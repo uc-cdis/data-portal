@@ -183,19 +183,18 @@ function queryGuppyForSubAgg({
     });
 }
 
-const rawDataQueryStrForEachField = (field) => {
-  const splittedFieldArray = field.split('.');
-  const splittedField = splittedFieldArray.shift();
-  if (splittedFieldArray.length === 0) {
-    return `
-    ${splittedField}
-    `;
-  }
-  return `
-  ${splittedField} {
-    ${rawDataQueryStrForEachField(splittedFieldArray.join('.'))}
-  }`;
-};
+/**
+ * @param {string} field
+ * @returns {string}
+ */
+function rawDataQueryStrForEachField(field) {
+  const [fieldName, ...nestedFieldNames] = field.split('.');
+  return nestedFieldNames.length === 0
+    ? `${fieldName}`
+    : `${fieldName} {
+      ${rawDataQueryStrForEachField(nestedFieldNames.join('.'))}
+    }`;
+}
 
 /**
  * @param {object} opt
@@ -257,12 +256,9 @@ export function queryGuppyForRawData({
     }`
     : '';
 
-  const processedFields = fields.map((field) =>
-    rawDataQueryStrForEachField(field)
-  );
   const query = `${queryLine} {
     ${dataTypeLine} {
-      ${processedFields.join('\n')}
+      ${fields.map(rawDataQueryStrForEachField).join('\n')}
     }
     ${aggregationFragment}
   }`.replace(/\s+/g, ' ');
