@@ -14,15 +14,12 @@ const statusEndpoint = '/_status';
  * @param {string} format
  */
 function jsonToFormat(json, format) {
-  if (format in FILE_DELIMITERS) {
-    const flatJson = Object.keys(json).map((key) =>
-      flat(json[key], { delimiter: '_' })
-    );
-    return papaparse.unparse(flatJson, {
-      delimiter: FILE_DELIMITERS[format],
-    });
-  }
-  return json;
+  return format in FILE_DELIMITERS
+    ? papaparse.unparse(
+        Object.values(json).map((value) => flat(value, { delimiter: '_' })),
+        { delimiter: FILE_DELIMITERS[format] }
+      )
+    : json;
 }
 
 const histogramQueryStrForEachField = (field) => {
