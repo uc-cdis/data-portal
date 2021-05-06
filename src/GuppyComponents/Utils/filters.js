@@ -257,27 +257,20 @@ const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (
   searchString,
   offset
 ) => {
-  const NUM_SEARCH_OPTIONS = 20;
   return new Promise((resolve, reject) => {
     // If searchString is empty return just the first NUM_SEARCH_OPTIONS options.
     // This allows the client to show default options in the search filter before
     // the user has started searching.
-    let filter = {};
-    if (searchString) {
-      filter = {
-        search: {
-          keyword: searchString,
-          fields: [field],
-        },
-      };
-    }
+    const gqlFilter = searchString
+      ? { search: { keyword: searchString, fields: [field] } }
+      : undefined;
+
     queryGuppyForRawData({
       path: guppyConfig.path,
       type: guppyConfig.type,
       fields: [field],
-      gqlFilter: filter,
+      gqlFilter,
       offset,
-      size: NUM_SEARCH_OPTIONS,
       withTotalCount: true,
     })
       .then((res) => {
