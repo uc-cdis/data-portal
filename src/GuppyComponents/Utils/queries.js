@@ -396,32 +396,25 @@ export function askGuppyForSubAggregationData({
   });
 }
 
-export const askGuppyForRawData = (
-  path,
-  type,
-  fields,
-  filter,
-  sort,
-  offset = 0,
-  size = 20,
-  signal,
-  format,
-  withTotalCount
-) => {
-  const gqlFilter = getGQLFilter(filter);
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {string[]} opt.fields
+ * @param {object} [opt.filter]
+ * @param {*} [opt.sort]
+ * @param {number} [opt.offset]
+ * @param {number} [opt.size]
+ * @param {AbortSignal} [opt.signal]
+ * @param {string} [opt.format]
+ * @param {boolean} [opt.withTotalCount]
+ */
+export function askGuppyForRawData({ filter, ...opt }) {
   return queryGuppyForRawData({
-    path,
-    type,
-    fields,
-    gqlFilter,
-    sort,
-    offset,
-    size,
-    signal,
-    format,
-    withTotalCount,
+    ...opt,
+    gqlFilter: getGQLFilter(filter),
   });
-};
+}
 
 export const getAllFieldsFromFilterConfigs = (filterTabConfigs) =>
   filterTabConfigs.reduce((acc, cur) => acc.concat(cur.fields), []);
@@ -454,16 +447,15 @@ export const downloadDataFromGuppy = (
       JSON_FORMAT ? res.json() : jsonToFormat(res.json(), format)
     );
   }
-  return askGuppyForRawData(
+  return askGuppyForRawData({
     path,
     type,
     fields,
     filter,
     sort,
-    0,
     size,
-    format
-  ).then((res) => {
+    format,
+  }).then((res) => {
     if (res && res.data && res.data[type]) {
       return JSON_FORMAT
         ? res.data[type]

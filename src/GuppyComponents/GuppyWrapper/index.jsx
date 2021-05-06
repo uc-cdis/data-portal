@@ -283,16 +283,16 @@ class GuppyWrapper extends React.Component {
     }
 
     // non-nested aggregation
-    return askGuppyForRawData(
-      this.props.guppyConfig.path,
-      this.props.guppyConfig.type,
+    return askGuppyForRawData({
+      path: this.props.guppyConfig.path,
+      type: this.props.guppyConfig.type,
       fields,
-      this.filter,
+      filter: this.filter,
       sort,
       offset,
       size,
-      this.controller.signal
-    ).then((res) => {
+      signal: this.controller.signal,
+    }).then((res) => {
       if (!res || !res.data) {
         throw new Error(
           `Error getting raw ${this.props.guppyConfig.type} data from Guppy server ${this.props.guppyConfig.path}.`
