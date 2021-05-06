@@ -407,6 +407,7 @@ export function askGuppyForRawData({ filter, ...opt }) {
 export function getAllFieldsFromFilterConfigs(filterTabConfigs) {
   return filterTabConfigs.flatMap(({ fields }) => fields);
 }
+
 /**
  * Download all data from guppy using fields, filter, and sort args.
  * If total count is less than 10000 this will use normal graphql endpoint
