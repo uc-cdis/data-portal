@@ -88,16 +88,22 @@ function queryGuppyForAggs({ path, type, fields, gqlFilter, signal }) {
   }).then((response) => response.json());
 }
 
-const queryGuppyForStatus = (path) =>
-  fetch(`${path}${statusEndpoint}`, {
+/** @param {string} path */
+function queryGuppyForStatus(path) {
+  return fetch(`${path}${statusEndpoint}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   }).then((response) => response.json());
+}
 
-const nestedHistogramQueryStrForEachField = (mainField, numericAggAsText) => `
-  ${mainField} {
+/**
+ * @param {string} mainField
+ * @param {boolean} numericAggAsText
+ */
+function nestedHistogramQueryStrForEachField(mainField, numericAggAsText) {
+  return `${mainField} {
     ${numericAggAsText ? 'asTextHistogram' : 'histogram'} {
       key
       count
@@ -114,6 +120,7 @@ const nestedHistogramQueryStrForEachField = (mainField, numericAggAsText) => `
       }
     }
   }`;
+}
 
 /**
  * @param {object} opt
@@ -337,9 +344,10 @@ export function getGQLFilter(filter) {
   return { AND: facetsList };
 }
 
-// eslint-disable-next-line max-len
-export const askGuppyAboutArrayTypes = (path) =>
-  queryGuppyForStatus(path).then((res) => res.indices);
+/** @param {string} path */
+export function askGuppyAboutArrayTypes(path) {
+  return queryGuppyForStatus(path).then((res) => res.indices);
+}
 
 /**
  * @param {object} opt
@@ -398,9 +406,10 @@ export function askGuppyForRawData({ filter, ...opt }) {
   });
 }
 
-export const getAllFieldsFromFilterConfigs = (filterTabConfigs) =>
-  filterTabConfigs.reduce((acc, cur) => acc.concat(cur.fields), []);
-
+/** @param {object} filterTabConfigs */
+export function getAllFieldsFromFilterConfigs(filterTabConfigs) {
+  return filterTabConfigs.flatMap(({ fields }) => fields);
+}
 /**
  * Download all data from guppy using fields, filter, and sort args.
  * If total count is less than 10000 this will use normal graphql endpoint
