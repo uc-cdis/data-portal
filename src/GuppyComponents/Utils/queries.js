@@ -52,46 +52,41 @@ const histogramQueryStrForEachField = (field) => {
  * @param {AbortSignal} [opt.signal]
  */
 function queryGuppyForAggs({ path, type, fields, gqlFilter, signal }) {
-  const queryBody =
+  const query =
     gqlFilter !== undefined
-      ? {
-          query: `query ($filter: JSON) {
-            _aggregation {
-              ${type} (filter: $filter, filterSelf: false, accessibility: all) {
-                ${fields.map((field) => histogramQueryStrForEachField(field))}
-              }
-              accessible: ${type} (filter: $filter, accessibility: accessible) {
-                _totalCount
-              }
-              all: ${type} (filter: $filter, accessibility: all) {
-                _totalCount
-              }
+      ? `query ($filter: JSON) {
+          _aggregation {
+            ${type} (filter: $filter, filterSelf: false, accessibility: all) {
+              ${fields.map((field) => histogramQueryStrForEachField(field))}
             }
-          }`,
-          variables: { filter: gqlFilter },
-        }
-      : {
-          query: `query {
-            _aggregation {
-              ${type} (accessibility: all) {
-                ${fields.map((field) => histogramQueryStrForEachField(field))}
-              }
-              accessible: ${type} (accessibility: accessible) {
-                _totalCount
-              }
-              all: ${type} (accessibility: all) {
-                _totalCount
-              }
+            accessible: ${type} (filter: $filter, accessibility: accessible) {
+              _totalCount
             }
-          }`,
-        };
+            all: ${type} (filter: $filter, accessibility: all) {
+              _totalCount
+            }
+          }
+        }`
+      : `query {
+          _aggregation {
+            ${type} (accessibility: all) {
+              ${fields.map((field) => histogramQueryStrForEachField(field))}
+            }
+            accessible: ${type} (accessibility: accessible) {
+              _totalCount
+            }
+            all: ${type} (accessibility: all) {
+              _totalCount
+            }
+          }
+        }`;
 
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(queryBody),
+    body: JSON.stringify({ query, variables: { filter: gqlFilter } }),
     signal,
   }).then((response) => response.json());
 }
@@ -144,11 +139,10 @@ function queryGuppyForSubAgg({
   gqlFilter,
   signal,
 }) {
-  const queryBody =
+  const query =
     gqlFilter !== undefined
-      ? {
-          query: `query ($filter: JSON, $nestedAggFields: JSON) {
-            _aggregation {
+      ? `query ($filter: JSON, $nestedAggFields: JSON) {
+          _aggregation {
               ${type} (filter: $filter, filterSelf: false, nestedAggFields: $nestedAggFields, accessibility: all) {
                 ${nestedHistogramQueryStrForEachField(
                   mainField,
@@ -156,32 +150,30 @@ function queryGuppyForSubAgg({
                 )}
               }
             }
-          }`,
-          variables: {
-            filter: gqlFilter,
-            nestedAggFields: { termsFields, missingFields },
-          },
-        }
-      : {
-          query: `query ($nestedAggFields: JSON) {
-            _aggregation {
-              ${type} (nestedAggFields: $nestedAggFields, accessibility: all) {
-                ${nestedHistogramQueryStrForEachField(
-                  mainField,
-                  numericAggAsText
-                )}
-              }
+          }`
+      : `query ($nestedAggFields: JSON) {
+          _aggregation {
+            ${type} (nestedAggFields: $nestedAggFields, accessibility: all) {
+              ${nestedHistogramQueryStrForEachField(
+                mainField,
+                numericAggAsText
+              )}
             }
-          }`,
-          variables: { nestedAggFields: { termsFields, missingFields } },
-        };
+          }
+        }`;
 
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(queryBody),
+    body: JSON.stringify({
+      query,
+      variables: {
+        filter: gqlFilter,
+        nestedAggFields: { termsFields, missingFields },
+      },
+    }),
     signal,
   })
     .then((response) => response.json())
