@@ -125,23 +125,21 @@ class GuppyWrapper extends React.Component {
    * Download all data from Guppy server and return raw data
    * This function uses current filter argument
    */
-  handleDownloadRawData({ sort, format }) {
+  handleDownloadRawData({ sort = [], format }) {
     // error handling for misconfigured format types
     if (format && !(format in FILE_FORMATS)) {
       // eslint-disable-next-line no-console
       console.error(`Invalid value ${format} found for arg format!`);
     }
-    return downloadDataFromGuppy(
-      this.props.guppyConfig.path,
-      this.props.guppyConfig.type,
-      this.state.accessibleCount,
-      {
-        fields: this.state.rawDataFields,
-        sort: sort || [],
-        filter: this.state.filter,
-        format,
-      }
-    );
+    return downloadDataFromGuppy({
+      path: this.props.guppyConfig.path,
+      type: this.props.guppyConfig.type,
+      size: this.state.accessibleCount,
+      fields: this.state.rawDataFields,
+      sort,
+      filter: this.state.filter,
+      format,
+    });
   }
 
   /**
@@ -150,16 +148,14 @@ class GuppyWrapper extends React.Component {
    * This function uses current filter argument
    */
   handleDownloadRawDataByFields({ fields, sort = [] }) {
-    return downloadDataFromGuppy(
-      this.props.guppyConfig.path,
-      this.props.guppyConfig.type,
-      this.state.accessibleCount,
-      {
-        fields: fields || this.state.rawDataFields,
-        sort,
-        filter: this.state.filter,
-      }
-    );
+    return downloadDataFromGuppy({
+      path: this.props.guppyConfig.path,
+      type: this.props.guppyConfig.type,
+      size: this.state.accessibleCount,
+      fields: fields || this.state.rawDataFields,
+      sort,
+      filter: this.state.filter,
+    });
   }
 
   /**
@@ -178,15 +174,13 @@ class GuppyWrapper extends React.Component {
    * @param {string[]} fields
    */
   handleDownloadRawDataByTypeAndFilter(type, filter, fields) {
-    return downloadDataFromGuppy(
-      this.props.guppyConfig.path,
+    return downloadDataFromGuppy({
+      path: this.props.guppyConfig.path,
       type,
-      this.state.accessibleCount,
-      {
-        fields,
-        filter,
-      }
-    );
+      size: this.state.accessibleCount,
+      fields,
+      filter,
+    });
   }
 
   /**
