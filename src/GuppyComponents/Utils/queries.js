@@ -416,7 +416,6 @@ export const getAllFieldsFromFilterConfigs = (filterTabConfigs) =>
  * @param {object} [opt.filter]
  * @param {*} [opt.sort]
  * @param {string} [opt.format]
-
  */
 export function downloadDataFromGuppy({
   path,
@@ -463,36 +462,46 @@ export function downloadDataFromGuppy({
       });
 }
 
-export const askGuppyForTotalCounts = (path, type, filter) => {
-  const gqlFilter = getGQLFilter(filter);
-  const queryLine = `query ${gqlFilter ? '($filter: JSON)' : ''}{`;
-  const typeAggsLine = `${type} ${
-    gqlFilter ? '(filter: $filter, ' : '('
-  } accessibility: all) {`;
-  const query = `${queryLine}
-    _aggregation {
-      ${typeAggsLine}
-        _totalCount
-      }
-    }
-  }`;
-  const queryBody = { query };
-  queryBody.variables = {};
-  if (gqlFilter) queryBody.variables.filter = gqlFilter;
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {object} [opt.filter]
+ */
+export function askGuppyForTotalCounts({ path, type, filter }) {
+  const query =
+    filter !== undefined || Object.keys(filter).length > 0
+      ? `query ($filter: JSON) {
+          _aggregation {
+            ${type} (filter: $filter, accessibility: all) {
+              _totalCount
+            }
+          }
+        }`
+      : `query {
+          _aggregation {
+            ${type} (accessibility: all) {
+              _totalCount
+            }
+          }
+        }`;
 
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(queryBody),
+    body: JSON.stringify({
+      query,
+      variables: { filter: getGQLFilter(filter) },
+    }),
   })
     .then((response) => response.json())
     .then((response) => response.data._aggregation[type]._totalCount)
     .catch((err) => {
       throw new Error(`Error during download ${err}`);
     });
-};
+}
 
 export const getAllFieldsFromGuppy = (path, type) => {
   const query = `{
