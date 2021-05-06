@@ -287,73 +287,58 @@ export function queryGuppyForRawData({
     });
 }
 
-export const getGQLFilter = (filterObj) => {
+/**
+ * Convert filter obj into GQL filter format
+ * @param {object | undefined} filter
+ */
+export function getGQLFilter(filter) {
+  if (filter === undefined || Object.keys(filter).length === 0) return;
+
   const facetsList = [];
-  Object.keys(filterObj).forEach((field) => {
-    const filterValues = filterObj[field];
+  for (const [field, filterValues] of Object.entries(filter)) {
     const fieldSplitted = field.split('.');
     const fieldName = fieldSplitted[fieldSplitted.length - 1];
-    // The combine mode defaults to OR when not set.
-    const combineMode = filterValues.__combineMode
-      ? filterValues.__combineMode
-      : 'OR';
-
-    const hasSelectedValues =
-      filterValues.selectedValues && filterValues.selectedValues.length > 0;
-    const hasRangeFilter =
+    const isRangeFilter =
       typeof filterValues.lowerBound !== 'undefined' &&
       typeof filterValues.upperBound !== 'undefined';
+    const hasSelectedValues = filterValues?.selectedValues?.length > 0;
 
-    let facetsPiece = {};
-    if (hasSelectedValues && combineMode === 'OR') {
-      facetsPiece = {
-        IN: {
-          [fieldName]: filterValues.selectedValues,
-        },
-      };
-    } else if (hasSelectedValues && combineMode === 'AND') {
-      facetsPiece = { AND: [] };
-      for (let i = 0; i < filterValues.selectedValues.length; i += 1) {
-        facetsPiece.AND.push({
-          IN: {
-            [fieldName]: [filterValues.selectedValues[i]],
-          },
-        });
-      }
-    } else if (hasRangeFilter) {
-      facetsPiece = {
-        AND: [
-          { '>=': { [fieldName]: filterValues.lowerBound } },
-          { '<=': { [fieldName]: filterValues.upperBound } },
-        ],
-      };
-    } else if (
-      filterValues.__combineMode &&
-      !hasSelectedValues &&
-      !hasRangeFilter
-    ) {
-      // This filter only has a combine setting so far. We can ignore it.
-      return;
-    } else {
-      throw new Error(`Invalid filter object ${filterValues}`);
-    }
-    if (fieldSplitted.length > 1) {
-      // nested field
-      fieldSplitted.pop();
-      facetsPiece = {
-        nested: {
-          path: fieldSplitted.join('.'), // parent path
-          ...facetsPiece,
-        },
-      };
-    }
-    facetsList.push(facetsPiece);
-  });
-  const gqlFilter = {
-    AND: facetsList,
-  };
-  return gqlFilter;
-};
+    if (!isRangeFilter && !hasSelectedValues)
+      if (filterValues.__combineMode)
+        // This filter only has a combine setting so far. We can ignore it.
+        return;
+      else throw new Error(`Invalid filter object ${filterValues}`);
+
+    /** @type {{ AND?: any[]; IN?: { [x: string]: string[] }}} */
+    const facetsPiece = {};
+    if (isRangeFilter)
+      facetsPiece.AND = [
+        { '>=': { [fieldName]: filterValues.lowerBound } },
+        { '<=': { [fieldName]: filterValues.upperBound } },
+      ];
+    else if (hasSelectedValues)
+      filterValues.__combineMode === 'AND'
+        ? (facetsPiece.AND = filterValues.selectedValues.map(
+            (selectedValue) => ({ IN: { [fieldName]: [selectedValue] } })
+          ))
+        : // combine mode defaults to OR when not set.
+          (facetsPiece.IN = { [fieldName]: filterValues.selectedValues });
+
+    facetsList.push(
+      fieldSplitted.length === 1
+        ? facetsPiece
+        : // nested field
+          {
+            nested: {
+              path: fieldSplitted.slice(0, -1).join('.'), // parent path
+              ...facetsPiece,
+            },
+          }
+    );
+  }
+
+  return { AND: facetsList };
+}
 
 // eslint-disable-next-line max-len
 export const askGuppyAboutArrayTypes = (path) =>
