@@ -123,7 +123,18 @@ const nestedHistogramQueryStrForEachField = (mainField, numericAggAsText) => `
     }
   }`;
 
-const queryGuppyForSubAgg = (
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {string} opt.mainField
+ * @param {boolean} [opt.numericAggAsText]
+ * @param {string[]} [opt.termsFields]
+ * @param {string[]} [opt.missingFields]
+ * @param {object} [opt.gqlFilter]
+ * @param {AbortSignal} [opt.signal]
+ */
+function queryGuppyForSubAgg({
   path,
   type,
   mainField,
@@ -131,36 +142,40 @@ const queryGuppyForSubAgg = (
   termsFields,
   missingFields,
   gqlFilter,
-  signal
-) => {
-  const nestedAggFields = {};
-  if (termsFields) {
-    nestedAggFields.termsFields = termsFields;
-  }
-  if (missingFields) {
-    nestedAggFields.missingFields = missingFields;
-  }
-
-  const query = `query ($nestedAggFields: JSON) {
-    _aggregation {
-      ${type} (nestedAggFields: $nestedAggFields, accessibility: all) {
-        ${nestedHistogramQueryStrForEachField(mainField, numericAggAsText)}
-      }
-    }
-  }`;
-  const queryBody = { query };
-  queryBody.variables = { nestedAggFields };
-  if (gqlFilter) {
-    const queryWithFilter = `query ($filter: JSON, $nestedAggFields: JSON) {
-      _aggregation {
-        ${type} (filter: $filter, filterSelf: false, nestedAggFields: $nestedAggFields, accessibility: all) {
-          ${nestedHistogramQueryStrForEachField(mainField, numericAggAsText)}
+  signal,
+}) {
+  const queryBody =
+    gqlFilter !== undefined
+      ? {
+          query: `query ($filter: JSON, $nestedAggFields: JSON) {
+            _aggregation {
+              ${type} (filter: $filter, filterSelf: false, nestedAggFields: $nestedAggFields, accessibility: all) {
+                ${nestedHistogramQueryStrForEachField(
+                  mainField,
+                  numericAggAsText
+                )}
+              }
+            }
+          }`,
+          variables: {
+            filter: gqlFilter,
+            nestedAggFields: { termsFields, missingFields },
+          },
         }
-      }
-    }`;
-    queryBody.variables = { filter: gqlFilter, nestedAggFields };
-    queryBody.query = queryWithFilter;
-  }
+      : {
+          query: `query ($nestedAggFields: JSON) {
+            _aggregation {
+              ${type} (nestedAggFields: $nestedAggFields, accessibility: all) {
+                ${nestedHistogramQueryStrForEachField(
+                  mainField,
+                  numericAggAsText
+                )}
+              }
+            }
+          }`,
+          variables: { nestedAggFields: { termsFields, missingFields } },
+        };
+
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
     headers: {
@@ -173,7 +188,7 @@ const queryGuppyForSubAgg = (
     .catch((err) => {
       throw new Error(`Error during queryGuppyForSubAgg ${err}`);
     });
-};
+}
 
 const rawDataQueryStrForEachField = (field) => {
   const splittedFieldArray = field.split('.');
@@ -361,16 +376,16 @@ export const askGuppyForSubAggregationData = ({
   signal,
 }) => {
   const gqlFilter = getGQLFilter(filter);
-  return queryGuppyForSubAgg(
+  return queryGuppyForSubAgg({
     path,
     type,
     mainField,
     numericAggAsText,
-    termsNestedFields,
-    missedNestedFields,
+    termsFields: termsNestedFields,
+    missingFields: missedNestedFields,
     gqlFilter,
-    signal
-  );
+    signal,
+  });
 };
 
 export const askGuppyForRawData = (
