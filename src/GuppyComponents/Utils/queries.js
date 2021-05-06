@@ -503,23 +503,28 @@ export function askGuppyForTotalCounts({ path, type, filter }) {
     });
 }
 
-export const getAllFieldsFromGuppy = (path, type) => {
-  const query = `{
-    _mapping {
-      ${type}
-    }
-  }`;
-  const queryBody = { query };
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ */
+export function getAllFieldsFromGuppy({ path, type }) {
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(queryBody),
+    body: JSON.stringify({
+      query: `{
+        _mapping {
+          ${type}
+        }
+      }`,
+    }),
   })
     .then((response) => response.json())
     .then((response) => response.data._mapping[type])
     .catch((err) => {
       throw new Error(`Error when getting fields from guppy: ${err}`);
     });
-};
+}
