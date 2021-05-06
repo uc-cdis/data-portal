@@ -253,24 +253,24 @@ class GuppyWrapper extends React.Component {
 
     // sub aggregations -- for DAT
     if (this.props.guppyConfig.mainField) {
-      const numericAggregation = this.props.guppyConfig.mainFieldIsNumeric;
-      return askGuppyForSubAggregationData(
-        this.props.guppyConfig.path,
-        this.props.guppyConfig.type,
-        this.props.guppyConfig.mainField,
-        numericAggregation,
-        this.props.guppyConfig.aggFields,
-        [],
-        this.filter,
-        this.controller.signal
-      ).then((res) => {
+      const numericAggAsText = this.props.guppyConfig.mainFieldIsNumeric;
+      return askGuppyForSubAggregationData({
+        path: this.props.guppyConfig.path,
+        type: this.props.guppyConfig.type,
+        mainField: this.props.guppyConfig.mainField,
+        numericAggAsText,
+        termsNestedFields: this.props.guppyConfig.aggFields,
+        missedNestedFields: [],
+        filter: this.filter,
+        signal: this.controller.signal,
+      }).then((res) => {
         if (!res || !res.data) {
           throw new Error(
             `Error getting raw ${this.props.guppyConfig.type} data from Guppy server ${this.props.guppyConfig.path}.`
           );
         }
         const data = res.data._aggregation[this.props.guppyConfig.type];
-        const field = numericAggregation ? 'asTextHistogram' : 'histogram';
+        const field = numericAggAsText ? 'asTextHistogram' : 'histogram';
         const parsedData = data[this.props.guppyConfig.mainField][field];
         if (this._isMounted) {
           if (updateDataWhenReceive) this.setState({ rawData: parsedData });

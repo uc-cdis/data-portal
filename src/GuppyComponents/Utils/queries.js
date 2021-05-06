@@ -371,28 +371,30 @@ export function askGuppyForAggregationData({ filter, ...opt }) {
   return queryGuppyForAggs({ ...opt, gqlFilter: getGQLFilter(filter) });
 }
 
-export const askGuppyForSubAggregationData = ({
-  path,
-  type,
-  mainField,
-  numericAggAsText,
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {string} opt.mainField
+ * @param {boolean} [opt.numericAggAsText]
+ * @param {string[]} [opt.termsNestedFields]
+ * @param {string[]} [opt.missedNestedFields]
+ * @param {object} [opt.filter]
+ * @param {AbortSignal} [opt.signal]
+ */
+export function askGuppyForSubAggregationData({
   termsNestedFields,
   missedNestedFields,
   filter,
-  signal,
-}) => {
-  const gqlFilter = getGQLFilter(filter);
+  ...opt
+}) {
   return queryGuppyForSubAgg({
-    path,
-    type,
-    mainField,
-    numericAggAsText,
+    ...opt,
     termsFields: termsNestedFields,
     missingFields: missedNestedFields,
-    gqlFilter,
-    signal,
+    gqlFilter: getGQLFilter(filter),
   });
-};
+}
 
 export const askGuppyForRawData = (
   path,
