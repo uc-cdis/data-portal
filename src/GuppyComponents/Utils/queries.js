@@ -49,34 +49,34 @@ function histogramQueryStrForEachField(field) {
  * @param {AbortSignal} [opt.signal]
  */
 function queryGuppyForAggs({ path, type, fields, gqlFilter, signal }) {
-  const query =
-    gqlFilter !== undefined
-      ? `query ($filter: JSON) {
-          _aggregation {
-            ${type} (filter: $filter, filterSelf: false, accessibility: all) {
-              ${fields.map((field) => histogramQueryStrForEachField(field))}
-            }
-            accessible: ${type} (filter: $filter, accessibility: accessible) {
-              _totalCount
-            }
-            all: ${type} (filter: $filter, accessibility: all) {
-              _totalCount
-            }
+  const query = (gqlFilter !== undefined
+    ? `query ($filter: JSON) {
+        _aggregation {
+          ${type} (filter: $filter, filterSelf: false, accessibility: all) {
+            ${fields.map((field) => histogramQueryStrForEachField(field))}
           }
-        }`
-      : `query {
-          _aggregation {
-            ${type} (accessibility: all) {
-              ${fields.map((field) => histogramQueryStrForEachField(field))}
-            }
-            accessible: ${type} (accessibility: accessible) {
-              _totalCount
-            }
-            all: ${type} (accessibility: all) {
-              _totalCount
-            }
+          accessible: ${type} (filter: $filter, accessibility: accessible) {
+            _totalCount
           }
-        }`;
+          all: ${type} (filter: $filter, accessibility: all) {
+            _totalCount
+          }
+        }
+      }`
+    : `query {
+        _aggregation {
+          ${type} (accessibility: all) {
+            ${fields.map((field) => histogramQueryStrForEachField(field))}
+          }
+          accessible: ${type} (accessibility: accessible) {
+            _totalCount
+          }
+          all: ${type} (accessibility: all) {
+            _totalCount
+          }
+        }
+      }`
+  ).replace(/\s+/g, ' ');
 
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
@@ -143,28 +143,25 @@ function queryGuppyForSubAgg({
   gqlFilter,
   signal,
 }) {
-  const query =
-    gqlFilter !== undefined
-      ? `query ($filter: JSON, $nestedAggFields: JSON) {
-          _aggregation {
-              ${type} (filter: $filter, filterSelf: false, nestedAggFields: $nestedAggFields, accessibility: all) {
-                ${nestedHistogramQueryStrForEachField(
-                  mainField,
-                  numericAggAsText
-                )}
-              }
-            }
-          }`
-      : `query ($nestedAggFields: JSON) {
-          _aggregation {
-            ${type} (nestedAggFields: $nestedAggFields, accessibility: all) {
+  const query = (gqlFilter !== undefined
+    ? `query ($filter: JSON, $nestedAggFields: JSON) {
+        _aggregation {
+            ${type} (filter: $filter, filterSelf: false, nestedAggFields: $nestedAggFields, accessibility: all) {
               ${nestedHistogramQueryStrForEachField(
                 mainField,
                 numericAggAsText
               )}
             }
           }
-        }`;
+        }`
+    : `query ($nestedAggFields: JSON) {
+        _aggregation {
+          ${type} (nestedAggFields: $nestedAggFields, accessibility: all) {
+            ${nestedHistogramQueryStrForEachField(mainField, numericAggAsText)}
+          }
+        }
+      }`
+  ).replace(/\s+/g, ' ');
 
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
@@ -268,7 +265,7 @@ export function queryGuppyForRawData({
       ${processedFields.join('\n')}
     }
     ${aggregationFragment}
-  }`;
+  }`.replace(/\s+/g, ' ');
 
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
@@ -475,22 +472,22 @@ export function downloadDataFromGuppy({
  * @param {object} [opt.filter]
  */
 export function askGuppyForTotalCounts({ path, type, filter }) {
-  const query =
-    filter !== undefined || Object.keys(filter).length > 0
-      ? `query ($filter: JSON) {
-          _aggregation {
-            ${type} (filter: $filter, accessibility: all) {
-              _totalCount
-            }
+  const query = (filter !== undefined || Object.keys(filter).length > 0
+    ? `query ($filter: JSON) {
+        _aggregation {
+          ${type} (filter: $filter, accessibility: all) {
+            _totalCount
           }
-        }`
-      : `query {
-          _aggregation {
-            ${type} (accessibility: all) {
-              _totalCount
-            }
+        }
+      }`
+    : `query {
+        _aggregation {
+          ${type} (accessibility: all) {
+            _totalCount
           }
-        }`;
+        }
+      }`
+  ).replace(/\s+/g, ' ');
 
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
@@ -525,7 +522,7 @@ export function getAllFieldsFromGuppy({ path, type }) {
         _mapping {
           ${type}
         }
-      }`,
+      }`.replace(/\s+/g, ' '),
     }),
   })
     .then((response) => response.json())
