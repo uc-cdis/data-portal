@@ -271,16 +271,15 @@ const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (
         },
       };
     }
-    queryGuppyForRawData(
-      guppyConfig.path,
-      guppyConfig.type,
-      [field],
-      filter,
-      undefined,
+    queryGuppyForRawData({
+      path: guppyConfig.path,
+      type: guppyConfig.type,
+      fields: [field],
+      gqlFilter: filter,
       offset,
-      NUM_SEARCH_OPTIONS,
-      true
-    )
+      size: NUM_SEARCH_OPTIONS,
+      withTotalCount: true,
+    })
       .then((res) => {
         if (!res.data || !res.data[guppyConfig.type]) {
           resolve({

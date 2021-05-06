@@ -204,7 +204,20 @@ const rawDataQueryStrForEachField = (field) => {
   }`;
 };
 
-export const queryGuppyForRawData = (
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {string[]} opt.fields
+ * @param {object} [opt.gqlFilter]
+ * @param {*} [opt.sort]
+ * @param {number} [opt.offset]
+ * @param {number} [opt.size]
+ * @param {AbortSignal} [opt.signal]
+ * @param {string} [opt.format]
+ * @param {boolean} [opt.withTotalCount]
+ */
+export function queryGuppyForRawData({
   path,
   type,
   fields,
@@ -214,8 +227,8 @@ export const queryGuppyForRawData = (
   size = 20,
   signal,
   format,
-  withTotalCount = false
-) => {
+  withTotalCount = false,
+}) {
   const queryArgument = [
     sort ? '$sort: JSON' : '',
     gqlFilter ? '$filter: JSON' : '',
@@ -280,7 +293,7 @@ export const queryGuppyForRawData = (
     .catch((err) => {
       throw new Error(`Error during queryGuppyForRawData ${err}`);
     });
-};
+}
 
 export const getGQLFilter = (filterObj) => {
   const facetsList = [];
@@ -401,7 +414,7 @@ export const askGuppyForRawData = (
   withTotalCount
 ) => {
   const gqlFilter = getGQLFilter(filter);
-  return queryGuppyForRawData(
+  return queryGuppyForRawData({
     path,
     type,
     fields,
@@ -411,8 +424,8 @@ export const askGuppyForRawData = (
     size,
     signal,
     format,
-    withTotalCount
-  );
+    withTotalCount,
+  });
 };
 
 export const getAllFieldsFromFilterConfigs = (filterTabConfigs) =>
