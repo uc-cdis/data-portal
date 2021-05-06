@@ -359,16 +359,17 @@ export const getGQLFilter = (filterObj) => {
 export const askGuppyAboutArrayTypes = (path) =>
   queryGuppyForStatus(path).then((res) => res.indices);
 
-export const askGuppyForAggregationData = (
-  path,
-  type,
-  fields,
-  filter,
-  signal
-) => {
-  const gqlFilter = getGQLFilter(filter);
-  return queryGuppyForAggs({ path, type, fields, gqlFilter, signal });
-};
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {string[]} opt.fields
+ * @param {object} opt.filter
+ * @param {AbortSignal} [opt.signal]
+ */
+export function askGuppyForAggregationData({ filter, ...opt }) {
+  return queryGuppyForAggs({ ...opt, gqlFilter: getGQLFilter(filter) });
+}
 
 export const askGuppyForSubAggregationData = ({
   path,

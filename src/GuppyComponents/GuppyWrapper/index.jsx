@@ -202,13 +202,13 @@ class GuppyWrapper extends React.Component {
   fetchAggsDataFromGuppy(filter) {
     if (this._isMounted) this.setState({ isLoadingAggsData: true });
 
-    askGuppyForAggregationData(
-      this.props.guppyConfig.path,
-      this.props.guppyConfig.type,
-      this.state.aggsDataFields,
+    askGuppyForAggregationData({
+      path: this.props.guppyConfig.path,
+      type: this.props.guppyConfig.type,
+      fields: this.state.aggsDataFields,
       filter,
-      this.controller.signal
-    ).then((res) => {
+      signal: this.controller.signal,
+    }).then((res) => {
       if (!res.data)
         console.error(
           `error querying guppy${
