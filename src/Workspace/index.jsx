@@ -36,7 +36,7 @@ class Workspace extends React.Component {
       interval: null,
       workspaceType: null,
       defaultWorkspace: false,
-      workspaceIsfullpage: false,
+      workspaceIsFullpage: false,
       externalLoginOptions: [],
     };
     this.workspaceStates = [
@@ -276,14 +276,14 @@ class Workspace extends React.Component {
 
   handleTerminateButtonClick = () => {
     // exit full page
-    this.setState({ workspaceIsfullpage: false });
+    this.setState({ workspaceIsFullpage: false });
     // terminate workspace
     this.terminateWorkspace();
   }
 
-  handleFullpageButtonClick = () => {
+  handleFullageButtonClick = () => {
     this.setState({
-      workspaceIsfullpage: !this.state.workspaceIsfullpage,
+      workspaceIsFullpage: !this.state.workspaceIsFullpage,
     });
   }
 
@@ -319,9 +319,9 @@ class Workspace extends React.Component {
       <Button
         className='workspace__button'
         onClick={this.handleFullpageButtonClick}
-        label={this.state.workspaceIsfullpage ? 'Exit Fullscreen' : 'Make Fullscreen'}
+        label={this.state.workspaceIsFullpage ? 'Exit Fullscreen' : 'Make Fullscreen'}
         buttonType='secondary'
-        rightIcon={this.state.workspaceIsfullpage ? 'back' : 'external-link'}
+        rightIcon={this.state.workspaceIsFullpage ? 'back' : 'external-link'}
       />
     );
 
@@ -331,7 +331,7 @@ class Workspace extends React.Component {
       // is for backwards compatibility with Jenkins integration tests that select by classname.
       return (
         <div
-          className={`workspace ${this.state.workspaceIsfullpage ? 'workspace--fullpage' : ''}`}
+          className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
         >
           {
             this.state.workspaceStatus === 'Running' ?
