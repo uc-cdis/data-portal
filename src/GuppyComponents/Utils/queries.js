@@ -14,87 +14,96 @@ const statusEndpoint = '/_status';
  * @param {string} format
  */
 function jsonToFormat(json, format) {
-  if (format in FILE_DELIMITERS) {
-    const flatJson = Object.keys(json).map((key) =>
-      flat(json[key], { delimiter: '_' })
-    );
-    return papaparse.unparse(flatJson, {
-      delimiter: FILE_DELIMITERS[format],
-    });
-  }
-  return json;
+  return format in FILE_DELIMITERS
+    ? papaparse.unparse(
+        Object.values(json).map((value) => flat(value, { delimiter: '_' })),
+        { delimiter: FILE_DELIMITERS[format] }
+      )
+    : json;
 }
 
-const histogramQueryStrForEachField = (field) => {
-  const splittedFieldArray = field.split('.');
-  const splittedField = splittedFieldArray.shift();
-  if (splittedFieldArray.length === 0) {
-    return `
-    ${splittedField} {
-      histogram {
-        key
-        count
-      }
-    }`;
-  }
-  return `
-  ${splittedField} {
-    ${histogramQueryStrForEachField(splittedFieldArray.join('.'))}
-  }`;
-};
+/**
+ * @param {string} field
+ * @returns {string}
+ */
+function histogramQueryStrForEachField(field) {
+  const [fieldName, ...nestedFieldNames] = field.split('.');
+  return nestedFieldNames.length === 0
+    ? `${fieldName} {
+        histogram {
+          key
+          count
+        }
+      }`
+    : `${fieldName} {
+        ${histogramQueryStrForEachField(nestedFieldNames.join('.'))}
+      }`;
+}
 
-const queryGuppyForAggs = (path, type, fields, gqlFilter, signal) => {
-  const query = `query {
-    _aggregation {
-      ${type} (accessibility: all) {
-        ${fields.map((field) => histogramQueryStrForEachField(field))}
-      }
-      accessible: ${type} (accessibility: accessible) {
-        _totalCount
-      }
-      all: ${type} (accessibility: all) {
-        _totalCount
-      }
-    }
-  }`;
-  const queryBody = { query };
-  if (gqlFilter) {
-    const queryWithFilter = `query ($filter: JSON) {
-      _aggregation {
-        ${type} (filter: $filter, filterSelf: false, accessibility: all) {
-          ${fields.map((field) => histogramQueryStrForEachField(field))}
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {string[]} opt.fields
+ * @param {object} [opt.gqlFilter]
+ * @param {AbortSignal} [opt.signal]
+ */
+function queryGuppyForAggs({ path, type, fields, gqlFilter, signal }) {
+  const query = (gqlFilter !== undefined
+    ? `query ($filter: JSON) {
+        _aggregation {
+          ${type} (filter: $filter, filterSelf: false, accessibility: all) {
+            ${fields.map((field) => histogramQueryStrForEachField(field))}
+          }
+          accessible: ${type} (filter: $filter, accessibility: accessible) {
+            _totalCount
+          }
+          all: ${type} (filter: $filter, accessibility: all) {
+            _totalCount
+          }
         }
-        accessible: ${type} (filter: $filter, accessibility: accessible) {
-          _totalCount
+      }`
+    : `query {
+        _aggregation {
+          ${type} (accessibility: all) {
+            ${fields.map((field) => histogramQueryStrForEachField(field))}
+          }
+          accessible: ${type} (accessibility: accessible) {
+            _totalCount
+          }
+          all: ${type} (accessibility: all) {
+            _totalCount
+          }
         }
-        all: ${type} (filter: $filter, accessibility: all) {
-          _totalCount
-        }
-      }
-    }`;
-    queryBody.variables = { filter: gqlFilter };
-    queryBody.query = queryWithFilter;
-  }
+      }`
+  ).replace(/\s+/g, ' ');
+
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(queryBody),
+    body: JSON.stringify({ query, variables: { filter: gqlFilter } }),
     signal,
   }).then((response) => response.json());
-};
+}
 
-const queryGuppyForStatus = (path) =>
-  fetch(`${path}${statusEndpoint}`, {
+/** @param {string} path */
+function queryGuppyForStatus(path) {
+  return fetch(`${path}${statusEndpoint}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   }).then((response) => response.json());
+}
 
-const nestedHistogramQueryStrForEachField = (mainField, numericAggAsText) => `
-  ${mainField} {
+/**
+ * @param {string} mainField
+ * @param {boolean} numericAggAsText
+ */
+function nestedHistogramQueryStrForEachField(mainField, numericAggAsText) {
+  return `${mainField} {
     ${numericAggAsText ? 'asTextHistogram' : 'histogram'} {
       key
       count
@@ -111,8 +120,20 @@ const nestedHistogramQueryStrForEachField = (mainField, numericAggAsText) => `
       }
     }
   }`;
+}
 
-const queryGuppyForSubAgg = (
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {string} opt.mainField
+ * @param {boolean} [opt.numericAggAsText]
+ * @param {string[]} [opt.termsFields]
+ * @param {string[]} [opt.missingFields]
+ * @param {object} [opt.gqlFilter]
+ * @param {AbortSignal} [opt.signal]
+ */
+function queryGuppyForSubAgg({
   path,
   type,
   mainField,
@@ -120,65 +141,75 @@ const queryGuppyForSubAgg = (
   termsFields,
   missingFields,
   gqlFilter,
-  signal
-) => {
-  const nestedAggFields = {};
-  if (termsFields) {
-    nestedAggFields.termsFields = termsFields;
-  }
-  if (missingFields) {
-    nestedAggFields.missingFields = missingFields;
-  }
-
-  const query = `query ($nestedAggFields: JSON) {
-    _aggregation {
-      ${type} (nestedAggFields: $nestedAggFields, accessibility: all) {
-        ${nestedHistogramQueryStrForEachField(mainField, numericAggAsText)}
-      }
-    }
-  }`;
-  const queryBody = { query };
-  queryBody.variables = { nestedAggFields };
-  if (gqlFilter) {
-    const queryWithFilter = `query ($filter: JSON, $nestedAggFields: JSON) {
-      _aggregation {
-        ${type} (filter: $filter, filterSelf: false, nestedAggFields: $nestedAggFields, accessibility: all) {
-          ${nestedHistogramQueryStrForEachField(mainField, numericAggAsText)}
+  signal,
+}) {
+  const query = (gqlFilter !== undefined
+    ? `query ($filter: JSON, $nestedAggFields: JSON) {
+        _aggregation {
+            ${type} (filter: $filter, filterSelf: false, nestedAggFields: $nestedAggFields, accessibility: all) {
+              ${nestedHistogramQueryStrForEachField(
+                mainField,
+                numericAggAsText
+              )}
+            }
+          }
+        }`
+    : `query ($nestedAggFields: JSON) {
+        _aggregation {
+          ${type} (nestedAggFields: $nestedAggFields, accessibility: all) {
+            ${nestedHistogramQueryStrForEachField(mainField, numericAggAsText)}
+          }
         }
-      }
-    }`;
-    queryBody.variables = { filter: gqlFilter, nestedAggFields };
-    queryBody.query = queryWithFilter;
-  }
+      }`
+  ).replace(/\s+/g, ' ');
+
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(queryBody),
+    body: JSON.stringify({
+      query,
+      variables: {
+        filter: gqlFilter,
+        nestedAggFields: { termsFields, missingFields },
+      },
+    }),
     signal,
   })
     .then((response) => response.json())
     .catch((err) => {
       throw new Error(`Error during queryGuppyForSubAgg ${err}`);
     });
-};
+}
 
-const rawDataQueryStrForEachField = (field) => {
-  const splittedFieldArray = field.split('.');
-  const splittedField = splittedFieldArray.shift();
-  if (splittedFieldArray.length === 0) {
-    return `
-    ${splittedField}
-    `;
-  }
-  return `
-  ${splittedField} {
-    ${rawDataQueryStrForEachField(splittedFieldArray.join('.'))}
-  }`;
-};
+/**
+ * @param {string} field
+ * @returns {string}
+ */
+function rawDataQueryStrForEachField(field) {
+  const [fieldName, ...nestedFieldNames] = field.split('.');
+  return nestedFieldNames.length === 0
+    ? `${fieldName}`
+    : `${fieldName} {
+      ${rawDataQueryStrForEachField(nestedFieldNames.join('.'))}
+    }`;
+}
 
-export const queryGuppyForRawData = (
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {string[]} opt.fields
+ * @param {object} [opt.gqlFilter]
+ * @param {*} [opt.sort]
+ * @param {number} [opt.offset]
+ * @param {number} [opt.size]
+ * @param {AbortSignal} [opt.signal]
+ * @param {string} [opt.format]
+ * @param {boolean} [opt.withTotalCount]
+ */
+export function queryGuppyForRawData({
   path,
   type,
   fields,
@@ -188,8 +219,8 @@ export const queryGuppyForRawData = (
   size = 20,
   signal,
   format,
-  withTotalCount = false
-) => {
+  withTotalCount = false,
+}) {
   const queryArgument = [
     sort ? '$sort: JSON' : '',
     gqlFilter ? '$filter: JSON' : '',
@@ -225,15 +256,12 @@ export const queryGuppyForRawData = (
     }`
     : '';
 
-  const processedFields = fields.map((field) =>
-    rawDataQueryStrForEachField(field)
-  );
   const query = `${queryLine} {
     ${dataTypeLine} {
-      ${processedFields.join('\n')}
+      ${fields.map(rawDataQueryStrForEachField).join('\n')}
     }
     ${aggregationFragment}
-  }`;
+  }`.replace(/\s+/g, ' ');
 
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
@@ -254,239 +282,249 @@ export const queryGuppyForRawData = (
     .catch((err) => {
       throw new Error(`Error during queryGuppyForRawData ${err}`);
     });
-};
+}
 
-export const getGQLFilter = (filterObj) => {
+/**
+ * Convert filter obj into GQL filter format
+ * @param {object | undefined} filter
+ */
+export function getGQLFilter(filter) {
+  if (filter === undefined || Object.keys(filter).length === 0) return;
+
   const facetsList = [];
-  Object.keys(filterObj).forEach((field) => {
-    const filterValues = filterObj[field];
+  for (const [field, filterValues] of Object.entries(filter)) {
     const fieldSplitted = field.split('.');
     const fieldName = fieldSplitted[fieldSplitted.length - 1];
-    // The combine mode defaults to OR when not set.
-    const combineMode = filterValues.__combineMode
-      ? filterValues.__combineMode
-      : 'OR';
-
-    const hasSelectedValues =
-      filterValues.selectedValues && filterValues.selectedValues.length > 0;
-    const hasRangeFilter =
+    const isRangeFilter =
       typeof filterValues.lowerBound !== 'undefined' &&
       typeof filterValues.upperBound !== 'undefined';
+    const hasSelectedValues = filterValues?.selectedValues?.length > 0;
 
-    let facetsPiece = {};
-    if (hasSelectedValues && combineMode === 'OR') {
-      facetsPiece = {
-        IN: {
-          [fieldName]: filterValues.selectedValues,
-        },
-      };
-    } else if (hasSelectedValues && combineMode === 'AND') {
-      facetsPiece = { AND: [] };
-      for (let i = 0; i < filterValues.selectedValues.length; i += 1) {
-        facetsPiece.AND.push({
-          IN: {
-            [fieldName]: [filterValues.selectedValues[i]],
-          },
-        });
-      }
-    } else if (hasRangeFilter) {
-      facetsPiece = {
-        AND: [
-          { '>=': { [fieldName]: filterValues.lowerBound } },
-          { '<=': { [fieldName]: filterValues.upperBound } },
-        ],
-      };
-    } else if (
-      filterValues.__combineMode &&
-      !hasSelectedValues &&
-      !hasRangeFilter
-    ) {
-      // This filter only has a combine setting so far. We can ignore it.
-      return;
-    } else {
-      throw new Error(`Invalid filter object ${filterValues}`);
-    }
-    if (fieldSplitted.length > 1) {
-      // nested field
-      fieldSplitted.pop();
-      facetsPiece = {
-        nested: {
-          path: fieldSplitted.join('.'), // parent path
-          ...facetsPiece,
-        },
-      };
-    }
-    facetsList.push(facetsPiece);
-  });
-  const gqlFilter = {
-    AND: facetsList,
-  };
-  return gqlFilter;
-};
+    if (!isRangeFilter && !hasSelectedValues)
+      if (filterValues.__combineMode)
+        // This filter only has a combine setting so far. We can ignore it.
+        return;
+      else throw new Error(`Invalid filter object ${filterValues}`);
 
-// eslint-disable-next-line max-len
-export const askGuppyAboutArrayTypes = (path) =>
-  queryGuppyForStatus(path).then((res) => res.indices);
+    /** @type {{ AND?: any[]; IN?: { [x: string]: string[] }}} */
+    const facetsPiece = {};
+    if (isRangeFilter)
+      facetsPiece.AND = [
+        { '>=': { [fieldName]: filterValues.lowerBound } },
+        { '<=': { [fieldName]: filterValues.upperBound } },
+      ];
+    else if (hasSelectedValues)
+      filterValues.__combineMode === 'AND'
+        ? (facetsPiece.AND = filterValues.selectedValues.map(
+            (selectedValue) => ({ IN: { [fieldName]: [selectedValue] } })
+          ))
+        : // combine mode defaults to OR when not set.
+          (facetsPiece.IN = { [fieldName]: filterValues.selectedValues });
 
-export const askGuppyForAggregationData = (
-  path,
-  type,
-  fields,
-  filter,
-  signal
-) => {
-  const gqlFilter = getGQLFilter(filter);
-  return queryGuppyForAggs(path, type, fields, gqlFilter, signal);
-};
+    facetsList.push(
+      fieldSplitted.length === 1
+        ? facetsPiece
+        : // nested field
+          {
+            nested: {
+              path: fieldSplitted.slice(0, -1).join('.'), // parent path
+              ...facetsPiece,
+            },
+          }
+    );
+  }
 
-export const askGuppyForSubAggregationData = ({
-  path,
-  type,
-  mainField,
-  numericAggAsText,
+  return { AND: facetsList };
+}
+
+/** @param {string} path */
+export function askGuppyAboutArrayTypes(path) {
+  return queryGuppyForStatus(path).then((res) => res.indices);
+}
+
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {string[]} opt.fields
+ * @param {object} opt.filter
+ * @param {AbortSignal} [opt.signal]
+ */
+export function askGuppyForAggregationData({ filter, ...opt }) {
+  return queryGuppyForAggs({ ...opt, gqlFilter: getGQLFilter(filter) });
+}
+
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {string} opt.mainField
+ * @param {boolean} [opt.numericAggAsText]
+ * @param {string[]} [opt.termsNestedFields]
+ * @param {string[]} [opt.missedNestedFields]
+ * @param {object} [opt.filter]
+ * @param {AbortSignal} [opt.signal]
+ */
+export function askGuppyForSubAggregationData({
   termsNestedFields,
   missedNestedFields,
   filter,
-  signal,
-}) => {
-  const gqlFilter = getGQLFilter(filter);
-  return queryGuppyForSubAgg(
-    path,
-    type,
-    mainField,
-    numericAggAsText,
-    termsNestedFields,
-    missedNestedFields,
-    gqlFilter,
-    signal
-  );
-};
+  ...opt
+}) {
+  return queryGuppyForSubAgg({
+    ...opt,
+    termsFields: termsNestedFields,
+    missingFields: missedNestedFields,
+    gqlFilter: getGQLFilter(filter),
+  });
+}
 
-export const askGuppyForRawData = (
-  path,
-  type,
-  fields,
-  filter,
-  sort,
-  offset = 0,
-  size = 20,
-  signal,
-  format,
-  withTotalCount
-) => {
-  const gqlFilter = getGQLFilter(filter);
-  return queryGuppyForRawData(
-    path,
-    type,
-    fields,
-    gqlFilter,
-    sort,
-    offset,
-    size,
-    signal,
-    format,
-    withTotalCount
-  );
-};
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {string[]} opt.fields
+ * @param {object} [opt.filter]
+ * @param {*} [opt.sort]
+ * @param {number} [opt.offset]
+ * @param {number} [opt.size]
+ * @param {AbortSignal} [opt.signal]
+ * @param {string} [opt.format]
+ * @param {boolean} [opt.withTotalCount]
+ */
+export function askGuppyForRawData({ filter, ...opt }) {
+  return queryGuppyForRawData({
+    ...opt,
+    gqlFilter: getGQLFilter(filter),
+  });
+}
 
-export const getAllFieldsFromFilterConfigs = (filterTabConfigs) =>
-  filterTabConfigs.reduce((acc, cur) => acc.concat(cur.fields), []);
+/** @param {object} filterTabConfigs */
+export function getAllFieldsFromFilterConfigs(filterTabConfigs) {
+  return filterTabConfigs.flatMap(({ fields }) => fields);
+}
 
 /**
  * Download all data from guppy using fields, filter, and sort args.
  * If total count is less than 10000 this will use normal graphql endpoint
  * If greater than 10000, use /download endpoint
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {number} opt.size
+ * @param {string[]} [opt.fields]
+ * @param {object} [opt.filter]
+ * @param {*} [opt.sort]
+ * @param {string} [opt.format]
  */
-export const downloadDataFromGuppy = (
+export function downloadDataFromGuppy({
   path,
   type,
   size,
-  { fields, filter, sort, format }
-) => {
+  fields,
+  filter,
+  sort,
+  format,
+}) {
   const SCROLL_SIZE = 10000;
   const JSON_FORMAT = format === 'json' || format === undefined;
-  if (size > SCROLL_SIZE) {
-    const queryBody = { type, accessibility: 'accessible' };
-    if (fields) queryBody.fields = fields;
-    if (filter) queryBody.filter = getGQLFilter(filter);
-    if (sort) queryBody.sort = sort;
-    return fetch(`${path}${downloadEndpoint}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(queryBody),
-    }).then((res) =>
-      JSON_FORMAT ? res.json() : jsonToFormat(res.json(), format)
-    );
-  }
-  return askGuppyForRawData(
-    path,
-    type,
-    fields,
-    filter,
-    sort,
-    0,
-    size,
-    format
-  ).then((res) => {
-    if (res && res.data && res.data[type]) {
-      return JSON_FORMAT
-        ? res.data[type]
-        : jsonToFormat(res.data[type], format);
-    }
-    throw Error('Error downloading data from Guppy');
-  });
-};
+  return size > SCROLL_SIZE
+    ? fetch(`${path}${downloadEndpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          accessibility: 'accessible',
+          filter: getGQLFilter(filter),
+          type,
+          fields,
+          sort,
+        }),
+      }).then((res) =>
+        JSON_FORMAT ? res.json() : jsonToFormat(res.json(), format)
+      )
+    : askGuppyForRawData({
+        path,
+        type,
+        fields,
+        filter,
+        sort,
+        size,
+        format,
+      }).then((res) => {
+        if (res?.data?.[type])
+          return JSON_FORMAT
+            ? res.data[type]
+            : jsonToFormat(res.data[type], format);
 
-export const askGuppyForTotalCounts = (path, type, filter) => {
-  const gqlFilter = getGQLFilter(filter);
-  const queryLine = `query ${gqlFilter ? '($filter: JSON)' : ''}{`;
-  const typeAggsLine = `${type} ${
-    gqlFilter ? '(filter: $filter, ' : '('
-  } accessibility: all) {`;
-  const query = `${queryLine}
-    _aggregation {
-      ${typeAggsLine}
-        _totalCount
-      }
-    }
-  }`;
-  const queryBody = { query };
-  queryBody.variables = {};
-  if (gqlFilter) queryBody.variables.filter = gqlFilter;
+        throw Error('Error downloading data from Guppy');
+      });
+}
+
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ * @param {object} [opt.filter]
+ */
+export function askGuppyForTotalCounts({ path, type, filter }) {
+  const query = (filter !== undefined || Object.keys(filter).length > 0
+    ? `query ($filter: JSON) {
+        _aggregation {
+          ${type} (filter: $filter, accessibility: all) {
+            _totalCount
+          }
+        }
+      }`
+    : `query {
+        _aggregation {
+          ${type} (accessibility: all) {
+            _totalCount
+          }
+        }
+      }`
+  ).replace(/\s+/g, ' ');
 
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(queryBody),
+    body: JSON.stringify({
+      query,
+      variables: { filter: getGQLFilter(filter) },
+    }),
   })
     .then((response) => response.json())
     .then((response) => response.data._aggregation[type]._totalCount)
     .catch((err) => {
       throw new Error(`Error during download ${err}`);
     });
-};
+}
 
-export const getAllFieldsFromGuppy = (path, type) => {
-  const query = `{
-    _mapping {
-      ${type}
-    }
-  }`;
-  const queryBody = { query };
+/**
+ * @param {object} opt
+ * @param {string} opt.path
+ * @param {string} opt.type
+ */
+export function getAllFieldsFromGuppy({ path, type }) {
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(queryBody),
+    body: JSON.stringify({
+      query: `{
+        _mapping {
+          ${type}
+        }
+      }`.replace(/\s+/g, ' '),
+    }),
   })
     .then((response) => response.json())
     .then((response) => response.data._mapping[type])
     .catch((err) => {
       throw new Error(`Error when getting fields from guppy: ${err}`);
     });
-};
+}

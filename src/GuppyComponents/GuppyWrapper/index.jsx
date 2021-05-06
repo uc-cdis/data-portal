@@ -74,10 +74,10 @@ class GuppyWrapper extends React.Component {
   componentDidMount() {
     this._isMounted = true;
 
-    getAllFieldsFromGuppy(
-      this.props.guppyConfig.path,
-      this.props.guppyConfig.type
-    ).then((fields) => {
+    getAllFieldsFromGuppy({
+      path: this.props.guppyConfig.path,
+      type: this.props.guppyConfig.type,
+    }).then((fields) => {
       const rawDataFields =
         this.props.rawDataFields && this.props.rawDataFields.length > 0
           ? this.props.rawDataFields
@@ -125,23 +125,21 @@ class GuppyWrapper extends React.Component {
    * Download all data from Guppy server and return raw data
    * This function uses current filter argument
    */
-  handleDownloadRawData({ sort, format }) {
+  handleDownloadRawData({ sort = [], format }) {
     // error handling for misconfigured format types
     if (format && !(format in FILE_FORMATS)) {
       // eslint-disable-next-line no-console
       console.error(`Invalid value ${format} found for arg format!`);
     }
-    return downloadDataFromGuppy(
-      this.props.guppyConfig.path,
-      this.props.guppyConfig.type,
-      this.state.accessibleCount,
-      {
-        fields: this.state.rawDataFields,
-        sort: sort || [],
-        filter: this.state.filter,
-        format,
-      }
-    );
+    return downloadDataFromGuppy({
+      path: this.props.guppyConfig.path,
+      type: this.props.guppyConfig.type,
+      size: this.state.accessibleCount,
+      fields: this.state.rawDataFields,
+      sort,
+      filter: this.state.filter,
+      format,
+    });
   }
 
   /**
@@ -150,16 +148,14 @@ class GuppyWrapper extends React.Component {
    * This function uses current filter argument
    */
   handleDownloadRawDataByFields({ fields, sort = [] }) {
-    return downloadDataFromGuppy(
-      this.props.guppyConfig.path,
-      this.props.guppyConfig.type,
-      this.state.accessibleCount,
-      {
-        fields: fields || this.state.rawDataFields,
-        sort,
-        filter: this.state.filter,
-      }
-    );
+    return downloadDataFromGuppy({
+      path: this.props.guppyConfig.path,
+      type: this.props.guppyConfig.type,
+      size: this.state.accessibleCount,
+      fields: fields || this.state.rawDataFields,
+      sort,
+      filter: this.state.filter,
+    });
   }
 
   /**
@@ -168,7 +164,11 @@ class GuppyWrapper extends React.Component {
    * @param {object} filter
    */
   handleAskGuppyForTotalCounts(type, filter) {
-    return askGuppyForTotalCounts(this.props.guppyConfig.path, type, filter);
+    return askGuppyForTotalCounts({
+      path: this.props.guppyConfig.path,
+      type,
+      filter,
+    });
   }
 
   /**
@@ -178,15 +178,13 @@ class GuppyWrapper extends React.Component {
    * @param {string[]} fields
    */
   handleDownloadRawDataByTypeAndFilter(type, filter, fields) {
-    return downloadDataFromGuppy(
-      this.props.guppyConfig.path,
+    return downloadDataFromGuppy({
+      path: this.props.guppyConfig.path,
       type,
-      this.state.accessibleCount,
-      {
-        fields,
-        filter,
-      }
-    );
+      size: this.state.accessibleCount,
+      fields,
+      filter,
+    });
   }
 
   /**
@@ -202,13 +200,13 @@ class GuppyWrapper extends React.Component {
   fetchAggsDataFromGuppy(filter) {
     if (this._isMounted) this.setState({ isLoadingAggsData: true });
 
-    askGuppyForAggregationData(
-      this.props.guppyConfig.path,
-      this.props.guppyConfig.type,
-      this.state.aggsDataFields,
+    askGuppyForAggregationData({
+      path: this.props.guppyConfig.path,
+      type: this.props.guppyConfig.type,
+      fields: this.state.aggsDataFields,
       filter,
-      this.controller.signal
-    ).then((res) => {
+      signal: this.controller.signal,
+    }).then((res) => {
       if (!res.data)
         console.error(
           `error querying guppy${
@@ -253,24 +251,24 @@ class GuppyWrapper extends React.Component {
 
     // sub aggregations -- for DAT
     if (this.props.guppyConfig.mainField) {
-      const numericAggregation = this.props.guppyConfig.mainFieldIsNumeric;
-      return askGuppyForSubAggregationData(
-        this.props.guppyConfig.path,
-        this.props.guppyConfig.type,
-        this.props.guppyConfig.mainField,
-        numericAggregation,
-        this.props.guppyConfig.aggFields,
-        [],
-        this.filter,
-        this.controller.signal
-      ).then((res) => {
+      const numericAggAsText = this.props.guppyConfig.mainFieldIsNumeric;
+      return askGuppyForSubAggregationData({
+        path: this.props.guppyConfig.path,
+        type: this.props.guppyConfig.type,
+        mainField: this.props.guppyConfig.mainField,
+        numericAggAsText,
+        termsNestedFields: this.props.guppyConfig.aggFields,
+        missedNestedFields: [],
+        filter: this.filter,
+        signal: this.controller.signal,
+      }).then((res) => {
         if (!res || !res.data) {
           throw new Error(
             `Error getting raw ${this.props.guppyConfig.type} data from Guppy server ${this.props.guppyConfig.path}.`
           );
         }
         const data = res.data._aggregation[this.props.guppyConfig.type];
-        const field = numericAggregation ? 'asTextHistogram' : 'histogram';
+        const field = numericAggAsText ? 'asTextHistogram' : 'histogram';
         const parsedData = data[this.props.guppyConfig.mainField][field];
         if (this._isMounted) {
           if (updateDataWhenReceive) this.setState({ rawData: parsedData });
@@ -283,16 +281,16 @@ class GuppyWrapper extends React.Component {
     }
 
     // non-nested aggregation
-    return askGuppyForRawData(
-      this.props.guppyConfig.path,
-      this.props.guppyConfig.type,
+    return askGuppyForRawData({
+      path: this.props.guppyConfig.path,
+      type: this.props.guppyConfig.type,
       fields,
-      this.filter,
+      filter: this.filter,
       sort,
       offset,
       size,
-      this.controller.signal
-    ).then((res) => {
+      signal: this.controller.signal,
+    }).then((res) => {
       if (!res || !res.data) {
         throw new Error(
           `Error getting raw ${this.props.guppyConfig.type} data from Guppy server ${this.props.guppyConfig.path}.`
