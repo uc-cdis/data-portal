@@ -1,7 +1,7 @@
 import React from 'react';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { Popconfirm, Spin, Steps } from 'antd';
+import { Popconfirm, Steps } from 'antd';
 
 import {
   workspaceUrl,
@@ -16,6 +16,7 @@ import {
 } from '../localconf';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
+import Spinner from '../components/Spinner';
 import jupyterIcon from '../img/icons/jupyter.svg';
 import rStudioIcon from '../img/icons/rstudio.svg';
 import galaxyIcon from '../img/icons/galaxy.svg';
@@ -371,7 +372,7 @@ class Workspace extends React.Component {
                     </Steps>
                     : null}
                   {(this.state.workspaceStatus === 'Launching') ?
-                    <Spin className='workspace__spinner-spin' tip='Launching Workspace, this process may take several minutes' />
+                    <Spinner text='Launching Workspace, this process may take several minutes' />
                     : null}
                 </div>
                 <div className='workspace__buttongroup'>
@@ -383,7 +384,7 @@ class Workspace extends React.Component {
           {
             this.state.workspaceStatus === 'Terminating' ?
               <div className='workspace__spinner-container'>
-                <Spin tip='Terminating workspace...' />
+                <Spinner text='Terminating workspace...' />
               </div>
               : null
           }
@@ -449,7 +450,7 @@ class Workspace extends React.Component {
         </div>
       );
     }
-    return <Spin />;
+    return <Spinner />;
   }
 }
 
