@@ -22,23 +22,23 @@ function jsonToFormat(json, format) {
     : json;
 }
 
-const histogramQueryStrForEachField = (field) => {
-  const splittedFieldArray = field.split('.');
-  const splittedField = splittedFieldArray.shift();
-  if (splittedFieldArray.length === 0) {
-    return `
-    ${splittedField} {
-      histogram {
-        key
-        count
-      }
-    }`;
-  }
-  return `
-  ${splittedField} {
-    ${histogramQueryStrForEachField(splittedFieldArray.join('.'))}
-  }`;
-};
+/**
+ * @param {string} field
+ * @returns {string}
+ */
+function histogramQueryStrForEachField(field) {
+  const [fieldName, ...nestedFieldNames] = field.split('.');
+  return nestedFieldNames.length === 0
+    ? `${fieldName} {
+        histogram {
+          key
+          count
+        }
+      }`
+    : `${fieldName} {
+        ${histogramQueryStrForEachField(nestedFieldNames.join('.'))}
+      }`;
+}
 
 /**
  * @param {object} opt
