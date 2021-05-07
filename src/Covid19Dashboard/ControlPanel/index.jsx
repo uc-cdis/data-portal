@@ -13,18 +13,23 @@ class ControlPanel extends PureComponent {
         <p>
           Data source: <a href='https://systems.jhu.edu'>Johns Hopkins University CSSE</a>
         </p>
-        {this.props.lastUpdated &&
-          <p>
+        {this.props.lastUpdated
+          && (
+            <p>
             Last updated: {this.props.lastUpdated}
-          </p>
-        }
-        {this.props.showMapStyle ? <MapStylePanel
-          onMapStyleChange={this.props.onMapStyleChange}
-          defaultMapStyle={this.props.defaultMapStyle}
-        /> : null }
-        {this.props.showLegend ? <LegendPanel
-          colors={this.props.colors}
-        /> : null }
+            </p>
+          )}
+        {this.props.showMapStyle ? (
+          <MapStylePanel
+            onMapStyleChange={this.props.onMapStyleChange}
+            defaultMapStyle={this.props.defaultMapStyle}
+          />
+        ) : null }
+        {this.props.showLegend ? (
+          <LegendPanel
+            colors={this.props.colors}
+          />
+        ) : null }
       </div>
     );
   }

@@ -1,5 +1,3 @@
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
@@ -407,34 +405,10 @@ async function init() {
                     exact
                     path='/study-viewer/:dataType/:rowAccessor'
                     component={
-                      props => (<ProtectedContent
-                        public
-                        component={ReduxSingleStudyViewer}
-                        {...props}
-                      />)
-                    }
-                  />
-                  {isEnabled('discovery') &&
-                    <Route
-                      exact
-                      path='/discovery'
-                      component={
-                        props => (<ProtectedContent
-                          public={discoveryConfig.public !== false}
-                          component={Discovery}
-                          {...props}
-                        />)
-                      }
-                    />
-                  }
-                  {isEnabled('discovery') &&
-                    <Route
-                      exact
-                      path='/discovery/:studyUID'
-                      component={
-                        props => (<ProtectedContent
+                      (props) => (
+                        <ProtectedContent
                           public
-                          component={Discovery}
+                          component={ReduxSingleStudyViewer}
                           {...props}
                         />
                       )
@@ -448,8 +422,8 @@ async function init() {
                         component={
                           (props) => (
                             <ProtectedContent
-                              public
-                              component={DiscoveryBeta}
+                              public={discoveryConfig.public !== false}
+                              component={Discovery}
                               {...props}
                             />
                           )
@@ -465,7 +439,7 @@ async function init() {
                           (props) => (
                             <ProtectedContent
                               public
-                              component={DiscoveryBeta}
+                              component={Discovery}
                               {...props}
                             />
                           )

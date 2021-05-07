@@ -21,7 +21,7 @@ const title = {
 const configFileName = (app === 'dev') ? 'default' : app;
 // eslint-disable-next-line import/no-dynamic-require
 const configFile = require(`./data/config/${configFileName}.json`);
-const DAPTrackingURL = configFile.DAPTrackingURL;
+const { DAPTrackingURL } = configFile;
 const scriptSrcURLs = [];
 const connectSrcURLs = [];
 if (DAPTrackingURL) {

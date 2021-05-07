@@ -3,7 +3,9 @@ import FileSaver from 'file-saver';
 import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
 import * as JsSearch from 'js-search';
-import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, ExportOutlined, DownloadOutlined } from '@ant-design/icons';
+import {
+  LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, ExportOutlined, DownloadOutlined,
+} from '@ant-design/icons';
 import {
   Input,
   Table,
@@ -82,13 +84,15 @@ const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'nu
   case 'paragraphs':
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
   case 'link':
-    return (<a
-      onClick={ev => ev.stopPropagation()}
-      onKeyPress={ev => ev.stopPropagation()}
-      href={content}
-    >
-      {content}
-    </a>);
+    return (
+      <a
+        onClick={(ev) => ev.stopPropagation()}
+        onKeyPress={(ev) => ev.stopPropagation()}
+        href={content}
+      >
+        {content}
+      </a>
+    );
   default:
     throw new Error(`Unrecognized content type ${contentType}. Check the 'study_page_fields' section of the Discovery config.`);
   }
@@ -256,10 +260,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     columns.push({
       title: 'Access',
       filters: [{
-        text: <><UnlockOutlined />Accessible</>,
+        text: <React.Fragment><UnlockOutlined />Accessible</React.Fragment>,
         value: true,
       }, {
-        text: <><LockFilled />Unaccessible</>,
+        text: <React.Fragment><LockFilled />Unaccessible</React.Fragment>,
         value: false,
       }],
       onFilter: (value, record) => record[accessibleFieldName] === value,
@@ -273,10 +277,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               placement='topRight'
               arrowPointAtCenter
               title={'You have access to this study.'}
-              content={<div className='discovery-popover__text'>
-                <>You have <code>{ARBORIST_READ_PRIV}</code> access to</>
-                <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
-              </div>}
+              content={(
+                <div className='discovery-popover__text'>
+                  <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
+                </div>
+              )}
             >
               <UnlockOutlined className='discovery-table__access-icon' />
             </Popover>
@@ -287,10 +293,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               placement='topRight'
               arrowPointAtCenter
               title={'You do not have access to this study.'}
-              content={
+              content={(
                 <div className='discovery-popover__text'>
-                  <>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</>
-                  <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
+                  <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
                 </div>
               )}
             >
@@ -318,7 +324,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 
   const handleExportToWorkspaceClick = async () => {
     setExportingToWorkspace(true);
-    const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+    const { manifestFieldName } = config.features.exportToWorkspaceBETA;
     if (!manifestFieldName) {
       throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
     }
@@ -344,7 +350,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   };
 
   const handleDownloadManifestClick = () => {
-    const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+    const { manifestFieldName } = config.features.exportToWorkspaceBETA;
     if (!manifestFieldName) {
       throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
     }
@@ -436,83 +442,92 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           </div>
         </div>
       </div>
-    </div>
-    <div className='discovery-table-container'>
-      <div className='discovery-table__header'>
-        { (
-          config.features.search && config.features.search.searchBar
+      <div className='discovery-table-container'>
+        <div className='discovery-table__header'>
+          { (
+            config.features.search && config.features.search.searchBar
             && config.features.search.searchBar.enabled
-        ) &&
-            <Input
-              className='discovery-search'
-              prefix={<SearchOutlined />}
-              placeholder={config.features.search.searchBar.placeholder}
-              value={searchTerm}
-              onChange={handleSearchChange}
-              size='large'
-              allowClear
-            />
-        }
-        { (
-          config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
-        ) &&
-          <Space>
-            <span className='discovery-export__selected-ct'>{selectedResources.length} selected</span>
-            { config.features.exportToWorkspaceBETA.enableDownloadManifest &&
+          )
+            && (
+              <Input
+                className='discovery-search'
+                prefix={<SearchOutlined />}
+                placeholder={config.features.search.searchBar.placeholder}
+                value={searchTerm}
+                onChange={handleSearchChange}
+                size='large'
+                allowClear
+              />
+            )}
+          { (
+            config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
+          )
+          && (
+            <Space>
+              <span className='discovery-export__selected-ct'>{selectedResources.length} selected</span>
+              { config.features.exportToWorkspaceBETA.enableDownloadManifest
+              && (
+                <Popover
+                  className='discovery-popover'
+                  arrowPointAtCenter
+                  title={(
+                    <React.Fragment>
+                  Download a Manifest File for use with the&nbsp;
+                      <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/'>
+                        {'Gen3 Client'}
+                      </a>.
+                    </React.Fragment>
+                  )}
+                  content={(
+                    <span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
+                to download the data from the selected studies to your local computer.
+                    </span>
+                  )}
+                >
+                  <Button
+                    onClick={handleDownloadManifestClick}
+                    type='text'
+                    disabled={selectedResources.length === 0}
+                    icon={<DownloadOutlined />}
+                  >
+                  Download Manifest
+                  </Button>
+                </Popover>
+              )}
               <Popover
                 className='discovery-popover'
                 arrowPointAtCenter
-                title={<>
-                  Download a Manifest File for use with the&nbsp;
-                  <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/' >
-                    {'Gen3 Client'}
-                  </a>.
-                </>}
-                content={(<span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
-                to download the data from the selected studies to your local computer.</span>)}
+                content={(
+                  <React.Fragment>
+                Open selected studies in the&nbsp;
+                    <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
+                      {'Gen3 Workspace'}
+                    </a>.
+                  </React.Fragment>
+                )}
               >
                 <Button
-                  onClick={handleDownloadManifestClick}
-                  type='text'
+                  type='primary'
                   disabled={selectedResources.length === 0}
-                  icon={<DownloadOutlined />}
+                  loading={exportingToWorkspace}
+                  icon={<ExportOutlined />}
+                  onClick={handleExportToWorkspaceClick}
                 >
-                  Download Manifest
+                Open in Workspace
                 </Button>
               </Popover>
-            }
-            <Popover
-              className='discovery-popover'
-              arrowPointAtCenter
-              content={<>
-                Open selected studies in the&nbsp;
-                <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
-                  {'Gen3 Workspace'}
-                </a>.
-              </>}
-            >
-              <Button
-                type='primary'
-                disabled={selectedResources.length === 0}
-                loading={exportingToWorkspace}
-                icon={<ExportOutlined />}
-                onClick={handleExportToWorkspaceClick}
-              >
-                Open in Workspace
-              </Button>
-            </Popover>
-          </Space>
-        }
+            </Space>
+          )}
 
-      </div>
-      <Table
-        columns={columns}
-        rowKey={config.minimalFieldMapping.uid}
-        rowSelection={(
-          config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
-        )
+        </div>
+        <Table
+          columns={columns}
+          rowKey={config.minimalFieldMapping.uid}
+          rowSelection={(
+            config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
+          )
           && {
-            selectedRowKeys: selectedResources.map(r => r[config.minimalFieldMapping.uid]),
+            selectedRowKeys: selectedResources.map((r) => r[config.minimalFieldMapping.uid]),
             preserveSelectedRowKeys: true,
             onChange: (_, selectedRows) => setSelectedResources(selectedRows),
             getCheckboxProps: (record) => {
@@ -522,26 +537,26 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 disabled = record[accessibleFieldName] === false;
               }
               // disable checkbox if there's no manifest found for this study
-              const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
+              const { manifestFieldName } = config.features.exportToWorkspaceBETA;
               if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
                 disabled = true;
               }
               return { disabled };
             },
           }}
-        rowClassName='discovery-table__row'
-        onRow={record => ({
-          onClick: () => {
-            setModalVisible(true);
-            setModalData(record);
-          },
-          onKeyPress: () => {
-            setModalVisible(true);
-            setModalData(record);
-          },
-        })}
-        dataSource={visibleResources}
-        expandable={config.studyPreviewField && ({
+          rowClassName='discovery-table__row'
+          onRow={(record) => ({
+            onClick: () => {
+              setModalVisible(true);
+              setModalData(record);
+            },
+            onKeyPress: () => {
+              setModalVisible(true);
+              setModalData(record);
+            },
+          })}
+          dataSource={visibleResources}
+          expandable={config.studyPreviewField && ({
           // expand all rows
             expandedRowKeys: visibleResources.map((r) => r[config.minimalFieldMapping.uid]),
             expandedRowRender: (record) => {
@@ -620,22 +635,14 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               <Alert
                 className='discovery-modal__access-alert'
                 type='success'
-                message={(
-                  <React.Fragment>
-                    <UnlockOutlined /> You have access to this study.
-                  </React.Fragment>
-                )}
+                message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
               />
             )
             : (
               <Alert
                 className='discovery-modal__access-alert'
                 type='warning'
-                message={(
-                  <React.Fragment>
-                    <LockFilled /> You do not have access to this study.
-                  </React.Fragment>
-                )}
+                message={<React.Fragment><LockFilled /> You do not have access to this study.</React.Fragment>}
               />
             )
           )}
