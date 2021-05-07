@@ -357,6 +357,7 @@ class WorldMapChart extends React.Component {
           onMapStyleChange={(layerId) => { this.setState({ selectedLayer: layerId }); }}
           showLegend={this.state.selectedLayer !== 'confirmed-dots'}
           colors={this.mapData.colors}
+          lastUpdated={this.props.jsonByLevel.last_updated}
         />
         <ReactMapGL.InteractiveMap
           className='map-chart__mapgl-map'

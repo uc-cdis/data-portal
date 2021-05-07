@@ -53,7 +53,7 @@ const DiscoveryWithMDSBackend: React.FC<{
 }> = (props) => {
   const [studies, setStudies] = useState(null);
 
-  if (!discoveryConfig) {
+  if (!props.config) {
     throw new Error('Could not find configuration for Discovery page. Check the portal config.');
   }
 

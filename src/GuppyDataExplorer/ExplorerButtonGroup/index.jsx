@@ -431,7 +431,7 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   sendPFBToWorkspace = (pfbGUID) => {
-    const JSONBody = { cohort_guid: pfbGUID };
+    const JSONBody = { guid: pfbGUID };
     fetchWithCreds({
       path: `${manifestServiceApiPath}cohorts`,
       body: JSON.stringify(JSONBody),
@@ -687,7 +687,15 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       }
     }
     if (buttonConfig.type === 'export-pfb-to-workspace') {
-      return !this.state.exportingToCloud;
+      // disable the pfb export button if any other pfb export jobs are running
+      if (pfbJobIsRunning) {
+        return false;
+      }
+      // If limited file PFB export is enabled, disable the button if the selected
+      // data files are on more than one source node. (See https://github.com/uc-cdis/data-portal/pull/729)
+      if (this.props.buttonConfig.enableLimitedFilePFBExport) {
+        return this.state.sourceNodesInCohort.length === 1;
+      }
     }
     if (buttonConfig.type === 'export') {
       // disable the terra export button if any of the

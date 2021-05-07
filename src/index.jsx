@@ -41,6 +41,7 @@ import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
+  discoveryConfig,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
@@ -52,7 +53,7 @@ import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
-import DiscoveryBeta from './Discovery';
+import Discovery from './Discovery';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import NotFound from './components/NotFound';
@@ -406,10 +407,34 @@ async function init() {
                     exact
                     path='/study-viewer/:dataType/:rowAccessor'
                     component={
-                      (props) => (
-                        <ProtectedContent
+                      props => (<ProtectedContent
+                        public
+                        component={ReduxSingleStudyViewer}
+                        {...props}
+                      />)
+                    }
+                  />
+                  {isEnabled('discovery') &&
+                    <Route
+                      exact
+                      path='/discovery'
+                      component={
+                        props => (<ProtectedContent
+                          public={discoveryConfig.public !== false}
+                          component={Discovery}
+                          {...props}
+                        />)
+                      }
+                    />
+                  }
+                  {isEnabled('discovery') &&
+                    <Route
+                      exact
+                      path='/discovery/:studyUID'
+                      component={
+                        props => (<ProtectedContent
                           public
-                          component={ReduxSingleStudyViewer}
+                          component={Discovery}
                           {...props}
                         />
                       )

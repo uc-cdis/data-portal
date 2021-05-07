@@ -6,6 +6,10 @@ FROM quay.io/cdis/ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV REACT_APP_PROJECT_ID=search
 
+# disable npm 7's brand new update notifier to prevent Portal from stuck at starting up
+# see https://github.com/npm/cli/issues/3163
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     ca-certificates \
@@ -21,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
-    && npm install -g npm@7.9.0 \
+    && npm install -g npm@7 \
     && npm config set maxsockets 5
 
 ARG APP=dev
