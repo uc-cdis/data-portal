@@ -70,7 +70,8 @@ class GuppyDataExplorer extends React.Component {
           if (!allSearchFieldSet.has(field))
             filterWithoutSearchFields[field] = filter[field];
 
-        search = `filter=${JSON.stringify(filterWithoutSearchFields)}`;
+        if (Object.keys(filterWithoutSearchFields).length > 0)
+          search = `filter=${JSON.stringify(filterWithoutSearchFields)}`;
       }
     }
 
