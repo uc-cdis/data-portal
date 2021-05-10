@@ -21,9 +21,6 @@ const retrieveFieldMapping = async (commonsName: string) => { // : Promise<any[]
   const jsonResponse = await res.json();
   console.log('29 response: ', jsonResponse);
 
-  // Temporarily some mock data.
-  // const jsonResponse = mockFieldMappingData;
-
   return jsonResponse;
 };
 
@@ -47,12 +44,9 @@ const loadStudiesFromAggMDS = async (offset:number = 0, limit:number = 100) => {
     throw new Error(`Request for study data at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
   }
 
-  // TODO: uncomment this
   const metadataResponse = await res.json();
   console.log('46 response: ', metadataResponse);
 
-  // Temporarily: some mock data.
-  // const metadataResponse = mockAggMDSData;
 
   // According to the API: https://petstore.swagger.io/?url=https://gist.githubusercontent.com/craigrbarnes/3ac95d4d6b5dd08d280a28ec0ae2a12d/raw/58a562c9b3a343e535849ad4085a3b27942b2b57/openapi.yaml#/Query/metadata_metadata_get
   const commons = Object.keys(metadataResponse);
