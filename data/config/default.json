@@ -214,7 +214,8 @@
   "requiredCerts": [],
   "featureFlags": {
     "explorer": true,
-    "discovery": true
+    "discovery": true,
+    "discoveryUseAggMDS": true
   },
   "dataExplorerConfig": {
     "charts": {

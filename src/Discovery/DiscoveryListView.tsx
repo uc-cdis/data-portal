@@ -4,7 +4,7 @@ import { ExportOutlined, DownloadOutlined } from '@ant-design/icons';
 import {
   Space,
   Popover,
-  Table
+  Table,
 } from 'antd';
 import FileSaver from 'file-saver';
 import './Discovery.css';
@@ -39,32 +39,32 @@ export class DiscoveryListView extends React.Component {
     };
 
     handleExportToWorkspaceClick = async () => {
-        this.props.setExportingToWorkspace(true);
-        const manifestFieldName = this.props.config.features.exportToWorkspaceBETA.manifestFieldName;
-        if (!manifestFieldName) {
-          throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
+      this.props.setExportingToWorkspace(true);
+      const manifestFieldName = this.props.config.features.exportToWorkspaceBETA.manifestFieldName;
+      if (!manifestFieldName) {
+        throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
+      }
+      // combine manifests from all selected studies
+      const manifest = [];
+      this.props.selectedResources.forEach((study) => {
+        if (study[manifestFieldName]) {
+          manifest.push(...study[manifestFieldName]);
         }
-        // combine manifests from all selected studies
-        const manifest = [];
-        this.props.selectedResources.forEach((study) => {
-          if (study[manifestFieldName]) {
-            manifest.push(...study[manifestFieldName]);
-          }
-        });
-        // post selected resources to manifestservice
-        const res = await fetchWithCreds({
-          path: `${manifestServiceApiPath}`,
-          body: JSON.stringify(manifest),
-          method: 'POST',
-        });
-        if (res.status !== 200) {
-          throw new Error(`Encountered error while exporting to Workspace: ${JSON.stringify(res)}`);
-        }
-        this.props.setExportingToWorkspace(false);
-        // redirect to Workspaces page
-        props.history.push('/workspace');
-      };
-    
+      });
+      // post selected resources to manifestservice
+      const res = await fetchWithCreds({
+        path: `${manifestServiceApiPath}`,
+        body: JSON.stringify(manifest),
+        method: 'POST',
+      });
+      if (res.status !== 200) {
+        throw new Error(`Encountered error while exporting to Workspace: ${JSON.stringify(res)}`);
+      }
+      this.props.setExportingToWorkspace(false);
+      // redirect to Workspaces page
+      props.history.push('/workspace');
+    };
+
       handleDownloadManifestClick = () => {
         const manifestFieldName = this.props.config.features.exportToWorkspaceBETA.manifestFieldName;
         if (!manifestFieldName) {
@@ -83,163 +83,163 @@ export class DiscoveryListView extends React.Component {
         FileSaver.saveAs(blob, MANIFEST_FILENAME);
       };
 
-    render() {
-      return (
-        <div className='discovery-table-container'>
-          <div className='discovery-table__header'>
-            { (
+      render() {
+        return (
+          <div className='discovery-table-container'>
+            <div className='discovery-table__header'>
+              { (
                 this.props.config.features.search && this.props.config.features.search.searchBar
                 && this.props.config.features.search.searchBar.enabled
-            ) &&
+              ) &&
                 <DiscoveryMDSSearch
                   config={this.props.config}
                   searchTerm={this.props.searchTerm}
                   handleSearchChange={this.handleSearchChange}
                   s
                 />}
-            { (
-          this.props.config.features.exportToWorkspaceBETA && this.props.config.features.exportToWorkspaceBETA.enabled
-            ) &&
+              { (
+                this.props.config.features.exportToWorkspaceBETA && this.props.config.features.exportToWorkspaceBETA.enabled
+              ) &&
             <Space>
-                <span className='discovery-export__selected-ct'>{selectedResources.length} selected</span>
-                { this.props.config.features.exportToWorkspaceBETA.enableDownloadManifest &&
+              <span className='discovery-export__selected-ct'>{selectedResources.length} selected</span>
+              { this.props.config.features.exportToWorkspaceBETA.enableDownloadManifest &&
                 <Popover
-                    className='discovery-popover'
-                    arrowPointAtCenter
-                    title={<>
+                  className='discovery-popover'
+                  arrowPointAtCenter
+                  title={<>
                     Download a Manifest File for use with the&nbsp;
                     <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/' >
-                        {'Gen3 Client'}
+                      {'Gen3 Client'}
                     </a>.
-                    </>}
-                    content={(<span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
+                  </>}
+                  content={(<span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
                     to download the data from the selected studies to your local computer.</span>)}
                 >
-                    <Button
+                  <Button
                     onClick={handleDownloadManifestClick}
                     type='text'
                     disabled={selectedResources.length === 0}
                     icon={<DownloadOutlined />}
-                    >
+                  >
                     Download Manifest
-                    </Button>
+                  </Button>
                 </Popover>
-                }
-                <Popover
+              }
+              <Popover
                 className='discovery-popover'
                 arrowPointAtCenter
                 content={<>
                     Open selected studies in the&nbsp;
-                    <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
+                  <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
                     {'Gen3 Workspace'}
-                    </a>.
+                  </a>.
                 </>}
-                >
+              >
                 <Button
-                    type='primary'
-                    disabled={selectedResources.length === 0}
-                    loading={exportingToWorkspace}
-                    icon={<ExportOutlined />}
-                    onClick={handleExportToWorkspaceClick}
+                  type='primary'
+                  disabled={selectedResources.length === 0}
+                  loading={exportingToWorkspace}
+                  icon={<ExportOutlined />}
+                  onClick={handleExportToWorkspaceClick}
                 >
                     Open in Workspace
                 </Button>
-                </Popover>
+              </Popover>
             </Space>
-            }
-          </div>
-          <Table
-            columns={this.props.columns}
-            rowKey={this.props.config.minimalFieldMapping.uid}
-            rowSelection={(
+              }
+            </div>
+            <Table
+              columns={this.props.columns}
+              rowKey={this.props.config.minimalFieldMapping.uid}
+              rowSelection={(
                 this.props.config.features.exportToWorkspaceBETA && this.props.config.features.exportToWorkspaceBETA.enabled
               ) && {
                 selectedRowKeys: selectedResources.map(r => r[this.props.config.minimalFieldMapping.uid]),
                 preserveSelectedRowKeys: true,
                 onChange: (_, selectedRows) => setSelectedResources(selectedRows),
                 getCheckboxProps: (record) => {
-                let disabled;
-                // if auth is enabled, disable checkbox if user doesn't have access
-                if (this.props.config.features.authorization.enabled) {
+                  let disabled;
+                  // if auth is enabled, disable checkbox if user doesn't have access
+                  if (this.props.config.features.authorization.enabled) {
                     disabled = record[accessibleFieldName] === false;
-                }
-                // disable checkbox if there's no manifest found for this study
-                const manifestFieldName = this.props.config.features.exportToWorkspaceBETA.manifestFieldName;
-                if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
+                  }
+                  // disable checkbox if there's no manifest found for this study
+                  const manifestFieldName = this.props.config.features.exportToWorkspaceBETA.manifestFieldName;
+                  if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
                     disabled = true;
-                }
-                return { disabled };
+                  }
+                  return { disabled };
                 },
-            }}
-            rowClassName='discovery-table__row'
-            onRow={record => ({
-              onClick: () => {
-                this.props.setModalVisible(true);
-                this.props.setModalData(record);
-              },
-              onKeyPress: () => {
-                this.props.setModalVisible(true);
-                this.props.setModalData(record);
-              },
-            })}
-            dataSource={this.props.visibleResources}
-            expandable={this.props.config.studyPreviewField && ({
+              }}
+              rowClassName='discovery-table__row'
+              onRow={record => ({
+                onClick: () => {
+                  this.props.setModalVisible(true);
+                  this.props.setModalData(record);
+                },
+                onKeyPress: () => {
+                  this.props.setModalVisible(true);
+                  this.props.setModalData(record);
+                },
+              })}
+              dataSource={this.props.visibleResources}
+              expandable={this.props.config.studyPreviewField && ({
               // expand all rows
-              expandedRowKeys: this.props.visibleResources.map(
-                r => r[this.props.config.minimalFieldMapping.uid]),
-              expandedRowRender: (record) => {
-                const studyPreviewText = record[this.props.config.studyPreviewField.field];
-                const renderValue = (value: string | undefined): React.ReactNode => {
-                  if (!value) {
-                    if (this.props.config.studyPreviewField.includeIfNotAvailable) {
-                      return this.props.config.studyPreviewField.valueIfNotAvailable;
+                expandedRowKeys: this.props.visibleResources.map(
+                  r => r[this.props.config.minimalFieldMapping.uid]),
+                expandedRowRender: (record) => {
+                  const studyPreviewText = record[this.props.config.studyPreviewField.field];
+                  const renderValue = (value: string | undefined): React.ReactNode => {
+                    if (!value) {
+                      if (this.props.config.studyPreviewField.includeIfNotAvailable) {
+                        return this.props.config.studyPreviewField.valueIfNotAvailable;
+                      }
                     }
-                  }
-                  if (this.props.searchTerm) {
+                    if (this.props.searchTerm) {
                     // get index of this.props.searchTerm match
-                    const matchIndex = value.toLowerCase().indexOf(
-                      this.props.searchTerm.toLowerCase());
-                    if (matchIndex === -1) {
+                      const matchIndex = value.toLowerCase().indexOf(
+                        this.props.searchTerm.toLowerCase());
+                      if (matchIndex === -1) {
                       // if searchterm doesn't match this record, don't highlight anything
-                      return value;
+                        return value;
+                      }
+                      // Scroll the text to the search term and highlight the search term.
+                      let start = matchIndex - 100;
+                      if (start < 0) {
+                        start = 0;
+                      }
+                      return (<React.Fragment>
+                        { start > 0 && '...' }
+                        {value.slice(start, matchIndex)}
+                        <span className='matched'>{value.slice(matchIndex,
+                          matchIndex + this.props.searchTerm.length)}</span>
+                        {value.slice(matchIndex + this.props.searchTerm.length)}
+                      </React.Fragment>
+                      );
                     }
-                    // Scroll the text to the search term and highlight the search term.
-                    let start = matchIndex - 100;
-                    if (start < 0) {
-                      start = 0;
-                    }
-                    return (<React.Fragment>
-                      { start > 0 && '...' }
-                      {value.slice(start, matchIndex)}
-                      <span className='matched'>{value.slice(matchIndex,
-                        matchIndex + this.props.searchTerm.length)}</span>
-                      {value.slice(matchIndex + this.props.searchTerm.length)}
-                    </React.Fragment>
-                    );
-                  }
-                  return value;
-                };
-                return (
-                  <div
-                    className='discovery-table__expanded-row-content'
-                    role='button'
-                    tabIndex={0}
-                    onClick={() => {
-                      this.props.setModalData(record);
-                      this.props.setModalVisible(true);
-                    }}
-                  >
-                    {renderValue(studyPreviewText)}
-                  </div>
-                );
-              },
-              expandedRowClassName: () => 'discovery-table__expanded-row',
-              expandIconColumnIndex: -1, // don't render expand icon
-            })}
-          />
-        </div>
-      );
-    }
+                    return value;
+                  };
+                  return (
+                    <div
+                      className='discovery-table__expanded-row-content'
+                      role='button'
+                      tabIndex={0}
+                      onClick={() => {
+                        this.props.setModalData(record);
+                        this.props.setModalVisible(true);
+                      }}
+                    >
+                      {renderValue(studyPreviewText)}
+                    </div>
+                  );
+                },
+                expandedRowClassName: () => 'discovery-table__expanded-row',
+                expandIconColumnIndex: -1, // don't render expand icon
+              })}
+            />
+          </div>
+        );
+      }
 }
 
 DiscoveryListView.propTypes = {
@@ -255,7 +255,7 @@ DiscoveryListView.propTypes = {
   studies: PropTypes.array,
   columns: PropTypes.array,
   setExportingToWorkspace: PropTypes.func,
-  selectedResources: PropTypes.any
+  selectedResources: PropTypes.any,
 };
 
 DiscoveryListView.defaultProps = {
@@ -271,5 +271,5 @@ DiscoveryListView.defaultProps = {
   studies: [],
   columns: [],
   setExportingToWorkspace: () => {},
-  selectedResources: {}
+  selectedResources: {},
 };

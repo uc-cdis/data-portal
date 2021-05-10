@@ -6,7 +6,7 @@ import {
   Space,
   Modal,
   Alert,
-  Popover
+  Popover,
 } from 'antd';
 
 import { DiscoveryConfig } from './DiscoveryConfig';
@@ -159,12 +159,11 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           return highlightSearchTerm(value, searchTerm).highlighted;
         }
       }
-      if(column.hrefValueFromField) {
-        return <a href={'//' + record[column.hrefValueFromField]} target='_blank'>{ renderFieldContent(value, column.contentType) }</a>;
+      if (column.hrefValueFromField) {
+        return <a href={`//${record[column.hrefValueFromField]}`} target='_blank' rel='noreferrer'>{ renderFieldContent(value, column.contentType) }</a>;
       }
-      else {
-        return renderFieldContent(value, column.contentType);
-      }
+
+      return renderFieldContent(value, column.contentType);
     },
   }),
   );
@@ -179,7 +178,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           {record.tags.map(({ name, category }) => {
             const isSelected = !!selectedTags[name];
             const color = getTagColor(category, config);
-            if (typeof name !== "string") {
+            if (typeof name !== 'string') {
               return;
             }
             return (
