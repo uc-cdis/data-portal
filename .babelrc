@@ -5,8 +5,7 @@
       {
         "targets": "> 2%, not dead",
         "useBuiltIns": "usage",
-        "corejs": 3,
-        "debug":true
+        "corejs": 3
       }
     ],
     "@babel/preset-react",
