@@ -48,7 +48,13 @@ function histogramQueryStrForEachField(field) {
  * @param {object} [opt.gqlFilter]
  * @param {AbortSignal} [opt.signal]
  */
-function queryGuppyForAggs({ path, type, fields, gqlFilter, signal }) {
+export function queryGuppyForAggregationData({
+  path,
+  type,
+  fields,
+  gqlFilter,
+  signal,
+}) {
   const query = (gqlFilter !== undefined
     ? `query ($filter: JSON) {
         _aggregation {
@@ -89,7 +95,7 @@ function queryGuppyForAggs({ path, type, fields, gqlFilter, signal }) {
 }
 
 /** @param {string} path */
-function queryGuppyForStatus(path) {
+export function queryGuppyForStatus(path) {
   return fetch(`${path}${statusEndpoint}`, {
     method: 'GET',
     headers: {
@@ -133,7 +139,7 @@ function nestedHistogramQueryStrForEachField(mainField, numericAggAsText) {
  * @param {object} [opt.gqlFilter]
  * @param {AbortSignal} [opt.signal]
  */
-function queryGuppyForSubAgg({
+export function queryGuppyForSubAggregationData({
   path,
   type,
   mainField,
@@ -179,7 +185,7 @@ function queryGuppyForSubAgg({
   })
     .then((response) => response.json())
     .catch((err) => {
-      throw new Error(`Error during queryGuppyForSubAgg ${err}`);
+      throw new Error(`Error during queryGuppyForSubAggregationData ${err}`);
     });
 }
 
@@ -337,68 +343,6 @@ export function getGQLFilter(filter) {
   return { AND: facetsList };
 }
 
-/** @param {string} path */
-export function askGuppyAboutArrayTypes(path) {
-  return queryGuppyForStatus(path).then((res) => res.indices);
-}
-
-/**
- * @param {object} opt
- * @param {string} opt.path
- * @param {string} opt.type
- * @param {string[]} opt.fields
- * @param {object} opt.filter
- * @param {AbortSignal} [opt.signal]
- */
-export function askGuppyForAggregationData({ filter, ...opt }) {
-  return queryGuppyForAggs({ ...opt, gqlFilter: getGQLFilter(filter) });
-}
-
-/**
- * @param {object} opt
- * @param {string} opt.path
- * @param {string} opt.type
- * @param {string} opt.mainField
- * @param {boolean} [opt.numericAggAsText]
- * @param {string[]} [opt.termsNestedFields]
- * @param {string[]} [opt.missedNestedFields]
- * @param {object} [opt.filter]
- * @param {AbortSignal} [opt.signal]
- */
-export function askGuppyForSubAggregationData({
-  termsNestedFields,
-  missedNestedFields,
-  filter,
-  ...opt
-}) {
-  return queryGuppyForSubAgg({
-    ...opt,
-    termsFields: termsNestedFields,
-    missingFields: missedNestedFields,
-    gqlFilter: getGQLFilter(filter),
-  });
-}
-
-/**
- * @param {object} opt
- * @param {string} opt.path
- * @param {string} opt.type
- * @param {string[]} opt.fields
- * @param {object} [opt.filter]
- * @param {*} [opt.sort]
- * @param {number} [opt.offset]
- * @param {number} [opt.size]
- * @param {AbortSignal} [opt.signal]
- * @param {string} [opt.format]
- * @param {boolean} [opt.withTotalCount]
- */
-export function askGuppyForRawData({ filter, ...opt }) {
-  return queryGuppyForRawData({
-    ...opt,
-    gqlFilter: getGQLFilter(filter),
-  });
-}
-
 /** @param {object} filterTabConfigs */
 export function getAllFieldsFromFilterConfigs(filterTabConfigs) {
   return filterTabConfigs.flatMap(({ fields }) => fields);
@@ -444,11 +388,11 @@ export function downloadDataFromGuppy({
       }).then((res) =>
         JSON_FORMAT ? res.json() : jsonToFormat(res.json(), format)
       )
-    : askGuppyForRawData({
+    : queryGuppyForRawData({
         path,
         type,
         fields,
-        filter,
+        gqlFilter: getGQLFilter(filter),
         sort,
         size,
         format,
@@ -468,7 +412,7 @@ export function downloadDataFromGuppy({
  * @param {string} opt.type
  * @param {object} [opt.filter]
  */
-export function askGuppyForTotalCounts({ path, type, filter }) {
+export function queryGuppyForTotalCounts({ path, type, filter }) {
   const query = (filter !== undefined || Object.keys(filter).length > 0
     ? `query ($filter: JSON) {
         _aggregation {

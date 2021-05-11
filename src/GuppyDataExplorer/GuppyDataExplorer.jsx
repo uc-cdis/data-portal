@@ -22,8 +22,9 @@ class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
 
-    let initialAppliedFilters = {};
     const searchParams = new URLSearchParams(props.history.location.search);
+
+    let initialAppliedFilters = {};
     if (searchParams.has('filter')) {
       try {
         const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
@@ -36,8 +37,13 @@ class GuppyDataExplorer extends React.Component {
       }
     }
 
+    const patientIds = searchParams.has('patientIds')
+      ? searchParams.get('patientIds').split(',')
+      : [];
+
     this.state = {
       initialAppliedFilters,
+      patientIds,
     };
     this._isMounted = false;
   }
@@ -55,14 +61,18 @@ class GuppyDataExplorer extends React.Component {
   };
 
   handleFilterChange = (filter) => {
-    let search = '';
+    const searchParams = new URLSearchParams(
+      this.props.history.location.search
+    );
+    searchParams.delete('filter');
+
     if (filter && Object.keys(filter).length > 0) {
       const allSearchFields = [];
       for (const { searchFields } of this.props.filterConfig.tabs)
         if (searchFields?.length > 0) allSearchFields.push(...searchFields);
 
       if (allSearchFields.length === 0) {
-        search = `filter=${JSON.stringify(filter)}`;
+        searchParams.set('filter', JSON.stringify(filter));
       } else {
         const allSearchFieldSet = new Set(allSearchFields);
         const filterWithoutSearchFields = {};
@@ -71,11 +81,13 @@ class GuppyDataExplorer extends React.Component {
             filterWithoutSearchFields[field] = filter[field];
 
         if (Object.keys(filterWithoutSearchFields).length > 0)
-          search = `filter=${JSON.stringify(filterWithoutSearchFields)}`;
+          searchParams.set('filter', JSON.stringify(filterWithoutSearchFields));
       }
     }
 
-    this.props.history.push({ search });
+    this.props.history.push({
+      search: Array.from(searchParams.entries(), (e) => e.join('=')).join('&'),
+    });
   };
 
   render() {
@@ -95,6 +107,7 @@ class GuppyDataExplorer extends React.Component {
             accessibleFieldCheckList={
               this.props.guppyConfig.accessibleFieldCheckList
             }
+            patientIds={this.state.patientIds}
           >
             <ExplorerTopMessageBanner
               className='guppy-data-explorer__top-banner'

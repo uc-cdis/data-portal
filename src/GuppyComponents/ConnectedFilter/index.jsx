@@ -1,7 +1,7 @@
 /* eslint react/forbid-prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { askGuppyAboutArrayTypes } from '../Utils/queries';
+import { queryGuppyForStatus } from '../Utils/queries';
 import {
   getFilterSections,
   mergeFilters,
@@ -32,11 +32,11 @@ class ConnectedFilter extends React.Component {
   componentDidMount() {
     this._isMounted = true;
 
-    askGuppyAboutArrayTypes(this.props.guppyConfig.path).then((res) => {
-      const keys = Object.keys(res);
-      for (const key of keys)
-        if (res[key].arrayFields && res[key].arrayFields.length > 0)
-          this.arrayFields = this.arrayFields.concat(res[key].arrayFields);
+    // get array types info from guppy
+    queryGuppyForStatus(this.props.guppyConfig.path).then((res) => {
+      for (const { arrayFields } of Object.values(res.indices))
+        if (arrayFields?.length > 0)
+          this.arrayFields = this.arrayFields.concat(arrayFields);
     });
   }
 

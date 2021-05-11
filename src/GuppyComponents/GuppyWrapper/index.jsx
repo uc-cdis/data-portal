@@ -3,13 +3,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  askGuppyForAggregationData,
-  askGuppyForRawData,
-  askGuppyForSubAggregationData,
-  askGuppyForTotalCounts,
+  queryGuppyForAggregationData,
+  queryGuppyForRawData,
+  queryGuppyForSubAggregationData,
+  queryGuppyForTotalCounts,
   downloadDataFromGuppy,
   getAllFieldsFromFilterConfigs,
   getAllFieldsFromGuppy,
+  getGQLFilter,
 } from '../Utils/queries';
 import { FILE_FORMATS } from '../Utils/const';
 import { excludeSelfFilterFromAggsData, mergeFilters } from '../Utils/filters';
@@ -131,13 +132,19 @@ class GuppyWrapper extends React.Component {
       // eslint-disable-next-line no-console
       console.error(`Invalid value ${format} found for arg format!`);
     }
+    const filterForGuppy =
+      this.props.patientIds.length > 0
+        ? mergeFilters(this.filter, {
+            subject_submitter_id: { selectedValues: this.props.patientIds },
+          })
+        : this.state.filter;
     return downloadDataFromGuppy({
       path: this.props.guppyConfig.path,
       type: this.props.guppyConfig.type,
       size: this.state.accessibleCount,
       fields: this.state.rawDataFields,
       sort,
-      filter: this.state.filter,
+      filter: filterForGuppy,
       format,
     });
   }
@@ -163,8 +170,8 @@ class GuppyWrapper extends React.Component {
    * @param {string} type
    * @param {object} filter
    */
-  handleAskGuppyForTotalCounts(type, filter) {
-    return askGuppyForTotalCounts({
+  handleGetTotalCountsByTypeAndFilter(type, filter) {
+    return queryGuppyForTotalCounts({
       path: this.props.guppyConfig.path,
       type,
       filter,
@@ -200,11 +207,18 @@ class GuppyWrapper extends React.Component {
   fetchAggsDataFromGuppy(filter) {
     if (this._isMounted) this.setState({ isLoadingAggsData: true });
 
-    askGuppyForAggregationData({
+    const filterForGuppy =
+      this.props.patientIds.length > 0
+        ? mergeFilters(filter, {
+            subject_submitter_id: { selectedValues: this.props.patientIds },
+          })
+        : filter;
+
+    queryGuppyForAggregationData({
       path: this.props.guppyConfig.path,
       type: this.props.guppyConfig.type,
       fields: this.state.aggsDataFields,
-      filter,
+      gqlFilter: getGQLFilter(filterForGuppy),
       signal: this.controller.signal,
     }).then((res) => {
       if (!res.data)
@@ -249,17 +263,23 @@ class GuppyWrapper extends React.Component {
       return Promise.resolve({ data: [], totalCount: 0 });
     }
 
+    const filterForGuppy =
+      this.props.patientIds.length > 0
+        ? mergeFilters(this.filter, {
+            subject_submitter_id: { selectedValues: this.props.patientIds },
+          })
+        : this.filter;
     // sub aggregations -- for DAT
     if (this.props.guppyConfig.mainField) {
       const numericAggAsText = this.props.guppyConfig.mainFieldIsNumeric;
-      return askGuppyForSubAggregationData({
+      return queryGuppyForSubAggregationData({
         path: this.props.guppyConfig.path,
         type: this.props.guppyConfig.type,
         mainField: this.props.guppyConfig.mainField,
         numericAggAsText,
-        termsNestedFields: this.props.guppyConfig.aggFields,
-        missedNestedFields: [],
-        filter: this.filter,
+        termsFields: this.props.guppyConfig.aggFields,
+        missingFields: [],
+        gqlFilter: getGQLFilter(filterForGuppy),
         signal: this.controller.signal,
       }).then((res) => {
         if (!res || !res.data) {
@@ -281,11 +301,11 @@ class GuppyWrapper extends React.Component {
     }
 
     // non-nested aggregation
-    return askGuppyForRawData({
+    return queryGuppyForRawData({
       path: this.props.guppyConfig.path,
       type: this.props.guppyConfig.type,
       fields,
-      filter: this.filter,
+      gqlFilter: getGQLFilter(filterForGuppy),
       sort,
       offset,
       size,
@@ -326,7 +346,7 @@ class GuppyWrapper extends React.Component {
         allFields: this.state.allFields,
 
         // a callback function which return total counts for any type, with any filter
-        getTotalCountsByTypeAndFilter: this.handleAskGuppyForTotalCounts.bind(
+        getTotalCountsByTypeAndFilter: this.handleGetTotalCountsByTypeAndFilter.bind(
           this
         ),
         downloadRawDataByTypeAndFilter: this.handleDownloadRawDataByTypeAndFilter.bind(
@@ -369,6 +389,7 @@ GuppyWrapper.propTypes = {
   onFilterChange: PropTypes.func,
   adminAppliedPreFilters: PropTypes.object,
   initialAppliedFilters: PropTypes.object,
+  patientIds: PropTypes.arrayOf(PropTypes.string),
 };
 
 GuppyWrapper.defaultProps = {
@@ -376,6 +397,7 @@ GuppyWrapper.defaultProps = {
   rawDataFields: [],
   adminAppliedPreFilters: {},
   initialAppliedFilters: {},
+  patientIds: [],
 };
 
 export default GuppyWrapper;
