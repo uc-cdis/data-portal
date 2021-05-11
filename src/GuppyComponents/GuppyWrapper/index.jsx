@@ -131,13 +131,19 @@ class GuppyWrapper extends React.Component {
       // eslint-disable-next-line no-console
       console.error(`Invalid value ${format} found for arg format!`);
     }
+    const filterForGuppy =
+      this.props.patientIds.length > 0
+        ? mergeFilters(this.filter, {
+            subject_submitter_id: { selectedValues: this.props.patientIds },
+          })
+        : this.state.filter;
     return downloadDataFromGuppy({
       path: this.props.guppyConfig.path,
       type: this.props.guppyConfig.type,
       size: this.state.accessibleCount,
       fields: this.state.rawDataFields,
       sort,
-      filter: this.state.filter,
+      filter: filterForGuppy,
       format,
     });
   }
@@ -200,11 +206,18 @@ class GuppyWrapper extends React.Component {
   fetchAggsDataFromGuppy(filter) {
     if (this._isMounted) this.setState({ isLoadingAggsData: true });
 
+    const filterForGuppy =
+      this.props.patientIds.length > 0
+        ? mergeFilters(filter, {
+            subject_submitter_id: { selectedValues: this.props.patientIds },
+          })
+        : filter;
+
     askGuppyForAggregationData({
       path: this.props.guppyConfig.path,
       type: this.props.guppyConfig.type,
       fields: this.state.aggsDataFields,
-      filter,
+      filter: filterForGuppy,
       signal: this.controller.signal,
     }).then((res) => {
       if (!res.data)
@@ -249,6 +262,12 @@ class GuppyWrapper extends React.Component {
       return Promise.resolve({ data: [], totalCount: 0 });
     }
 
+    const filterForGuppy =
+      this.props.patientIds.length > 0
+        ? mergeFilters(this.filter, {
+            subject_submitter_id: { selectedValues: this.props.patientIds },
+          })
+        : this.filter;
     // sub aggregations -- for DAT
     if (this.props.guppyConfig.mainField) {
       const numericAggAsText = this.props.guppyConfig.mainFieldIsNumeric;
@@ -259,7 +278,7 @@ class GuppyWrapper extends React.Component {
         numericAggAsText,
         termsNestedFields: this.props.guppyConfig.aggFields,
         missedNestedFields: [],
-        filter: this.filter,
+        filter: filterForGuppy,
         signal: this.controller.signal,
       }).then((res) => {
         if (!res || !res.data) {
@@ -285,7 +304,7 @@ class GuppyWrapper extends React.Component {
       path: this.props.guppyConfig.path,
       type: this.props.guppyConfig.type,
       fields,
-      filter: this.filter,
+      filter: filterForGuppy,
       sort,
       offset,
       size,
