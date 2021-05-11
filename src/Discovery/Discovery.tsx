@@ -23,6 +23,11 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
 
 const accessibleFieldName = '__accessible';
+export enum AccessLevel {
+  ACCESSIBLE,
+  UNACCESSIBLE,
+  NOTAVAILABLE
+}
 
 const ARBORIST_READ_PRIV = 'read';
 
@@ -323,19 +328,40 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   if (config.features.authorization.enabled) {
     columns.push({
       title: 'Access',
-      filters: [{
-        text: <><UnlockOutlined />Accessible</>,
-        value: true,
-      }, {
-        text: <><LockFilled />Unaccessible</>,
-        value: false,
-      }],
+      filters: [
+        {
+          text: <><UnlockOutlined />Accessible</>,
+          value: AccessLevel.ACCESSIBLE,
+        },
+        {
+          text: <><LockFilled />Unaccessible</>,
+          value: AccessLevel.UNACCESSIBLE,
+        },
+        {
+          text: <><span style={{ color: 'gray' }}>n/a</span>&nbsp;No Data</>,
+          value: AccessLevel.NOTAVAILABLE,
+        },
+      ],
       onFilter: (value, record) => record[accessibleFieldName] === value,
       ellipsis: false,
       width: undefined,
-      render: (_, record) => (
-        record[accessibleFieldName]
-          ? (
+      render: (_, record) => {
+        if (record[accessibleFieldName] === AccessLevel.NOTAVAILABLE) {
+          return (
+            <Popover
+              overlayClassName='discovery-popover'
+              placement='topRight'
+              arrowPointAtCenter
+              content={<div className='discovery-popover__text'>
+                This study does not have any data yet.
+              </div>}
+            >
+              <span style={{ color: 'gray' }}>n/a</span>
+            </Popover>
+          );
+        }
+        if (record[accessibleFieldName] === AccessLevel.ACCESSIBLE) {
+          return (
             <Popover
               overlayClassName='discovery-popover'
               placement='topRight'
@@ -348,24 +374,25 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
             >
               <UnlockOutlined className='discovery-table__access-icon' />
             </Popover>
-          )
-          : (
-            <Popover
-              overlayClassName='discovery-popover'
-              placement='topRight'
-              arrowPointAtCenter
-              title={'You do not have access to this study.'}
-              content={
-                <div className='discovery-popover__text'>
-                  <>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</>
-                  <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
-                </div>
-              }
-            >
-              <LockFilled className='discovery-table__access-icon' />
-            </Popover>
-          )
-      ),
+          );
+        }
+        return (
+          <Popover
+            overlayClassName='discovery-popover'
+            placement='topRight'
+            arrowPointAtCenter
+            title={'You do not have access to this study.'}
+            content={
+              <div className='discovery-popover__text'>
+                <>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</>
+                <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
+              </div>
+            }
+          >
+            <LockFilled className='discovery-table__access-icon' />
+          </Popover>
+        );
+      },
     });
   }
   // -----
@@ -642,7 +669,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 let disabled;
                 // if auth is enabled, disable checkbox if user doesn't have access
                 if (config.features.authorization.enabled) {
-                  disabled = record[accessibleFieldName] === false;
+                  disabled = record[accessibleFieldName] !== AccessLevel.ACCESSIBLE;
                 }
                 // disable checkbox if there's no manifest found for this study
                 const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
@@ -732,8 +759,11 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
             <a href={`/discovery/${modalData[config.minimalFieldMapping.uid]}/`}><LinkOutlined /> Permalink</a>
           </Space>
         }
-        { config.features.authorization.enabled &&
-          (modalData[accessibleFieldName]
+        { (
+          config.features.authorization.enabled
+            && modalData[accessibleFieldName] !== AccessLevel.NOTAVAILABLE
+        ) &&
+          (modalData[accessibleFieldName] === AccessLevel.ACCESSIBLE
             ? (
               <Alert
                 className='discovery-modal__access-alert'
