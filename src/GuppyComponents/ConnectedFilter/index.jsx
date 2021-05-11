@@ -34,7 +34,7 @@ class ConnectedFilter extends React.Component {
 
     // get array types info from guppy
     queryGuppyForStatus(this.props.guppyConfig.path).then((res) => {
-      const keys = Object.keys(res.indicies);
+      const keys = Object.keys(res.indices);
       for (const key of keys)
         if (res[key].arrayFields && res[key].arrayFields.length > 0)
           this.arrayFields = this.arrayFields.concat(res[key].arrayFields);
