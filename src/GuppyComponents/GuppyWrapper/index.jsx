@@ -369,6 +369,7 @@ GuppyWrapper.propTypes = {
   onFilterChange: PropTypes.func,
   adminAppliedPreFilters: PropTypes.object,
   initialAppliedFilters: PropTypes.object,
+  patientIds: PropTypes.arrayOf(PropTypes.string),
 };
 
 GuppyWrapper.defaultProps = {
@@ -376,6 +377,7 @@ GuppyWrapper.defaultProps = {
   rawDataFields: [],
   adminAppliedPreFilters: {},
   initialAppliedFilters: {},
+  patientIds: [],
 };
 
 export default GuppyWrapper;

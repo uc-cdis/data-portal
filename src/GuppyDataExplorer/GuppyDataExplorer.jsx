@@ -107,6 +107,7 @@ class GuppyDataExplorer extends React.Component {
             accessibleFieldCheckList={
               this.props.guppyConfig.accessibleFieldCheckList
             }
+            patientIds={this.state.patientIds}
           >
             <ExplorerTopMessageBanner
               className='guppy-data-explorer__top-banner'
