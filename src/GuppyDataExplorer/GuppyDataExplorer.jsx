@@ -22,8 +22,9 @@ class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
 
-    let initialAppliedFilters = {};
     const searchParams = new URLSearchParams(props.history.location.search);
+
+    let initialAppliedFilters = {};
     if (searchParams.has('filter')) {
       try {
         const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
@@ -36,8 +37,13 @@ class GuppyDataExplorer extends React.Component {
       }
     }
 
+    const patientIds = searchParams.has('patientIds')
+      ? searchParams.get('patientIds').split(',')
+      : [];
+
     this.state = {
       initialAppliedFilters,
+      patientIds,
     };
     this._isMounted = false;
   }
