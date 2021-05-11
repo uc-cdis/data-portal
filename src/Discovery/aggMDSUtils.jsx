@@ -1,7 +1,7 @@
 import { discoveryConfig } from '../localconf';
 
-// TODO: Replace this variable value with the correct agg MDS url.
-// const aggMDSURL = '/agg-mds';
+// TODO: Uncomment this.
+// const aggMDSURL = 'mds/aggregate';
 const aggMDSURL = 'http://localhost:8000';
 const aggMDSDataURL = `${aggMDSURL}/metadata`;
 
@@ -14,7 +14,6 @@ const retrieveFieldMapping = async (commonsName) => {
   }
 
   const jsonResponse = await res.json();
-  console.log('29 response: ', jsonResponse);
 
   return jsonResponse;
 };
@@ -31,7 +30,7 @@ const retrieveCommonsInfo = async (commonsName) => {
   return jsonResponse;
 };
 
-const loadStudiesFromAggMDS = async (offset, limit) => {
+const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
 
   const res = await fetch(url);
@@ -40,8 +39,6 @@ const loadStudiesFromAggMDS = async (offset, limit) => {
   }
 
   const metadataResponse = await res.json();
-  console.log('46 response: ', metadataResponse);
-
 
   // According to the API: https://petstore.swagger.io/?url=https://gist.githubusercontent.com/craigrbarnes/3ac95d4d6b5dd08d280a28ec0ae2a12d/raw/58a562c9b3a343e535849ad4085a3b27942b2b57/openapi.yaml#/Query/metadata_metadata_get
   const commons = Object.keys(metadataResponse);
@@ -52,27 +49,27 @@ const loadStudiesFromAggMDS = async (offset, limit) => {
     // Now retrieve field mappings for each commons
     // eslint-disable-next-line no-await-in-loop
     const fieldMapping = await retrieveFieldMapping(commonsName);
+    // eslint-disable-next-line no-await-in-loop
     const commonsInfo = await retrieveCommonsInfo(commonsName);
-    console.log('The fieldMapping for ', commonsName, ' is ', fieldMapping);
 
     const studies = metadataResponse[commonsName];
 
     const editedStudies = studies.map((entry, index) => {
       const keys = Object.keys(entry);
-      const study_id = keys[0];
+      const studyId = keys[0];
 
-      const entryUnpacked = entry[study_id].gen3_discovery;
+      const entryUnpacked = entry[studyId].gen3_discovery;
       const x = { ...entryUnpacked };
-      x.study_id = study_id;
+      x.study_id = studyId;
       x.commons = commonsName;
       x.frontend_uid = `${commonsName}_${index}`;
 
       // let shortNameKey = fieldMapping.short_name || 'short_name';
       x.name = x[fieldMapping.short_name];
-      if (fieldMapping.short_name == 'authz' && Array.isArray(x.name)) {
+      if (fieldMapping.short_name === 'authz' && Array.isArray(x.name)) {
         x.name = x.name[0].split('/').slice(-1)[0];
       }
-      if (fieldMapping.short_name == 'auth_resource_path') {
+      if (fieldMapping.short_name === 'auth_resource_path') {
         x.name = x.name.split('/').slice(-1)[0];
       }
       x.short_name = x.name;
@@ -90,7 +87,8 @@ const loadStudiesFromAggMDS = async (offset, limit) => {
         if (Object.prototype.hasOwnProperty.call(x, tag.name) && typeof x[tag.name] === 'string') {
           const tagValue = x[tag.name];
           x.tags.push(Object({ category: tag.name, name: tagValue }));
-        } else if (Object.prototype.hasOwnProperty.call(x, tag.name) && Array.isArray(x[tag.name])) {
+        } else if (Object.prototype.hasOwnProperty.call(x, tag.name)
+            && Array.isArray(x[tag.name])) {
           for (let z = 0; z < x[tag.name].length; z += 1) {
             x.tags.push({ category: tag.name, name: x[tag.name][z] });
           }
@@ -114,17 +112,16 @@ const loadStudiesFromAggMDS = async (offset, limit) => {
   return allStudies;
 };
 
-const loadStudiesFromAggMDSWrapper = async () => {
+const loadStudiesFromAggMDS = async () => {
   // Retrieve from aggregate MDS
 
   // TODO: connect the UI to these variables
   const offset = 0; // For pagination
   const limit = 1000; // Total number of rows requested
 
-  const studies = await loadStudiesFromAggMDS(offset, limit);
+  const studies = await loadStudiesFromAggMDSRequests(offset, limit);
 
-  console.log('studies retrieved: ', studies);
   return studies;
 };
 
-export default loadStudiesFromAggMDSWrapper;
+export default loadStudiesFromAggMDS;

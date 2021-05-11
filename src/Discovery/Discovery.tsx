@@ -22,6 +22,8 @@ const ARBORIST_READ_PRIV = 'read';
 const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   const categoryConfig = config.tagCategories.find(category => category.name === tagCategory);
   if (categoryConfig === undefined) {
+    // eslint-disable-next-line no-console
+    console.error(`Misconfiguration error: tag category ${tagCategory} not found in config. Check the 'tag_categories' section of the Discovery page config.`);
     return 'gray';
   }
   return categoryConfig.color;
@@ -172,14 +174,14 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       title: 'Tags',
       textWrap: 'word-break',
       ellipsis: false,
-      width: '362px',
+      width: '200px',
       render: (_, record) => (
         <React.Fragment>
           {record.tags.map(({ name, category }) => {
             const isSelected = !!selectedTags[name];
             const color = getTagColor(category, config);
             if (typeof name !== 'string') {
-              return;
+              return null;
             }
             return (
               <Tag
@@ -294,6 +296,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       studies={props.studies}
       visibleResources={visibleResources}
       selectedResources={selectedResources}
+      setSelectedResources={setSelectedResources}
       searchTerm={searchTerm}
       setSearchTerm={setSearchTerm}
       setSearchFilteredResources={setSearchFilteredResources}
@@ -302,6 +305,9 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       setModalVisible={setModalVisible}
       columns={columns}
       setExportingToWorkspace={setExportingToWorkspace}
+      accessibleFieldName={accessibleFieldName}
+      exportingToWorkspace={exportingToWorkspace}
+      history={props.history}
     />
     <Modal
       className='discovery-modal'

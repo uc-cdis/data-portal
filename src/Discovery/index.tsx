@@ -6,7 +6,7 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { hostname, discoveryConfig, useArboristUI } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
-import loadStudiesFromAggMDSWrapper from './utils';
+import loadStudiesFromAggMDS from './aggMDSUtils';
 
 const loadStudiesFromMDS = async (): Promise<any[]> => {
   // Why `_guid_type='discovery_metadata'? We need to distinguish the discovery page studies in MDS
@@ -62,7 +62,7 @@ const DiscoveryWithMDSBackend: React.FC<{
   useEffect(() => {
     let loadStudiesFunction;
     if (isEnabled('discoveryUseAggMDS')) {
-      loadStudiesFunction = loadStudiesFromAggMDSWrapper;
+      loadStudiesFunction = loadStudiesFromAggMDS;
     } else {
       loadStudiesFunction = loadStudiesFromMDS;
     }

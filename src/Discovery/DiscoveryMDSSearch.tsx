@@ -11,7 +11,7 @@ class DiscoveryMDSSearch extends React.Component {
       <Input
         className='discovery-search'
         prefix={<SearchOutlined />}
-        placeholder={this.props.config.features.search.searchBar.placeholder}
+        placeholder='Search studies by attribute...'
         value={this.props.searchTerm}
         onChange={this.props.handleSearchChange}
         size='large'
@@ -22,13 +22,11 @@ class DiscoveryMDSSearch extends React.Component {
 }
 
 DiscoveryMDSSearch.propTypes = {
-  config: PropTypes.object,
   searchTerm: PropTypes.string,
   handleSearchChange: PropTypes.func,
 };
 
 DiscoveryMDSSearch.defaultProps = {
-  config: {},
   searchTerm: '',
   handleSearchChange: () => {},
 };
