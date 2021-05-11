@@ -3,13 +3,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  askGuppyForAggregationData,
-  askGuppyForRawData,
-  askGuppyForSubAggregationData,
+  queryGuppyForAggs,
+  queryGuppyForRawData,
+  queryGuppyForSubAgg,
   queryGuppyForTotalCounts,
   downloadDataFromGuppy,
   getAllFieldsFromFilterConfigs,
   getAllFieldsFromGuppy,
+  getGQLFilter,
 } from '../Utils/queries';
 import { FILE_FORMATS } from '../Utils/const';
 import { excludeSelfFilterFromAggsData, mergeFilters } from '../Utils/filters';
@@ -213,11 +214,11 @@ class GuppyWrapper extends React.Component {
           })
         : filter;
 
-    askGuppyForAggregationData({
+    queryGuppyForAggs({
       path: this.props.guppyConfig.path,
       type: this.props.guppyConfig.type,
       fields: this.state.aggsDataFields,
-      filter: filterForGuppy,
+      gqlFilter: getGQLFilter(filterForGuppy),
       signal: this.controller.signal,
     }).then((res) => {
       if (!res.data)
@@ -271,14 +272,14 @@ class GuppyWrapper extends React.Component {
     // sub aggregations -- for DAT
     if (this.props.guppyConfig.mainField) {
       const numericAggAsText = this.props.guppyConfig.mainFieldIsNumeric;
-      return askGuppyForSubAggregationData({
+      return queryGuppyForSubAgg({
         path: this.props.guppyConfig.path,
         type: this.props.guppyConfig.type,
         mainField: this.props.guppyConfig.mainField,
         numericAggAsText,
-        termsNestedFields: this.props.guppyConfig.aggFields,
-        missedNestedFields: [],
-        filter: filterForGuppy,
+        termsFields: this.props.guppyConfig.aggFields,
+        missingFields: [],
+        gqlFilter: getGQLFilter(filterForGuppy),
         signal: this.controller.signal,
       }).then((res) => {
         if (!res || !res.data) {
@@ -300,11 +301,11 @@ class GuppyWrapper extends React.Component {
     }
 
     // non-nested aggregation
-    return askGuppyForRawData({
+    return queryGuppyForRawData({
       path: this.props.guppyConfig.path,
       type: this.props.guppyConfig.type,
       fields,
-      filter: filterForGuppy,
+      gqlFilter: getGQLFilter(filterForGuppy),
       sort,
       offset,
       size,
