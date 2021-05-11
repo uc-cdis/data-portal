@@ -48,7 +48,13 @@ function histogramQueryStrForEachField(field) {
  * @param {object} [opt.gqlFilter]
  * @param {AbortSignal} [opt.signal]
  */
-export function queryGuppyForAggs({ path, type, fields, gqlFilter, signal }) {
+export function queryGuppyForAggregationData({
+  path,
+  type,
+  fields,
+  gqlFilter,
+  signal,
+}) {
   const query = (gqlFilter !== undefined
     ? `query ($filter: JSON) {
         _aggregation {
@@ -133,7 +139,7 @@ function nestedHistogramQueryStrForEachField(mainField, numericAggAsText) {
  * @param {object} [opt.gqlFilter]
  * @param {AbortSignal} [opt.signal]
  */
-export function queryGuppyForSubAgg({
+export function queryGuppyForSubAggregationData({
   path,
   type,
   mainField,
@@ -179,7 +185,7 @@ export function queryGuppyForSubAgg({
   })
     .then((response) => response.json())
     .catch((err) => {
-      throw new Error(`Error during queryGuppyForSubAgg ${err}`);
+      throw new Error(`Error during queryGuppyForSubAggregationData ${err}`);
     });
 }
 

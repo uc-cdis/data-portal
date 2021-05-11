@@ -3,9 +3,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  queryGuppyForAggs,
+  queryGuppyForAggregationData,
   queryGuppyForRawData,
-  queryGuppyForSubAgg,
+  queryGuppyForSubAggregationData,
   queryGuppyForTotalCounts,
   downloadDataFromGuppy,
   getAllFieldsFromFilterConfigs,
@@ -214,7 +214,7 @@ class GuppyWrapper extends React.Component {
           })
         : filter;
 
-    queryGuppyForAggs({
+    queryGuppyForAggregationData({
       path: this.props.guppyConfig.path,
       type: this.props.guppyConfig.type,
       fields: this.state.aggsDataFields,
@@ -272,7 +272,7 @@ class GuppyWrapper extends React.Component {
     // sub aggregations -- for DAT
     if (this.props.guppyConfig.mainField) {
       const numericAggAsText = this.props.guppyConfig.mainFieldIsNumeric;
-      return queryGuppyForSubAgg({
+      return queryGuppyForSubAggregationData({
         path: this.props.guppyConfig.path,
         type: this.props.guppyConfig.type,
         mainField: this.props.guppyConfig.mainField,
