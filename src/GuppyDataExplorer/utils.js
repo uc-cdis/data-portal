@@ -98,12 +98,12 @@ export function validateFilter(value, filterConfig) {
 
   const allFields = filterConfig.tabs.flatMap(({ fields }) => fields);
   const testFieldSet = new Set(allFields);
-  for (const filterContent of Object.values(value))
+  for (const [field, filterContent] of Object.entries(value))
     if (
       isPlainObject(filterContent) &&
       (isTextFilter(filterContent) || isRangeFilter(filterContent))
     )
-      testFieldSet.add(key);
+      testFieldSet.add(field);
     else return false;
 
   return allFields.length === testFieldSet.size;
