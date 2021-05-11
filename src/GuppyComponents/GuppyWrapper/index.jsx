@@ -6,7 +6,7 @@ import {
   askGuppyForAggregationData,
   askGuppyForRawData,
   askGuppyForSubAggregationData,
-  askGuppyForTotalCounts,
+  queryGuppyForTotalCounts,
   downloadDataFromGuppy,
   getAllFieldsFromFilterConfigs,
   getAllFieldsFromGuppy,
@@ -169,8 +169,8 @@ class GuppyWrapper extends React.Component {
    * @param {string} type
    * @param {object} filter
    */
-  handleAskGuppyForTotalCounts(type, filter) {
-    return askGuppyForTotalCounts({
+  handleGetTotalCountsByTypeAndFilter(type, filter) {
+    return queryGuppyForTotalCounts({
       path: this.props.guppyConfig.path,
       type,
       filter,
@@ -345,7 +345,7 @@ class GuppyWrapper extends React.Component {
         allFields: this.state.allFields,
 
         // a callback function which return total counts for any type, with any filter
-        getTotalCountsByTypeAndFilter: this.handleAskGuppyForTotalCounts.bind(
+        getTotalCountsByTypeAndFilter: this.handleGetTotalCountsByTypeAndFilter.bind(
           this
         ),
         downloadRawDataByTypeAndFilter: this.handleDownloadRawDataByTypeAndFilter.bind(

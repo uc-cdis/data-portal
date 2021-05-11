@@ -468,7 +468,7 @@ export function downloadDataFromGuppy({
  * @param {string} opt.type
  * @param {object} [opt.filter]
  */
-export function askGuppyForTotalCounts({ path, type, filter }) {
+export function queryGuppyForTotalCounts({ path, type, filter }) {
   const query = (filter !== undefined || Object.keys(filter).length > 0
     ? `query ($filter: JSON) {
         _aggregation {
