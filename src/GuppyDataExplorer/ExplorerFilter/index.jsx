@@ -14,6 +14,7 @@ function ExplorerFilter({
   tierAccessLimit,
   adminAppliedPreFilters = {},
   initialAppliedFilters = {},
+  patientIds = [],
   receivedAggsData = {},
 }) {
   const filterProps = {
@@ -27,6 +28,7 @@ function ExplorerFilter({
     onPatientIdsChange,
     tierAccessLimit,
     adminAppliedPreFilters,
+    patientIds,
     initialAppliedFilters,
     receivedAggsData,
     lockedTooltipMessage: `You may only view summary information for this project. You do not have ${guppyConfig.dataType}-level access.`,
@@ -54,6 +56,7 @@ ExplorerFilter.propTypes = {
   onReceiveNewAggsData: PropTypes.func, // inherit from GuppyWrapper
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
+  patientIds: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
   initialAppliedFilters: PropTypes.object,
   onPatientIdsChange: PropTypes.func,
 };

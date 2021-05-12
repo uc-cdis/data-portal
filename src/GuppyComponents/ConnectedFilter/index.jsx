@@ -147,6 +147,7 @@ class ConnectedFilter extends React.Component {
         }}
         onFilterChange={(e) => this.handleFilterChange(e)}
         onPatientIdsChange={this.props.onPatientIdsChange}
+        patientIds={this.props.patientIds}
         hideZero={this.props.hideZero}
         initialAppliedFilters={this.props.initialAppliedFilters}
       />
@@ -180,6 +181,7 @@ ConnectedFilter.propTypes = {
   tierAccessLimit: PropTypes.number,
   onProcessFilterAggsData: PropTypes.func,
   adminAppliedPreFilters: PropTypes.object,
+  patientIds: PropTypes.arrayOf(PropTypes.string),
   initialAppliedFilters: PropTypes.object,
   receivedAggsData: PropTypes.object,
   lockedTooltipMessage: PropTypes.string,

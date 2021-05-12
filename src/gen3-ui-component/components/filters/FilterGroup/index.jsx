@@ -438,6 +438,7 @@ FilterGroup.propTypes = {
   hideZero: PropTypes.bool,
   className: PropTypes.string,
   initialAppliedFilters: PropTypes.object,
+  patientIds: PropTypes.arrayOf(PropTypes.string),
 };
 
 FilterGroup.defaultProps = {
