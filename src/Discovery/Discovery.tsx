@@ -22,8 +22,6 @@ const ARBORIST_READ_PRIV = 'read';
 const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   const categoryConfig = config.tagCategories.find(category => category.name === tagCategory);
   if (categoryConfig === undefined) {
-    // eslint-disable-next-line no-console
-    console.error(`Misconfiguration error: tag category ${tagCategory} not found in config. Check the 'tag_categories' section of the Discovery page config.`);
     return 'gray';
   }
   return categoryConfig.color;
