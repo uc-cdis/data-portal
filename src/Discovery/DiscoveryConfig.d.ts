@@ -45,6 +45,7 @@ export interface DiscoveryConfig {
     tagSelector: {
         title: string
     },
+    tagColumnWidth: string,
     studyColumns: {
         name: string
         field: string

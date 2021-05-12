@@ -650,8 +650,7 @@
       },
       "search": {
         "searchBar": {
-          "enabled": true,
-          "placeholder": "Search through studies by attribute..."
+          "enabled": true
         }
       },
       "authorization": {
@@ -673,6 +672,7 @@
     "tagSelector": {
       "title": "Tags by category"
     },
+    "tagColumnWidth": "362px",
     "studyColumns": [
       {
         "name": "Study Name",

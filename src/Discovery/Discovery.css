@@ -111,9 +111,9 @@
   align-items: flex-start;
   justify-content: flex-start;
   font-weight: bold;
-
+  overflow-y: scroll;
   overflow-x: visible;
-
+  width: 200px;
   height: 111px;
 }
 

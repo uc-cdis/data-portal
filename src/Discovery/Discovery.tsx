@@ -174,7 +174,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       title: 'Tags',
       textWrap: 'word-break',
       ellipsis: false,
-      width: '200px',
+      width: config.tagColumnWidth || '200px',
       render: (_, record) => (
         <React.Fragment>
           {record.tags.map(({ name, category }) => {
