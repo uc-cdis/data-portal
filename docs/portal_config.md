@@ -299,6 +299,13 @@ Below is an example, with inline comments describing what each JSON block config
         "title": "Export to Workspace",
         "leftIcon": "datafile",
         "rightIcon": "download"
+      },
+      {
+        "enabled": true,
+        "type": "export-pfb-to-workspace", // required; export PFB to workspace
+        "title": "Export PFB to Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "download"
       }
     ],
     "guppyConfig": { // required; how to configure Guppy to work with the Data Explorer
