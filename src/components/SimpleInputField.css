@@ -31,6 +31,10 @@
   width: 100%;
 }
 
+.simple-input-field__input > input[type='file'] {
+  border: none;
+}
+
 .simple-input-field__input > textarea {
   resize: none;
 }
