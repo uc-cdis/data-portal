@@ -4,4 +4,5 @@ The Ecosystem Browser is an exploratory tool in data-portal which allows researc
 
 The Ecosystem Browser requires the Metadata Service and a Redis pod to be running in the commons. See the [metadata service documentation](https://github.com/uc-cdis/metadata-service) for more details on how to set up the aggregate metadata path.
 
+
 All other configuration details are identical to the setup for the Discovery page. See `portal_config.md` for more details.
