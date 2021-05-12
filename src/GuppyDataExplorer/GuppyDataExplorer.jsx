@@ -96,7 +96,7 @@ class GuppyDataExplorer extends React.Component {
     );
     searchParams.delete('patientIds');
 
-    if (patientIds.length > 1)
+    if (patientIds.length > 0)
       searchParams.set('patientIds', patientIds.join(','));
 
     this.setState({ patientIds });
