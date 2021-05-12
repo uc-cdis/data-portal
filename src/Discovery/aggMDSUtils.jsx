@@ -113,7 +113,6 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
 const loadStudiesFromAggMDS = async () => {
   // Retrieve from aggregate MDS
 
-  // TODO: connect the UI to these variables
   const offset = 0; // For pagination
   const limit = 1000; // Total number of rows requested
 
