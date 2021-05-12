@@ -1,8 +1,6 @@
-import { discoveryConfig } from '../localconf';
+import { discoveryConfig, hostname } from '../localconf';
 
-// TODO: Uncomment this.
-// const aggMDSURL = 'mds/aggregate';
-const aggMDSURL = 'http://localhost:8000';
+const aggMDSURL = `${hostname}mds/aggregate`;
 const aggMDSDataURL = `${aggMDSURL}/metadata`;
 
 
