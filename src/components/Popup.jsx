@@ -28,6 +28,7 @@ const Popup = ({
                 verticalAlign: 'middle',
                 marginRight: '17px',
                 display: 'inline-flex',
+                fill: 'white',
               }}
             />
           )}
