@@ -434,6 +434,7 @@ FilterGroup.propTypes = {
     ),
   }).isRequired,
   onFilterChange: PropTypes.func,
+  onPatientIdsChange: PropTypes.func,
   hideZero: PropTypes.bool,
   className: PropTypes.string,
   initialAppliedFilters: PropTypes.object,

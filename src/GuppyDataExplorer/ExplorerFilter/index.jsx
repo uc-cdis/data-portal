@@ -10,6 +10,7 @@ function ExplorerFilter({
   filterConfig = {},
   guppyConfig = {},
   onFilterChange = () => {},
+  onPatientIdsChange = () => {},
   tierAccessLimit,
   adminAppliedPreFilters = {},
   initialAppliedFilters = {},
@@ -23,6 +24,7 @@ function ExplorerFilter({
     },
     fieldMapping: guppyConfig.fieldMapping,
     onFilterChange,
+    onPatientIdsChange,
     tierAccessLimit,
     adminAppliedPreFilters,
     initialAppliedFilters,
@@ -53,6 +55,7 @@ ExplorerFilter.propTypes = {
   tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
   adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
   initialAppliedFilters: PropTypes.object,
+  onPatientIdsChange: PropTypes.func,
 };
 
 export default ExplorerFilter;

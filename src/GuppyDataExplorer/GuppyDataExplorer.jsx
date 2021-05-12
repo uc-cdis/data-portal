@@ -90,6 +90,21 @@ class GuppyDataExplorer extends React.Component {
     });
   };
 
+  handlePatientIdsChange = (patientIds) => {
+    const searchParams = new URLSearchParams(
+      this.props.history.location.search
+    );
+    searchParams.delete('patientIds');
+
+    if (patientIds.length > 1)
+      searchParams.set('patientIds', patientIds.join(','));
+
+    this.setState({ patientIds });
+    this.props.history.push({
+      search: Array.from(searchParams.entries(), (e) => e.join('=')).join('&'),
+    });
+  };
+
   render() {
     return (
       <ExplorerErrorBoundary>
@@ -126,6 +141,7 @@ class GuppyDataExplorer extends React.Component {
               hideGetAccessButton={this.props.hideGetAccessButton}
               tierAccessLimit={this.props.tierAccessLimit}
               initialAppliedFilters={this.props.initialAppliedFilters}
+              onPatientIdsChange={this.handlePatientIdsChange}
             />
             <ExplorerVisualization
               className='guppy-data-explorer__visualization'

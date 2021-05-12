@@ -146,6 +146,7 @@ class ConnectedFilter extends React.Component {
           ),
         }}
         onFilterChange={(e) => this.handleFilterChange(e)}
+        onPatientIdsChange={this.props.onPatientIdsChange}
         hideZero={this.props.hideZero}
         initialAppliedFilters={this.props.initialAppliedFilters}
       />
@@ -168,6 +169,7 @@ ConnectedFilter.propTypes = {
     type: PropTypes.string.isRequired,
   }).isRequired,
   onFilterChange: PropTypes.func,
+  onPatientIdsChange: PropTypes.func,
   className: PropTypes.string,
   fieldMapping: PropTypes.arrayOf(
     PropTypes.shape({
