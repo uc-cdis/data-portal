@@ -13,7 +13,7 @@
 }
 
 .simple-input-field__input {
-  width: 60%;
+  flex-grow: 1;
 }
 
 .simple-input-field__input > input,
