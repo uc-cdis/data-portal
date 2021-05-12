@@ -458,6 +458,11 @@ Below is an example, with inline comments describing what each JSON block config
       {
         "name": "dbGaP Accession Number",
         "field": "study_id"
+      },
+      {
+        "name": "Commons",
+        "field": "commons_of_origin",
+        "hrefValueFromField": "commons_url", // If this attribute is present, the text in the column will be linked. The href value of the link will be the corresponding value of the fieldname in this attribute.
       }
     ],
     "studyPreviewField": { // if present, studyPreviewField shows a special preview field beneath each row of data in the table, useful for study descriptions.
