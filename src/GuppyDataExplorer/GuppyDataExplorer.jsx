@@ -144,6 +144,7 @@ class GuppyDataExplorer extends React.Component {
               tierAccessLimit={this.props.tierAccessLimit}
               adminAppliedPreFilters={this.props.adminAppliedPreFilters}
               initialAppliedFilters={this.props.initialAppliedFilters}
+              patientIds={this.state.patientIds}
               onPatientIdsChange={this.handlePatientIdsChange}
             />
             <ExplorerVisualization
