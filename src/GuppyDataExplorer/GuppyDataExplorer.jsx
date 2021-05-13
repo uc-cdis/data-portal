@@ -15,6 +15,7 @@ import {
   ButtonConfigType,
   ChartConfigType,
   SurvivalAnalysisConfigType,
+  PatientIdsConfigType,
 } from './configTypeDef';
 import './GuppyDataExplorer.css';
 
@@ -37,9 +38,11 @@ class GuppyDataExplorer extends React.Component {
       }
     }
 
-    const patientIds = searchParams.has('patientIds')
-      ? searchParams.get('patientIds').split(',')
-      : [];
+    const patientIds = props.patientIdsConfig?.enabled
+      ? searchParams.has('patientIds')
+        ? searchParams.get('patientIds').split(',')
+        : []
+      : undefined;
 
     this.state = {
       initialAppliedFilters,
@@ -90,20 +93,24 @@ class GuppyDataExplorer extends React.Component {
     });
   };
 
-  handlePatientIdsChange = (patientIds) => {
-    const searchParams = new URLSearchParams(
-      this.props.history.location.search
-    );
-    searchParams.delete('patientIds');
+  handlePatientIdsChange = this.props.patientIdsConfig?.enabled
+    ? (patientIds) => {
+        const searchParams = new URLSearchParams(
+          this.props.history.location.search
+        );
+        searchParams.delete('patientIds');
 
-    if (patientIds.length > 0)
-      searchParams.set('patientIds', patientIds.join(','));
+        if (patientIds.length > 0)
+          searchParams.set('patientIds', patientIds.join(','));
 
-    this.setState({ patientIds });
-    this.props.history.push({
-      search: Array.from(searchParams.entries(), (e) => e.join('=')).join('&'),
-    });
-  };
+        this.setState({ patientIds });
+        this.props.history.push({
+          search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
+            '&'
+          ),
+        });
+      }
+    : () => {};
 
   render() {
     return (
@@ -169,6 +176,7 @@ GuppyDataExplorer.propTypes = {
   filterConfig: FilterConfigType.isRequired,
   tableConfig: TableConfigType.isRequired,
   survivalAnalysisConfig: SurvivalAnalysisConfigType.isRequired,
+  patientIdsConfig: PatientIdsConfigType,
   chartConfig: ChartConfigType.isRequired,
   buttonConfig: ButtonConfigType.isRequired,
   nodeCountTitle: PropTypes.string,
