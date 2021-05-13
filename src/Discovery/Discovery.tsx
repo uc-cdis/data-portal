@@ -537,7 +537,9 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 
     <div className='discovery-studies-container'>
       <div className='discovery-studies__header'>
-        <Button onClick={() => setFiltersVisible(!filtersVisible)}>Advanced Search</Button>
+        { (config.features.advSearchFilters && config.features.advSearchFilters.enabled) &&
+          <Button onClick={() => setFiltersVisible(!filtersVisible)}>Advanced Search</Button>
+        }
         { (
           config.features.search && config.features.search.searchBar
             && config.features.search.searchBar.enabled
