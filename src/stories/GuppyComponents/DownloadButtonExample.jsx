@@ -83,7 +83,7 @@ class DownloadButtonExample extends React.Component {
     return (
       <React.Fragment>
         <Button
-          label={`download ${this.props.totalCount} ${this.props.guppyConfig.type} data`}
+          label={`download ${this.props.totalCount} ${this.props.guppyConfig.dataType} data`}
           onClick={this.downloadData.bind(this)}
         />
         <Button

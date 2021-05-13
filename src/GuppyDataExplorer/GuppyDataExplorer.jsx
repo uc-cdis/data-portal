@@ -120,10 +120,7 @@ class GuppyDataExplorer extends React.Component {
             adminAppliedPreFilters={this.props.adminAppliedPreFilters}
             initialAppliedFilters={this.state.initialAppliedFilters}
             filterConfig={this.props.filterConfig}
-            guppyConfig={{
-              type: this.props.guppyConfig.dataType,
-              ...this.props.guppyConfig,
-            }}
+            guppyConfig={this.props.guppyConfig}
             onFilterChange={this.handleFilterChange}
             rawDataFields={this.props.tableConfig.fields}
             accessibleFieldCheckList={

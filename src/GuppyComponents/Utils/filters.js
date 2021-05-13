@@ -267,22 +267,22 @@ const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (
 
     queryGuppyForRawData({
       path: guppyConfig.path,
-      type: guppyConfig.type,
+      type: guppyConfig.dataType,
       fields: [field],
       gqlFilter,
       offset,
       withTotalCount: true,
     })
       .then((res) => {
-        if (!res.data || !res.data[guppyConfig.type]) {
+        if (!res.data || !res.data[guppyConfig.dataType]) {
           resolve({
             options: [],
             hasMore: false,
           });
         } else {
-          const results = res.data[guppyConfig.type];
+          const results = res.data[guppyConfig.dataType];
           const totalCount =
-            res.data._aggregation[guppyConfig.type]._totalCount;
+            res.data._aggregation[guppyConfig.dataType]._totalCount;
           resolve({
             options: results.map((result) => ({
               value: result[field],
