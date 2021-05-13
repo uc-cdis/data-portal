@@ -55,6 +55,12 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
           style={{ marginBottom: '.5rem' }}
         >
           <div className='g3-filter-section__title-container'>
+            <div className='g3-filter-section__toggle-icon-container'>
+              <i
+                role='button'
+                className='g3-filter-section__toggle-icon g3-icon g3-icon-color__coal g3-icon--sm g3-icon--star'
+              />
+            </div>
             <div
               className={`g3-filter-section__title${
                 isUsingPatientIds ? ' g3-filter-section__title--active' : ''
