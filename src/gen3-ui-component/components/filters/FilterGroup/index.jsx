@@ -384,10 +384,12 @@ class FilterGroup extends React.Component {
             </div>
           ))}
         </div>
-        <PatientIdFilter
-          onPatientIdsChange={this.props.onPatientIdsChange}
-          patientIds={this.props.patientIds}
-        />
+        {this.props.patientIds && (
+          <PatientIdFilter
+            onPatientIdsChange={this.props.onPatientIdsChange}
+            patientIds={this.props.patientIds}
+          />
+        )}
         <div className='g3-filter-group__collapse'>
           <span
             className='g3-link g3-filter-group__collapse-link'
