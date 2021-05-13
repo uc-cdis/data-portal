@@ -143,6 +143,7 @@ class GuppyDataExplorer extends React.Component {
             />
             <ExplorerFilter
               className='guppy-data-explorer__filter'
+              filterConfig={this.props.filterConfig}
               guppyConfig={this.props.guppyConfig}
               getAccessButtonLink={this.props.getAccessButtonLink}
               hideGetAccessButton={this.props.hideGetAccessButton}

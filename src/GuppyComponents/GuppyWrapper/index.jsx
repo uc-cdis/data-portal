@@ -342,7 +342,6 @@ class GuppyWrapper extends React.Component {
         isLoadingAggsData: this.state.isLoadingAggsData,
         aggsData: this.state.aggsData,
         filter: this.state.filter,
-        filterConfig: this.props.filterConfig,
         isLoadingRawData: this.state.isLoadingRawData,
         rawData: this.state.rawData, // raw data (with current filter applied)
         accessibleCount: this.state.accessibleCount,
