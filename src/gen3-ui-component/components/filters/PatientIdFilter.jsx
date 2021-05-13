@@ -66,7 +66,7 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
                 isUsingPatientIds ? ' g3-filter-section__title--active' : ''
               }`}
             >
-              Patient IDs
+              Patient ID
             </div>
             {isUsingPatientIds && (
               <div className='g3-filter-section__selected-count-chip'>
