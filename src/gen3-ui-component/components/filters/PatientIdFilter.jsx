@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import Tooltip from 'rc-tooltip';
 import Popup from '../../../components/Popup';
 import SimpleInputField from '../../../components/SimpleInputField';
 import Button from '../Button';
@@ -50,42 +51,48 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
   return (
     <>
       <div className='g3-filter-section'>
-        <div
-          className='g3-filter-section__header'
-          style={{ marginBottom: '.5rem' }}
+        <Tooltip
+          placement='topLeft'
+          overlay='Patient ID is a special filter and cannot be used in cohorts like other normal filters.'
+          arrowContent={<div className='rc-tooltip-arrow-inner' />}
         >
-          <div className='g3-filter-section__title-container'>
-            <div className='g3-filter-section__toggle-icon-container'>
-              <i
-                role='button'
-                className='g3-filter-section__toggle-icon g3-icon g3-icon-color__coal g3-icon--sm g3-icon--star'
-              />
-            </div>
-            <div
-              className={`g3-filter-section__title${
-                isUsingPatientIds ? ' g3-filter-section__title--active' : ''
-              }`}
-            >
-              Patient ID
-            </div>
-            {isUsingPatientIds && (
-              <div className='g3-filter-section__selected-count-chip'>
-                <div
+          <div
+            className='g3-filter-section__header'
+            style={{ marginBottom: '.5rem' }}
+          >
+            <div className='g3-filter-section__title-container'>
+              <div className='g3-filter-section__toggle-icon-container'>
+                <i
                   role='button'
-                  className='g3-filter-section__range-filter-clear-btn'
-                  onClick={handleReset}
-                >
-                  <div className='g3-filter-section__range-filter-clear-btn-text'>
-                    reset
-                  </div>
-                  <div className='g3-filter-section__range-filter-clear-btn-icon'>
-                    <i className='g3-icon g3-icon--sm g3-icon-color__lightgray g3-icon--sm g3-icon--undo'></i>
+                  className='g3-filter-section__toggle-icon g3-icon g3-icon-color__coal g3-icon--sm g3-icon--star'
+                />
+              </div>
+              <div
+                className={`g3-filter-section__title${
+                  isUsingPatientIds ? ' g3-filter-section__title--active' : ''
+                }`}
+              >
+                Patient ID
+              </div>
+              {isUsingPatientIds && (
+                <div className='g3-filter-section__selected-count-chip'>
+                  <div
+                    role='button'
+                    className='g3-filter-section__range-filter-clear-btn'
+                    onClick={handleReset}
+                  >
+                    <div className='g3-filter-section__range-filter-clear-btn-text'>
+                      reset
+                    </div>
+                    <div className='g3-filter-section__range-filter-clear-btn-icon'>
+                      <i className='g3-icon g3-icon--sm g3-icon-color__lightgray g3-icon--sm g3-icon--undo'></i>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
+        </Tooltip>
 
         <Button label='Upload IDs' rightIcon='upload' onClick={openModal} />
       </div>
