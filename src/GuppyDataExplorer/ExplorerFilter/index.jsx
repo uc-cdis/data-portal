@@ -14,7 +14,7 @@ function ExplorerFilter({
   tierAccessLimit,
   adminAppliedPreFilters = {},
   initialAppliedFilters = {},
-  patientIds = [],
+  patientIds,
   receivedAggsData = {},
 }) {
   const filterProps = {

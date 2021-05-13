@@ -97,7 +97,7 @@ class GuppyWrapper extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.patientIds.join(',') !== this.props.patientIds.join(',')) {
+    if (prevProps.patientIds?.join(',') !== this.props.patientIds?.join(',')) {
       this.fetchAggsDataFromGuppy(this.state.filter);
       this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
     }
@@ -140,7 +140,7 @@ class GuppyWrapper extends React.Component {
       console.error(`Invalid value ${format} found for arg format!`);
     }
     const filterForGuppy =
-      this.props.patientIds.length > 0
+      this.props.patientIds?.length > 0
         ? mergeFilters(this.filter, {
             subject_submitter_id: { selectedValues: this.props.patientIds },
           })
@@ -215,7 +215,7 @@ class GuppyWrapper extends React.Component {
     if (this._isMounted) this.setState({ isLoadingAggsData: true });
 
     const filterForGuppy =
-      this.props.patientIds.length > 0
+      this.props.patientIds?.length > 0
         ? mergeFilters(filter, {
             subject_submitter_id: { selectedValues: this.props.patientIds },
           })
@@ -271,7 +271,7 @@ class GuppyWrapper extends React.Component {
     }
 
     const filterForGuppy =
-      this.props.patientIds.length > 0
+      this.props.patientIds?.length > 0
         ? mergeFilters(this.filter, {
             subject_submitter_id: { selectedValues: this.props.patientIds },
           })
@@ -405,7 +405,6 @@ GuppyWrapper.defaultProps = {
   rawDataFields: [],
   adminAppliedPreFilters: {},
   initialAppliedFilters: {},
-  patientIds: [],
 };
 
 export default GuppyWrapper;
