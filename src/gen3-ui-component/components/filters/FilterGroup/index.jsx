@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import PatientIdFilter from '../PatientIdFilter';
 import './FilterGroup.css';
 
 const removeEmptyFilter = (filterResults) => {
@@ -383,6 +384,10 @@ class FilterGroup extends React.Component {
             </div>
           ))}
         </div>
+        <PatientIdFilter
+          onPatientIdsChange={this.props.onPatientIdsChange}
+          patientIds={this.props.patientIds}
+        />
         <div className='g3-filter-group__collapse'>
           <span
             className='g3-link g3-filter-group__collapse-link'
@@ -434,9 +439,11 @@ FilterGroup.propTypes = {
     ),
   }).isRequired,
   onFilterChange: PropTypes.func,
+  onPatientIdsChange: PropTypes.func,
   hideZero: PropTypes.bool,
   className: PropTypes.string,
   initialAppliedFilters: PropTypes.object,
+  patientIds: PropTypes.arrayOf(PropTypes.string),
 };
 
 FilterGroup.defaultProps = {

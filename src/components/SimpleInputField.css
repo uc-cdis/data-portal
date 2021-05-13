@@ -13,7 +13,7 @@
 }
 
 .simple-input-field__input {
-  width: 60%;
+  flex-grow: 1;
 }
 
 .simple-input-field__input > input,
@@ -29,6 +29,10 @@
   overflow: hidden;
   padding: 2px 10px;
   width: 100%;
+}
+
+.simple-input-field__input > input[type='file'] {
+  border: none;
 }
 
 .simple-input-field__input > textarea {

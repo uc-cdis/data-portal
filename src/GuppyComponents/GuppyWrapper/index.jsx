@@ -96,6 +96,13 @@ class GuppyWrapper extends React.Component {
     this._isMounted = false;
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.patientIds.join(',') !== this.props.patientIds.join(',')) {
+      this.fetchAggsDataFromGuppy(this.state.filter);
+      this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
+    }
+  }
+
   handleFilterChange(filter) {
     if (this.props.onFilterChange) this.props.onFilterChange(filter);
 
@@ -358,6 +365,7 @@ class GuppyWrapper extends React.Component {
         guppyConfig: this.props.guppyConfig,
         adminAppliedPreFilters: this.props.adminAppliedPreFilters,
         initialAppliedFilters: this.props.initialAppliedFilters,
+        patientIds: this.props.patientIds,
         receivedAggsData: this.state.receivedAggsData,
       })
     );
