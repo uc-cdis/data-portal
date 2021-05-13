@@ -123,9 +123,6 @@ class GuppyDataExplorer extends React.Component {
             guppyConfig={this.props.guppyConfig}
             onFilterChange={this.handleFilterChange}
             rawDataFields={this.props.tableConfig.fields}
-            accessibleFieldCheckList={
-              this.props.guppyConfig.accessibleFieldCheckList
-            }
             patientIds={this.state.patientIds}
           >
             <ExplorerTopMessageBanner
