@@ -50,7 +50,13 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
 
   return (
     <>
-      <div className='g3-filter-section'>
+      <div
+        className='g3-filter-section'
+        style={{
+          borderTop: '1px solid var(--g3-color__silver)',
+          borderBottom: 'none',
+        }}
+      >
         <Tooltip
           placement='topLeft'
           overlay='Patient ID is a special filter and cannot be used in cohorts like other normal filters.'
