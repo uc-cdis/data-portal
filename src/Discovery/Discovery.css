@@ -113,7 +113,7 @@
   font-weight: bold;
   overflow-y: scroll;
   overflow-x: visible;
-  width: 290px;
+  max-width: 290px;
   height: 111px;
 }
 
