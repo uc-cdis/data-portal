@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import FileSaver from 'file-saver';
 import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
+import memoize from 'lodash/memoize';
+
 import * as JsSearch from 'js-search';
 import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, ExportOutlined, DownloadOutlined } from '@ant-design/icons';
 import {
@@ -81,7 +83,7 @@ const getTagsInCategory =
     return Object.keys(tagMap);
   };
 
-const getFilterValuesByKey =
+const getFilterValuesByKey = memoize(
   (key: string, studies: any[] | null, config: DiscoveryConfig) => {
     if (!studies) {
       return [];
@@ -93,7 +95,9 @@ const getFilterValuesByKey =
         throw new Error('Misconfiguration error: missing required configuration property `discoveryConfig.features.advSearchFilters.field`');
       }
       if (!study[filtersField]) {
-        throw new Error(`Misconfiguration error: expected to find property '${config.features.advSearchFilters.field}' in study metadata, but could not find it! Check the study metadata.`);
+        // eslint-disable-next-line no-console
+        console.warn(`Warning: expected to find property '${config.features.advSearchFilters.field}' in study metadata for study ${study[config.minimalFieldMapping.uid]}, but could not find it! This study will not be filterable by the advanced search filters.`);
+        return;
       }
       study[filtersField].forEach((filterValue) => {
         if (filterValue.key === key) {
@@ -102,7 +106,8 @@ const getFilterValuesByKey =
       });
     });
     return Object.keys(filterValuesMap);
-  };
+  },
+);
 
 const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number'|'link' = 'string'): React.ReactNode => {
   switch (contentType) {
@@ -174,14 +179,16 @@ const filterByAdvSearch =
     if (noFiltersActive) {
       return studies;
     }
-    const advSearchFiltersField = config.features.advSearchFilters.field;
     return studies.filter(study => Object.keys(advSearchFilterState).every((filterName) => {
       const filterValues = Object.keys(advSearchFilterState[filterName]);
       // Handle the edge case where no values in this filter are selected
       if (filterValues.length === 0) {
         return true;
       }
-      const studyFilters = study[advSearchFiltersField];
+      const studyFilters = study[config.features.advSearchFilters.field];
+      if (!studyFilters) {
+        return false;
+      }
       // combine within filters as OR
       // return studyFilters.some(({ key, value }) =>
       //   key === filterName && filterValues.includes(value));
