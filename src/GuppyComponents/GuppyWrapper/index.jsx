@@ -361,7 +361,6 @@ class GuppyWrapper extends React.Component {
 
         // below are just for ConnectedFilter component
         onFilterChange: this.handleFilterChange.bind(this),
-        adminAppliedPreFilters: this.props.adminAppliedPreFilters,
         initialAppliedFilters: this.props.initialAppliedFilters,
         patientIds: this.props.patientIds,
         receivedAggsData: this.state.receivedAggsData,
