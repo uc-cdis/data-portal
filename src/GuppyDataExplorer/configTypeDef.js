@@ -61,3 +61,7 @@ export const SurvivalAnalysisConfigType = PropTypes.shape({
     survival: PropTypes.bool,
   }),
 });
+
+export const PatientIdsConfigType = PropTypes.shape({
+  enabled: PropTypes.bool,
+});

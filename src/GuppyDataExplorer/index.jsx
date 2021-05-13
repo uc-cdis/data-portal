@@ -82,6 +82,7 @@ class Explorer extends React.Component {
             survivalAnalysisConfig={
               explorerConfig[this.state.tab].survivalAnalysis
             }
+            patientIdsConfig={explorerConfig[this.state.tab].patientIds}
             guppyConfig={{
               path: guppyUrl,
               ...explorerConfig[this.state.tab].guppyConfig,
