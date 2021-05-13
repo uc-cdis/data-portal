@@ -812,12 +812,12 @@
         {
           "name": "primary_site",
           "color": "rgba(112, 182, 3, 1)",
-          "display": true
+          "display": false
         },
         {
           "name": "disease_type",
           "color": "rgba(112, 182, 3, 1)",
-          "display": true
+          "display": false
         },
         {
           "name": "data_type",
