@@ -3,29 +3,7 @@ import PropTypes from 'prop-types';
 import ConnectedFilter from '../../GuppyComponents/ConnectedFilter';
 import { FilterConfigType, GuppyConfigType } from '../configTypeDef';
 
-function ExplorerFilter({
-  className = '',
-  filterConfig = {},
-  guppyConfig = {},
-  onFilterChange = () => {},
-  onPatientIdsChange = () => {},
-  tierAccessLimit,
-  adminAppliedPreFilters = {},
-  initialAppliedFilters = {},
-  patientIds,
-  receivedAggsData = {},
-}) {
-  const filterProps = {
-    filterConfig,
-    guppyConfig,
-    onFilterChange,
-    onPatientIdsChange,
-    tierAccessLimit,
-    adminAppliedPreFilters,
-    patientIds,
-    initialAppliedFilters,
-    receivedAggsData,
-  };
+function ExplorerFilter({ className = '', ...filterProps }) {
   return (
     <div className={className}>
       <h4>Filters</h4>
