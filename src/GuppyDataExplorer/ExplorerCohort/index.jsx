@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
 import cloneDeep from 'lodash.clonedeep';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SimplePopup from '../../components/SimplePopup';
 import Button from '../../gen3-ui-component/components/Button';
 import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
 import {
@@ -179,26 +179,24 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
           </div>
         </>
       )}
-      {showActionForm &&
-        ReactDOM.createPortal(
-          <div className='guppy-explorer-cohort__overlay'>
-            <CohortActionForm
-              actionType={actionType}
-              currentCohort={cohort}
-              currentFilters={filter}
-              cohorts={cohorts}
-              handlers={{
-                handleOpen,
-                handleSave,
-                handleUpdate,
-                handleDelete,
-                handleClose: closeActionForm,
-              }}
-              isFiltersChanged={isFiltersChanged}
-            />
-          </div>,
-          document.getElementById('root')
-        )}
+      {showActionForm && (
+        <SimplePopup>
+          <CohortActionForm
+            actionType={actionType}
+            currentCohort={cohort}
+            currentFilters={filter}
+            cohorts={cohorts}
+            handlers={{
+              handleOpen,
+              handleSave,
+              handleUpdate,
+              handleDelete,
+              handleClose: closeActionForm,
+            }}
+            isFiltersChanged={isFiltersChanged}
+          />
+        </SimplePopup>
+      )}
     </div>
   );
 }
