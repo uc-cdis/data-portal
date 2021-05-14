@@ -5,7 +5,6 @@ import sum from 'lodash/sum';
 import memoize from 'lodash/memoize';
 
 import * as JsSearch from 'js-search';
-import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, ExportOutlined, DownloadOutlined } from '@ant-design/icons';
 import {
   Input,
   Table,
@@ -18,6 +17,16 @@ import {
   Checkbox,
   Collapse,
 } from 'antd';
+import {
+  LockFilled,
+  LinkOutlined,
+  UnlockOutlined,
+  SearchOutlined,
+  ExportOutlined,
+  DownloadOutlined,
+  RightOutlined,
+  LeftOutlined,
+} from '@ant-design/icons';
 
 import { fetchWithCreds } from '../actions';
 import { manifestServiceApiPath } from '../localconf';
@@ -564,7 +573,17 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       }
       <div className='discovery-studies__header'>
         { (config.features.advSearchFilters && config.features.advSearchFilters.enabled) &&
-          <Button onClick={() => setFiltersVisible(!filtersVisible)}>Advanced Search</Button>
+          <Button
+            style={{ color: 'rgb(139, 51, 105)', fontWeight: '700' }}
+            onClick={() => setFiltersVisible(!filtersVisible)}
+            type='text'
+          >
+            ADVANCED SEARCH
+            { filtersVisible
+              ? <LeftOutlined />
+              : <RightOutlined />
+            }
+          </Button>
         }
         { (
           config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled

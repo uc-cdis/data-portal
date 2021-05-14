@@ -145,7 +145,7 @@
 .discovery-search {
   border-color: rgb(139, 51, 105);
   border-width: 1px;
-  border-radius: 8px;
+  border-radius: 7px;
   max-width: 500px;
 }
 
@@ -154,6 +154,7 @@
 }
 
 .discovery-table-container {
+  /* width: 100%; */
   transform: translateX(0px);
   /* Animate translateX change, don't animate width change but delay it */
   transition: transform 300ms, width 0ms 150ms;
