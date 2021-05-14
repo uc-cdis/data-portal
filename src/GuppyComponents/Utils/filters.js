@@ -312,7 +312,7 @@ export const checkIsArrayField = (field, arrayFields) => {
 export const getFilterSections = (
   fields,
   searchFields,
-  fieldMapping,
+  fieldMapping = [],
   tabsOptions,
   initialTabsOptions,
   adminAppliedPreFilters,
