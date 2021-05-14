@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import querystring from 'querystring';
 import { Helmet } from 'react-helmet';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
@@ -279,21 +278,20 @@ function App({ store }) {
               path='/:project/search'
               component={(props) => {
                 const queryFilter = () => {
-                  const location = props.location;
-                  const queryParams = querystring.parse(
-                    location.search ? location.search.replace(/^\?+/, '') : ''
+                  const searchParams = new URLSearchParams(
+                    props.location.search
                   );
-                  if (Object.keys(queryParams).length > 0) {
-                    // Linking directly to a search result,
-                    // so kick-off search here (rather than on button click)
-                    return store.dispatch(
-                      submitSearchForm({
-                        project: props.match.params.project,
-                        ...queryParams,
-                      })
-                    );
-                  }
-                  return Promise.resolve('ok');
+
+                  return Array.from(searchParams).length > 0
+                    ? // Linking directly to a search result,
+                      // so kick-off search here (rather than on button click)
+                      store.dispatch(
+                        submitSearchForm({
+                          project: props.match.params.project,
+                          ...Object.fromEntries(searchParams),
+                        })
+                      )
+                    : Promise.resolve('ok');
                 };
                 return (
                   <ProtectedContent filter={queryFilter} {...props}>
