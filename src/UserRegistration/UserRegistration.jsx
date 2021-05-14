@@ -37,15 +37,17 @@ function UserRegistration({ shouldRegister, updateAccess }) {
     window.open('http://sam.am/PCDCnews', '_blank');
   }
 
-  return show ? (
-    <SimplePopup>
-      <RegistrationForm
-        onClose={handleClose}
-        onRegister={handleRegister}
-        onSubscribe={handleSubscribe}
-      />
-    </SimplePopup>
-  ) : null;
+  return (
+    show && (
+      <SimplePopup>
+        <RegistrationForm
+          onClose={handleClose}
+          onRegister={handleRegister}
+          onSubscribe={handleSubscribe}
+        />
+      </SimplePopup>
+    )
+  );
 }
 
 UserRegistration.propTypes = {
