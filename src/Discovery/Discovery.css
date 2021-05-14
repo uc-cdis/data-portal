@@ -30,7 +30,7 @@
 }
 
 .discovery-header {
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #fff;
   margin-bottom: 36px;
   height: 191px;
@@ -113,7 +113,7 @@
 }
 
 .discovery-studies-container {
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #fff;
   padding: 20px;
   overflow-x: hidden;
@@ -133,8 +133,14 @@
   margin-right: 20px;
 }
 
+.discovery-search-container {
+  margin-bottom: 10px;
+}
+
 .discovery-search {
-  border-radius: 5px;
+  border-color: rgb(139, 51, 105);
+  border-width: 1px;
+  border-radius: 8px;
   max-width: 500px;
 }
 

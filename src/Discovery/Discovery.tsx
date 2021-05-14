@@ -543,23 +543,25 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     </div>
 
     <div className='discovery-studies-container'>
-      <div className='discovery-studies__header'>
-        { (config.features.advSearchFilters && config.features.advSearchFilters.enabled) &&
-          <Button onClick={() => setFiltersVisible(!filtersVisible)}>Advanced Search</Button>
-        }
-        { (
-          config.features.search && config.features.search.searchBar
-            && config.features.search.searchBar.enabled
-        ) &&
+      { (
+        config.features.search && config.features.search.searchBar
+          && config.features.search.searchBar.enabled
+      ) &&
+          <div className='discovery-search-container'>
             <Input
               className='discovery-search'
-              prefix={<SearchOutlined />}
+              suffix={<SearchOutlined style={{ color: 'rgb(139, 51, 105)' }} />}
               placeholder={config.features.search.searchBar.placeholder}
               value={searchTerm}
               onChange={handleSearchChange}
               size='large'
               allowClear
             />
+          </div>
+      }
+      <div className='discovery-studies__header'>
+        { (config.features.advSearchFilters && config.features.advSearchFilters.enabled) &&
+          <Button onClick={() => setFiltersVisible(!filtersVisible)}>Advanced Search</Button>
         }
         { (
           config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
