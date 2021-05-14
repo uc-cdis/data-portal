@@ -1,6 +1,7 @@
 .discovery-container {
   background-color: #f2f2f2;
   padding: 40px 32px;
+  font-family: Montserrat
 }
 
 /* This is a fix for the global 'button' element style override in portal
