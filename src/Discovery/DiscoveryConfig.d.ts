@@ -55,7 +55,8 @@ export interface DiscoveryConfig {
     },
     aggregations: AggregationConfig[],
     tagSelector: {
-        title: string
+        title?: string
+        showTagCategoryNames?: boolean
     },
     studyColumns: {
         name: string

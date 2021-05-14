@@ -497,7 +497,9 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         }
       </div>
       <div className='discovery-header__tags-container' >
-        <h3 className='discovery-header__tags-header'>{config.tagSelector.title}</h3>
+        { config.tagSelector.title &&
+          <h3 className='discovery-header__tags-header'>{config.tagSelector.title}</h3>
+        }
         <div className='discovery-header__tags'>
           {
             config.tagCategories.map((category) => {
@@ -506,7 +508,9 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               }
               const tags = getTagsInCategory(category.name, props.studies, config);
               return (<div className='discovery-header__tag-group' key={category.name}>
-                <h5>{category.name}</h5>
+                { config.tagSelector.showTagCategoryNames &&
+                  <h5>{category.name}</h5>
+                }
                 { tags.map(tag =>
                   (<Tag
                     key={category.name + tag}
@@ -554,7 +558,6 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               placeholder={config.features.search.searchBar.placeholder}
               value={searchTerm}
               onChange={handleSearchChange}
-              size='large'
               allowClear
             />
           </div>

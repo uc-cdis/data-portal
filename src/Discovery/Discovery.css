@@ -1,7 +1,11 @@
 .discovery-container {
   background-color: #f2f2f2;
-  padding: 40px 32px;
+  padding: 30px 32px;
   font-family: Montserrat
+}
+
+.discovery-container * {
+  font-family: inherit;
 }
 
 /* This is a fix for the global 'button' element style override in portal
@@ -33,8 +37,8 @@
 .discovery-header {
   border-radius: 8px;
   background-color: #fff;
-  margin-bottom: 36px;
-  height: 191px;
+  padding: 10px 16px;
+  margin-bottom: 16px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -62,7 +66,6 @@
 }
 
 .discovery-header__stat-number {
-  color: #169bd5;
   font-size: 40px;
   line-height: 50px;
 }
@@ -77,8 +80,9 @@
 
 .discovery-header__tags-header {
   cursor: default;
-  font-weight: normal;
-  font-size: 18px;
+  font-weight: 400;
+  font-size: 16px;
+  text-transform: uppercase;
   color: #555;
 }
 
@@ -86,7 +90,7 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .discovery-header__tag-group {
@@ -101,11 +105,11 @@
 }
 
 .discovery-tag {
+  line-height: 18px;
+  font-size: 10px;
+  box-sizing: border-box;
   border-radius: 5px;
   border-width: 2px;
-  box-sizing: border-box;
-  line-height: 18px;
-  color: #555;
   margin-bottom: 3px;
 }
 
@@ -150,7 +154,6 @@
 }
 
 .discovery-table-container {
-  /* width: 100%; */
   transform: translateX(0px);
   /* Animate translateX change, don't animate width change but delay it */
   transition: transform 300ms, width 0ms 150ms;
