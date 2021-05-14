@@ -72,7 +72,7 @@
 
 .discovery-header__stat-label {
   text-transform: uppercase;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .discovery-header__tags-container {
@@ -82,7 +82,8 @@
 .discovery-header__tags-header {
   cursor: default;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 700;
   text-transform: uppercase;
   color: #555;
 }
