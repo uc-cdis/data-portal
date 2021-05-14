@@ -1,14 +1,14 @@
 import { connect } from 'react-redux';
-import queryString from 'query-string';
 import GqlEditor from './GqlEditor';
 
 const mapStateToProps = (state, ownProps) => {
-  const params = queryString.parse(ownProps.location.search);
+  const searchParams = new URLSearchParams(ownProps.location.search);
 
   return {
     schema: state.graphiql.schema,
-    endpointIndex:
-      params && params.endpoint ? parseInt(params.endpoint, 10) : null,
+    endpointIndex: searchParams.has('endpoint')
+      ? parseInt(searchParams.get('endpoint'), 10)
+      : null,
   };
 };
 
