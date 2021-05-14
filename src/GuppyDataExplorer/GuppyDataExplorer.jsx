@@ -143,7 +143,7 @@ class GuppyDataExplorer extends React.Component {
               hideGetAccessButton={this.props.hideGetAccessButton}
               tierAccessLimit={this.props.tierAccessLimit}
               adminAppliedPreFilters={this.props.adminAppliedPreFilters}
-              initialAppliedFilters={this.props.initialAppliedFilters}
+              initialAppliedFilters={this.state.initialAppliedFilters}
               patientIds={this.state.patientIds}
               onPatientIdsChange={this.handlePatientIdsChange}
             />
