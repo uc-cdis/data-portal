@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import SimplePopup from '../components/SimplePopup';
 import { headers, userapiPath } from '../localconf';
 import RegistrationForm from './RegistrationForm';
 import './UserRegistration.css';
@@ -37,18 +37,15 @@ function UserRegistration({ shouldRegister, updateAccess }) {
     window.open('http://sam.am/PCDCnews', '_blank');
   }
 
-  return show
-    ? ReactDOM.createPortal(
-        <div className='user-registration__overlay'>
-          <RegistrationForm
-            onClose={handleClose}
-            onRegister={handleRegister}
-            onSubscribe={handleSubscribe}
-          />
-        </div>,
-        document.getElementById('root')
-      )
-    : null;
+  return show ? (
+    <SimplePopup>
+      <RegistrationForm
+        onClose={handleClose}
+        onRegister={handleRegister}
+        onSubscribe={handleSubscribe}
+      />
+    </SimplePopup>
+  ) : null;
 }
 
 UserRegistration.propTypes = {
