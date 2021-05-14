@@ -120,15 +120,9 @@ class GuppyDataExplorer extends React.Component {
             adminAppliedPreFilters={this.props.adminAppliedPreFilters}
             initialAppliedFilters={this.state.initialAppliedFilters}
             filterConfig={this.props.filterConfig}
-            guppyConfig={{
-              type: this.props.guppyConfig.dataType,
-              ...this.props.guppyConfig,
-            }}
+            guppyConfig={this.props.guppyConfig}
             onFilterChange={this.handleFilterChange}
             rawDataFields={this.props.tableConfig.fields}
-            accessibleFieldCheckList={
-              this.props.guppyConfig.accessibleFieldCheckList
-            }
             patientIds={this.state.patientIds}
           >
             <ExplorerTopMessageBanner
@@ -143,11 +137,14 @@ class GuppyDataExplorer extends React.Component {
             />
             <ExplorerFilter
               className='guppy-data-explorer__filter'
+              filterConfig={this.props.filterConfig}
               guppyConfig={this.props.guppyConfig}
               getAccessButtonLink={this.props.getAccessButtonLink}
               hideGetAccessButton={this.props.hideGetAccessButton}
               tierAccessLimit={this.props.tierAccessLimit}
-              initialAppliedFilters={this.props.initialAppliedFilters}
+              adminAppliedPreFilters={this.props.adminAppliedPreFilters}
+              initialAppliedFilters={this.state.initialAppliedFilters}
+              patientIds={this.state.patientIds}
               onPatientIdsChange={this.handlePatientIdsChange}
             />
             <ExplorerVisualization

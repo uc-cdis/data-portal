@@ -77,7 +77,7 @@ class GuppyWrapper extends React.Component {
 
     getAllFieldsFromGuppy({
       path: this.props.guppyConfig.path,
-      type: this.props.guppyConfig.type,
+      type: this.props.guppyConfig.dataType,
     }).then((fields) => {
       const rawDataFields =
         this.props.rawDataFields && this.props.rawDataFields.length > 0
@@ -147,7 +147,7 @@ class GuppyWrapper extends React.Component {
         : this.state.filter;
     return downloadDataFromGuppy({
       path: this.props.guppyConfig.path,
-      type: this.props.guppyConfig.type,
+      type: this.props.guppyConfig.dataType,
       size: this.state.accessibleCount,
       fields: this.state.rawDataFields,
       sort,
@@ -164,7 +164,7 @@ class GuppyWrapper extends React.Component {
   handleDownloadRawDataByFields({ fields, sort = [] }) {
     return downloadDataFromGuppy({
       path: this.props.guppyConfig.path,
-      type: this.props.guppyConfig.type,
+      type: this.props.guppyConfig.dataType,
       size: this.state.accessibleCount,
       fields: fields || this.state.rawDataFields,
       sort,
@@ -223,7 +223,7 @@ class GuppyWrapper extends React.Component {
 
     queryGuppyForAggregationData({
       path: this.props.guppyConfig.path,
-      type: this.props.guppyConfig.type,
+      type: this.props.guppyConfig.dataType,
       fields: this.state.aggsDataFields,
       gqlFilter: getGQLFilter(filterForGuppy),
       signal: this.controller.signal,
@@ -238,7 +238,7 @@ class GuppyWrapper extends React.Component {
         );
 
       const receivedAggsData =
-        res.data._aggregation[this.props.guppyConfig.type];
+        res.data._aggregation[this.props.guppyConfig.dataType];
       const aggsData = excludeSelfFilterFromAggsData(receivedAggsData, filter);
       const accessibleCount = res.data._aggregation.accessible._totalCount;
       const totalCount = res.data._aggregation.all._totalCount;
@@ -281,7 +281,7 @@ class GuppyWrapper extends React.Component {
       const numericAggAsText = this.props.guppyConfig.mainFieldIsNumeric;
       return queryGuppyForSubAggregationData({
         path: this.props.guppyConfig.path,
-        type: this.props.guppyConfig.type,
+        type: this.props.guppyConfig.dataType,
         mainField: this.props.guppyConfig.mainField,
         numericAggAsText,
         termsFields: this.props.guppyConfig.aggFields,
@@ -291,10 +291,10 @@ class GuppyWrapper extends React.Component {
       }).then((res) => {
         if (!res || !res.data) {
           throw new Error(
-            `Error getting raw ${this.props.guppyConfig.type} data from Guppy server ${this.props.guppyConfig.path}.`
+            `Error getting raw ${this.props.guppyConfig.dataType} data from Guppy server ${this.props.guppyConfig.path}.`
           );
         }
-        const data = res.data._aggregation[this.props.guppyConfig.type];
+        const data = res.data._aggregation[this.props.guppyConfig.dataType];
         const field = numericAggAsText ? 'asTextHistogram' : 'histogram';
         const parsedData = data[this.props.guppyConfig.mainField][field];
         if (this._isMounted) {
@@ -310,7 +310,7 @@ class GuppyWrapper extends React.Component {
     // non-nested aggregation
     return queryGuppyForRawData({
       path: this.props.guppyConfig.path,
-      type: this.props.guppyConfig.type,
+      type: this.props.guppyConfig.dataType,
       fields,
       gqlFilter: getGQLFilter(filterForGuppy),
       sort,
@@ -320,10 +320,10 @@ class GuppyWrapper extends React.Component {
     }).then((res) => {
       if (!res || !res.data) {
         throw new Error(
-          `Error getting raw ${this.props.guppyConfig.type} data from Guppy server ${this.props.guppyConfig.path}.`
+          `Error getting raw ${this.props.guppyConfig.dataType} data from Guppy server ${this.props.guppyConfig.path}.`
         );
       }
-      const parsedData = res.data[this.props.guppyConfig.type];
+      const parsedData = res.data[this.props.guppyConfig.dataType];
       if (this._isMounted) {
         if (updateDataWhenReceive) this.setState({ rawData: parsedData });
         this.setState({ isLoadingRawData: false });
@@ -342,7 +342,6 @@ class GuppyWrapper extends React.Component {
         isLoadingAggsData: this.state.isLoadingAggsData,
         aggsData: this.state.aggsData,
         filter: this.state.filter,
-        filterConfig: this.props.filterConfig,
         isLoadingRawData: this.state.isLoadingRawData,
         rawData: this.state.rawData, // raw data (with current filter applied)
         accessibleCount: this.state.accessibleCount,
@@ -362,10 +361,6 @@ class GuppyWrapper extends React.Component {
 
         // below are just for ConnectedFilter component
         onFilterChange: this.handleFilterChange.bind(this),
-        guppyConfig: this.props.guppyConfig,
-        adminAppliedPreFilters: this.props.adminAppliedPreFilters,
-        initialAppliedFilters: this.props.initialAppliedFilters,
-        patientIds: this.props.patientIds,
         receivedAggsData: this.state.receivedAggsData,
       })
     );

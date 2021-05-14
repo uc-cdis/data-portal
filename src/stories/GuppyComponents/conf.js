@@ -30,7 +30,7 @@ export const tableConfig = [
 
 export const guppyConfig = {
   path: 'http://localhost:3000',
-  type: 'subject',
+  dataType: 'subject',
   fileType: 'file',
   tierAccessLimit: 20,
 };

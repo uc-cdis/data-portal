@@ -254,11 +254,7 @@ function App({ store }) {
               path='/files'
               component={(props) => (
                 <ProtectedContent {...props}>
-                  <GuppyDataExplorer
-                    history={props.history}
-                    location={props.location}
-                    params={props.match.params}
-                  />
+                  <GuppyDataExplorer />
                 </ProtectedContent>
               )}
             />

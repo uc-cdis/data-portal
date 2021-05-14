@@ -1,6 +1,8 @@
 /* eslint react/forbid-prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
+import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
+import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 import { queryGuppyForStatus } from '../Utils/queries';
 import {
   getFilterSections,
@@ -100,7 +102,14 @@ class ConnectedFilter extends React.Component {
     );
     if (Object.keys(processedTabsOptions).length === 0) return null;
 
-    const { FilterList } = this.props.filterComponents;
+    const lockedTooltipMessage = `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.`;
+    const disabledTooltipMessage = `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${
+      this.props.tierAccessLimit
+    } ${
+      this.props.guppyConfig.nodeCountTitle.toLowerCase() ||
+      this.props.guppyConfig.dataType
+    } or more.`;
+
     return this.props.filterConfig.tabs.map(
       ({ fields, searchFields }, index) => (
         <FilterList
@@ -108,7 +117,7 @@ class ConnectedFilter extends React.Component {
           sections={getFilterSections(
             fields,
             searchFields,
-            this.props.fieldMapping,
+            this.props.guppyConfig.fieldMapping,
             processedTabsOptions,
             this.state.initialAggsData,
             this.props.adminAppliedPreFilters,
@@ -116,8 +125,8 @@ class ConnectedFilter extends React.Component {
             this.arrayFields
           )}
           tierAccessLimit={this.props.tierAccessLimit}
-          lockedTooltipMessage={this.props.lockedTooltipMessage}
-          disabledTooltipMessage={this.props.disabledTooltipMessage}
+          lockedTooltipMessage={lockedTooltipMessage}
+          disabledTooltipMessage={disabledTooltipMessage}
           arrayFields={this.arrayFields}
         />
       )
@@ -130,7 +139,6 @@ class ConnectedFilter extends React.Component {
     const filterTabs = this.getFilterTabs();
     if (!filterTabs || filterTabs.length === 0) return null;
 
-    const { FilterGroup } = this.props.filterComponents;
     return (
       <FilterGroup
         ref={this.filterGroupRef}
@@ -167,17 +175,17 @@ ConnectedFilter.propTypes = {
   }).isRequired,
   guppyConfig: PropTypes.shape({
     path: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
+    dataType: PropTypes.string.isRequired,
+    fieldMapping: PropTypes.arrayOf(
+      PropTypes.shape({
+        field: PropTypes.string,
+        name: PropTypes.string,
+      })
+    ),
   }).isRequired,
   onFilterChange: PropTypes.func,
   onPatientIdsChange: PropTypes.func,
   className: PropTypes.string,
-  fieldMapping: PropTypes.arrayOf(
-    PropTypes.shape({
-      field: PropTypes.string,
-      name: PropTypes.string,
-    })
-  ),
   tierAccessLimit: PropTypes.number,
   onProcessFilterAggsData: PropTypes.func,
   adminAppliedPreFilters: PropTypes.object,
@@ -188,23 +196,17 @@ ConnectedFilter.propTypes = {
   disabledTooltipMessage: PropTypes.string,
   hideZero: PropTypes.bool,
   hidden: PropTypes.bool,
-  filterComponents: PropTypes.shape({
-    FilterGroup: PropTypes.elementType.isRequired,
-    FilterList: PropTypes.elementType.isRequired,
-  }).isRequired,
 };
 
 ConnectedFilter.defaultProps = {
   onFilterChange: () => {},
+  onPatientIdsChange: () => {},
   className: '',
-  fieldMapping: [],
   tierAccessLimit: undefined,
   onProcessFilterAggsData: (data) => data,
   adminAppliedPreFilters: {},
   initialAppliedFilters: {},
   receivedAggsData: {},
-  lockedTooltipMessage: '',
-  disabledTooltipMessage: '',
   hideZero: false,
   hidden: false,
 };
