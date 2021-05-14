@@ -53,8 +53,6 @@
     "postcss-loader": "^5.2.0",
     "postcss-svgo": "^4.0.3",
     "prop-types": "^15.6.0",
-    "query-string": "^7.0.0",
-    "querystring": "^0.2.1",
     "rc-slider": "^9.7.2",
     "rc-tooltip": "^5.1.0",
     "react": "^16.14.0",

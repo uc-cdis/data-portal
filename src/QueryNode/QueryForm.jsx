@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import querystring from 'querystring';
 import Select from 'react-select';
 import Dropdown from '../gen3-ui-component/components/Dropdown';
 import { getSubmitPath } from '../utils';
@@ -12,15 +11,16 @@ class QueryForm extends React.Component {
   };
 
   constructor(props) {
-    const queryParams = querystring.parse(
-      location.search ? location.search.replace(/^\?+/, '') : ''
-    );
+    const searchParams = new URLSearchParams(location.search);
+
     super(props);
     this.state = {
-      selectValue:
-        Object.keys(queryParams).length > 0 && queryParams.node_type
-          ? { value: queryParams.node_type, label: queryParams.node_type }
-          : null,
+      selectValue: searchParams.has('node_type')
+        ? {
+            value: searchParams.get('node_type'),
+            label: searchParams.get('node_type'),
+          }
+        : null,
     };
     this.updateValue = this.updateValue.bind(this);
     this.handleDownloadAll = this.handleDownloadAll.bind(this);

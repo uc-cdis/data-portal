@@ -1,5 +1,4 @@
 import React from 'react';
-import querystring from 'querystring';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select, { createFilter } from 'react-select';
 import Button from '../gen3-ui-component/components/Button';
@@ -51,16 +50,14 @@ class Login extends React.Component {
 
   render() {
     const location = this.props.location; // this is the react-router "location"
-    // compose next according to location.from
-    let next = location.from ? `${basename}${location.from}` : basename;
-    // clean up url: no double slashes
-    next = next.replace(/\/+/g, '/');
-    const queryParams = querystring.parse(
-      location.search ? location.search.replace(/^\?+/, '') : ''
-    );
-    if (queryParams.next) {
-      next = basename === '/' ? queryParams.next : basename + queryParams.next;
-    }
+
+    const searchParams = new URLSearchParams(location.search);
+    const next = (searchParams.has('next')
+      ? basename + searchParams.get('next')
+      : location.from
+      ? `${basename}${location.from}`
+      : basename
+    ).replace(/\/+/g, '/'); // clean up url: no double slashes
 
     const loginOptions = {}; // one for each login provider
     this.props.providers.forEach((provider, i) => {
