@@ -175,7 +175,7 @@ ConnectedFilter.propTypes = {
   }).isRequired,
   guppyConfig: PropTypes.shape({
     path: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
+    dataType: PropTypes.string.isRequired,
   }).isRequired,
   onFilterChange: PropTypes.func,
   onPatientIdsChange: PropTypes.func,

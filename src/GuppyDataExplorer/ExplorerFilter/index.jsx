@@ -17,10 +17,7 @@ function ExplorerFilter({
 }) {
   const filterProps = {
     filterConfig,
-    guppyConfig: {
-      type: guppyConfig.dataType,
-      ...guppyConfig,
-    },
+    guppyConfig,
     fieldMapping: guppyConfig.fieldMapping,
     onFilterChange,
     onPatientIdsChange,
