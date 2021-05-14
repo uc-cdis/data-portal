@@ -56,35 +56,33 @@ function getChartData({
       continue;
     }
 
+    const { chartType: type, title } = chartConfig[`${field}`];
     const { histogram } = aggsData[`${field}`];
-    switch (chartConfig[`${field}`].chartType) {
+    switch (type) {
       case 'count':
+        const { selectedValues } = filter[`${field}`];
         countItems.push({
-          label: chartConfig[`${field}`].title,
-          value: filter[`${field}`]
-            ? filter[`${field}`].selectedValues.length
-            : aggsData[`${field}`].histogram.length,
+          label: title,
+          value: selectedValues?.length || histogram.length,
         });
         break;
       case 'pie':
       case 'bar':
-      case 'stackedBar': {
-        const dataItem = {
-          type: chartConfig[`${field}`].chartType,
-          title: chartConfig[`${field}`].title,
+        summaries.push({
+          type,
+          title,
           data: histogram.map((i) => ({ name: i.key, value: i.count })),
-        };
-        if (chartConfig[`${field}`].chartType === 'stackedBar') {
-          stackedBarCharts.push(dataItem);
-        } else {
-          summaries.push(dataItem);
-        }
+        });
         break;
-      }
+      case 'stackedBar':
+        stackedBarCharts.push({
+          type,
+          title,
+          data: histogram.map((i) => ({ name: i.key, value: i.count })),
+        });
+        break;
       default:
-        throw new Error(
-          `Invalid chartType ${chartConfig[`${field}`].chartType}`
-        );
+        throw new Error(`Invalid chartType ${type}`);
     }
   }
 
