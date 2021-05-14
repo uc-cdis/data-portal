@@ -39,6 +39,72 @@ function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
   return false;
 }
 
+function getChartData({
+  aggsData,
+  chartConfig,
+  filter,
+  nodeCountTitle,
+  totalCount,
+}) {
+  const summaries = [];
+  const countItems = [{ label: nodeCountTitle, value: totalCount }];
+  const stackedBarCharts = [];
+
+  for (const field of Object.keys(chartConfig)) {
+    if (!aggsData?.[`${field}`]?.histogram) {
+      continue;
+    }
+
+    const { histogram } = aggsData[`${field}`];
+    switch (chartConfig[`${field}`].chartType) {
+      case 'count':
+        countItems.push({
+          label: chartConfig[`${field}`].title,
+          value: filter[`${field}`]
+            ? filter[`${field}`].selectedValues.length
+            : aggsData[`${field}`].histogram.length,
+        });
+        break;
+      case 'pie':
+      case 'bar':
+      case 'stackedBar': {
+        const dataItem = {
+          type: chartConfig[`${field}`].chartType,
+          title: chartConfig[`${field}`].title,
+          data: histogram.map((i) => ({ name: i.key, value: i.count })),
+        };
+        if (chartConfig[`${field}`].chartType === 'stackedBar') {
+          stackedBarCharts.push(dataItem);
+        } else {
+          summaries.push(dataItem);
+        }
+        break;
+      }
+      default:
+        throw new Error(
+          `Invalid chartType ${chartConfig[`${field}`].chartType}`
+        );
+    }
+  }
+
+  // sort cout items according to appearence in chart config
+  countItems.sort((a, b) => {
+    const chartConfigValues = Object.values(chartConfig);
+    const aIndex = chartConfigValues.findIndex((v) => v.title === a.label);
+    const bIndex = chartConfigValues.findIndex((v) => v.title === b.label);
+    // if one doesn't exist in chart config, put it to front
+    if (aIndex === -1) return -1;
+    if (bIndex === -1) return 1;
+    return aIndex - bIndex;
+  });
+
+  return {
+    summaries,
+    countItems,
+    stackedBarCharts,
+  };
+}
+
 class ExplorerVisualization extends React.Component {
   constructor(props) {
     super(props);
@@ -55,70 +121,8 @@ class ExplorerVisualization extends React.Component {
     };
   }
 
-  getData = (aggsData, chartConfig, filter) => {
-    const summaries = [];
-    let countItems = [];
-    const stackedBarCharts = [];
-    countItems.push({
-      label: this.props.nodeCountTitle,
-      value: this.props.totalCount,
-    });
-    Object.keys(chartConfig).forEach((field) => {
-      if (!aggsData || !aggsData[`${field}`] || !aggsData[`${field}`].histogram)
-        return;
-      const { histogram } = aggsData[`${field}`];
-      switch (chartConfig[`${field}`].chartType) {
-        case 'count':
-          countItems.push({
-            label: chartConfig[`${field}`].title,
-            value: filter[`${field}`]
-              ? filter[`${field}`].selectedValues.length
-              : aggsData[`${field}`].histogram.length,
-          });
-          break;
-        case 'pie':
-        case 'bar':
-        case 'stackedBar': {
-          const dataItem = {
-            type: chartConfig[`${field}`].chartType,
-            title: chartConfig[`${field}`].title,
-            data: histogram.map((i) => ({ name: i.key, value: i.count })),
-          };
-          if (chartConfig[`${field}`].chartType === 'stackedBar') {
-            stackedBarCharts.push(dataItem);
-          } else {
-            summaries.push(dataItem);
-          }
-          break;
-        }
-        default:
-          throw new Error(
-            `Invalid chartType ${chartConfig[`${field}`].chartType}`
-          );
-      }
-    });
-    // sort cout items according to appearence in chart config
-    countItems = countItems.sort((a, b) => {
-      const aIndex = Object.values(chartConfig).findIndex(
-        (v) => v.title === a.label
-      );
-      const bIndex = Object.values(chartConfig).findIndex(
-        (v) => v.title === b.label
-      );
-      // if one doesn't exist in chart config, put it to front
-      if (aIndex === -1) return -1;
-      if (bIndex === -1) return 1;
-      return aIndex - bIndex;
-    });
-    return { summaries, countItems, stackedBarCharts };
-  };
-
   render() {
-    const chartData = this.getData(
-      this.props.aggsData,
-      this.props.chartConfig,
-      this.props.filter
-    );
+    const chartData = getChartData(this.props);
     const tableColumns =
       this.props.tableConfig.fields && this.props.tableConfig.fields.length > 0
         ? this.props.tableConfig.fields
