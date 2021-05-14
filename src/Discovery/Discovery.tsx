@@ -624,13 +624,17 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               </>}
             >
               <Button
-                type='primary'
+                type='default'
+                style={{
+                  color: selectedResources.length === 0 ? null : 'rgb(139, 51, 105)',
+                  borderColor: selectedResources.length === 0 ? null : 'rgb(139, 51, 105)',
+                }}
                 disabled={selectedResources.length === 0}
                 loading={exportingToWorkspace}
                 icon={<ExportOutlined />}
                 onClick={handleExportToWorkspaceClick}
               >
-                Open in Workspace
+                Open In Workspace
               </Button>
             </Popover>
           </Space>
