@@ -102,6 +102,14 @@ class ConnectedFilter extends React.Component {
     );
     if (Object.keys(processedTabsOptions).length === 0) return null;
 
+    const lockedTooltipMessage = `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.`;
+    const disabledTooltipMessage = `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${
+      this.props.tierAccessLimit
+    } ${
+      this.props.guppyConfig.nodeCountTitle.toLowerCase() ||
+      this.props.guppyConfig.dataType
+    } or more.`;
+
     return this.props.filterConfig.tabs.map(
       ({ fields, searchFields }, index) => (
         <FilterList
@@ -117,8 +125,8 @@ class ConnectedFilter extends React.Component {
             this.arrayFields
           )}
           tierAccessLimit={this.props.tierAccessLimit}
-          lockedTooltipMessage={this.props.lockedTooltipMessage}
-          disabledTooltipMessage={this.props.disabledTooltipMessage}
+          lockedTooltipMessage={lockedTooltipMessage}
+          disabledTooltipMessage={disabledTooltipMessage}
           arrayFields={this.arrayFields}
         />
       )
