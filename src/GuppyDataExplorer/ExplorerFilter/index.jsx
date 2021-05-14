@@ -14,15 +14,15 @@ function ExplorerFilter({ className = '', ...filterProps }) {
 
 ExplorerFilter.propTypes = {
   className: PropTypes.string,
-  filterConfig: FilterConfigType, // inherit from GuppyWrapper
-  guppyConfig: GuppyConfigType, // inherit from GuppyWrapper
+  filterConfig: FilterConfigType.isRequired,
+  guppyConfig: GuppyConfigType.isRequired,
+  tierAccessLimit: PropTypes.number,
+  adminAppliedPreFilters: PropTypes.object,
+  initialAppliedFilters: PropTypes.object,
+  patientIds: PropTypes.arrayOf(PropTypes.string),
+  onPatientIdsChange: PropTypes.func,
   onFilterChange: PropTypes.func, // inherit from GuppyWrapper
   onReceiveNewAggsData: PropTypes.func, // inherit from GuppyWrapper
-  tierAccessLimit: PropTypes.number, // inherit from GuppyWrapper
-  adminAppliedPreFilters: PropTypes.object, // inherit from GuppyWrapper
-  patientIds: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
-  initialAppliedFilters: PropTypes.object,
-  onPatientIdsChange: PropTypes.func,
 };
 
 export default ExplorerFilter;
