@@ -1,6 +1,8 @@
 /* eslint react/forbid-prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
+import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
+import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 import { queryGuppyForStatus } from '../Utils/queries';
 import {
   getFilterSections,
@@ -100,7 +102,6 @@ class ConnectedFilter extends React.Component {
     );
     if (Object.keys(processedTabsOptions).length === 0) return null;
 
-    const { FilterList } = this.props.filterComponents;
     return this.props.filterConfig.tabs.map(
       ({ fields, searchFields }, index) => (
         <FilterList
@@ -130,7 +131,6 @@ class ConnectedFilter extends React.Component {
     const filterTabs = this.getFilterTabs();
     if (!filterTabs || filterTabs.length === 0) return null;
 
-    const { FilterGroup } = this.props.filterComponents;
     return (
       <FilterGroup
         ref={this.filterGroupRef}
@@ -188,10 +188,6 @@ ConnectedFilter.propTypes = {
   disabledTooltipMessage: PropTypes.string,
   hideZero: PropTypes.bool,
   hidden: PropTypes.bool,
-  filterComponents: PropTypes.shape({
-    FilterGroup: PropTypes.elementType.isRequired,
-    FilterList: PropTypes.elementType.isRequired,
-  }).isRequired,
 };
 
 ConnectedFilter.defaultProps = {
