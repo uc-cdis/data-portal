@@ -18,7 +18,6 @@ function ExplorerFilter({
   const filterProps = {
     filterConfig,
     guppyConfig,
-    fieldMapping: guppyConfig.fieldMapping,
     onFilterChange,
     onPatientIdsChange,
     tierAccessLimit,

@@ -117,7 +117,7 @@ class ConnectedFilter extends React.Component {
           sections={getFilterSections(
             fields,
             searchFields,
-            this.props.fieldMapping,
+            this.props.guppyConfig.fieldMapping,
             processedTabsOptions,
             this.state.initialAggsData,
             this.props.adminAppliedPreFilters,
@@ -176,16 +176,16 @@ ConnectedFilter.propTypes = {
   guppyConfig: PropTypes.shape({
     path: PropTypes.string.isRequired,
     dataType: PropTypes.string.isRequired,
+    fieldMapping: PropTypes.arrayOf(
+      PropTypes.shape({
+        field: PropTypes.string,
+        name: PropTypes.string,
+      })
+    ),
   }).isRequired,
   onFilterChange: PropTypes.func,
   onPatientIdsChange: PropTypes.func,
   className: PropTypes.string,
-  fieldMapping: PropTypes.arrayOf(
-    PropTypes.shape({
-      field: PropTypes.string,
-      name: PropTypes.string,
-    })
-  ),
   tierAccessLimit: PropTypes.number,
   onProcessFilterAggsData: PropTypes.func,
   adminAppliedPreFilters: PropTypes.object,
@@ -201,7 +201,6 @@ ConnectedFilter.propTypes = {
 ConnectedFilter.defaultProps = {
   onFilterChange: () => {},
   className: '',
-  fieldMapping: [],
   tierAccessLimit: undefined,
   onProcessFilterAggsData: (data) => data,
   adminAppliedPreFilters: {},
