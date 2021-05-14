@@ -200,14 +200,13 @@ ConnectedFilter.propTypes = {
 
 ConnectedFilter.defaultProps = {
   onFilterChange: () => {},
+  onPatientIdsChange: () => {},
   className: '',
   tierAccessLimit: undefined,
   onProcessFilterAggsData: (data) => data,
   adminAppliedPreFilters: {},
   initialAppliedFilters: {},
   receivedAggsData: {},
-  lockedTooltipMessage: '',
-  disabledTooltipMessage: '',
   hideZero: false,
   hidden: false,
 };
