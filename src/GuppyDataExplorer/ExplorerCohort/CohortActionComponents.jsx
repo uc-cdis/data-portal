@@ -54,16 +54,12 @@ function CohortButton(props) {
  * @param {() => void} prop.onClose
  */
 function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
-  const emptyOption = {
-    label: 'Open New (no cohort)',
-    value: { name: '', description: '', filters: {} },
-  };
   const options = cohorts.map((cohort) => ({
     label: cohort.name,
     value: cohort,
   }));
   const [selected, setSelected] = useState({
-    label: currentCohort.name || 'Open New (no cohort)',
+    label: currentCohort.name,
     value: currentCohort,
   });
   return (
@@ -74,7 +70,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
           label='Name'
           input={
             <Select
-              options={[emptyOption, ...options]}
+              options={options}
               value={selected}
               autoFocus
               clearable={false}
@@ -118,6 +114,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
         />
         <CohortButton
           label='Open Cohort'
+          enabled={selected.value.name !== ''}
           onClick={() => onAction(selected.value)}
         />
       </div>
