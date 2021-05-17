@@ -52,6 +52,10 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     setShowActionForm(false);
   }
 
+  /** @param {{ value: ExplorerCohortActionType}} e */
+  function handleSelectAction({ value }) {
+    openActionForm(value);
+  }
   function handleOpen(/** @type {ExplorerCohort} */ opened) {
     setCohort(cloneDeep(opened));
     onOpenCohort(cloneDeep(opened));
@@ -154,7 +158,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
           </div>
           <CohortActionMenu
             isCohortEmpty={cohort.name === ''}
-            onSelectAction={(e) => openActionForm(e.value)}
+            onSelectAction={handleSelectAction}
           />
         </>
       )}
