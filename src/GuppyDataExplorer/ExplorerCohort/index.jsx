@@ -144,7 +144,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
             </h1>
             <p>
               {cohort.description ? (
-                truncateWithEllipsis(cohort.description, 80)
+                truncateWithEllipsis(cohort.description, 70)
               ) : (
                 <span className='guppy-explorer-cohort__placeholder'>
                   No description
