@@ -10,7 +10,7 @@ import {
   createEmptyCohort,
   truncateWithEllipsis,
   fetchCohorts,
-  saveCohort,
+  createCohort,
   updateCohort,
   deleteCohort,
 } from './utils';
@@ -70,9 +70,9 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     onOpenCohort(cloneDeep(opened));
     closeActionForm();
   }
-  async function handleSave(/** @type {ExplorerCohort} */ saved) {
+  async function handleCreate(/** @type {ExplorerCohort} */ created) {
     try {
-      setCohort(await saveCohort(saved));
+      setCohort(await createCohort(created));
       setCohorts(await fetchCohorts());
     } catch (e) {
       setIsError(true);
@@ -181,7 +181,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
             cohorts={cohorts}
             handlers={{
               handleOpen,
-              handleSave,
+              handleCreate,
               handleUpdate,
               handleDelete,
               handleClose: closeActionForm,

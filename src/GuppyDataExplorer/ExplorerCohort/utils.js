@@ -28,7 +28,7 @@ export function fetchCohorts() {
  * @param {ExplorerCohort} cohort
  * @returns {Promise<ExplorerCohort>}
  */
-export function saveCohort(cohort) {
+export function createCohort(cohort) {
   return fetchWithCreds({
     path: COHORT_URL,
     method: 'POST',

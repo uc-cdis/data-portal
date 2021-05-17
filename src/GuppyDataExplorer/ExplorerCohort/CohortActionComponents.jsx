@@ -128,10 +128,10 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
  * @param {ExplorerFilters} prop.currentFilters
  * @param {ExplorerCohort[]} prop.cohorts
  * @param {boolean} prop.isFiltersChanged
- * @param {(saved: ExplorerCohort) => void} prop.onAction
+ * @param {(created: ExplorerCohort) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
-function CohortSaveForm({
+function CohortCreateForm({
   currentCohort,
   currentFilters,
   cohorts,
@@ -367,7 +367,7 @@ function CohortDeleteForm({ currentCohort, onAction, onClose }) {
  * @param {ExplorerCohort[]} prop.cohorts
  * @param {object} prop.handlers
  * @param {(opened: ExplorerCohort) => void} prop.handlers.handleOpen
- * @param {(saved: ExplorerCohort) => void} prop.handlers.handleSave
+ * @param {(created: ExplorerCohort) => void} prop.handlers.handleCreate
  * @param {(updated: ExplorerCohort) => void} prop.handlers.handleUpdate
  * @param {(deleted: ExplorerCohort) => void} prop.handlers.handleDelete
  * @param {() => void} prop.handlers.handleClose
@@ -383,7 +383,7 @@ export function CohortActionForm({
 }) {
   const {
     handleOpen,
-    handleSave,
+    handleCreate,
     handleUpdate,
     handleDelete,
     handleClose,
@@ -401,12 +401,12 @@ export function CohortActionForm({
       );
     case 'save':
       return currentCohort.name === '' ? (
-        <CohortSaveForm
+        <CohortCreateForm
           currentCohort={currentCohort}
           currentFilters={currentFilters}
           cohorts={cohorts}
           isFiltersChanged={isFiltersChanged}
-          onAction={handleSave}
+          onAction={handleCreate}
           onClose={handleClose}
         />
       ) : (
@@ -421,12 +421,12 @@ export function CohortActionForm({
       );
     case 'save as':
       return (
-        <CohortSaveForm
+        <CohortCreateForm
           currentCohort={currentCohort}
           currentFilters={currentFilters}
           cohorts={cohorts}
           isFiltersChanged={isFiltersChanged}
-          onAction={handleSave}
+          onAction={handleCreate}
           onClose={handleClose}
         />
       );
