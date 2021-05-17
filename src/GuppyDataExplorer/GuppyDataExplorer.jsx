@@ -154,6 +154,7 @@ class GuppyDataExplorer extends React.Component {
               survivalAnalysisConfig={this.props.survivalAnalysisConfig}
               buttonConfig={this.props.buttonConfig}
               guppyConfig={this.props.guppyConfig}
+              patientIdsConfig={this.props.patientIdsConfig}
               history={this.props.history}
               nodeCountTitle={
                 this.props.guppyConfig.nodeCountTitle ||
