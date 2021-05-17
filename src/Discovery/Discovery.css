@@ -168,14 +168,29 @@
   transition: transform 300ms, width 0ms 150ms;
 }
 
+.discovery-table-header {
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
 .discovery-table__row {
   cursor: pointer;
 }
 
-/* some light css hacks here to override antd default expanded row styles. */
-.discovery-table__expanded-row > td.ant-table-cell {
-  color: #7f7f7f;
+.discovery-table-container th.ant-table-cell,
+.discovery-table-container th.ant-table-cell:hover,
+.discovery-table-container td.ant-table-cell,
+.discovery-table-container td.ant-table-cell:hover {
+  background: #e7e7e7;
 }
+
+.discovery-table__expanded-row > td.ant-table-cell {
+  background: #e7e7e7;
+  margin-top: -10px;
+  font-size: 12px;
+}
+
 .discovery-table__expanded-row-content {
   cursor: pointer;
   height: 40px;

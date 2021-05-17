@@ -272,7 +272,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   // Set up table columns
   // -----
   const columns = config.studyColumns.map(column => ({
-    title: column.name,
+    title: <div className='discovery-table-header'>{column.name}</div>,
     ellipsis: !!column.ellipsis,
     width: column.width,
     render: (_, record) => {
@@ -298,7 +298,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   );
   columns.push(
     {
-      title: 'Tags',
+      title: <div className='discovery-table-header'>Tags</div>,
       ellipsis: false,
       width: undefined,
       render: (_, record) => (
@@ -343,7 +343,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   );
   if (config.features.authorization.enabled) {
     columns.push({
-      title: 'Access',
+      title: <div className='discovery-table-header'>Data Access</div>,
       filters: [
         {
           text: <><UnlockOutlined />Accessible</>,
