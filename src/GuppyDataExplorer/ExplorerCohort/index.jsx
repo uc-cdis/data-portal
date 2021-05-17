@@ -54,7 +54,16 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
 
   /** @param {{ value: ExplorerCohortActionType}} e */
   function handleSelectAction({ value }) {
-    openActionForm(value);
+    if (value === 'new') {
+      handleNew();
+    } else {
+      openActionForm(value);
+    }
+  }
+  function handleNew() {
+    const emptyCohort = createEmptyCohort();
+    setCohort(emptyCohort);
+    onOpenCohort(emptyCohort);
   }
   function handleOpen(/** @type {ExplorerCohort} */ opened) {
     setCohort(cloneDeep(opened));

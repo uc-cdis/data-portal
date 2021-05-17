@@ -14,6 +14,7 @@ import './typedef';
  */
 export function CohortActionMenu({ isCohortEmpty, onSelectAction }) {
   const options = [
+    { label: 'New', value: 'new', isDisabled: isCohortEmpty },
     { label: 'Open', value: 'open' },
     { label: isCohortEmpty ? 'Save New' : 'Save As', value: 'save' },
     { label: 'Update', value: 'update', isDisabled: isCohortEmpty },

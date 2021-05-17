@@ -29,5 +29,5 @@
  */
 
 /**
- * @typedef {'open' | 'save' | 'update' | 'delete'} ExplorerCohortActionType
+ * @typedef {'new' | 'open' | 'save' | 'update' | 'delete'} ExplorerCohortActionType
  */
