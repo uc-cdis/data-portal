@@ -21,8 +21,8 @@ export function CohortActionMenu({
   const options = [
     { label: 'New', value: 'new', isDisabled: isCohortEmpty },
     { label: 'Open', value: 'open', isDisabled: hasNoSavedCohorts },
-    { label: isCohortEmpty ? 'Save New' : 'Save As', value: 'save' },
-    { label: 'Update', value: 'update', isDisabled: isCohortEmpty },
+    { label: 'Save', value: 'save' },
+    { label: 'Save As', value: 'save as', isDisabled: isCohortEmpty },
     { label: 'Delete', value: 'delete', isDisabled: isCohortEmpty },
   ];
   return (
@@ -249,7 +249,7 @@ function CohortUpdateForm({
   }
   return (
     <div className='guppy-explorer-cohort__form'>
-      <h4>Update the current Cohort</h4>
+      <h4>Save changes to the current Cohort</h4>
       {isFiltersChanged && (
         <p>
           <FontAwesomeIcon
@@ -400,7 +400,7 @@ export function CohortActionForm({
         />
       );
     case 'save':
-      return (
+      return currentCohort.name === '' ? (
         <CohortSaveForm
           currentCohort={currentCohort}
           currentFilters={currentFilters}
@@ -409,15 +409,24 @@ export function CohortActionForm({
           onAction={handleSave}
           onClose={handleClose}
         />
-      );
-    case 'update':
-      return (
+      ) : (
         <CohortUpdateForm
           currentCohort={currentCohort}
           currentFilters={currentFilters}
           cohorts={cohorts}
           isFiltersChanged={isFiltersChanged}
           onAction={handleUpdate}
+          onClose={handleClose}
+        />
+      );
+    case 'save as':
+      return (
+        <CohortSaveForm
+          currentCohort={currentCohort}
+          currentFilters={currentFilters}
+          cohorts={cohorts}
+          isFiltersChanged={isFiltersChanged}
+          onAction={handleSave}
           onClose={handleClose}
         />
       );
