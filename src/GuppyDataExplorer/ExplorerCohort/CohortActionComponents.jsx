@@ -1,32 +1,43 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import { stringifyFilters } from './utils';
 import './ExplorerCohort.css';
 import './typedef';
 
-function CohortButton(props) {
-  return <Button className='guppy-explorer-cohort__button' {...props} />;
-}
-
 /**
- * @param {{ labelIcon: IconProp; labelText: string; [x: string]: * }} prop
+ * @param {Object} prop
+ * @param {boolean} prop.isCohortEmpty
+ * @param {({ value: ExplorerCohortActionType }) => void} prop.onSelectAction
  */
-export function CohortActionButton({ labelIcon, labelText, ...attrs }) {
+export function CohortActionMenu({ isCohortEmpty, onSelectAction }) {
+  const options = [
+    { label: 'Open', value: 'open' },
+    { label: isCohortEmpty ? 'Save New' : 'Save As', value: 'save' },
+    { label: 'Update', value: 'update', isDisabled: isCohortEmpty },
+    { label: 'Delete', value: 'delete', isDisabled: isCohortEmpty },
+  ];
   return (
-    <CohortButton
-      buttonType='default'
-      label={
-        <div>
-          {labelText} {labelIcon && <FontAwesomeIcon icon={labelIcon} />}
-        </div>
-      }
-      {...attrs}
+    <Select
+      className='guppy-explorer-cohort__menu'
+      value={{ label: 'Manage Cohorts', value: '' }}
+      options={options}
+      theme={(theme) => ({
+        ...theme,
+        colors: {
+          ...theme.colors,
+          primary: 'var(--pcdc-color__primary)',
+        },
+      })}
+      onChange={onSelectAction}
     />
   );
+}
+
+function CohortButton(props) {
+  return <Button className='guppy-explorer-cohort__button' {...props} />;
 }
 
 /**

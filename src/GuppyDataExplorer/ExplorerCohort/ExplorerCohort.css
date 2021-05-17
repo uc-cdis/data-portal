@@ -2,9 +2,10 @@
   line-height: 1.25;
 }
 
-.guppy-explorer-cohort__buttons {
-  display: flex;
-  justify-content: flex-end;
+.guppy-explorer-cohort__menu {
+  min-width: 180px;
+  margin-left: 2rem;
+  text-align: center;
 }
 
 .guppy-explorer-cohort__button {

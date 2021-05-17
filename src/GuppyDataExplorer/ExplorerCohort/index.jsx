@@ -5,7 +5,7 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimplePopup from '../../components/SimplePopup';
 import Button from '../../gen3-ui-component/components/Button';
-import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
+import { CohortActionMenu, CohortActionForm } from './CohortActionComponents';
 import {
   createEmptyCohort,
   truncateWithEllipsis,
@@ -152,31 +152,10 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
               )}
             </p>
           </div>
-          <div className='guppy-explorer-cohort__buttons'>
-            <CohortActionButton
-              labelIcon='folder-open'
-              labelText='Open Cohort'
-              enabled={cohorts.length > 0}
-              onClick={() => openActionForm('open')}
-            />
-            <CohortActionButton
-              labelIcon='save'
-              labelText={`Save ${cohort.name === '' ? 'New' : 'As'}`}
-              onClick={() => openActionForm('save')}
-            />
-            <CohortActionButton
-              labelIcon='pen'
-              labelText='Update Cohort'
-              enabled={cohort.name !== ''}
-              onClick={() => openActionForm('update')}
-            />
-            <CohortActionButton
-              labelIcon='trash-alt'
-              labelText='Delete Cohort'
-              enabled={cohort.name !== ''}
-              onClick={() => openActionForm('delete')}
-            />
-          </div>
+          <CohortActionMenu
+            isCohortEmpty={cohort.name === ''}
+            onSelectAction={(e) => openActionForm(e.value)}
+          />
         </>
       )}
       {showActionForm && (
