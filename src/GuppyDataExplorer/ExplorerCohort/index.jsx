@@ -167,6 +167,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
           </div>
           <CohortActionMenu
             isCohortEmpty={cohort.name === ''}
+            hasNoSavedCohorts={cohorts.length === 0}
             onSelectAction={handleSelectAction}
           />
         </>

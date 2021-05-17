@@ -10,12 +10,17 @@ import './typedef';
 /**
  * @param {Object} prop
  * @param {boolean} prop.isCohortEmpty
+ * @param {boolean} prop.hasNoSavedCohorts
  * @param {({ value: ExplorerCohortActionType }) => void} prop.onSelectAction
  */
-export function CohortActionMenu({ isCohortEmpty, onSelectAction }) {
+export function CohortActionMenu({
+  isCohortEmpty,
+  hasNoSavedCohorts,
+  onSelectAction,
+}) {
   const options = [
     { label: 'New', value: 'new', isDisabled: isCohortEmpty },
-    { label: 'Open', value: 'open' },
+    { label: 'Open', value: 'open', isDisabled: hasNoSavedCohorts },
     { label: isCohortEmpty ? 'Save New' : 'Save As', value: 'save' },
     { label: 'Update', value: 'update', isDisabled: isCohortEmpty },
     { label: 'Delete', value: 'delete', isDisabled: isCohortEmpty },
