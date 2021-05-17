@@ -320,7 +320,7 @@ function CohortUpdateForm({
           onClick={onClose}
         />
         <CohortButton
-          label='Update Cohort'
+          label='Save changes'
           enabled={
             (isFiltersChanged ||
               cohort.name !== currentCohort.name ||
