@@ -1,32 +1,49 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import { stringifyFilters } from './utils';
 import './ExplorerCohort.css';
 import './typedef';
 
-function CohortButton(props) {
-  return <Button className='guppy-explorer-cohort__button' {...props} />;
-}
-
 /**
- * @param {{ labelIcon: IconProp; labelText: string; [x: string]: * }} prop
+ * @param {Object} prop
+ * @param {boolean} prop.isCohortEmpty
+ * @param {boolean} prop.hasNoSavedCohorts
+ * @param {({ value: ExplorerCohortActionType }) => void} prop.onSelectAction
  */
-export function CohortActionButton({ labelIcon, labelText, ...attrs }) {
+export function CohortActionMenu({
+  isCohortEmpty,
+  hasNoSavedCohorts,
+  onSelectAction,
+}) {
+  const options = [
+    { label: 'New', value: 'new', isDisabled: isCohortEmpty },
+    { label: 'Open', value: 'open', isDisabled: hasNoSavedCohorts },
+    { label: 'Save', value: 'save' },
+    { label: 'Save As', value: 'save as', isDisabled: isCohortEmpty },
+    { label: 'Delete', value: 'delete', isDisabled: isCohortEmpty },
+  ];
   return (
-    <CohortButton
-      buttonType='default'
-      label={
-        <div>
-          {labelText} {labelIcon && <FontAwesomeIcon icon={labelIcon} />}
-        </div>
-      }
-      {...attrs}
+    <Select
+      className='guppy-explorer-cohort__menu'
+      value={{ label: 'Manage Cohorts', value: '' }}
+      options={options}
+      theme={(theme) => ({
+        ...theme,
+        colors: {
+          ...theme.colors,
+          primary: 'var(--pcdc-color__primary)',
+        },
+      })}
+      onChange={onSelectAction}
     />
   );
+}
+
+function CohortButton(props) {
+  return <Button className='guppy-explorer-cohort__button' {...props} />;
 }
 
 /**
@@ -37,16 +54,12 @@ export function CohortActionButton({ labelIcon, labelText, ...attrs }) {
  * @param {() => void} prop.onClose
  */
 function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
-  const emptyOption = {
-    label: 'Open New (no cohort)',
-    value: { name: '', description: '', filters: {} },
-  };
   const options = cohorts.map((cohort) => ({
     label: cohort.name,
     value: cohort,
   }));
   const [selected, setSelected] = useState({
-    label: currentCohort.name || 'Open New (no cohort)',
+    label: currentCohort.name,
     value: currentCohort,
   });
   return (
@@ -57,7 +70,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
           label='Name'
           input={
             <Select
-              options={[emptyOption, ...options]}
+              options={options}
               value={selected}
               autoFocus
               clearable={false}
@@ -101,6 +114,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
         />
         <CohortButton
           label='Open Cohort'
+          enabled={selected.value.name !== ''}
           onClick={() => onAction(selected.value)}
         />
       </div>
@@ -114,10 +128,10 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
  * @param {ExplorerFilters} prop.currentFilters
  * @param {ExplorerCohort[]} prop.cohorts
  * @param {boolean} prop.isFiltersChanged
- * @param {(saved: ExplorerCohort) => void} prop.onAction
+ * @param {(created: ExplorerCohort) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
-function CohortSaveForm({
+function CohortCreateForm({
   currentCohort,
   currentFilters,
   cohorts,
@@ -235,7 +249,7 @@ function CohortUpdateForm({
   }
   return (
     <div className='guppy-explorer-cohort__form'>
-      <h4>Update the current Cohort</h4>
+      <h4>Save changes to the current Cohort</h4>
       {isFiltersChanged && (
         <p>
           <FontAwesomeIcon
@@ -306,7 +320,7 @@ function CohortUpdateForm({
           onClick={onClose}
         />
         <CohortButton
-          label='Update Cohort'
+          label='Save changes'
           enabled={
             (isFiltersChanged ||
               cohort.name !== currentCohort.name ||
@@ -353,7 +367,7 @@ function CohortDeleteForm({ currentCohort, onAction, onClose }) {
  * @param {ExplorerCohort[]} prop.cohorts
  * @param {object} prop.handlers
  * @param {(opened: ExplorerCohort) => void} prop.handlers.handleOpen
- * @param {(saved: ExplorerCohort) => void} prop.handlers.handleSave
+ * @param {(created: ExplorerCohort) => void} prop.handlers.handleCreate
  * @param {(updated: ExplorerCohort) => void} prop.handlers.handleUpdate
  * @param {(deleted: ExplorerCohort) => void} prop.handlers.handleDelete
  * @param {() => void} prop.handlers.handleClose
@@ -369,7 +383,7 @@ export function CohortActionForm({
 }) {
   const {
     handleOpen,
-    handleSave,
+    handleCreate,
     handleUpdate,
     handleDelete,
     handleClose,
@@ -386,24 +400,33 @@ export function CohortActionForm({
         />
       );
     case 'save':
-      return (
-        <CohortSaveForm
+      return currentCohort.name === '' ? (
+        <CohortCreateForm
           currentCohort={currentCohort}
           currentFilters={currentFilters}
           cohorts={cohorts}
           isFiltersChanged={isFiltersChanged}
-          onAction={handleSave}
+          onAction={handleCreate}
           onClose={handleClose}
         />
-      );
-    case 'update':
-      return (
+      ) : (
         <CohortUpdateForm
           currentCohort={currentCohort}
           currentFilters={currentFilters}
           cohorts={cohorts}
           isFiltersChanged={isFiltersChanged}
           onAction={handleUpdate}
+          onClose={handleClose}
+        />
+      );
+    case 'save as':
+      return (
+        <CohortCreateForm
+          currentCohort={currentCohort}
+          currentFilters={currentFilters}
+          cohorts={cohorts}
+          isFiltersChanged={isFiltersChanged}
+          onAction={handleCreate}
           onClose={handleClose}
         />
       );

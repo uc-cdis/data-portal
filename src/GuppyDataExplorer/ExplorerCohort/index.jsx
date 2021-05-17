@@ -5,12 +5,12 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimplePopup from '../../components/SimplePopup';
 import Button from '../../gen3-ui-component/components/Button';
-import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
+import { CohortActionMenu, CohortActionForm } from './CohortActionComponents';
 import {
   createEmptyCohort,
   truncateWithEllipsis,
   fetchCohorts,
-  saveCohort,
+  createCohort,
   updateCohort,
   deleteCohort,
 } from './utils';
@@ -52,14 +52,27 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     setShowActionForm(false);
   }
 
+  /** @param {{ value: ExplorerCohortActionType}} e */
+  function handleSelectAction({ value }) {
+    if (value === 'new') {
+      handleNew();
+    } else {
+      openActionForm(value);
+    }
+  }
+  function handleNew() {
+    const emptyCohort = createEmptyCohort();
+    setCohort(emptyCohort);
+    onOpenCohort(emptyCohort);
+  }
   function handleOpen(/** @type {ExplorerCohort} */ opened) {
     setCohort(cloneDeep(opened));
     onOpenCohort(cloneDeep(opened));
     closeActionForm();
   }
-  async function handleSave(/** @type {ExplorerCohort} */ saved) {
+  async function handleCreate(/** @type {ExplorerCohort} */ created) {
     try {
-      setCohort(await saveCohort(saved));
+      setCohort(await createCohort(created));
       setCohorts(await fetchCohorts());
     } catch (e) {
       setIsError(true);
@@ -144,7 +157,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
             </h1>
             <p>
               {cohort.description ? (
-                truncateWithEllipsis(cohort.description, 80)
+                truncateWithEllipsis(cohort.description, 70)
               ) : (
                 <span className='guppy-explorer-cohort__placeholder'>
                   No description
@@ -152,31 +165,11 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
               )}
             </p>
           </div>
-          <div className='guppy-explorer-cohort__buttons'>
-            <CohortActionButton
-              labelIcon='folder-open'
-              labelText='Open Cohort'
-              enabled={cohorts.length > 0}
-              onClick={() => openActionForm('open')}
-            />
-            <CohortActionButton
-              labelIcon='save'
-              labelText={`Save ${cohort.name === '' ? 'New' : 'As'}`}
-              onClick={() => openActionForm('save')}
-            />
-            <CohortActionButton
-              labelIcon='pen'
-              labelText='Update Cohort'
-              enabled={cohort.name !== ''}
-              onClick={() => openActionForm('update')}
-            />
-            <CohortActionButton
-              labelIcon='trash-alt'
-              labelText='Delete Cohort'
-              enabled={cohort.name !== ''}
-              onClick={() => openActionForm('delete')}
-            />
-          </div>
+          <CohortActionMenu
+            isCohortEmpty={cohort.name === ''}
+            hasNoSavedCohorts={cohorts.length === 0}
+            onSelectAction={handleSelectAction}
+          />
         </>
       )}
       {showActionForm && (
@@ -188,7 +181,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
             cohorts={cohorts}
             handlers={{
               handleOpen,
-              handleSave,
+              handleCreate,
               handleUpdate,
               handleDelete,
               handleClose: closeActionForm,
