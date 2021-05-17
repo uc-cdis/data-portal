@@ -6,6 +6,7 @@ import PercentageStackedBarChart from '../../gen3-ui-component/components/charts
 import Spinner from '../../gen3-ui-component/components/Spinner/Spinner';
 import { components } from '../../params';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
+import ExplorerFindCohortButton from '../ExplorerFindCohortButton';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
@@ -15,6 +16,7 @@ import {
   GuppyConfigType,
   SurvivalAnalysisConfigType,
   TableConfigType,
+  PatientIdsConfigType,
 } from '../configTypeDef';
 import './ExplorerVisualization.css';
 
@@ -124,6 +126,7 @@ function ExplorerVisualization({
   guppyConfig = {},
   survivalAnalysisConfig = {},
   tableConfig = {},
+  patientIdsConfig = {},
   nodeCountTitle,
   tierAccessLimit,
 }) {
@@ -198,6 +201,9 @@ function ExplorerVisualization({
           ))}
         </div>
         <div className='guppy-explorer-visualization__button-group'>
+          {patientIdsConfig?.enabled && (
+            <ExplorerFindCohortButton filter={filter} />
+          )}
           <ReduxExplorerButtonGroup {...buttonGroupProps} />
         </div>
       </div>
@@ -281,6 +287,7 @@ ExplorerVisualization.propTypes = {
   guppyConfig: GuppyConfigType,
   survivalAnalysisConfig: SurvivalAnalysisConfigType,
   tableConfig: TableConfigType,
+  patientIdsConfig: PatientIdsConfigType,
   nodeCountTitle: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number.isRequired,
 };

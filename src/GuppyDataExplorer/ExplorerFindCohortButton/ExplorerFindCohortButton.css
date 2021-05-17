@@ -1,0 +1,10 @@
+.explorer-find-cohort__button {
+  margin-right: 10px;
+}
+
+.explorer-find-cohort__form {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
