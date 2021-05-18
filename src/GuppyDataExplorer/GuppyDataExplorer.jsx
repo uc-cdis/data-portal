@@ -23,36 +23,40 @@ class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
 
-    const searchParams = new URLSearchParams(props.history.location.search);
-
-    let initialAppliedFilters = {};
-    if (searchParams.has('filter')) {
-      try {
-        const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
-        if (validateFilter(filterInUrl, props.filterConfig))
-          initialAppliedFilters = filterInUrl;
-        else throw undefined;
-      } catch (e) {
-        console.error('Invalid filter value in URL.', e);
-        props.history.push({ search: '' });
-      }
-    }
-
-    const patientIds = props.patientIdsConfig?.enabled
-      ? searchParams.has('patientIds')
-        ? searchParams.get('patientIds').split(',')
-        : []
-      : undefined;
-
     this.state = {
-      initialAppliedFilters,
-      patientIds,
+      initialAppliedFilters: {},
+      patientIds: undefined,
     };
     this._isMounted = false;
   }
 
   componentDidMount() {
     this._isMounted = true;
+    const syncFilterStateWithURL = () => {
+      const searchParams = new URLSearchParams(
+        this.props.history.location.search
+      );
+      let initialAppliedFilters = {};
+      if (searchParams.has('filter'))
+        try {
+          const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
+          if (validateFilter(filterInUrl, this.props.filterConfig))
+            initialAppliedFilters = filterInUrl;
+          else throw undefined;
+        } catch (e) {
+          console.error('Invalid filter value in URL.', e);
+        }
+
+      const patientIds = this.props.patientIdsConfig?.enabled
+        ? searchParams.has('patientIds')
+          ? searchParams.get('patientIds').split(',')
+          : []
+        : undefined;
+
+      this._isMounted && this.setState({ initialAppliedFilters, patientIds });
+    };
+    window.onpopstate = syncFilterStateWithURL;
+    syncFilterStateWithURL();
   }
 
   componentWillUnmount() {
