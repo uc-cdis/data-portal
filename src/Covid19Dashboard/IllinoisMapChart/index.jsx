@@ -6,6 +6,13 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
 import countyData from '../data/us_counties';
+import LayerTemplate from '../overlays/LayerTemplate';
+import PopulationIL from '../overlays/PopulationIL';
+import GagnonStrainLayer from '../overlays/GagnonStrainLayer';
+
+import strainData from '../data/gagnon_lab_strain_data.json';
+import MapSlider from '../MapSlider';
+
 
 function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
@@ -41,6 +48,42 @@ function addDataToGeoJsonBase(data) {
   return geoJson;
 }
 
+function addStrainDataToGeoJsonBase(data) {
+  // Only select Illinois data.
+  // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
+  // but not in JHU data. So don't display Chicago separately.
+  const _countyData = {...countyData};
+
+  const _base = {
+    ..._countyData,
+    features: _countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
+  };
+  const _geoJson = {
+    ..._base,
+    features: _base.features.map((_loc) => {
+      const _location = _loc;
+      if (_location.properties.FIPS && !(_location.properties.FIPS in data)) {
+        // `countyData` stores FIPS with trailing zeros, JHU data doesn't
+        _location.properties.FIPS = Number(_location.properties.FIPS).toString();
+      }
+      if (_location.properties.FIPS && _location.properties.FIPS in data) {
+        _location.properties = Object.assign(
+          data[_location.properties.FIPS][0],
+          _location.properties,
+        );
+        return _location;
+      }
+
+      // no data for this location
+      // location.properties.confirmed = 0;
+      // location.properties.deaths = 0;
+      return _location;
+    }),
+  };
+
+  return _geoJson;
+}
+
 function filterCountyGeoJson(selectedFips) {
   return {
     ...countyData,
@@ -48,10 +91,15 @@ function filterCountyGeoJson(selectedFips) {
   };
 }
 
+
+
 class IllinoisMapChart extends React.Component {
   constructor(props) {
     super(props);
+    this.strainData = strainData;
     this.choroCountyGeoJson = null;
+    this.strainDataGeoJson = null;
+    this._map = null;
     this.state = {
       mapSize: {
         width: '100%',
@@ -66,6 +114,13 @@ class IllinoisMapChart extends React.Component {
         pitch: 0,
       },
       hoverInfo: null,
+      _map: null,
+      overlay_layers: {
+         us_counties : { title: 'US Counties', visible: 'visible' },
+         il_population : { title: 'IL Population', visible: 'visible' },
+         strain_data : { title: 'Strain Data', visible: 'visible' },
+         county_data: {title: 'Case Data', visible: 'visible'}
+      },
     };
     this.mapData = {
       modeledCountyGeoJson: null,
@@ -73,17 +128,28 @@ class IllinoisMapChart extends React.Component {
       colorsAsList: null,
     };
   }
+
+  // componentDidMount = () => {
+  //   this.strainData = this.getS3Data();
+  // }
+
   componentDidUpdate() {
+    console.log(this.strainData);
     if (!(this.mapData.colorsAsList === null
-          && Object.keys(this.props.jsonByLevel.county).length > 0)) {
+      && Object.keys(this.props.jsonByLevel.county).length > 0)) {
       return;
     }
     if (Object.keys(this.props.jsonByLevel.country).length && !this.choroCountyGeoJson) {
+      this.strainDataGeoJson = addStrainDataToGeoJsonBase(
+        this.strainData,
+      );
       this.choroCountyGeoJson = addDataToGeoJsonBase(
         this.props.jsonByLevel.county,
       );
     }
     this.mapData.modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
+
+
 
     // Finds second highest value in data set
     // Second highest value is used to better balance distribution
@@ -129,6 +195,15 @@ class IllinoisMapChart extends React.Component {
       .map(item => [+item[0], item[1]]).flat();
   }
 
+  // getS3Data = (url=null) => {
+  //   const resp = fetch('https://covd-map-occ-prc-qa.s3.amazonaws.com/gagnon_lab_strain_data.json') //.then(resp => console.log(resp)).catch(err => console.log(err));
+  //   return resp;
+  //   this.strainData = resp;
+  // }
+
+
+
+
   onHover = (event) => {
     if (!event.features) { return; }
 
@@ -145,30 +220,56 @@ class IllinoisMapChart extends React.Component {
     };
 
     event.features.forEach((feature) => {
-      if (feature.layer.id !== 'confirmed-choropleth') {
+      if (feature.layer.id !== 'confirmed-choropleth' && feature.layer.id !== 'strain-data') {
         return;
       }
-      const confirmed = formatNumberToDisplay(feature.properties.confirmed);
-      const deaths = formatNumberToDisplay(feature.properties.deaths);
-      const recovered = formatNumberToDisplay(feature.properties.recovered);
+      if (feature.layer.id === 'confirmed-choropleth') {
+        const confirmed = formatNumberToDisplay(feature.properties.confirmed);
+        const deaths = formatNumberToDisplay(feature.properties.deaths);
+        const recovered = formatNumberToDisplay(feature.properties.recovered);
 
-      const state = feature.properties.STATE;
-      const county = feature.properties.COUNTYNAME;
-      let locationName = 'US';
-      locationName = (state && state !== 'null' ? `${state}, ` : '') + locationName;
-      locationName = (county && county !== 'null' ? `${county}, ` : '') + locationName;
-      hoverInfo = {
-        lngLat: event.lngLat,
-        locationName,
-        FIPS: feature.properties.FIPS,
-        values: {
-          'confirmed cases': confirmed,
-          deaths,
-        },
-      };
-      if (recovered) {
-        hoverInfo.values.recovered = recovered;
+        const state = feature.properties.STATE;
+        const county = feature.properties.COUNTYNAME;
+        let locationName = 'US';
+        locationName = (state && state !== 'null' ? `${state}, ` : '') + locationName;
+        locationName = (county && county !== 'null' ? `${county}, ` : '') + locationName;
+        hoverInfo = {
+          lngLat: event.lngLat,
+          locationName,
+          FIPS: feature.properties.FIPS,
+          values: {
+            'confirmed cases': confirmed,
+            deaths,
+          },
+        };
+        if (recovered) {
+          hoverInfo.values.recovered = recovered;
+        }
       }
+      if (feature.layer.id === 'strain-data') {
+        const nineteen_a = formatNumberToDisplay(feature.properties['19A']);
+        const twenty_a = formatNumberToDisplay(feature.properties['20A']);
+        const twenty_b = formatNumberToDisplay(feature.properties['20B']);
+        const twenty_c = formatNumberToDisplay(feature.properties['20C']);
+
+        const state = feature.properties.STATE;
+        const county = feature.properties.COUNTYNAME;
+        let locationName = 'US';
+        locationName = (state && state !== 'null' ? `${state}, ` : '') + locationName;
+        locationName = (county && county !== 'null' ? `${county}, ` : '') + locationName;
+        hoverInfo = {
+          lngLat: event.lngLat,
+          locationName,
+          FIPS: feature.properties.FIPS,
+          values: {
+            '19A': nineteen_a,
+            '20A': twenty_a,
+            '20B': twenty_b,
+            '20C': twenty_c,
+          },
+        };
+      }
+      
     });
 
     this.setState({
@@ -190,6 +291,12 @@ class IllinoisMapChart extends React.Component {
         );
       }
     });
+  }
+
+  onLayerSelect = (event, id) => {
+    const newState = Object.assign({}, this.state.overlay_layers);
+    newState[id].visible = event.target.checked ? 'visible' : 'none';
+    this.setState(newState);
   }
 
   renderHoverPopup() {
@@ -228,7 +335,13 @@ class IllinoisMapChart extends React.Component {
           showLegend
           colors={this.mapData.colors}
           lastUpdated={this.props.jsonByLevel.last_updated}
-        />
+          layers={this.state.overlay_layers}
+          onLayerSelectChange={this.onLayerSelect}
+        >
+
+
+        </ControlPanel>
+
         <ReactMapGL.InteractiveMap
           className='.map-chart__mapgl-map'
           mapboxApiAccessToken={mapboxAPIToken}
@@ -259,6 +372,7 @@ class IllinoisMapChart extends React.Component {
                 ],
                 'fill-opacity': 0.6,
               }}
+              layout={{ visibility: this.state.overlay_layers.county_data.visible }}
             />
           </ReactMapGL.Source>
 
@@ -274,7 +388,11 @@ class IllinoisMapChart extends React.Component {
               }}
             />
           </ReactMapGL.Source>
+          <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
+          <PopulationIL visibility={this.state.overlay_layers.il_population.visible} />
+          <GagnonStrainLayer visibility={this.state.overlay_layers.strain_data.visible} data={this.strainDataGeoJson}/>
         </ReactMapGL.InteractiveMap>
+        {this.state.overlay_layers.strain_data.visible === 'visible' && <MapSlider title={'View strain number by county and date'} value={44} />}
       </div>
     );
   }
