@@ -115,7 +115,9 @@ const getFilterValuesByKey = memoize(
           }
         });
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error(err);
+        // eslint-disable-next-line no-console
         console.error(`The above error appeared in study ${study[config.minimalFieldMapping.uid]}`);
       }
     });
