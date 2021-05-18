@@ -108,11 +108,16 @@ const getFilterValuesByKey = memoize(
         console.warn(`Warning: expected to find property '${config.features.advSearchFilters.field}' in study metadata for study ${study[config.minimalFieldMapping.uid]}, but could not find it! This study will not be filterable by the advanced search filters.`);
         return;
       }
-      study[filtersField].forEach((filterValue) => {
-        if (filterValue.key === key) {
-          filterValuesMap[filterValue.value] = true;
-        }
-      });
+      try {
+        study[filtersField].forEach((filterValue) => {
+          if (filterValue.key === key) {
+            filterValuesMap[filterValue.value] = true;
+          }
+        });
+      } catch (err) {
+        console.error(err);
+        console.error(`The above error appeared in study ${study[config.minimalFieldMapping.uid]}`);
+      }
     });
     return Object.keys(filterValuesMap);
   },
