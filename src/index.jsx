@@ -57,7 +57,7 @@ sessionMonitor.start();
 
 // render the app after the store is configured
 async function init() {
-  const store = await getReduxStore();
+    const store = await getReduxStore();
 
   // asyncSetInterval(() => store.dispatch(fetchUser), 60000);
   ReactGA.initialize(gaTracking);

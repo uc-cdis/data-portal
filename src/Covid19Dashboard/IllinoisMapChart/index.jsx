@@ -14,6 +14,7 @@ import strainData from '../data/gagnon_lab_strain_data.json';
 import MapSlider from '../MapSlider';
 
 
+
 function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
   // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
@@ -391,6 +392,7 @@ class IllinoisMapChart extends React.Component {
           <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
           <PopulationIL visibility={this.state.overlay_layers.il_population.visible} />
           <GagnonStrainLayer visibility={this.state.overlay_layers.strain_data.visible} data={this.strainDataGeoJson}/>
+
         </ReactMapGL.InteractiveMap>
         {this.state.overlay_layers.strain_data.visible === 'visible' && <MapSlider title={'View strain number by county and date'} value={44} />}
       </div>
