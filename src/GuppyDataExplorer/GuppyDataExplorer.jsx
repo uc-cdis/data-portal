@@ -23,36 +23,45 @@ class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
 
-    const searchParams = new URLSearchParams(props.history.location.search);
-
-    let initialAppliedFilters = {};
-    if (searchParams.has('filter')) {
-      try {
-        const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
-        if (validateFilter(filterInUrl, props.filterConfig))
-          initialAppliedFilters = filterInUrl;
-        else throw undefined;
-      } catch (e) {
-        console.error('Invalid filter value in URL.', e);
-        props.history.push({ search: '' });
-      }
-    }
-
-    const patientIds = props.patientIdsConfig?.enabled
-      ? searchParams.has('patientIds')
-        ? searchParams.get('patientIds').split(',')
-        : []
-      : undefined;
-
     this.state = {
-      initialAppliedFilters,
-      patientIds,
+      initialAppliedFilters: {},
+      patientIds: undefined,
     };
     this._isMounted = false;
+    this._isBrowserNavigation = false;
   }
 
   componentDidMount() {
     this._isMounted = true;
+    const syncFilterStateWithURL = () => {
+      const searchParams = new URLSearchParams(
+        this.props.history.location.search
+      );
+      let initialAppliedFilters = {};
+      if (searchParams.has('filter'))
+        try {
+          const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
+          if (validateFilter(filterInUrl, this.props.filterConfig))
+            initialAppliedFilters = filterInUrl;
+          else throw undefined;
+        } catch (e) {
+          console.error('Invalid filter value in URL.', e);
+        }
+
+      const patientIds = this.props.patientIdsConfig?.enabled
+        ? searchParams.has('patientIds')
+          ? searchParams.get('patientIds').split(',')
+          : []
+        : undefined;
+
+      this._isMounted && this.setState({ initialAppliedFilters, patientIds });
+    };
+    window.onpopstate = () => {
+      this._isBrowserNavigation = true;
+      syncFilterStateWithURL();
+      this._isBrowserNavigation = false;
+    };
+    syncFilterStateWithURL();
   }
 
   componentWillUnmount() {
@@ -88,9 +97,12 @@ class GuppyDataExplorer extends React.Component {
       }
     }
 
-    this.props.history.push({
-      search: Array.from(searchParams.entries(), (e) => e.join('=')).join('&'),
-    });
+    this._isBrowserNavigation ||
+      this.props.history.push({
+        search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
+          '&'
+        ),
+      });
   };
 
   handlePatientIdsChange = this.props.patientIdsConfig?.enabled
@@ -104,11 +116,12 @@ class GuppyDataExplorer extends React.Component {
           searchParams.set('patientIds', patientIds.join(','));
 
         this.setState({ patientIds });
-        this.props.history.push({
-          search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
-            '&'
-          ),
-        });
+        this._isBrowserNavigation ||
+          this.props.history.push({
+            search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
+              '&'
+            ),
+          });
       }
     : () => {};
 
