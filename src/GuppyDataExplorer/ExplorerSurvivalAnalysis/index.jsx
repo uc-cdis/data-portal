@@ -106,7 +106,7 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
 
     if (shouldUpdateResults)
       fetchResult({
-        filter: transformedFilter,
+        filter: transformedFilter ?? {},
         parameter: requestParameter,
         result: config.result,
       })
@@ -135,7 +135,7 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
       setIsError(false);
       setIsUpdating(true);
       fetchResult({
-        filter: transformedFilter,
+        filter: transformedFilter ?? {},
         parameter: {
           factorVariable: '',
           stratificationVariable: '',
