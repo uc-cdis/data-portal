@@ -60,6 +60,15 @@
   min-height: 300px;
 }
 
+.explorer-survival-analysis .recharts-wrapper {
+  background-blend-mode: lighten;
+  background-color: rgba(255, 255, 255, 0.9);
+  background-image: url(../../img/logo.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
 .explorer-survival-analysis__risk-table {
   margin: 12px;
   min-height: 150px;
