@@ -28,6 +28,7 @@ class GuppyDataExplorer extends React.Component {
       patientIds: undefined,
     };
     this._isMounted = false;
+    this._isBrowserNavigation = false;
   }
 
   componentDidMount() {
@@ -55,7 +56,11 @@ class GuppyDataExplorer extends React.Component {
 
       this._isMounted && this.setState({ initialAppliedFilters, patientIds });
     };
-    window.onpopstate = syncFilterStateWithURL;
+    window.onpopstate = () => {
+      this._isBrowserNavigation = true;
+      syncFilterStateWithURL();
+      this._isBrowserNavigation = false;
+    };
     syncFilterStateWithURL();
   }
 
@@ -92,9 +97,12 @@ class GuppyDataExplorer extends React.Component {
       }
     }
 
-    this.props.history.push({
-      search: Array.from(searchParams.entries(), (e) => e.join('=')).join('&'),
-    });
+    this._isBrowserNavigation ||
+      this.props.history.push({
+        search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
+          '&'
+        ),
+      });
   };
 
   handlePatientIdsChange = this.props.patientIdsConfig?.enabled
@@ -108,11 +116,12 @@ class GuppyDataExplorer extends React.Component {
           searchParams.set('patientIds', patientIds.join(','));
 
         this.setState({ patientIds });
-        this.props.history.push({
-          search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
-            '&'
-          ),
-        });
+        this._isBrowserNavigation ||
+          this.props.history.push({
+            search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
+              '&'
+            ),
+          });
       }
     : () => {};
 
