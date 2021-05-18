@@ -5,7 +5,7 @@ import { Spin } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
-import ReduxGWASApp from './ReduxGWASApp';
+import ReduxGWASApp from './GWASApp/ReduxGWASApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 

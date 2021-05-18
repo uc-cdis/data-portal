@@ -1,24 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber, Collapse, List, Tag, Popconfirm, Alert } from 'antd';
-import {
-  CheckCircleOutlined,
-  SyncOutlined,
-  CloseCircleOutlined,
-  QuestionCircleOutlined,
-  MinusCircleOutlined,
-} from '@ant-design/icons';
-import { humanFileSize } from '../utils.js';
-import { fetchWithCreds } from '../actions';
-import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { marinerUrl } from '../localconf';
-import marinerRequestBody from './utils.js';
+import { Steps, Button, Space, Table, Modal, Typography, Checkbox, Radio, Divider, Select, Input, Form, Result, Spin, InputNumber, Alert } from 'antd';
+import { humanFileSize } from '../../utils.js';
+import { fetchWithCreds } from '../../actions';
+import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
+import { marinerUrl } from '../../localconf';
+import { marinerRequestBody } from './utils.js';
+import GWASAppJobStatusList from './GWASAppJobStatusList';
 import './GWASApp.css';
 
 const { Step } = Steps;
 const { Text } = Typography;
-const { Panel } = Collapse;
-const { TextArea } = Input;
 
 const MAX_PREVIEW_FILE_SIZE_BYTES = 1000000;
 const steps = [
@@ -55,122 +47,19 @@ class GWASApp extends React.Component {
         sample_cutoff: 0.04,
         maf_cutoff: 0.05,
       },
-      marinerJobStatus: [],
-      showJobStatusModal: false,
-      jobStatusModalData: '',
     };
   }
 
   componentDidMount() {
     this.props.onLoadWorkspaceStorageFileList();
-    this.getMarinerJobStatus();
-    this.intervalId = setInterval(async () => {
-      await this.getMarinerJobStatus();
-    }, 60000);
+    this.props.onLoadMarinerJobStatus();
+    this.intervalId = setInterval(() => {
+      this.props.onLoadMarinerJobStatus();
+    }, 15000);
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalId);
-  }
-
-  getMarinerJobStatus = async () => {
-    fetchWithCreds({
-      path: `${marinerUrl}`,
-      method: 'GET',
-    })
-      .then(
-        ({ status, data }) => {
-          if (status !== 200 || !data || !data.runIDs) {
-            return [];
-          }
-          const runIDs = data.runIDs;
-          Promise.all(runIDs.map(rID => fetchWithCreds({
-            path: `${marinerUrl}/${rID}`,
-            method: 'GET',
-          })
-            .then(
-              (res) => {
-                if (res.status !== 200) {
-                  return ({
-                    runID: rID,
-                  });
-                }
-                const d = res.data;
-                if (d
-                  && d.log
-                  && d.log.main
-                  && d.log.main.status) {
-                  if (d.log.request && d.log.request.tags && d.log.request.tags.jobName) {
-                    // if the job has a tag
-                    return ({
-                      runID: rID,
-                      jobName: d.log.request.tags.jobName,
-                      status: d.log.main.status,
-                    });
-                  }
-                  return ({
-                    runID: rID,
-                    status: d.log.main.status,
-                  });
-                }
-                return ({
-                  runID: rID,
-                });
-              },
-            )))
-            .then(values => this.setState({ marinerJobStatus: values }));
-          return runIDs;
-        },
-      );
-  }
-
-  getStatusTag = (jobStatus) => {
-    if (!jobStatus) {
-      return (
-        <Tag icon={<QuestionCircleOutlined />} color='default'>
-        Unknown
-        </Tag>
-      );
-    }
-    switch (jobStatus) {
-    case 'running':
-      return (
-        <Tag icon={<SyncOutlined spin />} color='processing'>
-        In Progress
-        </Tag>
-      );
-    case 'completed':
-      return (
-        <Tag icon={<CheckCircleOutlined />} color='success'>
-        Completed
-        </Tag>
-      );
-    case 'failed':
-      return (
-        <Tag icon={<CloseCircleOutlined />} color='error'>
-        Failed
-        </Tag>
-      );
-    case 'cancelled':
-      return (
-        <Tag icon={<MinusCircleOutlined />} color='warning'>
-        Cancelled
-        </Tag>
-      );
-    default:
-      return (
-        <Tag icon={<QuestionCircleOutlined />} color='default'>
-            Unknown
-        </Tag>
-      );
-    }
-  }
-
-  cancelMarinerJob = (runID) => {
-    fetchWithCreds({
-      path: `${marinerUrl}/${runID}/cancel`,
-      method: 'POST',
-    }).then(this.getMarinerJobStatus());
   }
 
   mainTableRowSelection = {
@@ -237,24 +126,24 @@ class GWASApp extends React.Component {
     });
   };
 
-  handleJobStatusModalCancel = () => {
-    this.setState({
-      showJobStatusModal: false,
-    });
-  };
+  // handleJobStatusModalCancel = () => {
+  //   this.setState({
+  //     showJobStatusModal: false,
+  //   });
+  // };
 
-  handleJobStatusModalShow = (runID) => {
-    fetchWithCreds({
-      path: `${marinerUrl}/${runID}`,
-      method: 'GET',
-    })
-      .then(({ data }) => {
-        this.setState({
-          jobStatusModalData: JSON.stringify(data, undefined, 2),
-          showJobStatusModal: true,
-        });
-      });
-  };
+  // handleJobStatusModalShow = (runID) => {
+  //   fetchWithCreds({
+  //     path: `${marinerUrl}/${runID}`,
+  //     method: 'GET',
+  //   })
+  //     .then(({ data }) => {
+  //       this.setState({
+  //         jobStatusModalData: JSON.stringify(data, undefined, 2),
+  //         showJobStatusModal: true,
+  //       });
+  //     });
+  // };
 
   next() {
     const current = this.state.current + 1;
@@ -633,56 +522,11 @@ class GWASApp extends React.Component {
             banner
           />
           : null}
-        {(this.state.marinerJobStatus.length > 0) ?
-          (<div className='GWASApp-jobStatus'>
-            <Collapse onClick={event => event.stopPropagation()}>
-              <Panel header='Submitted Job Status' key='1'>
-                <List
-                  className='GWASApp__jobStatusList'
-                  itemLayout='horizontal'
-                  pagination={{ pageSize: 5 }}
-                  dataSource={this.state.marinerJobStatus}
-                  renderItem={item => (
-                    <List.Item
-                      actions={(item.status === 'running') ?
-                        [<Popconfirm
-                          title='Are you sure you want to cancel this job?'
-                          onConfirm={(event) => {
-                            event.stopPropagation();
-                            this.cancelMarinerJob(item.runID);
-                          }}
-                          okText='Yes'
-                          cancelText='No'
-                        >
-                          <Button type='link' size='small' danger>cancel job</Button>
-                        </Popconfirm>,
-                        <Button type='link' size='small' onClick={(event) => { event.stopPropagation(); this.handleJobStatusModalShow(item.runID); }}>show logs</Button>]
-                        : [<Button type='link' size='small' onClick={(event) => { event.stopPropagation(); this.handleJobStatusModalShow(item.runID); }}>show logs</Button>]}
-                    >
-                      <List.Item.Meta
-                        title={`Run ID: ${item.runID}`}
-                        description={(item.jobName) ? `GWAS Job Name: ${item.jobName}` : null}
-                      />
-                      <div>{this.getStatusTag(item.status)}</div>
-                    </List.Item>
-                  )}
-                />
-              </Panel>
-            </Collapse>
-            <Modal
-              visible={this.state.showJobStatusModal}
-              closable={false}
-              title={'Show job logs'}
-              footer={[
-                <Button key='close' onClick={this.handleJobStatusModalCancel}>
-              Close
-                </Button>,
-              ]}
-            >
-              <TextArea rows={10} value={this.state.jobStatusModalData} readOnly />
-            </Modal>
-          </div>
-          )
+        {(this.props.marinerJobStatus.length > 0) ?
+          <GWASAppJobStatusList
+            marinerJobStatus={this.props.marinerJobStatus}
+            getMarinerJobStatusFuncCallback={() => this.props.onLoadMarinerJobStatus()}
+          />
           : null}
         <Steps current={current}>
           {steps.map(item => (
@@ -720,8 +564,10 @@ GWASApp.propTypes = {
     workspaceKey: PropTypes.string.isRequired,
     fileData: PropTypes.array,
   }),
+  marinerJobStatus: PropTypes.array,
   onLoadWorkspaceStorageFileList: PropTypes.func.isRequired,
   onLoadWorkspaceStorageFile: PropTypes.func.isRequired,
+  onLoadMarinerJobStatus: PropTypes.func.isRequired,
   userAuthMapping: PropTypes.object.isRequired,
 };
 
@@ -730,6 +576,7 @@ GWASApp.defaultProps = {
   wssFilePrefix: undefined,
   wssFileData: undefined,
   wssListFileError: undefined,
+  marinerJobStatus: [],
 };
 
 export default GWASApp;
