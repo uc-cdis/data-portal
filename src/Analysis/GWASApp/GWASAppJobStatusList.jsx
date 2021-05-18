@@ -16,7 +16,6 @@ import './GWASApp.css';
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
-
 class GWASAppJobStatusList extends React.Component {
   constructor(props) {
     super(props);

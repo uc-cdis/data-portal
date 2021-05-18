@@ -126,25 +126,6 @@ class GWASApp extends React.Component {
     });
   };
 
-  // handleJobStatusModalCancel = () => {
-  //   this.setState({
-  //     showJobStatusModal: false,
-  //   });
-  // };
-
-  // handleJobStatusModalShow = (runID) => {
-  //   fetchWithCreds({
-  //     path: `${marinerUrl}/${runID}`,
-  //     method: 'GET',
-  //   })
-  //     .then(({ data }) => {
-  //       this.setState({
-  //         jobStatusModalData: JSON.stringify(data, undefined, 2),
-  //         showJobStatusModal: true,
-  //       });
-  //     });
-  // };
-
   next() {
     const current = this.state.current + 1;
     if (current === 1) {
