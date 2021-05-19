@@ -6,22 +6,22 @@ import './ProjectDashboard.less';
 
 /**
  * @param {Object} props
- * @param {{ label: string; value: number; }[]} props.details
  * @param {{ name: string; counts: number[]; }[]} props.projectList
+ * @param {string[]} props.summaryFields
  */
-function ProjectDashboard({ details, projectList }) {
+function ProjectDashboard({ projectList, summaryFields }) {
   return (
     <div className='project-dashboard'>
       <div className='h2-typo project-dashboard__title'>Data Submission</div>
       <ReduxSubmissionHeader />
-      <ProjectTable projectList={projectList} summaries={details} />
+      <ProjectTable projectList={projectList} summaryFields={summaryFields} />
     </div>
   );
 }
 
 ProjectDashboard.propTypes = {
-  details: PropTypes.arrayOf(PropTypes.object).isRequired,
   projectList: PropTypes.array.isRequired,
+  summaryFields: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default ProjectDashboard;

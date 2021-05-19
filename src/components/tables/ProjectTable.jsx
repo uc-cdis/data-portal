@@ -8,11 +8,11 @@ import './ProjectTable.less';
 /**
  * @param {Object} props
  * @param {{ name: string; counts: number[]; }[]} props.projectList
- * @param {{ label: string; }[]} props.summaries
+ * @param {string[]} props.summaryFields
  */
-function ProjectTable({ projectList = [], summaries = [] }) {
+function ProjectTable({ projectList = [], summaryFields = [] }) {
   const history = useHistory();
-  const tableHeader = ['Project', ...summaries.map(({ label }) => label), ''];
+  const tableHeader = ['Project', ...summaryFields, ''];
   const tableData = [...projectList]
     .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
     .map(({ name, counts }, i) => [
