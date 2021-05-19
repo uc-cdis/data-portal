@@ -698,8 +698,9 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
             </Collapse>
           </div>
       }
-      <div className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--expanded' : ''}`}>
+      <div className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--collapsed' : ''}`}>
         <Table
+          width={'500px'}
           columns={columns}
           rowKey={config.minimalFieldMapping.uid}
           rowSelection={(
