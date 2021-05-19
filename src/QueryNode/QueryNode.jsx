@@ -5,8 +5,6 @@ import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
 import './QueryNode.less';
-import { useArboristUI } from '../localconf';
-import { userHasMethodOnProject } from '../authMappingUtils';
 
 const Entity = ({
   value,
@@ -288,27 +286,17 @@ class QueryNode extends React.Component {
           queryNodeCount={queryNodesList.length}
         />
         <h4>most recent 20:</h4>
-        {queryNodesList.map((value) => {
-          let showDelete = true;
-          if (useArboristUI) {
-            showDelete = userHasMethodOnProject(
-              'delete',
-              this.props.params.project,
-              this.props.userAuthMapping
-            );
-          }
-          return (
-            <Entities
-              project={project}
-              onStoreNodeInfo={this.props.onStoreNodeInfo}
-              onUpdatePopup={this.props.onUpdatePopup}
-              node_type={value[0]}
-              key={value[0]}
-              value={value[1]}
-              showDelete={showDelete}
-            />
-          );
-        })}
+        {queryNodesList.map((value) => (
+          <Entities
+            project={project}
+            onStoreNodeInfo={this.props.onStoreNodeInfo}
+            onUpdatePopup={this.props.onUpdatePopup}
+            node_type={value[0]}
+            key={value[0]}
+            value={value[1]}
+            showDelete={true}
+          />
+        ))}
       </div>
     );
   }
@@ -325,7 +313,6 @@ QueryNode.propTypes = {
   onClearDeleteSession: PropTypes.func.isRequired,
   onDeleteNode: PropTypes.func.isRequired,
   onStoreNodeInfo: PropTypes.func.isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
 };
 
 QueryNode.defaultProps = {
