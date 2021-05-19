@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import copy from 'clipboard-plus';
 import React, { Component } from 'react';
 import Popup from '../components/Popup';
-import { userapiPath, useArboristUI } from '../localconf';
+import { userapiPath } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
-
-import { userHasMethodOnProject } from '../authMappingUtils';
 
 const DOWNLOAD_BTN_CAPTION = 'Download';
 const SIGNED_URL_BTN_CAPTION = 'Generate Signed URL';
@@ -28,10 +26,6 @@ function fileSizeTransform(size) {
   return `${sizeStr} ${suffix}`;
 }
 
-function projectIsOpenData(projectAvail, projectID) {
-  return projectID in projectAvail && projectAvail[projectID] === 'Open';
-}
-
 class CoreMetadataHeader extends Component {
   onGenerateSignedURL = () => {
     this.props.onGenerateSignedURL(this.props.metadata.object_id);
@@ -46,42 +40,7 @@ class CoreMetadataHeader extends Component {
 
   render() {
     if (this.props.metadata) {
-      const { projectAvail } = this.props;
-      const projectId = this.props.metadata.project_id;
-      let downloadButton = null;
-      let signedURLButton = null;
-
-      // downloadButton should always render if useArboristUI false. Otherwise according to authz.
-      if (
-        !useArboristUI ||
-        userHasMethodOnProject(
-          'read-storage',
-          projectId,
-          this.props.userAuthMapping
-        ) ||
-        projectIsOpenData(projectAvail, projectId)
-      ) {
-        const downloadLink = `${userapiPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
-
-        downloadButton = (
-          <a href={downloadLink}>
-            <button className='button-primary-orange'>
-              {DOWNLOAD_BTN_CAPTION}
-            </button>
-          </a>
-        );
-
-        if (isEnabled('signedURLButton')) {
-          signedURLButton = (
-            <Button
-              onClick={() => this.onGenerateSignedURL()}
-              label={SIGNED_URL_BTN_CAPTION}
-              className='core-metadata-page__column--right--signed-url-button'
-              buttonType='primary'
-            />
-          );
-        }
-      }
+      const downloadLink = `${userapiPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
 
       if (!this.props.metadata.data_format) {
         /* eslint no-console: ["error", { allow: ["error"] }] */
@@ -103,8 +62,19 @@ class CoreMetadataHeader extends Component {
             {fileTypeTransform(this.props.metadata.type)}
           </p>
           <p className='body-typo'>{this.props.metadata.description}</p>
-          {downloadButton}
-          {signedURLButton}
+          <a href={downloadLink}>
+            <button className='button-primary-orange'>
+              {DOWNLOAD_BTN_CAPTION}
+            </button>
+          </a>
+          {isEnabled('signedURLButton') && (
+            <Button
+              onClick={() => this.onGenerateSignedURL()}
+              label={SIGNED_URL_BTN_CAPTION}
+              className='core-metadata-page__column--right--signed-url-button'
+              buttonType='primary'
+            />
+          )}
           {this.props.signedURLPopup === true && (
             <Popup
               message={
@@ -146,8 +116,6 @@ CoreMetadataHeader.propTypes = {
   signedURL: PropTypes.string,
   signedURLPopup: PropTypes.bool,
   error: PropTypes.string,
-  projectAvail: PropTypes.object.isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
   onGenerateSignedURL: PropTypes.func.isRequired,
   onUpdatePopup: PropTypes.func.isRequired,
   onClearSignedURL: PropTypes.func.isRequired,
