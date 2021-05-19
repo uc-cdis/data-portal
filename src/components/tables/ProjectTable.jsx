@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../gen3-ui-component/components/Button';
 import Table from './base/Table';
-import { useArboristUI } from '../../localconf';
-import { userHasMethodOnProject } from '../../authMappingUtils';
 import './ProjectTable.less';
 
 function compare(a, b) {
@@ -28,30 +26,18 @@ class ProjectTable extends React.Component {
   };
 
   getData = (projectList) =>
-    projectList.map((proj, i) => {
-      let buttonText = 'Submit Data';
-      if (useArboristUI) {
-        buttonText = userHasMethodOnProject(
-          'create',
-          proj.name,
-          this.props.userAuthMapping
-        )
-          ? 'Submit/Browse Data'
-          : 'Browse Data';
-      }
-      return [
-        proj.name,
-        ...proj.counts,
-        <Button
-          className='project-table__submit-button'
-          key={i}
-          onClick={() => this.props.history.push(`/${proj.name}`)}
-          label={buttonText}
-          buttonType='primary'
-          rightIcon='upload'
-        />,
-      ];
-    });
+    projectList.map((proj, i) => [
+      proj.name,
+      ...proj.counts,
+      <Button
+        className='project-table__submit-button'
+        key={i}
+        onClick={() => this.props.history.push(`/${proj.name}`)}
+        label='Submit Data'
+        buttonType='primary'
+        rightIcon='upload'
+      />,
+    ]);
 
   getFooter = (summaries) => {
     const totalCounts = summaries.map((entry) => entry.value);
@@ -78,7 +64,6 @@ ProjectTable.propTypes = {
   projectList: PropTypes.array,
   summaries: PropTypes.array,
   history: PropTypes.object.isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
 };
 
 ProjectTable.defaultProps = {
