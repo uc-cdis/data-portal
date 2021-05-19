@@ -7,69 +7,63 @@ import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 
-const ProjectSubmission = (props) => {
+/**
+ *
+ * @param {Object} props
+ * @param {string} props.project
+ * @param {Object} props.dictionary
+ * @param {(typeList: string[], project: string, dictionary: Object) => void} props.onGetCounts
+ * @param {boolean} [props.dataIsReady]
+ * @param {string[]} [props.typeList]
+ * @param {React.Component} [props.submitForm]
+ * @param {React.Component} [props.submitTSV]
+ * @param {React.Component} [props.dataModelGraph]
+ */
+function ProjectSubmission({
+  project,
+  dictionary,
+  onGetCounts,
+  dataIsReady = false,
+  typeList = [],
+  submitForm = SubmitForm,
+  submitTSV = SubmitTSV,
+  dataModelGraph = DataModelGraph,
+}) {
   // hack to detect if dictionary data is available, and to trigger fetch if not
-  if (!props.dataIsReady) {
-    props.onGetCounts(props.typeList, props.project, props.dictionary);
-  }
+  if (!dataIsReady) onGetCounts(typeList, project, dictionary);
 
   // Passing children in as props allows us to swap in different containers -
   // dumb, redux, ...
-  const MySubmitForm = props.submitForm;
-  const MySubmitTSV = props.submitTSV;
-  const MyDataModelGraph = props.dataModelGraph;
-  const displayData = () => {
-    if (!props.dataIsReady) {
-      if (props.project !== '_root') {
-        return <Spinner />;
-      }
-      return null;
-    }
-    return <MyDataModelGraph project={props.project} />;
-  };
-  const displaySubmissionUIComponents = (project) => {
-    return (
-      <React.Fragment>
-        <MySubmitForm />
-        <MySubmitTSV project={project} />
-      </React.Fragment>
-    );
-  };
+  const MySubmitForm = submitForm;
+  const MySubmitTSV = submitTSV;
+  const MyDataModelGraph = dataModelGraph;
 
   return (
     <div className='project-submission'>
-      <h2 className='project-submission__title'>{props.project}</h2>
-      {
-        <Link
-          className='project-submission__link'
-          to={`/${props.project}/search`}
-        >
-          browse nodes
-        </Link>
-      }
-      {displaySubmissionUIComponents(props.project, props.userAuthMapping)}
-      {displayData()}
+      <h2 className='project-submission__title'>{project}</h2>
+      <Link className='project-submission__link' to={`/${project}/search`}>
+        browse nodes
+      </Link>
+      <MySubmitForm />
+      <MySubmitTSV project={project} />
+      {dataIsReady ? (
+        <MyDataModelGraph project={project} />
+      ) : (
+        project !== '_root' && <Spinner />
+      )}
     </div>
   );
-};
+}
 
 ProjectSubmission.propTypes = {
   project: PropTypes.string.isRequired,
-  dataIsReady: PropTypes.bool,
   dictionary: PropTypes.object.isRequired,
-  submitForm: PropTypes.func,
-  submitTSV: PropTypes.func,
-  dataModelGraph: PropTypes.func,
   onGetCounts: PropTypes.func.isRequired,
-  typeList: PropTypes.array,
-};
-
-ProjectSubmission.defaultProps = {
-  dataIsReady: false,
-  submitForm: SubmitForm,
-  submitTSV: SubmitTSV,
-  dataModelGraph: DataModelGraph,
-  typeList: [],
+  dataIsReady: PropTypes.bool,
+  typeList: PropTypes.arrayOf(PropTypes.string),
+  dataModelGraph: PropTypes.elementType,
+  submitForm: PropTypes.elementType,
+  submitTSV: PropTypes.elementType,
 };
 
 export default ProjectSubmission;
