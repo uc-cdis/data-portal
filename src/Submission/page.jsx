@@ -1,5 +1,5 @@
 import React from 'react';
-import ReduxProjectDashboard from './ReduxProjectDashboard';
+import ProjectDashboard from './ProjectDashboard';
 import ReduxTransaction from './ReduxTransaction';
 import { getTransactionList, getProjectsList } from './relayer';
 
@@ -13,7 +13,7 @@ class SubmissionPage extends React.Component {
   render() {
     return (
       <div style={{ padding: '40px 20px' }}>
-        <ReduxProjectDashboard />
+        <ProjectDashboard />
         <ReduxTransaction />
       </div>
     );

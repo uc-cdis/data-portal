@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import { components } from '../params';
-import ProjectDashboard from './ProjectDashboard';
+import ProjectTable from '../components/tables/ProjectTable';
 
-const ReduxProjectDashboard = (() => {
+const ReduxProjectTable = (() => {
   const mapStateToProps = (state) =>
     state.submission?.projectsByName !== undefined
       ? {
@@ -15,7 +15,7 @@ const ReduxProjectDashboard = (() => {
           projectList: [],
           summaryFields: [],
         };
-  return connect(mapStateToProps)(ProjectDashboard);
+  return connect(mapStateToProps)(ProjectTable);
 })();
 
-export default ReduxProjectDashboard;
+export default ReduxProjectTable;

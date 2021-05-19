@@ -1,27 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ReduxSubmissionHeader from './ReduxSubmissionHeader';
-import ProjectTable from '../components/tables/ProjectTable';
+import ReduxProjectTable from './ReduxProjectTable';
 import './ProjectDashboard.less';
 
-/**
- * @param {Object} props
- * @param {{ name: string; counts: number[]; }[]} props.projectList
- * @param {string[]} props.summaryFields
- */
-function ProjectDashboard({ projectList, summaryFields }) {
+function ProjectDashboard() {
   return (
     <div className='project-dashboard'>
       <div className='h2-typo project-dashboard__title'>Data Submission</div>
       <ReduxSubmissionHeader />
-      <ProjectTable projectList={projectList} summaryFields={summaryFields} />
+      <ReduxProjectTable />
     </div>
   );
 }
-
-ProjectDashboard.propTypes = {
-  projectList: PropTypes.array.isRequired,
-  summaryFields: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
 
 export default ProjectDashboard;
