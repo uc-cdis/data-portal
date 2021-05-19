@@ -19,10 +19,8 @@ export const ReduxNavBar = (() => {
 
 export const ReduxTopBar = (() => {
   const mapStateToProps = (state) => ({
-    navTitle: components.navigation.title,
     topItems: components.topBar.items,
     user: state.user,
-    userAuthMapping: state.userAuthMapping,
   });
 
   // Bar chart does not dispatch anything
