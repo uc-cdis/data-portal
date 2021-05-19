@@ -3,13 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
-import { useArboristUI } from '../../localconf';
-import { userHasMethodOnAnyProject } from '../../authMappingUtils';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
  */
-function TopBar({ topItems, user, userAuthMapping, onLogoutClick }) {
+function TopBar({ topItems, user, onLogoutClick }) {
   const location = useLocation();
 
   return (
@@ -44,14 +42,7 @@ function TopBar({ topItems, user, userAuthMapping, onLogoutClick }) {
               if (!isAdminUser) return undefined;
             }
 
-            let buttonText = item.name;
-            if (item.name === 'Submit Data' && useArboristUI) {
-              if (userHasMethodOnAnyProject('create', userAuthMapping)) {
-                buttonText = 'Submit/Browse Data';
-              } else {
-                buttonText = 'Browse Data';
-              }
-            }
+            const buttonText = item.name;
 
             return item.link.startsWith('http') ? (
               <a
@@ -104,7 +95,6 @@ function TopBar({ topItems, user, userAuthMapping, onLogoutClick }) {
 TopBar.propTypes = {
   topItems: PropTypes.array.isRequired,
   user: PropTypes.shape({ username: PropTypes.string }).isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
   onLogoutClick: PropTypes.func.isRequired,
 };
 
