@@ -178,20 +178,36 @@
   cursor: pointer;
 }
 
+
 .discovery-table-container th.ant-table-cell,
-.discovery-table-container th.ant-table-cell:hover,
-.discovery-table-container td.ant-table-cell,
-.discovery-table-container td.ant-table-cell:hover {
-  background: #e7e7e7;
+.discovery-table-container td.ant-table-cell {
+  background: #dfe3e2;
+}
+
+/* Remove default antd hover state for table row */
+.discovery-table-container tr:hover {
+  background: #dfe3e2;
+}
+
+.discovery-table-container td.ant-table-cell {
+  border-bottom: 1px solid #dfe3e2;
+}
+
+.discovery-table-container th.ant-table-cell {
+  border-bottom: 1px solid #dfe3e2;
+  /* border-bottom: 1px solid #aaa; */
 }
 
 .discovery-table__expanded-row > td.ant-table-cell {
-  background: #e7e7e7;
-  margin-top: -10px;
+  background: #dfe3e2;
   font-size: 12px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
 }
 
 .discovery-table__expanded-row-content {
+  background: inherit;
+  margin-top: -25px;
   cursor: pointer;
   height: 40px;
   width: 100%;
