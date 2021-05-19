@@ -61,7 +61,6 @@ export const ReduxIntroduction = (() => {
 
     return {
       isAdminUser,
-      userAuthMapping: state.userAuthMapping,
     };
   };
 
