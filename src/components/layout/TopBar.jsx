@@ -6,6 +6,10 @@ import './TopBar.less';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
+ * @param {Object} props
+ * @param {{ name: string; link: string; icon?: string; }[]} props.topItems
+ * @param {Object} props.user
+ * @param {() => void} props.onLogoutClick
  */
 function TopBar({ topItems, user, onLogoutClick }) {
   const location = useLocation();
