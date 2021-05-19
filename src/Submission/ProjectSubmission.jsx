@@ -1,23 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import SubmitTSV from './SubmitTSV';
-import DataModelGraph from '../DataModelGraph/DataModelGraph';
-import SubmitForm from './SubmitForm';
+import ReduxDataModelGraph from '../DataModelGraph/ReduxDataModelGraph';
+import { ReduxSubmitForm, ReduxSubmitTSV } from './ReduxProjectSubmission';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 
 /**
- *
  * @param {Object} props
  * @param {string} props.project
  * @param {Object} props.dictionary
  * @param {(typeList: string[], project: string, dictionary: Object) => void} props.onGetCounts
  * @param {boolean} [props.dataIsReady]
  * @param {string[]} [props.typeList]
- * @param {React.Component} [props.submitForm]
- * @param {React.Component} [props.submitTSV]
- * @param {React.Component} [props.dataModelGraph]
  */
 function ProjectSubmission({
   project,
@@ -25,18 +20,9 @@ function ProjectSubmission({
   onGetCounts,
   dataIsReady = false,
   typeList = [],
-  submitForm = SubmitForm,
-  submitTSV = SubmitTSV,
-  dataModelGraph = DataModelGraph,
 }) {
   // hack to detect if dictionary data is available, and to trigger fetch if not
   if (!dataIsReady) onGetCounts(typeList, project, dictionary);
-
-  // Passing children in as props allows us to swap in different containers -
-  // dumb, redux, ...
-  const MySubmitForm = submitForm;
-  const MySubmitTSV = submitTSV;
-  const MyDataModelGraph = dataModelGraph;
 
   return (
     <div className='project-submission'>
@@ -44,10 +30,10 @@ function ProjectSubmission({
       <Link className='project-submission__link' to={`/${project}/search`}>
         browse nodes
       </Link>
-      <MySubmitForm />
-      <MySubmitTSV project={project} />
+      <ReduxSubmitForm />
+      <ReduxSubmitTSV project={project} />
       {dataIsReady ? (
-        <MyDataModelGraph project={project} />
+        <ReduxDataModelGraph project={project} />
       ) : (
         project !== '_root' && <Spinner />
       )}
@@ -61,9 +47,6 @@ ProjectSubmission.propTypes = {
   onGetCounts: PropTypes.func.isRequired,
   dataIsReady: PropTypes.bool,
   typeList: PropTypes.arrayOf(PropTypes.string),
-  dataModelGraph: PropTypes.elementType,
-  submitForm: PropTypes.elementType,
-  submitTSV: PropTypes.elementType,
 };
 
 export default ProjectSubmission;
