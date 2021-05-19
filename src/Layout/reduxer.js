@@ -18,9 +18,12 @@ export const ReduxNavBar = (() => {
 })();
 
 export const ReduxTopBar = (() => {
+  const resourcePath = '/services/sheepdog/submission/project';
+  
   const mapStateToProps = (state) => ({
     topItems: components.topBar.items,
-    user: state.user,
+    username = state.user.username,
+    isAdminUser = state.user.authz?.[resourcePath]?.[0].method === '*',
   });
 
   // Bar chart does not dispatch anything
