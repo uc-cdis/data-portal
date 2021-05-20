@@ -152,10 +152,7 @@ Below is an example, with inline comments describing what each JSON block config
     "categorical2Colors": ["#6d6e70", "#c02f42"] // optional; colors for the graphs when there are only 2 colors (bar and pie graphs usually)
   },
   "requiredCerts": [], // optional; do users need to take a quiz or agree to something before they can access the site?
-  "featureFlags": { // optional; will hide certain parts of the site if needed
-    "explorer": true, // required; indicates the flag and whether to hide it or not
-    "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. Data explorer page would be public accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
-  },
+  "featureFlags": {}, // optional; will hide certain parts of the site if needed
   "dataExplorerConfig": { // required; configuration for the Data Explorer (/explorer)
     "charts": { // optional; indicates which charts to display in the Data Explorer
       "project_id": { // required; GraphQL field to query for a chart (ex: this one will display the number of projects, based on the project_id)
