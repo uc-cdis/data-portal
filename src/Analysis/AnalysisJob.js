@@ -1,10 +1,10 @@
 import { fetchWithCreds } from '../actions';
 import { asyncSetInterval } from '../utils';
-import { userapiPath, jobapiPath } from '../localconf';
+import { userApiPath, jobapiPath } from '../localconf';
 
 
 export const getPresignedUrl = (did, method) => {
-  const urlPath = `${userapiPath}data/${method}/${did}`;
+  const urlPath = `${userApiPath}data/${method}/${did}`;
   return fetchWithCreds({ path: urlPath, method: 'GET' },
   ).then(
     ({ data }) => data.url,
