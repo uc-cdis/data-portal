@@ -6,6 +6,10 @@ FROM quay.io/cdis/ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV REACT_APP_PROJECT_ID=search
 
+# disable npm 7's brand new update notifier to prevent Portal from stuck at starting up
+# see https://github.com/npm/cli/issues/3163
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     ca-certificates \
@@ -42,8 +46,6 @@ RUN npm config set unsafe-perm=true \
 RUN NODE_OPTIONS=--max-old-space-size=3584 NODE_ENV=production time ./node_modules/.bin/webpack --bail
 RUN cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
-    # clear npm cache, attempt to fix portal stuck at start up issue
-RUN npm cache clean --force
 
 # In standard prod these will be overwritten by volume mounts
 # Provided here for ease of use in development and
