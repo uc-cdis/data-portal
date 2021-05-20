@@ -673,9 +673,8 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                       href={`${userApiPath}/data/download/${item.guid}?expires_in=900&redirect`}
                       target='_blank'
                       type='text'
-                      // disable button if user don't have access, or data has no GUID
-                      disabled={!(config.features.authorization.enabled
-                        && modalData[accessibleFieldName]) || !item.guid}
+                      // disable button if data has no GUID
+                      disabled={!item.guid}
                       icon={<DownloadOutlined />}
                     >
                       Download File
