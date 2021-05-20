@@ -23,7 +23,6 @@ function buildConfig(opts) {
     workspaceURL: process.env.WORKSPACE_URL,
     manifestServiceURL: process.env.MANIFEST_SERVICE_URL,
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
-    tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
   };
 
@@ -51,7 +50,6 @@ function buildConfig(opts) {
     workspaceURL,
     manifestServiceURL,
     gaDebug,
-    tierAccessLevel,
     tierAccessLimit,
   } = Object.assign({}, defaults, opts);
 
@@ -148,9 +146,6 @@ function buildConfig(opts) {
 
   // for "libre" data commons, explorer page is public
   let explorerPublic = false;
-  if (tierAccessLevel === 'libre') {
-    explorerPublic = true;
-  }
   if (config.featureFlags && config.featureFlags.explorerPublic) {
     explorerPublic = true;
   }
@@ -254,7 +249,6 @@ function buildConfig(opts) {
     externalLoginOptionsUrl,
     showFenceAuthzOnProfile,
     terraExportWarning,
-    tierAccessLevel,
     tierAccessLimit,
     useIndexdAuthz,
     explorerPublic,
