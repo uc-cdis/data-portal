@@ -144,12 +144,6 @@ function buildConfig(opts) {
     terraExportWarning = config.terraExportWarning;
   }
 
-  // for "libre" data commons, explorer page is public
-  let explorerPublic = false;
-  if (config.featureFlags && config.featureFlags.explorerPublic) {
-    explorerPublic = true;
-  }
-
   const enableResourceBrowser = !!config.resourceBrowser;
   let resourceBrowserPublic = false;
   if (config.resourceBrowser && config.resourceBrowser.public) {
@@ -251,7 +245,6 @@ function buildConfig(opts) {
     terraExportWarning,
     tierAccessLimit,
     useIndexdAuthz,
-    explorerPublic,
     authzPath,
     enableResourceBrowser,
     resourceBrowserPublic,
