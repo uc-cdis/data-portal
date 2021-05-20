@@ -5,8 +5,6 @@ import Gen3ClientSvg from '../img/gen3client.svg';
 import MapFilesSvg from '../img/mapfiles.svg';
 import { humanFileSize } from '../utils.js';
 import './SubmissionHeader.less';
-import { useArboristUI } from '../localconf';
-import { userHasDataUpload } from '../authMappingUtils';
 
 class SubmissionHeader extends React.Component {
   componentDidMount = () => {
@@ -57,32 +55,29 @@ class SubmissionHeader extends React.Component {
             />
           </div>
         </div>
-        {useArboristUI &&
-        !userHasDataUpload(this.props.userAuthMapping) ? null : (
-          <div className='submission-header__section'>
-            <div className='submission-header__section-image'>
-              <MapFilesSvg />
-            </div>
-            <div className='submission-header__section-info'>
-              <div className='h3-typo'>Map My Files</div>
-              <div className='h4-typo'>
-                {this.props.unmappedFileCount} files | {totalFileSize}
-              </div>
-              <div className='body-typo'>
-                Mapping files to metadata in order to create medical meaning.
-              </div>
-              <Button
-                onClick={() => {
-                  window.location.href = `${window.location.href}/files`;
-                }}
-                className='submission-header__section-button'
-                label='Map My Files'
-                buttonType='primary'
-                enabled
-              />
-            </div>
+        <div className='submission-header__section'>
+          <div className='submission-header__section-image'>
+            <MapFilesSvg />
           </div>
-        )}
+          <div className='submission-header__section-info'>
+            <div className='h3-typo'>Map My Files</div>
+            <div className='h4-typo'>
+              {this.props.unmappedFileCount} files | {totalFileSize}
+            </div>
+            <div className='body-typo'>
+              Mapping files to metadata in order to create medical meaning.
+            </div>
+            <Button
+              onClick={() => {
+                window.location.href = `${window.location.href}/files`;
+              }}
+              className='submission-header__section-button'
+              label='Map My Files'
+              buttonType='primary'
+              enabled
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -93,7 +88,6 @@ SubmissionHeader.propTypes = {
   unmappedFileCount: PropTypes.number,
   fetchUnmappedFileStats: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
 };
 
 SubmissionHeader.defaultProps = {
