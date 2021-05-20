@@ -271,9 +271,7 @@ Below is an example, with inline comments describing what each JSON block config
         "resourceIdField": "object_id", // required; what is the identifier in the manifest index that you want to grab?
         "referenceIdFieldInResourceIndex": "case_id", // required; what is the field in the manifest index you want to make sure matches a field in the cohort?
         "referenceIdFieldInDataIndex": "case_id" // required; what is the field in the case/subject/participant index you are using to match with a field in the manifest index?
-      },
-      "accessibleFieldCheckList": ["project_id"], // optional; only useful when tiered access is enabled (tier_access_level=regular). When tiered access is on, portal needs to perform some filtering to display data explorer UI components according to user’s accessibility. Guppy will make queries for each of the fields listed in this array and figure out for each fields, what values are accessible to the current user and what values are not.
-      "accessibleValidationField": "project_id" // optional; only useful when tiered access is enabled (tier_access_level=regular). This value should be selected from the “accessibleFieldCheckList” variable. Portal will use this field to check against the result returned from Guppy with “accessibleFieldCheckList” to determine if user has selected any unaccessible values on the UI, and changes UI appearance accordingly.
+      }
     },
     "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/", // optional; for tiered access, if a user wants to get access to the data sets what site should they visit?
     "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data" // optional; if exporting to Terra which URL should we use?
@@ -322,8 +320,6 @@ Below is an example, with inline comments describing what each JSON block config
         "referenceIdFieldInResourceIndex": "object_id", // required; which field should we join on in the other index?
         "referenceIdFieldInDataIndex": "object_id" // required; which field should we join on in the current index?
       },
-      "accessibleFieldCheckList": ["project_id"],
-      "accessibleValidationField": "project_id",
       "downloadAccessor": "object_id" // required; for downloading a file, what is the GUID? This should probably not change
     },
     "buttons": [ // required; buttons for File Explorer
