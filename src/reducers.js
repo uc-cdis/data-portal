@@ -11,7 +11,7 @@ import graphiql from './GraphQLEditor/reducers';
 import login from './Login/reducers';
 import ddgraph from './DataDictionary/reducers';
 import { logoutListener } from './Login/ProtectedContent';
-import { fetchUserAccess, fetchUserAuthMapping } from './actions';
+import { fetchUserAccess } from './actions';
 import getReduxStore from './reduxStore';
 
 const status = (state = {}, action) => {
@@ -40,7 +40,6 @@ const user = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_USER':
       getReduxStore().then((store) => store.dispatch(fetchUserAccess));
-      getReduxStore().then((store) => store.dispatch(fetchUserAuthMapping));
       return { ...state, ...action.user, fetched_user: true };
     case 'REGISTER_ROLE':
       return {
@@ -63,15 +62,6 @@ const userAccess = (state = { access: {} }, action) => {
   switch (action.type) {
     case 'RECEIVE_USER_ACCESS':
       return { ...state, access: action.data };
-    default:
-      return state;
-  }
-};
-
-const userAuthMapping = (state = {}, action) => {
-  switch (action.type) {
-    case 'RECEIVE_USER_AUTH_MAPPING':
-      return { ...state, ...action.data };
     default:
       return state;
   }
@@ -118,7 +108,6 @@ const reducers = combineReducers({
   auth: logoutListener,
   ddgraph,
   userAccess,
-  userAuthMapping,
 });
 
 export default reducers;
