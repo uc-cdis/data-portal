@@ -304,20 +304,18 @@ function App({ store }) {
                 );
               }}
             />
-            {isEnabled('explorer') && (
-              <Route
-                path='/explorer'
-                component={(props) => (
-                  <ProtectedContent {...props}>
-                    <GuppyDataExplorer
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
-                  </ProtectedContent>
-                )}
-              />
-            )}
+            <Route
+              path='/explorer'
+              component={(props) => (
+                <ProtectedContent {...props}>
+                  <GuppyDataExplorer
+                    history={props.history}
+                    location={props.location}
+                    params={props.match.params}
+                  />
+                </ProtectedContent>
+              )}
+            />
             {components.privacyPolicy &&
               (!!components.privacyPolicy.file ||
                 !!components.privacyPolicy.routeHref) && (
