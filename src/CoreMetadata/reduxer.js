@@ -58,7 +58,6 @@ export const ReduxCoreMetadataHeader = (() => {
     signedURL: state.coreMetadata.url,
     signedURLPopup: state.popups.signedURLPopup,
     error: state.coreMetadata.error,
-    userAuthMapping: state.userAuthMapping,
     projectAvail: state.project.projectAvail,
   });
 
