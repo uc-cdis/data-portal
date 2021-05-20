@@ -9,7 +9,6 @@ import {
   graphqlPath,
   guppyGraphQLUrl,
   authzPath,
-  authzMappingPath,
 } from './localconf';
 import { config } from './params';
 import sessionMonitor from './SessionMonitor';

@@ -92,10 +92,6 @@ function buildConfig(opts) {
     typeof arboristURL === 'undefined'
       ? `${hostname}authz`
       : `${arboristURL}authz`;
-  const authzMappingPath =
-    typeof arboristURL === 'undefined'
-      ? `${hostname}authz/mapping`
-      : `${arboristURL}authz/mapping`;
   const loginPath = `${userapiPath}login/`;
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
@@ -263,7 +259,6 @@ function buildConfig(opts) {
     useIndexdAuthz,
     explorerPublic,
     authzPath,
-    authzMappingPath,
     enableResourceBrowser,
     resourceBrowserPublic,
     explorerConfig,
