@@ -4,12 +4,12 @@ import { fetchWithCreds } from '../actions';
 import { FETCH_LIMIT, STARTING_DID } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
 
-const fetchUnmappedFileStats = (user, totalSize, start, fetchLimit) => (
+const fetchUnmappedFileStats = (username, totalSize, start, fetchLimit) => (
   dispatch
 ) => {
   const unmappedFilesCheck = useIndexdAuthz ? 'authz=null' : 'acl=null';
   return fetchWithCreds({
-    path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${user}&start=${start}&limit=${fetchLimit}`,
+    path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${username}&start=${start}&limit=${fetchLimit}`,
     method: 'GET',
   })
     .then(
@@ -20,7 +20,7 @@ const fetchUnmappedFileStats = (user, totalSize, start, fetchLimit) => (
             if (data.records.length === fetchLimit) {
               return dispatch(
                 fetchUnmappedFileStats(
-                  user,
+                  username,
                   totalSize,
                   data.records[fetchLimit - 1].did,
                   fetchLimit
@@ -58,13 +58,12 @@ const ReduxSubmissionHeader = (() => {
   const mapStateToProps = (state) => ({
     unmappedFileCount: state.submission.unmappedFileCount,
     unmappedFileSize: state.submission.unmappedFileSize,
-    user: state.user,
-    userAuthMapping: state.userAuthMapping,
+    username: state.user.username,
   });
 
   const mapDispatchToProps = (dispatch) => ({
-    fetchUnmappedFileStats: (user) =>
-      dispatch(fetchUnmappedFileStats(user, [], STARTING_DID, FETCH_LIMIT)),
+    fetchUnmappedFileStats: (username) =>
+      dispatch(fetchUnmappedFileStats(username, [], STARTING_DID, FETCH_LIMIT)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(SubmissionHeader);

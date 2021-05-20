@@ -140,7 +140,7 @@ SubmitTSV.propTypes = {
     submit_counter: PropTypes.number,
     submit_total: PropTypes.number,
     submit_entity_counts: PropTypes.number,
-    nodeTypes: PropTypes.string,
+    nodeTypes: PropTypes.arrayOf(PropTypes.string),
     dictionary: PropTypes.object,
   }),
   onUploadClick: PropTypes.func.isRequired,

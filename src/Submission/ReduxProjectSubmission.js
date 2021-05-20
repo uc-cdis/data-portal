@@ -3,9 +3,7 @@ import ProjectSubmission from './ProjectSubmission';
 import SubmitTSV from './SubmitTSV';
 import SubmitForm from './SubmitForm';
 import sessionMonitor from '../SessionMonitor';
-import ReduxDataModelGraph, {
-  getCounts,
-} from '../DataModelGraph/ReduxDataModelGraph';
+import { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
 
 import { fetchWithCreds } from '../actions';
 import { predictFileType } from '../utils';
@@ -112,7 +110,7 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (
   return recursiveFetch(fileArray);
 };
 
-const ReduxSubmitTSV = (() => {
+export const ReduxSubmitTSV = (() => {
   const mapStateToProps = (state) => ({
     submission: state.submission,
     dictionary: state.dictionary,
@@ -129,7 +127,7 @@ const ReduxSubmitTSV = (() => {
   return connect(mapStateToProps, mapDispatchToProps)(SubmitTSV);
 })();
 
-const ReduxSubmitForm = (() => {
+export const ReduxSubmitForm = (() => {
   const mapStateToProps = (state) => ({
     submission: state.submission,
   });
@@ -147,11 +145,7 @@ const ReduxProjectSubmission = (() => {
     typeList: state.submission.nodeTypes,
     dataIsReady: !!state.submission.counts_search,
     dictionary: state.submission.dictionary,
-    submitForm: ReduxSubmitForm,
-    submitTSV: ReduxSubmitTSV,
-    dataModelGraph: ReduxDataModelGraph,
     project: ownProps.params.project,
-    userAuthMapping: state.userAuthMapping,
   });
 
   const mapDispatchToProps = (dispatch) => ({

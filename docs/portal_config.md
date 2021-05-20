@@ -345,8 +345,6 @@ Below is an example, with inline comments describing what each JSON block config
     ],
     "dropdowns": {} // optional; dropdown groupings for buttons
   },
-  "useArboristUI": false, // optional; set true to enable arborist UI; defaults to false if absent
-  "showArboristAuthzOnProfile": false, // optional; set true to list arborist resources on profile page
   "showFenceAuthzOnProfile": true, // optional; set false to not list fence project access on profile page
   "componentToResourceMapping": { // optional; configure some parts of arborist UI
     "Workspace": { // name of component as defined in this file

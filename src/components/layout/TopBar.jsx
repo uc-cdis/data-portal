@@ -3,13 +3,16 @@ import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
-import { useArboristUI } from '../../localconf';
-import { userHasMethodOnAnyProject } from '../../authMappingUtils';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
+ * @param {Object} props
+ * @param {{ name: string; link: string; icon?: string; }[]} props.topItems
+ * @param {string} props.username
+ * @param {boolean} props.isAdminUser
+ * @param {() => void} props.onLogoutClick
  */
-function TopBar({ topItems, user, userAuthMapping, onLogoutClick }) {
+function TopBar({ topItems, username, isAdminUser, onLogoutClick }) {
   const location = useLocation();
 
   return (
@@ -34,26 +37,9 @@ function TopBar({ topItems, user, userAuthMapping, onLogoutClick }) {
           </a>
         </div>
         <div className='top-bar__nav--flex-center'>
-          {topItems.map((item) => {
-            if (item.link === '/submission') {
-              const resourcePath = '/services/sheepdog/submission/project';
-              const isAdminUser =
-                user.authz &&
-                user.authz.hasOwnProperty(resourcePath) &&
-                user.authz[resourcePath][0].method === '*';
-              if (!isAdminUser) return undefined;
-            }
-
-            let buttonText = item.name;
-            if (item.name === 'Submit Data' && useArboristUI) {
-              if (userHasMethodOnAnyProject('create', userAuthMapping)) {
-                buttonText = 'Submit/Browse Data';
-              } else {
-                buttonText = 'Browse Data';
-              }
-            }
-
-            return item.link.startsWith('http') ? (
+          {topItems.map((item) =>
+            (item.link !== '/submission' || isAdminUser) &&
+            item.link.startsWith('http') ? (
               <a
                 className='top-bar__link'
                 key={item.link}
@@ -62,7 +48,7 @@ function TopBar({ topItems, user, userAuthMapping, onLogoutClick }) {
                 rel='noopener noreferrer'
               >
                 <TopIconButton
-                  name={buttonText}
+                  name={item.name}
                   icon={item.icon}
                   isActive={location.pathname === item.link}
                 />
@@ -70,19 +56,19 @@ function TopBar({ topItems, user, userAuthMapping, onLogoutClick }) {
             ) : (
               <Link className='top-bar__link' key={item.link} to={item.link}>
                 <TopIconButton
-                  name={buttonText}
+                  name={item.name}
                   icon={item.icon}
                   isActive={location.pathname === item.link}
                 />
               </Link>
-            );
-          })}
-          {user.username !== undefined ? (
+            )
+          )}
+          {username !== undefined ? (
             <>
               <Link className='top-bar__link' to='/identity'>
                 <TopIconButton
                   icon='user-circle'
-                  name={user.username}
+                  name={username}
                   isActive={location.pathname === '/identity'}
                 />
               </Link>
@@ -103,8 +89,8 @@ function TopBar({ topItems, user, userAuthMapping, onLogoutClick }) {
 
 TopBar.propTypes = {
   topItems: PropTypes.array.isRequired,
-  user: PropTypes.shape({ username: PropTypes.string }).isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
+  username: PropTypes.string,
+  isAdminUser: PropTypes.bool,
   onLogoutClick: PropTypes.func.isRequired,
 };
 

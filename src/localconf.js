@@ -92,10 +92,6 @@ function buildConfig(opts) {
     typeof arboristURL === 'undefined'
       ? `${hostname}authz`
       : `${arboristURL}authz`;
-  const authzMappingPath =
-    typeof arboristURL === 'undefined'
-      ? `${hostname}authz/mapping`
-      : `${arboristURL}authz/mapping`;
   const loginPath = `${userapiPath}login/`;
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
@@ -140,19 +136,9 @@ function buildConfig(opts) {
     explorerConfig = config.explorerConfig;
   }
 
-  let showArboristAuthzOnProfile = false;
-  if (config.showArboristAuthzOnProfile) {
-    showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
-  }
-
   let showFenceAuthzOnProfile = true;
   if (config.showFenceAuthzOnProfile === false) {
     showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
-  }
-
-  let useArboristUI = false;
-  if (config.useArboristUI) {
-    useArboristUI = config.useArboristUI;
   }
 
   let terraExportWarning;
@@ -266,16 +252,13 @@ function buildConfig(opts) {
     manifestServiceApiPath,
     wtsPath,
     externalLoginOptionsUrl,
-    showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
-    useArboristUI,
     terraExportWarning,
     tierAccessLevel,
     tierAccessLimit,
     useIndexdAuthz,
     explorerPublic,
     authzPath,
-    authzMappingPath,
     enableResourceBrowser,
     resourceBrowserPublic,
     explorerConfig,

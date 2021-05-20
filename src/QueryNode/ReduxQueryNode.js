@@ -106,7 +106,6 @@ const mapStateToProps = (state, ownProps) => {
     ownProps,
     queryNodes: state.queryNodes,
     popups: Object.assign({}, state.popups),
-    userAuthMapping: state.userAuthMapping,
   };
   return result;
 };
