@@ -9,19 +9,19 @@ import './SubmissionHeader.less';
 
 /**
  * @param {Object} props
- * @param {{ username: string }} props.user
+ * @param {string} props.username
  * @param {(username: string) => void} props.fetchUnmappedFileStats
  * @param {number} [props.unmappedFileCount]
  * @param {number} [props.unmappedFileSize]
  */
 function SubmissionHeader({
-  user,
+  username,
   fetchUnmappedFileStats,
   unmappedFileCount = 0,
   unmappedFileSize = 0,
 }) {
   useEffect(() => {
-    fetchUnmappedFileStats(user.username);
+    fetchUnmappedFileStats(username);
   }, []);
 
   function openGen3DataClient() {
@@ -96,7 +96,7 @@ function SubmissionHeader({
 }
 
 SubmissionHeader.propTypes = {
-  user: PropTypes.object.isRequired,
+  username: PropTypes.string.isRequired,
   fetchUnmappedFileStats: PropTypes.func.isRequired,
   unmappedFileSize: PropTypes.number,
   unmappedFileCount: PropTypes.number,
