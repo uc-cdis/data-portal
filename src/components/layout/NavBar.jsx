@@ -84,25 +84,13 @@ class NavBar extends Component {
           onMouseOver={() => this.updateTooltip(item)}
           onMouseLeave={() => this.updateTooltip(null)}
         >
-          {item.link.startsWith('http') ? (
-            <a href={item.link}>
-              <NavButton
-                dictIcons={this.props.dictIcons}
-                icon={item.icon}
-                name={item.name}
-                isActive={this.isActive(item.link)}
-              />
-            </a>
-          ) : (
-            <Link to={item.link}>
-              <NavButton
-                dictIcons={this.props.dictIcons}
-                icon={item.icon}
-                name={item.name}
-                isActive={this.isActive(item.link)}
-              />
-            </Link>
-          )}
+          <NavButton
+            dictIcons={this.props.dictIcons}
+            icon={item.icon}
+            name={item.name}
+            to={item.link}
+            isActive={this.isActive(item.link)}
+          />
         </div>
       );
       return this.canUserSeeComponent(item.name) ? navButton : null;
