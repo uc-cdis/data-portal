@@ -60,7 +60,7 @@ function buildConfig(opts) {
   const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
-  let userapiPath =
+  const userapiPath =
     typeof fenceURL === 'undefined'
       ? `${hostname}user/`
       : ensureTrailingSlash(fenceURL);
@@ -76,7 +76,7 @@ function buildConfig(opts) {
       ? `${hostname}wts/oauth2/`
       : ensureTrailingSlash(wtsURL);
   const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
-  let login = {
+  const login = {
     url: `${userapiPath}login/google?redirect=`,
     title: 'Login from Google',
   };
@@ -144,14 +144,6 @@ function buildConfig(opts) {
     categorical2Colors: components.categorical2Colors ?? ['#3283c8', '#e7e7e7'],
   };
 
-  if (app === 'gdc' && typeof fenceURL === 'undefined') {
-    userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
-    login = {
-      url:
-        'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',
-      title: 'Login from NIH',
-    };
-  }
   const fenceDownloadPath = `${userapiPath}data/download`;
 
   const defaultLineLimit = 30;
