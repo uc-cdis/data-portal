@@ -4,14 +4,14 @@ const { components, requiredCerts, config } = require('./params');
  * Setup configuration variables based on the "app" the data-portal is
  * being deployed into (Brain Health Commons, Blood Pack, ...)
  *
- * @param {app, dev, basename, mockStore, hostname} opts overrides for defaults
+ * @param {Object} opts overrides for defaults
  */
 function buildConfig(opts) {
   const defaults = {
-    dev: !!(process.env.NODE_ENV && process.env.NODE_ENV === 'dev'),
-    mockStore: !!(process.env.MOCK_STORE && process.env.MOCK_STORE === 'true'),
-    app: process.env.APP || 'generic',
-    basename: process.env.BASENAME || '/',
+    dev: process.env.NODE_ENV === 'dev',
+    mockStore: process.env.MOCK_STORE === 'true',
+    app: process.env.APP ?? 'generic',
+    basename: process.env.BASENAME ?? '/',
     hostname:
       typeof window !== 'undefined'
         ? `${window.location.protocol}//${window.location.hostname}/`
@@ -22,20 +22,14 @@ function buildConfig(opts) {
     wtsURL: process.env.WTS_URL,
     workspaceURL: process.env.WORKSPACE_URL,
     manifestServiceURL: process.env.MANIFEST_SERVICE_URL,
-    gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
+    gaDebug: process.env.GA_DEBUG === 'true',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
   };
 
-  //
   // Override default basename if loading via /dev.html
   // dev.html loads bundle.js via https://localhost...
-  //
-  if (
-    typeof location !== 'undefined' &&
-    location.pathname.indexOf(`${defaults.basename}dev.html`) === 0
-  ) {
+  if (location?.pathname.startsWith(`${defaults.basename}dev.html`))
     defaults.basename += 'dev.html';
-  }
 
   const {
     dev,
@@ -91,8 +85,8 @@ function buildConfig(opts) {
       ? `${hostname}authz`
       : `${arboristURL}authz`;
   const loginPath = `${userapiPath}login/`;
-  const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
-  const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
+  const logoutInactiveUsers = process.env.LOGOUT_INACTIVE_USERS !== 'false';
+  const useIndexdAuthz = process.env.USE_INDEXD_AUTHZ !== 'false';
   const workspaceTimeoutInMinutes =
     process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
   const graphqlSchemaUrl = `${hostname}data/schema.json`;
@@ -114,59 +108,40 @@ function buildConfig(opts) {
       ? `${hostname}manifests/`
       : ensureTrailingSlash(manifestServiceURL);
 
-  let explorerConfig = [];
+  const explorerConfig = config.explorerConfig ?? [];
   // for backward compatibilities
-  if (config.dataExplorerConfig) {
-    explorerConfig.push({
-      tabTitle: 'Data',
-      ...config.dataExplorerConfig,
-    });
-  }
-  if (config.fileExplorerConfig) {
-    explorerConfig.push({
-      tabTitle: 'File',
-      ...config.fileExplorerConfig,
-    });
+  if (explorerConfig.length === 0) {
+    if (config.dataExplorerConfig)
+      explorerConfig.push({
+        tabTitle: 'Data',
+        ...config.dataExplorerConfig,
+      });
+
+    if (config.fileExplorerConfig)
+      explorerConfig.push({
+        tabTitle: 'File',
+        ...config.fileExplorerConfig,
+      });
   }
 
-  // new explorer config format
-  if (config.explorerConfig) {
-    explorerConfig = config.explorerConfig;
-  }
-
-  let showFenceAuthzOnProfile = true;
-  if (config.showFenceAuthzOnProfile === false) {
-    showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
-  }
-
-  let terraExportWarning;
-  if (config.terraExportWarning) {
-    terraExportWarning = config.terraExportWarning;
-  }
-
-  const enableResourceBrowser = !!config.resourceBrowser;
-  let resourceBrowserPublic = false;
-  if (config.resourceBrowser && config.resourceBrowser.public) {
-    resourceBrowserPublic = true;
-  }
+  const showFenceAuthzOnProfile = config.showFenceAuthzOnProfile ?? true;
+  const terraExportWarning = config.terraExportWarning;
+  const enableResourceBrowser = config.resourceBrowser ?? true;
+  const resourceBrowserPublic = config.resourceBrowser?.public ?? false;
 
   const colorsForCharts = {
-    categorical9Colors: components.categorical9Colors
-      ? components.categorical9Colors
-      : [
-          '#3283c8',
-          '#7ec500',
-          '#ad91ff',
-          '#f4b940',
-          '#e74c3c',
-          '#05b8ee',
-          '#ff7abc',
-          '#ef8523',
-          '#26d9b1',
-        ],
-    categorical2Colors: components.categorical2Colors
-      ? components.categorical2Colors
-      : ['#3283c8', '#e7e7e7'],
+    categorical9Colors: components.categorical9Colors ?? [
+      '#3283c8',
+      '#7ec500',
+      '#ad91ff',
+      '#f4b940',
+      '#e74c3c',
+      '#05b8ee',
+      '#ff7abc',
+      '#ef8523',
+      '#26d9b1',
+    ],
+    categorical2Colors: components.categorical2Colors ?? ['#3283c8', '#e7e7e7'],
   };
 
   if (app === 'gdc' && typeof fenceURL === 'undefined') {
@@ -180,8 +155,7 @@ function buildConfig(opts) {
   const fenceDownloadPath = `${userapiPath}data/download`;
 
   const defaultLineLimit = 30;
-  const lineLimit =
-    config.lineLimit == null ? defaultLineLimit : config.lineLimit;
+  const lineLimit = config.lineLimit ?? defaultLineLimit;
 
   const breakpoints = {
     laptop: 1024,
