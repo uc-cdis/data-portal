@@ -35,31 +35,3 @@
     align-items: center;
   }
 }
-
-.top-bar__link {
-  border-right: 2px solid var(--pcdc-color__primary-light);
-  height: 20px;
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  padding: 0 0;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-@media screen and (max-width: 820px) {
-  .top-bar__link {
-    border-right: none;
-    width: unset;
-  }
-}
-
-.top-bar__link:last-child {
-  border-right: 0;
-}
-
-@media screen and (max-width: 820px) {
-  .top-bar__link:nth-child(-n + 2) {
-    display: none;
-  }
-}
