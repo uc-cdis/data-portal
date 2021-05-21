@@ -16,7 +16,6 @@
   border: 1px solid var(--g3-color__silver);
   border-top: 4px solid var(--pcdc-color__primary);
   border-radius: 4px;
-  min-height: 200px;
   width: 100%;
   max-width: 480px;
   padding: 2rem 1rem;
