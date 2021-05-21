@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
-import './TopBar.less';
+import './TopBar.css';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
