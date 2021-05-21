@@ -75,7 +75,7 @@ class NavBar extends Component {
   render() {
     if (this.props.location.pathname === '/login') return null;
 
-    const navItems = this.props.navItems.map((item, index) => {
+    const navItems = this.props.navItems.map((item) => {
       const navButton = (
         <div
           key={item.link}
@@ -87,16 +87,18 @@ class NavBar extends Component {
           {item.link.startsWith('http') ? (
             <a href={item.link}>
               <NavButton
-                item={item}
                 dictIcons={this.props.dictIcons}
+                icon={item.icon}
+                name={item.name}
                 isActive={this.isActive(item.link)}
               />
             </a>
           ) : (
             <Link to={item.link}>
               <NavButton
-                item={item}
                 dictIcons={this.props.dictIcons}
+                icon={item.icon}
+                name={item.name}
                 isActive={this.isActive(item.link)}
               />
             </Link>
