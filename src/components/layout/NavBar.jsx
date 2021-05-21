@@ -90,7 +90,6 @@ class NavBar extends Component {
                 item={item}
                 dictIcons={this.props.dictIcons}
                 isActive={this.isActive(item.link)}
-                tabIndex={index + 1}
               />
             </a>
           ) : (
@@ -99,7 +98,6 @@ class NavBar extends Component {
                 item={item}
                 dictIcons={this.props.dictIcons}
                 isActive={this.isActive(item.link)}
-                tabIndex={index + 1}
               />
             </Link>
           )}
