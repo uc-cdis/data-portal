@@ -9,8 +9,6 @@ const TopIconButton = ({ name, icon, isActive = false }) => (
         ? 'top-icon-button button-top-active body-typo'
         : 'top-icon-button body-typo'
     }
-    role='button'
-    tabIndex={0}
   >
     {name}&nbsp;
     {icon ? (
