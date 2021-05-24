@@ -88,12 +88,17 @@
 }
 
 .nav-bar__menu {
-  padding-bottom: 12px;
+  margin: 6px 0;
+  padding: 6px 0;
   font-size: 18px;
   cursor: pointer;
   outline: none;
   text-align: center;
   width: 100%;
+}
+
+.nav-bar__menu:focus {
+  outline: -webkit-focus-ring-color auto 1px;
 }
 
 .nav-bar__menu-icon {
