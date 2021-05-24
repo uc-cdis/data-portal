@@ -1,36 +1,32 @@
 .top-bar {
   background-color: var(--pcdc-color__primary);
-  overflow: hidden;
-  vertical-align: middle;
+  color: white;
+  display: flex;
+  justify-content: space-between;
   margin: auto;
   min-height: 40px;
+  overflow: hidden;
+  vertical-align: middle;
   width: 100%;
 }
 
-.top-bar__nav {
-  display: flex;
-  justify-content: space-between;
-  color: white;
-  overflow: hidden;
-}
-
-.top-bar__nav--flex-center {
+.top-bar--flex-center {
   display: flex;
   justify-content: center;
 }
 
 @media screen and (max-width: 1090px) {
-  .top-bar__nav {
+  .top-bar {
     justify-content: flex-end;
   }
 
-  .top-bar__nav--hidden-lg-and-down {
+  .top-bar--hidden-lg-and-down {
     display: none;
   }
 }
 
 @media screen and (max-width: 820px) {
-  .top-bar__nav {
+  .top-bar {
     flex-flow: column;
     align-items: center;
   }

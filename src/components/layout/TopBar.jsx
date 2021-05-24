@@ -16,54 +16,52 @@ function TopBar({ topItems, username, isAdminUser, onLogoutClick }) {
   const location = useLocation();
 
   return (
-    <header className='top-bar'>
-      <nav className='top-bar__nav'>
-        <div className='top-bar__nav--hidden-lg-and-down'>
-          <TopIconButton
-            icon='external-link'
-            name='About PCDC'
-            to='https://commons.cri.uchicago.edu/pcdc-consortium/'
-          />
-          <TopIconButton
-            icon='external-link'
-            name='Our Sponsors'
-            to='https://commons.cri.uchicago.edu/sponsors/'
-          />
-        </div>
-        <div className='top-bar__nav--flex-center'>
-          {topItems.map(
-            (item) =>
-              (item.link !== '/submission' || isAdminUser) && (
-                <TopIconButton
-                  key={item.link}
-                  name={item.name}
-                  icon={item.icon}
-                  isActive={location.pathname === item.link}
-                  to={item.link}
-                />
-              )
-          )}
-          {username !== undefined ? (
-            <>
+    <nav className='top-bar'>
+      <div className='top-bar--hidden-lg-and-down'>
+        <TopIconButton
+          icon='external-link'
+          name='About PCDC'
+          to='https://commons.cri.uchicago.edu/pcdc-consortium/'
+        />
+        <TopIconButton
+          icon='external-link'
+          name='Our Sponsors'
+          to='https://commons.cri.uchicago.edu/sponsors/'
+        />
+      </div>
+      <div className='top-bar--flex-center'>
+        {topItems.map(
+          (item) =>
+            (item.link !== '/submission' || isAdminUser) && (
               <TopIconButton
-                icon='user-circle'
-                name={username}
-                isActive={location.pathname === '/identity'}
-                to='/identity'
+                key={item.link}
+                name={item.name}
+                icon={item.icon}
+                isActive={location.pathname === item.link}
+                to={item.link}
               />
-              <TopIconButton
-                icon='exit'
-                name='Logout'
-                to='#'
-                onClick={onLogoutClick}
-              />
-            </>
-          ) : (
-            <TopIconButton icon='exit' name='Login' to='/login' />
-          )}
-        </div>
-      </nav>
-    </header>
+            )
+        )}
+        {username !== undefined ? (
+          <>
+            <TopIconButton
+              icon='user-circle'
+              name={username}
+              isActive={location.pathname === '/identity'}
+              to='/identity'
+            />
+            <TopIconButton
+              icon='exit'
+              name='Logout'
+              to='#'
+              onClick={onLogoutClick}
+            />
+          </>
+        ) : (
+          <TopIconButton icon='exit' name='Login' to='/login' />
+        )}
+      </div>
+    </nav>
   );
 }
 
