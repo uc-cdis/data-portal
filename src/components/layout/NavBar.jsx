@@ -110,6 +110,7 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
           onKeyPress={(e) => e.key === 'Enter' && toggleMenu()}
           role='button'
           tabIndex={0}
+          aria-expanded={isMenuOpen}
         >
           Menu
           <FontAwesomeIcon
