@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React, { useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,166 +12,132 @@ import './NavBar.less';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
- * @param { dictIcons, navTitle, navItems } params
+ * @param {Object} props
+ * @param {{ [iconName: string]: (height: string, svgStyles: Object) => SVGElement }} props.dictIcons
+ * @param {{ icon: string; link: string; name: string; tooltip?: string; }[]} props.navItems
+ * @param {string} [props.navTitle]
+ * @param {{ [key: string]: any; }} props.userAccess
  */
-class NavBar extends Component {
-  constructor(props) {
-    super(props);
-    this.navButtonRefs = {};
-    this.state = {
-      menuOpen: false,
-      tooltipDetails: { content: '' },
-    };
+function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
+  const location = useLocation();
+  if (location.pathname === '/login') return null;
+
+  const navButtonRefs = {};
+  for (const { link } of navItems)
+    if (navButtonRefs[link] === undefined) navButtonRefs[link] = useRef();
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [tooltipDetails, setTooltipDetails] = useState({ content: '' });
+
+  function toggleMenu() {
+    setIsMenuOpen(!isMenuOpen);
   }
 
-  getNavButtonRef = (itemUniqueId) => {
-    if (!this.navButtonRefs[itemUniqueId]) {
-      this.navButtonRefs[itemUniqueId] = React.createRef();
-    }
-    return this.navButtonRefs[itemUniqueId];
-  };
-
-  canUserSeeComponent = (componentName) => {
-    const authResult = this.props.userAccess[componentName];
-    return typeof authResult !== 'undefined' ? authResult : true;
-  };
-
-  isActive = (id) =>
-    this.props.location.pathname
-      .split('/')
-      .filter((x) => x !== 'dev.html')
-      .join('/')
-      .startsWith(id);
-
-  toggleMenu = () => {
-    this.setState((prevState) => ({ menuOpen: !prevState.menuOpen }));
-  };
-
-  updateTooltip(item) {
+  function updateTooltip(item) {
     /*
     - `item.tooltip` is a string: display it on mouse hover
     - `item.tooltip` is null/empty string: no tooltip text for this button
     - `item` is null: mouse is not over a button
     */
-    let tooltipDetails = { content: '' };
-    if (item && item.tooltip) {
-      const boundsRect = this.navButtonRefs[
-        item.link
-      ].current.getBoundingClientRect();
-      const bottomY = boundsRect.bottom + window.scrollY;
-      const centerX = boundsRect.x + boundsRect.width / 2;
-      tooltipDetails = {
-        content: item.tooltip,
-        x: centerX,
-        y: bottomY + 5,
-      };
+    const newTooltipDetails = { content: '' };
+    if (item?.tooltip) {
+      const navButtonEl = navButtonRefs[item.link].current;
+      const { x, width, bottom } = navButtonEl.getBoundingClientRect();
+
+      newTooltipDetails.content = item.tooltip;
+      newTooltipDetails.x = x + width / 2;
+      newTooltipDetails.y = bottom + window.scrollY + 5;
     }
-    if (tooltipDetails.content === this.state.tooltipDetails.content) {
-      return;
-    }
-    this.setState({ tooltipDetails });
+    if (newTooltipDetails.content !== tooltipDetails.content)
+      setTooltipDetails(newTooltipDetails);
   }
 
-  render() {
-    if (this.props.location.pathname === '/login') return null;
-
-    const navItems = this.props.navItems.map((item) => {
-      const navButton = (
+  const navButtons = navItems.map(
+    (item) =>
+      (userAccess[item.name] ?? true) && (
         <div
           key={item.link}
-          ref={this.getNavButtonRef(item.link)}
+          ref={navButtonRefs[item.link]}
           className='nav-bar__link nav-bar__link--right'
-          onMouseOver={() => this.updateTooltip(item)}
-          onMouseLeave={() => this.updateTooltip(null)}
+          onMouseOver={() => updateTooltip(item)}
+          onMouseLeave={() => updateTooltip(null)}
         >
           <NavButton
-            dictIcons={this.props.dictIcons}
+            dictIcons={dictIcons}
             icon={item.icon}
             name={item.name}
             to={item.link}
-            isActive={this.isActive(item.link)}
+            isActive={location.pathname.startsWith(item.link)}
           />
         </div>
-      );
-      return this.canUserSeeComponent(item.name) ? navButton : null;
-    });
+      )
+  );
 
-    return (
-      <div className='nav-bar'>
-        <header className='nav-bar__header'>
-          <nav className='nav-bar__nav--info'>
-            <div className='nav-bar__logo'>
-              {config.homepageHref ? (
-                <a href={config.homepageHref}>
-                  <img
-                    className='nav-bar__logo-img'
-                    src='/src/img/logo.png'
-                    alt=''
-                  />
-                </a>
-              ) : (
-                <Link to=''>
-                  <img
-                    className='nav-bar__logo-img'
-                    src='/src/img/logo.png'
-                    alt=''
-                  />
-                </Link>
-              )}
-            </div>
-            {this.props.navTitle && (
-              <div role='button' tabIndex={0} className='nav-bar__home-button'>
-                <Link
-                  className='h3-typo nav-bar__link nav-bar__link--home'
-                  to=''
-                >
-                  {this.props.navTitle}
-                </Link>
-              </div>
+  return (
+    <div className='nav-bar'>
+      <header className='nav-bar__header'>
+        <nav className='nav-bar__nav--info'>
+          <div className='nav-bar__logo'>
+            {config.homepageHref ? (
+              <a href={config.homepageHref}>
+                <img
+                  className='nav-bar__logo-img'
+                  src='/src/img/logo.png'
+                  alt=''
+                />
+              </a>
+            ) : (
+              <Link to=''>
+                <img
+                  className='nav-bar__logo-img'
+                  src='/src/img/logo.png'
+                  alt=''
+                />
+              </Link>
             )}
-          </nav>
-          <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
-            <div
-              className='nav-bar__menu'
-              onClick={this.toggleMenu}
-              role='button'
-              tabIndex={0}
-            >
-              Menu
-              <FontAwesomeIcon
-                className='nav-bar__menu-icon'
-                icon={this.state.menuOpen ? 'angle-down' : 'angle-up'}
-                size='lg'
-              />
+          </div>
+          {navTitle && (
+            <div role='button' tabIndex={0} className='nav-bar__home-button'>
+              <Link className='h3-typo nav-bar__link nav-bar__link--home' to=''>
+                {navTitle}
+              </Link>
             </div>
-            {this.state.menuOpen ? (
-              <nav className='nav-bar__nav--items'>{navItems}</nav>
-            ) : null}
-          </MediaQuery>
-          <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-            <nav className='nav-bar__nav--items'>{navItems}</nav>
-            {this.state.tooltipDetails.content !== '' ? (
-              <NavBarTooltip {...this.state.tooltipDetails} />
-            ) : null}
-          </MediaQuery>
-        </header>
-      </div>
-    );
-  }
+          )}
+        </nav>
+        <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
+          <div
+            className='nav-bar__menu'
+            onClick={toggleMenu}
+            role='button'
+            tabIndex={0}
+          >
+            Menu
+            <FontAwesomeIcon
+              className='nav-bar__menu-icon'
+              icon={isMenuOpen ? 'angle-down' : 'angle-up'}
+              size='lg'
+            />
+          </div>
+          {isMenuOpen && (
+            <nav className='nav-bar__nav--items'>{navButtons}</nav>
+          )}
+        </MediaQuery>
+        <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
+          <nav className='nav-bar__nav--items'>{navButtons}</nav>
+          {tooltipDetails.content !== '' && (
+            <NavBarTooltip {...tooltipDetails} />
+          )}
+        </MediaQuery>
+      </header>
+    </div>
+  );
 }
 
 NavBar.propTypes = {
-  navItems: PropTypes.array.isRequired,
-  userAccess: PropTypes.object.isRequired,
   dictIcons: PropTypes.object.isRequired,
+  navItems: PropTypes.array.isRequired,
   navTitle: PropTypes.string,
-  match: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
+  userAccess: PropTypes.object.isRequired,
 };
 
-NavBar.defaultProps = {
-  navTitle: null,
-};
-
-export default withRouter(NavBar);
+export default NavBar;
