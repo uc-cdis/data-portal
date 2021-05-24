@@ -21,7 +21,6 @@ import {
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import isEnabled from './helpers/featureFlags';
-import ScreenSizeWarning from './components/ScreenSizeWarning';
 
 // lazy-loaded pages
 const CoreMetadataPage = React.lazy(() => import('./CoreMetadata/page'));
@@ -352,7 +351,6 @@ function App({ store }) {
             </Switch>
           </Suspense>
         </Layout>
-        <ScreenSizeWarning />
       </BrowserRouter>
     </Provider>
   );

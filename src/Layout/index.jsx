@@ -4,6 +4,7 @@ import { useRouteMatch } from 'react-router-dom';
 import { components } from '../params';
 import dictIcons from '../img/icons/index';
 import Footer from '../components/layout/Footer';
+import ScreenSizeWarning from '../components/ScreenSizeWarning';
 import ReduxTopBar from './ReduxTopBar';
 import ReduxNavBar from './ReduxNavBar';
 
@@ -32,6 +33,7 @@ function Layout({ children }) {
           privacyPolicy={components.privacyPolicy}
         />
       )}
+      <ScreenSizeWarning />
     </>
   );
 }
