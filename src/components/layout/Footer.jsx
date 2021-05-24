@@ -10,7 +10,7 @@ import './Footer.css';
  * @param {{ footerHref: string; text: string; }} [props.privacyPolicy]
  */
 function Footer({ links = [], logos, privacyPolicy }) {
-  const isFooterHidden = useRouteMatch('/dd');
+  const isFooterHidden = useRouteMatch('/dd')?.isExact;
 
   return (
     isFooterHidden || (
