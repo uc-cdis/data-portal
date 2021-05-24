@@ -107,6 +107,7 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
         <div
           className='nav-bar__menu'
           onClick={toggleMenu}
+          onKeyPress={(e) => e.key === 'Enter' && toggleMenu()}
           role='button'
           tabIndex={0}
         >
