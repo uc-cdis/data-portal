@@ -48,18 +48,16 @@ function Footer({ links = [], logos, privacyPolicy }) {
             ))}
           </div>
           <div className='footer__link-area'>
-            {links.map(({ href, text }, i) => (
-              <React.Fragment key={href}>
-                <a
-                  href={href}
-                  className='footer__link'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  {text || href}
-                </a>
-                {i !== links.length - 1 && <span> | </span>}
-              </React.Fragment>
+            {links.map(({ href, text }) => (
+              <a
+                key={href}
+                href={href}
+                className='footer__link'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                {text || href}
+              </a>
             ))}
           </div>
         </nav>
