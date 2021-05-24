@@ -74,7 +74,7 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
   );
 
   return (
-    <nav className='nav-bar'>
+    <nav className='nav-bar' aria-label='Main Navigation'>
       <div className='nav-bar__nav--info'>
         <div className='nav-bar__logo'>
           {config.homepageHref ? (

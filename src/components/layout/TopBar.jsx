@@ -16,7 +16,7 @@ function TopBar({ topItems, username, isAdminUser, onLogoutClick }) {
   const location = useLocation();
 
   return (
-    <nav className='top-bar'>
+    <nav className='top-bar' aria-label='Top Navigation'>
       <div className='top-bar--hidden-lg-and-down'>
         <TopIconButton
           icon='external-link'
