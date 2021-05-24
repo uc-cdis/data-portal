@@ -4,7 +4,8 @@ import { useRouteMatch } from 'react-router-dom';
 import { components } from '../params';
 import dictIcons from '../img/icons/index';
 import Footer from '../components/layout/Footer';
-import { ReduxTopBar, ReduxNavBar } from './reduxer';
+import ReduxTopBar from './ReduxTopBar';
+import ReduxNavBar from './ReduxNavBar';
 
 /**
  * @param {Object} props
