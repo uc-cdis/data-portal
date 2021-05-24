@@ -83,7 +83,7 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
                 <img
                   className='nav-bar__logo-img'
                   src='/src/img/logo.png'
-                  alt=''
+                  alt='Main logo'
                 />
               </a>
             ) : (
@@ -91,7 +91,7 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
                 <img
                   className='nav-bar__logo-img'
                   src='/src/img/logo.png'
-                  alt=''
+                  alt='Main logo'
                 />
               </Link>
             )}
