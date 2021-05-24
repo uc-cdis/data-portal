@@ -13,12 +13,16 @@ import {
   Alert,
   Popover,
   Button,
+  Collapse,
+  List,
 } from 'antd';
 
 import { fetchWithCreds } from '../actions';
-import { manifestServiceApiPath } from '../localconf';
+import { manifestServiceApiPath, userApiPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
+
+const { Panel } = Collapse;
 
 const accessibleFieldName = '__accessible';
 
@@ -37,6 +41,12 @@ interface AggregationConfig {
   name: string
   field: string
   type: 'sum' | 'count'
+}
+
+interface ListItem {
+  title: string,
+  description: string,
+  guid: string
 }
 
 const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null): string => {
@@ -650,6 +660,37 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
             })}
           </div>
         ))}
+        { (config.studyPageFields.downloadLinks && config.studyPageFields.downloadLinks.field &&
+        modalData[config.studyPageFields.downloadLinks.field]) ?
+          <Collapse defaultActiveKey={['1']}>
+            <Panel header={config.studyPageFields.downloadLinks.name || 'Data Download Links'} key='1'>
+              <List
+                itemLayout='horizontal'
+                dataSource={modalData[config.studyPageFields.downloadLinks.field]}
+                renderItem={(item:ListItem) => (
+                  <List.Item
+                    actions={[<Button
+                      href={`${userApiPath}/data/download/${item.guid}?expires_in=900&redirect`}
+                      target='_blank'
+                      type='text'
+                      // disable button if data has no GUID
+                      disabled={!item.guid}
+                      icon={<DownloadOutlined />}
+                    >
+                      Download File
+                    </Button>]}
+                  >
+                    <List.Item.Meta
+                      title={item.title}
+                      description={item.description || ''}
+                    />
+                  </List.Item>
+                )}
+              />
+            </Panel>
+          </Collapse>
+          : null
+        }
       </Space>
     </Modal>
   </div>);

@@ -67,6 +67,10 @@ export interface DiscoveryConfig {
         header?: {
             field: string
         },
+        downloadLinks?: {
+            field: string
+            name?: string
+        },
         fieldsToShow: {
             groupName?: string
             includeName?: boolean,
