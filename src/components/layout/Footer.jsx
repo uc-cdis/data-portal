@@ -3,93 +3,90 @@ import PropTypes from 'prop-types';
 import { useRouteMatch } from 'react-router-dom';
 import './Footer.less';
 
-function Footer({ links, logos, privacyPolicy }) {
+/**
+ * @param {Object} props
+ * @param {{ href: string; text: string; }[]} [props.links]
+ * @param {{ alt: string; height: number; href: string; src: string; }[]} props.logos
+ * @param {{ footerHref: string; text: string; }} [props.privacyPolicy]
+ */
+function Footer({ links = [], logos, privacyPolicy }) {
   const isFooterHidden = useRouteMatch('/dd');
 
-  return isFooterHidden ? null : (
-    <footer className='footer-container'>
-      <nav className='footer__nav'>
-        <div className='footer__spacer-area' />
-        {privacyPolicy && privacyPolicy.text ? (
-          <div className='footer__privacy-policy-area'>
-            <a
-              className='h4-typo footer__privacy-policy'
-              href={privacyPolicy.footerHref}
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              {privacyPolicy.text}
-            </a>
-          </div>
-        ) : null}
-        <div className='footer__logo-area'>
-          {logos.map((logoObj, i) => (
-            <a
-              key={i}
-              target='_blank'
-              href={logoObj.href}
-              className='footer__icon'
-              rel='noopener noreferrer'
-            >
-              <img
-                className='footer__img'
-                src={logoObj.src}
-                alt={logoObj.alt}
-                style={{ height: logoObj.height ? logoObj.height : 60 }}
-              />
-            </a>
-          ))}
-        </div>
-        <div className='footer__link-area'>
-          {links.map((link, i) => (
-            <React.Fragment key={link.href}>
+  return (
+    isFooterHidden || (
+      <footer className='footer-container'>
+        <nav className='footer__nav'>
+          <div className='footer__spacer-area' />
+          {privacyPolicy?.text && (
+            <div className='footer__privacy-policy-area'>
               <a
-                href={link.href}
-                className='footer__link'
+                className='h4-typo footer__privacy-policy'
+                href={privacyPolicy.footerHref}
                 target='_blank'
                 rel='noopener noreferrer'
               >
-                {link.text ? link.text : link.href}
+                {privacyPolicy.text}
               </a>
-              {i !== links.length - 1 && <span> | </span>}
-            </React.Fragment>
-          ))}
-        </div>
-      </nav>
-    </footer>
+            </div>
+          )}
+          <div className='footer__logo-area'>
+            {logos.map(({ alt, height, href, src }, i) => (
+              <a
+                key={i}
+                target='_blank'
+                href={href}
+                className='footer__icon'
+                rel='noopener noreferrer'
+              >
+                <img
+                  className='footer__img'
+                  src={src}
+                  alt={alt}
+                  style={{ height: height ?? 60 }}
+                />
+              </a>
+            ))}
+          </div>
+          <div className='footer__link-area'>
+            {links.map(({ href, text }, i) => (
+              <React.Fragment key={href}>
+                <a
+                  href={href}
+                  className='footer__link'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {text || href}
+                </a>
+                {i !== links.length - 1 && <span> | </span>}
+              </React.Fragment>
+            ))}
+          </div>
+        </nav>
+      </footer>
+    )
   );
 }
 
-const LogoObject = PropTypes.shape({
-  src: PropTypes.string.isRequired,
-  href: PropTypes.string.isRequired,
-  alt: PropTypes.string.isRequired,
-  height: PropTypes.number,
-});
-
-const FooterLink = PropTypes.shape({
-  text: PropTypes.string.isRequired,
-  href: PropTypes.string.isRequired,
-});
-
 Footer.propTypes = {
-  dictionaryVersion: PropTypes.string,
-  apiVersion: PropTypes.string,
-  portalVersion: PropTypes.string,
-  links: PropTypes.arrayOf(FooterLink),
-  logos: PropTypes.arrayOf(LogoObject).isRequired,
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      href: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+    })
+  ),
+  logos: PropTypes.arrayOf(
+    PropTypes.shape({
+      alt: PropTypes.string.isRequired,
+      height: PropTypes.number,
+      href: PropTypes.string.isRequired,
+      src: PropTypes.string.isRequired,
+    })
+  ).isRequired,
   privacyPolicy: PropTypes.shape({
     footerHref: PropTypes.string,
     text: PropTypes.string,
   }),
-};
-
-Footer.defaultProps = {
-  dictionaryVersion: 'Unknown',
-  apiVersion: 'Unknown',
-  portalVersion: 'Unknown',
-  links: [],
-  privacyPolicy: null,
 };
 
 export default Footer;
