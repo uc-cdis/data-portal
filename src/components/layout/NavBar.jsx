@@ -8,7 +8,7 @@ import NavButton from './NavButton';
 import NavBarTooltip from './NavBarTooltip';
 import { breakpoints } from '../../localconf';
 import { config } from '../../params';
-import './NavBar.less';
+import './NavBar.css';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
