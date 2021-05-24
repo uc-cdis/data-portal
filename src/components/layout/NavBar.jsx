@@ -74,62 +74,56 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
   );
 
   return (
-    <div className='nav-bar'>
-      <header className='nav-bar__header'>
-        <nav className='nav-bar__nav--info'>
-          <div className='nav-bar__logo'>
-            {config.homepageHref ? (
-              <a href={config.homepageHref}>
-                <img
-                  className='nav-bar__logo-img'
-                  src='/src/img/logo.png'
-                  alt='Main logo'
-                />
-              </a>
-            ) : (
-              <Link to=''>
-                <img
-                  className='nav-bar__logo-img'
-                  src='/src/img/logo.png'
-                  alt='Main logo'
-                />
-              </Link>
-            )}
+    <nav className='nav-bar'>
+      <div className='nav-bar__nav--info'>
+        <div className='nav-bar__logo'>
+          {config.homepageHref ? (
+            <a href={config.homepageHref}>
+              <img
+                className='nav-bar__logo-img'
+                src='/src/img/logo.png'
+                alt='Main logo'
+              />
+            </a>
+          ) : (
+            <Link to=''>
+              <img
+                className='nav-bar__logo-img'
+                src='/src/img/logo.png'
+                alt='Main logo'
+              />
+            </Link>
+          )}
+        </div>
+        {navTitle && (
+          <div role='button' tabIndex={0} className='nav-bar__home-button'>
+            <Link className='h3-typo nav-bar__link nav-bar__link--home' to=''>
+              {navTitle}
+            </Link>
           </div>
-          {navTitle && (
-            <div role='button' tabIndex={0} className='nav-bar__home-button'>
-              <Link className='h3-typo nav-bar__link nav-bar__link--home' to=''>
-                {navTitle}
-              </Link>
-            </div>
-          )}
-        </nav>
-        <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
-          <div
-            className='nav-bar__menu'
-            onClick={toggleMenu}
-            role='button'
-            tabIndex={0}
-          >
-            Menu
-            <FontAwesomeIcon
-              className='nav-bar__menu-icon'
-              icon={isMenuOpen ? 'angle-down' : 'angle-up'}
-              size='lg'
-            />
-          </div>
-          {isMenuOpen && (
-            <nav className='nav-bar__nav--items'>{navButtons}</nav>
-          )}
-        </MediaQuery>
-        <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-          <nav className='nav-bar__nav--items'>{navButtons}</nav>
-          {tooltipDetails.content !== '' && (
-            <NavBarTooltip {...tooltipDetails} />
-          )}
-        </MediaQuery>
-      </header>
-    </div>
+        )}
+      </div>
+      <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
+        <div
+          className='nav-bar__menu'
+          onClick={toggleMenu}
+          role='button'
+          tabIndex={0}
+        >
+          Menu
+          <FontAwesomeIcon
+            className='nav-bar__menu-icon'
+            icon={isMenuOpen ? 'angle-down' : 'angle-up'}
+            size='lg'
+          />
+        </div>
+        {isMenuOpen && <div className='nav-bar__nav--items'>{navButtons}</div>}
+      </MediaQuery>
+      <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
+        <div className='nav-bar__nav--items'>{navButtons}</div>
+        {tooltipDetails.content !== '' && <NavBarTooltip {...tooltipDetails} />}
+      </MediaQuery>
+    </nav>
   );
 }
 
