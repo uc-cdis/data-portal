@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useRouteMatch } from 'react-router-dom';
-import './Footer.less';
+import './Footer.css';
 
 /**
  * @param {Object} props
