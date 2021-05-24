@@ -46,3 +46,10 @@ i.top-icon-button__icon {
   position: relative;
   top: 2px;
 }
+
+.top-icon-button--logout {
+  height: auto;
+  width: auto;
+  background: none;
+  border: none;
+}

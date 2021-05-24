@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import TopIconButton from './TopIconButton';
+import TopIconButton, { TopLogoutButton } from './TopIconButton';
 import './TopBar.css';
 
 /**
@@ -50,12 +50,7 @@ function TopBar({ topItems, username, isAdminUser, onLogoutClick }) {
               isActive={location.pathname === '/identity'}
               to='/identity'
             />
-            <TopIconButton
-              icon='exit'
-              name='Logout'
-              to='#'
-              onClick={onLogoutClick}
-            />
+            <TopLogoutButton onClick={onLogoutClick} />
           </>
         ) : (
           <TopIconButton icon='exit' name='Login' to='/login' />

@@ -5,13 +5,35 @@ import './TopIconButton.css';
 
 /**
  * @param {Object} props
+ * @param {() => void} props.onLogoutClick
+ */
+export function TopLogoutButton({ onClick }) {
+  return (
+    <button
+      className='top-icon-button top-icon-button--logout'
+      aria-label='Logout button'
+      onClick={onClick}
+    >
+      <span className='top-icon-button__content body-typo'>
+        Logout&nbsp;
+        <i className='g3-icon g3-icon--exit top-icon-button__icon' />
+      </span>
+    </button>
+  );
+}
+
+TopLogoutButton.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
+
+/**
+ * @param {Object} props
  * @param {string} props.name
  * @param {string} props.to
  * @param {string} [props.icon]
  * @param {boolean} [props.isActive]
- * @param {() => void} [props.onClick]
  */
-function TopIconButton({ name, to, icon, isActive = false, onClick }) {
+function TopIconButton({ name, to, icon, isActive = false }) {
   const buttonClassName = isActive
     ? 'top-icon-button button-top-active'
     : 'top-icon-button';
@@ -30,12 +52,11 @@ function TopIconButton({ name, to, icon, isActive = false, onClick }) {
       target='_blank'
       rel='noopener noreferrer'
       href={to}
-      onClick={onClick}
     >
       {buttonContent}
     </a>
   ) : (
-    <Link className={buttonClassName} to={to} onClick={onClick}>
+    <Link className={buttonClassName} to={to}>
       {buttonContent}
     </Link>
   );
@@ -46,7 +67,6 @@ TopIconButton.propTypes = {
   to: PropTypes.string.isRequired,
   icon: PropTypes.string,
   isActive: PropTypes.bool,
-  onClick: PropTypes.func,
 };
 
 export default TopIconButton;
