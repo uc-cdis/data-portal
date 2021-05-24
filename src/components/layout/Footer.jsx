@@ -14,7 +14,7 @@ function Footer({ links = [], logos, privacyPolicy }) {
 
   return (
     isFooterHidden || (
-      <footer className='footer-container'>
+      <footer>
         <nav className='footer__nav'>
           <div className='footer__spacer-area' />
           {privacyPolicy?.text && (
