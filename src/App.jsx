@@ -61,8 +61,10 @@ function App({ store }) {
             <meta name='robots' content='noindex,nofollow' />
           </Helmet>
         )}
-        <ReduxTopBar />
-        <ReduxNavBar />
+        <header>
+          <ReduxTopBar />
+          <ReduxNavBar />
+        </header>
         <Suspense
           fallback={
             <div style={{ height: '100vh' }}>
