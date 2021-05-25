@@ -31,8 +31,8 @@ module.exports = {
     'react/prefer-stateless-function': 'off',
     'react/jsx-curly-brace-presence': ['off', 'ignore'],
     'function-paren-newline': ['off', 'ignore'],
-    'react/no-array-index-key': ['off, ignore'],
-    'react/destructuring-assignment': ['off, ignore'],
+    'react/no-array-index-key': ['off', 'ignore'],
+    'react/destructuring-assignment': ['off', 'ignore'],
   },
   overrides: [
     {
