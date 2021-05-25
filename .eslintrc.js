@@ -1,7 +1,7 @@
 module.exports = {
   //"extends": "eslint:recommended",
   plugins: ['react'],
-  extends: ['airbnb', 'plugin:react/recommended'],
+  extends: ['airbnb', 'plugin:react/recommended', 'prettier'],
   root: true,
   env: {
     browser: true,
@@ -18,11 +18,6 @@ module.exports = {
     },
   },
   rules: {
-    indent: ['error', 2],
-    'linebreak-style': ['error', 'unix'],
-    quotes: ['error', 'single'],
-    'jsx-quotes': ['error', 'prefer-single'],
-    semi: ['error', 'always'],
     // see https://github.com/clayne11/eslint-import-resolver-meteor/issues/17
     // - seems to affect Codacy :-(
     'import/extensions': ['off', 'never'],
@@ -30,7 +25,6 @@ module.exports = {
     'react/forbid-prop-types': 'off',
     'react/prefer-stateless-function': 'off',
     'react/jsx-curly-brace-presence': ['off', 'ignore'],
-    'function-paren-newline': ['off', 'ignore'],
     'react/no-array-index-key': ['off', 'ignore'],
     'react/destructuring-assignment': ['off', 'ignore'],
   },
