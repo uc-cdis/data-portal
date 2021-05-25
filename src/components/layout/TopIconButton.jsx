@@ -5,7 +5,7 @@ import './TopIconButton.css';
 
 /**
  * @param {Object} props
- * @param {() => void} props.onLogoutClick
+ * @param {() => void} props.onClick
  */
 export function TopLogoutButton({ onClick }) {
   return (
