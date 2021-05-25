@@ -48,16 +48,6 @@ module.exports = {
     },
     {
       files: [
-        'src/Submission/SubmitTSV.jsx',
-        'src/Submission/SubmissionResult.jsx',
-        'src/CoreMetadata/reduxer.js', // for reducer
-      ],
-      rules: {
-        'no-unused-vars': 'off', // for 'brace' - required by AceEditor
-      },
-    },
-    {
-      files: [
         'src/DataDictionary/GraphCreator.js',
         'src/GraphUtils/testData.js',
         'src/GraphUtils/utils.js',
