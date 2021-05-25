@@ -1,7 +1,7 @@
 module.exports = {
   //"extends": "eslint:recommended",
   plugins: ['react'],
-  extends: ['airbnb', 'plugin:react/recommended', 'prettier'],
+  extends: ['airbnb', 'prettier'],
   root: true,
   env: {
     browser: true,
