@@ -84,13 +84,13 @@
     "webpack-node-externals": "^3.0.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.14.3",
     "@storybook/addon-actions": "^6.2.9",
     "@storybook/addon-essentials": "^6.2.9",
     "@storybook/addon-links": "^6.2.9",
     "@storybook/builder-webpack5": "^6.2.9",
     "@storybook/cli": "^6.2.9",
     "@storybook/react": "^6.2.9",
-    "babel-eslint": "7.2.3",
     "babel-jest": "^25.5.1",
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.15.6",

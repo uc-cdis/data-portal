@@ -8,7 +8,7 @@ module.exports = {
     es6: true,
     jest: true,
   },
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 6,
