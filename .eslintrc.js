@@ -17,13 +17,14 @@ module.exports = {
     },
   },
   rules: {
-    'import/extensions': ['off', 'never'],
-    'react/jsx-indent': 'off',
+    'no-restricted-syntax': 'off',
+    'import/extensions': 'off',
+    'react/destructuring-assignment': 'off',
     'react/forbid-prop-types': 'off',
-    'react/prefer-stateless-function': 'off',
-    'react/jsx-curly-brace-presence': ['off', 'ignore'],
-    'react/no-array-index-key': ['off', 'ignore'],
-    'react/destructuring-assignment': ['off', 'ignore'],
+    'react/jsx-curly-brace-presence': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'react/no-array-index-key': 'off',
+    'react/require-default-props': 'off',
   },
   overrides: [
     {
