@@ -10,7 +10,7 @@ import {
   Table,
   Tag,
   Space,
-  Modal,
+  Drawer,
   Alert,
   Popover,
   Button,
@@ -805,13 +805,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         />
       </div>
     </div>
-    <Modal
+    <Drawer
       className='discovery-modal'
       visible={modalVisible}
-      onOk={() => setModalVisible(false)}
-      onCancel={() => setModalVisible(false)}
-      width='80vw'
-      footer={false}
+      width={'50vw'}
+      closable
+      onClose={() => setModalVisible(false)}
     >
       <Space style={{ width: '100%' }} direction='vertical' size='large'>
         { config.studyPageFields.header &&
@@ -855,7 +854,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               return (
                 <div key={field.name} className='discovery-modal__attribute'>
                   { field.includeName !== false &&
-                        <span className='discovery-modal__attribute-name'>{field.name}:</span>
+                        <span className='discovery-modal__attribute-name'>{field.name}</span>
                   }
                   <span className='discovery-modal__attribute-value'>
                     { modalData[field.field]
@@ -869,7 +868,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           </div>
         ))}
       </Space>
-    </Modal>
+    </Drawer>
   </div>);
 };
 

@@ -81,7 +81,6 @@
 
 .discovery-header__tags-header {
   cursor: default;
-  font-weight: 400;
   font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
@@ -235,7 +234,21 @@
   flex-direction: column;
 }
 
+.discovery-modal__attribute {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #dfe3e2;
+  padding: 4px;
+  border-radius: 4px;
+  color: #313839;
+}
+
+.discovery-modal__attribute:not(:first-child) {
+  margin-top: 8px;
+}
+
 .discovery-modal__attribute-name {
-  color: #7f7f7f;
-  margin-right: 7px;
+  font-weight: 700;
+  text-transform: uppercase;
 }
