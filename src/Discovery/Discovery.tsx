@@ -242,17 +242,30 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     // Load studies into JS Search.
     const search = new JsSearch.Search(config.minimalFieldMapping.uid);
     search.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
-    // Enable search only over text fields present in the table
-    config.studyColumns.forEach((column) => {
-      if (!column.contentType || column.contentType === 'string') {
-        search.addIndex(column.field);
+
+    // Choose which fields in the data to make searchable.
+    // If `searchableFields` are configured, enable search over only those fields.
+    // Otherwise, default behavior: enable search over all non-numeric fields
+    // in the table and the study description.
+    // ---
+    const searchableFields = config.features.search.searchBar.searchableTextFields;
+    if (searchableFields) {
+      searchableFields.forEach((field) => {
+        search.addIndex(field);
+      });
+    } else {
+      config.studyColumns.forEach((column) => {
+        if (!column.contentType || column.contentType === 'string') {
+          search.addIndex(column.field);
+        }
+      });
+      // Also enable search over preview field if present
+      if (config.studyPreviewField) {
+        search.addIndex(config.studyPreviewField.field);
       }
-    });
-    // Also enable search over preview field if present
-    if (config.studyPreviewField) {
-      search.addIndex(config.studyPreviewField.field);
     }
-    // Index the studies
+    // ---
+
     search.addDocuments(props.studies);
     // expose the search function
     setJsSearch(search);
@@ -293,7 +306,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         }
         return 'Not available';
       }
-      if (!column.contentType || column.contentType === 'string') {
+      const columnIsSearchable = config.features.search.searchBar.searchableTextFields
+        ? config.features.search.searchBar.searchableTextFields.indexOf(column.field) !== -1
+        : !column.contentType || column.contentType === 'string';
+      if (columnIsSearchable) {
         // Show search highlights if there's an active search term
         if (searchTerm) {
           return highlightSearchTerm(value, searchTerm).highlighted;

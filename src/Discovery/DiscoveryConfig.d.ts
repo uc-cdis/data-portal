@@ -23,7 +23,9 @@ export interface DiscoveryConfig {
                 enabled: boolean,
                 placeholder?: string
                 // searchTags: boolean, // not supported, consider removing
-                // searchableTextFields: string[], // not supported, consider removing
+                searchableTextFields?: string[] // list of properties in data to make searchable.
+                                                // if not present, only fields visible in the table
+                                                // will be searchable.
             }
         },
         authorization: {
