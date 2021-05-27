@@ -62,25 +62,6 @@ export function logoutListener(state = {}, action) {
  * @extends {React.Component<Props>}
  */
 class ProtectedContent extends React.Component {
-  static propTypes = {
-    children: PropTypes.node.isRequired,
-    location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
-    match: PropTypes.shape({
-      params: PropTypes.object,
-      path: PropTypes.string,
-    }).isRequired,
-    isAdminOnly: PropTypes.bool,
-    isPublic: PropTypes.bool,
-    filter: PropTypes.func,
-  };
-
-  static defaultProps = {
-    isAdminOnly: false,
-    isPublic: false,
-    filter: null,
-  };
-
   constructor(props, context) {
     super(props, context);
 
@@ -118,8 +99,8 @@ class ProtectedContent extends React.Component {
               filter().finally(
                 () => this._isMounted && this.setState(latestState)
               );
-            } else {
-              this._isMounted && this.setState(latestState);
+            } else if (this._isMounted) {
+              this.setState(latestState);
             }
           } else
             this.checkLoginStatus(store, this.state)
@@ -131,11 +112,11 @@ class ProtectedContent extends React.Component {
 
                 if (newState.authenticated && typeof filter === 'function') {
                   filter().finally(() => {
-                    this._isMounted && this.setState(latestState);
+                    if (this._isMounted) this.setState(latestState);
                     this.fetchResources(store);
                   });
                 } else {
-                  this._isMounted && this.setState(latestState);
+                  if (this._isMounted) this.setState(latestState);
                   this.fetchResources(store);
                 }
               });
@@ -188,9 +169,9 @@ class ProtectedContent extends React.Component {
    * @returns {ComponentState}
    */
   checkIfRegisterd = (initialState) => {
-    let isUserRegistered = false;
-    if (initialState.user.authz !== undefined)
-      for (const i in initialState.user.authz) isUserRegistered = true;
+    const isUserRegistered =
+      initialState.user.authz !== undefined &&
+      Object.keys(initialState.user.authz).length > 0;
 
     return this.props.location.pathname === '/' || isUserRegistered
       ? initialState
@@ -207,9 +188,7 @@ class ProtectedContent extends React.Component {
 
     const resourcePath = '/services/sheepdog/submission/project';
     const isAdminUser =
-      initialState.user.authz &&
-      initialState.user.authz.hasOwnProperty(resourcePath) &&
-      initialState.user.authz[resourcePath][0].method === '*';
+      initialState.user.authz?.[resourcePath]?.[0].method === '*';
     return isAdminUser ? initialState : { ...initialState, redirectTo: '/' };
   };
 
@@ -248,7 +227,7 @@ class ProtectedContent extends React.Component {
    */
   fetchResources({ dispatch, getState }) {
     const { graphiql, project, submission } = getState();
-    const path = this.props.match.path;
+    const { path } = this.props.match;
 
     if (LOCATIONS_DICTIONARY.includes(path) && !submission.dictionary) {
       dispatch(fetchDictionary);
@@ -291,5 +270,23 @@ class ProtectedContent extends React.Component {
     );
   }
 }
+
+ProtectedContent.propTypes = {
+  children: PropTypes.node.isRequired,
+  location: PropTypes.object.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.object,
+    path: PropTypes.string,
+  }).isRequired,
+  isAdminOnly: PropTypes.bool,
+  isPublic: PropTypes.bool,
+  filter: PropTypes.func,
+};
+
+ProtectedContent.defaultProps = {
+  isAdminOnly: false,
+  isPublic: false,
+  filter: null,
+};
 
 export default ProtectedContent;

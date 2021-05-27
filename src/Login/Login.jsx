@@ -32,26 +32,28 @@ class Login extends React.Component {
     window.removeEventListener('resize', this.updateDimensions);
   }
 
+  selectChange = (selectedOption, index) => {
+    this.setState((prevState) => ({
+      selectedLoginOption: {
+        ...prevState.selectedLoginOption,
+        [index]: selectedOption,
+      },
+    }));
+  };
+
+  resetState() {
+    this.setState((prevState) => getInitialState(prevState.height));
+  }
+
   updateDimensions() {
     this.setState({ height: window.innerHeight - 221 });
   }
 
-  resetState() {
-    this.setState(getInitialState());
-  }
-
-  selectChange = (selectedOption, index) => {
-    const selectedLoginOptionCopy = { ...this.state.selectedLoginOption };
-    selectedLoginOptionCopy[index] = selectedOption;
-    this.setState({
-      selectedLoginOption: selectedLoginOptionCopy,
-    });
-  };
-
   render() {
-    const location = this.props.location; // this is the react-router "location"
+    const { location } = this.props; // this is the react-router "location"
 
     const searchParams = new URLSearchParams(location.search);
+    // eslint-disable-next-line no-nested-ternary
     const next = (searchParams.has('next')
       ? basename + searchParams.get('next')
       : location.from
@@ -91,7 +93,7 @@ class Login extends React.Component {
 
     return (
       <div className='login-page'>
-        <div className='login-page__spacer'></div>
+        <div className='login-page__spacer' />
         <div className='login-page__central-content'>
           <div className='h1-typo login-page__title'>
             {this.props.data.title}
