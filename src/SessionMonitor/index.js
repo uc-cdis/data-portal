@@ -2,13 +2,23 @@ import { logoutInactiveUsers, workspaceTimeoutInMinutes } from '../localconf';
 import getReduxStore from '../reduxStore';
 import { fetchUser, fetchUserNoRefresh } from '../actions';
 
-/* eslint-disable class-methods-use-this */
+export function pageFromURL(currentURL) {
+  const paths = currentURL
+    .split('/')
+    .filter((x) => x !== 'dev.html' && x !== '');
+  return paths[paths.length - 1];
+}
+
+function isUserOnPage(pageName) {
+  return pageFromURL(window.location.href) === pageName;
+}
+
 export class SessionMonitor {
   constructor(updateSessionTime, inactiveTimeLimit) {
     this.updateSessionTime = updateSessionTime || 5 * 60 * 1000;
     this.inactiveTimeLimit = inactiveTimeLimit || 30 * 60 * 1000;
     this.inactiveWorkspaceTimeLimit =
-      Math.min(workspaceTimeoutInMinutes, 480) * 60 * 1000;
+      Math.min(Number(workspaceTimeoutInMinutes), 480) * 60 * 1000;
     this.mostRecentActivityTimestamp = Date.now();
     this.interval = null;
     this.popupShown = false;
@@ -34,8 +44,16 @@ export class SessionMonitor {
   stop() {
     if (this.interval) {
       clearInterval(this.interval);
-      window.removeEventListener('mousedown', this.updateUserActivity(), false);
-      window.removeEventListener('keypress', this.updateUserActivity(), false);
+      window.removeEventListener(
+        'mousedown',
+        () => this.updateUserActivity(),
+        false
+      );
+      window.removeEventListener(
+        'keypress',
+        () => this.updateUserActivity(),
+        false
+      );
     }
   }
 
@@ -43,19 +61,8 @@ export class SessionMonitor {
     this.mostRecentActivityTimestamp = Date.now();
   }
 
-  pageFromURL(currentURL) {
-    const paths = currentURL
-      .split('/')
-      .filter((x) => x !== 'dev.html' && x !== '');
-    return paths[paths.length - 1];
-  }
-
-  isUserOnPage(pageName) {
-    return this.pageFromURL(window.location.href) === pageName;
-  }
-
   updateSession() {
-    if (this.isUserOnPage('login')) {
+    if (isUserOnPage('login')) {
       return Promise.resolve(0);
     }
 
@@ -63,7 +70,7 @@ export class SessionMonitor {
     // If user has been inactive for Y min, and they are not in a workspace
     if (
       timeSinceLastActivity >= this.inactiveTimeLimit &&
-      !this.isUserOnPage('workspace') &&
+      !isUserOnPage('workspace') &&
       logoutInactiveUsers
     ) {
       // Allow Fence to log out the user. If we don't refresh, Fence will mark them as inactive.
@@ -75,7 +82,7 @@ export class SessionMonitor {
     // and they *are* in a workspace
     if (
       timeSinceLastActivity >= this.inactiveWorkspaceTimeLimit &&
-      this.isUserOnPage('workspace') &&
+      isUserOnPage('workspace') &&
       logoutInactiveUsers
     ) {
       this.notifyUserIfTheyAreNotLoggedIn();
@@ -86,7 +93,7 @@ export class SessionMonitor {
   }
 
   refreshSession() {
-    if (this.isUserOnPage('login')) {
+    if (isUserOnPage('login')) {
       return Promise.resolve(0);
     }
     // hitting Fence endpoint refreshes token
