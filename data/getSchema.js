@@ -81,7 +81,9 @@ async function fetchJsonRetry(urlStr, opts) {
   async function doRetry(reason) {
     if (retryCount > retryBackoff.length) {
       return Promise.reject(
-        `failed fetch ${reason}, max retries ${retryBackoff.length} exceeded for ${urlStr}`
+        new Error(
+          `failed fetch ${reason}, max retries ${retryBackoff.length} exceeded for ${urlStr}`
+        )
       );
     }
 
