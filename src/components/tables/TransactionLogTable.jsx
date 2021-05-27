@@ -31,7 +31,7 @@ function getLocalTime(/** @type {string} */ gmtTimeString) {
 function getTotalFileSize(/** @type {LogEntryDocument[]} */ documents) {
   let totalSize = 0;
   if (documents)
-    for (const { doc_size } of documents) totalSize += doc_size || 0;
+    for (const { doc_size: docSize } of documents) totalSize += docSize || 0;
 
   return totalSize;
 }
@@ -57,6 +57,8 @@ function stateToColor(/** @type {LogEntryState} */ state) {
           {capitalizeFirstLetter(state)}
         </div>
       );
+    default:
+      return null;
   }
 }
 

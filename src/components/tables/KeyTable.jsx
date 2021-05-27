@@ -20,36 +20,29 @@ const keyType = PropTypes.shape({
   exp: PropTypes.number.isRequired,
 });
 
-class KeyTable extends React.Component {
-  /* eslint class-methods-use-this: ["error", { "exceptMethods": ["rowRender"] }] */
+function KeyTable({ jtis, onDelete }) {
   /**
    * default row renderer - just delegates to ProjectTR - can be overriden by subtypes, whatever
    */
-
-  getData = (jtis) =>
-    jtis.map((jti) => [
-      jti.jti,
-      TimestampToDateTime(jti.exp),
-      <IconicButton
-        onClick={() => this.props.onDelete(jti)}
-        caption={DELETE_BTN}
-        dictIcons={dictIcons}
-        icon='delete'
-        buttonClassName='button-primary-white'
-      />,
-    ]);
-
-  render() {
-    return (
-      <div className='key-table'>
-        <Table
-          title={LIST_API_KEY_MSG}
-          header={[API_KEY_COLUMN, EXPIRES_COLUMN, '']}
-          data={this.getData(this.props.jtis)}
-        />
-      </div>
-    );
-  }
+  return (
+    <div className='key-table'>
+      <Table
+        title={LIST_API_KEY_MSG}
+        header={[API_KEY_COLUMN, EXPIRES_COLUMN, '']}
+        data={jtis.map((jti) => [
+          jti.jti,
+          TimestampToDateTime(jti.exp),
+          <IconicButton
+            onClick={() => onDelete(jti)}
+            caption={DELETE_BTN}
+            dictIcons={dictIcons}
+            icon='delete'
+            buttonClassName='button-primary-white'
+          />,
+        ])}
+      />
+    </div>
+  );
 }
 
 KeyTable.propTypes = {

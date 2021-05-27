@@ -3,64 +3,73 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import './InputWithIcon.less';
 
-class InputWithIcon extends React.Component {
-  render() {
-    return (
-      <React.Fragment>
-        <div
-          className={'input-with-icon'.concat(
-            this.props.className ? ` ${this.props.className}` : ''
+function InputWithIcon({
+  className,
+  inputOptions,
+  inputClassName,
+  inputValue,
+  inputPlaceholderText,
+  inputOnChange,
+  shouldDisplayIcon,
+  shouldDisplayText,
+  iconSvg,
+  iconClassName,
+  textClassName,
+  text,
+}) {
+  return (
+    <>
+      <div
+        className={'input-with-icon'.concat(className ? ` ${className}` : '')}
+      >
+        {inputOptions ? (
+          <Select
+            styles={{
+              control: (provided) => ({ ...provided, width: '100%' }),
+            }}
+            className={`${inputClassName}`}
+            classNamePrefix={'react-select'}
+            value={{
+              value: inputValue,
+              label: inputValue,
+            }}
+            placeholder={inputPlaceholderText}
+            options={inputOptions}
+            onChange={inputOnChange}
+            theme={(theme) => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                primary: 'var(--pcdc-color__primary)',
+              },
+            })}
+          />
+        ) : (
+          <input
+            type='text'
+            className={inputClassName}
+            onBlur={inputOnChange}
+          />
+        )}
+        {shouldDisplayIcon && (
+          <iconSvg
+            className={'input-with-icon__icon'.concat(
+              iconClassName ? ` ${iconClassName}` : ''
+            )}
+          />
+        )}
+      </div>
+      {shouldDisplayText && (
+        <p
+          className={'input-with-icon__text'.concat(
+            textClassName ? ` ${textClassName}` : ''
           )}
         >
-          {this.props.inputOptions ? (
-            <Select
-              styles={{
-                control: (provided) => ({ ...provided, width: '100%' }),
-              }}
-              className={`${this.props.inputClassName}`}
-              classNamePrefix={'react-select'}
-              value={{
-                value: this.props.inputValue,
-                label: this.props.inputValue,
-              }}
-              placeholder={this.props.inputPlaceholderText}
-              options={this.props.inputOptions}
-              onChange={this.props.inputOnChange}
-              theme={(theme) => ({
-                ...theme,
-                colors: {
-                  ...theme.colors,
-                  primary: 'var(--pcdc-color__primary)',
-                },
-              })}
-            />
-          ) : (
-            <input
-              type='text'
-              className={this.props.inputClassName}
-              onBlur={this.props.inputOnChange}
-            />
-          )}
-          {this.props.shouldDisplayIcon ? (
-            <this.props.iconSvg
-              className={'input-with-icon__icon'.concat(
-                this.props.iconClassName ? ` ${this.props.iconClassName}` : ''
-              )}
-            />
-          ) : null}
-        </div>
-        {this.props.shouldDisplayText ? (
-          <p
-            className={'input-with-icon__text'.concat(
-              this.props.textClassName ? ` ${this.props.textClassName}` : ''
-            )}
-          >
-            {this.props.text}
-          </p>
-        ) : null}
-      </React.Fragment>
-    );
-  }
+          {text}
+        </p>
+      )}
+    </>
+  );
 }
 
 InputWithIcon.propTypes = {
