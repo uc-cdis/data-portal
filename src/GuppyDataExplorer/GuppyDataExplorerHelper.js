@@ -1,9 +1,3 @@
-function difference(a, b) {
-  const setA = new Set(a);
-  const setB = new Set(b);
-  return [...new Set([...setA].filter((x) => !setB.has(x)))];
-}
-
 // if true, means user don't have access to any project
 export function checkForNoAccessibleProject(
   accessibleFieldObject,

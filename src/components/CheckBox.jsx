@@ -2,29 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './CheckBox.less';
 
-class CheckBox extends React.Component {
-  onChange = () => {
-    this.props.onChange(this.props.id);
-  };
-
-  render() {
-    return (
-      <div
-        className={'checkbox '.concat(
-          !this.props.isEnabled ? 'checkbox--disabled' : ''
-        )}
-      >
-        <input
-          type='checkbox'
-          id={this.props.id}
-          value={this.props.item}
-          checked={this.props.isSelected}
-          onChange={this.onChange}
-          title={this.props.isEnabled ? null : this.props.disabledText}
-        />
-      </div>
-    );
-  }
+function CheckBox({ id, item, onChange, isSelected, isEnabled, disabledText }) {
+  return (
+    <div className={'checkbox '.concat(!isEnabled ? 'checkbox--disabled' : '')}>
+      <input
+        type='checkbox'
+        id={id}
+        value={item}
+        checked={isSelected}
+        onChange={() => onChange(id)}
+        title={isEnabled ? null : disabledText}
+      />
+    </div>
+  );
 }
 
 CheckBox.propTypes = {

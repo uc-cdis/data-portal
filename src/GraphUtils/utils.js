@@ -47,7 +47,7 @@ export function createNodesAndEdges(
   createAll,
   nodesToHide = ['program']
 ) {
-  const dictionary = props.dictionary;
+  const { dictionary } = props;
   const nodes = Object.keys(dictionary)
     .filter(
       (key) =>

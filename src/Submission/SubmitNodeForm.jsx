@@ -34,7 +34,8 @@ const SubmitNodeForm = ({
 
         if (property === 'type') {
           return null;
-        } else if ('enum' in node.properties[property]) {
+        }
+        if ('enum' in node.properties[property]) {
           return (
             <EnumInput
               key={property}
@@ -47,7 +48,8 @@ const SubmitNodeForm = ({
               description={description}
             />
           );
-        } else if ('oneOf' in node.properties[property]) {
+        }
+        if ('oneOf' in node.properties[property]) {
           return (
             <OneOfInput
               key={property}
@@ -61,7 +63,8 @@ const SubmitNodeForm = ({
               onUpdateFormSchema={onUpdateFormSchema}
             />
           );
-        } else if ('anyOf' in node.properties[property]) {
+        }
+        if ('anyOf' in node.properties[property]) {
           return (
             <AnyOfInput
               key={property}
@@ -77,17 +80,16 @@ const SubmitNodeForm = ({
             />
           );
         }
-        let propertyType = node.properties[property].type;
-        if (typeof propertyType === 'object') {
-          /* just use the first type if it allows multiple types */
-          propertyType = propertyType[0];
-        }
+        const propertyType = node.properties[property].type;
         return (
           <TextInput
             key={property}
             name={property}
             onUpdateFormSchema={onUpdateFormSchema}
-            propertyType={propertyType}
+            propertyType={
+              /* just use the first type if it allows multiple types */
+              Array.isArray(propertyType) ? propertyType[0] : propertyType
+            }
             value={form[property]}
             required={required}
             description={description}

@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const path = require('path');
+
 const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/')
   ? basename.slice(0, basename.length - 1)
@@ -31,8 +32,8 @@ const plugins = [
     title: process.env.TITLE || 'PCDC Data Portal',
     basename: pathPrefix,
     template: 'src/index.ejs',
-    connect_src: (function () {
-      let rv = {};
+    connect_src: (() => {
+      const rv = {};
       if (typeof process.env.FENCE_URL !== 'undefined') {
         rv[new URL(process.env.FENCE_URL).origin] = true;
       }
@@ -52,7 +53,7 @@ const plugins = [
     })(),
     hash: true,
   }),
-  new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
+  new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
 ];
 
 let optimization = {};

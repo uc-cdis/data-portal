@@ -1,8 +1,8 @@
+import React from 'react';
 import GraphiQL from 'graphiql';
 import { buildClientSchema } from 'graphql/utilities';
-import Button from '../gen3-ui-component/components/Button';
-import React from 'react';
 import PropTypes from 'prop-types';
+import Button from '../gen3-ui-component/components/Button';
 import { fetchGraphQL, fetchFlatGraphQL } from '../actions';
 import Spinner from '../components/Spinner';
 import { config } from '../params';

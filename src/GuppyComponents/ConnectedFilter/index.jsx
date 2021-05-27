@@ -23,7 +23,6 @@ class ConnectedFilter extends React.Component {
     this.initialTabsOptions = {};
     this.state = {
       initialAggsData: {},
-      receivedAggsData: {},
       filter: { ...initialFilter },
     };
     this.filterGroupRef = React.createRef();
@@ -42,10 +41,6 @@ class ConnectedFilter extends React.Component {
     });
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
   componentDidUpdate() {
     if (
       Object.keys(this.state.initialAggsData).length === 0 &&
@@ -54,7 +49,12 @@ class ConnectedFilter extends React.Component {
     )
       // Save initial aggregation data, especially for range slider
       // so that we still have min/max values for range slider
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ initialAggsData: this.props.receivedAggsData });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   /**
@@ -182,6 +182,7 @@ ConnectedFilter.propTypes = {
         name: PropTypes.string,
       })
     ),
+    nodeCountTitle: PropTypes.string,
   }).isRequired,
   onFilterChange: PropTypes.func,
   onPatientIdsChange: PropTypes.func,
@@ -192,8 +193,6 @@ ConnectedFilter.propTypes = {
   patientIds: PropTypes.arrayOf(PropTypes.string),
   initialAppliedFilters: PropTypes.object,
   receivedAggsData: PropTypes.object,
-  lockedTooltipMessage: PropTypes.string,
-  disabledTooltipMessage: PropTypes.string,
   hideZero: PropTypes.bool,
   hidden: PropTypes.bool,
 };

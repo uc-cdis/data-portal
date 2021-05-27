@@ -14,6 +14,7 @@ function ProjectTable({ projectList = [], summaryFields = [] }) {
   const history = useHistory();
   const tableHeader = ['Project', ...summaryFields, ''];
   const tableData = [...projectList]
+    // eslint-disable-next-line no-nested-ternary
     .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
     .map(({ name, counts }, i) => [
       name,
@@ -36,7 +37,7 @@ function ProjectTable({ projectList = [], summaryFields = [] }) {
 
 ProjectTable.propTypes = {
   projectList: PropTypes.array,
-  summaries: PropTypes.array,
+  summaryFields: PropTypes.array,
 };
 
 export default ProjectTable;

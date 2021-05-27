@@ -13,10 +13,9 @@ function SimpleInputField({ label, input, error }) {
     <div className='simple-input-field__container'>
       {label && <label className='simple-input-field__label'>{label}</label>}
       <div
-        className={
-          'simple-input-field__input' +
-          (error && error.isError ? ' simple-input-field__input--error' : '')
-        }
+        className={`simple-input-field__input${
+          error && error.isError ? ' simple-input-field__input--error' : ''
+        }`}
       >
         {input}
       </div>

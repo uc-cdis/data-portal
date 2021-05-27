@@ -1,10 +1,10 @@
 import React from 'react';
 import FileSaver from 'file-saver';
+import PropTypes from 'prop-types';
 import Button from '../../gen3-ui-component/components/Button';
 import Dropdown from '../../gen3-ui-component/components/Dropdown';
 import Toaster from '../../gen3-ui-component/components/Toaster';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
-import PropTypes from 'prop-types';
 import { calculateDropdownButtonConfigs, humanizeNumber } from '../utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
 import { fetchWithCreds } from '../../actions';
@@ -31,7 +31,7 @@ class ExplorerButtonGroup extends React.Component {
       exportingToTerra: false,
       exportingToSevenBridges: false,
       // for export to PFB
-      exportPFBStatus: null,
+      // exportPFBStatus: null,
       exportPFBURL: '',
       pfbStartText: 'Your export is in progress.',
       pfbWarning:
@@ -77,11 +77,11 @@ class ExplorerButtonGroup extends React.Component {
             }
           );
         } else {
-          this.setState({
+          this.setState((prevState) => ({
             exportPFBURL: `${res.data.output}`.split('\n'),
             toasterOpen: true,
-            toasterHeadline: this.state.pfbSuccessText,
-          });
+            toasterHeadline: prevState.pfbSuccessText,
+          }));
         }
       });
     }
@@ -139,7 +139,9 @@ class ExplorerButtonGroup extends React.Component {
       !this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex
     ) {
       return Promise.reject(
-        'No "guppyConfig.manifestMapping" or "guppyConfig.manifestMapping.referenceIdFieldInDataIndex" defined in config'
+        new Error(
+          'No "guppyConfig.manifestMapping" or "guppyConfig.manifestMapping.referenceIdFieldInDataIndex" defined in config'
+        )
       );
     }
     const refField = this.props.guppyConfig.manifestMapping
@@ -256,8 +258,7 @@ class ExplorerButtonGroup extends React.Component {
 
   getFileCountSum = async () => {
     try {
-      const dataType = this.props.guppyConfig.dataType;
-      const fileCountField = this.props.guppyConfig.fileCountField;
+      const { dataType, fileCountField } = this.props.guppyConfig;
       const query = `query ($filter: JSON) {
         _aggregation {
           ${dataType} (filter: $filter) {
@@ -298,7 +299,7 @@ class ExplorerButtonGroup extends React.Component {
       toasterOpen: false,
       toasterHeadline: '',
       toasterError: null,
-      exportPFBStatus: null,
+      // exportPFBStatus: null,
       exportPFBURL: '',
     });
   };
@@ -383,10 +384,10 @@ class ExplorerButtonGroup extends React.Component {
       input: { filter: getGQLFilter(this.props.filter) },
     });
     this.props.checkJobStatus();
-    this.setState({
+    this.setState((prevState) => ({
       toasterOpen: true,
-      toasterHeadline: this.state.pfbStartText,
-    });
+      toasterHeadline: prevState.pfbStartText,
+    }));
   };
 
   exportToWorkspace = async (indexType) => {
@@ -415,22 +416,22 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   exportToWorkspaceSuccessHandler = (data) => {
-    this.setState({
+    this.setState((prevState) => ({
       toasterOpen: true,
-      toasterHeadline: this.state.workspaceSuccessText,
+      toasterHeadline: prevState.workspaceSuccessText,
       exportWorkspaceStatus: 200,
       exportingToWorkspace: false,
       exportWorkspaceFileName: data.filename,
-    });
+    }));
   };
 
   exportToWorkspaceErrorHandler = (status) => {
-    this.setState({
+    this.setState((prevState) => ({
       toasterOpen: true,
-      toasterHeadline: this.state.toasterErrorText,
+      toasterHeadline: prevState.toasterErrorText,
       exportWorkspaceStatus: status,
       exportingToWorkspace: false,
-    });
+    }));
   };
 
   exportToWorkspaceMessageHandler = (status, message) => {
@@ -533,6 +534,7 @@ class ExplorerButtonGroup extends React.Component {
     }
     if (buttonConfig.type === 'export') {
       if (!this.props.buttonConfig.terraExportURL) {
+        // eslint-disable-next-line no-console
         console.error(
           'Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.'
         );
@@ -548,6 +550,7 @@ class ExplorerButtonGroup extends React.Component {
     }
     if (buttonConfig.type === 'export-to-seven-bridges') {
       if (!this.props.buttonConfig.sevenBridgesExportURL) {
+        // eslint-disable-next-line no-console
         console.error(
           'Export to Terra button is present, but there is no `terraExportURL` specified in the portal config. Disabling the export to Terra button.'
         );
@@ -646,7 +649,7 @@ class ExplorerButtonGroup extends React.Component {
       this.props.buttonConfig
     );
     return (
-      <React.Fragment>
+      <>
         {
           // REMOVE THIS CODE WHEN EXPORT TO TERRA WORKS
           // ===========================================
@@ -746,7 +749,7 @@ class ExplorerButtonGroup extends React.Component {
               .map((buttonConfig) => this.renderButton(buttonConfig))
         }
         {this.getToaster()}
-      </React.Fragment>
+      </>
     );
   }
 }

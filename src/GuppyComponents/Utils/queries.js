@@ -295,7 +295,8 @@ export function queryGuppyForRawData({
  * @param {object | undefined} filter
  */
 export function getGQLFilter(filter) {
-  if (filter === undefined || Object.keys(filter).length === 0) return;
+  if (filter === undefined || Object.keys(filter).length === 0)
+    return undefined;
 
   const facetsList = [];
   for (const [field, filterValues] of Object.entries(filter)) {
@@ -309,7 +310,7 @@ export function getGQLFilter(filter) {
     if (!isRangeFilter && !hasSelectedValues)
       if (filterValues.__combineMode)
         // This filter only has a combine setting so far. We can ignore it.
-        return;
+        return undefined;
       else throw new Error(`Invalid filter object ${filterValues}`);
 
     /** @type {{ AND?: any[]; IN?: { [x: string]: string[] }}} */
@@ -320,12 +321,12 @@ export function getGQLFilter(filter) {
         { '<=': { [fieldName]: filterValues.upperBound } },
       ];
     else if (hasSelectedValues)
-      filterValues.__combineMode === 'AND'
-        ? (facetsPiece.AND = filterValues.selectedValues.map(
-            (selectedValue) => ({ IN: { [fieldName]: [selectedValue] } })
-          ))
-        : // combine mode defaults to OR when not set.
-          (facetsPiece.IN = { [fieldName]: filterValues.selectedValues });
+      if (filterValues.__combineMode === 'AND')
+        facetsPiece.AND = filterValues.selectedValues.map((selectedValue) => ({
+          IN: { [fieldName]: [selectedValue] },
+        }));
+      // combine mode defaults to OR when not set.
+      else facetsPiece.IN = { [fieldName]: filterValues.selectedValues };
 
     facetsList.push(
       fieldSplitted.length === 1

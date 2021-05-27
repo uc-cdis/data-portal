@@ -34,15 +34,16 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (
   const path = fullProject.split('-');
   const program = path[0];
   const project = path.slice(1).join('-');
-  const submission = getState().submission;
+  const { submission } = getState();
   const method = path === 'graphql' ? 'POST' : methodIn;
-  let file = submission.file;
+  let { file } = submission;
 
   dispatch({ type: 'RESET_SUBMISSION_STATUS' });
 
   if (!file) {
-    return Promise.reject('No file to submit');
-  } else if (submission.file_type !== 'text/tab-separated-values') {
+    return Promise.reject(new Error('No file to submit'));
+  }
+  if (submission.file_type !== 'text/tab-separated-values') {
     // remove line break in json file
     file = file.replace(/\r\n?|\n/g, '');
   }

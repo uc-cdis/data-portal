@@ -1,23 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ProjectDashboard from './ProjectDashboard';
 import ReduxTransaction from './ReduxTransaction';
 import { getTransactionList, getProjectsList } from './relayer';
 
-class SubmissionPage extends React.Component {
-  constructor(props) {
-    super();
+function SubmissionPage() {
+  useEffect(() => {
     getProjectsList();
     getTransactionList();
-  }
+  }, []);
 
-  render() {
-    return (
-      <div style={{ padding: '40px 20px' }}>
-        <ProjectDashboard />
-        <ReduxTransaction />
-      </div>
-    );
-  }
+  return (
+    <div style={{ padding: '40px 20px' }}>
+      <ProjectDashboard />
+      <ReduxTransaction />
+    </div>
+  );
 }
 
 export default SubmissionPage;

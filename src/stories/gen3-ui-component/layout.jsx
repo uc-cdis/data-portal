@@ -3,8 +3,8 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { StaticRouter } from 'react-router-dom';
 import TopBar from '../../gen3-ui-component/components/TopBar/TopBar';
-import Header from '../../gen3-ui-component/components/Header/.';
-import Footer from '../../gen3-ui-component/components/Footer/.';
+import Header from '../../gen3-ui-component/components/Header';
+import Footer from '../../gen3-ui-component/components/Footer';
 import gen3Logo from '../../gen3-ui-component/images/logos/gen3.png';
 
 const tabItems = [

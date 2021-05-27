@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import DataDictionaryNode from './.';
+import DataDictionaryNode from '.';
 
 describe('DataDictionaryNode', () => {
   const node = {

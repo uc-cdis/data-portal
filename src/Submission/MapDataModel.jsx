@@ -130,16 +130,18 @@ class MapDataModel extends React.Component {
   };
 
   selectRequiredField = (option, prop) => {
-    const fields = this.state.requiredFields;
-    fields[prop] = null;
     let castedOption = null;
     if (option && option.target) {
       castedOption = this.castOption(option.target.value, prop);
     } else if (option && option.value) {
       castedOption = this.castOption(option.value, prop);
     }
-    fields[prop] = castedOption || null;
-    this.setState({ requiredFields: fields });
+    this.setState((prevState) => ({
+      requiredFields: {
+        ...prevState.requiredFields,
+        [prop]: castedOption || null,
+      },
+    }));
   };
 
   isInteger = (prop) => {
@@ -181,7 +183,9 @@ class MapDataModel extends React.Component {
         project_id: this.state.projectId,
       }).then((data) => {
         if (data && data[this.state.parentNodeType]) {
-          this.setState({ validParentIds: data[this.state.parentNodeType] });
+          this.setState((prevState) => ({
+            validParentIds: data[prevState.parentNodeType],
+          }));
         }
       });
     } else {
@@ -231,14 +235,12 @@ class MapDataModel extends React.Component {
         const promise = this.props
           .submitFiles(programProject[0], programProject[1], chunk)
           .then((res) => {
-            this.setState(
-              (prevState) => ({ chunkCounter: prevState.chunkCounter + 1 }),
-              () => {
-                this.setState({
-                  submissionText: `Submitting ${this.state.chunkCounter} of ${chunks.length} chunks...`,
-                });
-              }
-            );
+            this.setState((prevState) => ({
+              chunkCounter: prevState.chunkCounter + 1,
+              submissionText: `Submitting ${prevState.chunkCounter + 1} of ${
+                chunks.length
+              } chunks...`,
+            }));
             if (!res.success) {
               message = `Error: ${
                 res.entities &&

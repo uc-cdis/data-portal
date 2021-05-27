@@ -5,39 +5,39 @@ import {
   getCategoryIconSVG,
 } from '../../NodeCategories/helper';
 import { capitalizeFirstLetter } from '../../../utils';
-import DataDictionaryNode from '../DataDictionaryNode/.';
+import DataDictionaryNode from '../DataDictionaryNode';
 import './DataDictionaryCategory.css';
 
-class DataDictionaryCategory extends React.Component {
-  render() {
-    const IconSVG = getCategoryIconSVG(this.props.category);
-    return (
-      <div className='data-dictionary-category'>
-        <div
-          className='data-dictionary-category__head'
-          style={{ borderLeftColor: getCategoryColor(this.props.category) }}
-        >
-          <IconSVG className='data-dictionary-category__icon' />
-          <span>{capitalizeFirstLetter(this.props.category)}</span>
-          <span className='data-dictionary-category__download_template'>
-            Download Template
-          </span>
-        </div>
-        {this.props.nodes.map((node) => (
-          <DataDictionaryNode
-            node={node}
-            key={node.id}
-            description={node.description}
-            expanded={
-              this.props.highlightingNodeID &&
-              this.props.highlightingNodeID === node.id
-            }
-            onExpandNode={this.props.onExpandNode}
-          />
-        ))}
+function DataDictionaryCategory({
+  category,
+  nodes,
+  highlightingNodeID,
+  onExpandNode,
+}) {
+  const IconSVG = getCategoryIconSVG(category);
+  return (
+    <div className='data-dictionary-category'>
+      <div
+        className='data-dictionary-category__head'
+        style={{ borderLeftColor: getCategoryColor(category) }}
+      >
+        <IconSVG className='data-dictionary-category__icon' />
+        <span>{capitalizeFirstLetter(category)}</span>
+        <span className='data-dictionary-category__download_template'>
+          Download Template
+        </span>
       </div>
-    );
-  }
+      {nodes.map((node) => (
+        <DataDictionaryNode
+          node={node}
+          key={node.id}
+          description={node.description}
+          expanded={highlightingNodeID && highlightingNodeID === node.id}
+          onExpandNode={onExpandNode}
+        />
+      ))}
+    </div>
+  );
 }
 
 DataDictionaryCategory.propTypes = {

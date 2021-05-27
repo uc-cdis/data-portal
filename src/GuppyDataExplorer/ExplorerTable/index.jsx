@@ -180,6 +180,7 @@ class ExplorerTable extends React.Component {
             ) : null;
           case 'external_links':
             if (row.value === null) return null;
+            // eslint-disable-next-line no-case-declarations
             const [
               resourceName,
               resourceIconPath,
@@ -359,6 +360,7 @@ class ExplorerTable extends React.Component {
     const start = this.state.currentPage * this.state.pageSize + 1;
     const end = (this.state.currentPage + 1) * this.state.pageSize;
     const currentPageRange =
+      // eslint-disable-next-line no-nested-ternary
       accessibleCount < end
         ? accessibleCount < 2
           ? accessibleCount.toLocaleString()
@@ -378,8 +380,8 @@ class ExplorerTable extends React.Component {
                 arrowContent={<div className='rc-tooltip-arrow-inner' />}
                 overlay={
                   <span>
-                    This table only shows data you can access. Click "Request
-                    Access" button above for more.
+                    This table only shows data you can access. Click
+                    {' "Request Access"'} button above for more.
                   </span>
                 }
               >
@@ -435,6 +437,7 @@ ExplorerTable.propTypes = {
   defaultPageSize: PropTypes.number,
   tableConfig: TableConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
+  totalCount: PropTypes.number,
 };
 
 ExplorerTable.defaultProps = {

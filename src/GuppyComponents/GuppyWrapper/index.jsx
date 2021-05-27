@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-fragments */
-/* eslint react/forbid-prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -92,15 +90,15 @@ class GuppyWrapper extends React.Component {
     });
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
   componentDidUpdate(prevProps) {
     if (prevProps.patientIds?.join(',') !== this.props.patientIds?.join(',')) {
       this.fetchAggsDataFromGuppy(this.state.filter);
       this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
     }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleFilterChange(filter) {
@@ -229,6 +227,7 @@ class GuppyWrapper extends React.Component {
       signal: this.controller.signal,
     }).then((res) => {
       if (!res.data)
+        // eslint-disable-next-line no-console
         console.error(
           `error querying guppy${
             res.errors && res.errors.length > 0
@@ -374,6 +373,7 @@ GuppyWrapper.propTypes = {
     mainField: PropTypes.string,
     mainFieldIsNumeric: PropTypes.bool,
     aggFields: PropTypes.array,
+    dataType: PropTypes.string.isRequired,
   }).isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ExplorerButtonGroup from '../ExplorerButtonGroup';
+import ExplorerButtonGroup from '.';
 import {
   dispatchJob,
   checkJob,

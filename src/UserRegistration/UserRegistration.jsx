@@ -33,7 +33,7 @@ function UserRegistration({ shouldRegister, updateAccess }) {
     }).then(updateAccess);
   }
 
-  function handleSubscribe(/** @type {UserRegistrationInput} */ userInput) {
+  function handleSubscribe() {
     window.open('http://sam.am/PCDCnews', '_blank');
   }
 

@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Popup from '../components/Popup';
 
 const goToLogin = (history) => {
@@ -9,36 +10,29 @@ const goToLogin = (history) => {
   window.location.reload(false);
 };
 
-const AuthPopup = withRouter(({ history }) => (
-  <Popup
-    message={
-      'Your session has expired or you are logged out. Please log in to continue.'
-    }
-    rightButtons={[
-      {
-        caption: 'Go to Login',
-        fn: () => {
-          goToLogin(history);
+function AuthPopup({ authPopup }) {
+  const history = useHistory();
+  return authPopup ? (
+    <Popup
+      message='Your session has expired or you are logged out. Please log in to continue.'
+      rightButtons={[
+        {
+          caption: 'Go to Login',
+          fn: () => goToLogin(history),
         },
-      },
-    ]}
-  />
-));
+      ]}
+    />
+  ) : null;
+}
 
-const timeoutPopupMapState = (state) => ({
+AuthPopup.propTypes = {
+  authPopup: PropTypes.bool,
+};
+
+const mapStateToProps = (state) => ({
   authPopup: state.popups.authPopup,
 });
 
-const timeoutPopupMapDispatch = () => ({});
-
-const ReduxAuthTimeoutPopup = connect(
-  timeoutPopupMapState,
-  timeoutPopupMapDispatch
-)(({ authPopup }) => {
-  if (authPopup) {
-    return <AuthPopup />;
-  }
-  return null;
-});
+const ReduxAuthTimeoutPopup = connect(mapStateToProps)(AuthPopup);
 
 export default ReduxAuthTimeoutPopup;

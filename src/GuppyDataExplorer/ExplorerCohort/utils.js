@@ -16,10 +16,10 @@ export function fetchCohorts() {
     if (
       data === null ||
       typeof data !== 'object' ||
-      !data.hasOwnProperty('searches') ||
+      data.searches === undefined ||
       !Array.isArray(data.searches)
     )
-      throw 'Error: Incorrect Response Data';
+      throw new Error('Error: Incorrect Response Data');
     return data.searches;
   });
 }
@@ -82,7 +82,7 @@ export function createEmptyCohort() {
  */
 export function truncateWithEllipsis(string, maxLength) {
   return string.length > maxLength
-    ? string.slice(0, maxLength - 3) + '...'
+    ? `${string.slice(0, maxLength - 3)}...`
     : string;
 }
 
@@ -90,12 +90,12 @@ export function truncateWithEllipsis(string, maxLength) {
  * @param {ExplorerFilters} filters
  */
 export function stringifyFilters(filters) {
-  if (Object.keys(filters).length == 0) return '';
+  if (Object.keys(filters).length === 0) return '';
 
   let filterStr = '';
   for (const [key, value] of Object.entries(filters)) {
     filterStr += `* ${capitalizeFirstLetter(key)}\n`;
-    if (value.hasOwnProperty('selectedValues'))
+    if (value.selectedValues !== undefined)
       for (const selected of value.selectedValues)
         filterStr += `\t- '${selected}'\n`;
     else

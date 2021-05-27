@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
@@ -35,31 +36,25 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     let isMounted = true;
     if (!isError)
       fetchCohorts()
-        .then((cohorts) => isMounted && setCohorts(cohorts))
+        .then((fetchedCohorts) => isMounted && setCohorts(fetchedCohorts))
         .catch(() => setIsError(true));
 
-    return () => (isMounted = false);
+    return () => {
+      isMounted = false;
+    };
   }, [isError]);
 
   /** @type {[ExplorerCohortActionType, React.Dispatch<React.SetStateAction<ExplorerCohortActionType>>]} */
   const [actionType, setActionType] = useState('open');
   const [showActionForm, setShowActionForm] = useState(false);
-  function openActionForm(actionType) {
-    setActionType(actionType);
+  function openActionForm(type) {
+    setActionType(type);
     setShowActionForm(true);
   }
   function closeActionForm() {
     setShowActionForm(false);
   }
 
-  /** @param {{ value: ExplorerCohortActionType}} e */
-  function handleSelectAction({ value }) {
-    if (value === 'new') {
-      handleNew();
-    } else {
-      openActionForm(value);
-    }
-  }
   function handleNew() {
     const emptyCohort = createEmptyCohort();
     setCohort(emptyCohort);
@@ -103,6 +98,14 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
       closeActionForm();
     }
   }
+  /** @param {{ value: ExplorerCohortActionType}} e */
+  function handleSelectAction({ value }) {
+    if (value === 'new') {
+      handleNew();
+    } else {
+      openActionForm(value);
+    }
+  }
 
   const isFiltersChanged =
     JSON.stringify(filter) !== JSON.stringify(cohort.filters);
@@ -132,7 +135,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
         <div className='guppy-explorer-cohort__error'>
           <h2>Error obtaining saved cohorts data...</h2>
           <p>
-            Please retry by clicking "Retry" button or refreshing the page.
+            Please retry by clicking {'"Retry"'} button or refreshing the page.
             <br />
             If the problem persists, please contact administrator for more
             information.
@@ -193,5 +196,12 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     </div>
   );
 }
+
+ExplorerCohort.propTypes = {
+  className: PropTypes.string,
+  filter: PropTypes.object,
+  onOpenCohort: PropTypes.func,
+  onDeleteCohort: PropTypes.func,
+};
 
 export default ExplorerCohort;

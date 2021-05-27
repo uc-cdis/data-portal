@@ -18,6 +18,7 @@ module.exports = {
   },
   rules: {
     'no-restricted-syntax': 'off',
+    'no-underscore-dangle': 'off',
     'import/extensions': 'off',
     'react/destructuring-assignment': 'off',
     'react/forbid-prop-types': 'off',
@@ -27,6 +28,10 @@ module.exports = {
     'react/require-default-props': 'off',
   },
   overrides: [
+    {
+      files: ['src/stories/**/*.jsx'],
+      rules: { 'import/no-extraneous-dependencies': 'off' },
+    },
     {
       files: [
         'src/Submission/SubmitTSV.test.jsx',

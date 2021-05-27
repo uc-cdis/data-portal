@@ -47,7 +47,7 @@ class AnalysisApp extends React.Component {
     switch (app) {
       case 'vaGWAS':
         return (
-          <React.Fragment>
+          <>
             <Select
               value={this.state.jobInput}
               placeholder='Select your organ'
@@ -67,11 +67,11 @@ class AnalysisApp extends React.Component {
               onClick={this.onSubmitJob}
               isPending={this.isJobRunning()}
             />
-          </React.Fragment>
+          </>
         );
       default:
         return (
-          <React.Fragment>
+          <>
             <input
               className='text-input'
               type='text'
@@ -84,7 +84,7 @@ class AnalysisApp extends React.Component {
               onClick={this.onSubmitJob}
               isPending={this.isJobRunning()}
             />
-          </React.Fragment>
+          </>
         );
     }
   };

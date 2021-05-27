@@ -13,6 +13,7 @@ export function TopLogoutButton({ onClick }) {
       className='top-icon-button top-icon-button--logout'
       aria-label='Logout button'
       onClick={onClick}
+      type='button'
     >
       <span className='top-icon-button__content body-typo'>
         Logout&nbsp;

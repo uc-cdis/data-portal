@@ -4,9 +4,20 @@ import { StaticRouter } from 'react-router-dom';
 import TopBar from './TopBar';
 
 const tabItems = [
-  { iconClassName: 'g3-icon g3-icon--upload', link: '/submission', name: 'Data Submission' },
-  { link: 'https://uc-cdis.github.io/gen3-user-doc/user-guide/guide-overview', name: 'Documentation' },
-  { iconClassName: 'g3-icon g3-icon--exploration', link: '/explorer', name: 'Explorer' },
+  {
+    iconClassName: 'g3-icon g3-icon--upload',
+    link: '/submission',
+    name: 'Data Submission',
+  },
+  {
+    link: 'https://uc-cdis.github.io/gen3-user-doc/user-guide/guide-overview',
+    name: 'Documentation',
+  },
+  {
+    iconClassName: 'g3-icon g3-icon--exploration',
+    link: '/explorer',
+    name: 'Explorer',
+  },
 ];
 
 const user = {
@@ -25,7 +36,7 @@ describe('<TopBar />', () => {
         onActiveTab={onActiveTab}
         onLogout={onLogout}
       />
-    </StaticRouter>,
+    </StaticRouter>
   );
 
   it('renders', () => {
@@ -46,7 +57,7 @@ describe('<TopBar />', () => {
           onActiveTab={onActiveTab}
           onLogout={onLogout}
         />
-      </StaticRouter>,
+      </StaticRouter>
     );
     expect(noUserComponent.find('button').length).toBe(0);
   });

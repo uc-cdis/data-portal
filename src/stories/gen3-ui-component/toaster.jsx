@@ -1,6 +1,5 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 import Toaster from '../../gen3-ui-component/components/Toaster';
 import Button from '../../gen3-ui-component/components/Button';
 

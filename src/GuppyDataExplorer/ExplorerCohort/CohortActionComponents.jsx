@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimpleInputField from '../../components/SimpleInputField';
@@ -41,6 +42,12 @@ export function CohortActionMenu({
     />
   );
 }
+
+CohortActionMenu.propTypes = {
+  isCohortEmpty: PropTypes.bool,
+  hasNoSavedCohorts: PropTypes.bool,
+  onSelectAction: PropTypes.func,
+};
 
 function CohortButton(props) {
   return <Button className='guppy-explorer-cohort__button' {...props} />;
@@ -121,6 +128,25 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
     </div>
   );
 }
+
+CohortOpenForm.propTypes = {
+  currentCohort: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+    filters: PropTypes.object,
+    id: PropTypes.number,
+  }),
+  cohorts: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      description: PropTypes.string,
+      filters: PropTypes.object,
+      id: PropTypes.number,
+    })
+  ),
+  onAction: PropTypes.func,
+  onClose: PropTypes.func,
+};
 
 /**
  * @param {Object} prop
@@ -217,6 +243,27 @@ function CohortCreateForm({
   );
 }
 
+CohortCreateForm.propTypes = {
+  currentCohort: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+    filters: PropTypes.object,
+    id: PropTypes.number,
+  }),
+  currentFilters: PropTypes.object,
+  cohorts: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      description: PropTypes.string,
+      filters: PropTypes.object,
+      id: PropTypes.number,
+    })
+  ),
+  isFiltersChanged: PropTypes.bool,
+  onAction: PropTypes.func,
+  onClose: PropTypes.func,
+};
+
 /**
  * @param {Object} prop
  * @param {ExplorerCohort} prop.currentCohort
@@ -280,7 +327,6 @@ function CohortUpdateForm({
           label='Description'
           input={
             <textarea
-              autoFocus
               placeholder='Describe the cohort (optional)'
               value={cohort.description}
               onChange={(e) => {
@@ -334,6 +380,27 @@ function CohortUpdateForm({
   );
 }
 
+CohortUpdateForm.propTypes = {
+  currentCohort: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+    filters: PropTypes.object,
+    id: PropTypes.number,
+  }),
+  currentFilters: PropTypes.object,
+  cohorts: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      description: PropTypes.string,
+      filters: PropTypes.object,
+      id: PropTypes.number,
+    })
+  ),
+  isFiltersChanged: PropTypes.bool,
+  onAction: PropTypes.func,
+  onClose: PropTypes.func,
+};
+
 /**
  * @param {Object} prop
  * @param {ExplorerCohort} prop.currentCohort
@@ -358,6 +425,17 @@ function CohortDeleteForm({ currentCohort, onAction, onClose }) {
     </div>
   );
 }
+
+CohortDeleteForm.propTypes = {
+  currentCohort: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+    filters: PropTypes.object,
+    id: PropTypes.number,
+  }),
+  onAction: PropTypes.func,
+  onClose: PropTypes.func,
+};
 
 /**
  * @param {Object} prop
@@ -438,5 +516,34 @@ export function CohortActionForm({
           onClose={handleClose}
         />
       );
+    default:
+      return null;
   }
 }
+
+CohortActionForm.propTypes = {
+  actionType: PropTypes.oneOf(['new', 'open', 'save', 'save as', 'delete']),
+  currentCohort: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+    filters: PropTypes.object,
+    id: PropTypes.number,
+  }),
+  currentFilters: PropTypes.object,
+  cohorts: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      description: PropTypes.string,
+      filters: PropTypes.object,
+      id: PropTypes.number,
+    })
+  ),
+  handlers: PropTypes.shape({
+    handleOpen: PropTypes.func,
+    handleCreate: PropTypes.func,
+    handleUpdate: PropTypes.func,
+    handleDelete: PropTypes.func,
+    handleClose: PropTypes.func,
+  }),
+  isFiltersChanged: PropTypes.bool,
+};

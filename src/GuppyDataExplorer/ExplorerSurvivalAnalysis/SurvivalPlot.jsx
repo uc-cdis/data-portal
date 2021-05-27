@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -29,7 +30,7 @@ const Plot = ({ colorScheme, data, timeInterval }) => {
 
   function handleLegendMouseEnter({ value: lineName }) {
     const newOpacity = { ...opacity };
-    for (const name in newOpacity)
+    for (const name of Object.keys(newOpacity))
       newOpacity[name] = name === lineName ? 1 : 0.1;
     setOpacity(newOpacity);
   }
@@ -87,6 +88,27 @@ const Plot = ({ colorScheme, data, timeInterval }) => {
   );
 };
 
+Plot.propTypes = {
+  colorScheme: PropTypes.object.isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.exact({
+      data: PropTypes.arrayOf(
+        PropTypes.exact({
+          prob: PropTypes.number,
+          time: PropTypes.number,
+        })
+      ),
+      group: PropTypes.arrayOf(
+        PropTypes.exact({
+          variable: PropTypes.string,
+          value: PropTypes.string,
+        })
+      ),
+    })
+  ).isRequired,
+  timeInterval: PropTypes.number.isRequired,
+};
+
 /**
  * @param {Object} prop
  * @param {Object} prop.colorScheme
@@ -96,6 +118,7 @@ const Plot = ({ colorScheme, data, timeInterval }) => {
  */
 const SurvivalPlot = ({ colorScheme, data, isStratified, timeInterval }) => (
   <div className='explorer-survival-analysis__survival-plot'>
+    {/* eslint-disable-next-line no-nested-ternary */}
     {data.length === 0 ? (
       <div className='explorer-survival-analysis__figure-placeholder'>
         Survival plot here
@@ -105,9 +128,10 @@ const SurvivalPlot = ({ colorScheme, data, isStratified, timeInterval }) => (
         data.reduce((acc, { group, data }) => {
           const [factor, stratification] = group;
           const stratificationKey = JSON.stringify(stratification);
-          const stratificationValue = acc.hasOwnProperty(stratificationKey)
-            ? [...acc[stratificationKey], { group: [factor], data }]
-            : [{ group: [factor], data }];
+          const stratificationValue =
+            acc[stratificationKey] !== undefined
+              ? [...acc[stratificationKey], { group: [factor], data }]
+              : [{ group: [factor], data }];
 
           return { ...acc, [stratificationKey]: stratificationValue };
         }, {})
@@ -126,6 +150,7 @@ const SurvivalPlot = ({ colorScheme, data, isStratified, timeInterval }) => (
 );
 
 SurvivalPlot.propTypes = {
+  colorScheme: PropTypes.object.isRequired,
   data: PropTypes.arrayOf(
     PropTypes.exact({
       data: PropTypes.arrayOf(

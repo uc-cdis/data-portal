@@ -10,7 +10,7 @@ class NodePopup extends React.Component {
 
   render() {
     if (!this.props.highlightingNode) {
-      return <React.Fragment />;
+      return null;
     }
     const highlightingNodeSVGElement =
       this.props.graphNodesSVGElements &&

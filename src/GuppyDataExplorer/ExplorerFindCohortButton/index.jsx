@@ -15,7 +15,20 @@ import './ExplorerFindCohortButton.css';
  * @param {ExplorerFilters} props.filter
  */
 function ExplorerFindCohortButton({ filter }) {
+  const emptyOption = {
+    label: 'Select data commons',
+    value: '',
+  };
+  const externalCommonsOptions = [
+    {
+      label: 'Genomic Data Commons',
+      value: 'gdc',
+    },
+  ];
+
+  const [selected, setSelected] = useState(emptyOption);
   const [show, setShow] = useState(false);
+
   function openPopup() {
     setShow(true);
   }
@@ -33,23 +46,13 @@ function ExplorerFindCohortButton({ filter }) {
 
       window.open(data.link, '_blank');
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(e);
     } finally {
       closePopup();
     }
   }
 
-  const emptyOption = {
-    label: 'Select data commons',
-    value: '',
-  };
-  const externalCommonsOptions = [
-    {
-      label: 'Genomic Data Commons',
-      value: 'gdc',
-    },
-  ];
-  const [selected, setSelected] = useState(emptyOption);
   return (
     <>
       <Button

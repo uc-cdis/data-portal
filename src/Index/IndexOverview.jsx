@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
 import Select from 'react-select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Spinner from '../components/Spinner';
 import Button from '../gen3-ui-component/components/Button';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { consortiumList } from '../params';
 import { breakpoints } from '../localconf';
 import './IndexOverview.css';
@@ -18,7 +19,7 @@ function IndexOverview({ overviewCounts }) {
     ...consortiumList.map((option) => ({ label: option, value: option })),
   ];
 
-  let history = useHistory();
+  const history = useHistory();
   function ButtonToExplorer() {
     const search =
       consortium.value === 'total'
@@ -116,5 +117,9 @@ function IndexOverview({ overviewCounts }) {
     </div>
   );
 }
+
+IndexOverview.propTypes = {
+  overviewCounts: PropTypes.object,
+};
 
 export default IndexOverview;

@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReduxDataDictionaryTable from './table/DataDictionaryTable';
 import ReduxDataModelStructure from './DataModelStructure';
-import DataDictionaryGraph from './graph/DataDictionaryGraph/.';
-import ReduxDictionarySearcher from './search/DictionarySearcher/.';
-import ReduxDictionarySearchHistory from './search/DictionarySearchHistory/.';
+import DataDictionaryGraph from './graph/DataDictionaryGraph';
+import ReduxDictionarySearcher from './search/DictionarySearcher';
+import ReduxDictionarySearchHistory from './search/DictionarySearchHistory';
 import './DataDictionary.css';
 
 class DataDictionary extends React.Component {

@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
@@ -78,9 +79,9 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
     const newScheme = {};
     let factorValueCount = 0;
     for (const { group } of survival)
-      if (!newScheme.hasOwnProperty(group[0].value)) {
+      if (newScheme[group[0].value] === undefined) {
         newScheme[group[0].value] = schemeCategory10[factorValueCount % 9];
-        factorValueCount++;
+        factorValueCount += 1;
       }
 
     return newScheme;
@@ -151,11 +152,13 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
             if (config.result?.survival) setSurvival(result.survival);
           }
         })
-        .catch((e) => isMounted && setIsError(true))
+        .catch(() => isMounted && setIsError(true))
         .finally(() => isMounted && setIsUpdating(false));
     }
 
-    return () => (isMounted = false);
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
@@ -170,15 +173,16 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
         />
       </div>
       <div className='explorer-survival-analysis__column-right'>
+        {/* eslint-disable-next-line no-nested-ternary */}
         {isUpdating ? (
           <Spinner />
         ) : isError ? (
           <div className='explorer-survival-analysis__error'>
             <h1>Error obtaining survival analysis result...</h1>
             <p>
-              Please retry by clicking "Apply" button or refreshing the page. If
-              the problem persists, please contact administrator for more
-              information.
+              Please retry by clicking {'"Apply"'} button or refreshing the
+              page. If the problem persists, please contact administrator for
+              more information.
             </p>
           </div>
         ) : (

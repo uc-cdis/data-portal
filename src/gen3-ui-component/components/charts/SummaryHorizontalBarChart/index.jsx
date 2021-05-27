@@ -72,35 +72,30 @@ class SummaryBarChart extends React.Component {
             }
             return <React.Fragment key={item.name} />;
           })}
-          {barChartData.length > this.props.maximumDisplayItem ? (
-            <React.Fragment>
-              {this.state.showMore ? (
-                <div
-                  className='summary-horizontal-bar-chart__toggle g3-link'
-                  onClick={() => this.toggle()}
-                  onKeyPress={() => this.toggle()}
-                  role='button'
-                  tabIndex={0}
-                >
-                  <span>Show less</span>
-                </div>
-              ) : (
-                <div
-                  className='summary-horizontal-bar-chart__toggle g3-link'
-                  onClick={() => this.toggle()}
-                  onKeyPress={() => this.toggle()}
-                  role='button'
-                  tabIndex={0}
-                >
-                  {`And ${(
-                    barChartData.length - this.props.maximumDisplayItem
-                  ).toLocaleString()} more`}
-                </div>
-              )}
-            </React.Fragment>
-          ) : (
-            <React.Fragment />
-          )}
+          {barChartData.length > this.props.maximumDisplayItem &&
+            (this.state.showMore ? (
+              <div
+                className='summary-horizontal-bar-chart__toggle g3-link'
+                onClick={() => this.toggle()}
+                onKeyPress={() => this.toggle()}
+                role='button'
+                tabIndex={0}
+              >
+                <span>Show less</span>
+              </div>
+            ) : (
+              <div
+                className='summary-horizontal-bar-chart__toggle g3-link'
+                onClick={() => this.toggle()}
+                onKeyPress={() => this.toggle()}
+                role='button'
+                tabIndex={0}
+              >
+                {`And ${(
+                  barChartData.length - this.props.maximumDisplayItem
+                ).toLocaleString()} more`}
+              </div>
+            ))}
         </div>
       );
     }

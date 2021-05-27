@@ -1,7 +1,7 @@
 import React from 'react';
 import FileSaver from 'file-saver';
-import Button from '../../gen3-ui-component/components/Button';
 import PropTypes from 'prop-types';
+import Button from '../../gen3-ui-component/components/Button';
 
 class DownloadButtonExample extends React.Component {
   constructor(props) {
@@ -10,6 +10,7 @@ class DownloadButtonExample extends React.Component {
       manifestCount: 0,
     };
     this.updateManifestCount = this.updateManifestCount.bind(this);
+    this.downloadData = this.downloadData.bind(this);
   }
 
   componentDidUpdate(prevProp) {
@@ -81,16 +82,16 @@ class DownloadButtonExample extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <Button
           label={`download ${this.props.totalCount} ${this.props.guppyConfig.dataType} data`}
-          onClick={this.downloadData.bind(this)}
+          onClick={this.downloadData}
         />
         <Button
           label={`download ${this.state.manifestCount} ${this.props.guppyConfig.fileType} manifest`}
-          onClick={this.downloadManifest.bind(this)}
+          onClick={this.downloadData}
         />
-      </React.Fragment>
+      </>
     );
   }
 }
@@ -101,7 +102,7 @@ DownloadButtonExample.propTypes = {
   getTotalCountsByTypeAndFilter: PropTypes.func,
   downloadRawDataByTypeAndFilter: PropTypes.func,
   totalCount: PropTypes.number,
-  filter: PropTypes.object,
+  guppyConfig: PropTypes.object,
 };
 
 export default DownloadButtonExample;

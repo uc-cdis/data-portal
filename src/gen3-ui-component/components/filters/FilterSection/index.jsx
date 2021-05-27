@@ -62,6 +62,61 @@ class FilterSection extends React.Component {
     this.combineModeFieldName = '__combineMode';
   }
 
+  handleSetCombineModeOption(combineModeIn) {
+    // Combine mode: AND or OR
+    this.setState({ combineMode: combineModeIn });
+    this.props.onCombineOptionToggle(this.combineModeFieldName, combineModeIn);
+  }
+
+  handleClearButtonClick(ev) {
+    // Prevent this click from triggering any onClick events in parent component
+    ev.stopPropagation();
+    // Clear the filters
+    this.setState((prevState) => ({
+      filterStatus: {},
+      resetClickCounter: prevState.resetClickCounter + 1,
+    }));
+    this.props.onClear();
+  }
+
+  handleSearchInputChange() {
+    const currentInput = this.inputElem.current.value;
+    this.setState({
+      searchInputEmpty: !currentInput || currentInput.length === 0,
+    });
+    this.updateVisibleOptions(currentInput);
+  }
+
+  handleSelectSingleSelectFilter(label) {
+    this.setState((prevState) => {
+      const newFilterStatus = { ...prevState.filterStatus };
+      const oldSelected = newFilterStatus[label];
+      const newSelected =
+        typeof oldSelected === 'undefined' ? true : !oldSelected;
+      newFilterStatus[label] = newSelected;
+      return {
+        filterStatus: newFilterStatus,
+      };
+    });
+    this.props.onSelect(label);
+  }
+
+  handleDragRangeFilter(lowerBound, upperBound, minValue, maxValue, rangeStep) {
+    this.setState(() => {
+      const newFilterStatus = [lowerBound, upperBound];
+      return {
+        filterStatus: newFilterStatus,
+      };
+    });
+    this.props.onAfterDrag(
+      lowerBound,
+      upperBound,
+      minValue,
+      maxValue,
+      rangeStep
+    );
+  }
+
   getSearchInput() {
     return (
       <div
@@ -187,31 +242,6 @@ class FilterSection extends React.Component {
     );
   }
 
-  handleSetCombineModeOption(combineModeIn) {
-    // Combine mode: AND or OR
-    this.setState({ combineMode: combineModeIn });
-    this.props.onCombineOptionToggle(this.combineModeFieldName, combineModeIn);
-  }
-
-  handleClearButtonClick(ev) {
-    // Prevent this click from triggering any onClick events in parent component
-    ev.stopPropagation();
-    // Clear the filters
-    this.setState((prevState) => ({
-      filterStatus: {},
-      resetClickCounter: prevState.resetClickCounter + 1,
-    }));
-    this.props.onClear();
-  }
-
-  handleSearchInputChange() {
-    const currentInput = this.inputElem.current.value;
-    this.setState({
-      searchInputEmpty: !currentInput || currentInput.length === 0,
-    });
-    this.updateVisibleOptions(currentInput);
-  }
-
   clearSearchInput() {
     this.inputElem.current.value = '';
     this.setState({
@@ -223,24 +253,24 @@ class FilterSection extends React.Component {
   updateVisibleOptions(inputText) {
     // if empty input, all should be visible
     if (typeof inputText === 'undefined' || inputText.trim() === '') {
-      this.setState({
+      this.setState((prevState) => ({
         optionsVisibleStatus: filterVisibleStatusObj(
           this.props.options,
           this.props.initVisibleItemNumber,
-          this.state.showingMore
+          prevState.showingMore
         ),
-      });
+      }));
     }
 
     // if not empty, filter out those matched
-    this.setState({
+    this.setState((prevState) => ({
       optionsVisibleStatus: filterVisibleStatusObj(
         this.props.options,
         this.props.initVisibleItemNumber,
-        this.state.showingMore,
+        prevState.showingMore,
         inputText
       ),
-    });
+    }));
   }
 
   toggleSection(open) {
@@ -252,36 +282,6 @@ class FilterSection extends React.Component {
     }
     this.props.onToggle(targetStatus);
     this.setState({ isExpanded: targetStatus });
-  }
-
-  handleSelectSingleSelectFilter(label) {
-    this.setState((prevState) => {
-      const newFilterStatus = Object.assign({}, prevState.filterStatus);
-      const oldSelected = newFilterStatus[label];
-      const newSelected =
-        typeof oldSelected === 'undefined' ? true : !oldSelected;
-      newFilterStatus[label] = newSelected;
-      return {
-        filterStatus: newFilterStatus,
-      };
-    });
-    this.props.onSelect(label);
-  }
-
-  handleDragRangeFilter(lowerBound, upperBound, minValue, maxValue, rangeStep) {
-    this.setState(() => {
-      const newFilterStatus = [lowerBound, upperBound];
-      return {
-        filterStatus: newFilterStatus,
-      };
-    });
-    this.props.onAfterDrag(
-      lowerBound,
-      upperBound,
-      minValue,
-      maxValue,
-      rangeStep
-    );
   }
 
   toggleShowSearch() {
@@ -380,12 +380,12 @@ class FilterSection extends React.Component {
             <div className='g3-filter-section__selected-count-chip'>
               <Chip
                 text={
-                  <React.Fragment>
+                  <>
                     <span className='g3-filter-section__selected-count-chip-text-emphasis'>
                       {numSelected}
                     </span>
                     &nbsp;selected
-                  </React.Fragment>
+                  </>
                 }
                 onClearButtonClick={(ev) => this.handleClearButtonClick(ev)}
               />

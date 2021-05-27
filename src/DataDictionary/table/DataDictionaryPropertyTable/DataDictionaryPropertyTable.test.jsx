@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import DataDictionaryPropertyTable from './.';
+import DataDictionaryPropertyTable from '.';
 
 describe('DataDictionaryPropertyTable', () => {
   const properties = {

@@ -68,13 +68,13 @@ const userAccess = (state = { access: {} }, action) => {
 };
 
 const project = (state = {}, action) => {
+  const projects = {};
+  const projectAvail = {};
   switch (action.type) {
     case 'RECEIVE_PROJECTS':
-      const projects = {};
-      const projectAvail = {};
-      for (const { code, project_id, availability_type } of action.data) {
-        projects[code] = project_id;
-        projectAvail[project_id] = availability_type;
+      for (const d of action.data) {
+        projects[d.code] = d.project_id;
+        projectAvail[d.project_id] = d.availability_type;
       }
       return { ...state, projects, projectAvail };
     default:

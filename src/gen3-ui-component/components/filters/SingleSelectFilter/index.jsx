@@ -26,8 +26,8 @@ class SingleSelectFilter extends React.Component {
         ? this.state.selected
         : this.props.selected;
     let inputDisabled = this.props.disabled;
-    let lockIconComponent = <React.Fragment />;
-    let countIconComponent = <React.Fragment />;
+    let lockIconComponent = null;
+    let countIconComponent = null;
 
     const showLockedTooltip =
       !this.props.accessible && this.props.lockedTooltipMessage !== '';
@@ -38,18 +38,14 @@ class SingleSelectFilter extends React.Component {
       );
       if (showLockedTooltip) {
         lockIconComponent = (
-          <React.Fragment>
-            {
-              <Tooltip
-                placement='right'
-                overlay={<span>{this.props.lockedTooltipMessage}</span>}
-                arrowContent={<div className='rc-tooltip-arrow-inner' />}
-                trigger={['hover', 'focus']}
-              >
-                {lockIconComponent}
-              </Tooltip>
-            }
-          </React.Fragment>
+          <Tooltip
+            placement='right'
+            overlay={<span>{this.props.lockedTooltipMessage}</span>}
+            arrowContent={<div className='rc-tooltip-arrow-inner' />}
+            trigger={['hover', 'focus']}
+          >
+            {lockIconComponent}
+          </Tooltip>
         );
       }
     }
@@ -71,18 +67,14 @@ class SingleSelectFilter extends React.Component {
         inputDisabled && this.props.disabledTooltipMessage !== '';
       if (showDisabledTooltip) {
         countIconComponent = (
-          <React.Fragment>
-            {
-              <Tooltip
-                placement='right'
-                overlay={<span>{this.props.disabledTooltipMessage}</span>}
-                arrowContent={<div className='rc-tooltip-arrow-inner' />}
-                trigger={['hover', 'focus']}
-              >
-                {countIconComponent}
-              </Tooltip>
-            }
-          </React.Fragment>
+          <Tooltip
+            placement='right'
+            overlay={<span>{this.props.disabledTooltipMessage}</span>}
+            arrowContent={<div className='rc-tooltip-arrow-inner' />}
+            trigger={['hover', 'focus']}
+          >
+            {countIconComponent}
+          </Tooltip>
         );
       }
     } else if (this.props.accessible) {

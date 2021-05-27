@@ -2,18 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Toaster.css';
 
-class Toaster extends React.Component {
-  render() {
-    return this.props.isEnabled
-      ? (
-        <div className={`${this.props.className} toaster__div`}>
-          {this.props.children}
-        </div>
-      )
-      : null;
-  }
+function Toaster({ isEnabled, className, children }) {
+  return isEnabled ? (
+    <div className={`${className} toaster__div`}>{children}</div>
+  ) : null;
 }
-
 
 Toaster.propTypes = {
   isEnabled: PropTypes.bool.isRequired,

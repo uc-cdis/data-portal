@@ -12,9 +12,10 @@ class ConnectedTableExample extends React.Component {
       loading: false,
       pageSize: defaultPageSize,
     };
+    this.fetchData = this.fetchData.bind(this);
   }
 
-  fetchData(state, instance) {
+  fetchData(state) {
     this.setState({ loading: true });
     const offset = state.page * state.pageSize;
     const sort = state.sorted.map((i) => ({
@@ -27,7 +28,7 @@ class ConnectedTableExample extends React.Component {
         size,
         sort,
       })
-      .then((res) => {
+      .then(() => {
         this.setState({
           loading: false,
           pageSize: size,
@@ -51,7 +52,7 @@ class ConnectedTableExample extends React.Component {
         data={this.props.rawData || []}
         pages={totalPages} // Display the total number of pages
         loading={this.state.loading} // Display the loading overlay when we need it
-        onFetchData={this.fetchData.bind(this)} // Request new data when things change
+        onFetchData={this.fetchData} // Request new data when things change
         defaultPageSize={defaultPageSize}
         className={`-striped -highlight ${this.props.className}`}
         minRows={0}

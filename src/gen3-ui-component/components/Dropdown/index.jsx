@@ -19,13 +19,7 @@ class Dropdown extends Component {
     if (this.props.disabled) {
       return;
     }
-    this.setState(state => (
-      { menuOpen: !state.menuOpen }
-    ));
-  }
-
-  closeMenu() {
-    this.setState({ menuOpen: false });
+    this.setState((state) => ({ menuOpen: !state.menuOpen }));
   }
 
   handleWindowClick(e) {
@@ -37,12 +31,16 @@ class Dropdown extends Component {
     }
   }
 
+  closeMenu() {
+    this.setState({ menuOpen: false });
+  }
+
   bindCancellingEvent() {
-    window.addEventListener('click', e => this.handleWindowClick(e));
+    window.addEventListener('click', (e) => this.handleWindowClick(e));
   }
 
   unbindCancellingEvent() {
-    window.removeEventListener('click', e => this.handleWindowClick(e));
+    window.removeEventListener('click', (e) => this.handleWindowClick(e));
   }
 
   render() {
@@ -52,20 +50,23 @@ class Dropdown extends Component {
       this.unbindCancellingEvent();
     }
     return (
-      <div className={`g3-dropdown ${this.props.disabled ? 'g3-dropdown--disabled' : ''} ${this.props.className || ''} 
-                                   ${this.props.buttonType === 'secondary' ? 'g3-dropdown--secondary' : ''}`}
+      <div
+        className={`g3-dropdown ${
+          this.props.disabled ? 'g3-dropdown--disabled' : ''
+        } ${this.props.className || ''} ${
+          this.props.buttonType === 'secondary' ? 'g3-dropdown--secondary' : ''
+        }`}
       >
-        {
-          React.Children.map(this.props.children, child => React.cloneElement(child, {
-            handleTriggerMenu: e => this.handleTriggerMenu(e),
+        {React.Children.map(this.props.children, (child) =>
+          React.cloneElement(child, {
+            handleTriggerMenu: (e) => this.handleTriggerMenu(e),
             menuOpen: this.state.menuOpen,
-            afterClick: e => this.closeMenu(e),
+            afterClick: (e) => this.closeMenu(e),
             menuTriggerElementRef: this.menuTriggerElementRef,
             buttonType: this.props.buttonType,
             disabled: this.props.disabled,
-          }),
-          )
-        }
+          })
+        )}
       </div>
     );
   }
@@ -88,30 +89,30 @@ Dropdown.defaultProps = {
 };
 
 /**
-* props:
-*   - split(bool): if true, the trigger button is split
-*   - label(stirng): label of the button
-*   - onClick(func): onclick function, ignored when split=false (onClick=triggerMenu)
-*   - className(string): class name
-*   - disabled(bool): whether disabled
-*/
+ * props:
+ *   - split(bool): if true, the trigger button is split
+ *   - label(stirng): label of the button
+ *   - onClick(func): onclick function, ignored when split=false (onClick=triggerMenu)
+ *   - className(string): class name
+ *   - disabled(bool): whether disabled
+ */
 Dropdown.Button = DropdownButton;
 
 /**
-* Wrapper for a list of menu items
-* props:
-*   - className(string): class name
-*/
+ * Wrapper for a list of menu items
+ * props:
+ *   - className(string): class name
+ */
 Dropdown.Menu = DropdownMenu;
 
 /**
-* props:
-*   - className(string): class name
-*   - leftIcon(string): left icon name
-*   - rightIcon(string): right icon name
-*   - onClick(func): onclick function
-*   - disabled(bool): whether disabled
-*/
+ * props:
+ *   - className(string): class name
+ *   - leftIcon(string): left icon name
+ *   - rightIcon(string): right icon name
+ *   - onClick(func): onclick function
+ *   - disabled(bool): whether disabled
+ */
 Dropdown.Item = DropdownItem;
 
 Dropdown.MenuDivider = DropdownMenuDivider;

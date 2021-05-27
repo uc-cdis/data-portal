@@ -25,7 +25,7 @@ function ViewContainer({ showIf, children, isLoading }) {
   return (
     <div className={baseClassName + (showIf ? '' : '--hidden')}>
       {isLoading && (
-        <div className={baseClassName + '__loading'}>
+        <div className={`${baseClassName}__loading`}>
           <Spinner />
         </div>
       )}
@@ -34,8 +34,17 @@ function ViewContainer({ showIf, children, isLoading }) {
   );
 }
 
+ViewContainer.propTypes = {
+  showIf: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
+  isLoading: PropTypes.bool,
+};
+
 function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
-  if (survivalAnalysisConfig.hasOwnProperty('result'))
+  if (survivalAnalysisConfig.result !== undefined)
     for (const resultOption of ['pval', 'risktable', 'survival'])
       if (survivalAnalysisConfig.result[resultOption]) return true;
 
@@ -54,37 +63,34 @@ function getChartData({
   const stackedBarCharts = [];
 
   for (const field of Object.keys(chartConfig)) {
-    if (!aggsData?.[`${field}`]?.histogram) {
-      continue;
-    }
-
-    const { chartType: type, title } = chartConfig[`${field}`];
-    const { histogram } = aggsData[`${field}`];
-    switch (type) {
-      case 'count':
-        const { selectedValues } = filter[`${field}`];
-        countItems.push({
-          label: title,
-          value: selectedValues?.length || histogram.length,
-        });
-        break;
-      case 'pie':
-      case 'bar':
-        summaries.push({
-          type,
-          title,
-          data: histogram.map((i) => ({ name: i.key, value: i.count })),
-        });
-        break;
-      case 'stackedBar':
-        stackedBarCharts.push({
-          type,
-          title,
-          data: histogram.map((i) => ({ name: i.key, value: i.count })),
-        });
-        break;
-      default:
-        throw new Error(`Invalid chartType ${type}`);
+    if (aggsData?.[`${field}`]?.histogram !== undefined) {
+      const { chartType: type, title } = chartConfig[field];
+      const { histogram } = aggsData[field];
+      switch (type) {
+        case 'count':
+          countItems.push({
+            label: title,
+            value: filter[field].selectedValues?.length || histogram.length,
+          });
+          break;
+        case 'pie':
+        case 'bar':
+          summaries.push({
+            type,
+            title,
+            data: histogram.map((i) => ({ name: i.key, value: i.count })),
+          });
+          break;
+        case 'stackedBar':
+          stackedBarCharts.push({
+            type,
+            title,
+            data: histogram.map((i) => ({ name: i.key, value: i.count })),
+          });
+          break;
+        default:
+          throw new Error(`Invalid chartType ${type}`);
+      }
     }
   }
 
@@ -195,6 +201,7 @@ function ExplorerVisualization({
               key={view}
               className={explorerView === view ? 'active' : ''}
               onClick={() => setExplorerView(view)}
+              type='button'
             >
               {view}
             </button>

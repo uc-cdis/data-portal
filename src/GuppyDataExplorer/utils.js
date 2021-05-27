@@ -23,7 +23,7 @@ export const calculateDropdownButtonConfigs = (config) => {
         .filter(
           (btnCfg) => btnCfg.dropdownId && btnCfg.dropdownId === dropdownId
         );
-      const ret = Object.assign({}, map);
+      const ret = { ...map };
       ret[dropdownId] = {
         cnt: buttonCount,
         dropdownConfig: drpdnCfg,
