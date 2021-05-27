@@ -173,10 +173,8 @@ export function createSvgGraph(nodesIn, edges) {
       } ${(d.source.x + d.target.x) / 2},${
         d.source.y + height / numRows / 3
       }T ${d.target.x},${d.target.y}`;
-    } else if (
-      d.source.fx === d.target.fx &&
-      d.target.y - d.source.y > radius * 2
-    ) {
+    }
+    if (d.source.fx === d.target.fx && d.target.y - d.source.y > radius * 2) {
       return `M${d.source.x},${d.source.y}Q${d.source.x + radius * 1.25},${
         d.source.y
       } ${d.source.x + radius * 1.25},${(d.source.y + d.target.y) / 2}T ${
@@ -260,7 +258,7 @@ class SvgGraph extends React.Component {
     if (minX !== this.state.minX || minY !== this.state.minY) {
       // this will result eventually in this.componentDidUpdate ...
       //    https://reactjs.org/docs/react-component.html#componentwillupdate
-      this.setState(Object.assign(this.state, { minX, minY }));
+      this.setState({ minX, minY });
     }
   };
 
@@ -276,14 +274,12 @@ class SvgGraph extends React.Component {
       if (minX !== this.state.minX || minY !== this.state.minY) {
         // Need to 'setState' to force a repaint when size of graph changes - something like that
         // is going on
-        this.setState(
-          Object.assign(this.state, {
-            minX,
-            minY,
-            nodes: this.props.nodes,
-            edges: this.props.edges,
-          })
-        );
+        this.setState({
+          minX,
+          minY,
+          nodes: this.props.nodes,
+          edges: this.props.edges,
+        });
       }
     }
   };
@@ -315,11 +311,6 @@ class SvgGraph extends React.Component {
 SvgGraph.propTypes = {
   nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
   edges: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
-
-SvgGraph.defaultProps = {
-  nodes: [],
-  edges: [],
 };
 
 export default SvgGraph;
