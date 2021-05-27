@@ -306,7 +306,11 @@ export const logoutAPI = () => (dispatch) => {
     .then(handleResponse('RECEIVE_API_LOGOUT'))
     .then((msg) => dispatch(msg))
     .then(() =>
-      document.location.replace(`${userapiPath}/logout?next=${hostname}`)
+      document.location.replace(
+        `${userapiPath}/logout?next=${hostname}${
+          process.env.NODE_ENV === 'dev' ? 'dev.html' : ''
+        }`
+      )
     );
 };
 
