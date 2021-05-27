@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -77,11 +78,7 @@ function App({ store }) {
                     filter={() => store.dispatch(fetchLogin())}
                     {...props}
                   >
-                    <ReduxLogin
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <ReduxLogin location={props.location} />
                   </ProtectedContent>
                 )}
               />
@@ -90,11 +87,7 @@ function App({ store }) {
                 path='/'
                 component={(props) => (
                   <ProtectedContent {...props}>
-                    <IndexPage
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <IndexPage history={props.history} />
                   </ProtectedContent>
                 )}
               />
@@ -103,11 +96,7 @@ function App({ store }) {
                 path='/submission'
                 component={(props) => (
                   <ProtectedContent isAdminOnly {...props}>
-                    <SubmissionPage
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <SubmissionPage />
                   </ProtectedContent>
                 )}
               />
@@ -116,11 +105,7 @@ function App({ store }) {
                 path='/submission/files'
                 component={(props) => (
                   <ProtectedContent isAdminOnly {...props}>
-                    <ReduxMapFiles
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <ReduxMapFiles history={props.history} />
                   </ProtectedContent>
                 )}
               />
@@ -133,11 +118,7 @@ function App({ store }) {
                     component={ReduxMapDataModel}
                     {...props}
                   >
-                    <ReduxMapDataModel
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <ReduxMapDataModel history={props.history} />
                   </ProtectedContent>
                 )}
               />
@@ -146,11 +127,7 @@ function App({ store }) {
                 path='/document'
                 component={(props) => (
                   <ProtectedContent {...props}>
-                    <DocumentPage
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <DocumentPage />
                   </ProtectedContent>
                 )}
               />
@@ -158,11 +135,7 @@ function App({ store }) {
                 path='/query'
                 component={(props) => (
                   <ProtectedContent {...props}>
-                    <GraphQLQuery
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <GraphQLQuery />
                   </ProtectedContent>
                 )}
               />
@@ -173,11 +146,7 @@ function App({ store }) {
                     filter={() => store.dispatch(fetchAccess())}
                     {...props}
                   >
-                    <UserProfile
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <UserProfile />
                   </ProtectedContent>
                 )}
               />
@@ -185,11 +154,7 @@ function App({ store }) {
                 path='/indexing'
                 component={(props) => (
                   <ProtectedContent {...props}>
-                    <Indexing
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <Indexing />
                   </ProtectedContent>
                 )}
               />
@@ -197,11 +162,7 @@ function App({ store }) {
                 path='/quiz'
                 component={(props) => (
                   <ProtectedContent {...props}>
-                    <UserAgreementCert
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <UserAgreementCert />
                   </ProtectedContent>
                 )}
               />
@@ -209,11 +170,7 @@ function App({ store }) {
                 path='/dd/:node'
                 component={(props) => (
                   <ProtectedContent {...props}>
-                    <DataDictionary
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <DataDictionary />
                   </ProtectedContent>
                 )}
               />
@@ -221,11 +178,7 @@ function App({ store }) {
                 path='/dd'
                 component={(props) => (
                   <ProtectedContent {...props}>
-                    <DataDictionary
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <DataDictionary />
                   </ProtectedContent>
                 )}
               />
@@ -239,11 +192,7 @@ function App({ store }) {
                     }
                     {...props}
                   >
-                    <CoreMetadataPage
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <CoreMetadataPage />
                   </ProtectedContent>
                 )}
               />
@@ -259,11 +208,7 @@ function App({ store }) {
                 path='/workspace'
                 component={(props) => (
                   <ProtectedContent {...props}>
-                    <Workspace
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <Workspace />
                   </ProtectedContent>
                 )}
               />
@@ -296,11 +241,7 @@ function App({ store }) {
                   };
                   return (
                     <ProtectedContent filter={queryFilter} {...props}>
-                      <ReduxQueryNode
-                        history={props.history}
-                        location={props.location}
-                        params={props.match.params}
-                      />
+                      <ReduxQueryNode params={props.match.params} />
                     </ProtectedContent>
                   );
                 }}
@@ -309,11 +250,7 @@ function App({ store }) {
                 path='/explorer'
                 component={(props) => (
                   <ProtectedContent {...props}>
-                    <GuppyDataExplorer
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <GuppyDataExplorer />
                   </ProtectedContent>
                 )}
               />
@@ -327,11 +264,7 @@ function App({ store }) {
                   path='/resource-browser'
                   component={(props) => (
                     <ProtectedContent {...props}>
-                      <ResourceBrowser
-                        history={props.history}
-                        location={props.location}
-                        params={props.match.params}
-                      />
+                      <ResourceBrowser />
                     </ProtectedContent>
                   )}
                 />
@@ -340,11 +273,7 @@ function App({ store }) {
                 path='/:project'
                 component={(props) => (
                   <ProtectedContent {...props}>
-                    <ProjectSubmission
-                      history={props.history}
-                      location={props.location}
-                      params={props.match.params}
-                    />
+                    <ProjectSubmission params={props.match.params} />
                   </ProtectedContent>
                 )}
               />

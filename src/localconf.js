@@ -28,7 +28,7 @@ function buildConfig(opts) {
 
   // Override default basename if loading via /dev.html
   // dev.html loads bundle.js via https://localhost...
-  if (location?.pathname.startsWith(`${defaults.basename}dev.html`))
+  if (window?.location.pathname.startsWith(`${defaults.basename}dev.html`))
     defaults.basename += 'dev.html';
 
   const {
@@ -45,7 +45,7 @@ function buildConfig(opts) {
     manifestServiceURL,
     gaDebug,
     tierAccessLimit,
-  } = Object.assign({}, defaults, opts);
+  } = Object.assign(defaults, opts);
 
   function ensureTrailingSlash(url) {
     const u = new URL(url);
@@ -125,7 +125,7 @@ function buildConfig(opts) {
   }
 
   const showFenceAuthzOnProfile = config.showFenceAuthzOnProfile ?? true;
-  const terraExportWarning = config.terraExportWarning;
+  const { terraExportWarning } = config;
   const enableResourceBrowser = config.resourceBrowser ?? true;
   const resourceBrowserPublic = config.resourceBrowser?.public ?? false;
 

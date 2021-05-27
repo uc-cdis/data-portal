@@ -57,12 +57,12 @@ export const fetchCreds = (opts) => {
     return pendingRequest;
   }
   const { path = `${userapiPath}user/`, method = 'GET', dispatch } = opts;
-  const request = {
+
+  pendingRequest = fetch(path, {
     credentials: 'include',
     headers: { ...headers },
     method,
-  };
-  pendingRequest = fetch(path, request).then(
+  }).then(
     (response) => {
       pendingRequest = null;
       return Promise.resolve(getJsonOrText(path, response, false));
@@ -219,15 +219,13 @@ export const fetchWrapper = ({
 export const fetchGraphQL = (graphQLParams) =>
   // We first update the session so that the user will be notified
   // if their auth is insufficient to perform the query.
-  sessionMonitor.updateSession().then(() => {
-    const request = {
+  sessionMonitor.updateSession().then(() =>
+    fetch(graphqlPath, {
       credentials: 'include',
       headers: { ...headers },
       method: 'POST',
       body: JSON.stringify(graphQLParams),
-    };
-
-    return fetch(graphqlPath, request)
+    })
       .then((response) => response.text())
       .then((responseBody) => {
         try {
@@ -235,20 +233,17 @@ export const fetchGraphQL = (graphQLParams) =>
         } catch (error) {
           return responseBody;
         }
-      });
-  });
+      })
+  );
 
 export const fetchFlatGraphQL = (graphQLParams) =>
-  sessionMonitor.updateSession().then(() => {
-    const request = {
+  sessionMonitor.updateSession().then(() =>
+    fetch(guppyGraphQLUrl, {
       credentials: 'include',
       headers: { ...headers },
       method: 'POST',
       body: JSON.stringify(graphQLParams),
-    };
-
-    const graphqlUrl = guppyGraphQLUrl;
-    return fetch(graphqlUrl, request)
+    })
       .then((response) => response.text())
       .then((responseBody) => {
         try {
@@ -256,8 +251,8 @@ export const fetchFlatGraphQL = (graphQLParams) =>
         } catch (error) {
           return responseBody;
         }
-      });
-  });
+      })
+  );
 
 export const handleResponse = (type) => ({ data, status }) => {
   switch (status) {
@@ -298,7 +293,7 @@ export const fetchUser = (dispatch) =>
   fetchCreds({
     dispatch,
   })
-    .then((status, data) => handleFetchUser(status, data))
+    .then((res) => handleFetchUser(res))
     .then((msg) => dispatch(msg));
 
 export const refreshUser = () => fetchUser;
@@ -317,12 +312,12 @@ export const logoutAPI = () => (dispatch) => {
 
 export const fetchIsUserLoggedInNoRefresh = (opts) => {
   const { path = `${submissionApiPath}`, method = 'GET', dispatch } = opts;
-  const request = {
+
+  let requestPromise = fetch(path, {
     credentials: 'include',
     headers: { ...headers },
     method,
-  };
-  let requestPromise = fetch(path, request).then(
+  }).then(
     (response) => {
       requestPromise = null;
       return Promise.resolve(getJsonOrText(path, response, false));
@@ -342,7 +337,7 @@ export const fetchUserNoRefresh = (dispatch) =>
   fetchIsUserLoggedInNoRefresh({
     dispatch,
   })
-    .then((status, data) => handleFetchUser(status, data))
+    .then((res) => handleFetchUser(res))
     .then((msg) => dispatch(msg));
 
 /*
