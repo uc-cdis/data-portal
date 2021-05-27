@@ -256,8 +256,8 @@ const capitalizeFirstLetter = (str) => {
 const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (
   searchString,
   offset
-) => {
-  return new Promise((resolve, reject) => {
+) =>
+  new Promise((resolve, reject) => {
     // If searchString is empty return just the first NUM_SEARCH_OPTIONS options.
     // This allows the client to show default options in the search filter before
     // the user has started searching.
@@ -296,7 +296,6 @@ const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (
         reject(err);
       });
   });
-};
 
 export const checkIsArrayField = (field, arrayFields) => {
   let isArrayField = false;
