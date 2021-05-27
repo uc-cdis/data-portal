@@ -135,7 +135,7 @@ function App({ store }) {
                 path='/query'
                 component={(props) => (
                   <ProtectedContent {...props}>
-                    <GraphQLQuery />
+                    <GraphQLQuery location={props.location} />
                   </ProtectedContent>
                 )}
               />
