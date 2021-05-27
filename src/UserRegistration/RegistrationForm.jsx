@@ -134,6 +134,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
 
   return (
     <form className='user-registration__form'>
+      {/* eslint-disable-next-line no-nested-ternary */}
       {currentView === 'input'
         ? viewInput
         : currentView === 'success'

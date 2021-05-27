@@ -15,13 +15,12 @@ const mapDispatchToProps = (dispatch) => ({
   updateAccess: (response) =>
     response.ok
       ? response.json().then((user) => {
-          if (user.authz.hasOwnProperty('/portal')) {
+          if (user.authz['/portal'] !== undefined) {
             dispatch({ type: 'RECEIVE_USER', user });
             getIndexPageCounts();
             return 'success';
-          } else {
-            return 'error';
           }
+          return 'error';
         })
       : Promise.resolve('error'),
 });
