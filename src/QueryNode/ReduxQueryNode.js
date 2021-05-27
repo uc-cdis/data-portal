@@ -12,12 +12,11 @@ const clearDeleteSession = {
 export const submitSearchForm = (opts, url, history) => (dispatch) => {
   const nodeType = opts.node_type;
   const submitterId = opts.submitter_id || '';
-  const project = opts.project;
 
   return fetchWithCreds({
     path: `${submissionApiPath}graphql`,
     body: JSON.stringify({
-      query: `query Test { ${nodeType} (first: 20, project_id: "${project}", quick_search: "${submitterId}", order_by_desc: "updated_datetime") {id, type, submitter_id}}`,
+      query: `query Test { ${nodeType} (first: 20, project_id: "${opts.project}", quick_search: "${submitterId}", order_by_desc: "updated_datetime") {id, type, submitter_id}}`,
     }),
     method: 'POST',
     dispatch,
@@ -105,7 +104,7 @@ const mapStateToProps = (state, ownProps) => {
     submission: state.submission,
     ownProps,
     queryNodes: state.queryNodes,
-    popups: Object.assign({}, state.popups),
+    popups: { ...state.popups },
   };
   return result;
 };

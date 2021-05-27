@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { History } from 'history';
 import PropTypes from 'prop-types';
 import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
@@ -14,7 +13,7 @@ import './QueryNode.less';
  * @param {Object} props.params
  * @param {Object} props.queryNodes
  * @param {Object} props.popups
- * @param {(value: any, url: string, history: History ) => void} props.onSearchFormSubmit
+ * @param {(value: any, url: string, history: any ) => void} props.onSearchFormSubmit
  * @param {(param: { view_popup: string; nodedelete_popup: boolean | string; }) => void} props.onUpdatePopup
  * @param {() => void} props.onClearDeleteSession
  * @param {(param: { project: string; id: string; }) => void} props.onDeleteNode
@@ -170,9 +169,9 @@ function QueryNode({
       <h4>most recent 20:</h4>
       {queryNodesList.map(([key, value]) => (
         <ul key={key}>
-          {value.map(({ id, submitter_id }, i) => (
-            <li key={submitter_id}>
-              <span>{submitter_id}</span>
+          {value.map(({ id, submitter_id: submitterId }, i) => (
+            <li key={submitterId}>
+              <span>{submitterId}</span>
               <a
                 role='button'
                 tabIndex={i * 3}

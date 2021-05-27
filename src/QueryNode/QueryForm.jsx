@@ -6,12 +6,8 @@ import { getSubmitPath } from '../utils';
 import './QueryForm.less';
 
 class QueryForm extends React.Component {
-  static propTypes = {
-    project: PropTypes.string.isRequired,
-  };
-
   constructor(props) {
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(window.location.search);
 
     super(props);
     this.state = {
