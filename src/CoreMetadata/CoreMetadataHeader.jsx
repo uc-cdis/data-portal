@@ -56,7 +56,7 @@ function CoreMetadataHeader({
     onClearSignedURL();
   }
 
-  const fileTypeToDisplay = type
+  const fileTypeToDisplay = metadata.type
     .replace(/_/g, ' ')
     .replace(/\b\w/g, (l) => l.toUpperCase());
 
@@ -80,7 +80,7 @@ function CoreMetadataHeader({
       <a
         href={`${userapiPath}/data/download/${metadata.object_id}?expires_in=900&redirect`}
       >
-        <button className='button-primary-orange'>
+        <button className='button-primary-orange' type='button'>
           {DOWNLOAD_BTN_CAPTION}
         </button>
       </a>
