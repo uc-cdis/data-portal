@@ -96,11 +96,14 @@ class Workspace extends React.Component {
   getIcon = (notebook) => {
     if (this.regIcon(notebook, 'R Studio')) {
       return rStudioIcon;
-    } else if (this.regIcon(notebook, 'Jupyter')) {
+    }
+    if (this.regIcon(notebook, 'Jupyter')) {
       return jupyterIcon;
-    } else if (this.regIcon(notebook, 'Galaxy')) {
+    }
+    if (this.regIcon(notebook, 'Galaxy')) {
       return galaxyIcon;
-    } else if (this.regIcon(notebook, 'DICOM')) {
+    }
+    if (this.regIcon(notebook, 'DICOM')) {
       return ohifIcon;
     }
     return jupyterIcon;
@@ -181,9 +184,9 @@ class Workspace extends React.Component {
   };
 
   handleFullpageButtonClick = () => {
-    this.setState({
-      notebookIsfullpage: !this.state.notebookIsfullpage,
-    });
+    this.setState((prevState) => ({
+      notebookIsfullpage: !prevState.notebookIsfullpage,
+    }));
   };
 
   render() {
@@ -233,9 +236,9 @@ class Workspace extends React.Component {
             this.state.notebookIsfullpage ? 'workspace--fullpage' : ''
           }`}
         >
-          {this.state.notebookStatus === 'Running' ||
-          this.state.notebookStatus === 'Stopped' ? (
-            <React.Fragment>
+          {(this.state.notebookStatus === 'Running' ||
+            this.state.notebookStatus === 'Stopped') && (
+            <>
               <div className='workspace__iframe'>
                 <iframe
                   className='workspace'
@@ -248,53 +251,54 @@ class Workspace extends React.Component {
                 {terminateButton}
                 {fullpageButton}
               </div>
-            </React.Fragment>
-          ) : null}
-          {this.state.notebookStatus === 'Launching' ? (
-            <React.Fragment>
+            </>
+          )}
+          {this.state.notebookStatus === 'Launching' && (
+            <>
               <div className='workspace__spinner-container'>
                 <Spinner text='Launching workspace...' />
               </div>
               <div className='workspace__buttongroup'>{cancelButton}</div>
-            </React.Fragment>
-          ) : null}
-          {this.state.notebookStatus === 'Terminating' ? (
+            </>
+          )}
+          {this.state.notebookStatus === 'Terminating' && (
             <div className='workspace__spinner-container'>
               <Spinner text='Terminating workspace...' />
             </div>
-          ) : null}
+          )}
           {this.state.notebookStatus !== 'Launching' &&
-          this.state.notebookStatus !== 'Terminating' &&
-          this.state.notebookStatus !== 'Running' &&
-          this.state.notebookStatus !== 'Stopped' ? (
-            <div>
-              <div className='workspace__options'>
-                {this.state.options.map((option, i) => {
-                  const desc = option['cpu-limit']
-                    ? `${option['cpu-limit']}CPU, ${option['memory-limit']} memory`
-                    : '';
-                  return (
-                    <WorkspaceOption
-                      key={i}
-                      icon={this.getIcon(option.name)}
-                      title={option.name}
-                      description={desc}
-                      onClick={() => this.launchWorkspace(option)}
-                      isPending={this.state.notebookType === option.name}
-                      isDisabled={
-                        !!this.state.notebookType &&
-                        this.state.notebookType !== option.name
-                      }
-                    />
-                  );
-                })}
+            this.state.notebookStatus !== 'Terminating' &&
+            this.state.notebookStatus !== 'Running' &&
+            this.state.notebookStatus !== 'Stopped' && (
+              <div>
+                <div className='workspace__options'>
+                  {this.state.options.map((option, i) => {
+                    const desc = option['cpu-limit']
+                      ? `${option['cpu-limit']}CPU, ${option['memory-limit']} memory`
+                      : '';
+                    return (
+                      <WorkspaceOption
+                        key={i}
+                        icon={this.getIcon(option.name)}
+                        title={option.name}
+                        description={desc}
+                        onClick={() => this.launchWorkspace(option)}
+                        isPending={this.state.notebookType === option.name}
+                        isDisabled={
+                          !!this.state.notebookType &&
+                          this.state.notebookType !== option.name
+                        }
+                      />
+                    );
+                  })}
+                </div>
+                <WorkspaceLogin providers={this.state.externalLoginOptions} />
               </div>
-              <WorkspaceLogin providers={this.state.externalLoginOptions} />
-            </div>
-          ) : null}
+            )}
         </div>
       );
-    } else if (this.state.defaultNotebook && this.state.connectedStatus) {
+    }
+    if (this.state.defaultNotebook && this.state.connectedStatus) {
       // If this commons does not use Hatchery to spawn workspaces, then this
       // default workspace is shown.
       return (
