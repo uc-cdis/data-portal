@@ -7,7 +7,7 @@ import {
   getNodeDescriptionFragment,
   getNodeTitleFragment,
 } from '../../highlightHelper';
-import DataDictionaryPropertyTable from '../../table/DataDictionaryPropertyTable/.';
+import DataDictionaryPropertyTable from '../../table/DataDictionaryPropertyTable';
 import './OverlayPropertyTable.css';
 
 class OverlayPropertyTable extends React.Component {
@@ -59,7 +59,8 @@ class OverlayPropertyTable extends React.Component {
   };
 
   render() {
-    if (!this.props.node || this.props.hidden) return <React.Fragment />;
+    if (!this.props.node || this.props.hidden) return null;
+
     const IconSVG = getCategoryIconSVG(this.props.node.category);
     const searchedNodeNotOpened =
       this.props.isSearchMode && !this.props.isSearchResultNodeOpened;
