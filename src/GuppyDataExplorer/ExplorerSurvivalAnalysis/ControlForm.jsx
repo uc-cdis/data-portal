@@ -24,9 +24,17 @@ const ControlFormSelect = ({ label, ...selectProps }) => (
   />
 );
 
+ControlFormSelect.propTypes = {
+  label: PropTypes.string,
+};
+
 const ControlFormInput = ({ label, ...inputAttrs }) => (
   <SimpleInputField label={label} input={<input {...inputAttrs} />} />
 );
+
+ControlFormInput.propTypes = {
+  label: PropTypes.string,
+};
 
 const emptySelectOption = { label: 'Select...', value: '' };
 const survivalTypeOptions = [
@@ -80,9 +88,9 @@ const ControlForm = ({
   const validateNumberInput = (
     /** @type {{ target: { value: string, min: string, max: string }}} */ e
   ) => {
-    const value = Number.parseInt(e.target.value);
-    const min = Number.parseInt(e.target.min);
-    const max = Number.parseInt(e.target.max);
+    const value = Number.parseInt(e.target.value, 10);
+    const min = Number.parseInt(e.target.min, 10);
+    const max = Number.parseInt(e.target.max, 10);
     if (min && min > value) setLocalTimeInterval(min);
     else if (max && max < value) setLocalTimeInterval(max);
   };
@@ -162,7 +170,7 @@ const ControlForm = ({
         step={1}
         onBlur={validateNumberInput}
         onChange={(e) => {
-          setLocalTimeInterval(Number.parseInt(e.target.value));
+          setLocalTimeInterval(Number.parseInt(e.target.value, 10));
           setIsInputChanged(true);
         }}
         value={localTimeInterval}
@@ -176,7 +184,7 @@ const ControlForm = ({
         step={1}
         onBlur={validateNumberInput}
         onChange={(e) => {
-          setStartTime(Number.parseInt(e.target.value));
+          setStartTime(Number.parseInt(e.target.value, 10));
           setIsInputChanged(true);
         }}
         value={startTime}
@@ -189,7 +197,7 @@ const ControlForm = ({
         step={1}
         onBlur={validateNumberInput}
         onChange={(e) => {
-          setEndTime(Number.parseInt(e.target.value));
+          setEndTime(Number.parseInt(e.target.value, 10));
           setIsInputChanged(true);
         }}
         value={endTime}

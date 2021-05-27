@@ -173,35 +173,29 @@ class ExplorerHeatMap extends React.Component {
     const data = this.getTransformedData(yAxisVars);
     const height = `${yAxisVars.length * 20 + 80}px`; // default is 300px
 
-    return (
-      <React.Fragment>
-        {(data && data.length) || this.props.isLocked ? (
-          <div className='explorer-heat-map'>
-            <div className='explorer-heat-map__title--align-center h4-typo'>
-              Data availability
-            </div>
-            {this.props.isLocked ? (
-              <div>
-                <LockedContent lockMessage={this.props.lockMessage} />
-              </div>
-            ) : (
-              <div>
-                <ReactEcharts
-                  option={this.getHeatMapOptions(
-                    data,
-                    xAxisVarTitle,
-                    yAxisVars,
-                    yAxisVarsMapping,
-                    this.props.guppyConfig.colorRange
-                  )}
-                  style={{ height }}
-                />
-              </div>
-            )}
-          </div>
-        ) : null}
-      </React.Fragment>
-    );
+    return (data && data.length) || this.props.isLocked ? (
+      <div className='explorer-heat-map'>
+        <div className='explorer-heat-map__title--align-center h4-typo'>
+          Data availability
+        </div>
+        <div>
+          {this.props.isLocked ? (
+            <LockedContent lockMessage={this.props.lockMessage} />
+          ) : (
+            <ReactEcharts
+              option={this.getHeatMapOptions(
+                data,
+                xAxisVarTitle,
+                yAxisVars,
+                yAxisVarsMapping,
+                this.props.guppyConfig.colorRange
+              )}
+              style={{ height }}
+            />
+          )}
+        </div>
+      </div>
+    ) : null;
   }
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import './typedef';
 
 /**
@@ -25,19 +26,20 @@ export const getFactors = (aggsData, fieldMapping, enumFilterList) => {
       )
     )
       factors.push({
-        label: fieldNameMap.hasOwnProperty(field)
-          ? fieldNameMap[field]
-          : field
-              .toLowerCase()
-              .replace(/_|\./gi, ' ')
-              .replace(/\b\w/g, (c) => c.toUpperCase())
-              .trim(),
+        label:
+          fieldNameMap[field] !== undefined
+            ? fieldNameMap[field]
+            : field
+                .toLowerCase()
+                .replace(/_|\./gi, ' ')
+                .replace(/\b\w/g, (c) => c.toUpperCase())
+                .trim(),
         value: field,
       });
 
   return factors.sort((a, b) => {
-    var labelA = a.label.toUpperCase();
-    var labalB = b.label.toUpperCase();
+    const labelA = a.label.toUpperCase();
+    const labalB = b.label.toUpperCase();
 
     if (labelA < labalB) return -1;
     if (labelA > labalB) return 1;

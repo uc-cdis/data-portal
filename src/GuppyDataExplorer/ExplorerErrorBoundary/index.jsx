@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import NotFoundSVG from '../../img/not-found.svg';
 
 class ExplorerErrorBoundary extends React.Component {
@@ -6,12 +7,16 @@ class ExplorerErrorBoundary extends React.Component {
     super(props);
     this.state = { hasError: false };
   }
-  static getDerivedStateFromError(error) {
+
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
+
   componentDidCatch(error, errorInfo) {
+    // eslint-disable-next-line no-console
     console.error('Explorer has error:', error, errorInfo);
   }
+
   render() {
     return this.state.hasError ? (
       <div className='guppy-data-explorer__error'>
@@ -28,5 +33,12 @@ class ExplorerErrorBoundary extends React.Component {
     );
   }
 }
+
+ExplorerErrorBoundary.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
+};
 
 export default ExplorerErrorBoundary;

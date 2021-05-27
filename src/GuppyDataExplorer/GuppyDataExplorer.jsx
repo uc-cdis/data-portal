@@ -43,18 +43,20 @@ class GuppyDataExplorer extends React.Component {
           const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
           if (validateFilter(filterInUrl, this.props.filterConfig))
             initialAppliedFilters = filterInUrl;
-          else throw undefined;
+          else throw new Error(undefined);
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.error('Invalid filter value in URL.', e);
         }
 
+      // eslint-disable-next-line no-nested-ternary
       const patientIds = this.props.patientIdsConfig?.enabled
         ? searchParams.has('patientIds')
           ? searchParams.get('patientIds').split(',')
           : []
         : undefined;
 
-      this._isMounted && this.setState({ initialAppliedFilters, patientIds });
+      if (this._isMounted) this.setState({ initialAppliedFilters, patientIds });
     };
     window.onpopstate = () => {
       this._isBrowserNavigation = true;
@@ -67,10 +69,6 @@ class GuppyDataExplorer extends React.Component {
   componentWillUnmount() {
     this._isMounted = false;
   }
-
-  updateInitialAppliedFilters = ({ filters }) => {
-    if (this._isMounted) this.setState({ initialAppliedFilters: filters });
-  };
 
   handleFilterChange = (filter) => {
     const searchParams = new URLSearchParams(
@@ -97,7 +95,7 @@ class GuppyDataExplorer extends React.Component {
       }
     }
 
-    this._isBrowserNavigation ||
+    if (!this._isBrowserNavigation)
       this.props.history.push({
         search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
           '&'
@@ -116,7 +114,7 @@ class GuppyDataExplorer extends React.Component {
           searchParams.set('patientIds', patientIds.join(','));
 
         this.setState({ patientIds });
-        this._isBrowserNavigation ||
+        if (!this._isBrowserNavigation)
           this.props.history.push({
             search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
               '&'
@@ -124,6 +122,10 @@ class GuppyDataExplorer extends React.Component {
           });
       }
     : () => {};
+
+  updateInitialAppliedFilters = ({ filters }) => {
+    if (this._isMounted) this.setState({ initialAppliedFilters: filters });
+  };
 
   render() {
     return (

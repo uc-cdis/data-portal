@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -37,10 +38,16 @@ const CustomYAxisTick = (/** @type {Object} */ { x, y, payload }) => {
     <g transform={`translate(${x},${y})`}>
       <title>{name}</title>
       <text dx={-15} dy={4} fill='#666' textAnchor='end'>
-        <tspan>{name.length > 10 ? name.substring(0, 9) + '..' : name}</tspan>
+        <tspan>{name.length > 10 ? `${name.substring(0, 9)}..` : name}</tspan>
       </text>
     </g>
   );
+};
+
+CustomYAxisTick.propTypes = {
+  x: PropTypes.number,
+  y: PropTypes.number,
+  payload: PropTypes.shape({ value: PropTypes.string }),
 };
 
 /**
@@ -86,6 +93,27 @@ const Table = ({ data, isLast, timeInterval }) => (
   </ResponsiveContainer>
 );
 
+Table.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.exact({
+      data: PropTypes.arrayOf(
+        PropTypes.exact({
+          nrisk: PropTypes.number,
+          time: PropTypes.number,
+        })
+      ),
+      group: PropTypes.arrayOf(
+        PropTypes.exact({
+          variable: PropTypes.string,
+          value: PropTypes.string,
+        })
+      ),
+    })
+  ).isRequired,
+  isLast: PropTypes.bool.isRequired,
+  timeInterval: PropTypes.number.isRequired,
+};
+
 /**
  * @param {Object} prop
  * @param {RisktableData[]} prop.data
@@ -111,9 +139,10 @@ const RiskTable = ({ data, isStratified, timeInterval }) => (
             data.reduce((acc, { group, data }) => {
               const [factor, stratification] = group;
               const stratificationKey = JSON.stringify(stratification);
-              const stratificationValue = acc.hasOwnProperty(stratificationKey)
-                ? [...acc[stratificationKey], { group: [factor], data }]
-                : [{ group: [factor], data }];
+              const stratificationValue =
+                acc[stratificationKey] !== undefined
+                  ? [...acc[stratificationKey], { group: [factor], data }]
+                  : [{ group: [factor], data }];
 
               return { ...acc, [stratificationKey]: stratificationValue };
             }, {})
