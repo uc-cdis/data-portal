@@ -4,30 +4,22 @@ import Select from 'react-select';
 import './EnumInput.less';
 
 class EnumInput extends Component {
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    options: PropTypes.array.isRequired,
-    required: PropTypes.bool.isRequired,
-    description: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onUpdateFormSchema: PropTypes.func,
-    propertyType: PropTypes.string,
-  };
-  static getDefaultProps = {
-    onUpdateFormSchema: () => {},
-    propertyType: null,
-  };
-  state = {
-    chosenEnum: '',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      chosenEnum: '',
+    };
+  }
 
-  componentWillMount() {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillMount() {
     if (this.props.onUpdateFormSchema !== undefined) {
       this.props.onUpdateFormSchema({
         [this.props.name]: this.props.propertyType,
       });
     }
   }
+
   render() {
     const options = this.props.options.map((option) => ({
       label: option,
@@ -75,5 +67,20 @@ class EnumInput extends Component {
     );
   }
 }
+
+EnumInput.propTypes = {
+  name: PropTypes.string.isRequired,
+  options: PropTypes.array.isRequired,
+  required: PropTypes.bool.isRequired,
+  description: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onUpdateFormSchema: PropTypes.func,
+  propertyType: PropTypes.string,
+};
+
+EnumInput.defaultProps = {
+  onUpdateFormSchema: () => {},
+  propertyType: null,
+};
 
 export default EnumInput;

@@ -37,7 +37,7 @@ function SubmissionHeader({
 
   const history = useHistory();
   function navigateToMyFiles() {
-    history.push(history.location.pathname + '/files');
+    history.push(`${history.location.pathname}/files`);
   }
 
   return (
