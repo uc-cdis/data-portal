@@ -11,7 +11,7 @@ const calculateChartData = (data, percentageFixedPoint) => {
     percentage = (entry.value * 100) / sum;
     percentage = Number(Number(percentage).toFixed(percentageFixedPoint));
     const widthPercentage = (entry.value * 100) / max;
-    return Object.assign({ percentage, widthPercentage }, entry);
+    return { percentage, widthPercentage, ...entry };
   });
 };
 

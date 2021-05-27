@@ -5,7 +5,7 @@ import SingleSelectFilter from '.';
 describe('SingleSelectFilter', () => {
   const onSelect = jest.fn();
   const component = mount(
-    <SingleSelectFilter label='test1' onSelect={onSelect} hideZero={false} />,
+    <SingleSelectFilter label='test1' onSelect={onSelect} hideZero={false} />
   );
 
   it('renders', () => {

@@ -78,8 +78,8 @@ class SummaryPieChart extends React.Component {
               }
               return <React.Fragment key={'text'.concat(entry.name)} />;
             })}
-            {pieChartData.length > this.props.maximumDisplayItem ? (
-              <React.Fragment>
+            {pieChartData.length > this.props.maximumDisplayItem && (
+              <>
                 {this.state.showMore ? (
                   <div
                     className='summary-pie-chart__toggle g3-link'
@@ -103,9 +103,7 @@ class SummaryPieChart extends React.Component {
                     ).toLocaleString()} more`}
                   </div>
                 )}
-              </React.Fragment>
-            ) : (
-              <React.Fragment />
+              </>
             )}
           </div>
           <PieChart

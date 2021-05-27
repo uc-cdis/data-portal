@@ -23,15 +23,11 @@ describe('<TopBar />', () => {
       onActiveTab={onActiveTab}
       tabIndex={0}
       isActive
-    />,
+    />
   );
 
   const externalButton = mount(
-    <TopBarButton
-      item={externalLink}
-      onActiveTab={onActiveTab}
-      tabIndex={0}
-    />,
+    <TopBarButton item={externalLink} onActiveTab={onActiveTab} tabIndex={0} />
   );
 
   it('renders', () => {

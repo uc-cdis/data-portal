@@ -41,29 +41,21 @@ describe('FilterGroup', () => {
   ];
 
   const filterConfig = {
-    tabs: [{
-      title: 'Project',
+    tabs: [
+      {
+        title: 'Project',
 
-      fields: [
-        'project',
-        'study',
-      ],
-    },
-    {
-      title: 'Subject',
-      fields: [
-        'race',
-        'ethnicity',
-        'gender',
-        'vital_status',
-      ],
-    },
-    {
-      title: 'File',
-      fields: [
-        'file_type',
-      ],
-    }],
+        fields: ['project', 'study'],
+      },
+      {
+        title: 'Subject',
+        fields: ['race', 'ethnicity', 'gender', 'vital_status'],
+      },
+      {
+        title: 'File',
+        fields: ['file_type'],
+      },
+    ],
   };
 
   const component = mount(
@@ -71,7 +63,7 @@ describe('FilterGroup', () => {
       tabs={tabs}
       filterConfig={filterConfig}
       onFilterChange={jest.fn()}
-    />,
+    />
   );
 
   beforeEach(() => {
@@ -88,15 +80,15 @@ describe('FilterGroup', () => {
 
   it('displays the correct tab title', () => {
     expect(component.find('.g3-filter-group__tab-title').length).toBe(3);
-    expect(
-      component.find('.g3-filter-group__tab-title').at(0).text(),
-    ).toBe(filterConfig.tabs[0].title);
-    expect(
-      component.find('.g3-filter-group__tab-title').at(1).text(),
-    ).toBe(filterConfig.tabs[1].title);
-    expect(
-      component.find('.g3-filter-group__tab-title').at(2).text(),
-    ).toBe(filterConfig.tabs[2].title);
+    expect(component.find('.g3-filter-group__tab-title').at(0).text()).toBe(
+      filterConfig.tabs[0].title
+    );
+    expect(component.find('.g3-filter-group__tab-title').at(1).text()).toBe(
+      filterConfig.tabs[1].title
+    );
+    expect(component.find('.g3-filter-group__tab-title').at(2).text()).toBe(
+      filterConfig.tabs[2].title
+    );
   });
 
   it('selects the tab on click', () => {
