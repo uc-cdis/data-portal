@@ -31,6 +31,7 @@ function UserInformationField({
       const timeout = setTimeout(() => setSubmitStatus(null), 1500);
       return () => clearTimeout(timeout);
     }
+    return undefined;
   }, [submitStatus]);
 
   function handleChange(e) {
@@ -111,6 +112,14 @@ function UserInformationField({
     </div>
   );
 }
+
+UserInformationField.propTypes = {
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string,
+  isEditable: PropTypes.bool,
+  onSubmit: PropTypes.func,
+};
 
 /**
  * @param {Object} props
