@@ -25,7 +25,6 @@ import './ProtectedContent.css';
 
 /** @typedef {Object} ReduxStore */
 
-let lastAuthMs = 0;
 const LOCATIONS_DICTIONARY = [
   '/dd',
   '/dd/:node',
@@ -34,19 +33,6 @@ const LOCATIONS_DICTIONARY = [
 ];
 const LOCATIONS_PROJECTS = ['/files/*'];
 const LOCATIONS_SCHEMA = ['/query'];
-
-/**
- * Redux listener - just clears auth-cache on logout
- */
-export function logoutListener(state = {}, action) {
-  switch (action.type) {
-    case 'RECEIVE_API_LOGOUT':
-      lastAuthMs = 0;
-      break;
-    default: // noop
-  }
-  return state;
-}
 
 /**
  * Container for components that require authentication to access.
@@ -144,20 +130,18 @@ class ProtectedContent extends React.Component {
     };
 
     // assume we're still logged in after 1 minute ...
-    if (Date.now() - lastAuthMs < 60000) return Promise.resolve(newState);
+    if (Date.now() - newState.user.lastAuthMs < 10000)
+      return Promise.resolve(newState);
 
     return store
       .dispatch(fetchUser) // make an API call to see if we're still logged in ...
-      .then((response) => {
+      .then(() => {
         newState.user = store.getState().user;
         if (!newState.user.username) {
           // not authenticated
           newState.redirectTo = '/login';
           newState.authenticated = false;
           newState.from = this.props.location; // save previous location
-        } else if (response.type !== 'UPDATE_POPUP') {
-          // auth ok - cache it
-          lastAuthMs = Date.now();
         }
         return newState;
       });

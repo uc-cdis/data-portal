@@ -10,7 +10,6 @@ import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import login from './Login/reducers';
 import ddgraph from './DataDictionary/reducers';
-import { logoutListener } from './Login/ProtectedContent';
 import { fetchUserAccess } from './actions';
 import getReduxStore from './reduxStore';
 
@@ -40,7 +39,12 @@ const user = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_USER':
       getReduxStore().then((store) => store.dispatch(fetchUserAccess));
-      return { ...state, ...action.user, fetched_user: true };
+      return {
+        ...state,
+        ...action.user,
+        fetched_user: true,
+        lastAuthMs: Date.now(),
+      };
     case 'REGISTER_ROLE':
       return {
         ...state,
@@ -53,6 +57,8 @@ const user = (state = {}, action) => {
       };
     case 'FETCH_ERROR':
       return { ...state, fetched_user: true, fetch_error: action.error };
+    case 'RECEIVE_API_LOGOUT':
+      return { ...state, lastAuthMs: 0 };
     default:
       return state;
   }
@@ -105,7 +111,6 @@ const reducers = combineReducers({
   certificate,
   graphiql,
   login,
-  auth: logoutListener,
   ddgraph,
   userAccess,
 });
