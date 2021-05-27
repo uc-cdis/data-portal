@@ -2,6 +2,39 @@ import { fetchWithCreds } from '../actions';
 import getReduxStore from '../reduxStore';
 import { consortiumList } from '../params';
 
+function parseCounts(data) {
+  const overviewCounts = { names: [] };
+  const projectList = [];
+
+  for (const {
+    consortium,
+    molecular_analysis: molecularAnalysis,
+    study,
+    subject,
+  } of data) {
+    overviewCounts[consortium] = {
+      molecular_analysis: molecularAnalysis,
+      study,
+      subject,
+    };
+    if (consortium !== 'total') {
+      overviewCounts.names.push(consortium);
+
+      projectList.push({
+        code: consortium,
+        counts: [subject, molecularAnalysis],
+      });
+    }
+  }
+
+  return {
+    countNames: ['Subjects', 'Molecular Analyses'],
+    overviewCounts,
+    projectList,
+  };
+}
+
+// eslint-disable-next-line import/prefer-default-export
 export function getIndexPageCounts() {
   getReduxStore().then(
     (store) => {
@@ -29,27 +62,4 @@ export function getIndexPageCounts() {
     },
     (err) => console.error('WARNING: failed to load redux store', err)
   );
-}
-
-function parseCounts(data) {
-  const overviewCounts = { names: [] };
-  const projectList = [];
-
-  for (const { consortium, molecular_analysis, study, subject } of data) {
-    overviewCounts[consortium] = { molecular_analysis, study, subject };
-    if (consortium !== 'total') {
-      overviewCounts.names.push(consortium);
-
-      projectList.push({
-        code: consortium,
-        counts: [subject, molecular_analysis],
-      });
-    }
-  }
-
-  return {
-    countNames: ['Subjects', 'Molecular Analyses'],
-    overviewCounts,
-    projectList,
-  };
 }

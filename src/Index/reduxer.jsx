@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import dictIcons from '../img/icons';
-import IndexBarChart from '../components/charts/IndexBarChart/.';
+import IndexBarChart from '../components/charts/IndexBarChart';
 // import IndexCounts from '../components/cards/IndexCounts/.';
 import IndexButtonBar from '../components/IndexButtonBar';
 import Introduction from '../components/Introduction';
