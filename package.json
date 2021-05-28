@@ -51,7 +51,7 @@
     "postcss": "^8.3.0",
     "postcss-inline-svg": "^5.0.0",
     "postcss-loader": "^5.3.0",
-    "postcss-svgo": "^4.0.3",
+    "postcss-svgo": "^5.0.1",
     "prop-types": "^15.6.0",
     "rc-slider": "^9.7.2",
     "rc-tooltip": "^5.1.1",
