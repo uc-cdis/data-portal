@@ -1,4 +1,10 @@
-import { removeDeletedNode } from '../reducers';
+const removeDeletedNode = (state, id) => {
+  const searchResult = state.search_result;
+  const nodeType = Object.keys(searchResult.data)[0];
+  const entities = searchResult.data[nodeType];
+  searchResult.data[nodeType] = entities.filter((entity) => entity.id !== id);
+  return searchResult;
+};
 
 const queryNodes = (state = {}, action) => {
   switch (action.type) {

@@ -6,12 +6,9 @@ import {
   hostname,
   submissionApiOauthPath,
   submissionApiPath,
-  graphqlPath,
-  guppyGraphQLUrl,
   authzPath,
 } from './localconf';
 import { config } from './params';
-import sessionMonitor from './SessionMonitor';
 import dictionary from '../data/dictionary.json';
 import schema from '../data/schema.json';
 
@@ -216,44 +213,6 @@ export const fetchWrapper = ({
     }
   );
 
-export const fetchGraphQL = (graphQLParams) =>
-  // We first update the session so that the user will be notified
-  // if their auth is insufficient to perform the query.
-  sessionMonitor.updateSession().then(() =>
-    fetch(graphqlPath, {
-      credentials: 'include',
-      headers: { ...headers },
-      method: 'POST',
-      body: JSON.stringify(graphQLParams),
-    })
-      .then((response) => response.text())
-      .then((responseBody) => {
-        try {
-          return JSON.parse(responseBody);
-        } catch (error) {
-          return responseBody;
-        }
-      })
-  );
-
-export const fetchFlatGraphQL = (graphQLParams) =>
-  sessionMonitor.updateSession().then(() =>
-    fetch(guppyGraphQLUrl, {
-      credentials: 'include',
-      headers: { ...headers },
-      method: 'POST',
-      body: JSON.stringify(graphQLParams),
-    })
-      .then((response) => response.text())
-      .then((responseBody) => {
-        try {
-          return JSON.parse(responseBody);
-        } catch (error) {
-          return responseBody;
-        }
-      })
-  );
-
 export const handleResponse = (type) => ({ data, status }) => {
   switch (status) {
     case 200:
@@ -306,7 +265,11 @@ export const logoutAPI = () => (dispatch) => {
     .then(handleResponse('RECEIVE_API_LOGOUT'))
     .then((msg) => dispatch(msg))
     .then(() =>
-      document.location.replace(`${userapiPath}/logout?next=${hostname}`)
+      document.location.replace(
+        `${userapiPath}/logout?next=${hostname}${
+          process.env.NODE_ENV === 'dev' ? 'dev.html' : ''
+        }`
+      )
     );
 };
 

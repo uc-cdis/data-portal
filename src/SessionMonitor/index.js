@@ -1,6 +1,6 @@
 import { logoutInactiveUsers, workspaceTimeoutInMinutes } from '../localconf';
 import getReduxStore from '../reduxStore';
-import { fetchUser, fetchUserNoRefresh } from '../actions';
+import { fetchUser, fetchUserAccess, fetchUserNoRefresh } from '../actions';
 
 export function pageFromURL(currentURL) {
   const paths = currentURL
@@ -101,6 +101,8 @@ export class SessionMonitor {
       store.dispatch(fetchUser).then((response) => {
         if (response.type === 'UPDATE_POPUP') {
           this.popupShown = true;
+        } else {
+          store.dispatch(fetchUserAccess);
         }
       });
     });
@@ -121,6 +123,8 @@ export class SessionMonitor {
       store.dispatch(fetchUserNoRefresh).then((response) => {
         if (response.type === 'UPDATE_POPUP') {
           this.popupShown = true;
+        } else {
+          store.dispatch(fetchUserAccess);
         }
       });
     });
