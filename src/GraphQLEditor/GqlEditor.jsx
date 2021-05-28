@@ -3,15 +3,53 @@ import GraphiQL from 'graphiql';
 import { buildClientSchema } from 'graphql/utilities';
 import PropTypes from 'prop-types';
 import Button from '../gen3-ui-component/components/Button';
-import { fetchGraphQL, fetchFlatGraphQL } from '../actions';
 import Spinner from '../components/Spinner';
+import { headers, graphqlPath, guppyGraphQLUrl } from '../localconf';
 import { config } from '../params';
+import sessionMonitor from '../SessionMonitor';
 import './GqlEditor.less';
 import 'graphiql/graphiql.css';
 
 const parameters = {};
 const defaultValue = config.dataExplorerConfig ? 1 : 0;
 
+const fetchGraphQL = (graphQLParams) =>
+  // We first update the session so that the user will be notified
+  // if their auth is insufficient to perform the query.
+  sessionMonitor.updateSession().then(() =>
+    fetch(graphqlPath, {
+      credentials: 'include',
+      headers: { ...headers },
+      method: 'POST',
+      body: JSON.stringify(graphQLParams),
+    })
+      .then((response) => response.text())
+      .then((responseBody) => {
+        try {
+          return JSON.parse(responseBody);
+        } catch (error) {
+          return responseBody;
+        }
+      })
+  );
+
+const fetchFlatGraphQL = (graphQLParams) =>
+  sessionMonitor.updateSession().then(() =>
+    fetch(guppyGraphQLUrl, {
+      credentials: 'include',
+      headers: { ...headers },
+      method: 'POST',
+      body: JSON.stringify(graphQLParams),
+    })
+      .then((response) => response.text())
+      .then((responseBody) => {
+        try {
+          return JSON.parse(responseBody);
+        } catch (error) {
+          return responseBody;
+        }
+      })
+  );
 class GqlEditor extends React.Component {
   constructor(props) {
     super(props);

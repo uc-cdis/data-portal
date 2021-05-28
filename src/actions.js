@@ -6,12 +6,9 @@ import {
   hostname,
   submissionApiOauthPath,
   submissionApiPath,
-  graphqlPath,
-  guppyGraphQLUrl,
   authzPath,
 } from './localconf';
 import { config } from './params';
-import sessionMonitor from './SessionMonitor';
 import dictionary from '../data/dictionary.json';
 import schema from '../data/schema.json';
 
@@ -214,44 +211,6 @@ export const fetchWrapper = ({
         return result;
       });
     }
-  );
-
-export const fetchGraphQL = (graphQLParams) =>
-  // We first update the session so that the user will be notified
-  // if their auth is insufficient to perform the query.
-  sessionMonitor.updateSession().then(() =>
-    fetch(graphqlPath, {
-      credentials: 'include',
-      headers: { ...headers },
-      method: 'POST',
-      body: JSON.stringify(graphQLParams),
-    })
-      .then((response) => response.text())
-      .then((responseBody) => {
-        try {
-          return JSON.parse(responseBody);
-        } catch (error) {
-          return responseBody;
-        }
-      })
-  );
-
-export const fetchFlatGraphQL = (graphQLParams) =>
-  sessionMonitor.updateSession().then(() =>
-    fetch(guppyGraphQLUrl, {
-      credentials: 'include',
-      headers: { ...headers },
-      method: 'POST',
-      body: JSON.stringify(graphQLParams),
-    })
-      .then((response) => response.text())
-      .then((responseBody) => {
-        try {
-          return JSON.parse(responseBody);
-        } catch (error) {
-          return responseBody;
-        }
-      })
   );
 
 export const handleResponse = (type) => ({ data, status }) => {
