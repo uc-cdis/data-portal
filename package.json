@@ -40,7 +40,7 @@
     "ignore-loader": "^0.1.2",
     "isomorphic-fetch": "^3.0.0",
     "jszip": "^3.6.0",
-    "less": "^3.13.1",
+    "less": "^4.1.1",
     "less-loader": "^8.1.1",
     "lodash.clonedeep": "^4.5.0",
     "markdown-it": "^10.0.0",
