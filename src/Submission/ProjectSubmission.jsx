@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ReduxDataModelGraph from '../DataModelGraph/ReduxDataModelGraph';
-import { ReduxSubmitForm, ReduxSubmitTSV } from './ReduxProjectSubmission';
+import ReduxSubmitForm from './ReduxSubmitForm';
+import ReduxSubmitTSV from './ReduxSubmitTSV';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 
