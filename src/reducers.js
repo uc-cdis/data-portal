@@ -88,14 +88,6 @@ const project = (state = {}, action) => {
   }
 };
 
-export const removeDeletedNode = (state, id) => {
-  const searchResult = state.search_result;
-  const nodeType = Object.keys(searchResult.data)[0];
-  const entities = searchResult.data[nodeType];
-  searchResult.data[nodeType] = entities.filter((entity) => entity.id !== id);
-  return searchResult;
-};
-
 const reducers = combineReducers({
   index,
   project,
