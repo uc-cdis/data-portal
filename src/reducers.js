@@ -10,8 +10,6 @@ import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import login from './Login/reducers';
 import ddgraph from './DataDictionary/reducers';
-import { fetchUserAccess } from './actions';
-import getReduxStore from './reduxStore';
 
 const status = (state = {}, action) => {
   switch (action.type) {
@@ -38,7 +36,6 @@ const versionInfo = (state = {}, action) => {
 const user = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_USER':
-      getReduxStore().then((store) => store.dispatch(fetchUserAccess));
       return {
         ...state,
         ...action.user,

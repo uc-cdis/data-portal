@@ -6,6 +6,7 @@ import {
   fetchProjects,
   fetchSchema,
   fetchUser,
+  fetchUserAccess,
 } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
@@ -142,6 +143,8 @@ class ProtectedContent extends React.Component {
           newState.redirectTo = '/login';
           newState.authenticated = false;
           newState.from = this.props.location; // save previous location
+        } else {
+          store.dispatch(fetchUserAccess);
         }
         return newState;
       });
