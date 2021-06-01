@@ -34,7 +34,7 @@ class ChartCarousel extends PureComponent {
   }
 
   onChartClick = (chartConfig) => {
-    if (!this.props.enabledPopupOnClick) {
+    if (!this.props.enablePopupOnClick) {
       return;
     }
 
@@ -115,7 +115,7 @@ class ChartCarousel extends PureComponent {
         onMouseOut: () => this.onChartHover(null),
       };
       // If chart is clickable
-      if (this.props.enabledPopupOnClick) {
+      if (this.props.enablePopupOnClick) {
         chartContainerDivProps.onClick = () => this.onChartClick(chartConfig);
         chartContainerDivProps.role = 'button';
         chartContainerDivProps.tabIndex = 0;
@@ -182,7 +182,7 @@ class ChartCarousel extends PureComponent {
                   {...this.props}
                   chartsConfig={[this.state.popupChart.config]}
                   isInPopup
-                  enabledPopupOnClick={false}
+                  enablePopupOnClick={false}
                 />
               </Popup>
               : null
@@ -196,12 +196,12 @@ class ChartCarousel extends PureComponent {
 ChartCarousel.propTypes = {
   chartsConfig: PropTypes.array.isRequired,
   isInPopup: PropTypes.bool,
-  enabledPopupOnClick: PropTypes.bool,
+  enablePopupOnClick: PropTypes.bool,
 };
 
 ChartCarousel.defaultProps = {
   isInPopup: false,
-  enabledPopupOnClick: false,
+  enablePopupOnClick: false,
 };
 
 export default ChartCarousel;
