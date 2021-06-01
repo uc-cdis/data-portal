@@ -10,7 +10,7 @@ import {
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import React from 'react';
 import Spinner from '../../Spinner';
-import TooltipCDIS from '../TooltipCDIS/.';
+import TooltipCDIS from '../TooltipCDIS';
 import Tick from '../Tick';
 import './IndexBarChart.less';
 import { getCategoryColor } from '../helper';
@@ -84,70 +84,69 @@ const createBarNames = (indexChart) => {
  *       ...
  *   ];
  */
-class IndexBarChart extends React.Component {
-  static propTypes = {
-    projectList: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
-    countNames: PropTypes.arrayOf(PropTypes.string),
-    xAxisStyle: PropTypes.object,
-    barChartStyle: PropTypes.object,
-  };
-
-  render() {
-    if (this.props.projectList.length === 0) {
-      return <Spinner />;
-    }
-    const projectList = [...this.props.projectList.sort(sortCount)];
-    const topList =
-      projectList.length <= 5 ? projectList : getTopList(projectList);
-    const sumList = computeSummations(topList, this.props.countNames);
-    const indexChart = createChartData(topList, this.props.countNames, sumList);
-    const projectNames = topList.map((project) => project.code);
-    const barNames = createBarNames(indexChart);
-    let countBar = 0;
-    const { barChartStyle, xAxisStyle } = this.props;
-    return (
-      <div className='index-bar-chart'>
-        <ResponsiveContainer width='100%' height='100%'>
-          <BarChart
-            data={indexChart}
-            margin={barChartStyle.margins}
-            layout={barChartStyle.layout}
-          >
-            <h4>Project Submission status</h4>
-            <XAxis
-              {...xAxisStyle}
-              stroke={xAxisStyle.color}
-              fill={xAxisStyle.color}
-              unit='%'
-              type='number'
-            />
-            <YAxis
-              dataKey='name'
-              tick={<Tick />}
-              type='category'
-              axisLine={false}
-              tickLine={false}
-            />
-            <Tooltip content={<TooltipCDIS />} />
-            <Legend />
-            {barNames.map((barName, index) => {
-              countBar += 1;
-              return (
-                <Bar
-                  key={projectNames[index] + countBar.toString()}
-                  name={projectNames[index]}
-                  dataKey={barName}
-                  stackId='a'
-                  fill={getCategoryColor(index)}
-                />
-              );
-            })}
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    );
+function IndexBarChart({ projectList, countNames, barChartStyle, xAxisStyle }) {
+  if (projectList.length === 0) {
+    return <Spinner />;
   }
+  const sortedProjectList = [...projectList].sort(sortCount);
+  const topList =
+    sortedProjectList.length <= 5
+      ? sortedProjectList
+      : getTopList(sortedProjectList);
+  const sumList = computeSummations(topList, countNames);
+  const indexChart = createChartData(topList, countNames, sumList);
+  const projectNames = topList.map((project) => project.code);
+  const barNames = createBarNames(indexChart);
+  let countBar = 0;
+  return (
+    <div className='index-bar-chart'>
+      <ResponsiveContainer width='100%' height='100%'>
+        <BarChart
+          data={indexChart}
+          margin={barChartStyle.margins}
+          layout={barChartStyle.layout}
+        >
+          <h4>Project Submission status</h4>
+          <XAxis
+            {...xAxisStyle}
+            stroke={xAxisStyle.color}
+            fill={xAxisStyle.color}
+            unit='%'
+            type='number'
+          />
+          <YAxis
+            dataKey='name'
+            tick={<Tick />}
+            type='category'
+            axisLine={false}
+            tickLine={false}
+          />
+          <Tooltip content={<TooltipCDIS />} />
+          <Legend />
+          {barNames.map((barName, index) => {
+            countBar += 1;
+            return (
+              <Bar
+                key={projectNames[index] + countBar.toString()}
+                name={projectNames[index]}
+                dataKey={barName}
+                stackId='a'
+                fill={getCategoryColor(index)}
+              />
+            );
+          })}
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
 }
+
+IndexBarChart.propTypes = {
+  projectList: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+  countNames: PropTypes.arrayOf(PropTypes.string),
+  xAxisStyle: PropTypes.object,
+  barChartStyle: PropTypes.object,
+};
 
 IndexBarChart.defaultProps = {
   projectList: [],

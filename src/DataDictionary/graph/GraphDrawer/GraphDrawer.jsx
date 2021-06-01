@@ -55,7 +55,7 @@ class GraphDrawer extends React.Component {
   };
 
   render() {
-    if (!this.props.layoutInitialized) return <React.Fragment />;
+    if (!this.props.layoutInitialized) return null;
     const boundingBoxLength = this.props.graphBoundingBox[2][0];
     const fittingScale =
       Math.min(this.props.canvasWidth, this.props.canvasHeight) /
@@ -66,7 +66,11 @@ class GraphDrawer extends React.Component {
     const fittingTransY = Math.abs(
       (boundingBoxLength - this.props.canvasHeight / fittingScale) / 2
     );
-    if (isNaN(fittingTransX) || isNaN(fittingTransY) || isNaN(fittingScale))
+    if (
+      Number.isNaN(fittingTransX) ||
+      Number.isNaN(fittingTransY) ||
+      Number.isNaN(fittingScale)
+    )
       return <g />;
     return (
       <g

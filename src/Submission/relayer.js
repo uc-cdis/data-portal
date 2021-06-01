@@ -43,8 +43,7 @@ export const getTransactionList = () => {
   `;
   fetchQuery(environment, query, {}).then(
     (data) => {
-      const transactionList = data.transactionList;
-      updateReduxTransactionList(transactionList);
+      updateReduxTransactionList(data.transactionList);
     },
     (error) => {
       updateReduxError(error);
@@ -85,10 +84,12 @@ const transformRelayProps = (data) => {
   const nodeCount = Math.min(config.graphql.boardCounts.length + 1, 4);
   const projectList = (data.projectList || []).map((proj) =>
     // fill in missing properties
-    Object.assign(
-      { name: 'unknown', counts: new Array(nodeCount).fill(0), charts: [0, 0] },
-      proj
-    )
+    ({
+      name: 'unknown',
+      counts: new Array(nodeCount).fill(0),
+      charts: [0, 0],
+      ...proj,
+    })
   );
   let summaryCounts = Object.keys(data)
     .filter((key) => key.indexOf('count') === 0)

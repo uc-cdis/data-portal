@@ -1,26 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './CountBox.less';
 
-class CountBox extends Component {
-  render() {
-    return (
-      <div className={`count-box count-box--align-${this.props.align}`}>
-        <div className={`count-box__title--align-${this.props.align} h4-typo`}>
-          {this.props.label}
-        </div>
-        <div
-          className={`count-box__number--align-${this.props.align} special-number`}
-        >
-          {this.props.value === this.props.lockValue ? (
-            <i className='count-box__lock g3-icon g3-icon--lock' />
-          ) : (
-            Number(this.props.value).toLocaleString()
-          )}
-        </div>
+function CountBox({ label, value, align, lockValue }) {
+  return (
+    <div className={`count-box count-box--align-${align}`}>
+      <div className={`count-box__title--align-${align} h4-typo`}>{label}</div>
+      <div className={`count-box__number--align-${align} special-number`}>
+        {value === lockValue ? (
+          <i className='count-box__lock g3-icon g3-icon--lock' />
+        ) : (
+          Number(value).toLocaleString()
+        )}
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 CountBox.propTypes = {

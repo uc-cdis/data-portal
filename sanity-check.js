@@ -24,6 +24,7 @@ function makeSureHomepageChartWorks() {
     for (let i = 0; i < nodeList.length; i += 1) {
       const nodeID = nodeList[i];
       if (typeof dict[nodeID] === 'undefined') {
+        // eslint-disable-next-line no-console
         console.error(`ERR: "${nodeID}" does not exist`);
         process.exit(1);
       }

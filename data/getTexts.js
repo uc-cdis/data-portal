@@ -148,25 +148,21 @@ function buildConfig(appIn, data) {
 }
 
 function getConsortiumList(dict) {
-  const consortiumList = dict['subject'].properties.consortium.enum || [];
+  const consortiumList = dict.subject.properties.consortium.enum || [];
   return JSON.stringify(consortiumList, null, 2);
 }
 
 function getEnumFilterList(config, dict) {
   const filterSet = new Set();
-  if (
-    config.hasOwnProperty('dataExplorerConfig') &&
-    config.dataExplorerConfig.hasOwnProperty('filters') &&
-    config.dataExplorerConfig.filters.hasOwnProperty('tabs')
-  )
+  if (config.dataExplorerConfig?.filters?.tabs !== undefined)
     for (const { fields } of config.dataExplorerConfig.filters.tabs)
       for (const field of fields) filterSet.add(field);
 
   const enumPropSet = new Set();
   for (const value of Object.values(dict))
-    if (value.hasOwnProperty('properties'))
+    if (value.properties !== undefined)
       for (const [propName, propValue] of Object.entries(value.properties))
-        if (propValue.hasOwnProperty('enum')) enumPropSet.add(propName);
+        if (propValue.enum !== undefined) enumPropSet.add(propName);
 
   const filterList = Array.from(filterSet);
   const enumFilterSet = new Set();
@@ -177,6 +173,7 @@ function getEnumFilterList(config, dict) {
 }
 
 const config = buildConfig(process.env.app, params);
+// eslint-disable-next-line import/no-dynamic-require
 const dict = require(`${__dirname}/dictionary.json`);
 console.log(`const gaTracking = '${defaultGA}';`);
 console.log(

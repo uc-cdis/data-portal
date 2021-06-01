@@ -23,11 +23,7 @@ describe('FilterList', () => {
   const onDrag = jest.fn();
   const onSelect = jest.fn();
   const component = mount(
-    <FilterList
-      sections={filterSections}
-      onSelect={onSelect}
-      onDrag={onDrag}
-    />,
+    <FilterList sections={filterSections} onSelect={onSelect} onDrag={onDrag} />
   );
 
   it('renders', () => {

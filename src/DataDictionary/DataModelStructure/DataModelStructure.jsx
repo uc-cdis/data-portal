@@ -52,7 +52,7 @@ class DataModelStructure extends React.Component {
   };
 
   render() {
-    if (!this.props.dataModelStructure) return <React.Fragment />;
+    if (!this.props.dataModelStructure) return null;
     return (
       <div className='data-model-structure'>
         <h4 className='data-model-structure__header'>Data Model Structure</h4>
@@ -68,7 +68,7 @@ class DataModelStructure extends React.Component {
             return (
               <React.Fragment key={nodeID}>
                 {nodeIDsBefore.length > 0 && (
-                  <React.Fragment>
+                  <>
                     <div className='data-model-structure__summary-between'>
                       {nodeIDsBefore.length} nodes with {linksBefore.length}{' '}
                       links
@@ -81,7 +81,7 @@ class DataModelStructure extends React.Component {
                         buttonType='secondary'
                       />
                     )}
-                  </React.Fragment>
+                  </>
                 )}
                 <div className='data-model-structure__node'>
                   <IconSVG className='data-model-structure__icon' />
@@ -96,7 +96,7 @@ class DataModelStructure extends React.Component {
           })}
         </div>
         {this.props.isGraphView && (
-          <React.Fragment>
+          <>
             <Button
               onClick={this.handleClickOverlayPropertyButton}
               label={
@@ -127,7 +127,7 @@ class DataModelStructure extends React.Component {
                 </Dropdown.Menu>
               </Dropdown>
             )}
-          </React.Fragment>
+          </>
         )}
       </div>
     );

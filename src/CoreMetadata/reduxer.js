@@ -58,7 +58,6 @@ export const ReduxCoreMetadataHeader = (() => {
     signedURL: state.coreMetadata.url,
     signedURLPopup: state.popups.signedURLPopup,
     error: state.coreMetadata.error,
-    userAuthMapping: state.userAuthMapping,
     projectAvail: state.project.projectAvail,
   });
 
@@ -76,9 +75,7 @@ export const ReduxFileTypePicture = (() => {
     metadata: state.coreMetadata.metadata,
   });
 
-  const mapDispatchToProps = (dispatch) => ({});
-
-  return connect(mapStateToProps, mapDispatchToProps)(FileTypePicture);
+  return connect(mapStateToProps)(FileTypePicture);
 })();
 
 export const ReduxCoreMetadataTable = (() => {
@@ -86,7 +83,5 @@ export const ReduxCoreMetadataTable = (() => {
     metadata: state.coreMetadata.metadata,
   });
 
-  const mapDispatchToProps = (dispatch) => ({});
-
-  return connect(mapStateToProps, mapDispatchToProps)(CoreMetadataTable);
+  return connect(mapStateToProps)(CoreMetadataTable);
 })();

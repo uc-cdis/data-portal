@@ -1,16 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useRouteMatch } from 'react-router-dom';
-import './Footer.less';
+import './Footer.css';
 
+/**
+ * @param {Object} props
+ * @param {{ href: string; text: string; }[]} [props.links]
+ * @param {{ alt: string; height: number; href: string; src: string; }[]} props.logos
+ * @param {{ footerHref: string; text: string; }} [props.privacyPolicy]
+ */
 function Footer({ links, logos, privacyPolicy }) {
-  const isFooterHidden = useRouteMatch('/dd');
-
-  return isFooterHidden ? null : (
-    <footer className='footer-container'>
-      <nav className='footer__nav'>
+  return (
+    <footer>
+      <nav className='footer__nav' aria-label='Footer Navigation'>
         <div className='footer__spacer-area' />
-        {privacyPolicy && privacyPolicy.text ? (
+        {privacyPolicy?.text && (
           <div className='footer__privacy-policy-area'>
             <a
               className='h4-typo footer__privacy-policy'
@@ -21,38 +24,36 @@ function Footer({ links, logos, privacyPolicy }) {
               {privacyPolicy.text}
             </a>
           </div>
-        ) : null}
+        )}
         <div className='footer__logo-area'>
-          {logos.map((logoObj, i) => (
+          {logos.map(({ alt, height, href, src }, i) => (
             <a
               key={i}
               target='_blank'
-              href={logoObj.href}
+              href={href}
               className='footer__icon'
               rel='noopener noreferrer'
             >
               <img
                 className='footer__img'
-                src={logoObj.src}
-                alt={logoObj.alt}
-                style={{ height: logoObj.height ? logoObj.height : 60 }}
+                src={src}
+                alt={alt}
+                style={{ height: height ?? 60 }}
               />
             </a>
           ))}
         </div>
         <div className='footer__link-area'>
-          {links.map((link, i) => (
-            <React.Fragment key={link.href}>
-              <a
-                href={link.href}
-                className='footer__link'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                {link.text ? link.text : link.href}
-              </a>
-              {i !== links.length - 1 && <span> | </span>}
-            </React.Fragment>
+          {links?.map(({ href, text }) => (
+            <a
+              key={href}
+              href={href}
+              className='footer__link'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              {text || href}
+            </a>
           ))}
         </div>
       </nav>
@@ -60,36 +61,25 @@ function Footer({ links, logos, privacyPolicy }) {
   );
 }
 
-const LogoObject = PropTypes.shape({
-  src: PropTypes.string.isRequired,
-  href: PropTypes.string.isRequired,
-  alt: PropTypes.string.isRequired,
-  height: PropTypes.number,
-});
-
-const FooterLink = PropTypes.shape({
-  text: PropTypes.string.isRequired,
-  href: PropTypes.string.isRequired,
-});
-
 Footer.propTypes = {
-  dictionaryVersion: PropTypes.string,
-  apiVersion: PropTypes.string,
-  portalVersion: PropTypes.string,
-  links: PropTypes.arrayOf(FooterLink),
-  logos: PropTypes.arrayOf(LogoObject).isRequired,
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      href: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+    })
+  ),
+  logos: PropTypes.arrayOf(
+    PropTypes.shape({
+      alt: PropTypes.string.isRequired,
+      height: PropTypes.number,
+      href: PropTypes.string.isRequired,
+      src: PropTypes.string.isRequired,
+    })
+  ).isRequired,
   privacyPolicy: PropTypes.shape({
     footerHref: PropTypes.string,
     text: PropTypes.string,
   }),
-};
-
-Footer.defaultProps = {
-  dictionaryVersion: 'Unknown',
-  apiVersion: 'Unknown',
-  portalVersion: 'Unknown',
-  links: [],
-  privacyPolicy: null,
 };
 
 export default Footer;

@@ -23,7 +23,7 @@ export const calculateDropdownButtonConfigs = (config) => {
         .filter(
           (btnCfg) => btnCfg.dropdownId && btnCfg.dropdownId === dropdownId
         );
-      const ret = Object.assign({}, map);
+      const ret = { ...map };
       ret[dropdownId] = {
         cnt: buttonCount,
         dropdownConfig: drpdnCfg,
@@ -62,3 +62,49 @@ export const humanizeNumber = (number, fixedPoint = 2) => {
   // 10^15+, number is too large
   return Number.parseFloat(number).toExponential(fixedPoint);
 };
+
+function isPlainObject(value) {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isTextFilter(value) {
+  return (
+    Object.keys(value).length === 1 &&
+    Array.isArray(value?.selectedValues) &&
+    value?.selectedValues.length > 0 &&
+    typeof value?.selectedValues[0] === 'string'
+  );
+}
+
+function isRangeFilter(value) {
+  return (
+    Object.keys(value).length === 2 &&
+    typeof value?.lowerBound === 'number' &&
+    typeof value?.upperBound === 'number' &&
+    value?.lowerBound < value?.upperBound
+  );
+}
+
+/**
+ * Validates the provide filter value based on configuration.
+ * Performs the following checks:
+ * - filter value is a plain object
+ * - filter keys include only fields specified in the configuration
+ * @param {*} value
+ * @param {{ tabs: { fields: string[] }[] }} filterConfig
+ */
+export function validateFilter(value, filterConfig) {
+  if (!isPlainObject(value)) return false;
+
+  const allFields = filterConfig.tabs.flatMap(({ fields }) => fields);
+  const testFieldSet = new Set(allFields);
+  for (const [field, filterContent] of Object.entries(value))
+    if (
+      isPlainObject(filterContent) &&
+      (isTextFilter(filterContent) || isRangeFilter(filterContent))
+    )
+      testFieldSet.add(field);
+    else return false;
+
+  return allFields.length === testFieldSet.size;
+}

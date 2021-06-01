@@ -49,10 +49,11 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
         .map((n) => {
           const boundingBox = n._draw_[1].points.reduce(
             (acc, cur) => {
-              if (acc.x1 > cur[0]) acc.x1 = cur[0];
-              if (acc.y1 > cur[1]) acc.y1 = cur[1];
-              if (acc.x2 < cur[0]) acc.x2 = cur[0];
-              if (acc.y2 < cur[1]) acc.y2 = cur[1];
+              const [x, y] = cur;
+              if (acc.x1 > x) acc.x1 = x;
+              if (acc.y1 > y) acc.y1 = y;
+              if (acc.x2 < x) acc.x2 = x;
+              if (acc.y2 < y) acc.y2 = y;
               return acc;
             },
             {
@@ -93,14 +94,10 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
             ? Object.keys(originNode.properties).length -
               requiredPropertiesCount
             : 0;
-          let nodeLevel = 0;
-          if (
-            originNode &&
-            originNode.positionIndex &&
-            originNode.positionIndex.length >= 2
-          ) {
-            nodeLevel = originNode.positionIndex[1];
-          }
+          const nodeLevel =
+            originNode?.positionIndex?.length >= 2
+              ? originNode.positionIndex[1]
+              : 0;
           return {
             id: n.name,
             type: nodeType,
@@ -150,9 +147,9 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
           pathString = `M${sourePosition[0]} ${sourePosition[1]} 
               L ${targetPosition[0]} ${targetPosition[1]}`;
         }
-        const required = edges.find(
+        const { required } = edges.find(
           (e) => e.source.id === sourceNode.id && e.target.id === targetNode.id
-        ).required;
+        );
         return {
           source: sourceNode.id,
           target: targetNode.id,

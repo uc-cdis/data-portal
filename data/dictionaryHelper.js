@@ -55,16 +55,14 @@ function paramByApp(params, key) {
 }
 
 function getGraphQL(graphQLParams) {
-  const boardCounts = graphQLParams.boardCounts;
-  const chartCounts = graphQLParams.chartCounts;
-  let projectDetails = graphQLParams.projectDetails;
-  if (typeof projectDetails === 'string') {
-    projectDetails = graphQLParams[projectDetails];
-  }
+  const { boardCounts, chartCounts, projectDetails } = graphQLParams;
   return {
     boardCounts,
     chartCounts,
-    projectDetails,
+    projectDetails:
+      typeof projectDetails === 'string'
+        ? graphQLParams[projectDetails]
+        : projectDetails,
   };
 }
 

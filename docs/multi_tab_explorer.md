@@ -53,9 +53,7 @@ An example of this new `explorerConfig` is (some contents are omitted for concis
           "resourceIdField": "object_id",
           "referenceIdFieldInResourceIndex": "case_id",
           "referenceIdFieldInDataIndex": "case_id"
-        },
-        "accessibleFieldCheckList": ["project_id"],
-        "accessibleValidationField": "project_id"
+        }
       },
       "buttons": [
          ...
@@ -90,9 +88,7 @@ An example of this new `explorerConfig` is (some contents are omitted for concis
           "resourceIdField": "case_id",
           "referenceIdFieldInResourceIndex": "object_id",
           "referenceIdFieldInDataIndex": "object_id"
-        },
-        "accessibleFieldCheckList": ["project_id"],
-        "accessibleValidationField": "project_id",
+        }
         "downloadAccessor": "object_id"
       },
       "buttons": [
@@ -135,9 +131,7 @@ An example of this new `explorerConfig` is (some contents are omitted for concis
         ],
         "nodeCountTitle": "Subjects",
         "manifestMapping": {
-        },
-        "accessibleFieldCheckList": ["project_id"],
-        "accessibleValidationField": "project_id"
+        }
       },
       "buttons": [
       ],

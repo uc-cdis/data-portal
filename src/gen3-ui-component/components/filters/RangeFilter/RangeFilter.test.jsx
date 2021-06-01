@@ -9,7 +9,7 @@ describe('RangeFilter', () => {
   let component;
   beforeEach(() => {
     component = mount(
-      <RangeFilter min={min} max={max} onAfterDrag={onDrag} label='' />,
+      <RangeFilter min={min} max={max} onAfterDrag={onDrag} label='' />
     );
   });
 
@@ -77,7 +77,16 @@ describe('RangeFilter', () => {
     const lb = 30;
     const ub = 60;
     component = mount(
-      <RangeFilter count={-1} hideCount={-1} lowerBound={lb} upperBound={ub} min={min} max={max} onAfterDrag={onDrag} label='' />,
+      <RangeFilter
+        count={-1}
+        hideCount={-1}
+        lowerBound={lb}
+        upperBound={ub}
+        min={min}
+        max={max}
+        onAfterDrag={onDrag}
+        label=''
+      />
     );
     // increasing lb should have no effect
     component.instance().onSliderChange([lb + 1, ub]);
@@ -98,7 +107,16 @@ describe('RangeFilter', () => {
     const lb = 30;
     const ub = 60;
     component = mount(
-      <RangeFilter count={-1} hideCount={-1} lowerBound={lb} upperBound={ub} min={min} max={max} onAfterDrag={onDrag} label='' />,
+      <RangeFilter
+        count={-1}
+        hideCount={-1}
+        lowerBound={lb}
+        upperBound={ub}
+        min={min}
+        max={max}
+        onAfterDrag={onDrag}
+        label=''
+      />
     );
     // increasing lb should have no effect
     component.instance().handleLowerBoundInputChange(lb + 1);

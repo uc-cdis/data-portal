@@ -22,8 +22,8 @@ class AnalysisApp extends React.Component {
     this.updateApp();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.job && nextProps.job.status === 'Completed') {
+  componentDidUpdate() {
+    if (this.props.job && this.props.job.status === 'Completed') {
       this.fetchJobResult().then((res) => {
         this.setState({ results: `${res.data.output}`.split('\n') });
       });
@@ -47,7 +47,7 @@ class AnalysisApp extends React.Component {
     switch (app) {
       case 'vaGWAS':
         return (
-          <React.Fragment>
+          <>
             <Select
               value={this.state.jobInput}
               placeholder='Select your organ'
@@ -67,11 +67,11 @@ class AnalysisApp extends React.Component {
               onClick={this.onSubmitJob}
               isPending={this.isJobRunning()}
             />
-          </React.Fragment>
+          </>
         );
       default:
         return (
-          <React.Fragment>
+          <>
             <input
               className='text-input'
               type='text'
@@ -84,7 +84,7 @@ class AnalysisApp extends React.Component {
               onClick={this.onSubmitJob}
               isPending={this.isJobRunning()}
             />
-          </React.Fragment>
+          </>
         );
     }
   };

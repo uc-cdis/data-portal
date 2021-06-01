@@ -1,4 +1,5 @@
 import { fetchWithCreds } from '../../actions';
+import { capitalizeFirstLetter } from '../../utils';
 import './typedef';
 
 const COHORT_URL = '/amanuensis/cohort';
@@ -12,6 +13,13 @@ export function fetchCohorts() {
     method: 'GET',
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
+    if (
+      data === null ||
+      typeof data !== 'object' ||
+      data.searches === undefined ||
+      !Array.isArray(data.searches)
+    )
+      throw new Error('Error: Incorrect Response Data');
     return data.searches;
   });
 }
@@ -20,7 +28,7 @@ export function fetchCohorts() {
  * @param {ExplorerCohort} cohort
  * @returns {Promise<ExplorerCohort>}
  */
-export function saveCohort(cohort) {
+export function createCohort(cohort) {
   return fetchWithCreds({
     path: COHORT_URL,
     method: 'POST',
@@ -74,6 +82,25 @@ export function createEmptyCohort() {
  */
 export function truncateWithEllipsis(string, maxLength) {
   return string.length > maxLength
-    ? string.slice(0, maxLength - 3) + '...'
+    ? `${string.slice(0, maxLength - 3)}...`
     : string;
+}
+
+/**
+ * @param {ExplorerFilters} filters
+ */
+export function stringifyFilters(filters) {
+  if (Object.keys(filters).length === 0) return '';
+
+  let filterStr = '';
+  for (const [key, value] of Object.entries(filters)) {
+    filterStr += `* ${capitalizeFirstLetter(key)}\n`;
+    if (value.selectedValues !== undefined)
+      for (const selected of value.selectedValues)
+        filterStr += `\t- '${selected}'\n`;
+    else
+      filterStr += `\t- from: ${value.lowerBound}\n\t- to: ${value.upperBound}\n`;
+  }
+
+  return filterStr;
 }

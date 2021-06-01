@@ -1,63 +1,81 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './DropdownButton.css';
 
-class DropdownButton extends Component {
-  handleClick() {
-    if (this.props.disabled) {
-      return;
+function DropdownButton({
+  split,
+  className,
+  label,
+  onClick,
+  handleTriggerMenu,
+  menuOpen,
+  afterClick,
+  menuTriggerElementRef,
+  buttonType,
+  rightIcon,
+  disabled,
+  children,
+}) {
+  function handleClick() {
+    if (!disabled) {
+      onClick();
+      afterClick();
     }
-    this.props.onClick();
-    this.props.afterClick();
   }
 
-  render() {
-    const wrapperDisableStatusClassName = this.props.disabled ? 'g3-dropdown-button__wrapper--disabled' : '';
+  const wrapperDisableStatusClassName = disabled
+    ? 'g3-dropdown-button__wrapper--disabled'
+    : '';
 
-    const buttonTypeClassName = `g3-dropdown-button__button--${this.props.buttonType}`;
-    const buttonIsSplitClassName = this.props.split ? 'g3-dropdown-button__button--with-split-trigger' : 'g3-dropdown-button__button--without-split-trigger';
+  const buttonTypeClassName = `g3-dropdown-button__button--${buttonType}`;
+  const buttonIsSplitClassName = split
+    ? 'g3-dropdown-button__button--with-split-trigger'
+    : 'g3-dropdown-button__button--without-split-trigger';
 
-    const menuTriggerButtonTypeClassName = `g3-dropdown-button__menu-trigger--${this.props.buttonType}`;
+  const menuTriggerButtonTypeClassName = `g3-dropdown-button__menu-trigger--${buttonType}`;
 
-    return (
-      <div
-        ref={this.props.menuTriggerElementRef}
-        className={`g3-dropdown-button__wrapper ${wrapperDisableStatusClassName} ${this.props.className || ''}`}
+  return (
+    <div
+      ref={menuTriggerElementRef}
+      className={`g3-dropdown-button__wrapper ${wrapperDisableStatusClassName} ${
+        className || ''
+      }`}
+    >
+      {/* Render dropdown button  */}
+      <button
+        type='button'
+        className={`g3-dropdown-button__button ${buttonIsSplitClassName} ${buttonTypeClassName}`}
+        onClick={split ? handleClick : handleTriggerMenu}
+        label={label}
       >
+        {children}
+        {split || (
+          <i
+            className={`${
+              rightIcon === ''
+                ? 'g3-dropdown-button__icon'
+                : `g3-icon g3-icon--${rightIcon}`
+            }`}
+          />
+        )}
+      </button>
 
-        {/* Render dropdown button  */}
+      {/* Render split menu trigger if need  */}
+      {split && (
         <button
           type='button'
-          className={`g3-dropdown-button__button ${buttonIsSplitClassName} ${buttonTypeClassName}`}
-          onClick={this.props.split ? e => this.handleClick(e) : this.props.handleTriggerMenu}
-          label={this.props.label}
+          className={`g3-dropdown-button__menu-trigger ${menuTriggerButtonTypeClassName}`}
+          onClick={handleTriggerMenu}
         >
-          {this.props.children}
-          {
-            this.props.split || (
-              <i className={
-                `${this.props.rightIcon === '' ? 'g3-dropdown-button__icon' : (`g3-icon g3-icon--${this.props.rightIcon}`)}`
-              }
-              />
-            )
-          }
+          <i
+            className={`g3-dropdown-button__icon ${
+              menuOpen ? 'g3-dropdown-button__icon--menu-opened' : ''
+            }`}
+          />
         </button>
-
-        {/* Render split menu trigger if need  */}
-        {
-          this.props.split && (
-            <button
-              type='button'
-              className={`g3-dropdown-button__menu-trigger ${menuTriggerButtonTypeClassName}`}
-              onClick={this.props.handleTriggerMenu}
-            >
-              <i className={`g3-dropdown-button__icon ${this.props.menuOpen ? 'g3-dropdown-button__icon--menu-opened' : ''}`} />
-            </button>
-          )
-        }
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 }
 
 DropdownButton.propTypes = {

@@ -10,12 +10,17 @@ import Chip from '../Chip';
 import RangeFilter from '../RangeFilter';
 import './FilterSection.css';
 
-const filterVisibleStatusObj = (optionList, inputText) => {
+const filterVisibleStatusObj = (
+  optionList,
+  initVisibleItemNumber,
+  showingMore,
+  inputText
+) => {
   const res = {};
-  for (const o of optionList) {
+  for (const [i, o] of optionList.entries()) {
     res[o.text] =
-      typeof inputText === 'undefined'
-        ? true
+      typeof inputText === 'undefined' || inputText === ''
+        ? showingMore || i < initVisibleItemNumber
         : o.text.toLowerCase().indexOf(inputText.toLowerCase()) >= 0;
   }
   return res;
@@ -47,10 +52,69 @@ class FilterSection extends React.Component {
       resetClickCounter: 0,
 
       // option visible status filtered by the search inputbox
-      optionsVisibleStatus: filterVisibleStatusObj(this.props.options),
+      optionsVisibleStatus: filterVisibleStatusObj(
+        this.props.options,
+        this.props.initVisibleItemNumber,
+        false
+      ),
     };
     this.inputElem = React.createRef();
     this.combineModeFieldName = '__combineMode';
+  }
+
+  handleSetCombineModeOption(combineModeIn) {
+    // Combine mode: AND or OR
+    this.setState({ combineMode: combineModeIn });
+    this.props.onCombineOptionToggle(this.combineModeFieldName, combineModeIn);
+  }
+
+  handleClearButtonClick(ev) {
+    // Prevent this click from triggering any onClick events in parent component
+    ev.stopPropagation();
+    // Clear the filters
+    this.setState((prevState) => ({
+      filterStatus: {},
+      resetClickCounter: prevState.resetClickCounter + 1,
+    }));
+    this.props.onClear();
+  }
+
+  handleSearchInputChange() {
+    const currentInput = this.inputElem.current.value;
+    this.setState({
+      searchInputEmpty: !currentInput || currentInput.length === 0,
+    });
+    this.updateVisibleOptions(currentInput);
+  }
+
+  handleSelectSingleSelectFilter(label) {
+    this.setState((prevState) => {
+      const newFilterStatus = { ...prevState.filterStatus };
+      const oldSelected = newFilterStatus[label];
+      const newSelected =
+        typeof oldSelected === 'undefined' ? true : !oldSelected;
+      newFilterStatus[label] = newSelected;
+      return {
+        filterStatus: newFilterStatus,
+      };
+    });
+    this.props.onSelect(label);
+  }
+
+  handleDragRangeFilter(lowerBound, upperBound, minValue, maxValue, rangeStep) {
+    this.setState(() => {
+      const newFilterStatus = [lowerBound, upperBound];
+      return {
+        filterStatus: newFilterStatus,
+      };
+    });
+    this.props.onAfterDrag(
+      lowerBound,
+      upperBound,
+      minValue,
+      maxValue,
+      rangeStep
+    );
   }
 
   getSearchInput() {
@@ -157,7 +221,7 @@ class FilterSection extends React.Component {
     let totalCount = 0;
     for (const o of this.props.options) {
       if (o.count > 0 || !this.props.hideZero || o.count === -1)
-        if (this.state.optionsVisibleStatus[o.text]) totalCount += 1;
+        totalCount += 1;
     }
     return (
       totalCount > this.props.initVisibleItemNumber && (
@@ -178,31 +242,6 @@ class FilterSection extends React.Component {
     );
   }
 
-  handleSetCombineModeOption(combineModeIn) {
-    // Combine mode: AND or OR
-    this.setState({ combineMode: combineModeIn });
-    this.props.onCombineOptionToggle(this.combineModeFieldName, combineModeIn);
-  }
-
-  handleClearButtonClick(ev) {
-    // Prevent this click from triggering any onClick events in parent component
-    ev.stopPropagation();
-    // Clear the filters
-    this.setState((prevState) => ({
-      filterStatus: {},
-      resetClickCounter: prevState.resetClickCounter + 1,
-    }));
-    this.props.onClear();
-  }
-
-  handleSearchInputChange() {
-    const currentInput = this.inputElem.current.value;
-    this.setState({
-      searchInputEmpty: !currentInput || currentInput.length === 0,
-    });
-    this.updateVisibleOptions(currentInput);
-  }
-
   clearSearchInput() {
     this.inputElem.current.value = '';
     this.setState({
@@ -214,18 +253,24 @@ class FilterSection extends React.Component {
   updateVisibleOptions(inputText) {
     // if empty input, all should be visible
     if (typeof inputText === 'undefined' || inputText.trim() === '') {
-      this.setState({
-        optionsVisibleStatus: filterVisibleStatusObj(this.props.options),
-      });
+      this.setState((prevState) => ({
+        optionsVisibleStatus: filterVisibleStatusObj(
+          this.props.options,
+          this.props.initVisibleItemNumber,
+          prevState.showingMore
+        ),
+      }));
     }
 
     // if not empty, filter out those matched
-    this.setState({
+    this.setState((prevState) => ({
       optionsVisibleStatus: filterVisibleStatusObj(
         this.props.options,
+        this.props.initVisibleItemNumber,
+        prevState.showingMore,
         inputText
       ),
-    });
+    }));
   }
 
   toggleSection(open) {
@@ -237,36 +282,6 @@ class FilterSection extends React.Component {
     }
     this.props.onToggle(targetStatus);
     this.setState({ isExpanded: targetStatus });
-  }
-
-  handleSelectSingleSelectFilter(label) {
-    this.setState((prevState) => {
-      const newFilterStatus = Object.assign({}, prevState.filterStatus);
-      const oldSelected = newFilterStatus[label];
-      const newSelected =
-        typeof oldSelected === 'undefined' ? true : !oldSelected;
-      newFilterStatus[label] = newSelected;
-      return {
-        filterStatus: newFilterStatus,
-      };
-    });
-    this.props.onSelect(label);
-  }
-
-  handleDragRangeFilter(lowerBound, upperBound, minValue, maxValue, rangeStep) {
-    this.setState(() => {
-      const newFilterStatus = [lowerBound, upperBound];
-      return {
-        filterStatus: newFilterStatus,
-      };
-    });
-    this.props.onAfterDrag(
-      lowerBound,
-      upperBound,
-      minValue,
-      maxValue,
-      rangeStep
-    );
   }
 
   toggleShowSearch() {
@@ -286,7 +301,14 @@ class FilterSection extends React.Component {
   }
 
   toggleShowMore() {
-    this.setState((prevState) => ({ showingMore: !prevState.showingMore }));
+    this.setState((prevState) => ({
+      showingMore: !prevState.showingMore,
+      optionsVisibleStatus: filterVisibleStatusObj(
+        this.props.options,
+        this.props.initVisibleItemNumber,
+        !prevState.showingMore
+      ),
+    }));
   }
 
   render() {
@@ -358,12 +380,12 @@ class FilterSection extends React.Component {
             <div className='g3-filter-section__selected-count-chip'>
               <Chip
                 text={
-                  <React.Fragment>
+                  <>
                     <span className='g3-filter-section__selected-count-chip-text-emphasis'>
                       {numSelected}
                     </span>
                     &nbsp;selected
-                  </React.Fragment>
+                  </>
                 }
                 onClearButtonClick={(ev) => this.handleClearButtonClick(ev)}
               />
@@ -412,16 +434,14 @@ class FilterSection extends React.Component {
         <div className='g3-filter-section__options'>
           {(isTextFilter || isSearchFilter) &&
             this.state.isExpanded &&
-            this.props.options.map((option, index) => {
+            this.props.options.map((option) => {
               if (
                 // For searchFilters, options are treated differently -- the only
                 // options passed are the already selected options, as opposed
                 // to all available options in textfilters. So don't filter out
                 // any options based on `optionsVisibleStatus`.
-                (!isSearchFilter &&
-                  !this.state.optionsVisibleStatus[option.text]) ||
-                (index >= this.props.initVisibleItemNumber &&
-                  !this.state.showingMore)
+                !isSearchFilter &&
+                !this.state.optionsVisibleStatus[option.text]
               ) {
                 return null;
               }
@@ -450,12 +470,8 @@ class FilterSection extends React.Component {
             })}
           {isRangeFilter &&
             this.state.isExpanded &&
-            this.props.options.map((option, index) => {
-              if (
-                !this.state.optionsVisibleStatus[option.text] ||
-                (index >= this.props.initVisibleItemNumber &&
-                  !this.state.showingMore)
-              ) {
+            this.props.options.map((option) => {
+              if (!this.state.optionsVisibleStatus[option.text]) {
                 return null;
               }
               const lowerBound =
@@ -493,7 +509,10 @@ class FilterSection extends React.Component {
                 />
               );
             })}
-          {isTextFilter && this.state.isExpanded && this.getShowMoreButton()}
+          {isTextFilter &&
+            this.state.isExpanded &&
+            this.state.searchInputEmpty &&
+            this.getShowMoreButton()}
         </div>
       </div>
     );

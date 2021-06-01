@@ -12,76 +12,74 @@ import './SubmitForm.less';
  * the same way uploaded tsv/json data is treated.
  */
 class SubmitForm extends Component {
-  static propTypes = {
-    submission: PropTypes.object.isRequired,
-    onUploadClick: PropTypes.func.isRequired,
-    onUpdateFormSchema: PropTypes.func.isRequired,
-  };
-
-  state = {
-    chosenNode: { value: null, label: '' },
-    fill_form: false,
-    form: {},
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      chosenNode: { value: null, label: '' },
+      fill_form: false,
+      form: {},
+    };
+  }
 
   onFormToggle = () => {
-    this.setState({
-      fill_form: !this.state.fill_form,
-    });
+    this.setState((prevState) => ({
+      fill_form: !prevState.fill_form,
+    }));
   };
 
   onChange = (event) => {
-    const target = event.target;
+    const { target } = event;
     const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-    this.setState({
+    const { name } = target;
+    this.setState((prevState) => ({
       form: {
-        ...this.state.form,
+        ...prevState.form,
         [name]: value,
       },
-    });
+    }));
   };
 
   onChangeEnum = (name, newValue) => {
-    this.setState({
-      form: { ...this.state.form, [name]: newValue.value },
-    });
+    this.setState((prevState) => ({
+      form: { ...prevState.form, [name]: newValue.value },
+    }));
   };
 
   onChangeAnyOf = (name, event, properties) => {
-    const target = event.target;
+    const { target } = event;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const subname = target.name;
 
     if (this.state.form[name] === null || this.state.form[name] === undefined) {
-      this.setState({
+      this.setState((prevState) => ({
         form: {
-          ...this.state.form,
+          ...prevState.form,
           [name]: [{ [subname]: value }],
         },
-      });
+      }));
     } else if (properties.every((prop) => prop in this.state.form[name])) {
-      this.setState({
+      this.setState((prevState) => ({
         form: {
-          ...this.state.form,
-          [name]: this.state.form[name].push({ [subname]: value }),
+          ...prevState.form,
+          [name]: [...prevState.form[name], { [subname]: value }],
         },
-      });
+      }));
     } else {
-      this.setState({
+      this.setState((prevState) => ({
         form: {
-          ...this.state.form,
+          ...prevState.form,
           [name]: [
-            ...this.state.form[name].slice(0, this.state.form[name].length - 2),
+            ...prevState.form[name].slice(0, prevState.form[name].length - 2),
             {
-              ...this.state.form[name][this.state.form[name].length - 1],
+              ...prevState.form[name][prevState.form[name].length - 1],
               [subname]: value,
             },
           ],
         },
-      });
+      }));
     }
   };
+
   handleSubmit = (event) => {
     event.preventDefault();
 
@@ -93,8 +91,7 @@ class SubmitForm extends Component {
   };
 
   render() {
-    const dictionary = this.props.submission.dictionary;
-    const nodeTypes = this.props.submission.nodeTypes;
+    const { dictionary, nodeTypes } = this.props.submission;
     const node = dictionary[this.state.chosenNode.value];
     const options = nodeTypes.map((nodeType) => ({
       value: nodeType,
@@ -162,5 +159,11 @@ class SubmitForm extends Component {
     );
   }
 }
+
+SubmitForm.propTypes = {
+  submission: PropTypes.object.isRequired,
+  onUploadClick: PropTypes.func.isRequired,
+  onUpdateFormSchema: PropTypes.func.isRequired,
+};
 
 export default SubmitForm;

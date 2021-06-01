@@ -7,33 +7,17 @@ const makeDefaultSelectedState = (value) => ({
   selectedValue: value,
 });
 
-export default class SelectComponent extends Component {
-  static propTypes = {
-    title: PropTypes.string,
-    values: PropTypes.arrayOf(PropTypes.number),
-    onChange: PropTypes.func,
-    placeholder: PropTypes.string,
-    selectedValue: PropTypes.number,
-  };
-
-  static defaultProps = {
-    title: '',
-    values: [],
-    placeholder: 'Select...',
-    selectedValue: 0,
-    onChange: () => {},
-  };
-
+class SelectComponent extends Component {
   constructor(props) {
     super(props);
     this.state = makeDefaultSelectedState(this.props.selectedValue);
     this.resetState = this.resetState.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.selectedValue !== nextProps.selectedValue) {
-      this.setState({ selectedValue: nextProps.selectedValue });
-    }
+  static getDerivedStateFromProps(props, state) {
+    return props.selectedValue !== state.selectedValue
+      ? { selectedValue: props.selectedValue }
+      : null;
   }
 
   resetState() {
@@ -74,3 +58,21 @@ export default class SelectComponent extends Component {
     );
   }
 }
+
+SelectComponent.propTypes = {
+  title: PropTypes.string,
+  values: PropTypes.arrayOf(PropTypes.number),
+  onChange: PropTypes.func,
+  placeholder: PropTypes.string,
+  selectedValue: PropTypes.number,
+};
+
+SelectComponent.defaultProps = {
+  title: '',
+  values: [],
+  placeholder: 'Select...',
+  selectedValue: 0,
+  onChange: () => {},
+};
+
+export default SelectComponent;

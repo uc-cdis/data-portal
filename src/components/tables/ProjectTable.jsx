@@ -1,89 +1,43 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import Button from '../../gen3-ui-component/components/Button';
 import Table from './base/Table';
-import { useArboristUI } from '../../localconf';
-import { userHasMethodOnProject } from '../../authMappingUtils';
 import './ProjectTable.less';
 
-function compare(a, b) {
-  if (a.name < b.name) {
-    return -1;
-  }
-  if (a.name > b.name) {
-    return 1;
-  }
-  return 0;
-}
-
-class ProjectTable extends React.Component {
-  /* eslint class-methods-use-this: ["error", { "exceptMethods": ["rowRender"] }] */
-  /**
-   * default row renderer - just delegates to ProjectTR - can be overriden by subtypes, whatever
-   */
-
-  getHeaders = (summaries) => {
-    const summaryFields = summaries.map((entry) => entry.label);
-    return ['Project', ...summaryFields, ''];
-  };
-
-  getData = (projectList) =>
-    projectList.map((proj, i) => {
-      let buttonText = 'Submit Data';
-      if (useArboristUI) {
-        buttonText = userHasMethodOnProject(
-          'create',
-          proj.name,
-          this.props.userAuthMapping
-        )
-          ? 'Submit/Browse Data'
-          : 'Browse Data';
-      }
-      return [
-        proj.name,
-        ...proj.counts,
-        <Button
-          className='project-table__submit-button'
-          key={i}
-          onClick={() => this.props.history.push(`/${proj.name}`)}
-          label={buttonText}
-          buttonType='primary'
-          rightIcon='upload'
-        />,
-      ];
-    });
-
-  getFooter = (summaries) => {
-    const totalCounts = summaries.map((entry) => entry.value);
-    return ['Totals', ...totalCounts, ''];
-  };
-
-  render() {
-    const projectList = (this.props.projectList || []).sort((a, b) =>
-      compare(a, b)
-    );
-    return (
-      <div className='project-table'>
-        <Table
-          title='List of Projects'
-          header={this.getHeaders(this.props.summaries)}
-          data={this.getData(projectList)}
-        />
-      </div>
-    );
-  }
+/**
+ * @param {Object} props
+ * @param {{ name: string; counts: number[]; }[]} props.projectList
+ * @param {string[]} props.summaryFields
+ */
+function ProjectTable({ projectList = [], summaryFields = [] }) {
+  const history = useHistory();
+  const tableHeader = ['Project', ...summaryFields, ''];
+  const tableData = [...projectList]
+    // eslint-disable-next-line no-nested-ternary
+    .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
+    .map(({ name, counts }, i) => [
+      name,
+      ...counts,
+      <Button
+        className='project-table__submit-button'
+        key={i}
+        onClick={() => history.push(`/${name}`)}
+        label='Submit Data'
+        buttonType='primary'
+        rightIcon='upload'
+      />,
+    ]);
+  return (
+    <div className='project-table'>
+      <Table title='List of Projects' header={tableHeader} data={tableData} />
+    </div>
+  );
 }
 
 ProjectTable.propTypes = {
   projectList: PropTypes.array,
-  summaries: PropTypes.array,
-  history: PropTypes.object.isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
-};
-
-ProjectTable.defaultProps = {
-  summaries: [],
-  projectList: [],
+  summaryFields: PropTypes.array,
 };
 
 export default ProjectTable;

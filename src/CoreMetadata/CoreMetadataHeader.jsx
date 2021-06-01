@@ -1,12 +1,10 @@
-import Button from '../gen3-ui-component/components/Button';
+import React from 'react';
 import PropTypes from 'prop-types';
 import copy from 'clipboard-plus';
-import React, { Component } from 'react';
+import Button from '../gen3-ui-component/components/Button';
 import Popup from '../components/Popup';
-import { userapiPath, useArboristUI } from '../localconf';
+import { userapiPath } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
-
-import { userHasMethodOnProject } from '../authMappingUtils';
 
 const DOWNLOAD_BTN_CAPTION = 'Download';
 const SIGNED_URL_BTN_CAPTION = 'Generate Signed URL';
@@ -15,130 +13,115 @@ const SIGNED_URL_MSG =
 const SIGNED_URL_ERROR_MSG =
   'An error has occurred when generating signed URL:';
 
-function fileTypeTransform(type) {
-  let t = type.replace(/_/g, ' '); // '-' to ' '
-  t = t.replace(/\b\w/g, (l) => l.toUpperCase()); // capitalize words
-  return `| ${t} |`;
-}
+/**
+ * @typedef {Object} CoreMetadata
+ * @property {string} data_format
+ * @property {string} file_name
+ * @property {number} file_size
+ * @property {string} description
+ * @property {string} updated_datetime
+ * @property {string} object_id
+ * @property {string} type
+ */
 
-function fileSizeTransform(size) {
-  const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
-  const sizeStr = (size / 1024 ** i).toFixed(2) * 1;
-  const suffix = ['B', 'KB', 'MB', 'GB', 'TB'][i];
-  return `${sizeStr} ${suffix}`;
-}
+/**
+ * @param {Object} props
+ * @param {CoreMetadata} props.metadata
+ * @param {string} props.signedURL
+ * @param {boolean} props.signedURLPopup
+ * @param {string} props.error
+ * @param {(object_id: string) => void} props.onGenerateSignedURL
+ * @param {({ singedURLPopup: boolean }) => void} props.onUpdatePopup
+ * @param {() => void} props.onClearSignedURL
+ */
+function CoreMetadataHeader({
+  metadata,
+  signedURL,
+  error,
+  signedURLPopup,
+  onGenerateSignedURL,
+  onUpdatePopup,
+  onClearSignedURL,
+}) {
+  if (!metadata) return <p className='body-typo'>Error: {error}</p>;
 
-function projectIsOpenData(projectAvail, projectID) {
-  return projectID in projectAvail && projectAvail[projectID] === 'Open';
-}
+  if (!metadata.data_format)
+    /* eslint no-console: ["error", { allow: ["error"] }] */
+    console.error(
+      "WARNING: null value found for mandatory field 'data_format', please verify the correctness of metadata"
+    );
 
-class CoreMetadataHeader extends Component {
-  onGenerateSignedURL = () => {
-    this.props.onGenerateSignedURL(this.props.metadata.object_id);
-  };
-
-  onSignedURLPopupClose = () => {
-    this.props.onUpdatePopup({ signedURLPopup: false });
-    this.props.onClearSignedURL();
-  };
-
-  dateTransform = (date) => `Updated on ${date.substr(0, 10)}`;
-
-  render() {
-    if (this.props.metadata) {
-      const { projectAvail } = this.props;
-      const projectId = this.props.metadata.project_id;
-      let downloadButton = null;
-      let signedURLButton = null;
-
-      // downloadButton should always render if useArboristUI false. Otherwise according to authz.
-      if (
-        !useArboristUI ||
-        userHasMethodOnProject(
-          'read-storage',
-          projectId,
-          this.props.userAuthMapping
-        ) ||
-        projectIsOpenData(projectAvail, projectId)
-      ) {
-        const downloadLink = `${userapiPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
-
-        downloadButton = (
-          <a href={downloadLink}>
-            <button className='button-primary-orange'>
-              {DOWNLOAD_BTN_CAPTION}
-            </button>
-          </a>
-        );
-
-        if (isEnabled('signedURLButton')) {
-          signedURLButton = (
-            <Button
-              onClick={() => this.onGenerateSignedURL()}
-              label={SIGNED_URL_BTN_CAPTION}
-              className='core-metadata-page__column--right--signed-url-button'
-              buttonType='primary'
-            />
-          );
-        }
-      }
-
-      if (!this.props.metadata.data_format) {
-        /* eslint no-console: ["error", { allow: ["error"] }] */
-        console.error(
-          "WARNING: null value found for mandatory field 'data_format', please verify the correctness of metadata"
-        );
-      }
-      const properties = `${
-        this.props.metadata.data_format
-      } | ${fileSizeTransform(this.props.metadata.file_size)} | ${
-        this.props.metadata.object_id
-      } | ${this.dateTransform(this.props.metadata.updated_datetime)}`;
-
-      return (
-        <div className='body-typo'>
-          <p className='h3-typo'>
-            {this.props.metadata.file_name}
-            <br />
-            {fileTypeTransform(this.props.metadata.type)}
-          </p>
-          <p className='body-typo'>{this.props.metadata.description}</p>
-          {downloadButton}
-          {signedURLButton}
-          {this.props.signedURLPopup === true && (
-            <Popup
-              message={
-                !this.props.error ? SIGNED_URL_MSG : SIGNED_URL_ERROR_MSG
-              }
-              error={this.props.error}
-              lines={!this.props.error ? [{ code: this.props.signedURL }] : []}
-              title='Generated Signed URL'
-              leftButtons={[
-                {
-                  caption: 'Close',
-                  fn: () => this.onSignedURLPopupClose(),
-                },
-              ]}
-              rightButtons={[
-                {
-                  caption: 'Copy',
-                  fn: () => copy(this.props.signedURL),
-                  icon: 'copy',
-                  enabled: !this.props.error,
-                },
-              ]}
-              onClose={() => this.onSignedURLPopupClose()}
-            />
-          )}
-          <div className='body-typo'>{properties}</div>
-        </div>
-      );
-    }
-
-    // if there is no core metadata to display
-
-    return <p className='body-typo'>Error: {this.props.error}</p>;
+  function onSignedURLPopupClose() {
+    onUpdatePopup({ signedURLPopup: false });
+    onClearSignedURL();
   }
+
+  const fileTypeToDisplay = metadata.type
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (l) => l.toUpperCase());
+
+  const fileSizeOrder =
+    metadata.file_size === 0
+      ? 0
+      : Math.floor(Math.log(metadata.file_size) / Math.log(1024));
+  const fileSizeStr =
+    (metadata.file_size / 1024 ** fileSizeOrder).toFixed(2) * 1;
+  const fileSizeUnit = ['B', 'KB', 'MB', 'GB', 'TB'][fileSizeOrder];
+  const fileSizeToDisplay = `${fileSizeStr} ${fileSizeUnit}`;
+
+  return (
+    <div className='body-typo'>
+      <p className='h3-typo'>
+        {metadata.file_name}
+        <br />
+        {`| ${fileTypeToDisplay} |`}
+      </p>
+      <p className='body-typo'>{metadata.description}</p>
+      <a
+        href={`${userapiPath}/data/download/${metadata.object_id}?expires_in=900&redirect`}
+      >
+        <button className='button-primary-orange' type='button'>
+          {DOWNLOAD_BTN_CAPTION}
+        </button>
+      </a>
+      {isEnabled('signedURLButton') && (
+        <Button
+          onClick={() => onGenerateSignedURL(metadata.object_id)}
+          label={SIGNED_URL_BTN_CAPTION}
+          className='core-metadata-page__column--right--signed-url-button'
+          buttonType='primary'
+        />
+      )}
+      {signedURLPopup && (
+        <Popup
+          message={error ? SIGNED_URL_ERROR_MSG : SIGNED_URL_MSG}
+          error={error}
+          lines={error ? [] : [{ code: signedURL }]}
+          title='Generated Signed URL'
+          leftButtons={[
+            {
+              caption: 'Close',
+              fn: onSignedURLPopupClose,
+            },
+          ]}
+          rightButtons={[
+            {
+              caption: 'Copy',
+              fn: () => copy(signedURL),
+              icon: 'copy',
+              enabled: !error,
+            },
+          ]}
+          onClose={onSignedURLPopupClose}
+        />
+      )}
+      <div className='body-typo'>{`${
+        metadata.data_format
+      } | ${fileSizeToDisplay} | ${
+        metadata.object_id
+      } | Updated on ${metadata.updated_datetime.substr(0, 10)}`}</div>
+    </div>
+  );
 }
 
 CoreMetadataHeader.propTypes = {
@@ -146,8 +129,6 @@ CoreMetadataHeader.propTypes = {
   signedURL: PropTypes.string,
   signedURLPopup: PropTypes.bool,
   error: PropTypes.string,
-  projectAvail: PropTypes.object.isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
   onGenerateSignedURL: PropTypes.func.isRequired,
   onUpdatePopup: PropTypes.func.isRequired,
   onClearSignedURL: PropTypes.func.isRequired,

@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import UserInformation from './UserInformation';
+import { fetchUserAccess } from '../actions';
 
 const mapDispatchToProps = (dispatch) => ({
   /**
@@ -10,6 +11,7 @@ const mapDispatchToProps = (dispatch) => ({
     response.ok
       ? response.json().then((user) => {
           dispatch({ type: 'RECEIVE_USER', user });
+          dispatch(fetchUserAccess);
           return 'success';
         })
       : Promise.resolve('error'),

@@ -5,7 +5,7 @@ export const humanFileSize = (size) => {
     return '';
   }
   const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
-  const sizeStr = (size / 1024 ** i).toFixed(2) * 1;
+  const sizeStr = Number((size / 1024 ** i).toFixed(2));
   const suffix = ['B', 'KB', 'MB', 'GB', 'TB'][i];
   return `${sizeStr} ${suffix}`;
 };
@@ -24,7 +24,7 @@ export const jsonToString = (data, schema = {}) => {
     }
     if (schema[key] === 'number') {
       const castedValue = Number(value);
-      if (isNaN(castedValue)) {
+      if (Number.isNaN(castedValue)) {
         return value;
       }
       return castedValue;
@@ -53,7 +53,7 @@ export const predictFileType = (dirtyData, fileType) => {
  * from being invoked multiple times.
  *
  * @param {()=>Promise} lambda callback should return a Promise
- * @param {int} timeoutMs passed through to setinterval
+ * @param {number} timeoutMs passed through to setinterval
  * @return the setinterval id (can be passed to clearinterval)
  */
 export async function asyncSetInterval(lambda, timeoutMs) {
@@ -106,11 +106,8 @@ export function legendCreator(legendGroup, nodes, legendWidth) {
   uniqueCategoriesList.sort((aIn, bIn) => {
     const a = aIn.toLowerCase();
     const b = bIn.toLowerCase();
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
-    }
+    if (a < b) return -1;
+    if (a > b) return 1;
     return 0;
   });
 
@@ -171,7 +168,7 @@ export function addLinks(graphSvg, edges) {
  * Compute SVG coordinates fx, fy for each node in nodes.
  * Decorate each node with .fx and .fy property as side effect.
  *
- * @param {Array<Node>} nodes each decorated with a position [width,height] in [0,1]
+ * @param {Array<Object>} nodes each decorated with a position [width,height] in [0,1]
  * @param {*} graphWidth
  * @param {*} graphHeight
  */

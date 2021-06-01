@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SimplePopup from '../../components/SimplePopup';
 import Button from '../../gen3-ui-component/components/Button';
-import { CohortActionButton, CohortActionForm } from './CohortActionComponents';
+import { CohortActionMenu, CohortActionForm } from './CohortActionComponents';
 import {
   createEmptyCohort,
   truncateWithEllipsis,
   fetchCohorts,
-  saveCohort,
+  createCohort,
   updateCohort,
   deleteCohort,
 } from './utils';
@@ -32,31 +33,41 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   const [cohorts, setCohorts] = useState(emptyCohorts);
   const [isError, setIsError] = useState(false);
   useEffect(() => {
+    let isMounted = true;
     if (!isError)
       fetchCohorts()
-        .then(setCohorts)
+        .then((fetchedCohorts) => isMounted && setCohorts(fetchedCohorts))
         .catch(() => setIsError(true));
+
+    return () => {
+      isMounted = false;
+    };
   }, [isError]);
 
   /** @type {[ExplorerCohortActionType, React.Dispatch<React.SetStateAction<ExplorerCohortActionType>>]} */
   const [actionType, setActionType] = useState('open');
   const [showActionForm, setShowActionForm] = useState(false);
-  function openActionForm(actionType) {
-    setActionType(actionType);
+  function openActionForm(type) {
+    setActionType(type);
     setShowActionForm(true);
   }
   function closeActionForm() {
     setShowActionForm(false);
   }
 
+  function handleNew() {
+    const emptyCohort = createEmptyCohort();
+    setCohort(emptyCohort);
+    onOpenCohort(emptyCohort);
+  }
   function handleOpen(/** @type {ExplorerCohort} */ opened) {
     setCohort(cloneDeep(opened));
     onOpenCohort(cloneDeep(opened));
     closeActionForm();
   }
-  async function handleSave(/** @type {ExplorerCohort} */ saved) {
+  async function handleCreate(/** @type {ExplorerCohort} */ created) {
     try {
-      setCohort(await saveCohort(saved));
+      setCohort(await createCohort(created));
       setCohorts(await fetchCohorts());
     } catch (e) {
       setIsError(true);
@@ -85,6 +96,14 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
       setIsError(true);
     } finally {
       closeActionForm();
+    }
+  }
+  /** @param {{ value: ExplorerCohortActionType}} e */
+  function handleSelectAction({ value }) {
+    if (value === 'new') {
+      handleNew();
+    } else {
+      openActionForm(value);
     }
   }
 
@@ -116,7 +135,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
         <div className='guppy-explorer-cohort__error'>
           <h2>Error obtaining saved cohorts data...</h2>
           <p>
-            Please retry by clicking "Retry" button or refreshing the page.
+            Please retry by clicking {'"Retry"'} button or refreshing the page.
             <br />
             If the problem persists, please contact administrator for more
             information.
@@ -141,7 +160,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
             </h1>
             <p>
               {cohort.description ? (
-                truncateWithEllipsis(cohort.description, 80)
+                truncateWithEllipsis(cohort.description, 70)
               ) : (
                 <span className='guppy-explorer-cohort__placeholder'>
                   No description
@@ -149,55 +168,40 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
               )}
             </p>
           </div>
-          <div className='guppy-explorer-cohort__buttons'>
-            <CohortActionButton
-              labelIcon='folder-open'
-              labelText='Open Cohort'
-              enabled={cohorts.length > 0}
-              onClick={() => openActionForm('open')}
-            />
-            <CohortActionButton
-              labelIcon='save'
-              labelText={`Save ${cohort.name === '' ? 'New' : 'As'}`}
-              onClick={() => openActionForm('save')}
-            />
-            <CohortActionButton
-              labelIcon='pen'
-              labelText='Update Cohort'
-              enabled={cohort.name !== ''}
-              onClick={() => openActionForm('update')}
-            />
-            <CohortActionButton
-              labelIcon='trash-alt'
-              labelText='Delete Cohort'
-              enabled={cohort.name !== ''}
-              onClick={() => openActionForm('delete')}
-            />
-          </div>
+          <CohortActionMenu
+            isCohortEmpty={cohort.name === ''}
+            hasNoSavedCohorts={cohorts.length === 0}
+            onSelectAction={handleSelectAction}
+          />
         </>
       )}
-      {showActionForm &&
-        ReactDOM.createPortal(
-          <div className='guppy-explorer-cohort__overlay'>
-            <CohortActionForm
-              actionType={actionType}
-              currentCohort={cohort}
-              currentFilters={filter}
-              cohorts={cohorts}
-              handlers={{
-                handleOpen,
-                handleSave,
-                handleUpdate,
-                handleDelete,
-                handleClose: closeActionForm,
-              }}
-              isFiltersChanged={isFiltersChanged}
-            />
-          </div>,
-          document.getElementById('root')
-        )}
+      {showActionForm && (
+        <SimplePopup>
+          <CohortActionForm
+            actionType={actionType}
+            currentCohort={cohort}
+            currentFilters={filter}
+            cohorts={cohorts}
+            handlers={{
+              handleOpen,
+              handleCreate,
+              handleUpdate,
+              handleDelete,
+              handleClose: closeActionForm,
+            }}
+            isFiltersChanged={isFiltersChanged}
+          />
+        </SimplePopup>
+      )}
     </div>
   );
 }
+
+ExplorerCohort.propTypes = {
+  className: PropTypes.string,
+  filter: PropTypes.object,
+  onOpenCohort: PropTypes.func,
+  onDeleteCohort: PropTypes.func,
+};
 
 export default ExplorerCohort;

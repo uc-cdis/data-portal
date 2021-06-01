@@ -134,7 +134,6 @@ Below is an example, with inline comments describing what each JSON block config
       "text": "This is a generic Gen3 data commons.", // optional; text on the login page
       "contact": "If you have any questions about access or the registration process, please contact ", // optional; text for the contact section of the login page
       "email": "support@datacommons.io", // optional; email for contact
-      "image": "gene" // optional; images displayed on the login page
     },
     "footerLogos": [ // optional; logos to be displayed in the footer, usually sponsors
       {
@@ -152,10 +151,7 @@ Below is an example, with inline comments describing what each JSON block config
     "categorical2Colors": ["#6d6e70", "#c02f42"] // optional; colors for the graphs when there are only 2 colors (bar and pie graphs usually)
   },
   "requiredCerts": [], // optional; do users need to take a quiz or agree to something before they can access the site?
-  "featureFlags": { // optional; will hide certain parts of the site if needed
-    "explorer": true, // required; indicates the flag and whether to hide it or not
-    "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. Data explorer page would be public accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
-  },
+  "featureFlags": {}, // optional; will hide certain parts of the site if needed
   "dataExplorerConfig": { // required; configuration for the Data Explorer (/explorer)
     "charts": { // optional; indicates which charts to display in the Data Explorer
       "project_id": { // required; GraphQL field to query for a chart (ex: this one will display the number of projects, based on the project_id)
@@ -271,9 +267,7 @@ Below is an example, with inline comments describing what each JSON block config
         "resourceIdField": "object_id", // required; what is the identifier in the manifest index that you want to grab?
         "referenceIdFieldInResourceIndex": "case_id", // required; what is the field in the manifest index you want to make sure matches a field in the cohort?
         "referenceIdFieldInDataIndex": "case_id" // required; what is the field in the case/subject/participant index you are using to match with a field in the manifest index?
-      },
-      "accessibleFieldCheckList": ["project_id"], // optional; only useful when tiered access is enabled (tier_access_level=regular). When tiered access is on, portal needs to perform some filtering to display data explorer UI components according to user’s accessibility. Guppy will make queries for each of the fields listed in this array and figure out for each fields, what values are accessible to the current user and what values are not.
-      "accessibleValidationField": "project_id" // optional; only useful when tiered access is enabled (tier_access_level=regular). This value should be selected from the “accessibleFieldCheckList” variable. Portal will use this field to check against the result returned from Guppy with “accessibleFieldCheckList” to determine if user has selected any unaccessible values on the UI, and changes UI appearance accordingly.
+      }
     },
     "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/", // optional; for tiered access, if a user wants to get access to the data sets what site should they visit?
     "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data" // optional; if exporting to Terra which URL should we use?
@@ -322,8 +316,6 @@ Below is an example, with inline comments describing what each JSON block config
         "referenceIdFieldInResourceIndex": "object_id", // required; which field should we join on in the other index?
         "referenceIdFieldInDataIndex": "object_id" // required; which field should we join on in the current index?
       },
-      "accessibleFieldCheckList": ["project_id"],
-      "accessibleValidationField": "project_id",
       "downloadAccessor": "object_id" // required; for downloading a file, what is the GUID? This should probably not change
     },
     "buttons": [ // required; buttons for File Explorer
@@ -345,8 +337,6 @@ Below is an example, with inline comments describing what each JSON block config
     ],
     "dropdowns": {} // optional; dropdown groupings for buttons
   },
-  "useArboristUI": false, // optional; set true to enable arborist UI; defaults to false if absent
-  "showArboristAuthzOnProfile": false, // optional; set true to list arborist resources on profile page
   "showFenceAuthzOnProfile": true, // optional; set false to not list fence project access on profile page
   "componentToResourceMapping": { // optional; configure some parts of arborist UI
     "Workspace": { // name of component as defined in this file

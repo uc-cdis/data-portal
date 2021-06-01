@@ -9,15 +9,13 @@
 
 import { config } from '../params';
 
-const featureFlags = config.featureFlags;
-
 /*
   Will check parameters.js to see if there is default config for feature flags
   Then will check to see if user has set any flags in the browser
   Will return true if either of these types of flags is set to true
 */
 function isEnabled(featureName) {
-  const compileTimeFlags = featureFlags;
+  const compileTimeFlags = config.featureFlags;
   const runTimeFlags =
     JSON.parse(window.sessionStorage.getItem('gen3Features')) || {};
   return !!compileTimeFlags[featureName] || !!runTimeFlags[featureName];

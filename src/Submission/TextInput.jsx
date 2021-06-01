@@ -3,28 +3,15 @@ import PropTypes from 'prop-types';
 import './TextInput.less';
 
 class TextInput extends Component {
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    value: PropTypes.string,
-    required: PropTypes.bool.isRequired,
-    description: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onUpdateFormSchema: PropTypes.func,
-    propertyType: PropTypes.string,
-  };
-  static getDefaultProps = {
-    onUpdateFormSchema: () => {},
-    propertyType: undefined,
-    value: undefined,
-  };
-
-  componentWillMount() {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillMount() {
     if (this.props.onUpdateFormSchema !== undefined) {
       this.props.onUpdateFormSchema({
         [this.props.name]: this.props.propertyType,
       });
     }
   }
+
   render() {
     return (
       <div>
@@ -53,5 +40,21 @@ class TextInput extends Component {
     );
   }
 }
+
+TextInput.propTypes = {
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string,
+  required: PropTypes.bool.isRequired,
+  description: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onUpdateFormSchema: PropTypes.func,
+  propertyType: PropTypes.string,
+};
+
+TextInput.defaultProps = {
+  onUpdateFormSchema: () => {},
+  propertyType: undefined,
+  value: undefined,
+};
 
 export default TextInput;

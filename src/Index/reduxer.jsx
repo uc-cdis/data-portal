@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import dictIcons from '../img/icons';
-import { setActive } from '../Layout/reduxer';
-import IndexBarChart from '../components/charts/IndexBarChart/.';
+import IndexBarChart from '../components/charts/IndexBarChart';
 // import IndexCounts from '../components/cards/IndexCounts/.';
 import IndexButtonBar from '../components/IndexButtonBar';
 import Introduction from '../components/Introduction';
@@ -54,14 +53,8 @@ export const ReduxIndexButtonBar = (() => {
 export const ReduxIntroduction = (() => {
   const mapStateToProps = (state) => {
     const resourcePath = '/services/sheepdog/submission/project';
-    const isAdminUser =
-      state.user.authz &&
-      state.user.authz.hasOwnProperty(resourcePath) &&
-      state.user.authz[resourcePath][0].method === '*';
-
     return {
-      isAdminUser,
-      userAuthMapping: state.userAuthMapping,
+      isAdminUser: state.user.authz?.[resourcePath]?.[0].method === '*',
     };
   };
 

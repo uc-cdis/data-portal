@@ -2,28 +2,17 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const path = require('path');
+
 const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/')
   ? basename.slice(0, basename.length - 1)
   : basename;
 
 const plugins = [
-  new webpack.EnvironmentPlugin(['NODE_ENV']),
-  new webpack.EnvironmentPlugin({ MOCK_STORE: null }),
-  new webpack.EnvironmentPlugin(['APP']),
-  new webpack.EnvironmentPlugin({ BASENAME: '/' }),
-  new webpack.EnvironmentPlugin(['LOGOUT_INACTIVE_USERS']),
-  new webpack.EnvironmentPlugin(['WORKSPACE_TIMEOUT_IN_MINUTES']),
-  new webpack.EnvironmentPlugin(['REACT_APP_PROJECT_ID']),
-  new webpack.EnvironmentPlugin(['REACT_APP_DISABLE_SOCKET']),
-  new webpack.EnvironmentPlugin(['TIER_ACCESS_LEVEL']),
-  new webpack.EnvironmentPlugin(['TIER_ACCESS_LIMIT']),
-  new webpack.EnvironmentPlugin(['FENCE_URL']),
-  new webpack.EnvironmentPlugin(['INDEXD_URL']),
-  new webpack.EnvironmentPlugin(['USE_INDEXD_AUTHZ']),
-  new webpack.EnvironmentPlugin(['WORKSPACE_URL']),
-  new webpack.EnvironmentPlugin(['WTS_URL']),
-  new webpack.EnvironmentPlugin(['MANIFEST_SERVICE_URL']),
+  new webpack.EnvironmentPlugin({
+    MOCK_STORE: null,
+    BASENAME: '/',
+  }),
   new webpack.DefinePlugin({
     // <-- key to reducing React's size
     'process.env': {
@@ -43,8 +32,8 @@ const plugins = [
     title: process.env.TITLE || 'PCDC Data Portal',
     basename: pathPrefix,
     template: 'src/index.ejs',
-    connect_src: (function () {
-      let rv = {};
+    connect_src: (() => {
+      const rv = {};
       if (typeof process.env.FENCE_URL !== 'undefined') {
         rv[new URL(process.env.FENCE_URL).origin] = true;
       }
@@ -64,7 +53,7 @@ const plugins = [
     })(),
     hash: true,
   }),
-  new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
+  new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
 ];
 
 let optimization = {};
@@ -85,7 +74,7 @@ if (isProduction) {
 }
 
 module.exports = {
-  entry: ['babel-polyfill', './src/index.jsx'],
+  entry: './src/index.jsx',
   target: 'web',
   bail: isProduction,
   externals: [
@@ -96,7 +85,7 @@ module.exports = {
   mode: isProduction ? 'production' : 'development',
   output: {
     path: __dirname,
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     publicPath: isProduction ? basename : 'https://localhost:9443/',
   },
   optimization,
@@ -117,30 +106,31 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+      {
         test: /\.jsx?$/,
         exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
-        use: {
-          loader: 'babel-loader',
-        },
+        loader: 'babel-loader',
       },
       {
         test: /\.less$/,
-        loaders: ['style-loader', 'css-loader', 'less-loader'],
+        use: ['style-loader', 'css-loader', 'less-loader'],
       },
       {
         test: /\.css$/,
-        loader: ['style-loader', 'css-loader', 'postcss-loader'],
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
         test: /\.svg$/,
-        loaders: ['babel-loader', 'react-svg-loader'],
+        use: ['babel-loader', 'react-svg-loader'],
       },
       {
         test: /\.(png|jpg|gif|woff|ttf|eot|woff2)$/,
-        loaders: 'url-loader',
-        query: {
-          limit: 8192,
-        },
+        type: 'asset/inline',
       },
       {
         test: /\.flow$/,

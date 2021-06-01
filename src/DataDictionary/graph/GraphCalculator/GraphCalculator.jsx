@@ -29,7 +29,8 @@ class GraphCalculator extends React.Component {
     }
   }
 
-  componentWillUpdate(nextProps) {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillUpdate(nextProps) {
     // if the highlighted node is updated, calculate related highlighted nodes
     const newHighlightingNode = nextProps.highlightingNode;
     const newSecondHighlightingNodeID = nextProps.secondHighlightingNodeID;
@@ -157,7 +158,7 @@ class GraphCalculator extends React.Component {
   }
 
   render() {
-    return <React.Fragment />;
+    return null;
   }
 }
 

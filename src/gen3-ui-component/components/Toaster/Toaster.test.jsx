@@ -5,10 +5,8 @@ import Toaster from '.';
 describe('<Toaster />', () => {
   const t = mount(
     <Toaster isEnabled={false}>
-      <div>
-          Test
-      </div>
-    </Toaster>,
+      <div>Test</div>
+    </Toaster>
   );
 
   it('updates with state change', () => {

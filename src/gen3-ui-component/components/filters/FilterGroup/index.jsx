@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import PatientIdFilter from '../PatientIdFilter';
 import './FilterGroup.css';
 
 const removeEmptyFilter = (filterResults) => {
@@ -61,11 +62,10 @@ class FilterGroup extends React.Component {
           } = initialFilterResults[field];
           if (selectedValues === undefined) {
             return [lowerBound, upperBound];
-          } else {
-            const status = {};
-            for (const selected of selectedValues) status[selected] = true;
-            return status;
           }
+          const status = {};
+          for (const selected of selectedValues) status[selected] = true;
+          return status;
         }
         return {};
       })
@@ -105,54 +105,11 @@ class FilterGroup extends React.Component {
       JSON.stringify(this.props.initialAppliedFilters) !==
       JSON.stringify(prevProps.initialAppliedFilters)
     ) {
-      const newFilterResults = this.props.initialAppliedFilters;
-      const newFilterStatus = this.props.filterConfig.tabs.map((t) =>
-        t.fields.map((field) => {
-          if (Object.keys(newFilterResults).includes(field)) {
-            const { selectedValues, lowerBound, upperBound } = newFilterResults[
-              field
-            ];
-            if (selectedValues === undefined) {
-              return [lowerBound, upperBound];
-            } else {
-              const status = {};
-              for (const selected of selectedValues) status[selected] = true;
-              return status;
-            }
-          }
-          return {};
-        })
-      );
-      this.setState(
-        { filterStatus: newFilterStatus, filterResults: newFilterResults },
-        () => this.callOnFilterChange()
+      this.updateFilterStates(
+        this.props.initialAppliedFilters,
+        this.props.filterConfig
       );
     }
-  }
-
-  selectTab(index) {
-    this.setState({ selectedTabIndex: index });
-  }
-
-  resetFilter() {
-    this.setState((prevState) => {
-      const oldFilterStatus = prevState.filterStatus;
-      const resetStatus = oldFilterStatus.map((oldSectionStatus) => {
-        const sectionStatus = oldSectionStatus.map((oldEntry) => {
-          if (!oldEntry || Object.keys(oldEntry).length === 0) return oldEntry;
-          const newEntry = Object.keys(oldEntry).reduce((res, key) => {
-            res[key] = false;
-            return res;
-          }, {});
-          return newEntry;
-        });
-        return sectionStatus;
-      });
-      return {
-        filterStatus: resetStatus,
-        filterResults: {},
-      };
-    });
   }
 
   handleToggle(tabIndex, sectionIndex, newSectionExpandedStatus) {
@@ -173,7 +130,7 @@ class FilterGroup extends React.Component {
         newFilterStatus[tabIndex][sectionIndex] = {};
 
         // update filter results; clear the results for this filter
-        let newFilterResults = Object.assign({}, prevState.filterResults);
+        let newFilterResults = { ...prevState.filterResults };
         const field = this.props.filterConfig.tabs[tabIndex].fields[
           sectionIndex
         ];
@@ -333,6 +290,31 @@ class FilterGroup extends React.Component {
     );
   }
 
+  resetFilter() {
+    this.setState((prevState) => {
+      const oldFilterStatus = prevState.filterStatus;
+      const resetStatus = oldFilterStatus.map((oldSectionStatus) => {
+        const sectionStatus = oldSectionStatus.map((oldEntry) => {
+          if (!oldEntry || Object.keys(oldEntry).length === 0) return oldEntry;
+          const newEntry = Object.keys(oldEntry).reduce((res, key) => {
+            res[key] = false;
+            return res;
+          }, {});
+          return newEntry;
+        });
+        return sectionStatus;
+      });
+      return {
+        filterStatus: resetStatus,
+        filterResults: {},
+      };
+    });
+  }
+
+  selectTab(index) {
+    this.setState({ selectedTabIndex: index });
+  }
+
   callOnFilterChange() {
     this.props.onFilterChange(this.state.filterResults);
   }
@@ -352,6 +334,30 @@ class FilterGroup extends React.Component {
         expandedStatusControl: !prevState.expandedStatusControl,
       };
     });
+  }
+
+  updateFilterStates(initialAppliedFilters, filterConfig) {
+    const newFilterResults = initialAppliedFilters;
+    const newFilterStatus = filterConfig.tabs.map((t) =>
+      t.fields.map((field) => {
+        if (Object.keys(newFilterResults).includes(field)) {
+          const { selectedValues, lowerBound, upperBound } = newFilterResults[
+            field
+          ];
+          if (selectedValues === undefined) {
+            return [lowerBound, upperBound];
+          }
+          const status = {};
+          for (const selected of selectedValues) status[selected] = true;
+          return status;
+        }
+        return {};
+      })
+    );
+    this.setState(
+      { filterStatus: newFilterStatus, filterResults: newFilterResults },
+      () => this.callOnFilterChange()
+    );
   }
 
   render() {
@@ -383,6 +389,12 @@ class FilterGroup extends React.Component {
             </div>
           ))}
         </div>
+        {this.props.patientIds && (
+          <PatientIdFilter
+            onPatientIdsChange={this.props.onPatientIdsChange}
+            patientIds={this.props.patientIds}
+          />
+        )}
         <div className='g3-filter-group__collapse'>
           <span
             className='g3-link g3-filter-group__collapse-link'
@@ -434,9 +446,11 @@ FilterGroup.propTypes = {
     ),
   }).isRequired,
   onFilterChange: PropTypes.func,
+  onPatientIdsChange: PropTypes.func,
   hideZero: PropTypes.bool,
   className: PropTypes.string,
   initialAppliedFilters: PropTypes.object,
+  patientIds: PropTypes.arrayOf(PropTypes.string),
 };
 
 FilterGroup.defaultProps = {

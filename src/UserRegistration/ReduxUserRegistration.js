@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { getIndexPageCounts } from '../Index/utils';
 import UserRegistration from './UserRegistration';
+import { fetchUserAccess } from '../actions';
 
 const mapStateToProps = (state) => ({
   shouldRegister:
@@ -15,13 +16,13 @@ const mapDispatchToProps = (dispatch) => ({
   updateAccess: (response) =>
     response.ok
       ? response.json().then((user) => {
-          if (user.authz.hasOwnProperty('/portal')) {
+          if (user.authz['/portal'] !== undefined) {
             dispatch({ type: 'RECEIVE_USER', user });
+            dispatch(fetchUserAccess);
             getIndexPageCounts();
             return 'success';
-          } else {
-            return 'error';
           }
+          return 'error';
         })
       : Promise.resolve('error'),
 });

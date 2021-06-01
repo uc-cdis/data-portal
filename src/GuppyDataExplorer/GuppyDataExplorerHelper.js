@@ -1,38 +1,3 @@
-function difference(a, b) {
-  const setA = new Set(a);
-  const setB = new Set(b);
-  return [...new Set([...setA].filter((x) => !setB.has(x)))];
-}
-
-// if true, means user has unaccessible fields in aggsData
-export function checkForAnySelectedUnaccessibleField(
-  aggsData,
-  accessibleFieldObject,
-  fieldToCheck
-) {
-  let accessValuesInAggregationList = [];
-  if (!accessibleFieldObject || !accessibleFieldObject[fieldToCheck]) {
-    return false;
-  }
-
-  const accessibleValues = accessibleFieldObject[fieldToCheck];
-  if (aggsData && aggsData[fieldToCheck] && aggsData[fieldToCheck].histogram) {
-    accessValuesInAggregationList = aggsData[fieldToCheck].histogram.map(
-      (entry) => entry.key
-    );
-    const outOfScopeValues = difference(
-      accessValuesInAggregationList,
-      accessibleValues
-    );
-    if (outOfScopeValues.length > 0) {
-      // trying to get unaccessible data is forbidden
-      return true;
-    }
-    return false;
-  }
-  return false;
-}
-
 // if true, means user don't have access to any project
 export function checkForNoAccessibleProject(
   accessibleFieldObject,

@@ -24,9 +24,17 @@ const ControlFormSelect = ({ label, ...selectProps }) => (
   />
 );
 
+ControlFormSelect.propTypes = {
+  label: PropTypes.string,
+};
+
 const ControlFormInput = ({ label, ...inputAttrs }) => (
   <SimpleInputField label={label} input={<input {...inputAttrs} />} />
 );
+
+ControlFormInput.propTypes = {
+  label: PropTypes.string,
+};
 
 const emptySelectOption = { label: 'Select...', value: '' };
 const survivalTypeOptions = [
@@ -41,7 +49,6 @@ const survivalTypeOptions = [
  * @param {number} prop.timeInterval
  * @param {boolean} prop.isError
  * @param {boolean} prop.isFilterChanged
- * @param {Function} prop.setIsFilterChanged
  */
 const ControlForm = ({
   factors,
@@ -49,7 +56,6 @@ const ControlForm = ({
   timeInterval,
   isError,
   isFilterChanged,
-  setIsFilterChanged,
 }) => {
   const [factorVariable, setFactorVariable] = useState(emptySelectOption);
   const [stratificationVariable, setStratificationVariable] = useState(
@@ -62,30 +68,29 @@ const ControlForm = ({
 
   const [isInputChanged, setIsInputChanged] = useState(false);
   useEffect(() => {
-    setIsInputChanged(true);
-  }, [
-    factorVariable.value,
-    stratificationVariable.value,
-    localTimeInterval,
-    startTime,
-    endTime,
-    survivalType,
-  ]);
-  useEffect(() => {
     if (!isInputChanged && isError) setIsInputChanged(true);
   }, [isInputChanged, isError]);
 
   const [shouldUpdateResults, setShouldUpdateResults] = useState(true);
   useEffect(() => {
-    if (isFilterChanged) setShouldUpdateResults(true);
+    if (isFilterChanged)
+      onSubmit({
+        factorVariable: factorVariable.value,
+        stratificationVariable: stratificationVariable.value,
+        timeInterval: localTimeInterval,
+        startTime,
+        endTime,
+        efsFlag: survivalType.value === 'efs',
+        shouldUpdateResults: true,
+      });
   }, [isFilterChanged]);
 
   const validateNumberInput = (
     /** @type {{ target: { value: string, min: string, max: string }}} */ e
   ) => {
-    const value = Number.parseInt(e.target.value);
-    const min = Number.parseInt(e.target.min);
-    const max = Number.parseInt(e.target.max);
+    const value = Number.parseInt(e.target.value, 10);
+    const min = Number.parseInt(e.target.min, 10);
+    const max = Number.parseInt(e.target.max, 10);
     if (min && min > value) setLocalTimeInterval(min);
     else if (max && max < value) setLocalTimeInterval(max);
   };
@@ -105,11 +110,19 @@ const ControlForm = ({
       shouldUpdateResults,
     });
     setIsInputChanged(false);
-    setIsFilterChanged(false);
     setShouldUpdateResults(false);
   };
 
   const resetUserInput = () => {
+    setIsInputChanged(
+      factorVariable.value !== emptySelectOption.value ||
+        stratificationVariable.value !== emptySelectOption.value ||
+        localTimeInterval !== 2 ||
+        startTime !== 0 ||
+        endTime !== 20 ||
+        survivalType !== survivalTypeOptions[0]
+    );
+
     if (factorVariable.value !== '' || stratificationVariable.value !== '')
       setShouldUpdateResults(true);
 
@@ -132,6 +145,7 @@ const ControlForm = ({
 
           setFactorVariable(e);
           setShouldUpdateResults(true);
+          setIsInputChanged(true);
         }}
         value={factorVariable}
       />
@@ -144,6 +158,7 @@ const ControlForm = ({
         onChange={(e) => {
           setStratificationVariable(e);
           setShouldUpdateResults(true);
+          setIsInputChanged(true);
         }}
         value={stratificationVariable}
       />
@@ -154,7 +169,10 @@ const ControlForm = ({
         max={5}
         step={1}
         onBlur={validateNumberInput}
-        onChange={(e) => setLocalTimeInterval(Number.parseInt(e.target.value))}
+        onChange={(e) => {
+          setLocalTimeInterval(Number.parseInt(e.target.value, 10));
+          setIsInputChanged(true);
+        }}
         value={localTimeInterval}
       />
       <ControlFormInput
@@ -165,7 +183,10 @@ const ControlForm = ({
         max={endTime - 1}
         step={1}
         onBlur={validateNumberInput}
-        onChange={(e) => setStartTime(Number.parseInt(e.target.value))}
+        onChange={(e) => {
+          setStartTime(Number.parseInt(e.target.value, 10));
+          setIsInputChanged(true);
+        }}
         value={startTime}
       />
       <ControlFormInput
@@ -175,7 +196,10 @@ const ControlForm = ({
         max={99}
         step={1}
         onBlur={validateNumberInput}
-        onChange={(e) => setEndTime(Number.parseInt(e.target.value))}
+        onChange={(e) => {
+          setEndTime(Number.parseInt(e.target.value, 10));
+          setIsInputChanged(true);
+        }}
         value={endTime}
       />
       <ControlFormSelect
@@ -188,6 +212,7 @@ const ControlForm = ({
         onChange={(e) => {
           setSurvivalType(e);
           setShouldUpdateResults(true);
+          setIsInputChanged(true);
         }}
         value={survivalType}
       />
@@ -213,6 +238,8 @@ ControlForm.propTypes = {
   ).isRequired,
   onSubmit: PropTypes.func.isRequired,
   timeInterval: PropTypes.number.isRequired,
+  isError: PropTypes.bool,
+  isFilterChanged: PropTypes.bool,
 };
 
 export default ControlForm;

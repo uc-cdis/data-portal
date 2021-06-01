@@ -26,11 +26,12 @@ class WorkspaceLogin extends React.Component {
   }
 
   selectChange = (selectedOption, index) => {
-    const selectedLoginOptionCopy = { ...this.state.selectedLoginOption };
-    selectedLoginOptionCopy[index] = selectedOption;
-    this.setState({
-      selectedLoginOption: selectedLoginOptionCopy,
-    });
+    this.setState((prevState) => ({
+      selectedLoginOption: {
+        ...prevState.selectedLoginOption,
+        [index]: selectedOption,
+      },
+    }));
   };
 
   render() {

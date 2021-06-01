@@ -10,9 +10,6 @@ import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import login from './Login/reducers';
 import ddgraph from './DataDictionary/reducers';
-import { logoutListener } from './Login/ProtectedContent';
-import { fetchUserAccess, fetchUserAuthMapping } from './actions';
-import getReduxStore from './reduxStore';
 
 const status = (state = {}, action) => {
   switch (action.type) {
@@ -39,9 +36,12 @@ const versionInfo = (state = {}, action) => {
 const user = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_USER':
-      getReduxStore().then((store) => store.dispatch(fetchUserAccess));
-      getReduxStore().then((store) => store.dispatch(fetchUserAuthMapping));
-      return { ...state, ...action.user, fetched_user: true };
+      return {
+        ...state,
+        ...action.user,
+        fetched_user: true,
+        lastAuthMs: Date.now(),
+      };
     case 'REGISTER_ROLE':
       return {
         ...state,
@@ -54,6 +54,8 @@ const user = (state = {}, action) => {
       };
     case 'FETCH_ERROR':
       return { ...state, fetched_user: true, fetch_error: action.error };
+    case 'RECEIVE_API_LOGOUT':
+      return { ...state, lastAuthMs: 0 };
     default:
       return state;
   }
@@ -68,36 +70,19 @@ const userAccess = (state = { access: {} }, action) => {
   }
 };
 
-const userAuthMapping = (state = {}, action) => {
-  switch (action.type) {
-    case 'RECEIVE_USER_AUTH_MAPPING':
-      return { ...state, ...action.data };
-    default:
-      return state;
-  }
-};
-
 const project = (state = {}, action) => {
+  const projects = {};
+  const projectAvail = {};
   switch (action.type) {
     case 'RECEIVE_PROJECTS':
-      const projects = {};
-      const projectAvail = {};
-      for (const { code, project_id, availability_type } of action.data) {
-        projects[code] = project_id;
-        projectAvail[project_id] = availability_type;
+      for (const d of action.data) {
+        projects[d.code] = d.project_id;
+        projectAvail[d.project_id] = d.availability_type;
       }
       return { ...state, projects, projectAvail };
     default:
       return state;
   }
-};
-
-export const removeDeletedNode = (state, id) => {
-  const searchResult = state.search_result;
-  const nodeType = Object.keys(searchResult.data)[0];
-  const entities = searchResult.data[nodeType];
-  searchResult.data[nodeType] = entities.filter((entity) => entity.id !== id);
-  return searchResult;
 };
 
 const reducers = combineReducers({
@@ -115,10 +100,8 @@ const reducers = combineReducers({
   certificate,
   graphiql,
   login,
-  auth: logoutListener,
   ddgraph,
   userAccess,
-  userAuthMapping,
 });
 
 export default reducers;

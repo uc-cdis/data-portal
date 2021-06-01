@@ -120,9 +120,6 @@
       }
     ]
   },
-  "featureFlags": {
-    "explorer": true
-  },
   "dataExplorerConfig": {
     "charts": {
       "sex": {
@@ -147,33 +144,44 @@
         {
           "title": "Subject",
           "fields": [
+            "project_id",
             "consortium",
             "data_contributor_id",
-            "treatment_arm",
-            "project_id",
-            "ethnicity",
-            "race",
+            "external_resource_name",
             "sex",
+            "race",
+            "ethnicity",
             "lkss",
-            "age_at_lkss",
+            "age_at_lkss"
+          ]
+        },
+        {
+          "title": "Disease",
+          "fields": [
+            "histology",
+            "histology_grade",
+            "histology_inpc",
+            "tumor_classification",
             "tumor_site",
             "tumor_size",
+            "longest_diam_dim1",
             "invasiveness",
             "nodal_clinical",
             "nodal_pathology",
-            "longest_diam_dim1",
-            "tumor_classification",
             "parameningeal_extension",
             "irs_group",
-            "tnm_finding",
+            "tnm_finding"
+          ]
+        },
+        {
+          "title": "Molecular",
+          "fields": [
             "anaplasia",
             "anaplasia_extent",
+            "molecular_abnormality",
             "molecular_abnormality_result",
-            "histology",
-            "margins",
-            "disease_phase",
-            "age_at_disease_phase",
-            "year_at_disease_phase"
+            "gene1",
+            "gene2"
           ]
         }
       ]
@@ -188,11 +196,73 @@
         "title": "Download Data",
         "leftIcon": "user",
         "rightIcon": "download",
-        "fileName": "data.json"
+        "fileName": "data.json",
+        "tooltipText": "You can only download data accessible to you"
       }
     ],
     "table": {
-      "enabled": true
+      "enabled": true,
+      "fields": [
+        "external_links",
+        "consortium",
+        "data_contributor_id",
+        "subject_submitter_id",
+        "sex",
+        "race",
+        "ethnicity",
+        "lkss",
+        "age_at_lkss",
+        "histology",
+        "tumor_site",
+        "tumor_site_other",
+        "age_at_course_end",
+        "age_at_course_start",
+        "age_at_disease_phase",
+        "age_at_enrollment",
+        "age_at_hist_assessment",
+        "age_at_smn",
+        "anaplasia",
+        "anaplasia_extent",
+        "cause_of_death",
+        "course",
+        "course_number",
+        "disease_phase",
+        "disease_phase_number",
+        "enrolled_status",
+        "gene1",
+        "gene2",
+        "invasiveness",
+        "irs_group",
+        "longest_diam_dim1",
+        "longest_diam_dim2",
+        "longest_diam_dim3",
+        "margins",
+        "molecular_abnormality",
+        "molecular_abnormality_result",
+        "nodal_clinical",
+        "nodal_pathology",
+        "parameningeal_extension",
+        "procedure_site",
+        "procedure_tumor_classification",
+        "procedure_type",
+        "study_id",
+        "study_phase",
+        "study_type",
+        "tnm_finding",
+        "treatment_arm",
+        "tumor_classification",
+        "tumor_size",
+        "variant_type",
+        "year_at_disease_phase",
+        "year_at_enrollment"
+      ]
+    },
+    "survivalAnalysis": {
+      "result": {
+        "pval": false,
+        "risktable": false,
+        "survival": true
+      }
     },
     "guppyConfig": {
       "dataType": "subject",
@@ -203,16 +273,26 @@
           "name": "Last Known Survival Status (LKSS)"
         },
         {
+          "field": "age_at_lkss",
+          "name": "Age at LKSS"
+        },
+        {
           "field": "project_id",
           "name": "Data Release Version"
         },
         {
           "field": "data_contributor_id",
           "name": "Data Contributor"
+        },
+        {
+          "field": "irs_group",
+          "name": "IRS Group"
+        },
+        {
+          "field": "tnm_finding",
+          "name": "TNM Finding"
         }
-      ],
-      "accessibleFieldCheckList": ["project_id"],
-      "accessibleValidationField": "project_id"
+      ]
     },
     "getAccessButtonLink": "https://pcdc-gen3-docs.s3.amazonaws.com/%5BDRAFT%5D+PCDC-request_form.docx"
   }

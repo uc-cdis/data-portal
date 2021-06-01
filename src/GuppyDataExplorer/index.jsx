@@ -1,129 +1,79 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import GuppyDataExplorer from './GuppyDataExplorer';
-import {
-  guppyUrl,
-  tierAccessLevel,
-  tierAccessLimit,
-  explorerConfig,
-} from '../localconf';
+import { guppyUrl, tierAccessLimit, explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 import './GuppyExplorer.css';
 
-class Explorer extends React.Component {
-  constructor(props) {
-    super(props);
-    const tabIndex =
-      props.location.pathname === '/files'
-        ? explorerConfig.findIndex((config) => {
-            // find file tab index from config array using guppyConfig.dataType
-            if (config.guppyConfig && config.guppyConfig.dataType) {
-              return config.guppyConfig.dataType === 'file';
-            }
-            return false;
-          })
-        : 0;
-    this.state = {
-      tab: tabIndex,
-    };
-    this.onTabClick = this.onTabClick.bind(this);
+export default function Explorer() {
+  if (explorerConfig.legnth === 0) {
+    return null;
   }
 
-  onTabClick(tabIndex) {
-    this.setState({ tab: tabIndex });
+  const history = useHistory();
+  const isFilesPage = history.location.pathname === '/files';
+  const fileTabIndex = explorerConfig.findIndex(
+    ({ guppyConfig }) => guppyConfig?.dataType === 'file'
+  );
+  if (isFilesPage && fileTabIndex === -1) {
+    return null;
   }
 
-  render() {
-    // if no configs or comes from '/files' but there is no file tab
-    if (explorerConfig.length === 0 || this.state.tab === -1) {
-      return <React.Fragment />;
-    }
+  const [tabIndex, setTabIndex] = useState(isFilesPage ? fileTabIndex : 0);
+  const tabConfig = explorerConfig[tabIndex];
+  const isMultiTabExplorer = explorerConfig.length > 1;
 
-    const tabFragment = (
-      <React.Fragment>
+  return (
+    <div className='guppy-explorer'>
+      {isMultiTabExplorer && (
         <div className='guppy-explorer__tabs'>
-          {explorerConfig.map((element, index) => {
-            let tabTitle = '';
-            if (element.tabTitle) {
-              tabTitle = element.tabTitle;
-            } else if (element.guppyConfig && element.guppyConfig.dataType) {
-              tabTitle = capitalizeFirstLetter(element.guppyConfig.dataType);
-            }
-
-            return (
-              <React.Fragment key={index}>
-                <div
-                  className={'guppy-explorer__tab'.concat(
-                    this.state.tab === index
-                      ? ' guppy-explorer__tab--selected'
-                      : ''
-                  )}
-                  onClick={() => this.onTabClick(index)}
-                  role='button'
-                  tabIndex={index}
-                >
-                  <h3>{tabTitle}</h3>
-                </div>
-              </React.Fragment>
-            );
-          })}
+          {explorerConfig.map(({ tabTitle, guppyConfig }, index) => (
+            <div
+              key={index}
+              className={'guppy-explorer__tab'.concat(
+                tabIndex === index ? ' guppy-explorer__tab--selected' : ''
+              )}
+              onClick={() => setTabIndex(index)}
+              role='button'
+              tabIndex={index}
+            >
+              <h3>
+                {tabTitle ||
+                  (guppyConfig?.dataType
+                    ? capitalizeFirstLetter(guppyConfig.dataType)
+                    : '')}
+              </h3>
+            </div>
+          ))}
         </div>
-      </React.Fragment>
-    );
-
-    const overviewFilter =
-      this.props.history.location.state &&
-      this.props.history.location.state.filter
-        ? this.props.history.location.state.filter
-        : {};
-
-    return (
-      <div className='guppy-explorer'>
-        {explorerConfig.length > 1 ? tabFragment : null}
-        <div
-          className={explorerConfig.length > 1 ? 'guppy-explorer__main' : ''}
-        >
-          <GuppyDataExplorer
-            adminAppliedPreFilters={{
-              ...explorerConfig[this.state.tab].adminAppliedPreFilters,
-              ...overviewFilter,
-            }}
-            chartConfig={explorerConfig[this.state.tab].charts}
-            filterConfig={explorerConfig[this.state.tab].filters}
-            tableConfig={explorerConfig[this.state.tab].table}
-            guppyConfig={{
-              path: guppyUrl,
-              ...explorerConfig[this.state.tab].guppyConfig,
-            }}
-            buttonConfig={{
-              buttons: explorerConfig[this.state.tab].buttons,
-              dropdowns: explorerConfig[this.state.tab].dropdowns,
-              terraExportURL: explorerConfig[this.state.tab].terraExportURL,
-              terraTemplate: explorerConfig[this.state.tab].terraTemplate,
-              sevenBridgesExportURL:
-                explorerConfig[this.state.tab].sevenBridgesExportURL,
-            }}
-            history={this.props.history}
-            tierAccessLevel={tierAccessLevel}
-            tierAccessLimit={tierAccessLimit}
-            getAccessButtonLink={
-              explorerConfig[this.state.tab].getAccessButtonLink
-            }
-            hideGetAccessButton={
-              explorerConfig[this.state.tab].hideGetAccessButton
-            }
-            // the "fully uncontrolled component with a key" trick
-            key={this.state.tab}
-          />
-        </div>
+      )}
+      <div className={isMultiTabExplorer ? 'guppy-explorer__main' : ''}>
+        <GuppyDataExplorer
+          adminAppliedPreFilters={tabConfig.adminAppliedPreFilters}
+          chartConfig={tabConfig.charts}
+          filterConfig={tabConfig.filters}
+          tableConfig={tabConfig.table}
+          survivalAnalysisConfig={tabConfig.survivalAnalysis}
+          patientIdsConfig={tabConfig.patientIds}
+          guppyConfig={{
+            path: guppyUrl,
+            ...tabConfig.guppyConfig,
+          }}
+          buttonConfig={{
+            buttons: tabConfig.buttons,
+            dropdowns: tabConfig.dropdowns,
+            terraExportURL: tabConfig.terraExportURL,
+            terraTemplate: tabConfig.terraTemplate,
+            sevenBridgesExportURL: tabConfig.sevenBridgesExportURL,
+          }}
+          history={history}
+          tierAccessLimit={tierAccessLimit}
+          getAccessButtonLink={tabConfig.getAccessButtonLink}
+          hideGetAccessButton={tabConfig.hideGetAccessButton}
+          // the "fully uncontrolled component with a key" trick
+          key={tabIndex}
+        />
       </div>
-    );
-  }
+    </div>
+  );
 }
-
-Explorer.propTypes = {
-  history: PropTypes.object.isRequired, // inherited from ProtectedContent
-  location: PropTypes.object.isRequired,
-};
-
-export default Explorer;

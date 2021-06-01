@@ -15,8 +15,6 @@ export const GuppyConfigType = PropTypes.shape({
     referenceIdFieldInResourceIndex: PropTypes.string,
     referenceIdFieldInDataIndex: PropTypes.string,
   }),
-  accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string),
-  accessibleValidationField: PropTypes.string,
 });
 
 export const FilterConfigType = PropTypes.shape({
@@ -53,3 +51,15 @@ export const ButtonConfigType = PropTypes.shape({
 });
 
 export const ChartConfigType = PropTypes.object;
+
+export const SurvivalAnalysisConfigType = PropTypes.shape({
+  result: PropTypes.shape({
+    pval: PropTypes.bool,
+    risktable: PropTypes.bool,
+    survival: PropTypes.bool,
+  }),
+});
+
+export const PatientIdsConfigType = PropTypes.shape({
+  enabled: PropTypes.bool,
+});

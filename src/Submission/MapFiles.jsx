@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { AutoSizer, Column, Table } from 'react-virtualized';
@@ -23,8 +22,7 @@ dayjs.extend(customParseFormat);
 
 class MapFiles extends React.Component {
   constructor(props) {
-    const params = queryString.parse(window.location.search);
-    const message = params && params.message ? params.message : null;
+    const searchParams = new URLSearchParams(window.location.search);
     super(props);
     this.state = {
       selectedFilesByGroup: {},
@@ -32,7 +30,7 @@ class MapFiles extends React.Component {
       filesByDate: {},
       isScrolling: false,
       sortedDates: [],
-      message,
+      message: searchParams.get('message'),
       loading: true,
     };
   }

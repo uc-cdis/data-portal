@@ -1,12 +1,15 @@
 /**
  * @typedef {object} OptionFilterItem
  * @property {string[]} selectedValues
+ * @property {never} lowerBound
+ * @property {never} upperBound
  */
 
 /**
  * @typedef {object} RangeFilterItem
  * @property {number} lowerBound
  * @property {number} upperBound
+ * @property {never} selectedValues
  */
 
 /**
@@ -26,5 +29,5 @@
  */
 
 /**
- * @typedef {'open' | 'save' | 'update' | 'delete'} ExplorerCohortActionType
+ * @typedef {'new' | 'open' | 'save' | 'save as' | 'delete'} ExplorerCohortActionType
  */

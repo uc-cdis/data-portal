@@ -306,7 +306,7 @@ storiesOf('Filters', module)
       onAfterDrag={action('range change')}
       onCombineOptionToggle={action('combine mode change')}
       tierAccessLimit={1000}
-      isArrayField={true}
+      isArrayField
     />
   ))
   .add('SearchFilter', () => (
@@ -315,7 +315,7 @@ storiesOf('Filters', module)
       onSelect={action('checked')}
       onAfterDrag={action('range change')}
       tierAccessLimit={1000}
-      isSearchFilter={true}
+      isSearchFilter
       onSearchFilterLoadOptions={(searchString, offset = 0) => {
         const pageSize = 20;
         if (!searchString) {

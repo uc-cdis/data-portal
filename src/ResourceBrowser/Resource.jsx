@@ -3,35 +3,27 @@ import PropTypes from 'prop-types';
 
 import './ResourceBrowser.css';
 
-class Resource extends React.Component {
-  render() {
-    return (
-      <div className='resource'>
-        <a
-          className='resource__link'
-          href={this.props.link}
-          target='_blank' // open in new tab
-          rel='noopener noreferrer'
-        >
-          <div className='resource__text-contents'>
-            <h3 className='resource__title'>{this.props.title}</h3>
-            {this.props.description ? (
-              <div className='resource__description'>
-                {this.props.description}
-              </div>
-            ) : null}
-          </div>
-          {this.props.imageUrl ? (
-            <img
-              className='resource__image'
-              src={this.props.imageUrl}
-              alt={this.props.title}
-            />
-          ) : null}
-        </a>
-      </div>
-    );
-  }
+function Resource({ title, link, description, imageUrl }) {
+  return (
+    <div className='resource'>
+      <a
+        className='resource__link'
+        href={link}
+        target='_blank' // open in new tab
+        rel='noopener noreferrer'
+      >
+        <div className='resource__text-contents'>
+          <h3 className='resource__title'>{title}</h3>
+          {description && (
+            <div className='resource__description'>{description}</div>
+          )}
+        </div>
+        {imageUrl && (
+          <img className='resource__image' src={imageUrl} alt={title} />
+        )}
+      </a>
+    </div>
+  );
 }
 
 Resource.propTypes = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AutoComplete from '../../../gen3-ui-component/components/AutoComplete';
 import { compareTwoStrings } from 'string-similarity';
+import AutoComplete from '../../../gen3-ui-component/components/AutoComplete';
 import {
   prepareSearchData,
   searchKeyword,
@@ -148,10 +148,10 @@ class DictionarySearcher extends React.Component {
           onSubmitInput={this.submitInputFunc}
         />
         {this.state.isSearchFinished && (
-          <React.Fragment>
+          <>
             {!this.state.hasError &&
               (this.state.searchResult.matchedNodes.length > 0 ? (
-                <React.Fragment>
+                <>
                   <div className='dictionary-searcher__result'>
                     <h4 className='dictionary-searcher__result-text'>
                       Search Results
@@ -181,12 +181,12 @@ class DictionarySearcher extends React.Component {
                     </span>{' '}
                     matches in node properties
                   </li>
-                </React.Fragment>
+                </>
               ) : (
                 <p>{ZERO_RESULT_FOUND_MSG}</p>
               ))}
             {this.state.hasError && <p>{this.state.errorMsg}</p>}
-          </React.Fragment>
+          </>
         )}
       </div>
     );

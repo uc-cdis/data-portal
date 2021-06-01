@@ -21,7 +21,7 @@ describe('FilterSection', () => {
         onSelect={onSelect}
         onAfterDrag={onDrag}
         hideZero={false}
-      />,
+      />
     );
   });
 
@@ -38,7 +38,9 @@ describe('FilterSection', () => {
 
   it('shows the number of currently selected filters', () => {
     // expect the filterChip to not be shown
-    expect(component.find('.g3-filter-section__selected-count-chip').length).toBe(0);
+    expect(
+      component.find('.g3-filter-section__selected-count-chip').length
+    ).toBe(0);
 
     // select two options
     const option1 = singleSelectOptions[0];
@@ -48,10 +50,19 @@ describe('FilterSection', () => {
 
     // expect the filterChip to appear
     component.update();
-    expect(component.find('.g3-filter-section__selected-count-chip').length).toBe(1);
+    expect(
+      component.find('.g3-filter-section__selected-count-chip').length
+    ).toBe(1);
     // expect the filterChip to display that 2 filters are selected
-    const filterChip = component.find('.g3-filter-section__selected-count-chip').first();
-    expect(filterChip.find('.g3-filter-section__selected-count-chip-text-emphasis').first().instance().text === '2');
+    const filterChip = component
+      .find('.g3-filter-section__selected-count-chip')
+      .first();
+    expect(
+      filterChip
+        .find('.g3-filter-section__selected-count-chip-text-emphasis')
+        .first()
+        .instance().text === '2'
+    );
   });
 
   it('clears all selected filters on clear button click', () => {

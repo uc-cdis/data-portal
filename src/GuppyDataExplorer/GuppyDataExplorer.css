@@ -4,6 +4,10 @@
   padding: 0 20px 20px 20px;
 }
 
+.guppy-data-explorer__error {
+  text-align: center;
+}
+
 .guppy-data-explorer__filter {
   width: 20%;
   margin-top: 20px;
@@ -23,8 +27,7 @@
 .guppy-data-explorer__cohort {
   width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
 }
 
 /* Tablet width and less */

@@ -1,7 +1,13 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchUser } from '../actions';
+import {
+  fetchDictionary,
+  fetchProjects,
+  fetchSchema,
+  fetchUser,
+  fetchUserAccess,
+} from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import { requiredCerts } from '../localconf';
@@ -20,20 +26,14 @@ import './ProtectedContent.css';
 
 /** @typedef {Object} ReduxStore */
 
-let lastAuthMs = 0;
-
-/**
- * Redux listener - just clears auth-cache on logout
- */
-export function logoutListener(state = {}, action) {
-  switch (action.type) {
-    case 'RECEIVE_API_LOGOUT':
-      lastAuthMs = 0;
-      break;
-    default: // noop
-  }
-  return state;
-}
+const LOCATIONS_DICTIONARY = [
+  '/dd',
+  '/dd/:node',
+  '/submission/map',
+  '/:project',
+];
+const LOCATIONS_PROJECTS = ['/files/*'];
+const LOCATIONS_SCHEMA = ['/query'];
 
 /**
  * Container for components that require authentication to access.
@@ -49,25 +49,6 @@ export function logoutListener(state = {}, action) {
  * @extends {React.Component<Props>}
  */
 class ProtectedContent extends React.Component {
-  static propTypes = {
-    component: PropTypes.elementType.isRequired,
-    location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
-    match: PropTypes.shape({
-      params: PropTypes.object,
-      path: PropTypes.string,
-    }).isRequired,
-    isAdminOnly: PropTypes.bool,
-    isPublic: PropTypes.bool,
-    filter: PropTypes.func,
-  };
-
-  static defaultProps = {
-    isAdminOnly: false,
-    isPublic: false,
-    filter: null,
-  };
-
   constructor(props, context) {
     super(props, context);
 
@@ -105,8 +86,8 @@ class ProtectedContent extends React.Component {
               filter().finally(
                 () => this._isMounted && this.setState(latestState)
               );
-            } else {
-              this._isMounted && this.setState(latestState);
+            } else if (this._isMounted) {
+              this.setState(latestState);
             }
           } else
             this.checkLoginStatus(store, this.state)
@@ -117,11 +98,13 @@ class ProtectedContent extends React.Component {
                 const latestState = { ...newState, dataLoaded: true };
 
                 if (newState.authenticated && typeof filter === 'function') {
-                  filter().finally(
-                    () => this._isMounted && this.setState(latestState)
-                  );
+                  filter().finally(() => {
+                    if (this._isMounted) this.setState(latestState);
+                    this.fetchResources(store);
+                  });
                 } else {
-                  this._isMounted && this.setState(latestState);
+                  if (this._isMounted) this.setState(latestState);
+                  this.fetchResources(store);
                 }
               });
         })
@@ -148,20 +131,20 @@ class ProtectedContent extends React.Component {
     };
 
     // assume we're still logged in after 1 minute ...
-    if (Date.now() - lastAuthMs < 60000) return Promise.resolve(newState);
+    if (Date.now() - newState.user.lastAuthMs < 10000)
+      return Promise.resolve(newState);
 
     return store
       .dispatch(fetchUser) // make an API call to see if we're still logged in ...
-      .then((response) => {
+      .then(() => {
         newState.user = store.getState().user;
         if (!newState.user.username) {
           // not authenticated
           newState.redirectTo = '/login';
           newState.authenticated = false;
           newState.from = this.props.location; // save previous location
-        } else if (response.type !== 'UPDATE_POPUP') {
-          // auth ok - cache it
-          lastAuthMs = Date.now();
+        } else {
+          store.dispatch(fetchUserAccess);
         }
         return newState;
       });
@@ -173,9 +156,9 @@ class ProtectedContent extends React.Component {
    * @returns {ComponentState}
    */
   checkIfRegisterd = (initialState) => {
-    let isUserRegistered = false;
-    if (initialState.user.authz !== undefined)
-      for (const i in initialState.user.authz) isUserRegistered = true;
+    const isUserRegistered =
+      initialState.user.authz !== undefined &&
+      Object.keys(initialState.user.authz).length > 0;
 
     return this.props.location.pathname === '/' || isUserRegistered
       ? initialState
@@ -192,9 +175,7 @@ class ProtectedContent extends React.Component {
 
     const resourcePath = '/services/sheepdog/submission/project';
     const isAdminUser =
-      initialState.user.authz &&
-      initialState.user.authz.hasOwnProperty(resourcePath) &&
-      initialState.user.authz[resourcePath][0].method === '*';
+      initialState.user.authz?.[resourcePath]?.[0].method === '*';
     return isAdminUser ? initialState : { ...initialState, redirectTo: '/' };
   };
 
@@ -227,6 +208,23 @@ class ProtectedContent extends React.Component {
     return newState;
   };
 
+  /**
+   * Fetch resources on demand based on path
+   * @param {ReduxStore} store
+   */
+  fetchResources({ dispatch, getState }) {
+    const { graphiql, project, submission } = getState();
+    const { path } = this.props.match;
+
+    if (LOCATIONS_DICTIONARY.includes(path) && !submission.dictionary) {
+      dispatch(fetchDictionary);
+    } else if (LOCATIONS_PROJECTS.includes(path) && !project.projects) {
+      dispatch(fetchProjects);
+    } else if (LOCATIONS_SCHEMA.includes(path) && !graphiql.schema) {
+      dispatch(fetchSchema);
+    }
+  }
+
   render() {
     if (this.state.redirectTo)
       return (
@@ -240,36 +238,42 @@ class ProtectedContent extends React.Component {
         />
       );
 
-    const Component = this.props.component;
-    const ComponentWithProps = () => (
-      <Component
-        params={this.props.match ? this.props.match.params : {}} // router params
-        location={this.props.location}
-        history={this.props.history}
-      />
-    );
-
-    let content = <Spinner />;
-    if (
-      this.props.isPublic &&
-      (this.state.dataLoaded ||
-        !this.props.filter ||
-        typeof this.props.filter !== 'function')
-    )
-      content = <ComponentWithProps />;
-    else if (!this.props.isPublic && this.state.authenticated)
-      content = (
-        <>
-          <ReduxAuthTimeoutPopup />
-          <ComponentWithProps />
-        </>
-      );
-
     const pageClassName = isPageFullScreen(this.props.location.pathname)
       ? 'protected-content protected-content--full-screen'
       : 'protected-content';
-    return <div className={pageClassName}>{content}</div>;
+    return (
+      <div className={pageClassName}>
+        {(this.props.isPublic
+          ? (this.state.dataLoaded ||
+              typeof this.props.filter !== 'function') &&
+            this.props.children
+          : this.state.authenticated && (
+              <>
+                <ReduxAuthTimeoutPopup />
+                {this.props.children}
+              </>
+            )) || <Spinner />}
+      </div>
+    );
   }
 }
+
+ProtectedContent.propTypes = {
+  children: PropTypes.node.isRequired,
+  location: PropTypes.object.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.object,
+    path: PropTypes.string,
+  }).isRequired,
+  isAdminOnly: PropTypes.bool,
+  isPublic: PropTypes.bool,
+  filter: PropTypes.func,
+};
+
+ProtectedContent.defaultProps = {
+  isAdminOnly: false,
+  isPublic: false,
+  filter: null,
+};
 
 export default ProtectedContent;

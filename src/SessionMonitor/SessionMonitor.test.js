@@ -1,4 +1,4 @@
-import { SessionMonitor } from '.';
+import { SessionMonitor, pageFromURL } from '.';
 
 describe('SessionMonitor', () => {
   beforeEach(() => {
@@ -26,39 +26,32 @@ describe('SessionMonitor', () => {
   });
 
   it('detects the page correctly', () => {
-    const sessionMonitor = new SessionMonitor(500, 10000000);
+    expect(pageFromURL('https://example.subdomain.org/workspace/')).toEqual(
+      'workspace'
+    );
+
+    expect(pageFromURL('https://example.subdomain.org/workspace')).toEqual(
+      'workspace'
+    );
+
     expect(
-      sessionMonitor.pageFromURL('https://example.subdomain.org/workspace/')
+      pageFromURL('https://example.subdomain.org/dev.html/workspace/')
     ).toEqual('workspace');
 
-    expect(
-      sessionMonitor.pageFromURL('https://example.subdomain.org/workspace')
-    ).toEqual('workspace');
+    expect(pageFromURL('example-site.example-subdomain.org/login')).toEqual(
+      'login'
+    );
+
+    expect(pageFromURL('example-site.example-subdomain.org//login//')).toEqual(
+      'login'
+    );
 
     expect(
-      sessionMonitor.pageFromURL(
-        'https://example.subdomain.org/dev.html/workspace/'
-      )
-    ).toEqual('workspace');
-
-    expect(
-      sessionMonitor.pageFromURL('example-site.example-subdomain.org/login')
-    ).toEqual('login');
-
-    expect(
-      sessionMonitor.pageFromURL('example-site.example-subdomain.org//login//')
-    ).toEqual('login');
-
-    expect(
-      sessionMonitor.pageFromURL(
-        'https://example.subdomain.org/analysis/abc123//'
-      )
+      pageFromURL('https://example.subdomain.org/analysis/abc123//')
     ).toEqual('abc123');
 
     expect(
-      sessionMonitor.pageFromURL(
-        'https://example.subdomain.org/dev.html/analysis/abc123//'
-      )
+      pageFromURL('https://example.subdomain.org/dev.html/analysis/abc123//')
     ).toEqual('abc123');
   });
 });
