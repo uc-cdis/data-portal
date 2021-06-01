@@ -52,4 +52,5 @@ i.top-icon-button__icon {
   width: auto;
   background: none;
   border: none;
+  border-radius: 0;
 }
