@@ -12,7 +12,8 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
   // the full list of studies for this commons.
   const GUID_TYPE = 'discovery_metadata';
   const LIMIT = 1000; // required or else mds defaults to returning 10 records
-  const MDS_URL = `${hostname}mds/metadata`;
+  // const MDS_URL = `${hostname}mds/metadata`;
+  const MDS_URL = 'https://gen3.datacommons.io/mds/metadata';
   const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
 
   try {
@@ -32,7 +33,7 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
       }
       // eslint-disable-next-line no-await-in-loop
       const jsonResponse = await res.json();
-      const studies = Object.values(jsonResponse).map(entry => entry[STUDY_DATA_FIELD]);
+      const studies = Object.values(jsonResponse).filter(entry => ('tags' in entry[STUDY_DATA_FIELD]) && !('commons' in entry[STUDY_DATA_FIELD])).map(entry => entry[STUDY_DATA_FIELD]);
       allStudies = allStudies.concat(studies);
       const noMoreStudiesToLoad = studies.length < LIMIT;
       if (noMoreStudiesToLoad) {
