@@ -189,10 +189,9 @@ button {
   cursor: pointer;
 }
 
-button:focus,
-input:focus,
-textarea:focus {
-  outline-color: var(--pcdc-color__primary);
+:focus {
+  outline: 0;
+  box-shadow: 0 0 0 2px var(--pcdc-color__primary-light), 0 0 0 3px white;
 }
 
 small {
@@ -413,11 +412,6 @@ ul {
   border-radius: 0;
   padding: 0 10px;
   margin-right: 20px;
-}
-.text-input:focus,
-.text-input:active {
-  box-shadow: none;
-  outline: none;
 }
 
 .button-primary-white {
