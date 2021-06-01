@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as JsSearch from 'js-search';
-import { LockFilled, LinkOutlined, UnlockOutlined } from '@ant-design/icons';
+import { LockFilled, LinkOutlined, UnlockOutlined, DownloadOutlined } from '@ant-design/icons';
 import {
   Tag,
   Space,
