@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import { overrideSelectTheme } from '../utils';
 import './InputWithIcon.less';
 
 function InputWithIcon({
@@ -36,13 +37,7 @@ function InputWithIcon({
             placeholder={inputPlaceholderText}
             options={inputOptions}
             onChange={inputOnChange}
-            theme={(theme) => ({
-              ...theme,
-              colors: {
-                ...theme.colors,
-                primary: 'var(--pcdc-color__primary)',
-              },
-            })}
+            theme={overrideSelectTheme}
           />
         ) : (
           <input
