@@ -42,7 +42,7 @@
   }
 
   .nav-button:hover,
-  .nav-button.button-active {
+  .nav-button--active {
     border-left: 6px solid var(--pcdc-color__secondary);
     border-bottom: none;
   }

@@ -478,15 +478,6 @@ ul {
   padding: 5px 10px;
 }
 
-.button-active {
-  opacity: 1;
-  border-bottom: 3px solid var(--pcdc-color__secondary);
-}
-
-.button-top-active {
-  border-bottom: 1px solid var(--g3-color__white);
-}
-
 .right {
   display: inline-block;
   float: right;
