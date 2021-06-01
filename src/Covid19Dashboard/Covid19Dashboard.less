@@ -77,7 +77,29 @@
 .map-chart {
   width: 100%;
   flex-basis: 200%;
-  max-width: 1080px;
+  height: 55vw;
+}
+.map-chart-il {
+  height: auto;
+}
+
+//make charts go below map
+@media screen and (max-width: 1365px) {
+  .covid19-dashboard_visualizations {
+    display: block;
+  }
+  .map-chart {
+    height: 65vw;
+    min-height: 500px;
+  }
+  .map-chart-il {
+    min-height: 700px;
+  }
+  .covid19-dashboard_charts {
+    max-width: 700px;
+    padding-top: 10px;
+    min-width: 0;
+  }
 }
 
 .map-chart__mapgl-map {
