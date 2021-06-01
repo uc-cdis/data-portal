@@ -33,7 +33,7 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
       }
       // eslint-disable-next-line no-await-in-loop
       const jsonResponse = await res.json();
-      const studies = Object.values(jsonResponse).filter(entry => ('tags' in entry[STUDY_DATA_FIELD]) && !('commons' in entry[STUDY_DATA_FIELD])).map(entry => entry[STUDY_DATA_FIELD]);
+      const studies = Object.values(jsonResponse).filter(entry => !('commons' in entry[STUDY_DATA_FIELD])).map(entry => entry[STUDY_DATA_FIELD]);
       allStudies = allStudies.concat(studies);
       const noMoreStudiesToLoad = studies.length < LIMIT;
       if (noMoreStudiesToLoad) {
