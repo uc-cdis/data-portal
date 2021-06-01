@@ -58,7 +58,7 @@
   width: 65px;
 }
 
-.discovery-header__stats-wrapper#TotalSubjects {
+.discovery-header__stats-wrapper[data-aggregation-type="TotalSubjects"] {
   width: 135px;
 }
 
@@ -177,9 +177,9 @@
   width: 100%;
   overflow: hidden;
   /* ---------
-      * Add an ellipsis after N rows of text.
-      * This css won't work in IE 11, but it's ok, there just won't be an ellipsis.
-      **/
+   * Add an ellipsis after N rows of text.
+   * This css won't work in IE 11, but it's ok, there just won't be an ellipsis.
+   **/
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;

@@ -369,6 +369,9 @@ function buildConfig(opts) {
     mobile: 480,
   };
 
+  const aggMDSURL = `${hostname}mds/aggregate`;
+  const aggMDSDataURL = `${aggMDSURL}/metadata`;
+
   return {
     app,
     basename,
@@ -450,6 +453,7 @@ function buildConfig(opts) {
     workspaceStorageListUrl,
     workspaceStorageDownloadUrl,
     marinerUrl,
+    aggMDSDataURL,
   };
 }
 
