@@ -57,7 +57,7 @@ class DataDictionary extends React.Component {
                 this.setGraphView(false);
               }}
               onKeyPress={() => {
-                this.setGraphView(true);
+                this.setGraphView(false);
               }}
               role='button'
               tabIndex={0}
