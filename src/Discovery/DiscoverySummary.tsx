@@ -1,12 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
+import { DiscoveryConfig } from './DiscoveryConfig';
 
 interface AggregationConfig {
-    name: string
-    field: string
-    type: 'sum' | 'count'
+  name: string
+  field: string
+  type: 'sum' | 'count'
 }
 
 const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null): string => {
@@ -28,40 +28,31 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
   }
 };
 
-class DiscoverySummary extends React.Component {
-  render() {
-    return (
-      <div className='discovery-header__stats-container'>
-        {
-          this.props.config.aggregations.map((aggregation, i) => (
-            <React.Fragment key={aggregation.name} >
-              { i !== 0 && <div className='discovery-header__stat-border' /> }
-              <div className='discovery-header__stats-wrapper' id={aggregation.name.replace(/\s/g, '')} >
-                <div className='discovery-header__stat' >
-                  <div className='discovery-header__stat-number'>
-                    {renderAggregation(aggregation, this.props.visibleResources)}
-                  </div>
-                  <div className='discovery-header__stat-label'>
-                    {aggregation.name}
-                  </div>
-                </div>
-              </div>
-            </React.Fragment>
-          ))
-        }
-      </div>
-    );
-  }
+interface Props {
+  visibleResources: any[] | null;
+  config: DiscoveryConfig;
 }
 
-DiscoverySummary.propTypes = {
-  visibleResources: PropTypes.array,
-  config: PropTypes.object,
-};
-
-DiscoverySummary.defaultProps = {
-  visibleResources: [],
-  config: {},
-};
+const DiscoverySummary = (props: Props) => (
+  <div className='discovery-header__stats-container'>
+    {
+      props.config.aggregations.map((aggregation, i) => (
+        <React.Fragment key={aggregation.name} >
+          { i !== 0 && <div className='discovery-header__stat-border' /> }
+          <div className='discovery-header__stats-wrapper' data-aggregation-type={aggregation.name.replace(/\s/g, '')} >
+            <div className='discovery-header__stat' >
+              <div className='discovery-header__stat-number'>
+                {renderAggregation(aggregation, props.visibleResources)}
+              </div>
+              <div className='discovery-header__stat-label'>
+                {aggregation.name}
+              </div>
+            </div>
+          </div>
+        </React.Fragment>
+      ))
+    }
+  </div>
+);
 
 export default DiscoverySummary;
