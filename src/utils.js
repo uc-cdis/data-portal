@@ -282,7 +282,7 @@ export function overrideSelectTheme(theme) {
     ...theme,
     colors: {
       ...theme.colors,
-      primary: 'var(--pcdc-color__primary)',
+      primary: 'var(--pcdc-color__primary-light)',
     },
   };
 }
