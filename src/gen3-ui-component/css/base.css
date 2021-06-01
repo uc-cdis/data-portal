@@ -402,6 +402,12 @@ ul {
   cursor: pointer;
 }
 
+a.button {
+  letter-spacing: normal;
+  padding: 6px;
+  text-align: center;
+}
+
 .text-input {
   width: 152px;
   height: 40px;
