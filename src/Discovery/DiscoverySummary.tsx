@@ -1,6 +1,7 @@
 import React from 'react';
 import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
+import { DiscoveryConfig } from './DiscoveryConfig';
 
 interface AggregationConfig {
   name: string
@@ -28,32 +29,30 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
 };
 
 interface Props {
-  visibleResources: [];
-  config: { [aggregations]: []}
+  visibleResources: any[] | null;
+  config: DiscoveryConfig;
 }
 
-const DiscoverySummary = (props: { visibleResources: [], config: {}}) => {
-  return (
-    <div className='discovery-header__stats-container'>
-      {
-        props.config.aggregations.map((aggregation, i) => (
-          <React.Fragment key={aggregation.name} >
-            { i !== 0 && <div className='discovery-header__stat-border' /> }
-            <div className='discovery-header__stats-wrapper' data-aggregation-type={aggregation.name.replace(/\s/g, '')} >
-              <div className='discovery-header__stat' >
-                <div className='discovery-header__stat-number'>
-                  {renderAggregation(aggregation, props.visibleResources)}
-                </div>
-                <div className='discovery-header__stat-label'>
-                  {aggregation.name}
-                </div>
+const DiscoverySummary = (props: Props) => (
+  <div className='discovery-header__stats-container'>
+    {
+      props.config.aggregations.map((aggregation, i) => (
+        <React.Fragment key={aggregation.name} >
+          { i !== 0 && <div className='discovery-header__stat-border' /> }
+          <div className='discovery-header__stats-wrapper' data-aggregation-type={aggregation.name.replace(/\s/g, '')} >
+            <div className='discovery-header__stat' >
+              <div className='discovery-header__stat-number'>
+                {renderAggregation(aggregation, props.visibleResources)}
+              </div>
+              <div className='discovery-header__stat-label'>
+                {aggregation.name}
               </div>
             </div>
-          </React.Fragment>
-        ))
-      }
-    </div>
-  );
-};
+          </div>
+        </React.Fragment>
+      ))
+    }
+  </div>
+);
 
 export default DiscoverySummary;
