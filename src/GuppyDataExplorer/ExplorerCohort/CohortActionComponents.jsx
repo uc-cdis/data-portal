@@ -4,7 +4,8 @@ import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
-import { overrideSelectTheme, stringifyFilters } from './utils';
+import { overrideSelectTheme } from '../../utils';
+import { stringifyFilters } from './utils';
 import './ExplorerCohort.css';
 import './typedef';
 
