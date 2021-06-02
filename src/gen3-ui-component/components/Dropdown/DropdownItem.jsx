@@ -6,7 +6,6 @@ function DropdownItem({
   leftIcon,
   rightIcon,
   onClick,
-  tabIndex,
   disabled,
   children,
 }) {
@@ -29,7 +28,7 @@ function DropdownItem({
         }
       }}
       role='button'
-      tabIndex={tabIndex}
+      tabIndex={0}
     >
       {leftIcon && (
         <i
@@ -51,7 +50,6 @@ DropdownItem.propTypes = {
   leftIcon: PropTypes.string,
   rightIcon: PropTypes.string,
   onClick: PropTypes.func,
-  tabIndex: PropTypes.number,
   disabled: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -65,7 +63,6 @@ DropdownItem.defaultProps = {
   rightIcon: null,
   onClick: () => {},
   disabled: false,
-  tabIndex: 0, // override by Dropdown component
 };
 
 export default DropdownItem;

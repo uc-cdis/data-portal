@@ -35,7 +35,7 @@ export default function Explorer() {
               )}
               onClick={() => setTabIndex(index)}
               role='button'
-              tabIndex={index}
+              tabIndex={0}
             >
               <h3>
                 {tabTitle ||

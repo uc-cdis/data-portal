@@ -368,7 +368,7 @@ class FilterGroup extends React.Component {
             <div
               key={index}
               role='button'
-              tabIndex={index}
+              tabIndex={0}
               className={'g3-filter-group__tab'.concat(
                 this.state.selectedTabIndex === index
                   ? ' g3-filter-group__tab--selected'
