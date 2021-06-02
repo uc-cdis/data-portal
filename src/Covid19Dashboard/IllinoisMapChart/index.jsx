@@ -222,7 +222,7 @@ class IllinoisMapChart extends React.Component {
 
   render() {
     return (
-      <div className='map-chart'>
+      <div className='map-chart map-chart-il'>
         <ControlPanel
           showMapStyle={false}
           showLegend

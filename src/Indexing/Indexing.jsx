@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { userapiPath, fenceDownloadPath, jobapiPath, hostname } from '../localconf';
+import { userApiPath, fenceDownloadPath, jobapiPath, hostname } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './Indexing.less';
 import Popup from '../components/Popup';
@@ -63,7 +63,7 @@ class Indexing extends React.Component {
       file_name: this.state.uploadedFile.name,
     });
     return fetchWithCreds({
-      path: `${userapiPath}data/upload`,
+      path: `${userApiPath}data/upload`,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSONbody,
