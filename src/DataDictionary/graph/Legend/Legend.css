@@ -57,15 +57,19 @@
 }
 
 .data-dictionary-graph-legend__close {
+  display: flex;
   position: absolute;
   right: 15px;
-  width: 8px;
-  height: 8px;
-  background-color: var(--g3-color__gray);
   cursor: pointer;
 }
 
-.data-dictionary-graph-legend__close:hover {
+.data-dictionary-graph-legend__close-icon {
+  width: 8px;
+  height: 8px;
+  background-color: var(--g3-color__gray);
+}
+
+.data-dictionary-graph-legend__close-icon:hover {
   background-color: var(--g3-color__lightgray);
 }
 
