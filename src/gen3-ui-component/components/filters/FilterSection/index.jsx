@@ -332,18 +332,6 @@ class FilterSection extends React.Component {
     const numSelected = getNumValuesSelected(filterStatus);
     const sectionHeader = (
       <div className='g3-filter-section__header'>
-        <div className='g3-filter-section__toggle-icon-container'>
-          <i
-            onClick={() => this.toggleSection()}
-            onKeyPress={() => this.toggleSection()}
-            tabIndex={0}
-            role='button'
-            className={`g3-filter-section__toggle-icon g3-icon g3-icon-color__coal 
-                g3-icon--sm g3-icon--chevron-${
-                  this.state.isExpanded ? 'down' : 'right'
-                }`}
-          />
-        </div>
         <div
           className='g3-filter-section__title-container'
           onClick={() => this.toggleSection()}
@@ -351,6 +339,14 @@ class FilterSection extends React.Component {
           tabIndex={0}
           role='button'
         >
+          <div className='g3-filter-section__toggle-icon-container'>
+            <i
+              className={`g3-filter-section__toggle-icon g3-icon g3-icon-color__coal 
+                g3-icon--sm g3-icon--chevron-${
+                  this.state.isExpanded ? 'down' : 'right'
+                }`}
+            />
+          </div>
           <div
             className={`g3-filter-section__title ${
               numSelected !== 0 ? 'g3-filter-section__title--active' : ''
