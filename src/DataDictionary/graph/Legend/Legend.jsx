@@ -34,7 +34,7 @@ class Legend extends React.Component {
               className='data-dictionary-graph-legend__close g3-icon g3-icon--cross'
               onClick={this.toggleLegend}
               onKeyPress={(e) => {
-                if (charCode === 13 || charCode === 32) {
+                if (e.charCode === 13 || e.charCode === 32) {
                   e.preventDefault();
                   this.toggleLegend();
                 }
