@@ -277,7 +277,6 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       ),
     });
   }
-  // -----
 
   const visibleResources = filterByTags(
     searchFilteredResources,

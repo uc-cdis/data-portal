@@ -1,7 +1,7 @@
 import { discoveryConfig, aggMDSDataURL } from '../localconf';
 
 const retrieveFieldMapping = async (commonsName) => {
-  const url = `${aggMDSDataURL}/${commonsName}/field_to_columns`;
+  const url = `${aggMDSDataURL}/${commonsName}/columns_to_fields`;
   const res = await fetch(url);
   if (res.status !== 200) {
     throw new Error(`Request for field mapping at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
@@ -57,22 +57,20 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
 
   let allStudies = [];
 
-  // First, gather info for all Commons.
-  const allCommonsInfo = await Promise.all(
-    commons.map(commonsName => (
-      Promise.all(
-        retrieveFieldMapping(commonsName),
-        retrieveCommonsInfo(commonsName),
-      )
-    )),
-  )
-    // And key all the responses by the name of the commons.
+  const commonsPromises = commons.map(commonsName => (
+    Promise.all([
+      retrieveFieldMapping(commonsName),
+      retrieveCommonsInfo(commonsName),
+    ])
+  ));
+
+  const responses = await Promise.all(commonsPromises);
+
+  const allCommonsInfo = responses
     .reduce((commonsInfoByName, commonsInfo, index) => ({
       ...commonsInfoByName,
       [commons[index]]: commonsInfo,
     }), {});
-
-  console.log(allCommonsInfo);
 
   commons.forEach((commonsName) => {
     const [fieldMapping, commonsInfo] = allCommonsInfo[commonsName];
