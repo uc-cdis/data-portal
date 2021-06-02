@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import LegendPanel from './LegendPanel';
 import MapStylePanel from './MapStylePanel';
+import LayerSelector from './LayerSelector';
 
 import './ControlPanel.less';
 
@@ -13,11 +14,6 @@ class ControlPanel extends PureComponent {
         <p>
           Data source: <a href='https://systems.jhu.edu'>Johns Hopkins University CSSE</a>
         </p>
-        {this.props.lastUpdated &&
-          <p>
-            Last updated: {this.props.lastUpdated}
-          </p>
-        }
         {this.props.showMapStyle ? <MapStylePanel
           onMapStyleChange={this.props.onMapStyleChange}
           defaultMapStyle={this.props.defaultMapStyle}
@@ -25,6 +21,10 @@ class ControlPanel extends PureComponent {
         {this.props.showLegend ? <LegendPanel
           colors={this.props.colors}
         /> : null }
+        { this.props.layers ?
+          <LayerSelector layers={this.props.layers}
+                         onLayerSelectChange={this.props.onLayerSelectChange}/> : null
+        }
       </div>
     );
   }
@@ -36,7 +36,6 @@ ControlPanel.propTypes = {
   colors: PropTypes.object,
   showMapStyle: PropTypes.bool,
   defaultMapStyle: PropTypes.string,
-  lastUpdated: PropTypes.string,
 };
 
 ControlPanel.defaultProps = {
@@ -45,7 +44,6 @@ ControlPanel.defaultProps = {
   colors: {},
   showMapStyle: false,
   defaultMapStyle: '',
-  lastUpdated: '',
 };
 
 export default ControlPanel;

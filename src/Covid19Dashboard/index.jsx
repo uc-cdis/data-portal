@@ -246,6 +246,8 @@ class Covid19Dashboard extends React.Component {
       confirmedCount, deathsCount, recoveredCount,
     } = this.getTotalCounts();
 
+    console.log(mapboxAPIToken);
+
     return (
       <div className='covid19-dashboard'>
         {/* dashboard tabs */}
@@ -417,7 +419,7 @@ Covid19Dashboard.propTypes = {
 Covid19Dashboard.defaultProps = {
   modeledFipsList: [],
   jhuGeojsonLatest: { type: 'FeatureCollection', features: [] },
-  jhuJsonByLevelLatest: { country: {}, state: {}, county: {}, last_updated: '' },
+  jhuJsonByLevelLatest: { country: {}, state: {}, county: {} },
   selectedLocationData: null,
   top10ChartData: [],
   idphDailyChartData: [],
