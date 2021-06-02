@@ -812,7 +812,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       closable
       onClose={() => setModalVisible(false)}
     >
-      <Space style={{ width: '100%' }} direction='vertical' size='large'>
+      <div className='discovery-modal-content'>
         { config.studyPageFields.header &&
           <Space align='baseline'>
             <h3 className='discovery-modal__header-text'>{modalData[config.studyPageFields.header.field]}</h3>
@@ -840,34 +840,45 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
             )
           )
         }
-        { config.studyPageFields.fieldsToShow.map((fieldGroup, i) => (
-          <div key={i} className='discovery-modal__attribute-group'>
-            { fieldGroup.includeName &&
+        <div className='discovery-modal-attributes-container'>
+          { config.studyPageFields.fieldsToShow.map((fieldGroup, i) => (
+            <div key={i} className='discovery-modal__attribute-group'>
+              { fieldGroup.includeName &&
                   <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.groupName}</h3>
-            }
-            { fieldGroup.fields.map((field) => {
+              }
+              { fieldGroup.fields.map((field) => {
               // display nothing if selected study doesn't have this field
               // and this field isn't configured to show a default value
-              if (!modalData[field.field] && !field.includeIfNotAvailable) {
-                return null;
-              }
-              return (
-                <div key={field.name} className='discovery-modal__attribute'>
-                  { field.includeName !== false &&
+                if (!modalData[field.field] && !field.includeIfNotAvailable) {
+                  return null;
+                }
+                return (
+                  <div key={field.name} className='discovery-modal__attribute'>
+                    { field.includeName !== false &&
                         <span className='discovery-modal__attribute-name'>{field.name}</span>
-                  }
-                  <span className='discovery-modal__attribute-value'>
-                    { modalData[field.field]
-                      ? renderFieldContent(modalData[field.field], field.contentType)
-                      : (field.valueIfNotAvailable || 'Not available')
                     }
-                  </span>
-                </div>
-              );
-            })}
+                    <span className='discovery-modal__attribute-value'>
+                      { modalData[field.field]
+                        ? renderFieldContent(modalData[field.field], field.contentType)
+                        : (field.valueIfNotAvailable || 'Not available')
+                      }
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+          {/* FIXME THIS IS NOT BACKWARDS COMPATIBLE */}
+          <div className='discovery-modal-description'>
+            { modalData[config.studyPageFields.descriptionField.field]
+              ? modalData[config.studyPageFields.descriptionField.field]
+              : (config.studyPageFields.descriptionField.includeIfNotAvailable &&
+                  (config.studyPageFields.descriptionField.valueIfNotAvailable || 'n/a')
+              )
+            }
           </div>
-        ))}
-      </Space>
+        </div>
+      </div>
     </Drawer>
   </div>);
 };

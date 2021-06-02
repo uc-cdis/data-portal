@@ -87,6 +87,12 @@ export interface DiscoveryConfig {
             includeName?: boolean,
             fields: StudyPageFieldConfig[]
         }[]
+        descriptionField: {
+            name: string
+            field: string
+            includeIfNotAvailable?: boolean // defaults to false
+            valueIfNotAvailable?: string[] // defaults to 'n/a'
+        }
     },
     minimalFieldMapping: {
         tagsListFieldName: string,

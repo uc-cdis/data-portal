@@ -229,7 +229,26 @@
   font-size: 12px;
 }
 
+.discovery-modal {
+  box-sizing: border-box;
+  font-family: Montserrat;
+}
+
+.discovery-modal * {
+  box-sizing: inherit;
+}
+
+.discovery-modal-attributes-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
 .discovery-modal__attribute-group {
+  flex: 0.5 1 45%;
   display: flex;
   flex-direction: column;
 }
@@ -242,6 +261,7 @@
   padding: 4px;
   border-radius: 4px;
   color: #313839;
+  font-size: 12px;
 }
 
 .discovery-modal__attribute:not(:first-child) {
@@ -251,4 +271,5 @@
 .discovery-modal__attribute-name {
   font-weight: 700;
   text-transform: uppercase;
+  margin-right: 10px;
 }
