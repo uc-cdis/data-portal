@@ -149,7 +149,7 @@ function QueryNode({
     queryNodes.search_status === 'succeed: 200'
       ? Object.entries(queryNodes.search_result.data)
       : [];
-  const { project } = project;
+  const { project } = params;
 
   return (
     <div>
