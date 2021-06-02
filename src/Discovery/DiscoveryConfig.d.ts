@@ -84,15 +84,17 @@ export interface DiscoveryConfig {
         },
         fieldsToShow: {
             groupName?: string
+            groupWidth?: 'half' | 'full' // defaults to `'half'`
+            // showBackground?: boolean // defaults to `true`
             includeName?: boolean,
             fields: StudyPageFieldConfig[]
         }[]
-        descriptionField: {
-            name: string
-            field: string
-            includeIfNotAvailable?: boolean // defaults to false
-            valueIfNotAvailable?: string[] // defaults to 'n/a'
-        }
+        // descriptionField: {
+        //     name: string
+        //     field: string
+        //     includeIfNotAvailable?: boolean // defaults to false
+        //     valueIfNotAvailable?: string[] // defaults to 'n/a'
+        // }
     },
     minimalFieldMapping: {
         tagsListFieldName: string,
@@ -108,7 +110,7 @@ export interface DiscoveryConfig {
 export interface StudyPageFieldConfig {
     name: string
     field: string
-    contentType: 'string' | 'number' | 'paragraphs' | 'link'
+    contentType: 'string' | 'number' | 'paragraphs' | 'link' | 'tags'
     includeName?: boolean
     includeIfNotAvailable?: boolean
     valueIfNotAvailable?: string | number

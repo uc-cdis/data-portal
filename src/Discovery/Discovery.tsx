@@ -125,7 +125,7 @@ const getFilterValuesByKey = memoize(
   },
 );
 
-const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number'|'link' = 'string'): React.ReactNode => {
+const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number'|'link'|'tags' = 'string', config: DiscoveryConfig): React.ReactNode => {
   switch (contentType) {
   case 'string':
     return content;
@@ -141,6 +141,24 @@ const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'nu
     >
       {content}
     </a>);
+  case 'tags':
+    return content.map(({ name, category }) => {
+      const color = getTagColor(category, config);
+      return (
+        <Tag
+          key={name}
+          role='button'
+          tabIndex={0}
+          className='discovery-header__tag-btn discovery-tag '
+          aria-label={name}
+          style={{
+            borderColor: color,
+          }}
+        >
+          {name}
+        </Tag>
+      );
+    });
   default:
     throw new Error(`Unrecognized content type ${contentType}. Check the 'study_page_fields' section of the Discovery config.`);
   }
@@ -315,7 +333,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           return highlightSearchTerm(value, searchTerm).highlighted;
         }
       }
-      return renderFieldContent(value, column.contentType);
+      return renderFieldContent(value, column.contentType, config);
     },
   }),
   );
@@ -859,7 +877,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                     }
                     <span className='discovery-modal__attribute-value'>
                       { modalData[field.field]
-                        ? renderFieldContent(modalData[field.field], field.contentType)
+                        ? renderFieldContent(modalData[field.field], field.contentType, config)
                         : (field.valueIfNotAvailable || 'Not available')
                       }
                     </span>
@@ -868,15 +886,6 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               })}
             </div>
           ))}
-          {/* FIXME THIS IS NOT BACKWARDS COMPATIBLE */}
-          <div className='discovery-modal-description'>
-            { modalData[config.studyPageFields.descriptionField.field]
-              ? modalData[config.studyPageFields.descriptionField.field]
-              : (config.studyPageFields.descriptionField.includeIfNotAvailable &&
-                  (config.studyPageFields.descriptionField.valueIfNotAvailable || 'n/a')
-              )
-            }
-          </div>
         </div>
       </div>
     </Drawer>
