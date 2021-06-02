@@ -13,10 +13,10 @@ function DataDictionaryGraph({ onClearSearchResult }) {
   return (
     <>
       <ReduxGraphCalculator />
-      <ReduxLegend />
       <ReduxCanvas>
         <ReduxGraphDrawer />
       </ReduxCanvas>
+      <ReduxLegend />
       <ReduxNodeTooltip />
       <ReduxNodePopup />
       <ReduxOverlayPropertyTable />
