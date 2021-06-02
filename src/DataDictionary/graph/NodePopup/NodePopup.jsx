@@ -56,7 +56,12 @@ class NodePopup extends React.Component {
             <i
               className='node-popup__close g3-icon g3-icon--cross'
               onClick={this.props.onClosePopup}
-              onKeyPress={this.props.onClosePopup}
+              onKeyPress={(e) => {
+                if (charCode === 13 || charCode === 32) {
+                  e.preventDefault();
+                  this.props.onClosePopup();
+                }
+              }}
               role='button'
               tabIndex={0}
             />

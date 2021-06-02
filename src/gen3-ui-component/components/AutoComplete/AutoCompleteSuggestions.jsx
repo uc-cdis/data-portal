@@ -30,30 +30,25 @@ export const getSuggestionItemHTML = (suggestionItem) => {
     const highlightEndPos = matchedPieceIndices[currentHighlighPieceIndex][1];
     if (cursor < highlightStartPos) {
       resultHTMLSnippits.push(
-        (
-          <span key={cursor}>
-            {fullString.substring(cursor, highlightStartPos)}
-          </span>
-        ),
+        <span key={cursor}>
+          {fullString.substring(cursor, highlightStartPos)}
+        </span>
       );
     }
     resultHTMLSnippits.push(
-      (
-        <span key={highlightStartPos} className='auto-complete-suggestions__highlight'>
-          {fullString.substring(highlightStartPos, highlightEndPos)}
-        </span>
-      ),
+      <span
+        key={highlightStartPos}
+        className='auto-complete-suggestions__highlight'
+      >
+        {fullString.substring(highlightStartPos, highlightEndPos)}
+      </span>
     );
     cursor = highlightEndPos;
     currentHighlighPieceIndex += 1;
   }
   if (cursor < fullString.length) {
     resultHTMLSnippits.push(
-      (
-        <span key={cursor}>
-          {fullString.substring(cursor)}
-        </span>
-      ),
+      <span key={cursor}>{fullString.substring(cursor)}</span>
     );
   }
   return resultHTMLSnippits;
@@ -67,20 +62,25 @@ class AutoCompleteSuggestions extends Component {
   render() {
     return (
       <div>
-        {
-          this.props.suggestionList.map((suggestionItem, i) => (
-            <div
-              key={`${i}-${suggestionItem.fullString}`}
-              className='auto-complete-suggestions__item body'
-              onClick={() => { this.handleClickItem(suggestionItem, i); }}
-              onKeyPress={() => { this.handleClickItem(suggestionItem, i); }}
-              role='button'
-              tabIndex={0}
-            >
-              {getSuggestionItemHTML(suggestionItem)}
-            </div>
-          ))
-        }
+        {this.props.suggestionList.map((suggestionItem, i) => (
+          <div
+            key={`${i}-${suggestionItem.fullString}`}
+            className='auto-complete-suggestions__item body'
+            onClick={() => {
+              this.handleClickItem(suggestionItem, i);
+            }}
+            onKeyPress={(e) => {
+              if (e.charCode === 13 || e.charCode === 32) {
+                e.preventDefault();
+                this.handleClickItem(suggestionItem, i);
+              }
+            }}
+            role='button'
+            tabIndex={0}
+          >
+            {getSuggestionItemHTML(suggestionItem)}
+          </div>
+        ))}
       </div>
     );
   }
@@ -88,7 +88,8 @@ class AutoCompleteSuggestions extends Component {
 
 export const SuggestionItem = {
   fullString: PropTypes.string.isRequired,
-  matchedPieceIndices: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+  matchedPieceIndices: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
+    .isRequired,
 };
 
 AutoCompleteSuggestions.propTypes = {

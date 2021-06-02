@@ -137,10 +137,15 @@ class FilterSection extends React.Component {
           className={`g3-icon g3-icon--${
             this.state.searchInputEmpty ? 'search' : 'cross'
           } g3-filter-section__search-input-close`}
-          onClick={() => this.state.searchInputEmpty || this.clearSearchInput()}
-          onKeyPress={() =>
-            this.state.searchInputEmpty || this.clearSearchInput()
-          }
+          onClick={this.state.searchInputEmpty || this.clearSearchInput}
+          onKeyPress={(e) => {
+            if (this.state.searchInputEmpty) return;
+
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              this.clearSearchInput();
+            }
+          }}
           role='button'
           tabIndex={0}
         />
@@ -227,9 +232,14 @@ class FilterSection extends React.Component {
       totalCount > this.props.initVisibleItemNumber && (
         <div
           className='g3-filter-section__show-more'
-          role='button'
           onClick={() => this.toggleShowMore()}
-          onKeyPress={() => this.toggleShowMore()}
+          onKeyPress={(e) => {
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              this.toggleShowMore();
+            }
+          }}
+          role='button'
           tabIndex={0}
         >
           {this.state.showingMore
@@ -335,9 +345,14 @@ class FilterSection extends React.Component {
         <div
           className='g3-filter-section__title-container'
           onClick={() => this.toggleSection()}
-          onKeyPress={() => this.toggleSection()}
-          tabIndex={0}
+          onKeyPress={(e) => {
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              this.toggleSection();
+            }
+          }}
           role='button'
+          tabIndex={0}
         >
           <div className='g3-filter-section__toggle-icon-container'>
             <i
@@ -357,11 +372,16 @@ class FilterSection extends React.Component {
           {isRangeFilter && numSelected !== 0 && (
             <div className='g3-filter-section__selected-count-chip'>
               <div
-                tabIndex={0}
-                role='button'
-                onClick={(ev) => this.handleClearButtonClick(ev)}
-                onKeyPress={(ev) => this.handleClearButtonClick(ev)}
                 className='g3-filter-section__range-filter-clear-btn'
+                onClick={(e) => this.handleClearButtonClick(e)}
+                onKeyPress={(e) => {
+                  if (e.keyCode === 13 || e.keyCode === 32) {
+                    e.preventDefault();
+                    this.handleClearButtonClick(e);
+                  }
+                }}
+                role='button'
+                tabIndex={0}
               >
                 <div className='g3-filter-section__range-filter-clear-btn-text'>
                   reset
@@ -390,20 +410,30 @@ class FilterSection extends React.Component {
         </div>
         {isTextFilter && this.props.isArrayField && (
           <div
-            tabIndex={0}
-            role='button'
             onClick={() => this.toggleShowAndOrToggle()}
-            onKeyPress={() => this.toggleShowAndOrToggle()}
+            onKeyPress={(e) => {
+              if (e.charCode === 13 || e.charCode === 32) {
+                e.preventDefault();
+                this.toggleShowAndOrToggle();
+              }
+            }}
+            role='button'
+            tabIndex={0}
           >
             <i className='g3-filter-section__toggle-icon g3-icon g3-icon--sm g3-icon--gear' />
           </div>
         )}
         {isTextFilter && (
           <div
-            tabIndex={0}
-            role='button'
             onClick={() => this.toggleShowSearch()}
-            onKeyPress={() => this.toggleShowSearch()}
+            onKeyPress={(e) => {
+              if (e.charCode === 13 || e.charCode === 32) {
+                e.preventDefault();
+                this.toggleShowSearch();
+              }
+            }}
+            role='button'
+            tabIndex={0}
           >
             <i className='g3-filter-section__search-icon g3-icon g3-icon--sm g3-icon--search' />
           </div>

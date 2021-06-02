@@ -18,13 +18,18 @@ function DropdownItem({
 
   return (
     <div
-      role='button'
-      tabIndex={tabIndex}
       className={`${className} g3-dropdown__item ${
         disabled ? 'g3-dropdown__item--disabled' : ''
       }`}
       onClick={handleClick}
-      onKeyPress={handleClick}
+      onKeyPress={(e) => {
+        if (e.charCode === 13 || e.charCode === 32) {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
+      role='button'
+      tabIndex={tabIndex}
     >
       {leftIcon && (
         <i

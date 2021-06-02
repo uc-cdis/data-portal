@@ -69,8 +69,11 @@ class AutoCompleteInput extends Component {
               onClick={() => {
                 this.handleClear();
               }}
-              onKeyPress={() => {
-                this.handleClear();
+              onKeyPress={(e) => {
+                if (e.charCode === 13 || e.charCode === 32) {
+                  e.preventDefault();
+                  this.handleClear();
+                }
               }}
               role='button'
               tabIndex={0}
@@ -81,7 +84,12 @@ class AutoCompleteInput extends Component {
         <i
           className={`g3-icon g3-icon--${this.props.icon} auto-complete-input__icon`}
           onClick={() => this.handleSubmit()}
-          onKeyPress={() => this.handleSubmit()}
+          onKeyPress={(e) => {
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              this.handleSubmit();
+            }
+          }}
           role='button'
           tabIndex={0}
         />
