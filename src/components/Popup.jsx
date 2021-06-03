@@ -40,6 +40,12 @@ const Popup = ({
             tabIndex={-1}
             className='popup__close-button'
             onClick={onClose}
+            onKeyPress={(e) => {
+              if (e.charCode === 13 || e.charCode === 32) {
+                e.preventDefault();
+                onClose();
+              }
+            }}
           >
             <IconComponent
               iconName='cross'

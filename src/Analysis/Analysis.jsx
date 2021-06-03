@@ -24,6 +24,12 @@ class Analysis extends React.Component {
                 key={elt}
                 className='analysis__app-card'
                 onClick={() => this.openApp(elt)}
+                onKeyPress={(e) => {
+                  if (e.charCode === 13 || e.charCode === 32) {
+                    e.preventDefault();
+                    this.openApp(elt);
+                  }
+                }}
                 role='button'
                 tabIndex={0}
               >
