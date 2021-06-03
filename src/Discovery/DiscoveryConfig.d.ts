@@ -45,6 +45,7 @@ export interface DiscoveryConfig {
     tagSelector: {
         title: string
     },
+    tagColumnWidth: string,
     studyColumns: {
         name: string
         field: string
@@ -53,6 +54,7 @@ export interface DiscoveryConfig {
         valueIfNotAvailable?: string | number
         ellipsis?: boolean
         width?: string | number
+        hrefValueFromField?: 'string'
     }[],
     studyPreviewField: {
         name: string,
@@ -80,7 +82,8 @@ export interface DiscoveryConfig {
     minimalFieldMapping: {
         tagsListFieldName: string,
         authzField: string,
-        uid: string
+        uid: string,
+        commons: string
     },
     tagCategories: {
         name: string,
