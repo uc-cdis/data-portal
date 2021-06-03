@@ -115,16 +115,28 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
         placement='top'
         overlay='You have changed filters for this Cohort. Click this icon to undo.'
         arrowContent={<div className='rc-tooltip-arrow-inner' />}
+        trigger={['hover', 'focus']}
       >
-        <FontAwesomeIcon
-          icon='exclamation-triangle'
-          color='var(--pcdc-color__secondary)'
-          size='xs'
-          style={{
-            cursor: 'pointer',
-          }}
+        <span
           onClick={() => onOpenCohort(cloneDeep(cohort))}
-        />
+          onKeyPress={(e) => {
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              onOpenCohort(cloneDeep(cohort));
+            }
+          }}
+          role='button'
+          tabIndex={0}
+        >
+          <FontAwesomeIcon
+            icon='exclamation-triangle'
+            color='var(--pcdc-color__secondary)'
+            size='xs'
+            style={{
+              cursor: 'pointer',
+            }}
+          />
+        </span>
       </Tooltip>
     );
   }
