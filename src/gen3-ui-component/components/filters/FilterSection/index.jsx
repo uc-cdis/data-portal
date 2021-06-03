@@ -135,7 +135,9 @@ class FilterSection extends React.Component {
         />
         <span
           className=''
-          onClick={this.state.searchInputEmpty || this.clearSearchInput}
+          onClick={
+            this.state.searchInputEmpty ? undefined : this.clearSearchInput
+          }
           onKeyPress={(e) => {
             if (this.state.searchInputEmpty) return;
 
