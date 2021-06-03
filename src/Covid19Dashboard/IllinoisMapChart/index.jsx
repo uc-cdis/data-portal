@@ -246,7 +246,7 @@ class IllinoisMapChart extends React.Component {
           showLegend
           colors={this.mapData.colors}
           lastUpdated={this.props.jsonByLevel.last_updated}
-          layers={this.state.overlay_layers}
+          //layers={this.state.overlay_layers}
           onLayerSelectChange={this.onLayerSelect}
         >
 
@@ -298,8 +298,8 @@ class IllinoisMapChart extends React.Component {
               }}
             />
           </ReactMapGL.Source>
-          <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
-          <PopulationIL visibility={this.state.overlay_layers.il_population.visible} />
+          {/*<LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
+          <PopulationIL visibility={this.state.overlay_layers.il_population.visible} />*/}
         </ReactMapGL.InteractiveMap>
       </div>
     );
