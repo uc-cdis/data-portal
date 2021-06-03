@@ -61,17 +61,17 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
           placement='topLeft'
           overlay='Patient ID is a special filter and cannot be used in cohorts like other normal filters.'
           arrowContent={<div className='rc-tooltip-arrow-inner' />}
+          trigger={['hover', 'focus']}
         >
           <div
             className='g3-filter-section__header'
-            style={{ marginBottom: '.5rem' }}
+            style={{ marginBottom: '.5rem', height: 'auto' }}
+            role='button'
+            tabIndex={0}
           >
             <div className='g3-filter-section__title-container'>
               <div className='g3-filter-section__toggle-icon-container'>
-                <i
-                  role='button'
-                  className='g3-filter-section__toggle-icon g3-icon g3-icon-color__coal g3-icon--sm g3-icon--star'
-                />
+                <i className='g3-filter-section__toggle-icon g3-icon g3-icon-color__coal g3-icon--sm g3-icon--star' />
               </div>
               <div
                 className={`g3-filter-section__title${
@@ -81,11 +81,21 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
                 Patient ID
               </div>
               {isUsingPatientIds && (
-                <div className='g3-filter-section__selected-count-chip'>
+                <div
+                  className='g3-filter-section__selected-count-chip'
+                  style={{ marginTop: '2px', marginBottom: '2px' }}
+                >
                   <div
-                    role='button'
                     className='g3-filter-section__range-filter-clear-btn'
                     onClick={handleReset}
+                    onKeyPress={(e) => {
+                      if (e.charCode === 13 || e.charCode === 32) {
+                        e.preventDefault();
+                        handleReset();
+                      }
+                    }}
+                    role='button'
+                    tabIndex={0}
                   >
                     <div className='g3-filter-section__range-filter-clear-btn-text'>
                       reset
