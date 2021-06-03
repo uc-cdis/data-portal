@@ -133,10 +133,8 @@ class FilterSection extends React.Component {
           }}
           ref={this.inputElem}
         />
-        <i
-          className={`g3-icon g3-icon--${
-            this.state.searchInputEmpty ? 'search' : 'cross'
-          } g3-filter-section__search-input-close`}
+        <span
+          className=''
           onClick={this.state.searchInputEmpty || this.clearSearchInput}
           onKeyPress={(e) => {
             if (this.state.searchInputEmpty) return;
@@ -148,7 +146,13 @@ class FilterSection extends React.Component {
           }}
           role='button'
           tabIndex={0}
-        />
+        >
+          <i
+            className={`g3-icon g3-icon--${
+              this.state.searchInputEmpty ? 'search' : 'cross'
+            } g3-filter-section__search-input-close`}
+          />
+        </span>
       </div>
     );
   }

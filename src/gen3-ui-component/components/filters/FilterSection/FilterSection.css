@@ -104,6 +104,7 @@
   padding: 5px 8px;
   position: relative;
   display: flex;
+  align-items: center;
   margin-top: 8px;
 }
 
@@ -182,13 +183,10 @@
 }
 
 .g3-filter-section__search-input-close {
+  cursor: pointer;
   width: 10px;
   height: 10px;
-  position: relative;
-  top: 6px;
-  right: 6px;
   background-color: var(--g3-color__gray);
-  cursor: pointer;
 }
 
 .g3-filter-section__search-input-spinner {
