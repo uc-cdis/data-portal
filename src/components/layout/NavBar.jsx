@@ -61,6 +61,8 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
           className='nav-bar__link nav-bar__link--right'
           onMouseOver={() => updateTooltip(item)}
           onMouseLeave={() => updateTooltip(null)}
+          onFocus={() => updateTooltip(item)}
+          onBlur={() => updateTooltip(null)}
         >
           <NavButton
             dictIcons={dictIcons}
