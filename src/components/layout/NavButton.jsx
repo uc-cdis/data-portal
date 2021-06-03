@@ -14,7 +14,7 @@ import './NavButton.css';
  */
 function NavButton({ dictIcons, icon, name, to, isActive = false }) {
   const buttonClassName = isActive
-    ? 'body-typo button-active nav-button'
+    ? 'body-typo nav-button--active nav-button'
     : 'body-typo nav-button';
   const buttonBody = (
     <>

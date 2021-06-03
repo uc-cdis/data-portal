@@ -189,10 +189,9 @@ button {
   cursor: pointer;
 }
 
-button:focus,
-input:focus,
-textarea:focus {
-  outline-color: var(--pcdc-color__primary);
+:focus {
+  outline: 0;
+  box-shadow: 0 0 0 2px var(--pcdc-color__primary-light), 0 0 0 3px white;
 }
 
 small {
@@ -403,6 +402,12 @@ ul {
   cursor: pointer;
 }
 
+a.button {
+  letter-spacing: normal;
+  padding: 6px;
+  text-align: center;
+}
+
 .text-input {
   width: 152px;
   height: 40px;
@@ -413,11 +418,6 @@ ul {
   border-radius: 0;
   padding: 0 10px;
   margin-right: 20px;
-}
-.text-input:focus,
-.text-input:active {
-  box-shadow: none;
-  outline: none;
 }
 
 .button-primary-white {
@@ -482,15 +482,6 @@ ul {
 .button-inline {
   background-color: #34addb;
   padding: 5px 10px;
-}
-
-.button-active {
-  opacity: 1;
-  border-bottom: 3px solid var(--pcdc-color__secondary);
-}
-
-.button-top-active {
-  border-bottom: 1px solid var(--g3-color__white);
 }
 
 .right {

@@ -368,7 +368,7 @@ class FilterGroup extends React.Component {
             <div
               key={index}
               role='button'
-              tabIndex={index}
+              tabIndex={0}
               className={'g3-filter-group__tab'.concat(
                 this.state.selectedTabIndex === index
                   ? ' g3-filter-group__tab--selected'
@@ -399,7 +399,12 @@ class FilterGroup extends React.Component {
           <span
             className='g3-link g3-filter-group__collapse-link'
             onClick={() => this.toggleFilters()}
-            onKeyPress={() => this.toggleFilters()}
+            onKeyPress={(e) => {
+              if (e.charCode === 13 || e.charCode === 32) {
+                e.preventDefault();
+                this.toggleFilters();
+              }
+            }}
             role='button'
             tabIndex={0}
           >

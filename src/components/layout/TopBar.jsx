@@ -53,7 +53,9 @@ function TopBar({ topItems, username, isAdminUser, onLogoutClick }) {
             <TopLogoutButton onClick={onLogoutClick} />
           </>
         ) : (
-          <TopIconButton icon='exit' name='Login' to='/login' />
+          location.pathname !== '/login' && (
+            <TopIconButton icon='exit' name='Login' to='/login' />
+          )
         )}
       </div>
     </nav>

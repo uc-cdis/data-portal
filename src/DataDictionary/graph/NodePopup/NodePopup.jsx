@@ -35,6 +35,20 @@ class NodePopup extends React.Component {
       >
         {this.props.highlightingNode && (
           <div className='node-popup__wrapper'>
+            <span
+              className='node-popup__close'
+              onClick={this.props.onClosePopup}
+              onKeyPress={(e) => {
+                if (e.charCode === 13 || e.charCode === 32) {
+                  e.preventDefault();
+                  this.props.onClosePopup();
+                }
+              }}
+              role='button'
+              tabIndex={0}
+            >
+              <i className='node-popup__close-icon g3-icon g3-icon--cross' />
+            </span>
             <div className='node-popup__content'>
               <li className='node-popup__list-item'>
                 {this.props.highlightingNode.requiredPropertiesCount} required
@@ -53,13 +67,6 @@ class NodePopup extends React.Component {
             </div>
             <span className='node-popup__arrow node-popup__arrow--outer' />
             <span className='node-popup__arrow node-popup__arrow--inner' />
-            <i
-              className='node-popup__close g3-icon g3-icon--cross'
-              onClick={this.props.onClosePopup}
-              onKeyPress={this.props.onClosePopup}
-              role='button'
-              tabIndex={0}
-            />
           </div>
         )}
       </div>

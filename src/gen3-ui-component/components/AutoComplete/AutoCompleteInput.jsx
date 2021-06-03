@@ -64,27 +64,39 @@ class AutoCompleteInput extends Component {
         </form>
         {!this.state.closeIconHidden && (
           <>
-            <i
-              className='g3-icon g3-icon--cross auto-complete-input__close'
+            <span
               onClick={() => {
                 this.handleClear();
               }}
-              onKeyPress={() => {
-                this.handleClear();
+              onKeyPress={(e) => {
+                if (e.charCode === 13 || e.charCode === 32) {
+                  e.preventDefault();
+                  this.handleClear();
+                }
               }}
               role='button'
               tabIndex={0}
-            />
+            >
+              <i className='g3-icon g3-icon--cross auto-complete-input__close' />
+            </span>
             <i className='auto-complete-input__separator' />
           </>
         )}
-        <i
-          className={`g3-icon g3-icon--${this.props.icon} auto-complete-input__icon`}
+        <span
           onClick={() => this.handleSubmit()}
-          onKeyPress={() => this.handleSubmit()}
+          onKeyPress={(e) => {
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              this.handleSubmit();
+            }
+          }}
           role='button'
           tabIndex={0}
-        />
+        >
+          <i
+            className={`g3-icon g3-icon--${this.props.icon} auto-complete-input__icon`}
+          />
+        </span>
       </div>
     );
   }

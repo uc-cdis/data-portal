@@ -35,6 +35,7 @@
   color: var(--g3-color__white);
 }
 
+.top-icon-buton--active > .top-icon-button__content,
 .top-icon-button__content:hover {
   border-bottom: 1px solid var(--g3-color__white);
 }
@@ -52,4 +53,5 @@ i.top-icon-button__icon {
   width: auto;
   background: none;
   border: none;
+  border-radius: 0;
 }

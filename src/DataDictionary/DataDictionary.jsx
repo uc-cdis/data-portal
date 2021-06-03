@@ -39,8 +39,11 @@ class DataDictionary extends React.Component {
               onClick={() => {
                 this.setGraphView(true);
               }}
-              onKeyPress={() => {
-                this.setGraphView(true);
+              onKeyPress={(e) => {
+                if (e.charCode === 13 || e.charCode === 32) {
+                  e.preventDefault();
+                  this.setGraphView(true);
+                }
               }}
               role='button'
               tabIndex={0}
@@ -56,8 +59,11 @@ class DataDictionary extends React.Component {
               onClick={() => {
                 this.setGraphView(false);
               }}
-              onKeyPress={() => {
-                this.setGraphView(true);
+              onKeyPress={(e) => {
+                if (e.charCode === 13 || e.charCode === 32) {
+                  e.preventDefault();
+                  this.setGraphView(false);
+                }
               }}
               role='button'
               tabIndex={0}

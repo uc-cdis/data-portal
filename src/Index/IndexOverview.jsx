@@ -6,6 +6,7 @@ import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Spinner from '../components/Spinner';
 import Button from '../gen3-ui-component/components/Button';
+import { overrideSelectTheme } from '../utils';
 import { consortiumList } from '../params';
 import { breakpoints } from '../localconf';
 import './IndexOverview.css';
@@ -80,13 +81,7 @@ function IndexOverview({ overviewCounts }) {
               options={consortiumOptions}
               value={consortium}
               onChange={setConsortium}
-              theme={(theme) => ({
-                ...theme,
-                colors: {
-                  ...theme.colors,
-                  primary: 'var(--pcdc-color__primary)',
-                },
-              })}
+              theme={overrideSelectTheme}
             />
           </div>
           <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>

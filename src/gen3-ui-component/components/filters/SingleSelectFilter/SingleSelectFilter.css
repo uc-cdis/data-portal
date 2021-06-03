@@ -52,10 +52,6 @@
   outline: none;
 }
 
-.g3-single-select-filter__label--disabled {
-  cursor: not-allowed;
-}
-
 .g3-single-select-filter__tooltip-icon {
   color: var(--g3-color__gray);
 }

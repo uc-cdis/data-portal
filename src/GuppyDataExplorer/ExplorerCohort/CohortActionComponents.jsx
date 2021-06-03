@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
+import { overrideSelectTheme } from '../../utils';
 import { stringifyFilters } from './utils';
 import './ExplorerCohort.css';
 import './typedef';
@@ -31,13 +32,7 @@ export function CohortActionMenu({
       className='guppy-explorer-cohort__menu'
       value={{ label: 'Manage Cohorts', value: '' }}
       options={options}
-      theme={(theme) => ({
-        ...theme,
-        colors: {
-          ...theme.colors,
-          primary: 'var(--pcdc-color__primary)',
-        },
-      })}
+      theme={overrideSelectTheme}
       onChange={onSelectAction}
     />
   );
@@ -81,13 +76,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
               value={selected}
               autoFocus
               clearable={false}
-              theme={(theme) => ({
-                ...theme,
-                colors: {
-                  ...theme.colors,
-                  primary: 'var(--pcdc-color__primary)',
-                },
-              })}
+              theme={overrideSelectTheme}
               onChange={(e) => setSelected(e)}
             />
           }

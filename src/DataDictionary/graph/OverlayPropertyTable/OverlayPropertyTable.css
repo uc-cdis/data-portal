@@ -32,7 +32,6 @@
 }
 
 .overlay-property-table__close {
-  float: right;
   color: var(--g3-color__white);
   cursor: pointer;
   margin-left: 15px;
@@ -88,13 +87,17 @@
   margin-top: 15px;
 }
 
+.overlay-property-table__category-button-group {
+  display: inline-flex;
+  float: right;
+}
+
 .overlay-property-table__download-button {
   width: 80px;
   min-width: unset; /* override .g3-button's 152px min-width */
   height: 30px;
   margin: 5px 0 0 15px;
   padding: unset; /* override .g3-button's paddings */
-  float: right;
   font-weight: normal;
   border: none;
 }

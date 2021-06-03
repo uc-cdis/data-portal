@@ -159,9 +159,14 @@ class DictionarySearcher extends React.Component {
                     <span
                       className='dictionary-searcher__result-clear body'
                       onClick={this.onClearResult}
+                      onKeyPress={(e) => {
+                        if (e.charCode === 13 || e.charCode === 32) {
+                          e.preventDefault();
+                          this.onClearResult();
+                        }
+                      }}
                       role='button'
                       tabIndex={0}
-                      onKeyPress={this.onClearResult}
                     >
                       Clear Result
                     </span>

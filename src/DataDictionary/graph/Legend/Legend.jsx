@@ -30,13 +30,20 @@ class Legend extends React.Component {
       >
         {this.state.show ? (
           <>
-            <i
-              className='data-dictionary-graph-legend__close g3-icon g3-icon--cross'
+            <span
+              className='data-dictionary-graph-legend__close'
               onClick={this.toggleLegend}
-              onKeyPress={this.toggleLegend}
+              onKeyPress={(e) => {
+                if (e.charCode === 13 || e.charCode === 32) {
+                  e.preventDefault();
+                  this.toggleLegend();
+                }
+              }}
               role='button'
               tabIndex={0}
-            />
+            >
+              <i className='data-dictionary-graph-legend__close-icon g3-icon g3-icon--cross' />
+            </span>
             <div className='data-dictionary-graph-legend__item body'>
               <i className='data-dictionary-graph-legend__required-icon data-dictionary-graph-legend__required-icon--required g3-icon g3-icon--minus' />
               <span className='data-dictionary-graph-legend__text'>
@@ -78,7 +85,12 @@ class Legend extends React.Component {
           <span
             className='data-dictionary-graph-legend__info'
             onClick={this.toggleLegend}
-            onKeyPress={this.toggleLegend}
+            onKeyPress={(e) => {
+              if (e.charCode === 13 || e.charCode === 32) {
+                e.preventDefault();
+                this.toggleLegend();
+              }
+            }}
             role='button'
             tabIndex={0}
           >

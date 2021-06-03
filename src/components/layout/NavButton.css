@@ -1,17 +1,28 @@
 .nav-button {
-  margin: 6px;
+  margin: 4px;
   padding: 10px 2px;
-  height: 68px;
+  height: 72px;
   min-width: 110px;
+  position: relative;
   display: inline-block;
   text-align: center;
   opacity: 0.8;
 }
 
-.nav-button:hover {
+.nav-button:hover,
+.nav-button--active {
   color: var(--g3-color__black);
   opacity: 1;
+}
+
+.nav-button:hover::after,
+.nav-button--active::after {
   border-bottom: 3px solid var(--pcdc-color__secondary);
+  content: '';
+  width: calc(110px + 2 * 4px);
+  position: absolute;
+  left: -4px;
+  bottom: -4px;
 }
 
 .nav-button__icon {
@@ -31,7 +42,7 @@
   }
 
   .nav-button:hover,
-  .nav-button.button-active {
+  .nav-button--active {
     border-left: 6px solid var(--pcdc-color__secondary);
     border-bottom: none;
   }

@@ -3,23 +3,14 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Button from '../../gen3-ui-component/components/Button';
 import SimpleInputField from '../../components/SimpleInputField';
+import { overrideSelectTheme } from '../../utils';
 import './typedef';
 
 const ControlFormSelect = ({ label, ...selectProps }) => (
   <SimpleInputField
     label={label}
     input={
-      <Select
-        {...selectProps}
-        clearable={false}
-        theme={(theme) => ({
-          ...theme,
-          colors: {
-            ...theme.colors,
-            primary: 'var(--pcdc-color__primary)',
-          },
-        })}
-      />
+      <Select {...selectProps} clearable={false} theme={overrideSelectTheme} />
     }
   />
 );

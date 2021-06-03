@@ -107,7 +107,12 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
         <div
           className='nav-bar__menu'
           onClick={toggleMenu}
-          onKeyPress={(e) => e.key === 'Enter' && toggleMenu()}
+          onKeyPress={(e) => {
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              toggleMenu();
+            }
+          }}
           role='button'
           tabIndex={0}
           aria-expanded={isMenuOpen}

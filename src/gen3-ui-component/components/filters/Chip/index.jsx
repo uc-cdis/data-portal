@@ -9,10 +9,15 @@ function Chip({ text, onClearButtonClick }) {
       <div className='g3-chip__text'>{text}</div>
       <div
         className='g3-chip__clear-btn'
+        onClick={onClearButtonClick}
+        onKeyPress={(e) => {
+          if (e.charCode === 13 || e.charCode === 32) {
+            e.preventDefault();
+            onClearButtonClick();
+          }
+        }}
         role='button'
         tabIndex={0}
-        onClick={onClearButtonClick}
-        onKeyPress={onClearButtonClick}
       >
         <i className='g3-icon g3-icon--sm g3-icon-color__lightgray g3-icon--sm g3-icon--cross' />
       </div>

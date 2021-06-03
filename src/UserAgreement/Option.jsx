@@ -32,7 +32,7 @@ function Option({
       className={`option__frame ${frameClassModifier}`}
       role='button'
       onClick={() => onChange(idx)}
-      tabIndex={-10}
+      tabIndex={0}
     >
       {hasCorrectAnswers ? (
         <div

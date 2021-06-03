@@ -90,34 +90,41 @@ class OverlayPropertyTable extends React.Component {
                     buttonType='secondary'
                   />
                 )}
-                <span
-                  className='overlay-property-table__close'
-                  onClick={this.handleClose}
-                  onKeyPress={this.handleClose}
-                  role='button'
-                  tabIndex={0}
-                >
-                  Close
-                  <i className='overlay-property-table__close-icon g3-icon g3-icon--cross g3-icon--sm' />
-                </span>
-                <Button
-                  className='overlay-property-table__download-button'
-                  onClick={() => {
-                    downloadTemplate('tsv', this.props.node.id);
-                  }}
-                  label='TSV'
-                  buttonType='secondary'
-                  rightIcon='download'
-                />
-                <Button
-                  className='overlay-property-table__download-button'
-                  onClick={() => {
-                    downloadTemplate('json', this.props.node.id);
-                  }}
-                  label='JSON'
-                  buttonType='secondary'
-                  rightIcon='download'
-                />
+                <div className='overlay-property-table__category-button-group'>
+                  <Button
+                    className='overlay-property-table__download-button'
+                    onClick={() => {
+                      downloadTemplate('json', this.props.node.id);
+                    }}
+                    label='JSON'
+                    buttonType='secondary'
+                    rightIcon='download'
+                  />
+                  <Button
+                    className='overlay-property-table__download-button'
+                    onClick={() => {
+                      downloadTemplate('tsv', this.props.node.id);
+                    }}
+                    label='TSV'
+                    buttonType='secondary'
+                    rightIcon='download'
+                  />
+                  <span
+                    className='overlay-property-table__close'
+                    onClick={this.handleClose}
+                    onKeyPress={(e) => {
+                      if (e.charCode === 13 || e.charCode === 32) {
+                        e.preventDefault();
+                        this.handleClose();
+                      }
+                    }}
+                    role='button'
+                    tabIndex={0}
+                  >
+                    Close
+                    <i className='overlay-property-table__close-icon g3-icon g3-icon--cross g3-icon--sm' />
+                  </span>
+                </div>
               </div>
               <div className='overlay-property-table__node'>
                 <h3 className='overlay-property-table__node-title'>
