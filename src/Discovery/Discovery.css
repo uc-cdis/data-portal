@@ -243,14 +243,27 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
   align-items: baseline;
 }
 
+.discovery-modal__attribute-group--fullwidth {
+  flex: 1 1 100%;
+}
+
+.discovery-modal__attribute-group--halfwidth {
+  flex: 1 1 40%;
+}
+.discovery-modal__attribute-group--halfwidth:first-child {
+  margin-right: 6px;
+}
+.discovery-modal__attribute-group--halfwidth:nth-child(2) {
+  margin-left: 6px;
+}
+
 .discovery-modal__attribute-group {
-  flex: 0.5 1 45%;
   display: flex;
   flex-direction: column;
+  margin-bottom: 12px;
 }
 
 .discovery-modal__attribute {
@@ -272,4 +285,13 @@
   font-weight: 700;
   text-transform: uppercase;
   margin-right: 10px;
+}
+
+.discovery-modal__attribute-value {
+  text-align: right;
+}
+
+.discovery-modal__attribute-value--multiline {
+  display: block;
+  text-align: left;
 }

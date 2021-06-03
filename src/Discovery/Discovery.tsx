@@ -142,6 +142,9 @@ const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'nu
       {content}
     </a>);
   case 'tags':
+    if (!content || !content.map) {
+      return null;
+    }
     return content.map(({ name, category }) => {
       const color = getTagColor(category, config);
       return (
@@ -152,6 +155,7 @@ const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'nu
           className='discovery-header__tag-btn discovery-tag '
           aria-label={name}
           style={{
+            backgroundColor: color,
             borderColor: color,
           }}
         >
@@ -859,8 +863,18 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           )
         }
         <div className='discovery-modal-attributes-container'>
-          { config.studyPageFields.fieldsToShow.map((fieldGroup, i) => (
-            <div key={i} className='discovery-modal__attribute-group'>
+          { config.studyPageFields.fieldsToShow.map((fieldGroup, i) => {
+            let groupWidth;
+            switch (fieldGroup.groupWidth) {
+            case 'full':
+              groupWidth = 'fullwidth';
+              break;
+            case 'half':
+            default:
+              groupWidth = 'halfwidth';
+              break;
+            }
+            return (<div key={i} className={`discovery-modal__attribute-group discovery-modal__attribute-group--${groupWidth}`}>
               { fieldGroup.includeName &&
                   <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.groupName}</h3>
               }
@@ -875,7 +889,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                     { field.includeName !== false &&
                         <span className='discovery-modal__attribute-name'>{field.name}</span>
                     }
-                    <span className='discovery-modal__attribute-value'>
+                    <span className={`discovery-modal__attribute-value ${field.multiline ? 'discovery-modal__attribute-value--multiline' : ''}`}>
                       { modalData[field.field]
                         ? renderFieldContent(modalData[field.field], field.contentType, config)
                         : (field.valueIfNotAvailable || 'Not available')
@@ -884,8 +898,8 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                   </div>
                 );
               })}
-            </div>
-          ))}
+            </div>);
+          })}
         </div>
       </div>
     </Drawer>
