@@ -86,7 +86,7 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
               />
             </a>
           ) : (
-            <Link to=''>
+            <Link to='/'>
               <img
                 className='nav-bar__logo-img'
                 src='/src/img/logo.png'
@@ -97,7 +97,7 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
         </div>
         {navTitle && (
           <div role='button' tabIndex={0} className='nav-bar__home-button'>
-            <Link className='h3-typo nav-bar__link nav-bar__link--home' to=''>
+            <Link className='h3-typo nav-bar__link nav-bar__link--home' to='/'>
               {navTitle}
             </Link>
           </div>
