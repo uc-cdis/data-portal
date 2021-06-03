@@ -34,6 +34,12 @@ export default function Explorer() {
                 tabIndex === index ? ' guppy-explorer__tab--selected' : ''
               )}
               onClick={() => setTabIndex(index)}
+              onKeyPress={(e) => {
+                if (e.charCode === 13 || e.charCode === 32) {
+                  e.preventDefault();
+                  setTabIndex(index);
+                }
+              }}
               role='button'
               tabIndex={0}
             >
