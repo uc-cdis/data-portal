@@ -375,7 +375,12 @@ class FilterGroup extends React.Component {
                   : ''
               )}
               onClick={() => this.selectTab(index)}
-              onKeyDown={() => this.selectTab(index)}
+              onKeyPress={(e) => {
+                if (e.charCode === 13 || e.charCode === 32) {
+                  e.preventDefault();
+                  this.selectTab(index);
+                }
+              }}
             >
               <p
                 className={`g3-filter-group__tab-title ${
