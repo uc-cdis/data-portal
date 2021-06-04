@@ -120,6 +120,7 @@ class SubmitForm extends Component {
 
           {this.state.fill_form && (
             <Select
+              inputId='Node type'
               name='nodeType'
               options={options}
               value={this.state.chosenNode}

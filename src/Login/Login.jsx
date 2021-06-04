@@ -114,6 +114,7 @@ class Login extends React.Component {
                     // to the login button
                     loginOptions[i].length > 1 && (
                       <Select
+                        aria-label='Login options'
                         isClearable
                         isSearchable
                         options={loginOptions[i]}

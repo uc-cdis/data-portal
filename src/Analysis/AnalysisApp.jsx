@@ -50,6 +50,7 @@ class AnalysisApp extends React.Component {
         return (
           <>
             <Select
+              aria-label='Select your organ'
               value={this.state.jobInput}
               placeholder='Select your organ'
               options={analysisApps[app].options}
@@ -68,6 +69,7 @@ class AnalysisApp extends React.Component {
         return (
           <>
             <input
+              aria-label='Input data'
               className='text-input'
               type='text'
               placeholder='input data'

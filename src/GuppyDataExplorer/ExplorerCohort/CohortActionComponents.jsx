@@ -29,6 +29,7 @@ export function CohortActionMenu({
   ];
   return (
     <Select
+      aria-label='Manage cohorts'
       className='guppy-explorer-cohort__menu'
       value={{ label: 'Manage Cohorts', value: '' }}
       options={options}
