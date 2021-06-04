@@ -72,6 +72,7 @@ function ExplorerFindCohortButton({ filter }) {
                 label='Data Commons'
                 input={
                   <Select
+                    inputId='find-cohort-data-commons'
                     options={[emptyOption, ...externalCommonsOptions]}
                     value={selected}
                     autoFocus
@@ -85,6 +86,7 @@ function ExplorerFindCohortButton({ filter }) {
                 label='Filters'
                 input={
                   <textarea
+                    id='find-cohort-filters'
                     disabled
                     placeholder='No filters'
                     value={stringifyFilters(filter)}

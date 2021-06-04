@@ -60,6 +60,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
         label='First name'
         input={
           <input
+            id='registration-first-name'
             type='text'
             value={firstName}
             autoFocus
@@ -74,6 +75,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
         label='Last name'
         input={
           <input
+            id='registration-last-name'
             type='text'
             value={lastName}
             disabled={isRegistering}
@@ -87,6 +89,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
         label='Institution'
         input={
           <input
+            id='registration-institution'
             type='text'
             value={institution}
             disabled={isRegistering}
