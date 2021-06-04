@@ -307,8 +307,11 @@ class MapDataModel extends React.Component {
             <div className='h3-typo'>Assign Project and Node Type</div>
           </div>
           <div className='map-data-model__form-section map-data-model__border-bottom'>
-            <div className='h4-typo'>Project</div>
+            <label className='h4-typo' htmlFor='project'>
+              Project
+            </label>
             <InputWithIcon
+              inputId='project'
               inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
               inputValue={this.state.projectId}
               inputPlaceholderText='Select your project'
@@ -320,8 +323,11 @@ class MapDataModel extends React.Component {
           </div>
           <div className='map-data-model__node-form-section map-data-model__border-bottom'>
             <div className='map-data-model__form-section'>
-              <div className='h4-typo'>File Node</div>
+              <label className='h4-typo' htmlFor='file-node'>
+                File Node
+              </label>
               <InputWithIcon
+                inputId='file-node'
                 inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
                 inputValue={this.state.nodeType}
                 inputPlaceholderText='Select your node'
@@ -346,10 +352,13 @@ class MapDataModel extends React.Component {
                     <div key={i} className='map-data-model__required-field'>
                       <div className='map-data-model__required-field-info'>
                         <i className='g3-icon g3-icon--star' />
-                        <div className='h4-typo'>{prop}</div>
+                        <label className='h4-typo' htmlFor={prop}>
+                          {prop}
+                        </label>
                       </div>
                       {type && type.enum ? (
                         <InputWithIcon
+                          inputId={prop}
                           inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
                           inputValue={inputValue}
                           inputPlaceholderText='Select your field'
@@ -365,6 +374,7 @@ class MapDataModel extends React.Component {
                         />
                       ) : (
                         <InputWithIcon
+                          inputId={prop}
                           inputClassName='map-data-model__input introduction'
                           inputValue={inputValue}
                           inputOnChange={(e) =>
