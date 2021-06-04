@@ -884,12 +884,16 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 if (!modalData[field.field] && !field.includeIfNotAvailable) {
                   return null;
                 }
+                // If the field contains a particularly long string, add some special styles
+                const MULTILINE_FIELD_CHARLIMIT = 100; // FIXME pick a better length
+                const multiline = modalData[field.field]
+                  && modalData[field.field].length > MULTILINE_FIELD_CHARLIMIT;
                 return (
                   <div key={field.name} className='discovery-modal__attribute'>
                     { field.includeName !== false &&
                         <span className='discovery-modal__attribute-name'>{field.name}</span>
                     }
-                    <span className={`discovery-modal__attribute-value ${field.multiline ? 'discovery-modal__attribute-value--multiline' : ''}`}>
+                    <span className={`discovery-modal__attribute-value ${multiline ? 'discovery-modal__attribute-value--multiline' : ''}`}>
                       { modalData[field.field]
                         ? renderFieldContent(modalData[field.field], field.contentType, config)
                         : (field.valueIfNotAvailable || 'Not available')
