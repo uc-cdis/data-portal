@@ -67,7 +67,7 @@ function ExplorerFindCohortButton({ filter }) {
         <SimplePopup>
           <div className='explorer-find-cohort__form'>
             <h4>Find Cohort in An External Data Commons</h4>
-            <form onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}>
+            <form onSubmit={(e) => e.preventDefault()}>
               <SimpleInputField
                 label='Data Commons'
                 input={
