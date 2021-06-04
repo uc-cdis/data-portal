@@ -47,6 +47,7 @@ class DataDictionary extends React.Component {
               }}
               role='button'
               tabIndex={0}
+              aria-label='Graph view'
             >
               Graph View
             </span>
@@ -67,6 +68,7 @@ class DataDictionary extends React.Component {
               }}
               role='button'
               tabIndex={0}
+              aria-label='Dictionary view'
             >
               Table View
             </span>

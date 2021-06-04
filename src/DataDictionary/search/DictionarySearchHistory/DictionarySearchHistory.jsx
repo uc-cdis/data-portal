@@ -33,6 +33,7 @@ class DictionarySearchHistory extends React.Component {
               }}
               role='button'
               tabIndex={0}
+              aria-label='Clear history'
             >
               Clear History
             </span>
@@ -57,6 +58,7 @@ class DictionarySearchHistory extends React.Component {
                     }}
                     role='button'
                     tabIndex={0}
+                    aria-label='Search history item'
                   >
                     <span className='dictionary-search-history__item-keyword'>
                       {item.keywordStr}

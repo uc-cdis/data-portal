@@ -46,6 +46,7 @@ class NodePopup extends React.Component {
               }}
               role='button'
               tabIndex={0}
+              aria-label='Close popup'
             >
               <i className='node-popup__close-icon g3-icon g3-icon--cross' />
             </span>

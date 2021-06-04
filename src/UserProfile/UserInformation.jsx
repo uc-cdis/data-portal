@@ -8,6 +8,7 @@ import './UserInformation.css';
 
 /**
  * @param {Object} props
+ * @param {string} props.id
  * @param {string} props.label
  * @param {string} props.name
  * @param {string} [props.value]
@@ -15,6 +16,7 @@ import './UserInformation.css';
  * @param {(newInformation: { [name: string]: string }) => Promise<('success' | 'error')>} [props.onSubmit]
  */
 function UserInformationField({
+  id,
   label,
   name,
   value = '',
@@ -61,6 +63,7 @@ function UserInformationField({
         label={label}
         input={
           <input
+            id={id}
             ref={inputEl}
             readOnly={!isEditing}
             name={name}
@@ -114,6 +117,7 @@ function UserInformationField({
 }
 
 UserInformationField.propTypes = {
+  id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string,
@@ -154,12 +158,14 @@ function UserInformation({
     <div className='user-information__container'>
       <h2>Your information</h2>
       <UserInformationField
+        id='user-info-email'
         label='Email'
         name='email'
         value={email}
         onSubmit={onSubmit}
       />
       <UserInformationField
+        id='user-info-first-name'
         label='First name'
         name='firstName'
         value={firstName}
@@ -167,6 +173,7 @@ function UserInformation({
         onSubmit={onSubmit}
       />
       <UserInformationField
+        id='user-info-last-name'
         label='Last name'
         name='lastName'
         value={lastName}
@@ -174,6 +181,7 @@ function UserInformation({
         onSubmit={onSubmit}
       />
       <UserInformationField
+        id='user-info-institution'
         label='Institutional affiliation'
         name='institution'
         value={institution}

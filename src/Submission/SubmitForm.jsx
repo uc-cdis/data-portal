@@ -110,13 +110,17 @@ class SubmitForm extends Component {
     return (
       <div>
         <form>
-          <label style={{ display: 'block' }}>
+          <label style={{ display: 'block' }} htmlFor='form-submission-switch'>
             Use Form Submission
-            <Switch onChange={this.onFormToggle} />
+            <Switch
+              inputProps={{ role: 'switch', id: 'form-submission-switch' }}
+              onChange={this.onFormToggle}
+            />
           </label>
 
           {this.state.fill_form && (
             <Select
+              inputId='Node type'
               name='nodeType'
               options={options}
               value={this.state.chosenNode}

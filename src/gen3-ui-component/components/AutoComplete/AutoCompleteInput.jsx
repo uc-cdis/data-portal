@@ -76,6 +76,7 @@ class AutoCompleteInput extends Component {
               }}
               role='button'
               tabIndex={0}
+              aria-label='Clear'
             >
               <i className='g3-icon g3-icon--cross auto-complete-input__close' />
             </span>
@@ -92,6 +93,7 @@ class AutoCompleteInput extends Component {
           }}
           role='button'
           tabIndex={0}
+          aria-label='Search'
         >
           <i
             className={`g3-icon g3-icon--${this.props.icon} auto-complete-input__icon`}

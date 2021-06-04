@@ -33,6 +33,7 @@ function Option({
       role='button'
       onClick={() => onChange(idx)}
       tabIndex={0}
+      aria-label={option}
     >
       {hasCorrectAnswers ? (
         <div

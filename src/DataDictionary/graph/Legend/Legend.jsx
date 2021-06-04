@@ -41,6 +41,7 @@ class Legend extends React.Component {
               }}
               role='button'
               tabIndex={0}
+              aria-label='Close legend'
             >
               <i className='data-dictionary-graph-legend__close-icon g3-icon g3-icon--cross' />
             </span>
@@ -93,6 +94,7 @@ class Legend extends React.Component {
             }}
             role='button'
             tabIndex={0}
+            aria-label='Open legend'
           >
             <i className='data-dictionary-graph-legend__info-icon g3-icon g3-icon--question-mark' />
           </span>

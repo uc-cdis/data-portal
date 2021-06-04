@@ -18,6 +18,7 @@ function Chip({ text, onClearButtonClick }) {
         }}
         role='button'
         tabIndex={0}
+        aria-label='Clear'
       >
         <i className='g3-icon g3-icon--sm g3-icon-color__lightgray g3-icon--sm g3-icon--cross' />
       </div>

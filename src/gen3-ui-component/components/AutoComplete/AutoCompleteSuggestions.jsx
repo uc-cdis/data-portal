@@ -77,6 +77,7 @@ class AutoCompleteSuggestions extends Component {
             }}
             role='button'
             tabIndex={0}
+            aria-label={suggestionItem.fullString}
           >
             {getSuggestionItemHTML(suggestionItem)}
           </div>

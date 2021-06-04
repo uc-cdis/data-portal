@@ -367,8 +367,6 @@ class FilterGroup extends React.Component {
           {this.props.tabs.map((tab, index) => (
             <div
               key={index}
-              role='button'
-              tabIndex={0}
               className={'g3-filter-group__tab'.concat(
                 this.state.selectedTabIndex === index
                   ? ' g3-filter-group__tab--selected'
@@ -381,6 +379,9 @@ class FilterGroup extends React.Component {
                   this.selectTab(index);
                 }
               }}
+              role='button'
+              tabIndex={0}
+              aria-label={`Filter group tab: ${this.props.filterConfig.tabs[index].title}`}
             >
               <p
                 className={`g3-filter-group__tab-title ${
@@ -412,6 +413,7 @@ class FilterGroup extends React.Component {
             }}
             role='button'
             tabIndex={0}
+            aria-label={this.state.expandedStatusText}
           >
             {this.state.expandedStatusText}
           </span>

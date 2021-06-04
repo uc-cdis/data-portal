@@ -83,6 +83,7 @@ const SubmitTSV = ({
             }}
             role='button'
             tabIndex={0}
+            aria-label='Upload file'
           >
             Upload file
           </span>

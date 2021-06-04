@@ -141,6 +141,7 @@ class Canvas extends React.Component {
             }}
             role='button'
             tabIndex={0}
+            aria-label='Reset zoom'
           >
             <i className='canvas__zoom-icon g3-icon g3-icon--reset' />
           </div>
@@ -155,6 +156,7 @@ class Canvas extends React.Component {
             }}
             role='button'
             tabIndex={0}
+            aria-label='Zoom in'
           >
             <i className='canvas__zoom-icon g3-icon g3-icon--plus' />
           </div>
@@ -169,6 +171,7 @@ class Canvas extends React.Component {
             }}
             role='button'
             tabIndex={0}
+            aria-label='Zoom out'
           >
             <i className='canvas__zoom-icon canvas__zoom-icon--zoom-in g3-icon g3-icon--minus' />
           </div>

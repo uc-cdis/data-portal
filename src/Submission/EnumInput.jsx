@@ -46,6 +46,7 @@ class EnumInput extends Component {
         )}
         <br />
         <Select
+          inputId={this.props.name}
           name={this.props.name}
           options={options}
           required={this.props.required}

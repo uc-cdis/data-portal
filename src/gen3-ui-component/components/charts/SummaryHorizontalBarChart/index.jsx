@@ -85,6 +85,7 @@ class SummaryBarChart extends React.Component {
                 }}
                 role='button'
                 tabIndex={0}
+                aria-label='Show less'
               >
                 <span>Show less</span>
               </div>
@@ -100,6 +101,7 @@ class SummaryBarChart extends React.Component {
                 }}
                 role='button'
                 tabIndex={0}
+                aria-label='Show more'
               >
                 {`And ${(
                   barChartData.length - this.props.maximumDisplayItem

@@ -69,6 +69,7 @@ class WorkspaceLogin extends React.Component {
                   // to the login button
                   !p.refresh_token_expiration && loginOptions[i].length > 1 && (
                     <Select
+                      aria-label='Login options'
                       isClearable
                       isSearchable
                       options={loginOptions[i]}

@@ -187,6 +187,7 @@ function QueryNode({
                     onUpdatePopup({ view_popup: true })
                   )
                 }
+                aria-label='View'
               >
                 View
               </a>
@@ -199,6 +200,7 @@ function QueryNode({
                     onUpdatePopup({ nodedelete_popup: true })
                   )
                 }
+                aria-label='Delete'
               >
                 Delete
               </a>

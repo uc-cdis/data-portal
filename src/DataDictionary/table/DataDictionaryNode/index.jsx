@@ -41,6 +41,7 @@ class DataDictionaryNode extends React.Component {
           }}
           role='button'
           tabIndex={0}
+          aria-label='Dictionary node'
         >
           <span className='data-dictionary-node__title'>
             <i className='g3-icon g3-icon--folder data-dictionary-node__file-icon' />
@@ -92,6 +93,7 @@ class DataDictionaryNode extends React.Component {
               }}
               role='button'
               tabIndex={0}
+              aria-label='Close property tab'
             >
               Close tab
               <i className='g3-icon g3-icon--cross data-dictionary-node__property-close-icon' />
