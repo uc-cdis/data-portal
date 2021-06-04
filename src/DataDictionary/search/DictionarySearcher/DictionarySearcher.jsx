@@ -167,6 +167,7 @@ class DictionarySearcher extends React.Component {
                       }}
                       role='button'
                       tabIndex={0}
+                      aria-label='Clear result'
                     >
                       Clear Result
                     </span>

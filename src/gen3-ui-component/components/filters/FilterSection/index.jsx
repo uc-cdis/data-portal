@@ -148,6 +148,7 @@ class FilterSection extends React.Component {
           }}
           role='button'
           tabIndex={0}
+          aria-label={this.state.searchInputEmpty ? 'Search' : 'Clear'}
         >
           <i
             className={`g3-icon g3-icon--${
@@ -247,6 +248,7 @@ class FilterSection extends React.Component {
           }}
           role='button'
           tabIndex={0}
+          aria-label={this.state.showingMore ? 'Show less' : 'Show more'}
         >
           {this.state.showingMore
             ? 'less'
@@ -359,6 +361,9 @@ class FilterSection extends React.Component {
           }}
           role='button'
           tabIndex={0}
+          aria-label={`${
+            this.state.isExpanded ? 'Collapse' : 'Expand'
+          } filter: ${this.props.title}`}
         >
           <div className='g3-filter-section__toggle-icon-container'>
             <i
@@ -388,6 +393,7 @@ class FilterSection extends React.Component {
                 }}
                 role='button'
                 tabIndex={0}
+                aria-label='Reset filter'
               >
                 <div className='g3-filter-section__range-filter-clear-btn-text'>
                   reset
@@ -425,6 +431,11 @@ class FilterSection extends React.Component {
             }}
             role='button'
             tabIndex={0}
+            aria-label={
+              this.state.showingAndOrToggle
+                ? 'Hide filter combine mode'
+                : 'Show filter combine mode'
+            }
           >
             <i className='g3-filter-section__toggle-icon g3-icon g3-icon--sm g3-icon--gear' />
           </div>
@@ -440,6 +451,9 @@ class FilterSection extends React.Component {
             }}
             role='button'
             tabIndex={0}
+            aria-label={
+              this.state.showingSearch ? 'Hide search' : 'Show search'
+            }
           >
             <i className='g3-filter-section__search-icon g3-icon g3-icon--sm g3-icon--search' />
           </div>

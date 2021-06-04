@@ -29,6 +29,7 @@ function DropdownItem({
       }}
       role='button'
       tabIndex={0}
+      aria-label='Dropdown item'
     >
       {leftIcon && (
         <i

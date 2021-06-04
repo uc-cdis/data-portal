@@ -66,10 +66,13 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
           <div
             className='g3-filter-section__header'
             style={{ marginBottom: '.5rem', height: 'auto' }}
-            role='button'
-            tabIndex={0}
           >
-            <div className='g3-filter-section__title-container'>
+            <div
+              className='g3-filter-section__title-container'
+              role='button'
+              tabIndex={0}
+              aria-label='Filter: patient ids'
+            >
               <div className='g3-filter-section__toggle-icon-container'>
                 <i className='g3-filter-section__toggle-icon g3-icon g3-icon-color__coal g3-icon--sm g3-icon--star' />
               </div>
@@ -96,6 +99,7 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
                     }}
                     role='button'
                     tabIndex={0}
+                    aria-label='Reset filter'
                   >
                     <div className='g3-filter-section__range-filter-clear-btn-text'>
                       reset

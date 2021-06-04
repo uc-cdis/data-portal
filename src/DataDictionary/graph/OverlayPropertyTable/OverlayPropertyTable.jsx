@@ -120,6 +120,7 @@ class OverlayPropertyTable extends React.Component {
                     }}
                     role='button'
                     tabIndex={0}
+                    aria-label='Close property table'
                   >
                     Close
                     <i className='overlay-property-table__close-icon g3-icon g3-icon--cross g3-icon--sm' />

@@ -33,6 +33,9 @@ class TierAccessSelector extends React.Component {
           onClick={this.handleToggle}
           role='button'
           tabIndex={0}
+          aria-label={`${
+            this.state.toggled ? 'Expand' : 'Collapse'
+          } tier access selector`}
         >
           <h4>
             <span className='tier-access-selector__title'>Data Access</span>

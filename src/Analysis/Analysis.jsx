@@ -32,6 +32,7 @@ class Analysis extends React.Component {
                 }}
                 role='button'
                 tabIndex={0}
+                aria-label={`App card: ${app}`}
               >
                 <AppCard
                   title={app.title}

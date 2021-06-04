@@ -13,6 +13,7 @@ const TopBarButton = ({ item, onActiveTab = () => {}, isActive = false }) => (
     onKeyDown={onActiveTab}
     role='button'
     tabIndex={0}
+    aria-label={item.name}
   >
     {item.name}
     {item.iconClassName ? (

@@ -46,6 +46,7 @@ const Popup = ({
                 onClose();
               }
             }}
+            aria-label='Close popup'
           >
             <IconComponent
               iconName='cross'

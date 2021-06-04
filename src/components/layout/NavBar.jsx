@@ -118,6 +118,7 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
           role='button'
           tabIndex={0}
           aria-expanded={isMenuOpen}
+          aria-label={`${isMenuOpen ? 'Expand' : 'Collapse'} navigation menu`}
         >
           Menu
           <FontAwesomeIcon
