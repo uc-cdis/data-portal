@@ -36,8 +36,11 @@ class SelectComponent extends Component {
 
     return (
       <div className='selection'>
-        <span className='selection__title'>{this.props.title}</span>
+        <label className='selection__title' htmlFor={this.props.title}>
+          {this.props.title}
+        </label>
         <Select
+          inputId={this.props.title}
           className='selection__select'
           name={this.props.title}
           options={options}
