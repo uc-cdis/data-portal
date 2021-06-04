@@ -135,21 +135,19 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
           ]}
         >
           <div>
-            Upload a CSV file containing patient IDs to explore:
-            <br />
             <SimpleInputField
+              label=' Upload a CSV file containing patient IDs to explore'
               input={
                 <input type='file' accept='.csv' onChange={handleFileUpload} />
               }
             />
           </div>
-          <div>
-            {isFileUploaded
-              ? 'Review the patient IDs in the uploaded file:'
-              : 'Or type a list of patient IDs separated by commas:'}
-          </div>
-
           <SimpleInputField
+            label={
+              isFileUploaded
+                ? 'Review the patient IDs in the uploaded file:'
+                : 'Or type a list of patient IDs separated by commas'
+            }
             input={
               <textarea
                 ref={textareaRef}
