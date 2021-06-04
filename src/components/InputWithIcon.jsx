@@ -6,6 +6,7 @@ import './InputWithIcon.less';
 
 function InputWithIcon({
   className,
+  inputId,
   inputOptions,
   inputClassName,
   inputValue,
@@ -25,6 +26,7 @@ function InputWithIcon({
       >
         {inputOptions ? (
           <Select
+            inputId={inputId}
             styles={{
               control: (provided) => ({ ...provided, width: '100%' }),
             }}
@@ -41,6 +43,7 @@ function InputWithIcon({
           />
         ) : (
           <input
+            id={inputId}
             type='text'
             className={inputClassName}
             onBlur={inputOnChange}
@@ -69,6 +72,7 @@ function InputWithIcon({
 
 InputWithIcon.propTypes = {
   className: PropTypes.string,
+  inputId: PropTypes.string.isRequired,
   inputClassName: PropTypes.string,
   inputValue: PropTypes.string,
   inputPlaceholderText: PropTypes.string,
