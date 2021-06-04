@@ -75,9 +75,10 @@ function IndexOverview({ overviewCounts }) {
         <h2>Overview</h2>
         <div className='index-overview__actions'>
           <div className='index-overview__select'>
-            <label htmlFor='index-overview-select'>Consortium</label>
+            <label htmlFor='index-overview-select-input'>Consortium</label>
             <Select
-              indexId='index-overview-select'
+              id='index-overview-select'
+              inputId='index-overview-select-input'
               options={consortiumOptions}
               value={consortium}
               onChange={setConsortium}
