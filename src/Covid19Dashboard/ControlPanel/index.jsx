@@ -27,8 +27,10 @@ class ControlPanel extends PureComponent {
           colors={this.props.colors}
         /> : null }
         { this.props.layers ?
-          <LayerSelector layers={this.props.layers}
-                         onLayerSelectChange={this.props.onLayerSelectChange}/> : null
+          <LayerSelector
+            layers={this.props.layers}
+            onLayerSelectChange={this.props.onLayerSelectChange}
+          /> : null
         }
       </div>
     );
@@ -42,6 +44,8 @@ ControlPanel.propTypes = {
   showMapStyle: PropTypes.bool,
   defaultMapStyle: PropTypes.string,
   lastUpdated: PropTypes.string,
+  layers: PropTypes.object,
+  onLayerSelectChange: PropTypes.func,
 };
 
 ControlPanel.defaultProps = {
@@ -51,6 +55,8 @@ ControlPanel.defaultProps = {
   showMapStyle: false,
   defaultMapStyle: '',
   lastUpdated: '',
+  layers: null,
+  onLayerSelectChange: () => {},
 };
 
 export default ControlPanel;

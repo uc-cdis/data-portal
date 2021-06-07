@@ -6,8 +6,10 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
 import countyData from '../data/us_counties';
+/*
+// Additional layers used as examples enable here
 import LayerTemplate from '../overlays/LayerTemplate';
-import PopulationIL from '../overlays/PopulationIL';
+import PopulationIL from '../overlays/PopulationIL'; */
 
 
 function addDataToGeoJsonBase(data) {
@@ -72,8 +74,8 @@ class IllinoisMapChart extends React.Component {
       hoverInfo: null,
       _map: null,
       overlay_layers: {
-         us_counties : { title: 'US Counties', visible: 'visible' },
-         il_population : { title: 'IL Population', visible: 'visible' },
+        us_counties: { title: 'US Counties', visible: 'visible' },
+        il_population: { title: 'IL Population', visible: 'visible' },
       },
     };
     this.mapData = {
@@ -137,8 +139,6 @@ class IllinoisMapChart extends React.Component {
     this.mapData.colorsAsList = Object.entries(this.mapData.colors)
       .map(item => [+item[0], item[1]]).flat();
   }
-
-
 
 
   onHover = (event) => {
@@ -246,8 +246,11 @@ class IllinoisMapChart extends React.Component {
           showLegend
           colors={this.mapData.colors}
           lastUpdated={this.props.jsonByLevel.last_updated}
-          //layers={this.state.overlay_layers}
+          /*
+          // Additional layers used as examples enable here
+          layers={this.state.overlay_layers}
           onLayerSelectChange={this.onLayerSelect}
+          */
         />
         <ReactMapGL.InteractiveMap
           className='.map-chart__mapgl-map'
@@ -294,8 +297,10 @@ class IllinoisMapChart extends React.Component {
               }}
             />
           </ReactMapGL.Source>
-          {/*<LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
-          <PopulationIL visibility={this.state.overlay_layers.il_population.visible} />*/}
+          {/*
+          // Additional layers used as examples enable here
+          <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
+          <PopulationIL visibility={this.state.overlay_layers.il_population.visible} /> */}
         </ReactMapGL.InteractiveMap>
       </div>
     );
