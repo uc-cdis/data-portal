@@ -160,6 +160,7 @@ Below is an example, with inline comments describing what each JSON block config
     "explorer": true, // required; indicates the flag and whether to hide it or not
     "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. The Data Explorer page would be publicly accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
     "discovery": true, // optional; whether to enable the Discovery page. If true, `discoveryConfig` must be present as well.
+    "discoveryUseAggMDS": true // optional, false by default; if true, the Discovery page will use the Aggregate Metadata path instead of the Metadata path. This causes the Discovery page to serve as an "Ecosystem Browser". See docs/ecosystem_browser.md for more details.
     "explorerStoreFilterInURL": true, // optional; whether to store/load applied filters in the URL during Data Explorer use.
     This feature currently supports single select filters and range filters; it
     lacks support for search filter state, accessibility state, table state.
@@ -457,6 +458,11 @@ Below is an example, with inline comments describing what each JSON block config
       {
         "name": "dbGaP Accession Number",
         "field": "study_id"
+      },
+      {
+        "name": "Commons",
+        "field": "commons_of_origin",
+        "hrefValueFromField": "commons_url", // If this attribute is present, the text in the column will be linked. The href value of the link will be the corresponding value of the fieldname in this attribute.
       }
     ],
     "studyPreviewField": { // if present, studyPreviewField shows a special preview field beneath each row of data in the table, useful for study descriptions.

@@ -5,6 +5,8 @@ import Discovery from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { hostname, discoveryConfig, useArboristUI } from '../localconf';
+import isEnabled from '../helpers/featureFlags';
+import loadStudiesFromAggMDS from './aggMDSUtils';
 
 const loadStudiesFromMDS = async (): Promise<any[]> => {
   // Why `_guid_type='discovery_metadata'? We need to distinguish the discovery page studies in MDS
@@ -48,8 +50,8 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
 };
 
 const DiscoveryWithMDSBackend: React.FC<{
-  userAuthMapping: any,
-  config: DiscoveryConfig,
+    userAuthMapping: any,
+    config: DiscoveryConfig,
 }> = (props) => {
   const [studies, setStudies] = useState(null);
 
@@ -58,7 +60,13 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    loadStudiesFromMDS().then((rawStudies) => {
+    let loadStudiesFunction;
+    if (isEnabled('discoveryUseAggMDS')) {
+      loadStudiesFunction = loadStudiesFromAggMDS;
+    } else {
+      loadStudiesFunction = loadStudiesFromMDS;
+    }
+    loadStudiesFunction().then((rawStudies) => {
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const authzField = props.config.minimalFieldMapping.authzField;
