@@ -240,7 +240,7 @@ class IllinoisMapChart extends React.Component {
 
   render() {
     return (
-      <div className='map-chart'>
+      <div className='map-chart map-chart-il'>
         <ControlPanel
           showMapStyle={false}
           showLegend
@@ -248,11 +248,7 @@ class IllinoisMapChart extends React.Component {
           lastUpdated={this.props.jsonByLevel.last_updated}
           //layers={this.state.overlay_layers}
           onLayerSelectChange={this.onLayerSelect}
-        >
-
-
-        </ControlPanel>
-
+        />
         <ReactMapGL.InteractiveMap
           className='.map-chart__mapgl-map'
           mapboxApiAccessToken={mapboxAPIToken}

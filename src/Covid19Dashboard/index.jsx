@@ -285,6 +285,7 @@ class Covid19Dashboard extends React.Component {
                         key={i}
                         chartsConfig={carouselConfig}
                         {...this.props}
+                        enablePopupOnClick
                       />),
                     )}
                   </div>
@@ -324,6 +325,7 @@ class Covid19Dashboard extends React.Component {
                         key={i}
                         chartsConfig={carouselConfig}
                         {...this.props}
+                        enablePopupOnClick
                       />),
                     )}
                   </div>
@@ -415,7 +417,7 @@ Covid19Dashboard.propTypes = {
 Covid19Dashboard.defaultProps = {
   modeledFipsList: [],
   jhuGeojsonLatest: { type: 'FeatureCollection', features: [] },
-  jhuJsonByLevelLatest: { country: {}, state: {}, county: {} },
+  jhuJsonByLevelLatest: { country: {}, state: {}, county: {}, last_updated: '' },
   selectedLocationData: null,
   top10ChartData: [],
   idphDailyChartData: [],

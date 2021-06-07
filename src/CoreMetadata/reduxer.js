@@ -3,13 +3,13 @@ import CoreMetadataHeader from './CoreMetadataHeader';
 import FileTypePicture from '../components/FileTypePicture';
 import CoreMetadataTable from './CoreMetadataTable';
 import CoreMetadataPage from './page';
-import { coreMetadataPath, userapiPath } from '../localconf';
+import { coreMetadataPath, userApiPath } from '../localconf';
 import { fetchWithCreds, updatePopup } from '../actions';
 
 export const generateSignedURL = objectId =>
   dispatch =>
     fetchWithCreds({
-      path: `${userapiPath}/data/download/${objectId}?expires_in=3600`,
+      path: `${userApiPath}/data/download/${objectId}?expires_in=3600`,
       dispatch,
     })
       .then(
