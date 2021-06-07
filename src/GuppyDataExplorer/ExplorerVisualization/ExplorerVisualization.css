@@ -39,19 +39,24 @@
 }
 
 .guppy-explorer-visualization__view-group > button {
-  background-color: transparent;
+  background-color: var(--g3-color__silver);
   border: none;
-  color: var(--pcdc-color__primary);
-  font-weight: bold;
-  padding-left: 20px;
-  padding-right: 20px;
+  color: var(--g3-color__gray);
+  font-weight: var(--g3-font__semi-bold-weight);
+  padding: 0 10px;
+  margin-right: 10px;
   text-transform: capitalize;
   width: auto;
 }
 
+.guppy-explorer-visualization__view-group > button:last-child {
+  margin-right: 0;
+}
+
 .guppy-explorer-visualization__view-group > button.active,
 .guppy-explorer-visualization__view-group > button:hover {
-  color: var(--pcdc-color__secondary);
+  border: 1px solid var(--g3-color__silver);
+  background-color: var(--g3-color__white);
 }
 
 /* Tablet width and less */
