@@ -24,7 +24,7 @@
   --g3-color__black: #000000;
   --g3-color__white: #ffffff;
 
-  --g3-primary-btn__color: var(--g3-color__white);
+  --g3-primary-btn__color: var(--g3-color__black);
   --g3-primary-btn__bg-color: var(--pcdc-color__secondary);
   --g3-primary-btn__bg-color--hover: var(--pcdc-color__secondary-light);
   --g3-primary-btn__border-color: var(--g3-color__lightgray);
