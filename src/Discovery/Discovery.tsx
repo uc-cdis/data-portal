@@ -16,7 +16,6 @@ import {
   Button,
   Checkbox,
   Collapse,
-  Typography,
 } from 'antd';
 
 import {
@@ -36,8 +35,6 @@ import { fetchWithCreds } from '../actions';
 import { manifestServiceApiPath, hostname } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
-
-const { Paragraph } = Typography;
 
 const accessibleFieldName = '__accessible';
 export enum AccessLevel {
@@ -746,6 +743,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       }
       <div className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--collapsed' : ''}`}>
         <Table
+          loading={props.studies.length === 0}
           width={'500px'}
           columns={columns}
           rowKey={config.minimalFieldMapping.uid}

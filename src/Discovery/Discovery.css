@@ -175,21 +175,64 @@
 
 .discovery-table__row {
   cursor: pointer;
+  overflow: visible;
+  position: relative;
 }
+
+/* HACK: Because the study description row is a separate row under the hood,
+ * it doesn't change color when you highlight its parent row.
+ * To fix this, we make the study description row transparent on hover,
+ * and add an ::after element behind the study description row, to give
+ * it the appearance of changing color when its parent row is highlighted.
+ * ------------------------------------------------------------------------
+ */
+
+.discovery-table-container td.ant-table-cell {
+  border-color: #dfe3e2;
+}
+.discovery-table-container .ant-table-tbody > tr.ant-table-row:hover > td.ant-table-cell {
+  border-color: rgba(0,0,0,0);
+}
+
+.discovery-table-container .ant-table-tbody > tr.ant-table-row {
+  border-color: #dfe3e2;
+  transition: border-color 0.3s;
+}
+.discovery-table-container .ant-table-tbody > tr.ant-table-row:hover {
+  border-color: rgba(0,0,0,0);
+}
+.discovery-table-container .ant-table-tbody > tr.ant-table-row::after {
+  display: block;
+  position: absolute;
+  bottom: -100px;
+  left: 0;
+  z-index: 0;
+  content: "";
+  width: 100%;
+  height: 100px;
+  background-color: #dfe3e2;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+.discovery-table-container .ant-table-tbody > tr:not(.ant-table-row-selected).ant-table-row:hover::after {
+  background-color: rgb(250,250,250);
+}
+.discovery-table-container .ant-table-tbody > tr.ant-table-row-selected::after {
+  background-color: #e6f7ff;
+}
+/* Make the expanded row's background transparent on hover, so that it appears
+ * to change color on hover.
+ */
+.discovery-table-container tr.ant-table-expanded-row > td, tr.ant-table-expanded-row:hover > td {
+  background: rgba(0,0,0,0);
+}
+/* ---------------------------------------------------- */
+/* END HACK */
 
 .discovery-table-container th.ant-table-cell,
 .discovery-table-container td.ant-table-cell {
   background: #dfe3e2;
 }
 
-/* Remove default antd hover state for table row */
-.discovery-table-container tr:hover {
-  background: #dfe3e2;
-}
-
-.discovery-table-container td.ant-table-cell {
-  border-bottom: 1px solid #dfe3e2;
-}
 
 .discovery-table-container th.ant-table-cell {
   border-bottom: 1px solid #dfe3e2;
