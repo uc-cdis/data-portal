@@ -77,6 +77,9 @@ async function init() {
   // FontAwesome icons
   library.add(faAngleUp, faAngleDown);
 
+  // For any platform-wide branded logos (Gen3, CTDS logos), apply standardized
+  // alt text. For the commons-specific logo, use the appName attribute to apply
+  // accessible alt text.
   for (let i = 0; i < components.footerLogos.length; i += 1) {
     if (Object.prototype.hasOwnProperty.call(commonsWideAltText, components.footerLogos[i].href)) {
       components.footerLogos[i].alt = commonsWideAltText[components.footerLogos[i].href];
