@@ -45,7 +45,6 @@ Below is an example, with inline comments describing what each JSON block config
   "components": {
     "appName": "Gen3 Generic Data Commons", // required; title of commons that appears on the homepage
     "homepageHref": "https://example.gen3.org/", // optional; link that the logo in header will pointing to
-    "portalLogoAltText": "Gen3 Data Commons home", // required; descriptive alt text that states what text is in the logo and describes the function of the image. Do not use the phrase "links to". The form "[Logo Text] home" is appropriate.
     "index": { // required; relates to the homepage
       "introduction": { // optional; text on homepage
         "heading": "", // optional; title of introduction

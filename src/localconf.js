@@ -374,8 +374,9 @@ function buildConfig(opts) {
 
   // Disallow gitops.json configurability of Gen3 Data Commons and CTDS logo alt text.
   // This allows for one point-of-change in the case of future rebranding.
-  // Map href to alt text.
+  // Map href or explicit descriptor to alt text.
   const commonsWideAltText = {
+    'portalLogo': components.appName + ' - home', // Standardized, accessible logo alt text for all commons
     'https://ctds.uchicago.edu/gen3': 'Gen3 Data Commons - information and resources',
     'https://ctds.uchicago.edu/': 'Center for Translational Data Science at the University of Chicago - information and resources'
 
