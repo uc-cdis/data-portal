@@ -29,6 +29,7 @@ class GuppyDataExplorer extends React.Component {
     };
     this._isMounted = false;
     this._isBrowserNavigation = false;
+    this._hasAppliedFilters = false;
   }
 
   componentDidMount() {
@@ -56,6 +57,7 @@ class GuppyDataExplorer extends React.Component {
           : []
         : undefined;
 
+      this._hasAppliedFilters = Object.keys(initialAppliedFilters).length > 0;
       if (this._isMounted) this.setState({ initialAppliedFilters, patientIds });
     };
     window.onpopstate = () => {
@@ -77,6 +79,7 @@ class GuppyDataExplorer extends React.Component {
     searchParams.delete('filter');
 
     if (filter && Object.keys(filter).length > 0) {
+      this._hasAppliedFilters = true;
       const allSearchFields = [];
       for (const { searchFields } of this.props.filterConfig.tabs)
         if (searchFields?.length > 0) allSearchFields.push(...searchFields);
@@ -93,6 +96,8 @@ class GuppyDataExplorer extends React.Component {
         if (Object.keys(filterWithoutSearchFields).length > 0)
           searchParams.set('filter', JSON.stringify(filterWithoutSearchFields));
       }
+    } else {
+      this._hasAppliedFilters = false;
     }
 
     if (!this._isBrowserNavigation)
@@ -124,6 +129,7 @@ class GuppyDataExplorer extends React.Component {
     : () => {};
 
   updateInitialAppliedFilters = ({ filters }) => {
+    this._hasAppliedFilters = Object.kes(filters).length > 0;
     if (this._isMounted) this.setState({ initialAppliedFilters: filters });
   };
 
