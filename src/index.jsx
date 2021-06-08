@@ -34,7 +34,7 @@ import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
-  discoveryConfig, commonsWideAltText
+  discoveryConfig, commonsWideAltText,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
@@ -78,8 +78,8 @@ async function init() {
   library.add(faAngleUp, faAngleDown);
 
   for (let i = 0; i < components.footerLogos.length; i += 1) {
-    if(commonsWideAltText.hasOwnProperty(components.footerLogos[i].href)) {
-      components.footerLogos[i].alt = commonsWideAltText[components.footerLogos[i].href]
+    if (Object.prototype.hasOwnProperty.call(commonsWideAltText, components.footerLogos[i].href)) {
+      components.footerLogos[i].alt = commonsWideAltText[components.footerLogos[i].href];
     }
   }
 

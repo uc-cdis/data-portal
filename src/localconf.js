@@ -376,11 +376,11 @@ function buildConfig(opts) {
   // This allows for one point-of-change in the case of future rebranding.
   // Map href or explicit descriptor to alt text.
   const commonsWideAltText = {
-    'portalLogo': components.appName + ' - home', // Standardized, accessible logo alt text for all commons
+    portalLogo: `${components.appName} - home`, // Standardized, accessible logo alt text for all commons
     'https://ctds.uchicago.edu/gen3': 'Gen3 Data Commons - information and resources',
-    'https://ctds.uchicago.edu/': 'Center for Translational Data Science at the University of Chicago - information and resources'
+    'https://ctds.uchicago.edu/': 'Center for Translational Data Science at the University of Chicago - information and resources',
 
-  }
+  };
 
   return {
     app,
