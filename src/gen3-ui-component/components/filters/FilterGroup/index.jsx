@@ -47,7 +47,7 @@ const tabHasActiveFilters = (tabFilterStatus) => {
 class FilterGroup extends React.Component {
   constructor(props) {
     super(props);
-    const initialExpandedStatusControl = true;
+    const initialExpandedStatusControl = false;
     const initialExpandedStatus = props.filterConfig.tabs.map((t) =>
       t.fields.map(() => initialExpandedStatusControl)
     );
