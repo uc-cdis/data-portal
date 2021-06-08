@@ -16,22 +16,28 @@ import {
   Button,
   Checkbox,
   Collapse,
+  Typography,
 } from 'antd';
+
 import {
   LockFilled,
   LinkOutlined,
+  CheckOutlined,
   UnlockOutlined,
   SearchOutlined,
   ExportOutlined,
   DownloadOutlined,
   RightOutlined,
   LeftOutlined,
+  DoubleLeftOutlined,
 } from '@ant-design/icons';
 
 import { fetchWithCreds } from '../actions';
-import { manifestServiceApiPath } from '../localconf';
+import { manifestServiceApiPath, hostname } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
+
+const { Paragraph } = Typography;
 
 const accessibleFieldName = '__accessible';
 export enum AccessLevel {
@@ -152,7 +158,7 @@ const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'nu
           key={name}
           role='button'
           tabIndex={0}
-          className='discovery-header__tag-btn discovery-tag '
+          className='discovery-header__tag-btn discovery-tag discovery-tag--selected'
           aria-label={name}
           style={{
             backgroundColor: color,
@@ -259,6 +265,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   const [modalData, setModalData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTags, setSelectedTags] = useState({});
+  const [permalinkCopied, setPermalinkCopied] = useState(false);
 
   useEffect(() => {
     // Load studies into JS Search.
@@ -302,6 +309,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       const defaultModalData = props.studies.find(
         r => r[config.minimalFieldMapping.uid] === studyID);
       if (defaultModalData) {
+        setPermalinkCopied(false);
         setModalData(defaultModalData);
         setModalVisible(true);
       } else {
@@ -765,10 +773,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           rowClassName='discovery-table__row'
           onRow={record => ({
             onClick: () => {
+              setPermalinkCopied(false);
               setModalVisible(true);
               setModalData(record);
             },
             onKeyPress: () => {
+              setPermalinkCopied(false);
               setModalVisible(true);
               setModalData(record);
             },
@@ -813,6 +823,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                   role='button'
                   tabIndex={0}
                   onClick={() => {
+                    setPermalinkCopied(false);
                     setModalData(record);
                     setModalVisible(true);
                   }}
@@ -831,14 +842,37 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       className='discovery-modal'
       visible={modalVisible}
       width={'50vw'}
-      closable
+      closable={false}
       onClose={() => setModalVisible(false)}
     >
+      <div className='discovery-modal__header-buttons'>
+        <Button
+          type='text'
+          onClick={() => setModalVisible(false)}
+          className='discovery-modal__close-button'
+        >
+          <DoubleLeftOutlined />
+          Back
+        </Button>
+        <Button
+          type='text'
+          onClick={() => {
+            navigator.clipboard.writeText(`${hostname}discovery/${modalData[config.minimalFieldMapping.uid]}/`)
+              .then(() => {
+                setPermalinkCopied(true);
+              });
+          }}
+        >
+          { permalinkCopied
+            ? <><CheckOutlined /> Copied! </>
+            : <><LinkOutlined /> Permalink </>
+          }
+        </Button>
+      </div>
       <div className='discovery-modal-content'>
         { config.studyPageFields.header &&
           <Space align='baseline'>
             <h3 className='discovery-modal__header-text'>{modalData[config.studyPageFields.header.field]}</h3>
-            <a href={`/discovery/${modalData[config.minimalFieldMapping.uid]}/`}><LinkOutlined /> Permalink</a>
           </Space>
         }
         { (
@@ -885,7 +919,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                   return null;
                 }
                 // If the field contains a particularly long string, add some special styles
-                const MULTILINE_FIELD_CHARLIMIT = 100; // FIXME pick a better length
+                const MULTILINE_FIELD_CHARLIMIT = 200;
                 const multiline = modalData[field.field]
                   && modalData[field.field].length > MULTILINE_FIELD_CHARLIMIT;
                 return (

@@ -21,7 +21,7 @@
 
 /* Highlight matched search text */
 .discovery-container .matched {
-  font-weight: bold;
+  font-weight: 700;
   color: #000;
   text-decoration: underline;
 }
@@ -238,6 +238,22 @@
   box-sizing: inherit;
 }
 
+.discovery-modal__close-button {
+  color:rgb(139, 51, 105);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.discovery-modal__header-text {
+  font-family: 'Montserrat';
+  margin: 6px;
+}
+
+.discovery-modal__header-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
 .discovery-modal-attributes-container {
   width: 100%;
   display: flex;
@@ -253,17 +269,11 @@
 .discovery-modal__attribute-group--halfwidth {
   flex: 1 1 40%;
 }
-.discovery-modal__attribute-group--halfwidth:first-child {
-  margin-right: 6px;
-}
-.discovery-modal__attribute-group--halfwidth:nth-child(2) {
-  margin-left: 6px;
-}
 
 .discovery-modal__attribute-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
+  margin: 12px 6px;
 }
 
 .discovery-modal__attribute {
