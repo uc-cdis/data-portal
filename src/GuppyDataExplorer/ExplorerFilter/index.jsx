@@ -2,11 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ConnectedFilter from '../../GuppyComponents/ConnectedFilter';
 import { FilterConfigType, GuppyConfigType } from '../configTypeDef';
+import './ExplorerFilter.css';
 
-function ExplorerFilter({ className = '', ...filterProps }) {
+function ExplorerFilter({
+  className = '',
+  hasAppliedFilters,
+  onFilterClear,
+  ...filterProps
+}) {
   return (
     <div className={className}>
-      <h4>Filters</h4>
+      <div className='guppy-explorer-filter__title-container'>
+        <h4 className='guppy-explorer-filter__title'>Filters</h4>
+        {hasAppliedFilters && (
+          <button
+            type='button'
+            className='guppy-explorer-filter__clear-button'
+            onClick={onFilterClear}
+          >
+            Clear all
+          </button>
+        )}
+      </div>
       <ConnectedFilter {...filterProps} />
     </div>
   );
@@ -21,6 +38,8 @@ ExplorerFilter.propTypes = {
   initialAppliedFilters: PropTypes.object,
   patientIds: PropTypes.arrayOf(PropTypes.string),
   onPatientIdsChange: PropTypes.func,
+  hasAppliedFilters: PropTypes.bool,
+  onFilterClear: PropTypes.func,
   onFilterChange: PropTypes.func, // inherit from GuppyWrapper
   onReceiveNewAggsData: PropTypes.func, // inherit from GuppyWrapper
 };
