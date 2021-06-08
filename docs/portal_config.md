@@ -144,7 +144,7 @@ Below is an example, with inline comments describing what each JSON block config
       {
         "src": "/src/img/gen3.png", // required; src path for the image
         "href": "https://ctds.uchicago.edu/gen3", // required; link for image
-        "alt": "Gen3 Data Commons" // required; alternate text if image won’t load
+        // The alt text for certain cross-commons logos, such as the Gen3 and CTDS logos, are non-configurable so as to avoid redundancy.
       },
       {
         "src": "/src/img/createdby.png",

@@ -372,6 +372,15 @@ function buildConfig(opts) {
   const aggMDSURL = `${hostname}mds/aggregate`;
   const aggMDSDataURL = `${aggMDSURL}/metadata`;
 
+  // Disallow gitops.json configurability of Gen3 Data Commons and CTDS logo alt text.
+  // This allows for one point-of-change in the case of future rebranding.
+  // Map href to alt text.
+  const commonsWideAltText = {
+    'https://ctds.uchicago.edu/gen3': 'Gen3 Data Commons - information and resources',
+    'https://ctds.uchicago.edu/': 'Center for Translational Data Science at the University of Chicago - information and resources'
+
+  }
+
   return {
     app,
     basename,
@@ -454,6 +463,7 @@ function buildConfig(opts) {
     workspaceStorageDownloadUrl,
     marinerUrl,
     aggMDSDataURL,
+    commonsWideAltText,
   };
 }
 
