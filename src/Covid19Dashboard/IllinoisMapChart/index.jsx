@@ -57,7 +57,6 @@ class IllinoisMapChart extends React.Component {
   constructor(props) {
     super(props);
     this.choroCountyGeoJson = null;
-    this._map = null;
     this.state = {
       mapSize: {
         width: '100%',
@@ -72,7 +71,6 @@ class IllinoisMapChart extends React.Component {
         pitch: 0,
       },
       hoverInfo: null,
-      _map: null,
       overlay_layers: {
         us_counties: { title: 'US Counties', visible: 'visible' },
         il_population: { title: 'IL Population', visible: 'visible' },
