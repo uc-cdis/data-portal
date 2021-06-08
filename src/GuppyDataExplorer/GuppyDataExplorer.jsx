@@ -133,6 +133,11 @@ class GuppyDataExplorer extends React.Component {
     if (this._isMounted) this.setState({ initialAppliedFilters: filters });
   };
 
+  clearFilters = () => {
+    this._hasAppliedFilters = false;
+    if (this._isMounted) this.setState({ initialAppliedFilters: {} });
+  };
+
   render() {
     return (
       <ExplorerErrorBoundary>
