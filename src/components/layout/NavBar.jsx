@@ -95,7 +95,7 @@ class NavBar extends Component {
                   <img
                     className='nav-bar__logo-img'
                     src='/src/img/logo.png'
-                    alt={components.portalLogoAltText || 'Gen3 portal logo'}
+                    alt={components.portalLogoAltText || 'Data Portal home'}
                   />
                 </a>)
                 :
@@ -103,7 +103,7 @@ class NavBar extends Component {
                   <img
                     className='nav-bar__logo-img'
                     src='/src/img/logo.png'
-                    alt={components.portalLogoAltText || 'Gen3 portal logo'}
+                    alt={components.portalLogoAltText || 'Data Portal home'}
                   />
                 </NavLink>)
               }
