@@ -73,7 +73,6 @@ class FilterGroup extends React.Component {
     this.state = {
       selectedTabIndex: 0,
       expandedStatus: initialExpandedStatus,
-      expandedStatusText: 'Collapse all',
       expandedStatusControl: initialExpandedStatusControl,
 
       /**
@@ -328,9 +327,6 @@ class FilterGroup extends React.Component {
         expandedStatus: this.props.filterConfig.tabs.map((t) =>
           t.fields.map(() => !prevState.expandedStatusControl)
         ),
-        expandedStatusText: !prevState.expandedStatusControl
-          ? 'Collapse all'
-          : 'Open all',
         expandedStatusControl: !prevState.expandedStatusControl,
       };
     });
@@ -361,6 +357,9 @@ class FilterGroup extends React.Component {
   }
 
   render() {
+    const expandedStatusText = this.state.expandedStatusControl
+      ? 'Collapse all'
+      : 'Open all';
     return (
       <div className={`g3-filter-group ${this.props.className}`}>
         <div className='g3-filter-group__tabs'>
@@ -413,9 +412,9 @@ class FilterGroup extends React.Component {
             }}
             role='button'
             tabIndex={0}
-            aria-label={this.state.expandedStatusText}
+            aria-label={expandedStatusText}
           >
-            {this.state.expandedStatusText}
+            {expandedStatusText}
           </span>
         </div>
         <div className='g3-filter-group__filter-area'>
