@@ -171,6 +171,8 @@ class GuppyDataExplorer extends React.Component {
               adminAppliedPreFilters={this.props.adminAppliedPreFilters}
               initialAppliedFilters={this.state.initialAppliedFilters}
               patientIds={this.state.patientIds}
+              hasAppliedFilters={this._hasAppliedFilters}
+              onFilterClear={this.clearFilters}
               onPatientIdsChange={this.handlePatientIdsChange}
             />
             <ExplorerVisualization
