@@ -50,13 +50,19 @@ class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
 
+    const { initialAppliedFilters, patientIds } = extractExplorerStateFromURL(
+      new URLSearchParams(props.history.location.search),
+      props.filterConfig,
+      props.patientIdsConfig
+    );
+
     this.state = {
-      initialAppliedFilters: {},
-      patientIds: undefined,
+      initialAppliedFilters,
+      patientIds,
     };
     this._isMounted = false;
     this._isBrowserNavigation = false;
-    this._hasAppliedFilters = false;
+    this._hasAppliedFilters = Object.keys(initialAppliedFilters).length > 0;
   }
 
   componentDidMount() {
@@ -76,7 +82,6 @@ class GuppyDataExplorer extends React.Component {
       syncFilterStateWithURL();
       this._isBrowserNavigation = false;
     };
-    syncFilterStateWithURL();
   }
 
   componentWillUnmount() {
