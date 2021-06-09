@@ -19,6 +19,33 @@ import {
 } from './configTypeDef';
 import './GuppyDataExplorer.css';
 
+function extractExplorerStateFromURL(
+  searchParams,
+  filterConfig,
+  patientIdsConfig
+) {
+  let initialAppliedFilters = {};
+  if (searchParams.has('filter'))
+    try {
+      const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
+      if (validateFilter(filterInUrl, filterConfig))
+        initialAppliedFilters = filterInUrl;
+      else throw new Error(undefined);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Invalid filter value in URL.', e);
+    }
+
+  // eslint-disable-next-line no-nested-ternary
+  const patientIds = patientIdsConfig?.enabled
+    ? searchParams.has('patientIds')
+      ? searchParams.get('patientIds').split(',')
+      : []
+    : undefined;
+
+  return { initialAppliedFilters, patientIds };
+}
+
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
@@ -35,27 +62,11 @@ class GuppyDataExplorer extends React.Component {
   componentDidMount() {
     this._isMounted = true;
     const syncFilterStateWithURL = () => {
-      const searchParams = new URLSearchParams(
-        this.props.history.location.search
+      const { initialAppliedFilters, patientIds } = extractExplorerStateFromURL(
+        new URLSearchParams(this.props.history.location.search),
+        this.props.filterConfig,
+        this.props.patientIdsConfig
       );
-      let initialAppliedFilters = {};
-      if (searchParams.has('filter'))
-        try {
-          const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
-          if (validateFilter(filterInUrl, this.props.filterConfig))
-            initialAppliedFilters = filterInUrl;
-          else throw new Error(undefined);
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error('Invalid filter value in URL.', e);
-        }
-
-      // eslint-disable-next-line no-nested-ternary
-      const patientIds = this.props.patientIdsConfig?.enabled
-        ? searchParams.has('patientIds')
-          ? searchParams.get('patientIds').split(',')
-          : []
-        : undefined;
 
       this._hasAppliedFilters = Object.keys(initialAppliedFilters).length > 0;
       if (this._isMounted) this.setState({ initialAppliedFilters, patientIds });
