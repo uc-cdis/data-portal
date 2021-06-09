@@ -146,7 +146,6 @@ class GuppyWrapper extends React.Component {
     return downloadDataFromGuppy({
       path: this.props.guppyConfig.path,
       type: this.props.guppyConfig.dataType,
-      size: this.state.accessibleCount,
       fields: this.state.rawDataFields,
       sort,
       filter: filterForGuppy,
@@ -163,7 +162,6 @@ class GuppyWrapper extends React.Component {
     return downloadDataFromGuppy({
       path: this.props.guppyConfig.path,
       type: this.props.guppyConfig.dataType,
-      size: this.state.accessibleCount,
       fields: fields || this.state.rawDataFields,
       sort,
       filter: this.state.filter,
@@ -193,7 +191,6 @@ class GuppyWrapper extends React.Component {
     return downloadDataFromGuppy({
       path: this.props.guppyConfig.path,
       type,
-      size: this.state.accessibleCount,
       fields,
       filter,
     });
