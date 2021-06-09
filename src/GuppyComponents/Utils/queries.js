@@ -351,12 +351,9 @@ export function getAllFieldsFromFilterConfigs(filterTabConfigs) {
 
 /**
  * Download all data from guppy using fields, filter, and sort args.
- * If total count is less than 10000 this will use normal graphql endpoint
- * If greater than 10000, use /download endpoint
  * @param {object} opt
  * @param {string} opt.path
  * @param {string} opt.type
- * @param {number} opt.size
  * @param {string[]} [opt.fields]
  * @param {object} [opt.filter]
  * @param {*} [opt.sort]
