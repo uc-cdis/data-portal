@@ -54,7 +54,7 @@ To install the template you will need npm
 To install, change dir
 ```
 npm install
-```****
+```
 
 You will also need to set up a Mapbox token which is needed
 to access their services. You can obtain a Mapbox token and free access
