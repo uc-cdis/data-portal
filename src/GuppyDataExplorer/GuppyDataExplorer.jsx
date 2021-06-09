@@ -67,19 +67,15 @@ class GuppyDataExplorer extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-    const syncFilterStateWithURL = () => {
+    window.onpopstate = () => {
+      this._isBrowserNavigation = true;
       const { initialAppliedFilters, patientIds } = extractExplorerStateFromURL(
         new URLSearchParams(this.props.history.location.search),
         this.props.filterConfig,
         this.props.patientIdsConfig
       );
-
       this._hasAppliedFilters = Object.keys(initialAppliedFilters).length > 0;
       if (this._isMounted) this.setState({ initialAppliedFilters, patientIds });
-    };
-    window.onpopstate = () => {
-      this._isBrowserNavigation = true;
-      syncFilterStateWithURL();
       this._isBrowserNavigation = false;
     };
   }
