@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavButton from './NavButton';
 import NavBarTooltip from './NavBarTooltip';
-import { breakpoints } from '../../localconf';
+import { breakpoints, commonsWideAltText } from '../../localconf';
 import { config, components } from '../../params';
 import './NavBar.less';
 
@@ -95,7 +95,7 @@ class NavBar extends Component {
                   <img
                     className='nav-bar__logo-img'
                     src='/src/img/logo.png'
-                    alt={components.homepageAltText || 'Gen3 portal logo'}
+                    alt={commonsWideAltText.portalLogo || 'Gen3 Data Commons - home'}
                   />
                 </a>)
                 :
@@ -103,7 +103,7 @@ class NavBar extends Component {
                   <img
                     className='nav-bar__logo-img'
                     src='/src/img/logo.png'
-                    alt={components.homepageAltText || 'Gen3 portal logo'}
+                    alt={commonsWideAltText.portalLogo || 'Gen3 Data Commons - home'}
                   />
                 </NavLink>)
               }
