@@ -160,7 +160,7 @@
 }
 
 .discovery-export__selected-ct {
-  color: #7f7f7f;
+  color: #525252;
 }
 
 .discovery-table__row {
@@ -169,7 +169,7 @@
 
 /* some light css hacks here to override antd default expanded row styles. */
 .discovery-table__expanded-row > td.ant-table-cell {
-  color: #7f7f7f;
+  color: var(--g3-color__titanium);
 }
 .discovery-table__expanded-row-content {
   cursor: pointer;
@@ -192,7 +192,7 @@
 }
 
 .discovery-popover__text {
-  color: #7f7f7f;
+  color: var(--g3-color__titanium);
   font-size: 12px;
 }
 
@@ -202,6 +202,6 @@
 }
 
 .discovery-modal__attribute-name {
-  color: #7f7f7f;
+  color: var(--g3-color__titanium);
   margin-right: 7px;
 }
