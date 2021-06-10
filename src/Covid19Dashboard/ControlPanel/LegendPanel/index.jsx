@@ -23,7 +23,7 @@ function dictToLegendList(colors) {
 
 class LegendPanel extends PureComponent {
   render() {
-    const legendData = dictToLegendList(this.props.colors);
+    const legendData = this.props.colors;
     return (
       <div className='legend-panel'>
         <h3>Legend</h3>

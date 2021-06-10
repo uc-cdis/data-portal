@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './LayerSelector.less';
-import IllinoisMapChart from '../../IllinoisMapChart';
 
 class LayerSelector extends React.Component {
 
@@ -10,14 +9,16 @@ class LayerSelector extends React.Component {
     const listItems = Object.keys(data)
       .map((k) => {
         const d = data[k];
+        console.log(k);
         return (
           <div key={k}>
             <input
               id={k}
               className='layers-panel__checkbox'
-              type="checkbox"
-              defaultChecked={d.visible === 'visible' ? true : false}
-              onChange={(event) => this.props.onLayerSelectChange(event, k)}
+              type="radio"
+              checked={k === this.props.activeLayer ? true : false}
+              value={k}
+              onClick={(event) => this.props.onLayerSelectChange(event, k)}
             />
             <label>{d.title}</label>
           </div>
@@ -25,10 +26,11 @@ class LayerSelector extends React.Component {
       });
     return (
       <div className='map-selector'>
-        <h3>Overlays</h3>
+        <form>
         {
           listItems
         }
+        </form>
       </div>
     );
   }
@@ -37,6 +39,7 @@ class LayerSelector extends React.Component {
 LayerSelector.propTypes = {
   layers: PropTypes.object.isRequired,
   onLayerSelectChange: PropTypes.func.isRequired,
+  activeLayer: PropTypes.string.isRequired,
 };
 
 export default LayerSelector;

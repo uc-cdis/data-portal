@@ -8,21 +8,47 @@ import usCounties from '../PopulationIL/data/us_counties_il_pop.json';
   in transparent grey.
   The filter will select all counties not in the state of IL
  */
-const notIl = {
-  type: 'fill',
-  filter: ['all', ['!=', 'STATE', 'IL']], // filter by selecting all states != 'IL'
-  layout: { visibility: 'visible' }, // everything visible by default
-  paint: {
-    'fill-color': 'rgba(118, 103, 103, 1)',
-    'fill-opacity': 0.3,
-    'fill-outline-color': 'rgba(0, 0, 0, 1)',
-  },
-};
+function notIl (date) {
+    // console.log(date);
+    return {
+    type: 'fill',
+    filter: ['all'], // filter by selecting all states != 'IL'
+    layout: { visibility: 'visible' }, // everything visible by default
+    beforeId: 'county-outline',
+    paint: {
+      'fill-color': [
+        'interpolate',
+        ['linear'],
+        ['get', `rnr_${date}`],
+        -100,
+        '#FFF',
+        -80,
+        '#F7F787',
+        -60,
+        '#EED322',
+        -40,
+        '#E6B71E',
+        -20,
+        '#DA9C20',
+        0,
+        '#CA8323',
+        20,
+        '#B86B25',
+        40,
+        '#A25626',
+        60,
+        '#8B4225',
+        80,
+        '#850001',
+      ],
+      'fill-opacity': 0.6,
+    },
+  }};
 
 // LayerTemplate consist of a data source
 // and layer which is used to render the data using
 // the associated style
-class LayerTemplate extends React.Component {
+class MobilityLayer extends React.Component {
   // additional additional initial code code here.
   // If you do uncomment the constructor below
   /*
@@ -37,15 +63,17 @@ class LayerTemplate extends React.Component {
 
   render() {
     return (
-      <ReactMapGL.Source type='geojson' data={usCounties}>
-        <ReactMapGL.Layer {...notIl} layout={{ visibility: this.props.visibility }}/>
+      <ReactMapGL.Source type='geojson' data={this.props.data}>
+        <ReactMapGL.Layer id='rnr_mobility_data' {...notIl(this.props.date)} layout={{ visibility: this.props.visibility }}/>
       </ReactMapGL.Source>
     );
   }
 }
 
-LayerTemplate.propTypes = {
-  visibility: PropTypes.bool.isRequired,
+MobilityLayer.propTypes = {
+  visibility: PropTypes.string.isRequired,
+  data: PropTypes.object.isRequired,
+  date: PropTypes.string.isRequired,
 };
 
-export default LayerTemplate;
+export default MobilityLayer;
