@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import './mapSlider.less';
 
-function MapSlider ({value, title}) {
+function MapSlider ({value, maxValue, title, onChange}) {
 
-    const [sliderValue, setSliderValue] = useState(value);
+    // const [sliderValue, setSliderValue] = useState(value);
 
     return (
         <div id="map-slider" class="map-slider top">
@@ -20,12 +20,11 @@ function MapSlider ({value, title}) {
                     </tr>
                 </table>
                 
-                <input id="slider" type="range" min="0" max="88" step="1" value={sliderValue} onChange={(e) => {setSliderValue(e.target.value)}}/>
+                <input id="slider" type="range" min="0" max={maxValue} step="1" value={value} onChange={(e) => {onChange(e.target.value); }}/>
             </div>
         </div>
     );
   }
-
 
 export default MapSlider;
 
