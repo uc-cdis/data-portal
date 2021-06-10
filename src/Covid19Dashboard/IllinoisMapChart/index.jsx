@@ -16,7 +16,6 @@ import MobilityLayerRes from '../overlays/GoogleMobilityLayerRes';
 
 import timeData from '../data/jhu_il_json_by_time_latest_new.json';
 import strainData from '../data/gagnon_lab_strain_data.json';
-// import mobiltyData from '../data/google_mobility.json';
 
 import MapSlider from '../MapSlider';
 
@@ -535,7 +534,6 @@ class IllinoisMapChart extends React.Component {
               }}
             />
           </ReactMapGL.Source>
-          
         </ReactMapGL.InteractiveMap>
         {<MapSlider title={`View data by date: ${this.state.sliderDate}`} value={this.state.sliderValue} maxValue={this.state.sliderMaxValue} onChange={this.sliderOnChange.bind(this)} />}
       </div>
