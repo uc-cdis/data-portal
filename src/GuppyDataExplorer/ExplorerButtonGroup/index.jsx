@@ -20,6 +20,9 @@ class ExplorerButtonGroup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      // for data
+      isDownloadingData: false,
+
       // for manifest
       manifestEntryCount: 0,
 
@@ -305,16 +308,20 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   downloadData = (filename) => () => {
-    this.props.downloadRawData({}).then((res) => {
-      if (res) {
-        const blob = new Blob([JSON.stringify(res, null, 2)], {
-          type: 'text/json',
-        });
-        FileSaver.saveAs(blob, filename);
-      } else {
-        throw Error('Error when downloading data');
-      }
-    });
+    this.setState({ isDownloadingData: true });
+    this.props
+      .downloadRawData({})
+      .then((res) => {
+        if (res) {
+          const blob = new Blob([JSON.stringify(res, null, 2)], {
+            type: 'text/json',
+          });
+          FileSaver.saveAs(blob, filename);
+        } else {
+          throw Error('Error when downloading data');
+        }
+      })
+      .finally(() => this.setState({ isDownloadingData: false }));
   };
 
   downloadManifest = (filename, indexType) => async () => {
@@ -574,6 +581,9 @@ class ExplorerButtonGroup extends React.Component {
   isButtonPending = (buttonConfig) => {
     if (this.props.isPending) {
       return true;
+    }
+    if (buttonConfig.type === 'data') {
+      return this.state.isDownloadingData;
     }
     if (
       buttonConfig.type === 'export-to-workspace' ||
