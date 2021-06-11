@@ -3,22 +3,20 @@ import PropTypes from 'prop-types';
 import './LayerSelector.less';
 
 class LayerSelector extends React.Component {
-
   render() {
     const data = this.props.layers;
     const listItems = Object.keys(data)
       .map((k) => {
         const d = data[k];
-        console.log(k);
         return (
           <div key={k}>
             <input
               id={k}
               className='layers-panel__checkbox'
-              type="radio"
-              checked={k === this.props.activeLayer ? true : false}
+              type='radio'
+              checked={k === this.props.activeLayer}
               value={k}
-              onClick={(event) => this.props.onLayerSelectChange(event, k)}
+              onClick={event => this.props.onLayerSelectChange(event, k)}
             />
             <label>{d.title}</label>
           </div>
@@ -27,9 +25,9 @@ class LayerSelector extends React.Component {
     return (
       <div className='map-selector'>
         <form>
-        {
-          listItems
-        }
+          {
+            listItems
+          }
         </form>
       </div>
     );

@@ -61,7 +61,7 @@ class GagnonStrainLayer extends React.Component {
   render() {
     return (
       <ReactMapGL.Source type='geojson' data={this.props.data}>
-        <ReactMapGL.Layer id={'strain-data'} {...notIl} layout={{ visibility: this.props.visibility }}/>
+        <ReactMapGL.Layer id={'strain-data'} {...notIl} layout={{ visibility: this.props.visibility }} />
       </ReactMapGL.Source>
     );
   }
@@ -69,7 +69,7 @@ class GagnonStrainLayer extends React.Component {
 
 GagnonStrainLayer.propTypes = {
   visibility: PropTypes.bool.isRequired,
-  data: PropTypes.object.isRequired
+  data: PropTypes.object.isRequired,
 };
 
 export default GagnonStrainLayer;

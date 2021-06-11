@@ -38,7 +38,7 @@ class LayerTemplate extends React.Component {
   render() {
     return (
       <ReactMapGL.Source type='geojson' data={usCounties}>
-        <ReactMapGL.Layer {...notIl} layout={{ visibility: this.props.visibility }}/>
+        <ReactMapGL.Layer {...notIl} layout={{ visibility: this.props.visibility }} />
       </ReactMapGL.Source>
     );
   }

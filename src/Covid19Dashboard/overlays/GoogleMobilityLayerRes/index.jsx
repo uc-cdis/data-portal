@@ -7,9 +7,8 @@ import * as ReactMapGL from 'react-map-gl';
   in transparent grey.
   The filter will select all counties not in the state of IL
  */
-function notIl (date) {
-    // console.log(date);
-    return {
+function notIl(date) {
+  return {
     type: 'fill',
     filter: ['all'], // filter by selecting all states != 'IL'
     layout: { visibility: 'visible' }, // everything visible by default
@@ -42,7 +41,8 @@ function notIl (date) {
       ],
       'fill-opacity': 0.6,
     },
-  }};
+  };
+}
 
 // LayerTemplate consist of a data source
 // and layer which is used to render the data using
@@ -63,7 +63,7 @@ class MobilityLayerRes extends React.Component {
   render() {
     return (
       <ReactMapGL.Source type='geojson' data={this.props.data}>
-        <ReactMapGL.Layer id='res_mobility_data' {...notIl(this.props.date)} layout={{ visibility: this.props.visibility }}/>
+        <ReactMapGL.Layer id='res_mobility_data' {...notIl(this.props.date)} layout={{ visibility: this.props.visibility }} />
       </ReactMapGL.Source>
     );
   }

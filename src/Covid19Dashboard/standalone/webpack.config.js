@@ -12,7 +12,7 @@ module.exports = () => ({
   },
   devServer: {
     contentBase: './dist',
-    public: 'local-covid19.planx-pla.net' 
+    public: 'local-covid19.planx-pla.net',
   },
   resolve: {
     modules: [path.resolve(__dirname, 'node_modules'), 'node_modules'],

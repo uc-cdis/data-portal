@@ -10,7 +10,6 @@ const fetchTimeSeriesData = (dataLevel, locationId, title, withSimulation) => {
 };
 
 
-
 class Example extends React.Component {
   render() {
     return (
