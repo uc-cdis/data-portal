@@ -638,9 +638,7 @@ class ExplorerButtonGroup extends React.Component {
     const clickFunc = this.getOnClickFunction(buttonConfig);
     let buttonTitle = buttonConfig.title;
     if (buttonConfig.type === 'data') {
-      const buttonCount =
-        this.state.downloadDataCount >= 0 ? this.state.downloadDataCount : 0;
-      buttonTitle = `${buttonConfig.title} (${buttonCount})`;
+      buttonTitle = `${buttonConfig.title} (${this.state.downloadDataCount})`;
     } else if (
       buttonConfig.type === 'manifest' &&
       this.state.manifestEntryCount > 0
