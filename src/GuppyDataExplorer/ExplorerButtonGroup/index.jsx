@@ -22,6 +22,7 @@ class ExplorerButtonGroup extends React.Component {
     this.state = {
       // for data
       isDownloadingData: false,
+      downloadDataCount: props.accessibleCount,
 
       // for manifest
       manifestEntryCount: 0,
@@ -98,6 +99,18 @@ class ExplorerButtonGroup extends React.Component {
 
   componentWillUnmount() {
     this.props.resetJobState();
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (
+      !state.isDownloadingData &&
+      props.accessibleCount !== state.downloadDataCount
+    ) {
+      return {
+        downloadDataCount: props.accessibleCount,
+      };
+    }
+    return null;
   }
 
   getOnClickFunction = (buttonConfig) => {
@@ -321,7 +334,12 @@ class ExplorerButtonGroup extends React.Component {
           throw Error('Error when downloading data');
         }
       })
-      .finally(() => this.setState({ isDownloadingData: false }));
+      .finally(() =>
+        this.setState({
+          isDownloadingData: false,
+          downloadDataCount: this.props.accessibleCount,
+        })
+      );
   };
 
   downloadManifest = (filename, indexType) => async () => {
@@ -621,7 +639,7 @@ class ExplorerButtonGroup extends React.Component {
     let buttonTitle = buttonConfig.title;
     if (buttonConfig.type === 'data') {
       const buttonCount =
-        this.props.accessibleCount >= 0 ? this.props.accessibleCount : 0;
+        this.state.downloadDataCount >= 0 ? this.state.downloadDataCount : 0;
       buttonTitle = `${buttonConfig.title} (${buttonCount})`;
     } else if (
       buttonConfig.type === 'manifest' &&
