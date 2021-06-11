@@ -1,16 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
-import usCounties from '../PopulationIL/data/us_counties_il_pop.json';
 
 /*
   Use Mapbox filters to selection all counties not in Illinois and render them
   in transparent grey.
   The filter will select all counties not in the state of IL
  */
-function notIl (date) {
-    // console.log(date);
-    return {
+function notIl(date) {
+  // console.log(date);
+  return {
     type: 'fill',
     filter: ['all'], // filter by selecting all states != 'IL'
     layout: { visibility: 'visible' }, // everything visible by default
@@ -43,7 +42,8 @@ function notIl (date) {
       ],
       'fill-opacity': 0.6,
     },
-  }};
+  };
+}
 
 // LayerTemplate consist of a data source
 // and layer which is used to render the data using
@@ -64,7 +64,7 @@ class MobilityLayerGnp extends React.Component {
   render() {
     return (
       <ReactMapGL.Source type='geojson' data={this.props.data}>
-        <ReactMapGL.Layer id='gnp_mobility_data' {...notIl(this.props.date)} layout={{ visibility: this.props.visibility }}/>
+        <ReactMapGL.Layer id='gnp_mobility_data' {...notIl(this.props.date)} layout={{ visibility: this.props.visibility }} />
       </ReactMapGL.Source>
     );
   }

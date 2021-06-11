@@ -9,8 +9,6 @@ import './ControlPanel.less';
 
 class ControlPanel extends PureComponent {
   render() {
-    console.log(this.props.colors);
-    // console.log(this.props.layers);
     return (
       <div className='control-panel'>
         <h3>{this.props.legendTitle}</h3>
