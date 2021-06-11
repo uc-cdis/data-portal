@@ -48,8 +48,7 @@ is more efficient due to MapBox's render optimization. The template has an examp
 
 ## Installation
 
-To install the template you will need npm. Note that the version
-of npm needs to be less than version 7 or else you will run into errors.
+To install the template you will need npm
 
 To install type the following:
 ```

@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import FileSaver from 'file-saver';
-import uniq from 'lodash/uniq';
-import sum from 'lodash/sum';
 import * as JsSearch from 'js-search';
-import { LockFilled, LinkOutlined, UnlockOutlined, SearchOutlined, ExportOutlined, DownloadOutlined } from '@ant-design/icons';
+import { LockFilled, LinkOutlined, UnlockOutlined, DownloadOutlined } from '@ant-design/icons';
 import {
-  Input,
-  Table,
   Tag,
   Space,
   Modal,
   Alert,
   Popover,
   Button,
+  Collapse,
+  List,
 } from 'antd';
 
-import { fetchWithCreds } from '../actions';
-import { manifestServiceApiPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
+import DiscoverySummary from './DiscoverySummary';
+import DiscoveryTagViewer from './DiscoveryTagViewer';
+import { DiscoveryListView } from './DiscoveryListView';
+import { userApiPath } from '../localconf';
+
+const { Panel } = Collapse;
 
 const accessibleFieldName = '__accessible';
 
@@ -27,52 +28,16 @@ const ARBORIST_READ_PRIV = 'read';
 const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   const categoryConfig = config.tagCategories.find(category => category.name === tagCategory);
   if (categoryConfig === undefined) {
-    // eslint-disable-next-line no-console
-    console.error(`Misconfiguration error: tag category ${tagCategory} not found in config. Check the 'tag_categories' section of the Discovery page config.`);
     return 'gray';
   }
   return categoryConfig.color;
 };
-interface AggregationConfig {
-  name: string
-  field: string
-  type: 'sum' | 'count'
+
+interface ListItem {
+  title: string,
+  description: string,
+  guid: string
 }
-
-const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null): string => {
-  if (!studies) {
-    return '';
-  }
-  const { field, type } = aggregation;
-  const fields = studies.map(s => s[field]);
-  switch (type) {
-  case 'sum':
-    return sum(fields).toLocaleString();
-  case 'count':
-    return uniq(fields).length.toLocaleString();
-  default:
-    throw new Error(`Misconfiguration error: Unrecognized aggregation type ${type}. Check the 'aggregations' block of the Discovery page config.`);
-  }
-};
-
-// getTagsInCategory returns a list of the unique tags in studies which belong
-// to the specified category.
-const getTagsInCategory =
-  (category: string, studies: any[] | null, config: DiscoveryConfig): string[] => {
-    if (!studies) {
-      return [];
-    }
-    const tagMap = {};
-    studies.forEach((study) => {
-      const tagField = config.minimalFieldMapping.tagsListFieldName;
-      study[tagField].forEach((tag) => {
-        if (tag.category === category) {
-          tagMap[tag.name] = true;
-        }
-      });
-    });
-    return Object.keys(tagMap);
-  };
 
 const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number'|'link' = 'string'): React.ReactNode => {
   switch (contentType) {
@@ -186,9 +151,11 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   const columns = config.studyColumns.map(column => ({
     title: column.name,
     ellipsis: !!column.ellipsis,
+    textWrap: 'word-break',
     width: column.width,
     render: (_, record) => {
       const value = record[column.field];
+
       if (value === undefined) {
         if (column.errorIfNotAvailable !== false) {
           throw new Error(`Configuration error: Could not find field ${column.field} in record ${JSON.stringify(record)}. Check the 'study_columns' section of the Discovery config.`);
@@ -204,6 +171,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           return highlightSearchTerm(value, searchTerm).highlighted;
         }
       }
+      if (column.hrefValueFromField) {
+        return <a href={`//${record[column.hrefValueFromField]}`} target='_blank' rel='noreferrer'>{ renderFieldContent(value, column.contentType) }</a>;
+      }
+
       return renderFieldContent(value, column.contentType);
     },
   }),
@@ -211,13 +182,17 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   columns.push(
     {
       title: 'Tags',
+      textWrap: 'word-break',
       ellipsis: false,
-      width: undefined,
+      width: config.tagColumnWidth || '200px',
       render: (_, record) => (
         <React.Fragment>
           {record.tags.map(({ name, category }) => {
             const isSelected = !!selectedTags[name];
             const color = getTagColor(category, config);
+            if (typeof name !== 'string') {
+              return null;
+            }
             return (
               <Tag
                 key={record.name + name}
@@ -265,7 +240,8 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       }],
       onFilter: (value, record) => record[accessibleFieldName] === value,
       ellipsis: false,
-      width: undefined,
+      width: '106px',
+      textWrap: 'word-break',
       render: (_, record) => (
         record[accessibleFieldName]
           ? (
@@ -301,66 +277,6 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       ),
     });
   }
-  // -----
-
-  const handleSearchChange = (ev) => {
-    const value = ev.currentTarget.value;
-    setSearchTerm(value);
-    if (value === '') {
-      setSearchFilteredResources(props.studies);
-      return;
-    }
-    if (!jsSearch) {
-      return;
-    }
-    const results = jsSearch.search(value);
-    setSearchFilteredResources(results);
-  };
-
-  const handleExportToWorkspaceClick = async () => {
-    setExportingToWorkspace(true);
-    const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
-    if (!manifestFieldName) {
-      throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
-    }
-    // combine manifests from all selected studies
-    const manifest = [];
-    selectedResources.forEach((study) => {
-      if (study[manifestFieldName]) {
-        manifest.push(...study[manifestFieldName]);
-      }
-    });
-    // post selected resources to manifestservice
-    const res = await fetchWithCreds({
-      path: `${manifestServiceApiPath}`,
-      body: JSON.stringify(manifest),
-      method: 'POST',
-    });
-    if (res.status !== 200) {
-      throw new Error(`Encountered error while exporting to Workspace: ${JSON.stringify(res)}`);
-    }
-    setExportingToWorkspace(false);
-    // redirect to Workspaces page
-    props.history.push('/workspace');
-  };
-
-  const handleDownloadManifestClick = () => {
-    const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
-    if (!manifestFieldName) {
-      throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
-    }
-    // combine manifests from all selected studies
-    const manifest = [];
-    selectedResources.forEach((study) => {
-      if (study[manifestFieldName]) {
-        manifest.push(...study[manifestFieldName]);
-      }
-    });
-    // download the manifest
-    const MANIFEST_FILENAME = 'manifest.json';
-    const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'text/json' });
-    FileSaver.saveAs(blob, MANIFEST_FILENAME);
-  };
 
   const visibleResources = filterByTags(
     searchFilteredResources,
@@ -372,224 +288,36 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       <h1 className='discovery-page-title'>{config.features.pageTitle.text || 'Discovery'}</h1>
     }
     <div className='discovery-header'>
-      <div className='discovery-header__stats-container'>
-        {
-          config.aggregations.map((aggregation, i) => (
-            <React.Fragment key={aggregation.name} >
-              { i !== 0 && <div className='discovery-header__stat-border' /> }
-              <div className='discovery-header__stat' >
-                <div className='discovery-header__stat-number'>
-                  {renderAggregation(aggregation, visibleResources)}
-                </div>
-                <div className='discovery-header__stat-label'>
-                  {aggregation.name}
-                </div>
-              </div>
-            </React.Fragment>
-          ))
-        }
-      </div>
-      <div className='discovery-header__tags-container' >
-        <h3 className='discovery-header__tags-header'>{config.tagSelector.title}</h3>
-        <div className='discovery-header__tags'>
-          {
-            config.tagCategories.map((category) => {
-              if (category.display === false) {
-                return null;
-              }
-              const tags = getTagsInCategory(category.name, props.studies, config);
-              return (<div className='discovery-header__tag-group' key={category.name}>
-                <h5>{category.name}</h5>
-                { tags.map(tag =>
-                  (<Tag
-                    key={category.name + tag}
-                    role='button'
-                    tabIndex={0}
-                    aria-pressed={selectedTags[tag] ? 'true' : 'false'}
-                    className={`discovery-header__tag-btn discovery-tag ${selectedTags[tag] && 'discovery-tag--selected'}`}
-                    aria-label={tag}
-                    style={{
-                      backgroundColor: selectedTags[tag] ? category.color : 'initial',
-                      borderColor: category.color,
-                    }}
-                    onKeyPress={() => {
-                      setSelectedTags({
-                        ...selectedTags,
-                        [tag]: selectedTags[tag] ? undefined : true,
-                      });
-                    }}
-                    onClick={() => {
-                      setSelectedTags({
-                        ...selectedTags,
-                        [tag]: selectedTags[tag] ? undefined : true,
-                      });
-                    }}
-                  >
-                    {tag}
-                  </Tag>),
-                )}
-              </div>);
-            })
-          }
-        </div>
-      </div>
-    </div>
-    <div className='discovery-table-container'>
-      <div className='discovery-table__header'>
-        { (
-          config.features.search && config.features.search.searchBar
-            && config.features.search.searchBar.enabled
-        ) &&
-            <Input
-              className='discovery-search'
-              prefix={<SearchOutlined />}
-              placeholder={config.features.search.searchBar.placeholder}
-              value={searchTerm}
-              onChange={handleSearchChange}
-              size='large'
-              allowClear
-            />
-        }
-        { (
-          config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
-        ) &&
-          <Space>
-            <span className='discovery-export__selected-ct'>{selectedResources.length} selected</span>
-            { config.features.exportToWorkspaceBETA.enableDownloadManifest &&
-              <Popover
-                className='discovery-popover'
-                arrowPointAtCenter
-                title={<>
-                  Download a Manifest File for use with the&nbsp;
-                  <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/' >
-                    {'Gen3 Client'}
-                  </a>.
-                </>}
-                content={(<span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
-                to download the data from the selected studies to your local computer.</span>)}
-              >
-                <Button
-                  onClick={handleDownloadManifestClick}
-                  type='text'
-                  disabled={selectedResources.length === 0}
-                  icon={<DownloadOutlined />}
-                >
-                  Download Manifest
-                </Button>
-              </Popover>
-            }
-            <Popover
-              className='discovery-popover'
-              arrowPointAtCenter
-              content={<>
-                Open selected studies in the&nbsp;
-                <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
-                  {'Gen3 Workspace'}
-                </a>.
-              </>}
-            >
-              <Button
-                type='primary'
-                disabled={selectedResources.length === 0}
-                loading={exportingToWorkspace}
-                icon={<ExportOutlined />}
-                onClick={handleExportToWorkspaceClick}
-              >
-                Open in Workspace
-              </Button>
-            </Popover>
-          </Space>
-        }
-
-      </div>
-      <Table
-        columns={columns}
-        rowKey={config.minimalFieldMapping.uid}
-        rowSelection={(
-          config.features.exportToWorkspaceBETA && config.features.exportToWorkspaceBETA.enabled
-        )
-          && {
-            selectedRowKeys: selectedResources.map(r => r[config.minimalFieldMapping.uid]),
-            preserveSelectedRowKeys: true,
-            onChange: (_, selectedRows) => setSelectedResources(selectedRows),
-            getCheckboxProps: (record) => {
-              let disabled;
-              // if auth is enabled, disable checkbox if user doesn't have access
-              if (config.features.authorization.enabled) {
-                disabled = record[accessibleFieldName] === false;
-              }
-              // disable checkbox if there's no manifest found for this study
-              const manifestFieldName = config.features.exportToWorkspaceBETA.manifestFieldName;
-              if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
-                disabled = true;
-              }
-              return { disabled };
-            },
-          }}
-        rowClassName='discovery-table__row'
-        onRow={record => ({
-          onClick: () => {
-            setModalVisible(true);
-            setModalData(record);
-          },
-          onKeyPress: () => {
-            setModalVisible(true);
-            setModalData(record);
-          },
-        })}
-        dataSource={visibleResources}
-        expandable={config.studyPreviewField && ({
-          // expand all rows
-          expandedRowKeys: visibleResources.map(r => r[config.minimalFieldMapping.uid]),
-          expandedRowRender: (record) => {
-            const studyPreviewText = record[config.studyPreviewField.field];
-            const renderValue = (value: string | undefined): React.ReactNode => {
-              if (!value) {
-                if (config.studyPreviewField.includeIfNotAvailable) {
-                  return config.studyPreviewField.valueIfNotAvailable;
-                }
-              }
-              if (searchTerm) {
-                // get index of searchTerm match
-                const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
-                if (matchIndex === -1) {
-                  // if searchterm doesn't match this record, don't highlight anything
-                  return value;
-                }
-                // Scroll the text to the search term and highlight the search term.
-                let start = matchIndex - 100;
-                if (start < 0) {
-                  start = 0;
-                }
-                return (<React.Fragment>
-                  { start > 0 && '...' }
-                  {value.slice(start, matchIndex)}
-                  <span className='matched'>{value.slice(matchIndex, matchIndex + searchTerm.length)}</span>
-                  {value.slice(matchIndex + searchTerm.length)}
-                </React.Fragment>
-                );
-              }
-              return value;
-            };
-            return (
-              <div
-                className='discovery-table__expanded-row-content'
-                role='button'
-                tabIndex={0}
-                onClick={() => {
-                  setModalData(record);
-                  setModalVisible(true);
-                }}
-              >
-                {renderValue(studyPreviewText)}
-              </div>
-            );
-          },
-          expandedRowClassName: () => 'discovery-table__expanded-row',
-          expandIconColumnIndex: -1, // don't render expand icon
-        })}
+      <DiscoverySummary
+        visibleResources={visibleResources}
+        config={config}
+      />
+      <div className='discovery-header__stat-border' />
+      <DiscoveryTagViewer
+        config={config}
+        studies={props.studies}
+        selectedTags={selectedTags}
+        setSelectedTags={setSelectedTags}
       />
     </div>
+    <DiscoveryListView
+      config={config}
+      studies={props.studies}
+      visibleResources={visibleResources}
+      selectedResources={selectedResources}
+      setSelectedResources={setSelectedResources}
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+      setSearchFilteredResources={setSearchFilteredResources}
+      jsSearch={jsSearch}
+      setModalData={setModalData}
+      setModalVisible={setModalVisible}
+      columns={columns}
+      setExportingToWorkspace={setExportingToWorkspace}
+      accessibleFieldName={accessibleFieldName}
+      exportingToWorkspace={exportingToWorkspace}
+      history={props.history}
+    />
     <Modal
       className='discovery-modal'
       visible={modalVisible}
@@ -650,6 +378,37 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
             })}
           </div>
         ))}
+        { (config.studyPageFields.downloadLinks && config.studyPageFields.downloadLinks.field &&
+        modalData[config.studyPageFields.downloadLinks.field]) ?
+          <Collapse defaultActiveKey={['1']}>
+            <Panel header={config.studyPageFields.downloadLinks.name || 'Data Download Links'} key='1'>
+              <List
+                itemLayout='horizontal'
+                dataSource={modalData[config.studyPageFields.downloadLinks.field]}
+                renderItem={(item:ListItem) => (
+                  <List.Item
+                    actions={[<Button
+                      href={`${userApiPath}/data/download/${item.guid}?expires_in=900&redirect`}
+                      target='_blank'
+                      type='text'
+                      // disable button if data has no GUID
+                      disabled={!item.guid}
+                      icon={<DownloadOutlined />}
+                    >
+                      Download File
+                    </Button>]}
+                  >
+                    <List.Item.Meta
+                      title={item.title}
+                      description={item.description || ''}
+                    />
+                  </List.Item>
+                )}
+              />
+            </Panel>
+          </Collapse>
+          : null
+        }
       </Space>
     </Modal>
   </div>);

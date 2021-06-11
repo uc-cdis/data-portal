@@ -4,9 +4,9 @@ import IllinoisMapChart from '../IllinoisMapChart';
 import './standalone.less';
 import { mapboxAPIToken } from '../../localconf';
 import countyCodes from './data/CountyCodeList.json';
-import jhuJsonByLevelLatest from './data/jhu_json_by_level_latest.json';
+import jhuJsonByLevelLatest from './data/jhu_json_by_level_2021-05-24.json';
 
-const fetchTimeSeriesData = (dataLevel, locationId, title, withSimulation) => {
+const fetchTimeSeriesData = () => {
 };
 
 

@@ -11,7 +11,7 @@ import {
   LinkOutlined } from '@ant-design/icons';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { useArboristUI, requestorPath, userapiPath } from '../localconf';
+import { useArboristUI, requestorPath, userApiPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './StudyViewer.css';
 
@@ -293,7 +293,7 @@ class StudyDetails extends React.Component {
                bordered
                dataSource={this.props.fileData}
                renderItem={(item) => {
-                 const downloadLink = (item.object_id) ? `${userapiPath}data/download/${item.object_id}?expires_in=900&redirect` : '';
+                 const downloadLink = (item.object_id) ? `${userApiPath}data/download/${item.object_id}?expires_in=900&redirect` : '';
                  return (<List.Item
                    key={item.file_name}
                    actions={[<a key='modal-list-download-link' href={downloadLink}>download</a>]}

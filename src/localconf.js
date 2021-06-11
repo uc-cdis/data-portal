@@ -74,20 +74,20 @@ function buildConfig(opts) {
   const apiPath = `${hostname}api/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
-  let userapiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
+  let userApiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
   const jobapiPath = `${hostname}job/`;
-  const credentialCdisPath = `${userapiPath}credentials/cdis/`;
+  const credentialCdisPath = `${userApiPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
   const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
   const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
   let login = {
-    url: `${userapiPath}login/google?redirect=`,
+    url: `${userApiPath}login/google?redirect=`,
     title: 'Login from Google',
   };
   const authzPath = typeof arboristURL === 'undefined' ? `${hostname}authz` : `${arboristURL}authz`;
   const authzMappingPath = typeof arboristURL === 'undefined' ? `${hostname}authz/mapping` : `${arboristURL}authz/mapping`;
-  const loginPath = `${userapiPath}login/`;
+  const loginPath = `${userApiPath}login/`;
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
   const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
@@ -252,14 +252,14 @@ function buildConfig(opts) {
   };
 
   if (app === 'gdc' && typeof fenceURL === 'undefined') {
-    userapiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
+    userApiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
     login = {
       url: 'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',
       title: 'Login from NIH',
     };
   }
 
-  const fenceDataPath = `${userapiPath}data/`;
+  const fenceDataPath = `${userApiPath}data/`;
   const fenceDownloadPath = `${fenceDataPath}download`;
 
   const defaultLineLimit = 30;
@@ -369,6 +369,19 @@ function buildConfig(opts) {
     mobile: 480,
   };
 
+  const aggMDSURL = `${hostname}mds/aggregate`;
+  const aggMDSDataURL = `${aggMDSURL}/metadata`;
+
+  // Disallow gitops.json configurability of Gen3 Data Commons and CTDS logo alt text.
+  // This allows for one point-of-change in the case of future rebranding.
+  // Map href or explicit descriptor to alt text.
+  const commonsWideAltText = {
+    portalLogo: `${components.appName} - home`, // Standardized, accessible logo alt text for all commons
+    'https://ctds.uchicago.edu/gen3': 'Gen3 Data Commons - information and resources',
+    'https://ctds.uchicago.edu/': 'Center for Translational Data Science at the University of Chicago - information and resources',
+
+  };
+
   return {
     app,
     basename,
@@ -377,7 +390,7 @@ function buildConfig(opts) {
     dev,
     hostname,
     gaDebug,
-    userapiPath,
+    userApiPath,
     jobapiPath,
     apiPath,
     submissionApiPath,
@@ -450,6 +463,8 @@ function buildConfig(opts) {
     workspaceStorageListUrl,
     workspaceStorageDownloadUrl,
     marinerUrl,
+    aggMDSDataURL,
+    commonsWideAltText,
   };
 }
 
