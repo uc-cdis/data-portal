@@ -14,9 +14,10 @@ class LayerSelector extends React.Component {
               <input
                 id={k}
                 className='layers-panel__checkbox'
-                type='checkbox'
-                defaultChecked={d.visible === 'visible'}
-                onChange={event => this.props.onLayerSelectChange(event, k)}
+                type='radio'
+                checked={k === this.props.activeLayer}
+                value={k}
+                onClick={event => this.props.onLayerSelectChange(event, k)}
               />
               {d.title}
             </label>
@@ -25,10 +26,11 @@ class LayerSelector extends React.Component {
       });
     return (
       <div className='map-selector'>
-        <h3>Overlays</h3>
-        {
-          listItems
-        }
+        <form>
+          {
+            listItems
+          }
+        </form>
       </div>
     );
   }
@@ -37,6 +39,7 @@ class LayerSelector extends React.Component {
 LayerSelector.propTypes = {
   layers: PropTypes.object.isRequired,
   onLayerSelectChange: PropTypes.func.isRequired,
+  activeLayer: PropTypes.string.isRequired,
 };
 
 export default LayerSelector;

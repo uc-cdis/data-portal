@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import LegendPanel from './LegendPanel';
 import MapStylePanel from './MapStylePanel';
 import LayerSelector from './LayerSelector';
+import DataSelector from './DataSelector';
 
 import './ControlPanel.less';
 
@@ -10,9 +11,9 @@ class ControlPanel extends PureComponent {
   render() {
     return (
       <div className='control-panel'>
-        <h3>Confirmed cases</h3>
+        <h3>{this.props.legendTitle}</h3>
         <p>
-          Data source: <a href='https://systems.jhu.edu'>Johns Hopkins University CSSE</a>
+          Data source: <a href={this.props.legendDataSource.link}>{this.props.legendDataSource.title}</a>
         </p>
         {this.props.lastUpdated &&
           <p>
@@ -27,10 +28,20 @@ class ControlPanel extends PureComponent {
           colors={this.props.colors}
         /> : null }
         { this.props.layers ?
-          <LayerSelector
-            layers={this.props.layers}
-            onLayerSelectChange={this.props.onLayerSelectChange}
-          /> : null
+          <>
+            <h3>Select Data</h3>
+            <h4>
+              Map Layers
+            </h4>
+              <LayerSelector layers={this.props.layers}
+                            onLayerSelectChange={this.props.onLayerSelectChange}
+                            activeLayer={this.props.activeLayer}/>
+            <h4>
+              Additional Data Points
+            </h4>
+              <DataSelector layers={this.props.dataPoints}
+                            onDataSelectChange={this.props.onDataSelectChange}/>
+          </> : null
         }
       </div>
     );
