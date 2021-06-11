@@ -20,6 +20,10 @@ class ExplorerButtonGroup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      // for data
+      isDownloadingData: false,
+      downloadDataCount: props.accessibleCount,
+
       // for manifest
       manifestEntryCount: 0,
 
@@ -95,6 +99,18 @@ class ExplorerButtonGroup extends React.Component {
 
   componentWillUnmount() {
     this.props.resetJobState();
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (
+      !state.isDownloadingData &&
+      props.accessibleCount !== state.downloadDataCount
+    ) {
+      return {
+        downloadDataCount: props.accessibleCount,
+      };
+    }
+    return null;
   }
 
   getOnClickFunction = (buttonConfig) => {
@@ -305,16 +321,25 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   downloadData = (filename) => () => {
-    this.props.downloadRawData({}).then((res) => {
-      if (res) {
-        const blob = new Blob([JSON.stringify(res, null, 2)], {
-          type: 'text/json',
-        });
-        FileSaver.saveAs(blob, filename);
-      } else {
-        throw Error('Error when downloading data');
-      }
-    });
+    this.setState({ isDownloadingData: true });
+    this.props
+      .downloadRawData({})
+      .then((res) => {
+        if (res) {
+          const blob = new Blob([JSON.stringify(res, null, 2)], {
+            type: 'text/json',
+          });
+          FileSaver.saveAs(blob, filename);
+        } else {
+          throw Error('Error when downloading data');
+        }
+      })
+      .finally(() =>
+        this.setState({
+          isDownloadingData: false,
+          downloadDataCount: this.props.accessibleCount,
+        })
+      );
   };
 
   downloadManifest = (filename, indexType) => async () => {
@@ -575,6 +600,9 @@ class ExplorerButtonGroup extends React.Component {
     if (this.props.isPending) {
       return true;
     }
+    if (buttonConfig.type === 'data') {
+      return this.state.isDownloadingData;
+    }
     if (
       buttonConfig.type === 'export-to-workspace' ||
       buttonConfig.type === 'export-files-to-workspace'
@@ -610,9 +638,7 @@ class ExplorerButtonGroup extends React.Component {
     const clickFunc = this.getOnClickFunction(buttonConfig);
     let buttonTitle = buttonConfig.title;
     if (buttonConfig.type === 'data') {
-      const buttonCount =
-        this.props.accessibleCount >= 0 ? this.props.accessibleCount : 0;
-      buttonTitle = `${buttonConfig.title} (${buttonCount})`;
+      buttonTitle = `${buttonConfig.title} (${this.state.downloadDataCount})`;
     } else if (
       buttonConfig.type === 'manifest' &&
       this.state.manifestEntryCount > 0
