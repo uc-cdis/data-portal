@@ -264,11 +264,6 @@ class IllinoisMapChart extends React.Component {
         const cases = formatNumberToDisplay(feature.properties[`C_${this.state.sliderDate}`]);
         const deaths = formatNumberToDisplay(feature.properties[`D_${this.state.sliderDate}`]);
 
-        const state = feature.properties.STATE;
-        const county = feature.properties.COUNTYNAME;
-        let locationName = 'US';
-        locationName = (state && state !== 'null' ? `${state}, ` : '') + locationName;
-        locationName = (county && county !== 'null' ? `${county}, ` : '') + locationName;
         hoverInfo.case_values = {
           'confirmed cases': cases,
           deaths,
@@ -422,10 +417,10 @@ class IllinoisMapChart extends React.Component {
                   {Object.entries(hoverInfo.strain_values).map((val, i) => {
                     const secondCol = Object.entries(hoverInfo.strain_values)[i + 1] || ['', ''];
                     if (i % 2 !== 0) {
-                      return (<tr><td key={i}>{`${val[0]} ${val[1]}`}</td><td>{`${secondCol[0]} ${secondCol[1]}`}</td></tr>);
+                      return (<tr><td key={i}>{`${val[0]} ${val[1]}`}</td><td key={i+1}>{`${secondCol[0]} ${secondCol[1]}`}</td></tr>);
                     }
                     else {
-                      return;
+                      return null;
                     }
                   },
                   )}
@@ -497,7 +492,7 @@ class IllinoisMapChart extends React.Component {
           </ReactMapGL.Source>
 
         </ReactMapGL.InteractiveMap>
-        {<MapSlider title={`View data by date: ${this.state.sliderDate}`} value={this.state.sliderValue} maxValue={this.state.sliderMaxValue} onChange={this.sliderOnChange.bind(this)} />}
+        {<MapSlider title={`View data by date: ${this.state.sliderDate}`} value={this.state.sliderValue} maxValue={this.state.sliderMaxValue} onChange={this.sliderOnChange} />}
       </div>
     );
   }
