@@ -4,10 +4,10 @@
 }
 
 /* This is a fix for the global 'button' element style override in portal
- * https://github.com/uc-cdis/gen3-ui-component/blob/6b0aa10f63f0a325f58200148cd5ffbb6e4c2c46/src/css/base.less#L180
- * We use .ant-modal-root here to apply this reset style to Ant design modals, which
- * are not children of .discovery-container.
- */
+  * https://github.com/uc-cdis/gen3-ui-component/blob/6b0aa10f63f0a325f58200148cd5ffbb6e4c2c46/src/css/base.less#L180
+  * We use .ant-modal-root here to apply this reset style to Ant design modals, which
+  * are not children of .discovery-container.
+  */
 .discovery-container button, .ant-modal-root button {
   width: initial;
   display: initial;
@@ -41,12 +41,25 @@
 
 .discovery-header__stats-container {
   height: 100%;
+  width: 17%;
   position: relative;
   flex: 1 0 auto;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+}
+
+.discovery-header__stats-wrapper {
+  display: inline-block;
+}
+
+.discovery-header__stats-wrapper#Studies {
+  width: 65px;
+}
+
+.discovery-header__stats-wrapper[data-aggregation-type="TotalSubjects"] {
+  width: 135px;
 }
 
 .discovery-header__stat {
@@ -56,7 +69,7 @@
 
 .discovery-header__stat-border {
   width: 1px;
-  height: 100px;
+  height: 150px;
   border-left: solid #e7e7e7 1px;
 }
 
@@ -64,6 +77,7 @@
   color: #169bd5;
   font-size: 40px;
   line-height: 50px;
+  padding: 10px 0 10px 0;
 }
 
 .discovery-header__stat-label {
@@ -72,10 +86,13 @@
 
 .discovery-header__tags-container {
   flex: 1 0 auto;
+  height: 90%;
 }
 
 .discovery-header__tags-header {
+  padding-left: 50px;
   cursor: default;
+  border-bottom: solid 1px #e7e7e7;
   font-weight: normal;
   font-size: 18px;
   color: #555;
@@ -93,6 +110,15 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
+  font-weight: bold;
+  overflow-y: scroll;
+  overflow-x: visible;
+  max-width: 290px;
+  height: 111px;
+}
+
+.discovery-header__tag-group::-webkit-scrollbar {
+  display: none;
 }
 
 .discovery-header__tag-btn {
@@ -106,6 +132,7 @@
   line-height: 18px;
   color: #555;
   margin-bottom: 3px;
+  user-select: none;
 }
 
 .discovery-tag--selected {
@@ -150,9 +177,9 @@
   width: 100%;
   overflow: hidden;
   /* ---------
-     * Add an ellipsis after N rows of text.
-     * This css won't work in IE 11, but it's ok, there just won't be an ellipsis.
-     **/
+   * Add an ellipsis after N rows of text.
+   * This css won't work in IE 11, but it's ok, there just won't be an ellipsis.
+   **/
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;

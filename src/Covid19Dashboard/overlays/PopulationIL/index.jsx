@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
 import usCounties from './data/us_counties_il_pop.json';
 
-
 /*
   Setting the style for the counties in Illinois.
   The filter selected all counties whose state == 'IL" and not named "CHICAGO" as

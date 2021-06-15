@@ -9,6 +9,8 @@ import Spinner from '../../components/Spinner';
 import PlotChart from '../PlotChart';
 import './ChartCarousel.less';
 
+import Popup from '../../components/Popup';
+
 
 class ChartCarousel extends PureComponent {
   constructor(props) {
@@ -17,6 +19,7 @@ class ChartCarousel extends PureComponent {
     this.state = {
       hoveredChartId: null,
       hoverYPosition: 0,
+      popupChart: null,
     };
   }
 
@@ -27,6 +30,25 @@ class ChartCarousel extends PureComponent {
     this.setState({
       hoveredChartId, // if null, will not display hover info
       hoverYPosition: topY,
+    });
+  }
+
+  onChartClick = (chartConfig) => {
+    if (!this.props.enablePopupOnClick) {
+      return;
+    }
+
+    this.setState({
+      popupChart: {
+        title: chartConfig.title,
+        config: chartConfig,
+      },
+    });
+  }
+
+  closePopupChart = () => {
+    this.setState({
+      popupChart: null,
     });
   }
 
@@ -86,17 +108,26 @@ class ChartCarousel extends PureComponent {
       const showDescriptionColumn = this.props.isInPopup && (
         chartConfig.title || chartConfig.description
       );
-      const chartContainer = (<div
-        key={0}
-        onMouseOver={() => this.onChartHover(i)}
-        onMouseOut={() => this.onChartHover(null)}
-      >
-        <div
-          className={`${this.props.isInPopup ? 'chart-carousel__popup-chart' : null} ${showDescriptionColumn ? 'chart-carousel__left-column' : ''}`}
-        >
-          {chart}
-        </div>
-        { showDescriptionColumn &&
+
+      const chartContainerDivProps = {
+        key: 0,
+        onMouseOver: () => this.onChartHover(i),
+        onMouseOut: () => this.onChartHover(null),
+      };
+      // If chart is clickable
+      if (this.props.enablePopupOnClick) {
+        chartContainerDivProps.onClick = () => this.onChartClick(chartConfig);
+        chartContainerDivProps.role = 'button';
+        chartContainerDivProps.tabIndex = 0;
+      }
+      const chartContainer = (
+        <div {...chartContainerDivProps}>
+          <div
+            className={`${this.props.isInPopup ? 'chart-carousel__popup-chart' : null} ${showDescriptionColumn ? 'chart-carousel__left-column' : ''}`}
+          >
+            {chart}
+          </div>
+          { showDescriptionColumn &&
           <div className='chart-carousel__description'>
             <h3>
               {chartConfig.title}
@@ -105,8 +136,8 @@ class ChartCarousel extends PureComponent {
               {chartConfig.description}
             </p>
           </div>
-        }
-      </div>);
+          }
+        </div>);
       charts.push(chartContainer);
     });
 
@@ -140,6 +171,22 @@ class ChartCarousel extends PureComponent {
               </p>
             </div>
           }
+          {/* popup when click on a chart */}
+          {
+            this.state.popupChart ?
+              <Popup
+                title={this.state.popupChart.title}
+                onClose={() => this.closePopupChart()}
+              >
+                <ChartCarousel
+                  {...this.props}
+                  chartsConfig={[this.state.popupChart.config]}
+                  isInPopup
+                  enablePopupOnClick={false}
+                />
+              </Popup>
+              : null
+          }
         </div>
         : <Spinner />
     );
@@ -149,10 +196,12 @@ class ChartCarousel extends PureComponent {
 ChartCarousel.propTypes = {
   chartsConfig: PropTypes.array.isRequired,
   isInPopup: PropTypes.bool,
+  enablePopupOnClick: PropTypes.bool,
 };
 
 ChartCarousel.defaultProps = {
   isInPopup: false,
+  enablePopupOnClick: false,
 };
 
 export default ChartCarousel;
