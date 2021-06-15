@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { workspaceStorageListUrl, workspaceStorageDownloadUrl } from '../localconf';
-import { fetchWithCreds } from '../actions';
+import { workspaceStorageListUrl, workspaceStorageDownloadUrl, marinerUrl } from '../../localconf';
+import { fetchWithCreds } from '../../actions';
 import GWASApp from './GWASApp';
 
 const papaparse = require('papaparse');
@@ -89,17 +89,72 @@ const fetchWorkspaceStorageFile = workspaceKey => dispatch => fetchWithCreds({
 })
   .then(msg => dispatch(msg));
 
+
+const getMarinerJobStatus = () => (dispatch) => {
+  fetchWithCreds({
+    path: `${marinerUrl}`,
+    method: 'GET',
+  })
+    .then(
+      ({ status, data }) => {
+        if (status !== 200 || !data || !data.runIDs) {
+          return [];
+        }
+        const runIDs = data.runIDs;
+        return Promise.all(runIDs.map(rID => fetchWithCreds({
+          path: `${marinerUrl}/${rID}`,
+          method: 'GET',
+        })
+          .then(
+            (res) => {
+              if (res.status !== 200) {
+                return ({
+                  runID: rID,
+                });
+              }
+              const d = res.data;
+              if (d
+                && d.log
+                && d.log.main
+                && d.log.main.status) {
+                if (d.log.request && d.log.request.tags && d.log.request.tags.jobName) {
+                  // if the job has a tag
+                  return ({
+                    runID: rID,
+                    jobName: d.log.request.tags.jobName,
+                    status: d.log.main.status,
+                  });
+                }
+                return ({
+                  runID: rID,
+                  status: d.log.main.status,
+                });
+              }
+              return ({
+                runID: rID,
+              });
+            },
+          )));
+      },
+    ).then(marinerJobStatus => ({
+      type: 'RECEIVE_MARINER_JOB_STATUS',
+      marinerJobStatus,
+    })).then(msg => dispatch(msg));
+};
+
 const mapStateToProps = state => ({
   wssFileObjects: state.analysis.wssFileObjects,
   wssFilePrefix: state.analysis.wssFilePrefix,
   wssListFileError: state.analysis.wssListFileError,
   wssFileData: state.analysis.wssFileData,
+  marinerJobStatus: state.analysis.marinerJobStatus,
   userAuthMapping: state.userAuthMapping,
 });
 
 const mapDispatchToProps = dispatch => ({
   onLoadWorkspaceStorageFileList: (() => dispatch(fetchWorkspaceStorageFileList())),
   onLoadWorkspaceStorageFile: (workspaceKey => dispatch(fetchWorkspaceStorageFile(workspaceKey))),
+  onLoadMarinerJobStatus: (() => dispatch(getMarinerJobStatus())),
 });
 
 const ReduxGWASApp = connect(mapStateToProps, mapDispatchToProps)(GWASApp);

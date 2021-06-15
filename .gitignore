@@ -17,8 +17,6 @@ data/schema.json
 src/params.js
 src/css/themeoverrides.css
 src/img/sponsors/gitops-sponsors/
-src/Covid19Dashboard/standalone/.env
-src/Covid19Dashboard/standalone/node_modules/*
 __generated__/
 *.log
 *.bak

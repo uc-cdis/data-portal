@@ -6,6 +6,11 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
 import countyData from '../data/us_counties';
+/*
+// Additional layers used as examples enable here
+import LayerTemplate from '../overlays/LayerTemplate';
+import PopulationIL from '../overlays/PopulationIL'; */
+
 import TimeCaseLayer from '../overlays/TimeCaseLayer';
 import MobilityLayer from '../overlays/GoogleMobilityLayer';
 import MobilityLayerGnp from '../overlays/GoogleMobilityLayerGnp';
@@ -48,7 +53,6 @@ class IllinoisMapChart extends React.Component {
     // this.strainData = strainData;
     this.choroCountyGeoJson = null;
     this.strainDataGeoJson = null;
-    this._map = null;
     const today = new Date();
     const startDate = new Date(2020, 0, 22);
     const endDate = new Date(today);
@@ -68,9 +72,12 @@ class IllinoisMapChart extends React.Component {
         pitch: 0,
       },
       hoverInfo: null,
-      _map: null,
       // overlay - title, data, legend stuff - scale, data source, url - hover info
       overlay_layers: {
+        /*
+        // Additional layers used as examples enable here
+        us_counties: { title: 'US Counties', visible: 'visible' },
+        il_population: { title: 'IL Population', visible: 'visible' },*/
         time_data: { title: 'Case Data Over Time' },
         rnr_mobility_data: { title: 'Retail & Recreation' },
         gnp_mobility_data: { title: 'Grocery & Pharmacy' },
@@ -200,7 +207,6 @@ class IllinoisMapChart extends React.Component {
           );
           return location;
         }
-
         // no data for this location
         return location;
       }),
@@ -444,7 +450,7 @@ class IllinoisMapChart extends React.Component {
 
   render() {
     return (
-      <div className='map-chart'>
+      <div className='map-chart map-chart-il'>
         {this.state.mapColors &&
         <ControlPanel
           showMapStyle={false}
@@ -483,6 +489,10 @@ class IllinoisMapChart extends React.Component {
           {this.state.mobility_data && <MobilityLayerWrk visibility={this.state.activeLayer === 'wrk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data} date={this.state.sliderDate} />}
           {this.state.mobility_data && <MobilityLayerTrn visibility={this.state.activeLayer === 'trn_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data} date={this.state.sliderDate} />}
           {this.state.mobility_data && <MobilityLayerRes visibility={this.state.activeLayer === 'res_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data} date={this.state.sliderDate} />}
+          {/*
+          // Additional layers used as examples enable here
+          <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
+          <PopulationIL visibility={this.state.overlay_layers.il_population.visible} /> */}
           {/* Outline a set of counties */}
           <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountyGeoJson}>
             <ReactMapGL.Layer
@@ -495,7 +505,6 @@ class IllinoisMapChart extends React.Component {
               }}
             />
           </ReactMapGL.Source>
-
         </ReactMapGL.InteractiveMap>
         {<MapSlider title={`View data by date: ${this.state.sliderDate}`} value={this.state.sliderValue} maxValue={this.state.sliderMaxValue} onChange={this.sliderOnChange.bind(this)} />}
       </div>

@@ -15,6 +15,11 @@ class ControlPanel extends PureComponent {
         <p>
           Data source: <a href={this.props.legendDataSource.link}>{this.props.legendDataSource.title}</a>
         </p>
+        {this.props.lastUpdated &&
+          <p>
+            Last updated: {this.props.lastUpdated}
+          </p>
+        }
         {this.props.showMapStyle ? <MapStylePanel
           onMapStyleChange={this.props.onMapStyleChange}
           defaultMapStyle={this.props.defaultMapStyle}
@@ -24,18 +29,18 @@ class ControlPanel extends PureComponent {
         /> : null }
         { this.props.layers ?
         <div>
-        <h3>Select Data</h3>
-        <h4>
-          Map Layers
-        </h4>
-          <LayerSelector layers={this.props.layers}
-                         onLayerSelectChange={this.props.onLayerSelectChange}
-                         activeLayer={this.props.activeLayer}/> 
-        <h4>
-          Additional Data Points
-        </h4> 
-          <DataSelector layers={this.props.dataPoints}
-                         onDataSelectChange={this.props.onDataSelectChange}/> 
+          <h3>Select Data</h3>
+          <h4>
+            Map Layers
+          </h4>
+            <LayerSelector layers={this.props.layers}
+                           onLayerSelectChange={this.props.onLayerSelectChange}
+                           activeLayer={this.props.activeLayer}/> 
+          <h4>
+            Additional Data Points
+          </h4> 
+            <DataSelector layers={this.props.dataPoints}
+                          onDataSelectChange={this.props.onDataSelectChange}/> 
         </div> : null}
       </div>
     );
@@ -54,6 +59,8 @@ ControlPanel.propTypes = {
   activeLayer: PropTypes.string,
   dataPoints: PropTypes.object,
   layers: PropTypes.object,
+  lastUpdated: PropTypes.string,
+  onLayerSelectChange: PropTypes.func,
 };
 
 ControlPanel.defaultProps = {
@@ -62,6 +69,9 @@ ControlPanel.defaultProps = {
   colors: [],
   showMapStyle: false,
   defaultMapStyle: '',
+  lastUpdated: '',
+  layers: null,
+  onLayerSelectChange: () => {},
 };
 
 export default ControlPanel;

@@ -1,9 +1,6 @@
 module.exports = {
   // "extends": "eslint:recommended",
-  extends: [
-    'airbnb',
-    'plugin:react-hooks/recommended',
-  ],
+  extends: ['airbnb'],
   root: true,
   env: {
     browser: true,
@@ -140,7 +137,10 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       parser: '@typescript-eslint/parser',
-      plugins: ['@typescript-eslint'],
+      plugins: [
+        '@typescript-eslint',
+        'react-hooks',
+      ],
       parserOptions: {
         ecmaversion: 2018,
         sourceType: 'module',

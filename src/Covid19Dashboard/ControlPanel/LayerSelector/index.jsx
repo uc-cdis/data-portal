@@ -10,15 +10,17 @@ class LayerSelector extends React.Component {
         const d = data[k];
         return (
           <div key={k}>
-            <input
-              id={k}
-              className='layers-panel__checkbox'
-              type='radio'
-              checked={k === this.props.activeLayer}
-              value={k}
-              onClick={event => this.props.onLayerSelectChange(event, k)}
-            />
-            <label>{d.title}</label>
+            <label>
+              <input
+                id={k}
+                className='layers-panel__checkbox'
+                type='radio'
+                checked={k === this.props.activeLayer}
+                value={k}
+                onClick={event => this.props.onLayerSelectChange(event, k)}
+              />
+              {d.title}
+            </label>
           </div>
         );
       });
