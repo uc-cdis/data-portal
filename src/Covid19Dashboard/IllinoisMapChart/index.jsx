@@ -169,7 +169,7 @@ class IllinoisMapChart extends React.Component {
         .then((data) => {
           this.addMobilityDataToGeoJsonBase(data);
         })
-        .catch(() => {})
+        .catch(() => {console.warn('Data not retrieved. Unable to display mobility overlays')}) // eslint-disable-line no-console
     }
 
     if (!this.state.strainData) {
@@ -377,7 +377,7 @@ class IllinoisMapChart extends React.Component {
       .then((data) => {
         this.setState({ strainData: data });
       })
-      .catch(() => {});
+      .catch(() => {console.warn('Data not retrieved. Unable to display mobility overlays')}) // eslint-disable-line no-console
   }
 
   onLayerSelect = (event, id) => {
