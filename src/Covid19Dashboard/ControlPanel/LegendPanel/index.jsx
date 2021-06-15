@@ -3,23 +3,23 @@ import PropTypes from 'prop-types';
 
 import './LegendPanel.less';
 
-function dictToLegendList(colors) {
-  // input: {0: '#FFF', 10: '#888', 100: '#000'}
-  // output: [[ '0-9', '#FFF' ], [ '10-99', '#888' ], [ '100+', '#000' ]]
-  return Object.entries(colors).map((value, i) => {
-    const color = value[1];
-    let label = Number(value[0]);
-    if (i === Object.keys(colors).length - 1) {
-      label = `${label.toLocaleString()}+`;
-    } else {
-      const nextLabel = Number(Object.keys(colors)[i + 1]) - 1;
-      if (nextLabel !== label) {
-        label = `${label.toLocaleString()} - ${nextLabel.toLocaleString()}`;
-      }
-    }
-    return [label, color];
-  });
-}
+// function dictToLegendList(colors) { //keeping this as it was used. could potentially be rewritten for multiple legend types but fails to work properly with negative numbers
+//   // input: {0: '#FFF', 10: '#888', 100: '#000'}
+//   // output: [[ '0-9', '#FFF' ], [ '10-99', '#888' ], [ '100+', '#000' ]]
+//   return Object.entries(colors).map((value, i) => {
+//     const color = value[1];
+//     let label = Number(value[0]);
+//     if (i === Object.keys(colors).length - 1) {
+//       label = `${label.toLocaleString()}+`;
+//     } else {
+//       const nextLabel = Number(Object.keys(colors)[i + 1]) - 1;
+//       if (nextLabel !== label) {
+//         label = `${label.toLocaleString()} - ${nextLabel.toLocaleString()}`;
+//       }
+//     }
+//     return [label, color];
+//   });
+// }
 
 class LegendPanel extends PureComponent {
   render() {
@@ -49,11 +49,11 @@ class LegendPanel extends PureComponent {
 }
 
 LegendPanel.propTypes = {
-  colors: PropTypes.object,
+  colors: PropTypes.array,
 };
 
 LegendPanel.defaultProps = {
-  colors: {},
+  colors: [],
 };
 
 export default LegendPanel;

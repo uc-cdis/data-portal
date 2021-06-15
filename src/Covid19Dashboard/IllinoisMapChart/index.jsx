@@ -52,8 +52,8 @@ class IllinoisMapChart extends React.Component {
     const today = new Date();
     const startDate = new Date(2020, 0, 22);
     const endDate = new Date(today);
-    endDate.setDate(endDate.getDate() - 20);
-    const dateDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) - 20;
+    endDate.setDate(endDate.getDate() - 25);
+    const dateDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) - 25;
     this.state = {
       mapSize: {
         width: '100%',
@@ -105,8 +105,8 @@ class IllinoisMapChart extends React.Component {
     }
 
     if (!this.state.time_data) {
-      const timeDataVar = this.addTimeDataToGeoJsonBase(timeData.il_county_list);
-      this.setState({ time_data: timeDataVar });
+      this.addTimeDataToGeoJsonBase(timeData.il_county_list);
+      
     }
 
     if (this.mapData.colors !== {}) {
@@ -162,8 +162,7 @@ class IllinoisMapChart extends React.Component {
       fetch('https://covd-map-occ-prc-qa.s3.amazonaws.com/google_mobility.json')
         .then(resp => resp.json())
         .then((data) => {
-          const mobilityData = this.addMobilityDataToGeoJsonBase(data);
-          this.setState({ mobility_data: mobilityData });
+          this.addMobilityDataToGeoJsonBase(data);
         })
         .catch(e => {})
     }
@@ -206,8 +205,7 @@ class IllinoisMapChart extends React.Component {
         return location;
       }),
     };
-
-    return geoJson;
+    this.setState({ mobility_data: geoJson });
   }
 
   sliderOnChange = (value) => {
@@ -376,8 +374,7 @@ class IllinoisMapChart extends React.Component {
         return location;
       }),
     };
-
-    return geoJson;
+    this.setState({ time_data: geoJson });
   }
 
   onLayerSelect = (event, id) => {
@@ -391,23 +388,9 @@ class IllinoisMapChart extends React.Component {
     this.setState(newState);
   }
 
-  renderStrainData = (data) => {
-    let i;
-    for (i = 0; i < cars.length; i++) {
-      text += `${cars[i]}<br>`;
-    }
-  }
-
   renderHoverPopup() {
     const { hoverInfo } = this.state;
 
-    const formatDataToTable = (data) => {
-      let i;
-      let tableData;
-      for (i = 0; i < Object.entries(data).length; i + 2) {
-        text += `${cars[i]}<br>`;
-      }
-    };
     if (hoverInfo) {
       return (
         <ReactMapGL.Popup
@@ -440,6 +423,9 @@ class IllinoisMapChart extends React.Component {
                     const secondCol = Object.entries(hoverInfo.strain_values)[i + 1] || ['', ''];
                     if (i % 2 !== 0) {
                       return (<tr><td key={i}>{`${val[0]} ${val[1]}`}</td><td>{`${secondCol[0]} ${secondCol[1]}`}</td></tr>);
+                    }
+                    else {
+                      return;
                     }
                   },
                   )}

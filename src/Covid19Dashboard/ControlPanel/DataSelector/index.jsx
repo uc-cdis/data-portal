@@ -17,7 +17,7 @@ class DataSelector extends React.Component {
               defaultChecked={d.visible === 'visible'}
               onChange={event => this.props.onDataSelectChange(event, k)}
             />
-            <label>{d.title}</label>
+            <label htmlFor={k}>{d.title}</label>
           </div>
         );
       });
