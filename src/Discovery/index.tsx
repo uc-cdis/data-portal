@@ -6,7 +6,7 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { hostname, discoveryConfig, useArboristUI } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
-import loadStudiesFromAggMDS from './aggMDSUtils';
+import { loadStudiesFromAggMDS, loadAuthMappingsFromWTS } from './aggMDSUtils';
 
 const loadStudiesFromMDS = async (): Promise<any[]> => {
   // Why `_guid_type='discovery_metadata'? We need to distinguish the discovery page studies in MDS
@@ -60,32 +60,44 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    let loadStudiesFunction;
-    if (isEnabled('discoveryUseAggMDS')) {
-      loadStudiesFunction = loadStudiesFromAggMDS;
-    } else {
-      loadStudiesFunction = loadStudiesFromMDS;
-    }
-    loadStudiesFunction().then((rawStudies) => {
-      if (props.config.features.authorization.enabled) {
-        // mark studies as accessible or inaccessible to user
-        const authzField = props.config.minimalFieldMapping.authzField;
-        // useArboristUI=true is required for userHasMethodForServiceOnResource
-        if (!useArboristUI) {
-          throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
-        }
-        const studiesWithAccessibleField = rawStudies.map(study => ({
-          ...study,
-          __accessible: userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAuthMapping),
-        }));
-        setStudies(studiesWithAccessibleField);
+    async function loadStudiesWrapper() {
+      let loadStudiesFunction;
+      let getUserAuthMapping;
+      if (isEnabled('discoveryUseAggMDS')) {
+        loadStudiesFunction = loadStudiesFromAggMDS;
+        const userAuthMappings = await loadAuthMappingsFromWTS();
+        getUserAuthMapping = (study) => {
+          return userAuthMappings[study.commons_url];
+        };
       } else {
-        setStudies(rawStudies);
+        loadStudiesFunction = loadStudiesFromMDS;
+        // XXX use _ instead of study?
+        getUserAuthMapping = (study) => {
+          return props.userAuthMapping;
+        };
       }
-    }).catch((err) => {
-      // eslint-disable-next-line no-console
-      console.error('Error encountered while loading studies: ', err);
-    });
+      loadStudiesFunction().then((rawStudies) => {
+        if (props.config.features.authorization.enabled) {
+          // mark studies as accessible or inaccessible to user
+          const authzField = props.config.minimalFieldMapping.authzField;
+          // useArboristUI=true is required for userHasMethodForServiceOnResource
+          if (!useArboristUI) {
+            throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
+          }
+          const studiesWithAccessibleField = rawStudies.map(study => ({
+            ...study,
+            __accessible: userHasMethodForServiceOnResource('read', '*', study[authzField], getUserAuthMapping(study)),
+          }));
+          setStudies(studiesWithAccessibleField);
+        } else {
+          setStudies(rawStudies);
+        }
+      }).catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('Error encountered while loading studies: ', err);
+      });
+    };
+    loadStudiesWrapper();
   }, []);
 
   return (<Discovery

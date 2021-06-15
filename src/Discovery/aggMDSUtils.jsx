@@ -139,4 +139,11 @@ const loadStudiesFromAggMDS = async () => {
   return studies;
 };
 
-export default loadStudiesFromAggMDS;
+const loadAuthMappingsFromWTS = async () => {
+    return {
+        "john.planx-pla.net": { "/yoyo": [{ "method": "read", "service": "*"}]},
+        "qa-brain.planx-pla.net": { "/programs/DEV/projects/test": [{ "method": "read", "service": "*"}]}
+    };
+};
+
+export { loadStudiesFromAggMDS, loadAuthMappingsFromWTS };
