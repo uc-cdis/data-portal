@@ -49,19 +49,24 @@ class ControlPanel extends PureComponent {
 
 ControlPanel.propTypes = {
   onMapStyleChange: PropTypes.func,
+  onDataSelectChange: PropTypes.func,
   showLegend: PropTypes.bool,
-  colors: PropTypes.object,
+  colors: PropTypes.array,
   showMapStyle: PropTypes.bool,
   defaultMapStyle: PropTypes.string,
-  lastUpdated: PropTypes.string,
+  legendTitle: PropTypes.string,
+  legendDataSource: PropTypes.object,
+  activeLayer: PropTypes.string,
+  dataPoints: PropTypes.object,
   layers: PropTypes.object,
+  lastUpdated: PropTypes.string,
   onLayerSelectChange: PropTypes.func,
 };
 
 ControlPanel.defaultProps = {
   onMapStyleChange: () => {},
   showLegend: false,
-  colors: {},
+  colors: [],
   showMapStyle: false,
   defaultMapStyle: '',
   lastUpdated: '',
