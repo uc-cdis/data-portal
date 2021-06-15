@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 
 import './LegendPanel.less';
 
-// function dictToLegendList(colors) { //keeping this as it was used. could potentially be rewritten for multiple legend types but fails to work properly with negative numbers
+//keeping this as it was used. could potentially be rewritten for 
+//multiple legend types but fails to work properly with negative numbers
+// function dictToLegendList(colors) {
 //   // input: {0: '#FFF', 10: '#888', 100: '#000'}
 //   // output: [[ '0-9', '#FFF' ], [ '10-99', '#888' ], [ '100+', '#000' ]]
 //   return Object.entries(colors).map((value, i) => {

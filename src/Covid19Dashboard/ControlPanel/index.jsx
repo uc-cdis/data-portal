@@ -13,7 +13,10 @@ class ControlPanel extends PureComponent {
       <div className='control-panel'>
         <h3>{this.props.legendTitle}</h3>
         <p>
-          Data source: <a href={this.props.legendDataSource.link}>{this.props.legendDataSource.title}</a>
+          Data source: 
+          <a href={this.props.legendDataSource.link}>
+              {this.props.legendDataSource.title}
+          </a>
         </p>
         {this.props.lastUpdated &&
           <p>
