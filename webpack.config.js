@@ -85,7 +85,9 @@ module.exports = {
   mode: isProduction ? 'production' : 'development',
   output: {
     path: __dirname,
-    filename: '[name].bundle.js',
+    filename: isProduction
+      ? '[name].[contenthash].bundle.js'
+      : '[name].bundle.js',
     publicPath: isProduction ? basename : 'https://localhost:9443/',
   },
   optimization,
