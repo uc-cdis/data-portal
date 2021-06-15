@@ -75,6 +75,11 @@ ControlPanel.defaultProps = {
   lastUpdated: '',
   layers: null,
   onLayerSelectChange: () => {},
+  onDataSelectChange: () => {},
+  legendTitle: '',
+  legendDataSource: {},
+  activeLayer: '',
+  dataPoints: {}
 };
 
 export default ControlPanel;

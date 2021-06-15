@@ -12,11 +12,9 @@ class LayerSelector extends React.Component {
           <div key={k}>
             <label>
               <input
-                id={k}
-                className='layers-panel__checkbox'
+                className='layers-panel__radio'
                 type='radio'
                 checked={k === this.props.activeLayer}
-                value={k}
                 onClick={event => this.props.onLayerSelectChange(event, k)}
               />
               {d.title}
