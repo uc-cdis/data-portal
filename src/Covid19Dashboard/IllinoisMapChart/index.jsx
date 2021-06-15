@@ -50,7 +50,6 @@ function formatDate(date) {
 class IllinoisMapChart extends React.Component {
   constructor(props) {
     super(props);
-    // this.strainData = strainData;
     this.choroCountyGeoJson = null;
     this.strainDataGeoJson = null;
     const today = new Date();
@@ -72,7 +71,6 @@ class IllinoisMapChart extends React.Component {
         pitch: 0,
       },
       hoverInfo: null,
-      // overlay - title, data, legend stuff - scale, data source, url - hover info
       overlay_layers: {
         /*
         // Additional layers used as examples enable here
@@ -162,7 +160,7 @@ class IllinoisMapChart extends React.Component {
       this.mapData.colorsAsList = Object.entries(this.mapData.colors)
         .map(item => [+item[0], item[1]]).flat();
 
-      this.setState({ mapColors: this.mapData.colors }); // eslint-disable-line react/no-did-update-set-state
+      this.setState({ mapColors: this.mapData.colors }); // eslint-disable-line react/no-did-update-set-state, max-len
     }
 
     if (!this.state.mobility_data) {
@@ -171,31 +169,12 @@ class IllinoisMapChart extends React.Component {
         .then((data) => {
           this.addMobilityDataToGeoJsonBase(data);
         })
-        .catch(() => {})
+        .catch(() => {console.warn('Data not retrieved. Unable to display mobility overlays')}) // eslint-disable-line no-console
     }
 
     if (!this.state.strainData) {
       this.addStrainDataToState();
     }
-  }
-
-  sliderOnChange = (value) => {
-    const startDate = new Date(2020, 0, 22);
-    // this is ugly but it gets the job done
-    startDate.setDate(startDate.getDate() + parseInt(value, 10));
-    const _sliderDate = startDate;
-    let dd = _sliderDate.getDate();
-    let mm = _sliderDate.getMonth() + 1;
-    const y = _sliderDate.getFullYear();
-    if (`${dd}`.length === 1) {
-      dd = `0${dd}`;
-    }
-    if (`${mm}`.length === 1) {
-      mm = `0${mm}`;
-    }
-
-    const someFormattedDate = `${y}-${mm}-${dd}`;
-    this.setState({ sliderDate: someFormattedDate, sliderValue: value });
   }
 
   onHover = (event) => {
@@ -283,6 +262,25 @@ class IllinoisMapChart extends React.Component {
         );
       }
     });
+  }
+
+  sliderOnChange = (value) => {
+    const startDate = new Date(2020, 0, 22);
+    // this is ugly but it gets the job done
+    startDate.setDate(startDate.getDate() + parseInt(value, 10));
+    const _sliderDate = startDate;
+    let dd = _sliderDate.getDate();
+    let mm = _sliderDate.getMonth() + 1;
+    const y = _sliderDate.getFullYear();
+    if (`${dd}`.length === 1) {
+      dd = `0${dd}`;
+    }
+    if (`${mm}`.length === 1) {
+      mm = `0${mm}`;
+    }
+
+    const someFormattedDate = `${y}-${mm}-${dd}`;
+    this.setState({ sliderDate: someFormattedDate, sliderValue: value });
   }
 
   setMapLegendColors(id) {
@@ -379,7 +377,7 @@ class IllinoisMapChart extends React.Component {
       .then((data) => {
         this.setState({ strainData: data });
       })
-      .catch(() => {});
+      .catch(() => {console.warn('Data not retrieved. Unable to display mobility overlays')}) // eslint-disable-line no-console
   }
 
   onLayerSelect = (event, id) => {
