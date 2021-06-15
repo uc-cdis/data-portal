@@ -264,46 +264,6 @@ class IllinoisMapChart extends React.Component {
     });
   }
 
-  sliderOnChange = (value) => {
-    const startDate = new Date(2020, 0, 22);
-    // this is ugly but it gets the job done
-    startDate.setDate(startDate.getDate() + parseInt(value, 10));
-    const _sliderDate = startDate;
-    let dd = _sliderDate.getDate();
-    let mm = _sliderDate.getMonth() + 1;
-    const y = _sliderDate.getFullYear();
-    if (`${dd}`.length === 1) {
-      dd = `0${dd}`;
-    }
-    if (`${mm}`.length === 1) {
-      mm = `0${mm}`;
-    }
-
-    const someFormattedDate = `${y}-${mm}-${dd}`;
-    this.setState({ sliderDate: someFormattedDate, sliderValue: value });
-  }
-
-  setMapLegendColors(id) {
-    if (id === 'time_data') {
-      this.setState({ mapColors: this.mapData.colors, legendTitle: 'Confirmed Cases', legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' } });
-    }
-    if (id.includes('mobility_data')) {
-      const colors = [
-        ['-100% - -80%', '#FFF'],
-        ['-80% - -60%', '#F7F787'],
-        ['-60% - -40%', '#EED322'],
-        ['-40% - -20%', '#E6B71E'],
-        ['-20% - 0%', '#DA9C20'],
-        ['0% - 20%', '#CA8323'],
-        ['20% - 20%', '#B86B25'],
-        ['40% - 30%', '#A25626'],
-        ['80% - 40%', '#8B4225'],
-        ['100% +', '#850001'],
-      ];
-      this.setState({ mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google Mobility Data', link: 'https://www.google.com/covid19/mobility/' } });
-    }
-  }
-
   addMobilityDataToGeoJsonBase = (data) => {
     // Only select Illinois data.
     // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
@@ -385,6 +345,27 @@ class IllinoisMapChart extends React.Component {
     this.setMapLegendColors(id);
   }
 
+  setMapLegendColors(id) {
+    if (id === 'time_data') {
+      this.setState({ mapColors: this.mapData.colors, legendTitle: 'Confirmed Cases', legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' } });
+    }
+    if (id.includes('mobility_data')) {
+      const colors = [
+        ['-100% - -80%', '#FFF'],
+        ['-80% - -60%', '#F7F787'],
+        ['-60% - -40%', '#EED322'],
+        ['-40% - -20%', '#E6B71E'],
+        ['-20% - 0%', '#DA9C20'],
+        ['0% - 20%', '#CA8323'],
+        ['20% - 20%', '#B86B25'],
+        ['40% - 30%', '#A25626'],
+        ['80% - 40%', '#8B4225'],
+        ['100% +', '#850001'],
+      ];
+      this.setState({ mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google Mobility Data', link: 'https://www.google.com/covid19/mobility/' } });
+    }
+  }
+
   onDataSelect = (event, id) => {
     const newState = Object.assign({}, this.state.popup_data);
     newState[id].visible = event.target.checked ? 'visible' : 'none';
@@ -443,6 +424,25 @@ class IllinoisMapChart extends React.Component {
       );
     }
     return null;
+  }
+
+  sliderOnChange = (value) => {
+    const startDate = new Date(2020, 0, 22);
+    // this is ugly but it gets the job done
+    startDate.setDate(startDate.getDate() + parseInt(value, 10));
+    const _sliderDate = startDate;
+    let dd = _sliderDate.getDate();
+    let mm = _sliderDate.getMonth() + 1;
+    const y = _sliderDate.getFullYear();
+    if (`${dd}`.length === 1) {
+      dd = `0${dd}`;
+    }
+    if (`${mm}`.length === 1) {
+      mm = `0${mm}`;
+    }
+
+    const someFormattedDate = `${y}-${mm}-${dd}`;
+    this.setState({ sliderDate: someFormattedDate, sliderValue: value });
   }
 
   render() {
