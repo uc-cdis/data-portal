@@ -28,21 +28,20 @@ class ControlPanel extends PureComponent {
           colors={this.props.colors}
         /> : null }
         { this.props.layers ?
-          <>
-            <h3>Select Data</h3>
-            <h4>
-              Map Layers
-            </h4>
-              <LayerSelector layers={this.props.layers}
-                            onLayerSelectChange={this.props.onLayerSelectChange}
-                            activeLayer={this.props.activeLayer}/>
-            <h4>
-              Additional Data Points
-            </h4>
-              <DataSelector layers={this.props.dataPoints}
-                            onDataSelectChange={this.props.onDataSelectChange}/>
-          </> : null
-        }
+        <div>
+          <h3>Select Data</h3>
+          <h4>
+            Map Layers
+          </h4>
+            <LayerSelector layers={this.props.layers}
+                           onLayerSelectChange={this.props.onLayerSelectChange}
+                           activeLayer={this.props.activeLayer}/> 
+          <h4>
+            Additional Data Points
+          </h4> 
+            <DataSelector layers={this.props.dataPoints}
+                          onDataSelectChange={this.props.onDataSelectChange}/> 
+        </div> : null}
       </div>
     );
   }
