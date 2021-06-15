@@ -23,7 +23,7 @@ class ControlPanel extends PureComponent {
           colors={this.props.colors}
         /> : null }
         { this.props.layers ?
-        <>
+        <div>
         <h3>Select Data</h3>
         <h4>
           Map Layers
@@ -36,7 +36,7 @@ class ControlPanel extends PureComponent {
         </h4> 
           <DataSelector layers={this.props.dataPoints}
                          onDataSelectChange={this.props.onDataSelectChange}/> 
-        </> : null}
+        </div> : null}
       </div>
     );
   }

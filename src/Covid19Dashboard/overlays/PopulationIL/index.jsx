@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
 import usCounties from './data/us_counties_il_pop.json';
-import LayerTemplate from '../LayerTemplate';
 
 
 /*
