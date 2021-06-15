@@ -11,7 +11,6 @@ class DataSelector extends React.Component {
         return (
           <div key={k}>
             <input
-              id={k}
               className='layers-panel__checkbox'
               type='checkbox'
               defaultChecked={d.visible === 'visible'}

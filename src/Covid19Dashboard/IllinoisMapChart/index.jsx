@@ -162,7 +162,7 @@ class IllinoisMapChart extends React.Component {
       this.mapData.colorsAsList = Object.entries(this.mapData.colors)
         .map(item => [+item[0], item[1]]).flat();
 
-      this.setState({ mapColors: this.mapData.colors });
+      this.setState({ mapColors: this.mapData.colors }); // eslint-disable-line react/no-did-update-set-state
     }
 
     if (!this.state.mobility_data) {
@@ -171,47 +171,12 @@ class IllinoisMapChart extends React.Component {
         .then((data) => {
           this.addMobilityDataToGeoJsonBase(data);
         })
-        .catch(e => {})
+        .catch(() => {})
     }
 
     if (!this.state.strainData) {
-      fetch('https://covd-map-occ-prc-qa.s3.amazonaws.com/gagnon_lab_strain_data.json')
-        .then(resp => resp.json())
-        .then((data) => {
-          this.setState({ strainData: data });
-        })
-        .catch(e => {});
+      this.addStrainDataToState();
     }
-  }
-
-  addMobilityDataToGeoJsonBase = (data) => {
-    // Only select Illinois data.
-    // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
-    // but not in JHU data. So don't display Chicago separately.
-    const base = {
-      ...countyData,
-      features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
-    };
-    const geoJson = {
-      ...base,
-      features: base.features.map((loc) => {
-        const location = loc;
-        if (location.properties.FIPS && !(location.properties.FIPS in data)) {
-          // `countyData` stores FIPS with trailing zeros, JHU data doesn't
-          location.properties.FIPS = Number(location.properties.FIPS).toString();
-        }
-        if (location.properties.FIPS && location.properties.FIPS in data) {
-          location.properties = Object.assign(
-            data[location.properties.FIPS],
-            location.properties,
-          );
-          return location;
-        }
-        // no data for this location
-        return location;
-      }),
-    };
-    this.setState({ mobility_data: geoJson });
   }
 
   sliderOnChange = (value) => {
@@ -341,6 +306,36 @@ class IllinoisMapChart extends React.Component {
     }
   }
 
+  addMobilityDataToGeoJsonBase = (data) => {
+    // Only select Illinois data.
+    // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
+    // but not in JHU data. So don't display Chicago separately.
+    const base = {
+      ...countyData,
+      features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
+    };
+    const geoJson = {
+      ...base,
+      features: base.features.map((loc) => {
+        const location = loc;
+        if (location.properties.FIPS && !(location.properties.FIPS in data)) {
+          // `countyData` stores FIPS with trailing zeros, JHU data doesn't
+          location.properties.FIPS = Number(location.properties.FIPS).toString();
+        }
+        if (location.properties.FIPS && location.properties.FIPS in data) {
+          location.properties = Object.assign(
+            data[location.properties.FIPS],
+            location.properties,
+          );
+          return location;
+        }
+        // no data for this location
+        return location;
+      }),
+    };
+    this.setState({ mobility_data: geoJson });
+  }
+
   addTimeDataToGeoJsonBase = (data) => {
     // Only select Illinois data.
     // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
@@ -376,6 +371,15 @@ class IllinoisMapChart extends React.Component {
       }),
     };
     this.setState({ time_data: geoJson });
+  }
+
+  addStrainDataToState = () => {
+    fetch('https://covd-map-occ-prc-qa.s3.amazonaws.com/gagnon_lab_strain_data.json')
+      .then(resp => resp.json())
+      .then((data) => {
+        this.setState({ strainData: data });
+      })
+      .catch(() => {});
   }
 
   onLayerSelect = (event, id) => {

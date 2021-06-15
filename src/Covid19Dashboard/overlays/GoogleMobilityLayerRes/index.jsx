@@ -2,16 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
 
-/*
-  Use Mapbox filters to selection all counties not in Illinois and render them
-  in transparent grey.
-  The filter will select all counties not in the state of IL
- */
 function notIl(date) {
   return {
     type: 'fill',
-    filter: ['all'], // filter by selecting all states != 'IL'
-    layout: { visibility: 'visible' }, // everything visible by default
+    filter: ['all'],
+    layout: { visibility: 'visible' },
     beforeId: 'county-outline',
     paint: {
       'fill-color': [
@@ -44,21 +39,7 @@ function notIl(date) {
   };
 }
 
-// LayerTemplate consist of a data source
-// and layer which is used to render the data using
-// the associated style
 class MobilityLayerRes extends React.Component {
-  // additional additional initial code code here.
-  // If you do uncomment the constructor below
-  /*
-  constructor(props) {
-    super(props);
-  }
-  */
-
-  // Set the data source (geojson) and
-  // the layer used to render and toggle visibility
-  // NOTE: the layout prop must appear after the style
 
   render() {
     return (
