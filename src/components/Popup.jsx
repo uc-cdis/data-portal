@@ -25,9 +25,8 @@ class Popup extends React.Component {
     this.focusTrap.activate();
   }
 
-  onClose() {
+  componentWillUnmount() {
     this.focusTrap.deactivate();
-    this.props.onClose();
   }
 
   render() {
@@ -48,13 +47,13 @@ class Popup extends React.Component {
             </div>
             {
               this.props.onClose &&
-              <div role='button' tabIndex={-1} className='popup__close-button' onClick={this.onClose}>
+              <button type='button' className='popup__close-button' onClick={this.props.onClose}>
                 <IconComponent
                   iconName='cross'
                   dictIcons={dictIcons}
                   svgStyles={{ verticalAlign: 'middle' }}
                 />
-              </div>
+              </button>
             }
           </div>
           <div className='popup__message'>
