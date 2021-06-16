@@ -77,7 +77,29 @@
 .map-chart {
   width: 100%;
   flex-basis: 200%;
-  max-width: 1080px;
+  height: 55vw;
+}
+.map-chart-il {
+  height: auto;
+}
+
+//make charts go below map
+@media screen and (max-width: 1365px) {
+  .covid19-dashboard_visualizations {
+    display: block;
+  }
+  .map-chart {
+    height: 65vw;
+    min-height: 500px;
+  }
+  .map-chart-il {
+    min-height: 700px;
+  }
+  .covid19-dashboard_charts {
+    max-width: 700px;
+    padding-top: 10px;
+    min-width: 0;
+  }
 }
 
 .map-chart__mapgl-map {
@@ -102,17 +124,21 @@
   align-items: center;
 }
 
-// for ant design carousel
-.ant-carousel .slick-prev, .ant-carousel .slick-next {
-  color: black;
-  background-color: var(--g3-color__smoke);
+// Styling for graph popups
+.covid19-dashboard_charts .popup__title .popup__icon {
+  float: none;
+  vertical-align: middle;
+  padding: 10px 0;
 }
-
-.ant-carousel .slick-prev:hover, .ant-carousel .slick-next:hover, .ant-carousel .slick-prev:focus, .ant-carousel .slick-next:focus {
-  color: rgba(0,0,0,0.3);
-  background-color: var(--g3-color__smoke);
+.covid19-dashboard_charts .popup__title .popup__title-text {
+  line-height: 1.2em;
+  vertical-align: middle;
 }
-
-.ant-carousel .slick-prev::before, .ant-carousel .slick-next::before {
-  content: '';
+.covid19-dashboard_charts .popup__message .chart-carousel__left-column {
+  width: 75%;
+  height: 100%;
+}
+.covid19-dashboard_charts .popup__message .chart-carousel__image {
+  max-height: 100%;
+  width: 100%;
 }

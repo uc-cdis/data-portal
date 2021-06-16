@@ -6,6 +6,11 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { mapboxAPIToken } from '../../localconf';
 import ControlPanel from '../ControlPanel';
 import countyData from '../data/us_counties';
+/*
+// Additional layers used as examples enable here
+import LayerTemplate from '../overlays/LayerTemplate';
+import PopulationIL from '../overlays/PopulationIL'; */
+
 
 function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
@@ -66,6 +71,10 @@ class IllinoisMapChart extends React.Component {
         pitch: 0,
       },
       hoverInfo: null,
+      overlay_layers: {
+        us_counties: { title: 'US Counties', visible: 'visible' },
+        il_population: { title: 'IL Population', visible: 'visible' },
+      },
     };
     this.mapData = {
       modeledCountyGeoJson: null,
@@ -76,7 +85,7 @@ class IllinoisMapChart extends React.Component {
 
   componentDidUpdate() {
     if (!(this.mapData.colorsAsList === null
-          && Object.keys(this.props.jsonByLevel.county).length > 0)) {
+      && Object.keys(this.props.jsonByLevel.county).length > 0)) {
       return;
     }
     if (Object.keys(this.props.jsonByLevel.country).length && !this.choroCountyGeoJson) {
@@ -129,6 +138,7 @@ class IllinoisMapChart extends React.Component {
     this.mapData.colorsAsList = Object.entries(this.mapData.colors)
       .map((item) => [+item[0], item[1]]).flat();
   }
+
 
   onHover = (event) => {
     if (!event.features) { return; }
@@ -193,6 +203,12 @@ class IllinoisMapChart extends React.Component {
     });
   }
 
+  onLayerSelect = (event, id) => {
+    const newState = Object.assign({}, this.state.overlay_layers);
+    newState[id].visible = event.target.checked ? 'visible' : 'none';
+    this.setState(newState);
+  }
+
   renderHoverPopup() {
     const { hoverInfo } = this.state;
     if (hoverInfo) {
@@ -223,12 +239,17 @@ class IllinoisMapChart extends React.Component {
 
   render() {
     return (
-      <div className='map-chart'>
+      <div className='map-chart map-chart-il'>
         <ControlPanel
           showMapStyle={false}
           showLegend
           colors={this.mapData.colors}
           lastUpdated={this.props.jsonByLevel.last_updated}
+          /*
+          // Additional layers used as examples enable here
+          layers={this.state.overlay_layers}
+          onLayerSelectChange={this.onLayerSelect}
+          */
         />
         <ReactMapGL.InteractiveMap
           className='.map-chart__mapgl-map'
@@ -275,6 +296,10 @@ class IllinoisMapChart extends React.Component {
               }}
             />
           </ReactMapGL.Source>
+          {/*
+          // Additional layers used as examples enable here
+          <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
+          <PopulationIL visibility={this.state.overlay_layers.il_population.visible} /> */}
         </ReactMapGL.InteractiveMap>
       </div>
     );

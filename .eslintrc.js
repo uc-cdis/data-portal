@@ -31,6 +31,7 @@ module.exports = {
     },
   },
   rules: {
+    'no-underscore-dangle': 'off',
     indent: [
       'error',
       2,

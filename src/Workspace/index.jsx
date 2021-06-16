@@ -35,7 +35,7 @@ class Workspace extends React.Component {
       workspaceStatus: null,
       workspaceLaunchStepsConfig: null,
       interval: null,
-      workspaceType: null,
+      workspaceID: null,
       defaultWorkspace: false,
       workspaceIsFullpage: false,
       externalLoginOptions: [],
@@ -120,14 +120,11 @@ class Workspace extends React.Component {
   getIcon = (workspace) => {
     if (this.regIcon(workspace, 'R Studio')) {
       return rStudioIcon;
-    }
-    if (this.regIcon(workspace, 'Jupyter')) {
+    } if (this.regIcon(workspace, 'Jupyter')) {
       return jupyterIcon;
-    }
-    if (this.regIcon(workspace, 'Galaxy')) {
+    } if (this.regIcon(workspace, 'Galaxy')) {
       return galaxyIcon;
-    }
-    if (this.regIcon(workspace, 'DICOM')) {
+    } if (this.regIcon(workspace, 'DICOM')) {
       return ohifIcon;
     }
     return jupyterIcon;
@@ -209,7 +206,7 @@ class Workspace extends React.Component {
   regIcon = (str, pattn) => new RegExp(pattn).test(str)
 
   launchWorkspace = (workspace) => {
-    this.setState({ workspaceType: workspace.name }, () => {
+    this.setState({ workspaceID: workspace.id }, () => {
       fetchWithCreds({
         path: `${workspaceLaunchUrl}?id=${workspace.id}`,
         method: 'POST',
@@ -221,7 +218,7 @@ class Workspace extends React.Component {
 
   terminateWorkspace = () => {
     this.setState({
-      workspaceType: null,
+      workspaceID: null,
       workspaceStatus: 'Terminating',
       workspaceLaunchStepsConfig: null,
     }, () => {
@@ -434,10 +431,10 @@ class Workspace extends React.Component {
                             title={option.name}
                             description={desc}
                             onClick={() => this.launchWorkspace(option)}
-                            isPending={this.state.workspaceType === option.name}
+                            isPending={this.state.workspaceID === option.id}
                             isDisabled={
-                              !!this.state.workspaceType
-                            && this.state.workspaceType !== option.name
+                              !!this.state.workspaceID
+                            && this.state.workspaceID !== option.id
                             }
                           />
                         );

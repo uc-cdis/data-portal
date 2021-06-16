@@ -1,11 +1,15 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Carousel } from 'antd';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 import { covid19DashboardConfig } from '../../localconf';
 import Spinner from '../../components/Spinner';
 import PlotChart from '../PlotChart';
 import './ChartCarousel.less';
+
+import Popup from '../../components/Popup';
 
 class ChartCarousel extends PureComponent {
   constructor(props) {
@@ -14,6 +18,7 @@ class ChartCarousel extends PureComponent {
     this.state = {
       hoveredChartId: null,
       hoverYPosition: 0,
+      popupChart: null,
     };
   }
 
@@ -27,19 +32,38 @@ class ChartCarousel extends PureComponent {
     });
   }
 
+  onChartClick = (chartConfig) => {
+    if (!this.props.enablePopupOnClick) {
+      return;
+    }
+
+    this.setState({
+      popupChart: {
+        title: chartConfig.title,
+        config: chartConfig,
+      },
+    });
+  }
+
+  closePopupChart = () => {
+    this.setState({
+      popupChart: null,
+    });
+  }
+
   render() {
     if (!this.props.chartsConfig.length) {
       return null;
     }
 
-    // const sliderSettings = {
-    //   dots: true,
-    //   infinite: false,
-    //   speed: 500,
-    //   slidesToShow: 1,
-    //   slidesToScroll: 1,
-    //   arrows: true,
-    // };
+    const sliderSettings = {
+      dots: true,
+      infinite: false,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: true,
+    };
 
     const charts = [];
     this.props.chartsConfig.forEach((chartConfig, i) => {
@@ -85,14 +109,20 @@ class ChartCarousel extends PureComponent {
       const showDescriptionColumn = this.props.isInPopup && (
         chartConfig.title || chartConfig.description
       );
+
+      const chartContainerDivProps = {
+        key: 0,
+        onMouseOver: () => this.onChartHover(i),
+        onMouseOut: () => this.onChartHover(null),
+      };
+      // If chart is clickable
+      if (this.props.enablePopupOnClick) {
+        chartContainerDivProps.onClick = () => this.onChartClick(chartConfig);
+        chartContainerDivProps.role = 'button';
+        chartContainerDivProps.tabIndex = 0;
+      }
       const chartContainer = (
-        <div
-          key={0}
-          onMouseOver={() => this.onChartHover(i)}
-          onFocus={() => this.onChartHover(i)}
-          onMouseOut={() => this.onChartHover(null)}
-          onBlur={() => this.onChartHover(null)}
-        >
+        <div {...chartContainerDivProps}>
           <div
             className={`${this.props.isInPopup ? 'chart-carousel__popup-chart' : null} ${showDescriptionColumn ? 'chart-carousel__left-column' : ''}`}
           >
@@ -130,9 +160,9 @@ class ChartCarousel extends PureComponent {
               // match the popup width...
               style={this.props.isInPopup ? { width: '70vw' } : {}}
             >
-              <Carousel arrows dots infinite={false}>
+              <Slider {...sliderSettings}>
                 {charts}
-              </Carousel>
+              </Slider>
             </div>
 
             { showDescriptionHover
@@ -146,6 +176,24 @@ class ChartCarousel extends PureComponent {
                 </p>
               </div>
             )}
+            {/* popup when click on a chart */}
+            {
+              this.state.popupChart
+                ? (
+                  <Popup
+                    title={this.state.popupChart.title}
+                    onClose={() => this.closePopupChart()}
+                  >
+                    <ChartCarousel
+                      {...this.props}
+                      chartsConfig={[this.state.popupChart.config]}
+                      isInPopup
+                      enablePopupOnClick={false}
+                    />
+                  </Popup>
+                )
+                : null
+            }
           </div>
         )
         : <Spinner />
@@ -156,10 +204,12 @@ class ChartCarousel extends PureComponent {
 ChartCarousel.propTypes = {
   chartsConfig: PropTypes.array.isRequired,
   isInPopup: PropTypes.bool,
+  enablePopupOnClick: PropTypes.bool,
 };
 
 ChartCarousel.defaultProps = {
   isInPopup: false,
+  enablePopupOnClick: false,
 };
 
 export default ChartCarousel;

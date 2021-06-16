@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@gen3/ui-component/dist/components/Button';
 import {
-  userapiPath, fenceDownloadPath, jobapiPath, hostname,
+  userAPIPath, fenceDownloadPath, jobAPIPath, hostname,
 } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './Indexing.less';
@@ -64,7 +64,7 @@ class Indexing extends React.Component {
       file_name: this.state.uploadedFile.name,
     });
     return fetchWithCreds({
-      path: `${userapiPath}data/upload`,
+      path: `${userAPIPath}data/upload`,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSONbody,
@@ -166,7 +166,7 @@ class Indexing extends React.Component {
       input: { URL: this.state.presignedURLForDownload },
     };
     return fetchWithCreds({
-      path: `${jobapiPath}dispatch`,
+      path: `${jobAPIPath}dispatch`,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSON.stringify(JSONbody),
@@ -197,7 +197,7 @@ class Indexing extends React.Component {
       },
     };
     fetchWithCreds({
-      path: `${jobapiPath}dispatch`,
+      path: `${jobAPIPath}dispatch`,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSON.stringify(JSONbody),
@@ -222,7 +222,7 @@ class Indexing extends React.Component {
   }
 
   retrieveJobOutput = (uid) => fetchWithCreds({
-    path: `${jobapiPath}output?UID=${uid}`,
+    path: `${jobAPIPath}output?UID=${uid}`,
     method: 'GET',
     customHeaders: { 'Content-Type': 'application/json' },
   })
@@ -230,7 +230,7 @@ class Indexing extends React.Component {
   pollForIndexJobStatus = (uid) => {
     const thisPointer = this;
     return fetchWithCreds({
-      path: `${jobapiPath}status?UID=${uid}`,
+      path: `${jobAPIPath}status?UID=${uid}`,
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
@@ -270,7 +270,7 @@ class Indexing extends React.Component {
   pollForGenerateManifestJobStatus = (uid) => {
     const thisPointer = this;
     return fetchWithCreds({
-      path: `${jobapiPath}status?UID=${uid}`,
+      path: `${jobAPIPath}status?UID=${uid}`,
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {

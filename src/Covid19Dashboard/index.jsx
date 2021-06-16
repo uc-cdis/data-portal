@@ -297,6 +297,7 @@ class Covid19Dashboard extends React.Component {
                           key={i}
                           chartsConfig={carouselConfig}
                           {...this.props}
+                          enablePopupOnClick
                         />
                       ),
                       )}
@@ -339,6 +340,7 @@ class Covid19Dashboard extends React.Component {
                           key={i}
                           chartsConfig={carouselConfig}
                           {...this.props}
+                          enablePopupOnClick
                         />
                       ),
                       )}
