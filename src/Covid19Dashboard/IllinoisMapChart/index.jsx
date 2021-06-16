@@ -1,3 +1,4 @@
+ /* eslint-disable react/sort-comp */
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
@@ -503,7 +504,7 @@ class IllinoisMapChart extends React.Component {
             />
           </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
-        {<MapSlider title={`View data by date: ${this.state.sliderDate}`} value={this.state.sliderValue} maxValue={this.state.sliderMaxValue} onChange={this.sliderOnChange} />}
+        <MapSlider title={`View data by date: ${this.state.sliderDate}`} value={this.state.sliderValue} maxValue={this.state.sliderMaxValue} onChange={this.sliderOnChange} />
       </div>
     );
   }
