@@ -160,7 +160,7 @@
 }
 
 .discovery-export__selected-ct {
-  color: #525252;
+  color: var(--g3-color__gray);
 }
 
 .discovery-table__row {
