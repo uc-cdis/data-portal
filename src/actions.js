@@ -1,7 +1,7 @@
 import 'isomorphic-fetch';
 import {
   apiPath,
-  userApiPath,
+  userAPIPath,
   headers,
   hostname,
   submissionApiPath,
@@ -50,7 +50,7 @@ const getJsonOrText = (path, response, useCache, method = 'GET') => response.tex
 let pendingRequest = null;
 export const fetchCreds = (opts) => {
   if (pendingRequest) { return pendingRequest; }
-  const { path = `${userApiPath}user/`, method = 'GET', dispatch } = opts;
+  const { path = `${userAPIPath}user/`, method = 'GET', dispatch } = opts;
   const request = {
     credentials: 'include',
     headers: { ...headers },
@@ -271,7 +271,7 @@ export const fetchUser = (dispatch) => fetchCreds({
 export const refreshUser = () => fetchUser;
 
 export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
-  fetch(`${userApiPath}/logout?next=${hostname}`).then((response) => {
+  fetch(`${userAPIPath}/logout?next=${hostname}`).then((response) => {
     if (displayAuthPopup) {
       dispatch({
         type: 'UPDATE_POPUP',

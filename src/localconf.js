@@ -75,20 +75,20 @@ function buildConfig(opts) {
   const apiPath = `${hostname}api/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
-  let userApiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
-  const jobapiPath = `${hostname}job/`;
-  const credentialCdisPath = `${userApiPath}credentials/cdis/`;
+  let userAPIPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
+  const jobAPIPath = `${hostname}job/`;
+  const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
   const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
   const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
   let login = {
-    url: `${userApiPath}login/google?redirect=`,
+    url: `${userAPIPath}login/google?redirect=`,
     title: 'Login from Google',
   };
   const authzPath = typeof arboristURL === 'undefined' ? `${hostname}authz` : `${arboristURL}authz`;
   const authzMappingPath = typeof arboristURL === 'undefined' ? `${hostname}authz/mapping` : `${arboristURL}authz/mapping`;
-  const loginPath = `${userApiPath}login/`;
+  const loginPath = `${userAPIPath}login/`;
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
   const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
@@ -253,14 +253,14 @@ function buildConfig(opts) {
   };
 
   if (app === 'gdc' && typeof fenceURL === 'undefined') {
-    userApiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
+    userAPIPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
     login = {
       url: 'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',
       title: 'Login from NIH',
     };
   }
 
-  const fenceDataPath = `${userApiPath}data/`;
+  const fenceDataPath = `${userAPIPath}data/`;
   const fenceDownloadPath = `${fenceDataPath}download`;
 
   const defaultLineLimit = 30;
@@ -391,8 +391,8 @@ function buildConfig(opts) {
     dev,
     hostname,
     gaDebug,
-    userApiPath,
-    jobapiPath,
+    userAPIPath,
+    jobAPIPath,
     apiPath,
     submissionApiPath,
     credentialCdisPath,

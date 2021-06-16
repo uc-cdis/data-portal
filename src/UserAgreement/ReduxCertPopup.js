@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import CertPopup from './CertPopup';
-import { requiredCerts, userApiPath } from '../configs';
+import { requiredCerts, userAPIPath } from '../configs';
 import { fetchWithCreds, refreshUser } from '../actions';
 import { minus } from '../utils';
 import { certs, hostname } from '../localconf';
@@ -13,7 +13,7 @@ import { certs, hostname } from '../localconf';
  * @param {*} history
  */
 export const submitForm = (data, questionList, quiz) => (dispatch) => fetchWithCreds({
-  path: `${userApiPath}/user/cert/${quiz}?extension=txt`,
+  path: `${userAPIPath}/user/cert/${quiz}?extension=txt`,
   method: 'PUT',
   body: JSON.stringify({
     answers: data, certificate_form: questionList,

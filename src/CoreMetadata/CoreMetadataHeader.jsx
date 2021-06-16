@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import copy from 'clipboard-plus';
 import React, { Component } from 'react';
 import Popup from '../components/Popup';
-import { userApiPath, useArboristUI } from '../configs';
+import { userAPIPath, useArboristUI } from '../configs';
 import isEnabled from '../helpers/featureFlags';
 
 import { userHasMethodForServiceOnProject } from '../authMappingUtils';
@@ -55,7 +55,7 @@ class CoreMetadataHeader extends Component {
         || userHasMethodForServiceOnProject('read-storage', 'fence', projectId, this.props.userAuthMapping)
         || projectIsOpenData(projectAvail, projectId)
       ) {
-        const downloadLink = `${userApiPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
+        const downloadLink = `${userAPIPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
 
         downloadButton = (
           <a href={downloadLink}>

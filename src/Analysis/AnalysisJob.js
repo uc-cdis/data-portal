@@ -1,9 +1,9 @@
 import { fetchWithCreds } from '../actions';
 import { asyncSetInterval } from '../utils';
-import { userApiPath, jobapiPath } from '../localconf';
+import { userAPIPath, jobAPIPath } from '../localconf';
 
 export const getPresignedUrl = (did, method) => {
-  const urlPath = `${userApiPath}data/${method}/${did}`;
+  const urlPath = `${userAPIPath}data/${method}/${did}`;
   return fetchWithCreds({ path: urlPath, method: 'GET' },
   ).then(
     ({ data }) => data.url,
@@ -11,7 +11,7 @@ export const getPresignedUrl = (did, method) => {
 };
 
 export const dispatchJob = (body) => (dispatch) => fetchWithCreds({
-  path: `${jobapiPath}dispatch`,
+  path: `${jobAPIPath}dispatch`,
   body: JSON.stringify(body),
   method: 'POST',
   dispatch,
@@ -42,7 +42,7 @@ export const checkJobStatus = (dispatch, getState) => {
     jobId = state.analysis.job.uid;
   }
   return fetchWithCreds({
-    path: `${jobapiPath}status?UID=${jobId}`,
+    path: `${jobAPIPath}status?UID=${jobId}`,
     method: 'GET',
     dispatch,
   }).then(
@@ -81,7 +81,7 @@ export const checkJob = () => (dispatch) => asyncSetInterval(() => dispatch(chec
   });
 
 export const fetchJobResult = (jobId) => (dispatch) => fetchWithCreds({
-  path: `${jobapiPath}output?UID=${jobId}`,
+  path: `${jobAPIPath}output?UID=${jobId}`,
   method: 'GET',
   dispatch,
 }).then((data) => data);
