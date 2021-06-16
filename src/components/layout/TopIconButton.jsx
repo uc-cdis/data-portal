@@ -28,7 +28,7 @@ TopIconButton.defaultProps = {
   icon: null,
   onActiveTab: () => {},
   isActive: false,
-  tabIndex: 0
+  tabIndex: 0,
 };
 
 export default TopIconButton;
