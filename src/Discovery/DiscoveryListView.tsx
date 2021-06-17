@@ -259,6 +259,10 @@ export const DiscoveryListView: React.FunctionComponent<DiscoveryListViewProps> 
                   props.setModalData(record);
                   props.setModalVisible(true);
                 }}
+                onKeyPress={() => {
+                  props.setModalData(record);
+                  props.setModalVisible(true);
+                }}
               >
                 {renderValue(studyPreviewText)}
               </div>

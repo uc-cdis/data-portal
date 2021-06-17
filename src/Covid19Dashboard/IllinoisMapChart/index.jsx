@@ -11,7 +11,6 @@ import countyData from '../data/us_counties';
 import LayerTemplate from '../overlays/LayerTemplate';
 import PopulationIL from '../overlays/PopulationIL'; */
 
-
 function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
   // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
@@ -139,7 +138,6 @@ class IllinoisMapChart extends React.Component {
       .map((item) => [+item[0], item[1]]).flat();
   }
 
-
   onHover = (event) => {
     if (!event.features) { return; }
 
@@ -204,7 +202,7 @@ class IllinoisMapChart extends React.Component {
   }
 
   onLayerSelect = (event, id) => {
-    const newState = Object.assign({}, this.state.overlay_layers);
+    const newState = { ...this.state.overlay_layers };
     newState[id].visible = event.target.checked ? 'visible' : 'none';
     this.setState(newState);
   }

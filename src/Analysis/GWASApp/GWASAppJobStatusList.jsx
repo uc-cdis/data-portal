@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Modal, Input, Collapse, List, Tag, Popconfirm } from 'antd';
+import {
+  Button, Modal, Input, Collapse, List, Tag, Popconfirm,
+} from 'antd';
 import {
   CheckCircleOutlined,
   SyncOutlined,
@@ -70,29 +72,31 @@ class GWASAppJobStatusList extends React.Component {
   getActionButtons = (listItem) => {
     const actionButtons = [<Button type='link' size='small' onClick={(event) => { event.stopPropagation(); this.handleJobStatusModalShow(listItem.runID); }}>show logs</Button>];
     if (listItem.status === 'running') {
-      actionButtons.unshift(<Popconfirm
-        title='Are you sure you want to cancel this job?'
-        onConfirm={(event) => {
-          event.stopPropagation();
-          this.cancelMarinerJob(listItem.runID);
-        }}
-        okText='Yes'
-        cancelText='No'
-      >
-        <Button type='link' size='small' danger>cancel job</Button>
-      </Popconfirm>);
+      actionButtons.unshift(
+        <Popconfirm
+          title='Are you sure you want to cancel this job?'
+          onConfirm={(event) => {
+            event.stopPropagation();
+            this.cancelMarinerJob(listItem.runID);
+          }}
+          okText='Yes'
+          cancelText='No'
+        >
+          <Button type='link' size='small' danger>cancel job</Button>
+        </Popconfirm>);
     }
     if (listItem.status === 'completed') {
-      actionButtons.unshift(<Button
-        type='link'
-        size='small'
-        onClick={(event) => {
-          event.stopPropagation();
-          this.handleJobStatusModalShow(listItem.runID, false);
-        }}
-      >
+      actionButtons.unshift(
+        <Button
+          type='link'
+          size='small'
+          onClick={(event) => {
+            event.stopPropagation();
+            this.handleJobStatusModalShow(listItem.runID, false);
+          }}
+        >
         show output file paths
-      </Button>);
+        </Button>);
     }
     return actionButtons;
   }
@@ -138,14 +142,14 @@ class GWASAppJobStatusList extends React.Component {
   render() {
     return (
       <div className='GWASApp-jobStatus'>
-        <Collapse onClick={event => event.stopPropagation()}>
+        <Collapse onClick={(event) => event.stopPropagation()}>
           <Panel header='Submitted Job Status' key='1'>
             <List
               className='GWASApp__jobStatusList'
               itemLayout='horizontal'
               pagination={{ pageSize: 5 }}
               dataSource={this.props.marinerJobStatus}
-              renderItem={item => (
+              renderItem={(item) => (
                 <List.Item
                   actions={this.getActionButtons(item)}
                 >

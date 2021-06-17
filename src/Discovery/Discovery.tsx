@@ -391,16 +391,17 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                     dataSource={modalData[config.studyPageFields.downloadLinks.field]}
                     renderItem={(item:ListItem) => (
                       <List.Item
-                        actions={[<Button
-                          href={`${userAPIPath}/data/download/${item.guid}?expires_in=900&redirect`}
-                          target='_blank'
-                          type='text'
-                          // disable button if data has no GUID
-                          disabled={!item.guid}
-                          icon={<DownloadOutlined />}
-                        >
+                        actions={[
+                          <Button
+                            href={`${userAPIPath}/data/download/${item.guid}?expires_in=900&redirect`}
+                            target='_blank'
+                            type='text'
+                            // disable button if data has no GUID
+                            disabled={!item.guid}
+                            icon={<DownloadOutlined />}
+                          >
                       Download File
-                        </Button>]}
+                          </Button>]}
                       >
                         <List.Item.Meta
                           title={item.title}
