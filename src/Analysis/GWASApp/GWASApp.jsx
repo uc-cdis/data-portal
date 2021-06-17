@@ -7,7 +7,7 @@ import { humanFileSize } from '../../utils.js';
 import { fetchWithCreds } from '../../actions';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
 import { marinerUrl } from '../../localconf';
-import { marinerRequestBody } from './utils.js';
+import marinerRequestBody from './utils.js';
 import GWASAppJobStatusList from './GWASAppJobStatusList';
 import './GWASApp.css';
 
