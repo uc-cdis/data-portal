@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './TopIconButton.less';
 
-const TopIconButton = ({ name, icon, onActiveTab = () => {}, isActive = false, tabIndex = "0" }) => (
+const TopIconButton = ({ name, icon, onActiveTab = () => {}, isActive = false, tabIndex = '0' }) => (
   <div
     className={isActive ? 'top-icon-button button-top-active body-typo' : 'top-icon-button body-typo'}
     onClick={onActiveTab}
