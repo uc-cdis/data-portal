@@ -68,7 +68,7 @@ const DiscoveryWithMDSBackend: React.FC<{
         }
         const studiesWithAccessibleField = rawStudies.map((study) => {
           let accessible: AccessLevel;
-          if (study[authzField] === undefined) {
+          if (study[authzField] === undefined || study[authzField] === '') {
             accessible = AccessLevel.NOTAVAILABLE;
           } else {
             accessible = userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAuthMapping)
