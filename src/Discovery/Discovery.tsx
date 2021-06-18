@@ -400,7 +400,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           value: AccessLevel.ACCESSIBLE,
         },
         {
-          text: <><LockFilled />No Access</>,
+          text: <><LockFilled />Access Required</>,
           value: AccessLevel.UNACCESSIBLE,
         },
         {
