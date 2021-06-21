@@ -156,7 +156,7 @@
 
 .discovery-table-container {
   width: 100%;
-  transform: translateX(0px);
+  transform: translateX(0);
   transition: transform 300ms, width 250ms 50ms;
   overflow-x: auto;
 }
@@ -190,6 +190,20 @@
 .discovery-table-container td.ant-table-cell {
   border-color: #dfe3e2;
 }
+.discovery-table-container th.ant-table-cell,
+.discovery-table-container td.ant-table-cell {
+  background: #dfe3e2;
+}
+.discovery-table-container th.ant-table-cell {
+  border-bottom: 1px solid #dfe3e2;
+}
+.discovery-table__expanded-row > td.ant-table-cell {
+  background: #dfe3e2;
+  font-size: 12px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
 .discovery-table-container .ant-table-tbody > tr.ant-table-row:hover > td.ant-table-cell {
   border-color: rgba(0,0,0,0);
 }
@@ -228,23 +242,6 @@
 /* ---------------------------------------------------- */
 /* END HACK */
 
-.discovery-table-container th.ant-table-cell,
-.discovery-table-container td.ant-table-cell {
-  background: #dfe3e2;
-}
-
-
-.discovery-table-container th.ant-table-cell {
-  border-bottom: 1px solid #dfe3e2;
-}
-
-.discovery-table__expanded-row > td.ant-table-cell {
-  background: #dfe3e2;
-  font-size: 12px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #ccc;
-}
-
 .discovery-table__expanded-row-content {
   background: inherit;
   margin-top: -25px;
@@ -282,7 +279,7 @@
 }
 
 .discovery-modal__close-button {
-  color:rgb(139, 51, 105);
+  color: rgb(139, 51, 105);
   text-transform: uppercase;
   font-weight: 700;
 }
