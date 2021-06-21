@@ -44,7 +44,7 @@ class Footer extends Component {
                   key={i}
                   target='_blank'
                   href={logoObj.href}
-                  className='footer__icon'
+                  className='footer__icon g3-ring-on-focus'
                   rel='noopener noreferrer'
                 >
                   <img

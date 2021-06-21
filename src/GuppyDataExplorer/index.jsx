@@ -45,14 +45,14 @@ class Explorer extends React.Component {
 
             return (
               <React.Fragment key={index}>
-                <div
-                  className={'guppy-explorer__tab'.concat(this.state.tab === index ? ' guppy-explorer__tab--selected' : '')}
+                <button
+                  className={'g3-unstyle-btn g3-ring-on-focus guppy-explorer__tab'.concat(this.state.tab === index ? ' guppy-explorer__tab--selected' : '')}
                   onClick={() => this.onTabClick(index)}
                   role='button'
-                  tabIndex={index}
+                  tabIndex='0'
                 >
                   <h3>{tabTitle}</h3>
-                </div>
+                </button>
               </React.Fragment>
             );
           })}
