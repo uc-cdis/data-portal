@@ -1,6 +1,7 @@
 .navbar-tooltip {
   position: absolute;
   z-index: 1000;
+  color: var(--g3-color__titanium);
 }
 
 .navbar-tooltip__wrapper {

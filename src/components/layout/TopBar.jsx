@@ -61,6 +61,7 @@ class TopBar extends Component {
                           icon={item.icon}
                           isActive={this.isActive(itemHref)}
                           onActiveTab={() => this.props.onActiveTab(itemHref)}
+                          tabIndex='-1'
                         />
                       </a>
                     );
@@ -76,6 +77,7 @@ class TopBar extends Component {
                         icon={item.icon}
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
+                        tabIndex='-1'
                       />
                     </Link>
                   );
@@ -92,12 +94,14 @@ class TopBar extends Component {
                       name={this.props.user.username}
                       isActive={this.isActive('/identity')}
                       onActiveTab={() => this.props.onActiveTab('/identity')}
+                      tabIndex='-1'
                     />
                   </Link>
                   <Link className='top-bar__link' to='#' onClick={this.props.onLogoutClick}>
                     <TopIconButton
                       icon='exit'
                       name='Logout'
+                      tabIndex='-1'
                     />
                   </Link>
                 </React.Fragment>
@@ -123,6 +127,7 @@ class TopBar extends Component {
                       name=''
                       isActive={this.isActive('/identity')}
                       onActiveTab={() => this.props.onActiveTab('/identity')}
+                      tabIndex='-1'
                     />
                   </Link>
                 </Popover>
@@ -136,6 +141,7 @@ class TopBar extends Component {
                     <TopIconButton
                       icon='exit'
                       name='Login'
+                      tabIndex='-1'
                     />
                   </Link>
                 </React.Fragment>

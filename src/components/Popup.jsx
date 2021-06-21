@@ -1,126 +1,149 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { createFocusTrap } from 'focus-trap';
 import Button from '@gen3/ui-component/dist/components/Button';
 import IconComponent from './Icon';
 import dictIcons from '../img/icons/index';
 import './Popup.less';
 
-const Popup = ({
-  title, message, lines, error,
-  iconName, leftButtons, rightButtons,
-  onClose, children,
-}) => (
-  <div className='popup__mask'>
-    <div className='popup__box'>
-      <div className='popup__title'>
-        <div className='popup__icon'>
-          {
-            iconName !== ''
-            && (
-              <IconComponent
-                iconName={iconName}
-                dictIcons={dictIcons}
-                svgStyles={{ verticalAlign: 'middle', marginRight: '17px', display: 'inline-flex' }}
-              />
-            )
-          }
-          <div className='h2-typo popup__title-text'>{title}</div>
-        </div>
-        {
-          onClose
-          && (
-            <div role='button' tabIndex={-1} className='popup__close-button' onClick={onClose} onKeyPress={onClose}>
-              <IconComponent
-                iconName='cross'
-                dictIcons={dictIcons}
-                svgStyles={{ verticalAlign: 'middle' }}
-              />
-            </div>
-          )
-        }
-      </div>
-      <div className='popup__message'>
-        { message && <div className='high-light'>{message}</div> }
-        {
-          lines.length > 0
-          && (
-            <pre>
+class Popup extends React.Component {
+  componentDidMount() {
+    // Trapping focus in this popup for the purpose of
+    // maintaining an accessible tab order (508 compliance)
+    // Code inspired by: https://robinvdvleuten.nl/blog/trap-focus-in-a-react-component/
+    const modal = document.getElementById('popup');
+
+    this.focusTrap = createFocusTrap('#popup', {
+      onActivate() {
+        modal.className = 'trap is-visible';
+      },
+      onDeactivate() {
+        modal.className = 'trap';
+      },
+    });
+
+    this.focusTrap.activate();
+  }
+
+  componentWillUnmount() {
+    this.focusTrap.deactivate();
+  }
+
+  render() {
+    return (
+      <div className='popup__mask' aria-modal='true' id='popup'>
+        <div className='popup__box'>
+          <div className='popup__title'>
+            <div className='popup__icon'>
               {
-                lines.map((l, i) => (
-                  <div key={`line_${i}`}>
-                    {l.label && [<b className='h3-typo'>{l.label}</b>, <br />]}
-                    <code>
-                      {l.code} <br />
-                    </code>
-                  </div>
-                ))
+                this.props.iconName !== ''
+                && (
+                  <IconComponent
+                    iconName={this.props.iconName}
+                    dictIcons={dictIcons}
+                    svgStyles={{ verticalAlign: 'middle', marginRight: '17px', display: 'inline-flex' }}
+                  />
+                )
               }
-            </pre>
-          )
-        }
-        { children }
-        { error && <h6 className='popup__error'>Error</h6> }
-        { error && <code>{error}</code> }
-      </div>
-      <div className='popup__foot'>
-        <div className='popup__left-foot'>
-          {
-            leftButtons.map((btn, i) => [
-              i > 0 && ' ',
-              !btn.icon ? (
-                <Button
-                  key={btn.caption}
-                  onClick={btn.fn}
-                  label={btn.caption}
-                  enabled={(btn.enabled !== undefined) ? btn.enabled : true}
-                  buttonType='default'
-                  value={btn.value}
-                />
-              ) : (
-                <Button
-                  key={btn.caption}
-                  onClick={btn.fn}
-                  label={btn.caption}
-                  enabled={(btn.enabled !== undefined) ? btn.enabled : true}
-                  buttonType='default'
-                  rightIcon={btn.icon}
-                  value={btn.value}
-                />
-              ),
-            ])
-          }
+              <div className='h2-typo popup__title-text'>{this.props.title}</div>
+            </div>
+            {
+              this.props.onClose
+              && (
+                <button type='button' className='popup__close-button' onClick={this.props.onClose}>
+                  <IconComponent
+                    iconName='cross'
+                    dictIcons={dictIcons}
+                    svgStyles={{ verticalAlign: 'middle' }}
+                  />
+                </button>
+              )
+            }
+          </div>
+          <div className='popup__message'>
+            { this.props.message && <div className='high-light'>{this.props.message}</div> }
+            {
+              this.props.lines.length > 0
+              && (
+                <pre>
+                  {
+                    this.props.lines.map((l, i) => (
+                      <div key={`line_${i}`}>
+                        {l.label && [<b className='h3-typo'>{l.label}</b>, <br />]}
+                        <code>
+                          {l.code} <br />
+                        </code>
+                      </div>
+                    ))
+                  }
+                </pre>
+              )
+            }
+            { this.props.children }
+            { this.props.error && <h6 className='popup__error'>Error</h6> }
+            { this.props.error && <code>{this.props.error}</code> }
+          </div>
+          <div className='popup__foot'>
+            <div className='popup__left-foot'>
+              {
+                this.props.leftButtons.map((btn, i) => [
+                  i > 0 && ' ',
+                  !btn.icon ? (
+                    <Button
+                      key={btn.caption}
+                      onClick={btn.fn}
+                      label={btn.caption}
+                      enabled={(btn.enabled !== undefined) ? btn.enabled : true}
+                      buttonType='default'
+                      value={btn.value}
+                    />
+                  ) : (
+                    <Button
+                      key={btn.caption}
+                      onClick={btn.fn}
+                      label={btn.caption}
+                      enabled={(btn.enabled !== undefined) ? btn.enabled : true}
+                      buttonType='default'
+                      rightIcon={btn.icon}
+                      value={btn.value}
+                    />
+                  ),
+                ])
+              }
+            </div>
+            <div className='popup__right-foot'>
+              {
+                this.props.rightButtons.map((btn, i) => [
+                  i > 0 && ' ',
+                  !btn.icon ? (
+                    <Button
+                      key={btn.caption}
+                      onClick={btn.fn}
+                      label={btn.caption}
+                      enabled={(btn.enabled !== undefined) ? btn.enabled : true}
+                      buttonType='primary'
+                      value={btn.value}
+                    />
+                  ) : (
+                    <Button
+                      key={btn.caption}
+                      onClick={btn.fn}
+                      label={btn.caption}
+                      enabled={(btn.enabled !== undefined) ? btn.enabled : true}
+                      buttonType='primary'
+                      rightIcon={btn.icon}
+                      value={btn.value}
+                    />
+                  ),
+                ])
+              }
+            </div>
+          </div>
         </div>
-        <div className='popup__right-foot'>
-          {
-            rightButtons.map((btn, i) => [
-              i > 0 && ' ',
-              !btn.icon ? (
-                <Button
-                  key={btn.caption}
-                  onClick={btn.fn}
-                  label={btn.caption}
-                  enabled={(btn.enabled !== undefined) ? btn.enabled : true}
-                  buttonType='primary'
-                  value={btn.value}
-                />
-              ) : (
-                <Button
-                  key={btn.caption}
-                  onClick={btn.fn}
-                  label={btn.caption}
-                  enabled={(btn.enabled !== undefined) ? btn.enabled : true}
-                  buttonType='primary'
-                  rightIcon={btn.icon}
-                  value={btn.value}
-                />
-              ),
-            ])
-          }
-        </div>
       </div>
-    </div>
-  </div>
-);
+    );
+  }
+}
 
 const buttonType = PropTypes.shape({
   fn: PropTypes.func.isRequired,
