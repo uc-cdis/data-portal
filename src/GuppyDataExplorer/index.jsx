@@ -34,7 +34,13 @@ class Explorer extends React.Component {
 
     const tabFragment = (
       <React.Fragment>
-        <div className='guppy-explorer__tabs'>
+        <div className='guppy-explorer__accessibility-links'>
+          <a className='guppy-explorer__nav-link g3-ring-on-focus' href='#guppy-explorer-main-tabs'>Explorer Filters</a> |
+          <a className='guppy-explorer__nav-link g3-ring-on-focus' href='#guppy-explorer-data-tools'>Data Tools</a> |
+          <a className='guppy-explorer__nav-link g3-ring-on-focus' href='#guppy-explorer-summary-statistics'>Summary Statistics</a> |
+          <a className='guppy-explorer__nav-link g3-ring-on-focus' href='#guppy-explorer-table-of-records'>Table of Records</a>
+        </div>
+        <div className='guppy-explorer__tabs' id='guppy-explorer-main-tabs'>
           {explorerConfig.map((element, index) => {
             let tabTitle = '';
             if (element.tabTitle) {
@@ -48,7 +54,6 @@ class Explorer extends React.Component {
                 <button
                   className={'g3-unstyle-btn g3-ring-on-focus guppy-explorer__tab'.concat(this.state.tab === index ? ' guppy-explorer__tab--selected' : '')}
                   onClick={() => this.onTabClick(index)}
-                  role='button'
                   tabIndex='0'
                 >
                   <h3>{tabTitle}</h3>

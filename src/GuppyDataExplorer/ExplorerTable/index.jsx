@@ -337,7 +337,7 @@ class ExplorerTable extends React.Component {
     }
 
     return (
-      <div className={`explorer-table ${this.props.className}`}>
+      <div className={`explorer-table ${this.props.className}`} id='guppy-explorer-table-of-records'>
         {(this.props.isLocked) ? <React.Fragment />
           : <div className='explorer-table__description'>
             <span>

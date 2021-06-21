@@ -30,3 +30,14 @@
 .guppy-explorer__main {
   border: 2px solid var(--g3-color__silver);
 }
+
+.guppy-explorer__accessibility-links {
+  position: absolute;
+  right: 11px;
+  padding-bottom:15px;
+}
+
+.guppy-explorer__nav-link {
+  display: inline-block;
+  margin: 0 10px 0 10px;
+}
