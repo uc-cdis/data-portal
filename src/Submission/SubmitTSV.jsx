@@ -56,7 +56,7 @@ const SubmitTSV = ({ project, submission, onUploadClick,
   return (
     <form>
       <div className='submit-tsv'>
-        <label
+        <button
           className='button-primary-white submit-tsv__upload-button'
           id='cd-submit-tsv__upload-button'
           htmlFor='file-upload'
@@ -70,7 +70,7 @@ const SubmitTSV = ({ project, submission, onUploadClick,
             id='file-upload'
           />
           Upload file
-        </label>
+        </button>
         &emsp;
         {submission.file &&
           <button
