@@ -183,6 +183,29 @@
   font-size: 18px;
   margin: -7px -8px -6px 0;
   padding: 18px 16px 15px 12px;
+  display: contents;
+}
+
+.graphiql-container .history-label {
+  display: contents;
+  width: auto;
+  height: auto;
+  border-radius: 1px;
+  font-size: small;
+  font-weight: normal;
+}
+
+.graphiql-container button {
+  padding-left: 5px;
+  padding-right: 5px;
+  display: inline-block;
+  width: auto;
+  height: auto;
+  border-radius: 1px;
+  font-size: medium;
+  font-weight: normal;
+  border: black;
+  background-color: #f5f5f5;
 }
 
 .graphiql-container .query-editor {
