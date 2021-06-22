@@ -86,7 +86,7 @@ export class DiscoveryListView extends React.Component {
 
     render() {
       return (
-        <div className='discovery-table-container'>
+        <div className='discovery-table-container' id='discovery-table-of-records'>
           <div className='discovery-table__header'>
             { (
               this.props.config.features.search && this.props.config.features.search.searchBar

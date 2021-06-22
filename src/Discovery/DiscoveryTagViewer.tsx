@@ -25,7 +25,7 @@ const getTagsInCategory =
 class DiscoveryTagViewer extends React.Component {
   render() {
     return (
-      <div className='discovery-header__tags-container' >
+      <div className='discovery-header__tags-container' id='discovery-tag-filters'>
         <h3 className='discovery-header__tags-header'>{this.props.config.tagSelector.title}</h3>
         <div className='discovery-header__tags'>
           {

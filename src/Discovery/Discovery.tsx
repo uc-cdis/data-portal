@@ -33,6 +33,24 @@ const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   return categoryConfig.color;
 };
 
+const viewPagination = () => {
+  // To ensure accessibility and 508 compliance, users should be able
+  // to bypass repetitive blocks of content to reach important areas of the
+  // page. This function brings focus to the Discovery pagination.
+  const discoveryPagination = document.getElementsByClassName('ant-pagination-item ant-pagination-item-1 ant-pagination-item-active');
+  if (discoveryPagination.length > 0) {
+    discoveryPagination[0].id = 'discovery-pagination';
+    const linkToPagination = document.getElementById('discovery-link-to-pagination');
+    linkToPagination.click();
+    discoveryPagination[0].scrollIntoView(true);
+    // The scrollTo function requires a setTimeout in our app.
+    // https://stackoverflow.com/questions/1174863/javascript-scrollto-method-does-nothing
+    setTimeout(() => {
+      window.scrollTo(0, discoveryPagination[0].offsetTop);
+    }, 2);
+  }
+};
+
 interface ListItem {
   title: string,
   description: string,
@@ -287,6 +305,13 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     { (config.features.pageTitle && config.features.pageTitle.enabled) &&
       <h1 className='discovery-page-title'>{config.features.pageTitle.text || 'Discovery'}</h1>
     }
+    <div className='g3-accessibility-links' id='discovery-page-accessibility-links'>
+      <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-summary-statistics'><span>Summary Statistics</span></a> |
+      <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-tag-filters'><span>Tags</span></a> |
+      <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-table-of-records'><span>Table of Records</span></a> |
+      <button className='g3-unstyle-btn g3-accessibility-nav-link g3-ring-on-focus' onClick={viewPagination}>Pagination </button>
+      <a className='discovery-hidden-link' id='discovery-link-to-pagination' href='#discovery-pagination'><span>Pagination</span></a>
+    </div>
     <div className='discovery-header'>
       <DiscoverySummary
         visibleResources={visibleResources}

@@ -205,3 +205,11 @@
   color: var(--g3-color__titanium);
   margin-right: 7px;
 }
+
+#discovery-page-accessibility-links {
+  top:129px;
+}
+
+.discovery-hidden-link {
+  visibility: hidden;
+}

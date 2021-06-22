@@ -34,12 +34,13 @@ class Explorer extends React.Component {
 
     const tabFragment = (
       <React.Fragment>
-        <div className='guppy-explorer__accessibility-links'>
-          <a className='guppy-explorer__nav-link g3-ring-on-focus' href='#guppy-explorer-main-tabs'>Explorer Filters</a> |
-          <a className='guppy-explorer__nav-link g3-ring-on-focus' href='#guppy-explorer-data-tools'>Data Tools</a> |
-          <a className='guppy-explorer__nav-link g3-ring-on-focus' href='#guppy-explorer-summary-statistics'>Summary Statistics</a> |
-          <a className='guppy-explorer__nav-link g3-ring-on-focus' href='#guppy-explorer-table-of-records'>Table of Records</a>
+        <div className='g3-accessibility-links'>
+          <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-main-tabs'><span>Explorer Filters</span></a> |
+          <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-data-tools'><span>Data Tools</span></a> |
+          <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-summary-statistics'><span>Summary Statistics</span></a> |
+          <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-table-of-records'><span>Table of Records</span></a>
         </div>
+
         <div className='guppy-explorer__tabs' id='guppy-explorer-main-tabs'>
           {explorerConfig.map((element, index) => {
             let tabTitle = '';

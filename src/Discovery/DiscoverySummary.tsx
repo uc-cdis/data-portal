@@ -34,7 +34,7 @@ interface Props {
 }
 
 const DiscoverySummary = (props: Props) => (
-  <div className='discovery-header__stats-container'>
+  <div className='discovery-header__stats-container' id='discovery-summary-statistics'>
     {
       props.config.aggregations.map((aggregation, i) => (
         <React.Fragment key={aggregation.name} >
