@@ -36,13 +36,13 @@ const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
 const viewPagination = () => {
   // To ensure accessibility and 508 compliance, users should be able
   // to bypass repetitive blocks of content to reach important areas of the
-  // page. This function brings focus to the Discovery pagination.
+  // page. This function brings focus to the Antd Discovery pagination.
+  // We have to do this manually because Antd components are not accessibly designed.
   const discoveryPagination = document.getElementsByClassName('ant-pagination-item ant-pagination-item-1 ant-pagination-item-active');
   if (discoveryPagination.length > 0) {
     discoveryPagination[0].id = 'discovery-pagination';
     const linkToPagination = document.getElementById('discovery-link-to-pagination');
     linkToPagination.click();
-    discoveryPagination[0].scrollIntoView(true);
     // The scrollTo function requires a setTimeout in our app.
     // https://stackoverflow.com/questions/1174863/javascript-scrollto-method-does-nothing
     setTimeout(() => {
@@ -50,6 +50,23 @@ const viewPagination = () => {
     }, 2);
   }
 };
+
+const accessibleDataFilterToggle = () => {
+  let filterPopup = document.querySelector('#discovery-table-of-records .ant-table-filter-column .ant-dropdown-trigger');
+  if (filterPopup) {
+    filterPopup.click();
+    let antdCheckboxes = document.querySelectorAll('.ant-table-filter-dropdown .ant-checkbox-input');
+    for (let i = 0; i < antdCheckboxes.length; i += 1) {
+      antdCheckboxes[i].tabIndex = '0';
+      antdCheckboxes[i].id = 'accessibility-checkbox-' + i;
+      antdCheckboxes[i].onkeypress = function () {
+        let idString = 'accessibility-checkbox-' + i;
+        let thisElement = document.getElementById(idString);
+        thisElement.click();
+      }
+    }
+  }
+}
 
 interface ListItem {
   title: string,
@@ -164,6 +181,14 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     }
   }, [props.params.studyUID, props.studies]);
 
+  useEffect(() => {
+    let filterPopup = document.querySelector('#discovery-table-of-records .ant-table-filter-column .ant-dropdown-trigger');
+    if (filterPopup) {
+      filterPopup.tabIndex = '0';
+      filterPopup.onkeypress = accessibleDataFilterToggle;
+    }
+  });
+
   // Set up table columns
   // -----
   const columns = config.studyColumns.map(column => ({
@@ -250,11 +275,13 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     columns.push({
       title: 'Access',
       filters: [{
-        text: <><UnlockOutlined />Accessible</>,
+        text: <><UnlockOutlined id='testing' />Accessible</>,
         value: true,
+        id: 'accessible-data-filter',
       }, {
         text: <><LockFilled />Unaccessible</>,
         value: false,
+        id: 'unaccessible-data-filter',
       }],
       onFilter: (value, record) => record[accessibleFieldName] === value,
       ellipsis: false,
