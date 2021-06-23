@@ -5,8 +5,8 @@ import * as ReactMapGL from 'react-map-gl';
 function notIl(date) {
   return {
     type: 'fill',
-    filter: ['all'], 
-    layout: { visibility: 'visible' }, 
+    filter: ['all'],
+    layout: { visibility: 'visible' },
     beforeId: 'county-outline',
     paint: {
       'fill-color': [
@@ -40,7 +40,6 @@ function notIl(date) {
 }
 
 class MobilityLayerPrk extends React.Component {
-
   render() {
     return (
       <ReactMapGL.Source type='geojson' data={this.props.data}>
