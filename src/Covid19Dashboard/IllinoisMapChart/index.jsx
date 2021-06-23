@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-import { mapboxAPIToken } from '../../localconf';
+import { mapboxAPIToken, covid19DashboardConfig } from '../../localconf';
 import ControlPanel from '../ControlPanel';
 import countyData from '../data/us_counties';
 /*
@@ -22,6 +22,10 @@ import MobilityLayerRes from '../overlays/GoogleMobilityLayerRes';
 
 import MapSlider from '../MapSlider';
 import Spinner from '../../components/Spinner';
+
+// check the data commons url to check if prod or qa environment
+// pull data from qa for everything that is not prod
+const occEnv = covid19DashboardConfig.dataUrl === "https://opendata.datacommons.io/" ? "prod" : "qa";
 
 function filterCountyGeoJson(selectedFips) {
   return {
@@ -291,7 +295,7 @@ class IllinoisMapChart extends React.Component {
     // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
     // but not in JHU data. So don't display Chicago separately.
     this.setState({ mobility_data: {data: null, fetchStatus: 'fetching'} });
-    fetch('https://covd-map-occ-prc-qa.s3.amazonaws.com/google_mobility_data.json')
+    fetch(`https://covd-map-occ-prc-${occEnv}.s3.amazonaws.com/google_mobility_data.json`)
       .then(resp => resp.json())
       .then((data) => {
         const base = {
@@ -359,10 +363,10 @@ class IllinoisMapChart extends React.Component {
     };
     this.setState({ time_data: geoJson });
   }
-  
+
   addStrainDataToState = () => {
     this.setState({ strainData: {data: null, fetchStatus: 'fetching'} });
-    fetch('https://covd-map-occ-prc-qa.s3.amazonaws.com/gagnon_lab_strain_data.json')
+    fetch(`https://covd-map-occ-prc-${occEnv}.s3.amazonaws.com/gagnon_lab_strain_data.json`)
       .then(resp => resp.json())
       .then((data) => {
         this.setState({ strainData: {data: data, fetchStatus: 'done'} });
