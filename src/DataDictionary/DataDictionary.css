@@ -44,7 +44,7 @@
   border: 1px solid var(--data-dictionary__switch-border-color);
   border-radius: var(--data-dictionary__switch-border-radius);
   cursor: pointer;
-  font-size: 18px;
+  font-size: 1.285em;
   font-weight: 600;
   letter-spacing: .02rem;
   margin: 15px;

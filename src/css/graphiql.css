@@ -20,7 +20,7 @@
     'Lucida Grande',
     arial,
     sans-serif;
-  font-size: 14px;
+  font-size: 1em;
   height: 95%;
   margin: 0;
   overflow: hidden;
@@ -44,12 +44,12 @@
 }
 
 .graphiql-container .title {
-  font-size: 18px;
+  font-size: 1.285em;
 }
 
 .graphiql-container .title em {
   font-family: georgia;
-  font-size: 19px;
+  font-size: 1.357em;
 }
 
 .graphiql-container .topBarWrap {
@@ -101,7 +101,7 @@
   border-top: none;
   color: #3B5998;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 1em;
   margin: 0;
   outline: 0;
   padding: 2px 20px 0 18px;
@@ -180,7 +180,7 @@
 
 .graphiql-container .docExplorerHide {
   cursor: pointer;
-  font-size: 18px;
+  font-size: 1.285em;
   margin: -7px -8px -6px 0;
   padding: 18px 16px 15px 12px;
 }
@@ -374,7 +374,7 @@
     'Droid Sans Mono',
     'Monaco',
     monospace;
-  font-size: 13px;
+  font-size: 0.929em;
   height: 100%;
   left: 0;
   position: absolute;
@@ -393,7 +393,7 @@
   display: -ms-flexbox;
   display: flex;
   font-family: system, -apple-system, 'San Francisco', '.SFNSDisplay-Regular', 'Segoe UI', Segoe, 'Segoe WP', 'Helvetica Neue', helvetica, 'Lucida Grande', arial, sans-serif;
-  font-size: 13px;
+  font-size: 0.929em;
   line-clamp: 3;
   line-height: 16px;
   max-height: 48px;
@@ -469,7 +469,7 @@ div.CodeMirror-lint-tooltip {
     'Lucida Grande',
     arial,
     sans-serif;
-  font-size: 13px;
+  font-size: 0.929em;
   line-height: 16px;
   opacity: 0;
   padding: 6px 10px;
@@ -492,7 +492,7 @@ div.CodeMirror-lint-message-error, div.CodeMirror-lint-message-warning {
     inset 0 0 0 1px rgba(0, 0, 0, 0.1);
   color: white;
   font-family: arial;
-  font-size: 12px;
+  font-size: 0.857em;
   line-height: 0;
   margin: 0 3px;
   padding: 0 4px 1px;
@@ -1106,7 +1106,7 @@ span.CodeMirror-selectedtext {
   border-bottom: 1px solid #e0e0e0;
   color: #777;
   cursor: default;
-  font-size: 14px;
+  font-size: 1em;
   font-variant: small-caps;
   font-weight: bold;
   letter-spacing: 1px;
@@ -1154,14 +1154,14 @@ span.CodeMirror-selectedtext {
 .graphiql-container .doc-alert-text {
   color: #F00F00;
   font-family: 'Consolas', 'Inconsolata', 'Droid Sans Mono', 'Monaco', monospace;
-  font-size: 13px;
+  font-size: 0.929em;
 }
 
 .graphiql-container .search-box-outer {
   border: 1px solid #d3d6db;
   box-sizing: border-box;
   display: inline-block;
-  font-size: 12px;
+  font-size: 0.857em;
   height: 24px;
   margin-bottom: 12px;
   padding: 3px 8px 5px;
@@ -1171,7 +1171,7 @@ span.CodeMirror-selectedtext {
 
 .graphiql-container .search-box-input {
   border: 0;
-  font-size: 12px;
+  font-size: 0.857em;
   margin: 0;
   outline: 0;
   padding: 0;
@@ -1314,7 +1314,7 @@ span.CodeMirror-selectedtext {
   background: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
   font-family: 'Consolas', 'Inconsolata', 'Droid Sans Mono', 'Monaco', monospace;
-  font-size: 13px;
+  font-size: 0.929em;
   list-style: none;
   margin-left: -6px;
   margin: 0;

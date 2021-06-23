@@ -33,7 +33,7 @@
 
 .node-popup__content {
   position: relative;
-  font-size: 14px;
+  font-size: 1em;
   font-weight: normal;
   line-height: 1.6em;
   letter-spacing: .02rem;
@@ -47,7 +47,7 @@
 
 .node-popup__button {
   width: 120px;
-  font-size: 12px;
+  font-size: 0.857em;
   height: 30px;
   background-color: var(--g3-color__base-blue);
   color: var(--g3-color__white);

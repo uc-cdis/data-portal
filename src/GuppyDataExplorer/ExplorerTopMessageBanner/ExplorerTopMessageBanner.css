@@ -31,12 +31,12 @@
 }
 
 .top-message-banner__bold-text {
-  font-size: 14px;
+  font-size: 1em;
   font-weight: var(--g3-font__semi-bold-weight);
   color: var(--g3-color__black);
 }
 
 .top-message-banner__normal-text {
-  font-size: 14px;
+  font-size: 1em;
   color: var(--g3-color__gray);
 }
