@@ -323,6 +323,13 @@
   width: 34px;
 }
 
+
+.graphiql-container button:focus, .graphiql-container button:focus-within, .graphiql-container button:focus-visible,
+.graphiql-container a:focus, .graphiql-container a:focus-within, .graphiql-container a:focus-visible {
+  outline: 1px solid rgb(77, 144, 254);
+  outline-offset: -2px;
+}
+
 .graphiql-container .execute-button svg {
   pointer-events: none;
 }
@@ -333,10 +340,6 @@
   box-shadow: 0 1px 0 #fff,
     inset 0 0 2px rgba(0, 0, 0, 0.3),
     inset 0 0 6px rgba(0, 0, 0, 0.2);
-}
-
-.graphiql-container .execute-button:focus {
-  outline: 0;
 }
 
 .graphiql-container .execute-options {
