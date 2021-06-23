@@ -81,7 +81,7 @@
 }
 
 .discovery-header__stat-label {
-  font-size: 1.429em;
+  font-size: 1.25rem;
 }
 
 .discovery-header__tags-container {
@@ -94,7 +94,7 @@
   cursor: default;
   border-bottom: solid 1px #e7e7e7;
   font-weight: normal;
-  font-size: 1.285em;
+  font-size: 1.125rem;
   color: #555;
 }
 
@@ -193,7 +193,7 @@
 
 .discovery-popover__text {
   color: var(--g3-color__titanium);
-  font-size: 0.857em;
+  font-size: 0.625rem;
 }
 
 .discovery-modal__attribute-group {

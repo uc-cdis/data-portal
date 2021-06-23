@@ -34,7 +34,7 @@
 
 .navbar-tooltip__content {
   position: relative;
-  font-size: 1em;
+  font-size: 0.875rem;
   font-weight: normal;
   line-height: 1.6em;
   letter-spacing: .02rem;

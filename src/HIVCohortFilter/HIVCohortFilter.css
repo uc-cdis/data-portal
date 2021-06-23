@@ -21,7 +21,7 @@
   border-radius: 2px;
   width: 152px;
   height: 40px;
-  font-size: 1em;
+  font-size: 0.875rem;
   box-shadow: none;
   background: var(--g3-color__white);
   padding: 0 10px;
@@ -45,7 +45,7 @@
   width: 370px;
   height: fit-content;
   min-height: 380px;
-  font-size: 1em;
+  font-size: 0.875rem;
   background: var(--g3-color__white);
   border: 1px solid #a9a9a9;
   border-radius: 2px;
@@ -64,7 +64,7 @@
   width: 370px;
   height: fit-content;
   min-height: 470px;
-  font-size: 1em;
+  font-size: 0.875rem;
   background: var(--g3-color__white);
   border: 1px solid #a9a9a9;
   border-radius: 2px;
@@ -95,31 +95,31 @@
 .hiv-cohort-filter__sidebar-input {
   padding-left: 15px;
   padding-bottom: 15px;
-  font-size: 1em;
+  font-size: 0.875rem;
 }
 
 .hiv-cohort-filter__sidebar-input-label {
   padding-left: 15px;
   padding-bottom: 8px;
-  font-size: 1.285em;
+  font-size: 1.125rem;
 }
 
 .hiv-cohort-filter__value {
   font-weight: normal;
   color: #606060;
-  font-size: 1em;
+  font-size: 0.875rem;
 }
 
 .hiv-cohort-filter__value-highlight {
   font-weight: bold;
   color: #ef8523;
-  font-size: 1.285em;
+  font-size: 1.125rem;
 }
 
 .hiv-cohort-filter__value-highlight-2 {
   font-weight: bold;
   color: #3283c8;
-  font-size: 1.285em;
+  font-size: 1.125rem;
 }
 
 .hiv-cohort-filter__svg-wrapper div {

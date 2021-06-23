@@ -275,7 +275,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     columns.push({
       title: 'Access',
       filters: [{
-        text: <><UnlockOutlined id='testing' />Accessible</>,
+        text: <><UnlockOutlined />Accessible</>,
         value: true,
         id: 'accessible-data-filter',
       }, {
