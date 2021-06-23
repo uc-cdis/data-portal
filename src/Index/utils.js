@@ -1,10 +1,10 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import { fetchWithCreds } from '../actions';
 import { homepageChartNodes, homepageChartNodesChunkSize, datasetUrl } from '../localconf';
 import getReduxStore from '../reduxStore';
 import getHomepageChartProjectsList from './relayer';
 
-const updateRedux = async projectNodeCounts => getReduxStore().then(
+const updateRedux = async (projectNodeCounts) => getReduxStore().then(
   (store) => {
     store.dispatch({
       type: 'RECEIVE_HOMEPAGE_CHART_DATASETS',
@@ -42,7 +42,7 @@ export const getChunkedPeregrineRequestUrls = (nodesToRequest, chunkSize) => {
   return requestUrls;
 };
 
-const makePeregrineRequestForNode = async url => fetchWithCreds({
+const makePeregrineRequestForNode = async (url) => fetchWithCreds({
   path: url,
 }).then((res) => {
   if (res.status === 200) {
@@ -92,7 +92,7 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
 
   const store = await getReduxStore();
   const fileNodes = store.getState().submission.file_nodes;
-  const nodesForIndexChart = homepageChartNodes.map(item => item.node);
+  const nodesForIndexChart = homepageChartNodes.map((item) => item.node);
   const nodesToRequest = _.union(fileNodes, nodesForIndexChart);
   const requestUrls = getChunkedPeregrineRequestUrls(nodesToRequest, homepageChartNodesChunkSize);
 
@@ -104,10 +104,10 @@ export const loadHomepageChartDataFromDatasets = async (callback) => {
 
   const fullResult = await Promise.all(fullResultPromise);
 
-  const queryFailure = fullResult.some(element => element[1] !== 200);
-  const query401 = fullResult.some(element => element[1] === 401);
-  const query403 = fullResult.some(element => element[1] === 403);
-  const query404 = fullResult.some(element => element[1] === 404);
+  const queryFailure = fullResult.some((element) => element[1] !== 200);
+  const query401 = fullResult.some((element) => element[1] === 401);
+  const query403 = fullResult.some((element) => element[1] === 403);
+  const query404 = fullResult.some((element) => element[1] === 404);
 
   if (queryFailure) {
     if (query404) {

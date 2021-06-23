@@ -7,7 +7,7 @@ import './TransactionLogTable.less';
 import { useArboristUI } from '../../configs';
 import { userHasCreateOrUpdateOnAnyProject } from '../../authMappingUtils';
 
-const formatText = text => text[0] + text.slice(1).toLowerCase();
+const formatText = (text) => text[0] + text.slice(1).toLowerCase();
 
 class TransactionLogTable extends Component {
   getLocalTime = (gmtTimeString) => {
@@ -27,14 +27,14 @@ class TransactionLogTable extends Component {
     return totalSize;
   };
 
-  stateToColor = state => (state === 'SUCCEEDED' &&
-      <div className='form-special-number transaction-log-table__status-bar'>{formatText(state)}</div>)
-    || ((state === 'FAILED' || state === 'ERRORED') &&
-      <div className='form-special-number transaction-log-table__status-bar transaction-log-table__status-bar--fail'>{formatText(state)}</div>)
-    || (state === 'PENDING' &&
-      <div className='form-special-number transaction-log-table__status-bar transaction-log-table__status-bar--pending'>{formatText(state)}</div>);
+  stateToColor = (state) => (state === 'SUCCEEDED'
+      && <div className='form-special-number transaction-log-table__status-bar'>{formatText(state)}</div>)
+    || ((state === 'FAILED' || state === 'ERRORED')
+      && <div className='form-special-number transaction-log-table__status-bar transaction-log-table__status-bar--fail'>{formatText(state)}</div>)
+    || (state === 'PENDING'
+      && <div className='form-special-number transaction-log-table__status-bar transaction-log-table__status-bar--pending'>{formatText(state)}</div>);
 
-  dataTransform = logs => logs.map(entry => [
+  dataTransform = (logs) => logs.map((entry) => [
     entry.id, entry.submitter, entry.project_id,
     this.getLocalTime(entry.created_datetime),
     humanFileSize(this.getTotalFileSize(entry.documents)),
@@ -46,11 +46,13 @@ class TransactionLogTable extends Component {
       return null;
     }
     if (!this.props.log || this.props.log === []) { return <Spinner />; }
-    return (<Table
-      title='Recent Submissions'
-      header={['Id', 'Submitter', 'Project', 'Created Date', 'File Size', 'State']}
-      data={this.dataTransform(this.props.log)}
-    />);
+    return (
+      <Table
+        title='Recent Submissions'
+        header={['Id', 'Submitter', 'Project', 'Created Date', 'File Size', 'State']}
+        data={this.dataTransform(this.props.log)}
+      />
+    );
   }
 }
 

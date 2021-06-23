@@ -5,7 +5,7 @@ import GWASApp from './GWASApp';
 
 const papaparse = require('papaparse');
 
-const fetchWorkspaceStorageFileList = () => dispatch => fetchWithCreds({
+const fetchWorkspaceStorageFileList = () => (dispatch) => fetchWithCreds({
   path: `${workspaceStorageListUrl}/@user`,
   method: 'GET',
   dispatch,
@@ -15,7 +15,7 @@ const fetchWorkspaceStorageFileList = () => dispatch => fetchWithCreds({
     if (data.Data && data.Data.Objects) {
       return {
         type: 'RECEIVE_WSS_FILE_LIST',
-        wssFileObjects: data.Data.Objects.map(obj => ({ key: obj.WorkspaceKey, ...obj })),
+        wssFileObjects: data.Data.Objects.map((obj) => ({ key: obj.WorkspaceKey, ...obj })),
         wssFilePrefix: data.Data.Prefix,
       };
     }
@@ -30,11 +30,11 @@ const fetchWorkspaceStorageFileList = () => dispatch => fetchWithCreds({
     };
   }
 })
-  .then(msg => dispatch(msg));
+  .then((msg) => dispatch(msg));
 
 async function readTSV(tsvData) {
   const result = [];
-  const parseFile = rawFile => new Promise((resolve) => {
+  const parseFile = (rawFile) => new Promise((resolve) => {
     papaparse.parse(rawFile, {
       worker: true,
       header: true,
@@ -50,7 +50,7 @@ async function readTSV(tsvData) {
   return parsedData;
 }
 
-const fetchWorkspaceStorageFile = workspaceKey => dispatch => fetchWithCreds({
+const fetchWorkspaceStorageFile = (workspaceKey) => (dispatch) => fetchWithCreds({
   path: `${workspaceStorageDownloadUrl}/@user/${workspaceKey}`,
   method: 'GET',
   dispatch,
@@ -62,10 +62,10 @@ const fetchWorkspaceStorageFile = workspaceKey => dispatch => fetchWithCreds({
         (response) => {
           if (response.ok) {
             response.text().then((text) => {
-              readTSV(text).then(parsedData => ({
+              readTSV(text).then((parsedData) => ({
                 type: 'RECEIVE_WSS_FILE',
                 wssFileData: { workspaceKey, fileData: parsedData },
-              })).then(msg => dispatch(msg));
+              })).then((msg) => dispatch(msg));
             });
             return null;
           }
@@ -87,8 +87,7 @@ const fetchWorkspaceStorageFile = workspaceKey => dispatch => fetchWithCreds({
     };
   }
 })
-  .then(msg => dispatch(msg));
-
+  .then((msg) => dispatch(msg));
 
 const getMarinerJobStatus = () => (dispatch) => {
   fetchWithCreds({
@@ -100,8 +99,8 @@ const getMarinerJobStatus = () => (dispatch) => {
         if (status !== 200 || !data || !data.runIDs) {
           return [];
         }
-        const runIDs = data.runIDs;
-        return Promise.all(runIDs.map(rID => fetchWithCreds({
+        const { runIDs } = data;
+        return Promise.all(runIDs.map((rID) => fetchWithCreds({
           path: `${marinerUrl}/${rID}`,
           method: 'GET',
         })
@@ -136,13 +135,13 @@ const getMarinerJobStatus = () => (dispatch) => {
             },
           )));
       },
-    ).then(marinerJobStatus => ({
+    ).then((marinerJobStatus) => ({
       type: 'RECEIVE_MARINER_JOB_STATUS',
       marinerJobStatus,
-    })).then(msg => dispatch(msg));
+    })).then((msg) => dispatch(msg));
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   wssFileObjects: state.analysis.wssFileObjects,
   wssFilePrefix: state.analysis.wssFilePrefix,
   wssListFileError: state.analysis.wssListFileError,
@@ -151,9 +150,9 @@ const mapStateToProps = state => ({
   userAuthMapping: state.userAuthMapping,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   onLoadWorkspaceStorageFileList: (() => dispatch(fetchWorkspaceStorageFileList())),
-  onLoadWorkspaceStorageFile: (workspaceKey => dispatch(fetchWorkspaceStorageFile(workspaceKey))),
+  onLoadWorkspaceStorageFile: ((workspaceKey) => dispatch(fetchWorkspaceStorageFile(workspaceKey))),
   onLoadMarinerJobStatus: (() => dispatch(getMarinerJobStatus())),
 });
 

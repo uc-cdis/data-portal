@@ -36,42 +36,48 @@ class Popup extends React.Component {
           <div className='popup__title'>
             <div className='popup__icon'>
               {
-                this.props.iconName !== '' &&
-                <IconComponent
-                  iconName={this.props.iconName}
-                  dictIcons={dictIcons}
-                  svgStyles={{ verticalAlign: 'middle', marginRight: '17px', display: 'inline-flex' }}
-                />
+                this.props.iconName !== ''
+                && (
+                  <IconComponent
+                    iconName={this.props.iconName}
+                    dictIcons={dictIcons}
+                    svgStyles={{ verticalAlign: 'middle', marginRight: '17px', display: 'inline-flex' }}
+                  />
+                )
               }
               <div className='h2-typo popup__title-text'>{this.props.title}</div>
             </div>
             {
-              this.props.onClose &&
-              <button type='button' className='popup__close-button' onClick={this.props.onClose}>
-                <IconComponent
-                  iconName='cross'
-                  dictIcons={dictIcons}
-                  svgStyles={{ verticalAlign: 'middle' }}
-                />
-              </button>
+              this.props.onClose
+              && (
+                <button type='button' className='popup__close-button' onClick={this.props.onClose}>
+                  <IconComponent
+                    iconName='cross'
+                    dictIcons={dictIcons}
+                    svgStyles={{ verticalAlign: 'middle' }}
+                  />
+                </button>
+              )
             }
           </div>
           <div className='popup__message'>
             { this.props.message && <div className='high-light'>{this.props.message}</div> }
             {
-              this.props.lines.length > 0 &&
-              <pre>
-                {
-                  this.props.lines.map((l, i) => (
-                    <div key={`line_${i}`}>
-                      {l.label && [<b className='h3-typo'>{l.label}</b>, <br />]}
-                      <code>
-                        {l.code} <br />
-                      </code>
-                    </div>
-                  ))
-                }
-              </pre>
+              this.props.lines.length > 0
+              && (
+                <pre>
+                  {
+                    this.props.lines.map((l, i) => (
+                      <div key={`line_${i}`}>
+                        {l.label && [<b className='h3-typo'>{l.label}</b>, <br />]}
+                        <code>
+                          {l.code} <br />
+                        </code>
+                      </div>
+                    ))
+                  }
+                </pre>
+              )
             }
             { this.props.children }
             { this.props.error && <h6 className='popup__error'>Error</h6> }
@@ -82,14 +88,16 @@ class Popup extends React.Component {
               {
                 this.props.leftButtons.map((btn, i) => [
                   i > 0 && ' ',
-                  !btn.icon ? <Button
-                    key={btn.caption}
-                    onClick={btn.fn}
-                    label={btn.caption}
-                    enabled={(btn.enabled !== undefined) ? btn.enabled : true}
-                    buttonType='default'
-                    value={btn.value}
-                  /> :
+                  !btn.icon ? (
+                    <Button
+                      key={btn.caption}
+                      onClick={btn.fn}
+                      label={btn.caption}
+                      enabled={(btn.enabled !== undefined) ? btn.enabled : true}
+                      buttonType='default'
+                      value={btn.value}
+                    />
+                  ) : (
                     <Button
                       key={btn.caption}
                       onClick={btn.fn}
@@ -98,7 +106,8 @@ class Popup extends React.Component {
                       buttonType='default'
                       rightIcon={btn.icon}
                       value={btn.value}
-                    />,
+                    />
+                  ),
                 ])
               }
             </div>
@@ -106,14 +115,16 @@ class Popup extends React.Component {
               {
                 this.props.rightButtons.map((btn, i) => [
                   i > 0 && ' ',
-                  !btn.icon ? <Button
-                    key={btn.caption}
-                    onClick={btn.fn}
-                    label={btn.caption}
-                    enabled={(btn.enabled !== undefined) ? btn.enabled : true}
-                    buttonType='primary'
-                    value={btn.value}
-                  /> :
+                  !btn.icon ? (
+                    <Button
+                      key={btn.caption}
+                      onClick={btn.fn}
+                      label={btn.caption}
+                      enabled={(btn.enabled !== undefined) ? btn.enabled : true}
+                      buttonType='primary'
+                      value={btn.value}
+                    />
+                  ) : (
                     <Button
                       key={btn.caption}
                       onClick={btn.fn}
@@ -122,7 +133,8 @@ class Popup extends React.Component {
                       buttonType='primary'
                       rightIcon={btn.icon}
                       value={btn.value}
-                    />,
+                    />
+                  ),
                 ])
               }
             </div>

@@ -15,14 +15,14 @@ export const calculateDropdownButtonConfigs = (config) => {
     && Object.keys(config.dropdowns)
       .reduce((map, dropdownId) => {
         const buttonCount = config.buttons
-          .filter(btnCfg => btnCfg.enabled)
-          .filter(btnCfg => btnCfg.dropdownId && btnCfg.dropdownId === dropdownId)
+          .filter((btnCfg) => btnCfg.enabled)
+          .filter((btnCfg) => btnCfg.dropdownId && btnCfg.dropdownId === dropdownId)
           .length;
         const drpdnCfg = config.dropdowns[dropdownId];
         const buttonConfigs = config.buttons
-          .filter(btnCfg => btnCfg.enabled)
-          .filter(btnCfg => btnCfg.dropdownId && btnCfg.dropdownId === dropdownId);
-        const ret = Object.assign({}, map);
+          .filter((btnCfg) => btnCfg.enabled)
+          .filter((btnCfg) => btnCfg.dropdownId && btnCfg.dropdownId === dropdownId);
+        const ret = { ...map };
         ret[dropdownId] = {
           cnt: buttonCount,
           dropdownConfig: drpdnCfg,

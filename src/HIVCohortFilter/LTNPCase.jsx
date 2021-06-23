@@ -69,14 +69,17 @@ class LTNPCase extends HIVCohortFilterCase {
       ],
       filter: {
         AND: [
-          { '=': {
-            hiv_status: 'positive',
+          {
+            '=': {
+              hiv_status: 'positive',
+            },
           },
-          },
-          { in: {
-            project_id: hivAppProjects,
-          },
-          }] },
+          {
+            in: {
+              project_id: hivAppProjects,
+            },
+          }],
+      },
     };
     return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
       if (!data
@@ -115,7 +118,6 @@ class LTNPCase extends HIVCohortFilterCase {
     });
   }
 
-
   // query guppy to get all the follow up for charlie project that has hiv-positive.
   getFollowupsBuckets = () => {
     const queryObject = {
@@ -130,14 +132,17 @@ class LTNPCase extends HIVCohortFilterCase {
       ],
       filter: {
         AND: [
-          { '=': {
-            hiv_status: 'positive',
+          {
+            '=': {
+              hiv_status: 'positive',
+            },
           },
-          },
-          { in: {
-            project_id: hivAppProjects,
-          },
-          }] },
+          {
+            in: {
+              project_id: hivAppProjects,
+            },
+          }],
+      },
     };
     return HIVCohortFilterCase.performQuery(queryObject, null, false).then((data) => {
       if (!data
@@ -171,10 +176,9 @@ class LTNPCase extends HIVCohortFilterCase {
         }
       }
     });
-    const filtFollowups = Object.values(filtFollowup).filter(x => (x.length !== 0));
+    const filtFollowups = Object.values(filtFollowup).filter((x) => (x.length !== 0));
     return filtFollowups;
   }
-
 
   async getBucketByKey() {
     const subjectList = await Promise.all([
@@ -195,7 +199,7 @@ class LTNPCase extends HIVCohortFilterCase {
     // CD4 counts to extract first visit that the case qualifies LTNP
     filtFollowups.forEach((item) => {
       const fhv = item[0].submitter_id;
-      const subject_id = item[0].subject_id;
+      const { subject_id } = item[0];
       const duration = item.slice(-1)[0].visit_date - item[0].visit_date;
       if (duration < this.state.numConsecutiveYearsFromUser) {
         // The subject is neither control nor LTNP
@@ -366,7 +370,6 @@ class LTNPCase extends HIVCohortFilterCase {
             </div>
           </form>
         </div>
-
 
         <div className='hiv-cohort-filter__main'>
           <div className='hiv-cohort-filter__main-wrapper'>

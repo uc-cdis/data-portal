@@ -40,11 +40,11 @@ class GraphNode extends React.Component {
         ref={this.svgElement}
         key={this.props.node.id}
         transform={`translate(${this.props.node.topCenterX}, ${this.props.node.topCenterY}) `}
-        className={`graph-node 
-          ${nodeFadedClassModifier} 
-          ${nodeHalfFadedClassModifier} 
-          ${nodeDashedClassModifier} 
-          ${nodeClickableClassModifier} 
+        className={`graph-node
+          ${nodeFadedClassModifier}
+          ${nodeHalfFadedClassModifier}
+          ${nodeDashedClassModifier}
+          ${nodeClickableClassModifier}
           ${nodeIsCurrentHighlightingClassModifier}`}
         onMouseOver={this.props.onMouseOver}
         onMouseOut={this.props.onMouseOut}
@@ -127,4 +127,3 @@ GraphNode.defaultProps = {
 };
 
 export default GraphNode;
-

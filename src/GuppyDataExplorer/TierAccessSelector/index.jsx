@@ -22,7 +22,7 @@ class TierAccessSelector extends React.Component {
   };
 
   handleToggle = () => {
-    this.setState(prevState => ({ toggled: !prevState.toggled }));
+    this.setState((prevState) => ({ toggled: !prevState.toggled }));
   }
 
   render() {
@@ -31,6 +31,7 @@ class TierAccessSelector extends React.Component {
         <div
           className='tier-access-selector__dropdown'
           onClick={this.handleToggle}
+          onKeyPress={this.handleToggle}
           role='button'
           tabIndex={0}
         >

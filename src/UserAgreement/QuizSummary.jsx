@@ -8,15 +8,6 @@ import './QuizSummary.less';
  * Little quiz summary component - properties: notDone, wrongs, onSubmit
  */
 class QuizSummary extends Component {
-  static propTypes = {
-    notDone: PropTypes.arrayOf(PropTypes.number).isRequired,
-    wrongs: PropTypes.arrayOf(PropTypes.number).isRequired,
-    onSubmit: PropTypes.func.isRequired,
-  };
-
-  static defaultProps = {
-  };
-
   render() {
     const finishedAnswer = (this.props.notDone.length + this.props.wrongs.length === 0);
     return (
@@ -34,5 +25,11 @@ class QuizSummary extends Component {
     );
   }
 }
+
+QuizSummary.propTypes = {
+  notDone: PropTypes.arrayOf(PropTypes.number).isRequired,
+  wrongs: PropTypes.arrayOf(PropTypes.number).isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};
 
 export default QuizSummary;

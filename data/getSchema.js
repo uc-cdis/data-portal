@@ -38,7 +38,7 @@ const { gdcSubPath } = (function () {
 
     Use: node getSchema.js [gdcSubmissionApiPath]
         - where gdcSubmissionApiPath defaults to: process.env.GDC_SUBPATH || 'http://localhost:5000/v0/submission/'
-        - example - if gdcSubmissionApiPath = https://dev.bionimbus.org/api/vo/submission/, 
+        - example - if gdcSubmissionApiPath = https://dev.bionimbus.org/api/vo/submission/,
             then the script loads:
             * https://dev.bionimbus.org/api/v0/submission/_dictionary/_all
             * https://dev.bionimbus.org/api/v0/submission/getschema
@@ -103,12 +103,12 @@ async function fetchJsonRetry(urlStr, opts) {
       (res) => {
         if (res.status === 200) {
           return res.json().catch(
-            err => doRetry(`failed json parse - ${err}`),
+            (err) => doRetry(`failed json parse - ${err}`),
           );
         }
         return doRetry(`non-200 from server: ${res.status}`);
       },
-      err => doRetry(err),
+      (err) => doRetry(err),
     );
   };
 

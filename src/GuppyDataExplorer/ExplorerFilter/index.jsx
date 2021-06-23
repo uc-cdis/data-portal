@@ -27,8 +27,8 @@ class ExplorerFilter extends React.Component {
   }
 
   getSnapshotBeforeUpdate(prevProps) {
-    if (prevProps.accessibleFieldObject !== this.props.accessibleFieldObject ||
-      prevProps.unaccessibleFieldObject !== this.props.unaccessibleFieldObject
+    if (prevProps.accessibleFieldObject !== this.props.accessibleFieldObject
+      || prevProps.unaccessibleFieldObject !== this.props.unaccessibleFieldObject
     ) {
       if (this.props.tierAccessLevel === 'libre') {
         this.setState({ selectedAccessFilter: 'all-data' });
@@ -131,9 +131,9 @@ class ExplorerFilter extends React.Component {
       userFilterFromURL: this.props.userFilterFromURL,
       lockedTooltipMessage: this.props.tierAccessLevel === 'regular' ? `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.` : '',
       disabledTooltipMessage: this.props.tierAccessLevel === 'regular' ? `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${this.props.tierAccessLimit} ${
-        this.props.guppyConfig.nodeCountTitle ?
-          this.props.guppyConfig.nodeCountTitle.toLowerCase() :
-          labelToPlural(this.props.guppyConfig.dataType)
+        this.props.guppyConfig.nodeCountTitle
+          ? this.props.guppyConfig.nodeCountTitle.toLowerCase()
+          : labelToPlural(this.props.guppyConfig.dataType)
       } or more.` : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
       hideEmptyFilterSection: explorerHideEmptyFilterSection,

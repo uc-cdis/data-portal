@@ -41,7 +41,8 @@ const SubmitNodeForm = ({
               onUpdateFormSchema={onUpdateFormSchema}
               propertyType='string'
               description={description}
-            />);
+            />
+          );
         } else if ('oneOf' in node.properties[property]) {
           inputComponent = (
             <OneOfInput
@@ -54,7 +55,8 @@ const SubmitNodeForm = ({
               onChange={onChange}
               onChangeEnum={onChangeEnum}
               onUpdateFormSchema={onUpdateFormSchema}
-            />);
+            />
+          );
         } else if ('anyOf' in node.properties[property]) {
           inputComponent = (
             <AnyOfInput
@@ -85,7 +87,8 @@ const SubmitNodeForm = ({
               required={required}
               description={description}
               onChange={onChange}
-            />);
+            />
+          );
         }
         return (
           <React.Fragment key={index}>

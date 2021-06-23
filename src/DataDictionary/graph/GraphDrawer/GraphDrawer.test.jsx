@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import GraphDrawer from '../GraphDrawer/GraphDrawer';
+import GraphDrawer from './GraphDrawer';
 import { calculateGraphLayout } from '../GraphCalculator/graphCalculatorHelper';
 import {
   buildTestData,

@@ -26,12 +26,10 @@ class AnalysisApp extends React.Component {
     this.updateApp();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.job && nextProps.job.status === 'Completed') {
+  static getDerivedStateFromProps(props) {
+    if (props.job && props.job.status === 'Completed') {
       this.fetchJobResult()
-        .then((res) => {
-          this.setState({ results: `${res.data.output}`.split('\n') });
-        });
+        .then((res) => ({ results: `${res.data.output}`.split('\n') }));
     }
   }
 
@@ -73,9 +71,7 @@ class AnalysisApp extends React.Component {
       );
     case 'GWASApp':
       return (
-        <React.Fragment>
-          <ReduxGWASApp />
-        </React.Fragment>
+        <ReduxGWASApp />
       );
     default:
       return (
@@ -121,9 +117,9 @@ class AnalysisApp extends React.Component {
   }
 
   handleFullscreenButtonClick = () => {
-    this.setState({
-      analysisIsFullscreen: !this.state.analysisIsFullscreen,
-    });
+    this.setState((prevState) => ({
+      analysisIsFullscreen: !prevState.analysisIsFullscreen,
+    }));
   }
 
   handleIframeApp = () => {
@@ -158,30 +154,34 @@ class AnalysisApp extends React.Component {
       <div className='analysis-app-wrapper'>
         <BackLink url='/analysis' label='Back to Apps' />
         {
-          loaded ?
-            <div className='analysis-app'>
-              <h2 className='analysis-app__title'>{app.title}</h2>
-              <p className='analysis-app__description'>{app.description}</p>
-              <div className={`${this.state.analysisIsFullscreen ? 'analysis-app__fullscreen' : ''}`}>
-                <div className='analysis-app__actions'>
-                  { appContent }
+          loaded
+            ? (
+              <div className='analysis-app'>
+                <h2 className='analysis-app__title'>{app.title}</h2>
+                <p className='analysis-app__description'>{app.description}</p>
+                <div className={`${this.state.analysisIsFullscreen ? 'analysis-app__fullscreen' : ''}`}>
+                  <div className='analysis-app__actions'>
+                    { appContent }
+                  </div>
+                  { this.state.isIframeApp
+                    ? (
+                      <div className='analysis-app__buttongroup'>
+                        { fullscreenButton }
+                      </div>
+                    ) : null}
                 </div>
-                { this.state.isIframeApp ?
-                  <div className='analysis-app__buttongroup'>
-                    { fullscreenButton }
-                  </div> : null
-                }
+                {(showJobStatus)
+                  ? (
+                    <div className='analysis-app__job-status'>
+                      { this.isJobRunning() ? <Spin size='large' tip='Job in progress...' /> : null }
+                      { job && job.status === 'Completed' ? <h3>Job Completed</h3> : null }
+                      { job && job.status === 'Failed' ? <h3>Job Failed</h3> : null }
+                      { results ? results.map((line, i) => <p key={i}>{line}</p>) : null }
+                    </div>
+                  )
+                  : null}
               </div>
-              {(showJobStatus) ?
-                <div className='analysis-app__job-status'>
-                  { this.isJobRunning() ? <Spin size='large' tip='Job in progress...' /> : null }
-                  { job && job.status === 'Completed' ? <h3>Job Completed</h3> : null }
-                  { job && job.status === 'Failed' ? <h3>Job Failed</h3> : null }
-                  { results ? results.map((line, i) => <p key={i}>{line}</p>) : null }
-                </div>
-                : null
-              }
-            </div>
+            )
             : null
         }
       </div>

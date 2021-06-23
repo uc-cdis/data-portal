@@ -1,10 +1,11 @@
-
 /**
  * Little helper for building test data
  */
 export const buildTestData = () => {
   const nodes = ['project', 'a', 'b', 'c', 'd', 'x', 'y', 'z']
-    .map(id => ({ id, title: id, links: [], type: 'object' }));
+    .map((id) => ({
+      id, title: id, links: [], type: 'object',
+    }));
   const nodeCounts = nodes.map((nd, i) => ({ key: `_${nd.id}_count`, value: i + 1 }))
     .reduce((db, entry) => { db[entry.key] = entry.value; return db; }, {});
   // 0 'z' nodes
@@ -20,7 +21,7 @@ export const buildTestData = () => {
     .reduce((db, entry) => { db[entry.key] = entry.value; return db; }, {});
   const dictionary = nodes.reduce((db, nd) => { const res = db; res[nd.id] = nd; return res; }, {});
   edges.map(
-    edg => (
+    (edg) => (
       {
         source: dictionary[edg.source],
         target: dictionary[edg.target],
@@ -272,4 +273,3 @@ export const testGraph1 = {
     ],
   },
 };
-

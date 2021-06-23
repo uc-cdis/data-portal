@@ -64,7 +64,7 @@ class ExplorerTable extends React.Component {
    */
   buildColumnConfig = (field, isNestedTableColumn, isDetailedColumn) => {
     const fieldMappingEntry = this.props.guppyConfig.fieldMapping
-    && this.props.guppyConfig.fieldMapping.find(i => i.field === field);
+    && this.props.guppyConfig.fieldMapping.find((i) => i.field === field);
     const overrideName = fieldMappingEntry ? fieldMappingEntry.name : undefined;
     const fieldStringsArray = field.split('.');
     // for nested table, we only display the children names in column header
@@ -78,7 +78,7 @@ class ExplorerTable extends React.Component {
       // for nested table we set the width arbitrary wrt view width
       // because the width of its parent row is too big
       width: isNestedTableColumn ? '70vw' : this.getWidthForColumn(field, overrideName || fieldName),
-      accessor: d => d[fieldStringsArray[0]],
+      accessor: (d) => d[fieldStringsArray[0]],
       Cell: (row) => {
         let valueStr = '';
         // not a nested field name
@@ -92,7 +92,7 @@ class ExplorerTable extends React.Component {
           const nestedChildFieldName = fieldStringsArray.slice(1, fieldStringsArray.length).join('.');
           // some logic to handle depends on wether the child field in raw data is an array or not
           if (_.isArray(row.value)) {
-            valueStr = row.value.map(x => _.get(x, nestedChildFieldName)).join(', ');
+            valueStr = row.value.map((x) => _.get(x, nestedChildFieldName)).join(', ');
           } else {
             valueStr = _.get(row.value, nestedChildFieldName);
           }
@@ -133,17 +133,19 @@ class ExplorerTable extends React.Component {
         case 'file_size':
           return (<div><span title={valueStr}>{humanFileSize(valueStr)}</span></div>);
         case this.props.tableConfig.linkFields.includes(field) && field:
-          return valueStr ?
-            <IconicLink
-              link={valueStr}
-              className='explorer-table-link'
-              buttonClassName='explorer-table-link-button'
-              icon='exit'
-              dictIcons={dictIcons}
-              iconColor='#606060'
-              target='_blank'
-              isExternal
-            />
+          return valueStr
+            ? (
+              <IconicLink
+                link={valueStr}
+                className='explorer-table-link'
+                buttonClassName='explorer-table-link-button'
+                icon='exit'
+                dictIcons={dictIcons}
+                iconColor='#606060'
+                target='_blank'
+                isExternal
+              />
+            )
             : null;
         default:
           return (<div><span title={valueStr}>{valueStr}</span></div>);
@@ -186,15 +188,13 @@ class ExplorerTable extends React.Component {
       if (!nestedArrayFieldColumnConfigs[key]) {
         nestedArrayFieldColumnConfigs[key] = [];
       }
-      const firstLevelColumns = nestedArrayFieldNames[key].map(field =>
-        this.buildColumnConfig(`${key}.${field}`, true, false));
+      const firstLevelColumns = nestedArrayFieldNames[key].map((field) => this.buildColumnConfig(`${key}.${field}`, true, false));
       const firstLevelColumnsConfig = [];
       firstLevelColumnsConfig.push({
         Header: key,
         columns: firstLevelColumns,
       });
-      const secondLevelColumns = nestedArrayFieldNames[key].map(field =>
-        this.buildColumnConfig(`${key}.${field}`, true, true));
+      const secondLevelColumns = nestedArrayFieldNames[key].map((field) => this.buildColumnConfig(`${key}.${field}`, true, true));
       const secondLevelColumnsConfig = [];
       secondLevelColumnsConfig.push({
         Header: key,
@@ -209,7 +209,7 @@ class ExplorerTable extends React.Component {
   fetchData = (state) => {
     this.setState({ loading: true });
     const offset = state.page * state.pageSize;
-    const sort = state.sorted.map(i => ({
+    const sort = state.sorted.map((i) => ({
       [i.id]: i.desc ? 'desc' : 'asc',
     }));
     const size = state.pageSize;
@@ -235,7 +235,6 @@ class ExplorerTable extends React.Component {
   hideEmptyColumnToggle = (checked) => {
     this.setState({ showEmptyColumns: checked });
   };
-
 
   render() {
     if (!this.props.tableConfig.fields || this.props.tableConfig.fields.length === 0) {
@@ -272,7 +271,6 @@ class ExplorerTable extends React.Component {
       return tempColumnConfig;
     });
 
-
     // if not ordered sort alphabetically by Header
     if (!this.props.tableConfig.ordered) {
       rootColumnsConfig.sort((a, b) => a.Header.localeCompare(b.Header));
@@ -294,30 +292,31 @@ class ExplorerTable extends React.Component {
     let nestedArrayFieldColumnConfigs = {};
     let subComponent = null;
     if (Object.keys(nestedArrayFieldNames).length > 0) {
-      // eslint-disable-next-line max-len
       nestedArrayFieldColumnConfigs = this.buildNestedArrayFieldColumnConfigs(nestedArrayFieldNames);
       // this is the subComponent of the two-level nested tables
-      subComponent = row => Object.keys(nestedArrayFieldColumnConfigs).map((key) => {
-        const rowData = (this.props.isLocked || !this.props.rawData) ?
-          [] : _.slice(this.props.rawData, row.index, row.index + 1);
-        return (<div className='explorer-nested-table' key={key}>
-          <ReactTable
-            data={(this.props.isLocked || !rowData) ? [] : rowData}
-            columns={nestedArrayFieldColumnConfigs[key][0]}
-            defaultPageSize={1}
-            showPagination={false}
-            SubComponent={() => (
-              <div className='explorer-nested-table'>
-                <ReactTable
-                  data={(this.props.isLocked || !rowData) ? [] : rowData}
-                  columns={nestedArrayFieldColumnConfigs[key][1]}
-                  defaultPageSize={1}
-                  showPagination={false}
-                />
-              </div>
-            )}
-          />
-        </div>);
+      subComponent = (row) => Object.keys(nestedArrayFieldColumnConfigs).map((key) => {
+        const rowData = (this.props.isLocked || !this.props.rawData)
+          ? [] : _.slice(this.props.rawData, row.index, row.index + 1);
+        return (
+          <div className='explorer-nested-table' key={key}>
+            <ReactTable
+              data={(this.props.isLocked || !rowData) ? [] : rowData}
+              columns={nestedArrayFieldColumnConfigs[key][0]}
+              defaultPageSize={1}
+              showPagination={false}
+              SubComponent={() => (
+                <div className='explorer-nested-table'>
+                  <ReactTable
+                    data={(this.props.isLocked || !rowData) ? [] : rowData}
+                    columns={nestedArrayFieldColumnConfigs[key][1]}
+                    defaultPageSize={1}
+                    showPagination={false}
+                  />
+                </div>
+              )}
+            />
+          </div>
+        );
       });
     }
 
@@ -339,25 +338,26 @@ class ExplorerTable extends React.Component {
     return (
       <div className={`explorer-table ${this.props.className}`}>
         {(this.props.isLocked) ? <React.Fragment />
-          : <div className='explorer-table__description'>
-            <span>
-              {explorerTableCaption}
-            </span>
-            <label className={`explorer-table__hide_empty_column_toggle ${this.props.rawData ? '' : 'ant-switch-disabled'}`}>
+          : (
+            <div className='explorer-table__description'>
+              <span>
+                {explorerTableCaption}
+              </span>
+              <label className={`explorer-table__hide_empty_column_toggle ${this.props.rawData ? '' : 'ant-switch-disabled'}`}>
                 Show Empty Columns
-              <Switch
-                onChange={this.hideEmptyColumnToggle}
-                disabled={!this.props.rawData}
-              />
-            </label>
-          </div>}
+                <Switch
+                  onChange={this.hideEmptyColumnToggle}
+                  disabled={!this.props.rawData}
+                />
+              </label>
+            </div>
+          )}
 
         <ReactTable
           columns={rootColumnsConfig}
           manual
           data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
           showPageSizeOptions={!this.props.isLocked}
-          // eslint-disable-next-line max-len
           pages={(this.props.isLocked) ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}
           onFetchData={this.fetchData}

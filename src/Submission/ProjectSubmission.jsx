@@ -8,7 +8,13 @@ import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 import { useArboristUI } from '../configs';
-import { userHasMethodForServiceOnProject, isRootUrl, isProgramUrl, userHasSheepdogProgramAdmin, userHasSheepdogProjectAdmin } from '../authMappingUtils';
+import {
+  userHasMethodForServiceOnProject,
+  isRootUrl,
+  isProgramUrl,
+  userHasSheepdogProgramAdmin,
+  userHasSheepdogProjectAdmin,
+} from '../authMappingUtils';
 
 class ProjectSubmission extends React.Component {
   componentDidMount() {
@@ -103,7 +109,8 @@ class ProjectSubmission extends React.Component {
           <Link
             className='project-submission__link'
             to={`/${this.props.project}/search`}
-          >browse nodes</Link>
+          >browse nodes
+          </Link>
         }
         { displaySubmissionUIComponents(this.props.project, this.props.userAuthMapping) }
         { displayData() }

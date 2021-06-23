@@ -15,7 +15,7 @@ class TooltipCDIS extends React.Component {
           <h2>{`${txts[1]}`}</h2>
           {
             payload.map(
-              item => <div key={item.name} style={{ color: `${item.fill}` }} className='body-typo'>{`${item.name} : ${Math.round((item.value / 100) * number)}`}</div>,
+              (item) => <div key={item.name} style={{ color: `${item.fill}` }} className='body-typo'>{`${item.name} : ${Math.round((item.value / 100) * number)}`}</div>,
             )
           }
         </div>
@@ -24,7 +24,6 @@ class TooltipCDIS extends React.Component {
     return null;
   }
 }
-
 
 TooltipCDIS.propTypes = {
   label: PropTypes.string,
