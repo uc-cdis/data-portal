@@ -23,6 +23,21 @@ class GqlEditor extends React.Component {
     if (this.props.endpointIndex && this.state.selectedEndpointIndex !== this.props.endpointIndex) {
       this.selectEndpoint(this.props.endpointIndex);
     }
+    document.addEventListener("keydown", this.handleEscKey);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleEscKey);
+  }
+
+  handleEscKey(event) {
+    // To allow for accessible keyboard navigation,
+    // the user can press Esc to remove focus from
+    // the GraphQL textbox.
+    // https://www.w3.org/TR/UNDERSTANDING-WCAG20/keyboard-operation-trapping.html
+    if(event.keyCode == 27){
+      document.activeElement.blur();
+    }
   }
 
   getOtherIndex = index =>
