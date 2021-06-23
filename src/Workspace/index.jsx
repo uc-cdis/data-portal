@@ -282,7 +282,7 @@ class Workspace extends React.Component {
     this.terminateWorkspace();
   }
 
-  handleFullageButtonClick = () => {
+  handleFullpageButtonClick = () => {
     this.setState((prevState) => ({
       workspaceIsFullpage: !prevState.workspaceIsFullpage,
     }));
