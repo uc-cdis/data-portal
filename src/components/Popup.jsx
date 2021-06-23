@@ -15,10 +15,10 @@ class Popup extends React.Component {
 
     this.focusTrap = createFocusTrap('#popup', {
       onActivate() {
-        modal.className = 'trap is-visible';
+        modal.classList.add('trap-is-active');
       },
       onDeactivate() {
-        modal.className = 'trap';
+        modal.classList.remove('trap-is-active');
       },
     });
 
