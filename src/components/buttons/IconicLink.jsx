@@ -62,7 +62,7 @@ IconicLink.defaultProps = {
   icon: '',
   iconColor: '',
   caption: '',
-  buttonClassName: 'button-primary-white',
+  buttonClassName: 'g3-button button-primary-white',
   className: '',
   target: '',
   isExternal: false,

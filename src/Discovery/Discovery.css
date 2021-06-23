@@ -171,6 +171,7 @@
 .discovery-table__expanded-row > td.ant-table-cell {
   color: var(--g3-color__titanium);
 }
+
 .discovery-table__expanded-row-content {
   cursor: pointer;
   height: 40px;
@@ -185,6 +186,11 @@
   -webkit-line-clamp: 2;
   text-overflow: ellipsis;
   /* --------- */
+}
+
+.discovery-table-container .ant-table, .discovery-table-container .ant-btn {
+  font-size: 0.875rem;
+  height: 2rem;
 }
 
 .discovery-popover {
