@@ -24,6 +24,7 @@ const dashboardDataLocations = {
   modeledFipsList: 'bayes-by-county/CountyCodeList.txt',
   jhuGeojsonLatest: 'map_data/jhu_geojson_latest.json',
   jhuJsonByLevelLatest: 'map_data/jhu_json_by_level_latest.json',
+  jhuJsonByTimeLatest: 'map_data/jhu_il_json_by_time_latest.json',
   top10ChartData: 'charts_data/top10.txt',
   idphDailyChartData: 'idph_daily.txt',
 };
@@ -246,8 +247,6 @@ class Covid19Dashboard extends React.Component {
       confirmedCount, deathsCount, recoveredCount,
     } = this.getTotalCounts();
 
-    console.log(mapboxAPIToken);
-
     return (
       <div className='covid19-dashboard'>
         {/* dashboard tabs */}
@@ -276,6 +275,9 @@ class Covid19Dashboard extends React.Component {
                 { mapboxAPIToken &&
                   <IllinoisMapChart
                     jsonByLevel={this.props.jhuJsonByLevelLatest}
+                    jsonByTime={this.props.jhuJsonByTimeLatest}
+                    googleMobilityData={this.props.googleMobilityData}
+                    gagnonStrainData={this.props.gagnonStrainData}
                     modeledFipsList={this.props.modeledFipsList}
                     fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                   />
@@ -406,10 +408,12 @@ class CustomizedXAxisTick extends React.Component { // eslint-disable-line react
 
 Covid19Dashboard.propTypes = {
   fetchDashboardData: PropTypes.func.isRequired,
+  fetchExternalMapData: PropTypes.func.isRequired,
   fetchTimeSeriesData: PropTypes.func.isRequired,
   modeledFipsList: PropTypes.array,
   jhuGeojsonLatest: PropTypes.object,
   jhuJsonByLevelLatest: PropTypes.object,
+  jhuJsonByTimeLatest: PropTypes.object,
   selectedLocationData: PropTypes.object,
   closeLocationPopup: PropTypes.func.isRequired,
   top10ChartData: PropTypes.array,
@@ -419,7 +423,8 @@ Covid19Dashboard.propTypes = {
 Covid19Dashboard.defaultProps = {
   modeledFipsList: [],
   jhuGeojsonLatest: { type: 'FeatureCollection', features: [] },
-  jhuJsonByLevelLatest: { country: {}, state: {}, county: {} },
+  jhuJsonByLevelLatest: { country: {}, state: {}, county: {}, last_updated: '' },
+  jhuJsonByTimeLatest: {il_county_list: {}, last_updated: ''},
   selectedLocationData: null,
   top10ChartData: [],
   idphDailyChartData: [],

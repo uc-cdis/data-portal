@@ -1,4 +1,4 @@
- /* eslint-disable react/sort-comp */
+/* eslint-disable react/sort-comp */
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
@@ -20,9 +20,8 @@ import MobilityLayerWrk from '../overlays/GoogleMobilityLayerWrk';
 import MobilityLayerTrn from '../overlays/GoogleMobilityLayerTrn';
 import MobilityLayerRes from '../overlays/GoogleMobilityLayerRes';
 
-import timeData from '../data/jhu_il_json_by_time_latest_new.json';
-
 import MapSlider from '../MapSlider';
+import Spinner from '../../components/Spinner';
 
 function filterCountyGeoJson(selectedFips) {
   return {
@@ -51,13 +50,11 @@ function formatDate(date) {
 class IllinoisMapChart extends React.Component {
   constructor(props) {
     super(props);
-    this.choroCountyGeoJson = null;
-    this.strainDataGeoJson = null;
     const today = new Date();
     const startDate = new Date(2020, 0, 22);
     const endDate = new Date(today);
-    endDate.setDate(endDate.getDate() - 25);
-    const dateDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) - 25;
+    endDate.setDate(endDate.getDate() - 4);
+    const dateDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) - 4;
     this.state = {
       mapSize: {
         width: '100%',
@@ -76,7 +73,7 @@ class IllinoisMapChart extends React.Component {
         /*
         // Additional layers used as examples enable here
         us_counties: { title: 'US Counties', visible: 'visible' },
-        il_population: { title: 'IL Population', visible: 'visible' },*/
+        il_population: { title: 'IL Population', visible: 'visible' }, */
         time_data: { title: 'Case Data Over Time' },
         rnr_mobility_data: { title: 'Retail & Recreation' },
         gnp_mobility_data: { title: 'Grocery & Pharmacy' },
@@ -86,6 +83,8 @@ class IllinoisMapChart extends React.Component {
         res_mobility_data: { title: 'Residential' },
       },
       popup_data: {
+        /*
+        This data is used just for the popup on hover*/
         strain_data: { title: 'Strain Data', visible: 'none' },
         // mobility_data : {title: 'Mobility Data', visible: 'none'},
       },
@@ -96,6 +95,8 @@ class IllinoisMapChart extends React.Component {
       activeLayer: 'time_data',
       legendTitle: 'Confirmed Cases',
       legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' },
+      mobility_data: { data: null, fetchStatus: null },
+      strainData: { data: null, fetchStatus: null }
     };
     this.mapData = {
       modeledCountyGeoJson: null,
@@ -106,22 +107,20 @@ class IllinoisMapChart extends React.Component {
 
   componentDidUpdate() {
     if (!(this.mapData.colorsAsList === null
-      && Object.keys(this.props.jsonByLevel.county).length > 0)) {
+      && Object.entries(this.props.jsonByTime.il_county_list).length > 0)) {
       return;
     }
 
-    if (!this.state.time_data) {
-      this.addTimeDataToGeoJsonBase(timeData.il_county_list);
-      
+    if (!this.state.time_data && Object.entries(this.props.jsonByTime.il_county_list).length > 0) {
+      this.addTimeDataToGeoJsonBase(this.props.jsonByTime.il_county_list);
     }
 
-    if (this.mapData.colors !== {}) {
+    if (this.mapData.colors !== {} && this.state.time_data) {
       this.mapData.modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
-
       // Finds second highest value in data set
       // Second highest value is used to better balance distribution
       // Due to cook county being an extreme outlier
-      const maxVal = this.mapData.modeledCountyGeoJson.features
+      const maxVal = this.state.time_data.features
         .map((obj) => {
           const confirmedCases = obj.properties[`C_${this.state.sliderDate}`];
           // this is to handle <5 strings in dataset, makes it 0
@@ -163,24 +162,20 @@ class IllinoisMapChart extends React.Component {
 
       this.setState({ mapColors: this.mapData.colors }); // eslint-disable-line react/no-did-update-set-state, max-len
     }
-
-    if (!this.state.mobility_data) {
-      fetch('https://covd-map-occ-prc-qa.s3.amazonaws.com/google_mobility.json')
-        .then(resp => resp.json())
-        .then((data) => {
-          this.addMobilityDataToGeoJsonBase(data);
-        })
-        .catch(() => {console.warn('Data not retrieved. Unable to display mobility overlays')}) // eslint-disable-line no-console
+    // data fetch status added to prevent multiple requests
+    // generally browers are smart enough to cache the requests
+    // but this adds an extra layer of security
+    if (!this.state.mobility_data.fetchStatus) {
+      this.addMobilityDataToGeoJsonBase();
     }
 
-    if (!this.state.strainData) {
+    if (!this.state.strainData.fetchStatus) {
       this.addStrainDataToState();
     }
   }
 
   onHover = (event) => {
     if (!event.features) { return; }
-
     let hoverInfo = null;
     const formatNumberToDisplay = (rawNum) => {
       if (rawNum && rawNum !== 'null') {
@@ -232,15 +227,15 @@ class IllinoisMapChart extends React.Component {
         hoverInfo.mobility_values = {
           'Retail & Recreation': rnr,
           'Grocery & Pharmacy': gnp,
-          Parks: prk,
-          Transit: trn,
-          Workplaces: wrk,
-          Residential: res,
+          'Parks': prk,
+          'Transit': trn,
+          'Workplaces': wrk,
+          'Residential': res,
         };
       }
 
       if (this.state.popup_data.strain_data.visible === 'visible') {
-        hoverInfo.strain_values = this.state.strainData[feature.properties.FIPS][`${this.state.sliderDate}`];
+        hoverInfo.strain_values = this.state.strainData.data[feature.properties.FIPS][`${this.state.sliderDate}`];
       }
     });
 
@@ -253,8 +248,8 @@ class IllinoisMapChart extends React.Component {
     if (!event.features) { return; }
 
     event.features.forEach((feature) => {
-      if (feature.layer.id === 'confirmed-choropleth') {
-        const title = `${feature.properties.county}, ${feature.properties.province_state}`;
+      if (feature.layer.id === 'time-data') {
+        const title = `${feature.properties.COUNTYNAME}, ${feature.properties.STATE}`;
         this.props.fetchTimeSeriesData(
           'county',
           feature.properties.FIPS,
@@ -290,35 +285,42 @@ class IllinoisMapChart extends React.Component {
       this.setState({ mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google Mobility Data', link: 'https://www.google.com/covid19/mobility/' } });
     }
   }
-  
-  addMobilityDataToGeoJsonBase = (data) => {
+
+  addMobilityDataToGeoJsonBase = () => {
     // Only select Illinois data.
     // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
     // but not in JHU data. So don't display Chicago separately.
-    const base = {
-      ...countyData,
-      features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
-    };
-    const geoJson = {
-      ...base,
-      features: base.features.map((loc) => {
-        const location = loc;
-        if (location.properties.FIPS && !(location.properties.FIPS in data)) {
-          // `countyData` stores FIPS with trailing zeros, JHU data doesn't
-          location.properties.FIPS = Number(location.properties.FIPS).toString();
-        }
-        if (location.properties.FIPS && location.properties.FIPS in data) {
-          location.properties = Object.assign(
-            data[location.properties.FIPS],
-            location.properties,
-          );
-          return location;
-        }
-        // no data for this location
-        return location;
-      }),
-    };
-    this.setState({ mobility_data: geoJson });
+    this.setState({ mobility_data: {data: null, fetchStatus: 'fetching'} });
+    fetch('https://covd-map-occ-prc-qa.s3.amazonaws.com/google_mobility_data.json')
+      .then(resp => resp.json())
+      .then((data) => {
+        const base = {
+          ...countyData,
+          features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
+        };
+        const geoJson = {
+          ...base,
+          features: base.features.map((loc) => {
+            const location = loc;
+            if (location.properties.FIPS && !(location.properties.FIPS in data)) {
+              // `countyData` stores FIPS with trailing zeros, JHU data doesn't
+              location.properties.FIPS = Number(location.properties.FIPS).toString();
+            }
+            if (location.properties.FIPS && location.properties.FIPS in data) {
+              location.properties = Object.assign(
+                data[location.properties.FIPS],
+                location.properties,
+              );
+              return location;
+            }
+            // no data for this location
+            return location;
+          }),
+        };
+        this.setState({ mobility_data: {data: geoJson, fetchStatus: 'done'} });
+      })
+      .catch(() => {console.warn('Data not retrieved. Unable to display mobility overlays')}) // eslint-disable-line no-console
+    
   }
 
   addTimeDataToGeoJsonBase = (data) => {
@@ -341,8 +343,8 @@ class IllinoisMapChart extends React.Component {
           const dateProps = {};
           Object.entries(data[location.properties.FIPS].by_date).forEach((x) => {
             const [date, caseDeath] = x;
-            dateProps[`C_${date}`] = caseDeath.C;
-            dateProps[`D_${date}`] = caseDeath.D;
+            dateProps[`C_${date}`] = typeof caseDeath.C === 'string' ? 0 : caseDeath.C;
+            dateProps[`D_${date}`] = typeof caseDeath.D === 'string' ? 0 : caseDeath.D;
           });
           location.properties = Object.assign(
             dateProps,
@@ -358,11 +360,19 @@ class IllinoisMapChart extends React.Component {
     this.setState({ time_data: geoJson });
   }
 
+  updateDataFetchStatus = (id, status) => {
+    const newState = Object.assign({}, this.state.dataFetchStatus);
+    newState[id] = status;
+    console.log(newState);
+    this.setState(newState);
+  }
+
   addStrainDataToState = () => {
+    this.setState({ strainData: {data: null, fetchStatus: 'fetching'} });
     fetch('https://covd-map-occ-prc-qa.s3.amazonaws.com/gagnon_lab_strain_data.json')
       .then(resp => resp.json())
       .then((data) => {
-        this.setState({ strainData: data });
+        this.setState({ strainData: {data: data, fetchStatus: 'done'} });
       })
       .catch(() => {console.warn('Data not retrieved. Unable to display mobility overlays')}) // eslint-disable-line no-console
   }
@@ -396,7 +406,7 @@ class IllinoisMapChart extends React.Component {
             {
               hoverInfo.mobility_values &&
               Object.entries(hoverInfo.mobility_values).map(
-                (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>,
+                (val, i) => <p key={i}>{`${val[1]}% ${val[0]}`}</p>,
               )
             }
             {
@@ -407,19 +417,21 @@ class IllinoisMapChart extends React.Component {
                   {Object.entries(hoverInfo.strain_values).map((val, i) => {
                     const secondCol = Object.entries(hoverInfo.strain_values)[i + 1] || ['', ''];
                     if (i % 2 !== 0) {
-                      return (<tr><td key={i}>{`${val[0]} ${val[1]}`}</td><td key={i+1}>{`${secondCol[0]} ${secondCol[1]}`}</td></tr>);
+                      return (<tr><td key={i}>{`${val[0]} ${val[1]}`}</td><td key={i + 1}>{`${secondCol[0]} ${secondCol[1]}`}</td></tr>);
                     }
-                    else {
-                      return null;
-                    }
+                    return null;
                   },
                   )}
                 </table>
               )
             }
-            <p className='covid19-dashboard__location-info__click'>
-              Click for real time plotting {this.props.modeledFipsList.includes(hoverInfo.FIPS) ? '\nand simulations' : ''}
-            </p>
+            {
+              hoverInfo.case_values && 
+              (<p className='covid19-dashboard__location-info__click'>
+                Click for real time plotting {this.props.modeledFipsList.includes(hoverInfo.FIPS) ? '\nand simulations' : ''}
+              </p>)
+            }
+            
           </div>
         </ReactMapGL.Popup>
       );
@@ -429,20 +441,9 @@ class IllinoisMapChart extends React.Component {
 
   sliderOnChange = (value) => {
     const startDate = new Date(2020, 0, 22);
-    // this is ugly but it gets the job done
     startDate.setDate(startDate.getDate() + parseInt(value, 10));
-    const _sliderDate = startDate;
-    let dd = _sliderDate.getDate();
-    let mm = _sliderDate.getMonth() + 1;
-    const y = _sliderDate.getFullYear();
-    if (`${dd}`.length === 1) {
-      dd = `0${dd}`;
-    }
-    if (`${mm}`.length === 1) {
-      mm = `0${mm}`;
-    }
 
-    const someFormattedDate = `${y}-${mm}-${dd}`;
+    const someFormattedDate = formatDate(startDate);
     this.setState({ sliderDate: someFormattedDate, sliderValue: value });
   }
 
@@ -453,8 +454,8 @@ class IllinoisMapChart extends React.Component {
         <ControlPanel
           showMapStyle={false}
           showLegend
-          colors={this.state.mapColors}
-          lastUpdated={this.props.jsonByLevel.last_updated}
+          formattedColors={this.state.mapColors}
+          lastUpdated={this.props.jsonByTime.last_updated}
           layers={this.state.overlay_layers}
           dataPoints={this.state.popup_data}
           activeLayer={this.state.activeLayer}
@@ -463,7 +464,6 @@ class IllinoisMapChart extends React.Component {
           legendTitle={this.state.legendTitle}
           legendDataSource={this.state.legendDataSource}
         />}
-
         <ReactMapGL.InteractiveMap
           className='.map-chart__mapgl-map'
           mapboxApiAccessToken={mapboxAPIToken}
@@ -479,19 +479,21 @@ class IllinoisMapChart extends React.Component {
           touchRotate={false}
         >
           {this.renderHoverPopup()}
-
-          <TimeCaseLayer visibility={this.state.activeLayer === 'time_data' ? 'visible' : 'none'} data={this.state.time_data} date={this.state.sliderDate} />
-          {this.state.mobility_data && <MobilityLayer visibility={this.state.activeLayer === 'rnr_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data} date={this.state.sliderDate} />}
-          {this.state.mobility_data && <MobilityLayerGnp visibility={this.state.activeLayer === 'gnp_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data} date={this.state.sliderDate} />}
-          {this.state.mobility_data && <MobilityLayerPrk visibility={this.state.activeLayer === 'prk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data} date={this.state.sliderDate} />}
-          {this.state.mobility_data && <MobilityLayerWrk visibility={this.state.activeLayer === 'wrk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data} date={this.state.sliderDate} />}
-          {this.state.mobility_data && <MobilityLayerTrn visibility={this.state.activeLayer === 'trn_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data} date={this.state.sliderDate} />}
-          {this.state.mobility_data && <MobilityLayerRes visibility={this.state.activeLayer === 'res_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data} date={this.state.sliderDate} />}
+          {/*Line below ensures that if a user selects the mobility layers before it is finished retrieving then the spinner indicates that the data is being downloaded*/}
+          {this.state.activeLayer.includes('mobility_data') && this.state.mobility_data.fetchStatus !== 'done' && <Spinner text={'Downloading mobility data'}/>}
+          {this.state.time_data &&
+            <TimeCaseLayer visibility={this.state.activeLayer === 'time_data' ? 'visible' : 'none'} data={this.state.time_data} date={this.state.sliderDate} />}
+          {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayer visibility={this.state.activeLayer === 'rnr_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
+          {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerGnp visibility={this.state.activeLayer === 'gnp_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
+          {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerPrk visibility={this.state.activeLayer === 'prk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
+          {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerWrk visibility={this.state.activeLayer === 'wrk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
+          {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerTrn visibility={this.state.activeLayer === 'trn_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
+          {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerRes visibility={this.state.activeLayer === 'res_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {/*
           // Additional layers used as examples enable here
           <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
           <PopulationIL visibility={this.state.overlay_layers.il_population.visible} /> */}
-          {/* Outline a set of counties */}
+          {/* Outline a set of counties from IL */}
           <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountyGeoJson}>
             <ReactMapGL.Layer
               id='county-outline'
@@ -511,7 +513,7 @@ class IllinoisMapChart extends React.Component {
 }
 
 IllinoisMapChart.propTypes = {
-  jsonByLevel: PropTypes.object.isRequired,
+  jsonByTime: PropTypes.object.isRequired,
   modeledFipsList: PropTypes.array.isRequired,
   fetchTimeSeriesData: PropTypes.func.isRequired,
 };

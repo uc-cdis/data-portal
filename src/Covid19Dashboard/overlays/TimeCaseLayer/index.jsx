@@ -7,7 +7,7 @@ function notIl(date) {
     type: 'fill',
     filter: ['all'],
     layout: { visibility: 'visible' },
-    beforeId: 'waterway-label',
+    beforeId: 'county-outline',
     paint: {
       'fill-color': [
         'interpolate',
@@ -40,7 +40,6 @@ function notIl(date) {
 }
 
 class TimeCaseLayer extends React.Component {
-
   render() {
     return (
       <ReactMapGL.Source type='geojson' data={this.props.data}>

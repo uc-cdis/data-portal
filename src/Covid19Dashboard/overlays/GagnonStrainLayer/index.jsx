@@ -4,7 +4,7 @@ import * as ReactMapGL from 'react-map-gl';
 
 const notIl = {
   type: 'fill',
-  filter: ['all'], 
+  filter: ['all'],
   layout: { visibility: 'visible' },
   paint: {
     'fill-color': [
@@ -37,7 +37,6 @@ const notIl = {
 };
 
 class GagnonStrainLayer extends React.Component {
-
   render() {
     return (
       <ReactMapGL.Source type='geojson' data={this.props.data}>

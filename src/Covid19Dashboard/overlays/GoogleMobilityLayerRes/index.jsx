@@ -40,7 +40,6 @@ function notIl(date) {
 }
 
 class MobilityLayerRes extends React.Component {
-
   render() {
     return (
       <ReactMapGL.Source type='geojson' data={this.props.data}>
