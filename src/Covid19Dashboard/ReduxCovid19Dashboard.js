@@ -93,9 +93,6 @@ const mapDispatchToProps = dispatch => ({
   fetchDashboardData: (propName, filePath) => dispatch(
     fetchDashboardData(propName, filePath),
   ),
-  fetchExternalMapData: (propName, filePath) => dispatch(
-    fetchExternalMapData(propName, filePath),
-  ),
   fetchTimeSeriesData: (dataLevel, locationId, title, withSimulation = false) =>
     dispatch(
       fetchTimeSeriesData(dataLevel, locationId, title, withSimulation),

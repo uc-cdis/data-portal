@@ -359,14 +359,7 @@ class IllinoisMapChart extends React.Component {
     };
     this.setState({ time_data: geoJson });
   }
-
-  updateDataFetchStatus = (id, status) => {
-    const newState = Object.assign({}, this.state.dataFetchStatus);
-    newState[id] = status;
-    console.log(newState);
-    this.setState(newState);
-  }
-
+  
   addStrainDataToState = () => {
     this.setState({ strainData: {data: null, fetchStatus: 'fetching'} });
     fetch('https://covd-map-occ-prc-qa.s3.amazonaws.com/gagnon_lab_strain_data.json')
@@ -479,7 +472,8 @@ class IllinoisMapChart extends React.Component {
           touchRotate={false}
         >
           {this.renderHoverPopup()}
-          {/*Line below ensures that if a user selects the mobility layers before it is finished retrieving then the spinner indicates that the data is being downloaded*/}
+          {/*Line below ensures that if a user selects the mobility layers before it is
+           finished retrieving then the spinner indicates that the data is being downloaded*/}
           {this.state.activeLayer.includes('mobility_data') && this.state.mobility_data.fetchStatus !== 'done' && <Spinner text={'Downloading mobility data'}/>}
           {this.state.time_data &&
             <TimeCaseLayer visibility={this.state.activeLayer === 'time_data' ? 'visible' : 'none'} data={this.state.time_data} date={this.state.sliderDate} />}
