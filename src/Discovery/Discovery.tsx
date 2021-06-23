@@ -52,21 +52,22 @@ const viewPagination = () => {
 };
 
 const accessibleDataFilterToggle = () => {
-  let filterPopup = document.querySelector('#discovery-table-of-records .ant-table-filter-column .ant-dropdown-trigger');
+  const filterPopup = document.querySelector('#discovery-table-of-records .ant-table-filter-column .ant-dropdown-trigger');
   if (filterPopup) {
     filterPopup.click();
-    let antdCheckboxes = document.querySelectorAll('.ant-table-filter-dropdown .ant-checkbox-input');
+    const antdCheckboxes = document.querySelectorAll('.ant-table-filter-dropdown .ant-checkbox-input');
     for (let i = 0; i < antdCheckboxes.length; i += 1) {
       antdCheckboxes[i].tabIndex = '0';
-      antdCheckboxes[i].id = 'accessibility-checkbox-' + i;
-      antdCheckboxes[i].onkeypress = function () {
-        let idString = 'accessibility-checkbox-' + i;
-        let thisElement = document.getElementById(idString);
+      antdCheckboxes[i].id = `accessibility-checkbox-${i}`;
+      const clickThisElement = () => {
+        const idString = `accessibility-checkbox-${i}`;
+        const thisElement = document.getElementById(idString);
         thisElement.click();
-      }
+      };
+      antdCheckboxes[i].onkeypress = clickThisElement;
     }
   }
-}
+};
 
 interface ListItem {
   title: string,
@@ -182,7 +183,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   }, [props.params.studyUID, props.studies]);
 
   useEffect(() => {
-    let filterPopup = document.querySelector('#discovery-table-of-records .ant-table-filter-column .ant-dropdown-trigger');
+    const filterPopup = document.querySelector('#discovery-table-of-records .ant-table-filter-column .ant-dropdown-trigger');
     if (filterPopup) {
       filterPopup.tabIndex = '0';
       filterPopup.onkeypress = accessibleDataFilterToggle;
