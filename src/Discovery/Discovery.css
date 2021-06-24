@@ -125,6 +125,13 @@
   cursor: pointer;
 }
 
+.discovery-header__tag-btn:focus, .discovery-header__tag-btn:focus-within, .discovery-header__tag-btn:focus-visible {
+  /* outline: 1px solid rgb(77, 144, 254);
+  outline-offset: 0px;
+  border-radius:5px; */
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+}
+
 .discovery-tag {
   border-radius: 5px;
   border-width: 2px;
@@ -190,7 +197,6 @@
 
 .discovery-table-container .ant-table, .discovery-table-container .ant-btn {
   font-size: 0.875rem;
-  height: 2rem;
 }
 
 .discovery-popover {
