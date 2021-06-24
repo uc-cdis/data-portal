@@ -176,6 +176,10 @@
   color: var(--g3-color__titanium);
 }
 
+.discovery-table-container .ant-input-lg {
+  font-size: 1rem;
+}
+
 .discovery-table__expanded-row-content {
   cursor: pointer;
   height: 40px;
