@@ -92,7 +92,6 @@ class IllinoisMapChart extends React.Component {
         strain_data: { title: 'Strain Data', visible: 'none' },
         // mobility_data : {title: 'Mobility Data', visible: 'none'},
       },
-      case_time_data: null,
       sliderValue: dateDiff,
       sliderDate: formatDate(endDate),
       sliderMaxValue: dateDiff,
