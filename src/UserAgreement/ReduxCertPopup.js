@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import CertPopup from './CertPopup';
-import { requiredCerts, userApiPath } from '../configs';
+import { requiredCerts, userAPIPath } from '../configs';
 import { fetchWithCreds, refreshUser } from '../actions';
 import { minus } from '../utils';
 import { certs, hostname } from '../localconf';
@@ -12,8 +12,8 @@ import { certs, hostname } from '../localconf';
  * @param {*} quiz
  * @param {*} history
  */
-export const submitForm = (data, questionList, quiz) => dispatch => fetchWithCreds({
-  path: `${userApiPath}/user/cert/${quiz}?extension=txt`,
+export const submitForm = (data, questionList, quiz) => (dispatch) => fetchWithCreds({
+  path: `${userAPIPath}/user/cert/${quiz}?extension=txt`,
   method: 'PUT',
   body: JSON.stringify({
     answers: data, certificate_form: questionList,
@@ -35,12 +35,12 @@ export const submitForm = (data, questionList, quiz) => dispatch => fetchWithCre
     },
   );
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   certsList: certs,
   pendingCerts: minus(requiredCerts, state.user.certificates_uploaded),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   onSubmit: (data, questionList, quiz) => dispatch(
     submitForm(data, questionList, quiz),
   ),

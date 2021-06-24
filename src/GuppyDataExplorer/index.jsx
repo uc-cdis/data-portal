@@ -2,7 +2,15 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import GuppyDataExplorer from './GuppyDataExplorer';
-import { guppyUrl, tierAccessLevel, tierAccessLimit, explorerConfig, dataAvailabilityToolConfig, useNewExplorerConfigFormat, indexScopedTierAccessMode } from '../localconf';
+import {
+  guppyUrl,
+  tierAccessLevel,
+  tierAccessLimit,
+  explorerConfig,
+  dataAvailabilityToolConfig,
+  useNewExplorerConfigFormat,
+  indexScopedTierAccessMode,
+} from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 import './GuppyExplorer.css';
 
@@ -38,6 +46,7 @@ class Explorer extends React.Component {
           {explorerConfig.map((element, index) => {
             let tabTitle = '';
             if (element.tabTitle) {
+              // eslint-disable-next-line prefer-destructuring
               tabTitle = element.tabTitle;
             } else if (element.guppyConfig && element.guppyConfig.dataType) {
               tabTitle = capitalizeFirstLetter(element.guppyConfig.dataType);
@@ -48,6 +57,7 @@ class Explorer extends React.Component {
                 <div
                   className={'guppy-explorer__tab'.concat(this.state.tab === index ? ' guppy-explorer__tab--selected' : '')}
                   onClick={() => this.onTabClick(index)}
+                  onKeyPress={() => this.onTabClick(index)}
                   role='button'
                   tabIndex={index}
                 >
@@ -71,14 +81,14 @@ class Explorer extends React.Component {
       heatMapConfig = this.state.tab === 0 ? dataAvailabilityToolConfig : null;
     }
 
-    const tierAccessLevelCalculated = indexScopedTierAccessMode ?
-      explorerConfig[this.state.tab].guppyConfig.tierAccessLevel : tierAccessLevel;
+    const tierAccessLevelCalculated = indexScopedTierAccessMode
+      ? explorerConfig[this.state.tab].guppyConfig.tierAccessLevel : tierAccessLevel;
 
     return (
       <div className='guppy-explorer'>
         {
-          (explorerConfig.length > 1) ?
-            tabFragment
+          (explorerConfig.length > 1)
+            ? tabFragment
             : null
         }
         <div className={(explorerConfig.length > 1) ? 'guppy-explorer__main' : ''}>

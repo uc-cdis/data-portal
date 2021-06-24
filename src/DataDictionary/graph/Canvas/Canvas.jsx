@@ -69,14 +69,6 @@ class Canvas extends React.Component {
     }
   }
 
-  updateCanvasSize() {
-    this.setState({
-      canvasWidth: this.canvasElement.current.clientWidth,
-      canvasHeight: this.canvasElement.current.clientHeight,
-    });
-    this.handleCanvasUpdate();
-  }
-
   handleCanvasUpdate = () => {
     const canvasBoundingRect = this.canvasElement.current.getBoundingClientRect();
     this.props.onCanvasBoundingBoxUpdate(canvasBoundingRect);
@@ -117,6 +109,14 @@ class Canvas extends React.Component {
     this.zoomCatcher
       .transition(this.transition)
       .call(this.zoomBehavior.transform, d3.zoomIdentity);
+  }
+
+  updateCanvasSize() {
+    this.setState({
+      canvasWidth: this.canvasElement.current.clientWidth,
+      canvasHeight: this.canvasElement.current.clientHeight,
+    });
+    this.handleCanvasUpdate();
   }
 
   render() {
@@ -168,7 +168,7 @@ class Canvas extends React.Component {
             ref={this.containerElement}
           >
             {
-              React.Children.map(this.props.children, child => React.cloneElement(child, {
+              React.Children.map(this.props.children, (child) => React.cloneElement(child, {
                 canvasWidth: this.state.canvasWidth,
                 canvasHeight: this.state.canvasHeight,
               }),

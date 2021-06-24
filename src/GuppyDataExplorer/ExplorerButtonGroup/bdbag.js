@@ -8,7 +8,7 @@
 
 import { fetchWithCreds } from '../../actions';
 
-export const getBDBagQuery = referenceIDList => `{
+export const getBDBagQuery = (referenceIDList) => `{
   participants:
     case(first:0${referenceIDList !== undefined ? `,submitter_id: ["${referenceIDList.join('","')}"]` : ''})
     {
@@ -16,7 +16,7 @@ export const getBDBagQuery = referenceIDList => `{
     }
     samples:sample(first:0
     ${referenceIDList !== undefined ? `, with_path_to_any:[
-    ${referenceIDList.map(item => (`{type: "case", submitter_id: "${item}"}`))}
+    ${referenceIDList.map((item) => (`{type: "case", submitter_id: "${item}"}`))}
     ]` : ''}
     ) {
       composition
@@ -99,6 +99,6 @@ export const exportAllSelectedDataToCloud = async (
 ) => {
   const referenceID = 'submitter_id';
   const idList = await downloadFieldsFunc({ fields: [referenceID] })
-    .then(res => res.map(i => i[referenceID]));
+    .then((res) => res.map((i) => i[referenceID]));
   exportToSaturnByIDList(idList);
 };

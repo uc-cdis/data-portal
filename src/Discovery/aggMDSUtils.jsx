@@ -18,17 +18,16 @@ const retrieveCommonsInfo = async (commonsName) => {
  * @param {*} tags
  * @returns
  */
-const getUniqueTags = tags =>
-  tags.reduce((tagsSoFar, nextTag) => {
-    if (tagsSoFar.has(nextTag.name)) {
-      return tagsSoFar;
-    }
-    tagsSoFar.set(nextTag.name, {
-      category: nextTag.category,
-      name: nextTag.name,
-    });
+const getUniqueTags = (tags) => tags.reduce((tagsSoFar, nextTag) => {
+  if (tagsSoFar.has(nextTag.name)) {
     return tagsSoFar;
-  }, new Map());
+  }
+  tagsSoFar.set(nextTag.name, {
+    category: nextTag.category,
+    name: nextTag.name,
+  });
+  return tagsSoFar;
+}, new Map());
 
 const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
@@ -45,7 +44,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
 
   let allStudies = [];
 
-  const commonsPromises = commons.map(commonsName => (
+  const commonsPromises = commons.map((commonsName) => (
     Promise.all([
       retrieveCommonsInfo(commonsName),
     ])
@@ -87,7 +86,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
             x.tags.push(Object({ category: tag.name, name: tagValue }));
           } else if (Array.isArray(x[tag.name])) {
             x.tags = x.tags.concat(
-              x[tag.name].map(name => ({ category: tag.name, name })),
+              x[tag.name].map((name) => ({ category: tag.name, name })),
             );
           }
         }

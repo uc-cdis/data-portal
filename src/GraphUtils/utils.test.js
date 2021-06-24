@@ -7,7 +7,6 @@ import {
 } from './utils';
 import { buildTestData } from './testData';
 
-
 describe('the DataModelGraph utils helper', () => {
   it('can find the root of a graph', () => {
     const { nodes, edges } = buildTestData();
@@ -74,7 +73,7 @@ describe('the DataModelGraph utils helper', () => {
   it('assigns positions to nodes', () => {
     const { nodes, edges } = buildTestData();
     assignNodePositions(nodes, edges);
-    nodes.filter(nd => nd.position).forEach(
+    nodes.filter((nd) => nd.position).forEach(
       (node) => {
         const { treeLevel2Names, name2Level } = nodesBreadthFirst(nodes, edges);
 
@@ -92,7 +91,7 @@ describe('the DataModelGraph utils helper', () => {
     assignNodePositions(nodes, edges, { numPerRow: 2 });
     // up to 2 nodes per row, root on own row
     const maxRows = 1 + Math.round((nodes.length - 1) / 2);
-    nodes.filter(nd => nd.position).forEach(
+    nodes.filter((nd) => nd.position).forEach(
       (node) => {
         expect(Array.isArray(node.position)).toBe(true);
         expect(node.position[0] > 0 && node.position[0] <= 1).toBe(true);

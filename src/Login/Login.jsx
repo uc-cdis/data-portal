@@ -8,7 +8,7 @@ import { components } from '../params';
 
 import './Login.less';
 
-const getInitialState = height => ({ height });
+const getInitialState = (height) => ({ height });
 
 const getLoginUrl = (providerLoginUrl, next) => {
   const queryChar = providerLoginUrl.includes('?') ? '&' : '?';
@@ -19,39 +19,37 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.resetState = this.resetState.bind(this);
-    this.updateDimensions = this.updateDimensions.bind(this);
+    // this.updateDimensions = this.updateDimensions.bind(this);
     this.state = {
-      height: window.innerHeight - 221,
+      // height: window.innerHeight - 221,
       selectedLoginOption: {}, // one for each login dropdown
     };
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.updateDimensions);
-  }
+  // componentDidMount() {
+  //   window.addEventListener('resize', this.updateDimensions);
+  // }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateDimensions);
-  }
+  // componentWillUnmount() {
+  //   window.removeEventListener('resize', this.updateDimensions);
+  // }
 
-  updateDimensions() {
-    this.setState({ height: window.innerHeight - 221 });
+  selectChange = (selectedOption, index) => {
+    const { selectedLoginOption } = this.state;
+    selectedLoginOption[index] = selectedOption;
+    this.setState({ selectedLoginOption });
   }
 
   resetState() {
     this.setState(getInitialState());
   }
 
-  selectChange = (selectedOption, index) => {
-    const selectedLoginOptionCopy = { ...this.state.selectedLoginOption };
-    selectedLoginOptionCopy[index] = selectedOption;
-    this.setState({
-      selectedLoginOption: selectedLoginOptionCopy,
-    });
-  }
+  // updateDimensions() {
+  //   this.setState({ height: window.innerHeight - 221 });
+  // }
 
   render() {
-    const location = this.props.location; // this is the react-router "location"
+    const { location } = this.props; // this is the react-router "location"
     // compose next according to location.from
     let next = (location.from) ? `${basename}${location.from}` : basename;
     if (location.state && location.state.from) {
@@ -119,7 +117,7 @@ class Login extends React.Component {
             return 0;
           });
         // URLs in format expected by Select component
-        loginOptions[i] = loginUrls.map(e => ({
+        loginOptions[i] = loginUrls.map((e) => ({
           value: e.url,
           label: e.name,
         }));
@@ -146,10 +144,10 @@ class Login extends React.Component {
                       isClearable
                       isSearchable
                       options={loginOptions[i]}
-                      filterOption={createFilter({ ignoreAccents: false, matchFrom: 'any', stringify: option => `${option.label}` })}
-                      onChange={option => this.selectChange(option, i)}
-                      value={this.state.selectedLoginOption &&
-                        this.state.selectedLoginOption[i]}
+                      filterOption={createFilter({ ignoreAccents: false, matchFrom: 'any', stringify: (option) => `${option.label}` })}
+                      onChange={(option) => this.selectChange(option, i)}
+                      value={this.state.selectedLoginOption
+                        && this.state.selectedLoginOption[i]}
                     />
                   )
                 }
@@ -157,9 +155,9 @@ class Login extends React.Component {
                   className='login-page__entry-button'
                   onClick={() => {
                     window.location.href = getLoginUrl(
-                      loginOptions[i].length > 1 ?
-                        this.state.selectedLoginOption[i].value :
-                        loginOptions[i][0].value,
+                      loginOptions[i].length > 1
+                        ? this.state.selectedLoginOption[i].value
+                        : loginOptions[i][0].value,
                       next,
                     );
                   }}
@@ -176,8 +174,8 @@ class Login extends React.Component {
     return (
       <div className='login-page'>
         {
-          (displaySideBoxImages) ?
-            <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
+          (displaySideBoxImages)
+            ? <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
             : null
         }
         <div className='login-page__central-content'>
@@ -192,25 +190,28 @@ class Login extends React.Component {
           {loginComponent}
           <div>
             {this.props.data.contact}
-            {(this.props.data.email && !this.props.data.contact_link) &&
-              <a href={`mailto:${this.props.data.email}`}>
-                {this.props.data.email}
-              </a>
-            }
+            {(this.props.data.email && !this.props.data.contact_link)
+              && (
+                <a href={`mailto:${this.props.data.email}`}>
+                  {this.props.data.email}
+                </a>
+              )}
             {
-              this.props.data.contact_link &&
-              <a href={this.props.data.contact_link.href}>
-                {this.props.data.contact_link.text
-                  ? this.props.data.contact_link.text
-                  : this.props.data.contact_link.href}
-              </a>
+              this.props.data.contact_link
+              && (
+                <a href={this.props.data.contact_link.href}>
+                  {this.props.data.contact_link.text
+                    ? this.props.data.contact_link.text
+                    : this.props.data.contact_link.href}
+                </a>
+              )
             }
             {'.'}
           </div>
         </div>
         {
-          (displaySideBoxImages) ?
-            <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
+          (displaySideBoxImages)
+            ? <div className='login-page__side-box login-page__side-box--left' style={customImageStyle} />
             : null
         }
       </div>

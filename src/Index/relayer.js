@@ -21,7 +21,7 @@ const updateRedux = async ({ projectList, summaryCounts }) => getReduxStore().th
   },
 );
 
-const updateReduxError = async error => getReduxStore().then(
+const updateReduxError = async (error) => getReduxStore().then(
   (store) => {
     store.dispatch({ type: 'RECEIVE_RELAY_FAIL', data: error });
   },
@@ -38,17 +38,18 @@ const transformRelayProps = (data) => {
   const { fileCount } = GQLHelper.extractFileInfo(data);
   const nodeCount = Math.min(config.graphql.boardCounts.length + 1, 4);
   const projectList = (data.projectList || []).map(
-    proj =>
-      // fill in missing properties
-      Object.assign({ name: 'unknown',
-        counts: (new Array(nodeCount)).fill(0),
-        charts: [0, 0],
-      }, proj),
+    // fill in missing properties
+    (proj) => ({
+      name: 'unknown',
+      counts: (new Array(nodeCount)).fill(0),
+      charts: [0, 0],
+      ...proj,
+    }),
 
   );
   let summaryCounts = Object.keys(data).filter(
-    key => key.indexOf('count') === 0).map(key => key).sort()
-    .map(key => data[key],
+    (key) => key.indexOf('count') === 0).map((key) => key).sort()
+    .map((key) => data[key],
     );
   if (summaryCounts.length < 4) {
     summaryCounts = [...summaryCounts, fileCount];
@@ -62,9 +63,9 @@ const transformRelayProps = (data) => {
 const extractCounts = (data) => {
   const { fileCount } = GQLHelper.extractFileInfo(data);
   let counts = Object.keys(data).filter(
-    key => key.indexOf('count') === 0).map(key => key).sort()
+    (key) => key.indexOf('count') === 0).map((key) => key).sort()
     .map(
-      key => data[key],
+      (key) => data[key],
     );
   if (counts.length < 4) {
     counts = [...counts, fileCount];
@@ -72,11 +73,11 @@ const extractCounts = (data) => {
   return counts;
 };
 
-const extractCharts = data => Object.keys(data).filter(
-  key => key.indexOf('chart') === 0)
-  .map(key => key).sort()
+const extractCharts = (data) => Object.keys(data).filter(
+  (key) => key.indexOf('chart') === 0)
+  .map((key) => key).sort()
   .map(
-    key => data[key],
+    (key) => data[key],
   );
 
 const updateProjectDetailToRedux = (projInfo) => {
@@ -106,12 +107,12 @@ const getProjectDetail = (projectList) => {
   });
 };
 
-const checkIndexState = stateName => getReduxStore().then(
+const checkIndexState = (stateName) => getReduxStore().then(
   (store) => {
     const indexState = store.getState().index || {};
     const nowMs = Date.now();
-    if (!Object.prototype.hasOwnProperty.call(indexState, stateName) ||
-        (Object.prototype.hasOwnProperty.call(indexState, stateName)
+    if (!Object.prototype.hasOwnProperty.call(indexState, stateName)
+        || (Object.prototype.hasOwnProperty.call(indexState, stateName)
           && nowMs - indexState[stateName] > 300000)
     ) {
       return 'OLD';
@@ -149,4 +150,3 @@ const getHomepageChartProjectsList = () => {
 };
 
 export default getHomepageChartProjectsList;
-

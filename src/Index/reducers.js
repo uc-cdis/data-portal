@@ -4,7 +4,7 @@ const index = (state = {}, action) => {
   switch (action.type) {
   case 'RECEIVE_HOMEPAGE_CHART_DATASETS': {
     const { projectNodeCounts, homepageChartNodes, fileNodes } = action;
-    const nodesForIndexChart = homepageChartNodes.map(item => item.node);
+    const nodesForIndexChart = homepageChartNodes.map((item) => item.node);
 
     // constructing projct counts for index bar chart
     const projectsByName = {};
@@ -16,7 +16,7 @@ const index = (state = {}, action) => {
       }
       let counts = 0;
       if (projectNodeCounts[proj]) {
-        counts = nodesForIndexChart.map(node => projectNodeCounts[proj][node]);
+        counts = nodesForIndexChart.map((node) => projectNodeCounts[proj][node]);
       }
 
       if (nodesForIndexChart.length < 4) {
@@ -37,7 +37,7 @@ const index = (state = {}, action) => {
       };
     });
 
-    const countNames = homepageChartNodes.map(item => item.name);
+    const countNames = homepageChartNodes.map((item) => item.name);
     if (countNames.length < 4) {
       countNames.push('Files');
     }
@@ -48,14 +48,14 @@ const index = (state = {}, action) => {
     // Note - save projectsByName, b/c we acquire more data for individual tables
     // over time
     //
-    const projectsByName = Object.assign({}, state.projectsByName || {});
+    const projectsByName = { ...state.projectsByName || {} };
     action.data.projectList.forEach((proj) => {
       const old = projectsByName[proj.name] || {};
       projectsByName[proj.name] = Object.assign(old, proj);
     });
-    const summaryCounts = Object.assign(
-      {}, state.summaryCounts || {}, action.data.summaryCounts,
-    );
+    const summaryCounts = {
+      ...state.summaryCounts || {}, ...action.data.summaryCounts,
+    };
     const lastestListUpdating = Date.now();
     // const { error, ...state } = state;
     return {
@@ -67,7 +67,7 @@ const index = (state = {}, action) => {
     };
   }
   case 'RECEIVE_HOMEPAGE_CHART_PROJECT_DETAIL': {
-    const projectsByName = Object.assign({}, state.projectsByName || {});
+    const projectsByName = { ...state.projectsByName || {} };
     projectsByName[action.data.name] = action.data;
     const lastestDetailsUpdating = Date.now();
     return { ...state, projectsByName, lastestDetailsUpdating };

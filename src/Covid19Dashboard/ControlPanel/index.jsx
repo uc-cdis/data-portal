@@ -18,8 +18,9 @@ class ControlPanel extends PureComponent {
             {this.props.legendDataSource.title}
           </a>
         </p>
-        {this.props.lastUpdated &&
-          <p>
+        {this.props.lastUpdated
+          && (
+            <p>
             Last updated: {this.props.lastUpdated}
           </p>
         }

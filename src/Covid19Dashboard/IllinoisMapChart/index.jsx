@@ -30,7 +30,7 @@ const occEnv = covid19DashboardConfig.dataUrl === "https://opendata.datacommons.
 function filterCountyGeoJson(selectedFips) {
   return {
     ...countyData,
-    features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
+    features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
   };
 }
 
@@ -148,7 +148,6 @@ class IllinoisMapChart extends React.Component {
         return Math.floor(tempNum / roundingDigits) * roundingDigits;
       };
 
-
       this.mapData.colors = [
         [`0 - ${colorRangeMath(2)}`, '#FFF'],
         [`${colorRangeMath(2)} - ${colorRangeMath(3)}`, '#F7F787'],
@@ -177,7 +176,7 @@ class IllinoisMapChart extends React.Component {
       this.addStrainDataToState();
     }
   }
-
+  
   onHover = (event) => {
     if (!event.features) { return; }
     let hoverInfo = null;

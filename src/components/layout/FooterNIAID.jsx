@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Space, Row, Col, Tooltip } from 'antd';
+import {
+  Space, Row, Col, Tooltip,
+} from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './FooterNIAID.less';
 
@@ -75,7 +77,10 @@ class FooterNIAID extends Component {
     return (
       <footer className='footer-container'>
         <div className='footer__bottom-area'>
-          <Row gutter={[8, { xs: 16, sm: 16, md: 16, lg: 8 }]}>
+          <Row gutter={[8, {
+            xs: 16, sm: 16, md: 16, lg: 8,
+          }]}
+          >
             <Col className='gutter-row' xs={24} sm={12} md={12} lg={6} xl={6}>
               <div className='footer__logo'>
                 {
@@ -153,7 +158,8 @@ class FooterNIAID extends Component {
                         />
                       </Tooltip>
                     </Space>
-                  </a>))}
+                  </a>
+                ))}
               </Space>
             </Col>
           </Row>

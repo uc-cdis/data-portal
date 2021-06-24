@@ -37,7 +37,7 @@ class NavBar extends Component {
   }
 
   toggleMenu = () => {
-    this.setState(prevState => ({ menuOpen: !prevState.menuOpen }));
+    this.setState((prevState) => ({ menuOpen: !prevState.menuOpen }));
   }
 
   updateTooltip(item) {
@@ -66,18 +66,22 @@ class NavBar extends Component {
   render() {
     const navItems = this.props.navItems.map(
       (item) => {
-        const navButton = (<div
-          key={item.link}
-          ref={this.getNavButtonRef(item.link)}
-          className='nav-bar__link nav-bar__link--right'
-          onMouseOver={() => this.updateTooltip(item)}
-          onMouseLeave={() => this.updateTooltip(null)}
-        >
-          <NavButton
-            item={item}
-            dictIcons={this.props.dictIcons}
-          />
-        </div>);
+        const navButton = (
+          <div
+            key={item.link}
+            ref={this.getNavButtonRef(item.link)}
+            className='nav-bar__link nav-bar__link--right'
+            onMouseOver={() => this.updateTooltip(item)}
+            onFocus={() => this.updateTooltip(item)}
+            onMouseLeave={() => this.updateTooltip(null)}
+            onBlur={() => this.updateTooltip(null)}
+          >
+            <NavButton
+              item={item}
+              dictIcons={this.props.dictIcons}
+            />
+          </div>
+        );
         return this.canUserSeeComponent(item.name) ? navButton : null;
       });
 
@@ -90,23 +94,25 @@ class NavBar extends Component {
         <header className='nav-bar__header'>
           <nav className='nav-bar__nav--info'>
             <div className='nav-bar__logo'>
-              {homepageHref ?
-                (<a href={homepageHref}>
-                  <img
-                    className='nav-bar__logo-img'
-                    src='/src/img/logo.png'
-                    alt={commonsWideAltText.portalLogo || 'Gen3 Data Commons - home'}
-                  />
-                </a>)
-                :
-                (<NavLink exact to=''>
-                  <img
-                    className='nav-bar__logo-img'
-                    src='/src/img/logo.png'
-                    alt={commonsWideAltText.portalLogo || 'Gen3 Data Commons - home'}
-                  />
-                </NavLink>)
-              }
+              {homepageHref
+                ? (
+                  <a href={homepageHref}>
+                    <img
+                      className='nav-bar__logo-img'
+                      src='/src/img/logo.png'
+                      alt={commonsWideAltText.portalLogo || 'Gen3 Data Commons - home'}
+                    />
+                  </a>
+                )
+                : (
+                  <NavLink exact to=''>
+                    <img
+                      className='nav-bar__logo-img'
+                      src='/src/img/logo.png'
+                      alt={commonsWideAltText.portalLogo || 'Gen3 Data Commons - home'}
+                    />
+                  </NavLink>
+                )}
             </div>
             {
               this.props.navTitle && (
@@ -128,6 +134,7 @@ class NavBar extends Component {
             <div
               className='nav-bar__menu'
               onClick={this.toggleMenu}
+              onKeyPress={this.toggleMenu}
               role='button'
               tabIndex={0}
             >
@@ -150,8 +157,8 @@ class NavBar extends Component {
             <nav className='nav-bar__nav--items'>
               { navItems }
             </nav>
-            { this.state.tooltipDetails.content !== '' ?
-              <NavBarTooltip {...this.state.tooltipDetails} />
+            { this.state.tooltipDetails.content !== ''
+              ? <NavBarTooltip {...this.state.tooltipDetails} />
               : null }
           </MediaQuery>
         </header>

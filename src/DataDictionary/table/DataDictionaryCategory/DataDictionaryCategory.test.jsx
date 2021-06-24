@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import DataDictionaryCategory from './.';
-import DataDictionaryNode from '../DataDictionaryNode/.';
+import DataDictionaryCategory from '.';
+import DataDictionaryNode from '../DataDictionaryNode';
 
 describe('DataDictionaryCategory', () => {
   const nodes = [

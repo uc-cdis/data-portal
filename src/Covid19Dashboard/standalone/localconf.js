@@ -1,4 +1,3 @@
-
 function buildConfig(opts) {
   const defaults = {
     mapboxAPIToken: process.env.MAPBOX_API_TOKEN,
@@ -6,7 +5,7 @@ function buildConfig(opts) {
 
   const {
     mapboxAPIToken,
-  } = Object.assign({}, defaults, opts);
+  } = { ...defaults, ...opts };
 
   return {
     mapboxAPIToken,

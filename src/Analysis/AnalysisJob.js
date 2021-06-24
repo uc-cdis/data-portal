@@ -1,18 +1,17 @@
 import { fetchWithCreds } from '../actions';
 import { asyncSetInterval } from '../utils';
-import { userApiPath, jobapiPath } from '../localconf';
-
+import { userAPIPath, jobAPIPath } from '../localconf';
 
 export const getPresignedUrl = (did, method) => {
-  const urlPath = `${userApiPath}data/${method}/${did}`;
+  const urlPath = `${userAPIPath}data/${method}/${did}`;
   return fetchWithCreds({ path: urlPath, method: 'GET' },
   ).then(
     ({ data }) => data.url,
   );
 };
 
-export const dispatchJob = body => dispatch => fetchWithCreds({
-  path: `${jobapiPath}dispatch`,
+export const dispatchJob = (body) => (dispatch) => fetchWithCreds({
+  path: `${jobAPIPath}dispatch`,
   body: JSON.stringify(body),
   method: 'POST',
   dispatch,
@@ -32,7 +31,7 @@ export const dispatchJob = body => dispatch => fetchWithCreds({
         };
       }
     },
-    err => ({ type: 'FETCH_ERROR', error: err }),
+    (err) => ({ type: 'FETCH_ERROR', error: err }),
   )
   .then((msg) => { dispatch(msg); });
 
@@ -43,7 +42,7 @@ export const checkJobStatus = (dispatch, getState) => {
     jobId = state.analysis.job.uid;
   }
   return fetchWithCreds({
-    path: `${jobapiPath}status?UID=${jobId}`,
+    path: `${jobAPIPath}status?UID=${jobId}`,
     method: 'GET',
     dispatch,
   }).then(
@@ -65,7 +64,7 @@ export const checkJobStatus = (dispatch, getState) => {
         };
       }
     },
-    err => ({ type: 'FETCH_ERROR', error: err }),
+    (err) => ({ type: 'FETCH_ERROR', error: err }),
   ).then((msg) => { dispatch(msg); });
 };
 
@@ -74,19 +73,17 @@ export const checkJobStatus = (dispatch, getState) => {
 // save the interval id in redux that can be used to clear the timer later
 
 // TODO: need to get result urls from a Gen3 service
-export const submitJob = body => dispatch => dispatch(dispatchJob(body));
+export const submitJob = (body) => (dispatch) => dispatch(dispatchJob(body));
 
-export const checkJob = () => dispatch =>
-  asyncSetInterval(() => dispatch(checkJobStatus), 1000)
-    .then((intervalValue) => {
-      dispatch({ type: 'JOB_STATUS_INTERVAL', value: intervalValue });
-    });
+export const checkJob = () => (dispatch) => asyncSetInterval(() => dispatch(checkJobStatus), 1000)
+  .then((intervalValue) => {
+    dispatch({ type: 'JOB_STATUS_INTERVAL', value: intervalValue });
+  });
 
-export const fetchJobResult = jobId => dispatch =>
-  fetchWithCreds({
-    path: `${jobapiPath}output?UID=${jobId}`,
-    method: 'GET',
-    dispatch,
-  }).then(data => data);
+export const fetchJobResult = (jobId) => (dispatch) => fetchWithCreds({
+  path: `${jobAPIPath}output?UID=${jobId}`,
+  method: 'GET',
+  dispatch,
+}).then((data) => data);
 
-export const resetJobState = () => dispatch => dispatch({ type: 'RESET_JOB' });
+export const resetJobState = () => (dispatch) => dispatch({ type: 'RESET_JOB' });

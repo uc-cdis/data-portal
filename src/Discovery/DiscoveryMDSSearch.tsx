@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
-const DiscoveryMDSSearch = (props: { searchTerm: '', handleSearchChange: () => {}}) => (
+const DiscoveryMDSSearch = (props: { searchTerm, handleSearchChange}) => (
   <Input
     className='discovery-search'
     prefix={<SearchOutlined />}
