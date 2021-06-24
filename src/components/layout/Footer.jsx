@@ -15,7 +15,7 @@ class Footer extends Component {
               [{ name: 'Dictionary', version: this.props.dictionaryVersion },
                 { name: 'Submission', version: this.props.apiVersion },
                 { name: 'Portal', version: this.props.portalVersion }].map(
-                item => (
+                (item) => (
                   <div className='footer__version' key={item.name}>
                     <div className='h4-typo footer__version-name'>{item.name}</div>
                     <div className='body-typo footer__version-value'>v{item.version}</div>
@@ -24,19 +24,20 @@ class Footer extends Component {
               )
             }
           </div>
-          {this.props.privacyPolicy && this.props.privacyPolicy.text ?
-            <div className='footer__privacy-policy-area'>
-              <a
-                className='h4-typo footer__privacy-policy'
-                href={this.props.privacyPolicy.footerHref}
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                {this.props.privacyPolicy.text}
-              </a>
-            </div>
-            : null
-          }
+          {this.props.privacyPolicy && this.props.privacyPolicy.text
+            ? (
+              <div className='footer__privacy-policy-area'>
+                <a
+                  className='h4-typo footer__privacy-policy'
+                  href={this.props.privacyPolicy.footerHref}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {this.props.privacyPolicy.text}
+                </a>
+              </div>
+            )
+            : null}
           <div className='footer__logo-area'>
             {
               this.props.logos.map((logoObj, i) => (
@@ -57,26 +58,27 @@ class Footer extends Component {
               ))
             }
           </div>
-          { (this.props.links.length > 0) ?
-            <div className='footer__link-area'>
-              {
-                this.props.links.map((link, i) => (
-                  <React.Fragment key={link.href}>
-                    <a
-                      href={link.href}
-                      className='footer__link'
-                      target='_blank'
-                      rel='noopener noreferrer'
-                    >
-                      {link.text ? link.text : link.href}
-                    </a>
-                    { i !== this.props.links.length - 1 && <span> | </span> }
-                  </React.Fragment>
-                ))
-              }
-            </div>
-            : null
-          }
+          { (this.props.links.length > 0)
+            ? (
+              <div className='footer__link-area'>
+                {
+                  this.props.links.map((link, i) => (
+                    <React.Fragment key={link.href}>
+                      <a
+                        href={link.href}
+                        className='footer__link'
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        {link.text ? link.text : link.href}
+                      </a>
+                      { i !== this.props.links.length - 1 && <span> | </span> }
+                    </React.Fragment>
+                  ))
+                }
+              </div>
+            )
+            : null}
         </nav>
       </footer>
     );

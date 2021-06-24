@@ -7,7 +7,7 @@ import Quiz from '../UserAgreement/Quiz';
  * @method updateForm
  * @param {*} data
  */
-export const updateForm = data => ({
+export const updateForm = (data) => ({
   type: 'UPDATE_CERTIFICATE_FORM',
   data,
 });
@@ -51,7 +51,6 @@ const questionList = [
 ];
 
 const title = 'Please complete following questions';
-
 
 storiesOf('User agreement', module)
   .add('User agreement', () => (

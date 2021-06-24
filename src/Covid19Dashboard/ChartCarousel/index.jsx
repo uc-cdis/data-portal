@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { Carousel } from 'antd';
 
 import { covid19DashboardConfig } from '../../localconf';
 import Spinner from '../../components/Spinner';
@@ -10,7 +8,6 @@ import PlotChart from '../PlotChart';
 import './ChartCarousel.less';
 
 import Popup from '../../components/Popup';
-
 
 class ChartCarousel extends PureComponent {
   constructor(props) {
@@ -57,15 +54,6 @@ class ChartCarousel extends PureComponent {
       return null;
     }
 
-    const sliderSettings = {
-      dots: true,
-      infinite: false,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      arrows: true,
-    };
-
     const charts = [];
     this.props.chartsConfig.forEach((chartConfig, i) => {
       const hasImagePath = chartConfig.type === 'image' && chartConfig.path;
@@ -84,12 +72,14 @@ class ChartCarousel extends PureComponent {
         chart = this.props[chartConfig.prop];
         break;
       case 'image':
-        chart = (<img
-          className='chart-carousel__image'
-          src={covid19DashboardConfig.dataUrl +
-            (hasImagePath ? chartConfig.path : this.props[chartConfig.prop])}
-          alt={`Chart${chartConfig.title ? ` for ${chartConfig.title}` : ''}`}
-        />);
+        chart = (
+          <img
+            className='chart-carousel__image'
+            src={covid19DashboardConfig.dataUrl
+            + (hasImagePath ? chartConfig.path : this.props[chartConfig.prop])}
+            alt={`Chart${chartConfig.title ? ` for ${chartConfig.title}` : ''}`}
+          />
+        );
         break;
       case 'lineChart':
       case 'barChart':
@@ -127,67 +117,74 @@ class ChartCarousel extends PureComponent {
           >
             {chart}
           </div>
-          { showDescriptionColumn &&
-          <div className='chart-carousel__description'>
-            <h3>
-              {chartConfig.title}
-            </h3>
-            <p>
-              {chartConfig.description}
-            </p>
-          </div>
-          }
-        </div>);
+          { showDescriptionColumn
+          && (
+            <div className='chart-carousel__description'>
+              <h3>
+                {chartConfig.title}
+              </h3>
+              <p>
+                {chartConfig.description}
+              </p>
+            </div>
+          )}
+        </div>
+      );
       charts.push(chartContainer);
     });
 
-    const showDescriptionHover = !this.props.isInPopup &&
-      this.state.hoveredChartId !== null &&
+    const showDescriptionHover = !this.props.isInPopup
+      && this.state.hoveredChartId !== null
       // do not show the hover if there is a title without
       // description - the title is already displayed
-      this.props.chartsConfig[this.state.hoveredChartId].description;
+      && this.props.chartsConfig[this.state.hoveredChartId].description;
 
     return (
-      charts.length > 0 ?
-        <div>
-          <div
-            className={`chart-carousel__container ${this.props.isInPopup ? '' : 'chart-carousel__container-border'}`}
-            ref={this.containerRef}
-            // match the popup width...
-            style={this.props.isInPopup ? { width: '70vw' } : {}}
-          >
-            <Slider {...sliderSettings}>
-              {charts}
-            </Slider>
-          </div>
-
-          { showDescriptionHover &&
-            <div className='chart-carousel__hover' style={{ top: this.state.hoverYPosition }} >
-              <h3>
-                {this.props.chartsConfig[this.state.hoveredChartId].title}
-              </h3>
-              <p>
-                {this.props.chartsConfig[this.state.hoveredChartId].description}
-              </p>
+      charts.length > 0
+        ? (
+          <div>
+            <div
+              className={`chart-carousel__container ${this.props.isInPopup ? '' : 'chart-carousel__container-border'}`}
+              ref={this.containerRef}
+              // match the popup width...
+              style={this.props.isInPopup ? { width: '70vw' } : {}}
+            >
+              <Carousel arrows dots infinite={false}>
+                {charts}
+              </Carousel>
             </div>
-          }
-          {/* popup when click on a chart */}
-          {
-            this.state.popupChart ?
-              <Popup
-                title={this.state.popupChart.title}
-                onClose={() => this.closePopupChart()}
-              >
-                <ChartCarousel
-                  {...this.props}
-                  chartsConfig={[this.state.popupChart.config]}
-                  isInPopup
-                  enablePopupOnClick={false}
-                />
-              </Popup>
-              : null
-          }
-        </div>
+
+            { showDescriptionHover
+            && (
+              <div className='chart-carousel__hover' style={{ top: this.state.hoverYPosition }}>
+                <h3>
+                  {this.props.chartsConfig[this.state.hoveredChartId].title}
+                </h3>
+                <p>
+                  {this.props.chartsConfig[this.state.hoveredChartId].description}
+                </p>
+              </div>
+            )}
+            {/* popup when click on a chart */}
+            {
+              this.state.popupChart
+                ? (
+                  <Popup
+                    title={this.state.popupChart.title}
+                    onClose={() => this.closePopupChart()}
+                  >
+                    <ChartCarousel
+                      {...this.props}
+                      chartsConfig={[this.state.popupChart.config]}
+                      isInPopup
+                      enablePopupOnClick={false}
+                    />
+                  </Popup>
+                )
+                : null
+            }
+          </div>
+        )
         : <Spinner />
     );
   }

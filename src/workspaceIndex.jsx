@@ -2,10 +2,14 @@
  * Workspace portal entry point.
  * Workspace portal just deploys workspaces and identity
  */
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import {
+  BrowserRouter, Route, Switch, Redirect,
+} from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
@@ -22,7 +26,9 @@ import theme from './theme';
 import getReduxStore from './reduxStore';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
-import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, enableDAPTracker } from './localconf';
+import {
+  basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, enableDAPTracker,
+} from './localconf';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import { DAPRouteTracker } from './components/DAPAnalytics';
@@ -30,7 +36,6 @@ import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
-
 
 // monitor user's session
 sessionMonitor.start();
@@ -63,12 +68,13 @@ async function init() {
             <div>
               {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
               {enableDAPTracker && <DAPRouteTracker />}
-              {isEnabled('noIndex') ?
-                <Helmet>
-                  <meta name='robots' content='noindex,nofollow' />
-                </Helmet>
-                : null
-              }
+              {isEnabled('noIndex')
+                ? (
+                  <Helmet>
+                    <meta name='robots' content='noindex,nofollow' />
+                  </Helmet>
+                )
+                : null}
               <ReduxTopBar />
               <ReduxNavBar />
               <div className='main-content'>
@@ -98,7 +104,7 @@ async function init() {
                     path='/login'
                     component={
                       (
-                        props => (
+                        (props) => (
                           <ProtectedContent
                             public
                             filter={() => store.dispatch(fetchLogin())}
@@ -113,18 +119,20 @@ async function init() {
                     exact
                     path='/identity'
                     component={
-                      props => (<ProtectedContent
-                        filter={() => store.dispatch(fetchAccess())}
-                        component={UserProfile}
-                        {...props}
-                      />)
+                      (props) => (
+                        <ProtectedContent
+                          filter={() => store.dispatch(fetchAccess())}
+                          component={UserProfile}
+                          {...props}
+                        />
+                      )
                     }
                   />
                   <Route
                     exact
                     path='/workspace'
                     component={
-                      props => <ProtectedContent component={Workspace} {...props} />
+                      (props) => <ProtectedContent component={Workspace} {...props} />
                     }
                   />
                   <Route

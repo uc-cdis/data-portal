@@ -49,8 +49,7 @@ GoogleAnalytics.defaultProps = {
   options: {},
 };
 
-export const RouteTracker = () =>
-  <Route component={GoogleAnalytics} />;
+export const RouteTracker = () => <Route component={GoogleAnalytics} />;
 
 const init = (trackingId, dev, gaDebug, options = {}) => {
   const isGAEnabled = trackingId !== 'undefined';

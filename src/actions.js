@@ -1,7 +1,7 @@
 import 'isomorphic-fetch';
 import {
   apiPath,
-  userApiPath,
+  userAPIPath,
   headers,
   hostname,
   submissionApiPath,
@@ -14,7 +14,7 @@ import {
 import { config } from './params';
 import sessionMonitor from './SessionMonitor';
 
-export const updatePopup = state => ({
+export const updatePopup = (state) => ({
   type: 'UPDATE_POPUP',
   data: state,
 });
@@ -26,7 +26,6 @@ export const connectionError = () => {
     error: 'connection_error',
   };
 };
-
 
 const fetchCache = {};
 
@@ -43,13 +42,15 @@ const getJsonOrText = (path, response, useCache, method = 'GET') => response.tex
         // # do nothing
       }
     }
-    return { response, data, status: response.status, headers: response.headers };
+    return {
+      response, data, status: response.status, headers: response.headers,
+    };
   });
 
 let pendingRequest = null;
 export const fetchCreds = (opts) => {
   if (pendingRequest) { return pendingRequest; }
-  const { path = `${userApiPath}user/`, method = 'GET', dispatch } = opts;
+  const { path = `${userAPIPath}user/`, method = 'GET', dispatch } = opts;
   const request = {
     credentials: 'include',
     headers: { ...headers },
@@ -84,7 +85,9 @@ export const fetchCreds = (opts) => {
  * @return Promise<{response,data,status,headers}> or Promise<{data,status}> if useCache specified
  */
 export const fetchWithCreds = (opts) => {
-  const { path, method = 'GET', body = null, customHeaders, dispatch, useCache } = opts;
+  const {
+    path, method = 'GET', body = null, customHeaders, dispatch, useCache,
+  } = opts;
   if (useCache && (method === 'GET') && fetchCache[path]) {
     return Promise.resolve({ status: 200, data: JSON.parse(fetchCache[path]) });
   }
@@ -105,7 +108,7 @@ export const fetchWithCreds = (opts) => {
           switch (resp.status) {
           case 200:
             return Promise.resolve(fetch(path, request).then(
-              res => getJsonOrText(path, res, useCache, method),
+              (res) => getJsonOrText(path, res, useCache, method),
             ));
           default:
             return {
@@ -161,22 +164,27 @@ export const fetchWithCredsAndTimeout = (opts, timeoutInMS) => {
  * @param { path, method=GET, body=null, customerHeaders, handler, callback } opts
  * @return Promise
  */
-export const fetchWrapper = ({ path, method = 'GET', body = null, customHeaders, handler, callback = () => (null) }) =>
-  dispatch => fetchWithCreds({ path, method, body, customHeaders, dispatch },
-  ).then(
-    ({ response, data }) => {
-      const result = { response, data, status: response.status, headers: response.headers };
-      const dispatchPromise = handler ? Promise.resolve(dispatch(handler(result))) : Promise.resolve('ok');
-      return dispatchPromise.then(
-        () => {
-          callback();
-          return result;
-        },
-      );
-    },
-  );
+export const fetchWrapper = ({
+  path, method = 'GET', body = null, customHeaders, handler, callback = () => (null),
+}) => (dispatch) => fetchWithCreds({
+  path, method, body, customHeaders, dispatch,
+},
+).then(
+  ({ response, data }) => {
+    const result = {
+      response, data, status: response.status, headers: response.headers,
+    };
+    const dispatchPromise = handler ? Promise.resolve(dispatch(handler(result))) : Promise.resolve('ok');
+    return dispatchPromise.then(
+      () => {
+        callback();
+        return result;
+      },
+    );
+  },
+);
 
-export const fetchGraphQL = graphQLParams =>
+export const fetchGraphQL = (graphQLParams) => {
   // We first update the session so that the user will be notified
   // if their auth is insufficient to perform the query.
   sessionMonitor.updateSession().then(() => {
@@ -188,7 +196,7 @@ export const fetchGraphQL = graphQLParams =>
     };
 
     return fetch(graphqlPath, request)
-      .then(response => response.text())
+      .then((response) => response.text())
       .then((responseBody) => {
         try {
           return JSON.parse(responseBody);
@@ -196,10 +204,10 @@ export const fetchGraphQL = graphQLParams =>
           return responseBody;
         }
       });
-  })
-;
+  });
+};
 
-export const fetchFlatGraphQL = graphQLParams => sessionMonitor.updateSession().then(() => {
+export const fetchFlatGraphQL = (graphQLParams) => sessionMonitor.updateSession().then(() => {
   const request = {
     credentials: 'include',
     headers: { ...headers },
@@ -209,7 +217,7 @@ export const fetchFlatGraphQL = graphQLParams => sessionMonitor.updateSession().
 
   const graphqlUrl = guppyGraphQLUrl;
   return fetch(graphqlUrl, request)
-    .then(response => response.text())
+    .then((response) => response.text())
     .then((responseBody) => {
       try {
         return JSON.parse(responseBody);
@@ -219,7 +227,7 @@ export const fetchFlatGraphQL = graphQLParams => sessionMonitor.updateSession().
     });
 });
 
-export const handleResponse = type => ({ data, status }) => {
+export const handleResponse = (type) => ({ data, status }) => {
   switch (status) {
   case 200:
     return {
@@ -254,16 +262,16 @@ const handleFetchUser = ({ status, data }) => {
   }
 };
 
-export const fetchUser = dispatch => fetchCreds({
+export const fetchUser = (dispatch) => fetchCreds({
   dispatch,
 }).then(
   (status, data) => handleFetchUser(status, data),
-).then(msg => dispatch(msg));
+).then((msg) => dispatch(msg));
 
 export const refreshUser = () => fetchUser;
 
 export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
-  fetch(`${userApiPath}/logout?next=${hostname}`).then((response) => {
+  fetch(`${userAPIPath}/logout?next=${hostname}`).then((response) => {
     if (displayAuthPopup) {
       dispatch({
         type: 'UPDATE_POPUP',
@@ -282,39 +290,37 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
  * lambdas that accept dispatch and getState functions as arguments
  */
 
-export const fetchProjects = () => dispatch =>
-  fetchWithCreds({
-    path: `${submissionApiPath}graphql`,
-    body: JSON.stringify({
-      query: 'query { project(first:0) {code, project_id, availability_type}}',
-    }),
-    method: 'POST',
-  })
-    .then(
-      ({ status, data }) => {
-        switch (status) {
-        case 200:
-          return {
-            type: 'RECEIVE_PROJECTS',
-            data: data.data.project,
-            status,
-          };
-        default:
-          return {
-            type: 'FETCH_ERROR',
-            error: data,
-            status,
-          };
-        }
-      })
-    .then(msg => dispatch(msg));
-
+export const fetchProjects = () => (dispatch) => fetchWithCreds({
+  path: `${submissionApiPath}graphql`,
+  body: JSON.stringify({
+    query: 'query { project(first:0) {code, project_id, availability_type}}',
+  }),
+  method: 'POST',
+})
+  .then(
+    ({ status, data }) => {
+      switch (status) {
+      case 200:
+        return {
+          type: 'RECEIVE_PROJECTS',
+          data: data.data.project,
+          status,
+        };
+      default:
+        return {
+          type: 'FETCH_ERROR',
+          error: data,
+          status,
+        };
+      }
+    })
+  .then((msg) => dispatch(msg));
 
 /**
  * Fetch the schema for graphi, and stuff it into redux -
  * handled by router
  */
-export const fetchSchema = dispatch => fetchWithCreds({ path: graphqlSchemaUrl, dispatch })
+export const fetchSchema = (dispatch) => fetchWithCreds({ path: graphqlSchemaUrl, dispatch })
   .then(
     ({ status, data }) => {
       switch (status) {
@@ -331,54 +337,49 @@ export const fetchSchema = dispatch => fetchWithCreds({ path: graphqlSchemaUrl, 
     },
   );
 
+export const fetchDictionary = (dispatch) => fetchWithCreds({
+  path: `${submissionApiPath}_dictionary/_all`,
+  method: 'GET',
+  useCache: true,
+})
+  .then(
+    ({ status, data }) => {
+      switch (status) {
+      case 200:
+        return {
+          type: 'RECEIVE_DICTIONARY',
+          data,
+        };
+      default:
+        return {
+          type: 'FETCH_ERROR',
+          error: data,
+        };
+      }
+    })
+  .then((msg) => dispatch(msg));
 
-export const fetchDictionary = dispatch =>
-  fetchWithCreds({
-    path: `${submissionApiPath}_dictionary/_all`,
-    method: 'GET',
-    useCache: true,
-  })
-    .then(
-      ({ status, data }) => {
-        switch (status) {
-        case 200:
-          return {
-            type: 'RECEIVE_DICTIONARY',
-            data,
-          };
-        default:
-          return {
-            type: 'FETCH_ERROR',
-            error: data,
-          };
-        }
-      })
-    .then(msg => dispatch(msg));
-
-
-export const fetchVersionInfo = dispatch =>
-  fetchWithCreds({
-    path: `${apiPath}_version`,
-    method: 'GET',
-    useCache: true,
-  })
-    .then(
-      ({ status, data }) => {
-        switch (status) {
-        case 200:
-          return {
-            type: 'RECEIVE_VERSION_INFO',
-            data,
-          };
-        default:
-          return {
-            type: 'FETCH_ERROR',
-            error: data,
-          };
-        }
-      },
-    ).then(msg => dispatch(msg));
-
+export const fetchVersionInfo = (dispatch) => fetchWithCreds({
+  path: `${apiPath}_version`,
+  method: 'GET',
+  useCache: true,
+})
+  .then(
+    ({ status, data }) => {
+      switch (status) {
+      case 200:
+        return {
+          type: 'RECEIVE_VERSION_INFO',
+          data,
+        };
+      default:
+        return {
+          type: 'FETCH_ERROR',
+          error: data,
+        };
+      }
+    },
+  ).then((msg) => dispatch(msg));
 
 // asks arborist which restricted access components the user has access to
 export const fetchUserAccess = async (dispatch) => {

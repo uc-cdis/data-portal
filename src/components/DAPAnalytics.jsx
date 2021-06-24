@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 
-const scriptExists = url => document.querySelectorAll(`script[src="${url}"]`).length > 0;
+const scriptExists = (url) => document.querySelectorAll(`script[src="${url}"]`).length > 0;
 
 const logPageChange = (pathname, search = '') => {
   const page = pathname + search;
@@ -45,8 +45,7 @@ DAPAnalytics.propTypes = {
   }).isRequired,
 };
 
-export const DAPRouteTracker = () =>
-  <Route component={DAPAnalytics} />;
+export const DAPRouteTracker = () => <Route component={DAPAnalytics} />;
 
 export default {
   DAPAnalytics,

@@ -22,8 +22,7 @@ class IndexCounts extends React.Component {
     return (
       <div>
         {
-          countCards.map((card, i) =>
-            <CountBox key={i} label={card.name} value={card.sum} />)
+          countCards.map((card, i) => <CountBox key={i} label={card.name} value={card.sum} />)
         }
       </div>
     );

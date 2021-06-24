@@ -20,17 +20,20 @@ class ResourceBrowser extends React.Component {
         <h2 className='resource-browser__title'>
           {settings.title}
         </h2>
-        {settings.description ?
-          <p className='resource-browser__description'>
-            {parse(settings.description)}
-          </p>
+        {settings.description
+          ? (
+            <p className='resource-browser__description'>
+              {parse(settings.description)}
+            </p>
+          )
           : null}
         <div className='resource-browser__resources'>
-          {resources.map((resource, i) =>
-            (<Resource
+          {resources.map((resource, i) => (
+            <Resource
               key={i}
               {...resource}
-            />),
+            />
+          ),
           )}
         </div>
       </div>

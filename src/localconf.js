@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 const { components, requiredCerts, config } = require('./params');
 
 /**
@@ -37,7 +38,7 @@ function buildConfig(opts) {
   // Override default basename if loading via /dev.html
   // dev.html loads bundle.js via https://localhost...
   //
-  if (typeof location !== 'undefined' && location.pathname.indexOf(`${defaults.basename}dev.html`) === 0) {
+  if (typeof window.location !== 'undefined' && window.location.pathname.indexOf(`${defaults.basename}dev.html`) === 0) {
     defaults.basename += 'dev.html';
   }
 
@@ -60,7 +61,7 @@ function buildConfig(opts) {
     tierAccessLevel,
     tierAccessLimit,
     mapboxAPIToken,
-  } = Object.assign({}, defaults, opts);
+  } = { ...defaults, ...opts };
 
   function ensureTrailingSlash(url) {
     const u = new URL(url);
@@ -74,20 +75,20 @@ function buildConfig(opts) {
   const apiPath = `${hostname}api/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
-  let userApiPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
-  const jobapiPath = `${hostname}job/`;
-  const credentialCdisPath = `${userApiPath}credentials/cdis/`;
+  let userAPIPath = typeof fenceURL === 'undefined' ? `${hostname}user/` : ensureTrailingSlash(fenceURL);
+  const jobAPIPath = `${hostname}job/`;
+  const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
   const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
   const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
   let login = {
-    url: `${userApiPath}login/google?redirect=`,
+    url: `${userAPIPath}login/google?redirect=`,
     title: 'Login from Google',
   };
   const authzPath = typeof arboristURL === 'undefined' ? `${hostname}authz` : `${arboristURL}authz`;
   const authzMappingPath = typeof arboristURL === 'undefined' ? `${hostname}authz/mapping` : `${arboristURL}authz/mapping`;
-  const loginPath = `${userApiPath}login/`;
+  const loginPath = `${userAPIPath}login/`;
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
   const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
@@ -166,7 +167,7 @@ function buildConfig(opts) {
     }
   });
 
-  const dataAvailabilityToolConfig = config.dataAvailabilityToolConfig;
+  const { dataAvailabilityToolConfig } = config;
 
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
@@ -223,15 +224,15 @@ function buildConfig(opts) {
     resourceBrowserPublic = true;
   }
 
-  const covid19DashboardConfig = config.covid19DashboardConfig;
+  const { covid19DashboardConfig } = config;
   if (covid19DashboardConfig) {
     covid19DashboardConfig.dataUrl = ensureTrailingSlash(covid19DashboardConfig.dataUrl || '');
   }
 
-  const discoveryConfig = config.discoveryConfig;
+  const { discoveryConfig } = config;
 
-  const workspacePageTitle = config.workspacePageTitle;
-  const workspacePageDescription = config.workspacePageDescription;
+  const { workspacePageTitle } = config;
+  const { workspacePageDescription } = config;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -252,20 +253,20 @@ function buildConfig(opts) {
   };
 
   if (app === 'gdc' && typeof fenceURL === 'undefined') {
-    userApiPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
+    userAPIPath = dev === true ? `${hostname}user/` : `${hostname}api/`;
     login = {
       url: 'https://itrusteauth.nih.gov/affwebservices/public/saml2sso?SPID=https://bionimbus-pdc.opensciencedatacloud.org/shibboleth&RelayState=',
       title: 'Login from NIH',
     };
   }
 
-  const fenceDataPath = `${userApiPath}data/`;
+  const fenceDataPath = `${userAPIPath}data/`;
   const fenceDownloadPath = `${fenceDataPath}download`;
 
   const defaultLineLimit = 30;
   const lineLimit = (config.lineLimit == null) ? defaultLineLimit : config.lineLimit;
 
-  const analysisTools = config.analysisTools;
+  const { analysisTools } = config;
   const analysisApps = {};
   if (analysisTools) {
     analysisTools.forEach((at) => {
@@ -390,8 +391,8 @@ function buildConfig(opts) {
     dev,
     hostname,
     gaDebug,
-    userApiPath,
-    jobapiPath,
+    userAPIPath,
+    jobAPIPath,
     apiPath,
     submissionApiPath,
     credentialCdisPath,

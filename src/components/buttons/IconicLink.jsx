@@ -3,25 +3,28 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 import IconComponent from '../Icon';
 
-
 class IconicLink extends React.Component {
   renderButton(styles) {
     return (
       <React.Fragment>
         {
-          this.props.dictIcons !== undefined ?
-            <button className={this.props.buttonClassName}>
-              {this.props.caption}&ensp;
-              <IconComponent
-                dictIcons={this.props.dictIcons}
-                iconName={this.props.icon}
-                height='14px'
-                svgStyles={{ ...styles }}
-              />
-            </button> :
-            <button className={this.props.buttonClassName}>
-              {this.props.caption}
-            </button>
+          this.props.dictIcons !== undefined
+            ? (
+              <button className={this.props.buttonClassName} type='button'>
+                {this.props.caption}&ensp;
+                <IconComponent
+                  dictIcons={this.props.dictIcons}
+                  iconName={this.props.icon}
+                  height='14px'
+                  svgStyles={{ ...styles }}
+                />
+              </button>
+            )
+            : (
+              <button className={this.props.buttonClassName} type='button'>
+                {this.props.caption}
+              </button>
+            )
         }
       </React.Fragment>
     );

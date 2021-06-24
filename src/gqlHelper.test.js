@@ -14,7 +14,6 @@ describe('the gqlHelper', () => {
     expect(!!query).toBe(true);
   });
 
-
   it('provides a base projectDetail query', () => {
     const query = helper.projectDetailQuery;
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import * as JsSearch from 'js-search';
-import { LockFilled, LinkOutlined, UnlockOutlined, DownloadOutlined } from '@ant-design/icons';
+import {
+  LockFilled, LinkOutlined, UnlockOutlined, DownloadOutlined,
+} from '@ant-design/icons';
 import {
   Tag,
   Space,
@@ -17,7 +19,7 @@ import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
 import DiscoveryTagViewer from './DiscoveryTagViewer';
 import { DiscoveryListView } from './DiscoveryListView';
-import { userApiPath } from '../localconf';
+import { userAPIPath } from '../localconf';
 
 const { Panel } = Collapse;
 
@@ -26,7 +28,7 @@ const accessibleFieldName = '__accessible';
 const ARBORIST_READ_PRIV = 'read';
 
 const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
-  const categoryConfig = config.tagCategories.find(category => category.name === tagCategory);
+  const categoryConfig = config.tagCategories.find((category) => category.name === tagCategory);
   if (categoryConfig === undefined) {
     return 'gray';
   }
@@ -84,13 +86,15 @@ const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'nu
   case 'paragraphs':
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
   case 'link':
-    return (<a
-      onClick={ev => ev.stopPropagation()}
-      onKeyPress={ev => ev.stopPropagation()}
-      href={content}
-    >
-      {content}
-    </a>);
+    return (
+      <a
+        onClick={(ev) => ev.stopPropagation()}
+        onKeyPress={(ev) => ev.stopPropagation()}
+        href={content}
+      >
+        {content}
+      </a>
+    );
   default:
     throw new Error(`Unrecognized content type ${contentType}. Check the 'study_page_fields' section of the Discovery config.`);
   }
@@ -119,10 +123,10 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
 
 const filterByTags = (studies: any[], selectedTags: any): any[] => {
   // if no tags selected, show all studies
-  if (Object.values(selectedTags).every(selected => !selected)) {
+  if (Object.values(selectedTags).every((selected) => !selected)) {
     return studies;
   }
-  return studies.filter(study => study.tags.some(tag => selectedTags[tag.name]));
+  return studies.filter((study) => study.tags.some((tag) => selectedTags[tag.name]));
 };
 
 interface DiscoveryBetaProps {
@@ -171,7 +175,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     if (props.params.studyUID) {
       const studyID = props.params.studyUID;
       const defaultModalData = props.studies.find(
-        r => r[config.minimalFieldMapping.uid] === studyID);
+        (r) => r[config.minimalFieldMapping.uid] === studyID);
       if (defaultModalData) {
         setModalData(defaultModalData);
         setModalVisible(true);
@@ -192,7 +196,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 
   // Set up table columns
   // -----
-  const columns = config.studyColumns.map(column => ({
+  const columns = config.studyColumns.map((column) => ({
     title: column.name,
     ellipsis: !!column.ellipsis,
     textWrap: 'word-break',
@@ -276,11 +280,11 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     columns.push({
       title: 'Access',
       filters: [{
-        text: <><UnlockOutlined />Accessible</>,
+        text: <React.Fragment><UnlockOutlined />Accessible</React.Fragment>,
         value: true,
         id: 'accessible-data-filter',
       }, {
-        text: <><LockFilled />Unaccessible</>,
+        text: <React.Fragment><LockFilled />Unaccessible</React.Fragment>,
         value: false,
         id: 'unaccessible-data-filter',
       }],
@@ -296,10 +300,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               placement='topRight'
               arrowPointAtCenter
               title={'You have access to this study.'}
-              content={<div className='discovery-popover__text'>
-                <>You have <code>{ARBORIST_READ_PRIV}</code> access to</>
-                <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
-              </div>}
+              content={(
+                <div className='discovery-popover__text'>
+                  <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
+                </div>
+              )}
             >
               <UnlockOutlined className='discovery-table__access-icon' />
             </Popover>
@@ -310,12 +316,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               placement='topRight'
               arrowPointAtCenter
               title={'You do not have access to this study.'}
-              content={
+              content={(
                 <div className='discovery-popover__text'>
-                  <>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</>
-                  <><code>{record[config.minimalFieldMapping.authzField]}</code>.</>
+                  <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
                 </div>
-              }
+              )}
             >
               <LockFilled className='discovery-table__access-icon' />
             </Popover>
@@ -329,142 +335,142 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     selectedTags,
   );
 
-  return (<div className='discovery-container'>
-    { (config.features.pageTitle && config.features.pageTitle.enabled) &&
-      <h1 className='discovery-page-title'>{config.features.pageTitle.text || 'Discovery'}</h1>
-    }
-    <div className='g3-accessibility-links' id='discovery-page-accessibility-links'>
-      <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-summary-statistics'><span>Summary Statistics</span></a> |
-      <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-tag-filters'><span>Tags</span></a> |
-      <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-table-of-records'><span>Table of Records</span></a> |
-      <button className='g3-unstyle-btn g3-accessibility-nav-link g3-ring-on-focus' onClick={viewPagination}>Pagination </button>
-      <a className='discovery-hidden-link' id='discovery-link-to-pagination' href='#discovery-pagination'><span>Pagination</span></a>
-    </div>
-    <div className='discovery-header'>
-      <DiscoverySummary
-        visibleResources={visibleResources}
-        config={config}
-      />
-      <div className='discovery-header__stat-border' />
-      <DiscoveryTagViewer
+  return (
+    <div className='discovery-container'>
+      { (config.features.pageTitle && config.features.pageTitle.enabled)
+      && <h1 className='discovery-page-title'>{config.features.pageTitle.text || 'Discovery'}</h1>}
+      <div className='g3-accessibility-links' id='discovery-page-accessibility-links'>
+        <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-summary-statistics'><span>Summary Statistics</span></a> |
+        <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-tag-filters'><span>Tags</span></a> |
+        <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-table-of-records'><span>Table of Records</span></a> |
+        <button className='g3-unstyle-btn g3-accessibility-nav-link g3-ring-on-focus' onClick={viewPagination}>Pagination </button>
+        <a className='discovery-hidden-link' id='discovery-link-to-pagination' href='#discovery-pagination'><span>Pagination</span></a>
+      </div>
+      <div className='discovery-header'>
+        <DiscoverySummary
+          visibleResources={visibleResources}
+          config={config}
+        />
+        <div className='discovery-header__stat-border' />
+        <DiscoveryTagViewer
+          config={config}
+          studies={props.studies}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+        />
+      </div>
+      <DiscoveryListView
         config={config}
         studies={props.studies}
-        selectedTags={selectedTags}
-        setSelectedTags={setSelectedTags}
+        visibleResources={visibleResources}
+        selectedResources={selectedResources}
+        setSelectedResources={setSelectedResources}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        setSearchFilteredResources={setSearchFilteredResources}
+        jsSearch={jsSearch}
+        setModalData={setModalData}
+        setModalVisible={setModalVisible}
+        columns={columns}
+        setExportingToWorkspace={setExportingToWorkspace}
+        accessibleFieldName={accessibleFieldName}
+        exportingToWorkspace={exportingToWorkspace}
+        history={props.history}
       />
-    </div>
-    <DiscoveryListView
-      config={config}
-      studies={props.studies}
-      visibleResources={visibleResources}
-      selectedResources={selectedResources}
-      setSelectedResources={setSelectedResources}
-      searchTerm={searchTerm}
-      setSearchTerm={setSearchTerm}
-      setSearchFilteredResources={setSearchFilteredResources}
-      jsSearch={jsSearch}
-      setModalData={setModalData}
-      setModalVisible={setModalVisible}
-      columns={columns}
-      setExportingToWorkspace={setExportingToWorkspace}
-      accessibleFieldName={accessibleFieldName}
-      exportingToWorkspace={exportingToWorkspace}
-      history={props.history}
-    />
-    <Modal
-      className='discovery-modal'
-      visible={modalVisible}
-      onOk={() => setModalVisible(false)}
-      onCancel={() => setModalVisible(false)}
-      width='80vw'
-      footer={false}
-    >
-      <Space style={{ width: '100%' }} direction='vertical' size='large'>
-        { config.studyPageFields.header &&
-          <Space align='baseline'>
-            <h3 className='discovery-modal__header-text'>{modalData[config.studyPageFields.header.field]}</h3>
-            <a href={`/discovery/${modalData[config.minimalFieldMapping.uid]}/`}><LinkOutlined /> Permalink</a>
-          </Space>
-        }
-        { config.features.authorization.enabled &&
-          (modalData[accessibleFieldName]
+      <Modal
+        className='discovery-modal'
+        visible={modalVisible}
+        onOk={() => setModalVisible(false)}
+        onCancel={() => setModalVisible(false)}
+        width='80vw'
+        footer={false}
+      >
+        <Space style={{ width: '100%' }} direction='vertical' size='large'>
+          { config.studyPageFields.header
+          && (
+            <Space align='baseline'>
+              <h3 className='discovery-modal__header-text'>{modalData[config.studyPageFields.header.field]}</h3>
+              <a href={`/discovery/${modalData[config.minimalFieldMapping.uid]}/`}><LinkOutlined /> Permalink</a>
+            </Space>
+          )}
+          { config.features.authorization.enabled
+          && (modalData[accessibleFieldName]
             ? (
               <Alert
                 className='discovery-modal__access-alert'
                 type='success'
-                message={<><UnlockOutlined /> You have access to this study.</>}
+                message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
               />
             )
             : (
               <Alert
                 className='discovery-modal__access-alert'
                 type='warning'
-                message={<><LockFilled /> You do not have access to this study.</>}
+                message={<React.Fragment><LockFilled /> You do not have access to this study.</React.Fragment>}
               />
             )
-          )
-        }
-        { config.studyPageFields.fieldsToShow.map((fieldGroup, i) => (
-          <div key={i} className='discovery-modal__attribute-group'>
-            { fieldGroup.includeName &&
-                  <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.groupName}</h3>
-            }
-            { fieldGroup.fields.map((field) => {
+          )}
+          { config.studyPageFields.fieldsToShow.map((fieldGroup, i) => (
+            <div key={i} className='discovery-modal__attribute-group'>
+              { fieldGroup.includeName
+                  && <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.groupName}</h3>}
+              { fieldGroup.fields.map((field) => {
               // display nothing if selected study doesn't have this field
               // and this field isn't configured to show a default value
-              if (!modalData[field.field] && !field.includeIfNotAvailable) {
-                return null;
-              }
-              return (
-                <div key={field.name} className='discovery-modal__attribute'>
-                  { field.includeName !== false &&
-                        <span className='discovery-modal__attribute-name'>{field.name}:</span>
-                  }
-                  <span className='discovery-modal__attribute-value'>
-                    { modalData[field.field]
-                      ? renderFieldContent(modalData[field.field], field.contentType)
-                      : (field.valueIfNotAvailable || 'Not available')
-                    }
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        ))}
-        { (config.studyPageFields.downloadLinks && config.studyPageFields.downloadLinks.field &&
-        modalData[config.studyPageFields.downloadLinks.field]) ?
-          <Collapse defaultActiveKey={['1']}>
-            <Panel header={config.studyPageFields.downloadLinks.name || 'Data Download Links'} key='1'>
-              <List
-                itemLayout='horizontal'
-                dataSource={modalData[config.studyPageFields.downloadLinks.field]}
-                renderItem={(item:ListItem) => (
-                  <List.Item
-                    actions={[<Button
-                      href={`${userApiPath}/data/download/${item.guid}?expires_in=900&redirect`}
-                      target='_blank'
-                      type='text'
-                      // disable button if data has no GUID
-                      disabled={!item.guid}
-                      icon={<DownloadOutlined />}
-                    >
+                if (!modalData[field.field] && !field.includeIfNotAvailable) {
+                  return null;
+                }
+                return (
+                  <div key={field.name} className='discovery-modal__attribute'>
+                    { field.includeName !== false
+                        && <span className='discovery-modal__attribute-name'>{field.name}:</span>}
+                    <span className='discovery-modal__attribute-value'>
+                      { modalData[field.field]
+                        ? renderFieldContent(modalData[field.field], field.contentType)
+                        : (field.valueIfNotAvailable || 'Not available')}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+          { (config.studyPageFields.downloadLinks && config.studyPageFields.downloadLinks.field
+        && modalData[config.studyPageFields.downloadLinks.field])
+            ? (
+              <Collapse defaultActiveKey={['1']}>
+                <Panel header={config.studyPageFields.downloadLinks.name || 'Data Download Links'} key='1'>
+                  <List
+                    itemLayout='horizontal'
+                    dataSource={modalData[config.studyPageFields.downloadLinks.field]}
+                    renderItem={(item:ListItem) => (
+                      <List.Item
+                        actions={[
+                          <Button
+                            href={`${userAPIPath}/data/download/${item.guid}?expires_in=900&redirect`}
+                            target='_blank'
+                            type='text'
+                            // disable button if data has no GUID
+                            disabled={!item.guid}
+                            icon={<DownloadOutlined />}
+                          >
                       Download File
-                    </Button>]}
-                  >
-                    <List.Item.Meta
-                      title={item.title}
-                      description={item.description || ''}
-                    />
-                  </List.Item>
-                )}
-              />
-            </Panel>
-          </Collapse>
-          : null
-        }
-      </Space>
-    </Modal>
-  </div>);
+                          </Button>]}
+                      >
+                        <List.Item.Meta
+                          title={item.title}
+                          description={item.description || ''}
+                        />
+                      </List.Item>
+                    )}
+                  />
+                </Panel>
+              </Collapse>
+            )
+            : null}
+        </Space>
+      </Modal>
+    </div>
+  );
 };
 
 Discovery.defaultProps = {

@@ -46,8 +46,12 @@ describe('the load homepage chart data flow', () => {
     const chunk2 = [{ 'project-a': { 'node-3': 3, 'node-4': 13 }, 'project-b': { 'node-3': 6, 'node-4': 2 } }];
 
     expect(mergeChunkedChartData([chunk1, chunk2])).toEqual({
-      'project-a': { 'node-1': 17, 'node-2': 9, 'node-3': 3, 'node-4': 13 },
-      'project-b': { 'node-1': 2, 'node-2': 0, 'node-3': 6, 'node-4': 2 },
+      'project-a': {
+        'node-1': 17, 'node-2': 9, 'node-3': 3, 'node-4': 13,
+      },
+      'project-b': {
+        'node-1': 2, 'node-2': 0, 'node-3': 6, 'node-4': 2,
+      },
     });
   });
 });

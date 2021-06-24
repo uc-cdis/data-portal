@@ -17,7 +17,7 @@ export const uploadTSV = (value, type) => (dispatch) => {
   });
 };
 
-export const updateFormSchema = formSchema => ({
+export const updateFormSchema = (formSchema) => ({
   type: 'UPDATE_FORM_SCHEMA',
   formSchema,
 });
@@ -31,44 +31,43 @@ export const updateFileContent = (value, fileType) => (dispatch) => {
 };
 
 // fetch all program names from peregrine
-const fetchPrograms = () => dispatch =>
-  fetchWithCreds({
-    path: `${submissionApiPath}graphql`,
-    body: JSON.stringify({
-      query: 'query { program(first:0) {name, id}}',
-    }),
-    method: 'POST',
-  })
-    .then(
-      ({
-        status,
-        data,
-      }) => {
-        switch (status) {
-        case 200:
-          return {
-            type: 'RECEIVE_PROGRAMS',
-            data: data.data.program,
-            status,
-          };
-        default:
-          return {
-            type: 'FETCH_ERROR',
-            error: data,
-            status,
-          };
-        }
-      })
-    .then(msg => dispatch(msg));
+const fetchPrograms = () => (dispatch) => fetchWithCreds({
+  path: `${submissionApiPath}graphql`,
+  body: JSON.stringify({
+    query: 'query { program(first:0) {name, id}}',
+  }),
+  method: 'POST',
+})
+  .then(
+    ({
+      status,
+      data,
+    }) => {
+      switch (status) {
+      case 200:
+        return {
+          type: 'RECEIVE_PROGRAMS',
+          data: data.data.program,
+          status,
+        };
+      default:
+        return {
+          type: 'FETCH_ERROR',
+          error: data,
+          status,
+        };
+      }
+    })
+  .then((msg) => dispatch(msg));
 
 const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) => {
   const fileArray = [];
   const path = fullProject.split('-');
   const program = path[0];
   const project = path.slice(1).join('-');
-  const submission = getState().submission;
+  const { submission } = getState();
   const method = path === 'graphql' ? 'POST' : methodIn;
-  let file = submission.file;
+  let { file } = submission;
 
   dispatch({
     type: 'RESET_SUBMISSION_STATUS',
@@ -76,7 +75,7 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
 
   if (!file) {
     return Promise.reject('No file to submit');
-  } else if (submission.file_type !== 'text/tab-separated-values') {
+  } if (submission.file_type !== 'text/tab-separated-values') {
     // remove line break in json file
     file = file.replace(/\r\n?|\n/g, '');
   }
@@ -140,7 +139,7 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
         data,
         total: totalChunk,
       }),
-    ).then(msg => dispatch(msg))
+    ).then((msg) => dispatch(msg))
       .then(sessionMonitor.updateUserActivity());
   }
 
@@ -148,36 +147,33 @@ const submitToServer = (fullProject, methodIn = 'PUT') => (dispatch, getState) =
 };
 
 const ReduxSubmitTSV = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     submission: state.submission,
     dictionary: state.dictionary,
   });
 
-  const mapDispatchToProps = dispatch => ({
+  const mapDispatchToProps = (dispatch) => ({
     onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-    onSubmitClick: project => dispatch(submitToServer(project)),
-    onFileChange: value => dispatch(updateFileContent(value)),
-    onFinish: (type, project, dictionary) =>
-      dispatch(getCounts(type, project, dictionary)),
+    onSubmitClick: (project) => dispatch(submitToServer(project)),
+    onFileChange: (value) => dispatch(updateFileContent(value)),
+    onFinish: (type, project, dictionary) => dispatch(getCounts(type, project, dictionary)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(SubmitTSV);
 })();
 
-
 const ReduxSubmitForm = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     submission: state.submission,
   });
 
-  const mapDispatchToProps = dispatch => ({
+  const mapDispatchToProps = (dispatch) => ({
     onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-    onUpdateFormSchema: (formSchema => dispatch(updateFormSchema(formSchema))),
+    onUpdateFormSchema: ((formSchema) => dispatch(updateFormSchema(formSchema))),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(SubmitForm);
 })();
-
 
 const ReduxProjectSubmission = (() => {
   const mapStateToProps = (state, ownProps) => ({
@@ -193,9 +189,8 @@ const ReduxProjectSubmission = (() => {
     programList: state.submission.programs,
   });
 
-  const mapDispatchToProps = dispatch => ({
-    onGetCounts: (typeList, project, dictionary) =>
-      dispatch(getCounts(typeList, project, dictionary)),
+  const mapDispatchToProps = (dispatch) => ({
+    onGetCounts: (typeList, project, dictionary) => dispatch(getCounts(typeList, project, dictionary)),
     fetchPrograms: () => dispatch(fetchPrograms()),
   });
   return connect(mapStateToProps, mapDispatchToProps)(ProjectSubmission);

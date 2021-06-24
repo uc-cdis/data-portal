@@ -14,7 +14,7 @@ export function checkForAnySelectedUnaccessibleField(
   if (aggsData
       && aggsData[fieldToCheck]
       && aggsData[fieldToCheck].histogram) {
-    accessValuesInAggregationList = aggsData[fieldToCheck].histogram.map(entry => entry.key);
+    accessValuesInAggregationList = aggsData[fieldToCheck].histogram.map((entry) => entry.key);
     const outOfScopeValues = _.difference(accessValuesInAggregationList, accessibleValues);
     if (outOfScopeValues.length > 0) { // trying to get unaccessible data is forbidden
       return true;

@@ -14,11 +14,13 @@ const fetchQuery = (operation, variables) => {
     credentials: 'same-origin',
     headers: { ...headers },
     method: 'POST',
-    body: JSON.stringify({ query: operation.text,
-      variables }),
+    body: JSON.stringify({
+      query: operation.text,
+      variables,
+    }),
   };
 
-  return fetch(graphqlPath, request).then(response => response.text()).then((responseBody) => {
+  return fetch(graphqlPath, request).then((response) => response.text()).then((responseBody) => {
     try {
       return JSON.parse(responseBody);
     } catch (error) {

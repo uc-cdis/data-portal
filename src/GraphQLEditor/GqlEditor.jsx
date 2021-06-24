@@ -40,8 +40,7 @@ class GqlEditor extends React.Component {
     document.removeEventListener('keydown', handleEscKey);
   }
 
-  getOtherIndex = index =>
-    +!index // will either return 0 or 1
+  getOtherIndex = (index) => +!index // will either return 0 or 1
 
   selectEndpoint = (index) => {
     this.setState({ selectedEndpointIndex: index });
@@ -76,9 +75,9 @@ class GqlEditor extends React.Component {
     }
 
     // If provided endpoint is not 0 or 1, default to 0 (graph model)
-    const index = this.state.selectedEndpointIndex !== null &&
-      this.state.selectedEndpointIndex < options.length ?
-      this.state.selectedEndpointIndex
+    const index = this.state.selectedEndpointIndex !== null
+      && this.state.selectedEndpointIndex < options.length
+      ? this.state.selectedEndpointIndex
       : defaultValue;
 
     return (
@@ -98,29 +97,31 @@ class GqlEditor extends React.Component {
           }
         </div>
         {
-          index === 0 ?
-            <GraphiQL
-              fetcher={options[index].endpoint}
-              query={parameters.query}
-              schema={options[index].schema}
-              variables={parameters.variables}
-              onEditQuery={editQuery}
-              onEditVariables={editVariables}
-            />
-            :
-            <GraphiQL
-              fetcher={options[index].endpoint}
-              query={parameters.query}
-              variables={parameters.variables}
-              onEditQuery={editQuery}
-              onEditVariables={editVariables}
-            />
+          index === 0
+            ? (
+              <GraphiQL
+                fetcher={options[index].endpoint}
+                query={parameters.query}
+                schema={options[index].schema}
+                variables={parameters.variables}
+                onEditQuery={editQuery}
+                onEditVariables={editVariables}
+              />
+            )
+            : (
+              <GraphiQL
+                fetcher={options[index].endpoint}
+                query={parameters.query}
+                variables={parameters.variables}
+                onEditQuery={editQuery}
+                onEditVariables={editVariables}
+              />
+            )
         }
       </div>
     );
   }
 }
-
 
 GqlEditor.propTypes = {
   schema: PropTypes.object.isRequired,
