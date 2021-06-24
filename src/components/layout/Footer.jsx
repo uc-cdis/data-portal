@@ -66,7 +66,7 @@ class Footer extends Component {
                     <React.Fragment key={link.href}>
                       <a
                         href={link.href}
-                        className='footer__link'
+                        className='footer__link g3-ring-on-focus'
                         target='_blank'
                         rel='noopener noreferrer'
                       >
