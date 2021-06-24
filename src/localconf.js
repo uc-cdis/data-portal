@@ -419,6 +419,7 @@ function buildConfig(opts) {
     homepageChartNodes: components.index.homepageChartNodes,
     homepageChartNodesChunkSize,
     customHomepageChartConfig: components.index.customHomepageChartConfig,
+    homepageEmailForm: components.index.emailSignUpForm,
     datasetUrl,
     indexPublic,
     fenceDataPath,

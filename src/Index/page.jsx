@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import { Carousel } from 'antd';
-import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxIndexCounts, ReduxIntroduction } from './reduxer';
+import { ReduxIndexButtonBar, ReduxIndexBarChart, ReduxEmailSignUpForm, ReduxIndexCounts, ReduxIntroduction } from './reduxer';
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
-import { breakpoints, customHomepageChartConfig, indexPublic, homepageChartNodes } from '../localconf';
+import { breakpoints, customHomepageChartConfig, indexPublic, homepageChartNodes, homepageEmailForm } from '../localconf';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
 import './page.less';
 
@@ -96,6 +96,12 @@ class IndexPageComponent extends React.Component {
                 {homepageCharts}
               </Carousel>
             </MediaQuery>
+            {homepageEmailForm
+              && homepageEmailForm.account
+              && homepageEmailForm.token
+              && homepageEmailForm.subscribeToTopicIdArr ?
+              <ReduxEmailSignUpForm />
+              : null}
           </div>
         </div>
         <ReduxIndexButtonBar {...this.props} />

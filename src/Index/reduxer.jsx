@@ -3,6 +3,7 @@ import { sortCompare } from '../utils';
 import dictIcons from '../img/icons';
 import { setActive } from '../Layout/reduxer';
 import IndexBarChart from '../components/charts/IndexBarChart/.';
+import EmailSignUpForm from '../components/EmailSignUpForm';
 import IndexCounts from '../components/cards/IndexCounts/.';
 import IndexButtonBar from '../components/IndexButtonBar';
 import Introduction from '../components/Introduction';
@@ -26,6 +27,20 @@ export const ReduxIndexBarChart = (() => {
   const mapDispatchToProps = function mapDispatch() { return {}; };
 
   return connect(mapStateToProps, mapDispatchToProps)(IndexBarChart);
+})();
+
+export const ReduxEmailSignUpForm = (() => {
+  const mapStateToProps = () => {
+    if (components.index.emailSignUpForm) {
+      return { ...components.index.emailSignUpForm };
+    }
+    return {};
+  };
+
+  // ReduxEmailSignUpForm does not dispatch anything
+  const mapDispatchToProps = function mapDispatch() { return {}; };
+
+  return connect(mapStateToProps, mapDispatchToProps)(EmailSignUpForm);
 })();
 
 export const ReduxIndexCounts = (() => {
