@@ -66,7 +66,9 @@ class Explorer extends React.Component {
                   onClick={() => this.onTabClick(index)}
                   onKeyPress={() => this.onTabClick(index)}
                   type='button'
+                  role='tab'
                   tabIndex='0'
+                  aria-selected={this.state.tab === index ? 'true' : 'false'}
                 >
                   <h3>{tabTitle}</h3>
                 </button>
