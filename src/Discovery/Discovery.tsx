@@ -36,10 +36,13 @@ const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
 };
 
 const viewPagination = () => {
-  // To ensure accessibility and 508 compliance, users should be able
-  // to bypass repetitive blocks of content to reach important areas of the
-  // page. This function brings focus to the Antd Discovery pagination.
-  // We have to do this manually because Antd components are not accessibly designed.
+  /*
+    To ensure accessibility and 508 compliance, users should be able
+    to bypass repetitive blocks of content to reach important areas of the
+    page. This function brings focus to the Antd Discovery pagination.
+    Our method here is verbose due to:
+    https://github.com/ant-design/ant-design/issues/8305
+  */
   const discoveryPagination = document.getElementsByClassName('ant-pagination-item ant-pagination-item-1 ant-pagination-item-active');
   if (discoveryPagination.length > 0) {
     discoveryPagination[0].id = 'discovery-pagination';
@@ -54,6 +57,13 @@ const viewPagination = () => {
 };
 
 const accessibleDataFilterToggle = () => {
+  /*
+    To ensure accessibility and 508 compliance, users should be able
+    to navigate popups, dropdowns, and click buttons using only
+    keyboard controls. This function toggles the visibility of the
+    Antd filter popup in the Discovery Table "Access" column and allows
+    keyboard navigability of the displayed Antd checkboxes.
+  */
   const filterPopup = document.querySelector('#discovery-table-of-records .ant-table-filter-column .ant-dropdown-trigger');
   if (filterPopup) {
     filterPopup.click();
@@ -62,8 +72,7 @@ const accessibleDataFilterToggle = () => {
       antdCheckboxes[i].tabIndex = '0';
       antdCheckboxes[i].id = `accessibility-checkbox-${i}`;
       const clickThisElement = () => {
-        const idString = `accessibility-checkbox-${i}`;
-        const thisElement = document.getElementById(idString);
+        const thisElement = document.getElementById(`accessibility-checkbox-${i}`);
         thisElement.click();
       };
       antdCheckboxes[i].onkeypress = clickThisElement;
@@ -343,7 +352,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-summary-statistics'><span>Summary Statistics</span></a> |
         <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-tag-filters'><span>Tags</span></a> |
         <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-table-of-records'><span>Table of Records</span></a> |
-        <button className='g3-unstyle-btn g3-accessibility-nav-link g3-ring-on-focus' onClick={viewPagination}>Pagination </button>
+        <button className='g3-unstyle-btn g3-accessibility-nav-link g3-ring-on-focus' onClick={viewPagination} type='button'>Pagination </button>
         <a className='discovery-hidden-link' id='discovery-link-to-pagination' href='#discovery-pagination'><span>Pagination</span></a>
       </div>
       <div className='discovery-header'>

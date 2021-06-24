@@ -126,9 +126,6 @@
 }
 
 .discovery-header__tag-btn:focus, .discovery-header__tag-btn:focus-within, .discovery-header__tag-btn:focus-visible {
-  /* outline: 1px solid rgb(77, 144, 254);
-  outline-offset: 0px;
-  border-radius:5px; */
   box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 }
 
