@@ -20,9 +20,10 @@ class ControlPanel extends PureComponent {
         </p>
         {this.props.lastUpdated
           && (
-            <p>
+          <p>
             Last updated: {this.props.lastUpdated}
           </p>
+          )
         }
         {this.props.showMapStyle ? <MapStylePanel
           onMapStyleChange={this.props.onMapStyleChange}
