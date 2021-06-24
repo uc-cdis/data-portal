@@ -72,9 +72,9 @@ const accessibleDataFilterToggle = () => {
       antdCheckboxes[i].tabIndex = '0';
       antdCheckboxes[i].id = `accessibility-checkbox-${i}`;
       const clickThisElement = () => {
-        const thisElement = document.getElementById(`accessibility-checkbox-${i}`);
-        thisElement.click();
+        this.click();
       };
+      clickThisElement.bind(antdCheckboxes[i]);
       antdCheckboxes[i].onkeypress = clickThisElement;
     }
   }
