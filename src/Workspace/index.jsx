@@ -1,7 +1,9 @@
 import React from 'react';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { Popconfirm, Steps } from 'antd';
+import {
+  Popconfirm, Steps, Space, Collapse, Row, Col, Statistic,
+} from 'antd';
 
 import {
   workspaceUrl,
@@ -11,6 +13,7 @@ import {
   workspaceLaunchUrl,
   workspaceTerminateUrl,
   workspaceStatusUrl,
+  workspacePayModelUrl,
   workspacePageTitle,
   workspacePageDescription,
 } from '../localconf';
@@ -26,6 +29,8 @@ import WorkspaceLogin from './WorkspaceLogin';
 import sessionMonitor from '../SessionMonitor';
 
 const { Step } = Steps;
+const { Panel } = Collapse;
+
 class Workspace extends React.Component {
   constructor(props) {
     super(props);
@@ -35,10 +40,12 @@ class Workspace extends React.Component {
       workspaceStatus: null,
       workspaceLaunchStepsConfig: null,
       interval: null,
+      payModelInterval: null,
       workspaceID: null,
       defaultWorkspace: false,
       workspaceIsFullpage: false,
       externalLoginOptions: [],
+      payModel: null,
     };
     this.workspaceStates = [
       'Not Found',
@@ -68,6 +75,9 @@ class Workspace extends React.Component {
   componentWillUnmount() {
     if (this.state.interval) {
       clearInterval(this.state.interval);
+    }
+    if (this.state.payModelInterval) {
+      clearInterval(this.state.payModelInterval);
     }
   }
 
@@ -112,6 +122,13 @@ class Workspace extends React.Component {
 
   getWorkspaceStatus = async () => fetchWithCreds({
     path: `${workspaceStatusUrl}`,
+    method: 'GET',
+  }).then(
+    ({ data }) => data,
+  ).catch(() => 'Error');
+
+  getWorkspacePayModels = async () => fetchWithCreds({
+    path: `${workspacePayModelUrl}`,
     method: 'GET',
   }).then(
     ({ data }) => data,
@@ -234,6 +251,13 @@ class Workspace extends React.Component {
   connected = () => {
     this.getWorkspaceOptions();
     this.getExternalLoginOptions();
+    this.getWorkspacePayModels().then((data) => {
+      this.checkWorkspacePayModel();
+      console.log(data);
+      this.setState({
+        payModel: data,
+      });
+    });
     if (!this.state.defaultWorkspace) {
       this.getWorkspaceStatus().then((data) => {
         if (data.status === 'Launching' || data.status === 'Terminating' || data.status === 'Stopped') {
@@ -270,6 +294,24 @@ class Workspace extends React.Component {
         }
       }, 5000);
       this.setState({ interval });
+    } catch (e) {
+      console.log('Error checking workspace status:', e);
+    }
+  }
+
+  checkWorkspacePayModel = async () => {
+    if (this.state.payModelInterval) {
+      clearInterval(this.state.payModelInterval);
+    }
+    try {
+      const payModelInterval = setInterval(async () => {
+        const data = await this.getWorkspacePayModels();
+        console.log(data);
+        this.setState({
+          payModel: data,
+        });
+      }, 30000);
+      this.setState({ payModelInterval });
     } catch (e) {
       console.log('Error checking workspace status:', e);
     }
@@ -334,120 +376,148 @@ class Workspace extends React.Component {
         <div
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
         >
-          {
-            this.state.workspaceStatus === 'Running'
-              ? (
-                <React.Fragment>
-                  <div className='workspace__iframe'>
-                    <iframe
-                      className='workspace'
-                      title='Workspace'
-                      frameBorder='0'
-                      src={`${workspaceUrl}proxy/`}
-                      onLoad={this.oniframeLoad}
-                    />
-                  </div>
-                  <div className='workspace__buttongroup'>
-                    { terminateButton }
-                    { fullpageButton }
-                  </div>
-                </React.Fragment>
+          <Space direction='vertical'>
+            {
+              this.state.payModel ? (
+                <Collapse className='workspace__pay-model' onClick={(event) => event.stopPropagation()}>
+                  <Panel header='User Pay Model Information' key='1'>
+                    <Row gutter={{
+                      xs: 8, sm: 16, md: 24, lg: 32,
+                    }}
+                    >
+                      <Col className='gutter-row' span={6}>
+                        <Statistic title='Pay Model Name' value={this.state.payModel.name || 'N/A'} />
+                      </Col>
+                      <Col className='gutter-row' span={6}>
+                        <Statistic title='AWS Account ID' value={this.state.payModel.awe_account_id || 'N/A'} />
+                      </Col>
+                      <Col className='gutter-row' span={6}>
+                        <Statistic title='AWS Account Region' value={this.state.payModel.region || 'N/A'} />
+                      </Col>
+                      <Col className='gutter-row' span={6}>
+                        <Statistic title='Total Charges (USD)' value={this.state.payModel.cost || 123.45} precision={2} />
+                      </Col>
+                    </Row>
+                  </Panel>
+                </Collapse>
               )
-              : null
-          }
-          {
-            this.state.workspaceStatus === 'Launching'
+                : null
+            }
+            {
+              this.state.workspaceStatus === 'Running'
+                ? (
+                  <React.Fragment>
+                    <div className='workspace__iframe'>
+                      <iframe
+                        className='workspace'
+                        title='Workspace'
+                        frameBorder='0'
+                        src={`${workspaceUrl}proxy/`}
+                        onLoad={this.oniframeLoad}
+                      />
+                    </div>
+                    <div className='workspace__buttongroup'>
+                      { terminateButton }
+                      { fullpageButton }
+                    </div>
+                  </React.Fragment>
+                )
+                : null
+            }
+            {
+              this.state.workspaceStatus === 'Launching'
             || this.state.workspaceStatus === 'Stopped'
-              ? (
-                <React.Fragment>
+                ? (
+                  <React.Fragment>
+                    <div className='workspace__spinner-container'>
+                      {(this.state.workspaceLaunchStepsConfig)
+                        ? (
+                          <Steps
+                            current={this.state.workspaceLaunchStepsConfig.currentIndex}
+                            status={this.state.workspaceLaunchStepsConfig.currentStepsStatus}
+                          >
+                            { (this.state.workspaceLaunchStepsConfig.steps.map((step) => (
+                              <Step
+                                key={step.title}
+                                title={step.title}
+                                description={step.description}
+                              />
+                            ))) }
+                          </Steps>
+                        )
+                        : null}
+                      {(this.state.workspaceStatus === 'Launching')
+                        ? <Spinner text='Launching Workspace, this process may take several minutes' />
+                        : null}
+                    </div>
+                    <div className='workspace__buttongroup'>
+                      { cancelButton }
+                    </div>
+                  </React.Fragment>
+                )
+                : null
+            }
+            {
+              this.state.workspaceStatus === 'Terminating'
+                ? (
                   <div className='workspace__spinner-container'>
-                    {(this.state.workspaceLaunchStepsConfig)
-                      ? (
-                        <Steps
-                          current={this.state.workspaceLaunchStepsConfig.currentIndex}
-                          status={this.state.workspaceLaunchStepsConfig.currentStepsStatus}
-                        >
-                          { (this.state.workspaceLaunchStepsConfig.steps.map((step) => (
-                            <Step
-                              key={step.title}
-                              title={step.title}
-                              description={step.description}
-                            />
-                          ))) }
-                        </Steps>
-                      )
-                      : null}
-                    {(this.state.workspaceStatus === 'Launching')
-                      ? <Spinner text='Launching Workspace, this process may take several minutes' />
-                      : null}
+                    <Spinner text='Terminating workspace...' />
                   </div>
-                  <div className='workspace__buttongroup'>
-                    { cancelButton }
-                  </div>
-                </React.Fragment>
-              )
-              : null
-          }
-          {
-            this.state.workspaceStatus === 'Terminating'
-              ? (
-                <div className='workspace__spinner-container'>
-                  <Spinner text='Terminating workspace...' />
-                </div>
-              )
-              : null
-          }
-          {
-            this.state.workspaceStatus !== 'Launching'
+                )
+                : null
+            }
+            {
+              this.state.workspaceStatus !== 'Launching'
             && this.state.workspaceStatus !== 'Terminating'
             && this.state.workspaceStatus !== 'Running'
             && this.state.workspaceStatus !== 'Stopped'
-              ? (
-                <div>
-                  {workspacePageTitle
-                    ? (
-                      <h2 className='workspace__title'>
-                        {parse(workspacePageTitle)}
-                      </h2>
-                    )
-                    : null}
-                  {workspacePageDescription
-                    ? (
-                      <div className='workspace__description'>
-                        {parse(workspacePageDescription)}
-                      </div>
-                    )
-                    : null}
-                  <div className='workspace__options'>
-                    {
-                      this.state.options.map((option, i) => {
-                        const desc = option['cpu-limit']
-                          ? `${option['cpu-limit']}CPU, ${option['memory-limit']} memory`
-                          : '';
-                        return (
-                          <WorkspaceOption
-                            key={i}
-                            icon={this.getIcon(option.name)}
-                            title={option.name}
-                            description={desc}
-                            onClick={() => this.launchWorkspace(option)}
-                            isPending={this.state.workspaceID === option.id}
-                            isDisabled={
-                              !!this.state.workspaceID
+                ? (
+                  <div>
+                    {workspacePageTitle
+                      ? (
+                        <h2 className='workspace__title'>
+                          {parse(workspacePageTitle)}
+                        </h2>
+                      )
+                      : null}
+                    {workspacePageDescription
+                      ? (
+                        <div className='workspace__description'>
+                          {parse(workspacePageDescription)}
+                        </div>
+                      )
+                      : null}
+                    <div className='workspace__options'>
+                      {
+                        this.state.options.map((option, i) => {
+                          const desc = option['cpu-limit']
+                            ? `${option['cpu-limit']}CPU, ${option['memory-limit']} memory`
+                            : '';
+                          return (
+                            <WorkspaceOption
+                              key={i}
+                              icon={this.getIcon(option.name)}
+                              title={option.name}
+                              description={desc}
+                              onClick={() => this.launchWorkspace(option)}
+                              isPending={this.state.workspaceID === option.id}
+                              isDisabled={
+                                !!this.state.workspaceID
                             && this.state.workspaceID !== option.id
-                            }
-                          />
-                        );
-                      })
-                    }
+                              }
+                            />
+                          );
+                        })
+                      }
+                    </div>
+                    <WorkspaceLogin
+                      providers={this.state.externalLoginOptions}
+                    />
                   </div>
-                  <WorkspaceLogin
-                    providers={this.state.externalLoginOptions}
-                  />
-                </div>
-              )
-              : null
-          }
+                )
+                : null
+            }
+          </Space>
         </div>
       );
     } if (this.state.defaultWorkspace && this.state.connectedStatus) {
