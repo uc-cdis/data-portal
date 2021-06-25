@@ -97,6 +97,7 @@ function buildConfig(opts) {
   const workspaceErrorUrl = '/no-workspace-access/';
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
+  const workspacePayModelUrl = `${workspaceUrl}paymodels`;
   const workspaceTerminateUrl = `${workspaceUrl}terminate`;
   const workspaceLaunchUrl = `${workspaceUrl}launch`;
   const datasetUrl = `${hostname}api/search/datasets`;
@@ -415,6 +416,7 @@ function buildConfig(opts) {
     workspaceErrorUrl,
     workspaceOptionsUrl,
     workspaceStatusUrl,
+    workspacePayModelUrl,
     workspaceLaunchUrl,
     workspaceTerminateUrl,
     homepageChartNodes: components.index.homepageChartNodes,
