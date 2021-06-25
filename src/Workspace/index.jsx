@@ -389,7 +389,7 @@ class Workspace extends React.Component {
                         <Statistic title='Pay Model Name' value={this.state.payModel.name || 'N/A'} />
                       </Col>
                       <Col className='gutter-row' span={6}>
-                        <Statistic title='AWS Account ID' value={this.state.payModel.awe_account_id || 'N/A'} />
+                        <Statistic title='AWS Account ID' groupSeparator='' value={this.state.payModel.aws_account_id || 'N/A'} />
                       </Col>
                       <Col className='gutter-row' span={6}>
                         <Statistic title='AWS Account Region' value={this.state.payModel.region || 'N/A'} />
