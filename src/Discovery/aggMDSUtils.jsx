@@ -140,9 +140,19 @@ const loadStudiesFromAggMDS = async () => {
 };
 
 const loadAuthMappingsFromWTS = async () => {
+  // const url = `http://localhost:5000/aggregate/authz`;
+  // const res = await fetch(url);
+  // if (res.status !== 200) {
+    // throw new Error(`Request for aggregate auth mappings at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
+  // }
+
+  // const aggregateAuthMappings  = await res.json();
+  // return aggregateAuthMappings;
+
     return {
-        "john.planx-pla.net": { "/yoyo": [{ "method": "read", "service": "*"}]},
-        "qa-brain.planx-pla.net": { "/programs/DEV/projects/test": [{ "method": "read", "service": "*"}]}
+        "john.planx-pla.net": { "/programs/DEV/projects/grasshopper": [{ "method": "read", "service": "*"}]},
+        "qa-anvil.planx-pla.net": { "/programs/DEV/projects/dolphin": [{ "method": "read", "service": "*"}]},
+        "qa-brain.planx-pla.net": { "/programs/DEV/projects/hummingbird": [{ "method": "read", "service": "*"}]}
     };
 };
 
