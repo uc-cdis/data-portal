@@ -346,7 +346,8 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   );
 
   const tooltipText = 'These accessibility links assist with keyboard navigation of the site. Selecting a link will bring tab focus to the specified page content.';
-
+  // Disabling noninteractive-tabindex rule because the span tooltip must be focusable as per https://www.w3.org/TR/2017/REC-wai-aria-1.1-20171214/#tooltip
+  /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
   return (
     <div className='discovery-container'>
       { (config.features.pageTitle && config.features.pageTitle.enabled)

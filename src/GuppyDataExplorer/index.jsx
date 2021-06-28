@@ -43,9 +43,11 @@ class Explorer extends React.Component {
 
     const tooltipText = 'These accessibility links assist with keyboard navigation of the site. Selecting a link will bring tab focus to the specified page content.';
 
+    // Disabling noninteractive-tabindex rule because the span tooltip must be focusable as per https://sarahmhigley.com/writing/tooltips-in-wcag-21/
+    /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
     const tabFragment = (
       <React.Fragment>
-        <div className='g3-accessibility-links'>
+        <div className='g3-accessibility-links' aria-describedby='g3-accessibility-links-tooltip-explorer'>
           <Tooltip
             placement='left'
             overlay={tooltipText}
@@ -54,9 +56,9 @@ class Explorer extends React.Component {
             width='300px'
             trigger={['hover', 'focus']}
           >
-            <span className='g3-helper-tooltip g3-ring-on-focus' role='tooltip' tabIndex='0'>
+            <div id='g3-accessibility-links-tooltip-explorer' className='g3-helper-tooltip g3-ring-on-focus' role='tooltip' tabIndex='0'>
               <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
-            </span>
+            </div>
           </Tooltip>
           <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-main-tabs'><span>Explorer Filters</span></a> |
           <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-data-tools'><span>Data Tools</span></a> |
