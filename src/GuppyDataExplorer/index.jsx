@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import Tooltip from 'rc-tooltip';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import {
   guppyUrl,
@@ -40,9 +41,23 @@ class Explorer extends React.Component {
       return <React.Fragment />;
     }
 
+    const tooltipText = 'These accessibility links assist with keyboard navigation of the site. Selecting a link will bring tab focus to the specified page content.';
+
     const tabFragment = (
       <React.Fragment>
         <div className='g3-accessibility-links'>
+          <Tooltip
+            placement='left'
+            overlay={tooltipText}
+            overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
+            arrowContent={<div className='rc-tooltip-arrow-inner' />}
+            width='300px'
+            trigger={['hover', 'focus']}
+          >
+            <span className='g3-helper-tooltip'>
+              <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
+            </span>
+          </Tooltip>
           <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-main-tabs'><span>Explorer Filters</span></a> |
           <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-data-tools'><span>Data Tools</span></a> |
           <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-summary-statistics'><span>Summary Statistics</span></a> |

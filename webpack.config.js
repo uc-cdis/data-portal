@@ -53,7 +53,7 @@ const plugins = [
     },
   }),
   new HtmlWebpackPlugin({
-    title: configFile.components.appName,
+    title: configFile.components.appName || 'Generic Data Commons',
     basename: pathPrefix,
     template: 'src/index.ejs',
     connect_src: (function () {

@@ -13,6 +13,7 @@ import {
   Collapse,
   List,
 } from 'antd';
+import Tooltip from 'rc-tooltip';
 
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
@@ -344,11 +345,25 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     selectedTags,
   );
 
+  const tooltipText = 'These accessibility links assist with keyboard navigation of the site. Selecting a link will bring tab focus to the specified page content.';
+
   return (
     <div className='discovery-container'>
       { (config.features.pageTitle && config.features.pageTitle.enabled)
       && <h1 className='discovery-page-title'>{config.features.pageTitle.text || 'Discovery'}</h1>}
       <div className='g3-accessibility-links' id='discovery-page-accessibility-links'>
+        <Tooltip
+          placement='left'
+          overlay={tooltipText}
+          overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
+          arrowContent={<div className='rc-tooltip-arrow-inner' />}
+          width='300px'
+          trigger={['hover', 'focus']}
+        >
+          <span className='g3-helper-tooltip'>
+            <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
+          </span>
+        </Tooltip>
         <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-summary-statistics'><span>Summary Statistics</span></a> |
         <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-tag-filters'><span>Tags</span></a> |
         <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-table-of-records'><span>Table of Records</span></a> |
