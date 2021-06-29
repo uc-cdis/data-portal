@@ -33,7 +33,7 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import { basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
-  indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
+  explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
   discoveryConfig,
 } from './localconf';
 import Analysis from './Analysis/Analysis';
