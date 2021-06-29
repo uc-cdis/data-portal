@@ -50,7 +50,7 @@
     "pluralize": "^8.0.0",
     "postcss": "^8.3.5",
     "postcss-inline-svg": "^5.0.0",
-    "postcss-loader": "^5.3.0",
+    "postcss-loader": "^6.1.0",
     "postcss-svgo": "^5.0.2",
     "prop-types": "^15.6.0",
     "rc-slider": "^9.7.2",
