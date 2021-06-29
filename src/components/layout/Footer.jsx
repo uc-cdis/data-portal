@@ -45,7 +45,7 @@ class Footer extends Component {
                   key={i}
                   target='_blank'
                   href={logoObj.href}
-                  className='footer__icon'
+                  className='footer__icon g3-ring-on-focus'
                   rel='noopener noreferrer'
                 >
                   <img
@@ -66,7 +66,7 @@ class Footer extends Component {
                     <React.Fragment key={link.href}>
                       <a
                         href={link.href}
-                        className='footer__link'
+                        className='footer__link g3-ring-on-focus'
                         target='_blank'
                         rel='noopener noreferrer'
                       >

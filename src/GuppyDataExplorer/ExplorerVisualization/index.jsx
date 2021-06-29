@@ -133,7 +133,7 @@ class ExplorerVisualization extends React.Component {
 
     return (
       <div className={this.props.className}>
-        <div className='guppy-explorer-visualization__button-group'>
+        <div className='guppy-explorer-visualization__button-group' id='guppy-explorer-data-tools'>
           <ReduxExplorerButtonGroup
             buttonConfig={this.props.buttonConfig}
             guppyConfig={this.props.guppyConfig}
@@ -150,7 +150,7 @@ class ExplorerVisualization extends React.Component {
         </div>
         {
           chartData.countItems.length > 0 && (
-            <div className='guppy-explorer-visualization__summary-cards'>
+            <div className='guppy-explorer-visualization__summary-cards' id='guppy-explorer-summary-statistics'>
               <DataSummaryCardGroup summaryItems={chartData.countItems} connected />
             </div>
           )

@@ -9,7 +9,7 @@
   background-color: var(--g3-color__white);
   vertical-align: middle;
   padding: 10px;
-  left: -120px; /* tooltipWidth / 2 */
+  left: -220px;
   width: 240px; /* tooltipWidth = 240 */
   top: 5px;
   border: 1px solid var(--g3-color__gray);
@@ -21,7 +21,7 @@
   height: 0;
   position: absolute;
   top: -10px;
-  left: calc(50% - 10px);
+  left: calc(90% - 10px);
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-bottom: 10px solid var(--g3-color__gray); /* gap = 10px */
@@ -34,7 +34,7 @@
 
 .navbar-tooltip__content {
   position: relative;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: normal;
   line-height: 1.6em;
   letter-spacing: .02rem;

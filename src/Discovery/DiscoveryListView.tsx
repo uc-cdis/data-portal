@@ -100,7 +100,7 @@ export const DiscoveryListView: React.FunctionComponent<DiscoveryListViewProps> 
   };
 
   return (
-    <div className='discovery-table-container'>
+    <div className='discovery-table-container' id='discovery-table-of-records'>
       <div className='discovery-table__header'>
         { (
           props.config.features.search && props.config.features.search.searchBar
