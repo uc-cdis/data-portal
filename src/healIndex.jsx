@@ -135,13 +135,11 @@ async function init() {
                     exact
                     path='/'
                     component={
-                      props => (
-                        <ProtectedContent
-                          public={indexPublic}
-                          component={Discovery}
-                          {...props}
-                        />
-                      )
+                      props => (<ProtectedContent
+                        public={discoveryConfig.public !== false}
+                        component={Discovery}
+                        {...props}
+                      />)
                     }
                   />
                   <Route
