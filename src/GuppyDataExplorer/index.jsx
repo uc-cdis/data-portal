@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import Tooltip from 'rc-tooltip';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import {
   guppyUrl,
@@ -40,9 +41,32 @@ class Explorer extends React.Component {
       return <React.Fragment />;
     }
 
+    const tooltipText = 'These accessibility links assist with keyboard navigation of the site. Selecting a link will bring tab focus to the specified page content.';
+
+    // Disabling noninteractive-tabindex rule because the span tooltip must be focusable as per https://sarahmhigley.com/writing/tooltips-in-wcag-21/
+    /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
     const tabFragment = (
       <React.Fragment>
-        <div className='guppy-explorer__tabs'>
+        <div className='g3-accessibility-links' aria-describedby='g3-accessibility-links-tooltip-explorer'>
+          <Tooltip
+            placement='left'
+            overlay={tooltipText}
+            overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
+            arrowContent={<div className='rc-tooltip-arrow-inner' />}
+            width='300px'
+            trigger={['hover', 'focus']}
+          >
+            <div id='g3-accessibility-links-tooltip-explorer' className='g3-helper-tooltip g3-ring-on-focus' role='tooltip' tabIndex='0'>
+              <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
+            </div>
+          </Tooltip>
+          <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-main-tabs'><span>Explorer Filters</span></a> |
+          <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-data-tools'><span>Data Tools</span></a> |
+          <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-summary-statistics'><span>Summary Statistics</span></a> |
+          <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#guppy-explorer-table-of-records'><span>Table of Records</span></a>
+        </div>
+
+        <div className='guppy-explorer__tabs' id='guppy-explorer-main-tabs'>
           {explorerConfig.map((element, index) => {
             let tabTitle = '';
             if (element.tabTitle) {
@@ -54,15 +78,17 @@ class Explorer extends React.Component {
 
             return (
               <React.Fragment key={index}>
-                <div
-                  className={'guppy-explorer__tab'.concat(this.state.tab === index ? ' guppy-explorer__tab--selected' : '')}
+                <button
+                  className={'g3-unstyle-btn g3-ring-on-focus guppy-explorer__tab'.concat(this.state.tab === index ? ' guppy-explorer__tab--selected' : '')}
                   onClick={() => this.onTabClick(index)}
                   onKeyPress={() => this.onTabClick(index)}
-                  role='button'
-                  tabIndex={index}
+                  type='button'
+                  role='tab'
+                  tabIndex='0'
+                  aria-selected={this.state.tab === index ? 'true' : 'false'}
                 >
                   <h3>{tabTitle}</h3>
-                </div>
+                </button>
               </React.Fragment>
             );
           })}
