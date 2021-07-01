@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
+import { overrideSelectTheme } from '../../utils';
 import { stringifyFilters } from './utils';
 import './ExplorerCohort.css';
 import './typedef';
@@ -28,16 +29,11 @@ export function CohortActionMenu({
   ];
   return (
     <Select
+      aria-label='Manage cohorts'
       className='guppy-explorer-cohort__menu'
       value={{ label: 'Manage Cohorts', value: '' }}
       options={options}
-      theme={(theme) => ({
-        ...theme,
-        colors: {
-          ...theme.colors,
-          primary: 'var(--pcdc-color__primary)',
-        },
-      })}
+      theme={overrideSelectTheme}
       onChange={onSelectAction}
     />
   );
@@ -72,22 +68,17 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
   return (
     <div className='guppy-explorer-cohort__form'>
       <h4>Select a saved Cohort to open</h4>
-      <form onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}>
+      <form onSubmit={(e) => e.preventDefault()}>
         <SimpleInputField
           label='Name'
           input={
             <Select
+              inputId='open-cohort-name'
               options={options}
               value={selected}
               autoFocus
               clearable={false}
-              theme={(theme) => ({
-                ...theme,
-                colors: {
-                  ...theme.colors,
-                  primary: 'var(--pcdc-color__primary)',
-                },
-              })}
+              theme={overrideSelectTheme}
               onChange={(e) => setSelected(e)}
             />
           }
@@ -96,6 +87,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
           label='Description'
           input={
             <textarea
+              id='open-cohort-description'
               disabled
               placeholder='No description'
               value={selected.value.description}
@@ -106,6 +98,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
           label='Filters'
           input={
             <textarea
+              id='open-cohort-filters'
               disabled
               placeholder='No filters'
               value={stringifyFilters(selected.value.filters)}
@@ -186,11 +179,12 @@ function CohortCreateForm({
           You have changed filters for this Cohort.
         </p>
       )}
-      <form onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}>
+      <form onSubmit={(e) => e.preventDefault()}>
         <SimpleInputField
           label='Name'
           input={
             <input
+              id='create-cohort-name'
               autoFocus
               placeholder='Enter the cohort name'
               value={cohort.name}
@@ -207,6 +201,7 @@ function CohortCreateForm({
           label='Description'
           input={
             <textarea
+              id='create-cohort-description'
               placeholder='Describe the cohort (optional)'
               value={cohort.description}
               onChange={(e) => {
@@ -220,6 +215,7 @@ function CohortCreateForm({
           label='Filters'
           input={
             <textarea
+              id='create-cohort-filters'
               disabled
               placeholder='No filters'
               value={stringifyFilters(currentFilters)}
@@ -306,11 +302,12 @@ function CohortUpdateForm({
           You have changed filters for this Cohort.
         </p>
       )}
-      <form onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}>
+      <form onSubmit={(e) => e.preventDefault()}>
         <SimpleInputField
           label='Name'
           input={
             <input
+              id='update-ohort-name'
               autoFocus
               placeholder='Enter the cohort name'
               value={cohort.name}
@@ -327,6 +324,7 @@ function CohortUpdateForm({
           label='Description'
           input={
             <textarea
+              id='update-cohort-description'
               placeholder='Describe the cohort (optional)'
               value={cohort.description}
               onChange={(e) => {
@@ -340,6 +338,7 @@ function CohortUpdateForm({
           label='Filters'
           input={
             <textarea
+              id='update-cohort-filters'
               disabled
               placeholder='No filters'
               value={stringifyFilters(cohort.filters)}
@@ -351,6 +350,7 @@ function CohortUpdateForm({
             label='Filters (changed)'
             input={
               <textarea
+                id='update-cohort-changed-filters'
                 disabled
                 placeholder='No filters'
                 value={stringifyFilters(currentFilters)}

@@ -84,9 +84,15 @@ class SummaryPieChart extends React.Component {
                   <div
                     className='summary-pie-chart__toggle g3-link'
                     onClick={() => this.toggle()}
-                    onKeyPress={() => this.toggle()}
+                    onKeyPress={(e) => {
+                      if (e.charCode === 13 || e.charCode === 32) {
+                        e.preventDefault();
+                        this.toggle();
+                      }
+                    }}
                     role='button'
                     tabIndex={0}
+                    aria-label='Show less'
                   >
                     <span>Show less</span>
                   </div>
@@ -94,9 +100,15 @@ class SummaryPieChart extends React.Component {
                   <div
                     className='summary-pie-chart__toggle g3-link'
                     onClick={() => this.toggle()}
-                    onKeyPress={() => this.toggle()}
+                    onKeyPress={(e) => {
+                      if (e.charCode === 13 || e.charCode === 32) {
+                        e.preventDefault();
+                        this.toggle();
+                      }
+                    }}
                     role='button'
                     tabIndex={0}
+                    aria-label='Show more'
                   >
                     {`And ${(
                       pieChartData.length - this.props.maximumDisplayItem

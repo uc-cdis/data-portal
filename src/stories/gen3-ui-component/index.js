@@ -3,8 +3,6 @@ import './icons.jsx';
 import './color.jsx';
 import './buttons.jsx';
 import './dropdown.jsx';
-import './layout.jsx';
-import './login.jsx';
 import './autocomplete.jsx';
 import './toaster.jsx';
 import './filters.jsx';

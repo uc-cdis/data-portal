@@ -32,7 +32,8 @@ function Option({
       className={`option__frame ${frameClassModifier}`}
       role='button'
       onClick={() => onChange(idx)}
-      tabIndex={-10}
+      tabIndex={0}
+      aria-label={option}
     >
       {hasCorrectAnswers ? (
         <div

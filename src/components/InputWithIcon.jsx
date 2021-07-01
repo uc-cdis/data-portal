@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import { overrideSelectTheme } from '../utils';
 import './InputWithIcon.less';
 
 function InputWithIcon({
   className,
+  inputId,
   inputOptions,
   inputClassName,
   inputValue,
@@ -24,6 +26,7 @@ function InputWithIcon({
       >
         {inputOptions ? (
           <Select
+            inputId={inputId}
             styles={{
               control: (provided) => ({ ...provided, width: '100%' }),
             }}
@@ -36,16 +39,11 @@ function InputWithIcon({
             placeholder={inputPlaceholderText}
             options={inputOptions}
             onChange={inputOnChange}
-            theme={(theme) => ({
-              ...theme,
-              colors: {
-                ...theme.colors,
-                primary: 'var(--pcdc-color__primary)',
-              },
-            })}
+            theme={overrideSelectTheme}
           />
         ) : (
           <input
+            id={inputId}
             type='text'
             className={inputClassName}
             onBlur={inputOnChange}
@@ -74,6 +72,7 @@ function InputWithIcon({
 
 InputWithIcon.propTypes = {
   className: PropTypes.string,
+  inputId: PropTypes.string.isRequired,
   inputClassName: PropTypes.string,
   inputValue: PropTypes.string,
   inputPlaceholderText: PropTypes.string,

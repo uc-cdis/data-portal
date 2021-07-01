@@ -61,6 +61,8 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
           className='nav-bar__link nav-bar__link--right'
           onMouseOver={() => updateTooltip(item)}
           onMouseLeave={() => updateTooltip(null)}
+          onFocus={() => updateTooltip(item)}
+          onBlur={() => updateTooltip(null)}
         >
           <NavButton
             dictIcons={dictIcons}
@@ -86,7 +88,7 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
               />
             </a>
           ) : (
-            <Link to=''>
+            <Link to='/'>
               <img
                 className='nav-bar__logo-img'
                 src='/src/img/logo.png'
@@ -96,8 +98,8 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
           )}
         </div>
         {navTitle && (
-          <div role='button' tabIndex={0} className='nav-bar__home-button'>
-            <Link className='h3-typo nav-bar__link nav-bar__link--home' to=''>
+          <div className='nav-bar__home-button'>
+            <Link className='h3-typo nav-bar__link nav-bar__link--home' to='/'>
               {navTitle}
             </Link>
           </div>
@@ -107,10 +109,16 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
         <div
           className='nav-bar__menu'
           onClick={toggleMenu}
-          onKeyPress={(e) => e.key === 'Enter' && toggleMenu()}
+          onKeyPress={(e) => {
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              toggleMenu();
+            }
+          }}
           role='button'
           tabIndex={0}
           aria-expanded={isMenuOpen}
+          aria-label={`${isMenuOpen ? 'Expand' : 'Collapse'} navigation menu`}
         >
           Menu
           <FontAwesomeIcon

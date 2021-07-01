@@ -61,17 +61,20 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
           placement='topLeft'
           overlay='Patient ID is a special filter and cannot be used in cohorts like other normal filters.'
           arrowContent={<div className='rc-tooltip-arrow-inner' />}
+          trigger={['hover', 'focus']}
         >
           <div
             className='g3-filter-section__header'
-            style={{ marginBottom: '.5rem' }}
+            style={{ marginBottom: '.5rem', height: 'auto' }}
           >
-            <div className='g3-filter-section__title-container'>
+            <div
+              className='g3-filter-section__title-container'
+              role='button'
+              tabIndex={0}
+              aria-label='Filter: patient ids'
+            >
               <div className='g3-filter-section__toggle-icon-container'>
-                <i
-                  role='button'
-                  className='g3-filter-section__toggle-icon g3-icon g3-icon-color__coal g3-icon--sm g3-icon--star'
-                />
+                <i className='g3-filter-section__toggle-icon g3-icon g3-icon-color__coal g3-icon--sm g3-icon--star' />
               </div>
               <div
                 className={`g3-filter-section__title${
@@ -81,11 +84,22 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
                 Patient ID
               </div>
               {isUsingPatientIds && (
-                <div className='g3-filter-section__selected-count-chip'>
+                <div
+                  className='g3-filter-section__selected-count-chip'
+                  style={{ marginTop: '2px', marginBottom: '2px' }}
+                >
                   <div
-                    role='button'
                     className='g3-filter-section__range-filter-clear-btn'
                     onClick={handleReset}
+                    onKeyPress={(e) => {
+                      if (e.charCode === 13 || e.charCode === 32) {
+                        e.preventDefault();
+                        handleReset();
+                      }
+                    }}
+                    role='button'
+                    tabIndex={0}
+                    aria-label='Reset filter'
                   >
                     <div className='g3-filter-section__range-filter-clear-btn-text'>
                       reset
@@ -121,23 +135,27 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
           ]}
         >
           <div>
-            Upload a CSV file containing patient IDs to explore:
-            <br />
             <SimpleInputField
+              label=' Upload a CSV file containing patient IDs to explore'
               input={
-                <input type='file' accept='.csv' onChange={handleFileUpload} />
+                <input
+                  id='patient-ids-file-upload'
+                  type='file'
+                  accept='.csv'
+                  onChange={handleFileUpload}
+                />
               }
             />
           </div>
-          <div>
-            {isFileUploaded
-              ? 'Review the patient IDs in the uploaded file:'
-              : 'Or type a list of patient IDs separated by commas:'}
-          </div>
-
           <SimpleInputField
+            label={
+              isFileUploaded
+                ? 'Review the patient IDs in the uploaded file:'
+                : 'Or type a list of patient IDs separated by commas'
+            }
             input={
               <textarea
+                id='patient-ids-input'
                 ref={textareaRef}
                 disabled={isFileUploaded}
                 placeholder={

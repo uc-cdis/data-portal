@@ -36,7 +36,7 @@ TopLogoutButton.propTypes = {
  */
 function TopIconButton({ name, to, icon, isActive = false }) {
   const buttonClassName = isActive
-    ? 'top-icon-button button-top-active'
+    ? 'top-icon-button top-icon-buton--active'
     : 'top-icon-button';
   const buttonContent = (
     <span className='top-icon-button__content body-typo'>

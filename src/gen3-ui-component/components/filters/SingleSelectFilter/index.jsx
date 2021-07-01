@@ -94,25 +94,10 @@ class SingleSelectFilter extends React.Component {
           checked={selected}
           disabled={inputDisabled}
         />
-        {inputDisabled ? (
-          <span
-            className='g3-single-select-filter__label g3-single-select-filter__label--disabled'
-            role='button'
-            tabIndex={0}
-          >
-            {this.props.label}
-          </span>
-        ) : (
-          <span
-            className='g3-single-select-filter__label'
-            onClick={() => this.handleCheck()}
-            onKeyPress={() => this.handleCheck()}
-            role='button'
-            tabIndex={0}
-          >
-            {this.props.label}
-          </span>
-        )}
+        <span className='g3-single-select-filter__label'>
+          {this.props.label}
+        </span>
+
         {this.props.count !== null && countIconComponent}
         {lockIconComponent}
       </div>

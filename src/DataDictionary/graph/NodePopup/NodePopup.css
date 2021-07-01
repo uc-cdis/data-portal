@@ -55,15 +55,19 @@
 }
 
 .node-popup__close {
+  display: flex;
   position: absolute;
   right: 10px;
   top: 10px;
-  width: 12px;
-  height: 12px;
-  background-color: var(--g3-color__gray);
   cursor: pointer;
 }
 
-.node-popup__close:hover {
+.node-popup__close-icon {
+  width: 12px;
+  height: 12px;
+  background-color: var(--g3-color__gray);
+}
+
+.node-popup__close-icon:hover {
   background-color: var(--g3-color__lightgray);
 }

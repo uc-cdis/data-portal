@@ -4,6 +4,7 @@ import Select from 'react-select';
 import SimplePopup from '../../components/SimplePopup';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
+import { overrideSelectTheme } from '../../utils';
 import { fetchWithCreds } from '../../actions';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import { stringifyFilters } from '../ExplorerCohort/utils';
@@ -66,22 +67,17 @@ function ExplorerFindCohortButton({ filter }) {
         <SimplePopup>
           <div className='explorer-find-cohort__form'>
             <h4>Find Cohort in An External Data Commons</h4>
-            <form onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}>
+            <form onSubmit={(e) => e.preventDefault()}>
               <SimpleInputField
                 label='Data Commons'
                 input={
                   <Select
+                    inputId='find-cohort-data-commons'
                     options={[emptyOption, ...externalCommonsOptions]}
                     value={selected}
                     autoFocus
                     clearable={false}
-                    theme={(theme) => ({
-                      ...theme,
-                      colors: {
-                        ...theme.colors,
-                        primary: 'var(--pcdc-color__primary)',
-                      },
-                    })}
+                    theme={overrideSelectTheme}
                     onChange={setSelected}
                   />
                 }
@@ -90,6 +86,7 @@ function ExplorerFindCohortButton({ filter }) {
                 label='Filters'
                 input={
                   <textarea
+                    id='find-cohort-filters'
                     disabled
                     placeholder='No filters'
                     value={stringifyFilters(filter)}

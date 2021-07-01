@@ -138,7 +138,7 @@ class DataDictionaryPropertyTable extends React.Component {
                     {propertyDescriptionFragment}
                   </td>
                   <td className='data-dictionary-property-table__data'>
-                    <a href={termLink}>{termID}</a>
+                    {termLink !== '' && <a href={termLink}>{termID}</a>}
                   </td>
                 </tr>
               );

@@ -22,8 +22,8 @@
 
 .g3-filter-section__title-container {
   user-select: none;
-  margin: 0;
-  height: 100%;
+  padding: 0 4px;
+  height: 105%;
   width: 100%;
   overflow: hidden;
   flex-grow: 1;
@@ -74,7 +74,6 @@
 .g3-filter-section__toggle-icon,
 .g3-filter-section__search-icon {
   background-color: var(--g3-color__gray);
-  margin-left: 10px;
   cursor: pointer;
 }
 
@@ -105,6 +104,7 @@
   padding: 5px 8px;
   position: relative;
   display: flex;
+  align-items: center;
   margin-top: 8px;
 }
 
@@ -183,13 +183,10 @@
 }
 
 .g3-filter-section__search-input-close {
+  cursor: pointer;
   width: 10px;
   height: 10px;
-  position: relative;
-  top: 6px;
-  right: 6px;
   background-color: var(--g3-color__gray);
-  cursor: pointer;
 }
 
 .g3-filter-section__search-input-spinner {

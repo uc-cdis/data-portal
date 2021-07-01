@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Switch from '@material-ui/core/Switch';
 import Select from 'react-select';
-import { jsonToString } from '../utils';
+import { jsonToString, overrideSelectTheme } from '../utils';
 import SubmitNodeForm from './SubmitNodeForm';
 import './SubmitForm.less';
 
@@ -110,25 +110,23 @@ class SubmitForm extends Component {
     return (
       <div>
         <form>
-          <label style={{ display: 'block' }}>
+          <label style={{ display: 'block' }} htmlFor='form-submission-switch'>
             Use Form Submission
-            <Switch onChange={this.onFormToggle} />
+            <Switch
+              inputProps={{ role: 'switch', id: 'form-submission-switch' }}
+              onChange={this.onFormToggle}
+            />
           </label>
 
           {this.state.fill_form && (
             <Select
+              inputId='Node type'
               name='nodeType'
               options={options}
               value={this.state.chosenNode}
               onChange={updateChosenNode}
               className='submit-form__select'
-              theme={(theme) => ({
-                ...theme,
-                colors: {
-                  ...theme.colors,
-                  primary: 'var(--pcdc-color__primary)',
-                },
-              })}
+              theme={overrideSelectTheme}
             />
           )}
         </form>

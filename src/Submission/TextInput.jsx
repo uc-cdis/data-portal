@@ -26,6 +26,7 @@ class TextInput extends Component {
         )}
         <br />
         <input
+          id={this.props.name}
           className='text-input__input'
           type='text'
           name={this.props.name}

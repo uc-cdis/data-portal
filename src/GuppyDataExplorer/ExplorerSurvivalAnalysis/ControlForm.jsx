@@ -3,23 +3,14 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Button from '../../gen3-ui-component/components/Button';
 import SimpleInputField from '../../components/SimpleInputField';
+import { overrideSelectTheme } from '../../utils';
 import './typedef';
 
 const ControlFormSelect = ({ label, ...selectProps }) => (
   <SimpleInputField
     label={label}
     input={
-      <Select
-        {...selectProps}
-        clearable={false}
-        theme={(theme) => ({
-          ...theme,
-          colors: {
-            ...theme.colors,
-            primary: 'var(--pcdc-color__primary)',
-          },
-        })}
-      />
+      <Select {...selectProps} clearable={false} theme={overrideSelectTheme} />
     }
   />
 );
@@ -137,6 +128,7 @@ const ControlForm = ({
   return (
     <form className='explorer-survival-analysis__control-form'>
       <ControlFormSelect
+        inputId='survival-factor-variable'
         label='Factor variable'
         options={withEmptyOption(factors)}
         onChange={(e) => {
@@ -150,6 +142,7 @@ const ControlForm = ({
         value={factorVariable}
       />
       <ControlFormSelect
+        inputId='survival-stratification-variable'
         label='Stratification variable'
         options={withEmptyOption(
           factors.filter(({ value }) => value !== factorVariable.value)
@@ -163,6 +156,7 @@ const ControlForm = ({
         value={stratificationVariable}
       />
       <ControlFormInput
+        id='survival-time-interval'
         label='Time interval'
         type='number'
         min={1}
@@ -176,6 +170,7 @@ const ControlForm = ({
         value={localTimeInterval}
       />
       <ControlFormInput
+        id='survival-start-time'
         disabled
         label='Start time (year)'
         type='number'
@@ -190,6 +185,7 @@ const ControlForm = ({
         value={startTime}
       />
       <ControlFormInput
+        id='survival-end-time'
         label='End time (year)'
         type='number'
         min={startTime + 1}
@@ -203,6 +199,7 @@ const ControlForm = ({
         value={endTime}
       />
       <ControlFormSelect
+        inputId='survival-type'
         isDisabled
         label='Survival type'
         options={[

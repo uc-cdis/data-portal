@@ -19,51 +19,70 @@ import {
 } from './configTypeDef';
 import './GuppyDataExplorer.css';
 
+/**
+ * @param {URLSearchParams} searchParams
+ * @param {{ tabs: { fields: string[] }[] }} filterConfig
+ * @param {{ enabled?: boolean }} patientIdsConfig
+ */
+function extractExplorerStateFromURL(
+  searchParams,
+  filterConfig,
+  patientIdsConfig
+) {
+  let initialAppliedFilters = {};
+  if (searchParams.has('filter'))
+    try {
+      const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
+      if (validateFilter(filterInUrl, filterConfig))
+        initialAppliedFilters = filterInUrl;
+      else throw new Error(undefined);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Invalid filter value in URL.', e);
+    }
+
+  // eslint-disable-next-line no-nested-ternary
+  const patientIds = patientIdsConfig?.enabled
+    ? searchParams.has('patientIds')
+      ? searchParams.get('patientIds').split(',')
+      : []
+    : undefined;
+
+  return { initialAppliedFilters, patientIds };
+}
+
 class GuppyDataExplorer extends React.Component {
   constructor(props) {
     super(props);
 
+    const { initialAppliedFilters, patientIds } = extractExplorerStateFromURL(
+      new URLSearchParams(props.history.location.search),
+      props.filterConfig,
+      props.patientIdsConfig
+    );
+
     this.state = {
-      initialAppliedFilters: {},
-      patientIds: undefined,
+      initialAppliedFilters,
+      patientIds,
     };
     this._isMounted = false;
     this._isBrowserNavigation = false;
+    this._hasAppliedFilters = Object.keys(initialAppliedFilters).length > 0;
   }
 
   componentDidMount() {
     this._isMounted = true;
-    const syncFilterStateWithURL = () => {
-      const searchParams = new URLSearchParams(
-        this.props.history.location.search
-      );
-      let initialAppliedFilters = {};
-      if (searchParams.has('filter'))
-        try {
-          const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
-          if (validateFilter(filterInUrl, this.props.filterConfig))
-            initialAppliedFilters = filterInUrl;
-          else throw new Error(undefined);
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error('Invalid filter value in URL.', e);
-        }
-
-      // eslint-disable-next-line no-nested-ternary
-      const patientIds = this.props.patientIdsConfig?.enabled
-        ? searchParams.has('patientIds')
-          ? searchParams.get('patientIds').split(',')
-          : []
-        : undefined;
-
-      if (this._isMounted) this.setState({ initialAppliedFilters, patientIds });
-    };
     window.onpopstate = () => {
       this._isBrowserNavigation = true;
-      syncFilterStateWithURL();
+      const { initialAppliedFilters, patientIds } = extractExplorerStateFromURL(
+        new URLSearchParams(this.props.history.location.search),
+        this.props.filterConfig,
+        this.props.patientIdsConfig
+      );
+      this._hasAppliedFilters = Object.keys(initialAppliedFilters).length > 0;
+      if (this._isMounted) this.setState({ initialAppliedFilters, patientIds });
       this._isBrowserNavigation = false;
     };
-    syncFilterStateWithURL();
   }
 
   componentWillUnmount() {
@@ -77,6 +96,7 @@ class GuppyDataExplorer extends React.Component {
     searchParams.delete('filter');
 
     if (filter && Object.keys(filter).length > 0) {
+      this._hasAppliedFilters = true;
       const allSearchFields = [];
       for (const { searchFields } of this.props.filterConfig.tabs)
         if (searchFields?.length > 0) allSearchFields.push(...searchFields);
@@ -93,6 +113,8 @@ class GuppyDataExplorer extends React.Component {
         if (Object.keys(filterWithoutSearchFields).length > 0)
           searchParams.set('filter', JSON.stringify(filterWithoutSearchFields));
       }
+    } else {
+      this._hasAppliedFilters = false;
     }
 
     if (!this._isBrowserNavigation)
@@ -124,7 +146,13 @@ class GuppyDataExplorer extends React.Component {
     : () => {};
 
   updateInitialAppliedFilters = ({ filters }) => {
+    this._hasAppliedFilters = Object.keys(filters).length > 0;
     if (this._isMounted) this.setState({ initialAppliedFilters: filters });
+  };
+
+  clearFilters = () => {
+    this._hasAppliedFilters = false;
+    if (this._isMounted) this.setState({ initialAppliedFilters: {} });
   };
 
   render() {
@@ -160,6 +188,8 @@ class GuppyDataExplorer extends React.Component {
               adminAppliedPreFilters={this.props.adminAppliedPreFilters}
               initialAppliedFilters={this.state.initialAppliedFilters}
               patientIds={this.state.patientIds}
+              hasAppliedFilters={this._hasAppliedFilters}
+              onFilterClear={this.clearFilters}
               onPatientIdsChange={this.handlePatientIdsChange}
             />
             <ExplorerVisualization

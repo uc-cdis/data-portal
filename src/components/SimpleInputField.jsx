@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import './SimpleInputField.css';
 
@@ -9,9 +9,18 @@ import './SimpleInputField.css';
  * @param {?{ isError: boolean; message: string }} [prop.error]
  */
 function SimpleInputField({ label, input, error }) {
+  const inputEl = useRef(input);
+  const inputId =
+    // id for native input elements, inputId for react-select
+    inputEl.current?.props?.id ?? inputEl.current?.props?.inputId ?? undefined;
+
   return (
     <div className='simple-input-field__container'>
-      {label && <label className='simple-input-field__label'>{label}</label>}
+      {label && (
+        <label className='simple-input-field__label' htmlFor={inputId}>
+          {label}
+        </label>
+      )}
       <div
         className={`simple-input-field__input${
           error && error.isError ? ' simple-input-field__input--error' : ''

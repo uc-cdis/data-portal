@@ -1,0 +1,30 @@
+.guppy-explorer-filter__title-container {
+  display: flex;
+  align-items: baseline;
+}
+
+.guppy-explorer-filter__title {
+  display: inline;
+}
+
+.guppy-explorer-filter__clear-button {
+  height: auto;
+  width: auto;
+  background: none;
+  border: none;
+  padding: none;
+  color: var(--g3-color__gray);
+  font-weight: var(--g3-font__semi-bold-weight);
+  margin-left: 10px;
+}
+
+.guppy-explorer-filter__clear-button:hover {
+  color: var(--g3-color__bg-coal);
+}
+
+.guppy-explorer-filter__clear-button::before {
+  border-left: 1px solid var(--g3-color__lightgray);
+  content: '';
+  height: 1.5rem;
+  margin-right: 10px;
+}

@@ -149,7 +149,7 @@ function QueryNode({
     queryNodes.search_status === 'succeed: 200'
       ? Object.entries(queryNodes.search_result.data)
       : [];
-  const { project } = project;
+  const { project } = params;
 
   return (
     <div>
@@ -173,8 +173,6 @@ function QueryNode({
             <li key={submitterId}>
               <span>{submitterId}</span>
               <a
-                role='button'
-                tabIndex={i * 3}
                 className='query-node__button query-node__button--download'
                 href={`${getSubmitPath(project)}/export?format=json&ids=${id}`}
               >
@@ -182,25 +180,27 @@ function QueryNode({
               </a>
               <a
                 role='button'
-                tabIndex={i * 3 + 1}
+                tabIndex={0}
                 className='query-node__button query-node__button--view'
                 onClick={() =>
                   onStoreNodeInfo({ project, id }).then(() =>
                     onUpdatePopup({ view_popup: true })
                   )
                 }
+                aria-label='View'
               >
                 View
               </a>
               <a
                 role='button'
-                tabIndex={i * 3 + 2}
+                tabIndex={0}
                 className='query-node__button query-node__button--delete'
                 onClick={() =>
                   onStoreNodeInfo({ project, id }).then(() =>
                     onUpdatePopup({ nodedelete_popup: true })
                   )
                 }
+                aria-label='Delete'
               >
                 Delete
               </a>

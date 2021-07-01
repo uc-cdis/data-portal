@@ -351,12 +351,9 @@ export function getAllFieldsFromFilterConfigs(filterTabConfigs) {
 
 /**
  * Download all data from guppy using fields, filter, and sort args.
- * If total count is less than 10000 this will use normal graphql endpoint
- * If greater than 10000, use /download endpoint
  * @param {object} opt
  * @param {string} opt.path
  * @param {string} opt.type
- * @param {number} opt.size
  * @param {string[]} [opt.fields]
  * @param {object} [opt.filter]
  * @param {*} [opt.sort]
@@ -365,46 +362,27 @@ export function getAllFieldsFromFilterConfigs(filterTabConfigs) {
 export function downloadDataFromGuppy({
   path,
   type,
-  size,
   fields,
   filter,
   sort,
   format,
 }) {
-  const SCROLL_SIZE = 10000;
   const JSON_FORMAT = format === 'json' || format === undefined;
-  return size > SCROLL_SIZE
-    ? fetch(`${path}${downloadEndpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          accessibility: 'accessible',
-          filter: getGQLFilter(filter),
-          type,
-          fields,
-          sort,
-        }),
-      }).then((res) =>
-        JSON_FORMAT ? res.json() : jsonToFormat(res.json(), format)
-      )
-    : queryGuppyForRawData({
-        path,
-        type,
-        fields,
-        gqlFilter: getGQLFilter(filter),
-        sort,
-        size,
-        format,
-      }).then((res) => {
-        if (res?.data?.[type])
-          return JSON_FORMAT
-            ? res.data[type]
-            : jsonToFormat(res.data[type], format);
-
-        throw Error('Error downloading data from Guppy');
-      });
+  return fetch(`${path}${downloadEndpoint}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      accessibility: 'accessible',
+      filter: getGQLFilter(filter),
+      type,
+      fields,
+      sort,
+    }),
+  }).then((res) =>
+    JSON_FORMAT ? res.json() : jsonToFormat(res.json(), format)
+  );
 }
 
 /**

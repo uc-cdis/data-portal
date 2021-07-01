@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { select, event } from 'd3-selection';
+import { select } from 'd3-selection';
 import { transition } from 'd3-transition';
 import { easeLinear } from 'd3-ease';
 import { zoom, zoomTransform, zoomIdentity } from 'd3-zoom';
@@ -14,10 +14,11 @@ const d3 = {
   zoomIdentity,
   transition,
   easeLinear,
-  get event() {
-    return event;
-  }, // https://stackoverflow.com/a/40048292
 };
+
+function getTransition() {
+  return d3.transition().duration(150).ease(d3.easeLinear);
+}
 
 class Canvas extends React.Component {
   constructor(props) {
@@ -29,7 +30,6 @@ class Canvas extends React.Component {
     this.canvasElement = React.createRef();
     this.svgElement = React.createRef();
     this.containerElement = React.createRef();
-    this.transition = d3.transition().duration(150).ease(d3.easeLinear);
   }
 
   componentDidMount() {
@@ -40,9 +40,9 @@ class Canvas extends React.Component {
         this.props.topLeftTranslateLimit,
         this.props.bottomRightTranslateLimit,
       ])
-      .on('zoom', () => {
+      .on('zoom', (event) => {
         this.handleCanvasUpdate();
-        this.zoomTarget.attr('transform', d3.event.transform);
+        this.zoomTarget.attr('transform', event.transform);
       });
     this.zoomTarget = d3.select('.canvas__container');
     this.zoomCatcher = d3
@@ -88,7 +88,7 @@ class Canvas extends React.Component {
     const translateSign = k > 1 ? -1 : +1;
 
     this.zoomCatcher
-      .transition(this.transition)
+      .transition(getTransition())
       .call(
         this.zoomBehavior.transform,
         transform
@@ -110,7 +110,7 @@ class Canvas extends React.Component {
 
   handleReset = () => {
     this.zoomCatcher
-      .transition(this.transition)
+      .transition(getTransition())
       .call(this.zoomBehavior.transform, d3.zoomIdentity);
   };
 
@@ -133,27 +133,45 @@ class Canvas extends React.Component {
           <div
             className='canvas__zoom-button canvas__zoom-button--reset'
             onClick={this.handleReset}
-            onKeyPress={this.handleReset}
+            onKeyPress={(e) => {
+              if (e.charCode === 13 || e.charCode === 32) {
+                e.preventDefault();
+                this.handleReset();
+              }
+            }}
             role='button'
-            tabIndex={-1}
+            tabIndex={0}
+            aria-label='Reset zoom'
           >
             <i className='canvas__zoom-icon g3-icon g3-icon--reset' />
           </div>
           <div
             className='canvas__zoom-button canvas__zoom-button--zoom-in'
             onClick={this.handleZoomIn}
-            onKeyPress={this.handleZoomIn}
+            onKeyPress={(e) => {
+              if (e.charCode === 13 || e.charCode === 32) {
+                e.preventDefault();
+                this.handleZoomIn();
+              }
+            }}
             role='button'
-            tabIndex={-1}
+            tabIndex={0}
+            aria-label='Zoom in'
           >
             <i className='canvas__zoom-icon g3-icon g3-icon--plus' />
           </div>
           <div
             className='canvas__zoom-button canvas__zoom-button--zoom-out'
             onClick={this.handleZoomOut}
-            onKeyPress={this.handleZoomOut}
+            onKeyPress={(e) => {
+              if (e.charCode === 13 || e.charCode === 32) {
+                e.preventDefault();
+                this.handleZoomOut();
+              }
+            }}
             role='button'
-            tabIndex={-1}
+            tabIndex={0}
+            aria-label='Zoom out'
           >
             <i className='canvas__zoom-icon canvas__zoom-icon--zoom-in g3-icon g3-icon--minus' />
           </div>

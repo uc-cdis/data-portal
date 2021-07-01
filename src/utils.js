@@ -272,3 +272,17 @@ export const isFooterHidden = (pathname) =>
     (pathname.toLowerCase() === '/dd' ||
       pathname.toLowerCase().startsWith('/dd/'))
   );
+
+/**
+ * @param {import('react-select').Theme} theme
+ * @returns {import('react-select').Theme}
+ */
+export function overrideSelectTheme(theme) {
+  return {
+    ...theme,
+    colors: {
+      ...theme.colors,
+      primary: 'var(--pcdc-color__primary-light)',
+    },
+  };
+}

@@ -47,7 +47,7 @@ const tabHasActiveFilters = (tabFilterStatus) => {
 class FilterGroup extends React.Component {
   constructor(props) {
     super(props);
-    const initialExpandedStatusControl = true;
+    const initialExpandedStatusControl = false;
     const initialExpandedStatus = props.filterConfig.tabs.map((t) =>
       t.fields.map(() => initialExpandedStatusControl)
     );
@@ -73,7 +73,6 @@ class FilterGroup extends React.Component {
     this.state = {
       selectedTabIndex: 0,
       expandedStatus: initialExpandedStatus,
-      expandedStatusText: 'Collapse all',
       expandedStatusControl: initialExpandedStatusControl,
 
       /**
@@ -328,9 +327,6 @@ class FilterGroup extends React.Component {
         expandedStatus: this.props.filterConfig.tabs.map((t) =>
           t.fields.map(() => !prevState.expandedStatusControl)
         ),
-        expandedStatusText: !prevState.expandedStatusControl
-          ? 'Collapse all'
-          : 'Open all',
         expandedStatusControl: !prevState.expandedStatusControl,
       };
     });
@@ -361,21 +357,30 @@ class FilterGroup extends React.Component {
   }
 
   render() {
+    const expandedStatusText = this.state.expandedStatusControl
+      ? 'Collapse all'
+      : 'Open all';
     return (
       <div className={`g3-filter-group ${this.props.className}`}>
         <div className='g3-filter-group__tabs'>
           {this.props.tabs.map((tab, index) => (
             <div
               key={index}
-              role='button'
-              tabIndex={index}
               className={'g3-filter-group__tab'.concat(
                 this.state.selectedTabIndex === index
                   ? ' g3-filter-group__tab--selected'
                   : ''
               )}
               onClick={() => this.selectTab(index)}
-              onKeyDown={() => this.selectTab(index)}
+              onKeyPress={(e) => {
+                if (e.charCode === 13 || e.charCode === 32) {
+                  e.preventDefault();
+                  this.selectTab(index);
+                }
+              }}
+              role='button'
+              tabIndex={0}
+              aria-label={`Filter group tab: ${this.props.filterConfig.tabs[index].title}`}
             >
               <p
                 className={`g3-filter-group__tab-title ${
@@ -399,11 +404,17 @@ class FilterGroup extends React.Component {
           <span
             className='g3-link g3-filter-group__collapse-link'
             onClick={() => this.toggleFilters()}
-            onKeyPress={() => this.toggleFilters()}
+            onKeyPress={(e) => {
+              if (e.charCode === 13 || e.charCode === 32) {
+                e.preventDefault();
+                this.toggleFilters();
+              }
+            }}
             role='button'
             tabIndex={0}
+            aria-label={expandedStatusText}
           >
-            {this.state.expandedStatusText}
+            {expandedStatusText}
           </span>
         </div>
         <div className='g3-filter-group__filter-area'>

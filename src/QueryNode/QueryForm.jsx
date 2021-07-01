@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Dropdown from '../gen3-ui-component/components/Dropdown';
-import { getSubmitPath } from '../utils';
+import { getSubmitPath, overrideSelectTheme } from '../utils';
 import './QueryForm.less';
 
 class QueryForm extends React.Component {
@@ -72,13 +72,7 @@ class QueryForm extends React.Component {
           options={options}
           value={state.selectValue}
           onChange={this.updateValue}
-          theme={(theme) => ({
-            ...theme,
-            colors: {
-              ...theme.colors,
-              primary: 'var(--pcdc-color__primary)',
-            },
-          })}
+          theme={overrideSelectTheme}
         />
         <input
           className='query-form__input'
