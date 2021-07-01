@@ -696,7 +696,13 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           && filtersVisible
       )
         &&
-          <div className='discovery-filters'>
+          <div
+            className='discovery-filters'
+            style={{
+              height: document.getElementById('discovery-table-container').offsetHeight || '100vh',
+              overflowY: 'auto',
+            }}
+          >
             <Collapse
               bordered={false}
               defaultActiveKey={config.features.advSearchFilters.filters.map(f => f.key)}
@@ -741,10 +747,13 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
             </Collapse>
           </div>
       }
-      <div className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--collapsed' : ''}`}>
+      <div id='discovery-table-container' className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--collapsed' : ''}`}>
         <Table
           loading={props.studies.length === 0}
           width={'500px'}
+          locale={{
+            emptyText: 'No Studies',
+          }}
           columns={columns}
           rowKey={config.minimalFieldMapping.uid}
           rowSelection={(
