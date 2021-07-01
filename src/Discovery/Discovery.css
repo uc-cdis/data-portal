@@ -239,6 +239,23 @@
 .discovery-table-container tr.ant-table-expanded-row > td, tr.ant-table-expanded-row:hover > td {
   background: rgba(0,0,0,0);
 }
+
+/* This CSS hack doesn't work in Safari (the ::after elements get positioned relative
+ * to the <tbody> element instead of the <tr> element (behavior in Chromium).
+ * Mitigating this by hiding the ::after elements behind the
+ * pagination element using z-index. (Sorry)
+ */
+.discovery-table-container .ant-table {
+  background: #dfe3e2;
+  z-index: -1;
+}
+.discovery-table-container .ant-table-pagination.ant-pagination {
+  z-index: 2;
+  margin: 0;
+  padding: 16px 0;
+  background-color: #fff;
+}
+
 /* ---------------------------------------------------- */
 /* END HACK */
 
