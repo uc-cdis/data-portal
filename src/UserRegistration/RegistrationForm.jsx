@@ -23,6 +23,11 @@ function RegistrationForm({
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [institution, setInstitution] = useState('');
+
+  const initialReviewStatus = {};
+  for (const { id } of docsToBeReviewed) initialReviewStatus[id] = false;
+  const [reviewStatus, setReviewStatus] = useState(initialReviewStatus);
+
   const [isValidInput, setIsValidInput] = useState(false);
   useEffect(() => {
     setIsValidInput(firstName !== '' && lastName !== '' && institution !== '');
@@ -102,7 +107,18 @@ function RegistrationForm({
       <div className='user-registration__document-review-group'>
         {docsToBeReviewed.map((doc) => (
           <label key={doc.id}>
-            <input type='checkbox' /> I have read and agree to the{' '}
+            <input
+              type='checkbox'
+              checked={reviewStatus[doc.id]}
+              onChange={(e) => {
+                e.persist();
+                setReviewStatus((prev) => ({
+                  ...prev,
+                  [doc.id]: e.target.checked,
+                }));
+              }}
+            />{' '}
+            I have read and agree to the{' '}
             <a href={doc.formatted} target='_blank' rel='noreferrer'>
               {doc.name}
             </a>
