@@ -181,81 +181,58 @@
 
 /* HACK: Because the study description row is a separate row under the hood,
  * it doesn't change color when you highlight its parent row.
- * To fix this, we make the study description row transparent on hover,
- * and add an ::after element behind the study description row, to give
- * it the appearance of changing color when its parent row is highlighted.
- * ------------------------------------------------------------------------
- */
-
-.discovery-table-container td.ant-table-cell {
-  border-color: #dfe3e2;
-}
+ * To fix this, we did a different hacky approach.
+ * In the JS code we determine the row index that has mouse on,
+ * and then we add an arbitrary `--hover` suffix to both row and expandable row on that index.
+ * Finally we override the default :hover effect of both classes.
+ * ------------------------------------------------------------------------ */
 .discovery-table-container th.ant-table-cell,
-.discovery-table-container td.ant-table-cell {
+.discovery-table-container .discovery-table__row > td.ant-table-cell
+.discovery-table-container .discovery-table__expanded-row > td.ant-table-cell {
+  border-color: #dfe3e2;
   background: #dfe3e2;
 }
-.discovery-table-container th.ant-table-cell {
-  border-bottom: 1px solid #dfe3e2;
-}
+
 .discovery-table__expanded-row > td.ant-table-cell {
   background: #dfe3e2;
   font-size: 12px;
   padding-bottom: 5px;
   border-bottom: 1px solid #ccc;
 }
-
-.discovery-table-container .ant-table-tbody > tr.ant-table-row:hover > td.ant-table-cell {
-  border-color: rgba(0,0,0,0);
+.discovery-table__expanded-row--hover > td.ant-table-cell {
+  font-size: 12px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #fff;
 }
 
-.discovery-table-container .ant-table-tbody > tr.ant-table-row {
-  border-color: #dfe3e2;
-  transition: border-color 0.3s;
-}
-.discovery-table-container .ant-table-tbody > tr.ant-table-row:hover {
-  border-color: rgba(0,0,0,0);
-}
-.discovery-table-container .ant-table-tbody > tr.ant-table-row::after {
-  display: block;
-  position: absolute;
-  bottom: -35px;
-  left: 0;
-  z-index: 0;
-  content: "";
-  width: 100%;
-  height: 35px;
-  background-color: #dfe3e2;
-  transition: background-color 0.3s, border-color 0.3s;
-}
-.discovery-table-container .ant-table-tbody > tr:not(.ant-table-row-selected).ant-table-row:hover::after {
-  background-color: rgb(250,250,250);
-}
-.discovery-table-container .ant-table-tbody > tr.ant-table-row-selected::after {
-  background-color: #e6f7ff;
-}
-/* Make the expanded row's background transparent on hover, so that it appears
- * to change color on hover.
- */
-.discovery-table-container tr.ant-table-expanded-row > td, tr.ant-table-expanded-row:hover > td {
-  background: rgba(0,0,0,0);
-}
-
-/* This CSS hack doesn't work in Safari (the ::after elements get positioned relative
- * to the <tbody> element instead of the <tr> element (behavior in Chromium).
- * Mitigating this by hiding the ::after elements behind the
- * pagination element using z-index. (Sorry)
- */
-.discovery-table-container .ant-table {
+.discovery-table-container .ant-table-tbody > tr.discovery-table__row > td {
+  border-bottom: 1px solid #dfe3e2;
   background: #dfe3e2;
-  z-index: -1;
-}
-.discovery-table-container .ant-table-pagination.ant-pagination {
-  z-index: 2;
-  margin: 0;
-  padding: 16px 0;
-  background-color: #fff;
 }
 
+.discovery-table-container .ant-table-tbody > tr.ant-table-row:hover > td {
+  background: none;
+}
+
+.discovery-table-container .ant-table-tbody > tr.discovery-table__row--hover > td {
+  border-bottom: 1px solid #fff;
+  background: #fff;
+}
+
+.discovery-table-container tr.ant-table-expanded-row:hover > td {
+  background: none;
+}
+
+.discovery-table-container tr.discovery-table__expanded-row--hover > td {
+  border-top: none;
+  background: #fff;
+}
+
+.discovery-table-container .ant-table-tbody > tr.discovery-table__row {
+  background: #dfe3e2;
+  border-color: #dfe3e2;
+}
 /* ---------------------------------------------------- */
 /* END HACK */
 

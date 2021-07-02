@@ -263,6 +263,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTags, setSelectedTags] = useState({});
   const [permalinkCopied, setPermalinkCopied] = useState(false);
+  const [onHoverRowIndex, setOnHoverRowIndex] = useState(null);
 
   useEffect(() => {
     // Load studies into JS Search.
@@ -777,8 +778,15 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 return { disabled };
               },
             }}
-          rowClassName='discovery-table__row'
-          onRow={record => ({
+          onRow={(record, rowIndex) => ({
+            onMouseEnter: (ev) => {
+              ev.stopPropagation();
+              setOnHoverRowIndex(rowIndex);
+            },
+            onMouseLeave: (ev) => {
+              ev.stopPropagation();
+              setOnHoverRowIndex(null);
+            },
             onClick: () => {
               setPermalinkCopied(false);
               setModalVisible(true);
@@ -790,11 +798,12 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               setModalData(record);
             },
           })}
+          rowClassName={(_, index) => (index === onHoverRowIndex ? 'discovery-table__row--hover' : 'discovery-table__row')}
           dataSource={visibleResources}
           expandable={config.studyPreviewField && ({
             // expand all rows
             expandedRowKeys: visibleResources.map(r => r[config.minimalFieldMapping.uid]),
-            expandedRowRender: (record) => {
+            expandedRowRender: (record, index) => {
               const studyPreviewText = record[config.studyPreviewField.field];
               const renderValue = (value: string | undefined): React.ReactNode => {
                 if (!value) {
@@ -834,12 +843,20 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                     setModalData(record);
                     setModalVisible(true);
                   }}
+                  onMouseEnter={(ev) => {
+                    ev.stopPropagation();
+                    setOnHoverRowIndex(index);
+                  }}
+                  onMouseLeave={(ev) => {
+                    ev.stopPropagation();
+                    setOnHoverRowIndex(null);
+                  }}
                 >
                   {renderValue(studyPreviewText)}
                 </div>
               );
             },
-            expandedRowClassName: () => 'discovery-table__expanded-row',
+            expandedRowClassName: (_, index) => (index === onHoverRowIndex ? 'discovery-table__expanded-row--hover' : 'discovery-table__expanded-row'),
             expandIconColumnIndex: -1, // don't render expand icon
           })}
         />
