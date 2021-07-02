@@ -22,6 +22,20 @@
   margin-right: 0.25rem;
 }
 
+.user-registration__document-review-group {
+  margin: 1rem;
+  text-align: left;
+}
+
+.user-registration__document-review-group > * {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.user-registration__document-review-group input[type='checkbox'] {
+  margin-right: 0.5rem;
+}
+
 .user-registration__subscribe {
   font-weight: bold;
   margin: 2rem 0 1rem;

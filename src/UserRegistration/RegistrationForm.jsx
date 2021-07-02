@@ -99,6 +99,16 @@ function RegistrationForm({
           />
         }
       />
+      <div className='user-registration__document-review-group'>
+        {docsToBeReviewed.map((doc) => (
+          <label key={doc.id}>
+            <input type='checkbox' /> I have read and agree to the{' '}
+            <a href={doc.formatted} target='_blank' rel='noreferrer'>
+              {doc.name}
+            </a>
+          </label>
+        ))}
+      </div>
     </div>
   );
 
