@@ -186,24 +186,30 @@
  * and then we add an arbitrary `--hover` suffix to both row and expandable row on that index.
  * Finally we override the default :hover effect of both classes.
  * ------------------------------------------------------------------------ */
-.discovery-table-container th.ant-table-cell,
-.discovery-table-container .discovery-table__row > td.ant-table-cell
-.discovery-table-container .discovery-table__expanded-row > td.ant-table-cell {
-  border-color: #dfe3e2;
-  background: #dfe3e2;
-}
-
-.discovery-table__expanded-row > td.ant-table-cell {
-  background: #dfe3e2;
-  font-size: 12px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #ccc;
-}
 .discovery-table__expanded-row--hover > td.ant-table-cell {
   font-size: 12px;
   padding-bottom: 5px;
   border-bottom: 1px solid #ccc;
-  border-top: 1px solid #fff;
+}
+
+.discovery-table-container th.ant-table-cell,
+.discovery-table-container .discovery-table__row > td.ant-table-cell {
+  border-color: #dfe3e2;
+  background: #dfe3e2;
+}
+
+.discovery-table-container .discovery-table__expanded-row > td.ant-table-cell {
+  border-color: #dfe3e2;
+  background: #dfe3e2;
+  font-size: 12px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.discovery-table-container tr.discovery-table__expanded-row--hover > td {
+  border-top: none;
+  background: #fff;
+  transition: ;
 }
 
 .discovery-table-container .ant-table-tbody > tr.discovery-table__row > td {
@@ -211,22 +217,18 @@
   background: #dfe3e2;
 }
 
-.discovery-table-container .ant-table-tbody > tr.ant-table-row:hover > td {
-  background: none;
-}
-
 .discovery-table-container .ant-table-tbody > tr.discovery-table__row--hover > td {
   border-bottom: 1px solid #fff;
   background: #fff;
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
 .discovery-table-container tr.ant-table-expanded-row:hover > td {
   background: none;
 }
 
-.discovery-table-container tr.discovery-table__expanded-row--hover > td {
-  border-top: none;
-  background: #fff;
+.discovery-table-container .ant-table-tbody > tr.ant-table-row:hover > td {
+  background: none;
 }
 
 .discovery-table-container .ant-table-tbody > tr.discovery-table__row {
