@@ -12,20 +12,17 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   /**
    * @param {Response[]} responses
-   * @returns {Promise<('success' | 'error')>}
+   * @returns {'success' | 'error'}
    */
-  updateAccess: ([userResponse, documentsResponse]) =>
-    userResponse.ok && documentsResponse.ok
-      ? userResponse.json().then((user) => {
-          if (user.authz['/portal'] !== undefined) {
-            dispatch({ type: 'RECEIVE_USER', user });
-            dispatch(fetchUserAccess);
-            getIndexPageCounts();
-            return 'success';
-          }
-          return 'error';
-        })
-      : Promise.resolve('error'),
+  updateAccess: (user) => {
+    if (user.authz['/portal'] !== undefined) {
+      dispatch({ type: 'RECEIVE_USER', user });
+      dispatch(fetchUserAccess);
+      getIndexPageCounts();
+      return 'success';
+    }
+    return 'error';
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserRegistration);

@@ -10,7 +10,7 @@ import './typedef';
  * @param {Object} prop
  * @param {UserRegistrationDocument[]} prop.docsToBeReviewed
  * @param {boolean} prop.shouldRegister
- * @param {(responses: Response[]) => Promise<('success' | 'error')>} prop.updateAccess
+ * @param {(responses: Response[]) => ('success' | 'error')} prop.updateAccess
  */
 function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
   const [show, setShow] = useState(shouldRegister);
@@ -19,27 +19,37 @@ function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
     setShow(false);
   }
 
-  function handleRegister(/** @type {UserRegistrationInput} */ userInput) {
+  async function handleRegister(
+    /** @type {UserRegistrationInput} */ userInput
+  ) {
     const { reviewStatus, ...userInformation } = userInput;
-    const hasReviewedDocument =
-      Object.values(reviewStatus).filter(Boolean).length > 0;
 
-    return Promise.all([
-      fetch(`${userapiPath}user/`, {
+    try {
+      const userResponse = await fetch(`${userapiPath}user/`, {
         body: JSON.stringify(userInformation),
         credentials: 'include',
         headers,
         method: 'PUT',
-      }),
-      hasReviewedDocument
-        ? fetch(`${userapiPath}user/documents`, {
+      });
+      if (!userResponse.ok) throw new Error();
+
+      const hasReviewedDocument =
+        Object.values(reviewStatus).filter(Boolean).length > 0;
+      const documentsResponse = hasReviewedDocument
+        ? await fetch(`${userapiPath}user/documents`, {
             body: JSON.stringify(reviewStatus),
             credentials: 'include',
             headers,
             method: 'POST',
           })
-        : new Response(),
-    ]).then(updateAccess);
+        : new Response();
+      if (!documentsResponse.ok) throw new Error();
+
+      const user = await userResponse.json();
+      return updateAccess(user);
+    } catch (e) {
+      return 'error';
+    }
   }
 
   function handleSubscribe() {
