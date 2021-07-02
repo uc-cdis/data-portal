@@ -21,6 +21,9 @@ function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
 
   function handleRegister(/** @type {UserRegistrationInput} */ userInput) {
     const { reviewStatus, ...userInformation } = userInput;
+    const hasReviewedDocument =
+      Object.values(reviewStatus).filter(Boolean).length > 0;
+
     return Promise.all([
       fetch(`${userapiPath}user/`, {
         body: JSON.stringify(userInformation),
@@ -28,12 +31,14 @@ function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
         headers,
         method: 'PUT',
       }),
-      fetch(`${userapiPath}user/documents`, {
-        body: JSON.stringify(reviewStatus),
-        credentials: 'include',
-        headers,
-        method: 'POST',
-      }),
+      hasReviewedDocument
+        ? fetch(`${userapiPath}user/documents`, {
+            body: JSON.stringify(reviewStatus),
+            credentials: 'include',
+            headers,
+            method: 'POST',
+          })
+        : new Response(),
     ]).then(updateAccess);
   }
 
