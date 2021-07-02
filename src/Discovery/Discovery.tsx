@@ -16,6 +16,7 @@ import {
   Button,
   Checkbox,
   Collapse,
+  Empty,
 } from 'antd';
 
 import {
@@ -753,7 +754,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
           loading={props.studies.length === 0}
           width={'500px'}
           locale={{
-            emptyText: 'No Studies',
+            emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No Studies' />,
           }}
           columns={columns}
           rowKey={config.minimalFieldMapping.uid}
