@@ -3,24 +3,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '../gen3-ui-component/components/Button';
 import SimpleInputField from '../components/SimpleInputField';
-
-/**
- * @typedef {Object} UserRegistrationDocument
- * @property {string} formatted
- * @property {number} id
- * @property {string} name
- * @property {string} raw
- * @property {boolean} required
- * @property {string} type
- * @property {number} version
- */
-
-/**
- * @typedef {Object} UserRegistrationInput
- * @property {string} firstName
- * @property {string} lastName
- * @property {string} institution
- */
+import './typedef';
 
 /** @typedef {('input' | 'success' | 'error')} UserRegistrationView  */
 
