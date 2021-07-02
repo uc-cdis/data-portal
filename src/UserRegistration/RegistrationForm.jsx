@@ -30,8 +30,14 @@ function RegistrationForm({
 
   const [isValidInput, setIsValidInput] = useState(false);
   useEffect(() => {
-    setIsValidInput(firstName !== '' && lastName !== '' && institution !== '');
-  }, [firstName, lastName, institution]);
+    const isAllDocumentsReviewed = Object.values(reviewStatus).every(Boolean);
+    setIsValidInput(
+      firstName !== '' &&
+        lastName !== '' &&
+        institution !== '' &&
+        isAllDocumentsReviewed
+    );
+  }, [firstName, lastName, institution, reviewStatus]);
 
   /** @type {[UserRegistrationView, React.Dispatch<React.SetStateAction<UserRegistrationView>>]} */
   const [currentView, setCurrentView] = useState('input');
