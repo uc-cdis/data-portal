@@ -14,4 +14,5 @@
  * @property {string} firstName
  * @property {string} lastName
  * @property {string} institution
+ * @property {{ [id: number]: boolean }} [reviewStatus]
  */

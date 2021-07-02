@@ -24,6 +24,7 @@ function RegistrationForm({
   const [lastName, setLastName] = useState('');
   const [institution, setInstitution] = useState('');
 
+  /** @type {{ [id: number]: boolean }} */
   const initialReviewStatus = {};
   for (const { id } of docsToBeReviewed) initialReviewStatus[id] = false;
   const [reviewStatus, setReviewStatus] = useState(initialReviewStatus);
@@ -45,10 +46,12 @@ function RegistrationForm({
   const [isSubscribed, setIsSubscribed] = useState(false);
   function handleRegister() {
     setIsRegistering(true);
-    onRegister({ firstName, lastName, institution }).then((status) => {
-      setIsRegistering(false);
-      setCurrentView(status);
-    });
+    onRegister({ firstName, lastName, institution, reviewStatus }).then(
+      (status) => {
+        setIsRegistering(false);
+        setCurrentView(status);
+      }
+    );
   }
 
   function handleClose() {

@@ -20,9 +20,10 @@ function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
   }
 
   function handleRegister(/** @type {UserRegistrationInput} */ userInput) {
+    const { reviewStatus, ...userInformation } = userInput;
     return Promise.all([
       fetch(`${userapiPath}user/`, {
-        body: JSON.stringify(userInput),
+        body: JSON.stringify(userInformation),
         credentials: 'include',
         headers,
         method: 'PUT',
