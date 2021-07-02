@@ -10,7 +10,7 @@ import './typedef';
  * @param {Object} prop
  * @param {UserRegistrationDocument[]} prop.docsToBeReviewed
  * @param {boolean} prop.shouldRegister
- * @param {(response: Response) => Promise<('success' | 'error')>} prop.updateAccess
+ * @param {(responses: Response[]) => Promise<('success' | 'error')>} prop.updateAccess
  */
 function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
   const [show, setShow] = useState(shouldRegister);
@@ -20,12 +20,14 @@ function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
   }
 
   function handleRegister(/** @type {UserRegistrationInput} */ userInput) {
-    return fetch(`${userapiPath}user/`, {
-      body: JSON.stringify(userInput),
-      credentials: 'include',
-      headers,
-      method: 'PUT',
-    }).then(updateAccess);
+    return Promise.all([
+      fetch(`${userapiPath}user/`, {
+        body: JSON.stringify(userInput),
+        credentials: 'include',
+        headers,
+        method: 'PUT',
+      }),
+    ]).then(updateAccess);
   }
 
   function handleSubscribe() {

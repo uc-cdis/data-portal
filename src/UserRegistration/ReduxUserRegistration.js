@@ -11,10 +11,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   /**
-   * @param {Response} response
+   * @param {Response[]} responses
    * @returns {Promise<('success' | 'error')>}
    */
-  updateAccess: (response) =>
+  updateAccess: ([response]) =>
     response.ok
       ? response.json().then((user) => {
           if (user.authz['/portal'] !== undefined) {
