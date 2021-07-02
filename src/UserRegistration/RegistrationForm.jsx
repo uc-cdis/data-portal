@@ -5,6 +5,17 @@ import Button from '../gen3-ui-component/components/Button';
 import SimpleInputField from '../components/SimpleInputField';
 
 /**
+ * @typedef {Object} UserRegistrationDocument
+ * @property {string} formatted
+ * @property {number} id
+ * @property {string} name
+ * @property {string} raw
+ * @property {boolean} required
+ * @property {string} type
+ * @property {number} version
+ */
+
+/**
  * @typedef {Object} UserRegistrationInput
  * @property {string} firstName
  * @property {string} lastName
@@ -15,7 +26,7 @@ import SimpleInputField from '../components/SimpleInputField';
 
 /**
  * @param {Object} prop
- * @param {Object[]} prop.docsToBeReviewed
+ * @param {UserRegistrationDocument[]} prop.docsToBeReviewed
  * @param {() => void} prop.onClose
  * @param {(userInput: UserRegistrationInput) => Promise<('success' | 'error')>} prop.onRegister
  * @param {(userInput: UserRegistrationInput) => void} prop.onSubscribe

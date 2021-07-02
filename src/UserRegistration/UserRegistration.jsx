@@ -6,6 +6,17 @@ import RegistrationForm from './RegistrationForm';
 import './UserRegistration.css';
 
 /**
+ * @typedef {Object} UserRegistrationDocument
+ * @property {string} formatted
+ * @property {number} id
+ * @property {string} name
+ * @property {string} raw
+ * @property {boolean} required
+ * @property {string} type
+ * @property {number} version
+ */
+
+/**
  * @typedef {Object} UserRegistrationInput
  * @property {string} firstName
  * @property {string} lastName
@@ -14,7 +25,7 @@ import './UserRegistration.css';
 
 /**
  * @param {Object} prop
- * @param {Object[]} prop.docsToBeReviewed
+ * @param {UserRegistrationDocument[]} prop.docsToBeReviewed
  * @param {boolean} prop.shouldRegister
  * @param {(response: Response) => Promise<('success' | 'error')>} prop.updateAccess
  */
