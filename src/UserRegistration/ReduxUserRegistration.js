@@ -14,9 +14,9 @@ const mapDispatchToProps = (dispatch) => ({
    * @param {Response[]} responses
    * @returns {Promise<('success' | 'error')>}
    */
-  updateAccess: ([response]) =>
-    response.ok
-      ? response.json().then((user) => {
+  updateAccess: ([userResponse, documentsResponse]) =>
+    userResponse.ok && documentsResponse.ok
+      ? userResponse.json().then((user) => {
           if (user.authz['/portal'] !== undefined) {
             dispatch({ type: 'RECEIVE_USER', user });
             dispatch(fetchUserAccess);

@@ -28,6 +28,12 @@ function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
         headers,
         method: 'PUT',
       }),
+      fetch(`${userapiPath}user/documents`, {
+        body: JSON.stringify(reviewStatus),
+        credentials: 'include',
+        headers,
+        method: 'POST',
+      }),
     ]).then(updateAccess);
   }
 
