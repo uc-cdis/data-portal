@@ -15,11 +15,17 @@ import SimpleInputField from '../components/SimpleInputField';
 
 /**
  * @param {Object} prop
+ * @param {Object[]} prop.docsToBeReviewed
  * @param {() => void} prop.onClose
  * @param {(userInput: UserRegistrationInput) => Promise<('success' | 'error')>} prop.onRegister
  * @param {(userInput: UserRegistrationInput) => void} prop.onSubscribe
  */
-function RegistrationForm({ onClose, onRegister, onSubscribe }) {
+function RegistrationForm({
+  docsToBeReviewed,
+  onClose,
+  onRegister,
+  onSubscribe,
+}) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [institution, setInstitution] = useState('');
@@ -163,6 +169,7 @@ function RegistrationForm({ onClose, onRegister, onSubscribe }) {
 }
 
 RegistrationForm.propTypes = {
+  docsToBeReviewed: PropTypes.array,
   onClose: PropTypes.func,
   onRegister: PropTypes.func,
   onSubscribe: PropTypes.func,

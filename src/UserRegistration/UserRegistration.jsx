@@ -14,10 +14,11 @@ import './UserRegistration.css';
 
 /**
  * @param {Object} prop
+ * @param {Object[]} prop.docsToBeReviewed
  * @param {boolean} prop.shouldRegister
  * @param {(response: Response) => Promise<('success' | 'error')>} prop.updateAccess
  */
-function UserRegistration({ shouldRegister, updateAccess }) {
+function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
   const [show, setShow] = useState(shouldRegister);
 
   function handleClose() {
@@ -41,6 +42,7 @@ function UserRegistration({ shouldRegister, updateAccess }) {
     show && (
       <SimplePopup>
         <RegistrationForm
+          docsToBeReviewed={docsToBeReviewed}
           onClose={handleClose}
           onRegister={handleRegister}
           onSubscribe={handleSubscribe}
@@ -51,6 +53,7 @@ function UserRegistration({ shouldRegister, updateAccess }) {
 }
 
 UserRegistration.propTypes = {
+  docsToBeReviewed: PropTypes.array,
   shouldRegister: PropTypes.bool.isRequired,
   updateAccess: PropTypes.func.isRequired,
 };
