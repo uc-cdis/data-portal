@@ -11,7 +11,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   addToggleOne: (key, count) => dispatch(addToggleOne(key, count)),
   addToggleAll: () => dispatch(addToggleAll()),
-  deselectAll: (count) => dispatch(deselectAll(count)),
+  deselectAll: () => dispatch(deselectAll()),
 });
 
 const ReduxExplorerTable = connect(mapStateToProps, mapDispatchToProps)(ExplorerTable);
