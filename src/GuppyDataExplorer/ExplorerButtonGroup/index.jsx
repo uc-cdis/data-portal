@@ -12,10 +12,12 @@ import { fetchWithCreds } from '../../actions';
 import { manifestServiceApiPath, guppyGraphQLUrl, terraExportWarning } from '../../localconf';
 import './ExplorerButtonGroup.css';
 import Popup from '../../components/Popup';
+import {manifestTickBoxFilter} from '../ExplorerTable/ExplorerTickBox/actions';
 
 class ExplorerButtonGroup extends React.Component {
   constructor(props) {
     super(props);
+    this.manifestTickBoxFilter = manifestTickBoxFilter.bind(this)
     this.state = {
       // for manifest
       manifestEntryCount: 0,
@@ -356,7 +358,8 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   downloadManifest = (filename, indexType) => async () => {
-    const resultManifest = await this.getManifest(indexType);
+    var resultManifest = await this.getManifest(indexType);
+    resultManifest = this.manifestTickBoxFilter(resultManifest);
     if (resultManifest) {
       const blob = new Blob([JSON.stringify(resultManifest, null, 2)], { type: 'text/json' });
       FileSaver.saveAs(blob, filename);

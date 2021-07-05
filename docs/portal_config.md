@@ -227,6 +227,9 @@ Below is an example, with inline comments describing what each JSON block config
       ],
       "linkFields": [ // optional; fields (must exist in "field" list above) to display as clickable buttons
         "url"
+      ],
+      "tickBox": [ // optional; fields (must exist in "field" list above) to display as checkboxes. This is used to filter items in the manifest.json download, for example if the user only wants a subset of files
+        "object_id"
       ]
     },
     "dropdowns": { // optional; lists dropdowns if you want to combine multiple buttons into one dropdown (ie. Download dropdown has Download Manifest and Download Clinical Data as options)

@@ -7,6 +7,9 @@ import {
 const mapStateToProps = (state) => ({
   job: state.analysis.job,
   userAccess: state.userAccess.access,
+  selectingMode: state.tickbox.selectingMode,
+  filteredItems: state.tickbox.filteredItems,
+  allSelected: state.tickbox.allSelected
 });
 
 const mapDispatchToProps = (dispatch) => ({

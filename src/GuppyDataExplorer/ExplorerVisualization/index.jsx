@@ -8,7 +8,7 @@ import { components } from '../../params';
 import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../../localconf';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerHeatMap from '../ExplorerHeatMap';
-import ExplorerTable from '../ExplorerTable';
+import ReduxExplorerTable from '../ExplorerTable/ReduxExplorerTable';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import {
   TableConfigType,
@@ -138,8 +138,8 @@ class ExplorerVisualization extends React.Component {
             buttonConfig={this.props.buttonConfig}
             guppyConfig={this.props.guppyConfig}
             totalCount={this.props.totalCount}
-            downloadRawData={this.props.downloadRawData}
-            downloadRawDataByFields={this.props.downloadRawDataByFields}
+            downloadRawData={this.props.downloadRawData} 
+            downloadRawDataByFields={this.props.downloadRawDataByFields} 
             getTotalCountsByTypeAndFilter={this.props.getTotalCountsByTypeAndFilter}
             downloadRawDataByTypeAndFilter={this.props.downloadRawDataByTypeAndFilter}
             filter={this.props.filter}
@@ -231,12 +231,13 @@ class ExplorerVisualization extends React.Component {
         }
         {
           this.props.tableConfig.enabled && (
-            <ExplorerTable
+            <ReduxExplorerTable
               className='guppy-explorer-visualization__table'
               tableConfig={{
                 fields: tableColumns,
                 ordered: tableColumnsOrdered,
                 linkFields: this.props.tableConfig.linkFields || [],
+                tickBox: this.props.tableConfig.tickBox || [],
               }}
               fetchAndUpdateRawData={this.props.fetchAndUpdateRawData}
               rawData={this.props.rawData}

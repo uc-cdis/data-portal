@@ -4,6 +4,7 @@ import _ from 'lodash';
 import pluralize from 'pluralize';
 import ReactTable from 'react-table';
 import { Switch } from 'antd';
+import CheckBox from '../../components/CheckBox';
 import 'react-table/react-table.css';
 import IconicLink from '../../components/buttons/IconicLink';
 import { GuppyConfigType, TableConfigType } from '../configTypeDef';
@@ -11,10 +12,12 @@ import { capitalizeFirstLetter, humanFileSize } from '../../utils';
 import './ExplorerTable.css';
 import LockIcon from '../../img/icons/lock.svg';
 import dictIcons from '../../img/icons/index';
+import {isSelected} from './ExplorerTickBox/actions'
 
 class ExplorerTable extends React.Component {
   constructor(props) {
     super(props);
+    this.isSelected = isSelected.bind(this);
     this.state = {
       loading: false,
       pageSize: props.defaultPageSize,
@@ -23,8 +26,17 @@ class ExplorerTable extends React.Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.totalCount != prevProps.totalCount) {
+      this.props.deselectAll();
+    }
+  }
+
   getWidthForColumn = (field, columnName) => {
     if (this.props.tableConfig.linkFields.includes(field)) {
+      return 80;
+    }
+    if (this.props.tableConfig.tickBox.includes(field)) {
       return 80;
     }
 
@@ -128,8 +140,6 @@ class ExplorerTable extends React.Component {
         }
         // handling some special field types
         switch (field) {
-        case this.props.guppyConfig.downloadAccessor:
-          return (<div><span title={valueStr}><a href={`/files/${valueStr}`}>{valueStr}</a></span></div>);
         case 'file_size':
           return (<div><span title={valueStr}>{humanFileSize(valueStr)}</span></div>);
         case this.props.tableConfig.linkFields.includes(field) && field:
@@ -147,6 +157,18 @@ class ExplorerTable extends React.Component {
               />
             )
             : null;
+        case this.props.tableConfig.tickBox.includes(field) && field:
+          return valueStr ?
+            <CheckBox
+              id={valueStr}
+              item={valueStr}
+              isSelected={this.isSelected(valueStr)}
+              onChange={() => this.props.addToggleOne(valueStr, this.props.totalCount)}
+              isEnabled={true}
+            />
+            : null;
+        case this.props.guppyConfig.downloadAccessor:
+          return (<div><span title={valueStr}><a href={`/files/${valueStr}`}>{valueStr}</a></span></div>)
         default:
           return (<div><span title={valueStr}>{valueStr}</span></div>);
         }
@@ -353,6 +375,14 @@ class ExplorerTable extends React.Component {
             </div>
           )}
 
+      <div>
+        <CheckBox
+          isEnabled={true}
+          isSelected={this.props.allSelected}
+          onChange={() => this.props.addToggleAll()}
+        /> Select All
+      </div>
+
         <ReactTable
           columns={rootColumnsConfig}
           manual
@@ -389,6 +419,11 @@ ExplorerTable.propTypes = {
   defaultPageSize: PropTypes.number,
   tableConfig: TableConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
+  // for tickboxes
+  allSelected: PropTypes.bool.isRequired,
+  deselectAll: PropTypes.func.isRequired,
+  addToggleOne: PropTypes.func.isRequired,
+  addToggleAll: PropTypes.func.isRequired,
 };
 
 ExplorerTable.defaultProps = {
