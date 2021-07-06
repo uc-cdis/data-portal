@@ -18,7 +18,7 @@ function getSelectAllState() {
 const tickbox = (state = {selectingMode: true, filteredItems: {}, allSelected: false}, action) => {
   switch (action.type) {
     case 'DESELECT_TICKBOX':
-      if (state.selectingMode && state.filteredItems == {} && !allSelected) {
+      if (state.selectingMode && state.filteredItems == {} && !state.allSelected) {
         return state;
       }
       return getInitialState();
