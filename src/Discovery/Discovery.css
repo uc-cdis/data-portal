@@ -188,7 +188,7 @@
  * ------------------------------------------------------------------------ */
 .discovery-table__expanded-row--hover > td.ant-table-cell {
   font-size: 12px;
-  padding-bottom: 5px;
+  padding: 0;
   border-bottom: 1px solid #ccc;
 }
 
@@ -202,14 +202,13 @@
   border-color: #dfe3e2;
   background: #dfe3e2;
   font-size: 12px;
-  padding-bottom: 5px;
+  padding: 0;
   border-bottom: 1px solid #ccc;
 }
 
 .discovery-table-container tr.discovery-table__expanded-row--hover > td {
   border-top: none;
   background: #fff;
-  transition: ;
 }
 
 .discovery-table-container .ant-table-tbody > tr.discovery-table__row > td {
@@ -245,6 +244,8 @@
   height: 35px;
   width: 100%;
   overflow: hidden;
+  padding: 0 16px 0 16px;
+  margin: 1px 0 1px 0;
   /* ---------
      * Add an ellipsis after N rows of text.
      * This css won't work in IE 11, but it's ok, there just won't be an ellipsis.
