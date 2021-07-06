@@ -11,8 +11,10 @@ function MapSlider({
   return (
     <div id='map-slider' className='map-slider top'>
       <div className='map-overlay-inner' id='map-overlay-inner'>
-        <h2>{title}</h2>
-        <input id='slider' type='range' min='0' max={maxValue} step='1' value={value} onChange={(e) => { onChange(Number(e.target.value)); }} />
+        <label>
+          <span>{title}</span>
+          <input id='slider' type='range' min='0' max={maxValue} step='1' value={value} onChange={(e) => { onChange(Number(e.target.value)); }} />
+        </label>
       </div>
     </div>
   );
