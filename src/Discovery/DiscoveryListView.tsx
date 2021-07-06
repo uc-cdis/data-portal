@@ -62,9 +62,13 @@ export const DiscoveryListView: React.FunctionComponent<DiscoveryListViewProps> 
     }
     // combine manifests from all selected studies
     const manifest = [];
-    props.selectedResources.forEach((study) => {
+    props.selectedResources.forEach((study: any) => {
       if (study[manifestFieldName]) {
-        manifest.push(...study[manifestFieldName]);
+        if ('commons_url' in study) { // HEAL addition to allow hostname based DRS in file access clients
+          manifest.push(...study[manifestFieldName].map((x) => ({ ...x, commons_url: study.commons_url })));
+        } else {
+          manifest.push(...study[manifestFieldName]);
+        }
       }
     });
     // post selected resources to manifestservice
@@ -88,9 +92,13 @@ export const DiscoveryListView: React.FunctionComponent<DiscoveryListViewProps> 
     }
     // combine manifests from all selected studies
     const manifest = [];
-    props.selectedResources.forEach((study) => {
+    props.selectedResources.forEach((study: any) => {
       if (study[manifestFieldName]) {
-        manifest.push(...study[manifestFieldName]);
+        if ('commons_url' in study) { // HEAL addition to allow hostname based DRS in file access clients
+          manifest.push(...study[manifestFieldName].map((x) => ({ ...x, commons_url: study.commons_url })));
+        } else {
+          manifest.push(...study[manifestFieldName]);
+        }
       }
     });
     // download the manifest
