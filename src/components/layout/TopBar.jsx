@@ -50,7 +50,7 @@ class TopBar extends Component {
                     const itemHref = (isLinkEmailAddress) ? `mailto:${item.link}` : item.link;
                     return (
                       <a
-                        className='top-bar__link'
+                        className='top-bar__link g3-ring-on-focus'
                         key={itemHref}
                         href={itemHref}
                         target='_blank'
@@ -68,7 +68,7 @@ class TopBar extends Component {
                   }
                   return (
                     <Link
-                      className='top-bar__link'
+                      className='top-bar__link g3-ring-on-focus'
                       key={item.link}
                       to={item.link}
                     >
@@ -88,7 +88,7 @@ class TopBar extends Component {
               this.props.user.username !== undefined && this.props.useProfileDropdown !== true
               && (
                 <React.Fragment>
-                  <Link className='top-bar__link' to='/identity'>
+                  <Link className='top-bar__link g3-ring-on-focus' to='/identity'>
                     <TopIconButton
                       icon='user-circle'
                       name={this.props.user.username}
@@ -97,7 +97,7 @@ class TopBar extends Component {
                       tabIndex='-1'
                     />
                   </Link>
-                  <Link className='top-bar__link' to='#' onClick={this.props.onLogoutClick}>
+                  <Link className='top-bar__link g3-ring-on-focus' to='#' onClick={this.props.onLogoutClick}>
                     <TopIconButton
                       icon='exit'
                       name='Logout'
@@ -121,7 +121,7 @@ class TopBar extends Component {
                     </React.Fragment>
                   )}
                 >
-                  <Link className='top-bar__link' to='#'>
+                  <Link className='top-bar__link g3-ring-on-focus' to='#'>
                     <TopIconButton
                       icon='user-circle'
                       name=''
@@ -137,7 +137,7 @@ class TopBar extends Component {
               typeof this.props.user.username === 'undefined'
               && (
                 <React.Fragment>
-                  <Link className='top-bar__link' to='/login'>
+                  <Link className='top-bar__link g3-ring-on-focus' to='/login'>
                     <TopIconButton
                       icon='exit'
                       name='Login'

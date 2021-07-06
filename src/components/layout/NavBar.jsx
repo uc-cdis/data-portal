@@ -70,7 +70,7 @@ class NavBar extends Component {
           <div
             key={item.link}
             ref={this.getNavButtonRef(item.link)}
-            className='nav-bar__link nav-bar__link--right'
+            className='nav-bar__link nav-bar__link--right g3-ring-on-focus'
             onMouseOver={() => this.updateTooltip(item)}
             onFocus={() => this.updateTooltip(item)}
             onMouseLeave={() => this.updateTooltip(null)}
@@ -93,7 +93,7 @@ class NavBar extends Component {
       <div className='nav-bar'>
         <header className='nav-bar__header'>
           <nav className='nav-bar__nav--info'>
-            <div className='nav-bar__logo'>
+            <div className='nav-bar__logo g3-ring-on-focus'>
               {homepageHref
                 ? (
                   <a href={homepageHref}>
@@ -122,7 +122,7 @@ class NavBar extends Component {
                   <NavLink
                     exact
                     to=''
-                    className='h3-typo nav-bar__link nav-bar__link--home'
+                    className='h3-typo nav-bar__link nav-bar__link--home g3-ring-on-focus'
                   >
                     {this.props.navTitle}
                   </NavLink>

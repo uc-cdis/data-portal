@@ -11,6 +11,16 @@ import './GqlEditor.less';
 const parameters = {};
 const defaultValue = config.dataExplorerConfig ? 1 : 0;
 
+const handleEscKey = (event) => {
+  // To allow for accessible keyboard navigation,
+  // the user can press Esc to remove focus from
+  // the GraphQL textbox.
+  // https://www.w3.org/TR/UNDERSTANDING-WCAG20/keyboard-operation-trapping.html
+  if (event.keyCode === 27) {
+    document.activeElement.blur();
+  }
+};
+
 class GqlEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -23,6 +33,11 @@ class GqlEditor extends React.Component {
     if (this.props.endpointIndex && this.state.selectedEndpointIndex !== this.props.endpointIndex) {
       this.selectEndpoint(this.props.endpointIndex);
     }
+    document.addEventListener('keydown', handleEscKey);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', handleEscKey);
   }
 
   getOtherIndex = (index) => +!index // will either return 0 or 1
