@@ -328,17 +328,17 @@ export function getGQLFilter(filter) {
       // combine mode defaults to OR when not set.
       else facetsPiece.IN = { [fieldName]: filterValues.selectedValues };
 
-    facetsList.push(
-      fieldSplitted.length === 1
-        ? facetsPiece
-        : // nested field
-          {
-            nested: {
-              path: fieldSplitted.slice(0, -1).join('.'), // parent path
-              ...facetsPiece,
-            },
-          }
-    );
+    if (fieldSplitted.length === 1) {
+      facetsList.push(facetsPiece);
+    } else {
+      // nested field
+      facetsList.push({
+        nested: {
+          path: fieldSplitted.slice(0, -1).join('.'), // parent path
+          ...facetsPiece,
+        },
+      });
+    }
   }
 
   return { AND: facetsList };
