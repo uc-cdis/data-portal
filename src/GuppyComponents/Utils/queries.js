@@ -298,8 +298,11 @@ export function getGQLFilter(filter) {
   if (filter === undefined || Object.keys(filter).length === 0)
     return undefined;
 
+  let facetIndex = 0;
   const facetsList = [];
+  const nestedFacetIndices = {};
   for (const [field, filterValues] of Object.entries(filter)) {
+    facetIndex += 1;
     const fieldSplitted = field.split('.');
     const fieldName = fieldSplitted[fieldSplitted.length - 1];
     const isRangeFilter =
@@ -333,6 +336,9 @@ export function getGQLFilter(filter) {
     } else {
       // nested field
       const path = fieldSplitted.slice(0, -1).join('.'); // parent path
+      if (nestedFacetIndices[path] === undefined)
+        nestedFacetIndices[path] = facetIndex;
+
       facetsList.push({
         nested: {
           path,
