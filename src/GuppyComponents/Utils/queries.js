@@ -332,9 +332,10 @@ export function getGQLFilter(filter) {
       facetsList.push(facetsPiece);
     } else {
       // nested field
+      const path = fieldSplitted.slice(0, -1).join('.'); // parent path
       facetsList.push({
         nested: {
-          path: fieldSplitted.slice(0, -1).join('.'), // parent path
+          path,
           ...facetsPiece,
         },
       });
