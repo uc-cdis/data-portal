@@ -41,14 +41,14 @@ export const getTransactionList = () => {
       }
     }
   `;
-  fetchQuery(environment, query, {}).then(
-    (data) => {
+  fetchQuery(environment, query, {}).subscribe({
+    next: (data) => {
       updateReduxTransactionList(data.transactionList);
     },
-    (error) => {
+    error: (error) => {
       updateReduxError(error);
-    }
-  );
+    },
+  });
 };
 
 const gqlHelper = GQLHelper.getGQLHelper();
@@ -140,13 +140,15 @@ const getProjectDetail = (projectList) => {
   projectList.forEach((project) => {
     fetchQuery(environment, gqlHelper.projectDetailQuery, {
       name: project.name,
-    }).then((data) => {
-      const projInfo = {
-        ...data.project[0],
-        counts: extractCounts(data),
-        charts: extractCharts(data),
-      };
-      updateProjectDetailToRedux(projInfo);
+    }).subscribe({
+      next: (data) => {
+        const projInfo = {
+          ...data.project[0],
+          counts: extractCounts(data),
+          charts: extractCharts(data),
+        };
+        updateProjectDetailToRedux(projInfo);
+      },
     });
   });
 };
@@ -176,17 +178,17 @@ export const getProjectsList = () => {
   checkSubmissionPageState('lastestListUpdating').then(
     (res) => {
       if (res === 'OLD') {
-        fetchQuery(environment, gqlHelper.submissionPageQuery, {}).then(
-          (data) => {
+        fetchQuery(environment, gqlHelper.submissionPageQuery, {}).subscribe({
+          next: (data) => {
             const { projectList, summaryCounts } = transformRelayProps(data);
             updateReduxProjectList({ projectList, summaryCounts }).then(() =>
               getProjectDetail(projectList)
             );
           },
-          (error) => {
+          error: (error) => {
             updateReduxError(error);
-          }
-        );
+          },
+        });
       }
     },
     (error) => {
