@@ -64,7 +64,8 @@ export const DiscoveryListView: React.FunctionComponent<DiscoveryListViewProps> 
     const manifest = [];
     props.selectedResources.forEach((study: any) => {
       if (study[manifestFieldName]) {
-        if ('commons_url' in study) { // HEAL addition to allow hostname based DRS in file access clients
+        if ('commons_url' in study) { // PlanX addition to allow hostname based DRS in manifest download clients
+                                      // like FUSE
           manifest.push(...study[manifestFieldName].map((x) => ({ ...x, commons_url: study.commons_url })));
         } else {
           manifest.push(...study[manifestFieldName]);
@@ -94,7 +95,8 @@ export const DiscoveryListView: React.FunctionComponent<DiscoveryListViewProps> 
     const manifest = [];
     props.selectedResources.forEach((study: any) => {
       if (study[manifestFieldName]) {
-        if ('commons_url' in study) { // HEAL addition to allow hostname based DRS in file access clients
+        if ('commons_url' in study) { // PlanX addition to allow hostname based DRS in manifest download clients
+                                      // like FUSE
           manifest.push(...study[manifestFieldName].map((x) => ({ ...x, commons_url: study.commons_url })));
         } else {
           manifest.push(...study[manifestFieldName]);
