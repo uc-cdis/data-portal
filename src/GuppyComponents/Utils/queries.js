@@ -303,8 +303,11 @@ export function getGQLFilter(filter) {
   const nestedFacetIndices = {};
   for (const [field, filterValues] of Object.entries(filter)) {
     facetIndex += 1;
-    const fieldSplitted = field.split('.');
-    const fieldName = fieldSplitted[fieldSplitted.length - 1];
+
+    const [fieldStr, nestedFieldStr] = field.split('.');
+    const isNestedField = nestedFieldStr !== undefined;
+    const fieldName = isNestedField ? nestedFieldStr : fieldStr;
+
     const isRangeFilter =
       typeof filterValues.lowerBound !== 'undefined' &&
       typeof filterValues.upperBound !== 'undefined';
@@ -331,11 +334,11 @@ export function getGQLFilter(filter) {
       // combine mode defaults to OR when not set.
       else facetsPiece.IN = { [fieldName]: filterValues.selectedValues };
 
-    if (fieldSplitted.length === 1) {
+    if (!isNestedField) {
       facetsList.push(facetsPiece);
     } else {
       // nested field
-      const path = fieldSplitted.slice(0, -1).join('.'); // parent path
+      const path = fieldStr; // parent path
       if (nestedFacetIndices[path] === undefined)
         nestedFacetIndices[path] = facetIndex;
 
