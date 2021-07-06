@@ -25,8 +25,8 @@ function dictToLegendList(colors) {
 
 class LegendPanel extends PureComponent {
   render() {
-    const legendData = this.props.formattedColors.length > 0 ? 
-                       this.props.formattedColors : dictToLegendList(this.props.colors);
+    const legendData = this.props.formattedColors.length > 0
+      ? this.props.formattedColors : dictToLegendList(this.props.colors);
     return (
       <div className='legend-panel'>
         <h3>Legend</h3>

@@ -282,26 +282,29 @@ class Covid19Dashboard extends React.Component {
                 />
               </div>
               <div className='covid19-dashboard_visualizations'>
-                { mapboxAPIToken &&
-                  <IllinoisMapChart
-                    jsonByLevel={this.props.jhuJsonByLevelLatest}
-                    jsonByTime={this.props.jhuJsonByTimeLatest}
-                    modeledFipsList={this.props.modeledFipsList}
-                    fetchTimeSeriesData={this.props.fetchTimeSeriesData}
-                  />
-                }
-                {chartsConfig.illinois && chartsConfig.illinois.length > 0 &&
-                  <div className='covid19-dashboard_charts'>
-                    {chartsConfig.illinois.map((carouselConfig, i) =>
-                      (<ChartCarousel
-                        key={i}
-                        chartsConfig={carouselConfig}
-                        {...this.props}
-                        enablePopupOnClick
-                      />),
-                    )}
-                  </div>
-                }
+                { mapboxAPIToken
+                  && (
+                    <IllinoisMapChart
+                      jsonByLevel={this.props.jhuJsonByLevelLatest}
+                      jsonByTime={this.props.jhuJsonByTimeLatest}
+                      modeledFipsList={this.props.modeledFipsList}
+                      fetchTimeSeriesData={this.props.fetchTimeSeriesData}
+                    />
+                  )}
+                {chartsConfig.illinois && chartsConfig.illinois.length > 0
+                  && (
+                    <div className='covid19-dashboard_charts'>
+                      {chartsConfig.illinois.map((carouselConfig, i) => (
+                        <ChartCarousel
+                          key={i}
+                          chartsConfig={carouselConfig}
+                          {...this.props}
+                          enablePopupOnClick
+                        />
+                      ),
+                      )}
+                    </div>
+                  )}
               </div>
             </TabPanel>
 
@@ -423,7 +426,6 @@ class CustomizedXAxisTick extends React.Component {
 
 Covid19Dashboard.propTypes = {
   fetchDashboardData: PropTypes.func.isRequired,
-  fetchExternalMapData: PropTypes.func.isRequired,
   fetchTimeSeriesData: PropTypes.func.isRequired,
   modeledFipsList: PropTypes.array,
   jhuGeojsonLatest: PropTypes.object,
@@ -438,8 +440,10 @@ Covid19Dashboard.propTypes = {
 Covid19Dashboard.defaultProps = {
   modeledFipsList: [],
   jhuGeojsonLatest: { type: 'FeatureCollection', features: [] },
-  jhuJsonByLevelLatest: { country: {}, state: {}, county: {}, last_updated: '' },
-  jhuJsonByTimeLatest: {il_county_list: {}, last_updated: ''},
+  jhuJsonByLevelLatest: {
+    country: {}, state: {}, county: {}, last_updated: '',
+  },
+  jhuJsonByTimeLatest: { il_county_list: {}, last_updated: '' },
   selectedLocationData: null,
   top10ChartData: [],
   idphDailyChartData: [],

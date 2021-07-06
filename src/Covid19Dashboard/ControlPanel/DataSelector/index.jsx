@@ -10,19 +10,20 @@ class DataSelector extends React.Component {
         const d = data[k];
         return (
           <div key={k}>
-            <input
-              className='layers-panel__checkbox'
-              type='checkbox'
-              defaultChecked={d.visible === 'visible'}
-              onChange={event => this.props.onDataSelectChange(event, k)}
-            />
-            <label htmlFor={k}>{d.title}</label>
+            <label>
+              <input
+                className='layers-panel__checkbox'
+                type='checkbox'
+                defaultChecked={d.visible === 'visible'}
+                onChange={(event) => this.props.onDataSelectChange(event, k)}
+              />
+              {d.title}
+            </label>
           </div>
         );
       });
     return (
       <div className='map-selector'>
-
         {
           listItems
         }

@@ -25,7 +25,7 @@ import Spinner from '../../components/Spinner';
 
 // check the data commons url to check if prod or qa environment
 // pull data from qa for everything that is not prod
-const occEnv = covid19DashboardConfig.dataUrl === "https://opendata.datacommons.io/" ? "prod" : "qa";
+const occEnv = covid19DashboardConfig.dataUrl === 'https://opendata.datacommons.io/' ? 'prod' : 'qa';
 
 function filterCountyGeoJson(selectedFips) {
   return {
@@ -49,7 +49,6 @@ function formatDate(date) {
 
   return someFormattedDate;
 }
-
 
 class IllinoisMapChart extends React.Component {
   constructor(props) {
@@ -88,7 +87,7 @@ class IllinoisMapChart extends React.Component {
       },
       popup_data: {
         /*
-        This data is used just for the popup on hover*/
+        This data is used just for the popup on hover */
         strain_data: { title: 'Strain Data', visible: 'none' },
         // mobility_data : {title: 'Mobility Data', visible: 'none'},
       },
@@ -99,7 +98,7 @@ class IllinoisMapChart extends React.Component {
       legendTitle: 'Confirmed Cases',
       legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' },
       mobility_data: { data: null, fetchStatus: null },
-      strainData: { data: null, fetchStatus: null }
+      strainData: { data: null, fetchStatus: null },
     };
     this.mapData = {
       modeledCountyGeoJson: null,
@@ -160,7 +159,7 @@ class IllinoisMapChart extends React.Component {
         [`${colorRangeMath(10)} +`, '#850001'],
       ];
       this.mapData.colorsAsList = Object.entries(this.mapData.colors)
-        .map(item => [+item[0], item[1]]).flat();
+        .map((item) => [+item[0], item[1]]).flat();
 
       this.setState({ mapColors: this.mapData.colors }); // eslint-disable-line react/no-did-update-set-state, max-len
     }
@@ -175,7 +174,7 @@ class IllinoisMapChart extends React.Component {
       this.addStrainDataToState();
     }
   }
-  
+
   onHover = (event) => {
     if (!event.features) { return; }
     let hoverInfo = null;
@@ -229,10 +228,10 @@ class IllinoisMapChart extends React.Component {
         hoverInfo.mobility_values = {
           'Retail & Recreation': rnr,
           'Grocery & Pharmacy': gnp,
-          'Parks': prk,
-          'Transit': trn,
-          'Workplaces': wrk,
-          'Residential': res,
+          Parks: prk,
+          Transit: trn,
+          Workplaces: wrk,
+          Residential: res,
         };
       }
 
@@ -279,10 +278,10 @@ class IllinoisMapChart extends React.Component {
         ['-40% - -20%', '#E6B71E'],
         ['-20% - 0%', '#DA9C20'],
         ['0% - 20%', '#CA8323'],
-        ['20% - 20%', '#B86B25'],
-        ['40% - 30%', '#A25626'],
-        ['80% - 40%', '#8B4225'],
-        ['100% +', '#850001'],
+        ['20% - 40%', '#B86B25'],
+        ['40% - 60%', '#A25626'],
+        ['60% - 80%', '#8B4225'],
+        ['80% - 100% +', '#850001'],
       ];
       this.setState({ mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google Mobility Data', link: 'https://www.google.com/covid19/mobility/' } });
     }
@@ -292,13 +291,13 @@ class IllinoisMapChart extends React.Component {
     // Only select Illinois data.
     // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
     // but not in JHU data. So don't display Chicago separately.
-    this.setState({ mobility_data: {data: null, fetchStatus: 'fetching'} });
+    this.setState({ mobility_data: { data: null, fetchStatus: 'fetching' } });
     fetch(`https://covd-map-occ-prc-${occEnv}.s3.amazonaws.com/google_mobility_data.json`)
-      .then(resp => resp.json())
+      .then((resp) => resp.json())
       .then((data) => {
         const base = {
           ...countyData,
-          features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
+          features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
         };
         const geoJson = {
           ...base,
@@ -319,10 +318,9 @@ class IllinoisMapChart extends React.Component {
             return location;
           }),
         };
-        this.setState({ mobility_data: {data: geoJson, fetchStatus: 'done'} });
+        this.setState({ mobility_data: { data: geoJson, fetchStatus: 'done' } });
       })
-      .catch(() => {console.warn('Data not retrieved. Unable to display mobility overlays')}) // eslint-disable-line no-console
-    
+      .catch(() => { console.warn('Data not retrieved. Unable to display mobility overlays'); }); // eslint-disable-line no-console
   }
 
   addTimeDataToGeoJsonBase = (data) => {
@@ -331,7 +329,7 @@ class IllinoisMapChart extends React.Component {
     // but not in JHU data. So don't display Chicago separately.
     const base = {
       ...countyData,
-      features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
+      features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
     };
     const geoJson = {
       ...base,
@@ -363,17 +361,17 @@ class IllinoisMapChart extends React.Component {
   }
 
   addStrainDataToState = () => {
-    this.setState({ strainData: {data: null, fetchStatus: 'fetching'} });
+    this.setState({ strainData: { data: null, fetchStatus: 'fetching' } });
     fetch(`https://covd-map-occ-prc-${occEnv}.s3.amazonaws.com/gagnon_lab_strain_data.json`)
-      .then(resp => resp.json())
+      .then((resp) => resp.json())
       .then((data) => {
-        this.setState({ strainData: {data: data, fetchStatus: 'done'} });
+        this.setState({ strainData: { data, fetchStatus: 'done' } });
       })
-      .catch(() => {console.warn('Data not retrieved. Unable to display mobility overlays')}) // eslint-disable-line no-console
+      .catch(() => { console.warn('Data not retrieved. Unable to display mobility overlays'); }); // eslint-disable-line no-console
   }
 
   onDataSelect = (event, id) => {
-    const newState = Object.assign({}, this.state.popup_data);
+    const newState = { ...this.state.popup_data };
     newState[id].visible = event.target.checked ? 'visible' : 'none';
     this.setState(newState);
   }
@@ -393,40 +391,44 @@ class IllinoisMapChart extends React.Component {
               {hoverInfo.locationName}
             </h4>
             {
-              hoverInfo.case_values &&
-              Object.entries(hoverInfo.case_values).map(
+              hoverInfo.case_values
+              && Object.entries(hoverInfo.case_values).map(
                 (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>,
               )
             }
             {
-              hoverInfo.mobility_values &&
-              Object.entries(hoverInfo.mobility_values).map(
+              hoverInfo.mobility_values
+              && Object.entries(hoverInfo.mobility_values).map(
                 (val, i) => <p key={i}>{`${val[1]}% ${val[0]}`}</p>,
               )
             }
             {
-              hoverInfo.strain_values &&
-              (
+              hoverInfo.strain_values
+              && (
                 <table>
                   <caption>Strain Data</caption>
-                  {Object.entries(hoverInfo.strain_values).map((val, i) => {
-                    const secondCol = Object.entries(hoverInfo.strain_values)[i + 1] || ['', ''];
-                    if (i % 2 !== 0) {
-                      return (<tr><td key={i}>{`${val[0]} ${val[1]}`}</td><td key={i + 1}>{`${secondCol[0]} ${secondCol[1]}`}</td></tr>);
-                    }
-                    return null;
-                  },
-                  )}
+                  <tbody>
+                    {Object.entries(hoverInfo.strain_values).map((val, i) => {
+                      const secondCol = Object.entries(hoverInfo.strain_values)[i + 1] || ['', ''];
+                      if (i % 2 !== 0) {
+                        return (<tr key={i}><td>{`${val[0]} ${val[1]}`}</td><td>{`${secondCol[0]} ${secondCol[1]}`}</td></tr>);
+                      }
+                      return null;
+                    },
+                    )}
+                  </tbody>
                 </table>
               )
             }
             {
-              hoverInfo.case_values && 
-              (<p className='covid19-dashboard__location-info__click'>
+              hoverInfo.case_values
+              && (
+                <p className='covid19-dashboard__location-info__click'>
                 Click for real time plotting {this.props.modeledFipsList.includes(hoverInfo.FIPS) ? '\nand simulations' : ''}
-              </p>)
+                </p>
+              )
             }
-            
+
           </div>
         </ReactMapGL.Popup>
       );
@@ -445,20 +447,22 @@ class IllinoisMapChart extends React.Component {
   render() {
     return (
       <div className='map-chart map-chart-il'>
-        {this.state.mapColors &&
-        <ControlPanel
-          showMapStyle={false}
-          showLegend
-          formattedColors={this.state.mapColors}
-          lastUpdated={this.props.jsonByTime.last_updated}
-          layers={this.state.overlay_layers}
-          dataPoints={this.state.popup_data}
-          activeLayer={this.state.activeLayer}
-          onLayerSelectChange={this.onLayerSelect}
-          onDataSelectChange={this.onDataSelect}
-          legendTitle={this.state.legendTitle}
-          legendDataSource={this.state.legendDataSource}
-        />}
+        {this.state.mapColors
+        && (
+          <ControlPanel
+            showMapStyle={false}
+            showLegend
+            formattedColors={this.state.mapColors}
+            lastUpdated={this.props.jsonByTime.last_updated}
+            layers={this.state.overlay_layers}
+            dataPoints={this.state.popup_data}
+            activeLayer={this.state.activeLayer}
+            onLayerSelectChange={this.onLayerSelect}
+            onDataSelectChange={this.onDataSelect}
+            legendTitle={this.state.legendTitle}
+            legendDataSource={this.state.legendDataSource}
+          />
+        )}
         <ReactMapGL.InteractiveMap
           className='.map-chart__mapgl-map'
           mapboxApiAccessToken={mapboxAPIToken}
@@ -474,11 +478,11 @@ class IllinoisMapChart extends React.Component {
           touchRotate={false}
         >
           {this.renderHoverPopup()}
-          {/*Line below ensures that if a user selects the mobility layers before it is
-           finished retrieving then the spinner indicates that the data is being downloaded*/}
-          {this.state.activeLayer.includes('mobility_data') && this.state.mobility_data.fetchStatus !== 'done' && <Spinner text={'Downloading mobility data'}/>}
-          {this.state.time_data &&
-            <TimeCaseLayer visibility={this.state.activeLayer === 'time_data' ? 'visible' : 'none'} data={this.state.time_data} date={this.state.sliderDate} />}
+          {/* Line below ensures that if a user selects the mobility layers before it is
+           finished retrieving then the spinner indicates that the data is being downloaded */}
+          {this.state.activeLayer.includes('mobility_data') && this.state.mobility_data.fetchStatus !== 'done' && <Spinner text={'Downloading mobility data'} />}
+          {this.state.time_data
+            && <TimeCaseLayer visibility={this.state.activeLayer === 'time_data' ? 'visible' : 'none'} data={this.state.time_data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayer visibility={this.state.activeLayer === 'rnr_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerGnp visibility={this.state.activeLayer === 'gnp_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerPrk visibility={this.state.activeLayer === 'prk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
