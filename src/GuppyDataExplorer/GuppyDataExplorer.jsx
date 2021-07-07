@@ -22,7 +22,7 @@ import './GuppyDataExplorer.css';
 /**
  * @param {URLSearchParams} searchParams
  * @param {{ tabs: { fields: string[] }[] }} filterConfig
- * @param {{ enabled?: boolean }} patientIdsConfig
+ * @param {{ enabled?: boolean; export?: boolean }} patientIdsConfig
  */
 function extractExplorerStateFromURL(
   searchParams,
