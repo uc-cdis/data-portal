@@ -1,4 +1,4 @@
-import { discoveryConfig, aggMDSDataURL } from '../localconf';
+import { aggMDSDataURL, discoveryConfig, hostname } from '../localconf';
 
 const retrieveFieldMapping = async (commonsName) => {
   const url = `${aggMDSDataURL}/${commonsName}/columns_to_fields`;
@@ -140,20 +140,14 @@ const loadStudiesFromAggMDS = async () => {
 };
 
 const loadAuthMappingsFromWTS = async () => {
-  // const url = `http://localhost:5000/aggregate/authz`;
-  // const res = await fetch(url);
-  // if (res.status !== 200) {
-    // throw new Error(`Request for aggregate auth mappings at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
-  // }
+  const res = await fetch(`${hostname}wts/aggregate/authz`);
+  // don't throw error when user isn't logged in
+  if (res.status !== 200) {
+    return {};
+  }
 
-  // const aggregateAuthMappings  = await res.json();
-  // return aggregateAuthMappings;
-
-    return {
-        "john.planx-pla.net": { "/programs/DEV/projects/grasshopper": [{ "method": "read", "service": "*"}]},
-        "qa-anvil.planx-pla.net": { "/programs/DEV/projects/dolphin": [{ "method": "read", "service": "*"}]},
-        "qa-brain.planx-pla.net": { "/programs/DEV/projects/hummingbird": [{ "method": "read", "service": "*"}]}
-    };
+  const aggregateAuthMappings = await res.json();
+  return aggregateAuthMappings;
 };
 
 export { loadStudiesFromAggMDS, loadAuthMappingsFromWTS };

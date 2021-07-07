@@ -66,15 +66,10 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (isEnabled('discoveryUseAggMDS')) {
         loadStudiesFunction = loadStudiesFromAggMDS;
         const userAuthMappings = await loadAuthMappingsFromWTS();
-        getUserAuthMapping = (study) => {
-          return userAuthMappings[study.commons_url];
-        };
+        getUserAuthMapping = study => userAuthMappings[study.commons_url];
       } else {
         loadStudiesFunction = loadStudiesFromMDS;
-        // XXX use _ instead of study?
-        getUserAuthMapping = (study) => {
-          return props.userAuthMapping;
-        };
+        getUserAuthMapping = () => props.userAuthMapping;
       }
       loadStudiesFunction().then((rawStudies) => {
         if (props.config.features.authorization.enabled) {
@@ -96,7 +91,7 @@ const DiscoveryWithMDSBackend: React.FC<{
         // eslint-disable-next-line no-console
         console.error('Error encountered while loading studies: ', err);
       });
-    };
+    }
     loadStudiesWrapper();
   }, []);
 
