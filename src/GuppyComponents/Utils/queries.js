@@ -334,10 +334,7 @@ export function getGQLFilter(filter) {
       // combine mode defaults to OR when not set.
       else facetsPiece.IN = { [fieldName]: filterValues.selectedValues };
 
-    if (!isNestedField) {
-      facetsList.push(facetsPiece);
-    } else {
-      // nested field
+    if (isNestedField) {
       const path = fieldStr; // parent path
       if (nestedFacetIndices[path] === undefined)
         nestedFacetIndices[path] = facetIndex;
@@ -348,6 +345,8 @@ export function getGQLFilter(filter) {
           ...facetsPiece,
         },
       });
+    } else {
+      facetsList.push(facetsPiece);
     }
   }
 
