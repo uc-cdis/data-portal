@@ -208,7 +208,7 @@ function ExplorerVisualization({
           ))}
         </div>
         <div className='guppy-explorer-visualization__button-group'>
-          {patientIdsConfig?.enabled && (
+          {patientIdsConfig?.enabled && patientIdsConfig?.export && (
             <ExplorerFindCohortButton filter={filter} />
           )}
           <ReduxExplorerButtonGroup {...buttonGroupProps} />
