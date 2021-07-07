@@ -334,19 +334,23 @@ export function getGQLFilter(filter) {
 
     if (isNestedField) {
       const path = fieldStr; // parent path
-      if (path in nestedFacetIndices) nestedFacetIndices[path] = facetIndex;
-
-      facetsList.push({
-        nested: {
-          path,
-          ...facetsPiece,
-        },
-      });
+      if (path in nestedFacetIndices) {
+        // @ts-ignore
+        facetsList[nestedFacetIndices[path]].nested.AND.push(facetsPiece);
+      } else {
+        nestedFacetIndices[path] = facetIndex;
+        facetsList.push({
+          nested: {
+            path,
+            AND: [facetsPiece],
+          },
+        });
+        facetIndex += 1;
+      }
     } else {
       facetsList.push(facetsPiece);
+      facetIndex += 1;
     }
-
-    facetIndex += 1;
   }
 
   return { AND: facetsList };
