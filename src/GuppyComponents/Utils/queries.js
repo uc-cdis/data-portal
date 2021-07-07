@@ -298,10 +298,14 @@ export function getGQLFilter(filter) {
   if (filter === undefined || Object.keys(filter).length === 0)
     return undefined;
 
+  let facetIndex = 0;
   const facetsList = [];
+  const nestedFacetIndices = {};
   for (const [field, filterValues] of Object.entries(filter)) {
-    const fieldSplitted = field.split('.');
-    const fieldName = fieldSplitted[fieldSplitted.length - 1];
+    const [fieldStr, nestedFieldStr] = field.split('.');
+    const isNestedField = nestedFieldStr !== undefined;
+    const fieldName = isNestedField ? nestedFieldStr : fieldStr;
+
     const isRangeFilter =
       typeof filterValues.lowerBound !== 'undefined' &&
       typeof filterValues.upperBound !== 'undefined';
@@ -327,17 +331,25 @@ export function getGQLFilter(filter) {
       continue;
     else throw new Error(`Invalid filter object ${filterValues}`);
 
-    facetsList.push(
-      fieldSplitted.length === 1
-        ? facetsPiece
-        : // nested field
-          {
-            nested: {
-              path: fieldSplitted.slice(0, -1).join('.'), // parent path
-              ...facetsPiece,
-            },
-          }
-    );
+    if (isNestedField) {
+      const path = fieldStr; // parent path
+      if (path in nestedFacetIndices) {
+        // @ts-ignore
+        facetsList[nestedFacetIndices[path]].nested.AND.push(facetsPiece);
+      } else {
+        nestedFacetIndices[path] = facetIndex;
+        facetsList.push({
+          nested: {
+            path,
+            AND: [facetsPiece],
+          },
+        });
+        facetIndex += 1;
+      }
+    } else {
+      facetsList.push(facetsPiece);
+      facetIndex += 1;
+    }
   }
 
   return { AND: facetsList };
