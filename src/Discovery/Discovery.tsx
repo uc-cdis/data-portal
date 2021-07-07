@@ -468,7 +468,10 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
 
   return (
     <div>
-      <div className={`discovery-header__tag-column ${(tagsColumnExpansionStatus[category.name]) ? 'discovery-tag-column--expanded' : 'discovery-tag-column'}`}>
+      <div
+        id={`discovery-tag-column--${category.name}`}
+        className={`discovery-header__tag-column ${(tagsColumnExpansionStatus[category.name]) ? 'discovery-tag-column--expanded' : 'discovery-tag-column'}`}
+      >
         { tagArray.map(tag =>
           (<Tag
             key={category.name + tag}
@@ -502,6 +505,20 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
         <Button
           type='link'
           onClick={() => {
+            const tagColumn = document.getElementById(`discovery-tag-column--${category.name}`);
+            if (tagColumn) {
+              tagColumn.scrollTop = 0;
+            }
+            setTagsColumnExpansionStatus({
+              ...tagsColumnExpansionStatus,
+              [category.name]: !tagsColumnExpansionStatus[category.name],
+            });
+          }}
+          onKeyPress={() => {
+            const tagColumn = document.getElementById(`discovery-tag-column--${category.name}`);
+            if (tagColumn) {
+              tagColumn.scrollTop = 0;
+            }
             setTagsColumnExpansionStatus({
               ...tagsColumnExpansionStatus,
               [category.name]: !tagsColumnExpansionStatus[category.name],
@@ -514,15 +531,6 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
       }
     </div>
   );
-  // studies.forEach((study) => {
-  //   const tagField = config.minimalFieldMapping.tagsListFieldName;
-  //   study[tagField].forEach((tag) => {
-  //     if (tag.category === category) {
-  //       tagMap[tag.name] = true;
-  //     }
-  //   });
-  // });
-  // return Object.keys(tagMap);
 };
 
 

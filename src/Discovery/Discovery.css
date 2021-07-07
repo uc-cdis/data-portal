@@ -108,6 +108,7 @@
   justify-content: flex-start;
   max-height: 250px;
   overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 .discovery-tag-column {
