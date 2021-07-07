@@ -302,8 +302,6 @@ export function getGQLFilter(filter) {
   const facetsList = [];
   const nestedFacetIndices = {};
   for (const [field, filterValues] of Object.entries(filter)) {
-    facetIndex += 1;
-
     const [fieldStr, nestedFieldStr] = field.split('.');
     const isNestedField = nestedFieldStr !== undefined;
     const fieldName = isNestedField ? nestedFieldStr : fieldStr;
@@ -348,6 +346,8 @@ export function getGQLFilter(filter) {
     } else {
       facetsList.push(facetsPiece);
     }
+
+    facetIndex += 1;
   }
 
   return { AND: facetsList };
