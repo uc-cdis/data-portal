@@ -460,11 +460,14 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
     const tagField = config.minimalFieldMapping.tagsListFieldName;
     study[tagField].forEach((tag) => {
       if (tag.category === category.name) {
-        tagMap[tag.name] = true;
+        if (tagMap[tag.name] === undefined) {
+          tagMap[tag.name] = 1;
+        }
+        tagMap[tag.name] += 1;
       }
     });
   });
-  const tagArray = Object.keys(tagMap);
+  const tagArray = Object.keys(tagMap).sort((a, b) => tagMap[b] - tagMap[a]);
 
   return (
     <div>
