@@ -45,6 +45,7 @@ export enum AccessLevel {
 }
 
 const ARBORIST_READ_PRIV = 'read';
+const TAG_LIST_LIMIT = 10;
 
 const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   const categoryConfig = config.tagCategories.find(category => category.name === tagCategory);
@@ -76,25 +77,6 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
     throw new Error(`Misconfiguration error: Unrecognized aggregation type ${type}. Check the 'aggregations' block of the Discovery page config.`);
   }
 };
-
-// getTagsInCategory returns a list of the unique tags in studies which belong
-// to the specified category.
-const getTagsInCategory =
-  (category: string, studies: any[] | null, config: DiscoveryConfig): string[] => {
-    if (!studies) {
-      return [];
-    }
-    const tagMap = {};
-    studies.forEach((study) => {
-      const tagField = config.minimalFieldMapping.tagsListFieldName;
-      study[tagField].forEach((tag) => {
-        if (tag.category === category) {
-          tagMap[tag.name] = true;
-        }
-      });
-    });
-    return Object.keys(tagMap);
-  };
 
 const getFilterValuesByKey = memoize(
   (key: string, studies: any[] | null, config: DiscoveryConfig) => {
@@ -265,6 +247,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   const [selectedTags, setSelectedTags] = useState({});
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [onHoverRowIndex, setOnHoverRowIndex] = useState(null);
+  const [tagsColumnExpansionStatus, setTagsColumnExpansionStatus] = useState({});
 
   useEffect(() => {
     // Load studies into JS Search.
@@ -465,6 +448,84 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
   }
   // -----
 
+  // getTagsInCategory returns a list of the unique tags in studies which belong
+  // to the specified category.
+  const getTagsInCategory =
+(category: any, studies: any[] | null):React.ReactNode => {
+  if (!studies) {
+    return <React.Fragment />;
+  }
+  const tagMap = {};
+  studies.forEach((study) => {
+    const tagField = config.minimalFieldMapping.tagsListFieldName;
+    study[tagField].forEach((tag) => {
+      if (tag.category === category.name) {
+        tagMap[tag.name] = true;
+      }
+    });
+  });
+  const tagArray = Object.keys(tagMap);
+
+  return (
+    <div>
+      <div className={`discovery-header__tag-column ${(tagsColumnExpansionStatus[category.name]) ? 'discovery-tag-column--expanded' : 'discovery-tag-column'}`}>
+        { tagArray.map(tag =>
+          (<Tag
+            key={category.name + tag}
+            role='button'
+            tabIndex={0}
+            aria-pressed={selectedTags[tag] ? 'true' : 'false'}
+            className={`discovery-header__tag-btn discovery-tag ${selectedTags[tag] && 'discovery-tag--selected'}`}
+            aria-label={tag}
+            style={{
+              backgroundColor: selectedTags[tag] ? category.color : 'initial',
+              borderColor: category.color,
+            }}
+            onKeyPress={() => {
+              setSelectedTags({
+                ...selectedTags,
+                [tag]: selectedTags[tag] ? undefined : true,
+              });
+            }}
+            onClick={() => {
+              setSelectedTags({
+                ...selectedTags,
+                [tag]: selectedTags[tag] ? undefined : true,
+              });
+            }}
+          >
+            {tag}
+          </Tag>),
+        )}
+      </div>
+      {(tagArray.length > TAG_LIST_LIMIT) ?
+        <Button
+          type='link'
+          onClick={() => {
+            setTagsColumnExpansionStatus({
+              ...tagsColumnExpansionStatus,
+              [category.name]: !tagsColumnExpansionStatus[category.name],
+            });
+          }}
+        >
+          {`${(tagsColumnExpansionStatus[category.name]) ? 'Hide' : 'Show'} ${tagArray.length - TAG_LIST_LIMIT} more tags`}
+        </Button>
+        : null
+      }
+    </div>
+  );
+  // studies.forEach((study) => {
+  //   const tagField = config.minimalFieldMapping.tagsListFieldName;
+  //   study[tagField].forEach((tag) => {
+  //     if (tag.category === category) {
+  //       tagMap[tag.name] = true;
+  //     }
+  //   });
+  // });
+  // return Object.keys(tagMap);
+};
+
+
   const handleSearchChange = (ev) => {
     const value = ev.currentTarget.value;
     setSearchTerm(value);
@@ -567,12 +628,13 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
               if (category.display === false) {
                 return null;
               }
-              const tags = getTagsInCategory(category.name, props.studies, config);
+              const tagColumns = getTagsInCategory(category, props.studies);
               return (<div className='discovery-header__tag-group' key={category.name}>
                 { config.tagSelector.showTagCategoryNames &&
                   <h5>{category.name}</h5>
                 }
-                { tags.map(tag =>
+                {tagColumns
+                /* { tags.map(tag =>
                   (<Tag
                     key={category.name + tag}
                     role='button'
@@ -599,7 +661,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                   >
                     {tag}
                   </Tag>),
-                )}
+                )} */}
               </div>);
             })
           }
