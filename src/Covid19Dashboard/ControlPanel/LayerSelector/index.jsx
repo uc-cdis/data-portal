@@ -16,7 +16,7 @@ class LayerSelector extends React.Component {
                 className='layers-panel__checkbox'
                 type='checkbox'
                 defaultChecked={d.visible === 'visible'}
-                onChange={event => this.props.onLayerSelectChange(event, k)}
+                onChange={(event) => this.props.onLayerSelectChange(event, k)}
               />
               {d.title}
             </label>

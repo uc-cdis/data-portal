@@ -14,9 +14,9 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
     return '';
   }
   const { field, type } = aggregation;
-  let fields = studies.map(s => s[field]);
+  let fields = studies.map((s) => s[field]);
   // Replace any undefined fields with value 0
-  fields = fields.map(item => (typeof item === 'undefined' ? 0 : item));
+  fields = fields.map((item) => (typeof item === 'undefined' ? 0 : item));
 
   switch (type) {
   case 'sum':
@@ -34,13 +34,13 @@ interface Props {
 }
 
 const DiscoverySummary = (props: Props) => (
-  <div className='discovery-header__stats-container'>
+  <div className='discovery-header__stats-container' id='discovery-summary-statistics'>
     {
       props.config.aggregations.map((aggregation, i) => (
-        <React.Fragment key={aggregation.name} >
+        <React.Fragment key={aggregation.name}>
           { i !== 0 && <div className='discovery-header__stat-border' /> }
-          <div className='discovery-header__stats-wrapper' data-aggregation-type={aggregation.name.replace(/\s/g, '')} >
-            <div className='discovery-header__stat' >
+          <div className='discovery-header__stats-wrapper' data-aggregation-type={aggregation.name.replace(/\s/g, '')}>
+            <div className='discovery-header__stat'>
               <div className='discovery-header__stat-number'>
                 {renderAggregation(aggregation, props.visibleResources)}
               </div>

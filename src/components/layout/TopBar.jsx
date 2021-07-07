@@ -17,7 +17,7 @@ const isEmailAddress = (input) => {
  * NavBar renders row of nav-items of form { name, icon, link }
  */
 class TopBar extends Component {
-  isActive = id => this.props.activeTab === id;
+  isActive = (id) => this.props.activeTab === id;
 
   render() {
     return (
@@ -50,7 +50,7 @@ class TopBar extends Component {
                     const itemHref = (isLinkEmailAddress) ? `mailto:${item.link}` : item.link;
                     return (
                       <a
-                        className='top-bar__link'
+                        className='top-bar__link g3-ring-on-focus'
                         key={itemHref}
                         href={itemHref}
                         target='_blank'
@@ -61,13 +61,14 @@ class TopBar extends Component {
                           icon={item.icon}
                           isActive={this.isActive(itemHref)}
                           onActiveTab={() => this.props.onActiveTab(itemHref)}
+                          tabIndex='-1'
                         />
                       </a>
                     );
                   }
                   return (
                     <Link
-                      className='top-bar__link'
+                      className='top-bar__link g3-ring-on-focus'
                       key={item.link}
                       to={item.link}
                     >
@@ -76,6 +77,7 @@ class TopBar extends Component {
                         icon={item.icon}
                         isActive={this.isActive(item.link)}
                         onActiveTab={() => this.props.onActiveTab(item.link)}
+                        tabIndex='-1'
                       />
                     </Link>
                   );
@@ -84,21 +86,22 @@ class TopBar extends Component {
             }
             {
               this.props.user.username !== undefined && this.props.useProfileDropdown !== true
-              &&
-              (
+              && (
                 <React.Fragment>
-                  <Link className='top-bar__link' to='/identity'>
+                  <Link className='top-bar__link g3-ring-on-focus' to='/identity'>
                     <TopIconButton
                       icon='user-circle'
                       name={this.props.user.username}
                       isActive={this.isActive('/identity')}
                       onActiveTab={() => this.props.onActiveTab('/identity')}
+                      tabIndex='-1'
                     />
                   </Link>
-                  <Link className='top-bar__link' to='#' onClick={this.props.onLogoutClick}>
+                  <Link className='top-bar__link g3-ring-on-focus' to='#' onClick={this.props.onLogoutClick}>
                     <TopIconButton
                       icon='exit'
                       name='Logout'
+                      tabIndex='-1'
                     />
                   </Link>
                 </React.Fragment>
@@ -106,25 +109,25 @@ class TopBar extends Component {
             }
             {
               this.props.user.username !== undefined && this.props.useProfileDropdown === true
-              &&
-              (
+              && (
                 <Popover
                   title={this.props.user.username}
                   placement='bottomRight'
-                  content={
+                  content={(
                     <React.Fragment>
                       <Link to='/identity'>View Profile</Link>
                       <br />
                       <Link to='#' onClick={this.props.onLogoutClick}>Logout</Link>
                     </React.Fragment>
-                  }
+                  )}
                 >
-                  <Link className='top-bar__link' to='#'>
+                  <Link className='top-bar__link g3-ring-on-focus' to='#'>
                     <TopIconButton
                       icon='user-circle'
                       name=''
                       isActive={this.isActive('/identity')}
                       onActiveTab={() => this.props.onActiveTab('/identity')}
+                      tabIndex='-1'
                     />
                   </Link>
                 </Popover>
@@ -132,13 +135,13 @@ class TopBar extends Component {
             }
             {
               typeof this.props.user.username === 'undefined'
-              &&
-              (
+              && (
                 <React.Fragment>
-                  <Link className='top-bar__link' to='/login'>
+                  <Link className='top-bar__link g3-ring-on-focus' to='/login'>
                     <TopIconButton
                       icon='exit'
                       name='Login'
+                      tabIndex='-1'
                     />
                   </Link>
                 </React.Fragment>

@@ -37,6 +37,11 @@
   grid-template-rows: 1fr;
 }
 
+.resource__link:focus, .resource__link:focus-within, .resource__link:focus-visible {
+  outline: 1px solid blue;
+  outline-offset: -2px;
+}
+
 .resource__text-contents {
   color: black;
   padding: 20px;

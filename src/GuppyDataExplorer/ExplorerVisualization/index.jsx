@@ -20,7 +20,6 @@ import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper
 import './ExplorerVisualization.css';
 import { labelToPlural } from '../utils';
 
-
 class ExplorerVisualization extends React.Component {
   constructor(props) {
     super(props);
@@ -53,7 +52,7 @@ class ExplorerVisualization extends React.Component {
         const dataItem = {
           type: chartConfig[`${field}`].chartType,
           title: chartConfig[`${field}`].title,
-          data: histogram.map(i => ({ name: i.key, value: i.count })),
+          data: histogram.map((i) => ({ name: i.key, value: i.count })),
         };
         if (chartConfig[`${field}`].chartType === 'stackedBar') {
           stackedBarCharts.push(dataItem);
@@ -68,8 +67,8 @@ class ExplorerVisualization extends React.Component {
     });
     // sort cout items according to appearance in chart config
     countItems = countItems.sort((a, b) => {
-      const aIndex = Object.values(chartConfig).findIndex(v => v.title === a.label);
-      const bIndex = Object.values(chartConfig).findIndex(v => v.title === b.label);
+      const aIndex = Object.values(chartConfig).findIndex((v) => v.title === a.label);
+      const bIndex = Object.values(chartConfig).findIndex((v) => v.title === b.label);
       // if one doesn't exist in chart config, put it to front
       if (aIndex === -1) return -1;
       if (bIndex === -1) return 1;
@@ -83,7 +82,7 @@ class ExplorerVisualization extends React.Component {
     let caseIDList;
     try {
       const res = await this.props.downloadRawDataByFields({ fields: [caseField] });
-      caseIDList = res.map(e => e[caseField]);
+      caseIDList = res.map((e) => e[caseField]);
       this.heatMapIsLocked = false;
     } catch (e) {
       // when tiered access is enabled, we cannot get the list of IDs because
@@ -106,15 +105,15 @@ class ExplorerVisualization extends React.Component {
     const isComponentLocked = (tierAccessLevel !== 'regular') ? false : checkForAnySelectedUnaccessibleField(this.props.aggsData,
       this.props.accessibleFieldObject, this.props.guppyConfig.accessibleValidationField);
     const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${this.props.tierAccessLimit} ${
-      this.props.guppyConfig.nodeCountTitle ?
-        this.props.guppyConfig.nodeCountTitle.toLowerCase() :
-        labelToPlural(this.props.guppyConfig.dataType)
+      this.props.guppyConfig.nodeCountTitle
+        ? this.props.guppyConfig.nodeCountTitle.toLowerCase()
+        : labelToPlural(this.props.guppyConfig.dataType)
     }.`;
     const barChartColor = components.categorical2Colors ? components.categorical2Colors[0] : null;
 
     // heatmap config
-    const heatMapGuppyConfig = this.props.heatMapConfig ?
-      this.props.heatMapConfig.guppyConfig : null;
+    const heatMapGuppyConfig = this.props.heatMapConfig
+      ? this.props.heatMapConfig.guppyConfig : null;
     const heatMapMainYAxisVar = (this.props.heatMapConfig
       && this.props.guppyConfig.manifestMapping
       && this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex)
@@ -134,7 +133,7 @@ class ExplorerVisualization extends React.Component {
 
     return (
       <div className={this.props.className}>
-        <div className='guppy-explorer-visualization__button-group'>
+        <div className='guppy-explorer-visualization__button-group' id='guppy-explorer-data-tools'>
           <ReduxExplorerButtonGroup
             buttonConfig={this.props.buttonConfig}
             guppyConfig={this.props.guppyConfig}
@@ -151,7 +150,7 @@ class ExplorerVisualization extends React.Component {
         </div>
         {
           chartData.countItems.length > 0 && (
-            <div className='guppy-explorer-visualization__summary-cards'>
+            <div className='guppy-explorer-visualization__summary-cards' id='guppy-explorer-summary-statistics'>
               <DataSummaryCardGroup summaryItems={chartData.countItems} connected />
             </div>
           )
@@ -171,7 +170,7 @@ class ExplorerVisualization extends React.Component {
         }
         {
           chartData.stackedBarCharts.length > 0 && (
-            <div className='guppy-explorer-visualization__charts' >
+            <div className='guppy-explorer-visualization__charts'>
               {
                 chartData.stackedBarCharts.map((chart, i) => (
                   <div key={i} className='guppy-explorer-visualization__charts-row'>

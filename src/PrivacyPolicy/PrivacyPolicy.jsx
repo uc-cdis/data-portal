@@ -17,7 +17,7 @@ class PrivacyPolicy extends React.Component {
   render() {
     if (!this.props.loaded) {
       return <Spinner />;
-    } else if (this.props.text) {
+    } if (this.props.text) {
       return (
         <div className='privacy-policy'>
           <p dangerouslySetInnerHTML={{ __html: this.props.text }} />

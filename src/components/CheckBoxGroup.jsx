@@ -3,14 +3,6 @@ import PropTypes from 'prop-types';
 import './CheckBoxGroup.less';
 
 export class CheckBoxGroup extends Component {
-  static propTypes = {
-    listItems: PropTypes.arrayOf(PropTypes.string).isRequired,
-    groupName: PropTypes.string.isRequired,
-    selectedItems: PropTypes.array.isRequired,
-    title: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +31,7 @@ export class CheckBoxGroup extends Component {
           {'More options'}
         </a>
       );
-    } else if (this.state.collapsed === 2) {
+    } if (this.state.collapsed === 2) {
       return (
         <a href='#/' onClick={() => this.setState({ collapsed: 1 })}>
           {'Fewer options'}
@@ -50,7 +42,7 @@ export class CheckBoxGroup extends Component {
   };
 
   render() {
-    const selectedItems = this.props.selectedItems;
+    const { selectedItems } = this.props;
     const listItems = (this.state.collapsed === 1)
       ? this.props.listItems.slice(0, 3)
       : this.props.listItems;
@@ -58,7 +50,7 @@ export class CheckBoxGroup extends Component {
     return (
       <div className='checkbox-group'>
         {this.props.title}
-        {listItems.map(item => (
+        {listItems.map((item) => (
           <div key={item}>
             <input
               type='checkbox'
@@ -76,5 +68,13 @@ export class CheckBoxGroup extends Component {
     );
   }
 }
+
+CheckBoxGroup.propTypes = {
+  listItems: PropTypes.arrayOf(PropTypes.string).isRequired,
+  groupName: PropTypes.string.isRequired,
+  selectedItems: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 export default CheckBoxGroup;

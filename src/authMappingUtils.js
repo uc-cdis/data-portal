@@ -15,19 +15,17 @@ const resourcePathFromProjectID = (projectID) => {
 // Used by ProjectSubmission to determine whether the user is creating a program.
 // To create a program the user needs access to the resource
 // /services/sheepdog/submission/program, usually granted via Sheepdog admin policy.
-export const isRootUrl = urlFragment => urlFragment === '_root';
+export const isRootUrl = (urlFragment) => urlFragment === '_root';
 
 // Used by ProjectSubmission to determine whether the user is creating a project.
 // To create a project the user needs access to the resource
 // /services/sheepdog/submission/project, usually granted via Sheepdog admin policy.
 // A dash delimits the project code if there is one
-export const isProgramUrl = urlFragment => urlFragment !== '_root' && !urlFragment.includes('-');
+export const isProgramUrl = (urlFragment) => urlFragment !== '_root' && !urlFragment.includes('-');
 
-export const userHasSheepdogProgramAdmin = (userAuthMapping = {}) =>
-  userAuthMapping['/services/sheepdog/submission/program'] !== undefined;
+export const userHasSheepdogProgramAdmin = (userAuthMapping = {}) => userAuthMapping['/services/sheepdog/submission/program'] !== undefined;
 
-export const userHasSheepdogProjectAdmin = (userAuthMapping = {}) =>
-  userAuthMapping['/services/sheepdog/submission/project'] !== undefined;
+export const userHasSheepdogProjectAdmin = (userAuthMapping = {}) => userAuthMapping['/services/sheepdog/submission/project'] !== undefined;
 
 export const projectCodeFromResourcePath = (resourcePath) => {
   // If resourcePath is anything other than /programs/foo/projects/bar[/morestuff],
@@ -47,13 +45,12 @@ export const listifyMethodsFromMapping = (actions) => {
 
 export const userHasDataUpload = (userAuthMapping = {}) => {
   // data_upload policy is resource data_file, method file_upload
-  const actionIsFileUpload = x => x.method === 'file_upload';
+  const actionIsFileUpload = (x) => x.method === 'file_upload';
   const resource = userAuthMapping['/data_file'];
   return resource !== undefined && resource.some(actionIsFileUpload);
 };
 
-export const userHasMethodForServiceOnResource =
-(method, service, resourcePath, userAuthMapping = {}) => {
+export const userHasMethodForServiceOnResource = (method, service, resourcePath, userAuthMapping = {}) => {
   const actions = userAuthMapping[resourcePath];
   // accommodate for '*' logic
   // if we need to check for a specific service/method pair for a resource,
@@ -64,11 +61,10 @@ export const userHasMethodForServiceOnResource =
   // 2. {service: sheepdog, method: *}
   // 3. {service: *, method: update}
   // 4. {service: *, method: *}
-  return actions !== undefined && actions.some(x => ((x.service === service || x.service === '*') && (x.method === method || x.method === '*')));
+  return actions !== undefined && actions.some((x) => ((x.service === service || x.service === '*') && (x.method === method || x.method === '*')));
 };
 
-export const userHasMethodForServiceOnProject =
-(method, service, projectID, userAuthMapping = {}) => {
+export const userHasMethodForServiceOnProject = (method, service, projectID, userAuthMapping = {}) => {
   // method should be a string e.g. 'create'
   const resourcePath = resourcePathFromProjectID(projectID);
   return userHasMethodForServiceOnResource(method, service, resourcePath, userAuthMapping);
@@ -76,12 +72,12 @@ export const userHasMethodForServiceOnProject =
 
 export const userHasMethodOnAnyProject = (method, userAuthMapping = {}) => {
   // method should be a string e.g. 'create'
-  const actionHasMethod = x => (x.method === method);
+  const actionHasMethod = (x) => (x.method === method);
   // actionArrays is array of arrays of { service: x, method: y }
   const actionArrays = Object.values(userAuthMapping);
-  const hasMethod = actionArrays.some(x => x.some(actionHasMethod));
+  const hasMethod = actionArrays.some((x) => x.some(actionHasMethod));
   return hasMethod;
 };
 
-export const userHasCreateOrUpdateOnAnyProject = userAuthMapping => (userHasMethodOnAnyProject('create', userAuthMapping)
+export const userHasCreateOrUpdateOnAnyProject = (userAuthMapping) => (userHasMethodOnAnyProject('create', userAuthMapping)
       || userHasMethodOnAnyProject('update', userAuthMapping));

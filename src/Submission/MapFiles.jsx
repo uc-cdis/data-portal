@@ -5,7 +5,9 @@ import moment from 'moment';
 import pLimit from 'p-limit';
 import _ from 'lodash';
 import { AutoSizer, Column, Table } from 'react-virtualized';
-import { Switch, Modal, Typography, Space, Collapse, List } from 'antd';
+import {
+  Switch, Modal, Typography, Space, Collapse, List,
+} from 'antd';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
@@ -69,24 +71,26 @@ class MapFiles extends React.Component {
   }
 
   onDeletion = () => {
-    const flatFiles = this.flattenFiles(this.state.selectedFilesByGroup);
+    const { selectedFilesByGroup } = this.state;
+    const flatFiles = this.flattenFiles(selectedFilesByGroup);
     const limit = pLimit(CONCURRENCY_LIMIT);
     const promises = [];
     this.setState({
       showDeletePopup: true,
       deletionCounter: 0,
       deletionFailCounter: 0,
-      deletionTotalCount: flatFiles.length },
+      deletionTotalCount: flatFiles.length,
+    },
     () => {
       flatFiles.forEach((file) => {
         limit(() => {
           const promise = this.props.deleteFile(file).catch((error) => {
-            this.setState(prevState => ({
+            this.setState((prevState) => ({
               deletionErrorList: [...prevState.deletionErrorList, error.message],
               deletionFailCounter: prevState.deletionFailCounter + 1,
             }));
           });
-          this.setState(prevState => ({
+          this.setState((prevState) => ({
             deletionCounter: prevState.deletionCounter + 1,
           }));
           sessionMonitor.updateUserActivity();
@@ -116,12 +120,12 @@ class MapFiles extends React.Component {
   }
 
   onFeatureToggle = () => {
-    this.setState({
-      deleteFeature: !(this.state.deleteFeature),
-    }, () => this.createFileMapByGroup());
+    this.setState((prevState) => ({
+      deleteFeature: !(prevState.deleteFeature),
+    }), () => this.createFileMapByGroup());
   };
 
-  getSetSize = set => Object.keys(set).length
+  getSetSize = (set) => Object.keys(set).length
 
   getTableHeaderText = (files) => {
     const date = moment(files[0].created_date).format('MM/DD/YY');
@@ -160,7 +164,7 @@ class MapFiles extends React.Component {
   }
 
   flattenFiles = (files) => {
-    const groupedFiles = Object.keys(files).map(index => [...Object.values(files[index])]);
+    const groupedFiles = Object.keys(files).map((index) => [...Object.values(files[index])]);
     return groupedFiles.reduce((totalArr, currentArr) => totalArr.concat(currentArr));
   }
 
@@ -196,7 +200,7 @@ class MapFiles extends React.Component {
     const selectedMap = {};
     let index = 0;
     this.state.sortedDates.forEach((date) => {
-      const filesToAdd = this.state.filesByDate[date].filter(file => this.isFileReady(file)
+      const filesToAdd = this.state.filesByDate[date].filter((file) => this.isFileReady(file)
       || this.state.deleteFeature);
       unselectedMap[index] = this.createSet(SET_KEY, filesToAdd);
       selectedMap[index] = {};
@@ -222,12 +226,12 @@ class MapFiles extends React.Component {
 
   toggleCheckBox = (index, file) => {
     if (this.isSelected(index, file.did)) {
-      this.setState(prevState => ({
+      this.setState((prevState) => ({
         selectedFilesByGroup: this.removeFromMap(prevState.selectedFilesByGroup, index, file.did),
       }));
     } else if (this.isFileReady(file)
     || this.state.deleteFeature) { // file status == ready or in delete mode, so it is selectable
-      this.setState(prevState => ({
+      this.setState((prevState) => ({
         selectedFilesByGroup: this.addToMap(prevState.selectedFilesByGroup, index, file, file.did),
       }));
     }
@@ -237,19 +241,19 @@ class MapFiles extends React.Component {
     if (this.state.selectedFilesByGroup[index]) {
       if (this.getSetSize(this.state.selectedFilesByGroup[index])
         === this.getSetSize(this.state.allFilesByGroup[index])) {
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
           selectedFilesByGroup: this.setMapValue(prevState.selectedFilesByGroup, index, {}),
         }));
       } else {
         const newFiles = { ...this.state.allFilesByGroup[index] };
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
           selectedFilesByGroup: this.setMapValue(prevState.selectedFilesByGroup, index, newFiles),
         }));
       }
     }
   }
 
-  isFileReady = file => file.hashes && Object.keys(file.hashes).length > 0;
+  isFileReady = (file) => file.hashes && Object.keys(file.hashes).length > 0;
 
   closeMessage = () => {
     this.setState({ message: null });
@@ -314,8 +318,8 @@ class MapFiles extends React.Component {
           onScroll={this.onScroll}
         />
         {
-          this.state.showDeletePopup &&
-          (
+          this.state.showDeletePopup
+          && (
             <Modal
               title='Deleting File Records'
               visible={this.state.showDeletePopup}
@@ -334,14 +338,14 @@ class MapFiles extends React.Component {
                 <Text>{`Deleting file ${this.state.deletionCounter} of ${this.state.deletionTotalCount}`}</Text>
                 <Text type='success'>{`Succeeded: ${this.state.deletionTotalCount - this.state.deletionFailCounter}`}</Text>
                 <Text type='danger'>{`Failed: ${this.state.deletionFailCounter}`}</Text>
-                {(this.state.deletionErrorList.length > 0) &&
-                (
+                {(this.state.deletionErrorList.length > 0)
+                && (
                   <Collapse style={{ width: '100%' }}>
                     <Panel header='Error messages for failed deletions' key='1'>
                       <List
                         size='small'
                         dataSource={this.state.deletionErrorList}
-                        renderItem={item => <List.Item>{item}</List.Item>}
+                        renderItem={(item) => <List.Item>{item}</List.Item>}
                       />
                     </Panel>
                   </Collapse>
@@ -359,7 +363,7 @@ class MapFiles extends React.Component {
           }
           {
             sortedDates.map((date, groupIndex) => {
-              const files = filesByDate[date].map(file => ({
+              const files = filesByDate[date].map((file) => ({
                 ...file,
                 status: this.isFileReady(file) ? 'Ready' : 'generating',
               }));

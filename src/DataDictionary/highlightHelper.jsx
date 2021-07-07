@@ -101,7 +101,7 @@ export const getPropertyTypeFragment = (property, typeMatchList, spanClassName) 
   } else {
     propertyTypeFragment = type.map((t, i) => {
       const matchedTypeItem = typeMatchList && typeMatchList.find(
-        matchItem => matchItem.value === t);
+        (matchItem) => matchItem.value === t);
       if (matchedTypeItem) {
         return (
           <li key={i}>
@@ -143,7 +143,7 @@ export const getPropertyDescriptionFragment = (property, matchedItem, spanClassN
 };
 
 export const getNodeTitleFragment = (allMatches, title, spanClassName) => {
-  const matchedItem = allMatches.find(item => item.key === 'title');
+  const matchedItem = allMatches.find((item) => item.key === 'title');
   const nodeTitleFragment = addHighlightingSpans(
     title,
     matchedItem ? matchedItem.indices : [],
@@ -153,7 +153,7 @@ export const getNodeTitleFragment = (allMatches, title, spanClassName) => {
 };
 
 export const getNodeDescriptionFragment = (allMatches, description, spanClassName) => {
-  const matchedItem = allMatches.find(item => item.key === 'description');
+  const matchedItem = allMatches.find((item) => item.key === 'description');
   const nodeDescriptionFragment = addHighlightingSpans(
     description,
     matchedItem ? matchedItem.indices : [],
@@ -253,8 +253,8 @@ export const getNodeTitleSVGFragment = (
   while (currentRowIndex < nodeNameRows.length) { // for each row
     const currentRowStr = nodeNameRows[currentRowIndex];
     rowEndIndex = rowStartIndex + currentRowStr.length;
-    const textY = textPadding +
-      (currentRowIndex * (fontSize + textLineGap));
+    const textY = textPadding
+      + (currentRowIndex * (fontSize + textLineGap));
     const textAttr = {
       ...textAttrBase,
       key: currentRowIndex,

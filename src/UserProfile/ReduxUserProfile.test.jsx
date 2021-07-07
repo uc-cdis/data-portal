@@ -1,13 +1,13 @@
 import React from 'react';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
 import { mount } from 'enzyme';
 
 import ReduxUserProfile, { createKey, deleteKey } from './ReduxUserProfile';
 
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
-
 
 describe('the userProfile component', () => {
   it('can create, fetch, and list user access keys', () => {
@@ -55,7 +55,11 @@ describe('the userProfile component', () => {
     fetch.mockResponseOnce(JSON.stringify(expectedData), { status: 200 });
     fetch.mockResponseOnce(JSON.stringify(expectedListKey), { status: 200 });
 
-    const userProfilePage = mount(<ReduxUserProfile />, { context: { store } });
+    const userProfilePage = mount(
+      <Provider store={store}>
+        <ReduxUserProfile />
+      </Provider>,
+    );
     const btn = userProfilePage.find('.g3-button');
     expect(btn).toHaveLength(1);
     btn.simulate('click');
@@ -151,7 +155,6 @@ describe('the userProfile component', () => {
       });
   });
 
-
   it('can can delete key', () => {
     const jti = 'f8733984-8164-4689-9c25-56707962d7e0';
     const exp = 1459487258;
@@ -187,7 +190,6 @@ describe('the userProfile component', () => {
 
     fetch.mockResponseOnce(JSON.stringify(body), { status: 204 });
     fetch.mockResponseOnce(JSON.stringify({ jtis: [] }), { status: 200 });
-
 
     return store.dispatch(deleteKey(jti, exp, keypairsApi))
       .then(() => {

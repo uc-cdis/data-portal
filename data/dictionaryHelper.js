@@ -4,10 +4,9 @@
  * @return {experimentType, fileTypeList} gqlSetup object used by data/gqlSetup.js
  */
 function dictToGQLSetup(dict) {
-  const fileTypeList = Object.keys(dict).filter(key =>
-    typeof dict[key] === 'object' &&
-    dict[key].category &&
-    dict[key].category.endsWith('_file'),
+  const fileTypeList = Object.keys(dict).filter((key) => typeof dict[key] === 'object'
+    && dict[key].category
+    && dict[key].category.endsWith('_file'),
   );
   // admin types that link to the 'project' level and are not project or program
   const adminTypeList = Object.keys(dict).filter(
@@ -22,13 +21,13 @@ function dictToGQLSetup(dict) {
       return {
         typeName: key,
         entry,
-        projectLink: entry.links.find(link => link.target_type === 'project' && link.required),
+        projectLink: entry.links.find((link) => link.target_type === 'project' && link.required),
       };
     },
   );
 
   const experimentType = ['experiment', 'study', 'trio'].find(
-    name => Object.prototype.hasOwnProperty.call(dict, name),
+    (name) => Object.prototype.hasOwnProperty.call(dict, name),
   );
 
   return {
@@ -48,9 +47,9 @@ function paramByApp(params, key) {
 }
 
 function getGraphQL(graphQLParams) {
-  const boardCounts = graphQLParams.boardCounts;
-  const chartCounts = graphQLParams.chartCounts;
-  let projectDetails = graphQLParams.projectDetails;
+  const { boardCounts } = graphQLParams;
+  const { chartCounts } = graphQLParams;
+  let { projectDetails } = graphQLParams;
   if (typeof projectDetails === 'string') {
     projectDetails = graphQLParams[projectDetails];
   }
@@ -66,9 +65,9 @@ const { params } = require('./parameters');
 function paramSetup() {
   const countsAndDetails = getGraphQL(paramByApp(params, 'graphql'));
   return {
-    boardCounts: countsAndDetails.boardCounts.map(item => item.graphql),
-    chartCounts: countsAndDetails.chartCounts.map(item => item.graphql),
-    projectDetails: countsAndDetails.projectDetails.map(item => item.graphql),
+    boardCounts: countsAndDetails.boardCounts.map((item) => item.graphql),
+    chartCounts: countsAndDetails.chartCounts.map((item) => item.graphql),
+    projectDetails: countsAndDetails.projectDetails.map((item) => item.graphql),
   };
 }
 

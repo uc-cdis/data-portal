@@ -7,10 +7,8 @@ import { mockStore, dev } from './localconf';
 import reducers from './reducers';
 import { requiredCerts } from './configs';
 
-
 let store;
 let storePromise;
-
 
 /* eslint-disable no-underscore-dangle */
 /**

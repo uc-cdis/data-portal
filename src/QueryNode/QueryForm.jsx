@@ -7,16 +7,12 @@ import { getSubmitPath } from '../utils';
 import './QueryForm.less';
 
 class QueryForm extends React.Component {
-  static propTypes = {
-    project: PropTypes.string.isRequired,
-  };
-
   constructor(props) {
-    const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/, '') : '');
+    const queryParams = querystring.parse(window.location.search ? window.location.search.replace(/^\?+/, '') : '');
     super(props);
     this.state = {
-      selectValue: Object.keys(queryParams).length > 0 && queryParams.node_type ?
-        { value: queryParams.node_type, label: queryParams.node_type }
+      selectValue: Object.keys(queryParams).length > 0 && queryParams.node_type
+        ? { value: queryParams.node_type, label: queryParams.node_type }
         : null,
     };
     this.updateValue = this.updateValue.bind(this);
@@ -48,7 +44,6 @@ class QueryForm extends React.Component {
     this.props.onSearchFormSubmit(data, url);
   }
 
-
   updateValue(newValue) {
     this.setState({
       selectValue: newValue,
@@ -56,8 +51,8 @@ class QueryForm extends React.Component {
   }
 
   render() {
-    const nodesForQuery = this.props.nodeTypes.filter(nt => !['program', 'project'].includes(nt));
-    const options = nodesForQuery.map(nodeType => ({ value: nodeType, label: nodeType }));
+    const nodesForQuery = this.props.nodeTypes.filter((nt) => !['program', 'project'].includes(nt));
+    const options = nodesForQuery.map((nodeType) => ({ value: nodeType, label: nodeType }));
     const state = this.state || {};
     return (
       <form onSubmit={this.handleQuerySubmit}>

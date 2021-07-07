@@ -9,7 +9,6 @@ export const headers = {
   'x-csrf-token': csrftoken,
 };
 
-
 /**
  * Soon the CSRF cookie will not be readable, as
  * verracode cannot deal with cookies that are not http only.

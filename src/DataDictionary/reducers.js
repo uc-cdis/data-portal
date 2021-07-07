@@ -58,7 +58,7 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     };
   }
   case 'GRAPH_UPDATE_HOVERING_NODE': {
-    const newHoveringNode = state.nodes.find(n => n.id === action.nodeID);
+    const newHoveringNode = state.nodes.find((n) => n.id === action.nodeID);
     return {
       ...state,
       hoveringNode: newHoveringNode,
@@ -131,7 +131,7 @@ const ddgraph = (state = ddgraphInitialState, action) => {
     if (action.nodeID) {
       // if no node is selected, select this node as highlight node
       if (!state.highlightingNode) {
-        newHighlightingNode = state.nodes.find(n => n.id === action.nodeID);
+        newHighlightingNode = state.nodes.find((n) => n.id === action.nodeID);
       } else if (state.highlightingNode) {
         newHighlightingNode = state.highlightingNode;
 
@@ -182,7 +182,7 @@ const ddgraph = (state = ddgraphInitialState, action) => {
   case 'TABLE_EXPAND_NODE': {
     let newHighlightingNode = null;
     if (action.nodeID) {
-      newHighlightingNode = state.nodes.find(n => n.id === action.nodeID);
+      newHighlightingNode = state.nodes.find((n) => n.id === action.nodeID);
     }
     return {
       ...state,

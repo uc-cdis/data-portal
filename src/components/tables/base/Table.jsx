@@ -19,10 +19,12 @@ class Table extends React.Component {
             cols={this.props.header}
           />
           {
-            this.props.footer.length > 0 &&
-            <TableFoot
-              cols={this.props.footer}
-            />
+            this.props.footer.length > 0
+            && (
+              <TableFoot
+                cols={this.props.footer}
+              />
+            )
           }
           <tbody>
             {

@@ -14,7 +14,7 @@ const testStudies = mockData.map((study, i) => ({ ...study, __accessible: i % 2 
 // See https://jestjs.io/docs/en/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -172,8 +172,7 @@ describe('Modal', () => {
             expectedFieldData = modalData[fieldCfg.field].toLocaleString();
             break;
           case 'link':
-            expectedFieldData =
-              (<a href={modalData[fieldCfg.field]}>{modalData[fieldCfg.field]}</a>);
+            expectedFieldData = (<a href={modalData[fieldCfg.field]}>{modalData[fieldCfg.field]}</a>);
             break;
           default:
             throw new Error(`Unrecognized content_type ${fieldCfg.contentType}.`);
@@ -208,7 +207,6 @@ describe('Modal', () => {
   });
 });
 
-
 describe('Table', () => {
   test('Table filters records by tags', () => {
     testConfig.features.authorization.enabled = true;
@@ -219,18 +217,18 @@ describe('Table', () => {
 
     // select the `COVID 19` tag
     const targetTagValue = 'COVID 19';
-    const isTargetTag = n => n.hasClass('discovery-tag') && n.contains(targetTagValue);
+    const isTargetTag = (n) => n.hasClass('discovery-tag') && n.contains(targetTagValue);
     const tag = wrapper.findWhere(isTargetTag).first();
     tag.simulate('click');
     // expect all rows in the table to have the 'COVID 19' tag
     let rows = wrapper.find('.discovery-table__row');
-    expect(rows.everyWhere(r => r.findWhere(isTargetTag).exists())).toBe(true);
+    expect(rows.everyWhere((r) => r.findWhere(isTargetTag).exists())).toBe(true);
 
     // unselect the `COVID 19` tag
     tag.simulate('click');
     rows = wrapper.find('.discovery-table__row');
     // expect that not all rows have the 'COVID 19' tag
-    expect(rows.everyWhere(r => r.findWhere(isTargetTag).exists())).toBe(false);
+    expect(rows.everyWhere((r) => r.findWhere(isTargetTag).exists())).toBe(false);
 
     wrapper.unmount();
   });

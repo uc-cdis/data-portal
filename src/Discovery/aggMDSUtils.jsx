@@ -1,17 +1,5 @@
 import { aggMDSDataURL, discoveryConfig, hostname } from '../localconf';
 
-const retrieveFieldMapping = async (commonsName) => {
-  const url = `${aggMDSDataURL}/${commonsName}/columns_to_fields`;
-  const res = await fetch(url);
-  if (res.status !== 200) {
-    throw new Error(`Request for field mapping at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
-  }
-
-  const jsonResponse = await res.json();
-
-  return jsonResponse;
-};
-
 const retrieveCommonsInfo = async (commonsName) => {
   const url = `${aggMDSDataURL}/${commonsName}/info`;
   const res = await fetch(url);
@@ -30,17 +18,16 @@ const retrieveCommonsInfo = async (commonsName) => {
  * @param {*} tags
  * @returns
  */
-const getUniqueTags = tags =>
-  tags.reduce((tagsSoFar, nextTag) => {
-    if (tagsSoFar.has(nextTag.name)) {
-      return tagsSoFar;
-    }
-    tagsSoFar.set(nextTag.name, {
-      category: nextTag.category,
-      name: nextTag.name,
-    });
+const getUniqueTags = (tags) => tags.reduce((tagsSoFar, nextTag) => {
+  if (tagsSoFar.has(nextTag.name)) {
     return tagsSoFar;
-  }, new Map());
+  }
+  tagsSoFar.set(nextTag.name, {
+    category: nextTag.category,
+    name: nextTag.name,
+  });
+  return tagsSoFar;
+}, new Map());
 
 const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
@@ -57,9 +44,8 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
 
   let allStudies = [];
 
-  const commonsPromises = commons.map(commonsName => (
+  const commonsPromises = commons.map((commonsName) => (
     Promise.all([
-      retrieveFieldMapping(commonsName),
       retrieveCommonsInfo(commonsName),
     ])
   ));
@@ -73,7 +59,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
     }), {});
 
   commons.forEach((commonsName) => {
-    const [fieldMapping, commonsInfo] = allCommonsInfo[commonsName];
+    const [commonsInfo] = allCommonsInfo[commonsName];
 
     const studies = metadataResponse[commonsName];
 
@@ -86,18 +72,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
       x.study_id = studyId;
       x.commons = commonsName;
       x.frontend_uid = `${commonsName}_${index}`;
-
-      x.name = x[fieldMapping.short_name];
-      if (fieldMapping.short_name === 'authz' && Array.isArray(x.name)) {
-        x.name = x.name[0].split('/').slice(-1)[0];
-      }
-      if (fieldMapping.short_name === 'auth_resource_path') {
-        x.name = x.name.split('/').slice(-1)[0];
-      }
       x.short_name = x.name;
-      x.full_name = x[fieldMapping.full_name];
-      x._subjects_count = x[fieldMapping._subjects_count];
-      x.study_description = x[fieldMapping.study_description];
       x._unique_id = `${commonsName}_${x._unique_id}_${index}`;
       x.commons_url = commonsInfo.commons_url;
       x.tags.push(Object({ category: 'Commons', name: commonsName }));
@@ -111,7 +86,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
             x.tags.push(Object({ category: tag.name, name: tagValue }));
           } else if (Array.isArray(x[tag.name])) {
             x.tags = x.tags.concat(
-              x[tag.name].map(name => ({ category: tag.name, name })),
+              x[tag.name].map((name) => ({ category: tag.name, name })),
             );
           }
         }

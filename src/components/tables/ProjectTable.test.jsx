@@ -4,7 +4,6 @@ import { StaticRouter } from 'react-router-dom';
 
 import ProjectTable from './ProjectTable';
 
-
 test('Project tables renders', () => {
   const projectList = [{
     name: 'frickjack',

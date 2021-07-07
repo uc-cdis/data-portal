@@ -11,7 +11,11 @@ getProjectsList.mockImplementation(() => jest.fn());
 
 describe('MapDataModel', () => {
   const history = createMemoryHistory('/submission/map');
-  const projects = { test: { name: 'test', counts: [], charts: [], code: 'test' } };
+  const projects = {
+    test: {
+      name: 'test', counts: [], charts: [], code: 'test',
+    },
+  };
   const dictionary = {
     aligned_reads_index: {
       links: [{ backref: 'node1', name: 'core_metadata_collections', target_type: 'core_metadata_collection' }],

@@ -120,11 +120,11 @@ class Workspace extends React.Component {
   getIcon = (workspace) => {
     if (this.regIcon(workspace, 'R Studio')) {
       return rStudioIcon;
-    } else if (this.regIcon(workspace, 'Jupyter')) {
+    } if (this.regIcon(workspace, 'Jupyter')) {
       return jupyterIcon;
-    } else if (this.regIcon(workspace, 'Galaxy')) {
+    } if (this.regIcon(workspace, 'Galaxy')) {
       return galaxyIcon;
-    } else if (this.regIcon(workspace, 'DICOM')) {
+    } if (this.regIcon(workspace, 'DICOM')) {
       return ohifIcon;
     }
     return jupyterIcon;
@@ -160,32 +160,32 @@ class Workspace extends React.Component {
       workspaceLaunchStepsConfig.currentStepsStatus = 'error';
     }
     // update step description according to the condition array
-    if (workspaceStatusData.conditions.some(element => (
+    if (workspaceStatusData.conditions.some((element) => (
       (element.type === 'PodScheduled' && element.status === 'True')
     ))) {
       workspaceLaunchStepsConfig.steps[0].description = 'Pod scheduled';
     }
-    if (workspaceStatusData.conditions.some(element => (
+    if (workspaceStatusData.conditions.some((element) => (
       (element.type === 'Initialized' && element.status === 'True')
     ))) {
       workspaceLaunchStepsConfig.steps[1].description = 'Pod initialized';
     }
 
     // condition type: PodScheduled + status: false => at step 0
-    if (workspaceStatusData.conditions.some(element => (element.type === 'PodScheduled' && element.status === 'False'))) {
+    if (workspaceStatusData.conditions.some((element) => (element.type === 'PodScheduled' && element.status === 'False'))) {
       workspaceLaunchStepsConfig.steps[0].description = 'In progress';
       return workspaceLaunchStepsConfig;
     }
 
     // condition type: Initialized + status: false => at step 1
-    if (workspaceStatusData.conditions.some(element => (element.type === 'Initialized' && element.status === 'False'))) {
+    if (workspaceStatusData.conditions.some((element) => (element.type === 'Initialized' && element.status === 'False'))) {
       workspaceLaunchStepsConfig.currentIndex = 1;
       workspaceLaunchStepsConfig.steps[1].description = 'In progress';
       return workspaceLaunchStepsConfig;
     }
 
     // here we are at step 2
-    if (workspaceStatusData.conditions.some(element => (
+    if (workspaceStatusData.conditions.some((element) => (
       (element.type === 'ContainersReady' && element.status === 'False')
     ))) {
       workspaceLaunchStepsConfig.currentIndex = 2;
@@ -193,7 +193,7 @@ class Workspace extends React.Component {
       return workspaceLaunchStepsConfig;
     }
 
-    if (workspaceStatusData.conditions.some(element => (
+    if (workspaceStatusData.conditions.some((element) => (
       (element.type === 'ContainersReady' && element.status === 'True')
     ))) {
       workspaceLaunchStepsConfig.currentIndex = 2;
@@ -262,8 +262,8 @@ class Workspace extends React.Component {
             workspaceStatus: data.status,
             workspaceLaunchStepsConfig,
           }, () => {
-            if (this.state.workspaceStatus !== 'Launching' &&
-              this.state.workspaceStatus !== 'Terminating') {
+            if (this.state.workspaceStatus !== 'Launching'
+              && this.state.workspaceStatus !== 'Terminating') {
               clearInterval(this.state.interval);
             }
           });
@@ -282,10 +282,10 @@ class Workspace extends React.Component {
     this.terminateWorkspace();
   }
 
-  handleFullageButtonClick = () => {
-    this.setState({
-      workspaceIsFullpage: !this.state.workspaceIsFullpage,
-    });
+  handleFullpageButtonClick = () => {
+    this.setState((prevState) => ({
+      workspaceIsFullpage: !prevState.workspaceIsFullpage,
+    }));
   }
 
   render() {
@@ -335,107 +335,122 @@ class Workspace extends React.Component {
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
         >
           {
-            this.state.workspaceStatus === 'Running' ?
-              <React.Fragment>
-                <div className='workspace__iframe'>
-                  <iframe
-                    className='workspace'
-                    title='Workspace'
-                    frameBorder='0'
-                    src={`${workspaceUrl}proxy/`}
-                    onLoad={this.oniframeLoad}
+            this.state.workspaceStatus === 'Running'
+              ? (
+                <React.Fragment>
+                  <div className='workspace__iframe'>
+                    <iframe
+                      className='workspace'
+                      title='Workspace'
+                      frameBorder='0'
+                      src={`${workspaceUrl}proxy/`}
+                      onLoad={this.oniframeLoad}
+                    />
+                  </div>
+                  <div className='workspace__buttongroup'>
+                    { terminateButton }
+                    { fullpageButton }
+                  </div>
+                </React.Fragment>
+              )
+              : null
+          }
+          {
+            this.state.workspaceStatus === 'Launching'
+            || this.state.workspaceStatus === 'Stopped'
+              ? (
+                <React.Fragment>
+                  <div className='workspace__spinner-container'>
+                    {(this.state.workspaceLaunchStepsConfig)
+                      ? (
+                        <Steps
+                          current={this.state.workspaceLaunchStepsConfig.currentIndex}
+                          status={this.state.workspaceLaunchStepsConfig.currentStepsStatus}
+                        >
+                          { (this.state.workspaceLaunchStepsConfig.steps.map((step) => (
+                            <Step
+                              key={step.title}
+                              title={step.title}
+                              description={step.description}
+                            />
+                          ))) }
+                        </Steps>
+                      )
+                      : null}
+                    {(this.state.workspaceStatus === 'Launching')
+                      ? <Spinner text='Launching Workspace, this process may take several minutes' />
+                      : null}
+                  </div>
+                  <div className='workspace__buttongroup'>
+                    { cancelButton }
+                  </div>
+                </React.Fragment>
+              )
+              : null
+          }
+          {
+            this.state.workspaceStatus === 'Terminating'
+              ? (
+                <div className='workspace__spinner-container'>
+                  <Spinner text='Terminating workspace...' />
+                </div>
+              )
+              : null
+          }
+          {
+            this.state.workspaceStatus !== 'Launching'
+            && this.state.workspaceStatus !== 'Terminating'
+            && this.state.workspaceStatus !== 'Running'
+            && this.state.workspaceStatus !== 'Stopped'
+              ? (
+                <div>
+                  {workspacePageTitle
+                    ? (
+                      <h2 className='workspace__title'>
+                        {parse(workspacePageTitle)}
+                      </h2>
+                    )
+                    : null}
+                  {workspacePageDescription
+                    ? (
+                      <div className='workspace__description'>
+                        {parse(workspacePageDescription)}
+                      </div>
+                    )
+                    : null}
+                  <div className='workspace__options'>
+                    {
+                      this.state.options.map((option, i) => {
+                        const desc = option['cpu-limit']
+                          ? `${option['cpu-limit']}CPU, ${option['memory-limit']} memory`
+                          : '';
+                        return (
+                          <WorkspaceOption
+                            key={i}
+                            icon={this.getIcon(option.name)}
+                            title={option.name}
+                            description={desc}
+                            onClick={() => this.launchWorkspace(option)}
+                            isPending={this.state.workspaceID === option.id}
+                            isDisabled={
+                              !!this.state.workspaceID
+                            && this.state.workspaceID !== option.id
+                            }
+                          />
+                        );
+                      })
+                    }
+                  </div>
+                  <WorkspaceLogin
+                    providers={this.state.externalLoginOptions}
                   />
                 </div>
-                <div className='workspace__buttongroup'>
-                  { terminateButton }
-                  { fullpageButton }
-                </div>
-              </React.Fragment>
-              : null
-          }
-          {
-            this.state.workspaceStatus === 'Launching' ||
-            this.state.workspaceStatus === 'Stopped' ?
-              <React.Fragment>
-                <div className='workspace__spinner-container'>
-                  {(this.state.workspaceLaunchStepsConfig) ?
-                    <Steps
-                      current={this.state.workspaceLaunchStepsConfig.currentIndex}
-                      status={this.state.workspaceLaunchStepsConfig.currentStepsStatus}
-                    >
-                      { (this.state.workspaceLaunchStepsConfig.steps.map(step =>
-                        (<Step
-                          key={step.title}
-                          title={step.title}
-                          description={step.description}
-                        />))) }
-                    </Steps>
-                    : null}
-                  {(this.state.workspaceStatus === 'Launching') ?
-                    <Spinner text='Launching Workspace, this process may take several minutes' />
-                    : null}
-                </div>
-                <div className='workspace__buttongroup'>
-                  { cancelButton }
-                </div>
-              </React.Fragment>
-              : null
-          }
-          {
-            this.state.workspaceStatus === 'Terminating' ?
-              <div className='workspace__spinner-container'>
-                <Spinner text='Terminating workspace...' />
-              </div>
-              : null
-          }
-          {
-            this.state.workspaceStatus !== 'Launching' &&
-            this.state.workspaceStatus !== 'Terminating' &&
-            this.state.workspaceStatus !== 'Running' &&
-            this.state.workspaceStatus !== 'Stopped' ?
-              <div>
-                {workspacePageTitle ?
-                  <h2 className='workspace__title'>
-                    {parse(workspacePageTitle)}
-                  </h2>
-                  : null}
-                {workspacePageDescription ?
-                  <div className='workspace__description'>
-                    {parse(workspacePageDescription)}
-                  </div>
-                  : null}
-                <div className='workspace__options'>
-                  {
-                    this.state.options.map((option, i) => {
-                      const desc = option['cpu-limit'] ?
-                        `${option['cpu-limit']}CPU, ${option['memory-limit']} memory`
-                        : '';
-                      return (
-                        <WorkspaceOption
-                          key={i}
-                          icon={this.getIcon(option.name)}
-                          title={option.name}
-                          description={desc}
-                          onClick={() => this.launchWorkspace(option)}
-                          isPending={this.state.workspaceID === option.id}
-                          isDisabled={
-                            !!this.state.workspaceID &&
-                            this.state.workspaceID !== option.id
-                          }
-                        />
-                      );
-                    })
-                  }
-                </div>
-                <WorkspaceLogin
-                  providers={this.state.externalLoginOptions}
-                />
-              </div>
+              )
               : null
           }
         </div>
       );
-    } else if (this.state.defaultWorkspace && this.state.connectedStatus) {
+    } if (this.state.defaultWorkspace && this.state.connectedStatus) {
       // If this commons does not use Hatchery to spawn workspaces, then this
       // default workspace is shown.
       return (
