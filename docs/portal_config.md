@@ -398,7 +398,7 @@ Below is an example, with inline comments describing what each JSON block config
   "discoveryConfig": { // config for Discovery page. Required if 'featureFlags.discovery' is true. See src/Discovery/DiscoveryConfig.d.ts for Typescript schema.
     "public": true, // optional, defaults to true. If false, requires user to sign in before seeing the Discovery page
     "features": {
-      "exportToWorkspaceBETA": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
+      "exportToWorkspace": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
           "enable": boolean
           "enableDownloadManifest": boolean // enables a button which allows user to download a manifest file for gen3 client
           "manifestFieldName": string // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
@@ -412,21 +412,24 @@ Below is an example, with inline comments describing what each JSON block config
           "enabled": true
         }
       },
+      "advSearchFilters": {
+        "enabled": true
+      },
       "authorization": {
         "enabled": true // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
       }
     },
     "aggregations": [ // configures the statistics at the top of the discovery page (e.g. 'XX Studies', 'XX,XXX Subjects')
-        {
-            "name": "Studies",
-            "field": "study_id",
-            "type": "count" // count of rows in data where `field` is non-empty
-        },
-        {
-            "name": "Total Subjects",
-            "field": "_subjects_count",
-            "type": "sum" // sums together all numeric values in `row[field]`. `field` must be a numeric field.
-        }
+      {
+        "name": "Studies",
+        "field": "study_id",
+        "type": "count" // count of rows in data where `field` is non-empty
+      },
+      {
+        "name": "Total Subjects",
+        "field": "_subjects_count",
+        "type": "sum" // sums together all numeric values in `row[field]`. `field` must be a numeric field.
+      }
     ],
     "tagSelector": {
       "title": "Associated tags organized by category"

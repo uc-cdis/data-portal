@@ -29,7 +29,9 @@ interface DiscoveryTagViewerProps {
 
 const DiscoveryTagViewer: React.FunctionComponent<DiscoveryTagViewerProps> = (props: DiscoveryTagViewerProps) => (
   <div className='discovery-header__tags-container' id='discovery-tag-filters'>
-    <h3 className='discovery-header__tags-header'>{props.config.tagSelector.title}</h3>
+    {props.config.tagSelector.title &&
+      <h3 className='discovery-header__tags-header'>{props.config.tagSelector.title}</h3>
+    }
     <div className='discovery-header__tags'>
       {
         props.config.tagCategories.map((category) => {
