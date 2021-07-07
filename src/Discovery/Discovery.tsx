@@ -633,35 +633,7 @@ const Discovery: React.FunctionComponent<DiscoveryBetaProps> = (props: Discovery
                 { config.tagSelector.showTagCategoryNames &&
                   <h5>{category.name}</h5>
                 }
-                {tagColumns
-                /* { tags.map(tag =>
-                  (<Tag
-                    key={category.name + tag}
-                    role='button'
-                    tabIndex={0}
-                    aria-pressed={selectedTags[tag] ? 'true' : 'false'}
-                    className={`discovery-header__tag-btn discovery-tag ${selectedTags[tag] && 'discovery-tag--selected'}`}
-                    aria-label={tag}
-                    style={{
-                      backgroundColor: selectedTags[tag] ? category.color : 'initial',
-                      borderColor: category.color,
-                    }}
-                    onKeyPress={() => {
-                      setSelectedTags({
-                        ...selectedTags,
-                        [tag]: selectedTags[tag] ? undefined : true,
-                      });
-                    }}
-                    onClick={() => {
-                      setSelectedTags({
-                        ...selectedTags,
-                        [tag]: selectedTags[tag] ? undefined : true,
-                      });
-                    }}
-                  >
-                    {tag}
-                  </Tag>),
-                )} */}
+                {tagColumns}
               </div>);
             })
           }
