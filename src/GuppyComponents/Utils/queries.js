@@ -307,12 +307,6 @@ export function getGQLFilter(filter) {
       typeof filterValues.upperBound !== 'undefined';
     const hasSelectedValues = filterValues?.selectedValues?.length > 0;
 
-    if (!isRangeFilter && !hasSelectedValues)
-      if (filterValues.__combineMode)
-        // This filter only has a combine setting so far. We can ignore it.
-        return undefined;
-      else throw new Error(`Invalid filter object ${filterValues}`);
-
     /** @type {{ AND?: any[]; IN?: { [x: string]: string[] }}} */
     const facetsPiece = {};
     if (isRangeFilter)
@@ -327,6 +321,11 @@ export function getGQLFilter(filter) {
         }));
       // combine mode defaults to OR when not set.
       else facetsPiece.IN = { [fieldName]: filterValues.selectedValues };
+    else if (filterValues.__combineMode !== undefined)
+      // This filter only has a combine setting so far. We can ignore it.
+      // eslint-disable-next-line no-continue
+      continue;
+    else throw new Error(`Invalid filter object ${filterValues}`);
 
     facetsList.push(
       fieldSplitted.length === 1
