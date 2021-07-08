@@ -63,6 +63,8 @@ function buildConfig(opts) {
     tierAccessLevel,
     tierAccessLimit,
     mapboxAPIToken,
+    ddApplicationId,
+    ddClientToken,
   } = { ...defaults, ...opts };
 
   function ensureTrailingSlash(url) {
@@ -488,6 +490,8 @@ function buildConfig(opts) {
     marinerUrl,
     aggMDSDataURL,
     commonsWideAltText,
+    ddApplicationId,
+    ddClientToken,
     ddEnv,
     ddSampleRate,
   };

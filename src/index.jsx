@@ -69,6 +69,8 @@ async function init() {
   ReactGA.pageview(window.location.pathname + window.location.search);
 
   // Datadog setup
+  console.log(ddApplicationId);
+  console.log(ddClientToken);
   if (ddApplicationId && !ddClientToken) {
     console.warn('Datadog applicationId is set, but clientToken is missing');
   } else if (!ddApplicationId && ddClientToken) {
