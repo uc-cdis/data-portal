@@ -16,6 +16,9 @@ if (DAPTrackingURL) {
   scriptSrcURLs.push(DAPTrackingURL);
   connectSrcURLs.push(DAPTrackingURL);
 }
+if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
+  connectSrcURLs.push('https://*.logs.datadoghq.com');
+}
 const iFrameApplicationURLs = [];
 if (configFile && configFile.analysisTools) {
   configFile.analysisTools.forEach((e) => {
