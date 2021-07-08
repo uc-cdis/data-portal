@@ -272,16 +272,16 @@ class IllinoisMapChart extends React.Component {
     }
     if (id.includes('mobility_data')) {
       const colors = [
-        ['-100% - -80%', '#FFF'],
-        ['-80% - -60%', '#F7F787'],
-        ['-60% - -40%', '#EED322'],
-        ['-40% - -20%', '#E6B71E'],
-        ['-20% - 0%', '#DA9C20'],
-        ['0% - 20%', '#CA8323'],
-        ['20% - 40%', '#B86B25'],
-        ['40% - 60%', '#A25626'],
-        ['60% - 80%', '#8B4225'],
-        ['80% - 100% +', '#850001'],
+        ['-100% to -80%', '#FFF'],
+        ['-80% to -60%', '#F7F787'],
+        ['-60% to -40%', '#EED322'],
+        ['-40% to -20%', '#E6B71E'],
+        ['-20% to 0%', '#DA9C20'],
+        ['0% to 20%', '#CA8323'],
+        ['20% to 40%', '#B86B25'],
+        ['40% to 60%', '#A25626'],
+        ['60% to 80%', '#8B4225'],
+        ['80% to 100% +', '#850001'],
       ];
       this.setState({ mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google Mobility Data', link: 'https://www.google.com/covid19/mobility/' } });
     }
