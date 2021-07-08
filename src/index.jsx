@@ -439,7 +439,7 @@ async function init() {
                       exact
                       path='/discovery/:studyUID'
                       component={
-                        props => (
+                        (props) => (
                           <ProtectedContent
                             public
                             component={Discovery}
@@ -464,22 +464,6 @@ async function init() {
                       }
                     />
                   )}
-                  {isEnabled('discovery')
-                    && (
-                      <Route
-                        exact
-                        path='/discovery/:studyUID'
-                        component={
-                          (props) => (
-                            <ProtectedContent
-                              public
-                              component={Discovery}
-                              {...props}
-                            />
-                          )
-                        }
-                      />
-                    )}
                   <Route
                     path='/not-found'
                     component={NotFound}
