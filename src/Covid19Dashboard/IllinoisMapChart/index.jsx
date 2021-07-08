@@ -282,6 +282,7 @@ class IllinoisMapChart extends React.Component {
         ['40% to 60%', '#A25626'],
         ['60% to 80%', '#8B4225'],
         ['80% to 100% +', '#850001'],
+        ['No Data Available', '#5f5d59'],
       ];
       this.setState({ mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google Mobility Data', link: 'https://www.google.com/covid19/mobility/' } });
     }
