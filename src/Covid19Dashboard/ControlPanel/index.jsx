@@ -31,7 +31,7 @@ class ControlPanel extends PureComponent {
                 trigger={['hover', 'focus']}
               >
                 <div id='g3-accessibility-links-tooltip-data_source' className='g3-helper-tooltip g3-ring-on-focus' role='tooltip' tabIndex='0'>
-                  <i className='g3-icon g3-icon--sm g3-icon--info-circle-bootstrap help-tooltip-icon' />                  
+                  <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />                  
                 </div>
             </Tooltip>
           )}
