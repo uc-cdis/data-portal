@@ -27,7 +27,7 @@ class ExplorerTable extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.totalCount != prevProps.totalCount) {
+    if (this.props.totalCount !== prevProps.totalCount) {
       this.props.deselectAll();
     }
   }

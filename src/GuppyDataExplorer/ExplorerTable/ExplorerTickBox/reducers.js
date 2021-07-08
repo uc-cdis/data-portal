@@ -18,7 +18,7 @@ function getSelectAllState() {
 const tickbox = (state = {selectingMode: true, filteredItems: {}, allSelected: false}, action) => {
   switch (action.type) {
     case 'DESELECT_TICKBOX':
-      if (state.selectingMode && state.filteredItems == {} && !state.allSelected) {
+      if (state.selectingMode && state.filteredItems === {} && !state.allSelected) {
         return state;
       }
       return getInitialState();
@@ -27,36 +27,36 @@ const tickbox = (state = {selectingMode: true, filteredItems: {}, allSelected: f
       // if allSelected is true, transition back to 
       // initial state (nothing selected)
       if (state.allSelected){
-        const newState = getInitialState();
-        return newState;
+        return getInitialState();
       } else {
         // moving to every item toggled
         // does not matter what items were previously selected
-        const newState = getSelectAllState();
-        return newState;
+        return getSelectAllState();
       }
 
     case 'TOGGLE_TICKBOX':
       var newToggleValue = true;
+      var isEmpty = true;
       if (action.key in state.filteredItems) {
         newToggleValue = !state.filteredItems[action.key];
       }
       // check for cases equivalent to toggling SELECT ALL
-      var isEmpty = true; for (var key in state.filteredItems) { isEmpty = false; break; }
+      Object.keys(state.filteredItems).forEach(function(key) {
+        isEmpty = false;
+      })
       if (!isEmpty) {
-        var itemCount = 1;
-        var allBoxesTickedTheSame = true;
-        for (const item in state.filteredItems){
-          if (item == action.key) { continue; }
-          if (state.filteredItems[item] != newToggleValue){
+        let itemCount = 1;
+        let allBoxesTickedTheSame = true;
+        Object.keys(state.filteredItems).forEach(function(item) {
+          if (item !== action.key && state.filteredItems[item] !== newToggleValue){
             allBoxesTickedTheSame = false;
-            break;
+          } else {
+            itemCount = itemCount + 1;
           }
-          itemCount = itemCount + 1;
-        }
+        })
         if (allBoxesTickedTheSame){
           if (state.selectingMode) { 
-            if (itemCount == action.totalCount && newToggleValue) {
+            if (itemCount === action.totalCount && newToggleValue) {
               // all are ticked -> move to select all state
               return getSelectAllState();
             } else if (!newToggleValue) {
@@ -69,7 +69,7 @@ const tickbox = (state = {selectingMode: true, filteredItems: {}, allSelected: f
               return getSelectAllState();
             }
             // if all boxes are unticked, need to check total count
-            else if (itemCount == action.totalCount){
+            else if (itemCount === action.totalCount){
               return getInitialState();
             }
           }

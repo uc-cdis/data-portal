@@ -20,19 +20,19 @@ export function deselectAll() {
 
 function manifestShouldFilterIndividualItems(state) {
   var isEmpty = true; 
-  for (var key in state.filteredItems) { 
+  Object.keys(state.filteredItems).forEach(function(key) {
     if (state.filteredItems[key]){
       isEmpty = false; 
-      break; 
     }
-  }
+  })
   if (isEmpty) {
     return false;
   }
   return true;
 }
 
-export function manifestTickBoxFilter(resultManifest) {
+export function manifestTickBoxFilter(resultManifestInput) {
+  var resultManifest = resultManifestInput;
   if (manifestShouldFilterIndividualItems(this.props)) {
     function checkItem(item) {
       const refFieldInResourceIndex =
