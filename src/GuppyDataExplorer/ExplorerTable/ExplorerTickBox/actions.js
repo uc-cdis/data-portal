@@ -40,11 +40,11 @@ export function manifestTickBoxFilter(resultManifestInput) {
     }
     return false;
   }
+  let cI = checkItem.bind(this);
   function cNI(item){
     return !cI(item);
   }
-  var cI = checkItem.bind(this);
-  var resultManifest = resultManifestInput;
+  let resultManifest = resultManifestInput;
 
   if (manifestShouldFilterIndividualItems(this.props)) {
     if (this.props.selectingMode) {

@@ -41,8 +41,8 @@ const tickbox = (state = {selectingMode: true, filteredItems: {}, allSelected: f
         newToggleValue = !state.filteredItems[action.key];
       }
       // check for cases equivalent to toggling SELECT ALL
-      Object.keys(state.filteredItems).forEach(function(_) {
-        isEmpty = false;
+      Object.keys(state.filteredItems).forEach(function(key) {
+        isEmpty = false && key; // ESLint complains if I don't use key, or _
       })
       if (!isEmpty) {
         let itemCount = 1;
