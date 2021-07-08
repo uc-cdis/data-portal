@@ -88,12 +88,9 @@
 .discovery-header__stat-label {
   font-size: 1.25rem;
   font-size: 40px;
-  line-height: 50px;
-}
-
-.discovery-header__stat-label {
-  text-transform: uppercase;
   font-size: 14px;
+  line-height: 50px;
+  text-transform: uppercase;
 }
 
 .discovery-header__tags-container {
@@ -107,12 +104,6 @@
   border-bottom: solid 1px #e7e7e7;
   font-weight: normal;
   font-size: 1.125rem;
-}
-
-.discovery-header__tags-header {
-  cursor: default;
-  font-size: 14px;
-  font-weight: 700;
   text-transform: uppercase;
   color: #555;
 }
@@ -156,24 +147,11 @@
   color: #555;
   margin-bottom: 3px;
   user-select: none;
-}
-
-.discovery-tag {
-  line-height: 18px;
   font-size: 10px;
-  box-sizing: border-box;
-  border-radius: 5px;
-  border-width: 2px;
-  margin-bottom: 3px;
 }
 
 .discovery-tag--selected {
   color: #fff;
-}
-
-.discovery-search {
-  border-radius: 5px;
-  max-width: 500px;
 }
 
 .discovery-export__selected-ct {
@@ -208,12 +186,8 @@
 .discovery-search {
   border-color: rgb(139, 51, 105);
   border-width: 1px;
-  border-radius: 7px;
+  border-radius: 5px;
   max-width: 500px;
-}
-
-.discovery-export__selected-ct {
-  color: #7f7f7f;
 }
 
 .discovery-table-container {
@@ -268,21 +242,6 @@
   font-size: 1rem;
 }
 
-.discovery-table__expanded-row-content {
-  cursor: pointer;
-  height: 40px;
-  width: 100%;
-  overflow: hidden;
-  /* ---------
-   * Add an ellipsis after N rows of text.
-   * This css won't work in IE 11, but it's ok, there just won't be an ellipsis.
-   **/
-  background: #dfe3e2;
-  font-size: 12px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #ccc;
-}
-
 .discovery-table-container .ant-table-tbody > tr.ant-table-row:hover > td.ant-table-cell {
   border-color: rgba(0,0,0,0);
 }
@@ -328,10 +287,14 @@
   height: 35px;
   width: 100%;
   overflow: hidden;
+  background: #dfe3e2;
+  font-size: 12px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
   /* ---------
-     * Add an ellipsis after N rows of text.
-     * This css won't work in IE 11, but it's ok, there just won't be an ellipsis.
-     **/
+   * Add an ellipsis after N rows of text.
+   * This css won't work in IE 11, but it's ok, there just won't be an ellipsis.
+   **/
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -350,15 +313,6 @@
 .discovery-popover__text {
   color: var(--g3-color__titanium);
   font-size: 0.625rem;
-}
-
-.discovery-popover {
-  max-width: 500px;
-}
-
-.discovery-popover__text {
-  color: #7f7f7f;
-  font-size: 12px;
 }
 
 .discovery-modal {
@@ -410,6 +364,7 @@
 .discovery-modal__attribute-name {
   color: var(--g3-color__titanium);
   margin-right: 7px;
+  text-transform: uppercase;
 }
 
 #discovery-page-accessibility-links {
@@ -434,12 +389,6 @@
 
 .discovery-modal__attribute:not(:first-child) {
   margin-top: 8px;
-}
-
-.discovery-modal__attribute-name {
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-right: 10px;
 }
 
 .discovery-modal__attribute-value {
