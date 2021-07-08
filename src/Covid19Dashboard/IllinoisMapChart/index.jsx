@@ -88,7 +88,7 @@ class IllinoisMapChart extends React.Component {
       popup_data: {
         /*
         This data is used just for the popup on hover */
-        strain_data: { title: 'Strain Data', visible: 'none' },
+        strain_data: { title: 'SARS-CoV-2 Strain Data', visible: 'none' },
         // mobility_data : {title: 'Mobility Data', visible: 'none'},
       },
       sliderValue: dateDiff,
@@ -407,7 +407,7 @@ class IllinoisMapChart extends React.Component {
               hoverInfo.strain_values
               && (
                 <table>
-                  <caption>Strain Data</caption>
+                  <caption>SARS-CoV-2 Strain Data</caption>
                   <tbody>
                     {Object.entries(hoverInfo.strain_values).map((val, i) => {
                       const secondCol = Object.entries(hoverInfo.strain_values)[i + 1] || ['', ''];
