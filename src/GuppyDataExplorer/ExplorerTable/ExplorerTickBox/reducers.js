@@ -16,6 +16,8 @@ function getSelectAllState() {
 }
 
 const tickbox = (state = {selectingMode: true, filteredItems: {}, allSelected: false}, action) => {
+  var newToggleValue = true;
+  var isEmpty = true;
   switch (action.type) {
     case 'DESELECT_TICKBOX':
       if (state.selectingMode && state.filteredItems === {} && !state.allSelected) {
@@ -35,13 +37,11 @@ const tickbox = (state = {selectingMode: true, filteredItems: {}, allSelected: f
       }
 
     case 'TOGGLE_TICKBOX':
-      var newToggleValue = true;
-      var isEmpty = true;
       if (action.key in state.filteredItems) {
         newToggleValue = !state.filteredItems[action.key];
       }
       // check for cases equivalent to toggling SELECT ALL
-      Object.keys(state.filteredItems).forEach(function(key) {
+      Object.keys(state.filteredItems).forEach(function(_) {
         isEmpty = false;
       })
       if (!isEmpty) {

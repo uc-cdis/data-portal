@@ -32,20 +32,21 @@ function manifestShouldFilterIndividualItems(state) {
 }
 
 export function manifestTickBoxFilter(resultManifestInput) {
+  function checkItem(item) {
+    const refFieldInResourceIndex =
+      this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
+    if (item[refFieldInResourceIndex] in this.props.filteredItems) {
+      return this.props.filteredItems[item[refFieldInResourceIndex]];
+    }
+    return false;
+  }
+  function cNI(item){
+    return !cI(item);
+  }
+  var cI = checkItem.bind(this);
   var resultManifest = resultManifestInput;
+
   if (manifestShouldFilterIndividualItems(this.props)) {
-    function checkItem(item) {
-      const refFieldInResourceIndex =
-        this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
-      if (item[refFieldInResourceIndex] in this.props.filteredItems) {
-        return this.props.filteredItems[item[refFieldInResourceIndex]];
-      }
-      return false;
-    }
-    var cI = checkItem.bind(this);
-    function cNI(item){
-      return !cI(item);
-    }
     if (this.props.selectingMode) {
       resultManifest = resultManifest.filter(cI);
     } else {
