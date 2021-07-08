@@ -114,6 +114,26 @@ function buildConfig(opts) {
   const workspaceStorageDownloadUrl = `${workspaceStorageUrl}/download`;
   const marinerUrl = `${hostname}ga4gh/wes/v1/runs`;
   const enableDAPTracker = !!config.DAPTrackingURL;
+
+  // datadog related setup
+  let ddEnv = 'PROD';
+  if (hostnameOnly.includes('qa-')) {
+    ddEnv = 'QA';
+  } else if (hostnameOnly.includes('planx-pla.net')) {
+    ddEnv = 'DEV';
+  }
+  if (config.ddEnv) {
+    ddEnv = config.ddEnv;
+  }
+  let ddSampleRate = 100;
+  if (config.ddSampleRate) {
+    if (Number.isNaN(config.ddSampleRate)) {
+      console.warn('Datadog sampleRate value in Portal config is not a number, ignoring');
+    } else {
+      ddSampleRate = config.ddSampleRate;
+    }
+  }
+
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -468,6 +488,8 @@ function buildConfig(opts) {
     marinerUrl,
     aggMDSDataURL,
     commonsWideAltText,
+    ddEnv,
+    ddSampleRate,
   };
 }
 

@@ -42,7 +42,7 @@ import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
-  ddApplicationId, ddClientToken,
+  ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
 } from './localconf';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
@@ -77,10 +77,10 @@ async function init() {
       clientToken: ddClientToken,
       site: 'datadoghq.com',
       service: 'portal',
-      env: 'QA',
+      env: ddEnv,
       // Specify a version number to identify the deployed version of your application in Datadog
       // version: '1.0.0',
-      sampleRate: 100,
+      sampleRate: ddSampleRate,
       trackInteractions: true,
     });
   }
