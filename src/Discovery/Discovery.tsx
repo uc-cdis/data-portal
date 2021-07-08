@@ -55,12 +55,6 @@ const accessibleDataFilterToggle = () => {
   }
 };
 
-interface ListItem {
-  title: string,
-  description: string,
-  guid: string
-}
-
 export const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number'|'link'|'tags' = 'string', config: DiscoveryConfig): React.ReactNode => {
   switch (contentType) {
   case 'string':

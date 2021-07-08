@@ -43,7 +43,12 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
   FileSaver.saveAs(blob, MANIFEST_FILENAME);
 };
 
-const handleExportToWorkspaceClick = async (config: DiscoveryConfig, selectedResources: [], setExportingToWorkspace: (boolean) => void, history: any) => {
+const handleExportToWorkspaceClick = async (
+  config: DiscoveryConfig,
+  selectedResources: [],
+  setExportingToWorkspace: (boolean) => void,
+  history: any,
+) => {
   setExportingToWorkspace(true);
   const manifestFieldName = config.features.exportToWorkspace.manifestFieldName;
   if (!manifestFieldName) {

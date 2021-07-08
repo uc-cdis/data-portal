@@ -11,19 +11,21 @@ export enum AccessLevel {
 
 interface Props {
   config: DiscoveryConfig;
-  studies?: {__accessible: boolean, [any: string]: any}[];
-  columns?: [];
-  visibleResources?: [];
-  accessibleFieldName?: string;
-  searchTerm?: string;
+  studies: {__accessible: boolean, [any: string]: any}[];
+  columns: [];
+  visibleResources: [];
+  accessibleFieldName: string;
+  searchTerm: string;
   setPermalinkCopied: (boolean) => void;
   setModalVisible: (boolean) => void;
   setModalData: (boolean) => void;
-  selectedResources?: [];
-  setSelectedResources?: (any) => void;
+  selectedResources: [];
+  setSelectedResources: (any) => void;
 }
 
 export const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
+  const searchTerm = props.searchTerm;
+
   return (
     <Table
       loading={props.studies.length === 0}
@@ -82,7 +84,8 @@ export const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) 
                 return props.config.studyPreviewField.valueIfNotAvailable;
               }
             }
-            if (props.searchTerm) {
+
+            if (searchTerm) {
               // get index of this.props.searchTerm match
               const matchIndex = value.toLowerCase().indexOf(
                 props.searchTerm.toLowerCase());

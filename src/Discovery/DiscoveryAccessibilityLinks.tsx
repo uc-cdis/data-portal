@@ -35,7 +35,7 @@ const DiscoveryAccessibilityLinks = () => {
         width='300px'
         trigger={['hover', 'focus']}
       >
-        <span className='g3-helper-tooltip g3-ring-on-focus' role='tooltip' tabIndex='0'>
+        <span className='g3-helper-tooltip g3-ring-on-focus' role='tooltip'>
           <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
         </span>
       </Tooltip>
