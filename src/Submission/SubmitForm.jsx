@@ -31,8 +31,8 @@ class SubmitForm extends Component {
   };
 
   onChange = (event) => {
+    const { target } = event;
     this.setState((prevState) => {
-      const { target } = event;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const { name } = target;
       return {
@@ -54,8 +54,8 @@ class SubmitForm extends Component {
   };
 
   onChangeAnyOf = (name, event, properties) => {
+    const { target } = event;
     this.setState((prevState) => {
-      const { target } = event;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       // get real subname because we have to change the name of each text input so they are unique
       const subname = target.name.replace(`${name}_`, '');
