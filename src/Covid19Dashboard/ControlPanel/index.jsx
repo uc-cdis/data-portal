@@ -17,7 +17,7 @@ class ControlPanel extends PureComponent {
       <div className='control-panel'>
         <h3>{this.props.legendTitle}</h3>
         <p>
-          Data source:
+          Data source:&nbsp;
           <a href={this.props.legendDataSource.link}>
             {this.props.legendDataSource.title}
           </a>
