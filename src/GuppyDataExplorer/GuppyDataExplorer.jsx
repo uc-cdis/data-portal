@@ -22,7 +22,7 @@ import './GuppyDataExplorer.css';
 /**
  * @param {URLSearchParams} searchParams
  * @param {{ tabs: { fields: string[] }[] }} filterConfig
- * @param {{ enabled?: boolean }} patientIdsConfig
+ * @param {{ filter?: boolean; export?: boolean }} patientIdsConfig
  */
 function extractExplorerStateFromURL(
   searchParams,
@@ -42,7 +42,7 @@ function extractExplorerStateFromURL(
     }
 
   // eslint-disable-next-line no-nested-ternary
-  const patientIds = patientIdsConfig?.enabled
+  const patientIds = patientIdsConfig?.filter
     ? searchParams.has('patientIds')
       ? searchParams.get('patientIds').split(',')
       : []
@@ -125,7 +125,7 @@ class GuppyDataExplorer extends React.Component {
       });
   };
 
-  handlePatientIdsChange = this.props.patientIdsConfig?.enabled
+  handlePatientIdsChange = this.props.patientIdsConfig?.filter
     ? (patientIds) => {
         const searchParams = new URLSearchParams(
           this.props.history.location.search
