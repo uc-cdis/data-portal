@@ -43,6 +43,8 @@ const plugins = [
   new webpack.EnvironmentPlugin(['WTS_URL']),
   new webpack.EnvironmentPlugin(['MANIFEST_SERVICE_URL']),
   new webpack.EnvironmentPlugin(['MAPBOX_API_TOKEN']),
+  new webpack.EnvironmentPlugin(['DATADOG_APPLICATION_ID']),
+  new webpack.EnvironmentPlugin(['DATADOG_CLIENT_TOKEN']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),

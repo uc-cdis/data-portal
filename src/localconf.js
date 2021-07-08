@@ -32,6 +32,8 @@ function buildConfig(opts) {
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
     mapboxAPIToken: process.env.MAPBOX_API_TOKEN,
+    ddApplicationId: process.env.DATADOG_APPLICATION_ID,
+    ddClientToken: process.env.DATADOG_CLIENT_TOKEN,
   };
 
   //
