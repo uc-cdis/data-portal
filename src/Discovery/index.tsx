@@ -99,7 +99,7 @@ const DiscoveryWithMDSBackend: React.FC<{
         }
       }).catch((err) => {
         // eslint-disable-next-line no-console
-        console.error('Error encountered while loading studies: ', err);
+        console.error('Error encountered while loading studies:', err);
       });
     }
     loadStudiesWrapper();
