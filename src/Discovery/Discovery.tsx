@@ -273,7 +273,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     textWrap: 'word-break',
     width: column.width,
     render: (_, record) => {
-      const value = record[column.field];
+      let value = record[column.field];
 
       if (value === undefined) {
         if (column.errorIfNotAvailable !== false) {
@@ -290,6 +290,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       if (columnIsSearchable) {
         // Show search highlights if there's an active search term
         if (searchTerm) {
+          if (Array.isArray(value)) {
+            value = value.join(', ');
+          }
           return highlightSearchTerm(value, searchTerm).highlighted;
         }
       }

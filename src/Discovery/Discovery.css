@@ -371,9 +371,11 @@
 
 #discovery-page-accessibility-links {
   top: 129px;
+  padding-right: 16px;
 }
 
 .discovery-hidden-link {
+  display: none;
   visibility: hidden;
   margin: 12px 6px;
 }
