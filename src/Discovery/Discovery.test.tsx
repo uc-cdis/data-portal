@@ -148,7 +148,7 @@ describe('Modal', () => {
 
         // expect field to show correct field name, if configured to show a field name.
         if (fieldCfg.includeName !== false) {
-          expect(field.find('.discovery-modal__attribute-name').first().text()).toBe(`${fieldCfg.name}:`);
+          expect(field.find('.discovery-modal__attribute-name').first().text()).toBe(`${fieldCfg.name}`);
         } else {
           expect(field.exists('.discovery-modal__attribute-name')).toBe(false);
         }

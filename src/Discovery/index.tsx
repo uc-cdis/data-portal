@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import Discovery from './Discovery';
+import Discovery, { AccessLevel } from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { hostname, discoveryConfig, useArboristUI } from '../localconf';
@@ -79,10 +79,20 @@ const DiscoveryWithMDSBackend: React.FC<{
           if (!useArboristUI) {
             throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
           }
-          const studiesWithAccessibleField = rawStudies.map((study) => ({
-            ...study,
-            __accessible: userHasMethodForServiceOnResource('read', '*', study[authzField], getUserAuthMapping(study)),
-          }));
+          const studiesWithAccessibleField = rawStudies.map((study) => {
+            let accessible: AccessLevel;
+            if (study[authzField] === undefined || study[authzField] === '') {
+              accessible = AccessLevel.NOTAVAILABLE;
+            } else {
+              accessible = userHasMethodForServiceOnResource('read', '*', study[authzField], getUserAuthMapping(study))
+                ? AccessLevel.ACCESSIBLE
+                : AccessLevel.UNACCESSIBLE;
+            }
+            return {
+              ...study,
+              __accessible: accessible,
+            };
+          });
           setStudies(studiesWithAccessibleField);
         } else {
           setStudies(rawStudies);
