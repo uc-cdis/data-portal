@@ -34,7 +34,12 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
   const manifest = [];
   selectedResources.forEach((study) => {
     if (study[manifestFieldName]) {
-      manifest.push(...study[manifestFieldName]);
+      if ('commons_url' in study) { // PlanX addition to allow hostname based DRS in manifest download clients
+        // like FUSE
+        manifest.push(...study[manifestFieldName].map((x) => ({ ...x, commons_url: study.commons_url })));
+      } else {
+        manifest.push(...study[manifestFieldName]);
+      }
     }
   });
   // download the manifest
@@ -58,7 +63,12 @@ const handleExportToWorkspaceClick = async (
   const manifest = [];
   selectedResources.forEach((study) => {
     if (study[manifestFieldName]) {
-      manifest.push(...study[manifestFieldName]);
+      if ('commons_url' in study) { // PlanX addition to allow hostname based DRS in manifest download clients
+        // like FUSE
+        manifest.push(...study[manifestFieldName].map((x) => ({ ...x, commons_url: study.commons_url })));
+      } else {
+        manifest.push(...study[manifestFieldName]);
+      }
     }
   });
   // post selected resources to manifestservice
