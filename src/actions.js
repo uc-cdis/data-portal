@@ -184,28 +184,26 @@ export const fetchWrapper = ({
   },
 );
 
-export const fetchGraphQL = (graphQLParams) => {
-  // We first update the session so that the user will be notified
-  // if their auth is insufficient to perform the query.
-  sessionMonitor.updateSession().then(() => {
-    const request = {
-      credentials: 'include',
-      headers: { ...headers },
-      method: 'POST',
-      body: JSON.stringify(graphQLParams),
-    };
+// We first update the session so that the user will be notified
+// if their auth is insufficient to perform the query.
+export const fetchGraphQL = (graphQLParams) => sessionMonitor.updateSession().then(() => {
+  const request = {
+    credentials: 'include',
+    headers: { ...headers },
+    method: 'POST',
+    body: JSON.stringify(graphQLParams),
+  };
 
-    return fetch(graphqlPath, request)
-      .then((response) => response.text())
-      .then((responseBody) => {
-        try {
-          return JSON.parse(responseBody);
-        } catch (error) {
-          return responseBody;
-        }
-      });
-  });
-};
+  return fetch(graphqlPath, request)
+    .then((response) => response.text())
+    .then((responseBody) => {
+      try {
+        return JSON.parse(responseBody);
+      } catch (error) {
+        return responseBody;
+      }
+    });
+});
 
 export const fetchFlatGraphQL = (graphQLParams) => sessionMonitor.updateSession().then(() => {
   const request = {
