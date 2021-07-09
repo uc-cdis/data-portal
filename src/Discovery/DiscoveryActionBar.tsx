@@ -57,7 +57,7 @@ const handleExportToWorkspaceClick = async (
   setExportingToWorkspace(true);
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
-    throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
+    throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
   }
   // combine manifests from all selected studies
   const manifest = [];
