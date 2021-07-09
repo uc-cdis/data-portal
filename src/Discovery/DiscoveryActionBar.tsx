@@ -9,10 +9,10 @@ import {
   LeftOutlined,
   RightOutlined,
   ExportOutlined,
-  DownloadOutlined
+  DownloadOutlined,
 } from '@ant-design/icons';
-import { DiscoveryConfig } from './DiscoveryConfig';
 import FileSaver from 'file-saver';
+import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
 import { manifestServiceApiPath } from '../localconf';
 
@@ -50,7 +50,7 @@ const handleExportToWorkspaceClick = async (
   history: any,
 ) => {
   setExportingToWorkspace(true);
-  const manifestFieldName = config.features.exportToWorkspace.manifestFieldName;
+  const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error('Missing required configuration field `config.features.exportToWorkspaceBETA.manifestFieldName`');
   }
@@ -79,81 +79,90 @@ const DiscoveryActionBar = (props: Props) => {
   const history = useHistory();
 
   return (
-    <div className="discovery-studies__header">
+    <div className='discovery-studies__header'>
       {/* Advanced search show/hide UI */}
-      { (props.config.features.advSearchFilters && props.config.features.advSearchFilters.enabled) &&
-        <Button
-          style={{ color: 'rgb(139, 51, 105)', fontWeight: '700' }}
-          onClick={() => props.setFiltersVisible(!props.filtersVisible)}
-          type='text'
-        >
+      { (props.config.features.advSearchFilters && props.config.features.advSearchFilters.enabled)
+        && (
+          <Button
+            style={{ color: 'rgb(139, 51, 105)', fontWeight: '700' }}
+            onClick={() => props.setFiltersVisible(!props.filtersVisible)}
+            type='text'
+          >
           ADVANCED SEARCH
-          { props.filtersVisible
-            ? <LeftOutlined />
-            : <RightOutlined />
-          }
-        </Button>
-      }
+            { props.filtersVisible
+              ? <LeftOutlined />
+              : <RightOutlined />}
+          </Button>
+        )}
 
       {/* Export to workspaces button */}
       { (
         props.config.features.exportToWorkspace && props.config.features.exportToWorkspace.enabled
-      ) &&
-        <Space>
-          <span className='discovery-export__selected-ct'>{props.selectedResources.length} selected</span>
-          { props.config.features.exportToWorkspace.enableDownloadManifest &&
+      )
+        && (
+          <Space>
+            <span className='discovery-export__selected-ct'>{props.selectedResources.length} selected</span>
+            { props.config.features.exportToWorkspace.enableDownloadManifest
+            && (
+              <Popover
+                className='discovery-popover'
+                arrowPointAtCenter
+                title={(
+                  <React.Fragment>
+                Download a Manifest File for use with the&nbsp;
+                    <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/'>
+                      {'Gen3 Client'}
+                    </a>.
+                  </React.Fragment>
+                )}
+                content={(
+                  <span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
+              to download the data from the selected studies to your local computer.
+                  </span>
+                )}
+              >
+                <Button
+                  onClick={() => {
+                    handleDownloadManifestClick(props.config, props.selectedResources);
+                  }}
+                  type='text'
+                  disabled={props.selectedResources.length === 0}
+                  icon={<DownloadOutlined />}
+                >
+                Download Manifest
+                </Button>
+              </Popover>
+            )}
             <Popover
               className='discovery-popover'
               arrowPointAtCenter
-              title={<>
-                Download a Manifest File for use with the&nbsp;
-                <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/' >
-                  {'Gen3 Client'}
-                </a>.
-              </>}
-              content={(<span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
-              to download the data from the selected studies to your local computer.</span>)}
+              content={(
+                <React.Fragment>
+              Open selected studies in the&nbsp;
+                  <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
+                    {'Gen3 Workspace'}
+                  </a>.
+                </React.Fragment>
+              )}
             >
               <Button
-                onClick={() => {
-                  handleDownloadManifestClick(props.config, props.selectedResources);
+                type='default'
+                style={{
+                  color: props.selectedResources.length === 0 ? null : 'rgb(139, 51, 105)',
+                  borderColor: props.selectedResources.length === 0 ? null : 'rgb(139, 51, 105)',
                 }}
-                type='text'
                 disabled={props.selectedResources.length === 0}
-                icon={<DownloadOutlined />}
+                loading={props.exportingToWorkspace}
+                icon={<ExportOutlined />}
+                onClick={() => {
+                  handleExportToWorkspaceClick(props.config, props.selectedResources, props.setExportingToWorkspace, history);
+                }}
               >
-                Download Manifest
+              Open In Workspace
               </Button>
             </Popover>
-          }
-          <Popover
-            className='discovery-popover'
-            arrowPointAtCenter
-            content={<>
-              Open selected studies in the&nbsp;
-              <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
-                {'Gen3 Workspace'}
-              </a>.
-            </>}
-          >
-            <Button
-              type='default'
-              style={{
-                color: props.selectedResources.length === 0 ? null : 'rgb(139, 51, 105)',
-                borderColor: props.selectedResources.length === 0 ? null : 'rgb(139, 51, 105)',
-              }}
-              disabled={props.selectedResources.length === 0}
-              loading={props.exportingToWorkspace}
-              icon={<ExportOutlined />}
-              onClick={() => {
-                handleExportToWorkspaceClick(props.config, props.selectedResources, props.setExportingToWorkspace, history)
-              }}
-            >
-              Open In Workspace
-            </Button>
-          </Popover>
-        </Space>
-      }
+          </Space>
+        )}
     </div>
   );
 };

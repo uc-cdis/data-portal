@@ -1,5 +1,5 @@
-import React from 'react';
-import { Table } from 'antd';
+import React, { useState } from 'react';
+import { Table, Empty } from 'antd';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
 
@@ -24,12 +24,17 @@ interface Props {
 }
 
 export const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
-  const searchTerm = props.searchTerm;
+  const { searchTerm } = props;
+
+  const [onHoverRowIndex, setOnHoverRowIndex] = useState(null);
 
   return (
     <Table
       loading={props.studies.length === 0}
       width={'500px'}
+      locale={{
+        emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No Studies' />,
+      }}
       columns={props.columns}
       rowKey={props.config.minimalFieldMapping.uid}
       rowSelection={(
@@ -58,8 +63,16 @@ export const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) 
           return { disabled };
         },
       }}
-      rowClassName='discovery-table__row'
-      onRow={(record) => ({
+      rowClassName={(_, index) => (index === onHoverRowIndex ? 'discovery-table__row--hover' : 'discovery-table__row')}
+      onRow={(record, rowIndex) => ({
+        onMouseEnter: (ev) => {
+          ev.stopPropagation();
+          setOnHoverRowIndex(rowIndex);
+        },
+        onMouseLeave: (ev) => {
+          ev.stopPropagation();
+          setOnHoverRowIndex(null);
+        },
         onClick: () => {
           props.setPermalinkCopied(false);
           props.setModalVisible(true);
@@ -76,7 +89,7 @@ export const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) 
         // expand all rows
         expandedRowKeys: props.visibleResources.map(
           (r) => r[props.config.minimalFieldMapping.uid]),
-        expandedRowRender: (record) => {
+        expandedRowRender: (record, index) => {
           const studyPreviewText = record[props.config.studyPreviewField.field];
           const renderValue = (value: string | undefined): React.ReactNode => {
             if (!value) {
@@ -116,6 +129,14 @@ export const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) 
               className='discovery-table__expanded-row-content'
               role='button'
               tabIndex={0}
+              onMouseEnter={(ev) => {
+                ev.stopPropagation();
+                setOnHoverRowIndex(index);
+              }}
+              onMouseLeave={(ev) => {
+                ev.stopPropagation();
+                setOnHoverRowIndex(null);
+              }}
               onClick={() => {
                 props.setPermalinkCopied(false);
                 props.setModalData(record);
@@ -131,7 +152,7 @@ export const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) 
             </div>
           );
         },
-        expandedRowClassName: () => 'discovery-table__expanded-row',
+        expandedRowClassName: (_, index) => (index === onHoverRowIndex ? 'discovery-table__expanded-row--hover' : 'discovery-table__expanded-row'),
         expandIconColumnIndex: -1, // don't render expand icon
       })}
     />
