@@ -361,6 +361,7 @@
 .discovery-modal__attribute-group {
   display: flex;
   flex-direction: column;
+  margin-bottom: 8px;
 }
 
 .discovery-modal__attribute-name {
