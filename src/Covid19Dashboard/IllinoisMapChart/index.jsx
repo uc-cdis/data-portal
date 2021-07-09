@@ -88,7 +88,7 @@ class IllinoisMapChart extends React.Component {
       popup_data: {
         /*
         This data is used just for the popup on hover */
-        strain_data: { title: 'Strain Data', visible: 'none' },
+        strain_data: { title: 'SARS-CoV-2 Strain Data', visible: 'none' },
         // mobility_data : {title: 'Mobility Data', visible: 'none'},
       },
       sliderValue: dateDiff,
@@ -217,20 +217,50 @@ class IllinoisMapChart extends React.Component {
         };
       }
 
-      if (feature.layer.id.includes('mobility_data')) {
+      if (feature.layer.id === 'rnr_mobility_data') {
         const rnr = formatNumberToDisplay(feature.properties[`rnr_${this.state.sliderDate}`]);
-        const gnp = formatNumberToDisplay(feature.properties[`gnp_${this.state.sliderDate}`]);
-        const prk = formatNumberToDisplay(feature.properties[`prk_${this.state.sliderDate}`]);
-        const trn = formatNumberToDisplay(feature.properties[`trn_${this.state.sliderDate}`]);
-        const wrk = formatNumberToDisplay(feature.properties[`wrk_${this.state.sliderDate}`]);
-        const res = formatNumberToDisplay(feature.properties[`res_${this.state.sliderDate}`]);
 
         hoverInfo.mobility_values = {
           'Retail & Recreation': rnr,
+        };
+      }
+
+      if (feature.layer.id === 'gnp_mobility_data') {
+        const gnp = formatNumberToDisplay(feature.properties[`gnp_${this.state.sliderDate}`]);
+
+        hoverInfo.mobility_values = {
           'Grocery & Pharmacy': gnp,
+        };
+      }
+
+      if (feature.layer.id === 'prk_mobility_data') {
+        const prk = formatNumberToDisplay(feature.properties[`prk_${this.state.sliderDate}`]);
+
+        hoverInfo.mobility_values = {
           Parks: prk,
-          Transit: trn,
+        };
+      }
+
+      if (feature.layer.id === 'trn_mobility_data') {
+        const trn = formatNumberToDisplay(feature.properties[`trn_${this.state.sliderDate}`]);
+
+        hoverInfo.mobility_values = {
+          'Transit Stations': trn,
+        };
+      }
+
+      if (feature.layer.id === 'wrk_mobility_data') {
+        const wrk = formatNumberToDisplay(feature.properties[`wrk_${this.state.sliderDate}`]);
+        
+        hoverInfo.mobility_values = {
           Workplaces: wrk,
+        };
+      }
+
+      if (feature.layer.id === 'res_mobility_data') {
+        const res = formatNumberToDisplay(feature.properties[`res_${this.state.sliderDate}`]);
+
+        hoverInfo.mobility_values = {
           Residential: res,
         };
       }
@@ -282,6 +312,7 @@ class IllinoisMapChart extends React.Component {
         ['40% to 60%', '#A25626'],
         ['60% to 80%', '#8B4225'],
         ['80% to 100% +', '#850001'],
+        ['No Data Available', '#5f5d59'],
       ];
       this.setState({ mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google Mobility Data', link: 'https://www.google.com/covid19/mobility/' } });
     }
@@ -406,7 +437,7 @@ class IllinoisMapChart extends React.Component {
               hoverInfo.strain_values
               && (
                 <table>
-                  <caption>Strain Data</caption>
+                  <caption>SARS-CoV-2 Strain Data</caption>
                   <tbody>
                     {Object.entries(hoverInfo.strain_values).map((val, i) => {
                       const secondCol = Object.entries(hoverInfo.strain_values)[i + 1] || ['', ''];
@@ -486,8 +517,8 @@ class IllinoisMapChart extends React.Component {
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayer visibility={this.state.activeLayer === 'rnr_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerGnp visibility={this.state.activeLayer === 'gnp_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerPrk visibility={this.state.activeLayer === 'prk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
-          {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerWrk visibility={this.state.activeLayer === 'wrk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerTrn visibility={this.state.activeLayer === 'trn_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
+          {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerWrk visibility={this.state.activeLayer === 'wrk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerRes visibility={this.state.activeLayer === 'res_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {/*
           // Additional layers used as examples enable here
