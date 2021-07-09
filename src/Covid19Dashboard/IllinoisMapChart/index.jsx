@@ -217,20 +217,50 @@ class IllinoisMapChart extends React.Component {
         };
       }
 
-      if (feature.layer.id.includes('mobility_data')) {
+      if (feature.layer.id === 'rnr_mobility_data') {
         const rnr = formatNumberToDisplay(feature.properties[`rnr_${this.state.sliderDate}`]);
-        const gnp = formatNumberToDisplay(feature.properties[`gnp_${this.state.sliderDate}`]);
-        const prk = formatNumberToDisplay(feature.properties[`prk_${this.state.sliderDate}`]);
-        const trn = formatNumberToDisplay(feature.properties[`trn_${this.state.sliderDate}`]);
-        const wrk = formatNumberToDisplay(feature.properties[`wrk_${this.state.sliderDate}`]);
-        const res = formatNumberToDisplay(feature.properties[`res_${this.state.sliderDate}`]);
 
         hoverInfo.mobility_values = {
           'Retail & Recreation': rnr,
+        };
+      }
+
+      if (feature.layer.id === 'gnp_mobility_data') {
+        const gnp = formatNumberToDisplay(feature.properties[`gnp_${this.state.sliderDate}`]);
+
+        hoverInfo.mobility_values = {
           'Grocery & Pharmacy': gnp,
+        };
+      }
+
+      if (feature.layer.id === 'prk_mobility_data') {
+        const prk = formatNumberToDisplay(feature.properties[`prk_${this.state.sliderDate}`]);
+
+        hoverInfo.mobility_values = {
           Parks: prk,
-          Transit: trn,
+        };
+      }
+
+      if (feature.layer.id === 'trn_mobility_data') {
+        const trn = formatNumberToDisplay(feature.properties[`trn_${this.state.sliderDate}`]);
+
+        hoverInfo.mobility_values = {
+          'Transit Stations': trn,
+        };
+      }
+
+      if (feature.layer.id === 'wrk_mobility_data') {
+        const wrk = formatNumberToDisplay(feature.properties[`wrk_${this.state.sliderDate}`]);
+        
+        hoverInfo.mobility_values = {
           Workplaces: wrk,
+        };
+      }
+
+      if (feature.layer.id === 'res_mobility_data') {
+        const res = formatNumberToDisplay(feature.properties[`res_${this.state.sliderDate}`]);
+
+        hoverInfo.mobility_values = {
           Residential: res,
         };
       }
@@ -487,8 +517,8 @@ class IllinoisMapChart extends React.Component {
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayer visibility={this.state.activeLayer === 'rnr_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerGnp visibility={this.state.activeLayer === 'gnp_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerPrk visibility={this.state.activeLayer === 'prk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
-          {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerWrk visibility={this.state.activeLayer === 'wrk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerTrn visibility={this.state.activeLayer === 'trn_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
+          {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerWrk visibility={this.state.activeLayer === 'wrk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerRes visibility={this.state.activeLayer === 'res_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {/*
           // Additional layers used as examples enable here
