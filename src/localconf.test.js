@@ -7,7 +7,7 @@ describe('The localconf', () => {
     'app',
     'basename',
     'hostname',
-    'userapiPath',
+    'userAPIPath',
     'submissionApiPath',
     'credentialCdisPath',
     'graphqlPath',

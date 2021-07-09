@@ -1,10 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {
+  Tab, Tabs, TabList, TabPanel,
+} from 'react-tabs';
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+} from 'recharts';
 import 'react-tabs/style/react-tabs.less';
 
-import { covid19DashboardConfig, mapboxAPIToken, auspiceUrl, auspiceUrlIL } from '../localconf';
+import {
+  covid19DashboardConfig, mapboxAPIToken, auspiceUrl, auspiceUrlIL,
+} from '../localconf';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
 import WorldMapChart from './WorldMapChart';
@@ -12,7 +18,6 @@ import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
 import ChartCarousel from './ChartCarousel';
 import './Covid19Dashboard.less';
-
 
 /* To fetch new data:
 - add the prop name and location to `dashboardDataLocations`;
@@ -36,7 +41,7 @@ class Covid19Dashboard extends React.Component {
 
     // fetch all data in `dashboardDataLocations`
     Object.entries(dashboardDataLocations).forEach(
-      e => this.props.fetchDashboardData(e[0], e[1]),
+      (e) => this.props.fetchDashboardData(e[0], e[1]),
     );
   }
 
@@ -99,75 +104,78 @@ class Covid19Dashboard extends React.Component {
   }
 
   renderLocationPopupContents = () => {
-    const locationPopupData = (this.props.selectedLocationData &&
-      !this.props.selectedLocationData.loading) ? this.formatLocationTimeSeriesData() : null;
-    const timeSeriesChart = locationPopupData ?
-      (<ResponsiveContainer>
-        <LineChart
-          data={locationPopupData.data}
-          margin={{
-            top: 5, right: 30, left: 20, bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray='3 3' />
-          <XAxis
-            dataKey='date'
-            tick={<CustomizedXAxisTick />}
-            interval={Math.round(locationPopupData.data.length / 50)}
-          />
-          <YAxis
-            label={{
-              value: locationPopupData.maxes.recovered ? 'confirmed/recovered' : 'confirmed',
-              angle: -90,
-              position: 'insideLeft',
+    const locationPopupData = (this.props.selectedLocationData
+      && !this.props.selectedLocationData.loading) ? this.formatLocationTimeSeriesData() : null;
+    const timeSeriesChart = locationPopupData
+      ? (
+        <ResponsiveContainer>
+          <LineChart
+            data={locationPopupData.data}
+            margin={{
+              top: 5, right: 30, left: 20, bottom: 5,
             }}
-            yAxisId='left'
-            type='number'
-            domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
-            tickFormatter={val => Number(val).toLocaleString()}
-            fontSize={10}
-          />
-          <YAxis
-            label={{ value: 'deaths', angle: 90, position: 'insideRight' }}
-            yAxisId='right'
-            orientation='right'
-            type='number'
-            domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
-            tickFormatter={val => Number(val).toLocaleString()}
-            fontSize={10}
-          />
-          <Tooltip content={this.renderLocationPopupTooltip} />
-          <Legend />
+          >
+            <CartesianGrid strokeDasharray='3 3' />
+            <XAxis
+              dataKey='date'
+              tick={<CustomizedXAxisTick />}
+              interval={Math.round(locationPopupData.data.length / 50)}
+            />
+            <YAxis
+              label={{
+                value: locationPopupData.maxes.recovered ? 'confirmed/recovered' : 'confirmed',
+                angle: -90,
+                position: 'insideLeft',
+              }}
+              yAxisId='left'
+              type='number'
+              domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
+              tickFormatter={(val) => Number(val).toLocaleString()}
+              fontSize={10}
+            />
+            <YAxis
+              label={{ value: 'deaths', angle: 90, position: 'insideRight' }}
+              yAxisId='right'
+              orientation='right'
+              type='number'
+              domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
+              tickFormatter={(val) => Number(val).toLocaleString()}
+              fontSize={10}
+            />
+            <Tooltip content={this.renderLocationPopupTooltip} />
+            <Legend />
 
-          <Line
-            yAxisId='left'
-            type='monotone'
-            dataKey='confirmed'
-            stroke='#8884d8'
-            dot={false}
-          />
-          { locationPopupData.maxes.recovered &&
             <Line
               yAxisId='left'
               type='monotone'
-              dataKey='recovered'
-              stroke='#00B957'
+              dataKey='confirmed'
+              stroke='#8884d8'
               dot={false}
             />
-          }
-          <Line
-            yAxisId='right'
-            type='monotone'
-            dataKey='deaths'
-            stroke='#aa5e79'
-            dot={false}
-          />
-        </LineChart>
-      </ResponsiveContainer>)
+            { locationPopupData.maxes.recovered
+            && (
+              <Line
+                yAxisId='left'
+                type='monotone'
+                dataKey='recovered'
+                stroke='#00B957'
+                dot={false}
+              />
+            )}
+            <Line
+              yAxisId='right'
+              type='monotone'
+              dataKey='deaths'
+              stroke='#aa5e79'
+              dot={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      )
       : <Spinner />;
 
-    const modeledCountyFips = this.props.selectedLocationData ?
-      this.props.selectedLocationData.modeledCountyFips : null;
+    const modeledCountyFips = this.props.selectedLocationData
+      ? this.props.selectedLocationData.modeledCountyFips : null;
 
     // no additional charts for this location: do not render a carousel
     if (!modeledCountyFips) {
@@ -188,7 +196,7 @@ class Covid19Dashboard extends React.Component {
       },
     ];
     carouselChartsConfig = carouselChartsConfig.concat(
-      Object.keys(imgProps).map(propName => ({
+      Object.keys(imgProps).map((propName) => ({
         type: 'image',
         prop: propName,
         title: (imgMetadata[propName] && imgMetadata[propName].title) || null,
@@ -196,12 +204,14 @@ class Covid19Dashboard extends React.Component {
       })),
     );
 
-    const popupCarousel = (<ChartCarousel
-      chartsConfig={carouselChartsConfig}
-      isInPopup
-      timeSeriesChart={timeSeriesChart}
-      {...imgProps}
-    />);
+    const popupCarousel = (
+      <ChartCarousel
+        chartsConfig={carouselChartsConfig}
+        isInPopup
+        timeSeriesChart={timeSeriesChart}
+        {...imgProps}
+      />
+    );
     return popupCarousel;
   }
 
@@ -271,24 +281,28 @@ class Covid19Dashboard extends React.Component {
                 />
               </div>
               <div className='covid19-dashboard_visualizations'>
-                { mapboxAPIToken &&
-                  <IllinoisMapChart
-                    jsonByLevel={this.props.jhuJsonByLevelLatest}
-                    modeledFipsList={this.props.modeledFipsList}
-                    fetchTimeSeriesData={this.props.fetchTimeSeriesData}
-                  />
-                }
-                {chartsConfig.illinois && chartsConfig.illinois.length > 0 &&
-                  <div className='covid19-dashboard_charts'>
-                    {chartsConfig.illinois.map((carouselConfig, i) =>
-                      (<ChartCarousel
-                        key={i}
-                        chartsConfig={carouselConfig}
-                        {...this.props}
-                      />),
-                    )}
-                  </div>
-                }
+                { mapboxAPIToken
+                  && (
+                    <IllinoisMapChart
+                      jsonByLevel={this.props.jhuJsonByLevelLatest}
+                      modeledFipsList={this.props.modeledFipsList}
+                      fetchTimeSeriesData={this.props.fetchTimeSeriesData}
+                    />
+                  )}
+                {chartsConfig.illinois && chartsConfig.illinois.length > 0
+                  && (
+                    <div className='covid19-dashboard_charts'>
+                      {chartsConfig.illinois.map((carouselConfig, i) => (
+                        <ChartCarousel
+                          key={i}
+                          chartsConfig={carouselConfig}
+                          {...this.props}
+                          enablePopupOnClick
+                        />
+                      ),
+                      )}
+                    </div>
+                  )}
               </div>
             </TabPanel>
 
@@ -309,53 +323,59 @@ class Covid19Dashboard extends React.Component {
                 />
               </div>
               <div className='covid19-dashboard_visualizations'>
-                { mapboxAPIToken &&
-                  <WorldMapChart
-                    geoJson={this.props.jhuGeojsonLatest}
-                    jsonByLevel={this.props.jhuJsonByLevelLatest}
-                    modeledFipsList={this.props.modeledFipsList}
-                    fetchTimeSeriesData={this.props.fetchTimeSeriesData}
-                  />
-                }
-                {chartsConfig.world && chartsConfig.world.length > 0 &&
-                  <div className='covid19-dashboard_charts'>
-                    {chartsConfig.world.map((carouselConfig, i) =>
-                      (<ChartCarousel
-                        key={i}
-                        chartsConfig={carouselConfig}
-                        {...this.props}
-                      />),
-                    )}
-                  </div>
-                }
+                { mapboxAPIToken
+                  && (
+                    <WorldMapChart
+                      geoJson={this.props.jhuGeojsonLatest}
+                      jsonByLevel={this.props.jhuJsonByLevelLatest}
+                      modeledFipsList={this.props.modeledFipsList}
+                      fetchTimeSeriesData={this.props.fetchTimeSeriesData}
+                    />
+                  )}
+                {chartsConfig.world && chartsConfig.world.length > 0
+                  && (
+                    <div className='covid19-dashboard_charts'>
+                      {chartsConfig.world.map((carouselConfig, i) => (
+                        <ChartCarousel
+                          key={i}
+                          chartsConfig={carouselConfig}
+                          {...this.props}
+                          enablePopupOnClick
+                        />
+                      ),
+                      )}
+                    </div>
+                  )}
               </div>
             </TabPanel>
             <TabPanel className='covid19-dashboard_panel'>
               <div className='covid19-dashboard_auspice'>
                 {/* this component doesn't need the mapboxAPIToken but it's a way to make
                 sure this is the COVID19 Commons and the iframe contents will load */}
-                { mapboxAPIToken &&
-                  <iframe
-                    title='Global SARS-CoV2 Genomics'
-                    frameBorder='0'
-                    className='covid19-dashboard_auspice__iframe'
-                    src={auspiceUrl}
-                  />
-                }
+                { mapboxAPIToken
+                  && (
+                    <iframe
+                      title='Global SARS-CoV2 Genomics'
+                      frameBorder='0'
+                      className='covid19-dashboard_auspice__iframe'
+                      src={auspiceUrl}
+                    />
+                  )}
               </div>
             </TabPanel>
             <TabPanel className='covid19-dashboard_panel'>
               <div className='covid19-dashboard_auspice'>
                 {/* this component doesn't need the mapboxAPIToken but it's a way to make
                 sure this is the COVID19 Commons and the iframe contents will load */}
-                { mapboxAPIToken &&
-                  <iframe
-                    title='IL SARS-CoV2 Genomics'
-                    frameBorder='0'
-                    className='covid19-dashboard_auspice__iframe'
-                    src={auspiceUrlIL}
-                  />
-                }
+                { mapboxAPIToken
+                  && (
+                    <iframe
+                      title='IL SARS-CoV2 Genomics'
+                      frameBorder='0'
+                      className='covid19-dashboard_auspice__iframe'
+                      src={auspiceUrlIL}
+                    />
+                  )}
               </div>
             </TabPanel>
           </Tabs>
@@ -363,13 +383,15 @@ class Covid19Dashboard extends React.Component {
 
         {/* popup when click on a location */}
         {
-          this.props.selectedLocationData ?
-            <Popup
-              title={this.props.selectedLocationData.title}
-              onClose={() => this.props.closeLocationPopup()}
-            >
-              {this.renderLocationPopupContents()}
-            </Popup>
+          this.props.selectedLocationData
+            ? (
+              <Popup
+                title={this.props.selectedLocationData.title}
+                onClose={() => this.props.closeLocationPopup()}
+              >
+                {this.renderLocationPopupContents()}
+              </Popup>
+            )
             : null
         }
       </div>
@@ -377,7 +399,7 @@ class Covid19Dashboard extends React.Component {
   }
 }
 
-class CustomizedXAxisTick extends React.Component { // eslint-disable-line react/no-multi-comp
+class CustomizedXAxisTick extends React.Component {
   render() {
     const { x, y, payload } = this.props; // eslint-disable-line react/prop-types
     const val = payload.value; // eslint-disable-line react/prop-types
@@ -415,7 +437,9 @@ Covid19Dashboard.propTypes = {
 Covid19Dashboard.defaultProps = {
   modeledFipsList: [],
   jhuGeojsonLatest: { type: 'FeatureCollection', features: [] },
-  jhuJsonByLevelLatest: { country: {}, state: {}, county: {} },
+  jhuJsonByLevelLatest: {
+    country: {}, state: {}, county: {}, last_updated: '',
+  },
   selectedLocationData: null,
   top10ChartData: [],
   idphDailyChartData: [],

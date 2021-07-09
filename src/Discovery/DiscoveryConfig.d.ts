@@ -1,7 +1,7 @@
 export interface DiscoveryConfig {
     public?: boolean // If false, requires user to sign in before seeing the Discovery page
     features: {
-        exportToWorkspaceBETA: {
+        exportToWorkspace: {
             enabled: boolean
             enableDownloadManifest: boolean
             manifestFieldName: string
@@ -60,6 +60,7 @@ export interface DiscoveryConfig {
         title?: string
         showTagCategoryNames?: boolean
     },
+    tagColumnWidth: string,
     studyColumns: {
         name: string
         field: string
@@ -68,6 +69,7 @@ export interface DiscoveryConfig {
         valueIfNotAvailable?: string | number
         ellipsis?: boolean
         width?: string | number
+        hrefValueFromField?: 'string'
     }[],
     studyPreviewField: {
         name: string,
@@ -81,6 +83,10 @@ export interface DiscoveryConfig {
         // show_all_available_fields: boolean, // not supported
         header?: {
             field: string
+        },
+        downloadLinks?: {
+            field: string
+            name?: string
         },
         fieldsToShow: {
             groupName?: string
@@ -99,7 +105,8 @@ export interface DiscoveryConfig {
     minimalFieldMapping: {
         tagsListFieldName: string,
         authzField: string,
-        uid: string
+        uid: string,
+        commons: string
     },
     tagCategories: {
         name: string,

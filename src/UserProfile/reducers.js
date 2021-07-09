@@ -7,12 +7,15 @@ const userProfile = (state = {}, action) => {
   case 'RECEIVE_USERAPI_LOGIN':
     return { ...state, login: state.result, error: state.error };
   case 'REQUEST_DELETE_KEY':
-    return { ...state,
+    return {
+      ...state,
       ...action.userProfile,
       requestDeleteJTI: action.jti,
-      requestDeleteExp: action.exp };
+      requestDeleteExp: action.exp,
+    };
   case 'CREATE_SUCCEED':
-    return { ...state,
+    return {
+      ...state,
       ...action.userProfile,
       refreshCred: action.refreshCred,
       strRefreshCred: action.strRefreshCred,
@@ -29,7 +32,9 @@ const userProfile = (state = {}, action) => {
   case 'CLEAR_DELETE_KEY_SESSION':
     return { ...state, delete_error: null, request_delete_key: null };
   case 'CLEAR_CREATION_SESSION':
-    return { ...state, access_key_pair: null, str_access_key_pair: null, delete_error: null };
+    return {
+      ...state, access_key_pair: null, str_access_key_pair: null, delete_error: null,
+    };
   case 'FETCH_ERROR':
     return { ...state, fetch_error: action.error };
   default:

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Switch, Space, Select, Typography } from 'antd';
+import {
+  Switch, Space, Select, Typography,
+} from 'antd';
 import PropTypes from 'prop-types';
 import { jsonToString } from '../utils';
 import SubmitNodeForm from './SubmitNodeForm';
@@ -13,74 +15,74 @@ const { Title } = Typography;
  * the same way uploaded tsv/json data is treated.
  */
 class SubmitForm extends Component {
-  static propTypes = {
-    submission: PropTypes.object.isRequired,
-    onUploadClick: PropTypes.func.isRequired,
-    onUpdateFormSchema: PropTypes.func.isRequired,
-  };
-
-  state = {
-    chosenNode: { value: null, label: '' },
-    fill_form: false,
-    form: {},
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      chosenNode: { value: null, label: '' },
+      fill_form: false,
+      form: {},
+    };
+  }
 
   onFormToggle = () => {
-    this.setState({
-      fill_form: !(this.state.fill_form),
-    });
+    this.setState((prevState) => ({
+      fill_form: !(prevState.fill_form),
+    }));
   };
 
   onChange = (event) => {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-    this.setState({
-      form: {
-        ...this.state.form,
-        [name]: value,
-      },
+    const { target } = event;
+    this.setState((prevState) => {
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      const { name } = target;
+      return {
+        form: {
+          ...prevState.form,
+          [name]: value,
+        },
+      };
     });
   };
 
   onChangeEnum = (name, newValue) => {
-    this.setState({
+    this.setState((prevState) => ({
       form: {
-        ...this.state.form,
+        ...prevState.form,
         [name]: newValue,
       },
-    });
+    }));
   };
 
   onChangeAnyOf = (name, event, properties) => {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    // get real subname because we have to change the name of each text input so they are unique
-    const subname = target.name.replace(`${name}_`, '');
+    const { target } = event;
+    this.setState((prevState) => {
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      // get real subname because we have to change the name of each text input so they are unique
+      const subname = target.name.replace(`${name}_`, '');
 
-    if (this.state.form[name] === null || this.state.form[name] === undefined) {
-      this.setState({
+      if (prevState.form[name] === null || prevState.form[name] === undefined) {
+        return {
+          form: {
+            ...prevState.form,
+            [name]: [{ [subname]: value }],
+          },
+        };
+      } if (properties.every((prop) => prop in prevState.form[name])) {
+        return {
+          form: {
+            ...prevState.form,
+            [name]: prevState.form[name].push({ [subname]: value }),
+          },
+        };
+      }
+      return {
         form: {
-          ...this.state.form,
-          [name]: [{ [subname]: value }],
+          ...prevState.form,
+          [name]: [...prevState.form[name].slice(0, prevState.form[name].length - 2),
+            { ...prevState.form[name][prevState.form[name].length - 1], [subname]: value }],
         },
-      });
-    } else if (properties.every(prop => prop in this.state.form[name])) {
-      this.setState({
-        form: {
-          ...this.state.form,
-          [name]: this.state.form[name].push({ [subname]: value }),
-        },
-      });
-    } else {
-      this.setState({
-        form: {
-          ...this.state.form,
-          [name]: [...this.state.form[name].slice(0, this.state.form[name].length - 2),
-            { ...this.state.form[name][this.state.form[name].length - 1], [subname]: value }],
-        },
-      });
-    }
+      };
+    });
   };
 
   handleSubmit = () => {
@@ -89,10 +91,10 @@ class SubmitForm extends Component {
   };
 
   render() {
-    const dictionary = this.props.submission.dictionary;
-    const nodeTypes = this.props.submission.nodeTypes;
+    const { dictionary } = this.props.submission;
+    const { nodeTypes } = this.props.submission;
     const node = dictionary[this.state.chosenNode.value];
-    const options = nodeTypes.map(nodeType => ({ value: nodeType, label: nodeType }));
+    const options = nodeTypes.map((nodeType) => ({ value: nodeType, label: nodeType }));
 
     const updateChosenNode = (newValue) => {
       this.setState({
@@ -110,42 +112,51 @@ class SubmitForm extends Component {
                 Use Form Submission
                 <Switch className='submit-form__switch' onChange={this.onFormToggle} />
               </Space>
-              {this.state.fill_form && <Select
-                size={'large'}
-                showSearch
-                allowClear
-                value={this.state.chosenNode.value}
-                onChange={updateChosenNode}
-                className='submit-form__select'
-              >
-                {options.map(opt => (
-                  <Option key={opt.value} value={opt.value}>{opt.label}</Option>
-                ))}
-              </Select>}
+              {this.state.fill_form && (
+                <Select
+                  size={'large'}
+                  showSearch
+                  allowClear
+                  value={this.state.chosenNode.value}
+                  onChange={updateChosenNode}
+                  className='submit-form__select'
+                >
+                  {options.map((opt) => (
+                    <Option key={opt.value} value={opt.value}>{opt.label}</Option>
+                  ))}
+                </Select>
+              )}
             </Space>
           </form>
-          {(this.state.chosenNode.value !== null) && this.state.fill_form &&
-            <div className='submit-form__content'>
-              <Title level={4}>Properties:</Title>
-              <span className='submit-form__required-notification'> * Denotes Required Property </span>
-              <SubmitNodeForm
-                node={node}
-                form={this.state.form}
-                properties={Object.keys(node.properties)
-                  .filter(prop => node.systemProperties.indexOf(prop) < 0)}
-                requireds={('required' in node) ? node.required : []}
-                onChange={this.onChange}
-                onChangeEnum={this.onChangeEnum}
-                onChangeAnyOf={this.onChangeAnyOf}
-                onUpdateFormSchema={this.props.onUpdateFormSchema}
-                handleSubmit={this.handleSubmit}
-              />
-            </div>
-          }
+          {(this.state.chosenNode.value !== null) && this.state.fill_form
+            && (
+              <div className='submit-form__content'>
+                <Title level={4}>Properties:</Title>
+                <span className='submit-form__required-notification'> * Denotes Required Property </span>
+                <SubmitNodeForm
+                  node={node}
+                  form={this.state.form}
+                  properties={Object.keys(node.properties)
+                    .filter((prop) => node.systemProperties.indexOf(prop) < 0)}
+                  requireds={('required' in node) ? node.required : []}
+                  onChange={this.onChange}
+                  onChangeEnum={this.onChangeEnum}
+                  onChangeAnyOf={this.onChangeAnyOf}
+                  onUpdateFormSchema={this.props.onUpdateFormSchema}
+                  handleSubmit={this.handleSubmit}
+                />
+              </div>
+            )}
         </Space>
       </div>
     );
   }
 }
+
+SubmitForm.propTypes = {
+  submission: PropTypes.object.isRequired,
+  onUploadClick: PropTypes.func.isRequired,
+  onUpdateFormSchema: PropTypes.func.isRequired,
+};
 
 export default SubmitForm;

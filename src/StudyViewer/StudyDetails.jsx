@@ -1,17 +1,19 @@
-/* eslint-disable max-len */
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Space, Typography, Descriptions, message, Divider, Alert, Modal, List } from 'antd';
+import {
+  Space, Typography, Descriptions, message, Divider, Alert, Modal, List,
+} from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import {
   // for nested docs maybe
   // FileOutlined,
   // FilePdfOutlined,
-  LinkOutlined } from '@ant-design/icons';
+  LinkOutlined,
+} from '@ant-design/icons';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { useArboristUI, requestorPath, userapiPath } from '../localconf';
+import { useArboristUI, requestorPath, userAPIPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './StudyViewer.css';
 
@@ -63,7 +65,7 @@ class StudyDetails extends React.Component {
 
         // this defaults to the config of the 1st configured request_access
         // button. if there are more than 1 with different configs, TODO fix
-        const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find(e => e.type === 'request_access');
+        const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find((e) => e.type === 'request_access');
 
         if (!this.state.accessRequested) {
           const body = {
@@ -116,8 +118,8 @@ class StudyDetails extends React.Component {
     let button;
 
     const enableButton = buttonConfig.enableButtonField
-      && this.props.data.displayButtonsData[buttonConfig.enableButtonField] ?
-      this.props.data.displayButtonsData[buttonConfig.enableButtonField] === 'true'
+      && this.props.data.displayButtonsData[buttonConfig.enableButtonField]
+      ? this.props.data.displayButtonsData[buttonConfig.enableButtonField] === 'true'
       : true;
     let tooltipEnabled = false;
     let tooltipText = '';
@@ -132,15 +134,17 @@ class StudyDetails extends React.Component {
       && this.isDataAccessible(this.props.data.accessibleValidationValue)
       && this.props.fileData.length > 0;
 
-      button = displayDownloadButton ? (<Button
-        key={key}
-        label={'Download'}
-        buttonType='primary'
-        onClick={this.showDownloadModal}
-        enabled={enableButton}
-        tooltipEnabled={tooltipEnabled}
-        tooltipText={tooltipText}
-      />) : null;
+      button = displayDownloadButton ? (
+        <Button
+          key={key}
+          label={'Download'}
+          buttonType='primary'
+          onClick={this.showDownloadModal}
+          enabled={enableButton}
+          tooltipEnabled={tooltipEnabled}
+          tooltipText={tooltipText}
+        />
+      ) : null;
     } else if (buttonConfig.type === 'request_access') {
       // 'Request Access' and 'Login to Request Access' buttons
       const onRequestAccess = () => {
@@ -159,15 +163,17 @@ class StudyDetails extends React.Component {
       || !this.isDataAccessible(this.props.data.accessibleValidationValue);
       this.requestAccessButtonVisible = displayRequestAccessButton;
 
-      button = displayRequestAccessButton ? (<Button
-        key={key}
-        label={requestAccessText}
-        buttonType='primary'
-        onClick={onRequestAccess}
-        enabled={enableButton && !this.state.accessRequested}
-        tooltipEnabled={tooltipEnabled}
-        tooltipText={tooltipText}
-      />) : null;
+      button = displayRequestAccessButton ? (
+        <Button
+          key={key}
+          label={requestAccessText}
+          buttonType='primary'
+          onClick={onRequestAccess}
+          enabled={enableButton && !this.state.accessRequested}
+          tooltipEnabled={tooltipEnabled}
+          tooltipText={tooltipText}
+        />
+      ) : null;
     } else {
       console.warn(`Study viewer button type '${buttonConfig.type}' unknown`); // eslint-disable-line no-console
     }
@@ -181,7 +187,7 @@ class StudyDetails extends React.Component {
       return capitalizeFirstLetter(label);
     }
     const fieldMappingEntry = this.props.studyViewerConfig.fieldMapping
-      .find(i => i.field === label);
+      .find((i) => i.field === label);
     if (fieldMappingEntry) {
       return fieldMappingEntry.name;
     }
@@ -232,48 +238,51 @@ class StudyDetails extends React.Component {
 
      // this defaults to the config of the 1st configured request_access
      // button. if there are more than 1 with different configs, TODO fix
-     const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find(e => e.type === 'request_access');
+     const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find((e) => e.type === 'request_access');
 
      return (
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
            <Space>
-             {this.props.isSingleItemView ?
-               <Button
-                 label={'Learn More'}
-                 buttonType='primary'
-                 onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
-               />
-               : null
-             }
+             {this.props.isSingleItemView
+               ? (
+                 <Button
+                   label={'Learn More'}
+                   buttonType='primary'
+                   onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
+                 />
+               )
+               : null}
              {
                (this.props.studyViewerConfig.buttons) ? this.props.studyViewerConfig.buttons.map(
                  (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
                ) : null
              }
            </Space>
-           {(requestAccessConfig) ? (<Modal
-             title='Request Access'
-             visible={this.state.redirectModalVisible}
-             closable={false}
-             onCancel={this.handleRedirectModalCancel}
-             footer={[
-               <Button
-                 key='modal-accept-button'
-                 label={'Confirm'}
-                 buttonType='primary'
-                 onClick={this.handleRedirectModalOk}
-               />,
-               <Button
-                 key='modal-refuse-button'
-                 label={'Cancel'}
-                 buttonType='default'
-                 onClick={this.handleRedirectModalCancel}
-               />,
-             ]}
-           >
-             <p>You will now be sent to <a href={this.state.redirectUrl}>{requestAccessConfig.redirectModalText || this.state.redirectUrl}</a>.</p>
-           </Modal>) : null}
+           {(requestAccessConfig) ? (
+             <Modal
+               title='Request Access'
+               visible={this.state.redirectModalVisible}
+               closable={false}
+               onCancel={this.handleRedirectModalCancel}
+               footer={[
+                 <Button
+                   key='modal-accept-button'
+                   label={'Confirm'}
+                   buttonType='primary'
+                   onClick={this.handleRedirectModalOk}
+                 />,
+                 <Button
+                   key='modal-refuse-button'
+                   label={'Cancel'}
+                   buttonType='default'
+                   onClick={this.handleRedirectModalCancel}
+                 />,
+               ]}
+             >
+               <p>You will now be sent to <a href={this.state.redirectUrl}>{requestAccessConfig.redirectModalText || this.state.redirectUrl}</a>.</p>
+             </Modal>
+           ) : null}
            <Modal
              title='Download Files'
              visible={this.state.downloadModalVisible}
@@ -293,64 +302,74 @@ class StudyDetails extends React.Component {
                bordered
                dataSource={this.props.fileData}
                renderItem={(item) => {
-                 const downloadLink = (item.object_id) ? `${userapiPath}data/download/${item.object_id}?expires_in=900&redirect` : '';
-                 return (<List.Item
-                   key={item.file_name}
-                   actions={[<a key='modal-list-download-link' href={downloadLink}>download</a>]}
-                 >
-                   {`${item.file_name} (${item.data_format} - ${humanFileSize(item.file_size)})`}
-                 </List.Item>);
+                 const downloadLink = (item.object_id) ? `${userAPIPath}data/download/${item.object_id}?expires_in=900&redirect` : '';
+                 return (
+                   <List.Item
+                     key={item.file_name}
+                     actions={[<a key='modal-list-download-link' href={downloadLink}>download</a>]}
+                   >
+                     {`${item.file_name} (${item.data_format} - ${humanFileSize(item.file_size)})`}
+                   </List.Item>
+                 );
                }}
              />
            </Modal>
-           {this.requestAccessButtonVisible && !userHasLoggedIn && !this.state.accessRequested ?
-             <Alert
-               message='Please note that researchers are required to log in before requesting access.'
-               type='info'
-               showIcon
-             /> : null}
+           {this.requestAccessButtonVisible && !userHasLoggedIn && !this.state.accessRequested
+             ? (
+               <Alert
+                 message='Please note that researchers are required to log in before requesting access.'
+                 type='info'
+                 showIcon
+               />
+             ) : null}
            <Divider />
-           {(this.props.data.blockData) ?
-             <div>
-               {(Object.entries(this.props.data.blockData).map(([k, v]) => (
-                 <div key={k}>
-                   <div className='h3-typo'>{this.getLabel(k)}</div>
-                   <Paragraph>
-                     {v}
-                   </Paragraph>
-                 </div>)))}
-             </div> : null }
-           {(this.props.data.tableData) ?
-             <Descriptions
-               className='study-details__descriptions'
-               bordered
-               column={1}
-             >
-               {(Object.entries(this.props.data.tableData).map(([k, v]) => {
-                 let value = [];
-                 if (_.isArray(v)) {
-                   value = v;
-                 } else {
-                   value.push(v);
-                 }
-                 return (
-                   <Descriptions.Item key={k} label={this.getLabel(k)}>
-                     {value.map((item) => {
-                       if (_.isString(item)) {
-                         if (stringIsAValidUrl(item)) {
-                           return (<div key={item}>
-                             <Space>
-                               <LinkOutlined />
-                               <a href={item}>
-                                 {item}
-                               </a>
-                             </Space>
-                           </div>);
+           {(this.props.data.blockData)
+             ? (
+               <div>
+                 {(Object.entries(this.props.data.blockData).map(([k, v]) => (
+                   <div key={k}>
+                     <div className='h3-typo'>{this.getLabel(k)}</div>
+                     <Paragraph>
+                       {v}
+                     </Paragraph>
+                   </div>
+                 )))}
+               </div>
+             ) : null }
+           {(this.props.data.tableData)
+             ? (
+               <Descriptions
+                 className='study-details__descriptions'
+                 bordered
+                 column={1}
+               >
+                 {(Object.entries(this.props.data.tableData).map(([k, v]) => {
+                   let value = [];
+                   if (_.isArray(v)) {
+                     value = v;
+                   } else {
+                     value.push(v);
+                   }
+                   return (
+                     <Descriptions.Item key={k} label={this.getLabel(k)}>
+                       {value.map((item) => {
+                         if (_.isString(item)) {
+                           if (stringIsAValidUrl(item)) {
+                             return (
+                               <div key={item}>
+                                 <Space>
+                                   <LinkOutlined />
+                                   <a href={item}>
+                                     {item}
+                                   </a>
+                                 </Space>
+                               </div>
+                             );
+                           }
+                           return item;
                          }
-                         return item;
-                       }
-                       // codes below are from the mockup, keeping them here since we might need then if we have the nested docs later
-                       /*
+                         // codes below are from the mockup, keeping them here since we might need then if we have the nested docs later
+                         /*
                        if (item && item.link) {
                          let iconComponent = <LinkOutlined />;
                          let linkComponent = (<a href={item.link}>
@@ -367,13 +386,15 @@ class StudyDetails extends React.Component {
                          </div>);
                        }
                        */
-                       // eslint-disable-next-line no-console
-                       console.warn('Unknown object found in meta data: ', item);
-                       return null;
-                     })}
-                   </Descriptions.Item>);
-               }))}
-             </Descriptions>
+                         // eslint-disable-next-line no-console
+                         console.warn('Unknown object found in meta data: ', item);
+                         return null;
+                       })}
+                     </Descriptions.Item>
+                   );
+                 }))}
+               </Descriptions>
+             )
              : null}
          </Space>
        </div>

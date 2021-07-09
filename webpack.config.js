@@ -1,28 +1,15 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 
 const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
 const app = process.env.APP || 'dev';
-const title = {
-  acct: 'ACCOuNT Data Commons',
-  bhc: 'Brain Commons',
-  bpa: 'BPA Data Commons',
-  dcf: 'National Cancer Institue Data Commons Framework',
-  gtex: 'GTEx & TOPMed Data Commons Submission Portal',
-  dev: 'Generic Data Commons',
-  edc: 'Environmental Data Commons',
-  gdc: 'Jamboree Data Access',
-  kf: 'Kids First Data Coordinating Center Portal',
-  ndh: 'NIAID Data Hub',
-}[app];
 
 const configFileName = (app === 'dev') ? 'default' : app;
 // eslint-disable-next-line import/no-dynamic-require
 const configFile = require(`./data/config/${configFileName}.json`);
-const DAPTrackingURL = configFile.DAPTrackingURL;
+const { DAPTrackingURL } = configFile;
 const scriptSrcURLs = [];
 const connectSrcURLs = [];
 if (DAPTrackingURL) {
@@ -66,7 +53,7 @@ const plugins = [
     },
   }),
   new HtmlWebpackPlugin({
-    title,
+    title: configFile.components.appName || 'Generic Data Commons',
     basename: pathPrefix,
     template: 'src/index.ejs',
     connect_src: (function () {
@@ -141,11 +128,11 @@ if (process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto') {
 }
 
 const entry = {
-  bundle: ['babel-polyfill', './src/index.jsx'],
-  workspaceBundle: ['babel-polyfill', './src/workspaceIndex.jsx'],
-  covid19Bundle: ['babel-polyfill', './src/covid19Index.jsx'],
-  nctBundle: ['babel-polyfill', './src/nctIndex.jsx'],
-  healBundle: ['babel-polyfill', './src/healIndex.jsx'],
+  bundle: './src/index.jsx',
+  workspaceBundle: './src/workspaceIndex.jsx',
+  covid19Bundle: './src/covid19Index.jsx',
+  nctBundle: './src/nctIndex.jsx',
+  healBundle: './src/healIndex.jsx',
 };
 
 // if GEN3_BUNDLE is set with a value
@@ -196,9 +183,9 @@ if (process.env.GEN3_BUNDLE) {
 module.exports = {
   entry,
   target: 'web',
-  externals: [nodeExternals({
-    whitelist: ['graphiql', 'graphql-language-service-parser'],
-  })],
+  externals: [{
+    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}',
+  }],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
     path: __dirname,
@@ -271,7 +258,4 @@ module.exports = {
     extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
   },
   plugins,
-  externals: [{
-    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}',
-  }],
 };

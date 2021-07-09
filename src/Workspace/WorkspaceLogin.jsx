@@ -12,7 +12,6 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import './Workspace.less';
 import '../Login/Login.less';
 
-
 const getLoginUrl = (providerLoginUrl) => {
   const queryChar = providerLoginUrl.includes('?') ? '&' : '?';
   return `${providerLoginUrl}${queryChar}redirect=${window.location.pathname}`;
@@ -27,10 +26,10 @@ class WorkspaceLogin extends React.Component {
   }
 
   selectChange = (selectedOption, index) => {
-    const selectedLoginOptionCopy = { ...this.state.selectedLoginOption };
-    selectedLoginOptionCopy[index] = selectedOption;
-    this.setState({
-      selectedLoginOption: selectedLoginOptionCopy,
+    this.setState((prevState) => {
+      const selectedLoginOptionCopy = { ...prevState.selectedLoginOption };
+      selectedLoginOptionCopy[index] = selectedOption;
+      return { selectedLoginOption: selectedLoginOptionCopy };
     });
   }
 
@@ -50,7 +49,7 @@ class WorkspaceLogin extends React.Component {
           return 0;
         });
       // URLs in format expected by Select component
-      loginOptions[i] = loginUrls.map(e => ({
+      loginOptions[i] = loginUrls.map((e) => ({
         value: e.url,
         label: e.name,
       }));
@@ -59,8 +58,8 @@ class WorkspaceLogin extends React.Component {
     return (
       <div className='login-page__central-content'>
         {
-          this.props.providers.length > 0 ?
-            <h2>Link accounts from other Data Commons</h2>
+          this.props.providers.length > 0
+            ? <h2>Link accounts from other Data Commons</h2>
             : null
         }
         {
@@ -78,9 +77,9 @@ class WorkspaceLogin extends React.Component {
                           isSearchable
                           options={loginOptions[i]}
                           filterOptions={filterOptions[i]}
-                          onChange={option => this.selectChange(option, i)}
-                          value={this.state.selectedLoginOption &&
-                          this.state.selectedLoginOption[i]}
+                          onChange={(option) => this.selectChange(option, i)}
+                          value={this.state.selectedLoginOption
+                          && this.state.selectedLoginOption[i]}
                         />
                       )
                     }
@@ -89,13 +88,13 @@ class WorkspaceLogin extends React.Component {
                       className='login-page__entry-button'
                       onClick={() => {
                         window.location.href = getLoginUrl(
-                          loginOptions[i].length > 1 ?
-                            this.state.selectedLoginOption[i].value :
-                            loginOptions[i][0].value,
+                          loginOptions[i].length > 1
+                            ? this.state.selectedLoginOption[i].value
+                            : loginOptions[i][0].value,
                         );
                       }}
-                      label={p.refresh_token_expiration ?
-                        `${p.name} (expires in ${p.refresh_token_expiration})`
+                      label={p.refresh_token_expiration
+                        ? `${p.name} (expires in ${p.refresh_token_expiration})`
                         : p.name}
                       buttonType={p.secondary ? 'default' : 'primary'}
                       enabled={!p.refresh_token_expiration}

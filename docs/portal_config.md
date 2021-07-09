@@ -45,7 +45,6 @@ Below is an example, with inline comments describing what each JSON block config
   "components": {
     "appName": "Gen3 Generic Data Commons", // required; title of commons that appears on the homepage
     "homepageHref": "https://example.gen3.org/", // optional; link that the logo in header will pointing to
-    "homepageAltText": "A customized logo", // optional; alt text for logo images in header and footer
     "index": { // required; relates to the homepage
       "introduction": { // optional; text on homepage
         "heading": "", // optional; title of introduction
@@ -144,7 +143,8 @@ Below is an example, with inline comments describing what each JSON block config
       {
         "src": "/src/img/gen3.png", // required; src path for the image
         "href": "https://ctds.uchicago.edu/gen3", // required; link for image
-        "alt": "Gen3 Data Commons" // required; alternate text if image won’t load
+        // The alt text for certain cross-commons logos, such as the Gen3 and CTDS logos, are non-configurable so as to avoid redundancy.
+        // Note that this alt text is applied on the basis of link destination, not logo filename.
       },
       {
         "src": "/src/img/createdby.png",
@@ -160,6 +160,7 @@ Below is an example, with inline comments describing what each JSON block config
     "explorer": true, // required; indicates the flag and whether to hide it or not
     "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. The Data Explorer page would be publicly accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
     "discovery": true, // optional; whether to enable the Discovery page. If true, `discoveryConfig` must be present as well.
+    "discoveryUseAggMDS": true // optional, false by default; if true, the Discovery page will use the Aggregate Metadata path instead of the Metadata path. This causes the Discovery page to serve as an "Ecosystem Browser". See docs/ecosystem_browser.md for more details.
     "explorerStoreFilterInURL": true, // optional; whether to store/load applied filters in the URL during Data Explorer use.
     This feature currently supports single select filters and range filters; it
     lacks support for search filter state, accessibility state, table state.
@@ -298,6 +299,13 @@ Below is an example, with inline comments describing what each JSON block config
         "title": "Export to Workspace",
         "leftIcon": "datafile",
         "rightIcon": "download"
+      },
+      {
+        "enabled": true,
+        "type": "export-pfb-to-workspace", // required; export PFB to workspace
+        "title": "Export PFB to Workspace",
+        "leftIcon": "datafile",
+        "rightIcon": "download"
       }
     ],
     "guppyConfig": { // required; how to configure Guppy to work with the Data Explorer
@@ -388,24 +396,18 @@ Below is an example, with inline comments describing what each JSON block config
     "dropdowns": {} // optional; dropdown groupings for buttons
   },
   "discoveryConfig": { // config for Discovery page. Required if 'featureFlags.discovery' is true. See src/Discovery/DiscoveryConfig.d.ts for Typescript schema.
-<<<<<<< HEAD
     "requireLogin": false, // optional, defaults to false. If true, requires user to sign in before seeing the Discovery page
-=======
     "public": true, // optional, defaults to true. If false, requires user to sign in before seeing the Discovery page
->>>>>>> master
     "features": {
       "exportToWorkspaceBETA": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
           "enable": boolean
           "enableDownloadManifest": boolean // enables a button which allows user to download a manifest file for gen3 client
-<<<<<<< HEAD
+          "manifestFieldName": string // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
           "documentationLinks": {
               "gen3Client": string // link to documentation about the gen3 client. Used for button tooltips
               "gen3Workspaces": string // link to documentation about gen3 workspaces. Used for button tooltips.
           }
-=======
->>>>>>> master
-          "manifestFieldName": string // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
-      }
+      },
       "pageTitle": {
         "enabled": true,
         "text": "My Special Test Discovery Page"
@@ -415,21 +417,24 @@ Below is an example, with inline comments describing what each JSON block config
           "enabled": true
         }
       },
+      "advSearchFilters": {
+        "enabled": true
+      },
       "authorization": {
         "enabled": true // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
       }
     },
     "aggregations": [ // configures the statistics at the top of the discovery page (e.g. 'XX Studies', 'XX,XXX Subjects')
-        {
-            "name": "Studies",
-            "field": "study_id",
-            "type": "count" // count of rows in data where `field` is non-empty
-        },
-        {
-            "name": "Total Subjects",
-            "field": "_subjects_count",
-            "type": "sum" // sums together all numeric values in `row[field]`. `field` must be a numeric field.
-        }
+      {
+        "name": "Studies",
+        "field": "study_id",
+        "type": "count" // count of rows in data where `field` is non-empty
+      },
+      {
+        "name": "Total Subjects",
+        "field": "_subjects_count",
+        "type": "sum" // sums together all numeric values in `row[field]`. `field` must be a numeric field.
+      }
     ],
     "tagSelector": {
       "title": "Associated tags organized by category"
@@ -461,6 +466,11 @@ Below is an example, with inline comments describing what each JSON block config
       {
         "name": "dbGaP Accession Number",
         "field": "study_id"
+      },
+      {
+        "name": "Commons",
+        "field": "commons_of_origin",
+        "hrefValueFromField": "commons_url", // If this attribute is present, the text in the column will be linked. The href value of the link will be the corresponding value of the fieldname in this attribute.
       }
     ],
     "studyPreviewField": { // if present, studyPreviewField shows a special preview field beneath each row of data in the table, useful for study descriptions.

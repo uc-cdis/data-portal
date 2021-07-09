@@ -136,8 +136,6 @@ fi
 # on the current APP environment - ugh
 #
 bash custom/customize.sh
-echo "INFO: NPM config"
-npm config list
 
 # workspace bundle does not currently deploy sheepdog
 if [[ "$GEN3_BUNDLE" != "workspace" ]]; then

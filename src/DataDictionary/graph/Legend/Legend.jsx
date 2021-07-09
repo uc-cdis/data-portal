@@ -13,7 +13,7 @@ class Legend extends React.Component {
   }
 
   toggleLegend = () => {
-    this.setState(state => ({
+    this.setState((state) => ({
       show: !state.show,
     }));
   }
@@ -22,11 +22,12 @@ class Legend extends React.Component {
     return (
       <div className={`data-dictionary-graph-legend ${this.state.show ? '' : 'data-dictionary-graph-legend--toggled'}`}>
         {
-          this.state.show ?
-            (
+          this.state.show
+            ? (
               <React.Fragment>
                 <i
                   className='data-dictionary-graph-legend__close g3-icon g3-icon--cross'
+                  aria-label='Toggle Legend'
                   onClick={this.toggleLegend}
                   onKeyPress={this.toggleLegend}
                   role='button'

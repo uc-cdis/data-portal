@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import dictIcons from '../img/icons/index';
-import IconComponent from '../components/Icon';
+import IconComponent from './Icon';
 import './BackLink.less';
 
 class BackLink extends Component {

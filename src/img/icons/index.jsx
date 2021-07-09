@@ -43,13 +43,13 @@ import IcoAcctAccess from './acct-icons/acct-access.svg';
 import IcoAcctExplore from './acct-icons/acct-explore.svg';
 import IcoAcctAnalyze from './acct-icons/acct-analyze.svg';
 
-
 const dictIcons = {
   analysis: (height, customedStyles) => (
     <IcoAnalysis
       height={height}
       style={{ ...customedStyles }}
-    />),
+    />
+  ),
   back: (height, customedStyles) => (
     <IcoBack height={height} style={{ ...customedStyles }} />
   ),
@@ -104,10 +104,12 @@ const dictIcons = {
   files: (height, customedStyles) => (
     <IcoFiles height={height} style={{ ...customedStyles }} />
   ),
-  gen3: (height, customedStyles) => (<IcoGen3
-    height={height}
-    style={{ ...customedStyles }}
-  />),
+  gen3: (height, customedStyles) => (
+    <IcoGen3
+      height={height}
+      style={{ ...customedStyles }}
+    />
+  ),
   gene: (height, customedStyles) => (
     <IcoGene
       height={height}

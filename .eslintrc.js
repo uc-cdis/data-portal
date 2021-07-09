@@ -1,12 +1,26 @@
 module.exports = {
   // "extends": "eslint:recommended",
   extends: 'airbnb',
+  settings: {
+    react: {
+      pragma: 'React',
+      version: '16.14',
+    },
+    'import/resolver': {
+      typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
+    },
+  },
   root: true,
   env: {
     browser: true,
     es6: true,
     jest: true,
   },
+  plugins: [
+    'react',
+    'jsx-a11y',
+    'import',
+  ],
   parser: 'babel-eslint',
   parserOptions: {
     sourceType: 'module',
@@ -17,6 +31,7 @@ module.exports = {
     },
   },
   rules: {
+    'no-underscore-dangle': 'off',
     indent: [
       'error',
       2,
@@ -37,15 +52,37 @@ module.exports = {
       'error',
       'always',
     ],
-    // fixed in newer version of jsx-a11y remove if we upgrade
-    'jsx-a11y/label-has-for': ['error', {
-      required: {
-        some: ['nesting', 'id'],
+    'max-classes-per-file': ['error', 2],
+    'max-len': [
+      'error',
+      {
+        code: 150,
+        ignoreComments: true,
+        ignoreTrailingComments: true,
+        ignoreUrls: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
       },
+    ],
+    'prefer-destructuring': [
+      'error',
+      { object: true, array: false },
+    ],
+    'react/jsx-fragments': [
+      'error',
+      'element',
+    ],
+    'jsx-a11y/label-has-associated-control': [2, {
+      labelAttributes: ['label'],
+      controlComponents: ['Switch'],
+      depth: 3,
     }],
+    'jsx-a11y/anchor-is-valid': ['off'],
     // see https://github.com/clayne11/eslint-import-resolver-meteor/issues/17
     // - seems to affect Codacy :-(
     'import/extensions': ['off', 'never'],
+    'import/no-cycle': 'off',
+    'prefer-promise-reject-errors': 'off',
     'react/jsx-indent': 'off',
     'react/forbid-prop-types': 'off',
     'react/prefer-stateless-function': 'off',
@@ -53,6 +90,8 @@ module.exports = {
     'function-paren-newline': ['off'],
     'react/no-array-index-key': ['off'],
     'react/destructuring-assignment': ['off'],
+    'react/jsx-one-expression-per-line': ['off'],
+    'react/jsx-props-no-spreading': ['off'],
   },
   overrides: [
     {
@@ -163,9 +202,4 @@ module.exports = {
       },
     },
   ],
-  settings: {
-    'import/resolver': {
-      typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
-    },
-  },
 };

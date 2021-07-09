@@ -47,7 +47,7 @@ const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
         };
       }
     },
-    err => ({ type: 'FETCH_ERROR', error: err }),
+    (err) => ({ type: 'FETCH_ERROR', error: err }),
   ).then((msg) => {
     if (msg) {
       dispatch(msg);
@@ -55,23 +55,23 @@ const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
   });
 };
 
-const mapSelectedFiles = files => ({
+const mapSelectedFiles = (files) => ({
   type: 'RECEIVE_FILES_TO_MAP',
   data: files,
 });
 
 const ReduxMapFiles = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     unmappedFiles: state.submission.unmappedFiles,
     user: state.user,
   });
 
-  const mapDispatchToProps = dispatch => ({
-    fetchUnmappedFiles: user => dispatch(
+  const mapDispatchToProps = (dispatch) => ({
+    fetchUnmappedFiles: (user) => dispatch(
       fetchUnmappedFiles(user, [], STARTING_DID, FETCH_LIMIT),
     ),
-    mapSelectedFiles: files => dispatch(mapSelectedFiles(files)),
-    deleteFile: file => deleteFile(file),
+    mapSelectedFiles: (files) => dispatch(mapSelectedFiles(files)),
+    deleteFile: (file) => deleteFile(file),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(MapFiles);

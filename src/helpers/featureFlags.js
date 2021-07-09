@@ -9,7 +9,7 @@
 
 import { config } from '../params';
 
-const featureFlags = config.featureFlags;
+const { featureFlags } = config;
 
 /*
   Will check parameters.js to see if there is default config for feature flags

@@ -40,7 +40,7 @@ export const getCounts = (typeList, project, dictionary) => {
   const nodesToHide = { program: true };
   // Add links to query
   Object.keys(dictionary).filter(
-    name => (!name.startsWith('_' && dictionary[name].links) && dictionary[name].category !== 'internal'),
+    (name) => (!name.startsWith('_' && dictionary[name].links) && dictionary[name].category !== 'internal'),
   ).reduce( // extract links from each node
     (linkList, name) => {
       const node = dictionary[name];
@@ -51,7 +51,7 @@ export const getCounts = (typeList, project, dictionary) => {
           (listlist, link) => {
             if (link.subgroup) {
               return link.subgroup.map(
-                sg => ({
+                (sg) => ({
                   source: dictionary[name],
                   target: dictionary[sg.target_type],
                   name: sg.name,
@@ -64,12 +64,12 @@ export const getCounts = (typeList, project, dictionary) => {
         results = sgLinks.concat(linkList);
       }
       return newLinks ? newLinks.map(
-        l => ({ source: dictionary[name], target: dictionary[l.target_type], name: l.name }),
+        (l) => ({ source: dictionary[name], target: dictionary[l.target_type], name: l.name }),
       ).concat(results) : results;
     }, [],
   )
     .filter(
-      l => l.source && l.target && !nodesToHide[l.source.id] && !nodesToHide[l.target.id],
+      (l) => l.source && l.target && !nodesToHide[l.source.id] && !nodesToHide[l.target.id],
     )
     .forEach(
       ({ source, target, name }) => appendLinkToQuery(source, target, name),
@@ -77,7 +77,7 @@ export const getCounts = (typeList, project, dictionary) => {
 
   query = query.concat('}');
 
-  return dispatch => fetchWithCreds({
+  return (dispatch) => fetchWithCreds({
     path: `${submissionApiPath}graphql`,
     body: JSON.stringify({
       query,
@@ -100,19 +100,18 @@ export const getCounts = (typeList, project, dictionary) => {
           };
         }
       },
-      err => ({ type: 'FETCH_ERROR', error: err }),
+      (err) => ({ type: 'FETCH_ERROR', error: err }),
     )
     .then((msg) => { dispatch(msg); });
 };
 
-
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   dictionary: state.submission.dictionary,
   counts_search: state.submission.counts_search,
   links_search: state.submission.links_search,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   onGetCounts: (type, project) => dispatch(getCounts(type, project)),
 });
 const ReduxDataModelGraph = connect(mapStateToProps, mapDispatchToProps)(DataModelGraph);

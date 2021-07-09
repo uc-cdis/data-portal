@@ -5,6 +5,8 @@ import Discovery, { AccessLevel } from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { hostname, discoveryConfig, useArboristUI } from '../localconf';
+import isEnabled from '../helpers/featureFlags';
+import loadStudiesFromAggMDS from './aggMDSUtils';
 
 const loadStudiesFromMDS = async (): Promise<any[]> => {
   // Why `_guid_type='discovery_metadata'? We need to distinguish the discovery page studies in MDS
@@ -32,7 +34,7 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
       }
       // eslint-disable-next-line no-await-in-loop
       const jsonResponse = await res.json();
-      const studies = Object.values(jsonResponse).map(entry => entry[STUDY_DATA_FIELD]);
+      const studies = Object.values(jsonResponse).map((entry) => entry[STUDY_DATA_FIELD]);
       allStudies = allStudies.concat(studies);
       const noMoreStudiesToLoad = studies.length < LIMIT;
       if (noMoreStudiesToLoad) {
@@ -48,8 +50,8 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
 };
 
 const DiscoveryWithMDSBackend: React.FC<{
-  userAuthMapping: any,
-  config: DiscoveryConfig,
+    userAuthMapping: any,
+    config: DiscoveryConfig,
 }> = (props) => {
   const [studies, setStudies] = useState(null);
 
@@ -58,10 +60,16 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    loadStudiesFromMDS().then((rawStudies) => {
+    let loadStudiesFunction;
+    if (isEnabled('discoveryUseAggMDS')) {
+      loadStudiesFunction = loadStudiesFromAggMDS;
+    } else {
+      loadStudiesFunction = loadStudiesFromMDS;
+    }
+    loadStudiesFunction().then((rawStudies) => {
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
-        const authzField = props.config.minimalFieldMapping.authzField;
+        const { authzField } = props.config.minimalFieldMapping;
         // useArboristUI=true is required for userHasMethodForServiceOnResource
         if (!useArboristUI) {
           throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
@@ -90,13 +98,15 @@ const DiscoveryWithMDSBackend: React.FC<{
     });
   }, []);
 
-  return (<Discovery
-    studies={studies === null ? [] : studies}
-    {...props}
-  />);
+  return (
+    <Discovery
+      studies={studies === null ? [] : studies}
+      {...props}
+    />
+  );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   userAuthMapping: state.userAuthMapping,
   config: discoveryConfig,
 });

@@ -22,13 +22,13 @@ const getNode = (state) => {
 const getSearchResultItem = (state) => {
   if (state.ddgraph.isSearchMode) {
     return state.ddgraph.searchResult
-      .find(resItem => resItem.item.id === state.ddgraph.highlightingMatchedNodeID);
+      .find((resItem) => resItem.item.id === state.ddgraph.highlightingMatchedNodeID);
   }
   return null;
 };
 
 const ReduxOverlayPropertyTable = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     hidden: state.ddgraph.overlayPropertyHidden,
     node: getNode(state),
     isSearchMode: state.ddgraph.isSearchMode,
@@ -36,7 +36,7 @@ const ReduxOverlayPropertyTable = (() => {
     isSearchResultNodeOpened: state.ddgraph.highlightingMatchedNodeOpened,
   });
 
-  const mapDispatchToProps = dispatch => ({
+  const mapDispatchToProps = (dispatch) => ({
     onCloseOverlayPropertyTable: () => dispatch(setOverlayPropertyTableHidden(true)),
     onOpenMatchedProperties: () => dispatch(setHighlightingMatchedNodeOpened(true)),
     onCloseMatchedProperties: () => dispatch(setHighlightingMatchedNodeOpened(false)),

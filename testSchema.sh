@@ -6,10 +6,11 @@ set -e
 declare -a testCases
 testCases=(
 bpa "data.bloodpac.org"
-gtex "dcp.bionimbus.org"
+gtex "gen3.biodatacatalyst.nhlbi.nih.gov"
 dev "qa.planx-pla.net"
 edc "portal.occ-data.org"
 genomel "genomel.bionimbus.org"
+acct "acct.bionimbus.org"
 )
 index=0
 while [[ $index -lt ${#testCases[@]} ]]; do

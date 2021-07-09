@@ -9,10 +9,10 @@
 }
 
 /* This is a fix for the global 'button' element style override in portal
- * https://github.com/uc-cdis/gen3-ui-component/blob/6b0aa10f63f0a325f58200148cd5ffbb6e4c2c46/src/css/base.less#L180
- * We use .ant-modal-root here to apply this reset style to Ant design modals, which
- * are not children of .discovery-container.
- */
+  * https://github.com/uc-cdis/gen3-ui-component/blob/6b0aa10f63f0a325f58200148cd5ffbb6e4c2c46/src/css/base.less#L180
+  * We use .ant-modal-root here to apply this reset style to Ant design modals, which
+  * are not children of .discovery-container.
+  */
 .discovery-container button, .ant-modal-root button {
   width: initial;
   display: initial;
@@ -21,7 +21,7 @@
 
 /* Highlight matched search text */
 .discovery-container .matched {
-  font-weight: 700;
+  font-weight: bold;
   color: #000;
   text-decoration: underline;
 }
@@ -46,12 +46,25 @@
 
 .discovery-header__stats-container {
   height: 100%;
+  width: 17%;
   position: relative;
   flex: 1 0 auto;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+}
+
+.discovery-header__stats-wrapper {
+  display: inline-block;
+}
+
+.discovery-header__stats-wrapper#Studies {
+  width: 65px;
+}
+
+.discovery-header__stats-wrapper[data-aggregation-type="TotalSubjects"] {
+  width: 135px;
 }
 
 .discovery-header__stat {
@@ -66,23 +79,31 @@
 }
 
 .discovery-header__stat-number {
+  color: #169bd5;
   font-size: 40px;
   line-height: 50px;
+  padding: 10px 0 10px 0;
 }
 
 .discovery-header__stat-label {
-  text-transform: uppercase;
+  font-size: 1.25rem;
+  font-size: 40px;
   font-size: 14px;
+  line-height: 50px;
+  text-transform: uppercase;
 }
 
 .discovery-header__tags-container {
   flex: 1 0 auto;
+  height: 90%;
 }
 
 .discovery-header__tags-header {
+  padding-left: 50px;
   cursor: default;
-  font-size: 14px;
-  font-weight: 700;
+  border-bottom: solid 1px #e7e7e7;
+  font-weight: normal;
+  font-size: 1.125rem;
   text-transform: uppercase;
   color: #555;
 }
@@ -132,8 +153,16 @@
   margin-bottom: 3px;
 }
 
+.discovery-header__tag-btn:focus, .discovery-header__tag-btn:focus-within, .discovery-header__tag-btn:focus-visible {
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+}
+
 .discovery-tag--selected {
   color: #fff;
+}
+
+.discovery-export__selected-ct {
+  color: var(--g3-color__gray);
 }
 
 .discovery-studies-container {
@@ -173,7 +202,8 @@
 }
 
 .discovery-table-container {
-  width: 100%;
+  border-radius: 8px;
+  background-color: #fff;
   transform: translateX(0);
   transition: transform 300ms, width 250ms 50ms;
   overflow-x: auto;
@@ -279,13 +309,17 @@
   /* --------- */
 }
 
+.discovery-table-container .ant-table, .discovery-table-container .ant-btn {
+  font-size: 0.875rem;
+}
+
 .discovery-popover {
   max-width: 500px;
 }
 
 .discovery-popover__text {
-  color: #7f7f7f;
-  font-size: 12px;
+  color: var(--g3-color__titanium);
+  font-size: 0.625rem;
 }
 
 .discovery-modal {
@@ -332,6 +366,20 @@
 .discovery-modal__attribute-group {
   display: flex;
   flex-direction: column;
+}
+
+.discovery-modal__attribute-name {
+  color: var(--g3-color__titanium);
+  margin-right: 7px;
+  text-transform: uppercase;
+}
+
+#discovery-page-accessibility-links {
+  top:129px;
+}
+
+.discovery-hidden-link {
+  visibility: hidden;
   margin: 12px 6px;
 }
 
@@ -348,12 +396,6 @@
 
 .discovery-modal__attribute:not(:first-child) {
   margin-top: 8px;
-}
-
-.discovery-modal__attribute-name {
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-right: 10px;
 }
 
 .discovery-modal__attribute-value {
