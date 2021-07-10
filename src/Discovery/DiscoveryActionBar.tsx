@@ -4,7 +4,7 @@ import {
   Popover,
   Button,
 } from 'antd';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import {
   LeftOutlined,
   RightOutlined,
@@ -16,6 +16,9 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
 import { manifestServiceApiPath } from '../localconf';
 
+interface User {
+  username: string
+}
 interface Props {
   config: DiscoveryConfig;
   selectedResources: [];
@@ -23,6 +26,7 @@ interface Props {
   setExportingToWorkspace: (boolean) => void;
   filtersVisible: boolean;
   setFiltersVisible: (boolean) => void;
+  user: User,
 }
 
 const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: []) => {
@@ -87,6 +91,11 @@ const handleExportToWorkspaceClick = async (
 
 const DiscoveryActionBar = (props: Props) => {
   const history = useHistory();
+  const location = useLocation();
+
+  const handleRedirectToLoginClick = () => {
+    history.push('/login', { from: `${location.pathname}` });
+  };
 
   return (
     <div className='discovery-studies__header'>
@@ -132,14 +141,15 @@ const DiscoveryActionBar = (props: Props) => {
                 )}
               >
                 <Button
-                  onClick={() => {
+                  onClick={(props.user.username) ? () => {
                     handleDownloadManifestClick(props.config, props.selectedResources);
-                  }}
+                  }
+                    : () => { handleRedirectToLoginClick(); }}
                   type='text'
-                  disabled={props.selectedResources.length === 0}
+                  // disabled={props.selectedResources.length === 0}
                   icon={<DownloadOutlined />}
                 >
-                Download Manifest
+                  {(props.user.username) ? 'Download Manifest' : 'Login to Download Manifest'}
                 </Button>
               </Popover>
             )}
@@ -164,11 +174,12 @@ const DiscoveryActionBar = (props: Props) => {
                 disabled={props.selectedResources.length === 0}
                 loading={props.exportingToWorkspace}
                 icon={<ExportOutlined />}
-                onClick={() => {
+                onClick={(props.user.username) ? () => {
                   handleExportToWorkspaceClick(props.config, props.selectedResources, props.setExportingToWorkspace, history);
-                }}
+                }
+                  : () => { handleRedirectToLoginClick(); }}
               >
-              Open In Workspace
+                {(props.user.username) ? 'Open In Workspace' : 'Login to Open In Workspace'}
               </Button>
             </Popover>
           </Space>

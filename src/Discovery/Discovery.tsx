@@ -9,7 +9,7 @@ import DiscoveryTagViewer from './DiscoveryTagViewer';
 import DiscoveryListView from './DiscoveryListView';
 import DiscoveryDetails from './DiscoveryDetails';
 import DiscoveryAdvancedSearchPanel from './DiscoveryAdvancedSearchPanel';
-import DiscoveryActionBar from './DiscoveryActionBar';
+import ReduxDiscoveryActionBar from './reduxer';
 import DiscoveryMDSSearch from './DiscoveryMDSSearch';
 import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 
@@ -477,7 +477,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             )}
 
         {/* Bar with actions, stats, around advanced search and data actions */}
-        <DiscoveryActionBar
+        <ReduxDiscoveryActionBar
           config={props.config}
           selectedResources={selectedResources}
           exportingToWorkspace={exportingToWorkspace}
