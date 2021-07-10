@@ -2,12 +2,7 @@ import React, { useState } from 'react';
 import { Table, Empty } from 'antd';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
-
-export enum AccessLevel {
-  BOTH = 'both',
-  ACCESSIBLE = 'accessible',
-  UNACCESSIBLE = 'unaccessible',
-}
+import { AccessLevel } from './Discovery';
 
 interface Props {
   config: DiscoveryConfig;
@@ -23,9 +18,8 @@ interface Props {
   setSelectedResources: (any) => void;
 }
 
-export const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
+const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
   const { searchTerm } = props;
-
   const [onHoverRowIndex, setOnHoverRowIndex] = useState(null);
 
   return (
@@ -158,3 +152,5 @@ export const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) 
     />
   );
 };
+
+export default DiscoveryListView;
