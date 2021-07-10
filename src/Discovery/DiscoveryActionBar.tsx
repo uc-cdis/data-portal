@@ -146,7 +146,7 @@ const DiscoveryActionBar = (props: Props) => {
                   }
                     : () => { handleRedirectToLoginClick(); }}
                   type='text'
-                  // disabled={props.selectedResources.length === 0}
+                  disabled={props.selectedResources.length === 0}
                   icon={<DownloadOutlined />}
                 >
                   {(props.user.username) ? 'Download Manifest' : 'Login to Download Manifest'}
