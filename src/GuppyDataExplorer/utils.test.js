@@ -39,8 +39,8 @@ describe('utils for data visualization explorer', () => {
       },
       buttons: buttonConfigs,
     };
-    const buttonsList1 = buttonConfigs.filter(b => b.dropdownId === '1');
-    const buttonsList2 = buttonConfigs.filter(b => b.dropdownId === '2');
+    const buttonsList1 = buttonConfigs.filter((b) => b.dropdownId === '1');
+    const buttonsList2 = buttonConfigs.filter((b) => b.dropdownId === '2');
     const expectOutput = {
       1: {
         dropdownConfig: {

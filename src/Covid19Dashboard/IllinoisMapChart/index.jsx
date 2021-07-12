@@ -11,14 +11,13 @@ import countyData from '../data/us_counties';
 import LayerTemplate from '../overlays/LayerTemplate';
 import PopulationIL from '../overlays/PopulationIL'; */
 
-
 function addDataToGeoJsonBase(data) {
   // Only select Illinois data.
   // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
   // but not in JHU data. So don't display Chicago separately.
   const base = {
     ...countyData,
-    features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
+    features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
   };
   const geoJson = {
     ...base,
@@ -49,7 +48,7 @@ function addDataToGeoJsonBase(data) {
 function filterCountyGeoJson(selectedFips) {
   return {
     ...countyData,
-    features: countyData.features.filter(f => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
+    features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
   };
 }
 
@@ -82,6 +81,7 @@ class IllinoisMapChart extends React.Component {
       colorsAsList: null,
     };
   }
+
   componentDidUpdate() {
     if (!(this.mapData.colorsAsList === null
       && Object.keys(this.props.jsonByLevel.county).length > 0)) {
@@ -135,9 +135,8 @@ class IllinoisMapChart extends React.Component {
       [colorRangeMath(10)]: '#850001',
     };
     this.mapData.colorsAsList = Object.entries(this.mapData.colors)
-      .map(item => [+item[0], item[1]]).flat();
+      .map((item) => [+item[0], item[1]]).flat();
   }
-
 
   onHover = (event) => {
     if (!event.features) { return; }
@@ -203,7 +202,7 @@ class IllinoisMapChart extends React.Component {
   }
 
   onLayerSelect = (event, id) => {
-    const newState = Object.assign({}, this.state.overlay_layers);
+    const newState = { ...this.state.overlay_layers };
     newState[id].visible = event.target.checked ? 'visible' : 'none';
     this.setState(newState);
   }

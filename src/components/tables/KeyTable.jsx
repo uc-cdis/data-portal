@@ -26,7 +26,7 @@ class KeyTable extends React.Component {
    * default row renderer - just delegates to ProjectTR - can be overriden by subtypes, whatever
    */
 
-  getData = jtis => jtis.map(jti => [
+  getData = (jtis) => jtis.map((jti) => [
     jti.jti,
     TimestampToDateTime(jti.exp),
     <IconicButton

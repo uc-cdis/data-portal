@@ -5,32 +5,21 @@ import EnumInput from './EnumInput';
 
 class OneOfInput extends Component {
   // couldn't make a generalized component as I would like to, so I am shortcircuiting the logic
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedOption: 'Text',
+    };
+  }
 
-  static propTypes = {
-    property: PropTypes.array.isRequired,
-    name: PropTypes.string.isRequired,
-    value: PropTypes.any,
-    required: PropTypes.bool.isRequired,
-    description: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onChangeEnum: PropTypes.func.isRequired,
-    onUpdateFormSchema: PropTypes.func.isRequired,
-  };
-
-  static getDefaultProps = {
-    value: undefined,
-  };
-
-  state = {
-    selectedOption: 'Text',
-  };
-  componentWillMount() {
+  componentDidMount() {
     if (this.state.selectedOption === 'Number') {
       this.props.onUpdateFormSchema({ [this.props.name]: 'number' });
     } else {
       this.props.onUpdateFormSchema({ [this.props.name]: 'string' });
     }
   }
+
   render() {
     const radioChange = (newValue) => {
       this.setState({
@@ -56,7 +45,7 @@ class OneOfInput extends Component {
           onChange={this.props.onChangeEnum}
         />
       );
-    } else if (this.props.property[0].type === 'string' && this.props.property[1].type === 'null') {
+    } if (this.props.property[0].type === 'string' && this.props.property[1].type === 'null') {
       return (
         <TextInput
           id={this.props.name}
@@ -93,28 +82,45 @@ class OneOfInput extends Component {
           />
               Number
         </label>
-        {this.state.selectedOption === 'Number' &&
-        <TextInput
-          id={this.props.name}
-          name={this.props.name}
-          value={this.props.value}
-          description={this.props.description}
-          required={this.props.required}
-          onChange={this.props.onChange}
-        />
-        }
-        {this.state.selectedOption === 'Text' &&
-        <EnumInput
-          name={this.props.name}
-          options={this.props.property[0].enum}
-          required={this.props.required}
-          description={this.props.description}
-          onChange={this.props.onChangeEnum}
-        />
-        }
+        {this.state.selectedOption === 'Number'
+        && (
+          <TextInput
+            id={this.props.name}
+            name={this.props.name}
+            value={this.props.value}
+            description={this.props.description}
+            required={this.props.required}
+            onChange={this.props.onChange}
+          />
+        )}
+        {this.state.selectedOption === 'Text'
+        && (
+          <EnumInput
+            name={this.props.name}
+            options={this.props.property[0].enum}
+            required={this.props.required}
+            description={this.props.description}
+            onChange={this.props.onChangeEnum}
+          />
+        )}
       </div>
     );
   }
 }
+
+OneOfInput.propTypes = {
+  property: PropTypes.array.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.any,
+  required: PropTypes.bool.isRequired,
+  description: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onChangeEnum: PropTypes.func.isRequired,
+  onUpdateFormSchema: PropTypes.func.isRequired,
+};
+
+OneOfInput.getDefaultProps = {
+  value: undefined,
+};
 
 export default OneOfInput;

@@ -46,7 +46,8 @@ const AnyOfInput = ({
                 required={required && requiredSubprop}
                 description={description}
                 onChange={onChangeAnyOfWrapper}
-              />);
+              />
+            );
           })}
         </Space>
       </div>

@@ -1,5 +1,11 @@
 @import '~@gen3/ui-component/dist/css/base.less';
 
+#popup {
+  width: 100%;
+  position: absolute;
+  z-index:100;
+}
+
 .popup__mask {
   z-index: 100;
   position: fixed;
@@ -49,8 +55,11 @@
 
 .popup__close-button {
   float: right;
-  display: table-cell;
-  outline: none;
+  display: block;
+  height: 80px;
+  width: 80px;
+  border: 0;
+  background: none;
 }
 
 .popup__close-button:hover {
@@ -58,7 +67,7 @@
 }
 
 .popup__message {
-  font-size: 1em;
+  font-size: 0.875rem;
   padding: 40px 30px 18px 30px;
   white-space: pre-wrap;
 }

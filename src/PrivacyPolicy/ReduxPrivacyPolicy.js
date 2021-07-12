@@ -3,12 +3,12 @@ import showdown from 'showdown';
 import { components } from '../params';
 import PrivacyPolicy from './PrivacyPolicy';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   text: state.privacyPolicy,
   loaded: !!state.privacyPolicy,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   loadPrivacyPolicy: () => {
     fetch(components.privacyPolicy.file).then(
       (response) => {
@@ -24,7 +24,7 @@ const mapDispatchToProps = dispatch => ({
             });
         }
       },
-      _ => '', // eslint-disable-line no-unused-vars
+      (_) => '', // eslint-disable-line no-unused-vars
     );
   },
 });

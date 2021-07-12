@@ -12,7 +12,6 @@ const dataFolder = __dirname;
 const dictPath = `${dataFolder}/dictionary.json`;
 const templateName = 'gqlHelper.js.njk';
 
-
 if (!fs.existsSync(`${dataFolder}/${templateName}`)) {
   console.error(`ERR: ${dataFolder}/${templateName} does not exist - bailing out`);
   process.exit(1);

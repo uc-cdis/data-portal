@@ -9,11 +9,12 @@ import Spinner from '../../components/Spinner';
 import { downloadFromGuppy } from '../dataUtils.js';
 import './PlotChart.less';
 
-
 class PlotChartAxisTick extends React.Component {
   render() {
     // type is one of ['date', 'string', 'number']
-    const { x, y, payload, axis, type, labelMaxLength, labelFontSize } = this.props;
+    const {
+      x, y, payload, axis, type, labelMaxLength, labelFontSize,
+    } = this.props;
     if (!x || !y || !payload) {
       return null;
     }
@@ -109,16 +110,19 @@ function formatChartDataFromProps(plots) {
 // Intense + colorblind option + hard (force vector)
 const COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
 
-class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-comp
-  state = {
-    width: Object.fromEntries(
-      Object.entries(this.props.plots).map((e) => {
-        const value = e[1];
-        return [value.name, 1];
-      }),
-    ),
-    guppyData: [],
-  };
+class PlotChart extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      width: Object.fromEntries(
+        Object.entries(this.props.plots).map((e) => {
+          const value = e[1];
+          return [value.name, 1];
+        }),
+      ),
+      guppyData: [],
+    };
+  }
 
   componentDidMount() {
     if (!this.props.guppyConfig) {
@@ -143,68 +147,76 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
   }
 
   getGuppyBarChartComponent = (data) => {
-    const { xTitle, yTitle, layout, axisLabelMaxLength,
-      axisLabelFontSize, barColor, guppyConfig } = this.props;
+    const {
+      xTitle, yTitle, layout, axisLabelMaxLength,
+      axisLabelFontSize, barColor, guppyConfig,
+    } = this.props;
     if (!data.length) {
       return null;
     }
-    return (<BarChart
-      data={data}
-      margin={{
-        top: 5, right: 30, left: 20, bottom: 5,
-      }}
-      layout={layout}
-    >
-      <CartesianGrid
-        vertical={layout === 'vertical'}
-        horizontal={layout === 'horizontal'}
-        strokeDasharray='3 3'
-      />
-      <XAxis
-        height={50} // default is 30 - labels don't fit
-        label={{
-          value: xTitle,
-          position: 'bottom',
-          offset: -10,
+    return (
+      <BarChart
+        data={data}
+        margin={{
+          top: 5, right: 30, left: 20, bottom: 5,
         }}
-        dataKey={layout === 'horizontal' ? guppyConfig.xAxisProp : null}
-        type={layout === 'horizontal' ? 'category' : 'number'}
-        tickLine={layout === 'horizontal' && false}
-        tick={<PlotChartAxisTick
-          axis='x'
-          type={layout === 'vertical' ? 'number' : 'string'}
-          labelMaxLength={axisLabelMaxLength}
-          labelFontSize={axisLabelFontSize}
-        />}
-      />
-      <YAxis
-        label={{
-          className: 'plot-chart__y-title',
-          value: yTitle,
-          angle: -90,
-          position: 'left',
-          offset: 15,
-        }}
-        dataKey={layout === 'vertical' ? guppyConfig.xAxisProp : null}
-        type={layout === 'horizontal' ? 'number' : 'category'}
-        tickLine={layout === 'vertical' && false}
-        tick={<PlotChartAxisTick
-          axis='y'
-          type={layout === 'horizontal' ? 'number' : 'string'}
-          labelMaxLength={axisLabelMaxLength}
-          labelFontSize={axisLabelFontSize}
-        />}
-      />
-      <Tooltip
-        formatter={
-          value => [Number(value).toLocaleString(), yTitle || 'Value']
-        }
-      />
-      <Bar
-        dataKey={guppyConfig.yAxisProp}
-        fill={barColor || COLORS[0]}
-      />
-    </BarChart>);
+        layout={layout}
+      >
+        <CartesianGrid
+          vertical={layout === 'vertical'}
+          horizontal={layout === 'horizontal'}
+          strokeDasharray='3 3'
+        />
+        <XAxis
+          height={50} // default is 30 - labels don't fit
+          label={{
+            value: xTitle,
+            position: 'bottom',
+            offset: -10,
+          }}
+          dataKey={layout === 'horizontal' ? guppyConfig.xAxisProp : null}
+          type={layout === 'horizontal' ? 'category' : 'number'}
+          tickLine={layout === 'horizontal' && false}
+          tick={(
+            <PlotChartAxisTick
+              axis='x'
+              type={layout === 'vertical' ? 'number' : 'string'}
+              labelMaxLength={axisLabelMaxLength}
+              labelFontSize={axisLabelFontSize}
+            />
+          )}
+        />
+        <YAxis
+          label={{
+            className: 'plot-chart__y-title',
+            value: yTitle,
+            angle: -90,
+            position: 'left',
+            offset: 15,
+          }}
+          dataKey={layout === 'vertical' ? guppyConfig.xAxisProp : null}
+          type={layout === 'horizontal' ? 'number' : 'category'}
+          tickLine={layout === 'vertical' && false}
+          tick={(
+            <PlotChartAxisTick
+              axis='y'
+              type={layout === 'horizontal' ? 'number' : 'string'}
+              labelMaxLength={axisLabelMaxLength}
+              labelFontSize={axisLabelFontSize}
+            />
+          )}
+        />
+        <Tooltip
+          formatter={
+            (value) => [Number(value).toLocaleString(), yTitle || 'Value']
+          }
+        />
+        <Bar
+          dataKey={guppyConfig.yAxisProp}
+          fill={barColor || COLORS[0]}
+        />
+      </BarChart>
+    );
   }
 
   getLineChartComponent = (chartData, width) => {
@@ -212,60 +224,66 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
     if (!Object.keys(this.props.plots).length) {
       return null;
     }
-    return (<LineChart
-      data={chartData.data}
-      margin={{
-        top: 5, right: 30, left: 20, bottom: 5,
-      }}
-    >
-      <CartesianGrid
-        vertical={false}
-        strokeDasharray='3 3'
-      />
-      <XAxis
-        dataKey='date'
-        tick={<PlotChartAxisTick
-          axis='x'
-          type='date'
-          labelFontSize={axisLabelFontSize}
-        />}
-        ticks={chartData.ticks}
-        interval={Math.round(chartData.ticks.length / 25)}
-      />
-      <YAxis
-        label={{
-          className: 'plot-chart__y-title',
-          value: yTitle,
-          angle: -90,
-          position: 'insideLeft',
-          offset: -10,
+    return (
+      <LineChart
+        data={chartData.data}
+        margin={{
+          top: 5, right: 30, left: 20, bottom: 5,
         }}
-        type='number'
-        tick={<PlotChartAxisTick
-          axis='y'
+      >
+        <CartesianGrid
+          vertical={false}
+          strokeDasharray='3 3'
+        />
+        <XAxis
+          dataKey='date'
+          tick={(
+            <PlotChartAxisTick
+              axis='x'
+              type='date'
+              labelFontSize={axisLabelFontSize}
+            />
+          )}
+          ticks={chartData.ticks}
+          interval={Math.round(chartData.ticks.length / 25)}
+        />
+        <YAxis
+          label={{
+            className: 'plot-chart__y-title',
+            value: yTitle,
+            angle: -90,
+            position: 'insideLeft',
+            offset: -10,
+          }}
           type='number'
-          labelFontSize={axisLabelFontSize}
-        />}
-      />
-      <Tooltip
-        content={this.renderTooltip}
-      />
-      <Legend
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
-      />
-      {
-        this.props.plots.map((entry, index) => {
-          const color = COLORS[index % COLORS.length];
-          return <Line key={entry.name} type='monotone' dataKey={entry.name} strokeWidth={width[entry.name]} stroke={color} dot={false} />;
-        })
-      }
-    </LineChart>);
+          tick={(
+            <PlotChartAxisTick
+              axis='y'
+              type='number'
+              labelFontSize={axisLabelFontSize}
+            />
+          )}
+        />
+        <Tooltip
+          content={this.renderTooltip}
+        />
+        <Legend
+          onMouseEnter={this.handleMouseEnter}
+          onMouseLeave={this.handleMouseLeave}
+        />
+        {
+          this.props.plots.map((entry, index) => {
+            const color = COLORS[index % COLORS.length];
+            return <Line key={entry.name} type='monotone' dataKey={entry.name} strokeWidth={width[entry.name]} stroke={color} dot={false} />;
+          })
+        }
+      </LineChart>
+    );
   }
 
   formatChartDataFromGuppy = (guppyData) => {
     let data = guppyData.filter(
-      e => (!!e[this.props.guppyConfig.xAxisProp] && !!e[this.props.guppyConfig.yAxisProp]),
+      (e) => (!!e[this.props.guppyConfig.xAxisProp] && !!e[this.props.guppyConfig.yAxisProp]),
     ).sort( // sort in descending order
       (a, b) => (
         a[this.props.guppyConfig.yAxisProp] > b[this.props.guppyConfig.yAxisProp] ? -1 : 1
@@ -336,12 +354,13 @@ class PlotChart extends PureComponent { // eslint-disable-line react/no-multi-co
         <p className='plot-chart__title'>
           {this.props.title}
         </p>
-        {component ?
-          <ResponsiveContainer height={250}>
-            {component}
-          </ResponsiveContainer>
-          : <Spinner />
-        }
+        {component
+          ? (
+            <ResponsiveContainer height={250}>
+              {component}
+            </ResponsiveContainer>
+          )
+          : <Spinner />}
       </div>
     );
   }

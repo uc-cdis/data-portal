@@ -34,7 +34,7 @@ const fetchUnmappedFileStats = (user, totalSize, start, fetchLimit) => (dispatch
         };
       }
     },
-    err => ({ type: 'FETCH_ERROR', error: err }),
+    (err) => ({ type: 'FETCH_ERROR', error: err }),
   ).then((msg) => {
     if (msg) {
       dispatch(msg);
@@ -43,15 +43,15 @@ const fetchUnmappedFileStats = (user, totalSize, start, fetchLimit) => (dispatch
 };
 
 const ReduxSubmissionHeader = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     unmappedFileCount: state.submission.unmappedFileCount,
     unmappedFileSize: state.submission.unmappedFileSize,
     user: state.user,
     userAuthMapping: state.userAuthMapping,
   });
 
-  const mapDispatchToProps = dispatch => ({
-    fetchUnmappedFileStats: user => dispatch(
+  const mapDispatchToProps = (dispatch) => ({
+    fetchUnmappedFileStats: (user) => dispatch(
       fetchUnmappedFileStats(user, [], STARTING_DID, FETCH_LIMIT),
     ),
   });

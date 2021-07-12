@@ -13,7 +13,7 @@ describe('QueryNode', () => {
 
     it('detects the \'viewNode\' case', () => {
       const result = QueryNode.renderViewPopup({
-        popups: { view_popup: true },
+        popups: { viewPopup: true },
         queryNodes: { query_node: { submitter_id: '1' } },
       });
 
@@ -33,7 +33,7 @@ describe('QueryNode', () => {
 
     it('detects the \'confirmDelete\' case', () => {
       const result = QueryNode.renderDeletePopup({
-        popups: { nodedelete_popup: true },
+        popups: { nodeDeletePopup: true },
         queryNodes: { query_node: { submitter_id: '1' } },
       });
 
@@ -42,7 +42,7 @@ describe('QueryNode', () => {
 
     it('detects the \'deleteFailed\' case', () => {
       const result = QueryNode.renderDeletePopup({
-        popups: { nodedelete_popup: false, view_popup: false },
+        popups: { nodeDeletePopup: false, viewPopup: false },
         queryNodes: { query_node: { submitter_id: '1' }, delete_error: 'some error' },
       });
 
@@ -51,7 +51,7 @@ describe('QueryNode', () => {
 
     it('detects the \'waitForDelete\' case', () => {
       const result = QueryNode.renderDeletePopup({
-        popups: { nodedelete_popup: 'wait message', view_popup: false },
+        popups: { nodeDeletePopup: 'wait message', viewPopup: false },
         queryNodes: { query_node: { submitter_id: '1' } },
       });
 

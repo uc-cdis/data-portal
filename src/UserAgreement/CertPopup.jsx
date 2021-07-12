@@ -7,19 +7,6 @@ import './CertPopup.less';
  * Little quiz component - roperites: questionList, title, onSubmit
  */
 class CertPopup extends Component {
-  static propTypes = {
-    certsList: PropTypes.objectOf(
-      PropTypes.any,
-    ),
-    pendingCerts: PropTypes.arrayOf(PropTypes.string),
-    onSubmit: PropTypes.func.isRequired,
-  };
-
-  static defaultProps = {
-    pendingCerts: [],
-    certsList: {},
-  };
-
   render() {
     const { certsList, pendingCerts } = this.props;
     if (pendingCerts.length > 0) {
@@ -40,5 +27,18 @@ class CertPopup extends Component {
     return null;
   }
 }
+
+CertPopup.propTypes = {
+  certsList: PropTypes.objectOf(
+    PropTypes.any,
+  ),
+  pendingCerts: PropTypes.arrayOf(PropTypes.string),
+  onSubmit: PropTypes.func.isRequired,
+};
+
+CertPopup.defaultProps = {
+  pendingCerts: [],
+  certsList: {},
+};
 
 export default CertPopup;

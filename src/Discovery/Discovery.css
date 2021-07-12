@@ -81,7 +81,7 @@
 }
 
 .discovery-header__stat-label {
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 .discovery-header__tags-container {
@@ -94,7 +94,7 @@
   cursor: default;
   border-bottom: solid 1px #e7e7e7;
   font-weight: normal;
-  font-size: 18px;
+  font-size: 1.125rem;
   color: #555;
 }
 
@@ -123,6 +123,10 @@
 
 .discovery-header__tag-btn {
   cursor: pointer;
+}
+
+.discovery-header__tag-btn:focus, .discovery-header__tag-btn:focus-within, .discovery-header__tag-btn:focus-visible {
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 }
 
 .discovery-tag {
@@ -160,7 +164,7 @@
 }
 
 .discovery-export__selected-ct {
-  color: #7f7f7f;
+  color: var(--g3-color__gray);
 }
 
 .discovery-table__row {
@@ -169,8 +173,13 @@
 
 /* some light css hacks here to override antd default expanded row styles. */
 .discovery-table__expanded-row > td.ant-table-cell {
-  color: #7f7f7f;
+  color: var(--g3-color__titanium);
 }
+
+.discovery-table-container .ant-input-lg {
+  font-size: 1rem;
+}
+
 .discovery-table__expanded-row-content {
   cursor: pointer;
   height: 40px;
@@ -187,13 +196,17 @@
   /* --------- */
 }
 
+.discovery-table-container .ant-table, .discovery-table-container .ant-btn {
+  font-size: 0.875rem;
+}
+
 .discovery-popover {
   max-width: 500px;
 }
 
 .discovery-popover__text {
-  color: #7f7f7f;
-  font-size: 12px;
+  color: var(--g3-color__titanium);
+  font-size: 0.625rem;
 }
 
 .discovery-modal__attribute-group {
@@ -202,6 +215,14 @@
 }
 
 .discovery-modal__attribute-name {
-  color: #7f7f7f;
+  color: var(--g3-color__titanium);
   margin-right: 7px;
+}
+
+#discovery-page-accessibility-links {
+  top:129px;
+}
+
+.discovery-hidden-link {
+  visibility: hidden;
 }
