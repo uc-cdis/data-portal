@@ -149,7 +149,8 @@ const DiscoveryActionBar = (props: Props) => {
                   disabled={props.selectedResources.length === 0}
                   icon={<DownloadOutlined />}
                 >
-                  {(props.user.username) ? 'Download Manifest' : 'Login to Download Manifest'}
+                  {(props.user.username) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
+                    : `Login to ${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`}
                 </Button>
               </Popover>
             )}
