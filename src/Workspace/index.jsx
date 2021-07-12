@@ -288,7 +288,6 @@ class Workspace extends React.Component {
     try {
       const interval = setInterval(async () => {
         const data = await this.getWorkspaceStatus();
-        console.log(data);
         if (this.workspaceStates.includes(data.status)) {
           const workspaceLaunchStepsConfig = this.getWorkspaceLaunchSteps(data);
           this.setState({
