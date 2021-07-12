@@ -118,7 +118,7 @@ class Workspace extends React.Component {
   ).catch(() => 'Error');
 
   getIcon = (workspace) => {
-    if (this.regIcon(workspace, 'R Studio')) {
+    if (this.regIcon(workspace, 'R Studio') || this.regIcon(workspace, 'RStudio')) {
       return rStudioIcon;
     } if (this.regIcon(workspace, 'Jupyter')) {
       return jupyterIcon;
