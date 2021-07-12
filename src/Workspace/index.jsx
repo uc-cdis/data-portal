@@ -117,7 +117,7 @@ class Workspace extends React.Component {
     }).then(
       ({ data }) => data,
     ).catch(() => 'Error');
-    if (workspaceStatus.status === 'Running') {
+    if (workspaceStatus.status === 'Running' && (!this.state.workspaceStatus || this.state.workspaceStatus === 'Not Found' || this.state.workspaceStatus === 'Launching')) {
       await fetchWithCreds({
         path: `${workspaceUrl}proxy/`,
         method: 'GET',
@@ -288,6 +288,7 @@ class Workspace extends React.Component {
     try {
       const interval = setInterval(async () => {
         const data = await this.getWorkspaceStatus();
+        console.log(data);
         if (this.workspaceStates.includes(data.status)) {
           const workspaceLaunchStepsConfig = this.getWorkspaceLaunchSteps(data);
           this.setState({
