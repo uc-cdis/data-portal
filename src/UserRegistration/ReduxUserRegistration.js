@@ -4,8 +4,7 @@ import UserRegistration from './UserRegistration';
 import { fetchUserAccess } from '../actions';
 
 const mapStateToProps = (state) => ({
-  shouldRegister:
-    !state.user.authz || Object.keys(state.user.authz).length === 0,
+  shouldRegister: !(state.user.authz?.['/portal']?.length > 0),
   docsToBeReviewed: state.user?.docs_to_be_reviewed || [],
 });
 
