@@ -42,7 +42,7 @@ export interface DiscoveryConfig {
             //     }
             // }
         },
-        advSearchFilters: {
+        advSearchFilters?: {
             enabled: boolean,
             field: string,
             filters: {
@@ -60,7 +60,7 @@ export interface DiscoveryConfig {
         title?: string
         showTagCategoryNames?: boolean
     },
-    tagColumnWidth: string,
+    tagColumnWidth?: string,
     studyColumns: {
         name: string
         field: string
@@ -106,7 +106,7 @@ export interface DiscoveryConfig {
         tagsListFieldName: string,
         authzField: string,
         uid: string,
-        commons: string
+        commons?: string
     },
     tagCategories: {
         name: string,
