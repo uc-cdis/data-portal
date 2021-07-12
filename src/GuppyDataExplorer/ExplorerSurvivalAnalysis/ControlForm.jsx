@@ -57,7 +57,7 @@ const ControlForm = ({
   const [endTime, setEndTime] = useState(20);
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
 
-  const [isInputChanged, setIsInputChanged] = useState(false);
+  const [isInputChanged, setIsInputChanged] = useState(true);
   useEffect(() => {
     if (!isInputChanged && isError) setIsInputChanged(true);
   }, [isInputChanged, isError]);
