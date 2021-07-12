@@ -251,7 +251,7 @@ class IllinoisMapChart extends React.Component {
 
       if (feature.layer.id === 'wrk_mobility_data') {
         const wrk = formatNumberToDisplay(feature.properties[`wrk_${this.state.sliderDate}`]);
-        
+
         hoverInfo.mobility_values = {
           Workplaces: wrk,
         };

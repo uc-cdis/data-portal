@@ -1,16 +1,17 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import Tooltip from 'rc-tooltip';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import LegendPanel from './LegendPanel';
 import MapStylePanel from './MapStylePanel';
 import LayerSelector from './LayerSelector';
 import DataSelector from './DataSelector';
-import Tooltip from 'rc-tooltip';
 
 import './ControlPanel.less';
 
 class ControlPanel extends PureComponent {
   render() {
-    const tooltipText1 = 'Google Mobility Data shows movement trends as a percentage variance from an established baseline for a given day and place.'
+    const tooltipText1 = 'Google Mobility Data shows movement trends as a percentage variance from an established baseline for a given day and place.';
     const tooltipText2 = 'Additional data of interest to display in map tool-tip pop-up.  These data will not influence color gradients on the map.';
 
     return (
@@ -21,20 +22,27 @@ class ControlPanel extends PureComponent {
           <a href={this.props.legendDataSource.link}>
             {this.props.legendDataSource.title}
           </a>
-          {this.props.legendTitle === 'Mobility Data' 
-            && (<Tooltip
+          {this.props.legendTitle === 'Mobility Data'
+            && (
+              <Tooltip
                 placement='right'
                 overlay={tooltipText1}
                 overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
                 arrowContent={<div className='rc-tooltip-arrow-inner' />}
                 width='300px'
                 trigger={['hover', 'focus']}
+                id={'controlPanelTooltipMobilityData'}
               >
-                <div id='g3-accessibility-links-tooltip-data_source' className='g3-helper-tooltip g3-ring-on-focus' role='tooltip' tabIndex='0'>
-                  <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />                  
-                </div>
-            </Tooltip>
-          )}
+                <span
+                  role='button'
+                  tabIndex='0'
+                  aria-describedby={'controlPanelTooltipMobilityData'}
+                  className={'g3-helper-tooltip'}
+                >
+                  <ExclamationCircleOutlined />
+                </span>
+              </Tooltip>
+            )}
         </p>
         {this.props.lastUpdated
           && (
@@ -67,19 +75,25 @@ class ControlPanel extends PureComponent {
                 activeLayer={this.props.activeLayer}
               />
               <h4>
-            Additional Data 
-            <Tooltip
-                placement='right'
-                overlay={tooltipText2}
-                overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
-                arrowContent={<div className='rc-tooltip-arrow-inner' />}
-                width='300px'
-                trigger={['hover', 'focus']}
-              >
-                <div id='g3-accessibility-links-tooltip-additional_data' className='g3-helper-tooltip g3-ring-on-focus' role='tooltip' tabIndex='0'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="g3-icon g3-icon--sm" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path></svg>
-                </div>
-            </Tooltip>
+            Additional Data
+                <Tooltip
+                  placement='right'
+                  overlay={tooltipText2}
+                  overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
+                  arrowContent={<div className='rc-tooltip-arrow-inner' />}
+                  width='300px'
+                  trigger={['hover', 'focus']}
+                  id={'controlPanelTooltipAdditional_data'}
+                >
+                  <span
+                    role='button'
+                    tabIndex='0'
+                    aria-describedby={'controlPanelTooltipAdditional_data'}
+                    className={'g3-helper-tooltip'}
+                  >
+                    <ExclamationCircleOutlined />
+                  </span>
+                </Tooltip>
               </h4>
               <DataSelector
                 layers={this.props.dataPoints}
