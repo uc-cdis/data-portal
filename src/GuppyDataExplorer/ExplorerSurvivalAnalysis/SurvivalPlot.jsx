@@ -121,7 +121,7 @@ const SurvivalPlot = ({ colorScheme, data, isStratified, timeInterval }) => (
     {/* eslint-disable-next-line no-nested-ternary */}
     {data.length === 0 ? (
       <div className='explorer-survival-analysis__figure-placeholder'>
-        Survival plot here
+        Click "Apply" to get the survival plot here.
       </div>
     ) : isStratified ? (
       Object.entries(
