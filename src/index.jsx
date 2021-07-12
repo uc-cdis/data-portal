@@ -414,26 +414,31 @@ async function init() {
                     exact
                     path='/study-viewer/:dataType/:rowAccessor'
                     component={
-                      props => (<ProtectedContent
-                        public
-                        component={ReduxSingleStudyViewer}
-                        {...props}
-                      />)
+                      (props) => (
+                        <ProtectedContent
+                          public
+                          component={ReduxSingleStudyViewer}
+                          {...props}
+                        />
+                      )
                     }
                   />
-                  {isEnabled('discovery') &&
-                    <Route
-                      exact
-                      path='/discovery'
-                      component={
-                        props => (<ProtectedContent
-                          public={discoveryConfig.public !== false}
-                          component={Discovery}
-                          {...props}
-                        />)
-                      }
-                    />
-                  }
+                  {isEnabled('discovery')
+                    && (
+                      <Route
+                        exact
+                        path='/discovery'
+                        component={
+                          (props) => (
+                            <ProtectedContent
+                              public={discoveryConfig.public !== false}
+                              component={Discovery}
+                              {...props}
+                            />
+                          )
+                        }
+                      />
+                    )}
                   {isEnabled('discovery') && (
                     <Route
                       exact

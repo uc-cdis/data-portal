@@ -1,5 +1,7 @@
 import React from 'react';
-import { Alert, Button, Drawer, Space } from 'antd';
+import {
+  Alert, Button, Drawer, Space,
+} from 'antd';
 import {
   LockFilled,
   LinkOutlined,
@@ -20,82 +22,80 @@ interface Props {
   permalinkCopied: boolean;
 }
 
-const DiscoveryDetails = (props: Props) => {
-  return (
-    <Drawer
-      className='discovery-modal'
-      visible={props.modalVisible}
-      width={'50vw'}
-      closable={false}
-      onClose={() => props.setModalVisible(false)}
+const DiscoveryDetails = (props: Props) => (
+  <Drawer
+    className='discovery-modal'
+    visible={props.modalVisible}
+    width={'50vw'}
+    closable={false}
+    onClose={() => props.setModalVisible(false)}
+  >
+    <div className='discovery-modal__header-buttons'>
+      <Button
+        type='text'
+        onClick={() => props.setModalVisible(false)}
+        className='discovery-modal__close-button'
       >
-      <div className='discovery-modal__header-buttons'>
-        <Button
-          type='text'
-          onClick={() => props.setModalVisible(false)}
-          className='discovery-modal__close-button'
-        >
-          <DoubleLeftOutlined />
+        <DoubleLeftOutlined />
           Back
-        </Button>
-        <Button
-          type='text'
-          onClick={() => {
-            navigator.clipboard.writeText(`${hostname}discovery/${props.modalData[props.config.minimalFieldMapping.uid]}/`)
-              .then(() => {
-                props.setPermalinkCopied(true);
-              });
-          }}
-        >
-          { props.permalinkCopied
-            ? <><CheckOutlined /> Copied! </>
-            : <><LinkOutlined /> Permalink </>
-          }
-        </Button>
-      </div>
-      <div className='discovery-modal-content'>
-        { props.config.studyPageFields.header &&
-          <Space align='baseline'>
-            <h3 className='discovery-modal__header-text'>{props.modalData[props.config.studyPageFields.header.field]}</h3>
-          </Space>
-        }
-        { (
-          props.config.features.authorization.enabled
+      </Button>
+      <Button
+        type='text'
+        onClick={() => {
+          navigator.clipboard.writeText(`${hostname}discovery/${props.modalData[props.config.minimalFieldMapping.uid]}/`)
+            .then(() => {
+              props.setPermalinkCopied(true);
+            });
+        }}
+      >
+        { props.permalinkCopied
+          ? <React.Fragment><CheckOutlined /> Copied! </React.Fragment>
+          : <React.Fragment><LinkOutlined /> Permalink </React.Fragment>}
+      </Button>
+    </div>
+    <div className='discovery-modal-content'>
+      { props.config.studyPageFields.header
+          && (
+            <Space align='baseline'>
+              <h3 className='discovery-modal__header-text'>{props.modalData[props.config.studyPageFields.header.field]}</h3>
+            </Space>
+          )}
+      { (
+        props.config.features.authorization.enabled
             && props.modalData[accessibleFieldName] !== AccessLevel.NOTAVAILABLE
-        ) &&
-          (props.modalData[accessibleFieldName] === AccessLevel.ACCESSIBLE
+      )
+          && (props.modalData[accessibleFieldName] === AccessLevel.ACCESSIBLE
             ? (
               <Alert
                 className='discovery-modal__access-alert'
                 type='success'
-                message={<><UnlockOutlined /> You have access to this study.</>}
+                message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
               />
             )
             : (
               <Alert
                 className='discovery-modal__access-alert'
                 type='warning'
-                message={<><LockFilled /> You do not have access to this study.</>}
+                message={<React.Fragment><LockFilled /> You do not have access to this study.</React.Fragment>}
               />
             )
-          )
-        }
-        <div className='discovery-modal-attributes-container'>
-          { props.config.studyPageFields.fieldsToShow.map((fieldGroup, i) => {
-            let groupWidth;
-            switch (fieldGroup.groupWidth) {
-            case 'full':
-              groupWidth = 'fullwidth';
-              break;
-            case 'half':
-            default:
-              groupWidth = 'halfwidth';
-              break;
-            }
-            return (<div key={i} className={`discovery-modal__attribute-group discovery-modal__attribute-group--${groupWidth}`}>
-              { fieldGroup.includeName &&
-                  <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.groupName}</h3>
-              }
+          )}
+      <div className='discovery-modal-attributes-container'>
+        { props.config.studyPageFields.fieldsToShow.map((fieldGroup, i) => {
+          let groupWidth;
+          switch (fieldGroup.groupWidth) {
+          case 'full':
+            groupWidth = 'fullwidth';
+            break;
+          case 'half':
+          default:
+            groupWidth = 'halfwidth';
+            break;
+          }
+          return (
+            <div key={i} className={`discovery-modal__attribute-group discovery-modal__attribute-group--${groupWidth}`}>
+              { fieldGroup.includeName
+                  && <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.groupName}</h3>}
               { fieldGroup.fields.map((field) => {
               // display nothing if selected study doesn't have this field
               // and this field isn't configured to show a default value
@@ -108,24 +108,22 @@ const DiscoveryDetails = (props: Props) => {
                   && props.modalData[field.field].length > MULTILINE_FIELD_CHARLIMIT;
                 return (
                   <div key={field.name} className='discovery-modal__attribute'>
-                    { field.includeName !== false &&
-                        <span className='discovery-modal__attribute-name'>{field.name}</span>
-                    }
+                    { field.includeName !== false
+                        && <span className='discovery-modal__attribute-name'>{field.name}</span>}
                     <span className={`discovery-modal__attribute-value ${multiline ? 'discovery-modal__attribute-value--multiline' : ''}`}>
                       { props.modalData[field.field]
                         ? renderFieldContent(props.modalData[field.field], field.contentType, props.config)
-                        : (field.valueIfNotAvailable || 'Not available')
-                      }
+                        : (field.valueIfNotAvailable || 'Not available')}
                     </span>
                   </div>
                 );
               })}
-            </div>);
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
-    </Drawer>
-  );
-};
+    </div>
+  </Drawer>
+);
 
 export default DiscoveryDetails;

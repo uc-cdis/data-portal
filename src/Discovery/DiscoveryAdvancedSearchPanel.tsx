@@ -1,7 +1,7 @@
 import React from 'react';
-import { DiscoveryConfig } from './DiscoveryConfig';
 import memoize from 'lodash/memoize';
 import { Checkbox, Collapse, Space } from 'antd';
+import { DiscoveryConfig } from './DiscoveryConfig';
 
 interface Props {
   config: DiscoveryConfig;
@@ -43,51 +43,47 @@ const getFilterValuesByKey = memoize(
   },
 );
 
-const DiscoveryAdvancedSearchPanel = (props: Props) => {
-  return (
-    <Collapse
-      bordered={false}
-      defaultActiveKey={props.config.features.advSearchFilters.filters.map(f => f.key)}
-    >
-      { props.config.features.advSearchFilters.filters.map((filter) => {
-        const { key, keyDisplayName } = filter;
-        const values = getFilterValuesByKey(key, props.studies, props.config);
-        return (
-          <Collapse.Panel header={keyDisplayName || key} key={key}>
-            <Space direction='vertical'>
-              { values.map((value) => {
-                const valueDisplayName =
-                  (filter.valueDisplayNames && filter.valueDisplayNames[value])
-                    ? filter.valueDisplayNames[value]
-                    : value;
-                return (
-                  <Checkbox
-                    key={`${key}-${value}`}
-                    checked={props.filterState[key] && props.filterState[key][value]}
-                    onChange={(ev) => {
-                      const newFilterState = Object.assign({}, props.filterState);
-                      if (!newFilterState[key]) {
-                        newFilterState[key] = {};
-                      }
-                      if (ev.target.checked) {
-                        newFilterState[key][value] = true;
-                      } else {
-                        delete newFilterState[key][value];
-                      }
-                      props.setFilterState(newFilterState);
+const DiscoveryAdvancedSearchPanel = (props: Props) => (
+  <Collapse
+    bordered={false}
+    defaultActiveKey={props.config.features.advSearchFilters.filters.map((f) => f.key)}
+  >
+    { props.config.features.advSearchFilters.filters.map((filter) => {
+      const { key, keyDisplayName } = filter;
+      const values = getFilterValuesByKey(key, props.studies, props.config);
+      return (
+        <Collapse.Panel header={keyDisplayName || key} key={key}>
+          <Space direction='vertical'>
+            { values.map((value) => {
+              const valueDisplayName = (filter.valueDisplayNames && filter.valueDisplayNames[value])
+                ? filter.valueDisplayNames[value]
+                : value;
+              return (
+                <Checkbox
+                  key={`${key}-${value}`}
+                  checked={props.filterState[key] && props.filterState[key][value]}
+                  onChange={(ev) => {
+                    const newFilterState = { ...props.filterState };
+                    if (!newFilterState[key]) {
+                      newFilterState[key] = {};
                     }
+                    if (ev.target.checked) {
+                      newFilterState[key][value] = true;
+                    } else {
+                      delete newFilterState[key][value];
                     }
-                  >
-                    {valueDisplayName}
-                  </Checkbox>
-                );
-              })}
-            </Space>
-          </Collapse.Panel>
-        );
-      })}
-    </Collapse>
-  );
-};
+                    props.setFilterState(newFilterState);
+                  }}
+                >
+                  {valueDisplayName}
+                </Checkbox>
+              );
+            })}
+          </Space>
+        </Collapse.Panel>
+      );
+    })}
+  </Collapse>
+);
 
 export default DiscoveryAdvancedSearchPanel;

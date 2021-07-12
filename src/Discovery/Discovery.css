@@ -101,7 +101,6 @@
 .discovery-header__tags-header {
   padding-left: 50px;
   cursor: default;
-  border-bottom: solid 1px #e7e7e7;
   font-weight: normal;
   font-size: 1.125rem;
   text-transform: uppercase;
@@ -120,34 +119,41 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  font-weight: bold;
-  overflow-y: scroll;
-  overflow-x: visible;
-  max-width: 290px;
-  height: 111px;
 }
 
-.discovery-header__tag-group::-webkit-scrollbar {
-  display: none;
+.discovery-header__tag-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  max-height: 200px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.discovery-tag-column {
+  padding-right: 15px;
+}
+
+.discovery-tag-column--expanded {
+  overflow-y: auto;
 }
 
 .discovery-header__tag-btn {
   cursor: pointer;
 }
 
-.discovery-header__tag-btn:focus, .discovery-header__tag-btn:focus-within, .discovery-header__tag-btn:focus-visible {
-  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-}
-
 .discovery-tag {
+  line-height: 18px;
+  font-size: 10px;
+  box-sizing: border-box;
   border-radius: 5px;
   border-width: 2px;
-  box-sizing: border-box;
-  line-height: 18px;
-  color: #555;
   margin-bottom: 3px;
-  user-select: none;
-  font-size: 10px;
+}
+
+.discovery-header__tag-btn:focus, .discovery-header__tag-btn:focus-within, .discovery-header__tag-btn:focus-visible {
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 }
 
 .discovery-tag--selected {
@@ -186,7 +192,7 @@
 .discovery-search {
   border-color: rgb(139, 51, 105);
   border-width: 1px;
-  border-radius: 5px;
+  border-radius: 7px;
   max-width: 500px;
 }
 
@@ -218,64 +224,62 @@
 
 /* HACK: Because the study description row is a separate row under the hood,
  * it doesn't change color when you highlight its parent row.
- * To fix this, we make the study description row transparent on hover,
- * and add an ::after element behind the study description row, to give
- * it the appearance of changing color when its parent row is highlighted.
- * ------------------------------------------------------------------------
- */
-
-.discovery-table-container td.ant-table-cell {
-  border-color: #dfe3e2;
+ * To fix this, we did a different hacky approach.
+ * In the JS code we determine the row index that has mouse on,
+ * and then we add an arbitrary `--hover` suffix to both row and expandable row on that index.
+ * Finally we override the default :hover effect of both classes.
+ * ------------------------------------------------------------------------ */
+.discovery-table__expanded-row--hover > td.ant-table-cell {
+  font-size: 12px;
+  padding: 0;
+  border-bottom: 0 solid #ccc;
 }
+
 .discovery-table-container th.ant-table-cell,
-.discovery-table-container td.ant-table-cell {
+.discovery-table-container .discovery-table__row > td.ant-table-cell {
+  border-color: #dfe3e2;
   background: #dfe3e2;
 }
-.discovery-table-container th.ant-table-cell {
-  border-bottom: 1px solid #dfe3e2;
-}
-.discovery-table__expanded-row > td.ant-table-cell {
-  color: var(--g3-color__titanium);
-}
 
-.discovery-table-container .ant-input-lg {
-  font-size: 1rem;
-}
-
-.discovery-table-container .ant-table-tbody > tr.ant-table-row:hover > td.ant-table-cell {
-  border-color: rgba(0,0,0,0);
-}
-
-.discovery-table-container .ant-table-tbody > tr.ant-table-row {
+.discovery-table-container .discovery-table__expanded-row > td.ant-table-cell {
   border-color: #dfe3e2;
-  transition: border-color 0.3s;
+  background: #dfe3e2;
+  font-size: 12px;
+  padding: 0;
+  border-bottom: 1px solid #ccc;
 }
-.discovery-table-container .ant-table-tbody > tr.ant-table-row:hover {
-  border-color: rgba(0,0,0,0);
+
+.discovery-table-container .discovery-table__expanded-row--hover > td.ant-table-cell {
+  border-top: none;
+  background: #fff;
+  font-size: 12px;
+  padding: 0;
+  border-bottom: 1px solid #ccc;
 }
-.discovery-table-container .ant-table-tbody > tr.ant-table-row::after {
-  display: block;
-  position: absolute;
-  bottom: -35px;
-  left: 0;
-  z-index: 0;
-  content: "";
-  width: 100%;
-  height: 35px;
-  background-color: #dfe3e2;
-  transition: background-color 0.3s, border-color 0.3s;
+
+
+.discovery-table-container .ant-table-tbody > tr.discovery-table__row > td {
+  border-bottom: 0;
+  background: #dfe3e2;
 }
-.discovery-table-container .ant-table-tbody > tr:not(.ant-table-row-selected).ant-table-row:hover::after {
-  background-color: rgb(250,250,250);
+
+.discovery-table-container .ant-table-tbody > tr.discovery-table__row--hover > td {
+  border-bottom: 0;
+  background: #fff;
+  /* transition: background-color 0.3s, border-color 0.3s; */
 }
-.discovery-table-container .ant-table-tbody > tr.ant-table-row-selected::after {
-  background-color: #e6f7ff;
+
+.discovery-table-container tr.ant-table-expanded-row:hover > td {
+  background: none;
 }
-/* Make the expanded row's background transparent on hover, so that it appears
- * to change color on hover.
- */
-.discovery-table-container tr.ant-table-expanded-row > td, tr.ant-table-expanded-row:hover > td {
-  background: rgba(0,0,0,0);
+
+.discovery-table-container .ant-table-tbody > tr.ant-table-row:hover > td {
+  background: none;
+}
+
+.discovery-table-container .ant-table-tbody > tr.discovery-table__row {
+  background: #dfe3e2;
+  border-color: #dfe3e2;
 }
 /* ---------------------------------------------------- */
 /* END HACK */
@@ -287,14 +291,12 @@
   height: 35px;
   width: 100%;
   overflow: hidden;
-  background: #dfe3e2;
-  font-size: 12px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #ccc;
+  padding: 0 16px 0 16px;
+  margin: 1px 0 1px 0;
   /* ---------
-   * Add an ellipsis after N rows of text.
-   * This css won't work in IE 11, but it's ok, there just won't be an ellipsis.
-   **/
+     * Add an ellipsis after N rows of text.
+     * This css won't work in IE 11, but it's ok, there just won't be an ellipsis.
+     **/
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -359,6 +361,7 @@
 .discovery-modal__attribute-group {
   display: flex;
   flex-direction: column;
+  margin-bottom: 8px;
 }
 
 .discovery-modal__attribute-name {
@@ -368,10 +371,12 @@
 }
 
 #discovery-page-accessibility-links {
-  top:129px;
+  top: 129px;
+  padding-right: 16px;
 }
 
 .discovery-hidden-link {
+  display: none;
   visibility: hidden;
   margin: 12px 6px;
 }

@@ -6,7 +6,7 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
 import DiscoveryTagViewer from './DiscoveryTagViewer';
-import { DiscoveryListView } from './DiscoveryListView';
+import DiscoveryListView from './DiscoveryListView';
 import DiscoveryDetails from './DiscoveryDetails';
 import DiscoveryAdvancedSearchPanel from './DiscoveryAdvancedSearchPanel';
 import DiscoveryActionBar from './DiscoveryActionBar';
@@ -64,13 +64,15 @@ export const renderFieldContent = (content: any, contentType: 'string'|'paragrap
   case 'paragraphs':
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
   case 'link':
-    return (<a
-      onClick={ev => ev.stopPropagation()}
-      onKeyPress={ev => ev.stopPropagation()}
-      href={content}
-    >
-      {content}
-    </a>);
+    return (
+      <a
+        onClick={(ev) => ev.stopPropagation()}
+        onKeyPress={(ev) => ev.stopPropagation()}
+        href={content}
+      >
+        {content}
+      </a>
+    );
   case 'tags':
     if (!content || !content.map) {
       return null;
@@ -125,48 +127,47 @@ const filterByTags = (studies: any[], selectedTags: any, config: DiscoveryConfig
     return studies;
   }
   const tagField = config.minimalFieldMapping.tagsListFieldName;
-  return studies.filter(study => study[tagField].some(tag => selectedTags[tag.name]));
+  return studies.filter((study) => study[tagField].some((tag) => selectedTags[tag.name]));
 };
 
 interface FilterState {
   [key: string]: { [value: string]: boolean }
 }
 
-const filterByAdvSearch =
-  (studies: any[], advSearchFilterState: FilterState, config: DiscoveryConfig): any[] => {
-    // if no filters active, show all studies
-    const noFiltersActive = Object.values(advSearchFilterState).every((selectedValues) => {
-      if (Object.values(selectedValues).length === 0) {
-        return true;
-      }
-      if (Object.values(selectedValues).every(selected => !selected)) {
-        return true;
-      }
-      return false;
-    });
-    if (noFiltersActive) {
-      return studies;
+const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, config: DiscoveryConfig): any[] => {
+  // if no filters active, show all studies
+  const noFiltersActive = Object.values(advSearchFilterState).every((selectedValues) => {
+    if (Object.values(selectedValues).length === 0) {
+      return true;
     }
-    return studies.filter(study => Object.keys(advSearchFilterState).every((filterName) => {
-      const filterValues = Object.keys(advSearchFilterState[filterName]);
-      // Handle the edge case where no values in this filter are selected
-      if (filterValues.length === 0) {
-        return true;
-      }
-      const studyFilters = study[config.features.advSearchFilters.field];
-      if (!studyFilters) {
-        return false;
-      }
-      // combine within filters as OR
-      // return studyFilters.some(({ key, value }) =>
-      //   key === filterName && filterValues.includes(value));
+    if (Object.values(selectedValues).every((selected) => !selected)) {
+      return true;
+    }
+    return false;
+  });
+  if (noFiltersActive) {
+    return studies;
+  }
+  return studies.filter((study) => Object.keys(advSearchFilterState).every((filterName) => {
+    const filterValues = Object.keys(advSearchFilterState[filterName]);
+    // Handle the edge case where no values in this filter are selected
+    if (filterValues.length === 0) {
+      return true;
+    }
+    const studyFilters = study[config.features.advSearchFilters.field];
+    if (!studyFilters) {
+      return false;
+    }
+    // combine within filters as OR
+    // return studyFilters.some(({ key, value }) =>
+    //   key === filterName && filterValues.includes(value));
 
-      // combine within filters as AND
-      const studyFilterValues = studyFilters.filter(({ key }) => key === filterName)
-        .map(({ value }) => value);
-      return filterValues.every(value => studyFilterValues.includes(value));
-    }));
-  };
+    // combine within filters as AND
+    const studyFilterValues = studyFilters.filter(({ key }) => key === filterName)
+      .map(({ value }) => value);
+    return filterValues.every((value) => studyFilterValues.includes(value));
+  }));
+};
 
 interface Props {
   config: DiscoveryConfig
@@ -180,6 +181,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   const [jsSearch, setJsSearch] = useState(null);
   const [searchFilteredResources, setSearchFilteredResources] = useState([]);
+  const [selectedResources, setSelectedResources] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filterState, setFilterState] = useState({} as FilterState);
@@ -188,7 +190,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [selectedTags, setSelectedTags] = useState({});
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
-  const [selectedResources, setSelectedResources] = useState([]);
 
   const handleSearchChange = (ev) => {
     const { value } = ev.currentTarget;
@@ -266,13 +267,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   // Set up table columns
   // -----
-  const columns = config.studyColumns.map(column => ({
+  const columns = config.studyColumns.map((column) => ({
     title: <div className='discovery-table-header'>{column.name}</div>,
     ellipsis: !!column.ellipsis,
     textWrap: 'word-break',
     width: column.width,
     render: (_, record) => {
-      const value = record[column.field];
+      let value = record[column.field];
 
       if (value === undefined) {
         if (column.errorIfNotAvailable !== false) {
@@ -289,6 +290,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       if (columnIsSearchable) {
         // Show search highlights if there's an active search term
         if (searchTerm) {
+          if (Array.isArray(value)) {
+            value = value.join(', ');
+          }
           return highlightSearchTerm(value, searchTerm).highlighted;
         }
       }
@@ -354,14 +358,14 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       title: <div className='discovery-table-header'>Data Access</div>,
       filters: [{
         text: <React.Fragment><UnlockOutlined />Accessible</React.Fragment>,
-        value: true,
+        value: AccessLevel.ACCESSIBLE,
         id: 'accessible-data-filter',
       }, {
         text: <React.Fragment><LockFilled />Unaccessible</React.Fragment>,
-        value: false,
+        value: AccessLevel.UNACCESSIBLE,
         id: 'unaccessible-data-filter',
       }, {
-        text: <><span style={{ color: 'gray' }}>n/a</span>&nbsp;No Data</>,
+        text: <React.Fragment><span style={{ color: 'gray' }}>n/a</span>&nbsp;No Data</React.Fragment>,
         value: AccessLevel.NOTAVAILABLE,
       }],
       onFilter: (value, record) => record[accessibleFieldName] === value,
@@ -375,9 +379,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               overlayClassName='discovery-popover'
               placement='topRight'
               arrowPointAtCenter
-              content={<div className='discovery-popover__text'>
+              content={(
+                <div className='discovery-popover__text'>
                 This study does not have any data yet.
-              </div>}
+                </div>
+              )}
             >
               <span style={{ color: 'gray' }}>n/a</span>
             </Popover>
@@ -390,10 +396,12 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               placement='topRight'
               arrowPointAtCenter
               title={'You have access to this study.'}
-              content={<div className='discovery-popover__text'>
-                <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
-                <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
-              </div>}
+              content={(
+                <div className='discovery-popover__text'>
+                  <React.Fragment>You have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+                  <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
+                </div>
+              )}
             >
               <UnlockOutlined className='discovery-table__access-icon' />
             </Popover>
@@ -405,12 +413,12 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             placement='topRight'
             arrowPointAtCenter
             title={'You do not have access to this study.'}
-            content={
+            content={(
               <div className='discovery-popover__text'>
                 <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
                 <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
               </div>
-            }
+            )}
           >
             <LockFilled className='discovery-table__access-icon' />
           </Popover>
@@ -446,7 +454,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           visibleResources={visibleResources}
           config={config}
         />
-        <div className='discovery-header__stat-border' />
         <DiscoveryTagViewer
           config={config}
           studies={props.studies}
@@ -455,20 +462,19 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         />
       </div>
 
-      <div className="discovery-studies-container">
+      <div className='discovery-studies-container'>
         {/* Free-form text search box */}
-        { (
-            props.config.features.search && props.config.features.search.searchBar
-                  && props.config.features.search.searchBar.enabled
-          )
-                  && (
-                    <div className="discovery-search-container">
-                      <DiscoveryMDSSearch
-                        searchTerm={searchTerm}
-                        handleSearchChange={handleSearchChange}
-                      />
-                    </div>
-                  )}
+        { (props.config.features.search
+        && props.config.features.search.searchBar
+        && props.config.features.search.searchBar.enabled)
+            && (
+              <div className='discovery-search-container'>
+                <DiscoveryMDSSearch
+                  searchTerm={searchTerm}
+                  handleSearchChange={handleSearchChange}
+                />
+              </div>
+            )}
 
         {/* Bar with actions, stats, around advanced search and data actions */}
         <DiscoveryActionBar
@@ -482,12 +488,18 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
         {/* Advanced search panel */}
         { (
-        props.config.features.advSearchFilters
+          props.config.features.advSearchFilters
           && props.config.features.advSearchFilters.enabled
           && filtersVisible
         )
-        &&
-          <div className='discovery-filters'>
+        && (
+          <div
+            className='discovery-filters'
+            style={{
+              height: document.getElementById('discovery-table-of-records').offsetHeight || '100vh',
+              overflowY: 'auto',
+            }}
+          >
             <DiscoveryAdvancedSearchPanel
               config={props.config}
               studies={props.studies}
@@ -495,7 +507,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               setFilterState={setFilterState}
             />
           </div>
-        }
+        )}
 
         <div id='discovery-table-of-records' className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--collapsed' : ''}`}>
           <DiscoveryListView

@@ -24,28 +24,26 @@ const viewPagination = () => {
   }
 };
 
-const DiscoveryAccessibilityLinks = () => {
-  return (
-    <div className='g3-accessibility-links' id='discovery-page-accessibility-links'>
-      <Tooltip
-        placement='left'
-        overlay={tooltipText}
-        overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
-        arrowContent={<div className='rc-tooltip-arrow-inner' />}
-        width='300px'
-        trigger={['hover', 'focus']}
-      >
-        <span className='g3-helper-tooltip g3-ring-on-focus' role='tooltip'>
-          <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
-        </span>
-      </Tooltip>
-      <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-summary-statistics'><span>Summary Statistics</span></a> |
-      <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-tag-filters'><span>Tags</span></a> |
-      <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-table-of-records'><span>Table of Records</span></a> |
-      <button className='g3-unstyle-btn g3-accessibility-nav-link g3-ring-on-focus' onClick={viewPagination} type='button'>Pagination </button>
-      <a className='discovery-hidden-link' id='discovery-link-to-pagination' href='#discovery-pagination'><span>Pagination</span></a>
-    </div>
-  );
-};
+const DiscoveryAccessibilityLinks = () => (
+  <div className='g3-accessibility-links' id='discovery-page-accessibility-links'>
+    <Tooltip
+      placement='left'
+      overlay={tooltipText}
+      overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
+      arrowContent={<div className='rc-tooltip-arrow-inner' />}
+      width='300px'
+      trigger={['hover', 'focus']}
+    >
+      <span className='g3-helper-tooltip g3-ring-on-focus' role='tooltip'>
+        <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
+      </span>
+    </Tooltip>
+    <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-summary-statistics'><span>Summary Statistics</span></a> |
+    <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-tag-filters'><span>Tags</span></a> |
+    <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-table-of-records'><span>Table of Records</span></a> |
+    <button className='g3-unstyle-btn g3-accessibility-nav-link g3-ring-on-focus' onClick={viewPagination} type='button'>Pagination </button>
+    <a className='discovery-hidden-link' id='discovery-link-to-pagination' href='#discovery-pagination'><span>Pagination</span></a>
+  </div>
+);
 
 export default DiscoveryAccessibilityLinks;
