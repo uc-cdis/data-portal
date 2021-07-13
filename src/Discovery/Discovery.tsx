@@ -387,7 +387,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               arrowPointAtCenter
               content={(
                 <div className='discovery-popover__text'>
-                  <React.Fragment>Pending</React.Fragment>
+                  This study will have data soon
                 </div>
               )}
             >
