@@ -38,7 +38,7 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
   const manifest = [];
   selectedResources.forEach((study) => {
     if (study[manifestFieldName]) {
-      if ('commons_url' in study && study.commons_url != hostname) { // PlanX addition to allow hostname based DRS in manifest download clients
+      if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
         // like FUSE
         manifest.push(...study[manifestFieldName].map((x) => ({ ...x, commons_url: ('commons_url' in x) ?
                                                                       x.commons_url: study.commons_url })));
@@ -68,7 +68,7 @@ const handleExportToWorkspaceClick = async (
   const manifest = [];
   selectedResources.forEach((study) => {
     if (study[manifestFieldName]) {
-      if ('commons_url' in study && study.commons_url != hostname) { // PlanX addition to allow hostname based DRS in manifest download clients
+      if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
         // like FUSE
         manifest.push(...study[manifestFieldName].map((x) => ({ ...x, commons_url: ('commons_url' in x) ?
                                                               x.commons_url: study.commons_url })));
