@@ -69,15 +69,17 @@ const DiscoveryWithMDSBackend: React.FC<{
     loadStudiesFunction().then((rawStudies) => {
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
-        const { authzField } = props.config.minimalFieldMapping;
+        const { authzField, dataAvailabilityField } = props.config.minimalFieldMapping;
         // useArboristUI=true is required for userHasMethodForServiceOnResource
         if (!useArboristUI) {
           throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
         }
         const studiesWithAccessibleField = rawStudies.map((study) => {
           let accessible: AccessLevel;
-          if (study[authzField] === undefined || study[authzField] === '') {
-            accessible = AccessLevel.NOTAVAILABLE;
+          if (dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
+            accessible = AccessLevel.PENDING;
+          } else if (study[authzField] === undefined || study[authzField] === '') {
+            accessible = AccessLevel.NOT_AVAILABLE;
           } else {
             accessible = userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAuthMapping)
               ? AccessLevel.ACCESSIBLE
