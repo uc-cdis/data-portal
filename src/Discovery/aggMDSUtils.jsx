@@ -75,7 +75,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
       x.short_name = x.name;
       x._unique_id = `${commonsName}_${x._unique_id}_${index}`;
       x.commons_url = commonsInfo.commons_url;
-      x.tags.push(Object({ category: 'Commons', name: commonsName }));
+      x.tags.push(Object({ category: 'Data Resources', name: commonsName }));
 
       // If the discoveryConfig has a tag with the same name as one of the fields on an entry,
       // add the value of that field as a tag.
