@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as JsSearch from 'js-search';
 import { Tag, Popover } from 'antd';
-import { LockFilled, UnlockOutlined } from '@ant-design/icons';
+import { LockFilled, UnlockOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
@@ -18,7 +18,8 @@ export const accessibleFieldName = '__accessible';
 export enum AccessLevel {
   ACCESSIBLE,
   UNACCESSIBLE,
-  NOTAVAILABLE
+  NOT_AVAILABLE,
+  PENDING
 }
 
 const ARBORIST_READ_PRIV = 'read';
@@ -267,7 +268,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   // Set up table columns
   // -----
-  const columns = config.studyColumns.map((column) => ({
+  const columns: any = config.studyColumns.map((column) => ({
     title: <div className='discovery-table-header'>{column.name}</div>,
     ellipsis: !!column.ellipsis,
     textWrap: 'word-break',
@@ -366,14 +367,35 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         id: 'unaccessible-data-filter',
       }, {
         text: <React.Fragment><span style={{ color: 'gray' }}>n/a</span>&nbsp;No Data</React.Fragment>,
-        value: AccessLevel.NOTAVAILABLE,
+        value: AccessLevel.NOT_AVAILABLE,
+        id: 'not-available-data-filter',
+      }, {
+        text: <React.Fragment><ClockCircleOutlined />Pending</React.Fragment>,
+        value: AccessLevel.PENDING,
+        id: 'pending-data-filter',
       }],
       onFilter: (value, record) => record[accessibleFieldName] === value,
       ellipsis: false,
       width: '106px',
       textWrap: 'word-break',
       render: (_, record) => {
-        if (record[accessibleFieldName] === AccessLevel.NOTAVAILABLE) {
+        if (record[accessibleFieldName] === AccessLevel.PENDING) {
+          return (
+            <Popover
+              overlayClassName='discovery-popover'
+              placement='topRight'
+              arrowPointAtCenter
+              content={(
+                <div className='discovery-popover__text'>
+                  This study will have data soon
+                </div>
+              )}
+            >
+              <ClockCircleOutlined className='discovery-table__access-icon' />
+            </Popover>
+          );
+        }
+        if (record[accessibleFieldName] === AccessLevel.NOT_AVAILABLE) {
           return (
             <Popover
               overlayClassName='discovery-popover'

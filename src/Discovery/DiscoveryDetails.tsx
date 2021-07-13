@@ -62,7 +62,8 @@ const DiscoveryDetails = (props: Props) => (
           )}
       { (
         props.config.features.authorization.enabled
-            && props.modalData[accessibleFieldName] !== AccessLevel.NOTAVAILABLE
+            && props.modalData[accessibleFieldName] !== AccessLevel.NOT_AVAILABLE
+            && props.modalData[accessibleFieldName] !== AccessLevel.PENDING
       )
           && (props.modalData[accessibleFieldName] === AccessLevel.ACCESSIBLE
             ? (

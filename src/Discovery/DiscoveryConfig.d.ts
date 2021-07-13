@@ -106,6 +106,7 @@ export interface DiscoveryConfig {
     minimalFieldMapping: {
         tagsListFieldName: string,
         authzField: string,
+        dataAvailabilityField?: string,
         uid: string,
         commons?: string
     },
