@@ -4,6 +4,7 @@ export interface DiscoveryConfig {
         exportToWorkspace: {
             enabled: boolean
             enableDownloadManifest: boolean
+            downloadManifestButtonText?: string
             manifestFieldName: string
         }
         // explorationIntegration: {
