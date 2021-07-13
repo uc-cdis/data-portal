@@ -358,11 +358,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     columns.push({
       title: <div className='discovery-table-header'>Data Access</div>,
       filters: [{
-        text: <React.Fragment><UnlockOutlined />Accessible</React.Fragment>,
+        text: <React.Fragment><UnlockOutlined />&nbsp;Accessible</React.Fragment>,
         value: AccessLevel.ACCESSIBLE,
         id: 'accessible-data-filter',
       }, {
-        text: <React.Fragment><LockFilled />Unaccessible</React.Fragment>,
+        text: <React.Fragment><LockFilled />&nbsp;Unaccessible</React.Fragment>,
         value: AccessLevel.UNACCESSIBLE,
         id: 'unaccessible-data-filter',
       }, {
@@ -370,7 +370,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         value: AccessLevel.NOT_AVAILABLE,
         id: 'not-available-data-filter',
       }, {
-        text: <React.Fragment><ClockCircleOutlined />Pending</React.Fragment>,
+        text: <React.Fragment><ClockCircleOutlined />&nbsp;Pending</React.Fragment>,
         value: AccessLevel.PENDING,
         id: 'pending-data-filter',
       }],
