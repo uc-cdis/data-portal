@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Empty } from 'antd';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
@@ -16,11 +16,20 @@ interface Props {
   setModalData: (boolean) => void;
   selectedResources: [];
   setSelectedResources: (any) => void;
+  advSearchFilterHeight: string | number;
+  setAdvSearchFilterHeight: (any) => void;
 }
 
 const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
   const { searchTerm } = props;
   const [onHoverRowIndex, setOnHoverRowIndex] = useState(null);
+  const [onHeightChange, setOnHeightChange] = useState(true);
+
+  useEffect(() => {
+    if (props.advSearchFilterHeight !== document.getElementById('discovery-table-of-records').offsetHeight) {
+      props.setAdvSearchFilterHeight(document.getElementById('discovery-table-of-records').offsetHeight);
+    }
+  });
 
   return (
     <Table
@@ -28,6 +37,10 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
       width={'500px'}
       locale={{
         emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No Studies' />,
+      }}
+      onChange={() => {
+        // forcing calling useEffect to update adv search filter height
+        setOnHeightChange(!onHeightChange);
       }}
       columns={props.columns}
       rowKey={props.config.minimalFieldMapping.uid}

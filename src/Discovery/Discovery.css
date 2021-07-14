@@ -183,6 +183,7 @@
   position: absolute;
   width: 280px;
   margin-right: 20px;
+  overflow-y: auto;
 }
 
 .discovery-search-container {
