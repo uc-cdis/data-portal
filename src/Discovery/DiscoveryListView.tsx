@@ -26,7 +26,8 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
   const [onHeightChange, setOnHeightChange] = useState(true);
 
   useEffect(() => {
-    if (props.advSearchFilterHeight !== document.getElementById('discovery-table-of-records').offsetHeight) {
+    if (document.getElementById('discovery-table-of-records')
+    && props.advSearchFilterHeight !== document.getElementById('discovery-table-of-records').offsetHeight) {
       props.setAdvSearchFilterHeight(document.getElementById('discovery-table-of-records').offsetHeight);
     }
   });
