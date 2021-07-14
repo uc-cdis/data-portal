@@ -560,7 +560,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 };
 
 Discovery.defaultProps = {
-  history: [],
   params: { studyUID: null },
 };
 
