@@ -50,6 +50,7 @@ function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
       const user = await userResponse.json();
       return updateAccess(user);
     } catch (e) {
+      console.error(e);
       return 'error';
     }
   }
