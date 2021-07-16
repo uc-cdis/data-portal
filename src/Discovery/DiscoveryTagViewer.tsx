@@ -114,15 +114,18 @@ const DiscoveryTagViewer: React.FunctionComponent<DiscoveryTagViewerProps> = (pr
             }
             const tags = getTagsInCategory(category, props.studies);
 
+            let categoryDisplayName = category.displayName;
+            if (!categoryDisplayName) {
             // Capitalize category name
-            const categoryWords = category.name.split('_').map((x) => x.toLowerCase());
-            categoryWords[0] = categoryWords[0].charAt(0).toUpperCase()
+              const categoryWords = category.name.split('_').map((x) => x.toLowerCase());
+              categoryWords[0] = categoryWords[0].charAt(0).toUpperCase()
                 + categoryWords[0].slice(1);
-            const capitalizedCategoryName = categoryWords.join(' ');
+              categoryDisplayName = categoryWords.join(' ');
+            }
 
             return (
               <div className='discovery-header__tag-group' key={category.name}>
-                <h5 className='discovery-header__tag-group-header'>{capitalizedCategoryName}</h5>
+                <h5 className='discovery-header__tag-group-header'>{categoryDisplayName}</h5>
                 { tags }
               </div>
             );
