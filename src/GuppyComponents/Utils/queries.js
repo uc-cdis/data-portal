@@ -311,7 +311,15 @@ export function getGQLFilter(filter) {
       typeof filterValues.upperBound !== 'undefined';
     const hasSelectedValues = filterValues?.selectedValues?.length > 0;
 
-    /** @type {{ AND?: any[]; IN?: { [x: string]: string[] }}} */
+    /**
+     * @typedef {Object} FacetsPiece
+     * @property {{ [x: string]: any }[]} [AND]
+     * @property {{ [x: string]: string[] }} [IN]
+     * @property {Object} [nested]
+     * @property {string} nested.path
+     * @property {{ [x: string]: any }[]} nested.AND
+     */
+    /** @type {FacetsPiece} */
     const facetsPiece = {};
     if (isRangeFilter)
       facetsPiece.AND = [
@@ -334,7 +342,6 @@ export function getGQLFilter(filter) {
     if (isNestedField) {
       const path = fieldStr; // parent path
       if (path in nestedFacetIndices) {
-        // @ts-ignore
         facetsList[nestedFacetIndices[path]].nested.AND.push(facetsPiece);
       } else {
         nestedFacetIndices[path] = facetIndex;
