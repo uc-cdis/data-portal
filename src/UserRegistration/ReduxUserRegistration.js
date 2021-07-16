@@ -20,7 +20,7 @@ const mapDispatchToProps = (dispatch) => ({
       getIndexPageCounts();
       return 'success';
     }
-    return 'error';
+    throw new Error('Failed to update authorization information.');
   },
 });
 
