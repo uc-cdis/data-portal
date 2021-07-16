@@ -31,7 +31,8 @@ function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
         headers,
         method: 'PUT',
       });
-      if (!userResponse.ok) throw new Error();
+      if (!userResponse.ok)
+        throw new Error('Failed to update user information.');
 
       const hasReviewedDocument =
         Object.values(reviewStatus).filter(Boolean).length > 0;
@@ -43,11 +44,13 @@ function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
             method: 'POST',
           })
         : new Response();
-      if (!documentsResponse.ok) throw new Error();
+      if (!documentsResponse.ok)
+        throw new Error('Failed to update document review status.');
 
       const user = await userResponse.json();
       return updateAccess(user);
     } catch (e) {
+      console.error(e);
       return 'error';
     }
   }
