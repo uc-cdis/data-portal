@@ -32,6 +32,8 @@ function buildConfig(opts) {
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
     mapboxAPIToken: process.env.MAPBOX_API_TOKEN,
+    ddApplicationId: process.env.DATADOG_APPLICATION_ID,
+    ddClientToken: process.env.DATADOG_CLIENT_TOKEN,
   };
 
   //
@@ -61,6 +63,8 @@ function buildConfig(opts) {
     tierAccessLevel,
     tierAccessLimit,
     mapboxAPIToken,
+    ddApplicationId,
+    ddClientToken,
   } = { ...defaults, ...opts };
 
   function ensureTrailingSlash(url) {
@@ -112,6 +116,26 @@ function buildConfig(opts) {
   const workspaceStorageDownloadUrl = `${workspaceStorageUrl}/download`;
   const marinerUrl = `${hostname}ga4gh/wes/v1/runs`;
   const enableDAPTracker = !!config.DAPTrackingURL;
+
+  // datadog related setup
+  let ddEnv = 'PROD';
+  if (hostnameOnly.includes('qa-')) {
+    ddEnv = 'QA';
+  } else if (hostnameOnly.includes('planx-pla.net')) {
+    ddEnv = 'DEV';
+  }
+  if (config.ddEnv) {
+    ddEnv = config.ddEnv;
+  }
+  let ddSampleRate = 100;
+  if (config.ddSampleRate) {
+    if (Number.isNaN(config.ddSampleRate)) {
+      console.warn('Datadog sampleRate value in Portal config is not a number, ignoring');
+    } else {
+      ddSampleRate = config.ddSampleRate;
+    }
+  }
+
   // backward compatible: homepageChartNodes not set means using graphql query,
   // which will return 401 UNAUTHORIZED if not logged in, thus not making public
   let indexPublic = true;
@@ -466,6 +490,10 @@ function buildConfig(opts) {
     marinerUrl,
     aggMDSDataURL,
     commonsWideAltText,
+    ddApplicationId,
+    ddClientToken,
+    ddEnv,
+    ddSampleRate,
   };
 }
 
