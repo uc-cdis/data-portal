@@ -136,7 +136,11 @@ const DiscoveryDetails = (props: Props) => (
         && props.modalData[props.config.studyPageFields.downloadLinks.field])
         ? (
           <Collapse defaultActiveKey={['1']}>
-            <Panel header={props.config.studyPageFields.downloadLinks.name || 'Data Download Links'} key='1'>
+            <Panel
+              className='discovery-modal__download-panel-header'
+              header={props.config.studyPageFields.downloadLinks.name || 'Data Download Links'}
+              key='1'
+            >
               <List
                 itemLayout='horizontal'
                 dataSource={props.modalData[props.config.studyPageFields.downloadLinks.field]}
@@ -155,8 +159,8 @@ const DiscoveryDetails = (props: Props) => (
                       </Button>]}
                   >
                     <List.Item.Meta
-                      title={item.title}
-                      description={item.description || ''}
+                      title={<div className='discovery-modal__download-list-title'>{item.title}</div>}
+                      description={<div className='discovery-modal__download-list-description'>{item.description || ''}</div>}
                     />
                   </List.Item>
                 )}
