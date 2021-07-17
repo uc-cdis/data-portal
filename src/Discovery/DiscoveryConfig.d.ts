@@ -112,8 +112,9 @@ export interface DiscoveryConfig {
     },
     tagCategories: {
         name: string,
-        color: string
+        color?: string
         display: boolean
+        displayName?: string
     }[]
 }
 export interface StudyPageFieldConfig {
