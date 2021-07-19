@@ -135,7 +135,7 @@ const DiscoveryDetails = (props: Props) => (
       { (props.config.studyPageFields.downloadLinks && props.config.studyPageFields.downloadLinks.field
         && props.modalData[props.config.studyPageFields.downloadLinks.field])
         ? (
-          <Collapse defaultActiveKey={['1']}>
+          <Collapse className='discovery-modal__download-panel' defaultActiveKey={['1']}>
             <Panel
               className='discovery-modal__download-panel-header'
               header={props.config.studyPageFields.downloadLinks.name || 'Data Download Links'}
