@@ -35,29 +35,12 @@ function filterCountyGeoJson(selectedFips) {
 }
 
 function formatDate(date) {
-  let dd = date.getDate();
-  let mm = date.getMonth() + 1;
-  const y = date.getFullYear();
-  if (`${dd}`.length === 1) {
-    dd = `0${dd}`;
-  }
-  if (`${mm}`.length === 1) {
-    mm = `0${mm}`;
-  }
-
-  const someFormattedDate = `${y}-${mm}-${dd}`;
-
-  return someFormattedDate;
+  return date.toISOString().split('T')[0];
 }
 
 class IllinoisMapChart extends React.Component {
   constructor(props) {
     super(props);
-    const today = new Date();
-    const startDate = new Date(2020, 0, 22);
-    const endDate = new Date(today);
-    endDate.setDate(endDate.getDate() - 4);
-    const dateDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) - 4;
     this.state = {
       mapSize: {
         width: '100%',
@@ -91,20 +74,65 @@ class IllinoisMapChart extends React.Component {
         strain_data: { title: 'SARS-CoV-2 Strain Data', visible: 'none' },
         // mobility_data : {title: 'Mobility Data', visible: 'none'},
       },
-      sliderValue: dateDiff,
-      sliderDate: formatDate(endDate),
-      sliderMaxValue: dateDiff,
+      sliderValue: null,
+      sliderDate: null,
+      sliderDataLastUpdated: null,
+      sliderDataStartDate: null,
       activeLayer: 'time_data',
       legendTitle: 'Confirmed Cases',
       legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' },
       mobility_data: { data: null, fetchStatus: null },
       strainData: { data: null, fetchStatus: null },
+      lastUpdated: null,
+      dataDateRange: {},
     };
     this.mapData = {
       modeledCountyGeoJson: null,
       colors: {},
       colorsAsList: null,
     };
+  }
+
+  setSliderDates = (id) => {
+    let workingId = id;
+    if (workingId === 'time') {
+      workingId = 'C';
+    }
+    function msToDays(ms) {
+      return Math.floor(ms / (1000 * 60 * 60 * 24));
+    }
+    const curentDateRange = this.state.dataDateRange[workingId];
+    const startDate = new Date(curentDateRange.min);
+    const endDate = new Date(curentDateRange.max);
+
+    const dateDiff = msToDays(endDate - startDate);
+    let sliderValue;
+    let { sliderDate } = this.state;
+    if (sliderDate) {
+      // match date when switching between data sets
+
+      // TODO convert sliderDate to date object
+      // calculate old dates position on new slider
+      sliderValue = msToDays(new Date(sliderDate) - startDate);
+      // if date does not exist in set, set to min date
+      if (sliderValue < 0) {
+        sliderValue = 0;
+        sliderDate = formatDate(startDate);
+      // else if date is too big
+      } else if (sliderValue > dateDiff) {
+        sliderValue = dateDiff;
+        sliderDate = formatDate(endDate);
+      }
+    } else {
+      sliderValue = dateDiff;
+      sliderDate = formatDate(endDate);
+    }
+    this.setState({
+      sliderValue,
+      sliderDate,
+      sliderDataLastUpdated: dateDiff,
+      sliderDataStartDate: startDate,
+    });
   }
 
   componentDidUpdate() {
@@ -292,13 +320,17 @@ class IllinoisMapChart extends React.Component {
   }
 
   onLayerSelect = (event, id) => {
+    // TODO make ID usable
     this.setState({ activeLayer: id });
+    this.setSliderDates(id.split('_')[0]);
     this.setMapLegendColors(id);
   }
 
   setMapLegendColors(id) {
     if (id === 'time_data') {
-      this.setState({ mapColors: this.mapData.colors, legendTitle: 'Confirmed Cases', legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' } });
+      this.setState({
+        mapColors: this.mapData.colors, legendTitle: 'Confirmed Cases', legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' }, lastUpdated: this.props.jsonByTime.last_updated,
+      });
     }
     if (id.includes('mobility_data')) {
       const colors = [
@@ -314,8 +346,41 @@ class IllinoisMapChart extends React.Component {
         ['80% to 100% +', '#850001'],
         ['No Data Available', '#5f5d59'],
       ];
-      this.setState({ mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google Mobility Data', link: 'https://www.google.com/covid19/mobility/' } });
+      this.setState({
+        mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google Mobility Data', link: 'https://www.google.com/covid19/mobility/' }, lastUpdated: null,
+      });
     }
+  }
+
+  findStartAndEndDates = (geoJson) => {
+    // find first and last date
+    const { dataDateRange } = this.state;
+    geoJson.features.forEach((counties) => {
+      Object.keys(counties.properties).forEach((currentValue) => {
+        // sample data in [C_2020-01-22, D_2020-02-05,gnp_2020-02-15, prk_2020-02-15, res_2020-02-15, rnr_2020-02-15, trn_2020-02-15, wrk_2020-02-15]
+        // dont include
+        // [COUNTYNAME, CWA, FE_AREA, FIPS, LAT, LON, STATE,TIME_ZONE]
+
+        // exit if no date hyphen
+        if (currentValue.indexOf('-') === -1) {
+          return;
+        }
+        // break id into data set and date
+        const [setName, dateString] = currentValue.split('_');
+        // if already set a max compare to that if not set
+        if (Object.keys(dataDateRange).indexOf(setName) === -1) {
+          dataDateRange[setName] = {
+            min: dateString,
+            max: dateString,
+          };
+        } else if (dataDateRange[setName].max < dateString) {
+          dataDateRange[setName].max = dateString;
+        } else if (dataDateRange[setName].min > dateString) {
+          dataDateRange[setName].min = dateString;
+        }
+      });
+    });
+    this.setState({ dataDateRange });
   }
 
   addMobilityDataToGeoJsonBase = () => {
@@ -323,7 +388,11 @@ class IllinoisMapChart extends React.Component {
     // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
     // but not in JHU data. So don't display Chicago separately.
     this.setState({ mobility_data: { data: null, fetchStatus: 'fetching' } });
-    fetch(`https://covd-map-occ-prc-${occEnv}.s3.amazonaws.com/google_mobility_data.json`)
+    fetch(`https://covd-map-occ-prc-${occEnv}.s3.amazonaws.com/google_mobility_data.json`, {
+      headers: {
+        'Cache-Control': `max-age=${(1000 * 60 * 60 * 24)}`, // set cache to expire after one day
+      },
+    })
       .then((resp) => resp.json())
       .then((data) => {
         const base = {
@@ -349,6 +418,7 @@ class IllinoisMapChart extends React.Component {
             return location;
           }),
         };
+        this.findStartAndEndDates(geoJson);
         this.setState({ mobility_data: { data: geoJson, fetchStatus: 'done' } });
       })
       .catch(() => { console.warn('Data not retrieved. Unable to display mobility overlays'); }); // eslint-disable-line no-console
@@ -388,7 +458,10 @@ class IllinoisMapChart extends React.Component {
         return location;
       }),
     };
-    this.setState({ time_data: geoJson });
+
+    this.findStartAndEndDates(geoJson);
+    this.setSliderDates('C');
+    this.setState({ time_data: geoJson, lastUpdated: this.props.jsonByTime.last_updated });
   }
 
   addStrainDataToState = () => {
@@ -468,7 +541,7 @@ class IllinoisMapChart extends React.Component {
   }
 
   sliderOnChange = (value) => {
-    const startDate = new Date(2020, 0, 22);
+    const startDate = new Date(this.state.sliderDataStartDate);
     startDate.setDate(startDate.getDate() + parseInt(value, 10));
 
     const someFormattedDate = formatDate(startDate);
@@ -484,7 +557,7 @@ class IllinoisMapChart extends React.Component {
             showMapStyle={false}
             showLegend
             formattedColors={this.state.mapColors}
-            lastUpdated={this.props.jsonByTime.last_updated}
+            lastUpdated={this.state.lastUpdated}
             layers={this.state.overlay_layers}
             dataPoints={this.state.popup_data}
             activeLayer={this.state.activeLayer}
@@ -537,7 +610,8 @@ class IllinoisMapChart extends React.Component {
             />
           </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
-        <MapSlider title={`View data by date: ${this.state.sliderDate}`} value={this.state.sliderValue} maxValue={this.state.sliderMaxValue} onChange={this.sliderOnChange} />
+        {this.state.sliderDate
+        && <MapSlider title={`View data by date: ${this.state.sliderDate}`} value={this.state.sliderValue} maxValue={this.state.sliderDataLastUpdated} onChange={this.sliderOnChange} />}
       </div>
     );
   }
