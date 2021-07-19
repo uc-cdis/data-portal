@@ -190,6 +190,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [selectedTags, setSelectedTags] = useState({});
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
+  const [advSearchFilterHeight, setAdvSearchFilterHeight] = useState('100vh');
 
   const handleSearchChange = (ev) => {
     const { value } = ev.currentTarget;
@@ -517,8 +518,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           <div
             className='discovery-filters'
             style={{
-              height: document.getElementById('discovery-table-of-records').offsetHeight || '100vh',
-              overflowY: 'auto',
+              height: advSearchFilterHeight,
             }}
           >
             <DiscoveryAdvancedSearchPanel
@@ -536,6 +536,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             studies={props.studies}
             visibleResources={visibleResources}
             searchTerm={searchTerm}
+            advSearchFilterHeight={advSearchFilterHeight}
+            setAdvSearchFilterHeight={setAdvSearchFilterHeight}
             setPermalinkCopied={setPermalinkCopied}
             setModalData={setModalData}
             setModalVisible={setModalVisible}
