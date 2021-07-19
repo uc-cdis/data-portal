@@ -148,6 +148,7 @@ const DiscoveryDetails = (props: Props) => (
                   <List.Item
                     actions={[
                       <Button
+                        className='discovery-modal__download-button'
                         href={`${userAPIPath}/data/download/${item.guid}?expires_in=900&redirect`}
                         target='_blank'
                         type='text'

@@ -191,6 +191,7 @@
 }
 
 .discovery-search {
+  border-color: var(--g3-color__base-blue);
   border-width: 1px;
   border-radius: 7px;
   max-width: 500px;
@@ -432,6 +433,10 @@
   text-transform: uppercase;
   font-weight: bold;
   font-size: 12px;
+}
+
+.discovery-modal__download-button {
+  text-transform: none;
 }
 
 .discovery-modal__download-list-title {
