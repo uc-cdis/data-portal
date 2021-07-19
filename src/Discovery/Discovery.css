@@ -191,7 +191,6 @@
 }
 
 .discovery-search {
-  border-color: var(--g3-color__base-blue);
   border-width: 1px;
   border-radius: 7px;
   max-width: 500px;
