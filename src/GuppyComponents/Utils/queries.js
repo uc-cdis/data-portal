@@ -323,8 +323,8 @@ export function getGQLFilter(filter) {
     const facetsPiece = {};
     if (isRangeFilter)
       facetsPiece.AND = [
-        { '>=': { [fieldName]: filterValues.lowerBound } },
-        { '<=': { [fieldName]: filterValues.upperBound } },
+        { GTE: { [fieldName]: filterValues.lowerBound } },
+        { LTE: { [fieldName]: filterValues.upperBound } },
       ];
     else if (hasSelectedValues)
       if (filterValues.__combineMode === 'AND')

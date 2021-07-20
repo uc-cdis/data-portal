@@ -28,7 +28,7 @@ describe('Get GQL filter from filter object from', () => {
   test('a simple range filter', () => {
     const filter = { a: { lowerBound: 0, upperBound: 1 } };
     const gqlFilter = {
-      AND: [{ AND: [{ '>=': { a: 0 } }, { '<=': { a: 1 } }] }],
+      AND: [{ AND: [{ GTE: { a: 0 } }, { LTE: { a: 1 } }] }],
     };
     expect(getGQLFilter(filter)).toEqual(gqlFilter);
   });
@@ -43,7 +43,7 @@ describe('Get GQL filter from filter object from', () => {
       AND: [
         { IN: { a: ['foo', 'bar'] } },
         { AND: [{ IN: { b: ['foo'] } }, { IN: { b: ['bar'] } }] },
-        { AND: [{ '>=': { c: 0 } }, { '<=': { c: 1 } }] },
+        { AND: [{ GTE: { c: 0 } }, { LTE: { c: 1 } }] },
       ],
     };
     expect(getGQLFilter(filter)).toEqual(gqlFilter);
@@ -82,7 +82,7 @@ describe('Get GQL filter from filter object from', () => {
             path: 'a',
             AND: [
               { IN: { b: ['foo', 'bar'] } },
-              { AND: [{ '>=': { c: 0 } }, { '<=': { c: 1 } }] },
+              { AND: [{ GTE: { c: 0 } }, { LTE: { c: 1 } }] },
             ],
           },
         },
@@ -107,7 +107,7 @@ describe('Get GQL filter from filter object from', () => {
         {
           nested: {
             path: 'c',
-            AND: [{ AND: [{ '>=': { d: 0 } }, { '<=': { d: 1 } }] }],
+            AND: [{ AND: [{ GTE: { d: 0 } }, { LTE: { d: 1 } }] }],
           },
         },
       ],
@@ -131,14 +131,14 @@ describe('Get GQL filter from filter object from', () => {
             path: 'b',
             AND: [
               { AND: [{ IN: { c: ['foo'] } }, { IN: { c: ['bar'] } }] },
-              { AND: [{ '>=': { d: 0 } }, { '<=': { d: 1 } }] },
+              { AND: [{ GTE: { d: 0 } }, { LTE: { d: 1 } }] },
             ],
           },
         },
         {
           nested: {
             path: 'f',
-            AND: [{ AND: [{ '>=': { g: 0 } }, { '<=': { g: 1 } }] }],
+            AND: [{ AND: [{ GTE: { g: 0 } }, { LTE: { g: 1 } }] }],
           },
         },
       ],
