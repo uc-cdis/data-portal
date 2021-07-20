@@ -466,7 +466,11 @@ class IllinoisMapChart extends React.Component {
 
   addStrainDataToState = () => {
     this.setState({ strainData: { data: null, fetchStatus: 'fetching' } });
-    fetch(`https://covd-map-occ-prc-${occEnv}.s3.amazonaws.com/gagnon_lab_strain_data.json`)
+    fetch(`https://covd-map-occ-prc-${occEnv}.s3.amazonaws.com/gagnon_lab_strain_data.json`, {
+      headers: {
+        'Cache-Control': `max-age=${(1000 * 60 * 60 * 24)}`, // set cache to expire after one day
+      },
+    })
       .then((resp) => resp.json())
       .then((data) => {
         this.setState({ strainData: { data, fetchStatus: 'done' } });
