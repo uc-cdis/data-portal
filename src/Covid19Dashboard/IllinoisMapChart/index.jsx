@@ -515,7 +515,11 @@ class IllinoisMapChart extends React.Component {
               hoverInfo.strain_values
               && (
                 <table>
-                  <caption>SARS-CoV-2 Strain Data</caption>
+                  <thead>
+                    <tr>
+                      <th colSpan='2'>SARS-CoV-2 Strain Data</th>
+                    </tr>
+                  </thead>
                   <tbody>
                     {Object.entries(hoverInfo.strain_values).map((val, i) => {
                       const secondCol = Object.entries(hoverInfo.strain_values)[i + 1] || ['', ''];
@@ -526,6 +530,7 @@ class IllinoisMapChart extends React.Component {
                     },
                     )}
                   </tbody>
+                  <caption>Strain Data is cumulative</caption>
                 </table>
               )
             }
