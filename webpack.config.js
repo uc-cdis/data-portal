@@ -19,6 +19,11 @@ if (DAPTrackingURL) {
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
 }
+if (process.env.MAPBOX_API_TOKEN) {
+  connectSrcURLs.push('https://*.tiles.mapbox.com');
+  connectSrcURLs.push('https://api.mapbox.com');
+  connectSrcURLs.push('https://events.mapbox.com');
+}
 const iFrameApplicationURLs = [];
 if (configFile && configFile.analysisTools) {
   configFile.analysisTools.forEach((e) => {
