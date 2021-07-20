@@ -420,6 +420,7 @@ class IllinoisMapChart extends React.Component {
         };
         this.findStartAndEndDates(geoJson);
         this.setState({ mobility_data: { data: geoJson, fetchStatus: 'done' } });
+        this.setSliderDates(this.state.activeLayer.split('_')[0]);
       })
       .catch(() => { console.warn('Data not retrieved. Unable to display mobility overlays'); }); // eslint-disable-line no-console
   }
