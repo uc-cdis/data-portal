@@ -19,7 +19,7 @@ class ControlPanel extends PureComponent {
         <h3>{this.props.legendTitle}</h3>
         <p>
           Data source:&nbsp;
-          <a href={this.props.legendDataSource.link}>
+          <a href={this.props.legendDataSource.link} target='_blank' rel='noreferrer'>
             {this.props.legendDataSource.title}
           </a>
           {this.props.legendTitle === 'Mobility Data'
