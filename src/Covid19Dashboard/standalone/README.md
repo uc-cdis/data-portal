@@ -20,23 +20,22 @@ It is composed of the following elements:
 Data for any mapping project needs to be geospatial
 data in GeoJSON format,
 one of two formats that MapBox accepts. In the
-template, the data is imported into a JSON object. Other methods
-includes reading from an AWS S3 bucket
+template, the data is imported into a JSON object. O
+ther methods would include reading from an AWS S3 bucket
 or a URL. For inclusion into Gen3 the data files must be in
 GeoJSON format and not read from a database or other service.
 
 #### Map Component
 The [InteractiveMap](https://visgl.github.io/react-map-gl/docs/api-reference/interactive-map) component
 is a Mapbox based map. It requires for you to supply a MapBox token
-details of which are described below. You do not need to make
-any changes to the mapboxToken in this file. For the gen3 data-portal the
-map component you will be adding to is in src/Cov
+detail of which are described below. You do not need to make
+any changes to the mapboxToken in this file.
 
 #### Data Source and Layer
 To display your data on top of a MapBox map you need
 to define a Data Source and a Layer. The Datasource is used
 to load your GeoJSON map data and the Layer is used to
-render**** some or all of the data.
+render some or all of the data.
 
 Layer uses the MapBox style [definition](https://docs.mapbox.com/mapbox-gl-js/style-spec/)
 which is flexible enough to render a wide variety of different
@@ -51,7 +50,7 @@ is more efficient due to MapBox's render optimization. The template has an examp
 
 To install the template you will need npm
 
-To install, change dir
+To install type the following:
 ```
 npm install
 ```
@@ -157,7 +156,7 @@ This is a json object with a unique id and two members, ~title~ and
 ```javascript
  overlay_layers: {
   ...
-  us_counties : { title: 'US Counties', visible**: 'visible' },
+  us_counties : { title: 'US Counties', visible: 'visible' },
  }
 ```
 
