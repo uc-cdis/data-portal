@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Tag, Button } from 'antd';
+import {
+  Tag, Button, Row, Col,
+} from 'antd';
 import { DiscoveryConfig } from './DiscoveryConfig';
 
 const TAG_LIST_LIMIT = 8;
@@ -45,7 +47,7 @@ const DiscoveryTagViewer: React.FunctionComponent<DiscoveryTagViewerProps> = (pr
               role='button'
               tabIndex={0}
               aria-pressed={props.selectedTags[tag] ? 'true' : 'false'}
-              className={`discovery-header__tag-btn discovery-tag ${props.selectedTags[tag] && 'discovery-tag--selected'}`}
+              className={`discovery-header__tag-btn discovery-tag ${(props.selectedTags[tag]) ? 'discovery-tag--selected' : ''}`}
               aria-label={tag}
               style={{
                 backgroundColor: props.selectedTags[tag] ? category.color : 'initial',
@@ -106,7 +108,12 @@ const DiscoveryTagViewer: React.FunctionComponent<DiscoveryTagViewerProps> = (pr
     <div className='discovery-header__tags-container' id='discovery-tag-filters'>
       {props.config.tagSelector.title
       && <h3 className='discovery-header__tags-header'>{props.config.tagSelector.title}</h3>}
-      <div className='discovery-header__tags'>
+      <Row
+        gutter={{
+          xs: 8, sm: 16, md: 24, lg: 32,
+        }}
+        justify='space-between'
+      >
         {
           props.config.tagCategories.map((category) => {
             if (category.display === false) {
@@ -124,14 +131,23 @@ const DiscoveryTagViewer: React.FunctionComponent<DiscoveryTagViewerProps> = (pr
             }
 
             return (
-              <div className='discovery-header__tag-group' key={category.name}>
+              <Col
+                className='discovery-header__tag-group'
+                key={category.name}
+                xs={24}
+                sm={24}
+                md={12}
+                lg={6}
+                xl={6}
+                xxl={4}
+              >
                 <h5 className='discovery-header__tag-group-header'>{categoryDisplayName}</h5>
                 { tags }
-              </div>
+              </Col>
             );
           })
         }
-      </div>
+      </Row>
     </div>
   );
 };

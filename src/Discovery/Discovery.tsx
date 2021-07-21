@@ -173,7 +173,6 @@ const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, co
 interface Props {
   config: DiscoveryConfig
   studies: {__accessible: boolean, [any: string]: any}[]
-  history?: any // from React Router
   params?: {studyUID: string} // from React Router
 }
 
@@ -326,7 +325,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 role='button'
                 tabIndex={0}
                 aria-pressed={isSelected ? 'true' : 'false'}
-                className={`discovery-header__tag-btn discovery-tag ${isSelected ? 'discovery-tag--selected' : ''}`}
+                className={`discovery-tag ${isSelected ? 'discovery-tag--selected' : ''}`}
                 aria-label={name}
                 style={{
                   backgroundColor: isSelected ? color : 'initial',
@@ -544,7 +543,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             setModalVisible={setModalVisible}
             columns={columns}
             accessibleFieldName={accessibleFieldName}
-            history={props.history}
             selectedResources={selectedResources}
             setSelectedResources={setSelectedResources}
           />
@@ -564,7 +562,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 };
 
 Discovery.defaultProps = {
-  history: [],
   params: { studyUID: null },
 };
 
