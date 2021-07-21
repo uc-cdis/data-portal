@@ -1,7 +1,6 @@
 .discovery-container {
   background-color: #f2f2f2;
   padding: 30px 32px;
-  font-family: Montserrat
 }
 
 .discovery-container * {
@@ -333,7 +332,6 @@
 
 .discovery-modal {
   box-sizing: border-box;
-  font-family: Montserrat;
 }
 
 .discovery-modal * {
@@ -347,7 +345,6 @@
 }
 
 .discovery-modal__header-text {
-  font-family: 'Montserrat';
   margin: 6px;
 }
 
@@ -452,7 +449,6 @@
   text-transform: none;
   font-weight: bold;
   font-size: 12px;
-  font-family: Montserrat;
 }
 
 .discovery-modal__download-list-description {
