@@ -169,13 +169,13 @@ function ExplorerVisualization({
     isLocked: isComponentLocked,
     isPending: isLoadingAggsData,
   };
+  const tableColumnsOrdered =
+    tableConfig.fields && tableConfig.fields.length > 0;
   const tableProps = {
     className: 'guppy-explorer-visualization__table',
     tableConfig: {
-      fields:
-        tableConfig.fields && tableConfig.fields.length > 0
-          ? tableConfig.fields
-          : allFields,
+      fields: tableColumnsOrdered ? tableConfig.fields : allFields,
+      ordered: tableColumnsOrdered,
       linkFields: tableConfig.linkFields || [],
     },
     fetchAndUpdateRawData,
