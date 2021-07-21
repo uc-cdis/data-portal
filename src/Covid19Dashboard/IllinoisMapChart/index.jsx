@@ -1,4 +1,3 @@
-/* eslint-disable react/sort-comp */
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
@@ -93,48 +92,6 @@ class IllinoisMapChart extends React.Component {
     };
   }
 
-  setSliderDates = (id) => {
-    let workingId = id;
-    if (workingId === 'time') {
-      workingId = 'C';
-    }
-    function msToDays(ms) {
-      return Math.floor(ms / (1000 * 60 * 60 * 24));
-    }
-    const curentDateRange = this.state.dataDateRange[workingId];
-    const startDate = new Date(curentDateRange.min);
-    const endDate = new Date(curentDateRange.max);
-
-    const dateDiff = msToDays(endDate - startDate);
-    let sliderValue;
-    let { sliderDate } = this.state;
-    if (sliderDate) {
-      // match date when switching between data sets
-
-      // TODO convert sliderDate to date object
-      // calculate old dates position on new slider
-      sliderValue = msToDays(new Date(sliderDate) - startDate);
-      // if date does not exist in set, set to min date
-      if (sliderValue < 0) {
-        sliderValue = 0;
-        sliderDate = formatDate(startDate);
-      // else if date is too big
-      } else if (sliderValue > dateDiff) {
-        sliderValue = dateDiff;
-        sliderDate = formatDate(endDate);
-      }
-    } else {
-      sliderValue = dateDiff;
-      sliderDate = formatDate(endDate);
-    }
-    this.setState({
-      sliderValue,
-      sliderDate,
-      sliderDataLastUpdated: dateDiff,
-      sliderDataStartDate: startDate,
-    });
-  }
-
   componentDidUpdate() {
     if (!(this.mapData.colorsAsList === null
       && Object.entries(this.props.jsonByTime.il_county_list).length > 0)) {
@@ -201,6 +158,47 @@ class IllinoisMapChart extends React.Component {
     if (!this.state.strainData.fetchStatus) {
       this.addStrainDataToState();
     }
+  }
+
+  setSliderDates = (id) => {
+    let workingId = id;
+    if (workingId === 'time') {
+      workingId = 'C';
+    }
+    function msToDays(ms) {
+      return Math.floor(ms / (1000 * 60 * 60 * 24));
+    }
+    const curentDateRange = this.state.dataDateRange[workingId];
+    const startDate = new Date(curentDateRange.min);
+    const endDate = new Date(curentDateRange.max);
+
+    const dateDiff = msToDays(endDate - startDate);
+    let sliderValue;
+    let { sliderDate } = this.state;
+    if (sliderDate) {
+      // match date when switching between data sets
+
+      // calculate old dates position on new slider
+      sliderValue = msToDays(new Date(sliderDate) - startDate);
+      // if date does not exist in set, set to min date
+      if (sliderValue < 0) {
+        sliderValue = 0;
+        sliderDate = formatDate(startDate);
+      // else if date is too big
+      } else if (sliderValue > dateDiff) {
+        sliderValue = dateDiff;
+        sliderDate = formatDate(endDate);
+      }
+    } else {
+      sliderValue = dateDiff;
+      sliderDate = formatDate(endDate);
+    }
+    this.setState({
+      sliderValue,
+      sliderDate,
+      sliderDataLastUpdated: dateDiff,
+      sliderDataStartDate: startDate,
+    });
   }
 
   onHover = (event) => {
@@ -485,6 +483,14 @@ class IllinoisMapChart extends React.Component {
     this.setState(newState);
   }
 
+  sliderOnChange = (value) => {
+    const startDate = new Date(this.state.sliderDataStartDate);
+    startDate.setDate(startDate.getDate() + parseInt(value, 10));
+
+    const someFormattedDate = formatDate(startDate);
+    this.setState({ sliderDate: someFormattedDate, sliderValue: value });
+  }
+
   renderHoverPopup() {
     const { hoverInfo } = this.state;
 
@@ -548,14 +554,6 @@ class IllinoisMapChart extends React.Component {
       );
     }
     return null;
-  }
-
-  sliderOnChange = (value) => {
-    const startDate = new Date(this.state.sliderDataStartDate);
-    startDate.setDate(startDate.getDate() + parseInt(value, 10));
-
-    const someFormattedDate = formatDate(startDate);
-    this.setState({ sliderDate: someFormattedDate, sliderValue: value });
   }
 
   render() {
