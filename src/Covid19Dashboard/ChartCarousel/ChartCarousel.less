@@ -42,32 +42,7 @@
   z-index: 10; // place it over the "mapbox" link...
 }
 
-/** override some style for carousel's arrow and dots **/
-
-/* dots */
-.ant-carousel .slick-dots li button {
-  position: relative;
-  background: transparent;
-  padding: 10px;
-  box-sizing: content-box;
-}
-.ant-carousel .slick-dots li.slick-active button {
-  background: transparent;
-}
-.slick-dots li button:before {
-  content: " ";
-  width: 100%;
-  height: 100%;
-  font-size: 1.25rem;
-  background-color: #000;
-  opacity: 0.3;
-  display: block;
-}
-.slick-dots li.slick-active button:before {
-  opacity: 1;
-}
-
-/* arrow */
+/** override some style for carousel's arrows **/
 
 .ant-carousel .slick-arrow {
   background: var(--g3-color__smoke);
