@@ -44,24 +44,52 @@
 
 /** override some style for carousel's arrow and dots **/
 
+/* dots */
+.ant-carousel .slick-dots li button {
+  position: relative;
+  background: transparent;
+  padding: 10px;
+  box-sizing: content-box;
+}
+.ant-carousel .slick-dots li.slick-active button {
+  background: transparent;
+}
 .slick-dots li button:before {
+  content: " ";
+  width: 100%;
+  height: 100%;
   font-size: 1.25rem;
+  background-color: #000;
+  opacity: 0.3;
+  display: block;
+}
+.slick-dots li.slick-active button:before {
+  opacity: 1;
 }
 
-.slick-prev, .slick-next {
+/* arrow */
+
+.ant-carousel .slick-arrow {
   background: var(--g3-color__smoke);
   border-radius: 50%;
   transition: background-color 300ms;
   -webkit-transition: background-color 300ms;
 }
 
-.slick-prev:before, .slick-next:before {
+.ant-carousel .slick-arrow:hover,
+.ant-carousel .slick-arrow:focus {
+  background: var(--g3-color__gray);
+}
+
+.ant-carousel .slick-arrow:before {
   font-size: 0.625rem;
   content: ' ';
-  border: solid;
+  border: solid #fff;
   border-width: 0 3px 3px 0;
   display: inline-block;
   padding: 3px;
+  width: 10px;
+  height: 10px;
 }
 
 .slick-prev:hover, .slick-prev:focus, .slick-next:hover, .slick-next:focus {
