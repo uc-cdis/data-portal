@@ -11,6 +11,8 @@ async function handleDashboardData(propName, data) {
   case 'jhuGeojsonLatest':
   case 'jhuJsonByLevelLatest':
     return JSON.parse(data);
+  case 'jhuJsonByTimeLatest':
+    return JSON.parse(data);
   case 'top10ChartData':
   case 'idphDailyChartData':
     return readMultiColumnTSV(data);
