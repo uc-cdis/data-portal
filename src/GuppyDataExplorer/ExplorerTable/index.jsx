@@ -104,7 +104,11 @@ class ExplorerTable extends React.Component {
       Cell: (row) => {
         let valueStr = '';
         if (fieldStringsArray.length === 1) {
-          valueStr = row.value;
+          if (Array.isArray(row.value)) {
+            valueStr = row.value.join(', ');
+          } else {
+            valueStr = row.value;
+          }
         } else {
           const nestedChildFieldName = fieldStringsArray
             .slice(1, fieldStringsArray.length)
