@@ -8,13 +8,13 @@ interface Props {
   config: DiscoveryConfig;
   studies: {__accessible: boolean, [any: string]: any}[];
   columns: [];
-  visibleResources: [];
+  visibleResources: any[];
   accessibleFieldName: string;
   searchTerm: string;
   setPermalinkCopied: (boolean) => void;
   setModalVisible: (boolean) => void;
   setModalData: (boolean) => void;
-  selectedResources: [];
+  selectedResources: any[];
   setSelectedResources: (any) => void;
   advSearchFilterHeight: string | number;
   setAdvSearchFilterHeight: (any) => void;

@@ -94,7 +94,7 @@
 }
 
 .discovery-header__tags-container {
-  flex: 1 0 auto;
+  flex: 1 1 auto;
   height: 90%;
 }
 
@@ -109,9 +109,6 @@
 
 .discovery-header__tags {
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 }
 
 .discovery-header__tag-group {
@@ -140,10 +137,11 @@
 }
 
 .discovery-header__tag-btn {
-  cursor: pointer;
+  white-space: pre-wrap;
 }
 
 .discovery-tag {
+  cursor: pointer;
   line-height: 18px;
   font-size: 10px;
   box-sizing: border-box;
@@ -152,7 +150,7 @@
   margin-bottom: 3px;
 }
 
-.discovery-header__tag-btn:focus, .discovery-header__tag-btn:focus-within, .discovery-header__tag-btn:focus-visible {
+.discovery-tag:focus, .discovery-tag:focus-within, .discovery-tag:focus-visible {
   box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 }
 

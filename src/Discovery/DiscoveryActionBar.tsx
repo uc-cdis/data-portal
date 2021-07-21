@@ -21,7 +21,7 @@ interface User {
 }
 interface Props {
   config: DiscoveryConfig;
-  selectedResources: [];
+  selectedResources: any[];
   exportingToWorkspace: boolean;
   setExportingToWorkspace: (boolean) => void;
   filtersVisible: boolean;
@@ -29,7 +29,7 @@ interface Props {
   user: User,
 }
 
-const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: []) => {
+const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[]) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
     throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
@@ -40,8 +40,11 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
     if (study[manifestFieldName]) {
       if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
         // like FUSE
-        manifest.push(...study[manifestFieldName].map((x) => ({ ...x, commons_url: ('commons_url' in x) ?
-                                                                      x.commons_url: study.commons_url })));
+        manifest.push(...study[manifestFieldName].map((x) => ({
+          ...x,
+          commons_url: ('commons_url' in x)
+            ? x.commons_url : study.commons_url,
+        })));
       } else {
         manifest.push(...study[manifestFieldName]);
       }
@@ -55,7 +58,7 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
 
 const handleExportToWorkspaceClick = async (
   config: DiscoveryConfig,
-  selectedResources: [],
+  selectedResources: any[],
   setExportingToWorkspace: (boolean) => void,
   history: any,
 ) => {
@@ -70,8 +73,11 @@ const handleExportToWorkspaceClick = async (
     if (study[manifestFieldName]) {
       if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
         // like FUSE
-        manifest.push(...study[manifestFieldName].map((x) => ({ ...x, commons_url: ('commons_url' in x) ?
-                                                              x.commons_url: study.commons_url })));
+        manifest.push(...study[manifestFieldName].map((x) => ({
+          ...x,
+          commons_url: ('commons_url' in x)
+            ? x.commons_url : study.commons_url,
+        })));
       } else {
         manifest.push(...study[manifestFieldName]);
       }
@@ -105,7 +111,7 @@ const DiscoveryActionBar = (props: Props) => {
       { (props.config.features.advSearchFilters && props.config.features.advSearchFilters.enabled)
         && (
           <Button
-            style={{ color: 'rgb(139, 51, 105)', fontWeight: '700' }}
+            style={{ color: 'rgb(139, 51, 105)', fontWeight: 700 }}
             onClick={() => props.setFiltersVisible(!props.filtersVisible)}
             type='text'
           >
