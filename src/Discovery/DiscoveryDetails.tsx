@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Alert, Button, Drawer, Space,
+  Alert, Button, Drawer, Space, Collapse, List,
 } from 'antd';
 import {
   LockFilled,
@@ -8,10 +8,13 @@ import {
   CheckOutlined,
   UnlockOutlined,
   DoubleLeftOutlined,
+  DownloadOutlined,
 } from '@ant-design/icons';
-import { hostname } from '../localconf';
+import { hostname, userAPIPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { AccessLevel, accessibleFieldName, renderFieldContent } from './Discovery';
+
+const { Panel } = Collapse;
 
 interface Props {
   modalVisible: boolean;
@@ -20,6 +23,12 @@ interface Props {
   modalData: any;
   config: DiscoveryConfig;
   permalinkCopied: boolean;
+}
+
+interface ListItem {
+  title: string,
+  description: string,
+  guid: string
 }
 
 const DiscoveryDetails = (props: Props) => (
@@ -123,6 +132,44 @@ const DiscoveryDetails = (props: Props) => (
           );
         })}
       </div>
+      { (props.config.studyPageFields.downloadLinks && props.config.studyPageFields.downloadLinks.field
+        && props.modalData[props.config.studyPageFields.downloadLinks.field])
+        ? (
+          <Collapse className='discovery-modal__download-panel' defaultActiveKey={['1']}>
+            <Panel
+              className='discovery-modal__download-panel-header'
+              header={props.config.studyPageFields.downloadLinks.name || 'Data Download Links'}
+              key='1'
+            >
+              <List
+                itemLayout='horizontal'
+                dataSource={props.modalData[props.config.studyPageFields.downloadLinks.field]}
+                renderItem={(item:ListItem) => (
+                  <List.Item
+                    actions={[
+                      <Button
+                        className='discovery-modal__download-button'
+                        href={`${userAPIPath}/data/download/${item.guid}?expires_in=900&redirect`}
+                        target='_blank'
+                        type='text'
+                        // disable button if data has no GUID
+                        disabled={!item.guid}
+                        icon={<DownloadOutlined />}
+                      >
+                      Download File
+                      </Button>]}
+                  >
+                    <List.Item.Meta
+                      title={<div className='discovery-modal__download-list-title'>{item.title}</div>}
+                      description={<div className='discovery-modal__download-list-description'>{item.description || ''}</div>}
+                    />
+                  </List.Item>
+                )}
+              />
+            </Panel>
+          </Collapse>
+        )
+        : null}
     </div>
   </Drawer>
 );

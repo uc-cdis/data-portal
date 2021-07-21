@@ -111,7 +111,7 @@ const DiscoveryActionBar = (props: Props) => {
       { (props.config.features.advSearchFilters && props.config.features.advSearchFilters.enabled)
         && (
           <Button
-            style={{ color: 'rgb(139, 51, 105)', fontWeight: 700 }}
+            className='discovery-adv-filter-button'
             onClick={() => props.setFiltersVisible(!props.filtersVisible)}
             type='text'
           >
@@ -176,10 +176,7 @@ const DiscoveryActionBar = (props: Props) => {
             >
               <Button
                 type='default'
-                style={{
-                  color: props.selectedResources.length === 0 ? null : 'rgb(139, 51, 105)',
-                  borderColor: props.selectedResources.length === 0 ? null : 'rgb(139, 51, 105)',
-                }}
+                className={`discovery-action-bar-button${(props.selectedResources.length === 0) ? '--disabled' : ''}`}
                 disabled={props.selectedResources.length === 0}
                 loading={props.exportingToWorkspace}
                 icon={<ExportOutlined />}
