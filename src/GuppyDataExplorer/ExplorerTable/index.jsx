@@ -104,7 +104,11 @@ class ExplorerTable extends React.Component {
       Cell: (row) => {
         let valueStr = '';
         if (fieldStringsArray.length === 1) {
-          valueStr = row.value;
+          if (Array.isArray(row.value)) {
+            valueStr = row.value.join(', ');
+          } else {
+            valueStr = row.value;
+          }
         } else {
           const nestedChildFieldName = fieldStringsArray
             .slice(1, fieldStringsArray.length)
@@ -292,6 +296,9 @@ class ExplorerTable extends React.Component {
     const rootColumnsConfig = this.props.tableConfig.fields.map((field) =>
       this.buildColumnConfig(field, false, false)
     );
+    if (!this.props.tableConfig.ordered) {
+      rootColumnsConfig.sort((a, b) => a.Header.localeCompare(b.Header));
+    }
     const nestedArrayFieldNames = {};
     this.props.tableConfig.fields.forEach((field) => {
       if (field.includes('.')) {
