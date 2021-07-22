@@ -1,9 +1,10 @@
 export interface DiscoveryConfig {
     public?: boolean // If false, requires user to sign in before seeing the Discovery page
     features: {
-        exportToWorkspaceBETA: {
+        exportToWorkspace: {
             enabled: boolean
             enableDownloadManifest: boolean
+            downloadManifestButtonText?: string
             manifestFieldName: string
         }
         // explorationIntegration: {
@@ -23,7 +24,9 @@ export interface DiscoveryConfig {
                 enabled: boolean,
                 placeholder?: string
                 // searchTags: boolean, // not supported, consider removing
-                // searchableTextFields: string[], // not supported, consider removing
+                searchableTextFields?: string[] // list of properties in data to make searchable.
+                                                // if not present, only fields visible in the table
+                                                // will be searchable.
             }
         },
         authorization: {
@@ -39,13 +42,26 @@ export interface DiscoveryConfig {
             //         field: string
             //     }
             // }
+        },
+        advSearchFilters?: {
+            enabled: boolean,
+            field: string,
+            filters: {
+                key: string
+                // multiSelectBehavior?: 'AND' | 'OR' // defaults to OR // not yet supported
+                keyDisplayName?: string
+                valueDisplayNames?: {
+                    [value: string]: string
+                }
+            }[]
         }
     },
     aggregations: AggregationConfig[],
     tagSelector: {
-        title: string
+        title?: string
+        showTagCategoryNames?: boolean
     },
-    tagColumnWidth: string,
+    tagColumnWidth?: string,
     studyColumns: {
         name: string
         field: string
@@ -75,26 +91,36 @@ export interface DiscoveryConfig {
         },
         fieldsToShow: {
             groupName?: string
+            groupWidth?: 'half' | 'full' // defaults to `'half'`
+            // showBackground?: boolean // defaults to `true`
             includeName?: boolean,
             fields: StudyPageFieldConfig[]
         }[]
+        // descriptionField: {
+        //     name: string
+        //     field: string
+        //     includeIfNotAvailable?: boolean // defaults to false
+        //     valueIfNotAvailable?: string[] // defaults to 'n/a'
+        // }
     },
     minimalFieldMapping: {
         tagsListFieldName: string,
         authzField: string,
+        dataAvailabilityField?: string,
         uid: string,
-        commons: string
+        commons?: string
     },
     tagCategories: {
         name: string,
-        color: string
+        color?: string
         display: boolean
+        displayName?: string
     }[]
 }
 export interface StudyPageFieldConfig {
     name: string
     field: string
-    contentType: 'string' | 'number' | 'paragraphs' | 'link'
+    contentType: 'string' | 'number' | 'paragraphs' | 'link' | 'tags'
     includeName?: boolean
     includeIfNotAvailable?: boolean
     valueIfNotAvailable?: string | number
