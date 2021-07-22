@@ -24,7 +24,7 @@ import HomePage from './Homepage/page';
 import DocumentPage from './Document/page';
 import { fetchCoreMetadata, ReduxCoreMetadataPage } from './CoreMetadata/reduxer';
 import Indexing from './Indexing/Indexing';
-import IndexPage from './Index/page';
+// import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary';
 import ReduxPrivacyPolicy from './PrivacyPolicy/ReduxPrivacyPolicy';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
@@ -39,10 +39,9 @@ import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
-  indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
-  discoveryConfig, commonsWideAltText, ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
+  explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
+  discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
 } from './localconf';
-import { portalVersion } from './versions';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
@@ -81,7 +80,8 @@ async function init() {
       site: 'datadoghq.com',
       service: 'portal',
       env: ddEnv,
-      version: portalVersion,
+      // Specify a version number to identify the deployed version of your application in Datadog
+      // version: '1.0.0',
       sampleRate: ddSampleRate,
       trackInteractions: true,
     });
@@ -101,15 +101,6 @@ async function init() {
   );
   // FontAwesome icons
   library.add(faAngleUp, faAngleDown);
-
-  // For any platform-wide branded logos (Gen3, CTDS logos), apply standardized
-  // alt text. For the commons-specific logo, use the appName attribute to apply
-  // accessible alt text.
-  for (let i = 0; i < components.footerLogos.length; i += 1) {
-    if (Object.prototype.hasOwnProperty.call(commonsWideAltText, components.footerLogos[i].href)) {
-      components.footerLogos[i].alt = commonsWideAltText[components.footerLogos[i].href];
-    }
-  }
 
   render(
     <div>
@@ -172,8 +163,8 @@ async function init() {
                     component={
                       (props) => (
                         <ProtectedContent
-                          public={indexPublic}
-                          component={IndexPage}
+                          public={discoveryConfig.public !== false}
+                          component={Discovery}
                           {...props}
                         />
                       )
@@ -460,21 +451,22 @@ async function init() {
                         }
                       />
                     )}
-                  {isEnabled('discovery') && (
-                    <Route
-                      exact
-                      path='/discovery/:studyUID'
-                      component={
-                        (props) => (
-                          <ProtectedContent
-                            public
-                            component={Discovery}
-                            {...props}
-                          />
-                        )
-                      }
-                    />
-                  )}
+                  {isEnabled('discovery')
+                    && (
+                      <Route
+                        exact
+                        path='/discovery/:studyUID'
+                        component={
+                          (props) => (
+                            <ProtectedContent
+                              public
+                              component={Discovery}
+                              {...props}
+                            />
+                          )
+                        }
+                      />
+                    )}
                   <Route
                     path='/not-found'
                     component={NotFound}
