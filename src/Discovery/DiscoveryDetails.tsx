@@ -10,7 +10,7 @@ import {
   DoubleLeftOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
-import { hostname, userAPIPath } from '../localconf';
+import { hostname, fenceDownloadPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { AccessLevel, accessibleFieldName, renderFieldContent } from './Discovery';
 
@@ -149,7 +149,7 @@ const DiscoveryDetails = (props: Props) => (
                     actions={[
                       <Button
                         className='discovery-modal__download-button'
-                        href={`${userAPIPath}/data/download/${item.guid}?expires_in=900&redirect`}
+                        href={`${fenceDownloadPath}/${item.guid}?expires_in=900&redirect`}
                         target='_blank'
                         type='text'
                         // disable button if data has no GUID
