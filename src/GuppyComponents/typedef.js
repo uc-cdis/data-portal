@@ -11,6 +11,10 @@
  */
 
 /**
+ * @typedef {{ [x: string]: OptionFilter | RangeFilter }} SimpleFilterState
+ */
+
+/**
  * @typedef {{ [x: string]: OptionFilter | RangeFilter }} FilterState
  */
 
@@ -27,7 +31,11 @@
 
 /**
  * @typedef {Object} GqlSimpleAndFilter
- * @property {(GqlInFilter | GqlRangeFilter | GqlSimpleAndFilter)[]} AND
+ * @property {GqlSimpleFilter[]} AND
+ */
+
+/**
+ * @typedef {GqlInFilter | GqlRangeFilter | GqlSimpleAndFilter} GqlSimpleFilter
  */
 
 /**
@@ -39,9 +47,9 @@
 
 /**
  * @typedef {Object} GqlAndFilter
- * @property {(GqlInFilter | GqlRangeFilter | GqlSimpleAndFilter | GqlNestedFilter)[]} AND
+ * @property {GqlFilter[]} AND
  */
 
 /**
- * @typedef {GqlAndFilter | GqlInFilter | GqlRangeFilter | GqlNestedFilter} GqlFilter
+ * @typedef {GqlSimpleFilter | GqlNestedFilter | GqlAndFilter} GqlFilter
  */
