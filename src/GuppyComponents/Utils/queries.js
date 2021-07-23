@@ -360,8 +360,7 @@ function parseAnchoredFilter(anchorName, { filter }) {
       continue;
 
     if (path in nestedFacetIndices) {
-      const nestedFilter = facetsList[nestedFacetIndices[path]];
-      if ('nested' in nestedFilter) nestedFilter.nested.AND.push(facetsPiece);
+      facetsList[nestedFacetIndices[path]].nested.AND.push(facetsPiece);
     } else {
       nestedFacetIndices[path] = facetIndex;
       facetsList.push({
