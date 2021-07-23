@@ -56,9 +56,11 @@ describe('Get GQL filter from filter object from', () => {
   });
 
   test('an invalid filter', () => {
-    const filter = { a: {} };
+    const fieldName = 'a';
+    const filterValue = {};
+    const filter = { [fieldName]: filterValue };
     expect(() => getGQLFilter(filter)).toThrow(
-      `Invalid filter object ${filter.a}`
+      `Invalid filter object for "${fieldName}": ${JSON.stringify(filterValue)}`
     );
   });
 

@@ -297,7 +297,9 @@ export function queryGuppyForRawData({
  * @returns {GqlInFilter | GqlSimpleAndFilter | undefined}
  */
 function parseSimpleFilter(fieldName, filterValues) {
-  const invalidFilterError = new Error(`Invalid filter object ${filterValues}`);
+  const invalidFilterError = new Error(
+    `Invalid filter object for "${fieldName}": ${JSON.stringify(filterValues)}`
+  );
   if (filterValues === undefined) throw invalidFilterError;
 
   // a range-type filter
