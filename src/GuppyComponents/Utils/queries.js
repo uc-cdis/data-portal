@@ -360,18 +360,16 @@ function parseAnchoredFilter(anchorName, { filter }) {
       continue;
 
     if (path in nestedFacetIndices) {
-      const nestedFacetIndex = nestedFacetIndices[path];
-      const nestedFilter = facetsList[nestedFacetIndex];
+      const nestedFilter = facetsList[nestedFacetIndices[path]];
       if ('nested' in nestedFilter) nestedFilter.nested.AND.push(facetsPiece);
     } else {
       nestedFacetIndices[path] = facetIndex;
-      const nestedFilter = {
+      facetsList.push({
         nested: {
           path,
           AND: [anchorPiece, facetsPiece],
         },
-      };
-      facetsList.push(nestedFilter);
+      });
       facetIndex += 1;
     }
   }
@@ -403,19 +401,17 @@ export function getGQLFilter(filter) {
         const { path, AND } = nested;
         const facetsPiece = { AND };
         if (path in nestedFacetIndices) {
-          const nestedFacetIndex = nestedFacetIndices[path];
-          const nestedFilter = facetsList[nestedFacetIndex];
+          const nestedFilter = facetsList[nestedFacetIndices[path]];
           if ('nested' in nestedFilter)
             nestedFilter.nested.AND.push(facetsPiece);
         } else {
           nestedFacetIndices[path] = facetIndex;
-          const nestedFilter = {
+          facetsList.push({
             nested: {
               path,
               AND: [facetsPiece],
             },
-          };
-          facetsList.push(nestedFilter);
+          });
           facetIndex += 1;
         }
       }
@@ -431,18 +427,16 @@ export function getGQLFilter(filter) {
     if (isNestedField) {
       const path = fieldStr; // parent path
       if (path in nestedFacetIndices) {
-        const nestedFacetIndex = nestedFacetIndices[path];
-        const nestedFilter = facetsList[nestedFacetIndex];
+        const nestedFilter = facetsList[nestedFacetIndices[path]];
         if ('nested' in nestedFilter) nestedFilter.nested.AND.push(facetsPiece);
       } else {
         nestedFacetIndices[path] = facetIndex;
-        const nestedFilter = {
+        facetsList.push({
           nested: {
             path,
             AND: [facetsPiece],
           },
-        };
-        facetsList.push(nestedFilter);
+        });
         facetIndex += 1;
       }
     } else {
