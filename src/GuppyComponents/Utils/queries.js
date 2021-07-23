@@ -347,29 +347,24 @@ function parseAnchoredFilters(anchorName, anchoredFilterState) {
   const [anchorFieldName, anchorValue] = anchorName.split(':');
   const anchorFilter = { IN: { [anchorFieldName]: [anchorValue] } };
 
-  let nestedFilterIndex = 0;
   /** @type {GqlNestedFilter[]} */
   const nestedFilters = [];
   /** @type {{ [path: string]: number }} */
   const nestedFilterIndices = {};
+  let nestedFilterIndex = 0;
 
   for (const [filterKey, filterValues] of Object.entries(filterState)) {
     const [path, fieldName] = filterKey.split('.');
     const simpleFilter = parseSimpleFilter(fieldName, filterValues);
 
     if (simpleFilter !== undefined) {
-      if (path in nestedFilterIndices) {
-        nestedFilters[nestedFilterIndices[path]].nested.AND.push(simpleFilter);
-      } else {
+      if (!(path in nestedFilterIndices)) {
         nestedFilterIndices[path] = nestedFilterIndex;
-        nestedFilters.push({
-          nested: {
-            path,
-            AND: [anchorFilter, simpleFilter],
-          },
-        });
+        nestedFilters.push({ nested: { path, AND: [anchorFilter] } });
         nestedFilterIndex += 1;
       }
+
+      nestedFilters[nestedFilterIndices[path]].nested.AND.push(simpleFilter);
     }
   }
 
@@ -388,11 +383,11 @@ export function getGQLFilter(filterState) {
   /** @type {(GqlInFilter | GqlSimpleAndFilter)[]} */
   const simpleFilters = [];
 
-  let nestedFilterIndex = 0;
   /** @type {GqlNestedFilter[]} */
   const nestedFilters = [];
   /** @type {{ [path: string]: number }} */
   const nestedFilterIndices = {};
+  let nestedFilterIndex = 0;
 
   for (const [filterKey, filterValues] of Object.entries(filterState)) {
     const [fieldStr, nestedFieldStr] = filterKey.split('.');
@@ -402,21 +397,14 @@ export function getGQLFilter(filterState) {
     if ('filter' in filterValues) {
       for (const { nested } of parseAnchoredFilters(fieldName, filterValues)) {
         const { path, AND } = nested;
-        const anchoredFilter = { AND };
-        if (path in nestedFilterIndices) {
-          nestedFilters[nestedFilterIndices[path]].nested.AND.push(
-            anchoredFilter
-          );
-        } else {
+
+        if (!(path in nestedFilterIndices)) {
           nestedFilterIndices[path] = nestedFilterIndex;
-          nestedFilters.push({
-            nested: {
-              path,
-              AND: [anchoredFilter],
-            },
-          });
+          nestedFilters.push({ nested: { path, AND: [] } });
           nestedFilterIndex += 1;
         }
+
+        nestedFilters[nestedFilterIndices[path]].nested.AND.push({ AND });
       }
     } else {
       const simpleFilter = parseSimpleFilter(fieldName, filterValues);
@@ -424,20 +412,16 @@ export function getGQLFilter(filterState) {
       if (simpleFilter !== undefined) {
         if (isNestedField) {
           const path = fieldStr; // parent path
-          if (path in nestedFilterIndices) {
-            nestedFilters[nestedFilterIndices[path]].nested.AND.push(
-              simpleFilter
-            );
-          } else {
+
+          if (!(path in nestedFilterIndices)) {
             nestedFilterIndices[path] = nestedFilterIndex;
-            nestedFilters.push({
-              nested: {
-                path,
-                AND: [simpleFilter],
-              },
-            });
+            nestedFilters.push({ nested: { path, AND: [] } });
             nestedFilterIndex += 1;
           }
+
+          nestedFilters[nestedFilterIndices[path]].nested.AND.push(
+            simpleFilter
+          );
         } else {
           simpleFilters.push(simpleFilter);
         }
