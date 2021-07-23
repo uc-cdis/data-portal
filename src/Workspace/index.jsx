@@ -423,9 +423,6 @@ class Workspace extends React.Component {
                     <Col className='gutter-row' span={6}>
                       <Statistic title='AWS Account Region' value={this.state.payModel.region || 'N/A'} />
                     </Col>
-                    <Col className='gutter-row' span={6}>
-                      <Statistic title='Total Charges (USD)' value={this.state.payModel.cost || 123.45} precision={2} />
-                    </Col>
                   </Row>
                 </Panel>
               </Collapse>
