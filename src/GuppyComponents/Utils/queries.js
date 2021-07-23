@@ -383,11 +383,15 @@ export function getGQLFilter(filter) {
   if (filter === undefined || Object.keys(filter).length === 0)
     return undefined;
 
-  let facetIndex = 0;
-  /** @type {(GqlInFilter | GqlSimpleAndFilter | GqlNestedFilter)[]} */
+  /** @type {(GqlInFilter | GqlSimpleAndFilter)[]} */
   const facetsList = [];
+
+  let nestedFacetsIndex = 0;
+  /** @type {GqlNestedFilter[]} */
+  const nestedFacetsList = [];
   /** @type {{ [path: string]: number }} */
   const nestedFacetIndices = {};
+
   for (const [field, filterValues] of Object.entries(filter)) {
     const [fieldStr, nestedFieldStr] = field.split('.');
     const isNestedField = nestedFieldStr !== undefined;
@@ -398,18 +402,17 @@ export function getGQLFilter(filter) {
         const { path, AND } = nested;
         const facetsPiece = { AND };
         if (path in nestedFacetIndices) {
-          const nestedFilter = facetsList[nestedFacetIndices[path]];
-          if ('nested' in nestedFilter)
-            nestedFilter.nested.AND.push(facetsPiece);
+          const nestedFilter = nestedFacetsList[nestedFacetIndices[path]];
+          nestedFilter.nested.AND.push(facetsPiece);
         } else {
-          nestedFacetIndices[path] = facetIndex;
-          facetsList.push({
+          nestedFacetIndices[path] = nestedFacetsIndex;
+          nestedFacetsList.push({
             nested: {
               path,
               AND: [facetsPiece],
             },
           });
-          facetIndex += 1;
+          nestedFacetsIndex += 1;
         }
       }
     } else {
@@ -419,28 +422,26 @@ export function getGQLFilter(filter) {
         if (isNestedField) {
           const path = fieldStr; // parent path
           if (path in nestedFacetIndices) {
-            const nestedFilter = facetsList[nestedFacetIndices[path]];
-            if ('nested' in nestedFilter)
-              nestedFilter.nested.AND.push(facetsPiece);
+            const nestedFilter = nestedFacetsList[nestedFacetIndices[path]];
+            nestedFilter.nested.AND.push(facetsPiece);
           } else {
-            nestedFacetIndices[path] = facetIndex;
-            facetsList.push({
+            nestedFacetIndices[path] = nestedFacetsIndex;
+            nestedFacetsList.push({
               nested: {
                 path,
                 AND: [facetsPiece],
               },
             });
-            facetIndex += 1;
+            nestedFacetsIndex += 1;
           }
         } else {
           facetsList.push(facetsPiece);
-          facetIndex += 1;
         }
       }
     }
   }
 
-  return { AND: facetsList };
+  return { AND: [...facetsList, ...nestedFacetsList] };
 }
 
 /** @param {object} filterTabConfigs */
