@@ -336,112 +336,116 @@ function parseSimpleFilter(fieldName, filterValues) {
 
 /**
  * @param {string} anchorName Formatted as "[anchorFieldName]:[anchorValue]"
- * @param {AnchoredFilterState} filterValues
+ * @param {AnchoredFilterState} anchoredFilterState
  * @returns {GqlNestedFilter[]}
  */
-function parseAnchoredFilter(anchorName, { filter }) {
-  if (filter === undefined || Object.keys(filter).length === 0)
+function parseAnchoredFilters(anchorName, anchoredFilterState) {
+  const filterState = anchoredFilterState.filter;
+  if (filterState === undefined || Object.keys(filterState).length === 0)
     return undefined;
 
   const [anchorFieldName, anchorValue] = anchorName.split(':');
-  const anchorPiece = { IN: { [anchorFieldName]: [anchorValue] } };
+  const anchorFilter = { IN: { [anchorFieldName]: [anchorValue] } };
 
-  let facetIndex = 0;
+  let nestedFilterIndex = 0;
   /** @type {GqlNestedFilter[]} */
-  const facetsList = [];
+  const nestedFilters = [];
   /** @type {{ [path: string]: number }} */
-  const nestedFacetIndices = {};
-  for (const [field, filterValues] of Object.entries(filter)) {
-    const [path, fieldName] = field.split('.');
-    const facetsPiece = parseSimpleFilter(fieldName, filterValues);
+  const nestedFilterIndices = {};
 
-    if (facetsPiece !== undefined) {
-      if (path in nestedFacetIndices) {
-        facetsList[nestedFacetIndices[path]].nested.AND.push(facetsPiece);
+  for (const [filterKey, filterValues] of Object.entries(filterState)) {
+    const [path, fieldName] = filterKey.split('.');
+    const simpleFilter = parseSimpleFilter(fieldName, filterValues);
+
+    if (simpleFilter !== undefined) {
+      if (path in nestedFilterIndices) {
+        nestedFilters[nestedFilterIndices[path]].nested.AND.push(simpleFilter);
       } else {
-        nestedFacetIndices[path] = facetIndex;
-        facetsList.push({
+        nestedFilterIndices[path] = nestedFilterIndex;
+        nestedFilters.push({
           nested: {
             path,
-            AND: [anchorPiece, facetsPiece],
+            AND: [anchorFilter, simpleFilter],
           },
         });
-        facetIndex += 1;
+        nestedFilterIndex += 1;
       }
     }
   }
 
-  return facetsList;
+  return nestedFilters;
 }
 
 /**
  * Convert filter obj into GQL filter format
- * @param {FilterState} filter
+ * @param {FilterState} filterState
  * @returns {GqlFilter}
  */
-export function getGQLFilter(filter) {
-  if (filter === undefined || Object.keys(filter).length === 0)
+export function getGQLFilter(filterState) {
+  if (filterState === undefined || Object.keys(filterState).length === 0)
     return undefined;
 
   /** @type {(GqlInFilter | GqlSimpleAndFilter)[]} */
-  const facetsList = [];
+  const simpleFilters = [];
 
-  let nestedFacetsIndex = 0;
+  let nestedFilterIndex = 0;
   /** @type {GqlNestedFilter[]} */
-  const nestedFacetsList = [];
+  const nestedFilters = [];
   /** @type {{ [path: string]: number }} */
-  const nestedFacetIndices = {};
+  const nestedFilterIndices = {};
 
-  for (const [field, filterValues] of Object.entries(filter)) {
-    const [fieldStr, nestedFieldStr] = field.split('.');
+  for (const [filterKey, filterValues] of Object.entries(filterState)) {
+    const [fieldStr, nestedFieldStr] = filterKey.split('.');
     const isNestedField = nestedFieldStr !== undefined;
     const fieldName = isNestedField ? nestedFieldStr : fieldStr;
 
     if ('filter' in filterValues) {
-      for (const { nested } of parseAnchoredFilter(fieldName, filterValues)) {
+      for (const { nested } of parseAnchoredFilters(fieldName, filterValues)) {
         const { path, AND } = nested;
-        const facetsPiece = { AND };
-        if (path in nestedFacetIndices) {
-          const nestedFilter = nestedFacetsList[nestedFacetIndices[path]];
-          nestedFilter.nested.AND.push(facetsPiece);
+        const anchoredFilter = { AND };
+        if (path in nestedFilterIndices) {
+          nestedFilters[nestedFilterIndices[path]].nested.AND.push(
+            anchoredFilter
+          );
         } else {
-          nestedFacetIndices[path] = nestedFacetsIndex;
-          nestedFacetsList.push({
+          nestedFilterIndices[path] = nestedFilterIndex;
+          nestedFilters.push({
             nested: {
               path,
-              AND: [facetsPiece],
+              AND: [anchoredFilter],
             },
           });
-          nestedFacetsIndex += 1;
+          nestedFilterIndex += 1;
         }
       }
     } else {
-      const facetsPiece = parseSimpleFilter(fieldName, filterValues);
+      const simpleFilter = parseSimpleFilter(fieldName, filterValues);
 
-      if (facetsPiece !== undefined) {
+      if (simpleFilter !== undefined) {
         if (isNestedField) {
           const path = fieldStr; // parent path
-          if (path in nestedFacetIndices) {
-            const nestedFilter = nestedFacetsList[nestedFacetIndices[path]];
-            nestedFilter.nested.AND.push(facetsPiece);
+          if (path in nestedFilterIndices) {
+            nestedFilters[nestedFilterIndices[path]].nested.AND.push(
+              simpleFilter
+            );
           } else {
-            nestedFacetIndices[path] = nestedFacetsIndex;
-            nestedFacetsList.push({
+            nestedFilterIndices[path] = nestedFilterIndex;
+            nestedFilters.push({
               nested: {
                 path,
-                AND: [facetsPiece],
+                AND: [simpleFilter],
               },
             });
-            nestedFacetsIndex += 1;
+            nestedFilterIndex += 1;
           }
         } else {
-          facetsList.push(facetsPiece);
+          simpleFilters.push(simpleFilter);
         }
       }
     }
   }
 
-  return { AND: [...facetsList, ...nestedFacetsList] };
+  return { AND: [...simpleFilters, ...nestedFilters] };
 }
 
 /** @param {object} filterTabConfigs */

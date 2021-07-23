@@ -2,39 +2,39 @@ import { getGQLFilter } from '../Utils/queries';
 
 describe('Get GQL filter from filter object from', () => {
   test('a simple option filter', async () => {
-    const filter = { a: { selectedValues: ['foo', 'bar'] } };
+    const filterState = { a: { selectedValues: ['foo', 'bar'] } };
     const gqlFilter = { AND: [{ IN: { a: ['foo', 'bar'] } }] };
-    expect(getGQLFilter(filter)).toEqual(gqlFilter);
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('a simple option filter with combine mode OR', () => {
-    const filter = {
+    const filterState = {
       a: { __combineMode: 'OR', selectedValues: ['foo', 'bar'] },
     };
     const gqlFilter = { AND: [{ IN: { a: ['foo', 'bar'] } }] };
-    expect(getGQLFilter(filter)).toEqual(gqlFilter);
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('a simple option filter with combine mode AND', () => {
-    const filter = {
+    const filterState = {
       a: { __combineMode: 'AND', selectedValues: ['foo', 'bar'] },
     };
     const gqlFilter = {
       AND: [{ AND: [{ IN: { a: ['foo'] } }, { IN: { a: ['bar'] } }] }],
     };
-    expect(getGQLFilter(filter)).toEqual(gqlFilter);
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('a simple range filter', () => {
-    const filter = { a: { lowerBound: 0, upperBound: 1 } };
+    const filterState = { a: { lowerBound: 0, upperBound: 1 } };
     const gqlFilter = {
       AND: [{ AND: [{ GTE: { a: 0 } }, { LTE: { a: 1 } }] }],
     };
-    expect(getGQLFilter(filter)).toEqual(gqlFilter);
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('simple filters', () => {
-    const filter = {
+    const filterState = {
       a: { selectedValues: ['foo', 'bar'] },
       b: { __combineMode: 'AND', selectedValues: ['foo', 'bar'] },
       c: { lowerBound: 0, upperBound: 1 },
@@ -46,34 +46,34 @@ describe('Get GQL filter from filter object from', () => {
         { AND: [{ GTE: { c: 0 } }, { LTE: { c: 1 } }] },
       ],
     };
-    expect(getGQLFilter(filter)).toEqual(gqlFilter);
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('a combine mode only filter', () => {
-    const filter = { a: { __combineMode: 'OR' } };
+    const filterState = { a: { __combineMode: 'OR' } };
     const gqlFilter = { AND: [] };
-    expect(getGQLFilter(filter)).toEqual(gqlFilter);
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('an invalid filter', () => {
     const fieldName = 'a';
     const filterValue = {};
-    const filter = { [fieldName]: filterValue };
-    expect(() => getGQLFilter(filter)).toThrow(
+    const filterState = { [fieldName]: filterValue };
+    expect(() => getGQLFilter(filterState)).toThrow(
       `Invalid filter object for "${fieldName}": ${JSON.stringify(filterValue)}`
     );
   });
 
   test('a nested filter', () => {
-    const filter = { 'a.b': { selectedValues: ['foo', 'bar'] } };
+    const filterState = { 'a.b': { selectedValues: ['foo', 'bar'] } };
     const gqlFilter = {
       AND: [{ nested: { path: 'a', AND: [{ IN: { b: ['foo', 'bar'] } }] } }],
     };
-    expect(getGQLFilter(filter)).toEqual(gqlFilter);
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('nested filters with same parent path', () => {
-    const filter = {
+    const filterState = {
       'a.b': { selectedValues: ['foo', 'bar'] },
       'a.c': { lowerBound: 0, upperBound: 1 },
     };
@@ -90,11 +90,11 @@ describe('Get GQL filter from filter object from', () => {
         },
       ],
     };
-    expect(getGQLFilter(filter)).toEqual(gqlFilter);
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('nested filters with different parent paths', () => {
-    const filter = {
+    const filterState = {
       'a.b': { selectedValues: ['foo', 'bar'] },
       'c.d': { lowerBound: 0, upperBound: 1 },
     };
@@ -114,11 +114,11 @@ describe('Get GQL filter from filter object from', () => {
         },
       ],
     };
-    expect(getGQLFilter(filter)).toEqual(gqlFilter);
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('an anchored filter state', () => {
-    const filter = {
+    const filterState = {
       'x:y': {
         filter: {
           'a.b': { selectedValues: ['foo', 'bar'] },
@@ -153,11 +153,11 @@ describe('Get GQL filter from filter object from', () => {
         },
       ],
     };
-    expect(getGQLFilter(filter)).toEqual(gqlFilter);
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('various filters', () => {
-    const filter = {
+    const filterState = {
       a: { selectedValues: ['foo', 'bar'] },
       'b.c': { __combineMode: 'AND', selectedValues: ['foo', 'bar'] },
       'b.d': { lowerBound: 0, upperBound: 1 },
@@ -184,6 +184,6 @@ describe('Get GQL filter from filter object from', () => {
         },
       ],
     };
-    expect(getGQLFilter(filter)).toEqual(gqlFilter);
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 });
