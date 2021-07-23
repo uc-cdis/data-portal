@@ -40,19 +40,25 @@
   object-fit: contain;
 }
 
-.index-page .ant-carousel .slick-dots-bottom {
-  bottom: 5px;
+/* dots */
+.ant-carousel .slick-dots li button {
+  position: relative;
+  background: transparent;
+  padding: 10px;
+  box-sizing: content-box;
 }
-
-.index-page .ant-carousel .slick-dots {
-  height: 5px;
+.ant-carousel .slick-dots li.slick-active button {
+  background: transparent;
 }
-
-.index-page .ant-carousel .slick-dots li button {
-  background: #000;
+.slick-dots li button:before {
+  content: " ";
+  width: 100%;
   height: 100%;
+  font-size: 1.25rem;
+  background-color: #000;
+  opacity: 0.3;
+  display: block;
 }
-
-.index-page .ant-carousel .slick-dots li.slick-active button {
-  background: #000;
+.slick-dots li.slick-active button:before {
+  opacity: 1;
 }
