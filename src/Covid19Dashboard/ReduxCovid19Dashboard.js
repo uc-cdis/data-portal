@@ -10,8 +10,8 @@ async function handleDashboardData(propName, data) {
     return readQuotedList(data);
   case 'jhuGeojsonLatest':
   case 'jhuJsonByLevelLatest':
-    return JSON.parse(data);
   case 'jhuJsonByTimeLatest':
+  case 'vaccinesByCountyByDate':
     return JSON.parse(data);
   case 'top10ChartData':
   case 'idphDailyChartData':
