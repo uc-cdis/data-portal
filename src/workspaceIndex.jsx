@@ -31,6 +31,7 @@ import {
   basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, enableDAPTracker,
   ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
 } from './localconf';
+import { portalVersion } from './versions';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import { DAPRouteTracker } from './components/DAPAnalytics';
@@ -62,8 +63,7 @@ async function init() {
       site: 'datadoghq.com',
       service: 'portal',
       env: ddEnv,
-      // Specify a version number to identify the deployed version of your application in Datadog
-      // version: '1.0.0',
+      version: portalVersion,
       sampleRate: ddSampleRate,
       trackInteractions: true,
     });

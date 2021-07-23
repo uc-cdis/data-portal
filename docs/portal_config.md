@@ -398,13 +398,19 @@ Below is an example, with inline comments describing what each JSON block config
     "dropdowns": {} // optional; dropdown groupings for buttons
   },
   "discoveryConfig": { // config for Discovery page. Required if 'featureFlags.discovery' is true. See src/Discovery/DiscoveryConfig.d.ts for Typescript schema.
+    "requireLogin": false, // optional, defaults to false. If true, requires user to sign in before seeing the Discovery page
     "public": true, // optional, defaults to true. If false, requires user to sign in before seeing the Discovery page
     "features": {
-      "exportToWorkspaceBETA": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
+      "exportToWorkspace": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
           "enable": boolean
           "enableDownloadManifest": boolean // enables a button which allows user to download a manifest file for gen3 client
+          "downloadManifestButtonText": string // text to be displayed on the download manifest button
           "manifestFieldName": string // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
-      }
+          "documentationLinks": {
+              "gen3Client": string // link to documentation about the gen3 client. Used for button tooltips
+              "gen3Workspaces": string // link to documentation about gen3 workspaces. Used for button tooltips.
+          }
+      },
       "pageTitle": {
         "enabled": true,
         "text": "My Special Test Discovery Page"
@@ -414,21 +420,24 @@ Below is an example, with inline comments describing what each JSON block config
           "enabled": true
         }
       },
+      "advSearchFilters": {
+        "enabled": true
+      },
       "authorization": {
         "enabled": true // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
       }
     },
     "aggregations": [ // configures the statistics at the top of the discovery page (e.g. 'XX Studies', 'XX,XXX Subjects')
-        {
-            "name": "Studies",
-            "field": "study_id",
-            "type": "count" // count of rows in data where `field` is non-empty
-        },
-        {
-            "name": "Total Subjects",
-            "field": "_subjects_count",
-            "type": "sum" // sums together all numeric values in `row[field]`. `field` must be a numeric field.
-        }
+      {
+        "name": "Studies",
+        "field": "study_id",
+        "type": "count" // count of rows in data where `field` is non-empty
+      },
+      {
+        "name": "Total Subjects",
+        "field": "_subjects_count",
+        "type": "sum" // sums together all numeric values in `row[field]`. `field` must be a numeric field.
+      }
     ],
     "tagSelector": {
       "title": "Associated tags organized by category"
@@ -536,13 +545,15 @@ Below is an example, with inline comments describing what each JSON block config
     "minimalFieldMapping": { // maps
       "tagsListFieldName": "tags", // required; the field which contains the list of tags (format: [{name: string, category: string}] )
       "authzField": "authz", // optional if features.authorization.enabled is false, otherwise required
+      "dataAvailabilityField": "data_availability", // optional, for checking if a study has data pending to be available
       "uid": "study_id" // required; a unique identifier for each study. Can be any unique value and does not have to have any special meaning (eg does not need to be a GUID)
     },
     "tagCategories": [ // configures the categories displayed in the tag selector. If a tag category appears in the `tagsListFieldName` field but is not configured here, it will not be displayed in the tag selector.
       {
         "name": "Program", // this configures the tag category name that will be shown on the tag selector
         "color": "rgba(129, 211, 248, 1)", // color can be any vaid CSS color string, including hex, rgb, rgba, hsl
-        "display": true
+        "display": true,
+        "displayName": "All Programs" // optional string to customize tag category display name
       },
       {
         "name": "Study Registration",

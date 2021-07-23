@@ -142,6 +142,7 @@ const entry = {
   workspaceBundle: './src/workspaceIndex.jsx',
   covid19Bundle: './src/covid19Index.jsx',
   nctBundle: './src/nctIndex.jsx',
+  healBundle: './src/healIndex.jsx',
 };
 
 // if GEN3_BUNDLE is set with a value
@@ -153,24 +154,35 @@ if (process.env.GEN3_BUNDLE) {
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
+    delete entry.healBundle;
     break;
   case 'covid19':
     entry.bundle = entry.covid19Bundle;
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
+    delete entry.healBundle;
     break;
   case 'nct':
     entry.bundle = entry.nctBundle;
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
+    delete entry.healBundle;
+    break;
+  case 'heal':
+    entry.bundle = entry.healBundle;
+    delete entry.workspaceBundle;
+    delete entry.covid19Bundle;
+    delete entry.nctBundle;
+    delete entry.healBundle;
     break;
   default:
     // by default we build for commons bundle
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
+    delete entry.healBundle;
     break;
   }
 }
