@@ -315,9 +315,9 @@ function parseSimpleFilter(fieldName, filterValues) {
   }
 
   // an option-type filter
-  if ('selectedValues' in filterValues) {
+  if ('selectedValues' in filterValues || '__combineMode' in filterValues) {
     const { selectedValues, __combineMode } = filterValues;
-    if (selectedValues.length > 0)
+    if (selectedValues?.length > 0)
       return __combineMode === 'AND'
         ? {
             AND: selectedValues.map((selectedValue) => ({
