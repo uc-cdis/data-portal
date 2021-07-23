@@ -16,6 +16,9 @@ if (DAPTrackingURL) {
   scriptSrcURLs.push(DAPTrackingURL);
   connectSrcURLs.push(DAPTrackingURL);
 }
+if (process.env.DATA_UPLOAD_BUCKET) {
+  connectSrcURLs.push(`https://${process.env.DATA_UPLOAD_BUCKET}.s3.amazonaws.com`);
+}
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
 }
@@ -53,6 +56,7 @@ const plugins = [
   new webpack.EnvironmentPlugin(['MAPBOX_API_TOKEN']),
   new webpack.EnvironmentPlugin(['DATADOG_APPLICATION_ID']),
   new webpack.EnvironmentPlugin(['DATADOG_CLIENT_TOKEN']),
+  new webpack.EnvironmentPlugin(['DATA_UPLOAD_BUCKET']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),
