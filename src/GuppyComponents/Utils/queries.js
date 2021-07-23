@@ -355,21 +355,19 @@ function parseAnchoredFilter(anchorName, { filter }) {
     const [path, fieldName] = field.split('.');
     const facetsPiece = parseSimpleFilter(fieldName, filterValues);
 
-    if (facetsPiece === undefined)
-      // eslint-disable-next-line no-continue
-      continue;
-
-    if (path in nestedFacetIndices) {
-      facetsList[nestedFacetIndices[path]].nested.AND.push(facetsPiece);
-    } else {
-      nestedFacetIndices[path] = facetIndex;
-      facetsList.push({
-        nested: {
-          path,
-          AND: [anchorPiece, facetsPiece],
-        },
-      });
-      facetIndex += 1;
+    if (facetsPiece !== undefined) {
+      if (path in nestedFacetIndices) {
+        facetsList[nestedFacetIndices[path]].nested.AND.push(facetsPiece);
+      } else {
+        nestedFacetIndices[path] = facetIndex;
+        facetsList.push({
+          nested: {
+            path,
+            AND: [anchorPiece, facetsPiece],
+          },
+        });
+        facetIndex += 1;
+      }
     }
   }
 
@@ -414,33 +412,31 @@ export function getGQLFilter(filter) {
           facetIndex += 1;
         }
       }
-      // eslint-disable-next-line no-continue
-      continue;
-    }
-    const facetsPiece = parseSimpleFilter(fieldName, filterValues);
-
-    if (facetsPiece === undefined)
-      // eslint-disable-next-line no-continue
-      continue;
-
-    if (isNestedField) {
-      const path = fieldStr; // parent path
-      if (path in nestedFacetIndices) {
-        const nestedFilter = facetsList[nestedFacetIndices[path]];
-        if ('nested' in nestedFilter) nestedFilter.nested.AND.push(facetsPiece);
-      } else {
-        nestedFacetIndices[path] = facetIndex;
-        facetsList.push({
-          nested: {
-            path,
-            AND: [facetsPiece],
-          },
-        });
-        facetIndex += 1;
-      }
     } else {
-      facetsList.push(facetsPiece);
-      facetIndex += 1;
+      const facetsPiece = parseSimpleFilter(fieldName, filterValues);
+
+      if (facetsPiece !== undefined) {
+        if (isNestedField) {
+          const path = fieldStr; // parent path
+          if (path in nestedFacetIndices) {
+            const nestedFilter = facetsList[nestedFacetIndices[path]];
+            if ('nested' in nestedFilter)
+              nestedFilter.nested.AND.push(facetsPiece);
+          } else {
+            nestedFacetIndices[path] = facetIndex;
+            facetsList.push({
+              nested: {
+                path,
+                AND: [facetsPiece],
+              },
+            });
+            facetIndex += 1;
+          }
+        } else {
+          facetsList.push(facetsPiece);
+          facetIndex += 1;
+        }
+      }
     }
   }
 
