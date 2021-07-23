@@ -15,7 +15,11 @@
  */
 
 /**
- * @typedef {{ [x: string]: OptionFilter | RangeFilter }} FilterState
+ * @typedef {{ filter: SimpleFilterState }} AnchoredFilterState
+ */
+
+/**
+ * @typedef {{ [x: string]: OptionFilter | RangeFilter | AnchoredFilterState }} FilterState
  */
 
 /**
@@ -42,7 +46,7 @@
  * @typedef {Object} GqlNestedFilter
  * @property {Object} nested
  * @property {string} nested.path
- * @property {(GqlInFilter | GqlSimpleAndFilter)[]} nested.AND
+ * @property {GqlFilter[]} nested.AND
  */
 
 /**

@@ -117,6 +117,45 @@ describe('Get GQL filter from filter object from', () => {
     expect(getGQLFilter(filter)).toEqual(gqlFilter);
   });
 
+  test('an anchored filter state', () => {
+    const filter = {
+      'x:y': {
+        filter: {
+          'a.b': { selectedValues: ['foo', 'bar'] },
+          'c.d': { lowerBound: 0, upperBound: 1 },
+        },
+      },
+    };
+    const gqlFilter = {
+      AND: [
+        {
+          nested: {
+            path: 'a',
+            AND: [
+              {
+                AND: [{ IN: { x: ['y'] } }, { IN: { b: ['foo', 'bar'] } }],
+              },
+            ],
+          },
+        },
+        {
+          nested: {
+            path: 'c',
+            AND: [
+              {
+                AND: [
+                  { IN: { x: ['y'] } },
+                  { AND: [{ GTE: { d: 0 } }, { LTE: { d: 1 } }] },
+                ],
+              },
+            ],
+          },
+        },
+      ],
+    };
+    expect(getGQLFilter(filter)).toEqual(gqlFilter);
+  });
+
   test('various filters', () => {
     const filter = {
       a: { selectedValues: ['foo', 'bar'] },
