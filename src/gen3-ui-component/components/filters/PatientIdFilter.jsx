@@ -59,7 +59,7 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
       >
         <div
           className='g3-filter-section__header'
-          style={{ marginBottom: '.5rem', height: 'auto' }}
+          style={{ marginBottom: '0.875rem' }}
         >
           <div
             className='g3-filter-section__title-container'
@@ -88,10 +88,7 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
               </div>
             </Tooltip>
             {isUsingPatientIds && (
-              <div
-                className='g3-filter-section__selected-count-chip'
-                style={{ marginTop: '2px', marginBottom: '2px' }}
-              >
+              <div className='g3-filter-section__selected-count-chip'>
                 <div
                   className='g3-filter-section__range-filter-clear-btn'
                   onClick={handleReset}
