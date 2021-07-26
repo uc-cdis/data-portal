@@ -72,14 +72,13 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
       x.study_id = studyId;
       x.commons = commonsName;
       x.frontend_uid = `${commonsName}_${index}`;
+      x.name = x.short_name; // TODO: this will need to be refactored
       x._unique_id = `${commonsName}_${x._unique_id}_${index}`;
       x.commons_url = commonsInfo.commons_url;
       x.tags.push(Object({ category: 'Commons', name: commonsName }));
-      x.name = x.short_name; // TODO: this will need to be refactored
 
       // If the discoveryConfig has a tag with the same name as one of the fields on an entry,
       // add the value of that field as a tag.
-
       discoveryConfig.tagCategories.forEach((tag) => {
         if (tag.name in x) {
           if (typeof x[tag.name] === 'string') {
