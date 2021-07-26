@@ -1,5 +1,3 @@
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
@@ -26,7 +24,7 @@ import HomePage from './Homepage/page';
 import DocumentPage from './Document/page';
 import { fetchCoreMetadata, ReduxCoreMetadataPage } from './CoreMetadata/reduxer';
 import Indexing from './Indexing/Indexing';
-import Covid19IndexPage from './Index/covid19Page';
+// import IndexPage from './Index/page';
 import DataDictionary from './DataDictionary';
 import ReduxPrivacyPolicy from './PrivacyPolicy/ReduxPrivacyPolicy';
 import ProjectSubmission from './Submission/ReduxProjectSubmission';
@@ -41,10 +39,12 @@ import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
-  indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
-  ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
+  explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
+  discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
 } from './localconf';
 import { portalVersion } from './versions';
+import Analysis from './Analysis/Analysis';
+import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import { DAPRouteTracker } from './components/DAPAnalytics';
@@ -53,7 +53,9 @@ import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
+import Discovery from './Discovery';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
+import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import NotFound from './components/NotFound';
 
 // monitor user's session
@@ -161,8 +163,8 @@ async function init() {
                     component={
                       (props) => (
                         <ProtectedContent
-                          public={indexPublic}
-                          component={Covid19IndexPage}
+                          public={discoveryConfig.public !== false}
+                          component={Discovery}
                           {...props}
                         />
                       )
@@ -203,6 +205,32 @@ async function init() {
                       (props) => <ProtectedContent component={GraphQLQuery} {...props} />
                     }
                   />
+                  {
+                    isEnabled('analysis')
+                      ? (
+                        <Route
+                          exact
+                          path='/analysis/:app'
+                          component={
+                            (props) => <ProtectedContent component={ReduxAnalysisApp} {...props} />
+                          }
+                        />
+                      )
+                      : null
+                  }
+                  {
+                    isEnabled('analysis')
+                      ? (
+                        <Route
+                          exact
+                          path='/analysis'
+                          component={
+                            (props) => <ProtectedContent component={Analysis} {...props} />
+                          }
+                        />
+                      )
+                      : null
+                  }
                   <Route
                     exact
                     path='/identity'
@@ -381,6 +409,64 @@ async function init() {
                       />
                     )
                     : null}
+                  <Route
+                    exact
+                    path='/study-viewer/:dataType'
+                    component={
+                      (props) => (
+                        <ProtectedContent
+                          public
+                          component={ReduxStudyViewer}
+                          {...props}
+                        />
+                      )
+                    }
+                  />
+                  <Route
+                    exact
+                    path='/study-viewer/:dataType/:rowAccessor'
+                    component={
+                      (props) => (
+                        <ProtectedContent
+                          public
+                          component={ReduxSingleStudyViewer}
+                          {...props}
+                        />
+                      )
+                    }
+                  />
+                  {isEnabled('discovery')
+                    && (
+                      <Route
+                        exact
+                        path='/discovery'
+                        component={
+                          (props) => (
+                            <ProtectedContent
+                              public={discoveryConfig.public !== false}
+                              component={Discovery}
+                              {...props}
+                            />
+                          )
+                        }
+                      />
+                    )}
+                  {isEnabled('discovery')
+                    && (
+                      <Route
+                        exact
+                        path='/discovery/:studyUID'
+                        component={
+                          (props) => (
+                            <ProtectedContent
+                              public
+                              component={Discovery}
+                              {...props}
+                            />
+                          )
+                        }
+                      />
+                    )}
                   <Route
                     path='/not-found'
                     component={NotFound}

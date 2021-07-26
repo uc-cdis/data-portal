@@ -1,5 +1,8 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { Provider } from 'react-redux';
+import { StaticRouter } from 'react-router-dom';
+import configureMockStore from 'redux-mock-store';
 
 import Discovery from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
@@ -7,6 +10,12 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import mockData from './__mocks__/mock_mds_studies.json';
 import mockConfig from './__mocks__/mock_config.json';
 
+const mockStore = configureMockStore();
+const store = mockStore({
+  user: {
+    username: 'mock_user',
+  },
+});
 const testStudies = mockData.map((study, i) => ({ ...study, __accessible: i % 2 === 0 }));
 
 // This mock is required to avoid errors when rendering the Discovery page
@@ -35,18 +44,29 @@ describe('Configuration', () => {
   test('Page header is configurable', () => {
     const titleText = 'test title text';
     testConfig.features.pageTitle = { enabled: true, text: titleText };
-    let wrapper = mount(<Discovery
-      config={testConfig}
-      studies={testStudies}
-    />);
+    let wrapper = mount(
+      <Provider store={store}>
+        <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
+          <Discovery
+            config={testConfig}
+            studies={testStudies}
+          />
+        </StaticRouter>
+      </Provider>,
+    );
     expect(wrapper.find('.discovery-page-title').text()).toBe(titleText);
     wrapper.unmount();
 
     testConfig.features.pageTitle = { enabled: false, text: titleText };
-    wrapper = mount(<Discovery
-      config={testConfig}
-      studies={testStudies}
-    />);
+    wrapper = mount(
+      <Provider store={store}>
+        <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
+          <Discovery
+            config={testConfig}
+            studies={testStudies}
+          />
+        </StaticRouter>
+      </Provider>);
     expect(wrapper.exists('.discovery-page-title')).toBe(false);
     wrapper.unmount();
   });
@@ -54,10 +74,16 @@ describe('Configuration', () => {
   test('Search bar can be enabled/disabled', () => {
     [true, false].forEach((enabled) => {
       testConfig.features.search.searchBar.enabled = enabled;
-      const wrapper = mount(<Discovery
-        config={testConfig}
-        studies={testStudies}
-      />);
+      const wrapper = mount(
+        <Provider store={store}>
+          <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
+            <Discovery
+              config={testConfig}
+              studies={testStudies}
+            />
+          </StaticRouter>
+        </Provider>,
+      );
       expect(wrapper.exists('.discovery-search')).toBe(enabled);
 
       wrapper.unmount();
@@ -67,10 +93,16 @@ describe('Configuration', () => {
   test('Authorization checking can be enabled/disabled', () => {
     [true, false].forEach((enabled) => {
       testConfig.features.authorization.enabled = enabled;
-      const wrapper = mount(<Discovery
-        config={testConfig}
-        studies={testStudies}
-      />);
+      const wrapper = mount(
+        <Provider store={store}>
+          <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
+            <Discovery
+              config={testConfig}
+              studies={testStudies}
+            />
+          </StaticRouter>
+        </Provider>,
+      );
       // accessible column in table should be present/hidden
       expect(wrapper.exists('.discovery-table__access-icon')).toBe(enabled);
       // access info in modal should be present/hidden
@@ -90,10 +122,16 @@ describe('Modal', () => {
       testConfig.studyPageFields.header = enabled
         ? { field: testConfig.minimalFieldMapping.uid }
         : undefined;
-      const wrapper = mount(<Discovery
-        config={testConfig}
-        studies={testStudies}
-      />);
+      const wrapper = mount(
+        <Provider store={store}>
+          <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
+            <Discovery
+              config={testConfig}
+              studies={testStudies}
+            />
+          </StaticRouter>
+        </Provider>,
+      );
       wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
       const modal = wrapper.find('.discovery-modal').first();
       expect(modal.exists('.discovery-modal__header-text')).toBe(enabled);
@@ -106,10 +144,15 @@ describe('Modal', () => {
     const modalDataIndex = 2;
     const headerField = testConfig.minimalFieldMapping.uid;
     testConfig.studyPageFields.header = { field: headerField };
-    const wrapper = mount(<Discovery
-      config={testConfig}
-      studies={testStudies}
-    />);
+    const wrapper = mount(
+      <Provider store={store}>
+        <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
+          <Discovery
+            config={testConfig}
+            studies={testStudies}
+          />
+        </StaticRouter>
+      </Provider>);
     wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
     const modal = wrapper.find('.discovery-modal').first();
     const modalData = testStudies[modalDataIndex];
@@ -120,10 +163,16 @@ describe('Modal', () => {
 
   test('Modal fields show selected study\'s data with correct configuration', () => {
     const modalDataIndex = 2;
-    const wrapper = mount(<Discovery
-      config={testConfig}
-      studies={testStudies}
-    />);
+    const wrapper = mount(
+      <Provider store={store}>
+        <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
+          <Discovery
+            config={testConfig}
+            studies={testStudies}
+          />
+        </StaticRouter>
+      </Provider>,
+    );
     wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
     const modal = wrapper.find('.discovery-modal').first();
     const modalData = testStudies[modalDataIndex];
@@ -148,7 +197,7 @@ describe('Modal', () => {
 
         // expect field to show correct field name, if configured to show a field name.
         if (fieldCfg.includeName !== false) {
-          expect(field.find('.discovery-modal__attribute-name').first().text()).toBe(`${fieldCfg.name}:`);
+          expect(field.find('.discovery-modal__attribute-name').first().text()).toBe(`${fieldCfg.name}`);
         } else {
           expect(field.exists('.discovery-modal__attribute-name')).toBe(false);
         }
@@ -191,11 +240,17 @@ describe('Modal', () => {
     const permalinkStudyIndex = 5;
     const permalinkStudyData = testStudies[permalinkStudyIndex];
     const permalinkStudyUID = permalinkStudyData[testConfig.minimalFieldMapping.uid];
-    const wrapper = mount(<Discovery
-      config={testConfig}
-      studies={testStudies}
-      params={{ studyUID: permalinkStudyUID }}
-    />);
+    const wrapper = mount(
+      <Provider store={store}>
+        <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
+          <Discovery
+            config={testConfig}
+            studies={testStudies}
+            params={{ studyUID: permalinkStudyUID }}
+          />
+        </StaticRouter>
+      </Provider>,
+    );
 
     testConfig.studyPageFields.header = { field: testConfig.minimalFieldMapping.uid };
     const modal = wrapper.find('.discovery-modal').first();
@@ -210,10 +265,16 @@ describe('Modal', () => {
 describe('Table', () => {
   test('Table filters records by tags', () => {
     testConfig.features.authorization.enabled = true;
-    const wrapper = mount(<Discovery
-      config={testConfig}
-      studies={testStudies}
-    />);
+    const wrapper = mount(
+      <Provider store={store}>
+        <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
+          <Discovery
+            config={testConfig}
+            studies={testStudies}
+          />
+        </StaticRouter>
+      </Provider>,
+    );
 
     // select the `COVID 19` tag
     const targetTagValue = 'COVID 19';
