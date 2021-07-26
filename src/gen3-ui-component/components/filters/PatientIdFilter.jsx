@@ -61,6 +61,7 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
           placement='topLeft'
           overlay='Patient ID is a special filter and cannot be used in cohorts like other normal filters.'
           arrowContent={<div className='rc-tooltip-arrow-inner' />}
+          mouseLeaveDelay={0}
           trigger={['hover', 'focus']}
         >
           <div
