@@ -414,18 +414,19 @@ class Workspace extends React.Component {
                     xs: 8, sm: 16, md: 24, lg: 32,
                   }}
                   >
-                    <Col className='gutter-row' span={6}>
+                    <Col className='gutter-row' span={8}>
                       <Statistic title='Pay Model Name' value={this.state.payModel.name || 'N/A'} />
                     </Col>
-                    <Col className='gutter-row' span={6}>
+                    <Col className='gutter-row' span={8}>
                       <Statistic title='AWS Account ID' groupSeparator='' value={this.state.payModel.aws_account_id || 'N/A'} />
                     </Col>
-                    <Col className='gutter-row' span={6}>
+                    <Col className='gutter-row' span={8}>
                       <Statistic title='AWS Account Region' value={this.state.payModel.region || 'N/A'} />
                     </Col>
-                    <Col className='gutter-row' span={6}>
+                    {/* Total Charges column will be added back later */}
+                    {/* <Col className='gutter-row' span={6}>
                       <Statistic title='Total Charges (USD)' value={this.state.payModel.cost || 'N/A'} precision={2} />
-                    </Col>
+                    </Col> */}
                   </Row>
                 </Panel>
               </Collapse>
