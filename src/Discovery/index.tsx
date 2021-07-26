@@ -6,7 +6,7 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { hostname, discoveryConfig, useArboristUI } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
-import loadStudiesFromAggMDS from './aggMDSUtils';
+import { loadAuthMappingsFromWTS, loadStudiesFromAggMDS } from './aggMDSUtils';
 
 const loadStudiesFromMDS = async (): Promise<any[]> => {
   // Why `_guid_type='discovery_metadata'? We need to distinguish the discovery page studies in MDS
@@ -60,44 +60,57 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    let loadStudiesFunction;
-    if (isEnabled('discoveryUseAggMDS')) {
-      loadStudiesFunction = loadStudiesFromAggMDS;
-    } else {
-      loadStudiesFunction = loadStudiesFromMDS;
-    }
-    loadStudiesFunction().then((rawStudies) => {
-      if (props.config.features.authorization.enabled) {
-        // mark studies as accessible or inaccessible to user
-        const { authzField, dataAvailabilityField } = props.config.minimalFieldMapping;
-        // useArboristUI=true is required for userHasMethodForServiceOnResource
-        if (!useArboristUI) {
-          throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
-        }
-        const studiesWithAccessibleField = rawStudies.map((study) => {
-          let accessible: AccessLevel;
-          if (dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
-            accessible = AccessLevel.PENDING;
-          } else if (study[authzField] === undefined || study[authzField] === '') {
-            accessible = AccessLevel.NOT_AVAILABLE;
-          } else {
-            accessible = userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAuthMapping)
-              ? AccessLevel.ACCESSIBLE
-              : AccessLevel.UNACCESSIBLE;
+    async function loadStudiesWrapper() {
+      let loadStudiesFunction;
+      let getUserAuthMapping;
+      if (isEnabled('discoveryUseAggMDS')) {
+        loadStudiesFunction = loadStudiesFromAggMDS;
+        const userAuthMappings = await loadAuthMappingsFromWTS();
+        getUserAuthMapping = (study) => {
+          const authMapping = userAuthMappings[study.commons_url];
+          if (authMapping && 'authz' in authMapping) {
+            return authMapping.authz;
           }
-          return {
-            ...study,
-            __accessible: accessible,
-          };
-        });
-        setStudies(studiesWithAccessibleField);
+          return {};
+        };
       } else {
-        setStudies(rawStudies);
+        loadStudiesFunction = loadStudiesFromMDS;
+        getUserAuthMapping = () => props.userAuthMapping;
       }
-    }).catch((err) => {
-      // eslint-disable-next-line no-console
-      console.error('Error encountered while loading studies: ', err);
-    });
+      loadStudiesFunction().then((rawStudies) => {
+        if (props.config.features.authorization.enabled) {
+          // mark studies as accessible or inaccessible to user
+          const { authzField, dataAvailabilityField } = props.config.minimalFieldMapping;
+          // useArboristUI=true is required for userHasMethodForServiceOnResource
+          if (!useArboristUI) {
+            throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
+          }
+          const studiesWithAccessibleField = rawStudies.map((study) => {
+            let accessible: AccessLevel;
+            if (dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
+              accessible = AccessLevel.PENDING;
+            } else if (study[authzField] === undefined || study[authzField] === '') {
+              accessible = AccessLevel.NOT_AVAILABLE;
+            } else {
+              accessible = userHasMethodForServiceOnResource('read', '*', study[authzField], getUserAuthMapping(study))
+                ? AccessLevel.ACCESSIBLE
+                : AccessLevel.UNACCESSIBLE;
+            }
+            return {
+              ...study,
+              __accessible: accessible,
+            };
+          });
+          setStudies(studiesWithAccessibleField);
+        } else {
+          setStudies(rawStudies);
+        }
+      }).catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('Error encountered while loading studies: ', err);
+      });
+    }
+    loadStudiesWrapper();
   }, []);
 
   return (
