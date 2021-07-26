@@ -95,10 +95,10 @@ export function stringifyFilters(filters) {
   let filterStr = '';
   for (const [key, value] of Object.entries(filters)) {
     filterStr += `* ${capitalizeFirstLetter(key)}\n`;
-    if (value.selectedValues !== undefined)
+    if ('selectedValues' in value)
       for (const selected of value.selectedValues)
         filterStr += `\t- '${selected}'\n`;
-    else
+    else if ('lowerBound' in value)
       filterStr += `\t- from: ${value.lowerBound}\n\t- to: ${value.upperBound}\n`;
   }
 
