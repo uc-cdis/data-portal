@@ -33,7 +33,6 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
   });
 
   return (
-
     <Table
       loading={props.studies.length === 0}
       width={'500px'}
