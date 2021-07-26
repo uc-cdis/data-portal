@@ -1,23 +1,7 @@
-/**
- * @typedef {object} OptionFilterItem
- * @property {string[]} selectedValues
- * @property {never} lowerBound
- * @property {never} upperBound
- */
+/// <reference path="../../GuppyComponents/typedef.js" />
 
 /**
- * @typedef {object} RangeFilterItem
- * @property {number} lowerBound
- * @property {number} upperBound
- * @property {never} selectedValues
- */
-
-/**
- * @typedef {OptionFilterItem | RangeFilterItem} ExplorerFilterItem
- */
-
-/**
- * @typedef {{[x: string]: ExplorerFilterItem}} ExplorerFilters
+ * @typedef {FilterState} ExplorerFilters
  */
 
 /**
