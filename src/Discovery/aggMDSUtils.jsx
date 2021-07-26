@@ -16,18 +16,9 @@ const retrieveCommonsInfo = async (commonsName) => {
  * getUniqueTags returns a reduced subset of unique tags for the given tags.
  *
  * @param {*} tags
- * @returns
+ * @returns array with duplicates removed
  */
-const getUniqueTags = (tags) => tags.reduce((tagsSoFar, nextTag) => {
-  if (tagsSoFar.has(nextTag.name)) {
-    return tagsSoFar;
-  }
-  tagsSoFar.set(nextTag.name, {
-    category: nextTag.category,
-    name: nextTag.name,
-  });
-  return tagsSoFar;
-}, new Map());
+const getUniqueTags = ((tags) => tags.filter((v, i, a) => a.findIndex((t) => (t.category === v.category && t.name === v.name)) === i));
 
 const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
