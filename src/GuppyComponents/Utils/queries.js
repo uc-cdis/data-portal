@@ -2,6 +2,7 @@ import fetch from 'isomorphic-fetch';
 import flat from 'flat';
 import papaparse from 'papaparse';
 import { FILE_DELIMITERS } from './const';
+import '../typedef';
 
 const graphqlEndpoint = '/graphql';
 const downloadEndpoint = '/download';
@@ -291,75 +292,144 @@ export function queryGuppyForRawData({
 }
 
 /**
- * Convert filter obj into GQL filter format
- * @param {object | undefined} filter
+ * @param {string} fieldName
+ * @param {RangeFilter | OptionFilter} filterValues
+ * @returns {GqlInFilter | GqlSimpleAndFilter | undefined}
  */
-export function getGQLFilter(filter) {
-  if (filter === undefined || Object.keys(filter).length === 0)
+function parseSimpleFilter(fieldName, filterValues) {
+  const invalidFilterError = new Error(
+    `Invalid filter object for "${fieldName}": ${JSON.stringify(filterValues)}`
+  );
+  if (filterValues === undefined) throw invalidFilterError;
+
+  // a range-type filter
+  if ('lowerBound' in filterValues) {
+    const { lowerBound, upperBound } = filterValues;
+    if (typeof lowerBound === 'number' && typeof upperBound === 'number')
+      return {
+        AND: [
+          { GTE: { [fieldName]: lowerBound } },
+          { LTE: { [fieldName]: upperBound } },
+        ],
+      };
+  }
+
+  // an option-type filter
+  if ('selectedValues' in filterValues || '__combineMode' in filterValues) {
+    const { selectedValues, __combineMode } = filterValues;
+    if (selectedValues?.length > 0)
+      return __combineMode === 'AND'
+        ? {
+            AND: selectedValues.map((selectedValue) => ({
+              IN: { [fieldName]: [selectedValue] },
+            })),
+          }
+        : { IN: { [fieldName]: selectedValues } };
+
+    if (__combineMode !== undefined)
+      // with a combine setting only - ignore it.
+      return undefined;
+  }
+
+  throw invalidFilterError;
+}
+
+/**
+ * @param {string} anchorName Formatted as "[anchorFieldName]:[anchorValue]"
+ * @param {AnchoredFilterState} anchoredFilterState
+ * @returns {GqlNestedFilter[]}
+ */
+function parseAnchoredFilters(anchorName, anchoredFilterState) {
+  const filterState = anchoredFilterState.filter;
+  if (filterState === undefined || Object.keys(filterState).length === 0)
     return undefined;
 
-  let facetIndex = 0;
-  const facetsList = [];
-  const nestedFacetIndices = {};
-  for (const [field, filterValues] of Object.entries(filter)) {
-    const [fieldStr, nestedFieldStr] = field.split('.');
-    const isNestedField = nestedFieldStr !== undefined;
-    const fieldName = isNestedField ? nestedFieldStr : fieldStr;
+  const [anchorFieldName, anchorValue] = anchorName.split(':');
+  const anchorFilter = { IN: { [anchorFieldName]: [anchorValue] } };
 
-    const isRangeFilter =
-      typeof filterValues.lowerBound !== 'undefined' &&
-      typeof filterValues.upperBound !== 'undefined';
-    const hasSelectedValues = filterValues?.selectedValues?.length > 0;
+  /** @type {GqlNestedFilter[]} */
+  const nestedFilters = [];
+  /** @type {{ [path: string]: number }} */
+  const nestedFilterIndices = {};
+  let nestedFilterIndex = 0;
 
-    /**
-     * @typedef {Object} FacetsPiece
-     * @property {{ [x: string]: any }[]} [AND]
-     * @property {{ [x: string]: string[] }} [IN]
-     * @property {Object} [nested]
-     * @property {string} nested.path
-     * @property {{ [x: string]: any }[]} nested.AND
-     */
-    /** @type {FacetsPiece} */
-    const facetsPiece = {};
-    if (isRangeFilter)
-      facetsPiece.AND = [
-        { GTE: { [fieldName]: filterValues.lowerBound } },
-        { LTE: { [fieldName]: filterValues.upperBound } },
-      ];
-    else if (hasSelectedValues)
-      if (filterValues.__combineMode === 'AND')
-        facetsPiece.AND = filterValues.selectedValues.map((selectedValue) => ({
-          IN: { [fieldName]: [selectedValue] },
-        }));
-      // combine mode defaults to OR when not set.
-      else facetsPiece.IN = { [fieldName]: filterValues.selectedValues };
-    else if (filterValues.__combineMode !== undefined)
-      // This filter only has a combine setting so far. We can ignore it.
-      // eslint-disable-next-line no-continue
-      continue;
-    else throw new Error(`Invalid filter object ${filterValues}`);
+  for (const [filterKey, filterValues] of Object.entries(filterState)) {
+    const [path, fieldName] = filterKey.split('.');
+    const simpleFilter = parseSimpleFilter(fieldName, filterValues);
 
-    if (isNestedField) {
-      const path = fieldStr; // parent path
-      if (path in nestedFacetIndices) {
-        facetsList[nestedFacetIndices[path]].nested.AND.push(facetsPiece);
-      } else {
-        nestedFacetIndices[path] = facetIndex;
-        facetsList.push({
-          nested: {
-            path,
-            AND: [facetsPiece],
-          },
-        });
-        facetIndex += 1;
+    if (simpleFilter !== undefined) {
+      if (!(path in nestedFilterIndices)) {
+        nestedFilterIndices[path] = nestedFilterIndex;
+        nestedFilters.push({ nested: { path, AND: [anchorFilter] } });
+        nestedFilterIndex += 1;
       }
-    } else {
-      facetsList.push(facetsPiece);
-      facetIndex += 1;
+
+      nestedFilters[nestedFilterIndices[path]].nested.AND.push(simpleFilter);
     }
   }
 
-  return { AND: facetsList };
+  return nestedFilters;
+}
+
+/**
+ * Convert filter obj into GQL filter format
+ * @param {FilterState} filterState
+ * @returns {GqlFilter}
+ */
+export function getGQLFilter(filterState) {
+  if (filterState === undefined || Object.keys(filterState).length === 0)
+    return undefined;
+
+  /** @type {(GqlInFilter | GqlSimpleAndFilter)[]} */
+  const simpleFilters = [];
+
+  /** @type {GqlNestedFilter[]} */
+  const nestedFilters = [];
+  /** @type {{ [path: string]: number }} */
+  const nestedFilterIndices = {};
+  let nestedFilterIndex = 0;
+
+  for (const [filterKey, filterValues] of Object.entries(filterState)) {
+    const [fieldStr, nestedFieldStr] = filterKey.split('.');
+    const isNestedField = nestedFieldStr !== undefined;
+    const fieldName = isNestedField ? nestedFieldStr : fieldStr;
+
+    if ('filter' in filterValues) {
+      for (const { nested } of parseAnchoredFilters(fieldName, filterValues)) {
+        const { path, AND } = nested;
+
+        if (!(path in nestedFilterIndices)) {
+          nestedFilterIndices[path] = nestedFilterIndex;
+          nestedFilters.push({ nested: { path, AND: [] } });
+          nestedFilterIndex += 1;
+        }
+
+        nestedFilters[nestedFilterIndices[path]].nested.AND.push({ AND });
+      }
+    } else {
+      const simpleFilter = parseSimpleFilter(fieldName, filterValues);
+
+      if (simpleFilter !== undefined) {
+        if (isNestedField) {
+          const path = fieldStr; // parent path
+
+          if (!(path in nestedFilterIndices)) {
+            nestedFilterIndices[path] = nestedFilterIndex;
+            nestedFilters.push({ nested: { path, AND: [] } });
+            nestedFilterIndex += 1;
+          }
+
+          nestedFilters[nestedFilterIndices[path]].nested.AND.push(
+            simpleFilter
+          );
+        } else {
+          simpleFilters.push(simpleFilter);
+        }
+      }
+    }
+  }
+
+  return { AND: [...simpleFilters, ...nestedFilters] };
 }
 
 /** @param {object} filterTabConfigs */
