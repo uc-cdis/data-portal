@@ -66,7 +66,10 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (isEnabled('discoveryUseAggMDS')) {
         loadStudiesFunction = loadStudiesFromAggMDS;
         const userAuthMappings = await loadAuthMappingsFromWTS();
-        getUserAuthMapping = study => userAuthMappings[study.commons_url];
+        getUserAuthMapping = (study) => {
+          // TODO handle when auth mapping is empty object
+          userAuthMappings[study.commons_url]["authz"];
+        }
       } else {
         loadStudiesFunction = loadStudiesFromMDS;
         getUserAuthMapping = () => props.userAuthMapping;
