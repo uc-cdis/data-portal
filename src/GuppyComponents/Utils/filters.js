@@ -14,6 +14,7 @@ import '../typedef';
  * @param {FilterState} adminAppliedPreFilter
  * */
 export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
+  /** @type {FilterState} */
   const mergedFilterState = { ...userFilter };
 
   for (const key of Object.keys(adminAppliedPreFilter)) {
