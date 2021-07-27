@@ -57,3 +57,42 @@
 /**
  * @typedef {GqlSimpleFilter | GqlNestedFilter | GqlAndFilter} GqlFilter
  */
+
+/**
+ * @typedef {{ [x: string]: 'asc' | 'desc' }[]} GqlSort
+ */
+
+/**
+ * @typedef {Object} FilterTabsOption
+ * @property {string} title
+ * @property {string[]} fields
+ */
+
+/**
+ * @typedef {Object} FilterConfig
+ * @property {FilterTabsOption[]} tabs
+ */
+
+/**
+ * @typedef {Object} GuppyConfig
+ * @property {string} dataType
+ * @property {string} nodeCountTitle
+ * @property {{ field: string; name: string; }[]} [fieldMapping]
+ * @property {Object} [manifestMapping]
+ * @property {string} manifestMapping.resourceIndexType
+ * @property {string} manifestMapping.resourceIdField
+ * @property {string} manifestMapping.referenceIdFieldInResourceIndex
+ * @property {string} manifestMapping.referenceIdFieldInDataIndex
+ * @property {string} [getAccessButtonLink]
+ * @property {string} [terraExportURL]
+ */
+
+/**
+ * @typedef {Object} AggsCount
+ * @property {number} count
+ * @property {string} key
+ */
+
+/**
+ * @typedef {{ [x: string]: { histogram: AggsCount[] } | AggsData }} AggsData
+ */
