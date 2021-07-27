@@ -88,9 +88,19 @@
  */
 
 /**
- * @typedef {Object} AggsCount
+ * @typedef {Object} AggsTextCount
  * @property {number} count
  * @property {string} key
+ */
+
+/**
+ * @typedef {Object} AggsRangeCount
+ * @property {number} count
+ * @property {[number, number]} key
+ */
+
+/**
+ * @typedef {AggsRangeCount | AggsTextCount} AggsCount
  */
 
 /**
