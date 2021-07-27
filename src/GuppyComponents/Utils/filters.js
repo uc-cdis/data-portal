@@ -17,22 +17,30 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   /** @type {FilterState} */
   const mergedFilterState = { ...userFilter };
 
-  for (const key of Object.keys(adminAppliedPreFilter)) {
-    if (key in userFilter) {
-      const userFilterSubset = userFilter[key].selectedValues.filter((x) =>
-        adminAppliedPreFilter[key].selectedValues.includes(x)
-      );
+  for (const [key, adminFilterValues] of Object.entries(
+    adminAppliedPreFilter
+  )) {
+    if ('selectedValues' in adminFilterValues) {
+      if (key in userFilter) {
+        const userFilterValues = userFilter[key];
 
-      mergedFilterState[key].selectedValues =
-        userFilterSubset.length > 0
-          ? // The user-applied filter is more exclusive than the admin-applied filter.
-            userFilter[key].selectedValues
-          : // The admin-applied filter is more exclusive than the user-applied filter.
-            adminAppliedPreFilter[key].selectedValues;
-    } else {
-      mergedFilterState[key] = {
-        selectedValues: adminAppliedPreFilter[key].selectedValues,
-      };
+        if ('selectedValues' in userFilterValues) {
+          const userFilterSubset = userFilterValues.selectedValues.filter((x) =>
+            adminFilterValues.selectedValues.includes(x)
+          );
+
+          mergedFilterState[key].selectedValues =
+            userFilterSubset.length > 0
+              ? // The user-applied filter is more exclusive than the admin-applied filter.
+                userFilterValues.selectedValues
+              : // The admin-applied filter is more exclusive than the user-applied filter.
+                adminFilterValues.selectedValues;
+        }
+      } else {
+        mergedFilterState[key] = {
+          selectedValues: adminFilterValues.selectedValues,
+        };
+      }
     }
   }
 
