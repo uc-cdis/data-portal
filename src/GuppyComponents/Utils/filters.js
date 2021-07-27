@@ -1,5 +1,6 @@
 import flat from 'flat';
 import { queryGuppyForRawData } from './queries';
+import '../typedef';
 
 /**
  * This function takes two objects containing filters to be applied
@@ -9,6 +10,8 @@ import { queryGuppyForRawData } from './queries';
  * the user undoing the admin filter. (Multiple user checkboxes increase the
  * amount of data shown when combined, but an admin filter should always decrease
  * or keep constant the amount of data shown when combined with a user filter).
+ * @param {FilterState} userFilter
+ * @param {FilterState} adminAppliedPreFilter
  * */
 export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   const filterAB = { ...userFilter };
@@ -45,12 +48,16 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
  * calculated from unfiltered data.
  * It is used to retain field options in the rendering if
  * they are still checked but their counts are zero.
+ * @param {AggsData} initialTabsOptions
+ * @param {AggsData} processedTabsOptions
+ * @param {FilterState} filtersApplied
  */
 export const updateCountsInInitialTabsOptions = (
   initialTabsOptions,
   processedTabsOptions,
   filtersApplied
 ) => {
+  /** @type {AggsData} */
   const updatedTabsOptions = {};
   try {
     // flatten the tab options first
@@ -58,7 +65,9 @@ export const updateCountsInInitialTabsOptions = (
     //   project_id.histogram: ...
     //   visit.visit_label.histogram: ...
     // }
+    /** @type {{ [x: string]: AggsCount[] }} */
     const flattenInitialTabsOptions = flat(initialTabsOptions, { safe: true });
+    /** @type {{ [x: string]: AggsCount[] }} */
     const flattenProcessedTabsOptions = flat(processedTabsOptions, {
       safe: true,
     });
@@ -86,6 +95,7 @@ export const updateCountsInInitialTabsOptions = (
           ) {
             updatedTabsOptions[`${actualFieldName}`].histogram[0].count =
               flattenProcessedTabsOptions[`${field}`][0].count;
+            /** @type {[number, number]} */
             const newKey = [0, 0];
             if (flattenProcessedTabsOptions[`${field}`][0].key[0]) {
               // because of the prefer-destructuring eslint rule
@@ -113,22 +123,21 @@ export const updateCountsInInitialTabsOptions = (
           });
         }
       });
-      if (filtersApplied[`${actualFieldName}`]) {
-        if (filtersApplied[`${actualFieldName}`].selectedValues) {
-          filtersApplied[`${actualFieldName}`].selectedValues.forEach(
-            (optKey) => {
-              if (
-                !updatedTabsOptions[`${actualFieldName}`].histogram.find(
-                  (o) => o.key === optKey
-                )
-              ) {
-                updatedTabsOptions[`${actualFieldName}`].histogram.push({
-                  key: optKey,
-                  count: 0,
-                });
-              }
+      const filter = filtersApplied[`${actualFieldName}`];
+      if (filter) {
+        if ('selectedValues' in filter) {
+          filter.selectedValues.forEach((optKey) => {
+            if (
+              !updatedTabsOptions[`${actualFieldName}`].histogram.find(
+                (o) => o.key === optKey
+              )
+            ) {
+              updatedTabsOptions[`${actualFieldName}`].histogram.push({
+                key: optKey,
+                count: 0,
+              });
             }
-          );
+          });
         }
       }
     });
@@ -143,6 +152,9 @@ export const updateCountsInInitialTabsOptions = (
   return updatedTabsOptions;
 };
 
+/**
+ * @param {AggsData} tabsOptions
+ */
 export const sortTabsOptions = (tabsOptions) => {
   const fields = Object.keys(tabsOptions);
   const sortedTabsOptions = { ...tabsOptions };
@@ -159,6 +171,8 @@ export const sortTabsOptions = (tabsOptions) => {
 /**
  * This function takes two TabsOptions object and merge them together
  * The order of merged histogram array is preserved by firstHistogram.concat(secondHistogram)
+ * @param {AggsData} firstTabsOptions
+ * @param {AggsData} secondTabsOptions
  */
 export const mergeTabOptions = (firstTabsOptions, secondTabsOptions) => {
   if (!firstTabsOptions || !Object.keys(firstTabsOptions).length) {
@@ -174,6 +188,7 @@ export const mergeTabOptions = (firstTabsOptions, secondTabsOptions) => {
       ...Object.keys(secondTabsOptions),
     ]),
   ];
+  /** @type {AggsData} */
   const mergedTabOptions = {};
   allOptionKeys.forEach((optKey) => {
     if (!mergedTabOptions[`${optKey}`]) {
@@ -204,6 +219,10 @@ export const getFilterGroupConfig = (filterConfig) => ({
   })),
 });
 
+/**
+ * @param {{ histogram: AggsCount[] }} histogramResult
+ * @param {{ histogram: AggsCount[] }} initHistogramRes
+ */
 const getSingleFilterOption = (histogramResult, initHistogramRes) => {
   if (!histogramResult || !histogramResult.histogram) {
     throw new Error(
@@ -215,13 +234,16 @@ const getSingleFilterOption = (histogramResult, initHistogramRes) => {
     histogramResult.histogram.length === 1 &&
     typeof histogramResult.histogram[0].key !== 'string'
   ) {
-    const rangeOptions = histogramResult.histogram.map((item) => {
-      const minValue = initHistogramRes
-        ? initHistogramRes.histogram[0].key[0]
-        : item.key[0];
-      const maxValue = initHistogramRes
-        ? initHistogramRes.histogram[0].key[1]
-        : item.key[1];
+    /** @type {{ histogram: AggsRangeCount[] }} */
+    const { histogram } = histogramResult;
+    const rangeOptions = histogram.map((item) => {
+      let [minValue, maxValue] = item.key;
+      if (
+        initHistogramRes &&
+        typeof initHistogramRes.histogram[0].key !== 'string'
+      )
+        [minValue, maxValue] = initHistogramRes.histogram[0].key;
+
       return {
         filterType: 'range',
         min: Math.floor(minValue),
@@ -234,7 +256,9 @@ const getSingleFilterOption = (histogramResult, initHistogramRes) => {
     return rangeOptions;
   }
 
-  const textOptions = histogramResult.histogram.map((item) => ({
+  /** @type {{ histogram: AggsTextCount[] }} */
+  const { histogram } = histogramResult;
+  const textOptions = histogram.map((item) => ({
     text: item.key,
     filterType: 'singleSelect',
     count: item.count,
@@ -243,6 +267,9 @@ const getSingleFilterOption = (histogramResult, initHistogramRes) => {
   return textOptions;
 };
 
+/**
+ * @param {string} str
+ */
 const capitalizeFirstLetter = (str) => {
   const res = str.replace(/_|\./gi, ' ');
   return res.replace(
@@ -251,8 +278,13 @@ const capitalizeFirstLetter = (str) => {
   );
 };
 
-// createSearchFilterLoadOptionsFn creates a handler function that loads the search filter's
-// autosuggest options as the user types in the search filter.
+/**
+ * createSearchFilterLoadOptionsFn creates a handler function that loads the search filter's
+ * autosuggest options as the user types in the search filter.
+ * @param {string} field
+ * @param {GuppyConfig} guppyConfig
+ * @returns {(searchString: string; offset: number) => Promise}
+ */
 const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (
   searchString,
   offset
@@ -261,6 +293,7 @@ const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (
     // If searchString is empty return just the first NUM_SEARCH_OPTIONS options.
     // This allows the client to show default options in the search filter before
     // the user has started searching.
+    /** @type {GqlFilter | undefined} */
     const gqlFilter = searchString
       ? { search: { keyword: searchString, fields: [field] } }
       : undefined;
@@ -297,6 +330,10 @@ const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (
       });
   });
 
+/**
+ * @param {string} field
+ * @param {{ [x: string]: string[] }} arrayFields
+ */
 export const checkIsArrayField = (field, arrayFields) => {
   let isArrayField = false;
   const keys = Object.keys(arrayFields);
@@ -308,6 +345,16 @@ export const checkIsArrayField = (field, arrayFields) => {
   return isArrayField;
 };
 
+/**
+ * @param {string[]} fields
+ * @param {string[]} searchFields
+ * @param {{ field: string; name: string; }[]} fieldMapping
+ * @param {AggsData} tabsOptions
+ * @param {AggsData} initialTabsOptions
+ * @param {FilterState} adminAppliedPreFilters
+ * @param {GuppyConfig} guppyConfig
+ * @param {{ [x: string]: string[] }} arrayFields
+ */
 export const getFilterSections = (
   fields,
   searchFields,
@@ -365,6 +412,7 @@ export const getFilterSections = (
       ? overrideName.name
       : capitalizeFirstLetter(field);
 
+    /** @type {FilterTabsOption} */
     const tabsOptionsFiltered = { ...tabsOptions[field] };
     if (Object.keys(adminAppliedPreFilters).includes(field)) {
       tabsOptionsFiltered.histogram = tabsOptionsFiltered.histogram.filter(
@@ -388,26 +436,31 @@ export const getFilterSections = (
   return searchFieldSections.concat(sections);
 };
 
+/**
+ * @param {AggsData} receivedAggsData
+ * @param {FilterState} filterResults
+ */
 export const excludeSelfFilterFromAggsData = (
   receivedAggsData,
   filterResults
 ) => {
   if (!filterResults) return receivedAggsData;
+  /** @type {AggsData} */
   const resultAggsData = {};
+  /** @type {AggsData} */
   const flattenAggsData = flat(receivedAggsData, { safe: true });
   Object.keys(flattenAggsData).forEach((field) => {
     const actualFieldName = field.replace('.histogram', '');
+    /** @type {AggsCount[]} */
     const histogram = flattenAggsData[`${field}`];
     if (!histogram) return;
     if (actualFieldName in filterResults) {
+      /** @type {AggsCount[]} */
       let resultHistogram = [];
-      if (
-        typeof filterResults[`${actualFieldName}`].selectedValues !==
-        'undefined'
-      ) {
-        const { selectedValues } = filterResults[`${actualFieldName}`];
+      const filter = filterResults[`${actualFieldName}`];
+      if ('selectedValues' in filter) {
         resultHistogram = histogram.filter((bucket) =>
-          selectedValues.includes(bucket.key)
+          filter.selectedValues.includes(bucket.key)
         );
       }
       resultAggsData[`${actualFieldName}`] = { histogram: resultHistogram };
