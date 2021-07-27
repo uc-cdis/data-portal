@@ -46,7 +46,7 @@ function histogramQueryStrForEachField(field) {
  * @param {string} opt.path
  * @param {string} opt.type
  * @param {string[]} opt.fields
- * @param {object} [opt.gqlFilter]
+ * @param {GqlFilter} [opt.gqlFilter]
  * @param {AbortSignal} [opt.signal]
  */
 export function queryGuppyForAggregationData({
@@ -137,7 +137,7 @@ function nestedHistogramQueryStrForEachField(mainField, numericAggAsText) {
  * @param {boolean} [opt.numericAggAsText]
  * @param {string[]} [opt.termsFields]
  * @param {string[]} [opt.missingFields]
- * @param {object} [opt.gqlFilter]
+ * @param {GqlFilter} [opt.gqlFilter]
  * @param {AbortSignal} [opt.signal]
  */
 export function queryGuppyForSubAggregationData({
@@ -208,8 +208,8 @@ function rawDataQueryStrForEachField(field) {
  * @param {string} opt.path
  * @param {string} opt.type
  * @param {string[]} opt.fields
- * @param {object} [opt.gqlFilter]
- * @param {*} [opt.sort]
+ * @param {GqlFilter} [opt.gqlFilter]
+ * @param {GqlSort} [opt.sort]
  * @param {number} [opt.offset]
  * @param {number} [opt.size]
  * @param {AbortSignal} [opt.signal]
@@ -443,8 +443,8 @@ export function getAllFieldsFromFilterConfigs(filterTabConfigs) {
  * @param {string} opt.path
  * @param {string} opt.type
  * @param {string[]} [opt.fields]
- * @param {object} [opt.filter]
- * @param {*} [opt.sort]
+ * @param {FilterState} [opt.filter]
+ * @param {GqlSort} [opt.sort]
  * @param {string} [opt.format]
  */
 export function downloadDataFromGuppy({
@@ -477,7 +477,7 @@ export function downloadDataFromGuppy({
  * @param {object} opt
  * @param {string} opt.path
  * @param {string} opt.type
- * @param {object} [opt.filter]
+ * @param {FilterState} [opt.filter]
  */
 export function queryGuppyForTotalCounts({ path, type, filter }) {
   const query = (filter !== undefined || Object.keys(filter).length > 0
