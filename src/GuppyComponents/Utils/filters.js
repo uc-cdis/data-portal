@@ -212,13 +212,6 @@ export const mergeTabOptions = (firstTabsOptions, secondTabsOptions) => {
   return mergedTabOptions;
 };
 
-export const getFilterGroupConfig = (filterConfig) => ({
-  tabs: filterConfig.tabs.map((t) => ({
-    title: t.title,
-    fields: t.filters.map((f) => f.field),
-  })),
-});
-
 /**
  * @param {{ histogram: AggsCount[] }} histogramResult
  * @param {{ histogram: AggsCount[] }} initHistogramRes
