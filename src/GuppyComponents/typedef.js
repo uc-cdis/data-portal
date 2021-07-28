@@ -66,6 +66,7 @@
  * @typedef {Object} FilterTabsOption
  * @property {string} title
  * @property {string[]} fields
+ * @property {string[]} searchFields
  */
 
 /**
