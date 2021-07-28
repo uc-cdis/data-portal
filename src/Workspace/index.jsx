@@ -45,7 +45,7 @@ class Workspace extends React.Component {
       defaultWorkspace: false,
       workspaceIsFullpage: false,
       externalLoginOptions: [],
-      payModel: null,
+      payModel: {},
     };
     this.workspaceStates = [
       'Not Found',
@@ -150,7 +150,12 @@ class Workspace extends React.Component {
     path: `${workspacePayModelUrl}`,
     method: 'GET',
   }).then(
-    ({ data }) => data,
+    ({ status, data }) => {
+      if (status === 200) {
+        return data;
+      }
+      return {};
+    },
   ).catch(() => 'Error');
 
   getIcon = (workspace) => {
@@ -407,7 +412,7 @@ class Workspace extends React.Component {
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
         >
           {
-            this.state.payModel ? (
+            (Object.keys(this.state.payModel).length > 0) ? (
               <Collapse className='workspace__pay-model' onClick={(event) => event.stopPropagation()}>
                 <Panel header='User Pay Model Information' key='1'>
                   <Row gutter={{
