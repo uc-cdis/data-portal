@@ -151,7 +151,9 @@ class Workspace extends React.Component {
     method: 'GET',
   }).then(
     ({ status, data }) => {
-      if (status === 200) {
+      // check if is valid pay model data
+      // older hatchery will also return 200 for /paymodels with workspace options in it
+      if (status === 200 && data.aws_account_id) {
         return data;
       }
       return {};
@@ -407,6 +409,7 @@ class Workspace extends React.Component {
       // NOTE both the containing element and the iframe have class '.workspace',
       // although no styles should be shared between them. The reason for this
       // is for backwards compatibility with Jenkins integration tests that select by classname.
+      console.log(this.state.payModel);
       return (
         <div
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
