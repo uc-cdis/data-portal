@@ -10,8 +10,34 @@ import {
   updateCountsInInitialTabsOptions,
   sortTabsOptions,
 } from '../Utils/filters';
+import '../typedef';
 
+/**
+ * @typedef {Object} ConnectedFilterProps
+ * @property {FilterConfig} filterConfig
+ * @property {GuppyConfig} guppyConfig
+ * @property {(x: FilterState) => void} onFilterChange
+ * @property {(x: string[]) => void} onPatientIdsChange
+ * @property {string} className
+ * @property {number} tierAccessLimit
+ * @property {(x: AggsData) => AggsData} onProcessFilterAggsData
+ * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
+ * @property {string[]} patientIds
+ * @property {FilterState} initialAppliedFilters
+ * @property {AggsData} receivedAggsData
+ * @property {boolean} hideZero
+ * @property {boolean} hidden
+ */
+
+/**
+ * @typedef {Object} ConnectedFilterState
+ * @property {AggsData} initialAggsData
+ * @property {FilterState} filter
+ */
+
+/** @augments {React.Component<ConnectedFilterProps, ConnectedFilterState>} */
 class ConnectedFilter extends React.Component {
+  /** @param {ConnectedFilterProps} props */
   constructor(props) {
     super(props);
 
@@ -19,13 +45,15 @@ class ConnectedFilter extends React.Component {
       props.initialAppliedFilters,
       props.adminAppliedPreFilters
     );
-
+    /** @type {AggsData} */
     this.initialTabsOptions = {};
+    /** @type {ConnectedFilterState} */
     this.state = {
       initialAggsData: {},
       filter: { ...initialFilter },
     };
     this.filterGroupRef = React.createRef();
+    /** @type {string[]} */
     this.arrayFields = [];
     this._isMounted = false;
   }
@@ -63,7 +91,7 @@ class ConnectedFilter extends React.Component {
    * 1. Ask guppy for aggregation data using (processed) filter
    * 2. After get aggregation response, process new received agg data
    * 3. If there's `onFilterChange` callback function from parent, call it
-   * @param {object} filterResults
+   * @param {FilterState} filterResults
    */
   handleFilterChange(filterResults) {
     const mergedFilterResults = mergeFilters(

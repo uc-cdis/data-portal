@@ -88,18 +88,29 @@ export function truncateWithEllipsis(string, maxLength) {
 
 /**
  * @param {ExplorerFilters} filters
+ * @param {number} level Nesting level
  */
-export function stringifyFilters(filters) {
+export function stringifyFilters(filters, level = 0) {
   if (Object.keys(filters).length === 0) return '';
 
   let filterStr = '';
   for (const [key, value] of Object.entries(filters)) {
-    filterStr += `* ${capitalizeFirstLetter(key)}\n`;
-    if (value.selectedValues !== undefined)
-      for (const selected of value.selectedValues)
-        filterStr += `\t- '${selected}'\n`;
-    else
-      filterStr += `\t- from: ${value.lowerBound}\n\t- to: ${value.upperBound}\n`;
+    if ('filter' in value) {
+      const [anchorFieldName, anchorValue] = key.split(':');
+      filterStr += `${'\t'.repeat(level)}* ${capitalizeFirstLetter(
+        anchorFieldName
+      )}: '${capitalizeFirstLetter(anchorValue)}'\n`;
+      filterStr += stringifyFilters(value.filter, level + 1);
+    } else {
+      filterStr += `${'\t'.repeat(level)}* ${capitalizeFirstLetter(key)}\n`;
+      if ('selectedValues' in value)
+        for (const selected of value.selectedValues)
+          filterStr += `${'\t'.repeat(level + 1)}- '${selected}'\n`;
+      else if ('lowerBound' in value)
+        filterStr += `${'\t'.repeat(level + 1)}- from: ${
+          value.lowerBound
+        }\n${'\t'.repeat(level + 1)}- to: ${value.upperBound}\n`;
+    }
   }
 
   return filterStr;

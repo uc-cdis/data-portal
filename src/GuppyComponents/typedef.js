@@ -57,3 +57,53 @@
 /**
  * @typedef {GqlSimpleFilter | GqlNestedFilter | GqlAndFilter} GqlFilter
  */
+
+/**
+ * @typedef {{ [x: string]: 'asc' | 'desc' }[]} GqlSort
+ */
+
+/**
+ * @typedef {Object} FilterTabsOption
+ * @property {string} title
+ * @property {string[]} fields
+ * @property {string[]} searchFields
+ */
+
+/**
+ * @typedef {Object} FilterConfig
+ * @property {FilterTabsOption[]} tabs
+ */
+
+/**
+ * @typedef {Object} GuppyConfig
+ * @property {string} dataType
+ * @property {string} nodeCountTitle
+ * @property {{ field: string; name: string; }[]} [fieldMapping]
+ * @property {Object} [manifestMapping]
+ * @property {string} manifestMapping.resourceIndexType
+ * @property {string} manifestMapping.resourceIdField
+ * @property {string} manifestMapping.referenceIdFieldInResourceIndex
+ * @property {string} manifestMapping.referenceIdFieldInDataIndex
+ * @property {string} [getAccessButtonLink]
+ * @property {string} [terraExportURL]
+ */
+
+/**
+ * @typedef {Object} AggsTextCount
+ * @property {number} count
+ * @property {string} key
+ */
+
+/**
+ * @typedef {Object} AggsRangeCount
+ * @property {number} count
+ * @property {[number, number]} key
+ */
+
+/**
+ * @typedef {AggsRangeCount | AggsTextCount} AggsCount
+ */
+
+/**
+ * @typedef {{ [x: string]: { histogram: AggsCount[] } | AggsData }} AggsData
+ */
