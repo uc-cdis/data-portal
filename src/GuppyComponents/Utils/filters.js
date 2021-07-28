@@ -11,7 +11,7 @@ import '../typedef';
  * amount of data shown when combined, but an admin filter should always decrease
  * or keep constant the amount of data shown when combined with a user filter).
  * @param {FilterState} userFilter
- * @param {FilterState} adminAppliedPreFilter
+ * @param {{ [x: string]: OptionFilter }} adminAppliedPreFilter
  * */
 export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   /** @type {FilterState} */
@@ -20,27 +20,23 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   for (const [key, adminFilterValues] of Object.entries(
     adminAppliedPreFilter
   )) {
-    if ('selectedValues' in adminFilterValues) {
-      if (key in userFilter) {
-        const userFilterValues = userFilter[key];
+    if (key in userFilter) {
+      const userFilterValues = userFilter[key];
 
-        if ('selectedValues' in userFilterValues) {
-          const userFilterSubset = userFilterValues.selectedValues.filter((x) =>
-            adminFilterValues.selectedValues.includes(x)
-          );
+      if ('selectedValues' in userFilterValues) {
+        const userFilterSubset = userFilterValues.selectedValues.filter((x) =>
+          adminFilterValues.selectedValues.includes(x)
+        );
 
-          mergedFilterState[key].selectedValues =
-            userFilterSubset.length > 0
-              ? // The user-applied filter is more exclusive than the admin-applied filter.
-                userFilterValues.selectedValues
-              : // The admin-applied filter is more exclusive than the user-applied filter.
-                adminFilterValues.selectedValues;
-        }
-      } else {
-        mergedFilterState[key] = {
-          selectedValues: adminFilterValues.selectedValues,
-        };
+        mergedFilterState[key].selectedValues =
+          userFilterSubset.length > 0
+            ? // The user-applied filter is more exclusive than the admin-applied filter.
+              userFilterValues.selectedValues
+            : // The admin-applied filter is more exclusive than the user-applied filter.
+              adminFilterValues.selectedValues;
       }
+    } else {
+      mergedFilterState[key] = adminFilterValues;
     }
   }
 
