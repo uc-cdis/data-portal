@@ -1,6 +1,6 @@
 #!groovy
 
-@Library('cdis-jenkins-lib@test/csp') _
+@Library('cdis-jenkins-lib@master') _
 
 testPipeline {
 }
