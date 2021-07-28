@@ -42,12 +42,12 @@ function histogramQueryStrForEachField(field) {
 }
 
 /**
- * @param {object} opt
- * @param {string} opt.path
- * @param {string} opt.type
- * @param {string[]} opt.fields
- * @param {GqlFilter} [opt.gqlFilter]
- * @param {AbortSignal} [opt.signal]
+ * @param {object} args
+ * @param {string} args.path
+ * @param {string} args.type
+ * @param {string[]} args.fields
+ * @param {GqlFilter} [args.gqlFilter]
+ * @param {AbortSignal} [args.signal]
  */
 export function queryGuppyForAggregationData({
   path,
@@ -130,15 +130,15 @@ function nestedHistogramQueryStrForEachField(mainField, numericAggAsText) {
 }
 
 /**
- * @param {object} opt
- * @param {string} opt.path
- * @param {string} opt.type
- * @param {string} opt.mainField
- * @param {boolean} [opt.numericAggAsText]
- * @param {string[]} [opt.termsFields]
- * @param {string[]} [opt.missingFields]
- * @param {GqlFilter} [opt.gqlFilter]
- * @param {AbortSignal} [opt.signal]
+ * @param {object} args
+ * @param {string} args.path
+ * @param {string} args.type
+ * @param {string} args.mainField
+ * @param {boolean} [args.numericAggAsText]
+ * @param {string[]} [args.termsFields]
+ * @param {string[]} [args.missingFields]
+ * @param {GqlFilter} [args.gqlFilter]
+ * @param {AbortSignal} [args.signal]
  */
 export function queryGuppyForSubAggregationData({
   path,
@@ -204,17 +204,17 @@ function rawDataQueryStrForEachField(field) {
 }
 
 /**
- * @param {object} opt
- * @param {string} opt.path
- * @param {string} opt.type
- * @param {string[]} opt.fields
- * @param {GqlFilter} [opt.gqlFilter]
- * @param {GqlSort} [opt.sort]
- * @param {number} [opt.offset]
- * @param {number} [opt.size]
- * @param {AbortSignal} [opt.signal]
- * @param {string} [opt.format]
- * @param {boolean} [opt.withTotalCount]
+ * @param {object} args
+ * @param {string} args.path
+ * @param {string} args.type
+ * @param {string[]} args.fields
+ * @param {GqlFilter} [args.gqlFilter]
+ * @param {GqlSort} [args.sort]
+ * @param {number} [args.offset]
+ * @param {number} [args.size]
+ * @param {AbortSignal} [args.signal]
+ * @param {string} [args.format]
+ * @param {boolean} [args.withTotalCount]
  */
 export function queryGuppyForRawData({
   path,
@@ -439,13 +439,13 @@ export function getAllFieldsFromFilterConfigs(filterTabConfigs) {
 
 /**
  * Download all data from guppy using fields, filter, and sort args.
- * @param {object} opt
- * @param {string} opt.path
- * @param {string} opt.type
- * @param {string[]} [opt.fields]
- * @param {FilterState} [opt.filter]
- * @param {GqlSort} [opt.sort]
- * @param {string} [opt.format]
+ * @param {object} args
+ * @param {string} args.path
+ * @param {string} args.type
+ * @param {string[]} [args.fields]
+ * @param {FilterState} [args.filter]
+ * @param {GqlSort} [args.sort]
+ * @param {string} [args.format]
  */
 export function downloadDataFromGuppy({
   path,
@@ -474,10 +474,10 @@ export function downloadDataFromGuppy({
 }
 
 /**
- * @param {object} opt
- * @param {string} opt.path
- * @param {string} opt.type
- * @param {FilterState} [opt.filter]
+ * @param {object} args
+ * @param {string} args.path
+ * @param {string} args.type
+ * @param {FilterState} [args.filter]
  */
 export function queryGuppyForTotalCounts({ path, type, filter }) {
   const query = (filter !== undefined || Object.keys(filter).length > 0
@@ -515,9 +515,9 @@ export function queryGuppyForTotalCounts({ path, type, filter }) {
 }
 
 /**
- * @param {object} opt
- * @param {string} opt.path
- * @param {string} opt.type
+ * @param {object} args
+ * @param {string} args.path
+ * @param {string} args.type
  */
 export function getAllFieldsFromGuppy({ path, type }) {
   return fetch(`${path}${graphqlEndpoint}`, {
