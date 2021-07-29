@@ -55,7 +55,14 @@
  */
 
 /**
- * @typedef {GqlSimpleFilter | GqlNestedFilter | GqlAndFilter} GqlFilter
+ * @typedef {Object} GqlSearchFilter
+ * @property {Object} search
+ * @property {string} search.keyword
+ * @property {string[]} search.fields
+ */
+
+/**
+ * @typedef {GqlSimpleFilter | GqlNestedFilter | GqlAndFilter | GqlSearchFilter} GqlFilter
  */
 
 /**
@@ -86,18 +93,25 @@
  * @property {string} manifestMapping.referenceIdFieldInDataIndex
  * @property {string} [getAccessButtonLink]
  * @property {string} [terraExportURL]
+ * @property {string} [path]
+ * @property {string} [mainField]
+ * @property {string} [mainFieldTitle]
+ * @property {boolean} [mainFieldIsNumeric]
+ * @property {string[]} [aggFields]
  */
 
 /**
  * @typedef {Object} AggsTextCount
  * @property {number} count
  * @property {string} key
+ * @property {any} [accessible]
  */
 
 /**
  * @typedef {Object} AggsRangeCount
  * @property {number} count
  * @property {[number, number]} key
+ * @property {any} [accessible]
  */
 
 /**
@@ -105,5 +119,9 @@
  */
 
 /**
- * @typedef {{ [x: string]: { histogram: AggsCount[] } | AggsData }} AggsData
+ * @typedef {{ [x: string]: { histogram: AggsCount[] } }} SimpleAggsData
+ */
+
+/**
+ * @typedef {{ [x: string]: { histogram: AggsCount[] } | SimpleAggsData }} AggsData
  */
