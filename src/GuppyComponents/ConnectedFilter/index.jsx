@@ -9,6 +9,7 @@ import {
   mergeFilters,
   updateCountsInInitialTabsOptions,
   sortTabsOptions,
+  unnestAggsData,
 } from '../Utils/filters';
 import '../typedef';
 
@@ -45,7 +46,7 @@ class ConnectedFilter extends React.Component {
       props.initialAppliedFilters,
       props.adminAppliedPreFilters
     );
-    /** @type {AggsData} */
+    /** @type {SimpleAggsData} */
     this.initialTabsOptions = {};
     /** @type {ConnectedFilterState} */
     this.state = {
@@ -53,7 +54,7 @@ class ConnectedFilter extends React.Component {
       filter: { ...initialFilter },
     };
     this.filterGroupRef = React.createRef();
-    /** @type {string[]} */
+    /** @type {string[][]} */
     this.arrayFields = [];
     this._isMounted = false;
   }
@@ -115,8 +116,8 @@ class ConnectedFilter extends React.Component {
   getFilterTabs() {
     if (this.props.hidden) return null;
 
-    const tabsOptions = this.props.onProcessFilterAggsData(
-      this.props.receivedAggsData
+    const tabsOptions = unnestAggsData(
+      this.props.onProcessFilterAggsData(this.props.receivedAggsData)
     );
     if (Object.keys(this.initialTabsOptions).length === 0)
       this.initialTabsOptions = tabsOptions;
@@ -147,7 +148,7 @@ class ConnectedFilter extends React.Component {
             searchFields,
             this.props.guppyConfig.fieldMapping,
             processedTabsOptions,
-            this.state.initialAggsData,
+            this.initialTabsOptions,
             this.props.adminAppliedPreFilters,
             this.props.guppyConfig,
             this.arrayFields
