@@ -18,7 +18,7 @@ import '../typedef';
  * @typedef {Object} GuppyWrapperProps
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
- * @property {React.ReactNode} children
+ * @property {React.ReactElement[]} children
  * @property {(x: FilterState) => void} onFilterChange
  * @property {string[]} rawDataFields
  * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
@@ -300,8 +300,8 @@ class GuppyWrapper extends React.Component {
    * @param {string[]} fields
    * @param {GqlSort} sort
    * @param {boolean} updateDataWhenReceive
-   * @param {number} offset
-   * @param {number} size
+   * @param {number} [offset]
+   * @param {number} [size]
    */
   fetchRawDataFromGuppy(fields, sort, updateDataWhenReceive, offset, size) {
     if (this._isMounted) this.setState({ isLoadingRawData: true });
