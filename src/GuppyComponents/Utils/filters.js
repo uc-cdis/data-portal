@@ -468,3 +468,23 @@ export const excludeSelfFilterFromAggsData = (
   });
   return resultAggsData;
 };
+
+/**
+ * @param {AggsData} aggsData
+ */
+export function unnestAggsData(aggsData) {
+  /** @type {SimpleAggsData} */
+  const simpleAggsData = {};
+  for (const [key, value] of Object.entries(aggsData))
+    if (Array.isArray(value.histogram))
+      simpleAggsData[key] = {
+        histogram: value.histogram,
+      };
+    else
+      for (const [nestedKey, nestedValue] of Object.entries(value))
+        simpleAggsData[`${key}.${nestedKey}`] = {
+          histogram: nestedValue.histogram,
+        };
+
+  return simpleAggsData;
+}
