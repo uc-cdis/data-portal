@@ -98,6 +98,8 @@
  * @property {string} [mainFieldTitle]
  * @property {boolean} [mainFieldIsNumeric]
  * @property {string[]} [aggFields]
+ * @property {string} [downloadAccessor]
+ * @property {string} [fileCountField]
  */
 
 /**
