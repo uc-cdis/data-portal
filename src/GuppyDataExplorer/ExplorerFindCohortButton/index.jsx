@@ -8,12 +8,12 @@ import { overrideSelectTheme } from '../../utils';
 import { fetchWithCreds } from '../../actions';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import { stringifyFilters } from '../ExplorerCohort/utils';
-import '../ExplorerCohort/typedef';
+import '../typedef';
 import './ExplorerFindCohortButton.css';
 
 /**
  * @param {Object} props
- * @param {ExplorerFilters} props.filter
+ * @param {FilterState} props.filter
  */
 function ExplorerFindCohortButton({ filter }) {
   const emptyOption = {
