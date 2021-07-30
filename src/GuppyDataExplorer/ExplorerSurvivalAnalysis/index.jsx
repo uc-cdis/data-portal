@@ -36,10 +36,10 @@ const fetchResult = (body) => {
 
 /**
  * @param {Object} prop
- * @param {Object} prop.aggsData
+ * @param {AggsData} prop.aggsData
  * @param {SurvivalAnalysisConfig} prop.config
- * @param {Array} prop.fieldMapping
- * @param {Object} prop.filter
+ * @param {{ field: string; name: string; }[]} prop.fieldMapping
+ * @param {FilterState} prop.filter
  */
 function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value

@@ -15,7 +15,7 @@ import './typedef';
 
 /**
  * @param {Object} prop
- * @param {Object} prop.colorScheme
+ * @param {ColorScheme} prop.colorScheme
  * @param {SurvivalData[]} prop.data
  * @param {number} prop.timeInterval
  */
@@ -111,7 +111,7 @@ Plot.propTypes = {
 
 /**
  * @param {Object} prop
- * @param {Object} prop.colorScheme
+ * @param {ColorScheme} prop.colorScheme
  * @param {SurvivalData[]} prop.data
  * @param {boolean} prop.isStratified
  * @param {number} prop.timeInterval

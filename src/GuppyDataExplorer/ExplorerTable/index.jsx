@@ -11,6 +11,9 @@ import { capitalizeFirstLetter, humanFileSize } from '../../utils';
 import './ExplorerTable.css';
 import LockIcon from '../../img/icons/lock.svg';
 import dictIcons from '../../img/icons/index';
+import '../typedef';
+
+/** @typedef {import('react-table').Column} ReactTableColumn */
 
 /**
  * A simplified alternative to lodash/get using string path of property names only.
@@ -22,9 +25,32 @@ import dictIcons from '../../img/icons/index';
 const get = (object, path, defaultValue) =>
   path.split('.').reduce((obj, key) => obj && obj[key], object) || defaultValue;
 
+/**
+ * @typedef {Object} ExplorerTableProps
+ * @property {Object[]} rawData
+ * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise} fetchAndUpdateRawData
+ * @property {number} accessibleCount
+ * @property {boolean} isLocked
+ * @property {string} className
+ * @property {number} defaultPageSize
+ * @property {{ fields: string[]; linkFields: string[]; ordered: boolean }} tableConfig
+ * @property {GuppyConfig} guppyConfig
+ * @property {number} totalCount
+ */
+
+/**
+ * @typedef {Object} ExplorerTableState
+ * @property {number} pageSize
+ * @property {number} currentPage
+ * @property {boolean} isInitialFetchData
+ */
+
+/** @augments {React.Component<ExplorerTableProps, ExplorerTableState>} */
 class ExplorerTable extends React.Component {
+  /** @param {ExplorerTableProps} props */
   constructor(props) {
     super(props);
+    /** @type {ExplorerTableState} */
     this.state = {
       pageSize: props.defaultPageSize,
       currentPage: 0,
@@ -32,6 +58,10 @@ class ExplorerTable extends React.Component {
     };
   }
 
+  /**
+   * @param {string} field
+   * @param {string} columnName
+   */
   getWidthForColumn = (field, columnName) => {
     if (field === 'external_links') return 200;
 
@@ -70,12 +100,12 @@ class ExplorerTable extends React.Component {
 
   /**
    * Build column configs for each table according to their locations and fields
-   * @param field: the full field name, if it is a nested field, it would contains at least 1 '.'
-   * @param isNestedTableColumn: control flag to determine if it is building column config for
+   * @param {string} field: the full field name, if it is a nested field, it would contains at least 1 '.'
+   * @param {boolean} isNestedTableColumn: control flag to determine if it is building column config for
    * the root table or inner nested tables
-   * @param isDetailedColumn: control flag to determine if it is building column config for inner
+   * @param {boolean} isDetailedColumn: control flag to determine if it is building column config for inner
    * most nested table
-   * @returns: a column config for the input field which can be used by react-table
+   * @returns {ReactTableColumn} a column config for the input field which can be used by react-table
    */
   buildColumnConfig = (field, isNestedTableColumn, isDetailedColumn) => {
     const fieldMappingEntry =
@@ -91,12 +121,14 @@ class ExplorerTable extends React.Component {
         )
       : capitalizeFirstLetter(field);
 
+    /** @type {ReactTableColumn} */
     const columnConfig = {
       Header: overrideName || fieldName,
       id: field,
       maxWidth: 600,
       // for nested table we set the width arbitrary wrt view width
       // because the width of its parent row is too big
+      // @ts-ignore
       width: isNestedTableColumn
         ? '70vw'
         : this.getWidthForColumn(field, overrideName || fieldName),
@@ -214,7 +246,7 @@ class ExplorerTable extends React.Component {
    * We only need nested table if the nested field is an array
    * Otherwise the nested field will have 1-1 relationship to its parent
    * so can be displayed in one row
-   * @param nestedArrayFieldNames: an object containing all the nested array fields,
+   * @param {{ [x: string]: string[] }} nestedArrayFieldNames: an object containing all the nested array fields,
    * separated by their parent names
    * e.g.:
    * {
@@ -237,6 +269,7 @@ class ExplorerTable extends React.Component {
    * }
    */
   buildNestedArrayFieldColumnConfigs = (nestedArrayFieldNames) => {
+    /** @type {{ [x: string]: ReactTableColumn[][] }} */
     const nestedArrayFieldColumnConfigs = {};
     Object.keys(nestedArrayFieldNames).forEach((key) => {
       if (!nestedArrayFieldColumnConfigs[key]) {
@@ -264,6 +297,12 @@ class ExplorerTable extends React.Component {
     return nestedArrayFieldColumnConfigs;
   };
 
+  /**
+   * @param {Object} state
+   * @param {number} state.page
+   * @param {number} state.pageSize
+   * @param {{ id: string; desc: boolean }[]} state.sorted
+   */
   fetchData = (state) => {
     const offset = state.page * state.pageSize;
     const sort = state.sorted.map((i) => ({
@@ -297,8 +336,11 @@ class ExplorerTable extends React.Component {
       this.buildColumnConfig(field, false, false)
     );
     if (!this.props.tableConfig.ordered) {
-      rootColumnsConfig.sort((a, b) => a.Header.localeCompare(b.Header));
+      rootColumnsConfig.sort((a, b) =>
+        String(a.Header).localeCompare(String(b.Header))
+      );
     }
+    /** @type {{ [x: string]: string[] }} */
     const nestedArrayFieldNames = {};
     this.props.tableConfig.fields.forEach((field) => {
       if (field.includes('.')) {
@@ -317,11 +359,11 @@ class ExplorerTable extends React.Component {
         }
       }
     });
-    let nestedArrayFieldColumnConfigs = {};
+    /** @type {import('react-table').SubComponentFunction} */
     let subComponent = null;
     if (Object.keys(nestedArrayFieldNames).length > 0) {
       // eslint-disable-next-line max-len
-      nestedArrayFieldColumnConfigs = this.buildNestedArrayFieldColumnConfigs(
+      const nestedArrayFieldColumnConfigs = this.buildNestedArrayFieldColumnConfigs(
         nestedArrayFieldNames
       );
       // this is the subComponent of the two-level nested tables

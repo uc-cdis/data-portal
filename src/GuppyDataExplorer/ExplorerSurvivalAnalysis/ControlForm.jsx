@@ -6,6 +6,7 @@ import SimpleInputField from '../../components/SimpleInputField';
 import { overrideSelectTheme } from '../../utils';
 import './typedef';
 
+/** @param {{ label: string; [x: string]: any }} props */
 const ControlFormSelect = ({ label, ...selectProps }) => (
   <SimpleInputField
     label={label}
@@ -19,6 +20,7 @@ ControlFormSelect.propTypes = {
   label: PropTypes.string,
 };
 
+/** @param {{ label: string; [x: string]: any }} props */
 const ControlFormInput = ({ label, ...inputAttrs }) => (
   <SimpleInputField label={label} input={<input {...inputAttrs} />} />
 );

@@ -1,12 +1,25 @@
-/*
+import './typedef';
+
+/**
  * Buttons are grouped by their dropdownId value.
  * This function calculates and groups buttons under the same dropdown,
  * and return a map of dropdown ID and related infos for that dropdown:
  *   cnt: how many buttons under this dropdown
  *   dropdownConfig: infos for this dropdown, e.g. "title"
  *   buttonConfigs: a list of button configs (includes buttion title, button type, etc.)
+ * @param {Object} config
+ * @param {SingleButtonConfig[]} config.buttons
+ * @param {DropdownsConfig} config.dropdowns
  */
 export const calculateDropdownButtonConfigs = (config) => {
+  /**
+   * @typedef {Object} SingleDropdownButtonConfig
+   * @property {number} cnt
+   * @property {{ title: string }} dropdownConfig
+   * @property {SingleButtonConfig[]} buttonConfigs
+   */
+
+  /** @type {false | { [x: string]: SingleDropdownButtonConfig }} */
   const dropdownConfig =
     config &&
     config.dropdowns &&
@@ -34,11 +47,11 @@ export const calculateDropdownButtonConfigs = (config) => {
   return dropdownConfig;
 };
 
-/*
+/**
  * Humanize a number
  * @param {number} number - a integer to convert
  * @param {number} fixedPoint - fixzed point position
- * @returns {string|number} the humanized number
+ * @returns the humanized number
  */
 export const humanizeNumber = (number, fixedPoint = 2) => {
   const largeNumberNames = {
@@ -91,7 +104,7 @@ function isRangeFilter(value) {
  * - filter value is a plain object
  * - filter keys include only fields specified in the configuration
  * @param {*} value
- * @param {{ tabs: { fields: string[] }[] }} filterConfig
+ * @param {FilterConfig} filterConfig
  */
 export function validateFilter(value, filterConfig) {
   if (!isPlainObject(value)) return false;

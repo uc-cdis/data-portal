@@ -2,9 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import NotFoundSVG from '../../img/not-found.svg';
 
+/** @typedef {{ children: React.ReactNode}} ExplorerErrorBoundaryProps */
+
+/** @typedef {{ hasError: boolean }} ExplorerErrorBoundaryState */
+
+/** @augments {React.Component<ExplorerErrorBoundaryProps, ExplorerErrorBoundaryState>} */
 class ExplorerErrorBoundary extends React.Component {
+  /** @param {ExplorerErrorBoundaryProps} props */
   constructor(props) {
     super(props);
+    /** @type {ExplorerErrorBoundaryState} */
     this.state = { hasError: false };
   }
 
@@ -12,6 +19,10 @@ class ExplorerErrorBoundary extends React.Component {
     return { hasError: true };
   }
 
+  /**
+   * @param {Error} error
+   * @param {React.ErrorInfo} errorInfo
+   */
   componentDidCatch(error, errorInfo) {
     // eslint-disable-next-line no-console
     console.error('Explorer has error:', error, errorInfo);
