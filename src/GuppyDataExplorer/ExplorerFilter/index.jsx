@@ -4,6 +4,21 @@ import ConnectedFilter from '../../GuppyComponents/ConnectedFilter';
 import { FilterConfigType, GuppyConfigType } from '../configTypeDef';
 import './ExplorerFilter.css';
 
+/**
+ * @typedef {Object} ExplorerFilterProps
+ * @property {string} className
+ * @property {boolean} hasAppliedFilters
+ * @property {() => void} onFilterClear
+ * @property {FilterConfig} filterConfig
+ * @property {GuppyConfig} guppyConfig
+ * @property {number} tierAccessLimit
+ * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
+ * @property {FilterState} initialAppliedFilters
+ * @property {string[]} patientIds
+ * @property {(x: string[]) => void} onPatientIdsChange
+ */
+
+/** @param {ExplorerFilterProps} props */
 function ExplorerFilter({
   className = '',
   hasAppliedFilters,
