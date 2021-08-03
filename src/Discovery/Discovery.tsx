@@ -70,6 +70,8 @@ export const renderFieldContent = (content: any, contentType: 'string'|'paragrap
         onClick={(ev) => ev.stopPropagation()}
         onKeyPress={(ev) => ev.stopPropagation()}
         href={content}
+        target='_blank'
+        rel='noreferrer'
       >
         {content}
       </a>
