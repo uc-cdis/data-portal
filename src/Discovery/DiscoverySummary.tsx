@@ -17,10 +17,12 @@ const renderAggregation = (aggregation: AggregationConfig, studies: any[] | null
   let fields = studies.map((s) => s[field]);
   // Replace any undefined fields with value 0
   fields = fields.map((item) => (typeof item === 'undefined' ? 0 : item));
-
   switch (type) {
-  case 'sum':
+  case 'sum': {
+    // parse any string representation of an integer
+    fields = fields.map((item) => (typeof item === 'string' ? parseInt(item, 10) || 0 : item));
     return sum(fields).toLocaleString();
+  }
   case 'count':
     return uniq(fields).length.toLocaleString();
   default:
