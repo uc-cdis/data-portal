@@ -29,6 +29,7 @@ export const FilterConfigType = PropTypes.shape({
 export const TableConfigType = PropTypes.shape({
   enabled: PropTypes.bool,
   fields: PropTypes.arrayOf(PropTypes.string),
+  ordered: PropTypes.bool,
 });
 
 export const ButtonConfigType = PropTypes.shape({
@@ -61,5 +62,6 @@ export const SurvivalAnalysisConfigType = PropTypes.shape({
 });
 
 export const PatientIdsConfigType = PropTypes.shape({
-  enabled: PropTypes.bool,
+  filter: PropTypes.bool,
+  export: PropTypes.bool,
 });

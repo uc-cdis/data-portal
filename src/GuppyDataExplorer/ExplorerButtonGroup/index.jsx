@@ -15,10 +15,57 @@ import {
 } from '../../localconf';
 import './ExplorerButtonGroup.css';
 import Popup from '../../components/Popup';
+import '../typedef';
 
+/**
+ * @typedef {Object} ExplorerButtonGroupProps
+ * @property {Object} job
+ * @property {(args: {  sort: GqlSort; format: string }) => Promise} downloadRawData
+ * @property {(args: { fields: string[]; sort: GqlSort }) => Promise} downloadRawDataByFields
+ * @property {(type: string, filter: FilterState, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
+ * @property {(type: string, filter: FilterState) => Promise} getTotalCountsByTypeAndFilter
+ * @property {number} accessibleCount
+ * @property {number} totalCount
+ * @property {FilterState} filter
+ * @property {boolean} isPending: PropTypes.bool,
+ * @property {ButtonConfig} buttonConfig: ButtonConfigType.isRequired,
+ * @property {GuppyConfig} guppyConfig: GuppyConfigType.isRequired,
+ * @property {import('history').History} history: PropTypes.object.isRequired,
+ * @property {(body: any) => void} submitJob: PropTypes.func.isRequired,
+ * @property {() => void} resetJobState: PropTypes.func.isRequired,
+ * @property {() => void} checkJobStatus: PropTypes.func.isRequired,
+ * @property {(jobId: any) => Promise} fetchJobResult: PropTypes.func.isRequired,
+ * @property {boolean} isLocked: PropTypes.bool.isRequired,
+ * @property {Object} userAccess: PropTypes.object.isRequired,
+ */
+
+/**
+ * @typedef {Object} ExplorerButtonGroupState
+ * @property {boolean} isDownloadingData
+ * @property {number} downloadDataCount
+ * @property {number} manifestEntryCount
+ * @property {boolean} toasterOpen
+ * @property {string} toasterHeadline
+ * @property {React.ReactElement} toasterError
+ * @property {string} toasterErrorText
+ * @property {boolean} exportingToTerra
+ * @property {boolean} exportingToSevenBridges
+ * @property {string} exportPFBURL
+ * @property {string} pfbStartText
+ * @property {string} pfbWarning
+ * @property {string} pfbSuccessText
+ * @property {boolean} exportingToWorkspace
+ * @property {string} exportWorkspaceFileName
+ * @property {number} exportWorkspaceStatus
+ * @property {string} workspaceSuccessText
+ */
+
+/** @augments {React.Component<ExplorerButtonGroupProps, ExplorerButtonGroupState>} */
 class ExplorerButtonGroup extends React.Component {
+  /** @param {ExplorerButtonGroupProps} props */
   constructor(props) {
     super(props);
+    /** @type {ExplorerButtonGroupState} */
     this.state = {
       // for data
       isDownloadingData: false,
@@ -51,6 +98,7 @@ class ExplorerButtonGroup extends React.Component {
     };
   }
 
+  /** @param {ExplorerButtonGroupProps} prevProps */
   componentDidUpdate(prevProps) {
     if (
       this.props.job &&
@@ -101,6 +149,10 @@ class ExplorerButtonGroup extends React.Component {
     this.props.resetJobState();
   }
 
+  /**
+   * @param {ExplorerButtonGroupProps} props
+   * @param {ExplorerButtonGroupState} state
+   */
   static getDerivedStateFromProps(props, state) {
     if (
       !state.isDownloadingData &&
@@ -113,6 +165,7 @@ class ExplorerButtonGroup extends React.Component {
     return null;
   }
 
+  /** @param {SingleButtonConfig} buttonConfig */
   getOnClickFunction = (buttonConfig) => {
     let clickFunc = () => {};
     if (buttonConfig.type === 'data') {
@@ -149,6 +202,7 @@ class ExplorerButtonGroup extends React.Component {
     return clickFunc;
   };
 
+  /** @param {string} indexType */
   getManifest = async (indexType) => {
     if (
       !this.props.guppyConfig.manifestMapping ||
@@ -320,6 +374,7 @@ class ExplorerButtonGroup extends React.Component {
     });
   };
 
+  /** @param {string} filename */
   downloadData = (filename) => () => {
     this.setState({ isDownloadingData: true });
     this.props
@@ -342,6 +397,10 @@ class ExplorerButtonGroup extends React.Component {
       );
   };
 
+  /**
+   * @param {string} filename
+   * @param {string} indexType
+   */
   downloadManifest = (filename, indexType) => async () => {
     const resultManifest = await this.getManifest(indexType);
     if (resultManifest) {
@@ -415,6 +474,7 @@ class ExplorerButtonGroup extends React.Component {
     }));
   };
 
+  /** @param {string} indexType */
   exportToWorkspace = async (indexType) => {
     this.setState({ exportingToWorkspace: true });
     const resultManifest = await this.getManifest(indexType);
@@ -440,6 +500,7 @@ class ExplorerButtonGroup extends React.Component {
     }
   };
 
+  /** @param {{ filename: string }} data */
   exportToWorkspaceSuccessHandler = (data) => {
     this.setState((prevState) => ({
       toasterOpen: true,
@@ -450,6 +511,7 @@ class ExplorerButtonGroup extends React.Component {
     }));
   };
 
+  /** @param {number} status */
   exportToWorkspaceErrorHandler = (status) => {
     this.setState((prevState) => ({
       toasterOpen: true,
@@ -459,6 +521,10 @@ class ExplorerButtonGroup extends React.Component {
     }));
   };
 
+  /**
+   * @param {number} status
+   * @param {string} message
+   */
   exportToWorkspaceMessageHandler = (status, message) => {
     this.setState({
       toasterOpen: true,
@@ -468,6 +534,7 @@ class ExplorerButtonGroup extends React.Component {
     });
   };
 
+  /** @param {SingleButtonConfig} buttonConfig */
   isFileButton = (buttonConfig) =>
     buttonConfig.type === 'manifest' ||
     buttonConfig.type === 'export' ||
@@ -532,11 +599,13 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   // check if the user has access to this resource
+  /** @param {SingleButtonConfig} buttonConfig */
   isButtonDisplayed = (buttonConfig) => {
     if (
       buttonConfig.type === 'export-to-workspace' ||
       buttonConfig.type === 'export-files-to-workspace'
     ) {
+      /** @type {boolean} */
       const authResult = this.props.userAccess.Workspace;
       return typeof authResult !== 'undefined' ? authResult : true;
     }
@@ -544,6 +613,7 @@ class ExplorerButtonGroup extends React.Component {
     return true;
   };
 
+  /** @param {SingleButtonConfig} buttonConfig */
   isButtonEnabled = (buttonConfig) => {
     if (this.props.isLocked) {
       return !this.props.isLocked;
@@ -596,6 +666,7 @@ class ExplorerButtonGroup extends React.Component {
     return this.props.totalCount > 0;
   };
 
+  /** @param {SingleButtonConfig} buttonConfig */
   isButtonPending = (buttonConfig) => {
     if (this.props.isPending) {
       return true;
@@ -630,6 +701,7 @@ class ExplorerButtonGroup extends React.Component {
     return false;
   };
 
+  /** @param {SingleButtonConfig} buttonConfig */
   renderButton = (buttonConfig) => {
     if (!this.isButtonDisplayed(buttonConfig)) {
       return null;

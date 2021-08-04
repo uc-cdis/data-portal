@@ -6,6 +6,7 @@ import SimpleInputField from '../../components/SimpleInputField';
 import { overrideSelectTheme } from '../../utils';
 import './typedef';
 
+/** @param {{ label: string; [x: string]: any }} props */
 const ControlFormSelect = ({ label, ...selectProps }) => (
   <SimpleInputField
     label={label}
@@ -19,6 +20,7 @@ ControlFormSelect.propTypes = {
   label: PropTypes.string,
 };
 
+/** @param {{ label: string; [x: string]: any }} props */
 const ControlFormInput = ({ label, ...inputAttrs }) => (
   <SimpleInputField label={label} input={<input {...inputAttrs} />} />
 );
@@ -57,24 +59,12 @@ const ControlForm = ({
   const [endTime, setEndTime] = useState(20);
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
 
-  const [isInputChanged, setIsInputChanged] = useState(false);
+  const [isInputChanged, setIsInputChanged] = useState(true);
   useEffect(() => {
     if (!isInputChanged && isError) setIsInputChanged(true);
   }, [isInputChanged, isError]);
 
   const [shouldUpdateResults, setShouldUpdateResults] = useState(true);
-  useEffect(() => {
-    if (isFilterChanged)
-      onSubmit({
-        factorVariable: factorVariable.value,
-        stratificationVariable: stratificationVariable.value,
-        timeInterval: localTimeInterval,
-        startTime,
-        endTime,
-        efsFlag: survivalType.value === 'efs',
-        shouldUpdateResults: true,
-      });
-  }, [isFilterChanged]);
 
   const validateNumberInput = (
     /** @type {{ target: { value: string, min: string, max: string }}} */ e

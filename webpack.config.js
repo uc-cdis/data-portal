@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 
 const basename = process.env.BASENAME || '/';
@@ -77,11 +76,6 @@ module.exports = {
   entry: './src/index.jsx',
   target: 'web',
   bail: isProduction,
-  externals: [
-    nodeExternals({
-      allowlist: ['graphiql', 'graphql-language-service-parser'],
-    }),
-  ],
   mode: isProduction ? 'production' : 'development',
   output: {
     path: __dirname,

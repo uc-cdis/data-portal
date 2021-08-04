@@ -3,7 +3,7 @@ import './typedef';
 
 /**
  * Get factor variables to use for survival analysis
- * @param {{ [key: string]: any }} aggsData
+ * @param {SimpleAggsData} aggsData
  * @param {{ field: string; name: string }[]} fieldMapping
  * @param {string[]} enumFilterList
  */

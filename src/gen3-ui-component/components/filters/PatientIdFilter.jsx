@@ -57,62 +57,62 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
           borderBottom: 'none',
         }}
       >
-        <Tooltip
-          placement='topLeft'
-          overlay='Patient ID is a special filter and cannot be used in cohorts like other normal filters.'
-          arrowContent={<div className='rc-tooltip-arrow-inner' />}
-          trigger={['hover', 'focus']}
+        <div
+          className='g3-filter-section__header'
+          style={{ marginBottom: '0.875rem' }}
         >
           <div
-            className='g3-filter-section__header'
-            style={{ marginBottom: '.5rem', height: 'auto' }}
+            className='g3-filter-section__title-container'
+            role='button'
+            tabIndex={0}
+            aria-label='Filter: patient ids'
           >
-            <div
-              className='g3-filter-section__title-container'
-              role='button'
-              tabIndex={0}
-              aria-label='Filter: patient ids'
+            <Tooltip
+              placement='topLeft'
+              overlay='Patient ID is a special filter and cannot be used in cohorts like other normal filters.'
+              arrowContent={<div className='rc-tooltip-arrow-inner' />}
+              mouseLeaveDelay={0}
+              trigger={['hover', 'focus']}
             >
-              <div className='g3-filter-section__toggle-icon-container'>
-                <i className='g3-filter-section__toggle-icon g3-icon g3-icon-color__coal g3-icon--sm g3-icon--star' />
-              </div>
-              <div
-                className={`g3-filter-section__title${
-                  isUsingPatientIds ? ' g3-filter-section__title--active' : ''
-                }`}
-              >
-                Patient ID
-              </div>
-              {isUsingPatientIds && (
+              <div style={{ display: 'flex' }}>
+                <div className='g3-filter-section__toggle-icon-container'>
+                  <i className='g3-filter-section__toggle-icon g3-icon g3-icon-color__coal g3-icon--sm g3-icon--star' />
+                </div>
                 <div
-                  className='g3-filter-section__selected-count-chip'
-                  style={{ marginTop: '2px', marginBottom: '2px' }}
+                  className={`g3-filter-section__title${
+                    isUsingPatientIds ? ' g3-filter-section__title--active' : ''
+                  }`}
                 >
-                  <div
-                    className='g3-filter-section__range-filter-clear-btn'
-                    onClick={handleReset}
-                    onKeyPress={(e) => {
-                      if (e.charCode === 13 || e.charCode === 32) {
-                        e.preventDefault();
-                        handleReset();
-                      }
-                    }}
-                    role='button'
-                    tabIndex={0}
-                    aria-label='Reset filter'
-                  >
-                    <div className='g3-filter-section__range-filter-clear-btn-text'>
-                      reset
-                    </div>
-                    <div className='g3-filter-section__range-filter-clear-btn-icon'>
-                      <i className='g3-icon g3-icon--sm g3-icon-color__lightgray g3-icon--sm g3-icon--undo' />
-                    </div>
+                  Patient ID
+                </div>
+              </div>
+            </Tooltip>
+            {isUsingPatientIds && (
+              <div className='g3-filter-section__selected-count-chip'>
+                <div
+                  className='g3-filter-section__range-filter-clear-btn'
+                  onClick={handleReset}
+                  onKeyPress={(e) => {
+                    if (e.charCode === 13 || e.charCode === 32) {
+                      e.preventDefault();
+                      handleReset();
+                    }
+                  }}
+                  role='button'
+                  tabIndex={0}
+                  aria-label='Reset filter'
+                >
+                  <div className='g3-filter-section__range-filter-clear-btn-text'>
+                    reset
+                  </div>
+                  <div className='g3-filter-section__range-filter-clear-btn-icon'>
+                    <i className='g3-icon g3-icon--sm g3-icon-color__lightgray g3-icon--sm g3-icon--undo' />
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
-        </Tooltip>
+        </div>
 
         <Button label='Upload IDs' rightIcon='upload' onClick={openModal} />
       </div>

@@ -15,7 +15,7 @@ import './typedef';
 
 /**
  * @param {Object} prop
- * @param {Object} prop.colorScheme
+ * @param {ColorScheme} prop.colorScheme
  * @param {SurvivalData[]} prop.data
  * @param {number} prop.timeInterval
  */
@@ -111,7 +111,7 @@ Plot.propTypes = {
 
 /**
  * @param {Object} prop
- * @param {Object} prop.colorScheme
+ * @param {ColorScheme} prop.colorScheme
  * @param {SurvivalData[]} prop.data
  * @param {boolean} prop.isStratified
  * @param {number} prop.timeInterval
@@ -121,7 +121,7 @@ const SurvivalPlot = ({ colorScheme, data, isStratified, timeInterval }) => (
     {/* eslint-disable-next-line no-nested-ternary */}
     {data.length === 0 ? (
       <div className='explorer-survival-analysis__figure-placeholder'>
-        Survival plot here
+        Click "Apply" to get the survival plot here.
       </div>
     ) : isStratified ? (
       Object.entries(

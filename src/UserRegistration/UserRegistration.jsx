@@ -4,33 +4,55 @@ import SimplePopup from '../components/SimplePopup';
 import { headers, userapiPath } from '../localconf';
 import RegistrationForm from './RegistrationForm';
 import './UserRegistration.css';
-
-/**
- * @typedef {Object} UserRegistrationInput
- * @property {string} firstName
- * @property {string} lastName
- * @property {string} institution
- */
+import './typedef';
 
 /**
  * @param {Object} prop
+ * @param {UserRegistrationDocument[]} prop.docsToBeReviewed
  * @param {boolean} prop.shouldRegister
- * @param {(response: Response) => Promise<('success' | 'error')>} prop.updateAccess
+ * @param {(responses: Response[]) => ('success' | 'error')} prop.updateAccess
  */
-function UserRegistration({ shouldRegister, updateAccess }) {
+function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
   const [show, setShow] = useState(shouldRegister);
 
   function handleClose() {
     setShow(false);
   }
 
-  function handleRegister(/** @type {UserRegistrationInput} */ userInput) {
-    return fetch(`${userapiPath}user/`, {
-      body: JSON.stringify(userInput),
-      credentials: 'include',
-      headers,
-      method: 'PUT',
-    }).then(updateAccess);
+  async function handleRegister(
+    /** @type {UserRegistrationInput} */ userInput
+  ) {
+    const { reviewStatus, ...userInformation } = userInput;
+
+    try {
+      const userResponse = await fetch(`${userapiPath}user/`, {
+        body: JSON.stringify(userInformation),
+        credentials: 'include',
+        headers,
+        method: 'PUT',
+      });
+      if (!userResponse.ok)
+        throw new Error('Failed to update user information.');
+
+      const hasReviewedDocument =
+        Object.values(reviewStatus).filter(Boolean).length > 0;
+      const documentsResponse = hasReviewedDocument
+        ? await fetch(`${userapiPath}user/documents`, {
+            body: JSON.stringify(reviewStatus),
+            credentials: 'include',
+            headers,
+            method: 'POST',
+          })
+        : new Response();
+      if (!documentsResponse.ok)
+        throw new Error('Failed to update document review status.');
+
+      const user = await userResponse.json();
+      return updateAccess(user);
+    } catch (e) {
+      console.error(e);
+      return 'error';
+    }
   }
 
   function handleSubscribe() {
@@ -41,6 +63,7 @@ function UserRegistration({ shouldRegister, updateAccess }) {
     show && (
       <SimplePopup>
         <RegistrationForm
+          docsToBeReviewed={docsToBeReviewed}
           onClose={handleClose}
           onRegister={handleRegister}
           onSubscribe={handleSubscribe}
@@ -51,6 +74,7 @@ function UserRegistration({ shouldRegister, updateAccess }) {
 }
 
 UserRegistration.propTypes = {
+  docsToBeReviewed: PropTypes.array,
   shouldRegister: PropTypes.bool.isRequired,
   updateAccess: PropTypes.func.isRequired,
 };

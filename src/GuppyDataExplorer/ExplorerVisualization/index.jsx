@@ -19,7 +19,16 @@ import {
   PatientIdsConfigType,
 } from '../configTypeDef';
 import './ExplorerVisualization.css';
+import '../typedef';
 
+/**
+ * @typedef {Object} ViewContainerProps
+ * @property {boolean} showIf
+ * @property {React.ReactNode} children
+ * @property {boolean} isLoading
+ */
+
+/** @param {ViewContainerProps} props */
 function ViewContainer({ showIf, children, isLoading }) {
   const baseClassName = 'guppy-explorer-visualization__view';
   return (
@@ -43,6 +52,7 @@ ViewContainer.propTypes = {
   isLoading: PropTypes.bool,
 };
 
+/** @param {SurvivalAnalysisConfig} survivalAnalysisConfig */
 function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
   if (survivalAnalysisConfig.result !== undefined)
     for (const resultOption of ['pval', 'risktable', 'survival'])
@@ -51,6 +61,14 @@ function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
   return false;
 }
 
+/**
+ * @param {Object} args
+ * @param {SimpleAggsData} args.aggsData
+ * @param {ChartConfig} args.chartConfig
+ * @param {FilterState} args.filter
+ * @param {string} args.nodeCountTitle
+ * @param {number} args.totalCount
+ */
 function getChartData({
   aggsData,
   chartConfig,
@@ -112,6 +130,33 @@ function getChartData({
   };
 }
 
+/**
+ * @typedef {Object} ExplorerVisualizationProps
+ * @property {number} accessibleCount
+ * @property {number} totalCount
+ * @property {AggsData} aggsData
+ * @property {Object[]} rawData
+ * @property {string[]} allFields
+ * @property {FilterState} filter
+ * @property {boolean} isLoadingAggsData
+ * @property {boolean} isLoadingRawData
+ * @property {(args: {  sort: GqlSort; format: string }) => Promise} downloadRawData
+ * @property {(args: { fields: string[]; sort: GqlSort }) => Promise} downloadRawDataByFields
+ * @property {(type: string, filter: FilterState, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
+ * @property {(type: string, filter: FilterState) => Promise} getTotalCountsByTypeAndFilter
+ * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise} fetchAndUpdateRawData
+ * @property {string} className
+ * @property {ButtonConfig} buttonConfig
+ * @property {ChartConfig} chartConfig
+ * @property {GuppyConfig} guppyConfig
+ * @property {SurvivalAnalysisConfig} survivalAnalysisConfig
+ * @property {TableConfig} tableConfig
+ * @property {PatientIdsConfig} patientIdsConfig
+ * @property {string} nodeCountTitle
+ * @property {number} tierAccessLimit
+ */
+
+/** @param {ExplorerVisualizationProps} props */
 function ExplorerVisualization({
   accessibleCount = 0,
   totalCount = 0,
@@ -169,13 +214,13 @@ function ExplorerVisualization({
     isLocked: isComponentLocked,
     isPending: isLoadingAggsData,
   };
+  const tableColumnsOrdered =
+    tableConfig.fields && tableConfig.fields.length > 0;
   const tableProps = {
     className: 'guppy-explorer-visualization__table',
     tableConfig: {
-      fields:
-        tableConfig.fields && tableConfig.fields.length > 0
-          ? tableConfig.fields
-          : allFields,
+      fields: tableColumnsOrdered ? tableConfig.fields : allFields,
+      ordered: tableColumnsOrdered,
       linkFields: tableConfig.linkFields || [],
     },
     fetchAndUpdateRawData,
@@ -208,7 +253,7 @@ function ExplorerVisualization({
           ))}
         </div>
         <div className='guppy-explorer-visualization__button-group'>
-          {patientIdsConfig?.enabled && (
+          {patientIdsConfig?.export && (
             <ExplorerFindCohortButton filter={filter} />
           )}
           <ReduxExplorerButtonGroup {...buttonGroupProps} />

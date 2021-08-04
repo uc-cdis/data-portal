@@ -12,6 +12,35 @@ import {
 } from '../Utils/queries';
 import { FILE_FORMATS } from '../Utils/const';
 import { excludeSelfFilterFromAggsData, mergeFilters } from '../Utils/filters';
+import '../typedef';
+
+/**
+ * @typedef {Object} GuppyWrapperProps
+ * @property {FilterConfig} filterConfig
+ * @property {GuppyConfig} guppyConfig
+ * @property {React.ReactElement[]} children
+ * @property {(x: FilterState) => void} onFilterChange
+ * @property {string[]} rawDataFields
+ * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
+ * @property {FilterState} initialAppliedFilters
+ * @property {string[]} patientIds
+ */
+
+/**
+ * @typedef {Object} GuppyWrapperState
+ * @property {boolean} isLoadingAggsData
+ * @property {AggsData} receivedAggsData
+ * @property {AggsData} aggsData
+ * @property {FilterState} filter
+ * @property {boolean} isLoadingRawData
+ * @property {Object[]} rawData
+ * @property {number} accessibleCount
+ * @property {number} totalCount
+ * @property {string[]} allFields
+ * @property {string[]} aggsDataFields
+ * @property {string[]} rawDataFields
+ *
+ */
 
 /**
  * Wrapper that connects to Guppy server,
@@ -42,8 +71,10 @@ import { excludeSelfFilterFromAggsData, mergeFilters } from '../Utils/filters';
  *   - accessiableCount: count of raw data records user can access
  *   - totalCount: total count of raw data records
  *
+ * @augments {React.Component<GuppyWrapperProps>}
  */
 class GuppyWrapper extends React.Component {
+  /** @param {GuppyWrapperProps} props */
   constructor(props) {
     super(props);
     const initialFilter = mergeFilters(
@@ -53,6 +84,7 @@ class GuppyWrapper extends React.Component {
 
     // to avoid asynchronizations, we store another filter as private var
     this.filter = { ...initialFilter };
+    /** @type {GuppyWrapperState} */
     this.state = {
       isLoadingAggsData: false,
       receivedAggsData: {},
@@ -90,6 +122,7 @@ class GuppyWrapper extends React.Component {
     });
   }
 
+  /** @param {GuppyWrapperProps} prevProps */
   componentDidUpdate(prevProps) {
     if (prevProps.patientIds?.join(',') !== this.props.patientIds?.join(',')) {
       this.fetchAggsDataFromGuppy(this.state.filter);
@@ -101,6 +134,7 @@ class GuppyWrapper extends React.Component {
     this._isMounted = false;
   }
 
+  /** @param {FilterState} filter */
   handleFilterChange(filter) {
     if (this.props.onFilterChange) this.props.onFilterChange(filter);
 
@@ -116,6 +150,10 @@ class GuppyWrapper extends React.Component {
   /**
    * Fetch data from Guppy server.
    * This function will update this.state.rawData and this.state.totalCount
+   * @param {Object} args
+   * @param {number} args.offset
+   * @param {number} args.size
+   * @param {GqlSort} args.sort
    */
   handleFetchAndUpdateRawData({ offset = 0, size = 20, sort = [] }) {
     return this.fetchRawDataFromGuppy(
@@ -130,6 +168,9 @@ class GuppyWrapper extends React.Component {
   /**
    * Download all data from Guppy server and return raw data
    * This function uses current filter argument
+   * @param {Object} args
+   * @param {GqlSort} args.sort
+   * @param {string} args.format
    */
   handleDownloadRawData({ sort = [], format }) {
     // error handling for misconfigured format types
@@ -157,6 +198,9 @@ class GuppyWrapper extends React.Component {
    * Download all data from Guppy server and return raw data
    * For only given fields
    * This function uses current filter argument
+   * @param {Object} args
+   * @param {string[]} args.fields
+   * @param {GqlSort} args.sort
    */
   handleDownloadRawDataByFields({ fields, sort = [] }) {
     return downloadDataFromGuppy({
@@ -171,7 +215,7 @@ class GuppyWrapper extends React.Component {
   /**
    * Get total count from other es type, with filter
    * @param {string} type
-   * @param {object} filter
+   * @param {FilterState} filter
    */
   handleGetTotalCountsByTypeAndFilter(type, filter) {
     return queryGuppyForTotalCounts({
@@ -184,7 +228,7 @@ class GuppyWrapper extends React.Component {
   /**
    * Get raw data from other es type, with filter
    * @param {string} type
-   * @param {object} filter
+   * @param {FilterState} filter
    * @param {string[]} fields
    */
   handleDownloadRawDataByTypeAndFilter(type, filter, fields) {
@@ -204,7 +248,7 @@ class GuppyWrapper extends React.Component {
    *   - aggsData
    *   - accessibleCount
    *   - totalCount
-   * @param {object} filter
+   * @param {FilterState} filter
    */
   fetchAggsDataFromGuppy(filter) {
     if (this._isMounted) this.setState({ isLoadingAggsData: true });
@@ -254,10 +298,10 @@ class GuppyWrapper extends React.Component {
    * This function get data with current filter (if any),
    * and update this.state.rawData and this.state.totalCount
    * @param {string[]} fields
-   * @param {object} sort
-   * @param {bool} updateDataWhenReceive
-   * @param {number} offset
-   * @param {number} size
+   * @param {GqlSort} sort
+   * @param {boolean} updateDataWhenReceive
+   * @param {number} [offset]
+   * @param {number} [size]
    */
   fetchRawDataFromGuppy(fields, sort, updateDataWhenReceive, offset, size) {
     if (this._isMounted) this.setState({ isLoadingRawData: true });

@@ -36,10 +36,10 @@ const fetchResult = (body) => {
 
 /**
  * @param {Object} prop
- * @param {Object} prop.aggsData
+ * @param {AggsData} prop.aggsData
  * @param {SurvivalAnalysisConfig} prop.config
- * @param {Array} prop.fieldMapping
- * @param {Object} prop.filter
+ * @param {{ field: string; name: string; }[]} prop.fieldMapping
+ * @param {FilterState} prop.filter
  */
 function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
@@ -129,37 +129,6 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
         });
     else setIsUpdating(false);
   };
-  useEffect(() => {
-    let isMounted = true;
-
-    if (isMounted) {
-      setIsError(false);
-      setIsUpdating(true);
-      fetchResult({
-        filter: transformedFilter ?? {},
-        parameter: {
-          factorVariable: '',
-          stratificationVariable: '',
-          efsFlag: false,
-        },
-        result: config.result,
-      })
-        .then((result) => {
-          if (isMounted) {
-            if (config.result?.pval)
-              setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-            if (config.result?.risktable) setRisktable(result.risktable);
-            if (config.result?.survival) setSurvival(result.survival);
-          }
-        })
-        .catch(() => isMounted && setIsError(true))
-        .finally(() => isMounted && setIsUpdating(false));
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   return (
     <div className='explorer-survival-analysis'>

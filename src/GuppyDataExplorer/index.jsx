@@ -4,14 +4,15 @@ import GuppyDataExplorer from './GuppyDataExplorer';
 import { guppyUrl, tierAccessLimit, explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 import './GuppyExplorer.css';
+import './typedef';
 
 export default function Explorer() {
   if (explorerConfig.legnth === 0) {
     return null;
   }
-
   const history = useHistory();
   const isFilesPage = history.location.pathname === '/files';
+  /** @type {number} */
   const fileTabIndex = explorerConfig.findIndex(
     ({ guppyConfig }) => guppyConfig?.dataType === 'file'
   );
@@ -20,6 +21,7 @@ export default function Explorer() {
   }
 
   const [tabIndex, setTabIndex] = useState(isFilesPage ? fileTabIndex : 0);
+  /** @type {SingleExplorerConfig} */
   const tabConfig = explorerConfig[tabIndex];
   const isMultiTabExplorer = explorerConfig.length > 1;
 
@@ -27,30 +29,36 @@ export default function Explorer() {
     <div className='guppy-explorer'>
       {isMultiTabExplorer && (
         <div className='guppy-explorer__tabs'>
-          {explorerConfig.map(({ tabTitle, guppyConfig }, index) => (
-            <div
-              key={index}
-              className={'guppy-explorer__tab'.concat(
-                tabIndex === index ? ' guppy-explorer__tab--selected' : ''
-              )}
-              onClick={() => setTabIndex(index)}
-              onKeyPress={(e) => {
-                if (e.charCode === 13 || e.charCode === 32) {
-                  e.preventDefault();
-                  setTabIndex(index);
-                }
-              }}
-              role='button'
-              tabIndex={0}
-            >
-              <h3>
-                {tabTitle ||
-                  (guppyConfig?.dataType
-                    ? capitalizeFirstLetter(guppyConfig.dataType)
-                    : '')}
-              </h3>
-            </div>
-          ))}
+          {explorerConfig.map(
+            /**
+             * @param {SingleExplorerConfig} config
+             * @param {number} index
+             */
+            ({ tabTitle, guppyConfig }, index) => (
+              <div
+                key={index}
+                className={'guppy-explorer__tab'.concat(
+                  tabIndex === index ? ' guppy-explorer__tab--selected' : ''
+                )}
+                onClick={() => setTabIndex(index)}
+                onKeyPress={(e) => {
+                  if (e.charCode === 13 || e.charCode === 32) {
+                    e.preventDefault();
+                    setTabIndex(index);
+                  }
+                }}
+                role='button'
+                tabIndex={0}
+              >
+                <h3>
+                  {tabTitle ||
+                    (guppyConfig?.dataType
+                      ? capitalizeFirstLetter(guppyConfig.dataType)
+                      : '')}
+                </h3>
+              </div>
+            )
+          )}
         </div>
       )}
       <div className={isMultiTabExplorer ? 'guppy-explorer__main' : ''}>

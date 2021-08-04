@@ -124,7 +124,7 @@ const RiskTable = ({ data, isStratified, timeInterval }) => (
   <div className='explorer-survival-analysis__risk-table'>
     {data.length === 0 ? (
       <div className='explorer-survival-analysis__figure-placeholder'>
-        Rist table here
+        Click "Apply" to get the risk table here.
       </div>
     ) : (
       <>
