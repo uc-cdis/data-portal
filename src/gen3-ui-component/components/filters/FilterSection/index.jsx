@@ -260,9 +260,7 @@ class FilterSection extends React.Component {
       >
         <input
           className='g3-filter-section__search-input-box body'
-          onChange={() => {
-            this.handleSearchInputChange();
-          }}
+          onChange={this.handleSearchInputChange}
           ref={this.inputElem}
         />
         <span
@@ -302,7 +300,7 @@ class FilterSection extends React.Component {
       totalCount > this.props.initVisibleItemNumber && (
         <div
           className='g3-filter-section__show-more'
-          onClick={() => this.toggleShowMore()}
+          onClick={this.toggleShowMore}
           onKeyPress={(e) => {
             if (e.charCode === 13 || e.charCode === 32) {
               e.preventDefault();
@@ -378,7 +376,7 @@ class FilterSection extends React.Component {
             <div className='g3-filter-section__selected-count-chip'>
               <div
                 className='g3-filter-section__range-filter-clear-btn'
-                onClick={(e) => this.handleClearButtonClick(e)}
+                onClick={this.handleClearButtonClick}
                 onKeyPress={(e) => {
                   if (e.keyCode === 13 || e.keyCode === 32) {
                     e.preventDefault();
@@ -409,14 +407,14 @@ class FilterSection extends React.Component {
                     &nbsp;selected
                   </>
                 }
-                onClearButtonClick={(ev) => this.handleClearButtonClick(ev)}
+                onClearButtonClick={this.handleClearButtonClick}
               />
             </div>
           )}
         </div>
         {isTextFilter && this.props.isArrayField && (
           <div
-            onClick={() => this.toggleShowAndOrToggle()}
+            onClick={this.toggleShowAndOrToggle}
             onKeyPress={(e) => {
               if (e.charCode === 13 || e.charCode === 32) {
                 e.preventDefault();
@@ -436,7 +434,7 @@ class FilterSection extends React.Component {
         )}
         {isTextFilter && (
           <div
-            onClick={() => this.toggleShowSearch()}
+            onClick={this.toggleShowSearch}
             onKeyPress={(e) => {
               if (e.charCode === 13 || e.charCode === 32) {
                 e.preventDefault();
@@ -494,9 +492,7 @@ class FilterSection extends React.Component {
                     filterStatus[option.text] ? 'enabled' : 'disabled'
                   }`}
                   label={option.text}
-                  onSelect={(label) =>
-                    this.handleSelectSingleSelectFilter(label)
-                  }
+                  onSelect={this.handleSelectSingleSelectFilter}
                   selected={filterStatus[option.text]}
                   count={isSearchFilter ? null : option.count}
                   hideZero={this.props.hideZero}
@@ -536,9 +532,7 @@ class FilterSection extends React.Component {
                   label={option.text}
                   min={option.min}
                   max={option.max}
-                  onAfterDrag={(lb, ub, min, max, step) =>
-                    this.handleDragRangeFilter(lb, ub, min, max, step)
-                  }
+                  onAfterDrag={this.handleDragRangeFilter}
                   lowerBound={lowerBound}
                   upperBound={upperBound}
                   inactive={
