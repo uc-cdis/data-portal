@@ -237,21 +237,21 @@ describe('Update a range filter', () => {
 });
 
 describe('Update an option filter', () => {
-  function helper({ filterStatus, filterResults, singleFilterLabel }) {
+  function helper({ filterStatus, filterResults, selectedValue }) {
     return updateSelectedValue({
       filterStatus,
       filterResults,
       filterTabs: [{ title: 'a', fields: ['x'] }],
       tabIndex: 0,
       sectionIndex: 0,
-      singleFilterLabel,
+      selectedValue,
     });
   }
   test('Select value', () => {
     const updated = helper({
       filterStatus: [[{}]],
       filterResults: {},
-      singleFilterLabel: 'foo',
+      selectedValue: 'foo',
     });
     const expected = {
       filterResults: { x: { selectedValues: ['foo'] } },
@@ -263,7 +263,7 @@ describe('Update an option filter', () => {
     const updated = helper({
       filterStatus: [[{ foo: true }]],
       filterResults: { x: { selectedValues: ['foo'] } },
-      singleFilterLabel: 'foo',
+      selectedValue: 'foo',
     });
     const expected = {
       filterResults: {},

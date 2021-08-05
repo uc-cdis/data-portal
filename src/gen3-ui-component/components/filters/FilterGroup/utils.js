@@ -200,7 +200,7 @@ export function updateRangeValue({
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex
  * @param {number} args.sectionIndex
- * @param {string} args.singleFilterLabel
+ * @param {string} args.selectedValue
  */
 export function updateSelectedValue({
   filterStatus,
@@ -208,29 +208,28 @@ export function updateSelectedValue({
   filterTabs,
   tabIndex,
   sectionIndex,
-  singleFilterLabel,
+  selectedValue,
 }) {
   // update filter status
   const newFilterStatus = cloneDeep(filterStatus);
-  const oldSelected =
-    newFilterStatus[tabIndex][sectionIndex][singleFilterLabel];
+  const oldSelected = newFilterStatus[tabIndex][sectionIndex][selectedValue];
   const newSelected = oldSelected === undefined ? true : !oldSelected;
-  newFilterStatus[tabIndex][sectionIndex][singleFilterLabel] = newSelected;
+  newFilterStatus[tabIndex][sectionIndex][selectedValue] = newSelected;
 
   // update filter results
   let newFilterResults = cloneDeep(filterResults);
   const field = filterTabs[tabIndex].fields[sectionIndex];
   if (newFilterResults[field] === undefined) {
-    newFilterResults[field] = { selectedValues: [singleFilterLabel] };
+    newFilterResults[field] = { selectedValues: [selectedValue] };
   } else if (newFilterResults[field].selectedValues === undefined) {
-    newFilterResults[field].selectedValues = [singleFilterLabel];
+    newFilterResults[field].selectedValues = [selectedValue];
   } else {
     const filterValues = newFilterResults[field].selectedValues;
-    const findIndex = filterValues.indexOf(singleFilterLabel);
+    const findIndex = filterValues.indexOf(selectedValue);
     if (findIndex >= 0 && !newSelected) {
       filterValues.splice(findIndex, 1);
     } else if (findIndex < 0 && newSelected) {
-      filterValues.push(singleFilterLabel);
+      filterValues.push(selectedValue);
     }
   }
   newFilterResults = removeEmptyFilter(newFilterResults);

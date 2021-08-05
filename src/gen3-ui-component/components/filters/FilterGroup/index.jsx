@@ -123,16 +123,16 @@ function FilterGroup({
 
   /**
    * @param {number} sectionIndex
-   * @param {string} singleFilterLabel
+   * @param {string} selectedValue
    */
-  function handleSelect(sectionIndex, singleFilterLabel) {
+  function handleSelect(sectionIndex, selectedValue) {
     const updated = updateSelectedValue({
       filterStatus,
       filterResults,
       filterTabs,
       tabIndex,
       sectionIndex,
-      singleFilterLabel,
+      selectedValue,
     });
     setFilterStatus(updated.filterStatus);
     setFilterResults(updated.filterResults);
