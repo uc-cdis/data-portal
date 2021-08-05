@@ -123,149 +123,6 @@ class FilterSection extends React.Component {
     );
   };
 
-  getSearchInput() {
-    return (
-      <div
-        className={
-          this.state.isExpanded && this.state.showingSearch
-            ? 'g3-filter-section__search-input'
-            : 'g3-filter-section__hidden'
-        }
-      >
-        <input
-          className='g3-filter-section__search-input-box body'
-          onChange={() => {
-            this.handleSearchInputChange();
-          }}
-          ref={this.inputElem}
-        />
-        <span
-          className=''
-          onClick={
-            this.state.searchInputEmpty ? undefined : this.clearSearchInput
-          }
-          onKeyPress={(e) => {
-            if (this.state.searchInputEmpty) return;
-
-            if (e.charCode === 13 || e.charCode === 32) {
-              e.preventDefault();
-              this.clearSearchInput();
-            }
-          }}
-          role='button'
-          tabIndex={0}
-          aria-label={this.state.searchInputEmpty ? 'Search' : 'Clear'}
-        >
-          <i
-            className={`g3-icon g3-icon--${
-              this.state.searchInputEmpty ? 'search' : 'cross'
-            } g3-filter-section__search-input-close`}
-          />
-        </span>
-      </div>
-    );
-  }
-
-  getAndOrToggle() {
-    const tooltipText =
-      'This toggle selects the logical operator used to combine checked filter options. ' +
-      'If AND is set, records must match all checked filter options. ' +
-      'If OR is set, records must match at least one checked option.';
-    return (
-      <div
-        className={
-          this.state.isExpanded && this.state.showingAndOrToggle
-            ? 'g3-filter-section__and-or-toggle'
-            : 'g3-filter-section__hidden'
-        }
-      >
-        <span style={{ marginRight: '5px' }}>Combine with </span>
-        <Radio.Group defaultValue={this.state.combineMode} buttonStyle='solid'>
-          <Radio.Button
-            value='AND'
-            onChange={() => this.handleSetCombineModeOption('AND')}
-          >
-            AND
-          </Radio.Button>
-          <Radio.Button
-            value='OR'
-            onChange={() => this.handleSetCombineModeOption('OR')}
-          >
-            OR
-          </Radio.Button>
-        </Radio.Group>
-
-        <Tooltip
-          placement='right'
-          overlay={tooltipText}
-          overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
-          arrowContent={<div className='rc-tooltip-arrow-inner' />}
-          width='300px'
-          trigger={['hover', 'focus']}
-        >
-          <span className='g3-helper-tooltip'>
-            <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
-          </span>
-        </Tooltip>
-      </div>
-    );
-  }
-
-  getSearchFilter() {
-    const selectedOptions = Object.entries(this.state.filterStatus)
-      .filter((kv) => kv[1] === true)
-      .map((kv) => ({ value: kv[0], label: kv[0] }));
-    return (
-      <AsyncPaginate
-        className={
-          this.state.isExpanded
-            ? ''
-            : 'g3-filter-section__search-filter--hidden'
-        }
-        cacheOptions
-        controlShouldRenderValue={false}
-        defaultOptions
-        debounceTimeout={250}
-        value={selectedOptions}
-        loadOptions={(input, loadedOptions) =>
-          this.props.onSearchFilterLoadOptions(input, loadedOptions.length)
-        }
-        onChange={(option) => this.handleSelectSingleSelectFilter(option.value)}
-      />
-    );
-  }
-
-  getShowMoreButton() {
-    let totalCount = 0;
-    for (const o of this.props.options) {
-      if (o.count > 0 || !this.props.hideZero || o.count === -1)
-        totalCount += 1;
-    }
-    return (
-      totalCount > this.props.initVisibleItemNumber && (
-        <div
-          className='g3-filter-section__show-more'
-          onClick={() => this.toggleShowMore()}
-          onKeyPress={(e) => {
-            if (e.charCode === 13 || e.charCode === 32) {
-              e.preventDefault();
-              this.toggleShowMore();
-            }
-          }}
-          role='button'
-          tabIndex={0}
-          aria-label={this.state.showingMore ? 'Show less' : 'Show more'}
-        >
-          {this.state.showingMore
-            ? 'less'
-            : `${(
-                totalCount - this.props.initVisibleItemNumber
-              ).toLocaleString()} more`}
-        </div>
-      )
-    );
-  }
-
   clearSearchInput = () => {
     this.inputElem.current.value = '';
     this.setState({
@@ -322,6 +179,149 @@ class FilterSection extends React.Component {
       ),
     }));
   };
+
+  renderAndOrToggle() {
+    const tooltipText =
+      'This toggle selects the logical operator used to combine checked filter options. ' +
+      'If AND is set, records must match all checked filter options. ' +
+      'If OR is set, records must match at least one checked option.';
+    return (
+      <div
+        className={
+          this.state.isExpanded && this.state.showingAndOrToggle
+            ? 'g3-filter-section__and-or-toggle'
+            : 'g3-filter-section__hidden'
+        }
+      >
+        <span style={{ marginRight: '5px' }}>Combine with </span>
+        <Radio.Group defaultValue={this.state.combineMode} buttonStyle='solid'>
+          <Radio.Button
+            value='AND'
+            onChange={() => this.handleSetCombineModeOption('AND')}
+          >
+            AND
+          </Radio.Button>
+          <Radio.Button
+            value='OR'
+            onChange={() => this.handleSetCombineModeOption('OR')}
+          >
+            OR
+          </Radio.Button>
+        </Radio.Group>
+
+        <Tooltip
+          placement='right'
+          overlay={tooltipText}
+          overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
+          arrowContent={<div className='rc-tooltip-arrow-inner' />}
+          width='300px'
+          trigger={['hover', 'focus']}
+        >
+          <span className='g3-helper-tooltip'>
+            <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
+          </span>
+        </Tooltip>
+      </div>
+    );
+  }
+
+  renderSearchFilter() {
+    const selectedOptions = Object.entries(this.state.filterStatus)
+      .filter((kv) => kv[1] === true)
+      .map((kv) => ({ value: kv[0], label: kv[0] }));
+    return (
+      <AsyncPaginate
+        className={
+          this.state.isExpanded
+            ? ''
+            : 'g3-filter-section__search-filter--hidden'
+        }
+        cacheOptions
+        controlShouldRenderValue={false}
+        defaultOptions
+        debounceTimeout={250}
+        value={selectedOptions}
+        loadOptions={(input, loadedOptions) =>
+          this.props.onSearchFilterLoadOptions(input, loadedOptions.length)
+        }
+        onChange={(option) => this.handleSelectSingleSelectFilter(option.value)}
+      />
+    );
+  }
+
+  renderSearchInput() {
+    return (
+      <div
+        className={
+          this.state.isExpanded && this.state.showingSearch
+            ? 'g3-filter-section__search-input'
+            : 'g3-filter-section__hidden'
+        }
+      >
+        <input
+          className='g3-filter-section__search-input-box body'
+          onChange={() => {
+            this.handleSearchInputChange();
+          }}
+          ref={this.inputElem}
+        />
+        <span
+          className=''
+          onClick={
+            this.state.searchInputEmpty ? undefined : this.clearSearchInput
+          }
+          onKeyPress={(e) => {
+            if (this.state.searchInputEmpty) return;
+
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              this.clearSearchInput();
+            }
+          }}
+          role='button'
+          tabIndex={0}
+          aria-label={this.state.searchInputEmpty ? 'Search' : 'Clear'}
+        >
+          <i
+            className={`g3-icon g3-icon--${
+              this.state.searchInputEmpty ? 'search' : 'cross'
+            } g3-filter-section__search-input-close`}
+          />
+        </span>
+      </div>
+    );
+  }
+
+  renderShowMoreButton() {
+    let totalCount = 0;
+    for (const o of this.props.options) {
+      if (o.count > 0 || !this.props.hideZero || o.count === -1)
+        totalCount += 1;
+    }
+    return (
+      totalCount > this.props.initVisibleItemNumber && (
+        <div
+          className='g3-filter-section__show-more'
+          onClick={() => this.toggleShowMore()}
+          onKeyPress={(e) => {
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              this.toggleShowMore();
+            }
+          }}
+          role='button'
+          tabIndex={0}
+          aria-label={this.state.showingMore ? 'Show less' : 'Show more'}
+        >
+          {this.state.showingMore
+            ? 'less'
+            : `${(
+                totalCount - this.props.initVisibleItemNumber
+              ).toLocaleString()} more`}
+        </div>
+      )
+    );
+  }
 
   render() {
     // Takes in parent component's filterStatus or self state's filterStatus
@@ -468,9 +468,9 @@ class FilterSection extends React.Component {
         ) : (
           sectionHeader
         )}
-        {isTextFilter && this.getSearchInput()}
-        {this.props.isArrayField && this.getAndOrToggle()}
-        {isSearchFilter && this.getSearchFilter(Option)}
+        {isTextFilter && this.renderSearchInput()}
+        {this.props.isArrayField && this.renderAndOrToggle()}
+        {isSearchFilter && this.renderSearchFilter(Option)}
         <div className='g3-filter-section__options'>
           {(isTextFilter || isSearchFilter) &&
             this.state.isExpanded &&
@@ -552,7 +552,7 @@ class FilterSection extends React.Component {
           {isTextFilter &&
             this.state.isExpanded &&
             this.state.searchInputEmpty &&
-            this.getShowMoreButton()}
+            this.renderShowMoreButton()}
         </div>
       </div>
     );
