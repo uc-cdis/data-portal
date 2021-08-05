@@ -117,8 +117,11 @@ class ExplorerButtonGroup extends React.Component {
     });
   }
 
+
+
   getOnClickFunction = (buttonConfig) => {
     let clickFunc = () => {};
+
     if (buttonConfig.type.startsWith('data')) {
       clickFunc = this.downloadData(buttonConfig.fileName, buttonConfig.type.split('-').pop());
     }
@@ -796,10 +799,12 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       btnTooltipText = 'Currently you cannot export files with different Data Types. Please choose a single Data Type from the Data Type filter on the left.';
     }
 
+
+
     return (
       <Button
         key={buttonConfig.type}
-        onClick={clickFunc}
+        onClick={() => {this.isDownloadRegistrationEnabled(),clickFunc}}
         label={buttonTitle}
         leftIcon={buttonConfig.leftIcon}
         rightIcon={buttonConfig.rightIcon}
@@ -913,6 +918,16 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       </React.Fragment>
     );
   }
+  isDownloadRegistrationEnabled = () => {
+    if (this.props.buttonConfig.enableDownloadRegistrationLogin){
+      this.goToLogin();
+    }
+  }
+  goToLogin = () =>{
+    if(!this.props.user || !this.props.user.username) {
+      this.props.history.push('/login');
+    }
+  }
 }
 
 ExplorerButtonGroup.propTypes = {
@@ -933,6 +948,8 @@ ExplorerButtonGroup.propTypes = {
   fetchJobResult: PropTypes.func.isRequired,
   isLocked: PropTypes.bool.isRequired,
   userAccess: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  userAuthMapping: PropTypes.object.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {
