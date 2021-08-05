@@ -1,4 +1,4 @@
-/// <reference path="../typedef.js" />
+/// <reference path="../../../../GuppyComponents/typedef.js" />
 
 /** @typedef {{ [option: string]: boolean }} OptionFilterStatus */
 
