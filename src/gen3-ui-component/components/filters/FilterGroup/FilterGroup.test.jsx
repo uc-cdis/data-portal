@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import FilterGroup from '.';
 import FilterList from '../FilterList';
 
@@ -58,7 +58,7 @@ describe('FilterGroup', () => {
     ],
   };
 
-  const component = mount(
+  const component = shallow(
     <FilterGroup
       tabs={tabs}
       filterConfig={filterConfig}
@@ -68,10 +68,6 @@ describe('FilterGroup', () => {
 
   beforeEach(() => {
     component.find('.g3-filter-group__tab').at(0).simulate('click');
-  });
-
-  it('renders', () => {
-    expect(component.find(FilterGroup).length).toBe(1);
   });
 
   it('displays the correct number of tabs', () => {
@@ -92,16 +88,12 @@ describe('FilterGroup', () => {
   });
 
   it('selects the tab on click', () => {
-    expect(component.instance().state.selectedTabIndex).toBe(0);
+    expect(component.find('.g3-filter-group__tab--selected').text()).toBe(
+      'Project'
+    );
     component.find('.g3-filter-group__tab').at(2).simulate('click');
-    expect(component.instance().state.selectedTabIndex).toBe(2);
-  });
-
-  it('changes the class for the selected tab', () => {
-    expect(component.instance().state.selectedTabIndex).toBe(0);
-    expect(component.find('.g3-filter-group__tab--selected').length).toBe(1);
-    component.find('.g3-filter-group__tab').at(2).simulate('click');
-    expect(component.instance().state.selectedTabIndex).toBe(2);
-    expect(component.find('.g3-filter-group__tab--selected').length).toBe(1);
+    expect(component.find('.g3-filter-group__tab--selected').text()).toBe(
+      'File'
+    );
   });
 });

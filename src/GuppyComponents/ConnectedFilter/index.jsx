@@ -53,7 +53,6 @@ class ConnectedFilter extends React.Component {
       initialAggsData: {},
       filter: { ...initialFilter },
     };
-    this.filterGroupRef = React.createRef();
     /** @type {string[][]} */
     this.arrayFields = [];
     this._isMounted = false;
@@ -170,7 +169,6 @@ class ConnectedFilter extends React.Component {
 
     return (
       <FilterGroup
-        ref={this.filterGroupRef}
         className={this.props.className}
         tabs={filterTabs}
         filterConfig={{
