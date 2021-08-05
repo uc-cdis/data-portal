@@ -212,9 +212,9 @@ export function updateSelectedValue({
 }) {
   // update filter status
   const newFilterStatus = cloneDeep(filterStatus);
-  const oldSelected = newFilterStatus[tabIndex][sectionIndex][selectedValue];
-  const newSelected = oldSelected === undefined ? true : !oldSelected;
-  newFilterStatus[tabIndex][sectionIndex][selectedValue] = newSelected;
+  const wasSelected = newFilterStatus[tabIndex][sectionIndex][selectedValue];
+  const isSelected = wasSelected === undefined ? true : !wasSelected;
+  newFilterStatus[tabIndex][sectionIndex][selectedValue] = isSelected;
 
   // update filter results
   let newFilterResults = cloneDeep(filterResults);
@@ -224,13 +224,12 @@ export function updateSelectedValue({
   } else if (newFilterResults[field].selectedValues === undefined) {
     newFilterResults[field].selectedValues = [selectedValue];
   } else {
-    const filterValues = newFilterResults[field].selectedValues;
-    const findIndex = filterValues.indexOf(selectedValue);
-    if (findIndex >= 0 && !newSelected) {
-      filterValues.splice(findIndex, 1);
-    } else if (findIndex < 0 && newSelected) {
-      filterValues.push(selectedValue);
-    }
+    const { selectedValues } = newFilterResults[field];
+    const selectedValueIndex = selectedValues.indexOf(selectedValue);
+    if (selectedValueIndex >= 0 && !isSelected)
+      selectedValues.splice(selectedValueIndex, 1);
+    else if (selectedValueIndex < 0 && isSelected)
+      selectedValues.push(selectedValue);
   }
   newFilterResults = removeEmptyFilter(newFilterResults);
 
