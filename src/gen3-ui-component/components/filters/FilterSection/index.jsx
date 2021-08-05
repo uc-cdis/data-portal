@@ -62,13 +62,13 @@ class FilterSection extends React.Component {
     this.combineModeFieldName = '__combineMode';
   }
 
-  handleSetCombineModeOption(combineModeIn) {
+  handleSetCombineModeOption = (combineModeIn) => {
     // Combine mode: AND or OR
     this.setState({ combineMode: combineModeIn });
     this.props.onCombineOptionToggle(this.combineModeFieldName, combineModeIn);
-  }
+  };
 
-  handleClearButtonClick(ev) {
+  handleClearButtonClick = (ev) => {
     // Prevent this click from triggering any onClick events in parent component
     ev.stopPropagation();
     // Clear the filters
@@ -77,17 +77,17 @@ class FilterSection extends React.Component {
       resetClickCounter: prevState.resetClickCounter + 1,
     }));
     this.props.onClear();
-  }
+  };
 
-  handleSearchInputChange() {
+  handleSearchInputChange = () => {
     const currentInput = this.inputElem.current.value;
     this.setState({
       searchInputEmpty: !currentInput || currentInput.length === 0,
     });
     this.updateVisibleOptions(currentInput);
-  }
+  };
 
-  handleSelectSingleSelectFilter(label) {
+  handleSelectSingleSelectFilter = (label) => {
     this.setState((prevState) => {
       const newFilterStatus = { ...prevState.filterStatus };
       const oldSelected = newFilterStatus[label];
@@ -99,9 +99,15 @@ class FilterSection extends React.Component {
       };
     });
     this.props.onSelect(label);
-  }
+  };
 
-  handleDragRangeFilter(lowerBound, upperBound, minValue, maxValue, rangeStep) {
+  handleDragRangeFilter = (
+    lowerBound,
+    upperBound,
+    minValue,
+    maxValue,
+    rangeStep
+  ) => {
     this.setState(() => {
       const newFilterStatus = [lowerBound, upperBound];
       return {
@@ -115,7 +121,7 @@ class FilterSection extends React.Component {
       maxValue,
       rangeStep
     );
-  }
+  };
 
   getSearchInput() {
     return (
@@ -268,7 +274,7 @@ class FilterSection extends React.Component {
     this.updateVisibleOptions();
   };
 
-  updateVisibleOptions(inputText) {
+  updateVisibleOptions = (inputText) => {
     this.setState((prevState) => ({
       optionsVisibleStatus: filterVisibleStatusObj(
         this.props.options,
@@ -277,9 +283,9 @@ class FilterSection extends React.Component {
         inputText
       ),
     }));
-  }
+  };
 
-  toggleSection(open) {
+  toggleSection = (open) => {
     let targetStatus;
     if (typeof open === 'undefined') {
       targetStatus = !this.state.isExpanded;
@@ -288,25 +294,25 @@ class FilterSection extends React.Component {
     }
     this.props.onToggle(targetStatus);
     this.setState({ isExpanded: targetStatus });
-  }
+  };
 
-  toggleShowSearch() {
+  toggleShowSearch = () => {
     // If and/or toggle is shown, hide it before showing the search input.
     this.setState((prevState) => ({
       showingSearch: !prevState.showingSearch,
       showingAndOrToggle: false,
     }));
-  }
+  };
 
-  toggleShowAndOrToggle() {
+  toggleShowAndOrToggle = () => {
     // If search input is shown, hide it before showing the and/or toggle.
     this.setState((prevState) => ({
       showingAndOrToggle: !prevState.showingAndOrToggle,
       showingSearch: false,
     }));
-  }
+  };
 
-  toggleShowMore() {
+  toggleShowMore = () => {
     this.setState((prevState) => ({
       showingMore: !prevState.showingMore,
       optionsVisibleStatus: filterVisibleStatusObj(
@@ -315,7 +321,7 @@ class FilterSection extends React.Component {
         !prevState.showingMore
       ),
     }));
-  }
+  };
 
   render() {
     // Takes in parent component's filterStatus or self state's filterStatus
