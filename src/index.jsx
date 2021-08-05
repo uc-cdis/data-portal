@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
+  faAnchor,
   faAngleUp,
   faAngleDown,
   faCheckCircle,
@@ -32,6 +33,7 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 
 // FontAwesome icons
 library.add(
+  faAnchor,
   faAngleUp,
   faAngleDown,
   faCheckCircle,
