@@ -182,7 +182,7 @@ function FilterGroup({
   return (
     <div className={`g3-filter-group ${className}`}>
       <div className='g3-filter-group__tabs'>
-        {tabs.map((tab, index) => (
+        {tabs.map((_, index) => (
           <div
             key={index}
             className={'g3-filter-group__tab'.concat(
