@@ -107,7 +107,7 @@ export function tabHasActiveFilters(filterTabStatus) {
  * @param {FilterSectionStatus[][]} args.filterStatus
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
- * @param {number} args.selectedTabIndex
+ * @param {number} args.tabIndex
  * @param {number} args.sectionIndex
  * @param {string} args.combineModeFieldName
  * @param {string} args.combineModeValue
@@ -116,14 +116,13 @@ export function toggleCombineOption({
   filterStatus,
   filterResults,
   filterTabs,
-  selectedTabIndex,
+  tabIndex,
   sectionIndex,
   combineModeFieldName,
   combineModeValue,
 }) {
   // update filter status
   const newFilterStatus = cloneDeep(filterStatus);
-  const tabIndex = selectedTabIndex;
   newFilterStatus[tabIndex][sectionIndex][
     combineModeFieldName
   ] = combineModeValue;
@@ -150,7 +149,7 @@ export function toggleCombineOption({
  * @param {FilterSectionStatus[][]} args.filterStatus
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
- * @param {number} args.selectedTabIndex
+ * @param {number} args.tabIndex
  * @param {number} args.sectionIndex
  * @param {number} args.lowerBound
  * @param {number} args.upperBound
@@ -162,7 +161,7 @@ export function updateRangeValue({
   filterStatus,
   filterResults,
   filterTabs,
-  selectedTabIndex,
+  tabIndex,
   sectionIndex,
   lowerBound,
   upperBound,
@@ -172,11 +171,11 @@ export function updateRangeValue({
 }) {
   // update filter status
   const newFilterStatus = cloneDeep(filterStatus);
-  newFilterStatus[selectedTabIndex][sectionIndex] = [lowerBound, upperBound];
+  newFilterStatus[tabIndex][sectionIndex] = [lowerBound, upperBound];
 
   // update filter results
   let newFilterResults = cloneDeep(filterResults);
-  const field = filterTabs[selectedTabIndex].fields[sectionIndex];
+  const field = filterTabs[tabIndex].fields[sectionIndex];
   newFilterResults[field] = { lowerBound, upperBound };
   // if lowerbound and upperbound values equal min and max,
   // remove this range from filter
@@ -199,7 +198,7 @@ export function updateRangeValue({
  * @param {FilterSectionStatus[][]} args.filterStatus
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
- * @param {number} args.selectedTabIndex
+ * @param {number} args.tabIndex
  * @param {number} args.sectionIndex
  * @param {string} args.singleFilterLabel
  */
@@ -207,22 +206,20 @@ export function updateSelectedValue({
   filterStatus,
   filterResults,
   filterTabs,
-  selectedTabIndex,
+  tabIndex,
   sectionIndex,
   singleFilterLabel,
 }) {
   // update filter status
   const newFilterStatus = cloneDeep(filterStatus);
   const oldSelected =
-    newFilterStatus[selectedTabIndex][sectionIndex][singleFilterLabel];
+    newFilterStatus[tabIndex][sectionIndex][singleFilterLabel];
   const newSelected = oldSelected === undefined ? true : !oldSelected;
-  newFilterStatus[selectedTabIndex][sectionIndex][
-    singleFilterLabel
-  ] = newSelected;
+  newFilterStatus[tabIndex][sectionIndex][singleFilterLabel] = newSelected;
 
   // update filter results
   let newFilterResults = cloneDeep(filterResults);
-  const field = filterTabs[selectedTabIndex].fields[sectionIndex];
+  const field = filterTabs[tabIndex].fields[sectionIndex];
   if (newFilterResults[field] === undefined) {
     newFilterResults[field] = { selectedValues: [singleFilterLabel] };
   } else if (newFilterResults[field].selectedValues === undefined) {
