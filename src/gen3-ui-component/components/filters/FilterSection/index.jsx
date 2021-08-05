@@ -260,13 +260,13 @@ class FilterSection extends React.Component {
     );
   }
 
-  clearSearchInput() {
+  clearSearchInput = () => {
     this.inputElem.current.value = '';
     this.setState({
       searchInputEmpty: true,
     });
     this.updateVisibleOptions();
-  }
+  };
 
   updateVisibleOptions(inputText) {
     // if empty input, all should be visible
