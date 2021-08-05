@@ -19,7 +19,7 @@ const filterVisibleStatusObj = (
   const res = {};
   for (const [i, o] of optionList.entries()) {
     res[o.text] =
-      typeof inputText === 'undefined' || inputText === ''
+      typeof inputText === 'undefined' || inputText.trim() === ''
         ? showingMore || i < initVisibleItemNumber
         : o.text.toLowerCase().indexOf(inputText.toLowerCase()) >= 0;
   }
@@ -269,18 +269,6 @@ class FilterSection extends React.Component {
   };
 
   updateVisibleOptions(inputText) {
-    // if empty input, all should be visible
-    if (typeof inputText === 'undefined' || inputText.trim() === '') {
-      this.setState((prevState) => ({
-        optionsVisibleStatus: filterVisibleStatusObj(
-          this.props.options,
-          this.props.initVisibleItemNumber,
-          prevState.showingMore
-        ),
-      }));
-    }
-
-    // if not empty, filter out those matched
     this.setState((prevState) => ({
       optionsVisibleStatus: filterVisibleStatusObj(
         this.props.options,
