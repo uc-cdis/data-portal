@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import * as JsSearch from 'js-search';
 import { Tag, Popover } from 'antd';
-import { LockFilled, UnlockOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import {
+  LockFilled, UnlockOutlined, ClockCircleOutlined, DashOutlined,
+} from '@ant-design/icons';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
@@ -358,7 +360,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   );
   if (config.features.authorization.enabled) {
     columns.push({
-      title: <div className='discovery-table-header'>Data Access</div>,
+      title: <div className='discovery-table-header'>Data Availability</div>,
       filters: [{
         text: <React.Fragment><UnlockOutlined />&nbsp;Accessible</React.Fragment>,
         value: AccessLevel.ACCESSIBLE,
@@ -368,7 +370,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         value: AccessLevel.UNACCESSIBLE,
         id: 'unaccessible-data-filter',
       }, {
-        text: <React.Fragment><span style={{ color: 'gray' }}>n/a</span>&nbsp;No Data</React.Fragment>,
+        text: <React.Fragment><DashOutlined />&nbsp;No Data</React.Fragment>,
         value: AccessLevel.NOT_AVAILABLE,
         id: 'not-available-data-filter',
       }, {
