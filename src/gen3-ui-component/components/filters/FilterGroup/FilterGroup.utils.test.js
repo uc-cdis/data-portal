@@ -1,5 +1,6 @@
 import {
   getExpandedStatus,
+  getFilterResultsByAnchor,
   getFilterStatus,
   clearFilterSection,
   removeEmptyFilter,
@@ -23,6 +24,60 @@ describe('Get expanded status array for all tabs', () => {
     const collapsed = getExpandedStatus(filterTabs, false);
     const expected = [[false, false], [false]];
     expect(collapsed).toEqual(expected);
+  });
+});
+
+describe('Get filter results by anchor label', () => {
+  const anchorConfig = {
+    fieldName: 'a',
+    options: ['a0', 'a1'],
+    tabs: ['t1'],
+  };
+  test('Filter results with no anchor only', () => {
+    const received = getFilterResultsByAnchor(anchorConfig, {
+      x: { selectedValues: ['foo', 'bar'] },
+      y: { lowerBound: 0, upperBound: 1 },
+    });
+    const expected = {
+      '': {
+        x: { selectedValues: ['foo', 'bar'] },
+        y: { lowerBound: 0, upperBound: 1 },
+      },
+      'a:a0': {},
+      'a:a1': {},
+    };
+    expect(received).toEqual(expected);
+  });
+  test('Filter results with a single anchor label only', () => {
+    const received = getFilterResultsByAnchor(anchorConfig, {
+      'a:a0': {
+        filter: {
+          x: { selectedValues: ['foo'] },
+          y: { lowerBound: 0, upperBound: 1 },
+        },
+      },
+    });
+    const expected = {
+      '': {},
+      'a:a0': {
+        x: { selectedValues: ['foo'] },
+        y: { lowerBound: 0, upperBound: 1 },
+      },
+      'a:a1': {},
+    };
+    expect(received).toEqual(expected);
+  });
+  test('Filter result with multiple anchor labels only', () => {
+    const received = getFilterResultsByAnchor(anchorConfig, {
+      'a:a0': { filter: { x: { selectedValues: ['foo'] } } },
+      'a:a1': { filter: { y: { lowerBound: 0, upperBound: 1 } } },
+    });
+    const expected = {
+      '': {},
+      'a:a0': { x: { selectedValues: ['foo'] } },
+      'a:a1': { y: { lowerBound: 0, upperBound: 1 } },
+    };
+    expect(received).toEqual(expected);
   });
 });
 
