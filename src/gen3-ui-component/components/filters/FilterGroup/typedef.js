@@ -6,6 +6,12 @@
 
 /** @typedef {OptionFilterStatus | RangeFilterStatus} FilterSectionStatus */
 
+/** @typedef {FilterSectionStatus[]} FilterTabStatus */
+
+/** @typedef {{ [anchorLabel: string]: FilterTabStatus }} AnchoredFilterTabStatus */
+
+/** @typedef {(FilterTabStatus | AnchoredFilterTabStatus)[]} FilterStatus */
+
 /**
  * @typedef {Object} AnchorConfig
  * @property {string} fieldName
