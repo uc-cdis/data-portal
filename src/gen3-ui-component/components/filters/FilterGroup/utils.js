@@ -117,6 +117,7 @@ export function removeEmptyFilter(filterResults) {
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex
+ * @param {string} args.anchorLabel
  * @param {number} args.sectionIndex
  */
 export function clearFilterSection({
@@ -124,16 +125,23 @@ export function clearFilterSection({
   filterResults,
   filterTabs,
   tabIndex,
+  anchorLabel,
   sectionIndex,
 }) {
   // update filter status
   const newFilterStatus = cloneDeep(filterStatus);
-  newFilterStatus[tabIndex][sectionIndex] = {};
+  const newFilterTabStatus = newFilterStatus[tabIndex];
+  if (Array.isArray(newFilterTabStatus)) newFilterTabStatus[sectionIndex] = {};
+  else newFilterTabStatus[anchorLabel][sectionIndex] = {};
 
   // update filter results; clear the results for this filter
   let newFilterResults = cloneDeep(filterResults);
-  const field = filterTabs[tabIndex].fields[sectionIndex];
-  newFilterResults[field] = {};
+  const fieldName = filterTabs[tabIndex].fields[sectionIndex];
+  if (anchorLabel === undefined || anchorLabel === '') {
+    newFilterResults[fieldName] = {};
+  } else {
+    newFilterResults[anchorLabel].filter[fieldName] = {};
+  }
   newFilterResults = removeEmptyFilter(newFilterResults);
 
   // update component state
