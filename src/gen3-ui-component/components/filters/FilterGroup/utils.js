@@ -235,6 +235,7 @@ export function toggleCombineOption({
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex
+ * @param {string} args.anchorLabel
  * @param {number} args.sectionIndex
  * @param {number} args.lowerBound
  * @param {number} args.upperBound
@@ -247,6 +248,7 @@ export function updateRangeValue({
   filterResults,
   filterTabs,
   tabIndex,
+  anchorLabel,
   sectionIndex,
   lowerBound,
   upperBound,
@@ -256,19 +258,35 @@ export function updateRangeValue({
 }) {
   // update filter status
   const newFilterStatus = cloneDeep(filterStatus);
-  newFilterStatus[tabIndex][sectionIndex] = [lowerBound, upperBound];
+  const newFilterTabStatus = newFilterStatus[tabIndex];
+  if (Array.isArray(newFilterTabStatus))
+    newFilterTabStatus[sectionIndex] = [lowerBound, upperBound];
+  else newFilterTabStatus[anchorLabel][sectionIndex] = [lowerBound, upperBound];
 
   // update filter results
   let newFilterResults = cloneDeep(filterResults);
-  const field = filterTabs[tabIndex].fields[sectionIndex];
-  newFilterResults[field] = { lowerBound, upperBound };
-  // if lowerbound and upperbound values equal min and max,
-  // remove this range from filter
-  if (
-    Math.abs(lowerBound - minValue) < rangeStep &&
-    Math.abs(upperBound - maxValue) < rangeStep
-  ) {
-    delete newFilterResults[field];
+  const fieldName = filterTabs[tabIndex].fields[sectionIndex];
+  if (anchorLabel === undefined || anchorLabel === '') {
+    newFilterResults[fieldName] = { lowerBound, upperBound };
+    // if lowerbound and upperbound values equal min and max,
+    // remove this range from filter
+    if (
+      Math.abs(lowerBound - minValue) < rangeStep &&
+      Math.abs(upperBound - maxValue) < rangeStep
+    ) {
+      delete newFilterResults[fieldName];
+    }
+  } else {
+    const newAnchoredFilterResults = newFilterResults[anchorLabel].filter;
+    newAnchoredFilterResults[fieldName] = { lowerBound, upperBound };
+    // if lowerbound and upperbound values equal min and max,
+    // remove this range from filter
+    if (
+      Math.abs(lowerBound - minValue) < rangeStep &&
+      Math.abs(upperBound - maxValue) < rangeStep
+    ) {
+      delete newAnchoredFilterResults[fieldName];
+    }
   }
   newFilterResults = removeEmptyFilter(newFilterResults);
 
