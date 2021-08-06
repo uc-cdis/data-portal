@@ -613,12 +613,13 @@ describe('Update a range filter', () => {
 });
 
 describe('Update an option filter', () => {
-  function helper({ filterStatus, filterResults, selectedValue }) {
+  function helper({ filterStatus, filterResults, anchorLabel, selectedValue }) {
     return updateSelectedValue({
       filterStatus,
       filterResults,
       filterTabs: [{ title: 'a', fields: ['x'] }],
       tabIndex: 0,
+      anchorLabel,
       sectionIndex: 0,
       selectedValue,
     });
@@ -644,6 +645,32 @@ describe('Update an option filter', () => {
     const expected = {
       filterResults: {},
       filterStatus: [[{ foo: false }]],
+    };
+    expect(updated).toEqual(expected);
+  });
+  test('Select value in anchored filter', () => {
+    const updated = helper({
+      filterStatus: [{ 'a:a0': [{}] }],
+      filterResults: {},
+      anchorLabel: 'a:a0',
+      selectedValue: 'foo',
+    });
+    const expected = {
+      filterResults: { 'a:a0': { filter: { x: { selectedValues: ['foo'] } } } },
+      filterStatus: [{ 'a:a0': [{ foo: true }] }],
+    };
+    expect(updated).toEqual(expected);
+  });
+  test('Unselect value in anchored filter', () => {
+    const updated = helper({
+      filterStatus: [{ 'a:a0': [{ foo: true }] }],
+      filterResults: { 'a:a0': { filter: { x: { selectedValues: ['foo'] } } } },
+      anchorLabel: 'a:a0',
+      selectedValue: 'foo',
+    });
+    const expected = {
+      filterResults: {},
+      filterStatus: [{ 'a:a0': [{ foo: false }] }],
     };
     expect(updated).toEqual(expected);
   });
