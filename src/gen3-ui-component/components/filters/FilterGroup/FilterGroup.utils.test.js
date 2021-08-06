@@ -444,12 +444,18 @@ describe('Check if a tab has active filter', () => {
 });
 
 describe('Toggles combine mode in option filter', () => {
-  function helper({ filterStatus, filterResults, combineModeValue }) {
+  function helper({
+    filterStatus,
+    filterResults,
+    anchorLabel,
+    combineModeValue,
+  }) {
     return toggleCombineOption({
       filterStatus,
       filterResults,
       filterTabs: [{ title: 'a', fields: ['x'] }],
       tabIndex: 0,
+      anchorLabel,
       sectionIndex: 0,
       combineModeFieldName: '__combineMode',
       combineModeValue,
@@ -476,6 +482,50 @@ describe('Toggles combine mode in option filter', () => {
     const expected = {
       filterResults: { x: { selectedValues: ['foo'], __combineMode: 'AND' } },
       filterStatus: [[{ foo: true, __combineMode: 'AND' }]],
+    };
+    expect(updated).toEqual(expected);
+  });
+  test('Missing combine mode in anchored filter', () => {
+    const updated = helper({
+      filterStatus: [{ '': [{}], 'a:a0': [{ foo: true }] }],
+      filterResults: { 'a:a0': { filter: { x: { selectedValues: ['foo'] } } } },
+      anchorLabel: 'a:a0',
+      combineModeValue: 'AND',
+    });
+    const expected = {
+      filterResults: {
+        'a:a0': {
+          filter: { x: { selectedValues: ['foo'], __combineMode: 'AND' } },
+        },
+      },
+      filterStatus: [
+        { '': [{}], 'a:a0': [{ foo: true, __combineMode: 'AND' }] },
+      ],
+    };
+    expect(updated).toEqual(expected);
+  });
+  test('Exisiting combine mode in anchored filter', () => {
+    const updated = helper({
+      filterStatus: [
+        { '': [{}], 'a:a0': [{ foo: true, __combineMode: 'OR' }] },
+      ],
+      filterResults: {
+        'a:a0': {
+          filter: { x: { selectedValues: ['foo'], __combineMode: 'OR' } },
+        },
+      },
+      anchorLabel: 'a:a0',
+      combineModeValue: 'AND',
+    });
+    const expected = {
+      filterResults: {
+        'a:a0': {
+          filter: { x: { selectedValues: ['foo'], __combineMode: 'AND' } },
+        },
+      },
+      filterStatus: [
+        { '': [{}], 'a:a0': [{ foo: true, __combineMode: 'AND' }] },
+      ],
     };
     expect(updated).toEqual(expected);
   });
