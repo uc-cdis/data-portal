@@ -59,14 +59,27 @@ function getFilterTabStatus(fields, filterResults) {
 
 /**
  * @param {Object} args
+ * @param {AnchorConfig} args.anchorConfig
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
- * @returns {FilterSectionStatus[][]}
+ * @returns {FilterStatus}
  */
-export function getFilterStatus({ filterResults, filterTabs }) {
-  return filterTabs.map(({ fields }) =>
-    getFilterTabStatus(fields, filterResults)
-  );
+export function getFilterStatus({ anchorConfig, filterResults, filterTabs }) {
+  const filterResultsByAnchor = getFilterResultsByAnchor({
+    anchorConfig,
+    filterResults,
+  });
+  return filterTabs.map(({ title, fields }) => {
+    if (anchorConfig?.tabs.includes(title)) {
+      /** @type {AnchoredFilterTabStatus} */
+      const status = {};
+      for (const [anchor, results] of Object.entries(filterResultsByAnchor))
+        status[anchor] = getFilterTabStatus(fields, results);
+      return status;
+    }
+
+    return getFilterTabStatus(fields, filterResultsByAnchor['']);
+  });
 }
 
 /** @param {FilterState} filterResults */
