@@ -151,15 +151,18 @@ export function clearFilterSection({
   };
 }
 
-/** @param {FilterSectionStatus[]} filterTabStatus */
+/** @param {FilterTabStatus | AnchoredFilterTabStatus} filterTabStatus */
 export function tabHasActiveFilters(filterTabStatus) {
-  for (const filterSectionStatus of filterTabStatus) {
-    const hasActiveFilters = Object.values(filterSectionStatus).some(
-      (status) => status !== undefined && status !== false
-    );
-    if (hasActiveFilters) return true;
+  if (Array.isArray(filterTabStatus)) {
+    for (const filterSectionStatus of filterTabStatus) {
+      const hasActiveFilters = Object.values(filterSectionStatus).some(
+        (status) => status !== undefined && status !== false
+      );
+      if (hasActiveFilters) return true;
+    }
+    return false;
   }
-  return false;
+  return Object.values(filterTabStatus).some(tabHasActiveFilters);
 }
 
 /**
