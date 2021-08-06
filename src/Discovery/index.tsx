@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import Discovery, { AccessLevel } from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { hostname, discoveryConfig, useArboristUI } from '../localconf';
+import {
+  hostname, hostnameWithSubdomain, discoveryConfig, useArboristUI,
+} from '../localconf';
 import isEnabled from '../helpers/featureFlags';
 import loadStudiesFromAggMDS from './aggMDSUtils';
 
@@ -82,7 +84,7 @@ const DiscoveryWithMDSBackend: React.FC<{
             accessible = AccessLevel.NOT_AVAILABLE;
           } else {
             // TODO get study.commons_url working for regular discovery page
-            accessible = userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAggregateAuthMappings[study.commons_url])
+            accessible = userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)])
               ? AccessLevel.ACCESSIBLE
               : AccessLevel.UNACCESSIBLE;
           }

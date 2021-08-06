@@ -432,7 +432,7 @@ export const fetchUserAuthMapping = async (dispatch) => {
 
   // Arborist will get the username from the jwt
   const fetchedAuthMapping = await fetch(
-    authzMappingURL
+    authzMappingURL,
   ).then((fetchRes) => {
     switch (fetchRes.status) {
     case 200:
