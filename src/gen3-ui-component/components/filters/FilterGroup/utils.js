@@ -12,6 +12,27 @@ export function getExpandedStatus(filterTabs, expandedStatusControl) {
 }
 
 /**
+ * @param {AnchorConfig} anchorConfig
+ * @param {FilterState} filterResults
+ */
+export function getFilterResultsByAnchor(anchorConfig, filterResults) {
+  /** @type {{ [anchorLabel: string]: SimpleFilterState }} */
+  const filterResultsByAnchor = { '': {} };
+
+  for (const anchorValue of anchorConfig.options)
+    filterResultsByAnchor[`${anchorConfig.fieldName}:${anchorValue}`] = {};
+
+  for (const [filterKey, filterValues] of Object.entries(filterResults))
+    if ('filter' in filterValues) {
+      filterResultsByAnchor[filterKey] = filterValues.filter;
+    } else {
+      filterResultsByAnchor[''][filterKey] = filterValues;
+    }
+
+  return filterResultsByAnchor;
+}
+
+/**
  * @param {string[]} fields
  * @param {SimpleFilterState} filterResults
  */
