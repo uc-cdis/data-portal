@@ -171,6 +171,7 @@ export function tabHasActiveFilters(filterTabStatus) {
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex
+ * @param {string} args.anchorLabel
  * @param {number} args.sectionIndex
  * @param {string} args.combineModeFieldName
  * @param {string} args.combineModeValue
@@ -180,24 +181,45 @@ export function toggleCombineOption({
   filterResults,
   filterTabs,
   tabIndex,
+  anchorLabel,
   sectionIndex,
   combineModeFieldName,
   combineModeValue,
 }) {
   // update filter status
   const newFilterStatus = cloneDeep(filterStatus);
-  newFilterStatus[tabIndex][sectionIndex][
-    combineModeFieldName
-  ] = combineModeValue;
+  const newFilterTabStatus = newFilterStatus[tabIndex];
+  if (Array.isArray(newFilterTabStatus))
+    newFilterTabStatus[sectionIndex][combineModeFieldName] = combineModeValue;
+  else
+    newFilterTabStatus[anchorLabel][sectionIndex][
+      combineModeFieldName
+    ] = combineModeValue;
 
   // update filter results
   let newFilterResults = cloneDeep(filterResults);
-  const field = filterTabs[tabIndex].fields[sectionIndex];
-  if (newFilterResults[field] === undefined) {
-    newFilterResults[field] = { [combineModeFieldName]: combineModeValue };
+  const fieldName = filterTabs[tabIndex].fields[sectionIndex];
+  if (anchorLabel === undefined || anchorLabel === '') {
+    if (newFilterResults[fieldName] === undefined) {
+      newFilterResults[fieldName] = {
+        [combineModeFieldName]: combineModeValue,
+      };
+    } else {
+      newFilterResults[fieldName][combineModeFieldName] = combineModeValue;
+    }
   } else {
-    newFilterResults[field][combineModeFieldName] = combineModeValue;
+    const newAnchoredFilterResults = newFilterResults[anchorLabel].filter;
+    if (newAnchoredFilterResults[fieldName] === undefined) {
+      newAnchoredFilterResults[fieldName] = {
+        [combineModeFieldName]: combineModeValue,
+      };
+    } else {
+      newAnchoredFilterResults[fieldName][
+        combineModeFieldName
+      ] = combineModeValue;
+    }
   }
+
   newFilterResults = removeEmptyFilter(newFilterResults);
 
   // update component state
