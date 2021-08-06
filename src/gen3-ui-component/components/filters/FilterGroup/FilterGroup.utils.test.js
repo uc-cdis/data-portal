@@ -144,6 +144,114 @@ describe('Get filter status from filter results', () => {
     const expected = [[{ foo: true, bar: true }, { baz: true }], [[0, 1]]];
     expect(filerStatus).toEqual(expected);
   });
+  test('Single anchored tab', () => {
+    const anchorConfig = {
+      fieldName: 'a',
+      options: ['a0', 'a1'],
+      tabs: ['t'],
+    };
+    const filterResults = {
+      'a:a0': { filter: { x: { selectedValues: ['foo', 'bar'] } } },
+      'a:a1': { filter: { y: { lowerBound: 0, upperBound: 1 } } },
+    };
+    const filterTabs = [{ title: 't', fields: ['x', 'y'] }];
+    const filerStatus = getFilterStatus({
+      anchorConfig,
+      filterResults,
+      filterTabs,
+    });
+    const expected = [
+      {
+        '': [{}, {}],
+        'a:a0': [{ foo: true, bar: true }, {}],
+        'a:a1': [{}, [0, 1]],
+      },
+    ];
+    expect(filerStatus).toEqual(expected);
+  });
+  test('Multiple anchored tabs', () => {
+    const anchorConfig = {
+      fieldName: 'a',
+      options: ['a0', 'a1'],
+      tabs: ['t0', 't1'],
+    };
+    const filterResults = {
+      'a:a0': { filter: { x: { selectedValues: ['foo', 'bar'] } } },
+      'a:a1': {
+        filter: {
+          y: { lowerBound: 0, upperBound: 1 },
+          z: { selectedValues: ['baz'] },
+        },
+      },
+    };
+    const filterTabs = [
+      { title: 't0', fields: ['x', 'z'] },
+      { title: 't1', fields: ['y'] },
+    ];
+    const filerStatus = getFilterStatus({
+      anchorConfig,
+      filterResults,
+      filterTabs,
+    });
+    const expected = [
+      {
+        '': [{}, {}],
+        'a:a0': [{ foo: true, bar: true }, {}],
+        'a:a1': [{}, { baz: true }],
+      },
+      {
+        '': [{}],
+        'a:a0': [{}],
+        'a:a1': [[0, 1]],
+      },
+    ];
+    expect(filerStatus).toEqual(expected);
+  });
+  test('Multiple tabs, both anchored and not', () => {
+    const anchorConfig = {
+      fieldName: 'a',
+      options: ['a0', 'a1'],
+      tabs: ['t1', 't2'],
+    };
+    const filterResults = {
+      x: { selectedValues: ['foo', 'bar'] },
+      'a:a0': {
+        filter: {
+          y: { lowerBound: 0, upperBound: 1 },
+          z: { selectedValues: ['baz'] },
+        },
+      },
+      'a:a1': {
+        filter: {
+          z: { selectedValues: ['baz'] },
+        },
+      },
+    };
+    const filterTabs = [
+      { title: 't0', fields: ['x'] },
+      { title: 't1', fields: ['y'] },
+      { title: 't2', fields: ['z'] },
+    ];
+    const filerStatus = getFilterStatus({
+      anchorConfig,
+      filterResults,
+      filterTabs,
+    });
+    const expected = [
+      [{ foo: true, bar: true }],
+      {
+        '': [{}],
+        'a:a0': [[0, 1]],
+        'a:a1': [{}],
+      },
+      {
+        '': [{}],
+        'a:a0': [{ baz: true }],
+        'a:a1': [{ baz: true }],
+      },
+    ];
+    expect(filerStatus).toEqual(expected);
+  });
 });
 
 describe('Clear a single filter section', () => {
