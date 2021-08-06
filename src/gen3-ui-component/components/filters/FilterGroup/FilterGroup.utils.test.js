@@ -533,12 +533,19 @@ describe('Toggles combine mode in option filter', () => {
 
 describe('Update a range filter', () => {
   const [minValue, maxValue] = [0, 5];
-  function helper({ lowerBound, upperBound }) {
+  function helper({
+    filterStatus = [[[0, 1]]],
+    filterResults = { x: { lowerBound: 0, upperBound: 1 } },
+    anchorLabel,
+    lowerBound,
+    upperBound,
+  }) {
     return updateRangeValue({
-      filterStatus: [[[0, 1]]],
-      filterResults: { x: { lowerBound: 0, upperBound: 1 } },
-      filterTabs: [{ title: 'a', fields: ['x'] }],
+      filterStatus,
+      filterResults,
+      filterTabs: [{ title: 't', fields: ['x'] }],
       tabIndex: 0,
+      anchorLabel,
       sectionIndex: 0,
       lowerBound,
       upperBound,
@@ -566,6 +573,40 @@ describe('Update a range filter', () => {
     const expected = {
       filterResults: {},
       filterStatus: [[[minValue, maxValue]]],
+    };
+    expect(updated).toEqual(expected);
+  });
+  test('Simple update in anchored filter', () => {
+    const updated = helper({
+      filterStatus: [{ 'a:a0': [[0, 1]] }],
+      filterResults: {
+        'a:a0': { filter: { x: { lowerBound: 0, upperBound: 1 } } },
+      },
+      anchorLabel: 'a:a0',
+      lowerBound: 1,
+      upperBound: 2,
+    });
+    const expected = {
+      filterResults: {
+        'a:a0': { filter: { x: { lowerBound: 1, upperBound: 2 } } },
+      },
+      filterStatus: [{ 'a:a0': [[1, 2]] }],
+    };
+    expect(updated).toEqual(expected);
+  });
+  test('lowerBound and upperBound equal max and min values in anchored filter', () => {
+    const updated = helper({
+      filterStatus: [{ 'a:a0': [[0, 1]] }],
+      filterResults: {
+        'a:a0': { filter: { x: { lowerBound: 0, upperBound: 1 } } },
+      },
+      anchorLabel: 'a:a0',
+      lowerBound: minValue,
+      upperBound: maxValue,
+    });
+    const expected = {
+      filterResults: {},
+      filterStatus: [{ 'a:a0': [[minValue, maxValue]] }],
     };
     expect(updated).toEqual(expected);
   });
