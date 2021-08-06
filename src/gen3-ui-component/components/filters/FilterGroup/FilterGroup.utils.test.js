@@ -255,19 +255,27 @@ describe('Get filter status from filter results', () => {
 });
 
 describe('Clear a single filter section', () => {
-  function helper({ tabIndex, sectionIndex }) {
+  function helper({
+    filterResults = {
+      x: { selectedValues: ['foo', 'bar'] },
+      y: { lowerBound: 0, upperBound: 1 },
+      z: { selectedValues: ['baz'] },
+    },
+    filterStatus = [[{ foo: true, bar: true }, { baz: true }], [[0, 1]]],
+    filterTabs = [
+      { title: 't0', fields: ['x', 'z'] },
+      { title: 't1', fields: ['y'] },
+    ],
+    tabIndex,
+    anchorLabel,
+    sectionIndex,
+  }) {
     return clearFilterSection({
-      filterResults: {
-        x: { selectedValues: ['foo', 'bar'] },
-        y: { lowerBound: 0, upperBound: 1 },
-        z: { selectedValues: ['baz'] },
-      },
-      filterStatus: [[{ foo: true, bar: true }, { baz: true }], [[0, 1]]],
-      filterTabs: [
-        { title: 'a', fields: ['x', 'z'] },
-        { title: 'b', fields: ['y'] },
-      ],
+      filterResults,
+      filterStatus,
+      filterTabs,
       tabIndex,
+      anchorLabel,
       sectionIndex,
     });
   }
@@ -292,6 +300,33 @@ describe('Clear a single filter section', () => {
     });
     const expected = {
       filterStatus: [[{ foo: true, bar: true }, { baz: true }], [{}]],
+      filterResults: {
+        x: { selectedValues: ['foo', 'bar'] },
+        z: { selectedValues: ['baz'] },
+      },
+    };
+    expect(cleared).toEqual(expected);
+  });
+  test('Anchored filter', () => {
+    const cleared = helper({
+      filterResults: {
+        x: { selectedValues: ['foo', 'bar'] },
+        z: { selectedValues: ['baz'] },
+        'a:a0': { filter: { y: { lowerBound: 0, upperBound: 1 } } },
+      },
+      filterStatus: [
+        [{ foo: true, bar: true }, { baz: true }],
+        { '': [{}], 'a:a0': [[0, 1]] },
+      ],
+      anchorLabel: 'a:a0',
+      tabIndex: 1,
+      sectionIndex: 0,
+    });
+    const expected = {
+      filterStatus: [
+        [{ foo: true, bar: true }, { baz: true }],
+        { '': [{}], 'a:a0': [{}] },
+      ],
       filterResults: {
         x: { selectedValues: ['foo', 'bar'] },
         z: { selectedValues: ['baz'] },
