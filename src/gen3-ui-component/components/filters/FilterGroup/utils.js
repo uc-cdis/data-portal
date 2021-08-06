@@ -12,27 +12,35 @@ export function getExpandedStatus(filterTabs, expandedStatusControl) {
 }
 
 /**
+ * @param {string[]} fields
+ * @param {SimpleFilterState} filterResults
+ */
+function getFilterTabStatus(fields, filterResults) {
+  return fields.map((field) => {
+    if (field in filterResults) {
+      const filterValues = filterResults[field];
+      if ('selectedValues' in filterValues) {
+        const status = {};
+        for (const selected of filterValues.selectedValues)
+          status[selected] = true;
+        return status;
+      }
+      if ('lowerBound' in filterValues) {
+        return [filterValues.lowerBound, filterValues.upperBound];
+      }
+    }
+    return {};
+  });
+}
+
+/**
  * @param {FilterState} filterResults
  * @param {FilterTabsOption[]} filterTabs
  * @returns {FilterSectionStatus[][]}
  */
 export function getFilterStatus(filterResults, filterTabs) {
   return filterTabs.map(({ fields }) =>
-    fields.map((field) => {
-      if (Object.keys(filterResults).includes(field)) {
-        const filterValues = filterResults[field];
-        if ('selectedValues' in filterValues) {
-          const status = {};
-          for (const selected of filterValues.selectedValues)
-            status[selected] = true;
-          return status;
-        }
-        if ('lowerBound' in filterValues) {
-          return [filterValues.lowerBound, filterValues.upperBound];
-        }
-      }
-      return {};
-    })
+    getFilterTabStatus(fields, filterResults)
   );
 }
 
