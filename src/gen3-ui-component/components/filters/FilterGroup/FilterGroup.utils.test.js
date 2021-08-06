@@ -28,6 +28,21 @@ describe('Get expanded status array for all tabs', () => {
 });
 
 describe('Get filter results by anchor label', () => {
+  test('Missing anchor config', () => {
+    const received = getFilterResultsByAnchor({
+      filterResults: {
+        x: { selectedValues: ['foo', 'bar'] },
+        y: { lowerBound: 0, upperBound: 1 },
+      },
+    });
+    const expected = {
+      '': {
+        x: { selectedValues: ['foo', 'bar'] },
+        y: { lowerBound: 0, upperBound: 1 },
+      },
+    };
+    expect(received).toEqual(expected);
+  });
   const anchorConfig = {
     fieldName: 'a',
     options: ['a0', 'a1'],

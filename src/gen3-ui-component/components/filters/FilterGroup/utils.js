@@ -20,8 +20,9 @@ export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
   /** @type {{ [anchorLabel: string]: SimpleFilterState }} */
   const filterResultsByAnchor = { '': {} };
 
-  for (const anchorValue of anchorConfig.options)
-    filterResultsByAnchor[`${anchorConfig.fieldName}:${anchorValue}`] = {};
+  if (anchorConfig !== undefined)
+    for (const anchorValue of anchorConfig.options)
+      filterResultsByAnchor[`${anchorConfig.fieldName}:${anchorValue}`] = {};
 
   for (const [filterKey, filterValues] of Object.entries(filterResults))
     if ('filter' in filterValues) {
