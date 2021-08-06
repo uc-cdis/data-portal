@@ -34,9 +34,12 @@ describe('Get filter results by anchor label', () => {
     tabs: ['t1'],
   };
   test('Filter results with no anchor only', () => {
-    const received = getFilterResultsByAnchor(anchorConfig, {
-      x: { selectedValues: ['foo', 'bar'] },
-      y: { lowerBound: 0, upperBound: 1 },
+    const received = getFilterResultsByAnchor({
+      anchorConfig,
+      filterResults: {
+        x: { selectedValues: ['foo', 'bar'] },
+        y: { lowerBound: 0, upperBound: 1 },
+      },
     });
     const expected = {
       '': {
@@ -49,11 +52,14 @@ describe('Get filter results by anchor label', () => {
     expect(received).toEqual(expected);
   });
   test('Filter results with a single anchor label only', () => {
-    const received = getFilterResultsByAnchor(anchorConfig, {
-      'a:a0': {
-        filter: {
-          x: { selectedValues: ['foo'] },
-          y: { lowerBound: 0, upperBound: 1 },
+    const received = getFilterResultsByAnchor({
+      anchorConfig,
+      filterResults: {
+        'a:a0': {
+          filter: {
+            x: { selectedValues: ['foo'] },
+            y: { lowerBound: 0, upperBound: 1 },
+          },
         },
       },
     });
@@ -68,9 +74,12 @@ describe('Get filter results by anchor label', () => {
     expect(received).toEqual(expected);
   });
   test('Filter result with multiple anchor labels only', () => {
-    const received = getFilterResultsByAnchor(anchorConfig, {
-      'a:a0': { filter: { x: { selectedValues: ['foo'] } } },
-      'a:a1': { filter: { y: { lowerBound: 0, upperBound: 1 } } },
+    const received = getFilterResultsByAnchor({
+      anchorConfig,
+      filterResults: {
+        'a:a0': { filter: { x: { selectedValues: ['foo'] } } },
+        'a:a1': { filter: { y: { lowerBound: 0, upperBound: 1 } } },
+      },
     });
     const expected = {
       '': {},

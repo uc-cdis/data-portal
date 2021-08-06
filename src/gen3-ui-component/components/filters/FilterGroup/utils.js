@@ -12,10 +12,11 @@ export function getExpandedStatus(filterTabs, expandedStatusControl) {
 }
 
 /**
- * @param {AnchorConfig} anchorConfig
- * @param {FilterState} filterResults
+ * @param {Object} args
+ * @param {AnchorConfig} args.anchorConfig
+ * @param {FilterState} args.filterResults
  */
-export function getFilterResultsByAnchor(anchorConfig, filterResults) {
+export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
   /** @type {{ [anchorLabel: string]: SimpleFilterState }} */
   const filterResultsByAnchor = { '': {} };
 
