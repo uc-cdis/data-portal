@@ -138,6 +138,59 @@ describe('Remove empty filter in filter results', () => {
     };
     expect(removed).toEqual(expected);
   });
+  test('Single empty filter with anchor', () => {
+    const removed = removeEmptyFilter({
+      'a:a0': {
+        filter: {
+          x: {},
+          y: { lowerBound: 0, upperBound: 1 },
+          z: { __combineMode: 'AND' },
+        },
+      },
+    });
+    const expected = {
+      'a:a0': {
+        filter: {
+          y: { lowerBound: 0, upperBound: 1 },
+          z: { __combineMode: 'AND' },
+        },
+      },
+    };
+    expect(removed).toEqual(expected);
+  });
+  test('Empty filters only with anchor', () => {
+    const removed = removeEmptyFilter({
+      'a:a0': {
+        filter: {
+          x: {},
+          y: {},
+        },
+      },
+    });
+    const expected = {};
+    expect(removed).toEqual(expected);
+  });
+  test('Empty filters with and without anchor', () => {
+    const removed = removeEmptyFilter({
+      x: { selectedValues: ['foo', 'bar'] },
+      y: {},
+      'a:a0': {
+        filter: {
+          x: {},
+          y: { lowerBound: 0, upperBound: 1 },
+        },
+      },
+    });
+    const expected = {
+      x: { selectedValues: ['foo', 'bar'] },
+      'a:a0': {
+        filter: {
+          y: { lowerBound: 0, upperBound: 1 },
+        },
+      },
+    };
+    expect(removed).toEqual(expected);
+  });
 });
 
 describe('Check if a tab has active filter', () => {
