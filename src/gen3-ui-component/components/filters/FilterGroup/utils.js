@@ -176,7 +176,7 @@ export function tabHasActiveFilters(filterTabStatus) {
  * @param {string} args.combineModeFieldName
  * @param {string} args.combineModeValue
  */
-export function toggleCombineOption({
+export function updateCombineMode({
   filterStatus,
   filterResults,
   filterTabs,

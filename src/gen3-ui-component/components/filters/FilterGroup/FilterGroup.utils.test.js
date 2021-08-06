@@ -5,7 +5,7 @@ import {
   clearFilterSection,
   removeEmptyFilter,
   tabHasActiveFilters,
-  toggleCombineOption,
+  updateCombineMode,
   updateRangeValue,
   updateSelectedValue,
 } from './utils';
@@ -450,7 +450,7 @@ describe('Toggles combine mode in option filter', () => {
     anchorLabel,
     combineModeValue,
   }) {
-    return toggleCombineOption({
+    return updateCombineMode({
       filterStatus,
       filterResults,
       filterTabs: [{ title: 'a', fields: ['x'] }],

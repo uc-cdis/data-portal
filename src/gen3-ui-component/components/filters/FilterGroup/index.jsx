@@ -7,7 +7,7 @@ import {
   getFilterStatus,
   clearFilterSection,
   tabHasActiveFilters,
-  toggleCombineOption,
+  updateCombineMode,
   updateRangeValue,
   updateSelectedValue,
 } from './utils';
@@ -102,7 +102,7 @@ function FilterGroup({
     combineModeFieldName,
     combineModeValue
   ) {
-    const updated = toggleCombineOption({
+    const updated = updateCombineMode({
       filterStatus,
       filterResults,
       filterTabs,
