@@ -1,4 +1,4 @@
-import { aggMDSDataURL, discoveryConfig, wtsAggregateUserUserPath } from '../localconf';
+import { discoveryConfig, aggMDSDataURL } from '../localconf';
 
 const retrieveCommonsInfo = async (commonsName) => {
   const url = `${aggMDSDataURL}/${commonsName}/info`;
@@ -104,15 +104,4 @@ const loadStudiesFromAggMDS = async () => {
   return studies;
 };
 
-const loadAuthMappingsFromWTS = async () => {
-  const res = await fetch(`${wtsAggregateUserUserPath}?filters=authz`);
-  // don't throw error when user isn't logged in
-  if (res.status !== 200) {
-    return {};
-  }
-
-  const aggregateAuthMappings = await res.json();
-  return aggregateAuthMappings;
-};
-
-export { loadStudiesFromAggMDS, loadAuthMappingsFromWTS };
+export default loadStudiesFromAggMDS;

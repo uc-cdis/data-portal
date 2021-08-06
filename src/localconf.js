@@ -21,6 +21,7 @@ function buildConfig(opts) {
     protocol: typeof window !== 'undefined' ? `${window.location.protocol}` : 'http:',
     hostnameOnly: typeof window !== 'undefined' ? hostnameNoSubdomain : 'localhost',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
+    hostnameWithSubdomain: hostnameValue,
     fenceURL: process.env.FENCE_URL,
     indexdURL: process.env.INDEXD_URL,
     arboristURL: process.env.ARBORIST_URL,
@@ -52,6 +53,7 @@ function buildConfig(opts) {
     protocol,
     hostnameOnly,
     hostname,
+    hostnameWithSubdomain,
     fenceURL,
     indexdURL,
     arboristURL,
@@ -85,7 +87,7 @@ function buildConfig(opts) {
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
   const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
-  const wtsAggregateUserUserPath = `${hostname}wts/aggregate/user/user`;
+  const wtsAggregateAuthzPath = `${hostname}wts/aggregate/authz/mapping`;
   const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
   let login = {
     url: `${userAPIPath}login/google?redirect=`,
@@ -415,6 +417,7 @@ function buildConfig(opts) {
     buildConfig,
     dev,
     hostname,
+    hostnameWithSubdomain,
     gaDebug,
     userAPIPath,
     jobAPIPath,
@@ -454,7 +457,7 @@ function buildConfig(opts) {
     guppyDownloadUrl,
     manifestServiceApiPath,
     wtsPath,
-    wtsAggregateUserUserPath,
+    wtsAggregateAuthzPath,
     externalLoginOptionsUrl,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
