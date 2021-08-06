@@ -37,6 +37,7 @@ export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
 /**
  * @param {string[]} fields
  * @param {SimpleFilterState} filterResults
+ * @returns {FilterTabStatus}
  */
 function getFilterTabStatus(fields, filterResults) {
   return fields.map((field) => {
