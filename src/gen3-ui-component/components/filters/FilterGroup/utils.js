@@ -55,11 +55,12 @@ function getFilterTabStatus(fields, filterResults) {
 }
 
 /**
- * @param {FilterState} filterResults
- * @param {FilterTabsOption[]} filterTabs
+ * @param {Object} args
+ * @param {FilterState} args.filterResults
+ * @param {FilterTabsOption[]} args.filterTabs
  * @returns {FilterSectionStatus[][]}
  */
-export function getFilterStatus(filterResults, filterTabs) {
+export function getFilterStatus({ filterResults, filterTabs }) {
   return filterTabs.map(({ fields }) =>
     getFilterTabStatus(fields, filterResults)
   );

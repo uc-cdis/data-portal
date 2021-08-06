@@ -54,10 +54,13 @@ function FilterGroup({
 
   const [filterResults, setFilterResults] = useState(initialAppliedFilters);
   const [filterStatus, setFilterStatus] = useState(
-    getFilterStatus(initialAppliedFilters, filterTabs)
+    getFilterStatus({ filterResults: initialAppliedFilters, filterTabs })
   );
   useEffect(() => {
-    const newFilterStatus = getFilterStatus(initialAppliedFilters, filterTabs);
+    const newFilterStatus = getFilterStatus({
+      filterResults: initialAppliedFilters,
+      filterTabs,
+    });
     const newFilterResults = initialAppliedFilters;
 
     setFilterStatus(newFilterStatus);

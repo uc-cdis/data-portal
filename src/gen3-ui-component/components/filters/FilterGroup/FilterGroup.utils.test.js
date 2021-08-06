@@ -85,14 +85,14 @@ describe('Get filter status from filter results', () => {
   test('Single tab, single option filter', () => {
     const filterResults = { x: { selectedValues: ['foo', 'bar'] } };
     const filterTabs = [{ title: 'a', fields: ['x'] }];
-    const filerStatus = getFilterStatus(filterResults, filterTabs);
+    const filerStatus = getFilterStatus({ filterResults, filterTabs });
     const expected = [[{ foo: true, bar: true }]];
     expect(filerStatus).toEqual(expected);
   });
   test('Single tab, single range filter', () => {
     const filterResults = { x: { lowerBound: 0, upperBound: 1 } };
     const filterTabs = [{ title: 'a', fields: ['x'] }];
-    const filerStatus = getFilterStatus(filterResults, filterTabs);
+    const filerStatus = getFilterStatus({ filterResults, filterTabs });
     const expected = [[[0, 1]]];
     expect(filerStatus).toEqual(expected);
   });
@@ -102,7 +102,7 @@ describe('Get filter status from filter results', () => {
       y: { lowerBound: 0, upperBound: 1 },
     };
     const filterTabs = [{ title: 'a', fields: ['x', 'y'] }];
-    const filerStatus = getFilterStatus(filterResults, filterTabs);
+    const filerStatus = getFilterStatus({ filterResults, filterTabs });
     const expected = [[{ foo: true, bar: true }, [0, 1]]];
     expect(filerStatus).toEqual(expected);
   });
@@ -116,7 +116,7 @@ describe('Get filter status from filter results', () => {
       { title: 'a', fields: ['x', 'z'] },
       { title: 'b', fields: ['y'] },
     ];
-    const filerStatus = getFilterStatus(filterResults, filterTabs);
+    const filerStatus = getFilterStatus({ filterResults, filterTabs });
     const expected = [[{ foo: true, bar: true }, { baz: true }], [[0, 1]]];
     expect(filerStatus).toEqual(expected);
   });
