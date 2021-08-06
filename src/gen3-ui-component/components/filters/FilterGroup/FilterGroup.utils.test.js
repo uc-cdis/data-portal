@@ -431,6 +431,16 @@ describe('Check if a tab has active filter', () => {
     const hasActiveFilters = tabHasActiveFilters(filterTabStatus);
     expect(hasActiveFilters).toEqual(true);
   });
+  test('No active anchored filter', () => {
+    const filterTabStatus = { '': [{}, {}], 'a:a0': [{}, {}] };
+    const hasActiveFilters = tabHasActiveFilters(filterTabStatus);
+    expect(hasActiveFilters).toEqual(false);
+  });
+  test('One active anchored range filter', () => {
+    const filterTabStatus = { '': [{}, {}], 'a:a0': [{}, [0, 1]] };
+    const hasActiveFilters = tabHasActiveFilters(filterTabStatus);
+    expect(hasActiveFilters).toEqual(true);
+  });
 });
 
 describe('Toggles combine mode in option filter', () => {
