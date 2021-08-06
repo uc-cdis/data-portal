@@ -504,6 +504,19 @@ describe('Toggles combine mode in option filter', () => {
     };
     expect(updated).toEqual(expected);
   });
+  test('Missing anchored filter', () => {
+    const updated = helper({
+      filterStatus: [{ '': [{}], 'a:a0': [{}] }],
+      filterResults: {},
+      anchorLabel: 'a:a0',
+      combineModeValue: 'AND',
+    });
+    const expected = {
+      filterResults: { 'a:a0': { filter: { x: { __combineMode: 'AND' } } } },
+      filterStatus: [{ '': [{}], 'a:a0': [{ __combineMode: 'AND' }] }],
+    };
+    expect(updated).toEqual(expected);
+  });
   test('Exisiting combine mode in anchored filter', () => {
     const updated = helper({
       filterStatus: [
@@ -582,6 +595,22 @@ describe('Update a range filter', () => {
       filterResults: {
         'a:a0': { filter: { x: { lowerBound: 0, upperBound: 1 } } },
       },
+      anchorLabel: 'a:a0',
+      lowerBound: 1,
+      upperBound: 2,
+    });
+    const expected = {
+      filterResults: {
+        'a:a0': { filter: { x: { lowerBound: 1, upperBound: 2 } } },
+      },
+      filterStatus: [{ 'a:a0': [[1, 2]] }],
+    };
+    expect(updated).toEqual(expected);
+  });
+  test('Simple update in missing anchored filter', () => {
+    const updated = helper({
+      filterStatus: [{ 'a:a0': [{}] }],
+      filterResults: {},
       anchorLabel: 'a:a0',
       lowerBound: 1,
       upperBound: 2,
