@@ -208,6 +208,10 @@ export function toggleCombineOption({
       newFilterResults[fieldName][combineModeFieldName] = combineModeValue;
     }
   } else {
+    if (!(anchorLabel in newFilterResults))
+      newFilterResults[anchorLabel] = { filter: {} };
+    if (!('filter' in newFilterResults[anchorLabel]))
+      newFilterResults[anchorLabel].filter = {};
     const newAnchoredFilterResults = newFilterResults[anchorLabel].filter;
     if (newAnchoredFilterResults[fieldName] === undefined) {
       newAnchoredFilterResults[fieldName] = {
@@ -277,6 +281,10 @@ export function updateRangeValue({
       delete newFilterResults[fieldName];
     }
   } else {
+    if (!(anchorLabel in newFilterResults))
+      newFilterResults[anchorLabel] = { filter: {} };
+    if (!('filter' in newFilterResults[anchorLabel]))
+      newFilterResults[anchorLabel].filter = {};
     const newAnchoredFilterResults = newFilterResults[anchorLabel].filter;
     newAnchoredFilterResults[fieldName] = { lowerBound, upperBound };
     // if lowerbound and upperbound values equal min and max,
@@ -347,6 +355,10 @@ export function updateSelectedValue({
         selectedValues.push(selectedValue);
     }
   } else {
+    if (!(anchorLabel in newFilterResults))
+      newFilterResults[anchorLabel] = { filter: {} };
+    if (!('filter' in newFilterResults[anchorLabel]))
+      newFilterResults[anchorLabel].filter = {};
     const newAnchoredFilterResults = newFilterResults[anchorLabel].filter;
     if (newAnchoredFilterResults[fieldName] === undefined)
       newAnchoredFilterResults[fieldName] = { selectedValues: [selectedValue] };
