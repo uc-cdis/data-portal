@@ -302,6 +302,7 @@ export function updateRangeValue({
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex
+ * @param {string} args.anchorLabel
  * @param {number} args.sectionIndex
  * @param {string} args.selectedValue
  */
@@ -310,29 +311,55 @@ export function updateSelectedValue({
   filterResults,
   filterTabs,
   tabIndex,
+  anchorLabel,
   sectionIndex,
   selectedValue,
 }) {
   // update filter status
   const newFilterStatus = cloneDeep(filterStatus);
-  const wasSelected = newFilterStatus[tabIndex][sectionIndex][selectedValue];
-  const isSelected = wasSelected === undefined ? true : !wasSelected;
-  newFilterStatus[tabIndex][sectionIndex][selectedValue] = isSelected;
+  const newFilterTabStatus = newFilterStatus[tabIndex];
+  let wasSelected;
+  let isSelected;
+  if (Array.isArray(newFilterTabStatus)) {
+    wasSelected = newFilterTabStatus[sectionIndex][selectedValue];
+    isSelected = wasSelected === undefined ? true : !wasSelected;
+    newFilterTabStatus[sectionIndex][selectedValue] = isSelected;
+  } else {
+    wasSelected = newFilterTabStatus[anchorLabel][sectionIndex][selectedValue];
+    isSelected = wasSelected === undefined ? true : !wasSelected;
+    newFilterTabStatus[anchorLabel][sectionIndex][selectedValue] = isSelected;
+  }
 
   // update filter results
   let newFilterResults = cloneDeep(filterResults);
-  const field = filterTabs[tabIndex].fields[sectionIndex];
-  if (newFilterResults[field] === undefined) {
-    newFilterResults[field] = { selectedValues: [selectedValue] };
-  } else if (newFilterResults[field].selectedValues === undefined) {
-    newFilterResults[field].selectedValues = [selectedValue];
+  const fieldName = filterTabs[tabIndex].fields[sectionIndex];
+  if (anchorLabel === undefined || anchorLabel === '') {
+    if (newFilterResults[fieldName] === undefined)
+      newFilterResults[fieldName] = { selectedValues: [selectedValue] };
+    else if (newFilterResults[fieldName].selectedValues === undefined)
+      newFilterResults[fieldName].selectedValues = [selectedValue];
+    else {
+      const { selectedValues } = newFilterResults[fieldName];
+      const selectedValueIndex = selectedValues.indexOf(selectedValue);
+      if (selectedValueIndex >= 0 && !isSelected)
+        selectedValues.splice(selectedValueIndex, 1);
+      else if (selectedValueIndex < 0 && isSelected)
+        selectedValues.push(selectedValue);
+    }
   } else {
-    const { selectedValues } = newFilterResults[field];
-    const selectedValueIndex = selectedValues.indexOf(selectedValue);
-    if (selectedValueIndex >= 0 && !isSelected)
-      selectedValues.splice(selectedValueIndex, 1);
-    else if (selectedValueIndex < 0 && isSelected)
-      selectedValues.push(selectedValue);
+    const newAnchoredFilterResults = newFilterResults[anchorLabel].filter;
+    if (newAnchoredFilterResults[fieldName] === undefined)
+      newAnchoredFilterResults[fieldName] = { selectedValues: [selectedValue] };
+    else if (newAnchoredFilterResults[fieldName].selectedValues === undefined)
+      newAnchoredFilterResults[fieldName].selectedValues = [selectedValue];
+    else {
+      const { selectedValues } = newAnchoredFilterResults[fieldName];
+      const selectedValueIndex = selectedValues.indexOf(selectedValue);
+      if (selectedValueIndex >= 0 && !isSelected)
+        selectedValues.splice(selectedValueIndex, 1);
+      else if (selectedValueIndex < 0 && isSelected)
+        selectedValues.push(selectedValue);
+    }
   }
   newFilterResults = removeEmptyFilter(newFilterResults);
 
