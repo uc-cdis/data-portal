@@ -18,10 +18,10 @@ import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 export const accessibleFieldName = '__accessible';
 
 export enum AccessLevel {
-  ACCESSIBLE,
-  UNACCESSIBLE,
-  NOT_AVAILABLE,
-  PENDING
+  ACCESSIBLE = 1,
+  UNACCESSIBLE = 2,
+  PENDING = 3,
+  NOT_AVAILABLE = 4,
 }
 
 const ARBORIST_READ_PRIV = 'read';
@@ -370,15 +370,18 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         value: AccessLevel.UNACCESSIBLE,
         id: 'unaccessible-data-filter',
       }, {
-        text: <React.Fragment><DashOutlined />&nbsp;No Data</React.Fragment>,
-        value: AccessLevel.NOT_AVAILABLE,
-        id: 'not-available-data-filter',
-      }, {
         text: <React.Fragment><ClockCircleOutlined />&nbsp;Pending</React.Fragment>,
         value: AccessLevel.PENDING,
         id: 'pending-data-filter',
+      }, {
+        text: <React.Fragment><DashOutlined />&nbsp;No Data</React.Fragment>,
+        value: AccessLevel.NOT_AVAILABLE,
+        id: 'not-available-data-filter',
       }],
       onFilter: (value, record) => record[accessibleFieldName] === value,
+      // This will sort the values in the order defined by the AccessLevel enum. (AccessLevel.ACCESSIBLE=1, AccessLevel.UNACCESSIBLE=2, etc)
+      sorter: (a, b) => b[accessibleFieldName] - a[accessibleFieldName],
+      defaultSortOrder: 'descend',
       ellipsis: false,
       width: '106px',
       textWrap: 'word-break',
