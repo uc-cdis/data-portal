@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './DataDictionaryTable.css';
 import { parseDictionaryNodes } from '../../utils';
-import DataDictionaryCategory from '../DataDictionaryCategory/.';
+import DataDictionaryCategory from '../DataDictionaryCategory';
 
 /**
  * Just exported for testing
@@ -14,12 +14,17 @@ import DataDictionaryCategory from '../DataDictionaryCategory/.';
  */
 /* eslint-disable no-param-reassign */
 export function category2NodeList(dictionary) {
+  /* helpers for the helper */
+  const idFilter = (id) => id.charAt(0) !== '_' && id === dictionary[id].id;
+
+  const categoryFilter = (node) => node.category && node.id && node.category.toLowerCase() !== 'internal';
+
   const res = Object.keys(dictionary).filter(
-    id => id.charAt(0) !== '_' && id === dictionary[id].id,
+    (id) => idFilter(id),
   ).map(
-    id => dictionary[id],
+    (id) => dictionary[id],
   ).filter(
-    node => node.category && node.id,
+    (node) => categoryFilter(node),
   )
     .reduce(
       (lookup, node) => {
@@ -55,7 +60,9 @@ const getNodePropertyCount = (dictionary) => {
  *
  * @param {dictionary} params
  */
-const DataDictionaryTable = ({ dictionary, highlightingNodeID, onExpandNode, dictionaryName }) => {
+const DataDictionaryTable = ({
+  dictionary, highlightingNodeID, onExpandNode, dictionaryName,
+}) => {
   const c2nl = category2NodeList(dictionary);
   const { nodesCount, propertiesCount } = getNodePropertyCount(dictionary);
   return (
@@ -68,14 +75,15 @@ const DataDictionaryTable = ({ dictionary, highlightingNodeID, onExpandNode, dic
         <span>{propertiesCount}</span>
         <span> properties </span>
       </p>
-      {Object.keys(c2nl).map(category =>
-        (<DataDictionaryCategory
+      {Object.keys(c2nl).map((category) => (
+        <DataDictionaryCategory
           key={category}
           nodes={c2nl[category]}
           category={category}
           highlightingNodeID={highlightingNodeID}
           onExpandNode={onExpandNode}
-        />))}
+        />
+      ))}
     </React.Fragment>
   );
 };

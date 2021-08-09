@@ -1,0 +1,87 @@
+.chart-carousel__container {
+  padding: 10px 30px 30px 30px; // space for arrows and dots
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.chart-carousel__container-border {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.chart-carousel__popup-chart {
+  height: 50vh;
+}
+
+.chart-carousel__left-column {
+  float: left;
+}
+
+.chart-carousel__description {
+  text-align: justify;
+  overflow-y: auto;
+  height: 60vh;
+  padding: 0 10px 0 20px;
+}
+
+.chart-carousel__image {
+  max-width: 100%;
+  max-height: 350px;
+  margin: auto;
+}
+
+.chart-carousel__hover {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  max-width: 500px;
+  padding: 10px;
+  white-space: pre-wrap;
+  z-index: 10; // place it over the "mapbox" link...
+}
+
+/** override some style for carousel's arrows **/
+
+.ant-carousel .slick-arrow {
+  background: var(--g3-color__smoke);
+  border-radius: 50%;
+  transition: background-color 300ms;
+  -webkit-transition: background-color 300ms;
+}
+
+.ant-carousel .slick-arrow:hover,
+.ant-carousel .slick-arrow:focus {
+  background: var(--g3-color__gray);
+}
+
+.ant-carousel .slick-arrow:before {
+  font-size: 0.625rem;
+  content: ' ';
+  border: solid #fff;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  width: 10px;
+  height: 10px;
+}
+
+.slick-prev:hover, .slick-prev:focus, .slick-next:hover, .slick-next:focus {
+  opacity: 0.9;
+  background-color: var(--g3-color__smoke);
+}
+
+.slick-prev:before {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.slick-next:before {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.slick-arrow.slick-disabled {
+  opacity: 0;
+}

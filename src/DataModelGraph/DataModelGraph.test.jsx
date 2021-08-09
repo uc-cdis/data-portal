@@ -8,7 +8,6 @@ import { buildTestData } from '../GraphUtils/testData';
 describe('the DataModelGraph', () => {
   function buildTest() {
     const data = buildTestData();
-    // Material-UI components require the Mui theme ...
     const $dom = mount(
       <DataModelGraph
         dictionary={data.dictionary}

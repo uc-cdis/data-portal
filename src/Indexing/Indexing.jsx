@@ -1,7 +1,9 @@
 import React from 'react';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { userapiPath, fenceDownloadPath, jobapiPath, hostname } from '../localconf';
-import { fetchWithCreds, fetchWithCredsAndTimeout } from '../actions';
+import {
+  userAPIPath, fenceDownloadPath, jobAPIPath, hostname,
+} from '../localconf';
+import { fetchWithCreds } from '../actions';
 import './Indexing.less';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
@@ -11,7 +13,6 @@ import dictIcons from '../img/icons/index';
 class Indexing extends React.Component {
   constructor(props) {
     super(props);
-
 
     this.initialStateConfiguration = {
       // Index Files flow
@@ -28,11 +29,11 @@ class Indexing extends React.Component {
 
       // Download Manifest flow
       downloadManifestFileEnabled: true,
-      uidOfManifestGenerationSowerJob: null,
+      // uidOfManifestGenerationSowerJob: null,
       downloadManifestStatus: 'running',
       downloadManifestStatusLastUpdated: this.getCurrentTime(),
     };
-    this.state = Object.assign({}, this.initialStateConfiguration);
+    this.state = { ...this.initialStateConfiguration };
   }
 
   onChange = (e) => {
@@ -54,7 +55,7 @@ class Indexing extends React.Component {
   resetAllPageForms = () => {
     this.setState(this.initialStateConfiguration);
     const forms = Array.from(document.getElementsByClassName('index-flow-form'));
-    forms.map(x => x.reset());
+    forms.map((x) => x.reset());
   }
 
   createBlankIndexdRecord = () => {
@@ -63,7 +64,7 @@ class Indexing extends React.Component {
       file_name: this.state.uploadedFile.name,
     });
     return fetchWithCreds({
-      path: `${userapiPath}data/upload`,
+      path: `${userAPIPath}data/upload`,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSONbody,
@@ -74,34 +75,43 @@ class Indexing extends React.Component {
           urlToIndexedFile: response.data.url,
           indexingFilesPopupMessage: 'Uploading index file to s3...',
         });
-      } else {
-        thisPointer.setState({
-          indexingFilesStatus: 'error',
-          indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
-          indexingFilesPopupMessage: `There was a problem creating a placeholder record an indexd (${response.status})`,
-          indexFilesButtonEnabled: false,
-        });
+        return response;
       }
+      thisPointer.setState({
+        indexingFilesStatus: 'error',
+        indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
+        indexingFilesPopupMessage: `There was a problem creating a placeholder record in Indexd via Fence (${response.status}).`,
+        indexFilesButtonEnabled: false,
+      });
+      return null;
     });
   };
 
   indexFiles = async () => {
+    const thisPointer = this;
     this.setState({
       indexFilesButtonEnabled: false,
       showIndexFilesPopup: true,
       indexingFilesPopupMessage: 'Preparing indexd...',
     });
-    this.createBlankIndexdRecord().then(() => this.putIndexFileToSignedURL());
+    this.createBlankIndexdRecord().then((response) => {
+      if (response) {
+        thisPointer.putIndexFileToSignedURL();
+      } else {
+        // eslint-disable-next-line no-console
+        console.error('Aborting indexing due to error response from /data/upload.');
+      }
+    });
   };
 
   putIndexFileToSignedURL = () => {
     const thisPointer = this;
-    return fetchWithCredsAndTimeout({
+    return fetchWithCreds({
       path: thisPointer.state.urlToIndexedFile,
       method: 'PUT',
       customHeaders: { 'Content-Type': 'application/json' },
       body: thisPointer.state.uploadedFile,
-    }, 700000).then(() => {
+    }).then(() => {
       thisPointer.setState({
         indexingFilesPopupMessage: 'Preparing indexing job...',
       });
@@ -156,14 +166,13 @@ class Indexing extends React.Component {
       input: { URL: this.state.presignedURLForDownload },
     };
     return fetchWithCreds({
-      path: `${jobapiPath}dispatch`,
+      path: `${jobAPIPath}dispatch`,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSON.stringify(JSONbody),
     }).then((response) => {
       if (response.status === 200 && response.data && response.data.uid) {
         this.setState({
-          uidOfIndexingSowerJob: response.data.uid,
           indexingFilesPopupMessage: `Indexing job is in progress. UID: ${response.data.uid}`,
         });
         this.pollForIndexJobStatus(response.data.uid);
@@ -188,14 +197,14 @@ class Indexing extends React.Component {
       },
     };
     fetchWithCreds({
-      path: `${jobapiPath}dispatch`,
+      path: `${jobAPIPath}dispatch`,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSON.stringify(JSONbody),
     }).then((response) => {
       if (response.status === 200 && response.data && response.data.uid) {
         this.setState({
-          uidOfManifestGenerationSowerJob: response.data.uid,
+          // uidOfManifestGenerationSowerJob: response.data.uid,
           downloadManifestPopupMessage: `Manifest generation job is in progress. UID: ${response.data.uid}`,
           downloadManifestStatus: 'running',
           downloadManifestStatusLastUpdated: this.getCurrentTime(),
@@ -212,9 +221,8 @@ class Indexing extends React.Component {
     });
   }
 
-
-  retrieveJobOutput = uid => fetchWithCreds({
-    path: `${jobapiPath}output?UID=${uid}`,
+  retrieveJobOutput = (uid) => fetchWithCreds({
+    path: `${jobAPIPath}output?UID=${uid}`,
     method: 'GET',
     customHeaders: { 'Content-Type': 'application/json' },
   })
@@ -222,7 +230,7 @@ class Indexing extends React.Component {
   pollForIndexJobStatus = (uid) => {
     const thisPointer = this;
     return fetchWithCreds({
-      path: `${jobapiPath}status?UID=${uid}`,
+      path: `${jobAPIPath}status?UID=${uid}`,
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
@@ -247,7 +255,7 @@ class Indexing extends React.Component {
           }
         });
         return;
-      } else if (response.data && response.data.status === 'Failed') {
+      } if (response.data && response.data.status === 'Failed') {
         thisPointer.setState({
           indexingFilesStatus: 'error',
           indexingFilesStatusLastUpdated: thisPointer.getCurrentTime(),
@@ -262,7 +270,7 @@ class Indexing extends React.Component {
   pollForGenerateManifestJobStatus = (uid) => {
     const thisPointer = this;
     return fetchWithCreds({
-      path: `${jobapiPath}status?UID=${uid}`,
+      path: `${jobAPIPath}status?UID=${uid}`,
       method: 'GET',
       customHeaders: { 'Content-Type': 'application/json' },
     }).then((response) => {
@@ -288,7 +296,7 @@ class Indexing extends React.Component {
             }
           });
         return;
-      } else if (response.data && response.data.status === 'Failed') {
+      } if (response.data && response.data.status === 'Failed') {
         thisPointer.setState({
           downloadManifestStatus: 'error',
           downloadManifestPopupMessage: 'The manifest generation job was dispatched, but failed to produce output.',
@@ -310,7 +318,6 @@ class Indexing extends React.Component {
   download = async () => {
     this.setState({
       showDownloadManifestPopup: true,
-      downloadManifestButtonEnabled: false,
       downloadManifestPopupMessage: 'Dispatching manifest generation job...',
     });
     this.dispatchSowerGenerateManifestJob();
@@ -363,7 +370,8 @@ class Indexing extends React.Component {
           <br />
           <p>It may take several minutes to complete the indexing flow.</p>
           <p>Please do not navigate away from this page until
-          the operation is complete.</p>
+          the operation is complete.
+          </p>
         </div>
       </React.Fragment>
     );
@@ -373,7 +381,6 @@ class Indexing extends React.Component {
       error: indexFilesErrorPopupBlock,
       running: indexFilesRunningPopupBlock,
     };
-
 
     const downloadManifestSuccessPopupBlock = (
       <React.Fragment>
@@ -418,7 +425,8 @@ class Indexing extends React.Component {
           <br />
           <p>It may take several minutes to generate the file manifest.</p>
           <p>Please do not navigate away from this page until
-          the operation is complete.</p>
+          the operation is complete.
+          </p>
         </div>
       </React.Fragment>
     );
@@ -445,7 +453,6 @@ class Indexing extends React.Component {
       fn: () => this.downloadJobOutput(this.state.downloadManifestManifestLink),
     });
 
-
     return (
       <div className='indexing-page'>
         <div>
@@ -457,7 +464,8 @@ class Indexing extends React.Component {
               <p>An indexing file, or file manifest, is a TSV containing information about
                   files that exist in cloud storage.
                   Rows of importance include the MD5 sum of the file,
-                  a link to the file, the filename, and its size.</p>
+                  a link to the file, the filename, and its size.
+              </p>
 
               <p>Upload an indexing file below to create records in indexd for new object files.</p>
               <br />
@@ -477,50 +485,54 @@ class Indexing extends React.Component {
             </div>
           </div>
           {
-            this.state.showIndexFilesPopup &&
-                  (<Popup
-                    message={''}
-                    title='Indexing Files'
-                    rightButtons={this.state.indexingFilesStatus !== 'success' ? [
-                      {
-                        caption: 'Cancel',
-                        fn: () => this.onHidePopup(),
-                      },
-                    ] : [
-                      {
-                        caption: 'Download Logs',
-                        icon: 'download',
-                        value: this.state.indexingFilesLogsLink,
-                        fn: () => this.downloadJobOutput(this.state.indexingFilesLogsLink),
-                      },
-                      {
-                        caption: 'Download Manifest',
-                        icon: 'download',
-                        value: this.state.indexingFilesManifestLink,
-                        fn: () => this.downloadJobOutput(this.state.indexingFilesManifestLink),
-                      },
-                    ]}
-                    onClose={() => this.onHidePopup()}
-                  >
-                    { indexFilesPopupBlocks[this.state.indexingFilesStatus] }
-                  </Popup>)
+            this.state.showIndexFilesPopup
+                  && (
+                    <Popup
+                      message={''}
+                      title='Indexing Files'
+                      rightButtons={this.state.indexingFilesStatus !== 'success' ? [
+                        {
+                          caption: 'Cancel',
+                          fn: () => this.onHidePopup(),
+                        },
+                      ] : [
+                        {
+                          caption: 'Download Logs',
+                          icon: 'download',
+                          value: this.state.indexingFilesLogsLink,
+                          fn: () => this.downloadJobOutput(this.state.indexingFilesLogsLink),
+                        },
+                        {
+                          caption: 'Download Manifest',
+                          icon: 'download',
+                          value: this.state.indexingFilesManifestLink,
+                          fn: () => this.downloadJobOutput(this.state.indexingFilesManifestLink),
+                        },
+                      ]}
+                      onClose={() => this.onHidePopup()}
+                    >
+                      { indexFilesPopupBlocks[this.state.indexingFilesStatus] }
+                    </Popup>
+                  )
           }
 
           {
-            this.state.showDownloadManifestPopup &&
-                  (<Popup
-                    message={''}
-                    title='Downloading Indexing File'
-                    rightButtons={this.state.downloadManifestStatus !== 'success' ? [
-                      {
-                        caption: 'Cancel',
-                        fn: () => this.onHidePopup(),
-                      },
-                    ] : downloadManifestSuccessButtons}
-                    onClose={() => this.onHidePopup()}
-                  >
-                    { downloadManifestPopupBlocks[this.state.downloadManifestStatus] }
-                  </Popup>)
+            this.state.showDownloadManifestPopup
+                  && (
+                    <Popup
+                      message={''}
+                      title='Downloading Indexing File'
+                      rightButtons={this.state.downloadManifestStatus !== 'success' ? [
+                        {
+                          caption: 'Cancel',
+                          fn: () => this.onHidePopup(),
+                        },
+                      ] : downloadManifestSuccessButtons}
+                      onClose={() => this.onHidePopup()}
+                    >
+                      { downloadManifestPopupBlocks[this.state.downloadManifestStatus] }
+                    </Popup>
+                  )
           }
           <div className='action-panel'>
             <div className='action-panel-title'>

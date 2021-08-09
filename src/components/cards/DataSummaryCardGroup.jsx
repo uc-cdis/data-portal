@@ -22,8 +22,7 @@ class DataSummaryCardGroup extends Component {
               key={item.label || item[0].label}
             >
               {this.props.connected && index > 0
-                && <div className='left-border' />
-              }
+                && <div className='left-border' />}
               {
                 !item.length ? (
                   <CountBox
@@ -38,8 +37,7 @@ class DataSummaryCardGroup extends Component {
                       item.map((subItem, subIndex) => (
                         <div className='data-summary-card-group__sub-card-item' key={subItem.label}>
                           {subIndex > 0
-                            && <div className='left-border' />
-                          }
+                            && <div className='left-border' />}
                           <CountBox
                             label={subItem.label}
                             value={subItem.value}

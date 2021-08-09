@@ -1,11 +1,14 @@
 # To run: docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal
 # To check running container: docker exec -it dataportal /bin/bash
 
-FROM ubuntu:18.04
+FROM quay.io/cdis/ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV REACT_APP_PROJECT_ID=search
-ENV REACT_APP_ARRANGER_API=/api/v0/flat-search
+
+# disable npm 7's brand new update notifier to prevent Portal from stuck at starting up
+# see https://github.com/npm/cli/issues/3163
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -16,12 +19,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     time \
     vim \
-    && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+    && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
-    && ln -sf /dev/stderr /var/log/nginx/error.log
+    && ln -sf /dev/stderr /var/log/nginx/error.log \
+    && npm install -g npm@7 \
+    && npm config set maxsockets 5
 
 ARG APP=dev
 ARG BASENAME
@@ -32,13 +37,14 @@ WORKDIR /data-portal
 RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}\";" >src/versions.js \
     && VERSION=`git describe --always --tags` && echo "export const portalVersion =\"${VERSION}\";" >>src/versions.js \
     && /bin/rm -rf .git \
-    && /bin/rm -rf node_modules \
-    && npm config set unsafe-perm=true && npm ci \
+    && /bin/rm -rf node_modules
+RUN npm config set unsafe-perm=true \
+    && npm ci --legacy-peer-deps \
     && npm run relay \
-    && npm run params \
+    && npm run params
     # see https://stackoverflow.com/questions/48387040/nodejs-recommended-max-old-space-size
-    && NODE_OPTIONS=--max-old-space-size=2048 NODE_ENV=production time ./node_modules/.bin/webpack --bail \
-    && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
+RUN NODE_OPTIONS=--max-old-space-size=3584 NODE_ENV=production time ./node_modules/.bin/webpack --bail
+RUN cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
 
 # In standard prod these will be overwritten by volume mounts

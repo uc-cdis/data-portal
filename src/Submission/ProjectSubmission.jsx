@@ -1,13 +1,20 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Space } from 'antd';
 import SubmitTSV from './SubmitTSV';
 import DataModelGraph from '../DataModelGraph/DataModelGraph';
 import SubmitForm from './SubmitForm';
 import Spinner from '../components/Spinner';
 import './ProjectSubmission.less';
 import { useArboristUI } from '../configs';
-import { userHasMethodOnProject, isRootUrl, isProgramUrl, userHasSheepdogProgramAdmin, userHasSheepdogProjectAdmin } from '../authMappingUtils';
+import {
+  userHasMethodForServiceOnProject,
+  isRootUrl,
+  isProgramUrl,
+  userHasSheepdogProgramAdmin,
+  userHasSheepdogProjectAdmin,
+} from '../authMappingUtils';
 
 class ProjectSubmission extends React.Component {
   componentDidMount() {
@@ -80,13 +87,15 @@ class ProjectSubmission extends React.Component {
         !useArboristUI
         || (isRootUrl(project) && userHasSheepdogProgramAdmin(userAuthMapping))
         || (isProgramUrl(project) && userHasSheepdogProjectAdmin(userAuthMapping))
-        || userHasMethodOnProject('create', project, userAuthMapping)
-        || userHasMethodOnProject('update', project, userAuthMapping)
+        || userHasMethodForServiceOnProject('create', 'sheepdog', project, userAuthMapping)
+        || userHasMethodForServiceOnProject('update', 'sheepdog', project, userAuthMapping)
       ) {
         return (
           <React.Fragment>
-            <MySubmitForm />
-            <MySubmitTSV project={project} />
+            <Space direction='vertical' style={{ width: '100%' }}>
+              <MySubmitForm />
+              <MySubmitTSV project={project} />
+            </Space>
           </React.Fragment>
         );
       }
@@ -100,7 +109,8 @@ class ProjectSubmission extends React.Component {
           <Link
             className='project-submission__link'
             to={`/${this.props.project}/search`}
-          >browse nodes</Link>
+          >browse nodes
+          </Link>
         }
         { displaySubmissionUIComponents(this.props.project, this.props.userAuthMapping) }
         { displayData() }

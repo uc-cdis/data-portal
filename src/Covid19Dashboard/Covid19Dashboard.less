@@ -1,0 +1,154 @@
+.covid19-dashboard {
+  width: 100%;
+}
+
+.covid19-dashboard_tablist {
+  border-bottom: 1px solid var(--primary-color);
+}
+
+.react-tabs__tab {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.react-tabs__tab--selected {
+  background-color: #fff;
+  color: var(--primary-color);
+}
+
+.covid19-dashboard_panel {
+  background-color: #fff;
+}
+
+.covid19-dashboard_counts {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.covid19-dashboard_visualizations {
+  padding: 10px;
+  padding-top: 0; // counts above visualizations already padded
+  display: flex;
+}
+
+.covid19-dashboard_charts {
+  width: 100%;
+  min-width: 550px;
+}
+
+.covid19-dashboard__location-info__click {
+  font-style: italic;
+  white-space: pre-wrap;
+}
+
+// location popup
+.covid19-dashboard .popup__mask {
+  padding-top: 10vh;
+}
+
+.covid19-dashboard .popup__box {
+  width: 80%;
+  height: 80vh;
+}
+
+.covid19-dashboard .popup__message {
+  height: calc(100% - 100px);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.covid19-dashboard__tooltip {
+  padding: 10px 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.covid19-dashboard .recharts-legend-wrapper {
+  bottom: 0 !important; // stylelint-disable-line declaration-no-important
+}
+// end location popup
+
+.map-chart {
+  width: 100%;
+  flex-basis: 200%;
+  height: 55vw;
+}
+.map-chart-il {
+  height: auto;
+}
+
+//make charts go below map
+@media screen and (max-width: 1365px) {
+  .covid19-dashboard_visualizations {
+    display: block;
+  }
+  .map-chart {
+    height: 65vw;
+    min-height: 500px;
+  }
+  .map-chart-il {
+    min-height: 700px;
+  }
+  .covid19-dashboard_charts {
+    max-width: 700px;
+    padding-top: 10px;
+    min-width: 0;
+  }
+}
+
+.map-chart__mapgl-map {
+  width: 100%;
+  height: 100%;
+}
+
+.covid19-dashboard_auspice {
+  padding: 10px;
+  padding-top: 0; // counts above visualizations already padded
+  display: grid;
+}
+
+.covid19-dashboard_auspice__iframe {
+  min-height: 80vh;
+  max-height: 100vh;
+  min-width: 100vw;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+// Styling for graph popups
+.covid19-dashboard_charts .popup__title .popup__icon {
+  float: none;
+  vertical-align: middle;
+  padding: 10px 0;
+}
+.covid19-dashboard_charts .popup__title .popup__title-text {
+  line-height: 1.2em;
+  vertical-align: middle;
+}
+.covid19-dashboard_charts .popup__message .chart-carousel__left-column {
+  width: 75%;
+  height: 100%;
+}
+.covid19-dashboard_charts .popup__message .chart-carousel__image {
+  max-height: 100%;
+  width: 100%;
+}
+
+.overlays .spinner {
+  background: rgba(42, 42, 45, 0.95);
+  height: 100%;
+  color: #fff;
+}
+
+.overlays .spinner__svg {
+  fill: #fff;
+}

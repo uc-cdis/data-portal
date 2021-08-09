@@ -43,11 +43,11 @@ class MapDataModel extends React.Component {
     let props = [];
     const map = {};
     if (this.state.nodeType) {
-      props = this.props.dictionary[this.state.nodeType].required.filter(prop => prop !== 'submitter_id' &&
-        prop !== 'file_size' && prop !== 'file_name' && prop !== 'md5sum' && prop !== 'type' &&
-        !this.props.dictionary[this.state.nodeType].systemProperties.includes(prop) &&
-        !Object.keys(this.state.parentTypesOfSelectedNode)
-          .map(key => this.state.parentTypesOfSelectedNode[key].name).includes(prop));
+      props = this.props.dictionary[this.state.nodeType].required.filter((prop) => prop !== 'submitter_id'
+        && prop !== 'file_size' && prop !== 'file_name' && prop !== 'md5sum' && prop !== 'type'
+        && !this.props.dictionary[this.state.nodeType].systemProperties.includes(prop)
+        && !Object.keys(this.state.parentTypesOfSelectedNode)
+          .map((key) => this.state.parentTypesOfSelectedNode[key].name).includes(prop));
     }
     props.forEach((prop) => { map[prop] = null; });
     this.setState({ requiredFields: map });
@@ -69,8 +69,8 @@ class MapDataModel extends React.Component {
   selectNodeType = (option) => {
     this.setState({
       nodeType: option ? option.value : null,
-      parentTypesOfSelectedNode: option ?
-        this.getParentNodes(this.props.dictionary[option.value].links, {})
+      parentTypesOfSelectedNode: option
+        ? this.getParentNodes(this.props.dictionary[option.value].links, {})
         : {},
     }, () => {
       this.setRequiredProperties();
@@ -112,44 +112,44 @@ class MapDataModel extends React.Component {
   }
 
   selectRequiredField = (option, prop) => {
-    const fields = this.state.requiredFields;
-    fields[prop] = null;
+    const { requiredFields } = this.state;
+    requiredFields[prop] = null;
     let castedOption = null;
     if (option && option.target) {
       castedOption = this.castOption(option.target.value, prop);
     } else if (option && option.value) {
       castedOption = this.castOption(option.value, prop);
     }
-    fields[prop] = castedOption || null;
-    this.setState({ requiredFields: fields });
+    requiredFields[prop] = castedOption || null;
+    this.setState({ requiredFields });
   }
 
   isInteger = (prop) => {
-    if (this.state.nodeType && this.props.dictionary[this.state.nodeType] &&
-      this.props.dictionary[this.state.nodeType].properties[prop]) {
+    if (this.state.nodeType && this.props.dictionary[this.state.nodeType]
+      && this.props.dictionary[this.state.nodeType].properties[prop]) {
       return this.props.dictionary[this.state.nodeType].properties[prop].type === 'integer';
     }
     return false;
   }
 
   isNumber = (prop) => {
-    if (this.state.nodeType && this.props.dictionary[this.state.nodeType] &&
-      this.props.dictionary[this.state.nodeType].properties[prop]) {
+    if (this.state.nodeType && this.props.dictionary[this.state.nodeType]
+      && this.props.dictionary[this.state.nodeType].properties[prop]) {
       return this.props.dictionary[this.state.nodeType].properties[prop].type === 'number';
     }
     return false;
   }
 
   fetchAllSubmitterIds = () => {
-    if (this.state.parentNodeType && this.state.nodeType && this.state.projectId &&
-      this.state.parentTypesOfSelectedNode[this.state.parentNodeType]) {
+    if (this.state.parentNodeType && this.state.nodeType && this.state.projectId
+      && this.state.parentTypesOfSelectedNode[this.state.parentNodeType]) {
       fetchQuery(
         environment,
         gqlHelper.allSubmitterIdsByTypeQuery,
         { project_id: this.state.projectId },
       ).then((data) => {
         if (data && data[this.state.parentNodeType]) {
-          this.setState({ validParentIds: data[this.state.parentNodeType] });
+          this.setState((prevState) => ({ validParentIds: data[prevState.parentNodeType] }));
         }
       });
     } else {
@@ -193,12 +193,12 @@ class MapDataModel extends React.Component {
       chunks.forEach((chunk) => {
         const promise = this.props.submitFiles(programProject[0], programProject[1], chunk)
           .then((res) => {
-            this.setState(prevState => ({ chunkCounter: prevState.chunkCounter + 1 }), () => {
-              this.setState({ submissionText: `Submitting ${this.state.chunkCounter} of ${chunks.length} chunks...` });
+            this.setState((prevState) => ({ chunkCounter: prevState.chunkCounter + 1 }), () => {
+              this.setState((prevState) => ({ submissionText: `Submitting ${prevState.chunkCounter} of ${chunks.length} chunks...` }));
             });
             if (!res.success) {
               message = `Error: ${res.entities && res.entities.length > 0 && res.entities[0].errors
-                ? res.entities[0].errors.map(error => error.message).toString()
+                ? res.entities[0].errors.map((error) => error.message).toString()
                 : res.message} occurred during mapping.`;
             }
             sessionMonitor.updateUserActivity();
@@ -211,24 +211,26 @@ class MapDataModel extends React.Component {
     });
   };
 
-  isValidSubmission = () => !!this.state.projectId && !!this.state.nodeType &&
-      !!this.state.parentNodeType && !!this.state.parentNodeId &&
-      Object.values(this.state.requiredFields).filter(value => (value === null || value === '')).length === 0;
+  isValidSubmission = () => !!this.state.projectId && !!this.state.nodeType
+    && !!this.state.parentNodeType && !!this.state.parentNodeId
+    && Object.values(this.state.requiredFields).filter((value) => (value === null || value === '')).length === 0;
 
   render() {
     const projectList = this.props.projects ? Object.keys(this.props.projects) : [];
-    const projectOptions = projectList.map(key =>
-      ({ value: this.props.projects[key].name, label: this.props.projects[key].name }),
+    const projectOptions = projectList.map(
+      (key) => ({ value: this.props.projects[key].name, label: this.props.projects[key].name }
+      ),
     );
-    const nodeOptions = this.props.nodeTypes ?
-      this.props.nodeTypes.filter(node =>
-        this.props.dictionary[node] && this.props.dictionary[node].category &&
-        this.props.dictionary[node].category.endsWith('_file'))
-        .map(node => ({ value: node, label: node }))
+    const nodeOptions = this.props.nodeTypes
+      ? this.props.nodeTypes.filter(
+        (node) => this.props.dictionary[node] && this.props.dictionary[node].category
+        && this.props.dictionary[node].category.endsWith('_file'))
+        .map((node) => ({ value: node, label: node }))
       : [];
-    const parentIdOptions = this.state.validParentIds ?
-      this.state.validParentIds.map(parent =>
-        ({ value: parent.submitter_id, label: parent.submitter_id }),
+    const parentIdOptions = this.state.validParentIds
+      ? this.state.validParentIds.map(
+        (parent) => ({ value: parent.submitter_id, label: parent.submitter_id }
+        ),
       ) : [];
 
     return (
@@ -273,8 +275,8 @@ class MapDataModel extends React.Component {
                   {
                     Object.keys(this.state.requiredFields).map((prop, i) => {
                       const type = this.props.dictionary[this.state.nodeType].properties[prop];
-                      const inputValue = this.state.requiredFields[prop] ?
-                        this.state.requiredFields[prop].toString() : null;
+                      const inputValue = this.state.requiredFields[prop]
+                        ? this.state.requiredFields[prop].toString() : null;
 
                       return (
                         <div key={i} className='map-data-model__required-field'>
@@ -283,25 +285,29 @@ class MapDataModel extends React.Component {
                             <div className='h4-typo'>{prop}</div>
                           </div>
                           {
-                            type && type.enum ?
-                              <InputWithIcon
-                                inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
-                                inputValue={inputValue}
-                                inputPlaceholderText='Select your field'
-                                inputOptions={type.enum.map(option =>
-                                  ({ value: option, label: option }),
-                                )}
-                                inputOnChange={e => this.selectRequiredField(e, prop)}
-                                iconSvg={CheckmarkIcon}
-                                shouldDisplayIcon={!!this.state.requiredFields[prop]}
-                              />
-                              : <InputWithIcon
-                                inputClassName='map-data-model__input introduction'
-                                inputValue={inputValue}
-                                inputOnChange={e => this.selectRequiredField(e, prop)}
-                                iconSvg={CheckmarkIcon}
-                                shouldDisplayIcon={!!this.state.requiredFields[prop]}
-                              />
+                            type && type.enum
+                              ? (
+                                <InputWithIcon
+                                  inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
+                                  inputValue={inputValue}
+                                  inputPlaceholderText='Select your field'
+                                  inputOptions={type.enum.map(
+                                    (option) => ({ value: option, label: option }),
+                                  )}
+                                  inputOnChange={(e) => this.selectRequiredField(e, prop)}
+                                  iconSvg={CheckmarkIcon}
+                                  shouldDisplayIcon={!!this.state.requiredFields[prop]}
+                                />
+                              )
+                              : (
+                                <InputWithIcon
+                                  inputClassName='map-data-model__input introduction'
+                                  inputValue={inputValue}
+                                  inputOnChange={(e) => this.selectRequiredField(e, prop)}
+                                  iconSvg={CheckmarkIcon}
+                                  shouldDisplayIcon={!!this.state.requiredFields[prop]}
+                                />
+                              )
                           }
                         </div>
                       );
@@ -321,20 +327,24 @@ class MapDataModel extends React.Component {
                 <div className='h4-typo'>{this.state.parentNodeType}</div>
               </div>
               {
-                parentIdOptions.length > 0 ?
-                  <InputWithIcon
-                    inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
-                    inputValue={this.state.parentNodeId}
-                    inputPlaceholderText='Select your parent node ID'
-                    inputOptions={parentIdOptions}
-                    inputOnChange={this.selectParentNodeId}
-                    iconSvg={CheckmarkIcon}
-                    shouldDisplayIcon={!!this.state.parentNodeId}
-                  />
-                  : <p className='map-data-model__missing-node'>
+                parentIdOptions.length > 0
+                  ? (
+                    <InputWithIcon
+                      inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
+                      inputValue={this.state.parentNodeId}
+                      inputPlaceholderText='Select your parent node ID'
+                      inputOptions={parentIdOptions}
+                      inputOnChange={this.selectParentNodeId}
+                      iconSvg={CheckmarkIcon}
+                      shouldDisplayIcon={!!this.state.parentNodeId}
+                    />
+                  )
+                  : (
+                    <p className='map-data-model__missing-node'>
                     No available collections to link to. Please create a
                     &nbsp; {this.state.parentNodeType} node on this project to continue.
-                  </p>
+                    </p>
+                  )
               }
             </div>
           </div>

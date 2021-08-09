@@ -5,10 +5,10 @@ import TransactionLogTable from '../components/tables/TransactionLogTable';
 
 const extractData = (summaryCounts) => {
   const summaries = Object.keys(summaryCounts).map(
-    key => ({ label: components.charts.boardPluralNames[key], value: summaryCounts[key] }),
+    (key) => ({ label: components.charts.boardPluralNames[key], value: summaryCounts[key] }),
   );
   const details = Object.keys(summaryCounts).map(
-    key => ({ label: components.charts.detailPluralNames[key], value: summaryCounts[key] }),
+    (key) => ({ label: components.charts.detailPluralNames[key], value: summaryCounts[key] }),
   );
   return { summaries, details };
 };

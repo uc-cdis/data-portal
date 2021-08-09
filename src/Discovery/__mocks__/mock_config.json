@@ -1,0 +1,161 @@
+{
+  "features": {
+    "exportToWorkspace": {
+      "enabled": true,
+      "manifestFieldName": "__manifest",
+      "enableDownloadManifest": true,
+      "documentationLinks": {
+        "gen3Client": "https://gen3.org/resources/user/gen3-client/",
+        "gen3Workspaces": "https://gen3.org/resources/user/analyze-data/"
+      }
+    },
+    "pageTitle": {
+      "enabled": true,
+      "text": "My Special Test Discovery Page"
+    },
+    "search": {
+      "searchBar": {
+        "enabled": true
+      }
+    },
+    "authorization": {
+      "enabled": false
+    }
+  },
+  "aggregations": [
+    {
+      "name": "Studies",
+      "field": "study_id",
+      "type": "count"
+    },
+    {
+      "name": "Total Subjects",
+      "field": "_subjects_count",
+      "type": "sum"
+    }
+  ],
+  "tagSelector": {
+    "title": "Associated tags organized by category"
+  },
+  "studyColumns": [
+    {
+      "name": "Study Name",
+      "field": "name"
+    },
+    {
+      "name": "dbGaP Link",
+      "field": "dbgap_link",
+      "errorIfNotAvailable": false,
+      "valueIfNotAvailable": "n/a",
+      "contentType": "link"
+    },
+    {
+      "name": "Full Name",
+      "field": "full_name",
+      "contentType": "string"
+    },
+    {
+      "name": "Number of Subjects",
+      "field": "_subjects_count",
+      "errorIfNotAvailable": false,
+      "valueIfNotAvailable": "n/a",
+      "contentType": "number"
+    },
+    {
+      "name": "dbGaP Accession Number",
+      "field": "study_id"
+    }
+  ],
+  "studyPreviewField": {
+    "name": "Description",
+    "field": "study_description",
+    "contentType": "string",
+    "includeName": false,
+    "includeIfNotAvailable": true,
+    "valueIfNotAvailable": "No description has been provided for this study."
+  },
+  "studyPageFields": {
+    "header": {
+      "field": "name"
+    },
+    "fieldsToShow": [
+      {
+        "groupName": "Study Identifiers",
+        "includeName": true,
+        "fields": [
+          {
+            "name": "Number of Subjects",
+            "field": "_subjects_count",
+            "contentType": "number"
+          },
+          {
+            "name": "Full Name",
+            "field": "full_name",
+            "contentType": "string"
+          },
+          {
+            "name": "Short Name",
+            "field": "short_name",
+            "contentType": "string",
+            "includeName": true,
+            "includeIfNotAvailable": true,
+            "valueIfNotAvailable": "N/A"
+          },
+          {
+            "name": "dbGaP Link",
+            "field": "dbgap_link",
+            "includeIfNotAvailable": false,
+            "contentType": "link"
+          },
+          {
+            "name": "dbGaP Study Accession",
+            "field": "dbgap_accession",
+            "contentType": "string",
+            "includeName": true,
+            "includeIfNotAvailable": false
+          },
+          {
+            "name": "Project ID",
+            "field": "project_id",
+            "contentType": "string",
+            "includeIfNotAvailable": false
+          }
+        ]
+      },
+      {
+        "fields": [
+          {
+            "name": "Description",
+            "field": "study_description",
+            "contentType": "paragraphs",
+            "includeName": false,
+            "includeIfNotAvailable": true,
+            "valueIfNotAvailable": "No description has been provided for this study."
+          }
+        ]
+      }
+    ]
+  },
+  "minimalFieldMapping": {
+    "tagsListFieldName": "tags",
+    "authzField": "authz",
+    "uid": "study_id"
+  },
+  "tagCategories": [
+    {
+      "name": "Program",
+      "color": "rgba(129, 211, 248, 1)",
+      "display": true
+    },
+    {
+      "name": "Study Registration",
+      "color": "rgba(236, 128, 141, 1)",
+      "display": true
+    },
+    {
+      "name": "Data Type",
+      "color": "rgba(112, 182, 3, 1)",
+      "display": true
+    }
+  ]
+}

@@ -174,12 +174,6 @@
         "rightIcon": "download",
         "fileName": "manifest.json"
       }
-    ],
-    "arrangerConfig": {
-      "projectId": "search",
-      "graphqlField": "subject",
-      "index": "",
-      "nodeCountField": "node_id"
-    }
+    ]
   }
 }

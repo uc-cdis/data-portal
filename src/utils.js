@@ -25,7 +25,7 @@ export const jsonToString = (data, schema = {}) => {
     }
     if (schema[key] === 'number') {
       const castedValue = Number(value);
-      if (isNaN(castedValue)) {
+      if (Number.isNaN(castedValue)) {
         return value;
       }
       return castedValue;
@@ -48,7 +48,6 @@ export const predictFileType = (dirtyData, fileType) => {
   }
   return predictType;
 };
-
 
 /**
  * Little wrapper around setinterval with a guard to prevent an async function
@@ -86,7 +85,7 @@ export function legendCreator(legendGroup, nodes, legendWidth) {
     const b = bIn.toLowerCase();
     if (a < b) {
       return -1;
-    } else if (a > b) {
+    } if (a > b) {
       return 1;
     }
     return 0;
@@ -101,9 +100,9 @@ export function legendCreator(legendGroup, nodes, legendWidth) {
     .attr('x', legendWidth / 2)
     .attr('y', (d, i) => `${1.5 * (2.5 + i)}em`)
     .attr('text-anchor', 'middle')
-    .attr('fill', d => getCategoryColor(d))
+    .attr('fill', (d) => getCategoryColor(d))
     .style('font-size', legendFontSize)
-    .text(d => d);
+    .text((d) => d);
 
   legendGroup.append('text')
     .attr('x', legendWidth / 2)
@@ -113,7 +112,6 @@ export function legendCreator(legendGroup, nodes, legendWidth) {
     .style('font-size', legendFontSize)
     .style('text-decoration', 'underline');
 }
-
 
 export function addArrows(graphSvg) {
   graphSvg.append('svg:defs')
@@ -141,7 +139,6 @@ export function addLinks(graphSvg, edges) {
     .attr('stroke', 'darkgray')
     .attr('fill', 'none');
 }
-
 
 /**
  * Compute SVG coordinates fx, fy for each node in nodes.
@@ -185,7 +182,7 @@ export function computeLastPageSizes(filesMap, pageSize) {
 
 export function capitalizeFirstLetter(str) {
   const res = str.replace(/_|\./gi, ' ');
-  return res.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  return res.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 }
 
 /**
@@ -204,7 +201,7 @@ export function intersection(aList, bList) {
     }, {},
   );
   return Object.entries(key2Count)
-    .filter(kv => kv[1] > 1)
+    .filter((kv) => kv[1] > 1)
     .map(([k]) => k);
 }
 
@@ -217,20 +214,20 @@ export function minus(aList, bList) {
     }, {},
   );
   return Object.entries(key2Count)
-    .filter(kv => kv[1] === 2)
+    .filter((kv) => kv[1] === 2)
     .map(([k]) => k);
 }
 
-export const parseParamWidth = width => ((typeof width === 'number') ? `${width}px` : width);
+export const parseParamWidth = (width) => ((typeof width === 'number') ? `${width}px` : width);
 
-export const isPageFullScreen = pathname => (!!((pathname
+export const isPageFullScreen = (pathname) => (!!((pathname
   && (pathname.toLowerCase() === '/dd'
   || pathname.toLowerCase().startsWith('/dd/')
   || pathname.toLowerCase() === '/cohort-tools'
   || pathname.toLowerCase().startsWith('/cohort-tools/')
   ))));
 
-export const isFooterHidden = pathname => (!!((pathname
+export const isFooterHidden = (pathname) => (!!((pathname
   && (pathname.toLowerCase() === '/dd'
   || pathname.toLowerCase().startsWith('/dd/')
   ))));

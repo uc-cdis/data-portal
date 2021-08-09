@@ -14,8 +14,10 @@ import './SubmitTSV.less';
  * @param {string} project of form program-project
  * @param {Function} onFileChange triggered when user edits something in tsv/json AceEditor
  */
-const SubmitTSV = ({ project, submission, onUploadClick,
-  onSubmitClick, onFileChange, onFinish }) => {
+const SubmitTSV = ({
+  project, submission, onUploadClick,
+  onSubmitClick, onFileChange, onFinish,
+}) => {
   //
   // Reads the bytes from the tsv/json file the user submits,
   // then notify onUploadClick listener which might stuff data
@@ -72,48 +74,51 @@ const SubmitTSV = ({ project, submission, onUploadClick,
           Upload file
         </label>
         &emsp;
-        {submission.file &&
-          <button
-            type='button'
-            className='submit-tsv__upload-button button-primary-white'
-            id='cd-submit-tsv__submit-button'
-            onClick={onSubmitClickEvent}
-            onKeyPress={onSubmitClickEvent}
-          >
+        {submission.file
+          && (
+            <button
+              type='button'
+              className='submit-tsv__upload-button button-primary-white'
+              id='cd-submit-tsv__submit-button'
+              onClick={onSubmitClickEvent}
+              onKeyPress={onSubmitClickEvent}
+            >
             Submit
-          </button>
-        }
+            </button>
+          )}
 
       </div>
-      {(submission.file) &&
-        <AceEditor
-          width='100%'
-          height='200px'
-          className='submit-tsv__ace-editor'
-          mode={submission.file_type === 'text/tab-separated-values' ? '' : 'json'}
-          theme='kuroir'
-          value={submission.file}
-          editorProps={{ $blockScrolling: Infinity }} // mutes console warning
-          onChange={onChange}
-          id='uploaded'
-        />
-      }
-      {submission.submit_result &&
-        <div>
-          <p>
-            Submitting chunk {submission.submit_counter} of {submission.submit_total}
-          </p>
-          <SubmissionResult
-            status={submission.submit_status}
-            data={submission.submit_result}
-            dataString={submission.submit_result_string}
-            entityCounts={('submit_entity_counts' in submission) ? submission.submit_entity_counts : {}}
-            counter={submission.submit_counter}
-            total={submission.submit_total}
-            onFinish={onFinishSubmitEvent}
+      {(submission.file)
+        && (
+          <AceEditor
+            width='100%'
+            height='200px'
+            className='submit-tsv__ace-editor'
+            mode={submission.file_type === 'text/tab-separated-values' ? '' : 'json'}
+            theme='kuroir'
+            value={submission.file}
+            editorProps={{ $blockScrolling: Infinity }} // mutes console warning
+            onChange={onChange}
+            id='uploaded'
           />
-        </div>
-      }
+        )}
+      {submission.submit_result
+        && (
+          <div>
+            <p>
+            Submitting chunk {submission.submit_counter} of {submission.submit_total}
+            </p>
+            <SubmissionResult
+              status={submission.submit_status}
+              data={submission.submit_result}
+              dataString={submission.submit_result_string}
+              entityCounts={('submit_entity_counts' in submission) ? submission.submit_entity_counts : []}
+              counter={submission.submit_counter}
+              total={submission.submit_total}
+              onFinish={onFinishSubmitEvent}
+            />
+          </div>
+        )}
     </form>
   );
 };
@@ -128,7 +133,7 @@ SubmitTSV.propTypes = {
     submit_status: PropTypes.number,
     submit_counter: PropTypes.number,
     submit_total: PropTypes.number,
-    submit_entity_counts: PropTypes.number,
+    submit_entity_counts: PropTypes.array,
     nodeTypes: PropTypes.array,
     dictionary: PropTypes.object,
   }),

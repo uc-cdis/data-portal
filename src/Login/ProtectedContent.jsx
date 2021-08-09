@@ -1,30 +1,15 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchUser, fetchOAuthURL, fetchWithCreds, fetchProjects } from '../actions';
+import { fetchUser, fetchProjects } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
-import { requiredCerts, submissionApiOauthPath } from '../configs';
+import { requiredCerts } from '../configs';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 import { intersection, isPageFullScreen } from '../utils';
 import './ProtectedContent.css';
 
 let lastAuthMs = 0;
-let lastTokenRefreshMs = 0;
-
-/**
- * Redux listener - just clears auth-cache on logout
- */
-export function logoutListener(state = {}, action) {
-  switch (action.type) {
-  case 'RECEIVE_API_LOGOUT':
-    lastAuthMs = 0;
-    lastTokenRefreshMs = 0;
-    break;
-  default: // noop
-  }
-  return state;
-}
 
 /**
  * Container for components that require authentication to access.
@@ -37,25 +22,6 @@ export function logoutListener(state = {}, action) {
  * @param filter {() => Promise} optional filter to apply before rendering the child component
  */
 class ProtectedContent extends React.Component {
-  static propTypes = {
-    component: PropTypes.func.isRequired,
-    location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
-    match: PropTypes.shape(
-      {
-        params: PropTypes.object,
-        path: PropTypes.string,
-      },
-    ).isRequired,
-    public: PropTypes.bool,
-    filter: PropTypes.func,
-  };
-
-  static defaultProps = {
-    public: false,
-    filter: null,
-  };
-
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -73,33 +39,32 @@ class ProtectedContent extends React.Component {
    */
   componentDidMount() {
     getReduxStore().then(
-      store =>
-        Promise.all(
-          [
-            store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
-            store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
-          ],
-        ).then(
-          () => this.checkLoginStatus(store, this.state)
-            .then(newState => this.props.public || this.checkQuizStatus(newState))
-            .then(newState => this.props.public || this.checkApiToken(store, newState)),
-        ).then(
-          (newState) => {
-            const filterPromise = (!this.props.public && newState.authenticated
+      (store) => Promise.all(
+        [
+          store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
+          store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
+        ],
+      ).then(
+        () => this.checkLoginStatus(store, this.state)
+          .then((newState) => this.props.public || this.checkQuizStatus(newState))
+          .then((newState) => this.props.public || this.checkApiToken(store, newState)),
+      ).then(
+        (newState) => {
+          const filterPromise = (!this.props.public && newState.authenticated
               && typeof this.props.filter === 'function')
-              ? this.props.filter()
-              : Promise.resolve('ok');
+            ? this.props.filter()
+            : Promise.resolve('ok');
             // finally update the component state
-            const finish = () => {
-              const latestState = Object.assign({}, newState);
-              latestState.dataLoaded = true;
-              this.setState(latestState);
-            };
-            return filterPromise.then(
-              finish, finish,
-            );
-          },
-        ),
+          const finish = () => {
+            const latestState = { ...newState };
+            latestState.dataLoaded = true;
+            this.setState(latestState);
+          };
+          return filterPromise.then(
+            finish, finish,
+          );
+        },
+      ),
     );
     if (this.props.public) {
       getReduxStore().then(
@@ -110,7 +75,7 @@ class ProtectedContent extends React.Component {
             : Promise.resolve('ok');
           // finally update the component state
           const finish = () => {
-            const latestState = Object.assign({}, store);
+            const latestState = { ...store };
             latestState.dataLoaded = true;
             this.setState(latestState);
           };
@@ -131,7 +96,7 @@ class ProtectedContent extends React.Component {
    * @return Promise<{redirectTo, authenticated, user}>
    */
   checkLoginStatus = (store, initialState) => {
-    const newState = Object.assign({}, initialState);
+    const newState = { ...initialState };
     const nowMs = Date.now();
     newState.authenticated = true;
     newState.redirectTo = null;
@@ -168,13 +133,9 @@ class ProtectedContent extends React.Component {
    * @return newState passed through
    */
   checkApiToken = (store, initialState) => {
-    const nowMs = Date.now();
-    const newState = Object.assign({}, initialState);
+    const newState = { ...initialState };
 
     if (!newState.authenticated) {
-      return Promise.resolve(newState);
-    }
-    if (nowMs - lastTokenRefreshMs < 41000) {
       return Promise.resolve(newState);
     }
     return store.dispatch(fetchProjects())
@@ -183,63 +144,23 @@ class ProtectedContent extends React.Component {
         // The assumption here is that fetchProjects either succeeds or fails.
         // If it fails (we won't have any project data), then we need to refresh our api token ...
         //
-        const projects = store.getState().submission.projects;
+        const { projects } = store.getState().submission;
         if (projects) {
           // user already has a valid token
           return Promise.resolve(newState);
-        } else if (info.status !== 403 || info.status !== 401) {
+        } if (info.status !== 403 || info.status !== 401) {
           // do not authenticate unless we have a 403 or 401
           // should only check 401 after we fix fence to return correct
           // error code for all cases
           // there may be no tables at startup time,
           // or some other weirdness ...
-          // The oauth dance below is only relevant for legacy commons - pre jwt
           return Promise.resolve(newState);
         }
-        // else do the oauth dance
-        // NOTE: this is DEPRECATED now - jwt access token
-        //      works across all services
-        return store.dispatch(fetchOAuthURL(submissionApiOauthPath))
-          .then(
-            oauthUrl => fetchWithCreds({ path: oauthUrl, dispatch: store.dispatch.bind(store) }))
-          .then(
-            ({ status, data }) => {
-              switch (status) {
-              case 200:
-                return {
-                  type: 'RECEIVE_SUBMISSION_LOGIN',
-                  result: true,
-                };
-              default: {
-                return {
-                  type: 'RECEIVE_SUBMISSION_LOGIN',
-                  result: false,
-                  error: data,
-                };
-              }
-              }
-            },
-          )
-          .then(
-            msg => store.dispatch(msg),
-          )
-          .then(
-            // refetch the tables - since the earlier call failed with an invalid token ...
-            () => store.dispatch(fetchProjects()),
-          )
-          .then(
-            () => {
-              lastTokenRefreshMs = Date.now();
-              return newState;
-            },
-            () => {
-              // something went wrong - better just re-login
-              newState.authenticated = false;
-              newState.redirectTo = '/login';
-              newState.from = this.props.location;
-              return newState;
-            },
-          );
+        // something went wrong - better just re-login
+        newState.authenticated = false;
+        newState.redirectTo = '/login';
+        newState.from = this.props.location;
+        return Promise.resolve(newState);
       });
   };
 
@@ -256,8 +177,7 @@ class ProtectedContent extends React.Component {
     }
     const { user } = newState;
     // user is authenticated - now check if he has certs
-    const isMissingCerts =
-      intersection(requiredCerts, user.certificates_uploaded).length !== requiredCerts.length;
+    const isMissingCerts = intersection(requiredCerts, user.certificates_uploaded).length !== requiredCerts.length;
     // take quiz if this user doesn't have required certificate
     if (this.props.match.path !== '/quiz' && isMissingCerts) {
       newState.redirectTo = '/quiz';
@@ -279,24 +199,34 @@ class ProtectedContent extends React.Component {
     window.scrollTo(0, 0);
     const pageFullWidthClassModifier = isPageFullScreen(this.props.location.pathname) ? 'protected-content--full-screen' : '';
     if (this.state.redirectTo) {
-      return (<Redirect to={{
-        pathname: this.state.redirectTo,
-        from: (this.state.from && this.state.from.pathname) ? this.state.from.pathname : '/' }} // send previous location to redirect
-      />);
-    } else if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
+      let fromURL = '/';
+      if (this.state.from && this.state.from.pathname) {
+        fromURL = this.state.from.pathname;
+        if (this.state.from.search && this.state.from.search !== '') {
+          fromURL = fromURL.concat(this.state.from.search);
+        }
+      }
+      return (
+        <Redirect to={{
+          pathname: this.state.redirectTo,
+          from: fromURL,
+        }}
+        />
+      );
+    } if (this.props.public && (!this.props.filter || typeof this.props.filter !== 'function')) {
       return (
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
-    } else if (!this.props.public && this.state.authenticated) {
+    } if (!this.props.public && this.state.authenticated) {
       return (
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <ReduxAuthTimeoutPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
-    } else if (this.props.public && this.state.dataLoaded) {
+    } if (this.props.public && this.state.dataLoaded) {
       return (
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <Component params={params} location={this.props.location} history={this.props.history} />
@@ -306,5 +236,24 @@ class ProtectedContent extends React.Component {
     return (<div className={`protected-content ${pageFullWidthClassModifier}`}><Spinner /></div>);
   }
 }
+
+ProtectedContent.propTypes = {
+  component: PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  match: PropTypes.shape(
+    {
+      params: PropTypes.object,
+      path: PropTypes.string,
+    },
+  ).isRequired,
+  public: PropTypes.bool,
+  filter: PropTypes.func,
+};
+
+ProtectedContent.defaultProps = {
+  public: false,
+  filter: null,
+};
 
 export default ProtectedContent;

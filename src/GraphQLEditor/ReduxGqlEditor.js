@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import GqlEditor from './GqlEditor';
 
-
 const mapStateToProps = (state, ownProps) => {
   const params = queryString.parse(ownProps.location.search);
 

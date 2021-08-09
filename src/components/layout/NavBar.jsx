@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavButton from './NavButton';
 import NavBarTooltip from './NavBarTooltip';
-import { breakpoints } from '../../localconf';
-import { config } from '../../params';
+import { breakpoints, commonsWideAltText } from '../../localconf';
+import { config, components } from '../../params';
 import './NavBar.less';
 
 /**
@@ -24,10 +24,6 @@ class NavBar extends Component {
     };
   }
 
-  componentDidMount() {
-    this.props.onInitActive();
-  }
-
   getNavButtonRef = (itemUniqueId) => {
     if (!this.navButtonRefs[itemUniqueId]) {
       this.navButtonRefs[itemUniqueId] = React.createRef();
@@ -40,13 +36,8 @@ class NavBar extends Component {
     return typeof authResult !== 'undefined' ? authResult : true;
   }
 
-  isActive = (id) => {
-    const toCompare = this.props.activeTab.split('/').filter(x => x !== 'dev.html').join('/');
-    return toCompare.startsWith(id);
-  }
-
   toggleMenu = () => {
-    this.setState(prevState => ({ menuOpen: !prevState.menuOpen }));
+    this.setState((prevState) => ({ menuOpen: !prevState.menuOpen }));
   }
 
   updateTooltip(item) {
@@ -74,79 +65,67 @@ class NavBar extends Component {
 
   render() {
     const navItems = this.props.navItems.map(
-      (item, index) => {
-        const navButton = (<div
-          key={item.link}
-          ref={this.getNavButtonRef(item.link)}
-          className='nav-bar__link nav-bar__link--right'
-          onMouseOver={() => this.updateTooltip(item)}
-          onMouseLeave={() => this.updateTooltip(null)}
-        >
-          { item.link.startsWith('http') ?
-            (<a href={item.link}>
-              <NavButton
-                item={item}
-                dictIcons={this.props.dictIcons}
-                isActive={this.isActive(item.link)}
-                onActiveTab={() => this.props.onActiveTab(item.link)}
-                tabIndex={index + 1}
-              />
-            </a>)
-            :
-            (<Link to={item.link}>
-              <NavButton
-                item={item}
-                dictIcons={this.props.dictIcons}
-                isActive={this.isActive(item.link)}
-                onActiveTab={() => this.props.onActiveTab(item.link)}
-                tabIndex={index + 1}
-              />
-            </Link>)
-          }
-        </div>);
+      (item) => {
+        const navButton = (
+          <div
+            key={item.link}
+            ref={this.getNavButtonRef(item.link)}
+            className='nav-bar__link nav-bar__link--right g3-ring-on-focus'
+            onMouseOver={() => this.updateTooltip(item)}
+            onFocus={() => this.updateTooltip(item)}
+            onMouseLeave={() => this.updateTooltip(null)}
+            onBlur={() => this.updateTooltip(null)}
+          >
+            <NavButton
+              item={item}
+              dictIcons={this.props.dictIcons}
+            />
+          </div>
+        );
         return this.canUserSeeComponent(item.name) ? navButton : null;
       });
+
+    // added for backward compatibility
+    // should always add homepageHref to components in portal config in the future
+    const homepageHref = components.homepageHref || config.homepageHref;
 
     return (
       <div className='nav-bar'>
         <header className='nav-bar__header'>
           <nav className='nav-bar__nav--info'>
-            <div className='nav-bar__logo'>
-              {config.homepageHref ? (
-                <a href={config.homepageHref}>
-                  <img
-                    className='nav-bar__logo-img'
-                    src='/src/img/logo.png'
-                    alt=''
-                  />
-                </a>
-              ) : (
-                <Link
-                  to=''
-                  onClick={() => this.props.onActiveTab('')}
-                  onKeyPress={() => this.props.onActiveTab('')}
-                >
-                  <img
-                    className='nav-bar__logo-img'
-                    src='/src/img/logo.png'
-                    alt=''
-                  />
-                </Link>
-              )
-              }
+            <div className='nav-bar__logo g3-ring-on-focus'>
+              {homepageHref
+                ? (
+                  <a href={homepageHref}>
+                    <img
+                      className='nav-bar__logo-img'
+                      src='/src/img/logo.png'
+                      alt={commonsWideAltText.portalLogo || 'Gen3 Data Commons - home'}
+                    />
+                  </a>
+                )
+                : (
+                  <NavLink exact to=''>
+                    <img
+                      className='nav-bar__logo-img'
+                      src='/src/img/logo.png'
+                      alt={commonsWideAltText.portalLogo || 'Gen3 Data Commons - home'}
+                    />
+                  </NavLink>
+                )}
             </div>
             {
               this.props.navTitle && (
                 <div
-                  role='button'
-                  tabIndex={0}
                   className='nav-bar__home-button'
-                  onClick={() => this.props.onActiveTab('')}
-                  onKeyPress={() => this.props.onActiveTab('')}
                 >
-                  <Link className='h3-typo nav-bar__link nav-bar__link--home' to=''>
+                  <NavLink
+                    exact
+                    to=''
+                    className='h3-typo nav-bar__link nav-bar__link--home g3-ring-on-focus'
+                  >
                     {this.props.navTitle}
-                  </Link>
+                  </NavLink>
                 </div>
               )
             }
@@ -155,6 +134,7 @@ class NavBar extends Component {
             <div
               className='nav-bar__menu'
               onClick={this.toggleMenu}
+              onKeyPress={this.toggleMenu}
               role='button'
               tabIndex={0}
             >
@@ -177,8 +157,8 @@ class NavBar extends Component {
             <nav className='nav-bar__nav--items'>
               { navItems }
             </nav>
-            { this.state.tooltipDetails.content !== '' ?
-              <NavBarTooltip {...this.state.tooltipDetails} />
+            { this.state.tooltipDetails.content !== ''
+              ? <NavBarTooltip {...this.state.tooltipDetails} />
               : null }
           </MediaQuery>
         </header>
@@ -192,15 +172,9 @@ NavBar.propTypes = {
   userAccess: PropTypes.object.isRequired,
   dictIcons: PropTypes.object.isRequired,
   navTitle: PropTypes.string,
-  activeTab: PropTypes.string,
-  onActiveTab: PropTypes.func,
-  onInitActive: PropTypes.func,
 };
 
 NavBar.defaultProps = {
-  activeTab: '',
-  onActiveTab: () => {},
-  onInitActive: () => {},
   navTitle: null,
 };
 

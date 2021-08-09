@@ -2,7 +2,24 @@ import { connect } from 'react-redux';
 import MapFiles from './MapFiles';
 import { fetchWithCreds } from '../actions';
 import { STARTING_DID, FETCH_LIMIT } from './utils';
-import { indexdPath, useIndexdAuthz } from '../localconf';
+import { indexdPath, useIndexdAuthz, fenceDataPath } from '../localconf';
+import { headers } from '../configs';
+
+export const deleteFile = (file) => {
+  const request = {
+    credentials: 'include',
+    headers: { ...headers },
+    method: 'DELETE',
+  };
+
+  return fetch(`${fenceDataPath}${file.did}`, request)
+    .then((response) => {
+      if (response.status === 204) {
+        return response.text();
+      }
+      throw Error(`Unable to delete record for GUID ${file.did}, response code: ${response.status}, message: ${response.statusText}`);
+    });
+};
 
 const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
   const unmappedFilesCheck = useIndexdAuthz ? 'authz=null' : 'acl=null';
@@ -30,7 +47,7 @@ const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
         };
       }
     },
-    err => ({ type: 'FETCH_ERROR', error: err }),
+    (err) => ({ type: 'FETCH_ERROR', error: err }),
   ).then((msg) => {
     if (msg) {
       dispatch(msg);
@@ -38,22 +55,23 @@ const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
   });
 };
 
-const mapSelectedFiles = files => ({
+const mapSelectedFiles = (files) => ({
   type: 'RECEIVE_FILES_TO_MAP',
   data: files,
 });
 
 const ReduxMapFiles = (() => {
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     unmappedFiles: state.submission.unmappedFiles,
     user: state.user,
   });
 
-  const mapDispatchToProps = dispatch => ({
-    fetchUnmappedFiles: user => dispatch(
+  const mapDispatchToProps = (dispatch) => ({
+    fetchUnmappedFiles: (user) => dispatch(
       fetchUnmappedFiles(user, [], STARTING_DID, FETCH_LIMIT),
     ),
-    mapSelectedFiles: files => dispatch(mapSelectedFiles(files)),
+    mapSelectedFiles: (files) => dispatch(mapSelectedFiles(files)),
+    deleteFile: (file) => deleteFile(file),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(MapFiles);

@@ -40,6 +40,12 @@ describe('the DataDictionaryTable component', () => {
       description: 'whatever',
       properties: [],
     },
+    c1: {
+      id: 'c1',
+      category: 'internal',
+      description: 'whatever',
+      properties: [],
+    },
   };
 
   it('knows how to organize dictionary types by category', () => {

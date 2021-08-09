@@ -9,6 +9,8 @@ import {
   GuppyConfigType,
 } from '../configTypeDef';
 import { checkForNoAccessibleProject, checkForFullAccessibleProject } from '../GuppyDataExplorerHelper';
+import { labelToPlural } from '../utils';
+import { explorerHideEmptyFilterSection, explorerFilterValuesToHide } from '../../localconf';
 
 /**
  * For selectedAccessFilter the default value is 'Data with Access'
@@ -25,8 +27,8 @@ class ExplorerFilter extends React.Component {
   }
 
   getSnapshotBeforeUpdate(prevProps) {
-    if (prevProps.accessibleFieldObject !== this.props.accessibleFieldObject ||
-      prevProps.unaccessibleFieldObject !== this.props.unaccessibleFieldObject
+    if (prevProps.accessibleFieldObject !== this.props.accessibleFieldObject
+      || prevProps.unaccessibleFieldObject !== this.props.unaccessibleFieldObject
     ) {
       if (this.props.tierAccessLevel === 'libre') {
         this.setState({ selectedAccessFilter: 'all-data' });
@@ -126,9 +128,16 @@ class ExplorerFilter extends React.Component {
       onProcessFilterAggsData: this.onProcessFilterAggsData,
       onUpdateAccessLevel: this.props.onUpdateAccessLevel,
       adminAppliedPreFilters: this.props.adminAppliedPreFilters,
+      userFilterFromURL: this.props.userFilterFromURL,
       lockedTooltipMessage: this.props.tierAccessLevel === 'regular' ? `You may only view summary information for this project. You do not have ${this.props.guppyConfig.dataType}-level access.` : '',
-      disabledTooltipMessage: this.props.tierAccessLevel === 'regular' ? `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${this.props.tierAccessLimit} ${this.props.guppyConfig.nodeCountTitle.toLowerCase() || this.props.guppyConfig.dataType} or more.` : '',
+      disabledTooltipMessage: this.props.tierAccessLevel === 'regular' ? `This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${this.props.tierAccessLimit} ${
+        this.props.guppyConfig.nodeCountTitle
+          ? this.props.guppyConfig.nodeCountTitle.toLowerCase()
+          : labelToPlural(this.props.guppyConfig.dataType)
+      } or more.` : '',
       accessibleFieldCheckList: this.props.accessibleFieldCheckList,
+      hideEmptyFilterSection: explorerHideEmptyFilterSection,
+      filterValuesToHide: explorerFilterValuesToHide,
     };
     let filterFragment;
     switch (this.state.selectedAccessFilter) {
@@ -193,6 +202,7 @@ ExplorerFilter.propTypes = {
   accessibleFieldCheckList: PropTypes.arrayOf(PropTypes.string), // inherit from GuppyWrapper
   getAccessButtonLink: PropTypes.string,
   hideGetAccessButton: PropTypes.bool,
+  userFilterFromURL: PropTypes.object,
 };
 
 ExplorerFilter.defaultProps = {
@@ -210,6 +220,7 @@ ExplorerFilter.defaultProps = {
   accessibleFieldCheckList: [],
   getAccessButtonLink: undefined,
   hideGetAccessButton: false,
+  userFilterFromURL: {},
 };
 
 export default ExplorerFilter;

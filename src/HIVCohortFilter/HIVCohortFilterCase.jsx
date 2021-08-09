@@ -1,10 +1,9 @@
+/* eslint-disable react/no-unused-state */
 import React from 'react';
 import FileSaver from 'file-saver';
 import { fetchWithCreds } from '../actions';
 import {
   guppyGraphQLUrl,
-  arrangerGraphqlPath,
-  useGuppyForExplorer,
   guppyDownloadUrl,
   analysisApps,
 } from '../configs';
@@ -12,8 +11,8 @@ import {
 class HIVCohortFilterCase extends React.Component {
   // Base class for the 3 NDH cohort filter apps. Meant to facilitate code reuse
   static performQuery(query, variableString, useGraphQLEndpoint) {
-    if (useGraphQLEndpoint || !useGuppyForExplorer) {
-      const graphqlUrl = useGuppyForExplorer ? guppyGraphQLUrl : arrangerGraphqlPath;
+    if (useGraphQLEndpoint) {
+      const graphqlUrl = guppyGraphQLUrl;
       return fetchWithCreds({
         path: `${graphqlUrl}`,
         body: variableString ? JSON.stringify({
@@ -72,7 +71,6 @@ class HIVCohortFilterCase extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      inLoadingState: false,
       isReadyToCalculate: false,
       resultAlreadyCalculated: false,
       therapyValuesOfInterest: ['HAART', 'Potent ART'],
@@ -90,7 +88,7 @@ class HIVCohortFilterCase extends React.Component {
       const count = keyCountMap[keyId];
       if (batchCounts + count > 5000) {
         // query this batch for follow ups
-        promiseList.push(this.getFollowupsBuckets(keyName, keyRange).then(res => res));
+        promiseList.push(this.getFollowupsBuckets(keyName, keyRange).then((res) => res));
 
         // reset batch
         batchCounts = count;
@@ -99,7 +97,7 @@ class HIVCohortFilterCase extends React.Component {
       batchCounts += count;
       keyRange.push(keyId);
     });
-    promiseList.push(this.getFollowupsBuckets(keyName, keyRange).then(res => res));
+    promiseList.push(this.getFollowupsBuckets(keyName, keyRange).then((res) => res));
 
     let mergedFollowUps = [];
     const resultList = await Promise.all(promiseList);
@@ -110,8 +108,7 @@ class HIVCohortFilterCase extends React.Component {
   }
 
   getFollowupsBuckets = (key, keyRange) => {
-    if (useGuppyForExplorer) {
-      const queryString = `
+    const queryString = `
       query ($filter: JSON) {
         ${this.state.visitIndexTypeName} (filter: $filter, accessibility: all, first: 10000) {
           subject_id
@@ -131,7 +128,7 @@ class HIVCohortFilterCase extends React.Component {
         }
       }
     `;
-      const variableString = `
+    const variableString = `
       {
         "filter": {
           "AND": [
@@ -148,82 +145,13 @@ class HIVCohortFilterCase extends React.Component {
           ]
         }
       }`;
-      return HIVCohortFilterCase.performQuery(queryString, variableString, true).then((res) => {
-        if (!res
+    return HIVCohortFilterCase.performQuery(queryString, variableString, true).then((res) => {
+      if (!res
           || !res.data
           || !res.data[this.state.visitIndexTypeName]) {
-          throw new Error('Error while querying subjects with HIV');
-        }
-        return res.data[this.state.visitIndexTypeName];
-      });
-    }
-
-    // below are for arranger
-    const query = `
-    {
-      ${this.state.visitIndexTypeName} {
-        hits(filters: { op: "and",
-          content: [
-            { op: "=",
-              content: { field: "hiv_status", value: "positive" }
-            },
-            {
-              op: "in",
-              content: { field: "${key}", value: ["${keyRange.join('","')}"] }
-            }
-          ]
-        }, first:10000) {
-          total
-          edges {
-            node {
-              subject_id
-              visit_number
-              thrpyv
-              visit_date
-              fposdate
-              frstdthd
-              leu3n
-              submitter_id
-              viral_load
-            }
-          }
-        }
-      }
-    }`;
-    return HIVCohortFilterCase.performQuery(query, null, true).then((res) => {
-      if (!res || !res.data) {
         throw new Error('Error while querying subjects with HIV');
       }
-      return res.data[this.state.visitIndexTypeName].hits.edges.map(edge => edge.node);
-    });
-  }
-
-  isALargeAmountOfFollowUpDataMissing(visitArray) {
-    // Note: This function is overridden by the LTNP case
-    // If a large amount of data is missing, disqualify the subject
-    const monthSizeFromVisitDate = (visitArray[visitArray.length - 1].visit_date
-      - visitArray[0].visit_date) * 12;
-    // Visits are estimated to be 6 months apart, but this is not always the case
-    const monthSizeFromVisitNumber = (visitArray[visitArray.length - 1].visit_number
-      - visitArray[0].visit_number) * 6;
-    const maxWindowSize = this.state.numConsecutiveMonthsFromUser * 2;
-    if (Math.min(monthSizeFromVisitDate, monthSizeFromVisitNumber) >= maxWindowSize) {
-      // If the window_size is more than double, this indicates a large amount of missing data
-      return true;
-    }
-    return false;
-  }
-
-  checkReadyToCalculate = () => {
-    // Overridden by LTNP and EC case
-    const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
-    const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
-    this.setState({
-      viralLoadFromUser: viralLoadFromUser > 0 ? viralLoadFromUser : undefined,
-      numConsecutiveMonthsFromUser: numConsecutiveMonthsFromUser > 0
-        ? numConsecutiveMonthsFromUser : undefined,
-      isReadyToCalculate: (viralLoadFromUser > 0 && numConsecutiveMonthsFromUser > 0),
-      resultAlreadyCalculated: false,
+      return res.data[this.state.visitIndexTypeName];
     });
   }
 
@@ -240,6 +168,19 @@ class HIVCohortFilterCase extends React.Component {
     event.preventDefault();
     this.setState({ inLoadingState: true });
     this.updateSubjectClassifications();
+  }
+
+  checkReadyToCalculate = () => {
+    // Overridden by LTNP and EC case
+    const viralLoadFromUser = this.viralLoadInputRef.current.valueAsNumber;
+    const numConsecutiveMonthsFromUser = this.numConsecutiveMonthsInputRef.current.valueAsNumber;
+    this.setState({
+      viralLoadFromUser: viralLoadFromUser > 0 ? viralLoadFromUser : undefined,
+      numConsecutiveMonthsFromUser: numConsecutiveMonthsFromUser > 0
+        ? numConsecutiveMonthsFromUser : undefined,
+      isReadyToCalculate: (viralLoadFromUser > 0 && numConsecutiveMonthsFromUser > 0),
+      resultAlreadyCalculated: false,
+    });
   }
 }
 

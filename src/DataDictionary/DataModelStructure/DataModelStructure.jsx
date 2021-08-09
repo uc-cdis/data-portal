@@ -30,12 +30,14 @@ class DataModelStructure extends React.Component {
   handleDownloadAllTemplates = (format) => {
     const nodesToDownload = {};
     this.props.relatedNodeIDs
-      .filter(nid => !this.props.excludedNodesForTemplates.includes(nid))
+      .filter((nid) => !this.props.excludedNodesForTemplates.includes(nid))
       .forEach((nid) => {
         nodesToDownload[nid] = `${nid}-template.${format}`;
       }, []);
-    const allRoutes = this.props.allRoutes.map(nodeIDsInRoute =>
-      nodeIDsInRoute.filter(nid => !this.props.excludedNodesForTemplates.includes(nid)));
+    const allRoutes = this.props.allRoutes.map(
+      (nodeIDsInRoute) => nodeIDsInRoute.filter(
+        (nid) => !this.props.excludedNodesForTemplates.includes(nid),
+      ));
     this.props.downloadMultiTemplate(
       format,
       nodesToDownload,
@@ -54,7 +56,9 @@ class DataModelStructure extends React.Component {
           <div className='data-model-structure__path-line' />
           {
             this.props.dataModelStructure.map((entry, i) => {
-              const { nodeID, nodeIDsBefore, linksBefore, category } = entry;
+              const {
+                nodeID, nodeIDsBefore, linksBefore, category,
+              } = entry;
               const IconSVG = getCategoryIconSVG(category);
               const lastNodeModifier = (i === this.props.dataModelStructure.length - 1) ? 'data-model-structure__node-name--last' : '';
               return (

@@ -6,24 +6,26 @@ import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
 import './QueryNode.less';
 import { useArboristUI } from '../configs';
-import { userHasMethodOnProject } from '../authMappingUtils';
+import { userHasMethodForServiceOnProject } from '../authMappingUtils';
 
-const Entity = ({ value, project, onUpdatePopup, onStoreNodeInfo, tabindexStart, showDelete }) => {
+const Entity = ({
+  value, project, onUpdatePopup, onStoreNodeInfo, tabindexStart, showDelete,
+}) => {
   const onDelete = () => {
     onStoreNodeInfo({ project, id: value.id }).then(
-      () => onUpdatePopup({ nodedelete_popup: true }),
+      () => onUpdatePopup({ nodeDeletePopup: true }),
     );
   };
   const onView = () => {
-    onStoreNodeInfo({ project, id: value.id }).then(() => onUpdatePopup({ view_popup: true }));
+    onStoreNodeInfo({ project, id: value.id }).then(() => onUpdatePopup({ viewPopup: true }));
   };
   return (
     <li>
       <span>{value.submitter_id}</span>
       <a role='button' tabIndex={tabindexStart} className='query-node__button query-node__button--download' href={`${getSubmitPath(project)}/export?format=json&ids=${value.id}`}>Download</a>
-      <a role='button' tabIndex={tabindexStart + 1} className='query-node__button query-node__button--view' onClick={onView}>View</a>
+      <a role='button' tabIndex={tabindexStart + 1} className='query-node__button query-node__button--view' onClick={onView} onKeyPress={onView}>View</a>
       {
-        showDelete ? <a role='button' tabIndex={tabindexStart + 2} className='query-node__button query-node__button--delete' onClick={onDelete}>Delete</a> : null
+        showDelete ? <a role='button' tabIndex={tabindexStart + 2} className='query-node__button query-node__button--delete' onClick={onDelete} onKeyPress={onDelete}>Delete</a> : null
       }
     </li>
   );
@@ -39,25 +41,27 @@ Entity.propTypes = {
 };
 
 Entity.defaultProps = {
-  nodeTypes: [],
   onUpdatePopup: null,
   onStoreNodeInfo: null,
-  onSearchFormSubmit: null,
 };
 
-const Entities = ({ value, project, onUpdatePopup, onStoreNodeInfo, showDelete }) => (
+const Entities = ({
+  value, project, onUpdatePopup, onStoreNodeInfo, showDelete,
+}) => (
   <ul>
     {
       value.map(
-        (v, i) => (<Entity
-          project={project}
-          onStoreNodeInfo={onStoreNodeInfo}
-          onUpdatePopup={onUpdatePopup}
-          key={v.submitter_id}
-          value={v}
-          tabindexStart={i * 3}
-          showDelete={showDelete}
-        />),
+        (v, i) => (
+          <Entity
+            project={project}
+            onStoreNodeInfo={onStoreNodeInfo}
+            onUpdatePopup={onUpdatePopup}
+            key={v.submitter_id}
+            value={v}
+            tabindexStart={i * 3}
+            showDelete={showDelete}
+          />
+        ),
       )
     }
   </ul>
@@ -85,7 +89,7 @@ class QueryNode extends React.Component {
    * based on the popups and queryNodes properties attached to this component.
    *
    * @param {popups, queryNodes, onUpdatePopup} props including
-   * props.popups.view_popup and props.queryNodes state
+   * props.popups.viewPopup and props.queryNodes state
    * passed into the component by Redux
    * @return { state, popupEl } where state (just used for testing)
    * is string one of [viewNode, noPopup], and
@@ -99,27 +103,29 @@ class QueryNode extends React.Component {
     };
 
     const closeViewPopup = () => {
-      onUpdatePopup({ view_popup: false });
+      onUpdatePopup({ viewPopup: false });
     };
 
     if (
-      popups &&
-      popups.view_popup &&
-      queryNodes.query_node
+      popups
+      && popups.viewPopup
+      && queryNodes.query_node
     ) {
       // View node button clicked
       popup.state = 'viewNode';
-      popup.popupEl = (<Popup
-        title={queryNodes.query_node.submitter_id}
-        lines={[{ code: jsonToString(queryNodes.query_node) }]}
-        onClose={closeViewPopup}
-        rightButtons={[
-          {
-            caption: 'Close',
-            fn: closeViewPopup,
-          },
-        ]}
-      />);
+      popup.popupEl = (
+        <Popup
+          title={queryNodes.query_node.submitter_id}
+          lines={[{ code: jsonToString(queryNodes.query_node) }]}
+          onClose={closeViewPopup}
+          rightButtons={[
+            {
+              caption: 'Close',
+              fn: closeViewPopup,
+            },
+          ]}
+        />
+      );
     }
     return popup;
   }
@@ -138,68 +144,76 @@ class QueryNode extends React.Component {
    *    popupEl is either null or a <Popup> properly configured to render
    */
   static renderDeletePopup(props) {
-    const { params, queryNodes, popups, onUpdatePopup, onDeleteNode, onClearDeleteSession } = props;
+    const {
+      params, queryNodes, popups, onUpdatePopup, onDeleteNode, onClearDeleteSession,
+    } = props;
     const popup = {
       state: 'noPopup',
       popupEl: null,
     };
     const closeDelete = () => {
       onClearDeleteSession();
-      onUpdatePopup({ nodedelete_popup: false });
+      onUpdatePopup({ nodeDeletePopup: false });
     };
 
-    if (popups && popups.nodedelete_popup === true) {
+    if (popups && popups.nodeDeletePopup === true) {
       // User clicked on node 'Delete' button
       popup.state = 'confirmDelete';
-      popup.popupEl = (<Popup
-        title={queryNodes.query_node.submitter_id}
-        message={'Are you sure you want to delete this node?'}
-        error={jsonToString(queryNodes.delete_error)}
-        lines={[{ code: jsonToString(queryNodes.query_node) }]}
-        leftButtons={[
-          {
-            caption: 'Cancel',
-            fn: closeDelete,
-          },
-        ]}
-        rightButtons={[
-          {
-            caption: 'Confirm',
-            fn: () => {
-              onDeleteNode({ project: params.project, id: queryNodes.stored_node_info });
-              onUpdatePopup({ nodedelete_popup: 'Waiting for delete to finish ...' });
+      popup.popupEl = (
+        <Popup
+          title={queryNodes.query_node.submitter_id}
+          message={'Are you sure you want to delete this node?'}
+          error={jsonToString(queryNodes.delete_error)}
+          lines={[{ code: jsonToString(queryNodes.query_node) }]}
+          leftButtons={[
+            {
+              caption: 'Cancel',
+              fn: closeDelete,
             },
-          },
-        ]}
-        onClose={closeDelete}
-      />);
+          ]}
+          rightButtons={[
+            {
+              caption: 'Confirm',
+              fn: () => {
+                onDeleteNode({ project: params.project, id: queryNodes.stored_node_info });
+                onUpdatePopup({ nodeDeletePopup: 'Waiting for delete to finish ...' });
+              },
+            },
+          ]}
+          onClose={closeDelete}
+        />
+      );
     } else if (queryNodes && queryNodes.query_node && queryNodes.delete_error) {
       // Error deleting node
       popup.state = 'deleteFailed';
-      popup.popupEl = (<Popup
-        title={queryNodes.query_node.submitter_id}
-        message={`Error deleting: ${queryNodes.query_node.submitter_id}`}
-        error={jsonToString(queryNodes.delete_error)}
-        lines={[{ code: jsonToString(queryNodes.query_node) }]}
-        onClose={closeDelete}
-      />);
-    } else if (popups && typeof popups.nodedelete_popup === 'string' && queryNodes && queryNodes.query_node) {
+      popup.popupEl = (
+        <Popup
+          title={queryNodes.query_node.submitter_id}
+          message={`Error deleting: ${queryNodes.query_node.submitter_id}`}
+          error={jsonToString(queryNodes.delete_error)}
+          lines={[{ code: jsonToString(queryNodes.query_node) }]}
+          onClose={closeDelete}
+        />
+      );
+    } else if (popups && typeof popups.nodeDeletePopup === 'string' && queryNodes && queryNodes.query_node) {
       // Waiting for node delete to finish
       popup.state = 'waitForDelete';
-      popup.popupEl = (<Popup
-        title={queryNodes.query_node.submitter_id}
-        message={popups.nodedelete_popup}
-        onClose={() => onUpdatePopup({ nodedelete_popup: false })}
-      />);
+      popup.popupEl = (
+        <Popup
+          title={queryNodes.query_node.submitter_id}
+          message={popups.nodeDeletePopup}
+          onClose={() => onUpdatePopup({ nodeDeletePopup: false })}
+        />
+      );
     }
     return popup;
   }
 
   render() {
-    const queryNodesList = this.props.queryNodes.search_status === 'succeed: 200' ?
-      Object.entries(this.props.queryNodes.search_result.data)
+    const queryNodesList = this.props.queryNodes.search_status === 'succeed: 200'
+      ? Object.entries(this.props.queryNodes.search_result.data)
       : [];
-    const project = this.props.params.project;
+    const { project } = this.props.params;
 
     return (
       <div>
@@ -236,7 +250,7 @@ class QueryNode extends React.Component {
           (value) => {
             let showDelete = true;
             if (useArboristUI) {
-              showDelete = userHasMethodOnProject('delete', this.props.params.project, this.props.userAuthMapping);
+              showDelete = userHasMethodForServiceOnProject('delete', 'sheepdog', this.props.params.project, this.props.userAuthMapping);
             }
             return (
               <Entities
@@ -250,8 +264,7 @@ class QueryNode extends React.Component {
               />
             );
           },
-        )
-        }
+        )}
       </div>
     );
   }
@@ -278,6 +291,5 @@ QueryNode.defaultProps = {
   queryNodes: null,
   popups: null,
 };
-
 
 export default QueryNode;

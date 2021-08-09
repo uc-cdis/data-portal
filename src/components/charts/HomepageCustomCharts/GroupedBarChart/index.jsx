@@ -15,8 +15,8 @@ class GroupedBarChart extends React.Component {
 
   componentDidMount() {
     const typeName = this.props.dataType;
-    const xAxisProp = this.props.xAxisProp;
-    const yAxisProp = this.props.yAxisProp;
+    const { xAxisProp } = this.props;
+    const { yAxisProp } = this.props;
     this.downloadData(typeName, xAxisProp, yAxisProp)
       .then(({ datasets, valuesSet }) => {
         this.setState({ datasets, valuesSet });
@@ -158,7 +158,7 @@ class GroupedBarChart extends React.Component {
         trigger: 'axis',
       },
       legend: {
-        data: this.state.datasets.map(d => d.key),
+        data: this.state.datasets.map((d) => d.key),
         bottom: 0,
         selected: legendSelectedObj,
       },

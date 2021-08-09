@@ -1,0 +1,19 @@
+{
+  "presets":    [
+    [
+      "@babel/preset-env",
+      {
+        "targets": "> 2%, not dead"
+      }
+    ],
+    "@babel/preset-react",
+    "@babel/preset-typescript"
+],
+  "plugins": [
+    "dev-expression",
+    "transform-class-properties",
+    "@babel/plugin-transform-runtime",
+    [ "@babel/plugin-proposal-class-properties", { "loose" : true }],
+    "@babel/plugin-syntax-class-properties"
+  ]
+}

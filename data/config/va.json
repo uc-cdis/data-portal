@@ -149,7 +149,7 @@
     "explorer": true,
     "analysis": true
   },
-  "analysisTools": [ "vaGWAS" ],
+  "analysisTools": [ "GWASApp" ],
   "dataExplorerConfig": {
     "charts": {
       "Chicago_ID": {
@@ -219,19 +219,6 @@
     ],
     "table": {
       "enabled": true
-    },
-    "arrangerConfig": {
-      "projectId": "search",
-      "graphqlField": "patients",
-      "index": "",
-      "nodeCountField": "Chicago_ID",
-      "manifestMapping": {
-        "resourceIndexType": "file",
-        "resourceIdField": "object_id",
-        "referenceIdFieldInResourceIndex": "case_id",
-        "referenceIdFieldInDataIndex": "object_id",
-        "divideKey": "data_type"
-      }
     }
   }
 }

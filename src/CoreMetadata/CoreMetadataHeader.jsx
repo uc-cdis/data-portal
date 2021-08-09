@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import copy from 'clipboard-plus';
 import React, { Component } from 'react';
 import Popup from '../components/Popup';
-import { userapiPath, useArboristUI } from '../configs';
+import { userAPIPath, useArboristUI } from '../configs';
 import isEnabled from '../helpers/featureFlags';
 
-import { userHasMethodOnProject } from '../authMappingUtils';
+import { userHasMethodForServiceOnProject } from '../authMappingUtils';
 
 const DOWNLOAD_BTN_CAPTION = 'Download';
 const SIGNED_URL_BTN_CAPTION = 'Generate Signed URL';
@@ -15,7 +15,7 @@ const SIGNED_URL_ERROR_MSG = 'An error has occurred when generating signed URL:'
 
 function fileTypeTransform(type) {
   let t = type.replace(/_/g, ' '); // '-' to ' '
-  t = t.replace(/\b\w/g, l => l.toUpperCase()); // capitalize words
+  t = t.replace(/\b\w/g, (l) => l.toUpperCase()); // capitalize words
   return `| ${t} |`;
 }
 
@@ -40,7 +40,7 @@ class CoreMetadataHeader extends Component {
     this.props.onClearSignedURL();
   };
 
-  dateTransform = date => `Updated on ${date.substr(0, 10)}`;
+  dateTransform = (date) => `Updated on ${date.substr(0, 10)}`;
 
   render() {
     if (this.props.metadata) {
@@ -52,25 +52,28 @@ class CoreMetadataHeader extends Component {
       // downloadButton should always render if useArboristUI false. Otherwise according to authz.
       if (
         !useArboristUI
-        || userHasMethodOnProject('read-storage', projectId, this.props.userAuthMapping)
+        || userHasMethodForServiceOnProject('read-storage', 'fence', projectId, this.props.userAuthMapping)
         || projectIsOpenData(projectAvail, projectId)
       ) {
-        const downloadLink = `${userapiPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
+        const downloadLink = `${userAPIPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
 
         downloadButton = (
           <a href={downloadLink}>
-            <button className='button-primary-orange'>
+            <button className='button-primary-orange' type='button'>
               {DOWNLOAD_BTN_CAPTION}
             </button>
-          </a>);
+          </a>
+        );
 
         if (isEnabled('signedURLButton')) {
-          signedURLButton = (<Button
-            onClick={() => this.onGenerateSignedURL()}
-            label={SIGNED_URL_BTN_CAPTION}
-            className='core-metadata-page__column--right--signed-url-button'
-            buttonType='primary'
-          />);
+          signedURLButton = (
+            <Button
+              onClick={() => this.onGenerateSignedURL()}
+              label={SIGNED_URL_BTN_CAPTION}
+              className='core-metadata-page__column--right--signed-url-button'
+              buttonType='primary'
+            />
+          );
         }
       }
 
@@ -91,30 +94,32 @@ class CoreMetadataHeader extends Component {
           { downloadButton }
           { signedURLButton }
           {
-            this.props.signedURLPopup === true &&
-            <Popup
-              message={(!this.props.error) ? SIGNED_URL_MSG : SIGNED_URL_ERROR_MSG}
-              error={this.props.error}
-              lines={(!this.props.error) ? [
-                { code: this.props.signedURL },
-              ] : []}
-              title='Generated Signed URL'
-              leftButtons={[
-                {
-                  caption: 'Close',
-                  fn: () => this.onSignedURLPopupClose(),
-                },
-              ]}
-              rightButtons={[
-                {
-                  caption: 'Copy',
-                  fn: () => copy(this.props.signedURL),
-                  icon: 'copy',
-                  enabled: (!this.props.error),
-                },
-              ]}
-              onClose={() => this.onSignedURLPopupClose()}
-            />
+            this.props.signedURLPopup === true
+            && (
+              <Popup
+                message={(!this.props.error) ? SIGNED_URL_MSG : SIGNED_URL_ERROR_MSG}
+                error={this.props.error}
+                lines={(!this.props.error) ? [
+                  { code: this.props.signedURL },
+                ] : []}
+                title='Generated Signed URL'
+                leftButtons={[
+                  {
+                    caption: 'Close',
+                    fn: () => this.onSignedURLPopupClose(),
+                  },
+                ]}
+                rightButtons={[
+                  {
+                    caption: 'Copy',
+                    fn: () => copy(this.props.signedURL),
+                    icon: 'copy',
+                    enabled: (!this.props.error),
+                  },
+                ]}
+                onClose={() => this.onSignedURLPopupClose()}
+              />
+            )
           }
           <div className='body-typo'>{properties}</div>
         </div>

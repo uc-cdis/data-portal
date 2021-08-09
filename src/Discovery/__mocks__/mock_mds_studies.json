@@ -1,0 +1,588 @@
+[
+  {
+    "code": "MESA_HMB_",
+    "name": "MESA_HMB_",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "DCC Harmonized",
+        "category": "Data Type"
+      },
+      {
+        "name": "Clinical Phenotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/parent/projects/MESA_HMB_"
+    ],
+    "study_id": "phs000209.v13.p3.c1",
+    "dbgap_phs": "phs000209",
+    "dbgap_link": "https://example.com/phs00209.v13.p3.c1",
+    "full_name": "Multi-Ethnic Study of Atherosclerosis (MESA) Cohort",
+    "project_id": "parent-MESA_HMB_",
+    "short_name": "MESA",
+    "dbgap_consent": "c1",
+    "dbgap_version": "v13",
+    "_subjects_count": 7440,
+    "dbgap_accession": "phs000209.v13.p3.c1",
+    "study_description": "MESA The Multi-Ethnic Study of Atherosclerosis (MESA) is a study of the characteristics of subclinical cardiovascular disease (disease detected non-invasively before it has produced clinical signs and symptoms) and the risk factors that predict progression to clinically overt cardiovascular disease or progression of the subclinical disease. MESA researchers study a diverse, population-based sample of 6,814 asymptomatic men and women aged 45-84. Thirty-eight percent of the recruited participants are white, 28 percent African-American, 22 percent Hispanic, and 12 percent Asian, predominantly of Chinese descent. Participants were recruited from six field centers across the United States: Wake Forest University, Columbia University, Johns Hopkins University, University of Minnesota, Northwestern University and University of California - Los Angeles. Each participant received an extensive physical exam and determination of coronary calcification, ventricular mass and function, flow-mediated endothelial vasodilation, carotid intimal-medial wall thickness and presence of echogenic lucencies in the carotid artery, lower extremity vascular insufficiency, arterial wave forms, electrocardiographic (ECG) measures, standard coronary risk factors, sociodemographic factors, lifestyle factors, and psychosocial factors. Selected repetition of subclinical disease measures and risk factors at follow-up visits allows study of the progression of disease. Blood samples have been assayed for putative biochemical risk factors and stored for case-control studies. DNA has been extracted and lymphocytes cryopreserved (for possible immortalization) for study of candidate genes and possibly, genome-wide scanning, expression, and other genetic techniques. Participants are being followed for identification and characterization of cardiovascular disease events, including acute myocardial infarction and other forms of coronary heart disease (CHD), stroke, and congestive heart failure; for cardiovascular disease interventions; and for mortality. In addition to the six Field Centers, MESA involves a Coordinating Center, a Central Laboratory, and Central Reading Centers for Computed Tomography (CT), Magnetic Resonance Imaging (MRI), Ultrasound, and Electrocardiography (ECG). Protocol development, staff training, and pilot testing were performed in the first 18 months of the study. The first examination took place over two years, from July 2000 - July 2002. It was followed by four examination periods that were 17-20 months in length. Participants have been contacted every 9 to 12 months throughout the study to assess clinical morbidity and mortality. MESA Family The general goal of the MESA Family Study, an ancillary study to MESA funded by a grant from NHLBI, is to apply modern genetic analysis and genotyping methodologies to delineate the genetic determinants of early atherosclerosis. This is being accomplished by utilizing all the current organizational structures of the Multi-Ethnic Study of Atherosclerosis (MESA) and Genetic Centers at Cedars-Sinai Medical Center and University of Virginia. In the MESA Family Study, the goal is to locate and identify genes contributing to the genetic risk for cardiovascular disease (CVD), by looking at the early changes of atherosclerosis within families (mainly siblings). 2128 individuals from 594 families, yielding 3,026 sibpairs divided between African Americans and Hispanic-Americans, were recruited by utilizing the existing framework of MESA. MESA Family studied siblings of index subjects from the MESA study and from new sibpair families (with the same demographic characteristics) and is determining the extent of genetic contribution to the variation in coronary calcium (obtained via CT Scan) and carotid artery wall thickness (B-mode ultrasound) in the two largest non-majority U.S. populations. In a small proportion of subjects, parents of MESA index subjects participating in MESA Family were studied but only to have blood drawn for genotyping. The MESA Family cohort was recruited from the six MESA Field Centers. MESA Family participants underwent the same examination as MESA participants during May 2004 - May 2007. DNA was extracted and lymphocytes immortalized for study of candidate genes, genome-wide linkage scanning, and analyzed for linkage with these subclinical cardiovascular traits. While linkage analysis is the primary approach being used, an additional aspect of the MESA Family Study takes advantage of the existing MESA study population for testing a variety of candidate genes for association with the same subclinical traits. Genotyping and data analysis will occur throughout the study. MESA Air The general goal of the Multi-Ethnic Study of Atherosclerosis and Air Pollution ('MESA Air') is to prospectively examine the relation between an individual level assessment of long-term ambient air pollution exposures (including PM2.5 and the progression of subclinical cardiovascular disease in a multi-city, multi-ethnic cohort. MESA Air will also prospectively examine the relationship between an individual level assessment of long-term ambient air pollution exposures and the incidence of cardiovascular disease, including myocardial infarction and cardiovascular death. MESA AIR is funded by a grant from the United States Environmental Protection Agency to the University of Washington and subcontracts from the UW to other participating institutions. MESA Air will assess if ambient air pollution is associated with changes over time in subclinical measures of atherosclerosis and plasma markers of inflammation, oxidative damage, and endothelial activation in a longitudinal data model, adjusting for age, race/ethnicity, socioeconomic status, and specific cardiovascular risk factors (such as diabetes, hypertension, smoking, and diet). The study will similarly assess if the incidence of cardiovascular events is associated with long-term exposure to ambient air pollution, using a proportional hazards model. The study includes refinement of statistical tools, and explores joint/independent effects of acute and long-term pollutant exposure in the occurrence of cardiovascular disease. The MESA Air study is built on the foundation of the ongoing MESA study. The parent MESA Study cohort is located in six geographic areas ('Field Centers') that capture tremendous exposure heterogeneity, comparable to or greater than the variability in locations of prior U.S. cohort studies. In addition to the six Field Centers, the study involves a Coordinating Center, a Central Laboratory, and Reading Centers for Computed Tomography (CT), ultrasound and air pollution data. The cohort for the MESA Air study currently includes 6226 subjects: 5479 enrolled in the parent MESA study; 257 recruited specifically for this study, and 490 recruited from the MESA Family study. The entire MESA Air cohort will be followed over a 10-year project period for the occurrence of cardiovascular disease events. On two occasions over the ten-year study period, 3600 subjects from the MESA Air cohort, residing in nine locales, will undergo computed tomography scanning to assess presence and extent of coronary artery calcification (CAC), and ultrasound of the carotid artery to determine intima-media thickness (IMT). We will also repeatedly assess plasma markers of inflammation, oxidative damage, and endothelial function in 720 subjects. MESA Air adds state-of-the-art air pollution exposure assessment information to the MESA cohort study, and introduces new subjects and outcome measures to achieve our aims. The study will assess long-term individual-level exposure to ambient air pollutants for each subject using community-scale monitoring, outdoor spatial variation, subject proximity to pollution sources, pollutants' infiltration efficiency, and personal time-activity information. The exposure models will be validated using detailed monitoring in a subset of subjects. The MESA Cohort is utilized in the following dbGaP substudies. To view genotypes, analysis, expression data, other molecular data, and derived variables collected in these substudies, please click on the following substudies below or in the \"Substudies\" section of this top-level study page phs000209 MESA Cohort.  phs000420 MESA SHARe phs000283 MESA CARe phs000403 MESA ESP Heart-GO  \n\n Study Weblinks:\n\t\nMESA\nMESA Air\n\n\n Study Design: \n    \nProspective Longitudinal Cohort\n\n\n Study Type:\n\nLongitudinal\nFamily\n\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "HMB",
+    "dbgap_participant_set": "p3",
+    "__manifest": [
+      {
+        "object_id": "dg.712C/60df2552-3d67-4f21-b637-5b53684fe444",
+        "md5sum": "d8e8fca2dc0f896fd7cb4cb0031ba249",
+        "file_name": "testfile.txt",
+        "file_size": 5
+      },
+      {
+        "object_id": "dg.712C/a84c1bcf-1975-402f-a973-ff7a307a2e90",
+        "md5sum": "d8e8fca2dc0f896fd7cb4cb0031ba249",
+        "file_name": "testfile.txt",
+        "file_size": 5
+      }
+    ]
+  },
+  {
+    "code": "FHS_HMB-IRB-NPU-MDS",
+    "name": "FHS_HMB-IRB-NPU-MDS",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "Genotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/topmed/projects/FHS_HMB-IRB-NPU-MDS"
+    ],
+    "study_id": "phs000974.v4.p3.c2",
+    "dbgap_phs": "phs000974",
+    "full_name": "NHLBI TOPMed: Whole Genome Sequencing and Related Phenotypes in the Framingham Heart Study",
+    "project_id": "topmed-FHS_HMB-IRB-NPU-MDS",
+    "short_name": "FHS",
+    "dbgap_consent": "c2",
+    "dbgap_version": "v4",
+    "_subjects_count": 600,
+    "dbgap_accession": "phs000974.v4.p3.c2",
+    "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nThe Framingham Heart Study (FHS) is a prospective cohort study of 3 generations of subjects who have been followed up to 65 years to evaluate risk factors for cardiovascular disease. Its large sample of ~15,000 men and women who have been extensively phenotyped with repeated examinations make it ideal for the study of genetic associations with cardiovascular disease risk factors and outcomes. DNA samples have been collected and immortalized since the mid-1990s and are available on ~8000 study participants in 1037 families. These samples have been used for collection of GWAS array data and exome chip data in nearly all with DNA samples, and for targeted sequencing, deep exome sequencing and light coverage whole genome sequencing in limited numbers. Additionally, mRNA and miRNA expression data, DNA methylation data, metabolomics and other 'omics data are available on a sizable portion of study participants. This project will focus on deep whole genome sequencing (mean 30X coverage) in ~4100 subjects and imputed to all with GWAS array data to more fully understand the genetic contributions to cardiovascular, lung, blood and sleep disorders. Comprehensive phenotypic and pedigree data for study participants are available through dbGaP phs000007.\n\n Study Weblinks:\n\t\nFramingham Heart Study\n\n\n Study Design: \n    \nProspective Longitudinal Cohort\n\n\n Study Type:\n\nCohort\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "HMB-IRB-NPU-MDS",
+    "dbgap_participant_set": "p3",
+    "__manifest": [
+      {
+        "object_id": "dg.712C/b7a10338-6fb6-4201-adde-0ee933e069bc",
+        "md5sum": "d8e8fca2dc0f896fd7cb4cb0031ba249",
+        "file_name": "testfile.txt",
+        "file_size": 5,
+        "_matched": null
+      }
+    ]
+  },
+  {
+    "code": "SAGE_DS-LD-IRB-COL",
+    "name": "SAGE_DS-LD-IRB-COL",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "Genotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "Clinical Phenotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/topmed/projects/SAGE_DS-LD-IRB-COL"
+    ],
+    "study_id": "phs000921.v4.p1.c2",
+    "dbgap_phs": "phs000921",
+    "full_name": "NHLBI TOPMed: Study of African Americans, Asthma, Genes and Environment (SAGE)",
+    "project_id": "topmed-SAGE_DS-LD-IRB-COL",
+    "short_name": "SAGE",
+    "dbgap_consent": "c2",
+    "dbgap_version": "v4",
+    "_subjects_count": 2105,
+    "dbgap_accession": "phs000921.v4.p1.c2",
+    "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nThis is a parallel case-control pharmacogenetic study of bronchodilator drug response among African American children with and without asthma. Each participant had spirometry measured using the KoKo PFT System. Asthmatic participants were administered with 4 puffs of HFA Albuterol. Healthy participants were given a baseline spirometry test. The overall goal is to identify genetic factors which are predictive of drug response in children with asthma. The principal tools include a questionnaire and biological specimen collection. Participants were 8-21 years old at time of recruitment. Children with asthma have physician-diagnosed asthma, symptoms and medications.\n\n Study Weblinks:\n\t\nStudy Populations and Research Staff\n\n\n Study Design: \n    \nCase-Control\n\n\n Study Type:\n\nCase-Control\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "DS-LD-IRB-COL",
+    "dbgap_participant_set": "p1",
+    "__manifest": [
+      {
+        "object_id": "dg.712C/2d9692bb-2050-4742-b7ae-42a83de6129e",
+        "md5sum": "d8e8fca2dc0f896fd7cb4cb0031ba249",
+        "file_name": "testfile.txt",
+        "file_size": 5,
+        "_matched": null
+      }
+    ]
+  },
+  {
+    "code": "Mayo_VTE_GRU",
+    "name": "Mayo_VTE_GRU",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "Genotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/topmed/projects/Mayo_VTE_GRU"
+    ],
+    "study_id": "phs001402.v2.p1.c1",
+    "dbgap_phs": "phs001402",
+    "full_name": "NHLBI TOPMed: Whole Genome Sequencing of Venous Thromboembolism (WGS of VTE)",
+    "project_id": "topmed-Mayo_VTE_GRU",
+    "short_name": "Mayo_VTE",
+    "dbgap_consent": "c1",
+    "dbgap_version": "v2",
+    "_subjects_count": 1369,
+    "dbgap_accession": "phs001402.v2.p1.c1",
+    "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nThis study consists of 338 VTE cases from an inception cohort of Olmsted County, MN residents (OC) with a first lifetime objectively-diagnosed idiopathic VTE during the 40-year study period, 1966-2005. All living study subjects were invited to provide a whole blood sample at the Mayo Clinical Research Unit for leukocyte genomic DNA and plasma collection. For living study subjects who did not provide a blood sample, we retrieved any leftover blood (\"waste\" blood) from samples collected as part of routine clinical diagnostic testing and used this to extract DNA after obtaining patient consent. For deceased cases, with IRB approval, we extracted DNA from any available stored tissue within the Mayo Tissue Archive. This \"tissue\" DNA has been successfully genotyped in prior studies. Three trained and experienced study nurse abstractors reviewed the complete medical records in the community of all potential cases. Note: WGS sample IDs for the previous GENEVA study cases (phs000289) are included in this dataset. The phenotypes for the GENEVA study are located under the above phs number.\n\n Study Design: \n    \nCase Set\n\n\n Study Type:\n\nCase Set\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "GRU",
+    "dbgap_participant_set": "p1",
+    "__manifest": [
+      {
+        "object_id": "dg.712C/39474412-fc6d-4dbc-81c2-176db2403130",
+        "md5sum": "d8e8fca2dc0f896fd7cb4cb0031ba249",
+        "file_name": "testfile.txt",
+        "file_size": 5,
+        "_matched": null
+      }
+    ]
+  },
+  {
+    "code": "MPP_HMB-NPU-MDS",
+    "name": "MPP_HMB-NPU-MDS",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "Genotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "Clinical Phenotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/topmed/projects/MPP_HMB-NPU-MDS"
+    ],
+    "study_id": "phs001544.v1.p1.c1",
+    "dbgap_phs": "phs001544",
+    "full_name": "NHLBI TOPMed - NHGRI CCDG: Malmo Preventive Project (MPP)",
+    "project_id": "topmed-MPP_HMB-NPU-MDS",
+    "short_name": "MPP",
+    "dbgap_consent": "c1",
+    "dbgap_version": "v1",
+    "_subjects_count": 121,
+    "dbgap_accession": "phs001544.v1.p1.c1",
+    "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nThe Malmö Preventive Project (MPP) was a community-based disease prevention program including 33,346 inhabitants from the city of Malmö in Southern Sweden. Complete birth cohorts between 1921-1949 were invited, and the participation rate was 71%. Participants underwent screening between 1974 to 1992 for cardiovascular risk factors, alcohol abuse, and breast cancer. Between 2002-2006, surviving participants were invited to a reexamination which included blood sampling from which DNA has been extracted. Subjects with prevalent or incident AF were identified from national registers as previously described, and cases with DNA were then matched in a 1:1 fashion to controls with DNA from the same cohort by sex, age (±1 year), and date of baseline exam (±1 year). Also, controls required a follow-up exceeding that of the corresponding AF case.\n\n Study Design: \n    \nCase Set\n\n\n Study Type:\n\nCase Set\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "HMB-NPU-MDS",
+    "dbgap_participant_set": "p1",
+    "__manifest": [
+      {
+        "object_id": "dg.712C/a83118b2-8fdc-42de-9de2-5ddb27efb8eb",
+        "md5sum": "d8e8fca2dc0f896fd7cb4cb0031ba249",
+        "file_name": "testfile.txt",
+        "file_size": 5,
+        "_matched": null
+      }
+    ]
+  },
+  {
+    "code": "BioMe_HMB-NPU",
+    "name": "BioMe_HMB-NPU",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "Genotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/topmed/projects/BioMe_HMB-NPU"
+    ],
+    "study_id": "phs001644.v1.p1.c1",
+    "dbgap_phs": "phs001644",
+    "full_name": "NHLBI TOPMed - NHGRI CCDG: The BioMe Biobank at Mount Sinai",
+    "project_id": "topmed-BioMe_HMB-NPU",
+    "short_name": "BioMe",
+    "dbgap_consent": "c1",
+    "dbgap_version": "v1",
+    "_subjects_count": 15974,
+    "dbgap_accession": "phs001644.v1.p1.c1",
+    "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nThe IPM BioMe Biobank, founded in September 2007, is an ongoing, broadly-consented electronic health record (EHR)-linked clinical care biobank that enrolls participants non-selectively from the Mount Sinai Medical Center patient population. BioMe currently comprises >42,000 participants from diverse ancestries, characterized by a broad spectrum of longitudinal biomedical traits. Participants enroll through an opt-in process and consent to be followed throughout their clinical care (past, present, and future) in real-time, allowing us to integrate their genomic information with their EHRs for discovery research and clinical care implementation. BioMe participants consent for recall, based on their genotype and/or phenotype, permitting in-depth follow-up and functional studies for selected participants at any time. Phenotypic and genomic data are stored in a secure database and made available to investigators, contingent on approval by the BioMe Governing Board. BioMe uses a \"data-broker\" system to protect confidentiality. Ancestral diversity - BioMe participants represent a broad racial, ethnic and socioeconomic diversity with a distinct and population-specific disease burden. Specifically, BioMe participants are of African (AA), Hispanic/Latino (HL), European (EA) and other/mixed ancestry (Table 1, Figure 1). BioMe participants are predominantly of African (AA, 24%), Hispanic/Latino (HL, 35%), European (EA, 32%), and other ancestry (OA, 10%) (Table 1, Figure 1). Participants who self-identify as Hispanic/Latino further report to be of Puerto Rican (39%), Dominican (23%), Central/South American (17%), Mexican (5%) or other Hispanic (16%) ancestry. More than 40% of European ancestry participants are genetically determined to be of Ashkenazi Jewish ancestry. With this broad ancestral diversity, BioMe is uniquely positioned to examine the impact of demographic and evolutionary forces that have shaped common disease risk. Phenotypes available in BioMe - BioMe has available a high-quality and validated set of fully implemented clinical phenotype data that has been culled by a multi-disciplinary team of experienced investigators, clinicians, information technologists, data-managers, and programmers who apply advanced medical informatics and data mining tools to extract and harmonize EHRs. BioMe, as a cohort, offers great versatility for designing nested case-control sample-sets, particularly for studying longitudinal traits and co-morbidity in disease burden.  ** Biomedical and clinical outcomes: The BioMe Biobank is linked to Mount Sinai's system-wide Epic EHR, which captures a full spectrum of biomedical phenotypes, including clinical outcomes, covariate and exposure data from past, present and future health care encounters. As such, the BioMe Biobank has a longitudinal design as participants consent to make all of their EHR data from past (dating back as far as 2003), present and future inpatient or outpatient encounters available for research, without restriction. The median number of outpatient encounters is 21 per participant, reflecting predominant enrollment of participants with common chronic conditions from primary care facilities. ** Environmental data: The clinical and EHR information is complemented by detailed demographic and lifestyle information, including ancestry, residence history, country of origin, personal and familial medical history, education, socio-economic status, physical activity, smoking, dietary habits, alcohol intake, and body weight history, which is collected in a systematic manner by interview-based questionnaire at time of enrollment. The IPM BioMe Biobank contributed ~10,600 DNA samples for whole genome sequencing to the TOPMed program. Samples were selected for the Coronary Artery Disease (CAD) and the Chronic Obstructive Pulmonary Disease (COPD) working groups. Using a Case-Definition-Algorithm (CDA), we identified ~4,100 individuals with CAD (~50% women) and ~3,000 individuals as controls (65% women). In addition, we identified ~800 individual with COPD (62% women) and 1800 as controls (72% women). Another 600 BioMe participants with Atrial Fibrillation, all of African ancestry, were included.\n\n Study Weblinks:\n\t\nThe Charles Bronfman Institute for Personalized Medicine\n\n\n Study Design: \n    \nProspective Longitudinal Cohort\n\n\n Study Type:\n\nCohort\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "HMB-NPU",
+    "dbgap_participant_set": "p1"
+  },
+  {
+    "code": "JHS_HMB-IRB-NPU_",
+    "name": "JHS_HMB-IRB-NPU_",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "DCC Harmonized",
+        "category": "Data Type"
+      },
+      {
+        "name": "Clinical Phenotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/parent/projects/JHS_HMB-IRB-NPU_"
+    ],
+    "study_id": "phs000286.v6.p2.c1",
+    "dbgap_phs": "phs000286",
+    "full_name": "The Jackson Heart Study (JHS)",
+    "project_id": "parent-JHS_HMB-IRB-NPU_",
+    "short_name": "JHS",
+    "dbgap_consent": "c1",
+    "dbgap_version": "v6",
+    "_subjects_count": 797,
+    "dbgap_accession": "phs000286.v6.p2.c1",
+    "study_description": "The Jackson Heart Study (JHS) is a large, community-based, observational study whose participants were recruited from urban and rural areas of the three counties (Hinds, Madison and Rankin) that make up the Jackson, MS metropolitan statistical area (MSA). Participants were enrolled from each of 4 recruitment pools: random, 17%; volunteer, 30%; currently enrolled in the Atherosclerosis Risk in Communities (ARIC) Study, 31% and secondary family members, 22%. The final cohort of 5,306 participants included 6.59% of all African American Jackson MSA residents aged 35-84 during the baseline exam (N-76,426, US Census 2000). Among these, approximately 3,600 gave consent that allows genetic research and deposition of data into dbGaP. Major components of three clinic examinations (Exam 1 - 2000-2004; Exam 2 - 2005-2008; Exam 3 - 2009-2013) include medical history, physical examination, blood/urine analytes and interview questions on areas such as: physical activity; stress, coping and spirituality; racism and discrimination; socioeconomic position; and access to health care. Extensive clinical phenotyping includes anthropometrics, electrocardiography, carotid ultrasound, ankle-brachial blood pressure index, echocardiography, CT chest and abdomen for coronary and aortic calcification, liver fat, and subcutaneous and visceral fat measurement, and cardiac MRI. At 12-month intervals after the baseline clinic visit (Exam 1), participants have been contacted by telephone to: update information; confirm vital statistics; document interim medical events, hospitalizations, and functional status; and obtain additional sociocultural information. Questions about medical events, symptoms of cardiovascular disease and functional status are repeated annually. Ongoing cohort surveillance includes abstraction of medical records and death certificates for relevant International Classification of Diseases (ICD) codes and adjudication of nonfatal events and deaths. CMS data are currently being incorporated into the dataset. A note regarding date variables warehoused in the Jackson Heart Study (JHS) Cohort on dbGaP: The coordinating center has developed an algorithm that will systematically review and de-identify any of the (nearly 100) date-related variable types stored in the data package. To simultaneously minimize (i) de-identifiability of the data and (ii) impact on analyses utilizing sensitive data elements, a participant-level random number was generated to avoid the necessity of sharing any potentially sensitive data. The coordinating center maintains an archived linkage of these data in their raw form and regularly reviews ad hoc requests to utilize the raw data on a project-by-project basis. The JHS Cohort is utilized in the following dbGaP sub-studies. To view genotypes, other molecular data, and derived variables collected in these sub-studies, please click on the following sub-studies below or in the \"Sub-studies\" section of this of this top-level study page phs000286 JHS Cohort.  phs000402 HeartGO JHS phs000498 JHS Allelic Spectrum Seq phs000499 JHS CARe phs001098 T2D GENES Exome Seq phs001069 MIGen JHS phs001356 Exome Chip  \n\n Study Weblinks:\n\t\nJackson Heart Study\nJHS Publications\n\n\n Study Design: \n    \nProspective Longitudinal Cohort\n\n\n Study Type:\n\nCohort\n\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "HMB-IRB-NPU",
+    "dbgap_participant_set": "p2"
+  },
+  {
+    "code": "AACAC_DS-DHD-IRB-COL-NPU",
+    "name": "AACAC_DS-DHD-IRB-COL-NPU",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "Genotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/topmed/projects/AACAC_DS-DHD-IRB-COL-NPU"
+    ],
+    "study_id": "phs001412.v2.p1.c2",
+    "dbgap_phs": "phs001412",
+    "full_name": "NHLBI TOPMed: Diabetes Heart Study (DHS) African American Coronary Artery Calcification (AA CAC)",
+    "project_id": "topmed-AACAC_DS-DHD-IRB-COL-NPU",
+    "short_name": "AACAC",
+    "dbgap_consent": "c2",
+    "dbgap_version": "v2",
+    "_subjects_count": 3,
+    "dbgap_accession": "phs001412.v2.p1.c2",
+    "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nThe Diabetes Heart Study (DHS) is a family-based study enriched for type 2 diabetes (T2D). The cohort included 1443 European American and African American participants from 564 families with multiple cases of type 2 diabetes (Bowden et al., 2010. Review of Diabetic Studies 7:188-201. PMID: 21409311). The cohort was recruited between 1998 and 2006. Participants were extensively phenotyped for measures of subclinical CVD and other known CVD risk factors. Primary outcomes were quantified burden of vascular calcified plaque in the coronary artery, carotid artery, and abdominal aorta all determined from non-contrast computed tomography scans.\n\n Study Design: \n    \nCross-Sectional\n\n\n Study Type:\n\nCross-Sectional\nCohort\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "DS-DHD-IRB-COL-NPU",
+    "dbgap_participant_set": "p1"
+  },
+  {
+    "code": "Walk_PHaSST_SCD_HMB-IRB-PUB-COL-NPU-MDS-GSO",
+    "name": "Walk_PHaSST_SCD_HMB-IRB-PUB-COL-NPU-MDS-GSO",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "Genotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "Clinical Phenotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/topmed/projects/Walk_PHaSST_SCD_HMB-IRB-PUB-COL-NPU-MDS-GSO"
+    ],
+    "study_id": "phs001514.v1.p1.c1",
+    "dbgap_phs": "phs001514",
+    "full_name": "NHLBI TOPMed: Walk-PHaSST SCD",
+    "project_id": "topmed-Walk_PHaSST_SCD_HMB-IRB-PUB-COL-NPU-MDS-GSO",
+    "short_name": "Walk_PHaSST_SCD",
+    "dbgap_consent": "c1",
+    "dbgap_version": "v1",
+    "_subjects_count": 390,
+    "dbgap_accession": "phs001514.v1.p1.c1",
+    "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nWalk-PHaSST study is a multi-center clinical trial to evaluate the effects of sildenafil on Sickle Cell Disease (SCD) population with low exercise capacity associated with an increased Doppler-estimated pulmonary artery systolic pressure (as assessed by the tricuspid regurgitant velocity (TRV)). It is a double-blind, placebo-controlled trial to assess the safety, tolerability, and efficacy of sildenafil in patients with SCD who had both an elevated TRV and decreased exercise capacity. The screening phase of the study enrolled 720 subjects and 74 of them were randomized for the clinical trial. For the screening cohort, we have collected general demographics and race/ethnicity, hemoglobin genotype, physical examination, laboratory screening, transthoracic Doppler echocardiography, and 6 minute walk test in 9 US and 1 UK site. The walk-PHaSST biorepository have banked samples from 610 of the screening subjects. A total of 592 subjects from the screening phase are included in the TOPMed program for WGS.\n\n Study Design: \n    \nCross-Sectional\n\n\n Study Type:\n\nCross-Sectional\nClinical Trial\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "HMB-IRB-PUB-COL-NPU-MDS-GSO",
+    "dbgap_participant_set": "p1"
+  },
+  {
+    "code": "JHS_HMB-IRB",
+    "name": "JHS_HMB-IRB",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "Genotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/topmed/projects/JHS_HMB-IRB"
+    ],
+    "study_id": "phs000964.v4.p1.c3",
+    "dbgap_phs": "phs000964",
+    "full_name": "NHLBI TOPMed: The Jackson Heart Study (JHS)",
+    "project_id": "topmed-JHS_HMB-IRB",
+    "short_name": "JHS",
+    "dbgap_consent": "c3",
+    "dbgap_version": "v4",
+    "_subjects_count": 4036,
+    "dbgap_accession": "phs000964.v4.p1.c3",
+    "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nSince there is a greater prevalence of cardiovascular disease among African Americans, the purpose of the Jackson Heart Study (JHS) is to explore the reasons for this disparity and to uncover new approaches to reduce it. The JHS is a large, community-based, observational study whose 5306 participants were recruited from among the non-institutionalized African-American adults from urban and rural areas of the three counties (Hinds, Madison, and Rankin) that make up the Jackson, MS, metropolitan statistical area (MSA). Jackson is the capital of Mississippi, the state with the largest percentage (36.3%) of African Americans in the United States. The JHS design included participants from the Jackson ARIC study who had originally been recruited through random selection from a drivers' license registry. Approximately six months before the JHS was to begin, an amendment to the federal Driver's Privacy Protection Act was passed that changed the level of consent for public release of personal information from driver's license lists from an \"opt out\" to an \"opt in\" basis. The Mississippi Highway Patrol was no longer able to release a complete listing of all persons with driver's licenses or state identification cards, which prevented its use in the JHS. New JHS participants were chosen randomly from the Accudata America commercial listing, which provides householder name, address, zip code, phone number (if available), age group in decades, and family components. The Accudata list was deemed to provide the most complete count of households for individuals aged 55 years and older in the Jackson MSA. A structured volunteer sample was also included in which demographic cells for recruitment were designed to mirror the eligible population. Enrollment was opened to volunteers who met census-derived age, sex, and socioeconomic status (SES) eligibility criteria for the Jackson MSA. In addition, a family component was included in the JHS. The sampling frame for the family study was a participant in any one of the ARlC, random, or volunteer samples whose family size met eligibility requirements. Eligibility included having at least two full siblings and four first degree relatives (parents, siblings, children over the age of 21) who lived in the Jackson MSA and who were willing to participate in the study. No upper age limit was placed on the family sample. Known contact information was obtained during the baseline clinic examination from the index family member with a verbal pedigree format to identify name(s), age(s), address (es), and telephone number(s). Recruitment was limited to persons 35-84 years old except in the family cohort, where those 21 years old and above were eligible. Only persons who otherwise met study criteria but were deemed to be physically or mentally incompetent by trained recruiters were excluded from study eligibility.1  1 Wyatt SB, Diekelmann N, Henderson F, Andrew ME, Billingsley G, Felder SH et al. A community-driven model of research participation: the Jackson Heart Study Participant Recruitment and Retention Study. Ethn Dis 2003; 13(4):438-455 (PMID: 14632263).\n\n Study Weblinks:\n\t\nJackson Heart Study\n\n\n Study Design: \n    \nProspective Longitudinal Cohort\n\n\n Study Type:\n\nLongitudinal Cohort\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "HMB-IRB",
+    "dbgap_participant_set": "p1"
+  },
+  {
+    "code": "REDS-III_Brazil_SCD_GRU-IRB-PUB-NPU",
+    "name": "REDS-III_Brazil_SCD_GRU-IRB-PUB-NPU",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "Genotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "Clinical Phenotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/topmed/projects/REDS-III_Brazil_SCD_GRU-IRB-PUB-NPU"
+    ],
+    "study_id": "phs001468.v1.p1.c1",
+    "dbgap_phs": "phs001468",
+    "full_name": "NHLBI TOPMed: REDS-III Brazil Sickle Cell Disease Cohort (REDS-BSCDC)",
+    "project_id": "topmed-REDS-III_Brazil_SCD_GRU-IRB-PUB-NPU",
+    "short_name": "REDS-III_Brazil_SCD",
+    "dbgap_consent": "c1",
+    "dbgap_version": "v1",
+    "_subjects_count": 2748,
+    "dbgap_accession": "phs001468.v1.p1.c1",
+    "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nEstablishing a Brazilian Sickle Cell Disease Cohort and Identifying Molecular Determinants of Response to Transfusions, Genetic Determinants of Alloimmunization, and Risk Factors Associated with HIV Infection. The REDS-III Brazil SCD Cohort study focused on transfusion practices and predictors of health outcomes in patients with Sickle Cell Disease (SCD) and began in the Fall of 2013. The four primary aims of this study are: 1) Aim A - Establish a cohort of SCD patients with a comprehensive centralized electronic database of detailed clinical, laboratory and transfusion information, as well as establish a repository of blood samples to support biological studies relevant to SCD pathogenesis and transfusion complications; 2) Aim B - Characterize changes in markers of inflammation in response to transfusion by analyzing chemokine/cytokine panels in serial post transfusion specimens; 3) Aim C - Identify single nucleotide polymorphisms (SNPs) that contribute to the risk of red blood cell alloimmunization in SCD by performing a genome-wide association (GWA) study in transfused SCD patients; and, 4) Aim D - Characterize risk of HIV and HIV outcomes in the Brazilian SCD population and compare SCD outcomes among HIV sero-positive and sero-negative SCD patients. Patients are enrolled from six hospitals affiliated with the participating four REDS-III Brazil hemocenters.\n\n Study Weblinks:\n\t\nREDS-III\n\n\n Study Design: \n    \nProspective Longitudinal Cohort\n\n\n Study Type:\n\nCohort\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "GRU-IRB-PUB-NPU",
+    "dbgap_participant_set": "p1"
+  },
+  {
+    "code": "COPDGene_HMB_",
+    "name": "COPDGene_HMB_",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "DCC Harmonized",
+        "category": "Data Type"
+      },
+      {
+        "name": "Clinical Phenotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/parent/projects/COPDGene_HMB_"
+    ],
+    "study_id": "phs000179.v6.p2.c1",
+    "dbgap_phs": "phs000179",
+    "full_name": "Genetic Epidemiology of COPD (COPDGene)",
+    "project_id": "parent-COPDGene_HMB_",
+    "short_name": "COPDGene",
+    "dbgap_consent": "c1",
+    "dbgap_version": "v6",
+    "_subjects_count": 10099,
+    "dbgap_accession": "phs000179.v6.p2.c1",
+    "study_description": "Chronic obstructive pulmonary disease (COPD) is the fourth leading cause of death in the United States and the only leading cause of death that is steadily increasing in frequency. This project will establish a racially diverse cohort that is sufficiently large and appropriately designed for genome-wide association analysis of COPD. A total of 10,000 subjects will be recruited, including control smokers, definite COPD cases (GOLD Stage 2 to 4), and subjects not included in either group (GOLD 1 or GOLD-Unclassified). This cohort will be used for cross-sectional analysis, although long-term longitudinal follow-up will be a future goal. The primary focus of the study will be genome-wide association analysis to identify the genetic risk factors that determine susceptibility for COPD and COPD-related phenotypes. Detailed phenotyping of both cases and controls, including chest CT scan assessment of emphysema and airway disease, will allow identification of genetic determinants for the heterogeneous components of the COPD syndrome. The hypotheses to be studied are: 1) Precise phenotypic characterization of COPD subjects using computed tomography, as well as clinical and physiological measures, will provide data that will enable the broad COPD syndrome to be decomposed into clinically significant subtypes. 2) Genome-wide association studies will identify genetic determinants for COPD susceptibility that will provide insight into clinically relevant COPD subtypes. 3) Distinct genetic determinants influence the development of emphysema and airway disease. The initial phase of genome-wide association analysis included 500 COPD cases and 500 control subjects (all non-Hispanic White) genotyped with the Illumina Omni-1 chip. The second phase genotyped the entire study cohort using the Illumina Omni-Express chip. Unique aspects of the study include: 1) Inclusion of large numbers of African American subjects (approximately 1/3 of the cohort); 2) Obtaining chest CT scans (including inspiratory and expiratory images); and 3) Inclusion of the full range of disease severity. The COPDGene_v6 Cohort is utilized in the following dbGaP sub-studies. To view genotypes, other molecular data, and derived variables collected in these sub-studies, please click on the following sub-studies below or in the \"Sub-studies\" section of this top-level study page phs000179 COPDGene_v6 Cohort.  phs000296 ESP LungGO COPDGene phs000765 COPDGene_Geno  \n\n Study Weblinks:\n\t\nCOPDGene\n\n\n Study Design: \n    \nCase-Control\n\n\n Study Type:\n\nCase-Control\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "HMB",
+    "dbgap_participant_set": "p2"
+  },
+  {
+    "code": "PCGC_CHD_DS-CHD",
+    "name": "PCGC_CHD_DS-CHD",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "Genotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/topmed/projects/PCGC_CHD_DS-CHD"
+    ],
+    "study_id": "phs001735.v1.p1.c2",
+    "dbgap_phs": "phs001735",
+    "full_name": "NHLBI TOPMed: PCGC's Congenital Heart Disease Biobank",
+    "project_id": "topmed-PCGC_CHD_DS-CHD",
+    "short_name": "PCGC_CHD",
+    "dbgap_consent": "c2",
+    "dbgap_version": "v1",
+    "_subjects_count": 8,
+    "dbgap_accession": "phs001735.v1.p1.c2",
+    "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nThe Pediatric Cardiovascular Genetics Consortium (PCGC) proposes to define genetic causes for congenital heart defects (CHD) as part of the TOPMed Program are the most common form of heart disease in childhood and are also the most prevalent form of birth defects, occurring in 2-3% of live births. The PCGC has recruited and clinically characterized ≥ 10,000 CHD probands and parents (CHD trios). From whole exome sequencing (WES) of >2800 CHD trios, we identified a substantial enrichment of damaging de novo mutations in genes important for cardiogenesis, particularly implicating histone modifier enzyme gene defects. Analysis of whole genome sequencing (WGS) of 350 probands with CHD unexplained by WES and their parents preliminarily implicated de novo mutations in enhancers of genes previously shown to cause CHD in mouse knock out models. Sequencing of RNA (RNAseq) from discarded cardiac tissues from CHD probands has revealed likely causal allele-specific expression (ASE) as well as biallelic loss of expression (LOE). We have also discovered de novo epimutations, differentially methylated regions (DMRs), some with underlying de novo DNA variation, that are detectable in peripheral blood leukocytes and appear to underlie 10% of CHD. Of note, these assorted 'omic' approaches have enabled one another, both for attributing causality and assessing functional impact. Based on these extensive preliminary data, we hypothesize that PCGC probands with uninformative exomic analyses (WES-negative) harbor de novo genetic and/or epigenetic mutations in critical regulatory elements that participate in developmental expression of cardiac genes. To identify these etiologies, we propose analyses of WGS in 1000 WES-negative CHD trios, prioritizing those with probands with banked CHD tissues (n=78), one damaging variant in a recessive CHD gene, and older fathers (age>45). We also request WGS for 230 probands, for whom we have cardiac tissues but not parental DNAs. We request RNAseq for 308 cardiac tissues. For DNA methylation, which TOPMed will offer through the Illumina 850k array platform, we are requesting analysis of DNAs from peripheral blood leukocytes for all probands for whom WGS will be performed (1000 from trios, 230 singletons) as well as DNAs from cardiac tissues (n=308) to pair with the WGS, RNAseq and blood DNA methylation data. We will use existing resources and capabilities of the PCGC to confirm relevant mutations and those of its companion consortium in the Bench to Bassinet Program, the Cardiovascular Development Consortium, to inform analyses of non-coding mutations as well as to perform confirmatory functional genomics studies using cell and animal models. We expect that the studies resulting from data generated through TOPMed will provide novel insights into the molecular basis for CHD and fundamental knowledge about genes and pathways involved in cardiac development. Aside from being relevant to CHD, we anticipate that our findings will inform the understanding of later-onset cardiovascular diseases, including some arising in adulthood.\n\n Study Weblinks:\n\t\nFrom Bench to Bassinet: CHD Genes\n\n\n Study Design: \n    \nProspective Longitudinal Cohort\n\n\n Study Type:\n\nParent-Offspring Trios\nCase Set\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "DS-CHD",
+    "dbgap_participant_set": "p1"
+  },
+  {
+    "code": "Amish_HMB-IRB-MDS",
+    "name": "Amish_HMB-IRB-MDS",
+    "tags": [
+      {
+        "name": "TOPMed",
+        "category": "Program"
+      },
+      {
+        "name": "Genotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "Clinical Phenotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/topmed/projects/Amish_HMB-IRB-MDS"
+    ],
+    "study_id": "phs000956.v4.p1.c2",
+    "dbgap_phs": "phs000956",
+    "full_name": "NHLBI TOPMed: Genetics of Cardiometabolic Health in the Amish",
+    "project_id": "topmed-Amish_HMB-IRB-MDS",
+    "short_name": "Amish",
+    "dbgap_consent": "c2",
+    "dbgap_version": "v4",
+    "_subjects_count": 1111,
+    "dbgap_accession": "phs000956.v4.p1.c2",
+    "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nThe Amish Complex Disease Research Program includes a set of large community-based studies focused largely on cardiometabolic health carried out in the Old Order Amish (OOA) community of Lancaster, Pennsylvania (http://medschool.umaryland.edu/endocrinology/amish/research-program.asp). The OOA population of Lancaster County, PA immigrated to the Colonies from Western Europe in the early 1700's. There are now over 30,000 OOA individuals in the Lancaster area, nearly all of whom can trace their ancestry back 12-14 generations to approximately 700 founders. Investigators at the University of Maryland School of Medicine have been studying the genetic determinants of cardiometabolic health in this population since 1993. To date, over 7,000 Amish adults have participated in one or more of our studies. Due to their ancestral history, the OOA may be enriched for rare variants that arose in the population from a single founder (or small number of founders) and propagated through genetic drift. Many of these variants have large effect sizes and identifying them can lead to new biological insights about health and disease. The parent study for this WGS project provides one (of multiple) examples. In our parent study, we identified through a genome-wide association analysis a haplotype that was highly enriched in the OOA that is associated with very high LDL-cholesterol levels. At the present time, the identity of the causative SNP - and even the implicated gene - is not known because the associated haplotype contains numerous genes, none of which are obvious lipid candidate genes. A major goal of the WGS that will be obtained through the NHLBI TOPMed Consortium will be to identify functional variants that underlie some of the large effect associations observed in this unique population.\n\n Study Weblinks:\n\t\nUniversity of Maryland School of Medicine - Amish Studies\n\n\n Study Design: \n    \nFamily/Twin/Trios\n\n\n Study Type:\n\nFamily\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "HMB-IRB-MDS",
+    "dbgap_participant_set": "p1"
+  },
+  {
+    "code": "CAMP_DS-AST-COPD",
+    "name": "CAMP_DS-AST-COPD",
+    "tags": [
+      {
+        "name": "COVID 19",
+        "category": "Program"
+      },
+      {
+        "name": "Genotype",
+        "category": "Data Type"
+      },
+      {
+        "name": "dbGaP",
+        "category": "Study Registration"
+      }
+    ],
+    "authz": [
+      "/programs/DEV/projects/test"
+    ],
+    "study_id": "phs001726.v1.p1.c1",
+    "dbgap_phs": "phs001726",
+    "full_name": "NHLBI TOPMed: Childhood Asthma Management Program (CAMP)",
+    "project_id": "topmed-CAMP_DS-AST-COPD",
+    "short_name": "CAMP",
+    "dbgap_consent": "c1",
+    "dbgap_version": "v1",
+    "_subjects_count": 2290,
+    "dbgap_accession": "phs001726.v1.p1.c1",
+    "study_description": "This study is part of the NHLBI Trans-Omics for Precision Medicine (TOPMed) \nWhole Genome Sequencing Program. TOPMed is part of a broader \nPrecision Medicine Initiative, \nwhich aims to provide disease treatments that are tailored to an individual's \nunique genes and environment. TOPMed will contribute to this initiative through the \nintegration of whole-genome sequencing (WGS) and other -omics (e.g., metabolic profiles, \nprotein and RNA expression patterns) data with molecular, behavioral, imaging, environmental, \nand clinical data. In doing so, this program aims to uncover factors that increase or decrease \nthe risk of disease, to identify subtypes of disease, and to develop more targeted and personalized \ntreatments. Two genotype call sets derived from WGS are now available, \nFreeze 5b (GRCh38) and Freeze 8 (GRCh38), with largely overlapping sample sets. \nInformation about how to identify other TOPMed WGS accessions for cross-study analysis, \nas well as descriptions of TOPMed methods of data acquisition, data processing and quality control, \nare provided in the accompanying documents,  \n\"TOPMed Whole Genome Sequencing Project - Freeze 5b, Phases 1 and 2\" \nand \"TOPMed Whole Genome Sequencing Project - Freeze 8, Phases 1-4\". \nPlease check the study list at the top of each of these methods documents to determine whether \nit applies to this study accession.\nThe Childhood Asthma Management Program (CAMP) was designed to evaluate whether continuous, long-term treatment (over a period of four to six years) with either an inhaled corticosteroid (budesonide) or an inhaled noncorticosteroid drug (nedocromil) safely produces an improvement in lung growth as compared with treatment for symptoms only (with albuterol and, if necessary, prednisone, administered as needed). The primary outcome in the study was lung growth, as assessed by the change in forced expiratory volume in one second (FEV1, expressed as a percentage of the predicted value) after the administration of a bronchodilator. Secondary outcomes included the degree of airway responsiveness, morbidity, physical growth, and psychological development.\n\n Study Design: \n    \nFamily/Twin/Trios\n\n\n Study Type:\n\nParent-Offspring Trios\n\n\n\n\tdbGaP estimated ancestry using\n\tGRAF-pop\n\nNumber of study subjects that have individual-level data available through Authorized Access:\n\nNOTE: This text was scraped from https://www.ncbi.nlm.nih.gov/ on 2021-01-05 and may not include exact formatting or images.",
+    "dbgap_consent_text": "DS-AST-COPD",
+    "dbgap_participant_set": "p1",
+    "__manifest": [
+      {
+        "object_id": "9a44056e-5b9e-42c3-b3f8-85bc210c7b3f",
+        "md5sum": "694b1d13b8148756442739fa2cc37fd6",
+        "file_name": "test6.csv",
+        "file_size": 8
+      }
+    ]
+  }
+]
