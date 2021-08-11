@@ -32,7 +32,6 @@ import '../typedef';
 
 /**
  * @typedef {Object} ConnectedFilterState
- * @property {AggsData} initialAggsData
  * @property {FilterState} filter
  */
 
@@ -50,7 +49,6 @@ class ConnectedFilter extends React.Component {
     this.initialTabsOptions = {};
     /** @type {ConnectedFilterState} */
     this.state = {
-      initialAggsData: {},
       filter: { ...initialFilter },
     };
     /** @type {string[][]} */
@@ -67,18 +65,6 @@ class ConnectedFilter extends React.Component {
         if (arrayFields?.length > 0)
           this.arrayFields = this.arrayFields.concat(arrayFields);
     });
-  }
-
-  componentDidUpdate() {
-    if (
-      Object.keys(this.state.initialAggsData).length === 0 &&
-      Object.keys(this.props.receivedAggsData).length !== 0 &&
-      this._isMounted
-    )
-      // Save initial aggregation data, especially for range slider
-      // so that we still have min/max values for range slider
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ initialAggsData: this.props.receivedAggsData });
   }
 
   componentWillUnmount() {
