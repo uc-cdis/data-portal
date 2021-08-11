@@ -14,6 +14,7 @@ import './ExplorerFilter.css';
  * @property {number} tierAccessLimit
  * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
  * @property {FilterState} initialAppliedFilters
+ * @property {SimpleAggsData} initialTabsOptions
  * @property {string[]} patientIds
  * @property {(x: string[]) => void} onPatientIdsChange
  */
