@@ -39,7 +39,13 @@ function FilterGroup({
 }) {
   const currentFilterListRef = useRef();
 
-  const filterTabs = filterConfig.tabs;
+  const filterTabs = filterConfig.tabs.map(
+    ({ title, fields, searchFields }) => ({
+      title,
+      // If there are any search fields, insert them at the top of each tab's fields.
+      fields: searchFields ? searchFields.concat(fields) : fields,
+    })
+  );
   const [tabIndex, setTabIndex] = useState(0);
 
   const showPatientIdsFilter = patientIds !== undefined;
@@ -261,6 +267,7 @@ FilterGroup.propTypes = {
       PropTypes.shape({
         title: PropTypes.string,
         fields: PropTypes.arrayOf(PropTypes.string),
+        searchFields: PropTypes.arrayOf(PropTypes.string),
       })
     ),
   }).isRequired,

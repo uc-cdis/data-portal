@@ -171,15 +171,7 @@ class ConnectedFilter extends React.Component {
       <FilterGroup
         className={this.props.className}
         tabs={filterTabs}
-        filterConfig={{
-          tabs: this.props.filterConfig.tabs.map(
-            ({ title, fields, searchFields }) => ({
-              title,
-              // If there are any search fields, insert them at the top of each tab's fields.
-              fields: searchFields ? searchFields.concat(fields) : fields,
-            })
-          ),
-        }}
+        filterConfig={this.props.filterConfig}
         onFilterChange={(e) => this.handleFilterChange(e)}
         onPatientIdsChange={this.props.onPatientIdsChange}
         patientIds={this.props.patientIds}
