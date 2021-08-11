@@ -62,6 +62,10 @@ class FilterSection extends React.Component {
     this.combineModeFieldName = '__combineMode';
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.options !== this.props.options) this.updateVisibleOptions();
+  }
+
   handleSetCombineModeOption = (combineModeIn) => {
     // Combine mode: AND or OR
     this.setState({ combineMode: combineModeIn });
