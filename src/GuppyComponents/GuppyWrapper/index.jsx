@@ -22,7 +22,7 @@ import '../typedef';
  * @typedef {Object} GuppyWrapperProps
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
- * @property {React.ReactElement[]} children
+ * @property {((data: GuppyData) => JSX.Element)} children
  * @property {(x: FilterState) => void} onFilterChange
  * @property {string[]} rawDataFields
  * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
@@ -43,7 +43,6 @@ import '../typedef';
  * @property {string[]} allFields
  * @property {string[]} aggsDataFields
  * @property {string[]} rawDataFields
- *
  */
 
 /**
@@ -391,35 +390,28 @@ class GuppyWrapper extends React.Component {
   }
 
   render() {
-    return React.Children.map(this.props.children, (child) =>
-      React.cloneElement(child, {
-        // pass data to children
-        isLoadingAggsData: this.state.isLoadingAggsData,
-        aggsData: this.state.aggsData,
-        filter: this.state.filter,
-        isLoadingRawData: this.state.isLoadingRawData,
-        rawData: this.state.rawData, // raw data (with current filter applied)
-        accessibleCount: this.state.accessibleCount,
-        totalCount: this.state.totalCount, // total count of raw data (current filter applied)
-        fetchAndUpdateRawData: this.handleFetchAndUpdateRawData.bind(this),
-        downloadRawData: this.handleDownloadRawData.bind(this),
-        downloadRawDataByFields: this.handleDownloadRawDataByFields.bind(this),
-        allFields: this.state.allFields,
-
-        // a callback function which return total counts for any type, with any filter
-        getTotalCountsByTypeAndFilter: this.handleGetTotalCountsByTypeAndFilter.bind(
-          this
-        ),
-        downloadRawDataByTypeAndFilter: this.handleDownloadRawDataByTypeAndFilter.bind(
-          this
-        ),
-
-        // below are just for ConnectedFilter component
-        onFilterChange: this.handleFilterChange.bind(this),
-        receivedAggsData: this.state.receivedAggsData,
-        initialTabsOptions: this.state.initialTabsOptions,
-      })
-    );
+    return this.props.children({
+      accessibleCount: this.state.accessibleCount,
+      allFields: this.state.allFields,
+      aggsData: this.state.aggsData,
+      filter: this.state.filter,
+      initialTabsOptions: this.state.initialTabsOptions,
+      isLoadingAggsData: this.state.isLoadingAggsData,
+      isLoadingRawData: this.state.isLoadingRawData,
+      rawData: this.state.rawData,
+      receivedAggsData: this.state.receivedAggsData,
+      totalCount: this.state.totalCount,
+      downloadRawData: this.handleDownloadRawData.bind(this),
+      downloadRawDataByFields: this.handleDownloadRawDataByFields.bind(this),
+      downloadRawDataByTypeAndFilter: this.handleDownloadRawDataByTypeAndFilter.bind(
+        this
+      ),
+      fetchAndUpdateRawData: this.handleFetchAndUpdateRawData.bind(this),
+      getTotalCountsByTypeAndFilter: this.handleGetTotalCountsByTypeAndFilter.bind(
+        this
+      ),
+      onFilterChange: this.handleFilterChange.bind(this),
+    });
   }
 }
 
@@ -432,10 +424,7 @@ GuppyWrapper.propTypes = {
     aggFields: PropTypes.array,
     dataType: PropTypes.string.isRequired,
   }).isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]).isRequired,
+  children: PropTypes.func.isRequired,
   filterConfig: PropTypes.shape({
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
