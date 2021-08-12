@@ -184,8 +184,7 @@ class GuppyWrapper extends React.Component {
   handleDownloadRawData({ sort = [], format }) {
     // error handling for misconfigured format types
     if (format && !(format in FILE_FORMATS)) {
-      // eslint-disable-next-line no-console
-      console.error(`Invalid value ${format} found for arg format!`);
+      throw new Error(`Invalid value ${format} found for arg format!`);
     }
     const filterForGuppy =
       this.props.patientIds?.length > 0
