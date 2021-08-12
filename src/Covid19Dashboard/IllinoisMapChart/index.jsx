@@ -12,6 +12,7 @@ import LayerTemplate from '../overlays/LayerTemplate';
 import PopulationIL from '../overlays/PopulationIL'; */
 
 import TimeCaseLayer from '../overlays/TimeCaseLayer';
+import VaccinatedCaseLayer from '../overlays/TimeVaccinatedLayer';
 import MobilityLayer from '../overlays/GoogleMobilityLayer';
 import MobilityLayerGnp from '../overlays/GoogleMobilityLayerGnp';
 import MobilityLayerPrk from '../overlays/GoogleMobilityLayerPrk';
@@ -59,7 +60,8 @@ class IllinoisMapChart extends React.Component {
         // Additional layers used as examples enable here
         us_counties: { title: 'US Counties', visible: 'visible' },
         il_population: { title: 'IL Population', visible: 'visible' }, */
-        time_data: { title: 'Case Data Over Time' },
+        C_time_data: { title: 'Case Data' },
+        V_time_data: { title: 'Vaccination Data' },
         rnr_mobility_data: { title: 'Retail & Recreation' },
         gnp_mobility_data: { title: 'Grocery & Pharmacy' },
         prk_mobility_data: { title: 'Parks' },
@@ -77,13 +79,16 @@ class IllinoisMapChart extends React.Component {
       sliderDate: null,
       sliderDataLastUpdated: null,
       sliderDataStartDate: null,
-      activeLayer: 'time_data',
+      activeLayer: 'C_time_data',
       legendTitle: 'Confirmed Cases',
       legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' },
       mobility_data: { data: null, fetchStatus: null },
+      time_data: { data: null, fetchStatus: null, lastUpdated: null },
+      vaccine_data: { data: null, fetchStatus: null, lastUpdated: null },
       strainData: { data: null, fetchStatus: null },
       lastUpdated: null,
       dataDateRange: {},
+      mapColors: null,
     };
     this.mapData = {
       modeledCountyGeoJson: null,
@@ -93,23 +98,39 @@ class IllinoisMapChart extends React.Component {
   }
 
   componentDidUpdate() {
-    if (!(this.mapData.colorsAsList === null
-      && Object.entries(this.props.jsonByTime.il_county_list).length > 0)) {
-      return;
-    }
+    if (!this.state.time_data.fetchStatus && Object.entries(this.props.jsonByTime.il_county_list).length > 0) {
+      const geoJson = this.addDataToGeoJsonBase(
+        this.props.jsonByTime.il_county_list,
+        (data, location) => {
+          const dateProps = {};
+          Object.entries(data[location.properties.FIPS].by_date).forEach((x) => {
+            const [date, caseDeath] = x;
 
-    if (!this.state.time_data && Object.entries(this.props.jsonByTime.il_county_list).length > 0) {
-      this.addTimeDataToGeoJsonBase(this.props.jsonByTime.il_county_list);
-    }
+            dateProps[`C_${date}`] = typeof caseDeath.C === 'string' ? 0 : caseDeath.C;
+            dateProps[`D_${date}`] = typeof caseDeath.D === 'string' ? 0 : caseDeath.D;
+          });
+          return dateProps;
+        });
 
-    if (this.mapData.colors !== {} && this.state.time_data) {
+      this.setState({
+        time_data: {
+          data: geoJson,
+          lastUpdated: this.props.jsonByTime.last_updated,
+          fetchStatus: 'done',
+        },
+        lastUpdated: this.props.jsonByTime.last_updated,
+      });
+
+      this.setSliderDates(this.state.activeLayer.split('_')[0]);
+
       this.mapData.modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
+
       // Finds second highest value in data set
       // Second highest value is used to better balance distribution
       // Due to cook county being an extreme outlier
-      const maxVal = this.state.time_data.features
+      const maxVal = geoJson.features
         .map((obj) => {
-          const confirmedCases = obj.properties[`C_${this.state.sliderDate}`];
+          const confirmedCases = obj.properties[`C_${this.props.jsonByTime.last_updated}`];
           // this is to handle <5 strings in dataset, makes it 0
           if (typeof confirmedCases === 'string') {
             return 0;
@@ -148,6 +169,29 @@ class IllinoisMapChart extends React.Component {
 
       this.setState({ mapColors: this.mapData.colors }); // eslint-disable-line react/no-did-update-set-state, max-len
     }
+
+    if (!this.state.vaccine_data.fetchStatus && Object.entries(this.props.jsonVaccinated.il_county_list).length > 0) {
+      const vaccinegeoJson = this.addDataToGeoJsonBase(
+        this.props.jsonVaccinated.il_county_list,
+        (data, location) => {
+          const dateProps = {};
+          Object.entries(data[location.properties.FIPS].by_date).forEach((x) => {
+            const [date, vaccinated] = x;
+
+            dateProps[`V_${date}`] = typeof vaccinated === 'string' ? 0 : vaccinated;
+          });
+          return dateProps;
+        });
+
+      this.setState({
+        vaccine_data: {
+          data: vaccinegeoJson,
+          lastUpdated: this.props.jsonVaccinated.last_updated,
+          fetchStatus: 'done',
+        },
+      });
+    }
+
     // data fetch status added to prevent multiple requests
     // generally browers are smart enough to cache the requests
     // but this adds an extra layer of security
@@ -161,14 +205,10 @@ class IllinoisMapChart extends React.Component {
   }
 
   setSliderDates = (id) => {
-    let workingId = id;
-    if (workingId === 'time') {
-      workingId = 'C';
-    }
     function msToDays(ms) {
       return Math.floor(ms / (1000 * 60 * 60 * 24));
     }
-    const curentDateRange = this.state.dataDateRange[workingId];
+    const curentDateRange = this.state.dataDateRange[id];
     const startDate = new Date(curentDateRange.min);
     const endDate = new Date(curentDateRange.max);
 
@@ -216,13 +256,12 @@ class IllinoisMapChart extends React.Component {
     };
 
     event.features.forEach((feature) => {
-      if (!feature.layer.id.includes('mobility_data') && feature.layer.id !== 'time-data') {
+      if (!feature.layer.id.includes('mobility_data') && feature.layer.id !== 'time_data' && feature.layer.id !== 'V_time_data') {
         return;
       }
 
       const state = feature.properties.STATE;
       const county = feature.properties.COUNTYNAME;
-
       let locationName = 'US';
       locationName = (state && state !== 'null' ? `${state}, ` : '') + locationName;
       locationName = (county && county !== 'null' ? `${county}, ` : '') + locationName;
@@ -233,7 +272,7 @@ class IllinoisMapChart extends React.Component {
         FIPS: feature.properties.FIPS,
       };
 
-      if (feature.layer.id === 'time-data') {
+      if (feature.layer.id === 'time_data') {
         const cases = formatNumberToDisplay(feature.properties[`C_${this.state.sliderDate}`]);
         const deaths = formatNumberToDisplay(feature.properties[`D_${this.state.sliderDate}`]);
 
@@ -243,52 +282,18 @@ class IllinoisMapChart extends React.Component {
         };
       }
 
-      if (feature.layer.id === 'rnr_mobility_data') {
-        const rnr = formatNumberToDisplay(feature.properties[`rnr_${this.state.sliderDate}`]);
+      if (feature.layer.id === 'V_time_data') {
+        const vac = formatNumberToDisplay(feature.properties[`V_${this.state.sliderDate}`]);
 
-        hoverInfo.mobility_values = {
-          'Retail & Recreation': rnr,
+        hoverInfo.vac_values = {
+          'Vaccines Administered': vac,
         };
       }
 
-      if (feature.layer.id === 'gnp_mobility_data') {
-        const gnp = formatNumberToDisplay(feature.properties[`gnp_${this.state.sliderDate}`]);
-
-        hoverInfo.mobility_values = {
-          'Grocery & Pharmacy': gnp,
-        };
-      }
-
-      if (feature.layer.id === 'prk_mobility_data') {
-        const prk = formatNumberToDisplay(feature.properties[`prk_${this.state.sliderDate}`]);
-
-        hoverInfo.mobility_values = {
-          Parks: prk,
-        };
-      }
-
-      if (feature.layer.id === 'trn_mobility_data') {
-        const trn = formatNumberToDisplay(feature.properties[`trn_${this.state.sliderDate}`]);
-
-        hoverInfo.mobility_values = {
-          'Transit Stations': trn,
-        };
-      }
-
-      if (feature.layer.id === 'wrk_mobility_data') {
-        const wrk = formatNumberToDisplay(feature.properties[`wrk_${this.state.sliderDate}`]);
-
-        hoverInfo.mobility_values = {
-          Workplaces: wrk,
-        };
-      }
-
-      if (feature.layer.id === 'res_mobility_data') {
-        const res = formatNumberToDisplay(feature.properties[`res_${this.state.sliderDate}`]);
-
-        hoverInfo.mobility_values = {
-          Residential: res,
-        };
+      if (feature.layer.id.indexOf('mobility_data') > -1) {
+        const idString = feature.layer.id.split('_')[0];
+        hoverInfo.mobility_values = {};
+        hoverInfo.mobility_values[this.state.overlay_layers[`${idString}_mobility_data`].title] = formatNumberToDisplay(feature.properties[`${idString}_${this.state.sliderDate}`]);
       }
 
       if (this.state.popup_data.strain_data.visible === 'visible') {
@@ -305,7 +310,7 @@ class IllinoisMapChart extends React.Component {
     if (!event.features) { return; }
 
     event.features.forEach((feature) => {
-      if (feature.layer.id === 'time-data') {
+      if (feature.layer.id === 'time_data') {
         const title = `${feature.properties.COUNTYNAME}, ${feature.properties.STATE}`;
         this.props.fetchTimeSeriesData(
           'county',
@@ -320,26 +325,44 @@ class IllinoisMapChart extends React.Component {
   onLayerSelect = (event, id) => {
     // TODO make ID usable
     this.setState({ activeLayer: id });
+    // TODO set after compleated
     this.setSliderDates(id.split('_')[0]);
     this.setMapLegendColors(id);
   }
 
   setMapLegendColors(id) {
-    if (id === 'time_data') {
+    if (id === 'C_time_data') {
       this.setState({
         mapColors: this.mapData.colors, legendTitle: 'Confirmed Cases', legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' }, lastUpdated: this.props.jsonByTime.last_updated,
       });
     }
+    if (id === 'V_time_data') {
+      const colors = [
+        ['0 - 1000', '#FFF'],
+        ['1001 - 5000', '#a8dab5'],
+        ['5001 - 10000', '#81c995'],
+        ['10001 - 50000', '#5bb974'],
+        ['50001 - 100000', '#34a853'],
+        ['100001 - 150000', '#1e8e3e'],
+        ['150001 - 300000', '#188038'],
+        ['300001 - 500000', '#0d652d'],
+        ['No Data Available', '#5f5d59'],
+      ];
+      this.setState({
+        mapColors: colors, legendTitle: 'Vaccines Administered', legendDataSource: { title: 'Illinois Department of Public Health', link: 'http://www.dph.illinois.gov/' }, lastUpdated: this.props.jsonVaccinated.last_updated,
+      });
+    }
     if (id.includes('mobility_data')) {
       const colors = [
-        ['-100% to -80%', '#FFF'],
-        ['-80% to -60%', '#F7F787'],
-        ['-60% to -40%', '#EED322'],
-        ['-40% to -20%', '#E6B71E'],
-        ['-20% to 0%', '#DA9C20'],
-        ['0% to 20%', '#CA8323'],
-        ['20% to 40%', '#B86B25'],
-        ['40% to 60%', '#A25626'],
+        ['-100% to -80%', '#0d652d'],
+        ['-80% to -60%', '#188038'],
+        ['-60% to -40%', '#1e8e3e'],
+        ['-40% to -20%', '#34a853'],
+        ['-20% to 0%', '#81c995'],
+        ['0%', '#FFF'],
+        ['1% to 20%', '#EED322'],
+        ['20% to 40%', '#DA9C20'],
+        ['40% to 60%', '#B86B25'],
         ['60% to 80%', '#8B4225'],
         ['80% to 100% +', '#850001'],
         ['No Data Available', '#5f5d59'],
@@ -392,38 +415,18 @@ class IllinoisMapChart extends React.Component {
       },
     })
       .then((resp) => resp.json())
-      .then((data) => {
-        const base = {
-          ...countyData,
-          features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
-        };
-        const geoJson = {
-          ...base,
-          features: base.features.map((loc) => {
-            const location = loc;
-            if (location.properties.FIPS && !(location.properties.FIPS in data)) {
-              // `countyData` stores FIPS with trailing zeros, JHU data doesn't
-              location.properties.FIPS = Number(location.properties.FIPS).toString();
-            }
-            if (location.properties.FIPS && location.properties.FIPS in data) {
-              location.properties = Object.assign(
-                data[location.properties.FIPS],
-                location.properties,
-              );
-              return location;
-            }
-            // no data for this location
-            return location;
-          }),
-        };
-        this.findStartAndEndDates(geoJson);
+      .then((baseData) => {
+        const geoJson = this.addDataToGeoJsonBase(
+          baseData,
+          (data, location) => data[location.properties.FIPS]);
+
         this.setState({ mobility_data: { data: geoJson, fetchStatus: 'done' } });
         this.setSliderDates(this.state.activeLayer.split('_')[0]);
       })
       .catch(() => { console.warn('Data not retrieved. Unable to display mobility overlays'); }); // eslint-disable-line no-console
   }
 
-  addTimeDataToGeoJsonBase = (data) => {
+  addDataToGeoJsonBase = (data, assignValues) => {
     // Only select Illinois data.
     // Chicago (FIPS 17999) is separate from Cook county in `countyData`,
     // but not in JHU data. So don't display Chicago separately.
@@ -431,6 +434,7 @@ class IllinoisMapChart extends React.Component {
       ...countyData,
       features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
     };
+
     const geoJson = {
       ...base,
       features: base.features.map((loc) => {
@@ -440,14 +444,8 @@ class IllinoisMapChart extends React.Component {
           location.properties.FIPS = Number(location.properties.FIPS).toString();
         }
         if (location.properties.FIPS && location.properties.FIPS in data) {
-          const dateProps = {};
-          Object.entries(data[location.properties.FIPS].by_date).forEach((x) => {
-            const [date, caseDeath] = x;
-            dateProps[`C_${date}`] = typeof caseDeath.C === 'string' ? 0 : caseDeath.C;
-            dateProps[`D_${date}`] = typeof caseDeath.D === 'string' ? 0 : caseDeath.D;
-          });
           location.properties = Object.assign(
-            dateProps,
+            assignValues(data, location),
             location.properties,
           );
           return location;
@@ -459,8 +457,7 @@ class IllinoisMapChart extends React.Component {
     };
 
     this.findStartAndEndDates(geoJson);
-    this.setSliderDates('C');
-    this.setState({ time_data: geoJson, lastUpdated: this.props.jsonByTime.last_updated });
+    return geoJson;
   }
 
   addStrainDataToState = () => {
@@ -508,6 +505,12 @@ class IllinoisMapChart extends React.Component {
             {
               hoverInfo.case_values
               && Object.entries(hoverInfo.case_values).map(
+                (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>,
+              )
+            }
+            {
+              hoverInfo.vac_values
+              && Object.entries(hoverInfo.vac_values).map(
                 (val, i) => <p key={i}>{`${val[1]} ${val[0]}`}</p>,
               )
             }
@@ -593,8 +596,8 @@ class IllinoisMapChart extends React.Component {
           {/* Line below ensures that if a user selects the mobility layers before it is
            finished retrieving then the spinner indicates that the data is being downloaded */}
           {this.state.activeLayer.includes('mobility_data') && this.state.mobility_data.fetchStatus !== 'done' && <Spinner text={'Downloading mobility data'} />}
-          {this.state.time_data
-            && <TimeCaseLayer visibility={this.state.activeLayer === 'time_data' ? 'visible' : 'none'} data={this.state.time_data} date={this.state.sliderDate} />}
+          {this.state.time_data.fetchStatus === 'done' && <TimeCaseLayer visibility={this.state.activeLayer === 'C_time_data' ? 'visible' : 'none'} data={this.state.time_data.data} date={this.state.sliderDate} />}
+          {this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedCaseLayer visibility={this.state.activeLayer === 'V_time_data' ? 'visible' : 'none'} data={this.state.vaccine_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayer visibility={this.state.activeLayer === 'rnr_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerGnp visibility={this.state.activeLayer === 'gnp_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerPrk visibility={this.state.activeLayer === 'prk_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
@@ -629,6 +632,7 @@ IllinoisMapChart.propTypes = {
   jsonByTime: PropTypes.object.isRequired,
   modeledFipsList: PropTypes.array.isRequired,
   fetchTimeSeriesData: PropTypes.func.isRequired,
+  jsonVaccinated: PropTypes.object.isRequired,
 };
 
 export default IllinoisMapChart;

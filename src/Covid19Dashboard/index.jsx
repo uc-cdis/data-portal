@@ -301,6 +301,7 @@ class Covid19Dashboard extends React.Component {
                     <IllinoisMapChart
                       jsonByLevel={this.props.jhuJsonByLevelLatest}
                       jsonByTime={this.props.jhuJsonByTimeLatest}
+                      jsonVaccinated={this.props.vaccinesByCountyByDate}
                       modeledFipsList={this.props.modeledFipsList}
                       fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                     />
