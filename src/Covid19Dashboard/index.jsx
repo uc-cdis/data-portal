@@ -460,7 +460,7 @@ Covid19Dashboard.defaultProps = {
     country: {}, state: {}, county: {}, last_updated: '',
   },
   jhuJsonByTimeLatest: { il_county_list: {}, last_updated: '' },
-  vaccinesByCountyByDate: { il_county_list: {}, last_updated: '' },
+  vaccinesByCountyByDate: { il_county_list: {}, last_updated: '', total: null },
   selectedLocationData: null,
   top10ChartData: [],
   idphDailyChartData: [],
