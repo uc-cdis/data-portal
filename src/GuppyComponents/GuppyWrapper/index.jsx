@@ -11,7 +11,11 @@ import {
   getGQLFilter,
 } from '../Utils/queries';
 import { FILE_FORMATS } from '../Utils/const';
-import { excludeSelfFilterFromAggsData, mergeFilters } from '../Utils/filters';
+import {
+  excludeSelfFilterFromAggsData,
+  mergeFilters,
+  unnestAggsData,
+} from '../Utils/filters';
 import '../typedef';
 
 /**
@@ -97,6 +101,7 @@ class GuppyWrapper extends React.Component {
       allFields: [],
       aggsDataFields: getAllFieldsFromFilterConfigs(props.filterConfig.tabs),
       rawDataFields: [],
+      initialTabsOptions: undefined,
     };
     this._isMounted = false;
     this.controller = new AbortController();
@@ -259,12 +264,15 @@ class GuppyWrapper extends React.Component {
             subject_submitter_id: { selectedValues: this.props.patientIds },
           })
         : filter;
+    const isFilterEmpty = Object.keys(filter).length === 0;
 
     queryGuppyForAggregationData({
       path: this.props.guppyConfig.path,
       type: this.props.guppyConfig.dataType,
       fields: this.state.aggsDataFields,
       gqlFilter: getGQLFilter(filterForGuppy),
+      shouldGetFullAggsData:
+        this.state.initialTabsOptions === undefined && !isFilterEmpty,
       signal: this.controller.signal,
     }).then((res) => {
       if (!res.data)
@@ -279,18 +287,25 @@ class GuppyWrapper extends React.Component {
 
       const receivedAggsData =
         res.data._aggregation[this.props.guppyConfig.dataType];
+      const fullAggsData = isFilterEmpty
+        ? receivedAggsData
+        : res.data._aggregation.fullAggsData;
       const aggsData = excludeSelfFilterFromAggsData(receivedAggsData, filter);
       const accessibleCount = res.data._aggregation.accessible._totalCount;
       const totalCount = res.data._aggregation.all._totalCount;
 
       if (this._isMounted)
-        this.setState({
+        this.setState((prevState) => ({
           isLoadingAggsData: false,
           receivedAggsData,
           aggsData,
           accessibleCount,
           totalCount,
-        });
+          initialTabsOptions:
+            fullAggsData === undefined
+              ? prevState.initialTabsOptions
+              : unnestAggsData(fullAggsData),
+        }));
     });
   }
 
@@ -402,6 +417,7 @@ class GuppyWrapper extends React.Component {
         // below are just for ConnectedFilter component
         onFilterChange: this.handleFilterChange.bind(this),
         receivedAggsData: this.state.receivedAggsData,
+        initialTabsOptions: this.state.initialTabsOptions,
       })
     );
   }

@@ -56,7 +56,13 @@ function FilterGroup({
   const [filterStatus, setFilterStatus] = useState(
     getFilterStatus({ filterResults: initialAppliedFilters, filterTabs })
   );
+  const isInitialRenderRef = useRef(true);
   useEffect(() => {
+    if (isInitialRenderRef.current) {
+      isInitialRenderRef.current = false;
+      return;
+    }
+
     const newFilterStatus = getFilterStatus({
       filterResults: initialAppliedFilters,
       filterTabs,

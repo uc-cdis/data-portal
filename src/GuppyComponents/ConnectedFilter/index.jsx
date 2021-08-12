@@ -25,6 +25,7 @@ import '../typedef';
  * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
  * @property {string[]} patientIds
  * @property {FilterState} initialAppliedFilters
+ * @property {SimpleAggsData} initialTabsOptions
  * @property {AggsData} receivedAggsData
  * @property {boolean} hideZero
  * @property {boolean} hidden
@@ -46,8 +47,6 @@ class ConnectedFilter extends React.Component {
       props.initialAppliedFilters,
       props.adminAppliedPreFilters
     );
-    /** @type {SimpleAggsData} */
-    this.initialTabsOptions = {};
     /** @type {ConnectedFilterState} */
     this.state = {
       initialAggsData: {},
@@ -118,12 +117,10 @@ class ConnectedFilter extends React.Component {
     const tabsOptions = unnestAggsData(
       this.props.onProcessFilterAggsData(this.props.receivedAggsData)
     );
-    if (Object.keys(this.initialTabsOptions).length === 0)
-      this.initialTabsOptions = tabsOptions;
 
     const processedTabsOptions = sortTabsOptions(
       updateCountsInInitialTabsOptions(
-        this.initialTabsOptions,
+        this.props.initialTabsOptions,
         tabsOptions,
         this.state.filter
       )
@@ -147,7 +144,7 @@ class ConnectedFilter extends React.Component {
             searchFields,
             this.props.guppyConfig.fieldMapping,
             processedTabsOptions,
-            this.initialTabsOptions,
+            this.props.initialTabsOptions,
             this.props.adminAppliedPreFilters,
             this.props.guppyConfig,
             this.arrayFields
@@ -219,6 +216,7 @@ ConnectedFilter.propTypes = {
   adminAppliedPreFilters: PropTypes.object,
   patientIds: PropTypes.arrayOf(PropTypes.string),
   initialAppliedFilters: PropTypes.object,
+  initialTabsOptions: PropTypes.object,
   receivedAggsData: PropTypes.object,
   hideZero: PropTypes.bool,
   hidden: PropTypes.bool,
@@ -232,6 +230,7 @@ ConnectedFilter.defaultProps = {
   onProcessFilterAggsData: (data) => data,
   adminAppliedPreFilters: {},
   initialAppliedFilters: {},
+  initialTabsOptions: {},
   receivedAggsData: {},
   hideZero: false,
   hidden: false,

@@ -47,6 +47,7 @@ function histogramQueryStrForEachField(field) {
  * @param {string} args.type
  * @param {string[]} args.fields
  * @param {GqlFilter} [args.gqlFilter]
+ * @param {boolean} [args.shouldGetFullAggsData]
  * @param {AbortSignal} [args.signal]
  */
 export function queryGuppyForAggregationData({
@@ -54,8 +55,12 @@ export function queryGuppyForAggregationData({
   type,
   fields,
   gqlFilter,
+  shouldGetFullAggsData = false,
   signal,
 }) {
+  const fullAagsDataQueryFragment = `fullAggsData: ${type} (accessibility: all) {
+    ${fields.map((field) => histogramQueryStrForEachField(field))}
+  }`;
   const query = (gqlFilter !== undefined
     ? `query ($filter: JSON) {
         _aggregation {
@@ -68,6 +73,7 @@ export function queryGuppyForAggregationData({
           all: ${type} (filter: $filter, accessibility: all) {
             _totalCount
           }
+          ${shouldGetFullAggsData ? fullAagsDataQueryFragment : ''}
         }
       }`
     : `query {
