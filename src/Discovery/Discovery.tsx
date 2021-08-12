@@ -414,7 +414,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 </div>
               )}
             >
-              <span style={{ color: 'gray' }}>n/a</span>
+              <DashOutlined className='discovery-table__access-icon' />
             </Popover>
           );
         }
