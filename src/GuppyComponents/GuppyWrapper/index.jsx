@@ -284,8 +284,7 @@ class GuppyWrapper extends React.Component {
       signal: this.controller.signal,
     }).then((res) => {
       if (!res.data)
-        // eslint-disable-next-line no-console
-        console.error(
+        throw new Error(
           `error querying guppy${
             res.errors && res.errors.length > 0
               ? `: ${res.errors[0].message}`
