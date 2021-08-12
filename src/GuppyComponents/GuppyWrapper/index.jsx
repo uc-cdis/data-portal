@@ -80,19 +80,16 @@ class GuppyWrapper extends React.Component {
   /** @param {GuppyWrapperProps} props */
   constructor(props) {
     super(props);
-    const initialFilter = mergeFilters(
-      props.initialAppliedFilters,
-      props.adminAppliedPreFilters
-    );
 
-    // to avoid asynchronizations, we store another filter as private var
-    this.filter = { ...initialFilter };
     /** @type {GuppyWrapperState} */
     this.state = {
       isLoadingAggsData: false,
       receivedAggsData: {},
       aggsData: {},
-      filter: { ...initialFilter },
+      filter: mergeFilters(
+        props.initialAppliedFilters,
+        props.adminAppliedPreFilters
+      ),
       isLoadingRawData: false,
       rawData: [],
       accessibleCount: 0,
@@ -148,7 +145,6 @@ class GuppyWrapper extends React.Component {
   handleFilterChange(filter) {
     if (this.props.onFilterChange) this.props.onFilterChange(filter);
 
-    this.filter = filter;
     if (this._isMounted) this.setState({ filter });
 
     this.controller.abort();
@@ -193,7 +189,7 @@ class GuppyWrapper extends React.Component {
     }
     const filterForGuppy =
       this.props.patientIds?.length > 0
-        ? mergeFilters(this.filter, {
+        ? mergeFilters(this.state.filter, {
             subject_submitter_id: { selectedValues: this.props.patientIds },
           })
         : this.state.filter;
@@ -335,10 +331,10 @@ class GuppyWrapper extends React.Component {
 
     const filterForGuppy =
       this.props.patientIds?.length > 0
-        ? mergeFilters(this.filter, {
+        ? mergeFilters(this.state.filter, {
             subject_submitter_id: { selectedValues: this.props.patientIds },
           })
-        : this.filter;
+        : this.state.filter;
     // sub aggregations -- for DAT
     if (this.props.guppyConfig.mainField) {
       const numericAggAsText = this.props.guppyConfig.mainFieldIsNumeric;
