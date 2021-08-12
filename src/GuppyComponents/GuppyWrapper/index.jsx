@@ -121,7 +121,10 @@ class GuppyWrapper extends React.Component {
       if (this._isMounted) {
         this.setState({ allFields: fields, rawDataFields });
         this.fetchAggsDataFromGuppy(this.state.filter);
-        this.fetchRawDataFromGuppy(rawDataFields, undefined, true);
+        this.fetchRawDataFromGuppy({
+          fields: rawDataFields,
+          updateDataWhenReceive: true,
+        });
       }
     });
   }
@@ -130,7 +133,10 @@ class GuppyWrapper extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.patientIds?.join(',') !== this.props.patientIds?.join(',')) {
       this.fetchAggsDataFromGuppy(this.state.filter);
-      this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
+      this.fetchRawDataFromGuppy({
+        fields: this.state.rawDataFields,
+        updateDataWhenReceive: true,
+      });
     }
   }
 
@@ -148,7 +154,10 @@ class GuppyWrapper extends React.Component {
     this.controller.abort();
     this.controller = new AbortController();
     this.fetchAggsDataFromGuppy(filter);
-    this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
+    this.fetchRawDataFromGuppy({
+      fields: this.state.rawDataFields,
+      updateDataWhenReceive: true,
+    });
   }
 
   /**
@@ -160,13 +169,13 @@ class GuppyWrapper extends React.Component {
    * @param {GqlSort} args.sort
    */
   handleFetchAndUpdateRawData({ offset = 0, size = 20, sort = [] }) {
-    return this.fetchRawDataFromGuppy(
-      this.state.rawDataFields,
-      sort,
-      true,
+    return this.fetchRawDataFromGuppy({
+      fields: this.state.rawDataFields,
       offset,
-      size
-    );
+      sort,
+      size,
+      updateDataWhenReceive: true,
+    });
   }
 
   /**
@@ -311,13 +320,14 @@ class GuppyWrapper extends React.Component {
   /**
    * This function get data with current filter (if any),
    * and update this.state.rawData and this.state.totalCount
-   * @param {string[]} fields
-   * @param {GqlSort} sort
-   * @param {boolean} updateDataWhenReceive
-   * @param {number} [offset]
-   * @param {number} [size]
+   * @param {Object} args
+   * @param {string[]} args.fields
+   * @param {number} [args.offset]
+   * @param {number} [args.size]
+   * @param {GqlSort} [args.sort]
+   * @param {boolean} args.updateDataWhenReceive
    */
-  fetchRawDataFromGuppy(fields, sort, updateDataWhenReceive, offset, size) {
+  fetchRawDataFromGuppy({ fields, offset, size, sort, updateDataWhenReceive }) {
     if (this._isMounted) this.setState({ isLoadingRawData: true });
     if (!fields || fields.length === 0) {
       if (this._isMounted) this.setState({ isLoadingRawData: false });
