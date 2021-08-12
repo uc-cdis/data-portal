@@ -10,11 +10,13 @@ import {
   RightOutlined,
   ExportOutlined,
   DownloadOutlined,
+  FileTextOutlined,
 } from '@ant-design/icons';
 import FileSaver from 'file-saver';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
 import { manifestServiceApiPath, hostname } from '../localconf';
+import Popup from '../components/Popup';
 
 interface User {
   username: string
@@ -27,7 +29,116 @@ interface Props {
   filtersVisible: boolean;
   setFiltersVisible: (boolean) => void;
   user: User,
+  downloadInProgress: boolean,
+  setDownloadInProgress: (boolean) => void,
+  downloadStatusMessage: {
+    title: string,
+    message: string,
+    active: boolean
+  },
+  setDownloadStatusMessage: (Object) => void;
 }
+
+const handleDownloadZipClick = async (
+  selectedResources: any[],
+  setDownloadInProgress: (boolean) => void,
+  setDownloadStatusMessage: (object) => void,
+  manifestFieldName: string,
+  maxDownloadSizeBytes: number,
+) => {
+  const studyIDs = selectedResources.map((study) => study.project_number);
+  let downloadSize = 0;
+  selectedResources.forEach(
+    (study) => {
+      study[manifestFieldName].forEach(
+        (file) => {
+          downloadSize += file.file_size;
+        },
+      );
+    },
+  );
+
+  if (downloadSize > maxDownloadSizeBytes) {
+    const maxSizeMB = (maxDownloadSizeBytes / 1000000).toFixed(1);
+    const downloadSizeMb = (downloadSize / 1000000).toFixed(1);
+    setDownloadStatusMessage(
+      {
+        title: 'Download limit exceeded',
+        message: `
+        The selected studies contain ${downloadSizeMb} MB of data, which exceeds the download limit of ${maxSizeMB} MB.
+        Please deselect some studies and try again, or use the gen3 client.
+        `,
+        active: true,
+      },
+    );
+    return;
+  }
+
+  setDownloadInProgress(true);
+  setDownloadStatusMessage(
+    {
+      title: 'Your download is being prepared',
+      message: 'Please remain on this page while your download is being prepared.\n\n'
+                 + 'When your download is ready, it will begin automatically. You can close this window.',
+      active: true,
+    },
+  );
+
+  const triggerDownloadResponse = await fetch(
+    '/job/dispatch',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'batch-export',
+        input: {
+          study_ids: studyIDs,
+        },
+      }),
+    },
+  );
+  const initialialJobState = await triggerDownloadResponse.json();
+  const downloadFailedMessage = {
+    title: 'Download failed',
+    message: 'There was a problem preparing your download.'
+               + 'Please consider using the gen3 client to download these files via a manifest.',
+    active: true,
+  };
+
+  if (initialialJobState === null) {
+    console.warn('Sower is not configured for batch-export job.');
+    setDownloadInProgress(false);
+    setDownloadStatusMessage(downloadFailedMessage);
+  } else {
+    const { uid } = initialialJobState;
+    const pollForUpdate = async () => {
+      const statusResponse = await fetch(`/job/status?UID=${uid}`);
+      const statusObject = await statusResponse.json();
+      const { status } = statusObject;
+
+      if (status === 'Failed') {
+        setDownloadStatusMessage(downloadFailedMessage);
+        setDownloadInProgress(false);
+      } else if (status === 'Completed') {
+        const outputResponse = await fetch(`/job/output?UID=${uid}`);
+        const outputJSON = await outputResponse.json();
+        const url = outputJSON.output;
+        const message = `Your download has been prepared. If your download doesn't start automatically, please copy and paste this url into your browser:\n\n${url}`;
+        setDownloadStatusMessage(
+          {
+            title: 'Your download is ready',
+            message,
+            active: true,
+          },
+        );
+        setDownloadInProgress(false);
+        setTimeout(() => window.open(url), 2000);
+      } else {
+        setTimeout(pollForUpdate, 5000);
+      }
+    };
+    setTimeout(pollForUpdate, 5000);
+  }
+};
 
 const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[]) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
@@ -130,6 +241,42 @@ const DiscoveryActionBar = (props: Props) => {
         && (
           <Space>
             <span className='discovery-export__selected-ct'>{props.selectedResources.length} selected</span>
+            {
+              props.config.features.exportToWorkspace.enableDownloadZip
+              && (
+                <Button
+                  onClick={() => {
+                    if (props.user.username) {
+                      handleDownloadZipClick(
+                        props.selectedResources,
+                        props.setDownloadInProgress,
+                        props.setDownloadStatusMessage,
+                        props.config.features.exportToWorkspace.manifestFieldName,
+                        props.config.features.exportToWorkspace.downloadZipMaxSizeBytes || 250000000,
+                      );
+                    } else {
+                      handleRedirectToLoginClick();
+                    }
+                  }}
+                  type='text'
+                  disabled={props.selectedResources.length === 0 || props.downloadInProgress === true}
+                  icon={<DownloadOutlined />}
+                >
+                  {(
+                    () => {
+                      if (props.user.username) {
+                        if (props.downloadInProgress === true) {
+                          return 'Preparing download...';
+                        }
+
+                        return `${props.config.features.exportToWorkspace.downloadZipButtonText || 'Download Zip'}`;
+                      }
+                      return `Login to ${props.config.features.exportToWorkspace.downloadZipButtonText || 'Download Zip'}`;
+                    }
+                  )()}
+                </Button>
+              )
+            }
             { props.config.features.exportToWorkspace.enableDownloadManifest
             && (
               <Popover
@@ -156,11 +303,12 @@ const DiscoveryActionBar = (props: Props) => {
                     : () => { handleRedirectToLoginClick(); }}
                   type='text'
                   disabled={props.selectedResources.length === 0}
-                  icon={<DownloadOutlined />}
+                  icon={<FileTextOutlined />}
                 >
                   {(props.user.username) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
                     : `Login to ${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`}
                 </Button>
+
               </Popover>
             )}
             <Popover
@@ -189,6 +337,22 @@ const DiscoveryActionBar = (props: Props) => {
                 {(props.user.username) ? 'Open In Workspace' : 'Login to Open In Workspace'}
               </Button>
             </Popover>
+            {
+              props.downloadStatusMessage.active
+            && (
+              <Popup
+                message={props.downloadStatusMessage.message}
+                title={props.downloadStatusMessage.title}
+                leftButtons={[
+                  {
+                    caption: 'Close',
+                    fn: () => props.setDownloadStatusMessage({ title: '', message: '', active: false }),
+                  },
+                ]}
+              />
+            )
+            }
+
           </Space>
         )}
     </div>
