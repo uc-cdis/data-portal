@@ -18,12 +18,17 @@ storiesOf('Guppy Wrapper', module).add('Connected Filter and Table', () => (
       onFilterChange={action('wrapper receive filter change')}
       onReceiveNewAggsData={action('wrapper receive aggs data')}
     >
-      <ConnectedFilter
-        className='guppy-wrapper__filter'
-        filterConfig={filterConfig}
-        guppyConfig={guppyConfig}
-        filterComponents={{ FilterGroup, FilterList }}
-      />
+      {(data) => (
+        <ConnectedFilter
+          className='guppy-wrapper__filter'
+          filterConfig={filterConfig}
+          guppyConfig={guppyConfig}
+          filterComponents={{ FilterGroup, FilterList }}
+          onFilterChange={data.onFilterChange}
+          receivedAggsData={data.receivedAggsData}
+          initialTabsOptions={data.initialTabsOptions}
+        />
+      )}
       <TableExample className='guppy-wrapper__table' />
     </GuppyWrapper>
   </div>
