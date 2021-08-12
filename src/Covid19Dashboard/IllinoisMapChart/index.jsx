@@ -112,7 +112,7 @@ class IllinoisMapChart extends React.Component {
           return dateProps;
         });
 
-      this.setState({
+      this.setState({ // eslint-disable-line react/no-did-update-set-state, max-len
         time_data: {
           data: geoJson,
           lastUpdated: this.props.jsonByTime.last_updated,
@@ -183,7 +183,7 @@ class IllinoisMapChart extends React.Component {
           return dateProps;
         });
 
-      this.setState({
+      this.setState({ // eslint-disable-line react/no-did-update-set-state, max-len
         vaccine_data: {
           data: vaccinegeoJson,
           lastUpdated: this.props.jsonVaccinated.last_updated,
@@ -325,7 +325,6 @@ class IllinoisMapChart extends React.Component {
   onLayerSelect = (event, id) => {
     // TODO make ID usable
     this.setState({ activeLayer: id });
-    // TODO set after compleated
     this.setSliderDates(id.split('_')[0]);
     this.setMapLegendColors(id);
   }
