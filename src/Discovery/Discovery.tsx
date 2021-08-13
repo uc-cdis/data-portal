@@ -251,10 +251,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   useEffect(() => {
     // If opening to a study by default, open that study
-    if (props.params.studyUID) {
-      const studyID = props.params.studyUID;
+    if (props.params.studyUID && props.studies.length > 0) {
+      const studyID = decodeURIComponent(props.params.studyUID);
       const defaultModalData = props.studies.find(
         (r) => r[config.minimalFieldMapping.uid] === studyID);
+
       if (defaultModalData) {
         setPermalinkCopied(false);
         setModalData(defaultModalData);
