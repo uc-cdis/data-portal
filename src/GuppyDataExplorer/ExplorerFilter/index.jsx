@@ -57,7 +57,6 @@ ExplorerFilter.propTypes = {
   hasAppliedFilters: PropTypes.bool,
   onFilterClear: PropTypes.func,
   onFilterChange: PropTypes.func, // inherit from GuppyWrapper
-  onReceiveNewAggsData: PropTypes.func, // inherit from GuppyWrapper
 };
 
 export default ExplorerFilter;
