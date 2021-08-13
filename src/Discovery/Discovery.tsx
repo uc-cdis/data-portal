@@ -196,7 +196,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [advSearchFilterHeight, setAdvSearchFilterHeight] = useState('100vh');
   const [downloadInProgress, setDownloadInProgress] = useState(false);
-  const [downloadStatusMessage, setDownloadStatusMessage] = useState({ message: '', title: '', active: false });
+  const [downloadStatusMessage, setDownloadStatusMessage] = useState({
+    url: '', message: '', title: '', active: false,
+  });
 
   const handleSearchChange = (ev) => {
     const { value } = ev.currentTarget;

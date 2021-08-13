@@ -3,6 +3,7 @@ import {
   Space,
   Popover,
   Button,
+  Modal,
 } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
@@ -15,8 +16,7 @@ import {
 import FileSaver from 'file-saver';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
-import { manifestServiceApiPath, hostname } from '../localconf';
-import Popup from '../components/Popup';
+import { manifestServiceApiPath, hostname, jobAPIPath } from '../localconf';
 
 interface User {
   username: string
@@ -34,7 +34,8 @@ interface Props {
   downloadStatusMessage: {
     title: string,
     message: string,
-    active: boolean
+    active: boolean,
+    url: string
   },
   setDownloadStatusMessage: (Object) => void;
 }
@@ -43,101 +44,80 @@ const handleDownloadZipClick = async (
   selectedResources: any[],
   setDownloadInProgress: (boolean) => void,
   setDownloadStatusMessage: (object) => void,
-  manifestFieldName: string,
-  maxDownloadSizeBytes: number,
 ) => {
   const studyIDs = selectedResources.map((study) => study.project_number);
-  let downloadSize = 0;
-  selectedResources.forEach(
-    (study) => {
-      study[manifestFieldName].forEach(
-        (file) => {
-          downloadSize += file.file_size;
-        },
-      );
-    },
-  );
-
-  if (downloadSize > maxDownloadSizeBytes) {
-    const maxSizeMB = (maxDownloadSizeBytes / 1000000).toFixed(1);
-    const downloadSizeMb = (downloadSize / 1000000).toFixed(1);
-    setDownloadStatusMessage(
-      {
-        title: 'Download limit exceeded',
-        message: `
-        The selected studies contain ${downloadSizeMb} MB of data, which exceeds the download limit of ${maxSizeMB} MB.
-        Please deselect some studies and try again, or use the gen3 client.
-        `,
-        active: true,
-      },
-    );
-    return;
-  }
-
   setDownloadInProgress(true);
-  setDownloadStatusMessage(
-    {
-      title: 'Your download is being prepared',
-      message: 'Please remain on this page while your download is being prepared.\n\n'
-                 + 'When your download is ready, it will begin automatically. You can close this window.',
-      active: true,
-    },
-  );
-
-  const triggerDownloadResponse = await fetch(
-    '/job/dispatch',
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'batch-export',
-        input: {
-          study_ids: studyIDs,
-        },
-      }),
-    },
-  );
-  const initialialJobState = await triggerDownloadResponse.json();
-  const downloadFailedMessage = {
-    title: 'Download failed',
-    message: 'There was a problem preparing your download.'
-               + 'Please consider using the gen3 client to download these files via a manifest.',
+  setDownloadStatusMessage({
+    title: 'Your download is being prepared',
+    message: 'Please remain on this page while your download is being prepared.\n\n'
+               + 'When your download is ready, it will begin automatically. You can close this window.',
     active: true,
+    url: '',
+  });
+
+  const handleJobError = (err) => {
+    console.error(err);
+    setDownloadInProgress(false);
+    setDownloadStatusMessage({
+      title: 'Download failed',
+      message: 'There was a problem preparing your download.'
+                + 'Please consider using the gen3 client to download these files via a manifest.',
+      active: true,
+      url: '',
+    });
   };
 
-  if (initialialJobState === null) {
-    console.warn('Sower is not configured for batch-export job.');
-    setDownloadInProgress(false);
-    setDownloadStatusMessage(downloadFailedMessage);
-  } else {
-    const { uid } = initialialJobState;
-    const pollForUpdate = async () => {
-      const statusResponse = await fetch(`/job/status?UID=${uid}`);
-      const statusObject = await statusResponse.json();
-      const { status } = statusObject;
-
-      if (status === 'Failed') {
-        setDownloadStatusMessage(downloadFailedMessage);
-        setDownloadInProgress(false);
-      } else if (status === 'Completed') {
-        const outputResponse = await fetch(`/job/output?UID=${uid}`);
-        const outputJSON = await outputResponse.json();
-        const url = outputJSON.output;
-        const message = `Your download has been prepared. If your download doesn't start automatically, please copy and paste this url into your browser:\n\n${url}`;
-        setDownloadStatusMessage(
-          {
-            title: 'Your download is ready',
-            message,
-            active: true,
+  fetchWithCreds({
+    path: `${jobAPIPath}dispatch`,
+    method: 'POST',
+    body: JSON.stringify({
+      action: 'batch-export',
+      input: {
+        study_ids: studyIDs,
+      },
+    }),
+  }).then(
+    (dispatchResponse) => {
+      const { uid } = dispatchResponse.data;
+      const pollForJobStatusUpdate = () => {
+        fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
+          (statusResponse) => {
+            const { status } = statusResponse.data;
+            if (status === 'Failed') {
+              fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
+                (outputResponse) => {
+                  setDownloadStatusMessage({
+                    title: 'Download failed',
+                    message: outputResponse.data.output,
+                    active: true,
+                    url: '',
+                  });
+                  setDownloadInProgress(false);
+                },
+              ).catch(handleJobError);
+            } else if (status === 'Completed') {
+              fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
+                (outputResponse) => {
+                  const { output } = outputResponse.data;
+                  setDownloadStatusMessage({
+                    title: 'Your download is ready',
+                    message: 'Your download has been prepared. If your download doesn\'t start automatically, please follow this direct link:',
+                    active: true,
+                    url: output,
+                  });
+                  setDownloadInProgress(false);
+                  setTimeout(() => window.open(output), 2000);
+                },
+              ).catch(handleJobError);
+            } else {
+              setTimeout(pollForJobStatusUpdate, 5000);
+            }
           },
         );
-        setDownloadInProgress(false);
-        setTimeout(() => window.open(url), 2000);
-      } else {
-        setTimeout(pollForUpdate, 5000);
-      }
-    };
-    setTimeout(pollForUpdate, 5000);
-  }
+      };
+      setTimeout(pollForJobStatusUpdate, 5000);
+    },
+  ).catch(handleJobError);
 };
 
 const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[]) => {
@@ -220,7 +200,7 @@ const DiscoveryActionBar = (props: Props) => {
     <div className='discovery-studies__header'>
       {/* Advanced search show/hide UI */}
       { (props.config.features.advSearchFilters && props.config.features.advSearchFilters.enabled)
-        ? (
+        && (
           <Button
             className='discovery-adv-filter-button'
             onClick={() => props.setFiltersVisible(!props.filtersVisible)}
@@ -231,8 +211,7 @@ const DiscoveryActionBar = (props: Props) => {
               ? <LeftOutlined />
               : <RightOutlined />}
           </Button>
-        )
-        : <div />}
+        )}
 
       {/* Export to workspaces button */}
       { (
@@ -251,8 +230,6 @@ const DiscoveryActionBar = (props: Props) => {
                         props.selectedResources,
                         props.setDownloadInProgress,
                         props.setDownloadStatusMessage,
-                        props.config.features.exportToWorkspace.manifestFieldName,
-                        props.config.features.exportToWorkspace.downloadZipMaxSizeBytes || 250000000,
                       );
                     } else {
                       handleRedirectToLoginClick();
@@ -261,6 +238,7 @@ const DiscoveryActionBar = (props: Props) => {
                   type='text'
                   disabled={props.selectedResources.length === 0 || props.downloadInProgress === true}
                   icon={<DownloadOutlined />}
+                  loading={props.downloadInProgress}
                 >
                   {(
                     () => {
@@ -337,22 +315,28 @@ const DiscoveryActionBar = (props: Props) => {
                 {(props.user.username) ? 'Open In Workspace' : 'Login to Open In Workspace'}
               </Button>
             </Popover>
-            {
-              props.downloadStatusMessage.active
-            && (
-              <Popup
-                message={props.downloadStatusMessage.message}
-                title={props.downloadStatusMessage.title}
-                leftButtons={[
-                  {
-                    caption: 'Close',
-                    fn: () => props.setDownloadStatusMessage({ title: '', message: '', active: false }),
-                  },
-                ]}
-              />
-            )
-            }
-
+            <Modal
+              closable={false}
+              visible={props.downloadStatusMessage.active}
+              title={props.downloadStatusMessage.title}
+              footer={(
+                <Button
+                  onClick={
+                    () => props.setDownloadStatusMessage({
+                      title: '', message: '', active: false, url: '',
+                    })
+                  }
+                >
+                  Close
+                </Button>
+              )}
+            >
+              { props.downloadStatusMessage.message }
+              {
+                props.downloadStatusMessage.url
+                  && <a href={props.downloadStatusMessage.url}>{props.downloadStatusMessage.url}</a>
+              }
+            </Modal>
           </Space>
         )}
     </div>
