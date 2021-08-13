@@ -5,7 +5,7 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import Toaster from '@gen3/ui-component/dist/components/Toaster';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
-import PropTypes from 'prop-types';
+import PropTypes, { bool } from 'prop-types';
 import { calculateDropdownButtonConfigs, humanizeNumber } from '../utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
 import { fetchWithCreds } from '../../actions';
@@ -804,7 +804,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     return (
       <Button
         key={buttonConfig.type}
-        onClick={() => {this.isDownloadRegistrationEnabled(),clickFunc}}
+        onClick={() => {if (!this.isDownloadRegistrationEnabled()) {clickFunc()}}}
         label={buttonTitle}
         leftIcon={buttonConfig.leftIcon}
         rightIcon={buttonConfig.rightIcon}
@@ -920,14 +920,18 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
   }
   isDownloadRegistrationEnabled = () => {
     if (this.props.buttonConfig.enableDownloadRegistrationLogin){
-      this.goToLogin();
+      return this.goToLogin();
     }
+    return false;
   }
-  goToLogin = () =>{
+  goToLogin = () => {
     if(!this.props.user || !this.props.user.username) {
       this.props.history.push('/login');
+      return true;
     }
+    return false;
   }
+
 }
 
 ExplorerButtonGroup.propTypes = {
