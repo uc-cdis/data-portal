@@ -56,7 +56,6 @@ const handleDownloadZipClick = async (
   });
 
   const handleJobError = (err) => {
-    console.error(err);
     setDownloadInProgress(false);
     setDownloadStatusMessage({
       title: 'Download failed',
