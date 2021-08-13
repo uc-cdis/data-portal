@@ -59,7 +59,7 @@ const handleDownloadZipClick = async (
     setDownloadInProgress(false);
     setDownloadStatusMessage({
       title: 'Download failed',
-      message: 'There was a problem preparing your download.'
+      message: 'There was a problem preparing your download. '
                 + 'Please consider using the Gen3 SDK for Python (w/ CLI) to download these files via a manifest.',
       active: true,
       url: '',
@@ -77,47 +77,54 @@ const handleDownloadZipClick = async (
     }),
   }).then(
     (dispatchResponse) => {
-      if (dispatchResponse.status !== 200) {
-        throw new Error();
-      }
       const { uid } = dispatchResponse.data;
+      if (dispatchResponse.status !== 200 || !uid) {
+        handleJobError();
+      }
       const pollForJobStatusUpdate = () => {
         fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
           (statusResponse) => {
-            if (statusResponse.status !== 200) {
-              throw new Error();
-            }
             const { status } = statusResponse.data;
-            if (status === 'Failed') {
+            if (statusResponse.status !== 200 || !status) {
+              // usually empty status message means Sower can't find a job by its UID
+              handleJobError();
+            }
+            else if (status === 'Failed') {
               fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
                 (outputResponse) => {
-                  if (outputResponse.status !== 200) {
-                    throw new Error();
+                  const { output } = outputResponse.data;
+                  if (outputResponse.status !== 200 || !output) {
+                    handleJobError();
                   }
-                  setDownloadStatusMessage({
-                    title: 'Download failed',
-                    message: outputResponse.data.output,
-                    active: true,
-                    url: '',
-                  });
-                  setDownloadInProgress(false);
+                  else {
+                    setDownloadStatusMessage({
+                      title: 'Download failed',
+                      message: output,
+                      active: true,
+                      url: '',
+                    });
+                    setDownloadInProgress(false);
+                  }
                 },
               ).catch(handleJobError);
-            } else if (status === 'Completed') {
+            }
+            else if (status === 'Completed') {
               fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
                 (outputResponse) => {
-                  if (outputResponse.status !== 200) {
-                    throw new Error();
-                  }
                   const { output } = outputResponse.data;
-                  setDownloadStatusMessage({
-                    title: 'Your download is ready',
-                    message: 'Your download has been prepared. If your download doesn\'t start automatically, please follow this direct link:',
-                    active: true,
-                    url: output,
-                  });
-                  setDownloadInProgress(false);
-                  setTimeout(() => window.open(output), 2000);
+                  if (outputResponse.status !== 200 || !output) {
+                    handleJobError();
+                  }
+                  else {
+                    setDownloadStatusMessage({
+                      title: 'Your download is ready',
+                      message: 'Your download has been prepared. If your download doesn\'t start automatically, please follow this direct link: ',
+                      active: true,
+                      url: output,
+                    });
+                    setDownloadInProgress(false);
+                    setTimeout(() => window.open(output), 2000);
+                  }
                 },
               ).catch(handleJobError);
             } else {
