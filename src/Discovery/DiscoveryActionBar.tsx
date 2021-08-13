@@ -55,13 +55,12 @@ const handleDownloadZipClick = async (
     url: '',
   });
 
-  const handleJobError = (err) => {
-    console.error(err);
+  const handleJobError = () => {
     setDownloadInProgress(false);
     setDownloadStatusMessage({
       title: 'Download failed',
       message: 'There was a problem preparing your download.'
-                + 'Please consider using the gen3 client to download these files via a manifest.',
+                + 'Please consider using the Gen3 SDK for Python (w/ CLI) to download these files via a manifest.',
       active: true,
       url: '',
     });
