@@ -215,19 +215,20 @@ class GuppyDataExplorer extends React.Component {
                   filter={data.filter}
                 />
                 <ExplorerFilter
+                  adminAppliedPreFilters={this.props.adminAppliedPreFilters}
                   className='guppy-data-explorer__filter'
                   filterConfig={this.props.filterConfig}
                   guppyConfig={this.props.guppyConfig}
-                  tierAccessLimit={this.props.tierAccessLimit}
-                  adminAppliedPreFilters={this.props.adminAppliedPreFilters}
-                  initialAppliedFilters={this.state.initialAppliedFilters}
-                  patientIds={this.state.patientIds}
                   hasAppliedFilters={this._hasAppliedFilters}
+                  initialAppliedFilters={this.state.initialAppliedFilters}
                   onFilterClear={this.clearFilters}
                   onPatientIdsChange={this.handlePatientIdsChange}
+                  patientIds={this.state.patientIds}
+                  tierAccessLimit={this.props.tierAccessLimit}
+                  filter={data.filter}
+                  initialTabsOptions={data.initialTabsOptions}
                   onFilterChange={data.onFilterChange}
                   receivedAggsData={data.receivedAggsData}
-                  initialTabsOptions={data.initialTabsOptions}
                 />
                 <ExplorerVisualization
                   className='guppy-data-explorer__visualization'

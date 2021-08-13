@@ -268,13 +268,16 @@ function GuppyWrapper(
 
   /** @param {FilterState} filter */
   function handleFilterChange(filter) {
-    if (props.onFilterChange) props.onFilterChange(filter);
+    const mergedFilter = mergeFilters(filter, props.adminAppliedPreFilters);
 
-    if (isMounted.current) setState((prevState) => ({ ...prevState, filter }));
+    if (props.onFilterChange) props.onFilterChange(mergedFilter);
+
+    if (isMounted.current)
+      setState((prevState) => ({ ...prevState, filter: mergedFilter }));
 
     controller.current.abort();
     controller.current = new AbortController();
-    fetchAggsDataFromGuppy(filter);
+    fetchAggsDataFromGuppy(mergedFilter);
     fetchRawDataFromGuppy({
       fields: rawDataFields,
       updateDataWhenReceive: true,

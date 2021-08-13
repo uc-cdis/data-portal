@@ -6,7 +6,6 @@ import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 import { queryGuppyForStatus } from '../Utils/queries';
 import {
   getFilterSections,
-  mergeFilters,
   updateCountsInInitialTabsOptions,
   sortTabsOptions,
   unnestAggsData,
@@ -15,6 +14,7 @@ import '../typedef';
 
 /**
  * @typedef {Object} ConnectedFilterProps
+ * @property {FilterState} filter
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
  * @property {(x: FilterState) => void} onFilterChange
@@ -42,52 +42,17 @@ class ConnectedFilter extends React.Component {
   constructor(props) {
     super(props);
 
-    const initialFilter = mergeFilters(
-      props.initialAppliedFilters,
-      props.adminAppliedPreFilters
-    );
-    /** @type {ConnectedFilterState} */
-    this.state = {
-      filter: { ...initialFilter },
-    };
     /** @type {string[][]} */
     this.arrayFields = [];
-    this._isMounted = false;
   }
 
   componentDidMount() {
-    this._isMounted = true;
-
     // get array types info from guppy
     queryGuppyForStatus(this.props.guppyConfig.path).then((res) => {
       for (const { arrayFields } of Object.values(res.indices))
         if (arrayFields?.length > 0)
           this.arrayFields = this.arrayFields.concat(arrayFields);
     });
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
-  /**
-   * Handler function that is called everytime filter changes
-   * What this function does:
-   * 1. Ask guppy for aggregation data using (processed) filter
-   * 2. After get aggregation response, process new received agg data
-   * 3. If there's `onFilterChange` callback function from parent, call it
-   * @param {FilterState} filterResults
-   */
-  handleFilterChange(filterResults) {
-    const mergedFilterResults = mergeFilters(
-      filterResults,
-      this.props.adminAppliedPreFilters
-    );
-    if (this._isMounted) this.setState({ filter: mergedFilterResults });
-
-    if (this.props.onFilterChange) {
-      this.props.onFilterChange(mergedFilterResults);
-    }
   }
 
   /**
@@ -108,7 +73,7 @@ class ConnectedFilter extends React.Component {
       updateCountsInInitialTabsOptions(
         this.props.initialTabsOptions,
         tabsOptions,
-        this.state.filter
+        this.props.filter
       )
     );
     if (Object.keys(processedTabsOptions).length === 0) return null;
@@ -155,7 +120,7 @@ class ConnectedFilter extends React.Component {
         className={this.props.className}
         tabs={filterTabs}
         filterConfig={this.props.filterConfig}
-        onFilterChange={(e) => this.handleFilterChange(e)}
+        onFilterChange={this.props.onFilterChange}
         onPatientIdsChange={this.props.onPatientIdsChange}
         patientIds={this.props.patientIds}
         hideZero={this.props.hideZero}
@@ -166,6 +131,7 @@ class ConnectedFilter extends React.Component {
 }
 
 ConnectedFilter.propTypes = {
+  filter: PropTypes.object,
   filterConfig: PropTypes.shape({
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
@@ -201,6 +167,7 @@ ConnectedFilter.propTypes = {
 };
 
 ConnectedFilter.defaultProps = {
+  filter: {},
   onFilterChange: () => {},
   onPatientIdsChange: () => {},
   className: '',
