@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import * as JsSearch from 'js-search';
 import { Tag, Popover } from 'antd';
-import { LockFilled, UnlockOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import {
+  LockFilled, UnlockOutlined, ClockCircleOutlined, DashOutlined,
+} from '@ant-design/icons';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
@@ -16,10 +18,10 @@ import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 export const accessibleFieldName = '__accessible';
 
 export enum AccessLevel {
-  ACCESSIBLE,
-  UNACCESSIBLE,
-  NOT_AVAILABLE,
-  PENDING
+  ACCESSIBLE = 1,
+  UNACCESSIBLE = 2,
+  PENDING = 3,
+  NOT_AVAILABLE = 4,
 }
 
 const ARBORIST_READ_PRIV = 'read';
@@ -358,7 +360,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   );
   if (config.features.authorization.enabled) {
     columns.push({
-      title: <div className='discovery-table-header'>Data Access</div>,
+      title: <div className='discovery-table-header'>Data Availability</div>,
       filters: [{
         text: <React.Fragment><UnlockOutlined />&nbsp;Accessible</React.Fragment>,
         value: AccessLevel.ACCESSIBLE,
@@ -368,15 +370,18 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         value: AccessLevel.UNACCESSIBLE,
         id: 'unaccessible-data-filter',
       }, {
-        text: <React.Fragment><span style={{ color: 'gray' }}>n/a</span>&nbsp;No Data</React.Fragment>,
-        value: AccessLevel.NOT_AVAILABLE,
-        id: 'not-available-data-filter',
-      }, {
         text: <React.Fragment><ClockCircleOutlined />&nbsp;Pending</React.Fragment>,
         value: AccessLevel.PENDING,
         id: 'pending-data-filter',
+      }, {
+        text: <React.Fragment><DashOutlined />&nbsp;No Data</React.Fragment>,
+        value: AccessLevel.NOT_AVAILABLE,
+        id: 'not-available-data-filter',
       }],
       onFilter: (value, record) => record[accessibleFieldName] === value,
+      // This will sort the values in the order defined by the AccessLevel enum. (AccessLevel.ACCESSIBLE=1, AccessLevel.UNACCESSIBLE=2, etc)
+      sorter: (a, b) => b[accessibleFieldName] - a[accessibleFieldName],
+      defaultSortOrder: 'descend',
       ellipsis: false,
       width: '106px',
       textWrap: 'word-break',
@@ -409,7 +414,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 </div>
               )}
             >
-              <span style={{ color: 'gray' }}>n/a</span>
+              <DashOutlined className='discovery-table__access-icon' />
             </Popover>
           );
         }
