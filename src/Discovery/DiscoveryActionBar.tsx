@@ -78,14 +78,23 @@ const handleDownloadZipClick = async (
     }),
   }).then(
     (dispatchResponse) => {
+      if (dispatchResponse.status !== 200) {
+        throw new Error();
+      }
       const { uid } = dispatchResponse.data;
       const pollForJobStatusUpdate = () => {
         fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
           (statusResponse) => {
+            if (statusResponse.status !== 200) {
+              throw new Error();
+            }
             const { status } = statusResponse.data;
             if (status === 'Failed') {
               fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
                 (outputResponse) => {
+                  if (outputResponse.status !== 200) {
+                    throw new Error();
+                  }
                   setDownloadStatusMessage({
                     title: 'Download failed',
                     message: outputResponse.data.output,
@@ -98,6 +107,9 @@ const handleDownloadZipClick = async (
             } else if (status === 'Completed') {
               fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
                 (outputResponse) => {
+                  if (outputResponse.status !== 200) {
+                    throw new Error();
+                  }
                   const { output } = outputResponse.data;
                   setDownloadStatusMessage({
                     title: 'Your download is ready',
