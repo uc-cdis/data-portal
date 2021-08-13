@@ -200,7 +200,7 @@ const DiscoveryActionBar = (props: Props) => {
     <div className='discovery-studies__header'>
       {/* Advanced search show/hide UI */}
       { (props.config.features.advSearchFilters && props.config.features.advSearchFilters.enabled)
-        && (
+        ? (
           <Button
             className='discovery-adv-filter-button'
             onClick={() => props.setFiltersVisible(!props.filtersVisible)}
@@ -211,7 +211,8 @@ const DiscoveryActionBar = (props: Props) => {
               ? <LeftOutlined />
               : <RightOutlined />}
           </Button>
-        )}
+        )
+        : <div />}
 
       {/* Export to workspaces button */}
       { (
