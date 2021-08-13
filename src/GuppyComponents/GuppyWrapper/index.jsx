@@ -32,15 +32,16 @@ import '../typedef';
 
 /**
  * @typedef {Object} GuppyWrapperState
- * @property {boolean} isLoadingAggsData
- * @property {AggsData} receivedAggsData
+ * @property {number} accessibleCount
  * @property {AggsData} aggsData
+ * @property {string[]} allFields
  * @property {FilterState} filter
+ * @property {SimpleAggsData} initialTabsOptions
+ * @property {boolean} isLoadingAggsData
  * @property {boolean} isLoadingRawData
  * @property {Object[]} rawData
- * @property {number} accessibleCount
+ * @property {AggsData} receivedAggsData
  * @property {number} totalCount
- * @property {string[]} allFields
  */
 
 /** @param {GuppyWrapperProps} props */
@@ -373,16 +374,7 @@ function GuppyWrapper(
   }
 
   return props.children({
-    accessibleCount: state.accessibleCount,
-    allFields: state.allFields,
-    aggsData: state.aggsData,
-    filter: state.filter,
-    initialTabsOptions: state.initialTabsOptions,
-    isLoadingAggsData: state.isLoadingAggsData,
-    isLoadingRawData: state.isLoadingRawData,
-    rawData: state.rawData,
-    receivedAggsData: state.receivedAggsData,
-    totalCount: state.totalCount,
+    ...state,
     downloadRawData: handleDownloadRawData,
     downloadRawDataByFields: handleDownloadRawDataByFields,
     downloadRawDataByTypeAndFilter: handleDownloadRawDataByTypeAndFilter,
