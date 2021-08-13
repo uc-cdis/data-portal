@@ -41,8 +41,6 @@ import '../typedef';
  * @property {number} accessibleCount
  * @property {number} totalCount
  * @property {string[]} allFields
- * @property {string[]} aggsDataFields
- * @property {string[]} rawDataFields
  */
 
 /** @param {GuppyWrapperProps} props */
@@ -69,9 +67,6 @@ function GuppyWrapper(
     receivedAggsData: {},
     rawData: [],
     totalCount: 0,
-    // not passed
-    aggsDataFields: getAllFieldsFromFilterConfigs(props.filterConfig.tabs),
-    rawDataFields: [],
   });
   const controller = useRef(new AbortController());
   const isMounted = useRef(false);
@@ -107,7 +102,7 @@ function GuppyWrapper(
     queryGuppyForAggregationData({
       path: props.guppyConfig.path,
       type: props.guppyConfig.dataType,
-      fields: state.aggsDataFields,
+      fields: getAllFieldsFromFilterConfigs(props.filterConfig.tabs),
       gqlFilter: getGQLFilter(filterForGuppy),
       shouldGetFullAggsData:
         state.initialTabsOptions === undefined && !isFilterEmpty,
@@ -243,31 +238,29 @@ function GuppyWrapper(
     getAllFieldsFromGuppy({
       path: props.guppyConfig.path,
       type: props.guppyConfig.dataType,
-    }).then((fields) => {
-      const rawDataFields =
-        props.rawDataFields && props.rawDataFields.length > 0
-          ? props.rawDataFields
-          : fields;
-
+    }).then((allFields) => {
       if (isMounted.current) {
         setState((prevState) => ({
           ...prevState,
-          allFields: fields,
-          rawDataFields,
+          allFields,
         }));
         fetchAggsDataFromGuppy(state.filter);
         fetchRawDataFromGuppy({
-          fields: rawDataFields,
+          fields:
+            props.rawDataFields?.length > 0 ? props.rawDataFields : allFields,
           updateDataWhenReceive: true,
         });
       }
     });
   }, []);
 
+  const rawDataFields =
+    props.rawDataFields?.length > 0 ? props.rawDataFields : state.allFields;
+
   useEffect(() => {
     fetchAggsDataFromGuppy(state.filter);
     fetchRawDataFromGuppy({
-      fields: state.rawDataFields,
+      fields: rawDataFields,
       updateDataWhenReceive: true,
     });
   }, [props.patientIds]);
@@ -282,7 +275,7 @@ function GuppyWrapper(
     controller.current = new AbortController();
     fetchAggsDataFromGuppy(filter);
     fetchRawDataFromGuppy({
-      fields: state.rawDataFields,
+      fields: rawDataFields,
       updateDataWhenReceive: true,
     });
   }
@@ -297,7 +290,7 @@ function GuppyWrapper(
    */
   function handleFetchAndUpdateRawData({ offset = 0, size = 20, sort = [] }) {
     return fetchRawDataFromGuppy({
-      fields: state.rawDataFields,
+      fields: rawDataFields,
       offset,
       sort,
       size,
@@ -326,7 +319,7 @@ function GuppyWrapper(
     return downloadDataFromGuppy({
       path: props.guppyConfig.path,
       type: props.guppyConfig.dataType,
-      fields: state.rawDataFields,
+      fields: rawDataFields,
       sort,
       filter: filterForGuppy,
       format,
@@ -345,7 +338,7 @@ function GuppyWrapper(
     return downloadDataFromGuppy({
       path: props.guppyConfig.path,
       type: props.guppyConfig.dataType,
-      fields: fields || state.rawDataFields,
+      fields: fields || rawDataFields,
       sort,
       filter: state.filter,
     });
