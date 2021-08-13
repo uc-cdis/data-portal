@@ -7,7 +7,7 @@ export interface DiscoveryConfig {
             downloadManifestButtonText?: string
             manifestFieldName: string
             enableDownloadZip: boolean
-            downloadZipButtonText: string
+            downloadZipButtonText?: string
         }
         // explorationIntegration: {
         //     enabled: boolean // not supported
