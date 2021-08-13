@@ -77,16 +77,7 @@ function GuppyWrapper({
     };
   }, []);
 
-  /**
-   * This function
-   * 1. Asks guppy for aggregation data using (processed) filter
-   * 2. Uses the aggregation response to update the following states:
-   *   - receivedAggsData
-   *   - aggsData
-   *   - accessibleCount
-   *   - totalCount
-   * @param {FilterState} filter
-   */
+  /** @param {FilterState} filter */
   function fetchAggsDataFromGuppy(filter) {
     if (isMounted.current)
       setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
@@ -128,22 +119,20 @@ function GuppyWrapper({
       if (isMounted.current)
         setState((prevState) => ({
           ...prevState,
-          isLoadingAggsData: false,
-          receivedAggsData,
-          aggsData,
           accessibleCount,
-          totalCount,
+          aggsData,
           initialTabsOptions:
             fullAggsData === undefined
               ? prevState.initialTabsOptions
               : unnestAggsData(fullAggsData),
+          isLoadingAggsData: false,
+          receivedAggsData,
+          totalCount,
         }));
     });
   }
 
   /**
-   * This function get data with current filter (if any),
-   * and update state.rawData and state.totalCount
    * @param {Object} args
    * @param {string[]} args.fields
    * @param {number} [args.offset]
@@ -185,19 +174,21 @@ function GuppyWrapper({
         gqlFilter: getGQLFilter(filterForGuppy),
         signal: controller.current.signal,
       }).then((res) => {
-        if (!res || !res.data) {
+        if (!res || !res.data)
           throw new Error(
             `Error getting raw ${guppyConfig.dataType} data from Guppy server ${guppyConfig.path}.`
           );
-        }
+
         const data = res.data._aggregation[guppyConfig.dataType];
         const field = numericAggAsText ? 'asTextHistogram' : 'histogram';
         const parsedData = data[guppyConfig.mainField][field];
-        if (isMounted.current) {
-          if (updateDataWhenReceive)
-            setState((prevState) => ({ ...prevState, rawData: parsedData }));
-          setState((prevState) => ({ ...prevState, isLoadingRawData: false }));
-        }
+        if (isMounted.current)
+          setState((prevState) => ({
+            ...prevState,
+            isLoadingRawData: false,
+            rawData: updateDataWhenReceive ? parsedData : prevState.rawData,
+          }));
+
         return {
           data: res.data,
         };
@@ -215,17 +206,19 @@ function GuppyWrapper({
       size,
       signal: controller.current.signal,
     }).then((res) => {
-      if (!res || !res.data) {
+      if (!res || !res.data)
         throw new Error(
           `Error getting raw ${guppyConfig.dataType} data from Guppy server ${guppyConfig.path}.`
         );
-      }
+
       const parsedData = res.data[guppyConfig.dataType];
-      if (isMounted.current) {
-        if (updateDataWhenReceive)
-          setState((prevState) => ({ ...prevState, rawData: parsedData }));
-        setState((prevState) => ({ ...prevState, isLoadingRawData: false }));
-      }
+      if (isMounted.current)
+        setState((prevState) => ({
+          ...prevState,
+          isLoadingRawData: false,
+          rawData: updateDataWhenReceive ? parsedData : prevState.rawData,
+        }));
+
       return {
         data: parsedData,
         totalCount: state.totalCount,
@@ -239,10 +232,7 @@ function GuppyWrapper({
       type: guppyConfig.dataType,
     }).then((allFields) => {
       if (isMounted.current) {
-        setState((prevState) => ({
-          ...prevState,
-          allFields,
-        }));
+        setState((prevState) => ({ ...prevState, allFields }));
         fetchAggsDataFromGuppy(state.filter);
         fetchRawDataFromGuppy({
           fields:
@@ -264,54 +254,18 @@ function GuppyWrapper({
     });
   }, [patientIds]);
 
-  /** @param {FilterState} filter */
-  function handleFilterChange(filter) {
-    const mergedFilter = mergeFilters(filter, adminAppliedPreFilters);
-
-    if (onFilterChange) onFilterChange(mergedFilter);
-
-    if (isMounted.current)
-      setState((prevState) => ({ ...prevState, filter: mergedFilter }));
-
-    controller.current.abort();
-    controller.current = new AbortController();
-    fetchAggsDataFromGuppy(mergedFilter);
-    fetchRawDataFromGuppy({
-      fields: rawDataFields,
-      updateDataWhenReceive: true,
-    });
-  }
-
-  /**
-   * Fetch data from Guppy server.
-   * This function will update state.rawData and state.totalCount
-   * @param {Object} args
-   * @param {number} args.offset
-   * @param {number} args.size
-   * @param {GqlSort} args.sort
-   */
-  function handleFetchAndUpdateRawData({ offset = 0, size = 20, sort = [] }) {
-    return fetchRawDataFromGuppy({
-      fields: rawDataFields,
-      offset,
-      sort,
-      size,
-      updateDataWhenReceive: true,
-    });
-  }
-
   /**
    * Download all data from Guppy server and return raw data
    * This function uses current filter argument
    * @param {Object} args
-   * @param {GqlSort} args.sort
    * @param {string} args.format
+   * @param {GqlSort} args.sort
    */
-  function handleDownloadRawData({ sort = [], format }) {
+  function downloadRawData({ format, sort = [] }) {
     // error handling for misconfigured format types
-    if (format && !(format in FILE_FORMATS)) {
+    if (format && !(format in FILE_FORMATS))
       throw new Error(`Invalid value ${format} found for arg format!`);
-    }
+
     const filterForGuppy =
       patientIds?.length > 0
         ? mergeFilters(state.filter, {
@@ -336,7 +290,7 @@ function GuppyWrapper({
    * @param {string[]} args.fields
    * @param {GqlSort} args.sort
    */
-  function handleDownloadRawDataByFields({ fields, sort = [] }) {
+  function downloadRawDataByFields({ fields, sort = [] }) {
     return downloadDataFromGuppy({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
@@ -351,7 +305,7 @@ function GuppyWrapper({
    * @param {string} type
    * @param {FilterState} filter
    */
-  function handleGetTotalCountsByTypeAndFilter(type, filter) {
+  function getTotalCountsByTypeAndFilter(type, filter) {
     return queryGuppyForTotalCounts({
       path: guppyConfig.path,
       type,
@@ -365,7 +319,7 @@ function GuppyWrapper({
    * @param {FilterState} filter
    * @param {string[]} fields
    */
-  function handleDownloadRawDataByTypeAndFilter(type, filter, fields) {
+  function downloadRawDataByTypeAndFilter(type, filter, fields) {
     return downloadDataFromGuppy({
       path: guppyConfig.path,
       type,
@@ -374,13 +328,49 @@ function GuppyWrapper({
     });
   }
 
+  /**
+   * Fetch data from Guppy server.
+   * This function will update state.rawData and state.totalCount
+   * @param {Object} args
+   * @param {number} args.offset
+   * @param {number} args.size
+   * @param {GqlSort} args.sort
+   */
+  function fetchAndUpdateRawData({ offset = 0, size = 20, sort = [] }) {
+    return fetchRawDataFromGuppy({
+      fields: rawDataFields,
+      offset,
+      sort,
+      size,
+      updateDataWhenReceive: true,
+    });
+  }
+
+  /** @param {FilterState} filter */
+  function handleFilterChange(filter) {
+    const mergedFilter = mergeFilters(filter, adminAppliedPreFilters);
+
+    if (onFilterChange) onFilterChange(mergedFilter);
+
+    if (isMounted.current)
+      setState((prevState) => ({ ...prevState, filter: mergedFilter }));
+
+    controller.current.abort();
+    controller.current = new AbortController();
+    fetchAggsDataFromGuppy(mergedFilter);
+    fetchRawDataFromGuppy({
+      fields: rawDataFields,
+      updateDataWhenReceive: true,
+    });
+  }
+
   return children({
     ...state,
-    downloadRawData: handleDownloadRawData,
-    downloadRawDataByFields: handleDownloadRawDataByFields,
-    downloadRawDataByTypeAndFilter: handleDownloadRawDataByTypeAndFilter,
-    fetchAndUpdateRawData: handleFetchAndUpdateRawData,
-    getTotalCountsByTypeAndFilter: handleGetTotalCountsByTypeAndFilter,
+    downloadRawData,
+    downloadRawDataByFields,
+    downloadRawDataByTypeAndFilter,
+    fetchAndUpdateRawData,
+    getTotalCountsByTypeAndFilter,
     onFilterChange: handleFilterChange,
   });
 }
