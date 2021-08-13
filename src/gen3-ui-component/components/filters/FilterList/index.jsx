@@ -6,55 +6,14 @@ import './FilterList.css';
 class FilterList extends React.Component {
   constructor(props) {
     super(props);
-    const initialFilterStatus = props.sections.map(() => ({}));
     this.state = {
       /**
        * Current selected status for filters,
        * filterStatus[sectionIndex] = { [field]: true/false/[upperBound,lowerBound]}
        */
-      filterStatus: initialFilterStatus,
+      filterStatus: props.sections.map(() => ({})),
     };
     this.sectionRefs = props.sections.map(() => React.createRef());
-  }
-
-  handleSectionToggle(sectionIndex, newExpanded) {
-    this.props.onToggle(sectionIndex, newExpanded);
-  }
-
-  handleSectionClear(sectionIndex) {
-    this.setState((prevState) => {
-      const newFilterStatus = prevState.filterStatus.slice(0);
-      newFilterStatus[sectionIndex] = {};
-      return {
-        filterStatus: newFilterStatus,
-      };
-    });
-    this.props.onClear(sectionIndex);
-  }
-
-  handleSelectSingleFilter(sectionIndex, singleFilterLabel) {
-    this.setState((prevState) => {
-      const newFilterStatus = prevState.filterStatus.slice(0);
-      const oldSelected = newFilterStatus[sectionIndex][singleFilterLabel];
-      const newSelected =
-        typeof oldSelected === 'undefined' ? true : !oldSelected;
-      newFilterStatus[sectionIndex][singleFilterLabel] = newSelected;
-      return {
-        filterStatus: newFilterStatus,
-      };
-    });
-    this.props.onSelect(sectionIndex, singleFilterLabel);
-  }
-
-  handleSelectCombineOptionToggle(sectionIndex, fieldName, value) {
-    this.setState((prevState) => {
-      const newFilterStatus = prevState.filterStatus.slice(0);
-      newFilterStatus[sectionIndex][fieldName] = value;
-      return {
-        filterStatus: newFilterStatus,
-      };
-    });
-    this.props.onCombineOptionToggle(sectionIndex, fieldName, value);
   }
 
   handleDragRangeFilter(
@@ -66,7 +25,7 @@ class FilterList extends React.Component {
     rangeStep
   ) {
     this.setState((prevState) => {
-      const newFilterStatus = prevState.filterStatus.slice(0);
+      const newFilterStatus = [...prevState.filterStatus];
       newFilterStatus[sectionIndex] = [lowerBound, upperBound];
       return {
         filterStatus: newFilterStatus,
@@ -82,17 +41,54 @@ class FilterList extends React.Component {
     );
   }
 
-  toggleFilters(openAll) {
+  handleClearSection(sectionIndex) {
+    this.setState((prevState) => {
+      const newFilterStatus = [...prevState.filterStatus];
+      newFilterStatus[sectionIndex] = {};
+      return {
+        filterStatus: newFilterStatus,
+      };
+    });
+    this.props.onClearSection(sectionIndex);
+  }
+
+  handleSelectSingleFilter(sectionIndex, label) {
+    this.setState((prevState) => {
+      const newFilterStatus = [...prevState.filterStatus];
+      const isSelected = newFilterStatus[sectionIndex][label];
+      newFilterStatus[sectionIndex][label] =
+        isSelected === undefined || !isSelected;
+      return {
+        filterStatus: newFilterStatus,
+      };
+    });
+    this.props.onSelect(sectionIndex, label);
+  }
+
+  handleToggleCombineMode(sectionIndex, fieldName, value) {
+    this.setState((prevState) => {
+      const newFilterStatus = [...prevState.filterStatus];
+      newFilterStatus[sectionIndex][fieldName] = value;
+      return {
+        filterStatus: newFilterStatus,
+      };
+    });
+    this.props.onToggleCombineMode(sectionIndex, fieldName, value);
+  }
+
+  handleToggleSection(sectionIndex, isExpanded) {
+    this.props.onToggleSection(sectionIndex, isExpanded);
+  }
+
+  toggleSections(isExpanded) {
     this.sectionRefs.forEach((ref) => {
-      ref.current.toggleSection(openAll);
+      ref.current.toggleIsExpanded(isExpanded);
     });
   }
 
   render() {
     // Takes in parent component's filterStatus or self state's filterStatus
-    const filterStatus = this.props.filterStatus
-      ? this.props.filterStatus
-      : this.state.filterStatus;
+    const filterStatus = this.props.filterStatus ?? this.state.filterStatus;
 
     return (
       <div className='g3-filter-list'>
@@ -100,35 +96,29 @@ class FilterList extends React.Component {
           <FilterSection
             key={index}
             ref={this.sectionRefs[index]}
-            title={section.title}
-            tooltip={section.tooltip}
-            options={section.options}
-            isSearchFilter={section.isSearchFilter}
-            isArrayField={section.isArrayField}
-            onSearchFilterLoadOptions={section.onSearchFilterLoadOptions}
+            disabledTooltipMessage={this.props.disabledTooltipMessage}
             expanded={this.props.expandedStatus[index]}
-            onToggle={(newExpanded) =>
-              this.handleSectionToggle(index, newExpanded)
-            }
-            onClear={() => this.handleSectionClear(index)}
             filterStatus={filterStatus[index]}
-            onSelect={(singleFilterLabel) =>
-              this.handleSelectSingleFilter(index, singleFilterLabel)
-            }
-            onCombineOptionToggle={(combineModeFieldName, combineModeValue) =>
-              this.handleSelectCombineOptionToggle(
-                index,
-                combineModeFieldName,
-                combineModeValue
-              )
-            }
+            hideZero={this.props.hideZero}
+            isArrayField={section.isArrayField}
+            isSearchFilter={section.isSearchFilter}
+            lockedTooltipMessage={this.props.lockedTooltipMessage}
             onAfterDrag={(...args) =>
               this.handleDragRangeFilter(index, ...args)
             }
-            hideZero={this.props.hideZero}
+            onClear={() => this.handleClearSection(index)}
+            onSearchFilterLoadOptions={section.onSearchFilterLoadOptions}
+            onSelect={(label) => this.handleSelectSingleFilter(index, label)}
+            onToggle={(isExpanded) =>
+              this.handleToggleSection(index, isExpanded)
+            }
+            onToggleCombineMode={(...args) =>
+              this.handleToggleCombineMode(index, ...args)
+            }
+            options={section.options}
             tierAccessLimit={this.props.tierAccessLimit}
-            lockedTooltipMessage={this.props.lockedTooltipMessage}
-            disabledTooltipMessage={this.props.disabledTooltipMessage}
+            title={section.title}
+            tooltip={section.tooltip}
           />
         ))}
       </div>
@@ -137,6 +127,18 @@ class FilterList extends React.Component {
 }
 
 FilterList.propTypes = {
+  disabledTooltipMessage: PropTypes.string,
+  expandedStatus: PropTypes.arrayOf(PropTypes.bool),
+  filterStatus: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.object, PropTypes.arrayOf(PropTypes.number)])
+  ),
+  hideZero: PropTypes.bool,
+  lockedTooltipMessage: PropTypes.string,
+  onAfterDrag: PropTypes.func,
+  onToggleSection: PropTypes.func,
+  onClearSection: PropTypes.func,
+  onSelect: PropTypes.func,
+  onToggleCombineMode: PropTypes.func,
   sections: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
@@ -159,33 +161,21 @@ FilterList.propTypes = {
       ),
     })
   ).isRequired,
-  expandedStatus: PropTypes.arrayOf(PropTypes.bool),
-  onToggle: PropTypes.func,
-  onClear: PropTypes.func,
-  filterStatus: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.object, PropTypes.arrayOf(PropTypes.number)])
-  ),
-  onSelect: PropTypes.func,
-  onCombineOptionToggle: PropTypes.func,
-  onAfterDrag: PropTypes.func,
-  hideZero: PropTypes.bool,
   tierAccessLimit: PropTypes.number,
-  lockedTooltipMessage: PropTypes.string,
-  disabledTooltipMessage: PropTypes.string,
 };
 
 FilterList.defaultProps = {
-  expandedStatus: [],
-  onToggle: () => {},
-  onClear: () => {},
-  filterStatus: undefined,
-  onSelect: () => {},
-  onCombineOptionToggle: () => {},
-  onAfterDrag: () => {},
-  hideZero: true,
-  tierAccessLimit: undefined,
-  lockedTooltipMessage: '',
   disabledTooltipMessage: '',
+  expandedStatus: [],
+  filterStatus: undefined,
+  hideZero: true,
+  lockedTooltipMessage: '',
+  onAfterDrag: () => {},
+  onClearSection: () => {},
+  onSelect: () => {},
+  onToggleCombineMode: () => {},
+  onToggleSection: () => {},
+  tierAccessLimit: undefined,
 };
 
 export default FilterList;

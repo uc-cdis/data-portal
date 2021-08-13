@@ -16,26 +16,26 @@ import './typedef';
 
 /**
  * @typedef {Object} FilterGroupProps
- * @property {JSX.Element[]} tabs
+ * @property {string} className
  * @property {FilterConfig} filterConfig
+ * @property {boolean} hideZero
+ * @property {FilterState} initialAppliedFilters
  * @property {(filter: FilterState) => void} onFilterChange
  * @property {(patientIds: string[]) => void} onPatientIdsChange
- * @property {boolean} hideZero
- * @property {string} className
- * @property {FilterState} initialAppliedFilters
  * @property {string[]} patientIds
+ * @property {JSX.Element[]} tabs
  */
 
 /** @param {FilterGroupProps} props */
 function FilterGroup({
-  tabs,
+  className = '',
   filterConfig,
+  hideZero = true,
+  initialAppliedFilters = {},
   onFilterChange = () => {},
   onPatientIdsChange,
-  hideZero = true,
-  className = '',
-  initialAppliedFilters = {},
   patientIds,
+  tabs,
 }) {
   const currentFilterListRef = useRef();
 
@@ -82,16 +82,16 @@ function FilterGroup({
 
   /**
    * @param {number} sectionIndex
-   * @param {boolean[][]} newSectionExpandedStatus
+   * @param {boolean[][]} isSectionExpanded
    */
-  function handleToggle(sectionIndex, newSectionExpandedStatus) {
+  function handleToggleSection(sectionIndex, isExpanded) {
     const newExpandedStatus = cloneDeep(expandedStatus);
-    newExpandedStatus[tabIndex][sectionIndex] = newSectionExpandedStatus;
+    newExpandedStatus[tabIndex][sectionIndex] = isExpanded;
     setExpandedStatus(newExpandedStatus);
   }
 
   /** @param {number} sectionIndex */
-  function handleSectionClear(sectionIndex) {
+  function handleClearSection(sectionIndex) {
     const updated = clearFilterSection({
       filterStatus,
       filterResults,
@@ -109,7 +109,7 @@ function FilterGroup({
    * @param {string} combineModeFieldName
    * @param {boolean} combineModeValue
    */
-  function handleCombineOptionToggle(
+  function handleToggleCombineMode(
     sectionIndex,
     combineModeFieldName,
     combineModeValue
@@ -187,9 +187,9 @@ function FilterGroup({
     onFilterChange(updated.filterResults);
   }
 
-  function toggleFilters() {
+  function toggleSections() {
     const newExpandedStatusControl = !expandedStatusControl;
-    currentFilterListRef.current.toggleFilters(newExpandedStatusControl);
+    currentFilterListRef.current.toggleSections(newExpandedStatusControl);
     setExpandedStatusControl(newExpandedStatusControl);
     setExpandedStatus(getExpandedStatus(filterTabs, expandedStatusControl));
   }
@@ -235,11 +235,11 @@ function FilterGroup({
       <div className='g3-filter-group__collapse'>
         <span
           className='g3-link g3-filter-group__collapse-link'
-          onClick={toggleFilters}
+          onClick={toggleSections}
           onKeyPress={(e) => {
             if (e.charCode === 13 || e.charCode === 32) {
               e.preventDefault();
-              toggleFilters();
+              toggleSections();
             }
           }}
           role='button'
@@ -251,14 +251,14 @@ function FilterGroup({
       </div>
       <div className='g3-filter-group__filter-area'>
         {React.cloneElement(tabs[tabIndex], {
-          onToggle: handleToggle,
-          onClear: handleSectionClear,
           expandedStatus: expandedStatus[tabIndex],
           filterStatus: filterStatus[tabIndex],
-          onSelect: handleSelect,
-          onCombineOptionToggle: handleCombineOptionToggle,
-          onAfterDrag: handleDrag,
           hideZero,
+          onAfterDrag: handleDrag,
+          onClearSection: handleClearSection,
+          onSelect: handleSelect,
+          onToggleCombineMode: handleToggleCombineMode,
+          onToggleSection: handleToggleSection,
           ref: currentFilterListRef,
         })}
       </div>
@@ -267,7 +267,7 @@ function FilterGroup({
 }
 
 FilterGroup.propTypes = {
-  tabs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  className: PropTypes.string,
   filterConfig: PropTypes.shape({
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
@@ -277,12 +277,12 @@ FilterGroup.propTypes = {
       })
     ),
   }).isRequired,
+  hideZero: PropTypes.bool,
+  initialAppliedFilters: PropTypes.object,
   onFilterChange: PropTypes.func,
   onPatientIdsChange: PropTypes.func,
-  hideZero: PropTypes.bool,
-  className: PropTypes.string,
-  initialAppliedFilters: PropTypes.object,
   patientIds: PropTypes.arrayOf(PropTypes.string),
+  tabs: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default FilterGroup;
