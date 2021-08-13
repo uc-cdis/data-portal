@@ -208,6 +208,9 @@ class IllinoisMapChart extends React.Component {
     function msToDays(ms) {
       return Math.floor(ms / (1000 * 60 * 60 * 24));
     }
+    if (!this.state.dataDateRange[id]) {
+      return;
+    }
     const curentDateRange = this.state.dataDateRange[id];
     const startDate = new Date(curentDateRange.min);
     const endDate = new Date(curentDateRange.max);
@@ -420,9 +423,14 @@ class IllinoisMapChart extends React.Component {
           (data, location) => data[location.properties.FIPS]);
 
         this.setState({ mobility_data: { data: geoJson, fetchStatus: 'done' } });
+      })
+      .then(() => {
         this.setSliderDates(this.state.activeLayer.split('_')[0]);
       })
-      .catch(() => { console.warn('Data not retrieved. Unable to display mobility overlays'); }); // eslint-disable-line no-console
+      .catch((error) => {
+        console.warn('Data not retrieved. Unable to display mobility overlays', error); // eslint-disable-line no-console
+        this.setState({ mobility_data: { fetchStatus: 'error' } });
+      });
   }
 
   addDataToGeoJsonBase = (data, assignValues) => {
@@ -594,7 +602,8 @@ class IllinoisMapChart extends React.Component {
           {this.renderHoverPopup()}
           {/* Line below ensures that if a user selects the mobility layers before it is
            finished retrieving then the spinner indicates that the data is being downloaded */}
-          {this.state.activeLayer.includes('mobility_data') && this.state.mobility_data.fetchStatus !== 'done' && <Spinner text={'Downloading mobility data'} />}
+          {this.state.activeLayer.includes('mobility_data') && this.state.mobility_data.fetchStatus === 'fetching' && <Spinner text={'Downloading mobility data'} />}
+          {this.state.activeLayer.includes('mobility_data') && this.state.mobility_data.fetchStatus === 'error' && <Spinner text={'Something went wrong. Please refresh the page and try again.'} />}
           {this.state.time_data.fetchStatus === 'done' && <TimeCaseLayer visibility={this.state.activeLayer === 'C_time_data' ? 'visible' : 'none'} data={this.state.time_data.data} date={this.state.sliderDate} />}
           {this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedCaseLayer visibility={this.state.activeLayer === 'V_time_data' ? 'visible' : 'none'} data={this.state.vaccine_data.data} date={this.state.sliderDate} />}
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayer visibility={this.state.activeLayer === 'rnr_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
