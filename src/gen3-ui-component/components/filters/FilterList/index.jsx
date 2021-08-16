@@ -3,29 +3,13 @@ import PropTypes from 'prop-types';
 import FilterSection from '../FilterSection';
 import './FilterList.css';
 
-class FilterList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.sectionRefs = props.sections.map(() => React.createRef());
-  }
-
-  handleToggleSection(sectionIndex, isExpanded) {
-    this.props.onToggleSection(sectionIndex, isExpanded);
-  }
-
-  toggleSections(isExpanded) {
-    this.sectionRefs.forEach((ref) => {
-      ref.current.toggleIsExpanded(isExpanded);
-    });
-  }
-
+class FilterList extends React.PureComponent {
   render() {
     return (
       <div className='g3-filter-list'>
         {this.props.sections.map((section, index) => (
           <FilterSection
             key={index}
-            ref={this.sectionRefs[index]}
             disabledTooltipMessage={this.props.disabledTooltipMessage}
             expanded={this.props.expandedStatus[index]}
             filterStatus={this.props.filterStatus[index]}
@@ -38,7 +22,7 @@ class FilterList extends React.Component {
             onSearchFilterLoadOptions={section.onSearchFilterLoadOptions}
             onSelect={(label) => this.props.onSelect(index, label)}
             onToggle={(isExpanded) =>
-              this.handleToggleSection(index, isExpanded)
+              this.props.onToggleSection(index, isExpanded)
             }
             onToggleCombineMode={(...args) =>
               this.props.onToggleCombineMode(index, ...args)

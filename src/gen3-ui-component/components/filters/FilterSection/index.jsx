@@ -61,6 +61,8 @@ class FilterSection extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.options !== this.props.options) this.updateVisibleOptions();
+    if (this.state.isExpanded !== this.props.expanded)
+      this.toggleIsExpanded(this.props.expanded);
   }
 
   clearSearchInput = () => {

@@ -37,8 +37,6 @@ function FilterGroup({
   patientIds,
   tabs,
 }) {
-  const currentFilterListRef = useRef();
-
   const filterTabs = filterConfig.tabs.map(
     ({ title, fields, searchFields }) => ({
       title,
@@ -189,9 +187,8 @@ function FilterGroup({
 
   function toggleSections() {
     const newExpandedStatusControl = !expandedStatusControl;
-    currentFilterListRef.current.toggleSections(newExpandedStatusControl);
     setExpandedStatusControl(newExpandedStatusControl);
-    setExpandedStatus(getExpandedStatus(filterTabs, expandedStatusControl));
+    setExpandedStatus(getExpandedStatus(filterTabs, newExpandedStatusControl));
   }
 
   return (
@@ -259,7 +256,6 @@ function FilterGroup({
           onSelect: handleSelect,
           onToggleCombineMode: handleToggleCombineMode,
           onToggleSection: handleToggleSection,
-          ref: currentFilterListRef,
         })}
       </div>
     </div>
