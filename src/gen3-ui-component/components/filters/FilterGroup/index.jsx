@@ -12,7 +12,7 @@ import {
   updateSelectedValue,
 } from './utils';
 import './FilterGroup.css';
-import './typedef';
+import '../typedef';
 
 /**
  * @typedef {Object} FilterGroupProps
