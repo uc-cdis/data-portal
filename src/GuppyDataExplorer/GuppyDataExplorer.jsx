@@ -199,42 +199,70 @@ class GuppyDataExplorer extends React.Component {
             rawDataFields={this.props.tableConfig.fields}
             patientIds={this.state.patientIds}
           >
-            <ExplorerTopMessageBanner
-              className='guppy-data-explorer__top-banner'
-              getAccessButtonLink={this.props.getAccessButtonLink}
-              hideGetAccessButton={this.props.hideGetAccessButton}
-            />
-            <ExplorerCohort
-              className='guppy-data-explorer__cohort'
-              onOpenCohort={this.updateInitialAppliedFilters}
-              onDeleteCohort={this.updateInitialAppliedFilters}
-            />
-            <ExplorerFilter
-              className='guppy-data-explorer__filter'
-              filterConfig={this.props.filterConfig}
-              guppyConfig={this.props.guppyConfig}
-              tierAccessLimit={this.props.tierAccessLimit}
-              adminAppliedPreFilters={this.props.adminAppliedPreFilters}
-              initialAppliedFilters={this.state.initialAppliedFilters}
-              patientIds={this.state.patientIds}
-              hasAppliedFilters={this._hasAppliedFilters}
-              onFilterClear={this.clearFilters}
-              onPatientIdsChange={this.handlePatientIdsChange}
-            />
-            <ExplorerVisualization
-              className='guppy-data-explorer__visualization'
-              chartConfig={this.props.chartConfig}
-              tableConfig={this.props.tableConfig}
-              survivalAnalysisConfig={this.props.survivalAnalysisConfig}
-              buttonConfig={this.props.buttonConfig}
-              guppyConfig={this.props.guppyConfig}
-              patientIdsConfig={this.props.patientIdsConfig}
-              nodeCountTitle={
-                this.props.guppyConfig.nodeCountTitle ||
-                capitalizeFirstLetter(this.props.guppyConfig.dataType)
-              }
-              tierAccessLimit={this.props.tierAccessLimit}
-            />
+            {(data) => (
+              <>
+                <ExplorerTopMessageBanner
+                  className='guppy-data-explorer__top-banner'
+                  getAccessButtonLink={this.props.getAccessButtonLink}
+                  hideGetAccessButton={this.props.hideGetAccessButton}
+                  accessibleCount={data.accessibleCount}
+                  totalCount={data.totalCount}
+                />
+                <ExplorerCohort
+                  className='guppy-data-explorer__cohort'
+                  onOpenCohort={this.updateInitialAppliedFilters}
+                  onDeleteCohort={this.updateInitialAppliedFilters}
+                  filter={data.filter}
+                />
+                <ExplorerFilter
+                  adminAppliedPreFilters={this.props.adminAppliedPreFilters}
+                  className='guppy-data-explorer__filter'
+                  filterConfig={this.props.filterConfig}
+                  guppyConfig={this.props.guppyConfig}
+                  hasAppliedFilters={this._hasAppliedFilters}
+                  initialAppliedFilters={this.state.initialAppliedFilters}
+                  onFilterClear={this.clearFilters}
+                  onPatientIdsChange={this.handlePatientIdsChange}
+                  patientIds={this.state.patientIds}
+                  tierAccessLimit={this.props.tierAccessLimit}
+                  filter={data.filter}
+                  initialTabsOptions={data.initialTabsOptions}
+                  onFilterChange={data.onFilterChange}
+                  receivedAggsData={data.receivedAggsData}
+                />
+                <ExplorerVisualization
+                  className='guppy-data-explorer__visualization'
+                  chartConfig={this.props.chartConfig}
+                  tableConfig={this.props.tableConfig}
+                  survivalAnalysisConfig={this.props.survivalAnalysisConfig}
+                  buttonConfig={this.props.buttonConfig}
+                  guppyConfig={this.props.guppyConfig}
+                  patientIdsConfig={this.props.patientIdsConfig}
+                  nodeCountTitle={
+                    this.props.guppyConfig.nodeCountTitle ||
+                    capitalizeFirstLetter(this.props.guppyConfig.dataType)
+                  }
+                  tierAccessLimit={this.props.tierAccessLimit}
+                  accessibleCount={data.accessibleCount}
+                  aggsData={data.aggsData}
+                  allFields={data.allFields}
+                  filter={data.filter}
+                  isLoadingAggsData={data.isLoadingAggsData}
+                  isLoadingRawData={data.isLoadingRawData}
+                  rawData={data.rawData}
+                  totalCount={data.totalCount}
+                  downloadRawData={data.downloadRawData}
+                  downloadRawDataByFields={data.downloadRawDataByFields}
+                  downloadRawDataByTypeAndFilter={
+                    data.downloadRawDataByTypeAndFilter
+                  }
+                  fetchAndUpdateRawData={data.fetchAndUpdateRawData}
+                  getTotalCountsByTypeAndFilter={
+                    data.getTotalCountsByTypeAndFilter
+                  }
+                />
+              </>
+            )}
           </GuppyWrapper>
         </div>
       </ExplorerErrorBoundary>

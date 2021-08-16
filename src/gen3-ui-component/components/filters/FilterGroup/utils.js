@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash.clonedeep';
-import './typedef';
+import '../typedef';
 
 /**
  * @param {FilterTabsOption[]} filterTabs

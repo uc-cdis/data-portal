@@ -127,3 +127,23 @@
 /**
  * @typedef {{ [x: string]: { histogram: AggsCount[] } | SimpleAggsData }} AggsData
  */
+
+/**
+ * @typedef {Object} GuppyData
+ * @property {number} accessibleCount
+ * @property {AggsData} aggsData
+ * @property {string[]} allFields
+ * @property {FilterState} filter
+ * @property {SimpleAggsData} initialTabsOptions
+ * @property {boolean} isLoadingAggsData
+ * @property {boolean} isLoadingRawData
+ * @property {Array} rawData
+ * @property {AggsData} receivedAggsData
+ * @property {number} totalCount
+ * @property {(args: { format: string; sort: GqlSort }) => void} downloadRawData
+ * @property {(args: { fields: string[]; sort: GqlSort }) => void} downloadRawDataByFields
+ * @property {(type: string, filter: FilterState, fields: string[]) => void} downloadRawDataByTypeAndFilter
+ * @property {(type: string, filter: FilterState) => void} getTotalCountsByTypeAndFilter
+ * @property {(args: { offset: number; size: number; sort: GqlSort }) => void} fetchAndUpdateRawData
+ * @property {(filter: FilterState) => void} onFilterChange
+ */

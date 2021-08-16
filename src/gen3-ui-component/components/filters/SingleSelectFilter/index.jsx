@@ -1,134 +1,133 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
 import './SingleSelectFilter.css';
 
-class SingleSelectFilter extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selected: typeof props.selected === 'undefined' ? false : props.selected,
-    };
+/**
+ * @typedef {Object} SingleSelectFilterProps
+ * @property {boolean} accessible
+ * @property {number} count
+ * @property {boolean} disabled
+ * @property {string} disabledTooltipMessage
+ * @property {number} hideValue
+ * @property {boolean} hideZero
+ * @property {string} label
+ * @property {string} lockedTooltipMessage
+ * @property {(label: string) => void} onSelect
+ * @property {boolean} selected
+ * @property {number} tierAccessLimit
+ */
+
+function SingleSelectFilter({
+  accessible = true,
+  count = 0,
+  disabled = false,
+  disabledTooltipMessage = '',
+  hideValue = -1,
+  hideZero = true,
+  label,
+  lockedTooltipMessage = '',
+  onSelect,
+  selected,
+  tierAccessLimit,
+}) {
+  if (count === 0 && hideZero) {
+    return null;
   }
 
-  handleCheck() {
-    this.setState((prevState) => ({ selected: !prevState.selected }));
-    this.props.onSelect(this.props.label);
+  const [localSelected, setLocalSelected] = useState(selected ?? false);
+  function handleCheck() {
+    setLocalSelected(!localSelected);
+    onSelect(label);
   }
 
-  render() {
-    if (this.props.count === 0 && this.props.hideZero) {
-      return null;
-    }
-    // Takes in parent component's selected or self state's selected
-    const selected =
-      typeof this.props.selected === 'undefined'
-        ? this.state.selected
-        : this.props.selected;
-    let inputDisabled = this.props.disabled;
-    let lockIconComponent = null;
-    let countIconComponent = null;
+  const isChecked = selected ?? localSelected;
+  let inputDisabled = disabled;
 
-    const showLockedTooltip =
-      !this.props.accessible && this.props.lockedTooltipMessage !== '';
+  /** @type {JSX.Element} */
+  let countIconComponent = null;
+  if (count === hideValue) {
+    // we don't disable selected filters
+    inputDisabled = !isChecked;
+    countIconComponent = tierAccessLimit ? (
+      <span className='g3-badge g3-single-select-filter__count'>
+        {Number(tierAccessLimit).toLocaleString()}
+        <i className='g3-icon--under g3-icon g3-icon--sm g3-icon-color__base-blue' />
+      </span>
+    ) : (
+      <span className='g3-single-select-filter__icon-background'>
+        <i className='g3-icon--under g3-icon g3-icon--sm g3-icon-color__base-blue' />
+      </span>
+    );
 
-    if (!this.props.accessible) {
-      lockIconComponent = (
-        <i className='g3-icon g3-icon--md g3-icon--lock g3-icon-color__gray' />
-      );
-      if (showLockedTooltip) {
-        lockIconComponent = (
-          <Tooltip
-            placement='right'
-            overlay={<span>{this.props.lockedTooltipMessage}</span>}
-            arrowContent={<div className='rc-tooltip-arrow-inner' />}
-            trigger={['hover', 'focus']}
-          >
-            {lockIconComponent}
-          </Tooltip>
-        );
-      }
-    }
-
-    if (this.props.count === this.props.hideValue) {
-      // we don't disable selected filters
-      inputDisabled = !selected;
-      countIconComponent = this.props.tierAccessLimit ? (
-        <span className='g3-badge g3-single-select-filter__count'>
-          {Number(this.props.tierAccessLimit).toLocaleString()}
-          <i className='g3-icon--under g3-icon g3-icon--sm g3-icon-color__base-blue' />
-        </span>
-      ) : (
-        <span className='g3-single-select-filter__icon-background'>
-          <i className='g3-icon--under g3-icon g3-icon--sm g3-icon-color__base-blue' />
-        </span>
-      );
-      const showDisabledTooltip =
-        inputDisabled && this.props.disabledTooltipMessage !== '';
-      if (showDisabledTooltip) {
-        countIconComponent = (
-          <Tooltip
-            placement='right'
-            overlay={<span>{this.props.disabledTooltipMessage}</span>}
-            arrowContent={<div className='rc-tooltip-arrow-inner' />}
-            trigger={['hover', 'focus']}
-          >
-            {countIconComponent}
-          </Tooltip>
-        );
-      }
-    } else if (this.props.accessible) {
+    if (inputDisabled && disabledTooltipMessage !== '') {
       countIconComponent = (
-        <span className='g3-badge g3-single-select-filter__count'>
-          {Number(this.props.count).toLocaleString()}
-        </span>
+        <Tooltip
+          placement='right'
+          overlay={<span>{disabledTooltipMessage}</span>}
+          arrowContent={<div className='rc-tooltip-arrow-inner' />}
+          trigger={['hover', 'focus']}
+        >
+          {countIconComponent}
+        </Tooltip>
       );
     }
-
-    return (
-      <div className='g3-single-select-filter'>
-        <input
-          className='g3-single-select-filter__checkbox'
-          type='checkbox'
-          onChange={() => this.handleCheck()}
-          checked={selected}
-          disabled={inputDisabled}
-        />
-        <span className='g3-single-select-filter__label'>
-          {this.props.label}
-        </span>
-
-        {this.props.count !== null && countIconComponent}
-        {lockIconComponent}
-      </div>
+  } else if (accessible) {
+    countIconComponent = (
+      <span className='g3-badge g3-single-select-filter__count'>
+        {Number(count).toLocaleString()}
+      </span>
     );
   }
+
+  /** @type {JSX.Element} */
+  let lockIconComponent = null;
+  if (!accessible) {
+    lockIconComponent = (
+      <i className='g3-icon g3-icon--md g3-icon--lock g3-icon-color__gray' />
+    );
+    if (lockedTooltipMessage !== '') {
+      lockIconComponent = (
+        <Tooltip
+          placement='right'
+          overlay={<span>{lockedTooltipMessage}</span>}
+          arrowContent={<div className='rc-tooltip-arrow-inner' />}
+          trigger={['hover', 'focus']}
+        >
+          {lockIconComponent}
+        </Tooltip>
+      );
+    }
+  }
+
+  return (
+    <div className='g3-single-select-filter'>
+      <input
+        className='g3-single-select-filter__checkbox'
+        type='checkbox'
+        onChange={handleCheck}
+        checked={isChecked}
+        disabled={inputDisabled}
+      />
+      <span className='g3-single-select-filter__label'>{label}</span>
+      {count !== null && countIconComponent}
+      {lockIconComponent}
+    </div>
+  );
 }
 
 SingleSelectFilter.propTypes = {
+  accessible: PropTypes.bool,
+  count: PropTypes.number,
+  disabled: PropTypes.bool,
+  disabledTooltipMessage: PropTypes.string,
+  hideValue: PropTypes.number,
+  hideZero: PropTypes.bool,
   label: PropTypes.string.isRequired,
+  lockedTooltipMessage: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
   selected: PropTypes.bool,
-  count: PropTypes.number,
-  hideZero: PropTypes.bool,
-  hideValue: PropTypes.number,
   tierAccessLimit: PropTypes.number,
-  accessible: PropTypes.bool,
-  disabled: PropTypes.bool,
-  lockedTooltipMessage: PropTypes.string,
-  disabledTooltipMessage: PropTypes.string,
-};
-
-SingleSelectFilter.defaultProps = {
-  selected: undefined,
-  count: 0,
-  hideZero: true,
-  hideValue: -1,
-  tierAccessLimit: undefined,
-  accessible: true,
-  disabled: false,
-  lockedTooltipMessage: '',
-  disabledTooltipMessage: '',
 };
 
 export default SingleSelectFilter;
