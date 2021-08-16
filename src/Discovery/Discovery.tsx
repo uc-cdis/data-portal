@@ -506,6 +506,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 <DiscoveryMDSSearch
                   searchTerm={searchTerm}
                   handleSearchChange={handleSearchChange}
+                  inputSubtitle={config.features.search.searchBar.inputSubtitle}
                 />
               </div>
             )}

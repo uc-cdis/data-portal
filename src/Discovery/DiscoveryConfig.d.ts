@@ -24,6 +24,7 @@ export interface DiscoveryConfig {
         search: {
             searchBar: {
                 enabled: boolean,
+                inputSubtitle?: string,
                 placeholder?: string
                 // searchTags: boolean, // not supported, consider removing
                 searchableTextFields?: string[] // list of properties in data to make searchable.
