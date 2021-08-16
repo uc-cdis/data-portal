@@ -18,3 +18,32 @@
  * @property {string[]} options
  * @property {string[]} tabs
  */
+
+/**
+ * @typedef {Object} SingleSelectFilterOption
+ * @property {'singleSelect'} filterType
+ * @property {string} text
+ * @property {number} count
+ * @property {boolean} accessible
+ * @property {boolean} disabled
+ */
+
+/**
+ * @typedef {Object} RangeFilterOption
+ * @property {'range'} filterType
+ * @property {string} text
+ * @property {number} count
+ * @property {number} max
+ * @property {number} min
+ * @property {number} rangeStep
+ */
+
+/**
+ * @typedef {Object} FilterSectionConfig
+ * @property {boolean} isArrayField
+ * @property {boolean} isSearchFilter
+ * @property {(searchString: string, offset: number) => void} onSearchFilterLoadOptions
+ * @property {(SingleSelectFilterOption[] | RangeFilterOption[])} options
+ * @property {string} title
+ * @property {string} tootip
+ */
