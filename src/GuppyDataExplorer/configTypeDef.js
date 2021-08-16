@@ -46,7 +46,7 @@ export const ButtonConfigType = PropTypes.shape({
   terraExportURL: PropTypes.string,
   terraTemplate: PropTypes.arrayOf(PropTypes.string),
   sevenBridgesExportURL: PropTypes.string,
-  enableDownloadRegistrationLogin: PropTypes.bool,
+  registerUsersForDownload: PropTypes.bool,
 });
 
 export const ChartConfigType = PropTypes.object;

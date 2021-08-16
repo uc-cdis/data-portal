@@ -804,7 +804,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     return (
       <Button
         key={buttonConfig.type}
-        onClick={() => {if (!this.isDownloadRegistrationEnabled()) {clickFunc()}}}
+        onClick={() => {if (!this.isRegisterUsersForDownloadEnabled()) {clickFunc()}}}
         label={buttonTitle}
         leftIcon={buttonConfig.leftIcon}
         rightIcon={buttonConfig.rightIcon}
@@ -918,8 +918,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       </React.Fragment>
     );
   }
-  isDownloadRegistrationEnabled = () => {
-    if (this.props.buttonConfig.enableDownloadRegistrationLogin){
+  isRegisterUsersForDownloadEnabled = () => {
+    if (this.props.buttonConfig.registerUsersForDownload){
       return this.goToLogin();
     }
     return false;
