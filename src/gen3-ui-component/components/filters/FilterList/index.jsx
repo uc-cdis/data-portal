@@ -6,74 +6,7 @@ import './FilterList.css';
 class FilterList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      /**
-       * Current selected status for filters,
-       * filterStatus[sectionIndex] = { [field]: true/false/[upperBound,lowerBound]}
-       */
-      filterStatus: props.sections.map(() => ({})),
-    };
     this.sectionRefs = props.sections.map(() => React.createRef());
-  }
-
-  handleDragRangeFilter(
-    sectionIndex,
-    lowerBound,
-    upperBound,
-    minValue,
-    maxValue,
-    rangeStep
-  ) {
-    this.setState((prevState) => {
-      const newFilterStatus = [...prevState.filterStatus];
-      newFilterStatus[sectionIndex] = [lowerBound, upperBound];
-      return {
-        filterStatus: newFilterStatus,
-      };
-    });
-    this.props.onAfterDrag(
-      sectionIndex,
-      lowerBound,
-      upperBound,
-      minValue,
-      maxValue,
-      rangeStep
-    );
-  }
-
-  handleClearSection(sectionIndex) {
-    this.setState((prevState) => {
-      const newFilterStatus = [...prevState.filterStatus];
-      newFilterStatus[sectionIndex] = {};
-      return {
-        filterStatus: newFilterStatus,
-      };
-    });
-    this.props.onClearSection(sectionIndex);
-  }
-
-  handleSelectSingleFilter(sectionIndex, label) {
-    this.setState((prevState) => {
-      const newFilterStatus = [...prevState.filterStatus];
-      const isSelected = newFilterStatus[sectionIndex][label];
-      newFilterStatus[sectionIndex][label] =
-        isSelected === undefined || !isSelected;
-      return {
-        filterStatus: newFilterStatus,
-      };
-    });
-    this.props.onSelect(sectionIndex, label);
-  }
-
-  handleToggleCombineMode(sectionIndex, fieldName, value) {
-    this.setState((prevState) => {
-      const newFilterStatus = [...prevState.filterStatus];
-      newFilterStatus[sectionIndex][fieldName] = value;
-      return {
-        filterStatus: newFilterStatus,
-      };
-    });
-    this.props.onToggleCombineMode(sectionIndex, fieldName, value);
   }
 
   handleToggleSection(sectionIndex, isExpanded) {
@@ -87,9 +20,6 @@ class FilterList extends React.Component {
   }
 
   render() {
-    // Takes in parent component's filterStatus or self state's filterStatus
-    const filterStatus = this.props.filterStatus ?? this.state.filterStatus;
-
     return (
       <div className='g3-filter-list'>
         {this.props.sections.map((section, index) => (
@@ -98,22 +28,20 @@ class FilterList extends React.Component {
             ref={this.sectionRefs[index]}
             disabledTooltipMessage={this.props.disabledTooltipMessage}
             expanded={this.props.expandedStatus[index]}
-            filterStatus={filterStatus[index]}
+            filterStatus={this.props.filterStatus[index]}
             hideZero={this.props.hideZero}
             isArrayField={section.isArrayField}
             isSearchFilter={section.isSearchFilter}
             lockedTooltipMessage={this.props.lockedTooltipMessage}
-            onAfterDrag={(...args) =>
-              this.handleDragRangeFilter(index, ...args)
-            }
-            onClear={() => this.handleClearSection(index)}
+            onAfterDrag={(...args) => this.props.onAfterDrag(index, ...args)}
+            onClear={() => this.props.onClearSection(index)}
             onSearchFilterLoadOptions={section.onSearchFilterLoadOptions}
-            onSelect={(label) => this.handleSelectSingleFilter(index, label)}
+            onSelect={(label) => this.props.onSelect(index, label)}
             onToggle={(isExpanded) =>
               this.handleToggleSection(index, isExpanded)
             }
             onToggleCombineMode={(...args) =>
-              this.handleToggleCombineMode(index, ...args)
+              this.props.onToggleCombineMode(index, ...args)
             }
             options={section.options}
             tierAccessLimit={this.props.tierAccessLimit}
@@ -167,7 +95,7 @@ FilterList.propTypes = {
 FilterList.defaultProps = {
   disabledTooltipMessage: '',
   expandedStatus: [],
-  filterStatus: undefined,
+  filterStatus: [],
   hideZero: true,
   lockedTooltipMessage: '',
   onAfterDrag: () => {},
