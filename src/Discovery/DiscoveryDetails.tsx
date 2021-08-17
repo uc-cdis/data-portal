@@ -3,13 +3,11 @@ import {
   Alert, Button, Drawer, Space, Collapse, List,
 } from 'antd';
 import {
-  LockFilled,
   LinkOutlined,
   CheckOutlined,
   UnlockOutlined,
   DoubleLeftOutlined,
   DownloadOutlined,
-  EyeInvisibleOutlined,
 } from '@ant-design/icons';
 import { hostname, fenceDownloadPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
@@ -87,7 +85,7 @@ const DiscoveryDetails = (props: Props) => (
               <Alert
                 className='discovery-modal__access-alert'
                 type='warning'
-                message={<React.Fragment><EyeInvisibleOutlined /> You do not have access to this study.</React.Fragment>}
+                message={<React.Fragment>You do not have access to this study.</React.Fragment>}
               />
             )
           )}
