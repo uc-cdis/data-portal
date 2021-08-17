@@ -15,6 +15,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
+import { datadogRum } from '@datadog/browser-rum';
 
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
@@ -28,7 +29,9 @@ import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import {
   basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, enableDAPTracker,
+  ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
 } from './localconf';
+import { portalVersion } from './versions';
 import { gaTracking, components } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import { DAPRouteTracker } from './components/DAPAnalytics';
@@ -47,6 +50,25 @@ async function init() {
   // asyncSetInterval(() => store.dispatch(fetchUser), 60000);
   ReactGA.initialize(gaTracking);
   ReactGA.pageview(window.location.pathname + window.location.search);
+
+  // Datadog setup
+  if (ddApplicationId && !ddClientToken) {
+    console.warn('Datadog applicationId is set, but clientToken is missing');
+  } else if (!ddApplicationId && ddClientToken) {
+    console.warn('Datadog clientToken is set, but applicationId is missing');
+  } else if (ddApplicationId && ddClientToken) {
+    datadogRum.init({
+      applicationId: ddApplicationId,
+      clientToken: ddClientToken,
+      site: 'datadoghq.com',
+      service: 'portal',
+      env: ddEnv,
+      version: portalVersion,
+      sampleRate: ddSampleRate,
+      trackInteractions: true,
+    });
+  }
+
   // FontAwesome icons
   library.add(faAngleUp, faAngleDown);
 

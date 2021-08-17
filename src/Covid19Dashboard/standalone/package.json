@@ -54,7 +54,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --mode development",
+    "start": "set \"HOST=local-covid19.planx-pla.net\" && webpack-dev-server --mode development",
     "eslint": "./node_modules/.bin/eslint --ext js --ext jsx --ext ts --ext tsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --fix .",
     "build": "webpack --mode production"
   },

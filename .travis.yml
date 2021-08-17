@@ -19,7 +19,7 @@ before_install:
     - npm config set maxsockets 5
 
 install:
-    - npm install --force --legacy-peer-deps
+    - npm ci
 
 script:
     - npm run relay

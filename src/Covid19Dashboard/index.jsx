@@ -29,6 +29,8 @@ const dashboardDataLocations = {
   modeledFipsList: 'bayes-by-county/CountyCodeList.txt',
   jhuGeojsonLatest: 'map_data/jhu_geojson_latest.json',
   jhuJsonByLevelLatest: 'map_data/jhu_json_by_level_latest.json',
+  jhuJsonByTimeLatest: 'map_data/jhu_il_json_by_time_latest.json',
+  vaccinesByCountyByDate: 'map_data/vaccines_by_county_by_date.json',
   top10ChartData: 'charts_data/top10.txt',
   idphDailyChartData: 'idph_daily.txt',
 };
@@ -59,6 +61,13 @@ class Covid19Dashboard extends React.Component {
       global: 0,
       illinois: 0,
     };
+    const vaccinatedCount = {
+      illinois: 0,
+    };
+
+    if (this.props.vaccinesByCountyByDate.total) {
+      vaccinatedCount.illinois = this.props.vaccinesByCountyByDate.total;
+    }
 
     this.props.jhuGeojsonLatest.features.forEach((feat) => {
       const confirmed = +feat.properties.confirmed;
@@ -84,7 +93,9 @@ class Covid19Dashboard extends React.Component {
       }
     });
 
-    return { confirmedCount, deathsCount, recoveredCount };
+    return {
+      confirmedCount, deathsCount, recoveredCount, vaccinatedCount,
+    };
   }
 
   formatLocationTimeSeriesData = () => {
@@ -253,7 +264,7 @@ class Covid19Dashboard extends React.Component {
     const chartsConfig = covid19DashboardConfig.chartsConfig || {};
 
     const {
-      confirmedCount, deathsCount, recoveredCount,
+      confirmedCount, deathsCount, recoveredCount, vaccinatedCount,
     } = this.getTotalCounts();
 
     return (
@@ -279,12 +290,17 @@ class Covid19Dashboard extends React.Component {
                   label='Total Deaths'
                   value={deathsCount.illinois}
                 />
+                <CountWidget
+                  label='Total Vaccinated'
+                  value={vaccinatedCount.illinois}
+                />
               </div>
               <div className='covid19-dashboard_visualizations'>
                 { mapboxAPIToken
                   && (
                     <IllinoisMapChart
                       jsonByLevel={this.props.jhuJsonByLevelLatest}
+                      jsonByTime={this.props.jhuJsonByTimeLatest}
                       modeledFipsList={this.props.modeledFipsList}
                       fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                     />
@@ -428,6 +444,8 @@ Covid19Dashboard.propTypes = {
   modeledFipsList: PropTypes.array,
   jhuGeojsonLatest: PropTypes.object,
   jhuJsonByLevelLatest: PropTypes.object,
+  jhuJsonByTimeLatest: PropTypes.object,
+  vaccinesByCountyByDate: PropTypes.object,
   selectedLocationData: PropTypes.object,
   closeLocationPopup: PropTypes.func.isRequired,
   top10ChartData: PropTypes.array,
@@ -440,6 +458,8 @@ Covid19Dashboard.defaultProps = {
   jhuJsonByLevelLatest: {
     country: {}, state: {}, county: {}, last_updated: '',
   },
+  jhuJsonByTimeLatest: { il_county_list: {}, last_updated: '' },
+  vaccinesByCountyByDate: { il_county_list: {}, last_updated: '', total: null },
   selectedLocationData: null,
   top10ChartData: [],
   idphDailyChartData: [],
