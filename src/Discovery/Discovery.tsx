@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as JsSearch from 'js-search';
 import { Tag, Popover } from 'antd';
 import {
-    UnlockOutlined, ClockCircleOutlined, DashOutlined,
+  UnlockOutlined, ClockCircleOutlined, DashOutlined,
 } from '@ant-design/icons';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
@@ -373,11 +373,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       }, {
         text: <React.Fragment><DashOutlined />&nbsp;Not Available</React.Fragment>,
         value: AccessLevel.NOT_AVAILABLE,
-        id: 'unaccessible-data-filter',
+        id: 'not-available-data-filter',
       }, {
         text: <React.Fragment><ClockCircleOutlined />&nbsp;Pending</React.Fragment>,
         value: AccessLevel.PENDING,
-        id: 'not-available-data-filter',
+        id: 'pending-data-filter',
       }],
       onFilter: (value, record) => record[accessibleFieldName] === value,
       // This will sort the values in the order defined by the AccessLevel enum. (AccessLevel.ACCESSIBLE=1, AccessLevel.UNACCESSIBLE=2, etc)
