@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as JsSearch from 'js-search';
 import { Tag, Popover } from 'antd';
 import {
-  LockFilled, UnlockOutlined, ClockCircleOutlined, DashOutlined,
+  LockFilled, UnlockOutlined, ClockCircleOutlined, DashOutlined, EyeInvisibleOutlined
 } from '@ant-design/icons';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
@@ -365,23 +365,19 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   );
   if (config.features.authorization.enabled) {
     columns.push({
-      title: <div className='discovery-table-header'>Data Availability</div>,
+      title: <div className='discovery-table-header'>Availability</div>,
       filters: [{
-        text: <React.Fragment><UnlockOutlined />&nbsp;Accessible</React.Fragment>,
+        text: <React.Fragment><UnlockOutlined />&nbsp;Available</React.Fragment>,
         value: AccessLevel.ACCESSIBLE,
         id: 'accessible-data-filter',
       }, {
-        text: <React.Fragment><LockFilled />&nbsp;Unaccessible</React.Fragment>,
+        text: <React.Fragment><EyeInvisibleOutlined />&nbsp;Not Available</React.Fragment>,
         value: AccessLevel.UNACCESSIBLE,
         id: 'unaccessible-data-filter',
       }, {
         text: <React.Fragment><ClockCircleOutlined />&nbsp;Pending</React.Fragment>,
         value: AccessLevel.PENDING,
         id: 'pending-data-filter',
-      }, {
-        text: <React.Fragment><DashOutlined />&nbsp;No Data</React.Fragment>,
-        value: AccessLevel.NOT_AVAILABLE,
-        id: 'not-available-data-filter',
       }],
       onFilter: (value, record) => record[accessibleFieldName] === value,
       // This will sort the values in the order defined by the AccessLevel enum. (AccessLevel.ACCESSIBLE=1, AccessLevel.UNACCESSIBLE=2, etc)
@@ -454,7 +450,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               </div>
             )}
           >
-            <LockFilled className='discovery-table__access-icon' />
+            <EyeInvisibleOutlined className='discovery-table__access-icon' />
           </Popover>
         );
       },

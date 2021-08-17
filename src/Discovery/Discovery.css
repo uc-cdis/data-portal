@@ -225,6 +225,10 @@
   position: relative;
 }
 
+.discovery-table-container .ant-table-column-sorter {
+  display:none;
+}
+
 /* HACK: Because the study description row is a separate row under the hood,
  * it doesn't change color when you highlight its parent row.
  * To fix this, we did a different hacky approach.
