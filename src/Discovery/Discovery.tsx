@@ -437,8 +437,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             </Popover>
           );
         }
-        // Temporarily hiding the closed lock for the HEAL project.
-        // User feedback is coming pending a demo (8/18/21) so we won't delete this block for now.
+        // Hiding the closed lock for the HEAL project.
+        // This may be useful functionality for other commons. If a use case arises in the future
+        // in another commons to inform users of what Arborist access they lack, restore this block
+        // and make it configurable, defaulting to not visible.
         // https://ctds-planx.atlassian.net/browse/HP-393
         // return (
         //   <Popover
