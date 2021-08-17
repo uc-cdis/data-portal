@@ -99,10 +99,9 @@ class IndexPageComponent extends React.Component {
               </Carousel>
             </MediaQuery>
             {homepageEmailForm
-              && homepageEmailForm.account
-              && homepageEmailForm.token
-              && homepageEmailForm.subscribeToTopicIdArr ?
-              <ReduxEmailSignUpForm />
+              && homepageEmailForm.action
+              && homepageEmailForm.subscribeToTopicId
+              ? <ReduxEmailSignUpForm />
               : null}
           </div>
         </div>
