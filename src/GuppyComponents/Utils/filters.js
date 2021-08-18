@@ -405,44 +405,34 @@ export const getFilterSections = (
 };
 
 /**
- * @param {AggsData} receivedAggsData
+ * @param {AggsData} aggsData
  * @param {FilterState} filterResults
  */
-export const excludeSelfFilterFromAggsData = (
-  receivedAggsData,
-  filterResults
-) => {
-  if (!filterResults) return receivedAggsData;
+export function excludeSelfFilterFromAggsData(aggsData, filterResults) {
+  if (!filterResults) return aggsData;
 
   /** @type {SimpleAggsData} */
   const resultAggsData = {};
   /** @type {{ [x: string]: AggsCount[] }} */
-  const flattenAggsData = flat(receivedAggsData, { safe: true });
-  Object.keys(flattenAggsData).forEach((field) => {
-    const actualFieldName = field.replace('.histogram', '');
-    const histogram = flattenAggsData[`${field}`];
-    if (!histogram) return;
-
-    if (actualFieldName in filterResults) {
-      /** @type {AggsCount[]} */
-      let resultHistogram = [];
-      const filter = filterResults[`${actualFieldName}`];
-      if ('selectedValues' in filter) {
-        resultHistogram = histogram.filter(
-          (bucket) =>
-            typeof bucket.key === 'string' &&
-            filter.selectedValues.includes(bucket.key)
-        );
-      }
-      resultAggsData[`${actualFieldName}`] = { histogram: resultHistogram };
-    } else {
-      resultAggsData[`${actualFieldName}`] = {
-        histogram: flattenAggsData[`${field}`],
-      };
+  const flatAggsData = flat(aggsData, { safe: true });
+  for (const flatFieldName of Object.keys(flatAggsData)) {
+    const histogram = flatAggsData[flatFieldName];
+    if (histogram !== undefined) {
+      const fieldName = flatFieldName.replace('.histogram', '');
+      resultAggsData[fieldName] = { histogram };
+      if (fieldName in filterResults)
+        resultAggsData[fieldName].histogram =
+          'selectedValues' in filterResults[fieldName]
+            ? histogram.filter(
+                ({ key }) =>
+                  typeof key === 'string' &&
+                  filterResults[fieldName].selectedValues.includes(key)
+              )
+            : [];
     }
-  });
+  }
   return resultAggsData;
-};
+}
 
 /**
  * @param {AggsData} aggsData
