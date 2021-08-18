@@ -101,6 +101,48 @@ export function queryGuppyForAggregationData({
   }).then((response) => response.json());
 }
 
+/**
+ * @param {object} args
+ * @param {string} args.path
+ * @param {string} args.type
+ * @param {string[]} args.fields
+ * @param {GqlFilter} [args.gqlFilter]
+ * @param {AbortSignal} [args.signal]
+ */
+export function queryGuppyForAggregationChartData({
+  path,
+  type,
+  fields,
+  gqlFilter,
+  signal,
+}) {
+  const query = (gqlFilter !== undefined
+    ? `query ($filter: JSON) {
+        _aggregation {
+          ${type} (filter: $filter, filterSelf: false, accessibility: all) {
+            ${fields.map((field) => histogramQueryStrForEachField(field))}
+          }
+        }
+      }`
+    : `query {
+        _aggregation {
+          ${type} (accessibility: all) {
+            ${fields.map((field) => histogramQueryStrForEachField(field))}
+          }
+        }
+      }`
+  ).replace(/\s+/g, ' ');
+
+  return fetch(`${path}${graphqlEndpoint}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ query, variables: { filter: gqlFilter } }),
+    signal,
+  }).then((response) => response.json());
+}
+
 /** @param {string} path */
 export function queryGuppyForStatus(path) {
   return fetch(`${path}${statusEndpoint}`, {
