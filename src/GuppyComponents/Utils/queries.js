@@ -58,7 +58,7 @@ export function queryGuppyForAggregationData({
   shouldGetFullAggsData = false,
   signal,
 }) {
-  const fullAagsDataQueryFragment = `fullAggsData: ${type} (accessibility: all) {
+  const fullAggsDataQueryFragment = `fullAggsData: ${type} (accessibility: all) {
     ${fields.map((field) => histogramQueryStrForEachField(field))}
   }`;
   const query = (gqlFilter !== undefined
@@ -73,7 +73,7 @@ export function queryGuppyForAggregationData({
           all: ${type} (filter: $filter, accessibility: all) {
             _totalCount
           }
-          ${shouldGetFullAggsData ? fullAagsDataQueryFragment : ''}
+          ${shouldGetFullAggsData ? fullAggsDataQueryFragment : ''}
         }
       }`
     : `query {
