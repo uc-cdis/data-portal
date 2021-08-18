@@ -117,8 +117,6 @@ class ExplorerButtonGroup extends React.Component {
     });
   }
 
-
-
   getOnClickFunction = (buttonConfig) => {
     let clickFunc = () => {};
 
@@ -799,12 +797,10 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       btnTooltipText = 'Currently you cannot export files with different Data Types. Please choose a single Data Type from the Data Type filter on the left.';
     }
 
-
-
     return (
       <Button
         key={buttonConfig.type}
-        onClick={() => {if (!this.isLoginForButtonFeatureEnabled(buttonConfig)) {clickFunc()}}}
+        onClick={() => { if (!this.isLoginForButtonFeatureEnabled(buttonConfig)) { clickFunc(); } }}
         label={(this.props.user.username) ? buttonTitle : `Login to ${buttonTitle}`}
         leftIcon={buttonConfig.leftIcon}
         rightIcon={buttonConfig.rightIcon}
@@ -819,16 +815,17 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
   };
 
   isLoginForButtonFeatureEnabled = (buttonConfig) => {
-    if (this.props.buttonConfig.loginForButtonFeature &&
-      (buttonConfig.type.startsWith('data') ||
-      buttonConfig.type === 'manifest' ||
-      buttonConfig.type === 'file-manifest')){
+    if (this.props.buttonConfig.loginForButtonFeature
+      && (buttonConfig.type.startsWith('data')
+      || buttonConfig.type === 'manifest'
+      || buttonConfig.type === 'file-manifest')) {
       return this.goToLogin();
     }
     return false;
   }
+
   goToLogin = () => {
-    if(!this.props.user || !this.props.user.username) {
+    if (!this.props.user || !this.props.user.username) {
       this.props.history.push('/login');
       return true;
     }

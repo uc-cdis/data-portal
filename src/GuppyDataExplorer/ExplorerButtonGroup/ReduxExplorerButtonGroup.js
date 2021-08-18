@@ -17,9 +17,5 @@ const mapDispatchToProps = (dispatch) => ({
   resetJobState: () => dispatch(resetJobState()),
 });
 
-
-
-
-
 const ReduxExplorerButtonGroup = connect(mapStateToProps, mapDispatchToProps)(ExplorerButtonGroup);
 export default ReduxExplorerButtonGroup;
