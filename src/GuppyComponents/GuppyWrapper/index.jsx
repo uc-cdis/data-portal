@@ -81,24 +81,30 @@ function GuppyWrapper({
     };
   }, []);
 
+  /**
+   * Add patient ids to filter if provided
+   * @param {FilterState} filter
+   */
+  function augmentFilter(filter) {
+    return patientIds?.length > 0
+      ? mergeFilters(filter, {
+          subject_submitter_id: { selectedValues: patientIds },
+        })
+      : filter;
+  }
+
   /** @param {FilterState} filter */
   function fetchAggsDataFromGuppy(filter) {
     if (isMounted.current)
       setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
 
-    const filterForGuppy =
-      patientIds?.length > 0
-        ? mergeFilters(filter, {
-            subject_submitter_id: { selectedValues: patientIds },
-          })
-        : filter;
     const isFilterEmpty = Object.keys(filter).length === 0;
 
     queryGuppyForAggregationData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: getAllFieldsFromFilterConfigs(filterConfig.tabs),
-      gqlFilter: getGQLFilter(filterForGuppy),
+      gqlFilter: getGQLFilter(augmentFilter(filter)),
       shouldGetFullAggsData:
         state.initialTabsOptions === undefined && !isFilterEmpty,
       signal: controller.current.signal,
@@ -141,18 +147,11 @@ function GuppyWrapper({
     if (isMounted.current)
       setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
 
-    const filterForGuppy =
-      patientIds?.length > 0
-        ? mergeFilters(filter, {
-            subject_submitter_id: { selectedValues: patientIds },
-          })
-        : filter;
-
     queryGuppyForAggregationChartData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: Object.keys(chartConfig),
-      gqlFilter: getGQLFilter(filterForGuppy),
+      gqlFilter: getGQLFilter(augmentFilter(filter)),
       signal: controller.current.signal,
     }).then((res) => {
       if (!res.data)
@@ -196,12 +195,6 @@ function GuppyWrapper({
       return Promise.resolve({ data: [], totalCount: 0 });
     }
 
-    const filterForGuppy =
-      patientIds?.length > 0
-        ? mergeFilters(state.filter, {
-            subject_submitter_id: { selectedValues: patientIds },
-          })
-        : state.filter;
     // sub aggregations -- for DAT
     if (guppyConfig.mainField) {
       const numericAggAsText = guppyConfig.mainFieldIsNumeric;
@@ -212,7 +205,7 @@ function GuppyWrapper({
         numericAggAsText,
         termsFields: guppyConfig.aggFields,
         missingFields: [],
-        gqlFilter: getGQLFilter(filterForGuppy),
+        gqlFilter: getGQLFilter(augmentFilter(state.filter)),
         signal: controller.current.signal,
       }).then((res) => {
         if (!res || !res.data)
@@ -241,7 +234,7 @@ function GuppyWrapper({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields,
-      gqlFilter: getGQLFilter(filterForGuppy),
+      gqlFilter: getGQLFilter(augmentFilter(state.filter)),
       sort,
       offset,
       size,
@@ -309,18 +302,12 @@ function GuppyWrapper({
     if (format && !(format in FILE_FORMATS))
       throw new Error(`Invalid value ${format} found for arg format!`);
 
-    const filterForGuppy =
-      patientIds?.length > 0
-        ? mergeFilters(state.filter, {
-            subject_submitter_id: { selectedValues: patientIds },
-          })
-        : state.filter;
     return downloadDataFromGuppy({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: rawDataFields,
       sort,
-      filter: filterForGuppy,
+      filter: augmentFilter(state.filter),
       format,
     });
   }
