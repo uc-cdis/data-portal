@@ -98,6 +98,13 @@ function isRangeFilter(value) {
   );
 }
 
+function isValid(filterContent) {
+  return (
+    isPlainObject(filterContent) &&
+    (isTextFilter(filterContent) || isRangeFilter(filterContent))
+  );
+}
+
 /**
  * Validates the provide filter value based on configuration.
  * Performs the following checks:
@@ -111,13 +118,16 @@ export function validateFilter(value, filterConfig) {
 
   const allFields = filterConfig.tabs.flatMap(({ fields }) => fields);
   const testFieldSet = new Set(allFields);
-  for (const [field, filterContent] of Object.entries(value))
-    if (
-      isPlainObject(filterContent) &&
-      (isTextFilter(filterContent) || isRangeFilter(filterContent))
-    )
-      testFieldSet.add(field);
+  for (const [field, filterContent] of Object.entries(value)) {
+    if ('filter' in filterContent)
+      for (const [anchoredField, anchoredfilterContent] of Object.entries(
+        filterContent.filter
+      ))
+        if (isValid(anchoredfilterContent)) testFieldSet.add(anchoredField);
+        else return false;
+    else if (isValid(filterContent)) testFieldSet.add(field);
     else return false;
+  }
 
   return allFields.length === testFieldSet.size;
 }
