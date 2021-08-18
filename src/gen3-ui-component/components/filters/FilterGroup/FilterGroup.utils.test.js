@@ -8,6 +8,7 @@ import {
   updateCombineMode,
   updateRangeValue,
   updateSelectedValue,
+  getSelectedAnchors,
 } from './utils';
 
 describe('Get expanded status array for all tabs', () => {
@@ -702,5 +703,69 @@ describe('Update an option filter', () => {
       filterStatus: [{ 'a:a0': [{ foo: false }] }],
     };
     expect(updated).toEqual(expected);
+  });
+});
+
+describe('Get selected anchor values from filter status', () => {
+  test('No filter selected', () => {
+    const filterStatus = [
+      [{}],
+      {
+        '': [{}, {}],
+        'a:a0': [{}, {}],
+        'a:a1': [{}, {}],
+      },
+    ];
+    const anchors = getSelectedAnchors(filterStatus);
+    const expected = [[], []];
+    expect(anchors).toEqual(expected);
+  });
+  test('With non-anchored filter selected', () => {
+    const anchors = getSelectedAnchors([
+      [{ x: true }],
+      {
+        '': [{}, {}],
+        'a:a0': [{}, {}],
+        'a:a1': [{}, {}],
+      },
+    ]);
+    const expected = [[], []];
+    expect(anchors).toEqual(expected);
+  });
+  test('With anchored filter without anchor value selected', () => {
+    const anchors = getSelectedAnchors([
+      [{}],
+      {
+        '': [{ y: true }, {}],
+        'a:a0': [{}, {}],
+        'a:a1': [{}, {}],
+      },
+    ]);
+    const expected = [[], []];
+    expect(anchors).toEqual(expected);
+  });
+  test('With anchored filter with anchor value selected', () => {
+    const anchors = getSelectedAnchors([
+      [{}, {}],
+      {
+        '': [{ y: true }, {}],
+        'a:a0': [{}, { z: true }],
+        'a:a1': [{}, {}],
+      },
+    ]);
+    const expected = [[], ['a0']];
+    expect(anchors).toEqual(expected);
+  });
+  test('With anchored filter with multiple anchor values selected', () => {
+    const anchors = getSelectedAnchors([
+      [{}, {}],
+      {
+        '': [{ y: true }, {}],
+        'a:a0': [{}, { z: true }],
+        'a:a1': [{ y: true }, {}],
+      },
+    ]);
+    const expected = [[], ['a0', 'a1']];
+    expect(anchors).toEqual(expected);
   });
 });
