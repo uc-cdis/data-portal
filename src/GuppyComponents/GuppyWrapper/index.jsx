@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   queryGuppyForAggregationData,
+  queryGuppyForAggregationChartData,
   queryGuppyForRawData,
   queryGuppyForSubAggregationData,
   queryGuppyForTotalCounts,
@@ -34,6 +35,7 @@ import '../typedef';
  * @typedef {Object} GuppyWrapperState
  * @property {number} accessibleCount
  * @property {AggsData} aggsData
+ * @property {AggsData} aggsChartData
  * @property {string[]} allFields
  * @property {FilterState} filter
  * @property {SimpleAggsData} initialTabsOptions
@@ -46,6 +48,7 @@ import '../typedef';
 
 /** @param {GuppyWrapperProps} props */
 function GuppyWrapper({
+  chartConfig,
   filterConfig,
   guppyConfig,
   children,
@@ -60,6 +63,7 @@ function GuppyWrapper({
     accessibleCount: 0,
     allFields: [],
     aggsData: {},
+    aggsChartData: {},
     filter: mergeFilters(initialAppliedFilters, adminAppliedPreFilters),
     initialTabsOptions: undefined,
     isLoadingAggsData: false,
@@ -129,6 +133,43 @@ function GuppyWrapper({
           receivedAggsData,
           totalCount,
         }));
+    });
+  }
+
+  /** @param {FilterState} filter */
+  function fetchAggsChartDataFromGuppy(filter) {
+    if (isMounted.current)
+      setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
+
+    const filterForGuppy =
+      patientIds?.length > 0
+        ? mergeFilters(filter, {
+            subject_submitter_id: { selectedValues: patientIds },
+          })
+        : filter;
+
+    queryGuppyForAggregationChartData({
+      path: guppyConfig.path,
+      type: guppyConfig.dataType,
+      fields: Object.keys(chartConfig),
+      gqlFilter: getGQLFilter(filterForGuppy),
+      signal: controller.current.signal,
+    }).then((res) => {
+      if (!res.data)
+        throw new Error(
+          `error querying guppy${
+            res.errors && res.errors.length > 0
+              ? `: ${res.errors[0].message}`
+              : ''
+          }`
+        );
+
+      const aggsChartData = excludeSelfFilterFromAggsData(
+        res.data._aggregation[guppyConfig.dataType],
+        filter
+      );
+      if (isMounted.current)
+        setState((prevState) => ({ ...prevState, aggsChartData }));
     });
   }
 
@@ -234,6 +275,7 @@ function GuppyWrapper({
       if (isMounted.current) {
         setState((prevState) => ({ ...prevState, allFields }));
         fetchAggsDataFromGuppy(state.filter);
+        fetchAggsChartDataFromGuppy(state.filter);
         fetchRawDataFromGuppy({
           fields:
             rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : allFields,
@@ -248,6 +290,7 @@ function GuppyWrapper({
 
   useEffect(() => {
     fetchAggsDataFromGuppy(state.filter);
+    fetchAggsChartDataFromGuppy(state.filter);
     fetchRawDataFromGuppy({
       fields: rawDataFields,
       updateDataWhenReceive: true,
@@ -358,6 +401,7 @@ function GuppyWrapper({
     controller.current.abort();
     controller.current = new AbortController();
     fetchAggsDataFromGuppy(mergedFilter);
+    fetchAggsChartDataFromGuppy(mergedFilter);
     fetchRawDataFromGuppy({
       fields: rawDataFields,
       updateDataWhenReceive: true,

@@ -63,14 +63,14 @@ function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
 
 /**
  * @param {Object} args
- * @param {SimpleAggsData} args.aggsData
+ * @param {SimpleAggsData} args.aggsChartData
  * @param {ChartConfig} args.chartConfig
  * @param {FilterState} args.filter
  * @param {string} args.nodeCountTitle
  * @param {number} args.totalCount
  */
 function getChartData({
-  aggsData,
+  aggsChartData,
   chartConfig,
   filter,
   nodeCountTitle,
@@ -81,9 +81,9 @@ function getChartData({
   const stackedBarCharts = [];
 
   for (const field of Object.keys(chartConfig)) {
-    if (aggsData?.[`${field}`]?.histogram !== undefined) {
+    if (aggsChartData[field]?.histogram !== undefined) {
       const { chartType: type, title } = chartConfig[field];
-      const { histogram } = aggsData[field];
+      const { histogram } = aggsChartData[field];
       switch (type) {
         case 'count':
           countItems.push({
@@ -135,6 +135,7 @@ function getChartData({
  * @property {number} accessibleCount
  * @property {number} totalCount
  * @property {AggsData} aggsData
+ * @property {AggsData} aggsChartData
  * @property {Object[]} rawData
  * @property {string[]} allFields
  * @property {FilterState} filter
@@ -161,6 +162,7 @@ function ExplorerVisualization({
   accessibleCount = 0,
   totalCount = 0,
   aggsData = {},
+  aggsChartData = {},
   rawData = [],
   allFields = [],
   filter = {},
@@ -188,7 +190,7 @@ function ExplorerVisualization({
   const [explorerView, setExplorerView] = useState(explorerViews[0]);
 
   const chartData = getChartData({
-    aggsData,
+    aggsChartData,
     chartConfig,
     filter,
     nodeCountTitle,
@@ -323,6 +325,7 @@ ExplorerVisualization.propTypes = {
   accessibleCount: PropTypes.number, // inherited from GuppyWrapper
   totalCount: PropTypes.number, // inherited from GuppyWrapper
   aggsData: PropTypes.object, // inherited from GuppyWrapper
+  aggsChartData: PropTypes.object, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
   allFields: PropTypes.array, // inherited from GuppyWrapper
   filter: PropTypes.object, // inherited from GuppyWrapper

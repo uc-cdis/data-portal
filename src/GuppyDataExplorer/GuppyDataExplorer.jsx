@@ -199,6 +199,7 @@ class GuppyDataExplorer extends React.Component {
             adminAppliedPreFilters={this.props.adminAppliedPreFilters}
             initialAppliedFilters={this.state.initialAppliedFilters}
             anchorConfig={this.props.anchorConfig}
+            chartConfig={this.props.chartConfig}
             filterConfig={this.props.filterConfig}
             guppyConfig={this.props.guppyConfig}
             onFilterChange={this.handleFilterChange}
@@ -252,6 +253,7 @@ class GuppyDataExplorer extends React.Component {
                   tierAccessLimit={this.props.tierAccessLimit}
                   accessibleCount={data.accessibleCount}
                   aggsData={data.aggsData}
+                  aggsChartData={data.aggsChartData}
                   allFields={data.allFields}
                   filter={data.filter}
                   isLoadingAggsData={data.isLoadingAggsData}
