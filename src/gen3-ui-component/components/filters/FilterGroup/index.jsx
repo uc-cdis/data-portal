@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
+import AnchorFilter from '../AnchorFilter';
 import PatientIdFilter from '../PatientIdFilter';
 import {
+  clearFilterSection,
   getExpandedStatus,
   getFilterStatus,
-  clearFilterSection,
+  getSelectedAnchors,
   tabHasActiveFilters,
   updateCombineMode,
   updateRangeValue,
@@ -16,6 +18,7 @@ import '../typedef';
 
 /**
  * @typedef {Object} FilterGroupProps
+ * @property {AnchorConfig} anchorConfig
  * @property {string} className
  * @property {FilterConfig} filterConfig
  * @property {boolean} hideZero
@@ -28,6 +31,7 @@ import '../typedef';
 
 /** @param {FilterGroupProps} props */
 function FilterGroup({
+  anchorConfig,
   className = '',
   filterConfig,
   hideZero = true,
@@ -37,6 +41,12 @@ function FilterGroup({
   patientIds,
   tabs,
 }) {
+  const [anchorValue, setAnchorValue] = useState('');
+  const anchorLabel =
+    anchorConfig !== undefined && anchorValue !== ''
+      ? `${anchorConfig.fieldName}:${anchorValue}`
+      : '';
+
   const filterTabs = filterConfig.tabs.map(
     ({ title, fields, searchFields }) => ({
       title,
@@ -45,7 +55,9 @@ function FilterGroup({
     })
   );
   const [tabIndex, setTabIndex] = useState(0);
-
+  const tabTitle = filterTabs[tabIndex].title;
+  const showAnchorFilter =
+    anchorConfig !== undefined && anchorConfig.tabs.includes(tabTitle);
   const showPatientIdsFilter = patientIds !== undefined;
 
   const [expandedStatusControl, setExpandedStatusControl] = useState(false);
@@ -58,7 +70,11 @@ function FilterGroup({
 
   const [filterResults, setFilterResults] = useState(initialAppliedFilters);
   const [filterStatus, setFilterStatus] = useState(
-    getFilterStatus({ filterResults: initialAppliedFilters, filterTabs })
+    getFilterStatus({
+      anchorConfig,
+      filterResults: initialAppliedFilters,
+      filterTabs,
+    })
   );
   const isInitialRenderRef = useRef(true);
   useEffect(() => {
@@ -68,6 +84,7 @@ function FilterGroup({
     }
 
     const newFilterStatus = getFilterStatus({
+      anchorConfig,
       filterResults: initialAppliedFilters,
       filterTabs,
     });
@@ -77,6 +94,12 @@ function FilterGroup({
     setFilterResults(newFilterResults);
     onFilterChange(newFilterResults);
   }, [initialAppliedFilters]);
+
+  const filterTabStatus = showAnchorFilter
+    ? filterStatus[tabIndex][anchorLabel]
+    : filterStatus[tabIndex];
+
+  const selectedAnchors = getSelectedAnchors(filterStatus);
 
   /**
    * @param {number} sectionIndex
@@ -95,6 +118,7 @@ function FilterGroup({
       filterResults,
       filterTabs,
       tabIndex,
+      anchorLabel,
       sectionIndex,
     });
     setFilterResults(updated.filterResults);
@@ -117,6 +141,7 @@ function FilterGroup({
       filterResults,
       filterTabs,
       tabIndex,
+      anchorLabel,
       sectionIndex,
       combineModeFieldName,
       combineModeValue,
@@ -144,6 +169,7 @@ function FilterGroup({
       filterResults,
       filterTabs,
       tabIndex,
+      anchorLabel,
       sectionIndex,
       selectedValue,
     });
@@ -173,6 +199,7 @@ function FilterGroup({
       filterResults,
       filterTabs,
       tabIndex,
+      anchorLabel,
       sectionIndex,
       lowerBound,
       upperBound,
@@ -223,6 +250,15 @@ function FilterGroup({
           </div>
         ))}
       </div>
+      {showAnchorFilter && (
+        <AnchorFilter
+          anchorFieldName={anchorConfig.fieldName}
+          anchorValue={anchorValue}
+          onChange={setAnchorValue}
+          options={anchorConfig.options}
+          optionsInUse={selectedAnchors[tabIndex]}
+        />
+      )}
       {showPatientIdsFilter && (
         <PatientIdFilter
           onPatientIdsChange={onPatientIdsChange}
@@ -249,7 +285,7 @@ function FilterGroup({
       <div className='g3-filter-group__filter-area'>
         {React.cloneElement(tabs[tabIndex], {
           expandedStatus: expandedStatus[tabIndex],
-          filterStatus: filterStatus[tabIndex],
+          filterStatus: filterTabStatus,
           hideZero,
           onAfterDrag: handleDrag,
           onClearSection: handleClearSection,
@@ -263,6 +299,11 @@ function FilterGroup({
 }
 
 FilterGroup.propTypes = {
+  anchorConfig: PropTypes.shape({
+    fieldName: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.string),
+    tabs: PropTypes.arrayOf(PropTypes.string),
+  }),
   className: PropTypes.string,
   filterConfig: PropTypes.shape({
     tabs: PropTypes.arrayOf(
