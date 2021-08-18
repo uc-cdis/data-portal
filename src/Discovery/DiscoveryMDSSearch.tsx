@@ -5,7 +5,7 @@ import {
 import { SearchOutlined } from '@ant-design/icons';
 
 const DiscoveryMDSSearch = (props: { searchTerm, handleSearchChange, inputSubtitle}) => (
-  <>
+  <React.Fragment>
     <Input
       className='discovery-search'
       prefix={<SearchOutlined />}
@@ -16,7 +16,7 @@ const DiscoveryMDSSearch = (props: { searchTerm, handleSearchChange, inputSubtit
       allowClear
     />
     <div className='discovery-input-subtitle'>{props.inputSubtitle}</div>
-  </>
+  </React.Fragment>
 );
 
 export default DiscoveryMDSSearch;

@@ -437,11 +437,12 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             </Popover>
           );
         }
-        // Hiding the closed lock for the HEAL project.
-        // This may be useful functionality for other commons. If a use case arises in the future
-        // in another commons to inform users of what Arborist access they lack, restore this block
-        // and make it configurable, defaulting to not visible.
-        // https://ctds-planx.atlassian.net/browse/HP-393
+        return <React.Fragment />;
+        /* Hiding the closed lock for the HEAL project.
+          This may be useful functionality for other commons.
+          Keeping the logic for now.
+           https://ctds-planx.atlassian.net/browse/HP-393
+        */
         // return (
         //   <Popover
         //     overlayClassName='discovery-popover'
