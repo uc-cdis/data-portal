@@ -804,8 +804,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     return (
       <Button
         key={buttonConfig.type}
-        onClick={() => {if (!this.isRegisterUsersForDownloadEnabled()) {clickFunc()}}}
-        label={buttonTitle}
+        onClick={() => {if (!this.isLoginForButtonFeatureEnabled(buttonConfig)) {clickFunc()}}}
+        label={(this.props.user.username) ? buttonTitle : `Login to ${buttonTitle}`}
         leftIcon={buttonConfig.leftIcon}
         rightIcon={buttonConfig.rightIcon}
         className='explorer-button-group__download-button'
@@ -818,8 +818,11 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     );
   };
 
-  isRegisterUsersForDownloadEnabled = () => {
-    if (this.props.buttonConfig.registerUsersForDownload){
+  isLoginForButtonFeatureEnabled = (buttonConfig) => {
+    if (this.props.buttonConfig.loginForButtonFeature &&
+      (buttonConfig.type.startsWith('data') ||
+      buttonConfig.type === 'manifest' ||
+      buttonConfig.type === 'file-manifest')){
       return this.goToLogin();
     }
     return false;
