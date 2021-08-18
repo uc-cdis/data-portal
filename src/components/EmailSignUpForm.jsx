@@ -24,7 +24,7 @@ class EmailSignUpForm extends React.Component {
               placeholder={this.props.placeholder}
             />
           </label>
-          <Button type='primary' htmlType='submit' className="g3-button g3-button--primary">
+          <Button type='primary' htmlType='submit' className='g3-button g3-button--primary'>
             {this.props.buttonText}
           </Button>
         </form>
