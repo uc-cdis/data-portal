@@ -7,6 +7,7 @@ import './ExplorerFilter.css';
 /**
  * @typedef {Object} ExplorerFilterProps
  * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
+ * @property {AnchorConfig} anchorConfig
  * @property {string} className
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
@@ -50,6 +51,11 @@ function ExplorerFilter({
 
 ExplorerFilter.propTypes = {
   adminAppliedPreFilters: PropTypes.object,
+  anchorConfig: PropTypes.shape({
+    fieldName: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.string),
+    tabs: PropTypes.arrayOf(PropTypes.string),
+  }),
   className: PropTypes.string,
   filterConfig: FilterConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,

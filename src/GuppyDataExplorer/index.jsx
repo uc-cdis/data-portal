@@ -25,6 +25,13 @@ export default function Explorer() {
   const tabConfig = explorerConfig[tabIndex];
   const isMultiTabExplorer = explorerConfig.length > 1;
 
+  /** @type {AnchorConfig} */
+  const anchorConfig = {
+    fieldName: 'disease_phase',
+    options: ['Initial Diagnosis', 'Relapse'],
+    tabs: ['Disease', 'Molecular'],
+  };
+
   return (
     <div className='guppy-explorer'>
       {isMultiTabExplorer && (
@@ -63,6 +70,7 @@ export default function Explorer() {
       )}
       <div className={isMultiTabExplorer ? 'guppy-explorer__main' : ''}>
         <GuppyDataExplorer
+          anchorConfig={anchorConfig}
           adminAppliedPreFilters={tabConfig.adminAppliedPreFilters}
           chartConfig={tabConfig.charts}
           filterConfig={tabConfig.filters}
