@@ -78,62 +78,68 @@ const handleDownloadZipClick = async (
   }).then(
     (dispatchResponse) => {
       const { uid } = dispatchResponse.data;
-      if (dispatchResponse.status !== 200 || !uid) {
+      if (dispatchResponse.status === 403 || dispatchResponse.status === 302) {
+        setDownloadInProgress(false);
+        setDownloadStatusMessage({
+          title: 'Download failed',
+          message: 'Unable to authorize download. '
+                  + 'Please refresh the page and ensure you are logged in.',
+          active: true,
+          url: '',
+        });
+      } else if (dispatchResponse.status !== 200 || !uid) {
         handleJobError();
+      } else {
+        const pollForJobStatusUpdate = () => {
+          fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
+            (statusResponse) => {
+              const { status } = statusResponse.data;
+              if (statusResponse.status !== 200 || !status) {
+                // usually empty status message means Sower can't find a job by its UID
+                handleJobError();
+              } else if (status === 'Failed') {
+                fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
+                  (outputResponse) => {
+                    const { output } = outputResponse.data;
+                    if (outputResponse.status !== 200 || !output) {
+                      handleJobError();
+                    } else {
+                      setDownloadStatusMessage({
+                        title: 'Download failed',
+                        message: output,
+                        active: true,
+                        url: '',
+                      });
+                      setDownloadInProgress(false);
+                    }
+                  },
+                ).catch(handleJobError);
+              } else if (status === 'Completed') {
+                fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
+                  (outputResponse) => {
+                    const { output } = outputResponse.data;
+                    if (outputResponse.status !== 200 || !output) {
+                      handleJobError();
+                    } else {
+                      setDownloadStatusMessage({
+                        title: 'Your download is ready',
+                        message: 'Your download has been prepared. If your download doesn\'t start automatically, please follow this direct link: ',
+                        active: true,
+                        url: output,
+                      });
+                      setDownloadInProgress(false);
+                      setTimeout(() => window.open(output), 2000);
+                    }
+                  },
+                ).catch(handleJobError);
+              } else {
+                setTimeout(pollForJobStatusUpdate, 5000);
+              }
+            },
+          );
+        };
+        setTimeout(pollForJobStatusUpdate, 5000);
       }
-      const pollForJobStatusUpdate = () => {
-        fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
-          (statusResponse) => {
-            const { status } = statusResponse.data;
-            if (statusResponse.status !== 200 || !status) {
-              // usually empty status message means Sower can't find a job by its UID
-              handleJobError();
-            }
-            else if (status === 'Failed') {
-              fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
-                (outputResponse) => {
-                  const { output } = outputResponse.data;
-                  if (outputResponse.status !== 200 || !output) {
-                    handleJobError();
-                  }
-                  else {
-                    setDownloadStatusMessage({
-                      title: 'Download failed',
-                      message: output,
-                      active: true,
-                      url: '',
-                    });
-                    setDownloadInProgress(false);
-                  }
-                },
-              ).catch(handleJobError);
-            }
-            else if (status === 'Completed') {
-              fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
-                (outputResponse) => {
-                  const { output } = outputResponse.data;
-                  if (outputResponse.status !== 200 || !output) {
-                    handleJobError();
-                  }
-                  else {
-                    setDownloadStatusMessage({
-                      title: 'Your download is ready',
-                      message: 'Your download has been prepared. If your download doesn\'t start automatically, please follow this direct link: ',
-                      active: true,
-                      url: output,
-                    });
-                    setDownloadInProgress(false);
-                    setTimeout(() => window.open(output), 2000);
-                  }
-                },
-              ).catch(handleJobError);
-            } else {
-              setTimeout(pollForJobStatusUpdate, 5000);
-            }
-          },
-        );
-      };
-      setTimeout(pollForJobStatusUpdate, 5000);
     },
   ).catch(handleJobError);
 };
