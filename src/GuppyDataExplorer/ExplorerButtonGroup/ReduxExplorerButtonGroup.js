@@ -8,7 +8,6 @@ const mapStateToProps = (state) => ({
   job: state.analysis.job,
   userAccess: state.userAccess.access,
   user: state.user,
-  userAuthMapping: state.userAuthMapping,
 });
 
 const mapDispatchToProps = (dispatch) => ({

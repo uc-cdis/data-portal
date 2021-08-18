@@ -5,7 +5,7 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import Toaster from '@gen3/ui-component/dist/components/Toaster';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
-import PropTypes, { bool } from 'prop-types';
+import PropTypes from 'prop-types';
 import { calculateDropdownButtonConfigs, humanizeNumber } from '../utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
 import { fetchWithCreds } from '../../actions';
@@ -818,6 +818,20 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     );
   };
 
+  isRegisterUsersForDownloadEnabled = () => {
+    if (this.props.buttonConfig.registerUsersForDownload){
+      return this.goToLogin();
+    }
+    return false;
+  }
+  goToLogin = () => {
+    if(!this.props.user || !this.props.user.username) {
+      this.props.history.push('/login');
+      return true;
+    }
+    return false;
+  }
+
   render() {
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.buttonConfig);
     return (
@@ -918,20 +932,6 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       </React.Fragment>
     );
   }
-  isRegisterUsersForDownloadEnabled = () => {
-    if (this.props.buttonConfig.registerUsersForDownload){
-      return this.goToLogin();
-    }
-    return false;
-  }
-  goToLogin = () => {
-    if(!this.props.user || !this.props.user.username) {
-      this.props.history.push('/login');
-      return true;
-    }
-    return false;
-  }
-
 }
 
 ExplorerButtonGroup.propTypes = {
@@ -953,7 +953,6 @@ ExplorerButtonGroup.propTypes = {
   isLocked: PropTypes.bool.isRequired,
   userAccess: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  userAuthMapping: PropTypes.object.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {
