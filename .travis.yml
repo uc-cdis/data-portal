@@ -8,8 +8,7 @@ node_js:
   - "14"
 
 cache:
-  directories:
-    - node_modules # NPM packages
+  npm: false # disable npm cache for npm ci
 
 services:
     - docker
