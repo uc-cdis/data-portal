@@ -41,12 +41,6 @@ function FilterGroup({
   patientIds,
   tabs,
 }) {
-  const [anchorValue, setAnchorValue] = useState('');
-  const anchorLabel =
-    anchorConfig !== undefined && anchorValue !== ''
-      ? `${anchorConfig.fieldName}:${anchorValue}`
-      : '';
-
   const filterTabs = filterConfig.tabs.map(
     ({ title, fields, searchFields }) => ({
       title,
@@ -94,6 +88,12 @@ function FilterGroup({
     setFilterResults(newFilterResults);
     onFilterChange(newFilterResults);
   }, [initialAppliedFilters]);
+
+  const [anchorValue, setAnchorValue] = useState('');
+  const anchorLabel =
+    anchorConfig !== undefined && anchorValue !== '' && showAnchorFilter
+      ? `${anchorConfig.fieldName}:${anchorValue}`
+      : '';
 
   const filterTabStatus = showAnchorFilter
     ? filterStatus[tabIndex][anchorLabel]
