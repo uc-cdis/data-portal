@@ -112,14 +112,15 @@ function isValid(filterContent) {
  * - filter keys include only fields specified in the configuration
  * @param {*} value
  * @param {FilterConfig} filterConfig
+ * @param {boolean} isAnchorFilterEnabled
  */
-export function validateFilter(value, filterConfig) {
+export function validateFilter(value, filterConfig, isAnchorFilterEnabled) {
   if (!isPlainObject(value)) return false;
 
   const allFields = filterConfig.tabs.flatMap(({ fields }) => fields);
   const testFieldSet = new Set(allFields);
   for (const [field, filterContent] of Object.entries(value)) {
-    if ('filter' in filterContent)
+    if (isAnchorFilterEnabled && 'filter' in filterContent)
       for (const [anchoredField, anchoredfilterContent] of Object.entries(
         filterContent.filter
       ))
