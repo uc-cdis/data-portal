@@ -98,6 +98,7 @@ class IndexPageComponent extends React.Component {
                 {homepageCharts}
               </Carousel>
             </MediaQuery>
+            test
             {homepageEmailForm
               && homepageEmailForm.action
               && homepageEmailForm.subscribeToTopicId
