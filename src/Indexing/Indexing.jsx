@@ -311,8 +311,8 @@ class Indexing extends React.Component {
   downloadJobOutput = (linkToFile) => {
     const link = document.createElement('a');
     link.href = linkToFile;
-    document.body.appendChild(link);
     link.click();
+    document.body.appendChild(link);
   }
 
   download = async () => {

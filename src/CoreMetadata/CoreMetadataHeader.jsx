@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import Popup from '../components/Popup';
 import { userAPIPath, useArboristUI } from '../configs';
 import isEnabled from '../helpers/featureFlags';
+import { humanFileSize } from '../utils.js';
 
 import { userHasMethodForServiceOnProject } from '../authMappingUtils';
 
@@ -17,13 +18,6 @@ function fileTypeTransform(type) {
   let t = type.replace(/_/g, ' '); // '-' to ' '
   t = t.replace(/\b\w/g, (l) => l.toUpperCase()); // capitalize words
   return `| ${t} |`;
-}
-
-function fileSizeTransform(size) {
-  const i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
-  const sizeStr = (size / (1024 ** i)).toFixed(2) * 1;
-  const suffix = ['B', 'KB', 'MB', 'GB', 'TB'][i];
-  return `${sizeStr} ${suffix}`;
 }
 
 function projectIsOpenData(projectAvail, projectID) {
@@ -77,11 +71,20 @@ class CoreMetadataHeader extends Component {
         }
       }
 
-      if (!this.props.metadata.data_format) {
-        /* eslint no-console: ["error", { allow: ["error"] }] */
-        console.error('WARNING: null value found for mandatory field \'data_format\', please verify the correctness of metadata');
+      const propertiesList = [];
+      if (this.props.metadata.data_format) {
+        propertiesList.push(this.props.metadata.data_format);
       }
-      const properties = `${this.props.metadata.data_format} | ${fileSizeTransform(this.props.metadata.file_size)} | ${this.props.metadata.object_id} | ${this.dateTransform(this.props.metadata.updated_datetime)}`;
+      if (this.props.metadata.file_size) {
+        propertiesList.push(humanFileSize(this.props.metadata.file_size));
+      }
+      if (this.props.metadata.object_id) {
+        propertiesList.push(this.props.metadata.object_id);
+      }
+      if (this.props.metadata.updated_datetime) {
+        propertiesList.push(this.dateTransform(this.props.metadata.updated_datetime));
+      }
+      const properties = propertiesList.join(' | ');
 
       return (
         <div className='body-typo'>

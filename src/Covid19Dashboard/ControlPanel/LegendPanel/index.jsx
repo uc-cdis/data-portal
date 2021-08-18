@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import './LegendPanel.less';
 
+// keeping this as it was used. could potentially be rewritten for
+// multiple legend types but fails to work properly with negative numbers
 function dictToLegendList(colors) {
   // input: {0: '#FFF', 10: '#888', 100: '#000'}
   // output: [[ '0-9', '#FFF' ], [ '10-99', '#888' ], [ '100+', '#000' ]]
@@ -23,7 +25,8 @@ function dictToLegendList(colors) {
 
 class LegendPanel extends PureComponent {
   render() {
-    const legendData = dictToLegendList(this.props.colors);
+    const legendData = this.props.formattedColors.length > 0
+      ? this.props.formattedColors : dictToLegendList(this.props.colors);
     return (
       <div className='legend-panel'>
         <h3>Legend</h3>
@@ -51,10 +54,12 @@ class LegendPanel extends PureComponent {
 
 LegendPanel.propTypes = {
   colors: PropTypes.object,
+  formattedColors: PropTypes.array,
 };
 
 LegendPanel.defaultProps = {
   colors: {},
+  formattedColors: [],
 };
 
 export default LegendPanel;
