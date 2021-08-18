@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  queryGuppyForAggregationData,
   queryGuppyForAggregationChartData,
+  queryGuppyForAggregationCountData,
+  queryGuppyForAggregationFilterData,
   queryGuppyForRawData,
   queryGuppyForSubAggregationData,
   queryGuppyForTotalCounts,
@@ -94,55 +95,6 @@ function GuppyWrapper({
   }
 
   /** @param {FilterState} filter */
-  function fetchAggsDataFromGuppy(filter) {
-    if (isMounted.current)
-      setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
-
-    const isFilterEmpty = Object.keys(filter).length === 0;
-
-    queryGuppyForAggregationData({
-      path: guppyConfig.path,
-      type: guppyConfig.dataType,
-      fields: getAllFieldsFromFilterConfigs(filterConfig.tabs),
-      gqlFilter: getGQLFilter(augmentFilter(filter)),
-      shouldGetFullAggsData:
-        state.initialTabsOptions === undefined && !isFilterEmpty,
-      signal: controller.current.signal,
-    }).then((res) => {
-      if (!res.data)
-        throw new Error(
-          `error querying guppy${
-            res.errors && res.errors.length > 0
-              ? `: ${res.errors[0].message}`
-              : ''
-          }`
-        );
-
-      const receivedAggsData = res.data._aggregation[guppyConfig.dataType];
-      const fullAggsData = isFilterEmpty
-        ? receivedAggsData
-        : res.data._aggregation.fullAggsData;
-      const aggsData = excludeSelfFilterFromAggsData(receivedAggsData, filter);
-      const accessibleCount = res.data._aggregation.accessible._totalCount;
-      const totalCount = res.data._aggregation.all._totalCount;
-
-      if (isMounted.current)
-        setState((prevState) => ({
-          ...prevState,
-          accessibleCount,
-          aggsData,
-          initialTabsOptions:
-            fullAggsData === undefined
-              ? prevState.initialTabsOptions
-              : unnestAggsData(fullAggsData),
-          isLoadingAggsData: false,
-          tabsOptions: unnestAggsData(receivedAggsData),
-          totalCount,
-        }));
-    });
-  }
-
-  /** @param {FilterState} filter */
   function fetchAggsChartDataFromGuppy(filter) {
     if (isMounted.current)
       setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
@@ -169,6 +121,84 @@ function GuppyWrapper({
       );
       if (isMounted.current)
         setState((prevState) => ({ ...prevState, aggsChartData }));
+    });
+  }
+
+  /** @param {FilterState} filter */
+  function fetchAggsCountDataFromGuppy(filter) {
+    if (isMounted.current)
+      setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
+
+    queryGuppyForAggregationCountData({
+      path: guppyConfig.path,
+      type: guppyConfig.dataType,
+      gqlFilter: getGQLFilter(augmentFilter(filter)),
+      signal: controller.current.signal,
+    }).then((res) => {
+      if (!res.data)
+        throw new Error(
+          `error querying guppy${
+            res.errors && res.errors.length > 0
+              ? `: ${res.errors[0].message}`
+              : ''
+          }`
+        );
+
+      const accessibleCount = res.data._aggregation.accessible._totalCount;
+      const totalCount = res.data._aggregation.all._totalCount;
+
+      if (isMounted.current)
+        setState((prevState) => ({
+          ...prevState,
+          accessibleCount,
+          isLoadingAggsData: false,
+          totalCount,
+        }));
+    });
+  }
+
+  /** @param {FilterState} filter */
+  function fetchAggsFilterDataFromGuppy(filter) {
+    if (isMounted.current)
+      setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
+
+    const isFilterEmpty = Object.keys(filter).length === 0;
+
+    queryGuppyForAggregationFilterData({
+      path: guppyConfig.path,
+      type: guppyConfig.dataType,
+      fields: getAllFieldsFromFilterConfigs(filterConfig.tabs),
+      gqlFilter: getGQLFilter(augmentFilter(filter)),
+      shouldGetFullAggsData:
+        state.initialTabsOptions === undefined && !isFilterEmpty,
+      signal: controller.current.signal,
+    }).then((res) => {
+      if (!res.data)
+        throw new Error(
+          `error querying guppy${
+            res.errors && res.errors.length > 0
+              ? `: ${res.errors[0].message}`
+              : ''
+          }`
+        );
+
+      const receivedAggsData = res.data._aggregation[guppyConfig.dataType];
+      const fullAggsData = isFilterEmpty
+        ? receivedAggsData
+        : res.data._aggregation.fullAggsData;
+      const aggsData = excludeSelfFilterFromAggsData(receivedAggsData, filter);
+
+      if (isMounted.current)
+        setState((prevState) => ({
+          ...prevState,
+          aggsData,
+          initialTabsOptions:
+            fullAggsData === undefined
+              ? prevState.initialTabsOptions
+              : unnestAggsData(fullAggsData),
+          isLoadingAggsData: false,
+          tabsOptions: unnestAggsData(receivedAggsData),
+        }));
     });
   }
 
@@ -267,8 +297,9 @@ function GuppyWrapper({
     }).then((allFields) => {
       if (isMounted.current) {
         setState((prevState) => ({ ...prevState, allFields }));
-        fetchAggsDataFromGuppy(state.filter);
+        fetchAggsCountDataFromGuppy(state.filter);
         fetchAggsChartDataFromGuppy(state.filter);
+        fetchAggsFilterDataFromGuppy(state.filter);
         fetchRawDataFromGuppy({
           fields:
             rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : allFields,
@@ -282,8 +313,9 @@ function GuppyWrapper({
     rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : state.allFields;
 
   useEffect(() => {
-    fetchAggsDataFromGuppy(state.filter);
+    fetchAggsCountDataFromGuppy(state.filter);
     fetchAggsChartDataFromGuppy(state.filter);
+    fetchAggsFilterDataFromGuppy(state.filter);
     fetchRawDataFromGuppy({
       fields: rawDataFields,
       updateDataWhenReceive: true,
@@ -387,8 +419,9 @@ function GuppyWrapper({
 
     controller.current.abort();
     controller.current = new AbortController();
-    fetchAggsDataFromGuppy(mergedFilter);
     fetchAggsChartDataFromGuppy(mergedFilter);
+    fetchAggsCountDataFromGuppy(mergedFilter);
+    fetchAggsFilterDataFromGuppy(mergedFilter);
     fetchRawDataFromGuppy({
       fields: rawDataFields,
       updateDataWhenReceive: true,
