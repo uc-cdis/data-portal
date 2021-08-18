@@ -8,7 +8,6 @@ import {
   getFilterSections,
   updateCountsInInitialTabsOptions,
   sortTabsOptions,
-  unnestAggsData,
 } from '../Utils/filters';
 import '../typedef';
 
@@ -27,8 +26,8 @@ import '../typedef';
  * @property {(x: FilterState) => void} onFilterChange
  * @property {(x: string[]) => void} [onPatientIdsChange]
  * @property {string[]} [patientIds]
- * @property {AggsData} receivedAggsData
  * @property {number} [tierAccessLimit]
+ * @property {SimpleAggsData} tabsOptions
  */
 
 /** @param {ConnectedFilterProps} props */
@@ -46,7 +45,7 @@ function ConnectedFilter({
   onFilterChange,
   onPatientIdsChange,
   patientIds,
-  receivedAggsData,
+  tabsOptions = {},
   tierAccessLimit,
 }) {
   if (
@@ -56,7 +55,6 @@ function ConnectedFilter({
   )
     return null;
 
-  const tabsOptions = unnestAggsData(receivedAggsData);
   const processedTabsOptions = sortTabsOptions(
     updateCountsInInitialTabsOptions(initialTabsOptions, tabsOptions, filter)
   );
@@ -147,7 +145,7 @@ ConnectedFilter.propTypes = {
   onFilterChange: PropTypes.func.isRequired,
   onPatientIdsChange: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),
-  receivedAggsData: PropTypes.object.isRequired,
+  tabsOptions: PropTypes.object,
   tierAccessLimit: PropTypes.number,
 };
 

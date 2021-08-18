@@ -236,7 +236,7 @@ class GuppyDataExplorer extends React.Component {
                   filter={data.filter}
                   initialTabsOptions={data.initialTabsOptions}
                   onFilterChange={data.onFilterChange}
-                  receivedAggsData={data.receivedAggsData}
+                  tabsOptions={data.tabsOptions}
                 />
                 <ExplorerVisualization
                   className='guppy-data-explorer__visualization'

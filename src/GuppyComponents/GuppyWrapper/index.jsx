@@ -42,7 +42,7 @@ import '../typedef';
  * @property {boolean} isLoadingAggsData
  * @property {boolean} isLoadingRawData
  * @property {Object[]} rawData
- * @property {AggsData} receivedAggsData
+ * @property {SimpleAggsData} tabsOptions
  * @property {number} totalCount
  */
 
@@ -68,8 +68,8 @@ function GuppyWrapper({
     initialTabsOptions: undefined,
     isLoadingAggsData: false,
     isLoadingRawData: false,
-    receivedAggsData: {},
     rawData: [],
+    tabsOptions: {},
     totalCount: 0,
   });
   const controller = useRef(new AbortController());
@@ -136,7 +136,7 @@ function GuppyWrapper({
               ? prevState.initialTabsOptions
               : unnestAggsData(fullAggsData),
           isLoadingAggsData: false,
-          receivedAggsData,
+          tabsOptions: unnestAggsData(receivedAggsData),
           totalCount,
         }));
     });
