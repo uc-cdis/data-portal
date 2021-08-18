@@ -26,7 +26,6 @@ import '../typedef';
  * @property {SimpleAggsData} initialTabsOptions
  * @property {(x: FilterState) => void} onFilterChange
  * @property {(x: string[]) => void} [onPatientIdsChange]
- * @property {(x: AggsData) => AggsData} [onProcessFilterAggsData]
  * @property {string[]} [patientIds]
  * @property {AggsData} receivedAggsData
  * @property {number} [tierAccessLimit]
@@ -46,7 +45,6 @@ function ConnectedFilter({
   initialTabsOptions = {},
   onFilterChange,
   onPatientIdsChange,
-  onProcessFilterAggsData = (data) => data,
   patientIds,
   receivedAggsData,
   tierAccessLimit,
@@ -58,7 +56,7 @@ function ConnectedFilter({
   )
     return null;
 
-  const tabsOptions = unnestAggsData(onProcessFilterAggsData(receivedAggsData));
+  const tabsOptions = unnestAggsData(receivedAggsData);
   const processedTabsOptions = sortTabsOptions(
     updateCountsInInitialTabsOptions(initialTabsOptions, tabsOptions, filter)
   );
@@ -148,7 +146,6 @@ ConnectedFilter.propTypes = {
   initialTabsOptions: PropTypes.object,
   onFilterChange: PropTypes.func.isRequired,
   onPatientIdsChange: PropTypes.func,
-  onProcessFilterAggsData: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),
   receivedAggsData: PropTypes.object.isRequired,
   tierAccessLimit: PropTypes.number,
