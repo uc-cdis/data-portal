@@ -37,10 +37,7 @@ export const ReduxEmailSignUpForm = (() => {
     return {};
   };
 
-  // ReduxEmailSignUpForm does not dispatch anything
-  const mapDispatchToProps = function mapDispatch() { return {}; };
-
-  return connect(mapStateToProps, mapDispatchToProps)(EmailSignUpForm);
+  return connect(mapStateToProps)(EmailSignUpForm);
 })();
 
 export const ReduxIndexCounts = (() => {
