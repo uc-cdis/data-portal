@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
-import { Carousel } from 'antd';
-import { ReduxIndexBarChart, ReduxEmailSignUpForm } from './reduxer';
+import { Carousel, Input, Button } from 'antd';
+import { ReduxIndexBarChart } from './reduxer';
 import { components } from '../params';
 import { loadHomepageChartDataFromDatasets, loadHomepageChartDataFromGraphQL } from './utils';
 import {
-  breakpoints, customHomepageChartConfig, indexPublic, homepageChartNodes, homepageEmailForm,
+  breakpoints, customHomepageChartConfig, indexPublic, homepageChartNodes,
 } from '../localconf';
 import IntroductionNIAID from '../components/IntroductionNIAID';
 import HomepageCustomCharts from '../components/charts/HomepageCustomCharts';
 import './page.less';
+import './nctPage.less';
 
 class IndexPageComponent extends React.Component {
   componentDidMount() {
@@ -93,11 +94,26 @@ class IndexPageComponent extends React.Component {
                 {homepageCharts}
               </Carousel>
             </MediaQuery>
-            {homepageEmailForm
-              && homepageEmailForm.action
-              && homepageEmailForm.subscribeToTopicId
-              ? <ReduxEmailSignUpForm />
-              : null}
+            <div className='emailSignUpForm'>
+              <h2>Sign Up For Updates</h2>
+              <form
+                action='https://public.govdelivery.com/accounts/USNIAID/subscribers/qualify'
+                target='_blank'
+                method='post'
+              >
+                <input name='utf8' type='hidden' value='&#x2713;' />
+                <input type='hidden' name='topic_id' id='topic_id' value='USNIAID_185' />
+                <label><span>Email Address</span>
+                  <Input
+                    name='email'
+                    placeholder='example@domain.com'
+                  />
+                </label>
+                <Button type='primary' htmlType='submit' className='g3-button g3-button--primary'>
+                  Submit
+                </Button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

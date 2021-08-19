@@ -91,14 +91,6 @@ Below is an example, with inline comments describing what each JSON block config
         }
       ]
     },
-    "emailSignUpForm": { // optional; used to show a govdelivery.com Email SignUp Form on the homepage
-      "action": url, // required ; url user will be taken to when hitting submit
-      "subscribeToTopicId": "USNIAID_182", // required; email list user will be subscribed to
-      "title": "Sign Up For Updates", // optional ; will overtire this default text
-      "label": "Email Address", // optional ; will overtire this default text
-      "placeholder": "example@domain.com", // optional ; will overtire this default text
-      "buttonText": "Submit" // optional ; will overtire this default text
-    }
     "navigation": { // required; details what should be in the navigation bar
       "items": [ // required; the buttons in the navigation bar
         {
