@@ -96,10 +96,7 @@ function GuppyWrapper({
 
   /** @param {FilterState} filter */
   function fetchAggsChartDataFromGuppy(filter) {
-    if (isMounted.current)
-      setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
-
-    queryGuppyForAggregationChartData({
+    return queryGuppyForAggregationChartData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: Object.keys(chartConfig),
@@ -115,21 +112,18 @@ function GuppyWrapper({
           }`
         );
 
-      const aggsChartData = excludeSelfFilterFromAggsData(
-        res.data._aggregation[guppyConfig.dataType],
-        filter
-      );
-      if (isMounted.current)
-        setState((prevState) => ({ ...prevState, aggsChartData }));
+      return {
+        aggsChartData: excludeSelfFilterFromAggsData(
+          res.data._aggregation[guppyConfig.dataType],
+          filter
+        ),
+      };
     });
   }
 
   /** @param {FilterState} filter */
   function fetchAggsCountDataFromGuppy(filter) {
-    if (isMounted.current)
-      setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
-
-    queryGuppyForAggregationCountData({
+    return queryGuppyForAggregationCountData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       gqlFilter: getGQLFilter(augmentFilter(filter)),
@@ -144,33 +138,23 @@ function GuppyWrapper({
           }`
         );
 
-      const accessibleCount = res.data._aggregation.accessible._totalCount;
-      const totalCount = res.data._aggregation.all._totalCount;
-
-      if (isMounted.current)
-        setState((prevState) => ({
-          ...prevState,
-          accessibleCount,
-          isLoadingAggsData: false,
-          totalCount,
-        }));
+      return {
+        accessibleCount: res.data._aggregation.accessible._totalCount,
+        totalCount: res.data._aggregation.all._totalCount,
+      };
     });
   }
 
   /** @param {FilterState} filter */
-  function fetchAggsFilterDataFromGuppy(filter) {
-    if (isMounted.current)
-      setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
-
+  function fetchAggsFilterDataFromGuppy(filter, initialTabsOptions) {
     const isFilterEmpty = Object.keys(filter).length === 0;
 
-    queryGuppyForAggregationFilterData({
+    return queryGuppyForAggregationFilterData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: getAllFieldsFromFilterConfigs(filterConfig.tabs),
       gqlFilter: getGQLFilter(augmentFilter(filter)),
-      shouldGetFullAggsData:
-        state.initialTabsOptions === undefined && !isFilterEmpty,
+      shouldGetFullAggsData: initialTabsOptions === undefined && !isFilterEmpty,
       signal: controller.current.signal,
     }).then((res) => {
       if (!res.data)
@@ -186,20 +170,46 @@ function GuppyWrapper({
       const fullAggsData = isFilterEmpty
         ? receivedAggsData
         : res.data._aggregation.fullAggsData;
-      const aggsData = excludeSelfFilterFromAggsData(receivedAggsData, filter);
 
-      if (isMounted.current)
-        setState((prevState) => ({
-          ...prevState,
-          aggsData,
-          initialTabsOptions:
-            fullAggsData === undefined
-              ? prevState.initialTabsOptions
-              : unnestAggsData(fullAggsData),
-          isLoadingAggsData: false,
-          tabsOptions: unnestAggsData(receivedAggsData),
-        }));
+      return {
+        aggsData: excludeSelfFilterFromAggsData(receivedAggsData, filter),
+        initialTabsOptions:
+          fullAggsData === undefined
+            ? initialTabsOptions
+            : unnestAggsData(fullAggsData),
+        tabsOptions: unnestAggsData(receivedAggsData),
+      };
     });
+  }
+
+  /** @param {FilterState} filter */
+  function fetchAggsDataFromGuppy(filter) {
+    if (isMounted.current)
+      setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
+
+    Promise.all([
+      fetchAggsChartDataFromGuppy(filter),
+      fetchAggsCountDataFromGuppy(filter),
+      fetchAggsFilterDataFromGuppy(filter, state.initialTabsOptions),
+    ]).then(
+      ([
+        { aggsChartData },
+        { accessibleCount, totalCount },
+        { aggsData, initialTabsOptions, tabsOptions },
+      ]) => {
+        if (isMounted.current)
+          setState((prevState) => ({
+            ...prevState,
+            accessibleCount,
+            aggsChartData,
+            aggsData,
+            initialTabsOptions,
+            isLoadingAggsData: false,
+            tabsOptions,
+            totalCount,
+          }));
+      }
+    );
   }
 
   /**
@@ -297,9 +307,7 @@ function GuppyWrapper({
     }).then((allFields) => {
       if (isMounted.current) {
         setState((prevState) => ({ ...prevState, allFields }));
-        fetchAggsCountDataFromGuppy(state.filter);
-        fetchAggsChartDataFromGuppy(state.filter);
-        fetchAggsFilterDataFromGuppy(state.filter);
+        fetchAggsDataFromGuppy(state.filter);
         fetchRawDataFromGuppy({
           fields:
             rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : allFields,
@@ -313,9 +321,7 @@ function GuppyWrapper({
     rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : state.allFields;
 
   useEffect(() => {
-    fetchAggsCountDataFromGuppy(state.filter);
-    fetchAggsChartDataFromGuppy(state.filter);
-    fetchAggsFilterDataFromGuppy(state.filter);
+    fetchAggsDataFromGuppy(state.filter);
     fetchRawDataFromGuppy({
       fields: rawDataFields,
       updateDataWhenReceive: true,
@@ -419,9 +425,7 @@ function GuppyWrapper({
 
     controller.current.abort();
     controller.current = new AbortController();
-    fetchAggsChartDataFromGuppy(mergedFilter);
-    fetchAggsCountDataFromGuppy(mergedFilter);
-    fetchAggsFilterDataFromGuppy(mergedFilter);
+    fetchAggsDataFromGuppy(mergedFilter);
     fetchRawDataFromGuppy({
       fields: rawDataFields,
       updateDataWhenReceive: true,
