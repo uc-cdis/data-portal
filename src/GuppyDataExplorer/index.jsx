@@ -135,6 +135,7 @@ class Explorer extends React.Component {
               loginForButtonFeature: explorerConfig[this.state.tab].loginForButtonFeature,
             }}
             history={this.props.history}
+            location={this.props.location}
             tierAccessLevel={tierAccessLevelCalculated}
             tierAccessLimit={tierAccessLimit}
             getAccessButtonLink={explorerConfig[this.state.tab].getAccessButtonLink}

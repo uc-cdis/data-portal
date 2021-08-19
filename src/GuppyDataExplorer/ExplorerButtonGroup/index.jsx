@@ -825,8 +825,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
 
   goToLogin = () => {
     if (!this.props.user || !this.props.user.username) {
-      // this.props.history.push('/login', { from: `${props.location.pathname}` });
-      this.props.history.push('/login');
+      this.props.history.push('/login', { from: `${this.props.location.pathname}` });
+      // this.props.history.push('/login');
     }
   }
 
@@ -890,7 +890,10 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
             .map((dropdownId) => {
               const entry = dropdownConfigs[dropdownId];
               const btnConfigs = entry.buttonConfigs;
-              const dropdownTitle = entry.dropdownConfig.title;
+              // const dropdownTitle = entry.dropdownConfig.title;
+              const dropdownTitle = ((!this.props.user.username && this.isLoginForButtonFeatureEnabled()
+                && this.isDownloadButton(entry.dropdownConfig)) ? `Login to ${entry.dropdownConfig.title.toLowerCase()}` : entry.dropdownConfig.title);
+
               return (
                 <Dropdown
                   key={dropdownId}
@@ -907,7 +910,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
                             key={btnCfg.type}
                             leftIcon='datafile'
                             rightIcon='download'
-                            onClick={onClick}
+                            onClick={() => ((!this.props.user.username && this.isLoginForButtonFeatureEnabled()
+                              && this.isDownloadButton(btnCfg)) ? this.goToLogin() : onClick())}
                           >
                             {btnCfg.title}
                           </Dropdown.Item>
@@ -960,6 +964,7 @@ ExplorerButtonGroup.propTypes = {
   isLocked: PropTypes.bool.isRequired,
   userAccess: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {
