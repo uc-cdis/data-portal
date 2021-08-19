@@ -317,7 +317,12 @@ function GuppyWrapper({
   const rawDataFields =
     rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : state.allFields;
 
+  const isInitialRenderRef = useRef(true);
   useEffect(() => {
+    if (isInitialRenderRef.current) {
+      isInitialRenderRef.current = false;
+      return;
+    }
     fetchAggsDataFromGuppy(state.filter);
     fetchRawDataFromGuppy({
       fields: rawDataFields,
