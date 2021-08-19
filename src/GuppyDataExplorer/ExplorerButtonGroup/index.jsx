@@ -800,8 +800,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     return (
       <Button
         key={buttonConfig.type}
-        onClick={() => { if (!this.isLoginForButtonFeatureEnabled() && this.isDownloadButton(buttonConfig)) { clickFunc(); } }}
-        label={(this.props.user.username && this.isDownloadButton(buttonConfig)) ? buttonTitle : `Login to ${buttonTitle}`}
+        onClick={() => (!this.props.user.username && this.isLoginForButtonFeatureEnabled() && this.isDownloadButton(buttonConfig)) ? this.goToLogin() :  clickFunc()}
+        label={(!this.props.user.username && this.isLoginForButtonFeatureEnabled() && this.isDownloadButton(buttonConfig)) ? `Login to ${buttonTitle.toLowerCase()}` : buttonTitle}
         leftIcon={buttonConfig.leftIcon}
         rightIcon={buttonConfig.rightIcon}
         className='explorer-button-group__download-button'
@@ -816,17 +816,16 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
 
   isLoginForButtonFeatureEnabled = () => {
     if (this.props.buttonConfig.loginForButtonFeature) {
-      return this.goToLogin();
+      return true;
     }
     return false;
   }
 
   goToLogin = () => {
     if (!this.props.user || !this.props.user.username) {
+      //this.props.history.push('/login', { from: `${props.location.pathname}` });
       this.props.history.push('/login');
-      return true;
     }
-    return false;
   }
 
   isDownloadButton = (buttonConfig) => {
@@ -959,6 +958,7 @@ ExplorerButtonGroup.propTypes = {
   isLocked: PropTypes.bool.isRequired,
   userAccess: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {
