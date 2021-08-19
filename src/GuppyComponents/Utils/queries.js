@@ -47,66 +47,6 @@ function histogramQueryStrForEachField(field) {
  * @param {string} args.type
  * @param {string[]} args.fields
  * @param {GqlFilter} [args.gqlFilter]
- * @param {boolean} [args.shouldGetFullAggsData]
- * @param {AbortSignal} [args.signal]
- */
-export function queryGuppyForAggregationData({
-  path,
-  type,
-  fields,
-  gqlFilter,
-  shouldGetFullAggsData = false,
-  signal,
-}) {
-  const fullAggsDataQueryFragment = `fullAggsData: ${type} (accessibility: all) {
-    ${fields.map((field) => histogramQueryStrForEachField(field))}
-  }`;
-  const query = (gqlFilter !== undefined
-    ? `query ($filter: JSON) {
-        _aggregation {
-          ${type} (filter: $filter, filterSelf: false, accessibility: all) {
-            ${fields.map((field) => histogramQueryStrForEachField(field))}
-          }
-          accessible: ${type} (filter: $filter, accessibility: accessible) {
-            _totalCount
-          }
-          all: ${type} (filter: $filter, accessibility: all) {
-            _totalCount
-          }
-          ${shouldGetFullAggsData ? fullAggsDataQueryFragment : ''}
-        }
-      }`
-    : `query {
-        _aggregation {
-          ${type} (accessibility: all) {
-            ${fields.map((field) => histogramQueryStrForEachField(field))}
-          }
-          accessible: ${type} (accessibility: accessible) {
-            _totalCount
-          }
-          all: ${type} (accessibility: all) {
-            _totalCount
-          }
-        }
-      }`
-  ).replace(/\s+/g, ' ');
-
-  return fetch(`${path}${graphqlEndpoint}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ query, variables: { filter: gqlFilter } }),
-    signal,
-  }).then((response) => response.json());
-}
-
-/**
- * @param {object} args
- * @param {string} args.path
- * @param {string} args.type
- * @param {string[]} args.fields
- * @param {GqlFilter} [args.gqlFilter]
  * @param {AbortSignal} [args.signal]
  */
 export function queryGuppyForAggregationChartData({
