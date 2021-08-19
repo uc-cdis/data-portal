@@ -132,7 +132,7 @@ class Explorer extends React.Component {
               terraTemplate: explorerConfig[this.state.tab].terraTemplate,
               sevenBridgesExportURL: explorerConfig[this.state.tab].sevenBridgesExportURL,
               enableLimitedFilePFBExport: explorerConfig[this.state.tab].enableLimitedFilePFBExport,
-              loginForButtonFeature: explorerConfig[this.state.tab].loginForButtonFeature,
+              loginForDownload: explorerConfig[this.state.tab].loginForDownload,
             }}
             history={this.props.history}
             location={this.props.location}

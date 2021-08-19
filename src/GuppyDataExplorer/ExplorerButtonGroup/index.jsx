@@ -800,9 +800,9 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     return (
       <Button
         key={buttonConfig.type}
-        onClick={() => ((!this.props.user.username && this.isLoginForButtonFeatureEnabled()
+        onClick={() => ((!this.props.user.username && this.isLoginForDownloadEnabled()
           && this.isDownloadButton(buttonConfig)) ? this.goToLogin() : clickFunc())}
-        label={(!this.props.user.username && this.isLoginForButtonFeatureEnabled()
+        label={(!this.props.user.username && this.isLoginForDownloadEnabled()
           && this.isDownloadButton(buttonConfig)) ? `Login to ${buttonTitle.toLowerCase()}` : buttonTitle}
         leftIcon={buttonConfig.leftIcon}
         rightIcon={buttonConfig.rightIcon}
@@ -816,8 +816,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     );
   };
 
-  isLoginForButtonFeatureEnabled = () => {
-    if (this.props.buttonConfig.loginForButtonFeature) {
+  isLoginForDownloadEnabled = () => {
+    if (this.props.buttonConfig.loginForDownload) {
       return true;
     }
     return false;
@@ -890,9 +890,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
             .map((dropdownId) => {
               const entry = dropdownConfigs[dropdownId];
               const btnConfigs = entry.buttonConfigs;
-              // const dropdownTitle = entry.dropdownConfig.title;
-              const dropdownTitle = ((!this.props.user.username && this.isLoginForButtonFeatureEnabled()
-                && this.isDownloadButton(entry.dropdownConfig)) ? `Login to ${entry.dropdownConfig.title.toLowerCase()}` : entry.dropdownConfig.title);
+              const dropdownTitle = entry.dropdownConfig.title;
 
               return (
                 <Dropdown
@@ -910,10 +908,11 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
                             key={btnCfg.type}
                             leftIcon='datafile'
                             rightIcon='download'
-                            onClick={() => ((!this.props.user.username && this.isLoginForButtonFeatureEnabled()
+                            onClick={() => ((!this.props.user.username && this.isLoginForDownloadEnabled()
                               && this.isDownloadButton(btnCfg)) ? this.goToLogin() : onClick())}
                           >
-                            {btnCfg.title}
+                            {(!this.props.user.username && this.isLoginForDownloadEnabled()
+                            && this.isDownloadButton(btnCfg)) ? `Login to ${btnCfg.title}.toLowerCase()}` : btnCfg.title}
                           </Dropdown.Item>
                         );
                       })
