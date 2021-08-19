@@ -211,9 +211,9 @@ class IllinoisMapChart extends React.Component {
     if (!this.state.dataDateRange[id]) {
       return;
     }
-    const curentDateRange = this.state.dataDateRange[id];
-    const startDate = new Date(curentDateRange.min);
-    const endDate = new Date(curentDateRange.max);
+    const currentDateRange = this.state.dataDateRange[id];
+    const startDate = new Date(currentDateRange.min);
+    const endDate = new Date(currentDateRange.max);
 
     const dateDiff = msToDays(endDate - startDate);
     let sliderValue;
