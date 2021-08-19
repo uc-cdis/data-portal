@@ -141,7 +141,10 @@ function GuppyWrapper({
     });
   }
 
-  /** @param {FilterState} filter */
+  /**
+   * @param {FilterState} filter
+   * @param {SimpleAggsData} initialTabsOptions
+   */
   function fetchAggsFilterDataFromGuppy(filter, initialTabsOptions) {
     const isFilterEmpty = Object.keys(filter).length === 0;
 
