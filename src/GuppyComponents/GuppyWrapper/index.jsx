@@ -102,19 +102,17 @@ function GuppyWrapper({
       fields: Object.keys(chartConfig),
       gqlFilter: getGQLFilter(augmentFilter(filter)),
       signal: controller.current.signal,
-    }).then((res) => {
-      if (!res.data)
+    }).then(({ data, errors }) => {
+      if (data === undefined)
         throw new Error(
           `error querying guppy${
-            res.errors && res.errors.length > 0
-              ? `: ${res.errors[0].message}`
-              : ''
+            errors?.length > 0 ? `: ${errors[0].message}` : ''
           }`
         );
 
       return {
         aggsChartData: excludeSelfFilterFromAggsData(
-          res.data._aggregation[guppyConfig.dataType],
+          data._aggregation[guppyConfig.dataType],
           filter
         ),
       };
@@ -128,19 +126,17 @@ function GuppyWrapper({
       type: guppyConfig.dataType,
       gqlFilter: getGQLFilter(augmentFilter(filter)),
       signal: controller.current.signal,
-    }).then((res) => {
-      if (!res.data)
+    }).then(({ data, errors }) => {
+      if (data === undefined)
         throw new Error(
           `error querying guppy${
-            res.errors && res.errors.length > 0
-              ? `: ${res.errors[0].message}`
-              : ''
+            errors?.length > 0 ? `: ${errors[0].message}` : ''
           }`
         );
 
       return {
-        accessibleCount: res.data._aggregation.accessible._totalCount,
-        totalCount: res.data._aggregation.all._totalCount,
+        accessibleCount: data._aggregation.accessible._totalCount,
+        totalCount: data._aggregation.all._totalCount,
       };
     });
   }
@@ -156,20 +152,18 @@ function GuppyWrapper({
       gqlFilter: getGQLFilter(augmentFilter(filter)),
       shouldGetFullAggsData: initialTabsOptions === undefined && !isFilterEmpty,
       signal: controller.current.signal,
-    }).then((res) => {
-      if (!res.data)
+    }).then(({ data, errors }) => {
+      if (data === undefined)
         throw new Error(
           `error querying guppy${
-            res.errors && res.errors.length > 0
-              ? `: ${res.errors[0].message}`
-              : ''
+            errors?.length > 0 ? `: ${errors[0].message}` : ''
           }`
         );
 
-      const receivedAggsData = res.data._aggregation[guppyConfig.dataType];
+      const receivedAggsData = data._aggregation[guppyConfig.dataType];
       const fullAggsData = isFilterEmpty
         ? receivedAggsData
-        : res.data._aggregation.fullAggsData;
+        : data._aggregation.fullAggsData;
 
       return {
         aggsData: excludeSelfFilterFromAggsData(receivedAggsData, filter),
