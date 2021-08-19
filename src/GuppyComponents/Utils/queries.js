@@ -131,6 +131,42 @@ export function queryGuppyForAggregationCountData({
 
 /**
  * @param {object} args
+ * @param {string[]} args.fields
+ * @param {GqlFilter} [args.gqlFilter]
+ * @param {boolean} [args.shouldGetFullAggsData]
+ * @param {string} args.type
+ */
+function buildQueryForAggregationFilterData({
+  fields,
+  gqlFilter,
+  shouldGetFullAggsData = false,
+  type,
+}) {
+  if (gqlFilter === undefined)
+    return `query {
+      _aggregation {
+        ${type} (accessibility: all) {
+          ${fields.map((field) => histogramQueryStrForEachField(field))}
+        }
+      }
+    }`.replace(/\s+/g, ' ');
+
+  const fullAggsDataQueryFragment = `fullAggsData: ${type} (accessibility: all) {
+    ${fields.map((field) => histogramQueryStrForEachField(field))}
+  }`;
+
+  return `query ($filter: JSON) {
+    _aggregation {
+      ${type} (filter: $filter, filterSelf: false, accessibility: all) {
+        ${fields.map((field) => histogramQueryStrForEachField(field))}
+      }
+      ${shouldGetFullAggsData ? fullAggsDataQueryFragment : ''}
+    }
+  }`.replace(/\s+/g, ' ');
+}
+
+/**
+ * @param {object} args
  * @param {string} args.path
  * @param {string} args.type
  * @param {string[]} args.fields
@@ -143,29 +179,15 @@ export function queryGuppyForAggregationFilterData({
   type,
   fields,
   gqlFilter,
-  shouldGetFullAggsData = false,
+  shouldGetFullAggsData,
   signal,
 }) {
-  const fullAggsDataQueryFragment = `fullAggsData: ${type} (accessibility: all) {
-    ${fields.map((field) => histogramQueryStrForEachField(field))}
-  }`;
-  const query = (gqlFilter !== undefined
-    ? `query ($filter: JSON) {
-        _aggregation {
-          ${type} (filter: $filter, filterSelf: false, accessibility: all) {
-            ${fields.map((field) => histogramQueryStrForEachField(field))}
-          }
-          ${shouldGetFullAggsData ? fullAggsDataQueryFragment : ''}
-        }
-      }`
-    : `query {
-        _aggregation {
-          ${type} (accessibility: all) {
-            ${fields.map((field) => histogramQueryStrForEachField(field))}
-          }
-        }
-      }`
-  ).replace(/\s+/g, ' ');
+  const query = buildQueryForAggregationFilterData({
+    fields,
+    gqlFilter,
+    shouldGetFullAggsData,
+    type,
+  });
 
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
