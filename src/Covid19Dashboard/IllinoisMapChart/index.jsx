@@ -171,7 +171,7 @@ class IllinoisMapChart extends React.Component {
     }
 
     if (!this.state.vaccine_data.fetchStatus && Object.entries(this.props.jsonVaccinated.il_county_list).length > 0) {
-      const vaccinegeoJson = this.addDataToGeoJsonBase(
+      const vaccineGeoJson = this.addDataToGeoJsonBase(
         this.props.jsonVaccinated.il_county_list,
         (data, location) => {
           const dateProps = {};
@@ -185,7 +185,7 @@ class IllinoisMapChart extends React.Component {
 
       this.setState({ // eslint-disable-line react/no-did-update-set-state, max-len
         vaccine_data: {
-          data: vaccinegeoJson,
+          data: vaccineGeoJson,
           lastUpdated: this.props.jsonVaccinated.last_updated,
           fetchStatus: 'done',
         },
