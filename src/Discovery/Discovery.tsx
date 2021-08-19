@@ -195,6 +195,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [advSearchFilterHeight, setAdvSearchFilterHeight] = useState('100vh');
+  const [downloadInProgress, setDownloadInProgress] = useState(false);
+  const [downloadStatusMessage, setDownloadStatusMessage] = useState({
+    url: '', message: '', title: '', active: false,
+  });
 
   const handleSearchChange = (ev) => {
     const { value } = ev.currentTarget;
@@ -247,10 +251,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   useEffect(() => {
     // If opening to a study by default, open that study
-    if (props.params.studyUID) {
-      const studyID = props.params.studyUID;
+    if (props.params.studyUID && props.studies.length > 0) {
+      const studyID = decodeURIComponent(props.params.studyUID);
       const defaultModalData = props.studies.find(
         (r) => r[config.minimalFieldMapping.uid] === studyID);
+
       if (defaultModalData) {
         setPermalinkCopied(false);
         setModalData(defaultModalData);
@@ -513,6 +518,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           setExportingToWorkspace={setExportingToWorkspace}
           filtersVisible={filtersVisible}
           setFiltersVisible={setFiltersVisible}
+          downloadInProgress={downloadInProgress}
+          setDownloadInProgress={setDownloadInProgress}
+          downloadStatusMessage={downloadStatusMessage}
+          setDownloadStatusMessage={setDownloadStatusMessage}
         />
 
         {/* Advanced search panel */}

@@ -3,6 +3,7 @@ import {
   Space,
   Popover,
   Button,
+  Modal,
 } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
@@ -10,11 +11,12 @@ import {
   RightOutlined,
   ExportOutlined,
   DownloadOutlined,
+  FileTextOutlined,
 } from '@ant-design/icons';
 import FileSaver from 'file-saver';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
-import { manifestServiceApiPath, hostname } from '../localconf';
+import { manifestServiceApiPath, hostname, jobAPIPath } from '../localconf';
 
 interface User {
   username: string
@@ -27,7 +29,120 @@ interface Props {
   filtersVisible: boolean;
   setFiltersVisible: (boolean) => void;
   user: User,
+  downloadInProgress: boolean,
+  setDownloadInProgress: (boolean) => void,
+  downloadStatusMessage: {
+    title: string,
+    message: string,
+    active: boolean,
+    url: string
+  },
+  setDownloadStatusMessage: (Object) => void;
 }
+
+const handleDownloadZipClick = async (
+  selectedResources: any[],
+  setDownloadInProgress: (boolean) => void,
+  setDownloadStatusMessage: (object) => void,
+) => {
+  const studyIDs = selectedResources.map((study) => study.project_number);
+  setDownloadInProgress(true);
+  setDownloadStatusMessage({
+    title: 'Your download is being prepared',
+    message: 'Please remain on this page while your download is being prepared.\n\n'
+               + 'When your download is ready, it will begin automatically. You can close this window.',
+    active: true,
+    url: '',
+  });
+
+  const handleJobError = () => {
+    setDownloadInProgress(false);
+    setDownloadStatusMessage({
+      title: 'Download failed',
+      message: 'There was a problem preparing your download. '
+                + 'Please consider using the Gen3 SDK for Python (w/ CLI) to download these files via a manifest.',
+      active: true,
+      url: '',
+    });
+  };
+
+  fetchWithCreds({
+    path: `${jobAPIPath}dispatch`,
+    method: 'POST',
+    body: JSON.stringify({
+      action: 'batch-export',
+      input: {
+        study_ids: studyIDs,
+      },
+    }),
+  }).then(
+    (dispatchResponse) => {
+      const { uid } = dispatchResponse.data;
+      if (dispatchResponse.status === 403 || dispatchResponse.status === 302) {
+        setDownloadInProgress(false);
+        setDownloadStatusMessage({
+          title: 'Download failed',
+          message: 'Unable to authorize download. '
+                  + 'Please refresh the page and ensure you are logged in.',
+          active: true,
+          url: '',
+        });
+      } else if (dispatchResponse.status !== 200 || !uid) {
+        handleJobError();
+      } else {
+        const pollForJobStatusUpdate = () => {
+          fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
+            (statusResponse) => {
+              const { status } = statusResponse.data;
+              if (statusResponse.status !== 200 || !status) {
+                // usually empty status message means Sower can't find a job by its UID
+                handleJobError();
+              } else if (status === 'Failed') {
+                fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
+                  (outputResponse) => {
+                    const { output } = outputResponse.data;
+                    if (outputResponse.status !== 200 || !output) {
+                      handleJobError();
+                    } else {
+                      setDownloadStatusMessage({
+                        title: 'Download failed',
+                        message: output,
+                        active: true,
+                        url: '',
+                      });
+                      setDownloadInProgress(false);
+                    }
+                  },
+                ).catch(handleJobError);
+              } else if (status === 'Completed') {
+                fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
+                  (outputResponse) => {
+                    const { output } = outputResponse.data;
+                    if (outputResponse.status !== 200 || !output) {
+                      handleJobError();
+                    } else {
+                      setDownloadStatusMessage({
+                        title: 'Your download is ready',
+                        message: 'Your download has been prepared. If your download doesn\'t start automatically, please follow this direct link: ',
+                        active: true,
+                        url: output,
+                      });
+                      setDownloadInProgress(false);
+                      setTimeout(() => window.open(output), 2000);
+                    }
+                  },
+                ).catch(handleJobError);
+              } else {
+                setTimeout(pollForJobStatusUpdate, 5000);
+              }
+            },
+          );
+        };
+        setTimeout(pollForJobStatusUpdate, 5000);
+      }
+    },
+  ).catch(handleJobError);
+};
 
 const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources: any[]) => {
   const { manifestFieldName } = config.features.exportToWorkspace;
@@ -130,6 +245,41 @@ const DiscoveryActionBar = (props: Props) => {
         && (
           <Space>
             <span className='discovery-export__selected-ct'>{props.selectedResources.length} selected</span>
+            {
+              props.config.features.exportToWorkspace.enableDownloadZip
+              && (
+                <Button
+                  onClick={() => {
+                    if (props.user.username) {
+                      handleDownloadZipClick(
+                        props.selectedResources,
+                        props.setDownloadInProgress,
+                        props.setDownloadStatusMessage,
+                      );
+                    } else {
+                      handleRedirectToLoginClick();
+                    }
+                  }}
+                  type='text'
+                  disabled={props.selectedResources.length === 0 || props.downloadInProgress === true}
+                  icon={<DownloadOutlined />}
+                  loading={props.downloadInProgress}
+                >
+                  {(
+                    () => {
+                      if (props.user.username) {
+                        if (props.downloadInProgress === true) {
+                          return 'Preparing download...';
+                        }
+
+                        return `${props.config.features.exportToWorkspace.downloadZipButtonText || 'Download Zip'}`;
+                      }
+                      return `Login to ${props.config.features.exportToWorkspace.downloadZipButtonText || 'Download Zip'}`;
+                    }
+                  )()}
+                </Button>
+              )
+            }
             { props.config.features.exportToWorkspace.enableDownloadManifest
             && (
               <Popover
@@ -156,11 +306,12 @@ const DiscoveryActionBar = (props: Props) => {
                     : () => { handleRedirectToLoginClick(); }}
                   type='text'
                   disabled={props.selectedResources.length === 0}
-                  icon={<DownloadOutlined />}
+                  icon={<FileTextOutlined />}
                 >
                   {(props.user.username) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
                     : `Login to ${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`}
                 </Button>
+
               </Popover>
             )}
             <Popover
@@ -189,6 +340,28 @@ const DiscoveryActionBar = (props: Props) => {
                 {(props.user.username) ? 'Open In Workspace' : 'Login to Open In Workspace'}
               </Button>
             </Popover>
+            <Modal
+              closable={false}
+              visible={props.downloadStatusMessage.active}
+              title={props.downloadStatusMessage.title}
+              footer={(
+                <Button
+                  onClick={
+                    () => props.setDownloadStatusMessage({
+                      title: '', message: '', active: false, url: '',
+                    })
+                  }
+                >
+                  Close
+                </Button>
+              )}
+            >
+              { props.downloadStatusMessage.message }
+              {
+                props.downloadStatusMessage.url
+                  && <a href={props.downloadStatusMessage.url}>{props.downloadStatusMessage.url}</a>
+              }
+            </Modal>
           </Space>
         )}
     </div>
