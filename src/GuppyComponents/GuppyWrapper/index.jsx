@@ -8,7 +8,6 @@ import {
   queryGuppyForSubAggregationData,
   queryGuppyForTotalCounts,
   downloadDataFromGuppy,
-  getAllFieldsFromFilterConfigs,
   getAllFieldsFromGuppy,
   getGQLFilter,
 } from '../Utils/queries';
@@ -151,7 +150,7 @@ function GuppyWrapper({
     return queryGuppyForAggregationFilterData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
-      fields: getAllFieldsFromFilterConfigs(filterConfig.tabs),
+      fields: filterConfig.tabs.flatMap(({ fields }) => fields),
       gqlFilter: getGQLFilter(augmentFilter(filter)),
       shouldGetFullAggsData: initialTabsOptions === undefined && !isFilterEmpty,
       signal: controller.current.signal,

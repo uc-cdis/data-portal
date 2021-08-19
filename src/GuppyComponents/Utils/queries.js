@@ -574,11 +574,6 @@ export function getGQLFilter(filterState) {
   return { AND: [...simpleFilters, ...nestedFilters] };
 }
 
-/** @param {object} filterTabConfigs */
-export function getAllFieldsFromFilterConfigs(filterTabConfigs) {
-  return filterTabConfigs.flatMap(({ fields }) => fields);
-}
-
 /**
  * Download all data from guppy using fields, filter, and sort args.
  * @param {object} args
