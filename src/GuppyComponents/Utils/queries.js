@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash.clonedeep';
 import fetch from 'isomorphic-fetch';
 import flat from 'flat';
 import papaparse from 'papaparse';
@@ -127,6 +128,70 @@ export function queryGuppyForAggregationCountData({
     body: JSON.stringify({ query, variables: { filter: gqlFilter } }),
     signal,
   }).then((response) => response.json());
+}
+
+/**
+ * @param {Object} args
+ * @param {{ fieldName: string; tabs: string[] }} [args.anchorConfig]
+ * @param {string} [args.anchorLabel]
+ * @param {{ title: string; fields: string[] }[]} args.filterTabs
+ * @param {GqlFilter} [args.gqlFilter]
+ */
+export function getQueryInfoForAggregationOptionsData({
+  anchorConfig,
+  anchorValue = '',
+  filterTabs,
+  gqlFilter,
+}) {
+  const isUsingAnchor = anchorConfig !== undefined && anchorValue !== '';
+  const anchorFilterPiece = isUsingAnchor
+    ? { IN: { [anchorConfig.fieldName]: [anchorValue] } }
+    : undefined;
+
+  const fieldsByGroup = {};
+  const gqlFilterByGroup = {};
+
+  for (const { title, fields } of filterTabs)
+    if (isUsingAnchor && anchorConfig.tabs.includes(title)) {
+      for (const field of fields) {
+        const [path, fieldName] = field.split('.');
+
+        if (fieldName === undefined)
+          fieldsByGroup.main = [...(fieldsByGroup?.main ?? []), field];
+        else {
+          fieldsByGroup[path] = [...(fieldsByGroup?.[path] ?? []), field];
+
+          // add gqlFilterGroup for each nested field object path
+          if (!(path in gqlFilterByGroup)) {
+            const groupGqlFilter = cloneDeep(gqlFilter ?? { AND: [] });
+
+            if (anchorValue !== '') {
+              const found = groupGqlFilter.AND.find(
+                ({ nested }) => nested?.path === path
+              );
+              if (found === undefined) {
+                groupGqlFilter.AND.push({
+                  nested: { path, AND: [anchorFilterPiece] },
+                });
+              } else {
+                found.nested.AND.push(anchorFilterPiece);
+              }
+            }
+
+            gqlFilterByGroup[`filter_${path}`] = groupGqlFilter;
+          }
+        }
+      }
+    } else {
+      fieldsByGroup.main = [...(fieldsByGroup?.main ?? []), ...fields];
+    }
+
+  if (fieldsByGroup.main.length > 0) gqlFilterByGroup.filter_main = gqlFilter;
+
+  return {
+    fieldsByGroup,
+    gqlFilterByGroup,
+  };
 }
 
 /**

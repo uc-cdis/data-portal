@@ -1,4 +1,7 @@
-import { getGQLFilter } from '../Utils/queries';
+import {
+  getGQLFilter,
+  getQueryInfoForAggregationOptionsData,
+} from '../Utils/queries';
 
 describe('Get GQL filter from filter object from', () => {
   test('a simple option filter', async () => {
@@ -185,5 +188,142 @@ describe('Get GQL filter from filter object from', () => {
       ],
     };
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
+});
+
+describe('Get query info objects for aggregation options data', () => {
+  const anchorConfig = {
+    fieldName: 'a',
+    tabs: ['t1'],
+    options: ['a0', 'a1'],
+  };
+  const anchorValue = anchorConfig.options[0];
+  const filterTabs = [
+    { title: 't0', fields: ['f0', 'f1'] },
+    { title: 't1', fields: ['f2.foo', 'f2.bar', 'f3.baz'] },
+  ];
+  const gqlFilter = {
+    AND: [
+      { IN: { f0: ['x'] } },
+      { AND: [{ GTE: { f1: 0 } }, { LTE: { f1: 1 } }] },
+      {
+        nested: {
+          path: 'f2',
+          AND: [{ IN: { foo: ['y'] } }],
+        },
+      },
+    ],
+  };
+  test('No filter, no anchor config', () => {
+    const queryInfo = getQueryInfoForAggregationOptionsData({
+      filterTabs,
+    });
+    const expected = {
+      fieldsByGroup: { main: ['f0', 'f1', 'f2.foo', 'f2.bar', 'f3.baz'] },
+      gqlFilterByGroup: { filter_main: undefined },
+    };
+    expect(queryInfo).toEqual(expected);
+  });
+  test('No filter, no anchor value', () => {
+    const queryInfo = getQueryInfoForAggregationOptionsData({
+      anchorConfig,
+      filterTabs,
+    });
+    const expected = {
+      fieldsByGroup: { main: ['f0', 'f1', 'f2.foo', 'f2.bar', 'f3.baz'] },
+      gqlFilterByGroup: { filter_main: undefined },
+    };
+    expect(queryInfo).toEqual(expected);
+  });
+  test('No filter, with anchor value', () => {
+    const queryInfo = getQueryInfoForAggregationOptionsData({
+      anchorConfig,
+      anchorValue,
+      filterTabs,
+    });
+    const expected = {
+      fieldsByGroup: {
+        main: ['f0', 'f1'],
+        f2: ['f2.foo', 'f2.bar'],
+        f3: ['f3.baz'],
+      },
+      gqlFilterByGroup: {
+        filter_main: undefined,
+        filter_f2: {
+          AND: [{ nested: { path: 'f2', AND: [{ IN: { a: ['a0'] } }] } }],
+        },
+        filter_f3: {
+          AND: [{ nested: { path: 'f3', AND: [{ IN: { a: ['a0'] } }] } }],
+        },
+      },
+    };
+    expect(queryInfo).toEqual(expected);
+  });
+  test('With filter, no anchor config', () => {
+    const queryInfo = getQueryInfoForAggregationOptionsData({
+      filterTabs,
+      gqlFilter,
+    });
+    const expected = {
+      fieldsByGroup: { main: ['f0', 'f1', 'f2.foo', 'f2.bar', 'f3.baz'] },
+      gqlFilterByGroup: { filter_main: gqlFilter },
+    };
+    expect(queryInfo).toEqual(expected);
+  });
+  test('With filter, no anchor value', () => {
+    const queryInfo = getQueryInfoForAggregationOptionsData({
+      anchorConfig,
+      filterTabs,
+      gqlFilter,
+    });
+    const expected = {
+      fieldsByGroup: { main: ['f0', 'f1', 'f2.foo', 'f2.bar', 'f3.baz'] },
+      gqlFilterByGroup: { filter_main: gqlFilter },
+    };
+    expect(queryInfo).toEqual(expected);
+  });
+  test('With filter, with anchor value', () => {
+    const queryInfo = getQueryInfoForAggregationOptionsData({
+      anchorConfig,
+      anchorValue,
+      filterTabs,
+      gqlFilter,
+    });
+    const expected = {
+      fieldsByGroup: {
+        main: ['f0', 'f1'],
+        f2: ['f2.foo', 'f2.bar'],
+        f3: ['f3.baz'],
+      },
+      gqlFilterByGroup: {
+        filter_main: gqlFilter,
+        filter_f2: {
+          AND: [
+            { IN: { f0: ['x'] } },
+            { AND: [{ GTE: { f1: 0 } }, { LTE: { f1: 1 } }] },
+            {
+              nested: {
+                path: 'f2',
+                AND: [{ IN: { foo: ['y'] } }, { IN: { a: ['a0'] } }],
+              },
+            },
+          ],
+        },
+        filter_f3: {
+          AND: [
+            { IN: { f0: ['x'] } },
+            { AND: [{ GTE: { f1: 0 } }, { LTE: { f1: 1 } }] },
+            {
+              nested: {
+                path: 'f2',
+                AND: [{ IN: { foo: ['y'] } }],
+              },
+            },
+            { nested: { path: 'f3', AND: [{ IN: { a: ['a0'] } }] } },
+          ],
+        },
+      },
+    };
+    expect(queryInfo).toEqual(expected);
   });
 });
