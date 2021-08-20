@@ -139,10 +139,11 @@ export function queryGuppyForAggregationCountData({
 function buildQueryForAggregationOptionsData({
   fields,
   gqlFilter,
-  shouldGetFullAggsData = false,
+  isInitialQuery = false,
   type,
 }) {
-  if (gqlFilter === undefined)
+  const isFilterEmpty = gqlFilter === undefined;
+  if (isFilterEmpty)
     return `query {
       _aggregation {
         ${type} (accessibility: all) {
@@ -160,7 +161,7 @@ function buildQueryForAggregationOptionsData({
       ${type} (filter: $filter, filterSelf: false, accessibility: all) {
         ${fields.map((field) => histogramQueryStrForEachField(field))}
       }
-      ${shouldGetFullAggsData ? fullAggsDataQueryFragment : ''}
+      ${isInitialQuery && !isFilterEmpty ? fullAggsDataQueryFragment : ''}
     }
   }`.replace(/\s+/g, ' ');
 }
@@ -171,7 +172,7 @@ function buildQueryForAggregationOptionsData({
  * @param {string} args.type
  * @param {string[]} args.fields
  * @param {GqlFilter} [args.gqlFilter]
- * @param {boolean} [args.shouldGetFullAggsData]
+ * @param {boolean} [args.isInitialQuery]
  * @param {AbortSignal} [args.signal]
  */
 export function queryGuppyForAggregationOptionsData({
@@ -179,13 +180,13 @@ export function queryGuppyForAggregationOptionsData({
   type,
   fields,
   gqlFilter,
-  shouldGetFullAggsData,
+  isInitialQuery,
   signal,
 }) {
   const query = buildQueryForAggregationOptionsData({
     fields,
     gqlFilter,
-    shouldGetFullAggsData,
+    isInitialQuery,
     type,
   });
 

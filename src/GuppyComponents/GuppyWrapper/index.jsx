@@ -145,14 +145,12 @@ function GuppyWrapper({
    * @param {SimpleAggsData} initialTabsOptions
    */
   function fetchAggsOptionsDataFromGuppy(filter, initialTabsOptions) {
-    const isFilterEmpty = Object.keys(filter).length === 0;
-
     return queryGuppyForAggregationOptionsData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: filterConfig.tabs.flatMap(({ fields }) => fields),
       gqlFilter: getGQLFilter(augmentFilter(filter)),
-      shouldGetFullAggsData: initialTabsOptions === undefined && !isFilterEmpty,
+      isInitialQuery: initialTabsOptions === undefined,
       signal: controller.current.signal,
     }).then(({ data, errors }) => {
       if (data === undefined)
@@ -163,9 +161,10 @@ function GuppyWrapper({
         );
 
       const receivedAggsData = data._aggregation[guppyConfig.dataType];
-      const fullAggsData = isFilterEmpty
-        ? receivedAggsData
-        : data._aggregation.fullAggsData;
+      const fullAggsData =
+        Object.keys(filter).length === 0
+          ? receivedAggsData
+          : data._aggregation.fullAggsData;
 
       return {
         aggsData: excludeSelfFilterFromAggsData(receivedAggsData, filter),
