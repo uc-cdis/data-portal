@@ -20,7 +20,7 @@ import './ExplorerFilter.css';
  * @property {FilterState} filter
  * @property {SimpleAggsData} initialTabsOptions
  * @property {FilterChangeHandler} onFilterChange
- * @property {AggsData} receivedAggsData
+ * @property {SimpleAggsData} tabsOptions
  */
 
 /** @param {ExplorerFilterProps} props */
@@ -68,7 +68,7 @@ ExplorerFilter.propTypes = {
   filter: PropTypes.object, // from GuppyWrapper
   initialTabsOptions: PropTypes.object, // from GuppyWrapper
   onFilterChange: PropTypes.func, // from GuppyWrapper
-  receivedAggsData: PropTypes.object, // from GuppWrapper
+  tabsOptions: PropTypes.object, // from GuppWrapper
 };
 
 export default ExplorerFilter;
