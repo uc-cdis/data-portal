@@ -138,11 +138,10 @@ export function queryGuppyForAggregationCountData({
  */
 function buildQueryForAggregationOptionsData({
   fields,
-  gqlFilter,
+  isFilterEmpty,
   isInitialQuery = false,
   type,
 }) {
-  const isFilterEmpty = gqlFilter === undefined;
   if (isFilterEmpty)
     return `query {
       _aggregation {
@@ -187,7 +186,7 @@ export function queryGuppyForAggregationOptionsData({
 }) {
   const query = buildQueryForAggregationOptionsData({
     fields,
-    gqlFilter,
+    isFilterEmpty: gqlFilter === undefined,
     isInitialQuery,
     type,
   });
