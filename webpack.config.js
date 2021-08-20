@@ -17,13 +17,7 @@ if (DAPTrackingURL) {
   connectSrcURLs.push(DAPTrackingURL);
 }
 if (process.env.DATA_UPLOAD_BUCKET) {
-  if (Array.isArray(process.env.DATA_UPLOAD_BUCKET)) {
-    // if DATA_UPLOAD_BUCKET is an array
-    connectSrcURLs.push(...process.env.DATA_UPLOAD_BUCKET.map(dataBucket => (`https://${dataBucket}.s3.amazonaws.com`)));
-  } else {
-    // if DATA_UPLOAD_BUCKET is a string
-    connectSrcURLs.push(`https://${process.env.DATA_UPLOAD_BUCKET}.s3.amazonaws.com`);
-  }
+  connectSrcURLs.push(`https://${process.env.DATA_UPLOAD_BUCKET}.s3.amazonaws.com`);
 }
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
