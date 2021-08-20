@@ -196,72 +196,101 @@ export function getQueryInfoForAggregationOptionsData({
 
 /**
  * @param {object} args
- * @param {string[]} args.fields
- * @param {GqlFilter} [args.gqlFilter]
- * @param {boolean} [args.shouldGetFullAggsData]
+ * @param {{ [group: string]: string[]}} args.fieldsByGroup
+ * @param {boolean} [args.isFilterEmpty]
+ * @param {boolean} [args.isInitialQuery]
  * @param {string} args.type
  */
-function buildQueryForAggregationOptionsData({
-  fields,
+export function buildQueryForAggregationFilterData({
+  fieldsByGroup,
   isFilterEmpty,
   isInitialQuery = false,
   type,
 }) {
-  if (isFilterEmpty)
-    return `query {
-      _aggregation {
-        main: ${type} (accessibility: all) {
-          ${fields.map(buildHistogramQueryStrForField)}
-        }
-      }
-    }`.replace(/\s+/g, ' ');
+  const queryVariables = [];
+  for (const group of Object.keys(fieldsByGroup))
+    if (!(isFilterEmpty && group === 'main'))
+      queryVariables.push(`$filter_${group}: JSON`);
 
+  const { main: mainFields, ...fieldsByAnchoredGroup } = fieldsByGroup;
+  const mainQueryFragment = isFilterEmpty
+    ? `main: ${type} (accessibility: all) {
+        ${fieldsByGroup.main.map(buildHistogramQueryStrForField)}
+      }`
+    : `main: ${type} (filter: $filter_main, filterSelf: false, accessibility: all) {
+        ${fieldsByGroup.main.map(buildHistogramQueryStrForField)}
+      }`;
   const unfilteredQueryFragment =
     isInitialQuery && !isFilterEmpty
       ? `unfiltered: ${type} (accessibility: all) {
-        ${fields.map(buildHistogramQueryStrForField)}
+        ${fieldsByGroup.main.map(buildHistogramQueryStrForField)}
       }`
       : '';
-  return `query ($filter: JSON) {
-    _aggregation {
-      main: ${type} (filter: $filter, filterSelf: false, accessibility: all) {
+
+  const anchoredPathQueryFragments = [];
+  for (const [group, fields] of Object.entries(fieldsByAnchoredGroup))
+    anchoredPathQueryFragments.push(`
+      anchored_${group}: ${type} (filter: $filter_${group}, filterSelf: false, accessibility: all) {
         ${fields.map(buildHistogramQueryStrForField)}
       }
+    `);
+
+  return `query ${
+    queryVariables.length > 0 ? `(${queryVariables.join(', ')})` : ''
+  } {
+    _aggregation {
+      ${mainQueryFragment}
       ${unfilteredQueryFragment}
+      ${anchoredPathQueryFragments.join('')}
     }
   }`.replace(/\s+/g, ' ');
 }
 
 /**
  * @param {object} args
- * @param {string} args.path
- * @param {string} args.type
- * @param {string[]} args.fields
+ * @param {{ fieldName: string; tabs: string[] }} [args.anchorConfig]
+ * @param {string} args.anchorValue
+ * @param {{ title: string, fields: string[]}[]} args.filterTabs
  * @param {GqlFilter} [args.gqlFilter]
- * @param {boolean} [args.isInitialQuery]
+ * @param {boolean} [isInitialQuery]
+ * @param {string} args.path
  * @param {AbortSignal} [args.signal]
+ * @param {string} args.type
  */
 export function queryGuppyForAggregationOptionsData({
-  path,
-  type,
-  fields,
+  anchorConfig,
+  anchorValue,
+  filterTabs,
   gqlFilter,
   isInitialQuery,
+  path,
   signal,
+  type,
 }) {
-  const query = buildQueryForAggregationOptionsData({
-    fields,
+  const {
+    fieldsByGroup,
+    gqlFilterByGroup,
+  } = getQueryInfoForAggregationOptionsData({
+    anchorConfig,
+    anchorValue,
+    filterTabs,
+    gqlFilter,
+  });
+
+  const query = buildQueryForAggregationFilterData({
+    fieldsByGroup,
     isFilterEmpty: gqlFilter === undefined,
     isInitialQuery,
     type,
   });
+  const variables = { ...gqlFilterByGroup };
 
   return fetch(`${path}${graphqlEndpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ query, variables: { filter: gqlFilter } }),
+    body: JSON.stringify({ query, variables }),
     signal,
   }).then((response) => response.json());
 }

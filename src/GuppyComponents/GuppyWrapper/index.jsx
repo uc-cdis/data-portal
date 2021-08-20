@@ -21,6 +21,7 @@ import '../typedef';
 
 /**
  * @typedef {Object} GuppyWrapperProps
+ * @property {AnchorConfig} anchorConfig
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
  * @property {((data: GuppyData) => JSX.Element)} children
@@ -48,6 +49,7 @@ import '../typedef';
 
 /** @param {GuppyWrapperProps} props */
 function GuppyWrapper({
+  anchorConfig,
   chartConfig,
   filterConfig,
   guppyConfig,
@@ -141,13 +143,17 @@ function GuppyWrapper({
   }
 
   /**
-   * @param {FilterState} filter
+   * @param {Object} args
+   * @param {string} args.anchorValue
+   * @param {FilterState} args.filter
    */
-  function fetchAggsOptionsDataFromGuppy(filter) {
+  function fetchAggsOptionsDataFromGuppy({ anchorValue, filter }) {
     return queryGuppyForAggregationOptionsData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
-      fields: filterConfig.tabs.flatMap(({ fields }) => fields),
+      anchorConfig,
+      anchorValue,
+      filterTabs: filterConfig.tabs,
       gqlFilter: getGQLFilter(augmentFilter(filter)),
       isInitialQuery: state.initialTabsOptions === undefined,
       signal: controller.current.signal,
@@ -159,32 +165,41 @@ function GuppyWrapper({
           }`
         );
 
-      const mainAggsData = data._aggregation.main;
+      const { unfiltered, ...aggregation } = data._aggregation;
+      const receivedAggsData = {};
+      for (const group of Object.values(aggregation))
+        for (const [fieldName, value] of Object.entries(group))
+          receivedAggsData[fieldName] = value;
       const unfilteredAggsData =
-        Object.keys(filter).length === 0
-          ? mainAggsData
-          : data._aggregation.unfiltered;
+        Object.keys(filter).length === 0 ? receivedAggsData : unfiltered;
 
       return {
-        aggsData: excludeSelfFilterFromAggsData(mainAggsData, filter),
+        aggsData: excludeSelfFilterFromAggsData(receivedAggsData, filter),
         initialTabsOptions:
           unfilteredAggsData === undefined
             ? state.initialTabsOptions
             : unnestAggsData(unfilteredAggsData),
-        tabsOptions: unnestAggsData(mainAggsData),
+        tabsOptions: unnestAggsData(receivedAggsData),
       };
     });
   }
 
-  /** @param {FilterState} filter */
-  function fetchAggsDataFromGuppy(filter) {
+  /**
+   * @param {Object} args
+   * @param {string} args.anchorValue
+   * @param {FilterState} args.filter
+   */
+  function fetchAggsDataFromGuppy({ anchorValue, filter }) {
     if (isMounted.current)
       setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
 
     Promise.all([
       fetchAggsChartDataFromGuppy(filter),
       fetchAggsCountDataFromGuppy(filter),
-      fetchAggsOptionsDataFromGuppy(filter),
+      fetchAggsOptionsDataFromGuppy({
+        anchorValue,
+        filter,
+      }),
     ]).then(
       ([
         { aggsChartData },
@@ -301,7 +316,7 @@ function GuppyWrapper({
     }).then((allFields) => {
       if (isMounted.current) {
         setState((prevState) => ({ ...prevState, allFields }));
-        fetchAggsDataFromGuppy(state.filter);
+        fetchAggsDataFromGuppy({ filter: state.filter });
         fetchRawDataFromGuppy({
           fields:
             rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : allFields,
@@ -320,7 +335,7 @@ function GuppyWrapper({
       isInitialRenderRef.current = false;
       return;
     }
-    fetchAggsDataFromGuppy(state.filter);
+    fetchAggsDataFromGuppy({ filter: state.filter });
     fetchRawDataFromGuppy({
       fields: rawDataFields,
       updateDataWhenReceive: true,
@@ -413,8 +428,12 @@ function GuppyWrapper({
     });
   }
 
-  /** @param {FilterState} filter */
-  function handleFilterChange(filter) {
+  /**
+   * @param {Object} args
+   * @param {string} args.anchorValue
+   * @param {FilterState} args.filter
+   */
+  function handleFilterChange({ anchorValue, filter }) {
     const mergedFilter = mergeFilters(filter, adminAppliedPreFilters);
 
     if (onFilterChange) onFilterChange(mergedFilter);
@@ -424,7 +443,7 @@ function GuppyWrapper({
 
     controller.current.abort();
     controller.current = new AbortController();
-    fetchAggsDataFromGuppy(mergedFilter);
+    fetchAggsDataFromGuppy({ anchorValue, filter: mergedFilter });
     fetchRawDataFromGuppy({
       fields: rawDataFields,
       updateDataWhenReceive: true,

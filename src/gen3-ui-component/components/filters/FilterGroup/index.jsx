@@ -54,6 +54,12 @@ function FilterGroup({
     anchorConfig !== undefined && anchorConfig.tabs.includes(tabTitle);
   const showPatientIdsFilter = patientIds !== undefined;
 
+  const [anchorValue, setAnchorValue] = useState('');
+  const anchorLabel =
+    anchorConfig !== undefined && anchorValue !== '' && showAnchorFilter
+      ? `${anchorConfig.fieldName}:${anchorValue}`
+      : '';
+
   const [expandedStatusControl, setExpandedStatusControl] = useState(false);
   const expandedStatusText = expandedStatusControl
     ? 'Collapse all'
@@ -86,14 +92,8 @@ function FilterGroup({
 
     setFilterStatus(newFilterStatus);
     setFilterResults(newFilterResults);
-    onFilterChange(newFilterResults);
+    onFilterChange({ anchorValue, filter: newFilterResults });
   }, [initialAppliedFilters]);
-
-  const [anchorValue, setAnchorValue] = useState('');
-  const anchorLabel =
-    anchorConfig !== undefined && anchorValue !== '' && showAnchorFilter
-      ? `${anchorConfig.fieldName}:${anchorValue}`
-      : '';
 
   const filterTabStatus = showAnchorFilter
     ? filterStatus[tabIndex][anchorLabel]
@@ -123,7 +123,7 @@ function FilterGroup({
     });
     setFilterResults(updated.filterResults);
     setFilterStatus(updated.filterStatus);
-    onFilterChange(updated.filterResults);
+    onFilterChange({ anchorValue, filter: updated.filterResults });
   }
 
   /**
@@ -156,7 +156,7 @@ function FilterGroup({
       'selectedValues' in filterValues &&
       filterValues.selectedValues.length > 0
     )
-      onFilterChange(updated.filterResults);
+      onFilterChange({ anchorValue, filter: updated.filterResults });
   }
 
   /**
@@ -175,7 +175,7 @@ function FilterGroup({
     });
     setFilterStatus(updated.filterStatus);
     setFilterResults(updated.filterResults);
-    onFilterChange(updated.filterResults);
+    onFilterChange({ anchorValue, filter: updated.filterResults });
   }
 
   /**
@@ -209,7 +209,7 @@ function FilterGroup({
     });
     setFilterStatus(updated.filterStatus);
     setFilterResults(updated.filterResults);
-    onFilterChange(updated.filterResults);
+    onFilterChange({ anchorValue, filter: updated.filterResults });
   }
 
   function toggleSections() {
