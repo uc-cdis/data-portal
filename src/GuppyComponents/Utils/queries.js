@@ -212,18 +212,20 @@ export function buildQueryForAggregationFilterData({
     if (!(isFilterEmpty && group === 'main'))
       queryVariables.push(`$filter_${group}: JSON`);
 
-  const { main: mainFields, ...fieldsByAnchoredGroup } = fieldsByGroup;
+  const { main, ...fieldsByAnchoredGroup } = fieldsByGroup;
+  const mainHistogramQueryFragment = main.map(buildHistogramQueryStrForField);
   const mainQueryFragment = isFilterEmpty
     ? `main: ${type} (accessibility: all) {
-        ${fieldsByGroup.main.map(buildHistogramQueryStrForField)}
-      }`
+      ${mainHistogramQueryFragment}
+    }`
     : `main: ${type} (filter: $filter_main, filterSelf: false, accessibility: all) {
-        ${fieldsByGroup.main.map(buildHistogramQueryStrForField)}
-      }`;
+      ${mainHistogramQueryFragment}
+    }`;
+
   const unfilteredQueryFragment =
     isInitialQuery && !isFilterEmpty
       ? `unfiltered: ${type} (accessibility: all) {
-        ${fieldsByGroup.main.map(buildHistogramQueryStrForField)}
+        ${mainHistogramQueryFragment}
       }`
       : '';
 
