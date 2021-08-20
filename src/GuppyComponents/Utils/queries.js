@@ -60,14 +60,14 @@ export function queryGuppyForAggregationChartData({
     ? `query ($filter: JSON) {
         _aggregation {
           ${type} (filter: $filter, filterSelf: false, accessibility: all) {
-            ${fields.map((field) => histogramQueryStrForEachField(field))}
+            ${fields.map(histogramQueryStrForEachField)}
           }
         }
       }`
     : `query {
         _aggregation {
           ${type} (accessibility: all) {
-            ${fields.map((field) => histogramQueryStrForEachField(field))}
+            ${fields.map(histogramQueryStrForEachField)}
           }
         }
       }`
@@ -147,19 +147,19 @@ function buildQueryForAggregationOptionsData({
     return `query {
       _aggregation {
         ${type} (accessibility: all) {
-          ${fields.map((field) => histogramQueryStrForEachField(field))}
+          ${fields.map(histogramQueryStrForEachField)}
         }
       }
     }`.replace(/\s+/g, ' ');
 
   const fullAggsDataQueryFragment = `fullAggsData: ${type} (accessibility: all) {
-    ${fields.map((field) => histogramQueryStrForEachField(field))}
+    ${fields.map(histogramQueryStrForEachField)}
   }`;
 
   return `query ($filter: JSON) {
     _aggregation {
       ${type} (filter: $filter, filterSelf: false, accessibility: all) {
-        ${fields.map((field) => histogramQueryStrForEachField(field))}
+        ${fields.map(histogramQueryStrForEachField)}
       }
       ${isInitialQuery && !isFilterEmpty ? fullAggsDataQueryFragment : ''}
     }
