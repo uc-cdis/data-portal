@@ -160,19 +160,19 @@ function GuppyWrapper({
           }`
         );
 
-      const receivedAggsData = data._aggregation[guppyConfig.dataType];
-      const fullAggsData =
+      const mainAggsData = data._aggregation.main;
+      const unfilteredAggsData =
         Object.keys(filter).length === 0
-          ? receivedAggsData
-          : data._aggregation.fullAggsData;
+          ? mainAggsData
+          : data._aggregation.unfiltered;
 
       return {
-        aggsData: excludeSelfFilterFromAggsData(receivedAggsData, filter),
+        aggsData: excludeSelfFilterFromAggsData(mainAggsData, filter),
         initialTabsOptions:
-          fullAggsData === undefined
+          unfilteredAggsData === undefined
             ? initialTabsOptions
-            : unnestAggsData(fullAggsData),
-        tabsOptions: unnestAggsData(receivedAggsData),
+            : unnestAggsData(unfilteredAggsData),
+        tabsOptions: unnestAggsData(mainAggsData),
       };
     });
   }

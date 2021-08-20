@@ -146,22 +146,24 @@ function buildQueryForAggregationOptionsData({
   if (isFilterEmpty)
     return `query {
       _aggregation {
-        ${type} (accessibility: all) {
+        main: ${type} (accessibility: all) {
           ${fields.map(buildHistogramQueryStrForField)}
         }
       }
     }`.replace(/\s+/g, ' ');
 
-  const fullAggsDataQueryFragment = `fullAggsData: ${type} (accessibility: all) {
-    ${fields.map(buildHistogramQueryStrForField)}
-  }`;
-
+  const unfilteredQueryFragment =
+    isInitialQuery && !isFilterEmpty
+      ? `unfiltered: ${type} (accessibility: all) {
+        ${fields.map(buildHistogramQueryStrForField)}
+      }`
+      : '';
   return `query ($filter: JSON) {
     _aggregation {
-      ${type} (filter: $filter, filterSelf: false, accessibility: all) {
+      main: ${type} (filter: $filter, filterSelf: false, accessibility: all) {
         ${fields.map(buildHistogramQueryStrForField)}
       }
-      ${isInitialQuery && !isFilterEmpty ? fullAggsDataQueryFragment : ''}
+      ${unfilteredQueryFragment}
     }
   }`.replace(/\s+/g, ' ');
 }
