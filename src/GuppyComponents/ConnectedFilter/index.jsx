@@ -23,7 +23,7 @@ import '../typedef';
  * @property {boolean} [hideZero]
  * @property {FilterState} [initialAppliedFilters]
  * @property {SimpleAggsData} initialTabsOptions
- * @property {(x: FilterState) => void} onFilterChange
+ * @property {FilterChangeHandler} onFilterChange
  * @property {(x: string[]) => void} [onPatientIdsChange]
  * @property {string[]} [patientIds]
  * @property {number} [tierAccessLimit]

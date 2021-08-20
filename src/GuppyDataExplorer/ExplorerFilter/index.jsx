@@ -19,7 +19,7 @@ import './ExplorerFilter.css';
  * @property {number} tierAccessLimit
  * @property {FilterState} filter
  * @property {SimpleAggsData} initialTabsOptions
- * @property {(x: FilterState) => void} onFilterChange
+ * @property {FilterChangeHandler} onFilterChange
  * @property {AggsData} receivedAggsData
  */
 

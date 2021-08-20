@@ -129,6 +129,10 @@
  */
 
 /**
+ * @typedef {(args: { anchorValue?: string; filter: FilterState }) => void} FilterChangeHandler
+ */
+
+/**
  * @typedef {Object} GuppyData
  * @property {number} accessibleCount
  * @property {AggsData} aggsData
@@ -145,5 +149,5 @@
  * @property {(type: string, filter: FilterState, fields: string[]) => void} downloadRawDataByTypeAndFilter
  * @property {(type: string, filter: FilterState) => void} getTotalCountsByTypeAndFilter
  * @property {(args: { offset: number; size: number; sort: GqlSort }) => void} fetchAndUpdateRawData
- * @property {(filter: FilterState) => void} onFilterChange
+ * @property {FilterChangeHandler} onFilterChange
  */

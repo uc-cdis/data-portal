@@ -23,7 +23,7 @@ import '../typedef';
  * @property {FilterConfig} filterConfig
  * @property {boolean} hideZero
  * @property {FilterState} initialAppliedFilters
- * @property {(filter: FilterState) => void} onFilterChange
+ * @property {FilterChangeHandler} onFilterChange
  * @property {(patientIds: string[]) => void} onPatientIdsChange
  * @property {string[]} patientIds
  * @property {JSX.Element[]} tabs
