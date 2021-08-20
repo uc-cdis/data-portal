@@ -235,6 +235,7 @@ class GuppyDataExplorer extends React.Component {
                   tierAccessLimit={this.props.tierAccessLimit}
                   filter={data.filter}
                   initialTabsOptions={data.initialTabsOptions}
+                  onAnchorValueChange={data.onAnchorValueChange}
                   onFilterChange={data.onFilterChange}
                   tabsOptions={data.tabsOptions}
                 />

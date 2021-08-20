@@ -19,6 +19,7 @@ import './ExplorerFilter.css';
  * @property {number} tierAccessLimit
  * @property {FilterState} filter
  * @property {SimpleAggsData} initialTabsOptions
+ * @property {(anchorValue: string) => void} onAnchorValueChange
  * @property {FilterChangeHandler} onFilterChange
  * @property {SimpleAggsData} tabsOptions
  */
@@ -67,6 +68,7 @@ ExplorerFilter.propTypes = {
   tierAccessLimit: PropTypes.number,
   filter: PropTypes.object, // from GuppyWrapper
   initialTabsOptions: PropTypes.object, // from GuppyWrapper
+  onAnchorValueChange: PropTypes.func, // from GuppyWrapper
   onFilterChange: PropTypes.func, // from GuppyWrapper
   tabsOptions: PropTypes.object, // from GuppWrapper
 };

@@ -429,6 +429,20 @@ function GuppyWrapper({
   }
 
   /**
+   * @param {string} anchorValue
+   */
+  function handleAnchorValueChange(anchorValue) {
+    controller.current.abort();
+    controller.current = new AbortController();
+    fetchAggsOptionsDataFromGuppy({ anchorValue, filter: state.filter }).then(
+      ({ tabsOptions }) => {
+        if (isMounted.current)
+          setState((prevState) => ({ ...prevState, tabsOptions }));
+      }
+    );
+  }
+
+  /**
    * @param {Object} args
    * @param {string} args.anchorValue
    * @param {FilterState} args.filter
@@ -457,6 +471,7 @@ function GuppyWrapper({
     downloadRawDataByTypeAndFilter,
     fetchAndUpdateRawData,
     getTotalCountsByTypeAndFilter,
+    onAnchorValueChange: handleAnchorValueChange,
     onFilterChange: handleFilterChange,
   });
 }

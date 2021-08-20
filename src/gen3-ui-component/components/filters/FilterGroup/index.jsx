@@ -23,6 +23,7 @@ import '../typedef';
  * @property {FilterConfig} filterConfig
  * @property {boolean} hideZero
  * @property {FilterState} initialAppliedFilters
+ * @property {(anchorValue: string) => void} onAnchorValueChange
  * @property {FilterChangeHandler} onFilterChange
  * @property {(patientIds: string[]) => void} onPatientIdsChange
  * @property {string[]} patientIds
@@ -36,6 +37,7 @@ function FilterGroup({
   filterConfig,
   hideZero = true,
   initialAppliedFilters = {},
+  onAnchorValueChange = () => {},
   onFilterChange = () => {},
   onPatientIdsChange,
   patientIds,
@@ -59,6 +61,10 @@ function FilterGroup({
     anchorConfig !== undefined && anchorValue !== '' && showAnchorFilter
       ? `${anchorConfig.fieldName}:${anchorValue}`
       : '';
+  function handleAnchorValueChange(value) {
+    setAnchorValue(value);
+    onAnchorValueChange(value);
+  }
 
   const [expandedStatusControl, setExpandedStatusControl] = useState(false);
   const expandedStatusText = expandedStatusControl
@@ -254,7 +260,7 @@ function FilterGroup({
         <AnchorFilter
           anchorFieldName={anchorConfig.fieldName}
           anchorValue={anchorValue}
-          onChange={setAnchorValue}
+          onChange={handleAnchorValueChange}
           options={anchorConfig.options}
           optionsInUse={selectedAnchors[tabIndex]}
         />
@@ -316,6 +322,7 @@ FilterGroup.propTypes = {
   }).isRequired,
   hideZero: PropTypes.bool,
   initialAppliedFilters: PropTypes.object,
+  onAnchorValueChange: PropTypes.func,
   onFilterChange: PropTypes.func,
   onPatientIdsChange: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),

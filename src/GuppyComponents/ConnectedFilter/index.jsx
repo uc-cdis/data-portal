@@ -23,6 +23,7 @@ import '../typedef';
  * @property {boolean} [hideZero]
  * @property {FilterState} [initialAppliedFilters]
  * @property {SimpleAggsData} initialTabsOptions
+ * @property {(anchorValue: string) => void} onAnchorValueChange
  * @property {FilterChangeHandler} onFilterChange
  * @property {(x: string[]) => void} [onPatientIdsChange]
  * @property {string[]} [patientIds]
@@ -42,6 +43,7 @@ function ConnectedFilter({
   hideZero = false,
   initialAppliedFilters = {},
   initialTabsOptions = {},
+  onAnchorValueChange,
   onFilterChange,
   onPatientIdsChange,
   patientIds,
@@ -100,6 +102,7 @@ function ConnectedFilter({
       className={className}
       tabs={filterTabs}
       filterConfig={filterConfig}
+      onAnchorValueChange={onAnchorValueChange}
       onFilterChange={onFilterChange}
       onPatientIdsChange={onPatientIdsChange}
       patientIds={patientIds}
@@ -142,6 +145,7 @@ ConnectedFilter.propTypes = {
   hideZero: PropTypes.bool,
   initialAppliedFilters: PropTypes.object,
   initialTabsOptions: PropTypes.object,
+  onAnchorValueChange: PropTypes.func.isRequired,
   onFilterChange: PropTypes.func.isRequired,
   onPatientIdsChange: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),

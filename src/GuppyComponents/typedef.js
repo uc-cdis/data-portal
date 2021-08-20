@@ -149,5 +149,6 @@
  * @property {(type: string, filter: FilterState, fields: string[]) => void} downloadRawDataByTypeAndFilter
  * @property {(type: string, filter: FilterState) => void} getTotalCountsByTypeAndFilter
  * @property {(args: { offset: number; size: number; sort: GqlSort }) => void} fetchAndUpdateRawData
+ * @property {(anchorValue: string) => void} onAnchorValueChange
  * @property {FilterChangeHandler} onFilterChange
  */
