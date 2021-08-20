@@ -142,15 +142,14 @@ function GuppyWrapper({
 
   /**
    * @param {FilterState} filter
-   * @param {SimpleAggsData} initialTabsOptions
    */
-  function fetchAggsOptionsDataFromGuppy(filter, initialTabsOptions) {
+  function fetchAggsOptionsDataFromGuppy(filter) {
     return queryGuppyForAggregationOptionsData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: filterConfig.tabs.flatMap(({ fields }) => fields),
       gqlFilter: getGQLFilter(augmentFilter(filter)),
-      isInitialQuery: initialTabsOptions === undefined,
+      isInitialQuery: state.initialTabsOptions === undefined,
       signal: controller.current.signal,
     }).then(({ data, errors }) => {
       if (data === undefined)
@@ -170,7 +169,7 @@ function GuppyWrapper({
         aggsData: excludeSelfFilterFromAggsData(mainAggsData, filter),
         initialTabsOptions:
           unfilteredAggsData === undefined
-            ? initialTabsOptions
+            ? state.initialTabsOptions
             : unnestAggsData(unfilteredAggsData),
         tabsOptions: unnestAggsData(mainAggsData),
       };
@@ -185,7 +184,7 @@ function GuppyWrapper({
     Promise.all([
       fetchAggsChartDataFromGuppy(filter),
       fetchAggsCountDataFromGuppy(filter),
-      fetchAggsOptionsDataFromGuppy(filter, state.initialTabsOptions),
+      fetchAggsOptionsDataFromGuppy(filter),
     ]).then(
       ([
         { aggsChartData },
