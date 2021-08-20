@@ -136,7 +136,7 @@ export function queryGuppyForAggregationCountData({
  * @param {boolean} [args.shouldGetFullAggsData]
  * @param {string} args.type
  */
-function buildQueryForAggregationFilterData({
+function buildQueryForAggregationOptionsData({
   fields,
   gqlFilter,
   shouldGetFullAggsData = false,
@@ -174,7 +174,7 @@ function buildQueryForAggregationFilterData({
  * @param {boolean} [args.shouldGetFullAggsData]
  * @param {AbortSignal} [args.signal]
  */
-export function queryGuppyForAggregationFilterData({
+export function queryGuppyForAggregationOptionsData({
   path,
   type,
   fields,
@@ -182,7 +182,7 @@ export function queryGuppyForAggregationFilterData({
   shouldGetFullAggsData,
   signal,
 }) {
-  const query = buildQueryForAggregationFilterData({
+  const query = buildQueryForAggregationOptionsData({
     fields,
     gqlFilter,
     shouldGetFullAggsData,

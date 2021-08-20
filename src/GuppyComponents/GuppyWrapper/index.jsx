@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   queryGuppyForAggregationChartData,
   queryGuppyForAggregationCountData,
-  queryGuppyForAggregationFilterData,
+  queryGuppyForAggregationOptionsData,
   queryGuppyForRawData,
   queryGuppyForSubAggregationData,
   queryGuppyForTotalCounts,
@@ -144,10 +144,10 @@ function GuppyWrapper({
    * @param {FilterState} filter
    * @param {SimpleAggsData} initialTabsOptions
    */
-  function fetchAggsFilterDataFromGuppy(filter, initialTabsOptions) {
+  function fetchAggsOptionsDataFromGuppy(filter, initialTabsOptions) {
     const isFilterEmpty = Object.keys(filter).length === 0;
 
-    return queryGuppyForAggregationFilterData({
+    return queryGuppyForAggregationOptionsData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: filterConfig.tabs.flatMap(({ fields }) => fields),
@@ -186,7 +186,7 @@ function GuppyWrapper({
     Promise.all([
       fetchAggsChartDataFromGuppy(filter),
       fetchAggsCountDataFromGuppy(filter),
-      fetchAggsFilterDataFromGuppy(filter, state.initialTabsOptions),
+      fetchAggsOptionsDataFromGuppy(filter, state.initialTabsOptions),
     ]).then(
       ([
         { aggsChartData },
