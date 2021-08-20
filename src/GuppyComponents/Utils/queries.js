@@ -27,7 +27,7 @@ function jsonToFormat(json, format) {
  * @param {string} field
  * @returns {string}
  */
-function histogramQueryStrForEachField(field) {
+function buildHistogramQueryStrForField(field) {
   const [fieldName, ...nestedFieldNames] = field.split('.');
   return nestedFieldNames.length === 0
     ? `${fieldName} {
@@ -37,7 +37,7 @@ function histogramQueryStrForEachField(field) {
         }
       }`
     : `${fieldName} {
-        ${histogramQueryStrForEachField(nestedFieldNames.join('.'))}
+        ${buildHistogramQueryStrForField(nestedFieldNames.join('.'))}
       }`;
 }
 
@@ -60,14 +60,14 @@ export function queryGuppyForAggregationChartData({
     ? `query ($filter: JSON) {
         _aggregation {
           ${type} (filter: $filter, filterSelf: false, accessibility: all) {
-            ${fields.map(histogramQueryStrForEachField)}
+            ${fields.map(buildHistogramQueryStrForField)}
           }
         }
       }`
     : `query {
         _aggregation {
           ${type} (accessibility: all) {
-            ${fields.map(histogramQueryStrForEachField)}
+            ${fields.map(buildHistogramQueryStrForField)}
           }
         }
       }`
@@ -147,19 +147,19 @@ function buildQueryForAggregationOptionsData({
     return `query {
       _aggregation {
         ${type} (accessibility: all) {
-          ${fields.map(histogramQueryStrForEachField)}
+          ${fields.map(buildHistogramQueryStrForField)}
         }
       }
     }`.replace(/\s+/g, ' ');
 
   const fullAggsDataQueryFragment = `fullAggsData: ${type} (accessibility: all) {
-    ${fields.map(histogramQueryStrForEachField)}
+    ${fields.map(buildHistogramQueryStrForField)}
   }`;
 
   return `query ($filter: JSON) {
     _aggregation {
       ${type} (filter: $filter, filterSelf: false, accessibility: all) {
-        ${fields.map(histogramQueryStrForEachField)}
+        ${fields.map(buildHistogramQueryStrForField)}
       }
       ${isInitialQuery && !isFilterEmpty ? fullAggsDataQueryFragment : ''}
     }
