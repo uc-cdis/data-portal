@@ -142,7 +142,7 @@
  * @property {boolean} isLoadingAggsData
  * @property {boolean} isLoadingRawData
  * @property {Array} rawData
- * @property {AggsData} receivedAggsData
+ * @property {SimpleAggsData} tabsOptions
  * @property {number} totalCount
  * @property {(args: { format: string; sort: GqlSort }) => void} downloadRawData
  * @property {(args: { fields: string[]; sort: GqlSort }) => void} downloadRawDataByFields
