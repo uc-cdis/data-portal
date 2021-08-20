@@ -212,7 +212,14 @@ class Workspace extends React.Component {
       (element.type === 'ContainersReady' && element.status === 'False')
     ))) {
       workspaceLaunchStepsConfig.currentIndex = 2;
-      workspaceLaunchStepsConfig.steps[2].description = 'In progress';
+      if (workspaceStatusData.containerStates.some((element) => (
+        (element.state && element.state.terminated)
+      ))) {
+        workspaceLaunchStepsConfig.steps[2].description = 'Error';
+        workspaceLaunchStepsConfig.currentStepsStatus = 'error';
+      } else {
+        workspaceLaunchStepsConfig.steps[2].description = 'In progress';
+      }
       return workspaceLaunchStepsConfig;
     }
 
@@ -290,8 +297,12 @@ class Workspace extends React.Component {
         const data = await this.getWorkspaceStatus();
         if (this.workspaceStates.includes(data.status)) {
           const workspaceLaunchStepsConfig = this.getWorkspaceLaunchSteps(data);
+          let workspaceStatus = data.status;
+          if (workspaceLaunchStepsConfig && workspaceLaunchStepsConfig.currentStepsStatus === 'error') {
+            workspaceStatus = 'Stopped';
+          }
           this.setState({
-            workspaceStatus: data.status,
+            workspaceStatus,
             workspaceLaunchStepsConfig,
           }, () => {
             if (this.state.workspaceStatus !== 'Launching'
@@ -411,6 +422,15 @@ class Workspace extends React.Component {
                       : null}
                     {(this.state.workspaceStatus === 'Launching')
                       ? <Spinner text='Launching Workspace, this process may take several minutes' />
+                      : null}
+                    {(this.state.workspaceStatus === 'Stopped')
+                      ? (
+                        <div className='spinner'>
+                          <div className='spinner__text'>
+                            {'The Workspace launching process has stopped, please click the Cancel button and try again'}
+                          </div>
+                        </div>
+                      )
                       : null}
                   </div>
                   <div className='workspace__buttongroup'>

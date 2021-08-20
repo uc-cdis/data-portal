@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as JsSearch from 'js-search';
 import { Tag, Popover } from 'antd';
 import {
-  LockFilled, UnlockOutlined, ClockCircleOutlined, DashOutlined,
+  UnlockOutlined, ClockCircleOutlined, DashOutlined,
 } from '@ant-design/icons';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
@@ -367,21 +367,17 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     columns.push({
       title: <div className='discovery-table-header'>Data Availability</div>,
       filters: [{
-        text: <React.Fragment><UnlockOutlined />&nbsp;Accessible</React.Fragment>,
+        text: <React.Fragment><UnlockOutlined />&nbsp;Available</React.Fragment>,
         value: AccessLevel.ACCESSIBLE,
         id: 'accessible-data-filter',
       }, {
-        text: <React.Fragment><LockFilled />&nbsp;Unaccessible</React.Fragment>,
-        value: AccessLevel.UNACCESSIBLE,
-        id: 'unaccessible-data-filter',
+        text: <React.Fragment><DashOutlined />&nbsp;Not Available</React.Fragment>,
+        value: AccessLevel.NOT_AVAILABLE,
+        id: 'not-available-data-filter',
       }, {
         text: <React.Fragment><ClockCircleOutlined />&nbsp;Pending</React.Fragment>,
         value: AccessLevel.PENDING,
         id: 'pending-data-filter',
-      }, {
-        text: <React.Fragment><DashOutlined />&nbsp;No Data</React.Fragment>,
-        value: AccessLevel.NOT_AVAILABLE,
-        id: 'not-available-data-filter',
       }],
       onFilter: (value, record) => record[accessibleFieldName] === value,
       // This will sort the values in the order defined by the AccessLevel enum. (AccessLevel.ACCESSIBLE=1, AccessLevel.UNACCESSIBLE=2, etc)
@@ -441,22 +437,29 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             </Popover>
           );
         }
-        return (
-          <Popover
-            overlayClassName='discovery-popover'
-            placement='topRight'
-            arrowPointAtCenter
-            title={'You do not have access to this study.'}
-            content={(
-              <div className='discovery-popover__text'>
-                <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
-                <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
-              </div>
-            )}
-          >
-            <LockFilled className='discovery-table__access-icon' />
-          </Popover>
-        );
+        return <React.Fragment />;
+        /* Hiding the closed lock for the HEAL project.
+          This may be useful functionality for other commons.
+          Keeping the logic for now.
+           https://ctds-planx.atlassian.net/browse/HP-393
+        */
+        // return (
+        //   <Popover
+        //     overlayClassName='discovery-popover'
+        //     placement='topRight'
+        //     arrowPointAtCenter
+        //     title={'You do not have access to this study.'}
+        //     content={(
+        //       <div className='discovery-popover__text'>
+        //         <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+        //         <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
+        //       </div>
+        //     )}
+        //   >
+        //     {/* <EyeInvisibleOutlined className='discovery-table__access-icon' /> */}
+        //     ---
+        //   </Popover>
+        // );
       },
     });
   }
@@ -506,6 +509,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 <DiscoveryMDSSearch
                   searchTerm={searchTerm}
                   handleSearchChange={handleSearchChange}
+                  inputSubtitle={config.features.search.searchBar.inputSubtitle}
                 />
               </div>
             )}
