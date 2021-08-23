@@ -133,7 +133,7 @@ export function queryGuppyForAggregationCountData({
 /**
  * @param {Object} args
  * @param {{ fieldName: string; tabs: string[] }} [args.anchorConfig]
- * @param {string} [args.anchorLabel]
+ * @param {string} [args.anchorValue]
  * @param {{ title: string; fields: string[] }[]} args.filterTabs
  * @param {GqlFilter} [args.gqlFilter]
  */
