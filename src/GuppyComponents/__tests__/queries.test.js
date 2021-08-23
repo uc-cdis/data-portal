@@ -202,6 +202,9 @@ describe('Get query info objects for aggregation options data', () => {
     { title: 't0', fields: ['f0', 'f1'] },
     { title: 't1', fields: ['f2.foo', 'f2.bar', 'f3.baz'] },
   ];
+  const anchoredFilterTabs = filterTabs.filter(({ title }) =>
+    anchorConfig.tabs.includes(title)
+  );
   const gqlFilter = {
     AND: [
       { IN: { f0: ['x'] } },
@@ -235,6 +238,17 @@ describe('Get query info objects for aggregation options data', () => {
     };
     expect(queryInfo).toEqual(expected);
   });
+  test('No filter, no anchor value, anchored tabs only', () => {
+    const queryInfo = getQueryInfoForAggregationOptionsData({
+      anchorConfig,
+      filterTabs: anchoredFilterTabs,
+    });
+    const expected = {
+      fieldsByGroup: { main: ['f2.foo', 'f2.bar', 'f3.baz'] },
+      gqlFilterByGroup: { filter_main: undefined },
+    };
+    expect(queryInfo).toEqual(expected);
+  });
   test('No filter, with anchor value', () => {
     const queryInfo = getQueryInfoForAggregationOptionsData({
       anchorConfig,
@@ -244,6 +258,29 @@ describe('Get query info objects for aggregation options data', () => {
     const expected = {
       fieldsByGroup: {
         main: ['f0', 'f1'],
+        f2: ['f2.foo', 'f2.bar'],
+        f3: ['f3.baz'],
+      },
+      gqlFilterByGroup: {
+        filter_main: undefined,
+        filter_f2: {
+          AND: [{ nested: { path: 'f2', AND: [{ IN: { a: ['a0'] } }] } }],
+        },
+        filter_f3: {
+          AND: [{ nested: { path: 'f3', AND: [{ IN: { a: ['a0'] } }] } }],
+        },
+      },
+    };
+    expect(queryInfo).toEqual(expected);
+  });
+  test('No filter, with anchor value, anchored tabs only', () => {
+    const queryInfo = getQueryInfoForAggregationOptionsData({
+      anchorConfig,
+      anchorValue,
+      filterTabs: anchoredFilterTabs,
+    });
+    const expected = {
+      fieldsByGroup: {
         f2: ['f2.foo', 'f2.bar'],
         f3: ['f3.baz'],
       },
@@ -282,6 +319,18 @@ describe('Get query info objects for aggregation options data', () => {
     };
     expect(queryInfo).toEqual(expected);
   });
+  test('With filter, no anchor value, anchored tabs only', () => {
+    const queryInfo = getQueryInfoForAggregationOptionsData({
+      anchorConfig,
+      filterTabs: anchoredFilterTabs,
+      gqlFilter,
+    });
+    const expected = {
+      fieldsByGroup: { main: ['f2.foo', 'f2.bar', 'f3.baz'] },
+      gqlFilterByGroup: { filter_main: gqlFilter },
+    };
+    expect(queryInfo).toEqual(expected);
+  });
   test('With filter, with anchor value', () => {
     const queryInfo = getQueryInfoForAggregationOptionsData({
       anchorConfig,
@@ -297,6 +346,48 @@ describe('Get query info objects for aggregation options data', () => {
       },
       gqlFilterByGroup: {
         filter_main: gqlFilter,
+        filter_f2: {
+          AND: [
+            { IN: { f0: ['x'] } },
+            { AND: [{ GTE: { f1: 0 } }, { LTE: { f1: 1 } }] },
+            {
+              nested: {
+                path: 'f2',
+                AND: [{ IN: { foo: ['y'] } }, { IN: { a: ['a0'] } }],
+              },
+            },
+          ],
+        },
+        filter_f3: {
+          AND: [
+            { IN: { f0: ['x'] } },
+            { AND: [{ GTE: { f1: 0 } }, { LTE: { f1: 1 } }] },
+            {
+              nested: {
+                path: 'f2',
+                AND: [{ IN: { foo: ['y'] } }],
+              },
+            },
+            { nested: { path: 'f3', AND: [{ IN: { a: ['a0'] } }] } },
+          ],
+        },
+      },
+    };
+    expect(queryInfo).toEqual(expected);
+  });
+  test('No filter, with anchor value, anchored tabs only', () => {
+    const queryInfo = getQueryInfoForAggregationOptionsData({
+      anchorConfig,
+      anchorValue,
+      filterTabs: anchoredFilterTabs,
+      gqlFilter,
+    });
+    const expected = {
+      fieldsByGroup: {
+        f2: ['f2.foo', 'f2.bar'],
+        f3: ['f3.baz'],
+      },
+      gqlFilterByGroup: {
         filter_f2: {
           AND: [
             { IN: { f0: ['x'] } },
