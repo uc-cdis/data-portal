@@ -201,7 +201,7 @@ export function getQueryInfoForAggregationOptionsData({
  * @param {boolean} [args.isInitialQuery]
  * @param {string} args.type
  */
-export function buildQueryForAggregationFilterData({
+export function buildQueryForAggregationOptionsData({
   fieldsByGroup,
   isFilterEmpty,
   isInitialQuery = false,
@@ -279,7 +279,7 @@ export function queryGuppyForAggregationOptionsData({
     gqlFilter,
   });
 
-  const query = buildQueryForAggregationFilterData({
+  const query = buildQueryForAggregationOptionsData({
     fieldsByGroup,
     isFilterEmpty: gqlFilter === undefined,
     isInitialQuery,
