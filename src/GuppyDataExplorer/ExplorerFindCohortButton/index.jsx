@@ -39,7 +39,7 @@ function ExplorerFindCohortButton({ filter }) {
   async function handleFind() {
     try {
       const { data, response, status } = await fetchWithCreds({
-        path: `/analysis/tools/${selected.value}`,
+        path: `/analysis/tools/external/${selected.value}`,
         method: 'POST',
         body: JSON.stringify({ filter: getGQLFilter(filter) }),
       });
