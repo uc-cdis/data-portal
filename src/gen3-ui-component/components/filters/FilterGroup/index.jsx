@@ -54,7 +54,8 @@ function FilterGroup({
   const tabTitle = filterTabs[tabIndex].title;
   const showAnchorFilter =
     anchorConfig !== undefined && anchorConfig.tabs.includes(tabTitle);
-  const showPatientIdsFilter = patientIds !== undefined;
+  const showPatientIdsFilter =
+    patientIds !== undefined && tabTitle === 'Subject';
 
   const [anchorValue, setAnchorValue] = useState('');
   const anchorLabel =
