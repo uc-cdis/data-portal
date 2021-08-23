@@ -61,14 +61,14 @@ export function queryGuppyForAggregationChartData({
     ? `query ($filter: JSON) {
         _aggregation {
           ${type} (filter: $filter, filterSelf: false, accessibility: all) {
-            ${fields.map(buildHistogramQueryStrForField)}
+            ${fields.map(buildHistogramQueryStrForField).join('\n')}
           }
         }
       }`
     : `query {
         _aggregation {
           ${type} (accessibility: all) {
-            ${fields.map(buildHistogramQueryStrForField)}
+            ${fields.map(buildHistogramQueryStrForField).join('\n')}
           }
         }
       }`
@@ -215,7 +215,7 @@ export function buildQueryForAggregationOptionsData({
   const { main, ...fieldsByAnchoredGroup } = fieldsByGroup;
   const hasMainFields = main !== undefined;
   const mainHistogramQueryFragment = hasMainFields
-    ? main.map(buildHistogramQueryStrForField)
+    ? main.map(buildHistogramQueryStrForField).join('\n')
     : '';
   const mainQueryFragment = hasMainFields
     ? `main: ${type} ${
@@ -238,7 +238,7 @@ export function buildQueryForAggregationOptionsData({
   for (const [group, fields] of Object.entries(fieldsByAnchoredGroup))
     anchoredPathQueryFragments.push(`
       anchored_${group}: ${type} (filter: $filter_${group}, filterSelf: false, accessibility: all) {
-        ${fields.map(buildHistogramQueryStrForField)}
+        ${fields.map(buildHistogramQueryStrForField).join('\n')}
       }
     `);
 
@@ -248,7 +248,7 @@ export function buildQueryForAggregationOptionsData({
     _aggregation {
       ${mainQueryFragment}
       ${unfilteredQueryFragment}
-      ${anchoredPathQueryFragments.join('')}
+      ${anchoredPathQueryFragments.join('\n')}
     }
   }`.replace(/\s+/g, ' ');
 }
