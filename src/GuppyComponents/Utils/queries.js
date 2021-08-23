@@ -186,7 +186,7 @@ export function getQueryInfoForAggregationOptionsData({
       fieldsByGroup.main = [...(fieldsByGroup?.main ?? []), ...fields];
     }
 
-  if (fieldsByGroup.main.length > 0) gqlFilterByGroup.filter_main = gqlFilter;
+  if (fieldsByGroup.main?.length > 0) gqlFilterByGroup.filter_main = gqlFilter;
 
   return {
     fieldsByGroup,
@@ -213,17 +213,22 @@ export function buildQueryForAggregationOptionsData({
       queryVariables.push(`$filter_${group}: JSON`);
 
   const { main, ...fieldsByAnchoredGroup } = fieldsByGroup;
-  const mainHistogramQueryFragment = main.map(buildHistogramQueryStrForField);
-  const mainQueryFragment = isFilterEmpty
-    ? `main: ${type} (accessibility: all) {
+  const hasMainFields = main !== undefined;
+  const mainHistogramQueryFragment = hasMainFields
+    ? main.map(buildHistogramQueryStrForField)
+    : '';
+  const mainQueryFragment = hasMainFields
+    ? `main: ${type} ${
+        isFilterEmpty
+          ? '(accessibility: all)'
+          : '(filter: $filter_main, filterSelf: false, accessibility: all)'
+      } {
       ${mainHistogramQueryFragment}
     }`
-    : `main: ${type} (filter: $filter_main, filterSelf: false, accessibility: all) {
-      ${mainHistogramQueryFragment}
-    }`;
+    : '';
 
   const unfilteredQueryFragment =
-    isInitialQuery && !isFilterEmpty
+    hasMainFields && isInitialQuery && !isFilterEmpty
       ? `unfiltered: ${type} (accessibility: all) {
         ${mainHistogramQueryFragment}
       }`
