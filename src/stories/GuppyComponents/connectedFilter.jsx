@@ -36,7 +36,6 @@ const sampleAggsData = {
 
 storiesOf('ConnectedFilter', module).add('Filter', () => {
   const [filter, setFilter] = React.useState({});
-  const processFilterAggsData = (aggsData) => aggsData;
   return (
     <ConnectedFilter
       filterConfig={filterConfig}
@@ -46,7 +45,6 @@ storiesOf('ConnectedFilter', module).add('Filter', () => {
         action('filter change');
       }}
       fieldMapping={fieldMapping}
-      onProcessFilterAggsData={processFilterAggsData}
       tierAccessLimit={guppyConfig.tierAccessLimit}
       filter={filter}
       initialTabsOptions={sampleAggsData}

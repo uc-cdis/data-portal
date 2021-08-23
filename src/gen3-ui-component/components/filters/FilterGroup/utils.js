@@ -381,3 +381,30 @@ export function updateSelectedValue({
     filterResults: newFilterResults,
   };
 }
+
+/** @param {FilterSectionStatus} filterSectionStatus */
+function checkIfFilterSectionActive(filterSectionStatus) {
+  return Array.isArray(filterSectionStatus)
+    ? filterSectionStatus.length > 0
+    : Object.values(filterSectionStatus).some(Boolean);
+}
+
+/** @param {FilterStatus} filterStatus */
+export function getSelectedAnchors(filterStatus) {
+  /** @type {string[][]} */
+  const selectedAnchors = [];
+  for (const tabStatus of filterStatus) {
+    /** @type {string[]} */
+    const selectedAnchorsForTab = [];
+    if (!Array.isArray(tabStatus))
+      for (const [anchorLabel, anchoredTabStatus] of Object.entries(tabStatus))
+        if (
+          anchorLabel !== '' &&
+          anchoredTabStatus.some(checkIfFilterSectionActive)
+        )
+          selectedAnchorsForTab.push(anchorLabel.split(':')[1]);
+
+    selectedAnchors.push(selectedAnchorsForTab);
+  }
+  return selectedAnchors;
+}

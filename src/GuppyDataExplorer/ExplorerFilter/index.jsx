@@ -7,6 +7,7 @@ import './ExplorerFilter.css';
 /**
  * @typedef {Object} ExplorerFilterProps
  * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
+ * @property {AnchorConfig} anchorConfig
  * @property {string} className
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
@@ -18,8 +19,9 @@ import './ExplorerFilter.css';
  * @property {number} tierAccessLimit
  * @property {FilterState} filter
  * @property {SimpleAggsData} initialTabsOptions
- * @property {(x: FilterState) => void} onFilterChange
- * @property {AggsData} receivedAggsData
+ * @property {(anchorValue: string) => void} onAnchorValueChange
+ * @property {FilterChangeHandler} onFilterChange
+ * @property {SimpleAggsData} tabsOptions
  */
 
 /** @param {ExplorerFilterProps} props */
@@ -50,6 +52,11 @@ function ExplorerFilter({
 
 ExplorerFilter.propTypes = {
   adminAppliedPreFilters: PropTypes.object,
+  anchorConfig: PropTypes.shape({
+    fieldName: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.string),
+    tabs: PropTypes.arrayOf(PropTypes.string),
+  }),
   className: PropTypes.string,
   filterConfig: FilterConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
@@ -61,8 +68,9 @@ ExplorerFilter.propTypes = {
   tierAccessLimit: PropTypes.number,
   filter: PropTypes.object, // from GuppyWrapper
   initialTabsOptions: PropTypes.object, // from GuppyWrapper
+  onAnchorValueChange: PropTypes.func, // from GuppyWrapper
   onFilterChange: PropTypes.func, // from GuppyWrapper
-  receivedAggsData: PropTypes.object, // from GuppWrapper
+  tabsOptions: PropTypes.object, // from GuppWrapper
 };
 
 export default ExplorerFilter;

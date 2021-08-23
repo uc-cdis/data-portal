@@ -23,11 +23,13 @@ import './typedef';
 /**
  * @param {URLSearchParams} searchParams
  * @param {FilterConfig} filterConfig
+ * @param {boolean} isAnchorFilterEnabled
  * @param {PatientIdsConfig} [patientIdsConfig]
  */
 function extractExplorerStateFromURL(
   searchParams,
   filterConfig,
+  isAnchorFilterEnabled,
   patientIdsConfig
 ) {
   /** @type {FilterState} */
@@ -35,7 +37,7 @@ function extractExplorerStateFromURL(
   if (searchParams.has('filter'))
     try {
       const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
-      if (validateFilter(filterInUrl, filterConfig))
+      if (validateFilter(filterInUrl, filterConfig, isAnchorFilterEnabled))
         initialAppliedFilters = filterInUrl;
       else throw new Error(undefined);
     } catch (e) {
@@ -55,6 +57,7 @@ function extractExplorerStateFromURL(
 
 /**
  * @typedef {Object} GuppyDataExplorerProps
+ * @property {AnchorConfig} anchorConfig
  * @property {GuppyConfig} guppyConfig
  * @property {FilterConfig} filterConfig
  * @property {TableConfig} tableConfig
@@ -85,6 +88,7 @@ class GuppyDataExplorer extends React.Component {
     const { initialAppliedFilters, patientIds } = extractExplorerStateFromURL(
       new URLSearchParams(props.history.location.search),
       props.filterConfig,
+      props.anchorConfig !== undefined,
       props.patientIdsConfig
     );
     /** @type {GuppyDataExplorerState} */
@@ -104,6 +108,7 @@ class GuppyDataExplorer extends React.Component {
       const { initialAppliedFilters, patientIds } = extractExplorerStateFromURL(
         new URLSearchParams(this.props.history.location.search),
         this.props.filterConfig,
+        this.props.anchorConfig !== undefined,
         this.props.patientIdsConfig
       );
       this._hasAppliedFilters = Object.keys(initialAppliedFilters).length > 0;
@@ -193,6 +198,8 @@ class GuppyDataExplorer extends React.Component {
           <GuppyWrapper
             adminAppliedPreFilters={this.props.adminAppliedPreFilters}
             initialAppliedFilters={this.state.initialAppliedFilters}
+            anchorConfig={this.props.anchorConfig}
+            chartConfig={this.props.chartConfig}
             filterConfig={this.props.filterConfig}
             guppyConfig={this.props.guppyConfig}
             onFilterChange={this.handleFilterChange}
@@ -216,6 +223,7 @@ class GuppyDataExplorer extends React.Component {
                 />
                 <ExplorerFilter
                   adminAppliedPreFilters={this.props.adminAppliedPreFilters}
+                  anchorConfig={this.props.anchorConfig}
                   className='guppy-data-explorer__filter'
                   filterConfig={this.props.filterConfig}
                   guppyConfig={this.props.guppyConfig}
@@ -227,8 +235,9 @@ class GuppyDataExplorer extends React.Component {
                   tierAccessLimit={this.props.tierAccessLimit}
                   filter={data.filter}
                   initialTabsOptions={data.initialTabsOptions}
+                  onAnchorValueChange={data.onAnchorValueChange}
                   onFilterChange={data.onFilterChange}
-                  receivedAggsData={data.receivedAggsData}
+                  tabsOptions={data.tabsOptions}
                 />
                 <ExplorerVisualization
                   className='guppy-data-explorer__visualization'
@@ -245,6 +254,7 @@ class GuppyDataExplorer extends React.Component {
                   tierAccessLimit={this.props.tierAccessLimit}
                   accessibleCount={data.accessibleCount}
                   aggsData={data.aggsData}
+                  aggsChartData={data.aggsChartData}
                   allFields={data.allFields}
                   filter={data.filter}
                   isLoadingAggsData={data.isLoadingAggsData}
@@ -271,6 +281,11 @@ class GuppyDataExplorer extends React.Component {
 }
 
 GuppyDataExplorer.propTypes = {
+  anchorConfig: PropTypes.shape({
+    fieldName: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.string),
+    tabs: PropTypes.arrayOf(PropTypes.string),
+  }),
   guppyConfig: GuppyConfigType.isRequired,
   filterConfig: FilterConfigType.isRequired,
   tableConfig: TableConfigType.isRequired,

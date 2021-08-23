@@ -8,13 +8,13 @@ import {
   getFilterSections,
   updateCountsInInitialTabsOptions,
   sortTabsOptions,
-  unnestAggsData,
 } from '../Utils/filters';
 import '../typedef';
 
 /**
  * @typedef {Object} ConnectedFilterProps
  * @property {{ [x: string]: OptionFilter }} [adminAppliedPreFilters]
+ * @property {AnchorConfig} anchorConfig
  * @property {string} className
  * @property {FilterState} filter
  * @property {FilterConfig} filterConfig
@@ -23,17 +23,18 @@ import '../typedef';
  * @property {boolean} [hideZero]
  * @property {FilterState} [initialAppliedFilters]
  * @property {SimpleAggsData} initialTabsOptions
- * @property {(x: FilterState) => void} onFilterChange
+ * @property {(anchorValue: string) => void} onAnchorValueChange
+ * @property {FilterChangeHandler} onFilterChange
  * @property {(x: string[]) => void} [onPatientIdsChange]
- * @property {(x: AggsData) => AggsData} [onProcessFilterAggsData]
  * @property {string[]} [patientIds]
- * @property {AggsData} receivedAggsData
  * @property {number} [tierAccessLimit]
+ * @property {SimpleAggsData} tabsOptions
  */
 
 /** @param {ConnectedFilterProps} props */
 function ConnectedFilter({
   adminAppliedPreFilters = {},
+  anchorConfig,
   className = '',
   filter,
   filterConfig,
@@ -42,11 +43,11 @@ function ConnectedFilter({
   hideZero = false,
   initialAppliedFilters = {},
   initialTabsOptions = {},
+  onAnchorValueChange,
   onFilterChange,
   onPatientIdsChange,
-  onProcessFilterAggsData = (data) => data,
   patientIds,
-  receivedAggsData,
+  tabsOptions = {},
   tierAccessLimit,
 }) {
   if (
@@ -56,7 +57,6 @@ function ConnectedFilter({
   )
     return null;
 
-  const tabsOptions = unnestAggsData(onProcessFilterAggsData(receivedAggsData));
   const processedTabsOptions = sortTabsOptions(
     updateCountsInInitialTabsOptions(initialTabsOptions, tabsOptions, filter)
   );
@@ -98,9 +98,11 @@ function ConnectedFilter({
 
   return (
     <FilterGroup
+      anchorConfig={anchorConfig}
       className={className}
       tabs={filterTabs}
       filterConfig={filterConfig}
+      onAnchorValueChange={onAnchorValueChange}
       onFilterChange={onFilterChange}
       onPatientIdsChange={onPatientIdsChange}
       patientIds={patientIds}
@@ -112,6 +114,11 @@ function ConnectedFilter({
 
 ConnectedFilter.propTypes = {
   adminAppliedPreFilters: PropTypes.object,
+  anchorConfig: PropTypes.shape({
+    fieldName: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.string),
+    tabs: PropTypes.arrayOf(PropTypes.string),
+  }),
   className: PropTypes.string,
   filter: PropTypes.object.isRequired,
   filterConfig: PropTypes.shape({
@@ -138,11 +145,11 @@ ConnectedFilter.propTypes = {
   hideZero: PropTypes.bool,
   initialAppliedFilters: PropTypes.object,
   initialTabsOptions: PropTypes.object,
+  onAnchorValueChange: PropTypes.func.isRequired,
   onFilterChange: PropTypes.func.isRequired,
   onPatientIdsChange: PropTypes.func,
-  onProcessFilterAggsData: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),
-  receivedAggsData: PropTypes.object.isRequired,
+  tabsOptions: PropTypes.object,
   tierAccessLimit: PropTypes.number,
 };
 

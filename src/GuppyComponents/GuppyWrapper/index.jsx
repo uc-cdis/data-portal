@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  queryGuppyForAggregationData,
+  queryGuppyForAggregationChartData,
+  queryGuppyForAggregationCountData,
+  queryGuppyForAggregationOptionsData,
   queryGuppyForRawData,
   queryGuppyForSubAggregationData,
   queryGuppyForTotalCounts,
   downloadDataFromGuppy,
-  getAllFieldsFromFilterConfigs,
   getAllFieldsFromGuppy,
   getGQLFilter,
 } from '../Utils/queries';
@@ -20,6 +21,7 @@ import '../typedef';
 
 /**
  * @typedef {Object} GuppyWrapperProps
+ * @property {AnchorConfig} anchorConfig
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
  * @property {((data: GuppyData) => JSX.Element)} children
@@ -34,18 +36,21 @@ import '../typedef';
  * @typedef {Object} GuppyWrapperState
  * @property {number} accessibleCount
  * @property {AggsData} aggsData
+ * @property {AggsData} aggsChartData
  * @property {string[]} allFields
  * @property {FilterState} filter
  * @property {SimpleAggsData} initialTabsOptions
  * @property {boolean} isLoadingAggsData
  * @property {boolean} isLoadingRawData
  * @property {Object[]} rawData
- * @property {AggsData} receivedAggsData
+ * @property {SimpleAggsData} tabsOptions
  * @property {number} totalCount
  */
 
 /** @param {GuppyWrapperProps} props */
 function GuppyWrapper({
+  anchorConfig,
+  chartConfig,
   filterConfig,
   guppyConfig,
   children,
@@ -60,12 +65,13 @@ function GuppyWrapper({
     accessibleCount: 0,
     allFields: [],
     aggsData: {},
+    aggsChartData: {},
     filter: mergeFilters(initialAppliedFilters, adminAppliedPreFilters),
     initialTabsOptions: undefined,
     isLoadingAggsData: false,
     isLoadingRawData: false,
-    receivedAggsData: {},
     rawData: [],
+    tabsOptions: {},
     totalCount: 0,
   });
   const controller = useRef(new AbortController());
@@ -77,59 +83,146 @@ function GuppyWrapper({
     };
   }, []);
 
+  /**
+   * Add patient ids to filter if provided
+   * @param {FilterState} filter
+   */
+  function augmentFilter(filter) {
+    return patientIds?.length > 0
+      ? mergeFilters(filter, {
+          subject_submitter_id: { selectedValues: patientIds },
+        })
+      : filter;
+  }
+
   /** @param {FilterState} filter */
-  function fetchAggsDataFromGuppy(filter) {
-    if (isMounted.current)
-      setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
-
-    const filterForGuppy =
-      patientIds?.length > 0
-        ? mergeFilters(filter, {
-            subject_submitter_id: { selectedValues: patientIds },
-          })
-        : filter;
-    const isFilterEmpty = Object.keys(filter).length === 0;
-
-    queryGuppyForAggregationData({
+  function fetchAggsChartDataFromGuppy(filter) {
+    return queryGuppyForAggregationChartData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
-      fields: getAllFieldsFromFilterConfigs(filterConfig.tabs),
-      gqlFilter: getGQLFilter(filterForGuppy),
-      shouldGetFullAggsData:
-        state.initialTabsOptions === undefined && !isFilterEmpty,
+      fields: Object.keys(chartConfig),
+      gqlFilter: getGQLFilter(augmentFilter(filter)),
       signal: controller.current.signal,
-    }).then((res) => {
-      if (!res.data)
+    }).then(({ data, errors }) => {
+      if (data === undefined)
         throw new Error(
           `error querying guppy${
-            res.errors && res.errors.length > 0
-              ? `: ${res.errors[0].message}`
-              : ''
+            errors?.length > 0 ? `: ${errors[0].message}` : ''
           }`
         );
 
-      const receivedAggsData = res.data._aggregation[guppyConfig.dataType];
-      const fullAggsData = isFilterEmpty
-        ? receivedAggsData
-        : res.data._aggregation.fullAggsData;
-      const aggsData = excludeSelfFilterFromAggsData(receivedAggsData, filter);
-      const accessibleCount = res.data._aggregation.accessible._totalCount;
-      const totalCount = res.data._aggregation.all._totalCount;
-
-      if (isMounted.current)
-        setState((prevState) => ({
-          ...prevState,
-          accessibleCount,
-          aggsData,
-          initialTabsOptions:
-            fullAggsData === undefined
-              ? prevState.initialTabsOptions
-              : unnestAggsData(fullAggsData),
-          isLoadingAggsData: false,
-          receivedAggsData,
-          totalCount,
-        }));
+      return {
+        aggsChartData: excludeSelfFilterFromAggsData(
+          data._aggregation[guppyConfig.dataType],
+          filter
+        ),
+      };
     });
+  }
+
+  /** @param {FilterState} filter */
+  function fetchAggsCountDataFromGuppy(filter) {
+    return queryGuppyForAggregationCountData({
+      path: guppyConfig.path,
+      type: guppyConfig.dataType,
+      gqlFilter: getGQLFilter(augmentFilter(filter)),
+      signal: controller.current.signal,
+    }).then(({ data, errors }) => {
+      if (data === undefined)
+        throw new Error(
+          `error querying guppy${
+            errors?.length > 0 ? `: ${errors[0].message}` : ''
+          }`
+        );
+
+      return {
+        accessibleCount: data._aggregation.accessible._totalCount,
+        totalCount: data._aggregation.all._totalCount,
+      };
+    });
+  }
+
+  /**
+   * @param {Object} args
+   * @param {string} args.anchorValue
+   * @param {FilterState} args.filter
+   */
+  function fetchAggsOptionsDataFromGuppy({
+    anchorValue,
+    filter,
+    filterTabs = filterConfig.tabs,
+  }) {
+    return queryGuppyForAggregationOptionsData({
+      path: guppyConfig.path,
+      type: guppyConfig.dataType,
+      anchorConfig,
+      anchorValue,
+      filterTabs,
+      gqlFilter: getGQLFilter(augmentFilter(filter)),
+      isInitialQuery: state.initialTabsOptions === undefined,
+      signal: controller.current.signal,
+    }).then(({ data, errors }) => {
+      if (data === undefined)
+        throw new Error(
+          `error querying guppy${
+            errors?.length > 0 ? `: ${errors[0].message}` : ''
+          }`
+        );
+
+      const { unfiltered, ...aggregation } = data._aggregation;
+      const receivedAggsData = {};
+      for (const group of Object.values(aggregation))
+        for (const [fieldName, value] of Object.entries(group))
+          receivedAggsData[fieldName] = value;
+      const unfilteredAggsData =
+        Object.keys(filter).length === 0 ? receivedAggsData : unfiltered;
+
+      return {
+        aggsData: excludeSelfFilterFromAggsData(receivedAggsData, filter),
+        initialTabsOptions:
+          unfilteredAggsData === undefined
+            ? state.initialTabsOptions
+            : unnestAggsData(unfilteredAggsData),
+        tabsOptions: unnestAggsData(receivedAggsData),
+      };
+    });
+  }
+
+  /**
+   * @param {Object} args
+   * @param {string} args.anchorValue
+   * @param {FilterState} args.filter
+   */
+  function fetchAggsDataFromGuppy({ anchorValue, filter }) {
+    if (isMounted.current)
+      setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
+
+    Promise.all([
+      fetchAggsChartDataFromGuppy(filter),
+      fetchAggsCountDataFromGuppy(filter),
+      fetchAggsOptionsDataFromGuppy({
+        anchorValue,
+        filter,
+      }),
+    ]).then(
+      ([
+        { aggsChartData },
+        { accessibleCount, totalCount },
+        { aggsData, initialTabsOptions, tabsOptions },
+      ]) => {
+        if (isMounted.current)
+          setState((prevState) => ({
+            ...prevState,
+            accessibleCount,
+            aggsChartData,
+            aggsData,
+            initialTabsOptions,
+            isLoadingAggsData: false,
+            tabsOptions,
+            totalCount,
+          }));
+      }
+    );
   }
 
   /**
@@ -155,12 +248,6 @@ function GuppyWrapper({
       return Promise.resolve({ data: [], totalCount: 0 });
     }
 
-    const filterForGuppy =
-      patientIds?.length > 0
-        ? mergeFilters(state.filter, {
-            subject_submitter_id: { selectedValues: patientIds },
-          })
-        : state.filter;
     // sub aggregations -- for DAT
     if (guppyConfig.mainField) {
       const numericAggAsText = guppyConfig.mainFieldIsNumeric;
@@ -171,7 +258,7 @@ function GuppyWrapper({
         numericAggAsText,
         termsFields: guppyConfig.aggFields,
         missingFields: [],
-        gqlFilter: getGQLFilter(filterForGuppy),
+        gqlFilter: getGQLFilter(augmentFilter(state.filter)),
         signal: controller.current.signal,
       }).then((res) => {
         if (!res || !res.data)
@@ -200,7 +287,7 @@ function GuppyWrapper({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields,
-      gqlFilter: getGQLFilter(filterForGuppy),
+      gqlFilter: getGQLFilter(augmentFilter(state.filter)),
       sort,
       offset,
       size,
@@ -233,7 +320,7 @@ function GuppyWrapper({
     }).then((allFields) => {
       if (isMounted.current) {
         setState((prevState) => ({ ...prevState, allFields }));
-        fetchAggsDataFromGuppy(state.filter);
+        fetchAggsDataFromGuppy({ filter: state.filter });
         fetchRawDataFromGuppy({
           fields:
             rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : allFields,
@@ -246,8 +333,13 @@ function GuppyWrapper({
   const rawDataFields =
     rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : state.allFields;
 
+  const isInitialRenderRef = useRef(true);
   useEffect(() => {
-    fetchAggsDataFromGuppy(state.filter);
+    if (isInitialRenderRef.current) {
+      isInitialRenderRef.current = false;
+      return;
+    }
+    fetchAggsDataFromGuppy({ filter: state.filter });
     fetchRawDataFromGuppy({
       fields: rawDataFields,
       updateDataWhenReceive: true,
@@ -266,18 +358,12 @@ function GuppyWrapper({
     if (format && !(format in FILE_FORMATS))
       throw new Error(`Invalid value ${format} found for arg format!`);
 
-    const filterForGuppy =
-      patientIds?.length > 0
-        ? mergeFilters(state.filter, {
-            subject_submitter_id: { selectedValues: patientIds },
-          })
-        : state.filter;
     return downloadDataFromGuppy({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: rawDataFields,
       sort,
-      filter: filterForGuppy,
+      filter: augmentFilter(state.filter),
       format,
     });
   }
@@ -346,8 +432,33 @@ function GuppyWrapper({
     });
   }
 
-  /** @param {FilterState} filter */
-  function handleFilterChange(filter) {
+  /**
+   * @param {string} anchorValue
+   */
+  function handleAnchorValueChange(anchorValue) {
+    controller.current.abort();
+    controller.current = new AbortController();
+    fetchAggsOptionsDataFromGuppy({
+      anchorValue,
+      filter: state.filter,
+      filterTabs: filterConfig.tabs.filter(({ title }) =>
+        anchorConfig.tabs.includes(title)
+      ),
+    }).then(({ tabsOptions }) => {
+      if (isMounted.current)
+        setState((prevState) => ({
+          ...prevState,
+          tabsOptions: { ...prevState.tabsOptions, ...tabsOptions },
+        }));
+    });
+  }
+
+  /**
+   * @param {Object} args
+   * @param {string} args.anchorValue
+   * @param {FilterState} args.filter
+   */
+  function handleFilterChange({ anchorValue, filter }) {
     const mergedFilter = mergeFilters(filter, adminAppliedPreFilters);
 
     if (onFilterChange) onFilterChange(mergedFilter);
@@ -357,7 +468,7 @@ function GuppyWrapper({
 
     controller.current.abort();
     controller.current = new AbortController();
-    fetchAggsDataFromGuppy(mergedFilter);
+    fetchAggsDataFromGuppy({ anchorValue, filter: mergedFilter });
     fetchRawDataFromGuppy({
       fields: rawDataFields,
       updateDataWhenReceive: true,
@@ -371,6 +482,7 @@ function GuppyWrapper({
     downloadRawDataByTypeAndFilter,
     fetchAndUpdateRawData,
     getTotalCountsByTypeAndFilter,
+    onAnchorValueChange: handleAnchorValueChange,
     onFilterChange: handleFilterChange,
   });
 }

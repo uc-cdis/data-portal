@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
+import AnchorFilter from '../AnchorFilter';
 import PatientIdFilter from '../PatientIdFilter';
 import {
+  clearFilterSection,
   getExpandedStatus,
   getFilterStatus,
-  clearFilterSection,
+  getSelectedAnchors,
   tabHasActiveFilters,
   updateCombineMode,
   updateRangeValue,
@@ -16,11 +18,13 @@ import '../typedef';
 
 /**
  * @typedef {Object} FilterGroupProps
+ * @property {AnchorConfig} anchorConfig
  * @property {string} className
  * @property {FilterConfig} filterConfig
  * @property {boolean} hideZero
  * @property {FilterState} initialAppliedFilters
- * @property {(filter: FilterState) => void} onFilterChange
+ * @property {(anchorValue: string) => void} onAnchorValueChange
+ * @property {FilterChangeHandler} onFilterChange
  * @property {(patientIds: string[]) => void} onPatientIdsChange
  * @property {string[]} patientIds
  * @property {JSX.Element[]} tabs
@@ -28,10 +32,12 @@ import '../typedef';
 
 /** @param {FilterGroupProps} props */
 function FilterGroup({
+  anchorConfig,
   className = '',
   filterConfig,
   hideZero = true,
   initialAppliedFilters = {},
+  onAnchorValueChange = () => {},
   onFilterChange = () => {},
   onPatientIdsChange,
   patientIds,
@@ -45,8 +51,21 @@ function FilterGroup({
     })
   );
   const [tabIndex, setTabIndex] = useState(0);
+  const tabTitle = filterTabs[tabIndex].title;
+  const showAnchorFilter =
+    anchorConfig !== undefined && anchorConfig.tabs.includes(tabTitle);
+  const showPatientIdsFilter =
+    patientIds !== undefined && tabTitle === 'Subject';
 
-  const showPatientIdsFilter = patientIds !== undefined;
+  const [anchorValue, setAnchorValue] = useState('');
+  const anchorLabel =
+    anchorConfig !== undefined && anchorValue !== '' && showAnchorFilter
+      ? `${anchorConfig.fieldName}:${anchorValue}`
+      : '';
+  function handleAnchorValueChange(value) {
+    setAnchorValue(value);
+    onAnchorValueChange(value);
+  }
 
   const [expandedStatusControl, setExpandedStatusControl] = useState(false);
   const expandedStatusText = expandedStatusControl
@@ -58,7 +77,11 @@ function FilterGroup({
 
   const [filterResults, setFilterResults] = useState(initialAppliedFilters);
   const [filterStatus, setFilterStatus] = useState(
-    getFilterStatus({ filterResults: initialAppliedFilters, filterTabs })
+    getFilterStatus({
+      anchorConfig,
+      filterResults: initialAppliedFilters,
+      filterTabs,
+    })
   );
   const isInitialRenderRef = useRef(true);
   useEffect(() => {
@@ -68,6 +91,7 @@ function FilterGroup({
     }
 
     const newFilterStatus = getFilterStatus({
+      anchorConfig,
       filterResults: initialAppliedFilters,
       filterTabs,
     });
@@ -75,8 +99,14 @@ function FilterGroup({
 
     setFilterStatus(newFilterStatus);
     setFilterResults(newFilterResults);
-    onFilterChange(newFilterResults);
+    onFilterChange({ anchorValue, filter: newFilterResults });
   }, [initialAppliedFilters]);
+
+  const filterTabStatus = showAnchorFilter
+    ? filterStatus[tabIndex][anchorLabel]
+    : filterStatus[tabIndex];
+
+  const selectedAnchors = getSelectedAnchors(filterStatus);
 
   /**
    * @param {number} sectionIndex
@@ -95,11 +125,12 @@ function FilterGroup({
       filterResults,
       filterTabs,
       tabIndex,
+      anchorLabel,
       sectionIndex,
     });
     setFilterResults(updated.filterResults);
     setFilterStatus(updated.filterStatus);
-    onFilterChange(updated.filterResults);
+    onFilterChange({ anchorValue, filter: updated.filterResults });
   }
 
   /**
@@ -117,6 +148,7 @@ function FilterGroup({
       filterResults,
       filterTabs,
       tabIndex,
+      anchorLabel,
       sectionIndex,
       combineModeFieldName,
       combineModeValue,
@@ -131,7 +163,7 @@ function FilterGroup({
       'selectedValues' in filterValues &&
       filterValues.selectedValues.length > 0
     )
-      onFilterChange(updated.filterResults);
+      onFilterChange({ anchorValue, filter: updated.filterResults });
   }
 
   /**
@@ -144,12 +176,13 @@ function FilterGroup({
       filterResults,
       filterTabs,
       tabIndex,
+      anchorLabel,
       sectionIndex,
       selectedValue,
     });
     setFilterStatus(updated.filterStatus);
     setFilterResults(updated.filterResults);
-    onFilterChange(updated.filterResults);
+    onFilterChange({ anchorValue, filter: updated.filterResults });
   }
 
   /**
@@ -173,6 +206,7 @@ function FilterGroup({
       filterResults,
       filterTabs,
       tabIndex,
+      anchorLabel,
       sectionIndex,
       lowerBound,
       upperBound,
@@ -182,7 +216,7 @@ function FilterGroup({
     });
     setFilterStatus(updated.filterStatus);
     setFilterResults(updated.filterResults);
-    onFilterChange(updated.filterResults);
+    onFilterChange({ anchorValue, filter: updated.filterResults });
   }
 
   function toggleSections() {
@@ -223,6 +257,15 @@ function FilterGroup({
           </div>
         ))}
       </div>
+      {showAnchorFilter && (
+        <AnchorFilter
+          anchorFieldName={anchorConfig.fieldName}
+          anchorValue={anchorValue}
+          onChange={handleAnchorValueChange}
+          options={anchorConfig.options}
+          optionsInUse={selectedAnchors[tabIndex]}
+        />
+      )}
       {showPatientIdsFilter && (
         <PatientIdFilter
           onPatientIdsChange={onPatientIdsChange}
@@ -249,7 +292,7 @@ function FilterGroup({
       <div className='g3-filter-group__filter-area'>
         {React.cloneElement(tabs[tabIndex], {
           expandedStatus: expandedStatus[tabIndex],
-          filterStatus: filterStatus[tabIndex],
+          filterStatus: filterTabStatus,
           hideZero,
           onAfterDrag: handleDrag,
           onClearSection: handleClearSection,
@@ -263,6 +306,11 @@ function FilterGroup({
 }
 
 FilterGroup.propTypes = {
+  anchorConfig: PropTypes.shape({
+    fieldName: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.string),
+    tabs: PropTypes.arrayOf(PropTypes.string),
+  }),
   className: PropTypes.string,
   filterConfig: PropTypes.shape({
     tabs: PropTypes.arrayOf(
@@ -275,6 +323,7 @@ FilterGroup.propTypes = {
   }).isRequired,
   hideZero: PropTypes.bool,
   initialAppliedFilters: PropTypes.object,
+  onAnchorValueChange: PropTypes.func,
   onFilterChange: PropTypes.func,
   onPatientIdsChange: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),
