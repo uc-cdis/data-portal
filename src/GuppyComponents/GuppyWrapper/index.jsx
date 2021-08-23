@@ -147,13 +147,17 @@ function GuppyWrapper({
    * @param {string} args.anchorValue
    * @param {FilterState} args.filter
    */
-  function fetchAggsOptionsDataFromGuppy({ anchorValue, filter }) {
+  function fetchAggsOptionsDataFromGuppy({
+    anchorValue,
+    filter,
+    filterTabs = filterConfig.tabs,
+  }) {
     return queryGuppyForAggregationOptionsData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
       anchorConfig,
       anchorValue,
-      filterTabs: filterConfig.tabs,
+      filterTabs,
       gqlFilter: getGQLFilter(augmentFilter(filter)),
       isInitialQuery: state.initialTabsOptions === undefined,
       signal: controller.current.signal,
@@ -434,12 +438,19 @@ function GuppyWrapper({
   function handleAnchorValueChange(anchorValue) {
     controller.current.abort();
     controller.current = new AbortController();
-    fetchAggsOptionsDataFromGuppy({ anchorValue, filter: state.filter }).then(
-      ({ tabsOptions }) => {
-        if (isMounted.current)
-          setState((prevState) => ({ ...prevState, tabsOptions }));
-      }
-    );
+    fetchAggsOptionsDataFromGuppy({
+      anchorValue,
+      filter: state.filter,
+      filterTabs: filterConfig.tabs.filter(({ title }) =>
+        anchorConfig.tabs.includes(title)
+      ),
+    }).then(({ tabsOptions }) => {
+      if (isMounted.current)
+        setState((prevState) => ({
+          ...prevState,
+          tabsOptions: { ...prevState.tabsOptions, ...tabsOptions },
+        }));
+    });
   }
 
   /**
