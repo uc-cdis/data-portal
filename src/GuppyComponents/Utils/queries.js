@@ -145,7 +145,7 @@ export function getQueryInfoForAggregationOptionsData({
 }) {
   const isUsingAnchor = anchorConfig !== undefined && anchorValue !== '';
   const anchorFilterPiece = isUsingAnchor
-    ? { IN: { [anchorConfig.fieldName]: [anchorValue] } }
+    ? { IN: { [anchorConfig.field]: [anchorValue] } }
     : undefined;
 
   const fieldsByGroup = {};

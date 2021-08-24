@@ -53,7 +53,7 @@ function ExplorerFilter({
 ExplorerFilter.propTypes = {
   adminAppliedPreFilters: PropTypes.object,
   anchorConfig: PropTypes.shape({
-    fieldName: PropTypes.string,
+    field: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.string),
     tabs: PropTypes.arrayOf(PropTypes.string),
   }),

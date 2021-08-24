@@ -282,7 +282,7 @@ class GuppyDataExplorer extends React.Component {
 
 GuppyDataExplorer.propTypes = {
   anchorConfig: PropTypes.shape({
-    fieldName: PropTypes.string,
+    field: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.string),
     tabs: PropTypes.arrayOf(PropTypes.string),
   }),

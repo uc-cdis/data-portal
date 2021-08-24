@@ -27,7 +27,7 @@ export default function Explorer() {
 
   /** @type {AnchorConfig} */
   const anchorConfig = {
-    fieldName: 'disease_phase',
+    field: 'disease_phase',
     options: ['Initial Diagnosis', 'Relapse'],
     tabs: ['Disease', 'Molecular'],
   };

@@ -14,7 +14,7 @@
 
 /**
  * @typedef {Object} AnchorConfig
- * @property {string} fieldName
+ * @property {string} field
  * @property {string[]} options
  * @property {string[]} tabs
  */

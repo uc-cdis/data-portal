@@ -22,7 +22,7 @@ export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
 
   if (anchorConfig !== undefined)
     for (const anchorValue of anchorConfig.options)
-      filterResultsByAnchor[`${anchorConfig.fieldName}:${anchorValue}`] = {};
+      filterResultsByAnchor[`${anchorConfig.field}:${anchorValue}`] = {};
 
   for (const [filterKey, filterValues] of Object.entries(filterResults))
     if ('filter' in filterValues) {

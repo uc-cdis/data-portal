@@ -60,7 +60,7 @@ function FilterGroup({
   const [anchorValue, setAnchorValue] = useState('');
   const anchorLabel =
     anchorConfig !== undefined && anchorValue !== '' && showAnchorFilter
-      ? `${anchorConfig.fieldName}:${anchorValue}`
+      ? `${anchorConfig.field}:${anchorValue}`
       : '';
   function handleAnchorValueChange(value) {
     setAnchorValue(value);
@@ -259,7 +259,7 @@ function FilterGroup({
       </div>
       {showAnchorFilter && (
         <AnchorFilter
-          anchorFieldName={anchorConfig.fieldName}
+          anchorField={anchorConfig.field}
           anchorValue={anchorValue}
           onChange={handleAnchorValueChange}
           options={anchorConfig.options}
@@ -307,7 +307,7 @@ function FilterGroup({
 
 FilterGroup.propTypes = {
   anchorConfig: PropTypes.shape({
-    fieldName: PropTypes.string,
+    field: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.string),
     tabs: PropTypes.arrayOf(PropTypes.string),
   }),
