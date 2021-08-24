@@ -21,7 +21,6 @@ import '../typedef';
 
 /**
  * @typedef {Object} GuppyWrapperProps
- * @property {AnchorConfig} anchorConfig
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
  * @property {((data: GuppyData) => JSX.Element)} children
@@ -49,7 +48,6 @@ import '../typedef';
 
 /** @param {GuppyWrapperProps} props */
 function GuppyWrapper({
-  anchorConfig,
   chartConfig,
   filterConfig,
   guppyConfig,
@@ -155,7 +153,7 @@ function GuppyWrapper({
     return queryGuppyForAggregationOptionsData({
       path: guppyConfig.path,
       type: guppyConfig.dataType,
-      anchorConfig,
+      anchorConfig: filterConfig.anchor,
       anchorValue,
       filterTabs,
       gqlFilter: getGQLFilter(augmentFilter(filter)),
@@ -442,7 +440,7 @@ function GuppyWrapper({
       anchorValue,
       filter: state.filter,
       filterTabs: filterConfig.tabs.filter(({ title }) =>
-        anchorConfig.tabs.includes(title)
+        filterConfig.anchor.tabs.includes(title)
       ),
     }).then(({ tabsOptions }) => {
       if (isMounted.current)
@@ -498,6 +496,11 @@ GuppyWrapper.propTypes = {
   }).isRequired,
   children: PropTypes.func.isRequired,
   filterConfig: PropTypes.shape({
+    anchor: PropTypes.shape({
+      field: PropTypes.string,
+      options: PropTypes.arrayOf(PropTypes.string),
+      tabs: PropTypes.arrayOf(PropTypes.string),
+    }),
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
         title: PropTypes.string,

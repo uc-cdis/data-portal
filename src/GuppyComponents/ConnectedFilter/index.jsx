@@ -13,8 +13,6 @@ import '../typedef';
 
 /**
  * @typedef {Object} ConnectedFilterProps
- * @property {{ [x: string]: OptionFilter }} [adminAppliedPreFilters]
- * @property {AnchorConfig} anchorConfig
  * @property {string} className
  * @property {FilterState} filter
  * @property {FilterConfig} filterConfig
@@ -34,7 +32,6 @@ import '../typedef';
 /** @param {ConnectedFilterProps} props */
 function ConnectedFilter({
   adminAppliedPreFilters = {},
-  anchorConfig,
   className = '',
   filter,
   filterConfig,
@@ -98,7 +95,6 @@ function ConnectedFilter({
 
   return (
     <FilterGroup
-      anchorConfig={anchorConfig}
       className={className}
       tabs={filterTabs}
       filterConfig={filterConfig}
@@ -114,14 +110,14 @@ function ConnectedFilter({
 
 ConnectedFilter.propTypes = {
   adminAppliedPreFilters: PropTypes.object,
-  anchorConfig: PropTypes.shape({
-    field: PropTypes.string,
-    options: PropTypes.arrayOf(PropTypes.string),
-    tabs: PropTypes.arrayOf(PropTypes.string),
-  }),
   className: PropTypes.string,
   filter: PropTypes.object.isRequired,
   filterConfig: PropTypes.shape({
+    anchor: PropTypes.shape({
+      field: PropTypes.string,
+      options: PropTypes.arrayOf(PropTypes.string),
+      tabs: PropTypes.arrayOf(PropTypes.string),
+    }),
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
         title: PropTypes.string,
