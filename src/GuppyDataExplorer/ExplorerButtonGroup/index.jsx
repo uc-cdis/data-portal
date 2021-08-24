@@ -816,28 +816,18 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     );
   };
 
-  isLoginForDownloadEnabled = () => {
-    if (this.props.buttonConfig.loginForDownload) {
-      return true;
-    }
-    return false;
-  }
+  isLoginForDownloadEnabled = () => this.props.buttonConfig.loginForDownload;
 
   goToLogin = () => {
     if (!this.props.user || !this.props.user.username) {
       this.props.history.push('/login', { from: `${this.props.location.pathname}` });
-      // this.props.history.push('/login');
     }
   }
 
-  isDownloadButton = (buttonConfig) => {
-    if ((buttonConfig.type.startsWith('data')
+  isDownloadButton = (buttonConfig) => (
+    buttonConfig.type.startsWith('data')
     || buttonConfig.type === 'manifest'
-    || buttonConfig.type === 'file-manifest')) {
-      return true;
-    }
-    return false;
-  }
+    || buttonConfig.type === 'file-manifest');
 
   render() {
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.buttonConfig);
