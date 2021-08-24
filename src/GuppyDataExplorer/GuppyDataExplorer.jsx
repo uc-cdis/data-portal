@@ -57,7 +57,6 @@ function extractExplorerStateFromURL(
 
 /**
  * @typedef {Object} GuppyDataExplorerProps
- * @property {AnchorConfig} anchorConfig
  * @property {GuppyConfig} guppyConfig
  * @property {FilterConfig} filterConfig
  * @property {TableConfig} tableConfig
@@ -88,7 +87,7 @@ class GuppyDataExplorer extends React.Component {
     const { initialAppliedFilters, patientIds } = extractExplorerStateFromURL(
       new URLSearchParams(props.history.location.search),
       props.filterConfig,
-      props.anchorConfig !== undefined,
+      props.filterConfig.anchor !== undefined,
       props.patientIdsConfig
     );
     /** @type {GuppyDataExplorerState} */
@@ -108,7 +107,7 @@ class GuppyDataExplorer extends React.Component {
       const { initialAppliedFilters, patientIds } = extractExplorerStateFromURL(
         new URLSearchParams(this.props.history.location.search),
         this.props.filterConfig,
-        this.props.anchorConfig !== undefined,
+        this.props.filterConfig.anchor !== undefined,
         this.props.patientIdsConfig
       );
       this._hasAppliedFilters = Object.keys(initialAppliedFilters).length > 0;
@@ -198,7 +197,6 @@ class GuppyDataExplorer extends React.Component {
           <GuppyWrapper
             adminAppliedPreFilters={this.props.adminAppliedPreFilters}
             initialAppliedFilters={this.state.initialAppliedFilters}
-            anchorConfig={this.props.anchorConfig}
             chartConfig={this.props.chartConfig}
             filterConfig={this.props.filterConfig}
             guppyConfig={this.props.guppyConfig}
@@ -223,7 +221,6 @@ class GuppyDataExplorer extends React.Component {
                 />
                 <ExplorerFilter
                   adminAppliedPreFilters={this.props.adminAppliedPreFilters}
-                  anchorConfig={this.props.anchorConfig}
                   className='guppy-data-explorer__filter'
                   filterConfig={this.props.filterConfig}
                   guppyConfig={this.props.guppyConfig}
@@ -281,11 +278,6 @@ class GuppyDataExplorer extends React.Component {
 }
 
 GuppyDataExplorer.propTypes = {
-  anchorConfig: PropTypes.shape({
-    fieldName: PropTypes.string,
-    options: PropTypes.arrayOf(PropTypes.string),
-    tabs: PropTypes.arrayOf(PropTypes.string),
-  }),
   guppyConfig: GuppyConfigType.isRequired,
   filterConfig: FilterConfigType.isRequired,
   tableConfig: TableConfigType.isRequired,

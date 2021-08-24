@@ -5,7 +5,7 @@ import { capitalizeFirstLetter } from '../../../utils';
 
 /**
  * @typedef {Object} AnchorFilterProps
- * @property {string} anchorFieldName
+ * @property {string} anchorField
  * @property {string} anchorValue
  * @property {string} [defaultOptionLabel]
  * @property {string} [defaultOptionValue]
@@ -16,7 +16,7 @@ import { capitalizeFirstLetter } from '../../../utils';
 
 /** @param {AnchorFilterProps} props */
 function AnchorFilter({
-  anchorFieldName,
+  anchorField,
   anchorValue,
   defaultOptionLabel = 'Any',
   defaultOptionValue = '',
@@ -52,14 +52,14 @@ function AnchorFilter({
                 : ''
             }`}
           >
-            {capitalizeFirstLetter(anchorFieldName)}
+            {capitalizeFirstLetter(anchorField)}
           </span>
         </div>
       </div>
       {[defaultOptionValue, ...options].map((option) => (
         <label key={option} className={`g3-single-select-filter`}>
           <input
-            name={anchorFieldName}
+            name={anchorField}
             type='radio'
             style={{ margin: '0 14px' }}
             value={option}
@@ -82,7 +82,7 @@ function AnchorFilter({
 }
 
 AnchorFilter.propTypes = {
-  anchorFieldName: PropTypes.string.isRequired,
+  anchorField: PropTypes.string.isRequired,
   anchorValue: PropTypes.string.isRequired,
   defaultOptionLabel: PropTypes.string,
   defaultOptionValue: PropTypes.string,

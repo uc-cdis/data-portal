@@ -132,7 +132,7 @@ export function queryGuppyForAggregationCountData({
 
 /**
  * @param {Object} args
- * @param {{ fieldName: string; tabs: string[] }} [args.anchorConfig]
+ * @param {AnchorConfig} [args.anchorConfig]
  * @param {string} [args.anchorValue]
  * @param {{ title: string; fields: string[] }[]} args.filterTabs
  * @param {GqlFilter} [args.gqlFilter]
@@ -145,7 +145,7 @@ export function getQueryInfoForAggregationOptionsData({
 }) {
   const isUsingAnchor = anchorConfig !== undefined && anchorValue !== '';
   const anchorFilterPiece = isUsingAnchor
-    ? { IN: { [anchorConfig.fieldName]: [anchorValue] } }
+    ? { IN: { [anchorConfig.field]: [anchorValue] } }
     : undefined;
 
   const fieldsByGroup = {};

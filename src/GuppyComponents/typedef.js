@@ -70,6 +70,13 @@
  */
 
 /**
+ * @typedef {Object} AnchorConfig
+ * @property {string} field
+ * @property {string[]} options
+ * @property {string[]} tabs
+ */
+
+/**
  * @typedef {Object} FilterTabsOption
  * @property {string} title
  * @property {string[]} fields
@@ -78,6 +85,7 @@
 
 /**
  * @typedef {Object} FilterConfig
+ * @property {AnchorConfig} anchor
  * @property {FilterTabsOption[]} tabs
  */
 

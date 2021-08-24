@@ -312,7 +312,7 @@ storiesOf('Filters', module)
     return (
       <div>
         <AnchorFilter
-          anchorFieldName='Disease Phase'
+          anchorField='Disease Phase'
           anchorValue={anchorValue}
           options={['Initial Diagnosis', 'Relapse']}
           optionsInUse={['Initial Diagnosis']}

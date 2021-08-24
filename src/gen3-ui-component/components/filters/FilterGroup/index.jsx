@@ -18,7 +18,6 @@ import '../typedef';
 
 /**
  * @typedef {Object} FilterGroupProps
- * @property {AnchorConfig} anchorConfig
  * @property {string} className
  * @property {FilterConfig} filterConfig
  * @property {boolean} hideZero
@@ -32,7 +31,6 @@ import '../typedef';
 
 /** @param {FilterGroupProps} props */
 function FilterGroup({
-  anchorConfig,
   className = '',
   filterConfig,
   hideZero = true,
@@ -53,14 +51,15 @@ function FilterGroup({
   const [tabIndex, setTabIndex] = useState(0);
   const tabTitle = filterTabs[tabIndex].title;
   const showAnchorFilter =
-    anchorConfig !== undefined && anchorConfig.tabs.includes(tabTitle);
+    filterConfig.anchor !== undefined &&
+    filterConfig.anchor.tabs.includes(tabTitle);
   const showPatientIdsFilter =
     patientIds !== undefined && tabTitle === 'Subject';
 
   const [anchorValue, setAnchorValue] = useState('');
   const anchorLabel =
-    anchorConfig !== undefined && anchorValue !== '' && showAnchorFilter
-      ? `${anchorConfig.fieldName}:${anchorValue}`
+    filterConfig.anchor !== undefined && anchorValue !== '' && showAnchorFilter
+      ? `${filterConfig.anchor.field}:${anchorValue}`
       : '';
   function handleAnchorValueChange(value) {
     setAnchorValue(value);
@@ -78,7 +77,7 @@ function FilterGroup({
   const [filterResults, setFilterResults] = useState(initialAppliedFilters);
   const [filterStatus, setFilterStatus] = useState(
     getFilterStatus({
-      anchorConfig,
+      anchorConfig: filterConfig.anchor,
       filterResults: initialAppliedFilters,
       filterTabs,
     })
@@ -91,7 +90,7 @@ function FilterGroup({
     }
 
     const newFilterStatus = getFilterStatus({
-      anchorConfig,
+      anchorConfig: filterConfig.anchor,
       filterResults: initialAppliedFilters,
       filterTabs,
     });
@@ -259,10 +258,10 @@ function FilterGroup({
       </div>
       {showAnchorFilter && (
         <AnchorFilter
-          anchorFieldName={anchorConfig.fieldName}
+          anchorField={filterConfig.anchor.field}
           anchorValue={anchorValue}
           onChange={handleAnchorValueChange}
-          options={anchorConfig.options}
+          options={filterConfig.anchor.options}
           optionsInUse={selectedAnchors[tabIndex]}
         />
       )}
@@ -306,13 +305,13 @@ function FilterGroup({
 }
 
 FilterGroup.propTypes = {
-  anchorConfig: PropTypes.shape({
-    fieldName: PropTypes.string,
-    options: PropTypes.arrayOf(PropTypes.string),
-    tabs: PropTypes.arrayOf(PropTypes.string),
-  }),
   className: PropTypes.string,
   filterConfig: PropTypes.shape({
+    anchor: PropTypes.shape({
+      field: PropTypes.string,
+      options: PropTypes.arrayOf(PropTypes.string),
+      tabs: PropTypes.arrayOf(PropTypes.string),
+    }),
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
         title: PropTypes.string,
