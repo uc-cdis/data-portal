@@ -8,7 +8,7 @@ The anchor can only be applied to nested field filters, and the field used for t
 
 The use of anchored filters can be specified using a portal configuration option for data explorer filters that looks like the following:
 
-```json
+```jsonc
 {
   "dataExplorerConfig": {
     "filters": {
