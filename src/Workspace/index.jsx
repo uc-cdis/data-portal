@@ -19,6 +19,7 @@ import { fetchWithCreds } from '../actions';
 import Spinner from '../components/Spinner';
 import jupyterIcon from '../img/icons/jupyter.svg';
 import rStudioIcon from '../img/icons/rstudio.svg';
+import rLogoIcon from '../img/icons/rlogo.svg';
 import galaxyIcon from '../img/icons/galaxy.svg';
 import ohifIcon from '../img/icons/ohif-viewer.svg';
 import WorkspaceOption from './WorkspaceOption';
@@ -110,16 +111,37 @@ class Workspace extends React.Component {
     );
   }
 
-  getWorkspaceStatus = async () => fetchWithCreds({
-    path: `${workspaceStatusUrl}`,
-    method: 'GET',
-  }).then(
-    ({ data }) => data,
-  ).catch(() => 'Error');
+  getWorkspaceStatus = async () => {
+    const workspaceStatus = await fetchWithCreds({
+      path: `${workspaceStatusUrl}`,
+      method: 'GET',
+    }).then(
+      ({ data }) => data,
+    ).catch(() => 'Error');
+    if (workspaceStatus.status === 'Running' && (!this.state.workspaceStatus || this.state.workspaceStatus === 'Not Found' || this.state.workspaceStatus === 'Launching')) {
+      await fetchWithCreds({
+        path: `${workspaceUrl}proxy/`,
+        method: 'GET',
+      }).then(
+        ({ status }) => {
+          if (status !== 200) {
+            workspaceStatus.status = 'Launching';
+            workspaceStatus.conditions = [{
+              type: 'ProxyConnected',
+              status: 'False',
+            }];
+          }
+        },
+      ).catch(() => 'Error');
+    }
+    return workspaceStatus;
+  }
 
   getIcon = (workspace) => {
-    if (this.regIcon(workspace, 'R Studio')) {
+    if (this.regIcon(workspace, 'R Studio') || this.regIcon(workspace, 'RStudio')) {
       return rStudioIcon;
+    } if (this.regIcon(workspace, 'R Notebook')) {
+      return rLogoIcon;
     } if (this.regIcon(workspace, 'Jupyter')) {
       return jupyterIcon;
     } if (this.regIcon(workspace, 'Galaxy')) {
@@ -151,6 +173,10 @@ class Workspace extends React.Component {
         },
         {
           title: 'Getting Containers Ready',
+          description: '',
+        },
+        {
+          title: 'Waiting for Proxy',
           description: '',
         },
       ],
@@ -189,16 +215,32 @@ class Workspace extends React.Component {
       (element.type === 'ContainersReady' && element.status === 'False')
     ))) {
       workspaceLaunchStepsConfig.currentIndex = 2;
-      workspaceLaunchStepsConfig.steps[2].description = 'In progress';
+      if (workspaceStatusData.containerStates.some((element) => (
+        (element.state && element.state.terminated)
+      ))) {
+        workspaceLaunchStepsConfig.steps[2].description = 'Error';
+        workspaceLaunchStepsConfig.currentStepsStatus = 'error';
+      } else {
+        workspaceLaunchStepsConfig.steps[2].description = 'In progress';
+      }
       return workspaceLaunchStepsConfig;
     }
 
-    if (workspaceStatusData.conditions.some((element) => (
-      (element.type === 'ContainersReady' && element.status === 'True')
-    ))) {
-      workspaceLaunchStepsConfig.currentIndex = 2;
-      workspaceLaunchStepsConfig.currentStepsStatus = 'finish';
-      workspaceLaunchStepsConfig.steps[2].description = 'All containers are ready';
+    // here we are at step 3, step 3 have no k8s pod/container conditions
+    workspaceLaunchStepsConfig.steps[0].description = 'Pod scheduled';
+    workspaceLaunchStepsConfig.steps[1].description = 'Pod initialized';
+    workspaceLaunchStepsConfig.steps[2].description = 'All containers are ready';
+
+    // condition type: ProxyConnected + status: false => at step 3
+    if (workspaceStatusData.conditions.some((element) => (element.type === 'ProxyConnected' && element.status === 'False'))) {
+      workspaceLaunchStepsConfig.currentIndex = 3;
+      workspaceLaunchStepsConfig.steps[3].description = 'In progress';
+      return workspaceLaunchStepsConfig;
+    }
+    if (workspaceStatusData.conditions.some((element) => (element.type === 'ProxyConnected' && element.status === 'True'))) {
+      workspaceLaunchStepsConfig.currentIndex = 3;
+      workspaceLaunchStepsConfig.currentStepsStatus = 'success';
+      workspaceLaunchStepsConfig.steps[3].description = 'Proxy is ready';
     }
     return workspaceLaunchStepsConfig;
   }
@@ -258,8 +300,12 @@ class Workspace extends React.Component {
         const data = await this.getWorkspaceStatus();
         if (this.workspaceStates.includes(data.status)) {
           const workspaceLaunchStepsConfig = this.getWorkspaceLaunchSteps(data);
+          let workspaceStatus = data.status;
+          if (workspaceLaunchStepsConfig && workspaceLaunchStepsConfig.currentStepsStatus === 'error') {
+            workspaceStatus = 'Stopped';
+          }
           this.setState({
-            workspaceStatus: data.status,
+            workspaceStatus,
             workspaceLaunchStepsConfig,
           }, () => {
             if (this.state.workspaceStatus !== 'Launching'
@@ -379,6 +425,15 @@ class Workspace extends React.Component {
                       : null}
                     {(this.state.workspaceStatus === 'Launching')
                       ? <Spinner text='Launching Workspace, this process may take several minutes' />
+                      : null}
+                    {(this.state.workspaceStatus === 'Stopped')
+                      ? (
+                        <div className='spinner'>
+                          <div className='spinner__text'>
+                            {'The Workspace launching process has stopped, please click the Cancel button and try again'}
+                          </div>
+                        </div>
+                      )
                       : null}
                   </div>
                   <div className='workspace__buttongroup'>

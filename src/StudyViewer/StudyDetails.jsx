@@ -368,6 +368,9 @@ class StudyDetails extends React.Component {
                            }
                            return item;
                          }
+                         if (!item) {
+                           return null;
+                         }
                          // codes below are from the mockup, keeping them here since we might need then if we have the nested docs later
                          /*
                        if (item && item.link) {
@@ -387,7 +390,7 @@ class StudyDetails extends React.Component {
                        }
                        */
                          // eslint-disable-next-line no-console
-                         console.warn('Unknown object found in meta data: ', item);
+                         console.warn(`Unknown object found in meta data for key '${k}': ${item}`);
                          return null;
                        })}
                      </Descriptions.Item>
