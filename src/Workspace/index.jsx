@@ -1,7 +1,7 @@
 import React from 'react';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { Popconfirm, Steps } from 'antd';
+import { Alert, Popconfirm, Steps } from 'antd';
 
 import {
   workspaceUrl,
@@ -418,6 +418,12 @@ class Workspace extends React.Component {
                       </div>
                     )
                     : null}
+                  <Alert
+                    description=' Please link account to additional data resources at the bottom of the page'
+                    type='info'
+                    banner
+                    closable
+                  />
                   <div className='workspace__options'>
                     {
                       this.state.options.map((option, i) => {
