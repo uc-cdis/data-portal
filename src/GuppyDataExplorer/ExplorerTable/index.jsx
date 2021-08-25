@@ -214,14 +214,13 @@ class ExplorerTable extends React.Component {
                 isExternal
               />
             ) : null;
-          case 'external_links':
+          case 'external_references.external_links': {
             if (row.value === null) return null;
-            // eslint-disable-next-line no-case-declarations
             const [
               resourceName,
               resourceIconPath,
               subjectUrl,
-            ] = row.value.split('|');
+            ] = row.value[0].external_links.split('|');
             return (
               <div className='explorer-table-external-links'>
                 <a href={subjectUrl} target='_blank' rel='noopenner noreferrer'>
@@ -229,6 +228,7 @@ class ExplorerTable extends React.Component {
                 </a>
               </div>
             );
+          }
           default:
             return (
               <div>
