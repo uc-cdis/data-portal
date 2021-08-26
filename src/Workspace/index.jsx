@@ -19,6 +19,7 @@ import { fetchWithCreds } from '../actions';
 import Spinner from '../components/Spinner';
 import jupyterIcon from '../img/icons/jupyter.svg';
 import rStudioIcon from '../img/icons/rstudio.svg';
+import rLogoIcon from '../img/icons/rlogo.svg';
 import galaxyIcon from '../img/icons/galaxy.svg';
 import ohifIcon from '../img/icons/ohif-viewer.svg';
 import WorkspaceOption from './WorkspaceOption';
@@ -139,6 +140,8 @@ class Workspace extends React.Component {
   getIcon = (workspace) => {
     if (this.regIcon(workspace, 'R Studio') || this.regIcon(workspace, 'RStudio')) {
       return rStudioIcon;
+    } if (this.regIcon(workspace, 'R Notebook')) {
+      return rLogoIcon;
     } if (this.regIcon(workspace, 'Jupyter')) {
       return jupyterIcon;
     } if (this.regIcon(workspace, 'Galaxy')) {
