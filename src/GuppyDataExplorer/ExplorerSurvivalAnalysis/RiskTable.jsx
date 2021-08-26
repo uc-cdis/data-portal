@@ -9,7 +9,7 @@ import {
   LabelList,
   ResponsiveContainer,
 } from 'recharts';
-import { getXAxisTicks } from './utils';
+import { filterRisktableByTime, getXAxisTicks } from './utils';
 import './typedef';
 
 /**
@@ -117,54 +117,59 @@ Table.propTypes = {
 /**
  * @param {Object} prop
  * @param {RisktableData[]} prop.data
+ * @param {number} prop.endTime
  * @param {boolean} prop.isStratified
+ * @param {number} prop.startTime
  * @param {number} prop.timeInterval
  */
-const RiskTable = ({ data, isStratified, timeInterval }) => (
-  <div className='explorer-survival-analysis__risk-table'>
-    {data.length === 0 ? (
-      <div className='explorer-survival-analysis__figure-placeholder'>
-        Click "Apply" to get the risk table here.
-      </div>
-    ) : (
-      <>
-        <div
-          className='explorer-survival-analysis__figure-title'
-          style={{ fontSize: '1.2rem' }}
-        >
-          Number at risk
+function RiskTable({ data, endTime, isStratified, timeInterval, startTime }) {
+  const filteredData = filterRisktableByTime(data, startTime, endTime);
+  return (
+    <div className='explorer-survival-analysis__risk-table'>
+      {filteredData.length === 0 ? (
+        <div className='explorer-survival-analysis__figure-placeholder'>
+          Click "Apply" to get the risk table here.
         </div>
-        {isStratified ? (
-          Object.entries(
-            data.reduce((acc, { group, data }) => {
-              const [factor, stratification] = group;
-              const stratificationKey = JSON.stringify(stratification);
-              const stratificationValue =
-                acc[stratificationKey] !== undefined
-                  ? [...acc[stratificationKey], { group: [factor], data }]
-                  : [{ group: [factor], data }];
+      ) : (
+        <>
+          <div
+            className='explorer-survival-analysis__figure-title'
+            style={{ fontSize: '1.2rem' }}
+          >
+            Number at risk
+          </div>
+          {isStratified ? (
+            Object.entries(
+              filteredData.reduce((acc, { group, data }) => {
+                const [factor, stratification] = group;
+                const stratificationKey = JSON.stringify(stratification);
+                const stratificationValue =
+                  acc[stratificationKey] !== undefined
+                    ? [...acc[stratificationKey], { group: [factor], data }]
+                    : [{ group: [factor], data }];
 
-              return { ...acc, [stratificationKey]: stratificationValue };
-            }, {})
-          ).map(([key, data], i, arr) => (
-            <Fragment key={key}>
-              <div className='explorer-survival-analysis__figure-title'>
-                {JSON.parse(key).value}
-              </div>
-              <Table
-                data={data}
-                timeInterval={timeInterval}
-                isLast={i === arr.length - 1}
-              />
-            </Fragment>
-          ))
-        ) : (
-          <Table data={data} timeInterval={timeInterval} isLast />
-        )}
-      </>
-    )}
-  </div>
-);
+                return { ...acc, [stratificationKey]: stratificationValue };
+              }, {})
+            ).map(([key, data], i, arr) => (
+              <Fragment key={key}>
+                <div className='explorer-survival-analysis__figure-title'>
+                  {JSON.parse(key).value}
+                </div>
+                <Table
+                  data={data}
+                  timeInterval={timeInterval}
+                  isLast={i === arr.length - 1}
+                />
+              </Fragment>
+            ))
+          ) : (
+            <Table data={filteredData} timeInterval={timeInterval} isLast />
+          )}
+        </>
+      )}
+    </div>
+  );
+}
 
 RiskTable.propTypes = {
   data: PropTypes.arrayOf(
@@ -183,7 +188,9 @@ RiskTable.propTypes = {
       ),
     })
   ).isRequired,
+  endTime: PropTypes.number.isRequired,
   isStratified: PropTypes.bool.isRequired,
+  startTime: PropTypes.number.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 

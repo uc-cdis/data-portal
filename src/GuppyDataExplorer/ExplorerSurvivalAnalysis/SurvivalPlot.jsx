@@ -10,7 +10,7 @@ import {
   CartesianGrid,
   Legend,
 } from 'recharts';
-import { getXAxisTicks } from './utils';
+import { filterSurvivalByTime, getXAxisTicks } from './utils';
 import './typedef';
 
 /**
@@ -113,41 +113,53 @@ Plot.propTypes = {
  * @param {Object} prop
  * @param {ColorScheme} prop.colorScheme
  * @param {SurvivalData[]} prop.data
+ * @param {number} prop.endTime
  * @param {boolean} prop.isStratified
+ * @param {number} prop.startTime
  * @param {number} prop.timeInterval
  */
-const SurvivalPlot = ({ colorScheme, data, isStratified, timeInterval }) => (
-  <div className='explorer-survival-analysis__survival-plot'>
-    {/* eslint-disable-next-line no-nested-ternary */}
-    {data.length === 0 ? (
-      <div className='explorer-survival-analysis__figure-placeholder'>
-        Click "Apply" to get the survival plot here.
-      </div>
-    ) : isStratified ? (
-      Object.entries(
-        data.reduce((acc, { group, data }) => {
-          const [factor, stratification] = group;
-          const stratificationKey = JSON.stringify(stratification);
-          const stratificationValue =
-            acc[stratificationKey] !== undefined
-              ? [...acc[stratificationKey], { group: [factor], data }]
-              : [{ group: [factor], data }];
+function SurvivalPlot({
+  colorScheme,
+  data,
+  endTime,
+  isStratified,
+  timeInterval,
+  startTime,
+}) {
+  const filteredData = filterSurvivalByTime(data, startTime, endTime);
+  return (
+    <div className='explorer-survival-analysis__survival-plot'>
+      {/* eslint-disable-next-line no-nested-ternary */}
+      {filteredData.length === 0 ? (
+        <div className='explorer-survival-analysis__figure-placeholder'>
+          Click "Apply" to get the survival plot here.
+        </div>
+      ) : isStratified ? (
+        Object.entries(
+          filteredData.reduce((acc, { group, data }) => {
+            const [factor, stratification] = group;
+            const stratificationKey = JSON.stringify(stratification);
+            const stratificationValue =
+              acc[stratificationKey] !== undefined
+                ? [...acc[stratificationKey], { group: [factor], data }]
+                : [{ group: [factor], data }];
 
-          return { ...acc, [stratificationKey]: stratificationValue };
-        }, {})
-      ).map(([key, data]) => (
-        <Fragment key={key}>
-          <div className='explorer-survival-analysis__figure-title'>
-            {JSON.parse(key).value}
-          </div>
-          <Plot {...{ colorScheme, data, timeInterval }} />
-        </Fragment>
-      ))
-    ) : (
-      <Plot {...{ colorScheme, data, timeInterval }} />
-    )}
-  </div>
-);
+            return { ...acc, [stratificationKey]: stratificationValue };
+          }, {})
+        ).map(([key, data]) => (
+          <Fragment key={key}>
+            <div className='explorer-survival-analysis__figure-title'>
+              {JSON.parse(key).value}
+            </div>
+            <Plot {...{ colorScheme, data, timeInterval }} />
+          </Fragment>
+        ))
+      ) : (
+        <Plot {...{ colorScheme, data: filteredData, timeInterval }} />
+      )}
+    </div>
+  );
+}
 
 SurvivalPlot.propTypes = {
   colorScheme: PropTypes.object.isRequired,
@@ -167,7 +179,9 @@ SurvivalPlot.propTypes = {
       ),
     })
   ).isRequired,
+  endTime: PropTypes.number.isRequired,
   isStratified: PropTypes.bool.isRequired,
+  startTime: PropTypes.number.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 

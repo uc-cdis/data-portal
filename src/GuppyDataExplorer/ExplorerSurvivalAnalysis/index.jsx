@@ -10,11 +10,7 @@ import { SurvivalAnalysisConfigType } from '../configTypeDef';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
-import {
-  filterRisktableByTime,
-  filterSurvivalByTime,
-  getFactors,
-} from './utils';
+import { getFactors } from './utils';
 import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
@@ -164,15 +160,19 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
             {config.result?.survival && (
               <SurvivalPlot
                 colorScheme={colorScheme}
-                data={filterSurvivalByTime(survival, startTime, endTime)}
+                data={survival}
+                endTime={endTime}
                 isStratified={isStratified}
+                startTime={startTime}
                 timeInterval={timeInterval}
               />
             )}
             {config.result?.risktable && (
               <RiskTable
-                data={filterRisktableByTime(risktable, startTime, endTime)}
+                data={risktable}
+                endTime={endTime}
                 isStratified={isStratified}
+                startTime={startTime}
                 timeInterval={timeInterval}
               />
             )}
