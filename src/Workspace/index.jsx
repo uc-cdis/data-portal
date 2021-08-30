@@ -1,7 +1,7 @@
 import React from 'react';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { Popconfirm, Steps } from 'antd';
+import { Alert, Popconfirm, Steps } from 'antd';
 
 import {
   workspaceUrl,
@@ -19,6 +19,7 @@ import { fetchWithCreds } from '../actions';
 import Spinner from '../components/Spinner';
 import jupyterIcon from '../img/icons/jupyter.svg';
 import rStudioIcon from '../img/icons/rstudio.svg';
+import rLogoIcon from '../img/icons/rlogo.svg';
 import galaxyIcon from '../img/icons/galaxy.svg';
 import ohifIcon from '../img/icons/ohif-viewer.svg';
 import WorkspaceOption from './WorkspaceOption';
@@ -139,6 +140,8 @@ class Workspace extends React.Component {
   getIcon = (workspace) => {
     if (this.regIcon(workspace, 'R Studio') || this.regIcon(workspace, 'RStudio')) {
       return rStudioIcon;
+    } if (this.regIcon(workspace, 'R Notebook')) {
+      return rLogoIcon;
     } if (this.regIcon(workspace, 'Jupyter')) {
       return jupyterIcon;
     } if (this.regIcon(workspace, 'Galaxy')) {
@@ -470,6 +473,16 @@ class Workspace extends React.Component {
                       </div>
                     )
                     : null}
+                  {this.state.externalLoginOptions.length > 0
+                    ? (
+                      <Alert
+                        description='Please link account to additional data resources at the bottom of the page'
+                        type='info'
+                        banner
+                        closable
+                      />
+                    )
+                    : null }
                   <div className='workspace__options'>
                     {
                       this.state.options.map((option, i) => {
