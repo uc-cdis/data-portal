@@ -110,15 +110,34 @@ class Workspace extends React.Component {
     );
   }
 
-  getWorkspaceStatus = async () => fetchWithCreds({
-    path: `${workspaceStatusUrl}`,
-    method: 'GET',
-  }).then(
-    ({ data }) => data,
-  ).catch(() => 'Error');
+  getWorkspaceStatus = async () => {
+    const workspaceStatus = await fetchWithCreds({
+      path: `${workspaceStatusUrl}`,
+      method: 'GET',
+    }).then(
+      ({ data }) => data,
+    ).catch(() => 'Error');
+    if (workspaceStatus.status === 'Running' && (!this.state.workspaceStatus || this.state.workspaceStatus === 'Not Found' || this.state.workspaceStatus === 'Launching')) {
+      await fetchWithCreds({
+        path: `${workspaceUrl}proxy/`,
+        method: 'GET',
+      }).then(
+        ({ status }) => {
+          if (status !== 200) {
+            workspaceStatus.status = 'Launching';
+            workspaceStatus.conditions = [{
+              type: 'ProxyConnected',
+              status: 'False',
+            }];
+          }
+        },
+      ).catch(() => 'Error');
+    }
+    return workspaceStatus;
+  }
 
   getIcon = (workspace) => {
-    if (this.regIcon(workspace, 'R Studio')) {
+    if (this.regIcon(workspace, 'R Studio') || this.regIcon(workspace, 'RStudio')) {
       return rStudioIcon;
     } if (this.regIcon(workspace, 'Jupyter')) {
       return jupyterIcon;
@@ -151,6 +170,10 @@ class Workspace extends React.Component {
         },
         {
           title: 'Getting Containers Ready',
+          description: '',
+        },
+        {
+          title: 'Waiting for Proxy',
           description: '',
         },
       ],
@@ -193,12 +216,21 @@ class Workspace extends React.Component {
       return workspaceLaunchStepsConfig;
     }
 
-    if (workspaceStatusData.conditions.some((element) => (
-      (element.type === 'ContainersReady' && element.status === 'True')
-    ))) {
-      workspaceLaunchStepsConfig.currentIndex = 2;
-      workspaceLaunchStepsConfig.currentStepsStatus = 'finish';
-      workspaceLaunchStepsConfig.steps[2].description = 'All containers are ready';
+    // here we are at step 3, step 3 have no k8s pod/container conditions
+    workspaceLaunchStepsConfig.steps[0].description = 'Pod scheduled';
+    workspaceLaunchStepsConfig.steps[1].description = 'Pod initialized';
+    workspaceLaunchStepsConfig.steps[2].description = 'All containers are ready';
+
+    // condition type: ProxyConnected + status: false => at step 3
+    if (workspaceStatusData.conditions.some((element) => (element.type === 'ProxyConnected' && element.status === 'False'))) {
+      workspaceLaunchStepsConfig.currentIndex = 3;
+      workspaceLaunchStepsConfig.steps[3].description = 'In progress';
+      return workspaceLaunchStepsConfig;
+    }
+    if (workspaceStatusData.conditions.some((element) => (element.type === 'ProxyConnected' && element.status === 'True'))) {
+      workspaceLaunchStepsConfig.currentIndex = 3;
+      workspaceLaunchStepsConfig.currentStepsStatus = 'success';
+      workspaceLaunchStepsConfig.steps[3].description = 'Proxy is ready';
     }
     return workspaceLaunchStepsConfig;
   }

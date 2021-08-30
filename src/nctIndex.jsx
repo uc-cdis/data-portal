@@ -55,6 +55,7 @@ import {
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
   ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
 } from './localconf';
+import { portalVersion } from './versions';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { gaTracking, components } from './params';
@@ -96,6 +97,7 @@ async function init() {
       env: ddEnv,
       // Specify a version number to identify the deployed version of your application in Datadog
       // version: '1.0.0',
+      version: portalVersion,
       sampleRate: ddSampleRate,
       trackInteractions: true,
     });

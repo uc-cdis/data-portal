@@ -16,8 +16,16 @@ if (DAPTrackingURL) {
   scriptSrcURLs.push(DAPTrackingURL);
   connectSrcURLs.push(DAPTrackingURL);
 }
+if (process.env.DATA_UPLOAD_BUCKET) {
+  connectSrcURLs.push(`https://${process.env.DATA_UPLOAD_BUCKET}.s3.amazonaws.com`);
+}
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
+}
+if (process.env.MAPBOX_API_TOKEN) {
+  connectSrcURLs.push('https://*.tiles.mapbox.com');
+  connectSrcURLs.push('https://api.mapbox.com');
+  connectSrcURLs.push('https://events.mapbox.com');
 }
 const iFrameApplicationURLs = [];
 if (configFile && configFile.analysisTools) {
@@ -48,6 +56,7 @@ const plugins = [
   new webpack.EnvironmentPlugin(['MAPBOX_API_TOKEN']),
   new webpack.EnvironmentPlugin(['DATADOG_APPLICATION_ID']),
   new webpack.EnvironmentPlugin(['DATADOG_CLIENT_TOKEN']),
+  new webpack.EnvironmentPlugin(['DATA_UPLOAD_BUCKET']),
   new webpack.DefinePlugin({ // <-- key to reducing React's size
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),
@@ -137,6 +146,7 @@ const entry = {
   workspaceBundle: './src/workspaceIndex.jsx',
   covid19Bundle: './src/covid19Index.jsx',
   nctBundle: './src/nctIndex.jsx',
+  healBundle: './src/healIndex.jsx',
 };
 
 // if GEN3_BUNDLE is set with a value
@@ -148,24 +158,35 @@ if (process.env.GEN3_BUNDLE) {
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
+    delete entry.healBundle;
     break;
   case 'covid19':
     entry.bundle = entry.covid19Bundle;
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
+    delete entry.healBundle;
     break;
   case 'nct':
     entry.bundle = entry.nctBundle;
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
+    delete entry.healBundle;
+    break;
+  case 'heal':
+    entry.bundle = entry.healBundle;
+    delete entry.workspaceBundle;
+    delete entry.covid19Bundle;
+    delete entry.nctBundle;
+    delete entry.healBundle;
     break;
   default:
     // by default we build for commons bundle
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
+    delete entry.healBundle;
     break;
   }
 }
