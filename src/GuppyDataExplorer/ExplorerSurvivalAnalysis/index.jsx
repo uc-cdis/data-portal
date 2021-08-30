@@ -15,21 +15,6 @@ import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
 
-let controller = new AbortController();
-const fetchResult = (body) => {
-  controller.abort();
-  controller = new AbortController();
-  return fetchWithCreds({
-    path: '/analysis/tools/survival',
-    method: 'POST',
-    body: JSON.stringify(body),
-    signal: controller.signal,
-  }).then(({ response, data, status }) => {
-    if (status !== 200) throw response.statusText;
-    return data;
-  });
-};
-
 /**
  * @param {Object} prop
  * @param {AggsData} prop.aggsData
@@ -38,14 +23,28 @@ const fetchResult = (body) => {
  * @param {FilterState} prop.filter
  */
 function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
+  const controller = useRef(new AbortController());
   const isMounted = useRef(false);
   useEffect(() => {
     isMounted.current = true;
     return () => {
       isMounted.current = false;
-      controller.abort();
+      controller.current.abort();
     };
   }, []);
+  function fetchResult(body) {
+    controller.current.abort();
+    controller.current = new AbortController();
+    return fetchWithCreds({
+      path: '/analysis/tools/survival',
+      method: 'POST',
+      body: JSON.stringify(body),
+      signal: controller.current.signal,
+    }).then(({ response, data, status }) => {
+      if (status !== 200) throw response.statusText;
+      return data;
+    });
+  }
 
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
