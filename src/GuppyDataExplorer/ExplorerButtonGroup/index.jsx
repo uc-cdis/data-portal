@@ -26,6 +26,8 @@ class ExplorerButtonGroup extends React.Component {
       toasterErrorText: 'There was an error exporting your cohort.',
       exportingToTerra: false,
       exportingToSevenBridges: false,
+      exportingPFBToURL: false,
+      pfbExportTargetURL: '', // stores the target URL when the user clicks an 'export-pfb-to-url' button
       // for export to PFB
       exportPFBURL: '',
       exportPFBToWorkspaceGUID: '',
@@ -80,6 +82,14 @@ class ExplorerButtonGroup extends React.Component {
             }, () => {
               this.sendPFBToSevenBridges();
             });
+          } else if (this.state.exportingPFBToURL) {
+            this.setState({
+              exportPFBURL: `${res.data.output}`.split('\n'),
+              toasterOpen: false,
+              exportingPFBToURL: false,
+            }, () => {
+              this.sendPFBToURL(this.state.pfbExportTargetURL);
+            });
           } else if (this.state.exportingPFBToWorkspace) {
             const pfbGUID = `${res.data.output}`.split('\n')[0];
             this.sendPFBToWorkspace(pfbGUID);
@@ -128,6 +138,12 @@ class ExplorerButtonGroup extends React.Component {
     }
     if (buttonConfig.type === 'file-manifest') {
       clickFunc = this.downloadManifest(buttonConfig.fileName, 'file');
+    }
+    if (buttonConfig.type === 'export-pfb-to-url') {
+      if (!buttonConfig.pfbExportTargetURL) {
+        throw new Error('Misconfiguration Error! Expected button of type `export-pfb-to-url` to have the required `pfbExportTargetURL` property');
+      }
+      clickFunc = this.exportPFBToURL(buttonConfig.pfbExportTargetURL);
     }
     if (buttonConfig.type === 'export') {
       // REMOVE THIS CODE WHEN TERRA EXPORT WORKS
@@ -411,6 +427,35 @@ class ExplorerButtonGroup extends React.Component {
     this.setState({ exportingToSevenBridges: true }, () => {
       this.exportToPFB();
     });
+  }
+
+  // NOTE (@mpingram) this is a new way to send a PFB to an external website.
+  // New explorer button type: 'export-pfb-to-url'. Buttons of this type have
+  // a `pfbExportURL` property which is the target URL to send the PFB to.
+  // When the user clicks a 'export-pfb-to-url' button, store the `pfbExportURL`
+  // in the component state, create the pfb with exportToPFB(), and send the
+  // pfb to the target url with `sendPFBToURL()`.
+  // `sendPFBToURL()` is called from componentWillUpdate.
+  exportPFBToURL = (pfbExportTargetURL) => {
+    this.setState({
+      exportingPFBToURL: true,
+      pfbExportTargetURL,
+    }, () => {
+      this.exportToPFB();
+    });
+  }
+
+  sendPFBToURL = () => {
+    const signedURL = encodeURIComponent(this.state.exportPFBURL);
+    // the PFB export target URL is a template URL that should have a {{PRESIGNED_URL}} template
+    // variable in it.
+    const PRESIGNED_URL_TEMPLATE_VARIABLE = '{{PRESIGNED_URL}}';
+    const targetURLIsBad = this.state.pfbExportTargetURL.indexOf(PRESIGNED_URL_TEMPLATE_VARIABLE) === -1;
+    if (targetURLIsBad) {
+      throw new Error(`Misconfiguration error! An \`export-pfb-to-url\` button has a bad \`pfbExportTargetURL\` property. The string \`{{PRESIGNED_URL}}\` must appear in the \`pfbExportTargetURL\` property. Bad \`pfbExportTargetURL\`: ${this.state.pfbExportTargetURL}`);
+    }
+    const targetURL = this.state.pfbExportTargetURL.replace(PRESIGNED_URL_TEMPLATE_VARIABLE, signedURL);
+    window.location = targetURL;
   }
 
   exportFilesToSevenBridges = () => {
@@ -799,7 +844,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
 
     return (
       <Button
-        key={buttonConfig.type}
+        key={`${buttonConfig.type}-${buttonConfig.title}`}
         onClick={() => ((!this.props.user.username && this.isLoginForDownloadEnabled()
           && this.isDownloadButton(buttonConfig)) ? this.goToLogin() : clickFunc())}
         label={(!this.props.user.username && this.isLoginForDownloadEnabled()
@@ -895,7 +940,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
                         const onClick = this.getOnClickFunction(btnCfg);
                         return (
                           <Dropdown.Item
-                            key={btnCfg.type}
+                            key={`${btnCfg.type}-${btnCfg.title}`}
                             leftIcon='datafile'
                             rightIcon='download'
                             onClick={() => ((!this.props.user.username && this.isLoginForDownloadEnabled()
