@@ -214,7 +214,7 @@ function GuppyWrapper({
         { accessibleCount, totalCount },
         { aggsData, initialTabsOptions, tabsOptions },
       ]) => {
-        if (isMounted.current)
+        if (isMounted.current) {
           setState((prevState) => ({
             ...prevState,
             accessibleCount,
@@ -225,6 +225,10 @@ function GuppyWrapper({
             tabsOptions,
             totalCount,
           }));
+
+          if (anchorValue !== undefined)
+            setAnchoredTabsOptionsCache({ [anchorValue]: tabsOptions });
+        }
       }
     );
   }
