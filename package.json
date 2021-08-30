@@ -20,7 +20,7 @@
     "babel-plugin-relay": "^11.0.2",
     "clipboard-plus": "^1.0.0",
     "core-js": "^3.16.4",
-    "css-loader": "^5.2.7",
+    "css-loader": "^6.2.0",
     "d3-array": "^3.0.2",
     "d3-ease": "^3.0.1",
     "d3-force": "^3.0.0",
