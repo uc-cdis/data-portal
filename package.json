@@ -112,7 +112,7 @@
     "react-test-renderer": "^16.14.0",
     "redux-mock-store": "^1.5.4",
     "stylelint": "^13.13.1",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^4.0.0"
   },
   "jest": {
     "verbose": true,
