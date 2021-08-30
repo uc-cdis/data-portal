@@ -38,6 +38,8 @@ const fetchResult = (body) => {
  * @param {FilterState} prop.filter
  */
 function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
+  useEffect(() => () => controller.abort(), []);
+
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);

@@ -78,6 +78,7 @@ function GuppyWrapper({
     isMounted.current = true;
     return () => {
       isMounted.current = false;
+      controller.current.abort();
     };
   }, []);
 
