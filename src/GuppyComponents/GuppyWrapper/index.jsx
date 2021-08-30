@@ -81,6 +81,12 @@ function GuppyWrapper({
     };
   }, []);
 
+  /** @type {{ [anchorValue: string]: SimpleAggsData }} */
+  const initialAnchoredTabsOptionsCache = {};
+  const [anchoredTabsOptionsCache, setAnchoredTabsOptionsCache] = useState(
+    initialAnchoredTabsOptionsCache
+  );
+
   /**
    * Add patient ids to filter if provided
    * @param {FilterState} filter
@@ -208,7 +214,7 @@ function GuppyWrapper({
         { accessibleCount, totalCount },
         { aggsData, initialTabsOptions, tabsOptions },
       ]) => {
-        if (isMounted.current)
+        if (isMounted.current) {
           setState((prevState) => ({
             ...prevState,
             accessibleCount,
@@ -219,6 +225,10 @@ function GuppyWrapper({
             tabsOptions,
             totalCount,
           }));
+
+          if (anchorValue !== undefined)
+            setAnchoredTabsOptionsCache({ [anchorValue]: tabsOptions });
+        }
       }
     );
   }
@@ -318,7 +328,10 @@ function GuppyWrapper({
     }).then((allFields) => {
       if (isMounted.current) {
         setState((prevState) => ({ ...prevState, allFields }));
-        fetchAggsDataFromGuppy({ filter: state.filter });
+        fetchAggsDataFromGuppy({
+          anchorValue: filterConfig.anchor !== undefined ? '' : undefined,
+          filter: state.filter,
+        });
         fetchRawDataFromGuppy({
           fields:
             rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : allFields,
@@ -434,21 +447,37 @@ function GuppyWrapper({
    * @param {string} anchorValue
    */
   function handleAnchorValueChange(anchorValue) {
-    controller.current.abort();
-    controller.current = new AbortController();
-    fetchAggsOptionsDataFromGuppy({
-      anchorValue,
-      filter: state.filter,
-      filterTabs: filterConfig.tabs.filter(({ title }) =>
-        filterConfig.anchor.tabs.includes(title)
-      ),
-    }).then(({ tabsOptions }) => {
+    if (anchorValue in anchoredTabsOptionsCache) {
       if (isMounted.current)
         setState((prevState) => ({
           ...prevState,
-          tabsOptions: { ...prevState.tabsOptions, ...tabsOptions },
+          tabsOptions: {
+            ...prevState.tabsOptions,
+            ...anchoredTabsOptionsCache[anchorValue],
+          },
         }));
-    });
+    } else {
+      controller.current.abort();
+      controller.current = new AbortController();
+      fetchAggsOptionsDataFromGuppy({
+        anchorValue,
+        filter: state.filter,
+        filterTabs: filterConfig.tabs.filter(({ title }) =>
+          filterConfig.anchor.tabs.includes(title)
+        ),
+      }).then(({ tabsOptions }) => {
+        if (isMounted.current) {
+          setState((prevState) => ({
+            ...prevState,
+            tabsOptions: { ...prevState.tabsOptions, ...tabsOptions },
+          }));
+          setAnchoredTabsOptionsCache((prevState) => ({
+            ...prevState,
+            [anchorValue]: tabsOptions,
+          }));
+        }
+      });
+    }
   }
 
   /**
