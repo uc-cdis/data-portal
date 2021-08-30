@@ -81,6 +81,12 @@ function GuppyWrapper({
     };
   }, []);
 
+  /** @type {{ [anchorValue: string]: SimpleAggsData }} */
+  const initialAnchoredTabsOptionsCache = {};
+  const [anchoredTabsOptionsCache, setAnchoredTabsOptionsCache] = useState(
+    initialAnchoredTabsOptionsCache
+  );
+
   /**
    * Add patient ids to filter if provided
    * @param {FilterState} filter
@@ -434,21 +440,37 @@ function GuppyWrapper({
    * @param {string} anchorValue
    */
   function handleAnchorValueChange(anchorValue) {
-    controller.current.abort();
-    controller.current = new AbortController();
-    fetchAggsOptionsDataFromGuppy({
-      anchorValue,
-      filter: state.filter,
-      filterTabs: filterConfig.tabs.filter(({ title }) =>
-        filterConfig.anchor.tabs.includes(title)
-      ),
-    }).then(({ tabsOptions }) => {
+    if (anchorValue in anchoredTabsOptionsCache) {
       if (isMounted.current)
         setState((prevState) => ({
           ...prevState,
-          tabsOptions: { ...prevState.tabsOptions, ...tabsOptions },
+          tabsOptions: {
+            ...prevState.tabsOptions,
+            ...anchoredTabsOptionsCache[anchorValue],
+          },
         }));
-    });
+    } else {
+      controller.current.abort();
+      controller.current = new AbortController();
+      fetchAggsOptionsDataFromGuppy({
+        anchorValue,
+        filter: state.filter,
+        filterTabs: filterConfig.tabs.filter(({ title }) =>
+          filterConfig.anchor.tabs.includes(title)
+        ),
+      }).then(({ tabsOptions }) => {
+        if (isMounted.current) {
+          setState((prevState) => ({
+            ...prevState,
+            tabsOptions: { ...prevState.tabsOptions, ...tabsOptions },
+          }));
+          setAnchoredTabsOptionsCache((prevState) => ({
+            ...prevState,
+            [anchorValue]: tabsOptions,
+          }));
+        }
+      });
+    }
   }
 
   /**
