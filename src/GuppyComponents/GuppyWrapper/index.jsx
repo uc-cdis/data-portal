@@ -328,7 +328,10 @@ function GuppyWrapper({
     }).then((allFields) => {
       if (isMounted.current) {
         setState((prevState) => ({ ...prevState, allFields }));
-        fetchAggsDataFromGuppy({ filter: state.filter });
+        fetchAggsDataFromGuppy({
+          anchorValue: filterConfig.anchor !== undefined ? '' : undefined,
+          filter: state.filter,
+        });
         fetchRawDataFromGuppy({
           fields:
             rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : allFields,
