@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import { schemeCategory10 } from 'd3-scale-chromatic';
@@ -38,7 +38,14 @@ const fetchResult = (body) => {
  * @param {FilterState} prop.filter
  */
 function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
-  useEffect(() => () => controller.abort(), []);
+  const isMounted = useRef(false);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+      controller.abort();
+    };
+  }, []);
 
   const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
@@ -54,7 +61,10 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
   const [isFilterChanged, setIsFilterChanged] = useState(false);
   useEffect(() => {
     const updatedFilter = getGQLFilter(cloneDeep(filter));
-    if (JSON.stringify(updatedFilter) !== JSON.stringify(transformedFilter)) {
+    if (
+      isMounted.current &&
+      JSON.stringify(updatedFilter) !== JSON.stringify(transformedFilter)
+    ) {
       setTransformedFilter(updatedFilter);
       setIsFilterChanged(true);
     }
@@ -64,7 +74,8 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
     getFactors(aggsData, fieldMapping, enumFilterList)
   );
   useEffect(() => {
-    setFactors(getFactors(aggsData, fieldMapping, enumFilterList));
+    if (isMounted.current)
+      setFactors(getFactors(aggsData, fieldMapping, enumFilterList));
   }, [aggsData, fieldMapping]);
 
   /** @type {ColorScheme} */
@@ -110,17 +121,19 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
         result: config.result,
       })
         .then((result) => {
-          if (config.result?.pval)
-            setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-          if (config.result?.risktable) setRisktable(result.risktable);
-          if (config.result?.survival) {
-            setSurvival(result.survival);
-            setColorScheme(getNewColorScheme(result.survival));
+          if (isMounted.current) {
+            if (config.result?.pval)
+              setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
+            if (config.result?.risktable) setRisktable(result.risktable);
+            if (config.result?.survival) {
+              setSurvival(result.survival);
+              setColorScheme(getNewColorScheme(result.survival));
+            }
+            setIsUpdating(false);
           }
-          setIsUpdating(false);
         })
         .catch((e) => {
-          if (e.name !== 'AbortError') {
+          if (isMounted.current && e.name !== 'AbortError') {
             setIsError(true);
             setIsUpdating(false);
           }
