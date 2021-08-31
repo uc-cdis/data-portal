@@ -20,8 +20,8 @@ if (process.env.DATA_UPLOAD_BUCKET) {
   connectSrcURLs.push(`https://${process.env.DATA_UPLOAD_BUCKET}.s3.amazonaws.com`);
 }
 // add any extra URLs that should be whitelisted
-if (configFile.contentSecurityPolicyConnectSRCWhiteList && configFile.contentSecurityPolicyConnectSRCWhiteList.length > 0) {
-  connectSrcURLs.push(...configFile.contentSecurityPolicyConnectSRCWhiteList);
+if (configFile.connectSrcCSPWhitelist && configFile.connectSrcCSPWhitelist.length > 0) {
+  connectSrcURLs.push(...configFile.connectSrcCSPWhitelist);
 }
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');

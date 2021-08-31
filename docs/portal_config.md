@@ -597,7 +597,7 @@ Below is an example, with inline comments describing what each JSON block config
       "service": "query_page"
     }
   },
-  "contentSecurityPolicyConnectSRCWhiteList": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
+  "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
     "https://example.s3.amazonaws.com" // full url to be added
   ]
 }
