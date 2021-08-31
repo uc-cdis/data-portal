@@ -60,8 +60,8 @@ class IllinoisMapChart extends React.Component {
         // Additional layers used as examples enable here
         us_counties: { title: 'US Counties', visible: 'visible' },
         il_population: { title: 'IL Population', visible: 'visible' }, */
-        C_time_data: { title: 'Case Data' },
         V_time_data: { title: 'Vaccination Data' },
+        C_time_data: { title: 'Case Data' },
         rnr_mobility_data: { title: 'Retail & Recreation' },
         gnp_mobility_data: { title: 'Grocery & Pharmacy' },
         prk_mobility_data: { title: 'Parks' },
@@ -79,9 +79,10 @@ class IllinoisMapChart extends React.Component {
       sliderDate: null,
       sliderDataLastUpdated: null,
       sliderDataStartDate: null,
-      activeLayer: 'C_time_data',
-      legendTitle: 'Confirmed Cases',
-      legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' },
+      activeLayer: 'V_time_data',
+      legendTitle: 'Vaccines Administered',
+      legendDataSource: { title: 'Illinois Department of Public Health', link: 'http://www.dph.illinois.gov/' },
+
       mobility_data: { data: null, fetchStatus: null },
       time_data: { data: null, fetchStatus: null, lastUpdated: null },
       vaccine_data: { data: null, fetchStatus: null, lastUpdated: null },
