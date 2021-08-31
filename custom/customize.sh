@@ -27,12 +27,6 @@ if [ -f custom/privacy_policy.md ]; then
   cp custom/privacy_policy.md src/privacy_policy.md
 fi
 
-if [ -f custom/css/$APP.css ]; then
-  cp custom/css/$APP.css src/css/themeoverrides.css
-else
-  echo "/* generated file - see customize.sh */" > src/css/themeoverrides.css
-fi
-
 if [ -d custom/sponsors/$APP-sponsors ]; then
   cp -r custom/sponsors/$APP-sponsors src/img/sponsors
 fi
