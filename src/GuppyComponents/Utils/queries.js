@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash.clonedeep';
 import fetch from 'isomorphic-fetch';
 import flat from 'flat';
 import papaparse from 'papaparse';
@@ -27,7 +28,7 @@ function jsonToFormat(json, format) {
  * @param {string} field
  * @returns {string}
  */
-function histogramQueryStrForEachField(field) {
+function buildHistogramQueryStrForField(field) {
   const [fieldName, ...nestedFieldNames] = field.split('.');
   return nestedFieldNames.length === 0
     ? `${fieldName} {
@@ -37,7 +38,7 @@ function histogramQueryStrForEachField(field) {
         }
       }`
     : `${fieldName} {
-        ${histogramQueryStrForEachField(nestedFieldNames.join('.'))}
+        ${buildHistogramQueryStrForField(nestedFieldNames.join('.'))}
       }`;
 }
 
@@ -49,7 +50,7 @@ function histogramQueryStrForEachField(field) {
  * @param {GqlFilter} [args.gqlFilter]
  * @param {AbortSignal} [args.signal]
  */
-export function queryGuppyForAggregationData({
+export function queryGuppyForAggregationChartData({
   path,
   type,
   fields,
@@ -60,8 +61,45 @@ export function queryGuppyForAggregationData({
     ? `query ($filter: JSON) {
         _aggregation {
           ${type} (filter: $filter, filterSelf: false, accessibility: all) {
-            ${fields.map((field) => histogramQueryStrForEachField(field))}
+            ${fields.map(buildHistogramQueryStrForField).join('\n')}
           }
+        }
+      }`
+    : `query {
+        _aggregation {
+          ${type} (accessibility: all) {
+            ${fields.map(buildHistogramQueryStrForField).join('\n')}
+          }
+        }
+      }`
+  ).replace(/\s+/g, ' ');
+
+  return fetch(`${path}${graphqlEndpoint}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ query, variables: { filter: gqlFilter } }),
+    signal,
+  }).then((response) => response.json());
+}
+
+/**
+ * @param {object} args
+ * @param {string} args.path
+ * @param {string} args.type
+ * @param {GqlFilter} [args.gqlFilter]
+ * @param {AbortSignal} [args.signal]
+ */
+export function queryGuppyForAggregationCountData({
+  path,
+  type,
+  gqlFilter,
+  signal,
+}) {
+  const query = (gqlFilter !== undefined
+    ? `query ($filter: JSON) {
+        _aggregation {
           accessible: ${type} (filter: $filter, accessibility: accessible) {
             _totalCount
           }
@@ -72,9 +110,6 @@ export function queryGuppyForAggregationData({
       }`
     : `query {
         _aggregation {
-          ${type} (accessibility: all) {
-            ${fields.map((field) => histogramQueryStrForEachField(field))}
-          }
           accessible: ${type} (accessibility: accessible) {
             _totalCount
           }
@@ -91,6 +126,178 @@ export function queryGuppyForAggregationData({
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ query, variables: { filter: gqlFilter } }),
+    signal,
+  }).then((response) => response.json());
+}
+
+/**
+ * @param {Object} args
+ * @param {AnchorConfig} [args.anchorConfig]
+ * @param {string} [args.anchorValue]
+ * @param {{ title: string; fields: string[] }[]} args.filterTabs
+ * @param {GqlFilter} [args.gqlFilter]
+ */
+export function getQueryInfoForAggregationOptionsData({
+  anchorConfig,
+  anchorValue = '',
+  filterTabs,
+  gqlFilter,
+}) {
+  const isUsingAnchor = anchorConfig !== undefined && anchorValue !== '';
+  const anchorFilterPiece = isUsingAnchor
+    ? { IN: { [anchorConfig.field]: [anchorValue] } }
+    : undefined;
+
+  const fieldsByGroup = {};
+  const gqlFilterByGroup = {};
+
+  for (const { title, fields } of filterTabs)
+    if (isUsingAnchor && anchorConfig.tabs.includes(title)) {
+      for (const field of fields) {
+        const [path, fieldName] = field.split('.');
+
+        if (fieldName === undefined)
+          fieldsByGroup.main = [...(fieldsByGroup?.main ?? []), field];
+        else {
+          fieldsByGroup[path] = [...(fieldsByGroup?.[path] ?? []), field];
+
+          // add gqlFilterGroup for each nested field object path
+          if (!(path in gqlFilterByGroup)) {
+            const groupGqlFilter = cloneDeep(gqlFilter ?? { AND: [] });
+
+            if (anchorValue !== '') {
+              const found = groupGqlFilter.AND.find(
+                ({ nested }) => nested?.path === path
+              );
+              if (found === undefined) {
+                groupGqlFilter.AND.push({
+                  nested: { path, AND: [anchorFilterPiece] },
+                });
+              } else {
+                found.nested.AND.push(anchorFilterPiece);
+              }
+            }
+
+            gqlFilterByGroup[`filter_${path}`] = groupGqlFilter;
+          }
+        }
+      }
+    } else {
+      fieldsByGroup.main = [...(fieldsByGroup?.main ?? []), ...fields];
+    }
+
+  if (fieldsByGroup.main?.length > 0) gqlFilterByGroup.filter_main = gqlFilter;
+
+  return {
+    fieldsByGroup,
+    gqlFilterByGroup,
+  };
+}
+
+/**
+ * @param {object} args
+ * @param {{ [group: string]: string[]}} args.fieldsByGroup
+ * @param {boolean} [args.isFilterEmpty]
+ * @param {boolean} [args.isInitialQuery]
+ * @param {string} args.type
+ */
+export function buildQueryForAggregationOptionsData({
+  fieldsByGroup,
+  isFilterEmpty,
+  isInitialQuery = false,
+  type,
+}) {
+  const queryVariables = [];
+  for (const group of Object.keys(fieldsByGroup))
+    if (!(isFilterEmpty && group === 'main'))
+      queryVariables.push(`$filter_${group}: JSON`);
+
+  const { main, ...fieldsByAnchoredGroup } = fieldsByGroup;
+  const hasMainFields = main !== undefined;
+  const mainHistogramQueryFragment = hasMainFields
+    ? main.map(buildHistogramQueryStrForField).join('\n')
+    : '';
+  const mainQueryFragment = hasMainFields
+    ? `main: ${type} ${
+        isFilterEmpty
+          ? '(accessibility: all)'
+          : '(filter: $filter_main, filterSelf: false, accessibility: all)'
+      } {
+      ${mainHistogramQueryFragment}
+    }`
+    : '';
+
+  const unfilteredQueryFragment =
+    hasMainFields && isInitialQuery && !isFilterEmpty
+      ? `unfiltered: ${type} (accessibility: all) {
+        ${mainHistogramQueryFragment}
+      }`
+      : '';
+
+  const anchoredPathQueryFragments = [];
+  for (const [group, fields] of Object.entries(fieldsByAnchoredGroup))
+    anchoredPathQueryFragments.push(`
+      anchored_${group}: ${type} (filter: $filter_${group}, filterSelf: false, accessibility: all) {
+        ${fields.map(buildHistogramQueryStrForField).join('\n')}
+      }
+    `);
+
+  return `query ${
+    queryVariables.length > 0 ? `(${queryVariables.join(', ')})` : ''
+  } {
+    _aggregation {
+      ${mainQueryFragment}
+      ${unfilteredQueryFragment}
+      ${anchoredPathQueryFragments.join('\n')}
+    }
+  }`.replace(/\s+/g, ' ');
+}
+
+/**
+ * @param {object} args
+ * @param {{ fieldName: string; tabs: string[] }} [args.anchorConfig]
+ * @param {string} args.anchorValue
+ * @param {{ title: string, fields: string[]}[]} args.filterTabs
+ * @param {GqlFilter} [args.gqlFilter]
+ * @param {boolean} [isInitialQuery]
+ * @param {string} args.path
+ * @param {AbortSignal} [args.signal]
+ * @param {string} args.type
+ */
+export function queryGuppyForAggregationOptionsData({
+  anchorConfig,
+  anchorValue,
+  filterTabs,
+  gqlFilter,
+  isInitialQuery,
+  path,
+  signal,
+  type,
+}) {
+  const {
+    fieldsByGroup,
+    gqlFilterByGroup,
+  } = getQueryInfoForAggregationOptionsData({
+    anchorConfig,
+    anchorValue,
+    filterTabs,
+    gqlFilter,
+  });
+
+  const query = buildQueryForAggregationOptionsData({
+    fieldsByGroup,
+    isFilterEmpty: gqlFilter === undefined,
+    isInitialQuery,
+    type,
+  });
+  const variables = { ...gqlFilterByGroup };
+
+  return fetch(`${path}${graphqlEndpoint}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ query, variables }),
     signal,
   }).then((response) => response.json());
 }
@@ -430,11 +637,6 @@ export function getGQLFilter(filterState) {
   }
 
   return { AND: [...simpleFilters, ...nestedFilters] };
-}
-
-/** @param {object} filterTabConfigs */
-export function getAllFieldsFromFilterConfigs(filterTabConfigs) {
-  return filterTabConfigs.flatMap(({ fields }) => fields);
 }
 
 /**

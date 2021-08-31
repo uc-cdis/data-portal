@@ -1,253 +1,198 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import cloneDeep from 'lodash.clonedeep';
+import AnchorFilter from '../AnchorFilter';
 import PatientIdFilter from '../PatientIdFilter';
+import {
+  clearFilterSection,
+  getExpandedStatus,
+  getFilterStatus,
+  getSelectedAnchors,
+  tabHasActiveFilters,
+  updateCombineMode,
+  updateRangeValue,
+  updateSelectedValue,
+} from './utils';
 import './FilterGroup.css';
+import '../typedef';
 
-const removeEmptyFilter = (filterResults) => {
-  const newFilterResults = {};
-  Object.keys(filterResults).forEach((field) => {
-    const containsRangeFilter =
-      typeof filterResults[field].lowerBound !== 'undefined';
-    const containsCheckboxFilter =
-      filterResults[field].selectedValues &&
-      filterResults[field].selectedValues.length > 0;
-    // Filter settings are prefaced with two underscores, e.g., __combineMode
-    const configFields = Object.keys(filterResults[field]).filter((x) =>
-      x.startsWith('__')
-    );
-    // A given config setting is still informative to Guppy even if the setting becomes empty
-    const containsConfigSetting = configFields.length > 0;
-    if (
-      containsRangeFilter ||
-      containsCheckboxFilter ||
-      containsConfigSetting
-    ) {
-      newFilterResults[field] = filterResults[field];
-    }
-  });
-  return newFilterResults;
-};
+/**
+ * @typedef {Object} FilterGroupProps
+ * @property {string} className
+ * @property {FilterConfig} filterConfig
+ * @property {boolean} hideZero
+ * @property {FilterState} initialAppliedFilters
+ * @property {(anchorValue: string) => void} onAnchorValueChange
+ * @property {FilterChangeHandler} onFilterChange
+ * @property {(patientIds: string[]) => void} onPatientIdsChange
+ * @property {string[]} patientIds
+ * @property {JSX.Element[]} tabs
+ */
 
-const tabHasActiveFilters = (tabFilterStatus) => {
-  /**
-   * tabFilterStatus[sectionIndex] = { [field]: true/false/[upperBound,lowerBound]}
-   */
-  let hasActiveFilters = false;
-  tabFilterStatus.forEach((section) => {
-    const fieldStatuses = Object.values(section);
-    if (
-      fieldStatuses.some((status) => status !== undefined && status !== false)
-    ) {
-      hasActiveFilters = true;
-    }
-  });
-  return hasActiveFilters;
-};
+/** @param {FilterGroupProps} props */
+function FilterGroup({
+  className = '',
+  filterConfig,
+  hideZero = true,
+  initialAppliedFilters = {},
+  onAnchorValueChange = () => {},
+  onFilterChange = () => {},
+  onPatientIdsChange,
+  patientIds,
+  tabs,
+}) {
+  const filterTabs = filterConfig.tabs.map(
+    ({ title, fields, searchFields }) => ({
+      title,
+      // If there are any search fields, insert them at the top of each tab's fields.
+      fields: searchFields ? searchFields.concat(fields) : fields,
+    })
+  );
+  const [tabIndex, setTabIndex] = useState(0);
+  const tabTitle = filterTabs[tabIndex].title;
+  const showAnchorFilter =
+    filterConfig.anchor !== undefined &&
+    filterConfig.anchor.tabs.includes(tabTitle);
+  const showPatientIdsFilter =
+    patientIds !== undefined && tabTitle === 'Subject';
 
-class FilterGroup extends React.Component {
-  constructor(props) {
-    super(props);
-    const initialExpandedStatusControl = false;
-    const initialExpandedStatus = props.filterConfig.tabs.map((t) =>
-      t.fields.map(() => initialExpandedStatusControl)
-    );
-    const initialFilterResults = props.initialAppliedFilters;
-    const initialFilterStatus = props.filterConfig.tabs.map((t) =>
-      t.fields.map((field) => {
-        if (Object.keys(initialFilterResults).includes(field)) {
-          const {
-            selectedValues,
-            lowerBound,
-            upperBound,
-          } = initialFilterResults[field];
-          if (selectedValues === undefined) {
-            return [lowerBound, upperBound];
-          }
-          const status = {};
-          for (const selected of selectedValues) status[selected] = true;
-          return status;
-        }
-        return {};
-      })
-    );
-    this.state = {
-      selectedTabIndex: 0,
-      expandedStatus: initialExpandedStatus,
-      expandedStatusControl: initialExpandedStatusControl,
-
-      /**
-       * Current selected status for filters,
-       * filterStatus[tabIndex][sectionIndex] = { [field]: true | false } | [upperBound,lowerBound]
-       */
-      filterStatus: initialFilterStatus,
-
-      /**
-       * Currently filtered items, example:
-       *   {
-       *     'file_format': {
-       *        'selectedValues': ['CSV', 'TAR'],
-       *     },
-       *     'file_count': {
-       *        'lowerBound': 5,
-       *        'upperBound': 30,
-       *     },
-       *     ...
-       *   }
-       */
-      filterResults: initialFilterResults,
-    };
-    this.currentFilterListRef = React.createRef();
+  const [anchorValue, setAnchorValue] = useState('');
+  const anchorLabel =
+    filterConfig.anchor !== undefined && anchorValue !== '' && showAnchorFilter
+      ? `${filterConfig.anchor.field}:${anchorValue}`
+      : '';
+  function handleAnchorValueChange(value) {
+    setAnchorValue(value);
+    onAnchorValueChange(value);
   }
 
-  componentDidUpdate(prevProps) {
-    if (
-      JSON.stringify(this.props.initialAppliedFilters) !==
-      JSON.stringify(prevProps.initialAppliedFilters)
-    ) {
-      this.updateFilterStates(
-        this.props.initialAppliedFilters,
-        this.props.filterConfig
-      );
-    }
-  }
+  const [expandedStatusControl, setExpandedStatusControl] = useState(false);
+  const expandedStatusText = expandedStatusControl
+    ? 'Collapse all'
+    : 'Open all';
+  const [expandedStatus, setExpandedStatus] = useState(
+    getExpandedStatus(filterTabs, false)
+  );
 
-  handleToggle(tabIndex, sectionIndex, newSectionExpandedStatus) {
-    this.setState((prevState) => {
-      const newExpandedStatus = prevState.expandedStatus.slice(0);
-      newExpandedStatus[tabIndex][sectionIndex] = newSectionExpandedStatus;
-      return {
-        expandedStatus: newExpandedStatus,
-      };
+  const [filterResults, setFilterResults] = useState(initialAppliedFilters);
+  const [filterStatus, setFilterStatus] = useState(
+    getFilterStatus({
+      anchorConfig: filterConfig.anchor,
+      filterResults: initialAppliedFilters,
+      filterTabs,
+    })
+  );
+  const isInitialRenderRef = useRef(true);
+  useEffect(() => {
+    if (isInitialRenderRef.current) {
+      isInitialRenderRef.current = false;
+      return;
+    }
+
+    const newFilterStatus = getFilterStatus({
+      anchorConfig: filterConfig.anchor,
+      filterResults: initialAppliedFilters,
+      filterTabs,
     });
+    const newFilterResults = initialAppliedFilters;
+
+    setFilterStatus(newFilterStatus);
+    setFilterResults(newFilterResults);
+    onFilterChange({ anchorValue, filter: newFilterResults });
+  }, [initialAppliedFilters]);
+
+  const filterTabStatus = showAnchorFilter
+    ? filterStatus[tabIndex][anchorLabel]
+    : filterStatus[tabIndex];
+
+  const selectedAnchors = getSelectedAnchors(filterStatus);
+
+  /**
+   * @param {number} sectionIndex
+   * @param {boolean[][]} isSectionExpanded
+   */
+  function handleToggleSection(sectionIndex, isExpanded) {
+    const newExpandedStatus = cloneDeep(expandedStatus);
+    newExpandedStatus[tabIndex][sectionIndex] = isExpanded;
+    setExpandedStatus(newExpandedStatus);
   }
 
-  handleSectionClear(tabIndex, sectionIndex) {
-    this.setState(
-      (prevState) => {
-        // update filter status
-        const newFilterStatus = prevState.filterStatus.slice(0);
-        newFilterStatus[tabIndex][sectionIndex] = {};
-
-        // update filter results; clear the results for this filter
-        let newFilterResults = { ...prevState.filterResults };
-        const field = this.props.filterConfig.tabs[tabIndex].fields[
-          sectionIndex
-        ];
-        newFilterResults[field] = {};
-        newFilterResults = removeEmptyFilter(newFilterResults);
-
-        // update component state
-        return {
-          filterStatus: newFilterStatus,
-          filterResults: newFilterResults,
-        };
-      },
-      () => {
-        this.callOnFilterChange();
-      }
-    );
+  /** @param {number} sectionIndex */
+  function handleClearSection(sectionIndex) {
+    const updated = clearFilterSection({
+      filterStatus,
+      filterResults,
+      filterTabs,
+      tabIndex,
+      anchorLabel,
+      sectionIndex,
+    });
+    setFilterResults(updated.filterResults);
+    setFilterStatus(updated.filterStatus);
+    onFilterChange({ anchorValue, filter: updated.filterResults });
   }
 
-  handleCombineOptionToggle(
+  /**
+   * @param {number} sectionIndex
+   * @param {string} combineModeFieldName
+   * @param {boolean} combineModeValue
+   */
+  function handleToggleCombineMode(
     sectionIndex,
     combineModeFieldName,
     combineModeValue
   ) {
-    // The combine option toggle (also known as the and/or option toggle)
-    this.setState(
-      (prevState) => {
-        // update filter status
-        const newFilterStatus = prevState.filterStatus.slice(0);
-        const tabIndex = prevState.selectedTabIndex;
-        newFilterStatus[tabIndex][sectionIndex][
-          combineModeFieldName
-        ] = combineModeValue;
+    const updated = updateCombineMode({
+      filterStatus,
+      filterResults,
+      filterTabs,
+      tabIndex,
+      anchorLabel,
+      sectionIndex,
+      combineModeFieldName,
+      combineModeValue,
+    });
+    setFilterStatus(updated.filterStatus);
+    setFilterResults(updated.filterResults);
 
-        // update filter results
-        let newFilterResults = prevState.filterResults;
-        const field = this.props.filterConfig.tabs[tabIndex].fields[
-          sectionIndex
-        ];
-        if (typeof newFilterResults[field] === 'undefined') {
-          newFilterResults[field] = {};
-          newFilterResults[field][combineModeFieldName] = combineModeValue;
-        } else {
-          newFilterResults[field][combineModeFieldName] = combineModeValue;
-        }
-
-        newFilterResults = removeEmptyFilter(newFilterResults);
-        // update component state
-        return {
-          filterStatus: newFilterStatus,
-          filterResults: newFilterResults,
-        };
-      },
-      () => {
-        // If no other filter is applied, the combineMode is not yet useful to Guppy
-        const tabIndex = this.state.selectedTabIndex;
-        const field = this.props.filterConfig.tabs[tabIndex].fields[
-          sectionIndex
-        ];
-        if (
-          this.state.filterResults[field].selectedValues &&
-          this.state.filterResults[field].selectedValues.length > 0
-        ) {
-          this.callOnFilterChange();
-        }
-      }
-    );
+    // If no other filter is applied, the combineMode is not yet useful to Guppy
+    const field = filterTabs[tabIndex].fields[sectionIndex];
+    const filterValues = filterResults[field];
+    if (
+      'selectedValues' in filterValues &&
+      filterValues.selectedValues.length > 0
+    )
+      onFilterChange({ anchorValue, filter: updated.filterResults });
   }
 
-  handleSelect(sectionIndex, singleFilterLabel) {
-    this.setState(
-      (prevState) => {
-        // update filter status
-        const newFilterStatus = prevState.filterStatus.slice(0);
-        const tabIndex = prevState.selectedTabIndex;
-        const oldSelected =
-          newFilterStatus[tabIndex][sectionIndex][singleFilterLabel];
-        const newSelected =
-          typeof oldSelected === 'undefined' ? true : !oldSelected;
-        newFilterStatus[tabIndex][sectionIndex][
-          singleFilterLabel
-        ] = newSelected;
-
-        // update filter results
-        let newFilterResults = prevState.filterResults;
-        const field = this.props.filterConfig.tabs[tabIndex].fields[
-          sectionIndex
-        ];
-        if (typeof newFilterResults[field] === 'undefined') {
-          newFilterResults[field] = { selectedValues: [singleFilterLabel] };
-        } else if (
-          typeof newFilterResults[field].selectedValues === 'undefined'
-        ) {
-          newFilterResults[field].selectedValues = [singleFilterLabel];
-        } else {
-          const findIndex = newFilterResults[field].selectedValues.indexOf(
-            singleFilterLabel
-          );
-          if (findIndex >= 0 && !newSelected) {
-            newFilterResults[field].selectedValues.splice(findIndex, 1);
-          } else if (findIndex < 0 && newSelected) {
-            newFilterResults[field].selectedValues.push(singleFilterLabel);
-          }
-        }
-
-        newFilterResults = removeEmptyFilter(newFilterResults);
-        // update component state
-        return {
-          filterStatus: newFilterStatus,
-          filterResults: newFilterResults,
-        };
-      },
-      () => {
-        this.callOnFilterChange();
-      }
-    );
+  /**
+   * @param {number} sectionIndex
+   * @param {string} selectedValue
+   */
+  function handleSelect(sectionIndex, selectedValue) {
+    const updated = updateSelectedValue({
+      filterStatus,
+      filterResults,
+      filterTabs,
+      tabIndex,
+      anchorLabel,
+      sectionIndex,
+      selectedValue,
+    });
+    setFilterStatus(updated.filterStatus);
+    setFilterResults(updated.filterResults);
+    onFilterChange({ anchorValue, filter: updated.filterResults });
   }
 
-  handleDrag(
+  /**
+   * @param {number} sectionIndex
+   * @param {number} lowerBound
+   * @param {number} upperBound
+   * @param {number} minValue
+   * @param {number} maxValue
+   * @param {number} rangeStep
+   */
+  function handleDrag(
     sectionIndex,
     lowerBound,
     upperBound,
@@ -255,220 +200,133 @@ class FilterGroup extends React.Component {
     maxValue,
     rangeStep = 1
   ) {
-    this.setState(
-      (prevState) => {
-        // update filter status
-        const newFilterStatus = prevState.filterStatus.slice(0);
-        newFilterStatus[prevState.selectedTabIndex][sectionIndex] = [
-          lowerBound,
-          upperBound,
-        ];
-
-        // update filter results
-        let newFilterResults = prevState.filterResults;
-        const field = this.props.filterConfig.tabs[prevState.selectedTabIndex]
-          .fields[sectionIndex];
-        newFilterResults[field] = { lowerBound, upperBound };
-
-        // if lowerbound and upperbound values are min and max,
-        // remove this range from filter
-        const jsEqual = (a, b) => Math.abs(a - b) < rangeStep;
-        if (jsEqual(lowerBound, minValue) && jsEqual(upperBound, maxValue)) {
-          delete newFilterResults[field];
-        }
-
-        newFilterResults = removeEmptyFilter(newFilterResults);
-        return {
-          filterStatus: newFilterStatus,
-          filterResults: newFilterResults,
-        };
-      },
-      () => {
-        this.callOnFilterChange();
-      }
-    );
-  }
-
-  resetFilter() {
-    this.setState((prevState) => {
-      const oldFilterStatus = prevState.filterStatus;
-      const resetStatus = oldFilterStatus.map((oldSectionStatus) => {
-        const sectionStatus = oldSectionStatus.map((oldEntry) => {
-          if (!oldEntry || Object.keys(oldEntry).length === 0) return oldEntry;
-          const newEntry = Object.keys(oldEntry).reduce((res, key) => {
-            res[key] = false;
-            return res;
-          }, {});
-          return newEntry;
-        });
-        return sectionStatus;
-      });
-      return {
-        filterStatus: resetStatus,
-        filterResults: {},
-      };
+    const updated = updateRangeValue({
+      filterStatus,
+      filterResults,
+      filterTabs,
+      tabIndex,
+      anchorLabel,
+      sectionIndex,
+      lowerBound,
+      upperBound,
+      minValue,
+      maxValue,
+      rangeStep,
     });
+    setFilterStatus(updated.filterStatus);
+    setFilterResults(updated.filterResults);
+    onFilterChange({ anchorValue, filter: updated.filterResults });
   }
 
-  selectTab(index) {
-    this.setState({ selectedTabIndex: index });
+  function toggleSections() {
+    const newExpandedStatusControl = !expandedStatusControl;
+    setExpandedStatusControl(newExpandedStatusControl);
+    setExpandedStatus(getExpandedStatus(filterTabs, newExpandedStatusControl));
   }
 
-  callOnFilterChange() {
-    this.props.onFilterChange(this.state.filterResults);
-  }
-
-  toggleFilters() {
-    this.setState((prevState) => {
-      this.currentFilterListRef.current.toggleFilters(
-        !prevState.expandedStatusControl
-      );
-      return {
-        expandedStatus: this.props.filterConfig.tabs.map((t) =>
-          t.fields.map(() => !prevState.expandedStatusControl)
-        ),
-        expandedStatusControl: !prevState.expandedStatusControl,
-      };
-    });
-  }
-
-  updateFilterStates(initialAppliedFilters, filterConfig) {
-    const newFilterResults = initialAppliedFilters;
-    const newFilterStatus = filterConfig.tabs.map((t) =>
-      t.fields.map((field) => {
-        if (Object.keys(newFilterResults).includes(field)) {
-          const { selectedValues, lowerBound, upperBound } = newFilterResults[
-            field
-          ];
-          if (selectedValues === undefined) {
-            return [lowerBound, upperBound];
-          }
-          const status = {};
-          for (const selected of selectedValues) status[selected] = true;
-          return status;
-        }
-        return {};
-      })
-    );
-    this.setState(
-      { filterStatus: newFilterStatus, filterResults: newFilterResults },
-      () => this.callOnFilterChange()
-    );
-  }
-
-  render() {
-    const expandedStatusText = this.state.expandedStatusControl
-      ? 'Collapse all'
-      : 'Open all';
-    return (
-      <div className={`g3-filter-group ${this.props.className}`}>
-        <div className='g3-filter-group__tabs'>
-          {this.props.tabs.map((tab, index) => (
-            <div
-              key={index}
-              className={'g3-filter-group__tab'.concat(
-                this.state.selectedTabIndex === index
-                  ? ' g3-filter-group__tab--selected'
-                  : ''
-              )}
-              onClick={() => this.selectTab(index)}
-              onKeyPress={(e) => {
-                if (e.charCode === 13 || e.charCode === 32) {
-                  e.preventDefault();
-                  this.selectTab(index);
-                }
-              }}
-              role='button'
-              tabIndex={0}
-              aria-label={`Filter group tab: ${this.props.filterConfig.tabs[index].title}`}
-            >
-              <p
-                className={`g3-filter-group__tab-title ${
-                  tabHasActiveFilters(this.state.filterStatus[index])
-                    ? 'g3-filter-group__tab-title--has-active-filters'
-                    : ''
-                }`}
-              >
-                {this.props.filterConfig.tabs[index].title}
-              </p>
-            </div>
-          ))}
-        </div>
-        {this.props.patientIds && (
-          <PatientIdFilter
-            onPatientIdsChange={this.props.onPatientIdsChange}
-            patientIds={this.props.patientIds}
-          />
-        )}
-        <div className='g3-filter-group__collapse'>
-          <span
-            className='g3-link g3-filter-group__collapse-link'
-            onClick={() => this.toggleFilters()}
+  return (
+    <div className={`g3-filter-group ${className}`}>
+      <div className='g3-filter-group__tabs'>
+        {tabs.map((_, index) => (
+          <div
+            key={index}
+            className={'g3-filter-group__tab'.concat(
+              tabIndex === index ? ' g3-filter-group__tab--selected' : ''
+            )}
+            onClick={() => setTabIndex(index)}
             onKeyPress={(e) => {
               if (e.charCode === 13 || e.charCode === 32) {
                 e.preventDefault();
-                this.toggleFilters();
+                setTabIndex(index);
               }
             }}
             role='button'
             tabIndex={0}
-            aria-label={expandedStatusText}
+            aria-label={`Filter group tab: ${filterTabs[index].title}`}
           >
-            {expandedStatusText}
-          </span>
-        </div>
-        <div className='g3-filter-group__filter-area'>
-          {React.cloneElement(this.props.tabs[this.state.selectedTabIndex], {
-            onToggle: (sectionIndex, newSectionExpandedStatus) =>
-              this.handleToggle(
-                this.state.selectedTabIndex,
-                sectionIndex,
-                newSectionExpandedStatus
-              ),
-            onClear: (sectionIndex) =>
-              this.handleSectionClear(
-                this.state.selectedTabIndex,
-                sectionIndex
-              ),
-            expandedStatus: this.state.expandedStatus[
-              this.state.selectedTabIndex
-            ],
-            filterStatus: this.state.filterStatus[this.state.selectedTabIndex],
-            onSelect: this.handleSelect.bind(this),
-            onCombineOptionToggle: this.handleCombineOptionToggle.bind(this),
-            onAfterDrag: this.handleDrag.bind(this),
-            hideZero: this.props.hideZero,
-            ref: this.currentFilterListRef,
-          })}
-        </div>
+            <p
+              className={`g3-filter-group__tab-title ${
+                tabHasActiveFilters(filterStatus[index])
+                  ? 'g3-filter-group__tab-title--has-active-filters'
+                  : ''
+              }`}
+            >
+              {filterTabs[index].title}
+            </p>
+          </div>
+        ))}
       </div>
-    );
-  }
+      {showAnchorFilter && (
+        <AnchorFilter
+          anchorField={filterConfig.anchor.field}
+          anchorValue={anchorValue}
+          onChange={handleAnchorValueChange}
+          options={filterConfig.anchor.options}
+          optionsInUse={selectedAnchors[tabIndex]}
+        />
+      )}
+      {showPatientIdsFilter && (
+        <PatientIdFilter
+          onPatientIdsChange={onPatientIdsChange}
+          patientIds={patientIds}
+        />
+      )}
+      <div className='g3-filter-group__collapse'>
+        <span
+          className='g3-link g3-filter-group__collapse-link'
+          onClick={toggleSections}
+          onKeyPress={(e) => {
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              toggleSections();
+            }
+          }}
+          role='button'
+          tabIndex={0}
+          aria-label={expandedStatusText}
+        >
+          {expandedStatusText}
+        </span>
+      </div>
+      <div className='g3-filter-group__filter-area'>
+        {React.cloneElement(tabs[tabIndex], {
+          expandedStatus: expandedStatus[tabIndex],
+          filterStatus: filterTabStatus,
+          hideZero,
+          onAfterDrag: handleDrag,
+          onClearSection: handleClearSection,
+          onSelect: handleSelect,
+          onToggleCombineMode: handleToggleCombineMode,
+          onToggleSection: handleToggleSection,
+        })}
+      </div>
+    </div>
+  );
 }
 
 FilterGroup.propTypes = {
-  tabs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  className: PropTypes.string,
   filterConfig: PropTypes.shape({
+    anchor: PropTypes.shape({
+      field: PropTypes.string,
+      options: PropTypes.arrayOf(PropTypes.string),
+      tabs: PropTypes.arrayOf(PropTypes.string),
+    }),
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
         title: PropTypes.string,
         fields: PropTypes.arrayOf(PropTypes.string),
+        searchFields: PropTypes.arrayOf(PropTypes.string),
       })
     ),
   }).isRequired,
+  hideZero: PropTypes.bool,
+  initialAppliedFilters: PropTypes.object,
+  onAnchorValueChange: PropTypes.func,
   onFilterChange: PropTypes.func,
   onPatientIdsChange: PropTypes.func,
-  hideZero: PropTypes.bool,
-  className: PropTypes.string,
-  initialAppliedFilters: PropTypes.object,
   patientIds: PropTypes.arrayOf(PropTypes.string),
-};
-
-FilterGroup.defaultProps = {
-  onFilterChange: () => {},
-  hideZero: true,
-  className: '',
-  initialAppliedFilters: {},
+  tabs: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default FilterGroup;

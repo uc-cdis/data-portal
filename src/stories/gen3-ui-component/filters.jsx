@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import SingleSelectFilter from '../../gen3-ui-component/components/filters/SingleSelectFilter';
 import RangeFilter from '../../gen3-ui-component/components/filters/RangeFilter';
+import PatientIdFilter from '../../gen3-ui-component/components/filters/PatientIdFilter';
+import AnchorFilter from '../../gen3-ui-component/components/filters/AnchorFilter';
 import FilterSection from '../../gen3-ui-component/components/filters/FilterSection';
 import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
@@ -289,6 +291,36 @@ storiesOf('Filters', module)
       />
     </div>
   ))
+  .add('PatientIdFilter', () => {
+    const [ids, setIds] = useState([]);
+    function handleChange(newIds) {
+      setIds(newIds);
+      action('uploaded')(newIds);
+    }
+    return (
+      <div>
+        <PatientIdFilter onPatientIdsChange={handleChange} patientIds={ids} />
+      </div>
+    );
+  })
+  .add('AnchorFilter', () => {
+    const [anchorValue, setAnchorValue] = useState('');
+    function handleChange(newValue) {
+      setAnchorValue(newValue);
+      action('selected')(newValue);
+    }
+    return (
+      <div>
+        <AnchorFilter
+          anchorField='Disease Phase'
+          anchorValue={anchorValue}
+          options={['Initial Diagnosis', 'Relapse']}
+          optionsInUse={['Initial Diagnosis']}
+          onChange={handleChange}
+        />
+      </div>
+    );
+  })
   .add('FilterSection', () => (
     <FilterSection
       title={'Ethnicity'}

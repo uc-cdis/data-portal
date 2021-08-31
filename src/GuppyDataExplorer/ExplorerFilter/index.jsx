@@ -6,16 +6,21 @@ import './ExplorerFilter.css';
 
 /**
  * @typedef {Object} ExplorerFilterProps
+ * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
  * @property {string} className
- * @property {boolean} hasAppliedFilters
- * @property {() => void} onFilterClear
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
- * @property {number} tierAccessLimit
- * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
+ * @property {boolean} hasAppliedFilters
  * @property {FilterState} initialAppliedFilters
- * @property {string[]} patientIds
+ * @property {() => void} onFilterClear
  * @property {(x: string[]) => void} onPatientIdsChange
+ * @property {string[]} patientIds
+ * @property {number} tierAccessLimit
+ * @property {FilterState} filter
+ * @property {SimpleAggsData} initialTabsOptions
+ * @property {(anchorValue: string) => void} onAnchorValueChange
+ * @property {FilterChangeHandler} onFilterChange
+ * @property {SimpleAggsData} tabsOptions
  */
 
 /** @param {ExplorerFilterProps} props */
@@ -45,18 +50,21 @@ function ExplorerFilter({
 }
 
 ExplorerFilter.propTypes = {
+  adminAppliedPreFilters: PropTypes.object,
   className: PropTypes.string,
   filterConfig: FilterConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
-  tierAccessLimit: PropTypes.number,
-  adminAppliedPreFilters: PropTypes.object,
-  initialAppliedFilters: PropTypes.object,
-  patientIds: PropTypes.arrayOf(PropTypes.string),
-  onPatientIdsChange: PropTypes.func,
   hasAppliedFilters: PropTypes.bool,
+  initialAppliedFilters: PropTypes.object,
   onFilterClear: PropTypes.func,
-  onFilterChange: PropTypes.func, // inherit from GuppyWrapper
-  onReceiveNewAggsData: PropTypes.func, // inherit from GuppyWrapper
+  onPatientIdsChange: PropTypes.func,
+  patientIds: PropTypes.arrayOf(PropTypes.string),
+  tierAccessLimit: PropTypes.number,
+  filter: PropTypes.object, // from GuppyWrapper
+  initialTabsOptions: PropTypes.object, // from GuppyWrapper
+  onAnchorValueChange: PropTypes.func, // from GuppyWrapper
+  onFilterChange: PropTypes.func, // from GuppyWrapper
+  tabsOptions: PropTypes.object, // from GuppWrapper
 };
 
 export default ExplorerFilter;

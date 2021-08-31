@@ -1,24 +1,29 @@
-import React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  queryGuppyForAggregationData,
+  queryGuppyForAggregationChartData,
+  queryGuppyForAggregationCountData,
+  queryGuppyForAggregationOptionsData,
   queryGuppyForRawData,
   queryGuppyForSubAggregationData,
   queryGuppyForTotalCounts,
   downloadDataFromGuppy,
-  getAllFieldsFromFilterConfigs,
   getAllFieldsFromGuppy,
   getGQLFilter,
 } from '../Utils/queries';
 import { FILE_FORMATS } from '../Utils/const';
-import { excludeSelfFilterFromAggsData, mergeFilters } from '../Utils/filters';
+import {
+  excludeSelfFilterFromAggsData,
+  mergeFilters,
+  unnestAggsData,
+} from '../Utils/filters';
 import '../typedef';
 
 /**
  * @typedef {Object} GuppyWrapperProps
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
- * @property {React.ReactElement[]} children
+ * @property {((data: GuppyData) => JSX.Element)} children
  * @property {(x: FilterState) => void} onFilterChange
  * @property {string[]} rawDataFields
  * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
@@ -28,168 +33,349 @@ import '../typedef';
 
 /**
  * @typedef {Object} GuppyWrapperState
- * @property {boolean} isLoadingAggsData
- * @property {AggsData} receivedAggsData
+ * @property {number} accessibleCount
  * @property {AggsData} aggsData
+ * @property {AggsData} aggsChartData
+ * @property {string[]} allFields
  * @property {FilterState} filter
+ * @property {SimpleAggsData} initialTabsOptions
+ * @property {boolean} isLoadingAggsData
  * @property {boolean} isLoadingRawData
  * @property {Object[]} rawData
- * @property {number} accessibleCount
+ * @property {SimpleAggsData} tabsOptions
  * @property {number} totalCount
- * @property {string[]} allFields
- * @property {string[]} aggsDataFields
- * @property {string[]} rawDataFields
- *
  */
 
-/**
- * Wrapper that connects to Guppy server,
- * and pass filter, aggs, and data to children components
- * Input props:
- *   - filterConfig: configuration for ConnectedFilter component
- *   - guppyConfig: Guppy server config
- *   - onFilterChange: callback that takes filter as argument, will be
- * called every time filter changes
- *
- * This wrapper will pass following data (filters, aggs, configs) to children components via prop:
- *   - aggsData: the aggregation results, format:
- *         {
- *             // for text aggregation
- *            [field]: { histogram: [{key: 'v1', count: 42}, {key: 'v2', count: 19}, ...] },
- *             // for numeric aggregation
- *            [field]: { histogram: [{key: [1, 83], count: 100}] },
- *            ...
- *         }
- *   - filter: the filters, format:
- *         {
- *            [field]: { selectedValues: ['v1', 'v2', ...] },  // for text filter
- *            [field]: { upperBound: 1, lowerBound: 83 },  // for range filter
- *            ...
- *         }
- *   - filterConfig: configuration for ConnectedFilter component
- *   - rawData: raw data records filtered (with offset, size, and sort applied)
- *   - accessiableCount: count of raw data records user can access
- *   - totalCount: total count of raw data records
- *
- * @augments {React.Component<GuppyWrapperProps>}
- */
-class GuppyWrapper extends React.Component {
-  /** @param {GuppyWrapperProps} props */
-  constructor(props) {
-    super(props);
-    const initialFilter = mergeFilters(
-      props.initialAppliedFilters,
-      props.adminAppliedPreFilters
-    );
-
-    // to avoid asynchronizations, we store another filter as private var
-    this.filter = { ...initialFilter };
-    /** @type {GuppyWrapperState} */
-    this.state = {
-      isLoadingAggsData: false,
-      receivedAggsData: {},
-      aggsData: {},
-      filter: { ...initialFilter },
-      isLoadingRawData: false,
-      rawData: [],
-      accessibleCount: 0,
-      totalCount: 0,
-      allFields: [],
-      aggsDataFields: getAllFieldsFromFilterConfigs(props.filterConfig.tabs),
-      rawDataFields: [],
+/** @param {GuppyWrapperProps} props */
+function GuppyWrapper({
+  chartConfig,
+  filterConfig,
+  guppyConfig,
+  children,
+  onFilterChange = () => {},
+  rawDataFields: rawDataFieldsConfig = [],
+  adminAppliedPreFilters = {},
+  initialAppliedFilters = {},
+  patientIds,
+}) {
+  /** @type {[GuppyWrapperState, React.Dispatch<React.SetStateAction<GuppyWrapperState>>]} */
+  const [state, setState] = useState({
+    accessibleCount: 0,
+    allFields: [],
+    aggsData: {},
+    aggsChartData: {},
+    filter: mergeFilters(initialAppliedFilters, adminAppliedPreFilters),
+    initialTabsOptions: undefined,
+    isLoadingAggsData: false,
+    isLoadingRawData: false,
+    rawData: [],
+    tabsOptions: {},
+    totalCount: 0,
+  });
+  const controller = useRef(new AbortController());
+  const isMounted = useRef(false);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+      controller.current.abort();
     };
-    this._isMounted = false;
-    this.controller = new AbortController();
-  }
+  }, []);
 
-  componentDidMount() {
-    this._isMounted = true;
+  /** @type {{ [anchorValue: string]: SimpleAggsData }} */
+  const initialAnchoredTabsOptionsCache = {};
+  const [anchoredTabsOptionsCache, setAnchoredTabsOptionsCache] = useState(
+    initialAnchoredTabsOptionsCache
+  );
 
-    getAllFieldsFromGuppy({
-      path: this.props.guppyConfig.path,
-      type: this.props.guppyConfig.dataType,
-    }).then((fields) => {
-      const rawDataFields =
-        this.props.rawDataFields && this.props.rawDataFields.length > 0
-          ? this.props.rawDataFields
-          : fields;
-
-      if (this._isMounted) {
-        this.setState({ allFields: fields, rawDataFields });
-        this.fetchAggsDataFromGuppy(this.state.filter);
-        this.fetchRawDataFromGuppy(rawDataFields, undefined, true);
-      }
-    });
-  }
-
-  /** @param {GuppyWrapperProps} prevProps */
-  componentDidUpdate(prevProps) {
-    if (prevProps.patientIds?.join(',') !== this.props.patientIds?.join(',')) {
-      this.fetchAggsDataFromGuppy(this.state.filter);
-      this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
-    }
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
+  /**
+   * Add patient ids to filter if provided
+   * @param {FilterState} filter
+   */
+  function augmentFilter(filter) {
+    return patientIds?.length > 0
+      ? mergeFilters(filter, {
+          subject_submitter_id: { selectedValues: patientIds },
+        })
+      : filter;
   }
 
   /** @param {FilterState} filter */
-  handleFilterChange(filter) {
-    if (this.props.onFilterChange) this.props.onFilterChange(filter);
+  function fetchAggsChartDataFromGuppy(filter) {
+    return queryGuppyForAggregationChartData({
+      path: guppyConfig.path,
+      type: guppyConfig.dataType,
+      fields: Object.keys(chartConfig),
+      gqlFilter: getGQLFilter(augmentFilter(filter)),
+      signal: controller.current.signal,
+    }).then(({ data, errors }) => {
+      if (data === undefined)
+        throw new Error(
+          `error querying guppy${
+            errors?.length > 0 ? `: ${errors[0].message}` : ''
+          }`
+        );
 
-    this.filter = filter;
-    if (this._isMounted) this.setState({ filter });
+      return {
+        aggsChartData: excludeSelfFilterFromAggsData(
+          data._aggregation[guppyConfig.dataType],
+          filter
+        ),
+      };
+    });
+  }
 
-    this.controller.abort();
-    this.controller = new AbortController();
-    this.fetchAggsDataFromGuppy(filter);
-    this.fetchRawDataFromGuppy(this.state.rawDataFields, undefined, true);
+  /** @param {FilterState} filter */
+  function fetchAggsCountDataFromGuppy(filter) {
+    return queryGuppyForAggregationCountData({
+      path: guppyConfig.path,
+      type: guppyConfig.dataType,
+      gqlFilter: getGQLFilter(augmentFilter(filter)),
+      signal: controller.current.signal,
+    }).then(({ data, errors }) => {
+      if (data === undefined)
+        throw new Error(
+          `error querying guppy${
+            errors?.length > 0 ? `: ${errors[0].message}` : ''
+          }`
+        );
+
+      return {
+        accessibleCount: data._aggregation.accessible._totalCount,
+        totalCount: data._aggregation.all._totalCount,
+      };
+    });
   }
 
   /**
-   * Fetch data from Guppy server.
-   * This function will update this.state.rawData and this.state.totalCount
    * @param {Object} args
-   * @param {number} args.offset
-   * @param {number} args.size
-   * @param {GqlSort} args.sort
+   * @param {string} args.anchorValue
+   * @param {FilterState} args.filter
    */
-  handleFetchAndUpdateRawData({ offset = 0, size = 20, sort = [] }) {
-    return this.fetchRawDataFromGuppy(
-      this.state.rawDataFields,
-      sort,
-      true,
-      offset,
-      size
+  function fetchAggsOptionsDataFromGuppy({
+    anchorValue,
+    filter,
+    filterTabs = filterConfig.tabs,
+  }) {
+    return queryGuppyForAggregationOptionsData({
+      path: guppyConfig.path,
+      type: guppyConfig.dataType,
+      anchorConfig: filterConfig.anchor,
+      anchorValue,
+      filterTabs,
+      gqlFilter: getGQLFilter(augmentFilter(filter)),
+      isInitialQuery: state.initialTabsOptions === undefined,
+      signal: controller.current.signal,
+    }).then(({ data, errors }) => {
+      if (data === undefined)
+        throw new Error(
+          `error querying guppy${
+            errors?.length > 0 ? `: ${errors[0].message}` : ''
+          }`
+        );
+
+      const { unfiltered, ...aggregation } = data._aggregation;
+      const receivedAggsData = {};
+      for (const group of Object.values(aggregation))
+        for (const [fieldName, value] of Object.entries(group))
+          receivedAggsData[fieldName] = value;
+      const unfilteredAggsData =
+        Object.keys(filter).length === 0 ? receivedAggsData : unfiltered;
+
+      return {
+        aggsData: excludeSelfFilterFromAggsData(receivedAggsData, filter),
+        initialTabsOptions:
+          unfilteredAggsData === undefined
+            ? state.initialTabsOptions
+            : unnestAggsData(unfilteredAggsData),
+        tabsOptions: unnestAggsData(receivedAggsData),
+      };
+    });
+  }
+
+  /**
+   * @param {Object} args
+   * @param {string} args.anchorValue
+   * @param {FilterState} args.filter
+   */
+  function fetchAggsDataFromGuppy({ anchorValue, filter }) {
+    if (isMounted.current)
+      setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
+
+    Promise.all([
+      fetchAggsChartDataFromGuppy(filter),
+      fetchAggsCountDataFromGuppy(filter),
+      fetchAggsOptionsDataFromGuppy({
+        anchorValue,
+        filter,
+      }),
+    ]).then(
+      ([
+        { aggsChartData },
+        { accessibleCount, totalCount },
+        { aggsData, initialTabsOptions, tabsOptions },
+      ]) => {
+        if (isMounted.current) {
+          setState((prevState) => ({
+            ...prevState,
+            accessibleCount,
+            aggsChartData,
+            aggsData,
+            initialTabsOptions,
+            isLoadingAggsData: false,
+            tabsOptions,
+            totalCount,
+          }));
+
+          if (anchorValue !== undefined)
+            setAnchoredTabsOptionsCache({ [anchorValue]: tabsOptions });
+        }
+      }
     );
   }
+
+  /**
+   * @param {Object} args
+   * @param {string[]} args.fields
+   * @param {number} [args.offset]
+   * @param {number} [args.size]
+   * @param {GqlSort} [args.sort]
+   * @param {boolean} args.updateDataWhenReceive
+   */
+  function fetchRawDataFromGuppy({
+    fields,
+    offset,
+    size,
+    sort,
+    updateDataWhenReceive,
+  }) {
+    if (isMounted.current)
+      setState((prevState) => ({ ...prevState, isLoadingRawData: true }));
+    if (!fields || fields.length === 0) {
+      if (isMounted.current)
+        setState((prevState) => ({ ...prevState, isLoadingRawData: false }));
+      return Promise.resolve({ data: [], totalCount: 0 });
+    }
+
+    // sub aggregations -- for DAT
+    if (guppyConfig.mainField) {
+      const numericAggAsText = guppyConfig.mainFieldIsNumeric;
+      return queryGuppyForSubAggregationData({
+        path: guppyConfig.path,
+        type: guppyConfig.dataType,
+        mainField: guppyConfig.mainField,
+        numericAggAsText,
+        termsFields: guppyConfig.aggFields,
+        missingFields: [],
+        gqlFilter: getGQLFilter(augmentFilter(state.filter)),
+        signal: controller.current.signal,
+      }).then((res) => {
+        if (!res || !res.data)
+          throw new Error(
+            `Error getting raw ${guppyConfig.dataType} data from Guppy server ${guppyConfig.path}.`
+          );
+
+        const data = res.data._aggregation[guppyConfig.dataType];
+        const field = numericAggAsText ? 'asTextHistogram' : 'histogram';
+        const parsedData = data[guppyConfig.mainField][field];
+        if (isMounted.current)
+          setState((prevState) => ({
+            ...prevState,
+            isLoadingRawData: false,
+            rawData: updateDataWhenReceive ? parsedData : prevState.rawData,
+          }));
+
+        return {
+          data: res.data,
+        };
+      });
+    }
+
+    // non-nested aggregation
+    return queryGuppyForRawData({
+      path: guppyConfig.path,
+      type: guppyConfig.dataType,
+      fields,
+      gqlFilter: getGQLFilter(augmentFilter(state.filter)),
+      sort,
+      offset,
+      size,
+      signal: controller.current.signal,
+    }).then((res) => {
+      if (!res || !res.data)
+        throw new Error(
+          `Error getting raw ${guppyConfig.dataType} data from Guppy server ${guppyConfig.path}.`
+        );
+
+      const parsedData = res.data[guppyConfig.dataType];
+      if (isMounted.current)
+        setState((prevState) => ({
+          ...prevState,
+          isLoadingRawData: false,
+          rawData: updateDataWhenReceive ? parsedData : prevState.rawData,
+        }));
+
+      return {
+        data: parsedData,
+        totalCount: state.totalCount,
+      };
+    });
+  }
+
+  useEffect(() => {
+    getAllFieldsFromGuppy({
+      path: guppyConfig.path,
+      type: guppyConfig.dataType,
+    }).then((allFields) => {
+      if (isMounted.current) {
+        setState((prevState) => ({ ...prevState, allFields }));
+        fetchAggsDataFromGuppy({
+          anchorValue: filterConfig.anchor !== undefined ? '' : undefined,
+          filter: state.filter,
+        });
+        fetchRawDataFromGuppy({
+          fields:
+            rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : allFields,
+          updateDataWhenReceive: true,
+        });
+      }
+    });
+  }, []);
+
+  const rawDataFields =
+    rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : state.allFields;
+
+  const isInitialRenderRef = useRef(true);
+  useEffect(() => {
+    if (isInitialRenderRef.current) {
+      isInitialRenderRef.current = false;
+      return;
+    }
+    fetchAggsDataFromGuppy({ filter: state.filter });
+    fetchRawDataFromGuppy({
+      fields: rawDataFields,
+      updateDataWhenReceive: true,
+    });
+  }, [patientIds]);
 
   /**
    * Download all data from Guppy server and return raw data
    * This function uses current filter argument
    * @param {Object} args
-   * @param {GqlSort} args.sort
    * @param {string} args.format
+   * @param {GqlSort} args.sort
    */
-  handleDownloadRawData({ sort = [], format }) {
+  function downloadRawData({ format, sort = [] }) {
     // error handling for misconfigured format types
-    if (format && !(format in FILE_FORMATS)) {
-      // eslint-disable-next-line no-console
-      console.error(`Invalid value ${format} found for arg format!`);
-    }
-    const filterForGuppy =
-      this.props.patientIds?.length > 0
-        ? mergeFilters(this.filter, {
-            subject_submitter_id: { selectedValues: this.props.patientIds },
-          })
-        : this.state.filter;
+    if (format && !(format in FILE_FORMATS))
+      throw new Error(`Invalid value ${format} found for arg format!`);
+
     return downloadDataFromGuppy({
-      path: this.props.guppyConfig.path,
-      type: this.props.guppyConfig.dataType,
-      fields: this.state.rawDataFields,
+      path: guppyConfig.path,
+      type: guppyConfig.dataType,
+      fields: rawDataFields,
       sort,
-      filter: filterForGuppy,
+      filter: augmentFilter(state.filter),
       format,
     });
   }
@@ -202,13 +388,13 @@ class GuppyWrapper extends React.Component {
    * @param {string[]} args.fields
    * @param {GqlSort} args.sort
    */
-  handleDownloadRawDataByFields({ fields, sort = [] }) {
+  function downloadRawDataByFields({ fields, sort = [] }) {
     return downloadDataFromGuppy({
-      path: this.props.guppyConfig.path,
-      type: this.props.guppyConfig.dataType,
-      fields: fields || this.state.rawDataFields,
+      path: guppyConfig.path,
+      type: guppyConfig.dataType,
+      fields: fields || rawDataFields,
       sort,
-      filter: this.state.filter,
+      filter: state.filter,
     });
   }
 
@@ -217,9 +403,9 @@ class GuppyWrapper extends React.Component {
    * @param {string} type
    * @param {FilterState} filter
    */
-  handleGetTotalCountsByTypeAndFilter(type, filter) {
+  function getTotalCountsByTypeAndFilter(type, filter) {
     return queryGuppyForTotalCounts({
-      path: this.props.guppyConfig.path,
+      path: guppyConfig.path,
       type,
       filter,
     });
@@ -231,9 +417,9 @@ class GuppyWrapper extends React.Component {
    * @param {FilterState} filter
    * @param {string[]} fields
    */
-  handleDownloadRawDataByTypeAndFilter(type, filter, fields) {
+  function downloadRawDataByTypeAndFilter(type, filter, fields) {
     return downloadDataFromGuppy({
-      path: this.props.guppyConfig.path,
+      path: guppyConfig.path,
       type,
       fields,
       filter,
@@ -241,170 +427,92 @@ class GuppyWrapper extends React.Component {
   }
 
   /**
-   * This function
-   * 1. Asks guppy for aggregation data using (processed) filter
-   * 2. Uses the aggregation response to update the following states:
-   *   - receivedAggsData
-   *   - aggsData
-   *   - accessibleCount
-   *   - totalCount
-   * @param {FilterState} filter
+   * Fetch data from Guppy server.
+   * This function will update state.rawData and state.totalCount
+   * @param {Object} args
+   * @param {number} args.offset
+   * @param {number} args.size
+   * @param {GqlSort} args.sort
    */
-  fetchAggsDataFromGuppy(filter) {
-    if (this._isMounted) this.setState({ isLoadingAggsData: true });
-
-    const filterForGuppy =
-      this.props.patientIds?.length > 0
-        ? mergeFilters(filter, {
-            subject_submitter_id: { selectedValues: this.props.patientIds },
-          })
-        : filter;
-
-    queryGuppyForAggregationData({
-      path: this.props.guppyConfig.path,
-      type: this.props.guppyConfig.dataType,
-      fields: this.state.aggsDataFields,
-      gqlFilter: getGQLFilter(filterForGuppy),
-      signal: this.controller.signal,
-    }).then((res) => {
-      if (!res.data)
-        // eslint-disable-next-line no-console
-        console.error(
-          `error querying guppy${
-            res.errors && res.errors.length > 0
-              ? `: ${res.errors[0].message}`
-              : ''
-          }`
-        );
-
-      const receivedAggsData =
-        res.data._aggregation[this.props.guppyConfig.dataType];
-      const aggsData = excludeSelfFilterFromAggsData(receivedAggsData, filter);
-      const accessibleCount = res.data._aggregation.accessible._totalCount;
-      const totalCount = res.data._aggregation.all._totalCount;
-
-      if (this._isMounted)
-        this.setState({
-          isLoadingAggsData: false,
-          receivedAggsData,
-          aggsData,
-          accessibleCount,
-          totalCount,
-        });
+  function fetchAndUpdateRawData({ offset = 0, size = 20, sort = [] }) {
+    return fetchRawDataFromGuppy({
+      fields: rawDataFields,
+      offset,
+      sort,
+      size,
+      updateDataWhenReceive: true,
     });
   }
 
   /**
-   * This function get data with current filter (if any),
-   * and update this.state.rawData and this.state.totalCount
-   * @param {string[]} fields
-   * @param {GqlSort} sort
-   * @param {boolean} updateDataWhenReceive
-   * @param {number} [offset]
-   * @param {number} [size]
+   * @param {string} anchorValue
    */
-  fetchRawDataFromGuppy(fields, sort, updateDataWhenReceive, offset, size) {
-    if (this._isMounted) this.setState({ isLoadingRawData: true });
-    if (!fields || fields.length === 0) {
-      if (this._isMounted) this.setState({ isLoadingRawData: false });
-      return Promise.resolve({ data: [], totalCount: 0 });
-    }
-
-    const filterForGuppy =
-      this.props.patientIds?.length > 0
-        ? mergeFilters(this.filter, {
-            subject_submitter_id: { selectedValues: this.props.patientIds },
-          })
-        : this.filter;
-    // sub aggregations -- for DAT
-    if (this.props.guppyConfig.mainField) {
-      const numericAggAsText = this.props.guppyConfig.mainFieldIsNumeric;
-      return queryGuppyForSubAggregationData({
-        path: this.props.guppyConfig.path,
-        type: this.props.guppyConfig.dataType,
-        mainField: this.props.guppyConfig.mainField,
-        numericAggAsText,
-        termsFields: this.props.guppyConfig.aggFields,
-        missingFields: [],
-        gqlFilter: getGQLFilter(filterForGuppy),
-        signal: this.controller.signal,
-      }).then((res) => {
-        if (!res || !res.data) {
-          throw new Error(
-            `Error getting raw ${this.props.guppyConfig.dataType} data from Guppy server ${this.props.guppyConfig.path}.`
-          );
+  function handleAnchorValueChange(anchorValue) {
+    if (anchorValue in anchoredTabsOptionsCache) {
+      if (isMounted.current)
+        setState((prevState) => ({
+          ...prevState,
+          tabsOptions: {
+            ...prevState.tabsOptions,
+            ...anchoredTabsOptionsCache[anchorValue],
+          },
+        }));
+    } else {
+      controller.current.abort();
+      controller.current = new AbortController();
+      fetchAggsOptionsDataFromGuppy({
+        anchorValue,
+        filter: state.filter,
+        filterTabs: filterConfig.tabs.filter(({ title }) =>
+          filterConfig.anchor.tabs.includes(title)
+        ),
+      }).then(({ tabsOptions }) => {
+        if (isMounted.current) {
+          setState((prevState) => ({
+            ...prevState,
+            tabsOptions: { ...prevState.tabsOptions, ...tabsOptions },
+          }));
+          setAnchoredTabsOptionsCache((prevState) => ({
+            ...prevState,
+            [anchorValue]: tabsOptions,
+          }));
         }
-        const data = res.data._aggregation[this.props.guppyConfig.dataType];
-        const field = numericAggAsText ? 'asTextHistogram' : 'histogram';
-        const parsedData = data[this.props.guppyConfig.mainField][field];
-        if (this._isMounted) {
-          if (updateDataWhenReceive) this.setState({ rawData: parsedData });
-          this.setState({ isLoadingRawData: false });
-        }
-        return {
-          data: res.data,
-        };
       });
     }
+  }
 
-    // non-nested aggregation
-    return queryGuppyForRawData({
-      path: this.props.guppyConfig.path,
-      type: this.props.guppyConfig.dataType,
-      fields,
-      gqlFilter: getGQLFilter(filterForGuppy),
-      sort,
-      offset,
-      size,
-      signal: this.controller.signal,
-    }).then((res) => {
-      if (!res || !res.data) {
-        throw new Error(
-          `Error getting raw ${this.props.guppyConfig.dataType} data from Guppy server ${this.props.guppyConfig.path}.`
-        );
-      }
-      const parsedData = res.data[this.props.guppyConfig.dataType];
-      if (this._isMounted) {
-        if (updateDataWhenReceive) this.setState({ rawData: parsedData });
-        this.setState({ isLoadingRawData: false });
-      }
-      return {
-        data: parsedData,
-        totalCount: this.state.totalCount,
-      };
+  /**
+   * @param {Object} args
+   * @param {string} args.anchorValue
+   * @param {FilterState} args.filter
+   */
+  function handleFilterChange({ anchorValue, filter }) {
+    const mergedFilter = mergeFilters(filter, adminAppliedPreFilters);
+
+    if (onFilterChange) onFilterChange(mergedFilter);
+
+    if (isMounted.current)
+      setState((prevState) => ({ ...prevState, filter: mergedFilter }));
+
+    controller.current.abort();
+    controller.current = new AbortController();
+    fetchAggsDataFromGuppy({ anchorValue, filter: mergedFilter });
+    fetchRawDataFromGuppy({
+      fields: rawDataFields,
+      updateDataWhenReceive: true,
     });
   }
 
-  render() {
-    return React.Children.map(this.props.children, (child) =>
-      React.cloneElement(child, {
-        // pass data to children
-        isLoadingAggsData: this.state.isLoadingAggsData,
-        aggsData: this.state.aggsData,
-        filter: this.state.filter,
-        isLoadingRawData: this.state.isLoadingRawData,
-        rawData: this.state.rawData, // raw data (with current filter applied)
-        accessibleCount: this.state.accessibleCount,
-        totalCount: this.state.totalCount, // total count of raw data (current filter applied)
-        fetchAndUpdateRawData: this.handleFetchAndUpdateRawData.bind(this),
-        downloadRawData: this.handleDownloadRawData.bind(this),
-        downloadRawDataByFields: this.handleDownloadRawDataByFields.bind(this),
-        allFields: this.state.allFields,
-
-        // a callback function which return total counts for any type, with any filter
-        getTotalCountsByTypeAndFilter: this.handleGetTotalCountsByTypeAndFilter.bind(
-          this
-        ),
-        downloadRawDataByTypeAndFilter: this.handleDownloadRawDataByTypeAndFilter.bind(
-          this
-        ),
-
-        // below are just for ConnectedFilter component
-        onFilterChange: this.handleFilterChange.bind(this),
-        receivedAggsData: this.state.receivedAggsData,
-      })
-    );
-  }
+  return children({
+    ...state,
+    downloadRawData,
+    downloadRawDataByFields,
+    downloadRawDataByTypeAndFilter,
+    fetchAndUpdateRawData,
+    getTotalCountsByTypeAndFilter,
+    onAnchorValueChange: handleAnchorValueChange,
+    onFilterChange: handleFilterChange,
+  });
 }
 
 GuppyWrapper.propTypes = {
@@ -416,11 +524,13 @@ GuppyWrapper.propTypes = {
     aggFields: PropTypes.array,
     dataType: PropTypes.string.isRequired,
   }).isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]).isRequired,
+  children: PropTypes.func.isRequired,
   filterConfig: PropTypes.shape({
+    anchor: PropTypes.shape({
+      field: PropTypes.string,
+      options: PropTypes.arrayOf(PropTypes.string),
+      tabs: PropTypes.arrayOf(PropTypes.string),
+    }),
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
         title: PropTypes.string,
@@ -434,13 +544,6 @@ GuppyWrapper.propTypes = {
   adminAppliedPreFilters: PropTypes.object,
   initialAppliedFilters: PropTypes.object,
   patientIds: PropTypes.arrayOf(PropTypes.string),
-};
-
-GuppyWrapper.defaultProps = {
-  onFilterChange: () => {},
-  rawDataFields: [],
-  adminAppliedPreFilters: {},
-  initialAppliedFilters: {},
 };
 
 export default GuppyWrapper;

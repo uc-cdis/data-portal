@@ -18,6 +18,11 @@ export const GuppyConfigType = PropTypes.shape({
 });
 
 export const FilterConfigType = PropTypes.shape({
+  anchor: PropTypes.shape({
+    field: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.string),
+    tabs: PropTypes.arrayOf(PropTypes.string),
+  }),
   tabs: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,

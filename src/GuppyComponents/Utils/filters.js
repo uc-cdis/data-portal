@@ -52,14 +52,14 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
  * It is used to retain field options in the rendering if
  * they are still checked but their counts are zero.
  * @param {AggsData} initialTabsOptions
- * @param {AggsData} processedTabsOptions
+ * @param {AggsData} tabsOptions
  * @param {FilterState} filtersApplied
  */
-export const updateCountsInInitialTabsOptions = (
+export function updateCountsInInitialTabsOptions(
   initialTabsOptions,
-  processedTabsOptions,
+  tabsOptions,
   filtersApplied
-) => {
+) {
   /** @type {SimpleAggsData}} */
   const updatedTabsOptions = {};
   try {
@@ -69,81 +69,56 @@ export const updateCountsInInitialTabsOptions = (
     //   visit.visit_label.histogram: ...
     // }
     /** @type {{ [x: string]: AggsCount[] }} */
-    const flattenInitialTabsOptions = flat(initialTabsOptions, { safe: true });
+    const flatInitialTabsOptions = flat(initialTabsOptions, { safe: true });
     /** @type {{ [x: string]: AggsCount[] }} */
-    const flattenProcessedTabsOptions = flat(processedTabsOptions, {
-      safe: true,
-    });
-    Object.keys(flattenInitialTabsOptions).forEach((field) => {
+    const flatTabsOptions = flat(tabsOptions, { safe: true });
+
+    for (const flatFieldName of Object.keys(flatInitialTabsOptions)) {
       // in flattened tab options, to get actual field name, strip off the last '.histogram'
-      const actualFieldName = field.replace('.histogram', '');
-      // possible to have '.' in actualFieldName, so use it as a string
-      updatedTabsOptions[`${actualFieldName}`] = { histogram: [] };
-      const histogram = flattenInitialTabsOptions[`${field}`];
-      if (!histogram) {
+      const fieldName = flatFieldName.replace('.histogram', '');
+      const initialHistogram = flatInitialTabsOptions[flatFieldName];
+      if (initialHistogram === undefined)
         console.error(
-          `Guppy did not return histogram data for filter field ${actualFieldName}`
+          `Guppy did not return histogram data for filter field ${fieldName}`
         ); // eslint-disable-line no-console
-      }
-      histogram.forEach((opt) => {
-        const { key } = opt;
-        if (typeof key !== 'string') {
+
+      updatedTabsOptions[fieldName] = { histogram: [] };
+      for (const { key } of initialHistogram) {
+        const histogram = flatTabsOptions[flatFieldName];
+
+        if (typeof key === 'string') {
+          const found = histogram.find((o) => o.key === key);
+          if (found !== undefined)
+            updatedTabsOptions[fieldName].histogram.push({
+              key,
+              count: found.count,
+            });
+        } else {
           // key is a range, just copy the histogram
-          updatedTabsOptions[`${actualFieldName}`].histogram =
-            flattenInitialTabsOptions[`${field}`];
-          if (
-            flattenProcessedTabsOptions[`${field}`] &&
-            flattenProcessedTabsOptions[`${field}`].length > 0 &&
-            updatedTabsOptions[`${actualFieldName}`].histogram
-          ) {
-            updatedTabsOptions[`${actualFieldName}`].histogram[0].count =
-              flattenProcessedTabsOptions[`${field}`][0].count;
-            /** @type {[number, number]} */
-            const newKey = [0, 0];
-            if (flattenProcessedTabsOptions[`${field}`][0].key[0]) {
-              // because of the prefer-destructuring eslint rule
-              const newLowerBound =
-                flattenProcessedTabsOptions[`${field}`][0].key[0];
-              newKey[0] = Number(newLowerBound);
-            }
-            if (flattenProcessedTabsOptions[`${field}`][0].key[1]) {
-              const newHigherBound =
-                flattenProcessedTabsOptions[`${field}`][0].key[1];
-              newKey[1] = Number(newHigherBound);
-            }
-            updatedTabsOptions[`${actualFieldName}`].histogram[0].key = newKey;
+          updatedTabsOptions[fieldName].histogram = initialHistogram;
+
+          if (flatTabsOptions[flatFieldName]?.length > 0) {
+            const lowerBound = Number(histogram[0].key[0]) || 0;
+            const upperBound = Number(histogram[0].key[1]) || 0;
+
+            updatedTabsOptions[fieldName].histogram[0] = {
+              ...histogram[0],
+              key: [lowerBound, upperBound],
+            };
           }
-          return;
-        }
-        const findOpt = flattenProcessedTabsOptions[`${field}`].find(
-          (o) => o.key === key
-        );
-        if (findOpt) {
-          const { count } = findOpt;
-          updatedTabsOptions[`${actualFieldName}`].histogram.push({
-            key,
-            count,
-          });
-        }
-      });
-      const filter = filtersApplied[`${actualFieldName}`];
-      if (filter) {
-        if ('selectedValues' in filter) {
-          filter.selectedValues.forEach((optKey) => {
-            if (
-              !updatedTabsOptions[`${actualFieldName}`].histogram.find(
-                (o) => o.key === optKey
-              )
-            ) {
-              updatedTabsOptions[`${actualFieldName}`].histogram.push({
-                key: optKey,
-                count: 0,
-              });
-            }
-          });
         }
       }
-    });
+
+      const filter = filtersApplied[fieldName];
+      if (filter !== undefined && 'selectedValues' in filter)
+        for (const key of filter.selectedValues) {
+          const found = updatedTabsOptions[fieldName].histogram.find(
+            (o) => o.key === key
+          );
+          if (found === undefined)
+            updatedTabsOptions[fieldName].histogram.push({ key, count: 0 });
+        }
+    }
   } catch (err) {
     /* eslint-disable no-console */
     // hopefully we won't get here but in case of
@@ -153,7 +128,7 @@ export const updateCountsInInitialTabsOptions = (
     /* eslint-enable no-console */
   }
   return updatedTabsOptions;
-};
+}
 
 /**
  * @param {SimpleAggsData} tabsOptions
@@ -430,44 +405,34 @@ export const getFilterSections = (
 };
 
 /**
- * @param {AggsData} receivedAggsData
+ * @param {AggsData} aggsData
  * @param {FilterState} filterResults
  */
-export const excludeSelfFilterFromAggsData = (
-  receivedAggsData,
-  filterResults
-) => {
-  if (!filterResults) return receivedAggsData;
+export function excludeSelfFilterFromAggsData(aggsData, filterResults) {
+  if (!filterResults) return aggsData;
 
   /** @type {SimpleAggsData} */
   const resultAggsData = {};
   /** @type {{ [x: string]: AggsCount[] }} */
-  const flattenAggsData = flat(receivedAggsData, { safe: true });
-  Object.keys(flattenAggsData).forEach((field) => {
-    const actualFieldName = field.replace('.histogram', '');
-    const histogram = flattenAggsData[`${field}`];
-    if (!histogram) return;
-
-    if (actualFieldName in filterResults) {
-      /** @type {AggsCount[]} */
-      let resultHistogram = [];
-      const filter = filterResults[`${actualFieldName}`];
-      if ('selectedValues' in filter) {
-        resultHistogram = histogram.filter(
-          (bucket) =>
-            typeof bucket.key === 'string' &&
-            filter.selectedValues.includes(bucket.key)
-        );
-      }
-      resultAggsData[`${actualFieldName}`] = { histogram: resultHistogram };
-    } else {
-      resultAggsData[`${actualFieldName}`] = {
-        histogram: flattenAggsData[`${field}`],
-      };
+  const flatAggsData = flat(aggsData, { safe: true });
+  for (const flatFieldName of Object.keys(flatAggsData)) {
+    const histogram = flatAggsData[flatFieldName];
+    if (histogram !== undefined) {
+      const fieldName = flatFieldName.replace('.histogram', '');
+      resultAggsData[fieldName] = { histogram };
+      if (fieldName in filterResults)
+        resultAggsData[fieldName].histogram =
+          'selectedValues' in filterResults[fieldName]
+            ? histogram.filter(
+                ({ key }) =>
+                  typeof key === 'string' &&
+                  filterResults[fieldName].selectedValues.includes(key)
+              )
+            : [];
     }
-  });
+  }
   return resultAggsData;
-};
+}
 
 /**
  * @param {AggsData} aggsData
