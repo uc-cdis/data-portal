@@ -26,8 +26,6 @@ export WORKSPACE_TIMEOUT_IN_MINUTES="${WORKSPACE_TIMEOUT_IN_MINUTES:-"480"}"
 
 # lib -----------------------------
 
-declare -a gitopsFiles=(gitops.json data/config/gitops.json)
-
 #
 # Given the HOSTNAME of a public environment,
 # set the APP environment variable and copy gitops
@@ -40,7 +38,6 @@ gitops_config() {
   local gitRepo
   local manifestFile
   local portalApp
-  local portalGitopsFolder
 
   gitRepo="cdis-manifest"
   hostname="$1"
@@ -74,31 +71,21 @@ gitops_config() {
   export HOSTNAME="$hostname"
   export APP="$portalApp"
   if [[ "$portalApp" == "gitops" ]]; then
-    portalGitopsFolder="../$gitRepo/$hostname/portal"
-    local it=0
     local copySource
     local copyDest
-    while [[ $it -lt "${#gitopsFiles[@]}" ]]; do
-      copySource="$portalGitopsFolder/${gitopsFiles[$it]}"
-      let it=$it+1
-      copyDest="./${gitopsFiles[$it]}"
-      let it=$it+1
-      if [[ -z "$copySource" || -z "$copyDest" ]]; then
-        echo "ERROR: internal gitops processing error"
-        return 1
-      fi
-      if [[ -f "$copySource" ]]; then
-        echo "INFO: gitops_config - cp $copySource $copyDest"
-        cp "$copySource" "$copyDest"
-      elif [[ -d "$copySource" ]]; then
-        echo "INFO: gitops_config - mkdir -p $copyDest"
-        mkdir -p "$copyDest"
-        echo "INFO: gitops_config - cp $copySource/*.* $copyDest/"
-        cp $copySource/*.* $copyDest/
-      else
-        echo "INFO: gitops_config - no $copySource in gitops"
-      fi
-    done
+
+    copySource="../$gitRepo/$hostname/portal/gitops.json"
+    copyDest="./data/config/gitops.json"
+    if [[ -z "$copySource" || -z "$copyDest" ]]; then
+      echo "ERROR: internal gitops processing error"
+      return 1
+    fi
+    if [[ -f "$copySource" ]]; then
+      echo "INFO: gitops_config - cp $copySource $copyDest"
+      cp "$copySource" "$copyDest"
+    else
+      echo "INFO: gitops_config - no $copySource in gitops"
+    fi
   fi
 }
 
