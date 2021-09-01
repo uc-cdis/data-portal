@@ -716,6 +716,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     }
     const pfbJobIsRunning = this.state.exportingToTerra
     || this.state.exportingToSevenBridges
+    || this.state.exportingPFBToURL
     || this.isPFBRunning();
     if (buttonConfig.type === 'export-to-pfb') {
       // disable the pfb export button if any other pfb export jobs are running
@@ -742,6 +743,9 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       if (this.props.buttonConfig.enableLimitedFilePFBExport) {
         return this.state.sourceNodesInCohort.length === 1;
       }
+    }
+    if (buttonConfig.type === 'export-pfb-to-url') {
+      return !pfbJobIsRunning;
     }
     if (buttonConfig.type === 'export') {
       // disable the terra export button if any of the
