@@ -96,7 +96,7 @@ export function createSvgGraph(nodesIn, edges) {
       return '';
     })
     .attr('id', (d) => d.id)
-    .on('click', (d) => {
+    .on('click', (_, d) => {
       for (let i = 0; i < nodesForQuery.length; i += 1) {
         if (d.id === nodesForQuery[i]) {
           window.open(
