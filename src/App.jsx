@@ -19,7 +19,7 @@ import {
   workspaceErrorUrl,
   enableResourceBrowser,
 } from './localconf';
-import { gaTracking, components } from './params';
+import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import isEnabled from './helpers/featureFlags';
 
@@ -33,7 +33,6 @@ const GraphQLQuery = React.lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
 const GuppyDataExplorer = React.lazy(() => import('./GuppyDataExplorer'));
 const Indexing = React.lazy(() => import('./Indexing/Indexing'));
 const IndexPage = React.lazy(() => import('./Index/page'));
-const PrivacyPolicy = React.lazy(() => import('./PrivacyPolicy/PrivacyPolicy'));
 const ProjectSubmission = React.lazy(() =>
   import('./Submission/ReduxProjectSubmission')
 );
@@ -244,11 +243,6 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               />
-              {components.privacyPolicy &&
-                (!!components.privacyPolicy.file ||
-                  !!components.privacyPolicy.routeHref) && (
-                  <Route path='/privacy-policy' component={PrivacyPolicy} />
-                )}
               {enableResourceBrowser && (
                 <Route
                   path='/resource-browser'
