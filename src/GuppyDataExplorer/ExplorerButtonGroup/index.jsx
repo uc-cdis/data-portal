@@ -813,12 +813,6 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       return this.isPFBRunning()
         && this.state.exportingToSevenBridges;
     }
-    if (buttonConfig.type === 'export-pfb-to-url') {
-      // export to seven bridges button is pending if a pfb export job is running
-      // and it's an export to seven bridges job.
-      return this.isPFBRunning()
-        && this.state.exportingPFBToURL;
-    }
     return false;
   };
 
