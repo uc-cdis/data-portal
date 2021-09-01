@@ -26,7 +26,6 @@ import isEnabled from './helpers/featureFlags';
 // lazy-loaded pages
 const CoreMetadataPage = React.lazy(() => import('./CoreMetadata/page'));
 const DataDictionary = React.lazy(() => import('./DataDictionary'));
-const DocumentPage = React.lazy(() => import('./Document/page'));
 const ErrorWorkspacePlaceholder = React.lazy(() =>
   import('./Workspace/ErrorWorkspacePlaceholder')
 );
@@ -119,15 +118,6 @@ function App({ store }) {
                     {...props}
                   >
                     <ReduxMapDataModel history={props.history} />
-                  </ProtectedContent>
-                )}
-              />
-              <Route
-                exact
-                path='/document'
-                component={(props) => (
-                  <ProtectedContent {...props}>
-                    <DocumentPage />
                   </ProtectedContent>
                 )}
               />
