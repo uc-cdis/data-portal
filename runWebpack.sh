@@ -130,12 +130,6 @@ if [[ "$NODE_ENV" == "auto" ]]; then
   fi
 fi
 
-#
-# this script copies files from custom/ to src/ based
-# on the current APP environment - ugh
-#
-bash custom/customize.sh
-
 # download the graphql schema for the commons from HOSTNAME
 npm run schema
 # run the relay compiler against the graphql schema
