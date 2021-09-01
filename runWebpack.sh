@@ -26,14 +26,7 @@ export WORKSPACE_TIMEOUT_IN_MINUTES="${WORKSPACE_TIMEOUT_IN_MINUTES:-"480"}"
 
 # lib -----------------------------
 
-declare -a gitopsFiles=(
-  gitops.json data/config/gitops.json
-  gitops-logo.png custom/logo/gitops-logo.png
-  gitops-createdby.png custom/createdby/gitops.png
-  gitops-favicon.ico custom/favicon/gitops-favicon.ico
-  gitops.css custom/css/gitops.css
-  gitops-sponsors custom/sponsors/gitops-sponsors
-)
+declare -a gitopsFiles=(gitops.json data/config/gitops.json)
 
 #
 # Given the HOSTNAME of a public environment,
