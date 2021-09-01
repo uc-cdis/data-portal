@@ -43,9 +43,6 @@ const ReduxMapFiles = React.lazy(() => import('./Submission/ReduxMapFiles'));
 const ReduxQueryNode = React.lazy(() => import('./QueryNode/ReduxQueryNode'));
 const SubmissionPage = React.lazy(() => import('./Submission/page'));
 const ResourceBrowser = React.lazy(() => import('./ResourceBrowser'));
-const UserAgreementCert = React.lazy(() =>
-  import('./UserAgreement/ReduxCertPopup')
-);
 const UserProfile = React.lazy(() => import('./UserProfile/ReduxUserProfile'));
 const Workspace = React.lazy(() => import('./Workspace'));
 
@@ -144,14 +141,6 @@ function App({ store }) {
                 component={(props) => (
                   <ProtectedContent {...props}>
                     <Indexing />
-                  </ProtectedContent>
-                )}
-              />
-              <Route
-                path='/quiz'
-                component={(props) => (
-                  <ProtectedContent {...props}>
-                    <UserAgreementCert />
                   </ProtectedContent>
                 )}
               />
