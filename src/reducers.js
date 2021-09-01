@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import userProfile from './UserProfile/reducers';
 import coreMetadata from './CoreMetadata/reducers';
-import certificate from './UserAgreement/reducers';
 import submission from './Submission/reducers';
 import analysis from './Analysis/reducers';
 import index from './Index/reducers';
@@ -97,7 +96,6 @@ const reducers = combineReducers({
   queryNodes,
   userProfile,
   coreMetadata,
-  certificate,
   graphiql,
   login,
   ddgraph,
