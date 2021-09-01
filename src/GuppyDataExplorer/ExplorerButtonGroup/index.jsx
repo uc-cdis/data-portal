@@ -436,7 +436,7 @@ class ExplorerButtonGroup extends React.Component {
   // in the component state, create the pfb with exportToPFB(), and send the
   // pfb to the target url with `sendPFBToURL()`.
   // `sendPFBToURL()` is called from componentWillUpdate.
-  exportPFBToURL = (pfbExportTargetURL) => {
+  exportPFBToURL = (pfbExportTargetURL) => () => {
     this.setState({
       exportingPFBToURL: true,
       pfbExportTargetURL,
