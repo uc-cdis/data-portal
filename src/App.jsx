@@ -31,7 +31,7 @@ const ErrorWorkspacePlaceholder = React.lazy(() =>
 );
 const GraphQLQuery = React.lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
 const GuppyDataExplorer = React.lazy(() => import('./GuppyDataExplorer'));
-const Indexing = React.lazy(() => import('./Indexing/Indexing'));
+// const Indexing = React.lazy(() => import('./Indexing/Indexing'));
 const IndexPage = React.lazy(() => import('./Index/page'));
 const ProjectSubmission = React.lazy(() =>
   import('./Submission/ReduxProjectSubmission')
@@ -136,14 +136,14 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               />
-              <Route
+              {/* <Route
                 path='/indexing'
                 component={(props) => (
                   <ProtectedContent {...props}>
                     <Indexing />
                   </ProtectedContent>
                 )}
-              />
+              /> */}
               <Route
                 path='/dd/:node'
                 component={(props) => (
