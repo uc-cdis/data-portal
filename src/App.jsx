@@ -14,24 +14,19 @@ import { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename,
   dev,
+  enableResourceBrowser,
   gaDebug,
   // workspaceUrl,
   // workspaceErrorUrl,
-  enableResourceBrowser,
 } from './localconf';
 import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import isEnabled from './helpers/featureFlags';
 
 // lazy-loaded pages
-// const CoreMetadataPage = React.lazy(() => import('./CoreMetadata/page'));
 const DataDictionary = React.lazy(() => import('./DataDictionary'));
-// const ErrorWorkspacePlaceholder = React.lazy(() =>
-//   import('./Workspace/ErrorWorkspacePlaceholder')
-// );
 const GraphQLQuery = React.lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
 const GuppyDataExplorer = React.lazy(() => import('./GuppyDataExplorer'));
-// const Indexing = React.lazy(() => import('./Indexing/Indexing'));
 const IndexPage = React.lazy(() => import('./Index/page'));
 const ProjectSubmission = React.lazy(() =>
   import('./Submission/ReduxProjectSubmission')
@@ -44,6 +39,11 @@ const ReduxQueryNode = React.lazy(() => import('./QueryNode/ReduxQueryNode'));
 const SubmissionPage = React.lazy(() => import('./Submission/page'));
 const ResourceBrowser = React.lazy(() => import('./ResourceBrowser'));
 const UserProfile = React.lazy(() => import('./UserProfile/ReduxUserProfile'));
+// const CoreMetadataPage = React.lazy(() => import('./CoreMetadata/page'));
+// const ErrorWorkspacePlaceholder = React.lazy(() =>
+//   import('./Workspace/ErrorWorkspacePlaceholder')
+// );
+// const Indexing = React.lazy(() => import('./Indexing/Indexing'));
 // const Workspace = React.lazy(() => import('./Workspace'));
 
 function App({ store }) {
@@ -136,14 +136,6 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               />
-              {/* <Route
-                path='/indexing'
-                component={(props) => (
-                  <ProtectedContent {...props}>
-                    <Indexing />
-                  </ProtectedContent>
-                )}
-              /> */}
               <Route
                 path='/dd/:node'
                 component={(props) => (
@@ -160,44 +152,6 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               />
-              {/* <Route
-                exact
-                path='/files/*'
-                component={(props) => (
-                  <ProtectedContent
-                    filter={() =>
-                      store.dispatch(fetchCoreMetadata(props.match.params[0]))
-                    }
-                    {...props}
-                  >
-                    <CoreMetadataPage />
-                  </ProtectedContent>
-                )}
-              />
-              <Route
-                path='/files'
-                component={(props) => (
-                  <ProtectedContent {...props}>
-                    <GuppyDataExplorer />
-                  </ProtectedContent>
-                )}
-              /> */}
-              {/* <Route
-                path='/workspace'
-                component={(props) => (
-                  <ProtectedContent {...props}>
-                    <Workspace />
-                  </ProtectedContent>
-                )}
-              />
-              <Route
-                path={workspaceUrl}
-                component={ErrorWorkspacePlaceholder}
-              />
-              <Route
-                path={workspaceErrorUrl}
-                component={ErrorWorkspacePlaceholder}
-              /> */}
               <Route
                 path='/:project/search'
                 component={(props) => {
@@ -250,6 +204,52 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               />
+              {/* <Route
+                path='/indexing'
+                component={(props) => (
+                  <ProtectedContent {...props}>
+                    <Indexing />
+                  </ProtectedContent>
+                )}
+              />
+              <Route
+                exact
+                path='/files/*'
+                component={(props) => (
+                  <ProtectedContent
+                    filter={() =>
+                      store.dispatch(fetchCoreMetadata(props.match.params[0]))
+                    }
+                    {...props}
+                  >
+                    <CoreMetadataPage />
+                  </ProtectedContent>
+                )}
+              />
+              <Route
+                path='/files'
+                component={(props) => (
+                  <ProtectedContent {...props}>
+                    <GuppyDataExplorer />
+                  </ProtectedContent>
+                )}
+              />
+              <Route
+                path='/workspace'
+                component={(props) => (
+                  <ProtectedContent {...props}>
+                    <Workspace />
+                  </ProtectedContent>
+                )}
+              />
+              <Route
+                path={workspaceUrl}
+                component={ErrorWorkspacePlaceholder}
+              />
+              <Route
+                path={workspaceErrorUrl}
+                component={ErrorWorkspacePlaceholder}
+              /> */}
             </Switch>
           </Suspense>
         </Layout>
