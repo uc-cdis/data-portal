@@ -8,7 +8,7 @@ import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 import Layout from './Layout';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
-import { fetchCoreMetadata } from './CoreMetadata/reduxer';
+// import { fetchCoreMetadata } from './CoreMetadata/reduxer';
 import { fetchAccess } from './UserProfile/ReduxUserProfile';
 import { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
@@ -24,7 +24,7 @@ import GA, { RouteTracker } from './components/GoogleAnalytics';
 import isEnabled from './helpers/featureFlags';
 
 // lazy-loaded pages
-const CoreMetadataPage = React.lazy(() => import('./CoreMetadata/page'));
+// const CoreMetadataPage = React.lazy(() => import('./CoreMetadata/page'));
 const DataDictionary = React.lazy(() => import('./DataDictionary'));
 const ErrorWorkspacePlaceholder = React.lazy(() =>
   import('./Workspace/ErrorWorkspacePlaceholder')
@@ -160,7 +160,7 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               />
-              <Route
+              {/* <Route
                 exact
                 path='/files/*'
                 component={(props) => (
@@ -181,7 +181,7 @@ function App({ store }) {
                     <GuppyDataExplorer />
                   </ProtectedContent>
                 )}
-              />
+              /> */}
               <Route
                 path='/workspace'
                 component={(props) => (
