@@ -10,9 +10,8 @@ import {
 } from '../actions';
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
-import { requiredCerts } from '../localconf';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
-import { intersection, isPageFullScreen } from '../utils';
+import { isPageFullScreen } from '../utils';
 import './ProtectedContent.css';
 
 /**
@@ -93,7 +92,6 @@ class ProtectedContent extends React.Component {
             this.checkLoginStatus(store, this.state)
               .then((newState) => this.checkIfRegisterd(newState))
               .then((newState) => this.checkIfAdmin(newState))
-              .then((newState) => this.checkQuizStatus(newState))
               .then((newState) => {
                 const latestState = { ...newState, dataLoaded: true };
 
@@ -177,35 +175,6 @@ class ProtectedContent extends React.Component {
     const isAdminUser =
       initialState.user.authz?.[resourcePath]?.[0].method === '*';
     return isAdminUser ? initialState : { ...initialState, redirectTo: '/' };
-  };
-
-  /**
-   * Filter the 'newState' for the ProtectedComponent.
-   * User needs to take a security quiz before he/she can acquire tokens
-   * @param {ComponentState} initialState
-   * @returns {ComponentState}
-   */
-  checkQuizStatus = (initialState) => {
-    const isUserAuthenticated =
-      initialState.authenticated &&
-      initialState.user &&
-      initialState.user.username;
-    if (!isUserAuthenticated) return initialState;
-
-    const newState = { ...initialState };
-    const userCerts = newState.user.certificates_uploaded;
-    const isUserMissingCerts =
-      intersection(requiredCerts, userCerts).length !== requiredCerts.length;
-    // take quiz if this user doesn't have required certificate
-    if (this.props.match.path !== '/quiz' && isUserMissingCerts) {
-      newState.redirectTo = '/quiz';
-      newState.from = this.props.location;
-      // do not update lastAuthMs (indicates time of last successful auth)
-    } else if (this.props.match.path === '/quiz' && !isUserMissingCerts) {
-      newState.redirectTo = '/';
-      newState.from = this.props.location;
-    }
-    return newState;
   };
 
   /**
