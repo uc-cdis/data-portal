@@ -122,8 +122,6 @@ class IllinoisMapChart extends React.Component {
         lastUpdated: this.props.jsonByTime.last_updated,
       });
 
-      this.setSliderDates(this.state.activeLayer.split('_')[0]);
-
       this.mapData.modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
 
       // Finds second highest value in data set
@@ -167,8 +165,6 @@ class IllinoisMapChart extends React.Component {
       ];
       this.mapData.colorsAsList = Object.entries(this.mapData.colors)
         .map((item) => [+item[0], item[1]]).flat();
-
-      this.setState({ mapColors: this.mapData.colors }); // eslint-disable-line react/no-did-update-set-state, max-len
     }
 
     if (!this.state.vaccine_data.fetchStatus && Object.entries(this.props.jsonVaccinated.il_county_list).length > 0) {
@@ -176,11 +172,27 @@ class IllinoisMapChart extends React.Component {
         this.props.jsonVaccinated.il_county_list,
         (data, location) => {
           const dateProps = {};
-          Object.entries(data[location.properties.FIPS].by_date).forEach((x) => {
-            const [date, vaccinated] = x;
-
-            dateProps[`V_${date}`] = typeof vaccinated === 'string' ? 0 : vaccinated;
-          });
+          const curentDatesObj = data[location.properties.FIPS].by_date;
+          const datesKeyArr = Object.keys(curentDatesObj).sort();
+          const endDate = new Date(datesKeyArr[datesKeyArr.length - 1]);
+          let currentDateString = datesKeyArr[0];
+          const currentDate = new Date(currentDateString);
+          let yesterdaysData = 0;
+          // data may not exist for every day but because it is cumulative we can fill in missing days
+          while (currentDate <= endDate) {
+            const tempCurentVacCount = curentDatesObj[currentDateString];
+            // check if exists first and store value for future use if does not exist
+            if (tempCurentVacCount) {
+              dateProps[`V_${currentDateString}`] = typeof tempCurentVacCount === 'string' ? 0 : tempCurentVacCount;
+              yesterdaysData = tempCurentVacCount;
+            } else {
+              // use old data
+              dateProps[`V_${currentDateString}`] = yesterdaysData;
+            }
+            // increase to next day
+            currentDate.setDate(currentDate.getDate() + 1);
+            currentDateString = formatDate(currentDate);
+          }
           return dateProps;
         });
 
@@ -191,6 +203,8 @@ class IllinoisMapChart extends React.Component {
           fetchStatus: 'done',
         },
       });
+
+      this.setSliderDates(this.state.activeLayer.split('_')[0]); this.setMapLegendColors(this.state.activeLayer);
     }
 
     // data fetch status added to prevent multiple requests
@@ -463,7 +477,6 @@ class IllinoisMapChart extends React.Component {
         return location;
       }),
     };
-
     this.findStartAndEndDates(geoJson);
     return geoJson;
   }
