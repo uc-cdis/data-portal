@@ -15,8 +15,8 @@ import {
   basename,
   dev,
   gaDebug,
-  workspaceUrl,
-  workspaceErrorUrl,
+  // workspaceUrl,
+  // workspaceErrorUrl,
   enableResourceBrowser,
 } from './localconf';
 import { gaTracking } from './params';
@@ -26,9 +26,9 @@ import isEnabled from './helpers/featureFlags';
 // lazy-loaded pages
 // const CoreMetadataPage = React.lazy(() => import('./CoreMetadata/page'));
 const DataDictionary = React.lazy(() => import('./DataDictionary'));
-const ErrorWorkspacePlaceholder = React.lazy(() =>
-  import('./Workspace/ErrorWorkspacePlaceholder')
-);
+// const ErrorWorkspacePlaceholder = React.lazy(() =>
+//   import('./Workspace/ErrorWorkspacePlaceholder')
+// );
 const GraphQLQuery = React.lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
 const GuppyDataExplorer = React.lazy(() => import('./GuppyDataExplorer'));
 // const Indexing = React.lazy(() => import('./Indexing/Indexing'));
@@ -44,7 +44,7 @@ const ReduxQueryNode = React.lazy(() => import('./QueryNode/ReduxQueryNode'));
 const SubmissionPage = React.lazy(() => import('./Submission/page'));
 const ResourceBrowser = React.lazy(() => import('./ResourceBrowser'));
 const UserProfile = React.lazy(() => import('./UserProfile/ReduxUserProfile'));
-const Workspace = React.lazy(() => import('./Workspace'));
+// const Workspace = React.lazy(() => import('./Workspace'));
 
 function App({ store }) {
   return (
@@ -182,7 +182,7 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               /> */}
-              <Route
+              {/* <Route
                 path='/workspace'
                 component={(props) => (
                   <ProtectedContent {...props}>
@@ -197,7 +197,7 @@ function App({ store }) {
               <Route
                 path={workspaceErrorUrl}
                 component={ErrorWorkspacePlaceholder}
-              />
+              /> */}
               <Route
                 path='/:project/search'
                 component={(props) => {
