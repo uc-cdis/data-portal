@@ -379,6 +379,13 @@ function buildConfig(opts) {
             image: '/src/img/analysis-icons/gwas.svg',
           };
           break;
+        case 'GWASUIMockup':
+          analysisApps.GWASUIMockup = {
+            title: 'GWAS UI',
+            description: 'Advanced GWAS UI',
+            image: '/src/img/analysis-icons/gwas.svg',
+          };
+          break;
         default:
           break;
         }
