@@ -387,7 +387,12 @@ const GWASUI = (props) => {
           <Step key={item.title} title={item.title} description={item.description} />
         ))}
       </Steps>
-      <div className='steps-content'>{generateContentForStep(current)}</div>
+      <div className='steps-content'>
+        <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+          {generateContentForStep(current)}
+          {(selectedCohort && !showJobSubmissionResult) && <h4 className='GWASUI-selectedCohort'>{`Selected Cohort: ${selectedCohort.cohort_name}`}</h4>}
+        </Space>
+      </div>
       <div className='steps-action'>
         {current > 0 && !showJobSubmissionResult && (
           <Button
@@ -408,6 +413,10 @@ const GWASUI = (props) => {
               if (current === 1) {
                 setSelectedPhenotype(selectedConcepts[0]);
                 setSelectedCovariates([...selectedConcepts].slice(1));
+                form.setFieldsValue({
+                  covariates: [...selectedConcepts].slice(1).map((val) => val.name),
+                  outcome: selectedConcepts[0].name,
+                });
               }
               if (current === 3) {
                 form.submit();
