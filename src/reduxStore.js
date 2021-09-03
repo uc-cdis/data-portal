@@ -3,7 +3,6 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 
-import dictionary from './dictionary';
 import { mockStore, requiredCerts } from './localconf';
 import reducers from './reducers';
 
@@ -14,15 +13,24 @@ const persistConfig = {
 };
 const reducer = persistReducer(persistConfig, reducers);
 
-const preloadedState =
-  process.env.NODE_ENV !== 'production' && mockStore
-    ? {
-        user: { username: 'test', certificates_uploaded: requiredCerts },
-        submission: { dictionary, nodeTypes: Object.keys(dictionary).slice(2) },
-        status: {},
-      }
-    : { user: {}, status: {} };
+function getpreloadedState() {
+  const state = { user: {}, status: {} };
 
+  if (process.env.NODE_ENV !== 'production' && mockStore) {
+    state.user = { username: 'test', certificates_uploaded: requiredCerts };
+
+    import('./dictionary').then((dictionary) => {
+      state.submission = {
+        dictionary,
+        nodeTypes: Object.keys(dictionary).slice(2),
+      };
+    });
+  }
+
+  return state;
+}
+
+const preloadedState = getpreloadedState();
 const composeEnhancers =
   process.env.NODE_ENV !== 'production' &&
   typeof window === 'object' &&

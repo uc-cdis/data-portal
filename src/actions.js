@@ -9,8 +9,6 @@ import {
   authzPath,
 } from './localconf';
 import { config } from './params';
-import dictionary from '../data/dictionary.json';
-import schema from '../data/schema.json';
 
 export const updatePopup = (state) => ({
   type: 'UPDATE_POPUP',
@@ -339,10 +337,14 @@ export const fetchProjects = () => (dispatch) =>
  * handled by router
  */
 export const fetchSchema = (dispatch) =>
-  dispatch({ type: 'RECEIVE_SCHEMA', schema });
+  import('../data/schema.json').then((schema) =>
+    dispatch({ type: 'RECEIVE_SCHEMA', schema })
+  );
 
 export const fetchDictionary = (dispatch) =>
-  dispatch({ type: 'RECEIVE_DICTIONARY', data: dictionary });
+  import('../data/dictionary.json').then((dictionary) =>
+    dispatch({ type: 'RECEIVE_DICTIONARY', data: dictionary })
+  );
 
 export const fetchVersionInfo = (dispatch) =>
   fetchWithCreds({
