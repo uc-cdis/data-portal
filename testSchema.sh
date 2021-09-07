@@ -6,9 +6,10 @@ set -e
 declare -a testCases
 testCases=(
 bpa "data.bloodpac.org"
+dcf "nci-crdc.datacommons.io"
 gtex "gen3.biodatacatalyst.nhlbi.nih.gov"
+anvil "gen3.theanvil.io"
 dev "qa.planx-pla.net"
-edc "portal.occ-data.org"
 genomel "genomel.bionimbus.org"
 acct "acct.bionimbus.org"
 )

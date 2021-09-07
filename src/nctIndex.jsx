@@ -53,7 +53,7 @@ import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
-  ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
+  discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
 } from './localconf';
 import { portalVersion } from './versions';
 import Analysis from './Analysis/Analysis';
@@ -66,6 +66,7 @@ import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
+import Discovery from './Discovery';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import './nctIndex.css';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
@@ -459,6 +460,37 @@ async function init() {
                       )
                     }
                   />
+                  {isEnabled('discovery')
+                    && (
+                      <Route
+                        exact
+                        path='/discovery'
+                        component={
+                          (props) => (
+                            <ProtectedContent
+                              public={discoveryConfig.public !== false}
+                              component={Discovery}
+                              {...props}
+                            />
+                          )
+                        }
+                      />
+                    )}
+                  {isEnabled('discovery') && (
+                    <Route
+                      exact
+                      path='/discovery/:studyUID'
+                      component={
+                        (props) => (
+                          <ProtectedContent
+                            public
+                            component={Discovery}
+                            {...props}
+                          />
+                        )
+                      }
+                    />
+                  )}
                   <Route
                     path='/not-found'
                     component={NotFound}

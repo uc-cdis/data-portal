@@ -103,8 +103,11 @@ describe('Configuration', () => {
           </StaticRouter>
         </Provider>,
       );
+
+      /* Disabling this check due to  https://ctds-planx.atlassian.net/browse/HP-393 */
       // accessible column in table should be present/hidden
-      expect(wrapper.exists('.discovery-table__access-icon')).toBe(enabled);
+      // expect(wrapper.exists('.discovery-table__access-icon')).toBe(enabled);
+
       // access info in modal should be present/hidden
       // Open modal to a study by clicking on the first row
       wrapper.find('.discovery-table__row').first().simulate('click');

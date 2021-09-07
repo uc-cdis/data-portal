@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import * as JsSearch from 'js-search';
 import { Tag, Popover } from 'antd';
-import { LockFilled, UnlockOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import {
+  UnlockOutlined, ClockCircleOutlined, DashOutlined,
+} from '@ant-design/icons';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
@@ -16,10 +18,10 @@ import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 export const accessibleFieldName = '__accessible';
 
 export enum AccessLevel {
-  ACCESSIBLE,
-  UNACCESSIBLE,
-  NOT_AVAILABLE,
-  PENDING
+  ACCESSIBLE = 1,
+  UNACCESSIBLE = 2,
+  PENDING = 3,
+  NOT_AVAILABLE = 4,
 }
 
 const ARBORIST_READ_PRIV = 'read';
@@ -193,6 +195,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [advSearchFilterHeight, setAdvSearchFilterHeight] = useState('100vh');
+  const [downloadInProgress, setDownloadInProgress] = useState(false);
+  const [downloadStatusMessage, setDownloadStatusMessage] = useState({
+    url: '', message: '', title: '', active: false,
+  });
 
   const handleSearchChange = (ev) => {
     const { value } = ev.currentTarget;
@@ -245,10 +251,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   useEffect(() => {
     // If opening to a study by default, open that study
-    if (props.params.studyUID) {
-      const studyID = props.params.studyUID;
+    if (props.params.studyUID && props.studies.length > 0) {
+      const studyID = decodeURIComponent(props.params.studyUID);
       const defaultModalData = props.studies.find(
         (r) => r[config.minimalFieldMapping.uid] === studyID);
+
       if (defaultModalData) {
         setPermalinkCopied(false);
         setModalData(defaultModalData);
@@ -358,17 +365,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   );
   if (config.features.authorization.enabled) {
     columns.push({
-      title: <div className='discovery-table-header'>Data Access</div>,
+      title: <div className='discovery-table-header'>Data Availability</div>,
       filters: [{
-        text: <React.Fragment><UnlockOutlined />&nbsp;Accessible</React.Fragment>,
+        text: <React.Fragment><UnlockOutlined />&nbsp;Available</React.Fragment>,
         value: AccessLevel.ACCESSIBLE,
         id: 'accessible-data-filter',
       }, {
-        text: <React.Fragment><LockFilled />&nbsp;Unaccessible</React.Fragment>,
-        value: AccessLevel.UNACCESSIBLE,
-        id: 'unaccessible-data-filter',
-      }, {
-        text: <React.Fragment><span style={{ color: 'gray' }}>n/a</span>&nbsp;No Data</React.Fragment>,
+        text: <React.Fragment><DashOutlined />&nbsp;Not Available</React.Fragment>,
         value: AccessLevel.NOT_AVAILABLE,
         id: 'not-available-data-filter',
       }, {
@@ -377,6 +380,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         id: 'pending-data-filter',
       }],
       onFilter: (value, record) => record[accessibleFieldName] === value,
+      // This will sort the values in the order defined by the AccessLevel enum. (AccessLevel.ACCESSIBLE=1, AccessLevel.UNACCESSIBLE=2, etc)
+      sorter: (a, b) => b[accessibleFieldName] - a[accessibleFieldName],
+      defaultSortOrder: 'descend',
       ellipsis: false,
       width: '106px',
       textWrap: 'word-break',
@@ -409,7 +415,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 </div>
               )}
             >
-              <span style={{ color: 'gray' }}>n/a</span>
+              <DashOutlined className='discovery-table__access-icon' />
             </Popover>
           );
         }
@@ -431,22 +437,29 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             </Popover>
           );
         }
-        return (
-          <Popover
-            overlayClassName='discovery-popover'
-            placement='topRight'
-            arrowPointAtCenter
-            title={'You do not have access to this study.'}
-            content={(
-              <div className='discovery-popover__text'>
-                <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
-                <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
-              </div>
-            )}
-          >
-            <LockFilled className='discovery-table__access-icon' />
-          </Popover>
-        );
+        return <React.Fragment />;
+        /* Hiding the closed lock for the HEAL project.
+          This may be useful functionality for other commons.
+          Keeping the logic for now.
+           https://ctds-planx.atlassian.net/browse/HP-393
+        */
+        // return (
+        //   <Popover
+        //     overlayClassName='discovery-popover'
+        //     placement='topRight'
+        //     arrowPointAtCenter
+        //     title={'You do not have access to this study.'}
+        //     content={(
+        //       <div className='discovery-popover__text'>
+        //         <React.Fragment>You don&apos;t have <code>{ARBORIST_READ_PRIV}</code> access to</React.Fragment>
+        //         <React.Fragment><code>{record[config.minimalFieldMapping.authzField]}</code>.</React.Fragment>
+        //       </div>
+        //     )}
+        //   >
+        //     {/* <EyeInvisibleOutlined className='discovery-table__access-icon' /> */}
+        //     ---
+        //   </Popover>
+        // );
       },
     });
   }
@@ -496,6 +509,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                 <DiscoveryMDSSearch
                   searchTerm={searchTerm}
                   handleSearchChange={handleSearchChange}
+                  inputSubtitle={config.features.search.searchBar.inputSubtitle}
                 />
               </div>
             )}
@@ -508,6 +522,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           setExportingToWorkspace={setExportingToWorkspace}
           filtersVisible={filtersVisible}
           setFiltersVisible={setFiltersVisible}
+          downloadInProgress={downloadInProgress}
+          setDownloadInProgress={setDownloadInProgress}
+          downloadStatusMessage={downloadStatusMessage}
+          setDownloadStatusMessage={setDownloadStatusMessage}
         />
 
         {/* Advanced search panel */}

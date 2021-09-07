@@ -12,49 +12,43 @@ function notIl(date) {
       'fill-color': [
         'interpolate',
         ['linear'],
-        ['get', `rnr_${date}`],
-        -100,
-        '#0d652d',
-        -80,
-        '#188038',
-        -60,
-        '#1e8e3e',
-        -40,
-        '#34a853',
-        -20,
-        '#81c995',
-        0,
+        ['get', `V_${date}`],
+        1000,
         '#FFF',
-        1,
-        '#EED322',
-        20,
-        '#DA9C20',
-        40,
-        '#B86B25',
-        60,
-        '#8B4225',
-        80,
-        '#850001',
+        5000,
+        '#a8dab5',
+        10000,
+        '#81c995',
+        50000,
+        '#5bb974',
+        100000,
+        '#34a853',
+        150000,
+        '#1e8e3e',
+        300000,
+        '#188038',
+        500000,
+        '#0d652d',
       ],
       'fill-opacity': 0.6,
     },
   };
 }
 
-class MobilityLayer extends React.Component {
+class VaccinatedCaseLayer extends React.Component {
   render() {
     return (
       <ReactMapGL.Source type='geojson' data={this.props.data}>
-        <ReactMapGL.Layer id='rnr_mobility_data' {...notIl(this.props.date)} layout={{ visibility: this.props.visibility }} />
+        <ReactMapGL.Layer id='V_time_data' {...notIl(this.props.date)} layout={{ visibility: this.props.visibility }} />
       </ReactMapGL.Source>
     );
   }
 }
 
-MobilityLayer.propTypes = {
+VaccinatedCaseLayer.propTypes = {
   visibility: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
   date: PropTypes.string.isRequired,
 };
 
-export default MobilityLayer;
+export default VaccinatedCaseLayer;
