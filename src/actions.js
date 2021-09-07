@@ -337,14 +337,14 @@ export const fetchProjects = () => (dispatch) =>
  * handled by router
  */
 export const fetchSchema = (dispatch) =>
-  import('../data/schema.json').then((schema) =>
-    dispatch({ type: 'RECEIVE_SCHEMA', schema })
-  );
+  fetch('../data/schema.json')
+    .then((response) => response.json())
+    .then((schema) => dispatch({ type: 'RECEIVE_SCHEMA', schema }));
 
 export const fetchDictionary = (dispatch) =>
-  import('../data/dictionary.json').then((dictionary) =>
-    dispatch({ type: 'RECEIVE_DICTIONARY', data: dictionary })
-  );
+  fetch('../data/dictionary.json')
+    .then((response) => response.json())
+    .then((data) => dispatch({ type: 'RECEIVE_DICTIONARY', data }));
 
 export const fetchVersionInfo = (dispatch) =>
   fetchWithCreds({
