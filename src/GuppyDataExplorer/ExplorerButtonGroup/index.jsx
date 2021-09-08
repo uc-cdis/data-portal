@@ -799,7 +799,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       // export to pfb button is pending if a pfb export job is running and it's
       // neither an export to terra job or an export to seven bridges job.
       return this.isPFBRunning()
-        && !(this.state.exportingToTerra || this.state.exportingToSevenBridges);
+        && !(this.state.exportingToTerra || this.state.exportingToSevenBridges || this.state.exportingPFBToURL);
     }
     if (buttonConfig.type === 'export' || buttonConfig.type === 'export-files') {
       // export to terra button is pending if a pfb export job is running and
@@ -812,6 +812,10 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       // and it's an export to seven bridges job.
       return this.isPFBRunning()
         && this.state.exportingToSevenBridges;
+    }
+    if (buttonConfig.type === 'export-pfb-to-url') {
+      return this.isPFBRunning()
+        && this.state.exportingPFBToURL;
     }
     return false;
   };
