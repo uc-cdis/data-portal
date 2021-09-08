@@ -1,7 +1,9 @@
 import 'isomorphic-fetch';
+import { buildClientSchema, getIntrospectionQuery } from 'graphql/utilities';
 import {
   apiPath,
   userapiPath,
+  guppyGraphQLUrl,
   headers,
   hostname,
   submissionApiOauthPath,
@@ -339,7 +341,24 @@ export const fetchProjects = () => (dispatch) =>
 export const fetchSchema = (dispatch) =>
   fetch('../data/schema.json')
     .then((response) => response.json())
-    .then((schema) => dispatch({ type: 'RECEIVE_SCHEMA', schema }));
+    .then(({ data }) =>
+      dispatch({ type: 'RECEIVE_SCHEMA', schema: buildClientSchema(data) })
+    );
+
+export const fetchGuppySchema = (dispatch) =>
+  fetch(guppyGraphQLUrl, {
+    credentials: 'include',
+    headers: { ...headers },
+    method: 'POST',
+    body: JSON.stringify({
+      query: getIntrospectionQuery(),
+      operationName: 'IntrospectionQuery',
+    }),
+  })
+    .then((response) => response.json())
+    .then(({ data }) =>
+      dispatch({ type: 'RECEIVE_GUPPY_SCHEMA', data: buildClientSchema(data) })
+    );
 
 export const fetchDictionary = (dispatch) =>
   fetch('../data/dictionary.json')

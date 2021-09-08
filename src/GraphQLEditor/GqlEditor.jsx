@@ -1,17 +1,16 @@
 import React from 'react';
 import GraphiQL from 'graphiql';
-import { buildClientSchema } from 'graphql/utilities';
+
 import PropTypes from 'prop-types';
 import Button from '../gen3-ui-component/components/Button';
 import Spinner from '../components/Spinner';
 import { headers, graphqlPath, guppyGraphQLUrl } from '../localconf';
-import { config } from '../params';
 import sessionMonitor from '../SessionMonitor';
 import './GqlEditor.less';
 import 'graphiql/graphiql.css';
 
 const parameters = {};
-const defaultValue = config.dataExplorerConfig ? 1 : 0;
+const defaultValue = 0;
 
 const fetchGraphQL = (graphQLParams) =>
   // We first update the session so that the user will be notified
@@ -77,7 +76,6 @@ class GqlEditor extends React.Component {
     if (!this.props.schema) {
       return <Spinner />; // loading
     }
-    const graphqlSchema = buildClientSchema(this.props.schema.data);
     const editQuery = (newQuery) => {
       parameters.query = newQuery;
     };
@@ -87,21 +85,18 @@ class GqlEditor extends React.Component {
 
     const options = [
       {
+        name: 'Flat Model',
+        endpoint: fetchFlatGraphQL,
+        schema: this.props.guppySchema,
+      },
+      {
         name: 'Graph Model',
         endpoint: fetchGraphQL,
-        schema: graphqlSchema,
+        schema: this.props.schema,
       },
     ];
 
-    if (config.dataExplorerConfig) {
-      options.push({
-        name: 'Flat Model',
-        endpoint: fetchFlatGraphQL,
-        schema: null,
-      });
-    }
-
-    // If provided endpoint is not 0 or 1, default to 0 (graph model)
+    // If provided endpoint is not 0 or 1, default to 0 (flat model)
     const index =
       this.state.selectedEndpointIndex !== null &&
       this.state.selectedEndpointIndex < options.length
@@ -122,24 +117,14 @@ class GqlEditor extends React.Component {
             </div>
           ) : null}
         </div>
-        {index === 0 ? (
-          <GraphiQL
-            fetcher={options[index].endpoint}
-            query={parameters.query}
-            schema={options[index].schema}
-            variables={parameters.variables}
-            onEditQuery={editQuery}
-            onEditVariables={editVariables}
-          />
-        ) : (
-          <GraphiQL
-            fetcher={options[index].endpoint}
-            query={parameters.query}
-            variables={parameters.variables}
-            onEditQuery={editQuery}
-            onEditVariables={editVariables}
-          />
-        )}
+        <GraphiQL
+          fetcher={options[index].endpoint}
+          query={parameters.query}
+          schema={options[index].schema}
+          variables={parameters.variables}
+          onEditQuery={editQuery}
+          onEditVariables={editVariables}
+        />
       </div>
     );
   }
@@ -147,6 +132,7 @@ class GqlEditor extends React.Component {
 
 GqlEditor.propTypes = {
   schema: PropTypes.object,
+  guppySchema: PropTypes.object,
   endpointIndex: PropTypes.number,
 };
 
