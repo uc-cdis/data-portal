@@ -96,7 +96,7 @@ class GqlEditor extends React.Component {
       options.push({
         name: 'Flat Model',
         endpoint: fetchFlatGraphQL,
-        schema: this.props.schemaFlat,
+        schema: this.props.guppySchema,
       });
     }
 
@@ -136,7 +136,7 @@ class GqlEditor extends React.Component {
 
 GqlEditor.propTypes = {
   schema: PropTypes.object,
-  schemaFlat: PropTypes.object,
+  guppySchema: PropTypes.object,
   endpointIndex: PropTypes.number,
 };
 

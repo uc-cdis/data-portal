@@ -345,7 +345,7 @@ export const fetchSchema = (dispatch) =>
       dispatch({ type: 'RECEIVE_SCHEMA', schema: buildClientSchema(data) })
     );
 
-export const fetchSchemaFlat = (dispatch) =>
+export const fetchGuppySchema = (dispatch) =>
   fetch(guppyGraphQLUrl, {
     credentials: 'include',
     headers: { ...headers },
@@ -357,7 +357,7 @@ export const fetchSchemaFlat = (dispatch) =>
   })
     .then((response) => response.json())
     .then(({ data }) =>
-      dispatch({ type: 'RECEIVE_SCHEMA_FLAT', data: buildClientSchema(data) })
+      dispatch({ type: 'RECEIVE_GUPPY_SCHEMA', data: buildClientSchema(data) })
     );
 
 export const fetchDictionary = (dispatch) =>

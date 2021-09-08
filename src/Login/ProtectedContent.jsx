@@ -5,7 +5,7 @@ import {
   fetchDictionary,
   fetchProjects,
   fetchSchema,
-  fetchSchemaFlat,
+  fetchGuppySchema,
   fetchUser,
   fetchUserAccess,
 } from '../actions';
@@ -192,7 +192,7 @@ class ProtectedContent extends React.Component {
       dispatch(fetchProjects);
     } else if (LOCATIONS_SCHEMA.includes(path)) {
       if (!graphiql.schema) dispatch(fetchSchema);
-      if (!graphiql.schemaFlat) dispatch(fetchSchemaFlat);
+      if (!graphiql.guppySchema) dispatch(fetchGuppySchema);
     }
   }
 
