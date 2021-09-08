@@ -1,7 +1,9 @@
 import 'isomorphic-fetch';
+import { getIntrospectionQuery } from 'graphql';
 import {
   apiPath,
   userapiPath,
+  guppyGraphQLUrl,
   headers,
   hostname,
   submissionApiOauthPath,
@@ -340,6 +342,19 @@ export const fetchSchema = (dispatch) =>
   fetch('../data/schema.json')
     .then((response) => response.json())
     .then((schema) => dispatch({ type: 'RECEIVE_SCHEMA', schema }));
+
+export const fetchSchemaFlat = (dispatch) =>
+  fetch(guppyGraphQLUrl, {
+    credentials: 'include',
+    headers: { ...headers },
+    method: 'POST',
+    body: JSON.stringify({
+      query: getIntrospectionQuery(),
+      operationName: 'IntrospectionQuery',
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => dispatch({ type: 'RECEIVE_SCHEMA_FLAT', data }));
 
 export const fetchDictionary = (dispatch) =>
   fetch('../data/dictionary.json')
