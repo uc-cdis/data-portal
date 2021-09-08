@@ -5,13 +5,12 @@ import PropTypes from 'prop-types';
 import Button from '../gen3-ui-component/components/Button';
 import Spinner from '../components/Spinner';
 import { headers, graphqlPath, guppyGraphQLUrl } from '../localconf';
-import { config } from '../params';
 import sessionMonitor from '../SessionMonitor';
 import './GqlEditor.less';
 import 'graphiql/graphiql.css';
 
 const parameters = {};
-const defaultValue = config.dataExplorerConfig ? 1 : 0;
+const defaultValue = 0;
 
 const fetchGraphQL = (graphQLParams) =>
   // We first update the session so that the user will be notified
@@ -86,21 +85,18 @@ class GqlEditor extends React.Component {
 
     const options = [
       {
+        name: 'Flat Model',
+        endpoint: fetchFlatGraphQL,
+        schema: this.props.guppySchema,
+      },
+      {
         name: 'Graph Model',
         endpoint: fetchGraphQL,
         schema: this.props.schema,
       },
     ];
 
-    if (config.dataExplorerConfig) {
-      options.push({
-        name: 'Flat Model',
-        endpoint: fetchFlatGraphQL,
-        schema: this.props.guppySchema,
-      });
-    }
-
-    // If provided endpoint is not 0 or 1, default to 0 (graph model)
+    // If provided endpoint is not 0 or 1, default to 0 (flat model)
     const index =
       this.state.selectedEndpointIndex !== null &&
       this.state.selectedEndpointIndex < options.length
