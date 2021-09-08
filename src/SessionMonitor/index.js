@@ -29,12 +29,8 @@ export class SessionMonitor {
       // interval already started
       return;
     }
-    window.addEventListener(
-      'mousedown',
-      () => this.updateUserActivity(),
-      false
-    );
-    window.addEventListener('keypress', () => this.updateUserActivity(), false);
+    window.addEventListener('mousedown', this.updateUserActivity, false);
+    window.addEventListener('keypress', this.updateUserActivity, false);
     this.interval = setInterval(
       () => this.updateSession(),
       this.updateSessionTime
@@ -44,22 +40,14 @@ export class SessionMonitor {
   stop() {
     if (this.interval) {
       clearInterval(this.interval);
-      window.removeEventListener(
-        'mousedown',
-        () => this.updateUserActivity(),
-        false
-      );
-      window.removeEventListener(
-        'keypress',
-        () => this.updateUserActivity(),
-        false
-      );
+      window.removeEventListener('mousedown', this.updateUserActivity, false);
+      window.removeEventListener('keypress', this.updateUserActivity, false);
     }
   }
 
-  updateUserActivity() {
+  updateUserActivity = () => {
     this.mostRecentActivityTimestamp = Date.now();
-  }
+  };
 
   updateSession() {
     if (isUserOnPage('login')) {
