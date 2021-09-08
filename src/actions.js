@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { getIntrospectionQuery } from 'graphql';
+import { getIntrospectionQuery } from 'graphql/utilities';
 import {
   apiPath,
   userapiPath,
