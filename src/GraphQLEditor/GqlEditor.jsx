@@ -1,6 +1,6 @@
 import React from 'react';
 import GraphiQL from 'graphiql';
-import { buildClientSchema } from 'graphql/utilities';
+
 import PropTypes from 'prop-types';
 import Button from '../gen3-ui-component/components/Button';
 import Spinner from '../components/Spinner';
@@ -77,7 +77,6 @@ class GqlEditor extends React.Component {
     if (!this.props.schema) {
       return <Spinner />; // loading
     }
-    const graphqlSchema = buildClientSchema(this.props.schema.data);
     const editQuery = (newQuery) => {
       parameters.query = newQuery;
     };
@@ -89,17 +88,15 @@ class GqlEditor extends React.Component {
       {
         name: 'Graph Model',
         endpoint: fetchGraphQL,
-        schema: graphqlSchema,
+        schema: this.props.schema,
       },
     ];
 
     if (config.dataExplorerConfig) {
-      const graphqlSchemaFlat = buildClientSchema(this.props.schemaFlat.data);
-
       options.push({
         name: 'Flat Model',
         endpoint: fetchFlatGraphQL,
-        schema: graphqlSchemaFlat,
+        schema: this.props.schemaFlat,
       });
     }
 

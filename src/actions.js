@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { getIntrospectionQuery } from 'graphql/utilities';
+import { buildClientSchema, getIntrospectionQuery } from 'graphql/utilities';
 import {
   apiPath,
   userapiPath,
@@ -341,7 +341,9 @@ export const fetchProjects = () => (dispatch) =>
 export const fetchSchema = (dispatch) =>
   fetch('../data/schema.json')
     .then((response) => response.json())
-    .then((schema) => dispatch({ type: 'RECEIVE_SCHEMA', schema }));
+    .then(({ data }) =>
+      dispatch({ type: 'RECEIVE_SCHEMA', schema: buildClientSchema(data) })
+    );
 
 export const fetchSchemaFlat = (dispatch) =>
   fetch(guppyGraphQLUrl, {
@@ -354,7 +356,9 @@ export const fetchSchemaFlat = (dispatch) =>
     }),
   })
     .then((response) => response.json())
-    .then((data) => dispatch({ type: 'RECEIVE_SCHEMA_FLAT', data }));
+    .then(({ data }) =>
+      dispatch({ type: 'RECEIVE_SCHEMA_FLAT', data: buildClientSchema(data) })
+    );
 
 export const fetchDictionary = (dispatch) =>
   fetch('../data/dictionary.json')
