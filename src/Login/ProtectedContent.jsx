@@ -129,7 +129,7 @@ class ProtectedContent extends React.Component {
     };
 
     // assume we're still logged in after 1 minute ...
-    if (Date.now() - newState.user.lastAuthMs < 10000)
+    if (Date.now() - newState.user.lastAuthMs < 60000)
       return Promise.resolve(newState);
 
     return store
