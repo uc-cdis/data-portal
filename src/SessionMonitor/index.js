@@ -66,27 +66,17 @@ export class SessionMonitor {
       return Promise.resolve(0);
     }
 
-    const timeSinceLastActivity = Date.now() - this.mostRecentActivityTimestamp;
-    // If user has been inactive for Y min, and they are not in a workspace
-    if (
-      timeSinceLastActivity >= this.inactiveTimeLimit &&
-      !isUserOnPage('workspace') &&
-      logoutInactiveUsers
-    ) {
-      // Allow Fence to log out the user. If we don't refresh, Fence will mark them as inactive.
-      this.notifyUserIfTheyAreNotLoggedIn();
-      return Promise.resolve(0);
-    }
+    if (logoutInactiveUsers) {
+      const inactiveTimeLimit = isUserOnPage('workspace')
+        ? this.inactiveWorkspaceTimeLimit
+        : this.inactiveTimeLimit;
 
-    // If the user has been inactive for this.inactiveWorkspaceTimeLimit minutes
-    // and they *are* in a workspace
-    if (
-      timeSinceLastActivity >= this.inactiveWorkspaceTimeLimit &&
-      isUserOnPage('workspace') &&
-      logoutInactiveUsers
-    ) {
-      this.notifyUserIfTheyAreNotLoggedIn();
-      return Promise.resolve(0);
+      if (Date.now() - this.mostRecentActivityTimestamp >= inactiveTimeLimit) {
+        // Allow Fence to log out the user.
+        // If we don't refresh, Fence will mark them as inactive.
+        this.notifyUserIfTheyAreNotLoggedIn();
+        return Promise.resolve(0);
+      }
     }
 
     return this.refreshSession();
