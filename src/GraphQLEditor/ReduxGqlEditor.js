@@ -6,6 +6,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     schema: state.graphiql.schema,
+    schemaFlat: state.graphiql.schemaFlat,
     endpointIndex: searchParams.has('endpoint')
       ? parseInt(searchParams.get('endpoint'), 10)
       : null,
