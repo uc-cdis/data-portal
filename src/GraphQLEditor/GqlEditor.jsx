@@ -94,10 +94,12 @@ class GqlEditor extends React.Component {
     ];
 
     if (config.dataExplorerConfig) {
+      const graphqlSchemaFlat = buildClientSchema(this.props.schemaFlat.data);
+
       options.push({
         name: 'Flat Model',
         endpoint: fetchFlatGraphQL,
-        schema: null,
+        schema: graphqlSchemaFlat,
       });
     }
 
@@ -122,24 +124,14 @@ class GqlEditor extends React.Component {
             </div>
           ) : null}
         </div>
-        {index === 0 ? (
-          <GraphiQL
-            fetcher={options[index].endpoint}
-            query={parameters.query}
-            schema={options[index].schema}
-            variables={parameters.variables}
-            onEditQuery={editQuery}
-            onEditVariables={editVariables}
-          />
-        ) : (
-          <GraphiQL
-            fetcher={options[index].endpoint}
-            query={parameters.query}
-            variables={parameters.variables}
-            onEditQuery={editQuery}
-            onEditVariables={editVariables}
-          />
-        )}
+        <GraphiQL
+          fetcher={options[index].endpoint}
+          query={parameters.query}
+          schema={options[index].schema}
+          variables={parameters.variables}
+          onEditQuery={editQuery}
+          onEditVariables={editVariables}
+        />
       </div>
     );
   }
@@ -147,6 +139,7 @@ class GqlEditor extends React.Component {
 
 GqlEditor.propTypes = {
   schema: PropTypes.object,
+  schemaFlat: PropTypes.object,
   endpointIndex: PropTypes.number,
 };
 
