@@ -1,11 +1,9 @@
 import React from 'react';
 import GraphiQL from 'graphiql';
-
 import PropTypes from 'prop-types';
 import Button from '../gen3-ui-component/components/Button';
 import Spinner from '../components/Spinner';
 import { headers, graphqlPath, guppyGraphQLUrl } from '../localconf';
-import sessionMonitor from '../SessionMonitor';
 import './GqlEditor.less';
 import 'graphiql/graphiql.css';
 
@@ -13,42 +11,37 @@ const parameters = {};
 const defaultValue = 0;
 
 const fetchGraphQL = (graphQLParams) =>
-  // We first update the session so that the user will be notified
-  // if their auth is insufficient to perform the query.
-  sessionMonitor.updateSession().then(() =>
-    fetch(graphqlPath, {
-      credentials: 'include',
-      headers: { ...headers },
-      method: 'POST',
-      body: JSON.stringify(graphQLParams),
-    })
-      .then((response) => response.text())
-      .then((responseBody) => {
-        try {
-          return JSON.parse(responseBody);
-        } catch (error) {
-          return responseBody;
-        }
-      })
-  );
+  fetch(graphqlPath, {
+    credentials: 'include',
+    headers: { ...headers },
+    method: 'POST',
+    body: JSON.stringify(graphQLParams),
+  })
+    .then((response) => response.text())
+    .then((responseBody) => {
+      try {
+        return JSON.parse(responseBody);
+      } catch (error) {
+        return responseBody;
+      }
+    });
 
 const fetchFlatGraphQL = (graphQLParams) =>
-  sessionMonitor.updateSession().then(() =>
-    fetch(guppyGraphQLUrl, {
-      credentials: 'include',
-      headers: { ...headers },
-      method: 'POST',
-      body: JSON.stringify(graphQLParams),
-    })
-      .then((response) => response.text())
-      .then((responseBody) => {
-        try {
-          return JSON.parse(responseBody);
-        } catch (error) {
-          return responseBody;
-        }
-      })
-  );
+  fetch(guppyGraphQLUrl, {
+    credentials: 'include',
+    headers: { ...headers },
+    method: 'POST',
+    body: JSON.stringify(graphQLParams),
+  })
+    .then((response) => response.text())
+    .then((responseBody) => {
+      try {
+        return JSON.parse(responseBody);
+      } catch (error) {
+        return responseBody;
+      }
+    });
+
 class GqlEditor extends React.Component {
   constructor(props) {
     super(props);
