@@ -85,15 +85,11 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               />
-              <Route
-                exact
-                path='/submission'
-                component={
-                  <ProtectedContent isAdminOnly>
-                    <SubmissionPage />
-                  </ProtectedContent>
-                }
-              />
+              <Route exact path='/submission'>
+                <ProtectedContent isAdminOnly>
+                  <SubmissionPage />
+                </ProtectedContent>
+              </Route>
               <Route
                 exact
                 path='/submission/files'
@@ -120,32 +116,21 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               />
-              <Route
-                path='/identity'
-                component={
-                  <ProtectedContent
-                    filter={() => store.dispatch(fetchAccess())}
-                  >
-                    <UserProfile />
-                  </ProtectedContent>
-                }
-              />
-              <Route
-                path='/dd/:node'
-                component={
-                  <ProtectedContent>
-                    <DataDictionary />
-                  </ProtectedContent>
-                }
-              />
-              <Route
-                path='/dd'
-                component={
-                  <ProtectedContent>
-                    <DataDictionary />
-                  </ProtectedContent>
-                }
-              />
+              <Route path='/identity'>
+                <ProtectedContent filter={() => store.dispatch(fetchAccess())}>
+                  <UserProfile />
+                </ProtectedContent>
+              </Route>
+              <Route path='/dd/:node'>
+                <ProtectedContent>
+                  <DataDictionary />
+                </ProtectedContent>
+              </Route>
+              <Route path='/dd'>
+                <ProtectedContent>
+                  <DataDictionary />
+                </ProtectedContent>
+              </Route>
               <Route
                 path='/:project/search'
                 component={({ location, match }) => {
@@ -170,23 +155,17 @@ function App({ store }) {
                   );
                 }}
               />
-              <Route
-                path='/explorer'
-                component={
-                  <ProtectedContent>
-                    <GuppyDataExplorer />
-                  </ProtectedContent>
-                }
-              />
+              <Route path='/explorer'>
+                <ProtectedContent>
+                  <GuppyDataExplorer />
+                </ProtectedContent>
+              </Route>
               {enableResourceBrowser && (
-                <Route
-                  path='/resource-browser'
-                  component={
-                    <ProtectedContent>
-                      <ResourceBrowser />
-                    </ProtectedContent>
-                  }
-                />
+                <Route path='/resource-browser'>
+                  <ProtectedContent>
+                    <ResourceBrowser />
+                  </ProtectedContent>
+                </Route>
               )}
               <Route
                 path='/:project'
@@ -196,18 +175,15 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               />
-              {/* <Route
-                path='/indexing'
-                component={
-                  <ProtectedContent>
-                    <Indexing />
-                  </ProtectedContent>
-                }
-              />
+              {/* <Route path='/indexing'>
+                <ProtectedContent>
+                  <Indexing />
+                </ProtectedContent>
+              </Route>
               <Route
                 exact
                 path='/files/*'
-                component={
+                component={({ match }) => (
                   <ProtectedContent
                     filter={() =>
                       store.dispatch(fetchCoreMetadata(props.match.params[0]))
@@ -215,24 +191,18 @@ function App({ store }) {
                   >
                     <CoreMetadataPage />
                   </ProtectedContent>
-                }
+                )}
               />
-              <Route
-                path='/files'
-                component={
-                  <ProtectedContent>
-                    <GuppyDataExplorer />
-                  </ProtectedContent>
-                }
-              />
-              <Route
-                path='/workspace'
-                component={
-                  <ProtectedContent>
-                    <Workspace />
-                  </ProtectedContent>
-                }
-              />
+              <Route path='/files'>
+                <ProtectedContent>
+                  <GuppyDataExplorer />
+                </ProtectedContent>
+              </Route>
+              <Route path='/workspace'>
+                <ProtectedContent>
+                  <Workspace />
+                </ProtectedContent>
+              </Route>
               <Route
                 path={workspaceUrl}
                 component={ErrorWorkspacePlaceholder}
