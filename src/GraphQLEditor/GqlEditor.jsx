@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import GraphiQL from 'graphiql';
 import PropTypes from 'prop-types';
 import Button from '../gen3-ui-component/components/Button';
@@ -50,10 +51,14 @@ const fetchFlatGraphQL = (graphQLParams) =>
       }
     });
 
-function GqlEditor({ schema, guppySchema, endpointIndex = defaultValue }) {
+function GqlEditor({ schema, guppySchema }) {
   if (!schema) {
     return <Spinner />; // loading
   }
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const endpointIndex = Number.parseInt(searchParams.get('endpoint'), 10);
 
   const options = [
     {
@@ -70,7 +75,7 @@ function GqlEditor({ schema, guppySchema, endpointIndex = defaultValue }) {
 
   // If provided endpoint index is not 0 or 1, default to 0 (flat model)
   const initialIndex =
-    endpointIndex !== null && endpointIndex < options.length
+    !Number.isNaN(endpointIndex) && endpointIndex < options.length
       ? endpointIndex
       : defaultValue;
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
@@ -105,7 +110,6 @@ function GqlEditor({ schema, guppySchema, endpointIndex = defaultValue }) {
 GqlEditor.propTypes = {
   schema: PropTypes.object,
   guppySchema: PropTypes.object,
-  endpointIndex: PropTypes.number,
 };
 
 export default GqlEditor;
