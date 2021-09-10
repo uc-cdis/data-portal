@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import Button from '../gen3-ui-component/components/Button';
 import IconComponent from './Icon';
 import './IndexButtonBar.css';
@@ -8,7 +9,8 @@ import './IndexButtonBar.css';
  * NavBar renders row of nav-items of form { name, icon, link }
  * @param {dictIcons, buttons} params
  */
-function IndexButtonBar({ dictIcons, buttons, history, userAccess }) {
+function IndexButtonBar({ dictIcons, buttons, userAccess }) {
+  const history = useHistory();
   const canUserSeeComponent = (componentName) => {
     const authResult = userAccess[componentName];
     return authResult === undefined || authResult;
@@ -48,7 +50,6 @@ function IndexButtonBar({ dictIcons, buttons, history, userAccess }) {
 IndexButtonBar.propTypes = {
   dictIcons: PropTypes.object.isRequired,
   buttons: PropTypes.array.isRequired,
-  history: PropTypes.object.isRequired,
   userAccess: PropTypes.object.isRequired,
 };
 
