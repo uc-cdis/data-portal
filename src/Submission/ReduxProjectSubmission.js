@@ -2,11 +2,10 @@ import { connect } from 'react-redux';
 import ProjectSubmission from './ProjectSubmission';
 import { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
   typeList: state.submission.nodeTypes,
   dataIsReady: !!state.submission.counts_search,
   dictionary: state.submission.dictionary,
-  project: ownProps.params.project,
 });
 
 const mapDispatchToProps = (dispatch) => ({

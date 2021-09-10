@@ -157,14 +157,11 @@ function App({ store }) {
                   </ProtectedContent>
                 </Route>
               )}
-              <Route
-                path='/:project'
-                component={({ match }) => (
-                  <ProtectedContent>
-                    <ProjectSubmission params={match.params} />
-                  </ProtectedContent>
-                )}
-              />
+              <Route path='/:project'>
+                <ProtectedContent>
+                  <ProjectSubmission />
+                </ProtectedContent>
+              </Route>
               {/* <Route path='/indexing'>
                 <ProtectedContent>
                   <Indexing />
