@@ -65,17 +65,14 @@ function App({ store }) {
             }
           >
             <Switch>
-              <Route
-                path='/login'
-                component={({ location }) => (
-                  <ProtectedContent
-                    isPublic
-                    filter={() => store.dispatch(fetchLogin())}
-                  >
-                    <ReduxLogin location={location} />
-                  </ProtectedContent>
-                )}
-              />
+              <Route path='/login'>
+                <ProtectedContent
+                  isPublic
+                  filter={() => store.dispatch(fetchLogin())}
+                >
+                  <ReduxLogin />
+                </ProtectedContent>
+              </Route>
               <Route
                 exact
                 path='/'
