@@ -73,15 +73,11 @@ function App({ store }) {
                   <ReduxLogin />
                 </ProtectedContent>
               </Route>
-              <Route
-                exact
-                path='/'
-                component={({ history }) => (
-                  <ProtectedContent>
-                    <IndexPage history={history} />
-                  </ProtectedContent>
-                )}
-              />
+              <Route exact path='/'>
+                <ProtectedContent>
+                  <IndexPage />
+                </ProtectedContent>
+              </Route>
               <Route exact path='/submission'>
                 <ProtectedContent isAdminOnly>
                   <SubmissionPage />
