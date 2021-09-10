@@ -186,7 +186,7 @@ function ProtectedContent({
     return () => {
       isMounted.current = false;
     };
-  }, []);
+  }, [location]);
 
   if (state.redirectTo)
     return (
