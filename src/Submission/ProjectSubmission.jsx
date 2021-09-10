@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ReduxDataModelGraph from '../DataModelGraph/ReduxDataModelGraph';
 import ReduxSubmitForm from './ReduxSubmitForm';
@@ -20,8 +20,7 @@ function ProjectSubmission({
   dataIsReady = false,
   typeList = [],
 }) {
-  const match = useRouteMatch();
-  const { project } = match.params;
+  const { project } = useParams();
   // hack to detect if dictionary data is available, and to trigger fetch if not
   if (!dataIsReady) onGetCounts(typeList, project, dictionary);
 

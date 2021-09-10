@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
@@ -29,7 +29,7 @@ function QueryNode({
   onStoreNodeInfo,
 }) {
   const history = useHistory();
-  const match = useRouteMatch();
+  const { project } = useParams();
 
   /**
    * Internal helper to render the 'view node" popup if necessary
@@ -100,7 +100,7 @@ function QueryNode({
                 caption: 'Confirm',
                 fn: () => {
                   onDeleteNode({
-                    project: match.params.project,
+                    project,
                     id: queryNodes.stored_node_info,
                   });
                   onUpdatePopup({
@@ -145,7 +145,6 @@ function QueryNode({
     };
   }
 
-  const { project } = match.params;
   const queryNodesList =
     queryNodes.search_status === 'succeed: 200'
       ? Object.entries(queryNodes.search_result.data)
