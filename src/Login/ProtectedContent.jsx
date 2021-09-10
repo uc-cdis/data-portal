@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useLocation, useRouteMatch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   fetchDictionary,
@@ -29,8 +29,6 @@ import './ProtectedContent.css';
 /**
  * @typedef {object} ProtectedContentProps
  * @property {React.ReactNode} children required child component
- * @property {import('history').Location} location from react-router
- * @property {import('react-router').match} match from react-router.match
  * @property {boolean} isAdminOnly default false - if true, redirect to index page
  * @property {boolean} isPublic default false - set true to disable auth-guard
  * @property {() => Promise} filter optional filter to apply before rendering the child component
@@ -51,8 +49,6 @@ const LOCATIONS_SCHEMA = ['/query'];
  */
 function ProtectedContent({
   children,
-  location,
-  match,
   isAdminOnly = false,
   isPublic = false,
   filter,
@@ -66,6 +62,8 @@ function ProtectedContent({
     user: null,
   };
   const [state, setState] = useState(initialState);
+  const location = useLocation();
+  const match = useRouteMatch();
 
   /**
    * Start filter the 'newState' for the checkLoginStatus component.
@@ -217,11 +215,6 @@ function ProtectedContent({
 
 ProtectedContent.propTypes = {
   children: PropTypes.node.isRequired,
-  location: PropTypes.object.isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.object,
-    path: PropTypes.string,
-  }).isRequired,
   isAdminOnly: PropTypes.bool,
   isPublic: PropTypes.bool,
   filter: PropTypes.func,
