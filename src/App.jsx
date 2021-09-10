@@ -140,7 +140,7 @@ function App({ store }) {
                   };
                   return (
                     <ProtectedContent filter={queryFilter}>
-                      <ReduxQueryNode params={match.params} />
+                      <ReduxQueryNode />
                     </ProtectedContent>
                   );
                 }}
