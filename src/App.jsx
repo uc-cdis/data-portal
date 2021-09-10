@@ -101,14 +101,11 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               />
-              <Route
-                path='/query'
-                component={({ location }) => (
-                  <ProtectedContent>
-                    <GraphQLQuery location={location} />
-                  </ProtectedContent>
-                )}
-              />
+              <Route path='/query'>
+                <ProtectedContent>
+                  <GraphQLQuery />
+                </ProtectedContent>
+              </Route>
               <Route path='/identity'>
                 <ProtectedContent filter={() => store.dispatch(fetchAccess())}>
                   <UserProfile />
