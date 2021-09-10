@@ -1,57 +1,93 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
+import { useLocation } from 'react-router-dom';
 import Select, { createFilter } from 'react-select';
 import Button from '../gen3-ui-component/components/Button';
 import { basename, loginPath } from '../localconf';
 import { overrideSelectTheme } from '../utils';
-
 import './Login.less';
 
-const getInitialState = (height) => ({ height });
+/**
+ * @typedef {Object} LoginProvider
+ * @property {string} idp
+ * @property {string} name
+ * @property {{ name: string; url: string }[]} urls
+ * @property {boolean} [secondary]
+ */
 
-const getLoginUrl = (providerLoginUrl, next) => {
-  const queryChar = providerLoginUrl.includes('?') ? '&' : '?';
-  return `${providerLoginUrl}${queryChar}redirect=${window.location.origin}${next}`;
-};
+/**
+ * @typedef {Object} LoginData
+ * @property {string} title
+ * @property {string} subTitle
+ * @property {string} text
+ * @property {string} contact
+ * @property {{ text?: string; href: string }} [contact_link]
+ * @property {string} [email]
+ */
 
-class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.resetState = this.resetState.bind(this);
-    this.updateDimensions = this.updateDimensions.bind(this);
-    this.state = {
-      height: window.innerHeight - 221,
-      selectedLoginOption: {}, // one for each login dropdown
-    };
-  }
+/** @typedef {{ label: string; value: string }} LoginOption */
 
-  componentDidMount() {
-    window.addEventListener('resize', this.updateDimensions);
-  }
+/**
+ * @typedef {Object} LoginProps
+ * @property {LoginData} data
+ * @property {LoginProvider[]} providers
+ */
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateDimensions);
-  }
-
-  selectChange = (selectedOption, index) => {
-    this.setState((prevState) => ({
-      selectedLoginOption: {
-        ...prevState.selectedLoginOption,
-        [index]: selectedOption,
+/** @type {LoginProvider} */
+const defaultProviders = [
+  {
+    idp: 'google',
+    name: 'Google OAuth',
+    urls: [
+      {
+        name: 'Google OAuth',
+        url: `${loginPath}google/`,
       },
+    ],
+  },
+];
+
+/** @param {LoginProvider[]} providers */
+function getLoginOptions(providers) {
+  /** @type {{ [index: number]: { label: string; value: string; }[]}} */
+  const loginOptions = {}; // one for each login provider
+
+  providers.forEach((provider, index) => {
+    const loginUrls = provider.urls;
+
+    // sort login options by name
+    loginUrls.sort((a, b) => {
+      if (a.name.trim() > b.name.trim()) return 1;
+      if (b.name.trim() > a.name.trim()) return -1;
+      return 0;
+    });
+
+    // URLs in format expected by Select component
+    loginOptions[index] = loginUrls.map(({ url, name }) => ({
+      value: url,
+      label: name,
     }));
-  };
+  });
 
-  resetState() {
-    this.setState((prevState) => getInitialState(prevState.height));
-  }
+  return loginOptions;
+}
 
-  updateDimensions() {
-    this.setState({ height: window.innerHeight - 221 });
-  }
+/** @param {LoginProps} props */
 
-  render() {
-    const { location } = this.props; // this is the react-router "location"
+function Login({ data, providers = defaultProviders }) {
+  const location = useLocation();
+  /** @type {{ label: string; value: string; }} */
+  const emptyOption = {};
+  const [selectedLoginOption, setSelectedLoginOption] = useState(emptyOption);
+  const loginOptions = getLoginOptions(providers);
+
+  /** @param {number} index */
+  function handleLogin(index) {
+    const providerLoginUrl =
+      loginOptions[index].length === 1
+        ? loginOptions[index][0].value
+        : selectedLoginOption.value;
+    const queryChar = providerLoginUrl.includes('?') ? '&' : '?';
 
     const searchParams = new URLSearchParams(location.search);
     // eslint-disable-next-line no-nested-ternary
@@ -62,157 +98,95 @@ class Login extends React.Component {
       : basename
     ).replace(/\/+/g, '/'); // clean up url: no double slashes
 
-    const loginOptions = {}; // one for each login provider
-    this.props.providers.forEach((provider, i) => {
-      // for backwards compatibility, if "urls" does not exist
-      // (fence < 4.8.0), generate it from the deprecated "url" field
-      let loginUrls = provider.urls;
-      if (typeof loginUrls === 'undefined') {
-        loginUrls = [
-          {
-            name: provider.name,
-            url: provider.url,
-          },
-        ];
-      }
-      // sort login options by name
-      loginUrls = loginUrls.sort((a, b) => {
-        if (a.name.trim() > b.name.trim()) {
-          return 1;
-        }
-        if (b.name.trim() > a.name.trim()) {
-          return -1;
-        }
-        return 0;
-      });
-      // URLs in format expected by Select component
-      loginOptions[i] = loginUrls.map((e) => ({
-        value: e.url,
-        label: e.name,
-      }));
-    });
+    window.location.href = `${providerLoginUrl}${queryChar}redirect=${window.location.origin}${next}`;
+  }
 
-    return (
-      <div className='login-page'>
-        <div className='login-page__spacer' />
-        <div className='login-page__central-content'>
-          <div className='h1-typo login-page__title'>
-            {this.props.data.title}
-          </div>
-          <div className='high-light login-page__sub-title'>
-            {this.props.data.subTitle}
-          </div>
-          <hr className='login-page__separator' />
-          <div className='body-typo'>{this.props.data.text}</div>
-          {this.props.providers.map((p, i) => (
-            <React.Fragment key={i}>
-              <div className='login-page__entries'>
-                {p.desc}
-                <div className='login-page__entry-login'>
-                  {
-                    // if there are multiple URLs, display a dropdown next
-                    // to the login button
-                    loginOptions[i].length > 1 && (
-                      <Select
-                        aria-label='Login options'
-                        isClearable
-                        isSearchable
-                        options={loginOptions[i]}
-                        filterOption={createFilter({
-                          ignoreAccents: true,
-                          ignoreCase: true,
-                        })}
-                        onChange={(option) => this.selectChange(option, i)}
-                        value={
-                          this.state.selectedLoginOption &&
-                          this.state.selectedLoginOption[i]
-                        }
-                        theme={overrideSelectTheme}
-                      />
-                    )
-                  }
-                  <Button
-                    className='login-page__entry-button'
-                    onClick={() => {
-                      window.location.href = getLoginUrl(
-                        loginOptions[i].length > 1
-                          ? this.state.selectedLoginOption[i].value
-                          : loginOptions[i][0].value,
-                        next
-                      );
-                    }}
-                    label={p.name}
-                    buttonType={p.secondary ? 'default' : 'primary'}
+  return (
+    <div className='login-page'>
+      <div className='login-page__spacer' />
+      <div className='login-page__central-content'>
+        <div className='h1-typo login-page__title'>{data.title}</div>
+        <div className='high-light login-page__sub-title'>{data.subTitle}</div>
+        <hr className='login-page__separator' />
+        <div className='body-typo'>{data.text}</div>
+        {providers.map((provider, index) => (
+          <div className='login-page__entries' key={provider.idp}>
+            {provider.desc}
+            <div className='login-page__entry-login'>
+              {
+                // if there are multiple URLs, display a dropdown next
+                // to the login button
+                loginOptions[index].length > 1 && (
+                  <Select
+                    aria-label='Login options'
+                    isClearable
+                    isSearchable
+                    options={loginOptions[index]}
+                    filterOption={createFilter({
+                      ignoreAccents: true,
+                      ignoreCase: true,
+                    })}
+                    onChange={setSelectedLoginOption}
+                    value={selectedLoginOption}
+                    theme={overrideSelectTheme}
                   />
-                </div>
-              </div>
-            </React.Fragment>
-          ))}
-          <div>
-            {this.props.data.contact}
-            {this.props.data.email && !this.props.data.contact_link && (
-              <a href={`mailto:${this.props.data.email}`}>
-                {this.props.data.email}
-              </a>
-            )}
-            {this.props.data.contact_link && (
-              <a href={this.props.data.contact_link.href}>
-                {this.props.data.contact_link.text
-                  ? this.props.data.contact_link.text
-                  : this.props.data.contact_link.href}
-              </a>
-            )}
-            {'.'}
+                )
+              }
+              <Button
+                className='login-page__entry-button'
+                onClick={() => handleLogin(index)}
+                label={provider.name}
+                buttonType={provider.secondary ? 'default' : 'primary'}
+              />
+            </div>
           </div>
-        </div>
-        <div className='login-page__side-bars'>
-          <div
-            className='login-page__side-bar'
-            style={{ background: 'var(--pcdc-color__primary-light)' }}
-          />
-          <div
-            className='login-page__side-bar'
-            style={{ background: 'var(--pcdc-color__primary-dark)' }}
-          />
-          <div
-            className='login-page__side-bar'
-            style={{ background: 'var(--pcdc-color__secondary)' }}
-          />
+        ))}
+        <div>
+          {data.contact}
+          {data.email && !data.contact_link && (
+            <a href={`mailto:${data.email}`}>{data.email}</a>
+          )}
+          {data.contact_link && (
+            <a href={data.contact_link.href}>
+              {data.contact_link.text
+                ? data.contact_link.text
+                : data.contact_link.href}
+            </a>
+          )}
+          {'.'}
         </div>
       </div>
-    );
-  }
+      <div className='login-page__side-bars'>
+        <div
+          className='login-page__side-bar'
+          style={{ background: 'var(--pcdc-color__primary-light)' }}
+        />
+        <div
+          className='login-page__side-bar'
+          style={{ background: 'var(--pcdc-color__primary-dark)' }}
+        />
+        <div
+          className='login-page__side-bar'
+          style={{ background: 'var(--pcdc-color__secondary)' }}
+        />
+      </div>
+    </div>
+  );
 }
 
 Login.propTypes = {
-  providers: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
-  location: PropTypes.object.isRequired,
   data: PropTypes.shape({
     title: PropTypes.string.isRequired,
     subTitle: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
-    contact: PropTypes.shape.isRequired,
-    email: PropTypes.string, // deprecated; use contact_link instead
+    contact: PropTypes.string.isRequired,
     contact_link: PropTypes.shape({
       text: PropTypes.string,
       href: PropTypes.string.isRequired,
     }),
+    email: PropTypes.string, // deprecated; use contact_link instead
   }).isRequired,
-};
-
-Login.defaultProps = {
-  providers: [
-    {
-      idp: 'google',
-      name: 'Google OAuth',
-      urls: [
-        {
-          name: 'Google OAuth',
-          url: `${loginPath}google/`,
-        },
-      ],
-    },
-  ],
+  providers: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
 };
 
 export default Login;
