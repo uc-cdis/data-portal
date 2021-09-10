@@ -8,6 +8,7 @@ export interface DiscoveryConfig {
             manifestFieldName: string
             enableDownloadZip: boolean
             downloadZipButtonText?: string
+            verifyExternalLogins?: boolean
         }
         // explorationIntegration: {
         //     enabled: boolean // not supported
