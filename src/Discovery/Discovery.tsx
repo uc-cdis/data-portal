@@ -7,7 +7,7 @@ import {
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
-import DiscoveryTagViewer from './DiscoveryTagViewer';
+import DiscoveryDropdownTagViewer from './DiscoveryDropdownTagViewer';
 import DiscoveryListView from './DiscoveryListView';
 import DiscoveryDetails from './DiscoveryDetails';
 import DiscoveryAdvancedSearchPanel from './DiscoveryAdvancedSearchPanel';
@@ -491,7 +491,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           visibleResources={visibleResources}
           config={config}
         />
-        <DiscoveryTagViewer
+        <DiscoveryDropdownTagViewer
           config={config}
           studies={props.studies}
           selectedTags={selectedTags}
