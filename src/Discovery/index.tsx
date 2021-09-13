@@ -13,7 +13,7 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
   // from other data in MDS. So all MDS records with `_guid_type='discovery_metadata'` should be
   // the full list of studies for this commons.
   const GUID_TYPE = 'discovery_metadata';
-  const LIMIT = 1000; // required or else mds defaults to returning 10 records
+  const LIMIT = 3; // required or else mds defaults to returning 10 records
   const MDS_URL = `${hostname}mds/metadata`;
   const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
 
@@ -36,7 +36,7 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
       const jsonResponse = await res.json();
       const studies = Object.values(jsonResponse).map((entry) => entry[STUDY_DATA_FIELD]);
       allStudies = allStudies.concat(studies);
-      const noMoreStudiesToLoad = studies.length < LIMIT;
+      const noMoreStudiesToLoad = studies.length <= LIMIT;
       if (noMoreStudiesToLoad) {
         shouldContinue = false;
         return allStudies;
