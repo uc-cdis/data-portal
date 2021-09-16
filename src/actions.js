@@ -73,7 +73,7 @@ export const fetchCreds = (opts) => {
 /**
  * Little helper issues fetch, then resolves response
  * as text, and tries to JSON.parse the text before resolving, but
- * ignores JSON.parse failure and reponse.status, and returns {response, data} either way.
+ * ignores JSON.parse failure and response.status, and returns {response, data} either way.
  * If dispatch is supplied, then dispatch(connectionError()) on fetch reject.
  * If useCache is supplied and method is GET,
  * then text for 200 JSON responses are cached, and re-used, and
@@ -280,6 +280,33 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
     } else {
       document.location.replace(response.url);
     }
+  });
+};
+
+export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
+  if (document.cookie.indexOf('systemUseWarning=') >= 0) {
+    dispatch({
+      type: 'UPDATE_POPUP',
+      data: {
+        systemUseWarnPopup: false,
+      },
+    });
+  } else {
+    dispatch({
+      type: 'UPDATE_POPUP',
+      data: {
+        systemUseWarnPopup: true,
+      },
+    });
+  }
+};
+
+export const updateSystemUseNotice = (displayUseWarning) => (dispatch) => {
+  dispatch({
+    type: 'UPDATE_POPUP',
+    data: {
+      systemUseWarnPopup: displayUseWarning,
+    },
   });
 };
 
