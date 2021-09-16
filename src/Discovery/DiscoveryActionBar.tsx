@@ -17,7 +17,7 @@ import FileSaver from 'file-saver';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
 import {
-  manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl
+  manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl,
 } from '../localconf';
 import { appname } from '../localconf';
 
