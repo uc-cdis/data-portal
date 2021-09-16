@@ -61,7 +61,7 @@ const updatePopupMapDispatch = () => ({});
 
 const ReduxSystemUseWarningPopup = connect(showPopupMapState, updatePopupMapDispatch)(
   ({ systemUseWarnPopup }) => {
-    if (systemUseWarnPopup) {
+    if (components.login.systemUseText && systemUseWarnPopup) {
       return (<SystemUsePopup />);
     }
     return null;
