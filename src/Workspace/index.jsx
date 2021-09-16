@@ -1,7 +1,9 @@
 import React from 'react';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { Alert, Popconfirm, Steps } from 'antd';
+import {
+  Alert, Popconfirm, Steps, message,
+} from 'antd';
 
 import {
   workspaceUrl,
@@ -254,8 +256,18 @@ class Workspace extends React.Component {
       fetchWithCreds({
         path: `${workspaceLaunchUrl}?id=${workspace.id}`,
         method: 'POST',
-      }).then(() => {
-        this.checkWorkspaceStatus();
+      }).then(({ status }) => {
+        switch (status) {
+        case 200:
+          this.checkWorkspaceStatus();
+          break;
+        default:
+          message.error('There is an error when trying to launch your workspace');
+          this.setState({
+            workspaceID: null,
+            workspaceLaunchStepsConfig: null,
+          });
+        }
       });
     });
   }
@@ -318,7 +330,7 @@ class Workspace extends React.Component {
           }, () => {
             if (this.state.workspaceStatus !== 'Launching'
               && this.state.workspaceStatus !== 'Terminating') {
-              if (data.idleTimeLimit) {
+              if (data.idleTimeLimit && data.idleTimeLimit > 0) {
                 // start ws session monitor only if idleTimeLimit exists
                 workspaceSessionMonitor.start();
               }

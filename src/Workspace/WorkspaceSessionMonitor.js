@@ -38,11 +38,11 @@ export class WorkspaceSessionMonitor {
       method: 'GET',
     }).then(
       ({ data }) => {
-        if (!data.idleTimeLimit) {
+        if (!data.idleTimeLimit || data.idleTimeLimit < 0) {
           this.stop();
           return;
         }
-        if (data.idleTimeLimit && data.lastActivityTime) {
+        if (data.idleTimeLimit && data.idleTimeLimit > 0 && data.lastActivityTime) {
           getReduxStore().then(
             (store) => {
               const remainingWorkspaceKernelLife = data.idleTimeLimit - (Date.now() - data.lastActivityTime);
