@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
@@ -10,7 +10,6 @@ import './QueryNode.less';
  * QueryNode shows the details of a particular node
  * @param {Object} props
  * @param {Object} props.submission
- * @param {Object} props.params
  * @param {Object} props.queryNodes
  * @param {Object} props.popups
  * @param {(value: any, url: string, history: any ) => void} props.onSearchFormSubmit
@@ -21,7 +20,6 @@ import './QueryNode.less';
  */
 function QueryNode({
   submission = null,
-  params = null,
   queryNodes = null,
   popups = null,
   onSearchFormSubmit,
@@ -30,6 +28,9 @@ function QueryNode({
   onDeleteNode,
   onStoreNodeInfo,
 }) {
+  const history = useHistory();
+  const { project } = useParams();
+
   /**
    * Internal helper to render the 'view node" popup if necessary
    * based on the popups and queryNodes properties attached to this component.
@@ -99,7 +100,7 @@ function QueryNode({
                 caption: 'Confirm',
                 fn: () => {
                   onDeleteNode({
-                    project: params.project,
+                    project,
                     id: queryNodes.stored_node_info,
                   });
                   onUpdatePopup({
@@ -144,12 +145,10 @@ function QueryNode({
     };
   }
 
-  const history = useHistory();
   const queryNodesList =
     queryNodes.search_status === 'succeed: 200'
       ? Object.entries(queryNodes.search_result.data)
       : [];
-  const { project } = params;
 
   return (
     <div>
@@ -214,7 +213,6 @@ function QueryNode({
 
 QueryNode.propTypes = {
   submission: PropTypes.object,
-  params: PropTypes.object,
   queryNodes: PropTypes.object,
   popups: PropTypes.object,
   onSearchFormSubmit: PropTypes.func.isRequired,

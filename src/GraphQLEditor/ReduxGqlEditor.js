@@ -1,18 +1,10 @@
 import { connect } from 'react-redux';
 import GqlEditor from './GqlEditor';
 
-const mapStateToProps = (state, ownProps) => {
-  const searchParams = new URLSearchParams(ownProps.location.search);
+const mapStateToProps = (state) => ({
+  schema: state.graphiql.schema,
+  guppySchema: state.graphiql.guppySchema,
+});
 
-  return {
-    schema: state.graphiql.schema,
-    endpointIndex: searchParams.has('endpoint')
-      ? parseInt(searchParams.get('endpoint'), 10)
-      : null,
-  };
-};
-
-const mapDispatchToProps = () => ({});
-
-const ReduxGqlEditor = connect(mapStateToProps, mapDispatchToProps)(GqlEditor);
+const ReduxGqlEditor = connect(mapStateToProps)(GqlEditor);
 export default ReduxGqlEditor;

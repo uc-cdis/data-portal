@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const CompressionPlugin = require('compression-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
@@ -8,6 +9,7 @@ const pathPrefix = basename.endsWith('/')
   : basename;
 
 const plugins = [
+  new CompressionPlugin(),
   new webpack.EnvironmentPlugin({
     MOCK_STORE: null,
     BASENAME: '/',

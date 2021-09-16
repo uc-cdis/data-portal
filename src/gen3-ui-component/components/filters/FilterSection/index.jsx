@@ -57,6 +57,8 @@ function getNumValuesSelected(filterStatus) {
  * @property {number} resetClickCounter
  */
 
+const defaultOptions = [];
+
 /** @param {FilterSectionProps} props */
 function FilterSection({
   disabledTooltipMessage = '',
@@ -73,7 +75,7 @@ function FilterSection({
   onSelect,
   onToggle = () => {},
   onToggleCombineMode = () => {},
-  options = [],
+  options = defaultOptions,
   tierAccessLimit,
   title = '',
   tooltip,

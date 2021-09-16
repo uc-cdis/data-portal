@@ -29,12 +29,14 @@ import '../typedef';
  * @property {JSX.Element[]} tabs
  */
 
+const defaultInitialAppliedFilters = {};
+
 /** @param {FilterGroupProps} props */
 function FilterGroup({
   className = '',
   filterConfig,
   hideZero = true,
-  initialAppliedFilters = {},
+  initialAppliedFilters = defaultInitialAppliedFilters,
   onAnchorValueChange = () => {},
   onFilterChange = () => {},
   onPatientIdsChange,

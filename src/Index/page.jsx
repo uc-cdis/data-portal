@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 import {
   ReduxIndexButtonBar,
@@ -15,7 +14,7 @@ import { components } from '../params';
 import { breakpoints } from '../localconf';
 import './page.less';
 
-function IndexPage({ history }) {
+function IndexPage() {
   useEffect(() => {
     getIndexPageCounts();
   }, []);
@@ -39,14 +38,10 @@ function IndexPage({ history }) {
         </div>
       </div>
       <ReduxIndexOverview />
-      <ReduxIndexButtonBar history={history} />
+      <ReduxIndexButtonBar />
       <ReduxUserRegistration />
     </div>
   );
 }
-
-IndexPage.propTypes = {
-  history: PropTypes.object.isRequired,
-};
 
 export default IndexPage;

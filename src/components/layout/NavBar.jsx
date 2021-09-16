@@ -8,6 +8,7 @@ import NavButton from './NavButton';
 import NavBarTooltip from './NavBarTooltip';
 import { breakpoints } from '../../localconf';
 import { config } from '../../params';
+import MainLogo from '../../img/logo.png';
 import './NavBar.css';
 
 /**
@@ -83,7 +84,7 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
             <a href={config.homepageHref}>
               <img
                 className='nav-bar__logo-img'
-                src='/src/img/logo.png'
+                src={MainLogo}
                 alt='Main logo'
               />
             </a>
@@ -91,7 +92,7 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
             <Link to='/'>
               <img
                 className='nav-bar__logo-img'
-                src='/src/img/logo.png'
+                src={MainLogo}
                 alt='Main logo'
               />
             </Link>

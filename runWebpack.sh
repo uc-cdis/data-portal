@@ -26,15 +26,6 @@ export WORKSPACE_TIMEOUT_IN_MINUTES="${WORKSPACE_TIMEOUT_IN_MINUTES:-"480"}"
 
 # lib -----------------------------
 
-declare -a gitopsFiles=(
-  gitops.json data/config/gitops.json
-  gitops-logo.png custom/logo/gitops-logo.png
-  gitops-createdby.png custom/createdby/gitops.png
-  gitops-favicon.ico custom/favicon/gitops-favicon.ico
-  gitops.css custom/css/gitops.css
-  gitops-sponsors custom/sponsors/gitops-sponsors
-)
-
 #
 # Given the HOSTNAME of a public environment,
 # set the APP environment variable and copy gitops
@@ -47,7 +38,6 @@ gitops_config() {
   local gitRepo
   local manifestFile
   local portalApp
-  local portalGitopsFolder
 
   gitRepo="cdis-manifest"
   hostname="$1"
@@ -81,31 +71,21 @@ gitops_config() {
   export HOSTNAME="$hostname"
   export APP="$portalApp"
   if [[ "$portalApp" == "gitops" ]]; then
-    portalGitopsFolder="../$gitRepo/$hostname/portal"
-    local it=0
     local copySource
     local copyDest
-    while [[ $it -lt "${#gitopsFiles[@]}" ]]; do
-      copySource="$portalGitopsFolder/${gitopsFiles[$it]}"
-      let it=$it+1
-      copyDest="./${gitopsFiles[$it]}"
-      let it=$it+1
-      if [[ -z "$copySource" || -z "$copyDest" ]]; then
-        echo "ERROR: internal gitops processing error"
-        return 1
-      fi
-      if [[ -f "$copySource" ]]; then
-        echo "INFO: gitops_config - cp $copySource $copyDest"
-        cp "$copySource" "$copyDest"
-      elif [[ -d "$copySource" ]]; then
-        echo "INFO: gitops_config - mkdir -p $copyDest"
-        mkdir -p "$copyDest"
-        echo "INFO: gitops_config - cp $copySource/*.* $copyDest/"
-        cp $copySource/*.* $copyDest/
-      else
-        echo "INFO: gitops_config - no $copySource in gitops"
-      fi
-    done
+
+    copySource="../$gitRepo/$hostname/portal/gitops.json"
+    copyDest="./data/config/gitops.json"
+    if [[ -z "$copySource" || -z "$copyDest" ]]; then
+      echo "ERROR: internal gitops processing error"
+      return 1
+    fi
+    if [[ -f "$copySource" ]]; then
+      echo "INFO: gitops_config - cp $copySource $copyDest"
+      cp "$copySource" "$copyDest"
+    else
+      echo "INFO: gitops_config - no $copySource in gitops"
+    fi
   fi
 }
 
@@ -129,12 +109,6 @@ if [[ "$NODE_ENV" == "auto" ]]; then
     exit 1
   fi
 fi
-
-#
-# this script copies files from custom/ to src/ based
-# on the current APP environment - ugh
-#
-bash custom/customize.sh
 
 # download the graphql schema for the commons from HOSTNAME
 npm run schema

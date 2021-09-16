@@ -1,7 +1,9 @@
 import 'isomorphic-fetch';
+import { buildClientSchema, getIntrospectionQuery } from 'graphql/utilities';
 import {
   apiPath,
   userapiPath,
+  guppyGraphQLUrl,
   headers,
   hostname,
   submissionApiOauthPath,
@@ -9,8 +11,6 @@ import {
   authzPath,
 } from './localconf';
 import { config } from './params';
-import dictionary from '../data/dictionary.json';
-import schema from '../data/schema.json';
 
 export const updatePopup = (state) => ({
   type: 'UPDATE_POPUP',
@@ -339,10 +339,31 @@ export const fetchProjects = () => (dispatch) =>
  * handled by router
  */
 export const fetchSchema = (dispatch) =>
-  dispatch({ type: 'RECEIVE_SCHEMA', schema });
+  fetch('../data/schema.json')
+    .then((response) => response.json())
+    .then(({ data }) =>
+      dispatch({ type: 'RECEIVE_SCHEMA', schema: buildClientSchema(data) })
+    );
+
+export const fetchGuppySchema = (dispatch) =>
+  fetch(guppyGraphQLUrl, {
+    credentials: 'include',
+    headers: { ...headers },
+    method: 'POST',
+    body: JSON.stringify({
+      query: getIntrospectionQuery(),
+      operationName: 'IntrospectionQuery',
+    }),
+  })
+    .then((response) => response.json())
+    .then(({ data }) =>
+      dispatch({ type: 'RECEIVE_GUPPY_SCHEMA', data: buildClientSchema(data) })
+    );
 
 export const fetchDictionary = (dispatch) =>
-  dispatch({ type: 'RECEIVE_DICTIONARY', data: dictionary });
+  fetch('../data/dictionary.json')
+    .then((response) => response.json())
+    .then((data) => dispatch({ type: 'RECEIVE_DICTIONARY', data }));
 
 export const fetchVersionInfo = (dispatch) =>
   fetchWithCreds({

@@ -1,157 +1,115 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import GraphiQL from 'graphiql';
-import { buildClientSchema } from 'graphql/utilities';
 import PropTypes from 'prop-types';
 import Button from '../gen3-ui-component/components/Button';
 import Spinner from '../components/Spinner';
 import { headers, graphqlPath, guppyGraphQLUrl } from '../localconf';
-import { config } from '../params';
-import sessionMonitor from '../SessionMonitor';
 import './GqlEditor.less';
 import 'graphiql/graphiql.css';
 
 const parameters = {};
-const defaultValue = config.dataExplorerConfig ? 1 : 0;
+const defaultValue = 0;
+
+function editQuery(newQuery) {
+  parameters.query = newQuery;
+}
+
+function editVariables(newVariables) {
+  parameters.variables = newVariables;
+}
 
 const fetchGraphQL = (graphQLParams) =>
-  // We first update the session so that the user will be notified
-  // if their auth is insufficient to perform the query.
-  sessionMonitor.updateSession().then(() =>
-    fetch(graphqlPath, {
-      credentials: 'include',
-      headers: { ...headers },
-      method: 'POST',
-      body: JSON.stringify(graphQLParams),
-    })
-      .then((response) => response.text())
-      .then((responseBody) => {
-        try {
-          return JSON.parse(responseBody);
-        } catch (error) {
-          return responseBody;
-        }
-      })
-  );
+  fetch(graphqlPath, {
+    credentials: 'include',
+    headers: { ...headers },
+    method: 'POST',
+    body: JSON.stringify(graphQLParams),
+  })
+    .then((response) => response.text())
+    .then((responseBody) => {
+      try {
+        return JSON.parse(responseBody);
+      } catch (error) {
+        return responseBody;
+      }
+    });
 
 const fetchFlatGraphQL = (graphQLParams) =>
-  sessionMonitor.updateSession().then(() =>
-    fetch(guppyGraphQLUrl, {
-      credentials: 'include',
-      headers: { ...headers },
-      method: 'POST',
-      body: JSON.stringify(graphQLParams),
-    })
-      .then((response) => response.text())
-      .then((responseBody) => {
-        try {
-          return JSON.parse(responseBody);
-        } catch (error) {
-          return responseBody;
-        }
-      })
-  );
-class GqlEditor extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedEndpointIndex: props.endpointIndex,
-    };
+  fetch(guppyGraphQLUrl, {
+    credentials: 'include',
+    headers: { ...headers },
+    method: 'POST',
+    body: JSON.stringify(graphQLParams),
+  })
+    .then((response) => response.text())
+    .then((responseBody) => {
+      try {
+        return JSON.parse(responseBody);
+      } catch (error) {
+        return responseBody;
+      }
+    });
+
+function GqlEditor({ schema, guppySchema }) {
+  if (!schema) {
+    return <Spinner />; // loading
   }
 
-  componentDidMount() {
-    if (
-      this.props.endpointIndex &&
-      this.state.selectedEndpointIndex !== this.props.endpointIndex
-    ) {
-      this.selectEndpoint(this.props.endpointIndex);
-    }
-  }
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const endpointIndex = Number.parseInt(searchParams.get('endpoint'), 10);
 
-  getOtherIndex = (index) => +!index; // will either return 0 or 1
+  const options = [
+    {
+      name: 'Flat Model',
+      fetcher: fetchFlatGraphQL,
+      schema: guppySchema,
+    },
+    {
+      name: 'Graph Model',
+      fetcher: fetchGraphQL,
+      schema,
+    },
+  ];
 
-  selectEndpoint = (index) => {
-    this.setState({ selectedEndpointIndex: index });
-  };
+  // If provided endpoint index is not 0 or 1, default to 0 (flat model)
+  const initialIndex =
+    !Number.isNaN(endpointIndex) && endpointIndex < options.length
+      ? endpointIndex
+      : defaultValue;
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const otherIndex = +!currentIndex; // will either return 0 or 1
 
-  render() {
-    if (!this.props.schema) {
-      return <Spinner />; // loading
-    }
-    const graphqlSchema = buildClientSchema(this.props.schema.data);
-    const editQuery = (newQuery) => {
-      parameters.query = newQuery;
-    };
-    const editVariables = (newVariables) => {
-      parameters.variables = newVariables;
-    };
-
-    const options = [
-      {
-        name: 'Graph Model',
-        endpoint: fetchGraphQL,
-        schema: graphqlSchema,
-      },
-    ];
-
-    if (config.dataExplorerConfig) {
-      options.push({
-        name: 'Flat Model',
-        endpoint: fetchFlatGraphQL,
-        schema: null,
-      });
-    }
-
-    // If provided endpoint is not 0 or 1, default to 0 (graph model)
-    const index =
-      this.state.selectedEndpointIndex !== null &&
-      this.state.selectedEndpointIndex < options.length
-        ? this.state.selectedEndpointIndex
-        : defaultValue;
-
-    return (
-      <div className='gql-editor' id='graphiql'>
-        <div className='gql-editor__header'>
-          <h2 className='gql-editor__title'>Query graph</h2>
-          {options.length > 1 ? (
-            <div className='gql-editor__button'>
-              <Button
-                onClick={() => this.selectEndpoint(this.getOtherIndex(index))}
-                label={`Switch to ${options[this.getOtherIndex(index)].name}`}
-                buttonType='primary'
-              />
-            </div>
-          ) : null}
-        </div>
-        {index === 0 ? (
-          <GraphiQL
-            fetcher={options[index].endpoint}
-            query={parameters.query}
-            schema={options[index].schema}
-            variables={parameters.variables}
-            onEditQuery={editQuery}
-            onEditVariables={editVariables}
-          />
-        ) : (
-          <GraphiQL
-            fetcher={options[index].endpoint}
-            query={parameters.query}
-            variables={parameters.variables}
-            onEditQuery={editQuery}
-            onEditVariables={editVariables}
-          />
-        )}
+  return (
+    <div className='gql-editor' id='graphiql'>
+      <div className='gql-editor__header'>
+        <h2 className='gql-editor__title'>Query graph</h2>
+        {options.length > 1 ? (
+          <div className='gql-editor__button'>
+            <Button
+              onClick={() => setCurrentIndex(otherIndex)}
+              label={`Switch to ${options[otherIndex].name}`}
+              buttonType='primary'
+            />
+          </div>
+        ) : null}
       </div>
-    );
-  }
+      <GraphiQL
+        fetcher={options[currentIndex].fetcher}
+        query={parameters.query}
+        schema={options[currentIndex].schema}
+        variables={parameters.variables}
+        onEditQuery={editQuery}
+        onEditVariables={editVariables}
+      />
+    </div>
+  );
 }
 
 GqlEditor.propTypes = {
   schema: PropTypes.object,
-  endpointIndex: PropTypes.number,
-};
-
-GqlEditor.defaultProps = {
-  endpointIndex: defaultValue,
+  guppySchema: PropTypes.object,
 };
 
 export default GqlEditor;

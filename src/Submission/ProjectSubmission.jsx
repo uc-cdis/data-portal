@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ReduxDataModelGraph from '../DataModelGraph/ReduxDataModelGraph';
 import ReduxSubmitForm from './ReduxSubmitForm';
@@ -9,19 +9,18 @@ import './ProjectSubmission.less';
 
 /**
  * @param {Object} props
- * @param {string} props.project
  * @param {Object} props.dictionary
  * @param {(typeList: string[], project: string, dictionary: Object) => void} props.onGetCounts
  * @param {boolean} [props.dataIsReady]
  * @param {string[]} [props.typeList]
  */
 function ProjectSubmission({
-  project,
   dictionary,
   onGetCounts,
   dataIsReady = false,
   typeList = [],
 }) {
+  const { project } = useParams();
   // hack to detect if dictionary data is available, and to trigger fetch if not
   if (!dataIsReady) onGetCounts(typeList, project, dictionary);
 
@@ -43,7 +42,6 @@ function ProjectSubmission({
 }
 
 ProjectSubmission.propTypes = {
-  project: PropTypes.string.isRequired,
   dictionary: PropTypes.object.isRequired,
   onGetCounts: PropTypes.func.isRequired,
   dataIsReady: PropTypes.bool,
