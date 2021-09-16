@@ -42,7 +42,7 @@ export class WorkspaceSessionMonitor {
           this.stop();
           return;
         }
-        if (data.idleTimeLimit && data.idleTimeLimit > 0 && data.lastActivityTime) {
+        if (data.idleTimeLimit > 0 && data.lastActivityTime > 0) {
           getReduxStore().then(
             (store) => {
               const remainingWorkspaceKernelLife = data.idleTimeLimit - (Date.now() - data.lastActivityTime);

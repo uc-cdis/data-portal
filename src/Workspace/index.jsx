@@ -330,7 +330,7 @@ class Workspace extends React.Component {
           }, () => {
             if (this.state.workspaceStatus !== 'Launching'
               && this.state.workspaceStatus !== 'Terminating') {
-              if (data.idleTimeLimit && data.idleTimeLimit > 0) {
+              if (data.idleTimeLimit > 0) {
                 // start ws session monitor only if idleTimeLimit exists
                 workspaceSessionMonitor.start();
               }
