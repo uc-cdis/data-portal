@@ -19,7 +19,7 @@ import { fetchWithCreds } from '../actions';
 import {
   manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl
 } from '../localconf';
-import { components } from '../params';
+import { appname } from '../localconf';
 
 interface User {
   username: string
@@ -61,7 +61,7 @@ const checkFederatedLoginStatus = async (
     if (unauthenticatedProviders.length) {
       setDiscoveryActionStatusMessage({
         title: 'Please link your account to external repositories first.',
-        message: `The ${components.appName} connects to data from multiple sources. `
+        message: `The ${appname} connects to data from multiple sources. `
                     + 'To ensure full data accessibility, please authorize all external resources by navigating to the workspace link '
                     + 'below and logging in to the available data resources at the bottom of the page. ',
         active: true,
