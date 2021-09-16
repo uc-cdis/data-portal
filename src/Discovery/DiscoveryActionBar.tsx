@@ -18,8 +18,8 @@ import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
 import {
   manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl,
+  appname,
 } from '../localconf';
-import { appname } from '../localconf';
 
 interface User {
   username: string
