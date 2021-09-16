@@ -53,6 +53,8 @@ export class WorkspaceSessionMonitor {
               } else if (remainingWorkspaceKernelLife <= this.workspaceShutdownAlertLimit) {
                 console.log('ws sm dispatch banner', remainingWorkspaceKernelLife);
                 store.dispatch({ type: 'UPDATE_WORKSPACE_ALERT', data: { showShutdownBanner: true, showShutdownPopup: false, remainingWorkspaceKernelLife } });
+              } else {
+                store.dispatch({ type: 'UPDATE_WORKSPACE_ALERT', data: { showShutdownBanner: false, showShutdownPopup: false } });
               }
             },
           );
