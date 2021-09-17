@@ -27,7 +27,6 @@ const ReduxWorkspaceShutdownPopup = connect(workspaceShutdownPopupMapState, work
       });
       closeWorkspaceShutdownPopup();
       if (SessionMonitor.isUserOnPage('workspace')) {
-        console.log('on ws page');
         window.location.reload(); // if user is on workspace page, refresh to update
       }
     };
