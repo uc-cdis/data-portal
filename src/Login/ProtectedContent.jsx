@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {
   fetchUser,
   fetchProjects,
-  updateSystemUseNotice,
   checkIfDisplaySystemUseNotice
 } from '../actions';
 import Spinner from '../components/Spinner';
@@ -141,7 +140,7 @@ class ProtectedContent extends React.Component {
 
   checkUseWarning = (store, initialState) => {
     const newState = { ...initialState };
-    store.dispatch(checkIfDisplaySystemUseNotice());
+    store.dispatch(checkIfDisplaySystemUseNotice(store.getState().popups.systemUseWarnPopup));
     return newState;
   };
 
