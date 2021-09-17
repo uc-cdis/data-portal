@@ -18,13 +18,6 @@ function getpreloadedState() {
 
   if (process.env.NODE_ENV !== 'production' && mockStore) {
     state.user = { username: 'test', certificates_uploaded: requiredCerts };
-
-    import('./dictionary').then((dictionary) => {
-      state.submission = {
-        dictionary,
-        nodeTypes: Object.keys(dictionary).slice(2),
-      };
-    });
   }
 
   return state;
