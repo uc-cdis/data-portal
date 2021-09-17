@@ -186,26 +186,6 @@ export function calculatePosition(nodes, graphWidth, graphHeight) {
   return { retNodes, fyValsLength: fyVals.length };
 }
 
-/**
- * Type agnostic compare thunk for Array.sort
- * @param {*} a
- * @param {*} b
- */
-export function sortCompare(a, b) {
-  if (a === b) {
-    return 0;
-  }
-  return a < b ? -1 : 1;
-}
-
-export function computeLastPageSizes(filesMap, pageSize) {
-  return Object.keys(filesMap).reduce((d, key) => {
-    const result = d;
-    result[key] = filesMap[key].length % pageSize;
-    return result;
-  }, {});
-}
-
 export function capitalizeFirstLetter(str) {
   const res = str.replace(/_|\./gi, ' ');
   return res.replace(
@@ -236,24 +216,6 @@ export function intersection(aList, bList) {
     .map(([k]) => k);
 }
 
-export function minus(aList, bList) {
-  const key2Count = aList
-    .concat(bList)
-    .concat(aList)
-    .reduce((db, it) => {
-      const res = db;
-      if (res[it]) {
-        res[it] += 1;
-      } else {
-        res[it] = 1;
-      }
-      return res;
-    }, {});
-  return Object.entries(key2Count)
-    .filter((kv) => kv[1] === 2)
-    .map(([k]) => k);
-}
-
 export const parseParamWidth = (width) =>
   typeof width === 'number' ? `${width}px` : width;
 
@@ -264,13 +226,6 @@ export const isPageFullScreen = (pathname) =>
       pathname.toLowerCase().startsWith('/dd/') ||
       pathname.toLowerCase() === '/cohort-tools' ||
       pathname.toLowerCase().startsWith('/cohort-tools/'))
-  );
-
-export const isFooterHidden = (pathname) =>
-  !!(
-    pathname &&
-    (pathname.toLowerCase() === '/dd' ||
-      pathname.toLowerCase().startsWith('/dd/'))
   );
 
 /**
