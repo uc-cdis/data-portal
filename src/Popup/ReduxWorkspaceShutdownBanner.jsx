@@ -17,7 +17,11 @@ const ReduxWorkspaceShutdownPopup = connect(timeoutPopupMapState, timeoutPopupMa
     const remainingTimeInMinutes = (Math.ceil(remainingWorkspaceKernelLife / 60 / 1000));
     return (
       <Alert
-        message={`Your workspace will be terminated in ${remainingTimeInMinutes} ${(remainingTimeInMinutes === 1) ? 'minute' : 'minutes'} due to inactivity. Navigate to the workspace soon if you have unsaved data.`}
+        message={(
+          <React.Fragment>
+            Your workspace will be terminated in <b>{remainingTimeInMinutes}</b> {` ${(remainingTimeInMinutes === 1) ? 'minute' : 'minutes'}`} due to inactivity. Navigate to the workspace soon if you have unsaved data.
+          </React.Fragment>
+        )}
         banner
       />
     );
