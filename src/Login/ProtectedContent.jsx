@@ -20,7 +20,6 @@ import './ProtectedContent.css';
  * @property {boolean} authenticated
  * @property {boolean} dataLoaded
  * @property {?string} redirectTo
- * @property {?string} from
  * @property {?Object} user
  */
 
@@ -58,7 +57,6 @@ function ProtectedContent({
     authenticated: false,
     dataLoaded: false,
     redirectTo: null,
-    from: null,
     user: null,
   };
   const [state, setState] = useState(initialState);
@@ -92,7 +90,6 @@ function ProtectedContent({
           // not authenticated
           newState.redirectTo = '/login';
           newState.authenticated = false;
-          newState.from = location; // save previous location
         } else {
           store.dispatch(fetchUserAccess);
         }
@@ -188,13 +185,7 @@ function ProtectedContent({
     };
   }, [location]);
 
-  if (state.redirectTo)
-    return (
-      <Redirect
-        to={{ pathname: state.redirectTo }} // send previous location to redirect
-        from={state.from && state.from.pathname ? state.from.pathname : '/'}
-      />
-    );
+  if (state.redirectTo) return <Redirect to={state.redirectTo} />;
 
   const pageClassName = isPageFullScreen(location.pathname)
     ? 'protected-content protected-content--full-screen'
