@@ -96,7 +96,7 @@ function App({ store }) {
                 exact
                 path='/submission/map'
                 component={({ history }) => (
-                  <ProtectedContent isAdminOnly component={ReduxMapDataModel}>
+                  <ProtectedContent isAdminOnly>
                     <ReduxMapDataModel history={history} />
                   </ProtectedContent>
                 )}
