@@ -127,13 +127,13 @@ function App({ store }) {
                   const queryFilter = () => {
                     const searchParams = new URLSearchParams(location.search);
 
-                    return Array.from(searchParams).length > 0
+                    return Array.from(searchParams.keys()).length > 0
                       ? // Linking directly to a search result,
                         // so kick-off search here (rather than on button click)
                         store.dispatch(
                           submitSearchForm({
                             project: match.params.project,
-                            ...Object.fromEntries(searchParams),
+                            ...Object.fromEntries(searchParams.entries()),
                           })
                         )
                       : Promise.resolve('ok');
