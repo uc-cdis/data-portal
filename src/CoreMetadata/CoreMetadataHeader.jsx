@@ -59,7 +59,7 @@ class CoreMetadataHeader extends Component {
         if (data.authz && data.authz.length > 0) {
           userHasAccess = data.authz.every((resource) => userHasMethodForServiceOnResource('read-storage', 'fence', resource, this.props.userAuthMapping));
         } else {
-          // if no authz fall back to old revivification method
+          // if no authz fall back to old verification method
           userHasAccess = userHasMethodForServiceOnProject('read-storage', 'fence', projectId, this.props.userAuthMapping);
         }
 
