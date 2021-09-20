@@ -196,7 +196,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [advSearchFilterHeight, setAdvSearchFilterHeight] = useState('100vh');
   const [downloadInProgress, setDownloadInProgress] = useState(false);
-  const [downloadStatusMessage, setDownloadStatusMessage] = useState({
+  const [discoveryActionStatusMessage, setDiscoveryActionStatusMessage] = useState({
     url: '', message: '', title: '', active: false,
   });
 
@@ -524,8 +524,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           setFiltersVisible={setFiltersVisible}
           downloadInProgress={downloadInProgress}
           setDownloadInProgress={setDownloadInProgress}
-          downloadStatusMessage={downloadStatusMessage}
-          setDownloadStatusMessage={setDownloadStatusMessage}
+          discoveryActionStatusMessage={discoveryActionStatusMessage}
+          setDiscoveryActionStatusMessage={setDiscoveryActionStatusMessage}
         />
 
         {/* Advanced search panel */}
