@@ -3,8 +3,9 @@ import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import jestFetchMock from 'jest-fetch-mock'
 
-global.fetch = require('jest-fetch-mock');
+jestFetchMock.enableMocks()
 
 library.add(faAngleUp, faAngleDown);
 Enzyme.configure({ adapter: new Adapter() });
