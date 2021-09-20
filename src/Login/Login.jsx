@@ -93,8 +93,6 @@ function Login({ data, providers = defaultProviders }) {
     // eslint-disable-next-line no-nested-ternary
     const next = (searchParams.has('next')
       ? basename + searchParams.get('next')
-      : location.from
-      ? `${basename}${location.from}`
       : basename
     ).replace(/\/+/g, '/'); // clean up url: no double slashes
 
