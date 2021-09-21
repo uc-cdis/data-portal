@@ -11,9 +11,8 @@ import {
   authzPath,
   authzMappingPath,
 } from './configs';
-import { config } from './params';
+import { config, components } from './params';
 import sessionMonitor from './SessionMonitor';
-import getReduxStore from './reduxStore';
 
 export const updatePopup = (state) => ({
   type: 'UPDATE_POPUP',
@@ -301,25 +300,37 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
       }
     });
 };
-
+/**
+ * Determine if we need to display the system Use Message
+ * For all protected content, so sites require display of
+ * a use message. This is enabled by defining a object in
+ * gitops.json:
+  "systemUse" : {
+       "systemUseText" : "Text Message",
+        "expireUseMsgDays" : 10,
+        "displayUseMsg": "session"
+    }
+ * displayUseMsg: define if you want message to be displayed: values are:
+ *     *) "session" once per new session where session is a fresh version of the site
+ *     *) "cookie": set a cookie upon acceptance default of 10 day but can be set using expireUseMsgDays
+ */
 export const checkIfDisplaySystemUseNotice = (systemUseWarnPopup) => (dispatch) => {
-  // couple of option for when th display this
+  // couple of option for when to display the system use warning
   // displayUseMsg:
   // "session": show at the start of each session
   // "cookie": use the cookie and expireValue
   //  undefined or systemUseText is undefined: always false
-
-  if (!config.displayUseMsg) {
+  if (!components.systemUse || !components.systemUse.displayUseMsg) {
     dispatch({
       type: 'UPDATE_POPUP',
       data: {
         systemUseWarnPopup: false,
       },
     });
-    return;
+    return; //
   }
 
-  if (config.displayUseMsg === 'cookie') {
+  if (components.systemUse.displayUseMsg === 'cookie') {
     if (document.cookie.indexOf('systemUseWarning=') >= 0) {
       dispatch({
         type: 'UPDATE_POPUP',
@@ -338,7 +349,7 @@ export const checkIfDisplaySystemUseNotice = (systemUseWarnPopup) => (dispatch) 
     return;
   }
 
-  if (config.displayUseMsg === 'session') {
+  if (components.systemUse.displayUseMsg === 'session') {
     if (systemUseWarnPopup == null) {
       dispatch({
         type: 'UPDATE_POPUP',
@@ -365,6 +376,12 @@ export const updateSystemUseNotice = (displayUseWarning) => (dispatch) => {
       systemUseWarnPopup: displayUseWarning,
     },
   });
+};
+
+export const displaySystemUseNotice = () => {
+  return function (dispatch, getState) {
+    return dispatch(checkIfDisplaySystemUseNotice(getState().popups.systemUseWarnPopup));
+  };
 };
 
 /*
