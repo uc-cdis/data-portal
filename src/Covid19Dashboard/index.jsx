@@ -274,8 +274,8 @@ class Covid19Dashboard extends React.Component {
           <Tabs>
             <TabList className='covid19-dashboard_tablist'>
               <Tab>COVID-19 in Illinois</Tab>
-              <Tab>COVID-19 in the world</Tab>
-              <Tab>Global SARS-CoV2 Genomics</Tab>
+              {/* <Tab>COVID-19 in the world</Tab>
+              <Tab>Global SARS-CoV2 Genomics</Tab> */}
               <Tab>IL SARS-CoV2 Genomics</Tab>
             </TabList>
 
@@ -324,7 +324,7 @@ class Covid19Dashboard extends React.Component {
             </TabPanel>
 
             {/* world tab */}
-            <TabPanel className='covid19-dashboard_panel'>
+            {/* <TabPanel className='covid19-dashboard_panel'>
               <div className='covid19-dashboard_counts'>
                 <CountWidget
                   label='Total Confirmed'
@@ -379,7 +379,7 @@ class Covid19Dashboard extends React.Component {
                     />
                   )}
               </div>
-            </TabPanel>
+            </TabPanel> */}
             <TabPanel className='covid19-dashboard_panel'>
               <div className='covid19-dashboard_auspice'>
                 {/* this component doesn't need the mapboxAPIToken but it's a way to make
