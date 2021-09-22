@@ -369,7 +369,7 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_auspice'>
                 {/* this component doesn't need the mapboxAPIToken but it's a way to make
                 sure this is the COVID19 Commons and the iframe contents will load */}
-                { mapboxAPIToken
+            {/* { mapboxAPIToken
                   && (
                     <iframe
                       title='Global SARS-CoV2 Genomics'
