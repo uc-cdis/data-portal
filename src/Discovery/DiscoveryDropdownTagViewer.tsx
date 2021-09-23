@@ -37,8 +37,11 @@ const DiscoveryDropdownTagViewer: React.FunctionComponent<DiscoveryTagViewerProp
     return (
       <Select
         mode='tags'
+        showArrow
+        allowClear
+        maxTagCount={3}
+        style={{ width: '100%' }}
         id={`discovery-tag-column--${category.name}`}
-        className='discovery-header__tag-column discovery-tag-column'
       >
         { tagArray.map((tag) => (
           <Option
