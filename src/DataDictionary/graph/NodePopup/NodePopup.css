@@ -60,6 +60,7 @@
   right: 10px;
   top: 10px;
   cursor: pointer;
+  z-index: 1;
 }
 
 .node-popup__close-icon {
