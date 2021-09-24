@@ -10,6 +10,7 @@ import graphiql from './GraphQLEditor/reducers';
 import login from './Login/reducers';
 import ddgraph from './DataDictionary/reducers';
 
+/** @type {import('redux').Reducer} */
 const status = (state = {}, action) => {
   switch (action.type) {
     case 'REQUEST_ERROR':
@@ -19,6 +20,7 @@ const status = (state = {}, action) => {
   }
 };
 
+/** @type {import('redux').Reducer} */
 const versionInfo = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_VERSION_INFO':
@@ -32,6 +34,7 @@ const versionInfo = (state = {}, action) => {
   }
 };
 
+/** @type {import('redux').Reducer} */
 const user = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_USER':
@@ -60,6 +63,7 @@ const user = (state = {}, action) => {
   }
 };
 
+/** @type {import('redux').Reducer} */
 const userAccess = (state = { access: {} }, action) => {
   switch (action.type) {
     case 'RECEIVE_USER_ACCESS':
@@ -69,6 +73,7 @@ const userAccess = (state = { access: {} }, action) => {
   }
 };
 
+/** @type {import('redux').Reducer} */
 const project = (state = {}, action) => {
   const projects = {};
   const projectAvail = {};
@@ -85,21 +90,21 @@ const project = (state = {}, action) => {
 };
 
 const reducers = combineReducers({
-  index,
-  project,
-  popups,
-  user,
-  status,
-  versionInfo,
-  submission,
   analysis,
-  queryNodes,
-  userProfile,
   coreMetadata,
+  ddgraph,
+  index,
   graphiql,
   login,
-  ddgraph,
+  popups,
+  project,
+  queryNodes,
+  status,
+  submission,
+  user,
   userAccess,
+  userProfile,
+  versionInfo,
 });
 
 export default reducers;
