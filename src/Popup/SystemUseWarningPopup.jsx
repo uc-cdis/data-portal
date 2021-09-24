@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Popup from '../components/Popup';
 import { components } from '../params';
 import { updateSystemUseNotice } from '../actions';
@@ -16,7 +17,7 @@ const handleAcceptWarning = () => {
     const defaultDays = components.systemUse.expireUseMsgDays ? components.systemUse.expireUseMsgDays : 10;
 
     expiry.setTime(expiry.getTime() + (defaultDays * 1440 * 1 * 60 * 1000)); // number of days
-    document.cookie = 'systemUseWarning=yes; expires=' + expiry.toGMTString();
+    document.cookie = `systemUseWarning=yes; expires=${expiry.toGMTString()}`;
   }
   return (dispatch) => dispatch(updateSystemUseNotice(false));
 };
@@ -38,20 +39,22 @@ const SystemUsePopup = (props) => {
   );
 };
 
+SystemUsePopup.propTypes = {
+  messageText: PropTypes.string.isRequired,
+  onAccept: PropTypes.func.isRequired,
+};
 
 const showPopupMapState = (state) => ({
   systemUseWarnPopup: state.popups.systemUseWarnPopup,
 });
 
-const updatePopupMapDispatch = (dispatch) => {
-  return { onAccept: () => dispatch(handleAcceptWarning()) };
-};
+const updatePopupMapDispatch = (dispatch) => ({ onAccept: () => dispatch(handleAcceptWarning()) });
 
 const ReduxSystemUseWarningPopup = connect(showPopupMapState, updatePopupMapDispatch)(
   ({ systemUseWarnPopup, onAccept }) => {
     if (systemUseWarnPopup) {
       return (
-        <SystemUsePopup messageText={components.systemUse.systemUseText} onAccept={onAccept}/>);
+        <SystemUsePopup messageText={components.systemUse.systemUseText} onAccept={onAccept} />);
     }
     return null;
   },
