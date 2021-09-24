@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
 import { mockCohortData, mockConceptData } from './utils.js';
-// import GWASUIJobStatusList from './GWASUIJobStatusList';
+import GWASUIJobStatusList from './GWASUIJobStatusList';
 import './GWASUI.css';
 
 const { Step } = Steps;
@@ -44,6 +44,30 @@ const GWASUI = (props) => {
   const [jobName, setJobName] = useState(undefined);
   const [showJobSubmissionResult, setShowJobSubmissionResult] = useState(false);
   const [jobSubmittedRunID, setJobSubmittedRunID] = useState(undefined);
+  const [marinerJobStatus, setMarinerJobStatus] = useState([
+    {
+      runID: 'run-10000',
+      status: 'completed',
+      output: [
+        {
+          name: 'test_null_model_report.html',
+          url: 'https://qa-mickey.planx-pla.net/dashboard/Secure/hapmap-genesis-public-outputs/test_null_model_report.html',
+        },
+        {
+          name: 'test_null_model_invnorm_report.html',
+          url: 'https://qa-mickey.planx-pla.net/dashboard/Secure/hapmap-genesis-public-outputs/test_null_model_invnorm_report.html',
+        },
+        {
+          name: 'test_single_assoc_qq.png',
+          url: 'https://qa-mickey.planx-pla.net/dashboard/Secure/hapmap-genesis-public-outputs/test_single_assoc_qq.png',
+        },
+        {
+          name: 'test_single_assoc_manhattan.png',
+          url: 'https://qa-mickey.planx-pla.net/dashboard/Secure/hapmap-genesis-public-outputs/test_single_assoc_manhattan.png',
+        },
+      ],
+    },
+  ]);
 
   const onStep3FormSubmit = useCallback((values) => {
     setNumOfPC(values.numOfPC);
@@ -296,10 +320,6 @@ const GWASUI = (props) => {
       const tailLayout = {
         wrapperCol: { offset: 8, span: 16 },
       };
-      console.log('PCs: ', numOfPC);
-      console.log('Cohort: ', selectedCohort);
-      console.log('Phenotype: ', selectedPhenotype);
-      console.log('Covariates: ', selectedCovariates);
 
       if (showJobSubmissionResult) {
         return (
@@ -339,6 +359,13 @@ const GWASUI = (props) => {
             onFinish={(values) => {
               setJobName(values.GWASJobName);
               setJobSubmittedRunID('run-12345');
+              setMarinerJobStatus([
+                ...marinerJobStatus,
+                {
+                  runID: 'run-12345',
+                  status: 'running',
+                },
+              ]);
               setShowJobSubmissionResult(true);
             }}
           >
@@ -379,6 +406,14 @@ const GWASUI = (props) => {
           <Alert
             message='Warning: You don&apos;t have required permission to submit GWAS job'
             banner
+          />
+        )
+        : null}
+      {(marinerJobStatus.length > 0)
+        ? (
+          <GWASUIJobStatusList
+            marinerJobStatus={marinerJobStatus}
+            updateMarinerJobStatusFuncCallback={setMarinerJobStatus}
           />
         )
         : null}

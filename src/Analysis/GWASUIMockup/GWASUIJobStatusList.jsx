@@ -10,9 +10,6 @@ import {
   QuestionCircleOutlined,
   MinusCircleOutlined,
 } from '@ant-design/icons';
-import { has } from 'lodash';
-import { fetchWithCreds } from '../../actions';
-import { marinerUrl } from '../../localconf';
 import './GWASUI.css';
 
 const { Panel } = Collapse;
@@ -24,6 +21,8 @@ class GWASUIJobStatusList extends React.Component {
     this.state = {
       showJobStatusModal: false,
       jobStatusModalData: '',
+      showJobCompleteModal: false,
+      jobCompleteModalData: [],
     };
   }
 
@@ -92,7 +91,7 @@ class GWASUIJobStatusList extends React.Component {
           size='small'
           onClick={(event) => {
             event.stopPropagation();
-            this.handleJobStatusModalShow(listItem.runID, false);
+            this.handleJobCompleteModalShow(listItem);
           }}
         >
         show output file paths
@@ -102,10 +101,10 @@ class GWASUIJobStatusList extends React.Component {
   }
 
   cancelMarinerJob = (runID) => {
-    fetchWithCreds({
-      path: `${marinerUrl}/${runID}/cancel`,
-      method: 'POST',
-    }).then(this.props.getMarinerJobStatusFuncCallback());
+    const marinerJobStatusCopy = [...this.props.marinerJobStatus];
+    const pos = marinerJobStatusCopy.findIndex((e) => e.runID === runID);
+    if (pos >= 0) marinerJobStatusCopy[pos].status = 'cancelled';
+    this.props.updateMarinerJobStatusFuncCallback(marinerJobStatusCopy);
   }
 
   handleJobStatusModalCancel = () => {
@@ -114,29 +113,24 @@ class GWASUIJobStatusList extends React.Component {
     });
   };
 
-  // displayFullLog == true by default to display the entire Mariner log
-  // set it to false to only display the '.main.outputs' section
-  handleJobStatusModalShow = (runID, displayFullLog = true) => {
-    fetchWithCreds({
-      path: `${marinerUrl}/${runID}`,
-      method: 'GET',
-    })
-      .then(({ data }) => {
-        let logData = data;
-        if (!displayFullLog) {
-          if (has(data, 'log.main.output')) {
-            logData = data.log.main.output;
-          } else {
-            logData = {
-              message: 'no output available',
-            };
-          }
-        }
-        this.setState({
-          jobStatusModalData: JSON.stringify(logData, undefined, 2),
-          showJobStatusModal: true,
-        });
-      });
+  handleJobStatusModalShow = (runID) => {
+    this.setState({
+      jobStatusModalData: `This is the log for Mariner job run ${runID}`,
+      showJobStatusModal: true,
+    });
+  };
+
+  handleJobCompleteModalCancel = () => {
+    this.setState({
+      showJobCompleteModal: false,
+    });
+  };
+
+  handleJobCompleteModalShow = (marinerJob) => {
+    this.setState({
+      jobCompleteModalData: marinerJob.output,
+      showJobCompleteModal: true,
+    });
   };
 
   render() {
@@ -175,6 +169,32 @@ class GWASUIJobStatusList extends React.Component {
         >
           <TextArea rows={10} value={this.state.jobStatusModalData} readOnly />
         </Modal>
+        <Modal
+          visible={this.state.showJobCompleteModal}
+          closable={false}
+          title={'Show job outputs'}
+          footer={[
+            <Button key='close' onClick={this.handleJobCompleteModalCancel}>
+              Close
+            </Button>,
+          ]}
+        >
+          <List
+            itemLayout='horizontal'
+            dataSource={this.state.jobCompleteModalData}
+            renderItem={(item) => (
+              <List.Item
+                actions={[
+                  <a key='list-view-btn' href={item.url} target='_blank' rel='noreferrer'>
+                    view
+                  </a>,
+                ]}
+              >
+                <div>{item.name}</div>
+              </List.Item>
+            )}
+          />
+        </Modal>
       </div>
     );
   }
@@ -182,7 +202,7 @@ class GWASUIJobStatusList extends React.Component {
 
 GWASUIJobStatusList.propTypes = {
   marinerJobStatus: PropTypes.array,
-  getMarinerJobStatusFuncCallback: PropTypes.func.isRequired,
+  updateMarinerJobStatusFuncCallback: PropTypes.func.isRequired,
 };
 
 GWASUIJobStatusList.defaultProps = {
