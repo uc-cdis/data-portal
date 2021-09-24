@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import './TopIconButton.css';
 
 /**
- * @param {Object} props
- * @param {() => void} props.onClick
+ * @typedef {Object} TopLogoutButtonProps
+ * @property {React.MouseEventHandler<HTMLButtonElement>} onClick
  */
+
+/** @param {TopLogoutButtonProps} props */
 export function TopLogoutButton({ onClick }) {
   return (
     <button
@@ -28,13 +30,15 @@ TopLogoutButton.propTypes = {
 };
 
 /**
- * @param {Object} props
- * @param {string} props.name
- * @param {string} props.to
- * @param {string} [props.icon]
- * @param {boolean} [props.isActive]
+ * @typedef {Object} TopIconButtonProps
+ * @property {string} [icon]
+ * @property {boolean} [isActive]
+ * @property {string} name
+ * @property {string} to
  */
-function TopIconButton({ name, to, icon, isActive = false }) {
+
+/** @param {TopIconButtonProps} props */
+function TopIconButton({ icon, isActive = false, name, to }) {
   const buttonClassName = isActive
     ? 'top-icon-button top-icon-buton--active'
     : 'top-icon-button';
@@ -64,10 +68,10 @@ function TopIconButton({ name, to, icon, isActive = false }) {
 }
 
 TopIconButton.propTypes = {
-  name: PropTypes.string.isRequired,
-  to: PropTypes.string.isRequired,
   icon: PropTypes.string,
   isActive: PropTypes.bool,
+  name: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired,
 };
 
 export default TopIconButton;
