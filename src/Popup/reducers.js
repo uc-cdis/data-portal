@@ -1,4 +1,4 @@
-const popups = (state = { systemUseWarnPopup: null}, action) => {
+const popups = (state = {}, action) => {
   switch (action.type) {
   case 'UPDATE_POPUP':
     return { ...state, ...action.data };
