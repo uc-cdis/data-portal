@@ -1,5 +1,6 @@
 # System Use Message
 This feature will show a Use Message in a popup, to inform users of the use policy of the commons.
+It will display a message which requires acceptance before a user can use the site.
 
 To enable a system use message, define the following in gitops.json:
 ```json
