@@ -11,11 +11,11 @@ test('Project tables renders', () => {
       counts: [5, 20, 30, 200],
     },
   ];
-  const summaryCounts = [5, 20, 30, 200];
+  const summaryFields = ['a', 'b', 'c', 'd'];
 
   const table = mount(
     <StaticRouter location={{ pathname: '/identity' }} context={{}}>
-      <ProjectTable projectList={projectList} summaryCounts={summaryCounts} />
+      <ProjectTable projectList={projectList} summaryFields={summaryFields} />
     </StaticRouter>
   );
   // 2 == 1 data row + 1 summary totals row

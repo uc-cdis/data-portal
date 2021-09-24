@@ -2,6 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Table.less';
 
+/**
+ * @typedef {Object} TableHeadProps
+ * @property {string[]} cols
+ */
+
+/** @param {TableHeadProps} props */
 function TableHead({ cols }) {
   return (
     <thead className='base-table__head'>
@@ -17,7 +23,7 @@ function TableHead({ cols }) {
 }
 
 TableHead.propTypes = {
-  cols: PropTypes.array.isRequired,
+  cols: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default TableHead;

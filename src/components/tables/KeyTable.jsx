@@ -10,16 +10,13 @@ const API_KEY_COLUMN = 'API key(s)';
 const EXPIRES_COLUMN = 'Expires';
 export const DELETE_BTN = 'Delete';
 
-const TimestampToDateTime = (timestamp) => {
-  const t = new Date(timestamp * 1000);
-  return t.toLocaleString();
-};
+/**
+ * @typedef {Object} KeyTableProps
+ * @property {{ jti: string; exp: number; }[]} jtis
+ * @property {(jti: { jti: string; exp: number; }) => void} onDelete
+ */
 
-const keyType = PropTypes.shape({
-  jti: PropTypes.string.isRequired,
-  exp: PropTypes.number.isRequired,
-});
-
+/** @param {KeyTableProps} props */
 function KeyTable({ jtis, onDelete }) {
   /**
    * default row renderer - just delegates to ProjectTR - can be overriden by subtypes, whatever
@@ -31,7 +28,7 @@ function KeyTable({ jtis, onDelete }) {
         header={[API_KEY_COLUMN, EXPIRES_COLUMN, '']}
         data={jtis.map((jti) => [
           jti.jti,
-          TimestampToDateTime(jti.exp),
+          new Date(jti.exp * 1000).toLocaleString(),
           <IconicButton
             onClick={() => onDelete(jti)}
             caption={DELETE_BTN}
@@ -46,12 +43,13 @@ function KeyTable({ jtis, onDelete }) {
 }
 
 KeyTable.propTypes = {
-  jtis: PropTypes.arrayOf(keyType),
+  jtis: PropTypes.arrayOf(
+    PropTypes.shape({
+      jti: PropTypes.string.isRequired,
+      exp: PropTypes.number.isRequired,
+    })
+  ).isRequired,
   onDelete: PropTypes.func.isRequired,
-};
-
-KeyTable.defaultProps = {
-  jtis: [],
 };
 
 export default KeyTable;
