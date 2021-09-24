@@ -34,7 +34,6 @@ class ProtectedContent extends React.Component {
       dataLoaded: false,
       redirectTo: null,
       from: null,
-      showSystemUseNotice: true,
     };
   }
 
@@ -240,7 +239,7 @@ class ProtectedContent extends React.Component {
 
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <ReduxSystemUseWarningPopup />
-          <Component params={params} location={this.props.location} history={this.props.history}/>
+          <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     }
@@ -248,8 +247,8 @@ class ProtectedContent extends React.Component {
       return (
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <ReduxSystemUseWarningPopup />
-          <ReduxAuthTimeoutPopup/>
-          <Component params={params} location={this.props.location} history={this.props.history}/>
+          <ReduxAuthTimeoutPopup />
+          <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     }
@@ -257,11 +256,11 @@ class ProtectedContent extends React.Component {
       return (
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
           <ReduxSystemUseWarningPopup />
-          <Component params={params} location={this.props.location} history={this.props.history}/>
+          <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
       );
     }
-    return (<div className={`protected-content ${pageFullWidthClassModifier}`}>       <ReduxSystemUseWarningPopup /> <Spinner/></div>);
+    return (<div className={`protected-content ${pageFullWidthClassModifier}`}>       <ReduxSystemUseWarningPopup /> <Spinner /></div>);
   }
 }
 

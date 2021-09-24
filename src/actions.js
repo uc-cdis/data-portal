@@ -179,8 +179,8 @@ export const fetchWithCredsAndTimeout = (opts, timeoutInMS) => {
 export const fetchWrapper = ({
   path, method = 'GET', body = null, customHeaders, handler, callback = () => (null),
 }) => (dispatch) => fetchWithCreds({
-    path, method, body, customHeaders, dispatch,
-  },
+  path, method, body, customHeaders, dispatch,
+},
 )
   .then(
     ({ response, data }) => {
@@ -378,10 +378,8 @@ export const updateSystemUseNotice = (displayUseWarning) => (dispatch) => {
   });
 };
 
-export const displaySystemUseNotice = () => {
-  return function (dispatch, getState) {
-    return dispatch(checkIfDisplaySystemUseNotice(getState().popups.systemUseWarnPopup));
-  };
+export const displaySystemUseNotice = () => function (dispatch, getState) {
+  return dispatch(checkIfDisplaySystemUseNotice(getState().popups.systemUseWarnPopup));
 };
 
 /*
