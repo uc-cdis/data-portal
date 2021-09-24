@@ -103,7 +103,7 @@ async function init() {
       // resources can be open to anonymous users, so fetch access:
       store.dispatch(fetchUserAccess),
       store.dispatch(fetchUserAuthMapping),
-      store.dispatch(updateSystemUseNotice(null)),git
+      store.dispatch(updateSystemUseNotice(null)),
       // eslint-disable-next-line no-console
       fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); }),
     ],
