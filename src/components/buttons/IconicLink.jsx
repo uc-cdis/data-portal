@@ -3,72 +3,71 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 import IconComponent from '../Icon';
 
-class IconicLink extends React.Component {
-  renderButton(styles) {
-    return this.props.dictIcons !== undefined ? (
+/**
+ * @typedef {Object} IconicLinkProps
+ * @property {string} [buttonClassName]
+ * @property {string} [caption]
+ * @property {string} [className]
+ * @property {{ [iconName: string]: (height: string, style: Object) => JSX.Element }} [dictIcons]
+ * @property {string} [icon]
+ * @property {string} [iconColor]
+ * @property {boolean} [isExternal]
+ * @property {string} link
+ * @property {string} [target]
+ */
+
+/** @param {IconicLinkProps} props */
+function IconicLink({
+  buttonClassName = 'button-primary-white',
+  caption = '',
+  className = '',
+  dictIcons,
+  icon = '',
+  iconColor = '',
+  isExternal = false,
+  link,
+  target = '',
+}) {
+  const linkBody =
+    dictIcons === undefined ? (
+      caption
+    ) : (
       <>
-        {this.props.caption}&ensp;
+        {caption}&ensp;
         <IconComponent
-          dictIcons={this.props.dictIcons}
-          iconName={this.props.icon}
+          dictIcons={dictIcons}
+          iconName={icon}
           height='14px'
-          svgStyles={{ ...styles }}
+          style={iconColor && iconColor !== '' ? { fill: iconColor } : {}}
         />
       </>
-    ) : (
-      this.props.caption
     );
-  }
 
-  render() {
-    let styles = {};
-    if (this.props.iconColor && this.props.iconColor !== '') {
-      styles = { fill: this.props.iconColor };
-    }
-    if (this.props.isExternal) {
-      return (
-        <a
-          href={this.props.link}
-          target={this.props.target}
-          className={this.props.className}
-        >
-          {this.renderButton(styles)}
-        </a>
-      );
-    }
-    return (
-      <Link
-        className={`button ${this.props.className} ${this.props.buttonClassName}`}
-        to={this.props.link}
-        target={this.props.target}
-      >
-        {this.renderButton(styles)}
-      </Link>
-    );
-  }
+  return isExternal ? (
+    <a className={className} href={link} target={target}>
+      {linkBody}
+    </a>
+  ) : (
+    <Link
+      className={`button ${className} ${buttonClassName}`}
+      to={link}
+      target={target}
+    >
+      {linkBody}
+    </Link>
+  );
 }
 
 IconicLink.propTypes = {
-  link: PropTypes.string.isRequired,
-  dictIcons: PropTypes.object,
+  buttonClassName: PropTypes.string,
+  caption: PropTypes.string,
+  className: PropTypes.string,
+  dictIcons: PropTypes.objectOf(PropTypes.func),
   icon: PropTypes.string,
   iconColor: PropTypes.string,
-  caption: PropTypes.string,
-  buttonClassName: PropTypes.string,
-  className: PropTypes.string,
-  target: PropTypes.string,
   isExternal: PropTypes.bool,
-};
-
-IconicLink.defaultProps = {
-  dictIcons: undefined,
-  icon: '',
-  iconColor: '',
-  caption: '',
-  buttonClassName: 'button-primary-white',
-  className: '',
-  target: '',
-  isExternal: false,
+  link: PropTypes.string.isRequired,
+  target: PropTypes.string,
 };
 
 export default IconicLink;
