@@ -94,7 +94,7 @@ class GWASUIJobStatusList extends React.Component {
             this.handleJobCompleteModalShow(listItem);
           }}
         >
-        show output file paths
+        show output files
         </Button>);
     }
     return actionButtons;
