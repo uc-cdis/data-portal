@@ -8,8 +8,7 @@ import ControlPanel from '../ControlPanel';
 import countyData from '../data/us_counties';
 /*
 // Additional layers used as examples enable here
-import LayerTemplate from '../overlays/LayerTemplate';
-import PopulationIL from '../overlays/PopulationIL'; */
+import LayerTemplate from '../overlays/LayerTemplate'; */
 
 import TimeCaseLayer from '../overlays/TimeCaseLayer';
 import VaccinatedCaseLayer from '../overlays/TimeVaccinatedLayer';
@@ -56,18 +55,29 @@ class IllinoisMapChart extends React.Component {
       },
       hoverInfo: null,
       overlay_layers: {
-        /*
-        // Additional layers used as examples enable here
-        us_counties: { title: 'US Counties', visible: 'visible' },
-        il_population: { title: 'IL Population', visible: 'visible' }, */
-        V_time_data: { title: 'Vaccination Data' },
-        C_time_data: { title: 'Case Data' },
-        rnr_mobility_data: { title: 'Retail & Recreation' },
-        gnp_mobility_data: { title: 'Grocery & Pharmacy' },
-        prk_mobility_data: { title: 'Parks' },
-        trn_mobility_data: { title: 'Transit Stations' },
-        wrk_mobility_data: { title: 'Workplaces' },
-        res_mobility_data: { title: 'Residential' },
+        vaccination_layers: {
+          title: 'Vaccinations',
+          layers: {
+            V_time_data: { title: 'Vaccination Counts' },
+          }
+        },
+        case_layers: {
+          title: 'Cases & Deaths',
+          layers: {
+            C_time_data: { title: 'Case Counts' },
+          }
+        },
+        mobility_layers: {
+          title: 'Mobility',
+          layers: {
+            rnr_mobility_data: { title: 'Retail & Recreation' },
+            gnp_mobility_data: { title: 'Grocery & Pharmacy' },
+            prk_mobility_data: { title: 'Parks' },
+            trn_mobility_data: { title: 'Transit Stations' },
+            wrk_mobility_data: { title: 'Workplaces' },
+            res_mobility_data: { title: 'Residential' },
+          },
+        },
       },
       popup_data: {
         /*
@@ -628,8 +638,7 @@ class IllinoisMapChart extends React.Component {
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerRes visibility={this.state.activeLayer === 'res_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {/*
           // Additional layers used as examples enable here
-          <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
-          <PopulationIL visibility={this.state.overlay_layers.il_population.visible} /> */}
+          <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} /> */}
           {/* Outline a set of counties from IL */}
           <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountyGeoJson}>
             <ReactMapGL.Layer

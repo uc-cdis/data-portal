@@ -1,34 +1,44 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
+import { Collapse } from 'antd';
+import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import './LayerSelector.less';
 
+const { Panel } = Collapse;
+
 class LayerSelector extends React.Component {
+
   render() {
-    const data = this.props.layers;
-    const listItems = Object.keys(data)
-      .map((k) => {
-        const d = data[k];
-        return (
-          <div key={k}>
-            <label>
-              <input
-                className='layers-panel__radio'
-                type='radio'
-                checked={k === this.props.activeLayer}
-                onChange={(event) => this.props.onLayerSelectChange(event, k)}
-              />
-              {d.title}
-            </label>
-          </div>
-        );
-      });
-    return (
-      <div className='map-selector'>
-        <form>
-          {
-            listItems
-          }
-        </form>
+    return(
+      <div className="map_selection">
+        <Collapse accordion expandIcon={PlusCircleOutlined} collapseIcon={MinusCircleOutlined} defaultActiveKey={['0']}>
+          {Object.keys(this.props.layers)
+            .map((key,ind) => {
+            const title = this.props.layers[key].title;
+            const data = this.props.layers[key].layers;
+            return <Panel header={title} key={ind}>
+                     {Object.keys(data)
+                       .map((k) => {
+                         const d = data[k];
+                         return (
+                           <div key={k}>
+                             <label>
+                               <input
+                                 className='layers-panel__radio'
+                                 type='radio'
+                                 checked={k === this.props.activeLayer}
+                                 onChange={(event) => this.props.onLayerSelectChange(event, k)}
+                               />
+                               {d.title}
+                             </label>
+                           </div>
+                         )
+                       })
+                     }
+                   </Panel>
+                 })
+               }
+        </Collapse>
       </div>
     );
   }
