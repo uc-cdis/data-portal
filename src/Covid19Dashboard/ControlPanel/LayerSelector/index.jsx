@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Collapse } from 'antd';
-import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { CaretRightOutlined } from '@ant-design/icons';
 import './LayerSelector.less';
 
 const { Panel } = Collapse;
@@ -11,7 +11,11 @@ class LayerSelector extends React.Component {
   render() {
     return(
       <div className="map_selection">
-        <Collapse accordion expandIcon={PlusCircleOutlined} collapseIcon={MinusCircleOutlined} defaultActiveKey={['0']}>
+        <Collapse accordion
+	  bordered={false}
+	  defaultActiveKey={['0']}
+	  expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+	>
           {Object.keys(this.props.layers)
             .map((key,ind) => {
             const title = this.props.layers[key].title;
