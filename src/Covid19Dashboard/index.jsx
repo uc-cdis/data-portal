@@ -275,7 +275,6 @@ class Covid19Dashboard extends React.Component {
             <TabList className='covid19-dashboard_tablist'>
               <Tab>COVID-19 in Illinois</Tab>
               <Tab>COVID-19 in the world</Tab>
-              <Tab>Global SARS-CoV2 Genomics</Tab>
               <Tab>IL SARS-CoV2 Genomics</Tab>
             </TabList>
 
@@ -362,21 +361,6 @@ class Covid19Dashboard extends React.Component {
                       ),
                       )}
                     </div>
-                  )}
-              </div>
-            </TabPanel>
-            <TabPanel className='covid19-dashboard_panel'>
-              <div className='covid19-dashboard_auspice'>
-                {/* this component doesn't need the mapboxAPIToken but it's a way to make
-                sure this is the COVID19 Commons and the iframe contents will load */}
-                { mapboxAPIToken
-                  && (
-                    <iframe
-                      title='Global SARS-CoV2 Genomics'
-                      frameBorder='0'
-                      className='covid19-dashboard_auspice__iframe'
-                      src={auspiceUrl}
-                    />
                   )}
               </div>
             </TabPanel>
