@@ -496,6 +496,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           studies={props.studies}
           selectedTags={selectedTags}
           setSelectedTags={setSelectedTags}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
         />
       </div>
 
@@ -503,7 +505,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         {/* Free-form text search box */}
         { (props.config.features.search
         && props.config.features.search.searchBar
-        && props.config.features.search.searchBar.enabled)
+        && props.config.features.search.searchBar.enabled
+        && props.config.features.dropdownTagViewer.enabled
+        )
             && (
               <div className='discovery-search-container'>
                 <DiscoveryMDSSearch

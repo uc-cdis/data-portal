@@ -11,6 +11,8 @@ interface DiscoveryTagViewerProps {
   studies?: {__accessible: boolean, [any: string]: any}[]
   selectedTags: any
   setSelectedTags: any
+  searchTerm: any
+  setSearchTerm: any
 }
 
 const DiscoveryDropdownTagViewer: React.FunctionComponent<DiscoveryTagViewerProps> = (props: DiscoveryTagViewerProps) => {
