@@ -1,3 +1,4 @@
+/** @type {import('redux').Reducer} */
 const userProfile = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_USER_PROFILE':

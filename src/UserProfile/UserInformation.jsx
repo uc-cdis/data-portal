@@ -126,13 +126,15 @@ UserInformationField.propTypes = {
 };
 
 /**
- * @param {Object} props
- * @param {string} props.email
- * @param {string} [props.firstName]
- * @param {string} [props.lastName]
- * @param {string} [props.institution]
- * @param {(response: Response) => Promise<('success' | 'error')>} [props.updateInformation]
+ * @typedef {Object} UserInformationProps
+ * @property {string} email
+ * @property {string} [firstName]
+ * @property {string} [lastName]
+ * @property {string} [institution]
+ * @property {(response: Response) => Promise<('success' | 'error')>} [updateInformation]
  */
+
+/** @param {UserInformationProps} props */
 function UserInformation({
   email,
   firstName,

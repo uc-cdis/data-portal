@@ -4,6 +4,7 @@ import UserProfile from './UserProfile';
 import { fetchWithCreds, updatePopup } from '../actions';
 import { credentialCdisPath } from '../localconf';
 
+/** @returns {(dispatch: import('redux').Dispatch) => void} */
 export const fetchAccess = () => (dispatch) =>
   fetchWithCreds({
     path: credentialCdisPath,
@@ -65,6 +66,7 @@ export const deleteKey = (jti, exp, keypairsApi) => (dispatch) =>
     }
   });
 
+/** @returns {(dispatch: import('redux-thunk').ThunkDispatch) => void} */
 export const createKey = (keypairsApi) => (dispatch) =>
   fetchWithCreds({
     path: keypairsApi,
@@ -107,16 +109,14 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  onClearCreationSession: () => dispatch(clearCreationSession()),
+  onClearDeleteSession: () => dispatch(clearDeleteSession()),
   onCreateKey: (keypairsApi) => dispatch(createKey(keypairsApi)),
-  onUpdatePopup: (state) => dispatch(updatePopup(state)),
   onDeleteKey: (jti, exp, keypairsApi) =>
     dispatch(deleteKey(jti, exp, keypairsApi)),
-  onRequestDeleteKey: (jti, exp, keypairsApi) =>
-    dispatch(fetchAccess(keypairsApi)).then(() =>
-      dispatch(requestDeleteKey(jti, exp))
-    ),
-  onClearDeleteSession: () => dispatch(clearDeleteSession()),
-  onClearCreationSession: () => dispatch(clearCreationSession()),
+  onRequestDeleteKey: (jti, exp) =>
+    dispatch(fetchAccess()).then(() => dispatch(requestDeleteKey(jti, exp))),
+  onUpdatePopup: (state) => dispatch(updatePopup(state)),
 });
 
 const ReduxUserProfile = connect(
