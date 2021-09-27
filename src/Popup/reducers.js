@@ -1,3 +1,4 @@
+/** @type {import('redux').Reducer} */
 const popups = (state = {}, action) => {
   switch (action.type) {
     case 'UPDATE_POPUP':
