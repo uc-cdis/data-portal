@@ -2,9 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './CheckBox.less';
 
-function CheckBox({ id, item, onChange, isSelected, isEnabled, disabledText }) {
+/**
+ * @typedef {Object} CheckBoxProps
+ * @property {?string} [disabledText]
+ * @property {string} id
+ * @property {boolean} [isEnabled]
+ * @property {boolean} isSelected
+ * @property {Object} [item]
+ * @property {(id: string) => void} onChange
+ */
+
+/** @param {CheckBoxProps} props */
+function CheckBox({
+  disabledText = null,
+  id,
+  isEnabled = true,
+  isSelected,
+  item = {},
+  onChange,
+}) {
   return (
-    <div className={'checkbox '.concat(!isEnabled ? 'checkbox--disabled' : '')}>
+    <div className={'checkbox '.concat(isEnabled ? '' : 'checkbox--disabled')}>
       <input
         type='checkbox'
         id={id}
@@ -18,18 +36,12 @@ function CheckBox({ id, item, onChange, isSelected, isEnabled, disabledText }) {
 }
 
 CheckBox.propTypes = {
+  disabledText: PropTypes.string,
   id: PropTypes.string.isRequired,
+  isEnabled: PropTypes.bool,
+  isSelected: PropTypes.bool.isRequired,
   item: PropTypes.object,
   onChange: PropTypes.func.isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  isEnabled: PropTypes.bool,
-  disabledText: PropTypes.string,
-};
-
-CheckBox.defaultProps = {
-  item: {},
-  isEnabled: true,
-  disabledText: null,
 };
 
 export default CheckBox;

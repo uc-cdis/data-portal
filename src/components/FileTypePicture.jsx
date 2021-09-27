@@ -1,44 +1,35 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 import IconComponent from './Icon';
 import './FileTypePicture.less';
 
-function dataFormatToFileType(dictIcons, dataFormat) {
-  const fileTypes = Object.keys(dictIcons); // list of available types
-  const format = dataFormat.toLowerCase();
-  return fileTypes.includes(format) ? format : 'file';
-}
+/**
+ * @typedef {Object} FileTypePictureProps
+ * @property {{ [iconName: string]: (height: string, style: Object) => JSX.Element }} dictIcons
+ * @property {Object} [metadata]
+ */
 
-class FileTypePicture extends Component {
-  render() {
-    const dataFormat =
-      this.props.metadata && this.props.metadata.data_format
-        ? this.props.metadata.data_format
-        : 'file';
-    const fileType = dataFormatToFileType(this.props.dictIcons, dataFormat);
-    if (!fileType) return null;
-    const content = (
-      <div className='file-type-picture'>
-        <div className='file-type-picture__icon'>
-          <IconComponent
-            dictIcons={this.props.dictIcons}
-            iconName={fileType}
-            height='100%'
-          />
-        </div>
+/** @param {FileTypePictureProps} props */
+function FileTypePicture({ dictIcons, metadata }) {
+  const dataFormat = metadata?.data_format.toLowerCase();
+  const fileTypes = Object.keys(dictIcons); // list of available types
+  const fileType = fileTypes.includes(dataFormat) ? dataFormat : 'file';
+  return (
+    <div className='file-type-picture'>
+      <div className='file-type-picture__icon'>
+        <IconComponent
+          dictIcons={dictIcons}
+          iconName={fileType}
+          height='100%'
+        />
       </div>
-    );
-    return content;
-  }
+    </div>
+  );
 }
 
 FileTypePicture.propTypes = {
+  dictIcons: PropTypes.objectOf(PropTypes.func).isRequired,
   metadata: PropTypes.object,
-  dictIcons: PropTypes.object.isRequired,
-};
-
-FileTypePicture.defaultProps = {
-  metadata: null,
 };
 
 export default FileTypePicture;

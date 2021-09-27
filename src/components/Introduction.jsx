@@ -4,13 +4,14 @@ import IconicLink from './buttons/IconicLink';
 import './Introduction.less';
 
 /**
- * @param {Object} props
- * @param {{ heading:string; text:string; link: string }} props.data
- * @param {{ [iconName: string]: (height: string, svgStyles: Object) => SVGElement }} props.dictIcons
- * @param {boolean} [props.isAdminUser]
+ * @typedef {Object} IntroductionProps
+ * @property {{ heading: string; text: string; link: string }} data
+ * @property {{ [iconName: string]: (height: string, style: Object) => JSX.Element }} dictIcons
+ * @property {boolean} [isAdminUser]
  */
+
+/** @param {Object} IntroductionProps */
 function Introduction({ data, dictIcons, isAdminUser }) {
-  const buttonText = 'Submit Data';
   return (
     <div className='introduction'>
       <div className='h1-typo introduction__title'>{data.heading}</div>
@@ -22,7 +23,7 @@ function Introduction({ data, dictIcons, isAdminUser }) {
           className='introduction__icon'
           icon='upload'
           iconColor='#'
-          caption={buttonText}
+          caption='Submit Data'
         />
       )}
     </div>
@@ -30,8 +31,12 @@ function Introduction({ data, dictIcons, isAdminUser }) {
 }
 
 Introduction.propTypes = {
-  data: PropTypes.object.isRequired,
-  dictIcons: PropTypes.object.isRequired,
+  data: PropTypes.exact({
+    heading: PropTypes.string,
+    text: PropTypes.string,
+    link: PropTypes.string,
+  }).isRequired,
+  dictIcons: PropTypes.objectOf(PropTypes.func).isRequired,
   isAdminUser: PropTypes.bool,
 };
 
