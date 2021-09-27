@@ -13,20 +13,21 @@ import '../typedef';
 
 /**
  * @typedef {Object} ConnectedFilterProps
- * @property {string} className
+ * @property {object} [adminAppliedPreFilters]
+ * @property {string} [className]
  * @property {FilterState} filter
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
  * @property {boolean} [hidden]
  * @property {boolean} [hideZero]
  * @property {FilterState} [initialAppliedFilters]
- * @property {SimpleAggsData} initialTabsOptions
+ * @property {SimpleAggsData} [initialTabsOptions]
  * @property {(anchorValue: string) => void} onAnchorValueChange
  * @property {FilterChangeHandler} onFilterChange
  * @property {(x: string[]) => void} [onPatientIdsChange]
  * @property {string[]} [patientIds]
- * @property {number} [tierAccessLimit]
  * @property {SimpleAggsData} tabsOptions
+ * @property {number} [tierAccessLimit]
  */
 
 /** @param {ConnectedFilterProps} props */
@@ -44,7 +45,7 @@ function ConnectedFilter({
   onFilterChange,
   onPatientIdsChange,
   patientIds,
-  tabsOptions = {},
+  tabsOptions,
   tierAccessLimit,
 }) {
   if (
@@ -88,7 +89,6 @@ function ConnectedFilter({
         disabledTooltipMessage={`This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${tierAccessLimit} ${
           guppyConfig.nodeCountTitle?.toLowerCase() || guppyConfig.dataType
         } or more.`}
-        arrayFields={arrayFields.current}
       />
     )
   );
@@ -145,7 +145,7 @@ ConnectedFilter.propTypes = {
   onFilterChange: PropTypes.func.isRequired,
   onPatientIdsChange: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),
-  tabsOptions: PropTypes.object,
+  tabsOptions: PropTypes.object.isRequired,
   tierAccessLimit: PropTypes.number,
 };
 
