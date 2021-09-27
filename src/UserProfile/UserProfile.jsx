@@ -38,7 +38,7 @@ export const saveToFile = (savingStr, filename) => {
  * @typedef {Object} UserProfileData
  * @property {any} [create_error]
  * @property {any} [delete_error]
- * @property {{ exp: number; jti: string; }[]} jtis
+ * @property {{ exp: number; jti: string; }[]} [jtis]
  * @property {{ api_key: string; key_id: string; refreshCred: string; }} [refreshCred]
  * @property {string} [requestDeleteJTI]
  * @property {number} [requestDeleteExp]
@@ -200,7 +200,7 @@ UserProfile.propTypes = {
     delete_error: PropTypes.any,
     jtis: PropTypes.arrayOf(
       PropTypes.exact({ jti: PropTypes.string, exp: PropTypes.number })
-    ).isRequired,
+    ),
     refreshCred: PropTypes.exact({
       api_key: PropTypes.string,
       key_id: PropTypes.string,
