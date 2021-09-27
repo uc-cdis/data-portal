@@ -7,9 +7,7 @@ import './typedef';
  *   cnt: how many buttons under this dropdown
  *   dropdownConfig: infos for this dropdown, e.g. "title"
  *   buttonConfigs: a list of button configs (includes buttion title, button type, etc.)
- * @param {Object} config
- * @param {SingleButtonConfig[]} config.buttons
- * @param {DropdownsConfig} config.dropdowns
+ * @param {ButtonConfig} config
  */
 export const calculateDropdownButtonConfigs = (config) => {
   /**
@@ -54,26 +52,22 @@ export const calculateDropdownButtonConfigs = (config) => {
  * @returns the humanized number
  */
 export const humanizeNumber = (number, fixedPoint = 2) => {
-  const largeNumberNames = {
+  if (number < 1000) {
+    return number;
+  }
+  const unit = {
     1: 'K', // Thousand, 10^3
     2: 'M', // Milliion, 10^6
     3: 'B', // Billion, 10^9
     4: 'T', // Trillion, 10^12
     5: 'Qa', // Quadrillion, 10^15
   };
-  if (number < 1000) {
-    return number;
-  }
-  for (let i = 5; i >= 1; i -= 1) {
-    if (number > 1000 ** i) {
-      return `${Number.parseFloat(number / 1000 ** i).toFixed(fixedPoint)}${
-        largeNumberNames[i]
-      }`;
-    }
-  }
+  for (let i = 5; i >= 1; i -= 1)
+    if (number > 1000 ** i)
+      return `${(number / 1000 ** i).toFixed(fixedPoint)}${unit[i]}`;
 
   // 10^15+, number is too large
-  return Number.parseFloat(number).toExponential(fixedPoint);
+  return number.toExponential(fixedPoint);
 };
 
 function isPlainObject(value) {

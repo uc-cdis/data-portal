@@ -6,21 +6,21 @@ import './ExplorerFilter.css';
 
 /**
  * @typedef {Object} ExplorerFilterProps
- * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
- * @property {string} className
+ * @property {{ [x: string]: OptionFilter }} [adminAppliedPreFilters]
+ * @property {string} [className]
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
- * @property {boolean} hasAppliedFilters
- * @property {FilterState} initialAppliedFilters
- * @property {() => void} onFilterClear
- * @property {(x: string[]) => void} onPatientIdsChange
- * @property {string[]} patientIds
- * @property {number} tierAccessLimit
+ * @property {boolean} [hasAppliedFilters]
+ * @property {FilterState} [initialAppliedFilters]
+ * @property {SimpleAggsData} [initialTabsOptions]
  * @property {FilterState} filter
- * @property {SimpleAggsData} initialTabsOptions
- * @property {(anchorValue: string) => void} onAnchorValueChange
  * @property {FilterChangeHandler} onFilterChange
+ * @property {() => void} [onFilterClear]
+ * @property {(anchorValue: string) => void} onAnchorValueChange
+ * @property {(x: string[]) => void} [onPatientIdsChange]
+ * @property {string[]} [patientIds]
  * @property {SimpleAggsData} tabsOptions
+ * @property {number} [tierAccessLimit]
  */
 
 /** @param {ExplorerFilterProps} props */
@@ -60,11 +60,11 @@ ExplorerFilter.propTypes = {
   onPatientIdsChange: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),
   tierAccessLimit: PropTypes.number,
-  filter: PropTypes.object, // from GuppyWrapper
+  filter: PropTypes.object.isRequired, // from GuppyWrapper
   initialTabsOptions: PropTypes.object, // from GuppyWrapper
-  onAnchorValueChange: PropTypes.func, // from GuppyWrapper
-  onFilterChange: PropTypes.func, // from GuppyWrapper
-  tabsOptions: PropTypes.object, // from GuppWrapper
+  onAnchorValueChange: PropTypes.func.isRequired, // from GuppyWrapper
+  onFilterChange: PropTypes.func.isRequired, // from GuppyWrapper
+  tabsOptions: PropTypes.object.isRequired, // from GuppWrapper
 };
 
 export default ExplorerFilter;

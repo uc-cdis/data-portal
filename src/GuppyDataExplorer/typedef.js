@@ -33,10 +33,10 @@
 /**
  * @typedef {Object} ButtonConfig
  * @property {SingleButtonConfig[]} buttons
- * @property {DropdownsConfig} dropdowns
- * @property {string} terraExportURL
- * @property {string[]} terraTemplate
- * @property {string} sevenBridgesExportURL
+ * @property {DropdownsConfig} [dropdowns]
+ * @property {string} [terraExportURL]
+ * @property {string[]} [terraTemplate]
+ * @property {string} [sevenBridgesExportURL]
  */
 
 /**

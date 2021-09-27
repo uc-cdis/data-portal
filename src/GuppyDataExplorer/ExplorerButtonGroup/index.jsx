@@ -20,8 +20,8 @@ import '../typedef';
 /**
  * @typedef {Object} ExplorerButtonGroupProps
  * @property {Object} job
- * @property {(args: {  sort: GqlSort; format: string }) => Promise} downloadRawData
- * @property {(args: { fields: string[]; sort: GqlSort }) => Promise} downloadRawDataByFields
+ * @property {(args: { sort?: GqlSort; format?: string }) => Promise} downloadRawData
+ * @property {(args: { fields: string[]; sort?: GqlSort }) => Promise} downloadRawDataByFields
  * @property {(type: string, filter: FilterState, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
  * @property {(type: string, filter: FilterState) => Promise} getTotalCountsByTypeAndFilter
  * @property {number} accessibleCount
@@ -48,6 +48,7 @@ import '../typedef';
  * @property {string} toasterHeadline
  * @property {React.ReactElement} toasterError
  * @property {string} toasterErrorText
+ * @property {boolean} [enableTerraWarningPopup]
  * @property {boolean} exportingToTerra
  * @property {boolean} exportingToSevenBridges
  * @property {string} exportPFBURL
@@ -109,7 +110,7 @@ class ExplorerButtonGroup extends React.Component {
         if (this.state.exportingToTerra) {
           this.setState(
             {
-              exportPFBURL: `${res.data.output}`.split('\n'),
+              exportPFBURL: `${res.data.output}`.split('\n')[0],
               toasterOpen: false,
               exportingToTerra: false,
             },
@@ -120,7 +121,7 @@ class ExplorerButtonGroup extends React.Component {
         } else if (this.state.exportingToSevenBridges) {
           this.setState(
             {
-              exportPFBURL: `${res.data.output}`.split('\n'),
+              exportPFBURL: `${res.data.output}`.split('\n')[0],
               toasterOpen: false,
               exportingToSevenBridges: false,
             },
@@ -130,7 +131,7 @@ class ExplorerButtonGroup extends React.Component {
           );
         } else {
           this.setState((prevState) => ({
-            exportPFBURL: `${res.data.output}`.split('\n'),
+            exportPFBURL: `${res.data.output}`.split('\n')[0],
             toasterOpen: true,
             toasterHeadline: prevState.pfbSuccessText,
           }));
@@ -167,6 +168,7 @@ class ExplorerButtonGroup extends React.Component {
 
   /** @param {SingleButtonConfig} buttonConfig */
   getOnClickFunction = (buttonConfig) => {
+    /** @type {(...args: any[]) => void} */
     let clickFunc = () => {};
     if (buttonConfig.type === 'data') {
       clickFunc = this.downloadData(buttonConfig.fileName);
@@ -251,6 +253,7 @@ class ExplorerButtonGroup extends React.Component {
       },
     };
     if (this.props.filter.data_format) {
+      // @ts-ignore
       filter.data_format = this.props.filter.data_format;
     }
     let resultManifest;
@@ -454,12 +457,12 @@ class ExplorerButtonGroup extends React.Component {
         .map((x) => `&template=${x}`)
         .join('');
     }
-    window.location = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
+    window.location.pathname = `${this.props.buttonConfig.terraExportURL}?format=PFB${templateParam}&url=${url}`;
   };
 
   sendPFBToSevenBridges = () => {
     const url = encodeURIComponent(this.state.exportPFBURL);
-    window.location = `${this.props.buttonConfig.sevenBridgesExportURL}?format=PFB&url=${url}`;
+    window.location.pathname = `${this.props.buttonConfig.sevenBridgesExportURL}?format=PFB&url=${url}`;
   };
 
   exportToPFB = () => {
