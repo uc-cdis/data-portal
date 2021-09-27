@@ -119,6 +119,7 @@ class ExplorerButtonGroup extends React.Component {
 
   getOnClickFunction = (buttonConfig) => {
     let clickFunc = () => {};
+
     if (buttonConfig.type.startsWith('data')) {
       clickFunc = this.downloadData(buttonConfig.fileName, buttonConfig.type.split('-').pop());
     }
@@ -799,8 +800,10 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     return (
       <Button
         key={buttonConfig.type}
-        onClick={clickFunc}
-        label={buttonTitle}
+        onClick={() => ((!this.props.user.username && this.isLoginForDownloadEnabled()
+          && this.isDownloadButton(buttonConfig)) ? this.goToLogin() : clickFunc())}
+        label={(!this.props.user.username && this.isLoginForDownloadEnabled()
+          && this.isDownloadButton(buttonConfig)) ? `Login to ${buttonTitle.toLowerCase()}` : buttonTitle}
         leftIcon={buttonConfig.leftIcon}
         rightIcon={buttonConfig.rightIcon}
         className='explorer-button-group__download-button'
@@ -812,6 +815,19 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       />
     );
   };
+
+  isLoginForDownloadEnabled = () => this.props.buttonConfig.loginForDownload;
+
+  goToLogin = () => {
+    if (!this.props.user || !this.props.user.username) {
+      this.props.history.push('/login', { from: `${this.props.location.pathname}` });
+    }
+  }
+
+  isDownloadButton = (buttonConfig) => (
+    buttonConfig.type.startsWith('data')
+    || buttonConfig.type === 'manifest'
+    || buttonConfig.type === 'file-manifest');
 
   render() {
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.buttonConfig);
@@ -865,6 +881,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
               const entry = dropdownConfigs[dropdownId];
               const btnConfigs = entry.buttonConfigs;
               const dropdownTitle = entry.dropdownConfig.title;
+
               return (
                 <Dropdown
                   key={dropdownId}
@@ -881,9 +898,11 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
                             key={btnCfg.type}
                             leftIcon='datafile'
                             rightIcon='download'
-                            onClick={onClick}
+                            onClick={() => ((!this.props.user.username && this.isLoginForDownloadEnabled()
+                              && this.isDownloadButton(btnCfg)) ? this.goToLogin() : onClick())}
                           >
-                            {btnCfg.title}
+                            {(!this.props.user.username && this.isLoginForDownloadEnabled()
+                            && this.isDownloadButton(btnCfg)) ? `Login to ${btnCfg.title}.toLowerCase()}` : btnCfg.title}
                           </Dropdown.Item>
                         );
                       })
@@ -933,6 +952,8 @@ ExplorerButtonGroup.propTypes = {
   fetchJobResult: PropTypes.func.isRequired,
   isLocked: PropTypes.bool.isRequired,
   userAccess: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {

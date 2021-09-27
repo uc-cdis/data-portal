@@ -3,7 +3,6 @@ import {
   Alert, Button, Drawer, Space, Collapse, List,
 } from 'antd';
 import {
-  LockFilled,
   LinkOutlined,
   CheckOutlined,
   UnlockOutlined,
@@ -51,7 +50,7 @@ const DiscoveryDetails = (props: Props) => (
       <Button
         type='text'
         onClick={() => {
-          navigator.clipboard.writeText(`${hostname}discovery/${props.modalData[props.config.minimalFieldMapping.uid]}/`)
+          navigator.clipboard.writeText(`${hostname}discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`)
             .then(() => {
               props.setPermalinkCopied(true);
             });
@@ -86,7 +85,7 @@ const DiscoveryDetails = (props: Props) => (
               <Alert
                 className='discovery-modal__access-alert'
                 type='warning'
-                message={<React.Fragment><LockFilled /> You do not have access to this study.</React.Fragment>}
+                message={<React.Fragment>You do not have access to this study.</React.Fragment>}
               />
             )
           )}

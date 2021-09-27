@@ -194,6 +194,11 @@
   max-width: 500px;
 }
 
+.discovery-input-subtitle {
+  font-size: 0.75em;
+  color: var(--g3-color__titanium);
+}
+
 .discovery-table-container {
   border-radius: 8px;
   background-color: #fff;
@@ -218,6 +223,10 @@
   cursor: pointer;
   overflow: visible;
   position: relative;
+}
+
+.discovery-table-container .ant-table-column-sorter {
+  display:none;
 }
 
 /* HACK: Because the study description row is a separate row under the hood,
@@ -407,11 +416,18 @@
   font-size: 12px;
   background-color: #dfe3e2;
   border-radius: 4px;
+  min-width: 370px;
 }
 
 .discovery-modal__attribute-value {
   text-align: left;
   padding: 4px;
+  overflow: hidden;
+  white-space: pre-wrap; /* CSS3 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
 .discovery-modal__attribute-value--multiline {

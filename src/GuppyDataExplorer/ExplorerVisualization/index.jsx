@@ -144,6 +144,7 @@ class ExplorerVisualization extends React.Component {
             downloadRawDataByTypeAndFilter={this.props.downloadRawDataByTypeAndFilter}
             filter={this.props.filter}
             history={this.props.history}
+            location={this.props.location}
             isLocked={isComponentLocked}
             isPending={this.props.aggsDataIsLoading}
           />
@@ -273,6 +274,7 @@ ExplorerVisualization.propTypes = {
   guppyConfig: GuppyConfigType,
   nodeCountTitle: PropTypes.string,
   tierAccessLimit: PropTypes.number.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 ExplorerVisualization.defaultProps = {
