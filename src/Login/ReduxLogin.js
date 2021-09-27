@@ -5,49 +5,52 @@ import { fetchWithCreds } from '../actions';
 import { loginPath } from '../localconf';
 import { components } from '../params';
 
-export const fetchLogin = () => (dispatch) =>
-  fetchWithCreds({
-    path: loginPath,
-    dispatch,
-  })
-    .then(({ status, data }) => {
-      switch (status) {
-        case 200:
-          return {
-            type: 'RECEIVE_LOGIN_ENDPOINT',
-            providers: data.providers,
-          };
-        case 404:
-          return {
-            type: 'RECEIVE_LOGIN_ENDPOINT',
-            providers: [
+/**
+ * @param {any} data
+ * @param {number} status
+ * @returns {import('redux').AnyAction}
+ */
+function getLoginAction(data, status) {
+  switch (status) {
+    case 200:
+      return {
+        type: 'RECEIVE_LOGIN_ENDPOINT',
+        providers: data.providers,
+      };
+    case 404:
+      return {
+        type: 'RECEIVE_LOGIN_ENDPOINT',
+        providers: [
+          {
+            idp: 'google',
+            name: 'Google OAuth',
+            urls: [
               {
-                idp: 'google',
                 name: 'Google OAuth',
-                urls: [
-                  {
-                    name: 'Google OAuth',
-                    url: `${loginPath}google/`,
-                  },
-                ],
+                url: `${loginPath}google/`,
               },
             ],
-          };
-        default:
-          return {
-            type: 'LOGIN_ENDPOINT_ERROR',
-            error: data.error,
-          };
-      }
-    })
-    .then((msg) => dispatch(msg));
+          },
+        ],
+      };
+    default:
+      return {
+        type: 'LOGIN_ENDPOINT_ERROR',
+        error: data.error,
+      };
+  }
+}
+
+/** @returns {(dispatch: import('redux-thunk').ThunkDispatch) => Promise} */
+export const fetchLogin = () => (dispatch) =>
+  fetchWithCreds({ path: loginPath, dispatch }).then(({ data, status }) => {
+    dispatch(getLoginAction(data, status));
+  });
 
 const mapStateToProps = (state) => ({
-  providers: state.login.providers,
   data: components.login,
+  providers: state.login.providers,
 });
 
-const mapDispatchToProps = () => ({});
-
-const ReduxLogin = connect(mapStateToProps, mapDispatchToProps)(Login);
+const ReduxLogin = connect(mapStateToProps)(Login);
 export default ReduxLogin;
