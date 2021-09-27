@@ -2,19 +2,35 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './DropdownButton.css';
 
+/**
+ * @typedef {Object} DropdownButtonProps
+ * @property {() => void} [afterClick]
+ * @property {'primary' | 'secondary'} [buttonType]
+ * @property {React.ReactNode} children
+ * @property {string} [className]
+ * @property {boolean} [disabled]
+ * @property {() => void} [handleTriggerMenu]
+ * @property {string} [label]
+ * @property {boolean} [menuOpen]
+ * @property {React.RefObject} [menuTriggerElementRef]
+ * @property {() => void} [onClick]
+ * @property {string} [rightIcon]
+ * @property {boolean} [split]
+ */
+
 function DropdownButton({
-  split,
-  className,
-  label,
-  onClick,
-  handleTriggerMenu,
-  menuOpen,
-  afterClick,
-  menuTriggerElementRef,
-  buttonType,
-  rightIcon,
-  disabled,
+  afterClick = () => {},
+  buttonType = 'primary',
   children,
+  className = '',
+  disabled = false,
+  handleTriggerMenu = () => {},
+  label = 'Dropdown Button',
+  menuOpen = false,
+  menuTriggerElementRef,
+  onClick = () => {},
+  rightIcon = '',
+  split = false,
 }) {
   function handleClick() {
     if (!disabled) {
@@ -46,7 +62,7 @@ function DropdownButton({
         type='button'
         className={`g3-dropdown-button__button ${buttonIsSplitClassName} ${buttonTypeClassName}`}
         onClick={split ? handleClick : handleTriggerMenu}
-        label={label}
+        aria-label={label}
       >
         {children}
         {split || (
@@ -79,36 +95,21 @@ function DropdownButton({
 }
 
 DropdownButton.propTypes = {
-  split: PropTypes.bool,
-  className: PropTypes.string,
-  label: PropTypes.string,
-  onClick: PropTypes.func,
-  handleTriggerMenu: PropTypes.func,
-  menuOpen: PropTypes.bool,
   afterClick: PropTypes.func,
-  menuTriggerElementRef: PropTypes.object,
   buttonType: PropTypes.oneOf(['primary', 'secondary']),
-  rightIcon: PropTypes.string,
-  disabled: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
-};
-
-DropdownButton.defaultProps = {
-  split: false,
-  className: '',
-  label: 'Dropdown Button',
-  onClick: () => {},
-  buttonType: 'primary',
-  rightIcon: '',
-  // override by Dropdown component:
-  handleTriggerMenu: () => {},
-  menuOpen: false,
-  afterClick: () => {},
-  menuTriggerElementRef: {},
-  disabled: false,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  handleTriggerMenu: PropTypes.func,
+  label: PropTypes.string,
+  menuOpen: PropTypes.bool,
+  menuTriggerElementRef: PropTypes.object,
+  onClick: PropTypes.func,
+  rightIcon: PropTypes.string,
+  split: PropTypes.bool,
 };
 
 export default DropdownButton;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import DropdownButton from './DropdownButton';
 import DropdownItem from './DropdownItem';
@@ -6,95 +6,89 @@ import DropdownMenu from './DropdownMenu';
 import DropdownMenuDivider from './DropdownMenuDivider';
 import './Dropdown.css';
 
-class Dropdown extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      menuOpen: false,
+/**
+ * @typedef {Object} DropdownProps
+ * @property {'primary' | 'secondary' | 'default'} [buttonType]
+ * @property {React.ReactNode} children
+ * @property {string} [className]
+ * @property {boolean} [disabled]
+ */
+
+/** @param {DropdownProps} props */
+function Dropdown({
+  buttonType = 'primary',
+  children,
+  className = '',
+  disabled = false,
+}) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuTriggerElementRef = useRef(undefined);
+
+  function closeMenu() {
+    setMenuOpen(false);
+  }
+
+  function handleTriggerMenu() {
+    if (!disabled) setMenuOpen(!menuOpen);
+  }
+
+  useEffect(() => {
+    function handleWindowClick(e) {
+      if (
+        menuTriggerElementRef?.current !== undefined &&
+        !menuTriggerElementRef.current.contains(e.target)
+      )
+        closeMenu();
+    }
+
+    if (menuOpen) window.addEventListener('click', handleWindowClick);
+    else window.removeEventListener('click', handleWindowClick);
+
+    return () => {
+      window.removeEventListener('click', handleWindowClick);
     };
-    this.menuTriggerElementRef = React.createRef();
-  }
+  }, [menuOpen]);
 
-  handleTriggerMenu() {
-    if (this.props.disabled) {
-      return;
-    }
-    this.setState((state) => ({ menuOpen: !state.menuOpen }));
-  }
-
-  handleWindowClick(e) {
-    if (!this.menuTriggerElementRef || !this.menuTriggerElementRef.current) {
-      return;
-    }
-    if (!this.menuTriggerElementRef.current.contains(e.target)) {
-      this.closeMenu();
-    }
-  }
-
-  closeMenu() {
-    this.setState({ menuOpen: false });
-  }
-
-  bindCancellingEvent() {
-    window.addEventListener('click', (e) => this.handleWindowClick(e));
-  }
-
-  unbindCancellingEvent() {
-    window.removeEventListener('click', (e) => this.handleWindowClick(e));
-  }
-
-  render() {
-    if (this.state.menuOpen) {
-      this.bindCancellingEvent();
-    } else {
-      this.unbindCancellingEvent();
-    }
-    return (
-      <div
-        className={`g3-dropdown ${
-          this.props.disabled ? 'g3-dropdown--disabled' : ''
-        } ${this.props.className || ''} ${
-          this.props.buttonType === 'secondary' ? 'g3-dropdown--secondary' : ''
-        }`}
-      >
-        {React.Children.map(this.props.children, (child) =>
+  return (
+    <div
+      className={`g3-dropdown ${disabled ? 'g3-dropdown--disabled' : ''} ${
+        className || ''
+      } ${buttonType === 'secondary' ? 'g3-dropdown--secondary' : ''}`}
+    >
+      {React.Children.map(
+        children,
+        /** @param {React.ReactElement} child  */
+        (child) =>
           React.cloneElement(child, {
-            handleTriggerMenu: (e) => this.handleTriggerMenu(e),
-            menuOpen: this.state.menuOpen,
-            afterClick: (e) => this.closeMenu(e),
-            menuTriggerElementRef: this.menuTriggerElementRef,
-            buttonType: this.props.buttonType,
-            disabled: this.props.disabled,
+            afterClick: closeMenu,
+            buttonType,
+            disabled,
+            handleTriggerMenu,
+            menuOpen,
+            menuTriggerElementRef,
           })
-        )}
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 }
 
 Dropdown.propTypes = {
-  className: PropTypes.string,
   buttonType: PropTypes.oneOf(['primary', 'secondary', 'default']),
-  disabled: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
-};
-
-Dropdown.defaultProps = {
-  className: '',
-  buttonType: 'primary',
-  disabled: false,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 /**
  * props:
- *   - split(bool): if true, the trigger button is split
- *   - label(stirng): label of the button
- *   - onClick(func): onclick function, ignored when split=false (onClick=triggerMenu)
  *   - className(string): class name
  *   - disabled(bool): whether disabled
+ *   - label(stirng): label of the button
+ *   - onClick(func): onclick function, ignored when split=false (onClick=triggerMenu)
+ *   - split(bool): if true, the trigger button is split
  */
 Dropdown.Button = DropdownButton;
 
@@ -108,10 +102,10 @@ Dropdown.Menu = DropdownMenu;
 /**
  * props:
  *   - className(string): class name
- *   - leftIcon(string): left icon name
- *   - rightIcon(string): right icon name
- *   - onClick(func): onclick function
  *   - disabled(bool): whether disabled
+ *   - leftIcon(string): left icon name
+ *   - onClick(func): onclick function
+ *   - rightIcon(string): right icon name
  */
 Dropdown.Item = DropdownItem;
 

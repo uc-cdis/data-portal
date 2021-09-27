@@ -1,18 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * @typedef {Object} DropdownItemProps
+ * @property {React.ReactNode} children
+ * @property {string} [className]
+ * @property {boolean} [disabled]
+ * @property {string} [leftIcon]
+ * @property {() => void} [onClick]
+ * @property {string} [rightIcon]
+ */
+
+/** @param {DropdownItemProps} props */
 function DropdownItem({
-  className,
-  leftIcon,
-  rightIcon,
-  onClick,
-  disabled,
   children,
+  className = '',
+  disabled = false,
+  leftIcon,
+  onClick = () => {},
+  rightIcon,
 }) {
   function handleClick() {
-    if (!disabled) {
-      onClick();
-    }
+    if (!disabled) onClick();
   }
 
   return (
@@ -47,23 +56,15 @@ function DropdownItem({
 }
 
 DropdownItem.propTypes = {
-  className: PropTypes.string,
-  leftIcon: PropTypes.string,
-  rightIcon: PropTypes.string,
-  onClick: PropTypes.func,
-  disabled: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
-};
-
-DropdownItem.defaultProps = {
-  className: '',
-  leftIcon: null,
-  rightIcon: null,
-  onClick: () => {},
-  disabled: false,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  leftIcon: PropTypes.string,
+  onClick: PropTypes.func,
+  rightIcon: PropTypes.string,
 };
 
 export default DropdownItem;

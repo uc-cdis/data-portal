@@ -1,16 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function DropdownMenuDivider({ className }) {
-  return <hr className={`g3-dropdown__menu-divider ${className || ''}`} />;
+function DropdownMenuDivider({ className = '' }) {
+  return <hr className={`g3-dropdown__menu-divider ${className}`} />;
 }
 
 DropdownMenuDivider.propTypes = {
   className: PropTypes.string,
-};
-
-DropdownMenuDivider.defaultProps = {
-  className: '',
 };
 
 export default DropdownMenuDivider;
