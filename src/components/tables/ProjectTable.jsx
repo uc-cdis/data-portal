@@ -6,11 +6,13 @@ import Table from './base/Table';
 import './ProjectTable.less';
 
 /**
- * @param {Object} props
- * @param {{ name: string; counts: number[]; }[]} props.projectList
- * @param {string[]} props.summaryFields
+ * @typedef {Object} ProjectTableProps
+ * @property {{ name: string; counts: number[]; }[]} projectList
+ * @property {string[]} summaryFields
  */
-function ProjectTable({ projectList = [], summaryFields = [] }) {
+
+/** @param {ProjectTableProps} props */
+function ProjectTable({ projectList, summaryFields }) {
   const history = useHistory();
   const tableHeader = ['Project', ...summaryFields, ''];
   const tableData = [...projectList]
@@ -36,8 +38,15 @@ function ProjectTable({ projectList = [], summaryFields = [] }) {
 }
 
 ProjectTable.propTypes = {
-  projectList: PropTypes.array,
-  summaryFields: PropTypes.array,
+  projectList: PropTypes.arrayOf(
+    PropTypes.exact({
+      name: PropTypes.string.isRequired,
+      charts: PropTypes.array,
+      code: PropTypes.string,
+      counts: PropTypes.arrayOf(PropTypes.number).isRequired,
+    })
+  ).isRequired,
+  summaryFields: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default ProjectTable;

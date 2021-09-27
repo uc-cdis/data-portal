@@ -31,16 +31,19 @@ const getSubgroupLinks = (link, nameToNode, sourceId) => {
  *    and edges, returns the nodes and edges in correct format
  *
  * @method createNodesAndEdges
- * @param props: Object (normally taken from redux state) that includes dictionary
+ * @param {Object} props: Object (normally taken from redux state) that includes dictionary
  *    property defining the dictionary as well as other optional properties
  *    such as counts_search and links_search (created by getCounts) with
  *    information about the number of each type (node) and link (between
  *    nodes with a link's source and target types) that actually
  *    exist in the data
+ * @param {DataDictionary} props.dictionary
+ * @param {{ [key: string]: number }} props.counts_search
+ * @param {{ [key: string]: number }} props.links_search
  * @param createAll: Include all nodes and edges or only those that are populated in
  *    counts_search and links_search
  * @param nodesToHide: Array of nodes to hide from graph
- * @returns { nodes, edges } Object containing nodes and edges
+ * @returns {{ nodes: array; edges: array }} Object containing nodes and edges
  */
 export function createNodesAndEdges(
   props,
@@ -48,6 +51,7 @@ export function createNodesAndEdges(
   nodesToHide = ['program']
 ) {
   const { dictionary } = props;
+
   const nodes = Object.keys(dictionary)
     .filter(
       (key) =>

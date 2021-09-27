@@ -4,99 +4,71 @@ import Select from 'react-select';
 import { overrideSelectTheme } from '../utils';
 import './InputWithIcon.less';
 
+/**
+ * @typedef {Object} InputWithIconProps
+ * @property {string} [inputId]
+ * @property {string} [inputClassName]
+ * @property {(option?: { label: string; value: string; }) => void} inputOnChange
+ * @property {{ label: string; value: string; }[]} [inputOptions]
+ * @property {string} [inputPlaceholderText]
+ * @property {string} [inputValue]
+ * @property {boolean} [shouldDisplayIcon]
+ * @property {React.ElementType} iconSvg
+ */
+
+/** @param {InputWithIconProps} props */
 function InputWithIcon({
-  className,
   inputId,
-  inputOptions,
-  inputClassName,
-  inputValue,
-  inputPlaceholderText,
+  inputOptions = null,
+  inputClassName = '',
+  inputValue = '',
+  inputPlaceholderText = '',
   inputOnChange,
-  shouldDisplayIcon,
-  shouldDisplayText,
+  shouldDisplayIcon = false,
   iconSvg,
-  iconClassName,
-  textClassName,
-  text,
 }) {
+  const Icon = iconSvg;
   return (
-    <>
-      <div
-        className={'input-with-icon'.concat(className ? ` ${className}` : '')}
-      >
-        {inputOptions ? (
-          <Select
-            inputId={inputId}
-            styles={{
-              control: (provided) => ({ ...provided, width: '100%' }),
-            }}
-            className={`${inputClassName}`}
-            classNamePrefix={'react-select'}
-            value={{
-              value: inputValue,
-              label: inputValue,
-            }}
-            placeholder={inputPlaceholderText}
-            options={inputOptions}
-            onChange={inputOnChange}
-            theme={overrideSelectTheme}
-          />
-        ) : (
-          <input
-            id={inputId}
-            type='text'
-            className={inputClassName}
-            onBlur={inputOnChange}
-          />
-        )}
-        {shouldDisplayIcon && (
-          <iconSvg
-            className={'input-with-icon__icon'.concat(
-              iconClassName ? ` ${iconClassName}` : ''
-            )}
-          />
-        )}
-      </div>
-      {shouldDisplayText && (
-        <p
-          className={'input-with-icon__text'.concat(
-            textClassName ? ` ${textClassName}` : ''
-          )}
-        >
-          {text}
-        </p>
+    <div className='input-with-icon'>
+      {inputOptions ? (
+        <Select
+          inputId={inputId}
+          styles={{
+            control: (provided) => ({ ...provided, width: '100%' }),
+          }}
+          className={inputClassName}
+          classNamePrefix={'react-select'}
+          value={{
+            value: inputValue,
+            label: inputValue,
+          }}
+          placeholder={inputPlaceholderText}
+          options={inputOptions}
+          onChange={inputOnChange}
+          theme={overrideSelectTheme}
+        />
+      ) : (
+        <input
+          id={inputId}
+          type='text'
+          className={inputClassName}
+          onBlur={() => inputOnChange()}
+        />
       )}
-    </>
+      {shouldDisplayIcon && <Icon className='input-with-icon__icon' />}
+    </div>
   );
 }
 
 InputWithIcon.propTypes = {
-  className: PropTypes.string,
-  inputId: PropTypes.string.isRequired,
   inputClassName: PropTypes.string,
-  inputValue: PropTypes.string,
-  inputPlaceholderText: PropTypes.string,
-  inputOptions: PropTypes.array,
+  inputId: PropTypes.string,
   inputOnChange: PropTypes.func.isRequired,
+  inputOptions: PropTypes.array,
+  inputPlaceholderText: PropTypes.string,
+  inputValue: PropTypes.string,
   iconSvg: PropTypes.func.isRequired,
-  iconClassName: PropTypes.string,
   shouldDisplayIcon: PropTypes.bool,
-  shouldDisplayText: PropTypes.bool,
-  text: PropTypes.string,
-  textClassName: PropTypes.string,
-};
-
-InputWithIcon.defaultProps = {
-  className: '',
-  inputClassName: '',
-  inputPlaceholderText: '',
-  inputOptions: null,
-  inputValue: '',
-  iconClassName: '',
-  shouldDisplayIcon: false,
-  shouldDisplayText: false,
-  text: null,
-  textClassName: '',
 };
 
 export default InputWithIcon;

@@ -4,12 +4,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Popup from '../components/Popup';
 
-const goToLogin = (history) => {
-  history.push('/login');
-  // Refresh the page.jsx.
-  window.location.reload(false);
-};
-
+/** @param {{ authPopup: boolean; }} props  */
 function AuthPopup({ authPopup }) {
   const history = useHistory();
   return authPopup ? (
@@ -18,7 +13,11 @@ function AuthPopup({ authPopup }) {
       rightButtons={[
         {
           caption: 'Go to Login',
-          fn: () => goToLogin(history),
+          fn: () => {
+            history.push('/login');
+            // Refresh the page.jsx.
+            window.location.reload();
+          },
         },
       ]}
     />

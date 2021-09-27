@@ -77,7 +77,7 @@ function RegistrationForm({
             id='registration-first-name'
             type='text'
             value={firstName}
-            autoFocus
+            autoFocus // eslint-disable-line jsx-a11y/no-autofocus
             disabled={isRegistering}
             placeholder='Enter your first name'
             required

@@ -12,14 +12,28 @@ import MainLogo from '../../img/logo.png';
 import './NavBar.css';
 
 /**
- * NavBar renders row of nav-items of form { name, icon, link }
- * @param {Object} props
- * @param {{ [iconName: string]: (height: string, svgStyles: Object) => SVGElement }} props.dictIcons
- * @param {{ icon: string; link: string; name: string; tooltip?: string; }[]} props.navItems
- * @param {string} [props.navTitle]
- * @param {{ [key: string]: any; }} props.userAccess
+ * @typedef {Object} NavItem
+ * @property {string} [color]
+ * @property {string} icon
+ * @property {string} link
+ * @property {string} name
+ * @property {string | null} [tooltip]
  */
-function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
+
+/**
+ * @typedef {Object} NavBarProps
+ * @property {{ [iconName: string]: (height: string, style: Object) => JSX.Element }} dictIcons
+ * @property {NavItem[]} navItems
+ * @property {string} [navTitle]
+ * @property {{ [key: string]: any }} userAccess
+ * @returns
+ */
+
+/**
+ * NavBar renders row of nav-items of form { name, icon, link }
+ * @param {NavBarProps} props
+ */
+function NavBar({ dictIcons, navItems, navTitle, userAccess }) {
   const location = useLocation();
   if (location.pathname === '/login') return null;
 
@@ -34,6 +48,7 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
     setIsMenuOpen(!isMenuOpen);
   }
 
+  /** @param {NavItem} item */
   function updateTooltip(item) {
     /*
     - `item.tooltip` is a string: display it on mouse hover
@@ -139,8 +154,16 @@ function NavBar({ navItems, userAccess, dictIcons, navTitle }) {
 }
 
 NavBar.propTypes = {
-  dictIcons: PropTypes.object.isRequired,
-  navItems: PropTypes.array.isRequired,
+  dictIcons: PropTypes.objectOf(PropTypes.func).isRequired,
+  navItems: PropTypes.arrayOf(
+    PropTypes.exact({
+      icon: PropTypes.string,
+      link: PropTypes.string,
+      color: PropTypes.string,
+      name: PropTypes.string,
+      tooltip: PropTypes.string,
+    })
+  ).isRequired,
   navTitle: PropTypes.string,
   userAccess: PropTypes.object.isRequired,
 };

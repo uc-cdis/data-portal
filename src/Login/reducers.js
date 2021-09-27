@@ -1,3 +1,4 @@
+/** @type {import('redux').Reducer} */
 const login = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_LOGIN_ENDPOINT':

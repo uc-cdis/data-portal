@@ -1,9 +1,9 @@
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
-
 import { headers, graphqlPath } from './localconf';
 
 const store = new Store(new RecordSource());
 
+/** @type {import('relay-runtime').FetchFunction} */
 const fetchQuery = (operation, variables) => {
   const request = {
     credentials: 'same-origin',

@@ -1,12 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function DropdownMenu({ className, menuOpen, children }) {
+/**
+ * @typedef {Object} DropdownMenuProps
+ * @property {React.ReactNode} children
+ * @property {string} [className]
+ * @property {boolean} [menuOpen]
+ */
+
+/** @param {DropdownMenuProps} props */
+function DropdownMenu({ children, className = '', menuOpen = false }) {
   return (
     <div
       className={`g3-dropdown__menu ${
         menuOpen ? 'g3-dropdown__menu--opened' : ''
-      } ${className || ''}`}
+      } ${className}`}
     >
       {children}
     </div>
@@ -14,17 +22,12 @@ function DropdownMenu({ className, menuOpen, children }) {
 }
 
 DropdownMenu.propTypes = {
-  className: PropTypes.string,
-  menuOpen: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
-};
-
-DropdownMenu.defaultProps = {
-  className: '',
-  menuOpen: false, // override by Dropdown component
+  className: PropTypes.string,
+  menuOpen: PropTypes.bool,
 };
 
 export default DropdownMenu;

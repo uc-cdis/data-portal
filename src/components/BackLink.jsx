@@ -5,7 +5,14 @@ import dictIcons from '../img/icons/index';
 import IconComponent from './Icon';
 import './BackLink.less';
 
-function BackLink({ url, label }) {
+/**
+ * @typedef {Object} BackLinkProps
+ * @property {string} label
+ * @property {string} url
+ */
+
+/** @param {BackLinkProps} props */
+function BackLink({ label, url }) {
   return (
     <Link to={url}>
       <br />
@@ -18,8 +25,8 @@ function BackLink({ url, label }) {
 }
 
 BackLink.propTypes = {
-  url: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
 };
 
 export default BackLink;

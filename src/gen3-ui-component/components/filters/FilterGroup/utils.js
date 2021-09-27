@@ -113,7 +113,7 @@ export function removeEmptyFilter(filterResults) {
 
 /**
  * @param {Object} args
- * @param {FilterSectionStatus[][]} args.filterStatus
+ * @param {FilterStatus} args.filterStatus
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex
@@ -167,7 +167,7 @@ export function tabHasActiveFilters(filterTabStatus) {
 
 /**
  * @param {Object} args
- * @param {FilterSectionStatus[][]} args.filterStatus
+ * @param {FilterStatus} args.filterStatus
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex
@@ -235,7 +235,7 @@ export function updateCombineMode({
 
 /**
  * @param {Object} args
- * @param {FilterSectionStatus[][]} args.filterStatus
+ * @param {FilterStatus} args.filterStatus
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex
@@ -306,7 +306,7 @@ export function updateRangeValue({
 
 /**
  * @param {Object} args
- * @param {FilterSectionStatus[][]} args.filterStatus
+ * @param {FilterStatus} args.filterStatus
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex

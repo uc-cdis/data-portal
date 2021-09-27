@@ -6,10 +6,17 @@ import IconComponent from './Icon';
 import './IndexButtonBar.css';
 
 /**
- * NavBar renders row of nav-items of form { name, icon, link }
- * @param {dictIcons, buttons} params
+ * @typedef {Object} IndexButtonBarProps
+ * @property {any[]} buttons
+ * @property {{ [iconName: string]: (height: string, style: Object) => JSX.Element }} dictIcons
+ * @property {any} userAccess
  */
-function IndexButtonBar({ dictIcons, buttons, userAccess }) {
+
+/**
+ * NavBar renders row of nav-items of form { name, icon, link }
+ * @param {IndexButtonBarProps} props
+ */
+function IndexButtonBar({ buttons, dictIcons, userAccess }) {
   const history = useHistory();
   const canUserSeeComponent = (componentName) => {
     const authResult = userAccess[componentName];
@@ -48,8 +55,8 @@ function IndexButtonBar({ dictIcons, buttons, userAccess }) {
 }
 
 IndexButtonBar.propTypes = {
-  dictIcons: PropTypes.object.isRequired,
   buttons: PropTypes.array.isRequired,
+  dictIcons: PropTypes.objectOf(PropTypes.func).isRequired,
   userAccess: PropTypes.object.isRequired,
 };
 

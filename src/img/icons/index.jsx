@@ -29,94 +29,61 @@ import IcoUpload from './upload.svg';
 import IcoUploadWhite from './upload-white.svg';
 import IcoWorkspace from './workspace.svg';
 
+/** @type {{ [iconName: string]: (height: string, style: Object) => JSX.Element}} */
 const dictIcons = {
-  analysis: (height, customedStyles) => (
-    <IcoAnalysis height={height} style={{ ...customedStyles }} />
+  analysis: (height, style) => <IcoAnalysis height={height} style={style} />,
+  back: (height, style) => <IcoBack height={height} style={style} />,
+  'cohort-tools': (height, style) => (
+    <IcoCohortTools height={height} style={style} />
   ),
-  back: (height, customedStyles) => (
-    <IcoBack height={height} style={{ ...customedStyles }} />
+  copy: (height, style) => <IcoCopy height={height} style={style} />,
+  checkbox: (height, style) => <IcoCheckbox height={height} style={style} />,
+  cross: (height, style) => <IcoCross height={height} style={style} />,
+  'cross-key': (height, style) => <IcoCrossKey height={height} style={style} />,
+  'data-access': (height, style) => (
+    <IcoDataAccess height={height} style={style} />
   ),
-  'cohort-tools': (height, customedStyles) => (
-    <IcoCohortTools height={height} style={{ ...customedStyles }} />
+  'data-analyze': (height, style) => (
+    <IcoDataAnalyze height={height} style={style} />
   ),
-  copy: (height, customedStyles) => (
-    <IcoCopy height={height} style={{ ...customedStyles }} />
+  'data-explore': (height, style) => (
+    <IcoDataExplore height={height} style={style} />
   ),
-  checkbox: (height, customedStyles) => (
-    <IcoCheckbox height={height} style={{ ...customedStyles }} />
+  'data-field-define': (height, style) => (
+    <IcoDataFieldDefine height={height} style={style} />
   ),
-  cross: (height, customedStyles) => (
-    <IcoCross height={height} style={{ ...customedStyles }} />
+  'data-files': (height, style) => (
+    <IcoDataFiles height={height} style={style} />
   ),
-  'cross-key': (height, customedStyles) => (
-    <IcoCrossKey height={height} style={{ ...customedStyles }} />
+  'data-submit': (height, style) => (
+    <IcoDataSubmit height={height} style={style} />
   ),
-  'data-access': (height, customedStyles) => (
-    <IcoDataAccess height={height} style={{ ...customedStyles }} />
+  delete: (height, style) => <IcoDelete height={height} style={style} />,
+  dictionary: (height, style) => (
+    <IcoDictionary height={height} style={style} />
   ),
-  'data-analyze': (height, customedStyles) => (
-    <IcoDataAnalyze height={height} style={{ ...customedStyles }} />
+  download: (height, style) => <IcoDownload height={height} style={style} />,
+  exit: (height, style) => <IcoExit height={height} style={style} />,
+  exploration: (height, style) => (
+    <IcoExploration height={height} style={style} />
   ),
-  'data-explore': (height, customedStyles) => (
-    <IcoDataExplore height={height} style={{ ...customedStyles }} />
+  files: (height, style) => <IcoFiles height={height} style={style} />,
+  gen3: (height, style) => <IcoGen3 height={height} style={style} />,
+  key: (height, style) => <IcoKey height={height} style={style} />,
+  profile: (height, style) => <IcoProfile height={height} style={style} />,
+  query: (height, style) => <IcoQuery height={height} style={style} />,
+  status_error: (height, style) => (
+    <IcoStatusError height={height} style={style} />
   ),
-  'data-field-define': (height, customedStyles) => (
-    <IcoDataFieldDefine height={height} style={{ ...customedStyles }} />
+  status_ready: (height, style) => (
+    <IcoStatusReady height={height} style={style} />
   ),
-  'data-files': (height, customedStyles) => (
-    <IcoDataFiles height={height} style={{ ...customedStyles }} />
+  upload: (height, style) => <IcoUpload height={height} style={style} />,
+  'upload-white': (height, style) => (
+    <IcoUploadWhite height={height} style={style} />
   ),
-  'data-submit': (height, customedStyles) => (
-    <IcoDataSubmit height={height} style={{ ...customedStyles }} />
-  ),
-  delete: (height, customedStyles) => (
-    <IcoDelete height={height} style={{ ...customedStyles }} />
-  ),
-  dictionary: (height, customedStyles) => (
-    <IcoDictionary height={height} style={{ ...customedStyles }} />
-  ),
-  download: (height, customedStyles) => (
-    <IcoDownload height={height} style={{ ...customedStyles }} />
-  ),
-  exit: (height, customedStyles) => (
-    <IcoExit height={height} style={{ ...customedStyles }} />
-  ),
-  exploration: (height, customedStyles) => (
-    <IcoExploration height={height} style={{ ...customedStyles }} />
-  ),
-  files: (height, customedStyles) => (
-    <IcoFiles height={height} style={{ ...customedStyles }} />
-  ),
-  gen3: (height, customedStyles) => (
-    <IcoGen3 height={height} style={{ ...customedStyles }} />
-  ),
-  key: (height, customedStyles) => (
-    <IcoKey height={height} style={{ ...customedStyles }} />
-  ),
-  profile: (height, customedStyles) => (
-    <IcoProfile height={height} style={{ ...customedStyles }} />
-  ),
-  query: (height, customedStyles) => (
-    <IcoQuery height={height} style={{ ...customedStyles }} />
-  ),
-  status_error: (height, customedStyles) => (
-    <IcoStatusError height={height} style={{ ...customedStyles }} />
-  ),
-  status_ready: (height, customedStyles) => (
-    <IcoStatusReady height={height} style={{ ...customedStyles }} />
-  ),
-  upload: (height, customedStyles) => (
-    <IcoUpload height={height} style={{ ...customedStyles }} />
-  ),
-  'upload-white': (height, customedStyles) => (
-    <IcoUploadWhite height={height} style={{ ...customedStyles }} />
-  ),
-  workspace: (height, customedStyles) => (
-    <IcoWorkspace height={height} style={{ ...customedStyles }} />
-  ),
-  uchicago: (height, customedStyles) => (
-    <IcoSignature height={height} style={{ ...customedStyles }} />
-  ),
+  workspace: (height, style) => <IcoWorkspace height={height} style={style} />,
+  uchicago: (height, style) => <IcoSignature height={height} style={style} />,
 };
 
 export default dictIcons;

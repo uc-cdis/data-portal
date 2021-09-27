@@ -8,32 +8,33 @@ import { overrideSelectTheme } from '../utils';
 import './Login.less';
 
 /**
- * @typedef {Object} LoginProvider
- * @property {string} idp
- * @property {string} name
- * @property {{ name: string; url: string }[]} urls
- * @property {boolean} [secondary]
- */
-
-/**
  * @typedef {Object} LoginData
  * @property {string} title
  * @property {string} subTitle
  * @property {string} text
- * @property {string} contact
  * @property {{ text?: string; href: string }} [contact_link]
- * @property {string} [email]
+ * @property {string} [contact] deprecated; use contact_link
+ * @property {string} [email] deprecated; use contact_link
  */
 
-/** @typedef {{ label: string; value: string }} LoginOption */
+/**
+ * @typedef {Object} LoginProvider
+ * @property {string} idp
+ * @property {string} name
+ * @property {{ name: string; url: string }[]} urls
+ * @property {string} [desc]
+ * @property {boolean} [secondary]
+ * @property {string} [id] deprecated; use idp
+ * @property {string} [url] deprecated; use urls
+ */
 
 /**
  * @typedef {Object} LoginProps
  * @property {LoginData} data
- * @property {LoginProvider[]} providers
+ * @property {LoginProvider[]} [providers]
  */
 
-/** @type {LoginProvider} */
+/** @type {LoginProvider[]} */
 const defaultProviders = [
   {
     idp: 'google',
@@ -73,11 +74,10 @@ function getLoginOptions(providers) {
 }
 
 /** @param {LoginProps} props */
-
 function Login({ data, providers = defaultProviders }) {
   const location = useLocation();
   /** @type {{ label: string; value: string; }} */
-  const emptyOption = {};
+  const emptyOption = undefined;
   const [selectedLoginOption, setSelectedLoginOption] = useState(emptyOption);
   const loginOptions = getLoginOptions(providers);
 
@@ -173,18 +173,33 @@ function Login({ data, providers = defaultProviders }) {
 }
 
 Login.propTypes = {
-  data: PropTypes.shape({
+  data: PropTypes.exact({
     title: PropTypes.string.isRequired,
     subTitle: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
-    contact: PropTypes.string.isRequired,
-    contact_link: PropTypes.shape({
+    contact_link: PropTypes.exact({
       text: PropTypes.string,
       href: PropTypes.string.isRequired,
     }),
-    email: PropTypes.string, // deprecated; use contact_link instead
+    contact: PropTypes.string, // deprecated; use contact_link
+    email: PropTypes.string, // deprecated; use contact_link
   }).isRequired,
-  providers: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+  providers: PropTypes.arrayOf(
+    PropTypes.exact({
+      idp: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      urls: PropTypes.arrayOf(
+        PropTypes.exact({
+          name: PropTypes.string.isRequired,
+          url: PropTypes.string.isRequired,
+        }).isRequired
+      ).isRequired,
+      desc: PropTypes.string,
+      secondary: PropTypes.bool,
+      id: PropTypes.string, // deprecated; use id
+      url: PropTypes.string, // deprecated; use urls
+    }).isRequired
+  ),
 };
 
 export default Login;

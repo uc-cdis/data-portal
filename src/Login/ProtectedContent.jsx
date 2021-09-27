@@ -23,14 +23,12 @@ import './ProtectedContent.css';
  * @property {?Object} user
  */
 
-/** @typedef {Object} ReduxStore */
-
 /**
  * @typedef {object} ProtectedContentProps
  * @property {React.ReactNode} children required child component
- * @property {boolean} isAdminOnly default false - if true, redirect to index page
- * @property {boolean} isPublic default false - set true to disable auth-guard
- * @property {() => Promise} filter optional filter to apply before rendering the child component
+ * @property {boolean} [isAdminOnly] default false - if true, redirect to index page
+ * @property {boolean} [isPublic] default false - set true to disable auth-guard
+ * @property {() => Promise} [filter] optional filter to apply before rendering the child component
  */
 
 const LOCATIONS_DICTIONARY = [
@@ -66,7 +64,9 @@ function ProtectedContent({
   /**
    * Start filter the 'newState' for the checkLoginStatus component.
    * Check if the user is logged in, and update state accordingly.
-   * @param {ReduxStore} store
+   * @param {Object} store
+   * @param {import('redux-thunk').ThunkDispatch<any, any, Promise>} store.dispatch
+   * @param {() => any} store.getState
    * @param {ProtectedContentState} currentState
    * @returns {Promise<ProtectedContentState>}
    */
@@ -82,8 +82,9 @@ function ProtectedContent({
     if (Date.now() - newState.user.lastAuthMs < 60000)
       return Promise.resolve(newState);
 
+    /** @type {{ dispatch: import('redux-thunk').ThunkDispatch}} */
     return store
-      .dispatch(fetchUser) // make an API call to see if we're still logged in ...
+      .dispatch(fetchUser()) // make an API call to see if we're still logged in ...
       .then(() => {
         newState.user = store.getState().user;
         if (!newState.user.username) {
@@ -91,7 +92,7 @@ function ProtectedContent({
           newState.redirectTo = '/login';
           newState.authenticated = false;
         } else {
-          store.dispatch(fetchUserAccess);
+          store.dispatch(fetchUserAccess());
         }
         return newState;
       });
@@ -128,19 +129,21 @@ function ProtectedContent({
 
   /**
    * Fetch resources on demand based on path
-   * @param {ReduxStore} store
+   * @param {Object} store
+   * @param {import('redux-thunk').ThunkDispatch} store.dispatch
+   * @param {() => any} store.getState
    */
   function fetchResources({ dispatch, getState }) {
     const { graphiql, project, submission } = getState();
     const { path } = match;
 
     if (LOCATIONS_DICTIONARY.includes(path) && !submission.dictionary) {
-      dispatch(fetchDictionary);
+      dispatch(fetchDictionary());
     } else if (LOCATIONS_PROJECTS.includes(path) && !project.projects) {
-      dispatch(fetchProjects);
+      dispatch(fetchProjects());
     } else if (LOCATIONS_SCHEMA.includes(path)) {
-      if (!graphiql.schema) dispatch(fetchSchema);
-      if (!graphiql.guppySchema) dispatch(fetchGuppySchema);
+      if (!graphiql.schema) dispatch(fetchSchema());
+      if (!graphiql.guppySchema) dispatch(fetchGuppySchema());
     }
   }
 
@@ -161,8 +164,8 @@ function ProtectedContent({
         ]).then(() => {
           if (isPublic)
             if (typeof filter === 'function')
-              filter().finally(() => updateState(store));
-            else updateState(store);
+              filter().finally(() => updateState(state));
+            else updateState(state);
           else
             checkLoginStatus(store, state)
               .then(checkIfRegisterd)

@@ -17,7 +17,7 @@ import './typedef';
 
 /**
  * @param {Object} prop
- * @param {AggsData} prop.aggsData
+ * @param {SimpleAggsData} prop.aggsData
  * @param {SurvivalAnalysisConfig} prop.config
  * @param {{ field: string; name: string; }[]} prop.fieldMapping
  * @param {FilterState} prop.filter

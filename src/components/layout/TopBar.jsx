@@ -6,13 +6,15 @@ import './TopBar.css';
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
- * @param {Object} props
- * @param {{ name: string; link: string; icon?: string; }[]} props.topItems
- * @param {string} props.username
- * @param {boolean} props.isAdminUser
- * @param {() => void} props.onLogoutClick
+ * @typedef {Object} TopBarProps
+ * @property {boolean} isAdminUser
+ * @property {React.MouseEventHandler<HTMLButtonElement>} onLogoutClick
+ * @property {{ name: string; link: string; icon?: string; }[]} topItems
+ * @property {string} [username]
  */
-function TopBar({ topItems, username, isAdminUser, onLogoutClick }) {
+
+/** @param {TopBarProps} props */
+function TopBar({ isAdminUser, onLogoutClick, topItems, username }) {
   const location = useLocation();
 
   return (
@@ -63,10 +65,10 @@ function TopBar({ topItems, username, isAdminUser, onLogoutClick }) {
 }
 
 TopBar.propTypes = {
+  isAdminUser: PropTypes.bool.isRequired,
+  onLogoutClick: PropTypes.func.isRequired,
   topItems: PropTypes.array.isRequired,
   username: PropTypes.string,
-  isAdminUser: PropTypes.bool,
-  onLogoutClick: PropTypes.func.isRequired,
 };
 
 export default TopBar;

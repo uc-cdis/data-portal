@@ -18,21 +18,57 @@ const SECRET_KEY_MSG =
   'This secret key is only displayed this time. Please save it!';
 export const CREATE_API_KEY_BTN = 'Create API key';
 
+/**
+ * @param {string} savingStr
+ * @param {string} filename
+ */
 export const saveToFile = (savingStr, filename) => {
   const blob = new Blob([savingStr], { type: 'text/json' });
   FileSaver.saveAs(blob, filename);
 };
 
+/**
+ * @typedef {Object} PopupState
+ * @property {boolean} [deleteTokenPopup]
+ * @property {string} [keypairsApi]
+ * @property {boolean} [saveTokenPopup]
+ */
+
+/**
+ * @typedef {Object} UserProfileData
+ * @property {any} [create_error]
+ * @property {any} [delete_error]
+ * @property {{ exp: number; jti: string; }[]} [jtis]
+ * @property {{ api_key: string; key_id: string; refreshCred: string; }} [refreshCred]
+ * @property {string} [requestDeleteJTI]
+ * @property {number} [requestDeleteExp]
+ * @property {string} [strRefreshCred]
+ */
+
+/**
+ * @typedef {Object} UserProfileProps
+ * @property {() => void} onClearCreationSession
+ * @property {() => void} onClearDeleteSession
+ * @property {(keypairsApi: string) => void} onCreateKey
+ * @property {(jti: string, exp: number, keypairsApi: string) => void} onDeleteKey
+ * @property {(jti: string, exp: number) => void} onRequestDeleteKey
+ * @property {(state: PopupState) => void} onUpdatePopup
+ * @property {PopupState} popups
+ * @property {import('./UserInformation').UserInformationProps} userInformation
+ * @property {UserProfileData} userProfile
+ */
+
+/** @param {UserProfileProps} props */
 const UserProfile = ({
-  userInformation,
-  userProfile,
-  popups,
-  onCreateKey,
   onClearCreationSession,
-  onUpdatePopup,
+  onClearDeleteSession,
+  onCreateKey,
   onDeleteKey,
   onRequestDeleteKey,
-  onClearDeleteSession,
+  onUpdatePopup,
+  popups,
+  userInformation,
+  userProfile,
 }) => {
   const onCreate = () => {
     onCreateKey(credentialCdisPath);
@@ -126,7 +162,7 @@ const UserProfile = ({
             <KeyTable
               jtis={userProfile.jtis}
               onDelete={(jti) => {
-                onRequestDeleteKey(jti.jti, jti.exp, credentialCdisPath);
+                onRequestDeleteKey(jti.jti, jti.exp);
                 onUpdatePopup({
                   deleteTokenPopup: true,
                   keypairsApi: credentialCdisPath,
@@ -141,15 +177,39 @@ const UserProfile = ({
 };
 
 UserProfile.propTypes = {
-  userInformation: PropTypes.object.isRequired,
-  userProfile: PropTypes.object.isRequired,
-  popups: PropTypes.object.isRequired,
   onClearCreationSession: PropTypes.func.isRequired,
   onCreateKey: PropTypes.func.isRequired,
   onUpdatePopup: PropTypes.func.isRequired,
   onDeleteKey: PropTypes.func.isRequired,
   onRequestDeleteKey: PropTypes.func.isRequired,
   onClearDeleteSession: PropTypes.func.isRequired,
+  popups: PropTypes.exact({
+    deleteTokenPopup: PropTypes.bool,
+    keypairsApi: PropTypes.string,
+    saveTokenPopup: PropTypes.bool,
+  }).isRequired,
+  userInformation: PropTypes.exact({
+    email: PropTypes.string.isRequired,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    institution: PropTypes.string,
+    updateInformation: PropTypes.func,
+  }).isRequired,
+  userProfile: PropTypes.exact({
+    create_error: PropTypes.any,
+    delete_error: PropTypes.any,
+    jtis: PropTypes.arrayOf(
+      PropTypes.exact({ jti: PropTypes.string, exp: PropTypes.number })
+    ),
+    refreshCred: PropTypes.exact({
+      api_key: PropTypes.string,
+      key_id: PropTypes.string,
+      refreshCred: PropTypes.string,
+    }),
+    requestDeleteJTI: PropTypes.string,
+    requestDeleteExp: PropTypes.number,
+    strRefreshCred: PropTypes.any,
+  }).isRequired,
 };
 
 export default UserProfile;

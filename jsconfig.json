@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es2015",
+      "es2015.iterable",
+      "es2019",
+      "es2019.array",
+      "esnext"
+    ],
+    "target": "es6"
+  },
+  "typeAcquisition": {
+    "exclude": ["jest-fetch-mock"]
+  },
+  "include": ["src", "index.d.ts"],
+  "exclude": [
+    "src/CoreMetadata",
+    "src/DataDictionary",
+    "src/DataModelGraph",
+    "src/GuppyDataExplorer/ExplorerHeatMap",
+    "src/Indexing",
+    "src/QueryNode",
+    "src/Submission",
+    "src/Workspace"
+  ]
+}

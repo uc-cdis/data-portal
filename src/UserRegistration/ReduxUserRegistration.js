@@ -16,7 +16,7 @@ const mapDispatchToProps = (dispatch) => ({
   updateAccess: (user) => {
     if (user.authz['/portal'] !== undefined) {
       dispatch({ type: 'RECEIVE_USER', user });
-      dispatch(fetchUserAccess);
+      dispatch(fetchUserAccess());
       getIndexPageCounts();
       return 'success';
     }

@@ -271,3 +271,7 @@
   top: -1px;
   position: relative;
 }
+
+.g3-select-filter {
+  margin-top: 14px;
+}

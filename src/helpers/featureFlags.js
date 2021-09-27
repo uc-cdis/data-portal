@@ -9,11 +9,12 @@
 
 import { config } from '../params';
 
-/*
-  Will check parameters.js to see if there is default config for feature flags
-  Then will check to see if user has set any flags in the browser
-  Will return true if either of these types of flags is set to true
-*/
+/**
+ * Will check parameters.js to see if there is default config for feature flags
+ * Then will check to see if user has set any flags in the browser
+ * Will return true if either of these types of flags is set to true
+ * @param {string} featureName
+ */
 function isEnabled(featureName) {
   const compileTimeFlags = config.featureFlags;
   const runTimeFlags =

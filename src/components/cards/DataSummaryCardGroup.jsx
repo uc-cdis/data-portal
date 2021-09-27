@@ -4,13 +4,30 @@ import CountBox from './CountBox';
 import './DataSummaryCardGroup.less';
 import { parseParamWidth } from '../../utils.js';
 
+/**
+ * @typedef {Object} SummaryValue
+ * @property {string} label
+ * @property {number} value
+ */
+
+/**
+ * @typedef {Object} DataSummaryCardGroupProps
+ * @property {('left' | 'center')} [align]
+ * @property {boolean} [connected]
+ * @property {number | string} [height]
+ * @property {number} [lockValue]
+ * @property {(SummaryValue | SummaryValue[])[]} summaryItems
+ * @property {number | string} [width]
+ */
+
+/** @param {DataSummaryCardGroupProps} props */
 function DataSummaryCardGroup({
+  align = 'center',
+  connected = false,
+  height = 97,
+  lockValue = -1,
   summaryItems,
-  connected,
-  align,
-  width,
-  height,
-  lockValue,
+  width = '100%',
 }) {
   const totalWidth = parseParamWidth(width);
   return (
@@ -26,10 +43,10 @@ function DataSummaryCardGroup({
           className={'data-summary-card-group__'
             .concat(connected ? 'connected' : 'separated')
             .concat('-card')}
-          key={item.label || item[0].label}
+          key={!Array.isArray(item) ? item.label : item[0].label}
         >
           {connected && index > 0 && <div className='left-border' />}
-          {!item.length ? (
+          {!Array.isArray(item) ? (
             <CountBox
               label={item.label}
               value={item.value}
@@ -60,28 +77,22 @@ function DataSummaryCardGroup({
   );
 }
 
-const summaryValueShape = PropTypes.shape({
+const summaryValuePropType = PropTypes.exact({
   label: PropTypes.string,
   value: PropTypes.number,
 });
-const summarySubValueShape = PropTypes.arrayOf(summaryValueShape);
 DataSummaryCardGroup.propTypes = {
-  summaryItems: PropTypes.arrayOf(
-    PropTypes.oneOfType([summaryValueShape, summarySubValueShape])
-  ).isRequired,
-  connected: PropTypes.bool,
   align: PropTypes.oneOf(['left', 'center']),
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  height: PropTypes.number,
+  connected: PropTypes.bool,
+  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   lockValue: PropTypes.number,
-};
-
-DataSummaryCardGroup.defaultProps = {
-  connected: false,
-  align: 'center',
-  width: '100%',
-  height: 97,
-  lockValue: -1,
+  summaryItems: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      summaryValuePropType,
+      PropTypes.arrayOf(summaryValuePropType),
+    ])
+  ).isRequired,
+  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default DataSummaryCardGroup;

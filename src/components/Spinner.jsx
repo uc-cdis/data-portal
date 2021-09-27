@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Spinner.less';
 
-function Spinner({ text, type }) {
-  if (type === 'spinning') {
+function Spinner({ text = '', type = 'dots' }) {
+  if (type === 'spinning')
     // spinning spinner
     return (
       <div className='spinning-spinner-cell'>
@@ -12,7 +12,6 @@ function Spinner({ text, type }) {
         </div>
       </div>
     );
-  }
 
   // dots
   return (
@@ -30,11 +29,6 @@ function Spinner({ text, type }) {
 Spinner.propTypes = {
   text: PropTypes.string,
   type: PropTypes.string,
-};
-
-Spinner.defaultProps = {
-  text: '',
-  type: 'dots',
 };
 
 export default Spinner;
