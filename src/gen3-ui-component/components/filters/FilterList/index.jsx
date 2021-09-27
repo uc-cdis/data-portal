@@ -7,15 +7,15 @@ import '../typedef';
 /**
  * @typedef {Object} FilterListProps
  * @property {string} disabledTooltipMessage
- * @property {boolean[]} expandedStatus
- * @property {(OptionFilterStatus | RangeFilterStatus)[]} filterStatus
- * @property {boolean} hideZero
+ * @property {boolean[]} [expandedStatus]
+ * @property {(OptionFilterStatus | RangeFilterStatus)[]} [filterStatus]
+ * @property {boolean} [hideZero]
  * @property {string} lockedTooltipMessage
- * @property {(lowerBound: number, upperBound: number, min: number, max: number, rangeStep: number) => void} onAfterDrag
- * @property {(index: number) => void} onClearSection
- * @property {(index: number, label: string) => void} onSelect
- * @property {(fieldName: string, value: string) => void} onToggleCombineMode
- * @property {(index: number, isExpanded: boolean) => void} onToggleSection
+ * @property {(index: number, lowerBound: number, upperBound: number, min: number, max: number, rangeStep: number) => void} [onAfterDrag]
+ * @property {(index: number) => void} [onClearSection]
+ * @property {(index: number, label: string) => void} [onSelect]
+ * @property {(index: number, fieldName: string, value: string) => void} [onToggleCombineMode]
+ * @property {(index: number, isExpanded: boolean) => void} [onToggleSection]
  * @property {FilterSectionConfig[]} sections
  * @property {number} tierAccessLimit
  */

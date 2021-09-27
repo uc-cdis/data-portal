@@ -29,6 +29,7 @@ import '../typedef';
  * @property {JSX.Element[]} tabs
  */
 
+/** @type {FilterState} */
 const defaultInitialAppliedFilters = {};
 
 /** @param {FilterGroupProps} props */
@@ -111,7 +112,7 @@ function FilterGroup({
 
   /**
    * @param {number} sectionIndex
-   * @param {boolean[][]} isSectionExpanded
+   * @param {boolean} isExpanded
    */
   function handleToggleSection(sectionIndex, isExpanded) {
     const newExpandedStatus = cloneDeep(expandedStatus);
@@ -137,7 +138,7 @@ function FilterGroup({
   /**
    * @param {number} sectionIndex
    * @param {string} combineModeFieldName
-   * @param {boolean} combineModeValue
+   * @param {string} combineModeValue
    */
   function handleToggleCombineMode(
     sectionIndex,
