@@ -1,3 +1,4 @@
+/** @type {import('redux').Reducer} */
 const index = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_INDEX_PAGE_COUNTS': {
