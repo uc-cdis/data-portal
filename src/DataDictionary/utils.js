@@ -161,14 +161,13 @@ export const graphStyleConfig = {
   nodeIconRadius: 10,
 };
 
-export const parseDictionaryNodes = (dictionary) =>
-  Object.keys(dictionary)
-    .filter((id) => id.charAt(0) !== '_' && id === dictionary[id].id)
-    .map((id) => {
-      const originNode = dictionary[id];
-      return originNode;
-    })
-    .filter((node) => node.category && node.id);
+export const parseDictionaryNodes = (dictionary = {}) => {
+  const nodes = [];
+  for (const [id, node] of Object.entries(dictionary))
+    if (!id.startsWith('_') && id === node.id && node.category !== undefined)
+      nodes.push(node);
+  return nodes;
+};
 
 export const getPropertyDescription = (property) => {
   let description;
