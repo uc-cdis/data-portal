@@ -5,6 +5,7 @@ import {
   getSearchHistoryItems,
   addSearchHistoryItems,
   clearSearchHistoryItems,
+  parseDictionaryNodes,
 } from './utils';
 
 describe('the DataDictionaryNode', () => {
@@ -107,5 +108,39 @@ describe('the DataDictionaryNode', () => {
     const ls3 = addSearchHistoryItems(item2);
     expect(ls3).toEqual([item2, item1]);
     expect(clearSearchHistoryItems()).toEqual([]);
+  });
+});
+
+describe('The data dictionary', () => {
+  it('is parsed to get relevant nodes only', () => {
+    const emptyDictionary = undefined;
+    const emptyNodes = [];
+    expect(parseDictionaryNodes(emptyDictionary)).toEqual(emptyNodes);
+
+    const dictionary = {
+      // invalid key, invalid node
+      _v: {},
+      // invalid key, valid node
+      _w: {
+        id: '_w',
+        category: 'foo',
+      },
+      // valid key, invalid node (unmatching id)
+      x: {
+        id: '',
+        category: 'foo',
+      },
+      // valid key, valid node
+      y: {
+        id: 'y',
+        category: 'foo',
+      },
+      // valid key, invalid node (missing category)
+      z: {
+        id: 'z',
+      },
+    };
+    const parsedNodes = [{ id: 'y', category: 'foo' }];
+    expect(parseDictionaryNodes(dictionary)).toEqual(parsedNodes);
   });
 });
