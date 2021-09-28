@@ -1,5 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { parseDictionaryNodes } from '../../utils';
 import DataDictionaryTable, { category2NodeList } from './DataDictionaryTable';
 
 describe('the DataDictionaryTable component', () => {
@@ -41,9 +42,10 @@ describe('the DataDictionaryTable component', () => {
       properties: [],
     },
   };
+  const testNodes = parseDictionaryNodes(testDict);
 
   it('knows how to organize dictionary types by category', () => {
-    const mapping = category2NodeList(testDict);
+    const mapping = category2NodeList(testNodes);
     expect(Array.isArray(mapping.A)).toBe(true);
     expect(Array.isArray(mapping.B)).toBe(true);
     expect(mapping.A.length).toBe(2);
@@ -51,7 +53,7 @@ describe('the DataDictionaryTable component', () => {
   });
 
   it('renders', () => {
-    const wrapper = mount(<DataDictionaryTable dictionary={testDict} />);
+    const wrapper = mount(<DataDictionaryTable dictionaryNodes={testNodes} />);
     expect(wrapper.find(DataDictionaryTable).length).toBe(1);
   });
 });

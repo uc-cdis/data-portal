@@ -1,20 +1,22 @@
 import { connect } from 'react-redux';
 import { appname } from '../../../localconf';
 import { setExpandNode } from '../../action';
+import { parseDictionaryNodes } from '../../utils';
 import DataDictionaryTable from './DataDictionaryTable';
 
-const ReduxDataDictionaryTable = (() => {
-  const mapStateToProps = (state) => ({
-    dictionary: state.submission.dictionary,
-    highlightingNodeID: state.ddgraph.tableExpandNodeID,
-    dictionaryName: appname,
-  });
+const mapStateToProps = (state) => ({
+  dictionaryName: appname,
+  dictionaryNodes: parseDictionaryNodes(state.submission.dictionary),
+  highlightingNodeID: state.ddgraph.tableExpandNodeID,
+});
 
-  const mapDispatchToProps = (dispatch) => ({
-    onExpandNode: (nodeID) => dispatch(setExpandNode(nodeID)),
-  });
+const mapDispatchToProps = (dispatch) => ({
+  onExpandNode: (nodeID) => dispatch(setExpandNode(nodeID)),
+});
 
-  return connect(mapStateToProps, mapDispatchToProps)(DataDictionaryTable);
-})();
+const ReduxDataDictionaryTable = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DataDictionaryTable);
 
 export default ReduxDataDictionaryTable;
