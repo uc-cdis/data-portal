@@ -516,7 +516,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               <div className='discovery-header__dropdown-tags-control-panel'>
                 {(enableSearchBar)
                 && (
-                  <div className='discovery-header__dropdown-tags-search'>
+                  <div className='discovery-search-container discovery-header__dropdown-tags-search'>
                     <DiscoveryMDSSearch
                       searchTerm={searchTerm}
                       handleSearchChange={handleSearchChange}
@@ -575,7 +575,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         { (enableSearchBar && !enableSearchableTags
         )
             && (
-              <div className='discovery-search-container'>
+              <div className='discovery-search-container discovery-search-container__standalone'>
                 <DiscoveryMDSSearch
                   searchTerm={searchTerm}
                   handleSearchChange={handleSearchChange}
