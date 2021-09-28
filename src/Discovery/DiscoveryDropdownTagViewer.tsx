@@ -31,7 +31,12 @@ const DiscoveryDropdownTagViewer: React.FunctionComponent<DiscoveryTagViewerProp
       });
     });
     const tagArray = Object.keys(tagMap).sort((a, b) => a.localeCompare(b));
-    const valueArray = _.intersection(tagArray, Object.keys(props.selectedTags));
+    // get selected tags which value is not 'undefined'
+    const trulySelectedTags = Object.keys(props.selectedTags).reduce((acc, el) => {
+      if (props.selectedTags[el] !== undefined) acc.push(el);
+      return acc;
+    }, []);
+    const valueArray = _.intersection(tagArray, trulySelectedTags);
 
     return (
       <Select
