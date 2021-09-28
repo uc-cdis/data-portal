@@ -4,7 +4,7 @@ import {
   Tag, Popover, Space, Collapse, Button,
 } from 'antd';
 import {
-  UnlockOutlined, ClockCircleOutlined, DashOutlined,
+  UnlockOutlined, ClockCircleOutlined, DashOutlined, UpOutlined, DownOutlined, UndoOutlined,
 } from '@ant-design/icons';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
@@ -524,13 +524,25 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                     />
                   </div>
                 )}
-                <Button
-                  type='default'
-                  className={'discovery-header__dropdown-tags-control-button'}
-                  onClick={() => { setSearchableTagCollapsed(!searchableTagCollapsed); }}
-                >
-                  {`${searchableTagCollapsed ? 'Show' : 'Hide'} ${props.config.features.search.tagSearchDropdown.collapsibleButtonText || 'Tag Panel'}`}
-                </Button>
+                <div className='discovery-header__dropdown-tags-buttons'>
+                  <Button
+                    type='default'
+                    className={'discovery-header__dropdown-tags-control-button'}
+                    disabled={Object.keys(selectedTags).length === 0}
+                    onClick={() => { setSelectedTags({}); }}
+                    icon={<UndoOutlined />}
+                  >
+                    {'Reset Selection'}
+                  </Button>
+                  <Button
+                    type='default'
+                    className={'discovery-header__dropdown-tags-control-button'}
+                    onClick={() => { setSearchableTagCollapsed(!searchableTagCollapsed); }}
+                    icon={(searchableTagCollapsed) ? <DownOutlined /> : <UpOutlined />}
+                  >
+                    {`${props.config.features.search.tagSearchDropdown.collapsibleButtonText || 'Tag Panel'}`}
+                  </Button>
+                </div>
               </div>
               <div className='discovery-header__dropdown-tags-display-panel'>
                 <Collapse activeKey={(searchableTagCollapsed) ? '' : '1'} ghost>

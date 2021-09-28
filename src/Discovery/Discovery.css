@@ -147,7 +147,7 @@
 .discovery-tag {
   cursor: pointer;
   line-height: 18px;
-  font-size: 10px;
+  font-size: 12px;
   box-sizing: border-box;
   border-radius: 5px;
   border-width: 2px;
@@ -196,7 +196,7 @@
   border-color: var(--g3-color__base-blue);
   border-width: 1px;
   border-radius: 7px;
-  max-width: 500px;
+  max-width: 800px;
 }
 
 .discovery-input-subtitle {
@@ -349,6 +349,9 @@
   border-color: var(--g3-color__base-blue);
   min-width: 150px;
   margin-left: 8px;
+  height: 40px;
+  border-width: 1px;
+  border-radius: 7px;
 }
 
 .discovery-header__dropdown-tags-control-panel {

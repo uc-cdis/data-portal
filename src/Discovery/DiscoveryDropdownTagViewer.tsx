@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import {
   Select, Row, Col, Tag,
 } from 'antd';
@@ -25,14 +26,12 @@ const DiscoveryDropdownTagViewer: React.FunctionComponent<DiscoveryTagViewerProp
       const tagField = props.config.minimalFieldMapping.tagsListFieldName;
       study[tagField].forEach((tag) => {
         if (tag.category === category.name) {
-          if (tagMap[tag.name] === undefined) {
-            tagMap[tag.name] = 1;
-          }
-          tagMap[tag.name] += 1;
+          tagMap[tag.name] = 1;
         }
       });
     });
-    const tagArray = Object.keys(tagMap).sort((a, b) => tagMap[b] - tagMap[a]);
+    const tagArray = Object.keys(tagMap).sort((a, b) => a.localeCompare(b));
+    const valueArray = _.intersection(tagArray, Object.keys(props.selectedTags));
 
     return (
       <Select
@@ -44,6 +43,7 @@ const DiscoveryDropdownTagViewer: React.FunctionComponent<DiscoveryTagViewerProp
         style={{ width: '100%' }}
         id={`discovery-tag-column--${category.name}`}
         placeholder={displayName}
+        value={valueArray}
         onSelect={(tag: string) => {
           props.setSelectedTags({
             ...props.selectedTags,
