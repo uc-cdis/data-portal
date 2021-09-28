@@ -547,7 +547,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               <div className='discovery-header__dropdown-tags-display-panel'>
                 <Collapse activeKey={(searchableTagCollapsed) ? '' : '1'} ghost>
                   <Panel header='This is panel header 1' key='1'>
-                    <div className='discovery-header__tags-dropdown'>
+                    <div className='discovery-header__dropdown-tags'>
                       <DiscoveryDropdownTagViewer
                         config={config}
                         studies={props.studies}
