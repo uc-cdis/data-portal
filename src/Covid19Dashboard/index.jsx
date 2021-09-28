@@ -13,7 +13,7 @@ import {
 } from '../localconf';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
-import WorldMapChart from './WorldMapChart';
+import ChicagoMapChart from './ChicagoMapChart';
 import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
 import ChartCarousel from './ChartCarousel';
@@ -274,7 +274,7 @@ class Covid19Dashboard extends React.Component {
           <Tabs>
             <TabList className='covid19-dashboard_tablist'>
               <Tab>COVID-19 in Illinois</Tab>
-              <Tab>COVID-19 in the world</Tab>
+              <Tab>COVID-19 in Chicagoland</Tab>
               <Tab>IL SARS-CoV2 Genomics</Tab>
             </TabList>
 
@@ -322,7 +322,7 @@ class Covid19Dashboard extends React.Component {
               </div>
             </TabPanel>
 
-            {/* world tab */}
+            {/* chicago tab */}
             <TabPanel className='covid19-dashboard_panel'>
               <div className='covid19-dashboard_counts'>
                 <CountWidget
@@ -341,17 +341,17 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_visualizations'>
                 { mapboxAPIToken
                   && (
-                    <WorldMapChart
+                    <ChicagoMapChart
                       geoJson={this.props.jhuGeojsonLatest}
                       jsonByLevel={this.props.jhuJsonByLevelLatest}
                       modeledFipsList={this.props.modeledFipsList}
                       fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                     />
                   )}
-                {chartsConfig.world && chartsConfig.world.length > 0
+                {chartsConfig.chicago && chartsConfig.chicago.length > 0
                   && (
                     <div className='covid19-dashboard_charts'>
-                      {chartsConfig.world.map((carouselConfig, i) => (
+                      {chartsConfig.chicago.map((carouselConfig, i) => (
                         <ChartCarousel
                           key={i}
                           chartsConfig={carouselConfig}
