@@ -328,7 +328,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   columns.push(
     {
       textWrap: 'word-break',
-      title: <div className='discovery-table-header'>Tags</div>,
+      title: <div className='discovery-table-header'> { config.tagsColumnName || "Tags" }</div>,
       ellipsis: false,
       width: config.tagColumnWidth || '200px',
       render: (_, record) => (
