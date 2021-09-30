@@ -43,7 +43,7 @@ class TimeCaseLayer extends React.Component {
   render() {
     return (
       <ReactMapGL.Source type='geojson' data={this.props.data}>
-        <ReactMapGL.Layer id='time-data' {...notIl(this.props.date)} layout={{ visibility: this.props.visibility }} />
+        <ReactMapGL.Layer id='time_data' {...notIl(this.props.date)} layout={{ visibility: this.props.visibility }} />
       </ReactMapGL.Source>
     );
   }

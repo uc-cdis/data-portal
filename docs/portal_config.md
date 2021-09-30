@@ -171,6 +171,7 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "dataExplorerConfig": { // required only if featureFlags.explorer is true; configuration for the Data Explorer (/explorer); can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the Data Explorer
+      // Note that the fields configured in `charts` must be present in the `filters` section as well
       "project_id": { // required; GraphQL field to query for a chart (ex: this one will display the number of projects, based on the project_id)
         "chartType": "count", // required; indicates this chart will display a “count”
         "title": "Projects" // required; title to display on the chart
@@ -340,6 +341,7 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "fileExplorerConfig": { // optional; configuration for the File Explorer; can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the File Explorer
+      // Note that the fields configured in `charts` must be present in the `filters` section as well
       "data_type": { // required; GraphQL field to query for a chart (ex: this one will display a bar chart for data types of the files in the cohort)
         "chartType": "stackedBar", // required; chart type of stack bar
         "title": "File Type" // required; title of chart
@@ -425,7 +427,16 @@ Below is an example, with inline comments describing what each JSON block config
       },
       "search": {
         "searchBar": {
-          "enabled": true
+          "enabled": true,
+          "inputSubtitle": "Search Bar", // optional, subtitle of search bar
+          "placeholder": "Search studies by keyword", // optional, placeholder text of search input
+          "searchableTextFields": ["study", "age", "publication"] // optional, list of properties in data to make searchable
+                                                                  // if not present, only fields visible in the table will be searchable
+        },
+        "tagSearchDropdown": { // optional, config section for searchable tags
+          "enabled": true,
+          "collapseOnDefault": false, // optional, whether the searchable tag panel is collapsed when loading, default value is "true"
+          "collapsibleButtonText": "Study Characteristics" // optional, display text for the searchable tag panel collapse control button, default value is "Tag Panel"
         }
       },
       "advSearchFilters": {
@@ -603,6 +614,9 @@ Below is an example, with inline comments describing what each JSON block config
       "method": "access",
       "service": "query_page"
     }
-  }
+  },
+  "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
+    "https://example.s3.amazonaws.com" // full url to be added
+  ]
 }
 ```
