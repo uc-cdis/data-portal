@@ -27,7 +27,7 @@ class ExplorerButtonGroup extends React.Component {
       exportingToTerra: false,
       exportingToSevenBridges: false,
       exportingPFBToURL: false,
-      pfbExportTargetURL: '', // stores the target URL when the user clicks an 'export-pfb-to-url' button
+      targetURLTemplate: '', // stores the target URL when the user clicks an 'export-pfb-to-url' button
       // for export to PFB
       exportPFBURL: '',
       exportPFBToWorkspaceGUID: '',
@@ -88,7 +88,7 @@ class ExplorerButtonGroup extends React.Component {
               toasterOpen: false,
               exportingPFBToURL: false,
             }, () => {
-              this.sendPFBToURL(this.state.pfbExportTargetURL);
+              this.sendPFBToURL(this.state.targetURLTemplate, this.state.exportPFBURL);
             });
           } else if (this.state.exportingPFBToWorkspace) {
             const pfbGUID = `${res.data.output}`.split('\n')[0];
@@ -140,10 +140,10 @@ class ExplorerButtonGroup extends React.Component {
       clickFunc = this.downloadManifest(buttonConfig.fileName, 'file');
     }
     if (buttonConfig.type === 'export-pfb-to-url') {
-      if (!buttonConfig.pfbExportTargetURL) {
-        throw new Error('Misconfiguration Error! Expected button of type `export-pfb-to-url` to have the required `pfbExportTargetURL` property');
+      if (!buttonConfig.targetURLTemplate) {
+        throw new Error('Misconfiguration Error! Expected button of type `export-pfb-to-url` to have the required `targetURLTemplate` property');
       }
-      clickFunc = this.exportPFBToURL(buttonConfig.pfbExportTargetURL);
+      clickFunc = this.exportPFBToURL(buttonConfig.targetURLTemplate);
     }
     if (buttonConfig.type === 'export') {
       // REMOVE THIS CODE WHEN TERRA EXPORT WORKS
@@ -429,32 +429,34 @@ class ExplorerButtonGroup extends React.Component {
     });
   }
 
-  // NOTE (@mpingram) this is a new way to send a PFB to an external website.
-  // New explorer button type: 'export-pfb-to-url'. Buttons of this type have
-  // a `pfbExportURL` property which is the target URL to send the PFB to.
-  // When the user clicks a 'export-pfb-to-url' button, store the `pfbExportURL`
-  // in the component state, create the pfb with exportToPFB(), and send the
-  // pfb to the target url with `sendPFBToURL()`.
-  // `sendPFBToURL()` is called from componentWillUpdate.
-  exportPFBToURL = (pfbExportTargetURL) => () => {
+  // This is a generic way to export a PFB to a third party, deprecating
+  // exportToTerra and exportToSevenBridges.
+  // See docs/export-pfb-to-url.md
+  // Code flow (it's confusing):
+  // 1. User clicks a 'export-pfb-to-url' button
+  // 2. Store target URL as state.targetURLTemplate
+  // 2. Kick off a PFB export job with this.exportToPFB()
+  // 3. componentDidUpdate polls the exportToPFB job status, when complete it will call
+  //    sendPFBToURL(this.state.targetURLTemplate)
+  exportPFBToURL = (targetURLTemplate) => () => {
     this.setState({
       exportingPFBToURL: true,
-      pfbExportTargetURL,
+      targetURLTemplate,
     }, () => {
       this.exportToPFB();
     });
   }
 
-  sendPFBToURL = () => {
-    const signedURL = encodeURIComponent(this.state.exportPFBURL);
+  sendPFBToURL = (targetURLTemplate, presignedURL) => {
+    const signedURL = encodeURIComponent(presignedURL);
     // the PFB export target URL is a template URL that should have a {{PRESIGNED_URL}} template
     // variable in it.
     const PRESIGNED_URL_TEMPLATE_VARIABLE = '{{PRESIGNED_URL}}';
-    const targetURLIsBad = this.state.pfbExportTargetURL.indexOf(PRESIGNED_URL_TEMPLATE_VARIABLE) === -1;
+    const targetURLIsBad = this.state.targetURLTemplate.indexOf(PRESIGNED_URL_TEMPLATE_VARIABLE) === -1;
     if (targetURLIsBad) {
-      throw new Error(`Misconfiguration error! An \`export-pfb-to-url\` button has a bad \`pfbExportTargetURL\` property. The string \`{{PRESIGNED_URL}}\` must appear in the \`pfbExportTargetURL\` property. Bad \`pfbExportTargetURL\`: ${this.state.pfbExportTargetURL}`);
+      throw new Error(`Misconfiguration error! An \`export-pfb-to-url\` button has a bad \`targetURLTemplate\` property. The string \`{{PRESIGNED_URL}}\` must appear in the \`targetURLTemplate\` property. Bad \`targetURLTemplate\`: ${this.state.targetURLTemplate}`);
     }
-    const targetURL = this.state.pfbExportTargetURL.replace(PRESIGNED_URL_TEMPLATE_VARIABLE, signedURL);
+    const targetURL = targetURLTemplate.replace(PRESIGNED_URL_TEMPLATE_VARIABLE, signedURL);
     window.location = targetURL;
   }
 
@@ -815,7 +817,10 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     }
     if (buttonConfig.type === 'export-pfb-to-url') {
       return this.isPFBRunning()
-        && this.state.exportingPFBToURL;
+        && this.state.exportingPFBToURL
+        // because we can have multiple `export-pfb-to-url` buttons, only make the
+        // one the user clicked have the pending state.
+        && this.state.targetURLTemplate === buttonConfig.targetURLTemplate;
     }
     return false;
   };
