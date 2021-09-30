@@ -954,8 +954,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
                         return (
                           <Dropdown.Item
                             key={`${btnCfg.type}-${btnCfg.title}`}
-                            leftIcon='datafile'
-                            rightIcon='download'
+                            leftIcon={btnCfg.leftIcon}
+                            rightIcon={btnCfg.rightIcon}
                             onClick={() => ((!this.props.user.username && this.isLoginForDownloadEnabled()
                               && this.isDownloadButton(btnCfg)) ? this.goToLogin() : onClick())}
                           >
