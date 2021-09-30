@@ -124,7 +124,7 @@ export interface DiscoveryConfig {
         display: boolean
         displayName?: string
     }[],
-    tagsColumnName?: string
+    tagsDisplayName?: string
 }
 export interface StudyPageFieldConfig {
     name: string
