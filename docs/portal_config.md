@@ -578,7 +578,7 @@ Below is an example, with inline comments describing what each JSON block config
         "display": true
       }
     ],
-    "tagColumnName": "Tags" // optional, overrides the name of the mandatory tags column
+    "tagsColumnName": "Tags" // optional, overrides the name of the mandatory tags column
   },
   "resourceBrowser": {), // see Resource Browser documentation
   "workspacePageTitle": "", // title to display above workspacePageDescription
