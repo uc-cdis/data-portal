@@ -13,6 +13,9 @@ import { manifestServiceApiPath, guppyGraphQLUrl, terraExportWarning } from '../
 import './ExplorerButtonGroup.css';
 import Popup from '../../components/Popup';
 
+// template variable for export-pfb-to-url button config.
+// see docs/export_pfb_to_url.md
+const PRESIGNED_URL_TEMPLATE_VARIABLE = '{{PRESIGNED_URL}}';
 class ExplorerButtonGroup extends React.Component {
   constructor(props) {
     super(props);
@@ -142,6 +145,8 @@ class ExplorerButtonGroup extends React.Component {
     if (buttonConfig.type === 'export-pfb-to-url') {
       if (!buttonConfig.targetURLTemplate) {
         throw new Error('Misconfiguration Error! Expected button of type `export-pfb-to-url` to have the required `targetURLTemplate` property');
+      } else if (buttonConfig.targetURLTemplate.indexOf(PRESIGNED_URL_TEMPLATE_VARIABLE) === -1) {
+        throw new Error(`Misconfiguration error! An \`export-pfb-to-url\` button has a bad \`targetURLTemplate\` property. The string \`${PRESIGNED_URL_TEMPLATE_VARIABLE}\` must appear in the \`targetURLTemplate\` property. Bad \`targetURLTemplate\`: ${this.state.targetURLTemplate}`);
       }
       clickFunc = this.exportPFBToURL(buttonConfig.targetURLTemplate);
     }
@@ -451,11 +456,6 @@ class ExplorerButtonGroup extends React.Component {
     const signedURL = encodeURIComponent(presignedURL);
     // the PFB export target URL is a template URL that should have a {{PRESIGNED_URL}} template
     // variable in it.
-    const PRESIGNED_URL_TEMPLATE_VARIABLE = '{{PRESIGNED_URL}}';
-    const targetURLIsBad = this.state.targetURLTemplate.indexOf(PRESIGNED_URL_TEMPLATE_VARIABLE) === -1;
-    if (targetURLIsBad) {
-      throw new Error(`Misconfiguration error! An \`export-pfb-to-url\` button has a bad \`targetURLTemplate\` property. The string \`{{PRESIGNED_URL}}\` must appear in the \`targetURLTemplate\` property. Bad \`targetURLTemplate\`: ${this.state.targetURLTemplate}`);
-    }
     const targetURL = targetURLTemplate.replace(PRESIGNED_URL_TEMPLATE_VARIABLE, signedURL);
     window.location = targetURL;
   }
