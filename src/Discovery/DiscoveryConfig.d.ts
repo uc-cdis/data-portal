@@ -123,7 +123,8 @@ export interface DiscoveryConfig {
         color?: string
         display: boolean
         displayName?: string
-    }[]
+    }[],
+    tagsDisplayName?: string
 }
 export interface StudyPageFieldConfig {
     name: string
