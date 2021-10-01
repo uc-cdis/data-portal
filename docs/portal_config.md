@@ -577,7 +577,8 @@ Below is an example, with inline comments describing what each JSON block config
         "color": "rgba(112, 182, 3, 1)",
         "display": true
       }
-    ]
+    ],
+    "tagsDisplayName": "Tags" // optional, overrides the name of the mandatory tags column
   },
   "resourceBrowser": {), // see Resource Browser documentation
   "workspacePageTitle": "", // title to display above workspacePageDescription
