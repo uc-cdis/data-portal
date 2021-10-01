@@ -37,17 +37,20 @@ import GA, { RouteTracker } from './components/GoogleAnalytics';
 import { DAPRouteTracker } from './components/DAPAnalytics';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
+import workspaceSessionMonitor from './Workspace/WorkspaceSessionMonitor';
 import Workspace from './Workspace';
+import ReduxWorkspaceShutdownPopup from './Popup/ReduxWorkspaceShutdownPopup';
+import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 
 // monitor user's session
 sessionMonitor.start();
+workspaceSessionMonitor.start();
 
 // render the app after the store is configured
 async function init() {
   const store = await getReduxStore();
 
-  // asyncSetInterval(() => store.dispatch(fetchUser), 60000);
   ReactGA.initialize(gaTracking);
   ReactGA.pageview(window.location.pathname + window.location.search);
 
@@ -100,6 +103,8 @@ async function init() {
               <ReduxTopBar />
               <ReduxNavBar />
               <div className='main-content'>
+                <ReduxWorkspaceShutdownBanner />
+                <ReduxWorkspaceShutdownPopup />
                 <Switch>
                   {/* process with trailing and duplicate slashes first */}
                   {/* see https://github.com/ReactTraining/react-router/issues/4841#issuecomment-523625186 */}

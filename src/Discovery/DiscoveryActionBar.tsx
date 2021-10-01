@@ -16,7 +16,10 @@ import {
 import FileSaver from 'file-saver';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
-import { manifestServiceApiPath, hostname, jobAPIPath } from '../localconf';
+import {
+  manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl,
+  appname,
+} from '../localconf';
 
 interface User {
   username: string
@@ -31,23 +34,63 @@ interface Props {
   user: User,
   downloadInProgress: boolean,
   setDownloadInProgress: (boolean) => void,
-  downloadStatusMessage: {
+  discoveryActionStatusMessage: {
     title: string,
     message: string,
     active: boolean,
     url: string
   },
-  setDownloadStatusMessage: (Object) => void;
+  setDiscoveryActionStatusMessage: (Object) => void;
 }
 
+const checkFederatedLoginStatus = async (
+  setDiscoveryActionStatusMessage: (arg0: Object) => void,
+) => fetchWithCreds({
+  path: `${externalLoginOptionsUrl}`,
+  method: 'GET',
+}).then(
+  ({ data, status }) => {
+    if (status !== 200) {
+      return false;
+    }
+
+    const { providers } = data;
+    const unauthenticatedProviders = providers.filter(
+      (provider) => !provider.refresh_token_expiration,
+    );
+    if (unauthenticatedProviders.length) {
+      setDiscoveryActionStatusMessage({
+        title: 'Please link your account to external repositories first.',
+        message: `The ${appname} connects to data from multiple sources. `
+                    + 'To ensure full data accessibility, please authorize all external resources by navigating to the workspace link '
+                    + 'below and logging in to the available data resources at the bottom of the page. ',
+        active: true,
+        url: `${hostname}workspace`,
+      });
+      return false;
+    }
+    return true;
+  },
+).catch(() => false);
+
 const handleDownloadZipClick = async (
+  config: DiscoveryConfig,
   selectedResources: any[],
-  setDownloadInProgress: (boolean) => void,
-  setDownloadStatusMessage: (object) => void,
+  setDownloadInProgress: (arg0: boolean) => void,
+  setDiscoveryActionStatusMessage: (arg0: Object) => void,
 ) => {
+  if (config.features.exportToWorkspace.verifyExternalLogins) {
+    const isLinked = await checkFederatedLoginStatus(
+      setDiscoveryActionStatusMessage,
+    );
+    if (!isLinked) {
+      return;
+    }
+  }
+
   const studyIDs = selectedResources.map((study) => study.project_number);
   setDownloadInProgress(true);
-  setDownloadStatusMessage({
+  setDiscoveryActionStatusMessage({
     title: 'Your download is being prepared',
     message: 'Please remain on this page while your download is being prepared.\n\n'
                + 'When your download is ready, it will begin automatically. You can close this window.',
@@ -57,7 +100,7 @@ const handleDownloadZipClick = async (
 
   const handleJobError = () => {
     setDownloadInProgress(false);
-    setDownloadStatusMessage({
+    setDiscoveryActionStatusMessage({
       title: 'Download failed',
       message: 'There was a problem preparing your download. '
                 + 'Please consider using the Gen3 SDK for Python (w/ CLI) to download these files via a manifest.',
@@ -80,7 +123,7 @@ const handleDownloadZipClick = async (
       const { uid } = dispatchResponse.data;
       if (dispatchResponse.status === 403 || dispatchResponse.status === 302) {
         setDownloadInProgress(false);
-        setDownloadStatusMessage({
+        setDiscoveryActionStatusMessage({
           title: 'Download failed',
           message: 'Unable to authorize download. '
                   + 'Please refresh the page and ensure you are logged in.',
@@ -104,7 +147,7 @@ const handleDownloadZipClick = async (
                     if (outputResponse.status !== 200 || !output) {
                       handleJobError();
                     } else {
-                      setDownloadStatusMessage({
+                      setDiscoveryActionStatusMessage({
                         title: 'Download failed',
                         message: output,
                         active: true,
@@ -121,7 +164,7 @@ const handleDownloadZipClick = async (
                     if (outputResponse.status !== 200 || !output) {
                       handleJobError();
                     } else {
-                      setDownloadStatusMessage({
+                      setDiscoveryActionStatusMessage({
                         title: 'Your download is ready',
                         message: 'Your download has been prepared. If your download doesn\'t start automatically, please follow this direct link: ',
                         active: true,
@@ -175,8 +218,18 @@ const handleExportToWorkspaceClick = async (
   config: DiscoveryConfig,
   selectedResources: any[],
   setExportingToWorkspace: (boolean) => void,
+  setDiscoveryActionStatusMessage: (arg0: Object) => void,
   history: any,
 ) => {
+  if (config.features.exportToWorkspace.verifyExternalLogins) {
+    const isLinked = await checkFederatedLoginStatus(
+      setDiscoveryActionStatusMessage,
+    );
+    if (!isLinked) {
+      return;
+    }
+  }
+
   setExportingToWorkspace(true);
   const { manifestFieldName } = config.features.exportToWorkspace;
   if (!manifestFieldName) {
@@ -249,17 +302,20 @@ const DiscoveryActionBar = (props: Props) => {
               props.config.features.exportToWorkspace.enableDownloadZip
               && (
                 <Button
-                  onClick={() => {
-                    if (props.user.username) {
-                      handleDownloadZipClick(
-                        props.selectedResources,
-                        props.setDownloadInProgress,
-                        props.setDownloadStatusMessage,
-                      );
-                    } else {
-                      handleRedirectToLoginClick();
+                  onClick={
+                    async () => {
+                      if (props.user.username) {
+                        handleDownloadZipClick(
+                          props.config,
+                          props.selectedResources,
+                          props.setDownloadInProgress,
+                          props.setDiscoveryActionStatusMessage,
+                        );
+                      } else {
+                        handleRedirectToLoginClick();
+                      }
                     }
-                  }}
+                  }
                   type='text'
                   disabled={props.selectedResources.length === 0 || props.downloadInProgress === true}
                   icon={<DownloadOutlined />}
@@ -332,8 +388,14 @@ const DiscoveryActionBar = (props: Props) => {
                 disabled={props.selectedResources.length === 0}
                 loading={props.exportingToWorkspace}
                 icon={<ExportOutlined />}
-                onClick={(props.user.username) ? () => {
-                  handleExportToWorkspaceClick(props.config, props.selectedResources, props.setExportingToWorkspace, history);
+                onClick={(props.user.username) ? async () => {
+                  handleExportToWorkspaceClick(
+                    props.config,
+                    props.selectedResources,
+                    props.setExportingToWorkspace,
+                    props.setDiscoveryActionStatusMessage,
+                    history,
+                  );
                 }
                   : () => { handleRedirectToLoginClick(); }}
               >
@@ -342,12 +404,12 @@ const DiscoveryActionBar = (props: Props) => {
             </Popover>
             <Modal
               closable={false}
-              visible={props.downloadStatusMessage.active}
-              title={props.downloadStatusMessage.title}
+              visible={props.discoveryActionStatusMessage.active}
+              title={props.discoveryActionStatusMessage.title}
               footer={(
                 <Button
                   onClick={
-                    () => props.setDownloadStatusMessage({
+                    () => props.setDiscoveryActionStatusMessage({
                       title: '', message: '', active: false, url: '',
                     })
                   }
@@ -356,10 +418,10 @@ const DiscoveryActionBar = (props: Props) => {
                 </Button>
               )}
             >
-              { props.downloadStatusMessage.message }
+              { props.discoveryActionStatusMessage.message }
               {
-                props.downloadStatusMessage.url
-                  && <a href={props.downloadStatusMessage.url}>{props.downloadStatusMessage.url}</a>
+                props.discoveryActionStatusMessage.url
+                  && <a href={props.discoveryActionStatusMessage.url} target='_blank' rel='noreferrer'>{props.discoveryActionStatusMessage.url}</a>
               }
             </Modal>
           </Space>
