@@ -1,6 +1,6 @@
 .study-viewer {
   width: 100%;
-  padding: 40px 20px;
+  padding: 20px;
 }
 
 .study-viewer_loading {
@@ -35,7 +35,6 @@
   width: 30%;
   margin-left: 10px;
   display: flex;
-  align-items: center;
 }
 
 .study-viewer__details-sidebar-box {
@@ -45,11 +44,23 @@
 
 .study-viewer__details-sidebar-space {
   width: 100%;
-  padding: 10px;
+  padding: 0 0 10px;
+  background-color: var(--g3-color__white);
+}
+
+.study-viewer__details-sidebar-space > div {
+  padding: 0 10px;
+}
+.study-viewer__details-sidebar-space > div:first-child {
+  padding: 5px 10px;
+  background-color: var(--secondary-color);
+  color: var(--g3-color__white);
 }
 
 .study-details {
   width: 100%;
+  background-color: var(--g3-color__white);
+  padding: 10px;
 }
 
 /* antd modal style override */
@@ -64,4 +75,20 @@
 /* temp fix, there is an official fix coming up soon https://github.com/ant-design/ant-design/pull/26721 */
 .study-viewer .ant-space-item:empty {
   display: none;
+}
+
+.study-cards {
+  display: flex;
+  flex-flow: wrap;
+}
+.study-cards > .study-viewer__card{
+  width: 350px;
+  margin: 10px 20px;
+  border: 1px solid var(--g3-color__silver);
+  border-radius: 5px;
+  height: 100%;
+}
+
+.study-viewer__card h3 {
+  text-align: center;
 }

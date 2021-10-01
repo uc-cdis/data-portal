@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import {
-  Space, Typography, Descriptions, message, Divider, Alert, Modal, List,
+  Space, Typography, Descriptions, message, Alert, Modal, List,
 } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import {
@@ -243,22 +243,17 @@ class StudyDetails extends React.Component {
      return (
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
-           <Space>
-             {this.props.isSingleItemView
+
+           {
+             (!this.props.isSingleItemView && this.props.studyViewerConfig.buttons)
                ? (
-                 <Button
-                   label={'Learn More'}
-                   buttonType='primary'
-                   onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
-                 />
-               )
-               : null}
-             {
-               (this.props.studyViewerConfig.buttons) ? this.props.studyViewerConfig.buttons.map(
-                 (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
+                 <Space>
+                   {this.props.studyViewerConfig.buttons.map(
+                     (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn))}
+                 </Space>
                ) : null
-             }
-           </Space>
+           }
+
            {(requestAccessConfig) ? (
              <Modal
                title='Request Access'
@@ -322,13 +317,14 @@ class StudyDetails extends React.Component {
                  showIcon
                />
              ) : null}
-           <Divider />
            {(this.props.data.blockData)
              ? (
                <div>
                  {(Object.entries(this.props.data.blockData).map(([k, v]) => (
                    <div key={k}>
-                     <div className='h3-typo'>{this.getLabel(k)}</div>
+                     {!this.props.isSingleItemView ? (
+                       <div className='h3-typo'>{this.getLabel(k)}</div>
+                     ) : null }
                      <Paragraph>
                        {v}
                      </Paragraph>
@@ -336,7 +332,17 @@ class StudyDetails extends React.Component {
                  )))}
                </div>
              ) : null }
-           {(this.props.data.tableData)
+
+           {this.props.isSingleItemView
+             ? (
+               <Button
+                 label={'Learn More'}
+                 buttonType='primary'
+                 onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
+               />
+             )
+             : null}
+           {(!this.props.isSingleItemView && this.props.data.tableData)
              ? (
                <Descriptions
                  className='study-details__descriptions'
