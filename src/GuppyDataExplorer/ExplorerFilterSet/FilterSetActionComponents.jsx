@@ -78,7 +78,7 @@ function FilterSetOpenForm({
           label='Name'
           input={
             <Select
-              inputId='open-cohort-name'
+              inputId='open-filter-set-name'
               options={options}
               value={selected}
               autoFocus
@@ -92,7 +92,7 @@ function FilterSetOpenForm({
           label='Description'
           input={
             <textarea
-              id='open-cohort-description'
+              id='open-filter-set-description'
               disabled
               placeholder='No description'
               value={selected.value.description}
@@ -103,7 +103,7 @@ function FilterSetOpenForm({
           label='Filters'
           input={
             <textarea
-              id='open-cohort-filters'
+              id='open-filter-set-filters'
               disabled
               placeholder='No filters'
               value={stringifyFilters(selected.value.filters)}
@@ -189,7 +189,7 @@ function FilterSetCreateForm({
           label='Name'
           input={
             <input
-              id='create-cohort-name'
+              id='create-filter-set-name'
               autoFocus
               placeholder='Enter the Filter Set name'
               value={filterSet.name}
@@ -206,7 +206,7 @@ function FilterSetCreateForm({
           label='Description'
           input={
             <textarea
-              id='create-cohort-description'
+              id='create-filter-set-description'
               placeholder='Describe the Filter Set (optional)'
               value={filterSet.description}
               onChange={(e) => {
@@ -223,7 +223,7 @@ function FilterSetCreateForm({
           label='Filters'
           input={
             <textarea
-              id='create-cohort-filters'
+              id='create-filter-set-filters'
               disabled
               placeholder='No filters'
               value={stringifyFilters(currentFilters)}
@@ -332,7 +332,7 @@ function FilterSetUpdateForm({
           label='Description'
           input={
             <textarea
-              id='update-cohort-description'
+              id='update-filter-set-description'
               placeholder='Describe the Filter Set (optional)'
               value={filterSet.description}
               onChange={(e) => {
@@ -349,7 +349,7 @@ function FilterSetUpdateForm({
           label='Filters'
           input={
             <textarea
-              id='update-cohort-filters'
+              id='update-filter-set-filters'
               disabled
               placeholder='No filters'
               value={stringifyFilters(filterSet.filters)}
@@ -361,7 +361,7 @@ function FilterSetUpdateForm({
             label='Filters (changed)'
             input={
               <textarea
-                id='update-cohort-changed-filters'
+                id='update-filter-set-changed-filters'
                 disabled
                 placeholder='No filters'
                 value={stringifyFilters(currentFilters)}
