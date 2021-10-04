@@ -214,7 +214,7 @@ class GuppyDataExplorer extends React.Component {
                   totalCount={data.totalCount}
                 />
                 <ExplorerFilterSet
-                  className='guppy-data-explorer__cohort'
+                  className='guppy-data-explorer__filter-set'
                   onOpenFilterSet={this.updateInitialAppliedFilters}
                   onDeleteFilterSet={this.updateInitialAppliedFilters}
                   filter={data.filter}
