@@ -7,7 +7,7 @@ const COHORT_URL = '/amanuensis/cohort';
 /**
  * @returns {Promise<ExplorerFilterSet[]>}
  */
-export function fetchCohorts() {
+export function fetchFilterSets() {
   return fetchWithCreds({
     path: COHORT_URL,
     method: 'GET',
@@ -25,14 +25,14 @@ export function fetchCohorts() {
 }
 
 /**
- * @param {ExplorerFilterSet} cohort
+ * @param {ExplorerFilterSet} filterSet
  * @returns {Promise<ExplorerFilterSet>}
  */
-export function createCohort(cohort) {
+export function createFilterSet(filterSet) {
   return fetchWithCreds({
     path: COHORT_URL,
     method: 'POST',
-    body: JSON.stringify(cohort),
+    body: JSON.stringify(filterSet),
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
     return data;
@@ -40,10 +40,10 @@ export function createCohort(cohort) {
 }
 
 /**
- * @param {ExplorerFilterSet} cohort
+ * @param {ExplorerFilterSet} filterSet
  */
-export function updateCohort(cohort) {
-  const { id, ...requestBody } = cohort;
+export function updateFilterSet(filterSet) {
+  const { id, ...requestBody } = filterSet;
   return fetchWithCreds({
     path: `${COHORT_URL}/${id}`,
     method: 'PUT',
@@ -54,11 +54,11 @@ export function updateCohort(cohort) {
 }
 
 /**
- * @param {ExplorerFilterSet} cohort
+ * @param {ExplorerFilterSet} filterSet
  */
-export function deleteCohort(cohort) {
+export function deleteFilterSet(filterSet) {
   return fetchWithCreds({
-    path: `${COHORT_URL}/${cohort.id}`,
+    path: `${COHORT_URL}/${filterSet.id}`,
     method: 'DELETE',
   }).then(({ response, status }) => {
     if (status !== 200) throw response.statusText;
@@ -68,7 +68,7 @@ export function deleteCohort(cohort) {
 /**
  * @return {ExplorerFilterSet}
  */
-export function createEmptyCohort() {
+export function createEmptyFilterSet() {
   return {
     name: '',
     description: '',

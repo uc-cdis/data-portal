@@ -6,14 +6,17 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimplePopup from '../../components/SimplePopup';
 import Button from '../../gen3-ui-component/components/Button';
-import { CohortActionMenu, CohortActionForm } from './CohortActionComponents';
 import {
-  createEmptyCohort,
+  FilterSetActionMenu,
+  FilterSetActionForm,
+} from './CohortActionComponents';
+import {
+  createEmptyFilterSet,
   truncateWithEllipsis,
-  fetchCohorts,
-  createCohort,
-  updateCohort,
-  deleteCohort,
+  fetchFilterSets,
+  createFilterSet,
+  updateFilterSet,
+  deleteFilterSet,
 } from './utils';
 import './ExplorerCohort.css';
 import './typedef';
@@ -22,21 +25,28 @@ import './typedef';
  * @param {Object} prop
  * @param {string} prop.className
  * @param {ExplorerFilters} prop.filter
- * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onOpenCohort
- * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onDeleteCohort
+ * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onOpenFilterSet
+ * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onDeleteFilterSet
  */
-function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
-  const [cohort, setCohort] = useState(createEmptyCohort());
+function ExplorerFilterSet({
+  className,
+  filter,
+  onOpenFilterSet,
+  onDeleteFilterSet,
+}) {
+  const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
   /** @type {ExplorerFilterSet[]} */
-  const emptyCohorts = [];
-  const [cohorts, setCohorts] = useState(emptyCohorts);
+  const emptyFilterSets = [];
+  const [filterSets, setFilterSets] = useState(emptyFilterSets);
   const [isError, setIsError] = useState(false);
   useEffect(() => {
     let isMounted = true;
     if (!isError)
-      fetchCohorts()
-        .then((fetchedCohorts) => isMounted && setCohorts(fetchedCohorts))
+      fetchFilterSets()
+        .then(
+          (fetchedFilterSets) => isMounted && setFilterSets(fetchedFilterSets)
+        )
         .catch(() => setIsError(true));
 
     return () => {
@@ -56,19 +66,19 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   }
 
   function handleNew() {
-    const emptyCohort = createEmptyCohort();
-    setCohort(emptyCohort);
-    onOpenCohort(emptyCohort);
+    const emptyFilterSet = createEmptyFilterSet();
+    setFilterSet(emptyFilterSet);
+    onOpenFilterSet(emptyFilterSet);
   }
   function handleOpen(/** @type {ExplorerFilterSet} */ opened) {
-    setCohort(cloneDeep(opened));
-    onOpenCohort(cloneDeep(opened));
+    setFilterSet(cloneDeep(opened));
+    onOpenFilterSet(cloneDeep(opened));
     closeActionForm();
   }
   async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
     try {
-      setCohort(await createCohort(created));
-      setCohorts(await fetchCohorts());
+      setFilterSet(await createFilterSet(created));
+      setFilterSets(await fetchFilterSets());
     } catch (e) {
       setIsError(true);
     } finally {
@@ -77,9 +87,9 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   }
   async function handleUpdate(/** @type {ExplorerFilterSet} */ updated) {
     try {
-      await updateCohort(updated);
-      setCohort(cloneDeep(updated));
-      setCohorts(await fetchCohorts());
+      await updateFilterSet(updated);
+      setFilterSet(cloneDeep(updated));
+      setFilterSets(await fetchFilterSets());
     } catch (e) {
       setIsError(true);
     } finally {
@@ -88,10 +98,10 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   }
   async function handleDelete(/** @type {ExplorerFilterSet} */ deleted) {
     try {
-      await deleteCohort(deleted);
-      setCohort(createEmptyCohort());
-      setCohorts(await fetchCohorts());
-      onDeleteCohort(createEmptyCohort());
+      await deleteFilterSet(deleted);
+      setFilterSet(createEmptyFilterSet());
+      setFilterSets(await fetchFilterSets());
+      onDeleteFilterSet(createEmptyFilterSet());
     } catch (e) {
       setIsError(true);
     } finally {
@@ -108,7 +118,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   }
 
   const isFiltersChanged =
-    JSON.stringify(filter) !== JSON.stringify(cohort.filters);
+    JSON.stringify(filter) !== JSON.stringify(filterSet.filters);
   function FilterChangedWarning() {
     return (
       <Tooltip
@@ -118,11 +128,11 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
         trigger={['hover', 'focus']}
       >
         <span
-          onClick={() => onOpenCohort(cloneDeep(cohort))}
+          onClick={() => onOpenFilterSet(cloneDeep(filterSet))}
           onKeyPress={(e) => {
             if (e.charCode === 13 || e.charCode === 32) {
               e.preventDefault();
-              onOpenCohort(cloneDeep(cohort));
+              onOpenFilterSet(cloneDeep(filterSet));
             }
           }}
           role='button'
@@ -159,9 +169,9 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
           <div>
             <h1 className='guppy-explorer-filter-set__name'>
               Filter Set:{' '}
-              {cohort.name ? (
+              {filterSet.name ? (
                 <>
-                  {truncateWithEllipsis(cohort.name, 30)}{' '}
+                  {truncateWithEllipsis(filterSet.name, 30)}{' '}
                   {isFiltersChanged && <FilterChangedWarning />}
                 </>
               ) : (
@@ -171,8 +181,8 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
               )}
             </h1>
             <p>
-              {cohort.description ? (
-                truncateWithEllipsis(cohort.description, 70)
+              {filterSet.description ? (
+                truncateWithEllipsis(filterSet.description, 70)
               ) : (
                 <span className='guppy-explorer-filter-set__placeholder'>
                   No description
@@ -180,20 +190,20 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
               )}
             </p>
           </div>
-          <CohortActionMenu
-            isCohortEmpty={cohort.name === ''}
-            hasNoSavedCohorts={cohorts.length === 0}
+          <FilterSetActionMenu
+            isFilterSetEmpty={filterSet.name === ''}
+            hasNoSavedFilterSets={filterSets.length === 0}
             onSelectAction={handleSelectAction}
           />
         </>
       )}
       {showActionForm && (
         <SimplePopup>
-          <CohortActionForm
+          <FilterSetActionForm
             actionType={actionType}
-            currentCohort={cohort}
+            currentFilterSet={filterSet}
             currentFilters={filter}
-            cohorts={cohorts}
+            filterSets={filterSets}
             handlers={{
               handleOpen,
               handleCreate,
@@ -209,11 +219,11 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   );
 }
 
-ExplorerCohort.propTypes = {
+ExplorerFilterSet.propTypes = {
   className: PropTypes.string,
   filter: PropTypes.object,
-  onOpenCohort: PropTypes.func,
-  onDeleteCohort: PropTypes.func,
+  onOpenFilterSet: PropTypes.func,
+  onDeleteFilterSet: PropTypes.func,
 };
 
-export default ExplorerCohort;
+export default ExplorerFilterSet;

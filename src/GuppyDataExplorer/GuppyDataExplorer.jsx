@@ -5,7 +5,7 @@ import ExplorerErrorBoundary from './ExplorerErrorBoundary';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
-import ExplorerCohort from './ExplorerCohort';
+import ExplorerFilterSet from './ExplorerCohort';
 import { capitalizeFirstLetter } from '../utils';
 import { validateFilter } from './utils';
 import {
@@ -213,10 +213,10 @@ class GuppyDataExplorer extends React.Component {
                   accessibleCount={data.accessibleCount}
                   totalCount={data.totalCount}
                 />
-                <ExplorerCohort
+                <ExplorerFilterSet
                   className='guppy-data-explorer__cohort'
-                  onOpenCohort={this.updateInitialAppliedFilters}
-                  onDeleteCohort={this.updateInitialAppliedFilters}
+                  onOpenFilterSet={this.updateInitialAppliedFilters}
+                  onDeleteFilterSet={this.updateInitialAppliedFilters}
                   filter={data.filter}
                 />
                 <ExplorerFilter
