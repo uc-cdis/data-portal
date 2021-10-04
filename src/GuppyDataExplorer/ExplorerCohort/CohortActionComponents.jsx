@@ -30,7 +30,7 @@ export function CohortActionMenu({
   return (
     <Select
       aria-label='Manage filter sets'
-      className='guppy-explorer-cohort__menu'
+      className='guppy-explorer-filter-set__menu'
       value={{ label: 'Manage Filter Set', value: '' }}
       options={options}
       theme={overrideSelectTheme}
@@ -46,7 +46,7 @@ CohortActionMenu.propTypes = {
 };
 
 function CohortButton(props) {
-  return <Button className='guppy-explorer-cohort__button' {...props} />;
+  return <Button className='guppy-explorer-filter-set__button' {...props} />;
 }
 
 /**
@@ -66,7 +66,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
     value: currentCohort,
   });
   return (
-    <div className='guppy-explorer-cohort__form'>
+    <div className='guppy-explorer-filter-set__form'>
       <h4>Select a saved Filter Set to open</h4>
       <form onSubmit={(e) => e.preventDefault()}>
         <SimpleInputField
@@ -168,7 +168,7 @@ function CohortCreateForm({
     else setError({ isError: false, message: '' });
   }
   return (
-    <div className='guppy-explorer-cohort__form'>
+    <div className='guppy-explorer-filter-set__form'>
       <h4>Save as a new Filter Set</h4>
       {currentCohort.name !== '' && isFiltersChanged && (
         <p>
@@ -291,7 +291,7 @@ function CohortUpdateForm({
     else setError({ isError: false, message: '' });
   }
   return (
-    <div className='guppy-explorer-cohort__form'>
+    <div className='guppy-explorer-filter-set__form'>
       <h4>Save changes to the current Filter Set</h4>
       {isFiltersChanged && (
         <p>
@@ -409,7 +409,7 @@ CohortUpdateForm.propTypes = {
  */
 function CohortDeleteForm({ currentCohort, onAction, onClose }) {
   return (
-    <div className='guppy-explorer-cohort__form'>
+    <div className='guppy-explorer-filter-set__form'>
       <h4>Are you sure to delete the current Filter Set?</h4>
       <div>
         <CohortButton

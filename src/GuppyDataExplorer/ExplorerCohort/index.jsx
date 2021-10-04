@@ -144,7 +144,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   return (
     <div className={className}>
       {isError ? (
-        <div className='guppy-explorer-cohort__error'>
+        <div className='guppy-explorer-filter-set__error'>
           <h2>Error obtaining saved Filter Set data...</h2>
           <p>
             Please retry by clicking {'"Retry"'} button or refreshing the page.
@@ -157,7 +157,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
       ) : (
         <>
           <div>
-            <h1 className='guppy-explorer-cohort__name'>
+            <h1 className='guppy-explorer-filter-set__name'>
               Filter Set:{' '}
               {cohort.name ? (
                 <>
@@ -165,7 +165,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
                   {isFiltersChanged && <FilterChangedWarning />}
                 </>
               ) : (
-                <span className='guppy-explorer-cohort__placeholder'>
+                <span className='guppy-explorer-filter-set__placeholder'>
                   untitled
                 </span>
               )}
@@ -174,7 +174,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
               {cohort.description ? (
                 truncateWithEllipsis(cohort.description, 70)
               ) : (
-                <span className='guppy-explorer-cohort__placeholder'>
+                <span className='guppy-explorer-filter-set__placeholder'>
                   No description
                 </span>
               )}
