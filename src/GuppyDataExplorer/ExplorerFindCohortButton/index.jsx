@@ -58,7 +58,7 @@ function ExplorerFindCohortButton({ filter }) {
     <>
       <Button
         className='explorer-find-cohort__button'
-        label={<div>Find Cohort in...</div>}
+        label={<div>Explore in...</div>}
         rightIcon='external-link'
         buttonType='secondary'
         onClick={openPopup}
@@ -66,7 +66,7 @@ function ExplorerFindCohortButton({ filter }) {
       {show && (
         <SimplePopup>
           <div className='explorer-find-cohort__form'>
-            <h4>Find Cohort in An External Data Commons</h4>
+            <h4>Explore in An External Data Commons</h4>
             <form onSubmit={(e) => e.preventDefault()}>
               <SimpleInputField
                 label='Data Commons'
