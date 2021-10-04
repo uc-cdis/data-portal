@@ -27,7 +27,7 @@ import { config } from './params';
  * @typedef {Object} FetchResult
  * @property {any} data
  * @property {Headers} [headers]  if not using cache
- * @property {Response | FetchResult} [response]  if not using cache
+ * @property {Response} [response]  if not using cache
  * @property {number} status
  */
 
@@ -156,7 +156,7 @@ export const fetchWithCreds = (opts) => {
             );
           default:
             return {
-              response: resp,
+              response: resp.response,
               data: { data: {} },
               status: resp.status,
               headers: resp.headers,
@@ -414,8 +414,9 @@ export const fetchUserAccess = () => async (dispatch) => {
 
   /** @type {{ [name: string]: boolean }} */
   const userAccess = {};
-  for (const [i, hasAccess] of userAccessResults.entries())
+  userAccessResults.forEach((hasAccess, i) => {
     userAccess[resourceNames[i]] = hasAccess;
+  });
 
   dispatch({
     type: 'RECEIVE_USER_ACCESS',
