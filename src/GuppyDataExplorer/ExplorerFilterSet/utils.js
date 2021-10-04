@@ -2,14 +2,14 @@ import { fetchWithCreds } from '../../actions';
 import { capitalizeFirstLetter } from '../../utils';
 import './typedef';
 
-const COHORT_URL = '/amanuensis/cohort';
+const FILTER_SET_URL = '/amanuensis/filter-set';
 
 /**
  * @returns {Promise<ExplorerFilterSet[]>}
  */
 export function fetchFilterSets() {
   return fetchWithCreds({
-    path: COHORT_URL,
+    path: FILTER_SET_URL,
     method: 'GET',
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
@@ -30,7 +30,7 @@ export function fetchFilterSets() {
  */
 export function createFilterSet(filterSet) {
   return fetchWithCreds({
-    path: COHORT_URL,
+    path: FILTER_SET_URL,
     method: 'POST',
     body: JSON.stringify(filterSet),
   }).then(({ response, data, status }) => {
@@ -45,7 +45,7 @@ export function createFilterSet(filterSet) {
 export function updateFilterSet(filterSet) {
   const { id, ...requestBody } = filterSet;
   return fetchWithCreds({
-    path: `${COHORT_URL}/${id}`,
+    path: `${FILTER_SET_URL}/${id}`,
     method: 'PUT',
     body: JSON.stringify(requestBody),
   }).then(({ response, status }) => {
@@ -58,7 +58,7 @@ export function updateFilterSet(filterSet) {
  */
 export function deleteFilterSet(filterSet) {
   return fetchWithCreds({
-    path: `${COHORT_URL}/${filterSet.id}`,
+    path: `${FILTER_SET_URL}/${filterSet.id}`,
     method: 'DELETE',
   }).then(({ response, status }) => {
     if (status !== 200) throw response.statusText;
