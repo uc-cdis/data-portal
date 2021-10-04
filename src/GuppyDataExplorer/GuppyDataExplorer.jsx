@@ -5,7 +5,7 @@ import ExplorerErrorBoundary from './ExplorerErrorBoundary';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
-import ExplorerFilterSet from './ExplorerCohort';
+import ExplorerFilterSet from './ExplorerFilterSet';
 import { capitalizeFirstLetter } from '../utils';
 import { validateFilter } from './utils';
 import {

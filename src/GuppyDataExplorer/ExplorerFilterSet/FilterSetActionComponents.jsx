@@ -6,7 +6,7 @@ import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../../utils';
 import { stringifyFilters } from './utils';
-import './ExplorerCohort.css';
+import './ExplorerFilterSet.css';
 import './typedef';
 
 /**

@@ -9,7 +9,7 @@ import Button from '../../gen3-ui-component/components/Button';
 import {
   FilterSetActionMenu,
   FilterSetActionForm,
-} from './CohortActionComponents';
+} from './FilterSetActionComponents';
 import {
   createEmptyFilterSet,
   truncateWithEllipsis,
@@ -18,7 +18,7 @@ import {
   updateFilterSet,
   deleteFilterSet,
 } from './utils';
-import './ExplorerCohort.css';
+import './ExplorerFilterSet.css';
 import './typedef';
 
 /**
