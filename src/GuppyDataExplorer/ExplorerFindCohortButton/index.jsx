@@ -15,7 +15,7 @@ import './ExplorerFindCohortButton.css';
  * @param {Object} props
  * @param {FilterState} props.filter
  */
-function ExplorerFindCohortButton({ filter }) {
+function ExplorerExploreExternalButton({ filter }) {
   const emptyOption = {
     label: 'Select data commons',
     value: '',
@@ -114,8 +114,8 @@ function ExplorerFindCohortButton({ filter }) {
   );
 }
 
-ExplorerFindCohortButton.propTypes = {
+ExplorerExploreExternalButton.propTypes = {
   filter: PropTypes.object.isRequired,
 };
 
-export default ExplorerFindCohortButton;
+export default ExplorerExploreExternalButton;

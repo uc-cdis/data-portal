@@ -6,7 +6,7 @@ import PercentageStackedBarChart from '../../gen3-ui-component/components/charts
 import Spinner from '../../components/Spinner';
 import { components } from '../../params';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
-import ExplorerFindCohortButton from '../ExplorerFindCohortButton';
+import ExplorerExploreExternalButton from '../ExplorerFindCohortButton';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
@@ -261,7 +261,7 @@ function ExplorerVisualization({
         </div>
         <div className='guppy-explorer-visualization__button-group'>
           {patientIdsConfig?.export && (
-            <ExplorerFindCohortButton filter={filter} />
+            <ExplorerExploreExternalButton filter={filter} />
           )}
           <ReduxExplorerButtonGroup {...buttonGroupProps} />
         </div>
