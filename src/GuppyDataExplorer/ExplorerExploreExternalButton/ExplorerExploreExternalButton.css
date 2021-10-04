@@ -1,8 +1,8 @@
-.explorer-find-cohort__button {
+.explorer-explore-external__button {
   margin-right: 10px;
 }
 
-.explorer-find-cohort__form {
+.explorer-explore-external__form {
   text-align: center;
   display: flex;
   flex-direction: column;

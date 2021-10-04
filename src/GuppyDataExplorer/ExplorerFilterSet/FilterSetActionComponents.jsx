@@ -6,32 +6,32 @@ import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../../utils';
 import { stringifyFilters } from './utils';
-import './ExplorerCohort.css';
+import './ExplorerFilterSet.css';
 import './typedef';
 
 /**
  * @param {Object} prop
- * @param {boolean} prop.isCohortEmpty
- * @param {boolean} prop.hasNoSavedCohorts
- * @param {({ value: ExplorerCohortActionType }) => void} prop.onSelectAction
+ * @param {boolean} prop.isFilterSetEmpty
+ * @param {boolean} prop.hasNoSavedFilterSets
+ * @param {({ value: ExplorerFilterSetActionType }) => void} prop.onSelectAction
  */
-export function CohortActionMenu({
-  isCohortEmpty,
-  hasNoSavedCohorts,
+export function FilterSetActionMenu({
+  isFilterSetEmpty,
+  hasNoSavedFilterSets,
   onSelectAction,
 }) {
   const options = [
-    { label: 'New', value: 'new', isDisabled: isCohortEmpty },
-    { label: 'Open', value: 'open', isDisabled: hasNoSavedCohorts },
+    { label: 'New', value: 'new', isDisabled: isFilterSetEmpty },
+    { label: 'Open', value: 'open', isDisabled: hasNoSavedFilterSets },
     { label: 'Save', value: 'save' },
-    { label: 'Save As', value: 'save as', isDisabled: isCohortEmpty },
-    { label: 'Delete', value: 'delete', isDisabled: isCohortEmpty },
+    { label: 'Save As', value: 'save as', isDisabled: isFilterSetEmpty },
+    { label: 'Delete', value: 'delete', isDisabled: isFilterSetEmpty },
   ];
   return (
     <Select
-      aria-label='Manage cohorts'
-      className='guppy-explorer-cohort__menu'
-      value={{ label: 'Manage Cohorts', value: '' }}
+      aria-label='Manage filter sets'
+      className='guppy-explorer-filter-set__menu'
+      value={{ label: 'Manage Filter Set', value: '' }}
       options={options}
       theme={overrideSelectTheme}
       onChange={onSelectAction}
@@ -39,41 +39,46 @@ export function CohortActionMenu({
   );
 }
 
-CohortActionMenu.propTypes = {
-  isCohortEmpty: PropTypes.bool,
-  hasNoSavedCohorts: PropTypes.bool,
+FilterSetActionMenu.propTypes = {
+  isFilterSetEmpty: PropTypes.bool,
+  hasNoSavedFilterSets: PropTypes.bool,
   onSelectAction: PropTypes.func,
 };
 
-function CohortButton(props) {
-  return <Button className='guppy-explorer-cohort__button' {...props} />;
+function FilterSetButton(props) {
+  return <Button className='guppy-explorer-filter-set__button' {...props} />;
 }
 
 /**
  * @param {Object} prop
- * @param {ExplorerCohort} prop.currentCohort
- * @param {ExplorerCohort[]} prop.cohorts
- * @param {(opened: ExplorerCohort) => void} prop.onAction
+ * @param {ExplorerFilterSet} prop.currentFilterSet
+ * @param {ExplorerFilterSet[]} prop.filterSets
+ * @param {(opened: ExplorerFilterSet) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
-function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
-  const options = cohorts.map((cohort) => ({
-    label: cohort.name,
-    value: cohort,
+function FilterSetOpenForm({
+  currentFilterSet,
+  filterSets,
+  onAction,
+  onClose,
+}) {
+  const options = filterSets.map((filterSet) => ({
+    label: filterSet.name,
+    value: filterSet,
   }));
   const [selected, setSelected] = useState({
-    label: currentCohort.name,
-    value: currentCohort,
+    label: currentFilterSet.name,
+    value: currentFilterSet,
   });
   return (
-    <div className='guppy-explorer-cohort__form'>
-      <h4>Select a saved Cohort to open</h4>
+    <div className='guppy-explorer-filter-set__form'>
+      <h4>Select a saved Filter Set to open</h4>
       <form onSubmit={(e) => e.preventDefault()}>
         <SimpleInputField
           label='Name'
           input={
             <Select
-              inputId='open-cohort-name'
+              inputId='open-filter-set-name'
               options={options}
               value={selected}
               autoFocus
@@ -87,7 +92,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
           label='Description'
           input={
             <textarea
-              id='open-cohort-description'
+              id='open-filter-set-description'
               disabled
               placeholder='No description'
               value={selected.value.description}
@@ -98,7 +103,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
           label='Filters'
           input={
             <textarea
-              id='open-cohort-filters'
+              id='open-filter-set-filters'
               disabled
               placeholder='No filters'
               value={stringifyFilters(selected.value.filters)}
@@ -107,13 +112,13 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
         />
       </form>
       <div>
-        <CohortButton
+        <FilterSetButton
           buttonType='default'
           label='Back to page'
           onClick={onClose}
         />
-        <CohortButton
-          label='Open Cohort'
+        <FilterSetButton
+          label='Open Filter Set'
           enabled={selected.value.name !== ''}
           onClick={() => onAction(selected.value)}
         />
@@ -122,14 +127,14 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
   );
 }
 
-CohortOpenForm.propTypes = {
-  currentCohort: PropTypes.shape({
+FilterSetOpenForm.propTypes = {
+  currentFilterSet: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
     filters: PropTypes.object,
     id: PropTypes.number,
   }),
-  cohorts: PropTypes.arrayOf(
+  filterSets: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
       description: PropTypes.string,
@@ -143,40 +148,40 @@ CohortOpenForm.propTypes = {
 
 /**
  * @param {Object} prop
- * @param {ExplorerCohort} prop.currentCohort
+ * @param {ExplorerFilterSet} prop.currentFilterSet
  * @param {ExplorerFilters} prop.currentFilters
- * @param {ExplorerCohort[]} prop.cohorts
+ * @param {ExplorerFilterSet[]} prop.filterSets
  * @param {boolean} prop.isFiltersChanged
- * @param {(created: ExplorerCohort) => void} prop.onAction
+ * @param {(created: ExplorerFilterSet) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
-function CohortCreateForm({
-  currentCohort,
+function FilterSetCreateForm({
+  currentFilterSet,
   currentFilters,
-  cohorts,
+  filterSets,
   isFiltersChanged,
   onAction,
   onClose,
 }) {
-  const [cohort, setCohort] = useState(currentCohort);
+  const [filterSet, setFilterSet] = useState(currentFilterSet);
   const [error, setError] = useState({ isError: false, message: '' });
   function validate() {
-    if (cohort.name === '')
+    if (filterSet.name === '')
       setError({ isError: true, message: 'Name is required!' });
-    else if (cohorts.filter((c) => c.name === cohort.name).length > 0)
+    else if (filterSets.filter((c) => c.name === filterSet.name).length > 0)
       setError({ isError: true, message: 'Name is already in use!' });
     else setError({ isError: false, message: '' });
   }
   return (
-    <div className='guppy-explorer-cohort__form'>
-      <h4>Save as a new Cohort</h4>
-      {currentCohort.name !== '' && isFiltersChanged && (
+    <div className='guppy-explorer-filter-set__form'>
+      <h4>Save as a new Filter Set</h4>
+      {currentFilterSet.name !== '' && isFiltersChanged && (
         <p>
           <FontAwesomeIcon
             icon='exclamation-triangle'
             color='var(--pcdc-color__secondary)'
           />{' '}
-          You have changed filters for this Cohort.
+          You have changed filters for this Filter Set.
         </p>
       )}
       <form onSubmit={(e) => e.preventDefault()}>
@@ -184,14 +189,14 @@ function CohortCreateForm({
           label='Name'
           input={
             <input
-              id='create-cohort-name'
+              id='create-filter-set-name'
               autoFocus
-              placeholder='Enter the cohort name'
-              value={cohort.name}
+              placeholder='Enter the Filter Set name'
+              value={filterSet.name}
               onBlur={validate}
               onChange={(e) => {
                 e.persist();
-                setCohort((prev) => ({ ...prev, name: e.target.value }));
+                setFilterSet((prev) => ({ ...prev, name: e.target.value }));
               }}
             />
           }
@@ -201,12 +206,15 @@ function CohortCreateForm({
           label='Description'
           input={
             <textarea
-              id='create-cohort-description'
-              placeholder='Describe the cohort (optional)'
-              value={cohort.description}
+              id='create-filter-set-description'
+              placeholder='Describe the Filter Set (optional)'
+              value={filterSet.description}
               onChange={(e) => {
                 e.persist();
-                setCohort((prev) => ({ ...prev, description: e.target.value }));
+                setFilterSet((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }));
               }}
             />
           }
@@ -215,7 +223,7 @@ function CohortCreateForm({
           label='Filters'
           input={
             <textarea
-              id='create-cohort-filters'
+              id='create-filter-set-filters'
               disabled
               placeholder='No filters'
               value={stringifyFilters(currentFilters)}
@@ -224,30 +232,30 @@ function CohortCreateForm({
         />
       </form>
       <div>
-        <CohortButton
+        <FilterSetButton
           buttonType='default'
           label='Back to page'
           onClick={onClose}
         />
-        <CohortButton
-          enabled={cohort.name !== currentCohort.name && !error.isError}
-          label='Save Cohort'
-          onClick={() => onAction({ ...cohort, filters: currentFilters })}
+        <FilterSetButton
+          enabled={filterSet.name !== currentFilterSet.name && !error.isError}
+          label='Save Filter Set'
+          onClick={() => onAction({ ...filterSet, filters: currentFilters })}
         />
       </div>
     </div>
   );
 }
 
-CohortCreateForm.propTypes = {
-  currentCohort: PropTypes.shape({
+FilterSetCreateForm.propTypes = {
+  currentFilterSet: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
     filters: PropTypes.object,
     id: PropTypes.number,
   }),
   currentFilters: PropTypes.object,
-  cohorts: PropTypes.arrayOf(
+  filterSets: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
       description: PropTypes.string,
@@ -262,44 +270,44 @@ CohortCreateForm.propTypes = {
 
 /**
  * @param {Object} prop
- * @param {ExplorerCohort} prop.currentCohort
+ * @param {ExplorerFilterSet} prop.currentFilterSet
  * @param {ExplorerFilters} prop.currentFilters
- * @param {ExplorerCohort[]} prop.cohorts
+ * @param {ExplorerFilterSet[]} prop.filterSets
  * @param {boolean} prop.isFiltersChanged
- * @param {(updated: ExplorerCohort) => void} prop.onAction
+ * @param {(updated: ExplorerFilterSet) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
-function CohortUpdateForm({
-  currentCohort,
+function FilterSetUpdateForm({
+  currentFilterSet,
   currentFilters,
-  cohorts,
+  filterSets,
   isFiltersChanged,
   onAction,
   onClose,
 }) {
-  const [cohort, setCohort] = useState(currentCohort);
+  const [filterSet, setFilterSet] = useState(currentFilterSet);
   const [error, setError] = useState({ isError: false, message: '' });
   function validate() {
-    if (cohort.name === '')
+    if (filterSet.name === '')
       setError({ isError: true, message: 'Name is required!' });
     else if (
-      cohorts.filter(
-        (c) => c.name === cohort.name && c.name !== currentCohort.name
+      filterSets.filter(
+        (c) => c.name === filterSet.name && c.name !== currentFilterSet.name
       ).length > 0
     )
       setError({ isError: true, message: 'Name is already in use!' });
     else setError({ isError: false, message: '' });
   }
   return (
-    <div className='guppy-explorer-cohort__form'>
-      <h4>Save changes to the current Cohort</h4>
+    <div className='guppy-explorer-filter-set__form'>
+      <h4>Save changes to the current Filter Set</h4>
       {isFiltersChanged && (
         <p>
           <FontAwesomeIcon
             icon='exclamation-triangle'
             color='var(--pcdc-color__secondary)'
           />{' '}
-          You have changed filters for this Cohort.
+          You have changed filters for this Filter Set.
         </p>
       )}
       <form onSubmit={(e) => e.preventDefault()}>
@@ -309,12 +317,12 @@ function CohortUpdateForm({
             <input
               id='update-ohort-name'
               autoFocus
-              placeholder='Enter the cohort name'
-              value={cohort.name}
+              placeholder='Enter the Filter Set name'
+              value={filterSet.name}
               onBlur={validate}
               onChange={(e) => {
                 e.persist();
-                setCohort((prev) => ({ ...prev, name: e.target.value }));
+                setFilterSet((prev) => ({ ...prev, name: e.target.value }));
               }}
             />
           }
@@ -324,12 +332,15 @@ function CohortUpdateForm({
           label='Description'
           input={
             <textarea
-              id='update-cohort-description'
-              placeholder='Describe the cohort (optional)'
-              value={cohort.description}
+              id='update-filter-set-description'
+              placeholder='Describe the Filter Set (optional)'
+              value={filterSet.description}
               onChange={(e) => {
                 e.persist();
-                setCohort((prev) => ({ ...prev, description: e.target.value }));
+                setFilterSet((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }));
               }}
             />
           }
@@ -338,10 +349,10 @@ function CohortUpdateForm({
           label='Filters'
           input={
             <textarea
-              id='update-cohort-filters'
+              id='update-filter-set-filters'
               disabled
               placeholder='No filters'
-              value={stringifyFilters(cohort.filters)}
+              value={stringifyFilters(filterSet.filters)}
             />
           }
         />
@@ -350,7 +361,7 @@ function CohortUpdateForm({
             label='Filters (changed)'
             input={
               <textarea
-                id='update-cohort-changed-filters'
+                id='update-filter-set-changed-filters'
                 disabled
                 placeholder='No filters'
                 value={stringifyFilters(currentFilters)}
@@ -360,35 +371,35 @@ function CohortUpdateForm({
         )}
       </form>
       <div>
-        <CohortButton
+        <FilterSetButton
           buttonType='default'
           label='Back to page'
           onClick={onClose}
         />
-        <CohortButton
+        <FilterSetButton
           label='Save changes'
           enabled={
             (isFiltersChanged ||
-              cohort.name !== currentCohort.name ||
-              cohort.description !== currentCohort.description) &&
+              filterSet.name !== currentFilterSet.name ||
+              filterSet.description !== currentFilterSet.description) &&
             !error.isError
           }
-          onClick={() => onAction({ ...cohort, filters: currentFilters })}
+          onClick={() => onAction({ ...filterSet, filters: currentFilters })}
         />
       </div>
     </div>
   );
 }
 
-CohortUpdateForm.propTypes = {
-  currentCohort: PropTypes.shape({
+FilterSetUpdateForm.propTypes = {
+  currentFilterSet: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
     filters: PropTypes.object,
     id: PropTypes.number,
   }),
   currentFilters: PropTypes.object,
-  cohorts: PropTypes.arrayOf(
+  filterSets: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
       description: PropTypes.string,
@@ -403,31 +414,31 @@ CohortUpdateForm.propTypes = {
 
 /**
  * @param {Object} prop
- * @param {ExplorerCohort} prop.currentCohort
- * @param {(deleted: ExplorerCohort) => void} prop.onAction
+ * @param {ExplorerFilterSet} prop.currentFilterSet
+ * @param {(deleted: ExplorerFilterSet) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
-function CohortDeleteForm({ currentCohort, onAction, onClose }) {
+function FilterSetDeleteForm({ currentFilterSet, onAction, onClose }) {
   return (
-    <div className='guppy-explorer-cohort__form'>
-      <h4>Are you sure to delete the current Cohort?</h4>
+    <div className='guppy-explorer-filter-set__form'>
+      <h4>Are you sure to delete the current Filter Set?</h4>
       <div>
-        <CohortButton
+        <FilterSetButton
           buttonType='default'
           label='Back to page'
           onClick={onClose}
         />
-        <CohortButton
-          label='Delete Cohort'
-          onClick={() => onAction(currentCohort)}
+        <FilterSetButton
+          label='Delete Filter Set'
+          onClick={() => onAction(currentFilterSet)}
         />
       </div>
     </div>
   );
 }
 
-CohortDeleteForm.propTypes = {
-  currentCohort: PropTypes.shape({
+FilterSetDeleteForm.propTypes = {
+  currentFilterSet: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
     filters: PropTypes.object,
@@ -439,23 +450,23 @@ CohortDeleteForm.propTypes = {
 
 /**
  * @param {Object} prop
- * @param {ExplorerCohortActionType} prop.actionType
- * @param {ExplorerCohort} prop.currentCohort
+ * @param {ExplorerFilterSetActionType} prop.actionType
+ * @param {ExplorerFilterSet} prop.currentFilterSet
  * @param {ExplorerFilters} prop.currentFilters
- * @param {ExplorerCohort[]} prop.cohorts
+ * @param {ExplorerFilterSet[]} prop.filterSets
  * @param {object} prop.handlers
- * @param {(opened: ExplorerCohort) => void} prop.handlers.handleOpen
- * @param {(created: ExplorerCohort) => void} prop.handlers.handleCreate
- * @param {(updated: ExplorerCohort) => void} prop.handlers.handleUpdate
- * @param {(deleted: ExplorerCohort) => void} prop.handlers.handleDelete
+ * @param {(opened: ExplorerFilterSet) => void} prop.handlers.handleOpen
+ * @param {(created: ExplorerFilterSet) => void} prop.handlers.handleCreate
+ * @param {(updated: ExplorerFilterSet) => void} prop.handlers.handleUpdate
+ * @param {(deleted: ExplorerFilterSet) => void} prop.handlers.handleDelete
  * @param {() => void} prop.handlers.handleClose
  * @param {boolean} prop.isFiltersChanged
  */
-export function CohortActionForm({
+export function FilterSetActionForm({
   actionType,
-  currentCohort,
+  currentFilterSet,
   currentFilters,
-  cohorts,
+  filterSets,
   handlers,
   isFiltersChanged,
 }) {
@@ -470,28 +481,28 @@ export function CohortActionForm({
   switch (actionType) {
     case 'open':
       return (
-        <CohortOpenForm
-          currentCohort={currentCohort}
-          cohorts={cohorts}
+        <FilterSetOpenForm
+          currentFilterSet={currentFilterSet}
+          filterSets={filterSets}
           onAction={handleOpen}
           onClose={handleClose}
         />
       );
     case 'save':
-      return currentCohort.name === '' ? (
-        <CohortCreateForm
-          currentCohort={currentCohort}
+      return currentFilterSet.name === '' ? (
+        <FilterSetCreateForm
+          currentFilterSet={currentFilterSet}
           currentFilters={currentFilters}
-          cohorts={cohorts}
+          filterSets={filterSets}
           isFiltersChanged={isFiltersChanged}
           onAction={handleCreate}
           onClose={handleClose}
         />
       ) : (
-        <CohortUpdateForm
-          currentCohort={currentCohort}
+        <FilterSetUpdateForm
+          currentFilterSet={currentFilterSet}
           currentFilters={currentFilters}
-          cohorts={cohorts}
+          filterSets={filterSets}
           isFiltersChanged={isFiltersChanged}
           onAction={handleUpdate}
           onClose={handleClose}
@@ -499,10 +510,10 @@ export function CohortActionForm({
       );
     case 'save as':
       return (
-        <CohortCreateForm
-          currentCohort={currentCohort}
+        <FilterSetCreateForm
+          currentFilterSet={currentFilterSet}
           currentFilters={currentFilters}
-          cohorts={cohorts}
+          filterSets={filterSets}
           isFiltersChanged={isFiltersChanged}
           onAction={handleCreate}
           onClose={handleClose}
@@ -510,8 +521,8 @@ export function CohortActionForm({
       );
     case 'delete':
       return (
-        <CohortDeleteForm
-          currentCohort={currentCohort}
+        <FilterSetDeleteForm
+          currentFilterSet={currentFilterSet}
           onAction={handleDelete}
           onClose={handleClose}
         />
@@ -521,16 +532,16 @@ export function CohortActionForm({
   }
 }
 
-CohortActionForm.propTypes = {
+FilterSetActionForm.propTypes = {
   actionType: PropTypes.oneOf(['new', 'open', 'save', 'save as', 'delete']),
-  currentCohort: PropTypes.shape({
+  currentFilterSet: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
     filters: PropTypes.object,
     id: PropTypes.number,
   }),
   currentFilters: PropTypes.object,
-  cohorts: PropTypes.arrayOf(
+  filterSets: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
       description: PropTypes.string,

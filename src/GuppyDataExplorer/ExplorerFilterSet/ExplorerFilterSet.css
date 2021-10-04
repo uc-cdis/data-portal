@@ -1,24 +1,24 @@
-.guppy-explorer-cohort__name {
+.guppy-explorer-filter-set__name {
   font-size: 1.5rem;
   line-height: 1.25;
 }
 
-.guppy-explorer-cohort__menu {
+.guppy-explorer-filter-set__menu {
   min-width: 180px;
   margin-left: 2rem;
   text-align: center;
   z-index: 20;
 }
 
-.guppy-explorer-cohort__button {
+.guppy-explorer-filter-set__button {
   margin-right: 10px;
 }
 
-.guppy-explorer-cohort__placeholder {
+.guppy-explorer-filter-set__placeholder {
   font-style: italic;
 }
 
-.guppy-explorer-cohort__form {
+.guppy-explorer-filter-set__form {
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -26,21 +26,21 @@
   min-height: 120px;
 }
 
-.guppy-explorer-cohort__error {
+.guppy-explorer-filter-set__error {
   width: 100%;
 }
 
-.guppy-explorer-cohort__error > p {
+.guppy-explorer-filter-set__error > p {
   margin-bottom: 1rem;
 }
 
 @media screen and (max-width: 1170px) {
-  .guppy-explorer-cohort__buttons {
+  .guppy-explorer-filter-set__buttons {
     flex-wrap: wrap;
     width: 360px;
   }
 
-  .guppy-explorer-cohort__button {
+  .guppy-explorer-filter-set__button {
     margin-bottom: 10px;
   }
 }

@@ -7,15 +7,15 @@ import Button from '../../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../../utils';
 import { fetchWithCreds } from '../../actions';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
-import { stringifyFilters } from '../ExplorerCohort/utils';
+import { stringifyFilters } from '../ExplorerFilterSet/utils';
 import '../typedef';
-import './ExplorerFindCohortButton.css';
+import './ExplorerExploreExternalButton.css';
 
 /**
  * @param {Object} props
  * @param {FilterState} props.filter
  */
-function ExplorerFindCohortButton({ filter }) {
+function ExplorerExploreExternalButton({ filter }) {
   const emptyOption = {
     label: 'Select data commons',
     value: '',
@@ -57,22 +57,22 @@ function ExplorerFindCohortButton({ filter }) {
   return (
     <>
       <Button
-        className='explorer-find-cohort__button'
-        label={<div>Find Cohort in...</div>}
+        className='explorer-explore-external__button'
+        label={<div>Explore in...</div>}
         rightIcon='external-link'
         buttonType='secondary'
         onClick={openPopup}
       />
       {show && (
         <SimplePopup>
-          <div className='explorer-find-cohort__form'>
-            <h4>Find Cohort in An External Data Commons</h4>
+          <div className='explorer-explore-external__form'>
+            <h4>Explore in An External Data Commons</h4>
             <form onSubmit={(e) => e.preventDefault()}>
               <SimpleInputField
                 label='Data Commons'
                 input={
                   <Select
-                    inputId='find-cohort-data-commons'
+                    inputId='explore-external-data-commons'
                     options={[emptyOption, ...externalCommonsOptions]}
                     value={selected}
                     autoFocus
@@ -86,7 +86,7 @@ function ExplorerFindCohortButton({ filter }) {
                 label='Filters'
                 input={
                   <textarea
-                    id='find-cohort-filters'
+                    id='explore-external-filters'
                     disabled
                     placeholder='No filters'
                     value={stringifyFilters(filter)}
@@ -96,7 +96,7 @@ function ExplorerFindCohortButton({ filter }) {
             </form>
             <div>
               <Button
-                className='explorer-find-cohort__button'
+                className='explorer-explore-external__button'
                 buttonType='default'
                 label='Back to page'
                 onClick={closePopup}
@@ -114,8 +114,8 @@ function ExplorerFindCohortButton({ filter }) {
   );
 }
 
-ExplorerFindCohortButton.propTypes = {
+ExplorerExploreExternalButton.propTypes = {
   filter: PropTypes.object.isRequired,
 };
 
-export default ExplorerFindCohortButton;
+export default ExplorerExploreExternalButton;
