@@ -13,7 +13,7 @@ import './typedef';
  * @param {Object} prop
  * @param {boolean} prop.isCohortEmpty
  * @param {boolean} prop.hasNoSavedCohorts
- * @param {({ value: ExplorerCohortActionType }) => void} prop.onSelectAction
+ * @param {({ value: ExplorerFilterSetActionType }) => void} prop.onSelectAction
  */
 export function CohortActionMenu({
   isCohortEmpty,
@@ -51,9 +51,9 @@ function CohortButton(props) {
 
 /**
  * @param {Object} prop
- * @param {ExplorerCohort} prop.currentCohort
- * @param {ExplorerCohort[]} prop.cohorts
- * @param {(opened: ExplorerCohort) => void} prop.onAction
+ * @param {ExplorerFilterSet} prop.currentCohort
+ * @param {ExplorerFilterSet[]} prop.cohorts
+ * @param {(opened: ExplorerFilterSet) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
 function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
@@ -143,11 +143,11 @@ CohortOpenForm.propTypes = {
 
 /**
  * @param {Object} prop
- * @param {ExplorerCohort} prop.currentCohort
+ * @param {ExplorerFilterSet} prop.currentCohort
  * @param {ExplorerFilters} prop.currentFilters
- * @param {ExplorerCohort[]} prop.cohorts
+ * @param {ExplorerFilterSet[]} prop.cohorts
  * @param {boolean} prop.isFiltersChanged
- * @param {(created: ExplorerCohort) => void} prop.onAction
+ * @param {(created: ExplorerFilterSet) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
 function CohortCreateForm({
@@ -262,11 +262,11 @@ CohortCreateForm.propTypes = {
 
 /**
  * @param {Object} prop
- * @param {ExplorerCohort} prop.currentCohort
+ * @param {ExplorerFilterSet} prop.currentCohort
  * @param {ExplorerFilters} prop.currentFilters
- * @param {ExplorerCohort[]} prop.cohorts
+ * @param {ExplorerFilterSet[]} prop.cohorts
  * @param {boolean} prop.isFiltersChanged
- * @param {(updated: ExplorerCohort) => void} prop.onAction
+ * @param {(updated: ExplorerFilterSet) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
 function CohortUpdateForm({
@@ -403,8 +403,8 @@ CohortUpdateForm.propTypes = {
 
 /**
  * @param {Object} prop
- * @param {ExplorerCohort} prop.currentCohort
- * @param {(deleted: ExplorerCohort) => void} prop.onAction
+ * @param {ExplorerFilterSet} prop.currentCohort
+ * @param {(deleted: ExplorerFilterSet) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
 function CohortDeleteForm({ currentCohort, onAction, onClose }) {
@@ -439,15 +439,15 @@ CohortDeleteForm.propTypes = {
 
 /**
  * @param {Object} prop
- * @param {ExplorerCohortActionType} prop.actionType
- * @param {ExplorerCohort} prop.currentCohort
+ * @param {ExplorerFilterSetActionType} prop.actionType
+ * @param {ExplorerFilterSet} prop.currentCohort
  * @param {ExplorerFilters} prop.currentFilters
- * @param {ExplorerCohort[]} prop.cohorts
+ * @param {ExplorerFilterSet[]} prop.cohorts
  * @param {object} prop.handlers
- * @param {(opened: ExplorerCohort) => void} prop.handlers.handleOpen
- * @param {(created: ExplorerCohort) => void} prop.handlers.handleCreate
- * @param {(updated: ExplorerCohort) => void} prop.handlers.handleUpdate
- * @param {(deleted: ExplorerCohort) => void} prop.handlers.handleDelete
+ * @param {(opened: ExplorerFilterSet) => void} prop.handlers.handleOpen
+ * @param {(created: ExplorerFilterSet) => void} prop.handlers.handleCreate
+ * @param {(updated: ExplorerFilterSet) => void} prop.handlers.handleUpdate
+ * @param {(deleted: ExplorerFilterSet) => void} prop.handlers.handleDelete
  * @param {() => void} prop.handlers.handleClose
  * @param {boolean} prop.isFiltersChanged
  */

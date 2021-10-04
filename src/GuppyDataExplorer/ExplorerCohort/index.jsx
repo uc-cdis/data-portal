@@ -28,7 +28,7 @@ import './typedef';
 function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
   const [cohort, setCohort] = useState(createEmptyCohort());
 
-  /** @type {ExplorerCohort[]} */
+  /** @type {ExplorerFilterSet[]} */
   const emptyCohorts = [];
   const [cohorts, setCohorts] = useState(emptyCohorts);
   const [isError, setIsError] = useState(false);
@@ -44,7 +44,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     };
   }, [isError]);
 
-  /** @type {[ExplorerCohortActionType, React.Dispatch<React.SetStateAction<ExplorerCohortActionType>>]} */
+  /** @type {[ExplorerFilterSetActionType, React.Dispatch<React.SetStateAction<ExplorerFilterSetActionType>>]} */
   const [actionType, setActionType] = useState('open');
   const [showActionForm, setShowActionForm] = useState(false);
   function openActionForm(type) {
@@ -60,12 +60,12 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     setCohort(emptyCohort);
     onOpenCohort(emptyCohort);
   }
-  function handleOpen(/** @type {ExplorerCohort} */ opened) {
+  function handleOpen(/** @type {ExplorerFilterSet} */ opened) {
     setCohort(cloneDeep(opened));
     onOpenCohort(cloneDeep(opened));
     closeActionForm();
   }
-  async function handleCreate(/** @type {ExplorerCohort} */ created) {
+  async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
     try {
       setCohort(await createCohort(created));
       setCohorts(await fetchCohorts());
@@ -75,7 +75,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
       closeActionForm();
     }
   }
-  async function handleUpdate(/** @type {ExplorerCohort} */ updated) {
+  async function handleUpdate(/** @type {ExplorerFilterSet} */ updated) {
     try {
       await updateCohort(updated);
       setCohort(cloneDeep(updated));
@@ -86,7 +86,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
       closeActionForm();
     }
   }
-  async function handleDelete(/** @type {ExplorerCohort} */ deleted) {
+  async function handleDelete(/** @type {ExplorerFilterSet} */ deleted) {
     try {
       await deleteCohort(deleted);
       setCohort(createEmptyCohort());
@@ -98,7 +98,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
       closeActionForm();
     }
   }
-  /** @param {{ value: ExplorerCohortActionType}} e */
+  /** @param {{ value: ExplorerFilterSetActionType}} e */
   function handleSelectAction({ value }) {
     if (value === 'new') {
       handleNew();

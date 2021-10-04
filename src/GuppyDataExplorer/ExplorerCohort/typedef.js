@@ -5,7 +5,7 @@
  */
 
 /**
- * @typedef {object} ExplorerCohort
+ * @typedef {object} ExplorerFilterSet
  * @property {string} name
  * @property {string} description
  * @property {ExplorerFilters} filters
@@ -13,5 +13,5 @@
  */
 
 /**
- * @typedef {'new' | 'open' | 'save' | 'save as' | 'delete'} ExplorerCohortActionType
+ * @typedef {'new' | 'open' | 'save' | 'save as' | 'delete'} ExplorerFilterSetActionType
  */

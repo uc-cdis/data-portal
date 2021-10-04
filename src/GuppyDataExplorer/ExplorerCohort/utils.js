@@ -5,7 +5,7 @@ import './typedef';
 const COHORT_URL = '/amanuensis/cohort';
 
 /**
- * @returns {Promise<ExplorerCohort[]>}
+ * @returns {Promise<ExplorerFilterSet[]>}
  */
 export function fetchCohorts() {
   return fetchWithCreds({
@@ -25,8 +25,8 @@ export function fetchCohorts() {
 }
 
 /**
- * @param {ExplorerCohort} cohort
- * @returns {Promise<ExplorerCohort>}
+ * @param {ExplorerFilterSet} cohort
+ * @returns {Promise<ExplorerFilterSet>}
  */
 export function createCohort(cohort) {
   return fetchWithCreds({
@@ -40,7 +40,7 @@ export function createCohort(cohort) {
 }
 
 /**
- * @param {ExplorerCohort} cohort
+ * @param {ExplorerFilterSet} cohort
  */
 export function updateCohort(cohort) {
   const { id, ...requestBody } = cohort;
@@ -54,7 +54,7 @@ export function updateCohort(cohort) {
 }
 
 /**
- * @param {ExplorerCohort} cohort
+ * @param {ExplorerFilterSet} cohort
  */
 export function deleteCohort(cohort) {
   return fetchWithCreds({
@@ -66,7 +66,7 @@ export function deleteCohort(cohort) {
 }
 
 /**
- * @return {ExplorerCohort}
+ * @return {ExplorerFilterSet}
  */
 export function createEmptyCohort() {
   return {
