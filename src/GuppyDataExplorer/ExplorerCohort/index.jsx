@@ -113,7 +113,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     return (
       <Tooltip
         placement='top'
-        overlay='You have changed filters for this Cohort. Click this icon to undo.'
+        overlay='You have changed filters for this Filter Set. Click this icon to undo.'
         arrowContent={<div className='rc-tooltip-arrow-inner' />}
         trigger={['hover', 'focus']}
       >
@@ -145,7 +145,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
     <div className={className}>
       {isError ? (
         <div className='guppy-explorer-cohort__error'>
-          <h2>Error obtaining saved cohorts data...</h2>
+          <h2>Error obtaining saved Filter Set data...</h2>
           <p>
             Please retry by clicking {'"Retry"'} button or refreshing the page.
             <br />
@@ -158,7 +158,7 @@ function ExplorerCohort({ className, filter, onOpenCohort, onDeleteCohort }) {
         <>
           <div>
             <h1 className='guppy-explorer-cohort__name'>
-              Cohort:{' '}
+              Filter Set:{' '}
               {cohort.name ? (
                 <>
                   {truncateWithEllipsis(cohort.name, 30)}{' '}

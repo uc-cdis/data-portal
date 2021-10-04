@@ -29,9 +29,9 @@ export function CohortActionMenu({
   ];
   return (
     <Select
-      aria-label='Manage cohorts'
+      aria-label='Manage filter sets'
       className='guppy-explorer-cohort__menu'
-      value={{ label: 'Manage Cohorts', value: '' }}
+      value={{ label: 'Manage Filter Set', value: '' }}
       options={options}
       theme={overrideSelectTheme}
       onChange={onSelectAction}
@@ -67,7 +67,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
   });
   return (
     <div className='guppy-explorer-cohort__form'>
-      <h4>Select a saved Cohort to open</h4>
+      <h4>Select a saved Filter Set to open</h4>
       <form onSubmit={(e) => e.preventDefault()}>
         <SimpleInputField
           label='Name'
@@ -113,7 +113,7 @@ function CohortOpenForm({ currentCohort, cohorts, onAction, onClose }) {
           onClick={onClose}
         />
         <CohortButton
-          label='Open Cohort'
+          label='Open Filter Set'
           enabled={selected.value.name !== ''}
           onClick={() => onAction(selected.value)}
         />
@@ -169,14 +169,14 @@ function CohortCreateForm({
   }
   return (
     <div className='guppy-explorer-cohort__form'>
-      <h4>Save as a new Cohort</h4>
+      <h4>Save as a new Filter Set</h4>
       {currentCohort.name !== '' && isFiltersChanged && (
         <p>
           <FontAwesomeIcon
             icon='exclamation-triangle'
             color='var(--pcdc-color__secondary)'
           />{' '}
-          You have changed filters for this Cohort.
+          You have changed filters for this Filter Set.
         </p>
       )}
       <form onSubmit={(e) => e.preventDefault()}>
@@ -186,7 +186,7 @@ function CohortCreateForm({
             <input
               id='create-cohort-name'
               autoFocus
-              placeholder='Enter the cohort name'
+              placeholder='Enter the Filter Set name'
               value={cohort.name}
               onBlur={validate}
               onChange={(e) => {
@@ -202,7 +202,7 @@ function CohortCreateForm({
           input={
             <textarea
               id='create-cohort-description'
-              placeholder='Describe the cohort (optional)'
+              placeholder='Describe the Filter Set (optional)'
               value={cohort.description}
               onChange={(e) => {
                 e.persist();
@@ -231,7 +231,7 @@ function CohortCreateForm({
         />
         <CohortButton
           enabled={cohort.name !== currentCohort.name && !error.isError}
-          label='Save Cohort'
+          label='Save Filter Set'
           onClick={() => onAction({ ...cohort, filters: currentFilters })}
         />
       </div>
@@ -292,14 +292,14 @@ function CohortUpdateForm({
   }
   return (
     <div className='guppy-explorer-cohort__form'>
-      <h4>Save changes to the current Cohort</h4>
+      <h4>Save changes to the current Filter Set</h4>
       {isFiltersChanged && (
         <p>
           <FontAwesomeIcon
             icon='exclamation-triangle'
             color='var(--pcdc-color__secondary)'
           />{' '}
-          You have changed filters for this Cohort.
+          You have changed filters for this Filter Set.
         </p>
       )}
       <form onSubmit={(e) => e.preventDefault()}>
@@ -309,7 +309,7 @@ function CohortUpdateForm({
             <input
               id='update-ohort-name'
               autoFocus
-              placeholder='Enter the cohort name'
+              placeholder='Enter the Filter Set name'
               value={cohort.name}
               onBlur={validate}
               onChange={(e) => {
@@ -325,7 +325,7 @@ function CohortUpdateForm({
           input={
             <textarea
               id='update-cohort-description'
-              placeholder='Describe the cohort (optional)'
+              placeholder='Describe the Filter Set (optional)'
               value={cohort.description}
               onChange={(e) => {
                 e.persist();
@@ -410,7 +410,7 @@ CohortUpdateForm.propTypes = {
 function CohortDeleteForm({ currentCohort, onAction, onClose }) {
   return (
     <div className='guppy-explorer-cohort__form'>
-      <h4>Are you sure to delete the current Cohort?</h4>
+      <h4>Are you sure to delete the current Filter Set?</h4>
       <div>
         <CohortButton
           buttonType='default'
@@ -418,7 +418,7 @@ function CohortDeleteForm({ currentCohort, onAction, onClose }) {
           onClick={onClose}
         />
         <CohortButton
-          label='Delete Cohort'
+          label='Delete Filter Set'
           onClick={() => onAction(currentCohort)}
         />
       </div>
