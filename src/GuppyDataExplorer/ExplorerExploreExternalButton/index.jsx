@@ -9,7 +9,7 @@ import { fetchWithCreds } from '../../actions';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import { stringifyFilters } from '../ExplorerFilterSet/utils';
 import '../typedef';
-import './ExplorerFindCohortButton.css';
+import './ExplorerExploreExternalButton.css';
 
 /**
  * @param {Object} props

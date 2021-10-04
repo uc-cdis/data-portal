@@ -6,7 +6,7 @@ import PercentageStackedBarChart from '../../gen3-ui-component/components/charts
 import Spinner from '../../components/Spinner';
 import { components } from '../../params';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
-import ExplorerExploreExternalButton from '../ExplorerFindCohortButton';
+import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
