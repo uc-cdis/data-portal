@@ -246,6 +246,7 @@ class ProtectedContent extends React.Component {
     if (!this.props.public && this.state.authenticated) {
       return (
         <div className={`protected-content ${pageFullWidthClassModifier}`}>
+          <ReduxSystemUseWarningPopup />
           <ReduxAuthTimeoutPopup />
           <Component params={params} location={this.props.location} history={this.props.history} />
         </div>
