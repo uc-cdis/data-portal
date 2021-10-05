@@ -317,8 +317,7 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
 export const checkIfDisplaySystemUseNotice = (systemUseWarnPopup) => (dispatch) => {
   // couple of option for when to display the system use warning
   // displayUseMsg:
-  // "session": show at the start of each session
-  // "cookie": use the cookie and expireValue
+  // "cookie": use the cookie and expireValue (defaults to 0 to show use message per session
   //  undefined or systemUseText is undefined: always false
   if (!components.systemUse || !components.systemUse.displayUseMsg) {
     dispatch({
@@ -327,7 +326,7 @@ export const checkIfDisplaySystemUseNotice = (systemUseWarnPopup) => (dispatch) 
         systemUseWarnPopup: false,
       },
     });
-    return; //
+    return;
   }
 
   if (components.systemUse.displayUseMsg === 'cookie') {
@@ -347,24 +346,6 @@ export const checkIfDisplaySystemUseNotice = (systemUseWarnPopup) => (dispatch) 
       });
     }
     return;
-  }
-
-  if (components.systemUse.displayUseMsg === 'session') {
-    if (systemUseWarnPopup == null) {
-      dispatch({
-        type: 'UPDATE_POPUP',
-        data: {
-          systemUseWarnPopup: true,
-        },
-      });
-    }
-  } else {
-    dispatch({
-      type: 'UPDATE_POPUP',
-      data: {
-        systemUseWarnPopup: false,
-      },
-    });
   }
   // don't change anything
 };

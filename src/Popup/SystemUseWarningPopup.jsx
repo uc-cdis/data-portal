@@ -14,8 +14,7 @@ const handleAcceptWarning = () => {
     // set a new cookie indicating we have accepted this policy if
     // we are using cookies to track acceptance over multiple sessions
     const expiry = new Date();
-    const defaultDays = components.systemUse.expireUseMsgDays ? components.systemUse.expireUseMsgDays : 10;
-
+    const defaultDays = 'expireUseMsgDays' in components.systemUse ? components.systemUse.expireUseMsgDays : 0;
     if (defaultDays === 0) { // session cookie
       document.cookie = 'systemUseWarning=yes; expires=0}';
     } else {

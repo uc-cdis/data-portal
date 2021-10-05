@@ -15,7 +15,7 @@ To enable a system use message, define the following in gitops.json:
 
 the fields are:
 * systemUseText: text to display in the popup dialog
-* displayUseMsg: when to show the warning. The two permitted values are:
-  * "session": show message on every new session, i.e. fresh load of the commons
-  * "cookie": use a cookie to store the acceptance of the policy, the default cookie expiration is 10 days and can be changed by adding:
-    * "expireUseMsgDays" : 10
+* displayUseMsg: when to show the warning. The permitted value is ```"cookie"``` which enables using a cookie to store the acceptance of the policy, the default cookie expiration is 0
+ which makes the warning show up on each new browser session. Any positive integer value will set
+  the number of day until the cookie expires. Anything else will prevent the warning from showing.
+    * "expireUseMsgDays" : 10 - number of days until cookie expires
