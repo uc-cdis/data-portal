@@ -16,8 +16,12 @@ const handleAcceptWarning = () => {
     const expiry = new Date();
     const defaultDays = components.systemUse.expireUseMsgDays ? components.systemUse.expireUseMsgDays : 10;
 
-    expiry.setTime(expiry.getTime() + (defaultDays * 1440 * 1 * 60 * 1000)); // number of days
-    document.cookie = `systemUseWarning=yes; expires=${expiry.toGMTString()}`;
+    if (defaultDays === 0) { // session cookie
+      document.cookie = 'systemUseWarning=yes; expires=0}';
+    } else {
+      expiry.setTime(expiry.getTime() + (defaultDays * 1440 * 1 * 60 * 1000)); // number of days
+      document.cookie = `systemUseWarning=yes; expires=${expiry.toGMTString()}`;
+    }
   }
   return (dispatch) => dispatch(updateSystemUseNotice(false));
 };
