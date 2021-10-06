@@ -308,13 +308,15 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
   "systemUse" : {
        "systemUseText" : "Text Message",
         "expireUseMsgDays" : 10,
-        "displayUseMsg": "session"
+        "displayUseMsg": "cookie"
     }
  * displayUseMsg: define if you want message to be displayed: values are:
- *     *) "session" once per new session where session is a fresh version of the site
- *     *) "cookie": set a cookie upon acceptance default of 10 day but can be set using expireUseMsgDays
+ *     *) "cookie": set a cookie upon acceptance default of 10 day but can be set using
+ *        expireUseMsgDays
+ *     *) expireUseMsgDays: number of days until displaying message again, set to 0 to make it
+ *        a browser session
  */
-export const checkIfDisplaySystemUseNotice = (systemUseWarnPopup) => (dispatch) => {
+export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
   // couple of option for when to display the system use warning
   // displayUseMsg:
   // "cookie": use the cookie and expireValue (defaults to 0 to show use message per session
@@ -345,7 +347,6 @@ export const checkIfDisplaySystemUseNotice = (systemUseWarnPopup) => (dispatch) 
         },
       });
     }
-    return;
   }
   // don't change anything
 };
