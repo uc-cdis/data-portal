@@ -420,7 +420,16 @@ Below is an example, with inline comments describing what each JSON block config
       },
       "search": {
         "searchBar": {
-          "enabled": true
+          "enabled": true,
+          "inputSubtitle": "Search Bar", // optional, subtitle of search bar
+          "placeholder": "Search studies by keyword", // optional, placeholder text of search input
+          "searchableTextFields": ["study", "age", "publication"] // optional, list of properties in data to make searchable
+                                                                  // if not present, only fields visible in the table will be searchable
+        },
+        "tagSearchDropdown": { // optional, config section for searchable tags
+          "enabled": true,
+          "collapseOnDefault": false, // optional, whether the searchable tag panel is collapsed when loading, default value is "true"
+          "collapsibleButtonText": "Study Characteristics" // optional, display text for the searchable tag panel collapse control button, default value is "Tag Panel"
         }
       },
       "advSearchFilters": {
@@ -568,7 +577,8 @@ Below is an example, with inline comments describing what each JSON block config
         "color": "rgba(112, 182, 3, 1)",
         "display": true
       }
-    ]
+    ],
+    "tagsDisplayName": "Tags" // optional, overrides the name of the mandatory tags column
   },
   "resourceBrowser": {), // see Resource Browser documentation
   "workspacePageTitle": "", // title to display above workspacePageDescription
