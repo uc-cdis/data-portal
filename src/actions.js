@@ -308,6 +308,7 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
   "systemUse" : {
        "systemUseText" : "Text Message",
         "expireUseMsgDays" : 10,
+
         "displayUseMsg": "cookie"
     }
  * displayUseMsg: define if you want message to be displayed: values are:

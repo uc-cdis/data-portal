@@ -19,3 +19,4 @@ the fields are:
  which makes the warning show up on each new browser session. Any positive integer value will set
   the number of day until the cookie expires. Anything else will prevent the warning from showing.
     * "expireUseMsgDays" : 10 - number of days until cookie expires
+
