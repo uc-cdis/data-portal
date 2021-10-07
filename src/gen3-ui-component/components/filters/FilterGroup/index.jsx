@@ -29,6 +29,7 @@ import '../typedef';
  * @property {JSX.Element[]} tabs
  */
 
+/** @type {FilterState} */
 const defaultInitialAppliedFilters = {};
 
 /** @param {FilterGroupProps} props */
@@ -111,7 +112,7 @@ function FilterGroup({
 
   /**
    * @param {number} sectionIndex
-   * @param {boolean[][]} isSectionExpanded
+   * @param {boolean} isExpanded
    */
   function handleToggleSection(sectionIndex, isExpanded) {
     const newExpandedStatus = cloneDeep(expandedStatus);
@@ -137,7 +138,7 @@ function FilterGroup({
   /**
    * @param {number} sectionIndex
    * @param {string} combineModeFieldName
-   * @param {boolean} combineModeValue
+   * @param {string} combineModeValue
    */
   function handleToggleCombineMode(
     sectionIndex,
@@ -258,39 +259,39 @@ function FilterGroup({
           </div>
         ))}
       </div>
-      {showAnchorFilter && (
-        <AnchorFilter
-          anchorField={filterConfig.anchor.field}
-          anchorValue={anchorValue}
-          onChange={handleAnchorValueChange}
-          options={filterConfig.anchor.options}
-          optionsInUse={selectedAnchors[tabIndex]}
-        />
-      )}
-      {showPatientIdsFilter && (
-        <PatientIdFilter
-          onPatientIdsChange={onPatientIdsChange}
-          patientIds={patientIds}
-        />
-      )}
-      <div className='g3-filter-group__collapse'>
-        <span
-          className='g3-link g3-filter-group__collapse-link'
-          onClick={toggleSections}
-          onKeyPress={(e) => {
-            if (e.charCode === 13 || e.charCode === 32) {
-              e.preventDefault();
-              toggleSections();
-            }
-          }}
-          role='button'
-          tabIndex={0}
-          aria-label={expandedStatusText}
-        >
-          {expandedStatusText}
-        </span>
-      </div>
       <div className='g3-filter-group__filter-area'>
+        {showAnchorFilter && (
+          <AnchorFilter
+            anchorField={filterConfig.anchor.field}
+            anchorValue={anchorValue}
+            onChange={handleAnchorValueChange}
+            options={filterConfig.anchor.options}
+            optionsInUse={selectedAnchors[tabIndex]}
+          />
+        )}
+        {showPatientIdsFilter && (
+          <PatientIdFilter
+            onPatientIdsChange={onPatientIdsChange}
+            patientIds={patientIds}
+          />
+        )}
+        <div className='g3-filter-group__collapse'>
+          <span
+            className='g3-link g3-filter-group__collapse-link'
+            onClick={toggleSections}
+            onKeyPress={(e) => {
+              if (e.charCode === 13 || e.charCode === 32) {
+                e.preventDefault();
+                toggleSections();
+              }
+            }}
+            role='button'
+            tabIndex={0}
+            aria-label={expandedStatusText}
+          >
+            {expandedStatusText}
+          </span>
+        </div>
         {React.cloneElement(tabs[tabIndex], {
           expandedStatus: expandedStatus[tabIndex],
           filterStatus: filterTabStatus,

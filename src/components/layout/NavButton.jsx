@@ -5,14 +5,16 @@ import IconComponent from '../Icon';
 import './NavButton.css';
 
 /**
- * @param {Object} props
- * @param {{ [iconName: string]: (height: string, svgStyles: Object) => SVGElement }} props.dictIcons
- * @param {string} props.icon
- * @param {string} props.name
- * @param {string} props.to
- * @param {boolean} [props.isActive]
+ * @typedef {Object} NavButtonProps
+ * @property {{ [iconName: string]: (height: string, style: Object) => JSX.Element }} dictIcons
+ * @property {string} icon
+ * @property {boolean} [isActive]
+ * @property {string} name
+ * @property {string} to
  */
-function NavButton({ dictIcons, icon, name, to, isActive = false }) {
+
+/** @param {NavButtonProps} props */
+function NavButton({ dictIcons, icon, isActive = false, name, to }) {
   const buttonClassName = isActive
     ? 'body-typo nav-button--active nav-button'
     : 'body-typo nav-button';
@@ -37,11 +39,11 @@ function NavButton({ dictIcons, icon, name, to, isActive = false }) {
 }
 
 NavButton.propTypes = {
-  dictIcons: PropTypes.object.isRequired,
+  dictIcons: PropTypes.objectOf(PropTypes.func).isRequired,
   icon: PropTypes.string.isRequired,
+  isActive: PropTypes.bool,
   name: PropTypes.string.isRequired,
   to: PropTypes.string.isRequired,
-  isActive: PropTypes.bool,
 };
 
 export default NavButton;

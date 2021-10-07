@@ -21,6 +21,7 @@ import '../typedef';
 
 /**
  * @typedef {Object} GuppyWrapperProps
+ * @property {{ [fieldName: string]: any }} chartConfig
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
  * @property {((data: GuppyData) => JSX.Element)} children
@@ -38,7 +39,7 @@ import '../typedef';
  * @property {AggsData} aggsChartData
  * @property {string[]} allFields
  * @property {FilterState} filter
- * @property {SimpleAggsData} initialTabsOptions
+ * @property {SimpleAggsData} [initialTabsOptions]
  * @property {boolean} isLoadingAggsData
  * @property {boolean} isLoadingRawData
  * @property {Object[]} rawData
@@ -151,6 +152,7 @@ function GuppyWrapper({
    * @param {Object} args
    * @param {string} args.anchorValue
    * @param {FilterState} args.filter
+   * @param {FilterTabsOption[]} [args.filterTabs]
    */
   function fetchAggsOptionsDataFromGuppy({
     anchorValue,
@@ -175,6 +177,7 @@ function GuppyWrapper({
         );
 
       const { unfiltered, ...aggregation } = data._aggregation;
+      /** @type {AggsData} */
       const receivedAggsData = {};
       for (const group of Object.values(aggregation))
         for (const [fieldName, value] of Object.entries(group))
@@ -195,7 +198,7 @@ function GuppyWrapper({
 
   /**
    * @param {Object} args
-   * @param {string} args.anchorValue
+   * @param {string} [args.anchorValue]
    * @param {FilterState} args.filter
    */
   function fetchAggsDataFromGuppy({ anchorValue, filter }) {

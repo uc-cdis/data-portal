@@ -15,7 +15,7 @@ const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
         switch (status) {
           case 200:
             total = total.concat(data.records);
-            if (data.records.length === fetchLimit) {
+            if (data.records?.length === fetchLimit) {
               return dispatch(
                 fetchUnmappedFiles(
                   user,

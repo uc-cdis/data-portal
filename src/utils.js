@@ -10,6 +10,7 @@ export const humanFileSize = (size) => {
   return `${sizeStr} ${suffix}`;
 };
 
+/** @param {string} project */
 export const getSubmitPath = (project) => {
   const path = project.split('-');
   const programName = path[0];
@@ -17,6 +18,10 @@ export const getSubmitPath = (project) => {
   return `${submissionApiPath}/${programName}/${projectCode}`;
 };
 
+/**
+ * @param {any} data
+ * @param {{ [key: string]: any }} schema
+ */
 export const jsonToString = (data, schema = {}) => {
   const replacer = (key, value) => {
     if (value === null) {
@@ -34,6 +39,10 @@ export const jsonToString = (data, schema = {}) => {
   return JSON.stringify(data, replacer, '  ');
 };
 
+/**
+ * @param {string} dirtyData
+ * @param {string} fileType
+ */
 export const predictFileType = (dirtyData, fileType) => {
   const predictType = fileType;
   const jsonType = 'application/json';
@@ -52,11 +61,11 @@ export const predictFileType = (dirtyData, fileType) => {
  * Little wrapper around setinterval with a guard to prevent an async function
  * from being invoked multiple times.
  *
- * @param {()=>Promise} lambda callback should return a Promise
+ * @param {() => Promise} lambda callback should return a Promise
  * @param {number} timeoutMs passed through to setinterval
  * @return the setinterval id (can be passed to clearinterval)
  */
-export async function asyncSetInterval(lambda, timeoutMs) {
+export function asyncSetInterval(lambda, timeoutMs) {
   let isRunningGuard = false;
   return setInterval(() => {
     if (!isRunningGuard) {
@@ -69,6 +78,7 @@ export async function asyncSetInterval(lambda, timeoutMs) {
   }, timeoutMs);
 }
 
+/** @param {string} category  */
 export const getCategoryColor = (category) => {
   const colorMap = {
     clinical: '#05B8EE',
@@ -95,6 +105,11 @@ export const getCategoryColor = (category) => {
   return colorMap[category] ? colorMap[category] : defaultColor;
 };
 
+/**
+ * @param {import('d3-selection').Selection<SVGGElement>} legendGroup
+ * @param {{ category: string }[]} nodes
+ * @param {number} legendWidth
+ */
 export function legendCreator(legendGroup, nodes, legendWidth) {
   // Find all unique categories
   const uniqueCategoriesList = nodes.reduce((acc, elem) => {
@@ -135,6 +150,7 @@ export function legendCreator(legendGroup, nodes, legendWidth) {
     .style('text-decoration', 'underline');
 }
 
+/** @param {import('d3-selection').Selection<SVGGElement>} graphSvg */
 export function addArrows(graphSvg) {
   graphSvg
     .append('svg:defs')
@@ -151,6 +167,10 @@ export function addArrows(graphSvg) {
     .attr('d', 'M0,-5L10,0L0,5');
 }
 
+/**
+ * @param {import('d3-selection').Selection<SVGGElement>} graphSvg
+ * @param {any[]} edges
+ */
 export function addLinks(graphSvg, edges) {
   return graphSvg
     .append('g')
@@ -168,9 +188,9 @@ export function addLinks(graphSvg, edges) {
  * Compute SVG coordinates fx, fy for each node in nodes.
  * Decorate each node with .fx and .fy property as side effect.
  *
- * @param {Array<Object>} nodes each decorated with a position [width,height] in [0,1]
- * @param {*} graphWidth
- * @param {*} graphHeight
+ * @param {any[]} nodes each decorated with a position [width,height] in [0,1]
+ * @param {number} graphWidth
+ * @param {number} graphHeight
  */
 export function calculatePosition(nodes, graphWidth, graphHeight) {
   // Calculate the appropriate position of each node on the graph
@@ -186,26 +206,7 @@ export function calculatePosition(nodes, graphWidth, graphHeight) {
   return { retNodes, fyValsLength: fyVals.length };
 }
 
-/**
- * Type agnostic compare thunk for Array.sort
- * @param {*} a
- * @param {*} b
- */
-export function sortCompare(a, b) {
-  if (a === b) {
-    return 0;
-  }
-  return a < b ? -1 : 1;
-}
-
-export function computeLastPageSizes(filesMap, pageSize) {
-  return Object.keys(filesMap).reduce((d, key) => {
-    const result = d;
-    result[key] = filesMap[key].length % pageSize;
-    return result;
-  }, {});
-}
-
+/** @param {string} str */
 export function capitalizeFirstLetter(str) {
   const res = str.replace(/_|\./gi, ' ');
   return res.replace(
@@ -217,8 +218,8 @@ export function capitalizeFirstLetter(str) {
 /**
  * Avoid importing underscore just for this ... export for testing
  * @method intersection
- * @param aList {Array<String>}
- * @param bList {Array<String>}
+ * @param {string[]} aList
+ * @param {string[]} bList
  * @return list of intersecting elements
  */
 export function intersection(aList, bList) {
@@ -236,27 +237,11 @@ export function intersection(aList, bList) {
     .map(([k]) => k);
 }
 
-export function minus(aList, bList) {
-  const key2Count = aList
-    .concat(bList)
-    .concat(aList)
-    .reduce((db, it) => {
-      const res = db;
-      if (res[it]) {
-        res[it] += 1;
-      } else {
-        res[it] = 1;
-      }
-      return res;
-    }, {});
-  return Object.entries(key2Count)
-    .filter((kv) => kv[1] === 2)
-    .map(([k]) => k);
-}
-
+/** @param {number | string} width  */
 export const parseParamWidth = (width) =>
   typeof width === 'number' ? `${width}px` : width;
 
+/** @param {string} pathname */
 export const isPageFullScreen = (pathname) =>
   !!(
     pathname &&
@@ -264,13 +249,6 @@ export const isPageFullScreen = (pathname) =>
       pathname.toLowerCase().startsWith('/dd/') ||
       pathname.toLowerCase() === '/cohort-tools' ||
       pathname.toLowerCase().startsWith('/cohort-tools/'))
-  );
-
-export const isFooterHidden = (pathname) =>
-  !!(
-    pathname &&
-    (pathname.toLowerCase() === '/dd' ||
-      pathname.toLowerCase().startsWith('/dd/'))
   );
 
 /**

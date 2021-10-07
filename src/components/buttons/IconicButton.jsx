@@ -2,23 +2,39 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import IconComponent from '../Icon';
 
+/**
+ * @typedef {Object} IconicButtonProps
+ * @property {string} [buttonClassName]
+ * @property {string} [caption]
+ * @property {{ [iconName: string]: (height: string, style: Object) => JSX.Element }} [dictIcons]
+ * @property {string} [icon]
+ * @property {string} [iconColor]
+ * @property {React.MouseEventHandler<HTMLButtonElement>} onClick
+ */
+
+/** @param {IconicButtonProps} props */
 function IconicButton({
-  onClick,
+  buttonClassName = 'button-primary-white',
+  caption = '',
   dictIcons,
-  icon,
-  iconColor,
-  caption,
-  buttonClassName,
+  icon = '',
+  iconColor = '',
+  onClick,
 }) {
-  let styles = {};
-  if (iconColor && iconColor !== '') {
-    styles = { fill: iconColor };
-  }
-  return dictIcons !== undefined ? (
+  return dictIcons === undefined ? (
     <button
       className={buttonClassName}
-      onClick={onClick}
       name={caption}
+      onClick={onClick}
+      type='button'
+    >
+      {caption}
+    </button>
+  ) : (
+    <button
+      className={buttonClassName}
+      name={caption}
+      onClick={onClick}
       type='button'
     >
       {caption}&ensp;
@@ -26,36 +42,19 @@ function IconicButton({
         dictIcons={dictIcons}
         iconName={icon}
         height='14px'
-        svgStyles={{ ...styles }}
+        style={iconColor && iconColor !== '' ? { fill: iconColor } : {}}
       />
-    </button>
-  ) : (
-    <button
-      className={buttonClassName}
-      onClick={onClick}
-      name={caption}
-      type='button'
-    >
-      {caption}
     </button>
   );
 }
 
 IconicButton.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  dictIcons: PropTypes.object,
+  buttonClassName: PropTypes.string,
+  caption: PropTypes.string,
+  dictIcons: PropTypes.objectOf(PropTypes.func),
   icon: PropTypes.string,
   iconColor: PropTypes.string,
-  caption: PropTypes.string,
-  buttonClassName: PropTypes.string,
-};
-
-IconicButton.defaultProps = {
-  dictIcons: undefined,
-  icon: '',
-  iconColor: '',
-  caption: '',
-  buttonClassName: 'button-primary-white',
+  onClick: PropTypes.func.isRequired,
 };
 
 export default IconicButton;

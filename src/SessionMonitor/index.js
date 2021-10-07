@@ -2,6 +2,7 @@ import { logoutInactiveUsers, workspaceTimeoutInMinutes } from '../localconf';
 import getReduxStore from '../reduxStore';
 import { fetchUser, fetchUserAccess, fetchUserNoRefresh } from '../actions';
 
+/** @param {string} currentURL */
 export function pageFromURL(currentURL) {
   const paths = currentURL
     .split('/')
@@ -9,6 +10,7 @@ export function pageFromURL(currentURL) {
   return paths[paths.length - 1];
 }
 
+/** @param {string} pageName */
 function isUserOnPage(pageName) {
   return pageFromURL(window.location.href) === pageName;
 }
@@ -76,11 +78,11 @@ export class SessionMonitor {
     }
     // hitting Fence endpoint refreshes token
     return getReduxStore().then((store) => {
-      store.dispatch(fetchUser).then((response) => {
+      store.dispatch(fetchUser()).then((response) => {
         if (response.type === 'UPDATE_POPUP') {
           this.popupShown = true;
         } else {
-          store.dispatch(fetchUserAccess);
+          store.dispatch(fetchUserAccess());
         }
       });
     });
@@ -97,15 +99,18 @@ export class SessionMonitor {
       return;
     }
 
-    getReduxStore().then((store) => {
-      store.dispatch(fetchUserNoRefresh).then((response) => {
-        if (response.type === 'UPDATE_POPUP') {
-          this.popupShown = true;
-        } else {
-          store.dispatch(fetchUserAccess);
-        }
-      });
-    });
+    getReduxStore().then(
+      /** @param {{ dispatch: import('redux-thunk').ThunkDispatch; }} */
+      ({ dispatch }) => {
+        dispatch(fetchUserNoRefresh()).then((response) => {
+          if (response.type === 'UPDATE_POPUP') {
+            this.popupShown = true;
+          } else {
+            dispatch(fetchUserAccess());
+          }
+        });
+      }
+    );
   }
 }
 

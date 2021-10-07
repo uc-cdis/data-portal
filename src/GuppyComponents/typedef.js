@@ -80,7 +80,7 @@
  * @typedef {Object} FilterTabsOption
  * @property {string} title
  * @property {string[]} fields
- * @property {string[]} searchFields
+ * @property {string[]} [searchFields]
  */
 
 /**
@@ -146,7 +146,7 @@
  * @property {AggsData} aggsData
  * @property {string[]} allFields
  * @property {FilterState} filter
- * @property {SimpleAggsData} initialTabsOptions
+ * @property {SimpleAggsData} [initialTabsOptions]
  * @property {boolean} isLoadingAggsData
  * @property {boolean} isLoadingRawData
  * @property {Array} rawData

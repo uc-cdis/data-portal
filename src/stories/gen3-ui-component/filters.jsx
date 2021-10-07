@@ -341,35 +341,47 @@ storiesOf('Filters', module)
       isArrayField
     />
   ))
-  .add('SearchFilter', () => (
-    <FilterSection
-      title={'File GUIDs'}
-      onSelect={action('checked')}
-      onAfterDrag={action('range change')}
-      tierAccessLimit={1000}
-      isSearchFilter
-      onSearchFilterLoadOptions={(searchString, offset = 0) => {
-        const pageSize = 20;
-        if (!searchString) {
+  .add('SearchFilter', () => {
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    function handleSelect(value) {
+      action('checked')(value);
+      const i = selectedOptions.findIndex(({ text }) => text === value);
+      setSelectedOptions((options) =>
+        i === -1
+          ? [...options, { text: value, isSearchFilter: true }]
+          : [...options.slice(0, i), ...options.slice(i + 1)]
+      );
+    }
+    return (
+      <FilterSection
+        title={'File GUIDs'}
+        onSelect={handleSelect}
+        options={selectedOptions}
+        tierAccessLimit={1000}
+        isSearchFilter
+        onSearchFilterLoadOptions={(searchString, offset = 0) => {
+          const pageSize = 20;
+          if (!searchString) {
+            return {
+              options: guidOptions
+                .slice(offset, offset + pageSize)
+                .map((option) => ({ value: option.text, label: option.text })),
+              hasMore: guidOptions.length > offset + pageSize,
+            };
+          }
+          const filteredOptions = guidOptions.filter(
+            (option) => option.text.indexOf(searchString) !== -1
+          );
           return {
-            options: guidOptions
+            options: filteredOptions
               .slice(offset, offset + pageSize)
               .map((option) => ({ value: option.text, label: option.text })),
-            hasMore: guidOptions.length > offset + pageSize,
+            hasMore: filteredOptions.length > offset + pageSize,
           };
-        }
-        const filteredOptions = guidOptions.filter(
-          (option) => option.text.indexOf(searchString) !== -1
-        );
-        return {
-          options: filteredOptions
-            .slice(offset, offset + pageSize)
-            .map((option) => ({ value: option.text, label: option.text })),
-          hasMore: filteredOptions.length > offset + pageSize,
-        };
-      }}
-    />
-  ))
+        }}
+      />
+    );
+  })
   .add('FilterList', () => (
     <FilterList
       sections={subjectSections}

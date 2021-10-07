@@ -1,3 +1,4 @@
+/** @type {import('redux').Reducer} */
 const graphiql = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_SCHEMA':

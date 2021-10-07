@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import './ResourceBrowser.css';
 
-function Resource({ title, link, description, imageUrl }) {
+/** @param {import('./index').ResourceData} props */
+function Resource({ description = '', imageUrl = '', link, title }) {
   return (
     <div className='resource'>
       <a
@@ -27,15 +27,10 @@ function Resource({ title, link, description, imageUrl }) {
 }
 
 Resource.propTypes = {
-  title: PropTypes.string.isRequired,
-  link: PropTypes.string.isRequired,
   description: PropTypes.string,
   imageUrl: PropTypes.string,
-};
-
-Resource.defaultProps = {
-  description: '',
-  imageUrl: '',
+  link: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default Resource;

@@ -305,6 +305,7 @@ class ExplorerTable extends React.Component {
    */
   fetchData = (state) => {
     const offset = state.page * state.pageSize;
+    /** @type {GqlSort} */
     const sort = state.sorted.map((i) => ({
       [i.id]: i.desc ? 'desc' : 'asc',
     }));

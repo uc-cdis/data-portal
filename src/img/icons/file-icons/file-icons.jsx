@@ -10,37 +10,18 @@ import IcoTSV from './tsv.svg';
 import IcoTXT from './txt.svg';
 import IcoZIP from './zip.svg';
 
+/** @type {{ [iconName: string]: (height: string, style: Object) => JSX.Element}} */
 const dictIcons = {
-  bam: (height, customedStyles) => (
-    <IcoBAM height={height} style={{ ...customedStyles }} />
-  ),
-  bed: (height, customedStyles) => (
-    <IcoBED height={height} style={{ ...customedStyles }} />
-  ),
-  csv: (height, customedStyles) => (
-    <IcoCSV height={height} style={{ ...customedStyles }} />
-  ),
-  file: (height, customedStyles) => (
-    <IcoFile height={height} style={{ ...customedStyles }} />
-  ),
-  png: (height, customedStyles) => (
-    <IcoPNG height={height} style={{ ...customedStyles }} />
-  ),
-  raw: (height, customedStyles) => (
-    <IcoRAW height={height} style={{ ...customedStyles }} />
-  ),
-  tar: (height, customedStyles) => (
-    <IcoTAR height={height} style={{ ...customedStyles }} />
-  ),
-  tsv: (height, customedStyles) => (
-    <IcoTSV height={height} style={{ ...customedStyles }} />
-  ),
-  txt: (height, customedStyles) => (
-    <IcoTXT height={height} style={{ ...customedStyles }} />
-  ),
-  zip: (height, customedStyles) => (
-    <IcoZIP height={height} style={{ ...customedStyles }} />
-  ),
+  bam: (height, style) => <IcoBAM height={height} style={style} />,
+  bed: (height, style) => <IcoBED height={height} style={style} />,
+  csv: (height, style) => <IcoCSV height={height} style={style} />,
+  file: (height, style) => <IcoFile height={height} style={style} />,
+  png: (height, style) => <IcoPNG height={height} style={style} />,
+  raw: (height, style) => <IcoRAW height={height} style={style} />,
+  tar: (height, style) => <IcoTAR height={height} style={style} />,
+  tsv: (height, style) => <IcoTSV height={height} style={style} />,
+  txt: (height, style) => <IcoTXT height={height} style={style} />,
+  zip: (height, style) => <IcoZIP height={height} style={style} />,
 };
 
 export default dictIcons;

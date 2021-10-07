@@ -315,7 +315,7 @@ export const checkIsArrayField = (field, arrayFields) => {
  * @param {string[]} searchFields
  * @param {{ field: string; name: string; }[]} fieldMapping
  * @param {SimpleAggsData} tabsOptions
- * @param {SimpleAggsData} initialTabsOptions
+ * @param {SimpleAggsData} [initialTabsOptions]
  * @param {{ [x:string]: OptionFilter }} adminAppliedPreFilters
  * @param {GuppyConfig} guppyConfig
  * @param {string[][]} arrayFields
@@ -420,15 +420,17 @@ export function excludeSelfFilterFromAggsData(aggsData, filterResults) {
     if (histogram !== undefined) {
       const fieldName = flatFieldName.replace('.histogram', '');
       resultAggsData[fieldName] = { histogram };
-      if (fieldName in filterResults)
+      if (fieldName in filterResults) {
+        const filterValue = filterResults[fieldName];
         resultAggsData[fieldName].histogram =
-          'selectedValues' in filterResults[fieldName]
+          'selectedValues' in filterValue
             ? histogram.filter(
                 ({ key }) =>
                   typeof key === 'string' &&
-                  filterResults[fieldName].selectedValues.includes(key)
+                  filterValue.selectedValues.includes(key)
               )
             : [];
+      }
     }
   }
   return resultAggsData;

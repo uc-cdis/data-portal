@@ -148,7 +148,9 @@ export function getQueryInfoForAggregationOptionsData({
     ? { IN: { [anchorConfig.field]: [anchorValue] } }
     : undefined;
 
+  /** @type {{ [group: string]: string[]; }} */
   const fieldsByGroup = {};
+  /** @type {{ [group: string]: GqlFilter; }} */
   const gqlFilterByGroup = {};
 
   for (const { title, fields } of filterTabs)
@@ -165,7 +167,7 @@ export function getQueryInfoForAggregationOptionsData({
           if (!(path in gqlFilterByGroup)) {
             const groupGqlFilter = cloneDeep(gqlFilter ?? { AND: [] });
 
-            if (anchorValue !== '') {
+            if (anchorValue !== '' && 'AND' in groupGqlFilter) {
               const found = groupGqlFilter.AND.find(
                 ({ nested }) => nested?.path === path
               );
@@ -255,11 +257,11 @@ export function buildQueryForAggregationOptionsData({
 
 /**
  * @param {object} args
- * @param {{ fieldName: string; tabs: string[] }} [args.anchorConfig]
+ * @param {AnchorConfig} [args.anchorConfig]
  * @param {string} args.anchorValue
  * @param {{ title: string, fields: string[]}[]} args.filterTabs
  * @param {GqlFilter} [args.gqlFilter]
- * @param {boolean} [isInitialQuery]
+ * @param {boolean} [args.isInitialQuery]
  * @param {string} args.path
  * @param {AbortSignal} [args.signal]
  * @param {string} args.type

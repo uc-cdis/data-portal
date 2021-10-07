@@ -24,7 +24,7 @@
   margin-bottom: 10px;
 }
 
-.guppy-data-explorer__cohort {
+.guppy-data-explorer__filter-set {
   width: 100%;
   display: flex;
   align-items: flex-start;
@@ -45,7 +45,7 @@
     padding: 0;
   }
 
-  .guppy-data-explorer__cohort {
+  .guppy-data-explorer__filter-set {
     display: none;
   }
 }

@@ -9,7 +9,7 @@ import './ProjectSubmission.less';
 
 /**
  * @param {Object} props
- * @param {Object} props.dictionary
+ * @param {Object} [props.dictionary]
  * @param {(typeList: string[], project: string, dictionary: Object) => void} props.onGetCounts
  * @param {boolean} [props.dataIsReady]
  * @param {string[]} [props.typeList]
@@ -20,6 +20,8 @@ function ProjectSubmission({
   dataIsReady = false,
   typeList = [],
 }) {
+  if (dictionary === undefined) return <Spinner />;
+
   const { project } = useParams();
   // hack to detect if dictionary data is available, and to trigger fetch if not
   if (!dataIsReady) onGetCounts(typeList, project, dictionary);
@@ -42,7 +44,7 @@ function ProjectSubmission({
 }
 
 ProjectSubmission.propTypes = {
-  dictionary: PropTypes.object.isRequired,
+  dictionary: PropTypes.object,
   onGetCounts: PropTypes.func.isRequired,
   dataIsReady: PropTypes.bool,
   typeList: PropTypes.arrayOf(PropTypes.string),

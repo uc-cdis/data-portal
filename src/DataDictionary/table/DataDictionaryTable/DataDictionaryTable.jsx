@@ -1,100 +1,77 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './DataDictionaryTable.css';
-import { parseDictionaryNodes } from '../../utils';
 import DataDictionaryCategory from '../DataDictionaryCategory';
+import './DataDictionaryTable.css';
 
 /**
- * Just exported for testing
  * Little helper that extacts a mapping of category-name to
  * the list of nodes in that category given a dictionary definition object
- *
- * @param {Object} dictionary
- * @return {} mapping from category to node list
+ * @return mapping from category to node list
  */
-/* eslint-disable no-param-reassign */
-export function category2NodeList(dictionary) {
-  const res = Object.keys(dictionary)
-    .filter((id) => id.charAt(0) !== '_' && id === dictionary[id].id)
-    .map((id) => dictionary[id])
-    .filter((node) => node.category && node.id)
-    .reduce((lookup, node) => {
-      if (!lookup[node.category]) {
-        lookup[node.category] = [];
-      }
-      lookup[node.category].push(node);
-      return lookup;
-    }, {});
-  return res;
-}
-/* eslint-enable no-param-reassign */
+export function category2NodeList(nodes) {
+  /** @type {{ [category: string]: Object[] }} */
+  const mapping = {};
+  for (const node of nodes)
+    if (node.category in mapping) mapping[node.category].push(node);
+    else mapping[node.category] = [node];
 
-const getNodePropertyCount = (dictionary) => {
-  const res = parseDictionaryNodes(dictionary).reduce(
-    (acc, node) => {
-      acc.nodesCount += 1;
-      acc.propertiesCount += Object.keys(node.properties).length;
-      return acc;
-    },
-    {
-      nodesCount: 0,
-      propertiesCount: 0,
-    }
-  );
-  return {
-    nodesCount: res.nodesCount,
-    propertiesCount: res.propertiesCount,
-  };
-};
+  return mapping;
+}
+
+function getNodePropertyCount(nodes) {
+  let propertiesCount = 0;
+  for (const { properties } of nodes)
+    propertiesCount += Object.keys(properties).length;
+
+  return { nodesCount: nodes.length, propertiesCount };
+}
 
 /**
- * Little components presents an overview of the types in a dictionary organized by category
- *
- * @param {dictionary} params
+ * @typedef {Object} DataDictionaryTableProps
+ * @property {string} [dictionaryName]
+ * @property {Object[]} [dictionaryNodes]
+ * @property {?string} [highlightingNodeID]
+ * @property {(id: string) => void} [onExpandNode]
  */
-const DataDictionaryTable = ({
-  dictionary,
+
+/**
+ * A component presenting an overview of the types in a dictionary organized by category
+ * @param {DataDictionaryTableProps} props
+ */
+function DataDictionaryTable({
+  dictionaryName = '',
+  dictionaryNodes,
   highlightingNodeID,
   onExpandNode,
-  dictionaryName,
-}) => {
-  const c2nl = category2NodeList(dictionary);
-  const { nodesCount, propertiesCount } = getNodePropertyCount(dictionary);
+}) {
+  const { nodesCount, propertiesCount } = getNodePropertyCount(dictionaryNodes);
   return (
     <>
       <p>
-        <span>{dictionaryName}</span>
-        <span> dictionary has </span>
-        <span>{nodesCount}</span>
-        <span> nodes and </span>
-        <span>{propertiesCount}</span>
-        <span> properties </span>
+        {`${
+          dictionaryName === '' ? 'Dictionary' : `${dictionaryName} dictionary`
+        } has ${nodesCount} nodes and ${propertiesCount} properties`}
       </p>
-      {Object.keys(c2nl).map((category) => (
-        <DataDictionaryCategory
-          key={category}
-          nodes={c2nl[category]}
-          category={category}
-          highlightingNodeID={highlightingNodeID}
-          onExpandNode={onExpandNode}
-        />
-      ))}
+      {Object.entries(category2NodeList(dictionaryNodes)).map(
+        ([category, nodes]) => (
+          <DataDictionaryCategory
+            key={category}
+            nodes={nodes}
+            category={category}
+            highlightingNodeID={highlightingNodeID}
+            onExpandNode={onExpandNode}
+          />
+        )
+      )}
     </>
   );
-};
+}
 
 DataDictionaryTable.propTypes = {
-  dictionary: PropTypes.object,
+  dictionaryName: PropTypes.string,
+  dictionaryNodes: PropTypes.arrayOf(PropTypes.object),
   highlightingNodeID: PropTypes.string,
   onExpandNode: PropTypes.func,
-  dictionaryName: PropTypes.string,
-};
-
-DataDictionaryTable.defaultProps = {
-  dictionary: {},
-  highlightingNodeID: null,
-  onExpandNode: () => {},
-  dictionaryName: '',
 };
 
 export default DataDictionaryTable;

@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
-import Spinner from '../../gen3-ui-component/components/Spinner/Spinner';
+import Spinner from '../../components/Spinner';
 import { components } from '../../params';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
-import ExplorerFindCohortButton from '../ExplorerFindCohortButton';
+import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
@@ -85,12 +85,17 @@ function getChartData({
       const { chartType: type, title } = chartConfig[field];
       const { histogram } = aggsChartData[field];
       switch (type) {
-        case 'count':
+        case 'count': {
+          const optionFilter = filter[field];
           countItems.push({
             label: title,
-            value: filter[field].selectedValues?.length || histogram.length,
+            value:
+              'selectedValues' in optionFilter
+                ? optionFilter.selectedValues.length
+                : histogram.length,
           });
           break;
+        }
         case 'pie':
         case 'bar':
           summaries.push({
@@ -135,7 +140,7 @@ function getChartData({
  * @property {number} accessibleCount
  * @property {number} totalCount
  * @property {AggsData} aggsData
- * @property {AggsData} aggsChartData
+ * @property {SimpleAggsData} aggsChartData
  * @property {Object[]} rawData
  * @property {string[]} allFields
  * @property {FilterState} filter
@@ -168,18 +173,18 @@ function ExplorerVisualization({
   filter = {},
   isLoadingAggsData = false,
   isLoadingRawData = false,
-  downloadRawData = () => {},
-  downloadRawDataByFields = () => {},
-  downloadRawDataByTypeAndFilter = () => {},
-  fetchAndUpdateRawData = () => {},
-  getTotalCountsByTypeAndFilter = () => {},
+  downloadRawData,
+  downloadRawDataByFields,
+  downloadRawDataByTypeAndFilter,
+  fetchAndUpdateRawData,
+  getTotalCountsByTypeAndFilter,
   className = '',
-  buttonConfig = {},
-  chartConfig = {},
-  guppyConfig = {},
-  survivalAnalysisConfig = {},
-  tableConfig = {},
-  patientIdsConfig = {},
+  buttonConfig,
+  chartConfig,
+  guppyConfig,
+  survivalAnalysisConfig,
+  tableConfig,
+  patientIdsConfig,
   nodeCountTitle,
   tierAccessLimit,
 }) {
@@ -256,7 +261,7 @@ function ExplorerVisualization({
         </div>
         <div className='guppy-explorer-visualization__button-group'>
           {patientIdsConfig?.export && (
-            <ExplorerFindCohortButton filter={filter} />
+            <ExplorerExploreExternalButton filter={filter} />
           )}
           <ReduxExplorerButtonGroup {...buttonGroupProps} />
         </div>

@@ -26,7 +26,7 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
   function handleFileUpload(e) {
     const file = e.target.files[0];
     const reader = new FileReader();
-    reader.onload = (e) => setFileContent(e.target.result);
+    reader.onload = ({ target }) => setFileContent(target.result);
     reader.readAsText(file);
   }
 
@@ -173,8 +173,8 @@ function PatientIdFilter({ onPatientIdsChange, patientIds }) {
 }
 
 PatientIdFilter.propTypes = {
-  onPatientIdsChange: PropTypes.func,
-  patientIds: PropTypes.arrayOf(PropTypes.string),
+  onPatientIdsChange: PropTypes.func.isRequired,
+  patientIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default PatientIdFilter;

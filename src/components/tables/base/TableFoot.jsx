@@ -2,6 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Table.less';
 
+/**
+ * @typedef {Object} TableFootProps
+ * @property {{ name: string; }[]} cols
+ */
+
+/** @param {TableFootProps} props */
 function TableFoot({ cols }) {
   return (
     <tfoot className='base-table__foot'>
@@ -17,7 +23,9 @@ function TableFoot({ cols }) {
 }
 
 TableFoot.propTypes = {
-  cols: PropTypes.array.isRequired,
+  cols: PropTypes.arrayOf(
+    PropTypes.shape({ name: PropTypes.string.isRequired })
+  ).isRequired,
 };
 
 export default TableFoot;

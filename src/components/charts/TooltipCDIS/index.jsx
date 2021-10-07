@@ -2,36 +2,43 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './TooltipCDIS.less';
 
-function TooltipCDIS({ label, payload, active }) {
-  if (active) {
-    const txts = label.split('#');
-    const number = parseInt(txts[0], 10);
-    return (
-      <div className='cdis-tooltip'>
-        <h2>{`${txts[1]}`}</h2>
-        {payload.map((item) => (
-          <div
-            key={item.name}
-            style={{ color: `${item.fill}` }}
-            className='body-typo'
-          >{`${item.name} : ${Math.round((item.value / 100) * number)}`}</div>
-        ))}
-      </div>
-    );
-  }
-  return null;
+/**
+ * @typedef {Object} TooltipCDISProps
+ * @property {boolean} [active]
+ * @property {string} [label]
+ * @property {{ fill: string; name: string; value: number }[]} [payload]
+ */
+
+/** @param {TooltipCDISProps} props */
+function TooltipCDIS({ active = false, label = '', payload = [] }) {
+  if (!active) return null;
+
+  const txts = label.split('#');
+  const number = parseInt(txts[0], 10);
+  return (
+    <div className='cdis-tooltip'>
+      <h2>{`${txts[1]}`}</h2>
+      {payload.map((item) => (
+        <div
+          key={item.name}
+          style={{ color: `${item.fill}` }}
+          className='body-typo'
+        >{`${item.name} : ${Math.round((item.value / 100) * number)}`}</div>
+      ))}
+    </div>
+  );
 }
 
 TooltipCDIS.propTypes = {
-  label: PropTypes.string,
-  payload: PropTypes.array,
   active: PropTypes.bool,
-};
-
-TooltipCDIS.defaultProps = {
-  label: '',
-  payload: [],
-  active: false,
+  label: PropTypes.string,
+  payload: PropTypes.arrayOf(
+    PropTypes.shape({
+      fill: PropTypes.string,
+      name: PropTypes.string,
+      value: PropTypes.number,
+    })
+  ),
 };
 
 export default TooltipCDIS;

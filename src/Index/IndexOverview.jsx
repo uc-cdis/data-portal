@@ -13,6 +13,8 @@ import './IndexOverview.css';
 
 const defaultConsortiumOption = { label: 'All PCDC', value: 'total' };
 
+/** @typedef {{ [key: string]: string[] | { [key: string]: number } }} OverviewCounts  */
+/** @param {{ overviewCounts: OverviewCounts }} props */
 function IndexOverview({ overviewCounts }) {
   const [consortium, setConsortium] = useState(defaultConsortiumOption);
   const consortiumOptions = [
@@ -115,7 +117,12 @@ function IndexOverview({ overviewCounts }) {
 }
 
 IndexOverview.propTypes = {
-  overviewCounts: PropTypes.object,
+  overviewCounts: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.string),
+      PropTypes.objectOf(PropTypes.number),
+    ])
+  ),
 };
 
 export default IndexOverview;

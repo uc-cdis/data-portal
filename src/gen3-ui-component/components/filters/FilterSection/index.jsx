@@ -28,13 +28,13 @@ function getNumValuesSelected(filterStatus) {
  * @property {boolean} expanded
  * @property {OptionFilterStatus | RangeFilterStatus} filterStatus
  * @property {boolean} hideZero
- * @property {number} initVisibleItemNumber
+ * @property {number} [initVisibleItemNumber]
  * @property {boolean} isArrayField
  * @property {boolean} isSearchFilter
  * @property {string} lockedTooltipMessage
  * @property {(lowerBound: number, upperBound: number, min: number, max: number, rangeStep: number) => void} onAfterDrag
  * @property {() => void} onClear
- * @property {(searchString: string, offset: number) => void} onSearchFilterLoadOptions
+ * @property {(searchString: string, offset: number) => import('react-select-async-paginate').Response<any, null>} onSearchFilterLoadOptions
  * @property {(label: string) => void} onSelect
  * @property {(isExpanded: boolean) => void} onToggle
  * @property {(fieldName: string, value: string) => void} onToggleCombineMode
@@ -71,7 +71,7 @@ function FilterSection({
   lockedTooltipMessage = '',
   onAfterDrag,
   onClear = () => {},
-  onSearchFilterLoadOptions = () => {},
+  onSearchFilterLoadOptions,
   onSelect,
   onToggle = () => {},
   onToggleCombineMode = () => {},
@@ -118,6 +118,7 @@ function FilterSection({
     }));
   }, [options]);
 
+  /** @type {React.MutableRefObject<HTMLInputElement>} */
   const inputElem = useRef();
 
   function clearSearchInput() {
@@ -131,15 +132,15 @@ function FilterSection({
     }));
   }
 
-  /** @param {'AND' | 'OR'} combineMode */
-  function handleSetCombineModeOption(combineMode) {
+  /** @param {import('antd').RadioChangeEvent} e */
+  function handleSetCombineModeOption(e) {
+    /** @type {'AND' | 'OR'} combineMode */
+    const combineMode = e.target.value;
     setState((prevState) => ({ ...prevState, combineMode }));
     onToggleCombineMode('__combineMode', combineMode);
   }
 
-  /** @param {React.DOMAttributes<HTMLDivElement>.onClick} ev */
-  function handleClearButtonClick(ev) {
-    ev.stopPropagation();
+  function handleClearButtonClick() {
     setState((prevState) => ({
       ...prevState,
       filterStatus: {},
@@ -176,9 +177,7 @@ function FilterSection({
   /**
    * @param {number} lowerBound
    * @param {number} upperBound
-   * @param {number} min
-   * @param {number} max
-   * @param {number} rangeStep
+   * @param {[min: number, max: number, rangeStep: number]} args
    */
   function handleDragRangeFilter(lowerBound, upperBound, ...args) {
     setState((prevState) => ({
@@ -254,7 +253,6 @@ function FilterSection({
           overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
           placement='right'
           trigger={['hover', 'focus']}
-          width='300px'
         >
           <span className='g3-helper-tooltip'>
             <i className='g3-icon g3-icon--sm g3-icon--question-mark-bootstrap help-tooltip-icon' />
@@ -280,7 +278,7 @@ function FilterSection({
         defaultOptions
         onChange={(option) => handleSelectSingleSelectFilter(option.value)}
         loadOptions={(input, loadedOptions) =>
-          onSearchFilterLoadOptions(input, loadedOptions.length)
+          onSearchFilterLoadOptions?.(input, loadedOptions.length)
         }
         value={selectedOptions}
       />
@@ -480,7 +478,7 @@ function FilterSection({
               onKeyPress={(e) => {
                 if (e.keyCode === 13 || e.keyCode === 32) {
                   e.preventDefault();
-                  handleClearButtonClick(e);
+                  handleClearButtonClick();
                 }
               }}
               role='button'

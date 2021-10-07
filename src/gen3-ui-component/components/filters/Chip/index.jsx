@@ -1,9 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import './Chip.css';
 
-function Chip({ text, onClearButtonClick }) {
+/**
+ * @typedef {Object} ChipProps
+ * @property {() => void} onClearButtonClick
+ * @property {JSX.Element} text
+ */
+
+/** @param {ChipProps} props */
+function Chip({ onClearButtonClick, text }) {
   return (
     <div className='g3-chip'>
       <div className='g3-chip__text'>{text}</div>
@@ -27,8 +33,8 @@ function Chip({ text, onClearButtonClick }) {
 }
 
 Chip.propTypes = {
-  text: PropTypes.node.isRequired,
   onClearButtonClick: PropTypes.func.isRequired,
+  text: PropTypes.node.isRequired,
 };
 
 export default Chip;

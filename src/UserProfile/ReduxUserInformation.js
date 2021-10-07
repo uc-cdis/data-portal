@@ -11,7 +11,7 @@ const mapDispatchToProps = (dispatch) => ({
     response.ok
       ? response.json().then((user) => {
           dispatch({ type: 'RECEIVE_USER', user });
-          dispatch(fetchUserAccess);
+          dispatch(fetchUserAccess());
           return 'success';
         })
       : Promise.resolve('error'),

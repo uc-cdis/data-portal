@@ -12,11 +12,32 @@ import {
 } from './localconf';
 import { config } from './params';
 
+/**
+ * @typedef {Object} FetchOptions
+ * @property {string} path
+ * @property {string} [method] Default is "GET"
+ * @property {object} [body] Default is null
+ * @property {Headers} [customHeaders]
+ * @property {import('redux-thunk').ThunkDispatch} [dispatch] Redux store dispatch
+ * @property {boolean} [useCache]
+ * @property {AbortSignal} [signal]
+ */
+
+/**
+ * @typedef {Object} FetchResult
+ * @property {any} data
+ * @property {Headers} [headers]  if not using cache
+ * @property {Response} [response]  if not using cache
+ * @property {number} status
+ */
+
+/** @returns {import('redux').AnyAction} */
 export const updatePopup = (state) => ({
   type: 'UPDATE_POPUP',
   data: state,
 });
 
+/** @returns {import('redux').AnyAction} */
 export const connectionError = () => {
   console.log('connection error');
   return {
@@ -25,17 +46,24 @@ export const connectionError = () => {
   };
 };
 
+/** @type {{ [path: string]: string; }} */
 const fetchCache = {};
 
+/**
+ * @param {string} path
+ * @param {Response} response
+ * @param {boolean} useCache
+ * @param {string} method
+ * @returns {Promise<FetchResult>}
+ */
 const getJsonOrText = (path, response, useCache, method = 'GET') =>
   response.text().then((textData) => {
     let data = textData;
     if (data) {
       try {
         data = JSON.parse(data);
-        if (useCache && method === 'GET' && response.status === 200) {
+        if (useCache && method === 'GET' && response.status === 200)
           fetchCache[path] = textData;
-        }
       } catch (e) {
         // # do nothing
       }
@@ -48,7 +76,14 @@ const getJsonOrText = (path, response, useCache, method = 'GET') =>
     };
   });
 
+/** @type {Promise<FetchResult>} */
 let pendingRequest = null;
+/**
+ * @param {Object} opts
+ * @param {string} [opts.path]
+ * @param {string} [opts.method]
+ * @param {import('redux-thunk').ThunkDispatch} [opts.dispatch]
+ */
 export const fetchCreds = (opts) => {
   if (pendingRequest) {
     return pendingRequest;
@@ -59,19 +94,18 @@ export const fetchCreds = (opts) => {
     credentials: 'include',
     headers: { ...headers },
     method,
-  }).then(
-    (response) => {
+  })
+    .then((response) => {
       pendingRequest = null;
-      return Promise.resolve(getJsonOrText(path, response, false));
-    },
-    (error) => {
+      return getJsonOrText(path, response, false);
+    })
+    .catch((error) => {
       pendingRequest = null;
       if (dispatch) {
         dispatch(connectionError());
       }
-      return Promise.reject(error);
-    }
-  );
+      return error;
+    });
   return pendingRequest;
 };
 
@@ -85,15 +119,8 @@ export const fetchCreds = (opts) => {
  * the result promise only includes {data, status} - where JSON data is re-parsed
  * every time to avoid mutation by the client
  *
- * @param {object} opts
- * @param {string} opts.path
- * @param {string} [opts.method] Default is "GET"
- * @param {object} [opts.body] Default is null
- * @param {object} [opts.customHeaders]
- * @param {Function} [opts.dispatch] Redux store dispatch
- * @param {boolean} [opts.useCache]
- * @param {AbortSignal} [opts.signal]
- * @return Promise<{response,data,status,headers}> or Promise<{data,status}> if useCache specified
+ * @param {FetchOptions} opts
+ * @return {Promise<FetchResult>}
  */
 export const fetchWithCreds = (opts) => {
   const {
@@ -116,40 +143,40 @@ export const fetchWithCreds = (opts) => {
     body,
     signal,
   };
-  return fetch(path, request).then(
-    (response) => {
-      if (response.status !== 403 && response.status !== 401) {
-        return Promise.resolve(getJsonOrText(path, response, useCache, method));
-      }
-      return Promise.resolve(
-        fetchCreds({ dispatch }).then((resp) => {
-          switch (resp.status) {
-            case 200:
-              return Promise.resolve(
-                fetch(path, request).then((res) =>
-                  getJsonOrText(path, res, useCache, method)
-                )
-              );
-            default:
-              return {
-                response: resp,
-                data: { data: {} },
-                status: resp.status,
-                headers: resp.headers,
-              };
-          }
-        })
-      );
-    },
-    (error) => {
+  return fetch(path, request)
+    .then((response) => {
+      if (response.status !== 403 && response.status !== 401)
+        return getJsonOrText(path, response, useCache, method);
+
+      return fetchCreds({ dispatch }).then((resp) => {
+        switch (resp.status) {
+          case 200:
+            return fetch(path, request).then((res) =>
+              getJsonOrText(path, res, useCache, method)
+            );
+          default:
+            return {
+              response: resp.response,
+              data: { data: {} },
+              status: resp.status,
+              headers: resp.headers,
+            };
+        }
+      });
+    })
+    .catch((error) => {
       if (dispatch) {
         dispatch(connectionError());
       }
       return Promise.reject(error);
-    }
-  );
+    });
 };
 
+/**
+ *
+ * @param {FetchOptions} opts
+ * @param {number} timeoutInMS
+ */
 export const fetchWithCredsAndTimeout = (opts, timeoutInMS) => {
   let didTimeOut = false;
 
@@ -177,42 +204,9 @@ export const fetchWithCredsAndTimeout = (opts, timeoutInMS) => {
 };
 
 /**
- * Redux 'thunk' wrapper around fetchWithCreds
- * invokes dispatch(handler( { status, data, headers} ) and callback()
- * and propagates {response,data, status, headers} on resolved fetch,
- * otherwise dipatch(connectionError()) on fetch rejection.
- * May prefer this over straight call to fetchWithCreds in Redux context due to
- * conectionError() dispatch on fetch rejection.
- *
- * @param { path, method=GET, body=null, customerHeaders, handler, callback } opts
- * @return Promise
+ * @param {string} type
+ * @returns {(result: FetchResult) => import('redux').AnyAction}
  */
-export const fetchWrapper = ({
-  path,
-  method = 'GET',
-  body = null,
-  customHeaders,
-  handler,
-  callback = () => null,
-}) => (dispatch) =>
-  fetchWithCreds({ path, method, body, customHeaders, dispatch }).then(
-    ({ response, data }) => {
-      const result = {
-        response,
-        data,
-        status: response.status,
-        headers: response.headers,
-      };
-      const dispatchPromise = handler
-        ? Promise.resolve(dispatch(handler(result)))
-        : Promise.resolve('ok');
-      return dispatchPromise.then(() => {
-        callback();
-        return result;
-      });
-    }
-  );
-
 export const handleResponse = (type) => ({ data, status }) => {
   switch (status) {
     case 200:
@@ -228,6 +222,10 @@ export const handleResponse = (type) => ({ data, status }) => {
   }
 };
 
+/**
+ * @param {FetchResult} result
+ * @returns {import('redux').AnyAction}
+ */
 const handleFetchUser = ({ status, data }) => {
   switch (status) {
     case 200:
@@ -248,22 +246,17 @@ const handleFetchUser = ({ status, data }) => {
   }
 };
 
-export const fetchUser = (dispatch) =>
-  fetchCreds({
-    dispatch,
-  })
-    .then((res) => handleFetchUser(res))
-    .then((msg) => dispatch(msg));
+/** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
+export const fetchUser = () => (dispatch) =>
+  fetchCreds({ dispatch }).then((res) => dispatch(handleFetchUser(res)));
 
-export const refreshUser = () => fetchUser;
-
-export const logoutAPI = () => (dispatch) => {
+/** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
+export const logoutAPI = () => (dispatch) =>
   fetchWithCreds({
     path: `${submissionApiOauthPath}logout`,
     dispatch,
   })
-    .then(handleResponse('RECEIVE_API_LOGOUT'))
-    .then((msg) => dispatch(msg))
+    .then((res) => dispatch(handleResponse('RECEIVE_API_LOGOUT')(res)))
     .then(() =>
       document.location.replace(
         `${userapiPath}/logout?next=${hostname}${
@@ -271,8 +264,13 @@ export const logoutAPI = () => (dispatch) => {
         }`
       )
     );
-};
-
+/**
+ * @param {Object} opts
+ * @param {string} [opts.path]
+ * @param {string} [opts.method]
+ * @param {import('redux-thunk').ThunkDispatch} [opts.dispatch]
+ * @returns {?Promise<FetchResult>}
+ */
 export const fetchIsUserLoggedInNoRefresh = (opts) => {
   const { path = `${submissionApiPath}`, method = 'GET', dispatch } = opts;
 
@@ -283,31 +281,29 @@ export const fetchIsUserLoggedInNoRefresh = (opts) => {
   }).then(
     (response) => {
       requestPromise = null;
-      return Promise.resolve(getJsonOrText(path, response, false));
+      return getJsonOrText(path, response, false);
     },
     (error) => {
       requestPromise = null;
-      if (dispatch) {
-        dispatch(connectionError());
-      }
-      return Promise.reject(error);
+      if (dispatch) dispatch(connectionError());
+
+      return error;
     }
   );
   return requestPromise;
 };
 
-export const fetchUserNoRefresh = (dispatch) =>
+/** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
+export const fetchUserNoRefresh = () => (dispatch) =>
   fetchIsUserLoggedInNoRefresh({
     dispatch,
-  })
-    .then((res) => handleFetchUser(res))
-    .then((msg) => dispatch(msg));
+  }).then((res) => dispatch(handleFetchUser(res)));
 
-/*
+/**
  * redux-thunk support asynchronous redux actions via 'thunks' -
  * lambdas that accept dispatch and getState functions as arguments
+ * @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>}
  */
-
 export const fetchProjects = () => (dispatch) =>
   fetchWithCreds({
     path: `${submissionApiPath}graphql`,
@@ -315,37 +311,34 @@ export const fetchProjects = () => (dispatch) =>
       query: 'query { project(first:0) {code, project_id, availability_type}}',
     }),
     method: 'POST',
-  })
-    .then(({ status, data }) => {
-      switch (status) {
-        case 200:
-          return {
-            type: 'RECEIVE_PROJECTS',
-            data: data.data.project,
-            status,
-          };
-        default:
-          return {
-            type: 'FETCH_ERROR',
-            error: data,
-            status,
-          };
-      }
-    })
-    .then((msg) => dispatch(msg));
+  }).then(({ status, data }) => {
+    if (status === 200)
+      dispatch({
+        type: 'RECEIVE_PROJECTS',
+        data: data.data.project,
+        status,
+      });
+    else
+      dispatch({
+        type: 'FETCH_ERROR',
+        error: data,
+        status,
+      });
+  });
 
 /**
- * Fetch the schema for graphi, and stuff it into redux -
- * handled by router
+ * Fetch the schema for graphi, and stuff it into redux - handled by router
+ * @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>}
  */
-export const fetchSchema = (dispatch) =>
+export const fetchSchema = () => (dispatch) =>
   fetch('../data/schema.json')
     .then((response) => response.json())
     .then(({ data }) =>
       dispatch({ type: 'RECEIVE_SCHEMA', schema: buildClientSchema(data) })
     );
 
-export const fetchGuppySchema = (dispatch) =>
+/** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
+export const fetchGuppySchema = () => (dispatch) =>
   fetch(guppyGraphQLUrl, {
     credentials: 'include',
     headers: { ...headers },
@@ -360,62 +353,70 @@ export const fetchGuppySchema = (dispatch) =>
       dispatch({ type: 'RECEIVE_GUPPY_SCHEMA', data: buildClientSchema(data) })
     );
 
-export const fetchDictionary = (dispatch) =>
+/** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
+export const fetchDictionary = () => (dispatch) =>
   fetch('../data/dictionary.json')
     .then((response) => response.json())
     .then((data) => dispatch({ type: 'RECEIVE_DICTIONARY', data }));
 
-export const fetchVersionInfo = (dispatch) =>
+/** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
+export const fetchVersionInfo = () => (dispatch) =>
   fetchWithCreds({
     path: `${apiPath}_version`,
     method: 'GET',
     useCache: true,
-  })
-    .then(({ status, data }) => {
-      switch (status) {
-        case 200:
-          return {
-            type: 'RECEIVE_VERSION_INFO',
-            data,
-          };
-        default:
-          return {
-            type: 'FETCH_ERROR',
-            error: data,
-          };
-      }
+  }).then(({ status, data }) => {
+    if (status === 200)
+      dispatch({
+        type: 'RECEIVE_VERSION_INFO',
+        data,
+      });
+    else
+      dispatch({
+        type: 'FETCH_ERROR',
+        error: data,
+      });
+  });
+
+/**
+ * Asks arborist which restricted access components the user has access to
+ * @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>}
+ */
+export const fetchUserAccess = () => async (dispatch) => {
+  /**
+   * restricted access components and their associated arborist resources:
+   * @type {{ [name: string]: { [key: string]: string } }}
+   */
+  const resourceMapping = config.componentToResourceMapping || {};
+  const resourceNames = Object.keys(resourceMapping);
+
+  const userAccessResults = await Promise.all(
+    resourceNames.map((name) => {
+      const { resource, method, service } = resourceMapping[name];
+      return fetch(
+        `${authzPath}?resource=${resource}&method=${method}&service=${service}`
+      ).then(({ status, ok }) => {
+        switch (status) {
+          case 401: // user is not logged in
+          case 403: // user is not allowed to access the resource
+            return false;
+          case 200: // valid input -> check "ok" field for authorization
+            return ok;
+          default:
+            console.error(
+              `Unknown status "${status}" returned by arborist call`
+            );
+            return false;
+        }
+      });
     })
-    .then((msg) => dispatch(msg));
+  );
 
-// asks arborist which restricted access components the user has access to
-export const fetchUserAccess = async (dispatch) => {
-  // restricted access components and their associated arborist resources:
-  const mapping = config.componentToResourceMapping || {};
-
-  const userAccess = await Object.keys(mapping).reduce(async (res, name) => {
-    const dict = await res;
-    const e = mapping[name];
-
-    // makes a call to arborist's auth/proxy endpoint
-    // returns true if the user has access to the resource, false otherwise
-    dict[name] = await fetch(
-      `${authzPath}?resource=${e.resource}&method=${e.method}&service=${e.service}`
-    ).then((fetchRes) => {
-      switch (fetchRes.status) {
-        case 401: // user is not logged in
-        case 403: // user is not allowed to access the resource
-          return false;
-        case 200: // valid input -> check "ok" field for authorization
-          return fetchRes.ok;
-        default:
-          console.error(
-            `Unknown status "${fetchRes.status}" returned by arborist call`
-          );
-          return false;
-      }
-    });
-    return dict;
-  }, {});
+  /** @type {{ [name: string]: boolean }} */
+  const userAccess = {};
+  userAccessResults.forEach((hasAccess, i) => {
+    userAccess[resourceNames[i]] = hasAccess;
+  });
 
   dispatch({
     type: 'RECEIVE_USER_ACCESS',

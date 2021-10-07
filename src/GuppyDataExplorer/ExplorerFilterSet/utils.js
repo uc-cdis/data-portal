@@ -2,14 +2,14 @@ import { fetchWithCreds } from '../../actions';
 import { capitalizeFirstLetter } from '../../utils';
 import './typedef';
 
-const COHORT_URL = '/amanuensis/cohort';
+const FILTER_SET_URL = '/amanuensis/filter-set';
 
 /**
- * @returns {Promise<ExplorerCohort[]>}
+ * @returns {Promise<ExplorerFilterSet[]>}
  */
-export function fetchCohorts() {
+export function fetchFilterSets() {
   return fetchWithCreds({
-    path: COHORT_URL,
+    path: FILTER_SET_URL,
     method: 'GET',
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
@@ -25,14 +25,14 @@ export function fetchCohorts() {
 }
 
 /**
- * @param {ExplorerCohort} cohort
- * @returns {Promise<ExplorerCohort>}
+ * @param {ExplorerFilterSet} filterSet
+ * @returns {Promise<ExplorerFilterSet>}
  */
-export function createCohort(cohort) {
+export function createFilterSet(filterSet) {
   return fetchWithCreds({
-    path: COHORT_URL,
+    path: FILTER_SET_URL,
     method: 'POST',
-    body: JSON.stringify(cohort),
+    body: JSON.stringify(filterSet),
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
     return data;
@@ -40,12 +40,12 @@ export function createCohort(cohort) {
 }
 
 /**
- * @param {ExplorerCohort} cohort
+ * @param {ExplorerFilterSet} filterSet
  */
-export function updateCohort(cohort) {
-  const { id, ...requestBody } = cohort;
+export function updateFilterSet(filterSet) {
+  const { id, ...requestBody } = filterSet;
   return fetchWithCreds({
-    path: `${COHORT_URL}/${id}`,
+    path: `${FILTER_SET_URL}/${id}`,
     method: 'PUT',
     body: JSON.stringify(requestBody),
   }).then(({ response, status }) => {
@@ -54,11 +54,11 @@ export function updateCohort(cohort) {
 }
 
 /**
- * @param {ExplorerCohort} cohort
+ * @param {ExplorerFilterSet} filterSet
  */
-export function deleteCohort(cohort) {
+export function deleteFilterSet(filterSet) {
   return fetchWithCreds({
-    path: `${COHORT_URL}/${cohort.id}`,
+    path: `${FILTER_SET_URL}/${filterSet.id}`,
     method: 'DELETE',
   }).then(({ response, status }) => {
     if (status !== 200) throw response.statusText;
@@ -66,9 +66,9 @@ export function deleteCohort(cohort) {
 }
 
 /**
- * @return {ExplorerCohort}
+ * @return {ExplorerFilterSet}
  */
-export function createEmptyCohort() {
+export function createEmptyFilterSet() {
   return {
     name: '',
     description: '',

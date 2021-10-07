@@ -74,7 +74,7 @@ function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
 }
 
 UserRegistration.propTypes = {
-  docsToBeReviewed: PropTypes.array,
+  docsToBeReviewed: PropTypes.array.isRequired,
   shouldRegister: PropTypes.bool.isRequired,
   updateAccess: PropTypes.func.isRequired,
 };

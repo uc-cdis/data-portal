@@ -1,18 +1,23 @@
 import PropTypes from 'prop-types';
 
-const IconComponent = ({ dictIcons, iconName, height, svgStyles }) =>
-  dictIcons[iconName](height, svgStyles);
+/**
+ * @typedef {Object} IconComponentProps
+ * @property {{ [iconName: string]: (height: string, style: Object) => JSX.Element }} dictIcons
+ * @property {string} iconName
+ * @property {string} [height]
+ * @property {Object} [style]
+ */
+
+/** @param {IconComponentProps} props */
+function IconComponent({ dictIcons, iconName, height = '27px', style = {} }) {
+  return dictIcons[iconName](height, style);
+}
 
 IconComponent.propTypes = {
+  dictIcons: PropTypes.objectOf(PropTypes.func).isRequired,
   iconName: PropTypes.string.isRequired,
-  dictIcons: PropTypes.object.isRequired,
   height: PropTypes.string,
-  svgStyles: PropTypes.object,
-};
-
-IconComponent.defaultProps = {
-  height: '27px',
-  svgStyles: {},
+  style: PropTypes.object,
 };
 
 export default IconComponent;

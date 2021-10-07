@@ -11,11 +11,11 @@ import { submissionApiPath } from '../localconf';
  * @method getCounts
  * @param {Array<string>} typeList
  * @param {string} project
- * @param {Object} dictionary
- * @return {Function(dispatch => updates-redux-state)} async dispatch function
- *     that fetches data from backend and updates redux when dispatched
+ * @param {Object} [dictionary]
+ * @return {import('redux-thunk').ThunkAction<Promise, any, any, any>}
+ * async thunk action that fetches data from backend and updates redux when dispatched
  */
-export const getCounts = (typeList, project, dictionary) => {
+export const getCounts = (typeList, project, dictionary = {}) => {
   let query = '{';
 
   function appendCountToQuery(element) {
