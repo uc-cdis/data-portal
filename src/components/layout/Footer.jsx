@@ -20,7 +20,6 @@ function Footer({ links, logos, privacyPolicy }) {
             {process.env.DATA_RELEASE_VERSION}
           </div>
         )}
-        <div className='footer__spacer-area' />
         {privacyPolicy?.text && (
           <div className='footer__privacy-policy-area'>
             <a
