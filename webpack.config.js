@@ -17,7 +17,8 @@ const plugins = [
   new webpack.DefinePlugin({
     // <-- key to reducing React's size
     'process.env': {
-      NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),
+      // NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),
+      DATA_RELEASE_VERSION: JSON.stringify(process.env.DATA_RELEASE_VERSION),
       LOGOUT_INACTIVE_USERS: !(process.env.LOGOUT_INACTIVE_USERS === 'false'),
       WORKSPACE_TIMEOUT_IN_MINUTES:
         process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480,
