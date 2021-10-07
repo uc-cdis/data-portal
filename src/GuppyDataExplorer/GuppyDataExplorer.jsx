@@ -151,11 +151,14 @@ class GuppyDataExplorer extends React.Component {
     }
 
     if (!this._isBrowserNavigation)
-      this.props.history.push({
-        search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
-          '&'
-        ),
-      });
+      this.props.history.push(
+        {
+          search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
+            '&'
+          ),
+        },
+        { scrollY: window.scrollY }
+      );
   };
 
   handlePatientIdsChange = this.props.patientIdsConfig?.filter
