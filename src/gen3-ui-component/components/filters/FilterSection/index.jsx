@@ -155,7 +155,8 @@ function FilterSection({
       ...prevState,
       isSearchInputEmpty: !currentInput || currentInput.length === 0,
       optionsVisibleStatus: getOptionsVisibleStatus(
-        prevState.isShowingMoreOptions
+        prevState.isShowingMoreOptions,
+        currentInput
       ),
     }));
   }
