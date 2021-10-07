@@ -12,7 +12,14 @@ function Footer({ links, logos, privacyPolicy }) {
   return (
     <footer>
       <nav className='footer__nav' aria-label='Footer Navigation'>
-        <div className='footer__spacer-area' />
+        {process.env.DATA_RELEASE_VERSION && (
+          <div className='footer__data-release-version-area'>
+            <span className='footer__data-release-version-area--title'>
+              Data Release Version:
+            </span>
+            {process.env.DATA_RELEASE_VERSION}
+          </div>
+        )}
         {privacyPolicy?.text && (
           <div className='footer__privacy-policy-area'>
             <a
