@@ -154,7 +154,7 @@ function ProtectedContent({
   }
   useEffect(() => {
     isMounted.current = true;
-    window.scrollTo(0, 0);
+    window.scrollTo(0, location.state?.scrollY ?? 0);
 
     if (isMounted.current)
       getReduxStore().then((store) =>
