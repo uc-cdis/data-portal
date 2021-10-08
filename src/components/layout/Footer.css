@@ -19,6 +19,17 @@
   }
 }
 
+.footer__spacer-area {
+  display: flex;
+  flex-basis: 40%;
+}
+
+@media screen and (max-width: 1090px) {
+  .footer__spacer-area {
+    display: none;
+  }
+}
+
 .footer__privacy-policy-area {
   display: flex;
   flex-basis: 20%;
