@@ -5,9 +5,10 @@ import copy from 'clipboard-plus';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
-import { credentialCdisPath } from '../localconf';
+import { credentialCdisPath, showExternalLoginsOnProfile } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
 import AccessTable from '../components/tables/AccessTable';
+import ExternalLogins from './ExternalLogins';
 import { showArboristAuthzOnProfile, showFenceAuthzOnProfile } from '../configs';
 import './UserProfile.less';
 
@@ -41,8 +42,15 @@ const UserProfile = ({
     onUpdatePopup({ deleteTokenPopup: false });
   };
 
+  console.log(showExternalLoginsOnProfile)
+
   return (
     <div className='user-profile'>
+      {
+        // showExternalLoginsOnProfile
+        // &&
+        <ExternalLogins />
+      }
       {
         userProfile.jtis === undefined
         && (
