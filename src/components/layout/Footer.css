@@ -21,7 +21,7 @@
 
 .footer__spacer-area {
   display: flex;
-  flex-basis: 50%;
+  flex-basis: 40%;
 }
 
 @media screen and (max-width: 1090px) {
@@ -123,4 +123,17 @@
 
 .footer__link:last-child:after {
   content: '';
+}
+
+.footer__data-release-version-area {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-self: center;
+  justify-content: center;
+  margin: 1rem;
+}
+
+.footer__data-release-version-area--title {
+  font-style: italic;
+  margin-right: 0.25rem;
 }
