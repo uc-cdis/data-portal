@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Space,
   Popover,
   Button,
   Modal,
+  List
 } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
@@ -20,9 +21,15 @@ import {
   manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl,
   appname,
 } from '../localconf';
+import { metadata } from 'core-js/fn/reflect';
 
 interface User {
   username: string
+}
+interface StatusMessage {
+  title: string;
+  content: React.ReactElement;
+  active: boolean;
 }
 interface Props {
   config: DiscoveryConfig;
@@ -32,40 +39,72 @@ interface Props {
   filtersVisible: boolean;
   setFiltersVisible: (boolean) => void;
   user: User,
-  downloadInProgress: boolean,
-  setDownloadInProgress: (boolean) => void,
-  discoveryActionStatusMessage: {
-    title: string,
-    message: string,
-    active: boolean,
-    url: string
-  },
-  setDiscoveryActionStatusMessage: (Object) => void;
 }
 
+const GUID_PREFIX_PATTERN = /^dg.[a-zA-Z0-9]+\//
+
 const checkFederatedLoginStatus = async (
-  setDiscoveryActionStatusMessage: (arg0: Object) => void,
+  setDiscoveryActionStatusMessage: (arg0: StatusMessage) => void,
+  selectedResources: any[]
 ) => fetchWithCreds({
   path: `${externalLoginOptionsUrl}`,
   method: 'GET',
 }).then(
-  ({ data, status }) => {
+  async ({ data, status }) => {
     if (status !== 200) {
       return false;
     }
 
     const { providers } = data;
-    const unauthenticatedProviders = providers.filter(
-      (provider) => !provider.refresh_token_expiration,
+    const unauthenticatedProviders = providers.filter(provider => !provider.refresh_token_expiration);
+
+    const guidsForHostnameResolution = [];
+    const guidPrefixes = [];
+    selectedResources.forEach(
+      selectedResource => {
+        (selectedResource.__manifest || []).forEach(
+          fileMetadata => {
+            if (fileMetadata.object_id) {
+              const guidDomainPrefix = fileMetadata.object_id.match(GUID_PREFIX_PATTERN).shift();
+              if (guidDomainPrefix) {
+                if (!guidPrefixes.includes(guidDomainPrefix)) {
+                  guidPrefixes.push(guidDomainPrefix);
+                  guidsForHostnameResolution.push(fileMetadata.object_id);
+                }
+              }
+              else {
+                guidsForHostnameResolution.push(fileMetadata.object_id);
+              }
+            }
+        });
+      }
     );
-    if (unauthenticatedProviders.length) {
+    const guidResolutions = await Promise.all(
+      guidsForHostnameResolution.map(
+        guid => fetch(`https://dataguids.org/index/${guid}`).then(r => r.json()).catch(()=>{})
+      )
+    );
+    const externalHosts = guidResolutions.filter(
+      resolvedGuid => resolvedGuid.from_index_service
+    ).map(
+      resolvedGuid => new URL(resolvedGuid.from_index_service.host).host
+    );
+
+    console.log("HOSTS", externalHosts, unauthenticatedProviders);
+
+    const providersToAuthenticate = unauthenticatedProviders.filter(
+      unauthenticatedProvider => externalHosts.includes(new URL(unauthenticatedProvider.base_url).hostname)
+    );
+
+
+    if (providersToAuthenticate.length) {
       setDiscoveryActionStatusMessage({
         title: 'Please link your account to external repositories first.',
-        message: `The ${appname} connects to data from multiple sources. `
-                    + 'To ensure full data accessibility, please authorize all external resources by navigating to the workspace link '
-                    + 'below and logging in to the available data resources at the bottom of the page. ',
+        content: <List
+                  dataSource={providersToAuthenticate}
+                  renderItem={provider => <List.Item> { provider.name } </List.Item>}
+                  />,
         active: true,
-        url: `${hostname}workspace`,
       });
       return false;
     }
@@ -77,11 +116,11 @@ const handleDownloadZipClick = async (
   config: DiscoveryConfig,
   selectedResources: any[],
   setDownloadInProgress: (arg0: boolean) => void,
-  setDiscoveryActionStatusMessage: (arg0: Object) => void,
+  setDiscoveryActionStatusMessage: (arg0: StatusMessage) => void,
 ) => {
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const isLinked = await checkFederatedLoginStatus(
-      setDiscoveryActionStatusMessage,
+      setDiscoveryActionStatusMessage, selectedResources
     );
     if (!isLinked) {
       return;
@@ -92,20 +131,18 @@ const handleDownloadZipClick = async (
   setDownloadInProgress(true);
   setDiscoveryActionStatusMessage({
     title: 'Your download is being prepared',
-    message: 'Please remain on this page while your download is being prepared.\n\n'
-               + 'When your download is ready, it will begin automatically. You can close this window.',
+    content: <p> When your download is ready, it will begin automatically. You can close this window. </p>,
     active: true,
-    url: '',
   });
 
   const handleJobError = () => {
     setDownloadInProgress(false);
     setDiscoveryActionStatusMessage({
       title: 'Download failed',
-      message: 'There was a problem preparing your download. '
-                + 'Please consider using the Gen3 SDK for Python (w/ CLI) to download these files via a manifest.',
-      active: true,
-      url: '',
+      content: <p>
+        There was a problem preparing your download. Please consider using the Gen3 SDK for Python (w/ CLI) to download these files via a manifest.
+      </p>,
+      active: true
     });
   };
 
@@ -120,15 +157,14 @@ const handleDownloadZipClick = async (
     }),
   }).then(
     (dispatchResponse) => {
+      console.log(dispatchResponse);
       const { uid } = dispatchResponse.data;
       if (dispatchResponse.status === 403 || dispatchResponse.status === 302) {
         setDownloadInProgress(false);
         setDiscoveryActionStatusMessage({
           title: 'Download failed',
-          message: 'Unable to authorize download. '
-                  + 'Please refresh the page and ensure you are logged in.',
+          content: <p> Unable to authorize download. Please refresh the page and ensure you are logged in. </p>,
           active: true,
-          url: '',
         });
       } else if (dispatchResponse.status !== 200 || !uid) {
         handleJobError();
@@ -149,9 +185,8 @@ const handleDownloadZipClick = async (
                     } else {
                       setDiscoveryActionStatusMessage({
                         title: 'Download failed',
-                        message: output,
+                        content: <p>{output}</p>,
                         active: true,
-                        url: '',
                       });
                       setDownloadInProgress(false);
                     }
@@ -166,9 +201,11 @@ const handleDownloadZipClick = async (
                     } else {
                       setDiscoveryActionStatusMessage({
                         title: 'Your download is ready',
-                        message: 'Your download has been prepared. If your download doesn\'t start automatically, please follow this direct link: ',
-                        active: true,
-                        url: output,
+                        content: <p>
+                          Your download has been prepared. If your download doesn't start automatically, please follow this direct link:
+                          <a href={output} target="_blank">{output}</a>
+                        </p>,
+                        active: true
                       });
                       setDownloadInProgress(false);
                       setTimeout(() => window.open(output), 2000);
@@ -218,12 +255,12 @@ const handleExportToWorkspaceClick = async (
   config: DiscoveryConfig,
   selectedResources: any[],
   setExportingToWorkspace: (boolean) => void,
-  setDiscoveryActionStatusMessage: (arg0: Object) => void,
+  setDiscoveryActionStatusMessage: (arg0: StatusMessage) => void,
   history: any,
 ) => {
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const isLinked = await checkFederatedLoginStatus(
-      setDiscoveryActionStatusMessage,
+      setDiscoveryActionStatusMessage, selectedResources
     );
     if (!isLinked) {
       return;
@@ -268,6 +305,12 @@ const handleExportToWorkspaceClick = async (
 const DiscoveryActionBar = (props: Props) => {
   const history = useHistory();
   const location = useLocation();
+  const [downloadInProgress, setDownloadInProgress] = useState(false);
+  const [discoveryActionStatusMessage, setDiscoveryActionStatusMessage] = useState({
+    title: "",
+    content: <React.Fragment></React.Fragment>,
+    active: false,
+  });
 
   const handleRedirectToLoginClick = () => {
     history.push('/login', { from: `${location.pathname}` });
@@ -308,8 +351,8 @@ const DiscoveryActionBar = (props: Props) => {
                         handleDownloadZipClick(
                           props.config,
                           props.selectedResources,
-                          props.setDownloadInProgress,
-                          props.setDiscoveryActionStatusMessage,
+                          setDownloadInProgress,
+                          setDiscoveryActionStatusMessage,
                         );
                       } else {
                         handleRedirectToLoginClick();
@@ -317,14 +360,14 @@ const DiscoveryActionBar = (props: Props) => {
                     }
                   }
                   type='text'
-                  disabled={props.selectedResources.length === 0 || props.downloadInProgress === true}
+                  disabled={props.selectedResources.length === 0 || downloadInProgress}
                   icon={<DownloadOutlined />}
-                  loading={props.downloadInProgress}
+                  loading={downloadInProgress}
                 >
                   {(
                     () => {
                       if (props.user.username) {
-                        if (props.downloadInProgress === true) {
+                        if (downloadInProgress) {
                           return 'Preparing download...';
                         }
 
@@ -393,7 +436,7 @@ const DiscoveryActionBar = (props: Props) => {
                     props.config,
                     props.selectedResources,
                     props.setExportingToWorkspace,
-                    props.setDiscoveryActionStatusMessage,
+                    setDiscoveryActionStatusMessage,
                     history,
                   );
                 }
@@ -404,13 +447,15 @@ const DiscoveryActionBar = (props: Props) => {
             </Popover>
             <Modal
               closable={false}
-              visible={props.discoveryActionStatusMessage.active}
-              title={props.discoveryActionStatusMessage.title}
+              visible={discoveryActionStatusMessage.active}
+              title={discoveryActionStatusMessage.title}
               footer={(
                 <Button
                   onClick={
-                    () => props.setDiscoveryActionStatusMessage({
-                      title: '', message: '', active: false, url: '',
+                    () => setDiscoveryActionStatusMessage({
+                      title: '',
+                      content: <React.Fragment></React.Fragment>,
+                      active: false
                     })
                   }
                 >
@@ -418,11 +463,7 @@ const DiscoveryActionBar = (props: Props) => {
                 </Button>
               )}
             >
-              { props.discoveryActionStatusMessage.message }
-              {
-                props.discoveryActionStatusMessage.url
-                  && <a href={props.discoveryActionStatusMessage.url} target='_blank' rel='noreferrer'>{props.discoveryActionStatusMessage.url}</a>
-              }
+              { discoveryActionStatusMessage.content }
             </Modal>
           </Space>
         )}
