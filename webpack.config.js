@@ -24,11 +24,7 @@ if (configFile.connectSrcCSPWhitelist && configFile.connectSrcCSPWhitelist.lengt
   connectSrcURLs.push(...configFile.connectSrcCSPWhitelist);
 }
 if (configFile.featureFlags.discoveryUseAggMDS) {
-  console.log("Using agg mds")
   connectSrcURLs.push("https://dataguids.org");
-}
-else {
-  console.log("Not using agg mds!!!")
 }
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
