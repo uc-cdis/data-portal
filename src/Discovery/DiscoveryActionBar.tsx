@@ -39,7 +39,6 @@ interface JobStatus {
 }
 interface DownloadStatus {
   inProgress: boolean;
-  monitorInterval: number;
   message: {
     content: JSX.Element;
     active: boolean;
@@ -59,13 +58,12 @@ interface Props {
 const BATCH_EXPORT_JOB_PREFIX = "batch-export";
 const GUID_PREFIX_PATTERN = /^dg.[a-zA-Z0-9]+\//
 const DOWNLOAD_UNAUTHORIZED_MESSAGE = "Unable to authorize download. Please refresh the page and ensure you are logged in.";
-const DOWNLOAD_STARTED_MESSAGE = "When your download is ready, it will begin automatically. You can close this window.";
+const DOWNLOAD_STARTED_MESSAGE = "Please remain on this page until your download completes. When your download is ready, it will begin automatically. You can close this window.";
 const DOWNLOAD_SUCCEEDED_MESSAGE = "Your download has been prepared. If your download doesn't start automatically, please follow this direct link:";
-const JOB_POLLING_INTERVAL = 1000;
+const JOB_POLLING_INTERVAL = 5000;
 
 const DOWNLOAD_FAIL_STATUS = {
   inProgress: false,
-  monitorInterval: null,
   message: {
     title: 'Download failed',
     content: <p> "There was a problem preparing your download. Please consider using the Gen3 SDK for Python (w/ CLI) to download these files via a manifest.";</p>,
@@ -110,47 +108,50 @@ const checkFederatedLoginStatus = async (
         });
       }
     );
-    // const guidResolutions = await Promise.all(
-    //   guidsForHostnameResolution.map(
-    //     guid => fetch(`https://dataguids.org/index/${guid}`).then(r => r.json()).catch(()=>{})
-    //   )
-    // );
-    // const externalHosts = guidResolutions.filter(
-    //   resolvedGuid => resolvedGuid.from_index_service
-    // ).map(
-    //   resolvedGuid => new URL(resolvedGuid.from_index_service.host).host
-    // );
-    // const providersToAuthenticate = unauthenticatedProviders.filter(
-    //   unauthenticatedProvider => externalHosts.includes(new URL(unauthenticatedProvider.base_url).hostname)
-    // );
+    const guidResolutions = await Promise.all(
+      guidsForHostnameResolution.map(
+        guid => fetch(`https://dataguids.org/index/${guid}`).then(r => r.json()).catch(()=>{})
+      )
+    );
+    const externalHosts = guidResolutions.filter(
+      resolvedGuid => resolvedGuid.from_index_service
+    ).map(
+      resolvedGuid => new URL(resolvedGuid.from_index_service.host).host
+    );
+    const providersToAuthenticate = unauthenticatedProviders.filter(
+      unauthenticatedProvider => externalHosts.includes(new URL(unauthenticatedProvider.base_url).hostname)
+    );
 
-
-    // if (providersToAuthenticate.length) {
-    //   setActionMessage({
-    //     title: 'Authorization Required',
-    //     content: <React.Fragment>
-    //                 <p>The data you have selected requires authorization with the following data resources:</p>
-    //                 <Table
-    //                   dataSource={providersToAuthenticate}
-    //                   columns={[ { title: "Name", dataIndex: "name", key: "name" }, { title: "IDP", dataIndex: "idp", key: "idp" } ]}
-    //                   size={ "small" }
-    //                   pagination={false}
-    //                 />
-    //                 <p>Please authorize these resources at the top of the
-    //                   <Button
-    //                     size={ "small" }
-    //                     type="link"
-    //                     icon={<LinkOutlined/>}
-    //                     onClick={()=>history.push("/identity")}
-    //                   >
-    //                     profile page
-    //                   </Button>
-    //                 </p>
-    //               </React.Fragment>,
-    //     active: true,
-    //   });
-    //   return false;
-    // }
+    if (providersToAuthenticate.length) {
+      setDownloadStatus({
+        inProgress: false,
+        message: {
+          title: 'Authorization Required',
+          active: true,
+          content: <React.Fragment>
+                      <p>The data you have selected requires authorization with the following data resources:</p>
+                      <Table
+                        dataSource={providersToAuthenticate}
+                        columns={[ { title: "Name", dataIndex: "name", key: "name" }, { title: "IDP", dataIndex: "idp", key: "idp" } ]}
+                        size={ "small" }
+                        pagination={false}
+                      />
+                      <p>Please authorize these resources at the top of the
+                        <Button
+                          size={ "small" }
+                          type="link"
+                          icon={<LinkOutlined/>}
+                          onClick={()=>history.push("/identity", { from: `${location.pathname}` })}
+                        >
+                          profile page
+                        </Button>
+                      </p>
+                    </React.Fragment>,
+          }
+      }
+      );
+      return false;
+    }
     return true;
   },
 ).catch(() => false);
@@ -168,7 +169,6 @@ const checkDownloadStatus = (
         // usually empty status message means Sower can't find a job by its UID
         setDownloadStatus(DOWNLOAD_FAIL_STATUS);
       } else if (status === 'Failed') {
-        clearInterval(downloadStatus.monitorInterval);
         fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
           (outputResponse) => {
             const { output } = outputResponse.data;
@@ -176,7 +176,6 @@ const checkDownloadStatus = (
               setDownloadStatus(DOWNLOAD_FAIL_STATUS);
             } else {
               setDownloadStatus( {
-                monitorInterval: null,
                 inProgress: false,
                 message: {
                   title: 'Download failed',
@@ -188,29 +187,44 @@ const checkDownloadStatus = (
           },
         ).catch(() => setDownloadStatus(DOWNLOAD_FAIL_STATUS));
       } else if (status === 'Completed') {
-        clearInterval(downloadStatus.monitorInterval);
-
         fetchWithCreds({ path: `${jobAPIPath}output?UID=${uid}` }).then(
           (outputResponse) => {
             const { output } = outputResponse.data;
             if (outputResponse.status !== 200 || !output) {
               setDownloadStatus(DOWNLOAD_FAIL_STATUS);
             } else {
-              setDownloadStatus({
-                inProgress: false,
-                monitorInterval: null,
-                message: {
-                  title: 'Your download is ready',
-                  content: <p> { DOWNLOAD_SUCCEEDED_MESSAGE }
-                    <a href={output} target="_blank">{output}</a>
-                  </p>,
-                  active: true
-                }
-              });
-              setTimeout(() => window.open(output), 2000);
+              try {
+                new URL(output);
+                setDownloadStatus({
+                  inProgress: false,
+                  message: {
+                    title: 'Your download is ready',
+                    content: <React.Fragment>
+                      <p> { DOWNLOAD_SUCCEEDED_MESSAGE } </p>
+                      <a href={output} target="_blank">{output}</a>
+                    </React.Fragment>,
+                    active: true
+                  }
+                });
+                setTimeout(() => window.open(output), 2000);
+              }
+              catch {
+                // job output is not a url -> is an error message
+                setDownloadStatus( {
+                  inProgress: false,
+                  message: {
+                    title: 'Download failed',
+                    content: <p>{output}</p>,
+                    active: true,
+                  }
+                });
+              }
             }
           },
         ).catch(()=>setDownloadStatus(DOWNLOAD_FAIL_STATUS));
+      }
+      else {
+        setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus);
       }
     },
   );
@@ -231,16 +245,6 @@ const handleDownloadZipClick = async (
   }
 
   const studyIDs = selectedResources.map(study => study.project_number);
-  setDownloadStatus({
-    ...downloadStatus,
-    inProgress: true,
-    message: {
-      title: 'Your download is being prepared',
-      content: <p> { DOWNLOAD_STARTED_MESSAGE } </p>,
-      active: true,
-    }
-  });
-
   fetchWithCreds({
     path: `${jobAPIPath}dispatch`,
     method: 'POST',
@@ -250,8 +254,7 @@ const handleDownloadZipClick = async (
       const { uid } = dispatchResponse.data;
       if (dispatchResponse.status === 403 || dispatchResponse.status === 302) {
         setDownloadStatus({
-          ...downloadStatus,
-          inProgress: true,
+          inProgress: false,
           message: {
             title: 'Download failed',
             content: <p> { DOWNLOAD_UNAUTHORIZED_MESSAGE } </p>,
@@ -261,9 +264,15 @@ const handleDownloadZipClick = async (
       } else if (dispatchResponse.status !== 200 || !uid) {
         setDownloadStatus(DOWNLOAD_FAIL_STATUS);
       } else {
-        clearInterval(downloadStatus.monitorInterval);
-        const monitorInterval = setInterval(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, setDownloadStatus);
-        setDownloadStatus({...downloadStatus, monitorInterval});
+        setDownloadStatus({
+          inProgress: true,
+          message: {
+            title: 'Your download is being prepared',
+            content: <p> { DOWNLOAD_STARTED_MESSAGE } </p>,
+            active: true,
+          }
+        });
+        setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus);
       }
     },
   ).catch(()=>setDownloadStatus(DOWNLOAD_FAIL_STATUS));
@@ -352,32 +361,33 @@ const DiscoveryActionBar = (props: Props) => {
   const location = useLocation();
   const [downloadStatus, setDownloadStatus] = useState({
     inProgress: false,
-    monitorInterval: 0,
     message: { title: "", content: <React.Fragment></React.Fragment>, active: false }
   });
 
-  // begin monitoring download job is one already exists and is running
+  // begin monitoring download job if one already exists and is running
   useEffect(
     () => {
-      fetchWithCreds({ path: `${jobAPIPath}list` }).then(
-        jobsListResponse => {
-          const { status } = jobsListResponse;
-          if (status == 200) {
-            const runningJobs: JobStatus[] = jobsListResponse.data;
-            runningJobs.forEach(
-              job => {
-                if (job.status === "Running" && job.name.startsWith(BATCH_EXPORT_JOB_PREFIX)) {
-                  clearInterval(downloadStatus.monitorInterval);
-                  const monitorInterval = setInterval(
-                    checkDownloadStatus, JOB_POLLING_INTERVAL, job.uid, setDownloadStatus
-                  );
-                  setDownloadStatus({ ...downloadStatus, inProgress: true, monitorInterval });
+      if (!downloadStatus.inProgress) {
+        fetchWithCreds({ path: `${jobAPIPath}list` }).then(
+          jobsListResponse => {
+            const { status } = jobsListResponse;
+            if (status == 200) {
+              const runningJobs: JobStatus[] = jobsListResponse.data;
+              runningJobs.forEach(
+                job => {
+                  if (job.status === "Running" && job.name.startsWith(BATCH_EXPORT_JOB_PREFIX)) {
+                    setDownloadStatus({ ...downloadStatus, inProgress: true});
+                    setTimeout(
+                      checkDownloadStatus, JOB_POLLING_INTERVAL, job.uid, downloadStatus, setDownloadStatus
+                    );
+                  }
                 }
-              }
-            )
+              )
+            }
           }
-        }
-      )
+        )
+
+      }
     }
   );
 

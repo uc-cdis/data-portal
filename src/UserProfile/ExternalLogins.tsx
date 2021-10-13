@@ -18,39 +18,42 @@ interface ExternalProvider {
 
 const externalLogins: React.FunctionComponent = () => {
 
-    const [externalLoginOptions, setExternalLoginOptions] = useState([]);
+    const [externalLoginOptions, setExternalLoginOptions] = useState(null);
 
     useEffect(() => {
-        fetchWithCreds({
-            path: `${externalLoginOptionsUrl}`,
-            method: 'GET',
-        }).then(
-            ({ data }) => {
-              setExternalLoginOptions(data.providers);
-            },
-        );
+        if (!externalLoginOptions) {
+            fetchWithCreds({
+                path: `${externalLoginOptionsUrl}`,
+                method: 'GET',
+            }).then(
+                ({ data }) => {
+                  setExternalLoginOptions((data.providers || []));
+                },
+            ).catch(()=>setExternalLoginOptions([]));
+        }
     });
 
     return <React.Fragment>
         <h2>Link accounts from external data resource(s)</h2>
         <div className='external-logins'>
-            { externalLoginOptions.map(
+            { (externalLoginOptions || []).map(
                 (provider: ExternalProvider, i: number) => (
                     <div className='external-login-option' key={i}>
                         <div className="external-login-option__description">
                             <h4> {provider.name} </h4>
-                            <Space> IDP: {provider.idp} </Space>
-                            <Space>Provider URL: <a href={provider.base_url} target="_blank">{provider.base_url}</a></Space>
-                            <Space>Status:{
+                            <p> IDP: {provider.idp} </p>
+                            <p> Provider URL: <a href={provider.base_url} target="_blank">{provider.base_url}</a></p>
+                            <p> Status: {
                                 provider.refresh_token_expiration ?
                                 `expires in ${provider.refresh_token_expiration}` :
                                 "not authorized"
-                            }</Space>
+                            }</p>
                         </div>
                         <div className="external-login-option__sign-in-buttons">
                             {
                                 provider.urls.map(
-                                    providerUrl => <Button
+                                    (providerUrl, j) => <Button
+                                        key = {`${i}-${j}`}
                                         className="external-login-option__button"
                                         icon={
                                             provider.refresh_token_expiration ? <ReloadOutlined/> : <LoginOutlined />
