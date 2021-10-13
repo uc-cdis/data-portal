@@ -313,9 +313,9 @@ export const checkIsArrayField = (field, arrayFields) => {
 /**
  * @param {string[]} fields
  * @param {string[]} searchFields
- * @param {{ field: string; name: string; }[]} fieldMapping
+ * @param {{ field: string; name?: string; tooltip?: string }[]} fieldMapping
  * @param {SimpleAggsData} tabsOptions
- * @param {SimpleAggsData} [initialTabsOptions]
+ * @param {SimpleAggsData} initialTabsOptions
  * @param {{ [x:string]: OptionFilter }} adminAppliedPreFilters
  * @param {GuppyConfig} guppyConfig
  * @param {string[][]} arrayFields
@@ -337,10 +337,8 @@ export const getFilterSections = (
     // to search over all options, instead of displaying all options in a list. This allows
     // guppy/portal to support filters that have too many options to be displayed in a list.
     searchFieldSections = searchFields.map((field) => {
-      const overrideName = fieldMapping.find((entry) => entry.field === field);
-      const label = overrideName
-        ? overrideName.name
-        : capitalizeFirstLetter(field);
+      const fieldConfig = fieldMapping.find((entry) => entry.field === field);
+      const label = fieldConfig?.name ?? capitalizeFirstLetter(field);
 
       const tabsOptionsFiltered = { ...tabsOptions[field] };
       if (Object.keys(adminAppliedPreFilters).includes(field)) {
@@ -369,15 +367,14 @@ export const getFilterSections = (
           field,
           guppyConfig
         ),
+        tooltip: fieldConfig?.tooltip,
       };
     });
   }
 
   const sections = fields.map((field) => {
-    const overrideName = fieldMapping.find((entry) => entry.field === field);
-    const label = overrideName
-      ? overrideName.name
-      : capitalizeFirstLetter(field);
+    const fieldConfig = fieldMapping.find((entry) => entry.field === field);
+    const label = fieldConfig?.name ?? capitalizeFirstLetter(field);
 
     const tabsOptionsFiltered = { ...tabsOptions[field] };
     if (Object.keys(adminAppliedPreFilters).includes(field)) {
@@ -399,6 +396,7 @@ export const getFilterSections = (
       title: label,
       options: defaultOptions,
       isArrayField: fieldIsArrayField,
+      tooltip: fieldConfig?.tooltip,
     };
   });
   return searchFieldSections.concat(sections);
