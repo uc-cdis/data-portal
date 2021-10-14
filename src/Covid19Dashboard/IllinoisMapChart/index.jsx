@@ -8,7 +8,8 @@ import ControlPanel from '../ControlPanel';
 import countyData from '../data/us_counties';
 /*
 // Additional layers used as examples enable here
-import LayerTemplate from '../overlays/LayerTemplate'; */
+import LayerTemplate from '../overlays/LayerTemplate';
+import PopulationIL from '../overlays/PopulationIL'; */
 
 import TimeCaseLayer from '../overlays/TimeCaseLayer';
 import VaccinatedCaseLayer from '../overlays/TimeVaccinatedLayer';
@@ -55,17 +56,21 @@ class IllinoisMapChart extends React.Component {
       },
       hoverInfo: null,
       overlay_layers: {
+        /*
+        // Additional layers used as examples enable here
+        us_counties: { title: 'US Counties', visible: 'visible' },
+        il_population: { title: 'IL Population', visible: 'visible' }, */
         vaccination_layers: {
           title: 'Vaccinations',
           layers: {
             V_time_data: { title: 'Vaccination Counts' },
-          }
+          },
         },
         case_layers: {
           title: 'Cases & Deaths',
           layers: {
             C_time_data: { title: 'Case Counts' },
-          }
+          },
         },
         mobility_layers: {
           title: 'Mobility',
@@ -321,7 +326,7 @@ class IllinoisMapChart extends React.Component {
       if (feature.layer.id.indexOf('mobility_data') > -1) {
         const idString = feature.layer.id.split('_')[0];
         hoverInfo.mobility_values = {};
-        hoverInfo.mobility_values[this.state.overlay_layers[`${idString}_mobility_data`].title] = formatNumberToDisplay(feature.properties[`${idString}_${this.state.sliderDate}`]);
+        hoverInfo.mobility_values[this.state.overlay_layers.mobility_layers.layers[`${idString}_mobility_data`].title] = formatNumberToDisplay(feature.properties[`${idString}_${this.state.sliderDate}`]);
       }
 
       if (this.state.popup_data.strain_data.visible === 'visible') {
@@ -638,7 +643,8 @@ class IllinoisMapChart extends React.Component {
           {this.state.mobility_data.fetchStatus === 'done' && <MobilityLayerRes visibility={this.state.activeLayer === 'res_mobility_data' ? 'visible' : 'none'} data={this.state.mobility_data.data} date={this.state.sliderDate} />}
           {/*
           // Additional layers used as examples enable here
-          <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} /> */}
+          <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
+          <PopulationIL visibility={this.state.overlay_layers.il_population.visible} /> */}
           {/* Outline a set of counties from IL */}
           <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountyGeoJson}>
             <ReactMapGL.Layer
