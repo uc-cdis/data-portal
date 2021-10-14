@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { datadogRum } from '@datadog/browser-rum';
 import {
   Space,
   Popover,
@@ -161,7 +162,14 @@ const checkDownloadStatus = (
   uid: string,
   downloadStatus: DownloadStatus,
   setDownloadStatus: (arg0: DownloadStatus) => void,
+  selectedResources: any[],
 ) => {
+
+  const ddActionData = selectedResources.map((study) => ({
+    projectNumber: study.project_number,
+    studyName: study.study_name,
+  }));
+
   fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
     statusResponse => {
       const { status } = statusResponse.data;
@@ -207,6 +215,9 @@ const checkDownloadStatus = (
                   }
                 });
                 setTimeout(() => window.open(output), 2000);
+                datadogRum.addAction('datasetDownload', {
+                  datasetDownload: ddActionData,
+                });
               }
               catch {
                 // job output is not a url -> is an error message
@@ -224,7 +235,7 @@ const checkDownloadStatus = (
         ).catch(()=>setDownloadStatus(DOWNLOAD_FAIL_STATUS));
       }
       else {
-        setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus);
+        setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus, selectedResources);
       }
     },
   );
@@ -272,7 +283,7 @@ const handleDownloadZipClick = async (
             active: true,
           }
         });
-        setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus);
+        setTimeout(checkDownloadStatus, JOB_POLLING_INTERVAL, uid, downloadStatus, setDownloadStatus, selectedResources);
       }
     },
   ).catch(()=>setDownloadStatus(DOWNLOAD_FAIL_STATUS));
@@ -298,6 +309,13 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
         manifest.push(...study[manifestFieldName]);
       }
     }
+  });
+  const ddActionData = selectedResources.map((study) => ({
+    projectNumber: study.project_number,
+    studyName: study.study_name,
+  }));
+  datadogRum.addAction('manifestDownload', {
+    manifestDownload: ddActionData,
   });
   // download the manifest
   const MANIFEST_FILENAME = 'manifest.json';
@@ -377,7 +395,7 @@ const DiscoveryActionBar = (props: Props) => {
                 if (job.status === "Running" && job.name.startsWith(BATCH_EXPORT_JOB_PREFIX)) {
                   setDownloadStatus({ ...downloadStatus, inProgress: true});
                   setTimeout(
-                    checkDownloadStatus, JOB_POLLING_INTERVAL, job.uid, downloadStatus, setDownloadStatus
+                    checkDownloadStatus, JOB_POLLING_INTERVAL, job.uid, downloadStatus, setDownloadStatus, props.selectedResources
                   );
                 }
               }
