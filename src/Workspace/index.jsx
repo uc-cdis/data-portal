@@ -1,6 +1,7 @@
 import React from 'react';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
+import { datadogRum } from '@datadog/browser-rum';
 import {
   Alert, Popconfirm, Steps, message,
 } from 'antd';
@@ -258,6 +259,9 @@ class Workspace extends React.Component {
       }).then(({ status }) => {
         switch (status) {
         case 200:
+          datadogRum.addAction('workspaceLaunch', {
+            workspaceName: workspace.name,
+          });
           this.checkWorkspaceStatus();
           break;
         default:
