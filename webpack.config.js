@@ -29,6 +29,10 @@ const plugins = [
         process.env.REACT_APP_DISABLE_SOCKET || 'true'
       ),
     },
+    // disable React DevTools in production; see https://github.com/facebook/react/pull/11448
+    ...(process.env.NODE_ENV === 'production'
+      ? { __REACT_DEVTOOLS_GLOBAL_HOOK__: '({ isDisabled: true })' }
+      : {}),
   }),
   new HtmlWebpackPlugin({
     title: process.env.TITLE || 'PCDC Data Portal',
