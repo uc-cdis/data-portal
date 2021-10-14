@@ -22,8 +22,18 @@
   border: 1px solid black;
 }
 
+.study-viewer__card > .ant-card-head {
+  background-color: var(--secondary-color);
+  color: var(--g3-color__white);
+}
+
 .study-details__descriptions {
   border: 1px solid black;
+}
+
+.study-details__descriptions tbody > tr:nth-child(even) > th,
+.study-details__descriptions tbody > tr:nth-child(even) {
+  background-color: var(--g3-color__smoke);
 }
 
 .study-viewer__details {
@@ -75,20 +85,4 @@
 /* temp fix, there is an official fix coming up soon https://github.com/ant-design/ant-design/pull/26721 */
 .study-viewer .ant-space-item:empty {
   display: none;
-}
-
-.study-cards {
-  display: flex;
-  flex-flow: wrap;
-}
-.study-cards > .study-viewer__card{
-  width: 350px;
-  margin: 10px 20px;
-  border: 1px solid var(--g3-color__silver);
-  border-radius: 5px;
-  height: 100%;
-}
-
-.study-viewer__card h3 {
-  text-align: center;
 }
