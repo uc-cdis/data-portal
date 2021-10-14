@@ -231,7 +231,7 @@
 }
 
 .discovery-table-container .ant-table-column-sorter {
-  display: none;
+  display:none;
 }
 
 /* HACK: Because the study description row is a separate row under the hood,
