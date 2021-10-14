@@ -5,11 +5,11 @@ import copy from 'clipboard-plus';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
-import { credentialCdisPath, showExternalLoginsOnProfile } from '../localconf';
+import { credentialCdisPath } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
 import AccessTable from '../components/tables/AccessTable';
 import ExternalLogins from './ExternalLogins';
-import { showArboristAuthzOnProfile, showFenceAuthzOnProfile } from '../configs';
+import { showArboristAuthzOnProfile, showFenceAuthzOnProfile, showExternalLoginsOnProfile } from '../configs';
 import './UserProfile.less';
 
 const NO_ACCESS_MSG = 'You have no access to storage service. Please contact an admin to get it!';
@@ -46,7 +46,8 @@ const UserProfile = ({
     <div className='user-profile'>
       {
         showExternalLoginsOnProfile
-        && <ExternalLogins />
+        &&
+        <ExternalLogins />
       }
       {
         userProfile.jtis === undefined

@@ -203,6 +203,11 @@ function buildConfig(opts) {
     showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
   }
 
+  let showExternalLoginsOnProfile = false;
+  if (config.showExternalLoginsOnProfile === true) {
+    showExternalLoginsOnProfile = config.showExternalLoginsOnProfile;
+  }
+
   let hideSubmissionIfIneligible = false;
   if (config.hideSubmissionIfIneligible) {
     hideSubmissionIfIneligible = config.hideSubmissionIfIneligible;
@@ -456,6 +461,7 @@ function buildConfig(opts) {
     externalLoginOptionsUrl,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
+    showExternalLoginsOnProfile,
     hideSubmissionIfIneligible,
     useArboristUI,
     terraExportWarning,

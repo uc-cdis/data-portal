@@ -594,6 +594,7 @@ Below is an example, with inline comments describing what each JSON block config
   "hideSubmissionIfIneligible": true, // optional; only works if Arborist UI is enabled; if set to true, link/buttons to /submission page will be hidden to users who don't have permissions to submit data; defaults to false if absent
   "showArboristAuthzOnProfile": false, // optional; set true to list Arborist resources on profile page
   "showFenceAuthzOnProfile": true, // optional; set false to not list fence project access on profile page
+  "showExternalLoginsOnProfile": false, // enable WTS OIDC logins via the profile page
   "componentToResourceMapping": { // optional; configure some parts of Arborist UI
     "Workspace": { // name of component as defined in this file
       "resource": "/workspace", // ABAC fields defining permissions required to see this component
