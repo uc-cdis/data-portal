@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { externalLoginOptionsUrl } from '../localconf'
 import { fetchWithCreds } from '../actions'
-import { Button, Space } from 'antd';
+import { Button } from 'antd';
 import { LoginOutlined, ReloadOutlined } from '@ant-design/icons'
 import './ExternalLogins.less'
 
@@ -20,8 +20,8 @@ const externalLogins: React.FunctionComponent = () => {
 
     const [externalLoginOptions, setExternalLoginOptions] = useState(null);
 
-    useEffect(() => {
-        if (!externalLoginOptions) {
+    useEffect(
+        () => {
             fetchWithCreds({
                 path: `${externalLoginOptionsUrl}`,
                 method: 'GET',
@@ -30,8 +30,9 @@ const externalLogins: React.FunctionComponent = () => {
                   setExternalLoginOptions((data.providers || []));
                 },
             ).catch(()=>setExternalLoginOptions([]));
-        }
-    });
+        },
+        []
+    );
 
     return <React.Fragment>
         <h2>Link accounts from external data resource(s)</h2>

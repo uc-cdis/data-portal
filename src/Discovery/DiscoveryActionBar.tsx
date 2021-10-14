@@ -364,31 +364,29 @@ const DiscoveryActionBar = (props: Props) => {
     message: { title: "", content: <React.Fragment></React.Fragment>, active: false }
   });
 
-  // begin monitoring download job if one already exists and is running
+  // begin monitoring download job when component mounts if one already exists and is running
   useEffect(
     () => {
-      if (!downloadStatus.inProgress) {
-        fetchWithCreds({ path: `${jobAPIPath}list` }).then(
-          jobsListResponse => {
-            const { status } = jobsListResponse;
-            if (status == 200) {
-              const runningJobs: JobStatus[] = jobsListResponse.data;
-              runningJobs.forEach(
-                job => {
-                  if (job.status === "Running" && job.name.startsWith(BATCH_EXPORT_JOB_PREFIX)) {
-                    setDownloadStatus({ ...downloadStatus, inProgress: true});
-                    setTimeout(
-                      checkDownloadStatus, JOB_POLLING_INTERVAL, job.uid, downloadStatus, setDownloadStatus
-                    );
-                  }
+      fetchWithCreds({ path: `${jobAPIPath}list` }).then(
+        jobsListResponse => {
+          const { status } = jobsListResponse;
+          if (status == 200) {
+            const runningJobs: JobStatus[] = jobsListResponse.data;
+            runningJobs.forEach(
+              job => {
+                if (job.status === "Running" && job.name.startsWith(BATCH_EXPORT_JOB_PREFIX)) {
+                  setDownloadStatus({ ...downloadStatus, inProgress: true});
+                  setTimeout(
+                    checkDownloadStatus, JOB_POLLING_INTERVAL, job.uid, downloadStatus, setDownloadStatus
+                  );
                 }
-              )
-            }
+              }
+            )
           }
-        )
-
-      }
-    }
+        }
+      )
+    },
+    []
   );
 
   const handleRedirectToLoginClick = () => {

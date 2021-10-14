@@ -42,13 +42,11 @@ const UserProfile = ({
     onUpdatePopup({ deleteTokenPopup: false });
   };
 
-  console.log(showExternalLoginsOnProfile)
-
   return (
     <div className='user-profile'>
       {
-        // showExternalLoginsOnProfile
-        // &&
+        showExternalLoginsOnProfile
+        &&
         <ExternalLogins />
       }
       {
