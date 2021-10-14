@@ -43,7 +43,7 @@ const ilByPopulation = {
       1400000,
       '#850001',
     ],
-    'fill-opacity': 0.75,
+    'fill-opacity': 0.6,
   },
 };
 
@@ -61,7 +61,7 @@ class PopulationIL extends React.Component {
 }
 
 PopulationIL.propTypes = {
-  visibility: PropTypes.bool.isRequired,
+  visibility: PropTypes.string.isRequired,
 };
 
 export default PopulationIL;

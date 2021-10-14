@@ -15,8 +15,8 @@ import vacData from '../localdata/vaccination_with_area';
 //import vacData from '../localdata/vaccination_by_zip';
 /*
 // Additional layers used as examples enable here
-import LayerTemplate from '../overlays/LayerTemplate';
-import PopulationIL from '../overlays/PopulationIL'; */
+import LayerTemplate from '../overlays/LayerTemplate'; */
+import PopulationIL from '../overlays/PopulationIL';
 
 //import TimeCaseLayer from '../overlays/TimeCaseLayer';
 //import MobilityLayer from '../overlays/GoogleMobilityLayer';
@@ -105,14 +105,16 @@ class ChicagoMapChart extends React.Component {
       },
       hoverInfo: null,
       overlay_layers: {
-        /*
-        // Additional layers used as examples enable here
-        us_counties: { title: 'US Counties', visible: 'visible' },
-        il_population: { title: 'IL Population', visible: 'visible' }, */
 	vaccination_layers: {
 	  title: 'Vaccine',
 	  layers: {
 	    vaccine_data: { title: 'Vaccine Data' },
+	  },
+	},
+        demographic_layers: {
+	  title: 'Demographics',
+	  layers: {
+	    il_population: { title: 'Population', visible: 'visible' },
 	  },
 	},
       },
@@ -120,6 +122,7 @@ class ChicagoMapChart extends React.Component {
         /*
         This data is used just for the popup on hover */
         strain_data: { title: 'SARS-CoV-2 Strain Data', visible: 'none' },
+        vaccination_data: { title: 'COVID Vaccination Data', visible: 'none' },
         // mobility_data : {title: 'Mobility Data', visible: 'none'},
       },
 //      sliderValue: null,
@@ -406,6 +409,7 @@ class ChicagoMapChart extends React.Component {
           className='.map-chart__mapgl-map'
           mapboxApiAccessToken={mapboxAPIToken}
           mapStyle='mapbox://styles/mapbox/streets-v11'
+          minZoom={6}
           {...this.state.viewport}
           {...this.state.mapSize} // after viewport to avoid size overwrite
           onViewportChange={(viewport) => {
@@ -417,6 +421,7 @@ class ChicagoMapChart extends React.Component {
           touchRotate={false}
         >
          //{this.renderHoverPopup()}
+	   <PopulationIL visibility={this.state.activeLayer == 'il_population' ? 'visible' : 'none'} />
 
            <ReactMapGL.Source type='geojson' data={countyData}>
             <ReactMapGL.Layer

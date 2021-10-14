@@ -10,6 +10,7 @@ import countyData from '../data/us_counties';
 // Additional layers used as examples enable here
 import LayerTemplate from '../overlays/LayerTemplate'; */
 
+import PopulationIL from '../overlays/PopulationIL';
 import TimeCaseLayer from '../overlays/TimeCaseLayer';
 import VaccinatedCaseLayer from '../overlays/TimeVaccinatedLayer';
 import MobilityLayer from '../overlays/GoogleMobilityLayer';
@@ -78,6 +79,12 @@ class IllinoisMapChart extends React.Component {
             res_mobility_data: { title: 'Residential' },
           },
         },
+	demographic_layers: {
+	  title: 'Demographics',
+	  layers: {
+		  il_population: { title: 'Population', visible: 'none' },
+          },
+	},
       },
       popup_data: {
         /*
@@ -363,6 +370,11 @@ class IllinoisMapChart extends React.Component {
         mapColors: this.mapData.colors, legendTitle: 'Confirmed Cases', legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' }, lastUpdated: this.props.jsonByTime.last_updated,
       });
     }
+    if (id === 'il_population') {
+      this.setState({
+        mapColors: this.mapData.colors, legendTitle: 'Population by County', legendDataSource: { title: 'World Population Review', link: 'https://worldpopulationreview.com/us-counties/states/il' }, lastUpdated: this.props.jsonByTime.last_updated,
+      });
+    }
     if (id === 'V_time_data') {
       const colors = [
         ['0 - 1000', '#FFF'],
@@ -639,6 +651,7 @@ class IllinoisMapChart extends React.Component {
           {/*
           // Additional layers used as examples enable here
           <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} /> */}
+	  <PopulationIL visibility={this.state.activeLayer == 'il_population' ? 'visible' : 'none'} />
           {/* Outline a set of counties from IL */}
           <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountyGeoJson}>
             <ReactMapGL.Layer
