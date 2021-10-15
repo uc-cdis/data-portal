@@ -150,7 +150,9 @@ function ProtectedContent({
   const isMounted = useRef(false);
   /** @param {ProtectedContentState} currentState */
   function updateState(currentState) {
-    if (isMounted.current) setState({ ...currentState, dataLoaded: true });
+    const newState = { ...currentState, dataLoaded: true };
+    if (isPublic) newState.redirectTo = null;
+    if (isMounted.current) setState(newState);
   }
   useEffect(() => {
     isMounted.current = true;
