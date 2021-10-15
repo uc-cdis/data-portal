@@ -505,7 +505,7 @@ class Workspace extends React.Component {
                   {this.state.externalLoginOptions.length > 0
                     ? (
                       <Alert
-                        description='Please link account to additional data resources at the bottom of the page'
+                        description='Please link account to additional data resources on the Profile Page'
                         type='info'
                         banner
                         closable
