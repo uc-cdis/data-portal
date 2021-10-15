@@ -17,7 +17,7 @@ import {
   workspacePageTitle,
   workspacePageDescription,
 } from '../localconf';
-import { showExternalLoginsOnProfile } from '../config';
+import { showExternalLoginsOnProfile } from '../configs';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
 import getReduxStore from '../reduxStore';
@@ -506,9 +506,9 @@ class Workspace extends React.Component {
                     ? (
                       <Alert
                         description={
-                          showExternalLoginsOnProfile ?
-                          'Please link account to additional data resources on the Profile Page' :
-                          'Please link account to additional data resources at the bottom of the page'
+                          showExternalLoginsOnProfile
+                            ? 'Please link account to additional data resources on the Profile Page'
+                            : 'Please link account to additional data resources at the bottom of the page'
                         }
                         type='info'
                         banner
@@ -540,10 +540,12 @@ class Workspace extends React.Component {
                     }
                   </div>
                   {
-                    (!showExternalLoginsOnProfile) &&
-                    <WorkspaceLogin
-                      providers={this.state.externalLoginOptions}
-                    />
+                    (!showExternalLoginsOnProfile)
+                    && (
+                      <WorkspaceLogin
+                        providers={this.state.externalLoginOptions}
+                      />
+                    )
                   }
                 </div>
               )
