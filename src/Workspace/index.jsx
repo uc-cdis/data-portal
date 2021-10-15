@@ -17,6 +17,7 @@ import {
   workspacePageTitle,
   workspacePageDescription,
 } from '../localconf';
+import { showExternalLoginsOnProfile } from '../config';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
 import getReduxStore from '../reduxStore';
@@ -27,6 +28,7 @@ import rLogoIcon from '../img/icons/rlogo.svg';
 import galaxyIcon from '../img/icons/galaxy.svg';
 import ohifIcon from '../img/icons/ohif-viewer.svg';
 import WorkspaceOption from './WorkspaceOption';
+import WorkspaceLogin from './WorkspaceLogin';
 import sessionMonitor from '../SessionMonitor';
 import workspaceSessionMonitor from './WorkspaceSessionMonitor';
 
@@ -533,6 +535,12 @@ class Workspace extends React.Component {
                       })
                     }
                   </div>
+                  {
+                    (!showExternalLoginsOnProfile) &&
+                    <WorkspaceLogin
+                      providers={this.state.externalLoginOptions}
+                    />
+                  }
                 </div>
               )
               : null

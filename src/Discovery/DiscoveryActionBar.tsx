@@ -73,6 +73,7 @@ const DOWNLOAD_FAIL_STATUS = {
 const checkFederatedLoginStatus = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   selectedResources: any[],
+  manifestFieldName: string,
   history,
   location,
 ) => fetchWithCreds({
@@ -91,7 +92,7 @@ const checkFederatedLoginStatus = async (
     const guidPrefixes = [];
     selectedResources.forEach(
       (selectedResource) => {
-        (selectedResource.__manifest || []).forEach(
+        (selectedResource[manifestFieldName] || []).forEach(
           (fileMetadata) => {
             if (fileMetadata.object_id) {
               const guidDomainPrefix = fileMetadata.object_id.match(GUID_PREFIX_PATTERN).shift();
@@ -143,7 +144,7 @@ const checkFederatedLoginStatus = async (
                   icon={<LinkOutlined />}
                   onClick={() => history.push('/identity', { from: `${location.pathname}` })}
                 >
-                                                profile page
+                  profile page
                 </Button>
               </p>
             </React.Fragment>
@@ -249,7 +250,8 @@ const handleDownloadZipClick = async (
   location,
 ) => {
   if (config.features.exportToWorkspace.verifyExternalLogins) {
-    const isLinked = await checkFederatedLoginStatus(setDownloadStatus, selectedResources, history, location);
+    const { manifestFieldName } = config.features.exportToWorkspace;
+    const isLinked = await checkFederatedLoginStatus(setDownloadStatus, selectedResources, manifestFieldName, history, location);
     if (!isLinked) {
       return;
     }
@@ -331,9 +333,14 @@ const handleExportToWorkspaceClick = async (
   history: any,
   location: any,
 ) => {
+  const { manifestFieldName } = config.features.exportToWorkspace;
+  if (!manifestFieldName) {
+    throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
+  }
+
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const isLinked = await checkFederatedLoginStatus(
-      setDownloadStatus, selectedResources, history, location,
+      setDownloadStatus, selectedResources, manifestFieldName, history, location,
     );
     if (!isLinked) {
       return;
@@ -341,10 +348,6 @@ const handleExportToWorkspaceClick = async (
   }
 
   setExportingToWorkspace(true);
-  const { manifestFieldName } = config.features.exportToWorkspace;
-  if (!manifestFieldName) {
-    throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
-  }
   // combine manifests from all selected studies
   const manifest = [];
   selectedResources.forEach((study) => {
