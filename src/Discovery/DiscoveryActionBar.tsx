@@ -1,4 +1,5 @@
 import React from 'react';
+import { datadogRum } from '@datadog/browser-rum';
 import {
   Space,
   Popover,
@@ -89,6 +90,10 @@ const handleDownloadZipClick = async (
   }
 
   const studyIDs = selectedResources.map((study) => study.project_number);
+  const ddActionData = selectedResources.map((study) => ({
+    projectNumber: study.project_number,
+    studyName: study.study_name,
+  }));
   setDownloadInProgress(true);
   setDiscoveryActionStatusMessage({
     title: 'Your download is being prepared',
@@ -172,6 +177,9 @@ const handleDownloadZipClick = async (
                       });
                       setDownloadInProgress(false);
                       setTimeout(() => window.open(output), 2000);
+                      datadogRum.addAction('datasetDownload', {
+                        datasetDownload: ddActionData,
+                      });
                     }
                   },
                 ).catch(handleJobError);
@@ -207,6 +215,13 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
         manifest.push(...study[manifestFieldName]);
       }
     }
+  });
+  const ddActionData = selectedResources.map((study) => ({
+    projectNumber: study.project_number,
+    studyName: study.study_name,
+  }));
+  datadogRum.addAction('manifestDownload', {
+    manifestDownload: ddActionData,
   });
   // download the manifest
   const MANIFEST_FILENAME = 'manifest.json';

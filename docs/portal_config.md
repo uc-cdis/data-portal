@@ -298,6 +298,13 @@ Below is an example, with inline comments describing what each JSON block config
       },
       {
         "enabled": true,
+        "type": "export-pfb-to-url", // export PFB to arbitrary URL; see docs/export_pfb_to_url.md
+        "targetURLTemplate": "https://terra.biodatacatalyst.nhlbi.nih.gov/#import-data?url={{PRESIGNED_URL}}", // required if type is `export-pfb-to-url`; `{{PRESIGNED_URL}}` is a required template variable which is replaced by the presigned URL of the exported PFB
+        "title": "Export All to Terra",
+        "rightIcon": "external-link"
+      },
+      {
+        "enabled": true,
         "type": "export-to-workspace", // required; export-to-workspace = export to workspace type
         "title": "Export to Workspace",
         "leftIcon": "datafile",
