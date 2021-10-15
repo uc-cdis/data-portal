@@ -171,6 +171,7 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "dataExplorerConfig": { // required only if featureFlags.explorer is true; configuration for the Data Explorer (/explorer); can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the Data Explorer
+      // Note that the fields configured in `charts` must be present in the `filters` section as well
       "project_id": { // required; GraphQL field to query for a chart (ex: this one will display the number of projects, based on the project_id)
         "chartType": "count", // required; indicates this chart will display a “count”
         "title": "Projects" // required; title to display on the chart
@@ -297,6 +298,13 @@ Below is an example, with inline comments describing what each JSON block config
       },
       {
         "enabled": true,
+        "type": "export-pfb-to-url", // export PFB to arbitrary URL; see docs/export_pfb_to_url.md
+        "targetURLTemplate": "https://terra.biodatacatalyst.nhlbi.nih.gov/#import-data?url={{PRESIGNED_URL}}", // required if type is `export-pfb-to-url`; `{{PRESIGNED_URL}}` is a required template variable which is replaced by the presigned URL of the exported PFB
+        "title": "Export All to Terra",
+        "rightIcon": "external-link"
+      },
+      {
+        "enabled": true,
         "type": "export-to-workspace", // required; export-to-workspace = export to workspace type
         "title": "Export to Workspace",
         "leftIcon": "datafile",
@@ -333,6 +341,7 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "fileExplorerConfig": { // optional; configuration for the File Explorer; can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the File Explorer
+      // Note that the fields configured in `charts` must be present in the `filters` section as well
       "data_type": { // required; GraphQL field to query for a chart (ex: this one will display a bar chart for data types of the files in the cohort)
         "chartType": "stackedBar", // required; chart type of stack bar
         "title": "File Type" // required; title of chart
@@ -418,7 +427,16 @@ Below is an example, with inline comments describing what each JSON block config
       },
       "search": {
         "searchBar": {
-          "enabled": true
+          "enabled": true,
+          "inputSubtitle": "Search Bar", // optional, subtitle of search bar
+          "placeholder": "Search studies by keyword", // optional, placeholder text of search input
+          "searchableTextFields": ["study", "age", "publication"] // optional, list of properties in data to make searchable
+                                                                  // if not present, only fields visible in the table will be searchable
+        },
+        "tagSearchDropdown": { // optional, config section for searchable tags
+          "enabled": true,
+          "collapseOnDefault": false, // optional, whether the searchable tag panel is collapsed when loading, default value is "true"
+          "collapsibleButtonText": "Study Characteristics" // optional, display text for the searchable tag panel collapse control button, default value is "Tag Panel"
         }
       },
       "advSearchFilters": {
@@ -566,7 +584,8 @@ Below is an example, with inline comments describing what each JSON block config
         "color": "rgba(112, 182, 3, 1)",
         "display": true
       }
-    ]
+    ],
+    "tagsDisplayName": "Tags" // optional, overrides the name of the mandatory tags column
   },
   "resourceBrowser": {), // see Resource Browser documentation
   "workspacePageTitle": "", // title to display above workspacePageDescription
