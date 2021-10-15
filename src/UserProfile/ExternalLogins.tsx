@@ -17,7 +17,7 @@ interface ExternalProvider {
 }
 
 const externalLogins: React.FunctionComponent = () => {
-  const [externalLoginOptions, setExternalLoginOptions] = useState(null);
+  const [externalLoginOptions, setExternalLoginOptions] = useState([]);
 
   useEffect(
     () => {
@@ -37,7 +37,7 @@ const externalLogins: React.FunctionComponent = () => {
     <React.Fragment>
       <h2>Link accounts from external data resource(s)</h2>
       <div className='external-logins'>
-        { (externalLoginOptions || []).map(
+        { (externalLoginOptions).map(
           (provider: ExternalProvider, i: number) => (
             <div className='external-login-option' key={i}>
               <div className='external-login-option__description'>
