@@ -64,13 +64,13 @@ class IllinoisMapChart extends React.Component {
           title: 'Vaccinations',
           layers: {
             V_time_data: { title: 'Vaccination Counts' },
-          }
+          },
         },
         case_layers: {
           title: 'Cases & Deaths',
           layers: {
             C_time_data: { title: 'Case Counts' },
-          }
+          },
         },
         mobility_layers: {
           title: 'Mobility',
@@ -326,7 +326,7 @@ class IllinoisMapChart extends React.Component {
       if (feature.layer.id.indexOf('mobility_data') > -1) {
         const idString = feature.layer.id.split('_')[0];
         hoverInfo.mobility_values = {};
-        hoverInfo.mobility_values[this.state.overlay_layers[`${idString}_mobility_data`].title] = formatNumberToDisplay(feature.properties[`${idString}_${this.state.sliderDate}`]);
+        hoverInfo.mobility_values[this.state.overlay_layers.mobility_layers.layers[`${idString}_mobility_data`].title] = formatNumberToDisplay(feature.properties[`${idString}_${this.state.sliderDate}`]);
       }
 
       if (this.state.popup_data.strain_data.visible === 'visible') {
