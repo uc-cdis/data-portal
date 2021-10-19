@@ -27,9 +27,11 @@ class ExplorerButtonGroup extends React.Component {
       toasterHeadline: '',
       toasterError: null,
       toasterErrorText: 'There was an error exporting your cohort.',
-      downloadingData: false,
-      downloadingManifest: false,
-      downloadingFileManifest: false,
+      downloadingInProgress: {
+        data: false,
+        manifest: false,
+        fileManifest: false,
+      },
       downloadingInProgressToasterText: 'Your download has started and it may take up to several minutes. Please do not navigate away from this page.',
       exportingToTerra: false,
       exportingToSevenBridges: false,
@@ -300,7 +302,7 @@ class ExplorerButtonGroup extends React.Component {
       {
         <div className='explorer-button-group__toaster-text'>
           <div> {this.state.toasterHeadline} </div>
-          { (this.state.downloadingData || this.state.downloadingManifest || this.state.downloadingFileManifest)
+          { (Object.values(this.state.downloadingInProgress).some((x) => x === true))
             ? <div> { this.state.downloadingInProgressToasterText } </div>
             : null}
           { (this.state.exportWorkspaceFileName)
@@ -368,7 +370,7 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   downloadData = (filename, fileFormat) => () => {
-    this.setState({ downloadingData: true, toasterOpen: true });
+    this.setState({ downloadingInProgress: { data: true }, toasterOpen: true });
     const fileTypeKey = fileFormat.toLowerCase();
     const isJsonFormat = fileTypeKey === 'json' || fileTypeKey === 'data';
     const queryArgObj = {};
@@ -382,15 +384,15 @@ class ExplorerButtonGroup extends React.Component {
       } else {
         throw Error('Error when downloading data');
       }
-      this.setState({ downloadingData: false, toasterOpen: false });
+      this.setState({ downloadingInProgress: { data: false }, toasterOpen: false });
     });
   };
 
   downloadManifest = (filename, indexType) => async () => {
     if (indexType === 'file') {
-      this.setState({ downloadingFileManifest: true, toasterOpen: true });
+      this.setState({ downloadingInProgress: { fileManifest: true }, toasterOpen: true });
     } else {
-      this.setState({ downloadingManifest: true, toasterOpen: true });
+      this.setState({ downloadingInProgress: { manifest: true }, toasterOpen: true });
     }
 
     const resultManifest = await this.getManifest(indexType);
@@ -401,16 +403,16 @@ class ExplorerButtonGroup extends React.Component {
       throw Error('Error when downloading manifest');
     }
     if (indexType === 'file') {
-      this.setState({ downloadingFileManifest: false, toasterOpen: false });
+      this.setState({ downloadingInProgress: { fileManifest: false }, toasterOpen: false });
     } else {
-      this.setState({ downloadingManifest: false, toasterOpen: false });
+      this.setState({ downloadingInProgress: { manifest: false }, toasterOpen: false });
     }
   };
 
   // REMOVE THIS CODE ONCE TERRA EXPORT WORKS
   // =========================================
   // The below code is a temporary feature for for https://ctds-planx.atlassian.net/browse/PXP-5186
-  // (Warn user about Terra entitiy threshold). This code should be removed when
+  // (Warn user about Terra entity threshold). This code should be removed when
   // Terra is no longer limited to importing <165,000 entities. (~14k subjects).
   // This file is the only file that contains code for this feature.
   exportToTerraWithWarning = () => {
@@ -734,7 +736,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       return !this.props.isLocked;
     }
     if (buttonConfig.type.startsWith('data') || buttonConfig.type === 'manifest' || buttonConfig.type === 'file-manifest') {
-      let isEnabled = !(this.state.downloadingData || this.state.downloadingManifest || this.state.downloadingFileManifest);
+      let isEnabled = Object.values(this.state.downloadingInProgress).every((x) => x === false);
       if (buttonConfig.type === 'manifest') {
         isEnabled = isEnabled && this.state.manifestEntryCount > 0;
       }
@@ -820,13 +822,13 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       return true;
     }
     if (buttonConfig.type.startsWith('data')) {
-      return this.state.downloadingData;
+      return this.state.downloadingInProgress.data;
     }
     if (buttonConfig.type === 'manifest') {
-      return this.state.downloadingManifest;
+      return this.state.downloadingInProgress.manifest;
     }
     if (buttonConfig.type === 'file-manifest') {
-      return this.state.downloadingFileManifest;
+      return this.state.downloadingInProgress.fileManifest;
     }
     if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
       return this.state.exportingToWorkspace;
