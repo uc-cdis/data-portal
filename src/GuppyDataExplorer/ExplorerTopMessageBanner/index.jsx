@@ -29,7 +29,7 @@ function ExplorerTopMessageBanner({
             <div className='top-message-banner__button-wrapper'>
               {hideGetAccessButton ? null : (
                 <Button
-                  label='Get Access'
+                  label='Request Access'
                   className='top-message-banner__button'
                   buttonType='default'
                   enabled={!!getAccessButtonLink}
