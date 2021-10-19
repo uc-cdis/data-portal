@@ -106,7 +106,6 @@ function IndexBarChart({ projectList, countNames, barChartStyle, xAxisStyle }) {
           margin={barChartStyle.margins}
           layout={barChartStyle.layout}
         >
-          <h4>Project Submission status</h4>
           <XAxis
             {...xAxisStyle}
             stroke={xAxisStyle.color}
