@@ -27,6 +27,12 @@ class ExplorerButtonGroup extends React.Component {
       toasterHeadline: '',
       toasterError: null,
       toasterErrorText: 'There was an error exporting your cohort.',
+      downloadingInProgress: {
+        data: false,
+        manifest: false,
+        fileManifest: false,
+      },
+      downloadingInProgressToasterText: 'Your download has started and it may take up to several minutes. Please do not navigate away from this page.',
       exportingToTerra: false,
       exportingToSevenBridges: false,
       exportingPFBToURL: false,
@@ -296,6 +302,9 @@ class ExplorerButtonGroup extends React.Component {
       {
         <div className='explorer-button-group__toaster-text'>
           <div> {this.state.toasterHeadline} </div>
+          { (Object.values(this.state.downloadingInProgress).some((x) => x === true))
+            ? <div> { this.state.downloadingInProgressToasterText } </div>
+            : null}
           { (this.state.exportWorkspaceFileName)
             ? <div> Most recent Workspace file name: { this.state.exportWorkspaceFileName } </div>
             : null}
@@ -361,6 +370,7 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   downloadData = (filename, fileFormat) => () => {
+    this.setState({ downloadingInProgress: { data: true }, toasterOpen: true });
     const fileTypeKey = fileFormat.toLowerCase();
     const isJsonFormat = fileTypeKey === 'json' || fileTypeKey === 'data';
     const queryArgObj = {};
@@ -374,10 +384,17 @@ class ExplorerButtonGroup extends React.Component {
       } else {
         throw Error('Error when downloading data');
       }
+      this.setState({ downloadingInProgress: { data: false }, toasterOpen: false });
     });
   };
 
   downloadManifest = (filename, indexType) => async () => {
+    if (indexType === 'file') {
+      this.setState({ downloadingInProgress: { fileManifest: true }, toasterOpen: true });
+    } else {
+      this.setState({ downloadingInProgress: { manifest: true }, toasterOpen: true });
+    }
+
     const resultManifest = await this.getManifest(indexType);
     if (resultManifest) {
       const blob = new Blob([JSON.stringify(resultManifest, null, 2)], { type: 'text/json' });
@@ -385,12 +402,17 @@ class ExplorerButtonGroup extends React.Component {
     } else {
       throw Error('Error when downloading manifest');
     }
+    if (indexType === 'file') {
+      this.setState({ downloadingInProgress: { fileManifest: false }, toasterOpen: false });
+    } else {
+      this.setState({ downloadingInProgress: { manifest: false }, toasterOpen: false });
+    }
   };
 
   // REMOVE THIS CODE ONCE TERRA EXPORT WORKS
   // =========================================
   // The below code is a temporary feature for for https://ctds-planx.atlassian.net/browse/PXP-5186
-  // (Warn user about Terra entitiy threshold). This code should be removed when
+  // (Warn user about Terra entity threshold). This code should be removed when
   // Terra is no longer limited to importing <165,000 entities. (~14k subjects).
   // This file is the only file that contains code for this feature.
   exportToTerraWithWarning = () => {
@@ -713,9 +735,14 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     if (this.props.isLocked) {
       return !this.props.isLocked;
     }
-    if (buttonConfig.type === 'manifest') {
-      return this.state.manifestEntryCount > 0;
+    if (buttonConfig.type.startsWith('data') || buttonConfig.type === 'manifest' || buttonConfig.type === 'file-manifest') {
+      let isEnabled = Object.values(this.state.downloadingInProgress).every((x) => x === false);
+      if (buttonConfig.type === 'manifest') {
+        isEnabled = isEnabled && this.state.manifestEntryCount > 0;
+      }
+      return isEnabled;
     }
+
     const pfbJobIsRunning = this.state.exportingToTerra
     || this.state.exportingToSevenBridges
     || this.state.exportingPFBToURL
@@ -793,6 +820,15 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
   isButtonPending = (buttonConfig) => {
     if (this.props.isPending) {
       return true;
+    }
+    if (buttonConfig.type.startsWith('data')) {
+      return this.state.downloadingInProgress.data;
+    }
+    if (buttonConfig.type === 'manifest') {
+      return this.state.downloadingInProgress.manifest;
+    }
+    if (buttonConfig.type === 'file-manifest') {
+      return this.state.downloadingInProgress.fileManifest;
     }
     if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
       return this.state.exportingToWorkspace;
@@ -930,7 +966,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
           * First, render dropdown buttons
           * Buttons are grouped under same dropdown if they have the same dropdownID
           * If only one button points to the same dropdownId, it won't be grouped into dropdown
-          *   but will only be rendered as sinlge normal button instead.
+          *   but will only be rendered as single normal button instead.
           */
           dropdownConfigs && Object.keys(dropdownConfigs).length > 0
           && Object.keys(dropdownConfigs)
