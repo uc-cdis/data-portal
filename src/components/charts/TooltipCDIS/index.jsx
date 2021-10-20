@@ -36,7 +36,7 @@ TooltipCDIS.propTypes = {
     PropTypes.shape({
       fill: PropTypes.string,
       name: PropTypes.string,
-      value: PropTypes.number,
+      value: PropTypes.string,
     })
   ),
 };
