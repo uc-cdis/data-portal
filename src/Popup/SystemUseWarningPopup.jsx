@@ -15,7 +15,7 @@ const handleAcceptWarning = () => {
     // we are using cookies to track acceptance over multiple sessions
     const expiry = new Date();
     const defaultDays = 'expireUseMsgDays' in components.systemUse ? components.systemUse.expireUseMsgDays : 0;
-    
+
     if (defaultDays === 0) { // session cookie
       document.cookie = 'systemUseWarning=yes; expires=0}';
     } else {
@@ -27,9 +27,10 @@ const handleAcceptWarning = () => {
 };
 
 const SystemUsePopup = (props) => {
-  const { messageText, onAccept } = props;
+  const { titleText, messageText, onAccept } = props;
   return (
     <Popup
+      title={titleText}
       message={messageText}
       rightButtons={[
         {
@@ -44,7 +45,8 @@ const SystemUsePopup = (props) => {
 };
 
 SystemUsePopup.propTypes = {
-  messageText: PropTypes.string.isRequired,
+  titleText: PropTypes.string.isRequired,
+  messageText: PropTypes.array.isRequired,
   onAccept: PropTypes.func.isRequired,
 };
 
@@ -58,7 +60,7 @@ const ReduxSystemUseWarningPopup = connect(showPopupMapState, updatePopupMapDisp
   ({ systemUseWarnPopup, onAccept }) => {
     if (systemUseWarnPopup) {
       return (
-        <SystemUsePopup messageText={components.systemUse.systemUseText} onAccept={onAccept} />);
+        <SystemUsePopup titleText={components.systemUse.systemUseTitle} messageText={components.systemUse.systemUseText} onAccept={onAccept} />);
     }
     return null;
   },
