@@ -158,7 +158,7 @@ Popup.propTypes = {
     label: PropTypes.string,
     code: PropTypes.string,
   })),
-  message: PropTypes.string,
+  message: PropTypes.array,
   leftButtons: PropTypes.arrayOf(buttonType),
   rightButtons: PropTypes.arrayOf(buttonType),
   title: PropTypes.string,
