@@ -4,7 +4,6 @@ import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
 import ExplorerErrorBoundary from './ExplorerErrorBoundary';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
-import ExplorerTopMessageBanner from './ExplorerTopMessageBanner';
 import ExplorerFilterSet from './ExplorerFilterSet';
 import { capitalizeFirstLetter } from '../utils';
 import { validateFilter } from './utils';
@@ -209,13 +208,6 @@ class GuppyDataExplorer extends React.Component {
           >
             {(data) => (
               <>
-                <ExplorerTopMessageBanner
-                  className='guppy-data-explorer__top-banner'
-                  getAccessButtonLink={this.props.getAccessButtonLink}
-                  hideGetAccessButton={this.props.hideGetAccessButton}
-                  accessibleCount={data.accessibleCount}
-                  totalCount={data.totalCount}
-                />
                 <ExplorerFilterSet
                   className='guppy-data-explorer__filter-set'
                   onOpenFilterSet={this.updateInitialAppliedFilters}
@@ -270,6 +262,8 @@ class GuppyDataExplorer extends React.Component {
                   getTotalCountsByTypeAndFilter={
                     data.getTotalCountsByTypeAndFilter
                   }
+                  getAccessButtonLink={this.props.getAccessButtonLink}
+                  hideGetAccessButton={this.props.hideGetAccessButton}
                 />
               </>
             )}

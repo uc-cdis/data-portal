@@ -6,6 +6,7 @@ import PercentageStackedBarChart from '../../gen3-ui-component/components/charts
 import Spinner from '../../components/Spinner';
 import { components } from '../../params';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
+import ExplorerRequestAccessButton from '../ExplorerRequestAccessButton';
 import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
@@ -160,6 +161,8 @@ function getChartData({
  * @property {PatientIdsConfig} patientIdsConfig
  * @property {string} nodeCountTitle
  * @property {number} tierAccessLimit
+ * @property {string} [getAccessButtonLink]
+ * @property {boolean} [hideGetAccessButton]
  */
 
 /** @param {ExplorerVisualizationProps} props */
@@ -187,6 +190,8 @@ function ExplorerVisualization({
   patientIdsConfig,
   nodeCountTitle,
   tierAccessLimit,
+  getAccessButtonLink,
+  hideGetAccessButton = false,
 }) {
   const explorerViews = ['summary view'];
   if (tableConfig.enabled) explorerViews.push('table view');
@@ -260,6 +265,16 @@ function ExplorerVisualization({
           ))}
         </div>
         <div className='guppy-explorer-visualization__button-group'>
+          {accessibleCount < totalCount && !hideGetAccessButton && (
+            <ExplorerRequestAccessButton
+              getAccessButtonLink={getAccessButtonLink}
+              tooltipText={
+                accessibleCount === 0
+                  ? 'You do not have permissions to view line-level data.'
+                  : 'You have only limited access to line-level data.'
+              }
+            />
+          )}
           {patientIdsConfig?.export && (
             <ExplorerExploreExternalButton filter={filter} />
           )}
@@ -350,6 +365,8 @@ ExplorerVisualization.propTypes = {
   patientIdsConfig: PatientIdsConfigType,
   nodeCountTitle: PropTypes.string.isRequired,
   tierAccessLimit: PropTypes.number.isRequired,
+  getAccessButtonLink: PropTypes.string,
+  hideGetAccessButton: PropTypes.bool,
 };
 
 export default ExplorerVisualization;
