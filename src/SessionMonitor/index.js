@@ -1,6 +1,6 @@
 import { logoutInactiveUsers, workspaceTimeoutInMinutes } from '../localconf';
 import getReduxStore from '../reduxStore';
-import { fetchUser, fetchUserAccess, fetchUserNoRefresh } from '../actions';
+import { fetchUser, logoutAPI } from '../actions';
 
 /** @param {string} currentURL */
 export function pageFromURL(currentURL) {
@@ -47,12 +47,19 @@ export class SessionMonitor {
     }
   }
 
+  logoutUser() {
+    getReduxStore().then((store) => {
+      store.dispatch(logoutAPI(true));
+      this.popupShown = true;
+    });
+  }
+
   updateUserActivity = () => {
     this.mostRecentActivityTimestamp = Date.now();
   };
 
   updateSession() {
-    if (isUserOnPage('login')) {
+    if (isUserOnPage('login') || this.popupShown) {
       return Promise.resolve(0);
     }
 
@@ -64,7 +71,7 @@ export class SessionMonitor {
       if (Date.now() - this.mostRecentActivityTimestamp >= inactiveTimeLimit) {
         // Allow Fence to log out the user.
         // If we don't refresh, Fence will mark them as inactive.
-        this.notifyUserIfTheyAreNotLoggedIn();
+        this.logoutUser();
         return Promise.resolve(0);
       }
     }
@@ -73,44 +80,12 @@ export class SessionMonitor {
   }
 
   refreshSession() {
-    if (isUserOnPage('login')) {
-      return Promise.resolve(0);
-    }
     // hitting Fence endpoint refreshes token
-    return getReduxStore().then((store) => {
-      store.dispatch(fetchUser()).then((response) => {
-        if (response.type === 'UPDATE_POPUP') {
-          this.popupShown = true;
-        } else {
-          store.dispatch(fetchUserAccess());
-        }
+    return getReduxStore()
+      .then((store) => store.dispatch(fetchUser()))
+      .then((action) => {
+        if (action.type === 'UPDATE_POPUP') this.popupShown = true;
       });
-    });
-  }
-
-  notifyUserIfTheyAreNotLoggedIn() {
-    /* If a logged-out user is browsing a page with ProtectedContent, this code will
-     * display the popup that informs them their session has expired.
-     * This function is similar to refreshSession() in that it checks user
-     * auth (401/403 vs 200), but it does not refresh
-     * the access token nor extend the session.
-     */
-    if (this.popupShown) {
-      return;
-    }
-
-    getReduxStore().then(
-      /** @param {{ dispatch: import('redux-thunk').ThunkDispatch; }} */
-      ({ dispatch }) => {
-        dispatch(fetchUserNoRefresh()).then((response) => {
-          if (response.type === 'UPDATE_POPUP') {
-            this.popupShown = true;
-          } else {
-            dispatch(fetchUserAccess());
-          }
-        });
-      }
-    );
   }
 }
 
