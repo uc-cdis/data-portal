@@ -10,19 +10,17 @@ const handleAcceptWarning = () => {
    * If policy is accepted then set systemUseWarnPopup to false, hiding the
    * warning.
    */
-  if (components.systemUse.displayUseMsg === 'cookie') {
-    // set a new cookie indicating we have accepted this policy if
-    // we are using cookies to track acceptance over multiple sessions
-    const expiry = new Date();
-    const defaultDays = 'expireUseMsgDays' in components.systemUse ? components.systemUse.expireUseMsgDays : 0;
+  // set a new cookie indicating we have accepted this policy
+  const expiry = new Date();
+  const defaultDays = 'expireUseMsgDays' in components.systemUse ? components.systemUse.expireUseMsgDays : 0;
 
-    if (defaultDays === 0) { // session cookie
-      document.cookie = 'systemUseWarning=yes; expires=0}';
-    } else {
-      expiry.setTime(expiry.getTime() + (defaultDays * 1440 * 1 * 60 * 1000)); // number of days
-      document.cookie = `systemUseWarning=yes; expires=${expiry.toGMTString()}`;
-    }
+  if (defaultDays === 0) { // session cookie
+    document.cookie = 'systemUseWarning=yes; expires=0}';
+  } else {
+    expiry.setTime(expiry.getTime() + (defaultDays * 1440 * 1 * 60 * 1000)); // number of days
+    document.cookie = `systemUseWarning=yes; expires=${expiry.toGMTString()}`;
   }
+
   return (dispatch) => dispatch(updateSystemUseNotice(false));
 };
 

@@ -11,7 +11,8 @@ import {
   authzPath,
   authzMappingPath,
 } from './configs';
-import { config, components } from './params';
+import { config } from './params';
+import { showSystemUse } from './localconf';
 import sessionMonitor from './SessionMonitor';
 
 export const updatePopup = (state) => ({
@@ -308,7 +309,6 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
   "systemUse" : {
        "systemUseText" : "Text Message",
         "expireUseMsgDays" : 10,
-
         "displayUseMsg": "cookie"
     }
  * displayUseMsg: define if you want message to be displayed: values are:
@@ -322,7 +322,7 @@ export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
   // displayUseMsg:
   // "cookie": use the cookie and expireValue (defaults to 0 to show use message per session
   //  undefined or systemUseText is undefined: always false
-  if (!components.systemUse || !components.systemUse.displayUseMsg) {
+  if (!showSystemUse) {
     dispatch({
       type: 'UPDATE_POPUP',
       data: {
@@ -331,24 +331,23 @@ export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
     });
     return;
   }
-
-  if (components.systemUse.displayUseMsg === 'cookie') {
-    if (document.cookie.indexOf('systemUseWarning=') >= 0) {
-      dispatch({
-        type: 'UPDATE_POPUP',
-        data: {
-          systemUseWarnPopup: false,
-        },
-      });
-    } else {
-      dispatch({
-        type: 'UPDATE_POPUP',
-        data: {
-          systemUseWarnPopup: true,
-        },
-      });
-    }
+  // look for cookie
+  if (document.cookie.indexOf('systemUseWarning=') >= 0) {
+    dispatch({
+      type: 'UPDATE_POPUP',
+      data: {
+        systemUseWarnPopup: false,
+      },
+    });
+  } else {
+    dispatch({
+      type: 'UPDATE_POPUP',
+      data: {
+        systemUseWarnPopup: true,
+      },
+    });
   }
+
   // don't change anything
 };
 
