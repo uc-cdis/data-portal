@@ -59,7 +59,7 @@ const UserProfile = ({
               popups.deleteTokenPopup === true
             && (
               <Popup
-                message={CONFIRM_DELETE_MSG}
+                message={[CONFIRM_DELETE_MSG]}
                 error={jsonToString(userProfile.delete_error)}
                 iconName='cross-key'
                 title='Inactivate API Key'
@@ -87,7 +87,7 @@ const UserProfile = ({
               popups.saveTokenPopup === true
             && (
               <Popup
-                message={SECRET_KEY_MSG}
+                message={[SECRET_KEY_MSG]}
                 error={jsonToString(userProfile.create_error)}
                 lines={[
                   { label: 'Key id:', code: userProfile.refreshCred.key_id },

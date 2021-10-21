@@ -170,7 +170,7 @@ Popup.defaultProps = {
   error: '',
   iconName: '',
   lines: [],
-  message: '',
+  message: [''],
   leftButtons: [],
   rightButtons: [],
   title: '',
