@@ -109,17 +109,18 @@ function FilterSection({
     // used for rerendering child components when reset button is clicked
     resetClickCounter: 0,
   });
+
+  /** @type {React.MutableRefObject<HTMLInputElement>} */
+  const inputElem = useRef();
   useEffect(() => {
     setState((prevState) => ({
       ...prevState,
       optionsVisibleStatus: getOptionsVisibleStatus(
-        prevState.isShowingMoreOptions
+        prevState.isShowingMoreOptions,
+        inputElem.current?.value
       ),
     }));
   }, [options]);
-
-  /** @type {React.MutableRefObject<HTMLInputElement>} */
-  const inputElem = useRef();
 
   function clearSearchInput() {
     inputElem.current.value = '';
