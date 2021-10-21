@@ -17,9 +17,10 @@ import './typedef';
  * @param {Object} prop
  * @param {ColorScheme} prop.colorScheme
  * @param {SurvivalData[]} prop.data
+ * @param {number} prop.endTime
  * @param {number} prop.timeInterval
  */
-const Plot = ({ colorScheme, data, timeInterval }) => {
+const Plot = ({ colorScheme, data, endTime, timeInterval }) => {
   const [opacity, setOpacity] = useState({});
   useEffect(() => {
     const initOpacity = {};
@@ -52,8 +53,8 @@ const Plot = ({ colorScheme, data, timeInterval }) => {
             position: 'insideBottom',
             offset: -5,
           }}
-          ticks={getXAxisTicks(data, timeInterval)}
-          domain={['dataMin', (dataMax) => Math.ceil(dataMax)]}
+          ticks={getXAxisTicks(data, timeInterval, endTime)}
+          domain={['dataMin', endTime]}
         />
         <YAxis
           label={{
@@ -106,6 +107,7 @@ Plot.propTypes = {
       ),
     })
   ).isRequired,
+  endTime: PropTypes.number.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
@@ -151,11 +153,11 @@ function SurvivalPlot({
             <div className='explorer-survival-analysis__figure-title'>
               {JSON.parse(key).value}
             </div>
-            <Plot {...{ colorScheme, data, timeInterval }} />
+            <Plot {...{ colorScheme, data, endTime, timeInterval }} />
           </Fragment>
         ))
       ) : (
-        <Plot {...{ colorScheme, data: filteredData, timeInterval }} />
+        <Plot {...{ colorScheme, data: filteredData, endTime, timeInterval }} />
       )}
     </div>
   );
