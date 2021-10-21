@@ -95,7 +95,7 @@ const checkFederatedLoginStatus = async (
         (selectedResource[manifestFieldName] || []).forEach(
           (fileMetadata) => {
             if (fileMetadata.object_id) {
-              const guidDomainPrefix = fileMetadata.object_id.match(GUID_PREFIX_PATTERN).shift();
+              const guidDomainPrefix = (fileMetadata.object_id.match(GUID_PREFIX_PATTERN) || []).shift();
               if (guidDomainPrefix) {
                 if (!guidPrefixes.includes(guidDomainPrefix)) {
                   guidPrefixes.push(guidDomainPrefix);
