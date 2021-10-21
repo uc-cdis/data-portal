@@ -317,6 +317,7 @@ storiesOf('Filters', module)
           options={['Initial Diagnosis', 'Relapse']}
           optionsInUse={['Initial Diagnosis']}
           onChange={handleChange}
+          tooltip='Foobar'
         />
       </div>
     );

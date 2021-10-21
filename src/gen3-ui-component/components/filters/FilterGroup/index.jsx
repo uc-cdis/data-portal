@@ -267,6 +267,7 @@ function FilterGroup({
             onChange={handleAnchorValueChange}
             options={filterConfig.anchor.options}
             optionsInUse={selectedAnchors[tabIndex]}
+            tooltip={filterConfig.anchor.tooltip}
           />
         )}
         {showPatientIdsFilter && (
@@ -314,6 +315,7 @@ FilterGroup.propTypes = {
       field: PropTypes.string,
       options: PropTypes.arrayOf(PropTypes.string),
       tabs: PropTypes.arrayOf(PropTypes.string),
+      tooltip: PropTypes.string,
     }),
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
