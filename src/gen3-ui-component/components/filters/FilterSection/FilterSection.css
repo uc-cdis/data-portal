@@ -275,3 +275,9 @@
 .g3-select-filter {
   margin-top: 14px;
 }
+
+.g3-filter-section__no-option {
+  font-style: italic;
+  margin-left: 14px;
+  margin-top: 14px;
+}
