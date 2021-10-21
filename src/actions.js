@@ -309,6 +309,7 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
   "systemUse" : {
        "systemUseText" : "Text Message",
         "expireUseMsgDays" : 10,
+<<<<<<< HEAD
         "displayUseMsg": "cookie"
     }
  * displayUseMsg: define if you want message to be displayed: values are:
@@ -348,6 +349,49 @@ export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
     });
   }
 
+=======
+
+        "displayUseMsg": "cookie"
+    }
+ * displayUseMsg: define if you want message to be displayed: values are:
+ *     *) "cookie": set a cookie upon acceptance default of 10 day but can be set using
+ *        expireUseMsgDays
+ *     *) expireUseMsgDays: number of days until displaying message again, set to 0 to make it
+ *        a browser session
+ */
+export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
+  // couple of option for when to display the system use warning
+  // displayUseMsg:
+  // "cookie": use the cookie and expireValue (defaults to 0 to show use message per session
+  //  undefined or systemUseText is undefined: always false
+  if (!components.systemUse || !components.systemUse.displayUseMsg) {
+    dispatch({
+      type: 'UPDATE_POPUP',
+      data: {
+        systemUseWarnPopup: false,
+      },
+    });
+    return;
+  }
+
+  if (components.systemUse.displayUseMsg === 'cookie') {
+    if (document.cookie.indexOf('systemUseWarning=') >= 0) {
+      dispatch({
+        type: 'UPDATE_POPUP',
+        data: {
+          systemUseWarnPopup: false,
+        },
+      });
+    } else {
+      dispatch({
+        type: 'UPDATE_POPUP',
+        data: {
+          systemUseWarnPopup: true,
+        },
+      });
+    }
+  }
+>>>>>>> ef25e6a935cadb984f82d1f3f7094003943d9a48
   // don't change anything
 };
 
