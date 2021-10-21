@@ -566,13 +566,16 @@ function FilterSection({
       {isTextFilter && renderSearchInput()}
       {isArrayField && renderCombineOptionButton()}
       {isSearchFilter && renderSearchFilter()}
-      {state.isExpanded && (
-        <div className='g3-filter-section__options'>
-          {(isTextFilter || isSearchFilter) && renderTextFilter(filterStatus)}
-          {isRangeFilter && renderRangeFilter(filterStatus)}
-          {isTextFilter && state.isSearchInputEmpty && renderShowMoreButton()}
-        </div>
-      )}
+      {state.isExpanded &&
+        (options.length > 0 ? (
+          <div className='g3-filter-section__options'>
+            {(isTextFilter || isSearchFilter) && renderTextFilter(filterStatus)}
+            {isRangeFilter && renderRangeFilter(filterStatus)}
+            {isTextFilter && state.isSearchInputEmpty && renderShowMoreButton()}
+          </div>
+        ) : (
+          <div className='g3-filter-section__no-option'>No data</div>
+        ))}
     </div>
   );
 }
