@@ -61,7 +61,7 @@ class Popup extends React.Component {
             }
           </div>
           <div className='popup__message'>
-            { this.props.message && <div className='high-light'>{this.props.message}</div> }
+            { this.props.message && <div className='high-light'>{this.props.message.map((text, i) => <p key={i}>{text}</p>)}</div> }
             {
               this.props.lines.length > 0
               && (
