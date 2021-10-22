@@ -16,6 +16,9 @@ module.exports = {
     es6: true,
     jest: true,
   },
+  globals: {
+    JSX: true
+  },
   plugins: [
     'react',
     'jsx-a11y',

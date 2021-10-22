@@ -8,7 +8,8 @@ import Popup from '../components/Popup';
 import { credentialCdisPath } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
 import AccessTable from '../components/tables/AccessTable';
-import { showArboristAuthzOnProfile, showFenceAuthzOnProfile } from '../configs';
+import ExternalLogins from './ExternalLogins';
+import { showArboristAuthzOnProfile, showFenceAuthzOnProfile, showExternalLoginsOnProfile } from '../configs';
 import './UserProfile.less';
 
 const NO_ACCESS_MSG = 'You have no access to storage service. Please contact an admin to get it!';
@@ -43,6 +44,11 @@ const UserProfile = ({
 
   return (
     <div className='user-profile'>
+      {
+        showExternalLoginsOnProfile
+        &&
+        <ExternalLogins />
+      }
       {
         userProfile.jtis === undefined
         && (

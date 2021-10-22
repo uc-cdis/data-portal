@@ -1,7 +1,10 @@
 import React from 'react';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { Alert, Popconfirm, Steps } from 'antd';
+import { datadogRum } from '@datadog/browser-rum';
+import {
+  Alert, Popconfirm, Steps, message,
+} from 'antd';
 
 import {
   workspaceUrl,
@@ -14,8 +17,10 @@ import {
   workspacePageTitle,
   workspacePageDescription,
 } from '../localconf';
+import { showExternalLoginsOnProfile } from '../configs';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
+import getReduxStore from '../reduxStore';
 import Spinner from '../components/Spinner';
 import jupyterIcon from '../img/icons/jupyter.svg';
 import rStudioIcon from '../img/icons/rstudio.svg';
@@ -25,6 +30,7 @@ import ohifIcon from '../img/icons/ohif-viewer.svg';
 import WorkspaceOption from './WorkspaceOption';
 import WorkspaceLogin from './WorkspaceLogin';
 import sessionMonitor from '../SessionMonitor';
+import workspaceSessionMonitor from './WorkspaceSessionMonitor';
 
 const { Step } = Steps;
 class Workspace extends React.Component {
@@ -245,15 +251,28 @@ class Workspace extends React.Component {
     return workspaceLaunchStepsConfig;
   }
 
-  regIcon = (str, pattn) => new RegExp(pattn).test(str)
+  regIcon = (str, pattern) => new RegExp(pattern).test(str)
 
   launchWorkspace = (workspace) => {
     this.setState({ workspaceID: workspace.id }, () => {
       fetchWithCreds({
         path: `${workspaceLaunchUrl}?id=${workspace.id}`,
         method: 'POST',
-      }).then(() => {
-        this.checkWorkspaceStatus();
+      }).then(({ status }) => {
+        switch (status) {
+        case 200:
+          datadogRum.addAction('workspaceLaunch', {
+            workspaceName: workspace.name,
+          });
+          this.checkWorkspaceStatus();
+          break;
+        default:
+          message.error('There is an error when trying to launch your workspace');
+          this.setState({
+            workspaceID: null,
+            workspaceLaunchStepsConfig: null,
+          });
+        }
       });
     });
   }
@@ -264,6 +283,12 @@ class Workspace extends React.Component {
       workspaceStatus: 'Terminating',
       workspaceLaunchStepsConfig: null,
     }, () => {
+      getReduxStore().then(
+        (store) => {
+          // dismiss all banner/popup, if any
+          store.dispatch({ type: 'UPDATE_WORKSPACE_ALERT', data: { showShutdownPopup: false, showShutdownBanner: false } });
+        },
+      );
       fetchWithCreds({
         path: `${workspaceTerminateUrl}`,
         method: 'POST',
@@ -310,11 +335,15 @@ class Workspace extends React.Component {
           }, () => {
             if (this.state.workspaceStatus !== 'Launching'
               && this.state.workspaceStatus !== 'Terminating') {
+              if (data.idleTimeLimit > 0) {
+                // start ws session monitor only if idleTimeLimit exists
+                workspaceSessionMonitor.start();
+              }
               clearInterval(this.state.interval);
             }
           });
         }
-      }, 5000);
+      }, 10000);
       this.setState({ interval });
     } catch (e) {
       console.log('Error checking workspace status:', e);
@@ -476,7 +505,11 @@ class Workspace extends React.Component {
                   {this.state.externalLoginOptions.length > 0
                     ? (
                       <Alert
-                        description='Please link account to additional data resources at the bottom of the page'
+                        description={
+                          showExternalLoginsOnProfile
+                            ? 'Please link account to additional data resources on the Profile Page'
+                            : 'Please link account to additional data resources at the bottom of the page'
+                        }
                         type='info'
                         banner
                         closable
@@ -506,9 +539,14 @@ class Workspace extends React.Component {
                       })
                     }
                   </div>
-                  <WorkspaceLogin
-                    providers={this.state.externalLoginOptions}
-                  />
+                  {
+                    (!showExternalLoginsOnProfile)
+                    && (
+                      <WorkspaceLogin
+                        providers={this.state.externalLoginOptions}
+                      />
+                    )
+                  }
                 </div>
               )
               : null
