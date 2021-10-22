@@ -65,13 +65,11 @@ class SummaryPieChart extends React.Component {
                         {Number(entry.value).toLocaleString()}
                       </span>
                       <br />
-                      <span className='summary-pie-chart__legend-item-value-percentage'>
-                        (
-                        {helper.percentageFormatter(this.props.showPercentage)(
-                          entry[dataKey]
-                        )}
-                        )
-                      </span>
+                      {this.props.showPercentage && (
+                        <span className='summary-pie-chart__legend-item-value-percentage'>
+                          ({helper.addPercentage(entry[dataKey])})
+                        </span>
+                      )}
                     </div>
                   </div>
                 );
