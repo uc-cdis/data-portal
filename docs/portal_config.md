@@ -31,7 +31,7 @@ Below is an example, with inline comments describing what each JSON block config
         "name": "Aliquot",
         "plural": "Aliquots"
       }
-    ],
+    ],systemUseTitle
     "chartCounts": [ // required;
       {
         "graphql": "_case_count",
@@ -140,6 +140,11 @@ Below is an example, with inline comments describing what each JSON block config
       "contact": "If you have any questions about access or the registration process, please contact ", // optional; text for the contact section of the login page
       "email": "support@datacommons.io", // optional; email for contact
       "image": "gene" // optional; images displayed on the login page
+    },
+   "systemUse" : { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
+      "systemUseTitle" : [""], // required; Title of the popup dialog
+      "systemUseText" : [""] // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
+      "expireUseMsgDays" : optional; 0, // the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
     },
     "footerLogos": [ // optional; logos to be displayed in the footer, usually sponsors
       {

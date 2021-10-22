@@ -934,8 +934,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
             && (
               <Popup
                 message={terraExportWarning.message
-                  ? terraExportWarning.message
-                  : `Warning: You have selected more subjects than are currently supported. The import may not succeed. Terra recommends slicing your data into segments of no more than ${terraExportWarning.subjectThreshold.toLocaleString()} subjects and exporting each separately. Would you like to continue anyway?`}
+                  ? [terraExportWarning.message]
+                  : [`Warning: You have selected more subjects than are currently supported. The import may not succeed. Terra recommends slicing your data into segments of no more than ${terraExportWarning.subjectThreshold.toLocaleString()} subjects and exporting each separately. Would you like to continue anyway?`]}
                 title={terraExportWarning.title
                   ? terraExportWarning.title
                   : 'Warning: Export May Fail'}

@@ -137,7 +137,7 @@ class CoreMetadataHeader extends Component {
             this.props.signedURLPopup === true
             && (
               <Popup
-                message={(!this.props.error) ? SIGNED_URL_MSG : SIGNED_URL_ERROR_MSG}
+                message={(!this.props.error) ? [SIGNED_URL_MSG] : [SIGNED_URL_ERROR_MSG]}
                 error={this.props.error}
                 lines={(!this.props.error) ? [
                   { code: this.props.signedURL },
