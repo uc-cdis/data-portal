@@ -103,7 +103,7 @@ const checkFederatedLoginStatus = async (
               } else {
                 guidsForHostnameResolution.push(fileMetadata.object_id);
               }
-            }//08648ec8-1443-491c-b4b2-db82b0d21954
+            }
           });
       },
     );
