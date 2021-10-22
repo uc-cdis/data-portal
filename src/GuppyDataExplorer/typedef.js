@@ -8,6 +8,7 @@
  * @typedef {Object} SingleChartConfig
  * @property {ChartType} chartType
  * @property {string} title
+ * @property {boolean} [showPercentage]
  */
 
 /**

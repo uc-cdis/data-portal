@@ -83,7 +83,7 @@ function getChartData({
 
   for (const field of Object.keys(chartConfig)) {
     if (aggsChartData[field]?.histogram !== undefined) {
-      const { chartType: type, title } = chartConfig[field];
+      const { chartType: type, title, showPercentage } = chartConfig[field];
       const { histogram } = aggsChartData[field];
       switch (type) {
         case 'count': {
@@ -103,6 +103,7 @@ function getChartData({
             type,
             title,
             data: histogram.map((i) => ({ name: i.key, value: i.count })),
+            showPercentage,
           });
           break;
         case 'stackedBar':
