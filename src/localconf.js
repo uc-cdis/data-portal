@@ -193,6 +193,11 @@ function buildConfig(opts) {
 
   const { dataAvailabilityToolConfig } = config;
 
+  let showSystemUse = false;
+  if (components.systemUse && components.systemUse.systemUseText) {
+    showSystemUse = true;
+  }
+
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
     showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
@@ -500,6 +505,7 @@ function buildConfig(opts) {
     ddClientToken,
     ddEnv,
     ddSampleRate,
+    showSystemUse,
   };
 }
 
