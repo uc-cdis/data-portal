@@ -164,11 +164,13 @@ Below is an example, with inline comments describing what each JSON block config
       },
       "gender": {
         "chartType": "pie", // required; pie chart type
-        "title": "Gender"
+        "title": "Gender",
+        "showPercentage": true // optional, default to false; avialable for pie and bar chart types only
       },
       "race": {
         "chartType": "bar", // required; bar chart type
         "title": "Race"
+
       },
     },
     "filters": { // required; details facet configuration for the Data Explorer
