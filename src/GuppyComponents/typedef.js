@@ -74,6 +74,7 @@
  * @property {string} field
  * @property {string[]} options
  * @property {string[]} tabs
+ * @property {string} [tooltip]
  */
 
 /**
