@@ -183,7 +183,7 @@ SummaryPieChart.propTypes = {
 SummaryPieChart.defaultProps = {
   innerRadius: 31.5,
   outerRadius: 43,
-  showPercentage: true,
+  showPercentage: false,
   percentageFixedPoint: 2,
   pieChartStyle: {
     flexGrow: 1,
