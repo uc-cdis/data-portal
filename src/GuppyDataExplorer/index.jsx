@@ -7,7 +7,7 @@ import './GuppyExplorer.css';
 import './typedef';
 
 export default function Explorer() {
-  if (explorerConfig.legnth === 0) {
+  if (explorerConfig.length === 0) {
     return null;
   }
   const history = useHistory();
