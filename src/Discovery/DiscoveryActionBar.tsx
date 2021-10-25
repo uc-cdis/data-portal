@@ -215,9 +215,7 @@ const checkDownloadStatus = (
                   },
                 });
                 setTimeout(() => window.open(output), 2000);
-                datadogRum.addAction('datasetDownload', {
-                  datasetDownload: ddActionData,
-                });
+                datadogRum.addAction('datasetDownload', ddActionData);
               } catch {
                 // job output is not a url -> is an error message
                 setDownloadStatus({
@@ -314,9 +312,7 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
     projectNumber: study.project_number,
     studyName: study.study_name,
   }));
-  datadogRum.addAction('manifestDownload', {
-    manifestDownload: ddActionData,
-  });
+  datadogRum.addAction('manifestDownload', ddActionData);
   // download the manifest
   const MANIFEST_FILENAME = 'manifest.json';
   const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'text/json' });
