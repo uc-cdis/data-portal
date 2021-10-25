@@ -180,11 +180,6 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               />
-              <Route path='/files'>
-                <ProtectedContent>
-                  <GuppyDataExplorer />
-                </ProtectedContent>
-              </Route>
               <Route path='/workspace'>
                 <ProtectedContent>
                   <Workspace />

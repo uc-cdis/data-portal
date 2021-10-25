@@ -11,16 +11,7 @@ export default function Explorer() {
     return null;
   }
   const history = useHistory();
-  const isFilesPage = history.location.pathname === '/files';
-  /** @type {number} */
-  const fileTabIndex = explorerConfig.findIndex(
-    ({ guppyConfig }) => guppyConfig?.dataType === 'file'
-  );
-  if (isFilesPage && fileTabIndex === -1) {
-    return null;
-  }
-
-  const [tabIndex, setTabIndex] = useState(isFilesPage ? fileTabIndex : 0);
+  const [tabIndex, setTabIndex] = useState(0);
   /** @type {SingleExplorerConfig} */
   const tabConfig = explorerConfig[tabIndex];
   const isMultiTabExplorer = explorerConfig.length > 1;
