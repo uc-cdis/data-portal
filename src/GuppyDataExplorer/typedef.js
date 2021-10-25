@@ -74,7 +74,7 @@
  * @property {TableConfig} table
  * @property {string} tabTitle
  * @property {string} projectId
- * @property {string} graphqlFitled
+ * @property {string} graphqlField
  * @property {string} index
  * @property {string} getAccessButtonLink
  * @property {boolean} hideGetAccessButton
