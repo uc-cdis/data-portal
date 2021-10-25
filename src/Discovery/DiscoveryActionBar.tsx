@@ -212,7 +212,10 @@ const checkDownloadStatus = (
                 setTimeout(() => window.open(output), 2000);
                 const projectNumber = selectedResources.map((study) => study.project_number);
                 const studyName = selectedResources.map((study) => study.study_name);
-                datadogRum.addAction('datasetDownload', { projectNumber, studyName });
+                datadogRum.addAction('datasetDownload', {
+                  datasetDownloadProjectNumber: projectNumber,
+                  datasetDownloadStudyName: studyName,
+                });
               } catch {
                 // job output is not a url -> is an error message
                 setDownloadStatus({
@@ -307,7 +310,10 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
   });
   const projectNumber = selectedResources.map((study) => study.project_number);
   const studyName = selectedResources.map((study) => study.study_name);
-  datadogRum.addAction('manifestDownload', { projectNumber, studyName });
+  datadogRum.addAction('manifestDownload', {
+    manifestDownloadProjectNumber: projectNumber,
+    manifestDownloadStudyName: studyName,
+  });
   // download the manifest
   const MANIFEST_FILENAME = 'manifest.json';
   const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'text/json' });
