@@ -162,11 +162,6 @@ const checkDownloadStatus = (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   selectedResources: any[],
 ) => {
-  const ddActionData = selectedResources.map((study) => ({
-    projectNumber: study.project_number,
-    studyName: study.study_name,
-  }));
-
   fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
     (statusResponse) => {
       const { status } = statusResponse.data;
@@ -215,7 +210,9 @@ const checkDownloadStatus = (
                   },
                 });
                 setTimeout(() => window.open(output), 2000);
-                datadogRum.addAction('datasetDownload', ddActionData);
+                const projectNumber = selectedResources.map((study) => study.project_number);
+                const studyName = selectedResources.map((study) => study.study_name);
+                datadogRum.addAction('datasetDownload', { projectNumber, studyName });
               } catch {
                 // job output is not a url -> is an error message
                 setDownloadStatus({
@@ -308,11 +305,9 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
       }
     }
   });
-  const ddActionData = selectedResources.map((study) => ({
-    projectNumber: study.project_number,
-    studyName: study.study_name,
-  }));
-  datadogRum.addAction('manifestDownload', ddActionData);
+  const projectNumber = selectedResources.map((study) => study.project_number);
+  const studyName = selectedResources.map((study) => study.study_name);
+  datadogRum.addAction('manifestDownload', { projectNumber, studyName });
   // download the manifest
   const MANIFEST_FILENAME = 'manifest.json';
   const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'text/json' });
