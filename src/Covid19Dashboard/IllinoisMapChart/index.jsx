@@ -60,14 +60,29 @@ class IllinoisMapChart extends React.Component {
         // Additional layers used as examples enable here
         us_counties: { title: 'US Counties', visible: 'visible' },
         il_population: { title: 'IL Population', visible: 'visible' }, */
-        V_time_data: { title: 'Vaccination Data' },
-        C_time_data: { title: 'Case Data' },
-        rnr_mobility_data: { title: 'Retail & Recreation' },
-        gnp_mobility_data: { title: 'Grocery & Pharmacy' },
-        prk_mobility_data: { title: 'Parks' },
-        trn_mobility_data: { title: 'Transit Stations' },
-        wrk_mobility_data: { title: 'Workplaces' },
-        res_mobility_data: { title: 'Residential' },
+        vaccination_layers: {
+          title: 'Vaccinations',
+          layers: {
+            V_time_data: { title: 'Vaccination Counts' },
+          },
+        },
+        case_layers: {
+          title: 'Cases & Deaths',
+          layers: {
+            C_time_data: { title: 'Case Counts' },
+          },
+        },
+        mobility_layers: {
+          title: 'Mobility',
+          layers: {
+            rnr_mobility_data: { title: 'Retail & Recreation' },
+            gnp_mobility_data: { title: 'Grocery & Pharmacy' },
+            prk_mobility_data: { title: 'Parks' },
+            trn_mobility_data: { title: 'Transit Stations' },
+            wrk_mobility_data: { title: 'Workplaces' },
+            res_mobility_data: { title: 'Residential' },
+          },
+        },
       },
       popup_data: {
         /*
@@ -311,7 +326,7 @@ class IllinoisMapChart extends React.Component {
       if (feature.layer.id.indexOf('mobility_data') > -1) {
         const idString = feature.layer.id.split('_')[0];
         hoverInfo.mobility_values = {};
-        hoverInfo.mobility_values[this.state.overlay_layers[`${idString}_mobility_data`].title] = formatNumberToDisplay(feature.properties[`${idString}_${this.state.sliderDate}`]);
+        hoverInfo.mobility_values[this.state.overlay_layers.mobility_layers.layers[`${idString}_mobility_data`].title] = formatNumberToDisplay(feature.properties[`${idString}_${this.state.sliderDate}`]);
       }
 
       if (this.state.popup_data.strain_data.visible === 'visible') {
