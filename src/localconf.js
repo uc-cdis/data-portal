@@ -107,22 +107,6 @@ function buildConfig(opts) {
       ? `${hostname}manifests/`
       : ensureTrailingSlash(manifestServiceURL);
 
-  const explorerConfig = config.explorerConfig ?? [];
-  // for backward compatibilities
-  if (explorerConfig.length === 0) {
-    if (config.dataExplorerConfig)
-      explorerConfig.push({
-        tabTitle: 'Data',
-        ...config.dataExplorerConfig,
-      });
-
-    if (config.fileExplorerConfig)
-      explorerConfig.push({
-        tabTitle: 'File',
-        ...config.fileExplorerConfig,
-      });
-  }
-
   const showFenceAuthzOnProfile = config.showFenceAuthzOnProfile ?? true;
   const { terraExportWarning } = config;
   const enableResourceBrowser = config.resourceBrowser ?? true;
@@ -212,7 +196,7 @@ function buildConfig(opts) {
     authzPath,
     enableResourceBrowser,
     resourceBrowserPublic,
-    explorerConfig,
+    explorerConfig: config.explorerConfig,
     headers,
   };
 }

@@ -11,27 +11,30 @@ Example of a DAT for longitudinal data:
 
 The DAT requires the `dataAvailabilityToolConfig` block in `gitops.json`. This is the configuration for the example DAT above:
 
-```
-"dataAvailabilityToolConfig": {
-    "guppyConfig": {
-        "dataType": "follow_up",
-        "mainField": "visit_number",
-        "mainFieldTitle": "Visit number",
-        "mainFieldIsNumeric": true,
-        "aggFields": [
-            "age_at_visit",
-            "abcv",
-            "thrpyv",
-            "trzv"
-        ],
-        "fieldMapping": [
-            {"field": "abcv", "name": "Abcavir Use"},
-            {"field": "thrpyv", "name": "Therapy Type"},
-            {"field": "trzv", "name": "Terazol Use"},
-            {"field": "subject_id", "name": "Subjects"}
-        ],
-        "colorRange": ["#EBF7FB", "#1769A3"]
+```jsonc
+{
+  "explorerConfig": [
+    {
+      // ... other explorer config options ...
+
+      "dataAvailabilityToolConfig": {
+        "guppyConfig": {
+          "dataType": "follow_up",
+          "mainField": "visit_number",
+          "mainFieldTitle": "Visit number",
+          "mainFieldIsNumeric": true,
+          "aggFields": ["age_at_visit", "abcv", "thrpyv", "trzv"],
+          "fieldMapping": [
+            { "field": "abcv", "name": "Abcavir Use" },
+            { "field": "thrpyv", "name": "Therapy Type" },
+            { "field": "trzv", "name": "Terazol Use" },
+            { "field": "subject_id", "name": "Subjects" }
+          ],
+          "colorRange": ["#EBF7FB", "#1769A3"]
+        }
+      }
     }
+  ]
 }
 ```
 
