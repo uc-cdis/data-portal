@@ -43,7 +43,7 @@ class Covid19Dashboard extends React.Component {
 
     // fetch all data in `dashboardDataLocations`
     Object.entries(dashboardDataLocations).forEach(
-      e => this.props.fetchDashboardData(e[0], e[1]),
+      (e) => this.props.fetchDashboardData(e[0], e[1]),
     );
   }
 
@@ -130,7 +130,7 @@ class Covid19Dashboard extends React.Component {
               yAxisId='left'
               type='number'
               domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
-              tickFormatter={val => Number(val).toLocaleString()}
+              tickFormatter={(val) => Number(val).toLocaleString()}
               fontSize={10}
             />
             <YAxis
@@ -139,7 +139,7 @@ class Covid19Dashboard extends React.Component {
               orientation='right'
               type='number'
               domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
-              tickFormatter={val => Number(val).toLocaleString()}
+              tickFormatter={(val) => Number(val).toLocaleString()}
               fontSize={10}
             />
             <Tooltip content={this.renderLocationPopupTooltip} />
@@ -196,7 +196,7 @@ class Covid19Dashboard extends React.Component {
       },
     ];
     carouselChartsConfig = carouselChartsConfig.concat(
-      Object.keys(imgProps).map(propName => ({
+      Object.keys(imgProps).map((propName) => ({
         type: 'image',
         prop: propName,
         title: (imgMetadata[propName] && imgMetadata[propName].title) || null,

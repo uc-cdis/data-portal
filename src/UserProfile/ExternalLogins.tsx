@@ -16,7 +16,7 @@ interface ExternalProvider {
     }[]
 }
 
-const externalLogins: React.FunctionComponent = () => {
+const ExternalLogins: React.FunctionComponent = () => {
   const [externalLoginOptions, setExternalLoginOptions] = useState([]);
 
   useEffect(
@@ -81,4 +81,4 @@ const externalLogins: React.FunctionComponent = () => {
   );
 };
 
-export default externalLogins;
+export default ExternalLogins;
