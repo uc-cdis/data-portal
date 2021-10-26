@@ -10,19 +10,21 @@ The use of anchored filters can be specified using a portal configuration option
 
 ```jsonc
 {
-  "dataExplorerConfig": {
-    "filters": {
-      "anchor": {
-        "field": "",
-        "options": [""],
-        "tabs": [""],
-        "tooltip": "" // optional
-      },
-      "tabs": [
-        // ...
-      ]
+  "explorerConfig": [
+    {
+      "filters": {
+        "anchor": {
+          "field": "",
+          "options": [""],
+          "tabs": [""],
+          "tooltip": "" // optional
+        },
+        "tabs": [
+          // ...
+        ]
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -66,7 +68,7 @@ type FilterState = {
 };
 ```
 
-An anchor label value is formated as `[anchorField]:[anchorValue]`, where `[anchorField]` is the `dataExplorerConfig.filters.anchor.field` value in the portal configuration and `[anchorValue]` is one of the `dataExplorerConfig.filters.anchor.options` values in the portal configuration that is selected by the user.
+An anchor label value is formated as `[anchorField]:[anchorValue]`, where `[anchorField]` is the `explorerConfig[i].filters.anchor.field` value in the portal configuration and `[anchorValue]` is one of the `explorerConfig[i].filters.anchor.options` values in the portal configuration that is selected by the user.
 
 The anchor label is used only if anchor value is set to be a non-empty value (i.e. not "Any").
 

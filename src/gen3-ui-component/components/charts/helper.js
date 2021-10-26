@@ -107,16 +107,16 @@ const getSQONValues = (sqon, field) => {
   return sqonValues;
 };
 
-const getCharts = (data, dataExplorerConfig, sqon) => {
+const getCharts = (data, singleExplorerConfig, sqon) => {
   const countItems = [];
   const summaries = [];
   const stackedBarCharts = [];
-  const { arrangerConfig } = dataExplorerConfig;
+  const { arrangerConfig } = singleExplorerConfig;
 
   if (data && data[arrangerConfig.graphqlField].aggregations) {
     const fields = data[arrangerConfig.graphqlField].aggregations;
     Object.keys(fields).forEach((field) => {
-      const fieldConfig = dataExplorerConfig.charts[field];
+      const fieldConfig = singleExplorerConfig.charts[field];
       const sqonValues = getSQONValues(sqon, field);
       if (fieldConfig) {
         switch (fieldConfig.chartType) {

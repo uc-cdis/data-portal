@@ -116,6 +116,10 @@ function stringify(value, variables = [], spaces = 0) {
   return doStringify(value, variables, 0, spaces);
 }
 
+function isPlainObject(o) {
+  return !!o && typeof o === 'object' && !Array.isArray(o);
+}
+
 /**
  * Build a configuration that does a 2-level merge
  * of the default and app configs excluding 'components'
@@ -131,18 +135,12 @@ function buildConfig(appIn, data) {
   const result = { ...defaultConfig, ...appConfig };
   delete result.components;
   Object.keys(result).forEach((k) => {
-    if (typeof result[k] === 'object') {
-      const defaultVal = defaultConfig[k];
-      const appVal = appConfig[k];
-      if (
-        defaultVal &&
-        appVal &&
-        typeof defaultVal === 'object' &&
-        typeof appVal === 'object'
-      ) {
-        result[k] = { ...defaultVal, ...appVal };
-      }
-    }
+    if (
+      isPlainObject(result[k]) &&
+      isPlainObject(defaultConfig[k]) &&
+      isPlainObject(appConfig[k])
+    )
+      result[k] = { ...defaultConfig[k], ...appConfig[k] };
   });
   return result;
 }
@@ -154,8 +152,8 @@ function getConsortiumList(dict) {
 
 function getEnumFilterList(config, dict) {
   const filterSet = new Set();
-  if (config.dataExplorerConfig?.filters?.tabs !== undefined)
-    for (const { fields } of config.dataExplorerConfig.filters.tabs)
+  for (const { filters } of config.explorerConfig ?? [])
+    for (const { fields } of filters.tabs ?? [])
       for (const field of fields) filterSet.add(field);
 
   const enumPropSet = new Set();
