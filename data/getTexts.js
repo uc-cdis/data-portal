@@ -154,8 +154,8 @@ function getConsortiumList(dict) {
 
 function getEnumFilterList(config, dict) {
   const filterSet = new Set();
-  if (config.dataExplorerConfig?.filters?.tabs !== undefined)
-    for (const { fields } of config.dataExplorerConfig.filters.tabs)
+  for (const { filters } of config.explorerConfig ?? [])
+    for (const { fields } of filters.tabs ?? [])
       for (const field of fields) filterSet.add(field);
 
   const enumPropSet = new Set();
