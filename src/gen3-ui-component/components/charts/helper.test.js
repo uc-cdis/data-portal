@@ -148,7 +148,7 @@ describe('helper', () => {
     },
   };
 
-  const dataExplorerConfig = {
+  const singleExplorerConfig = {
     arrangerConfig: {
       graphqlField: 'subject',
     },
@@ -216,7 +216,7 @@ describe('helper', () => {
   });
 
   it('gets charts', () => {
-    const charts = helper.getCharts(rawData, dataExplorerConfig);
+    const charts = helper.getCharts(rawData, singleExplorerConfig);
     expect(charts.countItems).toEqual([projectCountData]);
     expect(charts.summaries).toEqual([summaryData]);
     expect(charts.stackedBarCharts).toEqual([]);
