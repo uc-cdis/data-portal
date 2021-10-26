@@ -11,7 +11,6 @@ import './page.less';
 function CoreMetadataPage() {
   return (
     <div className='core-metadata-page'>
-      <BackLink url='/files' label='Back to File Explorer' />
       <div className='core-metadata-page__grid'>
         <div className='core-metadata-page__picture'>
           <ReduxFileTypePicture dictIcons={dictIcons} />
