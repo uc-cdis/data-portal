@@ -41,6 +41,17 @@ An example of `explorerConfig` is (some contents are omitted for conciseness):
         // optional; fields (must exist in "fields" list above) to display as clickable buttons
         "linkFields": ["url"]
       },
+      "survivalAnalysis": {
+        // optional; if missing, survival analysis feature won't be used
+        "result": {
+          // optional; if true, fetch and display calculated p-value for log-rank test
+          "pval": false,
+          // optional; if true, fetch and display number-at-risk table
+          "risktable": false,
+          // optional; if true, fetch and plot survival rates
+          "survival": false
+        }
+      },
       "guppyConfig": {
         // must match the index “type” in the guppy configuration block in the manifest.json
         "dataType": "case",
@@ -106,17 +117,6 @@ An example of `explorerConfig` is (some contents are omitted for conciseness):
         // optional; if true, display a button/modal to export the current cohort (patient ids set) to external data commons
         "export": false
       },
-      // optional
-      "survivalAnalysis": {
-        "result": {
-          // optional; if true, fetch and display calculated p-value for log-rank test
-          "pval": false,
-          // optional; if true, fetch and display number-at-risk table
-          "risktable": false,
-          // optional; if true, fetch and plot survival rates
-          "survival": false
-        }
-      },
       // optional; see "docs/data_availability_tool.md" for details
       "dataAvailabilityToolConfig": {}
     },
@@ -175,6 +175,7 @@ An example of `explorerConfig` is (some contents are omitted for conciseness):
 
 - `tabTitle`: Optional. If omitted, will default to use the value of `guppyConfig.dataType` of this tab.
 - `filters`: Required.
+- `survivalAnalysis`: See [this external page](https://github.com/chicagopcdc/Documents/blob/master/GEN3/survival-analysis-tool/requirements.md) for further information.
 - `guppyConfig`: Required.
   - `dataType`: Required. Must match the index “type” in the guppy configuration block in the manifest.json.
   - `nodeCountTitle`: Required. Plural of root node.
@@ -185,7 +186,6 @@ An example of `explorerConfig` is (some contents are omitted for conciseness):
     - "export" for exporting to Terra
     - "export-to-pfb" for exporting to PFB
     - "export-to-workspace" for exporting to workspace
-- `survivalAnalysis`: See [this external page](https://github.com/chicagopcdc/Documents/blob/master/GEN3/survival-analysis-tool/requirements.md) for further information.
 - `dataAvailabilityToolConfig`: See [this page](./data_availability_tool.md) for further information.
 
 For a complete list of required and optional fields for a tab configuration object, please refer to [Portal Config](./portal_config.md).
