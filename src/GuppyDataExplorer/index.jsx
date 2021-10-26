@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import { guppyUrl, tierAccessLimit, explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
@@ -10,7 +9,6 @@ export default function Explorer() {
   if (explorerConfig.length === 0) {
     return null;
   }
-  const history = useHistory();
   const [tabIndex, setTabIndex] = useState(0);
   /** @type {SingleExplorerConfig} */
   const tabConfig = explorerConfig[tabIndex];
@@ -65,7 +63,6 @@ export default function Explorer() {
             terraTemplate: tabConfig.terraTemplate,
             sevenBridgesExportURL: tabConfig.sevenBridgesExportURL,
           }}
-          history={history}
           tierAccessLimit={tierAccessLimit}
           getAccessButtonLink={tabConfig.getAccessButtonLink}
           hideGetAccessButton={tabConfig.hideGetAccessButton}

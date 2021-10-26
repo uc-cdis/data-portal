@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
 import ExplorerErrorBoundary from './ExplorerErrorBoundary';
 import ExplorerVisualization from './ExplorerVisualization';
@@ -63,7 +64,6 @@ function extractExplorerStateFromURL(
  * @property {PatientIdsConfig} patientIdsConfig
  * @property {ChartConfig} chartConfig
  * @property {ButtonConfig} buttonConfig
- * @property {import('history').History} history
  * @property {number} tierAccessLimit
  * @property {string} getAccessButtonLink
  * @property {boolean} hideGetAccessButton
@@ -82,12 +82,12 @@ function GuppyDataExplorer({
   patientIdsConfig,
   chartConfig,
   buttonConfig,
-  history,
   tierAccessLimit,
   getAccessButtonLink,
   hideGetAccessButton = false,
   adminAppliedPreFilters = emptyAdminAppliedPreFilters,
 }) {
+  const history = useHistory();
   const initialState = extractExplorerStateFromURL(
     new URLSearchParams(history.location.search),
     filterConfig,
@@ -150,14 +150,12 @@ function GuppyDataExplorer({
     }
 
     if (!isBrowserNavigation.current)
-      history.push(
-        {
-          search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
-            '&'
-          ),
-        },
-        { scrollY: window.scrollY }
-      );
+      history.push({
+        search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
+          '&'
+        ),
+        state: { scrollY: window.scrollY },
+      });
   }
 
   /** @param {string[]} patientIds */
@@ -283,7 +281,6 @@ GuppyDataExplorer.propTypes = {
   patientIdsConfig: PatientIdsConfigType,
   chartConfig: ChartConfigType.isRequired,
   buttonConfig: ButtonConfigType.isRequired,
-  history: PropTypes.object.isRequired,
   tierAccessLimit: PropTypes.number.isRequired,
   getAccessButtonLink: PropTypes.string,
   hideGetAccessButton: PropTypes.bool,
