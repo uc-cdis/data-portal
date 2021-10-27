@@ -241,16 +241,6 @@ export function intersection(aList, bList) {
 export const parseParamWidth = (width) =>
   typeof width === 'number' ? `${width}px` : width;
 
-/** @param {string} pathname */
-export const isPageFullScreen = (pathname) =>
-  !!(
-    pathname &&
-    (pathname.toLowerCase() === '/dd' ||
-      pathname.toLowerCase().startsWith('/dd/') ||
-      pathname.toLowerCase() === '/cohort-tools' ||
-      pathname.toLowerCase().startsWith('/cohort-tools/'))
-  );
-
 /**
  * @param {import('react-select').Theme} theme
  * @returns {import('react-select').Theme}
