@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -19,6 +19,7 @@ import {
   // workspaceUrl,
   // workspaceErrorUrl,
 } from './localconf';
+import { fetchVersionInfo } from './actions';
 import { gaTracking } from './params';
 import GA, { RouteTracker } from './components/GoogleAnalytics';
 import isEnabled from './helpers/featureFlags';
@@ -47,6 +48,9 @@ const UserProfile = React.lazy(() => import('./UserProfile/ReduxUserProfile'));
 // const Workspace = React.lazy(() => import('./Workspace'));
 
 function App({ store }) {
+  useEffect(() => {
+    store.dispatch(fetchVersionInfo());
+  }, []);
   return (
     <Provider store={store}>
       <BrowserRouter basename={basename}>
