@@ -12,8 +12,6 @@ import {
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
-import { isPageFullScreen } from '../utils';
-import './ProtectedContent.css';
 
 /**
  * @typedef {Object} ProtectedContentState
@@ -192,20 +190,15 @@ function ProtectedContent({
 
   if (state.redirectTo) return <Redirect to={state.redirectTo} />;
 
-  const pageClassName = isPageFullScreen(location.pathname)
-    ? 'protected-content protected-content--full-screen'
-    : 'protected-content';
   return (
-    <div className={pageClassName}>
-      {(isPublic
-        ? (state.dataLoaded || typeof filter !== 'function') && children
-        : state.authenticated && (
-            <>
-              <ReduxAuthTimeoutPopup />
-              {children}
-            </>
-          )) || <Spinner />}
-    </div>
+    (isPublic
+      ? (state.dataLoaded || typeof filter !== 'function') && children
+      : state.authenticated && (
+          <>
+            <ReduxAuthTimeoutPopup />
+            {children}
+          </>
+        )) || <Spinner />
   );
 }
 
