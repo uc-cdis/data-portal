@@ -7,7 +7,7 @@ import './Footer.css';
  * @param {string} [props.dataVersion]
  * @param {{ href: string; text: string; }[]} [props.links]
  * @param {{ alt: string; height: number; href: string; src: string; }[]} props.logos
- * @param {{ footerHref: string; text: string; }} [props.privacyPolicy]
+ * @param {{ file?: string; footerHref: string; routeHref?: string; text: string }} [props.privacyPolicy]
  */
 function Footer({ dataVersion = '', links, logos, privacyPolicy }) {
   return (
@@ -87,8 +87,10 @@ Footer.propTypes = {
     })
   ).isRequired,
   privacyPolicy: PropTypes.exact({
-    footerHref: PropTypes.string,
-    text: PropTypes.string,
+    file: PropTypes.string,
+    footerHref: PropTypes.string.isRequired,
+    routeHref: PropTypes.string,
+    text: PropTypes.string.isRequired,
   }),
 };
 
