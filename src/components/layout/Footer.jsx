@@ -4,20 +4,21 @@ import './Footer.css';
 
 /**
  * @param {Object} props
+ * @param {string} [props.dataVersion]
  * @param {{ href: string; text: string; }[]} [props.links]
  * @param {{ alt: string; height: number; href: string; src: string; }[]} props.logos
  * @param {{ footerHref: string; text: string; }} [props.privacyPolicy]
  */
-function Footer({ links, logos, privacyPolicy }) {
+function Footer({ dataVersion = '', links, logos, privacyPolicy }) {
   return (
     <footer>
       <nav className='footer__nav' aria-label='Footer Navigation'>
-        {process.env.DATA_RELEASE_VERSION && (
+        {dataVersion !== '' && (
           <div className='footer__data-release-version-area'>
             <span className='footer__data-release-version-area--title'>
               Data Release Version:
             </span>
-            {process.env.DATA_RELEASE_VERSION}
+            {dataVersion}
           </div>
         )}
         <div className='footer__spacer-area' />
@@ -70,21 +71,22 @@ function Footer({ links, logos, privacyPolicy }) {
 }
 
 Footer.propTypes = {
+  dataVersion: PropTypes.string,
   links: PropTypes.arrayOf(
-    PropTypes.shape({
+    PropTypes.exact({
       href: PropTypes.string.isRequired,
       text: PropTypes.string.isRequired,
     })
   ),
   logos: PropTypes.arrayOf(
-    PropTypes.shape({
+    PropTypes.exact({
       alt: PropTypes.string.isRequired,
       height: PropTypes.number,
       href: PropTypes.string.isRequired,
       src: PropTypes.string.isRequired,
     })
   ).isRequired,
-  privacyPolicy: PropTypes.shape({
+  privacyPolicy: PropTypes.exact({
     footerHref: PropTypes.string,
     text: PropTypes.string,
   }),

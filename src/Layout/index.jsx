@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useRouteMatch } from 'react-router-dom';
 import { components } from '../params';
 import dictIcons from '../img/icons/index';
-import Footer from '../components/layout/Footer';
+import ReduxFooter from './ReduxFooter';
 import ScreenSizeWarning from '../components/ScreenSizeWarning';
 import ReduxTopBar from './ReduxTopBar';
 import ReduxNavBar from './ReduxNavBar';
@@ -27,7 +27,7 @@ function Layout({ children }) {
       </header>
       <main>{children}</main>
       {isFooterHidden || (
-        <Footer
+        <ReduxFooter
           links={components.footer?.links}
           logos={components.footerLogos}
           privacyPolicy={components.privacyPolicy}
