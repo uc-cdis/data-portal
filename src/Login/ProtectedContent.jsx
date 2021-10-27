@@ -189,17 +189,16 @@ function ProtectedContent({
   }, [location]);
 
   if (state.redirectTo) return <Redirect to={state.redirectTo} />;
-
-  return (
-    (isPublic
-      ? (state.dataLoaded || typeof filter !== 'function') && children
-      : state.authenticated && (
-          <>
-            <ReduxAuthTimeoutPopup />
-            {children}
-          </>
-        )) || <Spinner />
-  );
+  if (isPublic && (state.dataLoaded || typeof filter !== 'function'))
+    return children;
+  if (state.authenticated)
+    return (
+      <>
+        <ReduxAuthTimeoutPopup />
+        {children}
+      </>
+    );
+  return <Spinner />;
 }
 
 ProtectedContent.propTypes = {
