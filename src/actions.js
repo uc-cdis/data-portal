@@ -297,8 +297,9 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
           },
         });
       } else {
-        console.log('logoutAPI:' , document.cookie);
+        console.log('logoutAPI:', document.cookie);
         document.location.replace(response.url);
+        console.log('logoutAPI:', document.cookie);
       }
     });
 };
