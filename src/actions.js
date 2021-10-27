@@ -8,6 +8,7 @@ import {
   hostname,
   submissionApiPath,
   authzPath,
+  guppyUrl,
 } from './localconf';
 import { config } from './params';
 
@@ -348,7 +349,7 @@ export const fetchDictionary = () => (dispatch) =>
 /** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
 export const fetchVersionInfo = () => (dispatch) =>
   fetchWithCreds({
-    path: `${apiPath}_version`,
+    path: `${guppyUrl}/_data_version`,
     method: 'GET',
     useCache: true,
   }).then(({ status, data }) => {
