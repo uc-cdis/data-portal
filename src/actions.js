@@ -297,6 +297,7 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
           },
         });
       } else {
+        console.log('logoutAPI:' , document.cookie);
         document.location.replace(response.url);
       }
     });
@@ -321,6 +322,8 @@ export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
   // displayUseMsg:
   // "cookie": use the cookie and expireValue (defaults to 0 to show use message per session
   //  undefined or systemUseText is undefined: always false
+  console.log('checkIfDisplaySystemUseNotice:' , document.cookie);
+
   if (!showSystemUse) {
     dispatch({
       type: 'UPDATE_POPUP',
@@ -332,6 +335,8 @@ export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
   }
   // look for cookie
   if (document.cookie.indexOf('systemUseWarning=') >= 0) {
+    console.log("cookie found");
+
     dispatch({
       type: 'UPDATE_POPUP',
       data: {
@@ -339,6 +344,7 @@ export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
       },
     });
   } else {
+    console.log("cookie not found");
     dispatch({
       type: 'UPDATE_POPUP',
       data: {
