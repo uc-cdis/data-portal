@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import { guppyUrl, tierAccessLimit, explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
@@ -10,8 +11,25 @@ export default function Explorer() {
     return null;
   }
   const explorerIds = explorerConfig.map(({ id }) => id);
-  const initialExplorerId = explorerIds[0];
+  const history = useHistory();
+
+  const initialSearchParams = new URLSearchParams(history.location.search);
+  const initialSearchParamId = initialSearchParams.has('id')
+    ? Number(initialSearchParams.get('id'))
+    : undefined;
+  const initialExplorerId = explorerIds.includes(initialSearchParamId)
+    ? initialSearchParamId
+    : explorerIds[0];
+
   const [explorerId, setExporerId] = useState(initialExplorerId);
+  useEffect(() => {
+    const searchParams = new URLSearchParams(history.location.search);
+    searchParams.set('id', String(explorerId));
+    history.push({
+      search: Array.from(searchParams.entries(), (e) => e.join('=')).join('&'),
+    });
+  }, [explorerId]);
+
   /** @type {SingleExplorerConfig} */
   const config = explorerConfig.find(({ id }) => id === explorerId);
   const isMultiExplorer = explorerConfig.length > 1;
