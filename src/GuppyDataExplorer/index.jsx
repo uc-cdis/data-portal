@@ -18,7 +18,7 @@ export default function Explorer() {
     <div className='guppy-explorer'>
       {isMultiTabExplorer && (
         <div className='guppy-explorer__tabs'>
-          {explorerConfig.map(({ tabTitle, guppyConfig }, index) => (
+          {explorerConfig.map(({ guppyConfig, label }, index) => (
             <div
               key={index}
               className={'guppy-explorer__tab'.concat(
@@ -34,12 +34,7 @@ export default function Explorer() {
               role='button'
               tabIndex={0}
             >
-              <h3>
-                {tabTitle ||
-                  (guppyConfig?.dataType
-                    ? capitalizeFirstLetter(guppyConfig.dataType)
-                    : '')}
-              </h3>
+              <h3>{label || capitalizeFirstLetter(guppyConfig.dataType)}</h3>
             </div>
           ))}
         </div>
