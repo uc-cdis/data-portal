@@ -54,7 +54,7 @@ export default function Explorer() {
               role='button'
               tabIndex={0}
             >
-              <h3>{label || capitalizeFirstLetter(guppyConfig.dataType)}</h3>
+              <h3>{capitalizeFirstLetter(label || guppyConfig.dataType)}</h3>
             </div>
           ))}
         </div>
