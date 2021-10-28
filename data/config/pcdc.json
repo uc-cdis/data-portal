@@ -118,8 +118,8 @@
   },
   "explorerConfig": [
     {
-      "id": 0,
-      "label": "Data",
+      "id": 1,
+      "label": "data",
       "charts": {
         "sex": {
           "chartType": "bar",
