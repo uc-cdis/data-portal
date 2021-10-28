@@ -118,6 +118,8 @@
   },
   "explorerConfig": [
     {
+      "id": 0,
+      "label": "Data",
       "charts": {
         "sex": {
           "chartType": "bar",
@@ -179,9 +181,6 @@
           }
         ]
       },
-      "projectId": "search",
-      "graphqlField": "subject",
-      "index": "",
       "buttons": [
         {
           "enabled": true,
