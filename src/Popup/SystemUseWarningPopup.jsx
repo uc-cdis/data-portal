@@ -15,10 +15,10 @@ const handleAcceptWarning = () => {
   const defaultDays = 'expireUseMsgDays' in components.systemUse ? components.systemUse.expireUseMsgDays : 0;
 
   if (defaultDays === 0) { // session cookie
-    document.cookie = 'systemUseWarning=yes; expires=0; path=/';
+    document.cookie = 'systemUseWarning=yes; expires=0; path=/; domain=.planx-pla.net';
   } else {
     expiry.setTime(expiry.getTime() + (defaultDays * 1440 * 1 * 60 * 1000)); // number of days
-    document.cookie = `systemUseWarning=yes; expires=${expiry.toGMTString()}; path=/`;
+    document.cookie = `systemUseWarning=yes; expires=${expiry.toGMTString()}; path=/; domain=.planx-pla.net`;
   }
 
   return (dispatch) => dispatch(updateSystemUseNotice(false));

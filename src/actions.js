@@ -323,7 +323,7 @@ export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
   // displayUseMsg:
   // "cookie": use the cookie and expireValue (defaults to 0 to show use message per session
   //  undefined or systemUseText is undefined: always false
-  console.log('checkIfDisplaySystemUseNotice:' , document.cookie);
+  console.log('checkIfDisplaySystemUseNotice: ', document.cookie);
 
   if (!showSystemUse) {
     dispatch({
