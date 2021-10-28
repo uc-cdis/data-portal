@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import { guppyUrl, tierAccessLimit, explorerConfig } from '../localconf';
@@ -22,13 +22,10 @@ export default function Explorer() {
     : explorerIds[0];
 
   const [explorerId, setExporerId] = useState(initialExplorerId);
-  useEffect(() => {
-    const searchParams = new URLSearchParams(history.location.search);
-    searchParams.set('id', String(explorerId));
-    history.push({
-      search: Array.from(searchParams.entries(), (e) => e.join('=')).join('&'),
-    });
-  }, [explorerId]);
+  function updateExplorerId(id) {
+    setExporerId(id);
+    history.push({ search: `id=${id}` });
+  }
 
   /** @type {SingleExplorerConfig} */
   const config = explorerConfig.find(({ id }) => id === explorerId);
@@ -44,11 +41,11 @@ export default function Explorer() {
               className={'guppy-explorer__tab'.concat(
                 explorerId === id ? ' guppy-explorer__tab--selected' : ''
               )}
-              onClick={() => setExporerId(id)}
+              onClick={() => updateExplorerId(id)}
               onKeyPress={(e) => {
                 if (e.charCode === 13 || e.charCode === 32) {
                   e.preventDefault();
-                  setExporerId(id);
+                  updateExplorerId(id);
                 }
               }}
               role='button'
@@ -63,6 +60,7 @@ export default function Explorer() {
         <GuppyDataExplorer
           adminAppliedPreFilters={config.adminAppliedPreFilters}
           chartConfig={config.charts}
+          explorerId={explorerId}
           filterConfig={config.filters}
           tableConfig={config.table}
           survivalAnalysisConfig={config.survivalAnalysis}
