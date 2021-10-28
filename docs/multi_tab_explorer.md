@@ -11,7 +11,8 @@ An example of `explorerConfig` is (some contents are omitted for conciseness):
   "explorerConfig": [
     // --> 1st explorer
     {
-      "tabTitle": "Data",
+      "id": 1,
+      "label": "Data",
       "charts": {
         "project_id": {
           "chartType": "count",
@@ -79,10 +80,6 @@ An example of `explorerConfig` is (some contents are omitted for conciseness):
           // the field in the case/subject/participant index used to match with a field in the manifest index
           "referenceIdFieldInDataIndex": "case_id"
         },
-        // optional; if requesting access to the data sets what site should the user visit?
-        "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/",
-        // optional; if exporting to Terra which URL should we use?
-        "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data",
         // required if downloading a file; the GUID for downloding a file; This should probably not change
         "downloadAccessor": "object_id"
       },
@@ -117,12 +114,18 @@ An example of `explorerConfig` is (some contents are omitted for conciseness):
         // optional; if true, display a button/modal to export the current cohort (patient ids set) to external data commons
         "export": false
       },
+      // optional; if requesting access to the data sets what site should the user visit?
+      "getAccessButtonLink": "https://dbgap.ncbi.nlm.nih.gov/",
+      // optional; if exporting to Terra which URL should we use?
+      "terraExportURL": "https://bvdp-saturn-dev.appspot.com/#import-data",
       // optional; see "docs/data_availability_tool.md" for details
       "dataAvailabilityToolConfig": {}
     },
 
     // --> 2nd explorer
     {
+      "id": 2,
+      "label": "File",
       "charts": {
         "data_type": {
           "chartType": "stackedBar",
@@ -173,7 +176,8 @@ An example of `explorerConfig` is (some contents are omitted for conciseness):
 
 ### Notable fields
 
-- `tabTitle`: Optional. If omitted, will default to use the value of `guppyConfig.dataType` of this tab.
+- `id`: Required. Meant to remain constant over time. Changing its value can break the filter sets feature.
+- `label`: Optional. If omitted, will default to use the value of `guppyConfig.dataType` of this tab.
 - `filters`: Required.
 - `survivalAnalysis`: See [this external page](https://github.com/chicagopcdc/Documents/blob/master/GEN3/survival-analysis-tool/requirements.md) for further information.
 - `guppyConfig`: Required.

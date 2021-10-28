@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import { guppyUrl, tierAccessLimit, explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
@@ -9,65 +10,77 @@ export default function Explorer() {
   if (explorerConfig.length === 0) {
     return null;
   }
-  const [tabIndex, setTabIndex] = useState(0);
+  const explorerIds = explorerConfig.map(({ id }) => id);
+  const history = useHistory();
+
+  const initialSearchParams = new URLSearchParams(history.location.search);
+  const initialSearchParamId = initialSearchParams.has('id')
+    ? Number(initialSearchParams.get('id'))
+    : undefined;
+  const initialExplorerId = explorerIds.includes(initialSearchParamId)
+    ? initialSearchParamId
+    : explorerIds[0];
+
+  const [explorerId, setExporerId] = useState(initialExplorerId);
+  function updateExplorerId(id) {
+    setExporerId(id);
+    history.push({ search: `id=${id}` });
+  }
+
   /** @type {SingleExplorerConfig} */
-  const tabConfig = explorerConfig[tabIndex];
-  const isMultiTabExplorer = explorerConfig.length > 1;
+  const config = explorerConfig.find(({ id }) => id === explorerId);
+  const isMultiExplorer = explorerConfig.length > 1;
 
   return (
     <div className='guppy-explorer'>
-      {isMultiTabExplorer && (
+      {isMultiExplorer && (
         <div className='guppy-explorer__tabs'>
-          {explorerConfig.map(({ tabTitle, guppyConfig }, index) => (
+          {explorerConfig.map(({ guppyConfig, id, label }) => (
             <div
-              key={index}
+              key={id}
               className={'guppy-explorer__tab'.concat(
-                tabIndex === index ? ' guppy-explorer__tab--selected' : ''
+                explorerId === id ? ' guppy-explorer__tab--selected' : ''
               )}
-              onClick={() => setTabIndex(index)}
+              onClick={() => updateExplorerId(id)}
               onKeyPress={(e) => {
                 if (e.charCode === 13 || e.charCode === 32) {
                   e.preventDefault();
-                  setTabIndex(index);
+                  updateExplorerId(id);
                 }
               }}
               role='button'
               tabIndex={0}
             >
-              <h3>
-                {tabTitle ||
-                  (guppyConfig?.dataType
-                    ? capitalizeFirstLetter(guppyConfig.dataType)
-                    : '')}
-              </h3>
+              <h3>{capitalizeFirstLetter(label || guppyConfig.dataType)}</h3>
             </div>
           ))}
         </div>
       )}
-      <div className={isMultiTabExplorer ? 'guppy-explorer__main' : ''}>
+      <div className={isMultiExplorer ? 'guppy-explorer__main' : ''}>
         <GuppyDataExplorer
-          adminAppliedPreFilters={tabConfig.adminAppliedPreFilters}
-          chartConfig={tabConfig.charts}
-          filterConfig={tabConfig.filters}
-          tableConfig={tabConfig.table}
-          survivalAnalysisConfig={tabConfig.survivalAnalysis}
-          patientIdsConfig={tabConfig.patientIds}
+          adminAppliedPreFilters={config.adminAppliedPreFilters}
+          chartConfig={config.charts}
+          explorerId={explorerId}
+          filterConfig={config.filters}
+          tableConfig={config.table}
+          survivalAnalysisConfig={config.survivalAnalysis}
+          patientIdsConfig={config.patientIds}
           guppyConfig={{
             path: guppyUrl,
-            ...tabConfig.guppyConfig,
+            ...config.guppyConfig,
           }}
           buttonConfig={{
-            buttons: tabConfig.buttons,
-            dropdowns: tabConfig.dropdowns,
-            terraExportURL: tabConfig.terraExportURL,
-            terraTemplate: tabConfig.terraTemplate,
-            sevenBridgesExportURL: tabConfig.sevenBridgesExportURL,
+            buttons: config.buttons,
+            dropdowns: config.dropdowns,
+            terraExportURL: config.terraExportURL,
+            terraTemplate: config.terraTemplate,
+            sevenBridgesExportURL: config.sevenBridgesExportURL,
           }}
           tierAccessLimit={tierAccessLimit}
-          getAccessButtonLink={tabConfig.getAccessButtonLink}
-          hideGetAccessButton={tabConfig.hideGetAccessButton}
+          getAccessButtonLink={config.getAccessButtonLink}
+          hideGetAccessButton={config.hideGetAccessButton}
           // the "fully uncontrolled component with a key" trick
-          key={tabIndex}
+          key={config.id}
         />
       </div>
     </div>
