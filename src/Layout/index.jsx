@@ -15,8 +15,7 @@ import './Layout.css';
  */
 function Layout({ children }) {
   const location = useLocation();
-  const isPageFullScreen = location.pathname.toLowerCase().startsWith('/dd');
-  const mainClassName = isPageFullScreen ? 'main main--full-screen' : 'main';
+  const isDashboardPage = location.pathname.toLowerCase().startsWith('/dd');
 
   return (
     <>
@@ -28,8 +27,8 @@ function Layout({ children }) {
           navTitle={components.navigation.title}
         />
       </header>
-      <main className={mainClassName}>{children}</main>
-      {isPageFullScreen || (
+      <main className='main'>{children}</main>
+      {isDashboardPage || (
         <ReduxFooter
           links={components.footer?.links}
           logos={components.footerLogos}

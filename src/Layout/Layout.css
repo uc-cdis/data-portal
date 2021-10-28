@@ -4,7 +4,3 @@
   min-height: calc(100vh - 221px);
   background-color: var(--g3-color__bg-cloud);
 }
-
-.main--full-screen {
-  height: calc(100vh - 121px);
-}
