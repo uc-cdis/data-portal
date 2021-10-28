@@ -5,19 +5,23 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { mapboxAPIToken, covid19DashboardConfig } from '../../localconf';
 import ControlPanel from '../ControlPanel';
-//import countyData from '../data/us_counties';
-import countyData from '../data/chicago_communities';
+
+import communityData from '../data/chicago_communities';
 //import zipData from '../data/il_illinois_zip_codes_geo.min';
-import zipData from '../data/2015-2019-acs-il_zcta';
+import zipData from '../data/north';
+//import zipData from '../data/2015-2019-acs-il_zcta';
 //import vacData from '../localdata/vaccine_zip';
-import vacData from '../localdata/vaccination_with_area';
-//import vacData from '../localdata/testvac';
+//import vacData from '../localdata/vaccination_with_area';
 //import vacData from '../localdata/vaccination_by_zip';
 /*
 // Additional layers used as examples enable here
 import LayerTemplate from '../overlays/LayerTemplate'; */
 import PopulationIL from '../overlays/PopulationIL';
 
+import VaccinatedFirstLayer from '../overlays/VaccinatedFirstLayer';
+import VaccinatedFullLayer from '../overlays/VaccinatedFullLayer';
+import CaseLayer from '../overlays/CaseLayer';
+import TestLayer from '../overlays/TestLayer';
 //import TimeCaseLayer from '../overlays/TimeCaseLayer';
 //import MobilityLayer from '../overlays/GoogleMobilityLayer';
 //import MobilityLayerGnp from '../overlays/GoogleMobilityLayerGnp';
@@ -29,59 +33,10 @@ import PopulationIL from '../overlays/PopulationIL';
 //import MapSlider from '../MapSlider';
 import Spinner from '../../components/Spinner';
 
-//const GeoJsonGeometriesLookup = require('geojson-geometries-lookup');
-//const glookup = new GeoJsonGeometriesLookup(zipData);
 
 // check the data commons url to check if prod or qa environment
 // pull data from qa for everything that is not prod
 const occEnv = covid19DashboardConfig.dataUrl === 'https://opendata.datacommons.io/' ? 'prod' : 'qa';
-
-function addDataToGeoJsonBase(data) {
-  // We start with zipcodes in Illinois
-  let base = zipData;
-  const geoJson = {
-    ...base,
-    features: base.features.map((loc) => {
-      const location = loc;
-//      if (location.properties.ZCTA5CE10 && location.properties.ZCTA5CE10 in data) {
-//          location.properties = Object.assign(
-//            data[location.properties.ZCTA5CE10],
-      if (location.properties.FIPS && location.properties.FIPS in data) {
-          location.properties = Object.assign(
-            data[location.properties.FIPS],
-            location.properties,
-          );
-          return location;
-        }
-      // no data for this location
-      location.properties.firstDoseCount = 0;
-      location.properties.firstDoseCountDisplay = 0;
-      location.properties.firstDoseRateDisplay = 0;
-      location.properties.fullyVaccinatedCount = 0;
-      location.properties.fullyVaccinatedCountDisplay = 0;
-      location.properties.fullyVaccinatedRate = 0;
-      location.properties.fullyVaccinatedRateDisplay = 0;
-      location.properties.Report_Date = "";
-      return location;
-    }),
-  };
-
-  return geoJson;
-}
-
-function filterCommunityGeoJson(selectedNames) {
-  return {
-    ...countyData,
-    features: countyData.features.filter((f) => selectedNames.includes(f.properties.community)),
-  };
-}
-
-function filterCountyGeoJson(selectedFips) {
-  return {
-    ...countyData,
-    features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
-  };
-}
 
 function formatDate(date) {
   return date.toISOString().split('T')[0];
@@ -105,37 +60,55 @@ class ChicagoMapChart extends React.Component {
       },
       hoverInfo: null,
       overlay_layers: {
-	vaccination_layers: {
-	  title: 'Vaccine',
-	  layers: {
-	    vaccine_data: { title: 'Vaccine Data' },
-	  },
-	},
-        demographic_layers: {
-	  title: 'Demographics',
-	  layers: {
-	    il_population: { title: 'Population', visible: 'visible' },
-	  },
-	},
+	       vaccination_layers: {
+	          title: 'Vaccine',
+	          layers: {
+	             FirstDoseRate: {
+			     title: 'First Dose',
+		     },
+	             FullyVaccinatedRate: {
+			     title: 'Fully Vaccinated',
+		     },
+	          },
+	      },
+	      case_layers: {
+	          title: 'Cases & Testing',
+	          layers: {
+	             confirmed_cases_total: {
+			     title: 'Total Positive Tests',
+		     },
+	             total_tested_total: {
+			     title: 'Total Tests Performed',
+		     },
+	          },
+	      },
+              demographic_layers: {
+	         title: 'Demographics',
+	         layers: {
+	            il_population: { title: 'Population', visible: 'visible' },
+	         },
+	      },
       },
       popup_data: {
         /*
         This data is used just for the popup on hover */
         strain_data: { title: 'SARS-CoV-2 Strain Data', visible: 'none' },
-        vaccination_data: { title: 'COVID Vaccination Data', visible: 'none' },
+        vaccine_data: { title: 'COVID Vaccination Data', visible: 'none' },
         // mobility_data : {title: 'Mobility Data', visible: 'none'},
       },
-//      sliderValue: null,
-//      sliderDate: null,
-//      sliderDataLastUpdated: null,
-//      sliderDataStartDate: null,
-      activeLayer: 'vaccination_data',
-      legendTitle: 'Fully Vaccinated Rate',
+      sliderValue: null,
+      sliderDate: '2021-10-23',
+      sliderDataLastUpdated: null,
+      sliderDataStartDate: null,
+      activeLayer: 'FullyVaccinatedRate',
+      legendTitle: 'Vaccination Rate',
       legendDataSource: { title: 'IDPH', link: 'https://www.dph.illinois.gov/covid19/data-portal' },
-      vaccination_data: { data: null, fetchStatus: null },
+      vaccine_data: { data: null, fetchStatus: null },
+      case_data: { data: null, fetchStatus: null },
       strainData: { data: null, fetchStatus: null },
       lastUpdated: null,
       dataDateRange: {},
+      mapColors: null,
     };
     this.mapData = {
       densityGeoJson: null,
@@ -145,13 +118,45 @@ class ChicagoMapChart extends React.Component {
   }
 
   componentDidUpdate() {
-   if (!(this.mapData.colorsAsList === null)) {
-     return;
-   }
-    this.mapData.densityGeoJson = this.props.geoJson;
-    if (!this.choroGeoJson) {
-      this.choroGeoJson = addDataToGeoJsonBase(vacData);
+    if (!(this.mapData.colorsAsList === null)) {
+      return;
     }
+    //
+    // Load vaccination data
+    //
+    this.setState({ vaccine_data: { data: null, fetchStatus: 'fetching' } });
+    fetch(`https://covd-map-occ-prc-qa.s3.amazonaws.com/vaccination_by_zipcode_data.json`, {
+      headers: {
+        'Cache-Control': `max-age=${(1000 * 60 * 60 * 24)}`, // set cache to expire after one day
+      },
+    })
+    .then((resp) => resp.json())
+    .then((data) => {
+      const geoJson = this.addVaccineDataToGeoJsonBase(data)
+      this.setState({ vaccine_data: { data: geoJson, fetchStatus: 'done' } });
+    })
+    .catch((error) => {
+      console.warn('Data not retrieved. Unable to display vaccination overlays', error); // eslint-disable-line no-console
+      this.setState({ vaccine_data: { fetchStatus: 'error' } });
+    });
+    //
+    // Load total cases and testing data
+    //
+    this.setState({ case_data: { data: null, fetchStatus: 'fetching' } });
+    fetch(`https://covd-map-occ-prc-qa.s3.amazonaws.com/COVIDExport_data.json`, {
+      headers: {
+        'Cache-Control': `max-age=${(1000 * 60 * 60 * 24)}`, // set cache to expire after one day
+      },
+    })
+    .then((resp) => resp.json())
+    .then((data) => {
+      const geojson = this.addCaseDataToGeoJsonBase(data)
+      this.setState({ case_data: { data: geojson, fetchStatus: 'done' } });
+    })
+    .catch((error) => {
+      console.warn('Data not retrieved. Unable to display COVID case & testing overlays', error); // eslint-disable-line no-console
+      this.setState({ case_data: { fetchStatus: 'error' } });
+    });
 
     const maxVal = 100
     const maxValExponent = Math.log10(maxVal);
@@ -227,6 +232,37 @@ class ChicagoMapChart extends React.Component {
 //      this.addVaccinationDataToGeoJsonBase();
 //    }
   }
+  findStartAndEndDates = (geoJson) => {
+    // find first and last date
+    const { dataDateRange } = this.state;
+    geoJson.features.forEach((zipcode) => {
+      Object.keys(zipcode.properties).forEach((currentValue) => {
+        // sample data in [2021-10-22, 2021-10-23, 2021-10-24]
+        // don't include any of the SDOH data
+
+        // exit if no date hyphen
+        if (currentValue.indexOf('-') === -1) {
+          return;
+        }
+        // break id into data set and date
+        //const [setName, dateString] = currentValue.split('_');
+	const setName = 'vaccination';
+	const dateString = currentValue;
+        // if already set a max compare to that if not set
+        if (Object.keys(dataDateRange).indexOf(setName) === -1) {
+          dataDateRange[setName] = {
+            min: dateString,
+            max: dateString,
+          };
+        } else if (dataDateRange[setName].max < dateString) {
+          dataDateRange[setName].max = dateString;
+        } else if (dataDateRange[setName].min > dateString) {
+          dataDateRange[setName].min = dateString;
+        }
+      });
+    });
+    this.setState({ dataDateRange });
+  }
 
 
   onHover = (event) => {
@@ -244,7 +280,7 @@ class ChicagoMapChart extends React.Component {
     };
 
     event.features.forEach((feature) => {
-      if (!feature.layer.id.startsWith('zipcode-')) {
+      if (!(feature.layer.id.endsWith('Rate') || feature.layer.id.endsWith('total'))) {
         return;
       }
       const locationName = feature.properties.ZCTA5CE10;
@@ -252,18 +288,30 @@ class ChicagoMapChart extends React.Component {
         // we don't have data for this location
         return;
       }
-      //const firstRate = formatNumberToDisplay(feature.properties.FirstDoseRate);
-      //const fullRate  = formatNumberToDisplay(feature.properties.FullyVaccinatedRate);
-      const firstRate = feature.properties.FirstDoseRate;
-      const fullRate  = feature.properties.FullyVaccinatedRate;
-      hoverInfo = {
-        lngLat: event.lngLat,
-        locationName,
-        values: {
-          'First dose rate': firstRate,
-          'Fully vaccinated rate': fullRate,
-        },
-      };
+      if (feature.layer.id.endsWith('Rate')) {
+        const firstRate = feature.properties.FirstDoseRate;
+        const fullRate  = feature.properties.FullyVaccinatedRate;
+        hoverInfo = {
+          lngLat: event.lngLat,
+          locationName,
+          values: {
+            'First dose rate': firstRate,
+            'Fully vaccinated rate': fullRate,
+          },
+        };
+      }
+      if (feature.layer.id.endsWith('total')) {
+        const confirmed_cases = feature.properties.confirmed_cases;
+        const total_tested  = feature.properties.total_tested;
+        hoverInfo = {
+          lngLat: event.lngLat,
+          locationName,
+          values: {
+            'Total cases': confirmed_cases,
+            'Total tests': total_tested,
+          },
+        };
+      }
     });
     this.setState({
       hoverInfo,
@@ -293,16 +341,31 @@ class ChicagoMapChart extends React.Component {
   }
 
   onLayerSelect = (event, id) => {
-    // TODO make ID usable
     this.setState({ activeLayer: id });
-//    this.setSliderDates(id.split('_')[0]);
     this.setMapLegendColors(id);
   }
 
   setMapLegendColors(id) {
-    if (id === 'time_data') {
+    if (id.includes('Rate')) {
       this.setState({
-        mapColors: this.mapData.colors, legendTitle: 'Confirmed Cases', legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' }, lastUpdated: this.props.jsonByTime.last_updated,
+        mapColors: this.mapData.colors, legendTitle: 'Vaccination Rate', legendDataSource: { title: 'IDPH Vaccination Data', link: 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDVaccine/getCOVIDVaccineAdministrationZIP' }, lastUpdated: null,
+      });
+    }
+    if (id.includes('total')) {
+      const colors = [
+	['0', '#FFF'],
+        ['5', '#F7F787'],
+        ['10', '#EED322'],
+        ['50', '#E6B71E'],
+        ['100', '#DA9C20'],
+        ['150', '#CA8323'],
+        ['200', '#B86B25'],
+        ['250', '#A25626'],
+        ['300', '#8B4225'],
+        ['350+', '#850001'],
+      ];
+      this.setState({
+        mapColors: colors, legendTitle: 'Cases & Testing', legendDataSource: { title: 'IDPH Daily Data', link: 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDExport/GetZip' }, lastUpdated: null,
       });
     }
     if (id.includes('mobility_data')) {
@@ -325,41 +388,60 @@ class ChicagoMapChart extends React.Component {
     }
   }
 
-  addVaccinationDataToGeoJsonBase = () => {
-             console.warn('Got this far');
-//    this.setState({ vaccination_data: { data: null, fetchStatus: 'fetching' } });
-//    fetch(`https://idph.illinois.gov/DPHPublicInformation/api/COVIDVaccine/getCOVIDVaccineAdministrationZIP`, {
-//      header: {
-//        'Cache-Control': `max-age=${(1000 * 60 * 60 * 24)}`, // set cache to     expire after one day
-//      },
-//    })
-//      .then((resp) => resp.json())
-//      .then((data) => {
-        const base = zipData;
-        const geoJson = {
-          ...base,
-          features: base.features.map((loc) => {
-            const location = loc;
-            if (location.properties.ZCTA5CE10) {
-             // const result = vacData.find(zip => zip.ZipCode === Number(location.properties.ZCTA5CE10));
-            }
-            const result = false;
-            if (result) {
-            console.warn('here');
-            console.warn(result);
+
+  addVaccineDataToGeoJsonBase(data) {
+      // We start with zipcodes in Illinois
+      const base = zipData;
+      const geoJson = {
+        ...base,
+        features: base.features.map((loc) => {
+          const location = loc;
+          if (location.properties.ZCTA5CE10 && location.properties.ZCTA5CE10 in data) {
+		  const date = Object.keys(data[location.properties.ZCTA5CE10])[0];
               location.properties = Object.assign(
-                result,
+                data[location.properties.ZCTA5CE10][date],
                 location.properties,
               );
-            return location;
-          }
+              return location;
+            }
           // no data for this location
+          location.properties.FirstDoseCount = 0;
+          location.properties.FirstDoseCountDisplay = 0;
+          location.properties.FirstDoseRateDisplay = 0;
+          location.properties.FullyVaccinatedCount = 0;
+          location.properties.FullyVaccinatedCountDisplay = 0;
+          location.properties.FullyVaccinatedRate = 0;
+          location.properties.FullyVaccinatedRateDisplay = 0;
           return location;
         }),
       };
-//    })
-//    .catch(() => { console.warn('Data not retrieved. Unable to display vaccination overlay'); }); // eslint-disable-line no-console
-  }
+      this.findStartAndEndDates(geoJson);
+      return geoJson;
+    }
+
+  addCaseDataToGeoJsonBase(data) {
+      // We start with zipcodes in Illinois
+      const base = zipData;
+      const geoJson = {
+        ...base,
+        features: base.features.map((loc) => {
+          const location = loc;
+          if (location.properties.ZCTA5CE10 && location.properties.ZCTA5CE10 in data) {
+		  const date = Object.keys(data[location.properties.ZCTA5CE10])[0];
+              location.properties = Object.assign(
+                data[location.properties.ZCTA5CE10][date],
+                location.properties,
+              );
+              return location;
+            }
+          // no data for this location
+          location.properties.confirmed_cases = 0;
+          location.properties.total_tested = 0;
+          return location;
+        }),
+      };
+      return geoJson;
+    }
 
   renderHoverPopup() {
     const { hoverInfo } = this.state;
@@ -415,17 +497,21 @@ class ChicagoMapChart extends React.Component {
           onViewportChange={(viewport) => {
             this.setState({ viewport });
           }}
-          //onHover={this.onHover}
+          onHover={this.onHover}
           //onClick={this.onClick}
           dragRotate={false}
           touchRotate={false}
         >
-         //{this.renderHoverPopup()}
+        {this.renderHoverPopup()}
+	{this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedFullLayer visibility={this.state.activeLayer === 'FullyVaccinatedRate' ? 'visible' : 'none'} data={this.state.vaccine_data.data} item={this.state.activeLayer} />}
+	{this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedFirstLayer visibility={this.state.activeLayer === 'FirstDoseRate' ? 'visible' : 'none'} data={this.state.vaccine_data.data} item={this.state.activeLayer} />}
+	{this.state.case_data.fetchStatus === 'done' && <CaseLayer visibility={this.state.activeLayer === 'confirmed_cases_total' ? 'visible' : 'none'} data={this.state.case_data.data} />}
+	{this.state.case_data.fetchStatus === 'done' && <TestLayer visibility={this.state.activeLayer === 'total_tested_total' ? 'visible' : 'none'} data={this.state.case_data.data}  />}
 	   <PopulationIL visibility={this.state.activeLayer == 'il_population' ? 'visible' : 'none'} />
 
-           <ReactMapGL.Source type='geojson' data={countyData}>
+           <ReactMapGL.Source type='geojson' data={communityData}>
             <ReactMapGL.Layer
-              id='zipcode-outline'
+              id='community-outline'
               type='line'
               beforeId='waterway-label'
               paint={{
@@ -434,30 +520,16 @@ class ChicagoMapChart extends React.Component {
               }}
             />
            </ReactMapGL.Source>
-           <ReactMapGL.Source type='geojson' data={vacData}>
-             <ReactMapGL.Layer
-               id='choro-zip'
-               type='fill'
-               beforeID='waterway-label'
-               paint={this.mapData.colorsAsList === null ? {} : {
-                 'fill-color': [
-                   'interpolate',
-                   ['linear'],
-                   ['number', ['get', 'FullyVaccinatedRate'], 0],
-                   0, '#FFF',
-                   30, '#a8dab5',
-                   40, '#81c995',
-                   45, '#5bb974',
-                   50, '#34a853',
-                   55, '#1e8e3e',
-                   60, '#188038',
-                   65, '#0d652d',
-                   70, '#8B4225',
-                   75, '#850001',
-                 ],
-                 'fill-opacity': 0.6,
-               }}
-             />
+           <ReactMapGL.Source type='geojson' data={zipData}>
+            <ReactMapGL.Layer
+              id='zipcode-outline'
+              type='line'
+              beforeId='community-outline'
+              paint={{
+                'line-color': '#222258',
+                'line-width': .5,
+              }}
+            />
            </ReactMapGL.Source>
          </ReactMapGL.InteractiveMap>
 

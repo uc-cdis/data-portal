@@ -273,10 +273,53 @@ class Covid19Dashboard extends React.Component {
         <div>
           <Tabs>
             <TabList className='covid19-dashboard_tablist'>
-              <Tab>COVID-19 in Illinois</Tab>
               <Tab>COVID-19 in Chicagoland</Tab>
+              <Tab>COVID-19 in Illinois</Tab>
               <Tab>IL SARS-CoV2 Genomics</Tab>
             </TabList>
+
+            {/* chicago tab */}
+            <TabPanel className='covid19-dashboard_panel'>
+              <div className='covid19-dashboard_counts'>
+                <CountWidget
+                  label='Total Confirmed'
+                  value={confirmedCount.global}
+                />
+                <CountWidget
+                  label='Total Deaths'
+                  value={deathsCount.global}
+                />
+                <CountWidget
+                  label='Total Recovered'
+                  value={recoveredCount.global}
+                />
+              </div>
+              <div className='covid19-dashboard_visualizations'>
+                { mapboxAPIToken
+                  && (
+                    <ChicagoMapChart
+                      geoJson={this.props.jhuGeojsonLatest}
+                      jsonByLevel={this.props.jhuJsonByLevelLatest}
+                      modeledFipsList={this.props.modeledFipsList}
+                      fetchTimeSeriesData={this.props.fetchTimeSeriesData}
+                    />
+                  )}
+                {chartsConfig.chicago && chartsConfig.chicago.length > 0
+                  && (
+                    <div className='covid19-dashboard_charts'>
+                      {chartsConfig.chicago.map((carouselConfig, i) => (
+                        <ChartCarousel
+                          key={i}
+                          chartsConfig={carouselConfig}
+                          {...this.props}
+                          enablePopupOnClick
+                        />
+                      ),
+                      )}
+                    </div>
+                  )}
+              </div>
+            </TabPanel>
 
             {/* illinois tab */}
             <TabPanel className='covid19-dashboard_panel'>
@@ -322,48 +365,7 @@ class Covid19Dashboard extends React.Component {
               </div>
             </TabPanel>
 
-            {/* chicago tab */}
-            <TabPanel className='covid19-dashboard_panel'>
-              <div className='covid19-dashboard_counts'>
-                <CountWidget
-                  label='Total Confirmed'
-                  value={confirmedCount.global}
-                />
-                <CountWidget
-                  label='Total Deaths'
-                  value={deathsCount.global}
-                />
-                <CountWidget
-                  label='Total Recovered'
-                  value={recoveredCount.global}
-                />
-              </div>
-              <div className='covid19-dashboard_visualizations'>
-                { mapboxAPIToken
-                  && (
-                    <ChicagoMapChart
-                      geoJson={this.props.jhuGeojsonLatest}
-                      jsonByLevel={this.props.jhuJsonByLevelLatest}
-                      modeledFipsList={this.props.modeledFipsList}
-                      fetchTimeSeriesData={this.props.fetchTimeSeriesData}
-                    />
-                  )}
-                {chartsConfig.chicago && chartsConfig.chicago.length > 0
-                  && (
-                    <div className='covid19-dashboard_charts'>
-                      {chartsConfig.chicago.map((carouselConfig, i) => (
-                        <ChartCarousel
-                          key={i}
-                          chartsConfig={carouselConfig}
-                          {...this.props}
-                          enablePopupOnClick
-                        />
-                      ),
-                      )}
-                    </div>
-                  )}
-              </div>
-            </TabPanel>
+            {/* nextstrain tab */}
             <TabPanel className='covid19-dashboard_panel'>
               <div className='covid19-dashboard_auspice'>
                 {/* this component doesn't need the mapboxAPIToken but it's a way to make
