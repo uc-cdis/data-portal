@@ -9,26 +9,28 @@ export default function Explorer() {
   if (explorerConfig.length === 0) {
     return null;
   }
-  const [tabIndex, setTabIndex] = useState(0);
+  const explorerIds = explorerConfig.map(({ id }) => id);
+  const initialExplorerId = explorerIds[0];
+  const [explorerId, setExporerId] = useState(initialExplorerId);
   /** @type {SingleExplorerConfig} */
-  const tabConfig = explorerConfig[tabIndex];
-  const isMultiTabExplorer = explorerConfig.length > 1;
+  const config = explorerConfig.find(({ id }) => id === explorerId);
+  const isMultiExplorer = explorerConfig.length > 1;
 
   return (
     <div className='guppy-explorer'>
-      {isMultiTabExplorer && (
+      {isMultiExplorer && (
         <div className='guppy-explorer__tabs'>
-          {explorerConfig.map(({ guppyConfig, label }, index) => (
+          {explorerConfig.map(({ guppyConfig, id, label }) => (
             <div
-              key={index}
+              key={id}
               className={'guppy-explorer__tab'.concat(
-                tabIndex === index ? ' guppy-explorer__tab--selected' : ''
+                explorerId === id ? ' guppy-explorer__tab--selected' : ''
               )}
-              onClick={() => setTabIndex(index)}
+              onClick={() => setExporerId(id)}
               onKeyPress={(e) => {
                 if (e.charCode === 13 || e.charCode === 32) {
                   e.preventDefault();
-                  setTabIndex(index);
+                  setExporerId(id);
                 }
               }}
               role='button'
@@ -39,30 +41,30 @@ export default function Explorer() {
           ))}
         </div>
       )}
-      <div className={isMultiTabExplorer ? 'guppy-explorer__main' : ''}>
+      <div className={isMultiExplorer ? 'guppy-explorer__main' : ''}>
         <GuppyDataExplorer
-          adminAppliedPreFilters={tabConfig.adminAppliedPreFilters}
-          chartConfig={tabConfig.charts}
-          filterConfig={tabConfig.filters}
-          tableConfig={tabConfig.table}
-          survivalAnalysisConfig={tabConfig.survivalAnalysis}
-          patientIdsConfig={tabConfig.patientIds}
+          adminAppliedPreFilters={config.adminAppliedPreFilters}
+          chartConfig={config.charts}
+          filterConfig={config.filters}
+          tableConfig={config.table}
+          survivalAnalysisConfig={config.survivalAnalysis}
+          patientIdsConfig={config.patientIds}
           guppyConfig={{
             path: guppyUrl,
-            ...tabConfig.guppyConfig,
+            ...config.guppyConfig,
           }}
           buttonConfig={{
-            buttons: tabConfig.buttons,
-            dropdowns: tabConfig.dropdowns,
-            terraExportURL: tabConfig.terraExportURL,
-            terraTemplate: tabConfig.terraTemplate,
-            sevenBridgesExportURL: tabConfig.sevenBridgesExportURL,
+            buttons: config.buttons,
+            dropdowns: config.dropdowns,
+            terraExportURL: config.terraExportURL,
+            terraTemplate: config.terraTemplate,
+            sevenBridgesExportURL: config.sevenBridgesExportURL,
           }}
           tierAccessLimit={tierAccessLimit}
-          getAccessButtonLink={tabConfig.getAccessButtonLink}
-          hideGetAccessButton={tabConfig.hideGetAccessButton}
+          getAccessButtonLink={config.getAccessButtonLink}
+          hideGetAccessButton={config.hideGetAccessButton}
           // the "fully uncontrolled component with a key" trick
-          key={tabIndex}
+          key={config.id}
         />
       </div>
     </div>
