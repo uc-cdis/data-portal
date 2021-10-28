@@ -321,7 +321,6 @@ export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
   // displayUseMsg:
   // "cookie": use the cookie and expireValue (defaults to 0 to show use message per session
   //  undefined or systemUseText is undefined: always false
-
   if (!showSystemUse) {
     dispatch({
       type: 'UPDATE_POPUP',
