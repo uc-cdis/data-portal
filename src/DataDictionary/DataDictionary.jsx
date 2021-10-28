@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Dashboard from '../Layout/Dashboard';
 import ReduxDataDictionaryTable from './table/DataDictionaryTable';
 import ReduxDataModelStructure from './DataModelStructure';
 import DataDictionaryGraph from './graph/DataDictionaryGraph';
@@ -27,8 +28,8 @@ class DataDictionary extends React.Component {
 
   render() {
     return (
-      <div className='data-dictionary'>
-        <div className='data-dictionary__sidebar'>
+      <Dashboard>
+        <Dashboard.Sidebar>
           <div className='data-dictionary__switch'>
             <span
               className={`data-dictionary__switch-button ${
@@ -78,8 +79,8 @@ class DataDictionary extends React.Component {
           <ReduxDictionarySearchHistory
             onClickSearchHistoryItem={this.handleClickSearchHistoryItem}
           />
-        </div>
-        <div className='data-dictionary__main'>
+        </Dashboard.Sidebar>
+        <Dashboard.Main className='data-dictionary__main'>
           {this.props.isGraphView ? (
             <div
               className={`data-dictionary__graph ${
@@ -99,8 +100,8 @@ class DataDictionary extends React.Component {
               <ReduxDataDictionaryTable />
             </div>
           )}
-        </div>
-      </div>
+        </Dashboard.Main>
+      </Dashboard>
     );
   }
 }
