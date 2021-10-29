@@ -102,7 +102,6 @@
  * @property {string} manifestMapping.referenceIdFieldInDataIndex
  * @property {string} [getAccessButtonLink]
  * @property {string} [terraExportURL]
- * @property {string} [path]
  * @property {string} [mainField]
  * @property {string} [mainFieldTitle]
  * @property {boolean} [mainFieldIsNumeric]
