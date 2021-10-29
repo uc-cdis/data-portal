@@ -64,7 +64,7 @@ function ConnectedFilter({
 
   const arrayFields = useRef([]);
   useEffect(() => {
-    queryGuppyForStatus(guppyConfig.path).then((res) => {
+    queryGuppyForStatus().then((res) => {
       for (const { fields } of Object.values(res.indices))
         if (fields?.length > 0) arrayFields.current.concat(fields);
     });
