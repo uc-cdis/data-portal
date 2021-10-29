@@ -124,6 +124,7 @@ Below is an example, with inline comments describing what each JSON block config
           "name": "Submit Data"
         },
         {
+          "leftOrientation": true, // optioanl; puts the link on the left side of the top bar
           "link": "https://gen3.org/resources/user/",
           "name": "Documentation"
         }
