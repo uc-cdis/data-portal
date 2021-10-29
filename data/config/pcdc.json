@@ -88,6 +88,18 @@
     "topBar": {
       "items": [
         {
+          "icon": "external-link",
+          "leftOrientation": true,
+          "link": "https://commons.cri.uchicago.edu/pcdc/",
+          "name": "About PCDC"
+        },
+        {
+          "icon": "external-link",
+          "leftOrientation": true,
+          "link": "https://commons.cri.uchicago.edu/sponsors/",
+          "name": "Our Sponsors"
+        },
+        {
           "icon": "upload",
           "link": "/submission",
           "name": "Data Submission"

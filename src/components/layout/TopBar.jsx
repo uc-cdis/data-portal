@@ -9,30 +9,34 @@ import './TopBar.css';
  * @typedef {Object} TopBarProps
  * @property {boolean} isAdminUser
  * @property {React.MouseEventHandler<HTMLButtonElement>} onLogoutClick
- * @property {{ name: string; link: string; icon?: string; }[]} topItems
+ * @property {{ name: string; leftOrientation?: boolean; link: string; icon?: string }[]} topItems
  * @property {string} [username]
  */
 
 /** @param {TopBarProps} props */
 function TopBar({ isAdminUser, onLogoutClick, topItems, username }) {
   const location = useLocation();
+  const leftItems = [];
+  const rightItems = [];
+  for (const item of topItems)
+    if (item.leftOrientation) leftItems.push(item);
+    else rightItems.push(item);
 
   return (
     <nav className='top-bar' aria-label='Top Navigation'>
       <div className='top-bar--hidden-lg-and-down'>
-        <TopIconButton
-          icon='external-link'
-          name='About PCDC'
-          to='https://commons.cri.uchicago.edu/pcdc-consortium/'
-        />
-        <TopIconButton
-          icon='external-link'
-          name='Our Sponsors'
-          to='https://commons.cri.uchicago.edu/sponsors/'
-        />
+        {leftItems.map((item) => (
+          <TopIconButton
+            key={item.link}
+            name={item.name}
+            icon={item.icon}
+            isActive={location.pathname === item.link}
+            to={item.link}
+          />
+        ))}
       </div>
       <div className='top-bar--flex-center'>
-        {topItems.map(
+        {rightItems.map(
           (item) =>
             (item.link !== '/submission' || isAdminUser) && (
               <TopIconButton
