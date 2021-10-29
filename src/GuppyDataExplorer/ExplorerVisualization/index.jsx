@@ -20,7 +20,7 @@ import '../typedef';
  * @typedef {Object} ViewContainerProps
  * @property {boolean} showIf
  * @property {React.ReactNode} children
- * @property {boolean} isLoading
+ * @property {boolean} [isLoading]
  */
 
 /** @param {ViewContainerProps} props */
@@ -39,11 +39,8 @@ function ViewContainer({ showIf, children, isLoading }) {
 }
 
 ViewContainer.propTypes = {
-  showIf: PropTypes.bool,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]),
+  showIf: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired,
   isLoading: PropTypes.bool,
 };
 
