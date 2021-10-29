@@ -6,7 +6,6 @@ import ExplorerErrorBoundary from './ExplorerErrorBoundary';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerFilterSet from './ExplorerFilterSet';
-import { capitalizeFirstLetter } from '../utils';
 import { validateFilter } from './utils';
 import './GuppyDataExplorer.css';
 import './typedef';
@@ -52,14 +51,10 @@ const emptyAdminAppliedPreFilters = {};
 function GuppyDataExplorer() {
   const {
     adminAppliedPreFilters = emptyAdminAppliedPreFilters,
-    buttonConfig,
     chartConfig,
     filterConfig,
-    getAccessButtonLink,
     guppyConfig,
-    hideGetAccessButton = false,
     patientIdsConfig,
-    survivalAnalysisConfig,
     tableConfig,
     tierAccessLimit,
   } = useExplorerConfig();
@@ -209,17 +204,6 @@ function GuppyDataExplorer() {
               />
               <ExplorerVisualization
                 className='guppy-data-explorer__visualization'
-                chartConfig={chartConfig}
-                tableConfig={tableConfig}
-                survivalAnalysisConfig={survivalAnalysisConfig}
-                buttonConfig={buttonConfig}
-                guppyConfig={guppyConfig}
-                patientIdsConfig={patientIdsConfig}
-                nodeCountTitle={
-                  guppyConfig.nodeCountTitle ||
-                  capitalizeFirstLetter(guppyConfig.dataType)
-                }
-                tierAccessLimit={tierAccessLimit}
                 accessibleCount={data.accessibleCount}
                 aggsData={data.aggsData}
                 aggsChartData={data.aggsChartData}
@@ -238,8 +222,6 @@ function GuppyDataExplorer() {
                 getTotalCountsByTypeAndFilter={
                   data.getTotalCountsByTypeAndFilter
                 }
-                getAccessButtonLink={getAccessButtonLink}
-                hideGetAccessButton={hideGetAccessButton}
               />
             </>
           )}

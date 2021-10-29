@@ -5,20 +5,14 @@ import SummaryChartGroup from '../../gen3-ui-component/components/charts/Summary
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 import Spinner from '../../components/Spinner';
 import { components } from '../../params';
+import { capitalizeFirstLetter } from '../../utils';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
+import { useExplorerConfig } from '../ExplorerConfigContext';
 import ExplorerRequestAccessButton from '../ExplorerRequestAccessButton';
 import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
-import {
-  ButtonConfigType,
-  ChartConfigType,
-  GuppyConfigType,
-  SurvivalAnalysisConfigType,
-  TableConfigType,
-  PatientIdsConfigType,
-} from '../configTypeDef';
 import './ExplorerVisualization.css';
 import '../typedef';
 
@@ -154,16 +148,6 @@ function getChartData({
  * @property {(type: string, filter: FilterState) => Promise} getTotalCountsByTypeAndFilter
  * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise} fetchAndUpdateRawData
  * @property {string} className
- * @property {ButtonConfig} buttonConfig
- * @property {ChartConfig} chartConfig
- * @property {GuppyConfig} guppyConfig
- * @property {SurvivalAnalysisConfig} survivalAnalysisConfig
- * @property {TableConfig} tableConfig
- * @property {PatientIdsConfig} patientIdsConfig
- * @property {string} nodeCountTitle
- * @property {number} tierAccessLimit
- * @property {string} [getAccessButtonLink]
- * @property {boolean} [hideGetAccessButton]
  */
 
 /** @param {ExplorerVisualizationProps} props */
@@ -183,17 +167,21 @@ function ExplorerVisualization({
   fetchAndUpdateRawData,
   getTotalCountsByTypeAndFilter,
   className = '',
-  buttonConfig,
-  chartConfig,
-  guppyConfig,
-  survivalAnalysisConfig,
-  tableConfig,
-  patientIdsConfig,
-  nodeCountTitle,
-  tierAccessLimit,
-  getAccessButtonLink,
-  hideGetAccessButton = false,
 }) {
+  const {
+    buttonConfig,
+    chartConfig,
+    getAccessButtonLink,
+    guppyConfig,
+    hideGetAccessButton = false,
+    patientIdsConfig,
+    survivalAnalysisConfig,
+    tableConfig,
+    tierAccessLimit,
+  } = useExplorerConfig();
+  const nodeCountTitle =
+    guppyConfig.nodeCountTitle || capitalizeFirstLetter(guppyConfig.dataType);
+
   const explorerViews = ['summary view'];
   if (tableConfig.enabled) explorerViews.push('table view');
   if (isSurvivalAnalysisEnabled(survivalAnalysisConfig))
@@ -358,16 +346,6 @@ ExplorerVisualization.propTypes = {
   fetchAndUpdateRawData: PropTypes.func, // inherited from GuppyWrapper
   getTotalCountsByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   className: PropTypes.string,
-  buttonConfig: ButtonConfigType,
-  chartConfig: ChartConfigType,
-  guppyConfig: GuppyConfigType,
-  survivalAnalysisConfig: SurvivalAnalysisConfigType,
-  tableConfig: TableConfigType,
-  patientIdsConfig: PatientIdsConfigType,
-  nodeCountTitle: PropTypes.string.isRequired,
-  tierAccessLimit: PropTypes.number.isRequired,
-  getAccessButtonLink: PropTypes.string,
-  hideGetAccessButton: PropTypes.bool,
 };
 
 export default ExplorerVisualization;
