@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import GuppyDataExplorer from './GuppyDataExplorer';
-import { guppyUrl, tierAccessLimit, explorerConfig } from '../localconf';
+import { explorerConfig } from '../localconf';
+import { ExplorerConfigProvider } from './ExplorerConfigContext';
 import { capitalizeFirstLetter } from '../utils';
 import './GuppyExplorer.css';
 import './typedef';
@@ -27,8 +28,6 @@ export default function Explorer() {
     history.push({ search: `id=${id}` });
   }
 
-  /** @type {SingleExplorerConfig} */
-  const config = explorerConfig.find(({ id }) => id === explorerId);
   const isMultiExplorer = explorerConfig.length > 1;
 
   return (
@@ -57,30 +56,9 @@ export default function Explorer() {
         </div>
       )}
       <div className={isMultiExplorer ? 'guppy-explorer__main' : ''}>
-        <GuppyDataExplorer
-          adminAppliedPreFilters={config.adminAppliedPreFilters}
-          chartConfig={config.charts}
-          filterConfig={config.filters}
-          tableConfig={config.table}
-          survivalAnalysisConfig={config.survivalAnalysis}
-          patientIdsConfig={config.patientIds}
-          guppyConfig={{
-            path: guppyUrl,
-            ...config.guppyConfig,
-          }}
-          buttonConfig={{
-            buttons: config.buttons,
-            dropdowns: config.dropdowns,
-            terraExportURL: config.terraExportURL,
-            terraTemplate: config.terraTemplate,
-            sevenBridgesExportURL: config.sevenBridgesExportURL,
-          }}
-          tierAccessLimit={tierAccessLimit}
-          getAccessButtonLink={config.getAccessButtonLink}
-          hideGetAccessButton={config.hideGetAccessButton}
-          // the "fully uncontrolled component with a key" trick
-          key={config.id}
-        />
+        <ExplorerConfigProvider explorerId={explorerId}>
+          <GuppyDataExplorer key={explorerId} />
+        </ExplorerConfigProvider>
       </div>
     </div>
   );

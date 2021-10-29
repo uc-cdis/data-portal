@@ -1,22 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
+import { useExplorerConfig } from './ExplorerConfigContext';
 import ExplorerErrorBoundary from './ExplorerErrorBoundary';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerFilterSet from './ExplorerFilterSet';
 import { capitalizeFirstLetter } from '../utils';
 import { validateFilter } from './utils';
-import {
-  GuppyConfigType,
-  FilterConfigType,
-  TableConfigType,
-  ButtonConfigType,
-  ChartConfigType,
-  SurvivalAnalysisConfigType,
-  PatientIdsConfigType,
-} from './configTypeDef';
 import './GuppyDataExplorer.css';
 import './typedef';
 
@@ -55,38 +46,23 @@ function extractExplorerStateFromURL(
   return { initialAppliedFilters, patientIds };
 }
 
-/**
- * @typedef {Object} GuppyDataExplorerProps
- * @property {GuppyConfig} guppyConfig
- * @property {FilterConfig} filterConfig
- * @property {TableConfig} tableConfig
- * @property {SurvivalAnalysisConfig} survivalAnalysisConfig
- * @property {PatientIdsConfig} patientIdsConfig
- * @property {ChartConfig} chartConfig
- * @property {ButtonConfig} buttonConfig
- * @property {number} tierAccessLimit
- * @property {string} getAccessButtonLink
- * @property {boolean} hideGetAccessButton
- * @property {{ [x:string]: OptionFilter }} adminAppliedPreFilters
- */
-
 /** @type {{ [x:string]: OptionFilter }} */
 const emptyAdminAppliedPreFilters = {};
 
-/** @param {GuppyDataExplorerProps} props */
-function GuppyDataExplorer({
-  guppyConfig,
-  filterConfig,
-  tableConfig,
-  survivalAnalysisConfig,
-  patientIdsConfig,
-  chartConfig,
-  buttonConfig,
-  tierAccessLimit,
-  getAccessButtonLink,
-  hideGetAccessButton = false,
-  adminAppliedPreFilters = emptyAdminAppliedPreFilters,
-}) {
+function GuppyDataExplorer() {
+  const {
+    adminAppliedPreFilters = emptyAdminAppliedPreFilters,
+    buttonConfig,
+    chartConfig,
+    filterConfig,
+    getAccessButtonLink,
+    guppyConfig,
+    hideGetAccessButton = false,
+    patientIdsConfig,
+    survivalAnalysisConfig,
+    tableConfig,
+    tierAccessLimit,
+  } = useExplorerConfig();
   const history = useHistory();
   const initialState = extractExplorerStateFromURL(
     new URLSearchParams(history.location.search),
@@ -272,19 +248,5 @@ function GuppyDataExplorer({
     </ExplorerErrorBoundary>
   );
 }
-
-GuppyDataExplorer.propTypes = {
-  guppyConfig: GuppyConfigType.isRequired,
-  filterConfig: FilterConfigType.isRequired,
-  tableConfig: TableConfigType.isRequired,
-  survivalAnalysisConfig: SurvivalAnalysisConfigType.isRequired,
-  patientIdsConfig: PatientIdsConfigType,
-  chartConfig: ChartConfigType.isRequired,
-  buttonConfig: ButtonConfigType.isRequired,
-  tierAccessLimit: PropTypes.number.isRequired,
-  getAccessButtonLink: PropTypes.string,
-  hideGetAccessButton: PropTypes.bool,
-  adminAppliedPreFilters: PropTypes.object,
-};
 
 export default GuppyDataExplorer;
