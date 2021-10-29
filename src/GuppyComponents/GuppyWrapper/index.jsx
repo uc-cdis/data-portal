@@ -11,7 +11,7 @@ import {
   getAllFieldsFromGuppy,
   getGQLFilter,
 } from '../Utils/queries';
-import { FILE_FORMATS } from '../Utils/const';
+import { FILE_FORMATS, GUPPY_URL } from '../Utils/const';
 import {
   excludeSelfFilterFromAggsData,
   mergeFilters,
@@ -271,7 +271,7 @@ function GuppyWrapper({
       }).then((res) => {
         if (!res || !res.data)
           throw new Error(
-            `Error getting raw ${guppyConfig.dataType} data from Guppy server ${guppyConfig.path}.`
+            `Error getting raw ${guppyConfig.dataType} data from Guppy server ${GUPPY_URL}.`
           );
 
         const data = res.data._aggregation[guppyConfig.dataType];
@@ -302,7 +302,7 @@ function GuppyWrapper({
     }).then((res) => {
       if (!res || !res.data)
         throw new Error(
-          `Error getting raw ${guppyConfig.dataType} data from Guppy server ${guppyConfig.path}.`
+          `Error getting raw ${guppyConfig.dataType} data from Guppy server ${GUPPY_URL}.`
         );
 
       const parsedData = res.data[guppyConfig.dataType];
