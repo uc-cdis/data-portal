@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import { explorerConfig } from '../localconf';
@@ -14,13 +14,18 @@ export default function Explorer() {
   const explorerIds = explorerConfig.map(({ id }) => id);
   const history = useHistory();
 
-  const initialSearchParams = new URLSearchParams(history.location.search);
-  const initialSearchParamId = initialSearchParams.has('id')
-    ? Number(initialSearchParams.get('id'))
+  const searchParams = new URLSearchParams(history.location.search);
+  const searchParamId = searchParams.has('id')
+    ? Number(searchParams.get('id'))
     : undefined;
-  const initialExplorerId = explorerIds.includes(initialSearchParamId)
-    ? initialSearchParamId
+  const isSearchParamIdValid = explorerIds.includes(searchParamId);
+  const initialExplorerId = explorerIds.includes(searchParamId)
+    ? searchParamId
     : explorerIds[0];
+  useEffect(() => {
+    if (!searchParams.has('id') || !isSearchParamIdValid)
+      history.push({ search: `id=${initialExplorerId}` });
+  }, []);
 
   const [explorerId, setExporerId] = useState(initialExplorerId);
   function updateExplorerId(id) {
