@@ -60,7 +60,6 @@ export default function Explorer() {
         <GuppyDataExplorer
           adminAppliedPreFilters={config.adminAppliedPreFilters}
           chartConfig={config.charts}
-          explorerId={explorerId}
           filterConfig={config.filters}
           tableConfig={config.table}
           survivalAnalysisConfig={config.survivalAnalysis}
