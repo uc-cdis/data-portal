@@ -503,7 +503,6 @@ function GuppyWrapper({
 
 GuppyWrapper.propTypes = {
   guppyConfig: PropTypes.shape({
-    path: PropTypes.string,
     type: PropTypes.string,
     mainField: PropTypes.string,
     mainFieldIsNumeric: PropTypes.bool,

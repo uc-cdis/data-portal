@@ -127,7 +127,6 @@ ConnectedFilter.propTypes = {
     ),
   }).isRequired,
   guppyConfig: PropTypes.shape({
-    path: PropTypes.string.isRequired,
     dataType: PropTypes.string.isRequired,
     fieldMapping: PropTypes.arrayOf(
       PropTypes.shape({
