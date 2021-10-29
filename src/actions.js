@@ -1,7 +1,6 @@
 import 'isomorphic-fetch';
 import { buildClientSchema, getIntrospectionQuery } from 'graphql/utilities';
 import {
-  apiPath,
   userapiPath,
   guppyGraphQLUrl,
   headers,
