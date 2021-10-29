@@ -56,7 +56,6 @@ function GuppyDataExplorer() {
     guppyConfig,
     patientIdsConfig,
     tableConfig,
-    tierAccessLimit,
   } = useExplorerConfig();
   const history = useHistory();
   const initialState = extractExplorerStateFromURL(
@@ -186,16 +185,12 @@ function GuppyDataExplorer() {
                 filter={data.filter}
               />
               <ExplorerFilter
-                adminAppliedPreFilters={adminAppliedPreFilters}
                 className='guppy-data-explorer__filter'
-                filterConfig={filterConfig}
-                guppyConfig={guppyConfig}
                 hasAppliedFilters={hasAppliedFilters.current}
                 initialAppliedFilters={state.initialAppliedFilters}
                 onFilterClear={clearFilters}
                 onPatientIdsChange={handlePatientIdsChange}
                 patientIds={state.patientIds}
-                tierAccessLimit={tierAccessLimit}
                 filter={data.filter}
                 initialTabsOptions={data.initialTabsOptions}
                 onAnchorValueChange={data.onAnchorValueChange}
