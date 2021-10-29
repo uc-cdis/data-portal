@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { guppyUrl, tierAccessLimit, explorerConfig } from '../localconf';
+import { tierAccessLimit, explorerConfig } from '../localconf';
 import './typedef';
 
 /** @type {React.Context<AlteredExplorerConfig>} */
@@ -22,7 +22,7 @@ export function ExplorerConfigProvider({ children, explorerId }) {
         chartConfig: config.charts,
         filterConfig: config.filters,
         getAccessButtonLink: config.getAccessButtonLink,
-        guppyConfig: { path: guppyUrl, ...config.guppyConfig },
+        guppyConfig: config.guppyConfig,
         hideGetAccessButton: config.hideGetAccessButton,
         patientIdsConfig: config.patientIds,
         survivalAnalysisConfig: config.survivalAnalysis,
