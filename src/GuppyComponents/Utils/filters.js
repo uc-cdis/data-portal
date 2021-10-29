@@ -264,7 +264,6 @@ const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (
       : undefined;
 
     queryGuppyForRawData({
-      path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: [field],
       gqlFilter,
