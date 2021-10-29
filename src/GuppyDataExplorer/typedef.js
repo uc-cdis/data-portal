@@ -76,3 +76,18 @@
  * @property {string} [terraExportURL]
  * @property {string[]} [terraTemplate]
  */
+
+/**
+ * @typedef {Object} AlteredExplorerConfig
+ * @property {{ [x:string]: OptionFilter }} [adminAppliedPreFilters]
+ * @property {ButtonConfig} buttonConfig
+ * @property {ChartConfig} chartConfig
+ * @property {FilterConfig} filterConfig
+ * @property {string} [getAccessButtonLink]
+ * @property {GuppyConfig} guppyConfig
+ * @property {boolean} [hideGetAccessButton]
+ * @property {PatientIdsConfig} [patientIdsConfig]
+ * @property {SurvivalAnalysisConfig} survivalAnalysisConfig
+ * @property {TableConfig} tableConfig
+ * @property {number} tierAccessLimit
+ */
