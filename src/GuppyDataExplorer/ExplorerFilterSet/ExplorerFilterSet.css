@@ -4,7 +4,9 @@
 }
 
 .explorer-filter-set__title {
+  color: var(--g3-color__black);
   display: flex;
+  font-weight: 600;
   margin-bottom: 0.5rem;
 }
 

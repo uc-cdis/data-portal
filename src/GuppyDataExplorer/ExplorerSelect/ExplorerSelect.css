@@ -4,8 +4,10 @@
 }
 
 .explorer-select__title {
-  margin-bottom: 1rem;
+  color: var(--g3-color__black);
   display: flex;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 .explorer-select__title > h1 {
