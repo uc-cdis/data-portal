@@ -1,0 +1,16 @@
+.explorer-select {
+  border-bottom: 1px solid var(--g3-color__silver);
+  margin-bottom: 1rem;
+  padding: 1rem 1rem 2rem;
+}
+
+.explorer-select__title {
+  margin-bottom: 1rem;
+  display: flex;
+}
+
+.explorer-select__title > h1 {
+  font-size: 1.5rem;
+  line-height: initial;
+  margin-left: 0.5rem;
+}

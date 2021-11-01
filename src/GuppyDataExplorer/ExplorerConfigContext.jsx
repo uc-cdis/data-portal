@@ -2,13 +2,14 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { tierAccessLimit, explorerConfig } from '../localconf';
+import { capitalizeFirstLetter } from '../utils';
 import './typedef';
 
 /**
  * @typedef {Object} ExplorerConfigContext
  * @property {AlteredExplorerConfig} current
  * @property {number} explorerId
- * @property {{ id: number; label: string }[]} explorerOptions
+ * @property {{ label: string; value: string }[]} explorerOptions
  * @property {(id: number) => void} updateExplorerId
  */
 
@@ -22,7 +23,10 @@ export function ExplorerConfigProvider({ children }) {
   const explorerIds = [];
   for (const { guppyConfig, id, label } of explorerConfig) {
     explorerIds.push(id);
-    explorerOptions.push({ id, label: label || guppyConfig.dataType });
+    explorerOptions.push({
+      label: capitalizeFirstLetter(label || guppyConfig.dataType),
+      value: String(id),
+    });
   }
 
   const searchParams = new URLSearchParams(history.location.search);

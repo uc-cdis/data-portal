@@ -4,6 +4,7 @@ import Dashboard from '../Layout/Dashboard';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
 import { useExplorerConfig } from './ExplorerConfigContext';
 import ExplorerErrorBoundary from './ExplorerErrorBoundary';
+import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerFilterSet from './ExplorerFilterSet';
@@ -183,6 +184,7 @@ function GuppyDataExplorer() {
         {(data) => (
           <Dashboard>
             <Dashboard.Sidebar>
+              <ExplorerSelect />
               <ExplorerFilterSet
                 className='guppy-data-explorer__filter-set'
                 onOpenFilterSet={updateInitialAppliedFilters}
