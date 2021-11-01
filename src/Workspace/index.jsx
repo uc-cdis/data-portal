@@ -450,7 +450,8 @@ class Workspace extends React.Component {
       // NOTE both the containing element and the iframe have class '.workspace',
       // although no styles should be shared between them. The reason for this
       // is for backwards compatibility with Jenkins integration tests that select by classname.
-      console.log(this.state.payModel);
+      const showExternalLoginsHintBanner = this.state.externalLoginOptions.length > 0
+      && this.state.externalLoginOptions.some((option) => !option.refresh_token_expiration);
       return (
         <div
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
@@ -575,7 +576,7 @@ class Workspace extends React.Component {
                       </div>
                     )
                     : null}
-                  {this.state.externalLoginOptions.length > 0
+                  {showExternalLoginsHintBanner
                     ? (
                       <Alert
                         description={
