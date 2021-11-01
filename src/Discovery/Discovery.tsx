@@ -183,6 +183,8 @@ interface Props {
   config: DiscoveryConfig
   studies: {__accessible: boolean, [any: string]: any}[]
   params?: {studyUID: string} // from React Router
+  selectedResources
+  dispatch: (arg0: any)=>void
 }
 
 const Discovery: React.FunctionComponent<Props> = (props: Props) => {
@@ -190,7 +192,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   const [jsSearch, setJsSearch] = useState(null);
   const [searchFilteredResources, setSearchFilteredResources] = useState([]);
-  const [selectedResources, setSelectedResources] = useState([]);
+  // const [selectedResources, setSelectedResources] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filterState, setFilterState] = useState({} as FilterState);
@@ -583,7 +585,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         {/* Bar with actions, stats, around advanced search and data actions */}
         <ReduxDiscoveryActionBar
           config={props.config}
-          selectedResources={selectedResources}
+          selectedResources={props.selectedResources}
           exportingToWorkspace={exportingToWorkspace}
           setExportingToWorkspace={setExportingToWorkspace}
           filtersVisible={filtersVisible}
@@ -625,8 +627,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             setModalVisible={setModalVisible}
             columns={columns}
             accessibleFieldName={accessibleFieldName}
-            selectedResources={selectedResources}
-            setSelectedResources={setSelectedResources}
+            selectedResources={props.selectedResources}
+            setSelectedResources={(selectedResources)=>props.dispatch({
+              type: "RESOURCES_SELECTED", selectedResources
+            })}
           />
         </div>
 

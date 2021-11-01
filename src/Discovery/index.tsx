@@ -52,6 +52,8 @@ const loadStudiesFromMDS = async (): Promise<any[]> => {
 const DiscoveryWithMDSBackend: React.FC<{
     userAuthMapping: any,
     config: DiscoveryConfig,
+    awaitingDownload: boolean,
+    dispatch,
 }> = (props) => {
   const [studies, setStudies] = useState(null);
 
@@ -59,7 +61,9 @@ const DiscoveryWithMDSBackend: React.FC<{
     throw new Error('Could not find configuration for Discovery page. Check the portal config.');
   }
 
+
   useEffect(() => {
+
     let loadStudiesFunction;
     if (isEnabled('discoveryUseAggMDS')) {
       loadStudiesFunction = loadStudiesFromAggMDS;
@@ -67,6 +71,7 @@ const DiscoveryWithMDSBackend: React.FC<{
       loadStudiesFunction = loadStudiesFromMDS;
     }
     loadStudiesFunction().then((rawStudies) => {
+      let studies;
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const { authzField, dataAvailabilityField } = props.config.minimalFieldMapping;
@@ -90,9 +95,27 @@ const DiscoveryWithMDSBackend: React.FC<{
             __accessible: accessible,
           };
         });
-        setStudies(studiesWithAccessibleField);
+        studies = studiesWithAccessibleField;
       } else {
-        setStudies(rawStudies);
+        studies = rawStudies;
+      }
+      setStudies(studies);
+
+      // resume action in progress if redirected from login
+      const urlParams = decodeURIComponent(window.location.search);
+      if (urlParams.startsWith("?actionToResume=")) {
+        const state = JSON.parse(urlParams.split("?actionToResume=")[1]);
+        if (state.action && state.selectedResourceIDs) {
+          const selectedResources = studies.filter(
+            study => (state.selectedResourceIDs).includes(study.study_id)
+          );
+          props.dispatch({
+            type: "REDIRECTED_FOR_ACTION",
+            actionToResume: state.action,
+            selectedResources
+          });
+        }
+        window.history.replaceState({}, document.title, window.location.pathname);
       }
     }).catch((err) => {
       // eslint-disable-next-line no-console
@@ -108,9 +131,19 @@ const DiscoveryWithMDSBackend: React.FC<{
   );
 };
 
-const mapStateToProps = (state) => ({
-  userAuthMapping: state.userAuthMapping,
-  config: discoveryConfig,
-});
+// Goal 1: store the studies in redux
+
+// Goal 2: store the study filters in redux
+
+// Goal 2.5: consolidate the study filters
+
+const mapStateToProps = (state) => {
+  return {
+    userAuthMapping: state.userAuthMapping,
+    config: discoveryConfig,
+    selectedResources: state.discovery.selectedResources,
+    actionToResume: state.actionToResume
+  }
+};
 
 export default connect(mapStateToProps)(DiscoveryWithMDSBackend);

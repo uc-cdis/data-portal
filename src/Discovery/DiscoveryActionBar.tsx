@@ -47,6 +47,8 @@ interface Props {
   filtersVisible: boolean;
   setFiltersVisible: (boolean) => void;
   user: User,
+  actionToResume: "download"|"export"|"manifest"
+  dispatch
 }
 
 const BATCH_EXPORT_JOB_PREFIX = 'batch-export';
@@ -387,8 +389,10 @@ const DiscoveryActionBar = (props: Props) => {
       fetchWithCreds({ path: `${jobAPIPath}list` }).then(
         (jobsListResponse) => {
           const { status } = jobsListResponse;
-          if (status === 200) {
+          // jobsListResponse will be boilerplate HTML when not logged in
+          if (status === 200 && typeof jobsListResponse.data === 'object') {
             const runningJobs: JobStatus[] = jobsListResponse.data;
+            console.log(runningJobs, jobsListResponse)
             runningJobs.forEach(
               (job) => {
                 if (job.status === 'Running' && job.name.startsWith(BATCH_EXPORT_JOB_PREFIX)) {
@@ -406,8 +410,44 @@ const DiscoveryActionBar = (props: Props) => {
     [],
   );
 
-  const handleRedirectToLoginClick = () => {
-    history.push('/login', { from: `${location.pathname}` });
+  useEffect(
+    () => {
+      if (props.actionToResume === "download") {
+        handleDownloadZipClick(
+          props.config,
+          props.selectedResources,
+          downloadStatus,
+          setDownloadStatus,
+          history,
+          location
+        );
+        props.dispatch({type: "REDIRECT_ACTION_RESUMED"});
+      }
+      else if (props.actionToResume === "export") {
+        handleExportToWorkspaceClick(
+          props.config,
+          props.selectedResources,
+          props.setExportingToWorkspace,
+          setDownloadStatus,
+          history,
+          location
+        );
+        props.dispatch({type: "REDIRECT_ACTION_RESUMED"});
+      }
+      else if (props.actionToResume === "manifest") {
+        console.log("clicking manifest", props.actionToResume)
+        handleDownloadManifestClick(props.config, props.selectedResources);
+        props.dispatch({type: "REDIRECT_ACTION_RESUMED"});
+      }
+    }, [props.actionToResume]
+  )
+
+  const handleRedirectToLoginClick = (selectedResourceIDs: string[]=null, action:"download"|"export"|"manifest"=null) => {
+    let queryStr = ""
+    if (action && selectedResourceIDs) {
+      queryStr = `?actionToResume=${encodeURIComponent(JSON.stringify({action, selectedResourceIDs}))}`;
+    }
+    history.push(`/login`, { from: `${location.pathname}${queryStr}` });
   };
 
   return (
@@ -451,7 +491,7 @@ const DiscoveryActionBar = (props: Props) => {
                           location,
                         );
                       } else {
-                        handleRedirectToLoginClick();
+                        handleRedirectToLoginClick(props.selectedResources.map(res=>res.study_id), "download");
                       }
                     }
                   }
