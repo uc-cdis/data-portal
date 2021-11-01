@@ -50,13 +50,16 @@ const emptyAdminAppliedPreFilters = {};
 
 function GuppyDataExplorer() {
   const {
-    adminAppliedPreFilters = emptyAdminAppliedPreFilters,
-    chartConfig,
-    filterConfig,
-    guppyConfig,
-    patientIdsConfig,
-    tableConfig,
-  } = useExplorerConfig().current;
+    explorerId,
+    current: {
+      adminAppliedPreFilters = emptyAdminAppliedPreFilters,
+      chartConfig,
+      filterConfig,
+      guppyConfig,
+      patientIdsConfig,
+      tableConfig,
+    },
+  } = useExplorerConfig();
   const history = useHistory();
   const initialState = extractExplorerStateFromURL(
     new URLSearchParams(history.location.search),
@@ -167,6 +170,7 @@ function GuppyDataExplorer() {
     <ExplorerErrorBoundary>
       <div className='guppy-data-explorer'>
         <GuppyWrapper
+          key={explorerId}
           adminAppliedPreFilters={adminAppliedPreFilters}
           initialAppliedFilters={state.initialAppliedFilters}
           chartConfig={chartConfig}

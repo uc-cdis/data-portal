@@ -1,13 +1,51 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import { tierAccessLimit, explorerConfig } from '../localconf';
 import './typedef';
 
-/** @type {React.Context<{ current: AlteredExplorerConfig}>} */
+/**
+ * @typedef {Object} ExplorerConfigContext
+ * @property {AlteredExplorerConfig} current
+ * @property {number} explorerId
+ * @property {{ id: number; label: string }[]} explorerOptions
+ * @property {(id: number) => void} updateExplorerId
+ */
+
+/** @type {React.Context<ExplorerConfigContext>} */
 const ExplorerConfigContext = createContext(null);
 
-export function ExplorerConfigProvider({ children, explorerId }) {
+export function ExplorerConfigProvider({ children }) {
+  const history = useHistory();
+
+  const explorerOptions = [];
+  const explorerIds = [];
+  for (const { guppyConfig, id, label } of explorerConfig) {
+    explorerIds.push(id);
+    explorerOptions.push({ id, label: label || guppyConfig.dataType });
+  }
+
+  const searchParams = new URLSearchParams(history.location.search);
+  const searchParamId = searchParams.has('id')
+    ? Number(searchParams.get('id'))
+    : undefined;
+  const isSearchParamIdValid = explorerIds.includes(searchParamId);
+  const initialExplorerId = isSearchParamIdValid
+    ? searchParamId
+    : explorerIds[0];
+  useEffect(() => {
+    if (!searchParams.has('id') || !isSearchParamIdValid)
+      history.push({ search: `id=${initialExplorerId}` });
+  }, []);
+
+  const [explorerId, setExporerId] = useState(initialExplorerId);
+  function updateExplorerId(id) {
+    setExporerId(id);
+    history.push({ search: `id=${id}` });
+  }
+
   const config = explorerConfig.find(({ id }) => id === explorerId);
+
   return (
     <ExplorerConfigContext.Provider
       value={{
@@ -30,6 +68,9 @@ export function ExplorerConfigProvider({ children, explorerId }) {
           tableConfig: config.table,
           tierAccessLimit,
         },
+        explorerId,
+        explorerOptions,
+        updateExplorerId,
       }}
     >
       {children}
@@ -39,7 +80,6 @@ export function ExplorerConfigProvider({ children, explorerId }) {
 
 ExplorerConfigProvider.propTypes = {
   children: PropTypes.node.isRequired,
-  explorerId: PropTypes.number.isRequired,
 };
 
 export const useExplorerConfig = () => useContext(ExplorerConfigContext);
