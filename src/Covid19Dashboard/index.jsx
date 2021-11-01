@@ -9,11 +9,11 @@ import {
 import 'react-tabs/style/react-tabs.less';
 
 import {
-  covid19DashboardConfig, mapboxAPIToken, auspiceUrl, auspiceUrlIL,
+  covid19DashboardConfig, mapboxAPIToken, auspiceUrlIL,
 } from '../localconf';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
-import WorldMapChart from './WorldMapChart';
+// import WorldMapChart from './WorldMapChart';
 import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
 import ChartCarousel from './ChartCarousel';
@@ -57,10 +57,6 @@ class Covid19Dashboard extends React.Component {
       global: 0,
       illinois: 0,
     };
-    const recoveredCount = {
-      global: 0,
-      illinois: 0,
-    };
     const vaccinatedCount = {
       illinois: 0,
     };
@@ -72,7 +68,6 @@ class Covid19Dashboard extends React.Component {
     this.props.jhuGeojsonLatest.features.forEach((feat) => {
       const confirmed = +feat.properties.confirmed;
       const deaths = +feat.properties.deaths;
-      const recovered = +feat.properties.recovered;
       if (confirmed) {
         confirmedCount.global += confirmed;
         if (feat.properties.province_state === 'Illinois') {
@@ -85,16 +80,10 @@ class Covid19Dashboard extends React.Component {
           deathsCount.illinois += deaths;
         }
       }
-      if (recovered) {
-        recoveredCount.global += recovered;
-        if (feat.properties.province_state === 'Illinois') {
-          recoveredCount.illinois += recovered;
-        }
-      }
     });
 
     return {
-      confirmedCount, deathsCount, recoveredCount, vaccinatedCount,
+      confirmedCount, deathsCount, vaccinatedCount,
     };
   }
 
@@ -264,7 +253,7 @@ class Covid19Dashboard extends React.Component {
     const chartsConfig = covid19DashboardConfig.chartsConfig || {};
 
     const {
-      confirmedCount, deathsCount, recoveredCount, vaccinatedCount,
+      confirmedCount, deathsCount, vaccinatedCount,
     } = this.getTotalCounts();
 
     return (
@@ -274,8 +263,8 @@ class Covid19Dashboard extends React.Component {
           <Tabs>
             <TabList className='covid19-dashboard_tablist'>
               <Tab>COVID-19 in Illinois</Tab>
-              <Tab>COVID-19 in the world</Tab>
-              <Tab>Global SARS-CoV2 Genomics</Tab>
+              {/* <Tab>COVID-19 in the world</Tab>
+              <Tab>Global SARS-CoV2 Genomics</Tab> */}
               <Tab>IL SARS-CoV2 Genomics</Tab>
             </TabList>
 
@@ -301,6 +290,7 @@ class Covid19Dashboard extends React.Component {
                     <IllinoisMapChart
                       jsonByLevel={this.props.jhuJsonByLevelLatest}
                       jsonByTime={this.props.jhuJsonByTimeLatest}
+                      jsonVaccinated={this.props.vaccinesByCountyByDate}
                       modeledFipsList={this.props.modeledFipsList}
                       fetchTimeSeriesData={this.props.fetchTimeSeriesData}
                     />
@@ -323,7 +313,7 @@ class Covid19Dashboard extends React.Component {
             </TabPanel>
 
             {/* world tab */}
-            <TabPanel className='covid19-dashboard_panel'>
+            {/* <TabPanel className='covid19-dashboard_panel'>
               <div className='covid19-dashboard_counts'>
                 <CountWidget
                   label='Total Confirmed'
@@ -332,10 +322,6 @@ class Covid19Dashboard extends React.Component {
                 <CountWidget
                   label='Total Deaths'
                   value={deathsCount.global}
-                />
-                <CountWidget
-                  label='Total Recovered'
-                  value={recoveredCount.global}
                 />
               </div>
               <div className='covid19-dashboard_visualizations'>
@@ -368,7 +354,7 @@ class Covid19Dashboard extends React.Component {
               <div className='covid19-dashboard_auspice'>
                 {/* this component doesn't need the mapboxAPIToken but it's a way to make
                 sure this is the COVID19 Commons and the iframe contents will load */}
-                { mapboxAPIToken
+            {/* { mapboxAPIToken
                   && (
                     <iframe
                       title='Global SARS-CoV2 Genomics'
@@ -378,7 +364,7 @@ class Covid19Dashboard extends React.Component {
                     />
                   )}
               </div>
-            </TabPanel>
+            </TabPanel> */}
             <TabPanel className='covid19-dashboard_panel'>
               <div className='covid19-dashboard_auspice'>
                 {/* this component doesn't need the mapboxAPIToken but it's a way to make

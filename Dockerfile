@@ -39,7 +39,7 @@ RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}
     && /bin/rm -rf .git \
     && /bin/rm -rf node_modules
 RUN npm config set unsafe-perm=true \
-    && npm ci --legacy-peer-deps \
+    && npm ci \
     && npm run relay \
     && npm run params
     # see https://stackoverflow.com/questions/48387040/nodejs-recommended-max-old-space-size

@@ -26,14 +26,11 @@ const DiscoveryTagViewer: React.FunctionComponent<DiscoveryTagViewerProps> = (pr
       const tagField = props.config.minimalFieldMapping.tagsListFieldName;
       study[tagField].forEach((tag) => {
         if (tag.category === category.name) {
-          if (tagMap[tag.name] === undefined) {
-            tagMap[tag.name] = 1;
-          }
-          tagMap[tag.name] += 1;
+          tagMap[tag.name] = 1;
         }
       });
     });
-    const tagArray = Object.keys(tagMap).sort((a, b) => tagMap[b] - tagMap[a]);
+    const tagArray = Object.keys(tagMap).sort((a, b) => a.localeCompare(b));
 
     return (
       <div>

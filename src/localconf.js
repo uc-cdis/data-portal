@@ -194,6 +194,11 @@ function buildConfig(opts) {
 
   const { dataAvailabilityToolConfig } = config;
 
+  let showSystemUse = false;
+  if (components.systemUse && components.systemUse.systemUseText) {
+    showSystemUse = true;
+  }
+
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
     showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
@@ -202,6 +207,11 @@ function buildConfig(opts) {
   let showFenceAuthzOnProfile = true;
   if (config.showFenceAuthzOnProfile === false) {
     showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
+  }
+
+  let showExternalLoginsOnProfile = false;
+  if (config.showExternalLoginsOnProfile === true) {
+    showExternalLoginsOnProfile = config.showExternalLoginsOnProfile;
   }
 
   let hideSubmissionIfIneligible = false;
@@ -458,6 +468,7 @@ function buildConfig(opts) {
     externalLoginOptionsUrl,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
+    showExternalLoginsOnProfile,
     hideSubmissionIfIneligible,
     useArboristUI,
     terraExportWarning,
@@ -496,6 +507,7 @@ function buildConfig(opts) {
     ddClientToken,
     ddEnv,
     ddSampleRate,
+    showSystemUse,
   };
 }
 

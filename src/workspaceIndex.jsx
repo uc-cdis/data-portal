@@ -20,7 +20,7 @@ import { datadogRum } from '@datadog/browser-rum';
 import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
 import { fetchAndSetCsrfToken } from './configs';
-import { fetchUserAccess, fetchUserAuthMapping } from './actions';
+import { fetchUserAccess, fetchUserAuthMapping, updateSystemUseNotice } from './actions';
 import ProtectedContent from './Login/ProtectedContent';
 import UserProfile, { fetchAccess } from './UserProfile/ReduxUserProfile';
 import theme from './theme';
@@ -37,17 +37,20 @@ import GA, { RouteTracker } from './components/GoogleAnalytics';
 import { DAPRouteTracker } from './components/DAPAnalytics';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
+import workspaceSessionMonitor from './Workspace/WorkspaceSessionMonitor';
 import Workspace from './Workspace';
+import ReduxWorkspaceShutdownPopup from './Popup/ReduxWorkspaceShutdownPopup';
+import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 
 // monitor user's session
 sessionMonitor.start();
+workspaceSessionMonitor.start();
 
 // render the app after the store is configured
 async function init() {
   const store = await getReduxStore();
 
-  // asyncSetInterval(() => store.dispatch(fetchUser), 60000);
   ReactGA.initialize(gaTracking);
   ReactGA.pageview(window.location.pathname + window.location.search);
 
@@ -77,6 +80,7 @@ async function init() {
       // resources can be open to anonymous users, so fetch access:
       store.dispatch(fetchUserAccess),
       store.dispatch(fetchUserAuthMapping),
+      store.dispatch(updateSystemUseNotice(null)),
       // eslint-disable-next-line no-console
       fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); }),
     ],
@@ -100,6 +104,8 @@ async function init() {
               <ReduxTopBar />
               <ReduxNavBar />
               <div className='main-content'>
+                <ReduxWorkspaceShutdownBanner />
+                <ReduxWorkspaceShutdownPopup />
                 <Switch>
                   {/* process with trailing and duplicate slashes first */}
                   {/* see https://github.com/ReactTraining/react-router/issues/4841#issuecomment-523625186 */}

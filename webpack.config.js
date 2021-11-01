@@ -19,6 +19,13 @@ if (DAPTrackingURL) {
 if (process.env.DATA_UPLOAD_BUCKET) {
   connectSrcURLs.push(`https://${process.env.DATA_UPLOAD_BUCKET}.s3.amazonaws.com`);
 }
+// add any extra URLs that should be whitelisted
+if (configFile.connectSrcCSPWhitelist && configFile.connectSrcCSPWhitelist.length > 0) {
+  connectSrcURLs.push(...configFile.connectSrcCSPWhitelist);
+}
+if (configFile.featureFlags.discoveryUseAggMDS) {
+  connectSrcURLs.push("https://dataguids.org");
+}
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
 }
@@ -146,7 +153,7 @@ const entry = {
   workspaceBundle: './src/workspaceIndex.jsx',
   covid19Bundle: './src/covid19Index.jsx',
   nctBundle: './src/nctIndex.jsx',
-  healBundle: './src/healIndex.jsx',
+  ecosystemBundle: './src/ecosystemIndex.jsx',
 };
 
 // if GEN3_BUNDLE is set with a value
@@ -158,35 +165,36 @@ if (process.env.GEN3_BUNDLE) {
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
-    delete entry.healBundle;
+    delete entry.ecosystemBundle;
     break;
   case 'covid19':
     entry.bundle = entry.covid19Bundle;
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
-    delete entry.healBundle;
+    delete entry.ecosystemBundle;
     break;
   case 'nct':
     entry.bundle = entry.nctBundle;
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
-    delete entry.healBundle;
+    delete entry.ecosystemBundle;
     break;
   case 'heal':
-    entry.bundle = entry.healBundle;
+  case 'ecosystem':
+    entry.bundle = entry.ecosystemBundle;
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
-    delete entry.healBundle;
+    delete entry.ecosystemBundle;
     break;
   default:
     // by default we build for commons bundle
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
-    delete entry.healBundle;
+    delete entry.ecosystemBundle;
     break;
   }
 }
