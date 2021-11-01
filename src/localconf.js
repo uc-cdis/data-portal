@@ -197,6 +197,7 @@ function buildConfig(opts) {
   if (components.systemUse && components.systemUse.systemUseText) {
     showSystemUse = true;
   }
+  console.log("show system use: ", showSystemUse);
 
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {

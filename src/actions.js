@@ -332,6 +332,7 @@ export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
   }
   // look for cookie
   if (document.cookie.indexOf('systemUseWarning=') >= 0) {
+    console.log('hide system use msg');
     dispatch({
       type: 'UPDATE_POPUP',
       data: {
@@ -339,6 +340,7 @@ export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
       },
     });
   } else {
+    console.log('hide system use msg');
     dispatch({
       type: 'UPDATE_POPUP',
       data: {
