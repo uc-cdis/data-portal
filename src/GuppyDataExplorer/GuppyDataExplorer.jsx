@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import Dashboard from '../Layout/Dashboard';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
 import { useExplorerConfig } from './ExplorerConfigContext';
 import ExplorerErrorBoundary from './ExplorerErrorBoundary';
@@ -180,46 +181,52 @@ function GuppyDataExplorer() {
         patientIds={state.patientIds}
       >
         {(data) => (
-          <div className='guppy-data-explorer'>
-            <ExplorerFilterSet
-              className='guppy-data-explorer__filter-set'
-              onOpenFilterSet={updateInitialAppliedFilters}
-              onDeleteFilterSet={updateInitialAppliedFilters}
-              filter={data.filter}
-            />
-            <ExplorerFilter
-              className='guppy-data-explorer__filter'
-              hasAppliedFilters={hasAppliedFilters.current}
-              initialAppliedFilters={state.initialAppliedFilters}
-              onFilterClear={clearFilters}
-              onPatientIdsChange={handlePatientIdsChange}
-              patientIds={state.patientIds}
-              filter={data.filter}
-              initialTabsOptions={data.initialTabsOptions}
-              onAnchorValueChange={data.onAnchorValueChange}
-              onFilterChange={data.onFilterChange}
-              tabsOptions={data.tabsOptions}
-            />
-            <ExplorerVisualization
-              className='guppy-data-explorer__visualization'
-              accessibleCount={data.accessibleCount}
-              aggsData={data.aggsData}
-              aggsChartData={data.aggsChartData}
-              allFields={data.allFields}
-              filter={data.filter}
-              isLoadingAggsData={data.isLoadingAggsData}
-              isLoadingRawData={data.isLoadingRawData}
-              rawData={data.rawData}
-              totalCount={data.totalCount}
-              downloadRawData={data.downloadRawData}
-              downloadRawDataByFields={data.downloadRawDataByFields}
-              downloadRawDataByTypeAndFilter={
-                data.downloadRawDataByTypeAndFilter
-              }
-              fetchAndUpdateRawData={data.fetchAndUpdateRawData}
-              getTotalCountsByTypeAndFilter={data.getTotalCountsByTypeAndFilter}
-            />
-          </div>
+          <Dashboard>
+            <Dashboard.Sidebar>
+              <ExplorerFilterSet
+                className='guppy-data-explorer__filter-set'
+                onOpenFilterSet={updateInitialAppliedFilters}
+                onDeleteFilterSet={updateInitialAppliedFilters}
+                filter={data.filter}
+              />
+              <ExplorerFilter
+                className='guppy-data-explorer__filter'
+                hasAppliedFilters={hasAppliedFilters.current}
+                initialAppliedFilters={state.initialAppliedFilters}
+                onFilterClear={clearFilters}
+                onPatientIdsChange={handlePatientIdsChange}
+                patientIds={state.patientIds}
+                filter={data.filter}
+                initialTabsOptions={data.initialTabsOptions}
+                onAnchorValueChange={data.onAnchorValueChange}
+                onFilterChange={data.onFilterChange}
+                tabsOptions={data.tabsOptions}
+              />
+            </Dashboard.Sidebar>
+            <Dashboard.Main>
+              <ExplorerVisualization
+                className='guppy-data-explorer__visualization'
+                accessibleCount={data.accessibleCount}
+                aggsData={data.aggsData}
+                aggsChartData={data.aggsChartData}
+                allFields={data.allFields}
+                filter={data.filter}
+                isLoadingAggsData={data.isLoadingAggsData}
+                isLoadingRawData={data.isLoadingRawData}
+                rawData={data.rawData}
+                totalCount={data.totalCount}
+                downloadRawData={data.downloadRawData}
+                downloadRawDataByFields={data.downloadRawDataByFields}
+                downloadRawDataByTypeAndFilter={
+                  data.downloadRawDataByTypeAndFilter
+                }
+                fetchAndUpdateRawData={data.fetchAndUpdateRawData}
+                getTotalCountsByTypeAndFilter={
+                  data.getTotalCountsByTypeAndFilter
+                }
+              />
+            </Dashboard.Main>
+          </Dashboard>
         )}
       </GuppyWrapper>
     </ExplorerErrorBoundary>

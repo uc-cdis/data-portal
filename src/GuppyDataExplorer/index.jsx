@@ -43,14 +43,8 @@ export default function Explorer() {
 
   return (
     <ExplorerConfigProvider>
-      <div className='guppy-explorer'>
-        <ExplorerTabs />
-        <div
-          className={explorerConfig.length > 1 ? 'guppy-explorer__main' : ''}
-        >
-          <GuppyDataExplorer />
-        </div>
-      </div>
+      <ExplorerTabs />
+      <GuppyDataExplorer />
     </ExplorerConfigProvider>
   );
 }
