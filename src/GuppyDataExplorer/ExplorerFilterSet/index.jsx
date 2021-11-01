@@ -154,7 +154,7 @@ function ExplorerFilterSet({
   return (
     <div className={className}>
       {isError ? (
-        <div className='guppy-explorer-filter-set__error'>
+        <div className='explorer-filter-set__error'>
           <h2>Error obtaining saved Filter Set data...</h2>
           <p>
             Please retry by clicking {'"Retry"'} button or refreshing the page.
@@ -167,7 +167,7 @@ function ExplorerFilterSet({
       ) : (
         <>
           <div>
-            <h1 className='guppy-explorer-filter-set__name'>
+            <h1 className='explorer-filter-set__name'>
               Filter Set:{' '}
               {filterSet.name ? (
                 <>
@@ -175,7 +175,7 @@ function ExplorerFilterSet({
                   {isFiltersChanged && <FilterChangedWarning />}
                 </>
               ) : (
-                <span className='guppy-explorer-filter-set__placeholder'>
+                <span className='explorer-filter-set__placeholder'>
                   untitled
                 </span>
               )}
@@ -184,7 +184,7 @@ function ExplorerFilterSet({
               {filterSet.description ? (
                 truncateWithEllipsis(filterSet.description, 70)
               ) : (
-                <span className='guppy-explorer-filter-set__placeholder'>
+                <span className='explorer-filter-set__placeholder'>
                   No description
                 </span>
               )}
