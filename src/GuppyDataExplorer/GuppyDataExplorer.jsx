@@ -56,7 +56,7 @@ function GuppyDataExplorer() {
     guppyConfig,
     patientIdsConfig,
     tableConfig,
-  } = useExplorerConfig();
+  } = useExplorerConfig().current;
   const history = useHistory();
   const initialState = extractExplorerStateFromURL(
     new URLSearchParams(history.location.search),

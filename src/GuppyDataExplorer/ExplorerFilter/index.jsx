@@ -31,7 +31,7 @@ function ExplorerFilter({
     filterConfig,
     guppyConfig,
     tierAccessLimit,
-  } = useExplorerConfig();
+  } = useExplorerConfig().current;
   const connectedFilterProps = {
     ...filterProps,
     adminAppliedPreFilters,
