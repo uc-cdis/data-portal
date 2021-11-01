@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import { explorerConfig } from '../localconf';
@@ -6,6 +7,43 @@ import { ExplorerConfigProvider } from './ExplorerConfigContext';
 import { capitalizeFirstLetter } from '../utils';
 import './GuppyExplorer.css';
 import './typedef';
+
+function ExplorerTabs({ explorerId, explorerOptions, onChange }) {
+  return explorerOptions.length > 1 ? (
+    <div className='guppy-explorer__tabs'>
+      {explorerOptions.map(({ id, label }) => (
+        <div
+          key={id}
+          className={`guppy-explorer__tab ${
+            explorerId === id ? ' guppy-explorer__tab--selected' : ''
+          }`.trim()}
+          onClick={() => onChange(id)}
+          onKeyPress={(e) => {
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              onChange(id);
+            }
+          }}
+          role='button'
+          tabIndex={0}
+        >
+          <h3>{capitalizeFirstLetter(label)}</h3>
+        </div>
+      ))}
+    </div>
+  ) : null;
+}
+
+ExplorerTabs.propTypes = {
+  explorerId: PropTypes.number,
+  explorerOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      label: PropTypes.string,
+    })
+  ),
+  onChange: PropTypes.func,
+};
 
 export default function Explorer() {
   if (explorerConfig.length === 0) {
@@ -33,34 +71,19 @@ export default function Explorer() {
     history.push({ search: `id=${id}` });
   }
 
-  const isMultiExplorer = explorerConfig.length > 1;
+  const explorerOptions = explorerConfig.map((e) => ({
+    id: e.id,
+    label: e.label || e.guppyConfig.dataType,
+  }));
 
   return (
     <div className='guppy-explorer'>
-      {isMultiExplorer && (
-        <div className='guppy-explorer__tabs'>
-          {explorerConfig.map(({ guppyConfig, id, label }) => (
-            <div
-              key={id}
-              className={'guppy-explorer__tab'.concat(
-                explorerId === id ? ' guppy-explorer__tab--selected' : ''
-              )}
-              onClick={() => updateExplorerId(id)}
-              onKeyPress={(e) => {
-                if (e.charCode === 13 || e.charCode === 32) {
-                  e.preventDefault();
-                  updateExplorerId(id);
-                }
-              }}
-              role='button'
-              tabIndex={0}
-            >
-              <h3>{capitalizeFirstLetter(label || guppyConfig.dataType)}</h3>
-            </div>
-          ))}
-        </div>
-      )}
-      <div className={isMultiExplorer ? 'guppy-explorer__main' : ''}>
+      <ExplorerTabs
+        explorerOptions={explorerOptions}
+        explorerId={explorerId}
+        onChange={updateExplorerId}
+      />
+      <div className={explorerOptions.length > 1 ? 'guppy-explorer__main' : ''}>
         <ExplorerConfigProvider explorerId={explorerId}>
           <GuppyDataExplorer key={explorerId} />
         </ExplorerConfigProvider>
