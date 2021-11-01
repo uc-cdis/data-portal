@@ -1,12 +1,24 @@
-.explorer-filter-set__name {
-  font-size: 1.5rem;
-  line-height: 1.25;
+.explorer-filter-set {
+  border-bottom: 1px solid var(--g3-color__silver);
+  padding: 1rem 1rem 2rem;
 }
 
-.explorer-filter-set__menu {
-  min-width: 180px;
-  margin-left: 2rem;
-  text-align: center;
+.explorer-filter-set__title {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.explorer-filter-set__title > h1 {
+  font-size: 1.5rem;
+  line-height: initial;
+  margin-left: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 70%;
+}
+
+.explorer-filter-set__description {
+  margin-bottom: 1rem;
 }
 
 .explorer-filter-set__button {
@@ -25,8 +37,9 @@
   min-height: 120px;
 }
 
-.explorer-filter-set__error {
-  width: 100%;
+.explorer-filter-set__error > h2 {
+  line-height: initial;
+  margin-bottom: 1rem;
 }
 
 .explorer-filter-set__error > p {

@@ -17,9 +17,8 @@
 }
 
 .guppy-data-explorer__filter-set {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
+  border-bottom: 1px solid var(--g3-color__silver);
+  padding: 1rem 1rem 2rem;
 }
 
 /* Medium screen and less */

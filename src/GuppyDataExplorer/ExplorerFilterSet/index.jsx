@@ -122,7 +122,6 @@ function ExplorerFilterSet({
   function FilterChangedWarning() {
     return (
       <Tooltip
-        placement='top'
         overlay='You have changed filters for this Filter Set. Click this icon to undo.'
         arrowContent={<div className='rc-tooltip-arrow-inner' />}
         trigger={['hover', 'focus']}
@@ -167,22 +166,22 @@ function ExplorerFilterSet({
       ) : (
         <>
           <div>
-            <h1 className='explorer-filter-set__name'>
-              Filter Set:{' '}
-              {filterSet.name ? (
-                <>
-                  {truncateWithEllipsis(filterSet.name, 30)}{' '}
-                  {isFiltersChanged && <FilterChangedWarning />}
-                </>
-              ) : (
-                <span className='explorer-filter-set__placeholder'>
-                  untitled
-                </span>
-              )}
-            </h1>
-            <p>
+            <div className='explorer-filter-set__title'>
+              <div>
+                {filterSet.name && isFiltersChanged && <FilterChangedWarning />}{' '}
+                Filter set:
+              </div>{' '}
+              <h1>
+                {filterSet.name || (
+                  <span className='explorer-filter-set__placeholder'>
+                    Untitled
+                  </span>
+                )}
+              </h1>
+            </div>
+            <p className='explorer-filter-set__description'>
               {filterSet.description ? (
-                truncateWithEllipsis(filterSet.description, 70)
+                truncateWithEllipsis(filterSet.description, 80)
               ) : (
                 <span className='explorer-filter-set__placeholder'>
                   No description
