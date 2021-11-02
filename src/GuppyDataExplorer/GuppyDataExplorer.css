@@ -40,11 +40,9 @@
     overflow: inherit;
   }
 
-  .guppy-data-explorer__filter {
-    display: none;
-  }
-
-  .guppy-data-explorer__filter-set {
+  .guppy-data-explorer__filter,
+  .guppy-data-explorer__filter-set,
+  .guppy-data-explorer__data-release-version {
     display: none;
   }
 }
