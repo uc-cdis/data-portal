@@ -7,7 +7,6 @@ import './ExplorerFilter.css';
 /**
  * @typedef {Object} ExplorerFilterProps
  * @property {string} [className]
- * @property {boolean} [hasAppliedFilters]
  * @property {FilterState} [initialAppliedFilters]
  * @property {SimpleAggsData} [initialTabsOptions]
  * @property {FilterState} filter
@@ -20,12 +19,7 @@ import './ExplorerFilter.css';
  */
 
 /** @param {ExplorerFilterProps} props */
-function ExplorerFilter({
-  className = '',
-  hasAppliedFilters,
-  onFilterClear,
-  ...filterProps
-}) {
+function ExplorerFilter({ className = '', onFilterClear, ...filterProps }) {
   const {
     adminAppliedPreFilters,
     filterConfig,
@@ -39,6 +33,7 @@ function ExplorerFilter({
     guppyConfig,
     tierAccessLimit,
   };
+  const hasAppliedFilters = Object.keys(filterProps.filter).length > 0;
 
   return (
     <div className={className}>
@@ -61,7 +56,6 @@ function ExplorerFilter({
 
 ExplorerFilter.propTypes = {
   className: PropTypes.string,
-  hasAppliedFilters: PropTypes.bool,
   initialAppliedFilters: PropTypes.object,
   onFilterClear: PropTypes.func,
   onPatientIdsChange: PropTypes.func,

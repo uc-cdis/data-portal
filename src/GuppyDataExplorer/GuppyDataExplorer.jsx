@@ -74,9 +74,6 @@ function GuppyDataExplorer({ dataVersion }) {
   );
   const isMounted = useRef(false);
   const isBrowserNavigation = useRef(false);
-  const hasAppliedFilters = useRef(
-    Object.keys(initialState.initialAppliedFilters).length > 0
-  );
   const [state, setState] = useState(initialState);
 
   useEffect(() => {
@@ -89,8 +86,6 @@ function GuppyDataExplorer({ dataVersion }) {
         filterConfig.anchor !== undefined,
         patientIdsConfig
       );
-      hasAppliedFilters.current =
-        Object.keys(newState.initialAppliedFilters).length > 0;
       if (isMounted.current) setState(newState);
       isBrowserNavigation.current = false;
     };
@@ -105,7 +100,6 @@ function GuppyDataExplorer({ dataVersion }) {
     searchParams.delete('filter');
 
     if (filter && Object.keys(filter).length > 0) {
-      hasAppliedFilters.current = true;
       /** @type {string[]} */
       const allSearchFields = [];
       for (const { searchFields } of filterConfig.tabs)
@@ -123,8 +117,6 @@ function GuppyDataExplorer({ dataVersion }) {
         if (Object.keys(filterWithoutSearchFields).length > 0)
           searchParams.set('filter', JSON.stringify(filterWithoutSearchFields));
       }
-    } else {
-      hasAppliedFilters.current = false;
     }
 
     if (!isBrowserNavigation.current)
@@ -157,7 +149,6 @@ function GuppyDataExplorer({ dataVersion }) {
 
   /** @param {{ filters: FilterState }} args */
   function updateInitialAppliedFilters({ filters }) {
-    hasAppliedFilters.current = Object.keys(filters).length > 0;
     if (isMounted.current)
       setState((prevState) => ({
         ...prevState,
@@ -166,7 +157,6 @@ function GuppyDataExplorer({ dataVersion }) {
   }
 
   function clearFilters() {
-    hasAppliedFilters.current = false;
     if (isMounted.current)
       setState((prevState) => ({ ...prevState, initialAppliedFilters: {} }));
   }
@@ -196,7 +186,6 @@ function GuppyDataExplorer({ dataVersion }) {
               />
               <ExplorerFilter
                 className='guppy-data-explorer__filter'
-                hasAppliedFilters={hasAppliedFilters.current}
                 initialAppliedFilters={state.initialAppliedFilters}
                 onFilterClear={clearFilters}
                 onPatientIdsChange={handlePatientIdsChange}
