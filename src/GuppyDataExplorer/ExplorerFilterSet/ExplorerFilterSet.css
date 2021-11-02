@@ -4,19 +4,17 @@
 }
 
 .explorer-filter-set__title {
-  color: var(--g3-color__black);
-  display: flex;
-  font-weight: var(--g3-font__semi-bold-weight);
   margin-bottom: 1rem;
 }
 
-.explorer-filter-set__title > h1 {
-  font-size: 1.25rem;
+.explorer-filter-set__name {
+  color: var(--g3-color__black);
+  font-size: 1.1rem;
+  font-weight: var(--g3-font__semi-bold-weight);
   line-height: 1.6rem;
-  margin-left: 0.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 70%;
+  white-space: nowrap;
 }
 
 .explorer-filter-set__description {

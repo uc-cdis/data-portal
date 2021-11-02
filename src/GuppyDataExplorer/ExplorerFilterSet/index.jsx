@@ -166,18 +166,16 @@ function ExplorerFilterSet({
       ) : (
         <>
           <div>
-            <div className='explorer-filter-set__title'>
-              <div>
-                {filterSet.name && isFiltersChanged && <FilterChangedWarning />}{' '}
-                Filter set
-              </div>{' '}
-              <h1>
-                {filterSet.name || (
-                  <span className='explorer-filter-set__placeholder'>
-                    Untitled
-                  </span>
-                )}
-              </h1>
+            <h4 className='explorer-filter-set__title'>
+              My filter sets{' '}
+              {filterSet.name && isFiltersChanged && <FilterChangedWarning />}
+            </h4>
+            <div className='explorer-filter-set__name'>
+              {filterSet.name || (
+                <span className='explorer-filter-set__placeholder'>
+                  Untitled
+                </span>
+              )}
             </div>
             <p className='explorer-filter-set__description'>
               {filterSet.description ? (
