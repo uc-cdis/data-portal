@@ -4,14 +4,5 @@
 }
 
 .explorer-select__title {
-  color: var(--g3-color__black);
-  display: flex;
-  font-weight: var(--g3-font__semi-bold-weight);
   margin-bottom: 1rem;
-}
-
-.explorer-select__title > h1 {
-  font-size: 1.25rem;
-  line-height: 1.6rem;
-  margin-left: 0.5rem;
 }
