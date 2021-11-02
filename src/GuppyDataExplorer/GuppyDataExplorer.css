@@ -8,7 +8,7 @@
 }
 
 .guppy-data-explorer__visualization {
-  padding: 0 20px;
+  padding: 1rem;
 }
 
 .guppy-data-explorer__top-banner {
@@ -26,10 +26,6 @@
 @media screen and (max-width: 1090px) {
   .guppy-data-explorer__filter {
     display: none;
-  }
-
-  .guppy-data-explorer__visualization {
-    padding: 0;
   }
 
   .guppy-data-explorer__filter-set {
