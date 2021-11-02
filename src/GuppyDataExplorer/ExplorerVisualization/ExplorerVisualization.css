@@ -80,9 +80,6 @@
     display: flex;
     flex-direction: column;
   }
-  .guppy-explorer-visualization__view-group > button {
-    text-align: left;
-  }
 }
 
 /* Overrides */
