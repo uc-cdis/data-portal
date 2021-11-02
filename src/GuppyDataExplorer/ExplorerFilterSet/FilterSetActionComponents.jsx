@@ -30,7 +30,8 @@ export function FilterSetActionMenu({
   return (
     <Select
       aria-label='Manage filter sets'
-      className='guppy-explorer-filter-set__menu'
+      className='explorer-filter-set__menu'
+      isSearchable={false}
       value={{ label: 'Manage Filter Set', value: '' }}
       options={options}
       theme={overrideSelectTheme}
@@ -46,7 +47,7 @@ FilterSetActionMenu.propTypes = {
 };
 
 function FilterSetButton(props) {
-  return <Button className='guppy-explorer-filter-set__button' {...props} />;
+  return <Button className='explorer-filter-set__button' {...props} />;
 }
 
 /**
@@ -71,7 +72,7 @@ function FilterSetOpenForm({
     value: currentFilterSet,
   });
   return (
-    <div className='guppy-explorer-filter-set__form'>
+    <div className='explorer-filter-set__form'>
       <h4>Select a saved Filter Set to open</h4>
       <form onSubmit={(e) => e.preventDefault()}>
         <SimpleInputField
@@ -173,7 +174,7 @@ function FilterSetCreateForm({
     else setError({ isError: false, message: '' });
   }
   return (
-    <div className='guppy-explorer-filter-set__form'>
+    <div className='explorer-filter-set__form'>
       <h4>Save as a new Filter Set</h4>
       {currentFilterSet.name !== '' && isFiltersChanged && (
         <p>
@@ -299,7 +300,7 @@ function FilterSetUpdateForm({
     else setError({ isError: false, message: '' });
   }
   return (
-    <div className='guppy-explorer-filter-set__form'>
+    <div className='explorer-filter-set__form'>
       <h4>Save changes to the current Filter Set</h4>
       {isFiltersChanged && (
         <p>
@@ -420,7 +421,7 @@ FilterSetUpdateForm.propTypes = {
  */
 function FilterSetDeleteForm({ currentFilterSet, onAction, onClose }) {
   return (
-    <div className='guppy-explorer-filter-set__form'>
+    <div className='explorer-filter-set__form'>
       <h4>Are you sure to delete the current Filter Set?</h4>
       <div>
         <FilterSetButton

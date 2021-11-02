@@ -122,7 +122,6 @@ function ExplorerFilterSet({
   function FilterChangedWarning() {
     return (
       <Tooltip
-        placement='top'
         overlay='You have changed filters for this Filter Set. Click this icon to undo.'
         arrowContent={<div className='rc-tooltip-arrow-inner' />}
         trigger={['hover', 'focus']}
@@ -154,7 +153,7 @@ function ExplorerFilterSet({
   return (
     <div className={className}>
       {isError ? (
-        <div className='guppy-explorer-filter-set__error'>
+        <div className='explorer-filter-set__error'>
           <h2>Error obtaining saved Filter Set data...</h2>
           <p>
             Please retry by clicking {'"Retry"'} button or refreshing the page.
@@ -167,24 +166,22 @@ function ExplorerFilterSet({
       ) : (
         <>
           <div>
-            <h1 className='guppy-explorer-filter-set__name'>
-              Filter Set:{' '}
-              {filterSet.name ? (
-                <>
-                  {truncateWithEllipsis(filterSet.name, 30)}{' '}
-                  {isFiltersChanged && <FilterChangedWarning />}
-                </>
-              ) : (
-                <span className='guppy-explorer-filter-set__placeholder'>
-                  untitled
+            <h4 className='explorer-filter-set__title'>
+              My filter sets{' '}
+              {filterSet.name && isFiltersChanged && <FilterChangedWarning />}
+            </h4>
+            <div className='explorer-filter-set__name'>
+              {filterSet.name || (
+                <span className='explorer-filter-set__placeholder'>
+                  Untitled
                 </span>
               )}
-            </h1>
-            <p>
+            </div>
+            <p className='explorer-filter-set__description'>
               {filterSet.description ? (
-                truncateWithEllipsis(filterSet.description, 70)
+                truncateWithEllipsis(filterSet.description, 80)
               ) : (
-                <span className='guppy-explorer-filter-set__placeholder'>
+                <span className='explorer-filter-set__placeholder'>
                   No description
                 </span>
               )}

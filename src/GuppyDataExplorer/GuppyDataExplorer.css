@@ -1,22 +1,14 @@
 .guppy-data-explorer {
   display: flex;
   flex-wrap: wrap;
-  padding: 0 20px 20px 20px;
 }
 
 .guppy-data-explorer__error {
   text-align: center;
 }
 
-.guppy-data-explorer__filter {
-  width: 20%;
-  margin-top: 20px;
-}
-
 .guppy-data-explorer__visualization {
-  width: 80%;
-  margin-top: 20px;
-  padding: 0 0 20px 20px;
+  padding: 1rem;
 }
 
 .guppy-data-explorer__top-banner {
@@ -25,27 +17,32 @@
 }
 
 .guppy-data-explorer__filter-set {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
+  border-bottom: 1px solid var(--g3-color__silver);
+  padding: 1rem 1rem 2rem;
 }
 
-/* Tablet width and less */
-@media screen and (max-width: 820px) {
-  .guppy-data-explorer {
-    padding: 0;
+.guppy-data-explorer__filter {
+  padding: 1rem 1rem 2rem;
+}
+
+.guppy-data-explorer__data-release-version {
+  padding: 3rem 1rem 2rem;
+  text-align: center;
+}
+
+.guppy-data-explorer__data-release-version > span {
+  font-style: italic;
+}
+
+/* Medium screen and less */
+@media screen and (max-width: 1090px) {
+  .guppy-data-explorer__sidebar {
+    overflow: inherit;
   }
 
-  .guppy-data-explorer__filter {
-    display: none;
-  }
-
-  .guppy-data-explorer__visualization {
-    width: 100%;
-    padding: 0;
-  }
-
-  .guppy-data-explorer__filter-set {
+  .guppy-data-explorer__filter,
+  .guppy-data-explorer__filter-set,
+  .guppy-data-explorer__data-release-version {
     display: none;
   }
 }

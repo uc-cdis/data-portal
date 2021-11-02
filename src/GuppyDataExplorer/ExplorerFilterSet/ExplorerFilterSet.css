@@ -1,24 +1,35 @@
-.guppy-explorer-filter-set__name {
-  font-size: 1.5rem;
-  line-height: 1.25;
+.explorer-filter-set {
+  border-bottom: 1px solid var(--g3-color__silver);
+  padding: 1rem 1rem 2rem;
 }
 
-.guppy-explorer-filter-set__menu {
-  min-width: 180px;
-  margin-left: 2rem;
-  text-align: center;
-  z-index: 20;
+.explorer-filter-set__title {
+  margin-bottom: 1rem;
 }
 
-.guppy-explorer-filter-set__button {
+.explorer-filter-set__name {
+  color: var(--g3-color__black);
+  font-size: 1.1rem;
+  font-weight: var(--g3-font__semi-bold-weight);
+  line-height: 1.6rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.explorer-filter-set__description {
+  margin-bottom: 1rem;
+}
+
+.explorer-filter-set__button {
   margin-right: 10px;
 }
 
-.guppy-explorer-filter-set__placeholder {
+.explorer-filter-set__placeholder {
   font-style: italic;
 }
 
-.guppy-explorer-filter-set__form {
+.explorer-filter-set__form {
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -26,21 +37,22 @@
   min-height: 120px;
 }
 
-.guppy-explorer-filter-set__error {
-  width: 100%;
+.explorer-filter-set__error > h2 {
+  line-height: initial;
+  margin-bottom: 1rem;
 }
 
-.guppy-explorer-filter-set__error > p {
+.explorer-filter-set__error > p {
   margin-bottom: 1rem;
 }
 
 @media screen and (max-width: 1170px) {
-  .guppy-explorer-filter-set__buttons {
+  .explorer-filter-set__buttons {
     flex-wrap: wrap;
     width: 360px;
   }
 
-  .guppy-explorer-filter-set__button {
+  .explorer-filter-set__button {
     margin-bottom: 10px;
   }
 }

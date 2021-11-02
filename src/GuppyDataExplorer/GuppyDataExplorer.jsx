@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
+import Dashboard from '../Layout/Dashboard';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
 import { useExplorerConfig } from './ExplorerConfigContext';
 import ExplorerErrorBoundary from './ExplorerErrorBoundary';
+import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerFilterSet from './ExplorerFilterSet';
@@ -48,14 +52,18 @@ function extractExplorerStateFromURL(
 /** @type {{ [x:string]: OptionFilter }} */
 const emptyAdminAppliedPreFilters = {};
 
-function GuppyDataExplorer() {
+/** @param {{ dataVersion: string }} props */
+function GuppyDataExplorer({ dataVersion }) {
   const {
-    adminAppliedPreFilters = emptyAdminAppliedPreFilters,
-    chartConfig,
-    filterConfig,
-    guppyConfig,
-    patientIdsConfig,
-    tableConfig,
+    explorerId,
+    current: {
+      adminAppliedPreFilters = emptyAdminAppliedPreFilters,
+      chartConfig,
+      filterConfig,
+      guppyConfig,
+      patientIdsConfig,
+      tableConfig,
+    },
   } = useExplorerConfig();
   const history = useHistory();
   const initialState = extractExplorerStateFromURL(
@@ -165,19 +173,21 @@ function GuppyDataExplorer() {
 
   return (
     <ExplorerErrorBoundary>
-      <div className='guppy-data-explorer'>
-        <GuppyWrapper
-          adminAppliedPreFilters={adminAppliedPreFilters}
-          initialAppliedFilters={state.initialAppliedFilters}
-          chartConfig={chartConfig}
-          filterConfig={filterConfig}
-          guppyConfig={guppyConfig}
-          onFilterChange={handleFilterChange}
-          rawDataFields={tableConfig.fields}
-          patientIds={state.patientIds}
-        >
-          {(data) => (
-            <>
+      <GuppyWrapper
+        key={explorerId}
+        adminAppliedPreFilters={adminAppliedPreFilters}
+        initialAppliedFilters={state.initialAppliedFilters}
+        chartConfig={chartConfig}
+        filterConfig={filterConfig}
+        guppyConfig={guppyConfig}
+        onFilterChange={handleFilterChange}
+        rawDataFields={tableConfig.fields}
+        patientIds={state.patientIds}
+      >
+        {(data) => (
+          <Dashboard>
+            <Dashboard.Sidebar className='guppy-data-explorer__sidebar'>
+              <ExplorerSelect />
               <ExplorerFilterSet
                 className='guppy-data-explorer__filter-set'
                 onOpenFilterSet={updateInitialAppliedFilters}
@@ -197,6 +207,11 @@ function GuppyDataExplorer() {
                 onFilterChange={data.onFilterChange}
                 tabsOptions={data.tabsOptions}
               />
+              <div className='guppy-data-explorer__data-release-version'>
+                <span>Data release version:</span> {dataVersion}
+              </div>
+            </Dashboard.Sidebar>
+            <Dashboard.Main>
               <ExplorerVisualization
                 className='guppy-data-explorer__visualization'
                 accessibleCount={data.accessibleCount}
@@ -218,12 +233,20 @@ function GuppyDataExplorer() {
                   data.getTotalCountsByTypeAndFilter
                 }
               />
-            </>
-          )}
-        </GuppyWrapper>
-      </div>
+            </Dashboard.Main>
+          </Dashboard>
+        )}
+      </GuppyWrapper>
     </ExplorerErrorBoundary>
   );
 }
 
-export default GuppyDataExplorer;
+GuppyDataExplorer.propTypes = {
+  dataVersion: PropTypes.string,
+};
+
+const mapStateToProps = (state) => ({
+  dataVersion: state.versionInfo.dataVersion,
+});
+
+export default connect(mapStateToProps)(GuppyDataExplorer);

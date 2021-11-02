@@ -14,8 +14,10 @@ import './Layout.css';
  * @param {React.ReactNode} props.children
  */
 function Layout({ children }) {
-  const location = useLocation();
-  const isDashboardPage = location.pathname.toLowerCase().startsWith('/dd');
+  const { pathname } = useLocation();
+  const isDashboardPage =
+    pathname.toLowerCase().startsWith('/dd') ||
+    pathname.toLowerCase().startsWith('/explorer');
 
   return (
     <>

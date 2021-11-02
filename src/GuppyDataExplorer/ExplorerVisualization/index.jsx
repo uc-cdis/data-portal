@@ -175,7 +175,7 @@ function ExplorerVisualization({
     survivalAnalysisConfig,
     tableConfig,
     tierAccessLimit,
-  } = useExplorerConfig();
+  } = useExplorerConfig().current;
   const nodeCountTitle =
     guppyConfig.nodeCountTitle || capitalizeFirstLetter(guppyConfig.dataType);
 

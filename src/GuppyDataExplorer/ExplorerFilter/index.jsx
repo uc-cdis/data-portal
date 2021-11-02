@@ -31,7 +31,7 @@ function ExplorerFilter({
     filterConfig,
     guppyConfig,
     tierAccessLimit,
-  } = useExplorerConfig();
+  } = useExplorerConfig().current;
   const connectedFilterProps = {
     ...filterProps,
     adminAppliedPreFilters,
@@ -42,12 +42,12 @@ function ExplorerFilter({
 
   return (
     <div className={className}>
-      <div className='guppy-explorer-filter__title-container'>
-        <h4 className='guppy-explorer-filter__title'>Filters</h4>
+      <div className='explorer-filter__title-container'>
+        <h4 className='explorer-filter__title'>Filters</h4>
         {hasAppliedFilters && (
           <button
             type='button'
-            className='guppy-explorer-filter__clear-button'
+            className='explorer-filter__clear-button'
             onClick={onFilterClear}
           >
             Clear all

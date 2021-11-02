@@ -733,7 +733,6 @@ class ExplorerButtonGroup extends React.Component {
         label={buttonTitle}
         leftIcon={buttonConfig.leftIcon}
         rightIcon={buttonConfig.rightIcon}
-        className='explorer-button-group__download-button'
         buttonType='primary'
         enabled={this.isButtonEnabled(buttonConfig)}
         tooltipEnabled={

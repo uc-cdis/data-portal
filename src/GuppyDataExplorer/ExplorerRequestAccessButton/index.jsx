@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../gen3-ui-component/components/Button';
-import './ExplorerRequestAccessButton.css';
 
 /**
  * @typedef {Object} ExplorerRequestAccessButtonProps
@@ -13,7 +12,6 @@ import './ExplorerRequestAccessButton.css';
 function ExplorerRequestAccessButton({ getAccessButtonLink, tooltipText }) {
   return (
     <Button
-      className='explorer-request-access__button'
       buttonType='secondary'
       enabled={!!getAccessButtonLink}
       label='Request Access'
