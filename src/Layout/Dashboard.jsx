@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import './Dashboard.css';
 
 function Dashboard({ children, className }) {
-  return <div className={`dashboard ${className}`.trim()}>{children}</div>;
+  return (
+    <div className={`dashboard ${className ?? ''}`.trim()}>{children}</div>
+  );
 }
 
 Dashboard.propTypes = {
@@ -13,7 +15,9 @@ Dashboard.propTypes = {
 
 function Main({ children, className }) {
   return (
-    <div className={`dashboard__main ${className}`.trim()}>{children}</div>
+    <div className={`dashboard__main ${className ?? ''}`.trim()}>
+      {children}
+    </div>
   );
 }
 
@@ -24,7 +28,9 @@ Main.propTypes = {
 
 function Sidebar({ children, className }) {
   return (
-    <div className={`dashboard__sidebar ${className}`.trim()}>{children}</div>
+    <div className={`dashboard__sidebar ${className ?? ''}`.trim()}>
+      {children}
+    </div>
   );
 }
 
