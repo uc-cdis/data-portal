@@ -45,12 +45,13 @@
 
 .guppy-explorer-visualization__view-group > button {
   background-color: var(--g3-color__silver);
-  border: none;
+  border: 1px solid var(--g3-color__silver);
   color: var(--g3-color__gray);
   font-weight: var(--g3-font__semi-bold-weight);
-  padding: 0 10px;
+  padding: 0 12px;
   margin: 4px;
   text-transform: capitalize;
+  width: auto;
 }
 
 .guppy-explorer-visualization__view-group > button:last-child {
@@ -59,7 +60,6 @@
 
 .guppy-explorer-visualization__view-group > button.active,
 .guppy-explorer-visualization__view-group > button:hover {
-  border: 1px solid var(--g3-color__silver);
   background-color: var(--g3-color__white);
 }
 
@@ -69,16 +69,13 @@
 
 /* Tablet width and less */
 @media screen and (max-width: 820px) {
+  .guppy-explorer-visualization__view-group > button {
+    font-size: 12px;
+    padding: 0 8px;
+  }
+
   .guppy-explorer-visualization__button-group {
     display: none;
-  }
-}
-
-/* Mobile width and less */
-@media screen and (max-width: 480px) {
-  .guppy-explorer-visualization__view-group {
-    display: flex;
-    flex-direction: column;
   }
 }
 
