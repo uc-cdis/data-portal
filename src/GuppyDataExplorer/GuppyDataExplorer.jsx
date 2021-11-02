@@ -10,44 +10,9 @@ import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerFilterSet from './ExplorerFilterSet';
-import { validateFilter } from './utils';
+import { extractExplorerStateFromURL } from './utils';
 import './GuppyDataExplorer.css';
 import './typedef';
-
-/**
- * @param {URLSearchParams} searchParams
- * @param {FilterConfig} filterConfig
- * @param {boolean} isAnchorFilterEnabled
- * @param {PatientIdsConfig} [patientIdsConfig]
- */
-function extractExplorerStateFromURL(
-  searchParams,
-  filterConfig,
-  isAnchorFilterEnabled,
-  patientIdsConfig
-) {
-  /** @type {FilterState} */
-  let initialAppliedFilters = {};
-  if (searchParams.has('filter'))
-    try {
-      const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
-      if (validateFilter(filterInUrl, filterConfig, isAnchorFilterEnabled))
-        initialAppliedFilters = filterInUrl;
-      else throw new Error(undefined);
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error('Invalid filter value in URL.', e);
-    }
-
-  // eslint-disable-next-line no-nested-ternary
-  const patientIds = patientIdsConfig?.filter
-    ? searchParams.has('patientIds')
-      ? searchParams.get('patientIds').split(',')
-      : []
-    : undefined;
-
-  return { initialAppliedFilters, patientIds };
-}
 
 /** @type {{ [x:string]: OptionFilter }} */
 const emptyAdminAppliedPreFilters = {};
