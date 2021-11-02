@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Dashboard from '../Layout/Dashboard';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
 import { useExplorerConfig } from './ExplorerConfigContext';
@@ -50,7 +52,8 @@ function extractExplorerStateFromURL(
 /** @type {{ [x:string]: OptionFilter }} */
 const emptyAdminAppliedPreFilters = {};
 
-function GuppyDataExplorer() {
+/** @param {{ dataVersion: string }} props */
+function GuppyDataExplorer({ dataVersion }) {
   const {
     explorerId,
     current: {
@@ -204,6 +207,9 @@ function GuppyDataExplorer() {
                 onFilterChange={data.onFilterChange}
                 tabsOptions={data.tabsOptions}
               />
+              <div className='guppy-data-explorer__data-release-version'>
+                <span>Data release version:</span> {dataVersion}
+              </div>
             </Dashboard.Sidebar>
             <Dashboard.Main>
               <ExplorerVisualization
@@ -235,4 +241,12 @@ function GuppyDataExplorer() {
   );
 }
 
-export default GuppyDataExplorer;
+GuppyDataExplorer.propTypes = {
+  dataVersion: PropTypes.string,
+};
+
+const mapStateToProps = (state) => ({
+  dataVersion: state.versionInfo.dataVersion,
+});
+
+export default connect(mapStateToProps)(GuppyDataExplorer);

@@ -16,10 +16,22 @@
   margin-bottom: 10px;
 }
 
-.guppy-data-explorer__filter-set,
-.guppy-data-explorer__filter {
+.guppy-data-explorer__filter-set {
   border-bottom: 1px solid var(--g3-color__silver);
   padding: 1rem 1rem 2rem;
+}
+
+.guppy-data-explorer__filter {
+  padding: 1rem 1rem 2rem;
+}
+
+.guppy-data-explorer__data-release-version {
+  padding: 3rem 1rem 2rem;
+  text-align: center;
+}
+
+.guppy-data-explorer__data-release-version > span {
+  font-style: italic;
 }
 
 /* Medium screen and less */
