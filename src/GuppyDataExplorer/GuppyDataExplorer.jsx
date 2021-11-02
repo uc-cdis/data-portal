@@ -56,6 +56,7 @@ function GuppyDataExplorer({ dataVersion }) {
     };
     return () => {
       isMounted.current = false;
+      window.onpopstate = () => {};
     };
   }, []);
 
