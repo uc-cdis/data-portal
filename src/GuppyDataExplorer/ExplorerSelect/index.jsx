@@ -6,7 +6,7 @@ import './ExplorerSelect.css';
 
 export default function ExplorerTabs() {
   const { explorerId, explorerOptions, updateExplorerId } = useExplorerConfig();
-  const currentExlorer = explorerOptions.find(
+  const currentExplorer = explorerOptions.find(
     (o) => o.value === String(explorerId)
   );
   return explorerOptions.length > 1 ? (
@@ -14,7 +14,7 @@ export default function ExplorerTabs() {
       <h4 className='explorer-select__title'>Explorers</h4>
       <div className='explorer-select__options-container'>
         <Select
-          value={currentExlorer}
+          value={currentExplorer}
           isClearable={false}
           isSearchable={false}
           options={explorerOptions}
