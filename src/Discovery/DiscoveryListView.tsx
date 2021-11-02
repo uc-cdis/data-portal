@@ -3,6 +3,7 @@ import { Table, Empty } from 'antd';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { AccessLevel } from './Discovery';
+import { filter } from 'jszip';
 
 interface Props {
   config: DiscoveryConfig;
@@ -15,9 +16,9 @@ interface Props {
   setModalVisible: (boolean) => void;
   setModalData: (boolean) => void;
   selectedResources: any[];
-  setSelectedResources: (any) => void;
   advSearchFilterHeight: string | number;
   setAdvSearchFilterHeight: (any) => void;
+  dispatch
 }
 
 const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
@@ -39,7 +40,10 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
       locale={{
         emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No Studies' />,
       }}
-      onChange={() => {
+      onChange={(pagination, filters, sorter, extra) => {
+        props.dispatch({
+          type: "TABLE_ON_CHANGE", tableState: { pagination, filters, sorter, extra }
+        });
         // forcing calling useEffect to update adv search filter height
         setOnHeightChange(!onHeightChange);
       }}
@@ -54,7 +58,9 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
         ),
         preserveSelectedRowKeys: true,
         onChange: (_, selectedRows) => {
-          props.setSelectedResources(selectedRows);
+          props.dispatch({
+            type: "RESOURCES_SELECTED", selectedResources: selectedRows
+          });
         },
         getCheckboxProps: (record) => {
           let disabled;

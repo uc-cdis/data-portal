@@ -1,7 +1,16 @@
+import { Pagination } from "antd"
+import { AccessLevel } from "./Discovery";
+
 const discovery = (
     state = {
         selectedResources: [],
-        actionToResume: null
+        actionToResume: null,
+        accessFilters: {
+            [AccessLevel.ACCESSIBLE]: true,
+            [AccessLevel.NOT_AVAILABLE]: true,
+            [AccessLevel.PENDING]: true,
+            [AccessLevel.NOT_AVAILABLE]: true
+        }
     },
     action
 ) => {
@@ -10,6 +19,11 @@ const discovery = (
             return {
                 ...state,
                 selectedResources: action.selectedResources
+            }
+        case 'ACCESS_FILTER_SET':
+            return {
+                ...state,
+                accessFilters: action.accessFilters
             }
         case 'REDIRECTED_FOR_ACTION':
             return {

@@ -141,8 +141,7 @@ const mapStateToProps = (state) => {
   return {
     userAuthMapping: state.userAuthMapping,
     config: discoveryConfig,
-    selectedResources: state.discovery.selectedResources,
-    actionToResume: state.actionToResume
+    ...state.discovery
   }
 };
 

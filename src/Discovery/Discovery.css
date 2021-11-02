@@ -222,6 +222,8 @@
   font-size: 14px;
   text-transform: uppercase;
   font-weight: 700;
+  display: flex;
+  align-items: center;
 }
 
 .discovery-table__row {

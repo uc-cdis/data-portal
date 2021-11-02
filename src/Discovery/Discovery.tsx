@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import * as JsSearch from 'js-search';
 import {
-  Tag, Popover, Space, Collapse, Button,
+  Tag, Popover, Space, Collapse, Button, Dropdown, Menu,
 } from 'antd';
 import {
-  UnlockOutlined, ClockCircleOutlined, DashOutlined, UpOutlined, DownOutlined, UndoOutlined,
+  UnlockOutlined, ClockCircleOutlined, DashOutlined, UpOutlined, DownOutlined, UndoOutlined, FilterFilled, FilterTwoTone, FilterOutlined,
 } from '@ant-design/icons';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
@@ -17,6 +17,8 @@ import DiscoveryAdvancedSearchPanel from './DiscoveryAdvancedSearchPanel';
 import ReduxDiscoveryActionBar from './reduxer';
 import DiscoveryMDSSearch from './DiscoveryMDSSearch';
 import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
+import Checkbox from 'antd/lib/checkbox/Checkbox';
+import MenuItem from 'antd/lib/menu/MenuItem';
 
 export const accessibleFieldName = '__accessible';
 
@@ -183,7 +185,10 @@ interface Props {
   config: DiscoveryConfig
   studies: {__accessible: boolean, [any: string]: any}[]
   params?: {studyUID: string} // from React Router
-  selectedResources
+  selectedResources,
+  accessFilters: {
+    [accessLevel: number]: boolean
+  }
   dispatch: (arg0: any)=>void
 }
 
@@ -192,7 +197,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   const [jsSearch, setJsSearch] = useState(null);
   const [searchFilteredResources, setSearchFilteredResources] = useState([]);
-  // const [selectedResources, setSelectedResources] = useState([]);
+  const [accessibilityFilterVisible, setAccessibilityFilterVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filterState, setFilterState] = useState({} as FilterState);
@@ -374,24 +379,67 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   );
   if (config.features.authorization.enabled) {
     columns.push({
-      title: <div className='discovery-table-header'>Data Availability</div>,
-      filters: [{
-        text: <React.Fragment><UnlockOutlined />&nbsp;Available</React.Fragment>,
-        value: AccessLevel.ACCESSIBLE,
-        id: 'accessible-data-filter',
-      }, {
-        text: <React.Fragment><DashOutlined />&nbsp;Not Available</React.Fragment>,
-        value: AccessLevel.NOT_AVAILABLE,
-        id: 'not-available-data-filter',
-      }, {
-        text: <React.Fragment><ClockCircleOutlined />&nbsp;Pending</React.Fragment>,
-        value: AccessLevel.PENDING,
-        id: 'pending-data-filter',
-      }],
-      onFilter: (value, record) => record[accessibleFieldName] === value,
-      // This will sort the values in the order defined by the AccessLevel enum. (AccessLevel.ACCESSIBLE=1, AccessLevel.UNACCESSIBLE=2, etc)
+      title: <div className="discovery-table-header">
+        <div>Data Availability</div>
+        <Dropdown
+          // trigger={["click"]}
+          visible={accessibilityFilterVisible}
+          overlay={
+          <Menu>
+            {
+              [
+                [ AccessLevel.ACCESSIBLE, "Available", <UnlockOutlined/> ],
+                [ AccessLevel.NOT_AVAILABLE, "Not Available", <DashOutlined />],
+                [ AccessLevel.PENDING, "Pending", <ClockCircleOutlined/> ],
+              ].map(
+                ([accessLevel, accessDescriptor, icon]) => (
+                  <MenuItem key={accessLevel.toString()}>
+                    <Checkbox
+                      checked={props.accessFilters[accessLevel]}
+                      onChange={
+                        (event) => {
+                          props.dispatch({
+                            type: "ACCESS_FILTER_SET",
+                            accessFilters: {
+                              ...props.accessFilters,
+                              [accessLevel]: !props.accessFilters[accessLevel]
+                            }
+                          })
+                          // event.preventDefault();
+                        }
+                      }
+                    >
+                      {icon}&nbsp;{accessDescriptor}
+                    </Checkbox>
+                  </MenuItem>
+                )
+              )
+            }
+            <Menu.Divider/>
+            <MenuItem>
+              <Button type={"primary" } onClick={()=>props.dispatch({
+                type: "ACCESS_FILTER_SET", accessFilters: {
+                  [AccessLevel.ACCESSIBLE]: true,
+                  [AccessLevel.NOT_AVAILABLE]: true,
+                  [AccessLevel.PENDING]: true,
+                  [AccessLevel.UNACCESSIBLE]: true
+                }
+              })} > Reset </Button>
+            </MenuItem>
+          </Menu>
+          }
+          >
+        <Button
+          size={"large"}
+          type={"text"}
+          icon={<FilterOutlined/>}
+          onClick={()=>{setAccessibilityFilterVisible(!accessibilityFilterVisible)}}
+        />
+      </Dropdown>
+      </div>,
       sorter: (a, b) => b[accessibleFieldName] - a[accessibleFieldName],
-      defaultSortOrder: 'descend',
+      // defaultSortOrder: 'descend',
+      sortOrder: "descend",
       ellipsis: false,
       width: '106px',
       textWrap: 'word-break',
@@ -483,6 +531,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     visibleResources,
     filterState,
     config,
+  );
+  visibleResources = visibleResources.filter(
+    resource => props.accessFilters[resource[accessibleFieldName]]
   );
 
   const enableSearchBar = props.config.features.search
@@ -628,9 +679,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             columns={columns}
             accessibleFieldName={accessibleFieldName}
             selectedResources={props.selectedResources}
-            setSelectedResources={(selectedResources)=>props.dispatch({
-              type: "RESOURCES_SELECTED", selectedResources
-            })}
+            dispatch={props.dispatch}
           />
         </div>
 
