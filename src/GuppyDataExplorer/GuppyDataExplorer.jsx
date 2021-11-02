@@ -37,12 +37,10 @@ function GuppyDataExplorer({ dataVersion }) {
     filterConfig.anchor !== undefined,
     patientIdsConfig
   );
-  const isMounted = useRef(false);
   const isBrowserNavigation = useRef(false);
   const [state, setState] = useState(initialState);
 
   useEffect(() => {
-    isMounted.current = true;
     window.onpopstate = () => {
       isBrowserNavigation.current = true;
       const newState = extractExplorerStateFromURL(
@@ -51,11 +49,10 @@ function GuppyDataExplorer({ dataVersion }) {
         filterConfig.anchor !== undefined,
         patientIdsConfig
       );
-      if (isMounted.current) setState(newState);
+      setState(newState);
       isBrowserNavigation.current = false;
     };
     return () => {
-      isMounted.current = false;
       window.onpopstate = () => {};
     };
   }, []);
@@ -115,16 +112,14 @@ function GuppyDataExplorer({ dataVersion }) {
 
   /** @param {{ filters: FilterState }} args */
   function updateInitialAppliedFilters({ filters }) {
-    if (isMounted.current)
-      setState((prevState) => ({
-        ...prevState,
-        initialAppliedFilters: filters,
-      }));
+    setState((prevState) => ({
+      ...prevState,
+      initialAppliedFilters: filters,
+    }));
   }
 
   function clearFilters() {
-    if (isMounted.current)
-      setState((prevState) => ({ ...prevState, initialAppliedFilters: {} }));
+    setState((prevState) => ({ ...prevState, initialAppliedFilters: {} }));
   }
 
   return (
