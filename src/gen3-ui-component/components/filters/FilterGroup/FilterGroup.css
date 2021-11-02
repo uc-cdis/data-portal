@@ -11,14 +11,14 @@
 }
 
 .g3-filter-group__tab {
-  margin: 4px;
   background-color: var(--g3-color__silver);
   border: 1px solid var(--g3-color__silver);
   border-radius: 4px;
   cursor: pointer;
   color: var(--g3-color__gray);
   font-weight: var(--g3-font__semi-bold-weight);
-  padding: 4px;
+  margin: 4px;
+  padding: 4px 12px;
 }
 
 .g3-filter-group__tab--selected,
@@ -28,13 +28,9 @@
 }
 
 .g3-filter-group__tab-title {
-  padding: 2px;
-  margin: 3px 10px;
-  font-size: 14px;
-  line-height: 1em;
+  border-bottom: 2px solid transparent;
   font-weight: var(--g3-font__semi-bold-weight);
   text-align: center;
-  border-bottom: 2px solid transparent;
 }
 
 .g3-filter-group__tab-title--has-active-filters {
