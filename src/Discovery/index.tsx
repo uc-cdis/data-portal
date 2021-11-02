@@ -103,18 +103,15 @@ const DiscoveryWithMDSBackend: React.FC<{
 
       // resume action in progress if redirected from login
       const urlParams = decodeURIComponent(window.location.search);
-      if (urlParams.startsWith("?actionToResume=")) {
-        const state = JSON.parse(urlParams.split("?actionToResume=")[1]);
-        if (state.action && state.selectedResourceIDs) {
-          const selectedResources = studies.filter(
-            study => (state.selectedResourceIDs).includes(study.study_id)
-          );
-          props.dispatch({
-            type: "REDIRECTED_FOR_ACTION",
-            actionToResume: state.action,
-            selectedResources
-          });
-        }
+      if (urlParams.startsWith("?state=")) {
+        const redirectState = JSON.parse(urlParams.split("?state=")[1]);
+        redirectState.selectedResources = studies.filter(
+          study => (redirectState.selectedResourceIDs).includes(study.study_id)
+        );
+        delete redirectState.selectedResourceIDs;
+        props.dispatch({
+          type: "REDIRECTED_FOR_ACTION", redirectState
+        });
         window.history.replaceState({}, document.title, window.location.pathname);
       }
     }).catch((err) => {

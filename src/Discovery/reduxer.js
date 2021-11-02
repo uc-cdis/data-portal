@@ -5,8 +5,7 @@ const ReduxDiscoveryActionBar = (() => {
   const mapStateToProps = (state, dispatch) => {
     console.log("mapping state to props", state);return {
     user: state.user,
-    actionToResume: state.discovery.actionToResume,
-    selectedResources: state.discovery.selectedResources,
+    discovery: state.discovery,
     dispatch
   }};
 

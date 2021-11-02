@@ -297,7 +297,11 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
           },
         });
       } else {
-        document.location.replace(response.url);
+        if (document.location.pathname.includes("/dev.html")) {
+          document.location.replace(`${response.url}dev.html`)
+        } else {
+          document.location.replace(response.url);
+        }
       }
     });
 };

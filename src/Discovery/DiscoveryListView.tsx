@@ -35,15 +35,14 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
 
   return (
     <Table
+      pagination={false} // handled in separate element
+      // scroll={{y:'max-content'}}
       loading={props.studies.length === 0}
       width={'500px'}
       locale={{
         emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No Studies' />,
       }}
-      onChange={(pagination, filters, sorter, extra) => {
-        props.dispatch({
-          type: "TABLE_ON_CHANGE", tableState: { pagination, filters, sorter, extra }
-        });
+      onChange={() => {
         // forcing calling useEffect to update adv search filter height
         setOnHeightChange(!onHeightChange);
       }}

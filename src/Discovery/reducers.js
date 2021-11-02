@@ -10,6 +10,11 @@ const discovery = (
             [AccessLevel.NOT_AVAILABLE]: true,
             [AccessLevel.PENDING]: true,
             [AccessLevel.NOT_AVAILABLE]: true
+        },
+        selectedTags: {},
+        pagination: {
+            resultsPerPage: 10,
+            currentPage: 1
         }
     },
     action
@@ -25,11 +30,25 @@ const discovery = (
                 ...state,
                 accessFilters: action.accessFilters
             }
+        case 'TAGS_SELECTED':
+            return {
+                ...state,
+                selectedTags: action.selectedTags
+            }
+        case 'SEARCH_TERM_SET':
+            return {
+                ...state,
+                searchTerm: action.searchTerm
+            }
+        case 'PAGINATION_SET':
+            return {
+                ...state,
+                pagination: action.pagination
+            }
         case 'REDIRECTED_FOR_ACTION':
             return {
                 ...state,
-                actionToResume: action.actionToResume,
-                selectedResources: action.selectedResources
+                ...action.redirectState
             }
         case 'REDIRECT_ACTION_RESUMED':
             return {

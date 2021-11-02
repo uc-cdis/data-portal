@@ -204,6 +204,10 @@
   color: var(--g3-color__titanium);
 }
 
+#discovery-table-of-records {
+  overflow: visible;
+}
+
 .discovery-table-container {
   border-radius: 8px;
   background-color: #fff;
@@ -222,8 +226,6 @@
   font-size: 14px;
   text-transform: uppercase;
   font-weight: 700;
-  display: flex;
-  align-items: center;
 }
 
 .discovery-table__row {

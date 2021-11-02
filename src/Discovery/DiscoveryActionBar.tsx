@@ -41,13 +41,15 @@ interface DownloadStatus {
 }
 interface Props {
   config: DiscoveryConfig;
-  selectedResources: any[];
   exportingToWorkspace: boolean;
   setExportingToWorkspace: (boolean) => void;
   filtersVisible: boolean;
   setFiltersVisible: (boolean) => void;
   user: User,
-  actionToResume: "download"|"export"|"manifest"
+  discovery: {
+    actionToResume: "download"|"export"|"manifest";
+    selectedResources: any[];
+  };
   dispatch
 }
 
@@ -398,7 +400,7 @@ const DiscoveryActionBar = (props: Props) => {
                 if (job.status === 'Running' && job.name.startsWith(BATCH_EXPORT_JOB_PREFIX)) {
                   setDownloadStatus({ ...downloadStatus, inProgress: true });
                   setTimeout(
-                    checkDownloadStatus, JOB_POLLING_INTERVAL, job.uid, downloadStatus, setDownloadStatus, props.selectedResources,
+                    checkDownloadStatus, JOB_POLLING_INTERVAL, job.uid, downloadStatus, setDownloadStatus, props.discovery.selectedResources,
                   );
                 }
               },
@@ -412,10 +414,10 @@ const DiscoveryActionBar = (props: Props) => {
 
   useEffect(
     () => {
-      if (props.actionToResume === "download") {
+      if (props.discovery.actionToResume === "download") {
         handleDownloadZipClick(
           props.config,
-          props.selectedResources,
+          props.discovery.selectedResources,
           downloadStatus,
           setDownloadStatus,
           history,
@@ -423,10 +425,10 @@ const DiscoveryActionBar = (props: Props) => {
         );
         props.dispatch({type: "REDIRECT_ACTION_RESUMED"});
       }
-      else if (props.actionToResume === "export") {
+      else if (props.discovery.actionToResume === "export") {
         handleExportToWorkspaceClick(
           props.config,
-          props.selectedResources,
+          props.discovery.selectedResources,
           props.setExportingToWorkspace,
           setDownloadStatus,
           history,
@@ -434,19 +436,24 @@ const DiscoveryActionBar = (props: Props) => {
         );
         props.dispatch({type: "REDIRECT_ACTION_RESUMED"});
       }
-      else if (props.actionToResume === "manifest") {
-        console.log("clicking manifest", props.actionToResume)
-        handleDownloadManifestClick(props.config, props.selectedResources);
+      else if (props.discovery.actionToResume === "manifest") {
+        console.log("clicking manifest", props.discovery.actionToResume)
+        handleDownloadManifestClick(props.config, props.discovery.selectedResources);
         props.dispatch({type: "REDIRECT_ACTION_RESUMED"});
       }
-    }, [props.actionToResume]
+    }, [props.discovery.actionToResume]
   )
 
-  const handleRedirectToLoginClick = (selectedResourceIDs: string[]=null, action:"download"|"export"|"manifest"=null) => {
-    let queryStr = ""
-    if (action && selectedResourceIDs) {
-      queryStr = `?actionToResume=${encodeURIComponent(JSON.stringify({action, selectedResourceIDs}))}`;
-    }
+  const handleRedirectToLoginClick = (action:"download"|"export"|"manifest"=null) => {
+    const serializableState = {
+      ...props.discovery,
+      actionToResume: action,
+      // reduce the size of the redirect url by only storing study id
+      // study id is remapped to it study after redirect and studies load in root index component
+      selectedResourceIDs: props.discovery.selectedResources.map(study=>study.study_id)
+    };
+    delete serializableState.selectedResources;
+    const queryStr = `?state=${encodeURIComponent(JSON.stringify(serializableState))}`;
     history.push(`/login`, { from: `${location.pathname}${queryStr}` });
   };
 
@@ -474,7 +481,7 @@ const DiscoveryActionBar = (props: Props) => {
       )
         && (
           <Space>
-            <span className='discovery-export__selected-ct'>{props.selectedResources.length} selected</span>
+            <span className='discovery-export__selected-ct'>{props.discovery.selectedResources.length} selected</span>
             {
               props.config.features.exportToWorkspace.enableDownloadZip
               && (
@@ -484,19 +491,19 @@ const DiscoveryActionBar = (props: Props) => {
                       if (props.user.username) {
                         handleDownloadZipClick(
                           props.config,
-                          props.selectedResources,
+                          props.discovery.selectedResources,
                           downloadStatus,
                           setDownloadStatus,
                           history,
                           location,
                         );
                       } else {
-                        handleRedirectToLoginClick(props.selectedResources.map(res=>res.study_id), "download");
+                        handleRedirectToLoginClick("download");
                       }
                     }
                   }
                   type='text'
-                  disabled={props.selectedResources.length === 0 || downloadStatus.inProgress}
+                  disabled={props.discovery.selectedResources.length === 0 || downloadStatus.inProgress}
                   icon={<DownloadOutlined />}
                   loading={downloadStatus.inProgress}
                 >
@@ -536,11 +543,11 @@ const DiscoveryActionBar = (props: Props) => {
               >
                 <Button
                   onClick={(props.user.username) ? () => {
-                    handleDownloadManifestClick(props.config, props.selectedResources);
+                    handleDownloadManifestClick(props.config, props.discovery.selectedResources);
                   }
-                    : () => { handleRedirectToLoginClick(); }}
+                    : () => { handleRedirectToLoginClick("manifest"); }}
                   type='text'
-                  disabled={props.selectedResources.length === 0}
+                  disabled={props.discovery.selectedResources.length === 0}
                   icon={<FileTextOutlined />}
                 >
                   {(props.user.username) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
@@ -563,21 +570,21 @@ const DiscoveryActionBar = (props: Props) => {
             >
               <Button
                 type='default'
-                className={`discovery-action-bar-button${(props.selectedResources.length === 0) ? '--disabled' : ''}`}
-                disabled={props.selectedResources.length === 0}
+                className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
+                disabled={props.discovery.selectedResources.length === 0}
                 loading={props.exportingToWorkspace}
                 icon={<ExportOutlined />}
                 onClick={(props.user.username) ? async () => {
                   handleExportToWorkspaceClick(
                     props.config,
-                    props.selectedResources,
+                    props.discovery.selectedResources,
                     props.setExportingToWorkspace,
                     setDownloadStatus,
                     history,
                     location,
                   );
                 }
-                  : () => { handleRedirectToLoginClick(); }}
+                  : () => { handleRedirectToLoginClick("export"); }}
               >
                 {(props.user.username) ? 'Open In Workspace' : 'Login to Open In Workspace'}
               </Button>
