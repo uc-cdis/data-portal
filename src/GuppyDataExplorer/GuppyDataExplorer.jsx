@@ -183,7 +183,7 @@ function GuppyDataExplorer() {
       >
         {(data) => (
           <Dashboard>
-            <Dashboard.Sidebar>
+            <Dashboard.Sidebar className='guppy-data-explorer__sidebar'>
               <ExplorerSelect />
               <ExplorerFilterSet
                 className='guppy-data-explorer__filter-set'

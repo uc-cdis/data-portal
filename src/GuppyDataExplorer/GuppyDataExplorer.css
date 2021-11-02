@@ -24,6 +24,10 @@
 
 /* Medium screen and less */
 @media screen and (max-width: 1090px) {
+  .guppy-data-explorer__sidebar {
+    overflow: inherit;
+  }
+
   .guppy-data-explorer__filter {
     display: none;
   }
