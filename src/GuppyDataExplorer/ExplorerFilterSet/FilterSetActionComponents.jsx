@@ -31,6 +31,7 @@ export function FilterSetActionMenu({
     <Select
       aria-label='Manage filter sets'
       className='explorer-filter-set__menu'
+      isSearchable={false}
       value={{ label: 'Manage Filter Set', value: '' }}
       options={options}
       theme={overrideSelectTheme}
