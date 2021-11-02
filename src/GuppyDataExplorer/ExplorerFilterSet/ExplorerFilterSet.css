@@ -6,13 +6,13 @@
 .explorer-filter-set__title {
   color: var(--g3-color__black);
   display: flex;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-weight: var(--g3-font__semi-bold-weight);
+  margin-bottom: 1rem;
 }
 
 .explorer-filter-set__title > h1 {
-  font-size: 1.5rem;
-  line-height: initial;
+  font-size: 1.25rem;
+  line-height: 1.6rem;
   margin-left: 0.5rem;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -169,7 +169,7 @@ function ExplorerFilterSet({
             <div className='explorer-filter-set__title'>
               <div>
                 {filterSet.name && isFiltersChanged && <FilterChangedWarning />}{' '}
-                Filter set:
+                Filter set
               </div>{' '}
               <h1>
                 {filterSet.name || (
