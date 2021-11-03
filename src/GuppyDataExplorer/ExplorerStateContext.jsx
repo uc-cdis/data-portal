@@ -39,7 +39,7 @@ export function ExplorerStateProvider({ children }) {
   const isBrowserNavigation = useRef(false);
 
   useEffect(() => {
-    window.onpopstate = () => {
+    function handleBrowserNavigationForState() {
       isBrowserNavigation.current = true;
       const newState = extractExplorerStateFromURL(
         new URLSearchParams(history.location.search),
@@ -49,9 +49,10 @@ export function ExplorerStateProvider({ children }) {
       setFilters(newState.initialAppliedFilters);
       setPatientIds(newState.patientIds);
       isBrowserNavigation.current = false;
-    };
+    }
+    window.addEventListener('popstate', handleBrowserNavigationForState);
     return () => {
-      window.onpopstate = () => {};
+      window.removeEventListener('popstate', handleBrowserNavigationForState);
     };
   }, []);
 
