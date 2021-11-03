@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ConnectedFilter from '../../GuppyComponents/ConnectedFilter';
 import { useExplorerConfig } from '../ExplorerConfigContext';
+import { useExplorerState } from '../ExplorerStateContext';
 import './ExplorerFilter.css';
 
 /**
@@ -26,12 +27,21 @@ function ExplorerFilter({ className = '', onFilterClear, ...filterProps }) {
     guppyConfig,
     tierAccessLimit,
   } = useExplorerConfig().current;
+  const {
+    initialAppliedFilters,
+    patientIds,
+    clearFilters,
+    handlePatientIdsChange,
+  } = useExplorerState();
   const connectedFilterProps = {
     ...filterProps,
     adminAppliedPreFilters,
     filterConfig,
     guppyConfig,
+    initialAppliedFilters,
+    patientIds,
     tierAccessLimit,
+    onPatientIdsChange: handlePatientIdsChange,
   };
   const hasAppliedFilters = Object.keys(filterProps.filter).length > 0;
 
@@ -43,7 +53,7 @@ function ExplorerFilter({ className = '', onFilterClear, ...filterProps }) {
           <button
             type='button'
             className='explorer-filter__clear-button'
-            onClick={onFilterClear}
+            onClick={clearFilters}
           >
             Clear all
           </button>

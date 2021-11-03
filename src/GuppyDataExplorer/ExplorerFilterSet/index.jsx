@@ -6,6 +6,7 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimplePopup from '../../components/SimplePopup';
 import Button from '../../gen3-ui-component/components/Button';
+import { useExplorerState } from '../ExplorerStateContext';
 import {
   FilterSetActionMenu,
   FilterSetActionForm,
@@ -25,15 +26,9 @@ import './typedef';
  * @param {Object} prop
  * @param {string} prop.className
  * @param {ExplorerFilters} prop.filter
- * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onOpenFilterSet
- * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onDeleteFilterSet
  */
-function ExplorerFilterSet({
-  className,
-  filter,
-  onOpenFilterSet,
-  onDeleteFilterSet,
-}) {
+function ExplorerFilterSet({ className, filter }) {
+  const { updateFilters } = useExplorerState();
   const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
   /** @type {ExplorerFilterSet[]} */
@@ -68,11 +63,11 @@ function ExplorerFilterSet({
   function handleNew() {
     const emptyFilterSet = createEmptyFilterSet();
     setFilterSet(emptyFilterSet);
-    onOpenFilterSet(emptyFilterSet);
+    updateFilters(emptyFilterSet);
   }
   function handleOpen(/** @type {ExplorerFilterSet} */ opened) {
     setFilterSet(cloneDeep(opened));
-    onOpenFilterSet(cloneDeep(opened));
+    updateFilters(cloneDeep(opened));
     closeActionForm();
   }
   async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
@@ -101,7 +96,7 @@ function ExplorerFilterSet({
       await deleteFilterSet(deleted);
       setFilterSet(createEmptyFilterSet());
       setFilterSets(await fetchFilterSets());
-      onDeleteFilterSet(createEmptyFilterSet());
+      updateFilters(createEmptyFilterSet());
     } catch (e) {
       setIsError(true);
     } finally {
@@ -127,11 +122,11 @@ function ExplorerFilterSet({
         trigger={['hover', 'focus']}
       >
         <span
-          onClick={() => onOpenFilterSet(cloneDeep(filterSet))}
+          onClick={() => updateFilters(cloneDeep(filterSet))}
           onKeyPress={(e) => {
             if (e.charCode === 13 || e.charCode === 32) {
               e.preventDefault();
-              onOpenFilterSet(cloneDeep(filterSet));
+              updateFilters(cloneDeep(filterSet));
             }
           }}
           role='button'
@@ -219,8 +214,6 @@ function ExplorerFilterSet({
 ExplorerFilterSet.propTypes = {
   className: PropTypes.string,
   filter: PropTypes.object,
-  onOpenFilterSet: PropTypes.func,
-  onDeleteFilterSet: PropTypes.func,
 };
 
 export default ExplorerFilterSet;
