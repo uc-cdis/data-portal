@@ -84,9 +84,7 @@ function GuppyDataExplorer({ dataVersion }) {
 
     if (!isBrowserNavigation.current)
       history.push({
-        search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
-          '&'
-        ),
+        search: decodeURIComponent(searchParams.toString()),
         state: { scrollY: window.scrollY },
       });
   }
@@ -103,11 +101,7 @@ function GuppyDataExplorer({ dataVersion }) {
 
     setState((prevState) => ({ ...prevState, patientIds }));
     if (!isBrowserNavigation.current)
-      history.push({
-        search: Array.from(searchParams.entries(), (e) => e.join('=')).join(
-          '&'
-        ),
-      });
+      history.push({ search: decodeURIComponent(searchParams.toString()) });
   }
 
   /** @param {{ filters: FilterState }} args */
