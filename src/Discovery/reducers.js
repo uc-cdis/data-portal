@@ -1,5 +1,5 @@
 import { Pagination } from "antd"
-import { AccessLevel } from "./Discovery";
+import { AccessLevel, AccessSortDirection } from "./Discovery";
 
 const discovery = (
     state = {
@@ -7,7 +7,7 @@ const discovery = (
         actionToResume: null,
         accessFilters: {
             [AccessLevel.ACCESSIBLE]: true,
-            [AccessLevel.NOT_AVAILABLE]: true,
+            [AccessLevel.UNACCESSIBLE]: true,
             [AccessLevel.PENDING]: true,
             [AccessLevel.NOT_AVAILABLE]: true
         },
@@ -15,7 +15,8 @@ const discovery = (
         pagination: {
             resultsPerPage: 10,
             currentPage: 1
-        }
+        },
+        accessSortDirection: AccessSortDirection.DESCENDING
     },
     action
 ) => {
@@ -28,22 +29,42 @@ const discovery = (
         case 'ACCESS_FILTER_SET':
             return {
                 ...state,
-                accessFilters: action.accessFilters
+                accessFilters: {
+                    ...state.accessFilters,
+                    ...action.accessFilters
+                },
+                pagination: {
+                    ...state.pagination,
+                    currentPage: 1
+                }
             }
         case 'TAGS_SELECTED':
             return {
                 ...state,
-                selectedTags: action.selectedTags
+                selectedTags: action.selectedTags,
+                pagination: {
+                    ...state.pagination,
+                    currentPage: 1
+                }
             }
         case 'SEARCH_TERM_SET':
             return {
                 ...state,
-                searchTerm: action.searchTerm
+                searchTerm: action.searchTerm,
+                pagination: {
+                    ...state.pagination,
+                    currentPage: 1
+                }
             }
         case 'PAGINATION_SET':
             return {
                 ...state,
                 pagination: action.pagination
+            }
+        case 'ACCESS_SORT_DIRECTION_SET':
+            return {
+                ...state,
+                accessSortDirection: action.accessSortDirection
             }
         case 'REDIRECTED_FOR_ACTION':
             return {

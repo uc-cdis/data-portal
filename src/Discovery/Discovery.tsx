@@ -31,7 +31,7 @@ export enum AccessLevel {
   NOT_AVAILABLE = 4,
 }
 
-enum AccessSortDirection {
+export enum AccessSortDirection {
   ASCENDING="sort ascending", DESCENDING="sort descending", NONE="cancel sorting"
 }
 
@@ -189,7 +189,7 @@ const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, co
 
 interface Props {
   config: DiscoveryConfig
-  studies: {__accessible: boolean, [any: string]: any}[]
+  studies: {__accessible: AccessLevel, [any: string]: any}[]
   params?: {studyUID: string} // from React Router
   selectedResources,
   pagination: { currentPage: number, resultsPerPage: number },
@@ -198,6 +198,7 @@ interface Props {
   accessFilters: {
     [accessLevel: number]: boolean
   },
+  accessSortDirection: AccessSortDirection
   dispatch: (arg0: any)=>void
 }
 
@@ -205,15 +206,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const { config } = props;
 
   const [jsSearch, setJsSearch] = useState(null);
-  const [searchFilteredResources, setSearchFilteredResources] = useState([]);
   const [accessibilityFilterVisible, setAccessibilityFilterVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filterState, setFilterState] = useState({} as FilterState);
   const [modalData, setModalData] = useState({});
-  const [accessSortDirection, setAccessSortDirection] = useState(AccessSortDirection.DESCENDING);
-  // const [searchTerm, setSearchTerm] = useState('');
-  // const [selectedTags, setSelectedTags] = useState({});
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [advSearchFilterHeight, setAdvSearchFilterHeight] = useState('100vh');
@@ -223,20 +220,60 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     && (config.features.search.tagSearchDropdown.collapseOnDefault
       || config.features.search.tagSearchDropdown.collapseOnDefault === undefined),
   );
+  const [visibleResources, setVisibleResources] = useState([]);
 
   const handleSearchChange = (ev) => {
     const { value } = ev.currentTarget;
     props.dispatch({type: "SEARCH_TERM_SET", searchTerm: value});
-    if (value === '') {
-      setSearchFilteredResources(props.studies);
-      return;
-    }
-    if (!jsSearch) {
-      return;
-    }
-    const results = jsSearch.search(value);
-    setSearchFilteredResources(results);
   };
+
+  const doSearchFilterSort = () => {
+    let filteredResources = props.studies;
+    if (jsSearch && props.searchTerm) {
+      filteredResources = jsSearch.search(props.searchTerm);
+    }
+    console.log("resources 1", filteredResources)
+    filteredResources = filterByTags(
+      filteredResources,
+      props.selectedTags,
+      config,
+    );
+
+    console.log("resources 2", filteredResources)
+    if (config.features.advSearchFilters && config.features.advSearchFilters.enabled) {
+      filteredResources = filterByAdvSearch(
+        filteredResources,
+        filterState,
+        config,
+      );
+    }
+
+    console.log("resources 3", filteredResources, props.accessFilters, accessibleFieldName)
+    if (props.config.features.authorization.enabled){
+      filteredResources = filteredResources.filter(
+        resource => props.accessFilters[resource[accessibleFieldName]]
+      );
+    }
+
+    // console.log("sorting by", props.accessSortDirection)
+    // filteredResources = filteredResources.sort(
+    //   (a, b) => {
+    //     return 1
+    //     // if (props.accessSortDirection === AccessSortDirection.DESCENDING) {
+    //     //   return a[accessibleFieldName] - b[accessibleFieldName];
+    //     // } else if (props.accessSortDirection === AccessSortDirection.ASCENDING) {
+    //     //   return b[accessibleFieldName] - a[accessibleFieldName];
+    //     // }
+    //     // return 0;
+    //   }
+    // );
+    console.log("resources 4", filteredResources)
+    setVisibleResources(filteredResources);
+  }
+
+  useEffect(doSearchFilterSort,
+    [props.searchTerm, props.accessSortDirection, props.studies, props.pagination, props.accessFilters, props.selectedTags]
+  );
 
   useEffect(() => {
     // Load studies into JS Search.
@@ -269,8 +306,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     search.addDocuments(props.studies);
     // expose the search function
     setJsSearch(search);
-    // -----------------------
-    setSearchFilteredResources(props.studies);
   }, [props.studies]);
 
   useEffect(() => {
@@ -396,8 +431,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   if (config.features.authorization.enabled) {
     columns.push({
       title: <div className="discovery-table-header">
-        <Space>
+        <Space size={"small"}>
           <div>Data Availability</div>
+          <Tooltip title={"Filter by data access"}>
           <Dropdown
             visible={accessibilityFilterVisible}
             overlay={
@@ -452,28 +488,38 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           <Button
             size={"large"}
             type={"text"}
-            icon={<FilterOutlined/>}
+            icon={
+              Object.values(props.accessFilters).every(Boolean) ?
+              <FilterOutlined /> :
+              <FilterFilled color={"blue"}/>
+            }
             onClick={()=>{setAccessibilityFilterVisible(!accessibilityFilterVisible)}}
           />
         </Dropdown>
+        </Tooltip>
           {
             (() => {
               let nextSortDirection = AccessSortDirection.DESCENDING;
-              if (accessSortDirection === AccessSortDirection.DESCENDING) {
+              if (props.accessSortDirection === AccessSortDirection.DESCENDING) {
                 nextSortDirection = AccessSortDirection.ASCENDING;
-              } else if (accessSortDirection === AccessSortDirection.ASCENDING) {
+              } else if (props.accessSortDirection === AccessSortDirection.ASCENDING) {
                 nextSortDirection = AccessSortDirection.NONE;
               }
               return (
                 <Tooltip title={`Click to ${nextSortDirection}`}>
                   <Button
                     type = {"text"}
-                    onClick={()=>setAccessSortDirection(nextSortDirection)}
+                    onClick={()=>{
+                      props.dispatch({
+                        type: "ACCESS_SORT_DIRECTION_SET",
+                        accessSortDirection: nextSortDirection
+                      });
+                    }}
                     icon={
                       (()=>{
-                        if (accessSortDirection === AccessSortDirection.DESCENDING) {
+                        if (props.accessSortDirection === AccessSortDirection.DESCENDING) {
                           return <DownOutlined/>
-                        } else if (accessSortDirection === AccessSortDirection.ASCENDING) {
+                        } else if (props.accessSortDirection === AccessSortDirection.ASCENDING) {
                           return <UpOutlined/>
                         }
                         return <MinusOutlined/>
@@ -486,8 +532,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           }
         </Space>
       </div>,
-      // sorter: (a, b) => b[accessibleFieldName] - a[accessibleFieldName],
-      // defaultSortOrder: 'descend',
       sortOrder: "descend",
       ellipsis: false,
       width: '106px',
@@ -570,31 +614,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     });
   }
   // -----
-
-  console.log("filtering.")
-  let visibleResources = filterByTags(
-    searchFilteredResources,
-    props.selectedTags,
-    config,
-  );
-  visibleResources = filterByAdvSearch(
-    visibleResources,
-    filterState,
-    config,
-  );
-  visibleResources = visibleResources.filter(
-    resource => props.accessFilters[resource[accessibleFieldName]]
-  );
-  visibleResources = visibleResources.sort(
-    (a, b) => {
-      if (accessSortDirection === AccessSortDirection.DESCENDING) {
-        return a[accessibleFieldName] - b[accessibleFieldName];
-      } else if (accessSortDirection === AccessSortDirection.ASCENDING) {
-        return b[accessibleFieldName] - a[accessibleFieldName];
-      }
-      return a.study_id.localeCompare(b.study_id);
-    }
-  )
 
   const enableSearchBar = props.config.features.search
   && props.config.features.search.searchBar
