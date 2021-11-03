@@ -26,8 +26,8 @@ import isEnabled from './helpers/featureFlags';
 
 // lazy-loaded pages
 const DataDictionary = React.lazy(() => import('./DataDictionary'));
+const Explorer = React.lazy(() => import('./GuppyDataExplorer'));
 const GraphQLQuery = React.lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
-const GuppyDataExplorer = React.lazy(() => import('./GuppyDataExplorer'));
 const IndexPage = React.lazy(() => import('./Index/page'));
 const ProjectSubmission = React.lazy(() =>
   import('./Submission/ReduxProjectSubmission')
@@ -151,7 +151,7 @@ function App({ store }) {
               />
               <Route path='/explorer'>
                 <ProtectedContent>
-                  <GuppyDataExplorer />
+                  <Explorer />
                 </ProtectedContent>
               </Route>
               {enableResourceBrowser && (
