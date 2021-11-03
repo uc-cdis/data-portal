@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
 
 const dataLayer = {
-  id: 'FirstDoseRate',
+  id: 'V_first_dose_rate',
   type: 'fill',
   layout: { visibility: 'visible' },
   beforeId: 'zipcode-outline',

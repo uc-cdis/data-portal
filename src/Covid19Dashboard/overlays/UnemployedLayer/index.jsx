@@ -3,40 +3,40 @@ import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
 
 const dataLayer = {
-  id: 'V_fully_vaccinated_rate',
+  id: 'D_unemployed_rate',
   type: 'fill',
   layout: { visibility: 'visible' },
-  beforeId: 'zipcode-outline',
   paint: {
     'fill-color': [
       'interpolate',
       ['linear'],
-      ['get', 'FullyVaccinatedRate'],
-	30,
+      ['get', 'Percent Unemployment'],
+	2,
         '#FFF',
-        40,
+        4,
         '#a8dab5',
-        45,
+        6,
         '#81c995',
-        50,
+        8,
         '#5bb974',
-        55,
+        10,
         '#34a853',
-        60,
+        12,
         '#1e8e3e',
-        65,
+        14,
         '#188038',
-        70,
+        16,
         '#0d652d',
-        75,
+        18,
         '#8B4225',
-        100,
+        20,
         '#850001',
       ],
+      'fill-opacity': 0.6,
   },
 }
 
-class VaccinatedFullLayer extends React.Component {
+class UnemployedLayer extends React.Component {
   render() {
     return (
         <ReactMapGL.Source type='geojson' data={this.props.data}>
@@ -49,9 +49,9 @@ class VaccinatedFullLayer extends React.Component {
   }
 }
 
-VaccinatedFullLayer.propTypes = {
+UnemployedLayer.propTypes = {
   visibility: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
 };
 
-export default VaccinatedFullLayer;
+export default UnemployedLayer;

@@ -9,19 +9,15 @@ import ControlPanel from '../ControlPanel';
 import communityData from '../data/chicago_communities';
 //import zipData from '../data/il_illinois_zip_codes_geo.min';
 import zipData from '../data/north';
-//import zipData from '../data/2015-2019-acs-il_zcta';
-//import vacData from '../localdata/vaccine_zip';
-//import vacData from '../localdata/vaccination_with_area';
-//import vacData from '../localdata/vaccination_by_zip';
-/*
-// Additional layers used as examples enable here
-import LayerTemplate from '../overlays/LayerTemplate'; */
+import popData from '../data/2015-2019-acs-il_zcta';
 import PopulationIL from '../overlays/PopulationIL';
 
 import VaccinatedFirstLayer from '../overlays/VaccinatedFirstLayer';
 import VaccinatedFullLayer from '../overlays/VaccinatedFullLayer';
 import CaseLayer from '../overlays/CaseLayer';
 import TestLayer from '../overlays/TestLayer';
+import InsuredLayer from '../overlays/InsuredLayer';
+import UnemployedLayer from '../overlays/UnemployedLayer';
 //import TimeCaseLayer from '../overlays/TimeCaseLayer';
 //import MobilityLayer from '../overlays/GoogleMobilityLayer';
 //import MobilityLayerGnp from '../overlays/GoogleMobilityLayerGnp';
@@ -63,10 +59,10 @@ class ChicagoMapChart extends React.Component {
 	       vaccination_layers: {
 	          title: 'Vaccine',
 	          layers: {
-	             FirstDoseRate: {
+	             first_dose_rate: {
 			     title: 'First Dose',
 		     },
-	             FullyVaccinatedRate: {
+	             fully_vaccinated_rate: {
 			     title: 'Fully Vaccinated',
 		     },
 	          },
@@ -74,18 +70,21 @@ class ChicagoMapChart extends React.Component {
 	      case_layers: {
 	          title: 'Cases & Testing',
 	          layers: {
-	             confirmed_cases_total: {
-			     title: 'Total Positive Tests',
+	             confirmed_cases_count: {
+			     title: 'Confirmed Cases',
 		     },
-	             total_tested_total: {
-			     title: 'Total Tests Performed',
+	             total_tested_count: {
+			     title: 'Tests Performed',
 		     },
 	          },
 	      },
               demographic_layers: {
 	         title: 'Demographics',
 	         layers: {
-	            il_population: { title: 'Population', visible: 'visible' },
+	            total_population_count: { title: 'Population' },
+	            median_income: { title: 'Median Income' },
+	            insured_rate: { title: 'Percent Insured' },
+	            unemployed_rate: { title: 'Percent Unemployed' },
 	         },
 	      },
       },
@@ -100,7 +99,7 @@ class ChicagoMapChart extends React.Component {
       sliderDate: '2021-10-23',
       sliderDataLastUpdated: null,
       sliderDataStartDate: null,
-      activeLayer: 'FullyVaccinatedRate',
+      activeLayer: 'fully_vaccinated_rate',
       legendTitle: 'Vaccination Rate',
       legendDataSource: { title: 'IDPH', link: 'https://www.dph.illinois.gov/covid19/data-portal' },
       vaccine_data: { data: null, fetchStatus: null },
@@ -280,35 +279,60 @@ class ChicagoMapChart extends React.Component {
     };
 
     event.features.forEach((feature) => {
-      if (!(feature.layer.id.endsWith('Rate') || feature.layer.id.endsWith('total'))) {
+      if (!(feature.layer.id.startsWith('V_') || feature.layer.id.startsWith('C_') || feature.layer.id.startsWith('D_'))) {
         return;
       }
-      const locationName = feature.properties.ZCTA5CE10;
-      if (!locationName || locationName === 'undefined') {
-        // we don't have data for this location
-        return;
+      let locationName = 'undefined';
+      if ((feature.layer.id.startsWith('V_') || feature.layer.id.startsWith('C_'))) {
+        locationName = feature.properties.ZCTA5CE10;
+        if (!locationName || locationName === 'undefined') {
+          // we don't have data for this location
+          return;
+        }
       }
-      if (feature.layer.id.endsWith('Rate')) {
-        const firstRate = feature.properties.FirstDoseRate;
-        const fullRate  = feature.properties.FullyVaccinatedRate;
+      if (feature.layer.id.startsWith('V_')) {
+        const firstRate = feature.properties.FirstDoseRateDisplay;
+        const fullRate  = feature.properties.FullyVaccinatedRateDisplay;
         hoverInfo = {
           lngLat: event.lngLat,
           locationName,
           values: {
-            'First dose rate': firstRate,
-            'Fully vaccinated rate': fullRate,
+            'First dose rate:': firstRate + '%',
+            'Fully vaccinated rate:': fullRate + '%',
           },
         };
       }
-      if (feature.layer.id.endsWith('total')) {
+      if (feature.layer.id.startsWith('C_')) {
         const confirmed_cases = feature.properties.confirmed_cases;
         const total_tested  = feature.properties.total_tested;
         hoverInfo = {
           lngLat: event.lngLat,
           locationName,
           values: {
-            'Total cases': confirmed_cases,
-            'Total tests': total_tested,
+            'Total cases:': confirmed_cases,
+            'Total tests:': total_tested,
+          },
+        };
+      }
+      //This has to be FIPS for the POP data.
+      locationName = feature.properties.FIPS;
+      if (!locationName || locationName === 'undefined') {
+        // we don't have data for this location
+        return;
+      }
+      if (feature.layer.id.startsWith('D_')) {
+        const population_count = feature.properties["Total Population"];
+	const median_income = feature.properties["Median Household Income"];
+        const insured_rate  = feature.properties["Percent Health Insurance"];
+        const unemployed_rate  = feature.properties["Percent Unemployment"];
+        hoverInfo = {
+          lngLat: event.lngLat,
+          locationName,
+          values: {
+            'Population:': population_count,
+	    'Median income:': '$' + median_income,
+            'Percent insured:': insured_rate + '%',
+            'Percent unemployed:': unemployed_rate + '%',
           },
         };
       }
@@ -351,7 +375,7 @@ class ChicagoMapChart extends React.Component {
         mapColors: this.mapData.colors, legendTitle: 'Vaccination Rate', legendDataSource: { title: 'IDPH Vaccination Data', link: 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDVaccine/getCOVIDVaccineAdministrationZIP' }, lastUpdated: null,
       });
     }
-    if (id.includes('total')) {
+    if (id.includes('confirmed')) {
       const colors = [
 	['0', '#FFF'],
         ['5', '#F7F787'],
@@ -363,6 +387,23 @@ class ChicagoMapChart extends React.Component {
         ['250', '#A25626'],
         ['300', '#8B4225'],
         ['350+', '#850001'],
+      ];
+      this.setState({
+        mapColors: colors, legendTitle: 'Cases & Testing', legendDataSource: { title: 'IDPH Daily Data', link: 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDExport/GetZip' }, lastUpdated: null,
+      });
+    }
+    if (id.includes('tested')) {
+      const colors = [
+	['0', '#FFF'],
+        ['1000', '#F7F787'],
+        ['2000', '#EED322'],
+        ['5000', '#E6B71E'],
+        ['10000', '#DA9C20'],
+        ['20000', '#CA8323'],
+        ['50000', '#B86B25'],
+        ['100000', '#A25626'],
+        ['200000', '#8B4225'],
+        ['500000+', '#850001'],
       ];
       this.setState({
         mapColors: colors, legendTitle: 'Cases & Testing', legendDataSource: { title: 'IDPH Daily Data', link: 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDExport/GetZip' }, lastUpdated: null,
@@ -503,11 +544,13 @@ class ChicagoMapChart extends React.Component {
           touchRotate={false}
         >
         {this.renderHoverPopup()}
-	{this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedFullLayer visibility={this.state.activeLayer === 'FullyVaccinatedRate' ? 'visible' : 'none'} data={this.state.vaccine_data.data} item={this.state.activeLayer} />}
-	{this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedFirstLayer visibility={this.state.activeLayer === 'FirstDoseRate' ? 'visible' : 'none'} data={this.state.vaccine_data.data} item={this.state.activeLayer} />}
-	{this.state.case_data.fetchStatus === 'done' && <CaseLayer visibility={this.state.activeLayer === 'confirmed_cases_total' ? 'visible' : 'none'} data={this.state.case_data.data} />}
-	{this.state.case_data.fetchStatus === 'done' && <TestLayer visibility={this.state.activeLayer === 'total_tested_total' ? 'visible' : 'none'} data={this.state.case_data.data}  />}
-	   <PopulationIL visibility={this.state.activeLayer == 'il_population' ? 'visible' : 'none'} />
+	{this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedFullLayer visibility={this.state.activeLayer === 'fully_vaccinated_rate' ? 'visible' : 'none'} data={this.state.vaccine_data.data} item={this.state.activeLayer} />}
+	{this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedFirstLayer visibility={this.state.activeLayer === 'first_dose_rate' ? 'visible' : 'none'} data={this.state.vaccine_data.data} item={this.state.activeLayer} />}
+	{this.state.case_data.fetchStatus === 'done' && <CaseLayer visibility={this.state.activeLayer === 'confirmed_cases_count' ? 'visible' : 'none'} data={this.state.case_data.data} />}
+	{this.state.case_data.fetchStatus === 'done' && <TestLayer visibility={this.state.activeLayer === 'total_tested_count' ? 'visible' : 'none'} data={this.state.case_data.data}  />}
+	   <PopulationIL visibility={this.state.activeLayer === 'total_population_count' ? 'visible' : 'none'} data={popData}/>
+	   <InsuredLayer visibility={this.state.activeLayer === 'insured_rate' ? 'visible' : 'none'} data={popData}/>
+	   <UnemployedLayer visibility={this.state.activeLayer === 'unemployed_rate' ? 'visible' : 'none'} data={popData}/>
 
            <ReactMapGL.Source type='geojson' data={communityData}>
             <ReactMapGL.Layer

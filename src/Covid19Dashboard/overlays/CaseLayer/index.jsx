@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
 
 const dataLayer = {
-  id: 'confirmed_cases_total',
+  id: 'C_confirmed_cases_count',
   type: 'fill',
   layout: { visibility: 'visible' },
   beforeId: 'zipcode-outline',

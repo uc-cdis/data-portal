@@ -1,27 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
-import usCounties from './data/us_counties_il_pop.json';
 
-/*
-  Setting the style for the counties in Illinois.
-  The filter selected all counties whose state == 'IL" and not named "CHICAGO" as
-  this data file also has the boundaries for the City of Chicago
-
-  The paint instruction will take the value of the population property
-  for the county and set ir color based on that value.
- */
-
-const ilByPopulation = {
-  id: 'illinois-counties-with-population',
+const dataLayer = {
+  id: 'D_illinois-zipcodes-with-population',
   type: 'fill',
-  filter: ['all', ['!=', 'COUNTYNAME', 'CHICAGO'], ['==', 'STATE', 'IL']],
   layout: { visibility: 'visible' },
   paint: {
     'fill-color': [
       'interpolate',
       ['linear'],
-      ['get', 'population'],
+      ['get', 'Total Population'],
       0,
       '#FFF',
       500,
@@ -50,9 +39,9 @@ const ilByPopulation = {
 class PopulationIL extends React.Component {
   render() {
     return (
-      <ReactMapGL.Source type='geojson' data={usCounties}>
+      <ReactMapGL.Source type='geojson' data={this.props.data}>
         <ReactMapGL.Layer
-          {...ilByPopulation}
+          {...dataLayer}
           layout={{ visibility: this.props.visibility }}
         />
       </ReactMapGL.Source>
@@ -62,6 +51,7 @@ class PopulationIL extends React.Component {
 
 PopulationIL.propTypes = {
   visibility: PropTypes.string.isRequired,
+  data:	PropTypes.object.isRequired,
 };
 
 export default PopulationIL;
