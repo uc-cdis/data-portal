@@ -18,6 +18,7 @@ import {
   workspacePageTitle,
   workspacePageDescription,
 } from '../localconf';
+// import Popup from '../components/Popup';
 import { showExternalLoginsOnProfile } from '../configs';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
@@ -457,7 +458,7 @@ class Workspace extends React.Component {
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
         >
           {
-            (Object.keys(this.state.payModel).length > 0) ? (
+            (Object.keys(this.state.payModel).length === 0) ? (
               <Collapse className='workspace__pay-model' onClick={(event) => event.stopPropagation()}>
                 <Panel header='User Pay Model Information' key='1'>
                   <Row gutter={{
@@ -481,7 +482,18 @@ class Workspace extends React.Component {
                 </Panel>
               </Collapse>
             )
-              : null
+              : (
+                <Alert
+                  description={(
+                    <div>
+                      <p>{'No HEAL workspace account information found for this user.'}</p>
+                      <p>Please visit <a href="https://www.w3schools.com">HEAL STRIDES Portal</a> to apply for a workspace account and wait for approval.</p>
+                    </div>
+                  )}
+                  type='warning'
+                  banner
+                />
+              )
           }
           {
             this.state.workspaceStatus === 'Running'
@@ -562,6 +574,28 @@ class Workspace extends React.Component {
             && this.state.workspaceStatus !== 'Stopped'
               ? (
                 <div>
+                  {/* <Popup
+                    message={[]}
+                    title='No Workspace Account Information'
+                    leftButtons={[
+                      {
+                        caption: 'Close',
+                        fn: () => {},
+                      },
+                    ]}
+                    rightButtons={[
+                      {
+                        caption: 'Apply for HEAL STRIDES Workspace Account',
+                        icon: 'exit',
+                        fn: () => {},
+                      },
+                    ]}
+                    onClose={() => {}}
+                  >
+                    <p>{'No HEAL workspace account information found for this user.'}</p>
+                    <p>{'Please visit the HEAL STRIDES Portal to apply for a workspace account and wait for approval.'}</p>
+                    <p>{'This process may take several days.'}</p>
+                  </Popup> */}
                   {workspacePageTitle
                     ? (
                       <h2 className='workspace__title'>
@@ -604,10 +638,7 @@ class Workspace extends React.Component {
                             description={desc}
                             onClick={() => this.launchWorkspace(option)}
                             isPending={this.state.workspaceID === option.id}
-                            isDisabled={
-                              !!this.state.workspaceID
-                            && this.state.workspaceID !== option.id
-                            }
+                            isDisabled
                           />
                         );
                       })
