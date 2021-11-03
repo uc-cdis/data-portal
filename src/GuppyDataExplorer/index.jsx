@@ -73,9 +73,8 @@ function ExplorerDashboard({ dataVersion }) {
               <span>Data release version:</span> {dataVersion}
             </div>
           </Dashboard.Sidebar>
-          <Dashboard.Main>
+          <Dashboard.Main className='explorer__main'>
             <ExplorerVisualization
-              className='explorer__visualization'
               accessibleCount={data.accessibleCount}
               aggsData={data.aggsData}
               aggsChartData={data.aggsChartData}

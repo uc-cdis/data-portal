@@ -144,7 +144,7 @@ function getChartData({
  * @property {(type: string, filter: FilterState, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
  * @property {(type: string, filter: FilterState) => Promise} getTotalCountsByTypeAndFilter
  * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise} fetchAndUpdateRawData
- * @property {string} className
+ * @property {string} [className]
  */
 
 /** @param {ExplorerVisualizationProps} props */
