@@ -595,6 +595,7 @@ Below is an example, with inline comments describing what each JSON block config
   "resourceBrowser": {), // see Resource Browser documentation
   "workspacePageTitle": "", // title to display above workspacePageDescription
   "workspacePageDescription": "", // html to display above the workspace options
+  "studyViewerConfig": [],//See docs/study_viewer.md for more details.
   "useArboristUI": false, // optional; set true to enable Arborist UI; defaults to false if absent
   "hideSubmissionIfIneligible": true, // optional; only works if Arborist UI is enabled; if set to true, link/buttons to /submission page will be hidden to users who don't have permissions to submit data; defaults to false if absent
   "showArboristAuthzOnProfile": false, // optional; set true to list Arborist resources on profile page

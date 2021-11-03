@@ -6,6 +6,9 @@ import StudyViewer from './StudyViewer';
 import SingleStudyViewer from './SingleStudyViewer';
 import { guppyGraphQLUrl, studyViewerConfig, requestorPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
+import {
+  dispatchJob, checkJob, fetchJobResult, resetJobState,
+} from '../Analysis/AnalysisJob';
 
 const generateGQLQuery = (nameOfIndex, fieldsToFetch, rowAccessorField, rowAccessorValue) => {
   const query = `query ($filter: JSON) {
@@ -232,9 +235,16 @@ export const ReduxStudyDetails = (() => {
   const mapStateToProps = (state) => ({
     user: state.user,
     userAuthMapping: state.userAuthMapping,
+    job: state.analysis.job,
+  });
+  const mapDispatchToProps = (dispatch) => ({
+    submitJob: (body) => dispatch(dispatchJob(body)),
+    checkJobStatus: () => dispatch(checkJob()),
+    fetchJobResult: (jobId) => dispatch(fetchJobResult(jobId)),
+    resetJobState: () => dispatch(resetJobState()),
   });
 
-  return withRouter(connect(mapStateToProps)(StudyDetails));
+  return withRouter(connect(mapStateToProps, mapDispatchToProps)(StudyDetails));
 })();
 
 export const ReduxStudyViewer = (() => {
