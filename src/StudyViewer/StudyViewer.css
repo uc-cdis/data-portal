@@ -23,8 +23,8 @@
 }
 
 .study-viewer__card > .ant-card-head {
-  background-color: var(--secondary-color);
-  color: var(--g3-color__white);
+  background-color: var(--g3-primary-btn__bg-color);
+  color: var(--g3-primary-btn__color);
 }
 
 .study-details__descriptions {
@@ -63,8 +63,8 @@
 }
 .study-viewer__details-sidebar-space > div:first-child {
   padding: 5px 10px;
-  background-color: var(--secondary-color);
-  color: var(--g3-color__white);
+  background-color: var(--g3-primary-btn__bg-color);
+  color: var(--g3-primary-btn__color);
 }
 
 .study-details {
