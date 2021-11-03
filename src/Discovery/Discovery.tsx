@@ -200,10 +200,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [advSearchFilterHeight, setAdvSearchFilterHeight] = useState('100vh');
-  const [downloadInProgress, setDownloadInProgress] = useState(false);
-  const [discoveryActionStatusMessage, setDiscoveryActionStatusMessage] = useState({
-    url: '', message: '', title: '', active: false,
-  });
   const [searchableTagCollapsed, setSearchableTagCollapsed] = useState(
     config.features.search.tagSearchDropdown
     && config.features.search.tagSearchDropdown.enabled
@@ -328,7 +324,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   columns.push(
     {
       textWrap: 'word-break',
-      title: <div className='discovery-table-header'> { config.tagsDisplayName || "Tags" }</div>,
+      title: <div className='discovery-table-header'> { config.tagsDisplayName || 'Tags' }</div>,
       ellipsis: false,
       width: config.tagColumnWidth || '200px',
       render: (_, record) => (
@@ -592,10 +588,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           setExportingToWorkspace={setExportingToWorkspace}
           filtersVisible={filtersVisible}
           setFiltersVisible={setFiltersVisible}
-          downloadInProgress={downloadInProgress}
-          setDownloadInProgress={setDownloadInProgress}
-          discoveryActionStatusMessage={discoveryActionStatusMessage}
-          setDiscoveryActionStatusMessage={setDiscoveryActionStatusMessage}
         />
 
         {/* Advanced search panel */}
