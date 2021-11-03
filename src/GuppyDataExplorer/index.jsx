@@ -1,14 +1,119 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { explorerConfig } from '../localconf';
-import { ExplorerConfigProvider } from './ExplorerConfigContext';
-import { ExplorerStateProvider } from './ExplorerStateContext';
-import GuppyDataExplorer from './GuppyDataExplorer';
+import Dashboard from '../Layout/Dashboard';
+import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
+import {
+  ExplorerConfigProvider,
+  useExplorerConfig,
+} from './ExplorerConfigContext';
+import {
+  ExplorerStateProvider,
+  useExplorerState,
+} from './ExplorerStateContext';
+import ExplorerErrorBoundary from './ExplorerErrorBoundary';
+import ExplorerSelect from './ExplorerSelect';
+import ExplorerVisualization from './ExplorerVisualization';
+import ExplorerFilter from './ExplorerFilter';
+import ExplorerFilterSet from './ExplorerFilterSet';
+import './Explorer.css';
+import './typedef';
+
+/** @type {{ [x:string]: OptionFilter }} */
+const emptyAdminAppliedPreFilters = {};
+
+/** @param {{ dataVersion: string }} props */
+function ExplorerDashboard({ dataVersion }) {
+  const {
+    explorerId,
+    current: {
+      adminAppliedPreFilters = emptyAdminAppliedPreFilters,
+      chartConfig,
+      filterConfig,
+      guppyConfig,
+      tableConfig,
+    },
+  } = useExplorerConfig();
+  const {
+    initialAppliedFilters,
+    patientIds,
+    handleFilterChange,
+  } = useExplorerState();
+
+  return (
+    <GuppyWrapper
+      key={explorerId}
+      adminAppliedPreFilters={adminAppliedPreFilters}
+      initialAppliedFilters={initialAppliedFilters}
+      chartConfig={chartConfig}
+      filterConfig={filterConfig}
+      guppyConfig={guppyConfig}
+      onFilterChange={handleFilterChange}
+      rawDataFields={tableConfig.fields}
+      patientIds={patientIds}
+    >
+      {(data) => (
+        <Dashboard>
+          <Dashboard.Sidebar className='explorer__sidebar'>
+            <ExplorerSelect />
+            <ExplorerFilterSet
+              className='explorer__filter-set'
+              filter={data.filter}
+            />
+            <ExplorerFilter
+              className='explorer__filter'
+              filter={data.filter}
+              initialTabsOptions={data.initialTabsOptions}
+              onAnchorValueChange={data.onAnchorValueChange}
+              onFilterChange={data.onFilterChange}
+              tabsOptions={data.tabsOptions}
+            />
+            <div className='explorer__data-release-version'>
+              <span>Data release version:</span> {dataVersion}
+            </div>
+          </Dashboard.Sidebar>
+          <Dashboard.Main>
+            <ExplorerVisualization
+              className='explorer__visualization'
+              accessibleCount={data.accessibleCount}
+              aggsData={data.aggsData}
+              aggsChartData={data.aggsChartData}
+              allFields={data.allFields}
+              filter={data.filter}
+              isLoadingAggsData={data.isLoadingAggsData}
+              isLoadingRawData={data.isLoadingRawData}
+              rawData={data.rawData}
+              totalCount={data.totalCount}
+              downloadRawData={data.downloadRawData}
+              downloadRawDataByFields={data.downloadRawDataByFields}
+              downloadRawDataByTypeAndFilter={
+                data.downloadRawDataByTypeAndFilter
+              }
+              fetchAndUpdateRawData={data.fetchAndUpdateRawData}
+              getTotalCountsByTypeAndFilter={data.getTotalCountsByTypeAndFilter}
+            />
+          </Dashboard.Main>
+        </Dashboard>
+      )}
+    </GuppyWrapper>
+  );
+}
+
+ExplorerDashboard.propTypes = {
+  dataVersion: PropTypes.string,
+};
+
+const mapStateToProps = ({ versionInfo: { dataVersion } }) => ({ dataVersion });
+const ReduxExplorerDashboard = connect(mapStateToProps)(ExplorerDashboard);
 
 export default function Explorer() {
   return explorerConfig.length === 0 ? null : (
     <ExplorerConfigProvider>
       <ExplorerStateProvider>
-        <GuppyDataExplorer />
+        <ExplorerErrorBoundary>
+          <ReduxExplorerDashboard />
+        </ExplorerErrorBoundary>
       </ExplorerStateProvider>
     </ExplorerConfigProvider>
   );
