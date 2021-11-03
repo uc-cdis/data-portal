@@ -47,6 +47,17 @@ export function ExplorerConfigProvider({ children }) {
     setExporerId(id);
     history.push({ search: `id=${id}` });
   }
+  useEffect(() => {
+    function handleBrowserNavigationForConfig() {
+      const newSearchParam = new URLSearchParams(history.location.search);
+      const newSearchParamId = Number(newSearchParam.get('id'));
+      setExporerId(newSearchParamId);
+    }
+    window.addEventListener('popstate', handleBrowserNavigationForConfig);
+    return () => {
+      window.removeEventListener('popstate', handleBrowserNavigationForConfig);
+    };
+  }, []);
 
   const config = explorerConfig.find(({ id }) => id === explorerId);
 
