@@ -17,8 +17,8 @@ import './typedef';
  * @property {string[]} patientIds
  * @property {(filter: FilterState) => void} handleFilterChange
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
- * @property {(args: { filters: FilterState }) => void} updateFilters
  * @property {() => void} clearFilters
+ * @property {(filters) => void} updateFilters
  */
 
 /** @type {React.Context<ExplorerStateContext>} */
@@ -101,11 +101,6 @@ export function ExplorerStateProvider({ children }) {
       history.push({ search: decodeURIComponent(searchParams.toString()) });
   }
 
-  /** @param {{ filters: FilterState }} args */
-  function updateFilters({ filters: updatedFilters }) {
-    setFilters(updatedFilters);
-  }
-
   function clearFilters() {
     setFilters({});
   }
@@ -117,8 +112,8 @@ export function ExplorerStateProvider({ children }) {
         patientIds,
         handleFilterChange,
         handlePatientIdsChange,
-        updateFilters,
         clearFilters,
+        updateFilters: setFilters,
       }}
     >
       {children}

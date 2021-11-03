@@ -28,7 +28,7 @@ import './typedef';
  * @param {ExplorerFilters} prop.filter
  */
 function ExplorerFilterSet({ className, filter }) {
-  const { updateFilters } = useExplorerState();
+  const { clearFilters, updateFilters } = useExplorerState();
   const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
   /** @type {ExplorerFilterSet[]} */
@@ -61,13 +61,12 @@ function ExplorerFilterSet({ className, filter }) {
   }
 
   function handleNew() {
-    const emptyFilterSet = createEmptyFilterSet();
-    setFilterSet(emptyFilterSet);
-    updateFilters(emptyFilterSet);
+    setFilterSet(createEmptyFilterSet());
+    clearFilters();
   }
   function handleOpen(/** @type {ExplorerFilterSet} */ opened) {
     setFilterSet(cloneDeep(opened));
-    updateFilters(cloneDeep(opened));
+    updateFilters(cloneDeep(opened.filters));
     closeActionForm();
   }
   async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
@@ -96,7 +95,7 @@ function ExplorerFilterSet({ className, filter }) {
       await deleteFilterSet(deleted);
       setFilterSet(createEmptyFilterSet());
       setFilterSets(await fetchFilterSets());
-      updateFilters(createEmptyFilterSet());
+      clearFilters();
     } catch (e) {
       setIsError(true);
     } finally {
@@ -122,11 +121,11 @@ function ExplorerFilterSet({ className, filter }) {
         trigger={['hover', 'focus']}
       >
         <span
-          onClick={() => updateFilters(cloneDeep(filterSet))}
+          onClick={() => updateFilters(cloneDeep(filterSet.filters))}
           onKeyPress={(e) => {
             if (e.charCode === 13 || e.charCode === 32) {
               e.preventDefault();
-              updateFilters(cloneDeep(filterSet));
+              updateFilters(cloneDeep(filterSet.filters));
             }
           }}
           role='button'
