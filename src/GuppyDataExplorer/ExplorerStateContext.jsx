@@ -2,6 +2,7 @@ import React, {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -28,10 +29,14 @@ export function ExplorerStateProvider({ children }) {
   const history = useHistory();
   const { filterConfig, patientIdsConfig } = useExplorerConfig().current;
 
-  const initialState = extractExplorerStateFromURL(
-    new URLSearchParams(history.location.search),
-    filterConfig,
-    patientIdsConfig
+  const initialState = useMemo(
+    () =>
+      extractExplorerStateFromURL(
+        new URLSearchParams(history.location.search),
+        filterConfig,
+        patientIdsConfig
+      ),
+    []
   );
   const [filters, setFilters] = useState(initialState.initialAppliedFilters);
   const [patientIds, setPatientIds] = useState(initialState.patientIds);
