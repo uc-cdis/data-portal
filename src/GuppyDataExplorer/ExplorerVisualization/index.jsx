@@ -25,7 +25,7 @@ import '../typedef';
 
 /** @param {ViewContainerProps} props */
 function ViewContainer({ showIf, children, isLoading }) {
-  const baseClassName = 'guppy-explorer-visualization__view';
+  const baseClassName = 'explorer-visualization__view';
   return (
     <div className={baseClassName + (showIf ? '' : '--hidden')}>
       {isLoading && (
@@ -215,7 +215,7 @@ function ExplorerVisualization({
   const tableColumnsOrdered =
     tableConfig.fields && tableConfig.fields.length > 0;
   const tableProps = {
-    className: 'guppy-explorer-visualization__table',
+    className: 'explorer-visualization__table',
     tableConfig: {
       fields: tableColumnsOrdered ? tableConfig.fields : allFields,
       ordered: tableColumnsOrdered,
@@ -237,8 +237,8 @@ function ExplorerVisualization({
 
   return (
     <div className={className}>
-      <div className='guppy-explorer-visualization__top'>
-        <div className='guppy-explorer-visualization__view-group'>
+      <div className='explorer-visualization__top'>
+        <div className='explorer-visualization__view-group'>
           {explorerViews.map((view) => (
             <button
               key={view}
@@ -250,7 +250,7 @@ function ExplorerVisualization({
             </button>
           ))}
         </div>
-        <div className='guppy-explorer-visualization__button-group'>
+        <div className='explorer-visualization__button-group'>
           {accessibleCount < totalCount && !hideGetAccessButton && (
             <ExplorerRequestAccessButton
               getAccessButtonLink={getAccessButtonLink}
@@ -272,7 +272,7 @@ function ExplorerVisualization({
         isLoading={isLoadingAggsData}
       >
         {chartData.countItems.length > 0 && (
-          <div className='guppy-explorer-visualization__summary-cards'>
+          <div className='explorer-visualization__summary-cards'>
             <DataSummaryCardGroup
               summaryItems={chartData.countItems}
               connected
@@ -280,7 +280,7 @@ function ExplorerVisualization({
           </div>
         )}
         {chartData.summaries.length > 0 && (
-          <div className='guppy-explorer-visualization__charts'>
+          <div className='explorer-visualization__charts'>
             <SummaryChartGroup
               summaries={chartData.summaries}
               lockMessage={lockMessage}
@@ -291,9 +291,9 @@ function ExplorerVisualization({
           </div>
         )}
         {chartData.stackedBarCharts.length > 0 && (
-          <div className='guppy-explorer-visualization__charts'>
+          <div className='explorer-visualization__charts'>
             {chartData.stackedBarCharts.map((chart, i) => (
-              <div key={i} className='guppy-explorer-visualization__charts-row'>
+              <div key={i} className='explorer-visualization__charts-row'>
                 {i > 0 && (
                   <div className='percentage-bar-chart__row-upper-border' />
                 )}
