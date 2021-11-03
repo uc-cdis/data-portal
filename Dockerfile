@@ -1,7 +1,7 @@
 # To run: docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal
 # To check running container: docker exec -it dataportal /bin/bash
 
-FROM quay.io/cdis/ubuntu:20.04
+FROM quay.io/cdis/python:pybase3-2.0.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV REACT_APP_PROJECT_ID=search
@@ -44,8 +44,7 @@ RUN npm config set unsafe-perm=true \
     && npm run params
     # see https://stackoverflow.com/questions/48387040/nodejs-recommended-max-old-space-size
 RUN NODE_OPTIONS=--max-old-space-size=3584 NODE_ENV=production time ./node_modules/.bin/webpack --bail
-RUN cp nginx.conf /etc/nginx/conf.d/nginx.conf \
-    && rm /etc/nginx/sites-enabled/default
+RUN cp nginx.conf /etc/nginx/conf.d/nginx.conf
 
 # In standard prod these will be overwritten by volume mounts
 # Provided here for ease of use in development and
