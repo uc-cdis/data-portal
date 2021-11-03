@@ -129,16 +129,16 @@ function GuppyDataExplorer({ dataVersion }) {
       >
         {(data) => (
           <Dashboard>
-            <Dashboard.Sidebar className='guppy-data-explorer__sidebar'>
+            <Dashboard.Sidebar className='explorer__sidebar'>
               <ExplorerSelect />
               <ExplorerFilterSet
-                className='guppy-data-explorer__filter-set'
+                className='explorer__filter-set'
                 onOpenFilterSet={updateInitialAppliedFilters}
                 onDeleteFilterSet={updateInitialAppliedFilters}
                 filter={data.filter}
               />
               <ExplorerFilter
-                className='guppy-data-explorer__filter'
+                className='explorer__filter'
                 initialAppliedFilters={state.initialAppliedFilters}
                 onFilterClear={clearFilters}
                 onPatientIdsChange={handlePatientIdsChange}
@@ -149,13 +149,13 @@ function GuppyDataExplorer({ dataVersion }) {
                 onFilterChange={data.onFilterChange}
                 tabsOptions={data.tabsOptions}
               />
-              <div className='guppy-data-explorer__data-release-version'>
+              <div className='explorer__data-release-version'>
                 <span>Data release version:</span> {dataVersion}
               </div>
             </Dashboard.Sidebar>
             <Dashboard.Main>
               <ExplorerVisualization
-                className='guppy-data-explorer__visualization'
+                className='explorer__visualization'
                 accessibleCount={data.accessibleCount}
                 aggsData={data.aggsData}
                 aggsChartData={data.aggsChartData}
