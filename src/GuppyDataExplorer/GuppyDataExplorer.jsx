@@ -34,7 +34,6 @@ function GuppyDataExplorer({ dataVersion }) {
   const initialState = extractExplorerStateFromURL(
     new URLSearchParams(history.location.search),
     filterConfig,
-    filterConfig.anchor !== undefined,
     patientIdsConfig
   );
   const isBrowserNavigation = useRef(false);
@@ -46,7 +45,6 @@ function GuppyDataExplorer({ dataVersion }) {
       const newState = extractExplorerStateFromURL(
         new URLSearchParams(history.location.search),
         filterConfig,
-        filterConfig.anchor !== undefined,
         patientIdsConfig
       );
       setState(newState);

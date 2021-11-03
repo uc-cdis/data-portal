@@ -106,13 +106,13 @@ function isValid(filterContent) {
  * - filter keys include only fields specified in the configuration
  * @param {*} value
  * @param {FilterConfig} filterConfig
- * @param {boolean} isAnchorFilterEnabled
  */
-export function validateFilter(value, filterConfig, isAnchorFilterEnabled) {
+export function validateFilter(value, filterConfig) {
   if (!isPlainObject(value)) return false;
 
   const allFields = filterConfig.tabs.flatMap(({ fields }) => fields);
   const testFieldSet = new Set(allFields);
+  const isAnchorFilterEnabled = filterConfig.anchor !== undefined;
   for (const [field, filterContent] of Object.entries(value)) {
     if (isAnchorFilterEnabled && 'filter' in filterContent)
       for (const [anchoredField, anchoredfilterContent] of Object.entries(
@@ -130,13 +130,11 @@ export function validateFilter(value, filterConfig, isAnchorFilterEnabled) {
 /**
  * @param {URLSearchParams} searchParams
  * @param {FilterConfig} filterConfig
- * @param {boolean} isAnchorFilterEnabled
  * @param {PatientIdsConfig} [patientIdsConfig]
  */
 export function extractExplorerStateFromURL(
   searchParams,
   filterConfig,
-  isAnchorFilterEnabled,
   patientIdsConfig
 ) {
   /** @type {FilterState} */
@@ -144,7 +142,7 @@ export function extractExplorerStateFromURL(
   if (searchParams.has('filter'))
     try {
       const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
-      if (validateFilter(filterInUrl, filterConfig, isAnchorFilterEnabled))
+      if (validateFilter(filterInUrl, filterConfig))
         initialAppliedFilters = filterInUrl;
       else throw new Error(undefined);
     } catch (e) {
