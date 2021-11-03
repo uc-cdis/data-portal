@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { tierAccessLimit, explorerConfig } from '../localconf';
@@ -29,16 +35,20 @@ export function ExplorerConfigProvider({ children }) {
     });
   }
 
-  const searchParams = new URLSearchParams(history.location.search);
-  const searchParamId = searchParams.has('id')
-    ? Number(searchParams.get('id'))
-    : undefined;
-  const isSearchParamIdValid = explorerIds.includes(searchParamId);
-  const initialExplorerId = isSearchParamIdValid
-    ? searchParamId
-    : explorerIds[0];
+  const [initialExplorerId, hasValidInitialSearchParamId] = useMemo(() => {
+    const searchParams = new URLSearchParams(history.location.search);
+    const hasSearchParamId = searchParams.has('id');
+    const searchParamId = hasSearchParamId
+      ? Number(searchParams.get('id'))
+      : undefined;
+    const isSearchParamIdValid = explorerIds.includes(searchParamId);
+    return [
+      isSearchParamIdValid ? searchParamId : explorerIds[0],
+      hasSearchParamId && isSearchParamIdValid,
+    ];
+  }, []);
   useEffect(() => {
-    if (!searchParams.has('id') || !isSearchParamIdValid)
+    if (!hasValidInitialSearchParamId)
       history.push({ search: `id=${initialExplorerId}` });
   }, []);
 
@@ -49,9 +59,9 @@ export function ExplorerConfigProvider({ children }) {
   }
   useEffect(() => {
     function handleBrowserNavigationForConfig() {
-      const newSearchParam = new URLSearchParams(history.location.search);
-      const newSearchParamId = Number(newSearchParam.get('id'));
-      setExporerId(newSearchParamId);
+      const searchParams = new URLSearchParams(history.location.search);
+      const searchParamId = Number(searchParams.get('id'));
+      setExporerId(searchParamId);
     }
     window.addEventListener('popstate', handleBrowserNavigationForConfig);
     return () => {
