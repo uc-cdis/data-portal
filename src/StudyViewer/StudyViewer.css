@@ -20,6 +20,7 @@
 .study-viewer__card {
   width: 100%;
   border: 1px solid black;
+  margin: 10px 0;
 }
 
 .study-viewer__card > .ant-card-head {
@@ -31,9 +32,11 @@
   border: 1px solid black;
 }
 
-.study-details__descriptions tbody > tr:nth-child(even) > th,
+.study-details__descriptions tbody > tr:nth-child(even) > th {
+  background-color: #EEE;
+}
 .study-details__descriptions tbody > tr:nth-child(even) {
-  background-color: var(--g3-color__smoke);
+  background-color: #fafafa;
 }
 
 .study-viewer__details {
