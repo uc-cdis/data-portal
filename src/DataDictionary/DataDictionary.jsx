@@ -85,12 +85,12 @@ class DataDictionary extends React.Component {
             <div className='data-dictionary__version-info-list'>
               {this.props.dataVersion !== '' && (
                 <div className='data-dictionary__version-info'>
-                  <span>Data release version:</span> {this.props.dataVersion}
+                  <span>Data Release Version:</span> {this.props.dataVersion}
                 </div>
               )}
               {this.props.portalVersion !== '' && (
                 <div className='data-dictionary__version-info'>
-                  <span>Portal version:</span> {this.props.portalVersion}
+                  <span>Portal Version:</span> {this.props.portalVersion}
                 </div>
               )}
             </div>

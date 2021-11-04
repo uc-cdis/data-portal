@@ -84,12 +84,12 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
             <div className='explorer__version-info-area'>
               {dataVersion !== '' && (
                 <div className='explorer__version-info'>
-                  <span>Data release version:</span> {dataVersion}
+                  <span>Data Release Version:</span> {dataVersion}
                 </div>
               )}
               {portalVersion !== '' && (
                 <div className='explorer__version-info'>
-                  <span>Portal version:</span> {portalVersion}
+                  <span>Portal Version:</span> {portalVersion}
                 </div>
               )}
             </div>
