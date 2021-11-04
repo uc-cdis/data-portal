@@ -49,7 +49,7 @@
 
   .explorer__filter,
   .explorer__filter-set,
-  .explorer__data-release-version {
+  .explorer__version-info-area {
     display: none;
   }
 }

@@ -81,6 +81,10 @@
   .data-dictionary__searcher {
     display: hidden;
   }
+
+  .data-dictionary__version-info-area {
+    display: none;
+  }
 }
 
 /* Tablet width and less */
