@@ -14,7 +14,7 @@ const plugins = [
   new webpack.EnvironmentPlugin({
     MOCK_STORE: null,
     BASENAME: '/',
-    PORTAL_VERSION: JSON.stringify(portalVersion || ''),
+    PORTAL_VERSION: portalVersion || '',
   }),
   new webpack.DefinePlugin({
     // <-- key to reducing React's size
