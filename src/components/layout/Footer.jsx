@@ -7,20 +7,25 @@ import './Footer.css';
  * @param {string} [props.dataVersion]
  * @param {{ href: string; text: string; }[]} [props.links]
  * @param {{ alt: string; height: number; href: string; src: string; }[]} props.logos
+ * @param {string} [props.portalVersion]
  * @param {{ file?: string; footerHref: string; routeHref?: string; text: string }} [props.privacyPolicy]
  */
-function Footer({ dataVersion = '', links, logos, privacyPolicy }) {
+function Footer({ dataVersion, links, logos, portalVersion, privacyPolicy }) {
   return (
     <footer>
       <nav className='footer__nav' aria-label='Footer Navigation'>
-        {dataVersion !== '' && (
-          <div className='footer__data-release-version-area'>
-            <span className='footer__data-release-version-area--title'>
-              Data Release Version:
-            </span>
-            {dataVersion}
-          </div>
-        )}
+        <div className='footer__version-info-area'>
+          {dataVersion !== '' && (
+            <div className='footer__version-info'>
+              <span>Data Release Version:</span> {dataVersion}
+            </div>
+          )}
+          {portalVersion !== '' && (
+            <div className='footer__version-info'>
+              <span>Portal Version:</span> {portalVersion}
+            </div>
+          )}
+        </div>
         <div className='footer__spacer-area' />
         {privacyPolicy?.text && (
           <div className='footer__privacy-policy-area'>
@@ -86,6 +91,7 @@ Footer.propTypes = {
       src: PropTypes.string.isRequired,
     })
   ).isRequired,
+  portalVersion: PropTypes.string,
   privacyPolicy: PropTypes.exact({
     file: PropTypes.string,
     footerHref: PropTypes.string.isRequired,

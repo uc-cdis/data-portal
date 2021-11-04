@@ -125,15 +125,15 @@
   content: '';
 }
 
-.footer__data-release-version-area {
-  display: inline-flex;
-  flex-wrap: wrap;
+.footer__version-info-area {
   align-self: center;
-  justify-content: center;
   margin: 1rem;
 }
 
-.footer__data-release-version-area--title {
+.footer__version-info {
+  text-align: left;
+}
+
+.footer__version-info > span {
   font-style: italic;
-  margin-right: 0.25rem;
 }
