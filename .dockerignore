@@ -1,4 +1,5 @@
 __mocks__
+.git
 .storybook
 docs
 node_modules
