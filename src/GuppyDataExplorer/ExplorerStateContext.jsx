@@ -1,7 +1,7 @@
 import React, {
   createContext,
   useContext,
-  useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -15,6 +15,7 @@ import './typedef';
  * @typedef {Object} ExplorerStateContext
  * @property {FilterState} initialAppliedFilters
  * @property {string[]} patientIds
+ * @property {() => void} handleBrowserNavigationForState
  * @property {(filter: FilterState) => void} handleFilterChange
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
  * @property {() => void} clearFilters
@@ -28,32 +29,30 @@ export function ExplorerStateProvider({ children }) {
   const history = useHistory();
   const { filterConfig, patientIdsConfig } = useExplorerConfig().current;
 
-  const initialState = extractExplorerStateFromURL(
-    new URLSearchParams(history.location.search),
-    filterConfig,
-    patientIdsConfig
+  const initialState = useMemo(
+    () =>
+      extractExplorerStateFromURL(
+        new URLSearchParams(history.location.search),
+        filterConfig,
+        patientIdsConfig
+      ),
+    []
   );
   const [filters, setFilters] = useState(initialState.initialAppliedFilters);
   const [patientIds, setPatientIds] = useState(initialState.patientIds);
 
   const isBrowserNavigation = useRef(false);
-
-  useEffect(() => {
-    window.onpopstate = () => {
-      isBrowserNavigation.current = true;
-      const newState = extractExplorerStateFromURL(
-        new URLSearchParams(history.location.search),
-        filterConfig,
-        patientIdsConfig
-      );
-      setFilters(newState.initialAppliedFilters);
-      setPatientIds(newState.patientIds);
-      isBrowserNavigation.current = false;
-    };
-    return () => {
-      window.onpopstate = () => {};
-    };
-  }, []);
+  function handleBrowserNavigationForState() {
+    isBrowserNavigation.current = true;
+    const newState = extractExplorerStateFromURL(
+      new URLSearchParams(history.location.search),
+      filterConfig,
+      patientIdsConfig
+    );
+    setFilters(newState.initialAppliedFilters);
+    setPatientIds(newState.patientIds);
+    isBrowserNavigation.current = false;
+  }
 
   /** @param {FilterState} filter */
   function handleFilterChange(filter) {
@@ -110,6 +109,7 @@ export function ExplorerStateProvider({ children }) {
       value={{
         initialAppliedFilters: filters,
         patientIds,
+        handleBrowserNavigationForState,
         handleFilterChange,
         handlePatientIdsChange,
         clearFilters,

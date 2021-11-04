@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { tierAccessLimit, explorerConfig } from '../localconf';
@@ -10,6 +16,7 @@ import './typedef';
  * @property {AlteredExplorerConfig} current
  * @property {number} explorerId
  * @property {{ label: string; value: string }[]} explorerOptions
+ * @property {() => void} handleBrowserNavigationForConfig
  * @property {(id: number) => void} updateExplorerId
  */
 
@@ -29,16 +36,20 @@ export function ExplorerConfigProvider({ children }) {
     });
   }
 
-  const searchParams = new URLSearchParams(history.location.search);
-  const searchParamId = searchParams.has('id')
-    ? Number(searchParams.get('id'))
-    : undefined;
-  const isSearchParamIdValid = explorerIds.includes(searchParamId);
-  const initialExplorerId = isSearchParamIdValid
-    ? searchParamId
-    : explorerIds[0];
+  const [initialExplorerId, hasValidInitialSearchParamId] = useMemo(() => {
+    const searchParams = new URLSearchParams(history.location.search);
+    const hasSearchParamId = searchParams.has('id');
+    const searchParamId = hasSearchParamId
+      ? Number(searchParams.get('id'))
+      : undefined;
+    const isSearchParamIdValid = explorerIds.includes(searchParamId);
+    return [
+      isSearchParamIdValid ? searchParamId : explorerIds[0],
+      hasSearchParamId && isSearchParamIdValid,
+    ];
+  }, []);
   useEffect(() => {
-    if (!searchParams.has('id') || !isSearchParamIdValid)
+    if (!hasValidInitialSearchParamId)
       history.push({ search: `id=${initialExplorerId}` });
   }, []);
 
@@ -46,6 +57,12 @@ export function ExplorerConfigProvider({ children }) {
   function updateExplorerId(id) {
     setExporerId(id);
     history.push({ search: `id=${id}` });
+  }
+
+  function handleBrowserNavigationForConfig() {
+    const searchParams = new URLSearchParams(history.location.search);
+    const searchParamId = Number(searchParams.get('id'));
+    setExporerId(searchParamId);
   }
 
   const config = explorerConfig.find(({ id }) => id === explorerId);
@@ -74,6 +91,7 @@ export function ExplorerConfigProvider({ children }) {
         },
         explorerId,
         explorerOptions,
+        handleBrowserNavigationForConfig,
         updateExplorerId,
       }}
     >
