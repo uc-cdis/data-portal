@@ -3,6 +3,12 @@
   --data-dictionary__switch-border-color: var(--g3-color__black);
 }
 
+.data-dictionary__sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .data-dictionary__graph {
   overflow: hidden;
   height: 100%;
@@ -54,6 +60,16 @@
 .data-dictionary__switch-button--active {
   background-color: var(--pcdc-color__primary);
   color: var(--g3-color__white);
+}
+
+.data-dictionary__version-info-area {
+  margin: 0 auto;
+  padding: 3rem 0 2rem;
+  width: fit-content;
+}
+
+.data-dictionary__version-info > span {
+  font-style: italic;
 }
 
 /* Medium screen and less */
