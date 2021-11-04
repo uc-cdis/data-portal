@@ -32,9 +32,10 @@
   border: 1px solid black;
 }
 
-.study-details__descriptions tbody > tr:nth-child(even) > th {
-  background-color: #EEE;
+.study-details__descriptions tbody > tr > th.ant-descriptions-item-label {
+  background-color: #fff;
 }
+.study-details__descriptions tbody > tr:nth-child(even) > th,
 .study-details__descriptions tbody > tr:nth-child(even) {
   background-color: #fafafa;
 }
