@@ -13,7 +13,11 @@ const persistConfig = {
 const reducer = persistReducer(persistConfig, reducers);
 
 function getpreloadedState() {
-  const state = { user: {}, status: {} };
+  const state = {
+    user: {},
+    status: {},
+    versionInfo: { dataVersion: '', portalVersion: process.env.PORTAL_VERSION },
+  };
 
   if (process.env.NODE_ENV !== 'production' && mockStore) {
     state.user = { username: 'test', certificates_uploaded: requiredCerts };
