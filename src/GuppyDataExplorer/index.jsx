@@ -23,8 +23,8 @@ import './typedef';
 /** @type {{ [x:string]: OptionFilter }} */
 const emptyAdminAppliedPreFilters = {};
 
-/** @param {{ dataVersion: string }} props */
-function ExplorerDashboard({ dataVersion }) {
+/** @param {{ dataVersion?: string; portalVersion?: string }} props */
+function ExplorerDashboard({ dataVersion, portalVersion }) {
   const {
     current: {
       adminAppliedPreFilters = emptyAdminAppliedPreFilters,
@@ -66,21 +66,32 @@ function ExplorerDashboard({ dataVersion }) {
       {(data) => (
         <Dashboard>
           <Dashboard.Sidebar className='explorer__sidebar'>
-            <ExplorerSelect />
-            <ExplorerFilterSet
-              className='explorer__filter-set'
-              filter={data.filter}
-            />
-            <ExplorerFilter
-              className='explorer__filter'
-              filter={data.filter}
-              initialTabsOptions={data.initialTabsOptions}
-              onAnchorValueChange={data.onAnchorValueChange}
-              onFilterChange={data.onFilterChange}
-              tabsOptions={data.tabsOptions}
-            />
-            <div className='explorer__data-release-version'>
-              <span>Data release version:</span> {dataVersion}
+            <div>
+              <ExplorerSelect />
+              <ExplorerFilterSet
+                className='explorer__filter-set'
+                filter={data.filter}
+              />
+              <ExplorerFilter
+                className='explorer__filter'
+                filter={data.filter}
+                initialTabsOptions={data.initialTabsOptions}
+                onAnchorValueChange={data.onAnchorValueChange}
+                onFilterChange={data.onFilterChange}
+                tabsOptions={data.tabsOptions}
+              />
+            </div>
+            <div className='explorer__version-info-area'>
+              {dataVersion !== '' && (
+                <div className='explorer__version-info'>
+                  <span>Data Release Version:</span> {dataVersion}
+                </div>
+              )}
+              {portalVersion !== '' && (
+                <div className='explorer__version-info'>
+                  <span>Portal Version:</span> {portalVersion}
+                </div>
+              )}
             </div>
           </Dashboard.Sidebar>
           <Dashboard.Main className='explorer__main'>
@@ -111,9 +122,10 @@ function ExplorerDashboard({ dataVersion }) {
 
 ExplorerDashboard.propTypes = {
   dataVersion: PropTypes.string,
+  portalVersion: PropTypes.string,
 };
 
-const mapStateToProps = ({ versionInfo: { dataVersion } }) => ({ dataVersion });
+const mapStateToProps = ({ versionInfo }) => versionInfo;
 const ReduxExplorerDashboard = connect(mapStateToProps)(ExplorerDashboard);
 
 export default function Explorer() {

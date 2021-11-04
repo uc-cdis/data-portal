@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const CompressionPlugin = require('compression-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const portalVersion = require('./package.json').version;
 
 const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/')
@@ -13,6 +14,7 @@ const plugins = [
   new webpack.EnvironmentPlugin({
     MOCK_STORE: null,
     BASENAME: '/',
+    PORTAL_VERSION: portalVersion || '',
   }),
   new webpack.DefinePlugin({
     // <-- key to reducing React's size

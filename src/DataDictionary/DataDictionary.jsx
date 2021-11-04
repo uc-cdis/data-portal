@@ -29,56 +29,72 @@ class DataDictionary extends React.Component {
   render() {
     return (
       <Dashboard>
-        <Dashboard.Sidebar>
-          <div className='data-dictionary__switch'>
-            <span
-              className={`data-dictionary__switch-button ${
-                !this.props.isGraphView
-                  ? ''
-                  : 'data-dictionary__switch-button--active'
-              }`}
-              onClick={() => {
-                this.setGraphView(true);
-              }}
-              onKeyPress={(e) => {
-                if (e.charCode === 13 || e.charCode === 32) {
-                  e.preventDefault();
+        <Dashboard.Sidebar className='data-dictionary__sidebar'>
+          <div>
+            <div className='data-dictionary__switch'>
+              <span
+                className={`data-dictionary__switch-button ${
+                  !this.props.isGraphView
+                    ? ''
+                    : 'data-dictionary__switch-button--active'
+                }`}
+                onClick={() => {
                   this.setGraphView(true);
-                }
-              }}
-              role='button'
-              tabIndex={0}
-              aria-label='Graph view'
-            >
-              Graph View
-            </span>
-            <span
-              className={`data-dictionary__switch-button ${
-                this.props.isGraphView
-                  ? ''
-                  : 'data-dictionary__switch-button--active'
-              }`}
-              onClick={() => {
-                this.setGraphView(false);
-              }}
-              onKeyPress={(e) => {
-                if (e.charCode === 13 || e.charCode === 32) {
-                  e.preventDefault();
+                }}
+                onKeyPress={(e) => {
+                  if (e.charCode === 13 || e.charCode === 32) {
+                    e.preventDefault();
+                    this.setGraphView(true);
+                  }
+                }}
+                role='button'
+                tabIndex={0}
+                aria-label='Graph view'
+              >
+                Graph View
+              </span>
+              <span
+                className={`data-dictionary__switch-button ${
+                  this.props.isGraphView
+                    ? ''
+                    : 'data-dictionary__switch-button--active'
+                }`}
+                onClick={() => {
                   this.setGraphView(false);
-                }
-              }}
-              role='button'
-              tabIndex={0}
-              aria-label='Dictionary view'
-            >
-              Table View
-            </span>
+                }}
+                onKeyPress={(e) => {
+                  if (e.charCode === 13 || e.charCode === 32) {
+                    e.preventDefault();
+                    this.setGraphView(false);
+                  }
+                }}
+                role='button'
+                tabIndex={0}
+                aria-label='Dictionary view'
+              >
+                Table View
+              </span>
+            </div>
+            <ReduxDictionarySearcher ref={this.dictionarySearcherRef} />
+            <ReduxDataModelStructure />
+            <ReduxDictionarySearchHistory
+              onClickSearchHistoryItem={this.handleClickSearchHistoryItem}
+            />
           </div>
-          <ReduxDictionarySearcher ref={this.dictionarySearcherRef} />
-          <ReduxDataModelStructure />
-          <ReduxDictionarySearchHistory
-            onClickSearchHistoryItem={this.handleClickSearchHistoryItem}
-          />
+          <div className='data-dictionary__version-info-area'>
+            <div className='data-dictionary__version-info-list'>
+              {this.props.dataVersion !== '' && (
+                <div className='data-dictionary__version-info'>
+                  <span>Data Release Version:</span> {this.props.dataVersion}
+                </div>
+              )}
+              {this.props.portalVersion !== '' && (
+                <div className='data-dictionary__version-info'>
+                  <span>Portal Version:</span> {this.props.portalVersion}
+                </div>
+              )}
+            </div>
+          </div>
         </Dashboard.Sidebar>
         <Dashboard.Main className='data-dictionary__main'>
           {this.props.isGraphView ? (
@@ -107,8 +123,10 @@ class DataDictionary extends React.Component {
 }
 
 DataDictionary.propTypes = {
-  onSetGraphView: PropTypes.func,
+  dataVersion: PropTypes.string,
   isGraphView: PropTypes.bool,
+  onSetGraphView: PropTypes.func,
+  portalVersion: PropTypes.string,
 };
 
 DataDictionary.defaultProps = {
