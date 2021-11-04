@@ -16,6 +16,7 @@ import './typedef';
  * @property {AlteredExplorerConfig} current
  * @property {number} explorerId
  * @property {{ label: string; value: string }[]} explorerOptions
+ * @property {() => void} handleBrowserNavigationForConfig
  * @property {(id: number) => void} updateExplorerId
  */
 
@@ -57,17 +58,12 @@ export function ExplorerConfigProvider({ children }) {
     setExporerId(id);
     history.push({ search: `id=${id}` });
   }
-  useEffect(() => {
-    function handleBrowserNavigationForConfig() {
-      const searchParams = new URLSearchParams(history.location.search);
-      const searchParamId = Number(searchParams.get('id'));
-      setExporerId(searchParamId);
-    }
-    window.addEventListener('popstate', handleBrowserNavigationForConfig);
-    return () => {
-      window.removeEventListener('popstate', handleBrowserNavigationForConfig);
-    };
-  }, []);
+
+  function handleBrowserNavigationForConfig() {
+    const searchParams = new URLSearchParams(history.location.search);
+    const searchParamId = Number(searchParams.get('id'));
+    setExporerId(searchParamId);
+  }
 
   const config = explorerConfig.find(({ id }) => id === explorerId);
 
@@ -95,6 +91,7 @@ export function ExplorerConfigProvider({ children }) {
         },
         explorerId,
         explorerOptions,
+        handleBrowserNavigationForConfig,
         updateExplorerId,
       }}
     >

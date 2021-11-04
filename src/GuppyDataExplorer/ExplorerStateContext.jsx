@@ -1,7 +1,6 @@
 import React, {
   createContext,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -16,6 +15,7 @@ import './typedef';
  * @typedef {Object} ExplorerStateContext
  * @property {FilterState} initialAppliedFilters
  * @property {string[]} patientIds
+ * @property {() => void} handleBrowserNavigationForState
  * @property {(filter: FilterState) => void} handleFilterChange
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
  * @property {() => void} clearFilters
@@ -42,24 +42,17 @@ export function ExplorerStateProvider({ children }) {
   const [patientIds, setPatientIds] = useState(initialState.patientIds);
 
   const isBrowserNavigation = useRef(false);
-
-  useEffect(() => {
-    function handleBrowserNavigationForState() {
-      isBrowserNavigation.current = true;
-      const newState = extractExplorerStateFromURL(
-        new URLSearchParams(history.location.search),
-        filterConfig,
-        patientIdsConfig
-      );
-      setFilters(newState.initialAppliedFilters);
-      setPatientIds(newState.patientIds);
-      isBrowserNavigation.current = false;
-    }
-    window.addEventListener('popstate', handleBrowserNavigationForState);
-    return () => {
-      window.removeEventListener('popstate', handleBrowserNavigationForState);
-    };
-  }, []);
+  function handleBrowserNavigationForState() {
+    isBrowserNavigation.current = true;
+    const newState = extractExplorerStateFromURL(
+      new URLSearchParams(history.location.search),
+      filterConfig,
+      patientIdsConfig
+    );
+    setFilters(newState.initialAppliedFilters);
+    setPatientIds(newState.patientIds);
+    isBrowserNavigation.current = false;
+  }
 
   /** @param {FilterState} filter */
   function handleFilterChange(filter) {
@@ -116,6 +109,7 @@ export function ExplorerStateProvider({ children }) {
       value={{
         initialAppliedFilters: filters,
         patientIds,
+        handleBrowserNavigationForState,
         handleFilterChange,
         handlePatientIdsChange,
         clearFilters,

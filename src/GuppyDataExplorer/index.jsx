@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { explorerConfig } from '../localconf';
@@ -26,7 +26,6 @@ const emptyAdminAppliedPreFilters = {};
 /** @param {{ dataVersion: string }} props */
 function ExplorerDashboard({ dataVersion }) {
   const {
-    explorerId,
     current: {
       adminAppliedPreFilters = emptyAdminAppliedPreFilters,
       chartConfig,
@@ -34,12 +33,23 @@ function ExplorerDashboard({ dataVersion }) {
       guppyConfig,
       tableConfig,
     },
+    explorerId,
+    handleBrowserNavigationForConfig,
   } = useExplorerConfig();
   const {
     initialAppliedFilters,
     patientIds,
+    handleBrowserNavigationForState,
     handleFilterChange,
   } = useExplorerState();
+  useEffect(() => {
+    window.addEventListener('popstate', handleBrowserNavigationForConfig);
+    window.addEventListener('popstate', handleBrowserNavigationForState);
+    return () => {
+      window.removeEventListener('popstate', handleBrowserNavigationForConfig);
+      window.removeEventListener('popstate', handleBrowserNavigationForState);
+    };
+  }, []);
 
   return (
     <GuppyWrapper
