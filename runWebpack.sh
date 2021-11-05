@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Runtime deployment helper.  Keys on environment variables:
-#  NODE_ENV = dev|production
+#  NODE_ENV = development|production
 #  APP = commons specific
 #  HOSTNAME = where to download graphql schema from
 #  LOGOUT_INACTIVE_USERS = bool, should inactive users be logged out before session lifetime ends
@@ -15,7 +15,7 @@
 set -e
 
 export APP="${APP:-dev}"
-export NODE_ENV="${NODE_ENV:-dev}"
+export NODE_ENV="${NODE_ENV:-development}"
 export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
 export TIER_ACCESS_LEVEL="${TIER_ACCESS_LEVEL:-"private"}"
 export TIER_ACCESS_LIMIT="${TIER_ACCESS_LIMIT:-"1000"}"

@@ -237,7 +237,7 @@ export const fetchUser = () => (dispatch) =>
 export const logoutAPI = (displayAuthPopup = false) => (dispatch) =>
   fetch(
     `${userapiPath}/logout?next=${hostname}${
-      process.env.NODE_ENV === 'dev' ? 'dev.html' : ''
+      process.env.NODE_ENV === 'development' ? 'dev.html' : ''
     }`
   ).then((response) => {
     if (displayAuthPopup)

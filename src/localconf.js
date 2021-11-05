@@ -8,7 +8,7 @@ const { components, requiredCerts, config } = require('./params');
  */
 function buildConfig(opts) {
   const defaults = {
-    dev: process.env.NODE_ENV === 'dev',
+    dev: process.env.NODE_ENV === 'development',
     mockStore: process.env.MOCK_STORE === 'true',
     app: process.env.APP ?? 'generic',
     basename: process.env.BASENAME ?? '/',

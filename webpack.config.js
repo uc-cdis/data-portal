@@ -19,9 +19,7 @@ const plugins = [
     PORTAL_VERSION: portalVersion || '',
   }),
   new webpack.DefinePlugin({
-    // <-- key to reducing React's size
     'process.env': {
-      NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),
       LOGOUT_INACTIVE_USERS: !(process.env.LOGOUT_INACTIVE_USERS === 'false'),
       WORKSPACE_TIMEOUT_IN_MINUTES:
         process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480,
