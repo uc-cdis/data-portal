@@ -22,8 +22,8 @@ dayjs.extend(customParseFormat);
 
 class MapFiles extends React.Component {
   constructor(props) {
-    const searchParams = new URLSearchParams(window.location.search);
     super(props);
+    const searchParams = new URLSearchParams(window.location.search);
     this.state = {
       selectedFilesByGroup: {},
       allFilesByGroup: {},
