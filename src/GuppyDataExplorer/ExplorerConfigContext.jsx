@@ -50,7 +50,7 @@ export function ExplorerConfigProvider({ children }) {
   }, []);
   useEffect(() => {
     if (!hasValidInitialSearchParamId)
-      history.push({
+      history.replace({
         search:
           // @ts-ignore
           history.location.state.keepSearch === true
