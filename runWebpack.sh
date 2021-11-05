@@ -127,11 +127,10 @@ export REACT_APP_DISABLE_SOCKET=true
 # finally either launch the webpack-dev-server or
 # run webpack to generate a static bundle.js
 #
-if [[ "$NODE_ENV" == "dev" || "$NODE_ENV" == "auto" ]]; then
-  echo npx webpack serve
-  npx webpack serve
-else
-  export NODE_ENV="production"
+if [[ "$NODE_ENV" == "production" ]]; then
   echo npx webpack
   npx webpack
+else
+  echo npx webpack serve
+  npx webpack serve
 fi
