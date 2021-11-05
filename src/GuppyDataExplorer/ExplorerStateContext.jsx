@@ -1,6 +1,7 @@
 import React, {
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -27,7 +28,11 @@ const ExplorerStateContext = createContext(null);
 
 export function ExplorerStateProvider({ children }) {
   const history = useHistory();
-  const { filterConfig, patientIdsConfig } = useExplorerConfig().current;
+  const {
+    current: { filterConfig, patientIdsConfig },
+    shouldUpdateState,
+    setShouldUpdateState,
+  } = useExplorerConfig();
 
   const initialState = useMemo(
     () =>
@@ -40,6 +45,18 @@ export function ExplorerStateProvider({ children }) {
   );
   const [filters, setFilters] = useState(initialState.initialAppliedFilters);
   const [patientIds, setPatientIds] = useState(initialState.patientIds);
+  useEffect(() => {
+    if (shouldUpdateState) {
+      const newState = extractExplorerStateFromURL(
+        new URLSearchParams(history.location.search),
+        filterConfig,
+        patientIdsConfig
+      );
+      setFilters(newState.initialAppliedFilters);
+      setPatientIds(newState.patientIds);
+      setShouldUpdateState(false);
+    }
+  }, [shouldUpdateState]);
 
   const isBrowserNavigation = useRef(false);
   function handleBrowserNavigationForState() {
