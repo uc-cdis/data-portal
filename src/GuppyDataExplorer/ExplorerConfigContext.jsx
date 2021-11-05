@@ -53,7 +53,7 @@ export function ExplorerConfigProvider({ children }) {
       history.replace({
         search:
           // @ts-ignore
-          history.location.state.keepSearch === true
+          history.location.state?.keepSearch === true
             ? `id=${initialExplorerId}&${history.location.search.slice(1)}`
             : `id=${initialExplorerId}`,
       });
