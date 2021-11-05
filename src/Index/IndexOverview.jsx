@@ -40,7 +40,13 @@ function IndexOverview({ overviewCounts }) {
         label='Explore more'
         buttonType='primary'
         enabled={enabled}
-        onClick={() => history.push({ pathname: '/explorer', search })}
+        onClick={() =>
+          history.push({
+            pathname: '/explorer',
+            search,
+            state: { keepSearch: true },
+          })
+        }
       />
     );
   }

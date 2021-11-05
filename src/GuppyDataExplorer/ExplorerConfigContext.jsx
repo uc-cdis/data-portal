@@ -50,7 +50,13 @@ export function ExplorerConfigProvider({ children }) {
   }, []);
   useEffect(() => {
     if (!hasValidInitialSearchParamId)
-      history.push({ search: `id=${initialExplorerId}` });
+      history.push({
+        search:
+          // @ts-ignore
+          history.location.state.keepSearch === true
+            ? `id=${initialExplorerId}&${history.location.search.slice(1)}`
+            : `id=${initialExplorerId}`,
+      });
   }, []);
 
   const [explorerId, setExporerId] = useState(initialExplorerId);
