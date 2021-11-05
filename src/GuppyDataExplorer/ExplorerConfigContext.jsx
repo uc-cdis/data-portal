@@ -17,6 +17,8 @@ import './typedef';
  * @property {number} explorerId
  * @property {{ label: string; value: string }[]} explorerOptions
  * @property {() => void} handleBrowserNavigationForConfig
+ * @property {boolean} shouldUpdateState
+ * @property {(v: boolean) => void} setShouldUpdateState
  * @property {(id: number) => void} updateExplorerId
  */
 
@@ -48,9 +50,18 @@ export function ExplorerConfigProvider({ children }) {
       hasSearchParamId && isSearchParamIdValid,
     ];
   }, []);
+  const [shouldUpdateState, setShouldUpdateState] = useState(false);
   useEffect(() => {
-    if (!hasValidInitialSearchParamId)
-      history.push({ search: `id=${initialExplorerId}` });
+    if (!hasValidInitialSearchParamId) {
+      history.replace({
+        search:
+          // @ts-ignore
+          history.location.state?.keepSearch === true
+            ? `id=${initialExplorerId}&${history.location.search.slice(1)}`
+            : `id=${initialExplorerId}`,
+      });
+      setShouldUpdateState(true);
+    }
   }, []);
 
   const [explorerId, setExporerId] = useState(initialExplorerId);
@@ -92,6 +103,8 @@ export function ExplorerConfigProvider({ children }) {
         explorerId,
         explorerOptions,
         handleBrowserNavigationForConfig,
+        shouldUpdateState,
+        setShouldUpdateState,
         updateExplorerId,
       }}
     >
