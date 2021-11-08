@@ -14,13 +14,10 @@ import { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename,
   enableResourceBrowser,
-  gaDebug,
   // workspaceUrl,
   // workspaceErrorUrl,
 } from './localconf';
 import { fetchVersionInfo } from './actions';
-import { gaTracking } from './params';
-import GA, { RouteTracker } from './components/GoogleAnalytics';
 import isEnabled from './helpers/featureFlags';
 
 // lazy-loaded pages
@@ -53,7 +50,6 @@ function App({ store }) {
   return (
     <Provider store={store}>
       <BrowserRouter basename={basename}>
-        {GA.init(gaTracking, { debug: gaDebug }) && <RouteTracker />}
         {isEnabled('noIndex') && (
           <Helmet>
             <meta name='robots' content='noindex,nofollow' />
