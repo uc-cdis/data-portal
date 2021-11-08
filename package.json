@@ -19,7 +19,7 @@
     "babel-loader": "^8.2.3",
     "babel-plugin-relay": "^11.0.2",
     "clipboard-plus": "^1.0.0",
-    "compression-webpack-plugin": "^8.0.1",
+    "compression-webpack-plugin": "^9.0.0",
     "core-js": "^3.19.1",
     "css-loader": "^6.5.1",
     "d3-array": "^3.1.1",
