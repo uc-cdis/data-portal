@@ -61,9 +61,7 @@ const DiscoveryWithMDSBackend: React.FC<{
     throw new Error('Could not find configuration for Discovery page. Check the portal config.');
   }
 
-
   useEffect(() => {
-
     let loadStudiesFunction;
     if (isEnabled('discoveryUseAggMDS')) {
       loadStudiesFunction = loadStudiesFromAggMDS;
@@ -71,7 +69,6 @@ const DiscoveryWithMDSBackend: React.FC<{
       loadStudiesFunction = loadStudiesFromMDS;
     }
     loadStudiesFunction().then((rawStudies) => {
-      let studies;
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const { authzField, dataAvailabilityField } = props.config.minimalFieldMapping;
@@ -95,22 +92,21 @@ const DiscoveryWithMDSBackend: React.FC<{
             __accessible: accessible,
           };
         });
-        studies = studiesWithAccessibleField;
+        setStudies(studiesWithAccessibleField);
       } else {
-        studies = rawStudies;
+        setStudies(rawStudies);
       }
-      setStudies(studies);
 
       // resume action in progress if redirected from login
       const urlParams = decodeURIComponent(window.location.search);
-      if (urlParams.startsWith("?state=")) {
-        const redirectState = JSON.parse(urlParams.split("?state=")[1]);
+      if (urlParams.startsWith('?state=')) {
+        const redirectState = JSON.parse(urlParams.split('?state=')[1]);
         redirectState.selectedResources = studies.filter(
-          study => (redirectState.selectedResourceIDs).includes(study.study_id)
+          (study) => (redirectState.selectedResourceIDs).includes(study.study_id),
         );
         delete redirectState.selectedResourceIDs;
         props.dispatch({
-          type: "REDIRECTED_FOR_ACTION", redirectState
+          type: 'REDIRECTED_FOR_ACTION', redirectState,
         });
         window.history.replaceState({}, document.title, window.location.pathname);
       }
@@ -134,12 +130,10 @@ const DiscoveryWithMDSBackend: React.FC<{
 
 // Goal 2.5: consolidate the study filters
 
-const mapStateToProps = (state) => {
-  return {
-    userAuthMapping: state.userAuthMapping,
-    config: discoveryConfig,
-    ...state.discovery
-  }
-};
+const mapStateToProps = (state) => ({
+  userAuthMapping: state.userAuthMapping,
+  config: discoveryConfig,
+  ...state.discovery,
+});
 
 export default connect(mapStateToProps)(DiscoveryWithMDSBackend);

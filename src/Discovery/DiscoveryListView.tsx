@@ -3,7 +3,6 @@ import { Table, Empty } from 'antd';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { AccessLevel } from './Discovery';
-import { filter } from 'jszip';
 
 interface Props {
   config: DiscoveryConfig;
@@ -58,7 +57,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
         preserveSelectedRowKeys: true,
         onChange: (_, selectedRows) => {
           props.dispatch({
-            type: "RESOURCES_SELECTED", selectedResources: selectedRows
+            type: 'RESOURCES_SELECTED', selectedResources: selectedRows,
           });
         },
         getCheckboxProps: (record) => {

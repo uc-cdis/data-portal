@@ -19,37 +19,35 @@ const initStoreData = {
     selectedResources: [],
     actionToResume: null,
     accessFilters: {
-        [AccessLevel.ACCESSIBLE]: true,
-        [AccessLevel.UNACCESSIBLE]: true,
-        [AccessLevel.PENDING]: true,
-        [AccessLevel.NOT_AVAILABLE]: true
+      [AccessLevel.ACCESSIBLE]: true,
+      [AccessLevel.UNACCESSIBLE]: true,
+      [AccessLevel.PENDING]: true,
+      [AccessLevel.NOT_AVAILABLE]: true,
     },
     selectedTags: {},
     pagination: {
-        resultsPerPage: 10,
-        currentPage: 1
+      resultsPerPage: 10,
+      currentPage: 1,
     },
-    accessSortDirection: AccessSortDirection.DESCENDING
-  }
+    accessSortDirection: AccessSortDirection.DESCENDING,
+  },
 };
 
-const getDiscoveryComponent = (store, config: DiscoveryConfig, params={}) => {
-  return (
-    <Provider store={store}>
-      <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
-        <Discovery
-          config={config}
-          studies={testStudies}
-          {...store.getState().discovery}
-          dispatch={store.dispatch}
-          params={params}
-        />
-      </StaticRouter>
-    </Provider>
-  );
-}
-
 const testStudies = mockData.map((study, i) => ({ ...study, __accessible: i % 2 === 0 }));
+
+const getDiscoveryComponent = (store, config: DiscoveryConfig, params = {}) => (
+  <Provider store={store}>
+    <StaticRouter location={{ pathname: '/discovery' }} context={{}}>
+      <Discovery
+        config={config}
+        studies={testStudies}
+        {...store.getState().discovery}
+        dispatch={store.dispatch}
+        params={params}
+      />
+    </StaticRouter>
+  </Provider>
+);
 
 // This mock is required to avoid errors when rendering the Discovery page
 // with enzyme's `mount` method (which uses jsdom). (antd components use window.matchMedia)
@@ -218,7 +216,7 @@ describe('Modal', () => {
     const permalinkStudyUID = permalinkStudyData[testConfig.minimalFieldMapping.uid];
     const store = mockStore(initStoreData);
     const wrapper = mount(
-      getDiscoveryComponent(store, testConfig, {studyUID: permalinkStudyUID})
+      getDiscoveryComponent(store, testConfig, { studyUID: permalinkStudyUID }),
     );
 
     testConfig.studyPageFields.header = { field: testConfig.minimalFieldMapping.uid };
@@ -243,25 +241,25 @@ describe('Table', () => {
     let tag = wrapper.findWhere(isTargetTag).first();
     tag.simulate('click');
 
-    const selectedTags = {[targetTagValue]: true};
-    const expectedTagSelectedAction = {type: "TAGS_SELECTED", selectedTags};
+    const selectedTags = { [targetTagValue]: true };
+    const expectedTagSelectedAction = { type: 'TAGS_SELECTED', selectedTags };
     expect(store.getActions()).toContainEqual(expectedTagSelectedAction);
-    wrapper.unmount()
+    wrapper.unmount();
 
     // select `COVID 19` tag on component with tag already selected
-    store = mockStore({...initStoreData, discovery: {...initStoreData.discovery, selectedTags} });
+    store = mockStore({ ...initStoreData, discovery: { ...initStoreData.discovery, selectedTags } });
     wrapper = mount(getDiscoveryComponent(store, testConfig));
 
     // expect all rows in the table to have the 'COVID 19' tag
-    let rows = wrapper.find('.discovery-table__row');
+    const rows = wrapper.find('.discovery-table__row');
     expect(rows.everyWhere((r) => r.findWhere(isTargetTag).exists())).toBe(true);
 
-    let isSelectedTag = (n) => n.hasClass('discovery-tag--selected');
+    const isSelectedTag = (n) => n.hasClass('discovery-tag--selected');
     tag = wrapper.findWhere(isSelectedTag).first();
     expect(store.getActions()).toHaveLength(0);
     tag.simulate('click');
 
-    const expectedTagClearedAction = {type: "TAGS_SELECTED", selectedTags: {[targetTagValue]: undefined}};
+    const expectedTagClearedAction = { type: 'TAGS_SELECTED', selectedTags: { [targetTagValue]: undefined } };
     expect(store.getActions()).toContainEqual(expectedTagClearedAction);
     wrapper.unmount();
   });
