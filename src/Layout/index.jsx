@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import { components } from '../params';
+import useGoogleAnalytics from '../hooks/useGoogleAnalytics';
 import dictIcons from '../img/icons/index';
 import ReduxFooter from './ReduxFooter';
 import ScreenSizeWarning from '../components/ScreenSizeWarning';
@@ -14,10 +15,13 @@ import './Layout.css';
  * @param {React.ReactNode} props.children
  */
 function Layout({ children }) {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  // @ts-ignore
+  useGoogleAnalytics(location);
+
   const isDashboardPage =
-    pathname.toLowerCase().startsWith('/dd') ||
-    pathname.toLowerCase().startsWith('/explorer');
+    location.pathname.toLowerCase().startsWith('/dd') ||
+    location.pathname.toLowerCase().startsWith('/explorer');
 
   return (
     <>
