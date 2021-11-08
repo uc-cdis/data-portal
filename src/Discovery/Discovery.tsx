@@ -189,7 +189,7 @@ const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, co
 
 interface Props {
   config: DiscoveryConfig
-  studies: {__accessible: AccessLevel, [any: string]: any}[]
+  studies: {__accessible: AccessLevel|boolean, [any: string]: any}[]
   params?: {studyUID: string} // from React Router
   selectedResources,
   pagination: { currentPage: number, resultsPerPage: number },
@@ -232,14 +232,12 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     if (jsSearch && props.searchTerm) {
       filteredResources = jsSearch.search(props.searchTerm);
     }
-    console.log("resources 1", filteredResources)
     filteredResources = filterByTags(
       filteredResources,
       props.selectedTags,
       config,
     );
 
-    console.log("resources 2", filteredResources)
     if (config.features.advSearchFilters && config.features.advSearchFilters.enabled) {
       filteredResources = filterByAdvSearch(
         filteredResources,
@@ -248,26 +246,22 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       );
     }
 
-    console.log("resources 3", filteredResources, props.accessFilters, accessibleFieldName)
     if (props.config.features.authorization.enabled){
       filteredResources = filteredResources.filter(
-        resource => props.accessFilters[resource[accessibleFieldName]]
+        resource => resource[accessibleFieldName] === true || props.accessFilters[resource[accessibleFieldName]]
       );
     }
 
-    // console.log("sorting by", props.accessSortDirection)
-    // filteredResources = filteredResources.sort(
-    //   (a, b) => {
-    //     return 1
-    //     // if (props.accessSortDirection === AccessSortDirection.DESCENDING) {
-    //     //   return a[accessibleFieldName] - b[accessibleFieldName];
-    //     // } else if (props.accessSortDirection === AccessSortDirection.ASCENDING) {
-    //     //   return b[accessibleFieldName] - a[accessibleFieldName];
-    //     // }
-    //     // return 0;
-    //   }
-    // );
-    console.log("resources 4", filteredResources)
+    filteredResources = filteredResources.sort(
+      (a, b) => {
+        if (props.accessSortDirection === AccessSortDirection.DESCENDING) {
+          return a[accessibleFieldName] - b[accessibleFieldName];
+        } else if (props.accessSortDirection === AccessSortDirection.ASCENDING) {
+          return b[accessibleFieldName] - a[accessibleFieldName];
+        }
+        return 0;
+      }
+    );
     setVisibleResources(filteredResources);
   }
 
