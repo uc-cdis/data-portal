@@ -20,39 +20,19 @@ The portal's `/dev.html` path loads javascript and most css
 from `localhost`. Test code under local development with this procedure:
 
 - `npm install`
-- launch the webpack dev server, and configure local code with the same configuration as the server to test against. For example - if we intend to test against qa.planx-pla.net, then:
+- launch the webpack dev server, and configure local code with the same configuration as the server to test against. For example - if we intend to test against the local Docker Compose stack running on localhost, then:
 
 ```
-HOSTNAME=qa.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
+HOSTNAME=localhost APP=pcdc ./runWebpack.sh
 ```
 
-, or for qa-brain:
-
-```
-HOSTNAME=qa-brain.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
-```
-
-> **NOTE:** To locally test Tiered Access features, you must include the additional environment variables `TIER_ACCESS_LEVEL` and `TIER_ACCESS_LIMIT`, with should have the same values as the server's "global.tier_access_level" and "global.tier_access_limit" properties in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest).
+> **NOTE:** To locally test Tiered Access features, you must include the additional environment variable `TIER_ACCESS_LIMIT`, which should have the same values as the server's "global.tier_access_limit" properties in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest).
 >
-> **Example**:`HOSTNAME=qa-brain.planx-pla.net TIER_ACCESS_LEVEL=regular TIER_ACCESS_LIMIT=50 NODE_ENV=auto bash ./runWebpack.sh`
+> **Example**:`HOSTNAME=localhost TIER_ACCESS_LIMIT=50 bash ./runWebpack.sh`
 
 - Accept the self-signed certificate at https://localhost:9443/bundle.js
 
-- Load the test environment's `/dev.html` - ex: https://qa-brian.planx-pla.net/dev.html
-
-### Local development and gitops
-
-Most production commons currently load custom configuration via gitops. The configuration for a production commons is available in that commons' gitops repository (mostly https://github.com/uc-cdis/cdis-manifest), and can be copied for local development. The `runWebpack.sh` script automates this process when `NODE_ENV` is set to `auto` - ex:
-
-```
-HOSTNAME=qa-brain.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
-```
-
-Note: the legacy `dev` NODE_ENV is still available, but the `APP` environment must also be manually set to load the configuration that matches the dictionary from HOSTNAME - ex:
-
-```
-HOSTNAME=qa.planx-pla.net NODE_ENV=dev APP=dev bash ./runWebpack.sh
-```
+- Load the test environment's `/dev.html` - ex: https://localhost/dev.html
 
 ### Component story books
 

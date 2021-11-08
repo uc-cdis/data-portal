@@ -8,7 +8,6 @@ const { components, requiredCerts, config } = require('./params');
  */
 function buildConfig(opts) {
   const defaults = {
-    dev: process.env.NODE_ENV === 'dev',
     mockStore: process.env.MOCK_STORE === 'true',
     app: process.env.APP ?? 'generic',
     basename: process.env.BASENAME ?? '/',
@@ -32,7 +31,6 @@ function buildConfig(opts) {
     defaults.basename += 'dev.html';
 
   const {
-    dev,
     mockStore,
     app,
     basename,
@@ -152,7 +150,6 @@ function buildConfig(opts) {
     basename,
     breakpoints,
     buildConfig,
-    dev,
     hostname,
     gaDebug,
     userapiPath,

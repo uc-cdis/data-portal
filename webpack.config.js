@@ -9,6 +9,8 @@ const pathPrefix = basename.endsWith('/')
   ? basename.slice(0, basename.length - 1)
   : basename;
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const plugins = [
   new CompressionPlugin(),
   new webpack.EnvironmentPlugin({
@@ -17,9 +19,7 @@ const plugins = [
     PORTAL_VERSION: portalVersion || '',
   }),
   new webpack.DefinePlugin({
-    // <-- key to reducing React's size
     'process.env': {
-      NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),
       LOGOUT_INACTIVE_USERS: !(process.env.LOGOUT_INACTIVE_USERS === 'false'),
       WORKSPACE_TIMEOUT_IN_MINUTES:
         process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480,
@@ -31,7 +31,7 @@ const plugins = [
       ),
     },
     // disable React DevTools in production; see https://github.com/facebook/react/pull/11448
-    ...(process.env.NODE_ENV === 'production'
+    ...(isProduction
       ? { __REACT_DEVTOOLS_GLOBAL_HOOK__: '({ isDisabled: true })' }
       : {}),
   }),
@@ -66,8 +66,6 @@ const plugins = [
 let optimization = {};
 let devtool = false;
 
-const isProduction =
-  process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto';
 if (isProduction) {
   // optimization for production mode
   optimization = {

@@ -2,7 +2,6 @@ import conf from './localconf';
 
 describe('The localconf', () => {
   const expectedKeys = [
-    'dev',
     'mockStore',
     'app',
     'basename',

@@ -13,7 +13,6 @@ import { fetchAccess } from './UserProfile/ReduxUserProfile';
 import { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename,
-  dev,
   enableResourceBrowser,
   gaDebug,
   // workspaceUrl,
@@ -54,7 +53,7 @@ function App({ store }) {
   return (
     <Provider store={store}>
       <BrowserRouter basename={basename}>
-        {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+        {GA.init(gaTracking, { debug: gaDebug }) && <RouteTracker />}
         {isEnabled('noIndex') && (
           <Helmet>
             <meta name='robots' content='noindex,nofollow' />
