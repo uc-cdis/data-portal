@@ -124,12 +124,6 @@ const DiscoveryWithMDSBackend: React.FC<{
   );
 };
 
-// Goal 1: store the studies in redux
-
-// Goal 2: store the study filters in redux
-
-// Goal 2.5: consolidate the study filters
-
 const mapStateToProps = (state) => ({
   userAuthMapping: state.userAuthMapping,
   config: discoveryConfig,
