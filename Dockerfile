@@ -1,7 +1,7 @@
 # To run: docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal
 # To check running container: docker exec -it dataportal /bin/bash
 
-FROM quay.io/cdis/python:pybase3-2.0.0
+FROM quay.io/cdis/python:pybase3-2.0.1
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV REACT_APP_PROJECT_ID=search
