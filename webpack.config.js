@@ -2,23 +2,24 @@ const webpack = require('webpack');
 const CompressionPlugin = require('compression-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const portalVersion = require('./package.json').version;
 
 const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/')
   ? basename.slice(0, basename.length - 1)
   : basename;
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const plugins = [
   new CompressionPlugin(),
   new webpack.EnvironmentPlugin({
     MOCK_STORE: null,
     BASENAME: '/',
+    PORTAL_VERSION: portalVersion || '',
   }),
   new webpack.DefinePlugin({
-    // <-- key to reducing React's size
     'process.env': {
-      NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev'),
-      DATA_RELEASE_VERSION: JSON.stringify(process.env.DATA_RELEASE_VERSION),
       LOGOUT_INACTIVE_USERS: !(process.env.LOGOUT_INACTIVE_USERS === 'false'),
       WORKSPACE_TIMEOUT_IN_MINUTES:
         process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480,
@@ -29,6 +30,10 @@ const plugins = [
         process.env.REACT_APP_DISABLE_SOCKET || 'true'
       ),
     },
+    // disable React DevTools in production; see https://github.com/facebook/react/pull/11448
+    ...(isProduction
+      ? { __REACT_DEVTOOLS_GLOBAL_HOOK__: '({ isDisabled: true })' }
+      : {}),
   }),
   new HtmlWebpackPlugin({
     title: process.env.TITLE || 'PCDC Data Portal',
@@ -61,8 +66,6 @@ const plugins = [
 let optimization = {};
 let devtool = false;
 
-const isProduction =
-  process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto';
 if (isProduction) {
   // optimization for production mode
   optimization = {

@@ -30,7 +30,7 @@ class ExplorerErrorBoundary extends React.Component {
 
   render() {
     return this.state.hasError ? (
-      <div className='guppy-data-explorer__error'>
+      <div className='explorer__error'>
         <h1>Error opening the Exploration page...</h1>
         <p>
           The Exploration page is not working correctly. Please try refreshing

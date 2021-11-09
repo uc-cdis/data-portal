@@ -8,7 +8,6 @@ const { components, requiredCerts, config } = require('./params');
  */
 function buildConfig(opts) {
   const defaults = {
-    dev: process.env.NODE_ENV === 'dev',
     mockStore: process.env.MOCK_STORE === 'true',
     app: process.env.APP ?? 'generic',
     basename: process.env.BASENAME ?? '/',
@@ -32,7 +31,6 @@ function buildConfig(opts) {
     defaults.basename += 'dev.html';
 
   const {
-    dev,
     mockStore,
     app,
     basename,
@@ -57,7 +55,6 @@ function buildConfig(opts) {
 
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
-  const submissionApiOauthPath = `${hostname}api/v0/oauth2/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
   const dataDictionaryTemplatePath = `${hostname}api/v0/submission/template/`;
   const userapiPath =
@@ -108,22 +105,6 @@ function buildConfig(opts) {
       ? `${hostname}manifests/`
       : ensureTrailingSlash(manifestServiceURL);
 
-  const explorerConfig = config.explorerConfig ?? [];
-  // for backward compatibilities
-  if (explorerConfig.length === 0) {
-    if (config.dataExplorerConfig)
-      explorerConfig.push({
-        tabTitle: 'Data',
-        ...config.dataExplorerConfig,
-      });
-
-    if (config.fileExplorerConfig)
-      explorerConfig.push({
-        tabTitle: 'File',
-        ...config.fileExplorerConfig,
-      });
-  }
-
   const showFenceAuthzOnProfile = config.showFenceAuthzOnProfile ?? true;
   const { terraExportWarning } = config;
   const enableResourceBrowser = config.resourceBrowser ?? true;
@@ -169,14 +150,12 @@ function buildConfig(opts) {
     basename,
     breakpoints,
     buildConfig,
-    dev,
     hostname,
     gaDebug,
     userapiPath,
     jobapiPath,
     apiPath,
     submissionApiPath,
-    submissionApiOauthPath,
     credentialCdisPath,
     coreMetadataPath,
     indexdPath,
@@ -214,7 +193,7 @@ function buildConfig(opts) {
     authzPath,
     enableResourceBrowser,
     resourceBrowserPublic,
-    explorerConfig,
+    explorerConfig: config.explorerConfig,
     headers,
   };
 }

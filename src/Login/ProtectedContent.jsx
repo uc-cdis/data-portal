@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect, useLocation, useRouteMatch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -12,8 +12,6 @@ import {
 import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
-import { isPageFullScreen } from '../utils';
-import './ProtectedContent.css';
 
 /**
  * @typedef {Object} ProtectedContentState
@@ -147,66 +145,54 @@ function ProtectedContent({
     }
   }
 
-  const isMounted = useRef(false);
   /** @param {ProtectedContentState} currentState */
   function updateState(currentState) {
     const newState = { ...currentState, dataLoaded: true };
     if (isPublic) newState.redirectTo = null;
-    if (isMounted.current) setState(newState);
+    setState(newState);
   }
   useEffect(() => {
-    isMounted.current = true;
     window.scrollTo(0, location.state?.scrollY ?? 0);
 
-    if (isMounted.current)
-      getReduxStore().then((store) =>
-        Promise.all([
-          store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
-          store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
-        ]).then(() => {
-          if (isPublic)
-            if (typeof filter === 'function')
-              filter().finally(() => updateState(state));
-            else updateState(state);
-          else
-            checkLoginStatus(store, state)
-              .then(checkIfRegisterd)
-              .then(checkIfAdmin)
-              .then((newState) => {
-                if (newState.authenticated && typeof filter === 'function')
-                  filter().finally(() => {
-                    updateState(newState);
-                    fetchResources(store);
-                  });
-                else {
+    getReduxStore().then((store) =>
+      Promise.all([
+        store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
+        store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
+      ]).then(() => {
+        if (isPublic)
+          if (typeof filter === 'function')
+            filter().finally(() => updateState(state));
+          else updateState(state);
+        else
+          checkLoginStatus(store, state)
+            .then(checkIfRegisterd)
+            .then(checkIfAdmin)
+            .then((newState) => {
+              if (newState.authenticated && typeof filter === 'function')
+                filter().finally(() => {
                   updateState(newState);
                   fetchResources(store);
-                }
-              });
-        })
-      );
-    return () => {
-      isMounted.current = false;
-    };
+                });
+              else {
+                updateState(newState);
+                fetchResources(store);
+              }
+            });
+      })
+    );
   }, [location]);
 
   if (state.redirectTo) return <Redirect to={state.redirectTo} />;
-
-  const pageClassName = isPageFullScreen(location.pathname)
-    ? 'protected-content protected-content--full-screen'
-    : 'protected-content';
-  return (
-    <div className={pageClassName}>
-      {(isPublic
-        ? (state.dataLoaded || typeof filter !== 'function') && children
-        : state.authenticated && (
-            <>
-              <ReduxAuthTimeoutPopup />
-              {children}
-            </>
-          )) || <Spinner />}
-    </div>
-  );
+  if (isPublic && (state.dataLoaded || typeof filter !== 'function'))
+    return children;
+  if (state.authenticated)
+    return (
+      <>
+        <ReduxAuthTimeoutPopup />
+        {children}
+      </>
+    );
+  return <Spinner />;
 }
 
 ProtectedContent.propTypes = {

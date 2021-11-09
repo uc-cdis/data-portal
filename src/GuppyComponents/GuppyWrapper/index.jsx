@@ -11,7 +11,7 @@ import {
   getAllFieldsFromGuppy,
   getGQLFilter,
 } from '../Utils/queries';
-import { FILE_FORMATS } from '../Utils/const';
+import { FILE_FORMATS, GUPPY_URL } from '../Utils/const';
 import {
   excludeSelfFilterFromAggsData,
   mergeFilters,
@@ -104,7 +104,6 @@ function GuppyWrapper({
   /** @param {FilterState} filter */
   function fetchAggsChartDataFromGuppy(filter) {
     return queryGuppyForAggregationChartData({
-      path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: Object.keys(chartConfig),
       gqlFilter: getGQLFilter(augmentFilter(filter)),
@@ -129,7 +128,6 @@ function GuppyWrapper({
   /** @param {FilterState} filter */
   function fetchAggsCountDataFromGuppy(filter) {
     return queryGuppyForAggregationCountData({
-      path: guppyConfig.path,
       type: guppyConfig.dataType,
       gqlFilter: getGQLFilter(augmentFilter(filter)),
       signal: controller.current.signal,
@@ -160,7 +158,6 @@ function GuppyWrapper({
     filterTabs = filterConfig.tabs,
   }) {
     return queryGuppyForAggregationOptionsData({
-      path: guppyConfig.path,
       type: guppyConfig.dataType,
       anchorConfig: filterConfig.anchor,
       anchorValue,
@@ -264,7 +261,6 @@ function GuppyWrapper({
     if (guppyConfig.mainField) {
       const numericAggAsText = guppyConfig.mainFieldIsNumeric;
       return queryGuppyForSubAggregationData({
-        path: guppyConfig.path,
         type: guppyConfig.dataType,
         mainField: guppyConfig.mainField,
         numericAggAsText,
@@ -275,7 +271,7 @@ function GuppyWrapper({
       }).then((res) => {
         if (!res || !res.data)
           throw new Error(
-            `Error getting raw ${guppyConfig.dataType} data from Guppy server ${guppyConfig.path}.`
+            `Error getting raw ${guppyConfig.dataType} data from Guppy server ${GUPPY_URL}.`
           );
 
         const data = res.data._aggregation[guppyConfig.dataType];
@@ -296,7 +292,6 @@ function GuppyWrapper({
 
     // non-nested aggregation
     return queryGuppyForRawData({
-      path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields,
       gqlFilter: getGQLFilter(augmentFilter(state.filter)),
@@ -307,7 +302,7 @@ function GuppyWrapper({
     }).then((res) => {
       if (!res || !res.data)
         throw new Error(
-          `Error getting raw ${guppyConfig.dataType} data from Guppy server ${guppyConfig.path}.`
+          `Error getting raw ${guppyConfig.dataType} data from Guppy server ${GUPPY_URL}.`
         );
 
       const parsedData = res.data[guppyConfig.dataType];
@@ -327,7 +322,6 @@ function GuppyWrapper({
 
   useEffect(() => {
     getAllFieldsFromGuppy({
-      path: guppyConfig.path,
       type: guppyConfig.dataType,
     }).then((allFields) => {
       if (isMounted.current) {
@@ -374,7 +368,6 @@ function GuppyWrapper({
       throw new Error(`Invalid value ${format} found for arg format!`);
 
     return downloadDataFromGuppy({
-      path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: rawDataFields,
       sort,
@@ -393,7 +386,6 @@ function GuppyWrapper({
    */
   function downloadRawDataByFields({ fields, sort = [] }) {
     return downloadDataFromGuppy({
-      path: guppyConfig.path,
       type: guppyConfig.dataType,
       fields: fields || rawDataFields,
       sort,
@@ -407,11 +399,7 @@ function GuppyWrapper({
    * @param {FilterState} filter
    */
   function getTotalCountsByTypeAndFilter(type, filter) {
-    return queryGuppyForTotalCounts({
-      path: guppyConfig.path,
-      type,
-      filter,
-    });
+    return queryGuppyForTotalCounts({ type, filter });
   }
 
   /**
@@ -421,12 +409,7 @@ function GuppyWrapper({
    * @param {string[]} fields
    */
   function downloadRawDataByTypeAndFilter(type, filter, fields) {
-    return downloadDataFromGuppy({
-      path: guppyConfig.path,
-      type,
-      fields,
-      filter,
-    });
+    return downloadDataFromGuppy({ type, fields, filter });
   }
 
   /**
@@ -520,7 +503,6 @@ function GuppyWrapper({
 
 GuppyWrapper.propTypes = {
   guppyConfig: PropTypes.shape({
-    path: PropTypes.string,
     type: PropTypes.string,
     mainField: PropTypes.string,
     mainFieldIsNumeric: PropTypes.bool,

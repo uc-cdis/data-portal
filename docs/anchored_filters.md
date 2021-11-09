@@ -10,24 +10,28 @@ The use of anchored filters can be specified using a portal configuration option
 
 ```jsonc
 {
-  "dataExplorerConfig": {
-    "filters": {
-      "anchor": {
-        "field": "",
-        "options": [""],
-        "tabs": [""]
-      },
-      "tabs": [
-        // ...
-      ]
+  "explorerConfig": [
+    {
+      "filters": {
+        "anchor": {
+          "field": "",
+          "options": [""],
+          "tabs": [""],
+          "tooltip": "" // optional
+        },
+        "tabs": [
+          // ...
+        ]
+      }
     }
-  }
+  ]
 }
 ```
 
 - `"field"` is the name of the field to use as anchor. It must be a common attribute to all nested field filters to be used as anchored filters. Additionally, the anchor must be an _option_ (as opposed to _range_) type filter
 - `"options"` is an array of values for the anchor field to be used for anchored filters.
 - `"tabs"` is an array of tab titles where the tabs will contain nested field filters to be used as anchored filters.
+- `"tooltip"` is the text to display on hover in a tooltip element. This is optional.
 
 ## UI
 
@@ -64,7 +68,7 @@ type FilterState = {
 };
 ```
 
-An anchor label value is formated as `[anchorField]:[anchorValue]`, where `[anchorField]` is the `dataExplorerConfig.filters.anchor.field` value in the portal configuration and `[anchorValue]` is one of the `dataExplorerConfig.filters.anchor.options` values in the portal configuration that is selected by the user.
+An anchor label value is formated as `[anchorField]:[anchorValue]`, where `[anchorField]` is the `explorerConfig[i].filters.anchor.field` value in the portal configuration and `[anchorValue]` is one of the `explorerConfig[i].filters.anchor.options` values in the portal configuration that is selected by the user.
 
 The anchor label is used only if anchor value is set to be a non-empty value (i.e. not "Any").
 

@@ -106,13 +106,13 @@ function isValid(filterContent) {
  * - filter keys include only fields specified in the configuration
  * @param {*} value
  * @param {FilterConfig} filterConfig
- * @param {boolean} isAnchorFilterEnabled
  */
-export function validateFilter(value, filterConfig, isAnchorFilterEnabled) {
+export function validateFilter(value, filterConfig) {
   if (!isPlainObject(value)) return false;
 
   const allFields = filterConfig.tabs.flatMap(({ fields }) => fields);
   const testFieldSet = new Set(allFields);
+  const isAnchorFilterEnabled = filterConfig.anchor !== undefined;
   for (const [field, filterContent] of Object.entries(value)) {
     if (isAnchorFilterEnabled && 'filter' in filterContent)
       for (const [anchoredField, anchoredfilterContent] of Object.entries(
@@ -125,4 +125,37 @@ export function validateFilter(value, filterConfig, isAnchorFilterEnabled) {
   }
 
   return allFields.length === testFieldSet.size;
+}
+
+/**
+ * @param {URLSearchParams} searchParams
+ * @param {FilterConfig} filterConfig
+ * @param {PatientIdsConfig} [patientIdsConfig]
+ */
+export function extractExplorerStateFromURL(
+  searchParams,
+  filterConfig,
+  patientIdsConfig
+) {
+  /** @type {FilterState} */
+  let initialAppliedFilters = {};
+  if (searchParams.has('filter'))
+    try {
+      const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
+      if (validateFilter(filterInUrl, filterConfig))
+        initialAppliedFilters = filterInUrl;
+      else throw new Error(undefined);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Invalid filter value in URL.', e);
+    }
+
+  // eslint-disable-next-line no-nested-ternary
+  const patientIds = patientIdsConfig?.filter
+    ? searchParams.has('patientIds')
+      ? searchParams.get('patientIds').split(',')
+      : []
+    : undefined;
+
+  return { initialAppliedFilters, patientIds };
 }

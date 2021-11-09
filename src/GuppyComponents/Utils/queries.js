@@ -2,12 +2,12 @@ import cloneDeep from 'lodash.clonedeep';
 import fetch from 'isomorphic-fetch';
 import flat from 'flat';
 import papaparse from 'papaparse';
-import { FILE_DELIMITERS } from './const';
+import { FILE_DELIMITERS, GUPPY_URL } from './const';
 import '../typedef';
 
-const graphqlEndpoint = '/graphql';
-const downloadEndpoint = '/download';
-const statusEndpoint = '/_status';
+const graphqlEndpoint = `${GUPPY_URL}/graphql`;
+const downloadEndpoint = `${GUPPY_URL}/download`;
+const statusEndpoint = `${GUPPY_URL}/_status`;
 
 /**
  * Converts JSON to a specified file format.
@@ -44,14 +44,12 @@ function buildHistogramQueryStrForField(field) {
 
 /**
  * @param {object} args
- * @param {string} args.path
  * @param {string} args.type
  * @param {string[]} args.fields
  * @param {GqlFilter} [args.gqlFilter]
  * @param {AbortSignal} [args.signal]
  */
 export function queryGuppyForAggregationChartData({
-  path,
   type,
   fields,
   gqlFilter,
@@ -74,7 +72,7 @@ export function queryGuppyForAggregationChartData({
       }`
   ).replace(/\s+/g, ' ');
 
-  return fetch(`${path}${graphqlEndpoint}`, {
+  return fetch(graphqlEndpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -86,17 +84,11 @@ export function queryGuppyForAggregationChartData({
 
 /**
  * @param {object} args
- * @param {string} args.path
  * @param {string} args.type
  * @param {GqlFilter} [args.gqlFilter]
  * @param {AbortSignal} [args.signal]
  */
-export function queryGuppyForAggregationCountData({
-  path,
-  type,
-  gqlFilter,
-  signal,
-}) {
+export function queryGuppyForAggregationCountData({ type, gqlFilter, signal }) {
   const query = (gqlFilter !== undefined
     ? `query ($filter: JSON) {
         _aggregation {
@@ -120,7 +112,7 @@ export function queryGuppyForAggregationCountData({
       }`
   ).replace(/\s+/g, ' ');
 
-  return fetch(`${path}${graphqlEndpoint}`, {
+  return fetch(graphqlEndpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -262,7 +254,6 @@ export function buildQueryForAggregationOptionsData({
  * @param {{ title: string, fields: string[]}[]} args.filterTabs
  * @param {GqlFilter} [args.gqlFilter]
  * @param {boolean} [args.isInitialQuery]
- * @param {string} args.path
  * @param {AbortSignal} [args.signal]
  * @param {string} args.type
  */
@@ -272,7 +263,6 @@ export function queryGuppyForAggregationOptionsData({
   filterTabs,
   gqlFilter,
   isInitialQuery,
-  path,
   signal,
   type,
 }) {
@@ -294,7 +284,7 @@ export function queryGuppyForAggregationOptionsData({
   });
   const variables = { ...gqlFilterByGroup };
 
-  return fetch(`${path}${graphqlEndpoint}`, {
+  return fetch(graphqlEndpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -304,9 +294,8 @@ export function queryGuppyForAggregationOptionsData({
   }).then((response) => response.json());
 }
 
-/** @param {string} path */
-export function queryGuppyForStatus(path) {
-  return fetch(`${path}${statusEndpoint}`, {
+export function queryGuppyForStatus() {
+  return fetch(statusEndpoint, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -340,7 +329,6 @@ function nestedHistogramQueryStrForEachField(mainField, numericAggAsText) {
 
 /**
  * @param {object} args
- * @param {string} args.path
  * @param {string} args.type
  * @param {string} args.mainField
  * @param {boolean} [args.numericAggAsText]
@@ -350,7 +338,6 @@ function nestedHistogramQueryStrForEachField(mainField, numericAggAsText) {
  * @param {AbortSignal} [args.signal]
  */
 export function queryGuppyForSubAggregationData({
-  path,
   type,
   mainField,
   numericAggAsText = false,
@@ -379,7 +366,7 @@ export function queryGuppyForSubAggregationData({
       }`
   ).replace(/\s+/g, ' ');
 
-  return fetch(`${path}${graphqlEndpoint}`, {
+  return fetch(graphqlEndpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -414,7 +401,6 @@ function rawDataQueryStrForEachField(field) {
 
 /**
  * @param {object} args
- * @param {string} args.path
  * @param {string} args.type
  * @param {string[]} args.fields
  * @param {GqlFilter} [args.gqlFilter]
@@ -426,7 +412,6 @@ function rawDataQueryStrForEachField(field) {
  * @param {boolean} [args.withTotalCount]
  */
 export function queryGuppyForRawData({
-  path,
   type,
   fields,
   gqlFilter,
@@ -479,7 +464,7 @@ export function queryGuppyForRawData({
     ${aggregationFragment}
   }`.replace(/\s+/g, ' ');
 
-  return fetch(`${path}${graphqlEndpoint}`, {
+  return fetch(graphqlEndpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -644,23 +629,15 @@ export function getGQLFilter(filterState) {
 /**
  * Download all data from guppy using fields, filter, and sort args.
  * @param {object} args
- * @param {string} args.path
  * @param {string} args.type
  * @param {string[]} [args.fields]
  * @param {FilterState} [args.filter]
  * @param {GqlSort} [args.sort]
  * @param {string} [args.format]
  */
-export function downloadDataFromGuppy({
-  path,
-  type,
-  fields,
-  filter,
-  sort,
-  format,
-}) {
+export function downloadDataFromGuppy({ type, fields, filter, sort, format }) {
   const JSON_FORMAT = format === 'json' || format === undefined;
-  return fetch(`${path}${downloadEndpoint}`, {
+  return fetch(downloadEndpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -679,11 +656,10 @@ export function downloadDataFromGuppy({
 
 /**
  * @param {object} args
- * @param {string} args.path
  * @param {string} args.type
  * @param {FilterState} [args.filter]
  */
-export function queryGuppyForTotalCounts({ path, type, filter }) {
+export function queryGuppyForTotalCounts({ type, filter }) {
   const query = (filter !== undefined || Object.keys(filter).length > 0
     ? `query ($filter: JSON) {
         _aggregation {
@@ -701,7 +677,7 @@ export function queryGuppyForTotalCounts({ path, type, filter }) {
       }`
   ).replace(/\s+/g, ' ');
 
-  return fetch(`${path}${graphqlEndpoint}`, {
+  return fetch(graphqlEndpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -720,11 +696,10 @@ export function queryGuppyForTotalCounts({ path, type, filter }) {
 
 /**
  * @param {object} args
- * @param {string} args.path
  * @param {string} args.type
  */
-export function getAllFieldsFromGuppy({ path, type }) {
-  return fetch(`${path}${graphqlEndpoint}`, {
+export function getAllFieldsFromGuppy({ type }) {
+  return fetch(graphqlEndpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

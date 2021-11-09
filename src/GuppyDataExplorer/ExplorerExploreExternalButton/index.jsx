@@ -57,7 +57,6 @@ function ExplorerExploreExternalButton({ filter }) {
   return (
     <>
       <Button
-        className='explorer-explore-external__button'
         label={<div>Explore in...</div>}
         rightIcon='external-link'
         buttonType='secondary'

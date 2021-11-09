@@ -1,0 +1,8 @@
+.explorer-select {
+  border-bottom: 1px solid var(--g3-color__silver);
+  padding: 1rem 1rem 2rem;
+}
+
+.explorer-select__title {
+  margin-bottom: 1rem;
+}

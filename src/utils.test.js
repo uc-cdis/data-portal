@@ -1,4 +1,4 @@
-import { asyncSetInterval, predictFileType } from './utils';
+import { asyncSetInterval, intersection, predictFileType } from './utils';
 
 describe('the utils helper', () => {
   it.skip('supports asyncSetInterval', (done) => {
@@ -23,6 +23,12 @@ describe('the utils helper', () => {
       expect(callCount).toBe(2);
       done();
     }, 400);
+  });
+
+  it('can compute the intersection of 2 lists', () => {
+    expect(
+      intersection(['a', 'b', 'c', 'd', 'e'], ['c', 'd', 'e', 'f', 'g'])
+    ).toEqual(['c', 'd', 'e']);
   });
 
   it('predicts mime-type based on text shape', () => {

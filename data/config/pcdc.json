@@ -88,20 +88,28 @@
     "topBar": {
       "items": [
         {
+          "icon": "external-link",
+          "leftOrientation": true,
+          "link": "https://commons.cri.uchicago.edu/pcdc/",
+          "name": "About PCDC"
+        },
+        {
+          "icon": "external-link",
+          "leftOrientation": true,
+          "link": "https://commons.cri.uchicago.edu/sponsors/",
+          "name": "Our Sponsors"
+        },
+        {
           "icon": "upload",
           "link": "/submission",
           "name": "Data Submission"
-        },
-        {
-          "link": "https://uc-cdis.github.io/gen3-user-doc/user-guide/guide-overview",
-          "name": "Documentation"
         }
       ]
     },
     "login": {
       "title": "Pediatric Cancer Data Commons",
       "subTitle": "Connect. Share. Cure.",
-      "text": "The Pediatric Cancer Data Commons (PCDC) harnesses pediatric cancer clinical data from around the globe into a single combined platform, connecting the data to other sources and making it available to clinicians and researchers everywhere. Headquartered at the University of Chicago, the PCDC team works with international leaders in pediatric cancers to develop and apply uniform data standards that facilitate the collection, combination, and analysis of data from many different sources. The PCDC currently houses the world’s largest sets of clinical data for pediatric neuroblastoma and soft tissue sarcoma and is in the process of onboarding additional pediatric cancer disease groups.",
+      "text": "The Pediatric Cancer Data Commons (PCDC) harnesses pediatric cancer clinical data from around the globe into a single combined platform, connecting the data to other sources and making it available to clinicians and researchers everywhere. Headquartered at the University of Chicago, the PCDC team works with international leaders in pediatric cancers to develop and apply uniform data standards that facilitate the collection, combination, and analysis of data from many different sources. The PCDC currently houses the world's largest sets of clinical data for pediatric neuroblastoma and soft tissue sarcoma and is in the process of onboarding additional pediatric cancer disease groups.",
       "contact": "If you have any questions about access or the registration process, please contact ",
       "email": "pcdc_root@lists.uchicago.edu"
     },
@@ -120,180 +128,214 @@
       }
     ]
   },
-  "dataExplorerConfig": {
-    "charts": {
-      "sex": {
-        "chartType": "bar",
-        "title": "Sex"
-      },
-      "race": {
-        "chartType": "bar",
-        "title": "Race"
-      },
-      "ethnicity": {
-        "chartType": "bar",
-        "title": "Ethnicity"
-      },
-      "data_contributor_id": {
-        "chartType": "bar",
-        "title": "Data Contributor"
-      }
-    },
-    "filters": {
-      "tabs": [
-        {
-          "title": "Subject",
-          "fields": [
-            "project_id",
-            "consortium",
-            "data_contributor_id",
-            "external_resource_name",
-            "sex",
-            "race",
-            "ethnicity",
-            "lkss",
-            "age_at_lkss"
-          ]
+  "explorerConfig": [
+    {
+      "id": 1,
+      "label": "data",
+      "charts": {
+        "sex": {
+          "chartType": "bar",
+          "title": "Sex"
         },
-        {
-          "title": "Disease",
-          "fields": [
-            "histology",
-            "histology_grade",
-            "histology_inpc",
-            "tumor_classification",
-            "tumor_site",
-            "tumor_size",
-            "longest_diam_dim1",
-            "invasiveness",
-            "nodal_clinical",
-            "nodal_pathology",
-            "parameningeal_extension",
-            "irs_group",
-            "tnm_finding"
-          ]
+        "race": {
+          "chartType": "bar",
+          "title": "Race"
         },
-        {
-          "title": "Molecular",
-          "fields": [
-            "anaplasia",
-            "anaplasia_extent",
-            "molecular_abnormality",
-            "molecular_abnormality_result",
-            "gene1",
-            "gene2"
-          ]
+        "ethnicity": {
+          "chartType": "bar",
+          "title": "Ethnicity"
         }
-      ]
-    },
-    "projectId": "search",
-    "graphqlField": "subject",
-    "index": "",
-    "buttons": [
-      {
+      },
+      "filters": {
+        "anchor": {
+          "field": "disease_phase",
+          "options": ["Initial Diagnosis", "Relapse"],
+          "tabs": ["Disease", "Molecular"]
+        },
+        "tabs": [
+          {
+            "title": "Subject",
+            "fields": [
+              "consortium",
+              "sex",
+              "race",
+              "ethnicity",
+              "survival_characteristics.lkss",
+              "survival_characteristics.age_at_lkss"
+            ]
+          },
+          {
+            "title": "Disease",
+            "fields": [
+              "histologies.histology",
+              "tumor_assessments.age_at_tumor_assessment",
+              "tumor_assessments.tumor_classification",
+              "tumor_assessments.tumor_site",
+              "tumor_assessments.longest_diam_dim1",
+              "tumor_assessments.invasiveness",
+              "tumor_assessments.nodal_clinical",
+              "tumor_assessments.nodal_pathology",
+              "tumor_assessments.parameningeal_extension",
+              "stagings.irs_group",
+              "stagings.tnm_finding"
+            ]
+          },
+          {
+            "title": "Molecular",
+            "fields": [
+              "molecular_analysis.anaplasia",
+              "molecular_analysis.anaplasia_extent",
+              "molecular_analysis.molecular_abnormality",
+              "molecular_analysis.molecular_abnormality_result",
+              "molecular_analysis.gene1",
+              "molecular_analysis.gene2"
+            ]
+          }
+        ]
+      },
+      "buttons": [
+        {
+          "enabled": true,
+          "type": "data",
+          "title": "Download Data",
+          "leftIcon": "user",
+          "rightIcon": "download",
+          "fileName": "data.json",
+          "tooltipText": "You can only download data accessible to you"
+        }
+      ],
+      "table": {
         "enabled": true,
-        "type": "data",
-        "title": "Download Data",
-        "leftIcon": "user",
-        "rightIcon": "download",
-        "fileName": "data.json",
-        "tooltipText": "You can only download data accessible to you"
-      }
-    ],
-    "table": {
-      "enabled": true,
-      "fields": [
-        "external_links",
-        "consortium",
-        "data_contributor_id",
-        "subject_submitter_id",
-        "sex",
-        "race",
-        "ethnicity",
-        "lkss",
-        "age_at_lkss",
-        "histology",
-        "tumor_site",
-        "tumor_site_other",
-        "age_at_course_end",
-        "age_at_course_start",
-        "age_at_disease_phase",
-        "age_at_enrollment",
-        "age_at_hist_assessment",
-        "age_at_smn",
-        "anaplasia",
-        "anaplasia_extent",
-        "cause_of_death",
-        "course",
-        "course_number",
-        "disease_phase",
-        "disease_phase_number",
-        "enrolled_status",
-        "gene1",
-        "gene2",
-        "invasiveness",
-        "irs_group",
-        "longest_diam_dim1",
-        "longest_diam_dim2",
-        "longest_diam_dim3",
-        "margins",
-        "molecular_abnormality",
-        "molecular_abnormality_result",
-        "nodal_clinical",
-        "nodal_pathology",
-        "parameningeal_extension",
-        "procedure_site",
-        "procedure_tumor_classification",
-        "procedure_type",
-        "study_id",
-        "study_phase",
-        "study_type",
-        "tnm_finding",
-        "treatment_arm",
-        "tumor_classification",
-        "tumor_size",
-        "variant_type",
-        "year_at_disease_phase",
-        "year_at_enrollment"
-      ]
-    },
-    "survivalAnalysis": {
-      "result": {
-        "pval": false,
-        "risktable": false,
-        "survival": true
-      }
-    },
-    "guppyConfig": {
-      "dataType": "subject",
-      "nodeCountTitle": "Subjects",
-      "fieldMapping": [
-        {
-          "field": "lkss",
-          "name": "Last Known Survival Status (LKSS)"
-        },
-        {
-          "field": "age_at_lkss",
-          "name": "Age at LKSS"
-        },
-        {
-          "field": "project_id",
-          "name": "Data Release Version"
-        },
-        {
-          "field": "data_contributor_id",
-          "name": "Data Contributor"
-        },
-        {
-          "field": "irs_group",
-          "name": "IRS Group"
-        },
-        {
-          "field": "tnm_finding",
-          "name": "TNM Finding"
+        "fields": [
+          "external_references.external_links",
+          "consortium",
+          "data_contributor_id",
+          "subject_submitter_id",
+          "sex",
+          "race",
+          "ethnicity",
+          "survival_characteristics.lkss",
+          "survival_characteristics.age_at_lkss"
+        ]
+      },
+      "patientIds": {
+        "filter": false,
+        "export": false
+      },
+      "survivalAnalysis": {
+        "result": {
+          "pval": false,
+          "risktable": false,
+          "survival": false
         }
-      ]
-    },
-    "getAccessButtonLink": "https://pcdc-gen3-docs.s3.amazonaws.com/%5BDRAFT%5D+PCDC-request_form.docx"
-  }
+      },
+      "guppyConfig": {
+        "dataType": "subject",
+        "nodeCountTitle": "Subjects",
+        "fieldMapping": [
+          {
+            "field": "survival_characteristics.lkss",
+            "name": "Last Known Survival Status (LKSS)"
+          },
+          {
+            "field": "survival_characteristics.age_at_lkss",
+            "name": "Age at LKSS"
+          },
+          {
+            "field": "external_references.external_resource_name",
+            "name": "External Resource Name"
+          },
+          {
+            "field": "tumor_assessments.age_at_tumor_assessment",
+            "name": "Age at Tumor Assessment"
+          },
+          {
+            "field": "tumor_assessments.tumor_classification",
+            "name": "Tumor Classification"
+          },
+          {
+            "field": "tumor_assessments.tumor_site",
+            "name": "Tumor Site"
+          },
+          {
+            "field": "tumor_assessments.tumor_size",
+            "name": "Tumor Size"
+          },
+          {
+            "field": "tumor_assessments.longest_diam_dim1",
+            "name": "Longest Diam Dim 1"
+          },
+          {
+            "field": "tumor_assessments.invasiveness",
+            "name": "Invasiveness"
+          },
+          {
+            "field": "tumor_assessments.nodal_clinical",
+            "name": "Nodal Clinical"
+          },
+          {
+            "field": "tumor_assessments.nodal_pathology",
+            "name": "Nodal Pathology"
+          },
+          {
+            "field": "tumor_assessments.parameningeal_extension",
+            "name": "Parameningeal Extension"
+          },
+          {
+            "field": "histologies.histology",
+            "name": "Histology"
+          },
+          {
+            "field": "histologies.histology_grade",
+            "name": "Histology Grade"
+          },
+          {
+            "field": "histologies.histology_inpc",
+            "name": "Histology Inpc"
+          },
+          {
+            "field": "molecular_analysis.anaplasia",
+            "name": "Anaplasia"
+          },
+          {
+            "field": "molecular_analysis.anaplasia_extent",
+            "name": "Anaplasia Extent"
+          },
+          {
+            "field": "molecular_analysis.molecular_abnormality",
+            "name": "Molecular Abnormality"
+          },
+          {
+            "field": "molecular_analysis.molecular_abnormality_result",
+            "name": "Molecular Abnormality Result"
+          },
+          {
+            "field": "molecular_analysis.gene1",
+            "name": "Gene 1"
+          },
+          {
+            "field": "molecular_analysis.gene2",
+            "name": "Gene 2"
+          },
+          {
+            "field": "project_id",
+            "name": "Data Release Version"
+          },
+          {
+            "field": "data_contributor_id",
+            "name": "Data Contributor"
+          },
+          {
+            "field": "stagings.irs_group",
+            "name": "IRS Group"
+          },
+          {
+            "field": "stagings.tnm_finding",
+            "name": "TNM Finding"
+          }
+        ]
+      },
+      "getAccessButtonLink": "https://pcdc-gen3-docs.s3.amazonaws.com/%5BDRAFT%5D+PCDC-request_form.docx"
+    }
+  ]
 }

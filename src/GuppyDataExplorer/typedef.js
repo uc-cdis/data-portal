@@ -1,13 +1,10 @@
 /// <reference path="../GuppyComponents/typedef.js" />
 
 /**
- * @typedef {'bar' | 'count' | 'pie' | 'stackedBar'} ChartType
- */
-
-/**
  * @typedef {Object} SingleChartConfig
- * @property {ChartType} chartType
+ * @property {string} chartType
  * @property {string} title
+ * @property {boolean} [showPercentage]
  */
 
 /**
@@ -62,22 +59,35 @@
 
 /**
  * @typedef {Object} SingleExplorerConfig
- * @property {{ [x: string]: OptionFilter; }} adminAppliedPreFilters
+ * @property {{ [x: string]: OptionFilter; }} [adminAppliedPreFilters]
  * @property {SingleButtonConfig[]} buttons
  * @property {ChartConfig} charts
- * @property {DropdownsConfig} dropdowns
- * @property {GuppyConfig} guppyConfig
+ * @property {DropdownsConfig} [dropdowns]
  * @property {FilterConfig} filters
- * @property {PatientIdsConfig} patientIds
+ * @property {string} [getAccessButtonLink]
+ * @property {GuppyConfig} guppyConfig
+ * @property {boolean} [hideGetAccessButton]
+ * @property {number} id
+ * @property {string} [label]
+ * @property {PatientIdsConfig} [patientIds]
+ * @property {string} [sevenBridgesExportURL]
  * @property {SurvivalAnalysisConfig} survivalAnalysis
  * @property {TableConfig} table
- * @property {string} tabTitle
- * @property {string} projectId
- * @property {string} graphqlFitled
- * @property {string} index
- * @property {string} getAccessButtonLink
- * @property {boolean} hideGetAccessButton
- * @property {string} terraExportURL
- * @property {string[]} terraTemplate
- * @property {string} sevenBridgesExportURL
+ * @property {string} [terraExportURL]
+ * @property {string[]} [terraTemplate]
+ */
+
+/**
+ * @typedef {Object} AlteredExplorerConfig
+ * @property {{ [x:string]: OptionFilter }} [adminAppliedPreFilters]
+ * @property {ButtonConfig} buttonConfig
+ * @property {ChartConfig} chartConfig
+ * @property {FilterConfig} filterConfig
+ * @property {string} [getAccessButtonLink]
+ * @property {GuppyConfig} guppyConfig
+ * @property {boolean} [hideGetAccessButton]
+ * @property {PatientIdsConfig} [patientIdsConfig]
+ * @property {SurvivalAnalysisConfig} survivalAnalysisConfig
+ * @property {TableConfig} tableConfig
+ * @property {number} tierAccessLimit
  */

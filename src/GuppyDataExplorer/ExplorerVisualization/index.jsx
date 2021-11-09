@@ -5,19 +5,14 @@ import SummaryChartGroup from '../../gen3-ui-component/components/charts/Summary
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 import Spinner from '../../components/Spinner';
 import { components } from '../../params';
+import { capitalizeFirstLetter } from '../../utils';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
+import { useExplorerConfig } from '../ExplorerConfigContext';
+import ExplorerRequestAccessButton from '../ExplorerRequestAccessButton';
 import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
-import {
-  ButtonConfigType,
-  ChartConfigType,
-  GuppyConfigType,
-  SurvivalAnalysisConfigType,
-  TableConfigType,
-  PatientIdsConfigType,
-} from '../configTypeDef';
 import './ExplorerVisualization.css';
 import '../typedef';
 
@@ -25,12 +20,12 @@ import '../typedef';
  * @typedef {Object} ViewContainerProps
  * @property {boolean} showIf
  * @property {React.ReactNode} children
- * @property {boolean} isLoading
+ * @property {boolean} [isLoading]
  */
 
 /** @param {ViewContainerProps} props */
 function ViewContainer({ showIf, children, isLoading }) {
-  const baseClassName = 'guppy-explorer-visualization__view';
+  const baseClassName = 'explorer-visualization__view';
   return (
     <div className={baseClassName + (showIf ? '' : '--hidden')}>
       {isLoading && (
@@ -44,11 +39,8 @@ function ViewContainer({ showIf, children, isLoading }) {
 }
 
 ViewContainer.propTypes = {
-  showIf: PropTypes.bool,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]),
+  showIf: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired,
   isLoading: PropTypes.bool,
 };
 
@@ -82,7 +74,7 @@ function getChartData({
 
   for (const field of Object.keys(chartConfig)) {
     if (aggsChartData[field]?.histogram !== undefined) {
-      const { chartType: type, title } = chartConfig[field];
+      const { chartType: type, title, showPercentage } = chartConfig[field];
       const { histogram } = aggsChartData[field];
       switch (type) {
         case 'count': {
@@ -102,6 +94,7 @@ function getChartData({
             type,
             title,
             data: histogram.map((i) => ({ name: i.key, value: i.count })),
+            showPercentage,
           });
           break;
         case 'stackedBar':
@@ -151,15 +144,7 @@ function getChartData({
  * @property {(type: string, filter: FilterState, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
  * @property {(type: string, filter: FilterState) => Promise} getTotalCountsByTypeAndFilter
  * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise} fetchAndUpdateRawData
- * @property {string} className
- * @property {ButtonConfig} buttonConfig
- * @property {ChartConfig} chartConfig
- * @property {GuppyConfig} guppyConfig
- * @property {SurvivalAnalysisConfig} survivalAnalysisConfig
- * @property {TableConfig} tableConfig
- * @property {PatientIdsConfig} patientIdsConfig
- * @property {string} nodeCountTitle
- * @property {number} tierAccessLimit
+ * @property {string} [className]
  */
 
 /** @param {ExplorerVisualizationProps} props */
@@ -179,15 +164,21 @@ function ExplorerVisualization({
   fetchAndUpdateRawData,
   getTotalCountsByTypeAndFilter,
   className = '',
-  buttonConfig,
-  chartConfig,
-  guppyConfig,
-  survivalAnalysisConfig,
-  tableConfig,
-  patientIdsConfig,
-  nodeCountTitle,
-  tierAccessLimit,
 }) {
+  const {
+    buttonConfig,
+    chartConfig,
+    getAccessButtonLink,
+    guppyConfig,
+    hideGetAccessButton = false,
+    patientIdsConfig,
+    survivalAnalysisConfig,
+    tableConfig,
+    tierAccessLimit,
+  } = useExplorerConfig().current;
+  const nodeCountTitle =
+    guppyConfig.nodeCountTitle || capitalizeFirstLetter(guppyConfig.dataType);
+
   const explorerViews = ['summary view'];
   if (tableConfig.enabled) explorerViews.push('table view');
   if (isSurvivalAnalysisEnabled(survivalAnalysisConfig))
@@ -224,7 +215,7 @@ function ExplorerVisualization({
   const tableColumnsOrdered =
     tableConfig.fields && tableConfig.fields.length > 0;
   const tableProps = {
-    className: 'guppy-explorer-visualization__table',
+    className: 'explorer-visualization__table',
     tableConfig: {
       fields: tableColumnsOrdered ? tableConfig.fields : allFields,
       ordered: tableColumnsOrdered,
@@ -246,8 +237,8 @@ function ExplorerVisualization({
 
   return (
     <div className={className}>
-      <div className='guppy-explorer-visualization__top'>
-        <div className='guppy-explorer-visualization__view-group'>
+      <div className='explorer-visualization__top'>
+        <div className='explorer-visualization__view-group'>
           {explorerViews.map((view) => (
             <button
               key={view}
@@ -259,7 +250,17 @@ function ExplorerVisualization({
             </button>
           ))}
         </div>
-        <div className='guppy-explorer-visualization__button-group'>
+        <div className='explorer-visualization__button-group'>
+          {accessibleCount < totalCount && !hideGetAccessButton && (
+            <ExplorerRequestAccessButton
+              getAccessButtonLink={getAccessButtonLink}
+              tooltipText={
+                accessibleCount === 0
+                  ? 'You do not have permissions to view line-level data.'
+                  : 'You have only limited access to line-level data.'
+              }
+            />
+          )}
           {patientIdsConfig?.export && (
             <ExplorerExploreExternalButton filter={filter} />
           )}
@@ -271,7 +272,7 @@ function ExplorerVisualization({
         isLoading={isLoadingAggsData}
       >
         {chartData.countItems.length > 0 && (
-          <div className='guppy-explorer-visualization__summary-cards'>
+          <div className='explorer-visualization__summary-cards'>
             <DataSummaryCardGroup
               summaryItems={chartData.countItems}
               connected
@@ -279,7 +280,7 @@ function ExplorerVisualization({
           </div>
         )}
         {chartData.summaries.length > 0 && (
-          <div className='guppy-explorer-visualization__charts'>
+          <div className='explorer-visualization__charts'>
             <SummaryChartGroup
               summaries={chartData.summaries}
               lockMessage={lockMessage}
@@ -290,9 +291,9 @@ function ExplorerVisualization({
           </div>
         )}
         {chartData.stackedBarCharts.length > 0 && (
-          <div className='guppy-explorer-visualization__charts'>
+          <div className='explorer-visualization__charts'>
             {chartData.stackedBarCharts.map((chart, i) => (
-              <div key={i} className='guppy-explorer-visualization__charts-row'>
+              <div key={i} className='explorer-visualization__charts-row'>
                 {i > 0 && (
                   <div className='percentage-bar-chart__row-upper-border' />
                 )}
@@ -342,14 +343,6 @@ ExplorerVisualization.propTypes = {
   fetchAndUpdateRawData: PropTypes.func, // inherited from GuppyWrapper
   getTotalCountsByTypeAndFilter: PropTypes.func, // inherited from GuppyWrapper
   className: PropTypes.string,
-  buttonConfig: ButtonConfigType,
-  chartConfig: ChartConfigType,
-  guppyConfig: GuppyConfigType,
-  survivalAnalysisConfig: SurvivalAnalysisConfigType,
-  tableConfig: TableConfigType,
-  patientIdsConfig: PatientIdsConfigType,
-  nodeCountTitle: PropTypes.string.isRequired,
-  tierAccessLimit: PropTypes.number.isRequired,
 };
 
 export default ExplorerVisualization;

@@ -148,7 +148,7 @@ SummaryBarChart.defaultProps = {
   color: undefined,
   useCustomizedColorMap: false,
   customizedColorMap: ['var(--pcdc-color__primary)'],
-  showPercentage: true,
+  showPercentage: false,
   percentageFixedPoint: 2,
   lockValue: -1,
   lockMessage:

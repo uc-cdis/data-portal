@@ -10,11 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     ca-certificates \
     curl \
-    git \
     nginx \
-    python3 \
-    time \
-    vim \
     && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean \
@@ -28,10 +24,7 @@ ARG BASENAME
 RUN mkdir -p /data-portal
 COPY . /data-portal
 WORKDIR /data-portal
-RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}\";" >src/versions.js \
-    && VERSION=`git describe --always --tags` && echo "export const portalVersion =\"${VERSION}\";" >>src/versions.js \
-    && /bin/rm -rf .git \
-    && npm config set unsafe-perm=true && npm ci --only=production\
+RUN npm config set unsafe-perm=true && npm ci --only=production\
     && cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
     

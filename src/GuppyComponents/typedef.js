@@ -74,6 +74,7 @@
  * @property {string} field
  * @property {string[]} options
  * @property {string[]} tabs
+ * @property {string} [tooltip]
  */
 
 /**
@@ -85,7 +86,7 @@
 
 /**
  * @typedef {Object} FilterConfig
- * @property {AnchorConfig} anchor
+ * @property {AnchorConfig} [anchor]
  * @property {FilterTabsOption[]} tabs
  */
 
@@ -101,7 +102,6 @@
  * @property {string} manifestMapping.referenceIdFieldInDataIndex
  * @property {string} [getAccessButtonLink]
  * @property {string} [terraExportURL]
- * @property {string} [path]
  * @property {string} [mainField]
  * @property {string} [mainFieldTitle]
  * @property {boolean} [mainFieldIsNumeric]
@@ -143,6 +143,7 @@
 /**
  * @typedef {Object} GuppyData
  * @property {number} accessibleCount
+ * @property {SimpleAggsData} aggsChartData
  * @property {AggsData} aggsData
  * @property {string[]} allFields
  * @property {FilterState} filter
@@ -152,11 +153,11 @@
  * @property {Array} rawData
  * @property {SimpleAggsData} tabsOptions
  * @property {number} totalCount
- * @property {(args: { format: string; sort: GqlSort }) => void} downloadRawData
- * @property {(args: { fields: string[]; sort: GqlSort }) => void} downloadRawDataByFields
- * @property {(type: string, filter: FilterState, fields: string[]) => void} downloadRawDataByTypeAndFilter
- * @property {(type: string, filter: FilterState) => void} getTotalCountsByTypeAndFilter
- * @property {(args: { offset: number; size: number; sort: GqlSort }) => void} fetchAndUpdateRawData
+ * @property {(args: { format: string; sort: GqlSort }) => Promise<void>} downloadRawData
+ * @property {(args: { fields: string[]; sort: GqlSort }) => Promise<void>} downloadRawDataByFields
+ * @property {(type: string, filter: FilterState, fields: string[]) => Promise<void>} downloadRawDataByTypeAndFilter
+ * @property {(type: string, filter: FilterState) => Promise<void>} getTotalCountsByTypeAndFilter
+ * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise<void>} fetchAndUpdateRawData
  * @property {(anchorValue: string) => void} onAnchorValueChange
  * @property {FilterChangeHandler} onFilterChange
  */

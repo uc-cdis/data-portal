@@ -44,6 +44,10 @@
   .nav-button:hover,
   .nav-button--active {
     border-left: 6px solid var(--pcdc-color__secondary);
+  }
+
+  .nav-button:hover::after,
+  .nav-button--active::after {
     border-bottom: none;
   }
 }

@@ -2,14 +2,12 @@ import conf from './localconf';
 
 describe('The localconf', () => {
   const expectedKeys = [
-    'dev',
     'mockStore',
     'app',
     'basename',
     'hostname',
     'userapiPath',
     'submissionApiPath',
-    'submissionApiOauthPath',
     'credentialCdisPath',
     'graphqlPath',
     'graphqlSchemaUrl',

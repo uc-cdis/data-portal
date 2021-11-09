@@ -6,6 +6,7 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimplePopup from '../../components/SimplePopup';
 import Button from '../../gen3-ui-component/components/Button';
+import { useExplorerState } from '../ExplorerStateContext';
 import {
   FilterSetActionMenu,
   FilterSetActionForm,
@@ -25,15 +26,9 @@ import './typedef';
  * @param {Object} prop
  * @param {string} prop.className
  * @param {ExplorerFilters} prop.filter
- * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onOpenFilterSet
- * @param {({ filters }: { filters: ExplorerFilters }) => void} prop.onDeleteFilterSet
  */
-function ExplorerFilterSet({
-  className,
-  filter,
-  onOpenFilterSet,
-  onDeleteFilterSet,
-}) {
+function ExplorerFilterSet({ className, filter }) {
+  const { clearFilters, updateFilters } = useExplorerState();
   const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
   /** @type {ExplorerFilterSet[]} */
@@ -66,13 +61,12 @@ function ExplorerFilterSet({
   }
 
   function handleNew() {
-    const emptyFilterSet = createEmptyFilterSet();
-    setFilterSet(emptyFilterSet);
-    onOpenFilterSet(emptyFilterSet);
+    setFilterSet(createEmptyFilterSet());
+    clearFilters();
   }
   function handleOpen(/** @type {ExplorerFilterSet} */ opened) {
     setFilterSet(cloneDeep(opened));
-    onOpenFilterSet(cloneDeep(opened));
+    updateFilters(cloneDeep(opened.filters));
     closeActionForm();
   }
   async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
@@ -101,7 +95,7 @@ function ExplorerFilterSet({
       await deleteFilterSet(deleted);
       setFilterSet(createEmptyFilterSet());
       setFilterSets(await fetchFilterSets());
-      onDeleteFilterSet(createEmptyFilterSet());
+      clearFilters();
     } catch (e) {
       setIsError(true);
     } finally {
@@ -122,17 +116,16 @@ function ExplorerFilterSet({
   function FilterChangedWarning() {
     return (
       <Tooltip
-        placement='top'
         overlay='You have changed filters for this Filter Set. Click this icon to undo.'
         arrowContent={<div className='rc-tooltip-arrow-inner' />}
         trigger={['hover', 'focus']}
       >
         <span
-          onClick={() => onOpenFilterSet(cloneDeep(filterSet))}
+          onClick={() => updateFilters(cloneDeep(filterSet.filters))}
           onKeyPress={(e) => {
             if (e.charCode === 13 || e.charCode === 32) {
               e.preventDefault();
-              onOpenFilterSet(cloneDeep(filterSet));
+              updateFilters(cloneDeep(filterSet.filters));
             }
           }}
           role='button'
@@ -154,7 +147,7 @@ function ExplorerFilterSet({
   return (
     <div className={className}>
       {isError ? (
-        <div className='guppy-explorer-filter-set__error'>
+        <div className='explorer-filter-set__error'>
           <h2>Error obtaining saved Filter Set data...</h2>
           <p>
             Please retry by clicking {'"Retry"'} button or refreshing the page.
@@ -167,24 +160,22 @@ function ExplorerFilterSet({
       ) : (
         <>
           <div>
-            <h1 className='guppy-explorer-filter-set__name'>
-              Filter Set:{' '}
-              {filterSet.name ? (
-                <>
-                  {truncateWithEllipsis(filterSet.name, 30)}{' '}
-                  {isFiltersChanged && <FilterChangedWarning />}
-                </>
-              ) : (
-                <span className='guppy-explorer-filter-set__placeholder'>
-                  untitled
+            <h4 className='explorer-filter-set__title'>
+              My filter sets{' '}
+              {filterSet.name && isFiltersChanged && <FilterChangedWarning />}
+            </h4>
+            <div className='explorer-filter-set__name'>
+              {filterSet.name || (
+                <span className='explorer-filter-set__placeholder'>
+                  Untitled
                 </span>
               )}
-            </h1>
-            <p>
+            </div>
+            <p className='explorer-filter-set__description'>
               {filterSet.description ? (
-                truncateWithEllipsis(filterSet.description, 70)
+                truncateWithEllipsis(filterSet.description, 80)
               ) : (
-                <span className='guppy-explorer-filter-set__placeholder'>
+                <span className='explorer-filter-set__placeholder'>
                   No description
                 </span>
               )}
@@ -222,8 +213,6 @@ function ExplorerFilterSet({
 ExplorerFilterSet.propTypes = {
   className: PropTypes.string,
   filter: PropTypes.object,
-  onOpenFilterSet: PropTypes.func,
-  onDeleteFilterSet: PropTypes.func,
 };
 
 export default ExplorerFilterSet;

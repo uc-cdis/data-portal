@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Tooltip from 'rc-tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { capitalizeFirstLetter } from '../../../utils';
 
@@ -12,6 +13,7 @@ import { capitalizeFirstLetter } from '../../../utils';
  * @property {(anchor: string) => void} onChange
  * @property {string[]} options
  * @property {string[]} [optionsInUse]
+ * @property {string} [tooltip]
  */
 
 /** @param {AnchorFilterProps} props */
@@ -23,7 +25,25 @@ function AnchorFilter({
   onChange,
   options,
   optionsInUse,
+  tooltip,
 }) {
+  const sectionTitle = (
+    <div style={{ display: 'flex' }}>
+      <span className='g3-filter-section__toggle-icon-container'>
+        <FontAwesomeIcon icon='anchor' />
+      </span>
+      <span
+        className={`g3-filter-section__title${
+          defaultOptionValue !== anchorValue
+            ? ' g3-filter-section__title--active'
+            : ''
+        }`}
+      >
+        {capitalizeFirstLetter(anchorField)}
+      </span>
+    </div>
+  );
+
   return (
     <div
       className='g3-filter-section'
@@ -42,18 +62,19 @@ function AnchorFilter({
           tabIndex={0}
           aria-label='Filter: patient ids'
         >
-          <span className='g3-filter-section__toggle-icon-container'>
-            <FontAwesomeIcon icon='anchor' />
-          </span>
-          <span
-            className={`g3-filter-section__title${
-              defaultOptionValue !== anchorValue
-                ? ' g3-filter-section__title--active'
-                : ''
-            }`}
-          >
-            {capitalizeFirstLetter(anchorField)}
-          </span>
+          {tooltip ? (
+            <Tooltip
+              arrowContent={<div className='rc-tooltip-arrow-inner' />}
+              mouseLeaveDelay={0}
+              overlay={tooltip}
+              placement='topLeft'
+              trigger={['hover', 'focus']}
+            >
+              {sectionTitle}
+            </Tooltip>
+          ) : (
+            sectionTitle
+          )}
         </div>
       </div>
       {[defaultOptionValue, ...options].map((option) => (
@@ -89,6 +110,7 @@ AnchorFilter.propTypes = {
   onChange: PropTypes.func,
   options: PropTypes.arrayOf(PropTypes.string).isRequired,
   optionsInUse: PropTypes.arrayOf(PropTypes.string),
+  tooltip: PropTypes.string,
 };
 
 export default AnchorFilter;

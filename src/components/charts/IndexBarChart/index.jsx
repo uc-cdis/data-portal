@@ -85,9 +85,13 @@ const createBarNames = (indexChart) => {
  *   ];
  */
 function IndexBarChart({ projectList, countNames, barChartStyle, xAxisStyle }) {
-  if (projectList.length === 0) {
-    return <Spinner />;
-  }
+  if (projectList.length === 0)
+    return (
+      <div className='index-bar-chart'>
+        <Spinner />
+      </div>
+    );
+
   const sortedProjectList = [...projectList].sort(sortCount);
   const topList =
     sortedProjectList.length <= 5
@@ -106,7 +110,6 @@ function IndexBarChart({ projectList, countNames, barChartStyle, xAxisStyle }) {
           margin={barChartStyle.margins}
           layout={barChartStyle.layout}
         >
-          <h4>Project Submission status</h4>
           <XAxis
             {...xAxisStyle}
             stroke={xAxisStyle.color}

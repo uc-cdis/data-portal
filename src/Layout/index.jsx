@@ -1,19 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useRouteMatch } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { components } from '../params';
+import useGoogleAnalytics from '../hooks/useGoogleAnalytics';
 import dictIcons from '../img/icons/index';
-import Footer from '../components/layout/Footer';
+import ReduxFooter from './ReduxFooter';
 import ScreenSizeWarning from '../components/ScreenSizeWarning';
 import ReduxTopBar from './ReduxTopBar';
 import ReduxNavBar from './ReduxNavBar';
+import './Layout.css';
 
 /**
  * @param {Object} props
  * @param {React.ReactNode} props.children
  */
 function Layout({ children }) {
-  const isFooterHidden = useRouteMatch('/dd')?.isExact;
+  const location = useLocation();
+  // @ts-ignore
+  useGoogleAnalytics(location);
+
+  const isDashboardPage =
+    location.pathname.toLowerCase().startsWith('/dd') ||
+    location.pathname.toLowerCase().startsWith('/explorer');
 
   return (
     <>
@@ -25,9 +33,9 @@ function Layout({ children }) {
           navTitle={components.navigation.title}
         />
       </header>
-      <main>{children}</main>
-      {isFooterHidden || (
-        <Footer
+      <main className='main'>{children}</main>
+      {isDashboardPage || (
+        <ReduxFooter
           links={components.footer?.links}
           logos={components.footerLogos}
           privacyPolicy={components.privacyPolicy}

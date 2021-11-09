@@ -1,13 +1,14 @@
-.guppy-explorer-filter__title-container {
+.explorer-filter__title-container {
   display: flex;
   align-items: baseline;
 }
 
-.guppy-explorer-filter__title {
+.explorer-filter__title {
   display: inline;
+  margin-bottom: 1rem;
 }
 
-.guppy-explorer-filter__clear-button {
+.explorer-filter__clear-button {
   height: auto;
   width: auto;
   background: none;
@@ -18,11 +19,11 @@
   margin-left: 10px;
 }
 
-.guppy-explorer-filter__clear-button:hover {
+.explorer-filter__clear-button:hover {
   color: var(--g3-color__bg-coal);
 }
 
-.guppy-explorer-filter__clear-button::before {
+.explorer-filter__clear-button::before {
   border-left: 1px solid var(--g3-color__lightgray);
   content: '';
   height: 1.5rem;

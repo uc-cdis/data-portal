@@ -7,9 +7,8 @@ import './QueryForm.less';
 
 class QueryForm extends React.Component {
   constructor(props) {
-    const searchParams = new URLSearchParams(window.location.search);
-
     super(props);
+    const searchParams = new URLSearchParams(window.location.search);
     this.state = {
       selectValue: searchParams.has('node_type')
         ? {

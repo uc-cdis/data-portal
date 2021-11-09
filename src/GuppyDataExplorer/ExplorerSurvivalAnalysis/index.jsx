@@ -24,14 +24,7 @@ import './typedef';
  */
 function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
   const controller = useRef(new AbortController());
-  const isMounted = useRef(false);
-  useEffect(() => {
-    isMounted.current = true;
-    return () => {
-      isMounted.current = false;
-      controller.current.abort();
-    };
-  }, []);
+  useEffect(() => () => controller.current.abort(), []);
   function fetchResult(body) {
     controller.current.abort();
     controller.current = new AbortController();
@@ -60,10 +53,7 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
   const [isFilterChanged, setIsFilterChanged] = useState(false);
   useEffect(() => {
     const updatedFilter = getGQLFilter(cloneDeep(filter));
-    if (
-      isMounted.current &&
-      JSON.stringify(updatedFilter) !== JSON.stringify(transformedFilter)
-    ) {
+    if (JSON.stringify(updatedFilter) !== JSON.stringify(transformedFilter)) {
       setTransformedFilter(updatedFilter);
       setIsFilterChanged(true);
     }
@@ -73,8 +63,7 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
     getFactors(aggsData, fieldMapping, enumFilterList)
   );
   useEffect(() => {
-    if (isMounted.current)
-      setFactors(getFactors(aggsData, fieldMapping, enumFilterList));
+    setFactors(getFactors(aggsData, fieldMapping, enumFilterList));
   }, [aggsData, fieldMapping]);
 
   /** @type {ColorScheme} */
@@ -120,19 +109,17 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
         result: config.result,
       })
         .then((result) => {
-          if (isMounted.current) {
-            if (config.result?.pval)
-              setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
-            if (config.result?.risktable) setRisktable(result.risktable);
-            if (config.result?.survival) {
-              setSurvival(result.survival);
-              setColorScheme(getNewColorScheme(result.survival));
-            }
-            setIsUpdating(false);
+          if (config.result?.pval)
+            setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
+          if (config.result?.risktable) setRisktable(result.risktable);
+          if (config.result?.survival) {
+            setSurvival(result.survival);
+            setColorScheme(getNewColorScheme(result.survival));
           }
+          setIsUpdating(false);
         })
         .catch((e) => {
-          if (isMounted.current && e.name !== 'AbortError') {
+          if (e.name !== 'AbortError') {
             setIsError(true);
             setIsUpdating(false);
           }

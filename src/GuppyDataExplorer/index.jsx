@@ -1,93 +1,141 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import GuppyDataExplorer from './GuppyDataExplorer';
-import { guppyUrl, tierAccessLimit, explorerConfig } from '../localconf';
-import { capitalizeFirstLetter } from '../utils';
-import './GuppyExplorer.css';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { explorerConfig } from '../localconf';
+import Dashboard from '../Layout/Dashboard';
+import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
+import {
+  ExplorerConfigProvider,
+  useExplorerConfig,
+} from './ExplorerConfigContext';
+import {
+  ExplorerStateProvider,
+  useExplorerState,
+} from './ExplorerStateContext';
+import ExplorerErrorBoundary from './ExplorerErrorBoundary';
+import ExplorerSelect from './ExplorerSelect';
+import ExplorerVisualization from './ExplorerVisualization';
+import ExplorerFilter from './ExplorerFilter';
+import ExplorerFilterSet from './ExplorerFilterSet';
+import './Explorer.css';
 import './typedef';
 
-export default function Explorer() {
-  if (explorerConfig.legnth === 0) {
-    return null;
-  }
-  const history = useHistory();
-  const isFilesPage = history.location.pathname === '/files';
-  /** @type {number} */
-  const fileTabIndex = explorerConfig.findIndex(
-    ({ guppyConfig }) => guppyConfig?.dataType === 'file'
-  );
-  if (isFilesPage && fileTabIndex === -1) {
-    return null;
-  }
+/** @type {{ [x:string]: OptionFilter }} */
+const emptyAdminAppliedPreFilters = {};
 
-  const [tabIndex, setTabIndex] = useState(isFilesPage ? fileTabIndex : 0);
-  /** @type {SingleExplorerConfig} */
-  const tabConfig = explorerConfig[tabIndex];
-  const isMultiTabExplorer = explorerConfig.length > 1;
+/** @param {{ dataVersion?: string; portalVersion?: string }} props */
+function ExplorerDashboard({ dataVersion, portalVersion }) {
+  const {
+    current: {
+      adminAppliedPreFilters = emptyAdminAppliedPreFilters,
+      chartConfig,
+      filterConfig,
+      guppyConfig,
+      tableConfig,
+    },
+    explorerId,
+    handleBrowserNavigationForConfig,
+  } = useExplorerConfig();
+  const {
+    initialAppliedFilters,
+    patientIds,
+    handleBrowserNavigationForState,
+    handleFilterChange,
+  } = useExplorerState();
+  useEffect(() => {
+    window.addEventListener('popstate', handleBrowserNavigationForConfig);
+    window.addEventListener('popstate', handleBrowserNavigationForState);
+    return () => {
+      window.removeEventListener('popstate', handleBrowserNavigationForConfig);
+      window.removeEventListener('popstate', handleBrowserNavigationForState);
+    };
+  }, []);
 
   return (
-    <div className='guppy-explorer'>
-      {isMultiTabExplorer && (
-        <div className='guppy-explorer__tabs'>
-          {explorerConfig.map(
-            /**
-             * @param {SingleExplorerConfig} config
-             * @param {number} index
-             */
-            ({ tabTitle, guppyConfig }, index) => (
-              <div
-                key={index}
-                className={'guppy-explorer__tab'.concat(
-                  tabIndex === index ? ' guppy-explorer__tab--selected' : ''
-                )}
-                onClick={() => setTabIndex(index)}
-                onKeyPress={(e) => {
-                  if (e.charCode === 13 || e.charCode === 32) {
-                    e.preventDefault();
-                    setTabIndex(index);
-                  }
-                }}
-                role='button'
-                tabIndex={0}
-              >
-                <h3>
-                  {tabTitle ||
-                    (guppyConfig?.dataType
-                      ? capitalizeFirstLetter(guppyConfig.dataType)
-                      : '')}
-                </h3>
-              </div>
-            )
-          )}
-        </div>
+    <GuppyWrapper
+      key={explorerId}
+      adminAppliedPreFilters={adminAppliedPreFilters}
+      initialAppliedFilters={initialAppliedFilters}
+      chartConfig={chartConfig}
+      filterConfig={filterConfig}
+      guppyConfig={guppyConfig}
+      onFilterChange={handleFilterChange}
+      rawDataFields={tableConfig.fields}
+      patientIds={patientIds}
+    >
+      {(data) => (
+        <Dashboard>
+          <Dashboard.Sidebar className='explorer__sidebar'>
+            <div>
+              <ExplorerSelect />
+              <ExplorerFilterSet
+                className='explorer__filter-set'
+                filter={data.filter}
+              />
+              <ExplorerFilter
+                className='explorer__filter'
+                filter={data.filter}
+                initialTabsOptions={data.initialTabsOptions}
+                onAnchorValueChange={data.onAnchorValueChange}
+                onFilterChange={data.onFilterChange}
+                tabsOptions={data.tabsOptions}
+              />
+            </div>
+            <div className='explorer__version-info-area'>
+              {dataVersion !== '' && (
+                <div className='explorer__version-info'>
+                  <span>Data Release Version:</span> {dataVersion}
+                </div>
+              )}
+              {portalVersion !== '' && (
+                <div className='explorer__version-info'>
+                  <span>Portal Version:</span> {portalVersion}
+                </div>
+              )}
+            </div>
+          </Dashboard.Sidebar>
+          <Dashboard.Main className='explorer__main'>
+            <ExplorerVisualization
+              accessibleCount={data.accessibleCount}
+              aggsData={data.aggsData}
+              aggsChartData={data.aggsChartData}
+              allFields={data.allFields}
+              filter={data.filter}
+              isLoadingAggsData={data.isLoadingAggsData}
+              isLoadingRawData={data.isLoadingRawData}
+              rawData={data.rawData}
+              totalCount={data.totalCount}
+              downloadRawData={data.downloadRawData}
+              downloadRawDataByFields={data.downloadRawDataByFields}
+              downloadRawDataByTypeAndFilter={
+                data.downloadRawDataByTypeAndFilter
+              }
+              fetchAndUpdateRawData={data.fetchAndUpdateRawData}
+              getTotalCountsByTypeAndFilter={data.getTotalCountsByTypeAndFilter}
+            />
+          </Dashboard.Main>
+        </Dashboard>
       )}
-      <div className={isMultiTabExplorer ? 'guppy-explorer__main' : ''}>
-        <GuppyDataExplorer
-          adminAppliedPreFilters={tabConfig.adminAppliedPreFilters}
-          chartConfig={tabConfig.charts}
-          filterConfig={tabConfig.filters}
-          tableConfig={tabConfig.table}
-          survivalAnalysisConfig={tabConfig.survivalAnalysis}
-          patientIdsConfig={tabConfig.patientIds}
-          guppyConfig={{
-            path: guppyUrl,
-            ...tabConfig.guppyConfig,
-          }}
-          buttonConfig={{
-            buttons: tabConfig.buttons,
-            dropdowns: tabConfig.dropdowns,
-            terraExportURL: tabConfig.terraExportURL,
-            terraTemplate: tabConfig.terraTemplate,
-            sevenBridgesExportURL: tabConfig.sevenBridgesExportURL,
-          }}
-          history={history}
-          tierAccessLimit={tierAccessLimit}
-          getAccessButtonLink={tabConfig.getAccessButtonLink}
-          hideGetAccessButton={tabConfig.hideGetAccessButton}
-          // the "fully uncontrolled component with a key" trick
-          key={tabIndex}
-        />
-      </div>
-    </div>
+    </GuppyWrapper>
+  );
+}
+
+ExplorerDashboard.propTypes = {
+  dataVersion: PropTypes.string,
+  portalVersion: PropTypes.string,
+};
+
+const mapStateToProps = ({ versionInfo }) => versionInfo;
+const ReduxExplorerDashboard = connect(mapStateToProps)(ExplorerDashboard);
+
+export default function Explorer() {
+  return explorerConfig.length === 0 ? null : (
+    <ExplorerConfigProvider>
+      <ExplorerStateProvider>
+        <ExplorerErrorBoundary>
+          <ReduxExplorerDashboard />
+        </ExplorerErrorBoundary>
+      </ExplorerStateProvider>
+    </ExplorerConfigProvider>
   );
 }

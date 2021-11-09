@@ -1,14 +1,13 @@
 import 'isomorphic-fetch';
 import { buildClientSchema, getIntrospectionQuery } from 'graphql/utilities';
 import {
-  apiPath,
   userapiPath,
   guppyGraphQLUrl,
   headers,
   hostname,
-  submissionApiOauthPath,
   submissionApiPath,
   authzPath,
+  guppyUrl,
 } from './localconf';
 import { config } from './params';
 
@@ -204,25 +203,6 @@ export const fetchWithCredsAndTimeout = (opts, timeoutInMS) => {
 };
 
 /**
- * @param {string} type
- * @returns {(result: FetchResult) => import('redux').AnyAction}
- */
-export const handleResponse = (type) => ({ data, status }) => {
-  switch (status) {
-    case 200:
-      return {
-        type,
-        data,
-      };
-    default:
-      return {
-        type: 'FETCH_ERROR',
-        error: data,
-      };
-  }
-};
-
-/**
  * @param {FetchResult} result
  * @returns {import('redux').AnyAction}
  */
@@ -250,20 +230,26 @@ const handleFetchUser = ({ status, data }) => {
 export const fetchUser = () => (dispatch) =>
   fetchCreds({ dispatch }).then((res) => dispatch(handleFetchUser(res)));
 
-/** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
-export const logoutAPI = () => (dispatch) =>
-  fetchWithCreds({
-    path: `${submissionApiOauthPath}logout`,
-    dispatch,
-  })
-    .then((res) => dispatch(handleResponse('RECEIVE_API_LOGOUT')(res)))
-    .then(() =>
-      document.location.replace(
-        `${userapiPath}/logout?next=${hostname}${
-          process.env.NODE_ENV === 'dev' ? 'dev.html' : ''
-        }`
-      )
-    );
+/**
+ * @param {boolean} displayAuthPopup
+ * @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>}
+ */
+export const logoutAPI = (displayAuthPopup = false) => (dispatch) =>
+  fetch(
+    `${userapiPath}/logout?next=${hostname}${
+      process.env.NODE_ENV === 'development' ? 'dev.html' : ''
+    }`
+  ).then((response) => {
+    if (displayAuthPopup)
+      dispatch({
+        type: 'UPDATE_POPUP',
+        data: {
+          authPopup: true,
+        },
+      });
+    else document.location.replace(response.url);
+  });
+
 /**
  * @param {Object} opts
  * @param {string} [opts.path]
@@ -362,7 +348,7 @@ export const fetchDictionary = () => (dispatch) =>
 /** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
 export const fetchVersionInfo = () => (dispatch) =>
   fetchWithCreds({
-    path: `${apiPath}_version`,
+    path: `${guppyUrl}/_data_version`,
     method: 'GET',
     useCache: true,
   }).then(({ status, data }) => {

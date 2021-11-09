@@ -4,22 +4,28 @@ import './Footer.css';
 
 /**
  * @param {Object} props
+ * @param {string} [props.dataVersion]
  * @param {{ href: string; text: string; }[]} [props.links]
  * @param {{ alt: string; height: number; href: string; src: string; }[]} props.logos
- * @param {{ footerHref: string; text: string; }} [props.privacyPolicy]
+ * @param {string} [props.portalVersion]
+ * @param {{ file?: string; footerHref: string; routeHref?: string; text: string }} [props.privacyPolicy]
  */
-function Footer({ links, logos, privacyPolicy }) {
+function Footer({ dataVersion, links, logos, portalVersion, privacyPolicy }) {
   return (
     <footer>
       <nav className='footer__nav' aria-label='Footer Navigation'>
-        {process.env.DATA_RELEASE_VERSION && (
-          <div className='footer__data-release-version-area'>
-            <span className='footer__data-release-version-area--title'>
-              Data Release Version:
-            </span>
-            {process.env.DATA_RELEASE_VERSION}
-          </div>
-        )}
+        <div className='footer__version-info-area'>
+          {dataVersion !== '' && (
+            <div className='footer__version-info'>
+              <span>Data Release Version:</span> {dataVersion}
+            </div>
+          )}
+          {portalVersion !== '' && (
+            <div className='footer__version-info'>
+              <span>Portal Version:</span> {portalVersion}
+            </div>
+          )}
+        </div>
         <div className='footer__spacer-area' />
         {privacyPolicy?.text && (
           <div className='footer__privacy-policy-area'>
@@ -70,23 +76,27 @@ function Footer({ links, logos, privacyPolicy }) {
 }
 
 Footer.propTypes = {
+  dataVersion: PropTypes.string,
   links: PropTypes.arrayOf(
-    PropTypes.shape({
+    PropTypes.exact({
       href: PropTypes.string.isRequired,
       text: PropTypes.string.isRequired,
     })
   ),
   logos: PropTypes.arrayOf(
-    PropTypes.shape({
+    PropTypes.exact({
       alt: PropTypes.string.isRequired,
       height: PropTypes.number,
       href: PropTypes.string.isRequired,
       src: PropTypes.string.isRequired,
     })
   ).isRequired,
-  privacyPolicy: PropTypes.shape({
-    footerHref: PropTypes.string,
-    text: PropTypes.string,
+  portalVersion: PropTypes.string,
+  privacyPolicy: PropTypes.exact({
+    file: PropTypes.string,
+    footerHref: PropTypes.string.isRequired,
+    routeHref: PropTypes.string,
+    text: PropTypes.string.isRequired,
   }),
 };
 

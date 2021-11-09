@@ -11,27 +11,30 @@ Example of a DAT for longitudinal data:
 
 The DAT requires the `dataAvailabilityToolConfig` block in `gitops.json`. This is the configuration for the example DAT above:
 
-```
-"dataAvailabilityToolConfig": {
-    "guppyConfig": {
-        "dataType": "follow_up",
-        "mainField": "visit_number",
-        "mainFieldTitle": "Visit number",
-        "mainFieldIsNumeric": true,
-        "aggFields": [
-            "age_at_visit",
-            "abcv",
-            "thrpyv",
-            "trzv"
-        ],
-        "fieldMapping": [
-            {"field": "abcv", "name": "Abcavir Use"},
-            {"field": "thrpyv", "name": "Therapy Type"},
-            {"field": "trzv", "name": "Terazol Use"},
-            {"field": "subject_id", "name": "Subjects"}
-        ],
-        "colorRange": ["#EBF7FB", "#1769A3"]
+```jsonc
+{
+  "explorerConfig": [
+    {
+      // ... other explorer config options ...
+
+      "dataAvailabilityToolConfig": {
+        "guppyConfig": {
+          "dataType": "follow_up",
+          "mainField": "visit_number",
+          "mainFieldTitle": "Visit number",
+          "mainFieldIsNumeric": true,
+          "aggFields": ["age_at_visit", "abcv", "thrpyv", "trzv"],
+          "fieldMapping": [
+            { "field": "abcv", "name": "Abcavir Use" },
+            { "field": "thrpyv", "name": "Therapy Type" },
+            { "field": "trzv", "name": "Terazol Use" },
+            { "field": "subject_id", "name": "Subjects" }
+          ],
+          "colorRange": ["#EBF7FB", "#1769A3"]
+        }
+      }
     }
+  ]
 }
 ```
 
@@ -43,7 +46,7 @@ The DAT requires the `dataAvailabilityToolConfig` block in `gitops.json`. This i
 - `fieldMapping`: fields for which a mapping is _not_ provided will be capitalized, for example `age_at_visit` will be displayed `Age At Visit` _(optional)_
 - `colorRange`: a list of two hex color codes, the first one will be used for availabilities of 0% and the second one will be used for the greatest availability value found in the heatmap _(optional, default is `["#EBF7FB", "#1769A3"]`)_
 
-An additional row is always displayed using the values for the configuration field `dataExplorerConfig`.`guppyConfig`.`manifestMapping`.`referenceIdFieldInResourceIndex` (typically `subject_id` or `case_id`). A name mapping can also be provided for this row.
+An additional row is always displayed using the values for the configuration field `explorerConfig`.`guppyConfig`.`manifestMapping`.`referenceIdFieldInResourceIndex` (typically `subject_id` or `case_id`). A name mapping can also be provided for this row.
 
 ## Technical details
 
@@ -53,13 +56,10 @@ When filters are selected in the exploration page, we make a first Guppy query t
 
 - Query:
 
-```
-query ($nestedAggFields: JSON, $filter: JSON) {
+```gql
+query($nestedAggFields: JSON, $filter: JSON) {
   _aggregation {
-    follow_up (
-      nestedAggFields: $nestedAggFields,
-      filter: $filter
-    ) {
+    follow_up(nestedAggFields: $nestedAggFields, filter: $filter) {
       visit_number {
         asTextHistogram {
           key
@@ -82,15 +82,10 @@ Note that if `mainFieldIsNumeric` is `False`, `asTextHistogram` becomes `histogr
 
 - Variables:
 
-```
+```jsonc
 {
   "nestedAggFields": {
-    "termsFields": [
-      "age_at_visit",
-      "abcv",
-      "thrpyv",
-      "trzv"
-    ]
+    "termsFields": ["age_at_visit", "abcv", "thrpyv", "trzv"]
   },
   "filter": {
     // list of selected subject IDs
@@ -104,8 +99,8 @@ Note that if `mainFieldIsNumeric` is `False`, `asTextHistogram` becomes `histogr
         "=": {
           "subject_id": "def456"
         }
-      },
-      ...
+      }
+      // ...
     ]
   }
 }

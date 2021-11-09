@@ -109,17 +109,18 @@ function FilterSection({
     // used for rerendering child components when reset button is clicked
     resetClickCounter: 0,
   });
+
+  /** @type {React.MutableRefObject<HTMLInputElement>} */
+  const inputElem = useRef();
   useEffect(() => {
     setState((prevState) => ({
       ...prevState,
       optionsVisibleStatus: getOptionsVisibleStatus(
-        prevState.isShowingMoreOptions
+        prevState.isShowingMoreOptions,
+        inputElem.current?.value
       ),
     }));
   }, [options]);
-
-  /** @type {React.MutableRefObject<HTMLInputElement>} */
-  const inputElem = useRef();
 
   function clearSearchInput() {
     inputElem.current.value = '';
@@ -566,13 +567,16 @@ function FilterSection({
       {isTextFilter && renderSearchInput()}
       {isArrayField && renderCombineOptionButton()}
       {isSearchFilter && renderSearchFilter()}
-      {state.isExpanded && (
-        <div className='g3-filter-section__options'>
-          {(isTextFilter || isSearchFilter) && renderTextFilter(filterStatus)}
-          {isRangeFilter && renderRangeFilter(filterStatus)}
-          {isTextFilter && state.isSearchInputEmpty && renderShowMoreButton()}
-        </div>
-      )}
+      {state.isExpanded &&
+        (options.length > 0 ? (
+          <div className='g3-filter-section__options'>
+            {(isTextFilter || isSearchFilter) && renderTextFilter(filterStatus)}
+            {isRangeFilter && renderRangeFilter(filterStatus)}
+            {isTextFilter && state.isSearchInputEmpty && renderShowMoreButton()}
+          </div>
+        ) : (
+          <div className='g3-filter-section__no-option'>No data</div>
+        ))}
     </div>
   );
 }

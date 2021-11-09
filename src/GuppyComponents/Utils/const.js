@@ -14,3 +14,5 @@ export const FILE_DELIMITERS = {
   tsv: '\t',
   csv: ',',
 };
+
+export { guppyUrl as GUPPY_URL } from '../../localconf';

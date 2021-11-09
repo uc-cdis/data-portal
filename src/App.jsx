@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -13,20 +13,17 @@ import { fetchAccess } from './UserProfile/ReduxUserProfile';
 import { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename,
-  dev,
   enableResourceBrowser,
-  gaDebug,
   // workspaceUrl,
   // workspaceErrorUrl,
 } from './localconf';
-import { gaTracking } from './params';
-import GA, { RouteTracker } from './components/GoogleAnalytics';
+import { fetchVersionInfo } from './actions';
 import isEnabled from './helpers/featureFlags';
 
 // lazy-loaded pages
 const DataDictionary = React.lazy(() => import('./DataDictionary'));
+const Explorer = React.lazy(() => import('./GuppyDataExplorer'));
 const GraphQLQuery = React.lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
-const GuppyDataExplorer = React.lazy(() => import('./GuppyDataExplorer'));
 const IndexPage = React.lazy(() => import('./Index/page'));
 const ProjectSubmission = React.lazy(() =>
   import('./Submission/ReduxProjectSubmission')
@@ -47,10 +44,12 @@ const UserProfile = React.lazy(() => import('./UserProfile/ReduxUserProfile'));
 // const Workspace = React.lazy(() => import('./Workspace'));
 
 function App({ store }) {
+  useEffect(() => {
+    store.dispatch(fetchVersionInfo());
+  }, []);
   return (
     <Provider store={store}>
       <BrowserRouter basename={basename}>
-        {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
         {isEnabled('noIndex') && (
           <Helmet>
             <meta name='robots' content='noindex,nofollow' />
@@ -147,7 +146,7 @@ function App({ store }) {
               />
               <Route path='/explorer'>
                 <ProtectedContent>
-                  <GuppyDataExplorer />
+                  <Explorer />
                 </ProtectedContent>
               </Route>
               {enableResourceBrowser && (
@@ -180,11 +179,6 @@ function App({ store }) {
                   </ProtectedContent>
                 )}
               />
-              <Route path='/files'>
-                <ProtectedContent>
-                  <GuppyDataExplorer />
-                </ProtectedContent>
-              </Route>
               <Route path='/workspace'>
                 <ProtectedContent>
                   <Workspace />

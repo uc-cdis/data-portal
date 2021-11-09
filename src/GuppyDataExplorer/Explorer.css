@@ -1,0 +1,50 @@
+.explorer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.explorer__error {
+  text-align: center;
+}
+
+.explorer__main {
+  padding: 1rem;
+}
+
+.explorer__sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.explorer__filter-set {
+  border-bottom: 1px solid var(--g3-color__silver);
+  padding: 1rem 1rem 2rem;
+}
+
+.explorer__filter {
+  padding: 1rem 1rem 2rem;
+}
+
+.explorer__version-info-area {
+  margin: 0 auto;
+  padding: 3rem 0 2rem;
+  width: fit-content;
+}
+
+.explorer__version-info > span {
+  font-style: italic;
+}
+
+/* Medium screen and less */
+@media screen and (max-width: 1090px) {
+  .explorer__sidebar {
+    overflow: inherit;
+  }
+
+  .explorer__filter,
+  .explorer__filter-set,
+  .explorer__version-info-area {
+    display: none;
+  }
+}

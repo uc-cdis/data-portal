@@ -66,7 +66,7 @@
   background-image: url(../../img/logo.png);
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 100%;
+  background-size: contain;
 }
 
 .explorer-survival-analysis__risk-table {

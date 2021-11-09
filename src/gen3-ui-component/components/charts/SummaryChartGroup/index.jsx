@@ -37,6 +37,7 @@ function SummaryChartGroup({
               maximumDisplayItem={maximumDisplayItem}
               chartIsEmpty={item.chartIsEmpty}
               chartEmptyMessage={chartEmptyMessage}
+              showPercentage={item.showPercentage}
             />
           ) : (
             <SummaryHorizontalBarChart
@@ -51,6 +52,7 @@ function SummaryChartGroup({
               maximumDisplayItem={maximumDisplayItem}
               chartIsEmpty={item.chartIsEmpty}
               chartEmptyMessage={chartEmptyMessage}
+              showPercentage={item.showPercentage}
             />
           )}
         </div>
