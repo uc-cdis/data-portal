@@ -1,6 +1,6 @@
 {
   "name": "@pcdc/windmill",
-  "version": "0.1.12",
+  "version": "1.0.0",
   "description": "PCDC Data Portal",
   "dependencies": {
     "@babel/core": "^7.16.0",
@@ -19,7 +19,7 @@
     "babel-loader": "^8.2.3",
     "babel-plugin-relay": "^11.0.2",
     "clipboard-plus": "^1.0.0",
-    "compression-webpack-plugin": "^8.0.1",
+    "compression-webpack-plugin": "^9.0.0",
     "core-js": "^3.19.1",
     "css-loader": "^6.5.1",
     "d3-array": "^3.1.1",
@@ -36,7 +36,7 @@
     "file-saver": "^2.0.5",
     "flat": "^5.0.2",
     "fuse.js": "^3.3.0",
-    "graphiql": "^1.4.7",
+    "graphiql": "^1.5.0",
     "graphql": "^14.7.0",
     "html-webpack-plugin": "^5.5.0",
     "ignore-loader": "^0.1.2",
@@ -65,7 +65,7 @@
     "react-relay": "^11.0.2",
     "react-responsive": "^8.2.0",
     "react-router-dom": "^5.3.0",
-    "react-select": "^5.2.0",
+    "react-select": "^5.2.1",
     "react-select-async-paginate": "^0.6.0",
     "react-svg-loader": "^3.0.3",
     "react-table": "^6.9.2",
@@ -80,7 +80,7 @@
     "style-loader": "^3.3.1",
     "url-loader": "^4.1.1",
     "viz.js": "2.0.0",
-    "webpack": "^5.61.0",
+    "webpack": "^5.62.1",
     "webpack-cli": "^4.9.1",
     "webpack-node-externals": "^3.0.0"
   },
