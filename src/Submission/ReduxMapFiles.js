@@ -4,10 +4,10 @@ import { fetchWithCreds } from '../actions';
 import { STARTING_DID, FETCH_LIMIT } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
 
-const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
+const fetchUnmappedFiles = (user, total, start) => (dispatch) => {
   const unmappedFilesCheck = useIndexdAuthz ? 'authz=null' : 'acl=null';
   return fetchWithCreds({
-    path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${user}&start=${start}&limit=${fetchLimit}`,
+    path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${user}&start=${start}&limit=${FETCH_LIMIT}`,
     method: 'GET',
   })
     .then(
@@ -15,13 +15,12 @@ const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
         switch (status) {
           case 200:
             total = total.concat(data.records ?? []);
-            if (data.records?.length === fetchLimit) {
+            if (data.records?.length === FETCH_LIMIT) {
               return dispatch(
                 fetchUnmappedFiles(
                   user,
                   total,
-                  data.records[fetchLimit - 1].did,
-                  fetchLimit
+                  data.records[FETCH_LIMIT - 1].did
                 )
               );
             }
@@ -39,9 +38,7 @@ const fetchUnmappedFiles = (user, total, start, fetchLimit) => (dispatch) => {
       (err) => ({ type: 'FETCH_ERROR', error: err })
     )
     .then((msg) => {
-      if (msg) {
-        dispatch(msg);
-      }
+      if (msg) dispatch(msg);
     });
 };
 
@@ -58,7 +55,7 @@ const ReduxMapFiles = (() => {
 
   const mapDispatchToProps = (dispatch) => ({
     fetchUnmappedFiles: (user) =>
-      dispatch(fetchUnmappedFiles(user, [], STARTING_DID, FETCH_LIMIT)),
+      dispatch(fetchUnmappedFiles(user, [], STARTING_DID)),
     mapSelectedFiles: (files) => dispatch(mapSelectedFiles(files)),
   });
 
