@@ -7,7 +7,7 @@ function notIl(date) {
     type: 'fill',
     filter: ['all'],
     layout: { visibility: 'visible' },
-    beforeId: 'county-outline',
+    beforeId: 'waterway-label',
     paint: {
       'fill-color': [
         'interpolate',
