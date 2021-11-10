@@ -4,15 +4,13 @@ import { headers, graphqlPath } from './localconf';
 const store = new Store(new RecordSource());
 
 /** @type {import('relay-runtime').FetchFunction} */
-const fetchQuery = (operation, variables) => {
-  const request = {
+const fetchQuery = (operation, variables) =>
+  fetch(graphqlPath, {
     credentials: 'same-origin',
-    headers: { ...headers },
+    headers,
     method: 'POST',
     body: JSON.stringify({ query: operation.text, variables }),
-  };
-
-  return fetch(graphqlPath, request)
+  })
     .then((response) => response.text())
     .then((responseBody) => {
       try {
@@ -21,7 +19,6 @@ const fetchQuery = (operation, variables) => {
         return responseBody;
       }
     });
-};
 
 const network = Network.create(fetchQuery);
 
