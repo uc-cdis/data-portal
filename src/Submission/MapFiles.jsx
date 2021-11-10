@@ -172,7 +172,7 @@ class MapFiles extends React.Component {
       }
     });
     const sortedDates = Object.keys(groupedFiles).sort(
-      (a, b) => dayjs(b, 'MM/DD/YY') - dayjs(a, 'MM/DD/YY')
+      (a, b) => dayjs(b, 'MM/DD/YY').valueOf() - dayjs(a, 'MM/DD/YY').valueOf()
     );
     this.setState({ sortedDates });
     return groupedFiles;
