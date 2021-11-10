@@ -91,7 +91,7 @@ export const fetchCreds = (opts) => {
 
   pendingRequest = fetch(path, {
     credentials: 'include',
-    headers: { ...headers },
+    headers,
     method,
   })
     .then((response) => {
@@ -262,7 +262,7 @@ export const fetchIsUserLoggedInNoRefresh = (opts) => {
 
   let requestPromise = fetch(path, {
     credentials: 'include',
-    headers: { ...headers },
+    headers,
     method,
   }).then(
     (response) => {
@@ -327,7 +327,7 @@ export const fetchSchema = () => (dispatch) =>
 export const fetchGuppySchema = () => (dispatch) =>
   fetch(guppyGraphQLUrl, {
     credentials: 'include',
-    headers: { ...headers },
+    headers,
     method: 'POST',
     body: JSON.stringify({
       query: getIntrospectionQuery(),
