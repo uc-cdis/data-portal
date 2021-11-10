@@ -4,35 +4,32 @@ import { fetchWithCreds } from '../actions';
 import { FETCH_LIMIT, STARTING_DID } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
 
-const fetchUnmappedFileStats = (username, totalSize, start, fetchLimit) => (
-  dispatch
-) => {
+const fetchUnmappedFileStats = (username, total, start) => (dispatch) => {
   const unmappedFilesCheck = useIndexdAuthz ? 'authz=null' : 'acl=null';
   return fetchWithCreds({
-    path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${username}&start=${start}&limit=${fetchLimit}`,
+    path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${username}&start=${start}&limit=${FETCH_LIMIT}`,
     method: 'GET',
   })
     .then(
       ({ status, data }) => {
         switch (status) {
           case 200:
-            totalSize = totalSize.concat(data.records);
-            if (data.records?.length === fetchLimit) {
+            total = total.concat(data.records ?? []);
+            if (data.records?.length === FETCH_LIMIT) {
               return dispatch(
                 fetchUnmappedFileStats(
                   username,
-                  totalSize,
-                  data.records[fetchLimit - 1].did,
-                  fetchLimit
+                  total,
+                  data.records[FETCH_LIMIT - 1].did
                 )
               );
             }
             return {
               type: 'RECEIVE_UNMAPPED_FILE_STATISTICS',
               data: {
-                count: totalSize.length,
-                totalSize: totalSize.reduce(
-                  (total, current) => total + current.size,
+                count: total.length,
+                totalSize: total.reduce(
+                  (size, current) => size + current.size,
                   0
                 ),
               },
@@ -48,9 +45,7 @@ const fetchUnmappedFileStats = (username, totalSize, start, fetchLimit) => (
       (err) => ({ type: 'FETCH_ERROR', error: err })
     )
     .then((msg) => {
-      if (msg) {
-        dispatch(msg);
-      }
+      if (msg) dispatch(msg);
     });
 };
 
@@ -63,7 +58,7 @@ const ReduxSubmissionHeader = (() => {
 
   const mapDispatchToProps = (dispatch) => ({
     fetchUnmappedFileStats: (username) =>
-      dispatch(fetchUnmappedFileStats(username, [], STARTING_DID, FETCH_LIMIT)),
+      dispatch(fetchUnmappedFileStats(username, [], STARTING_DID)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(SubmissionHeader);
