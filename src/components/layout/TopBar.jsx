@@ -143,7 +143,7 @@ class TopBar extends Component {
                     className='top-bar__link g3-ring-on-focus'
                     to={
                       (() => {
-                        if (location.pathname === "/discovery") {
+                        if (location.pathname === '/discovery') {
                           // describes the state, filters of the discovery page to reload after redirect
                           const serializableState = {
                             ...this.props.discovery,
@@ -156,11 +156,10 @@ class TopBar extends Component {
                           const queryStr = `?state=${encodeURIComponent(JSON.stringify(serializableState))}`;
                           return {
                             pathname: '/login',
-                            from: `/discovery${queryStr}`
-                          }
-                        } else {
-                          return "/login"
+                            from: `/discovery${queryStr}`,
+                          };
                         }
+                        return '/login';
                       })()
                     }
                   >
@@ -188,6 +187,8 @@ TopBar.propTypes = {
   activeTab: PropTypes.string,
   onActiveTab: PropTypes.func,
   onLogoutClick: PropTypes.func.isRequired,
+  location: PropTypes.shape({ pathname: PropTypes.string }).isRequired,
+  discovery: PropTypes.shape({ selectedResources: PropTypes.array }).isRequired,
 };
 
 TopBar.defaultProps = {
