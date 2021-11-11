@@ -1,7 +1,7 @@
 # To run: docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal
 # To check running container: docker exec -it dataportal /bin/bash
 
-FROM quay.io/cdis/python:pybase3-2.0.1
+FROM quay.io/cdis/ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV REACT_APP_PROJECT_ID=search
@@ -12,6 +12,8 @@ ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    libssl1.1 \
+    libgnutls30 \
     ca-certificates \
     curl \
     git \
