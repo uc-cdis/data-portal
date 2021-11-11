@@ -69,6 +69,7 @@ const DiscoveryWithMDSBackend: React.FC<{
       loadStudiesFunction = loadStudiesFromMDS;
     }
     loadStudiesFunction().then((rawStudies) => {
+      let studiesToSet;
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const { authzField, dataAvailabilityField } = props.config.minimalFieldMapping;
@@ -92,16 +93,17 @@ const DiscoveryWithMDSBackend: React.FC<{
             __accessible: accessible,
           };
         });
-        setStudies(studiesWithAccessibleField);
+        studiesToSet = studiesWithAccessibleField;
       } else {
-        setStudies(rawStudies);
+        studiesToSet = rawStudies;
       }
+      setStudies(studiesToSet);
 
       // resume action in progress if redirected from login
       const urlParams = decodeURIComponent(window.location.search);
       if (urlParams.startsWith('?state=')) {
         const redirectState = JSON.parse(urlParams.split('?state=')[1]);
-        redirectState.selectedResources = studies.filter(
+        redirectState.selectedResources = studiesToSet.filter(
           (study) => (redirectState.selectedResourceIDs).includes(study.study_id),
         );
         delete redirectState.selectedResourceIDs;
