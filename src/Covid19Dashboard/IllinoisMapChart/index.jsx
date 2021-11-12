@@ -27,10 +27,17 @@ import Spinner from '../../components/Spinner';
 // pull data from qa for everything that is not prod
 const occEnv = covid19DashboardConfig.dataUrl === 'https://opendata.datacommons.io/' ? 'prod' : 'qa';
 
-function filterCountyGeoJson(selectedFips) {
+function filterIllinoisCountiesGeoJson() {
   return {
     ...countyData,
-    features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
+    features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
+  };
+}
+
+function filterModeledCountiesGeoJson(illinoisCountiesGeoJson, selectedFips) {
+  return {
+    ...illinoisCountiesGeoJson,
+    features: illinoisCountiesGeoJson.features.filter((f) => selectedFips.includes(f.properties.FIPS)),
   };
 }
 
@@ -107,7 +114,8 @@ class IllinoisMapChart extends React.Component {
       mapColors: null,
     };
     this.mapData = {
-      modeledCountyGeoJson: null,
+      illinoisCountiesGeoJson: null,
+      modeledCountiesGeoJson: null,
       colors: {},
       colorsAsList: null,
     };
@@ -137,7 +145,11 @@ class IllinoisMapChart extends React.Component {
         lastUpdated: this.props.jsonByTime.last_updated,
       });
 
-      this.mapData.modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
+      this.mapData.illinoisCountiesGeoJson = filterIllinoisCountiesGeoJson();
+      this.mapData.modeledCountiesGeoJson = filterModeledCountiesGeoJson(
+        this.mapData.illinoisCountiesGeoJson,
+        this.props.modeledFipsList,
+      );
 
       // Finds second highest value in data set
       // Second highest value is used to better balance distribution
@@ -646,14 +658,27 @@ class IllinoisMapChart extends React.Component {
           <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
           <PopulationIL visibility={this.state.overlay_layers.il_population.visible} /> */}
           {/* Outline a set of counties from IL */}
-          <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountyGeoJson}>
+          {this.state.activeLayer === 'C_time_data' &&
+            <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountiesGeoJson}>
+              <ReactMapGL.Layer
+                id='county-highlight'
+                type='line'
+                beforeId='waterway-label'
+                paint={{
+                  'line-color': '#421C52',
+                  'line-width': 3,
+                }}
+              />
+            </ReactMapGL.Source>
+          }
+        <ReactMapGL.Source type='geojson' data={this.mapData.illinoisCountiesGeoJson}>
             <ReactMapGL.Layer
               id='county-outline'
               type='line'
               beforeId='waterway-label'
               paint={{
                 'line-color': '#421C52',
-                'line-width': 1.5,
+                'line-width': 1,
               }}
             />
           </ReactMapGL.Source>
