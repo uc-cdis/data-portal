@@ -23,8 +23,8 @@ if (process.env.DATA_UPLOAD_BUCKET) {
 if (configFile.connectSrcCSPWhitelist && configFile.connectSrcCSPWhitelist.length > 0) {
   connectSrcURLs.push(...configFile.connectSrcCSPWhitelist);
 }
-if (configFile.featureFlags.discoveryUseAggMDS) {
-  connectSrcURLs.push("https://dataguids.org");
+if (configFile.featureFlags && configFile.featureFlags.discoveryUseAggMDS) {
+  connectSrcURLs.push('https://dataguids.org');
 }
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
