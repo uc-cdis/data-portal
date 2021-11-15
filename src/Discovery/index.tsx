@@ -117,6 +117,7 @@ const DiscoveryWithMDSBackend: React.FC<{
       console.error('Error encountered while loading studies: ', err);
     });
 
+    // indicate discovery tag is active even if we didn't click a button to get here
     props.dispatch({type: "ACTIVE_CHANGED", data: "/discovery"})
   }, []);
 
