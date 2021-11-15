@@ -37,7 +37,7 @@
     "flat": "^5.0.2",
     "fuse.js": "^3.3.0",
     "graphiql": "^1.5.0",
-    "graphql": "^14.7.0",
+    "graphql": "^15.7.2",
     "html-webpack-plugin": "^5.5.0",
     "ignore-loader": "^0.1.2",
     "isomorphic-fetch": "^3.0.0",
