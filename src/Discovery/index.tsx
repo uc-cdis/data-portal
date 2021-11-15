@@ -116,6 +116,8 @@ const DiscoveryWithMDSBackend: React.FC<{
       // eslint-disable-next-line no-console
       console.error('Error encountered while loading studies: ', err);
     });
+
+    props.dispatch({type: "ACTIVE_CHANGED", data: "/discovery"})
   }, []);
 
   return (
