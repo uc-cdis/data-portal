@@ -20,7 +20,7 @@ class TopBar extends Component {
   isActive = (id) => this.props.activeTab === id;
 
   render() {
-    const { location } = this.props;
+    const { location: { pathname } } = this.props;
 
     return (
       <div className='top-bar'>
@@ -143,7 +143,8 @@ class TopBar extends Component {
                     className='top-bar__link g3-ring-on-focus'
                     to={
                       (() => {
-                        if (location.pathname === '/discovery') {
+                        console.log("pathname", pathname)
+                        if (pathname === '/discovery') {
                           // describes the state, filters of the discovery page to reload after redirect
                           const serializableState = {
                             ...this.props.discovery,
