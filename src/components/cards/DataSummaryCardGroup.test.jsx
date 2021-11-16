@@ -1,54 +1,59 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import DataSummaryCardGroup from './DataSummaryCardGroup';
 
-describe('<DataSummaryCardGroup />', () => {
-  const countItems = [
-    [
-      {
-        label: 'Project',
-        value: 9,
-      },
-      {
-        label: 'Study',
-        value: 11,
-      },
-    ],
+const countItems = [
+  [
     {
-      label: 'Subject',
-      value: 13463,
+      label: 'Project',
+      value: 9,
     },
     {
-      label: 'Sample',
-      value: 2354,
+      label: 'Study',
+      value: 11,
     },
-    {
-      label: 'Aliquots',
-      value: 374225,
-    },
-    {
-      label: 'Data File',
-      value: 574356,
-    },
-  ];
+  ],
+  {
+    label: 'Subject',
+    value: 13463,
+  },
+  {
+    label: 'Sample',
+    value: 2354,
+  },
+  {
+    label: 'Aliquots',
+    value: 374225,
+  },
+  {
+    label: 'Data File',
+    value: 574356,
+  },
+];
 
-  const cards = mount(
-    <DataSummaryCardGroup summaryItems={countItems} connected />
-  ).find(DataSummaryCardGroup);
+function renderComponent() {
+  return render(<DataSummaryCardGroup summaryItems={countItems} connected />);
+}
 
-  it('renders', () => {
-    expect(cards.length).toBe(1);
-  });
+test('renders', () => {
+  const { container } = renderComponent();
+  expect(container.firstElementChild).toHaveClass('data-summary-card-group');
+});
 
-  it('should display all cards correctly', () => {
-    expect(cards.find('.data-summary-card-group__connected-card').length).toBe(
-      countItems.length
-    );
-  });
+test('displays all cards correctly', () => {
+  const { container } = renderComponent();
+  expect(
+    container.firstElementChild.getElementsByClassName(
+      'data-summary-card-group__connected-card'
+    )
+  ).toHaveLength(countItems.length);
+});
 
-  it('should display all sub cards correctly', () => {
-    expect(cards.find('.data-summary-card-group__sub-card-item').length).toBe(
-      countItems[0].length
-    );
-  });
+test('displays all sub cards correctly', () => {
+  const { container } = renderComponent();
+  expect(
+    container.firstElementChild.firstElementChild.getElementsByClassName(
+      'data-summary-card-group__sub-card-item'
+    )
+  ).toHaveLength(countItems[0].length);
 });
