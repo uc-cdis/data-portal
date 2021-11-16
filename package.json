@@ -118,7 +118,7 @@
   "jest": {
     "verbose": true,
     "automock": false,
-    "setupFiles": [
+    "setupFilesAfterEnv": [
       "./src/setupJest.js"
     ],
     "moduleNameMapper": {
