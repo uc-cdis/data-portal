@@ -104,7 +104,7 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (urlParams.startsWith('?state=')) {
         const redirectState = JSON.parse(urlParams.split('?state=')[1]);
         redirectState.selectedResources = studiesToSet.filter(
-          (study) => (redirectState.selectedResourceIDs).includes(study.study_id),
+          (study) => redirectState.selectedResourceIDs.includes(study.study_id),
         );
         delete redirectState.selectedResourceIDs;
         props.dispatch({
@@ -118,7 +118,7 @@ const DiscoveryWithMDSBackend: React.FC<{
     });
 
     // indicate discovery tag is active even if we didn't click a button to get here
-    props.dispatch({type: "ACTIVE_CHANGED", data: "/discovery"})
+    props.dispatch({type: "ACTIVE_CHANGED", data: "/discovery"});
   }, []);
 
   return (
