@@ -1,139 +1,219 @@
-import React from 'react';
-import { mount } from 'enzyme';
-import RangeFilter from '.';
+import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import { fireEvent, render } from '@testing-library/react';
+import RangeFilter from './index';
 
-describe('RangeFilter', () => {
-  const onDrag = jest.fn();
-  const min = 0;
-  const max = 100;
-  let component;
-  beforeEach(() => {
-    component = mount(
-      <RangeFilter min={min} max={max} onAfterDrag={onDrag} label='' />
-    );
-  });
+const min = 0;
+const max = 100;
 
-  it('renders', () => {
-    expect(component.find(RangeFilter).length).toBe(1);
-  });
+function RangeFilterWrapper({ values = undefined, ...props }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (ref.current !== null && values !== undefined) {
+      ref.current.onSliderChange(values);
+    }
+  }, [values]);
 
-  it('sets bounds on slider change', () => {
-    expect(component.instance().state.lowerBound).not.toBe(30);
-    expect(component.instance().state.upperBound).not.toBe(55);
-    component.instance().onSliderChange([30, 55]);
-    expect(component.instance().state.lowerBound).toBe(30);
-    expect(component.instance().state.upperBound).toBe(55);
-  });
+  return (
+    <RangeFilter
+      ref={ref}
+      min={min}
+      max={max}
+      onAfterDrag={() => {}}
+      {...props}
+    />
+  );
+}
+RangeFilterWrapper.propTypes = {
+  values: PropTypes.arrayOf(PropTypes.number),
+};
 
-  it('calculates fixed length after decimal point correctly', () => {
-    expect(component.instance().getNumberToFixed(1.234567)).toBe(1.23);
-  });
+test('renders', () => {
+  const { container } = render(
+    <RangeFilter min={min} max={max} onAfterDrag={() => {}} />
+  );
+  expect(container.firstElementChild).toHaveClass('g3-range-filter');
+});
 
-  it('updates inputs on slider change', () => {
-    component.instance().onSliderChange([30, 55]);
-    expect(component.instance().state.lowerBoundInputValue).toBe(30);
-    expect(component.instance().state.upperBoundInputValue).toBe(55);
-  });
+test('sets bounds on slider change', () => {
+  const { container, rerender } = render(<RangeFilterWrapper />);
+  const lowerBoundInputElement = container.querySelector('#-lower-bound-input');
+  const upperBoundInputElement = container.querySelector('#-upper-bound-input');
+  expect(lowerBoundInputElement).not.toHaveValue(30);
+  expect(upperBoundInputElement).not.toHaveValue(55);
 
-  it('updates sliders on input submit', () => {
-    component.instance().handleLowerBoundInputChange(30);
-    component.instance().handleInputSubmit();
-    expect(component.instance().state.lowerBound).toBe(30);
-  });
+  rerender(<RangeFilterWrapper values={[30, 55]} />);
+  expect(lowerBoundInputElement).toHaveAttribute('max', (55).toString());
+  expect(upperBoundInputElement).toHaveAttribute('min', (30).toString());
+});
 
-  it('should clamp lowerBound to between [min, upperBound]', () => {
-    // lowerBound should be clamped to min
-    component.instance().handleLowerBoundInputChange(min - 1);
-    component.instance().handleInputSubmit();
-    expect(component.instance().state.lowerBound).toBe(min);
-    expect(component.instance().state.lowerBoundInputValue).toBe(min);
+test('calculates fixed length after decimal point correctly', () => {
+  const { container } = render(
+    <RangeFilter min={min + 0.001} max={max + 0.001} onAfterDrag={() => {}} />
+  );
 
-    // lowerBound should be clamped to upperBound
-    const upperBound = 30;
-    component.instance().setState({ upperBound });
-    component.instance().handleLowerBoundInputChange(upperBound + 1);
-    component.instance().handleInputSubmit();
-    expect(component.instance().state.lowerBound).toBe(upperBound);
-    expect(component.instance().state.lowerBoundInputValue).toBe(upperBound);
-  });
+  const minHandleElement = container.querySelector('.rc-slider-handle-1');
+  expect(minHandleElement).toHaveAttribute('aria-valuenow', min.toString());
 
-  it('should clamp upperBound to between [lowerBound, max]', () => {
-    // upperBound should be clamped to max
-    component.instance().handleUpperBoundInputChange(max + 1);
-    component.instance().handleInputSubmit();
-    expect(component.instance().state.upperBound).toBe(max);
-    expect(component.instance().state.upperBoundInputValue).toBe(max);
+  const maxHandleElement = container.querySelector('.rc-slider-handle-2');
+  expect(maxHandleElement).toHaveAttribute('aria-valuenow', max.toString());
+});
 
-    // upperBound should be clamped to lowerBound
-    const lowerBound = 30;
-    component.instance().setState({ lowerBound });
-    component.instance().handleUpperBoundInputChange(lowerBound - 1);
-    component.instance().handleInputSubmit();
-    expect(component.instance().state.upperBound).toBe(lowerBound);
-    expect(component.instance().state.upperBoundInputValue).toBe(lowerBound);
-  });
+test('updates inputs on slider change', () => {
+  const { container, rerender } = render(<RangeFilterWrapper />);
+  const lowerBoundInputElement = container.querySelector('#-lower-bound-input');
+  const upperBoundInputElement = container.querySelector('#-upper-bound-input');
 
-  it('if count === hideValue, lower slider should not be allowed to increase and upper slider should not be allowed to decrease', () => {
-    const lb = 30;
-    const ub = 60;
-    component = mount(
-      <RangeFilter
-        count={-1}
-        hideCount={-1}
-        lowerBound={lb}
-        upperBound={ub}
-        min={min}
-        max={max}
-        onAfterDrag={onDrag}
-        label=''
-      />
-    );
-    // increasing lb should have no effect
-    component.instance().onSliderChange([lb + 1, ub]);
-    expect(component.instance().state.lowerBound).toBe(lb);
-    // decreasing ub should have no effect
-    component.instance().onSliderChange([lb, ub - 1]);
-    expect(component.instance().state.upperBound).toBe(ub);
+  rerender(<RangeFilterWrapper values={[30, 55]} />);
+  expect(lowerBoundInputElement).toHaveValue(30);
+  expect(upperBoundInputElement).toHaveValue(55);
+});
 
-    // lb should still decrease like normal
-    component.instance().onSliderChange([lb - 1, ub]);
-    expect(component.instance().state.lowerBound).toBe(lb - 1);
-    // ub should still increase like normal
-    component.instance().onSliderChange([lb, ub + 1]);
-    expect(component.instance().state.upperBound).toBe(ub + 1);
-  });
+test('updates sliders on input submit', () => {
+  const value = 30;
+  const { container } = render(<RangeFilterWrapper />);
+  const lowerBoundInputElement = container.querySelector('#-lower-bound-input');
+  const minHandleElement = container.querySelector('.rc-slider-handle-1');
 
-  it('if count === hideValue, lower input should not be allowed to increase and upper input should not be allowed to decrease', () => {
-    const lb = 30;
-    const ub = 60;
-    component = mount(
-      <RangeFilter
-        count={-1}
-        hideCount={-1}
-        lowerBound={lb}
-        upperBound={ub}
-        min={min}
-        max={max}
-        onAfterDrag={onDrag}
-        label=''
-      />
-    );
-    // increasing lb should have no effect
-    component.instance().handleLowerBoundInputChange(lb + 1);
-    component.instance().handleInputSubmit();
-    expect(component.instance().state.lowerBound).toBe(lb);
-    // decreasing ub should have no effect
-    component.instance().handleUpperBoundInputChange(ub - 1);
-    component.instance().handleInputSubmit();
-    expect(component.instance().state.upperBound).toBe(ub);
+  fireEvent.change(lowerBoundInputElement, { target: { value } }); // invokes handleLowerBoundInputChange(30)
+  fireEvent.blur(lowerBoundInputElement); // invokes handleInputSubmit()
+  expect(minHandleElement).toHaveAttribute('aria-valuenow', value.toString());
+});
 
-    // lb should still decrease like normal
-    component.instance().handleLowerBoundInputChange(lb - 1);
-    component.instance().handleInputSubmit();
-    expect(component.instance().state.lowerBound).toBe(lb - 1);
-    // ub should still increase like normal
-    component.instance().handleUpperBoundInputChange(ub + 1);
-    component.instance().handleInputSubmit();
-    expect(component.instance().state.upperBound).toBe(ub + 1);
-  });
+test('clamps lowerBound to between [min, upperBound]', () => {
+  const { container, rerender } = render(<RangeFilterWrapper />);
+  const lowerBoundInputElement = container.querySelector('#-lower-bound-input');
+  const minHandleElement = container.querySelector('.rc-slider-handle-1');
+
+  // lowerBound should be clamped to min
+  fireEvent.change(lowerBoundInputElement, { target: { value: min - 1 } });
+  fireEvent.blur(lowerBoundInputElement);
+  expect(lowerBoundInputElement).toHaveValue(min);
+  expect(minHandleElement).toHaveAttribute('aria-valuenow', min.toString());
+
+  // lowerBound should be clamped to upperBound
+  const ub = 30;
+  rerender(<RangeFilterWrapper values={[min, ub]} />);
+  fireEvent.change(lowerBoundInputElement, { target: { value: ub + 1 } });
+  fireEvent.blur(lowerBoundInputElement);
+  expect(lowerBoundInputElement).toHaveValue(ub);
+  expect(minHandleElement).toHaveAttribute('aria-valuenow', ub.toString());
+});
+
+test('clamps upperBound to between [lowerBound, max]', () => {
+  const { container, rerender } = render(<RangeFilterWrapper />);
+  const upperBoundInputElement = container.querySelector('#-upper-bound-input');
+  const maxHandleElement = container.querySelector('.rc-slider-handle-2');
+
+  // upperBound should be clamped to max
+  fireEvent.change(upperBoundInputElement, { target: { value: max + 1 } });
+  fireEvent.blur(upperBoundInputElement);
+  expect(upperBoundInputElement).toHaveValue(max);
+  expect(maxHandleElement).toHaveAttribute('aria-valuenow', max.toString());
+
+  // upperBound should be clamped to lowerBound
+  const lb = 30;
+  rerender(<RangeFilterWrapper values={[lb, max]} />);
+  fireEvent.change(upperBoundInputElement, { target: { value: lb - 1 } });
+  fireEvent.blur(upperBoundInputElement);
+  expect(upperBoundInputElement).toHaveValue(lb);
+  expect(maxHandleElement).toHaveAttribute('aria-valuenow', lb.toString());
+});
+
+test('if count === hideValue, lower slider should not be allowed to increase and upper slider should not be allowed to decrease', () => {
+  const lb = 30;
+  const ub = 60;
+  const { container, rerender } = render(
+    <RangeFilterWrapper count={-1} lowerBound={lb} upperBound={ub} />
+  );
+  const minHandleElement = container.querySelector('.rc-slider-handle-1');
+  const maxHandleElement = container.querySelector('.rc-slider-handle-2');
+
+  // increasing lb should have no effect
+  rerender(
+    <RangeFilterWrapper
+      count={-1}
+      lowerBound={lb}
+      upperBound={ub}
+      values={[lb + 1, ub]}
+    />
+  );
+  expect(minHandleElement).toHaveAttribute('aria-valuenow', lb.toString());
+
+  // decreasing ub should have no effect
+  rerender(
+    <RangeFilterWrapper
+      count={-1}
+      lowerBound={lb}
+      upperBound={ub}
+      values={[lb, ub - 1]}
+    />
+  );
+  expect(maxHandleElement).toHaveAttribute('aria-valuenow', ub.toString());
+
+  // lb should still decrease like normal
+  rerender(
+    <RangeFilterWrapper
+      count={-1}
+      lowerBound={lb}
+      upperBound={ub}
+      values={[lb - 1, ub]}
+    />
+  );
+  expect(minHandleElement).toHaveAttribute(
+    'aria-valuenow',
+    (lb - 1).toString()
+  );
+
+  // ub should still increase like normal
+  rerender(
+    <RangeFilterWrapper
+      count={-1}
+      lowerBound={lb}
+      upperBound={ub}
+      values={[lb, ub + 1]}
+    />
+  );
+  expect(maxHandleElement).toHaveAttribute(
+    'aria-valuenow',
+    (ub + 1).toString()
+  );
+});
+
+test('if count === hideValue, lower input should not be allowed to increase and upper input should not be allowed to decrease', () => {
+  const lb = 30;
+  const ub = 60;
+  const { container } = render(
+    <RangeFilterWrapper count={-1} lowerBound={lb} upperBound={ub} />
+  );
+  const lowerBoundInputElement = container.querySelector('#-lower-bound-input');
+  const upperBoundInputElement = container.querySelector('#-upper-bound-input');
+  const minHandleElement = container.querySelector('.rc-slider-handle-1');
+  const maxHandleElement = container.querySelector('.rc-slider-handle-2');
+
+  // increasing lb should have no effect
+  fireEvent.change(lowerBoundInputElement, { target: { value: lb + 1 } });
+  fireEvent.blur(lowerBoundInputElement);
+  expect(minHandleElement).toHaveAttribute('aria-valuenow', lb.toString());
+
+  // decreasing ub should have no effect
+  fireEvent.change(upperBoundInputElement, { target: { value: ub - 1 } });
+  fireEvent.blur(upperBoundInputElement);
+  expect(maxHandleElement).toHaveAttribute('aria-valuenow', ub.toString());
+
+  // lb should still decrease like normal
+  fireEvent.change(lowerBoundInputElement, { target: { value: lb - 1 } });
+  fireEvent.blur(lowerBoundInputElement);
+  expect(minHandleElement).toHaveAttribute(
+    'aria-valuenow',
+    (lb - 1).toString()
+  );
+
+  // ub should still increase like normal
+  fireEvent.change(upperBoundInputElement, { target: { value: ub + 1 } });
+  fireEvent.blur(upperBoundInputElement);
+  expect(maxHandleElement).toHaveAttribute(
+    'aria-valuenow',
+    (ub + 1).toString()
+  );
 });
