@@ -67,7 +67,7 @@ InputWithIcon.propTypes = {
   inputOptions: PropTypes.array,
   inputPlaceholderText: PropTypes.string,
   inputValue: PropTypes.string,
-  iconSvg: PropTypes.func.isRequired,
+  iconSvg: PropTypes.string.isRequired,
   shouldDisplayIcon: PropTypes.bool,
 };
 
