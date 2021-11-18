@@ -97,8 +97,6 @@
     "@testing-library/react": "^12.1.2",
     "@types/jest": "^25.2.3",
     "babel-jest": "^25.5.1",
-    "enzyme": "^3.2.0",
-    "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",
@@ -126,7 +124,7 @@
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
     },
     "transformIgnorePatterns": [
-      "<rootDir>/node_modules/(?!d3)"
+      "<rootDir>/node_modules/(?!d3|internmap)"
     ]
   },
   "scripts": {
