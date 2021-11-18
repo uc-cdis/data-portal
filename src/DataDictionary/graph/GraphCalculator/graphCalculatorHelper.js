@@ -18,8 +18,8 @@ import { getCategoryColor } from '../../NodeCategories/helper';
 
 /**
  * Get a set of types from an array of nodes
- * @param {Node[]} nodes
- * @returns {string[]} array of type names(duplicating names removed) of given nodes
+ * @param {{ type: string }[]} nodes
+ * @returns array of type names(duplicating names removed) of given nodes
  */
 export const getAllTypes = (nodes) => {
   const types = nodes.map((node) => node.type);
@@ -27,7 +27,6 @@ export const getAllTypes = (nodes) => {
   return uniqueTypes;
 };
 
-/* eslint-disable no-underscore-dangle */
 export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
   const { nodes, edges } = createNodesAndEdges(
     {
@@ -235,8 +234,6 @@ export const calculatePathRelatedToSecondHighlightingNode = (
  * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
  * @param {Edge[]} subgraphEdges - array of edges in subgraph
  * @param {Node[]} wholeGraphNodes - array of nodes in the origin whole graph
- * @returns {Object[]} array of ordered items, each refers to a descendent node,
- *                     its category, nodes and links between this item and previous item
  * Calculating process:
  *    step.1: find all critical nodes in subgraph
              (critical nodes here means all articulation nodes in subgraph and the starting node)
