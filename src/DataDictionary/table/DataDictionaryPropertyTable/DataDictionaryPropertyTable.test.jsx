@@ -1,24 +1,24 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import DataDictionaryPropertyTable from '.';
+import { render } from '@testing-library/react';
+import DataDictionaryPropertyTable from './index';
 
-describe('DataDictionaryPropertyTable', () => {
-  const properties = {
-    prop1: { description: 'test 1', type: 't1' },
-    prop2: { description: 'test 2', type: 't2' },
-  };
-  const requiredProps = ['prop1'];
-  const wrapper = mount(
+const properties = {
+  prop1: { description: 'test 1', type: 't1' },
+  prop2: { description: 'test 2', type: 't2' },
+};
+const requiredProps = ['prop1'];
+
+test('renders', () => {
+  const { container } = render(
     <DataDictionaryPropertyTable
       properties={properties}
       requiredProperties={requiredProps}
     />
   );
-
-  it('can render', () => {
-    expect(wrapper.find(DataDictionaryPropertyTable).length).toBe(1);
-    expect(
-      wrapper.find('.data-dictionary-property-table__required').length
-    ).toBe(requiredProps.length);
-  });
+  expect(container.firstElementChild).toHaveClass(
+    'data-dictionary-property-table'
+  );
+  expect(
+    container.querySelectorAll('.data-dictionary-property-table__required')
+  ).toHaveLength(requiredProps.length);
 });
