@@ -31,7 +31,6 @@
     "dayjs": "^1.10.7",
     "echarts": "^4.9.0",
     "echarts-for-react": "^2.0.16",
-    "file-loader": "^6.2.0",
     "file-saver": "^2.0.5",
     "flat": "^5.0.2",
     "fuse.js": "^3.3.0",
