@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Switch from '@material-ui/core/Switch';
 import Select from 'react-select';
 import { jsonToString, overrideSelectTheme } from '../utils';
 import SubmitNodeForm from './SubmitNodeForm';
@@ -109,15 +108,15 @@ class SubmitForm extends Component {
 
     return (
       <div>
-        <form>
-          <label style={{ display: 'block' }} htmlFor='form-submission-switch'>
-            Use Form Submission
-            <Switch
-              inputProps={{ role: 'switch', id: 'form-submission-switch' }}
+        <form className='submit-form__form'>
+          <label>
+            <input
+              type='checkbox'
+              checked={this.state.fill_form}
               onChange={this.onFormToggle}
             />
+            Use Form Submission
           </label>
-
           {this.state.fill_form && (
             <Select
               inputId='Node type'
