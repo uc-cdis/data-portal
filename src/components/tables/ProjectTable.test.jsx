@@ -1,24 +1,27 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { StaticRouter } from 'react-router-dom';
+import { render } from '@testing-library/react';
 
 import ProjectTable from './ProjectTable';
 
-test('Project tables renders', () => {
-  const projectList = [
-    {
-      name: 'frickjack',
-      counts: [5, 20, 30, 200],
-    },
-  ];
-  const summaryFields = ['a', 'b', 'c', 'd'];
+const projectList = [
+  {
+    name: 'frickjack',
+    counts: [5, 20, 30, 200],
+  },
+];
+const summaryFields = ['a', 'b', 'c', 'd'];
 
-  const table = mount(
-    <StaticRouter location={{ pathname: '/identity' }} context={{}}>
-      <ProjectTable projectList={projectList} summaryFields={summaryFields} />
-    </StaticRouter>
+test('renders', () => {
+  const { container } = render(
+    <ProjectTable projectList={projectList} summaryFields={summaryFields} />
   );
-  // 2 == 1 data row + 1 summary totals row
-  expect(table.find('tbody tr').length).toBe(1);
-  expect(table.find('thead tr').length).toBe(1);
+
+  // summary totals row
+  expect(container.firstElementChild.querySelectorAll('thead tr')).toHaveLength(
+    1
+  );
+  // data row
+  expect(container.firstElementChild.querySelectorAll('tbody tr')).toHaveLength(
+    1
+  );
 });

@@ -15,6 +15,30 @@ import './MapDataModel.less';
 const gqlHelper = GQLHelper.getGQLHelper();
 const CHUNK_SIZE = 10;
 
+export function isValidSubmission(state) {
+  return (
+    !!state.projectId &&
+    !!state.nodeType &&
+    !!state.parentNodeType &&
+    !!state.parentNodeId &&
+    Object.values(state.requiredFields).filter(
+      (value) => value === null || value === ''
+    ).length === 0
+  );
+}
+
+export function getParentNodes(links, parents) {
+  let parentNodes = { ...parents };
+  for (const link of links)
+    if (link.subgroup) {
+      parentNodes = getParentNodes(link.subgroup, parentNodes);
+    } else {
+      parentNodes[link.target_type] = link;
+    }
+
+  return parentNodes;
+}
+
 class MapDataModel extends React.Component {
   constructor(props) {
     super(props);
@@ -65,25 +89,12 @@ class MapDataModel extends React.Component {
     this.setState({ requiredFields: map });
   };
 
-  /* eslint-disable no-param-reassign */
-  getParentNodes = (links, parents) => {
-    links.forEach((link) => {
-      if (link.subgroup) {
-        parents = this.getParentNodes(link.subgroup, parents);
-      } else {
-        parents[link.target_type] = link;
-      }
-    });
-    return parents;
-  };
-  /* eslint-enable */
-
   selectNodeType = (option) => {
     this.setState(
       {
         nodeType: option ? option.value : null,
         parentTypesOfSelectedNode: option
-          ? this.getParentNodes(this.props.dictionary[option.value].links, {})
+          ? getParentNodes(this.props.dictionary[option.value].links, {})
           : {},
       },
       () => {
@@ -116,17 +127,13 @@ class MapDataModel extends React.Component {
   };
 
   castOption = (value, prop) => {
-    const isNumber = this.isNumber(prop);
-    const isInteger = this.isInteger(prop);
-    let option = null;
-    if (isNumber) {
-      option = parseFloat(value);
-    } else if (isInteger) {
-      option = parseInt(value, 10);
-    } else {
-      option = value;
-    }
-    return option;
+    const { dictionary } = this.props;
+    const { nodeType } = this.state;
+    const { type } = dictionary[nodeType]?.properties?.[prop];
+
+    if (type === 'number') return parseFloat(value);
+    if (type === 'integer') return parseInt(value, 10);
+    return value;
   };
 
   selectRequiredField = (option, prop) => {
@@ -142,34 +149,6 @@ class MapDataModel extends React.Component {
         [prop]: castedOption || null,
       },
     }));
-  };
-
-  isInteger = (prop) => {
-    if (
-      this.state.nodeType &&
-      this.props.dictionary[this.state.nodeType] &&
-      this.props.dictionary[this.state.nodeType].properties[prop]
-    ) {
-      return (
-        this.props.dictionary[this.state.nodeType].properties[prop].type ===
-        'integer'
-      );
-    }
-    return false;
-  };
-
-  isNumber = (prop) => {
-    if (
-      this.state.nodeType &&
-      this.props.dictionary[this.state.nodeType] &&
-      this.props.dictionary[this.state.nodeType].properties[prop]
-    ) {
-      return (
-        this.props.dictionary[this.state.nodeType].properties[prop].type ===
-        'number'
-      );
-    }
-    return false;
   };
 
   fetchAllSubmitterIds = () => {
@@ -263,15 +242,6 @@ class MapDataModel extends React.Component {
       });
     });
   };
-
-  isValidSubmission = () =>
-    !!this.state.projectId &&
-    !!this.state.nodeType &&
-    !!this.state.parentNodeType &&
-    !!this.state.parentNodeId &&
-    Object.values(this.state.requiredFields).filter(
-      (value) => value === null || value === ''
-    ).length === 0;
 
   render() {
     const projectList = this.props.projects
@@ -422,7 +392,7 @@ class MapDataModel extends React.Component {
         </div>
         {
           <Toaster
-            isEnabled={this.isValidSubmission()}
+            isEnabled={isValidSubmission(this.state)}
             className={'map-data-model__submission-toaster-div'}
           >
             <Button

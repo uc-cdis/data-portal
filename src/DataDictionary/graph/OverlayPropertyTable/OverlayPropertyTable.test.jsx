@@ -1,38 +1,34 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { fireEvent, render, screen } from '@testing-library/react';
 import OverlayPropertyTable from './OverlayPropertyTable';
 
-describe('OverlayPropertyTable', () => {
-  const node = {
-    id: 'a',
-    category: 'test',
-    title: 'node A',
-    description: 'node A description',
-    required: [],
-    properties: {},
-  };
-  it('can render overlay property table correctly', () => {
-    const hiddenTable1 = mount(
-      <OverlayPropertyTable node={null} hidden={false} />
-    );
-    expect(hiddenTable1.find('.overlay-property-table').length).toBe(0);
+test('does not render without node', () => {
+  const { container } = render(
+    <OverlayPropertyTable node={null} hidden={false} />
+  );
+  expect(container.firstElementChild).not.toBeInTheDocument();
+});
 
-    const hiddenTable2 = mount(<OverlayPropertyTable node={node} hidden />);
-    expect(hiddenTable2.find('.overlay-property-table').length).toBe(0);
+const node = {
+  id: 'a',
+  category: 'test',
+  title: 'node A',
+  description: 'node A description',
+  required: [],
+  properties: {},
+};
 
-    const closeFunc = jest.fn();
-    const table = mount(
-      <OverlayPropertyTable
-        node={node}
-        hidden={false}
-        onCloseOverlayPropertyTable={closeFunc}
-      />
-    );
-    expect(table.find('.overlay-property-table').length).toBe(1);
-    const closeButtonElem = table
-      .find('.overlay-property-table__close')
-      .first();
-    closeButtonElem.simulate('click');
-    expect(closeFunc.mock.calls.length).toBe(1);
-  });
+test('does not render if hidden', () => {
+  const { container } = render(<OverlayPropertyTable node={node} hidden />);
+  expect(container.firstElementChild).not.toBeInTheDocument();
+});
+
+test('renders normal', () => {
+  const onCloseOverlayPropertyTable = jest.fn();
+  const props = { node, hidden: false, onCloseOverlayPropertyTable };
+  const { container } = render(<OverlayPropertyTable {...props} />);
+  expect(container.firstElementChild).toHaveClass('overlay-property-table');
+
+  fireEvent.click(screen.getByLabelText('Close property table'));
+  expect(onCloseOverlayPropertyTable).toHaveBeenCalledTimes(1);
 });

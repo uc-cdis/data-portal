@@ -1,52 +1,59 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render, waitFor } from '@testing-library/react';
 import GraphCalculator from './GraphCalculator';
 import { buildTestData, testGraph1 } from '../../../GraphUtils/testData';
 
-describe('GraphCalculator', () => {
-  const data = buildTestData();
-  const layoutCallback = jest.fn();
-  const legendCallback = jest.fn();
-  const highlightCallback = jest.fn();
-  const candidateCalculatedCallback = jest.fn();
-  const pathCallback = jest.fn();
-  const dataModelCallback = jest.fn();
-  const graphCalculator = mount(
+const data = buildTestData();
+
+test('calculates layout and legend on mount', () => {
+  const onGraphLayoutCalculated = jest.fn();
+  const onGraphLegendCalculated = jest.fn();
+  const props = {
+    dictionary: data.dictionary,
+    onGraphLayoutCalculated,
+    onGraphLegendCalculated,
+  };
+  render(<GraphCalculator {...props} />);
+
+  waitFor(() => {
+    expect(onGraphLayoutCalculated).toHaveBeenCalledTimes(1);
+    expect(onGraphLegendCalculated).toHaveBeenCalledTimes(1);
+  });
+});
+
+test('updates related highlighted nodes and clickable nodes when highlighted node changes', () => {
+  const onDataModelStructureCalculated = jest.fn();
+  const onHighlightRelatedNodesCalculated = jest.fn();
+  const onPathRelatedToSecondHighlightingNodeCalculated = jest.fn();
+  const onSecondHighlightingNodeCandidateIDsCalculated = jest.fn();
+  const props = {
+    dictionary: data.dictionary,
+    edges: testGraph1.graphEdges,
+    nodes: testGraph1.graphNodes,
+    onDataModelStructureCalculated,
+    onHighlightRelatedNodesCalculated,
+    onPathRelatedToSecondHighlightingNodeCalculated,
+    onSecondHighlightingNodeCandidateIDsCalculated,
+  };
+  const { rerender } = render(<GraphCalculator {...props} />);
+
+  rerender(
+    <GraphCalculator {...props} highlightingNode={testGraph1.testClickNode} />
+  );
+  expect(onHighlightRelatedNodesCalculated).toHaveBeenCalledTimes(1);
+  expect(
+    onSecondHighlightingNodeCandidateIDsCalculated.mock.calls
+  ).toHaveLength(1);
+  expect(onDataModelStructureCalculated).toHaveBeenCalledTimes(1);
+
+  rerender(
     <GraphCalculator
-      dictionary={data.dictionary}
-      countsSearch={[]}
-      linksSearch={[]}
-      onGraphLayoutCalculated={layoutCallback}
-      onGraphLegendCalculated={legendCallback}
-      onHighlightRelatedNodesCalculated={highlightCallback}
-      onSecondHighlightingNodeCandidateIDsCalculated={
-        candidateCalculatedCallback
-      }
-      onPathRelatedToSecondHighlightingNodeCalculated={pathCallback}
-      onDataModelStructureCalculated={dataModelCallback}
+      {...props}
+      secondHighlightingNodeID={testGraph1.testSecondClickNodeID}
     />
   );
-
-  it('can calculate layout and legend', () => {
-    expect(layoutCallback.mock.calls.length).toBe(1);
-    expect(legendCallback.mock.calls.length).toBe(1);
-  });
-
-  it('can update related highlighted nodes and clickable nodes when highlighted node changes', () => {
-    graphCalculator.setProps({
-      nodes: testGraph1.graphNodes,
-      edges: testGraph1.graphEdges,
-    });
-    graphCalculator.setProps({
-      highlightingNode: testGraph1.testClickNode,
-    });
-    expect(highlightCallback.mock.calls.length).toBe(1);
-    expect(candidateCalculatedCallback.mock.calls.length).toBe(1);
-    expect(dataModelCallback.mock.calls.length).toBe(1);
-    graphCalculator.setProps({
-      secondHighlightingNodeID: testGraph1.testSecondClickNodeID,
-    });
-    expect(pathCallback.mock.calls.length).toBe(1);
-    expect(dataModelCallback.mock.calls.length).toBe(2);
-  });
+  expect(onDataModelStructureCalculated).toHaveBeenCalledTimes(2);
+  expect(
+    onPathRelatedToSecondHighlightingNodeCalculated.mock.calls
+  ).toHaveLength(1);
 });

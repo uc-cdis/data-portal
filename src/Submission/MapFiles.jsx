@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cloneDeep from 'lodash.clonedeep';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { AutoSizer, Column, Table } from 'react-virtualized';
@@ -19,6 +20,88 @@ const ROW_HEIGHT = 70;
 const HEADER_HEIGHT = 70;
 
 dayjs.extend(customParseFormat);
+
+function flattenFiles(files) {
+  const groupedFiles = Object.keys(files).map((index) => [
+    ...Object.values(files[index]),
+  ]);
+  return groupedFiles.reduce((totalArr, currentArr) =>
+    totalArr.concat(currentArr)
+  );
+}
+
+function createSet(key, values) {
+  const set = {};
+  for (const value of values) set[value[key]] = value;
+  return set;
+}
+
+function getSetSize(set) {
+  return Object.keys(set).length;
+}
+
+function getTableHeaderText(files) {
+  const date = dayjs(files[0].created_date).format('MM/DD/YY');
+  return `uploaded on ${date}, ${files.length} ${
+    files.length > 1 ? 'files' : 'file'
+  }`;
+}
+
+export function groupUnmappedFiles(unmappedFiles) {
+  const filesByDate = {};
+  for (const file of unmappedFiles) {
+    const fileDate = dayjs(file.created_date).format('MM/DD/YY');
+    if (fileDate in filesByDate) filesByDate[fileDate].push(file);
+    else filesByDate[fileDate] = [file];
+  }
+  const sortedDates = Object.keys(filesByDate).sort(
+    (a, b) => dayjs(b, 'MM/DD/YY').valueOf() - dayjs(a, 'MM/DD/YY').valueOf()
+  );
+  return { filesByDate, sortedDates };
+}
+
+export function setMapValue(map, index, value) {
+  const tempMap = cloneDeep(map);
+  tempMap[index] = value;
+  return tempMap;
+}
+
+export function addToMap(map, index, file, setKey) {
+  const tempMap = cloneDeep(map);
+  if (tempMap[index]) tempMap[index][setKey] = file;
+  return tempMap;
+}
+
+export function removeFromMap(map, index, setKey) {
+  const tempMap = cloneDeep(map);
+  if (tempMap[index]) delete tempMap[index][setKey];
+  return tempMap;
+}
+
+export function isSelectAll({ index, allFilesByGroup, selectedFilesByGroup }) {
+  return selectedFilesByGroup[index]
+    ? getSetSize(allFilesByGroup[index]) ===
+        getSetSize(selectedFilesByGroup[index]) &&
+        getSetSize(selectedFilesByGroup[index]) > 0
+    : false;
+}
+
+export function isSelected({ index, did, selectedFilesByGroup }) {
+  return selectedFilesByGroup[index]
+    ? !!selectedFilesByGroup[index][did]
+    : false;
+}
+
+export function isMapEmpty(map) {
+  for (const key in map) {
+    if (map[key] && getSetSize(map[key]) > 0) return false;
+  }
+  return true;
+}
+
+export function isFileReady(file) {
+  return file.hashes && Object.keys(file.hashes).length > 0;
+}
 
 class MapFiles extends React.Component {
   constructor(props) {
@@ -50,7 +133,7 @@ class MapFiles extends React.Component {
   };
 
   onCompletion = () => {
-    const flatFiles = this.flattenFiles(this.state.selectedFilesByGroup);
+    const flatFiles = flattenFiles(this.state.selectedFilesByGroup);
     this.props.mapSelectedFiles(flatFiles);
     this.props.history.push('/submission/map');
   };
@@ -59,88 +142,10 @@ class MapFiles extends React.Component {
     this.setState(
       {
         loading: false,
-        filesByDate: this.groupUnmappedFiles(),
+        ...groupUnmappedFiles(this.props.unmappedFiles),
       },
       () => this.createFileMapByGroup()
     );
-  };
-
-  getSetSize = (set) => Object.keys(set).length;
-
-  getTableHeaderText = (files) => {
-    const date = dayjs(files[0].created_date).format('MM/DD/YY');
-    return `uploaded on ${date}, ${files.length} ${
-      files.length > 1 ? 'files' : 'file'
-    }`;
-  };
-
-  setMapValue = (map, index, value) => {
-    const tempMap = map;
-    tempMap[index] = value;
-    return tempMap;
-  };
-
-  addToMap = (map, index, file, setKey) => {
-    const tempMap = map;
-    if (tempMap[index]) {
-      tempMap[index][setKey] = file;
-    }
-    return tempMap;
-  };
-
-  removeFromMap = (map, index, setKey) => {
-    const tempMap = map;
-    if (tempMap[index]) {
-      delete tempMap[index][setKey];
-    }
-    return tempMap;
-  };
-
-  createSet = (key, values) => {
-    const set = {};
-    values.forEach((value) => {
-      const setKey = value[key];
-      set[setKey] = value;
-    });
-    return set;
-  };
-
-  flattenFiles = (files) => {
-    const groupedFiles = Object.keys(files).map((index) => [
-      ...Object.values(files[index]),
-    ]);
-    return groupedFiles.reduce((totalArr, currentArr) =>
-      totalArr.concat(currentArr)
-    );
-  };
-
-  isSelectAll = (index) => {
-    if (this.state.selectedFilesByGroup[index]) {
-      return (
-        this.getSetSize(this.state.allFilesByGroup[index]) ===
-          this.getSetSize(this.state.selectedFilesByGroup[index]) &&
-        this.getSetSize(this.state.selectedFilesByGroup[index]) > 0
-      );
-    }
-    return false;
-  };
-
-  isSelected = (index, did) => {
-    if (this.state.selectedFilesByGroup[index]) {
-      return !!this.state.selectedFilesByGroup[index][did];
-    }
-    return false;
-  };
-
-  isMapEmpty = (map) => {
-    /* eslint-disable no-restricted-syntax */
-    for (const key in map) {
-      if (map[key] && this.getSetSize(map[key]) > 0) {
-        return false;
-      }
-    }
-    return true;
-    /* eslint-enable */
   };
 
   createFileMapByGroup = () => {
@@ -148,49 +153,38 @@ class MapFiles extends React.Component {
     const selectedMap = {};
     let index = 0;
     this.state.sortedDates.forEach((date) => {
-      const filesToAdd = this.state.filesByDate[date].filter((file) =>
-        this.isFileReady(file)
-      );
-      unselectedMap[index] = this.createSet(SET_KEY, filesToAdd);
+      const filesToAdd = this.state.filesByDate[date].filter(isFileReady);
+      unselectedMap[index] = createSet(SET_KEY, filesToAdd);
       selectedMap[index] = {};
       index += 1;
     });
+    // console.log('createFileMapByGroup', unselectedMap, selectedMap);
     this.setState({
       allFilesByGroup: unselectedMap,
       selectedFilesByGroup: selectedMap,
     });
   };
 
-  groupUnmappedFiles = () => {
-    const groupedFiles = {};
-    this.props.unmappedFiles.forEach((file) => {
-      const fileDate = dayjs(file.created_date).format('MM/DD/YY');
-      if (groupedFiles[fileDate]) {
-        groupedFiles[fileDate].push(file);
-      } else {
-        groupedFiles[fileDate] = [file];
-      }
-    });
-    const sortedDates = Object.keys(groupedFiles).sort(
-      (a, b) => dayjs(b, 'MM/DD/YY').valueOf() - dayjs(a, 'MM/DD/YY').valueOf()
-    );
-    this.setState({ sortedDates });
-    return groupedFiles;
-  };
-
   toggleCheckBox = (index, file) => {
-    if (this.isSelected(index, file.did)) {
+    console.log('toggleCheckBox');
+    if (
+      isSelected({
+        index,
+        did: file.did,
+        selectedFilesByGroup: this.state.selectedFilesByGroup,
+      })
+    ) {
       this.setState((prevState) => ({
-        selectedFilesByGroup: this.removeFromMap(
+        selectedFilesByGroup: removeFromMap(
           prevState.selectedFilesByGroup,
           index,
           file.did
         ),
       }));
-    } else if (this.isFileReady(file)) {
+    } else if (isFileReady(file)) {
       // file status == ready, so it is selectable
       this.setState((prevState) => ({
-        selectedFilesByGroup: this.addToMap(
+        selectedFilesByGroup: addToMap(
           prevState.selectedFilesByGroup,
           index,
           file,
@@ -203,11 +197,11 @@ class MapFiles extends React.Component {
   toggleSelectAll = (index) => {
     if (this.state.selectedFilesByGroup[index]) {
       if (
-        this.getSetSize(this.state.selectedFilesByGroup[index]) ===
-        this.getSetSize(this.state.allFilesByGroup[index])
+        getSetSize(this.state.selectedFilesByGroup[index]) ===
+        getSetSize(this.state.allFilesByGroup[index])
       ) {
         this.setState((prevState) => ({
-          selectedFilesByGroup: this.setMapValue(
+          selectedFilesByGroup: setMapValue(
             prevState.selectedFilesByGroup,
             index,
             {}
@@ -216,7 +210,7 @@ class MapFiles extends React.Component {
       } else {
         const newFiles = { ...this.state.allFilesByGroup[index] };
         this.setState((prevState) => ({
-          selectedFilesByGroup: this.setMapValue(
+          selectedFilesByGroup: setMapValue(
             prevState.selectedFilesByGroup,
             index,
             newFiles
@@ -225,8 +219,6 @@ class MapFiles extends React.Component {
       }
     }
   };
-
-  isFileReady = (file) => file.hashes && Object.keys(file.hashes).length > 0;
 
   closeMessage = () => {
     this.setState({ message: null });
@@ -238,16 +230,16 @@ class MapFiles extends React.Component {
       <Button
         onClick={this.onCompletion}
         label={
-          !this.isMapEmpty(this.state.selectedFilesByGroup)
+          !isMapEmpty(this.state.selectedFilesByGroup)
             ? `Map Files (${
-                this.flattenFiles(this.state.selectedFilesByGroup).length
+                flattenFiles(this.state.selectedFilesByGroup).length
               })`
             : 'Map Files'
         }
         rightIcon='graph'
         buttonType='primary'
         className='g3-icon g3-icon--lg'
-        enabled={!this.isMapEmpty(this.state.selectedFilesByGroup)}
+        enabled={!isMapEmpty(this.state.selectedFilesByGroup)}
       />,
     ];
 
@@ -290,12 +282,12 @@ class MapFiles extends React.Component {
           {sortedDates.map((date, groupIndex) => {
             const files = filesByDate[date].map((file) => ({
               ...file,
-              status: this.isFileReady(file) ? 'Ready' : 'generating',
+              status: isFileReady(file) ? 'Ready' : 'generating',
             }));
             const minTableHeight = files.length * ROW_HEIGHT + HEADER_HEIGHT;
             return (
               <React.Fragment key={groupIndex}>
-                <div className='h2-typo'>{this.getTableHeaderText(files)}</div>
+                <div className='h2-typo'>{getTableHeaderText(files)}</div>
                 <AutoSizer disableHeight>
                   {({ width }) => (
                     <Table
@@ -315,27 +307,37 @@ class MapFiles extends React.Component {
                         headerRenderer={() => (
                           <CheckBox
                             id={`${groupIndex}`}
-                            isSelected={this.isSelectAll(groupIndex)}
+                            isSelected={isSelectAll({
+                              index: groupIndex,
+                              allFilesByGroup: this.state.allFilesByGroup,
+                              selectedFilesByGroup: this.state
+                                .selectedFilesByGroup,
+                            })}
                             onChange={() => this.toggleSelectAll(groupIndex)}
                           />
                         )}
-                        cellRenderer={({ rowIndex }) => (
-                          <CheckBox
-                            id={`${files[rowIndex].did}`}
-                            item={files[rowIndex]}
-                            isSelected={this.isSelected(
-                              groupIndex,
-                              files[rowIndex].did
-                            )}
-                            onChange={() =>
-                              this.toggleCheckBox(groupIndex, files[rowIndex])
-                            }
-                            isEnabled={files[rowIndex].status === 'Ready'}
-                            disabledText={
-                              'This file is not ready to be mapped yet.'
-                            }
-                          />
-                        )}
+                        cellRenderer={({ rowIndex }) => {
+                          console.log('checkboxId', files[rowIndex].did);
+                          return (
+                            <CheckBox
+                              id={`${files[rowIndex].did}`}
+                              item={files[rowIndex]}
+                              isSelected={isSelected({
+                                index: groupIndex,
+                                did: files[rowIndex].did,
+                                selectedFilesByGroup: this.state
+                                  .selectedFilesByGroup,
+                              })}
+                              onChange={() =>
+                                this.toggleCheckBox(groupIndex, files[rowIndex])
+                              }
+                              isEnabled={files[rowIndex].status === 'Ready'}
+                              disabledText={
+                                'This file is not ready to be mapped yet.'
+                              }
+                            />
+                          );
+                        }}
                       />
                       <Column
                         label='File Name'

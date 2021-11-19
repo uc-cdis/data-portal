@@ -1,10 +1,9 @@
 import React from 'react';
-import { mount } from 'enzyme';
-
+import { render } from '@testing-library/react';
 import Spinner from './Spinner';
 
-it('Spinner displaying', () => {
-  const spinner = mount(<Spinner />);
-  expect(spinner.find('svg').length).toBe(1);
-  expect(spinner.find('div').length).toBe(1);
+test('renders', () => {
+  const { container } = render(<Spinner />);
+  expect(container.firstElementChild).toHaveClass('spinner');
+  expect(container.querySelectorAll('svg')).toHaveLength(1);
 });
