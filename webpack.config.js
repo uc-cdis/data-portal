@@ -133,10 +133,6 @@ module.exports = {
         test: /\.(png|jpg|gif|woff|ttf|eot|woff2)$/,
         type: 'asset/inline',
       },
-      {
-        test: /\.flow$/,
-        loader: 'ignore-loader',
-      },
     ],
   },
   resolve: {
