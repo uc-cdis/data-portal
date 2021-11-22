@@ -19,11 +19,11 @@ import '../typedef';
  * A simplified alternative to lodash/get using string path of property names only.
  * @param {object} object The object to query.
  * @param {string} path Path to the property to get, e.g. 'a.b.c'
- * @param {any} defaultValue The value returned if the resolved value is undefined.
  * @return Returns the resolved value.
  */
-const get = (object, path, defaultValue) =>
-  path.split('.').reduce((obj, key) => obj && obj[key], object) || defaultValue;
+function get(object, path) {
+  return path.split('.').reduce((obj, key) => obj && obj[key], object);
+}
 
 /**
  * @param {Object} args
