@@ -238,29 +238,24 @@ class ExplorerTable extends React.Component {
   buildNestedArrayFieldColumnConfigs = (nestedArrayFieldNames) => {
     /** @type {{ [x: string]: ReactTableColumn[][] }} */
     const nestedArrayFieldColumnConfigs = {};
-    Object.keys(nestedArrayFieldNames).forEach((key) => {
-      if (!nestedArrayFieldColumnConfigs[key]) {
+    for (const key of Object.keys(nestedArrayFieldNames)) {
+      if (!nestedArrayFieldColumnConfigs[key])
         nestedArrayFieldColumnConfigs[key] = [];
+
+      const firstLevelColumns = [];
+      const secondLevelColumns = [];
+      for (const nestedFieldName of nestedArrayFieldNames[key]) {
+        const field = `${key}.${nestedFieldName}`;
+        firstLevelColumns.push(this.buildColumnConfig(field, true, false));
+        secondLevelColumns.push(this.buildColumnConfig(field, true, true));
       }
-      const firstLevelColumns = nestedArrayFieldNames[key].map((field) =>
-        this.buildColumnConfig(`${key}.${field}`, true, false)
+
+      nestedArrayFieldColumnConfigs[key].push(
+        [{ Header: key, columns: firstLevelColumns }],
+        [{ Header: key, columns: secondLevelColumns }]
       );
-      const firstLevelColumnsConfig = [];
-      firstLevelColumnsConfig.push({
-        Header: key,
-        columns: firstLevelColumns,
-      });
-      const secondLevelColumns = nestedArrayFieldNames[key].map((field) =>
-        this.buildColumnConfig(`${key}.${field}`, true, true)
-      );
-      const secondLevelColumnsConfig = [];
-      secondLevelColumnsConfig.push({
-        Header: key,
-        columns: secondLevelColumns,
-      });
-      nestedArrayFieldColumnConfigs[key].push(firstLevelColumnsConfig);
-      nestedArrayFieldColumnConfigs[key].push(secondLevelColumnsConfig);
-    });
+    }
+
     return nestedArrayFieldColumnConfigs;
   };
 
