@@ -158,7 +158,7 @@ function ExplorerTable({
   /**
    * Build column config for each table according to their locations and fields
    * @param {string} field: the full field name
-   * @returns {ReactTableColumn} a column config for the input field which can be used by react-table
+   * @returns {ReactTableColumn}
    */
   function buildColumnConfig(field) {
     const { downloadAccessor, fieldMapping } = guppyConfig;
@@ -190,9 +190,8 @@ function ExplorerTable({
   /**
    * Build nested column config for each table according to their locations and fields
    * @param {string} field the full field name, contains at least 1 '.'
-   * @param {boolean} [isDetailedColumn] control flag to determine if it is building column config for inner
-   * most nested table
-   * @returns {ReactTableColumn} a column config for the input field which can be used by react-table
+   * @param {boolean} [isDetailedColumn] control flag to determine if it is building column config for innermost nested table
+   * @returns {ReactTableColumn}
    */
   function buildNestedColumnConfig(field, isDetailedColumn = false) {
     const { downloadAccessor, fieldMapping } = guppyConfig;
@@ -247,29 +246,22 @@ function ExplorerTable({
 
   /**
    * Build column configs nested array fields
-   * We only need nested table if the nested field is an array
-   * Otherwise the nested field will have 1-1 relationship to its parent
-   * so can be displayed in one row
-   * @param {{ [x: string]: string[] }} nestedArrayFieldNames: an object containing all the nested array fields,
-   * separated by their parent names
-   * e.g.:
+   * We only need nested table if the nested field is an array.
+   * Otherwise, the nested field can be displayed in one row.
+   * @param {{ [x: string]: string[] }} nestedArrayFieldNames an object containing
+   * all the nested array fields, separated by their parent names.
+   * @example
    * {
-   *    ActionableMutations: [ Lab ],
-   *    Oncology_Primary: [ Multiplicitycounter, ICDOSite ]
+   *    ActionableMutations: [ 'Lab' ],
+   *    Oncology_Primary: [ 'Multiplicitycounter', 'ICDOSite' ]
    * }
    * @returns a collection of column configs for each nested table,
    * separated by their parent names. Each set of column configs contains two configs,
-   * one for the 1st level nested table and one for the 2nd level table
-   * e.g.:
+   * one for the 1st level nested table and one for the 2nd level table.
+   * @example
    * {
-   *    ActionableMutations: [
-   *      <columnConfig for 1st level nested table>,
-   *      <columnConfig for 2nd level nested table (the details table)>
-   *    ],
-   *    Oncology_Primary: [
-   *      <columnConfig for 1st level nested table>,
-   *      <columnConfig for 2nd level nested table (the details table)>
-   *    ]
+   *    ActionableMutations: [ firstLevelColumnConfig, secondLevelColumnConfig ],
+   *    Oncology_Primary: [ firstLevelColumnConfig, secondLevelColumnConfig ]
    * }
    */
   function buildNestedArrayFieldColumnConfigs(nestedArrayFieldNames) {
