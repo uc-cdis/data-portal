@@ -61,14 +61,14 @@ function getColumnWidth({ field, columnName, linkFields, rawData }) {
  * @param {string} args.downloadAccessor
  * @param {string} args.field
  * @param {string[]} args.linkFields
- * @param {Array} args.rowValue
+ * @param {Array} args.value
  * @param {string} args.valueStr
  */
 function getCellElement({
   downloadAccessor,
   field,
   linkFields,
-  rowValue,
+  value,
   valueStr,
 }) {
   if (downloadAccessor)
@@ -102,12 +102,12 @@ function getCellElement({
     );
 
   if (field === 'external_references.external_links') {
-    if (!rowValue) return null;
+    if (!value) return null;
     const [
       resourceName,
       resourceIconPath,
       subjectUrl,
-    ] = rowValue[0].external_links.split('|');
+    ] = value[0].external_links.split('|');
     return (
       <div className='explorer-table-external-links'>
         <a href={subjectUrl} target='_blank' rel='noopenner noreferrer'>
@@ -183,7 +183,7 @@ class ExplorerTable extends React.Component {
           downloadAccessor,
           field,
           linkFields: this.props.tableConfig.linkFields,
-          rowValue: value,
+          value,
           valueStr: Array.isArray(value) ? value.join(', ') : value,
         }),
     };
@@ -238,7 +238,7 @@ class ExplorerTable extends React.Component {
             downloadAccessor,
             field,
             linkFields: this.props.tableConfig.linkFields,
-            rowValue: value,
+            value,
             valueStr: Array.isArray(value)
               ? value.map((v) => get(v, nestedFieldName)).join(', ')
               : get(value, nestedFieldName),
