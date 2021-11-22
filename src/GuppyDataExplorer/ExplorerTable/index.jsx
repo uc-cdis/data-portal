@@ -270,24 +270,17 @@ class ExplorerTable extends React.Component {
    * @param {number} state.pageSize
    * @param {{ id: string; desc: boolean }[]} state.sorted
    */
-  fetchData = (state) => {
-    const offset = state.page * state.pageSize;
-    /** @type {GqlSort} */
-    const sort = state.sorted.map((i) => ({
-      [i.id]: i.desc ? 'desc' : 'asc',
-    }));
-    const size = state.pageSize;
+  fetchData = ({ page, pageSize, sorted }) => {
     this.props
       .fetchAndUpdateRawData({
-        offset,
-        size,
-        sort,
+        offset: page * pageSize,
+        size: pageSize,
+        sort: sorted.map((i) => ({ [i.id]: i.desc ? 'desc' : 'asc' })),
       })
       .then(() => {
-        // Guppy fetched and loaded raw data into "this.props.rawData" already
         this.setState({
-          pageSize: size,
-          currentPage: state.page,
+          pageSize,
+          currentPage: page,
         });
       });
   };
