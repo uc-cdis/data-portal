@@ -420,14 +420,14 @@ function ExplorerTable({
 }
 
 ExplorerTable.propTypes = {
-  rawData: PropTypes.array, // from GuppyWrapper
-  fetchAndUpdateRawData: PropTypes.func.isRequired, // from GuppyWrapper
   accessibleCount: PropTypes.number.isRequired, // from GuppyWrapper
-  isLocked: PropTypes.bool.isRequired,
   className: PropTypes.string,
   defaultPageSize: PropTypes.number,
-  tableConfig: TableConfigType.isRequired,
+  fetchAndUpdateRawData: PropTypes.func.isRequired, // from GuppyWrapper
   guppyConfig: GuppyConfigType.isRequired,
+  isLocked: PropTypes.bool.isRequired,
+  rawData: PropTypes.array, // from GuppyWrapper
+  tableConfig: TableConfigType.isRequired,
   totalCount: PropTypes.number,
 };
 
