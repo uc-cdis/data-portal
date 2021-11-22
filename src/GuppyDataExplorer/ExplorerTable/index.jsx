@@ -311,38 +311,34 @@ function ExplorerTable({
     }
 
   /** @type {import('react-table').SubComponentFunction} */
-  let subComponent = null;
+  let SubComponent = null;
   if (Object.keys(nestedArrayFieldNames).length > 0) {
     // eslint-disable-next-line max-len
     const nestedArrayFieldColumnConfigs = buildNestedArrayFieldColumnConfigs(
       nestedArrayFieldNames
     );
     // this is the subComponent of the two-level nested tables
-    subComponent = (row) =>
-      Object.keys(nestedArrayFieldColumnConfigs).map((key) => {
-        const rowData =
-          isLocked || !rawData ? [] : rawData.slice(row.index, row.index + 1);
-        return (
-          <div className='explorer-nested-table' key={key}>
-            <ReactTable
-              data={isLocked || !rowData ? [] : rowData}
-              columns={nestedArrayFieldColumnConfigs[key][0]}
-              defaultPageSize={1}
-              showPagination={false}
-              SubComponent={() => (
-                <div className='explorer-nested-table'>
-                  <ReactTable
-                    data={isLocked || !rowData ? [] : rowData}
-                    columns={nestedArrayFieldColumnConfigs[key][1]}
-                    defaultPageSize={1}
-                    showPagination={false}
-                  />
-                </div>
-              )}
-            />
-          </div>
-        );
-      });
+    SubComponent = (row) =>
+      Object.keys(nestedArrayFieldColumnConfigs).map((key) => (
+        <div className='explorer-nested-table' key={key}>
+          <ReactTable
+            data={(rawData ?? []).slice(row.index, row.index + 1)}
+            columns={nestedArrayFieldColumnConfigs[key][0]}
+            defaultPageSize={1}
+            showPagination={false}
+            SubComponent={() => (
+              <div className='explorer-nested-table'>
+                <ReactTable
+                  data={(rawData ?? []).slice(row.index, row.index + 1)}
+                  columns={nestedArrayFieldColumnConfigs[key][1]}
+                  defaultPageSize={1}
+                  showPagination={false}
+                />
+              </div>
+            )}
+          />
+        </div>
+      ));
   }
 
   const totalPages =
@@ -422,7 +418,7 @@ function ExplorerTable({
             <div className='rt-noData'>No data to display</div>
           )
         }
-        SubComponent={isLocked ? null : subComponent}
+        SubComponent={isLocked ? null : SubComponent}
       />
     </div>
   );
