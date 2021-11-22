@@ -161,56 +161,57 @@ class ExplorerTable extends React.Component {
             : row.value;
 
         // handling some special field types
-        switch (field) {
-          case this.props.guppyConfig.downloadAccessor:
-            return (
-              <div>
-                <span title={valueStr}>
-                  <a href={`/files/${valueStr}`}>{valueStr}</a>
-                </span>
-              </div>
-            );
-          case this.props.tableConfig.linkFields.includes(field) && field:
-            return valueStr ? (
-              <IconicLink
-                link={valueStr}
-                className='explorer-table-link'
-                buttonClassName='explorer-table-link-button'
-                icon='exit'
-                dictIcons={dictIcons}
-                iconColor='#606060'
-                target='_blank'
-                isExternal
-              />
-            ) : null;
-          case 'file_size':
-            return (
-              <div>
-                <span title={valueStr}>{humanFileSize(valueStr)}</span>
-              </div>
-            );
-          case 'external_references.external_links': {
-            if (row.value === null) return null;
-            const [
-              resourceName,
-              resourceIconPath,
-              subjectUrl,
-            ] = row.value[0].external_links.split('|');
-            return (
-              <div className='explorer-table-external-links'>
-                <a href={subjectUrl} target='_blank' rel='noopenner noreferrer'>
-                  <img src={resourceIconPath} alt={resourceName} />
-                </a>
-              </div>
-            );
-          }
-          default:
-            return (
-              <div>
-                <span title={valueStr}>{valueStr}</span>
-              </div>
-            );
+        if (this.props.guppyConfig.downloadAccessor)
+          return (
+            <div>
+              <span title={valueStr}>
+                <a href={`/files/${valueStr}`}>{valueStr}</a>
+              </span>
+            </div>
+          );
+
+        if (this.props.tableConfig.linkFields.includes(field))
+          return field && valueStr ? (
+            <IconicLink
+              link={valueStr}
+              className='explorer-table-link'
+              buttonClassName='explorer-table-link-button'
+              icon='exit'
+              dictIcons={dictIcons}
+              iconColor='#606060'
+              target='_blank'
+              isExternal
+            />
+          ) : null;
+
+        if (field === 'filed_size')
+          return (
+            <div>
+              <span title={valueStr}>{humanFileSize(valueStr)}</span>
+            </div>
+          );
+
+        if (field === 'external_references.external_links') {
+          if (row.value === null) return null;
+          const [
+            resourceName,
+            resourceIconPath,
+            subjectUrl,
+          ] = row.value[0].external_links.split('|');
+          return (
+            <div className='explorer-table-external-links'>
+              <a href={subjectUrl} target='_blank' rel='noopenner noreferrer'>
+                <img src={resourceIconPath} alt={resourceName} />
+              </a>
+            </div>
+          );
         }
+
+        return (
+          <div>
+            <span title={valueStr}>{valueStr}</span>
+          </div>
+        );
       },
     };
   };
