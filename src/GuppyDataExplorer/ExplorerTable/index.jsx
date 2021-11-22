@@ -149,6 +149,8 @@ function ExplorerTable({
   tableConfig,
   totalCount,
 }) {
+  if ((tableConfig.fields ?? []).length === 0) return null;
+
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [currentPage, setCurrentPage] = useState(0);
   const [isInitialFetchData, setIsInitialFetchData] = useState(true);
@@ -294,9 +296,6 @@ function ExplorerTable({
     return nestedArrayFieldColumnConfigs;
   }
 
-  if (!tableConfig.fields || tableConfig.fields.length === 0) {
-    return null;
-  }
   // build column configs for root table first
   const rootColumnsConfig = tableConfig.fields.map(buildColumnConfig);
   if (!tableConfig.ordered) {
