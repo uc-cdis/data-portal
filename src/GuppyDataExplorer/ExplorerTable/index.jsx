@@ -27,12 +27,12 @@ function get(object, path) {
 
 /**
  * @param {Object} args
- * @param {string} args.field
  * @param {string} args.columnName
+ * @param {string} args.field
  * @param {Array} args.linkFields
  * @param {Array} args.rawData
  */
-function getColumnWidth({ field, columnName, linkFields, rawData }) {
+function getColumnWidth({ columnName, field, linkFields, rawData }) {
   // special cases
   if ((rawData ?? []).length === 0) return 100;
   if (field === 'external_links') return 200;
@@ -149,7 +149,9 @@ function ExplorerTable({
   tableConfig,
   totalCount,
 }) {
-  if ((tableConfig.fields ?? []).length === 0) return null;
+  const { dataType, downloadAccessor, fieldMapping } = guppyConfig;
+  const { fields, linkFields, ordered } = tableConfig;
+  if ((fields ?? []).length === 0) return null;
 
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [currentPage, setCurrentPage] = useState(0);
@@ -161,7 +163,6 @@ function ExplorerTable({
    * @returns {ReactTableColumn}
    */
   function buildColumnConfig(field) {
-    const { downloadAccessor, fieldMapping } = guppyConfig;
     const overrideName = fieldMapping?.find((i) => i.field === field)?.name;
     const columnName = overrideName ?? capitalizeFirstLetter(field);
 
@@ -169,18 +170,13 @@ function ExplorerTable({
       Header: columnName,
       id: field,
       maxWidth: 600,
-      width: getColumnWidth({
-        field,
-        columnName,
-        linkFields: tableConfig.linkFields,
-        rawData,
-      }),
+      width: getColumnWidth({ columnName, field, linkFields, rawData }),
       accessor: (d) => d[field],
       Cell: ({ value }) =>
         getCellElement({
           downloadAccessor,
           field,
-          linkFields: tableConfig.linkFields,
+          linkFields,
           value,
           valueStr: Array.isArray(value) ? value.join(', ') : value,
         }),
@@ -194,7 +190,6 @@ function ExplorerTable({
    * @returns {ReactTableColumn}
    */
   function buildNestedColumnConfig(field, isDetailedColumn = false) {
-    const { downloadAccessor, fieldMapping } = guppyConfig;
     const overrideName = fieldMapping?.find((i) => i.field === field)?.name;
     const fieldStringsArray = field.split('.');
     // for nested table, we only display the children names in column header
@@ -234,7 +229,7 @@ function ExplorerTable({
           getCellElement({
             downloadAccessor,
             field,
-            linkFields: tableConfig.linkFields,
+            linkFields,
             value,
             valueStr: Array.isArray(value)
               ? value.map((v) => get(v, nestedFieldName)).join(', ')
@@ -289,15 +284,15 @@ function ExplorerTable({
   }
 
   // build column configs for root table first
-  const rootColumnsConfig = tableConfig.fields.map(buildColumnConfig);
-  if (!tableConfig.ordered) {
+  const rootColumnsConfig = fields.map(buildColumnConfig);
+  if (!ordered)
     rootColumnsConfig.sort((a, b) =>
       String(a.Header).localeCompare(String(b.Header))
     );
-  }
+
   /** @type {{ [x: string]: string[] }} */
   const nestedArrayFieldNames = {};
-  for (const field of tableConfig.fields)
+  for (const field of fields)
     if (field.includes('.')) {
       const fieldStringsArray = field.split('.');
       if (Array.isArray(rawData?.[0]?.[fieldStringsArray[0]])) {
@@ -358,7 +353,7 @@ function ExplorerTable({
         ? accessibleCount.toLocaleString()
         : `${start.toLocaleString()} - ${accessibleCount.toLocaleString()}`
       : `${start.toLocaleString()} - ${end.toLocaleString()}`;
-  const dataTypeString = pluralize(guppyConfig.dataType);
+  const dataTypeString = pluralize(dataType);
 
   return (
     <div className={`explorer-table ${className}`}>
