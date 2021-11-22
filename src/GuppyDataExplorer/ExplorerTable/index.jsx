@@ -255,8 +255,8 @@ function ExplorerTable({
    * one for the 1st level nested table and one for the 2nd level table.
    * @example
    * {
-   *    ActionableMutations: [ firstLevelColumnConfig, secondLevelColumnConfig ],
-   *    Oncology_Primary: [ firstLevelColumnConfig, secondLevelColumnConfig ]
+   *    ActionableMutations: [ firstLevelColumnsConfig, secondLevelColumnsConfig ],
+   *    Oncology_Primary: [ firstLevelColumnsConfig, secondLevelColumnsConfig ]
    * }
    */
   function buildNestedArrayFieldColumnConfigs(nestedArrayFieldNames) {
@@ -314,26 +314,28 @@ function ExplorerTable({
     );
     // this is the subComponent of the two-level nested tables
     SubComponent = (row) =>
-      Object.keys(nestedArrayFieldColumnConfigs).map((key) => (
-        <div className='explorer-nested-table' key={key}>
-          <ReactTable
-            data={(rawData ?? []).slice(row.index, row.index + 1)}
-            columns={nestedArrayFieldColumnConfigs[key][0]}
-            defaultPageSize={1}
-            showPagination={false}
-            SubComponent={() => (
-              <div className='explorer-nested-table'>
-                <ReactTable
-                  data={(rawData ?? []).slice(row.index, row.index + 1)}
-                  columns={nestedArrayFieldColumnConfigs[key][1]}
-                  defaultPageSize={1}
-                  showPagination={false}
-                />
-              </div>
-            )}
-          />
-        </div>
-      ));
+      Object.entries(nestedArrayFieldColumnConfigs).map(
+        ([key, [firstLevelColumnsConfig, secondLevelColumnsConfig]]) => (
+          <div className='explorer-nested-table' key={key}>
+            <ReactTable
+              data={(rawData ?? []).slice(row.index, row.index + 1)}
+              columns={firstLevelColumnsConfig}
+              defaultPageSize={1}
+              showPagination={false}
+              SubComponent={() => (
+                <div className='explorer-nested-table'>
+                  <ReactTable
+                    data={(rawData ?? []).slice(row.index, row.index + 1)}
+                    columns={secondLevelColumnsConfig}
+                    defaultPageSize={1}
+                    showPagination={false}
+                  />
+                </div>
+              )}
+            />
+          </div>
+        )
+      );
   }
 
   const totalPages =
