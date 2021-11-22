@@ -57,6 +57,74 @@ function getColumnWidth({ field, columnName, linkFields, rawData }) {
 }
 
 /**
+ * @param {Object} args
+ * @param {string} args.downloadAccessor
+ * @param {string} args.field
+ * @param {string[]} args.linkFields
+ * @param {Array} args.rowValue
+ * @param {string} args.valueStr
+ */
+function getCellElement({
+  downloadAccessor,
+  field,
+  linkFields,
+  rowValue,
+  valueStr,
+}) {
+  if (downloadAccessor)
+    return (
+      <div>
+        <span title={valueStr}>
+          <a href={`/files/${valueStr}`}>{valueStr}</a>
+        </span>
+      </div>
+    );
+
+  if (linkFields.includes(field))
+    return field && valueStr ? (
+      <IconicLink
+        link={valueStr}
+        className='explorer-table-link'
+        buttonClassName='explorer-table-link-button'
+        icon='exit'
+        dictIcons={dictIcons}
+        iconColor='#606060'
+        target='_blank'
+        isExternal
+      />
+    ) : null;
+
+  if (field === 'filed_size')
+    return (
+      <div>
+        <span title={valueStr}>{humanFileSize(valueStr)}</span>
+      </div>
+    );
+
+  if (field === 'external_references.external_links') {
+    if (!rowValue) return null;
+    const [
+      resourceName,
+      resourceIconPath,
+      subjectUrl,
+    ] = rowValue[0].external_links.split('|');
+    return (
+      <div className='explorer-table-external-links'>
+        <a href={subjectUrl} target='_blank' rel='noopenner noreferrer'>
+          <img src={resourceIconPath} alt={resourceName} />
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <span title={valueStr}>{valueStr}</span>
+    </div>
+  );
+}
+
+/**
  * @typedef {Object} ExplorerTableProps
  * @property {Object[]} rawData
  * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise} fetchAndUpdateRawData
@@ -160,58 +228,13 @@ class ExplorerTable extends React.Component {
             ? row.value.join(', ')
             : row.value;
 
-        // handling some special field types
-        if (this.props.guppyConfig.downloadAccessor)
-          return (
-            <div>
-              <span title={valueStr}>
-                <a href={`/files/${valueStr}`}>{valueStr}</a>
-              </span>
-            </div>
-          );
-
-        if (this.props.tableConfig.linkFields.includes(field))
-          return field && valueStr ? (
-            <IconicLink
-              link={valueStr}
-              className='explorer-table-link'
-              buttonClassName='explorer-table-link-button'
-              icon='exit'
-              dictIcons={dictIcons}
-              iconColor='#606060'
-              target='_blank'
-              isExternal
-            />
-          ) : null;
-
-        if (field === 'filed_size')
-          return (
-            <div>
-              <span title={valueStr}>{humanFileSize(valueStr)}</span>
-            </div>
-          );
-
-        if (field === 'external_references.external_links') {
-          if (row.value === null) return null;
-          const [
-            resourceName,
-            resourceIconPath,
-            subjectUrl,
-          ] = row.value[0].external_links.split('|');
-          return (
-            <div className='explorer-table-external-links'>
-              <a href={subjectUrl} target='_blank' rel='noopenner noreferrer'>
-                <img src={resourceIconPath} alt={resourceName} />
-              </a>
-            </div>
-          );
-        }
-
-        return (
-          <div>
-            <span title={valueStr}>{valueStr}</span>
-          </div>
-        );
+        return getCellElement({
+          downloadAccessor: this.props.guppyConfig.downloadAccessor,
+          field,
+          linkFields: this.props.tableConfig.linkFields,
+          rowValue: row.value,
+          valueStr,
+        });
       },
     };
   };
