@@ -97,22 +97,18 @@ class ExplorerTable extends React.Component {
    * @returns {ReactTableColumn} a column config for the input field which can be used by react-table
    */
   buildColumnConfig = (field, isNestedTableColumn, isDetailedColumn) => {
-    const fieldMappingEntry =
-      this.props.guppyConfig.fieldMapping &&
-      this.props.guppyConfig.fieldMapping.find((i) => i.field === field);
-    const overrideName = fieldMappingEntry ? fieldMappingEntry.name : undefined;
+    const { fieldMapping } = this.props.guppyConfig;
+    const overrideName = fieldMapping?.find((i) => i.field === field)?.name;
     const fieldStringsArray = field.split('.');
     // for nested table, we only display the children names in column header
     // i.e.: visits.follow_ups.follow_up_label => follow_ups.follow_up_label
-    const fieldName = isNestedTableColumn
-      ? capitalizeFirstLetter(
-          fieldStringsArray.slice(1, fieldStringsArray.length).join('.')
-        )
-      : capitalizeFirstLetter(field);
+    const fieldName =
+      overrideName ?? isNestedTableColumn
+        ? capitalizeFirstLetter(fieldStringsArray.slice(1).join('.'))
+        : capitalizeFirstLetter(field);
 
-    /** @type {ReactTableColumn} */
-    const columnConfig = {
-      Header: overrideName || fieldName,
+    return {
+      Header: fieldName,
       id: field,
       maxWidth: 600,
       // for nested table we set the width arbitrary wrt view width
@@ -120,60 +116,43 @@ class ExplorerTable extends React.Component {
       // @ts-ignore
       width: isNestedTableColumn
         ? '70vw'
-        : this.getWidthForColumn(field, overrideName || fieldName),
+        : this.getWidthForColumn(field, fieldName),
       accessor: (d) => d[fieldStringsArray[0]],
       Cell: (row) => {
         let valueStr = '';
-        if (fieldStringsArray.length === 1) {
-          if (Array.isArray(row.value)) {
-            valueStr = row.value.join(', ');
-          } else {
-            valueStr = row.value;
-          }
-        } else {
-          const nestedChildFieldName = fieldStringsArray
-            .slice(1, fieldStringsArray.length)
-            .join('.');
-          // some logic to handle depends on wether the child field in raw data is an array or not
-          if (Array.isArray(row.value)) {
-            valueStr = row.value
-              .map((x) => get(x, nestedChildFieldName))
-              .join(', ');
-          } else {
-            valueStr = get(row.value, nestedChildFieldName);
-          }
-          // for inner most detailed table, 1 value per row
-          if (isDetailedColumn) {
-            const rowComp = (
+        if (fieldStringsArray.length > 1) {
+          if (isDetailedColumn)
+            // for inner most detailed table, 1 value per row
+            return (
               <div className='rt-tbody'>
                 <div className='rt-tr-group'>
-                  {row.value.map((element, i) =>
-                    i % 2 !== 0 ? (
-                      <div className='rt-tr -odd' key={i}>
-                        <div className='rt-td'>
-                          <span>
-                            {get(element, nestedChildFieldName)}
-                            <br />
-                          </span>
-                        </div>
+                  {row.value.map((element, i) => (
+                    <div
+                      className={`rt-tr ${i % 2 === 0 ? '-even' : '-odd'}`}
+                      key={i}
+                    >
+                      <div className='rt-td'>
+                        <span>
+                          {get(element, fieldStringsArray.slice(1).join('.'))}
+                          <br />
+                        </span>
                       </div>
-                    ) : (
-                      <div className='rt-tr -even' key={i}>
-                        <div className='rt-td'>
-                          <span>
-                            {get(element, nestedChildFieldName)}
-                            <br />
-                          </span>
-                        </div>
-                      </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
               </div>
             );
-            return rowComp;
-          }
-        }
+
+          valueStr = Array.isArray(row.value)
+            ? row.value
+                .map((x) => get(x, fieldStringsArray.slice(1).join('.')))
+                .join(', ')
+            : get(row.value, fieldStringsArray.slice(1).join('.'));
+        } else
+          valueStr = Array.isArray(row.value)
+            ? row.value.join(', ')
+            : row.value;
+
         // handling some special field types
         switch (field) {
           case this.props.guppyConfig.downloadAccessor:
@@ -182,12 +161,6 @@ class ExplorerTable extends React.Component {
                 <span title={valueStr}>
                   <a href={`/files/${valueStr}`}>{valueStr}</a>
                 </span>
-              </div>
-            );
-          case 'file_size':
-            return (
-              <div>
-                <span title={valueStr}>{humanFileSize(valueStr)}</span>
               </div>
             );
           case this.props.tableConfig.linkFields.includes(field) && field:
@@ -203,6 +176,12 @@ class ExplorerTable extends React.Component {
                 isExternal
               />
             ) : null;
+          case 'file_size':
+            return (
+              <div>
+                <span title={valueStr}>{humanFileSize(valueStr)}</span>
+              </div>
+            );
           case 'external_references.external_links': {
             if (row.value === null) return null;
             const [
@@ -227,7 +206,6 @@ class ExplorerTable extends React.Component {
         }
       },
     };
-    return columnConfig;
   };
 
   /**
