@@ -63,39 +63,28 @@ class ExplorerTable extends React.Component {
    * @param {string} columnName
    */
   getWidthForColumn = (field, columnName) => {
+    // special cases
     if (field === 'external_links') return 200;
-
-    if (this.props.tableConfig.linkFields.includes(field)) {
-      return 80;
-    }
+    if (this.props.tableConfig.linkFields.includes(field)) return 80;
+    if ((this.props.rawData ?? []).length === 0) return 100;
 
     // some magic numbers that work fine for table columns width
-    const minWidth = 100;
     const maxWidth = 400;
     const letterWidth = 8;
     const spacing = 20;
-    if (!this.props.rawData || this.props.rawData.length === 0) {
-      return minWidth;
-    }
+
+    const [fieldName] = field.split('.');
     let maxLetterLen = columnName.length;
-    const fieldStringsArray = field.split('.');
-    this.props.rawData.forEach((d) => {
-      if (
-        d[fieldStringsArray[0]] === null ||
-        typeof d[fieldStringsArray[0]] === 'undefined'
-      ) {
-        return;
-      }
+
+    for (const d of this.props.rawData) {
       // the calculation logic here is a bit wild if it is a nested array field
       // it would convert the whole array to string and calculate
       // which in most cases would exceed the maxWidth so just use maxWidth
-      const str =
-        d[fieldStringsArray[0]].toString && d[fieldStringsArray[0]].toString();
-      const len = str ? str.length : 0;
-      maxLetterLen = len > maxLetterLen ? len : maxLetterLen;
-    });
-    const resWidth = Math.min(maxLetterLen * letterWidth + spacing, maxWidth);
-    return resWidth;
+      const len = d?.[fieldName]?.toString().length ?? 0;
+      maxLetterLen = Math.max(len, maxLetterLen);
+    }
+
+    return Math.min(maxLetterLen * letterWidth + spacing, maxWidth);
   };
 
   /**
