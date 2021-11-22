@@ -158,84 +158,92 @@ class ExplorerTable extends React.Component {
   }
 
   /**
-   * Build column configs for each table according to their locations and fields
-   * @param {string} field: the full field name, if it is a nested field, it would contains at least 1 '.'
-   * @param {boolean} isNestedTableColumn: control flag to determine if it is building column config for
-   * the root table or inner nested tables
-   * @param {boolean} isDetailedColumn: control flag to determine if it is building column config for inner
-   * most nested table
+   * Build column config for each table according to their locations and fields
+   * @param {string} field: the full field name
    * @returns {ReactTableColumn} a column config for the input field which can be used by react-table
    */
-  buildColumnConfig = (field, isNestedTableColumn, isDetailedColumn) => {
-    const { fieldMapping } = this.props.guppyConfig;
+  buildColumnConfig = (field) => {
+    const { downloadAccessor, fieldMapping } = this.props.guppyConfig;
     const overrideName = fieldMapping?.find((i) => i.field === field)?.name;
-    const fieldStringsArray = field.split('.');
-    // for nested table, we only display the children names in column header
-    // i.e.: visits.follow_ups.follow_up_label => follow_ups.follow_up_label
-    const fieldName =
-      overrideName ?? isNestedTableColumn
-        ? capitalizeFirstLetter(fieldStringsArray.slice(1).join('.'))
-        : capitalizeFirstLetter(field);
+    const fieldName = overrideName ?? capitalizeFirstLetter(field);
 
     return {
       Header: fieldName,
       id: field,
       maxWidth: 600,
+      width: getColumnWidth({
+        field,
+        columnName: fieldName,
+        linkFields: this.props.tableConfig.linkFields,
+        rawData: this.props.rawData,
+      }),
+      accessor: (d) => d[field],
+      Cell: ({ value }) =>
+        getCellElement({
+          downloadAccessor,
+          field,
+          linkFields: this.props.tableConfig.linkFields,
+          rowValue: value,
+          valueStr: Array.isArray(value) ? value.join(', ') : value,
+        }),
+    };
+  };
+
+  /**
+   * Build nested column config for each table according to their locations and fields
+   * @param {string} field the full field name, contains at least 1 '.'
+   * @param {boolean} [isDetailedColumn] control flag to determine if it is building column config for inner
+   * most nested table
+   * @returns {ReactTableColumn} a column config for the input field which can be used by react-table
+   */
+  buildNestedColumnConfig = (field, isDetailedColumn = false) => {
+    const { downloadAccessor, fieldMapping } = this.props.guppyConfig;
+    const overrideName = fieldMapping?.find((i) => i.field === field)?.name;
+    const fieldStringsArray = field.split('.');
+    // for nested table, we only display the children names in column header
+    // i.e.: visits.follow_ups.follow_up_label => follow_ups.follow_up_label
+    const nestedFieldName = fieldStringsArray.slice(1).join('.');
+
+    return {
+      Header: overrideName ?? capitalizeFirstLetter(nestedFieldName),
+      id: field,
+      maxWidth: 600,
       // for nested table we set the width arbitrary wrt view width
       // because the width of its parent row is too big
       // @ts-ignore
-      width: isNestedTableColumn
-        ? '70vw'
-        : getColumnWidth({
-            field,
-            columnName: fieldName,
-            linkFields: this.props.tableConfig.linkFields,
-            rawData: this.props.rawData,
-          }),
+      width: '70vw',
       accessor: (d) => d[fieldStringsArray[0]],
-      Cell: (row) => {
-        let valueStr = '';
-        if (fieldStringsArray.length > 1) {
-          if (isDetailedColumn)
-            // for inner most detailed table, 1 value per row
-            return (
-              <div className='rt-tbody'>
-                <div className='rt-tr-group'>
-                  {row.value.map((element, i) => (
-                    <div
-                      className={`rt-tr ${i % 2 === 0 ? '-even' : '-odd'}`}
-                      key={i}
-                    >
-                      <div className='rt-td'>
-                        <span>
-                          {get(element, fieldStringsArray.slice(1).join('.'))}
-                          <br />
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+      Cell: ({ value }) =>
+        // for inner most detailed table, 1 value per row
+        isDetailedColumn ? (
+          <div className='rt-tbody'>
+            <div className='rt-tr-group'>
+              {value.map((v, i) => (
+                <div
+                  className={`rt-tr ${i % 2 === 0 ? '-even' : '-odd'}`}
+                  key={i}
+                >
+                  <div className='rt-td'>
+                    <span>
+                      {get(v, nestedFieldName)}
+                      <br />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            );
-
-          valueStr = Array.isArray(row.value)
-            ? row.value
-                .map((x) => get(x, fieldStringsArray.slice(1).join('.')))
-                .join(', ')
-            : get(row.value, fieldStringsArray.slice(1).join('.'));
-        } else
-          valueStr = Array.isArray(row.value)
-            ? row.value.join(', ')
-            : row.value;
-
-        return getCellElement({
-          downloadAccessor: this.props.guppyConfig.downloadAccessor,
-          field,
-          linkFields: this.props.tableConfig.linkFields,
-          rowValue: row.value,
-          valueStr,
-        });
-      },
+              ))}
+            </div>
+          </div>
+        ) : (
+          getCellElement({
+            downloadAccessor,
+            field,
+            linkFields: this.props.tableConfig.linkFields,
+            rowValue: value,
+            valueStr: Array.isArray(value)
+              ? value.map((v) => get(v, nestedFieldName)).join(', ')
+              : get(value, nestedFieldName),
+          })
+        ),
     };
   };
 
@@ -277,8 +285,8 @@ class ExplorerTable extends React.Component {
       const secondLevelColumns = [];
       for (const nestedFieldName of nestedArrayFieldNames[key]) {
         const field = `${key}.${nestedFieldName}`;
-        firstLevelColumns.push(this.buildColumnConfig(field, true, false));
-        secondLevelColumns.push(this.buildColumnConfig(field, true, true));
+        firstLevelColumns.push(this.buildNestedColumnConfig(field));
+        secondLevelColumns.push(this.buildNestedColumnConfig(field, true));
       }
 
       nestedArrayFieldColumnConfigs[key].push(
@@ -298,8 +306,8 @@ class ExplorerTable extends React.Component {
       return null;
     }
     // build column configs for root table first
-    const rootColumnsConfig = this.props.tableConfig.fields.map((field) =>
-      this.buildColumnConfig(field, false, false)
+    const rootColumnsConfig = this.props.tableConfig.fields.map(
+      this.buildColumnConfig
     );
     if (!this.props.tableConfig.ordered) {
       rootColumnsConfig.sort((a, b) =>
