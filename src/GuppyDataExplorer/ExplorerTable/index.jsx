@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 import ReactTable from 'react-table';
@@ -126,68 +126,64 @@ function getCellElement({
 
 /**
  * @typedef {Object} ExplorerTableProps
- * @property {Object[]} rawData
- * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise} fetchAndUpdateRawData
  * @property {number} accessibleCount
- * @property {boolean} isLocked
  * @property {string} className
  * @property {number} defaultPageSize
- * @property {{ fields: string[]; linkFields: string[]; ordered: boolean }} tableConfig
+ * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise} fetchAndUpdateRawData
  * @property {GuppyConfig} guppyConfig
+ * @property {boolean} isLocked
+ * @property {Object[]} rawData
+ * @property {{ fields: string[]; linkFields: string[]; ordered: boolean }} tableConfig
  * @property {number} totalCount
  */
 
-/**
- * @typedef {Object} ExplorerTableState
- * @property {number} pageSize
- * @property {number} currentPage
- * @property {boolean} isInitialFetchData
- */
-
-/** @augments {React.Component<ExplorerTableProps, ExplorerTableState>} */
-class ExplorerTable extends React.Component {
-  /** @param {ExplorerTableProps} props */
-  constructor(props) {
-    super(props);
-    /** @type {ExplorerTableState} */
-    this.state = {
-      pageSize: props.defaultPageSize,
-      currentPage: 0,
-      isInitialFetchData: true,
-    };
-  }
+/** @param {ExplorerTableProps} props */
+function ExplorerTable({
+  accessibleCount,
+  className = '',
+  defaultPageSize = 20,
+  fetchAndUpdateRawData,
+  guppyConfig,
+  isLocked,
+  rawData = [],
+  tableConfig,
+  totalCount,
+}) {
+  const [pageSize, setPageSize] = useState(defaultPageSize);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isInitialFetchData, setIsInitialFetchData] = useState(true);
 
   /**
    * Build column config for each table according to their locations and fields
    * @param {string} field: the full field name
    * @returns {ReactTableColumn} a column config for the input field which can be used by react-table
    */
-  buildColumnConfig = (field) => {
-    const { downloadAccessor, fieldMapping } = this.props.guppyConfig;
+  function buildColumnConfig(field) {
+    const { downloadAccessor, fieldMapping } = guppyConfig;
     const overrideName = fieldMapping?.find((i) => i.field === field)?.name;
-    const fieldName = overrideName ?? capitalizeFirstLetter(field);
+    const columnName = overrideName ?? capitalizeFirstLetter(field);
 
     return {
-      Header: fieldName,
+      Header: columnName,
       id: field,
       maxWidth: 600,
       width: getColumnWidth({
         field,
-        columnName: fieldName,
-        linkFields: this.props.tableConfig.linkFields,
-        rawData: this.props.rawData,
+        columnName,
+        linkFields: tableConfig.linkFields,
+        rawData,
       }),
       accessor: (d) => d[field],
       Cell: ({ value }) =>
         getCellElement({
           downloadAccessor,
           field,
-          linkFields: this.props.tableConfig.linkFields,
+          linkFields: tableConfig.linkFields,
           value,
           valueStr: Array.isArray(value) ? value.join(', ') : value,
         }),
     };
-  };
+  }
 
   /**
    * Build nested column config for each table according to their locations and fields
@@ -196,8 +192,8 @@ class ExplorerTable extends React.Component {
    * most nested table
    * @returns {ReactTableColumn} a column config for the input field which can be used by react-table
    */
-  buildNestedColumnConfig = (field, isDetailedColumn = false) => {
-    const { downloadAccessor, fieldMapping } = this.props.guppyConfig;
+  function buildNestedColumnConfig(field, isDetailedColumn = false) {
+    const { downloadAccessor, fieldMapping } = guppyConfig;
     const overrideName = fieldMapping?.find((i) => i.field === field)?.name;
     const fieldStringsArray = field.split('.');
     // for nested table, we only display the children names in column header
@@ -237,7 +233,7 @@ class ExplorerTable extends React.Component {
           getCellElement({
             downloadAccessor,
             field,
-            linkFields: this.props.tableConfig.linkFields,
+            linkFields: tableConfig.linkFields,
             value,
             valueStr: Array.isArray(value)
               ? value.map((v) => get(v, nestedFieldName)).join(', ')
@@ -245,7 +241,7 @@ class ExplorerTable extends React.Component {
           })
         ),
     };
-  };
+  }
 
   /**
    * Build column configs nested array fields
@@ -274,7 +270,7 @@ class ExplorerTable extends React.Component {
    *    ]
    * }
    */
-  buildNestedArrayFieldColumnConfigs = (nestedArrayFieldNames) => {
+  function buildNestedArrayFieldColumnConfigs(nestedArrayFieldNames) {
     /** @type {{ [x: string]: ReactTableColumn[][] }} */
     const nestedArrayFieldColumnConfigs = {};
     for (const key of Object.keys(nestedArrayFieldNames)) {
@@ -285,8 +281,8 @@ class ExplorerTable extends React.Component {
       const secondLevelColumns = [];
       for (const nestedFieldName of nestedArrayFieldNames[key]) {
         const field = `${key}.${nestedFieldName}`;
-        firstLevelColumns.push(this.buildNestedColumnConfig(field));
-        secondLevelColumns.push(this.buildNestedColumnConfig(field, true));
+        firstLevelColumns.push(buildNestedColumnConfig(field));
+        secondLevelColumns.push(buildNestedColumnConfig(field, true));
       }
 
       nestedArrayFieldColumnConfigs[key].push(
@@ -296,173 +292,149 @@ class ExplorerTable extends React.Component {
     }
 
     return nestedArrayFieldColumnConfigs;
-  };
+  }
 
-  render() {
-    if (
-      !this.props.tableConfig.fields ||
-      this.props.tableConfig.fields.length === 0
-    ) {
-      return null;
-    }
-    // build column configs for root table first
-    const rootColumnsConfig = this.props.tableConfig.fields.map(
-      this.buildColumnConfig
-    );
-    if (!this.props.tableConfig.ordered) {
-      rootColumnsConfig.sort((a, b) =>
-        String(a.Header).localeCompare(String(b.Header))
-      );
-    }
-    /** @type {{ [x: string]: string[] }} */
-    const nestedArrayFieldNames = {};
-    this.props.tableConfig.fields.forEach((field) => {
-      if (field.includes('.')) {
-        const fieldStringsArray = field.split('.');
-        if (
-          this.props.rawData &&
-          this.props.rawData.length > 0 &&
-          Array.isArray(this.props.rawData[0][fieldStringsArray[0]])
-        ) {
-          if (!nestedArrayFieldNames[fieldStringsArray[0]]) {
-            nestedArrayFieldNames[fieldStringsArray[0]] = [];
-          }
-          nestedArrayFieldNames[fieldStringsArray[0]].push(
-            fieldStringsArray.slice(1, fieldStringsArray.length).join('.')
-          );
-        }
-      }
-    });
-    /** @type {import('react-table').SubComponentFunction} */
-    let subComponent = null;
-    if (Object.keys(nestedArrayFieldNames).length > 0) {
-      // eslint-disable-next-line max-len
-      const nestedArrayFieldColumnConfigs = this.buildNestedArrayFieldColumnConfigs(
-        nestedArrayFieldNames
-      );
-      // this is the subComponent of the two-level nested tables
-      subComponent = (row) =>
-        Object.keys(nestedArrayFieldColumnConfigs).map((key) => {
-          const rowData =
-            this.props.isLocked || !this.props.rawData
-              ? []
-              : this.props.rawData.slice(row.index, row.index + 1);
-          return (
-            <div className='explorer-nested-table' key={key}>
-              <ReactTable
-                data={this.props.isLocked || !rowData ? [] : rowData}
-                columns={nestedArrayFieldColumnConfigs[key][0]}
-                defaultPageSize={1}
-                showPagination={false}
-                SubComponent={() => (
-                  <div className='explorer-nested-table'>
-                    <ReactTable
-                      data={this.props.isLocked || !rowData ? [] : rowData}
-                      columns={nestedArrayFieldColumnConfigs[key][1]}
-                      defaultPageSize={1}
-                      showPagination={false}
-                    />
-                  </div>
-                )}
-              />
-            </div>
-          );
-        });
-    }
-
-    const { accessibleCount, totalCount } = this.props;
-    const { pageSize } = this.state;
-    const totalPages =
-      Math.floor(accessibleCount / pageSize) +
-      (accessibleCount % pageSize === 0 ? 0 : 1);
-    const SCROLL_SIZE = 10000;
-    const visiblePages = Math.min(
-      totalPages,
-      Math.round(SCROLL_SIZE / pageSize + 0.49)
-    );
-    const start = this.state.currentPage * this.state.pageSize + 1;
-    const end = (this.state.currentPage + 1) * this.state.pageSize;
-    const currentPageRange =
-      // eslint-disable-next-line no-nested-ternary
-      accessibleCount < end
-        ? accessibleCount < 2
-          ? accessibleCount.toLocaleString()
-          : `${start.toLocaleString()} - ${accessibleCount.toLocaleString()}`
-        : `${start.toLocaleString()} - ${end.toLocaleString()}`;
-    const dataTypeString = pluralize(this.props.guppyConfig.dataType);
-    const explorerTableCaption = `Showing ${currentPageRange} of ${accessibleCount.toLocaleString()} ${dataTypeString}`;
-
-    return (
-      <div className={`explorer-table ${this.props.className}`}>
-        {!this.props.isLocked && (
-          <p className='explorer-table__description'>
-            {explorerTableCaption}{' '}
-            {accessibleCount !== totalCount && (
-              <Tooltip
-                placement='right'
-                arrowContent={<div className='rc-tooltip-arrow-inner' />}
-                overlay={
-                  <span>
-                    This table only shows data you can access. Click
-                    {' "Request Access"'} button above for more.
-                  </span>
-                }
-              >
-                <FontAwesomeIcon
-                  icon='exclamation-triangle'
-                  color='var(--pcdc-color__secondary)'
-                />
-              </Tooltip>
-            )}
-          </p>
-        )}
-        <ReactTable
-          columns={rootColumnsConfig}
-          manual
-          data={
-            this.props.isLocked || !this.props.rawData ? [] : this.props.rawData
-          }
-          showPageSizeOptions={!this.props.isLocked}
-          // eslint-disable-next-line max-len
-          pages={this.props.isLocked ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
-          onFetchData={
-            this.state.isInitialFetchData
-              ? () => this.setState({ isInitialFetchData: false })
-              : (state) =>
-                  this.props
-                    .fetchAndUpdateRawData({
-                      offset: state.page * state.pageSize,
-                      size: state.pageSize,
-                      sort: state.sorted.map((i) => ({
-                        [i.id]: i.desc ? 'desc' : 'asc',
-                      })),
-                    })
-                    .then(() =>
-                      this.setState({
-                        pageSize: state.pageSize,
-                        currentPage: state.page,
-                      })
-                    )
-          }
-          defaultPageSize={this.props.defaultPageSize}
-          className={'-striped -highlight '}
-          minRows={3} // make room for no data component
-          resizable={false}
-          NoDataComponent={() =>
-            this.props.isLocked ? (
-              <div className='rt-noData'>
-                <LockIcon width={30} />
-                <p>You only have access to summary data</p>
-              </div>
-            ) : (
-              <div className='rt-noData'>No data to display</div>
-            )
-          }
-          SubComponent={this.props.isLocked ? null : subComponent}
-        />
-      </div>
+  if (!tableConfig.fields || tableConfig.fields.length === 0) {
+    return null;
+  }
+  // build column configs for root table first
+  const rootColumnsConfig = tableConfig.fields.map(buildColumnConfig);
+  if (!tableConfig.ordered) {
+    rootColumnsConfig.sort((a, b) =>
+      String(a.Header).localeCompare(String(b.Header))
     );
   }
+  /** @type {{ [x: string]: string[] }} */
+  const nestedArrayFieldNames = {};
+  for (const field of tableConfig.fields)
+    if (field.includes('.')) {
+      const fieldStringsArray = field.split('.');
+      if (Array.isArray(rawData?.[0]?.[fieldStringsArray[0]])) {
+        if (!nestedArrayFieldNames[fieldStringsArray[0]])
+          nestedArrayFieldNames[fieldStringsArray[0]] = [];
+
+        nestedArrayFieldNames[fieldStringsArray[0]].push(
+          fieldStringsArray.slice(1).join('.')
+        );
+      }
+    }
+
+  /** @type {import('react-table').SubComponentFunction} */
+  let subComponent = null;
+  if (Object.keys(nestedArrayFieldNames).length > 0) {
+    // eslint-disable-next-line max-len
+    const nestedArrayFieldColumnConfigs = buildNestedArrayFieldColumnConfigs(
+      nestedArrayFieldNames
+    );
+    // this is the subComponent of the two-level nested tables
+    subComponent = (row) =>
+      Object.keys(nestedArrayFieldColumnConfigs).map((key) => {
+        const rowData =
+          isLocked || !rawData ? [] : rawData.slice(row.index, row.index + 1);
+        return (
+          <div className='explorer-nested-table' key={key}>
+            <ReactTable
+              data={isLocked || !rowData ? [] : rowData}
+              columns={nestedArrayFieldColumnConfigs[key][0]}
+              defaultPageSize={1}
+              showPagination={false}
+              SubComponent={() => (
+                <div className='explorer-nested-table'>
+                  <ReactTable
+                    data={isLocked || !rowData ? [] : rowData}
+                    columns={nestedArrayFieldColumnConfigs[key][1]}
+                    defaultPageSize={1}
+                    showPagination={false}
+                  />
+                </div>
+              )}
+            />
+          </div>
+        );
+      });
+  }
+
+  const totalPages =
+    Math.floor(accessibleCount / pageSize) +
+    (accessibleCount % pageSize === 0 ? 0 : 1);
+  const SCROLL_SIZE = 10000;
+  const visiblePages = Math.min(
+    totalPages,
+    Math.round(SCROLL_SIZE / pageSize + 0.49)
+  );
+  const start = currentPage * pageSize + 1;
+  const end = (currentPage + 1) * pageSize;
+  const currentPageRange =
+    // eslint-disable-next-line no-nested-ternary
+    accessibleCount < end
+      ? accessibleCount < 2
+        ? accessibleCount.toLocaleString()
+        : `${start.toLocaleString()} - ${accessibleCount.toLocaleString()}`
+      : `${start.toLocaleString()} - ${end.toLocaleString()}`;
+  const dataTypeString = pluralize(guppyConfig.dataType);
+
+  return (
+    <div className={`explorer-table ${className}`}>
+      {!isLocked && (
+        <p className='explorer-table__description'>
+          {`Showing ${currentPageRange} of ${accessibleCount.toLocaleString()} ${dataTypeString} `}
+          {accessibleCount !== totalCount && (
+            <Tooltip
+              placement='right'
+              arrowContent={<div className='rc-tooltip-arrow-inner' />}
+              overlay={
+                <span>
+                  This table only shows data you can access. Click
+                  {' "Request Access"'} button above for more.
+                </span>
+              }
+            >
+              <FontAwesomeIcon
+                icon='exclamation-triangle'
+                color='var(--pcdc-color__secondary)'
+              />
+            </Tooltip>
+          )}
+        </p>
+      )}
+      <ReactTable
+        columns={rootColumnsConfig}
+        manual
+        data={isLocked || !rawData ? [] : rawData}
+        showPageSizeOptions={!isLocked}
+        pages={isLocked ? 0 : visiblePages}
+        onFetchData={(s) =>
+          isInitialFetchData
+            ? setIsInitialFetchData(false)
+            : fetchAndUpdateRawData({
+                offset: s.page * s.pageSize,
+                size: s.pageSize,
+                sort: s.sorted.map((i) => ({
+                  [i.id]: i.desc ? 'desc' : 'asc',
+                })),
+              }).then(() => {
+                setPageSize(s.pageSize);
+                setCurrentPage(s.page);
+              })
+        }
+        defaultPageSize={defaultPageSize}
+        className={'-striped -highlight '}
+        minRows={3} // make room for no data component
+        resizable={false}
+        NoDataComponent={() =>
+          isLocked ? (
+            <div className='rt-noData'>
+              <LockIcon width={30} />
+              <p>You only have access to summary data</p>
+            </div>
+          ) : (
+            <div className='rt-noData'>No data to display</div>
+          )
+        }
+        SubComponent={isLocked ? null : subComponent}
+      />
+    </div>
+  );
 }
 
 ExplorerTable.propTypes = {
@@ -475,12 +447,6 @@ ExplorerTable.propTypes = {
   tableConfig: TableConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
   totalCount: PropTypes.number,
-};
-
-ExplorerTable.defaultProps = {
-  rawData: [],
-  className: '',
-  defaultPageSize: 20,
 };
 
 export default ExplorerTable;
