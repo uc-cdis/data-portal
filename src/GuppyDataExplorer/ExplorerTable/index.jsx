@@ -266,27 +266,6 @@ class ExplorerTable extends React.Component {
     return nestedArrayFieldColumnConfigs;
   };
 
-  /**
-   * @param {Object} state
-   * @param {number} state.page
-   * @param {number} state.pageSize
-   * @param {{ id: string; desc: boolean }[]} state.sorted
-   */
-  fetchData = ({ page, pageSize, sorted }) => {
-    this.props
-      .fetchAndUpdateRawData({
-        offset: page * pageSize,
-        size: pageSize,
-        sort: sorted.map((i) => ({ [i.id]: i.desc ? 'desc' : 'asc' })),
-      })
-      .then(() => {
-        this.setState({
-          pageSize,
-          currentPage: page,
-        });
-      });
-  };
-
   render() {
     if (
       !this.props.tableConfig.fields ||
@@ -417,7 +396,21 @@ class ExplorerTable extends React.Component {
           onFetchData={
             this.state.isInitialFetchData
               ? () => this.setState({ isInitialFetchData: false })
-              : this.fetchData
+              : (state) =>
+                  this.props
+                    .fetchAndUpdateRawData({
+                      offset: state.page * state.pageSize,
+                      size: state.pageSize,
+                      sort: state.sorted.map((i) => ({
+                        [i.id]: i.desc ? 'desc' : 'asc',
+                      })),
+                    })
+                    .then(() =>
+                      this.setState({
+                        pageSize: state.pageSize,
+                        currentPage: state.page,
+                      })
+                    )
           }
           defaultPageSize={this.props.defaultPageSize}
           className={'-striped -highlight '}
