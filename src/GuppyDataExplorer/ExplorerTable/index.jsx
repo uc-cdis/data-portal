@@ -205,37 +205,37 @@ function ExplorerTable({
       // @ts-ignore
       width: '70vw',
       accessor: (d) => d[fieldStringsArray[0]],
-      Cell: ({ value }) =>
-        // for inner most detailed table, 1 value per row
-        isDetailedColumn ? (
-          <div className='rt-tbody'>
-            <div className='rt-tr-group'>
-              {value.map((v, i) => (
-                <div
-                  className={`rt-tr ${i % 2 === 0 ? '-even' : '-odd'}`}
-                  key={i}
-                >
-                  <div className='rt-td'>
-                    <span>
-                      {get(v, nestedFieldName)}
-                      <br />
-                    </span>
+      Cell: isDetailedColumn
+        ? ({ value }) => (
+            // for inner most detailed table, 1 value per row
+            <div className='rt-tbody'>
+              <div className='rt-tr-group'>
+                {value.map((v, i) => (
+                  <div
+                    className={`rt-tr ${i % 2 === 0 ? '-even' : '-odd'}`}
+                    key={i}
+                  >
+                    <div className='rt-td'>
+                      <span>
+                        {get(v, nestedFieldName)}
+                        <br />
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        ) : (
-          getCellElement({
-            downloadAccessor,
-            field,
-            linkFields,
-            value,
-            valueStr: Array.isArray(value)
-              ? value.map((v) => get(v, nestedFieldName)).join(', ')
-              : get(value, nestedFieldName),
-          })
-        ),
+          )
+        : ({ value }) =>
+            getCellElement({
+              downloadAccessor,
+              field,
+              linkFields,
+              value,
+              valueStr: Array.isArray(value)
+                ? value.map((v) => get(v, nestedFieldName)).join(', ')
+                : get(value, nestedFieldName),
+            }),
     };
   }
 
