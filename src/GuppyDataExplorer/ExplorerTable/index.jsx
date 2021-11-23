@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
-import ReactTable from 'react-table';
+import ReactTable from 'react-table-6';
 import Tooltip from 'rc-tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import IconicLink from '../../components/buttons/IconicLink';
@@ -13,7 +13,7 @@ import LockIcon from '../../img/icons/lock.svg';
 import dictIcons from '../../img/icons/index';
 import '../typedef';
 
-/** @typedef {import('react-table').Column} ReactTableColumn */
+/** @typedef {import('react-table-6').Column} ReactTableColumn */
 
 /**
  * A simplified alternative to lodash/get using string path of property names only.
@@ -305,7 +305,7 @@ function ExplorerTable({
       }
     }
 
-  /** @type {import('react-table').SubComponentFunction} */
+  /** @type {import('react-table-6').SubComponentFunction} */
   let SubComponent = null;
   if (Object.keys(nestedArrayFieldNames).length > 0) {
     // eslint-disable-next-line max-len
