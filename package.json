@@ -65,6 +65,7 @@
     "react-select-async-paginate": "^0.6.0",
     "react-svg-loader": "^3.0.3",
     "react-table": "^6.9.2",
+    "react-table-6": "^6.11.0",
     "react-virtualized": "^9.22.3",
     "recharts": "^2.1.6",
     "redux": "^4.1.2",
