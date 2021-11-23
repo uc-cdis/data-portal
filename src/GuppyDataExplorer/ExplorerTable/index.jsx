@@ -127,12 +127,12 @@ function getCellElement({
 /**
  * @typedef {Object} ExplorerTableProps
  * @property {number} accessibleCount
- * @property {string} className
- * @property {number} defaultPageSize
+ * @property {string} [className]
+ * @property {number} [defaultPageSize]
  * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise} fetchAndUpdateRawData
  * @property {GuppyConfig} guppyConfig
  * @property {boolean} isLocked
- * @property {Object[]} rawData
+ * @property {Object[]} [rawData]
  * @property {{ fields: string[]; linkFields: string[]; ordered: boolean }} tableConfig
  * @property {number} totalCount
  */
@@ -430,7 +430,7 @@ ExplorerTable.propTypes = {
   isLocked: PropTypes.bool.isRequired,
   rawData: PropTypes.array, // from GuppyWrapper
   tableConfig: TableConfigType.isRequired,
-  totalCount: PropTypes.number,
+  totalCount: PropTypes.number.isRequired, // from GuppyWrapper
 };
 
 export default ExplorerTable;
