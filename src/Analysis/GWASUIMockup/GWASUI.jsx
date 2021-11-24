@@ -10,13 +10,6 @@ import { getAllSources, getCohortJsonByName, getCohortCsvByName } from '../../co
 
 const { Step } = Steps;
 
-const consoleHelper = (funcName, stateArr) => {
-  console.log(`${funcName} called`);
-  for (const item of stateArr) {
-    console.log('key', item.key, 'value', item.value);
-  }
-}
-
 const steps = [
   {
     title: 'Step 1',
@@ -82,7 +75,6 @@ const GWASUI = (props) => {
 
   const onStep3FormSubmit = useCallback((values) => {
     setNumOfPC(values.numOfPC);
-    consoleHelper('onStep3FormSubmit', [{ key: 'numOfPC:', value: values.numOfPC }, { key: 'callBackVals:', value: values }]);
   }, []);
 
   const handleDelete = (key) => {
@@ -95,7 +87,6 @@ const GWASUI = (props) => {
       covariates: newlySelectedCovariates.map((val) => val.name),
       // outcome: newlySelectedPhenotype.name,
     });
-    consoleHelper('handleDelete', [{ key: 'newlySelectedPhenotype:', value: newlySelectedPhenotype }, { key: 'newlySelectedCovariates:', value: newlySelectedCovariates }, { key: 'form:', value: form }]);
   };
 
   const step1TableRowSelection = {
@@ -103,38 +94,12 @@ const GWASUI = (props) => {
     columnTitle: 'Select',
     selectedRowKeys: (selectedCohort) ? [selectedCohort.SourceId] : [],
     onChange: (_, selectedRows) => {
-      // console.log('selectedCohort', selectedRows, selectedRows[0]);
       setSelectedCohort(selectedRows[0]);
       initializeCohortData(selectedRows[0].SourceName);
-
-      consoleHelper('step1TableRowSelection', [{ key: 'selectedRow:', value: selectedRows[0] }, { key: 'Rows', value: selectedRows }, { key: 'selectedCohort', value: selectedCohort }]);
     },
   };
 
-  // const step1TableConfig = [
-  //   {
-  //     title: 'Cohort ID',
-  //     dataIndex: 'cohort_id',
-  //     key: 'cohortID',
-  //   },
-  //   {
-  //     title: 'Cohort Name',
-  //     dataIndex: 'cohort_name',
-  //     key: 'cohortName',
-  //   },
-  //   {
-  //     title: 'Cohort Size',
-  //     dataIndex: 'size',
-  //     key: 'size',
-  //   },
-  // ];
-
   const step1TableConfig = [
-    // {
-    //   title: 'Source ID',
-    //   dataIndex: 'SourceId',
-    //   key: 'sourceID'
-    // },
     {
       title: 'Source Name',
       dataIndex: 'SourceName',
@@ -147,32 +112,17 @@ const GWASUI = (props) => {
     columnTitle: 'Select',
     selectedRowKeys: selectedConcepts.map((val) => val.concept_id),
     onChange: (_, selectedRows) => {
-      // console.log('selectedConcepts', selectedConcepts);
-      // console.log('selectedRowKeys', selectedConcepts.map((val) => val.concept_id));
-      // console.log('SELECTED ROWS', selectedRows);
       setSelectedConcepts(selectedRows);
     },
   };
 
   const step2TableConfig = [
-    // {
-    //   title: 'Concept ID',
-    //   dataIndex: 'concept_id',
-    //   key: 'conceptID',
-    //   filterSearch: true,
-    // },
     {
       title: 'Concept Name',
       dataIndex: 'name',
       key: 'conceptName',
       filterSearch: true,
-    },
-    // {
-    //   title: 'Domain',
-    //   dataIndex: 'domain',
-    //   key: 'domain',
-    //   filterSearch: true,
-    // },
+    }
   ];
 
   const step3TableRowSelection = {
@@ -187,7 +137,6 @@ const GWASUI = (props) => {
         covariates: newlySelectedCovariates.map((val) => val.name),
         outcome: selectedRows[0].name,
       });
-      // consoleHelper('step3TableRowSelection', [{ key: 'selectedRows:', value: selectedRows }, { key: 'newSelectedCovariates:', value: newlySelectedCovariates }, { key: 'form:', value: form }]);
     },
 
   };
@@ -203,17 +152,11 @@ const GWASUI = (props) => {
       dataIndex: 'name',
       key: 'conceptName',
     },
-    // {
-    //   title: 'Domain',
-    //   dataIndex: 'domain',
-    //   key: 'domain',
-    // },
     {
       title: 'Missing',
       dataIndex: 'n_missing',
       key: 'missing',
       render: (_, record) => (
-        // <span>{`${record.n_missing} / ${record.cohort_size} (${(record.n_missing_ratio * 100).toFixed(0)}%)`}</span>
         <span>{`${(record.n_missing_ratio * 100).toFixed(0)}%`}</span>
       ),
     },
@@ -231,9 +174,6 @@ const GWASUI = (props) => {
 
   const userHasMariner = () => userHasMethodForServiceOnResource('access', 'mariner', '/mariner', props.userAuthMapping);
 
-  const handleCsv = (jobName) => {
-    // console.log(jobName, cohortCsv);
-  }
 
   const cohortIterator = (cohortArr) => {
     const cohortKeys = Object.keys(cohortArr[0]);
@@ -278,6 +218,7 @@ const GWASUI = (props) => {
                 <Table
                   className='GWASUI-table1'
                   rowKey='SourceId'
+                  size="middle"
                   rowSelection={step1TableRowSelection}
                   columns={step1TableConfig}
                   dataSource={sources}
@@ -302,11 +243,6 @@ const GWASUI = (props) => {
           );
         }
         case 2: {
-          // const processedStep3Data = selectedConcepts.map((md) => ({
-          //   ...md,
-          //   cohort_size: selectedCohort.size,
-          //   n_missing: Math.round(selectedCohort.size * md.n_missing_ratio),
-          // }));
           return (
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
               <div className='GWASUI-mainTable'>
@@ -431,7 +367,6 @@ const GWASUI = (props) => {
                 {...layout}
                 name='control-hooks'
                 onFinish={(values) => {
-                  handleCsv(values.GWASJobName);
                   setJobName(values.GWASJobName);
                   setJobSubmittedRunID('run-12345');
                   setMarinerJobStatus([
@@ -500,7 +435,7 @@ const GWASUI = (props) => {
       <div className='steps-content'>
         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
           {generateContentForStep(current)}
-          {(selectedCohort && !showJobSubmissionResult) && <h4 className='GWASUI-selectedCohort'>{`Selected Cohort: ${selectedCohort.cohort_name}`}</h4>}
+          {(selectedCohort && !showJobSubmissionResult) && <h4 className='GWASUI-selectedCohort'>{`Selected Cohort: ${selectedCohort.SourceName}`}</h4>}
         </Space>
       </div>
       <div className='steps-action'>
