@@ -88,6 +88,26 @@ const GWASUI = (props) => {
     });
   };
 
+  const getMissingRatio = (cohortArr) => {
+    const cohortKeys = Object.keys(cohortArr[0]);
+    cohortKeys.shift();
+    const missingRatioArr = [];
+    cohortKeys.forEach(key => {
+      let keyRow = {};
+      cohortArr.forEach(cohort => {
+        if (cohort[key] !== "") {
+          keyRow[key] = (keyRow[key] + 1) || 1;
+        }
+      })
+      missingRatioArr.push(keyRow);
+    });
+    const len = cohortArr.length;
+    const stepArrayData = cohortKeys.map((element, i) => ({
+      concept_id: ((i + 1) * 1000) + i, name: element, n_missing_ratio: 1 - (missingRatioArr[i][element] / len)
+    }));
+    setCohortData(stepArrayData);
+  }
+
   const initializeCohortData = async (name) => {
     const json = await getCohortJsonByName(name);
     getMissingRatio(json["Cohort"]);
@@ -178,27 +198,6 @@ const GWASUI = (props) => {
 
   const userHasMariner = () => userHasMethodForServiceOnResource('access', 'mariner', '/mariner', props.userAuthMapping);
 
-
-  const getMissingRatio = (cohortArr) => {
-    const cohortKeys = Object.keys(cohortArr[0]);
-    cohortKeys.shift();
-    const missingRatioArr = [];
-    cohortKeys.forEach(key => {
-      let keyRow = {};
-      cohortArr.forEach(cohort => {
-        if (cohort[key] !== "") {
-          keyRow[key] = (keyRow[key]+1) || 1;
-        }
-      })
-      missingRatioArr.push(keyRow);
-    });
-    const len = cohortArr.length;
-    const stepArrayData = cohortKeys.map((element, i) => ({concept_id: ((i + 1) * 1000) + i, name: element, n_missing_ratio: 1 - (missingRatioArr[i][element] / len)}));
-    setCohortData(stepArrayData);
-  }
-
-
-
   const initializeSources = async () => {
     const sourceData = await getAllSources();
     setSources(sourceData["Sources"]);
@@ -209,194 +208,194 @@ const GWASUI = (props) => {
   }, []);
 
   const generateContentForStep = (stepIndex) => {
-      switch (stepIndex) {
-        case 0: {
-          return (
-            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <div className='GWASUI-mainTable'>
-                <Table
-                  className='GWASUI-table1'
-                  rowKey='SourceId'
-                  size="middle"
-                  rowSelection={step1TableRowSelection}
-                  columns={step1TableConfig}
-                  dataSource={sources}
-                />
-              </div>
-            </Space>
-          );
-        }
-        case 1: {
-          return (
-            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <div className='GWASUI-mainTable'>
-                <Table
-                  className='GWASUI-table2'
-                  rowKey='concept_id'
-                  rowSelection={step2TableRowSelection}
-                  columns={step2TableConfig}
-                  dataSource={cohortData}
-                />
-              </div>
-            </Space>
-          );
-        }
-        case 2: {
-          return (
-            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <div className='GWASUI-mainTable'>
-                <Table
-                  className='GWASUI-table3'
-                  rowKey='concept_id'
-                  rowSelection={step3TableRowSelection}
-                  columns={step3TableConfig}
-                  dataSource={selectedConcepts}
-                />
-              </div>
-            </Space>
-          );
-        }
-        case 3: {
-          return (
-            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <div className='GWASUI-mainArea'>
-                <Form
-                  name='GWASUI-parameter-form'
-                  form={form}
-                  labelCol={{
-                    span: 8,
-                  }}
-                  wrapperCol={{
-                    span: 16,
-                  }}
-                  initialValues={{
-                    numOfPC,
-                    isBinary: false,
-                  }}
-                  onFinish={onStep3FormSubmit}
-                  autoComplete='off'
-                >
-                  <Form.Item
-                    label='Number of PCs to use'
-                    name='numOfPC'
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please input a value between 1 to 10',
-                      },
-                    ]}
-                  >
-                    <InputNumber min={1} max={10} />
-                  </Form.Item>
-                  <Form.Item
-                    label='Covariates'
-                    name='covariates'
-                  >
-                    <Select
-                      mode='multiple'
-                      disabled
-                      style={{ width: '100%' }}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label='Outcome'
-                    name='outcome'
-                  >
-                    <Input
-                      disabled
-                      style={{ width: '100%' }}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label='Is Binary Outcome?'
-                    name='isBinary'
-                  >
-                    <Input
-                      disabled
-                      style={{ width: '100%' }}
-                    />
-                  </Form.Item>
-                </Form>
-              </div>
-            </Space>
-          );
-        }
-        case 4: {
-          const layout = {
-            labelCol: { span: 8 },
-            wrapperCol: { span: 16 },
-          };
-          const tailLayout = {
-            wrapperCol: { offset: 8, span: 16 },
-          };
-
-          if (showJobSubmissionResult) {
-            return (
-              <div className='GWASUI-mainArea'>
-                <Result
-                  status={(jobSubmittedRunID) ? 'success' : 'error'}
-                  title={(jobSubmittedRunID) ? 'GWAS Job Submitted Successfully' : 'GWAS Job Submission Failed'}
-                  subTitle={`GWAS Job Name: ${jobName}, run ID: ${jobSubmittedRunID}`}
-                  extra={[
-                    <Button
-                      key='done'
-                      onClick={() => {
-                        setCurrent(0);
-                        setSelectedCohort(undefined);
-                        setSelectedConcepts([]);
-                        setSelectedPhenotype(undefined);
-                        setSelectedCovariates([]);
-                        setNumOfPC(3);
-                        setJobName(undefined);
-                        setShowJobSubmissionResult(false);
-                        setJobSubmittedRunID(undefined);
-                      }}
-                    >
-                      Done
-                    </Button>,
-                  ]}
-                />
-              </div>
-            );
-          }
-
-          return (
+    switch (stepIndex) {
+      case 0: {
+        return (
+          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+            <div className='GWASUI-mainTable'>
+              <Table
+                className='GWASUI-table1'
+                rowKey='SourceId'
+                size="middle"
+                rowSelection={step1TableRowSelection}
+                columns={step1TableConfig}
+                dataSource={sources}
+              />
+            </div>
+          </Space>
+        );
+      }
+      case 1: {
+        return (
+          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+            <div className='GWASUI-mainTable'>
+              <Table
+                className='GWASUI-table2'
+                rowKey='concept_id'
+                rowSelection={step2TableRowSelection}
+                columns={step2TableConfig}
+                dataSource={cohortData}
+              />
+            </div>
+          </Space>
+        );
+      }
+      case 2: {
+        return (
+          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+            <div className='GWASUI-mainTable'>
+              <Table
+                className='GWASUI-table3'
+                rowKey='concept_id'
+                rowSelection={step3TableRowSelection}
+                columns={step3TableConfig}
+                dataSource={selectedConcepts}
+              />
+            </div>
+          </Space>
+        );
+      }
+      case 3: {
+        return (
+          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
             <div className='GWASUI-mainArea'>
               <Form
-                {...layout}
-                name='control-hooks'
-                onFinish={(values) => {
-                  setJobName(values.GWASJobName);
-                  setJobSubmittedRunID('run-12345');
-                  setMarinerJobStatus([
-                    ...marinerJobStatus,
-                    {
-                      runID: 'run-12345',
-                      status: 'running',
-                    },
-                  ]);
-                  setShowJobSubmissionResult(true);
+                name='GWASUI-parameter-form'
+                form={form}
+                labelCol={{
+                  span: 8,
                 }}
+                wrapperCol={{
+                  span: 16,
+                }}
+                initialValues={{
+                  numOfPC,
+                  isBinary: false,
+                }}
+                onFinish={onStep3FormSubmit}
+                autoComplete='off'
               >
-                <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name for GWAS job!' }]}>
-                  <Input placeholder='my_gwas_20201101_1' />
+                <Form.Item
+                  label='Number of PCs to use'
+                  name='numOfPC'
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input a value between 1 to 10',
+                    },
+                  ]}
+                >
+                  <InputNumber min={1} max={10} />
                 </Form.Item>
-                <Form.Item {...tailLayout}>
-                  <Button
-                    htmlType='submit'
-                    type='primary'
-                    disabled={!userHasMariner()}
-                  >
-                    Submit
-                  </Button>
+                <Form.Item
+                  label='Covariates'
+                  name='covariates'
+                >
+                  <Select
+                    mode='multiple'
+                    disabled
+                    style={{ width: '100%' }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label='Outcome'
+                  name='outcome'
+                >
+                  <Input
+                    disabled
+                    style={{ width: '100%' }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label='Is Binary Outcome?'
+                  name='isBinary'
+                >
+                  <Input
+                    disabled
+                    style={{ width: '100%' }}
+                  />
                 </Form.Item>
               </Form>
             </div>
+          </Space>
+        );
+      }
+      case 4: {
+        const layout = {
+          labelCol: { span: 8 },
+          wrapperCol: { span: 16 },
+        };
+        const tailLayout = {
+          wrapperCol: { offset: 8, span: 16 },
+        };
+
+        if (showJobSubmissionResult) {
+          return (
+            <div className='GWASUI-mainArea'>
+              <Result
+                status={(jobSubmittedRunID) ? 'success' : 'error'}
+                title={(jobSubmittedRunID) ? 'GWAS Job Submitted Successfully' : 'GWAS Job Submission Failed'}
+                subTitle={`GWAS Job Name: ${jobName}, run ID: ${jobSubmittedRunID}`}
+                extra={[
+                  <Button
+                    key='done'
+                    onClick={() => {
+                      setCurrent(0);
+                      setSelectedCohort(undefined);
+                      setSelectedConcepts([]);
+                      setSelectedPhenotype(undefined);
+                      setSelectedCovariates([]);
+                      setNumOfPC(3);
+                      setJobName(undefined);
+                      setShowJobSubmissionResult(false);
+                      setJobSubmittedRunID(undefined);
+                    }}
+                  >
+                    Done
+                  </Button>,
+                ]}
+              />
+            </div>
           );
         }
-        default:
-          return <React.Fragment />;
+
+        return (
+          <div className='GWASUI-mainArea'>
+            <Form
+              {...layout}
+              name='control-hooks'
+              onFinish={(values) => {
+                setJobName(values.GWASJobName);
+                setJobSubmittedRunID('run-12345');
+                setMarinerJobStatus([
+                  ...marinerJobStatus,
+                  {
+                    runID: 'run-12345',
+                    status: 'running',
+                  },
+                ]);
+                setShowJobSubmissionResult(true);
+              }}
+            >
+              <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name for GWAS job!' }]}>
+                <Input placeholder='my_gwas_20201101_1' />
+              </Form.Item>
+              <Form.Item {...tailLayout}>
+                <Button
+                  htmlType='submit'
+                  type='primary'
+                  disabled={!userHasMariner()}
+                >
+                  Submit
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+        );
       }
+      default:
+        return <React.Fragment />;
+    }
   };
 
   let nextButtonEnabled = true;
