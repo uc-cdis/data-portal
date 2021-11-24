@@ -6,7 +6,7 @@ import {
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
 import GWASUIJobStatusList from './GWASUIJobStatusList';
 import './GWASUI.css';
-import { getAllSources, getCohortJsonByName, getCohortCsvByName } from '../../cohortMiddleware';
+import { getAllSources, getCohortJsonByName } from '../../cohortMiddleware';
 
 const { Step } = Steps;
 
@@ -70,7 +70,6 @@ const GWASUI = (props) => {
   ]);
   const [sources, setSources] = useState([]);
   const [cohortData, setCohortData] = useState([]);
-  const [cohortCsv, setCohortCsv] = useState([]);
 
 
   const onStep3FormSubmit = useCallback((values) => {
@@ -88,6 +87,11 @@ const GWASUI = (props) => {
       // outcome: newlySelectedPhenotype.name,
     });
   };
+
+  const initializeCohortData = async (name) => {
+    const json = await getCohortJsonByName(name);
+    getMissingRatio(json["Cohort"]);
+  }
 
   const step1TableRowSelection = {
     type: 'radio',
@@ -175,30 +179,25 @@ const GWASUI = (props) => {
   const userHasMariner = () => userHasMethodForServiceOnResource('access', 'mariner', '/mariner', props.userAuthMapping);
 
 
-  const cohortIterator = (cohortArr) => {
+  const getMissingRatio = (cohortArr) => {
     const cohortKeys = Object.keys(cohortArr[0]);
     cohortKeys.shift();
     const missingRatioArr = [];
-    for (const key of cohortKeys) {
+    cohortKeys.forEach(key => {
       let keyRow = {};
-      for (const entry of cohortArr) {
-        if (entry[key] !== "") {
+      cohortArr.forEach(cohort => {
+        if (cohort[key] !== "") {
           keyRow[key] = (keyRow[key]+1) || 1;
         }
-      }
+      })
       missingRatioArr.push(keyRow);
-    }
+    });
     const len = cohortArr.length;
     const stepArrayData = cohortKeys.map((element, i) => ({concept_id: ((i + 1) * 1000) + i, name: element, n_missing_ratio: 1 - (missingRatioArr[i][element] / len)}));
     setCohortData(stepArrayData);
   }
 
-  const initializeCohortData = async (name) => {
-    const json = await getCohortJsonByName(name);
-    // const csv = await getCohortCsvByName(name);
-    // setCohortCsv(csv);
-    cohortIterator(json["Cohort"]);
-  }
+
 
   const initializeSources = async () => {
     const sourceData = await getAllSources();
