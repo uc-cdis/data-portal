@@ -50,7 +50,7 @@ interface Props {
     actionToResume: 'download'|'export'|'manifest';
     selectedResources: any[];
   };
-  dispatch
+  onActionResumed: () => any
 }
 
 const BATCH_EXPORT_JOB_PREFIX = 'batch-export';
@@ -422,7 +422,7 @@ const DiscoveryActionBar = (props: Props) => {
           history,
           location,
         );
-        props.dispatch({ type: 'REDIRECT_ACTION_RESUMED' });
+        props.onActionResumed();
       } else if (props.discovery.actionToResume === 'export') {
         handleExportToWorkspaceClick(
           props.config,
@@ -432,10 +432,10 @@ const DiscoveryActionBar = (props: Props) => {
           history,
           location,
         );
-        props.dispatch({ type: 'REDIRECT_ACTION_RESUMED' });
+        props.onActionResumed();
       } else if (props.discovery.actionToResume === 'manifest') {
         handleDownloadManifestClick(props.config, props.discovery.selectedResources);
-        props.dispatch({ type: 'REDIRECT_ACTION_RESUMED' });
+        props.onActionResumed();
       }
     }, [props.discovery.actionToResume],
   );
@@ -444,9 +444,11 @@ const DiscoveryActionBar = (props: Props) => {
     const serializableState = {
       ...props.discovery,
       actionToResume: action,
-      // reduce the size of the redirect url by only storing study id
-      // study id is remapped to it study after redirect and studies load in root index component
-      selectedResourceIDs: props.discovery.selectedResources.map((study) => study.study_id),
+      // reduce the size of the redirect url by only storing resource id
+      // resource id is remapped to its resource after redirect and resources load in index component
+      selectedResourceIDs: props.discovery.selectedResources.map(
+        (resource) => resource[props.config.minimalFieldMapping.uid],
+      ),
     };
     delete serializableState.selectedResources;
     const queryStr = `?state=${encodeURIComponent(JSON.stringify(serializableState))}`;

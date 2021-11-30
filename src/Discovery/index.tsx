@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import Discovery, { AccessLevel } from './Discovery';
+import Discovery, { AccessLevel, AccessSortDirection, DiscoveryResource } from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { hostname, discoveryConfig, useArboristUI } from '../localconf';
@@ -53,7 +53,20 @@ const DiscoveryWithMDSBackend: React.FC<{
     userAuthMapping: any,
     config: DiscoveryConfig,
     awaitingDownload: boolean,
-    dispatch,
+    selectedResources,
+    pagination,
+    selectedTags,
+    searchTerm,
+    accessSortDirection,
+    accessFilters,
+    onSearchChange: (searchTerm: string) => any,
+    onTagsSelected: (selectedTags: any[]) => any,
+    onAccessFilterSet: (accessFilters: { [key in AccessLevel]: boolean }) => any,
+    onAccessSortDirectionSet: (accessSortDirection: AccessSortDirection) => any,
+    onPaginationSet: (pagination: {currentPage: number, resultsPerPage: number}) => any,
+    onResourcesSelected: (selectedResources: DiscoveryResource[]) => any,
+    onDiscoveryPageActive: () => any,
+    onRedirectForAction: (redirectState: object) => any,
 }> = (props) => {
   const [studies, setStudies] = useState(null);
 
@@ -104,12 +117,10 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (urlParams.startsWith('?state=')) {
         const redirectState = JSON.parse(urlParams.split('?state=')[1]);
         redirectState.selectedResources = studiesToSet.filter(
-          (study) => redirectState.selectedResourceIDs.includes(study.study_id),
+          (resource) => redirectState.selectedResourceIDs.includes(resource[props.config.minimalFieldMapping.uid]),
         );
         delete redirectState.selectedResourceIDs;
-        props.dispatch({
-          type: 'REDIRECTED_FOR_ACTION', redirectState,
-        });
+        props.onRedirectForAction(redirectState);
         window.history.replaceState({}, document.title, window.location.pathname);
       }
     }).catch((err) => {
@@ -118,7 +129,7 @@ const DiscoveryWithMDSBackend: React.FC<{
     });
 
     // indicate discovery tag is active even if we didn't click a button to get here
-    props.dispatch({type: "ACTIVE_CHANGED", data: "/discovery"});
+    props.onDiscoveryPageActive();
   }, []);
 
   return (
@@ -135,4 +146,15 @@ const mapStateToProps = (state) => ({
   ...state.discovery,
 });
 
-export default connect(mapStateToProps)(DiscoveryWithMDSBackend);
+const mapDispatchToProps = (dispatch) => ({
+  onSearchChange: (searchTerm) => dispatch({ type: 'SEARCH_TERM_SET', searchTerm }),
+  onTagsSelected: (selectedTags) => dispatch({ type: 'TAGS_SELECTED', selectedTags }),
+  onAccessFilterSet: (accessFilters) => dispatch({ type: 'ACCESS_FILTER_SET', accessFilters }),
+  onAccessSortDirectionSet: (accessSortDirection) => dispatch({ type: 'ACCESS_SORT_DIRECTION_SET', accessSortDirection }),
+  onPaginationSet: (pagination) => dispatch({ type: 'PAGINATION_SET', pagination }),
+  onResourcesSelected: (selectedResources) => dispatch({ type: 'RESOURCES_SELECTED', selectedResources }),
+  onDiscoveryPageActive: () => dispatch({ type: 'ACTIVE_CHANGED', data: '/discovery' }),
+  onRedirectForAction: (redirectState) => dispatch({ type: 'REDIRECTED_FOR_ACTION', redirectState }),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DiscoveryWithMDSBackend);

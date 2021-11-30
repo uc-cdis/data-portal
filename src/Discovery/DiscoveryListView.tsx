@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Table, Empty } from 'antd';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
-import { AccessLevel } from './Discovery';
+import { AccessLevel, DiscoveryResource } from './Discovery';
 
 interface Props {
   config: DiscoveryConfig;
-  studies: {__accessible: boolean, [any: string]: any}[];
+  studies: DiscoveryResource[];
   columns: [];
   visibleResources: any[];
   accessibleFieldName: string;
@@ -17,7 +17,7 @@ interface Props {
   selectedResources: any[];
   advSearchFilterHeight: string | number;
   setAdvSearchFilterHeight: (any) => void;
-  dispatch
+  onResourcesSelected: (selectedResources: DiscoveryResource[]) => any
 }
 
 const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
@@ -55,9 +55,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
         ),
         preserveSelectedRowKeys: true,
         onChange: (_, selectedRows) => {
-          props.dispatch({
-            type: 'RESOURCES_SELECTED', selectedResources: selectedRows,
-          });
+          props.onResourcesSelected(selectedRows);
         },
         getCheckboxProps: (record) => {
           let disabled;

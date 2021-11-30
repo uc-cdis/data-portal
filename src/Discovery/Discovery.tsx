@@ -185,9 +185,14 @@ const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, co
   }));
 };
 
+export interface DiscoveryResource {
+  [accessibleFieldName]: AccessLevel,
+  [any: string]: any
+}
+
 interface Props {
   config: DiscoveryConfig
-  studies: {__accessible: AccessLevel|boolean, [any: string]: any}[]
+  studies: DiscoveryResource[]
   params?: {studyUID: string} // from React Router
   selectedResources,
   pagination: { currentPage: number, resultsPerPage: number },
@@ -196,8 +201,13 @@ interface Props {
   accessFilters: {
     [accessLevel: number]: boolean
   },
-  accessSortDirection: AccessSortDirection
-  dispatch: (arg0: any)=>void
+  accessSortDirection: AccessSortDirection,
+  onSearchChange: (arg0: string) => any,
+  onTagsSelected: (arg0: any) => any,
+  onAccessFilterSet: (arg0: object) => any,
+  onAccessSortDirectionSet: (accessSortDirection: AccessSortDirection) => any,
+  onResourcesSelected: (resources: DiscoveryResource[]) => any,
+  onPaginationSet: (pagination: {currentPage: number, resultsPerPage: number}) => any,
 }
 
 const Discovery: React.FunctionComponent<Props> = (props: Props) => {
@@ -222,7 +232,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   const handleSearchChange = (ev) => {
     const { value } = ev.currentTarget;
-    props.dispatch({ type: 'SEARCH_TERM_SET', searchTerm: value });
+    props.onSearchChange(value);
   };
 
   const doSearchFilterSort = () => {
@@ -246,7 +256,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
     if (props.config.features.authorization.enabled) {
       filteredResources = filteredResources.filter(
-        (resource) => resource[accessibleFieldName] === true || props.accessFilters[resource[accessibleFieldName]],
+        (resource) => props.accessFilters[resource[accessibleFieldName]],
       );
     }
 
@@ -397,9 +407,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                     ...props.selectedTags,
                     [name]: props.selectedTags[name] ? undefined : true,
                   };
-                  props.dispatch({
-                    type: 'TAGS_SELECTED', selectedTags,
-                  });
+                  props.onTagsSelected(selectedTags);
                 }}
                 onClick={(ev) => {
                   ev.stopPropagation();
@@ -407,9 +415,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                     ...props.selectedTags,
                     [name]: props.selectedTags[name] ? undefined : true,
                   };
-                  props.dispatch({
-                    type: 'TAGS_SELECTED', selectedTags,
-                  });
+                  props.onTagsSelected(selectedTags);
                 }}
               >
                 {name}
@@ -443,12 +449,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                               checked={props.accessFilters[accessLevel]}
                               onChange={
                                 () => {
-                                  props.dispatch({
-                                    type: 'ACCESS_FILTER_SET',
-                                    accessFilters: {
-                                      ...props.accessFilters,
-                                      [accessLevel]: !props.accessFilters[accessLevel],
-                                    },
+                                  props.onAccessFilterSet({
+                                    ...props.accessFilters,
+                                    [accessLevel]: !props.accessFilters[accessLevel],
                                   });
                                 }
                               }
@@ -467,15 +470,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                         </Button>
                         <Button
                           type={'primary'}
-                          onClick={() => props.dispatch({
-                            type: 'ACCESS_FILTER_SET',
-                            accessFilters: {
-                              [AccessLevel.ACCESSIBLE]: true,
-                              [AccessLevel.NOT_AVAILABLE]: true,
-                              [AccessLevel.PENDING]: true,
-                              [AccessLevel.UNACCESSIBLE]: true,
-                            },
-                          })}
+                          onClick={() => props.onAccessFilterSet({
+                            [AccessLevel.ACCESSIBLE]: true,
+                            [AccessLevel.NOT_AVAILABLE]: true,
+                            [AccessLevel.PENDING]: true,
+                            [AccessLevel.UNACCESSIBLE]: true,
+                          },
+                          )}
                         > Reset
                         </Button>
                       </Space>
@@ -507,12 +508,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                   <Tooltip title={`Click to ${nextSortDirection}`}>
                     <Button
                       type={'text'}
-                      onClick={() => {
-                        props.dispatch({
-                          type: 'ACCESS_SORT_DIRECTION_SET',
-                          accessSortDirection: nextSortDirection,
-                        });
-                      }}
+                      onClick={() => props.onAccessSortDirectionSet(nextSortDirection)}
                       icon={
                         (() => {
                           if (props.accessSortDirection === AccessSortDirection.DESCENDING) {
@@ -655,7 +651,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                     type='default'
                     className={'discovery-header__dropdown-tags-control-button'}
                     disabled={Object.keys(props.selectedTags).length === 0}
-                    onClick={() => { props.dispatch({ type: 'TAGS_SELECTED', selectedTags: {} }); }}
+                    onClick={() => { props.onTagsSelected({}); }}
                     icon={<UndoOutlined />}
                   >
                     {'Reset Selection'}
@@ -678,7 +674,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                         config={config}
                         studies={props.studies}
                         selectedTags={props.selectedTags}
-                        setSelectedTags={(selectedTags) => props.dispatch({ type: 'TAGS_SELECTED', selectedTags })}
+                        setSelectedTags={props.onTagsSelected}
                       />
                     </div>
                   </Panel>
@@ -691,7 +687,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             config={config}
             studies={props.studies}
             selectedTags={props.selectedTags}
-            setSelectedTags={(selectedTags) => props.dispatch({ type: 'TAGS_SELECTED', selectedTags })}
+            setSelectedTags={props.onTagsSelected}
           />
         )}
       </div>
@@ -713,7 +709,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         {/* Bar with actions, stats, around advanced search and data actions */}
         <ReduxDiscoveryActionBar
           config={props.config}
-          selectedResources={props.selectedResources}
           exportingToWorkspace={exportingToWorkspace}
           setExportingToWorkspace={setExportingToWorkspace}
           filtersVisible={filtersVisible}
@@ -762,20 +757,17 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               columns={columns}
               accessibleFieldName={accessibleFieldName}
               selectedResources={props.selectedResources}
-              dispatch={props.dispatch}
+              onResourcesSelected={props.onResourcesSelected}
             />
-            <Space direction={'vertical'} style={{ width: '100%' }} align={'end'}>
-              <Pagination
-                current={props.pagination.currentPage}
-                pageSize={props.pagination.resultsPerPage}
-                onChange={(currentPage, resultsPerPage) => props.dispatch({
-                  type: 'PAGINATION_SET', pagination: { currentPage, resultsPerPage },
-                })}
-                pageSizeOptions={['10', '20', '50', '100']}
-                total={visibleResources.length}
-                showSizeChanger
-              />
-            </Space>
+            <Pagination
+              current={props.pagination.currentPage}
+              pageSize={props.pagination.resultsPerPage}
+              onChange={(currentPage, resultsPerPage) => props.onPaginationSet({ currentPage, resultsPerPage })}
+              pageSizeOptions={['10', '20', '50', '100']}
+              total={visibleResources.length}
+              showSizeChanger
+              style={{ float: 'right' }}
+            />
           </Space>
         </div>
 

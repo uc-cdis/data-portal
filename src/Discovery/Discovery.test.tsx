@@ -33,7 +33,7 @@ const initStoreData = {
   },
 };
 
-const testStudies = mockData.map((study, i) => ({ ...study, __accessible: i % 2 === 0 }));
+const testStudies = mockData.map((study, i) => ({ ...study, __accessible: i % 2 ? AccessLevel.ACCESSIBLE : AccessLevel.NOT_AVAILABLE }));
 
 const getDiscoveryComponent = (store, config: DiscoveryConfig, params = {}) => (
   <Provider store={store}>
@@ -42,8 +42,15 @@ const getDiscoveryComponent = (store, config: DiscoveryConfig, params = {}) => (
         config={config}
         studies={testStudies}
         {...store.getState().discovery}
-        dispatch={store.dispatch}
         params={params}
+        onSearchChange={(searchTerm) => store.dispatch({ type: 'SEARCH_TERM_SET', searchTerm })}
+        onTagsSelected={(selectedTags) => store.dispatch({ type: 'TAGS_SELECTED', selectedTags })}
+        onAccessFilterSet={(accessFilters) => store.dispatch({ type: 'ACCESS_FILTER_SET', accessFilters })}
+        onAccessSortDirectionSet={(accessSortDirection) => store.dispatch({ type: 'ACCESS_SORT_DIRECTION_SET', accessSortDirection })}
+        onPaginationSet={(pagination) => store.dispatch({ type: 'PAGINATION_SET', pagination })}
+        onResourcesSelected={(selectedResources) => store.dispatch({ type: 'RESOURCES_SELECTED', selectedResources })}
+        onDiscoveryPageActive={() => store.dispatch({ type: 'ACTIVE_CHANGED', data: '/discovery' })}
+        onRedirectForAction={(redirectState) => store.dispatch({ type: 'REDIRECTED_FOR_ACTION', redirectState })}
       />
     </StaticRouter>
   </Provider>
