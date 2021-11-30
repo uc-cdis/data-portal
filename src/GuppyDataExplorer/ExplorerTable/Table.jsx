@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { usePagination, useSortBy, useTable } from 'react-table';
+import { usePagination, useSortBy, useTable, useFlexLayout } from 'react-table';
 import './react-table.css';
 
 /**
@@ -55,7 +55,8 @@ function Table({
       pageCount: controlledPageCount,
     },
     useSortBy,
-    usePagination
+    usePagination,
+    useFlexLayout
   );
 
   useEffect(() => {
@@ -68,17 +69,25 @@ function Table({
         <thead className='rt-thead -header'>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} className='rt-tr'>
-              {headerGroup.headers.map((column) => (
-                <th
-                  {...{
-                    ...column.getHeaderProps(),
-                    ...column.getSortByToggleProps(),
-                  }}
-                  className='rt-th -cursor-pointer'
-                >
-                  {column.render('Header')}
-                </th>
-              ))}
+              {headerGroup.headers.map((column) => {
+                const headerProps = column.getHeaderProps();
+                const sortByToggleProps = column.getSortByToggleProps();
+                return (
+                  <th
+                    {...{
+                      ...headerProps,
+                      ...sortByToggleProps,
+                      style: {
+                        ...headerProps.style,
+                        ...sortByToggleProps.style,
+                      },
+                    }}
+                    className='rt-th -cursor-pointer'
+                  >
+                    {column.render('Header')}
+                  </th>
+                );
+              })}
             </tr>
           ))}
         </thead>
