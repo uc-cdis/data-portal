@@ -356,7 +356,7 @@ function ExplorerTable({
       : `${start.toLocaleString()} - ${end.toLocaleString()}`;
   const dataTypeString = pluralize(dataType);
 
-  const columns = React.useMemo(() => rootColumnsConfig, []);
+  const columns = React.useMemo(() => rootColumnsConfig, [rawData]);
   const fetchData = React.useCallback(
     (s) =>
       isInitialFetchData
