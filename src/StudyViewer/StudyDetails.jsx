@@ -13,7 +13,7 @@ import {
 } from '@ant-design/icons';
 import { capitalizeFirstLetter, humanFileSize } from '../utils';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { useArboristUI, requestorPath, userAPIPath, manifestServiceApiPath } from '../localconf';
+import { useArboristUI, requestorPath, userAPIPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import './StudyViewer.css';
 
@@ -40,8 +40,6 @@ class StudyDetails extends React.Component {
       downloadModalVisible: false,
       redirectModalVisible: false,
       redirectUrl: undefined,
-      exportingPFBToWorkspace: false,
-      exportPFBToWorkspaceStatusMsg: '',
     };
   }
 
@@ -106,28 +104,6 @@ class StudyDetails extends React.Component {
       // we are done here, remove the query string from URL
       this.props.history.push(`${this.props.location.pathname}`, { from: this.props.location.pathname });
     }
-    console.log('componentDidUpdate', this.props.job);
-    if (this.props.job && this.props.job.status === 'Completed' && prevProps.job && prevProps.job.status !== 'Completed') {
-      this.fetchJobResult()
-        .then((res) => {
-          if (this.state.exportingPFBToWorkspace) {
-            console.log('componentDidUpdate exportingPFBToWorkspace', res);
-            /*this.setState({
-              exportPFBURL: `${res.data.output}`.split('\n'),
-              toasterOpen: false,
-              exportingToTerra: false,
-            }, () => {
-              this.sendPFBToTerra();
-            });*/
-          } else {
-            /*this.setState({
-              exportPFBURL: `${res.data.output}`.split('\n'),
-              toasterOpen: true,
-              toasterHeadline: prevState.pfbSuccessText,
-            });*/
-          }
-        });
-    }
   }
 
   getButton = (key, buttonConfig, userHasLoggedIn) => {
@@ -151,6 +127,7 @@ class StudyDetails extends React.Component {
       tooltipEnabled = true;
       tooltipText = buttonConfig.disableButtonTooltipText;
     }
+
     if (buttonConfig.type === 'download') {
       // 'Download' button
       const displayDownloadButton = userHasLoggedIn
@@ -174,15 +151,17 @@ class StudyDetails extends React.Component {
       && this.isDataAccessible(this.props.data.accessibleValidationValue)
       && this.props.fileData.length > 0;
 
+      const onClickProperties = {...buttonConfig, accessibleValidationValue: this.props.data.accessibleValidationValue};
+
       button = displayDownloadButton ? (
         <Button
           key={`${key}-2`}
           label={'Export to Workspace'}
           buttonType='primary'
-          onClick={() => this.exportToWorkspace(buttonConfig)}
-          enabled={!this.state.exportingPFBToWorkspace}
-          tooltipEnabled={this.state.exportingPFBToWorkspace}
-          tooltipText={'Working on an Export'}
+          onClick={() => this.props.exportToWorkspaceAction(onClickProperties)}
+          enabled={this.props.exportToWorkspaceEnabled}
+          tooltipEnabled={!this.props.exportToWorkspaceEnabled && !!buttonConfig.disableButtonTooltipText}
+          tooltipText={buttonConfig.disableButtonTooltipText}
         />
       ) : null;
     } else if (buttonConfig.type === 'request_access') {
@@ -263,70 +242,6 @@ class StudyDetails extends React.Component {
     });
   };
 
-  sendPFBToWorkspace = (pfbGUID) => {
-    const JSONBody = { guid: pfbGUID };
-    fetchWithCreds({
-      path: `${manifestServiceApiPath}cohorts`,
-      body: JSON.stringify(JSONBody),
-      method: 'POST',
-    })
-      .then(
-        ({ status, data }) => {
-          const errorMsg = (data.error ? data.error : '');
-          switch (status) {
-          case 200:
-            this.setState((prevState) => ({
-              exportingPFBToWorkspace: false,
-              exportPFBToWorkspaceStatusMsg: 'A PFB for this cohort will be saved to your workspace.',
-            }));
-            return;
-          default:
-            this.setState({
-              exportingPFBToWorkspace: false,
-              exportPFBToWorkspaceStatusMsg: `There was an error exporting your cohort (${status}). ${errorMsg}`,
-              exportPFBToWorkspaceStatus: status,
-            });
-          }
-        },
-      );
-  };
-
-  exportToWorkspace = (buttonConfig) => {
-    this.setState({
-      exportingPFBToWorkspace: true,
-      exportPFBToWorkspaceStatusMsg: 'Working',
-    });
-    console.log('test', this.props);
-    //getReduxStore().then((store) => store.dispatch(exportToWorkspace));
-
-    this.props.submitJob({
-      action: 'export',
-      access_format: 'guid',
-      input: {filter: { "=": { auth_resource_path : this.props.data.accessibleValidationValue } }, root_node: buttonConfig.root_node}
-    }).then((res) => {
-      console.log(res);
-    });
-    this.props.checkJobStatus();
-    /*
-    this.props.submitJob({
-      action: 'export',
-      access_format: 'guid',
-      input: { filter: getGQLFilter(this.props.filter) }
-    });
-    this.props.checkJobStatus();
-    console.log('test 2');
-    //later?
-    this.fetchJobResult()
-        .then((res) => {
-          if (this.state.exportingPFBToWorkspace) {
-            const pfbGUID = `${res.data.output}`.split('\n')[0];
-            this.sendPFBToWorkspace(pfbGUID);
-          }
-        });
-
-    */
-  };
-
    isDataAccessible = (accessibleValidationValue) => {
      if (!useArboristUI) {
        return true;
@@ -343,7 +258,6 @@ class StudyDetails extends React.Component {
      // this defaults to the config of the 1st configured request_access
      // button. if there are more than 1 with different configs, TODO fix
      const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find((e) => e.type === 'request_access');
-
      return (
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
@@ -532,17 +446,15 @@ StudyDetails.propTypes = {
   isSingleItemView: PropTypes.bool.isRequired,
   userAuthMapping: PropTypes.object.isRequired,
   studyViewerConfig: PropTypes.object,
-  submitJob: PropTypes.func.isRequired,
-  resetJobState: PropTypes.func.isRequired,
-  checkJobStatus: PropTypes.func.isRequired,
-  fetchJobResult: PropTypes.func.isRequired,
-  job: PropTypes.object,
+  exportToWorkspaceAction: PropTypes.func,
+  exportToWorkspaceEnabled: PropTypes.bool,
 };
 
 StudyDetails.defaultProps = {
   fileData: [],
   studyViewerConfig: {},
-  job: null,
+  exportToWorkspaceAction: () => {},
+  exportToWorkspaceEnabled: false,
 };
 
 export default StudyDetails;

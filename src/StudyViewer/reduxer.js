@@ -235,6 +235,17 @@ export const ReduxStudyDetails = (() => {
   const mapStateToProps = (state) => ({
     user: state.user,
     userAuthMapping: state.userAuthMapping,
+  });
+
+  return withRouter(connect(mapStateToProps)(StudyDetails));
+})();
+
+export const ReduxStudyViewer = (() => {
+  const mapStateToProps = (state) => ({
+    datasets: state.study.datasets,
+    docData: state.study.docData,
+    fileData: state.study.fileData,
+    noConfigError: state.study.noConfigError,
     job: state.analysis.job,
   });
   const mapDispatchToProps = (dispatch) => ({
@@ -244,18 +255,7 @@ export const ReduxStudyDetails = (() => {
     resetJobState: () => dispatch(resetJobState()),
   });
 
-  return withRouter(connect(mapStateToProps, mapDispatchToProps)(StudyDetails));
-})();
-
-export const ReduxStudyViewer = (() => {
-  const mapStateToProps = (state) => ({
-    datasets: state.study.datasets,
-    docData: state.study.docData,
-    fileData: state.study.fileData,
-    noConfigError: state.study.noConfigError,
-  });
-
-  return withRouter(connect(mapStateToProps)(StudyViewer));
+  return withRouter(connect(mapStateToProps, mapDispatchToProps)(StudyViewer));
 })();
 
 export const ReduxSingleStudyViewer = (() => {
@@ -264,7 +264,14 @@ export const ReduxSingleStudyViewer = (() => {
     docData: state.study.docData,
     fileData: state.study.fileData,
     noConfigError: state.study.noConfigError,
+    job: state.analysis.job,
+  });
+  const mapDispatchToProps = (dispatch) => ({
+    submitJob: (body) => dispatch(dispatchJob(body)),
+    checkJobStatus: () => dispatch(checkJob()),
+    fetchJobResult: (jobId) => dispatch(fetchJobResult(jobId)),
+    resetJobState: () => dispatch(resetJobState()),
   });
 
-  return withRouter(connect(mapStateToProps)(SingleStudyViewer));
+  return withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleStudyViewer));
 })();

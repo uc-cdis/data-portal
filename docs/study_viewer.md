@@ -80,6 +80,7 @@ Example configuration:
                 // configuration specific to the "Export to Workspace" button
                 "type": "export-pfb-to-workspace",
                 "root_node": "clinical_trial_file",// name of the node corresponding to the "ROOT_NODE" ES index in the Pelican job config
+                "disableButtonTooltipText": "Working on an Export" // optional, tooltip text to display when the "Export to Workspace" button is disabled during export
                 }
         ]
     },
