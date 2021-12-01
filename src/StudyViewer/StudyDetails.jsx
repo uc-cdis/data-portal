@@ -152,8 +152,7 @@ class StudyDetails extends React.Component {
       && this.props.fileData.length > 0
       && this.props.userAccess.Workspace;
 
-
-      const onClickProperties = {...buttonConfig, accessibleValidationValue: this.props.data.accessibleValidationValue};
+      const onClickProperties = { ...buttonConfig, accessibleValidationValue: this.props.data.accessibleValidationValue };
 
       button = displayDownloadButton ? (
         <Button

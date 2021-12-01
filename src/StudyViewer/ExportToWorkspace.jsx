@@ -11,16 +11,13 @@ class ExportToWorkspace extends React.Component {
     this.state = {
       toasterOpen: false,
       toasterHeadline: '',
-      downloadingInProgress: {
-        data: false,
-      },
       exportPFBToWorkspaceGUID: '',
       exportPFBToWorkspaceStatus: null,
       jobFailed: false,
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (this.props.exportToWorkspaceAction
       && this.props.exportToWorkspaceAction.accessibleValidationValue
       && !this.props.exportingPFBToWorkspace
@@ -48,7 +45,6 @@ class ExportToWorkspace extends React.Component {
     this.setState({
       toasterOpen: true,
       toasterHeadline,
-      downloadingInProgress: { data: false },
       jobFailed: true,
     });
     this.props.exportingPFBToWorkspaceStateChange(false);
@@ -57,7 +53,6 @@ class ExportToWorkspace extends React.Component {
   exportToWorkspace = (buttonConfig) => {
     this.props.exportingPFBToWorkspaceStateChange(true);
     this.setState({
-      downloadingInProgress: { data: true },
       toasterOpen: true,
       exportPFBToWorkspaceGUID: '',
       jobFailed: false,
@@ -66,7 +61,7 @@ class ExportToWorkspace extends React.Component {
     this.props.submitJob({
       action: 'export',
       access_format: 'guid',
-      input: {filter: { "=": { auth_resource_path : buttonConfig.accessibleValidationValue } }, root_node: buttonConfig.root_node},
+      input: { filter: { '=': { auth_resource_path: buttonConfig.accessibleValidationValue } }, root_node: buttonConfig.root_node },
     });
     this.props.checkJobStatus();
     this.setState({
@@ -87,12 +82,11 @@ class ExportToWorkspace extends React.Component {
           this.props.exportingPFBToWorkspaceStateChange(false);
           switch (status) {
           case 200:
-            this.setState((prevState) => ({
+            this.setState(() => ({
               exportPFBToWorkspaceGUID: pfbGUID,
               toasterOpen: true,
               toasterHeadline: 'A PFB for this cohort will be saved to your workspace. The GUID for your PFB is displayed below.',
               exportPFBToWorkspaceStatus: status,
-              downloadingInProgress: { data: false },
             }));
             return;
           default:
@@ -101,7 +95,6 @@ class ExportToWorkspace extends React.Component {
               toasterOpen: true,
               toasterHeadline: `There was an error exporting your cohort (${status}). ${errorMsg}`,
               exportPFBToWorkspaceStatus: status,
-              downloadingInProgress: { data: false },
             });
           }
         },
@@ -118,20 +111,19 @@ class ExportToWorkspace extends React.Component {
     this.setState({
       toasterOpen: false,
       toasterHeadline: '',
-      exportPFBURL: '',
     });
   };
 
   render() {
     return (
       <Toaster isEnabled={this.state.toasterOpen} className={'explorer-button-group__toaster-div'}>
-          <Button
-            className='explorer-button-group__toaster-button'
-            onClick={() => this.closeToaster()}
-            label='Close'
-            buttonType='primary'
-            enabled
-          />
+        <Button
+          className='explorer-button-group__toaster-button'
+          onClick={() => this.closeToaster()}
+          label='Close'
+          buttonType='primary'
+          enabled
+        />
         { (this.state.exportPFBToWorkspaceStatus === 200)
           ? (
             <Button
@@ -161,13 +153,13 @@ class ExportToWorkspace extends React.Component {
 
 ExportToWorkspace.propTypes = {
   submitJob: PropTypes.func.isRequired,
-  resetJobState: PropTypes.func.isRequired,
   checkJobStatus: PropTypes.func.isRequired,
   fetchJobResult: PropTypes.func.isRequired,
   job: PropTypes.object,
   exportToWorkspaceAction: PropTypes.object.isRequired,
   exportingPFBToWorkspaceStateChange: PropTypes.func.isRequired,
   exportingPFBToWorkspace: PropTypes.bool.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 ExportToWorkspace.defaultProps = {

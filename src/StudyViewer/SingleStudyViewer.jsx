@@ -48,25 +48,6 @@ class SingleStudyViewer extends React.Component {
     };
   }
 
-  exportToWorkspace = (buttonConfig) => {
-    this.setState({
-      exportToWorkspace: {...buttonConfig},
-    });
-  };
-
-  exportingPFBToWorkspaceStateChange = (stateChange) => {
-    let tempStateChange = {
-        exportingPFBToWorkspace: stateChange,
-      };
-
-    // if set to false clear exportToWorkspace
-    if (!stateChange) {
-      tempStateChange.exportToWorkspace = {};
-    }
-
-    this.setState(tempStateChange);
-  };
-
   static getDerivedStateFromProps(nextProps, prevState) {
     const newState = {};
     if (nextProps.match.params.dataType
@@ -79,6 +60,25 @@ class SingleStudyViewer extends React.Component {
     }
     return Object.keys(newState).length ? newState : null;
   }
+
+  exportToWorkspace = (buttonConfig) => {
+    this.setState({
+      exportToWorkspace: { ...buttonConfig },
+    });
+  };
+
+  exportingPFBToWorkspaceStateChange = (stateChange) => {
+    const tempStateChange = {
+      exportingPFBToWorkspace: stateChange,
+    };
+
+    // if set to false clear exportToWorkspace
+    if (!stateChange) {
+      tempStateChange.exportToWorkspace = {};
+    }
+
+    this.setState(tempStateChange);
+  };
 
   render() {
     if (this.props.noConfigError) {
@@ -132,13 +132,13 @@ class SingleStudyViewer extends React.Component {
           </div>
           <div className='study-viewer__details'>
             <ReduxStudyDetails
-                data={dataset}
-                fileData={this.props.fileData}
-                studyViewerConfig={studyViewerConfig}
-                isSingleItemView={false}
-                exportToWorkspaceAction={this.exportToWorkspace}
-                exportToWorkspaceEnabled={!this.state.exportingPFBToWorkspace}
-              />
+              data={dataset}
+              fileData={this.props.fileData}
+              studyViewerConfig={studyViewerConfig}
+              isSingleItemView={false}
+              exportToWorkspaceAction={this.exportToWorkspace}
+              exportToWorkspaceEnabled={!this.state.exportingPFBToWorkspace}
+            />
             <div className='study-viewer__details-sidebar'>
               <Space direction='vertical' style={{ width: '100%' }}>
                 {(sideBoxesConfig && sideBoxesConfig.length > 0)
@@ -182,10 +182,10 @@ class SingleStudyViewer extends React.Component {
           </div>
         </Space>
         <ReduxExportToWorkspace
-            exportToWorkspaceAction={this.state.exportToWorkspace}
-            exportingPFBToWorkspaceStateChange={this.exportingPFBToWorkspaceStateChange}
-            exportingPFBToWorkspace={this.state.exportingPFBToWorkspace}
-          />
+          exportToWorkspaceAction={this.state.exportToWorkspace}
+          exportingPFBToWorkspaceStateChange={this.exportingPFBToWorkspaceStateChange}
+          exportingPFBToWorkspace={this.state.exportingPFBToWorkspace}
+        />
       </div>
     );
   }
