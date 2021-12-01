@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, Spin, Result } from 'antd';
+import { Spin, Result } from 'antd';
 import getReduxStore from '../reduxStore';
 import {
   fetchDataset, fetchFiles, resetSingleStudyData, fetchStudyViewerConfig, ReduxExportToWorkspace,
@@ -135,10 +135,9 @@ class StudyViewer extends React.Component {
         <div className='h2-typo study-viewer__title'>
           {studyViewerConfig.title}
         </div>
-        {(datasets.length > 0)
-          ? (
-            <Space className='study-viewer__space' direction='vertical'>
-              {(datasets.map((d, i) => (
+        <div className='study-cards'>
+          {(datasets.length > 0)
+            ? (datasets.map((d, i) => (
                 <StudyCard
                   key={i}
                   data={d}
@@ -149,10 +148,10 @@ class StudyViewer extends React.Component {
                   exportToWorkspaceAction={this.exportToWorkspace}
                   exportToWorkspaceEnabled={!this.state.exportingPFBToWorkspace}
                 />
-              )))}
-            </Space>
-          )
-          : null}
+              ))
+            )
+            : null}
+          </div>
           <ReduxExportToWorkspace
             exportToWorkspaceAction={this.state.exportToWorkspace}
             exportingPFBToWorkspaceStateChange={this.exportingPFBToWorkspaceStateChange}

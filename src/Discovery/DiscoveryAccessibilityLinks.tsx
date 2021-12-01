@@ -12,16 +12,16 @@ const viewLinkedElement = (elementId) => {
     https://github.com/ant-design/ant-design/issues/8305
   */
   const element = document.getElementById(elementId);
-  const targetHash = "#" + elementId;
-  [...document.getElementsByTagName('a')].forEach(link => {
+  const targetHash = `#${elementId}`;
+  [...document.getElementsByTagName('a')].forEach((link) => {
     if (link.hash === targetHash) {
       // The scrollTo function requires a setTimeout in our app.
       // https://stackoverflow.com/questions/1174863/javascript-scrollto-method-does-nothing
       setTimeout(() => window.scrollTo(0, element.offsetTop), 2);
       link.click();
     }
-  })
-}
+  });
+};
 
 const DiscoveryAccessibilityLinks = () => (
   <div className='g3-accessibility-links' id='discovery-page-accessibility-links'>
@@ -38,32 +38,45 @@ const DiscoveryAccessibilityLinks = () => (
       </span>
     </Tooltip>
 
-    <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-summary-statistics'
-       onClick={ () => viewLinkedElement("discovery-summary-statistics") }>
+    <a
+      className='g3-accessibility-nav-link g3-ring-on-focus'
+      href='#discovery-summary-statistics'
+      onClick={() => viewLinkedElement('discovery-summary-statistics')}
+    >
       <span>Summary Statistics</span>
     </a> |
 
-    <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-tag-filters'
-       onClick={ () => viewLinkedElement("discovery-tag-filters") }>
+    <a
+      className='g3-accessibility-nav-link g3-ring-on-focus'
+      href='#discovery-tag-filters'
+      onClick={() => viewLinkedElement('discovery-tag-filters')}
+    >
       <span>Tags</span>
     </a> |
 
-    <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-table-of-records'
-      onClick={ () => viewLinkedElement("discovery-table-of-records") }>
+    <a
+      className='g3-accessibility-nav-link g3-ring-on-focus'
+      href='#discovery-table-of-records'
+      onClick={() => viewLinkedElement('discovery-table-of-records')}
+    >
       <span>Table of Records</span>
     </a> |
 
-    <a className='g3-accessibility-nav-link g3-ring-on-focus' href='#discovery-pagination' onClick={
-      () => {
-        const discoveryPagination = document.getElementsByClassName(
-          'ant-pagination-item ant-pagination-item-1 ant-pagination-item-active'
-        );
-        if (discoveryPagination.length > 0) {
-          discoveryPagination[0].id = 'discovery-pagination';
-          viewLinkedElement("discovery-pagination");
+    <a
+      className='g3-accessibility-nav-link g3-ring-on-focus'
+      href='#discovery-pagination'
+      onClick={
+        () => {
+          const discoveryPagination = document.getElementsByClassName(
+            'ant-pagination-item ant-pagination-item-1 ant-pagination-item-active',
+          );
+          if (discoveryPagination.length > 0) {
+            discoveryPagination[0].id = 'discovery-pagination';
+            viewLinkedElement('discovery-pagination');
+          }
         }
       }
-     }>
+    >
       <span>Pagination</span>
     </a>
   </div>

@@ -46,8 +46,7 @@ const UserProfile = ({
     <div className='user-profile'>
       {
         showExternalLoginsOnProfile
-        &&
-        <ExternalLogins />
+        && <ExternalLogins />
       }
       {
         userProfile.jtis === undefined
