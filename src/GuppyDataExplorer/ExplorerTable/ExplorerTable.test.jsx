@@ -151,10 +151,10 @@ test('Shows data in table', () => {
     totalCount: rawData.length,
   };
 
-  render(<ExplorerTable {...props} />);
-  const rowgroupss = screen.queryAllByRole('rowgroup');
-  expect(rowgroupss).toHaveLength(rawData.length);
+  const { container } = render(<ExplorerTable {...props} />);
+  const rows = container.querySelector('tbody').querySelectorAll('tr');
+  expect(rows).toHaveLength(rawData.length);
 
-  const cells = screen.queryAllByRole('gridcell');
+  const cells = container.querySelector('tbody').querySelectorAll('td');
   expect(cells).toHaveLength(rawData.length * tableConfig.fields.length);
 });
