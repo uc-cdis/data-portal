@@ -29,14 +29,17 @@ const columns = [
   {
     Header: 'Foo',
     accessor: 'foo',
+    width: 150,
   },
   {
     Header: 'Bar',
     accessor: 'bar',
+    width: 250,
   },
   {
     Header: 'Baz',
     accessor: 'baz',
+    width: 300,
   },
 ];
 
@@ -76,19 +79,7 @@ storiesOf('Table', module)
         columns={columns}
         data={data}
         onFetchData={() => {}}
-        NoDataComponent={() => (
-          <div
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              justifyContent: 'center',
-              minHeight: 100,
-              width: '100%',
-            }}
-          >
-            No data
-          </div>
-        )}
+        NoDataComponent={() => <div className='rt-noData'>No data</div>}
         showPageSizeOptions={false}
       />
     );
