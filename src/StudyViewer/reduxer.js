@@ -236,6 +236,7 @@ export const ReduxStudyDetails = (() => {
   const mapStateToProps = (state) => ({
     user: state.user,
     userAuthMapping: state.userAuthMapping,
+    userAccess: state.userAccess.access,
   });
 
   return withRouter(connect(mapStateToProps)(StudyDetails));

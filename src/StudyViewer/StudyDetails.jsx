@@ -149,7 +149,9 @@ class StudyDetails extends React.Component {
       // 'Export to Workspace' button
       const displayDownloadButton = userHasLoggedIn
       && this.isDataAccessible(this.props.data.accessibleValidationValue)
-      && this.props.fileData.length > 0;
+      && this.props.fileData.length > 0
+      && this.props.userAccess.Workspace;
+
 
       const onClickProperties = {...buttonConfig, accessibleValidationValue: this.props.data.accessibleValidationValue};
 
@@ -446,6 +448,7 @@ StudyDetails.propTypes = {
   user: PropTypes.object.isRequired,
   isSingleItemView: PropTypes.bool.isRequired,
   userAuthMapping: PropTypes.object.isRequired,
+  userAccess: PropTypes.object.isRequired,
   studyViewerConfig: PropTypes.object,
   exportToWorkspaceAction: PropTypes.func,
   exportToWorkspaceEnabled: PropTypes.bool,

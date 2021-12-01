@@ -156,7 +156,7 @@ class StudyViewer extends React.Component {
             exportToWorkspaceAction={this.state.exportToWorkspace}
             exportingPFBToWorkspaceStateChange={this.exportingPFBToWorkspaceStateChange}
             exportingPFBToWorkspace={this.state.exportingPFBToWorkspace}
-          ></ReduxExportToWorkspace>
+          />
       </div>
     );
   }
