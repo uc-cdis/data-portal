@@ -62,11 +62,9 @@ function getCellElement({
 }) {
   if (downloadAccessor)
     return (
-      <div>
-        <span title={valueStr}>
-          <a href={`/files/${valueStr}`}>{valueStr}</a>
-        </span>
-      </div>
+      <span title={valueStr}>
+        <a href={`/files/${valueStr}`}>{valueStr}</a>
+      </span>
     );
 
   if (linkFields.includes(field))
@@ -84,11 +82,7 @@ function getCellElement({
     ) : null;
 
   if (field === 'filed_size')
-    return (
-      <div>
-        <span title={valueStr}>{humanFileSize(valueStr)}</span>
-      </div>
-    );
+    return <span title={valueStr}>{humanFileSize(valueStr)}</span>;
 
   if (field === 'external_references.external_links') {
     if (!value) return null;
@@ -98,11 +92,14 @@ function getCellElement({
       subjectUrl,
     ] = value[0].external_links.split('|');
     return (
-      <div className='explorer-table-external-links'>
-        <a href={subjectUrl} target='_blank' rel='noopenner noreferrer'>
-          <img src={resourceIconPath} alt={resourceName} />
-        </a>
-      </div>
+      <a
+        className='explorer-table-external-links'
+        href={subjectUrl}
+        target='_blank'
+        rel='noopenner noreferrer'
+      >
+        <img src={resourceIconPath} alt={resourceName} />
+      </a>
     );
   }
 
