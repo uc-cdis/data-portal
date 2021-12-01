@@ -2,55 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Space, Spin, Result } from 'antd';
 import getReduxStore from '../reduxStore';
-import Toaster from '@gen3/ui-component/dist/components/Toaster';
-import Button from '@gen3/ui-component/dist/components/Button';
 import {
-  fetchDataset, fetchFiles, resetSingleStudyData, fetchStudyViewerConfig,
+  fetchDataset, fetchFiles, resetSingleStudyData, fetchStudyViewerConfig, ReduxExportToWorkspace,
 } from './reduxer';
 import './StudyViewer.css';
 import StudyCard from './StudyCard';
-import { manifestServiceApiPath } from '../localconf';
-import { fetchWithCreds } from '../actions';
 
 class StudyViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       dataType: undefined,
+      exportToWorkspace: {},
       exportingPFBToWorkspace: false,
-      toasterOpen: false,
-      toasterHeadline: '',
-      downloadingInProgress: {
-        data: false,
-      },
-      exportPFBToWorkspaceGUID: '',
-      exportPFBToWorkspaceStatus: null,
     };
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.job && !this.props.job.status) {
-      this.onJobFailed('There was an error please refresh the page and try again');
-    }
-    if (this.props.job && this.props.job.status === 'Failed' && prevProps.job && prevProps.job.status !== 'Failed') {
-      this.onJobFailed('There was an error exporting your cohort.');
-    }
-    if (this.props.job && this.props.job.status === 'Completed' && prevProps.job && prevProps.job.status !== 'Completed') {
-      this.fetchJobResult()
-        .then((res) => {
-          if (this.state.exportingPFBToWorkspace) {
-            const pfbGUID = `${res.data.output}`.split('\n')[0];
-            this.sendPFBToWorkspace(pfbGUID);
-          } else {
-            console.log('this ran???');
-            this.setState({
-              exportPFBURL: `${res.data.output}`.split('\n'),
-              toasterOpen: true,
-              toasterHeadline: prevState.pfbSuccessText,
-            });
-          }
-        });
-    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -69,124 +34,25 @@ class StudyViewer extends React.Component {
     return (index === 0);
   }
 
-  onJobFailed = (toasterHeadline) => {
-    this.setState({
-      toasterOpen: true,
-      toasterHeadline,
-      downloadingInProgress: { data: false },
-    });
-  }
-
   exportToWorkspace = (buttonConfig) => {
-    //check if it is already running
-    if (this.state.exportingPFBToWorkspace) {
-      this.setState({
-        toasterOpen: true,
-        toasterHeadline: 'An export is already in progress.',
-      });
-      return false;
+    this.setState({
+      exportToWorkspace: {...buttonConfig},
+    });
+  };
+
+  exportingPFBToWorkspaceStateChange = (stateChange) => {
+    let tempStateChange = {
+        exportingPFBToWorkspace: stateChange,
+      };
+
+    // if set to false clear exportToWorkspace
+    if (!stateChange) {
+      tempStateChange.exportToWorkspace = {};
     }
-    this.setState({
-      exportingPFBToWorkspace: true,
-      downloadingInProgress: { data: true },
-      toasterOpen: true,
-      exportPFBToWorkspaceGUID: '',
-    });
 
-    this.props.submitJob({
-      action: 'export',
-      access_format: 'guid',
-      input: {filter: { "=": { auth_resource_path : buttonConfig.accessibleValidationValue } }, root_node: buttonConfig.root_node},
-    });
-    this.props.checkJobStatus();
-    this.setState({
-      toasterHeadline: 'Your export is in progress.',
-    });
+    this.setState(tempStateChange);
   };
 
-  sendPFBToWorkspace = (pfbGUID) => {
-    console.log('exportToWorkspace called');
-    const JSONBody = { guid: pfbGUID };
-    fetchWithCreds({
-      path: `${manifestServiceApiPath}cohorts`,
-      body: JSON.stringify(JSONBody),
-      method: 'POST',
-    })
-      .then(
-        ({ status, data }) => {
-          const errorMsg = (data.error ? data.error : '');
-          switch (status) {
-          case 200:
-            this.setState((prevState) => ({
-              exportingPFBToWorkspace: false,
-              exportPFBToWorkspaceGUID: pfbGUID,
-              toasterOpen: true,
-              toasterHeadline: 'A PFB for this cohort will be saved to your workspace. The GUID for your PFB is displayed below.',
-              exportPFBToWorkspaceStatus: status,
-              downloadingInProgress: { data: false },
-            }));
-            return;
-          default:
-            this.setState({
-              exportingPFBToWorkspace: false,
-              exportPFBToWorkspaceGUID: '',
-              toasterOpen: true,
-              toasterHeadline: `There was an error exporting your cohort (${status}). ${errorMsg}`,
-              exportPFBToWorkspaceStatus: status,
-              downloadingInProgress: { data: false },
-            });
-          }
-        },
-      );
-  };
-
-  isPFBRunning = () => this.props.job && this.props.job.status === 'Running';
-
-  fetchJobResult = async () => this.props.fetchJobResult(this.props.job.uid);
-
-  gotoWorkspace = () => this.props.history.push('/workspace');
-
-  closeToaster = () => {
-    this.setState({
-      toasterOpen: false,
-      toasterHeadline: '',
-      exportPFBURL: '',
-    });
-  };
-
-  getToaster = () => ((
-    <Toaster isEnabled={this.state.toasterOpen} className={'explorer-button-group__toaster-div'}>
-      <Button
-        className='explorer-button-group__toaster-button'
-        onClick={() => this.closeToaster()}
-        label='Close'
-        buttonType='primary'
-        enabled
-      />
-      { (this.state.exportPFBToWorkspaceStatus === 200)
-        ? (
-          <Button
-            className='explorer-button-group__toaster-button'
-            label='Go To Workspace'
-            buttonType='primary'
-            enabled
-            onClick={this.gotoWorkspace}
-          />
-        )
-        : null}
-      {
-        <div className='explorer-button-group__toaster-text'>
-          <div> {this.state.toasterHeadline} </div>
-          { (this.state.exportPFBToWorkspaceGUID)
-            ? <div>{ this.state.exportPFBToWorkspaceGUID } </div>
-            : null}
-          { (this.isPFBRunning())
-            ? <div>Please do not navigate away from this page until your export is finished.</div>
-            : null}
-        </div>
-      }
-    </Toaster>
-  ));
 
   render() {
     if (this.props.noConfigError) {
@@ -287,7 +153,11 @@ class StudyViewer extends React.Component {
             </Space>
           )
           : null}
-          { this.getToaster() }
+          <ReduxExportToWorkspace
+            exportToWorkspaceAction={this.state.exportToWorkspace}
+            exportingPFBToWorkspaceStateChange={this.exportingPFBToWorkspaceStateChange}
+            exportingPFBToWorkspace={this.state.exportingPFBToWorkspace}
+          ></ReduxExportToWorkspace>
       </div>
     );
   }
@@ -304,18 +174,12 @@ StudyViewer.propTypes = {
       path: PropTypes.string,
     },
   ).isRequired,
-  submitJob: PropTypes.func.isRequired,
-  resetJobState: PropTypes.func.isRequired,
-  checkJobStatus: PropTypes.func.isRequired,
-  fetchJobResult: PropTypes.func.isRequired,
-  job: PropTypes.object,
 };
 
 StudyViewer.defaultProps = {
   datasets: undefined,
   fileData: [],
   noConfigError: undefined,
-  job: null,
 };
 
 export default StudyViewer;

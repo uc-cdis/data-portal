@@ -258,6 +258,7 @@ class StudyDetails extends React.Component {
      // this defaults to the config of the 1st configured request_access
      // button. if there are more than 1 with different configs, TODO fix
      const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find((e) => e.type === 'request_access');
+
      return (
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
