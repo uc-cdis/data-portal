@@ -1,29 +1,18 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
 import Tooltip from 'rc-tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import IconicLink from '../../components/buttons/IconicLink';
 import { GuppyConfigType, TableConfigType } from '../configTypeDef';
 import { capitalizeFirstLetter, humanFileSize } from '../../utils';
+import ReactTable from './Table';
 import './ExplorerTable.css';
 import LockIcon from '../../img/icons/lock.svg';
 import dictIcons from '../../img/icons/index';
 import '../typedef';
 
 /** @typedef {import('react-table').Column} ReactTableColumn */
-
-/**
- * A simplified alternative to lodash/get using string path of property names only.
- * @param {object} object The object to query.
- * @param {string} path Path to the property to get, e.g. 'a.b.c'
- * @return Returns the resolved value.
- */
-function get(object, path) {
-  return path.split('.').reduce((obj, key) => obj && obj[key], object);
-}
 
 /**
  * @param {Object} args
@@ -73,11 +62,9 @@ function getCellElement({
 }) {
   if (downloadAccessor)
     return (
-      <div>
-        <span title={valueStr}>
-          <a href={`/files/${valueStr}`}>{valueStr}</a>
-        </span>
-      </div>
+      <span title={valueStr}>
+        <a href={`/files/${valueStr}`}>{valueStr}</a>
+      </span>
     );
 
   if (linkFields.includes(field))
@@ -95,11 +82,7 @@ function getCellElement({
     ) : null;
 
   if (field === 'filed_size')
-    return (
-      <div>
-        <span title={valueStr}>{humanFileSize(valueStr)}</span>
-      </div>
-    );
+    return <span title={valueStr}>{humanFileSize(valueStr)}</span>;
 
   if (field === 'external_references.external_links') {
     if (!value) return null;
@@ -109,11 +92,14 @@ function getCellElement({
       subjectUrl,
     ] = value[0].external_links.split('|');
     return (
-      <div className='explorer-table-external-links'>
-        <a href={subjectUrl} target='_blank' rel='noopenner noreferrer'>
-          <img src={resourceIconPath} alt={resourceName} />
-        </a>
-      </div>
+      <a
+        className='explorer-table-external-links'
+        href={subjectUrl}
+        target='_blank'
+        rel='noopenner noreferrer'
+      >
+        <img src={resourceIconPath} alt={resourceName} />
+      </a>
     );
   }
 
@@ -122,6 +108,41 @@ function getCellElement({
       <span title={valueStr}>{valueStr}</span>
     </div>
   );
+}
+
+function isPlainObject(value) {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/** @param {Object[]} rawData */
+function parseDataForTable(rawData) {
+  /** @type {Object[]} */
+  const parsedData = [];
+  for (const row of rawData) {
+    const parsedRow = {};
+    for (const [fieldName, value] of Object.entries(row)) {
+      // if value is nested field value, must be parsed
+      // nested field value is an array of object
+      // where each object contains the pairs of nested field name & value
+      // e.g. [{ foo: 0, bar: 'a' }, { foo: 1. bar: 'b' }]
+      if (Array.isArray(value) && value.some(isPlainObject)) {
+        // parsed nested field value is an object
+        // which contains the pairs of nested field name & array of its values
+        // e.g. { foo: [0, 1], bar: ['a', 'b'] }
+        parsedRow[fieldName] = {};
+        for (const obj of value)
+          for (const [nestedFieldName, nestedValue] of Object.entries(obj)) {
+            if (!(nestedFieldName in parsedRow[fieldName]))
+              parsedRow[fieldName][nestedFieldName] = [];
+            parsedRow[fieldName][nestedFieldName].push(nestedValue);
+          }
+      }
+      // otherwise, use it as is
+      else parsedRow[fieldName] = value;
+    }
+    parsedData.push(parsedRow);
+  }
+  return parsedData;
 }
 
 /**
@@ -171,7 +192,7 @@ function ExplorerTable({
       id: field,
       maxWidth: 600,
       width: getColumnWidth({ columnName, field, linkFields, rawData }),
-      accessor: (d) => d[field],
+      accessor: field,
       Cell: ({ value }) =>
         getCellElement({
           downloadAccessor,
@@ -183,160 +204,12 @@ function ExplorerTable({
     };
   }
 
-  /**
-   * Build nested column config for each table according to their locations and fields
-   * @param {string} field the full field name, contains at least 1 '.'
-   * @param {boolean} [isDetailedColumn] control flag to determine if it is building column config for innermost nested table
-   * @returns {ReactTableColumn}
-   */
-  function buildNestedColumnConfig(field, isDetailedColumn = false) {
-    const overrideName = fieldMapping?.find((i) => i.field === field)?.name;
-    const fieldStringsArray = field.split('.');
-    // for nested table, we only display the children names in column header
-    // i.e.: visits.follow_ups.follow_up_label => follow_ups.follow_up_label
-    const nestedFieldName = fieldStringsArray.slice(1).join('.');
-
-    return {
-      Header: overrideName ?? capitalizeFirstLetter(nestedFieldName),
-      id: field,
-      maxWidth: 600,
-      // for nested table we set the width arbitrary wrt view width
-      // because the width of its parent row is too big
-      // @ts-ignore
-      width: '70vw',
-      accessor: (d) => d[fieldStringsArray[0]],
-      Cell: isDetailedColumn
-        ? ({ value }) => (
-            // for inner most detailed table, 1 value per row
-            <div className='rt-tbody'>
-              <div className='rt-tr-group'>
-                {value.map((v, i) => (
-                  <div
-                    className={`rt-tr ${i % 2 === 0 ? '-even' : '-odd'}`}
-                    key={i}
-                  >
-                    <div className='rt-td'>
-                      <span>
-                        {get(v, nestedFieldName)}
-                        <br />
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )
-        : ({ value }) =>
-            getCellElement({
-              downloadAccessor,
-              field,
-              linkFields,
-              value,
-              valueStr: Array.isArray(value)
-                ? value.map((v) => get(v, nestedFieldName)).join(', ')
-                : get(value, nestedFieldName),
-            }),
-    };
-  }
-
-  /**
-   * Build column configs nested array fields
-   * We only need nested table if the nested field is an array.
-   * Otherwise, the nested field can be displayed in one row.
-   * @param {{ [x: string]: string[] }} nestedArrayFieldNames an object containing
-   * all the nested array fields, separated by their parent names.
-   * @example
-   * {
-   *    ActionableMutations: [ 'Lab' ],
-   *    Oncology_Primary: [ 'Multiplicitycounter', 'ICDOSite' ]
-   * }
-   * @returns a collection of column configs for each nested table,
-   * separated by their parent names. Each set of column configs contains two configs,
-   * one for the 1st level nested table and one for the 2nd level table.
-   * @example
-   * {
-   *    ActionableMutations: [ firstLevelColumnsConfig, secondLevelColumnsConfig ],
-   *    Oncology_Primary: [ firstLevelColumnsConfig, secondLevelColumnsConfig ]
-   * }
-   */
-  function buildNestedArrayFieldColumnConfigs(nestedArrayFieldNames) {
-    /** @type {{ [x: string]: ReactTableColumn[][] }} */
-    const nestedArrayFieldColumnConfigs = {};
-    for (const key of Object.keys(nestedArrayFieldNames)) {
-      if (!nestedArrayFieldColumnConfigs[key])
-        nestedArrayFieldColumnConfigs[key] = [];
-
-      const firstLevelColumns = [];
-      const secondLevelColumns = [];
-      for (const nestedFieldName of nestedArrayFieldNames[key]) {
-        const field = `${key}.${nestedFieldName}`;
-        firstLevelColumns.push(buildNestedColumnConfig(field));
-        secondLevelColumns.push(buildNestedColumnConfig(field, true));
-      }
-
-      nestedArrayFieldColumnConfigs[key].push(
-        [{ Header: key, columns: firstLevelColumns }],
-        [{ Header: key, columns: secondLevelColumns }]
-      );
-    }
-
-    return nestedArrayFieldColumnConfigs;
-  }
-
   // build column configs for root table first
   const rootColumnsConfig = fields.map(buildColumnConfig);
   if (!ordered)
     rootColumnsConfig.sort((a, b) =>
       String(a.Header).localeCompare(String(b.Header))
     );
-
-  /** @type {{ [x: string]: string[] }} */
-  const nestedArrayFieldNames = {};
-  for (const field of fields)
-    if (field.includes('.')) {
-      const fieldStringsArray = field.split('.');
-      if (Array.isArray(rawData?.[0]?.[fieldStringsArray[0]])) {
-        if (!nestedArrayFieldNames[fieldStringsArray[0]])
-          nestedArrayFieldNames[fieldStringsArray[0]] = [];
-
-        nestedArrayFieldNames[fieldStringsArray[0]].push(
-          fieldStringsArray.slice(1).join('.')
-        );
-      }
-    }
-
-  /** @type {import('react-table').SubComponentFunction} */
-  let SubComponent = null;
-  if (Object.keys(nestedArrayFieldNames).length > 0) {
-    // eslint-disable-next-line max-len
-    const nestedArrayFieldColumnConfigs = buildNestedArrayFieldColumnConfigs(
-      nestedArrayFieldNames
-    );
-    // this is the subComponent of the two-level nested tables
-    SubComponent = (row) =>
-      Object.entries(nestedArrayFieldColumnConfigs).map(
-        ([key, [firstLevelColumnsConfig, secondLevelColumnsConfig]]) => (
-          <div className='explorer-nested-table' key={key}>
-            <ReactTable
-              data={(rawData ?? []).slice(row.index, row.index + 1)}
-              columns={firstLevelColumnsConfig}
-              defaultPageSize={1}
-              showPagination={false}
-              SubComponent={() => (
-                <div className='explorer-nested-table'>
-                  <ReactTable
-                    data={(rawData ?? []).slice(row.index, row.index + 1)}
-                    columns={secondLevelColumnsConfig}
-                    defaultPageSize={1}
-                    showPagination={false}
-                  />
-                </div>
-              )}
-            />
-          </div>
-        )
-      );
-  }
 
   const totalPages =
     Math.floor(accessibleCount / pageSize) +
@@ -356,6 +229,25 @@ function ExplorerTable({
         : `${start.toLocaleString()} - ${accessibleCount.toLocaleString()}`
       : `${start.toLocaleString()} - ${end.toLocaleString()}`;
   const dataTypeString = pluralize(dataType);
+
+  const columns = React.useMemo(() => rootColumnsConfig, [rawData]);
+  const data = React.useMemo(() => parseDataForTable(rawData), [rawData]);
+  const fetchData = React.useCallback(
+    (s) =>
+      isInitialFetchData
+        ? setIsInitialFetchData(false)
+        : fetchAndUpdateRawData({
+            offset: s.pageIndex * s.pageSize,
+            size: s.pageSize,
+            sort: (s.sortBy ?? []).map((i) => ({
+              [i.id]: i.desc ? 'desc' : 'asc',
+            })),
+          }).then(() => {
+            setPageSize(s.pageSize);
+            setCurrentPage(s.pageIndex);
+          }),
+    [fetchAndUpdateRawData]
+  );
 
   return (
     <div className={`explorer-table ${className}`}>
@@ -382,29 +274,12 @@ function ExplorerTable({
         </p>
       )}
       <ReactTable
-        columns={rootColumnsConfig}
-        manual
-        data={isLocked || !rawData ? [] : rawData}
+        columns={columns}
+        data={isLocked || !data ? [] : data}
         showPageSizeOptions={!isLocked}
-        pages={isLocked ? 0 : visiblePages}
-        onFetchData={(s) =>
-          isInitialFetchData
-            ? setIsInitialFetchData(false)
-            : fetchAndUpdateRawData({
-                offset: s.page * s.pageSize,
-                size: s.pageSize,
-                sort: s.sorted.map((i) => ({
-                  [i.id]: i.desc ? 'desc' : 'asc',
-                })),
-              }).then(() => {
-                setPageSize(s.pageSize);
-                setCurrentPage(s.page);
-              })
-        }
+        pageCount={isLocked ? 1 : visiblePages}
+        onFetchData={fetchData}
         defaultPageSize={defaultPageSize}
-        className={'-striped -highlight '}
-        minRows={3} // make room for no data component
-        resizable={false}
         NoDataComponent={() =>
           isLocked ? (
             <div className='rt-noData'>
@@ -415,7 +290,7 @@ function ExplorerTable({
             <div className='rt-noData'>No data to display</div>
           )
         }
-        SubComponent={isLocked ? null : SubComponent}
+        // SubComponent={isLocked ? null : SubComponent}
       />
     </div>
   );
