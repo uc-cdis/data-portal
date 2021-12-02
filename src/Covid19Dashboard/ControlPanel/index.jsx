@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import LegendPanel from './LegendPanel';
 import MapStylePanel from './MapStylePanel';
 import LayerSelector from './LayerSelector';
@@ -39,7 +39,7 @@ class ControlPanel extends PureComponent {
                   aria-describedby={'controlPanelTooltipMobilityData'}
                   className={'g3-helper-tooltip'}
                 >
-                  <ExclamationCircleOutlined />
+                  <InfoCircleOutlined />
                 </span>
               </Tooltip>
             )}
@@ -91,7 +91,7 @@ class ControlPanel extends PureComponent {
                     aria-describedby={'controlPanelTooltipAdditional_data'}
                     className={'g3-helper-tooltip'}
                   >
-                    <ExclamationCircleOutlined />
+                    <InfoCircleOutlined />
                   </span>
                 </Tooltip>
               </h4>

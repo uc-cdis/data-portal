@@ -84,7 +84,6 @@ const checkFederatedLoginStatus = async (
     if (status !== 200) {
       return false;
     }
-
     const { providers } = data;
     const unauthenticatedProviders = providers.filter((provider) => !provider.refresh_token_expiration);
 
@@ -95,7 +94,7 @@ const checkFederatedLoginStatus = async (
         (selectedResource[manifestFieldName] || []).forEach(
           (fileMetadata) => {
             if (fileMetadata.object_id) {
-              const guidDomainPrefix = fileMetadata.object_id.match(GUID_PREFIX_PATTERN).shift();
+              const guidDomainPrefix = (fileMetadata.object_id.match(GUID_PREFIX_PATTERN) || []).shift();
               if (guidDomainPrefix) {
                 if (!guidPrefixes.includes(guidDomainPrefix)) {
                   guidPrefixes.push(guidDomainPrefix);
@@ -114,14 +113,13 @@ const checkFederatedLoginStatus = async (
       ),
     );
     const externalHosts = guidResolutions.filter(
-      (resolvedGuid) => resolvedGuid.from_index_service,
+      (resolvedGuid) => resolvedGuid && resolvedGuid.from_index_service,
     ).map(
       (resolvedGuid) => new URL(resolvedGuid.from_index_service.host).host,
     );
     const providersToAuthenticate = unauthenticatedProviders.filter(
       (unauthenticatedProvider) => externalHosts.includes(new URL(unauthenticatedProvider.base_url).hostname),
     );
-
     if (providersToAuthenticate.length) {
       setDownloadStatus({
         inProgress: false,
@@ -164,11 +162,6 @@ const checkDownloadStatus = (
   setDownloadStatus: (arg0: DownloadStatus) => void,
   selectedResources: any[],
 ) => {
-  const ddActionData = selectedResources.map((study) => ({
-    projectNumber: study.project_number,
-    studyName: study.study_name,
-  }));
-
   fetchWithCreds({ path: `${jobAPIPath}status?UID=${uid}` }).then(
     (statusResponse) => {
       const { status } = statusResponse.data;
@@ -217,8 +210,11 @@ const checkDownloadStatus = (
                   },
                 });
                 setTimeout(() => window.open(output), 2000);
+                const projectNumber = selectedResources.map((study) => study.project_number);
+                const studyName = selectedResources.map((study) => study.study_name);
                 datadogRum.addAction('datasetDownload', {
-                  datasetDownload: ddActionData,
+                  datasetDownloadProjectNumber: projectNumber,
+                  datasetDownloadStudyName: studyName,
                 });
               } catch {
                 // job output is not a url -> is an error message
@@ -312,12 +308,11 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
       }
     }
   });
-  const ddActionData = selectedResources.map((study) => ({
-    projectNumber: study.project_number,
-    studyName: study.study_name,
-  }));
+  const projectNumber = selectedResources.map((study) => study.project_number);
+  const studyName = selectedResources.map((study) => study.study_name);
   datadogRum.addAction('manifestDownload', {
-    manifestDownload: ddActionData,
+    manifestDownloadProjectNumber: projectNumber,
+    manifestDownloadStudyName: studyName,
   });
   // download the manifest
   const MANIFEST_FILENAME = 'manifest.json';

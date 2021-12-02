@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="131.097 85.321 315.668 294.22" xmlns="http://www.w3.org/2000/svg" xmlnsbx="https://boxy-svg.com">
+  <rect x="146.883" y="123.117" width="10" height="235.133" style=""/>
+  <rect x="173.961" y="123.107" width="10" height="210.793" style=""/>
+  <rect x="274.91" y="74.604" width="10" height="272.308" style="" transform="matrix(0, 1, -1, 0, 521.079666, 50.305029)"/>
+  <rect x="289.934" y="82.821" width="10" height="299.46" style="" transform="matrix(0, 1, -1, 0, 529.229142, 61.28937)"/>
+  <g transform="matrix(1, 0, 0, 1, 2, 7)">
+    <rect x="219.219" y="230.79" width="6" height="61" style=""/>
+    <rect x="227.906" y="230.79" width="6" height="61" style=""/>
+  </g>
+  <g transform="matrix(1, 0, 0, 1, 6.600337, 7)">
+    <rect x="267.104" y="165.252" width="6" height="126.479" style="" bxorigin="0.5 0.759019"/>
+    <rect x="275.791" y="165.194" width="6" height="126.479" style="" bxorigin="0.5 0.759478"/>
+  </g>
+  <g transform="matrix(1, 0, 0, 1, 13.009664, 7)">
+    <rect x="313.18" y="194.361" width="6" height="97.312" style=""/>
+    <rect x="321.867" y="194.171" width="6" height="97.312" style=""/>
+  </g>
+  <g transform="matrix(1, 0, 0, 1, 11, 7)">
+    <rect x="367.675" y="134.152" width="6" height="157.374" style=""/>
+    <rect x="376.362" y="134.299" width="6" height="157.374" style=""/>
+  </g>
+</svg>

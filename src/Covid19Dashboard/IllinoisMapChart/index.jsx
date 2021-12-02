@@ -27,10 +27,17 @@ import Spinner from '../../components/Spinner';
 // pull data from qa for everything that is not prod
 const occEnv = covid19DashboardConfig.dataUrl === 'https://opendata.datacommons.io/' ? 'prod' : 'qa';
 
-function filterCountyGeoJson(selectedFips) {
+function filterIllinoisCountiesGeoJson() {
   return {
     ...countyData,
-    features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999' && selectedFips.includes(f.properties.FIPS)),
+    features: countyData.features.filter((f) => f.properties.STATE === 'IL' && f.properties.FIPS !== '17999'),
+  };
+}
+
+function filterModeledCountiesGeoJson(illinoisCountiesGeoJson, selectedFips) {
+  return {
+    ...illinoisCountiesGeoJson,
+    features: illinoisCountiesGeoJson.features.filter((f) => selectedFips.includes(f.properties.FIPS)),
   };
 }
 
@@ -60,14 +67,29 @@ class IllinoisMapChart extends React.Component {
         // Additional layers used as examples enable here
         us_counties: { title: 'US Counties', visible: 'visible' },
         il_population: { title: 'IL Population', visible: 'visible' }, */
-        V_time_data: { title: 'Vaccination Data' },
-        C_time_data: { title: 'Case Data' },
-        rnr_mobility_data: { title: 'Retail & Recreation' },
-        gnp_mobility_data: { title: 'Grocery & Pharmacy' },
-        prk_mobility_data: { title: 'Parks' },
-        trn_mobility_data: { title: 'Transit Stations' },
-        wrk_mobility_data: { title: 'Workplaces' },
-        res_mobility_data: { title: 'Residential' },
+        vaccination_layers: {
+          title: 'Vaccinations',
+          layers: {
+            V_time_data: { title: 'Vaccination Counts' },
+          },
+        },
+        case_layers: {
+          title: 'Cases & Deaths',
+          layers: {
+            C_time_data: { title: 'Case Counts' },
+          },
+        },
+        mobility_layers: {
+          title: 'Mobility',
+          layers: {
+            rnr_mobility_data: { title: 'Retail & Recreation' },
+            gnp_mobility_data: { title: 'Grocery & Pharmacy' },
+            prk_mobility_data: { title: 'Parks' },
+            trn_mobility_data: { title: 'Transit Stations' },
+            wrk_mobility_data: { title: 'Workplaces' },
+            res_mobility_data: { title: 'Residential' },
+          },
+        },
       },
       popup_data: {
         /*
@@ -92,7 +114,8 @@ class IllinoisMapChart extends React.Component {
       mapColors: null,
     };
     this.mapData = {
-      modeledCountyGeoJson: null,
+      illinoisCountiesGeoJson: null,
+      modeledCountiesGeoJson: null,
       colors: {},
       colorsAsList: null,
     };
@@ -122,7 +145,11 @@ class IllinoisMapChart extends React.Component {
         lastUpdated: this.props.jsonByTime.last_updated,
       });
 
-      this.mapData.modeledCountyGeoJson = filterCountyGeoJson(this.props.modeledFipsList);
+      this.mapData.illinoisCountiesGeoJson = filterIllinoisCountiesGeoJson();
+      this.mapData.modeledCountiesGeoJson = filterModeledCountiesGeoJson(
+        this.mapData.illinoisCountiesGeoJson,
+        this.props.modeledFipsList,
+      );
 
       // Finds second highest value in data set
       // Second highest value is used to better balance distribution
@@ -311,7 +338,7 @@ class IllinoisMapChart extends React.Component {
       if (feature.layer.id.indexOf('mobility_data') > -1) {
         const idString = feature.layer.id.split('_')[0];
         hoverInfo.mobility_values = {};
-        hoverInfo.mobility_values[this.state.overlay_layers[`${idString}_mobility_data`].title] = formatNumberToDisplay(feature.properties[`${idString}_${this.state.sliderDate}`]);
+        hoverInfo.mobility_values[this.state.overlay_layers.mobility_layers.layers[`${idString}_mobility_data`].title] = formatNumberToDisplay(feature.properties[`${idString}_${this.state.sliderDate}`]);
       }
 
       if (this.state.popup_data.strain_data.visible === 'visible') {
@@ -631,14 +658,27 @@ class IllinoisMapChart extends React.Component {
           <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
           <PopulationIL visibility={this.state.overlay_layers.il_population.visible} /> */}
           {/* Outline a set of counties from IL */}
-          <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountyGeoJson}>
+          {this.state.activeLayer === 'C_time_data' &&
+            <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountiesGeoJson}>
+              <ReactMapGL.Layer
+                id='county-highlight'
+                type='line'
+                beforeId='waterway-label'
+                paint={{
+                  'line-color': '#421C52',
+                  'line-width': 3,
+                }}
+              />
+            </ReactMapGL.Source>
+          }
+        <ReactMapGL.Source type='geojson' data={this.mapData.illinoisCountiesGeoJson}>
             <ReactMapGL.Layer
               id='county-outline'
               type='line'
               beforeId='waterway-label'
               paint={{
                 'line-color': '#421C52',
-                'line-width': 1.5,
+                'line-width': 1,
               }}
             />
           </ReactMapGL.Source>
