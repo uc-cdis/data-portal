@@ -156,7 +156,7 @@ class StudyDetails extends React.Component {
 
       button = displayDownloadButton ? (
         <Button
-          key={`${key}-2`}
+          key={key}
           label={'Export to Workspace'}
           buttonType='primary'
           onClick={() => this.props.exportToWorkspaceAction(onClickProperties)}

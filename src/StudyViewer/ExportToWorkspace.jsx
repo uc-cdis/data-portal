@@ -25,10 +25,10 @@ class ExportToWorkspace extends React.Component {
       this.exportToWorkspace(this.props.exportToWorkspaceAction);
     }
     if (this.props.job && !this.props.job.status && !this.state.jobFailed) {
-      this.onJobFailed('There was an error please refresh the page and try again');
+      this.onJobFailed('There was an error, please refresh the page and try again');
     }
     if (this.props.job && this.props.job.status === 'Failed' && prevProps.job && prevProps.job.status !== 'Failed' && !this.state.jobFailed) {
-      this.onJobFailed('There was an error exporting your cohort.');
+      this.onJobFailed('There was an error exporting your cohort, please refresh the page and try again');
     }
     if (this.props.job && this.props.job.status === 'Completed' && prevProps.job && prevProps.job.status !== 'Completed') {
       this.fetchJobResult()
@@ -85,7 +85,7 @@ class ExportToWorkspace extends React.Component {
             this.setState(() => ({
               exportPFBToWorkspaceGUID: pfbGUID,
               toasterOpen: true,
-              toasterHeadline: 'A PFB for this cohort will be saved to your workspace. The GUID for your PFB is displayed below.',
+              toasterHeadline: 'The data has been exported to your workspace',
               exportPFBToWorkspaceStatus: status,
             }));
             return;
