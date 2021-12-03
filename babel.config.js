@@ -9,7 +9,7 @@ const config = {
         corejs: '3.10',
       },
     ],
-    '@babel/preset-react',
+    ['@babel/preset-react', { runtime: 'automatic' }],
   ],
   plugins: [
     ['relay', { compat: true, schema: 'data/schema.json' }],
