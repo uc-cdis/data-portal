@@ -13,14 +13,12 @@ Example configuration:
             "blockFields": ["short_description"],
             // displayed in table:
             "tableFields": ["condition", ...],
-            "hideEmptyFields": false //optional false by default; hides empty fields
         },
         "singleItemConfig": { // optional, if omitted, "listItemConfig" block will be used for both pages
             // displayed outside of table:
             "blockFields": ["long_description"],
             // displayed in table:
             "tableFields": ["condition", ...],
-            "hideEmptyFields": false, //optional false by default; hides empty fields
             // optional configs for side boxes, only for single study viewer
             "sideBoxes": [
                 {
