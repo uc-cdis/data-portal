@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { getSuggestionItemHTML } from './AutoCompleteSuggestions';
 import AutoComplete from './index';

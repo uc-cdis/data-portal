@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import React from 'react';
 import PropTypes from 'prop-types';
 import dictIcons from '../img/icons/index';
 import IconComponent from './Icon';

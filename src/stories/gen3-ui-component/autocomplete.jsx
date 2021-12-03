@@ -1,4 +1,4 @@
-import React from 'react';
+import { createRef } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import AutoComplete from '../../gen3-ui-component/components/AutoComplete';
@@ -31,7 +31,7 @@ const setInputFunc = (ref) => {
 };
 
 storiesOf('AutoComplete', module).add('autocomplete', () => {
-  const autoCompleteRef = React.createRef();
+  const autoCompleteRef = createRef();
   return (
     <div>
       <AutoComplete

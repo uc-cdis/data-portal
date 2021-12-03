@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -21,27 +21,25 @@ import { fetchVersionInfo } from './actions';
 import isEnabled from './helpers/featureFlags';
 
 // lazy-loaded pages
-const DataDictionary = React.lazy(() => import('./DataDictionary'));
-const Explorer = React.lazy(() => import('./GuppyDataExplorer'));
-const GraphQLQuery = React.lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
-const IndexPage = React.lazy(() => import('./Index/page'));
-const ProjectSubmission = React.lazy(() =>
+const DataDictionary = lazy(() => import('./DataDictionary'));
+const Explorer = lazy(() => import('./GuppyDataExplorer'));
+const GraphQLQuery = lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
+const IndexPage = lazy(() => import('./Index/page'));
+const ProjectSubmission = lazy(() =>
   import('./Submission/ReduxProjectSubmission')
 );
-const ReduxMapDataModel = React.lazy(() =>
-  import('./Submission/ReduxMapDataModel')
-);
-const ReduxMapFiles = React.lazy(() => import('./Submission/ReduxMapFiles'));
-const ReduxQueryNode = React.lazy(() => import('./QueryNode/ReduxQueryNode'));
-const SubmissionPage = React.lazy(() => import('./Submission/page'));
-const ResourceBrowser = React.lazy(() => import('./ResourceBrowser'));
-const UserProfile = React.lazy(() => import('./UserProfile/ReduxUserProfile'));
-// const CoreMetadataPage = React.lazy(() => import('./CoreMetadata/page'));
-// const ErrorWorkspacePlaceholder = React.lazy(() =>
+const ReduxMapDataModel = lazy(() => import('./Submission/ReduxMapDataModel'));
+const ReduxMapFiles = lazy(() => import('./Submission/ReduxMapFiles'));
+const ReduxQueryNode = lazy(() => import('./QueryNode/ReduxQueryNode'));
+const SubmissionPage = lazy(() => import('./Submission/page'));
+const ResourceBrowser = lazy(() => import('./ResourceBrowser'));
+const UserProfile = lazy(() => import('./UserProfile/ReduxUserProfile'));
+// const CoreMetadataPage = lazy(() => import('./CoreMetadata/page'));
+// const ErrorWorkspacePlaceholder = lazy(() =>
 //   import('./Workspace/ErrorWorkspacePlaceholder')
 // );
-// const Indexing = React.lazy(() => import('./Indexing/Indexing'));
-// const Workspace = React.lazy(() => import('./Workspace'));
+// const Indexing = lazy(() => import('./Indexing/Indexing'));
+// const Workspace = lazy(() => import('./Workspace'));
 
 function App({ store }) {
   useEffect(() => {

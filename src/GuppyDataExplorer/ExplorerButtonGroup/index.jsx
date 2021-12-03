@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import FileSaver from 'file-saver';
 import PropTypes from 'prop-types';
 import Button from '../../gen3-ui-component/components/Button';
@@ -62,7 +62,7 @@ import '../typedef';
  */
 
 /** @augments {React.Component<ExplorerButtonGroupProps, ExplorerButtonGroupState>} */
-class ExplorerButtonGroup extends React.Component {
+class ExplorerButtonGroup extends Component {
   /** @param {ExplorerButtonGroupProps} props */
   constructor(props) {
     super(props);

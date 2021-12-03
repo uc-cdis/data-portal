@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import ConnectedFilter from '../../GuppyComponents/ConnectedFilter';
 import { useExplorerConfig } from '../ExplorerConfigContext';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { compareTwoStrings } from 'string-similarity';
 import AutoComplete from '../../../gen3-ui-component/components/AutoComplete';
@@ -10,11 +10,11 @@ import {
 } from './searchHelper';
 import './DictionarySearcher.css';
 
-class DictionarySearcher extends React.Component {
+class DictionarySearcher extends Component {
   constructor(props) {
     super(props);
     this.searchData = prepareSearchData(props.dictionary);
-    this.autoCompleteRef = React.createRef();
+    this.autoCompleteRef = createRef();
     this.state = {
       suggestionList: [],
       isSearchFinished: false,

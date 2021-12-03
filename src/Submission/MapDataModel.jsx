@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { fetchQuery } from 'relay-runtime';
 import Button from '../gen3-ui-component/components/Button';
@@ -39,7 +39,7 @@ export function getParentNodes(links, parents) {
   return parentNodes;
 }
 
-class MapDataModel extends React.Component {
+class MapDataModel extends Component {
   constructor(props) {
     super(props);
     this.state = {

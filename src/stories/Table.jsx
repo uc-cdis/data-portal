@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { storiesOf } from '@storybook/react';
 import Table from '../GuppyDataExplorer/ExplorerTable/Table';
 

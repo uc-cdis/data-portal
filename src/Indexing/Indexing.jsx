@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import Button from '../gen3-ui-component/components/Button';
 import {
   userapiPath,
@@ -13,7 +13,7 @@ import Spinner from '../components/Spinner';
 import IconComponent from '../components/Icon';
 import dictIcons from '../img/icons/index';
 
-class Indexing extends React.Component {
+class Indexing extends Component {
   constructor(props) {
     super(props);
 

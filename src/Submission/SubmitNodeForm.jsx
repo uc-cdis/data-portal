@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import OneOfInput from './OneOfInput';
 import EnumInput from './EnumInput';

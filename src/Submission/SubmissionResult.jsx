@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
@@ -16,7 +16,7 @@ import './SubmissionResult.less';
  * @param {number} counter
  * @param {number} total
  */
-class SubmissionResult extends React.Component {
+class SubmissionResult extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {

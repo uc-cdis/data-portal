@@ -1,4 +1,3 @@
-import React from 'react';
 import IcoAnalysis from './analysis.svg';
 import IcoBack from './back.svg';
 import IcoCohortTools from './cohort-tools.svg';

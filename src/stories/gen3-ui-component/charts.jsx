@@ -1,4 +1,3 @@
-import React from 'react';
 import { storiesOf } from '@storybook/react';
 import SummaryHorizontalBarChart from '../../gen3-ui-component/components/charts/SummaryHorizontalBarChart';
 import SummaryPieChart from '../../gen3-ui-component/components/charts/SummaryPieChart';

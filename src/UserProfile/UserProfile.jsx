@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import FileSaver from 'file-saver';
 import copy from 'clipboard-plus';

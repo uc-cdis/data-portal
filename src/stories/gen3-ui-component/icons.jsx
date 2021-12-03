@@ -1,4 +1,3 @@
-import React from 'react';
 import { storiesOf } from '@storybook/react';
 import '../../gen3-ui-component/css/icon.css';
 import './icon-story.css';

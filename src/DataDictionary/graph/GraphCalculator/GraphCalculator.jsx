@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   getAllTypes,
@@ -8,7 +8,7 @@ import {
   calculateDataModelStructure,
 } from './graphCalculatorHelper';
 
-class GraphCalculator extends React.Component {
+class GraphCalculator extends Component {
   constructor(props) {
     super(props);
     this.oldHighlightingNode = null;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { cloneElement, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import AnchorFilter from '../AnchorFilter';
@@ -294,7 +294,7 @@ function FilterGroup({
           />
         )}
 
-        {React.cloneElement(tabs[tabIndex], {
+        {cloneElement(tabs[tabIndex], {
           expandedStatus: expandedStatus[tabIndex],
           filterStatus: filterTabStatus,
           hideZero,

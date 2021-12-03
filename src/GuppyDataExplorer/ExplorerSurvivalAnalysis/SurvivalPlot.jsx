@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   ResponsiveContainer,
@@ -187,4 +187,4 @@ SurvivalPlot.propTypes = {
   timeInterval: PropTypes.number.isRequired,
 };
 
-export default React.memo(SurvivalPlot);
+export default memo(SurvivalPlot);

@@ -1,4 +1,3 @@
-import React from 'react';
 import ReduxSubmissionHeader from './ReduxSubmissionHeader';
 import ReduxProjectTable from './ReduxProjectTable';
 import './ProjectDashboard.less';

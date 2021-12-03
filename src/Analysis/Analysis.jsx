@@ -1,11 +1,11 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { config } from '../params';
 import { analysisApps } from '../localconf';
 import AppCard from './AppCard';
 import './Analysis.less';
 
-class Analysis extends React.Component {
+class Analysis extends Component {
   openApp = (app) => {
     this.props.history.push(`/analysis/${app}`);
   };

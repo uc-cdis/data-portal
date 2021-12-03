@@ -1,4 +1,3 @@
-import React from 'react';
 import IcoBAM from './bam.svg';
 import IcoBED from './bed.svg';
 import IcoCSV from './csv.svg';

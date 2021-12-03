@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../../gen3-ui-component/components/Button';
 import { downloadTemplate, SearchResultItemShape } from '../../utils';
@@ -10,7 +10,7 @@ import {
 import DataDictionaryPropertyTable from '../../table/DataDictionaryPropertyTable';
 import './OverlayPropertyTable.css';
 
-class OverlayPropertyTable extends React.Component {
+class OverlayPropertyTable extends Component {
   getTitle = () => {
     if (this.props.isSearchMode) {
       const nodeTitleFragment = getNodeTitleFragment(

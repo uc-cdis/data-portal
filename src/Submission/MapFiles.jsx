@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import dayjs from 'dayjs';
@@ -103,7 +103,7 @@ export function isFileReady(file) {
   return file.hashes && Object.keys(file.hashes).length > 0;
 }
 
-class MapFiles extends React.Component {
+class MapFiles extends Component {
   constructor(props) {
     super(props);
     const searchParams = new URLSearchParams(window.location.search);
@@ -286,7 +286,7 @@ class MapFiles extends React.Component {
             }));
             const minTableHeight = files.length * ROW_HEIGHT + HEADER_HEIGHT;
             return (
-              <React.Fragment key={groupIndex}>
+              <Fragment key={groupIndex}>
                 <div className='h2-typo'>{getTableHeaderText(files)}</div>
                 <AutoSizer disableHeight>
                   {({ width }) => (
@@ -389,7 +389,7 @@ class MapFiles extends React.Component {
                     </Table>
                   )}
                 </AutoSizer>
-              </React.Fragment>
+              </Fragment>
             );
           })}
         </div>

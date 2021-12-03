@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { select, selectAll } from 'd3-selection';
 import { forceSimulation, forceLink } from 'd3-force';
@@ -227,7 +227,7 @@ export function createSvgGraph(nodesIn, edges) {
  * graph is basically a tree structure that can be
  * layed out breadth first.
  */
-class SvgGraph extends React.Component {
+class SvgGraph extends Component {
   constructor(props) {
     super(props);
     this.state = { minX: 100, minY: 100 };
