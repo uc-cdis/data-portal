@@ -30,33 +30,14 @@ function IndexOverview({ overviewCounts }) {
   ];
 
   const history = useHistory();
-  function ButtonToExplorer() {
-    const search =
-      consortium.value === 'total'
-        ? undefined
-        : `filter=${JSON.stringify({
-            consortium: { selectedValues: [consortium.value] },
-          })}`;
-
-    const enabled =
-      overviewCounts !== undefined &&
-      overviewCounts.data[consortium.value].subject !== 0;
-
-    return (
-      <Button
-        label='Explore more'
-        buttonType='primary'
-        enabled={enabled}
-        onClick={() =>
-          history.push({
-            pathname: '/explorer',
-            search,
-            state: { keepSearch: true },
-          })
-        }
-      />
-    );
-  }
+  const explorerLocation =
+    consortium.value === 'total'
+      ? { pathname: '/explorer' }
+      : {
+          pathname: '/explorer',
+          search: `filter={"consortium":{"selectedValues":["${consortium.value}"]}}`,
+          state: { keepSearch: true },
+        };
 
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   useEffect(() => {
@@ -101,7 +82,11 @@ function IndexOverview({ overviewCounts }) {
             />
           </div>
           <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-            <ButtonToExplorer />
+            <Button
+              label='Explore more'
+              buttonType='primary'
+              onClick={() => history.push(explorerLocation)}
+            />
           </MediaQuery>
         </div>
       </div>
@@ -122,7 +107,11 @@ function IndexOverview({ overviewCounts }) {
       </div>
       <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
         <div className='index-overview__footer'>
-          <ButtonToExplorer />
+          <Button
+            label='Explore more'
+            buttonType='primary'
+            onClick={() => history.push(explorerLocation)}
+          />
         </div>
       </MediaQuery>
     </div>
