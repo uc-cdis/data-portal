@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Table, Empty } from 'antd';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
-import { AccessLevel } from './Discovery';
+import { AccessLevel, DiscoveryResource } from './Discovery';
 
 interface Props {
   config: DiscoveryConfig;
-  studies: {__accessible: boolean, [any: string]: any}[];
+  studies: DiscoveryResource[];
   columns: [];
   visibleResources: any[];
   accessibleFieldName: string;
@@ -15,9 +15,9 @@ interface Props {
   setModalVisible: (boolean) => void;
   setModalData: (boolean) => void;
   selectedResources: any[];
-  setSelectedResources: (any) => void;
   advSearchFilterHeight: string | number;
   setAdvSearchFilterHeight: (any) => void;
+  onResourcesSelected: (selectedResources: DiscoveryResource[]) => any
 }
 
 const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
@@ -34,6 +34,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
 
   return (
     <Table
+      pagination={false} // handled in separate element
       loading={props.studies.length === 0}
       width={'500px'}
       locale={{
@@ -54,7 +55,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
         ),
         preserveSelectedRowKeys: true,
         onChange: (_, selectedRows) => {
-          props.setSelectedResources(selectedRows);
+          props.onResourcesSelected(selectedRows);
         },
         getCheckboxProps: (record) => {
           let disabled;

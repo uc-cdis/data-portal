@@ -296,6 +296,8 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
             authPopup: true,
           },
         });
+      } else if (document.location.pathname.includes('/dev.html')) {
+        document.location.replace(`${response.url}dev.html`);
       } else {
         document.location.replace(response.url);
       }
