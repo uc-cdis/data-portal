@@ -16,7 +16,7 @@ module.exports = {
       },
       {
         test: /\.svg$/,
-        loaders: ['babel-loader', 'react-svg-loader'],
+        loaders: ['babel-loader', '@svgr/webpack'],
       },
       {
         test: /\.(png|jpg|eot|ttf|woff|woff2)$/,
