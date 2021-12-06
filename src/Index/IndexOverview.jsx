@@ -44,6 +44,8 @@ function IndexOverview({ overviewCounts }) {
     if (overviewCounts !== undefined) setIsDataLoaded(true);
   }, [overviewCounts]);
 
+  /** @typedef {import('@fortawesome/fontawesome-svg-core').IconName} FaIconName */
+  /** @returns {{ count: number; faIcon: FaIconName; name: { singular: string; plural: string }}[]} */
   const getCountDataList = () => [
     {
       count: overviewCounts.data[consortium.value].subject,
