@@ -7,19 +7,26 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Spinner from '../components/Spinner';
 import Button from '../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../utils';
-import { consortiumList } from '../params';
 import { breakpoints } from '../localconf';
 import './IndexOverview.css';
 
 const defaultConsortiumOption = { label: 'All PCDC', value: 'total' };
 
-/** @typedef {{ [key: string]: string[] | { [key: string]: number } }} OverviewCounts  */
+/**
+ * @typedef {Object} OverviewCounts
+ * @property {string[]} names
+ * @property {{ [key: string]: { [key: string]: number } }} data
+ */
+
 /** @param {{ overviewCounts: OverviewCounts }} props */
 function IndexOverview({ overviewCounts }) {
   const [consortium, setConsortium] = useState(defaultConsortiumOption);
   const consortiumOptions = [
     defaultConsortiumOption,
-    ...consortiumList.map((option) => ({ label: option, value: option })),
+    ...(overviewCounts?.names ?? []).map((option) => ({
+      label: option,
+      value: option,
+    })),
   ];
 
   const history = useHistory();
@@ -33,7 +40,7 @@ function IndexOverview({ overviewCounts }) {
 
     const enabled =
       overviewCounts !== undefined &&
-      overviewCounts[consortium.value].subject !== 0;
+      overviewCounts.data[consortium.value].subject !== 0;
 
     return (
       <Button
@@ -58,17 +65,17 @@ function IndexOverview({ overviewCounts }) {
 
   const getCountDataList = () => [
     {
-      count: overviewCounts[consortium.value].subject,
+      count: overviewCounts.data[consortium.value].subject,
       faIcon: 'user',
       name: { singular: 'Subject', plural: 'Subjects' },
     },
     {
-      count: overviewCounts[consortium.value].study,
+      count: overviewCounts.data[consortium.value].study,
       faIcon: 'flask',
       name: { singular: 'Study', plural: 'Studies' },
     },
     {
-      count: overviewCounts[consortium.value].molecular_analysis,
+      count: overviewCounts.data[consortium.value].molecular_analysis,
       faIcon: 'microscope',
       name: {
         singular: 'Molecular analysis',
@@ -123,12 +130,10 @@ function IndexOverview({ overviewCounts }) {
 }
 
 IndexOverview.propTypes = {
-  overviewCounts: PropTypes.objectOf(
-    PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
-      PropTypes.objectOf(PropTypes.number),
-    ])
-  ),
+  overviewCounts: PropTypes.exact({
+    names: PropTypes.arrayOf(PropTypes.string),
+    data: PropTypes.objectOf(PropTypes.objectOf(PropTypes.number)),
+  }),
 };
 
 export default IndexOverview;

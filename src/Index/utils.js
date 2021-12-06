@@ -3,7 +3,7 @@ import getReduxStore from '../reduxStore';
 import { consortiumList } from '../params';
 
 function parseCounts(data) {
-  const overviewCounts = { names: [] };
+  const overviewCounts = { names: [], data: {} };
   const projectList = [];
 
   for (const {
@@ -12,7 +12,7 @@ function parseCounts(data) {
     study,
     subject,
   } of data) {
-    overviewCounts[consortium] = {
+    overviewCounts.data[consortium] = {
       molecular_analysis: molecularAnalysis,
       study,
       subject,
