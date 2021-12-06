@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Popover } from 'antd';
 import PropTypes from 'prop-types';
 import TopIconButton from './TopIconButton';
 import './TopBar.less';
 import { useArboristUI, hideSubmissionIfIneligible } from '../../configs';
+import { discoveryConfig } from '../../localconf';
 import { userHasCreateOrUpdateOnAnyProject } from '../../authMappingUtils';
 
 const isEmailAddress = (input) => {
@@ -137,7 +138,32 @@ class TopBar extends Component {
               typeof this.props.user.username === 'undefined'
               && (
                 <React.Fragment>
-                  <Link className='top-bar__link g3-ring-on-focus' to='/login'>
+                  <Link
+                    className='top-bar__link g3-ring-on-focus'
+                    to={
+                      (() => {
+                        if (this.props.activeTab === '/discovery') {
+                          // describes the state, filters of the discovery page to reload after redirect
+                          const serializableState = {
+                            ...this.props.discovery,
+                            actionToResume: null,
+                            // reduce the size of the redirect url by only storing study id
+                            // study id is remapped to it study after redirect and studies load in root index component
+                            selectedResourceIDs: this.props.discovery.selectedResources.map(
+                              (resource) => resource[discoveryConfig.minimalFieldMapping.uid],
+                            ),
+                          };
+                          delete serializableState.selectedResources;
+                          const queryStr = `?state=${encodeURIComponent(JSON.stringify(serializableState))}`;
+                          return {
+                            pathname: '/login',
+                            from: `/discovery${queryStr}`,
+                          };
+                        }
+                        return '/login';
+                      })()
+                    }
+                  >
                     <TopIconButton
                       icon='exit'
                       name='Login'
@@ -162,6 +188,7 @@ TopBar.propTypes = {
   activeTab: PropTypes.string,
   onActiveTab: PropTypes.func,
   onLogoutClick: PropTypes.func.isRequired,
+  discovery: PropTypes.shape({ selectedResources: PropTypes.array }).isRequired,
 };
 
 TopBar.defaultProps = {
@@ -170,4 +197,4 @@ TopBar.defaultProps = {
   onActiveTab: () => {},
 };
 
-export default TopBar;
+export default withRouter(TopBar);
