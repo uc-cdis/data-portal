@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { capitalizeFirstLetter } from '../../../utils';
 import {
@@ -7,7 +7,7 @@ import {
 } from '../../NodeCategories/helper';
 import './Legend.css';
 
-class Legend extends React.Component {
+class Legend extends Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { fireEvent, render, screen } from '@testing-library/react';

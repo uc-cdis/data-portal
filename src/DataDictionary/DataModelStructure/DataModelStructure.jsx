@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../gen3-ui-component/components/Button';
 import Dropdown from '../../gen3-ui-component/components/Dropdown';
@@ -7,7 +7,7 @@ import { downloadMultiTemplate } from '../utils';
 import { intersection } from '../../utils';
 import './DataModelStructure.css';
 
-class DataModelStructure extends React.Component {
+class DataModelStructure extends Component {
   handleClickGraphButton = () => {
     this.props.onSetGraphView(true);
     this.props.onResetGraphCanvas();
@@ -66,7 +66,7 @@ class DataModelStructure extends React.Component {
                 ? 'data-model-structure__node-name--last'
                 : '';
             return (
-              <React.Fragment key={nodeID}>
+              <Fragment key={nodeID}>
                 {nodeIDsBefore.length > 0 && (
                   <>
                     <div className='data-model-structure__summary-between'>
@@ -91,7 +91,7 @@ class DataModelStructure extends React.Component {
                     {nodeID}
                   </span>
                 </div>
-              </React.Fragment>
+              </Fragment>
             );
           })}
         </div>

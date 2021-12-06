@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import GraphCalculator from './GraphCalculator';
 import { buildTestData, testGraph1 } from '../../../GraphUtils/testData';

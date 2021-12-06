@@ -1,4 +1,3 @@
-import React from 'react';
 import { getPropertyDescription, getType } from './utils';
 
 const escapeReturnChar = (str, newlineClassName) => {

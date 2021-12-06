@@ -4,7 +4,7 @@
 /* WE SHOULD REUSE CODE INSTEAD
 ************************************************** */
 
-import React from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Button from '../gen3-ui-component/components/Button';
@@ -17,7 +17,7 @@ const getLoginUrl = (providerLoginUrl) => {
   return `${providerLoginUrl}${queryChar}redirect=${window.location.pathname}`;
 };
 
-class WorkspaceLogin extends React.Component {
+class WorkspaceLogin extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -61,7 +61,7 @@ class WorkspaceLogin extends React.Component {
           <h2>Link accounts from other Data Commons</h2>
         ) : null}
         {this.props.providers.map((p, i) => (
-          <React.Fragment key={i}>
+          <Fragment key={i}>
             <div className='login-page__entries'>
               <div className='login-page__entry-login'>
                 {
@@ -103,7 +103,7 @@ class WorkspaceLogin extends React.Component {
                 />
               </div>
             </div>
-          </React.Fragment>
+          </Fragment>
         ))}
       </div>
     );

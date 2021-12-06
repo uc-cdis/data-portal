@@ -1,9 +1,9 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../../gen3-ui-component/components/Button';
 import './NodePopup.css';
 
-class NodePopup extends React.Component {
+class NodePopup extends Component {
   handleClickPropertyButton = () => {
     this.props.onOpenOverlayPropertyTable();
   };

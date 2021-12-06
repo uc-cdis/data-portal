@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import MediaQuery from 'react-responsive';
 import {
   ReduxIndexButtonBar,

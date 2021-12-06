@@ -1,14 +1,14 @@
-import React from 'react';
+import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import GraphNode from '../GraphNode/GraphNode';
 import GraphEdge from '../GraphEdge/GraphEdge';
 import { SearchResultItemShape } from '../../utils';
 import './GraphDrawer.css';
 
-class GraphDrawer extends React.Component {
+class GraphDrawer extends Component {
   constructor(props) {
     super(props);
-    this.graphDomRef = React.createRef();
+    this.graphDomRef = createRef();
     this.graphNodeRefs = [];
     this.nodeSVGElementInitialized = false;
   }
@@ -49,7 +49,7 @@ class GraphDrawer extends React.Component {
 
   getNodeRef = (nodeID) => {
     if (!this.graphNodeRefs[nodeID]) {
-      this.graphNodeRefs[nodeID] = React.createRef();
+      this.graphNodeRefs[nodeID] = createRef();
     }
     return this.graphNodeRefs[nodeID];
   };

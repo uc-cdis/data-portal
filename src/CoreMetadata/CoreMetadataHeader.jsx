@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import copy from 'clipboard-plus';
 import Button from '../gen3-ui-component/components/Button';

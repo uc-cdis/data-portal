@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import React, { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import { schemeCategory10 } from 'd3-scale-chromatic';
@@ -195,4 +195,4 @@ ExplorerSurvivalAnalysis.defaultProps = {
   fieldMapping: [],
 };
 
-export default React.memo(ExplorerSurvivalAnalysis);
+export default memo(ExplorerSurvivalAnalysis);

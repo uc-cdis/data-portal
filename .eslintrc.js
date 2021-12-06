@@ -1,6 +1,6 @@
 module.exports = {
   plugins: ['react'],
-  extends: ['airbnb', 'prettier'],
+  extends: ['airbnb', 'prettier', 'plugin:react/jsx-runtime'],
   root: true,
   env: {
     browser: true,

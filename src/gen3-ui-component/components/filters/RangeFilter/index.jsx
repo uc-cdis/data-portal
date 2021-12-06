@@ -1,10 +1,10 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import './RangeFilter.css';
 
-class RangeFilter extends React.Component {
+class RangeFilter extends Component {
   constructor(props) {
     super(props);
     // Set lower/upper bounds to min/max if they are undefined or outside the range of [min, max]

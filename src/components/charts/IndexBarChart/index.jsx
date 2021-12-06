@@ -8,7 +8,6 @@ import {
   YAxis,
 } from 'recharts';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
-import React from 'react';
 import Spinner from '../../Spinner';
 import TooltipCDIS from '../TooltipCDIS';
 import Tick from '../Tick';

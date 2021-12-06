@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactEcharts from 'echarts-for-react';
 import LockedContent from '../../gen3-ui-component/components/charts/LockedContent';
@@ -10,7 +10,7 @@ function round(value, decimals) {
   return Number(`${Math.round(`${value}e${decimals}`)}e-${decimals}`);
 }
 
-class ExplorerHeatMap extends React.Component {
+class ExplorerHeatMap extends Component {
   constructor(props) {
     super(props);
     this.maxCellValue = 0; // updated when data is received

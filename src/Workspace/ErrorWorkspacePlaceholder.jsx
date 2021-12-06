@@ -1,4 +1,3 @@
-import React from 'react';
 import './Workspace.less';
 import NotFoundSVG from '../img/not-found.svg';
 

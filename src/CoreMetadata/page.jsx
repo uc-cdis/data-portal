@@ -1,4 +1,3 @@
-import React from 'react';
 import BackLink from '../components/BackLink';
 import {
   ReduxCoreMetadataHeader,

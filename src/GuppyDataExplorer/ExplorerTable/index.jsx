@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 import Tooltip from 'rc-tooltip';
@@ -230,9 +230,9 @@ function ExplorerTable({
       : `${start.toLocaleString()} - ${end.toLocaleString()}`;
   const dataTypeString = pluralize(dataType);
 
-  const columns = React.useMemo(() => rootColumnsConfig, [rawData]);
-  const data = React.useMemo(() => parseDataForTable(rawData), [rawData]);
-  const fetchData = React.useCallback(
+  const columns = useMemo(() => rootColumnsConfig, [rawData]);
+  const data = useMemo(() => parseDataForTable(rawData), [rawData]);
+  const fetchData = useCallback(
     (s) =>
       isInitialFetchData
         ? setIsInitialFetchData(false)

@@ -1,11 +1,11 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Dropdown from '../gen3-ui-component/components/Dropdown';
 import { getSubmitPath, overrideSelectTheme } from '../utils';
 import './QueryForm.less';
 
-class QueryForm extends React.Component {
+class QueryForm extends Component {
   constructor(props) {
     super(props);
     const searchParams = new URLSearchParams(window.location.search);

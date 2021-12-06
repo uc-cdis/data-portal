@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';

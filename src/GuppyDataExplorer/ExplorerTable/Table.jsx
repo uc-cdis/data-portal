@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { usePagination, useSortBy, useTable, useFlexLayout } from 'react-table';
 import './react-table.css';

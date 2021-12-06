@@ -1,3 +1,4 @@
+import { Component } from 'react';
 import {
   BarChart,
   Bar,
@@ -9,7 +10,6 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import PropTypes from 'prop-types';
-import React from 'react';
 import helper from '../helper';
 import './PercentageStackedBarChart.css';
 import LockedContent from '../LockedContent';
@@ -18,7 +18,7 @@ const getPercentageDataLabels = (chartData) =>
   chartData.map((entry) => entry.name);
 
 // FIXME: add back in animation (https://github.com/recharts/recharts/issues/1083)
-class PercentageStackedBarChart extends React.Component {
+class PercentageStackedBarChart extends Component {
   getItemColor(index) {
     if (this.props.useCustomizedColorMap) {
       return this.props.customizedColorMap[

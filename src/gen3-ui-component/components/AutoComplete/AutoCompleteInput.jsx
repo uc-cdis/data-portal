@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import './AutoCompleteInput.css';
 
@@ -8,7 +8,7 @@ class AutoCompleteInput extends Component {
     this.state = {
       closeIconHidden: true,
     };
-    this.inputElem = React.createRef();
+    this.inputElem = createRef();
   }
 
   handleChange() {

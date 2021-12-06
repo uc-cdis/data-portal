@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../../gen3-ui-component/components/Button';
 import './ActionLayer.css';
@@ -7,7 +7,7 @@ import './ActionLayer.css';
  * A layer over the graph.
  * Put action buttons here.
  */
-class ActionLayer extends React.Component {
+class ActionLayer extends Component {
   handleClearSearch = () => {
     this.props.onClearSearchResult();
   };

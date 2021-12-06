@@ -1,4 +1,3 @@
-import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import * as testData from './__test__/data.json';
 import SubmitTSV from './SubmitTSV';

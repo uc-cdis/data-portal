@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import Dashboard from '../Layout/Dashboard';
 import ReduxDataDictionaryTable from './table/DataDictionaryTable';
@@ -8,10 +8,10 @@ import ReduxDictionarySearcher from './search/DictionarySearcher';
 import ReduxDictionarySearchHistory from './search/DictionarySearchHistory';
 import './DataDictionary.css';
 
-class DataDictionary extends React.Component {
+class DataDictionary extends Component {
   constructor(props) {
     super(props);
-    this.dictionarySearcherRef = React.createRef();
+    this.dictionarySearcherRef = createRef();
   }
 
   setGraphView = (isGraphView) => {

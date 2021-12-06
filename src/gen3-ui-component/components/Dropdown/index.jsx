@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { Children, cloneElement, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import DropdownButton from './DropdownButton';
 import DropdownItem from './DropdownItem';
@@ -55,11 +55,11 @@ function Dropdown({
         className || ''
       } ${buttonType === 'secondary' ? 'g3-dropdown--secondary' : ''}`}
     >
-      {React.Children.map(
+      {Children.map(
         children,
         /** @param {React.ReactElement} child  */
         (child) =>
-          React.cloneElement(child, {
+          cloneElement(child, {
             afterClick: closeMenu,
             buttonType,
             disabled,

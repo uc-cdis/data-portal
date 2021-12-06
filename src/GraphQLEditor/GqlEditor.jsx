@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import GraphiQL from 'graphiql';
 import PropTypes from 'prop-types';
