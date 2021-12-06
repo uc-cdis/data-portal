@@ -7,68 +7,58 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Spinner from '../components/Spinner';
 import Button from '../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../utils';
-import { consortiumList } from '../params';
 import { breakpoints } from '../localconf';
 import './IndexOverview.css';
 
 const defaultConsortiumOption = { label: 'All PCDC', value: 'total' };
 
-/** @typedef {{ [key: string]: string[] | { [key: string]: number } }} OverviewCounts  */
+/**
+ * @typedef {Object} OverviewCounts
+ * @property {string[]} names
+ * @property {{ [key: string]: { [key: string]: number } }} data
+ */
+
 /** @param {{ overviewCounts: OverviewCounts }} props */
 function IndexOverview({ overviewCounts }) {
   const [consortium, setConsortium] = useState(defaultConsortiumOption);
   const consortiumOptions = [
     defaultConsortiumOption,
-    ...consortiumList.map((option) => ({ label: option, value: option })),
+    ...(overviewCounts?.names ?? []).map((option) => ({
+      label: option,
+      value: option,
+    })),
   ];
 
   const history = useHistory();
-  function ButtonToExplorer() {
-    const search =
-      consortium.value === 'total'
-        ? undefined
-        : `filter=${JSON.stringify({
-            consortium: { selectedValues: [consortium.value] },
-          })}`;
-
-    const enabled =
-      overviewCounts !== undefined &&
-      overviewCounts[consortium.value].subject !== 0;
-
-    return (
-      <Button
-        label='Explore more'
-        buttonType='primary'
-        enabled={enabled}
-        onClick={() =>
-          history.push({
-            pathname: '/explorer',
-            search,
-            state: { keepSearch: true },
-          })
-        }
-      />
-    );
-  }
+  const explorerLocation =
+    consortium.value === 'total'
+      ? { pathname: '/explorer' }
+      : {
+          pathname: '/explorer',
+          search: `filter={"consortium":{"selectedValues":["${consortium.value}"]}}`,
+          state: { keepSearch: true },
+        };
 
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   useEffect(() => {
     if (overviewCounts !== undefined) setIsDataLoaded(true);
   }, [overviewCounts]);
 
+  /** @typedef {import('@fortawesome/fontawesome-svg-core').IconName} FaIconName */
+  /** @returns {{ count: number; faIcon: FaIconName; name: { singular: string; plural: string }}[]} */
   const getCountDataList = () => [
     {
-      count: overviewCounts[consortium.value].subject,
+      count: overviewCounts.data[consortium.value].subject,
       faIcon: 'user',
       name: { singular: 'Subject', plural: 'Subjects' },
     },
     {
-      count: overviewCounts[consortium.value].study,
+      count: overviewCounts.data[consortium.value].study,
       faIcon: 'flask',
       name: { singular: 'Study', plural: 'Studies' },
     },
     {
-      count: overviewCounts[consortium.value].molecular_analysis,
+      count: overviewCounts.data[consortium.value].molecular_analysis,
       faIcon: 'microscope',
       name: {
         singular: 'Molecular analysis',
@@ -94,7 +84,11 @@ function IndexOverview({ overviewCounts }) {
             />
           </div>
           <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-            <ButtonToExplorer />
+            <Button
+              label='Explore more'
+              buttonType='primary'
+              onClick={() => history.push(explorerLocation)}
+            />
           </MediaQuery>
         </div>
       </div>
@@ -115,7 +109,11 @@ function IndexOverview({ overviewCounts }) {
       </div>
       <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
         <div className='index-overview__footer'>
-          <ButtonToExplorer />
+          <Button
+            label='Explore more'
+            buttonType='primary'
+            onClick={() => history.push(explorerLocation)}
+          />
         </div>
       </MediaQuery>
     </div>
@@ -123,12 +121,10 @@ function IndexOverview({ overviewCounts }) {
 }
 
 IndexOverview.propTypes = {
-  overviewCounts: PropTypes.objectOf(
-    PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
-      PropTypes.objectOf(PropTypes.number),
-    ])
-  ),
+  overviewCounts: PropTypes.exact({
+    names: PropTypes.arrayOf(PropTypes.string),
+    data: PropTypes.objectOf(PropTypes.objectOf(PropTypes.number)),
+  }),
 };
 
 export default IndexOverview;
