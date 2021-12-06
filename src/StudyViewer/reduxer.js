@@ -113,13 +113,6 @@ const fetchRequestedAccess = (receivedData) => {
   );
 };
 
-const removeEmptyFields = (inputObj, flag) => {
-  if (flag) {
-    return _.omitBy(inputObj, _.isNil);
-  }
-  return inputObj;
-};
-
 const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFields) => {
   const targetStudyViewerConfig = fetchStudyViewerConfig(nameOfIndex);
   const processedDataset = [];
@@ -131,7 +124,7 @@ const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFie
           processedItem.title = dataElement[targetStudyViewerConfig.titleField];
           processedItem.rowAccessorValue = dataElement[targetStudyViewerConfig.rowAccessor];
           processedItem.blockData = _.pick(dataElement, itemConfig.blockFields);
-          processedItem.tableData = removeEmptyFields(_.pick(dataElement, itemConfig.tableFields), itemConfig.hideEmptyFields);
+          processedItem.tableData = _.pick(dataElement, itemConfig.tableFields);
           processedItem.displayButtonsData = _.pick(dataElement, displayButtonsFields);
           processedItem.accessibleValidationValue = dataElement.auth_resource_path;
           processedItem.accessRequested = !!(requestedAccess
