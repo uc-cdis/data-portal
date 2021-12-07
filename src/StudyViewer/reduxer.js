@@ -3,9 +3,13 @@ import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import StudyDetails from './StudyDetails';
 import StudyViewer from './StudyViewer';
+import ExportToWorkspace from './ExportToWorkspace';
 import SingleStudyViewer from './SingleStudyViewer';
 import { guppyGraphQLUrl, studyViewerConfig, requestorPath } from '../localconf';
 import { fetchWithCreds } from '../actions';
+import {
+  dispatchJob, checkJob, fetchJobResult, resetJobState,
+} from '../Analysis/AnalysisJob';
 
 const generateGQLQuery = (nameOfIndex, fieldsToFetch, rowAccessorField, rowAccessorValue) => {
   const query = `query ($filter: JSON) {
@@ -239,6 +243,7 @@ export const ReduxStudyDetails = (() => {
   const mapStateToProps = (state) => ({
     user: state.user,
     userAuthMapping: state.userAuthMapping,
+    userAccess: state.userAccess.access,
   });
 
   return withRouter(connect(mapStateToProps)(StudyDetails));
@@ -264,4 +269,18 @@ export const ReduxSingleStudyViewer = (() => {
   });
 
   return withRouter(connect(mapStateToProps)(SingleStudyViewer));
+})();
+
+export const ReduxExportToWorkspace = (() => {
+  const mapStateToProps = (state) => ({
+    job: state.analysis.job,
+  });
+  const mapDispatchToProps = (dispatch) => ({
+    submitJob: (body) => dispatch(dispatchJob(body)),
+    checkJobStatus: () => dispatch(checkJob()),
+    fetchJobResult: (jobId) => dispatch(fetchJobResult(jobId)),
+    resetJobState: () => dispatch(resetJobState()),
+  });
+
+  return withRouter(connect(mapStateToProps, mapDispatchToProps)(ExportToWorkspace));
 })();
