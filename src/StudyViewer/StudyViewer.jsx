@@ -23,6 +23,20 @@ class StudyViewer extends React.Component {
     return null;
   }
 
+  componentDidMount() {
+    if (!this.props.datasets
+      && this.state.dataType) {
+      getReduxStore().then(
+        (store) => Promise.allSettled(
+          [
+            store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType))),
+            store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object')),
+            store.dispatch(resetSingleStudyData()),
+          ],
+        ));
+    }
+  }
+
   getPanelExpandStatus = (openMode, index) => {
     if (openMode === 'open-all') {
       return true;
@@ -38,16 +52,6 @@ class StudyViewer extends React.Component {
     }
 
     if (!this.props.datasets) {
-      if (this.state.dataType) {
-        getReduxStore().then(
-          (store) => Promise.allSettled(
-            [
-              store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType))),
-              store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object')),
-              store.dispatch(resetSingleStudyData()),
-            ],
-          ));
-      }
       return (
         <div className='study-viewer'>
           <div className='study-viewer_loading'>
