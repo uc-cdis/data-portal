@@ -1,6 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { TopBarButton, TopBarLink } from './TopBarItems';
+import { TopBarLink } from './TopBarItems';
+import TopBarMenu from './TopBarMenu';
 import './TopBar.css';
 
 /**
@@ -14,7 +15,7 @@ import './TopBar.css';
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
  * @typedef {Object} TopBarProps
- * @property {{ items: TopBarItem[] }} config
+ * @property {{ items: TopBarItem[]; menuItems: TopBarItem[] }} config
  * @property {boolean} isAdminUser
  * @property {React.MouseEventHandler<HTMLButtonElement>} onLogoutClick
  * @property {string} [username]
@@ -31,10 +32,11 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
 
   return (
     <nav className='top-bar' aria-label='Top Navigation'>
-      <div className='top-bar--hidden-lg-and-down'>
+      <div>
         {leftItems.map((item) => (
           <TopBarLink
             key={item.link}
+            className='hidden-lg-and-down'
             name={item.name}
             icon={item.icon}
             isActive={location.pathname === item.link}
@@ -42,12 +44,13 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
           />
         ))}
       </div>
-      <div className='top-bar--flex-center'>
+      <div>
         {rightItems.map(
           (item) =>
             (item.link !== '/submission' || isAdminUser) && (
               <TopBarLink
                 key={item.link}
+                className='hidden-md-and-down'
                 name={item.name}
                 icon={item.icon}
                 isActive={location.pathname === item.link}
@@ -56,15 +59,11 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
             )
         )}
         {username !== undefined ? (
-          <>
-            <TopBarLink
-              icon='user-circle'
-              name={username}
-              isActive={location.pathname === '/identity'}
-              to='/identity'
-            />
-            <TopBarButton icon='exit' name='Logout' onClick={onLogoutClick} />
-          </>
+          <TopBarMenu
+            items={config.menuItems}
+            onLogoutClick={onLogoutClick}
+            username={username}
+          />
         ) : (
           location.pathname !== '/login' && (
             <TopBarLink icon='exit' name='Login' to='/login' />
@@ -78,6 +77,7 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
 TopBar.propTypes = {
   config: PropTypes.exact({
     items: PropTypes.array.isRequired,
+    menuItems: PropTypes.array.isRequired,
   }).isRequired,
   isAdminUser: PropTypes.bool.isRequired,
   onLogoutClick: PropTypes.func.isRequired,

@@ -128,6 +128,18 @@ Below is an example, with inline comments describing what each JSON block config
           "link": "https://gen3.org/resources/user/",
           "name": "Documentation"
         }
+      ],
+      "menuItems": [
+        {
+          "icon": "external-link",
+          "link": "https://path.to.privacy.policy",
+          "name": "Privacy Policy"
+        },
+        {
+          "icon": "external-link",
+          "link": "https://path.to.terms.and.conditions",
+          "name": "Terms & Conditions"
+        }
       ]
     },
     // what to display on the login page (/login)

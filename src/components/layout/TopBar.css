@@ -10,24 +10,18 @@
   width: 100%;
 }
 
-.top-bar--flex-center {
-  display: flex;
-  justify-content: center;
-}
-
 @media screen and (max-width: 1090px) {
   .top-bar {
     justify-content: flex-end;
   }
 
-  .top-bar--hidden-lg-and-down {
+  .top-bar .hidden-lg-and-down {
     display: none;
   }
 }
 
 @media screen and (max-width: 820px) {
-  .top-bar {
-    flex-flow: column;
-    align-items: center;
+  .top-bar .hidden-md-and-down {
+    display: none;
   }
 }

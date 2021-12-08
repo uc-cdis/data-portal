@@ -16,21 +16,8 @@ button.top-bar-item {
   border-radius: 0;
 }
 
-@media screen and (max-width: 820px) {
-  .top-bar-item {
-    border-right: none;
-    width: unset;
-  }
-}
-
 .top-bar-item:last-child {
   border-right: 0;
-}
-
-@media screen and (max-width: 820px) {
-  .top-bar-item:nth-child(-n + 2) {
-    display: none;
-  }
 }
 
 .top-bar-item__content {
