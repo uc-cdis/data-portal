@@ -32,10 +32,11 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
 
   return (
     <nav className='top-bar' aria-label='Top Navigation'>
-      <div className='top-bar--hidden-lg-and-down'>
+      <div>
         {leftItems.map((item) => (
           <TopBarLink
             key={item.link}
+            className='hidden-lg-and-down'
             name={item.name}
             icon={item.icon}
             isActive={location.pathname === item.link}
@@ -43,12 +44,13 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
           />
         ))}
       </div>
-      <div className='top-bar--flex-center'>
+      <div>
         {rightItems.map(
           (item) =>
             (item.link !== '/submission' || isAdminUser) && (
               <TopBarLink
                 key={item.link}
+                className='hidden-md-and-down'
                 name={item.name}
                 icon={item.icon}
                 isActive={location.pathname === item.link}
