@@ -145,6 +145,26 @@ class StudyDetails extends React.Component {
           tooltipText={tooltipText}
         />
       ) : null;
+    } else if (buttonConfig.type === 'export-pfb-to-workspace') {
+      // 'Export to Workspace' button
+      const displayDownloadButton = userHasLoggedIn
+      && this.isDataAccessible(this.props.data.accessibleValidationValue)
+      && this.props.fileData.length > 0
+      && this.props.userAccess.Workspace;
+
+      const onClickProperties = { ...buttonConfig, accessibleValidationValue: this.props.data.accessibleValidationValue };
+
+      button = displayDownloadButton ? (
+        <Button
+          key={key}
+          label={'Export to Workspace'}
+          buttonType='primary'
+          onClick={() => this.props.exportToWorkspaceAction(onClickProperties)}
+          enabled={this.props.exportToWorkspaceEnabled}
+          tooltipEnabled={!this.props.exportToWorkspaceEnabled && !!buttonConfig.disableButtonTooltipText}
+          tooltipText={buttonConfig.disableButtonTooltipText}
+        />
+      ) : null;
     } else if (buttonConfig.type === 'request_access') {
       // 'Request Access' and 'Login to Request Access' buttons
       const onRequestAccess = () => {
@@ -368,6 +388,9 @@ class StudyDetails extends React.Component {
                            }
                            return item;
                          }
+                         if (!item) {
+                           return null;
+                         }
                          // codes below are from the mockup, keeping them here since we might need then if we have the nested docs later
                          /*
                        if (item && item.link) {
@@ -387,7 +410,7 @@ class StudyDetails extends React.Component {
                        }
                        */
                          // eslint-disable-next-line no-console
-                         console.warn('Unknown object found in meta data: ', item);
+                         console.warn(`Unknown object found in meta data for key '${k}': ${item}`);
                          return null;
                        })}
                      </Descriptions.Item>
@@ -424,12 +447,17 @@ StudyDetails.propTypes = {
   user: PropTypes.object.isRequired,
   isSingleItemView: PropTypes.bool.isRequired,
   userAuthMapping: PropTypes.object.isRequired,
+  userAccess: PropTypes.object.isRequired,
   studyViewerConfig: PropTypes.object,
+  exportToWorkspaceAction: PropTypes.func,
+  exportToWorkspaceEnabled: PropTypes.bool,
 };
 
 StudyDetails.defaultProps = {
   fileData: [],
   studyViewerConfig: {},
+  exportToWorkspaceAction: () => {},
+  exportToWorkspaceEnabled: false,
 };
 
 export default StudyDetails;

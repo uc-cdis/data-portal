@@ -1,7 +1,10 @@
 import React from 'react';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { Popconfirm, Steps } from 'antd';
+import {
+  Popconfirm, Steps, Collapse, Row, Col, Statistic, Alert, message,
+} from 'antd';
+import { datadogRum } from '@datadog/browser-rum';
 
 import {
   workspaceUrl,
@@ -11,21 +14,28 @@ import {
   workspaceLaunchUrl,
   workspaceTerminateUrl,
   workspaceStatusUrl,
+  workspacePayModelUrl,
   workspacePageTitle,
   workspacePageDescription,
 } from '../localconf';
+import { showExternalLoginsOnProfile } from '../configs';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
+import getReduxStore from '../reduxStore';
 import Spinner from '../components/Spinner';
 import jupyterIcon from '../img/icons/jupyter.svg';
 import rStudioIcon from '../img/icons/rstudio.svg';
+import rLogoIcon from '../img/icons/rlogo.svg';
 import galaxyIcon from '../img/icons/galaxy.svg';
 import ohifIcon from '../img/icons/ohif-viewer.svg';
 import WorkspaceOption from './WorkspaceOption';
 import WorkspaceLogin from './WorkspaceLogin';
 import sessionMonitor from '../SessionMonitor';
+import workspaceSessionMonitor from './WorkspaceSessionMonitor';
 
 const { Step } = Steps;
+const { Panel } = Collapse;
+
 class Workspace extends React.Component {
   constructor(props) {
     super(props);
@@ -35,10 +45,12 @@ class Workspace extends React.Component {
       workspaceStatus: null,
       workspaceLaunchStepsConfig: null,
       interval: null,
+      payModelInterval: null,
       workspaceID: null,
       defaultWorkspace: false,
       workspaceIsFullpage: false,
       externalLoginOptions: [],
+      payModel: {},
     };
     this.workspaceStates = [
       'Not Found',
@@ -68,6 +80,9 @@ class Workspace extends React.Component {
   componentWillUnmount() {
     if (this.state.interval) {
       clearInterval(this.state.interval);
+    }
+    if (this.state.payModelInterval) {
+      clearInterval(this.state.payModelInterval);
     }
   }
 
@@ -110,16 +125,51 @@ class Workspace extends React.Component {
     );
   }
 
-  getWorkspaceStatus = async () => fetchWithCreds({
-    path: `${workspaceStatusUrl}`,
+  getWorkspaceStatus = async () => {
+    const workspaceStatus = await fetchWithCreds({
+      path: `${workspaceStatusUrl}`,
+      method: 'GET',
+    }).then(
+      ({ data }) => data,
+    ).catch(() => 'Error');
+    if (workspaceStatus.status === 'Running' && (!this.state.workspaceStatus || this.state.workspaceStatus === 'Not Found' || this.state.workspaceStatus === 'Launching')) {
+      await fetchWithCreds({
+        path: `${workspaceUrl}proxy/`,
+        method: 'GET',
+      }).then(
+        ({ status }) => {
+          if (status !== 200) {
+            workspaceStatus.status = 'Launching';
+            workspaceStatus.conditions = [{
+              type: 'ProxyConnected',
+              status: 'False',
+            }];
+          }
+        },
+      ).catch(() => 'Error');
+    }
+    return workspaceStatus;
+  }
+
+  getWorkspacePayModels = async () => fetchWithCreds({
+    path: `${workspacePayModelUrl}`,
     method: 'GET',
   }).then(
-    ({ data }) => data,
+    ({ status, data }) => {
+      // check if is valid pay model data
+      // older hatchery will also return 200 for /paymodels with workspace options in it
+      if (status === 200 && data.aws_account_id) {
+        return data;
+      }
+      return {};
+    },
   ).catch(() => 'Error');
 
   getIcon = (workspace) => {
-    if (this.regIcon(workspace, 'R Studio')) {
+    if (this.regIcon(workspace, 'R Studio') || this.regIcon(workspace, 'RStudio')) {
       return rStudioIcon;
+    } if (this.regIcon(workspace, 'R Notebook')) {
+      return rLogoIcon;
     } if (this.regIcon(workspace, 'Jupyter')) {
       return jupyterIcon;
     } if (this.regIcon(workspace, 'Galaxy')) {
@@ -151,6 +201,10 @@ class Workspace extends React.Component {
         },
         {
           title: 'Getting Containers Ready',
+          description: '',
+        },
+        {
+          title: 'Waiting for Proxy',
           description: '',
         },
       ],
@@ -189,29 +243,58 @@ class Workspace extends React.Component {
       (element.type === 'ContainersReady' && element.status === 'False')
     ))) {
       workspaceLaunchStepsConfig.currentIndex = 2;
-      workspaceLaunchStepsConfig.steps[2].description = 'In progress';
+      if (workspaceStatusData.containerStates.some((element) => (
+        (element.state && element.state.terminated)
+      ))) {
+        workspaceLaunchStepsConfig.steps[2].description = 'Error';
+        workspaceLaunchStepsConfig.currentStepsStatus = 'error';
+      } else {
+        workspaceLaunchStepsConfig.steps[2].description = 'In progress';
+      }
       return workspaceLaunchStepsConfig;
     }
 
-    if (workspaceStatusData.conditions.some((element) => (
-      (element.type === 'ContainersReady' && element.status === 'True')
-    ))) {
-      workspaceLaunchStepsConfig.currentIndex = 2;
-      workspaceLaunchStepsConfig.currentStepsStatus = 'finish';
-      workspaceLaunchStepsConfig.steps[2].description = 'All containers are ready';
+    // here we are at step 3, step 3 have no k8s pod/container conditions
+    workspaceLaunchStepsConfig.steps[0].description = 'Pod scheduled';
+    workspaceLaunchStepsConfig.steps[1].description = 'Pod initialized';
+    workspaceLaunchStepsConfig.steps[2].description = 'All containers are ready';
+
+    // condition type: ProxyConnected + status: false => at step 3
+    if (workspaceStatusData.conditions.some((element) => (element.type === 'ProxyConnected' && element.status === 'False'))) {
+      workspaceLaunchStepsConfig.currentIndex = 3;
+      workspaceLaunchStepsConfig.steps[3].description = 'In progress';
+      return workspaceLaunchStepsConfig;
+    }
+    if (workspaceStatusData.conditions.some((element) => (element.type === 'ProxyConnected' && element.status === 'True'))) {
+      workspaceLaunchStepsConfig.currentIndex = 3;
+      workspaceLaunchStepsConfig.currentStepsStatus = 'success';
+      workspaceLaunchStepsConfig.steps[3].description = 'Proxy is ready';
     }
     return workspaceLaunchStepsConfig;
   }
 
-  regIcon = (str, pattn) => new RegExp(pattn).test(str)
+  regIcon = (str, pattern) => new RegExp(pattern).test(str)
 
   launchWorkspace = (workspace) => {
     this.setState({ workspaceID: workspace.id }, () => {
       fetchWithCreds({
         path: `${workspaceLaunchUrl}?id=${workspace.id}`,
         method: 'POST',
-      }).then(() => {
-        this.checkWorkspaceStatus();
+      }).then(({ status }) => {
+        switch (status) {
+        case 200:
+          datadogRum.addAction('workspaceLaunch', {
+            workspaceName: workspace.name,
+          });
+          this.checkWorkspaceStatus();
+          break;
+        default:
+          message.error('There is an error when trying to launch your workspace');
+          this.setState({
+            workspaceID: null,
+            workspaceLaunchStepsConfig: null,
+          });
+        }
       });
     });
   }
@@ -222,6 +305,12 @@ class Workspace extends React.Component {
       workspaceStatus: 'Terminating',
       workspaceLaunchStepsConfig: null,
     }, () => {
+      getReduxStore().then(
+        (store) => {
+          // dismiss all banner/popup, if any
+          store.dispatch({ type: 'UPDATE_WORKSPACE_ALERT', data: { showShutdownPopup: false, showShutdownBanner: false } });
+        },
+      );
       fetchWithCreds({
         path: `${workspaceTerminateUrl}`,
         method: 'POST',
@@ -234,6 +323,12 @@ class Workspace extends React.Component {
   connected = () => {
     this.getWorkspaceOptions();
     this.getExternalLoginOptions();
+    this.getWorkspacePayModels().then((data) => {
+      this.checkWorkspacePayModel();
+      this.setState({
+        payModel: data,
+      });
+    });
     if (!this.state.defaultWorkspace) {
       this.getWorkspaceStatus().then((data) => {
         if (data.status === 'Launching' || data.status === 'Terminating' || data.status === 'Stopped') {
@@ -258,18 +353,43 @@ class Workspace extends React.Component {
         const data = await this.getWorkspaceStatus();
         if (this.workspaceStates.includes(data.status)) {
           const workspaceLaunchStepsConfig = this.getWorkspaceLaunchSteps(data);
+          let workspaceStatus = data.status;
+          if (workspaceLaunchStepsConfig && workspaceLaunchStepsConfig.currentStepsStatus === 'error') {
+            workspaceStatus = 'Stopped';
+          }
           this.setState({
-            workspaceStatus: data.status,
+            workspaceStatus,
             workspaceLaunchStepsConfig,
           }, () => {
             if (this.state.workspaceStatus !== 'Launching'
               && this.state.workspaceStatus !== 'Terminating') {
+              if (data.idleTimeLimit > 0) {
+                // start ws session monitor only if idleTimeLimit exists
+                workspaceSessionMonitor.start();
+              }
               clearInterval(this.state.interval);
             }
           });
         }
-      }, 5000);
+      }, 10000);
       this.setState({ interval });
+    } catch (e) {
+      console.log('Error checking workspace status:', e);
+    }
+  }
+
+  checkWorkspacePayModel = async () => {
+    if (this.state.payModelInterval) {
+      clearInterval(this.state.payModelInterval);
+    }
+    try {
+      const payModelInterval = setInterval(async () => {
+        const data = await this.getWorkspacePayModels();
+        this.setState({
+          payModel: data,
+        });
+      }, 30000);
+      this.setState({ payModelInterval });
     } catch (e) {
       console.log('Error checking workspace status:', e);
     }
@@ -330,10 +450,39 @@ class Workspace extends React.Component {
       // NOTE both the containing element and the iframe have class '.workspace',
       // although no styles should be shared between them. The reason for this
       // is for backwards compatibility with Jenkins integration tests that select by classname.
+      const showExternalLoginsHintBanner = this.state.externalLoginOptions.length > 0
+      && this.state.externalLoginOptions.some((option) => !option.refresh_token_expiration);
       return (
         <div
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
         >
+          {
+            (Object.keys(this.state.payModel).length > 0) ? (
+              <Collapse className='workspace__pay-model' onClick={(event) => event.stopPropagation()}>
+                <Panel header='User Pay Model Information' key='1'>
+                  <Row gutter={{
+                    xs: 8, sm: 16, md: 24, lg: 32,
+                  }}
+                  >
+                    <Col className='gutter-row' span={8}>
+                      <Statistic title='Pay Model Name' value={this.state.payModel.name || 'N/A'} />
+                    </Col>
+                    <Col className='gutter-row' span={8}>
+                      <Statistic title='AWS Account ID' groupSeparator='' value={this.state.payModel.aws_account_id || 'N/A'} />
+                    </Col>
+                    <Col className='gutter-row' span={8}>
+                      <Statistic title='AWS Account Region' value={this.state.payModel.region || 'N/A'} />
+                    </Col>
+                    {/* Total Charges column will be added back later */}
+                    {/* <Col className='gutter-row' span={6}>
+                      <Statistic title='Total Charges (USD)' value={this.state.payModel.cost || 'N/A'} precision={2} />
+                    </Col> */}
+                  </Row>
+                </Panel>
+              </Collapse>
+            )
+              : null
+          }
           {
             this.state.workspaceStatus === 'Running'
               ? (
@@ -380,6 +529,15 @@ class Workspace extends React.Component {
                     {(this.state.workspaceStatus === 'Launching')
                       ? <Spinner text='Launching Workspace, this process may take several minutes' />
                       : null}
+                    {(this.state.workspaceStatus === 'Stopped')
+                      ? (
+                        <div className='spinner'>
+                          <div className='spinner__text'>
+                            {'The Workspace launching process has stopped, please click the Cancel button and try again'}
+                          </div>
+                        </div>
+                      )
+                      : null}
                   </div>
                   <div className='workspace__buttongroup'>
                     { cancelButton }
@@ -418,6 +576,20 @@ class Workspace extends React.Component {
                       </div>
                     )
                     : null}
+                  {showExternalLoginsHintBanner
+                    ? (
+                      <Alert
+                        description={
+                          showExternalLoginsOnProfile
+                            ? 'Please link account to additional data resources on the Profile Page'
+                            : 'Please link account to additional data resources at the bottom of the page'
+                        }
+                        type='info'
+                        banner
+                        closable
+                      />
+                    )
+                    : null }
                   <div className='workspace__options'>
                     {
                       this.state.options.map((option, i) => {
@@ -441,9 +613,14 @@ class Workspace extends React.Component {
                       })
                     }
                   </div>
-                  <WorkspaceLogin
-                    providers={this.state.externalLoginOptions}
-                  />
+                  {
+                    (!showExternalLoginsOnProfile)
+                    && (
+                      <WorkspaceLogin
+                        providers={this.state.externalLoginOptions}
+                      />
+                    )
+                  }
                 </div>
               )
               : null

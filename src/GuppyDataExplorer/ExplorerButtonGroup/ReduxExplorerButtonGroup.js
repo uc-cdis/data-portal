@@ -9,7 +9,8 @@ const mapStateToProps = (state) => ({
   userAccess: state.userAccess.access,
   selectingMode: state.tickbox.selectingMode,
   filteredItems: state.tickbox.filteredItems,
-  allSelected: state.tickbox.allSelected
+  allSelected: state.tickbox.allSelected,
+  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -18,5 +19,6 @@ const mapDispatchToProps = (dispatch) => ({
   fetchJobResult: (jobId) => dispatch(fetchJobResult(jobId)),
   resetJobState: () => dispatch(resetJobState()),
 });
+
 const ReduxExplorerButtonGroup = connect(mapStateToProps, mapDispatchToProps)(ExplorerButtonGroup);
 export default ReduxExplorerButtonGroup;

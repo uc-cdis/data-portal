@@ -17,6 +17,7 @@ import ddgraph from './DataDictionary/reducers';
 import privacyPolicy from './PrivacyPolicy/reducers';
 import study from './StudyViewer/reducers';
 import tickbox from './GuppyDataExplorer/ExplorerTable/ExplorerTickBox/reducers';
+import discovery from './Discovery/reducers';
 import { fetchUserAccess, fetchUserAuthMapping } from './actions';
 import getReduxStore from './reduxStore';
 
@@ -110,7 +111,8 @@ const reducers = combineReducers({
   ddgraph,
   userAccess,
   userAuthMapping,
-  tickbox
+  tickbox,
+  discovery,
 });
 
 export default reducers;

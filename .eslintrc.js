@@ -16,6 +16,9 @@ module.exports = {
     es6: true,
     jest: true,
   },
+  globals: {
+    JSX: true
+  },
   plugins: [
     'react',
     'jsx-a11y',
@@ -74,7 +77,7 @@ module.exports = {
     ],
     'jsx-a11y/label-has-associated-control': [2, {
       labelAttributes: ['label'],
-      controlComponents: ['Switch'],
+      controlComponents: ['Switch', 'Input'],
       depth: 3,
     }],
     'jsx-a11y/anchor-is-valid': ['off'],
