@@ -2,8 +2,14 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './TopBarItems.css';
 
+/** @param {string[]} args */
+function joinClassNames(...args) {
+  return args.filter(Boolean).join(' ');
+}
+
 /**
  * @typedef {Object} TopBarButtonProps
+ * @property {string} [className]
  * @property {string} [icon]
  * @property {boolean} [isActive]
  * @property {string} name
@@ -11,13 +17,23 @@ import './TopBarItems.css';
  */
 
 /** @param {TopBarButtonProps} props */
-export function TopBarButton({ icon, isActive = false, name, onClick }) {
-  const className = isActive
+export function TopBarButton({
+  className,
+  icon,
+  isActive = false,
+  name,
+  onClick,
+}) {
+  const baseClassName = isActive
     ? 'top-bar-item top-bar-item--active'
     : 'top-bar-item';
 
   return (
-    <button className={className} onClick={onClick} type='button'>
+    <button
+      className={joinClassNames(baseClassName, className)}
+      onClick={onClick}
+      type='button'
+    >
       <span className='top-bar-item__content body-typo'>
         {name}
         {icon && <i className={`g3-icon g3-icon--${icon}`} />}
@@ -27,6 +43,7 @@ export function TopBarButton({ icon, isActive = false, name, onClick }) {
 }
 
 TopBarButton.propTypes = {
+  className: PropTypes.string,
   icon: PropTypes.string,
   isActive: PropTypes.bool,
   name: PropTypes.string.isRequired,
@@ -35,6 +52,7 @@ TopBarButton.propTypes = {
 
 /**
  * @typedef {Object} TopBarLinkProps
+ * @property {string} [className]
  * @property {string} [icon]
  * @property {boolean} [isActive]
  * @property {string} name
@@ -42,8 +60,8 @@ TopBarButton.propTypes = {
  */
 
 /** @param {TopBarLinkProps} props */
-export function TopBarLink({ icon, isActive = false, name, to }) {
-  const className = isActive
+export function TopBarLink({ className, icon, isActive = false, name, to }) {
+  const baseClassName = isActive
     ? 'top-bar-item top-icon-buton--active'
     : 'top-bar-item';
   const content = (
@@ -55,7 +73,7 @@ export function TopBarLink({ icon, isActive = false, name, to }) {
 
   return to.startsWith('http') ? (
     <a
-      className={className}
+      className={joinClassNames(baseClassName, className)}
       target='_blank'
       rel='noopener noreferrer'
       href={to}
@@ -63,13 +81,14 @@ export function TopBarLink({ icon, isActive = false, name, to }) {
       {content}
     </a>
   ) : (
-    <Link className={className} to={to}>
+    <Link className={joinClassNames(baseClassName, className)} to={to}>
       {content}
     </Link>
   );
 }
 
 TopBarLink.propTypes = {
+  className: PropTypes.string,
   icon: PropTypes.string,
   isActive: PropTypes.bool,
   name: PropTypes.string.isRequired,
