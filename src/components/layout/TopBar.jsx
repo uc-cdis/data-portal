@@ -4,11 +4,19 @@ import { TopBarButton, TopBarLink } from './TopBarItems';
 import './TopBar.css';
 
 /**
+ * @typedef {Object} TopBarItem
+ * @property {string} name
+ * @property {boolean} [leftOrientation]
+ * @property {string} link
+ * @property {string} [icon]
+ */
+
+/**
  * NavBar renders row of nav-items of form { name, icon, link }
  * @typedef {Object} TopBarProps
  * @property {boolean} isAdminUser
  * @property {React.MouseEventHandler<HTMLButtonElement>} onLogoutClick
- * @property {{ name: string; leftOrientation?: boolean; link: string; icon?: string }[]} topItems
+ * @property {TopBarItem[]} topItems
  * @property {string} [username]
  */
 
