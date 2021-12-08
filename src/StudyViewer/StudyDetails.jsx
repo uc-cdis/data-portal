@@ -145,6 +145,26 @@ class StudyDetails extends React.Component {
           tooltipText={tooltipText}
         />
       ) : null;
+    } else if (buttonConfig.type === 'export-pfb-to-workspace') {
+      // 'Export to Workspace' button
+      const displayDownloadButton = userHasLoggedIn
+      && this.isDataAccessible(this.props.data.accessibleValidationValue)
+      && this.props.fileData.length > 0
+      && this.props.userAccess.Workspace;
+
+      const onClickProperties = { ...buttonConfig, accessibleValidationValue: this.props.data.accessibleValidationValue };
+
+      button = displayDownloadButton ? (
+        <Button
+          key={key}
+          label={'Export to Workspace'}
+          buttonType='primary'
+          onClick={() => this.props.exportToWorkspaceAction(onClickProperties)}
+          enabled={this.props.exportToWorkspaceEnabled}
+          tooltipEnabled={!this.props.exportToWorkspaceEnabled && !!buttonConfig.disableButtonTooltipText}
+          tooltipText={buttonConfig.disableButtonTooltipText}
+        />
+      ) : null;
     } else if (buttonConfig.type === 'request_access') {
       // 'Request Access' and 'Login to Request Access' buttons
       const onRequestAccess = () => {
@@ -427,12 +447,17 @@ StudyDetails.propTypes = {
   user: PropTypes.object.isRequired,
   isSingleItemView: PropTypes.bool.isRequired,
   userAuthMapping: PropTypes.object.isRequired,
+  userAccess: PropTypes.object.isRequired,
   studyViewerConfig: PropTypes.object,
+  exportToWorkspaceAction: PropTypes.func,
+  exportToWorkspaceEnabled: PropTypes.bool,
 };
 
 StudyDetails.defaultProps = {
   fileData: [],
   studyViewerConfig: {},
+  exportToWorkspaceAction: () => {},
+  exportToWorkspaceEnabled: false,
 };
 
 export default StudyDetails;

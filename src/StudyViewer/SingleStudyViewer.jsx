@@ -8,7 +8,7 @@ import { FileOutlined, FilePdfOutlined, LinkOutlined } from '@ant-design/icons';
 import BackLink from '../components/BackLink';
 import { humanFileSize } from '../utils.js';
 import {
-  ReduxStudyDetails, fetchDataset, fetchFiles, resetMultipleStudyData, fetchStudyViewerConfig,
+  ReduxStudyDetails, fetchDataset, fetchFiles, resetMultipleStudyData, fetchStudyViewerConfig, ReduxExportToWorkspace,
 } from './reduxer';
 import getReduxStore from '../reduxStore';
 import './StudyViewer.css';
@@ -43,6 +43,8 @@ class SingleStudyViewer extends React.Component {
     this.state = {
       dataType: undefined,
       rowAccessor: undefined,
+      exportToWorkspace: {},
+      exportingPFBToWorkspace: false,
     };
   }
 
@@ -75,6 +77,25 @@ class SingleStudyViewer extends React.Component {
         ));
     }
   }
+
+  exportToWorkspace = (buttonConfig) => {
+    this.setState({
+      exportToWorkspace: { ...buttonConfig },
+    });
+  };
+
+  exportingPFBToWorkspaceStateChange = (stateChange) => {
+    const tempStateChange = {
+      exportingPFBToWorkspace: stateChange,
+    };
+
+    // if set to false clear exportToWorkspace
+    if (!stateChange) {
+      tempStateChange.exportToWorkspace = {};
+    }
+
+    this.setState(tempStateChange);
+  };
 
   render() {
     if (this.props.noConfigError) {
@@ -120,6 +141,8 @@ class SingleStudyViewer extends React.Component {
               fileData={this.props.fileData}
               studyViewerConfig={studyViewerConfig}
               isSingleItemView={false}
+              exportToWorkspaceAction={this.exportToWorkspace}
+              exportToWorkspaceEnabled={!this.state.exportingPFBToWorkspace}
             />
             <div className='study-viewer__details-sidebar'>
               <Space direction='vertical' style={{ width: '100%' }}>
@@ -163,6 +186,11 @@ class SingleStudyViewer extends React.Component {
             </div>
           </div>
         </Space>
+        <ReduxExportToWorkspace
+          exportToWorkspaceAction={this.state.exportToWorkspace}
+          exportingPFBToWorkspaceStateChange={this.exportingPFBToWorkspaceStateChange}
+          exportingPFBToWorkspace={this.state.exportingPFBToWorkspace}
+        />
       </div>
     );
   }
