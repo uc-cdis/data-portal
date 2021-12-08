@@ -14,18 +14,18 @@ import './TopBar.css';
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
  * @typedef {Object} TopBarProps
+ * @property {{ items: TopBarItem[] }} config
  * @property {boolean} isAdminUser
  * @property {React.MouseEventHandler<HTMLButtonElement>} onLogoutClick
- * @property {TopBarItem[]} topItems
  * @property {string} [username]
  */
 
 /** @param {TopBarProps} props */
-function TopBar({ isAdminUser, onLogoutClick, topItems, username }) {
+function TopBar({ config, isAdminUser, onLogoutClick, username }) {
   const location = useLocation();
   const leftItems = [];
   const rightItems = [];
-  for (const item of topItems)
+  for (const item of config.items)
     if (item.leftOrientation) leftItems.push(item);
     else rightItems.push(item);
 
@@ -76,9 +76,11 @@ function TopBar({ isAdminUser, onLogoutClick, topItems, username }) {
 }
 
 TopBar.propTypes = {
+  config: PropTypes.exact({
+    items: PropTypes.array.isRequired,
+  }).isRequired,
   isAdminUser: PropTypes.bool.isRequired,
   onLogoutClick: PropTypes.func.isRequired,
-  topItems: PropTypes.array.isRequired,
   username: PropTypes.string,
 };
 

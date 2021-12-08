@@ -25,7 +25,7 @@ function Layout({ children }) {
   return (
     <>
       <header>
-        <ReduxTopBar topItems={components.topBar.items} />
+        <ReduxTopBar config={components.topBar} />
         <ReduxNavBar
           dictIcons={dictIcons}
           navItems={components.navigation.items}
