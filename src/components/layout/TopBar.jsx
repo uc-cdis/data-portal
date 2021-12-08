@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import TopIconButton, { TopLogoutButton } from './TopIconButton';
+import { TopBarButton, TopBarLink } from './TopBarItems';
 import './TopBar.css';
 
 /**
@@ -25,7 +25,7 @@ function TopBar({ isAdminUser, onLogoutClick, topItems, username }) {
     <nav className='top-bar' aria-label='Top Navigation'>
       <div className='top-bar--hidden-lg-and-down'>
         {leftItems.map((item) => (
-          <TopIconButton
+          <TopBarLink
             key={item.link}
             name={item.name}
             icon={item.icon}
@@ -38,7 +38,7 @@ function TopBar({ isAdminUser, onLogoutClick, topItems, username }) {
         {rightItems.map(
           (item) =>
             (item.link !== '/submission' || isAdminUser) && (
-              <TopIconButton
+              <TopBarLink
                 key={item.link}
                 name={item.name}
                 icon={item.icon}
@@ -49,17 +49,17 @@ function TopBar({ isAdminUser, onLogoutClick, topItems, username }) {
         )}
         {username !== undefined ? (
           <>
-            <TopIconButton
+            <TopBarLink
               icon='user-circle'
               name={username}
               isActive={location.pathname === '/identity'}
               to='/identity'
             />
-            <TopLogoutButton onClick={onLogoutClick} />
+            <TopBarButton icon='exit' name='Logout' onClick={onLogoutClick} />
           </>
         ) : (
           location.pathname !== '/login' && (
-            <TopIconButton icon='exit' name='Login' to='/login' />
+            <TopBarLink icon='exit' name='Login' to='/login' />
           )
         )}
       </div>
