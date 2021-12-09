@@ -723,7 +723,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
 
   // check if the user has access to this resource
   isButtonDisplayed = (buttonConfig) => {
-    if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
+    if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace' || buttonConfig.type === 'export-pfb-to-workspace') {
       const authResult = this.props.userAccess.Workspace;
       return typeof authResult !== 'undefined' ? authResult : true;
     }
