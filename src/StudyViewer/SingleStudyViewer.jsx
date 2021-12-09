@@ -61,6 +61,23 @@ class SingleStudyViewer extends React.Component {
     return Object.keys(newState).length ? newState : null;
   }
 
+  componentDidMount() {
+    if (!this.props.dataset
+      && this.state.dataType
+      && this.state.rowAccessor) {
+      getReduxStore().then(
+        (store) => Promise.allSettled(
+          [
+            store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType),
+              decodeURIComponent(this.state.rowAccessor))),
+            store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object', decodeURIComponent(this.state.rowAccessor))),
+            store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'open-access', decodeURIComponent(this.state.rowAccessor))),
+            store.dispatch(resetMultipleStudyData()),
+          ],
+        ));
+    }
+  }
+
   exportToWorkspace = (buttonConfig) => {
     this.setState({
       exportToWorkspace: { ...buttonConfig },
@@ -85,18 +102,6 @@ class SingleStudyViewer extends React.Component {
       this.props.history.push('/not-found');
     }
     if (!this.props.dataset) {
-      if (this.state.dataType && this.state.rowAccessor) {
-        getReduxStore().then(
-          (store) => Promise.allSettled(
-            [
-              store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType),
-                decodeURIComponent(this.state.rowAccessor))),
-              store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object', decodeURIComponent(this.state.rowAccessor))),
-              store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'open-access', decodeURIComponent(this.state.rowAccessor))),
-              store.dispatch(resetMultipleStudyData()),
-            ],
-          ));
-      }
       return (
         <div className='study-viewer'>
           <div className='study-viewer_loading'>
