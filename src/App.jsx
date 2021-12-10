@@ -2,7 +2,6 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
 import Layout from './Layout';
@@ -18,7 +17,6 @@ import {
   // workspaceErrorUrl,
 } from './localconf';
 import { fetchVersionInfo } from './actions';
-import isEnabled from './helpers/featureFlags';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
@@ -48,11 +46,6 @@ function App({ store }) {
   return (
     <Provider store={store}>
       <BrowserRouter basename={basename}>
-        {isEnabled('noIndex') && (
-          <Helmet>
-            <meta name='robots' content='noindex,nofollow' />
-          </Helmet>
-        )}
         <Layout>
           <Suspense
             fallback={

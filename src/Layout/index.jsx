@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 import { components } from '../params';
+import isEnabled from '../helpers/featureFlags';
 import useGoogleAnalytics from '../hooks/useGoogleAnalytics';
 import dictIcons from '../img/icons/index';
 import ReduxFooter from './ReduxFooter';
@@ -24,6 +26,11 @@ function Layout({ children }) {
 
   return (
     <>
+      {isEnabled('noIndex') && (
+        <Helmet>
+          <meta name='robots' content='noindex,nofollow' />
+        </Helmet>
+      )}
       <header>
         <ReduxTopBar config={components.topBar} />
         <ReduxNavBar
