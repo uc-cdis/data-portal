@@ -95,19 +95,20 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
 
   return (
     <form className='explorer-survival-analysis__control-form'>
-      <ControlFormInput
-        id='survival-time-interval'
-        label='Time interval'
-        type='number'
-        min={1}
-        max={5}
-        step={1}
-        onBlur={validateNumberInput}
+      <ControlFormSelect
+        inputId='survival-type'
+        isDisabled
+        label='Survival type'
+        options={[
+          { label: 'Overall Survival', value: 'all' },
+          { label: 'Event-Free Survival (EFS)', value: 'efs' },
+        ]}
         onChange={(e) => {
-          setLocalTimeInterval(Number.parseInt(e.target.value, 10));
+          setSurvivalType(e);
+          setShouldUpdateResults(true);
           setIsInputChanged(true);
         }}
-        value={localTimeInterval}
+        value={survivalType}
       />
       <ControlFormInput
         id='survival-start-time'
@@ -138,20 +139,19 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
         }}
         value={endTime}
       />
-      <ControlFormSelect
-        inputId='survival-type'
-        isDisabled
-        label='Survival type'
-        options={[
-          { label: 'Overall Survival', value: 'all' },
-          { label: 'Event-Free Survival (EFS)', value: 'efs' },
-        ]}
+      <ControlFormInput
+        id='survival-time-interval'
+        label='Time interval'
+        type='number'
+        min={1}
+        max={5}
+        step={1}
+        onBlur={validateNumberInput}
         onChange={(e) => {
-          setSurvivalType(e);
-          setShouldUpdateResults(true);
+          setLocalTimeInterval(Number.parseInt(e.target.value, 10));
           setIsInputChanged(true);
         }}
-        value={survivalType}
+        value={localTimeInterval}
       />
       <div className='explorer-survival-analysis__button-group'>
         <Button label='Reset' buttonType='default' onClick={resetUserInput} />
