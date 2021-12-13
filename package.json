@@ -13,6 +13,7 @@
     "@fortawesome/react-fontawesome": "^0.1.16",
     "@svgr/webpack": "^6.1.1",
     "ace-builds": "^1.4.13",
+    "acorn": "^8.6.0",
     "antd": "^4.17.3",
     "autoprefixer": "^10.4.0",
     "babel-loader": "^8.2.3",
