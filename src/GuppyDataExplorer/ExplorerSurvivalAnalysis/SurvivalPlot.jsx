@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import { Fragment, memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   ResponsiveContainer,
@@ -116,18 +116,10 @@ Plot.propTypes = {
  * @param {ColorScheme} prop.colorScheme
  * @param {SurvivalData[]} prop.data
  * @param {number} prop.endTime
- * @param {boolean} prop.isStratified
  * @param {number} prop.startTime
  * @param {number} prop.timeInterval
  */
-function SurvivalPlot({
-  colorScheme,
-  data,
-  endTime,
-  isStratified,
-  timeInterval,
-  startTime,
-}) {
+function SurvivalPlot({ colorScheme, data, endTime, timeInterval, startTime }) {
   const filteredData = filterSurvivalByTime(data, startTime, endTime);
   return (
     <div className='explorer-survival-analysis__survival-plot'>
@@ -136,26 +128,6 @@ function SurvivalPlot({
         <div className='explorer-survival-analysis__figure-placeholder'>
           {'Click "Apply" to get the survival plot here.'}
         </div>
-      ) : isStratified ? (
-        Object.entries(
-          filteredData.reduce((acc, { group, data }) => {
-            const [factor, stratification] = group;
-            const stratificationKey = JSON.stringify(stratification);
-            const stratificationValue =
-              acc[stratificationKey] !== undefined
-                ? [...acc[stratificationKey], { group: [factor], data }]
-                : [{ group: [factor], data }];
-
-            return { ...acc, [stratificationKey]: stratificationValue };
-          }, {})
-        ).map(([key, data]) => (
-          <Fragment key={key}>
-            <div className='explorer-survival-analysis__figure-title'>
-              {JSON.parse(key).value}
-            </div>
-            <Plot {...{ colorScheme, data, endTime, timeInterval }} />
-          </Fragment>
-        ))
       ) : (
         <Plot {...{ colorScheme, data: filteredData, endTime, timeInterval }} />
       )}
@@ -182,7 +154,6 @@ SurvivalPlot.propTypes = {
     })
   ).isRequired,
   endTime: PropTypes.number.isRequired,
-  isStratified: PropTypes.bool.isRequired,
   startTime: PropTypes.number.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };

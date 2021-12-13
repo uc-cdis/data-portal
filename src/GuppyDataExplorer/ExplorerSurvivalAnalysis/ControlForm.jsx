@@ -29,7 +29,6 @@ ControlFormInput.propTypes = {
   label: PropTypes.string,
 };
 
-const emptySelectOption = { label: 'Select...', value: '' };
 const survivalTypeOptions = [
   { label: 'Overall Survival', value: 'all' },
   { label: 'Event-Free Survival (EFS)', value: 'efs' },
@@ -37,23 +36,12 @@ const survivalTypeOptions = [
 
 /**
  * @param {Object} prop
- * @param {FactorItem[]} prop.factors
  * @param {UserInputSubmitHandler} prop.onSubmit
  * @param {number} prop.timeInterval
  * @param {boolean} prop.isError
  * @param {boolean} prop.isFilterChanged
  */
-const ControlForm = ({
-  factors,
-  onSubmit,
-  timeInterval,
-  isError,
-  isFilterChanged,
-}) => {
-  const [factorVariable, setFactorVariable] = useState(emptySelectOption);
-  const [stratificationVariable, setStratificationVariable] = useState(
-    emptySelectOption
-  );
+const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
   const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(20);
@@ -79,14 +67,8 @@ const ControlForm = ({
     else if (max && max < value) setLocalTimeInterval(max);
   };
 
-  const withEmptyOption = (
-    /** @type {{ label: string, value: string }[]} */ options
-  ) => [emptySelectOption, ...options];
-
   const submitUserInput = () => {
     onSubmit({
-      factorVariable: factorVariable.value,
-      stratificationVariable: stratificationVariable.value,
       timeInterval: localTimeInterval,
       startTime,
       endTime,
@@ -99,19 +81,12 @@ const ControlForm = ({
 
   const resetUserInput = () => {
     setIsInputChanged(
-      factorVariable.value !== emptySelectOption.value ||
-        stratificationVariable.value !== emptySelectOption.value ||
-        localTimeInterval !== 2 ||
+      localTimeInterval !== 2 ||
         startTime !== 0 ||
         endTime !== 20 ||
         survivalType !== survivalTypeOptions[0]
     );
 
-    if (factorVariable.value !== '' || stratificationVariable.value !== '')
-      setShouldUpdateResults(true);
-
-    setFactorVariable(emptySelectOption);
-    setStratificationVariable(emptySelectOption);
     setLocalTimeInterval(2);
     setStartTime(0);
     setEndTime(20);
@@ -120,34 +95,6 @@ const ControlForm = ({
 
   return (
     <form className='explorer-survival-analysis__control-form'>
-      <ControlFormSelect
-        inputId='survival-factor-variable'
-        label='Factor variable'
-        options={withEmptyOption(factors)}
-        onChange={(e) => {
-          if (e.value === '' || e.value === stratificationVariable)
-            setStratificationVariable(emptySelectOption);
-
-          setFactorVariable(e);
-          setShouldUpdateResults(true);
-          setIsInputChanged(true);
-        }}
-        value={factorVariable}
-      />
-      <ControlFormSelect
-        inputId='survival-stratification-variable'
-        label='Stratification variable'
-        options={withEmptyOption(
-          factors.filter(({ value }) => value !== factorVariable.value)
-        )}
-        isDisabled={factorVariable.value === ''}
-        onChange={(e) => {
-          setStratificationVariable(e);
-          setShouldUpdateResults(true);
-          setIsInputChanged(true);
-        }}
-        value={stratificationVariable}
-      />
       <ControlFormInput
         id='survival-time-interval'
         label='Time interval'
@@ -220,12 +167,6 @@ const ControlForm = ({
 };
 
 ControlForm.propTypes = {
-  factors: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string,
-      value: PropTypes.string,
-    })
-  ).isRequired,
   onSubmit: PropTypes.func.isRequired,
   timeInterval: PropTypes.number.isRequired,
   isError: PropTypes.bool,

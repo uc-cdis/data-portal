@@ -97,7 +97,6 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
           <Dashboard.Main className='explorer__main'>
             <ExplorerVisualization
               accessibleCount={data.accessibleCount}
-              aggsData={data.aggsData}
               aggsChartData={data.aggsChartData}
               allFields={data.allFields}
               filter={data.filter}

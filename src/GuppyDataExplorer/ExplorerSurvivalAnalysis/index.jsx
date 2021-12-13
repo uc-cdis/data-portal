@@ -4,25 +4,21 @@ import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
-import { enumFilterList } from '../../params';
 import Spinner from '../../components/Spinner';
 import { SurvivalAnalysisConfigType } from '../configTypeDef';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
-import { getFactors } from './utils';
 import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
 
 /**
  * @param {Object} prop
- * @param {SimpleAggsData} prop.aggsData
  * @param {SurvivalAnalysisConfig} prop.config
- * @param {{ field: string; name: string; }[]} prop.fieldMapping
  * @param {FilterState} prop.filter
  */
-function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
+function ExplorerSurvivalAnalysis({ config, filter }) {
   const controller = useRef(new AbortController());
   useEffect(() => () => controller.current.abort(), []);
   function fetchResult(body) {
@@ -41,7 +37,6 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
 
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
-  const [isStratified, setIsStratified] = useState(false);
   const [timeInterval, setTimeInterval] = useState(2);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(20);
@@ -57,13 +52,6 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
       setIsFilterChanged(true);
     }
   }, [filter]);
-
-  const [factors, setFactors] = useState(
-    getFactors(aggsData, fieldMapping, enumFilterList)
-  );
-  useEffect(() => {
-    setFactors(getFactors(aggsData, fieldMapping, enumFilterList));
-  }, [aggsData, fieldMapping]);
 
   /** @type {ColorScheme} */
   const initColorScheme = { All: schemeCategory10[0] };
@@ -96,7 +84,6 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
     if (isError) setIsError(false);
     if (isFilterChanged) setIsFilterChanged(false);
     setIsUpdating(true);
-    setIsStratified(requestParameter.stratificationVariable !== '');
     setTimeInterval(timeInterval);
     setStartTime(startTime);
     setEndTime(endTime);
@@ -128,7 +115,6 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
     <div className='explorer-survival-analysis'>
       <div className='explorer-survival-analysis__column-left'>
         <ControlForm
-          factors={factors}
           onSubmit={handleSubmit}
           timeInterval={timeInterval}
           isError={isError}
@@ -155,7 +141,6 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
                 colorScheme={colorScheme}
                 data={survival}
                 endTime={endTime}
-                isStratified={isStratified}
                 startTime={startTime}
                 timeInterval={timeInterval}
               />
@@ -164,7 +149,6 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
               <RiskTable
                 data={risktable}
                 endTime={endTime}
-                isStratified={isStratified}
                 startTime={startTime}
                 timeInterval={timeInterval}
               />
@@ -177,14 +161,8 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
 }
 
 ExplorerSurvivalAnalysis.propTypes = {
-  aggsData: PropTypes.object,
   config: SurvivalAnalysisConfigType,
-  fieldMapping: PropTypes.array,
   filter: PropTypes.object,
-};
-
-ExplorerSurvivalAnalysis.defaultProps = {
-  fieldMapping: [],
 };
 
 export default memo(ExplorerSurvivalAnalysis);

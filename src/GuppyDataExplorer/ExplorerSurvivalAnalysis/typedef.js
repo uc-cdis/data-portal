@@ -26,8 +26,6 @@
 
 /**
  * @typedef {Object} UserInput
- * @property {string} factorVariable
- * @property {string} stratificationVariable
  * @property {number} timeInterval
  * @property {number} startTime
  * @property {number} endTime

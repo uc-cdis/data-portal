@@ -132,7 +132,6 @@ function getChartData({
  * @typedef {Object} ExplorerVisualizationProps
  * @property {number} accessibleCount
  * @property {number} totalCount
- * @property {AggsData} aggsData
  * @property {SimpleAggsData} aggsChartData
  * @property {Object[]} rawData
  * @property {string[]} allFields
@@ -151,7 +150,6 @@ function getChartData({
 function ExplorerVisualization({
   accessibleCount = 0,
   totalCount = 0,
-  aggsData = {},
   aggsChartData = {},
   rawData = [],
   allFields = [],
@@ -229,9 +227,7 @@ function ExplorerVisualization({
     isLocked: isComponentLocked,
   };
   const survivalProps = {
-    aggsData,
     config: survivalAnalysisConfig,
-    fieldMapping: guppyConfig.fieldMapping,
     filter,
   };
 
@@ -330,7 +326,6 @@ function ExplorerVisualization({
 ExplorerVisualization.propTypes = {
   accessibleCount: PropTypes.number, // inherited from GuppyWrapper
   totalCount: PropTypes.number, // inherited from GuppyWrapper
-  aggsData: PropTypes.object, // inherited from GuppyWrapper
   aggsChartData: PropTypes.object, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
   allFields: PropTypes.array, // inherited from GuppyWrapper
