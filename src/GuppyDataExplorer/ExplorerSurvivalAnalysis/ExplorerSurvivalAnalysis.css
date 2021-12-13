@@ -48,13 +48,6 @@
   justify-content: space-between;
 }
 
-.explorer-survival-analysis__pval {
-  margin-left: 12px;
-  padding: 0.5rem 1rem;
-  height: 1.25rem;
-  font-size: 1rem;
-}
-
 .explorer-survival-analysis__survival-plot {
   margin: 12px;
   min-height: 300px;

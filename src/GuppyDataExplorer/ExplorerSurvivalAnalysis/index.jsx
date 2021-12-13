@@ -39,7 +39,6 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
     });
   }
 
-  const [pval, setPval] = useState(-1); // -1 is a placeholder for no p-value
   const [risktable, setRisktable] = useState([]);
   const [survival, setSurvival] = useState([]);
   const [isStratified, setIsStratified] = useState(false);
@@ -109,8 +108,6 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
         result: config.result,
       })
         .then((result) => {
-          if (config.result?.pval)
-            setPval(result.pval ? +parseFloat(result.pval).toFixed(4) : -1);
           if (config.result?.risktable) setRisktable(result.risktable);
           if (config.result?.survival) {
             setSurvival(result.survival);
@@ -153,11 +150,6 @@ function ExplorerSurvivalAnalysis({ aggsData, config, fieldMapping, filter }) {
           </div>
         ) : (
           <>
-            {config.result?.pval && (
-              <div className='explorer-survival-analysis__pval'>
-                {pval >= 0 && `Log-rank test p-value: ${pval}`}
-              </div>
-            )}
             {config.result?.survival && (
               <SurvivalPlot
                 colorScheme={colorScheme}

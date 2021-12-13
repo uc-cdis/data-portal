@@ -47,7 +47,7 @@ ViewContainer.propTypes = {
 /** @param {SurvivalAnalysisConfig} survivalAnalysisConfig */
 function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
   if (survivalAnalysisConfig.result !== undefined)
-    for (const resultOption of ['pval', 'risktable', 'survival'])
+    for (const resultOption of ['risktable', 'survival'])
       if (survivalAnalysisConfig.result[resultOption]) return true;
 
   return false;
