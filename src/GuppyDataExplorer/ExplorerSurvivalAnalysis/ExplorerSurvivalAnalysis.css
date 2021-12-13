@@ -4,7 +4,7 @@
   flex-wrap: wrap;
   justify-content: space-around;
   margin-top: 10px;
-  padding: 12px;
+  padding: 12px 12px 3rem;
 }
 
 .explorer-survival-analysis__warning {
@@ -40,12 +40,19 @@
 }
 
 .explorer-survival-analysis__button-group {
-  max-width: 200px;
-  min-height: 100px;
-  margin: 3rem auto 1rem;
+  background-color: var(--g3-color__white);
+  border-top: 1px solid var(--g3-color__smoke);
+  bottom: 0;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  left: var(--dashboard__sidebar-width);
+  padding: 1rem 1rem 2rem;
+  position: fixed;
+  width: inherit;
+  z-index: 1;
+}
+
+.explorer-survival-analysis__button-group > button {
+  margin-left: 1rem;
 }
 
 .explorer-survival-analysis__survival-plot {
@@ -86,6 +93,18 @@
   height: 100%;
   width: 90%;
   margin: auto;
+}
+
+@media screen and (max-width: 1090px) {
+  .explorer-survival-analysis {
+    padding-bottom: 5rem;
+  }
+  .explorer-survival-analysis__button-group {
+    left: 0;
+    padding-left: 0;
+    padding-bottom: 4rem;
+    justify-content: center;
+  }
 }
 
 /* Medium screen and less */

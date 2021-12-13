@@ -22,10 +22,6 @@
   justify-content: space-between;
 }
 
-.explorer-visualization__view {
-  position: relative;
-}
-
 .explorer-visualization__view--hidden {
   display: none;
 }
