@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   getAllTypes,
@@ -8,7 +8,7 @@ import {
   calculateDataModelStructure,
 } from './graphCalculatorHelper';
 
-class GraphCalculator extends React.Component {
+class GraphCalculator extends Component {
   constructor(props) {
     super(props);
     this.oldHighlightingNode = null;
@@ -111,15 +111,13 @@ class GraphCalculator extends React.Component {
           relatedHighlightedNodeIDs.includes(e.target)
       )
       .map((e) => ({ source: e.source, target: e.target }));
-    const {
-      dataModelStructure,
-      routesBetweenStartEndNodes,
-    } = calculateDataModelStructure(
-      newHighlightingNode,
-      relatedHighlightedNodeIDs,
-      subgraphEdges,
-      this.props.nodes
-    );
+    const { dataModelStructure, routesBetweenStartEndNodes } =
+      calculateDataModelStructure(
+        newHighlightingNode,
+        relatedHighlightedNodeIDs,
+        subgraphEdges,
+        this.props.nodes
+      ) ?? {};
     return {
       dataModelStructure,
       dataModelStructureRelatedNodeIDs: relatedHighlightedNodeIDs,
@@ -141,15 +139,13 @@ class GraphCalculator extends React.Component {
       if (!subgraphNodeIDs.includes(e.source)) subgraphNodeIDs.push(e.source);
       if (!subgraphNodeIDs.includes(e.target)) subgraphNodeIDs.push(e.target);
     });
-    const {
-      dataModelStructure,
-      routesBetweenStartEndNodes,
-    } = calculateDataModelStructure(
-      newHighlightingNode,
-      subgraphNodeIDs,
-      pathRelatedToSecondHighlightingNode,
-      this.props.nodes
-    );
+    const { dataModelStructure, routesBetweenStartEndNodes } =
+      calculateDataModelStructure(
+        newHighlightingNode,
+        subgraphNodeIDs,
+        pathRelatedToSecondHighlightingNode,
+        this.props.nodes
+      ) ?? {};
     return {
       dataModelStructure,
       dataModelStructureRelatedNodeIDs: subgraphNodeIDs,

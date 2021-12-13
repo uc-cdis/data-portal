@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
+import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import AutoCompleteInput from './AutoCompleteInput';
-import AutoCompleteSuggestions, { SuggestionItem } from './AutoCompleteSuggestions';
+import AutoCompleteSuggestions, {
+  SuggestionItem,
+} from './AutoCompleteSuggestions';
 import './AutoComplete.css';
 
 class AutoComplete extends Component {
   constructor(props) {
     super(props);
-    this.inputRef = React.createRef();
+    this.inputRef = createRef();
   }
 
   setInputText(text) {
@@ -19,7 +21,10 @@ class AutoComplete extends Component {
   }
 
   render() {
-    const emptySuggestionsClassModifier = this.props.suggestionList.length === 0 ? 'auto-complete--empty-suggestion-list' : '';
+    const emptySuggestionsClassModifier =
+      this.props.suggestionList.length === 0
+        ? 'auto-complete--empty-suggestion-list'
+        : '';
     return (
       <div className={`auto-complete ${emptySuggestionsClassModifier}`}>
         <div className='auto-complete__input-wrapper'>

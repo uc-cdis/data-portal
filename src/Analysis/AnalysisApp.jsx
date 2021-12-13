@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import Select from 'react-select';
 import { overrideSelectTheme } from '../utils';
@@ -8,7 +8,7 @@ import Spinner from '../components/Spinner';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 
-class AnalysisApp extends React.Component {
+class AnalysisApp extends Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import { useLocation } from 'react-router-dom';
 import Select, { createFilter } from 'react-select';

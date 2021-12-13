@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { cloneElement, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './StickyToolbar.less';
 
@@ -38,7 +38,7 @@ function StickyToolbar({
     >
       <div className='h2-typo'>{title}</div>
       <div className='sticky-toolbar__elts'>
-        {toolbarElts.map((elt, i) => React.cloneElement(elt, { key: i }))}
+        {toolbarElts.map((elt, i) => cloneElement(elt, { key: i }))}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Children, Component, cloneElement, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { select } from 'd3-selection';
 import { transition } from 'd3-transition';
@@ -20,16 +20,16 @@ function getTransition() {
   return d3.transition().duration(150).ease(d3.easeLinear);
 }
 
-class Canvas extends React.Component {
+class Canvas extends Component {
   constructor(props) {
     super(props);
     this.state = {
       canvasWidth: 0,
       canvasHeight: 0,
     };
-    this.canvasElement = React.createRef();
-    this.svgElement = React.createRef();
-    this.containerElement = React.createRef();
+    this.canvasElement = createRef();
+    this.svgElement = createRef();
+    this.containerElement = createRef();
   }
 
   componentDidMount() {
@@ -189,8 +189,8 @@ class Canvas extends React.Component {
             onClick={this.handleClick}
           />
           <g className='canvas__container' ref={this.containerElement}>
-            {React.Children.map(this.props.children, (child) =>
-              React.cloneElement(child, {
+            {Children.map(this.props.children, (child) =>
+              cloneElement(child, {
                 canvasWidth: this.state.canvasWidth,
                 canvasHeight: this.state.canvasHeight,
               })

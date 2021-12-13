@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import GraphiQL from 'graphiql';
 import PropTypes from 'prop-types';
@@ -22,7 +22,7 @@ function editVariables(newVariables) {
 const fetchGraphQL = (graphQLParams) =>
   fetch(graphqlPath, {
     credentials: 'include',
-    headers: { ...headers },
+    headers,
     method: 'POST',
     body: JSON.stringify(graphQLParams),
   })
@@ -38,7 +38,7 @@ const fetchGraphQL = (graphQLParams) =>
 const fetchFlatGraphQL = (graphQLParams) =>
   fetch(guppyGraphQLUrl, {
     credentials: 'include',
-    headers: { ...headers },
+    headers,
     method: 'POST',
     body: JSON.stringify(graphQLParams),
   })

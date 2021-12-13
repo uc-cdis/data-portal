@@ -1,41 +1,32 @@
-import React from 'react';
-import { mount } from 'enzyme';
-import DataDictionaryNode from '.';
+import { fireEvent, render, screen } from '@testing-library/react';
+import DataDictionaryNode from './index';
 
-describe('DataDictionaryNode', () => {
-  const node = {
-    id: 'a',
-    title: 'test title',
-    category: 'test',
-    properties: { pro1: {}, pro2: {} },
-    required: ['pro1'],
-  };
-  const expandFunc = jest.fn();
-  const wrapper = mount(
-    <DataDictionaryNode
-      node={node}
-      description='test description'
-      expanded={false}
-      onExpandNode={expandFunc}
-    />
-  );
+const node = {
+  id: 'a',
+  title: 'test title',
+  category: 'test',
+  properties: { pro1: {}, pro2: {} },
+  required: ['pro1'],
+};
 
-  it('can render and toggle properties', () => {
-    expect(wrapper.find('.data-dictionary-node').length).toBe(1);
-    expect(wrapper.find('.data-dictionary-node__property').length).toBe(0);
+test('renders', () => {
+  const { container } = render(<DataDictionaryNode node={node} />);
+  expect(container.firstElementChild).toHaveClass('data-dictionary-node');
+});
 
-    // expand node
-    const nodeElem = wrapper.find('.data-dictionary-node').first();
-    nodeElem.simulate('click');
-    expect(expandFunc.mock.calls.length).toBe(1);
-    wrapper.setProps({ expanded: true });
-    expect(wrapper.find('.data-dictionary-node__property').length).toBe(1);
+test('toggles properties', () => {
+  const onExpandNode = jest.fn();
+  const props = { node, onExpandNode };
+  const { container, rerender } = render(<DataDictionaryNode {...props} />);
 
-    // unexpand node
-    const closeElem = wrapper
-      .find('.data-dictionary-node__property-close')
-      .first();
-    closeElem.simulate('click');
-    expect(expandFunc.mock.calls.length).toBe(2);
-  });
+  fireEvent.click(screen.getByLabelText('Dictionary node'));
+  expect(onExpandNode).toHaveBeenCalledTimes(1);
+
+  rerender(<DataDictionaryNode {...props} expanded />);
+  expect(
+    container.querySelector('.data-dictionary-node__property')
+  ).toBeInTheDocument();
+
+  fireEvent.click(screen.getByLabelText('Close property tab'));
+  expect(onExpandNode).toHaveBeenCalledTimes(2);
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Redirect, useLocation, useRouteMatch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -23,7 +23,7 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 
 /**
  * @typedef {object} ProtectedContentProps
- * @property {React.ReactNode} children required child component
+ * @property {JSX.Element} children required child component
  * @property {boolean} [isAdminOnly] default false - if true, redirect to index page
  * @property {boolean} [isPublic] default false - set true to disable auth-guard
  * @property {() => Promise} [filter] optional filter to apply before rendering the child component

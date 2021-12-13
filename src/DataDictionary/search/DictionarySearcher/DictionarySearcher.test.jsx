@@ -1,87 +1,100 @@
-import React from 'react';
-import { mount } from 'enzyme';
+import { useRef } from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import DictionarySearcher from './DictionarySearcher';
 
-describe('DictionarySearcher', () => {
-  const testDict = {
-    a1: {
-      id: 'a1',
-      category: 'A',
-      description: 'whatever',
-      properties: [],
-    },
-    a2: {
-      id: 'a2',
-      category: 'A',
-      description: 'whatever description.',
-      properties: [],
-    },
-    b1: {
-      id: 'b1',
-      category: 'B',
-      description: 'whatever',
-      properties: [],
-    },
-    b2: {
-      id: 'b2',
-      category: 'B',
-      description: 'test node description',
-      properties: [],
-    },
-    b3: {
-      id: 'b3',
-      category: 'B',
-      description: 'whatever',
-      properties: [],
-    },
-    b4: {
-      id: 'b4',
-      category: 'B',
-      description: 'whatever',
-      properties: [],
-    },
+const testDict = {
+  a1: {
+    id: 'a1',
+    category: 'A',
+    description: 'whatever',
+    properties: [],
+  },
+  a2: {
+    id: 'a2',
+    category: 'A',
+    description: 'whatever description.',
+    properties: [],
+  },
+  b1: {
+    id: 'b1',
+    category: 'B',
+    description: 'whatever',
+    properties: [],
+  },
+  b2: {
+    id: 'b2',
+    category: 'B',
+    description: 'test node description',
+    properties: [],
+  },
+  b3: {
+    id: 'b3',
+    category: 'B',
+    description: 'whatever',
+    properties: [],
+  },
+  b4: {
+    id: 'b4',
+    category: 'B',
+    description: 'whatever',
+    properties: [],
+  },
+};
+
+test('renders', () => {
+  const { container } = render(<DictionarySearcher dictionary={testDict} />);
+  expect(container.firstElementChild).toHaveClass('data-dictionary-searcher');
+});
+
+test('autocompeletes, searches, and resets', () => {
+  const onSearchResultCleared = jest.fn();
+  const onSearchResultUpdated = jest.fn();
+  const onSearchHistoryItemCreated = jest.fn();
+  const onSaveCurrentSearchKeyword = jest.fn();
+  const setIsSearching = jest.fn();
+  const props = {
+    dictionary: testDict,
+    onSearchResultCleared,
+    onSearchResultUpdated,
+    onSearchHistoryItemCreated,
+    onSaveCurrentSearchKeyword,
+    setIsSearching,
   };
-
-  const keyword = 'test';
-  const updateFunc = jest.fn();
-  const resetFunc = jest.fn();
-  const createHistoryFunc = jest.fn();
-  const saveResultFunc = jest.fn();
-  const setSearchFunc = jest.fn();
-  const wrapper = mount(
-    <DictionarySearcher
-      dictionary={testDict}
-      onSearchResultUpdated={updateFunc}
-      onSearchResultCleared={resetFunc}
-      onSearchHistoryItemCreated={createHistoryFunc}
-      onSaveCurrentSearchKeyword={saveResultFunc}
-      setIsSearching={setSearchFunc}
-    />
-  );
-  const dictionarySearcherInstance = wrapper.instance();
-
-  it('can render', () => {
-    expect(wrapper.find(DictionarySearcher).length).toBe(1);
+  const { container } = render(<DictionarySearcher {...props} />);
+  fireEvent.change(container.querySelector('.auto-complete-input__input-box'), {
+    target: { value: 'test' },
   });
+  fireEvent.submit(container.querySelector('.auto-complete-input__form'));
+  expect(onSearchResultCleared).toHaveBeenCalledTimes(1);
+  expect(onSearchResultUpdated).toHaveBeenCalledTimes(1);
+  expect(onSearchHistoryItemCreated).toHaveBeenCalledTimes(1);
+  expect(onSaveCurrentSearchKeyword).toHaveBeenCalledTimes(1);
+  expect(setIsSearching).toHaveBeenCalledTimes(2);
 
-  it('can autocomplete, search, and reset', () => {
-    // type in keyword, and hit enter
-    const inputElem = wrapper.find('.auto-complete-input__input-box');
-    inputElem.instance().value = keyword;
-    const formElem = wrapper.find('.auto-complete-input__form');
-    formElem.simulate('submit');
-    expect(updateFunc.mock.calls.length).toBe(1);
-    expect(saveResultFunc.mock.calls.length).toBe(1);
-    expect(createHistoryFunc.mock.calls.length).toBe(1);
-    expect(setSearchFunc.mock.calls.length).toBe(2);
+  fireEvent.click(screen.getByLabelText('Clear result'));
+  expect(onSearchResultCleared).toHaveBeenCalledTimes(2);
+});
 
-    // clear input content, check: reset search result
-    const resetElem = wrapper.find('.dictionary-searcher__result-clear');
-    resetElem.simulate('click');
-    expect(resetFunc.mock.calls.length).toBe(1);
+test('calls search from outside', () => {
+  function DictionarySearcherWrapper(props) {
+    const ref = useRef(null);
+    return (
+      <div>
+        <button
+          onClick={() => ref.current.launchSearchFromOutside('test')}
+          type='button'
+        >
+          Search
+        </button>
+        <DictionarySearcher ref={ref} {...props} />
+      </div>
+    );
+  }
 
-    // call search from outside
-    dictionarySearcherInstance.launchSearchFromOutside(keyword);
-    expect(updateFunc.mock.calls.length).toBe(2);
-  });
+  const onSearchResultUpdated = jest.fn();
+  const props = { dictionary: testDict, onSearchResultUpdated };
+  render(<DictionarySearcherWrapper {...props} />);
+
+  fireEvent.click(screen.getByText('Search'));
+  expect(onSearchResultUpdated).toHaveBeenCalledTimes(1);
 });

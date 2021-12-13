@@ -1,4 +1,3 @@
-import React from 'react';
 import Resource from './Resource';
 import { config } from '../params';
 import './ResourceBrowser.css';

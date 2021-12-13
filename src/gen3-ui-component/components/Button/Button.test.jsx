@@ -1,11 +1,7 @@
-import React from 'react';
-import { mount } from 'enzyme';
-import Button from '.';
+import { render } from '@testing-library/react';
+import Button from './index';
 
-describe('<Button />', () => {
-  const btn = mount(<Button label='test-button' />).find(Button);
-
-  it('renders', () => {
-    expect(btn.length).toBe(1);
-  });
+test('renders', () => {
+  const { container } = render(<Button label='test-button' />);
+  expect(container.firstElementChild).toHaveClass('g3-button');
 });

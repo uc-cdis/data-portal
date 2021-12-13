@@ -1,9 +1,9 @@
-import React from 'react';
+import { Component } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import Button from '../../gen3-ui-component/components/Button';
 
-class ButtonWrapper extends React.Component {
+class ButtonWrapper extends Component {
   constructor(props) {
     super(props);
     this.state = {

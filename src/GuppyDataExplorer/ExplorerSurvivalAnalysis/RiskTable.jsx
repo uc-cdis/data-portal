@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import React, { Fragment } from 'react';
+import { Fragment, memo } from 'react';
 import PropTypes from 'prop-types';
 import {
   ScatterChart,
@@ -194,4 +194,4 @@ RiskTable.propTypes = {
   timeInterval: PropTypes.number.isRequired,
 };
 
-export default React.memo(RiskTable);
+export default memo(RiskTable);

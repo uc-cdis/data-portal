@@ -1,20 +1,18 @@
-import React from 'react';
-import { mount } from 'enzyme';
-import SingleSelectFilter from '.';
+import { fireEvent, render } from '@testing-library/react';
+import SingleSelectFilter from './index';
 
-describe('SingleSelectFilter', () => {
+test('renders', () => {
+  const { container } = render(
+    <SingleSelectFilter label='test1' onSelect={() => {}} hideZero={false} />
+  );
+  expect(container.firstElementChild).toHaveClass('g3-single-select-filter');
+});
+
+test('calls onSelect when selected', () => {
   const onSelect = jest.fn();
-  const component = mount(
+  const { container } = render(
     <SingleSelectFilter label='test1' onSelect={onSelect} hideZero={false} />
   );
-
-  it('renders', () => {
-    expect(component.find(SingleSelectFilter).length).toBe(1);
-  });
-
-  it('calls onSelect when selected', () => {
-    expect(component.find('input').length).toBe(1);
-    component.find('input').simulate('change');
-    expect(onSelect).toHaveBeenCalled();
-  });
+  fireEvent.click(container.querySelector('input'));
+  expect(onSelect).toHaveBeenCalled();
 });

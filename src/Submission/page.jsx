@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import ProjectDashboard from './ProjectDashboard';
 import ReduxTransaction from './ReduxTransaction';
 import { getTransactionList, getProjectsList } from './relayer';

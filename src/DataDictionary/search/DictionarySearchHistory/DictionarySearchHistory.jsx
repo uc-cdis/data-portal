@@ -1,8 +1,8 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import './DictionarySearchHistory.css';
 
-class DictionarySearchHistory extends React.Component {
+class DictionarySearchHistory extends Component {
   handleClick = (keyword) => {
     this.props.onClickSearchHistoryItem(keyword);
   };

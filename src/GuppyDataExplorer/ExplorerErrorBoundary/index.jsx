@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import NotFoundSVG from '../../img/not-found.svg';
 
@@ -7,7 +7,7 @@ import NotFoundSVG from '../../img/not-found.svg';
 /** @typedef {{ hasError: boolean }} ExplorerErrorBoundaryState */
 
 /** @augments {React.Component<ExplorerErrorBoundaryProps, ExplorerErrorBoundaryState>} */
-class ExplorerErrorBoundary extends React.Component {
+class ExplorerErrorBoundary extends Component {
   /** @param {ExplorerErrorBoundaryProps} props */
   constructor(props) {
     super(props);

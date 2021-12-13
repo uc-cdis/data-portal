@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import Table from './base/Table';
 import dictIcons from '../../img/icons/index';

@@ -1,14 +1,14 @@
-import React from 'react';
+import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { getCategoryIconSVG } from '../../NodeCategories/helper';
 import { MatchedIndicesShape } from '../../utils';
 import { getNodeTitleSVGFragment } from '../../highlightHelper';
 import './GraphNode.css';
 
-class GraphNode extends React.Component {
+class GraphNode extends Component {
   constructor(props) {
     super(props);
-    this.svgElement = React.createRef();
+    this.svgElement = createRef();
   }
 
   getSVGElement() {

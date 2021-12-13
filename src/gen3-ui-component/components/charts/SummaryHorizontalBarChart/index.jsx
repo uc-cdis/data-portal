@@ -1,12 +1,12 @@
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import React from 'react';
 import LockedContent from '../LockedContent';
 import EmptyContent from '../EmptyContent';
 import helper from '../helper';
 import './SummaryHorizontalBarChart.css';
 
 // FIXME: add back in animation (https://github.com/recharts/recharts/issues/1083)
-class SummaryBarChart extends React.Component {
+class SummaryBarChart extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -70,7 +70,7 @@ class SummaryBarChart extends React.Component {
                 </div>
               );
             }
-            return <React.Fragment key={item.name} />;
+            return <Fragment key={item.name} />;
           })}
           {barChartData.length > this.props.maximumDisplayItem &&
             (this.state.showMore ? (

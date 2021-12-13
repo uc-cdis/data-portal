@@ -1,5 +1,5 @@
 /* eslint react/forbid-prop-types: 0 */
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
 import FilterList from '../../gen3-ui-component/components/filters/FilterList';

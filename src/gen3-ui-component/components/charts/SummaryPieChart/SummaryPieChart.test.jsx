@@ -1,31 +1,28 @@
-import React from 'react';
-import { mount } from 'enzyme';
-import SummaryPieChart from '.';
+import { render } from '@testing-library/react';
+import SummaryPieChart from './index';
 
-describe('<SummaryPieChart />', () => {
-  const chartData = [
-    { name: 'H1N1', value: 4000 },
-    { name: 'VN1203', value: 3000 },
-    { name: 'HIV', value: 2800 },
-    { name: 'HuCoV_EMC', value: 2000 },
-    { name: 'SARS_CoV', value: 2708 },
-    { name: 'CA04', value: 1890 },
-  ];
+const chartData = [
+  { name: 'H1N1', value: 4000 },
+  { name: 'VN1203', value: 3000 },
+  { name: 'HIV', value: 2800 },
+  { name: 'HuCoV_EMC', value: 2000 },
+  { name: 'SARS_CoV', value: 2708 },
+  { name: 'CA04', value: 1890 },
+];
 
-  const charts = mount(<SummaryPieChart
-    title='test'
-    data={chartData}
-  />).find(SummaryPieChart);
+test('renders', () => {
+  const { container } = render(
+    <SummaryPieChart title='test' data={chartData} />
+  );
+  expect(container.firstElementChild).toHaveClass('summary-pie-chart');
 
-  it('renders', () => {
-    expect(charts.length).toBe(1);
-  });
+  const pieSectorElements = container.querySelectorAll(
+    '.recharts-layer.recharts-pie-sector'
+  );
+  expect(pieSectorElements).toHaveLength(chartData.length);
 
-  it('should render all pie sectors', () => {
-    expect(charts.find('.recharts-layer.recharts-pie-sector').length).toBe(chartData.length);
-  });
-
-  it('should render all legend items', () => {
-    expect(charts.find('.summary-pie-chart__legend-item').length).toBe(chartData.length);
-  });
+  const legendElements = container.querySelectorAll(
+    '.summary-pie-chart__legend-item'
+  );
+  expect(legendElements).toHaveLength(chartData.length);
 });

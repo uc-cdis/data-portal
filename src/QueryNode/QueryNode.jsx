@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { jsonToString, getSubmitPath } from '../utils';

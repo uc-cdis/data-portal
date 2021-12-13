@@ -1,12 +1,12 @@
+import { Component, Fragment } from 'react';
 import { PieChart, Pie, Tooltip, Cell } from 'recharts';
 import PropTypes from 'prop-types';
-import React from 'react';
 import LockedContent from '../LockedContent';
 import EmptyContent from '../EmptyContent';
 import helper from '../helper';
 import './SummaryPieChart.css';
 
-class SummaryPieChart extends React.Component {
+class SummaryPieChart extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -74,7 +74,7 @@ class SummaryPieChart extends React.Component {
                   </div>
                 );
               }
-              return <React.Fragment key={'text'.concat(entry.name)} />;
+              return <Fragment key={'text'.concat(entry.name)} />;
             })}
             {pieChartData.length > this.props.maximumDisplayItem && (
               <>

@@ -1,21 +1,20 @@
-import React from 'react';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import NodeTooltip from './NodeTooltip';
 
-describe('NodeTooltip', () => {
-  const hoveringNode = {
-    id: 'a',
-    type: 'test',
-    label: 'node A',
-  };
-  it('can render tooltip', () => {
-    const tooltip = mount(<NodeTooltip hoveringNode={hoveringNode} />);
-    expect(tooltip.find('.node-tooltip__wrapper').length).toBe(1);
-    const tooltipWithoutHoveringNode = mount(
-      <NodeTooltip hoveringNode={null} />
-    );
-    expect(
-      tooltipWithoutHoveringNode.find('.node-tooltip__wrapper').length
-    ).toBe(0);
-  });
+test('renders', () => {
+  const { container } = render(
+    <NodeTooltip
+      hoveringNode={{
+        id: 'a',
+        type: 'test',
+        label: 'node A',
+      }}
+    />
+  );
+  expect(container.firstElementChild).toHaveClass('node-tooltip');
+});
+
+test('does not render without node', () => {
+  const { container } = render(<NodeTooltip hoveringNode={null} />);
+  expect(container.firstElementChild).not.toBeInTheDocument();
 });
