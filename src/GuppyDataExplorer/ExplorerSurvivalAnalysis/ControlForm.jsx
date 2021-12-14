@@ -202,11 +202,13 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
           <FilterSetCard
             filterSet={filterSet}
             label={`${i + 1}. ${filterSet.name}`}
-            onClose={() =>
+            onClose={() => {
               setUsedFilterSets((prevFilterSets) =>
                 prevFilterSets.filter(({ id }) => id !== filterSet.id)
-              )
-            }
+              );
+              setShouldUpdateResults(true);
+              setIsInputChanged(true);
+            }}
           />
         ))
       )}
