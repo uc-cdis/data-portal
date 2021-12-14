@@ -12,6 +12,7 @@ import {
   ExplorerStateProvider,
   useExplorerState,
 } from './ExplorerStateContext';
+import { ExplorerFilterSetsProvider } from './ExplorerFilterSetsContext';
 import ExplorerErrorBoundary from './ExplorerErrorBoundary';
 import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
@@ -131,9 +132,11 @@ export default function Explorer() {
   return explorerConfig.length === 0 ? null : (
     <ExplorerConfigProvider>
       <ExplorerStateProvider>
-        <ExplorerErrorBoundary>
-          <ReduxExplorerDashboard />
-        </ExplorerErrorBoundary>
+        <ExplorerFilterSetsProvider>
+          <ExplorerErrorBoundary>
+            <ReduxExplorerDashboard />
+          </ExplorerErrorBoundary>
+        </ExplorerFilterSetsProvider>
       </ExplorerStateProvider>
     </ExplorerConfigProvider>
   );

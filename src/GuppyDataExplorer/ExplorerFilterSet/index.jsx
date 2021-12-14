@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimplePopup from '../../components/SimplePopup';
 import Button from '../../gen3-ui-component/components/Button';
 import { useExplorerState } from '../ExplorerStateContext';
+import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import {
   FilterSetActionMenu,
   FilterSetActionForm,
@@ -14,7 +15,6 @@ import {
 import {
   createEmptyFilterSet,
   truncateWithEllipsis,
-  fetchFilterSets,
   createFilterSet,
   updateFilterSet,
   deleteFilterSet,
@@ -31,22 +31,10 @@ function ExplorerFilterSet({ className, filter }) {
   const { clearFilters, updateFilters } = useExplorerState();
   const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
-  /** @type {ExplorerFilterSet[]} */
-  const emptyFilterSets = [];
-  const [filterSets, setFilterSets] = useState(emptyFilterSets);
+  const { filterSets, refreshFilterSets } = useExplorerFilterSets();
   const [isError, setIsError] = useState(false);
   useEffect(() => {
-    let isMounted = true;
-    if (!isError)
-      fetchFilterSets()
-        .then(
-          (fetchedFilterSets) => isMounted && setFilterSets(fetchedFilterSets)
-        )
-        .catch(() => setIsError(true));
-
-    return () => {
-      isMounted = false;
-    };
+    if (!isError) refreshFilterSets().catch(() => setIsError(true));
   }, [isError]);
 
   /** @type {[ExplorerFilterSetActionType, React.Dispatch<React.SetStateAction<ExplorerFilterSetActionType>>]} */
@@ -72,7 +60,7 @@ function ExplorerFilterSet({ className, filter }) {
   async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
     try {
       setFilterSet(await createFilterSet(created));
-      setFilterSets(await fetchFilterSets());
+      await refreshFilterSets();
     } catch (e) {
       setIsError(true);
     } finally {
@@ -83,7 +71,7 @@ function ExplorerFilterSet({ className, filter }) {
     try {
       await updateFilterSet(updated);
       setFilterSet(cloneDeep(updated));
-      setFilterSets(await fetchFilterSets());
+      await refreshFilterSets();
     } catch (e) {
       setIsError(true);
     } finally {
@@ -94,7 +82,7 @@ function ExplorerFilterSet({ className, filter }) {
     try {
       await deleteFilterSet(deleted);
       setFilterSet(createEmptyFilterSet());
-      setFilterSets(await fetchFilterSets());
+      await refreshFilterSets();
       clearFilters();
     } catch (e) {
       setIsError(true);
