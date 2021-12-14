@@ -11,7 +11,11 @@ const ControlFormSelect = ({ label, ...selectProps }) => (
   <SimpleInputField
     label={label}
     input={
-      <Select {...selectProps} clearable={false} theme={overrideSelectTheme} />
+      <Select
+        {...selectProps}
+        isClearable={false}
+        theme={overrideSelectTheme}
+      />
     }
   />
 );
