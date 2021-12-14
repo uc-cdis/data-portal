@@ -53,13 +53,14 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
   const [endTime, setEndTime] = useState(20);
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
 
+  const [selectFilterSetOption, setSelectFilterSetOption] = useState(null);
+  const [usedFilterSets, setUsedFilterSets] = useState([]);
   const { filterSets } = useExplorerFilterSets();
   const filterSetOptions = filterSets.map((filterSet) => ({
     label: filterSet.name,
     value: filterSet,
+    isDisabled: usedFilterSets.some(({ id }) => id === filterSet.id),
   }));
-  const [selectFilterSetOption, setSelectFilterSetOption] = useState(null);
-  const [usedFilterSets, setUsedFilterSets] = useState([]);
 
   const [isInputChanged, setIsInputChanged] = useState(true);
   useEffect(() => {
