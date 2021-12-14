@@ -4,6 +4,7 @@ import Select from 'react-select';
 import Button from '../../gen3-ui-component/components/Button';
 import SimpleInputField from '../../components/SimpleInputField';
 import { overrideSelectTheme } from '../../utils';
+import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import FilterSetCard from './FilterSetCard';
 import './typedef';
 
@@ -39,35 +40,6 @@ const survivalTypeOptions = [
   { label: 'Event-Free Survival (EFS)', value: 'efs' },
 ];
 
-/** @type {ExplorerFilterSet[]} */
-const mockFilterSets = [
-  {
-    id: 0,
-    name: 'Foo Bar Baz',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    filters: { sex: { selectedValues: ['Female'] } },
-  },
-  {
-    id: 1,
-    name: 'Bar Baz Foo',
-    description:
-      'Mauris luctus nisi quis urna pretium, id faucibus libero imperdiet.',
-    filters: { race: { selectedValues: ['Asian'] } },
-  },
-  {
-    id: 2,
-    name: 'Baz Foo Bar',
-    description:
-      'Etiam fringilla odio ornare, vehicula sapien molestie, tempor elit.',
-    filters: { ethnicity: { selectedValues: ['Not+Hispanic+or+Latino'] } },
-  },
-];
-
-const mockFilterSetOptions = mockFilterSets.map((filterSet) => ({
-  label: filterSet.name,
-  value: filterSet,
-}));
-
 /**
  * @param {Object} prop
  * @param {UserInputSubmitHandler} prop.onSubmit
@@ -80,6 +52,12 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(20);
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
+
+  const { filterSets } = useExplorerFilterSets();
+  const filterSetOptions = filterSets.map((filterSet) => ({
+    label: filterSet.name,
+    value: filterSet,
+  }));
   const [selectFilterSetOption, setSelectFilterSetOption] = useState(null);
   const [usedFilterSets, setUsedFilterSets] = useState([]);
 
@@ -193,7 +171,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
         <Select
           inputId='survival-filter-sets'
           placeholder='Select Filter Set to analyze'
-          options={mockFilterSetOptions}
+          options={filterSetOptions}
           onChange={setSelectFilterSetOption}
           value={selectFilterSetOption}
           theme={overrideSelectTheme}
