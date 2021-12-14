@@ -4,6 +4,7 @@ import Select from 'react-select';
 import Button from '../../gen3-ui-component/components/Button';
 import SimpleInputField from '../../components/SimpleInputField';
 import { overrideSelectTheme } from '../../utils';
+import FilterSetCard from './FilterSetCard';
 import './typedef';
 
 /** @param {{ label: string; [x: string]: any }} props */
@@ -38,6 +39,35 @@ const survivalTypeOptions = [
   { label: 'Event-Free Survival (EFS)', value: 'efs' },
 ];
 
+/** @type {ExplorerFilterSet[]} */
+const mockFilterSets = [
+  {
+    id: 0,
+    name: 'Foo Bar Baz',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    filters: { sex: { selectedValues: ['Female'] } },
+  },
+  {
+    id: 1,
+    name: 'Bar Baz Foo',
+    description:
+      'Mauris luctus nisi quis urna pretium, id faucibus libero imperdiet.',
+    filters: { race: { selectedValues: ['Asian'] } },
+  },
+  {
+    id: 2,
+    name: 'Baz Foo Bar',
+    description:
+      'Etiam fringilla odio ornare, vehicula sapien molestie, tempor elit.',
+    filters: { ethnicity: { selectedValues: ['Not+Hispanic+or+Latino'] } },
+  },
+];
+
+const mockFilterSetOptions = mockFilterSets.map((filterSet) => ({
+  label: filterSet.name,
+  value: filterSet,
+}));
+
 /**
  * @param {Object} prop
  * @param {UserInputSubmitHandler} prop.onSubmit
@@ -50,6 +80,8 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(20);
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
+  const [selectFilterSetOption, setSelectFilterSetOption] = useState(null);
+  const [usedFilterSets, setUsedFilterSets] = useState([]);
 
   const [isInputChanged, setIsInputChanged] = useState(true);
   useEffect(() => {
@@ -157,6 +189,48 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
         }}
         value={localTimeInterval}
       />
+      <div className='explorer-survival-analysis__filter-set-select'>
+        <Select
+          inputId='survival-filter-sets'
+          placeholder='Select Filter Set to analyze'
+          options={mockFilterSetOptions}
+          onChange={setSelectFilterSetOption}
+          value={selectFilterSetOption}
+          theme={overrideSelectTheme}
+        />
+        <Button
+          label='Add'
+          buttonType='default'
+          enabled={selectFilterSetOption !== null}
+          onClick={() => {
+            setUsedFilterSets((prevFilterSets) => [
+              ...prevFilterSets,
+              selectFilterSetOption.value,
+            ]);
+            setSelectFilterSetOption(null);
+            setShouldUpdateResults(true);
+            setIsInputChanged(true);
+          }}
+        />
+      </div>
+      {usedFilterSets.length === 0 ? (
+        <span style={{ fontStyle: 'italic' }}>
+          Nothing to show here. Try select and use Filter Sets for survival
+          analysis.
+        </span>
+      ) : (
+        usedFilterSets.map((filterSet, i) => (
+          <FilterSetCard
+            filterSet={filterSet}
+            label={`${i + 1}. ${filterSet.name}`}
+            onClose={() =>
+              setUsedFilterSets((prevFilterSets) =>
+                prevFilterSets.filter(({ id }) => id !== filterSet.id)
+              )
+            }
+          />
+        ))
+      )}
       <div className='explorer-survival-analysis__button-group'>
         <Button label='Reset' buttonType='default' onClick={resetUserInput} />
         <Button
