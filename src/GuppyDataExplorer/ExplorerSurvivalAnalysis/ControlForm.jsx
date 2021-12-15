@@ -40,6 +40,9 @@ const survivalTypeOptions = [
   { label: 'Event-Free Survival (EFS)', value: 'efs' },
 ];
 
+/** @type {ExplorerFilterSet[]} */
+const emptyFilterSets = [];
+
 /**
  * @param {Object} prop
  * @param {UserInputSubmitHandler} prop.onSubmit
@@ -54,7 +57,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
 
   const [selectFilterSetOption, setSelectFilterSetOption] = useState(null);
-  const [usedFilterSets, setUsedFilterSets] = useState([]);
+  const [usedFilterSets, setUsedFilterSets] = useState(emptyFilterSets);
   const { filterSets } = useExplorerFilterSets();
   const filterSetOptions = filterSets.map((filterSet) => ({
     label: filterSet.name,
@@ -89,6 +92,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
       endTime,
       efsFlag: survivalType.value === 'efs',
       shouldUpdateResults,
+      usedFilterSets,
     });
     setIsInputChanged(false);
     setShouldUpdateResults(false);
@@ -106,6 +110,8 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
     setStartTime(0);
     setEndTime(20);
     setSurvivalType(survivalTypeOptions[0]);
+    setUsedFilterSets(emptyFilterSets);
+    setIsInputChanged(true);
   };
 
   return (
