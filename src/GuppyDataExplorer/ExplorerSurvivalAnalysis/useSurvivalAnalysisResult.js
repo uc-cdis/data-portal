@@ -6,7 +6,6 @@ import '../typedef';
 
 /**
  * @typedef {Object} ExplorerFilterSetDTO
- * @property {string} description
  * @property {GqlFilter} filters
  * @property {number} id
  * @property {string} name
@@ -68,13 +67,12 @@ export default function useSurvivalAnalysisResult() {
     /** @type {SurvivalAnalysisResult} */
     const cache = {};
     for (const [index, usedFilterSet] of usedFilterSets.entries()) {
-      const { description, filters, id, name } = usedFilterSet;
+      const { filters, id, name } = usedFilterSet;
       body.usedFilterSetIds.push(id);
       if (id in result)
         cache[id] = { ...result[id], name: `${index + 1}. ${name}` };
       else
         body.filterSets.push({
-          description,
           filters: getGQLFilter(filters) ?? {},
           id,
           name: `${index + 1}. ${name}`,
