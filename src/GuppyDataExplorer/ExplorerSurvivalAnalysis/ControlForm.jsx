@@ -89,15 +89,23 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
     else if (max && max < value) setLocalTimeInterval(max);
   };
 
+  const [shouldSubmit, setShouldSubmit] = useState(false);
+  useEffect(() => {
+    if (shouldSubmit) {
+      onSubmit({
+        timeInterval: localTimeInterval,
+        startTime,
+        endTime,
+        efsFlag: survivalType.value === 'efs',
+        usedFilterSets,
+      });
+      setShouldSubmit(false);
+    }
+  }, [shouldSubmit]);
+
   const submitUserInput = () => {
-    onSubmit({
-      timeInterval: localTimeInterval,
-      startTime,
-      endTime,
-      efsFlag: survivalType.value === 'efs',
-      usedFilterSets,
-    });
     setIsInputChanged(false);
+    setShouldSubmit(true);
   };
 
   const resetUserInput = () => {
@@ -114,6 +122,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
     setSurvivalType(survivalTypeOptions[0]);
     setUsedFilterSets(emptyFilterSets);
     setIsInputChanged(false);
+    setShouldSubmit(true);
   };
 
   return (
