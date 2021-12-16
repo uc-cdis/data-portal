@@ -226,9 +226,6 @@ function ExplorerVisualization({
     guppyConfig,
     isLocked: isComponentLocked,
   };
-  const survivalProps = {
-    config: survivalAnalysisConfig,
-  };
 
   return (
     <div className={className}>
@@ -315,7 +312,7 @@ function ExplorerVisualization({
       )}
       {isSurvivalAnalysisEnabled(survivalAnalysisConfig) && (
         <ViewContainer showIf={explorerView === 'survival analysis'}>
-          <ExplorerSurvivalAnalysis {...survivalProps} />
+          <ExplorerSurvivalAnalysis />
         </ViewContainer>
       )}
     </div>
