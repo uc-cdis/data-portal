@@ -24,8 +24,7 @@ const Plot = ({ colorScheme, data, endTime, timeInterval }) => {
   const [opacity, setOpacity] = useState({});
   useEffect(() => {
     const initOpacity = {};
-    for (const { group } of data)
-      initOpacity[group.length === 0 ? 'All' : group[0].value] = 1;
+    for (const { name } of data) initOpacity[name] = 1;
     setOpacity(initOpacity);
   }, [data]);
 
@@ -69,21 +68,18 @@ const Plot = ({ colorScheme, data, endTime, timeInterval }) => {
           onMouseEnter={handleLegendMouseEnter}
           onMouseLeave={handleLegendMouseLeave}
         />
-        {data.map(({ group, data }) => {
-          const factorValue = group.length === 0 ? 'All' : group[0].value;
-          return (
-            <Line
-              key={factorValue}
-              data={data}
-              dataKey='prob'
-              dot={false}
-              name={factorValue}
-              type='stepAfter'
-              stroke={colorScheme[factorValue]}
-              strokeOpacity={opacity[factorValue]}
-            />
-          );
-        })}
+        {data.map(({ data, name }) => (
+          <Line
+            key={name}
+            data={data}
+            dataKey='prob'
+            dot={false}
+            name={name}
+            type='stepAfter'
+            stroke={colorScheme[name]}
+            strokeOpacity={opacity[name]}
+          />
+        ))}
       </LineChart>
     </ResponsiveContainer>
   );
@@ -99,12 +95,7 @@ Plot.propTypes = {
           time: PropTypes.number,
         })
       ),
-      group: PropTypes.arrayOf(
-        PropTypes.exact({
-          variable: PropTypes.string,
-          value: PropTypes.string,
-        })
-      ),
+      name: PropTypes.string,
     })
   ).isRequired,
   endTime: PropTypes.number.isRequired,
@@ -145,12 +136,7 @@ SurvivalPlot.propTypes = {
           time: PropTypes.number,
         })
       ),
-      group: PropTypes.arrayOf(
-        PropTypes.exact({
-          variable: PropTypes.string,
-          value: PropTypes.string,
-        })
-      ),
+      name: PropTypes.string,
     })
   ).isRequired,
   endTime: PropTypes.number.isRequired,

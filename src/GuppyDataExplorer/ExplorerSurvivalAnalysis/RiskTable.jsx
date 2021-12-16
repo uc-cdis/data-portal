@@ -19,12 +19,7 @@ import './typedef';
 const parseRisktable = (data, timeInterval) => {
   const minTime = data[0].data[0].time;
   return data
-    .flatMap(({ group, data }) =>
-      data.map((d) => ({
-        group: group.length === 0 ? 'All' : group[0].value,
-        ...d,
-      }))
-    )
+    .flatMap(({ name, data }) => data.map((d) => ({ name, ...d })))
     .filter(({ time }) => (time - minTime) % timeInterval === 0);
 };
 
@@ -78,7 +73,7 @@ const Table = ({ data, isLast, timeInterval }) => (
         ticks={getXAxisTicks(data, timeInterval)}
       />
       <YAxis
-        dataKey='group'
+        dataKey='name'
         type='category'
         allowDuplicatedCategory={false}
         axisLine={false}
@@ -102,12 +97,7 @@ Table.propTypes = {
           time: PropTypes.number,
         })
       ),
-      group: PropTypes.arrayOf(
-        PropTypes.exact({
-          variable: PropTypes.string,
-          value: PropTypes.string,
-        })
-      ),
+      name: PropTypes.string,
     })
   ).isRequired,
   isLast: PropTypes.bool.isRequired,
@@ -153,12 +143,7 @@ RiskTable.propTypes = {
           time: PropTypes.number,
         })
       ),
-      group: PropTypes.arrayOf(
-        PropTypes.exact({
-          variable: PropTypes.string,
-          value: PropTypes.string,
-        })
-      ),
+      name: PropTypes.string,
     })
   ).isRequired,
   endTime: PropTypes.number.isRequired,
