@@ -206,6 +206,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
       ) : (
         usedFilterSets.map((filterSet, i) => (
           <FilterSetCard
+            key={filterSet.id}
             filterSet={filterSet}
             label={`${i + 1}. ${filterSet.name}`}
             onClose={() => {
