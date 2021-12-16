@@ -224,7 +224,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
           label='Apply'
           buttonType='primary'
           onClick={submitUserInput}
-          enabled={isInputChanged}
+          enabled={isInputChanged && usedFilterSets.length > 0}
         />
       </div>
     </form>
