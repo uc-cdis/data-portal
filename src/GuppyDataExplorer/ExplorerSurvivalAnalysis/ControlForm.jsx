@@ -44,7 +44,7 @@ const survivalTypeOptions = [
 const emptyFilterSets = [];
 
 /** @type {ExplorerFilterSet} */
-const defaultFilterSet = {
+export const defaultFilterSet = {
   name: '*** All Subjects ***',
   description: '',
   filters: {},
