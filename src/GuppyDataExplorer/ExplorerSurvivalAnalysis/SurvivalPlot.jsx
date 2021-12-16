@@ -117,7 +117,7 @@ function SurvivalPlot({ colorScheme, data, endTime, timeInterval, startTime }) {
       {/* eslint-disable-next-line no-nested-ternary */}
       {filteredData.length === 0 ? (
         <div className='explorer-survival-analysis__figure-placeholder'>
-          {'Click "Apply" to get the survival plot here.'}
+          The survival curves plot will appear here.
         </div>
       ) : (
         <Plot {...{ colorScheme, data: filteredData, endTime, timeInterval }} />

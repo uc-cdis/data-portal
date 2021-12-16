@@ -117,7 +117,7 @@ function RiskTable({ data, endTime, timeInterval, startTime }) {
     <div className='explorer-survival-analysis__risk-table'>
       {filteredData.length === 0 ? (
         <div className='explorer-survival-analysis__figure-placeholder'>
-          Click "Apply" to get the risk table here.
+          The number at risk table will appear here.
         </div>
       ) : (
         <>
