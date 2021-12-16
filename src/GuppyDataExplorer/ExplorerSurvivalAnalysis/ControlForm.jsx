@@ -43,14 +43,21 @@ const survivalTypeOptions = [
 /** @type {ExplorerFilterSet[]} */
 const emptyFilterSets = [];
 
+/** @type {ExplorerFilterSet} */
+const defaultFilterSet = {
+  name: '*** All Subjects ***',
+  description: '',
+  filters: {},
+  id: -1,
+};
+
 /**
  * @param {Object} prop
  * @param {UserInputSubmitHandler} prop.onSubmit
  * @param {number} prop.timeInterval
  * @param {boolean} prop.isError
- * @param {boolean} prop.isFilterChanged
  */
-const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
+const ControlForm = ({ onSubmit, timeInterval, isError }) => {
   const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(20);
@@ -59,21 +66,18 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
   const [selectFilterSetOption, setSelectFilterSetOption] = useState(null);
   const [usedFilterSets, setUsedFilterSets] = useState(emptyFilterSets);
   const { filterSets } = useExplorerFilterSets();
-  const filterSetOptions = filterSets.map((filterSet) => ({
-    label: filterSet.name,
-    value: filterSet,
-    isDisabled: usedFilterSets.some(({ id }) => id === filterSet.id),
-  }));
+  const filterSetOptions = [defaultFilterSet, ...filterSets].map(
+    (filterSet) => ({
+      label: filterSet.name,
+      value: filterSet,
+      isDisabled: usedFilterSets.some(({ id }) => id === filterSet.id),
+    })
+  );
 
-  const [isInputChanged, setIsInputChanged] = useState(true);
+  const [isInputChanged, setIsInputChanged] = useState(false);
   useEffect(() => {
     if (!isInputChanged && isError) setIsInputChanged(true);
   }, [isInputChanged, isError]);
-
-  const [shouldUpdateResults, setShouldUpdateResults] = useState(true);
-  useEffect(() => {
-    if (isFilterChanged && !shouldUpdateResults) setShouldUpdateResults(true);
-  }, [isFilterChanged]);
 
   const validateNumberInput = (
     /** @type {{ target: { value: string, min: string, max: string }}} */ e
@@ -91,11 +95,9 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
       startTime,
       endTime,
       efsFlag: survivalType.value === 'efs',
-      shouldUpdateResults,
       usedFilterSets,
     });
     setIsInputChanged(false);
-    setShouldUpdateResults(false);
   };
 
   const resetUserInput = () => {
@@ -111,7 +113,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
     setEndTime(20);
     setSurvivalType(survivalTypeOptions[0]);
     setUsedFilterSets(emptyFilterSets);
-    setIsInputChanged(true);
+    setIsInputChanged(false);
   };
 
   return (
@@ -126,7 +128,6 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
         ]}
         onChange={(e) => {
           setSurvivalType(e);
-          setShouldUpdateResults(true);
           setIsInputChanged(true);
         }}
         value={survivalType}
@@ -193,7 +194,6 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
               selectFilterSetOption.value,
             ]);
             setSelectFilterSetOption(null);
-            setShouldUpdateResults(true);
             setIsInputChanged(true);
           }}
         />
@@ -212,7 +212,6 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
               setUsedFilterSets((prevFilterSets) =>
                 prevFilterSets.filter(({ id }) => id !== filterSet.id)
               );
-              setShouldUpdateResults(true);
               setIsInputChanged(true);
             }}
           />
@@ -224,7 +223,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError, isFilterChanged }) => {
           label='Apply'
           buttonType='primary'
           onClick={submitUserInput}
-          enabled={isInputChanged || isFilterChanged}
+          enabled={isInputChanged}
         />
       </div>
     </form>
@@ -235,7 +234,6 @@ ControlForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   timeInterval: PropTypes.number.isRequired,
   isError: PropTypes.bool,
-  isFilterChanged: PropTypes.bool,
 };
 
 export default ControlForm;

@@ -228,7 +228,6 @@ function ExplorerVisualization({
   };
   const survivalProps = {
     config: survivalAnalysisConfig,
-    filter,
   };
 
   return (

@@ -1,75 +1,33 @@
 /* eslint-disable no-shadow */
-import { memo, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import cloneDeep from 'lodash.clonedeep';
+import { memo, useMemo, useState } from 'react';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import Spinner from '../../components/Spinner';
-import { SurvivalAnalysisConfigType } from '../configTypeDef';
+import { useExplorerConfig } from '../ExplorerConfigContext';
+import useSurvivalAnalysisResult from './useSurvivalAnalysisResult';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
-import { fetchWithCreds } from '../../actions';
 import './ExplorerSurvivalAnalysis.css';
 import './typedef';
 
-/**
- * @param {Object} prop
- * @param {SurvivalAnalysisConfig} prop.config
- * @param {FilterState} prop.filter
- */
-function ExplorerSurvivalAnalysis({ config, filter }) {
-  const controller = useRef(new AbortController());
-  useEffect(() => () => controller.current.abort(), []);
-  function fetchResult(body) {
-    controller.current.abort();
-    controller.current = new AbortController();
-    return fetchWithCreds({
-      path: '/analysis/tools/survival',
-      method: 'POST',
-      body: JSON.stringify(body),
-      signal: controller.current.signal,
-    }).then(({ response, data, status }) => {
-      if (status !== 200) throw response.statusText;
-      return data;
-    });
-  }
-
-  const [risktable, setRisktable] = useState([]);
-  const [survival, setSurvival] = useState([]);
+function ExplorerSurvivalAnalysis() {
+  const [[risktable, survival], refershResult] = useSurvivalAnalysisResult();
   const [timeInterval, setTimeInterval] = useState(2);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(20);
 
-  const [transformedFilter, setTransformedFilter] = useState(
-    getGQLFilter(filter)
-  );
-  const [isFilterChanged, setIsFilterChanged] = useState(false);
-  useEffect(() => {
-    const updatedFilter = getGQLFilter(cloneDeep(filter));
-    if (JSON.stringify(updatedFilter) !== JSON.stringify(transformedFilter)) {
-      setTransformedFilter(updatedFilter);
-      setIsFilterChanged(true);
-    }
-  }, [filter]);
-
-  /** @type {ColorScheme} */
-  const initColorScheme = { All: schemeCategory10[0] };
-  const [colorScheme, setColorScheme] = useState(initColorScheme);
-  const getNewColorScheme = (/** @type {SurvivalData[]} */ survival) => {
-    if (survival.length === 1) return initColorScheme;
-
+  const colorScheme = useMemo(() => {
     /** @type {ColorScheme} */
-    const newScheme = {};
-    let factorValueCount = 0;
-    for (const { group } of survival)
-      if (newScheme[group[0].value] === undefined) {
-        newScheme[group[0].value] = schemeCategory10[factorValueCount % 9];
-        factorValueCount += 1;
+    const colorScheme = {};
+    let count = 0;
+    for (const { name } of survival)
+      if (colorScheme[name] === undefined) {
+        colorScheme[name] = schemeCategory10[count % 9];
+        count += 1;
       }
 
-    return newScheme;
-  };
+    return colorScheme;
+  }, [survival]);
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -78,38 +36,23 @@ function ExplorerSurvivalAnalysis({ config, filter }) {
     timeInterval,
     startTime,
     endTime,
-    shouldUpdateResults,
-    ...requestParameter
+    usedFilterSets,
   }) => {
     if (isError) setIsError(false);
-    if (isFilterChanged) setIsFilterChanged(false);
     setIsUpdating(true);
     setTimeInterval(timeInterval);
     setStartTime(startTime);
     setEndTime(endTime);
 
-    if (shouldUpdateResults)
-      fetchResult({
-        filter: transformedFilter ?? {},
-        parameter: requestParameter,
-        result: config.result,
-      })
-        .then((result) => {
-          if (config.result?.risktable) setRisktable(result.risktable);
-          if (config.result?.survival) {
-            setSurvival(result.survival);
-            setColorScheme(getNewColorScheme(result.survival));
-          }
-          setIsUpdating(false);
-        })
-        .catch((e) => {
-          if (e.name !== 'AbortError') {
-            setIsError(true);
-            setIsUpdating(false);
-          }
-        });
-    else setIsUpdating(false);
+    refershResult(usedFilterSets)
+      .then(() => setIsUpdating(false))
+      .catch(() => {
+        setIsError(true);
+        setIsUpdating(false);
+      });
   };
+
+  const { survivalAnalysisConfig: config } = useExplorerConfig().current;
 
   return (
     <div className='explorer-survival-analysis'>
@@ -118,7 +61,6 @@ function ExplorerSurvivalAnalysis({ config, filter }) {
           onSubmit={handleSubmit}
           timeInterval={timeInterval}
           isError={isError}
-          isFilterChanged={isFilterChanged}
         />
       </div>
       <div className='explorer-survival-analysis__column-right'>
@@ -159,10 +101,5 @@ function ExplorerSurvivalAnalysis({ config, filter }) {
     </div>
   );
 }
-
-ExplorerSurvivalAnalysis.propTypes = {
-  config: SurvivalAnalysisConfigType,
-  filter: PropTypes.object,
-};
 
 export default memo(ExplorerSurvivalAnalysis);
