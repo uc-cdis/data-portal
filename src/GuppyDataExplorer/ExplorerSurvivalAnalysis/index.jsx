@@ -1,6 +1,5 @@
 /* eslint-disable no-shadow */
-import { memo, useMemo, useState } from 'react';
-import { schemeCategory10 } from 'd3-scale-chromatic';
+import { memo, useState } from 'react';
 import Spinner from '../../components/Spinner';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import useSurvivalAnalysisResult from './useSurvivalAnalysisResult';
@@ -15,19 +14,6 @@ function ExplorerSurvivalAnalysis() {
   const [timeInterval, setTimeInterval] = useState(2);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(20);
-
-  const colorScheme = useMemo(() => {
-    /** @type {ColorScheme} */
-    const colorScheme = {};
-    let count = 0;
-    for (const { name } of survival)
-      if (colorScheme[name] === undefined) {
-        colorScheme[name] = schemeCategory10[count % 9];
-        count += 1;
-      }
-
-    return colorScheme;
-  }, [survival]);
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -80,7 +66,6 @@ function ExplorerSurvivalAnalysis() {
           <>
             {config.result?.survival && (
               <SurvivalPlot
-                colorScheme={colorScheme}
                 data={survival}
                 endTime={endTime}
                 startTime={startTime}

@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { schemeCategory10 } from 'd3-scale-chromatic';
 import {
   ResponsiveContainer,
   LineChart,
@@ -15,12 +16,21 @@ import './typedef';
 
 /**
  * @param {Object} prop
- * @param {ColorScheme} prop.colorScheme
  * @param {SurvivalData[]} prop.data
  * @param {number} prop.endTime
  * @param {number} prop.timeInterval
  */
-const Plot = ({ colorScheme, data, endTime, timeInterval }) => {
+const Plot = ({ data, endTime, timeInterval }) => {
+  const colorScheme = useMemo(() => {
+    /** @type {ColorScheme} */
+    const colorScheme = {};
+    for (const [count, { name }] of data.entries())
+      if (colorScheme[name] === undefined)
+        colorScheme[name] = schemeCategory10[count % 9];
+
+    return colorScheme;
+  }, [data]);
+
   const [opacity, setOpacity] = useState({});
   useEffect(() => {
     const initOpacity = {};
@@ -86,7 +96,6 @@ const Plot = ({ colorScheme, data, endTime, timeInterval }) => {
 };
 
 Plot.propTypes = {
-  colorScheme: PropTypes.object.isRequired,
   data: PropTypes.arrayOf(
     PropTypes.exact({
       data: PropTypes.arrayOf(
@@ -104,13 +113,12 @@ Plot.propTypes = {
 
 /**
  * @param {Object} prop
- * @param {ColorScheme} prop.colorScheme
  * @param {SurvivalData[]} prop.data
  * @param {number} prop.endTime
  * @param {number} prop.startTime
  * @param {number} prop.timeInterval
  */
-function SurvivalPlot({ colorScheme, data, endTime, timeInterval, startTime }) {
+function SurvivalPlot({ data, endTime, timeInterval, startTime }) {
   const filteredData = filterSurvivalByTime(data, startTime, endTime);
   return (
     <div className='explorer-survival-analysis__survival-plot'>
@@ -120,14 +128,13 @@ function SurvivalPlot({ colorScheme, data, endTime, timeInterval, startTime }) {
           The survival curves plot will appear here.
         </div>
       ) : (
-        <Plot {...{ colorScheme, data: filteredData, endTime, timeInterval }} />
+        <Plot {...{ data: filteredData, endTime, timeInterval }} />
       )}
     </div>
   );
 }
 
 SurvivalPlot.propTypes = {
-  colorScheme: PropTypes.object.isRequired,
   data: PropTypes.arrayOf(
     PropTypes.exact({
       data: PropTypes.arrayOf(
