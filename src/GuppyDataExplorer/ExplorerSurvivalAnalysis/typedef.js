@@ -9,7 +9,7 @@
 /**
  * @typedef {Object} RisktableData
  * @property {RisktableDataPoint[]} data
- * @property {{ variable: string; value: string; }[]} group
+ * @property {string} name
  */
 
 /**
@@ -21,8 +21,17 @@
 /**
  * @typedef {Object} SurvivalData
  * @property {SurvivalDataPoint[]} data
- * @property {{ variable: string; value: string; }[]} group
+ * @property {string} name
  */
+
+/**
+ * @typedef {Object} SurvivalResultForFilterSet
+ * @property {string} name
+ * @property {RisktableDataPoint[]} risktable
+ * @property {SurvivalDataPoint[]} survival
+ */
+
+/** @typedef {{ [id: string]: SurvivalResultForFilterSet }} SurvivalAnalysisResult */
 
 /**
  * @typedef {Object} UserInput
@@ -30,7 +39,7 @@
  * @property {number} startTime
  * @property {number} endTime
  * @property {boolean} efsFlag
- * @property {boolean} shouldUpdateResults
+ * @property {ExplorerFilterSet[]} usedFilterSets
  */
 
 /**
