@@ -54,4 +54,6 @@ InsuredLayer.propTypes = {
   data: PropTypes.object.isRequired,
 };
 
+
+export { dataLayer }
 export default InsuredLayer;

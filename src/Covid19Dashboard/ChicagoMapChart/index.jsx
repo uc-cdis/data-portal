@@ -16,7 +16,7 @@ import VaccinatedFirstLayer from '../overlays/VaccinatedFirstLayer';
 import VaccinatedFullLayer from '../overlays/VaccinatedFullLayer';
 import CaseLayer from '../overlays/CaseLayer';
 import TestLayer from '../overlays/TestLayer';
-import InsuredLayer from '../overlays/InsuredLayer';
+import InsuredLayer, { dataLayer as insuredDataLayer } from '../overlays/InsuredLayer';
 import UnemployedLayer from '../overlays/UnemployedLayer';
 //import TimeCaseLayer from '../overlays/TimeCaseLayer';
 //import MobilityLayer from '../overlays/GoogleMobilityLayer';
