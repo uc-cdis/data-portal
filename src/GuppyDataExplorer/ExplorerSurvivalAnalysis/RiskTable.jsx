@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import { Fragment, memo } from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import {
   ScatterChart,
@@ -19,12 +19,7 @@ import './typedef';
 const parseRisktable = (data, timeInterval) => {
   const minTime = data[0].data[0].time;
   return data
-    .flatMap(({ group, data }) =>
-      data.map((d) => ({
-        group: group.length === 0 ? 'All' : group[0].value,
-        ...d,
-      }))
-    )
+    .flatMap(({ name, data }) => data.map((d) => ({ name, ...d })))
     .filter(({ time }) => (time - minTime) % timeInterval === 0);
 };
 
@@ -78,7 +73,7 @@ const Table = ({ data, isLast, timeInterval }) => (
         ticks={getXAxisTicks(data, timeInterval)}
       />
       <YAxis
-        dataKey='group'
+        dataKey='name'
         type='category'
         allowDuplicatedCategory={false}
         axisLine={false}
@@ -102,12 +97,7 @@ Table.propTypes = {
           time: PropTypes.number,
         })
       ),
-      group: PropTypes.arrayOf(
-        PropTypes.exact({
-          variable: PropTypes.string,
-          value: PropTypes.string,
-        })
-      ),
+      name: PropTypes.string,
     })
   ).isRequired,
   isLast: PropTypes.bool.isRequired,
@@ -118,17 +108,16 @@ Table.propTypes = {
  * @param {Object} prop
  * @param {RisktableData[]} prop.data
  * @param {number} prop.endTime
- * @param {boolean} prop.isStratified
  * @param {number} prop.startTime
  * @param {number} prop.timeInterval
  */
-function RiskTable({ data, endTime, isStratified, timeInterval, startTime }) {
+function RiskTable({ data, endTime, timeInterval, startTime }) {
   const filteredData = filterRisktableByTime(data, startTime, endTime);
   return (
     <div className='explorer-survival-analysis__risk-table'>
       {filteredData.length === 0 ? (
         <div className='explorer-survival-analysis__figure-placeholder'>
-          Click "Apply" to get the risk table here.
+          The number at risk table will appear here.
         </div>
       ) : (
         <>
@@ -138,33 +127,7 @@ function RiskTable({ data, endTime, isStratified, timeInterval, startTime }) {
           >
             Number at risk
           </div>
-          {isStratified ? (
-            Object.entries(
-              filteredData.reduce((acc, { group, data }) => {
-                const [factor, stratification] = group;
-                const stratificationKey = JSON.stringify(stratification);
-                const stratificationValue =
-                  acc[stratificationKey] !== undefined
-                    ? [...acc[stratificationKey], { group: [factor], data }]
-                    : [{ group: [factor], data }];
-
-                return { ...acc, [stratificationKey]: stratificationValue };
-              }, {})
-            ).map(([key, data], i, arr) => (
-              <Fragment key={key}>
-                <div className='explorer-survival-analysis__figure-title'>
-                  {JSON.parse(key).value}
-                </div>
-                <Table
-                  data={data}
-                  timeInterval={timeInterval}
-                  isLast={i === arr.length - 1}
-                />
-              </Fragment>
-            ))
-          ) : (
-            <Table data={filteredData} timeInterval={timeInterval} isLast />
-          )}
+          <Table data={filteredData} timeInterval={timeInterval} isLast />
         </>
       )}
     </div>
@@ -180,16 +143,10 @@ RiskTable.propTypes = {
           time: PropTypes.number,
         })
       ),
-      group: PropTypes.arrayOf(
-        PropTypes.exact({
-          variable: PropTypes.string,
-          value: PropTypes.string,
-        })
-      ),
+      name: PropTypes.string,
     })
   ).isRequired,
   endTime: PropTypes.number.isRequired,
-  isStratified: PropTypes.bool.isRequired,
   startTime: PropTypes.number.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };

@@ -47,7 +47,7 @@ ViewContainer.propTypes = {
 /** @param {SurvivalAnalysisConfig} survivalAnalysisConfig */
 function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
   if (survivalAnalysisConfig.result !== undefined)
-    for (const resultOption of ['pval', 'risktable', 'survival'])
+    for (const resultOption of ['risktable', 'survival'])
       if (survivalAnalysisConfig.result[resultOption]) return true;
 
   return false;
@@ -132,7 +132,6 @@ function getChartData({
  * @typedef {Object} ExplorerVisualizationProps
  * @property {number} accessibleCount
  * @property {number} totalCount
- * @property {AggsData} aggsData
  * @property {SimpleAggsData} aggsChartData
  * @property {Object[]} rawData
  * @property {string[]} allFields
@@ -151,7 +150,6 @@ function getChartData({
 function ExplorerVisualization({
   accessibleCount = 0,
   totalCount = 0,
-  aggsData = {},
   aggsChartData = {},
   rawData = [],
   allFields = [],
@@ -227,12 +225,6 @@ function ExplorerVisualization({
     totalCount,
     guppyConfig,
     isLocked: isComponentLocked,
-  };
-  const survivalProps = {
-    aggsData,
-    config: survivalAnalysisConfig,
-    fieldMapping: guppyConfig.fieldMapping,
-    filter,
   };
 
   return (
@@ -320,7 +312,7 @@ function ExplorerVisualization({
       )}
       {isSurvivalAnalysisEnabled(survivalAnalysisConfig) && (
         <ViewContainer showIf={explorerView === 'survival analysis'}>
-          <ExplorerSurvivalAnalysis {...survivalProps} />
+          <ExplorerSurvivalAnalysis />
         </ViewContainer>
       )}
     </div>
@@ -330,7 +322,6 @@ function ExplorerVisualization({
 ExplorerVisualization.propTypes = {
   accessibleCount: PropTypes.number, // inherited from GuppyWrapper
   totalCount: PropTypes.number, // inherited from GuppyWrapper
-  aggsData: PropTypes.object, // inherited from GuppyWrapper
   aggsChartData: PropTypes.object, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
   allFields: PropTypes.array, // inherited from GuppyWrapper

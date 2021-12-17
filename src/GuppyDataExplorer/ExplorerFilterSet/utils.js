@@ -5,26 +5,6 @@ import './typedef';
 const FILTER_SET_URL = '/amanuensis/filter-set';
 
 /**
- * @returns {Promise<ExplorerFilterSet[]>}
- */
-export function fetchFilterSets() {
-  return fetchWithCreds({
-    path: FILTER_SET_URL,
-    method: 'GET',
-  }).then(({ response, data, status }) => {
-    if (status !== 200) throw response.statusText;
-    if (
-      data === null ||
-      typeof data !== 'object' ||
-      data.searches === undefined ||
-      !Array.isArray(data.searches)
-    )
-      throw new Error('Error: Incorrect Response Data');
-    return data.searches;
-  });
-}
-
-/**
  * @param {ExplorerFilterSet} filterSet
  * @returns {Promise<ExplorerFilterSet>}
  */

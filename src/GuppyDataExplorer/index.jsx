@@ -12,6 +12,7 @@ import {
   ExplorerStateProvider,
   useExplorerState,
 } from './ExplorerStateContext';
+import { ExplorerFilterSetsProvider } from './ExplorerFilterSetsContext';
 import ExplorerErrorBoundary from './ExplorerErrorBoundary';
 import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
@@ -97,7 +98,6 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
           <Dashboard.Main className='explorer__main'>
             <ExplorerVisualization
               accessibleCount={data.accessibleCount}
-              aggsData={data.aggsData}
               aggsChartData={data.aggsChartData}
               allFields={data.allFields}
               filter={data.filter}
@@ -132,9 +132,11 @@ export default function Explorer() {
   return explorerConfig.length === 0 ? null : (
     <ExplorerConfigProvider>
       <ExplorerStateProvider>
-        <ExplorerErrorBoundary>
-          <ReduxExplorerDashboard />
-        </ExplorerErrorBoundary>
+        <ExplorerFilterSetsProvider>
+          <ExplorerErrorBoundary>
+            <ReduxExplorerDashboard />
+          </ExplorerErrorBoundary>
+        </ExplorerFilterSetsProvider>
       </ExplorerStateProvider>
     </ExplorerConfigProvider>
   );

@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../../utils';
+import { defaultFilterSet as survivalDefaultFilterSet } from '../ExplorerSurvivalAnalysis/ControlForm';
 import { stringifyFilters } from './utils';
 import './ExplorerFilterSet.css';
 import './typedef';
@@ -169,6 +170,8 @@ function FilterSetCreateForm({
   function validate() {
     if (filterSet.name === '')
       setError({ isError: true, message: 'Name is required!' });
+    else if (filterSet.name === survivalDefaultFilterSet.name)
+      setError({ isError: true, message: 'Name is reserved!' });
     else if (filterSets.filter((c) => c.name === filterSet.name).length > 0)
       setError({ isError: true, message: 'Name is already in use!' });
     else setError({ isError: false, message: '' });

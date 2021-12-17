@@ -59,7 +59,6 @@ export const ChartConfigType = PropTypes.object;
 
 export const SurvivalAnalysisConfigType = PropTypes.shape({
   result: PropTypes.shape({
-    pval: PropTypes.bool,
     risktable: PropTypes.bool,
     survival: PropTypes.bool,
   }),
