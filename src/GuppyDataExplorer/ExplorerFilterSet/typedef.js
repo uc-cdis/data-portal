@@ -9,6 +9,7 @@
  * @property {string} name
  * @property {string} description
  * @property {ExplorerFilters} filters
+ * @property {?number} [explorerId]
  * @property {?number} [id]
  */
 
