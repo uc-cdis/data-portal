@@ -33,7 +33,7 @@ const ReduxWorkspaceShutdownPopup = connect(workspaceShutdownPopupMapState, work
 
     return (
       <Popup
-        message={`Your workspace has been terminated because it has been inactive for longer than ${idleTimeLimit / 60 / 1000} minutes.`}
+        message={[`Your workspace has been terminated because it has been inactive for longer than ${idleTimeLimit / 60 / 1000} minutes.`]}
         rightButtons={[
           {
             caption: 'Close',

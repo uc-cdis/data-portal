@@ -12,6 +12,8 @@ ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    libssl1.1 \
+    libgnutls30 \
     ca-certificates \
     curl \
     git \

@@ -25,8 +25,9 @@ import './Covid19Dashboard.less';
 - add it to ReduxCovid19Dashboard.handleDashboardData();
 - add it to covid19DashboardConfig.chartsConfig in the relevant chart's config.
 */
+const bayesOutputDir = 'generative_bayes_model';
 const dashboardDataLocations = {
-  modeledFipsList: 'bayes-by-county/CountyCodeList.txt',
+  modeledFipsList: `${bayesOutputDir}/CountyCodeList.txt`,
   jhuGeojsonLatest: 'map_data/jhu_geojson_latest.json',
   jhuJsonByLevelLatest: 'map_data/jhu_json_by_level_latest.json',
   jhuJsonByTimeLatest: 'map_data/jhu_il_json_by_time_latest.json',
@@ -43,7 +44,7 @@ class Covid19Dashboard extends React.Component {
 
     // fetch all data in `dashboardDataLocations`
     Object.entries(dashboardDataLocations).forEach(
-      e => this.props.fetchDashboardData(e[0], e[1]),
+      (e) => this.props.fetchDashboardData(e[0], e[1]),
     );
   }
 
@@ -130,7 +131,7 @@ class Covid19Dashboard extends React.Component {
               yAxisId='left'
               type='number'
               domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
-              tickFormatter={val => Number(val).toLocaleString()}
+              tickFormatter={(val) => Number(val).toLocaleString()}
               fontSize={10}
             />
             <YAxis
@@ -139,7 +140,7 @@ class Covid19Dashboard extends React.Component {
               orientation='right'
               type='number'
               domain={[0, Math.max(Object.values(locationPopupData.maxes)) || 'auto']}
-              tickFormatter={val => Number(val).toLocaleString()}
+              tickFormatter={(val) => Number(val).toLocaleString()}
               fontSize={10}
             />
             <Tooltip content={this.renderLocationPopupTooltip} />
@@ -183,9 +184,8 @@ class Covid19Dashboard extends React.Component {
     }
 
     const imgProps = {
-      imgCases: `bayes-by-county/${modeledCountyFips}/cases.png`,
-      imgDeaths: `bayes-by-county/${modeledCountyFips}/deaths.png`,
-      imgRt: `bayes-by-county/${modeledCountyFips}/Rt.png`,
+      imgCases: `${bayesOutputDir}/${modeledCountyFips}/cases.svg`,
+      imgRt: `${bayesOutputDir}/${modeledCountyFips}/rt.svg`,
     };
     const imgMetadata = covid19DashboardConfig.chartsConfig.simulations || {};
 
@@ -196,7 +196,7 @@ class Covid19Dashboard extends React.Component {
       },
     ];
     carouselChartsConfig = carouselChartsConfig.concat(
-      Object.keys(imgProps).map(propName => ({
+      Object.keys(imgProps).map((propName) => ({
         type: 'image',
         prop: propName,
         title: (imgMetadata[propName] && imgMetadata[propName].title) || null,
