@@ -90,3 +90,16 @@
  * @property {TableConfig} tableConfig
  * @property {number} tierAccessLimit
  */
+
+/**
+ * @typedef {FilterState} ExplorerFilters
+ */
+
+/**
+ * @typedef {object} ExplorerFilterSet
+ * @property {string} name
+ * @property {string} description
+ * @property {ExplorerFilters} filters
+ * @property {?number} [explorerId]
+ * @property {?number} [id]
+ */
