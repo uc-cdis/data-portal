@@ -1,52 +1,5 @@
-import { fetchWithCreds } from '../../actions';
 import { capitalizeFirstLetter } from '../../utils';
 import './typedef';
-
-const FILTER_SET_URL = '/amanuensis/filter-sets';
-
-/**
- * @param {number} explorerId
- * @param {ExplorerFilterSet} filterSet
- * @returns {Promise<ExplorerFilterSet>}
- */
-export function createFilterSet(explorerId, filterSet) {
-  return fetchWithCreds({
-    path: `${FILTER_SET_URL}?explorerId=${explorerId}`,
-    method: 'POST',
-    body: JSON.stringify(filterSet),
-  }).then(({ response, data, status }) => {
-    if (status !== 200) throw response.statusText;
-    return data;
-  });
-}
-
-/**
- * @param {number} explorerId
- * @param {ExplorerFilterSet} filterSet
- */
-export function updateFilterSet(explorerId, filterSet) {
-  const { id, ...requestBody } = filterSet;
-  return fetchWithCreds({
-    path: `${FILTER_SET_URL}/${id}?explorerId=${explorerId}`,
-    method: 'PUT',
-    body: JSON.stringify(requestBody),
-  }).then(({ response, status }) => {
-    if (status !== 200) throw response.statusText;
-  });
-}
-
-/**
- * @param {number} explorerId
- * @param {ExplorerFilterSet} filterSet
- */
-export function deleteFilterSet(explorerId, filterSet) {
-  return fetchWithCreds({
-    path: `${FILTER_SET_URL}/${filterSet.id}?explorerId=${explorerId}`,
-    method: 'DELETE',
-  }).then(({ response, status }) => {
-    if (status !== 200) throw response.statusText;
-  });
-}
 
 /**
  * @return {ExplorerFilterSet}
