@@ -12,13 +12,7 @@ import {
   FilterSetActionMenu,
   FilterSetActionForm,
 } from './FilterSetActionComponents';
-import {
-  createEmptyFilterSet,
-  truncateWithEllipsis,
-  createFilterSet,
-  updateFilterSet,
-  deleteFilterSet,
-} from './utils';
+import { createEmptyFilterSet, truncateWithEllipsis } from './utils';
 import './ExplorerFilterSet.css';
 import './typedef';
 
@@ -31,7 +25,13 @@ function ExplorerFilterSet({ className, filter }) {
   const { clearFilters, updateFilters } = useExplorerState();
   const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
-  const { filterSets, refreshFilterSets } = useExplorerFilterSets();
+  const {
+    filterSets,
+    refreshFilterSets,
+    createFilterSet,
+    deleteFilterSet,
+    updateFilterSet,
+  } = useExplorerFilterSets();
   const [isError, setIsError] = useState(false);
   useEffect(() => {
     if (!isError) refreshFilterSets().catch(() => setIsError(true));
