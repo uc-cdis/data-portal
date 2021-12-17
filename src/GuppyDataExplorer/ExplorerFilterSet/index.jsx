@@ -6,6 +6,7 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimplePopup from '../../components/SimplePopup';
 import Button from '../../gen3-ui-component/components/Button';
+import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerState } from '../ExplorerStateContext';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import {
@@ -28,6 +29,7 @@ import './typedef';
  * @param {ExplorerFilters} prop.filter
  */
 function ExplorerFilterSet({ className, filter }) {
+  const { explorerId } = useExplorerConfig();
   const { clearFilters, updateFilters } = useExplorerState();
   const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
@@ -59,7 +61,7 @@ function ExplorerFilterSet({ className, filter }) {
   }
   async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
     try {
-      setFilterSet(await createFilterSet(created));
+      setFilterSet(await createFilterSet(explorerId, created));
       await refreshFilterSets();
     } catch (e) {
       setIsError(true);
@@ -69,7 +71,7 @@ function ExplorerFilterSet({ className, filter }) {
   }
   async function handleUpdate(/** @type {ExplorerFilterSet} */ updated) {
     try {
-      await updateFilterSet(updated);
+      await updateFilterSet(explorerId, updated);
       setFilterSet(cloneDeep(updated));
       await refreshFilterSets();
     } catch (e) {
@@ -80,7 +82,7 @@ function ExplorerFilterSet({ className, filter }) {
   }
   async function handleDelete(/** @type {ExplorerFilterSet} */ deleted) {
     try {
-      await deleteFilterSet(deleted);
+      await deleteFilterSet(explorerId, deleted);
       setFilterSet(createEmptyFilterSet());
       await refreshFilterSets();
       clearFilters();

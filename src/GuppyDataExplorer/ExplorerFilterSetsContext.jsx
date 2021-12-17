@@ -2,24 +2,28 @@ import { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { fetchWithCreds } from '../actions';
 import './typedef';
+import { useExplorerConfig } from './ExplorerConfigContext';
 
-const FILTER_SET_URL = '/amanuensis/filter-set';
+const FILTER_SET_URL = '/amanuensis/filter-sets';
 
-/** @returns {Promise<ExplorerFilterSet[]>} */
-function fetchFilterSets() {
+/**
+ * @param {number} explorerId
+ * @returns {Promise<ExplorerFilterSet[]>}
+ */
+function fetchFilterSets(explorerId) {
   return fetchWithCreds({
-    path: FILTER_SET_URL,
+    path: `${FILTER_SET_URL}?explorerId=${explorerId}`,
     method: 'GET',
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
     if (
       data === null ||
       typeof data !== 'object' ||
-      data.searches === undefined ||
-      !Array.isArray(data.searches)
+      data.filter_sets === undefined ||
+      !Array.isArray(data.filter_sets)
     )
       throw new Error('Error: Incorrect Response Data');
-    return data.searches;
+    return data.filter_sets;
   });
 }
 
@@ -35,12 +39,14 @@ const ExplorerFilterSetsContext = createContext(null);
 /** @type {ExplorerFilterSet[]} */
 const emptyFilterSets = [];
 export function ExplorerFilterSetsProvider({ children }) {
+  const { explorerId } = useExplorerConfig();
   const [filterSets, setFilterSets] = useState(emptyFilterSets);
   return (
     <ExplorerFilterSetsContext.Provider
       value={{
         filterSets,
-        refreshFilterSets: () => fetchFilterSets().then(setFilterSets),
+        refreshFilterSets: () =>
+          fetchFilterSets(explorerId).then(setFilterSets),
       }}
     >
       {children}
