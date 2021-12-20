@@ -59,6 +59,20 @@ export const defaultFilterSet = {
 };
 
 /**
+ * @param {React.FocusEvent<HTMLInputElement>} e
+ * @param {React.Dispatch<React.SetStateAction<number>>} setStateAction
+ */
+function validateNumberInput(e, setStateAction) {
+  if (e.target.value !== '') {
+    const value = Number.parseInt(e.target.value, 10);
+    const min = Number.parseInt(e.target.min, 10);
+    const max = Number.parseInt(e.target.max, 10);
+    if (min && min > value) setStateAction(min);
+    else if (max && max < value) setStateAction(max);
+  }
+}
+
+/**
  * @param {Object} prop
  * @param {UserInputSubmitHandler} prop.onSubmit
  * @param {number} prop.timeInterval
@@ -85,18 +99,6 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
   useEffect(() => {
     if (!isInputChanged && isError) setIsInputChanged(true);
   }, [isInputChanged, isError]);
-
-  const validateNumberInput = (
-    /** @type {{ target: { value: string, min: string, max: string }}} */ e
-  ) => {
-    if (e.target.value !== '') {
-      const value = Number.parseInt(e.target.value, 10);
-      const min = Number.parseInt(e.target.min, 10);
-      const max = Number.parseInt(e.target.max, 10);
-      if (min && min > value) setLocalTimeInterval(min);
-      else if (max && max < value) setLocalTimeInterval(max);
-    }
-  };
 
   const [shouldSubmit, setShouldSubmit] = useState(false);
   useEffect(() => {
@@ -151,7 +153,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
         min={0}
         max={endTime - 1}
         step={1}
-        onBlur={validateNumberInput}
+        onBlur={(e) => validateNumberInput(e, setStartTime)}
         onChange={(e) => {
           setStartTime(Number.parseInt(e.target.value, 10));
           setIsInputChanged(true);
@@ -166,7 +168,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
         min={startTime + 1}
         max={99}
         step={1}
-        onBlur={validateNumberInput}
+        onBlur={(e) => validateNumberInput(e, setEndTime)}
         onChange={(e) => {
           setEndTime(
             e.target.value === ''
@@ -184,7 +186,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
         min={1}
         max={5}
         step={1}
-        onBlur={validateNumberInput}
+        onBlur={(e) => validateNumberInput(e, setLocalTimeInterval)}
         onChange={(e) => {
           setLocalTimeInterval(Number.parseInt(e.target.value, 10));
           setIsInputChanged(true);
