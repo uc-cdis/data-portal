@@ -48,14 +48,13 @@ CustomYAxisTick.propTypes = {
 /**
  * @param {Object} prop
  * @param {RisktableData[]} prop.data
- * @param {boolean} prop.isLast
  * @param {number} prop.timeInterval
  */
-const Table = ({ data, isLast, timeInterval }) => (
-  <ResponsiveContainer height={(data.length + (isLast ? 2 : 0.5)) * 30}>
+const Table = ({ data, timeInterval }) => (
+  <ResponsiveContainer height={(data.length + 2) * 30}>
     <ScatterChart
       margin={{
-        bottom: isLast ? 10 : 0,
+        bottom: 10,
         left: 20,
         right: 20,
       }}
@@ -64,12 +63,11 @@ const Table = ({ data, isLast, timeInterval }) => (
         dataKey='time'
         type='number'
         domain={['dataMin', getMaxTime(data)]}
-        hide={!isLast}
-        label={
-          isLast
-            ? { value: 'Time (in year)', position: 'insideBottom', offset: -5 }
-            : {}
-        }
+        label={{
+          value: 'Time (in year)',
+          position: 'insideBottom',
+          offset: -5,
+        }}
         ticks={getXAxisTicks(data, timeInterval)}
       />
       <YAxis
@@ -100,7 +98,6 @@ Table.propTypes = {
       name: PropTypes.string,
     })
   ).isRequired,
-  isLast: PropTypes.bool.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
@@ -129,7 +126,6 @@ function RiskTable({ data, endTime, timeInterval, startTime }) {
           <Table
             data={filterRisktableByTime(data, startTime, endTime)}
             timeInterval={timeInterval}
-            isLast
           />
         </>
       )}
