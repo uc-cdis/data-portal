@@ -17,6 +17,13 @@ const ControlFormSelect = ({ label, ...selectProps }) => (
         {...selectProps}
         isClearable={false}
         theme={overrideSelectTheme}
+        styles={{
+          control: (provided, { isDisabled }) => ({
+            ...provided,
+            cursor: isDisabled ? 'not-allowed' : '',
+            pointerEvents: 'auto',
+          }),
+        }}
       />
     }
   />

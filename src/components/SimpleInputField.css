@@ -16,6 +16,10 @@
   flex-grow: 1;
 }
 
+.simple-input-field__input > *:disabled {
+  cursor: not-allowed;
+}
+
 .simple-input-field__input > input,
 .simple-input-field__input > textarea {
   border-color: #d9d9d9 #ccc #b3b3b3;
