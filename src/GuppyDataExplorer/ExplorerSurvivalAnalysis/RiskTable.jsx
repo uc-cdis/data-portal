@@ -43,97 +43,57 @@ CustomYAxisTick.propTypes = {
 };
 
 /**
- * @param {Object} prop
- * @param {RisktableData[]} prop.data
- * @param {number} prop.endTime
- * @param {number} prop.timeInterval
+ * @typedef {Object} RiskTableProps
+ * @property {RisktableData[]} data
+ * @property {number} endTime
+ * @property {number} startTime
+ * @property {number} timeInterval
  */
-const Table = ({ data, endTime, timeInterval }) => (
-  <ResponsiveContainer height={(data.length + 2) * 30}>
-    <ScatterChart
-      margin={{
-        bottom: 10,
-        left: 20,
-        right: 20,
-      }}
-    >
-      <XAxis
-        dataKey='time'
-        type='number'
-        domain={['dataMin', endTime]}
-        label={{
-          value: 'Time (in year)',
-          position: 'insideBottom',
-          offset: -5,
-        }}
-        ticks={getXAxisTicks(data, timeInterval, endTime)}
-      />
-      <YAxis
-        dataKey='name'
-        type='category'
-        allowDuplicatedCategory={false}
-        axisLine={false}
-        reversed
-        tickSize={0}
-        tick={<CustomYAxisTick />}
-      />
-      <Scatter data={parseRisktable(data, timeInterval)} fill='transparent'>
-        <LabelList dataKey='nrisk' />
-      </Scatter>
-    </ScatterChart>
-  </ResponsiveContainer>
-);
 
-Table.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.exact({
-      data: PropTypes.arrayOf(
-        PropTypes.exact({
-          nrisk: PropTypes.number,
-          time: PropTypes.number,
-        })
-      ),
-      name: PropTypes.string,
-    })
-  ).isRequired,
-  endTime: PropTypes.number.isRequired,
-  timeInterval: PropTypes.number.isRequired,
-};
-
-/**
- * @param {Object} prop
- * @param {RisktableData[]} prop.data
- * @param {number} prop.endTime
- * @param {number} prop.startTime
- * @param {number} prop.timeInterval
- */
-function RiskTable({ data, endTime, timeInterval, startTime }) {
+/** @param {RiskTableProps} props */
+function Table({ data, endTime, startTime, timeInterval }) {
+  const filteredData = filterRisktableByTime(data, startTime, endTime);
   return (
-    <div className='explorer-survival-analysis__risk-table'>
-      {data.length === 0 ? (
-        <div className='explorer-survival-analysis__figure-placeholder'>
-          The number at risk table will appear here.
-        </div>
-      ) : (
-        <>
-          <div
-            className='explorer-survival-analysis__figure-title'
-            style={{ fontSize: '1.2rem' }}
-          >
-            Number at risk
-          </div>
-          <Table
-            data={filterRisktableByTime(data, startTime, endTime)}
-            endTime={endTime}
-            timeInterval={timeInterval}
-          />
-        </>
-      )}
-    </div>
+    <ResponsiveContainer height={(data.length + 2) * 30}>
+      <ScatterChart
+        margin={{
+          bottom: 10,
+          left: 20,
+          right: 20,
+        }}
+      >
+        <XAxis
+          dataKey='time'
+          type='number'
+          domain={['dataMin', endTime]}
+          label={{
+            value: 'Time (in year)',
+            position: 'insideBottom',
+            offset: -5,
+          }}
+          ticks={getXAxisTicks(filteredData, timeInterval, endTime)}
+        />
+        <YAxis
+          dataKey='name'
+          type='category'
+          allowDuplicatedCategory={false}
+          axisLine={false}
+          reversed
+          tickSize={0}
+          tick={<CustomYAxisTick />}
+        />
+        <Scatter
+          data={parseRisktable(filteredData, timeInterval)}
+          fill='transparent'
+        >
+          <LabelList dataKey='nrisk' />
+        </Scatter>
+      </ScatterChart>
+    </ResponsiveContainer>
   );
 }
 
-RiskTable.propTypes = {
+Table.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.exact({
       data: PropTypes.arrayOf(
@@ -149,5 +109,30 @@ RiskTable.propTypes = {
   startTime: PropTypes.number.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
+
+/** @param {RiskTableProps} props */
+function RiskTable(props) {
+  return (
+    <div className='explorer-survival-analysis__risk-table'>
+      {props.data.length === 0 ? (
+        <div className='explorer-survival-analysis__figure-placeholder'>
+          The number at risk table will appear here.
+        </div>
+      ) : (
+        <>
+          <div
+            className='explorer-survival-analysis__figure-title'
+            style={{ fontSize: '1.2rem' }}
+          >
+            Number at risk
+          </div>
+          <Table {...props} />
+        </>
+      )}
+    </div>
+  );
+}
+
+RiskTable.propTypes = Table.propTypes;
 
 export default memo(RiskTable);

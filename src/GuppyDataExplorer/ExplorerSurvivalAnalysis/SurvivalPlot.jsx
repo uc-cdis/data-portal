@@ -15,12 +15,15 @@ import { filterSurvivalByTime, getXAxisTicks } from './utils';
 import './typedef';
 
 /**
- * @param {Object} prop
- * @param {SurvivalData[]} prop.data
- * @param {number} prop.endTime
- * @param {number} prop.timeInterval
+ * @typedef {Object} SurvivalPlotProps
+ * @property {SurvivalData[]} data
+ * @property {number} endTime
+ * @property {number} startTime
+ * @property {number} timeInterval
  */
-const Plot = ({ data, endTime, timeInterval }) => {
+
+/** @param {SurvivalPlotProps} props */
+function Plot({ data, endTime, startTime, timeInterval }) {
   const colorScheme = useMemo(() => {
     /** @type {ColorScheme} */
     const colorScheme = {};
@@ -51,9 +54,14 @@ const Plot = ({ data, endTime, timeInterval }) => {
     setOpacity(newOpacity);
   }
 
+  const filteredData = filterSurvivalByTime(data, startTime, endTime);
+
   return (
     <ResponsiveContainer height={300 + Math.floor(data.length / 5) * 25}>
-      <LineChart data={data} margin={{ left: 20, bottom: 10, right: 20 }}>
+      <LineChart
+        data={filteredData}
+        margin={{ left: 20, bottom: 10, right: 20 }}
+      >
         <XAxis
           dataKey='time'
           type='number'
@@ -62,7 +70,7 @@ const Plot = ({ data, endTime, timeInterval }) => {
             position: 'insideBottom',
             offset: -5,
           }}
-          ticks={getXAxisTicks(data, timeInterval, endTime)}
+          ticks={getXAxisTicks(filteredData, timeInterval, endTime)}
           domain={['dataMin', endTime]}
         />
         <YAxis
@@ -78,7 +86,7 @@ const Plot = ({ data, endTime, timeInterval }) => {
           onMouseEnter={handleLegendMouseEnter}
           onMouseLeave={handleLegendMouseLeave}
         />
-        {data.map(({ data, name }) => (
+        {filteredData.map(({ data, name }) => (
           <Line
             key={name}
             data={data}
@@ -93,50 +101,9 @@ const Plot = ({ data, endTime, timeInterval }) => {
       </LineChart>
     </ResponsiveContainer>
   );
-};
-
-Plot.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.exact({
-      data: PropTypes.arrayOf(
-        PropTypes.exact({
-          prob: PropTypes.number,
-          time: PropTypes.number,
-        })
-      ),
-      name: PropTypes.string,
-    })
-  ).isRequired,
-  endTime: PropTypes.number.isRequired,
-  timeInterval: PropTypes.number.isRequired,
-};
-
-/**
- * @param {Object} prop
- * @param {SurvivalData[]} prop.data
- * @param {number} prop.endTime
- * @param {number} prop.startTime
- * @param {number} prop.timeInterval
- */
-function SurvivalPlot({ data, endTime, timeInterval, startTime }) {
-  return (
-    <div className='explorer-survival-analysis__survival-plot'>
-      {data.length === 0 ? (
-        <div className='explorer-survival-analysis__figure-placeholder'>
-          The survival curves plot will appear here.
-        </div>
-      ) : (
-        <Plot
-          data={filterSurvivalByTime(data, startTime, endTime)}
-          endTime={endTime}
-          timeInterval={timeInterval}
-        />
-      )}
-    </div>
-  );
 }
 
-SurvivalPlot.propTypes = {
+Plot.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.exact({
       data: PropTypes.arrayOf(
@@ -152,5 +119,22 @@ SurvivalPlot.propTypes = {
   startTime: PropTypes.number.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
+
+/** @param {SurvivalPlotProps} props */
+function SurvivalPlot(props) {
+  return (
+    <div className='explorer-survival-analysis__survival-plot'>
+      {props.data.length === 0 ? (
+        <div className='explorer-survival-analysis__figure-placeholder'>
+          The survival curves plot will appear here.
+        </div>
+      ) : (
+        <Plot {...props} />
+      )}
+    </div>
+  );
+}
+
+SurvivalPlot.propTypes = Plot.propTypes;
 
 export default memo(SurvivalPlot);
