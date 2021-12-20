@@ -162,6 +162,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
         id='survival-end-time'
         label='End time (year)'
         type='number'
+        placeholder='Optional; max value if left blank'
         min={startTime + 1}
         max={99}
         step={1}
