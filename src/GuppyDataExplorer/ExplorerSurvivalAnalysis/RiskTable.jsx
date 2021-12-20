@@ -112,10 +112,9 @@ Table.propTypes = {
  * @param {number} prop.timeInterval
  */
 function RiskTable({ data, endTime, timeInterval, startTime }) {
-  const filteredData = filterRisktableByTime(data, startTime, endTime);
   return (
     <div className='explorer-survival-analysis__risk-table'>
-      {filteredData.length === 0 ? (
+      {data.length === 0 ? (
         <div className='explorer-survival-analysis__figure-placeholder'>
           The number at risk table will appear here.
         </div>
@@ -127,7 +126,11 @@ function RiskTable({ data, endTime, timeInterval, startTime }) {
           >
             Number at risk
           </div>
-          <Table data={filteredData} timeInterval={timeInterval} isLast />
+          <Table
+            data={filterRisktableByTime(data, startTime, endTime)}
+            timeInterval={timeInterval}
+            isLast
+          />
         </>
       )}
     </div>

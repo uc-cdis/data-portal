@@ -119,16 +119,18 @@ Plot.propTypes = {
  * @param {number} prop.timeInterval
  */
 function SurvivalPlot({ data, endTime, timeInterval, startTime }) {
-  const filteredData = filterSurvivalByTime(data, startTime, endTime);
   return (
     <div className='explorer-survival-analysis__survival-plot'>
-      {/* eslint-disable-next-line no-nested-ternary */}
-      {filteredData.length === 0 ? (
+      {data.length === 0 ? (
         <div className='explorer-survival-analysis__figure-placeholder'>
           The survival curves plot will appear here.
         </div>
       ) : (
-        <Plot {...{ data: filteredData, endTime, timeInterval }} />
+        <Plot
+          data={filterSurvivalByTime(data, startTime, endTime)}
+          endTime={endTime}
+          timeInterval={timeInterval}
+        />
       )}
     </div>
   );
