@@ -67,7 +67,7 @@ export const defaultFilterSet = {
 const ControlForm = ({ onSubmit, timeInterval, isError }) => {
   const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
   const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(20);
+  const [endTime, setEndTime] = useState(undefined);
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
 
   const [selectFilterSetOption, setSelectFilterSetOption] = useState(null);
@@ -89,11 +89,13 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
   const validateNumberInput = (
     /** @type {{ target: { value: string, min: string, max: string }}} */ e
   ) => {
-    const value = Number.parseInt(e.target.value, 10);
-    const min = Number.parseInt(e.target.min, 10);
-    const max = Number.parseInt(e.target.max, 10);
-    if (min && min > value) setLocalTimeInterval(min);
-    else if (max && max < value) setLocalTimeInterval(max);
+    if (e.target.value !== '') {
+      const value = Number.parseInt(e.target.value, 10);
+      const min = Number.parseInt(e.target.min, 10);
+      const max = Number.parseInt(e.target.max, 10);
+      if (min && min > value) setLocalTimeInterval(min);
+      else if (max && max < value) setLocalTimeInterval(max);
+    }
   };
 
   const [shouldSubmit, setShouldSubmit] = useState(false);
@@ -116,16 +118,9 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
   };
 
   const resetUserInput = () => {
-    setIsInputChanged(
-      localTimeInterval !== 2 ||
-        startTime !== 0 ||
-        endTime !== 20 ||
-        survivalType !== survivalTypeOptions[0]
-    );
-
     setLocalTimeInterval(2);
     setStartTime(0);
-    setEndTime(20);
+    setEndTime(undefined);
     setSurvivalType(survivalTypeOptions[0]);
     setUsedFilterSets(emptyFilterSets);
     setIsInputChanged(false);
@@ -172,7 +167,11 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
         step={1}
         onBlur={validateNumberInput}
         onChange={(e) => {
-          setEndTime(Number.parseInt(e.target.value, 10));
+          setEndTime(
+            e.target.value === ''
+              ? undefined
+              : Number.parseInt(e.target.value, 10)
+          );
           setIsInputChanged(true);
         }}
         value={endTime}
