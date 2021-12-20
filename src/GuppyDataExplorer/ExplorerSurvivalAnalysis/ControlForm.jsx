@@ -106,7 +106,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
       onSubmit({
         timeInterval: localTimeInterval,
         startTime,
-        endTime,
+        endTime: endTime || undefined,
         efsFlag: survivalType.value === 'efs',
         usedFilterSets,
       });
@@ -170,11 +170,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
         step={1}
         onBlur={(e) => validateNumberInput(e, setEndTime)}
         onChange={(e) => {
-          setEndTime(
-            e.target.value === ''
-              ? undefined
-              : Number.parseInt(e.target.value, 10)
-          );
+          setEndTime(Number.parseInt(e.target.value, 10));
           setIsInputChanged(true);
         }}
         value={endTime}
