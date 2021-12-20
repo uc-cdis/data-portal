@@ -23,9 +23,6 @@ const parseRisktable = (data, timeInterval) => {
     .filter(({ time }) => (time - minTime) % timeInterval === 0);
 };
 
-const getMaxTime = (/** @type {RisktableData[]} */ data) =>
-  Math.max(...data.flatMap(({ data }) => data.map(({ time }) => time)));
-
 const CustomYAxisTick = (/** @type {Object} */ { x, y, payload }) => {
   const name = payload.value;
 
@@ -48,9 +45,10 @@ CustomYAxisTick.propTypes = {
 /**
  * @param {Object} prop
  * @param {RisktableData[]} prop.data
+ * @param {number} prop.endTime
  * @param {number} prop.timeInterval
  */
-const Table = ({ data, timeInterval }) => (
+const Table = ({ data, endTime, timeInterval }) => (
   <ResponsiveContainer height={(data.length + 2) * 30}>
     <ScatterChart
       margin={{
@@ -62,13 +60,13 @@ const Table = ({ data, timeInterval }) => (
       <XAxis
         dataKey='time'
         type='number'
-        domain={['dataMin', getMaxTime(data)]}
+        domain={['dataMin', endTime]}
         label={{
           value: 'Time (in year)',
           position: 'insideBottom',
           offset: -5,
         }}
-        ticks={getXAxisTicks(data, timeInterval)}
+        ticks={getXAxisTicks(data, timeInterval, endTime)}
       />
       <YAxis
         dataKey='name'
@@ -98,6 +96,7 @@ Table.propTypes = {
       name: PropTypes.string,
     })
   ).isRequired,
+  endTime: PropTypes.number.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
@@ -125,6 +124,7 @@ function RiskTable({ data, endTime, timeInterval, startTime }) {
           </div>
           <Table
             data={filterRisktableByTime(data, startTime, endTime)}
+            endTime={endTime}
             timeInterval={timeInterval}
           />
         </>
