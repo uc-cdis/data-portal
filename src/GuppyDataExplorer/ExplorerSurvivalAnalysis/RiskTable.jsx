@@ -45,7 +45,7 @@ CustomYAxisTick.propTypes = {
 /**
  * @typedef {Object} RiskTableProps
  * @property {RisktableData[]} data
- * @property {number} endTime
+ * @property {number} [endTime]
  * @property {number} startTime
  * @property {number} timeInterval
  */
@@ -105,7 +105,7 @@ Table.propTypes = {
       name: PropTypes.string,
     })
   ).isRequired,
-  endTime: PropTypes.number.isRequired,
+  endTime: PropTypes.number,
   startTime: PropTypes.number.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };

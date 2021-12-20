@@ -17,7 +17,7 @@ import './typedef';
 /**
  * @typedef {Object} SurvivalPlotProps
  * @property {SurvivalData[]} data
- * @property {number} endTime
+ * @property {number} [endTime]
  * @property {number} startTime
  * @property {number} timeInterval
  */
@@ -115,7 +115,7 @@ Plot.propTypes = {
       name: PropTypes.string,
     })
   ).isRequired,
-  endTime: PropTypes.number.isRequired,
+  endTime: PropTypes.number,
   startTime: PropTypes.number.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
