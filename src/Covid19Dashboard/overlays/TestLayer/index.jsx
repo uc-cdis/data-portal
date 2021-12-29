@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
 
 const dataLegend = {
-  title: 'COVID-19 tests perfomed',
+  title: 'COVID-19 Tests Perfomed',
   source: {
     title: 'IDPH',
     link: 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDExport/GetZip',

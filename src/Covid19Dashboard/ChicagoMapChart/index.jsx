@@ -39,9 +39,9 @@ import Spinner from '../../components/Spinner';
 
 // check the data commons url to check if prod or qa environment
 // pull data from qa for everything that is not prod
-//const occEnv = covid19DashboardConfig.dataUrl === 'https://opendata.datacommons.io/' ? 'prod' : 'qa';
-const occEnv = 'qa';
+const occEnv = covid19DashboardConfig.dataUrl === 'https://opendata.datacommons.io/' ? 'prod' : 'qa';
 
+// This allows the setMapLegendColors() function to be fully generalized
 const dataLegends = {
   fullyVaccinated: fullyVaccinatedLegend,
   firstDose: firstDoseLegend,
@@ -51,7 +51,7 @@ const dataLegends = {
   unemployed: unemployedLegend,
   population: populationLegend,
   medianIncome: incomeLegend,
-}
+};
 
 class ChicagoMapChart extends React.Component {
   constructor(props) {
@@ -130,9 +130,9 @@ class ChicagoMapChart extends React.Component {
       activeLayer: 'fullyVaccinated',
       vaccine_data: { data: null, fetchStatus: null },
       case_data: { data: null, fetchStatus: null, lastUpdated: null },
-      strainData: { data: null, fetchStatus: null },
+      // strainData: { data: null, fetchStatus: null },
       lastUpdated: null,
-      dataDateRange: {},
+      // dataDateRange: {},
       mapColors: null,
     };
     this.mapData = {
@@ -173,17 +173,17 @@ class ChicagoMapChart extends React.Component {
     //
     // Load total cases and testing data
     //
-    this.setState({ case_data: { data: null, fetchStatus: 'fetching' } });
+    this.setState({ case_data: { data: null, fetchStatus: 'fetching' } }); // eslint-disable-line react/no-did-update-set-state, max-len
     fetch(`https://covd-map-occ-prc-${occEnv}.s3.amazonaws.com/COVIDExport_data.json`, {
       headers: {
         'Cache-Control': `max-age=${(1000 * 60 * 60 * 24)}`, // set cache to expire after one day
       },
     })
       .then((resp) => resp.json())
-      .then((data) => {
-        const updateDate = Object.keys(data['60000'])[0];
+      .then((baseData) => {
+        const updateDate = Object.keys(baseData['60000'])[0];
         const geoJson = this.addDataToGeoJsonBase(
-          data,
+          baseData,
           'zipcode',
           (data, location) => {
             const date = Object.keys(data[location.properties.ZCTA5CE10])[0];
@@ -211,51 +211,19 @@ class ChicagoMapChart extends React.Component {
     //    }
   }
 
-  findStartAndEndDates = (geoJson) => {
-    // find first and last date
-    const { dataDateRange } = this.state;
-    geoJson.features.forEach((zipcode) => {
-      Object.keys(zipcode.properties).forEach((currentValue) => {
-        // sample data in [2021-10-22, 2021-10-23, 2021-10-24]
-        // don't include any of the SDOH data
-
-        // exit if no date hyphen
-        if (currentValue.indexOf('-') === -1) {
-          return;
-        }
-        // break id into data set and date
-        // const [setName, dateString] = currentValue.split('_');
-        const setName = 'vaccination';
-        const dateString = currentValue;
-        // if already set a max compare to that if not set
-        if (Object.keys(dataDateRange).indexOf(setName) === -1) {
-          dataDateRange[setName] = {
-            min: dateString,
-            max: dateString,
-          };
-        } else if (dataDateRange[setName].max < dateString) {
-          dataDateRange[setName].max = dateString;
-        } else if (dataDateRange[setName].min > dateString) {
-          dataDateRange[setName].min = dateString;
-        }
-      });
-    });
-    this.setState({ dataDateRange });
-  }
-
   onHover = (event) => {
     if (!event.features) { return; }
     let hoverInfo = null;
-    const formatNumberToDisplay = (rawNum) => {
-      if (rawNum && rawNum !== 'null') {
-        if (typeof rawNum === 'number') {
-          return rawNum.toLocaleString();
-        }
-        return rawNum;
-      }
-      // Default if missing
-      return 0;
-    };
+    // const formatNumberToDisplay = (rawNum) => {
+    //  if (rawNum && rawNum !== 'null') {
+    //    if (typeof rawNum === 'number') {
+    //      return rawNum.toLocaleString();
+    //    }
+    //    return rawNum;
+    //  }
+    //  // Default if missing
+    //  return 0;
+    // };
 
     event.features.forEach((feature) => {
       if (!(feature.layer.id.startsWith('V_') || feature.layer.id.startsWith('C_') || feature.layer.id.startsWith('D_'))) {
@@ -282,14 +250,14 @@ class ChicagoMapChart extends React.Component {
         };
       }
       if (feature.layer.id.startsWith('C_')) {
-        const { confirmed_cases } = feature.properties;
-        const { total_tested } = feature.properties;
+        const { confirmedCases } = feature.properties;
+        const { totalTested } = feature.properties;
         hoverInfo = {
           lngLat: event.lngLat,
           locationName,
           values: {
-            'Total cases:': confirmed_cases,
-            'Total tests:': total_tested,
+            'Total cases:': confirmedCases,
+            'Total tests:': totalTested,
           },
         };
       }
@@ -300,18 +268,18 @@ class ChicagoMapChart extends React.Component {
         return;
       }
       if (feature.layer.id.startsWith('D_')) {
-        const population_count = feature.properties['Total Population'];
-        const median_income = feature.properties['Median Household Income'];
-        const insured_rate = feature.properties['Percent Health Insurance'];
-        const unemployed_rate = feature.properties['Percent Unemployment'];
+        const populationCount = feature.properties['Total Population'];
+        const medianIncome = feature.properties['Median Household Income'];
+        const insuredRate = feature.properties['Percent Health Insurance'];
+        const unemployedRate = feature.properties['Percent Unemployment'];
         hoverInfo = {
           lngLat: event.lngLat,
           locationName,
           values: {
-            'Population:': population_count,
-            'Median income:': `$${median_income}`,
-            'Percent insured:': `${insured_rate}%`,
-            'Percent unemployed:': `${unemployed_rate}%`,
+            'Population:': populationCount,
+            'Median income:': `$${medianIncome}`,
+            'Percent insured:': `${insuredRate}%`,
+            'Percent unemployed:': `${unemployedRate}%`,
           },
         };
       }
@@ -351,94 +319,28 @@ class ChicagoMapChart extends React.Component {
   setMapLegendColors(id) {
     const colors = [];
     const legend = dataLegends[id];
-    if (typeof legend == 'undefined') {
+    if (typeof legend === 'undefined') {
       return null;
     }
     const mode = typeof legend.mode !== 'undefined' ? legend.mode : '';
-    const stops = legend.stops;
-    for (var i = 0; i < stops.length; i++) {
+    const { stops } = legend;
+    for (let i = 0; i < stops.length; i += 1) {
       if (i === 0 && stops[i][0]) {
-        colors[i] = ["< " + stops[i][0].toString() + mode, stops[i][1]];
+        colors[i] = [`< ${stops[i][0].toString()}${mode}`, stops[i][1]];
       } else if (i === stops.length - 1) {
-        colors[i] = ["> " + stops[i][0].toString() + mode, stops[i][1]];
+        colors[i] = [`> ${stops[i][0].toString()}${mode}`, stops[i][1]];
       } else {
-        colors[i] = [stops[i][0].toString() + mode + " - " + stops[i+1][0].toString() + mode, stops[i][1]];
+        colors[i] = [`${stops[i][0].toString() + mode} - ${stops[i + 1][0].toString()}${mode}`, stops[i][1]];
       }
     }
     this.mapData.colors = colors;
     this.setState({
-      mapColors: colors, legendTitle: legend.title, legendDataSource: legend.source, lastUpdated: null, });
+      mapColors: colors, legendTitle: legend.title, legendDataSource: legend.source, lastUpdated: null,
+    });
+    return true;
   }
 
-  setMapLegendColorsyak(id) {
-    if (id.includes('Rate')) {
-      this.setState({
-        mapColors: this.mapData.colors, legendTitle: 'Vaccination Rate', legendDataSource: { title: 'IDPH Vaccination Data', link: 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDVaccine/getCOVIDVaccineAdministrationZIP' }, lastUpdated: null,
-      });
-    }
-    if (id.includes('insured')) {
-      const colors = insuredLegend.stops.map((x) => [`${x[0].toString()}%`, x[1]]);
-      this.setState({
-        mapColors: colors, legendTitle: insuredLegend.title,
-        legendDataSource: { title: insuredLegend.legend_title,
-        link: insuredLegend.legend_url }, lastUpdated: null,
-      });
-    }
-    if (id.includes('confirmed')) {
-      const colors = [
-        ['0', '#FFF'],
-        ['5', '#F7F787'],
-        ['10', '#EED322'],
-        ['50', '#E6B71E'],
-        ['100', '#DA9C20'],
-        ['150', '#CA8323'],
-        ['200', '#B86B25'],
-        ['250', '#A25626'],
-        ['300', '#8B4225'],
-        ['350+', '#850001'],
-      ];
-      this.setState({
-        mapColors: colors, legendTitle: 'Cases & Testing', legendDataSource: { title: 'IDPH Daily Data', link: 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDExport/GetZip' }, lastUpdated: null,
-      });
-    }
-    if (id.includes('tested')) {
-      const colors = [
-        ['0', '#FFF'],
-        ['1000', '#F7F787'],
-        ['2000', '#EED322'],
-        ['5000', '#E6B71E'],
-        ['10000', '#DA9C20'],
-        ['20000', '#CA8323'],
-        ['50000', '#B86B25'],
-        ['100000', '#A25626'],
-        ['200000', '#8B4225'],
-        ['500000+', '#850001'],
-      ];
-      this.setState({
-        mapColors: colors, legendTitle: 'Cases & Testing', legendDataSource: { title: 'IDPH Daily Data', link: 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDExport/GetZip' }, lastUpdated: null,
-      });
-    }
-    if (id.includes('mobility_')) {
-      const colors = [
-        ['-100% to -80%', '#FFF'],
-        ['-80% to -60%', '#F7F787'],
-        ['-60% to -40%', '#EED322'],
-        ['-40% to -20%', '#E6B71E'],
-        ['-20% to 0%', '#DA9C20'],
-        ['0% to 20%', '#CA8323'],
-        ['20% to 40%', '#B86B25'],
-        ['40% to 60%', '#A25626'],
-        ['60% to 80%', '#8B4225'],
-        ['80% to 100% +', '#850001'],
-        ['No Data Available', '#5f5d59'],
-      ];
-      this.setState({
-        mapColors: colors, legendTitle: 'Vaccination Data', legendDataSource: { title: 'IDPH Vaccination Data', link: 'https://idph' }, lastUpdated: null,
-      });
-    }
-  }
-
-  addDataToGeoJsonBase(data, dataLevel, assignValues) {
+  addDataToGeoJsonBase = (data, dataLevel, assignValues) => {
     let base = zipData;
     if (dataLevel === 'county') {
       base = {
@@ -533,6 +435,9 @@ class ChicagoMapChart extends React.Component {
           touchRotate={false}
         >
           {this.renderHoverPopup()}
+          {this.state.activeLayer.includes('case_data') && this.state.case_data.fetchStatus === 'fetching' && <Spinner text={'Downloading case and testing data'} />}
+          {this.state.activeLayer.includes('vaccine_data') && this.state.vaccine_data.fetchStatus === 'fetching' && <Spinner text={'Downloading vaccination data'} />}
+
           {this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedFullLayer visibility={this.state.activeLayer === 'fullyVaccinated' ? 'visible' : 'none'} data={this.state.vaccine_data.data} item={this.state.activeLayer} />}
           {this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedFirstLayer visibility={this.state.activeLayer === 'firstDose' ? 'visible' : 'none'} data={this.state.vaccine_data.data} item={this.state.activeLayer} />}
           {this.state.case_data.fetchStatus === 'done' && <CaseLayer visibility={this.state.activeLayer === 'confirmedCases' ? 'visible' : 'none'} data={this.state.case_data.data} />}
@@ -572,7 +477,7 @@ class ChicagoMapChart extends React.Component {
 }
 
 ChicagoMapChart.propTypes = {
-  modeledFipsList: PropTypes.array,
+  modeledFipsList: PropTypes.array.isRequired,
   fetchTimeSeriesData: PropTypes.func.isRequired,
 };
 

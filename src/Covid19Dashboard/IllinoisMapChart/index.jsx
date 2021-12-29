@@ -80,9 +80,9 @@ class IllinoisMapChart extends React.Component {
           },
         },
         demographic_layers: {
-	  title: 'Demographics',
-	  layers: {
-		  il_population: { title: 'Population', visible: 'none' },
+          title: 'Demographics',
+          layers: {
+            il_population: { title: 'Population', visible: 'none' },
           },
         },
       },
@@ -651,7 +651,7 @@ class IllinoisMapChart extends React.Component {
           {/*
           // Additional layers used as examples enable here
           <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} /> */}
-	  <PopulationIL visibility={this.state.activeLayer == 'il_population' ? 'visible' : 'none'} />
+          <PopulationIL visibility={this.state.activeLayer === 'il_population' ? 'visible' : 'none'} />
           {/* Outline a set of counties from IL */}
           <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountyGeoJson}>
             <ReactMapGL.Layer

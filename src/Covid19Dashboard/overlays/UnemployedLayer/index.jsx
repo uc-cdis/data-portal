@@ -9,16 +9,16 @@ const dataLegend = {
     link: 'https://www.census.gov/newsroom/press-kits/2020/acs-5-year.html',
   },
   stops: [
-    [40, '#FFF'],
-    [50, '#a8dab5'],
-    [55, '#81c995'],
-    [60, '#5bb974'],
-    [70, '#34a853'],
-    [75, '#1e8e3e'],
-    [80, '#188038'],
-    [85, '#0d652d'],
-    [90, '#8B4225'],
-    [95, '#850001'],
+    [2, '#FFF'],
+    [4, '#a8dab5'],
+    [6, '#81c995'],
+    [8, '#5bb974'],
+    [10, '#34a853'],
+    [12, '#1e8e3e'],
+    [14, '#188038'],
+    [16, '#0d652d'],
+    [18, '#8B4225'],
+    [20, '#850001'],
   ],
   mode: '%',
 };
@@ -75,5 +75,5 @@ UnemployedLayer.propTypes = {
   data: PropTypes.object.isRequired,
 };
 
-export { dataLayer };
+export { dataLegend };
 export default UnemployedLayer;
