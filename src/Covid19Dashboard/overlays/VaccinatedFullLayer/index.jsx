@@ -2,6 +2,33 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as ReactMapGL from 'react-map-gl';
 
+const dataLegend = {
+  title: 'Fully vaccinated rate',
+  source: {
+    title: 'IDPH',
+    url: 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDExport/GetZip',
+  },
+  stops: [
+    0,
+    '#FFF',
+    50,
+    '#a8dab5',
+    60,
+    '#81c995',
+    70,
+    '#5bb974',
+    80,
+    '#34a853',
+    85,
+    '#1e8e3e',
+    90,
+    '#0d652d',
+    95,
+    '#0b4225',
+  ],
+  mode: '%',
+};
+
 const dataLayer = {
   id: 'V_fully_vaccinated_rate',
   type: 'fill',
@@ -12,38 +39,19 @@ const dataLayer = {
       'interpolate',
       ['linear'],
       ['get', 'FullyVaccinatedRate'],
-	30,
-        '#FFF',
-        40,
-        '#a8dab5',
-        45,
-        '#81c995',
-        50,
-        '#5bb974',
-        55,
-        '#34a853',
-        60,
-        '#1e8e3e',
-        65,
-        '#188038',
-        70,
-        '#0d652d',
-        75,
-        '#8B4225',
-        100,
-        '#850001',
-      ],
+      ...dataLegend.stops.flat(),
+    ],
   },
-}
+};
 
 class VaccinatedFullLayer extends React.Component {
   render() {
     return (
-        <ReactMapGL.Source type='geojson' data={this.props.data}>
-          <ReactMapGL.Layer
-	    {...dataLayer}
-	    layout={{ visibility: this.props.visibility }}
-	  />
+      <ReactMapGL.Source type='geojson' data={this.props.data}>
+        <ReactMapGL.Layer
+          {...dataLayer}
+          layout={{ visibility: this.props.visibility }}
+        />
       </ReactMapGL.Source>
     );
   }
@@ -54,4 +62,5 @@ VaccinatedFullLayer.propTypes = {
   data: PropTypes.object.isRequired,
 };
 
+export { dataLegend };
 export default VaccinatedFullLayer;

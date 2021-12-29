@@ -51,7 +51,7 @@ class PopulationIL extends React.Component {
 
 PopulationIL.propTypes = {
   visibility: PropTypes.string.isRequired,
-  data:	PropTypes.object.isRequired,
+  data: PropTypes.object.isRequired,
 };
 
 export default PopulationIL;

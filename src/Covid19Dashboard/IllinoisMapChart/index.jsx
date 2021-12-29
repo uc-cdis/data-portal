@@ -60,13 +60,13 @@ class IllinoisMapChart extends React.Component {
           title: 'Vaccinations',
           layers: {
             V_time_data: { title: 'Vaccination Counts' },
-          }
+          },
         },
         case_layers: {
           title: 'Cases & Deaths',
           layers: {
             C_time_data: { title: 'Case Counts' },
-          }
+          },
         },
         mobility_layers: {
           title: 'Mobility',
@@ -79,12 +79,12 @@ class IllinoisMapChart extends React.Component {
             res_mobility_data: { title: 'Residential' },
           },
         },
-	demographic_layers: {
+        demographic_layers: {
 	  title: 'Demographics',
 	  layers: {
 		  il_population: { title: 'Population', visible: 'none' },
           },
-	},
+        },
       },
       popup_data: {
         /*
