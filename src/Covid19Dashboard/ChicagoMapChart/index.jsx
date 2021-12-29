@@ -12,15 +12,20 @@ import communityData from '../data/chicago_communities';
 // only for northen IL to save space/time
 import zipData from '../data/north';
 import countyData from '../data/us_counties';
+// These are static data from the American Community Survey
 import popData from '../data/2015-2019-acs-il_zcta';
-import PopulationIL from '../overlays/PopulationIL';
 
-import VaccinatedFirstLayer, { dataLegend as vaccinatedFirstLegend } from '../overlays/VaccinatedFirstLayer';
-import VaccinatedFullLayer, { dataLegend as vaccinatedFullLegend } from '../overlays/VaccinatedFullLayer';
-import CaseLayer, { dataLegend as caseLegend } from '../overlays/CaseLayer';
-import TestLayer, { dataLegend as testLegend } from '../overlays/TestLayer';
+import PopulationIL, { dataLegend as populationLegend } from '../overlays/PopulationIL';
 import InsuredLayer, { dataLegend as insuredLegend } from '../overlays/InsuredLayer';
 import UnemployedLayer, { dataLegend as unemployedLegend } from '../overlays/UnemployedLayer';
+import IncomeLayer, { dataLegend as incomeLegend } from '../overlays/IncomeLayer';
+
+// Vaccination data by zipcode
+import VaccinatedFirstLayer, { dataLegend as firstDoseLegend } from '../overlays/VaccinatedFirstLayer';
+import VaccinatedFullLayer, { dataLegend as fullyVaccinatedLegend } from '../overlays/VaccinatedFullLayer';
+// Confirmed cases and test performed by zipcode
+import CaseLayer, { dataLegend as confirmedCasesLegend } from '../overlays/CaseLayer';
+import TestLayer, { dataLegend as totalTestedLegend } from '../overlays/TestLayer';
 // import TimeCaseLayer from '../overlays/TimeCaseLayer';
 // import MobilityLayer from '../overlays/GoogleMobilityLayer';
 // import MobilityLayerGnp from '../overlays/GoogleMobilityLayerGnp';
@@ -34,7 +39,19 @@ import Spinner from '../../components/Spinner';
 
 // check the data commons url to check if prod or qa environment
 // pull data from qa for everything that is not prod
-const occEnv = covid19DashboardConfig.dataUrl === 'https://opendata.datacommons.io/' ? 'prod' : 'qa';
+//const occEnv = covid19DashboardConfig.dataUrl === 'https://opendata.datacommons.io/' ? 'prod' : 'qa';
+const occEnv = 'qa';
+
+const dataLegends = {
+  fullyVaccinated: fullyVaccinatedLegend,
+  firstDose: firstDoseLegend,
+  confirmedCases: confirmedCasesLegend,
+  totalTested: totalTestedLegend,
+  insured: insuredLegend,
+  unemployed: unemployedLegend,
+  population: populationLegend,
+  medianIncome: incomeLegend,
+}
 
 class ChicagoMapChart extends React.Component {
   constructor(props) {
@@ -57,10 +74,10 @@ class ChicagoMapChart extends React.Component {
         vaccination_layers: {
           title: 'Vaccine',
           layers: {
-            first_dose_rate: {
+            firstDose: {
               title: 'First Dose',
             },
-            fully_vaccinated_rate: {
+            fullyVaccinated: {
               title: 'Fully Vaccinated',
             },
           },
@@ -68,10 +85,10 @@ class ChicagoMapChart extends React.Component {
         case_layers: {
           title: 'Cases & Testing',
           layers: {
-            confirmed_cases_count: {
+            confirmedCases: {
               title: 'Confirmed Cases',
             },
-            total_tested_count: {
+            totalTested: {
               title: 'Tests Performed',
             },
           },
@@ -79,10 +96,10 @@ class ChicagoMapChart extends React.Component {
         demographic_layers: {
           title: 'Demographics',
           layers: {
-            total_population_count: { title: 'Population' },
-            median_income: { title: 'Median Income' },
-            insured_rate: { title: 'Percent Insured' },
-            unemployed_rate: { title: 'Percent Unemployed' },
+            population: { title: 'Population' },
+            medianIncome: { title: 'Median Income' },
+            insured: { title: 'Percent Insured' },
+            unemployed: { title: 'Percent Unemployed' },
           },
         },
         /*
@@ -110,10 +127,7 @@ class ChicagoMapChart extends React.Component {
       // sliderDate: '2021-10-23',
       // sliderDataLastUpdated: null,
       // sliderDataStartDate: null,
-      activeLayer: 'fully_vaccinated_rate',
-      activeLegend: VaccinatedFullLegend,
-      legendTitle: vaccinatedFullLegend.title,
-      legendDataSource: vaccinatedFullLegend.source,
+      activeLayer: 'fullyVaccinated',
       vaccine_data: { data: null, fetchStatus: null },
       case_data: { data: null, fetchStatus: null, lastUpdated: null },
       strainData: { data: null, fetchStatus: null },
@@ -181,16 +195,8 @@ class ChicagoMapChart extends React.Component {
         console.warn('Data not retrieved. Unable to display COVID case & testing overlays', error); // eslint-disable-line no-console
         this.setState({ case_data: { fetchStatus: 'error' } });
       });
-    this.mapData.colors = [
-      [' 0% - 50%', '#FFF'],
-      ['50% - 60%', '#a8dab5'],
-      ['60% - 70%', '#81c995'],
-      ['70% - 80%', '#5bb974'],
-      ['80% - 85%', '#34a853'],
-      ['85% - 90%', '#1e8e3e'],
-      ['90% - 95%', '#0d652d'],
-      ['95% +', '#0b4225'],
-    ];
+    // set colors based on activeLayer
+    this.setMapLegendColors(this.state.activeLayer);
 
     this.mapData.colorsAsList = Object.entries(this.mapData.colors)
       .map((item) => [+item[0], item[1]]).flat();
@@ -342,20 +348,29 @@ class ChicagoMapChart extends React.Component {
     this.setMapLegendColors(id);
   }
 
-  legendColors(legend) {
+  setMapLegendColors(id) {
     const colors = [];
-    for (var i = 0; i < legend.steps.length; i++) {
-      if (i == 0) {
-        colors[i] = ["< " + steps[i][0].toString() + legend.mode, steps[i][1]];
-      } else if (i == steps.length - 1) {
-        colors[i] = ["> " + steps[i][0].toString() + legend.mode, steps[i][1]];
+    const legend = dataLegends[id];
+    if (typeof legend == 'undefined') {
+      return null;
+    }
+    const mode = typeof legend.mode !== 'undefined' ? legend.mode : '';
+    const stops = legend.stops;
+    for (var i = 0; i < stops.length; i++) {
+      if (i === 0 && stops[i][0]) {
+        colors[i] = ["< " + stops[i][0].toString() + mode, stops[i][1]];
+      } else if (i === stops.length - 1) {
+        colors[i] = ["> " + stops[i][0].toString() + mode, stops[i][1]];
       } else {
-        colors[i] = [steps[i][0].toString() + legend.mode + " - " + steps[i+1][0].toString() + legend.mode, steps[i][1]];
+        colors[i] = [stops[i][0].toString() + mode + " - " + stops[i+1][0].toString() + mode, stops[i][1]];
       }
     }
+    this.mapData.colors = colors;
+    this.setState({
+      mapColors: colors, legendTitle: legend.title, legendDataSource: legend.source, lastUpdated: null, });
   }
 
-  setMapLegendColors(id) {
+  setMapLegendColorsyak(id) {
     if (id.includes('Rate')) {
       this.setState({
         mapColors: this.mapData.colors, legendTitle: 'Vaccination Rate', legendDataSource: { title: 'IDPH Vaccination Data', link: 'https://idph.illinois.gov/DPHPublicInformation/api/COVIDVaccine/getCOVIDVaccineAdministrationZIP' }, lastUpdated: null,
@@ -518,13 +533,14 @@ class ChicagoMapChart extends React.Component {
           touchRotate={false}
         >
           {this.renderHoverPopup()}
-          {this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedFullLayer visibility={this.state.activeLayer === 'fully_vaccinated_rate' ? 'visible' : 'none'} data={this.state.vaccine_data.data} item={this.state.activeLayer} />}
-          {this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedFirstLayer visibility={this.state.activeLayer === 'first_dose_rate' ? 'visible' : 'none'} data={this.state.vaccine_data.data} item={this.state.activeLayer} />}
-          {this.state.case_data.fetchStatus === 'done' && <CaseLayer visibility={this.state.activeLayer === 'confirmed_cases_count' ? 'visible' : 'none'} data={this.state.case_data.data} />}
-          {this.state.case_data.fetchStatus === 'done' && <TestLayer visibility={this.state.activeLayer === 'total_tested_count' ? 'visible' : 'none'} data={this.state.case_data.data} />}
-          <PopulationIL visibility={this.state.activeLayer === 'total_population_count' ? 'visible' : 'none'} data={popData} />
-          <InsuredLayer visibility={this.state.activeLayer === 'insured_rate' ? 'visible' : 'none'} data={popData} />
-          <UnemployedLayer visibility={this.state.activeLayer === 'unemployed_rate' ? 'visible' : 'none'} data={popData} />
+          {this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedFullLayer visibility={this.state.activeLayer === 'fullyVaccinated' ? 'visible' : 'none'} data={this.state.vaccine_data.data} item={this.state.activeLayer} />}
+          {this.state.vaccine_data.fetchStatus === 'done' && <VaccinatedFirstLayer visibility={this.state.activeLayer === 'firstDose' ? 'visible' : 'none'} data={this.state.vaccine_data.data} item={this.state.activeLayer} />}
+          {this.state.case_data.fetchStatus === 'done' && <CaseLayer visibility={this.state.activeLayer === 'confirmedCases' ? 'visible' : 'none'} data={this.state.case_data.data} />}
+          {this.state.case_data.fetchStatus === 'done' && <TestLayer visibility={this.state.activeLayer === 'totalTested' ? 'visible' : 'none'} data={this.state.case_data.data} />}
+          <PopulationIL visibility={this.state.activeLayer === 'population' ? 'visible' : 'none'} data={popData} />
+          <InsuredLayer visibility={this.state.activeLayer === 'insured' ? 'visible' : 'none'} data={popData} />
+          <UnemployedLayer visibility={this.state.activeLayer === 'unemployed' ? 'visible' : 'none'} data={popData} />
+          <IncomeLayer visibility={this.state.activeLayer === 'medianIncome' ? 'visible' : 'none'} data={popData} />
 
           <ReactMapGL.Source type='geojson' data={communityData}>
             <ReactMapGL.Layer

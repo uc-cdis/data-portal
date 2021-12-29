@@ -5,8 +5,8 @@ import * as ReactMapGL from 'react-map-gl';
 const dataLegend = {
   title: 'Percent Insured',
   source: {
-    title: 'something demographic',
-    url: 'https://something.or.other.com',
+    title: 'American Community Survey',
+    link: 'https://www.census.gov/newsroom/press-kits/2020/acs-5-year.html',
   },
   stops: [
     [90, '#FFF'],
