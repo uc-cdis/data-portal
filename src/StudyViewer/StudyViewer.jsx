@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, Spin, Result } from 'antd';
+import { Spin, Result } from 'antd';
 import getReduxStore from '../reduxStore';
 import {
   fetchDataset, fetchFiles, resetSingleStudyData, fetchStudyViewerConfig,
@@ -113,22 +113,21 @@ class StudyViewer extends React.Component {
         <div className='h2-typo study-viewer__title'>
           {studyViewerConfig.title}
         </div>
-        {(datasets.length > 0)
-          ? (
-            <Space className='study-viewer__space' direction='vertical'>
-              {(datasets.map((d, i) => (
-                <StudyCard
-                  key={i}
-                  data={d}
-                  fileData={this.props.fileData
-                    .filter((fd) => fd.rowAccessorValue === d.rowAccessorValue)}
-                  studyViewerConfig={studyViewerConfig}
-                  initialPanelExpandStatus={this.getPanelExpandStatus(studyViewerConfig.openMode, i)}
-                />
-              )))}
-            </Space>
-          )
-          : null}
+        <div className='study-cards'>
+          {(datasets.length > 0)
+            ? (datasets.map((d, i) => (
+              <StudyCard
+                key={i}
+                data={d}
+                fileData={this.props.fileData
+                  .filter((fd) => fd.rowAccessorValue === d.rowAccessorValue)}
+                studyViewerConfig={studyViewerConfig}
+                initialPanelExpandStatus={this.getPanelExpandStatus(studyViewerConfig.openMode, i)}
+              />
+            ))
+            )
+            : null}
+        </div>
       </div>
     );
   }

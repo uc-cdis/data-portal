@@ -25,6 +25,7 @@ import './Covid19Dashboard.less';
 - add it to ReduxCovid19Dashboard.handleDashboardData();
 - add it to covid19DashboardConfig.chartsConfig in the relevant chart's config.
 */
+const bayesOutputDir = 'generative_bayes_model';
 const dashboardDataLocations = {
   modeledFipsList: 'bayes-by-county/CountyCodeList.txt',
   //  jhuGeojsonLatest: 'map_data/jhu_geojson_latest.json',
@@ -58,10 +59,6 @@ class Covid19Dashboard extends React.Component {
       global: 0,
       illinois: 0,
     };
-    const recoveredCount = {
-      global: 0,
-      illinois: 0,
-    };
     const vaccinatedCount = {
       illinois: 0,
     };
@@ -73,7 +70,6 @@ class Covid19Dashboard extends React.Component {
     this.props.jhuGeojsonLatest.features.forEach((feat) => {
       const confirmed = +feat.properties.confirmed;
       const deaths = +feat.properties.deaths;
-      const recovered = +feat.properties.recovered;
       if (confirmed) {
         confirmedCount.global += confirmed;
         if (feat.properties.province_state === 'Illinois') {
@@ -86,16 +82,10 @@ class Covid19Dashboard extends React.Component {
           deathsCount.illinois += deaths;
         }
       }
-      if (recovered) {
-        recoveredCount.global += recovered;
-        if (feat.properties.province_state === 'Illinois') {
-          recoveredCount.illinois += recovered;
-        }
-      }
     });
 
     return {
-      confirmedCount, deathsCount, recoveredCount, vaccinatedCount,
+      confirmedCount, deathsCount, vaccinatedCount,
     };
   }
 */
@@ -196,9 +186,8 @@ class Covid19Dashboard extends React.Component {
     }
 
     const imgProps = {
-      imgCases: `bayes-by-county/${modeledCountyFips}/cases.png`,
-      imgDeaths: `bayes-by-county/${modeledCountyFips}/deaths.png`,
-      imgRt: `bayes-by-county/${modeledCountyFips}/Rt.png`,
+      imgCases: `${bayesOutputDir}/${modeledCountyFips}/cases.svg`,
+      imgRt: `${bayesOutputDir}/${modeledCountyFips}/rt.svg`,
     };
     const imgMetadata = covid19DashboardConfig.chartsConfig.simulations || {};
 
@@ -267,7 +256,7 @@ class Covid19Dashboard extends React.Component {
 
     /*
     const {
-      confirmedCount, deathsCount, recoveredCount, vaccinatedCount,
+      confirmedCount, deathsCount, vaccinatedCount,
     } = this.getTotalCounts();
 */
 
@@ -309,6 +298,21 @@ class Covid19Dashboard extends React.Component {
             </TabPanel>
 
             {/* nextstrain tab */}
+            <TabPanel className='covid19-dashboard_panel'>
+              <div className='covid19-dashboard_auspice'>
+                {/* this component doesn't need the mapboxAPIToken but it's a way to make
+                sure this is the COVID19 Commons and the iframe contents will load */}
+            {/* { mapboxAPIToken
+                  && (
+                    <iframe
+                      title='Global SARS-CoV2 Genomics'
+                      frameBorder='0'
+                      className='covid19-dashboard_auspice__iframe'
+                      src={auspiceUrl}
+                    />
+                  )}
+              </div>
+            </TabPanel> */}
             <TabPanel className='covid19-dashboard_panel'>
               <div className='covid19-dashboard_auspice'>
                 {/* this component doesn't need the mapboxAPIToken but it's a way to make
