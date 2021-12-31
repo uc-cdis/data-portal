@@ -25,8 +25,6 @@ const dataLegend = {
 
 const dataLayer = {
   title: 'Percent Insured',
-  legend_title: 'something demographic',
-  legend_url: 'https://something.or.other.com',
   id: 'D_insured_rate',
   type: 'fill',
   layout: { visibility: 'visible' },
