@@ -1,6 +1,12 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import {
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
+  useParams,
+} from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
 import Layout from './Layout';
@@ -41,6 +47,11 @@ function App({ store }) {
   useEffect(() => {
     store.dispatch(fetchVersionInfo());
   }, []);
+
+  const history = useHistory();
+  const location = useLocation();
+  const params = useParams();
+
   return (
     <Layout>
       <Suspense
@@ -69,24 +80,16 @@ function App({ store }) {
               <SubmissionPage />
             </ProtectedContent>
           </Route>
-          <Route
-            exact
-            path='/submission/files'
-            component={({ history }) => (
-              <ProtectedContent isAdminOnly>
-                <ReduxMapFiles history={history} />
-              </ProtectedContent>
-            )}
-          />
-          <Route
-            exact
-            path='/submission/map'
-            component={({ history }) => (
-              <ProtectedContent isAdminOnly>
-                <ReduxMapDataModel history={history} />
-              </ProtectedContent>
-            )}
-          />
+          <Route exact path='/submission/files'>
+            <ProtectedContent isAdminOnly>
+              <ReduxMapFiles history={history} />
+            </ProtectedContent>
+          </Route>
+          <Route exact path='/submission/map'>
+            <ProtectedContent isAdminOnly>
+              <ReduxMapDataModel history={history} />
+            </ProtectedContent>
+          </Route>
           <Route path='/query'>
             <ProtectedContent>
               <GraphQLQuery />
@@ -107,30 +110,25 @@ function App({ store }) {
               <DataDictionary />
             </ProtectedContent>
           </Route>
-          <Route
-            path='/:project/search'
-            component={({ location, match }) => {
-              const queryFilter = () => {
+          <Route path='/:project/search'>
+            <ProtectedContent
+              filter={() => {
                 const searchParams = new URLSearchParams(location.search);
-
                 return Array.from(searchParams.keys()).length > 0
                   ? // Linking directly to a search result,
                     // so kick-off search here (rather than on button click)
                     store.dispatch(
                       submitSearchForm({
-                        project: match.params.project,
+                        project: params.project,
                         ...Object.fromEntries(searchParams.entries()),
                       })
                     )
                   : Promise.resolve('ok');
-              };
-              return (
-                <ProtectedContent filter={queryFilter}>
-                  <ReduxQueryNode />
-                </ProtectedContent>
-              );
-            }}
-          />
+              }}
+            >
+              <ReduxQueryNode />
+            </ProtectedContent>
+          </Route>
           <Route path='/explorer'>
             <ProtectedContent>
               <Explorer />
