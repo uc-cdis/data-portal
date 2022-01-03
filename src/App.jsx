@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
-import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
@@ -44,115 +43,114 @@ function App({ store }) {
     store.dispatch(fetchVersionInfo());
   }, []);
   return (
-    <Provider store={store}>
-      <BrowserRouter basename={basename}>
-        <Layout>
-          <Suspense
-            fallback={
-              <div style={{ height: '100vh' }}>
-                <Spinner />
-              </div>
-            }
-          >
-            <Switch>
-              <Route path='/login'>
-                <ProtectedContent
-                  isPublic
-                  filter={() => store.dispatch(fetchLogin())}
-                >
-                  <ReduxLogin />
-                </ProtectedContent>
-              </Route>
-              <Route exact path='/'>
-                <ProtectedContent>
-                  <IndexPage />
-                </ProtectedContent>
-              </Route>
-              <Route exact path='/submission'>
+    <BrowserRouter basename={basename}>
+      <Layout>
+        <Suspense
+          fallback={
+            <div style={{ height: '100vh' }}>
+              <Spinner />
+            </div>
+          }
+        >
+          <Switch>
+            <Route path='/login'>
+              <ProtectedContent
+                isPublic
+                filter={() => store.dispatch(fetchLogin())}
+              >
+                <ReduxLogin />
+              </ProtectedContent>
+            </Route>
+            <Route exact path='/'>
+              <ProtectedContent>
+                <IndexPage />
+              </ProtectedContent>
+            </Route>
+            <Route exact path='/submission'>
+              <ProtectedContent isAdminOnly>
+                <SubmissionPage />
+              </ProtectedContent>
+            </Route>
+            <Route
+              exact
+              path='/submission/files'
+              component={({ history }) => (
                 <ProtectedContent isAdminOnly>
-                  <SubmissionPage />
+                  <ReduxMapFiles history={history} />
                 </ProtectedContent>
-              </Route>
-              <Route
-                exact
-                path='/submission/files'
-                component={({ history }) => (
-                  <ProtectedContent isAdminOnly>
-                    <ReduxMapFiles history={history} />
-                  </ProtectedContent>
-                )}
-              />
-              <Route
-                exact
-                path='/submission/map'
-                component={({ history }) => (
-                  <ProtectedContent isAdminOnly>
-                    <ReduxMapDataModel history={history} />
-                  </ProtectedContent>
-                )}
-              />
-              <Route path='/query'>
-                <ProtectedContent>
-                  <GraphQLQuery />
-                </ProtectedContent>
-              </Route>
-              <Route path='/identity'>
-                <ProtectedContent filter={() => store.dispatch(fetchAccess())}>
-                  <UserProfile />
-                </ProtectedContent>
-              </Route>
-              <Route path='/dd/:node'>
-                <ProtectedContent>
-                  <DataDictionary />
-                </ProtectedContent>
-              </Route>
-              <Route path='/dd'>
-                <ProtectedContent>
-                  <DataDictionary />
-                </ProtectedContent>
-              </Route>
-              <Route
-                path='/:project/search'
-                component={({ location, match }) => {
-                  const queryFilter = () => {
-                    const searchParams = new URLSearchParams(location.search);
-
-                    return Array.from(searchParams.keys()).length > 0
-                      ? // Linking directly to a search result,
-                        // so kick-off search here (rather than on button click)
-                        store.dispatch(
-                          submitSearchForm({
-                            project: match.params.project,
-                            ...Object.fromEntries(searchParams.entries()),
-                          })
-                        )
-                      : Promise.resolve('ok');
-                  };
-                  return (
-                    <ProtectedContent filter={queryFilter}>
-                      <ReduxQueryNode />
-                    </ProtectedContent>
-                  );
-                }}
-              />
-              <Route path='/explorer'>
-                <ProtectedContent>
-                  <Explorer />
-                </ProtectedContent>
-              </Route>
-              {enableResourceBrowser && (
-                <Route path='/resource-browser'>
-                  <ProtectedContent>
-                    <ResourceBrowser />
-                  </ProtectedContent>
-                </Route>
               )}
-              <Route path='/:project'>
+            />
+            <Route
+              exact
+              path='/submission/map'
+              component={({ history }) => (
+                <ProtectedContent isAdminOnly>
+                  <ReduxMapDataModel history={history} />
+                </ProtectedContent>
+              )}
+            />
+            <Route path='/query'>
+              <ProtectedContent>
+                <GraphQLQuery />
+              </ProtectedContent>
+            </Route>
+            <Route path='/identity'>
+              <ProtectedContent filter={() => store.dispatch(fetchAccess())}>
+                <UserProfile />
+              </ProtectedContent>
+            </Route>
+            <Route path='/dd/:node'>
+              <ProtectedContent>
+                <DataDictionary />
+              </ProtectedContent>
+            </Route>
+            <Route path='/dd'>
+              <ProtectedContent>
+                <DataDictionary />
+              </ProtectedContent>
+            </Route>
+            <Route
+              path='/:project/search'
+              component={({ location, match }) => {
+                const queryFilter = () => {
+                  const searchParams = new URLSearchParams(location.search);
+
+                  return Array.from(searchParams.keys()).length > 0
+                    ? // Linking directly to a search result,
+                      // so kick-off search here (rather than on button click)
+                      store.dispatch(
+                        submitSearchForm({
+                          project: match.params.project,
+                          ...Object.fromEntries(searchParams.entries()),
+                        })
+                      )
+                    : Promise.resolve('ok');
+                };
+                return (
+                  <ProtectedContent filter={queryFilter}>
+                    <ReduxQueryNode />
+                  </ProtectedContent>
+                );
+              }}
+            />
+            <Route path='/explorer'>
+              <ProtectedContent>
+                <Explorer />
+              </ProtectedContent>
+            </Route>
+            {enableResourceBrowser && (
+              <Route path='/resource-browser'>
                 <ProtectedContent>
-                  <ProjectSubmission />
+                  <ResourceBrowser />
                 </ProtectedContent>
               </Route>
-              {/* <Route path='/indexing'>
+            )}
+            <Route path='/:project'>
+              <ProtectedContent>
+                <ProjectSubmission />
+              </ProtectedContent>
+            </Route>
+            {/* <Route path='/indexing'>
                 <ProtectedContent>
                   <Indexing />
                 </ProtectedContent>
@@ -183,11 +181,10 @@ function App({ store }) {
                 path={workspaceErrorUrl}
                 component={ErrorWorkspacePlaceholder}
               /> */}
-            </Switch>
-          </Suspense>
-        </Layout>
-      </BrowserRouter>
-    </Provider>
+          </Switch>
+        </Suspense>
+      </Layout>
+    </BrowserRouter>
   );
 }
 
