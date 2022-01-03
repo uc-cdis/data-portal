@@ -1,4 +1,3 @@
-import BackLink from '../components/BackLink';
 import {
   ReduxCoreMetadataHeader,
   ReduxFileTypePicture,
