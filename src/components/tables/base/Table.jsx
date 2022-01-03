@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import TableRow from './TableRow';
 import TableFoot from './TableFoot';
 import TableHead from './TableHead';
-import './Table.less';
+import './Table.css';
 
 function Table({ title, header, data, footer }) {
   /* eslint class-methods-use-this: ["error", { "exceptMethods": ["rowRender"] }] */

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import './Table.less';
+import './Table.css';
 
 /**
  * @typedef {Object} TableFootProps

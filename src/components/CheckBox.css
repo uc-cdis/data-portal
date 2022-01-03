@@ -23,7 +23,7 @@
   background: var(--pcdc-color__secondary);
 }
 
-// defines check in checkbox
+/* defines check in checkbox */
 .checkbox input[type='checkbox']:after {
   content: '';
   position: relative;

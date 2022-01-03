@@ -4,7 +4,7 @@ import ReduxDataModelGraph from '../DataModelGraph/ReduxDataModelGraph';
 import ReduxSubmitForm from './ReduxSubmitForm';
 import ReduxSubmitTSV from './ReduxSubmitTSV';
 import Spinner from '../components/Spinner';
-import './ProjectSubmission.less';
+import './ProjectSubmission.css';
 
 /**
  * @param {Object} props

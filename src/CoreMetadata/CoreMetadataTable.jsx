@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Component } from 'react';
 import Table from '../components/tables/base/Table';
-import './CoreMetadataTable.less';
+import './CoreMetadataTable.css';
 
 const TABLE_TITLE = 'More Data Info';
 

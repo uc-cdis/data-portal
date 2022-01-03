@@ -13,7 +13,7 @@ import Spinner from '../components/Spinner';
 import StatusReadyIcon from '../img/icons/status_ready.svg';
 import CloseIcon from '../img/icons/cross.svg';
 import { humanFileSize } from '../utils.js';
-import './MapFiles.less';
+import './MapFiles.css';
 
 const SET_KEY = 'did';
 const ROW_HEIGHT = 70;

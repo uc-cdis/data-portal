@@ -57,13 +57,14 @@
   justify-content: center;
   height: 10rem;
   margin: 10px;
-  &::after {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 0.2rem;
-    text-align: center;
-  }
+}
+
+.spinning-spinner-cell .wrapper::after {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 0.2rem;
+  text-align: center;
 }
 
 .spinning-spinner {

@@ -7,8 +7,10 @@ div.workspace__default {
   background: inherit;
 }
 
-// Add a left/right margin to workspace on large screens,
-// unless the workspace is full-paged.
+/*
+Add a left/right margin to workspace on large screens,
+unless the workspace is full-paged.
+*/
 @media screen and (min-width: 1291px) {
   div.workspace:not(.workspace--fullpage) {
     padding: 0 20px;

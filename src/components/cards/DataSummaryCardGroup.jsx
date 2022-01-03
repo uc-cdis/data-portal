@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import CountBox from './CountBox';
-import './DataSummaryCardGroup.less';
+import './DataSummaryCardGroup.css';
 import { parseParamWidth } from '../../utils.js';
 
 /**

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import IconComponent from './Icon';
-import './FileTypePicture.less';
+import './FileTypePicture.css';
 
 /**
  * @typedef {Object} FileTypePictureProps

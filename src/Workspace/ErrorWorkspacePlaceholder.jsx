@@ -1,4 +1,4 @@
-import './Workspace.less';
+import './Workspace.css';
 import NotFoundSVG from '../img/not-found.svg';
 
 function ErrorWorkspacePlaceholder() {

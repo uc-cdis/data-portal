@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import './TooltipCDIS.less';
+import './TooltipCDIS.css';
 
 /**
  * @typedef {Object} TooltipCDISProps

@@ -3,7 +3,7 @@ import OneOfInput from './OneOfInput';
 import EnumInput from './EnumInput';
 import AnyOfInput from './AnyOfInput';
 import TextInput from './TextInput';
-import './SubmitNodeForm.less';
+import './SubmitNodeForm.css';
 
 const SubmitNodeForm = ({
   node,

@@ -40,8 +40,6 @@
     "html-webpack-plugin": "^5.5.0",
     "isomorphic-fetch": "^3.0.0",
     "jszip": "^3.7.1",
-    "less": "^4.1.2",
-    "less-loader": "^10.2.0",
     "lodash.clonedeep": "^4.5.0",
     "node-fetch": "^2.6.6",
     "nunjucks": "^3.2.3",
@@ -131,7 +129,7 @@
     "eslint": "./node_modules/.bin/eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --fix src data",
     "elint": "./node_modules/.bin/eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'",
     "storybook": "STORYBOOK_PROJECT_ID=search start-storybook -p 9001 -c .storybook",
-    "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --config .stylelintrc.js --fix",
+    "stylelint": "stylelint 'src/**/*.css' --config .stylelintrc.js --fix",
     "sanity-check": "node ./sanity-check",
     "format": "prettier --write ."
   },

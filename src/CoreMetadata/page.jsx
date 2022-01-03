@@ -5,7 +5,7 @@ import {
   ReduxCoreMetadataTable,
 } from './reduxer';
 import dictIcons from '../img/icons/file-icons/file-icons';
-import './page.less';
+import './page.css';
 
 function CoreMetadataPage() {
   return (

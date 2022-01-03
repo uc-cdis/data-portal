@@ -4,7 +4,7 @@ import ReactEcharts from 'echarts-for-react';
 import LockedContent from '../../gen3-ui-component/components/charts/LockedContent';
 import { capitalizeFirstLetter } from '../../utils';
 import { GuppyConfigType } from '../configTypeDef';
-import './ExplorerHeatMap.less';
+import './ExplorerHeatMap.css';
 
 function round(value, decimals) {
   return Number(`${Math.round(`${value}e${decimals}`)}e-${decimals}`);

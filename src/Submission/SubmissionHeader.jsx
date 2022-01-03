@@ -5,7 +5,7 @@ import Button from '../gen3-ui-component/components/Button';
 import Gen3ClientSvg from '../img/gen3client.svg';
 import MapFilesSvg from '../img/mapfiles.svg';
 import { humanFileSize } from '../utils.js';
-import './SubmissionHeader.less';
+import './SubmissionHeader.css';
 
 /**
  * @param {Object} props

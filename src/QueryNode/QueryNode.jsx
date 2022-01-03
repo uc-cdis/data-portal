@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
-import './QueryNode.less';
+import './QueryNode.css';
 
 /**
  * QueryNode shows the details of a particular node
