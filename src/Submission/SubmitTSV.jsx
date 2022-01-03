@@ -5,7 +5,7 @@ import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-kuroir';
 import { predictFileType } from '../utils';
 import SubmissionResult from './SubmissionResult';
-import './SubmitTSV.less';
+import './SubmitTSV.css';
 
 /**
  * Manage TSV/JSON submission

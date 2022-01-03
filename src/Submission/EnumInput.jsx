@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { overrideSelectTheme } from '../utils';
-import './EnumInput.less';
+import './EnumInput.css';
 
 class EnumInput extends Component {
   constructor(props) {

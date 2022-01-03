@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import './TextInput.less';
+import './TextInput.css';
 
 class TextInput extends Component {
   // eslint-disable-next-line camelcase

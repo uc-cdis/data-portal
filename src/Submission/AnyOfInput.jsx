@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import TextInput from './TextInput';
-import './AnyOfInput.less';
+import './AnyOfInput.css';
 
 const AnyOfInput = ({
   name,

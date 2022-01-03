@@ -11,7 +11,7 @@ import { getIndexPageCounts } from './utils';
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { breakpoints } from '../localconf';
-import './page.less';
+import './page.css';
 
 function IndexPage() {
   useEffect(() => {

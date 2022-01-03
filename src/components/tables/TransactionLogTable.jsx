@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import Table from './base/Table';
 import Spinner from '../Spinner';
 import { capitalizeFirstLetter, humanFileSize } from '../../utils.js';
-import './TransactionLogTable.less';
+import './TransactionLogTable.css';
 
 /** @typedef {{ doc: string; doc_size: number; }} LogEntryDocument */
 

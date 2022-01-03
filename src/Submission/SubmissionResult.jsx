@@ -4,7 +4,7 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-kuroir';
 import Button from '../gen3-ui-component/components/Button';
-import './SubmissionResult.less';
+import './SubmissionResult.css';
 
 /**
  * Present summary of a submission success or failure given

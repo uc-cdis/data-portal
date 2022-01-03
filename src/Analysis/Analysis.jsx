@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { config } from '../params';
 import { analysisApps } from '../localconf';
 import AppCard from './AppCard';
-import './Analysis.less';
+import './Analysis.css';
 
 class Analysis extends Component {
   openApp = (app) => {

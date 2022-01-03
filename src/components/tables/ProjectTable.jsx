@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import Button from '../../gen3-ui-component/components/Button';
 import Table from './base/Table';
-import './ProjectTable.less';
+import './ProjectTable.css';
 
 /**
  * @typedef {Object} ProjectTableProps

@@ -7,7 +7,7 @@ import Popup from '../components/Popup';
 import { credentialCdisPath } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
 import ReduxUserInformation from './ReduxUserInformation';
-import './UserProfile.less';
+import './UserProfile.css';
 
 const NO_ACCESS_MSG =
   'You have no access to storage service. Please contact an admin to get it!';

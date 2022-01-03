@@ -5,7 +5,7 @@ import Select, { createFilter } from 'react-select';
 import Button from '../gen3-ui-component/components/Button';
 import { basename, loginPath } from '../localconf';
 import { overrideSelectTheme } from '../utils';
-import './Login.less';
+import './Login.css';
 
 /**
  * @typedef {Object} LoginData

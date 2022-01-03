@@ -10,7 +10,7 @@ import InputWithIcon from '../components/InputWithIcon';
 import { GQLHelper } from '../gqlHelper';
 import environment from '../environment';
 import sessionMonitor from '../SessionMonitor';
-import './MapDataModel.less';
+import './MapDataModel.css';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 const CHUNK_SIZE = 10;

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { jsonToString, overrideSelectTheme } from '../utils';
 import SubmitNodeForm from './SubmitNodeForm';
-import './SubmitForm.less';
+import './SubmitForm.css';
 
 /**
  * Form-based data submission.  The results of this form submission are subsequently

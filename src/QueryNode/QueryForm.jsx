@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Dropdown from '../gen3-ui-component/components/Dropdown';
 import { getSubmitPath, overrideSelectTheme } from '../utils';
-import './QueryForm.less';
+import './QueryForm.css';
 
 class QueryForm extends Component {
   constructor(props) {

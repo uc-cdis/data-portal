@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import Button from '../gen3-ui-component/components/Button';
 import IconComponent from './Icon';
 import dictIcons from '../img/icons/index';
-import './Popup.less';
+import './Popup.css';
 
 /**
  * @typedef {Object} PopupButton

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import './Spinner.less';
+import './Spinner.css';
 
 function Spinner({ text = '', type = 'dots' }) {
   if (type === 'spinning')

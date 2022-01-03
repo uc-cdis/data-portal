@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { overrideSelectTheme } from '../utils';
-import './InputWithIcon.less';
+import './InputWithIcon.css';
 
 /**
  * @typedef {Object} InputWithIconProps

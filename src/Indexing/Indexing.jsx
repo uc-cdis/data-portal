@@ -7,7 +7,7 @@ import {
   hostname,
 } from '../localconf';
 import { fetchWithCreds, fetchWithCredsAndTimeout } from '../actions';
-import './Indexing.less';
+import './Indexing.css';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
 import IconComponent from '../components/Icon';

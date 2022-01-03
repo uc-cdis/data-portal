@@ -1,6 +1,6 @@
 import ReduxSubmissionHeader from './ReduxSubmissionHeader';
 import ReduxProjectTable from './ReduxProjectTable';
-import './ProjectDashboard.less';
+import './ProjectDashboard.css';
 
 function ProjectDashboard() {
   return (

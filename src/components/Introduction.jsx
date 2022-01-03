@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import IconicLink from './buttons/IconicLink';
-import './Introduction.less';
+import './Introduction.css';
 
 /**
  * @typedef {Object} IntroductionProps
