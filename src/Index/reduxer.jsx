@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import dictIcons from '../img/icons';
 import IndexBarChart from '../components/charts/IndexBarChart';
-// import IndexCounts from '../components/cards/IndexCounts/.';
 import IndexButtonBar from '../components/IndexButtonBar';
 import Introduction from '../components/Introduction';
 import IndexOverview from './IndexOverview';
@@ -18,18 +17,6 @@ export const ReduxIndexBarChart = (() => {
 
   return connect(mapStateToProps)(IndexBarChart);
 })();
-
-// export const ReduxIndexCounts = (() => {
-//   const mapStateToProps = (state) =>
-//     state.index && state.index.projectList
-//       ? {
-//           projectList: state.index.projectList,
-//           countNames: state.index.countNames,
-//         }
-//       : {};
-
-//   return connect(mapStateToProps)(IndexCounts);
-// })();
 
 export const ReduxIndexOverview = (() => {
   const mapStateToProps = (state) =>
