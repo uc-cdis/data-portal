@@ -11,9 +11,9 @@ import './typedef';
 
 function ExplorerSurvivalAnalysis() {
   const [[risktable, survival], refershResult] = useSurvivalAnalysisResult();
-  const [timeInterval, setTimeInterval] = useState(2);
+  const [timeInterval, setTimeInterval] = useState(4);
   const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(20);
+  const [endTime, setEndTime] = useState(undefined);
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [isError, setIsError] = useState(false);
