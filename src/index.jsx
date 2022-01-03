@@ -16,8 +16,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import getReduxStore from './reduxStore';
 import { gaTracking } from './params';
+import { basename } from './localconf';
 import App from './App';
 import sessionMonitor from './SessionMonitor';
 import '@fontsource/raleway';
@@ -52,7 +54,9 @@ async function init() {
   const store = await getReduxStore();
   render(
     <Provider store={store}>
-      <App store={store} />
+      <BrowserRouter basename={basename}>
+        <App store={store} />
+      </BrowserRouter>
     </Provider>,
     document.getElementById('root')
   );
