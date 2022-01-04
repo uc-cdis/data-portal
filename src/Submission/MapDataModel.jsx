@@ -59,7 +59,7 @@ class MapDataModel extends Component {
   componentDidMount() {
     if (this.props.filesToMap.length === 0) {
       // redirect if no files
-      this.props.history.push('/submission/files');
+      this.props.navigate('/submission/files');
     }
     getProjectsList();
   }
@@ -238,7 +238,7 @@ class MapDataModel extends Component {
         promises.push(promise);
       });
       Promise.all(promises).then(() => {
-        this.props.history.push(`/submission/files?message=${message}`);
+        this.props.navigate(`/submission/files?message=${message}`);
       });
     });
   };
@@ -416,7 +416,7 @@ MapDataModel.propTypes = {
   projects: PropTypes.object,
   dictionary: PropTypes.object,
   nodeTypes: PropTypes.array,
-  history: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
   submitFiles: PropTypes.func.isRequired,
 };
 

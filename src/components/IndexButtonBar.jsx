@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '../gen3-ui-component/components/Button';
 import IconComponent from './Icon';
 import './IndexButtonBar.css';
@@ -16,7 +16,7 @@ import './IndexButtonBar.css';
  * @param {IndexButtonBarProps} props
  */
 function IndexButtonBar({ buttons, dictIcons, userAccess }) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const canUserSeeComponent = (componentName) => {
     const authResult = userAccess[componentName];
     return authResult === undefined || authResult;
@@ -42,7 +42,7 @@ function IndexButtonBar({ buttons, dictIcons, userAccess }) {
             </div>
             <Button
               className='index-button-bar__item'
-              onClick={() => history.push(item.link)}
+              onClick={() => navigate(item.link)}
               label={item.label}
               buttonType='primary'
             />

@@ -135,7 +135,7 @@ class MapFiles extends Component {
   onCompletion = () => {
     const flatFiles = flattenFiles(this.state.selectedFilesByGroup);
     this.props.mapSelectedFiles(flatFiles);
-    this.props.history.push('/submission/map');
+    this.props.navigate('/submission/map');
   };
 
   onUpdate = () => {
@@ -402,7 +402,7 @@ MapFiles.propTypes = {
   unmappedFiles: PropTypes.array,
   fetchUnmappedFiles: PropTypes.func.isRequired,
   mapSelectedFiles: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
 };
 

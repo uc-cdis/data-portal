@@ -34,7 +34,7 @@ function ProjectSubmission({
       <ReduxSubmitForm />
       <ReduxSubmitTSV project={project} />
       {dataIsReady ? (
-        <ReduxDataModelGraph project={project} />
+        <ReduxDataModelGraph />
       ) : (
         project !== '_root' && <Spinner />
       )}

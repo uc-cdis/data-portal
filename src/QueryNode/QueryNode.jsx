@@ -1,4 +1,4 @@
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
@@ -11,7 +11,7 @@ import './QueryNode.css';
  * @param {Object} props.submission
  * @param {Object} props.queryNodes
  * @param {Object} props.popups
- * @param {(value: any, url: string, history: any ) => void} props.onSearchFormSubmit
+ * @param {(value: any, url: string, navigate: import('react-router-dom').NavigateFunction ) => void} props.onSearchFormSubmit
  * @param {(param: { view_popup: string; nodedelete_popup: boolean | string; }) => void} props.onUpdatePopup
  * @param {() => void} props.onClearDeleteSession
  * @param {(param: { project: string; id: string; }) => void} props.onDeleteNode
@@ -27,7 +27,7 @@ function QueryNode({
   onDeleteNode,
   onStoreNodeInfo,
 }) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { project } = useParams();
 
   /**
@@ -158,7 +158,7 @@ function QueryNode({
       {renderDeletePopup().popupEl}
       <QueryForm
         onSearchFormSubmit={(data, url) =>
-          onSearchFormSubmit(data, url, history)
+          onSearchFormSubmit(data, url, navigate)
         }
         project={project}
         nodeTypes={submission.nodeTypes}

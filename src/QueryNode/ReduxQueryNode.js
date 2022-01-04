@@ -9,7 +9,7 @@ const clearDeleteSession = {
   type: 'CLEAR_DELETE_SESSION',
 };
 
-export const submitSearchForm = (opts, url, history) => (dispatch) => {
+export const submitSearchForm = (opts, url, navigate) => (dispatch) => {
   const nodeType = opts.node_type;
   const submitterId = opts.submitter_id || '';
 
@@ -39,9 +39,7 @@ export const submitSearchForm = (opts, url, history) => (dispatch) => {
     })
     .then((msg) => dispatch(msg))
     .then(() => {
-      if (url && history) {
-        history.push(url);
-      }
+      if (url) navigate(url);
       return null;
     });
 };
@@ -110,8 +108,8 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  onSearchFormSubmit: (value, url, history) =>
-    dispatch(submitSearchForm(value, url, history)),
+  onSearchFormSubmit: (value, url, navigate) =>
+    dispatch(submitSearchForm(value, url, navigate)),
   onUpdatePopup: (state) => dispatch(updatePopup(state)),
   onClearDeleteSession: () => dispatch(clearDeleteSession),
   onDeleteNode: ({ id, project }) => {

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { tierAccessLimit, explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 import './typedef';
@@ -20,7 +20,7 @@ import './typedef';
 const ExplorerConfigContext = createContext(null);
 
 export function ExplorerConfigProvider({ children }) {
-  const history = useHistory();
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
 
   const explorerOptions = [];
@@ -34,7 +34,6 @@ export function ExplorerConfigProvider({ children }) {
   }
 
   const [initialExplorerId, hasValidInitialSearchParamId] = useMemo(() => {
-    const searchParams = new URLSearchParams(location.search);
     const hasSearchParamId = searchParams.has('id');
     const searchParamId = hasSearchParamId
       ? Number(searchParams.get('id'))
@@ -48,13 +47,13 @@ export function ExplorerConfigProvider({ children }) {
   const [shouldUpdateState, setShouldUpdateState] = useState(false);
   useEffect(() => {
     if (!hasValidInitialSearchParamId) {
-      history.replace({
-        search:
-          // @ts-ignore
-          location.state?.keepSearch === true
-            ? `id=${initialExplorerId}&${location.search.slice(1)}`
-            : `id=${initialExplorerId}`,
-      });
+      setSearchParams(
+        // @ts-ignore
+        location.state?.keepSearch === true
+          ? `id=${initialExplorerId}&${location.search.slice(1)}`
+          : `id=${initialExplorerId}`,
+        { replace: true }
+      );
       setShouldUpdateState(true);
     }
   }, []);
@@ -62,11 +61,10 @@ export function ExplorerConfigProvider({ children }) {
   const [explorerId, setExporerId] = useState(initialExplorerId);
   function updateExplorerId(id) {
     setExporerId(id);
-    history.push({ search: `id=${id}` });
+    setSearchParams(`id=${id}`);
   }
 
   function handleBrowserNavigationForConfig() {
-    const searchParams = new URLSearchParams(location.search);
     const searchParamId = Number(searchParams.get('id'));
     setExporerId(searchParamId);
   }

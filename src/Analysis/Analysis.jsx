@@ -7,7 +7,7 @@ import './Analysis.css';
 
 class Analysis extends Component {
   openApp = (app) => {
-    this.props.history.push(`/analysis/${app}`);
+    this.props.navigate(`/analysis/${app}`);
   };
 
   render() {
@@ -49,7 +49,7 @@ class Analysis extends Component {
 }
 
 Analysis.propTypes = {
-  history: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
 };
 
 export default Analysis;

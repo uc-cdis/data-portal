@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../gen3-ui-component/components/Button';
 import Table from './base/Table';
 import './ProjectTable.css';
@@ -12,7 +12,7 @@ import './ProjectTable.css';
 
 /** @param {ProjectTableProps} props */
 function ProjectTable({ projectList, summaryFields }) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const tableHeader = ['Project', ...summaryFields, ''];
   const tableData = [...projectList]
     // eslint-disable-next-line no-nested-ternary
@@ -23,7 +23,7 @@ function ProjectTable({ projectList, summaryFields }) {
       <Button
         className='project-table__submit-button'
         key={i}
-        onClick={() => history.push(`/${name}`)}
+        onClick={() => navigate(`/${name}`)}
         label='Submit Data'
         buttonType='primary'
         rightIcon='upload'

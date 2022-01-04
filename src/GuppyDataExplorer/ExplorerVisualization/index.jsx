@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 import Spinner from '../../components/Spinner';
@@ -195,7 +195,6 @@ function ExplorerVisualization({
     guppyConfig.nodeCountTitle.toLowerCase() || guppyConfig.dataType
   }.`;
 
-  const history = useHistory();
   const buttonGroupProps = {
     buttonConfig,
     guppyConfig,
@@ -206,7 +205,7 @@ function ExplorerVisualization({
     downloadRawDataByTypeAndFilter,
     getTotalCountsByTypeAndFilter,
     filter,
-    history,
+    navigate: useNavigate(),
     isLocked: isComponentLocked,
     isPending: isLoadingAggsData,
   };
