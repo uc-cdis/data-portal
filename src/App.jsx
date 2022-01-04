@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
 import {
+  Outlet,
   Route,
   Routes,
   useNavigate,
@@ -53,93 +54,113 @@ function App({ store }) {
   const [searchParams] = useSearchParams();
 
   return (
-    <Layout>
-      <Suspense
-        fallback={
-          <div style={{ height: '100vh' }}>
-            <Spinner />
-          </div>
+    <Routes>
+      <Route
+        path='/'
+        element={
+          <Layout>
+            <Suspense
+              fallback={
+                <div style={{ height: '100vh' }}>
+                  <Spinner />
+                </div>
+              }
+            >
+              <Outlet />
+            </Suspense>
+          </Layout>
         }
       >
-        <Routes>
+        <Route
+          index
+          element={
+            <ProtectedContent>
+              <IndexPage />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='login'
+          element={
+            <ProtectedContent
+              isPublic
+              filter={() => store.dispatch(fetchLogin())}
+            >
+              <ReduxLogin />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='submission'
+          element={
+            <ProtectedContent isAdminOnly>
+              <Outlet />
+            </ProtectedContent>
+          }
+        >
+          <Route index element={<SubmissionPage />} />
+          <Route path='files' element={<ReduxMapFiles navigate={navigate} />} />
           <Route
-            path='/login'
-            element={
-              <ProtectedContent
-                isPublic
-                filter={() => store.dispatch(fetchLogin())}
-              >
-                <ReduxLogin />
-              </ProtectedContent>
-            }
+            path='map'
+            element={<ReduxMapDataModel navigate={navigate} />}
           />
+        </Route>
+        <Route
+          path='query'
+          element={
+            <ProtectedContent>
+              <GraphQLQuery />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='identity'
+          element={
+            <ProtectedContent filter={() => store.dispatch(fetchAccess())}>
+              <UserProfile />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='dd'
+          element={
+            <ProtectedContent>
+              <Outlet />
+            </ProtectedContent>
+          }
+        >
+          <Route index element={<DataDictionary />} />
+          <Route path=':node' element={<DataDictionary />} />
+        </Route>
+        <Route
+          path='explorer'
+          element={
+            <ProtectedContent>
+              <Explorer />
+            </ProtectedContent>
+          }
+        />
+        {enableResourceBrowser && (
           <Route
-            path='/'
+            path='resource-browser'
             element={
               <ProtectedContent>
-                <IndexPage />
+                <ResourceBrowser />
               </ProtectedContent>
             }
           />
+        )}
+        <Route path=':project' element={<Outlet />}>
           <Route
-            path='/submission'
-            element={
-              <ProtectedContent isAdminOnly>
-                <SubmissionPage />
-              </ProtectedContent>
-            }
-          />
-          <Route
-            path='/submission/files'
-            element={
-              <ProtectedContent isAdminOnly>
-                <ReduxMapFiles navigate={navigate} />
-              </ProtectedContent>
-            }
-          />
-
-          <Route
-            path='/submission/map'
-            element={
-              <ProtectedContent isAdminOnly>
-                <ReduxMapDataModel navigate={navigate} />
-              </ProtectedContent>
-            }
-          />
-          <Route
-            path='/query'
+            index
             element={
               <ProtectedContent>
-                <GraphQLQuery />
+                <ProjectSubmission />
               </ProtectedContent>
             }
           />
           <Route
-            path='/identity'
-            element={
-              <ProtectedContent filter={() => store.dispatch(fetchAccess())}>
-                <UserProfile />
-              </ProtectedContent>
-            }
-          />
-          <Route
-            path='/dd/:node'
-            element={
-              <ProtectedContent>
-                <DataDictionary />
-              </ProtectedContent>
-            }
-          />
-          <Route
-            path='/dd'
-            element={
-              <ProtectedContent>
-                <DataDictionary />
-              </ProtectedContent>
-            }
-          />
-          <Route
-            path='/:project/search'
+            path='search'
             element={
               <ProtectedContent
                 filter={() =>
@@ -159,68 +180,42 @@ function App({ store }) {
               </ProtectedContent>
             }
           />
-          <Route
-            path='/explorer'
-            element={
-              <ProtectedContent>
-                <Explorer />
-              </ProtectedContent>
-            }
-          />
-          {enableResourceBrowser && (
-            <Route
-              path='/resource-browser'
-              element={
-                <ProtectedContent>
-                  <ResourceBrowser />
-                </ProtectedContent>
+        </Route>
+        {/* <Route
+          path='/indexing'
+          element={
+            <ProtectedContent>
+              <Indexing />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='/files/*'
+          element={
+            <ProtectedContent
+              filter={() =>
+                store.dispatch(fetchCoreMetadata(props.match.params[0]))
               }
-            />
-          )}
-          <Route
-            path='/:project'
-            element={
-              <ProtectedContent>
-                <ProjectSubmission />
-              </ProtectedContent>
-            }
-          />
-          {/* <Route
-            path='/indexing'
-            element={
-              <ProtectedContent>
-                <Indexing />
-              </ProtectedContent>
-            }
-          />
-          <Route
-            path='/files/*'
-            element={
-              <ProtectedContent
-                filter={() =>
-                  store.dispatch(fetchCoreMetadata(props.match.params[0]))
-                }
-              >
-                <CoreMetadataPage />
-              </ProtectedContent>
-            }
-          />
-          <Route
-            path='/workspace'
-            element={
-              <ProtectedContent>
-                <Workspace />
-              </ProtectedContent>
-            }
-          />
-          <Route path={workspaceUrl} element={<ErrorWorkspacePlaceholder />} />
-          <Route
-            path={workspaceErrorUrl}
-            element={<ErrorWorkspacePlaceholder />}
-          /> */}
-        </Routes>
-      </Suspense>
-    </Layout>
+            >
+              <CoreMetadataPage />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='/workspace'
+          element={
+            <ProtectedContent>
+              <Workspace />
+            </ProtectedContent>
+          }
+        />
+        <Route path={workspaceUrl} element={<ErrorWorkspacePlaceholder />} />
+        <Route
+          path={workspaceErrorUrl}
+          element={<ErrorWorkspacePlaceholder />}
+        /> */}
+      </Route>
+    </Routes>
   );
 }
 

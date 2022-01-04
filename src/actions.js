@@ -317,7 +317,7 @@ export const fetchProjects = () => (dispatch) =>
  * @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>}
  */
 export const fetchSchema = () => (dispatch) =>
-  fetch('../data/schema.json')
+  fetch('/data/schema.json')
     .then((response) => response.json())
     .then(({ data }) =>
       dispatch({ type: 'RECEIVE_SCHEMA', schema: buildClientSchema(data) })
@@ -341,7 +341,7 @@ export const fetchGuppySchema = () => (dispatch) =>
 
 /** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
 export const fetchDictionary = () => (dispatch) =>
-  fetch('../data/dictionary.json')
+  fetch('/data/dictionary.json')
     .then((response) => response.json())
     .then((data) => dispatch({ type: 'RECEIVE_DICTIONARY', data }));
 
