@@ -60,7 +60,7 @@
     "react-redux": "^7.2.6",
     "react-relay": "^11.0.2",
     "react-responsive": "^8.2.0",
-    "react-router-dom": "^5.3.0",
+    "react-router-dom": "^6.2.1",
     "react-select": "^5.2.1",
     "react-select-async-paginate": "^0.6.0",
     "react-table": "^7.7.0",
