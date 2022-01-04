@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import Button from '../gen3-ui-component/components/Button';
 import Gen3ClientSvg from '../img/gen3client.svg';
 import MapFilesSvg from '../img/mapfiles.svg';
@@ -36,8 +36,9 @@ function SubmissionHeader({
   }
 
   const history = useHistory();
+  const location = useLocation();
   function navigateToMyFiles() {
-    history.push(`${history.location.pathname}/files`);
+    history.push(`${location.pathname}/files`);
   }
 
   return (

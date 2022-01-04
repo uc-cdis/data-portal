@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { tierAccessLimit, explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 import './typedef';
@@ -21,6 +21,7 @@ const ExplorerConfigContext = createContext(null);
 
 export function ExplorerConfigProvider({ children }) {
   const history = useHistory();
+  const location = useLocation();
 
   const explorerOptions = [];
   const explorerIds = [];
@@ -33,7 +34,7 @@ export function ExplorerConfigProvider({ children }) {
   }
 
   const [initialExplorerId, hasValidInitialSearchParamId] = useMemo(() => {
-    const searchParams = new URLSearchParams(history.location.search);
+    const searchParams = new URLSearchParams(location.search);
     const hasSearchParamId = searchParams.has('id');
     const searchParamId = hasSearchParamId
       ? Number(searchParams.get('id'))
@@ -50,8 +51,8 @@ export function ExplorerConfigProvider({ children }) {
       history.replace({
         search:
           // @ts-ignore
-          history.location.state?.keepSearch === true
-            ? `id=${initialExplorerId}&${history.location.search.slice(1)}`
+          location.state?.keepSearch === true
+            ? `id=${initialExplorerId}&${location.search.slice(1)}`
             : `id=${initialExplorerId}`,
       });
       setShouldUpdateState(true);
@@ -65,7 +66,7 @@ export function ExplorerConfigProvider({ children }) {
   }
 
   function handleBrowserNavigationForConfig() {
-    const searchParams = new URLSearchParams(history.location.search);
+    const searchParams = new URLSearchParams(location.search);
     const searchParamId = Number(searchParams.get('id'));
     setExporerId(searchParamId);
   }

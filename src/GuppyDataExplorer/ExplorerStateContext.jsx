@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useExplorerConfig } from './ExplorerConfigContext';
 import { extractExplorerStateFromURL } from './utils';
 import './typedef';
@@ -28,6 +28,7 @@ const ExplorerStateContext = createContext(null);
 
 export function ExplorerStateProvider({ children }) {
   const history = useHistory();
+  const location = useLocation();
   const {
     current: { filterConfig, patientIdsConfig },
     shouldUpdateState,
@@ -37,7 +38,7 @@ export function ExplorerStateProvider({ children }) {
   const initialState = useMemo(
     () =>
       extractExplorerStateFromURL(
-        new URLSearchParams(history.location.search),
+        new URLSearchParams(location.search),
         filterConfig,
         patientIdsConfig
       ),
@@ -48,7 +49,7 @@ export function ExplorerStateProvider({ children }) {
   useEffect(() => {
     if (shouldUpdateState) {
       const newState = extractExplorerStateFromURL(
-        new URLSearchParams(history.location.search),
+        new URLSearchParams(location.search),
         filterConfig,
         patientIdsConfig
       );
@@ -62,7 +63,7 @@ export function ExplorerStateProvider({ children }) {
   function handleBrowserNavigationForState() {
     isBrowserNavigation.current = true;
     const newState = extractExplorerStateFromURL(
-      new URLSearchParams(history.location.search),
+      new URLSearchParams(location.search),
       filterConfig,
       patientIdsConfig
     );
@@ -73,7 +74,7 @@ export function ExplorerStateProvider({ children }) {
 
   /** @param {FilterState} filter */
   function handleFilterChange(filter) {
-    const searchParams = new URLSearchParams(history.location.search);
+    const searchParams = new URLSearchParams(location.search);
     searchParams.delete('filter');
 
     if (filter && Object.keys(filter).length > 0) {
@@ -107,7 +108,7 @@ export function ExplorerStateProvider({ children }) {
   function handlePatientIdsChange(ids) {
     if (patientIdsConfig?.filter === undefined) return;
 
-    const searchParams = new URLSearchParams(history.location.search);
+    const searchParams = new URLSearchParams(location.search);
     searchParams.delete('patientIds');
 
     if (ids.length > 0) searchParams.set('patientIds', ids.join(','));
