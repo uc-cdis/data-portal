@@ -29,12 +29,7 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
  * @property {() => Promise} [filter] optional filter to apply before rendering the child component
  */
 
-const LOCATIONS_DICTIONARY = [
-  '/dd',
-  '/dd/:node',
-  '/submission/map',
-  '/:project',
-];
+const LOCATIONS_DICTIONARY = ['/dd/*', '/submission/map', '/:project'];
 const LOCATIONS_PROJECTS = ['/files/*'];
 const LOCATIONS_SCHEMA = ['/query'];
 

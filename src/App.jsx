@@ -122,16 +122,13 @@ function App({ store }) {
           }
         />
         <Route
-          path='dd'
+          path='dd/*'
           element={
             <ProtectedContent>
-              <Outlet />
+              <DataDictionary />
             </ProtectedContent>
           }
-        >
-          <Route index element={<DataDictionary />} />
-          <Route path=':node' element={<DataDictionary />} />
-        </Route>
+        />
         <Route
           path='explorer'
           element={
