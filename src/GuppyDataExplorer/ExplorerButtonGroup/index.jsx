@@ -997,7 +997,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
                               && this.isDownloadButton(btnCfg)) ? this.goToLogin() : onClick())}
                           >
                             {(!this.props.user.username && this.isLoginForDownloadEnabled()
-                            && this.isDownloadButton(btnCfg)) ? `Login to ${btnCfg.title}.toLowerCase()}` : btnCfg.title}
+                            && this.isDownloadButton(btnCfg)) ? `Login to download ${btnCfg.title}` : btnCfg.title}
                           </Dropdown.Item>
                         );
                       })
