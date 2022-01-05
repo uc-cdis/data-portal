@@ -9,17 +9,21 @@ import './SubmitTSV.css';
 
 /**
  * Manage TSV/JSON submission
- *
- * @param {string} project of form program-project
- * @param {Function} onFileChange triggered when user edits something in tsv/json AceEditor
+ * @param {Object} props
+ * @param {string} props.project of form program-project
+ * @param {Object} props.submission
+ * @param {Function} props.onFileChange triggered when user edits something in tsv/json AceEditor
+ * @param {Function} props.onFinish
+ * @param {Function} props.onUploadClick
+ * @param {Function} props.onSubmitClick
  */
 const SubmitTSV = ({
   project,
   submission,
-  onUploadClick,
-  onSubmitClick,
   onFileChange,
   onFinish,
+  onSubmitClick,
+  onUploadClick,
 }) => {
   const fileUploadRef = useRef(null);
 
