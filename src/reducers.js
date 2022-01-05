@@ -2,13 +2,30 @@ import { combineReducers } from 'redux';
 import userProfile from './UserProfile/reducers';
 import coreMetadata from './CoreMetadata/reducers';
 import submission from './Submission/reducers';
-import analysis from './Analysis/reducers';
 import index from './Index/reducers';
 import queryNodes from './QueryNode/reducers';
 import popups from './Popup/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import login from './Login/reducers';
 import ddgraph from './DataDictionary/reducers';
+
+/** @type {import('redux').Reducer} */
+const kube = (state = {}, action) => {
+  switch (action.type) {
+    case 'RECEIVE_JOB_DISPATCH':
+      return { ...state, job: action.data };
+    case 'RECEIVE_JOB_STATUS': {
+      const job = { ...action.data, resultURL: action.resultURL };
+      return { ...state, job };
+    }
+    case 'JOB_STATUS_INTERVAL':
+      return { ...state, jobStatusInterval: action.value };
+    case 'RESET_JOB':
+      return { ...state, job: null, jobStatusInterval: null, resultURL: null };
+    default:
+      return state;
+  }
+};
 
 /** @type {import('redux').Reducer} */
 const status = (state = {}, action) => {
@@ -89,11 +106,11 @@ const project = (state = {}, action) => {
 };
 
 const reducers = combineReducers({
-  analysis,
   coreMetadata,
   ddgraph,
   index,
   graphiql,
+  kube,
   login,
   popups,
   project,
