@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
 import {
+  Outlet,
   Route,
-  Switch,
-  useHistory,
-  useLocation,
+  Routes,
+  useNavigate,
   useParams,
+  useSearchParams,
 } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
@@ -48,138 +49,170 @@ function App({ store }) {
     store.dispatch(fetchVersionInfo());
   }, []);
 
-  const history = useHistory();
-  const location = useLocation();
+  const navigate = useNavigate();
   const params = useParams();
+  const [searchParams] = useSearchParams();
 
   return (
-    <Layout>
-      <Suspense
-        fallback={
-          <div style={{ height: '100vh' }}>
-            <Spinner />
-          </div>
+    <Routes>
+      <Route
+        path='/'
+        element={
+          <Layout>
+            <Suspense
+              fallback={
+                <div style={{ height: '100vh' }}>
+                  <Spinner />
+                </div>
+              }
+            >
+              <Outlet />
+            </Suspense>
+          </Layout>
         }
       >
-        <Switch>
-          <Route path='/login'>
+        <Route
+          index
+          element={
+            <ProtectedContent>
+              <IndexPage />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='login'
+          element={
             <ProtectedContent
               isPublic
               filter={() => store.dispatch(fetchLogin())}
             >
               <ReduxLogin />
             </ProtectedContent>
-          </Route>
-          <Route exact path='/'>
-            <ProtectedContent>
-              <IndexPage />
-            </ProtectedContent>
-          </Route>
-          <Route exact path='/submission'>
+          }
+        />
+        <Route
+          path='submission'
+          element={
             <ProtectedContent isAdminOnly>
-              <SubmissionPage />
+              <Outlet />
             </ProtectedContent>
-          </Route>
-          <Route exact path='/submission/files'>
-            <ProtectedContent isAdminOnly>
-              <ReduxMapFiles history={history} />
-            </ProtectedContent>
-          </Route>
-          <Route exact path='/submission/map'>
-            <ProtectedContent isAdminOnly>
-              <ReduxMapDataModel history={history} />
-            </ProtectedContent>
-          </Route>
-          <Route path='/query'>
+          }
+        >
+          <Route index element={<SubmissionPage />} />
+          <Route path='files' element={<ReduxMapFiles navigate={navigate} />} />
+          <Route
+            path='map'
+            element={<ReduxMapDataModel navigate={navigate} />}
+          />
+        </Route>
+        <Route
+          path='query'
+          element={
             <ProtectedContent>
               <GraphQLQuery />
             </ProtectedContent>
-          </Route>
-          <Route path='/identity'>
+          }
+        />
+        <Route
+          path='identity'
+          element={
             <ProtectedContent filter={() => store.dispatch(fetchAccess())}>
               <UserProfile />
             </ProtectedContent>
-          </Route>
-          <Route path='/dd/:node'>
+          }
+        />
+        <Route
+          path='dd/*'
+          element={
             <ProtectedContent>
               <DataDictionary />
             </ProtectedContent>
-          </Route>
-          <Route path='/dd'>
-            <ProtectedContent>
-              <DataDictionary />
-            </ProtectedContent>
-          </Route>
-          <Route path='/:project/search'>
-            <ProtectedContent
-              filter={() => {
-                const searchParams = new URLSearchParams(location.search);
-                return Array.from(searchParams.keys()).length > 0
-                  ? // Linking directly to a search result,
-                    // so kick-off search here (rather than on button click)
-                    store.dispatch(
-                      submitSearchForm({
-                        project: params.project,
-                        ...Object.fromEntries(searchParams.entries()),
-                      })
-                    )
-                  : Promise.resolve('ok');
-              }}
-            >
-              <ReduxQueryNode />
-            </ProtectedContent>
-          </Route>
-          <Route path='/explorer'>
+          }
+        />
+        <Route
+          path='explorer'
+          element={
             <ProtectedContent>
               <Explorer />
             </ProtectedContent>
-          </Route>
-          {enableResourceBrowser && (
-            <Route path='/resource-browser'>
+          }
+        />
+        {enableResourceBrowser && (
+          <Route
+            path='resource-browser'
+            element={
               <ProtectedContent>
                 <ResourceBrowser />
               </ProtectedContent>
-            </Route>
-          )}
-          <Route path='/:project'>
+            }
+          />
+        )}
+        <Route path=':project' element={<Outlet />}>
+          <Route
+            index
+            element={
+              <ProtectedContent>
+                <ProjectSubmission />
+              </ProtectedContent>
+            }
+          />
+          <Route
+            path='search'
+            element={
+              <ProtectedContent
+                filter={() =>
+                  Array.from(searchParams.keys()).length > 0
+                    ? // Linking directly to a search result,
+                      // so kick-off search here (rather than on button click)
+                      store.dispatch(
+                        submitSearchForm({
+                          project: params.project,
+                          ...Object.fromEntries(searchParams.entries()),
+                        })
+                      )
+                    : Promise.resolve('ok')
+                }
+              >
+                <ReduxQueryNode />
+              </ProtectedContent>
+            }
+          />
+        </Route>
+        {/* <Route
+          path='/indexing'
+          element={
             <ProtectedContent>
-              <ProjectSubmission />
+              <Indexing />
             </ProtectedContent>
-          </Route>
-          {/* <Route path='/indexing'>
-                <ProtectedContent>
-                  <Indexing />
-                </ProtectedContent>
-              </Route>
-              <Route
-                exact
-                path='/files/*'
-                component={({ match }) => (
-                  <ProtectedContent
-                    filter={() =>
-                      store.dispatch(fetchCoreMetadata(props.match.params[0]))
-                    }
-                  >
-                    <CoreMetadataPage />
-                  </ProtectedContent>
-                )}
-              />
-              <Route path='/workspace'>
-                <ProtectedContent>
-                  <Workspace />
-                </ProtectedContent>
-              </Route>
-              <Route
-                path={workspaceUrl}
-                component={ErrorWorkspacePlaceholder}
-              />
-              <Route
-                path={workspaceErrorUrl}
-                component={ErrorWorkspacePlaceholder}
-              /> */}
-        </Switch>
-      </Suspense>
-    </Layout>
+          }
+        />
+        <Route
+          path='/files/*'
+          element={
+            <ProtectedContent
+              filter={() =>
+                store.dispatch(fetchCoreMetadata(props.match.params[0]))
+              }
+            >
+              <CoreMetadataPage />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='/workspace'
+          element={
+            <ProtectedContent>
+              <Workspace />
+            </ProtectedContent>
+          }
+        />
+        <Route path={workspaceUrl} element={<ErrorWorkspacePlaceholder />} />
+        <Route
+          path={workspaceErrorUrl}
+          element={<ErrorWorkspacePlaceholder />}
+        /> */}
+      </Route>
+    </Routes>
   );
 }
 

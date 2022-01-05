@@ -30,7 +30,7 @@ import '../typedef';
  * @property {boolean} isPending: PropTypes.bool,
  * @property {ButtonConfig} buttonConfig: ButtonConfigType.isRequired,
  * @property {GuppyConfig} guppyConfig: GuppyConfigType.isRequired,
- * @property {import('history').History} history: PropTypes.object.isRequired,
+ * @property {import('react-router-dom').NavigateFunction} navigate: PropTypes.func.isRequired,
  * @property {(body: any) => void} submitJob: PropTypes.func.isRequired,
  * @property {() => void} resetJobState: PropTypes.func.isRequired,
  * @property {() => void} checkJobStatus: PropTypes.func.isRequired,
@@ -365,7 +365,7 @@ class ExplorerButtonGroup extends Component {
 
   isPFBRunning = () => this.props.job && this.props.job.status === 'Running';
 
-  gotoWorkspace = () => this.props.history.push('/workspace');
+  gotoWorkspace = () => this.props.navigate('/workspace');
 
   closeToaster = () => {
     this.setState({
@@ -866,7 +866,7 @@ ExplorerButtonGroup.propTypes = {
   isPending: PropTypes.bool,
   buttonConfig: ButtonConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
-  history: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
   submitJob: PropTypes.func.isRequired,
   resetJobState: PropTypes.func.isRequired,
   checkJobStatus: PropTypes.func.isRequired,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -29,7 +29,7 @@ function IndexOverview({ overviewCounts }) {
     })),
   ];
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const explorerLocation =
     consortium.value === 'total'
       ? { pathname: '/explorer' }
@@ -87,7 +87,7 @@ function IndexOverview({ overviewCounts }) {
             <Button
               label='Explore more'
               buttonType='primary'
-              onClick={() => history.push(explorerLocation)}
+              onClick={() => navigate(explorerLocation)}
             />
           </MediaQuery>
         </div>
@@ -112,7 +112,7 @@ function IndexOverview({ overviewCounts }) {
           <Button
             label='Explore more'
             buttonType='primary'
-            onClick={() => history.push(explorerLocation)}
+            onClick={() => navigate(explorerLocation)}
           />
         </div>
       </MediaQuery>

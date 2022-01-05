@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useExplorerConfig } from './ExplorerConfigContext';
 import { extractExplorerStateFromURL } from './utils';
 import './typedef';
@@ -27,8 +27,8 @@ import './typedef';
 const ExplorerStateContext = createContext(null);
 
 export function ExplorerStateProvider({ children }) {
-  const history = useHistory();
-  const location = useLocation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const {
     current: { filterConfig, patientIdsConfig },
     shouldUpdateState,
@@ -37,11 +37,7 @@ export function ExplorerStateProvider({ children }) {
 
   const initialState = useMemo(
     () =>
-      extractExplorerStateFromURL(
-        new URLSearchParams(location.search),
-        filterConfig,
-        patientIdsConfig
-      ),
+      extractExplorerStateFromURL(searchParams, filterConfig, patientIdsConfig),
     []
   );
   const [filters, setFilters] = useState(initialState.initialAppliedFilters);
@@ -49,7 +45,7 @@ export function ExplorerStateProvider({ children }) {
   useEffect(() => {
     if (shouldUpdateState) {
       const newState = extractExplorerStateFromURL(
-        new URLSearchParams(location.search),
+        searchParams,
         filterConfig,
         patientIdsConfig
       );
@@ -63,7 +59,7 @@ export function ExplorerStateProvider({ children }) {
   function handleBrowserNavigationForState() {
     isBrowserNavigation.current = true;
     const newState = extractExplorerStateFromURL(
-      new URLSearchParams(location.search),
+      searchParams,
       filterConfig,
       patientIdsConfig
     );
@@ -74,8 +70,8 @@ export function ExplorerStateProvider({ children }) {
 
   /** @param {FilterState} filter */
   function handleFilterChange(filter) {
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.delete('filter');
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.delete('filter');
 
     if (filter && Object.keys(filter).length > 0) {
       /** @type {string[]} */
@@ -84,7 +80,7 @@ export function ExplorerStateProvider({ children }) {
         if (searchFields?.length > 0) allSearchFields.push(...searchFields);
 
       if (allSearchFields.length === 0) {
-        searchParams.set('filter', JSON.stringify(filter));
+        newSearchParams.set('filter', JSON.stringify(filter));
       } else {
         const allSearchFieldSet = new Set(allSearchFields);
         const filterWithoutSearchFields = {};
@@ -93,13 +89,15 @@ export function ExplorerStateProvider({ children }) {
             filterWithoutSearchFields[field] = filter[field];
 
         if (Object.keys(filterWithoutSearchFields).length > 0)
-          searchParams.set('filter', JSON.stringify(filterWithoutSearchFields));
+          newSearchParams.set(
+            'filter',
+            JSON.stringify(filterWithoutSearchFields)
+          );
       }
     }
 
     if (!isBrowserNavigation.current)
-      history.push({
-        search: decodeURIComponent(searchParams.toString()),
+      navigate(`?${decodeURIComponent(newSearchParams.toString())}`, {
         state: { scrollY: window.scrollY },
       });
   }
@@ -108,14 +106,14 @@ export function ExplorerStateProvider({ children }) {
   function handlePatientIdsChange(ids) {
     if (patientIdsConfig?.filter === undefined) return;
 
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.delete('patientIds');
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.delete('patientIds');
 
-    if (ids.length > 0) searchParams.set('patientIds', ids.join(','));
+    if (ids.length > 0) newSearchParams.set('patientIds', ids.join(','));
 
     setPatientIds(ids);
     if (!isBrowserNavigation.current)
-      history.push({ search: decodeURIComponent(searchParams.toString()) });
+      navigate(`?${decodeURIComponent(newSearchParams.toString())}`);
   }
 
   function clearFilters() {

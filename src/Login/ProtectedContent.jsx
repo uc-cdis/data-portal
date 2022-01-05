@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Redirect, useLocation, useRouteMatch } from 'react-router-dom';
+import { matchPath, Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   fetchDictionary,
@@ -29,12 +29,7 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
  * @property {() => Promise} [filter] optional filter to apply before rendering the child component
  */
 
-const LOCATIONS_DICTIONARY = [
-  '/dd',
-  '/dd/:node',
-  '/submission/map',
-  '/:project',
-];
+const LOCATIONS_DICTIONARY = ['/dd/*', '/submission/map', '/:project'];
 const LOCATIONS_PROJECTS = ['/files/*'];
 const LOCATIONS_SCHEMA = ['/query'];
 
@@ -57,7 +52,6 @@ function ProtectedContent({
   };
   const [state, setState] = useState(initialState);
   const location = useLocation();
-  const match = useRouteMatch();
 
   /**
    * Start filter the 'newState' for the checkLoginStatus component.
@@ -133,13 +127,15 @@ function ProtectedContent({
    */
   function fetchResources({ dispatch, getState }) {
     const { graphiql, project, submission } = getState();
-    const { path } = match;
+    function matchPathOneOf(patterns) {
+      return patterns.some((pattern) => matchPath(pattern, location.pathname));
+    }
 
-    if (LOCATIONS_DICTIONARY.includes(path) && !submission.dictionary) {
+    if (matchPathOneOf(LOCATIONS_DICTIONARY) && !submission.dictionary) {
       dispatch(fetchDictionary());
-    } else if (LOCATIONS_PROJECTS.includes(path) && !project.projects) {
+    } else if (matchPathOneOf(LOCATIONS_PROJECTS) && !project.projects) {
       dispatch(fetchProjects());
-    } else if (LOCATIONS_SCHEMA.includes(path)) {
+    } else if (matchPathOneOf(LOCATIONS_SCHEMA)) {
       if (!graphiql.schema) dispatch(fetchSchema());
       if (!graphiql.guppySchema) dispatch(fetchGuppySchema());
     }
@@ -182,7 +178,7 @@ function ProtectedContent({
     );
   }, [location]);
 
-  if (state.redirectTo) return <Redirect to={state.redirectTo} />;
+  if (state.redirectTo) return <Navigate to={state.redirectTo} replace />;
   if (isPublic && (state.dataLoaded || typeof filter !== 'function'))
     return children;
   if (state.authenticated)
