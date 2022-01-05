@@ -5,7 +5,7 @@ import {
   checkJob,
   fetchJobResult,
   resetJobState,
-} from '../../Analysis/AnalysisJob';
+} from '../../actions';
 
 const mapStateToProps = (state) => ({
   job: state.analysis.job,
