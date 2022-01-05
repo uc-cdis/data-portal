@@ -150,26 +150,6 @@ function getConsortiumList(dict) {
   return JSON.stringify(consortiumList, null, 2);
 }
 
-function getEnumFilterList(config, dict) {
-  const filterSet = new Set();
-  for (const { filters } of config.explorerConfig ?? [])
-    for (const { fields } of filters.tabs ?? [])
-      for (const field of fields) filterSet.add(field);
-
-  const enumPropSet = new Set();
-  for (const value of Object.values(dict))
-    if (value.properties !== undefined)
-      for (const [propName, propValue] of Object.entries(value.properties))
-        if (propValue.enum !== undefined) enumPropSet.add(propName);
-
-  const filterList = Array.from(filterSet);
-  const enumFilterSet = new Set();
-  for (const filter of filterList)
-    if (enumPropSet.has(filter)) enumFilterSet.add(filter);
-
-  return JSON.stringify(Array.from(enumFilterSet), null, 2);
-}
-
 const config = buildConfig(process.env.app, params);
 // eslint-disable-next-line import/no-dynamic-require
 const dict = require(`${__dirname}/dictionary.json`);
@@ -189,7 +169,6 @@ console.log(
   `const requiredCerts = [${defaultRequiredCerts.map((item) => `'${item}'`)}];`
 );
 console.log(`const consortiumList = ${getConsortiumList(dict)};`);
-console.log(`const enumFilterList = ${getEnumFilterList(config, dict)};`);
 console.log(
-  'module.exports = { components, config, gaTracking, requiredCerts, consortiumList, enumFilterList };'
+  'module.exports = { components, config, gaTracking, requiredCerts, consortiumList };'
 );
