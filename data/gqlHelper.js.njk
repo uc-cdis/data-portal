@@ -108,7 +108,7 @@ const helperSingleton = {
  * support different dictionaries in the same app we need to be a little
  * bit clever.
  */
-export class GQLHelper {
+export default class GQLHelper {
   /**
    * Goofy little utility - scans data for keys matching 'fileCount\d+' or 'fileData\d+',
    * and returns a { fileCount: sum-of-fileCounts, fileData:[] concatenation of data }

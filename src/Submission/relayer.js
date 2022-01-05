@@ -1,7 +1,7 @@
 import { fetchQuery, graphql } from 'relay-runtime';
 import environment from '../environment';
 import getReduxStore from '../reduxStore';
-import { GQLHelper } from '../gqlHelper';
+import GQLHelper from '../gqlHelper';
 import { config } from '../params';
 
 const updateReduxTransactionList = async (transactionList) =>
