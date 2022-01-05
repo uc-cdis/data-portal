@@ -10,7 +10,7 @@ import login from './Login/reducers';
 import ddgraph from './DataDictionary/reducers';
 
 /** @type {import('redux').Reducer} */
-const analysis = (state = {}, action) => {
+const kube = (state = {}, action) => {
   switch (action.type) {
     case 'RECEIVE_JOB_DISPATCH':
       return { ...state, job: action.data };
@@ -106,11 +106,11 @@ const project = (state = {}, action) => {
 };
 
 const reducers = combineReducers({
-  analysis,
   coreMetadata,
   ddgraph,
   index,
   graphiql,
+  kube,
   login,
   popups,
   project,

@@ -8,7 +8,7 @@ import {
 } from '../../actions';
 
 const mapStateToProps = (state) => ({
-  job: state.analysis.job,
+  job: state.kube.job,
   userAccess: state.userAccess.access,
 });
 

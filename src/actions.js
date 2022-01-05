@@ -450,8 +450,8 @@ export const dispatchJob = (body) => (dispatch) =>
 export const checkJobStatus = (dispatch, getState) => {
   const state = getState();
   let jobId = null;
-  if (state.analysis.job) {
-    jobId = state.analysis.job.uid;
+  if (state.kube.job) {
+    jobId = state.kube.job.uid;
   }
   return fetchWithCreds({
     path: `${jobapiPath}status?UID=${jobId}`,
@@ -462,7 +462,7 @@ export const checkJobStatus = (dispatch, getState) => {
       ({ status, data }) => {
         // stop fetching job status once it stops running
         if (data.status !== 'Running') {
-          clearInterval(state.analysis.jobStatusInterval);
+          clearInterval(state.kube.jobStatusInterval);
         }
         switch (status) {
           case 200:
