@@ -666,20 +666,18 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                   </Button>
                 </div>
               </div>
-              <div className='discovery-header__dropdown-tags-display-panel'>
-                <Collapse activeKey={(searchableTagCollapsed) ? '' : '1'} ghost>
-                  <Panel header='This is panel header 1' key='1'>
-                    <div className='discovery-header__dropdown-tags'>
-                      <DiscoveryDropdownTagViewer
-                        config={config}
-                        studies={props.studies}
-                        selectedTags={props.selectedTags}
-                        setSelectedTags={props.onTagsSelected}
-                      />
-                    </div>
-                  </Panel>
-                </Collapse>
-              </div>
+              <Collapse activeKey={(searchableTagCollapsed) ? '' : '1'} ghost>
+                <Panel className='discovery-header__dropdown-tags-display-panel' header='' key='1'>
+                  <div className='discovery-header__dropdown-tags'>
+                    <DiscoveryDropdownTagViewer
+                      config={config}
+                      studies={props.studies}
+                      selectedTags={props.selectedTags}
+                      setSelectedTags={props.onTagsSelected}
+                    />
+                  </div>
+                </Panel>
+              </Collapse>
             </Space>
           </div>
         ) : (
