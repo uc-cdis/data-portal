@@ -368,7 +368,7 @@
 }
 
 .discovery-header__dropdown-tags-display-panel .ant-collapse-header {
-  display: none;
+  display: none !important;
 }
 
 .discovery-header__dropdown-tags-search {
