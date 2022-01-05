@@ -8,12 +8,6 @@ import GQLHelper from './gqlHelper';
 describe('the gqlHelper', () => {
   const helper = GQLHelper.getGQLHelper();
 
-  it('provides a base indexPageQuery', () => {
-    const query = helper.indexPageQuery;
-
-    expect(!!query).toBe(true);
-  });
-
   it('provides a base submissionPageQuery', () => {
     const query = helper.submissionPageQuery;
 
