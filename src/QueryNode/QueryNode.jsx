@@ -178,7 +178,7 @@ function QueryNode({
       <h4>most recent 20:</h4>
       {queryNodesList.map(([key, value]) => (
         <ul key={key}>
-          {value.map(({ id, submitter_id: submitterId }, i) => (
+          {value.map(({ id, submitter_id: submitterId }) => (
             <li key={submitterId}>
               <span>{submitterId}</span>
               <a
