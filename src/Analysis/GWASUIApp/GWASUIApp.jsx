@@ -89,7 +89,7 @@ const GWASUIApp = (props) => {
 
   const getMissingRatio = (cohortArr) => {
     const cohortKeys = Object.keys(cohortArr[0]);
-    cohortKeys.shift();  // removes id key
+    cohortKeys.shift(); // removes id key
     const missingRatioArr = [];
     cohortKeys.forEach((key) => {
       const keyRow = {};
@@ -108,7 +108,7 @@ const GWASUIApp = (props) => {
   };
 
   const initializeCohortData = async (name) => {
-    const json = await getCohortJsonByName(name).catch((err) => { console.log('Failed to retrieve cohort json by name', err)});
+    const json = await getCohortJsonByName(name).catch((err) => { console.error('Failed to retrieve cohort json by name', err)});
     if (json.Cohort.length > 0) getMissingRatio(json.Cohort);
   };
 
@@ -204,7 +204,7 @@ const GWASUIApp = (props) => {
 
   useEffect(() => {
     initializeSources();
-  }, []);
+  }, [props]);
 
   const generateContentForStep = (stepIndex) => {
     switch (stepIndex) {

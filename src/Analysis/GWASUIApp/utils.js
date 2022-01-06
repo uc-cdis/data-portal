@@ -1,53 +1,4 @@
-export const mockCohortData = [
-  {
-    cohort_id: 1,
-    cohort_name: 'Testing Cohort',
-    size: 10000,
-  },
-  {
-    cohort_id: 2,
-    cohort_name: 'T2D Cohort',
-    size: 15000,
-  },
-  {
-    cohort_id: 3,
-    cohort_name: 'Hypertension Cohort',
-    size: 255000,
-  },
-  {
-    cohort_id: 7,
-    cohort_name: 'PTSD Cohort',
-    size: 5000,
-  },
-  {
-    cohort_id: 15,
-    cohort_name: 'Height Cohort',
-    size: 400000,
-  },
-];
-
-export const mockConceptData = [
-  {
-    concept_id: 1010101,
-    name: 'Standing height',
-    domain: 'Measurement',
-    n_missing_ratio: 0.2,
-  },
-  {
-    concept_id: 2020202,
-    name: 'Age',
-    domain: 'Person',
-    n_missing_ratio: 0.8,
-  },
-  {
-    concept_id: 3030303,
-    name: 'Biological sex',
-    domain: 'Person',
-    n_missing_ratio: 0.01,
-  },
-];
-
-export const marinerRequestBody = {
+const marinerRequestBody = {
   demo: {
     input: {
       genotype_cutoff: '0.2',
@@ -752,3 +703,5 @@ export const marinerRequestBody = {
     },
   },
 };
+
+export default marinerRequestBody;
