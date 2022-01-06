@@ -105,8 +105,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  onSearchFormSubmit: (value, url, navigate) =>
-    dispatch(submitSearchForm(value, url, navigate)),
+  onSearchFormSubmit: (value, cb) => dispatch(submitSearchForm(value, cb)),
   onUpdatePopup: (state) => dispatch(updatePopup(state)),
   onClearDeleteSession: () => dispatch(clearDeleteSession),
   onDeleteNode: ({ id, project }) => {
