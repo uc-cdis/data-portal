@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
-import { Outlet, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
 import Layout from './Layout';
@@ -141,6 +141,7 @@ function App({ store }) {
             }
           />
         )}
+        <Route path='*' element={<Navigate to='' replace />} />
         {/* <Route
           path='/indexing'
           element={
