@@ -187,32 +187,28 @@ function QueryNode({
               >
                 Download
               </a>
-              <a
-                role='button'
-                tabIndex={0}
+              <button
                 className='query-node__button query-node__button--view'
                 onClick={() =>
                   onStoreNodeInfo({ project, id }).then(() =>
                     onUpdatePopup({ view_popup: true })
                   )
                 }
-                aria-label='View'
+                type='button'
               >
                 View
-              </a>
-              <a
-                role='button'
-                tabIndex={0}
+              </button>
+              <button
                 className='query-node__button query-node__button--delete'
                 onClick={() =>
                   onStoreNodeInfo({ project, id }).then(() =>
                     onUpdatePopup({ nodedelete_popup: true })
                   )
                 }
-                aria-label='Delete'
+                type='button'
               >
                 Delete
-              </a>
+              </button>
             </li>
           ))}
         </ul>

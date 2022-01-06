@@ -1,8 +1,16 @@
 .query-node__button {
   cursor: pointer;
   float: right;
-  display: inline-block;
+  line-height: 1.6em;
   margin-left: 2em;
+}
+
+button.query-node__button {
+  background: initial;
+  border: none;
+  margin-left: 2em;
+  width: auto;
+  height: auto;
 }
 
 .query-node__button:hover,
