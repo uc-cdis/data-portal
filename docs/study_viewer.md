@@ -3,7 +3,7 @@
 Example configuration:
 
 ```
-[
+"studyViewerConfig": [
     {
         "dataType": "dataset",
         "title": "Datasets",           // page title
@@ -13,12 +13,14 @@ Example configuration:
             "blockFields": ["short_description"],
             // displayed in table:
             "tableFields": ["condition", ...],
+            "hideEmptyFields": false //optional false by default; hides empty fields
         },
         "singleItemConfig": { // optional, if omitted, "listItemConfig" block will be used for both pages
             // displayed outside of table:
             "blockFields": ["long_description"],
             // displayed in table:
             "tableFields": ["condition", ...],
+            "hideEmptyFields": false, //optional false by default; hides empty fields
             // optional configs for side boxes, only for single study viewer
             "sideBoxes": [
                 {
@@ -75,7 +77,13 @@ Example configuration:
                 "redirectModalText": "", // optional, link label for the URL in "You will now be sent to <URL>"
                 "accessRequestedText": "DAR In Progress", // optional, button text that will be overridden for the disabled button when user already has a request in SUBMITTED state. If omitted, the default text will be "Access Requested"
                 "accessRequestedTooltipText": "Your recently submitted DAR is being reviewed" // optional, button tooltip that will be displayed for the disabled button when user already has a request in SUBMITTED state. If omitted, there will be no tooltip showing up by default
-            }
+            },
+            {
+                // configuration specific to the "Export to Workspace" button
+                "type": "export-pfb-to-workspace",
+                "root_node": "clinical_trial_file",// name of the node corresponding to the "ROOT_NODE" ES index in the Pelican job config
+                "disableButtonTooltipText": "Working on an Export" // optional, tooltip text to display when the "Export to Workspace" button is disabled during export
+                }
         ]
     },
     {

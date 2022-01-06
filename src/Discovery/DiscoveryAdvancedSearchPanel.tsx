@@ -2,10 +2,11 @@ import React from 'react';
 import memoize from 'lodash/memoize';
 import { Checkbox, Collapse, Space } from 'antd';
 import { DiscoveryConfig } from './DiscoveryConfig';
+import { AccessLevel } from './Discovery';
 
 interface Props {
   config: DiscoveryConfig;
-  studies: {__accessible: boolean, [any: string]: any}[]
+  studies: {__accessible: AccessLevel, [any: string]: any}[]
   filterState: any;
   setFilterState: (boolean) => void;
 }
