@@ -19,7 +19,7 @@ import './Popup.css';
  * @property {string} [error]
  * @property {string} [iconName]
  * @property {PopupButton[]} [leftButtons]
- * @property {{ code: string; label: string }[]} [lines]
+ * @property {{ code: string; label?: string }[]} [lines]
  * @property {string} [message]
  * @property {() => void} [onClose]
  * @property {PopupButton[]} [rightButtons]

@@ -13,10 +13,10 @@ import './QueryNode.css';
  * @param {Object} props.queryNodes
  * @param {Object} props.popups
  * @param {(value: any, cb?: Function) => void} props.onSearchFormSubmit
- * @param {(param: { view_popup: string; nodedelete_popup: boolean | string; }) => void} props.onUpdatePopup
+ * @param {(param: { view_popup?: boolean; nodedelete_popup?: boolean | string; }) => void} props.onUpdatePopup
  * @param {() => void} props.onClearDeleteSession
  * @param {(param: { project: string; id: string; }) => void} props.onDeleteNode
- * @param {(param: { project: string; id: string; }) => void} props.onStoreNodeInfo
+ * @param {(param: { project: string; id: string; }) => Promise<void>} props.onStoreNodeInfo
  */
 function QueryNode({
   submission = null,
@@ -44,7 +44,7 @@ function QueryNode({
   /**
    * Internal helper to render the 'view node" popup if necessary
    * based on the popups and queryNodes properties attached to this component.
-   * @return {{ state: 'vieNode' | 'noPopup'; popupEl: JSX.Element | null; }}
+   * @return {{ state: 'viewNode' | 'noPopup'; popupEl: JSX.Element | null; }}
    * state (just used for testing) is string one of [viewNode, noPopup], and
    * popupEl is either null or a <Popup> properly configured to render
    */
