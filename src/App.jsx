@@ -94,6 +94,10 @@ function App({ store }) {
             path='map'
             element={<ReduxMapDataModel navigate={navigate} />}
           />
+          <Route path=':project' element={<Outlet />}>
+            <Route index element={<ProjectSubmission />} />
+            <Route path='search' element={<ReduxQueryNode />} />
+          </Route>
         </Route>
         <Route
           path='query'
@@ -137,17 +141,6 @@ function App({ store }) {
             }
           />
         )}
-        <Route
-          path=':project'
-          element={
-            <ProtectedContent>
-              <Outlet />
-            </ProtectedContent>
-          }
-        >
-          <Route index element={<ProjectSubmission />} />
-          <Route path='search' element={<ReduxQueryNode />} />
-        </Route>
         {/* <Route
           path='/indexing'
           element={
