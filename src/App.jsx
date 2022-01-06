@@ -1,13 +1,6 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
-import {
-  Outlet,
-  Route,
-  Routes,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+import { Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
 import Layout from './Layout';
@@ -15,7 +8,6 @@ import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 // import { fetchCoreMetadata } from './CoreMetadata/reduxer';
 import { fetchAccess } from './UserProfile/ReduxUserProfile';
-import { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   enableResourceBrowser,
   // workspaceUrl,
@@ -50,8 +42,6 @@ function App({ store }) {
   }, []);
 
   const navigate = useNavigate();
-  const params = useParams();
-  const [searchParams] = useSearchParams();
 
   return (
     <Routes>
@@ -147,36 +137,16 @@ function App({ store }) {
             }
           />
         )}
-        <Route path=':project' element={<Outlet />}>
-          <Route
-            index
-            element={
-              <ProtectedContent>
-                <ProjectSubmission />
-              </ProtectedContent>
-            }
-          />
-          <Route
-            path='search'
-            element={
-              <ProtectedContent
-                filter={() =>
-                  Array.from(searchParams.keys()).length > 0
-                    ? // Linking directly to a search result,
-                      // so kick-off search here (rather than on button click)
-                      store.dispatch(
-                        submitSearchForm({
-                          project: params.project,
-                          ...Object.fromEntries(searchParams.entries()),
-                        })
-                      )
-                    : Promise.resolve('ok')
-                }
-              >
-                <ReduxQueryNode />
-              </ProtectedContent>
-            }
-          />
+        <Route
+          path=':project'
+          element={
+            <ProtectedContent>
+              <Outlet />
+            </ProtectedContent>
+          }
+        >
+          <Route index element={<ProjectSubmission />} />
+          <Route path='search' element={<ReduxQueryNode />} />
         </Route>
         {/* <Route
           path='/indexing'

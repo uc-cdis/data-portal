@@ -1,4 +1,10 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
@@ -29,6 +35,18 @@ function QueryNode({
 }) {
   const navigate = useNavigate();
   const { project } = useParams();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (Array.from(searchParams.keys()).length > 0)
+      // Linking directly to a search result,
+      // so kick-off search here (rather than on button click)
+      onSearchFormSubmit(
+        { project, ...Object.fromEntries(searchParams.entries()) },
+        null,
+        navigate
+      );
+  }, []);
 
   /**
    * Internal helper to render the 'view node" popup if necessary
