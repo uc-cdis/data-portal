@@ -56,7 +56,7 @@ const deleteNode = ({ id, project }) => (dispatch) =>
           type: 'DELETE_SUCCEED',
           id,
         });
-        return dispatch(clearDeleteSession());
+        return dispatch(clearDeleteSession);
       default:
         return dispatch({
           type: 'DELETE_FAIL',
