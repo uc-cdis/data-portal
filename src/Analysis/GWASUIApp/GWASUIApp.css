@@ -1,0 +1,73 @@
+.steps-content {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  border: 1px dashed #e9e9e9;
+  border-radius: 2px;
+  background-color: #fafafa;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.steps-action {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ant-btn {
+  width: auto;
+}
+
+.GWASUI-mainTable {
+  padding: 0 8px;
+  border: 1px solid #e9e9e9;
+}
+
+.GWASUI-jobStatus {
+  margin-bottom: 16px;
+}
+
+.GWASUI-navBtn {
+  width: 150px;
+}
+
+.GWASUI-navBtn__next {
+  margin-left: auto;
+}
+
+.GWASUI-specifyTable {
+  padding: 8px;
+  border: 1px solid #e9e9e9;
+}
+
+.GWASUI-specifyTable__innerSpace {
+  width: 100%;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.GWASUI-specifyTable__formItem {
+  width: 200px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  align-items: center;
+}
+
+.GWASUI-specifyTable__formItem > .ant-form-item-control {
+  align-items: center;
+  text-align: center;
+}
+
+.GWASUI-mainArea {
+  min-width: 600px;
+  padding: 8px;
+  border: 1px solid #e9e9e9;
+}
+
+.GWASUI-selectedCohort {
+  color: var(--g3-color__base-blue);
+}

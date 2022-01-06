@@ -6,7 +6,7 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import ReduxGWASApp from './GWASApp/ReduxGWASApp';
-import ReduxGWASUI from './GWASUIMockup/ReduxGWASUI';
+import ReduxGWASUIApp from './GWASUIApp/ReduxGWASUIApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 
@@ -75,9 +75,9 @@ class AnalysisApp extends React.Component {
       return (
         <ReduxGWASApp />
       );
-    case 'GWASUIMockup':
+    case 'GWASUIApp':
       return (
-        <ReduxGWASUI />
+        <ReduxGWASUIApp />
       );
     default:
       return (

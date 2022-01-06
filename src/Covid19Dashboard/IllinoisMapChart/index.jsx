@@ -658,20 +658,21 @@ class IllinoisMapChart extends React.Component {
           <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
           <PopulationIL visibility={this.state.overlay_layers.il_population.visible} /> */}
           {/* Outline a set of counties from IL */}
-          {this.state.activeLayer === 'C_time_data' &&
-            <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountiesGeoJson}>
-              <ReactMapGL.Layer
-                id='county-highlight'
-                type='line'
-                beforeId='waterway-label'
-                paint={{
-                  'line-color': '#421C52',
-                  'line-width': 3,
-                }}
-              />
-            </ReactMapGL.Source>
-          }
-        <ReactMapGL.Source type='geojson' data={this.mapData.illinoisCountiesGeoJson}>
+          {this.state.activeLayer === 'C_time_data'
+            && (
+              <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountiesGeoJson}>
+                <ReactMapGL.Layer
+                  id='county-highlight'
+                  type='line'
+                  beforeId='waterway-label'
+                  paint={{
+                    'line-color': '#421C52',
+                    'line-width': 3,
+                  }}
+                />
+              </ReactMapGL.Source>
+            )}
+          <ReactMapGL.Source type='geojson' data={this.mapData.illinoisCountiesGeoJson}>
             <ReactMapGL.Layer
               id='county-outline'
               type='line'
