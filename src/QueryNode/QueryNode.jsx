@@ -1,10 +1,5 @@
 import { useEffect } from 'react';
-import {
-  Link,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { jsonToString, getSubmitPath } from '../utils';
 import Popup from '../components/Popup';
@@ -17,7 +12,7 @@ import './QueryNode.css';
  * @param {Object} props.submission
  * @param {Object} props.queryNodes
  * @param {Object} props.popups
- * @param {(value: any, url: string, navigate: import('react-router-dom').NavigateFunction ) => void} props.onSearchFormSubmit
+ * @param {(value: any, cb?: Function) => void} props.onSearchFormSubmit
  * @param {(param: { view_popup: string; nodedelete_popup: boolean | string; }) => void} props.onUpdatePopup
  * @param {() => void} props.onClearDeleteSession
  * @param {(param: { project: string; id: string; }) => void} props.onDeleteNode
@@ -33,19 +28,17 @@ function QueryNode({
   onDeleteNode,
   onStoreNodeInfo,
 }) {
-  const navigate = useNavigate();
   const { project } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     if (Array.from(searchParams.keys()).length > 0)
       // Linking directly to a search result,
       // so kick-off search here (rather than on button click)
-      onSearchFormSubmit(
-        { project, ...Object.fromEntries(searchParams.entries()) },
-        null,
-        navigate
-      );
+      onSearchFormSubmit({
+        project,
+        ...Object.fromEntries(searchParams.entries()),
+      });
   }, []);
 
   /**
@@ -175,8 +168,8 @@ function QueryNode({
       {renderViewPopup().popupEl}
       {renderDeletePopup().popupEl}
       <QueryForm
-        onSearchFormSubmit={(data, url) =>
-          onSearchFormSubmit(data, url, navigate)
+        onSearchFormSubmit={(data, newSearchParams) =>
+          onSearchFormSubmit(data, () => setSearchParams(newSearchParams))
         }
         project={project}
         nodeTypes={submission.nodeTypes}

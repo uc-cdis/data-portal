@@ -44,8 +44,7 @@ class QueryForm extends Component {
         data[input.name] = input.value;
       }
     }
-    const url = `/${this.props.project}/search?${queryParam.join('&')}`;
-    this.props.onSearchFormSubmit(data, url);
+    this.props.onSearchFormSubmit(data, queryParam.join('&'));
   }
 
   updateValue(newValue) {

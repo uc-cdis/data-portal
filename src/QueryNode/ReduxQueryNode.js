@@ -9,7 +9,7 @@ const clearDeleteSession = {
   type: 'CLEAR_DELETE_SESSION',
 };
 
-export const submitSearchForm = (opts, url, navigate) => (dispatch) => {
+export const submitSearchForm = (opts, cb) => (dispatch) => {
   const nodeType = opts.node_type;
   const submitterId = opts.submitter_id || '';
 
@@ -38,10 +38,7 @@ export const submitSearchForm = (opts, url, navigate) => (dispatch) => {
       }
     })
     .then((msg) => dispatch(msg))
-    .then(() => {
-      if (url) navigate(url);
-      return null;
-    });
+    .then(() => cb?.());
 };
 
 const deleteNode = ({ id, project }) => (dispatch) =>
