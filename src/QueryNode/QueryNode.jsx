@@ -1,7 +1,13 @@
 import { useEffect } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { jsonToString, getSubmitPath } from '../utils';
+import checkProjectPermission from '../hooks/checkProjectPermission';
 import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
 import './QueryNode.css';
@@ -30,7 +36,6 @@ function QueryNode({
 }) {
   const { project } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-
   useEffect(() => {
     if (Array.from(searchParams.keys()).length > 0)
       // Linking directly to a search result,
@@ -39,6 +44,12 @@ function QueryNode({
         project,
         ...Object.fromEntries(searchParams.entries()),
       });
+  }, []);
+
+  const navigate = useNavigate();
+  const isUserWithPermission = checkProjectPermission(project);
+  useEffect(() => {
+    if (!isUserWithPermission) navigate(-1);
   }, []);
 
   /**

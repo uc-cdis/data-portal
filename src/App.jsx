@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
-import { Outlet, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
 import Layout from './Layout';
@@ -94,6 +94,10 @@ function App({ store }) {
             path='map'
             element={<ReduxMapDataModel navigate={navigate} />}
           />
+          <Route path=':project' element={<Outlet />}>
+            <Route index element={<ProjectSubmission />} />
+            <Route path='search' element={<ReduxQueryNode />} />
+          </Route>
         </Route>
         <Route
           path='query'
@@ -137,17 +141,7 @@ function App({ store }) {
             }
           />
         )}
-        <Route
-          path=':project'
-          element={
-            <ProtectedContent>
-              <Outlet />
-            </ProtectedContent>
-          }
-        >
-          <Route index element={<ProjectSubmission />} />
-          <Route path='search' element={<ReduxQueryNode />} />
-        </Route>
+        <Route path='*' element={<Navigate to='' replace />} />
         {/* <Route
           path='/indexing'
           element={

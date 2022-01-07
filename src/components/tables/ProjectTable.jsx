@@ -23,7 +23,7 @@ function ProjectTable({ projectList, summaryFields }) {
       <Button
         className='project-table__submit-button'
         key={i}
-        onClick={() => navigate(`/${name}`)}
+        onClick={() => navigate(name)}
         label='Submit Data'
         buttonType='primary'
         rightIcon='upload'

@@ -56,7 +56,7 @@ const deleteNode = ({ id, project }) => (dispatch) =>
           type: 'DELETE_SUCCEED',
           id,
         });
-        return dispatch(clearDeleteSession());
+        return dispatch(clearDeleteSession);
       default:
         return dispatch({
           type: 'DELETE_FAIL',
@@ -94,15 +94,11 @@ const fetchQueryNode = ({ id, project }) => (dispatch) =>
       dispatch(msg);
     });
 
-const mapStateToProps = (state, ownProps) => {
-  const result = {
-    submission: state.submission,
-    ownProps,
-    queryNodes: state.queryNodes,
-    popups: { ...state.popups },
-  };
-  return result;
-};
+const mapStateToProps = (state) => ({
+  submission: state.submission,
+  queryNodes: state.queryNodes,
+  popups: { ...state.popups },
+});
 
 const mapDispatchToProps = (dispatch) => ({
   onSearchFormSubmit: (value, cb) => dispatch(submitSearchForm(value, cb)),
