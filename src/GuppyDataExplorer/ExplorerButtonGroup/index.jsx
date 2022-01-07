@@ -982,7 +982,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
                   className='explorer-button-group__dropdown'
                   disabled={this.props.totalCount === 0 || this.props.isLocked}
                 >
-                  <Dropdown.Button>{dropdownTitle}</Dropdown.Button>
+                  <Dropdown.Button>{(!this.props.user.username && this.isLoginForDownloadEnabled())
+                             ? `Login to ${dropdownTitle.toLowerCase()}` : dropdownTitle}</Dropdown.Button>
                   <Dropdown.Menu>
                     {
                       btnConfigs.map((btnCfg) => {
@@ -996,7 +997,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
                               && this.isDownloadButton(btnCfg)) ? this.goToLogin() : onClick())}
                           >
                             {(!this.props.user.username && this.isLoginForDownloadEnabled()
-                            && this.isDownloadButton(btnCfg)) ? `Login to ${btnCfg.title}.toLowerCase()}` : btnCfg.title}
+                            && this.isDownloadButton(btnCfg)) ? `Login to download ${btnCfg.title}` : btnCfg.title}
                           </Dropdown.Item>
                         );
                       })
