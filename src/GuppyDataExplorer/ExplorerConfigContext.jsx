@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { tierAccessLimit, explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
-import './typedef';
+
+/** @typedef {import('./types').AlteredExplorerConfig} AlteredExplorerConfig */
 
 /**
  * @typedef {Object} ExplorerConfigContext

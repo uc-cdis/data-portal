@@ -19,9 +19,10 @@ import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import ExplorerFilterSet from './ExplorerFilterSet';
 import './Explorer.css';
-import './typedef';
 
-/** @type {{ [x:string]: OptionFilter }} */
+/** @typedef {import('./types').OptionFilter} OptionFilter */
+
+/** @type {{ [x: string]: OptionFilter }} */
 const emptyAdminAppliedPreFilters = {};
 
 /** @param {{ dataVersion?: string; portalVersion?: string }} props */

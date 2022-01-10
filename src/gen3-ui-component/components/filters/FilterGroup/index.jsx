@@ -14,7 +14,10 @@ import {
   updateSelectedValue,
 } from './utils';
 import './FilterGroup.css';
-import '../typedef';
+
+/** @typedef {import('../types').FilterChangeHandler} FilterChangeHandler */
+/** @typedef {import('../types').FilterConfig} FilterConfig */
+/** @typedef {import('../types').FilterState} FilterState */
 
 /**
  * @typedef {Object} FilterGroupProps

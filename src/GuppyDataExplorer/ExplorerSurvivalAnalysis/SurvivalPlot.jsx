@@ -12,7 +12,9 @@ import {
   Legend,
 } from 'recharts';
 import { filterSurvivalByTime, getXAxisTicks } from './utils';
-import './typedef';
+
+/** @typedef {import('./types').ColorScheme} ColorScheme */
+/** @typedef {import('./types').SurvivalData} SurvivalData */
 
 /**
  * @typedef {Object} SurvivalPlotProps

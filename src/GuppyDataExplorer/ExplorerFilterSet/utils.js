@@ -1,5 +1,7 @@
 import { capitalizeFirstLetter } from '../../utils';
-import './typedef';
+
+/** @typedef {import('../types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
 
 /**
  * @return {ExplorerFilterSet}

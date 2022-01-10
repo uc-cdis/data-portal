@@ -4,7 +4,9 @@ import SimplePopup from '../components/SimplePopup';
 import { headers, userapiPath } from '../localconf';
 import RegistrationForm from './RegistrationForm';
 import './UserRegistration.css';
-import './typedef';
+
+/** @typedef {import('./types').UserRegistrationDocument} UserRegistrationDocument */
+/** @typedef {import('./types').UserRegistrationInput} UserRegistrationInput */
 
 /**
  * @param {Object} prop

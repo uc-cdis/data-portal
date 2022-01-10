@@ -3,7 +3,18 @@ import fetch from 'isomorphic-fetch';
 import flat from 'flat';
 import papaparse from 'papaparse';
 import { FILE_DELIMITERS, GUPPY_URL } from './const';
-import '../typedef';
+
+/** @typedef {import('../types').AnchorConfig} AnchorConfig */
+/** @typedef {import('../types').AnchoredFilterState} AnchoredFilterState */
+/** @typedef {import('../types').FilterState} FilterState */
+/** @typedef {import('../types').GqlAndFilter} GqlAndFilter */
+/** @typedef {import('../types').GqlFilter} GqlFilter */
+/** @typedef {import('../types').GqlInFilter} GqlInFilter */
+/** @typedef {import('../types').GqlNestedFilter} GqlNestedFilter */
+/** @typedef {import('../types').GqlSimpleAndFilter} GqlSimpleAndFilter */
+/** @typedef {import('../types').GqlSort} GqlSort */
+/** @typedef {import('../types').OptionFilter} OptionFilter */
+/** @typedef {import('../types').RangeFilter} RangeFilter */
 
 const graphqlEndpoint = `${GUPPY_URL}/graphql`;
 const downloadEndpoint = `${GUPPY_URL}/download`;
@@ -55,15 +66,16 @@ export function queryGuppyForAggregationChartData({
   gqlFilter,
   signal,
 }) {
-  const query = (gqlFilter !== undefined
-    ? `query ($filter: JSON) {
+  const query = (
+    gqlFilter !== undefined
+      ? `query ($filter: JSON) {
         _aggregation {
           ${type} (filter: $filter, filterSelf: false, accessibility: all) {
             ${fields.map(buildHistogramQueryStrForField).join('\n')}
           }
         }
       }`
-    : `query {
+      : `query {
         _aggregation {
           ${type} (accessibility: all) {
             ${fields.map(buildHistogramQueryStrForField).join('\n')}
@@ -89,8 +101,9 @@ export function queryGuppyForAggregationChartData({
  * @param {AbortSignal} [args.signal]
  */
 export function queryGuppyForAggregationCountData({ type, gqlFilter, signal }) {
-  const query = (gqlFilter !== undefined
-    ? `query ($filter: JSON) {
+  const query = (
+    gqlFilter !== undefined
+      ? `query ($filter: JSON) {
         _aggregation {
           accessible: ${type} (filter: $filter, accessibility: accessible) {
             _totalCount
@@ -100,7 +113,7 @@ export function queryGuppyForAggregationCountData({ type, gqlFilter, signal }) {
           }
         }
       }`
-    : `query {
+      : `query {
         _aggregation {
           accessible: ${type} (accessibility: accessible) {
             _totalCount
@@ -160,13 +173,12 @@ export function getQueryInfoForAggregationOptionsData({
             const groupGqlFilter = cloneDeep(gqlFilter ?? { AND: [] });
 
             if (anchorValue !== '' && 'AND' in groupGqlFilter) {
-              const found = groupGqlFilter.AND.find(
-                ({ nested }) => nested?.path === path
+              const filters = /** @type {GqlFilter[]} */ (groupGqlFilter.AND);
+              const found = /** @type {GqlNestedFilter} */ (
+                filters.find((f) => 'nested' in f && f.nested.path === path)
               );
               if (found === undefined) {
-                groupGqlFilter.AND.push({
-                  nested: { path, AND: [anchorFilterPiece] },
-                });
+                filters.push({ nested: { path, AND: [anchorFilterPiece] } });
               } else {
                 found.nested.AND.push(anchorFilterPiece);
               }
@@ -266,15 +278,13 @@ export function queryGuppyForAggregationOptionsData({
   signal,
   type,
 }) {
-  const {
-    fieldsByGroup,
-    gqlFilterByGroup,
-  } = getQueryInfoForAggregationOptionsData({
-    anchorConfig,
-    anchorValue,
-    filterTabs,
-    gqlFilter,
-  });
+  const { fieldsByGroup, gqlFilterByGroup } =
+    getQueryInfoForAggregationOptionsData({
+      anchorConfig,
+      anchorValue,
+      filterTabs,
+      gqlFilter,
+    });
 
   const query = buildQueryForAggregationOptionsData({
     fieldsByGroup,
@@ -346,8 +356,9 @@ export function queryGuppyForSubAggregationData({
   gqlFilter,
   signal,
 }) {
-  const query = (gqlFilter !== undefined
-    ? `query ($filter: JSON, $nestedAggFields: JSON) {
+  const query = (
+    gqlFilter !== undefined
+      ? `query ($filter: JSON, $nestedAggFields: JSON) {
         _aggregation {
             ${type} (filter: $filter, filterSelf: false, nestedAggFields: $nestedAggFields, accessibility: all) {
               ${nestedHistogramQueryStrForEachField(
@@ -357,7 +368,7 @@ export function queryGuppyForSubAggregationData({
             }
           }
         }`
-    : `query ($nestedAggFields: JSON) {
+      : `query ($nestedAggFields: JSON) {
         _aggregation {
           ${type} (nestedAggFields: $nestedAggFields, accessibility: all) {
             ${nestedHistogramQueryStrForEachField(mainField, numericAggAsText)}
@@ -660,15 +671,16 @@ export function downloadDataFromGuppy({ type, fields, filter, sort, format }) {
  * @param {FilterState} [args.filter]
  */
 export function queryGuppyForTotalCounts({ type, filter }) {
-  const query = (filter !== undefined || Object.keys(filter).length > 0
-    ? `query ($filter: JSON) {
+  const query = (
+    filter !== undefined || Object.keys(filter).length > 0
+      ? `query ($filter: JSON) {
         _aggregation {
           ${type} (filter: $filter, accessibility: all) {
             _totalCount
           }
         }
       }`
-    : `query {
+      : `query {
         _aggregation {
           ${type} (accessibility: all) {
             _totalCount

@@ -8,19 +8,23 @@ import { overrideSelectTheme } from '../../utils';
 import { defaultFilterSet as survivalDefaultFilterSet } from '../ExplorerSurvivalAnalysis/ControlForm';
 import { stringifyFilters } from './utils';
 import './ExplorerFilterSet.css';
-import './typedef';
+
+/** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('./types').ExplorerFilterSetActionType} ExplorerFilterSetActionType */
 
 /**
  * @param {Object} prop
  * @param {boolean} prop.isFilterSetEmpty
  * @param {boolean} prop.hasNoSavedFilterSets
- * @param {({ value: ExplorerFilterSetActionType }) => void} prop.onSelectAction
+ * @param {(option: { label: string; value: ExplorerFilterSetActionType }) => void} prop.onSelectAction
  */
 export function FilterSetActionMenu({
   isFilterSetEmpty,
   hasNoSavedFilterSets,
   onSelectAction,
 }) {
+  /** @type {{ label: string; value: ExplorerFilterSetActionType; isDisabled?: boolean }[]} */
   const options = [
     { label: 'New', value: 'new', isDisabled: isFilterSetEmpty },
     { label: 'Open', value: 'open', isDisabled: hasNoSavedFilterSets },
@@ -84,7 +88,7 @@ function FilterSetOpenForm({
               options={options}
               value={selected}
               autoFocus
-              clearable={false}
+              isClearable={false}
               theme={overrideSelectTheme}
               onChange={(e) => setSelected(e)}
             />
@@ -474,13 +478,8 @@ export function FilterSetActionForm({
   handlers,
   isFiltersChanged,
 }) {
-  const {
-    handleOpen,
-    handleCreate,
-    handleUpdate,
-    handleDelete,
-    handleClose,
-  } = handlers;
+  const { handleOpen, handleCreate, handleUpdate, handleDelete, handleClose } =
+    handlers;
 
   switch (actionType) {
     case 'open':

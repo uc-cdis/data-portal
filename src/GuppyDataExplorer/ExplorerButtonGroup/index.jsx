@@ -15,19 +15,24 @@ import {
 } from '../../localconf';
 import './ExplorerButtonGroup.css';
 import Popup from '../../components/Popup';
-import '../typedef';
+
+/** @typedef {import('../types').ButtonConfig} ButtonConfig */
+/** @typedef {import('../types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('../types').GqlSort} GqlSort */
+/** @typedef {import('../types').GuppyConfig} GuppyConfig */
+/** @typedef {import('../types').SingleButtonConfig} SingleButtonConfig */
 
 /**
  * @typedef {Object} ExplorerButtonGroupProps
- * @property {Object} job
+ * @property {Object} [job]
  * @property {(args: { sort?: GqlSort; format?: string }) => Promise} downloadRawData
  * @property {(args: { fields: string[]; sort?: GqlSort }) => Promise} downloadRawDataByFields
- * @property {(type: string, filter: FilterState, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
- * @property {(type: string, filter: FilterState) => Promise} getTotalCountsByTypeAndFilter
+ * @property {(type: string, filter: ExplorerFilters, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
+ * @property {(type: string, filter: ExplorerFilters) => Promise} getTotalCountsByTypeAndFilter
  * @property {number} accessibleCount
  * @property {number} totalCount
- * @property {FilterState} filter
- * @property {boolean} isPending: PropTypes.bool,
+ * @property {ExplorerFilters} filter
+ * @property {boolean} [isPending] : PropTypes.bool,
  * @property {ButtonConfig} buttonConfig: ButtonConfigType.isRequired,
  * @property {GuppyConfig} guppyConfig: GuppyConfigType.isRequired,
  * @property {import('react-router-dom').NavigateFunction} navigate: PropTypes.func.isRequired,
@@ -61,7 +66,7 @@ import '../typedef';
  * @property {string} workspaceSuccessText
  */
 
-/** @augments {React.Component<ExplorerButtonGroupProps, ExplorerButtonGroupState>} */
+/** @extends {React.Component<ExplorerButtonGroupProps, ExplorerButtonGroupState>} */
 class ExplorerButtonGroup extends Component {
   /** @param {ExplorerButtonGroupProps} props */
   constructor(props) {
@@ -216,8 +221,8 @@ class ExplorerButtonGroup extends Component {
         )
       );
     }
-    const refField = this.props.guppyConfig.manifestMapping
-      .referenceIdFieldInDataIndex;
+    const refField =
+      this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     const md5Field = 'md5sum';
     const fileNameField = 'file_name';
     const fileSizeField = 'file_size';
@@ -241,12 +246,12 @@ class ExplorerButtonGroup extends Component {
     const refIDList = await this.props
       .downloadRawDataByFields({ fields: [refField] })
       .then((res) => res.map((i) => i[refField]));
-    const refFieldInResourceIndex = this.props.guppyConfig.manifestMapping
-      .referenceIdFieldInResourceIndex;
-    const resourceFieldInResourceIndex = this.props.guppyConfig.manifestMapping
-      .resourceIdField;
-    const resourceType = this.props.guppyConfig.manifestMapping
-      .resourceIndexType;
+    const refFieldInResourceIndex =
+      this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
+    const resourceFieldInResourceIndex =
+      this.props.guppyConfig.manifestMapping.resourceIdField;
+    const resourceType =
+      this.props.guppyConfig.manifestMapping.resourceIndexType;
     const filter = {
       [refFieldInResourceIndex]: {
         selectedValues: refIDList,
@@ -553,10 +558,10 @@ class ExplorerButtonGroup extends Component {
       !this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex
     )
       return;
-    const caseField = this.props.guppyConfig.manifestMapping
-      .referenceIdFieldInDataIndex;
-    const caseFieldInFileIndex = this.props.guppyConfig.manifestMapping
-      .referenceIdFieldInResourceIndex;
+    const caseField =
+      this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
+    const caseFieldInFileIndex =
+      this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
     if (
       this.props.buttonConfig &&
       this.props.buttonConfig.buttons &&
@@ -581,8 +586,8 @@ class ExplorerButtonGroup extends Component {
         });
         if (caseIDResult) {
           const caseIDList = caseIDResult.map((i) => i[caseField]);
-          const fileType = this.props.guppyConfig.manifestMapping
-            .resourceIndexType;
+          const fileType =
+            this.props.guppyConfig.manifestMapping.resourceIndexType;
           const countResult = await this.props.getTotalCountsByTypeAndFilter(
             fileType,
             {

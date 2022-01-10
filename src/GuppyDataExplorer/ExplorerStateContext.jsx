@@ -10,14 +10,15 @@ import PropTypes from 'prop-types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useExplorerConfig } from './ExplorerConfigContext';
 import { extractExplorerStateFromURL } from './utils';
-import './typedef';
+
+/** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
 
 /**
  * @typedef {Object} ExplorerStateContext
- * @property {FilterState} initialAppliedFilters
+ * @property {ExplorerFilters} initialAppliedFilters
  * @property {string[]} patientIds
  * @property {() => void} handleBrowserNavigationForState
- * @property {(filter: FilterState) => void} handleFilterChange
+ * @property {(filter: ExplorerFilters) => void} handleFilterChange
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
  * @property {() => void} clearFilters
  * @property {(filters) => void} updateFilters
@@ -68,7 +69,7 @@ export function ExplorerStateProvider({ children }) {
     isBrowserNavigation.current = false;
   }
 
-  /** @param {FilterState} filter */
+  /** @param {ExplorerFilters} filter */
   function handleFilterChange(filter) {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.delete('filter');

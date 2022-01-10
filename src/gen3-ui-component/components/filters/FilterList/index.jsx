@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
 import FilterSection from '../FilterSection';
 import './FilterList.css';
-import '../typedef';
+
+/** @typedef {import('../types').FilterSectionConfig} FilterSectionConfig */
+/** @typedef {import('../types').OptionFilterStatus} OptionFilterStatus */
+/** @typedef {import('../types').RangeFilterStatus} RangeFilterStatus */
 
 /**
  * @typedef {Object} FilterListProps

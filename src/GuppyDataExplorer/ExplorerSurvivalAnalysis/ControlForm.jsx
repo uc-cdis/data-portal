@@ -6,7 +6,9 @@ import SimpleInputField from '../../components/SimpleInputField';
 import { overrideSelectTheme } from '../../utils';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import FilterSetCard from './FilterSetCard';
-import './typedef';
+
+/** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('./types').UserInputSubmitHandler} UserInputSubmitHandler */
 
 /** @param {{ label: string; [x: string]: any }} props */
 const ControlFormSelect = ({ label, ...selectProps }) => (

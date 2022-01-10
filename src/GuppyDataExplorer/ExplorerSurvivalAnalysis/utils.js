@@ -1,5 +1,6 @@
 /* eslint-disable no-shadow */
-import './typedef';
+/** @typedef {import('./types').RisktableData} RisktableData */
+/** @typedef {import('./types').SurvivalData} SurvivalData */
 
 /**
  * Builds x-axis ticks array to use in plots

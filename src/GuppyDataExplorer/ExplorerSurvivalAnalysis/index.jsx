@@ -7,7 +7,8 @@ import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
 import './ExplorerSurvivalAnalysis.css';
-import './typedef';
+
+/** @typedef {import('./types').UserInputSubmitHandler} UserInputSubmitHandler */
 
 function ExplorerSurvivalAnalysis() {
   const [[risktable, survival], refershResult] = useSurvivalAnalysisResult();
