@@ -1,5 +1,13 @@
 import cloneDeep from 'lodash.clonedeep';
-import '../typedef';
+
+/** @typedef {import('../types').AnchorConfig} AnchorConfig */
+/** @typedef {import('../types').AnchoredFilterTabStatus} AnchoredFilterTabStatus */
+/** @typedef {import('../types').FilterSectionStatus} FilterSectionStatus */
+/** @typedef {import('../types').FilterState} FilterState */
+/** @typedef {import('../types').FilterStatus} FilterStatus */
+/** @typedef {import('../types').FilterTabsOption} FilterTabsOption */
+/** @typedef {import('../types').FilterTabStatus} FilterTabStatus */
+/** @typedef {import('../types').SimpleFilterState} SimpleFilterState */
 
 /**
  * @param {FilterTabsOption[]} filterTabs
@@ -192,9 +200,8 @@ export function updateCombineMode({
   if (Array.isArray(newFilterTabStatus))
     newFilterTabStatus[sectionIndex][combineModeFieldName] = combineModeValue;
   else
-    newFilterTabStatus[anchorLabel][sectionIndex][
-      combineModeFieldName
-    ] = combineModeValue;
+    newFilterTabStatus[anchorLabel][sectionIndex][combineModeFieldName] =
+      combineModeValue;
 
   // update filter results
   let newFilterResults = cloneDeep(filterResults);
@@ -218,9 +225,8 @@ export function updateCombineMode({
         [combineModeFieldName]: combineModeValue,
       };
     } else {
-      newAnchoredFilterResults[fieldName][
-        combineModeFieldName
-      ] = combineModeValue;
+      newAnchoredFilterResults[fieldName][combineModeFieldName] =
+        combineModeValue;
     }
   }
 

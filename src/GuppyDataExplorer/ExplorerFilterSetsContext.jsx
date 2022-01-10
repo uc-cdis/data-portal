@@ -1,8 +1,9 @@
 import { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { fetchWithCreds } from '../actions';
-import './typedef';
 import { useExplorerConfig } from './ExplorerConfigContext';
+
+/** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 
 const FILTER_SET_URL = '/amanuensis/filter-sets';
 

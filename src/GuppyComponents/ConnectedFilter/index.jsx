@@ -9,7 +9,12 @@ import {
   updateCountsInInitialTabsOptions,
   sortTabsOptions,
 } from '../Utils/filters';
-import '../typedef';
+
+/** @typedef {import('../types').FilterChangeHandler} FilterChangeHandler */
+/** @typedef {import('../types').FilterConfig} FilterConfig */
+/** @typedef {import('../types').FilterState} FilterState */
+/** @typedef {import('../types').GuppyConfig} GuppyConfig */
+/** @typedef {import('../types').SimpleAggsData} SimpleAggsData */
 
 /**
  * @typedef {Object} ConnectedFilterProps

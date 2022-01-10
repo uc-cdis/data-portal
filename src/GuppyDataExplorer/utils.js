@@ -1,4 +1,8 @@
-import './typedef';
+/** @typedef {import('./types').ButtonConfig} ButtonConfig */
+/** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('./types').FilterConfig} FilterConfig */
+/** @typedef {import('./types').PatientIdsConfig} PatientIdsConfig */
+/** @typedef {import('./types').SingleButtonConfig} SingleButtonConfig */
 
 /**
  * Buttons are grouped by their dropdownId value.
@@ -137,7 +141,7 @@ export function extractExplorerStateFromURL(
   filterConfig,
   patientIdsConfig
 ) {
-  /** @type {FilterState} */
+  /** @type {ExplorerFilters} */
   let initialAppliedFilters = {};
   if (searchParams.has('filter'))
     try {

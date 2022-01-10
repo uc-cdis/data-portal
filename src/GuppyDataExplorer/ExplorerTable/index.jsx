@@ -10,9 +10,10 @@ import ReactTable from './Table';
 import './ExplorerTable.css';
 import LockIcon from '../../img/icons/lock.svg';
 import dictIcons from '../../img/icons/index';
-import '../typedef';
 
 /** @typedef {import('react-table').Column} ReactTableColumn */
+/** @typedef {import('../types').GqlSort} GqlSort */
+/** @typedef {import('../types').GuppyConfig} GuppyConfig */
 
 /**
  * @param {Object} args
@@ -86,11 +87,8 @@ function getCellElement({
 
   if (field === 'external_references.external_links') {
     if (!value) return null;
-    const [
-      resourceName,
-      resourceIconPath,
-      subjectUrl,
-    ] = value[0].external_links.split('|');
+    const [resourceName, resourceIconPath, subjectUrl] =
+      value[0].external_links.split('|');
     return (
       <a
         className='explorer-table-external-links'

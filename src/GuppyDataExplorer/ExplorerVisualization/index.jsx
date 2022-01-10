@@ -14,7 +14,12 @@ import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import './ExplorerVisualization.css';
-import '../typedef';
+
+/** @typedef {import('../types').ChartConfig} ChartConfig */
+/** @typedef {import('../types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('../types').GqlSort} GqlSort */
+/** @typedef {import('../types').SimpleAggsData} SimpleAggsData */
+/** @typedef {import('../types').SurvivalAnalysisConfig} SurvivalAnalysisConfig */
 
 /**
  * @typedef {Object} ViewContainerProps
@@ -57,7 +62,7 @@ function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
  * @param {Object} args
  * @param {SimpleAggsData} args.aggsChartData
  * @param {ChartConfig} args.chartConfig
- * @param {FilterState} args.filter
+ * @param {ExplorerFilters} args.filter
  * @param {string} args.nodeCountTitle
  * @param {number} args.totalCount
  */
@@ -135,13 +140,13 @@ function getChartData({
  * @property {SimpleAggsData} aggsChartData
  * @property {Object[]} rawData
  * @property {string[]} allFields
- * @property {FilterState} filter
+ * @property {ExplorerFilters} filter
  * @property {boolean} isLoadingAggsData
  * @property {boolean} isLoadingRawData
  * @property {(args: {  sort: GqlSort; format: string }) => Promise} downloadRawData
  * @property {(args: { fields: string[]; sort: GqlSort }) => Promise} downloadRawDataByFields
- * @property {(type: string, filter: FilterState, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
- * @property {(type: string, filter: FilterState) => Promise} getTotalCountsByTypeAndFilter
+ * @property {(type: string, filter: ExplorerFilters, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
+ * @property {(type: string, filter: ExplorerFilters) => Promise} getTotalCountsByTypeAndFilter
  * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise} fetchAndUpdateRawData
  * @property {string} [className]
  */

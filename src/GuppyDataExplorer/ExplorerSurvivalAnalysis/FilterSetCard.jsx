@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import SimpleInputField from '../../components/SimpleInputField';
 import { stringifyFilters } from '../ExplorerFilterSet/utils';
 
+/** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
+
 /**
  * @typedef {Object} FilterSetCardProps
  * @property {ExplorerFilterSet} filterSet

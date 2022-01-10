@@ -10,7 +10,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { filterRisktableByTime, getXAxisTicks } from './utils';
-import './typedef';
+
+/** @typedef {import('./types').RisktableData} RisktableData */
 
 /**
  * @param {RisktableData[]} data

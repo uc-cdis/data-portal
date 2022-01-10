@@ -1,6 +1,13 @@
 import flat from 'flat';
 import { queryGuppyForRawData } from './queries';
-import '../typedef';
+
+/** @typedef {import('../types').AggsCount} AggsCount */
+/** @typedef {import('../types').AggsData} AggsData */
+/** @typedef {import('../types').FilterState} FilterState */
+/** @typedef {import('../types').GqlFilter} GqlFilter */
+/** @typedef {import('../types').GuppyConfig} GuppyConfig */
+/** @typedef {import('../types').OptionFilter} OptionFilter */
+/** @typedef {import('../types').SimpleAggsData} SimpleAggsData */
 
 /**
  * This function takes two objects containing filters to be applied
