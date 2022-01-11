@@ -10,10 +10,10 @@ class GraphEdge extends React.Component {
     const edgeHighlightedClassModifier = this.props.isHighlighted ? 'graph-edge--highlighted' : '';
     return (
       <path
-        className={`graph-edge 
-          ${edgeRequiredClassModifier} 
-          ${edgeFadedClassModifier} 
-          ${edgeHalfFadedClassModifier} 
+        className={`graph-edge
+          ${edgeRequiredClassModifier}
+          ${edgeFadedClassModifier}
+          ${edgeHalfFadedClassModifier}
           ${edgeHighlightedClassModifier}`}
         d={this.props.edge.pathString}
       />
