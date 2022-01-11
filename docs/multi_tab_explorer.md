@@ -1,12 +1,12 @@
 # Multi-tab Explorer
 
-The multi-tab explorer is an enhancement to Windmill's data and file explorer feature. The enhancement includes a configuration format change to support rendering multiple tabs in the explorer, each tab will serves contents from one ES index. This enhancement allows the original file explorer to be decoupled with data explorer, and customize each tabs in the explorer.
+The multi-tab explorer is an enhancement to Windmill's data and file explorer feature. The enhancement includes a configuration format change to support rendering multiple tabs in the explorer, each tab will serve contents from one ES index. This enhancement allows the original file explorer to be decoupled with data explorer, and customize each tabs in the explorer.
 
 This feature is available from Portal 2.26.0, and is backward compatible with existing data/file explorer configurations. For more information about the old configuration format for data/file explorer, please refer to [Portal Config](https://github.com/uc-cdis/data-portal/blob/master/docs/portal_config.md).
 
 ## Configuration
 
-The multi-tab explorer requires a new configuration field, called `explorerConfig`, to be placed in the config file of Portal. The `explorerConfig` is an array which can hold multiple configuration objects, one for each tab. Each individual configuration object has a similar format as the old `dataExplorerConfig` and/or `fileExplorerConfig`, which means it should contains a set of fields like `charts`, `filters`, `table`, `buttons`, `guppyConfig` and other optional fields. Each tab serves the information from one single ES index, as have been defined in `guppyConfig.dataType`.
+The multi-tab explorer requires a new configuration field, called `explorerConfig`, to be placed in the config file of Portal. The `explorerConfig` is an array which can hold multiple configuration objects, one for each tab. Each individual configuration object has a similar format as the old `dataExplorerConfig` and/or `fileExplorerConfig`, which means it should contain a set of fields like `charts`, `filters`, `table`, `buttons`, `guppyConfig` and other optional fields. Each tab serves the information from one single ES index, as have been defined in `guppyConfig.dataType`.
 
 An example of this new `explorerConfig` is (some contents are omitted for conciseness):
 
