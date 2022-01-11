@@ -36,7 +36,7 @@ function ProjectSubmission({
   return (
     <div className='project-submission'>
       <h2 className='project-submission__title'>{project}</h2>
-      <Link className='project-submission__link' to={`/${project}/search`}>
+      <Link className='project-submission__link' to='search'>
         browse nodes
       </Link>
       <ReduxSubmitForm />

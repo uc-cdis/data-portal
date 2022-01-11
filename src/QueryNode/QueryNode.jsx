@@ -174,7 +174,7 @@ function QueryNode({
   return (
     <div>
       <h3>
-        browse <Link to={`/${project}`}>{project}</Link>{' '}
+        browse <Link to='..'>{project}</Link>{' '}
       </h3>
       {renderViewPopup().popupEl}
       {renderDeletePopup().popupEl}
