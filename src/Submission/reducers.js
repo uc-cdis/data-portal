@@ -120,7 +120,7 @@ const submission = (state = {}, action) => {
     case 'RESET_SUBMISSION_STATUS':
       return {
         ...state,
-        submit_entity_counts: [],
+        submit_entity_counts: {},
         submit_result: null,
         submit_result_string: '',
         submit_status: 0,
