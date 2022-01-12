@@ -96,7 +96,10 @@ const submission = (state = {}, action) => {
     case 'RECEIVE_COUNTS':
       return {
         ...state,
-        counts_search: action.data,
+        counts_search: Object.entries(action.data).reduce((acc, [k, v]) => {
+          if (k.endsWith('_count')) acc[k] = v;
+          return acc;
+        }, {}),
         links_search: Object.entries(action.data).reduce((acc, entry) => {
           acc[entry[0]] = entry[1].length;
           return acc;
