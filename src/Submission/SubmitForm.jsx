@@ -3,7 +3,15 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { jsonToString, overrideSelectTheme } from '../utils';
 import SubmitNodeForm from './SubmitNodeForm';
+import { SubmissionStateType } from './propTypeDef';
 import './SubmitForm.css';
+
+/**
+ * @typedef {Object} SubmissionState
+ * @property {Object} [dictionary]
+ * @property {Object} [formSchema]
+ * @property {string[]} [nodeTypes]
+ */
 
 /**
  * Form-based data submission.  The results of this form submission are subsequently
@@ -12,7 +20,7 @@ import './SubmitForm.css';
  * @param {Object} props
  * @param {(formSchema: Object) => void} props.onUpdateFormSchema
  * @param {(value: string, type: string) => void} props.onUploadClick
- * @param {Object} props.submission
+ * @param {SubmissionState} props.submission
  */
 function SubmitForm({ onUpdateFormSchema, onUploadClick, submission }) {
   const [nodeOption, setNodeOption] = useState({ label: '', value: '' });
@@ -76,7 +84,6 @@ function SubmitForm({ onUpdateFormSchema, onUploadClick, submission }) {
     );
   }
 
-  /** @type {{ dictionary: Object; nodeTypes: string[] }} */
   const { dictionary, nodeTypes } = submission;
   const node = dictionary[nodeOption.value];
   const options = nodeTypes.map((type) => ({ label: type, value: type }));
@@ -133,7 +140,7 @@ function SubmitForm({ onUpdateFormSchema, onUploadClick, submission }) {
 SubmitForm.propTypes = {
   onUpdateFormSchema: PropTypes.func.isRequired,
   onUploadClick: PropTypes.func.isRequired,
-  submission: PropTypes.object.isRequired,
+  submission: SubmissionStateType.isRequired,
 };
 
 export default SubmitForm;

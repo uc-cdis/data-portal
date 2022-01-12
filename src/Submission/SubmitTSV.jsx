@@ -5,6 +5,7 @@ import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-kuroir';
 import { predictFileType } from '../utils';
 import SubmissionResult from './SubmissionResult';
+import { SubmissionStateType } from './propTypeDef';
 import './SubmitTSV.css';
 
 /**
@@ -160,18 +161,7 @@ function SubmitTSV({
 
 SubmitTSV.propTypes = {
   project: PropTypes.string.isRequired, // from react-router
-  submission: PropTypes.shape({
-    dictionary: PropTypes.object,
-    file: PropTypes.string,
-    file_type: PropTypes.string,
-    nodeTypes: PropTypes.arrayOf(PropTypes.string),
-    submit_counter: PropTypes.number,
-    submit_entity_counts: PropTypes.number,
-    submit_result: PropTypes.any,
-    submit_result_string: PropTypes.string,
-    submit_status: PropTypes.number,
-    submit_total: PropTypes.number,
-  }),
+  submission: SubmissionStateType.isRequired,
   onFileChange: PropTypes.func.isRequired,
   onFinish: PropTypes.func.isRequired,
   onSubmitClick: PropTypes.func.isRequired,
