@@ -32,7 +32,7 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 const LOCATIONS_DICTIONARY = [
   '/dd/*',
   '/submission/map',
-  '/submission/:project',
+  '/submission/:project/*',
 ];
 const LOCATIONS_PROJECTS = ['/files/*'];
 const LOCATIONS_SCHEMA = ['/query'];
