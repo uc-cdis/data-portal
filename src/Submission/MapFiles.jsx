@@ -1,5 +1,6 @@
-import { Component, Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import cloneDeep from 'lodash.clonedeep';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -21,25 +22,43 @@ const HEADER_HEIGHT = 70;
 
 dayjs.extend(customParseFormat);
 
+/**
+ * @typedef {Object} File
+ * @property {string} created_date
+ * @property {string} did
+ * @property {Object} hashes
+ */
+
+/** @typedef {{ [key: string]: File }} FileSet  */
+
+/** @typedef {{ [index: number]: FileSet }} FileMap */
+
+/** @param {FileMap} files */
 function flattenFiles(files) {
   const groupedFiles = Object.keys(files).map((index) => [
-    ...Object.values(files[index]),
+    ...Object.values(files[Number(index)]),
   ]);
   return groupedFiles.reduce((totalArr, currentArr) =>
     totalArr.concat(currentArr)
   );
 }
 
+/**
+ * @param {string} key
+ * @param {File[]} values
+ */
 function createSet(key, values) {
-  const set = {};
+  const set = /** @type {FileSet} */ ({});
   for (const value of values) set[value[key]] = value;
   return set;
 }
 
+/** @param {FileSet} set */
 function getSetSize(set) {
   return Object.keys(set).length;
 }
 
+/** @param {File[]} files */
 function getTableHeaderText(files) {
   const date = dayjs(files[0].created_date).format('MM/DD/YY');
   return `uploaded on ${date}, ${files.length} ${
@@ -47,7 +66,9 @@ function getTableHeaderText(files) {
   }`;
 }
 
+/** @param {File[]} unmappedFiles */
 export function groupUnmappedFiles(unmappedFiles) {
+  /** @type {{ [date: string]: File[] }} */
   const filesByDate = {};
   for (const file of unmappedFiles) {
     const fileDate = dayjs(file.created_date).format('MM/DD/YY');
@@ -60,18 +81,34 @@ export function groupUnmappedFiles(unmappedFiles) {
   return { filesByDate, sortedDates };
 }
 
+/**
+ * @param {FileMap} map
+ * @param {number} index
+ * @param {any} value
+ */
 export function setMapValue(map, index, value) {
   const tempMap = cloneDeep(map);
   tempMap[index] = value;
   return tempMap;
 }
 
+/**
+ * @param {FileMap} map
+ * @param {number} index
+ * @param {File} file
+ * @param {string} setKey
+ */
 export function addToMap(map, index, file, setKey) {
   const tempMap = cloneDeep(map);
   if (tempMap[index]) tempMap[index][setKey] = file;
   return tempMap;
 }
 
+/**
+ * @param {FileMap} map
+ * @param {number} index
+ * @param {string} setKey
+ */
 export function removeFromMap(map, index, setKey) {
   const tempMap = cloneDeep(map);
   if (tempMap[index]) delete tempMap[index][setKey];
@@ -86,12 +123,19 @@ export function isSelectAll({ index, allFilesByGroup, selectedFilesByGroup }) {
     : false;
 }
 
-export function isSelected({ index, did, selectedFilesByGroup }) {
+/**
+ * @param {Object} args
+ * @param {string} args.did
+ * @param {number} args.index
+ * @param {FileMap} args.selectedFilesByGroup
+ */
+export function isSelected({ did, index, selectedFilesByGroup }) {
   return selectedFilesByGroup[index]
     ? !!selectedFilesByGroup[index][did]
     : false;
 }
 
+/** @param {FileMap} map */
 export function isMapEmpty(map) {
   for (const key in map) {
     if (map[key] && getSetSize(map[key]) > 0) return false;
@@ -99,315 +143,269 @@ export function isMapEmpty(map) {
   return true;
 }
 
+/** @param {File} file */
 export function isFileReady(file) {
   return file.hashes && Object.keys(file.hashes).length > 0;
 }
 
-class MapFiles extends Component {
-  constructor(props) {
-    super(props);
-    const searchParams = new URLSearchParams(window.location.search);
-    this.state = {
-      selectedFilesByGroup: {},
-      allFilesByGroup: {},
-      filesByDate: {},
-      isScrolling: false,
-      sortedDates: [],
-      message: searchParams.get('message'),
-      loading: true,
-    };
-  }
+/**
+ * @param {Object} props
+ * @param {File[]} props.unmappedFiles
+ * @param {(username: string) => void} props.fetchUnmappedFiles
+ * @param {(files: File[]) => void} props.mapSelectedFiles
+ * @param {string} props.username
+ */
+function MapFiles({
+  unmappedFiles = [],
+  fetchUnmappedFiles,
+  mapSelectedFiles,
+  username,
+}) {
+  useEffect(() => {
+    fetchUnmappedFiles(username);
+  }, []);
 
-  componentDidMount() {
-    this.props.fetchUnmappedFiles(this.props.user.username);
-  }
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.unmappedFiles !== this.props.unmappedFiles) {
-      this.onUpdate();
-    }
-  }
+  const [filesByDate, setFilesByDate] = useState({});
+  const [sortedDates, setSortedDates] = useState([]);
 
-  onScroll = (isScrolling) => {
-    this.setState({ isScrolling });
-  };
+  const [allFilesByGroup, setAllFilesByGroup] = useState(
+    /** @type {FileMap} */ ({})
+  );
+  const [selectedFilesByGroup, setSelectedFilesByGroup] = useState(
+    /** @type {FileMap} */ ({})
+  );
 
-  onCompletion = () => {
-    const flatFiles = flattenFiles(this.state.selectedFilesByGroup);
-    this.props.mapSelectedFiles(flatFiles);
-    this.props.navigate('/submission/map');
-  };
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  onUpdate = () => {
-    this.setState(
-      {
-        loading: false,
-        ...groupUnmappedFiles(this.props.unmappedFiles),
-      },
-      () => this.createFileMapByGroup()
-    );
-  };
+  useEffect(() => {
+    setIsLoading(false);
 
-  createFileMapByGroup = () => {
-    const unselectedMap = {};
-    const selectedMap = {};
-    let index = 0;
-    this.state.sortedDates.forEach((date) => {
-      const filesToAdd = this.state.filesByDate[date].filter(isFileReady);
+    const grouped = groupUnmappedFiles(unmappedFiles);
+    setFilesByDate(grouped.filesByDate);
+    setSortedDates(grouped.sortedDates);
+
+    const unselectedMap = /** @type {FileMap} */ ({});
+    const selectedMap = /** @type {FileMap} */ ({});
+    for (const [index, date] of grouped.sortedDates.entries()) {
+      const filesToAdd = grouped.filesByDate[date].filter(isFileReady);
       unselectedMap[index] = createSet(SET_KEY, filesToAdd);
       selectedMap[index] = {};
-      index += 1;
-    });
-    // console.log('createFileMapByGroup', unselectedMap, selectedMap);
-    this.setState({
-      allFilesByGroup: unselectedMap,
-      selectedFilesByGroup: selectedMap,
-    });
-  };
+    }
+    setAllFilesByGroup(unselectedMap);
+    setSelectedFilesByGroup(selectedMap);
+  }, [unmappedFiles]);
 
-  toggleCheckBox = (index, file) => {
+  function onCompletion() {
+    const flatFiles = flattenFiles(selectedFilesByGroup);
+    mapSelectedFiles(flatFiles);
+    navigate('/submission/map');
+  }
+
+  /**
+   *
+   * @param {number} index
+   * @param {File} file
+   */
+  function toggleCheckBox(index, file) {
     console.log('toggleCheckBox');
-    if (
-      isSelected({
-        index,
-        did: file.did,
-        selectedFilesByGroup: this.state.selectedFilesByGroup,
-      })
-    ) {
-      this.setState((prevState) => ({
-        selectedFilesByGroup: removeFromMap(
-          prevState.selectedFilesByGroup,
-          index,
-          file.did
-        ),
-      }));
+    if (isSelected({ index, did: file.did, selectedFilesByGroup })) {
+      setSelectedFilesByGroup((prevSelectedFilesByGroup) =>
+        removeFromMap(prevSelectedFilesByGroup, index, file.did)
+      );
     } else if (isFileReady(file)) {
       // file status == ready, so it is selectable
-      this.setState((prevState) => ({
-        selectedFilesByGroup: addToMap(
-          prevState.selectedFilesByGroup,
-          index,
-          file,
-          file.did
-        ),
-      }));
+      setSelectedFilesByGroup((prevSelectedFilesByGroup) =>
+        addToMap(prevSelectedFilesByGroup, index, file, file.did)
+      );
     }
-  };
+  }
 
-  toggleSelectAll = (index) => {
-    if (this.state.selectedFilesByGroup[index]) {
+  /** @param {number} index */
+  function toggleSelectAll(index) {
+    if (selectedFilesByGroup[index]) {
       if (
-        getSetSize(this.state.selectedFilesByGroup[index]) ===
-        getSetSize(this.state.allFilesByGroup[index])
+        getSetSize(selectedFilesByGroup[index]) ===
+        getSetSize(allFilesByGroup[index])
       ) {
-        this.setState((prevState) => ({
-          selectedFilesByGroup: setMapValue(
-            prevState.selectedFilesByGroup,
-            index,
-            {}
-          ),
-        }));
+        setSelectedFilesByGroup((prevSelectedFilesByGroup) =>
+          setMapValue(prevSelectedFilesByGroup, index, {})
+        );
       } else {
-        const newFiles = { ...this.state.allFilesByGroup[index] };
-        this.setState((prevState) => ({
-          selectedFilesByGroup: setMapValue(
-            prevState.selectedFilesByGroup,
-            index,
-            newFiles
-          ),
-        }));
+        const newFiles = { ...allFilesByGroup[index] };
+        setSelectedFilesByGroup((prevSelectedFilesByGroup) =>
+          setMapValue(prevSelectedFilesByGroup, index, newFiles)
+        );
       }
     }
-  };
-
-  closeMessage = () => {
-    this.setState({ message: null });
-    window.history.replaceState(null, null, window.location.pathname);
-  };
-
-  render() {
-    const buttons = [
-      <Button
-        onClick={this.onCompletion}
-        label={
-          !isMapEmpty(this.state.selectedFilesByGroup)
-            ? `Map Files (${
-                flattenFiles(this.state.selectedFilesByGroup).length
-              })`
-            : 'Map Files'
-        }
-        rightIcon='graph'
-        buttonType='primary'
-        className='g3-icon g3-icon--lg'
-        enabled={!isMapEmpty(this.state.selectedFilesByGroup)}
-      />,
-    ];
-
-    const { sortedDates, filesByDate } = this.state;
-
-    return (
-      <div className='map-files'>
-        {this.state.message ? (
-          <div className='map-files__notification-wrapper'>
-            <div className='map-files__notification'>
-              <CloseIcon
-                className='map-files__notification-icon'
-                onClick={this.closeMessage}
-              />
-              <p className='map-files__notification-text'>
-                {this.state.message}
-              </p>
-            </div>
-          </div>
-        ) : null}
-        <BackLink url='/submission' label='Back to Data Submission' />
-        <div className='h1-typo'>My Files</div>
-        <StickyToolbar
-          title='Unmapped Files'
-          toolbarElts={buttons}
-          scrollPosition={248}
-          onScroll={this.onScroll}
-        />
-        <div
-          className={'map-files__tables'.concat(
-            this.state.isScrolling ? ' map-files__tables--scrolling' : ''
-          )}
-        >
-          {this.state.loading ? <Spinner /> : null}
-          {!this.state.loading && sortedDates.length === 0 ? (
-            <h2 className='map-files__empty-text'>
-              No files have been uploaded.
-            </h2>
-          ) : null}
-          {sortedDates.map((date, groupIndex) => {
-            const files = filesByDate[date].map((file) => ({
-              ...file,
-              status: isFileReady(file) ? 'Ready' : 'generating',
-            }));
-            const minTableHeight = files.length * ROW_HEIGHT + HEADER_HEIGHT;
-            return (
-              <Fragment key={groupIndex}>
-                <div className='h2-typo'>{getTableHeaderText(files)}</div>
-                <AutoSizer disableHeight>
-                  {({ width }) => (
-                    <Table
-                      className='map-files__table'
-                      width={width}
-                      height={minTableHeight < 500 ? minTableHeight : 500}
-                      headerHeight={ROW_HEIGHT}
-                      rowHeight={ROW_HEIGHT}
-                      rowCount={files.length}
-                      rowGetter={({ index }) => files[index]}
-                      rowClassName='map-files__table-row'
-                    >
-                      <Column
-                        width={100}
-                        label='Select All'
-                        dataKey='selectAll'
-                        headerRenderer={() => (
-                          <CheckBox
-                            id={`${groupIndex}`}
-                            isSelected={isSelectAll({
-                              index: groupIndex,
-                              allFilesByGroup: this.state.allFilesByGroup,
-                              selectedFilesByGroup: this.state
-                                .selectedFilesByGroup,
-                            })}
-                            onChange={() => this.toggleSelectAll(groupIndex)}
-                          />
-                        )}
-                        cellRenderer={({ rowIndex }) => {
-                          console.log('checkboxId', files[rowIndex].did);
-                          return (
-                            <CheckBox
-                              id={`${files[rowIndex].did}`}
-                              item={files[rowIndex]}
-                              isSelected={isSelected({
-                                index: groupIndex,
-                                did: files[rowIndex].did,
-                                selectedFilesByGroup: this.state
-                                  .selectedFilesByGroup,
-                              })}
-                              onChange={() =>
-                                this.toggleCheckBox(groupIndex, files[rowIndex])
-                              }
-                              isEnabled={files[rowIndex].status === 'Ready'}
-                              disabledText={
-                                'This file is not ready to be mapped yet.'
-                              }
-                            />
-                          );
-                        }}
-                      />
-                      <Column
-                        label='File Name'
-                        dataKey='file_name'
-                        width={400}
-                      />
-                      <Column
-                        label='Size'
-                        dataKey='size'
-                        width={100}
-                        cellRenderer={({ cellData }) => (
-                          <div>
-                            {cellData ? humanFileSize(cellData) : '0 B'}
-                          </div>
-                        )}
-                      />
-                      <Column
-                        label='Uploaded Date'
-                        dataKey='created_date'
-                        width={300}
-                        cellRenderer={({ cellData }) => (
-                          <div>
-                            {dayjs(cellData).format(
-                              'MM/DD/YY, hh:mm:ss a [UTC]Z'
-                            )}
-                          </div>
-                        )}
-                      />
-                      <Column
-                        label='Status'
-                        dataKey='status'
-                        width={400}
-                        cellRenderer={({ cellData }) => {
-                          const className = `map-files__status--${cellData.toLowerCase()}`;
-                          return (
-                            <div className={className}>
-                              {cellData === 'Ready' ? (
-                                <StatusReadyIcon />
-                              ) : null}
-                              <div className='h2-typo'>
-                                {cellData === 'Ready'
-                                  ? cellData
-                                  : `${cellData}...`}
-                              </div>
-                            </div>
-                          );
-                        }}
-                      />
-                    </Table>
-                  )}
-                </AutoSizer>
-              </Fragment>
-            );
-          })}
-        </div>
-      </div>
-    );
   }
+
+  function closeMessage() {
+    setSearchParams('');
+  }
+  return (
+    <div className='map-files'>
+      {searchParams.has('message') ? (
+        <div className='map-files__notification-wrapper'>
+          <div className='map-files__notification'>
+            <CloseIcon
+              className='map-files__notification-icon'
+              onClick={closeMessage}
+            />
+            <p className='map-files__notification-text'>
+              {searchParams.get('message')}
+            </p>
+          </div>
+        </div>
+      ) : null}
+      <BackLink url='/submission' label='Back to Data Submission' />
+      <div className='h1-typo'>My Files</div>
+      <StickyToolbar
+        title='Unmapped Files'
+        toolbarElts={[
+          <Button
+            onClick={onCompletion}
+            label={
+              !isMapEmpty(selectedFilesByGroup)
+                ? `Map Files (${flattenFiles(selectedFilesByGroup).length})`
+                : 'Map Files'
+            }
+            rightIcon='graph'
+            buttonType='primary'
+            className='g3-icon g3-icon--lg'
+            enabled={!isMapEmpty(selectedFilesByGroup)}
+          />,
+        ]}
+        scrollPosition={248}
+        onScroll={setIsScrolling}
+      />
+      <div
+        className={'map-files__tables'.concat(
+          isScrolling ? ' map-files__tables--scrolling' : ''
+        )}
+      >
+        {isLoading ? <Spinner /> : null}
+        {!isLoading && sortedDates.length === 0 ? (
+          <h2 className='map-files__empty-text'>
+            No files have been uploaded.
+          </h2>
+        ) : null}
+        {sortedDates.map((date, groupIndex) => {
+          const files = filesByDate[date].map((file) => ({
+            ...file,
+            status: isFileReady(file) ? 'Ready' : 'generating',
+          }));
+          const minTableHeight = files.length * ROW_HEIGHT + HEADER_HEIGHT;
+          return (
+            <Fragment key={groupIndex}>
+              <div className='h2-typo'>{getTableHeaderText(files)}</div>
+              <AutoSizer disableHeight>
+                {({ width }) => (
+                  <Table
+                    className='map-files__table'
+                    width={width}
+                    height={minTableHeight < 500 ? minTableHeight : 500}
+                    headerHeight={ROW_HEIGHT}
+                    rowHeight={ROW_HEIGHT}
+                    rowCount={files.length}
+                    rowGetter={({ index }) => files[index]}
+                    rowClassName='map-files__table-row'
+                  >
+                    <Column
+                      width={100}
+                      label='Select All'
+                      dataKey='selectAll'
+                      headerRenderer={() => (
+                        <CheckBox
+                          id={`${groupIndex}`}
+                          isSelected={isSelectAll({
+                            index: groupIndex,
+                            allFilesByGroup,
+                            selectedFilesByGroup,
+                          })}
+                          onChange={() => toggleSelectAll(groupIndex)}
+                        />
+                      )}
+                      cellRenderer={({ rowIndex }) => {
+                        console.log('checkboxId', files[rowIndex].did);
+                        return (
+                          <CheckBox
+                            id={`${files[rowIndex].did}`}
+                            item={files[rowIndex]}
+                            isSelected={isSelected({
+                              index: groupIndex,
+                              did: files[rowIndex].did,
+                              selectedFilesByGroup,
+                            })}
+                            onChange={() =>
+                              toggleCheckBox(groupIndex, files[rowIndex])
+                            }
+                            isEnabled={files[rowIndex].status === 'Ready'}
+                            disabledText={
+                              'This file is not ready to be mapped yet.'
+                            }
+                          />
+                        );
+                      }}
+                    />
+                    <Column label='File Name' dataKey='file_name' width={400} />
+                    <Column
+                      label='Size'
+                      dataKey='size'
+                      width={100}
+                      cellRenderer={({ cellData }) => (
+                        <div>{cellData ? humanFileSize(cellData) : '0 B'}</div>
+                      )}
+                    />
+                    <Column
+                      label='Uploaded Date'
+                      dataKey='created_date'
+                      width={300}
+                      cellRenderer={({ cellData }) => (
+                        <div>
+                          {dayjs(cellData).format(
+                            'MM/DD/YY, hh:mm:ss a [UTC]Z'
+                          )}
+                        </div>
+                      )}
+                    />
+                    <Column
+                      label='Status'
+                      dataKey='status'
+                      width={400}
+                      cellRenderer={({ cellData }) => {
+                        const className = `map-files__status--${cellData.toLowerCase()}`;
+                        return (
+                          <div className={className}>
+                            {cellData === 'Ready' ? <StatusReadyIcon /> : null}
+                            <div className='h2-typo'>
+                              {cellData === 'Ready'
+                                ? cellData
+                                : `${cellData}...`}
+                            </div>
+                          </div>
+                        );
+                      }}
+                    />
+                  </Table>
+                )}
+              </AutoSizer>
+            </Fragment>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 MapFiles.propTypes = {
   unmappedFiles: PropTypes.array,
   fetchUnmappedFiles: PropTypes.func.isRequired,
   mapSelectedFiles: PropTypes.func.isRequired,
-  navigate: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-};
-
-MapFiles.defaultProps = {
-  unmappedFiles: [],
+  username: PropTypes.string.isRequired,
 };
 
 export default MapFiles;
