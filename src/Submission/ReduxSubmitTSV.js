@@ -6,90 +6,98 @@ import { submissionApiPath, lineLimit } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import { uploadTSV, updateFileContent } from './actions';
 
-const submitToServer = (fullProject, methodIn = 'PUT') => (
-  dispatch,
-  getState
-) => {
-  const fileArray = [];
-  const path = fullProject.split('-');
-  const program = path[0];
-  const project = path.slice(1).join('-');
-  const { submission } = getState();
-  const method = path === 'graphql' ? 'POST' : methodIn;
-  let { file } = submission;
+/**
+ * @param {string} fullProject
+ * @param {string} methodIn
+ */
+const submitToServer =
+  (fullProject, methodIn = 'PUT') =>
+  /**
+   * @param {import('redux').Dispatch} dispatch
+   * @param {() => { submission: { file: string; file_type: string } }} getState
+   */
+  (dispatch, getState) => {
+    dispatch({ type: 'RESET_SUBMISSION_STATUS' });
 
-  dispatch({ type: 'RESET_SUBMISSION_STATUS' });
+    const fileArray = [];
+    const path = fullProject.split('-');
+    const program = path[0];
+    const project = path.slice(1).join('-');
+    const { submission } = getState();
+    const method = /* path === 'graphql' ? 'POST' : */ methodIn;
 
-  if (!file) {
-    return Promise.reject(new Error('No file to submit'));
-  }
-  if (submission.file_type !== 'text/tab-separated-values') {
-    // remove line break in json file
-    file = file.replace(/\r\n?|\n/g, '');
-  }
+    let { file } = submission;
+    if (!file) {
+      return Promise.reject(new Error('No file to submit'));
+    }
+    if (submission.file_type !== 'text/tab-separated-values') {
+      // remove line break in json file
+      file = file.replace(/\r\n?|\n/g, '');
+    }
 
-  if (submission.file_type === 'text/tab-separated-values') {
-    const fileSplited = file.split(/\r\n?|\n/g);
-    if (fileSplited.length > lineLimit && lineLimit > 0) {
-      let fileHeader = fileSplited[0];
-      fileHeader += '\n';
-      let count = lineLimit;
-      let fileChunk = fileHeader;
+    if (submission.file_type === 'text/tab-separated-values') {
+      const fileSplited = file.split(/\r\n?|\n/g);
+      if (fileSplited.length > lineLimit && lineLimit > 0) {
+        let fileHeader = fileSplited[0];
+        fileHeader += '\n';
+        let count = lineLimit;
+        let fileChunk = fileHeader;
 
-      for (let i = 1; i < fileSplited.length; i += 1) {
-        if (fileSplited[i] !== '') {
-          fileChunk += fileSplited[i];
-          fileChunk += '\n';
-          count -= 1;
+        for (let i = 1; i < fileSplited.length; i += 1) {
+          if (fileSplited[i] !== '') {
+            fileChunk += fileSplited[i];
+            fileChunk += '\n';
+            count -= 1;
+          }
+          if (count === 0) {
+            fileArray.push(fileChunk);
+            fileChunk = fileHeader;
+            count = lineLimit;
+          }
         }
-        if (count === 0) {
+        if (fileChunk !== fileHeader) {
           fileArray.push(fileChunk);
-          fileChunk = fileHeader;
-          count = lineLimit;
         }
-      }
-      if (fileChunk !== fileHeader) {
-        fileArray.push(fileChunk);
+      } else {
+        fileArray.push(file);
       }
     } else {
       fileArray.push(file);
     }
-  } else {
-    fileArray.push(file);
-  }
 
-  let subUrl = submissionApiPath;
-  if (program !== '_root') {
-    subUrl = `${subUrl + program}/${project}/`;
-  }
-
-  const totalChunk = fileArray.length;
-
-  function recursiveFetch(chunkArray) {
-    if (chunkArray.length === 0) {
-      return null;
+    let subUrl = submissionApiPath;
+    if (program !== '_root') {
+      subUrl = `${subUrl + program}/${project}/`;
     }
 
-    return fetchWithCreds({
-      path: subUrl,
-      method,
-      customHeaders: { 'Content-Type': submission.file_type },
-      body: chunkArray.shift(),
-      dispatch,
-    })
-      .then(recursiveFetch(chunkArray))
-      .then(({ status, data }) => ({
-        type: 'RECEIVE_SUBMISSION',
-        submit_status: status,
-        data,
-        total: totalChunk,
-      }))
-      .then((msg) => dispatch(msg))
-      .then(sessionMonitor.updateUserActivity());
-  }
+    const totalChunk = fileArray.length;
 
-  return recursiveFetch(fileArray);
-};
+    /** @param {string[]} chunkArray */
+    function recursiveFetch(chunkArray) {
+      if (chunkArray.length === 0) {
+        return null;
+      }
+
+      return fetchWithCreds({
+        path: subUrl,
+        method,
+        customHeaders: new Headers({ 'Content-Type': submission.file_type }),
+        body: chunkArray.shift(),
+        dispatch,
+      })
+        .then(recursiveFetch(chunkArray))
+        .then(({ status, data }) => ({
+          type: 'RECEIVE_SUBMISSION',
+          submit_status: status,
+          data,
+          total: totalChunk,
+        }))
+        .then((msg) => dispatch(msg))
+        .then(() => sessionMonitor.updateUserActivity());
+    }
+
+    return recursiveFetch(fileArray);
+  };
 
 const mapStateToProps = (state) => ({
   submission: state.submission,

@@ -96,7 +96,10 @@ const submission = (state = {}, action) => {
     case 'RECEIVE_COUNTS':
       return {
         ...state,
-        counts_search: action.data,
+        counts_search: Object.entries(action.data).reduce((acc, [k, v]) => {
+          if (k.endsWith('_count')) acc[k] = v;
+          return acc;
+        }, {}),
         links_search: Object.entries(action.data).reduce((acc, entry) => {
           acc[entry[0]] = entry[1].length;
           return acc;
@@ -117,7 +120,7 @@ const submission = (state = {}, action) => {
     case 'RESET_SUBMISSION_STATUS':
       return {
         ...state,
-        submit_entity_counts: [],
+        submit_entity_counts: {},
         submit_result: null,
         submit_result_string: '',
         submit_status: 0,
