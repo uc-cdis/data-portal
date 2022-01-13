@@ -5,12 +5,12 @@ import { STARTING_DID, FETCH_LIMIT } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
 
 /**
- * @param {{ username: string }} user
+ * @param {string} username
  * @param {Array} total
  * @param {string} start
  */
 const fetchUnmappedFiles =
-  ({ username }, total, start) =>
+  (username, total, start) =>
   /** @param {import('redux-thunk').ThunkDispatch} dispatch */
   (dispatch) => {
     const unmappedFilesCheck = useIndexdAuthz ? 'authz=null' : 'acl=null';
@@ -26,7 +26,7 @@ const fetchUnmappedFiles =
               if (data.records?.length === FETCH_LIMIT) {
                 return dispatch(
                   fetchUnmappedFiles(
-                    { username },
+                    username,
                     total,
                     data.records[FETCH_LIMIT - 1].did
                   )
@@ -58,12 +58,12 @@ const mapSelectedFiles = (files) => ({
 const ReduxMapFiles = (() => {
   const mapStateToProps = (state) => ({
     unmappedFiles: state.submission.unmappedFiles,
-    user: state.user,
+    username: state.user.username,
   });
 
   const mapDispatchToProps = (dispatch) => ({
-    fetchUnmappedFiles: (user) =>
-      dispatch(fetchUnmappedFiles(user, [], STARTING_DID)),
+    fetchUnmappedFiles: (username) =>
+      dispatch(fetchUnmappedFiles(username, [], STARTING_DID)),
     mapSelectedFiles: (files) => dispatch(mapSelectedFiles(files)),
   });
 

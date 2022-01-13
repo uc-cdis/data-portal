@@ -151,18 +151,18 @@ export function isFileReady(file) {
 /**
  * @param {Object} props
  * @param {File[]} props.unmappedFiles
- * @param {(user: { username: string }) => void} props.fetchUnmappedFiles
+ * @param {(username: string) => void} props.fetchUnmappedFiles
  * @param {(files: File[]) => void} props.mapSelectedFiles
- * @param {{ username: string }} props.user
+ * @param {string} props.username
  */
 function MapFiles({
   unmappedFiles = [],
   fetchUnmappedFiles,
   mapSelectedFiles,
-  user: { username },
+  username,
 }) {
   useEffect(() => {
-    fetchUnmappedFiles({ username });
+    fetchUnmappedFiles(username);
   }, []);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -405,7 +405,7 @@ MapFiles.propTypes = {
   unmappedFiles: PropTypes.array,
   fetchUnmappedFiles: PropTypes.func.isRequired,
   mapSelectedFiles: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
+  username: PropTypes.string.isRequired,
 };
 
 export default MapFiles;
