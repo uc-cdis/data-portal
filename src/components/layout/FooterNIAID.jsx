@@ -70,6 +70,10 @@ const footerGovLinks = [
     href: 'http://www.usa.gov/',
     text: 'USA.gov',
   },
+  {
+    href: "https://hhs.responsibledisclosure.com/hc/en-us",
+    text: "HHS Responsible Disclosure Form",
+  },
 ];
 
 class FooterNIAID extends Component {
