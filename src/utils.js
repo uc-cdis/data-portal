@@ -41,7 +41,7 @@ export const jsonToString = (data, schema = {}) => {
 
 /**
  * @param {string} dirtyData
- * @param {string} fileType
+ * @param {string} [fileType]
  */
 export const predictFileType = (dirtyData, fileType) => {
   const predictType = fileType;
@@ -67,7 +67,7 @@ export const predictFileType = (dirtyData, fileType) => {
  */
 export function asyncSetInterval(lambda, timeoutMs) {
   let isRunningGuard = false;
-  return setInterval(() => {
+  return window.setInterval(() => {
     if (!isRunningGuard) {
       isRunningGuard = true;
 

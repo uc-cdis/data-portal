@@ -16,9 +16,15 @@ import {
 } from './graphStructureHelper.js';
 import { getCategoryColor } from '../../NodeCategories/helper';
 
+/** @typedef {import('../../types').GraphBoundingBox} GraphBoundingBox */
+/** @typedef {import('../../types').GraphEdge} GraphEdge */
+/** @typedef {import('../../types').GraphNode} GraphNode */
+/** @typedef {import('../../types').GraphLayout} GraphLayout */
+/** @typedef {import('../../../Submission/types').SubmissionState} SubmissionState */
+
 /**
  * Get a set of types from an array of nodes
- * @param {{ type: string }[]} nodes
+ * @param {GraphNode[]} nodes
  * @returns array of type names(duplicating names removed) of given nodes
  */
 export const getAllTypes = (nodes) => {
@@ -27,6 +33,11 @@ export const getAllTypes = (nodes) => {
   return uniqueTypes;
 };
 
+/**
+ * @param {Object} dictionary
+ * @param {SubmissionState['counts_search']} countsSearch
+ * @param {SubmissionState['links_search']} linksSearch
+ */
 export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
   const { nodes, edges } = createNodesAndEdges(
     {
@@ -158,17 +169,12 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
         };
       });
 
-      // get bounding box for whole graph
-      const graphBoundingBox = renderedJSON._draw_.find(
-        (entry) => entry.op === 'P'
-      ).points;
-
-      const layoutResult = {
+      return /** @type {GraphLayout} */ ({
         nodes: renderedNodes,
         edges: renderedEdges,
-        graphBoundingBox,
-      };
-      return layoutResult;
+        graphBoundingBox: renderedJSON._draw_.find(({ op }) => op === 'P')
+          .points,
+      });
     })
     .catch((e) => {
       throw e;
@@ -178,8 +184,8 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
 
 /**
  * Get all node IDs that are descendent of the first highlighting node
- * @param {Node} highlightingNode - the first highlighting node
- * @param {Node[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @param {GraphNode} highlightingNode - the first highlighting node
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {string[]} array of node IDs that are descendent of the first highlighting node
  */
 export const calculateHighlightRelatedNodeIDs = (
@@ -201,10 +207,10 @@ export const calculateHighlightRelatedNodeIDs = (
 
 /**
  * Get all routes that pass the second highlighting node and ends at the first highlighting node
- * @param {Node} highlightingNode - the first highlighting node
+ * @param {GraphNode} highlightingNode - the first highlighting node
  * @param {string} secondHighlightingNodeID - the second highlighting node ID
- * @param {Node[]} wholeGraphNodes - array of nodes in the origin whole graph
- * @returns {Edge[]} array of links along  routes that pass
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @returns {GraphEdge[]} array of links along  routes that pass
  *                   the second and ends at the first highlighting node
  */
 export const calculatePathRelatedToSecondHighlightingNode = (
@@ -230,10 +236,10 @@ export const calculatePathRelatedToSecondHighlightingNode = (
  * For a given node in subgraph, summary about how do its descendent structure look like.
  * I.e., which nodes along the descendent structure, and how many nodes/links between.
  * (A node's descendent structure means nodes and links that are started from this node)
- * @param {Node} startingNode
+ * @param {GraphNode} startingNode
  * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
- * @param {Edge[]} subgraphEdges - array of edges in subgraph
- * @param {Node[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @param {GraphEdge[]} subgraphEdges - array of edges in subgraph
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
  * Calculating process:
  *    step.1: find all critical nodes in subgraph
              (critical nodes here means all articulation nodes in subgraph and the starting node)
@@ -311,6 +317,7 @@ export const calculateDataModelStructure = (
     });
   }
 
+  /** @type {string[][]} */
   let routesBetweenStartEndNodes = [];
   if (singleDescendentNodeID) {
     resultStructure.push({
