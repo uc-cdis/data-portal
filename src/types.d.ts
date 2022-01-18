@@ -49,6 +49,7 @@ export type ProjectState = {
 export type VersionInfoState = {
   dataVersion: string;
   dictionaryVersion: string;
+  portalVersion: string;
 };
 
 export type StatusState = {
