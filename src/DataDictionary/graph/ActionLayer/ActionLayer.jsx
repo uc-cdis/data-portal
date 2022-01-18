@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../../gen3-ui-component/components/Button';
 import './ActionLayer.css';
@@ -6,35 +5,27 @@ import './ActionLayer.css';
 /**
  * A layer over the graph.
  * Put action buttons here.
+ * @param {Object} props
+ * @param {import('../../types').DdgraphState['isSearchMode']} [props.isSearchMode]
+ * @param {() => void} [props.onClearSearchResult]
  */
-class ActionLayer extends Component {
-  handleClearSearch = () => {
-    this.props.onClearSearchResult();
-  };
-
-  render() {
-    return (
-      <div className='action-layer'>
-        {this.props.isSearchMode && (
-          <Button
-            className='action-layer__clear-search'
-            onClick={this.handleClearSearch}
-            label='Clear Search Result'
-          />
-        )}
-      </div>
-    );
-  }
+function ActionLayer({ isSearchMode = false, onClearSearchResult }) {
+  return (
+    <div className='action-layer'>
+      {isSearchMode && (
+        <Button
+          className='action-layer__clear-search'
+          onClick={onClearSearchResult}
+          label='Clear Search Result'
+        />
+      )}
+    </div>
+  );
 }
 
 ActionLayer.propTypes = {
   isSearchMode: PropTypes.bool,
   onClearSearchResult: PropTypes.func,
-};
-
-ActionLayer.defaultProps = {
-  isSearchMode: false,
-  onClearSearchResult: () => {},
 };
 
 export default ActionLayer;
