@@ -13,12 +13,18 @@ import Spinner from '../components/Spinner';
 import getReduxStore from '../reduxStore';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 
+/** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
+/** @typedef {import('../types').ProjectState} ProjectState */
+/** @typedef {import('../types').UserState} UserState */
+/** @typedef {import('../GraphQLEditor/types').GraphiqlState} GraphiqlState */
+/** @typedef {import('../Submission/types').SubmissionState} SubmissionState */
+
 /**
  * @typedef {Object} ProtectedContentState
  * @property {boolean} authenticated
  * @property {boolean} dataLoaded
- * @property {?string} redirectTo
- * @property {?Object} user
+ * @property {string} redirectTo
+ * @property {UserState} user
  */
 
 /**
@@ -61,8 +67,8 @@ function ProtectedContent({
    * Start filter the 'newState' for the checkLoginStatus component.
    * Check if the user is logged in, and update state accordingly.
    * @param {Object} store
-   * @param {import('redux-thunk').ThunkDispatch<any, any, Promise>} store.dispatch
-   * @param {() => any} store.getState
+   * @param {ThunkDispatch} store.dispatch
+   * @param {() => { user: UserState }} store.getState
    * @param {ProtectedContentState} currentState
    * @returns {Promise<ProtectedContentState>}
    */
@@ -78,7 +84,6 @@ function ProtectedContent({
     if (Date.now() - newState.user.lastAuthMs < 60000)
       return Promise.resolve(newState);
 
-    /** @type {{ dispatch: import('redux-thunk').ThunkDispatch}} */
     return store
       .dispatch(fetchUser()) // make an API call to see if we're still logged in ...
       .then(() => {
@@ -126,11 +131,12 @@ function ProtectedContent({
   /**
    * Fetch resources on demand based on path
    * @param {Object} store
-   * @param {import('redux-thunk').ThunkDispatch} store.dispatch
-   * @param {() => any} store.getState
+   * @param {ThunkDispatch} store.dispatch
+   * @param {() => { graphiql: GraphiqlState; project: ProjectState; submission: SubmissionState }} store.getState
    */
   function fetchResources({ dispatch, getState }) {
     const { graphiql, project, submission } = getState();
+    /** @param {string[]} patterns */
     function matchPathOneOf(patterns) {
       return patterns.some((pattern) => matchPath(pattern, location.pathname));
     }
@@ -152,7 +158,10 @@ function ProtectedContent({
     setState(newState);
   }
   useEffect(() => {
-    window.scrollTo(0, location.state?.scrollY ?? 0);
+    window.scrollTo(
+      0,
+      /** @type {{ scrollY?: number }} */ (location?.state)?.scrollY ?? 0
+    );
 
     getReduxStore().then((store) =>
       Promise.all([

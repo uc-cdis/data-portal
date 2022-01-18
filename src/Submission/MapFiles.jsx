@@ -22,18 +22,11 @@ const HEADER_HEIGHT = 70;
 
 dayjs.extend(customParseFormat);
 
-/**
- * @typedef {Object} File
- * @property {string} created_date
- * @property {string} did
- * @property {Object} hashes
- */
+/** @typedef {import('./types').SubmissionFile} SubmissionFile */
+/** @typedef {{ [key: string]: SubmissionFile }} SubmissionFileSet  */
+/** @typedef {{ [index: number]: SubmissionFileSet }} SubmissionFileMap */
 
-/** @typedef {{ [key: string]: File }} FileSet  */
-
-/** @typedef {{ [index: number]: FileSet }} FileMap */
-
-/** @param {FileMap} files */
+/** @param {SubmissionFileMap} files */
 function flattenFiles(files) {
   const groupedFiles = Object.keys(files).map((index) => [
     ...Object.values(files[Number(index)]),
@@ -45,20 +38,20 @@ function flattenFiles(files) {
 
 /**
  * @param {string} key
- * @param {File[]} values
+ * @param {SubmissionFile[]} values
  */
 function createSet(key, values) {
-  const set = /** @type {FileSet} */ ({});
+  const set = /** @type {SubmissionFileSet} */ ({});
   for (const value of values) set[value[key]] = value;
   return set;
 }
 
-/** @param {FileSet} set */
+/** @param {SubmissionFileSet} set */
 function getSetSize(set) {
   return Object.keys(set).length;
 }
 
-/** @param {File[]} files */
+/** @param {SubmissionFile[]} files */
 function getTableHeaderText(files) {
   const date = dayjs(files[0].created_date).format('MM/DD/YY');
   return `uploaded on ${date}, ${files.length} ${
@@ -66,9 +59,9 @@ function getTableHeaderText(files) {
   }`;
 }
 
-/** @param {File[]} unmappedFiles */
-export function groupUnmappedFiles(unmappedFiles) {
-  /** @type {{ [date: string]: File[] }} */
+/** @param {SubmissionFile[]} unmappedFiles */
+export function groupSubmissionFiles(unmappedFiles) {
+  /** @type {{ [date: string]: SubmissionFile[] }} */
   const filesByDate = {};
   for (const file of unmappedFiles) {
     const fileDate = dayjs(file.created_date).format('MM/DD/YY');
@@ -82,7 +75,7 @@ export function groupUnmappedFiles(unmappedFiles) {
 }
 
 /**
- * @param {FileMap} map
+ * @param {SubmissionFileMap} map
  * @param {number} index
  * @param {any} value
  */
@@ -93,9 +86,9 @@ export function setMapValue(map, index, value) {
 }
 
 /**
- * @param {FileMap} map
+ * @param {SubmissionFileMap} map
  * @param {number} index
- * @param {File} file
+ * @param {SubmissionFile} file
  * @param {string} setKey
  */
 export function addToMap(map, index, file, setKey) {
@@ -105,7 +98,7 @@ export function addToMap(map, index, file, setKey) {
 }
 
 /**
- * @param {FileMap} map
+ * @param {SubmissionFileMap} map
  * @param {number} index
  * @param {string} setKey
  */
@@ -127,7 +120,7 @@ export function isSelectAll({ index, allFilesByGroup, selectedFilesByGroup }) {
  * @param {Object} args
  * @param {string} args.did
  * @param {number} args.index
- * @param {FileMap} args.selectedFilesByGroup
+ * @param {SubmissionFileMap} args.selectedFilesByGroup
  */
 export function isSelected({ did, index, selectedFilesByGroup }) {
   return selectedFilesByGroup[index]
@@ -135,7 +128,7 @@ export function isSelected({ did, index, selectedFilesByGroup }) {
     : false;
 }
 
-/** @param {FileMap} map */
+/** @param {SubmissionFileMap} map */
 export function isMapEmpty(map) {
   for (const key in map) {
     if (map[key] && getSetSize(map[key]) > 0) return false;
@@ -143,26 +136,26 @@ export function isMapEmpty(map) {
   return true;
 }
 
-/** @param {File} file */
+/** @param {SubmissionFile} file */
 export function isFileReady(file) {
   return file.hashes && Object.keys(file.hashes).length > 0;
 }
 
 /**
  * @param {Object} props
- * @param {File[]} props.unmappedFiles
- * @param {(username: string) => void} props.fetchUnmappedFiles
- * @param {(files: File[]) => void} props.mapSelectedFiles
+ * @param {SubmissionFile[]} props.unmappedFiles
+ * @param {(username: string) => void} props.fetchSubmissionFiles
+ * @param {(files: SubmissionFile[]) => void} props.mapSelectedFiles
  * @param {string} props.username
  */
 function MapFiles({
   unmappedFiles = [],
-  fetchUnmappedFiles,
+  fetchSubmissionFiles,
   mapSelectedFiles,
   username,
 }) {
   useEffect(() => {
-    fetchUnmappedFiles(username);
+    fetchSubmissionFiles(username);
   }, []);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -172,10 +165,10 @@ function MapFiles({
   const [sortedDates, setSortedDates] = useState([]);
 
   const [allFilesByGroup, setAllFilesByGroup] = useState(
-    /** @type {FileMap} */ ({})
+    /** @type {SubmissionFileMap} */ ({})
   );
   const [selectedFilesByGroup, setSelectedFilesByGroup] = useState(
-    /** @type {FileMap} */ ({})
+    /** @type {SubmissionFileMap} */ ({})
   );
 
   const [isScrolling, setIsScrolling] = useState(false);
@@ -184,12 +177,12 @@ function MapFiles({
   useEffect(() => {
     setIsLoading(false);
 
-    const grouped = groupUnmappedFiles(unmappedFiles);
+    const grouped = groupSubmissionFiles(unmappedFiles);
     setFilesByDate(grouped.filesByDate);
     setSortedDates(grouped.sortedDates);
 
-    const unselectedMap = /** @type {FileMap} */ ({});
-    const selectedMap = /** @type {FileMap} */ ({});
+    const unselectedMap = /** @type {SubmissionFileMap} */ ({});
+    const selectedMap = /** @type {SubmissionFileMap} */ ({});
     for (const [index, date] of grouped.sortedDates.entries()) {
       const filesToAdd = grouped.filesByDate[date].filter(isFileReady);
       unselectedMap[index] = createSet(SET_KEY, filesToAdd);
@@ -208,7 +201,7 @@ function MapFiles({
   /**
    *
    * @param {number} index
-   * @param {File} file
+   * @param {SubmissionFile} file
    */
   function toggleCheckBox(index, file) {
     console.log('toggleCheckBox');
@@ -403,7 +396,7 @@ function MapFiles({
 
 MapFiles.propTypes = {
   unmappedFiles: PropTypes.array,
-  fetchUnmappedFiles: PropTypes.func.isRequired,
+  fetchSubmissionFiles: PropTypes.func.isRequired,
   mapSelectedFiles: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,
 };

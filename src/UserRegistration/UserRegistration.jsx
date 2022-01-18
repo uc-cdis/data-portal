@@ -5,6 +5,7 @@ import { headers, userapiPath } from '../localconf';
 import RegistrationForm from './RegistrationForm';
 import './UserRegistration.css';
 
+/** @typedef {import('../types').User} User */
 /** @typedef {import('./types').UserRegistrationDocument} UserRegistrationDocument */
 /** @typedef {import('./types').UserRegistrationInput} UserRegistrationInput */
 
@@ -12,7 +13,7 @@ import './UserRegistration.css';
  * @param {Object} prop
  * @param {UserRegistrationDocument[]} prop.docsToBeReviewed
  * @param {boolean} prop.shouldRegister
- * @param {(responses: Response[]) => ('success' | 'error')} prop.updateAccess
+ * @param {(user: User) => ('success')} prop.updateAccess
  */
 function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
   const [show, setShow] = useState(shouldRegister);
@@ -49,6 +50,7 @@ function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
       if (!documentsResponse.ok)
         throw new Error('Failed to update document review status.');
 
+      /** @type {User} */
       const user = await userResponse.json();
       return updateAccess(user);
     } catch (e) {

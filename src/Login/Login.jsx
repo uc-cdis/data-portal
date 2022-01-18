@@ -7,26 +7,8 @@ import { basename, loginPath } from '../localconf';
 import { overrideSelectTheme } from '../utils';
 import './Login.css';
 
-/**
- * @typedef {Object} LoginData
- * @property {string} title
- * @property {string} subTitle
- * @property {string} text
- * @property {{ text?: string; href: string }} [contact_link]
- * @property {string} [contact] deprecated; use contact_link
- * @property {string} [email] deprecated; use contact_link
- */
-
-/**
- * @typedef {Object} LoginProvider
- * @property {string} idp
- * @property {string} name
- * @property {{ name: string; url: string }[]} urls
- * @property {string} [desc]
- * @property {boolean} [secondary]
- * @property {string} [id] deprecated; use idp
- * @property {string} [url] deprecated; use urls
- */
+/** @typedef {import('./types').LoginData} LoginData */
+/** @typedef {import('./types').LoginProvider} LoginProvider */
 
 /**
  * @typedef {Object} LoginProps
@@ -91,9 +73,8 @@ function Login({ data, providers = defaultProviders }) {
 
     const searchParams = new URLSearchParams(location.search);
     // eslint-disable-next-line no-nested-ternary
-    const next = (searchParams.has('next')
-      ? basename + searchParams.get('next')
-      : basename
+    const next = (
+      searchParams.has('next') ? basename + searchParams.get('next') : basename
     ).replace(/\/+/g, '/'); // clean up url: no double slashes
 
     window.location.href = `${providerLoginUrl}${queryChar}redirect=${window.location.origin}${next}`;
