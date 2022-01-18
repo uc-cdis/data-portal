@@ -5,8 +5,11 @@ import { fetchWithCreds } from '../actions';
 import { loginPath } from '../localconf';
 import { components } from '../params';
 
+/** @typedef {import('./types').LoginProvider} LoginProvider */
+/** @typedef {import('./types').LoginState} LoginState */
+
 /**
- * @param {any} data
+ * @param {{ providers: LoginProvider[]; error: any }} data
  * @param {number} status
  * @returns {import('redux').AnyAction}
  */
@@ -41,12 +44,13 @@ function getLoginAction(data, status) {
   }
 }
 
-/** @returns {(dispatch: import('redux-thunk').ThunkDispatch) => Promise} */
-export const fetchLogin = () => (dispatch) =>
-  fetchWithCreds({ path: loginPath, dispatch }).then(({ data, status }) => {
-    dispatch(getLoginAction(data, status));
-  });
+export const fetchLogin =
+  () => (/** @type {import('redux').Dispatch} */ dispatch) =>
+    fetchWithCreds({ path: loginPath, dispatch }).then(({ data, status }) => {
+      dispatch(getLoginAction(data, status));
+    });
 
+/** @param {{ login: LoginState }} state */
 const mapStateToProps = (state) => ({
   data: components.login,
   providers: state.login.providers,

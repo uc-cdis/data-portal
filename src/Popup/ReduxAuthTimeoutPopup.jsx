@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Popup from '../components/Popup';
 
-/** @param {{ authPopup: boolean; }} props  */
+/** @typedef {import('./types').PopupState} PopupState */
+
+/** @param {{ authPopup: PopupState['authPopup'] }} props  */
 function AuthPopup({ authPopup }) {
   const navigate = useNavigate();
   return authPopup ? (
@@ -27,6 +29,7 @@ AuthPopup.propTypes = {
   authPopup: PropTypes.bool,
 };
 
+/** @param {{ popups: PopupState }} state */
 const mapStateToProps = (state) => ({
   authPopup: state.popups.authPopup,
 });
