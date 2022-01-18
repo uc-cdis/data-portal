@@ -33,10 +33,18 @@ type SubmissionSubmissionState = {
   submit_total: number;
 };
 
+export type SubmissionFile = {
+  created_date: string;
+  did: string;
+  file_name: string;
+  hashes: Object;
+  size: number;
+};
+
 type SubmissionUnmappedFileState = {
-  filesToMap: Object[];
+  filesToMap: SubmissionFile[];
   unmappedFileCount: number;
-  unmappedFiles: Object[];
+  unmappedFiles: SubmissionFile[];
   unmappedFileSize: number;
 };
 
