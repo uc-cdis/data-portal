@@ -74,7 +74,10 @@ export type StatusState = {
 };
 
 export type KubeState = {
-  job: { uid: string };
+  job: {
+    status: string;
+    uid: string;
+  };
   jobStatusInterval: number;
   resultURL: string;
 };
