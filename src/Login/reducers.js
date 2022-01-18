@@ -1,5 +1,7 @@
-/** @type {import('redux').Reducer} */
-const login = (state = {}, action) => {
+/** @typedef {import('./types').LoginState} LoginState */
+
+/** @type {import('redux').Reducer<LoginState>} */
+const login = (state = /** @type {LoginState} */ ({}), action) => {
   switch (action.type) {
     case 'RECEIVE_LOGIN_ENDPOINT':
       return { ...state, providers: action.providers };
