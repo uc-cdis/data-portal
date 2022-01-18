@@ -1,6 +1,22 @@
-import type { ReturnType } from 'redux';
+import type { Dispatch, ReturnType } from 'redux';
 import type { UserRegistrationDocument } from './UserRegistration/types';
-import reducers from './reducers';
+
+export type FetchHelperOptions = {
+  path: string;
+  method?: string; // Default is "GET"
+  body?: any; // Default is null
+  customHeaders?: Headers;
+  dispatch?: Dispatch;
+  useCache?: boolean;
+  signal?: AbortSignal;
+};
+
+export type FetchHelperResult = {
+  data: any;
+  headers?: Headers; // if not using cache
+  response?: Response; // if not using cache
+  status: number;
+};
 
 export type UserAuthz = {
   [path: string]: { method: string; service: string }[];
