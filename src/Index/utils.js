@@ -2,8 +2,14 @@ import { fetchWithCreds } from '../actions';
 import getReduxStore from '../reduxStore';
 import { consortiumList } from '../params';
 
+/** @typedef {import('./types').IndexState} IndexState */
+/** @typedef {import('./types').ConsortiumCountsData} ConsortiumCountsData */
+
+/** @param {ConsortiumCountsData[]} data */
 function parseCounts(data) {
+  /** @type {IndexState['overviewCounts']} */
   const overviewCounts = { names: [], data: {} };
+  /** @type {IndexState['projectList']} */
   const projectList = [];
 
   for (const {

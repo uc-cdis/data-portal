@@ -2,7 +2,11 @@ import { connect } from 'react-redux';
 import { hoverNode, clickNode, setGraphNodesSVGElements } from '../../action';
 import GraphDrawer from './GraphDrawer';
 
+/** @typedef {import('../../types').DdgraphState} DdgraphState */
+/** @typedef {import('../../types').GraphNode} GraphNode */
+
 const ReduxGraphDrawer = (() => {
+  /** @param {{ ddgraph: DdgraphState }} state */
   const mapStateToProps = (state) => ({
     nodes: state.ddgraph.nodes,
     edges: state.ddgraph.edges,
@@ -24,9 +28,12 @@ const ReduxGraphDrawer = (() => {
   });
 
   const mapDispatchToProps = (dispatch) => ({
+    /** @param {GraphNode['id']} nodeId */
     onHoverNode: (nodeID) => dispatch(hoverNode(nodeID)),
     onCancelHoverNode: () => dispatch(hoverNode(null)),
+    /** @param {GraphNode['id']} nodeId */
     onClickNode: (nodeID) => dispatch(clickNode(nodeID)),
+    /** @param {DdgraphState['graphNodesSVGElements']} graphNodesSVGElements */
     onGraphNodesSVGElementsUpdated: (graphNodesSVGElements) =>
       dispatch(setGraphNodesSVGElements(graphNodesSVGElements)),
   });

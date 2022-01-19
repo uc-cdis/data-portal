@@ -16,6 +16,8 @@ import {
 import './ExplorerButtonGroup.css';
 import Popup from '../../components/Popup';
 
+/** @typedef {import('../../types').KubeState} KubeState */
+/** @typedef {import('../../types').UserAccessState} UserAccessState */
 /** @typedef {import('../types').ButtonConfig} ButtonConfig */
 /** @typedef {import('../types').ExplorerFilters} ExplorerFilters */
 /** @typedef {import('../types').GqlSort} GqlSort */
@@ -24,7 +26,7 @@ import Popup from '../../components/Popup';
 
 /**
  * @typedef {Object} ExplorerButtonGroupProps
- * @property {Object} [job]
+ * @property {KubeState['job']} [job]
  * @property {(args: { sort?: GqlSort; format?: string }) => Promise} downloadRawData
  * @property {(args: { fields: string[]; sort?: GqlSort }) => Promise} downloadRawDataByFields
  * @property {(type: string, filter: ExplorerFilters, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
@@ -39,9 +41,9 @@ import Popup from '../../components/Popup';
  * @property {(body: any) => void} submitJob: PropTypes.func.isRequired,
  * @property {() => void} resetJobState: PropTypes.func.isRequired,
  * @property {() => void} checkJobStatus: PropTypes.func.isRequired,
- * @property {(jobId: any) => Promise} fetchJobResult: PropTypes.func.isRequired,
+ * @property {(jobId: string) => Promise} fetchJobResult: PropTypes.func.isRequired,
  * @property {boolean} isLocked: PropTypes.bool.isRequired,
- * @property {Object} userAccess: PropTypes.object.isRequired,
+ * @property {UserAccessState['access']} userAccess: PropTypes.object.isRequired,
  */
 
 /**

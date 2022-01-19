@@ -1,99 +1,83 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 import './DictionarySearchHistory.css';
 
-class DictionarySearchHistory extends Component {
-  handleClick = (keyword) => {
-    this.props.onClickSearchHistoryItem(keyword);
-  };
-
-  handleClearHistory = () => {
-    this.props.onClearSearchHistoryItems();
-  };
-
-  render() {
-    if (
-      this.props.searchHistoryItems &&
-      this.props.searchHistoryItems.length > 0
-    ) {
-      return (
-        <div className='dictionary-search-history'>
-          <div className='dictionary-search-history__title'>
-            <h4 className='dictionary-search-history__title-text'>
-              Last Search
-            </h4>
-            <span
-              className='dictionary-search-history__clear'
-              onClick={this.handleClearHistory}
+/**
+ * @param {Object} props
+ * @param {() => void} props.onClearSearchHistoryItems
+ * @param {(keyword: string) => void} props.onClickSearchHistoryItem
+ * @param {import('../../types').SearchHistoryItem[]} props.searchHistoryItems
+ */
+function DictionarySearchHistory({
+  onClearSearchHistoryItems,
+  onClickSearchHistoryItem,
+  searchHistoryItems = [],
+}) {
+  return searchHistoryItems.length > 0 ? (
+    <div className='dictionary-search-history'>
+      <div className='dictionary-search-history__title'>
+        <h4 className='dictionary-search-history__title-text'>Last Search</h4>
+        <span
+          className='dictionary-search-history__clear'
+          onClick={onClearSearchHistoryItems}
+          onKeyPress={(e) => {
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              onClearSearchHistoryItems?.();
+            }
+          }}
+          role='button'
+          tabIndex={0}
+          aria-label='Clear history'
+        >
+          Clear History
+        </span>
+      </div>
+      <div>
+        {searchHistoryItems.map((item) => {
+          const zeroCountModifier =
+            item.matchedCount === 0
+              ? 'dictionary-search-history__item-badge--zero'
+              : '';
+          return (
+            <div
+              className='dictionary-search-history__item'
+              key={item.keywordStr}
+              onClick={() => onClickSearchHistoryItem?.(item.keywordStr)}
               onKeyPress={(e) => {
                 if (e.charCode === 13 || e.charCode === 32) {
                   e.preventDefault();
-                  this.handleClearHistory();
+                  onClickSearchHistoryItem?.(item.keywordStr);
                 }
               }}
               role='button'
               tabIndex={0}
-              aria-label='Clear history'
+              aria-label='Search history item'
             >
-              Clear History
-            </span>
-          </div>
-          <div>
-            {this.props.searchHistoryItems &&
-              this.props.searchHistoryItems.map((item) => {
-                const zeroCountModifier =
-                  item.matchedCount === 0
-                    ? 'dictionary-search-history__item-badge--zero'
-                    : '';
-                return (
-                  <div
-                    className='dictionary-search-history__item'
-                    key={item.keywordStr}
-                    onClick={() => this.handleClick(item.keywordStr)}
-                    onKeyPress={(e) => {
-                      if (e.charCode === 13 || e.charCode === 32) {
-                        e.preventDefault();
-                        this.handleClick(item.keywordStr);
-                      }
-                    }}
-                    role='button'
-                    tabIndex={0}
-                    aria-label='Search history item'
-                  >
-                    <span className='dictionary-search-history__item-keyword'>
-                      {item.keywordStr}
-                    </span>
-                    <span
-                      className={`dictionary-search-history__item-badge ${zeroCountModifier}`}
-                    >
-                      {item.matchedCount}
-                    </span>
-                  </div>
-                );
-              })}
-          </div>
-        </div>
-      );
-    }
-    return null;
-  }
+              <span className='dictionary-search-history__item-keyword'>
+                {item.keywordStr}
+              </span>
+              <span
+                className={`dictionary-search-history__item-badge ${zeroCountModifier}`}
+              >
+                {item.matchedCount}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  ) : null;
 }
 
-const SearchHistoryItemShape = PropTypes.shape({
-  keywordStr: PropTypes.string,
-  matchedCount: PropTypes.number,
-});
-
 DictionarySearchHistory.propTypes = {
-  searchHistoryItems: PropTypes.arrayOf(SearchHistoryItemShape),
-  onClickSearchHistoryItem: PropTypes.func,
   onClearSearchHistoryItems: PropTypes.func,
-};
-
-DictionarySearchHistory.defaultProps = {
-  searchHistoryItems: [],
-  onClickSearchHistoryItem: () => {},
-  onClearSearchHistoryItems: () => {},
+  onClickSearchHistoryItem: PropTypes.func,
+  searchHistoryItems: PropTypes.arrayOf(
+    PropTypes.exact({
+      keywordStr: PropTypes.string,
+      matchedCount: PropTypes.number,
+    })
+  ),
 };
 
 export default DictionarySearchHistory;

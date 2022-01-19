@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import NodeTooltip from './NodeTooltip';
 
 const ReduxNodeTooltip = (() => {
+  /** @param {{ ddgraph: import('../../types').DdgraphState }} state */
   const mapStateToProps = (state) => ({
     hoveringNode: state.ddgraph.hoveringNode,
     canvasBoundingRect: state.ddgraph.canvasBoundingRect,

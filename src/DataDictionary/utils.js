@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import JSZip from 'jszip';
 import { dataDictionaryTemplatePath, appname } from '../localconf';
 
+/** @typedef {import('./types').SearchHistoryItem} SearchHistoryItem */
+
 const concatTwoWords = (w1, w2) => {
   if (w1.length === 0) return w2;
   if (w2.length === 0) return w1;
@@ -181,11 +183,6 @@ export const getPropertyDescription = (property) => {
 };
 
 const searchHistoryLocalStorageKey = 'datadictionary:searchHistory';
-/**
- * @typedef {Object} SearchHistoryItem
- * @property {string} keywordStr - keywordStr of this item
- * @property {integer} matchedCount - matched count for this keyword
- */
 
 /**
  * Get search history items from localStorage
@@ -198,7 +195,7 @@ export const getSearchHistoryItems = () => {
 
 /**
  * Add search history item to localStorage
- * @params {SearchHistoryItem} searchHistoryItem - item to add into localStorage
+ * @param {SearchHistoryItem} searchHistoryItem - item to add into localStorage
  * @returns {SearchHistoryItem[]} array of new search history items
  */
 export const addSearchHistoryItems = (searchHistoryItem) => {

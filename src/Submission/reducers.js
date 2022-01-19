@@ -2,7 +2,10 @@ import { components } from '../params';
 import { getFileNodes, getNodeTypes } from '../graphutils';
 import { getDictionaryWithExcludeSystemProperties } from './utils';
 
-const submission = (state = {}, action) => {
+/** @typedef {import('./types').SubmissionState} SubmissionState */
+
+/** @type {import('redux').Reducer<SubmissionState>} */
+const submission = (state = /** @type {SubmissionState} */ ({}), action) => {
   switch (action.type) {
     case 'REQUEST_UPLOAD':
       return { ...state, file: action.file, file_type: action.file_type };
@@ -49,8 +52,6 @@ const submission = (state = {}, action) => {
     case 'RECEIVE_RELAY_FAIL': {
       return { ...state, error: action.data };
     }
-    case 'RECEIVE_NODE_TYPES':
-      return { ...state, nodeTypes: action.data };
     case 'RECEIVE_DICTIONARY':
       return {
         ...state,

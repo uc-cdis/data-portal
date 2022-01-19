@@ -5,13 +5,16 @@ import {
   getType,
 } from '../../utils';
 
+/** @typedef {import('../../types').SearchItem} SearchItem */
+/** @typedef {import('../../types').MatchedResult} MatchedResult */
+
 export const ZERO_RESULT_FOUND_MSG =
   '0 results found. Please try another keyword.';
 
 /**
  * Prepare search items for Fuse.io library
- * @params [Object] dictionary
- * @returns [Object] search data
+ * @param {Object} dictionary
+ * @returns {SearchItem[]} search data
  */
 export const prepareSearchData = (dictionary) => {
   const searchData = parseDictionaryNodes(dictionary).map((node) => {
@@ -42,9 +45,9 @@ export const ERR_KEYWORD_TOO_LONG = 'Keyword too long (more than 32).';
 
 /**
  * Call Fuse search and returns search result
- * @params [Object] searchData - see prepareSearchData returns
- * @params [string] keyword
- * @returns [SearchResultItemShape[]] (see ../../utils).
+ * @param {SearchItem[]} searchData - see prepareSearchData returns
+ * @param {string} keyword
+ * @returns {{ result: MatchedResult[]; errorMsg: string }} (see ../../utils).
  */
 export const searchKeyword = (searchData, keyword) => {
   if (!keyword || keyword.length < 2) {
@@ -111,12 +114,15 @@ export const searchKeyword = (searchData, keyword) => {
 /**
  * Prepare search items for Fuse.io library, call Fuse constructor
  * and return a search instance handler.
- * @params [SearchResultItemShape[]] search result (SearchResultItemShape from '../../utils')
+ * @param {MatchedResult[]} result (SearchResultItemShape from '../../utils')
  * @returns [Object] summary
  */
 export const getSearchSummary = (result) => {
+  /** @type {SearchItem['id'][]} */
   const matchedNodeIDsInNameAndDescription = [];
+  /** @type {SearchItem['id'][]} */
   const matchedNodeIDsInProperties = [];
+  /** @type {SearchItem['id'][]} */
   const generalMatchedNodeIDs = [];
   let matchedPropertiesCount = 0;
   let matchedNodeNameAndDescriptionsCount = 0;

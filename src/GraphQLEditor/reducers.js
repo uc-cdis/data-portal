@@ -1,5 +1,6 @@
-/** @type {import('redux').Reducer} */
-const graphiql = (state = {}, action) => {
+/** @typedef {import('./types').GraphiqlState} GraphiqlState */
+/** @type {import('redux').Reducer<GraphiqlState>} */
+const graphiql = (state = /** @type {GraphiqlState} */ ({}), action) => {
   switch (action.type) {
     case 'RECEIVE_SCHEMA':
       return { ...state, schema: action.schema };

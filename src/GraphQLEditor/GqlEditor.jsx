@@ -8,17 +8,23 @@ import { headers, graphqlPath, guppyGraphQLUrl } from '../localconf';
 import './GqlEditor.css';
 import 'graphiql/graphiql.css';
 
+/** @typedef {import('graphiql').Fetcher} GraphiQLFetcher */
+/** @typedef {import('graphql').GraphQLSchema} GraphQLSchema */
+
 const parameters = {};
 const defaultValue = 0;
 
+/** @param {string} newQuery */
 function editQuery(newQuery) {
   parameters.query = newQuery;
 }
 
+/** @param {string} newVariables */
 function editVariables(newVariables) {
   parameters.variables = newVariables;
 }
 
+/** @type {GraphiQLFetcher} */
 const fetchGraphQL = (graphQLParams) =>
   fetch(graphqlPath, {
     credentials: 'include',
@@ -35,6 +41,7 @@ const fetchGraphQL = (graphQLParams) =>
       }
     });
 
+/** @type {GraphiQLFetcher} */
 const fetchFlatGraphQL = (graphQLParams) =>
   fetch(guppyGraphQLUrl, {
     credentials: 'include',
@@ -51,7 +58,12 @@ const fetchFlatGraphQL = (graphQLParams) =>
       }
     });
 
-function GqlEditor({ schema, guppySchema }) {
+/**
+ * @param {Object} props
+ * @param {GraphQLSchema} [props.guppySchema]
+ * @param {GraphQLSchema} [props.schema]
+ */
+function GqlEditor({ guppySchema, schema }) {
   if (!schema) {
     return <Spinner />; // loading
   }
@@ -108,8 +120,8 @@ function GqlEditor({ schema, guppySchema }) {
 }
 
 GqlEditor.propTypes = {
-  schema: PropTypes.object,
   guppySchema: PropTypes.object,
+  schema: PropTypes.object,
 };
 
 export default GqlEditor;

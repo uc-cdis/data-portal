@@ -6,6 +6,10 @@ import { submissionApiPath, lineLimit } from '../localconf';
 import { fetchWithCreds } from '../actions';
 import { uploadTSV, updateFileContent } from './actions';
 
+/** @typedef {import('redux').Dispatch} Dispatch */
+/** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
+/** @typedef {import('./types').SubmissionState} SubmissionState */
+
 /**
  * @param {string} fullProject
  * @param {string} methodIn
@@ -13,12 +17,13 @@ import { uploadTSV, updateFileContent } from './actions';
 const submitToServer =
   (fullProject, methodIn = 'PUT') =>
   /**
-   * @param {import('redux').Dispatch} dispatch
-   * @param {() => { submission: { file: string; file_type: string } }} getState
+   * @param {Dispatch} dispatch
+   * @param {() => { submission: SubmissionState }} getState
    */
   (dispatch, getState) => {
     dispatch({ type: 'RESET_SUBMISSION_STATUS' });
 
+    /** @type {string[]} */
     const fileArray = [];
     const path = fullProject.split('-');
     const program = path[0];
@@ -99,17 +104,36 @@ const submitToServer =
     return recursiveFetch(fileArray);
   };
 
+/** @param {{ submission: SubmissionState }} state */
 const mapStateToProps = (state) => ({
   submission: state.submission,
-  dictionary: state.dictionary,
 });
 
+/** @param {ThunkDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
-  onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
-  onSubmitClick: (project) => dispatch(submitToServer(project)),
-  onFileChange: (value) => dispatch(updateFileContent(value)),
-  onFinish: (type, project, dictionary) =>
-    dispatch(getCounts(type, project, dictionary)),
+  /**
+   * @param {SubmissionState['file']} value
+   * @param {SubmissionState['file_type']} type
+   */
+  onUploadClick: (value, type) => {
+    dispatch(uploadTSV(value, type));
+  },
+  /** @param {string} project */
+  onSubmitClick: (project) => {
+    dispatch(submitToServer(project));
+  },
+  /** @param {SubmissionState['file']} */
+  onFileChange: (value) => {
+    dispatch(updateFileContent(value));
+  },
+  /**
+   * @param {string[]} nodeTypes
+   * @param {string} project
+   * @param {SubmissionState['dictionary']} [dictionary]
+   */
+  onFinish: (nodeTypes, project, dictionary) => {
+    dispatch(getCounts(nodeTypes, project, dictionary));
+  },
 });
 
 const ReduxSubmitTSV = connect(mapStateToProps, mapDispatchToProps)(SubmitTSV);

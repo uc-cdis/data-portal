@@ -12,17 +12,21 @@ import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
 import './QueryNode.css';
 
+/** @typedef {import('./types').QueryNodeState} QueryNodeState */
+/** @typedef {import('../Popup/types').PopupState} PopupState */
+/** @typedef {import('../Submission/types').SubmissionState} SubmissionState */
+
 /**
  * QueryNode shows the details of a particular node
  * @param {Object} props
- * @param {Object} props.submission
- * @param {Object} props.queryNodes
- * @param {Object} props.popups
+ * @param {SubmissionState} props.submission
+ * @param {QueryNodeState} props.queryNodes
+ * @param {PopupState} props.popups
  * @param {(value: any, cb?: Function) => void} props.onSearchFormSubmit
- * @param {(param: { view_popup?: boolean; nodedelete_popup?: boolean | string; }) => void} props.onUpdatePopup
+ * @param {(state: Partial<PopupState>) => void} props.onUpdatePopup
  * @param {() => void} props.onClearDeleteSession
- * @param {(param: { project: string; id: string; }) => void} props.onDeleteNode
- * @param {(param: { project: string; id: string; }) => Promise<void>} props.onStoreNodeInfo
+ * @param {(param: { id: string; project: string }) => void} props.onDeleteNode
+ * @param {(param: { id: string; project: string }) => Promise<void>} props.onStoreNodeInfo
  */
 function QueryNode({
   submission = null,
