@@ -146,6 +146,14 @@ Below is an example, with inline comments describing what each JSON block config
       "systemUseText" : [""] // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
       "expireUseMsgDays" : optional; 0, // the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
     },
+    "footer": {
+      "links": [
+        {
+          "text": "Link title",
+          "href": "https://example.com"
+        }
+      ]
+    },
     "footerLogos": [ // optional; logos to be displayed in the footer, usually sponsors
       {
         "src": "/src/img/gen3.png", // required; src path for the image
