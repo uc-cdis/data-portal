@@ -21,13 +21,9 @@ import getReduxStore from './reduxStore';
 import { gaTracking } from './params';
 import { basename } from './localconf';
 import App from './App';
-import sessionMonitor from './SessionMonitor';
 import '@fontsource/raleway';
 import './gen3-ui-component/css/base.css';
 import './gen3-ui-component/css/icon.css';
-
-// monitor user's session
-sessionMonitor.start();
 
 // Google Analytics
 ReactGA.initialize(gaTracking);

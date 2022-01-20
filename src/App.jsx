@@ -14,6 +14,7 @@ import {
   // workspaceErrorUrl,
 } from './localconf';
 import { fetchVersionInfo } from './actions';
+import useSessionMonitor from './hooks/useSessionMonitor';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
@@ -37,6 +38,7 @@ const UserProfile = lazy(() => import('./UserProfile/ReduxUserProfile'));
 // const Workspace = lazy(() => import('./Workspace'));
 
 function App({ store }) {
+  useSessionMonitor();
   useEffect(() => {
     store.dispatch(fetchVersionInfo());
   }, []);

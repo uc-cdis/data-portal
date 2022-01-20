@@ -8,9 +8,9 @@ import BackLink from '../components/BackLink';
 import { getProjectsList } from './relayer';
 import CheckmarkIcon from '../img/icons/status_confirm.svg';
 import InputWithIcon from '../components/InputWithIcon';
+import useSessionMonitor from '../hooks/useSessionMonitor';
 import GQLHelper from '../gqlHelper';
 import environment from '../environment';
-import sessionMonitor from '../SessionMonitor';
 import { headers, submissionApiPath } from '../localconf';
 import './MapDataModel.css';
 
@@ -210,6 +210,8 @@ function MapDataModel({
     if (filesToMap.length === 0) navigate('/submission/files');
     getProjectsList();
   }, []);
+
+  const sessionMonitor = useSessionMonitor();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [nodeType, setNodeType] = useState(null);
