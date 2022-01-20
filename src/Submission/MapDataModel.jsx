@@ -5,12 +5,11 @@ import { fetchQuery } from 'relay-runtime';
 import Button from '../gen3-ui-component/components/Button';
 import Toaster from '../gen3-ui-component/components/Toaster';
 import BackLink from '../components/BackLink';
-import { getProjectsList } from './relayer';
 import CheckmarkIcon from '../img/icons/status_confirm.svg';
 import InputWithIcon from '../components/InputWithIcon';
+import useSessionMonitor from '../hooks/useSessionMonitor';
 import GQLHelper from '../gqlHelper';
 import environment from '../environment';
-import sessionMonitor from '../SessionMonitor';
 import { headers, submissionApiPath } from '../localconf';
 import './MapDataModel.css';
 
@@ -194,6 +193,7 @@ function submitFilesToMap(program, project, files) {
  * @param {Object} props
  * @param {Object} [props.dictionary]
  * @param {Object[]} [props.filesToMap]
+ * @param {() => void} [props.getProjectsList]
  * @param {string[]} [props.nodeTypes]
  * @param {Object} [props.projects]
  * @param {Function} [props.submitFiles]
@@ -201,6 +201,7 @@ function submitFilesToMap(program, project, files) {
 function MapDataModel({
   dictionary = {},
   filesToMap = [],
+  getProjectsList = () => {},
   nodeTypes = [],
   projects = null,
   submitFiles = submitFilesToMap,
@@ -210,6 +211,8 @@ function MapDataModel({
     if (filesToMap.length === 0) navigate('/submission/files');
     getProjectsList();
   }, []);
+
+  const sessionMonitor = useSessionMonitor();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [nodeType, setNodeType] = useState(null);
@@ -489,6 +492,7 @@ function MapDataModel({
 MapDataModel.propTypes = {
   dictionary: PropTypes.object,
   filesToMap: PropTypes.array,
+  getProjectsList: PropTypes.func,
   nodeTypes: PropTypes.array,
   projects: PropTypes.object,
   submitFiles: PropTypes.func,

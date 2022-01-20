@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import SubmitTSV from './SubmitTSV';
-import sessionMonitor from '../SessionMonitor';
 import { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
 import { submissionApiPath, lineLimit } from '../localconf';
 import { fetchWithCreds } from '../actions';
@@ -11,11 +10,13 @@ import { uploadTSV, updateFileContent } from './actions';
 /** @typedef {import('./types').SubmissionState} SubmissionState */
 
 /**
- * @param {string} fullProject
- * @param {string} methodIn
+ * @param {Object} args
+ * @param {string} args.fullProject
+ * @param {string} [args.methodIn]
+ * @param {() => void} [args.callback]
  */
 const submitToServer =
-  (fullProject, methodIn = 'PUT') =>
+  ({ fullProject, methodIn = 'PUT', callback }) =>
   /**
    * @param {Dispatch} dispatch
    * @param {() => { submission: SubmissionState }} getState
@@ -98,7 +99,7 @@ const submitToServer =
           total: totalChunk,
         }))
         .then((msg) => dispatch(msg))
-        .then(() => sessionMonitor.updateUserActivity());
+        .then(callback);
     }
 
     return recursiveFetch(fileArray);
@@ -119,10 +120,10 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(uploadTSV(value, type));
   },
   /** @param {string} project */
-  onSubmitClick: (project) => {
-    dispatch(submitToServer(project));
+  onSubmitClick: (project, callback) => {
+    dispatch(submitToServer({ fullProject: project, callback }));
   },
-  /** @param {SubmissionState['file']} */
+  /** @param {SubmissionState['file']} value */
   onFileChange: (value) => {
     dispatch(updateFileContent(value));
   },

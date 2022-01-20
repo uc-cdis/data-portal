@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import MediaQuery from 'react-responsive';
 import {
   ReduxIndexButtonBar,
@@ -14,8 +15,9 @@ import { breakpoints } from '../localconf';
 import './page.css';
 
 function IndexPage() {
+  const dispatch = useDispatch();
   useEffect(() => {
-    getIndexPageCounts();
+    dispatch(getIndexPageCounts());
   }, []);
 
   return (

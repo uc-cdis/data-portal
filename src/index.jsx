@@ -17,17 +17,13 @@ import {
 import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import getReduxStore from './reduxStore';
+import reduxStore from './reduxStore';
 import { gaTracking } from './params';
 import { basename } from './localconf';
 import App from './App';
-import sessionMonitor from './SessionMonitor';
 import '@fontsource/raleway';
 import './gen3-ui-component/css/base.css';
 import './gen3-ui-component/css/icon.css';
-
-// monitor user's session
-sessionMonitor.start();
 
 // Google Analytics
 ReactGA.initialize(gaTracking);
@@ -49,17 +45,11 @@ library.add(
   faTrashAlt
 );
 
-// render the app after the store is configured
-async function init() {
-  const store = await getReduxStore();
-  render(
-    <Provider store={store}>
-      <BrowserRouter basename={basename}>
-        <App store={store} />
-      </BrowserRouter>
-    </Provider>,
-    document.getElementById('root')
-  );
-}
-
-init();
+render(
+  <Provider store={reduxStore}>
+    <BrowserRouter basename={basename}>
+      <App />
+    </BrowserRouter>
+  </Provider>,
+  document.getElementById('root')
+);

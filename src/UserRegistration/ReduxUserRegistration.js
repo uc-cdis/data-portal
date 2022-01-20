@@ -19,7 +19,7 @@ const mapDispatchToProps = (dispatch) => ({
     if (user.authz['/portal'] !== undefined) {
       dispatch({ type: 'RECEIVE_USER', user });
       dispatch(fetchUserAccess());
-      getIndexPageCounts();
+      dispatch(getIndexPageCounts());
       return 'success';
     }
     throw new Error('Failed to update authorization information.');

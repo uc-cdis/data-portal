@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import ProjectDashboard from './ProjectDashboard';
 import ReduxTransaction from './ReduxTransaction';
 import { getTransactionList, getProjectsList } from './relayer';
 
 function SubmissionPage() {
+  const dispatch = useDispatch();
   useEffect(() => {
-    getProjectsList();
-    getTransactionList();
+    dispatch(getProjectsList());
+    dispatch(getTransactionList());
   }, []);
 
   return (

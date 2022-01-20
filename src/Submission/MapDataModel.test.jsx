@@ -1,17 +1,11 @@
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
 import MapDataModel, {
   getParentNodes,
   isValidSubmission,
 } from './MapDataModel';
 import * as testData from './__test__/data.json';
-import { getProjectsList } from './relayer';
 
-jest.mock('./relayer');
-getProjectsList.mockImplementation(() => jest.fn());
-
-const history = createMemoryHistory('/submission/map');
 const projects = {
   test: { name: 'test', counts: [], charts: [], code: 'test' },
 };
@@ -44,7 +38,7 @@ test('renders', () => {
         projects={projects}
         dictionary={dictionary}
         nodeTypes={['aligned_reads_index']}
-        history={history}
+        getProjectsList={() => {}}
         submitFiles={() => {}}
       />
     </MemoryRouter>
