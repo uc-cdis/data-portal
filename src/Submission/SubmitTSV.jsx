@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-kuroir';
+import useSessionMonitor from '../hooks/useSessionMonitor';
 import { predictFileType } from '../utils';
 import SubmissionResult from './SubmissionResult';
 import { SubmissionStateType } from './propTypeDef';
@@ -30,7 +31,7 @@ import './SubmitTSV.css';
  * @param {(file: string, fileType: string) => void} props.onFileChange triggered when user edits something in tsv/json AceEditor
  * @param {(nodeTypes: string[], project: string, dictionary: Object) => void} props.onFinish
  * @param {(file: string, fileType: string) => void} props.onUploadClick
- * @param {(project: string) => void} props.onSubmitClick
+ * @param {(project: string, callback?: () => void) => void} props.onSubmitClick
  */
 function SubmitTSV({
   project,
@@ -71,8 +72,9 @@ function SubmitTSV({
     e.currentTarget.value = null;
   }
 
+  const sessionMonitor = useSessionMonitor();
   function handleSubmitFile() {
-    onSubmitClick(project);
+    onSubmitClick(project, () => sessionMonitor.updateUserActivity());
   }
 
   /** @param {string} value */
