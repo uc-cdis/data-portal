@@ -1,16 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 import { mockStore, requiredCerts } from './localconf';
 import reducers from './reducers';
-
-const persistConfig = {
-  key: 'primary',
-  storage,
-  whitelist: ['certificate'],
-};
-const reducer = persistReducer(persistConfig, reducers);
 
 function getpreloadedState() {
   const state = {
@@ -35,12 +26,8 @@ const composeEnhancers =
     : compose;
 const enhancer = composeEnhancers(applyMiddleware(thunk));
 
-/** @typedef {import('redux').Store} ReduxStore */
-
-/** @type {ReduxStore} */
+/** @type {import('redux').Store} */
 let store;
-/** @type {Promise<ReduxStore>} */
-let storePromise;
 
 /* eslint-disable no-underscore-dangle */
 /**
@@ -52,21 +39,10 @@ let storePromise;
  * @return Promisified Redux store
  */
 const getReduxStore = () => {
-  // singleton
   if (store) return Promise.resolve(store);
 
-  // store setup is in process
-  if (storePromise) return storePromise;
-
-  storePromise = new Promise((resolve, reject) => {
-    try {
-      store = createStore(reducer, preloadedState, enhancer);
-      persistStore(store, null, () => resolve(store));
-    } catch (e) {
-      reject(e);
-    }
-  });
-  return storePromise;
+  store = createStore(reducers, preloadedState, enhancer);
+  return Promise.resolve(store);
 };
 
 export default getReduxStore;
