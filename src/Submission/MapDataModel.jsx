@@ -5,7 +5,6 @@ import { fetchQuery } from 'relay-runtime';
 import Button from '../gen3-ui-component/components/Button';
 import Toaster from '../gen3-ui-component/components/Toaster';
 import BackLink from '../components/BackLink';
-import { getProjectsList } from './relayer';
 import CheckmarkIcon from '../img/icons/status_confirm.svg';
 import InputWithIcon from '../components/InputWithIcon';
 import useSessionMonitor from '../hooks/useSessionMonitor';
@@ -194,6 +193,7 @@ function submitFilesToMap(program, project, files) {
  * @param {Object} props
  * @param {Object} [props.dictionary]
  * @param {Object[]} [props.filesToMap]
+ * @param {() => void} [props.getProjectsList]
  * @param {string[]} [props.nodeTypes]
  * @param {Object} [props.projects]
  * @param {Function} [props.submitFiles]
@@ -201,6 +201,7 @@ function submitFilesToMap(program, project, files) {
 function MapDataModel({
   dictionary = {},
   filesToMap = [],
+  getProjectsList = () => {},
   nodeTypes = [],
   projects = null,
   submitFiles = submitFilesToMap,
@@ -491,6 +492,7 @@ function MapDataModel({
 MapDataModel.propTypes = {
   dictionary: PropTypes.object,
   filesToMap: PropTypes.array,
+  getProjectsList: PropTypes.func,
   nodeTypes: PropTypes.array,
   projects: PropTypes.object,
   submitFiles: PropTypes.func,
