@@ -48,7 +48,7 @@ library.add(
 render(
   <Provider store={reduxStore}>
     <BrowserRouter basename={basename}>
-      <App store={reduxStore} />
+      <App />
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')

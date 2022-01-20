@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
@@ -37,10 +38,13 @@ const UserProfile = lazy(() => import('./UserProfile/ReduxUserProfile'));
 // const Indexing = lazy(() => import('./Indexing/Indexing'));
 // const Workspace = lazy(() => import('./Workspace'));
 
-function App({ store }) {
+function App() {
   useSessionMonitor();
+
+  /** @type {import('redux-thunk').ThunkDispatch} */
+  const dispatch = useDispatch();
   useEffect(() => {
-    store.dispatch(fetchVersionInfo());
+    dispatch(fetchVersionInfo());
   }, []);
 
   return (
@@ -72,10 +76,7 @@ function App({ store }) {
         <Route
           path='login'
           element={
-            <ProtectedContent
-              isPublic
-              filter={() => store.dispatch(fetchLogin())}
-            >
+            <ProtectedContent isPublic filter={() => dispatch(fetchLogin())}>
               <ReduxLogin />
             </ProtectedContent>
           }
@@ -107,7 +108,7 @@ function App({ store }) {
         <Route
           path='identity'
           element={
-            <ProtectedContent filter={() => store.dispatch(fetchAccess())}>
+            <ProtectedContent filter={() => dispatch(fetchAccess())}>
               <UserProfile />
             </ProtectedContent>
           }
@@ -152,7 +153,7 @@ function App({ store }) {
           element={
             <ProtectedContent
               filter={() =>
-                store.dispatch(fetchCoreMetadata(props.match.params[0]))
+                dispatch(fetchCoreMetadata(props.match.params[0]))
               }
             >
               <CoreMetadataPage />
