@@ -3,6 +3,7 @@ export type {
   FilterState as ExplorerFilters,
   GqlSort,
   GuppyConfig,
+  GuppyData,
   OptionFilter,
   SimpleAggsData,
 } from '../GuppyComponents/types';
