@@ -23,16 +23,16 @@ import './FilterGroup.css';
 
 /**
  * @typedef {Object} FilterGroupProps
- * @property {string} className
- * @property {string} disabledTooltipMessage
+ * @property {string} [className]
+ * @property {string} [disabledTooltipMessage]
  * @property {FilterConfig} filterConfig
- * @property {boolean} hideZero
- * @property {FilterState} initialAppliedFilters
- * @property {string} lockedTooltipMessage
- * @property {(anchorValue: string) => void} onAnchorValueChange
- * @property {FilterChangeHandler} onFilterChange
- * @property {(patientIds: string[]) => void} onPatientIdsChange
- * @property {string[]} patientIds
+ * @property {boolean} [hideZero]
+ * @property {FilterState} [initialAppliedFilters]
+ * @property {string} [lockedTooltipMessage]
+ * @property {(anchorValue: string) => void} [onAnchorValueChange]
+ * @property {FilterChangeHandler} [onFilterChange]
+ * @property {(patientIds: string[]) => void} [onPatientIdsChange]
+ * @property {string[]} [patientIds]
  * @property {number} [tierAccessLimit]
  * @property {FilterSectionConfig[][]} tabs
  */
