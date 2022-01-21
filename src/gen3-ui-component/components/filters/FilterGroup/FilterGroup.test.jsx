@@ -1,25 +1,24 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import FilterList from '../FilterList';
 import FilterGroup from './index';
 
+/** @typedef {import('../types').FilterSectionConfig} FilterSectionConfig */
+/** @typedef {import('../types').SingleSelectFilterOption} SingleSelectFilterOption */
+
+/** @type {SingleSelectFilterOption[]} */
 const filterOptions = [
-  { text: 'test1', filterType: 'singleSelect' },
-  { text: 'test2', filterType: 'singleSelect' },
-  { text: 'test3', filterType: 'singleSelect' },
-  {
-    text: 'test4',
-    filterType: 'range',
-    min: 0,
-    max: 100,
-  },
+  { text: 'test1', filterType: 'singleSelect', count: 0 },
+  { text: 'test2', filterType: 'singleSelect', count: 0 },
+  { text: 'test3', filterType: 'singleSelect', count: 0 },
 ];
 
+/** @type {FilterSectionConfig[]} */
 const filterSections = [
   { title: 'Section 1', options: filterOptions },
   { title: 'Section 2', options: filterOptions },
   { title: 'Section 3', options: filterOptions },
 ];
 
+/** @type {FilterSectionConfig[]} */
 const filterSections2 = [
   { title: 'Section 3', options: filterOptions },
   { title: 'Section 4', options: filterOptions },
@@ -27,16 +26,13 @@ const filterSections2 = [
   { title: 'Section 6', options: filterOptions },
 ];
 
+/** @type {FilterSectionConfig[]} */
 const filterSections3 = [
   { title: 'Section 5', options: filterOptions },
   { title: 'Section 6', options: filterOptions },
 ];
 
-const tabs = [
-  <FilterList key={0} sections={filterSections} />,
-  <FilterList key={1} sections={filterSections2} />,
-  <FilterList key={2} sections={filterSections3} />,
-];
+const tabs = [filterSections, filterSections2, filterSections3];
 
 const filterConfig = {
   tabs: [
