@@ -6,7 +6,6 @@ import RangeFilter from '../../gen3-ui-component/components/filters/RangeFilter'
 import PatientIdFilter from '../../gen3-ui-component/components/filters/PatientIdFilter';
 import AnchorFilter from '../../gen3-ui-component/components/filters/AnchorFilter';
 import FilterSection from '../../gen3-ui-component/components/filters/FilterSection';
-import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
 
 const projectOptions = [
@@ -177,28 +176,12 @@ const fileSectionsWithTooltips = [
   },
 ];
 
-const tabs = [
-  <FilterList key={0} sections={projectSections} tierAccessLimit={1000} />,
-  <FilterList key={1} sections={subjectSections} tierAccessLimit={1000} />,
-  <FilterList key={2} sections={fileSections} tierAccessLimit={1000} />,
-];
+const tabs = [projectSections, subjectSections, fileSections];
 
 const tabsWithTooltips = [
-  <FilterList
-    key={0}
-    sections={projectSectionsWithTooltips}
-    tierAccessLimit={1000}
-  />,
-  <FilterList
-    key={1}
-    sections={subjectSectionsWithTooltips}
-    tierAccessLimit={1000}
-  />,
-  <FilterList
-    key={2}
-    sections={fileSectionsWithTooltips}
-    tierAccessLimit={1000}
-  />,
+  projectSectionsWithTooltips,
+  subjectSectionsWithTooltips,
+  fileSectionsWithTooltips,
 ];
 
 const filterConfig = {
@@ -383,24 +366,6 @@ storiesOf('Filters', module)
       />
     );
   })
-  .add('FilterList', () => (
-    <FilterList
-      sections={subjectSections}
-      onSelect={action('checked')}
-      onAfterDrag={action('range change')}
-      tierAccessLimit={1000}
-    />
-  ))
-  .add('FilterList with icon tooltips', () => (
-    <FilterList
-      sections={subjectSections}
-      onSelect={action('checked')}
-      onAfterDrag={action('range change')}
-      tierAccessLimit={1000}
-      lockedTooltipMessage='locked'
-      disabledTooltipMessage='disabled'
-    />
-  ))
   .add('FilterGroup', () => (
     <FilterGroup
       tabs={tabs}
