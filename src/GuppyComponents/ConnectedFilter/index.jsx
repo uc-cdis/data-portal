@@ -2,7 +2,6 @@
 import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
-import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 import { queryGuppyForStatus } from '../Utils/queries';
 import {
   getFilterSections,
@@ -75,40 +74,35 @@ function ConnectedFilter({
     });
   }, []);
 
-  const filterTabs = filterConfig.tabs.map(
-    ({ fields, searchFields }, index) => (
-      <FilterList
-        key={index}
-        sections={getFilterSections(
-          fields,
-          searchFields,
-          guppyConfig.fieldMapping,
-          processedTabsOptions,
-          initialTabsOptions,
-          adminAppliedPreFilters,
-          guppyConfig,
-          arrayFields.current
-        )}
-        tierAccessLimit={tierAccessLimit}
-        lockedTooltipMessage={`You may only view summary information for this project. You do not have ${guppyConfig.dataType}-level access.`}
-        disabledTooltipMessage={`This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${tierAccessLimit} ${
-          guppyConfig.nodeCountTitle?.toLowerCase() || guppyConfig.dataType
-        } or more.`}
-      />
+  const filterTabs = filterConfig.tabs.map(({ fields, searchFields }) =>
+    getFilterSections(
+      fields,
+      searchFields,
+      guppyConfig.fieldMapping,
+      processedTabsOptions,
+      initialTabsOptions,
+      adminAppliedPreFilters,
+      guppyConfig,
+      arrayFields.current
     )
   );
 
   return (
     <FilterGroup
       className={className}
-      tabs={filterTabs}
+      disabledTooltipMessage={`This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${tierAccessLimit} ${
+        guppyConfig.nodeCountTitle?.toLowerCase() || guppyConfig.dataType
+      } or more.`}
       filterConfig={filterConfig}
+      lockedTooltipMessage={`You may only view summary information for this project. You do not have ${guppyConfig.dataType}-level access.`}
       onAnchorValueChange={onAnchorValueChange}
       onFilterChange={onFilterChange}
       onPatientIdsChange={onPatientIdsChange}
       patientIds={patientIds}
       hideZero={hideZero}
       initialAppliedFilters={initialAppliedFilters}
+      tabs={filterTabs}
+      tierAccessLimit={tierAccessLimit}
     />
   );
 }
