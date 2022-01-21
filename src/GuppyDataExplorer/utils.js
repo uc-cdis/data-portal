@@ -67,6 +67,9 @@ export const humanizeNumber = (number, fixedPoint = 2) => {
 * @returns {string} Pluralized formatted word
 */
 export const labelToPlural = (label, titleCase = false) => {
+  if (!label) {
+    return label;
+  }
   const pluralizedLabel = pluralize(label);
   if (titleCase) {
     return pluralizedLabel.charAt(0).toUpperCase() + pluralizedLabel.slice(1);
