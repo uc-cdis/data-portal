@@ -18,7 +18,7 @@ import './ExplorerFilter.css';
 
 /** @param {ExplorerFilterProps} props */
 function ExplorerFilter({ className = '', ...filterProps }) {
-  const { adminAppliedPreFilters, filterConfig, guppyConfig, tierAccessLimit } =
+  const { adminAppliedPreFilters, filterConfig, guppyConfig } =
     useExplorerConfig().current;
   const {
     initialAppliedFilters,
@@ -33,7 +33,6 @@ function ExplorerFilter({ className = '', ...filterProps }) {
     guppyConfig,
     initialAppliedFilters,
     patientIds,
-    tierAccessLimit,
     onPatientIdsChange: handlePatientIdsChange,
   };
   const hasAppliedFilters = Object.keys(filterProps.filter).length > 0;

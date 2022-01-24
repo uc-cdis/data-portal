@@ -31,7 +31,6 @@ import {
  * @property {(x: string[]) => void} [onPatientIdsChange]
  * @property {string[]} [patientIds]
  * @property {SimpleAggsData} tabsOptions
- * @property {number} [tierAccessLimit]
  */
 
 /** @param {ConnectedFilterProps} props */
@@ -50,7 +49,6 @@ function ConnectedFilter({
   onPatientIdsChange,
   patientIds,
   tabsOptions,
-  tierAccessLimit,
 }) {
   if (
     hidden ||
@@ -102,7 +100,6 @@ function ConnectedFilter({
       hideZero={hideZero}
       initialAppliedFilters={initialAppliedFilters}
       tabs={filterTabs}
-      tierAccessLimit={tierAccessLimit}
     />
   );
 }
@@ -144,7 +141,6 @@ ConnectedFilter.propTypes = {
   onPatientIdsChange: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),
   tabsOptions: PropTypes.object.isRequired,
-  tierAccessLimit: PropTypes.number,
 };
 
 export default ConnectedFilter;

@@ -44,7 +44,6 @@ function getNumValuesSelected(filterStatus) {
  * @property {(isExpanded: boolean) => void} [onToggle]
  * @property {(fieldName: string, value: string) => void} [onToggleCombineMode]
  * @property {(SingleSelectFilterOption[] | RangeFilterOption[])} options
- * @property {number} [tierAccessLimit]
  * @property {string} [title]
  * @property {string} [tooltip]
  */
@@ -81,7 +80,6 @@ function FilterSection({
   onToggle = () => {},
   onToggleCombineMode = () => {},
   options = defaultOptions,
-  tierAccessLimit,
   title = '',
   tooltip,
 }) {
@@ -424,7 +422,6 @@ function FilterSection({
           lockedTooltipMessage={lockedTooltipMessage}
           onSelect={handleSelectSingleSelectFilter}
           selected={filterStatus[option.text]}
-          tierAccessLimit={tierAccessLimit}
         />
       );
     });
@@ -617,7 +614,6 @@ FilterSection.propTypes = {
       rangeStep: PropTypes.number, // by default 1
     })
   ),
-  tierAccessLimit: PropTypes.number,
   title: PropTypes.string,
   tooltip: PropTypes.string,
   lockedTooltipMessage: PropTypes.string,
