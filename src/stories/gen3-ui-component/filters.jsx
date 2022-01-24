@@ -221,7 +221,6 @@ storiesOf('Filters', module)
         onSelect={action('checked')}
         count={-1}
         accessible
-        tierAccessLimit={1000}
       />
       <SingleSelectFilter
         label='Option4'
@@ -234,7 +233,6 @@ storiesOf('Filters', module)
         onSelect={action('checked')}
         count={-1}
         accessible={false}
-        tierAccessLimit={1000}
       />
       <SingleSelectFilter
         label='Option6'
@@ -247,13 +245,11 @@ storiesOf('Filters', module)
         onSelect={action('checked')}
         count={-1}
         accessible
-        tierAccessLimit={123456789}
       />
       <SingleSelectFilter
         label='Option8'
         onSelect={action('checked')}
         count={123456789}
-        accessible={false}
       />
     </div>
   ))
@@ -311,7 +307,6 @@ storiesOf('Filters', module)
       options={ethnicityOptions}
       onSelect={action('checked')}
       onAfterDrag={action('range change')}
-      tierAccessLimit={1000}
     />
   ))
   .add('FilterSection for array-type field', () => (
@@ -321,7 +316,6 @@ storiesOf('Filters', module)
       onSelect={action('checked')}
       onAfterDrag={action('range change')}
       onCombineOptionToggle={action('combine mode change')}
-      tierAccessLimit={1000}
       isArrayField
     />
   ))
@@ -341,7 +335,6 @@ storiesOf('Filters', module)
         title={'File GUIDs'}
         onSelect={handleSelect}
         options={selectedOptions}
-        tierAccessLimit={1000}
         isSearchFilter
         onSearchFilterLoadOptions={(searchString, offset = 0) => {
           const pageSize = 20;
