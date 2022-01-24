@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
+import Select from 'react-select';
+import { overrideSelectTheme } from '../../../../utils';
 import AnchorFilter from '../AnchorFilter';
 import FilterSection from '../FilterSection';
 import PatientIdFilter from '../PatientIdFilter';
@@ -15,6 +17,19 @@ import {
   updateSelectedValue,
 } from './utils';
 import './FilterGroup.css';
+
+/** @param {string} label */
+function findFilterElement(label) {
+  const selector = 'div.g3-filter-section__title-container';
+  /** @type {NodeListOf<HTMLDivElement>} */
+  const sectionTitleElements = document.querySelectorAll(selector);
+
+  for (const el of sectionTitleElements)
+    if (label === el.attributes['aria-label'].value.split(': ')[1]) {
+      el.focus();
+      break;
+    }
+}
 
 /** @typedef {import('../types').FilterChangeHandler} FilterChangeHandler */
 /** @typedef {import('../types').FilterConfig} FilterConfig */
@@ -238,8 +253,40 @@ function FilterGroup({
     setExpandedStatus(getExpandedStatus(filterTabs, newExpandedStatusControl));
   }
 
+  const filterFinderOptions = filterTabs.map((tab, index) => ({
+    label: tab.title,
+    options: tabs[index].map((section) => ({
+      label: section.title,
+      value: { index, title: section.title },
+    })),
+  }));
+  const filterToFind = useRef('');
+  useEffect(() => {
+    if (filterToFind.current !== '') {
+      findFilterElement(filterToFind.current);
+      filterToFind.current = '';
+    }
+  }, [tabIndex]);
+  /** @param {{ value: { index: number; title: string }}} option */
+  function handleFindFilter({ value }) {
+    if (tabIndex !== value.index) {
+      filterToFind.current = value.title;
+      setTabIndex(value.index);
+    } else {
+      findFilterElement(value.title);
+    }
+  }
+
   return (
     <div className={`g3-filter-group ${className}`}>
+      <Select
+        className='g3-filter-group__filter-finder'
+        placeholder='Find filter to use'
+        onChange={handleFindFilter}
+        options={filterFinderOptions}
+        theme={overrideSelectTheme}
+        value={null}
+      />
       <div className='g3-filter-group__tabs'>
         {tabs.map((_, index) => (
           <div

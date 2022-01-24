@@ -3,6 +3,10 @@
   flex-flow: column;
 }
 
+.g3-filter-group__filter-finder {
+  margin-bottom: 1rem;
+}
+
 .g3-filter-group__tabs {
   display: flex;
   flex-wrap: wrap;
