@@ -45,7 +45,7 @@ describe('Get filter results by anchor label', () => {
     expect(received).toEqual(expected);
   });
   const anchorConfig = {
-    fieldName: 'a',
+    field: 'a',
     options: ['a0', 'a1'],
     tabs: ['t1'],
   };
@@ -147,7 +147,7 @@ describe('Get filter status from filter results', () => {
   });
   test('Single anchored tab', () => {
     const anchorConfig = {
-      fieldName: 'a',
+      field: 'a',
       options: ['a0', 'a1'],
       tabs: ['t'],
     };
@@ -172,7 +172,7 @@ describe('Get filter status from filter results', () => {
   });
   test('Multiple anchored tabs', () => {
     const anchorConfig = {
-      fieldName: 'a',
+      field: 'a',
       options: ['a0', 'a1'],
       tabs: ['t0', 't1'],
     };
@@ -210,7 +210,7 @@ describe('Get filter status from filter results', () => {
   });
   test('Multiple tabs, both anchored and not', () => {
     const anchorConfig = {
-      fieldName: 'a',
+      field: 'a',
       options: ['a0', 'a1'],
       tabs: ['t1', 't2'],
     };

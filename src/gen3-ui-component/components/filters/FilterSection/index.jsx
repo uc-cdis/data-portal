@@ -29,24 +29,24 @@ function getNumValuesSelected(filterStatus) {
 
 /**
  * @typedef {Object} FilterSectionProps
- * @property {string} disabledTooltipMessage
- * @property {boolean} expanded
- * @property {OptionFilterStatus | RangeFilterStatus} filterStatus
- * @property {boolean} hideZero
+ * @property {string} [disabledTooltipMessage]
+ * @property {boolean} [expanded]
+ * @property {OptionFilterStatus | RangeFilterStatus} [filterStatus]
+ * @property {boolean} [hideZero]
  * @property {number} [initVisibleItemNumber]
- * @property {boolean} isArrayField
- * @property {boolean} isSearchFilter
- * @property {string} lockedTooltipMessage
+ * @property {boolean} [isArrayField]
+ * @property {boolean} [isSearchFilter]
+ * @property {string} [lockedTooltipMessage]
  * @property {(lowerBound: number, upperBound: number, min: number, max: number, rangeStep: number) => void} onAfterDrag
- * @property {() => void} onClear
- * @property {(searchString: string, offset: number) => PaginateResponse} onSearchFilterLoadOptions
+ * @property {() => void} [onClear]
+ * @property {(searchString: string, offset: number) => PaginateResponse} [onSearchFilterLoadOptions]
  * @property {(label: string) => void} onSelect
- * @property {(isExpanded: boolean) => void} onToggle
- * @property {(fieldName: string, value: string) => void} onToggleCombineMode
+ * @property {(isExpanded: boolean) => void} [onToggle]
+ * @property {(fieldName: string, value: string) => void} [onToggleCombineMode]
  * @property {(SingleSelectFilterOption[] | RangeFilterOption[])} options
- * @property {number} tierAccessLimit
- * @property {string} title
- * @property {string} tooltip
+ * @property {number} [tierAccessLimit]
+ * @property {string} [title]
+ * @property {string} [tooltip]
  */
 
 /**
