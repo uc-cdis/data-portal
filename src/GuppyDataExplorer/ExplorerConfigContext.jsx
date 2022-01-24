@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import { tierAccessLimit, explorerConfig } from '../localconf';
+import { explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 
 /** @typedef {import('./types').AlteredExplorerConfig} AlteredExplorerConfig */
@@ -92,7 +92,6 @@ export function ExplorerConfigProvider({ children }) {
           patientIdsConfig: config.patientIds,
           survivalAnalysisConfig: config.survivalAnalysis,
           tableConfig: config.table,
-          tierAccessLimit,
         },
         explorerId,
         explorerOptions,
