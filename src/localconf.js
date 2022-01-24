@@ -22,7 +22,6 @@ function buildConfig(opts) {
     workspaceURL: process.env.WORKSPACE_URL,
     manifestServiceURL: process.env.MANIFEST_SERVICE_URL,
     gaDebug: process.env.GA_DEBUG === 'true',
-    tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
   };
 
   // Override default basename if loading via /dev.html
@@ -42,7 +41,6 @@ function buildConfig(opts) {
     workspaceURL,
     manifestServiceURL,
     gaDebug,
-    tierAccessLimit,
   } = Object.assign(defaults, opts);
 
   function ensureTrailingSlash(url) {
@@ -188,7 +186,6 @@ function buildConfig(opts) {
     externalLoginOptionsUrl,
     showFenceAuthzOnProfile,
     terraExportWarning,
-    tierAccessLimit,
     useIndexdAuthz,
     authzPath,
     enableResourceBrowser,
