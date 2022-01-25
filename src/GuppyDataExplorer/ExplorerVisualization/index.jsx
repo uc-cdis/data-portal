@@ -177,7 +177,6 @@ function ExplorerVisualization({
     patientIdsConfig,
     survivalAnalysisConfig,
     tableConfig,
-    tierAccessLimit,
   } = useExplorerConfig().current;
   const nodeCountTitle =
     guppyConfig.nodeCountTitle || capitalizeFirstLetter(guppyConfig.dataType);
@@ -196,9 +195,8 @@ function ExplorerVisualization({
     totalCount,
   });
   const isComponentLocked = accessibleCount === 0;
-  const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${tierAccessLimit} ${
-    guppyConfig.nodeCountTitle.toLowerCase() || guppyConfig.dataType
-  }.`;
+  const lockMessage =
+    'The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit.';
 
   const buttonGroupProps = {
     buttonConfig,

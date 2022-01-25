@@ -48,7 +48,6 @@ function findFilterElement(label) {
  * @property {FilterChangeHandler} [onFilterChange]
  * @property {(patientIds: string[]) => void} [onPatientIdsChange]
  * @property {string[]} [patientIds]
- * @property {number} [tierAccessLimit]
  * @property {FilterSectionConfig[][]} tabs
  */
 
@@ -68,7 +67,6 @@ function FilterGroup({
   onPatientIdsChange,
   patientIds,
   tabs,
-  tierAccessLimit,
 }) {
   const filterTabs = filterConfig.tabs.map(
     ({ title, fields, searchFields }) => ({
@@ -370,7 +368,6 @@ function FilterGroup({
               handleToggleCombineMode(index, ...args)
             }
             options={section.options}
-            tierAccessLimit={tierAccessLimit}
             title={section.title}
             tooltip={section.tooltip}
           />
@@ -406,7 +403,6 @@ FilterGroup.propTypes = {
   onPatientIdsChange: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),
   tabs: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
-  tierAccessLimit: PropTypes.number,
 };
 
 export default FilterGroup;

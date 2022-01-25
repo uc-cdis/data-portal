@@ -31,7 +31,6 @@ import {
  * @property {(x: string[]) => void} [onPatientIdsChange]
  * @property {string[]} [patientIds]
  * @property {SimpleAggsData} tabsOptions
- * @property {number} [tierAccessLimit]
  */
 
 /** @param {ConnectedFilterProps} props */
@@ -50,7 +49,6 @@ function ConnectedFilter({
   onPatientIdsChange,
   patientIds,
   tabsOptions,
-  tierAccessLimit,
 }) {
   if (
     hidden ||
@@ -90,9 +88,9 @@ function ConnectedFilter({
   return (
     <FilterGroup
       className={className}
-      disabledTooltipMessage={`This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${tierAccessLimit} ${
-        guppyConfig.nodeCountTitle?.toLowerCase() || guppyConfig.dataType
-      } or more.`}
+      disabledTooltipMessage={
+        'This resource is currently disabled because you are exploring restricted data. You are limited to exploring cohorts of a size greater than or equal to the access limit.'
+      }
       filterConfig={filterConfig}
       lockedTooltipMessage={`You may only view summary information for this project. You do not have ${guppyConfig.dataType}-level access.`}
       onAnchorValueChange={onAnchorValueChange}
@@ -102,7 +100,6 @@ function ConnectedFilter({
       hideZero={hideZero}
       initialAppliedFilters={initialAppliedFilters}
       tabs={filterTabs}
-      tierAccessLimit={tierAccessLimit}
     />
   );
 }
@@ -144,7 +141,6 @@ ConnectedFilter.propTypes = {
   onPatientIdsChange: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),
   tabsOptions: PropTypes.object.isRequired,
-  tierAccessLimit: PropTypes.number,
 };
 
 export default ConnectedFilter;

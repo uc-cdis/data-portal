@@ -95,7 +95,6 @@ export type AlteredExplorerConfig = {
   patientIdsConfig?: PatientIdsConfig;
   survivalAnalysisConfig: SurvivalAnalysisConfig;
   tableConfig: TableConfig;
-  tierAccessLimit: number;
 };
 
 export type ExplorerFilterSet = {
