@@ -1,8 +1,11 @@
 /** @typedef {import('./types').ButtonConfig} ButtonConfig */
 /** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
 /** @typedef {import('./types').FilterConfig} FilterConfig */
+/** @typedef {import('./types').GuppyConfig} GuppyConfig */
 /** @typedef {import('./types').PatientIdsConfig} PatientIdsConfig */
 /** @typedef {import('./types').SingleButtonConfig} SingleButtonConfig */
+
+import { capitalizeFirstLetter } from '../utils';
 
 /**
  * Buttons are grouped by their dropdownId value.
@@ -162,4 +165,22 @@ export function extractExplorerStateFromURL(
     : undefined;
 
   return { initialAppliedFilters, patientIds };
+}
+/**
+ * @param {FilterConfig} filterConfig
+ * @param {GuppyConfig['fieldMapping']} fieldMapping
+ */
+export function createFilterInfo(filterConfig, fieldMapping) {
+  const map = /** @type {FilterConfig['info']} */ ({});
+
+  for (const { field, name, tooltip } of fieldMapping)
+    map[field] = { label: name ?? capitalizeFirstLetter(field), tooltip };
+
+  const allFields = filterConfig.tabs.flatMap(({ fields }) => fields);
+  if ('anchor' in filterConfig) allFields.push(filterConfig.anchor.field);
+
+  for (const field of allFields)
+    if (!(field in map)) map[field] = { label: capitalizeFirstLetter(field) };
+
+  return map;
 }
