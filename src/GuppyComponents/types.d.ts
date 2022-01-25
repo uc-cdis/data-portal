@@ -82,6 +82,12 @@ export type FilterTabsOption = {
 
 export type FilterConfig = {
   anchor?: AnchorConfig;
+  info?: /* runtime only */ {
+    [field: string]: {
+      label: string;
+      tooltip?: string;
+    };
+  };
   tabs: FilterTabsOption[];
 };
 
@@ -90,7 +96,8 @@ export type GuppyConfig = {
   nodeCountTitle: string;
   fieldMapping?: {
     field: string;
-    name: string;
+    name?: string;
+    tooltip?: string;
   }[];
   manifestMapping?: {
     resourceIndexType: string;
