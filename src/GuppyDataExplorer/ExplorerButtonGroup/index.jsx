@@ -484,7 +484,7 @@ class ExplorerButtonGroup extends React.Component {
   }
 
   // counterpart to exportPFBToURL, allows export of a PFB to a third
-  // party from the Files tab. Deprecates exportFilesToTerra, exportFilesToPFB.
+  // party from the Files tab. Deprecates exportFilesToTerra, exportFilesToSevenBridges.
   exportFilePFBToURL = (targetURLTemplate) => () => {
     this.setState({
       exportingPFBToURL: true,
