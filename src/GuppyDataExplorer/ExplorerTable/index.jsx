@@ -13,7 +13,15 @@ import dictIcons from '../../img/icons/index';
 
 /** @typedef {import('react-table').Column} ReactTableColumn */
 /** @typedef {import('../types').GqlSort} GqlSort */
+/** @typedef {import('../types').FilterConfig} FilterConfig */
 /** @typedef {import('../types').GuppyConfig} GuppyConfig */
+/**
+ * @typedef {Object} TableConfig
+ * @property {string[]} fields
+ * @property {FilterConfig['info']} filterInfo
+ * @property {string[]} linkFields
+ * @property {boolean} ordered
+ */
 
 /**
  * @param {Object} args
@@ -152,7 +160,7 @@ function parseDataForTable(rawData) {
  * @property {GuppyConfig} guppyConfig
  * @property {boolean} isLocked
  * @property {Object[]} [rawData]
- * @property {{ fields: string[]; linkFields: string[]; ordered: boolean }} tableConfig
+ * @property {TableConfig} tableConfig
  * @property {number} totalCount
  */
 
@@ -168,8 +176,8 @@ function ExplorerTable({
   tableConfig,
   totalCount,
 }) {
-  const { dataType, downloadAccessor, fieldMapping } = guppyConfig;
-  const { fields, linkFields, ordered } = tableConfig;
+  const { dataType, downloadAccessor } = guppyConfig;
+  const { fields, filterInfo, linkFields, ordered } = tableConfig;
   if ((fields ?? []).length === 0) return null;
 
   const [pageSize, setPageSize] = useState(defaultPageSize);
@@ -182,8 +190,7 @@ function ExplorerTable({
    * @returns {ReactTableColumn}
    */
   function buildColumnConfig(field) {
-    const overrideName = fieldMapping?.find((i) => i.field === field)?.name;
-    const columnName = overrideName ?? capitalizeFirstLetter(field);
+    const columnName = filterInfo[field]?.label ?? capitalizeFirstLetter(field);
 
     return {
       Header: columnName,
