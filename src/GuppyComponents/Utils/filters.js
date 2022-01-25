@@ -240,17 +240,6 @@ const getSingleFilterOption = (histogramResult, initHistogramRes) => {
 };
 
 /**
- * @param {string} str
- */
-const capitalizeFirstLetter = (str) => {
-  const res = str.replace(/_|\./gi, ' ');
-  return res.replace(
-    /\w\S*/g,
-    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-  );
-};
-
-/**
  * createSearchFilterLoadOptionsFn creates a handler function that loads the search filter's
  * autosuggest options as the user types in the search filter.
  * @param {string} field
@@ -319,7 +308,7 @@ export const checkIsArrayField = (field, arrayFields) => {
  * @param {{ [x:string]: OptionFilter }} args.adminAppliedPreFilters
  * @param {string[][]} args.arrayFields
  * @param {string[]} args.fields
- * @param {{ field: string; name?: string; tooltip?: string }[]} args.fieldMapping
+ * @param {FilterConfig['info']} args.filterInfo
  * @param {GuppyConfig} args.guppyConfig
  * @param {SimpleAggsData} args.initialTabsOptions
  * @param {string[]} args.searchFields
@@ -330,7 +319,7 @@ export const getFilterSections = ({
   adminAppliedPreFilters,
   arrayFields,
   fields,
-  fieldMapping = [],
+  filterInfo,
   guppyConfig,
   initialTabsOptions,
   searchFields,
@@ -343,8 +332,7 @@ export const getFilterSections = ({
     // to search over all options, instead of displaying all options in a list. This allows
     // guppy/portal to support filters that have too many options to be displayed in a list.
     searchFieldSections = searchFields.map((field) => {
-      const fieldConfig = fieldMapping.find((entry) => entry.field === field);
-      const label = fieldConfig?.name ?? capitalizeFirstLetter(field);
+      const { label, tooltip } = filterInfo[field];
 
       const tabsOptionsFiltered = { ...tabsOptions[field] };
       if (Object.keys(adminAppliedPreFilters).includes(field)) {
@@ -373,14 +361,13 @@ export const getFilterSections = ({
           field,
           guppyConfig
         ),
-        tooltip: fieldConfig?.tooltip,
+        tooltip,
       };
     });
   }
 
   const sections = fields.map((field) => {
-    const fieldConfig = fieldMapping.find((entry) => entry.field === field);
-    const label = fieldConfig?.name ?? capitalizeFirstLetter(field);
+    const { label, tooltip } = filterInfo[field];
 
     const tabsOptionsFiltered = { ...tabsOptions[field] };
     if (Object.keys(adminAppliedPreFilters).includes(field)) {
@@ -402,7 +389,7 @@ export const getFilterSections = ({
       title: label,
       options: defaultOptions,
       isArrayField: fieldIsArrayField,
-      tooltip: fieldConfig?.tooltip,
+      tooltip,
     };
   });
   return searchFieldSections.concat(sections);

@@ -77,7 +77,7 @@ function ConnectedFilter({
       adminAppliedPreFilters,
       arrayFields: arrayFields.current,
       fields,
-      fieldMapping: guppyConfig.fieldMapping,
+      filterInfo: filterConfig.info,
       guppyConfig,
       initialTabsOptions,
       searchFields,
@@ -114,6 +114,12 @@ ConnectedFilter.propTypes = {
       options: PropTypes.arrayOf(PropTypes.string),
       tabs: PropTypes.arrayOf(PropTypes.string),
     }),
+    info: PropTypes.objectOf(
+      PropTypes.shape({
+        label: PropTypes.string,
+        tooltip: PropTypes.string,
+      })
+    ),
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
         title: PropTypes.string,
