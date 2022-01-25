@@ -134,6 +134,7 @@ ConnectedFilter.propTypes = {
       PropTypes.shape({
         field: PropTypes.string,
         name: PropTypes.string,
+        tooltip: PropTypes.string,
       })
     ),
     nodeCountTitle: PropTypes.string,
