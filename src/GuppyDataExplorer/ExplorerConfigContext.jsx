@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
+import { createFilterInfo } from './utils';
 
 /** @typedef {import('./types').AlteredExplorerConfig} AlteredExplorerConfig */
 
@@ -85,7 +86,13 @@ export function ExplorerConfigProvider({ children }) {
             terraTemplate: config.terraTemplate,
           },
           chartConfig: config.charts,
-          filterConfig: config.filters,
+          filterConfig: {
+            ...config.filters,
+            info: createFilterInfo(
+              config.filters,
+              config.guppyConfig.fieldMapping
+            ),
+          },
           getAccessButtonLink: config.getAccessButtonLink,
           guppyConfig: config.guppyConfig,
           hideGetAccessButton: config.hideGetAccessButton,
