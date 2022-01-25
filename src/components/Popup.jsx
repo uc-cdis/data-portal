@@ -8,7 +8,7 @@ import './Popup.css';
  * @typedef {Object} PopupButton
  * @property {string} caption
  * @property {boolean} [enabled]
- * @property {function} fn
+ * @property {React.MouseEventHandler} fn
  * @property {string} [icon]
  * @property {string} [value]
  */
