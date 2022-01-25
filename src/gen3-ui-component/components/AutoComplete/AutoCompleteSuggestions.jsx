@@ -1,6 +1,11 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 import './AutoCompleteSuggestions.css';
+
+/**
+ * @typedef {Object} SuggestionItem
+ * @property {string} fullString
+ * @property {number[][]} matchedPieceIndices
+ */
 
 /**
  * Wrap suggestion item into HTML, take following as an e.g.:
@@ -19,9 +24,9 @@ import './AutoCompleteSuggestions.css';
  *     <span className='auto-complete-suggestions__highlight'>
  *       a
  *     </span>
+ * @param {SuggestionItem} suggestionItem
  */
-export const getSuggestionItemHTML = (suggestionItem) => {
-  const { fullString, matchedPieceIndices } = suggestionItem;
+export function getSuggestionItemHTML({ fullString, matchedPieceIndices }) {
   let cursor = 0;
   let currentHighlighPieceIndex = 0;
   const resultHTMLSnippits = [];
@@ -52,55 +57,50 @@ export const getSuggestionItemHTML = (suggestionItem) => {
     );
   }
   return resultHTMLSnippits;
-};
-
-class AutoCompleteSuggestions extends Component {
-  handleClickItem(suggestionItem, i) {
-    this.props.onSuggestionItemClick(suggestionItem, i);
-  }
-
-  render() {
-    return (
-      <div>
-        {this.props.suggestionList.map((suggestionItem, i) => (
-          <div
-            key={`${i}-${suggestionItem.fullString}`}
-            className='auto-complete-suggestions__item body'
-            onClick={() => {
-              this.handleClickItem(suggestionItem, i);
-            }}
-            onKeyPress={(e) => {
-              if (e.charCode === 13 || e.charCode === 32) {
-                e.preventDefault();
-                this.handleClickItem(suggestionItem, i);
-              }
-            }}
-            role='button'
-            tabIndex={0}
-            aria-label={suggestionItem.fullString}
-          >
-            {getSuggestionItemHTML(suggestionItem)}
-          </div>
-        ))}
-      </div>
-    );
-  }
 }
 
-export const SuggestionItem = {
+/**
+ * @param {Object} props
+ * @param {SuggestionItem[]} props.suggestionList
+ * @param {(suggestionItem: SuggestionItem, i: number) => void} props.onSuggestionItemClick
+ */
+function AutoCompleteSuggestions({
+  suggestionList = [],
+  onSuggestionItemClick,
+}) {
+  return (
+    <div>
+      {suggestionList.map((suggestionItem, i) => (
+        <div
+          key={`${i}-${suggestionItem.fullString}`}
+          className='auto-complete-suggestions__item body'
+          onClick={() => onSuggestionItemClick?.(suggestionItem, i)}
+          onKeyPress={(e) => {
+            if (e.charCode === 13 || e.charCode === 32) {
+              e.preventDefault();
+              onSuggestionItemClick?.(suggestionItem, i);
+            }
+          }}
+          role='button'
+          tabIndex={0}
+          aria-label={suggestionItem.fullString}
+        >
+          {getSuggestionItemHTML(suggestionItem)}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export const SuggestionItemType = {
   fullString: PropTypes.string.isRequired,
   matchedPieceIndices: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
     .isRequired,
 };
 
 AutoCompleteSuggestions.propTypes = {
-  suggestionList: PropTypes.arrayOf(PropTypes.shape(SuggestionItem)),
+  suggestionList: PropTypes.arrayOf(PropTypes.shape(SuggestionItemType)),
   onSuggestionItemClick: PropTypes.func,
-};
-
-AutoCompleteSuggestions.defaultProps = {
-  suggestionList: [],
-  onSuggestionItemClick: () => {},
 };
 
 export default AutoCompleteSuggestions;
