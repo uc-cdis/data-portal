@@ -6,6 +6,7 @@ export const GuppyConfigType = PropTypes.shape({
     PropTypes.shape({
       field: PropTypes.string,
       name: PropTypes.string,
+      tooltip: PropTypes.string,
     })
   ),
   manifestMapping: PropTypes.shape({

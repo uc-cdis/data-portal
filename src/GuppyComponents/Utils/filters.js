@@ -4,6 +4,7 @@ import { queryGuppyForRawData } from './queries';
 /** @typedef {import('../types').AggsCount} AggsCount */
 /** @typedef {import('../types').AggsData} AggsData */
 /** @typedef {import('../types').FilterState} FilterState */
+/** @typedef {import('../types').FilterConfig} FilterConfig */
 /** @typedef {import('../types').GqlFilter} GqlFilter */
 /** @typedef {import('../types').GuppyConfig} GuppyConfig */
 /** @typedef {import('../types').OptionFilter} OptionFilter */
@@ -190,9 +191,8 @@ export const mergeTabOptions = (firstTabsOptions, secondTabsOptions) => {
       secondTabsOptions[`${optKey}`] && secondTabsOptions[`${optKey}`].histogram
         ? secondTabsOptions[`${optKey}`].histogram
         : [];
-    mergedTabOptions[`${optKey}`].histogram = firstHistogram.concat(
-      secondHistogram
-    );
+    mergedTabOptions[`${optKey}`].histogram =
+      firstHistogram.concat(secondHistogram);
   });
   return mergedTabOptions;
 };
@@ -240,66 +240,53 @@ const getSingleFilterOption = (histogramResult, initHistogramRes) => {
 };
 
 /**
- * @param {string} str
- */
-const capitalizeFirstLetter = (str) => {
-  const res = str.replace(/_|\./gi, ' ');
-  return res.replace(
-    /\w\S*/g,
-    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-  );
-};
-
-/**
  * createSearchFilterLoadOptionsFn creates a handler function that loads the search filter's
  * autosuggest options as the user types in the search filter.
  * @param {string} field
  * @param {GuppyConfig} guppyConfig
  * @returns {(searchString: string, offset: number) => Promise}
  */
-const createSearchFilterLoadOptionsFn = (field, guppyConfig) => (
-  searchString,
-  offset
-) =>
-  new Promise((resolve, reject) => {
-    // If searchString is empty return just the first NUM_SEARCH_OPTIONS options.
-    // This allows the client to show default options in the search filter before
-    // the user has started searching.
-    /** @type {GqlFilter | undefined} */
-    const gqlFilter = searchString
-      ? { search: { keyword: searchString, fields: [field] } }
-      : undefined;
+const createSearchFilterLoadOptionsFn =
+  (field, guppyConfig) => (searchString, offset) =>
+    new Promise((resolve, reject) => {
+      // If searchString is empty return just the first NUM_SEARCH_OPTIONS options.
+      // This allows the client to show default options in the search filter before
+      // the user has started searching.
+      /** @type {GqlFilter | undefined} */
+      const gqlFilter = searchString
+        ? { search: { keyword: searchString, fields: [field] } }
+        : undefined;
 
-    queryGuppyForRawData({
-      type: guppyConfig.dataType,
-      fields: [field],
-      gqlFilter,
-      offset,
-      withTotalCount: true,
-    })
-      .then((res) => {
-        if (!res.data || !res.data[guppyConfig.dataType]) {
-          resolve({
-            options: [],
-            hasMore: false,
-          });
-        } else {
-          const results = res.data[guppyConfig.dataType];
-          const totalCount =
-            res.data._aggregation[guppyConfig.dataType]._totalCount;
-          resolve({
-            options: results.map((result) => ({
-              value: result[field],
-              label: result[field],
-            })),
-            hasMore: totalCount > offset + results.length,
-          });
-        }
+      queryGuppyForRawData({
+        type: guppyConfig.dataType,
+        fields: [field],
+        gqlFilter,
+        offset,
+        withTotalCount: true,
       })
-      .catch((err) => {
-        reject(err);
-      });
-  });
+        .then((res) => {
+          if (!res.data || !res.data[guppyConfig.dataType]) {
+            resolve({
+              options: [],
+              hasMore: false,
+            });
+          } else {
+            const results = res.data[guppyConfig.dataType];
+            const totalCount =
+              res.data._aggregation[guppyConfig.dataType]._totalCount;
+            resolve({
+              options: results.map((result) => ({
+                value: result[field],
+                label: result[field],
+              })),
+              hasMore: totalCount > offset + results.length,
+            });
+          }
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
 
 /**
  * @param {string} field
@@ -317,25 +304,27 @@ export const checkIsArrayField = (field, arrayFields) => {
 };
 
 /**
- * @param {string[]} fields
- * @param {string[]} searchFields
- * @param {{ field: string; name?: string; tooltip?: string }[]} fieldMapping
- * @param {SimpleAggsData} tabsOptions
- * @param {SimpleAggsData} initialTabsOptions
- * @param {{ [x:string]: OptionFilter }} adminAppliedPreFilters
- * @param {GuppyConfig} guppyConfig
- * @param {string[][]} arrayFields
+ * @param {Object} args
+ * @param {{ [x:string]: OptionFilter }} args.adminAppliedPreFilters
+ * @param {string[][]} args.arrayFields
+ * @param {string[]} args.fields
+ * @param {FilterConfig['info']} args.filterInfo
+ * @param {GuppyConfig} args.guppyConfig
+ * @param {SimpleAggsData} args.initialTabsOptions
+ * @param {string[]} args.searchFields
+ * @param {SimpleAggsData} args.tabsOptions
+ * @returns {import('../../gen3-ui-component/components/filters/types').FilterSectionConfig[]}
  */
-export const getFilterSections = (
-  fields,
-  searchFields,
-  fieldMapping = [],
-  tabsOptions,
-  initialTabsOptions,
+export const getFilterSections = ({
   adminAppliedPreFilters,
+  arrayFields,
+  fields,
+  filterInfo,
   guppyConfig,
-  arrayFields
-) => {
+  initialTabsOptions,
+  searchFields,
+  tabsOptions,
+}) => {
   let searchFieldSections = [];
 
   if (searchFields) {
@@ -343,8 +332,7 @@ export const getFilterSections = (
     // to search over all options, instead of displaying all options in a list. This allows
     // guppy/portal to support filters that have too many options to be displayed in a list.
     searchFieldSections = searchFields.map((field) => {
-      const fieldConfig = fieldMapping.find((entry) => entry.field === field);
-      const label = fieldConfig?.name ?? capitalizeFirstLetter(field);
+      const { label, tooltip } = filterInfo[field];
 
       const tabsOptionsFiltered = { ...tabsOptions[field] };
       if (Object.keys(adminAppliedPreFilters).includes(field)) {
@@ -373,14 +361,13 @@ export const getFilterSections = (
           field,
           guppyConfig
         ),
-        tooltip: fieldConfig?.tooltip,
+        tooltip,
       };
     });
   }
 
   const sections = fields.map((field) => {
-    const fieldConfig = fieldMapping.find((entry) => entry.field === field);
-    const label = fieldConfig?.name ?? capitalizeFirstLetter(field);
+    const { label, tooltip } = filterInfo[field];
 
     const tabsOptionsFiltered = { ...tabsOptions[field] };
     if (Object.keys(adminAppliedPreFilters).includes(field)) {
@@ -402,7 +389,7 @@ export const getFilterSections = (
       title: label,
       options: defaultOptions,
       isArrayField: fieldIsArrayField,
-      tooltip: fieldConfig?.tooltip,
+      tooltip,
     };
   });
   return searchFieldSections.concat(sections);

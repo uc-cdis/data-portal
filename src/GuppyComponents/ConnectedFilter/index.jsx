@@ -73,16 +73,16 @@ function ConnectedFilter({
   }, []);
 
   const filterTabs = filterConfig.tabs.map(({ fields, searchFields }) =>
-    getFilterSections(
-      fields,
-      searchFields,
-      guppyConfig.fieldMapping,
-      processedTabsOptions,
-      initialTabsOptions,
+    getFilterSections({
       adminAppliedPreFilters,
+      arrayFields: arrayFields.current,
+      fields,
+      filterInfo: filterConfig.info,
       guppyConfig,
-      arrayFields.current
-    )
+      initialTabsOptions,
+      searchFields,
+      tabsOptions: processedTabsOptions,
+    })
   );
 
   return (
@@ -114,6 +114,12 @@ ConnectedFilter.propTypes = {
       options: PropTypes.arrayOf(PropTypes.string),
       tabs: PropTypes.arrayOf(PropTypes.string),
     }),
+    info: PropTypes.objectOf(
+      PropTypes.shape({
+        label: PropTypes.string,
+        tooltip: PropTypes.string,
+      })
+    ),
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
         title: PropTypes.string,
@@ -128,6 +134,7 @@ ConnectedFilter.propTypes = {
       PropTypes.shape({
         field: PropTypes.string,
         name: PropTypes.string,
+        tooltip: PropTypes.string,
       })
     ),
     nodeCountTitle: PropTypes.string,

@@ -1,4 +1,8 @@
-import { calculateDropdownButtonConfigs, humanizeNumber } from './utils';
+import {
+  calculateDropdownButtonConfigs,
+  createFilterInfo,
+  humanizeNumber,
+} from './utils';
 
 describe('utils for data visualization explorer', () => {
   it('calculate dropdown button configurations correctly', () => {
@@ -58,6 +62,27 @@ describe('utils for data visualization explorer', () => {
       },
     };
     expect(calculateDropdownButtonConfigs(input)).toEqual(expectOutput);
+  });
+
+  it('creates filter info object', () => {
+    const filterConfig = {
+      anchor: { field: 'anchor_field', options: [], tabs: [] },
+      tabs: [
+        { title: 'a', fields: ['foo_foo', 'foo_bar'] },
+        { title: 'b', fields: ['bar.baz'] },
+      ],
+    };
+    const fieldMapping = [
+      { field: 'foo_bar', name: 'Customized Name' },
+      { field: 'bar.baz', tooltip: 'lorem ipsum' },
+    ];
+    const expected = {
+      anchor_field: { label: 'Anchor Field' },
+      foo_foo: { label: 'Foo Foo' },
+      foo_bar: { label: 'Customized Name' },
+      'bar.baz': { label: 'Bar Baz', tooltip: 'lorem ipsum' },
+    };
+    expect(createFilterInfo(filterConfig, fieldMapping)).toEqual(expected);
   });
 
   it('humanize number', () => {

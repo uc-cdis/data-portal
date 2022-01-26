@@ -171,6 +171,7 @@ function ExplorerVisualization({
   const {
     buttonConfig,
     chartConfig,
+    filterConfig,
     getAccessButtonLink,
     guppyConfig,
     hideGetAccessButton = false,
@@ -218,6 +219,7 @@ function ExplorerVisualization({
     className: 'explorer-visualization__table',
     tableConfig: {
       fields: tableColumnsOrdered ? tableConfig.fields : allFields,
+      filterInfo: filterConfig.info,
       ordered: tableColumnsOrdered,
       linkFields: tableConfig.linkFields || [],
     },
