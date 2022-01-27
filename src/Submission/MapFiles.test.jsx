@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import MapFiles, {
-  groupUnmappedFiles,
+  groupSubmissionFiles,
   setMapValue,
   addToMap,
   removeFromMap,
@@ -13,14 +13,21 @@ import MapFiles, {
 import * as testData from './__test__/data.json';
 import * as testGroupedData from './__test__/expectedGroupFiles.json';
 
+/** @typedef {import('./types').SubmissionFile} SubmissionFile */
+/** @typedef {import('./MapFiles').SubmissionFileMap} SubmissionFileMap */
+
+const file1 = /** @type {SubmissionFile} */ ({ file_name: 'value1' });
+const file2 = /** @type {SubmissionFile} */ ({ file_name: 'value2' });
+const file3 = /** @type {SubmissionFile} */ ({ file_name: 'value3' });
+const file4 = /** @type {SubmissionFile} */ ({ file_name: 'value4' });
+
 test('renders', () => {
   const { container } = render(
     <MemoryRouter>
       <MapFiles
         fetchUnmappedFiles={() => {}}
         mapSelectedFiles={() => {}}
-        history={{}}
-        user={{}}
+        username={''}
       />
     </MemoryRouter>
   );
@@ -28,7 +35,7 @@ test('renders', () => {
 });
 
 test('groups files by date', () => {
-  const { filesByDate } = groupUnmappedFiles(testData.records);
+  const { filesByDate } = groupSubmissionFiles(testData.records);
   for (const date of Object.keys(filesByDate)) {
     const values = filesByDate[date];
     expect(values.length).toEqual(testGroupedData[date].length);
@@ -39,31 +46,33 @@ test('groups files by date', () => {
 });
 
 test('updates a map value', () => {
+  /** @type {SubmissionFileMap} */
   let map = {
-    field1: { 1: 'value1', 2: 'value2' },
-    field2: { 3: 'value3' },
+    1: { 1: file1, 2: file2 },
+    2: { 3: file3 },
   };
-  expect(map.field2).toEqual({ 3: 'value3' });
+  expect(map[2]).toEqual({ 3: file3 });
 
-  map = setMapValue(map, 'field2', map.field1);
-  expect(map.field2).toEqual(map.field1);
+  map = setMapValue(map, 2, map[1]);
+  expect(map[2]).toEqual(map[1]);
 
-  map = setMapValue(map, 'field3', map.field1);
-  expect(map.field3).toEqual(map.field1);
+  map = setMapValue(map, 3, map[1]);
+  expect(map[3]).toEqual(map[1]);
 });
 
 test('adds to a map value', () => {
+  /** @type {SubmissionFileMap} */
   let map = {
-    field1: { 1: 'value1', 2: 'value2' },
-    field2: { 3: 'value3' },
+    1: { 1: file1, 2: file2 },
+    2: { 3: file3 },
   };
-  expect(map.field1).toEqual({ 1: 'value1', 2: 'value2' });
+  expect(map[1]).toEqual({ 1: file1, 2: file2 });
 
-  map = addToMap(map, 'field1', 'value4', '4');
-  expect(map.field1).toEqual({ 1: 'value1', 2: 'value2', 4: 'value4' });
+  map = addToMap(map, 1, file4, '4');
+  expect(map[1]).toEqual({ 1: file1, 2: file2, 4: file4 });
 
-  map = addToMap(map, 'field3', 'value3', '3');
-  expect(map.field3).toBeUndefined();
+  map = addToMap(map, 3, file3, '3');
+  expect(map[3]).toBeUndefined();
 });
 
 test('returns if all files should be selected', () => {
@@ -102,8 +111,7 @@ test('toggles select all', () => {
       <MapFiles
         fetchUnmappedFiles={() => {}}
         mapSelectedFiles={() => {}}
-        history={{}}
-        user={{}}
+        username={''}
       />
     </MemoryRouter>
   );
@@ -112,9 +120,8 @@ test('toggles select all', () => {
       <MapFiles
         fetchUnmappedFiles={() => {}}
         mapSelectedFiles={() => {}}
-        history={{}}
         unmappedFiles={testData.records}
-        user={{}}
+        username={''}
       />
     </MemoryRouter>
   );
@@ -129,40 +136,36 @@ test('toggles select all', () => {
 
 test('returns if a file should be selected', () => {
   const selectedFilesByGroup = {
-    1: { 1: 'value1', 2: 'value2' },
-    2: { 3: 'value3' },
+    1: { 1: file1, 2: file2 },
+    2: { 3: file3 },
   };
 
-  expect(isSelected({ index: '1', did: '1', selectedFilesByGroup })).toBe(true);
-  expect(isSelected({ index: '2', did: '1', selectedFilesByGroup })).toBe(
-    false
-  );
-  expect(isSelected({ index: '2', did: '4', selectedFilesByGroup })).toBe(
-    false
-  );
-  expect(isSelected({ index: '3', did: '1', selectedFilesByGroup })).toBe(
-    false
-  );
+  expect(isSelected({ index: 1, did: '1', selectedFilesByGroup })).toBe(true);
+  expect(isSelected({ index: 2, did: '1', selectedFilesByGroup })).toBe(false);
+  expect(isSelected({ index: 2, did: '4', selectedFilesByGroup })).toBe(false);
+  expect(isSelected({ index: 3, did: '1', selectedFilesByGroup })).toBe(false);
 });
 
 test('removes from the map', () => {
+  /** @type {SubmissionFileMap} */
   let map = {
-    field1: { 1: 'value1', 2: 'value2' },
-    field2: { 3: 'value3' },
+    1: { 1: file1, 2: file2 },
+    2: { 3: file3 },
   };
-  expect(map.field1).toEqual({ 1: 'value1', 2: 'value2' });
+  expect(map[1]).toEqual({ 1: file1, 2: file2 });
 
-  map = removeFromMap(map, 'field1', '1');
-  expect(map.field1).toEqual({ 2: 'value2' });
+  map = removeFromMap(map, 1, '1');
+  expect(map[1]).toEqual({ 2: file2 });
 
-  map = removeFromMap(map, 'field3', '2');
-  expect(map.field3).toBeUndefined();
+  map = removeFromMap(map, 3, '2');
+  expect(map[3]).toBeUndefined();
 });
 
 test('returns if a map is empty', () => {
+  /** @type {SubmissionFileMap} */
   const map = {
-    field1: { 1: 'value1', 2: 'value2' },
-    field2: { 3: 'value3' },
+    1: { 1: file1, 2: file2 },
+    2: { 3: file3 },
   };
   expect(isMapEmpty(map)).toEqual(false);
   expect(isMapEmpty({})).toEqual(true);
