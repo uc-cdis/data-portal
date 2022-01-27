@@ -141,15 +141,18 @@ export function isFileReady(file) {
   return file.hashes && Object.keys(file.hashes).length > 0;
 }
 
+/** @type {SubmissionFile[]} */
+const defaultUnmapedFiles = [];
+
 /**
  * @param {Object} props
- * @param {SubmissionFile[]} props.unmappedFiles
+ * @param {SubmissionFile[]} [props.unmappedFiles]
  * @param {(username: string) => void} props.fetchUnmappedFiles
  * @param {(files: SubmissionFile[]) => void} props.mapSelectedFiles
  * @param {string} props.username
  */
 function MapFiles({
-  unmappedFiles = [],
+  unmappedFiles = defaultUnmapedFiles,
   fetchUnmappedFiles,
   mapSelectedFiles,
   username,
