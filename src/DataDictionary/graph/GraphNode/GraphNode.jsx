@@ -11,6 +11,7 @@ class GraphNode extends Component {
     this.svgElement = createRef();
   }
 
+  // eslint-disable-next-line react/no-unused-class-component-methods
   getSVGElement() {
     return this.svgElement.current;
   }

@@ -14,7 +14,6 @@ class ButtonWrapper extends Component {
   }
 
   mockLoadData() {
-    console.log('loading...');
     this.setState({ loading: true }, () => {
       setTimeout(() => {
         this.setState({ loading: false });

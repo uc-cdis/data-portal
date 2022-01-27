@@ -42,10 +42,12 @@ class DictionarySearcher extends Component {
     this.autoCompleteRef.current.clearInput();
   };
 
+  // eslint-disable-next-line react/no-unused-class-component-methods
   launchClearSearchFromOutside = () => {
     this.onClearResult();
   };
 
+  // eslint-disable-next-line react/no-unused-class-component-methods
   launchSearchFromOutside = (keyword) => {
     this.autoCompleteRef.current.setInputText(keyword);
     this.search(keyword);

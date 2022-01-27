@@ -104,6 +104,13 @@ class ExplorerButtonGroup extends Component {
       workspaceSuccessText:
         'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
     };
+    this.fileButtonTypes = [
+      'manifest',
+      'export',
+      'export-to-seven-bridges',
+      'export-to-workspace',
+      'export-to-pfb',
+    ];
   }
 
   /** @param {ExplorerButtonGroupProps} prevProps */
@@ -545,12 +552,7 @@ class ExplorerButtonGroup extends Component {
   };
 
   /** @param {SingleButtonConfig} buttonConfig */
-  isFileButton = (buttonConfig) =>
-    buttonConfig.type === 'manifest' ||
-    buttonConfig.type === 'export' ||
-    buttonConfig.type === 'export-to-seven-bridges' ||
-    buttonConfig.type === 'export-to-workspace' ||
-    buttonConfig.type === 'export-to-pfb';
+  isFileButton = ({ type }) => this.fileButtonTypes.includes(type);
 
   refreshManifestEntryCount = async () => {
     if (

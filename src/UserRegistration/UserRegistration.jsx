@@ -54,7 +54,7 @@ function UserRegistration({ docsToBeReviewed, shouldRegister, updateAccess }) {
       const user = await userResponse.json();
       return updateAccess(user);
     } catch (e) {
-      console.error(e);
+      console.error(e); // eslint-disable-line no-console
       return 'error';
     }
   }

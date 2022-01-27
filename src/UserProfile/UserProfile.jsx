@@ -53,7 +53,7 @@ export const saveToFile = (savingStr, filename) => {
  */
 
 /** @param {UserProfileProps} props */
-const UserProfile = ({
+function UserProfile({
   onClearCreationSession,
   onClearDeleteSession,
   onCreateKey,
@@ -63,7 +63,7 @@ const UserProfile = ({
   popups,
   userInformation,
   userProfile,
-}) => {
+}) {
   const onCreate = () => {
     onCreateKey(credentialCdisPath);
   };
@@ -168,7 +168,7 @@ const UserProfile = ({
       )}
     </div>
   );
-};
+}
 
 UserProfile.propTypes = {
   onClearCreationSession: PropTypes.func.isRequired,

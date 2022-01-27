@@ -76,45 +76,42 @@ class SummaryPieChart extends Component {
               }
               return <Fragment key={'text'.concat(entry.name)} />;
             })}
-            {pieChartData.length > this.props.maximumDisplayItem && (
-              <>
-                {this.state.showMore ? (
-                  <div
-                    className='summary-pie-chart__toggle g3-link'
-                    onClick={() => this.toggle()}
-                    onKeyPress={(e) => {
-                      if (e.charCode === 13 || e.charCode === 32) {
-                        e.preventDefault();
-                        this.toggle();
-                      }
-                    }}
-                    role='button'
-                    tabIndex={0}
-                    aria-label='Show less'
-                  >
-                    <span>Show less</span>
-                  </div>
-                ) : (
-                  <div
-                    className='summary-pie-chart__toggle g3-link'
-                    onClick={() => this.toggle()}
-                    onKeyPress={(e) => {
-                      if (e.charCode === 13 || e.charCode === 32) {
-                        e.preventDefault();
-                        this.toggle();
-                      }
-                    }}
-                    role='button'
-                    tabIndex={0}
-                    aria-label='Show more'
-                  >
-                    {`And ${(
-                      pieChartData.length - this.props.maximumDisplayItem
-                    ).toLocaleString()} more`}
-                  </div>
-                )}
-              </>
-            )}
+            {pieChartData.length > this.props.maximumDisplayItem &&
+              (this.state.showMore ? (
+                <div
+                  className='summary-pie-chart__toggle g3-link'
+                  onClick={() => this.toggle()}
+                  onKeyPress={(e) => {
+                    if (e.charCode === 13 || e.charCode === 32) {
+                      e.preventDefault();
+                      this.toggle();
+                    }
+                  }}
+                  role='button'
+                  tabIndex={0}
+                  aria-label='Show less'
+                >
+                  <span>Show less</span>
+                </div>
+              ) : (
+                <div
+                  className='summary-pie-chart__toggle g3-link'
+                  onClick={() => this.toggle()}
+                  onKeyPress={(e) => {
+                    if (e.charCode === 13 || e.charCode === 32) {
+                      e.preventDefault();
+                      this.toggle();
+                    }
+                  }}
+                  role='button'
+                  tabIndex={0}
+                  aria-label='Show more'
+                >
+                  {`And ${(
+                    pieChartData.length - this.props.maximumDisplayItem
+                  ).toLocaleString()} more`}
+                </div>
+              ))}
           </div>
           <PieChart
             width={this.props.outerRadius * 2}

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { fetchWithCreds } from '../actions';
 import { useExplorerConfig } from './ExplorerConfigContext';
@@ -89,17 +89,18 @@ const emptyFilterSets = [];
 export function ExplorerFilterSetsProvider({ children }) {
   const { explorerId } = useExplorerConfig();
   const [filterSets, setFilterSets] = useState(emptyFilterSets);
+  const value = useMemo(
+    () => ({
+      filterSets,
+      refreshFilterSets: () => fetchFilterSets(explorerId).then(setFilterSets),
+      createFilterSet: (filterSet) => createFilterSet(explorerId, filterSet),
+      deleteFilterSet: (filterSet) => deleteFilterSet(explorerId, filterSet),
+      updateFilterSet: (filterSet) => updateFilterSet(explorerId, filterSet),
+    }),
+    [filterSets, explorerId]
+  );
   return (
-    <ExplorerFilterSetsContext.Provider
-      value={{
-        filterSets,
-        refreshFilterSets: () =>
-          fetchFilterSets(explorerId).then(setFilterSets),
-        createFilterSet: (filterSet) => createFilterSet(explorerId, filterSet),
-        deleteFilterSet: (filterSet) => deleteFilterSet(explorerId, filterSet),
-        updateFilterSet: (filterSet) => updateFilterSet(explorerId, filterSet),
-      }}
-    >
+    <ExplorerFilterSetsContext.Provider value={value}>
       {children}
     </ExplorerFilterSetsContext.Provider>
   );

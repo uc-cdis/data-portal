@@ -86,9 +86,10 @@ export function updateCountsInInitialTabsOptions(
       const fieldName = flatFieldName.replace('.histogram', '');
       const initialHistogram = flatInitialTabsOptions[flatFieldName];
       if (initialHistogram === undefined)
+        // eslint-disable-next-line no-console
         console.error(
           `Guppy did not return histogram data for filter field ${fieldName}`
-        ); // eslint-disable-line no-console
+        );
 
       updatedTabsOptions[fieldName] = { histogram: [] };
       for (const { key } of initialHistogram) {

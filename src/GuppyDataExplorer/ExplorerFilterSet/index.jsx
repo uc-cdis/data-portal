@@ -104,36 +104,6 @@ function ExplorerFilterSet({ className, filter }) {
 
   const isFiltersChanged =
     JSON.stringify(filter) !== JSON.stringify(filterSet.filters);
-  function FilterChangedWarning() {
-    return (
-      <Tooltip
-        overlay='You have changed filters for this Filter Set. Click this icon to undo.'
-        arrowContent={<div className='rc-tooltip-arrow-inner' />}
-        trigger={['hover', 'focus']}
-      >
-        <span
-          onClick={() => updateFilters(cloneDeep(filterSet.filters))}
-          onKeyPress={(e) => {
-            if (e.charCode === 13 || e.charCode === 32) {
-              e.preventDefault();
-              updateFilters(cloneDeep(filterSet.filters));
-            }
-          }}
-          role='button'
-          tabIndex={0}
-        >
-          <FontAwesomeIcon
-            icon='exclamation-triangle'
-            color='var(--pcdc-color__secondary)'
-            size='xs'
-            style={{
-              cursor: 'pointer',
-            }}
-          />
-        </span>
-      </Tooltip>
-    );
-  }
 
   return (
     <div className={className}>
@@ -153,7 +123,34 @@ function ExplorerFilterSet({ className, filter }) {
           <div>
             <h4 className='explorer-filter-set__title'>
               My filter sets{' '}
-              {filterSet.name && isFiltersChanged && <FilterChangedWarning />}
+              {filterSet.name && isFiltersChanged && (
+                <Tooltip
+                  overlay='You have changed filters for this Filter Set. Click this icon to undo.'
+                  arrowContent={<div className='rc-tooltip-arrow-inner' />}
+                  trigger={['hover', 'focus']}
+                >
+                  <span
+                    onClick={() => updateFilters(cloneDeep(filterSet.filters))}
+                    onKeyPress={(e) => {
+                      if (e.charCode === 13 || e.charCode === 32) {
+                        e.preventDefault();
+                        updateFilters(cloneDeep(filterSet.filters));
+                      }
+                    }}
+                    role='button'
+                    tabIndex={0}
+                  >
+                    <FontAwesomeIcon
+                      icon='exclamation-triangle'
+                      color='var(--pcdc-color__secondary)'
+                      size='xs'
+                      style={{
+                        cursor: 'pointer',
+                      }}
+                    />
+                  </span>
+                </Tooltip>
+              )}
             </h4>
             <div className='explorer-filter-set__name'>
               {filterSet.name || (

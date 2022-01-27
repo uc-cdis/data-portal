@@ -207,7 +207,6 @@ function MapFiles({
    * @param {SubmissionFile} file
    */
   function toggleCheckBox(index, file) {
-    console.log('toggleCheckBox');
     if (isSelected({ index, did: file.did, selectedFilesByGroup })) {
       setSelectedFilesByGroup((prevSelectedFilesByGroup) =>
         removeFromMap(prevSelectedFilesByGroup, index, file.did)
@@ -325,27 +324,24 @@ function MapFiles({
                           onChange={() => toggleSelectAll(groupIndex)}
                         />
                       )}
-                      cellRenderer={({ rowIndex }) => {
-                        console.log('checkboxId', files[rowIndex].did);
-                        return (
-                          <CheckBox
-                            id={`${files[rowIndex].did}`}
-                            item={files[rowIndex]}
-                            isSelected={isSelected({
-                              index: groupIndex,
-                              did: files[rowIndex].did,
-                              selectedFilesByGroup,
-                            })}
-                            onChange={() =>
-                              toggleCheckBox(groupIndex, files[rowIndex])
-                            }
-                            isEnabled={files[rowIndex].status === 'Ready'}
-                            disabledText={
-                              'This file is not ready to be mapped yet.'
-                            }
-                          />
-                        );
-                      }}
+                      cellRenderer={({ rowIndex }) => (
+                        <CheckBox
+                          id={`${files[rowIndex].did}`}
+                          item={files[rowIndex]}
+                          isSelected={isSelected({
+                            index: groupIndex,
+                            did: files[rowIndex].did,
+                            selectedFilesByGroup,
+                          })}
+                          onChange={() =>
+                            toggleCheckBox(groupIndex, files[rowIndex])
+                          }
+                          isEnabled={files[rowIndex].status === 'Ready'}
+                          disabledText={
+                            'This file is not ready to be mapped yet.'
+                          }
+                        />
+                      )}
                     />
                     <Column label='File Name' dataKey='file_name' width={400} />
                     <Column

@@ -11,34 +11,36 @@ import FilterSetCard from './FilterSetCard';
 /** @typedef {import('./types').UserInputSubmitHandler} UserInputSubmitHandler */
 
 /** @param {{ label: string; [x: string]: any }} props */
-const ControlFormSelect = ({ label, ...selectProps }) => (
-  <SimpleInputField
-    label={label}
-    input={
-      <Select
-        {...selectProps}
-        isClearable={false}
-        theme={overrideSelectTheme}
-        styles={{
-          control: (provided, { isDisabled }) => ({
-            ...provided,
-            cursor: isDisabled ? 'not-allowed' : '',
-            pointerEvents: 'auto',
-          }),
-        }}
-      />
-    }
-  />
-);
+function ControlFormSelect({ label, ...selectProps }) {
+  return (
+    <SimpleInputField
+      label={label}
+      input={
+        <Select
+          {...selectProps}
+          isClearable={false}
+          theme={overrideSelectTheme}
+          styles={{
+            control: (provided, { isDisabled }) => ({
+              ...provided,
+              cursor: isDisabled ? 'not-allowed' : '',
+              pointerEvents: 'auto',
+            }),
+          }}
+        />
+      }
+    />
+  );
+}
 
 ControlFormSelect.propTypes = {
   label: PropTypes.string,
 };
 
 /** @param {{ label: string; [x: string]: any }} props */
-const ControlFormInput = ({ label, ...inputAttrs }) => (
-  <SimpleInputField label={label} input={<input {...inputAttrs} />} />
-);
+function ControlFormInput({ label, ...inputAttrs }) {
+  return <SimpleInputField label={label} input={<input {...inputAttrs} />} />;
+}
 
 ControlFormInput.propTypes = {
   label: PropTypes.string,
@@ -80,7 +82,7 @@ function validateNumberInput(e, setStateAction) {
  * @param {number} prop.timeInterval
  * @param {boolean} prop.isError
  */
-const ControlForm = ({ onSubmit, timeInterval, isError }) => {
+function ControlForm({ onSubmit, timeInterval, isError }) {
   const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(undefined);
@@ -245,7 +247,7 @@ const ControlForm = ({ onSubmit, timeInterval, isError }) => {
       </div>
     </form>
   );
-};
+}
 
 ControlForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,

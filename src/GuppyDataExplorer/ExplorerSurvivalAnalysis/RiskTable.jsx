@@ -24,7 +24,7 @@ const parseRisktable = (data, timeInterval) => {
     .filter(({ time }) => (time - minTime) % timeInterval === 0);
 };
 
-const CustomYAxisTick = (/** @type {Object} */ { x, y, payload }) => {
+function CustomYAxisTick(/** @type {Object} */ { x, y, payload }) {
   const name = payload.value;
 
   return (
@@ -35,7 +35,7 @@ const CustomYAxisTick = (/** @type {Object} */ { x, y, payload }) => {
       </text>
     </g>
   );
-};
+}
 
 CustomYAxisTick.propTypes = {
   x: PropTypes.number,
