@@ -44,6 +44,13 @@
   line-height: 2rem;
 }
 
+/* Tablet width and less */
+@media screen and (max-width: 820px) {
+  .explorer-filter-info .pill {
+    font-size: 12px;
+  }
+}
+
 .explorer-filter-info .pill.anchor {
   padding: 8px 4px;
   line-height: 2.2rem;
