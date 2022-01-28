@@ -155,7 +155,7 @@ function ControlForm({ onSubmit, timeInterval, isError }) {
         label='Start time (year)'
         type='number'
         min={0}
-        max={endTime - 1}
+        max={Number.isInteger(endTime) ? endTime - 1 : undefined}
         step={1}
         onBlur={(e) => validateNumberInput(e, setStartTime)}
         onChange={(e) => {
