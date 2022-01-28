@@ -50,11 +50,12 @@ class GraphCalculator extends Component {
 
     // if the second highlighting node is updated, calculate related highlighting nodes
     if (this.oldSecondHighlightingNodeID !== newSecondHighlightingNodeID) {
-      const pathRelatedToSecondHighlightingNode = calculatePathRelatedToSecondHighlightingNode(
-        newHighlightingNode,
-        newSecondHighlightingNodeID,
-        this.props.nodes
-      );
+      const pathRelatedToSecondHighlightingNode =
+        calculatePathRelatedToSecondHighlightingNode(
+          newHighlightingNode,
+          newSecondHighlightingNodeID,
+          this.props.nodes
+        );
       this.props.onPathRelatedToSecondHighlightingNodeCalculated(
         pathRelatedToSecondHighlightingNode
       );
@@ -130,11 +131,12 @@ class GraphCalculator extends Component {
     newSecondHighlightingNodeID
   ) {
     const subgraphNodeIDs = [];
-    const pathRelatedToSecondHighlightingNode = calculatePathRelatedToSecondHighlightingNode(
-      newHighlightingNode,
-      newSecondHighlightingNodeID,
-      this.props.nodes
-    );
+    const pathRelatedToSecondHighlightingNode =
+      calculatePathRelatedToSecondHighlightingNode(
+        newHighlightingNode,
+        newSecondHighlightingNodeID,
+        this.props.nodes
+      );
     pathRelatedToSecondHighlightingNode.forEach((e) => {
       if (!subgraphNodeIDs.includes(e.source)) subgraphNodeIDs.push(e.source);
       if (!subgraphNodeIDs.includes(e.target)) subgraphNodeIDs.push(e.target);
