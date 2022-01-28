@@ -135,9 +135,8 @@
 }
 
 .ant-radio-button-wrapper:hover {
-  color: var(
-    --g3-primary-btn__bg-color
-  ) !important; /* stylelint-disable-line declaration-no-important */
+  /* stylelint-disable-next-line declaration-no-important */
+  color: var(--g3-primary-btn__bg-color) !important;
 }
 
 .ant-radio-button-wrapper.ant-radio-button-wrapper-checked:hover {
@@ -160,13 +159,11 @@
 
 .ant-radio-group-solid
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-  background: var(
-    --g3-primary-btn__bg-color
-  ) !important; /* stylelint-disable-line declaration-no-important */
+  /* stylelint-disable-next-line declaration-no-important */
+  background: var(--g3-primary-btn__bg-color) !important;
   color: white;
-  border-color: var(
-    --g3-primary-btn__bg-color
-  ) !important; /* stylelint-disable-line declaration-no-important */
+  /* stylelint-disable-next-line declaration-no-important */
+  border-color: var(--g3-primary-btn__bg-color) !important;
 }
 
 .g3-filter-section__search-input-box {
