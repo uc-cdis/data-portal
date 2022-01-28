@@ -59,6 +59,7 @@
   background-color: var(--g3-color__white);
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 .explorer-visualization__button-group > button {
   margin: 4px;
 }

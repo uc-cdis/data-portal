@@ -41,16 +41,13 @@
 
 .simple-input-field__input > textarea {
   resize: none;
+  min-height: 72px;
+  padding: 10px;
+  overflow: scroll;
 }
 
 .simple-input-field__input--error > input {
   border-color: red;
-}
-
-.simple-input-field__input > textarea {
-  min-height: 72px;
-  padding: 10px;
-  overflow: scroll;
 }
 
 .simple-input-field__error-message {
