@@ -121,18 +121,21 @@ export function ExplorerStateProvider({ children }) {
     setFilters({});
   }
 
+  const value = useMemo(
+    () => ({
+      initialAppliedFilters: filters,
+      patientIds,
+      handleBrowserNavigationForState,
+      handleFilterChange,
+      handlePatientIdsChange,
+      clearFilters,
+      updateFilters: setFilters,
+    }),
+    [filters, patientIds]
+  );
+
   return (
-    <ExplorerStateContext.Provider
-      value={{
-        initialAppliedFilters: filters,
-        patientIds,
-        handleBrowserNavigationForState,
-        handleFilterChange,
-        handlePatientIdsChange,
-        clearFilters,
-        updateFilters: setFilters,
-      }}
-    >
+    <ExplorerStateContext.Provider value={value}>
       {children}
     </ExplorerStateContext.Provider>
   );

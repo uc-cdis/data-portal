@@ -87,7 +87,7 @@ function FilterSetOpenForm({
               inputId='open-filter-set-name'
               options={options}
               value={selected}
-              autoFocus
+              autoFocus // eslint-disable-line jsx-a11y/no-autofocus
               isClearable={false}
               theme={overrideSelectTheme}
               onChange={(e) => setSelected(e)}
@@ -198,7 +198,7 @@ function FilterSetCreateForm({
           input={
             <input
               id='create-filter-set-name'
-              autoFocus
+              autoFocus // eslint-disable-line jsx-a11y/no-autofocus
               placeholder='Enter the Filter Set name'
               value={filterSet.name}
               onBlur={validate}
@@ -324,7 +324,7 @@ function FilterSetUpdateForm({
           input={
             <input
               id='update-ohort-name'
-              autoFocus
+              autoFocus // eslint-disable-line jsx-a11y/no-autofocus
               placeholder='Enter the Filter Set name'
               value={filterSet.name}
               onBlur={validate}

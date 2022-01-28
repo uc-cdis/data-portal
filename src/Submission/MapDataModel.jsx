@@ -274,7 +274,7 @@ function MapDataModel({
    * @param {string} prop
    */
   function parseFieldValue(value, prop) {
-    const { type } = dictionary[nodeType]?.properties?.[prop];
+    const { type } = dictionary[nodeType]?.properties?.[prop] ?? {};
     if (type === 'number') return parseFloat(value);
     if (type === 'integer') return parseInt(value, 10);
     return value;

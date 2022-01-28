@@ -102,7 +102,7 @@ function getCellElement({
         className='explorer-table-external-links'
         href={subjectUrl}
         target='_blank'
-        rel='noopenner noreferrer'
+        rel='noopener noreferrer'
       >
         <img src={resourceIconPath} alt={resourceName} />
       </a>

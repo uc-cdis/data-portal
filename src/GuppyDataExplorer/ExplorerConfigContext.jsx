@@ -73,41 +73,44 @@ export function ExplorerConfigProvider({ children }) {
 
   const config = explorerConfig.find(({ id }) => id === explorerId);
 
-  return (
-    <ExplorerConfigContext.Provider
-      value={{
-        current: {
-          adminAppliedPreFilters: config.adminAppliedPreFilters,
-          buttonConfig: {
-            buttons: config.buttons,
-            dropdowns: config.dropdowns,
-            sevenBridgesExportURL: config.sevenBridgesExportURL,
-            terraExportURL: config.terraExportURL,
-            terraTemplate: config.terraTemplate,
-          },
-          chartConfig: config.charts,
-          filterConfig: {
-            ...config.filters,
-            info: createFilterInfo(
-              config.filters,
-              config.guppyConfig.fieldMapping
-            ),
-          },
-          getAccessButtonLink: config.getAccessButtonLink,
-          guppyConfig: config.guppyConfig,
-          hideGetAccessButton: config.hideGetAccessButton,
-          patientIdsConfig: config.patientIds,
-          survivalAnalysisConfig: config.survivalAnalysis,
-          tableConfig: config.table,
+  const value = useMemo(
+    () => ({
+      current: {
+        adminAppliedPreFilters: config.adminAppliedPreFilters,
+        buttonConfig: {
+          buttons: config.buttons,
+          dropdowns: config.dropdowns,
+          sevenBridgesExportURL: config.sevenBridgesExportURL,
+          terraExportURL: config.terraExportURL,
+          terraTemplate: config.terraTemplate,
         },
-        explorerId,
-        explorerOptions,
-        handleBrowserNavigationForConfig,
-        shouldUpdateState,
-        setShouldUpdateState,
-        updateExplorerId,
-      }}
-    >
+        chartConfig: config.charts,
+        filterConfig: {
+          ...config.filters,
+          info: createFilterInfo(
+            config.filters,
+            config.guppyConfig.fieldMapping
+          ),
+        },
+        getAccessButtonLink: config.getAccessButtonLink,
+        guppyConfig: config.guppyConfig,
+        hideGetAccessButton: config.hideGetAccessButton,
+        patientIdsConfig: config.patientIds,
+        survivalAnalysisConfig: config.survivalAnalysis,
+        tableConfig: config.table,
+      },
+      explorerId,
+      explorerOptions,
+      handleBrowserNavigationForConfig,
+      shouldUpdateState,
+      setShouldUpdateState,
+      updateExplorerId,
+    }),
+    [config, explorerId, explorerOptions, shouldUpdateState]
+  );
+
+  return (
+    <ExplorerConfigContext.Provider value={value}>
       {children}
     </ExplorerConfigContext.Provider>
   );
