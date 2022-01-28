@@ -168,9 +168,9 @@ export function extractExplorerStateFromURL(
 }
 /**
  * @param {FilterConfig} filterConfig
- * @param {GuppyConfig['fieldMapping']} fieldMapping
+ * @param {GuppyConfig['fieldMapping']} [fieldMapping]
  */
-export function createFilterInfo(filterConfig, fieldMapping) {
+export function createFilterInfo(filterConfig, fieldMapping = []) {
   const map = /** @type {FilterConfig['info']} */ ({});
 
   for (const { field, name, tooltip } of fieldMapping)
