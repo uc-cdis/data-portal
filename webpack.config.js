@@ -220,7 +220,6 @@ module.exports = {
     historyApiFallback: {
       index: 'dev.html',
     },
-    disableHostCheck: true,
     compress: true,
     hot: true,
     port: 9443,
