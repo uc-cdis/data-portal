@@ -79,9 +79,9 @@ async function init() {
 
   // Datadog setup
   if (ddApplicationId && !ddClientToken) {
-    console.warn('Datadog applicationId is set, but clientToken is missing');
+    console.warn('Datadog applicationId is set, but clientToken is missing'); // eslint-disable-line no-console
   } else if (!ddApplicationId && ddClientToken) {
-    console.warn('Datadog clientToken is set, but applicationId is missing');
+    console.warn('Datadog clientToken is set, but applicationId is missing'); // eslint-disable-line no-console
   } else if (ddApplicationId && ddClientToken) {
     datadogRum.init({
       applicationId: ddApplicationId,

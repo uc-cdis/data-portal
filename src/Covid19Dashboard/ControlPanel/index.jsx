@@ -74,6 +74,7 @@ class ControlPanel extends PureComponent {
                 onLayerSelectChange={this.props.onLayerSelectChange}
                 activeLayer={this.props.activeLayer}
               />
+{/*
               <h4>
             Additional Data
                 <Tooltip
@@ -99,6 +100,7 @@ class ControlPanel extends PureComponent {
                 layers={this.props.dataPoints}
                 onDataSelectChange={this.props.onDataSelectChange}
               />
+*/}
             </div>
           ) : null}
       </div>
