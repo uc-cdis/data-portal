@@ -71,8 +71,8 @@ const footerGovLinks = [
     text: 'USA.gov',
   },
   {
-    href: "https://hhs.responsibledisclosure.com/hc/en-us",
-    text: "HHS Responsible Disclosure Form",
+    href: 'https://hhs.responsibledisclosure.com/hc/en-us',
+    text: 'HHS Responsible Disclosure Form',
   },
 ];
 
