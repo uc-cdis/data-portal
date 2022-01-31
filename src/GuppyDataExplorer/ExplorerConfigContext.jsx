@@ -1,9 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
-import { tierAccessLimit, explorerConfig } from '../localconf';
+import { useLocation, useSearchParams } from 'react-router-dom';
+import { explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
-import './typedef';
+import { createFilterInfo } from './utils';
+
+/** @typedef {import('./types').AlteredExplorerConfig} AlteredExplorerConfig */
 
 /**
  * @typedef {Object} ExplorerConfigContext
@@ -20,7 +22,8 @@ import './typedef';
 const ExplorerConfigContext = createContext(null);
 
 export function ExplorerConfigProvider({ children }) {
-  const history = useHistory();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
 
   const explorerOptions = [];
   const explorerIds = [];
@@ -33,7 +36,6 @@ export function ExplorerConfigProvider({ children }) {
   }
 
   const [initialExplorerId, hasValidInitialSearchParamId] = useMemo(() => {
-    const searchParams = new URLSearchParams(history.location.search);
     const hasSearchParamId = searchParams.has('id');
     const searchParamId = hasSearchParamId
       ? Number(searchParams.get('id'))
@@ -47,13 +49,13 @@ export function ExplorerConfigProvider({ children }) {
   const [shouldUpdateState, setShouldUpdateState] = useState(false);
   useEffect(() => {
     if (!hasValidInitialSearchParamId) {
-      history.replace({
-        search:
-          // @ts-ignore
-          history.location.state?.keepSearch === true
-            ? `id=${initialExplorerId}&${history.location.search.slice(1)}`
-            : `id=${initialExplorerId}`,
-      });
+      setSearchParams(
+        // @ts-ignore
+        location.state?.keepSearch === true
+          ? `id=${initialExplorerId}&${location.search.slice(1)}`
+          : `id=${initialExplorerId}`,
+        { replace: true }
+      );
       setShouldUpdateState(true);
     }
   }, []);
@@ -61,47 +63,54 @@ export function ExplorerConfigProvider({ children }) {
   const [explorerId, setExporerId] = useState(initialExplorerId);
   function updateExplorerId(id) {
     setExporerId(id);
-    history.push({ search: `id=${id}` });
+    setSearchParams(`id=${id}`);
   }
 
   function handleBrowserNavigationForConfig() {
-    const searchParams = new URLSearchParams(history.location.search);
     const searchParamId = Number(searchParams.get('id'));
     setExporerId(searchParamId);
   }
 
   const config = explorerConfig.find(({ id }) => id === explorerId);
 
-  return (
-    <ExplorerConfigContext.Provider
-      value={{
-        current: {
-          adminAppliedPreFilters: config.adminAppliedPreFilters,
-          buttonConfig: {
-            buttons: config.buttons,
-            dropdowns: config.dropdowns,
-            sevenBridgesExportURL: config.sevenBridgesExportURL,
-            terraExportURL: config.terraExportURL,
-            terraTemplate: config.terraTemplate,
-          },
-          chartConfig: config.charts,
-          filterConfig: config.filters,
-          getAccessButtonLink: config.getAccessButtonLink,
-          guppyConfig: config.guppyConfig,
-          hideGetAccessButton: config.hideGetAccessButton,
-          patientIdsConfig: config.patientIds,
-          survivalAnalysisConfig: config.survivalAnalysis,
-          tableConfig: config.table,
-          tierAccessLimit,
+  const value = useMemo(
+    () => ({
+      current: {
+        adminAppliedPreFilters: config.adminAppliedPreFilters,
+        buttonConfig: {
+          buttons: config.buttons,
+          dropdowns: config.dropdowns,
+          sevenBridgesExportURL: config.sevenBridgesExportURL,
+          terraExportURL: config.terraExportURL,
+          terraTemplate: config.terraTemplate,
         },
-        explorerId,
-        explorerOptions,
-        handleBrowserNavigationForConfig,
-        shouldUpdateState,
-        setShouldUpdateState,
-        updateExplorerId,
-      }}
-    >
+        chartConfig: config.charts,
+        filterConfig: {
+          ...config.filters,
+          info: createFilterInfo(
+            config.filters,
+            config.guppyConfig.fieldMapping
+          ),
+        },
+        getAccessButtonLink: config.getAccessButtonLink,
+        guppyConfig: config.guppyConfig,
+        hideGetAccessButton: config.hideGetAccessButton,
+        patientIdsConfig: config.patientIds,
+        survivalAnalysisConfig: config.survivalAnalysis,
+        tableConfig: config.table,
+      },
+      explorerId,
+      explorerOptions,
+      handleBrowserNavigationForConfig,
+      shouldUpdateState,
+      setShouldUpdateState,
+      updateExplorerId,
+    }),
+    [config, explorerId, explorerOptions, shouldUpdateState]
+  );
+
+  return (
+    <ExplorerConfigContext.Provider value={value}>
       {children}
     </ExplorerConfigContext.Provider>
   );

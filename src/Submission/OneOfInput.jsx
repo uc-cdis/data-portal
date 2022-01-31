@@ -1,130 +1,122 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import TextInput from './TextInput';
 import EnumInput from './EnumInput';
 
-class OneOfInput extends Component {
-  // couldn't make a generalized component as I would like to, so I am shortcircuiting the logic
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedOption: 'Text',
-    };
+/** @typedef {'Number' | 'Text'} DataType */
+
+/**
+ *
+ * @param {Object} props
+ * @param {string} props.description
+ * @param {string} props.name
+ * @param {React.ChangeEventHandler} props.onChange
+ * @param {(name: string, newEnum: { value: string }) => void} props.onChangeEnum
+ * @param {(formSchema: Object) => void} props.onUpdateFormSchema
+ * @param {Object[]} props.property
+ * @param {boolean} props.required
+ * @param {string} [props.value]
+ */
+function OneOfInput({
+  description,
+  name,
+  onChange,
+  onChangeEnum,
+  onUpdateFormSchema,
+  property,
+  required,
+  value,
+}) {
+  const [dataType, setDataType] = useState(/** @type {DataType} */ ('Text'));
+  useEffect(() => {
+    onUpdateFormSchema({ [name]: dataType === 'Number' ? 'number' : 'string' });
+  }, []);
+  /** @type {React.ChangeEventHandler<HTMLInputElement>} */
+  function handleDataTypeChange(event) {
+    const newDataType = /** @type {DataType} */ (event.target.value);
+    setDataType(newDataType);
+    onUpdateFormSchema({
+      [name]: newDataType === 'Number' ? 'number' : 'string',
+    });
   }
 
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount() {
-    if (this.state.selectedOption === 'Number') {
-      this.props.onUpdateFormSchema({ [this.props.name]: 'number' });
-    } else {
-      this.props.onUpdateFormSchema({ [this.props.name]: 'string' });
-    }
-  }
-
-  render() {
-    const radioChange = (newValue) => {
-      this.setState({
-        selectedOption: newValue.target.value,
-      });
-      const option = newValue.target.value;
-      if (option === 'Number') {
-        this.props.onUpdateFormSchema({ [this.props.name]: 'number' });
-      } else {
-        this.props.onUpdateFormSchema({ [this.props.name]: 'string' });
-      }
-    };
-
-    if (
-      Object.prototype.hasOwnProperty.call(this.props.property[0], 'enum') &&
-      Object.prototype.hasOwnProperty.call(this.props.property[1], 'enum')
-    ) {
-      const options = this.props.property[0].enum.concat(
-        this.props.property[1].enum
-      );
-      return (
-        <EnumInput
-          name={this.props.name}
-          options={options}
-          required={this.props.required}
-          description={this.props.description}
-          onChange={this.props.onChangeEnum}
-        />
-      );
-    }
-    if (
-      this.props.property[0].type === 'string' &&
-      this.props.property[1].type === 'null'
-    ) {
-      return (
-        <TextInput
-          name={this.props.name}
-          value={this.props.value}
-          required={this.props.required}
-          description={this.props.description}
-          onChange={this.props.onChange}
-        />
-      );
-    }
+  if ('enum' in property[0] && 'enum' in property[1])
     return (
-      <div>
-        What is your data type for {this.props.name}?
-        <br />
-        <label htmlFor='textDataType'>
-          <input
-            id='textDataType'
-            type='radio'
-            value='Text'
-            checked={this.state.selectedOption === 'Text'}
-            onChange={radioChange}
-          />
-          Text
-        </label>
-        <label htmlFor='numberDataType'>
-          <input
-            id='numberDataType'
-            type='radio'
-            value='Number'
-            checked={this.state.selectedOption === 'Number'}
-            onChange={radioChange}
-          />
-          Number
-        </label>
-        {this.state.selectedOption === 'Number' && (
-          <TextInput
-            name={this.props.name}
-            value={this.props.value}
-            description={this.props.description}
-            required={this.props.required}
-            onChange={this.props.onChange}
-          />
-        )}
-        {this.state.selectedOption === 'Text' && (
-          <EnumInput
-            name={this.props.name}
-            options={this.props.property[0].enum}
-            required={this.props.required}
-            description={this.props.description}
-            onChange={this.props.onChangeEnum}
-          />
-        )}
-      </div>
+      <EnumInput
+        name={name}
+        options={[...property[0].enum, ...property[1].enum]}
+        required={required}
+        description={description}
+        onChange={onChangeEnum}
+      />
     );
-  }
+
+  if (property[0].type === 'string' && property[1].type === 'null')
+    return (
+      <TextInput
+        name={name}
+        value={value}
+        required={required}
+        description={description}
+        onChange={onChange}
+      />
+    );
+
+  return (
+    <div>
+      What is your data type for {name}?
+      <br />
+      <label htmlFor='textDataType'>
+        <input
+          id='textDataType'
+          type='radio'
+          value='Text'
+          checked={dataType === 'Text'}
+          onChange={handleDataTypeChange}
+        />
+        Text
+      </label>
+      <label htmlFor='numberDataType'>
+        <input
+          id='numberDataType'
+          type='radio'
+          value='Number'
+          checked={dataType === 'Number'}
+          onChange={handleDataTypeChange}
+        />
+        Number
+      </label>
+      {dataType === 'Number' && (
+        <TextInput
+          name={name}
+          value={value}
+          description={description}
+          required={required}
+          onChange={onChange}
+        />
+      )}
+      {dataType === 'Text' && (
+        <EnumInput
+          name={name}
+          options={property[0].enum}
+          required={required}
+          description={description}
+          onChange={onChangeEnum}
+        />
+      )}
+    </div>
+  );
 }
 
 OneOfInput.propTypes = {
-  property: PropTypes.array.isRequired,
-  name: PropTypes.string.isRequired,
-  value: PropTypes.any,
-  required: PropTypes.bool.isRequired,
   description: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onChangeEnum: PropTypes.func.isRequired,
   onUpdateFormSchema: PropTypes.func.isRequired,
-};
-
-OneOfInput.defaultProps = {
-  value: undefined,
+  property: PropTypes.array.isRequired,
+  required: PropTypes.bool.isRequired,
+  value: PropTypes.any,
 };
 
 export default OneOfInput;

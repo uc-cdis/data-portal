@@ -1,5 +1,6 @@
-/** @type {import('redux').Reducer} */
-const index = (state = {}, action) => {
+/** @typedef {import('./types').IndexState} IndexState */
+/** @type {import('redux').Reducer<IndexState>} */
+const index = (state = /** @type {IndexState} */ ({}), action) => {
   switch (action.type) {
     case 'RECEIVE_INDEX_PAGE_COUNTS': {
       return {

@@ -17,22 +17,21 @@ module.exports = {
     },
   },
   rules: {
+    'default-param-last': 'off',
     'no-restricted-syntax': 'off',
     'no-underscore-dangle': 'off',
     'import/extensions': 'off',
     'react/destructuring-assignment': 'off',
     'react/forbid-prop-types': 'off',
     'react/jsx-curly-brace-presence': 'off',
+    'react/jsx-no-bind': 'off',
     'react/jsx-props-no-spreading': 'off',
     'react/no-array-index-key': 'off',
+    'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
     'react/require-default-props': 'off',
     'jsx-a11y/label-has-associated-control': [
       'error',
-      {
-        required: {
-          some: ['nesting', 'id'],
-        },
-      },
+      { required: { some: ['nesting', 'id'] } },
     ],
   },
   overrides: [

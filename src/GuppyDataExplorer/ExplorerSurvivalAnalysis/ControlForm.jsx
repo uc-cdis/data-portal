@@ -4,193 +4,137 @@ import Select from 'react-select';
 import Button from '../../gen3-ui-component/components/Button';
 import SimpleInputField from '../../components/SimpleInputField';
 import { overrideSelectTheme } from '../../utils';
-import './typedef';
+import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
+import FilterSetCard from './FilterSetCard';
+
+/** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('./types').UserInputSubmitHandler} UserInputSubmitHandler */
 
 /** @param {{ label: string; [x: string]: any }} props */
-const ControlFormSelect = ({ label, ...selectProps }) => (
-  <SimpleInputField
-    label={label}
-    input={
-      <Select {...selectProps} clearable={false} theme={overrideSelectTheme} />
-    }
-  />
-);
+function ControlFormSelect({ label, ...selectProps }) {
+  return (
+    <SimpleInputField
+      label={label}
+      input={
+        <Select
+          {...selectProps}
+          isClearable={false}
+          theme={overrideSelectTheme}
+          styles={{
+            control: (provided, { isDisabled }) => ({
+              ...provided,
+              cursor: isDisabled ? 'not-allowed' : '',
+              pointerEvents: 'auto',
+            }),
+          }}
+        />
+      }
+    />
+  );
+}
 
 ControlFormSelect.propTypes = {
   label: PropTypes.string,
 };
 
 /** @param {{ label: string; [x: string]: any }} props */
-const ControlFormInput = ({ label, ...inputAttrs }) => (
-  <SimpleInputField label={label} input={<input {...inputAttrs} />} />
-);
+function ControlFormInput({ label, ...inputAttrs }) {
+  return <SimpleInputField label={label} input={<input {...inputAttrs} />} />;
+}
 
 ControlFormInput.propTypes = {
   label: PropTypes.string,
 };
 
-const emptySelectOption = { label: 'Select...', value: '' };
 const survivalTypeOptions = [
   { label: 'Overall Survival', value: 'all' },
   { label: 'Event-Free Survival (EFS)', value: 'efs' },
 ];
 
+/** @type {ExplorerFilterSet[]} */
+const emptyFilterSets = [];
+
+/** @type {ExplorerFilterSet} */
+export const defaultFilterSet = {
+  name: '*** All Subjects ***',
+  description: '',
+  filters: {},
+  id: -1,
+};
+
+/**
+ * @param {React.FocusEvent<HTMLInputElement>} e
+ * @param {React.Dispatch<React.SetStateAction<number>>} setStateAction
+ */
+function validateNumberInput(e, setStateAction) {
+  if (e.target.value !== '') {
+    const value = Number.parseInt(e.target.value, 10);
+    const min = Number.parseInt(e.target.min, 10);
+    const max = Number.parseInt(e.target.max, 10);
+    if (min && min > value) setStateAction(min);
+    else if (max && max < value) setStateAction(max);
+  }
+}
+
 /**
  * @param {Object} prop
- * @param {FactorItem[]} prop.factors
  * @param {UserInputSubmitHandler} prop.onSubmit
  * @param {number} prop.timeInterval
  * @param {boolean} prop.isError
- * @param {boolean} prop.isFilterChanged
  */
-const ControlForm = ({
-  factors,
-  onSubmit,
-  timeInterval,
-  isError,
-  isFilterChanged,
-}) => {
-  const [factorVariable, setFactorVariable] = useState(emptySelectOption);
-  const [stratificationVariable, setStratificationVariable] = useState(
-    emptySelectOption
-  );
+function ControlForm({ onSubmit, timeInterval, isError }) {
   const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
   const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(20);
+  const [endTime, setEndTime] = useState(undefined);
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
 
-  const [isInputChanged, setIsInputChanged] = useState(true);
+  const [selectFilterSetOption, setSelectFilterSetOption] = useState(null);
+  const [usedFilterSets, setUsedFilterSets] = useState(emptyFilterSets);
+  const { filterSets } = useExplorerFilterSets();
+  const filterSetOptions = [defaultFilterSet, ...filterSets].map(
+    (filterSet) => ({
+      label: filterSet.name,
+      value: filterSet,
+      isDisabled: usedFilterSets.some(({ id }) => id === filterSet.id),
+    })
+  );
+
+  const [isInputChanged, setIsInputChanged] = useState(false);
   useEffect(() => {
     if (!isInputChanged && isError) setIsInputChanged(true);
   }, [isInputChanged, isError]);
 
-  const [shouldUpdateResults, setShouldUpdateResults] = useState(true);
+  const [shouldSubmit, setShouldSubmit] = useState(false);
   useEffect(() => {
-    if (isFilterChanged && !shouldUpdateResults) setShouldUpdateResults(true);
-  }, [isFilterChanged]);
-
-  const validateNumberInput = (
-    /** @type {{ target: { value: string, min: string, max: string }}} */ e
-  ) => {
-    const value = Number.parseInt(e.target.value, 10);
-    const min = Number.parseInt(e.target.min, 10);
-    const max = Number.parseInt(e.target.max, 10);
-    if (min && min > value) setLocalTimeInterval(min);
-    else if (max && max < value) setLocalTimeInterval(max);
-  };
-
-  const withEmptyOption = (
-    /** @type {{ label: string, value: string }[]} */ options
-  ) => [emptySelectOption, ...options];
+    if (shouldSubmit) {
+      onSubmit({
+        timeInterval: localTimeInterval,
+        startTime,
+        endTime: endTime || undefined,
+        efsFlag: survivalType.value === 'efs',
+        usedFilterSets,
+      });
+      setShouldSubmit(false);
+    }
+  }, [shouldSubmit]);
 
   const submitUserInput = () => {
-    onSubmit({
-      factorVariable: factorVariable.value,
-      stratificationVariable: stratificationVariable.value,
-      timeInterval: localTimeInterval,
-      startTime,
-      endTime,
-      efsFlag: survivalType.value === 'efs',
-      shouldUpdateResults,
-    });
     setIsInputChanged(false);
-    setShouldUpdateResults(false);
+    setShouldSubmit(true);
   };
 
   const resetUserInput = () => {
-    setIsInputChanged(
-      factorVariable.value !== emptySelectOption.value ||
-        stratificationVariable.value !== emptySelectOption.value ||
-        localTimeInterval !== 2 ||
-        startTime !== 0 ||
-        endTime !== 20 ||
-        survivalType !== survivalTypeOptions[0]
-    );
-
-    if (factorVariable.value !== '' || stratificationVariable.value !== '')
-      setShouldUpdateResults(true);
-
-    setFactorVariable(emptySelectOption);
-    setStratificationVariable(emptySelectOption);
     setLocalTimeInterval(2);
     setStartTime(0);
-    setEndTime(20);
+    setEndTime(undefined);
     setSurvivalType(survivalTypeOptions[0]);
+    setUsedFilterSets(emptyFilterSets);
+    setIsInputChanged(false);
+    setShouldSubmit(true);
   };
 
   return (
     <form className='explorer-survival-analysis__control-form'>
-      <ControlFormSelect
-        inputId='survival-factor-variable'
-        label='Factor variable'
-        options={withEmptyOption(factors)}
-        onChange={(e) => {
-          if (e.value === '' || e.value === stratificationVariable)
-            setStratificationVariable(emptySelectOption);
-
-          setFactorVariable(e);
-          setShouldUpdateResults(true);
-          setIsInputChanged(true);
-        }}
-        value={factorVariable}
-      />
-      <ControlFormSelect
-        inputId='survival-stratification-variable'
-        label='Stratification variable'
-        options={withEmptyOption(
-          factors.filter(({ value }) => value !== factorVariable.value)
-        )}
-        isDisabled={factorVariable.value === ''}
-        onChange={(e) => {
-          setStratificationVariable(e);
-          setShouldUpdateResults(true);
-          setIsInputChanged(true);
-        }}
-        value={stratificationVariable}
-      />
-      <ControlFormInput
-        id='survival-time-interval'
-        label='Time interval'
-        type='number'
-        min={1}
-        max={5}
-        step={1}
-        onBlur={validateNumberInput}
-        onChange={(e) => {
-          setLocalTimeInterval(Number.parseInt(e.target.value, 10));
-          setIsInputChanged(true);
-        }}
-        value={localTimeInterval}
-      />
-      <ControlFormInput
-        id='survival-start-time'
-        disabled
-        label='Start time (year)'
-        type='number'
-        min={0}
-        max={endTime - 1}
-        step={1}
-        onBlur={validateNumberInput}
-        onChange={(e) => {
-          setStartTime(Number.parseInt(e.target.value, 10));
-          setIsInputChanged(true);
-        }}
-        value={startTime}
-      />
-      <ControlFormInput
-        id='survival-end-time'
-        label='End time (year)'
-        type='number'
-        min={startTime + 1}
-        max={99}
-        step={1}
-        onBlur={validateNumberInput}
-        onChange={(e) => {
-          setEndTime(Number.parseInt(e.target.value, 10));
-          setIsInputChanged(true);
-        }}
-        value={endTime}
-      />
       <ControlFormSelect
         inputId='survival-type'
         isDisabled
@@ -201,35 +145,114 @@ const ControlForm = ({
         ]}
         onChange={(e) => {
           setSurvivalType(e);
-          setShouldUpdateResults(true);
           setIsInputChanged(true);
         }}
         value={survivalType}
       />
+      <ControlFormInput
+        id='survival-start-time'
+        disabled
+        label='Start time (year)'
+        type='number'
+        min={0}
+        max={Number.isInteger(endTime) ? endTime - 1 : undefined}
+        step={1}
+        onBlur={(e) => validateNumberInput(e, setStartTime)}
+        onChange={(e) => {
+          setStartTime(Number.parseInt(e.target.value, 10));
+          setIsInputChanged(true);
+        }}
+        value={startTime}
+      />
+      <ControlFormInput
+        id='survival-end-time'
+        label='End time (year)'
+        type='number'
+        placeholder='Optional; max value if left blank'
+        min={startTime + 1}
+        max={99}
+        step={1}
+        onBlur={(e) => validateNumberInput(e, setEndTime)}
+        onChange={(e) => {
+          setEndTime(Number.parseInt(e.target.value, 10));
+          setIsInputChanged(true);
+        }}
+        value={endTime}
+      />
+      <ControlFormInput
+        id='survival-time-interval'
+        label='Time interval'
+        type='number'
+        min={1}
+        max={5}
+        step={1}
+        onBlur={(e) => validateNumberInput(e, setLocalTimeInterval)}
+        onChange={(e) => {
+          setLocalTimeInterval(Number.parseInt(e.target.value, 10));
+          setIsInputChanged(true);
+        }}
+        value={localTimeInterval}
+      />
+      <div className='explorer-survival-analysis__filter-set-select'>
+        <Select
+          inputId='survival-filter-sets'
+          placeholder='Select Filter Set to analyze'
+          options={filterSetOptions}
+          onChange={setSelectFilterSetOption}
+          value={selectFilterSetOption}
+          theme={overrideSelectTheme}
+        />
+        <Button
+          label='Add'
+          buttonType='default'
+          enabled={selectFilterSetOption !== null}
+          onClick={() => {
+            setUsedFilterSets((prevFilterSets) => [
+              ...prevFilterSets,
+              selectFilterSetOption.value,
+            ]);
+            setSelectFilterSetOption(null);
+            setIsInputChanged(true);
+          }}
+        />
+      </div>
+      {usedFilterSets.length === 0 ? (
+        <span style={{ fontStyle: 'italic' }}>
+          Nothing to show here. Try select and use Filter Sets for survival
+          analysis.
+        </span>
+      ) : (
+        usedFilterSets.map((filterSet, i) => (
+          <FilterSetCard
+            key={filterSet.id}
+            filterSet={filterSet}
+            label={`${i + 1}. ${filterSet.name}`}
+            onClose={() => {
+              setUsedFilterSets((prevFilterSets) =>
+                prevFilterSets.filter(({ id }) => id !== filterSet.id)
+              );
+              setIsInputChanged(true);
+            }}
+          />
+        ))
+      )}
       <div className='explorer-survival-analysis__button-group'>
         <Button label='Reset' buttonType='default' onClick={resetUserInput} />
         <Button
           label='Apply'
           buttonType='primary'
           onClick={submitUserInput}
-          enabled={isInputChanged || isFilterChanged}
+          enabled={isInputChanged && usedFilterSets.length > 0}
         />
       </div>
     </form>
   );
-};
+}
 
 ControlForm.propTypes = {
-  factors: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string,
-      value: PropTypes.string,
-    })
-  ).isRequired,
   onSubmit: PropTypes.func.isRequired,
   timeInterval: PropTypes.number.isRequired,
   isError: PropTypes.bool,
-  isFilterChanged: PropTypes.bool,
 };
 
 export default ControlForm;

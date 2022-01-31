@@ -1,10 +1,12 @@
-import { Link, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import checkProjectPermission from '../hooks/checkProjectPermission';
 import ReduxDataModelGraph from '../DataModelGraph/ReduxDataModelGraph';
 import ReduxSubmitForm from './ReduxSubmitForm';
 import ReduxSubmitTSV from './ReduxSubmitTSV';
 import Spinner from '../components/Spinner';
-import './ProjectSubmission.less';
+import './ProjectSubmission.css';
 
 /**
  * @param {Object} props
@@ -25,16 +27,22 @@ function ProjectSubmission({
   // hack to detect if dictionary data is available, and to trigger fetch if not
   if (!dataIsReady) onGetCounts(typeList, project, dictionary);
 
+  const navigate = useNavigate();
+  const isUserWithPermission = checkProjectPermission(project);
+  useEffect(() => {
+    if (!isUserWithPermission) navigate(-1);
+  }, []);
+
   return (
     <div className='project-submission'>
       <h2 className='project-submission__title'>{project}</h2>
-      <Link className='project-submission__link' to={`/${project}/search`}>
+      <Link className='project-submission__link' to='search'>
         browse nodes
       </Link>
       <ReduxSubmitForm />
       <ReduxSubmitTSV project={project} />
       {dataIsReady ? (
-        <ReduxDataModelGraph project={project} />
+        <ReduxDataModelGraph />
       ) : (
         project !== '_root' && <Spinner />
       )}

@@ -1,70 +1,68 @@
-import { Component, createRef } from 'react';
+import { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import AutoCompleteInput from './AutoCompleteInput';
 import AutoCompleteSuggestions, {
-  SuggestionItem,
+  SuggestionItemType,
 } from './AutoCompleteSuggestions';
 import './AutoComplete.css';
 
-class AutoComplete extends Component {
-  constructor(props) {
-    super(props);
-    this.inputRef = createRef();
-  }
+/**  @typedef {import('./AutoCompleteSuggestions').SuggestionItem} SuggestionItem */
 
-  setInputText(text) {
-    this.inputRef.current.setInputText(text);
-  }
+const AutoComplete = forwardRef(
+  /**
+   * @param {Object} props
+   * @param {string} [props.inputIcon]
+   * @param {string} [props.inputPlaceHolderText]
+   * @param {string} [props.inputTitle]
+   * @param {(input: string) => void} [props.onInputChange]
+   * @param {(input: string) => void} [props.onSubmitInput]
+   * @param {(suggestionItem: SuggestionItem) => void} [props.onSuggestionItemClick]
+   * @param {SuggestionItem[]} [props.suggestionList]
+   * @param {React.Ref<any>} inputRef
+   */
+  // eslint-disable-next-line prefer-arrow-callback
+  function AutoComplete(props, inputRef) {
+    const {
+      inputIcon = 'search',
+      inputPlaceHolderText = 'Search',
+      inputTitle = 'Search Input',
+      onInputChange,
+      onSubmitInput,
+      onSuggestionItemClick,
+      suggestionList = [],
+    } = props;
 
-  clearInput() {
-    this.inputRef.current.clearInput();
-  }
-
-  render() {
     const emptySuggestionsClassModifier =
-      this.props.suggestionList.length === 0
-        ? 'auto-complete--empty-suggestion-list'
-        : '';
+      suggestionList.length === 0 ? 'auto-complete--empty-suggestion-list' : '';
     return (
       <div className={`auto-complete ${emptySuggestionsClassModifier}`}>
         <div className='auto-complete__input-wrapper'>
           <AutoCompleteInput
-            ref={this.inputRef}
-            placeHolderText={this.props.inputPlaceHolderText}
-            icon={this.props.inputIcon}
-            inputTitle={this.props.inputTitle}
-            onInputChange={this.props.onInputChange}
-            onSubmitInput={this.props.onSubmitInput}
+            icon={inputIcon}
+            inputTitle={inputTitle}
+            onInputChange={onInputChange}
+            onSubmitInput={onSubmitInput}
+            placeHolderText={inputPlaceHolderText}
+            ref={inputRef}
           />
         </div>
         <AutoCompleteSuggestions
-          className='auto-complete__suggestions'
-          suggestionList={this.props.suggestionList}
-          onSuggestionItemClick={this.props.onSuggestionItemClick}
+          onSuggestionItemClick={onSuggestionItemClick}
+          suggestionList={suggestionList}
         />
       </div>
     );
   }
-}
+);
 
 AutoComplete.propTypes = {
-  onInputChange: PropTypes.func,
-  suggestionList: PropTypes.arrayOf(PropTypes.shape(SuggestionItem)),
   inputPlaceHolderText: PropTypes.string,
   inputTitle: PropTypes.string,
   inputIcon: PropTypes.string,
-  onSuggestionItemClick: PropTypes.func,
+  onInputChange: PropTypes.func,
   onSubmitInput: PropTypes.func,
-};
-
-AutoComplete.defaultProps = {
-  onInputChange: () => {},
-  suggestionList: [],
-  inputPlaceHolderText: 'Search',
-  inputTitle: 'Search Input',
-  inputIcon: 'search',
-  onSuggestionItemClick: () => {},
-  onSubmitInput: () => {},
+  onSuggestionItemClick: PropTypes.func,
+  suggestionList: PropTypes.arrayOf(PropTypes.exact(SuggestionItemType)),
 };
 
 export default AutoComplete;

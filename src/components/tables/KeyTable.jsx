@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import Table from './base/Table';
 import dictIcons from '../../img/icons/index';
 import IconicButton from '../buttons/IconicButton';
-import './KeyTable.less';
+import './KeyTable.css';
 
 const LIST_API_KEY_MSG = 'You have the following API key(s)';
 const API_KEY_COLUMN = 'API key(s)';

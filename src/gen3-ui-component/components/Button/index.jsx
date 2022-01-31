@@ -1,95 +1,98 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
 import Spinner from '../Spinner/Spinner';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import './Button.css';
 
-class Button extends Component {
-  handleClick(e) {
-    if (this.props.enabled && this.props.onClick && !this.props.isPending) {
-      this.props.onClick(e);
-    }
+/**
+ * @param {Object} props
+ * @param {'primary' | 'secondary' | 'default'} [props.buttonType]
+ * @param {string} [props.className]
+ * @param {boolean} [props.enabled]
+ * @param {string} [props.id]
+ * @param {boolean} [props.isPending]
+ * @param {string | JSX.Element} props.label
+ * @param {string} [props.leftIcon]
+ * @param {React.MouseEventHandler} [props.onClick]
+ * @param {string} [props.rightIcon]
+ * @param {boolean} [props.tooltipEnabled]
+ * @param {string} [props.tooltipText]
+ * @param {string} [props.value]
+ */
+function Button({
+  buttonType = 'primary',
+  className = '',
+  enabled = true,
+  id,
+  isPending,
+  label,
+  leftIcon,
+  onClick,
+  rightIcon,
+  tooltipEnabled = false,
+  tooltipText,
+  value,
+}) {
+  function handleClick(e) {
+    if (enabled && !isPending) onClick?.(e);
   }
 
-  render() {
-    const buttonTypeClassName =
-      !this.props.enabled || this.props.isPending
-        ? 'g3-button--disabled'
-        : `g3-button--${this.props.buttonType}`;
-    const otherAttrs = {};
-    if (this.props.id) otherAttrs.id = this.props.id;
-    if (this.props.value) otherAttrs.value = this.props.value;
-    const button = (
-      <button
-        type='button'
-        className={`${this.props.className} g3-button ${buttonTypeClassName}`}
-        onClick={(e) => this.handleClick(e)}
-        onKeyPress={(e) => e.stopPropagation()}
-        {...otherAttrs}
-      >
-        {this.props.leftIcon && (
-          <i
-            className={`g3-icon g3-icon--sm g3-icon--${this.props.leftIcon} g3-button__icon g3-button__icon--left`}
-          />
-        )}
-        {this.props.label}
-        {this.props.rightIcon && !this.props.isPending && (
-          <i
-            className={`g3-icon g3-icon--sm g3-icon--${this.props.rightIcon} g3-button__icon g3-button__icon--right`}
-          />
-        )}
-        {this.props.isPending && (
-          <div className='g3-button__spinner g3-button__icon--right'>
-            <Spinner />
-          </div>
-        )}
-      </button>
-    );
+  const buttonTypeClassName =
+    !enabled || isPending ? 'g3-button--disabled' : `g3-button--${buttonType}`;
+  const buttonElement = (
+    <button
+      type='button'
+      className={`${className} g3-button ${buttonTypeClassName}`}
+      onClick={handleClick}
+      onKeyPress={(e) => e.stopPropagation()}
+      id={id}
+      value={value}
+    >
+      {leftIcon && (
+        <i
+          className={`g3-icon g3-icon--sm g3-icon--${leftIcon} g3-button__icon g3-button__icon--left`}
+        />
+      )}
+      {label}
+      {rightIcon && !isPending && (
+        <i
+          className={`g3-icon g3-icon--sm g3-icon--${rightIcon} g3-button__icon g3-button__icon--right`}
+        />
+      )}
+      {isPending && (
+        <div className='g3-button__spinner g3-button__icon--right'>
+          <Spinner />
+        </div>
+      )}
+    </button>
+  );
 
-    return this.props.tooltipEnabled ? (
-      <Tooltip
-        placement='bottom'
-        overlay={this.props.tooltipText}
-        arrowContent={<div className='rc-tooltip-arrow-inner' />}
-      >
-        {button}
-      </Tooltip>
-    ) : (
-      button
-    );
-  }
+  return tooltipEnabled ? (
+    <Tooltip
+      placement='bottom'
+      overlay={tooltipText}
+      arrowContent={<div className='rc-tooltip-arrow-inner' />}
+    >
+      {buttonElement}
+    </Tooltip>
+  ) : (
+    buttonElement
+  );
 }
 
 Button.propTypes = {
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
   buttonType: PropTypes.oneOf(['primary', 'secondary', 'default']),
   enabled: PropTypes.bool,
   className: PropTypes.string,
-  onClick: PropTypes.func,
-  leftIcon: PropTypes.string,
-  rightIcon: PropTypes.string,
-  type: PropTypes.oneOf(['button', 'submit', 'reset']),
   id: PropTypes.string,
-  value: PropTypes.string,
+  isPending: PropTypes.bool,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
+  leftIcon: PropTypes.string,
+  onClick: PropTypes.func,
+  rightIcon: PropTypes.string,
   tooltipEnabled: PropTypes.bool,
   tooltipText: PropTypes.string,
-  isPending: PropTypes.bool,
-};
-
-Button.defaultProps = {
-  buttonType: 'primary',
-  enabled: true,
-  className: '',
-  onClick: () => {},
-  leftIcon: null,
-  rightIcon: null,
-  type: 'button',
-  id: null,
-  value: null,
-  tooltipEnabled: false,
-  tooltipText: null,
-  isPending: false,
+  value: PropTypes.string,
 };
 
 export default Button;

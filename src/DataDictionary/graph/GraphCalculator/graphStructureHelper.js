@@ -1,20 +1,10 @@
-/**
- * @typedef {Object} Node
- * @property {string} id - ID of this node
- * @property {string[]} inLinks - array of soure node IDs that link to this node
- * @property {string[]} outLinks - array of target node IDs that are linked from this node
- */
-
-/**
- * @typedef {Object} Edge
- * @property {string} source - edge source node ID
- * @property {string} target - edge target node ID
- */
+/** @typedef {import('../../types').GraphEdge} GraphEdge */
+/** @typedef {import('../../types').GraphNode} GraphNode */
 
 /**
  * Get all descendent node IDs from a given node
  * @param {string} startingNodeID
- * @param {Object[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {string[]} array of descendent node IDs
  */
 export const getAllChildrenNodeIDs = (startingNodeID, wholeGraphNodes) => {
@@ -41,8 +31,8 @@ export const getAllChildrenNodeIDs = (startingNodeID, wholeGraphNodes) => {
 /**
  * Get all children links from a given node
  * @param {string} startingNodeID
- * @param {Object[]} wholeGraphNodes - array of nodes in the origin whole graph
- * @returns {Edge[]} array of descendent links
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @returns {GraphEdge[]} array of descendent links
  */
 export const getAllChildrenLinks = (startingNodeID, wholeGraphNodes) => {
   const startingNode = wholeGraphNodes.find((n) => n.id === startingNodeID);
@@ -79,8 +69,8 @@ export const getAllChildrenLinks = (startingNodeID, wholeGraphNodes) => {
  * @param {string} nodeID - ID of the given node
  * @param {boolean} inOrOut - true: get inlinks, false: get outlinks
  * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
- * @param {Edge[]} subgraphEdges - array of edges in subgraph
- * @param {Object[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @param {GraphEdge[]} subgraphEdges - array of edges in subgraph
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {string[]} array of node IDs that are inlinks or outlinks of the given node
  */
 const inOrOutLinksFromGivenNode = (
@@ -119,8 +109,8 @@ const inOrOutLinksFromGivenNode = (
  * (node without outlinks means this node is not pointing at any other nodes in subgraph)
  * @param {boolean} inOrOut - true: get inlinks, false: get outlinks
  * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
- * @param {Edge[]} subgraphEdges - array of edges in subgraph
- * @param {Object[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @param {GraphEdge[]} subgraphEdges - array of edges in subgraph
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {string[]} array of node IDs that have no inlinks or outlinks
  */
 export const getNodeIDsThatHaveNoInOrOutLinks = (
@@ -150,8 +140,8 @@ export const getNodeIDsThatHaveNoInOrOutLinks = (
  * (An articulation node of a graph is a node whose removal will disconnect the graph)
  * @param {string} targetNodeID - the target node to validate
  * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
- * @param {Edge[]} subgraphEdges - array of edges in subgraph
- * @param {Object[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @param {GraphEdge[]} subgraphEdges - array of edges in subgraph
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {boolean} whether this node is articulation node inside subgraph
  */
 export const isArticulationNodeInSubgraph = (
@@ -207,8 +197,8 @@ export const isArticulationNodeInSubgraph = (
  * Get all articulation node is articulation inside subgraph
  * (An articulation node of a graph is a node whose removal will disconnect the graph)
  * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
- * @param {Edge[]} subgraphEdges - array of edges in subgraph
- * @param {Object[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @param {GraphEdge[]} subgraphEdges - array of edges in subgraph
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {string[]} array of articulation node IDs inside subgraph
  */
 export const getArticulationNodesInSubgraph = (
@@ -236,8 +226,8 @@ export const getArticulationNodesInSubgraph = (
  * Traverse a subgraph via breath Breadth-first search algorithm
  * @param {boolean} alongLinkDirection - if want traverse from link direction
  * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
- * @param {Edge[]} subgraphEdges - array of edges in subgraph
- * @param {Object[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @param {GraphEdge[]} subgraphEdges - array of edges in subgraph
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {string[]} array of node IDs in BFS traverse
  * Note that this function only consider union of `subgraphNodeIDs` and `subgraphEdges`,
  * if a node is in `subgraphEdges` but not in `subgraphNodeIDs`, it'll be ignored.
@@ -296,8 +286,8 @@ export const BFSTraverseSubgraph = (
  * I.e., order nodes so that for each link A->B, A comes before B in the ordering
  * @param {string[]} nodeIDsToSort - array of node IDs to sort
  * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
- * @param {Edge[]} subgraphEdges - array of edges in subgraph
- * @param {Object[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @param {GraphEdge[]} subgraphEdges - array of edges in subgraph
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {string[]} array of node IDs in topological order
  */
 export const sortNodesByTopology = (
@@ -321,8 +311,8 @@ export const sortNodesByTopology = (
 /**
  * Find a node that is descendent of all other nodes inside subgraph
  * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
- * @param {Edge[]} subgraphEdges - array of edges in subgraph
- * @param {Node[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @param {GraphEdge[]} subgraphEdges - array of edges in subgraph
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {string} if find, return node ID, otherwise return null
  */
 export const getSingleEndDescendentNodeID = (
@@ -343,7 +333,7 @@ export const getSingleEndDescendentNodeID = (
 /**
  * @typedef {Object} Summary
  * @property {string[]} nodeIDs - array of node IDs between two given nodes
- * @property {Edge[]} links - array of links between two given nodes
+ * @property {GraphEdge[]} links - array of links between two given nodes
  */
 /**
  * Get summary of how many nodes and links are between given two nodes inside subgraph
@@ -351,8 +341,8 @@ export const getSingleEndDescendentNodeID = (
  * @param {string} startingNodeID
  * @param {string} endingNodeID
  * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
- * @param {Edge[]} subgraphEdges - array of edges in subgraph
- * @param {Object[]} wholeGraphNodes - array of nodes in the origin whole graph
+ * @param {GraphEdge[]} subgraphEdges - array of edges in subgraph
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
  * @returns {Summary}
  */
 export const getNodesAndLinksSummaryBetweenNodesInSubgraph = (
@@ -420,6 +410,13 @@ export const getNodesAndLinksSummaryBetweenNodesInSubgraph = (
   };
 };
 
+/**
+ * @param {string} startingNodeID
+ * @param {string} endingNodeID
+ * @param {string[]} subgraphNodeIDs - array of node IDs in subgraph
+ * @param {GraphEdge[]} subgraphEdges - array of edges in subgraph
+ * @param {GraphNode[]} wholeGraphNodes - array of nodes in the origin whole graph
+ */
 export const getAllRoutesBetweenTwoNodes = (
   startingNodeID,
   endingNodeID,
@@ -427,7 +424,12 @@ export const getAllRoutesBetweenTwoNodes = (
   subgraphEdges,
   wholeGraphNodes
 ) => {
+  /** @type {string[][]} */
   const resultRoutes = [];
+  /**
+   * @param {string} curID
+   * @param {Set} curPath
+   */
   const takeOneStep = (curID, curPath) => {
     if (curID === endingNodeID) {
       const resultPath = Array.from(curPath);

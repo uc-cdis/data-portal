@@ -1,22 +1,32 @@
 import PropTypes from 'prop-types';
 import TextInput from './TextInput';
-import './AnyOfInput.less';
+import './AnyOfInput.css';
 
-const AnyOfInput = ({
+/**
+ * @param {Object} props
+ * @param {string} props.name
+ * @param {Object[]} [props.values]
+ * @param {any} props.node
+ * @param {(name: string, event: React.ChangeEvent<HTMLInputElement>, properties: string[]) => void} props.onChange
+ * @param {string[]} props.properties
+ * @param {boolean} props.required
+ * @param {string[]} [props.requireds]
+ */
+function AnyOfInput({
   name,
   values,
   node,
+  onChange,
   properties,
   required,
-  requireds,
-  onChange,
-}) => {
+  requireds = [],
+}) {
   // this is smelly code because it reuses logic from SubmitNodeForm,
   // I'd like to extract some of the code into another function
-
-  const onChangeAnyOfWrapper = (event) => {
+  /** @type {React.ChangeEventHandler<HTMLInputElement>} */
+  function onChangeAnyOfWrapper(event) {
     onChange(name, event, properties);
-  };
+  }
 
   return (
     <div>
@@ -53,20 +63,16 @@ const AnyOfInput = ({
       </div>
     </div>
   );
-};
+}
 
 AnyOfInput.propTypes = {
   name: PropTypes.string.isRequired,
-  values: PropTypes.object.isRequired,
+  values: PropTypes.arrayOf(PropTypes.object),
   node: PropTypes.any.isRequired,
   properties: PropTypes.array.isRequired,
   required: PropTypes.bool.isRequired,
-  requireds: PropTypes.array,
+  requireds: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func.isRequired,
-};
-
-AnyOfInput.defaultProps = {
-  requireds: [],
 };
 
 export default AnyOfInput;

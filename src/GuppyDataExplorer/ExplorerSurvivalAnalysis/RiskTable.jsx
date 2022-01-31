@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import { Fragment, memo } from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import {
   ScatterChart,
@@ -10,7 +10,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { filterRisktableByTime, getXAxisTicks } from './utils';
-import './typedef';
+
+/** @typedef {import('./types').RisktableData} RisktableData */
 
 /**
  * @param {RisktableData[]} data
@@ -19,19 +20,11 @@ import './typedef';
 const parseRisktable = (data, timeInterval) => {
   const minTime = data[0].data[0].time;
   return data
-    .flatMap(({ group, data }) =>
-      data.map((d) => ({
-        group: group.length === 0 ? 'All' : group[0].value,
-        ...d,
-      }))
-    )
+    .flatMap(({ name, data }) => data.map((d) => ({ name, ...d })))
     .filter(({ time }) => (time - minTime) % timeInterval === 0);
 };
 
-const getMaxTime = (/** @type {RisktableData[]} */ data) =>
-  Math.max(...data.flatMap(({ data }) => data.map(({ time }) => time)));
-
-const CustomYAxisTick = (/** @type {Object} */ { x, y, payload }) => {
+function CustomYAxisTick(/** @type {Object} */ { x, y, payload }) {
   const name = payload.value;
 
   return (
@@ -42,7 +35,7 @@ const CustomYAxisTick = (/** @type {Object} */ { x, y, payload }) => {
       </text>
     </g>
   );
-};
+}
 
 CustomYAxisTick.propTypes = {
   x: PropTypes.number,
@@ -51,47 +44,55 @@ CustomYAxisTick.propTypes = {
 };
 
 /**
- * @param {Object} prop
- * @param {RisktableData[]} prop.data
- * @param {boolean} prop.isLast
- * @param {number} prop.timeInterval
+ * @typedef {Object} RiskTableProps
+ * @property {RisktableData[]} data
+ * @property {number} [endTime]
+ * @property {number} startTime
+ * @property {number} timeInterval
  */
-const Table = ({ data, isLast, timeInterval }) => (
-  <ResponsiveContainer height={(data.length + (isLast ? 2 : 0.5)) * 30}>
-    <ScatterChart
-      margin={{
-        bottom: isLast ? 10 : 0,
-        left: 20,
-        right: 20,
-      }}
-    >
-      <XAxis
-        dataKey='time'
-        type='number'
-        domain={['dataMin', getMaxTime(data)]}
-        hide={!isLast}
-        label={
-          isLast
-            ? { value: 'Time (in year)', position: 'insideBottom', offset: -5 }
-            : {}
-        }
-        ticks={getXAxisTicks(data, timeInterval)}
-      />
-      <YAxis
-        dataKey='group'
-        type='category'
-        allowDuplicatedCategory={false}
-        axisLine={false}
-        reversed
-        tickSize={0}
-        tick={<CustomYAxisTick />}
-      />
-      <Scatter data={parseRisktable(data, timeInterval)} fill='transparent'>
-        <LabelList dataKey='nrisk' />
-      </Scatter>
-    </ScatterChart>
-  </ResponsiveContainer>
-);
+
+/** @param {RiskTableProps} props */
+function Table({ data, endTime, startTime, timeInterval }) {
+  const filteredData = filterRisktableByTime(data, startTime, endTime);
+  return (
+    <ResponsiveContainer height={(data.length + 2) * 30}>
+      <ScatterChart
+        margin={{
+          bottom: 10,
+          left: 20,
+          right: 20,
+        }}
+      >
+        <XAxis
+          dataKey='time'
+          type='number'
+          domain={['dataMin', endTime]}
+          label={{
+            value: 'Time (in year)',
+            position: 'insideBottom',
+            offset: -5,
+          }}
+          ticks={getXAxisTicks(filteredData, timeInterval, endTime)}
+        />
+        <YAxis
+          dataKey='name'
+          type='category'
+          allowDuplicatedCategory={false}
+          axisLine={false}
+          reversed
+          tickSize={0}
+          tick={<CustomYAxisTick />}
+        />
+        <Scatter
+          data={parseRisktable(filteredData, timeInterval)}
+          fill='transparent'
+        >
+          <LabelList dataKey='nrisk' />
+        </Scatter>
+      </ScatterChart>
+    </ResponsiveContainer>
+  );
+}
 
 Table.propTypes = {
   data: PropTypes.arrayOf(
@@ -102,33 +103,21 @@ Table.propTypes = {
           time: PropTypes.number,
         })
       ),
-      group: PropTypes.arrayOf(
-        PropTypes.exact({
-          variable: PropTypes.string,
-          value: PropTypes.string,
-        })
-      ),
+      name: PropTypes.string,
     })
   ).isRequired,
-  isLast: PropTypes.bool.isRequired,
+  endTime: PropTypes.number,
+  startTime: PropTypes.number.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
-/**
- * @param {Object} prop
- * @param {RisktableData[]} prop.data
- * @param {number} prop.endTime
- * @param {boolean} prop.isStratified
- * @param {number} prop.startTime
- * @param {number} prop.timeInterval
- */
-function RiskTable({ data, endTime, isStratified, timeInterval, startTime }) {
-  const filteredData = filterRisktableByTime(data, startTime, endTime);
+/** @param {RiskTableProps} props */
+function RiskTable(props) {
   return (
     <div className='explorer-survival-analysis__risk-table'>
-      {filteredData.length === 0 ? (
+      {props.data.length === 0 ? (
         <div className='explorer-survival-analysis__figure-placeholder'>
-          Click "Apply" to get the risk table here.
+          The number at risk table will appear here.
         </div>
       ) : (
         <>
@@ -138,60 +127,13 @@ function RiskTable({ data, endTime, isStratified, timeInterval, startTime }) {
           >
             Number at risk
           </div>
-          {isStratified ? (
-            Object.entries(
-              filteredData.reduce((acc, { group, data }) => {
-                const [factor, stratification] = group;
-                const stratificationKey = JSON.stringify(stratification);
-                const stratificationValue =
-                  acc[stratificationKey] !== undefined
-                    ? [...acc[stratificationKey], { group: [factor], data }]
-                    : [{ group: [factor], data }];
-
-                return { ...acc, [stratificationKey]: stratificationValue };
-              }, {})
-            ).map(([key, data], i, arr) => (
-              <Fragment key={key}>
-                <div className='explorer-survival-analysis__figure-title'>
-                  {JSON.parse(key).value}
-                </div>
-                <Table
-                  data={data}
-                  timeInterval={timeInterval}
-                  isLast={i === arr.length - 1}
-                />
-              </Fragment>
-            ))
-          ) : (
-            <Table data={filteredData} timeInterval={timeInterval} isLast />
-          )}
+          <Table {...props} />
         </>
       )}
     </div>
   );
 }
 
-RiskTable.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.exact({
-      data: PropTypes.arrayOf(
-        PropTypes.exact({
-          nrisk: PropTypes.number,
-          time: PropTypes.number,
-        })
-      ),
-      group: PropTypes.arrayOf(
-        PropTypes.exact({
-          variable: PropTypes.string,
-          value: PropTypes.string,
-        })
-      ),
-    })
-  ).isRequired,
-  endTime: PropTypes.number.isRequired,
-  isStratified: PropTypes.bool.isRequired,
-  startTime: PropTypes.number.isRequired,
-  timeInterval: PropTypes.number.isRequired,
-};
+RiskTable.propTypes = Table.propTypes;
 
 export default memo(RiskTable);

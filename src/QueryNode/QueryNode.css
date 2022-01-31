@@ -1,0 +1,32 @@
+.query-node__button {
+  cursor: pointer;
+  float: right;
+  line-height: 1.6em;
+  margin-left: 2em;
+}
+
+button.query-node__button {
+  background: initial;
+  border: none;
+  margin-left: 2em;
+  width: auto;
+  height: auto;
+}
+
+.query-node__button:hover,
+.query-node__button:active,
+.query-node__button:focus {
+  color: inherit;
+}
+
+.query-node__button--delete {
+  color: #800000;
+}
+
+.query-node__button--view {
+  color: #2b547e;
+}
+
+.query-node__download-button {
+  float: right;
+}

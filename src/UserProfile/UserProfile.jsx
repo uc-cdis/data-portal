@@ -7,7 +7,7 @@ import Popup from '../components/Popup';
 import { credentialCdisPath } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
 import ReduxUserInformation from './ReduxUserInformation';
-import './UserProfile.less';
+import './UserProfile.css';
 
 const NO_ACCESS_MSG =
   'You have no access to storage service. Please contact an admin to get it!';
@@ -26,12 +26,7 @@ export const saveToFile = (savingStr, filename) => {
   FileSaver.saveAs(blob, filename);
 };
 
-/**
- * @typedef {Object} PopupState
- * @property {boolean} [deleteTokenPopup]
- * @property {string} [keypairsApi]
- * @property {boolean} [saveTokenPopup]
- */
+/** @typedef {import('../Popup/types').PopupState} PopupState */
 
 /**
  * @typedef {Object} UserProfileData
@@ -48,17 +43,17 @@ export const saveToFile = (savingStr, filename) => {
  * @typedef {Object} UserProfileProps
  * @property {() => void} onClearCreationSession
  * @property {() => void} onClearDeleteSession
- * @property {(keypairsApi: string) => void} onCreateKey
- * @property {(jti: string, exp: number, keypairsApi: string) => void} onDeleteKey
+ * @property {(path: string) => void} onCreateKey
+ * @property {(jti: string, exp: number, path: string) => void} onDeleteKey
  * @property {(jti: string, exp: number) => void} onRequestDeleteKey
- * @property {(state: PopupState) => void} onUpdatePopup
- * @property {PopupState} popups
+ * @property {(state: Partial<PopupState>) => void} onUpdatePopup
+ * @property {Partial<PopupState>} popups
  * @property {import('./UserInformation').UserInformationProps} userInformation
  * @property {UserProfileData} userProfile
  */
 
 /** @param {UserProfileProps} props */
-const UserProfile = ({
+function UserProfile({
   onClearCreationSession,
   onClearDeleteSession,
   onCreateKey,
@@ -68,7 +63,7 @@ const UserProfile = ({
   popups,
   userInformation,
   userProfile,
-}) => {
+}) {
   const onCreate = () => {
     onCreateKey(credentialCdisPath);
   };
@@ -173,7 +168,7 @@ const UserProfile = ({
       )}
     </div>
   );
-};
+}
 
 UserProfile.propTypes = {
   onClearCreationSession: PropTypes.func.isRequired,

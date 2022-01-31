@@ -3,124 +3,123 @@ import OneOfInput from './OneOfInput';
 import EnumInput from './EnumInput';
 import AnyOfInput from './AnyOfInput';
 import TextInput from './TextInput';
-import './SubmitNodeForm.less';
+import './SubmitNodeForm.css';
 
-const SubmitNodeForm = ({
-  node,
+/**
+ * @param {Object} props
+ * @param {Object} props.form
+ * @param {React.FormEventHandler} props.handleSubmit
+ * @param {Object} props.node
+ * @param {React.ChangeEventHandler} props.onChange
+ * @param {(name: string, event: React.ChangeEvent<HTMLInputElement>, properties: string[]) => void} props.onChangeAnyOf
+ * @param {(name: string, newEnum: { value: string }) => void} props.onChangeEnum
+ * @param {(formSchema: any) => void} props.onUpdateFormSchema
+ * @param {string[]} props.properties
+ * @param {string[]} props.requireds
+ */
+function SubmitNodeForm({
   form,
-  properties,
-  requireds,
-  onChange,
-  onChangeEnum,
-  onChangeAnyOf,
-  onUpdateFormSchema,
   handleSubmit,
-}) => (
-  <div>
-    <form onSubmit={handleSubmit}>
-      {properties.map((property) => {
-        let description =
-          'description' in node.properties[property]
-            ? node.properties[property].description
-            : '';
-        if (description === '') {
-          description =
-            'term' in node.properties[property]
-              ? node.properties[property].term.description
-              : '';
-        }
-        const required = requireds.indexOf(property) > -1;
+  node,
+  onChange,
+  onChangeAnyOf,
+  onChangeEnum,
+  onUpdateFormSchema,
+  properties,
+  requireds = [],
+}) {
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        {properties.map((propertyName) => {
+          if (propertyName === 'type') return null;
 
-        if (property === 'type') {
-          return null;
-        }
-        if ('enum' in node.properties[property]) {
+          const property = node.properties[propertyName];
+          const description =
+            property?.description ?? property?.term?.description ?? '';
+          const required = requireds.indexOf(propertyName) > -1;
+
+          if ('enum' in property)
+            return (
+              <EnumInput
+                key={propertyName}
+                description={description}
+                name={propertyName}
+                onChange={onChangeEnum}
+                onUpdateFormSchema={onUpdateFormSchema}
+                options={property.enum}
+                propertyType='string'
+                required={required}
+              />
+            );
+
+          if ('oneOf' in property)
+            return (
+              <OneOfInput
+                key={propertyName}
+                description={description}
+                name={propertyName}
+                onChange={onChange}
+                onChangeEnum={onChangeEnum}
+                onUpdateFormSchema={onUpdateFormSchema}
+                property={property.oneOf}
+                required={required}
+                value={form[propertyName]}
+              />
+            );
+
+          if ('anyOf' in property)
+            return (
+              <AnyOfInput
+                key={propertyName}
+                name={propertyName}
+                node={property.anyOf[0].items}
+                onChange={onChangeAnyOf}
+                properties={Object.keys(property.anyOf[0].items.properties)}
+                required={required}
+                requireds={requireds}
+                values={form[propertyName]}
+              />
+            );
+
           return (
-            <EnumInput
-              key={property}
-              name={property}
-              options={node.properties[property].enum}
-              onChange={onChangeEnum}
-              required={required}
+            <TextInput
+              key={propertyName}
+              name={propertyName}
               onUpdateFormSchema={onUpdateFormSchema}
-              propertyType='string'
-              description={description}
-            />
-          );
-        }
-        if ('oneOf' in node.properties[property]) {
-          return (
-            <OneOfInput
-              key={property}
-              value={form[property]}
-              property={node.properties[property].oneOf}
-              name={property}
+              propertyType={
+                /* just use the first type if it allows multiple types */
+                Array.isArray(property.type) ? property.type[0] : property.type
+              }
+              value={form[propertyName]}
               required={required}
               description={description}
               onChange={onChange}
-              onChangeEnum={onChangeEnum}
-              onUpdateFormSchema={onUpdateFormSchema}
             />
           );
-        }
-        if ('anyOf' in node.properties[property]) {
-          return (
-            <AnyOfInput
-              key={property}
-              values={form[property]}
-              name={property}
-              node={node.properties[property].anyOf[0].items}
-              properties={Object.keys(
-                node.properties[property].anyOf[0].items.properties
-              )}
-              required={required}
-              requireds={requireds}
-              onChange={onChangeAnyOf}
-            />
-          );
-        }
-        const propertyType = node.properties[property].type;
-        return (
-          <TextInput
-            key={property}
-            name={property}
-            onUpdateFormSchema={onUpdateFormSchema}
-            propertyType={
-              /* just use the first type if it allows multiple types */
-              Array.isArray(propertyType) ? propertyType[0] : propertyType
-            }
-            value={form[property]}
-            required={required}
-            description={description}
-            onChange={onChange}
-          />
-        );
-      })}
-      <button
-        type='submit'
-        value='Submit'
-        className='button-primary-white submit-node-form__upload-form-button'
-      >
-        Upload submission json from form
-      </button>
-    </form>
-  </div>
-);
+        })}
+        <button
+          type='submit'
+          value='Submit'
+          className='button-primary-white submit-node-form__upload-form-button'
+        >
+          Upload submission json from form
+        </button>
+      </form>
+    </div>
+  );
+}
 
 SubmitNodeForm.propTypes = {
-  node: PropTypes.any.isRequired,
   form: PropTypes.object.isRequired,
-  properties: PropTypes.object.isRequired,
-  requireds: PropTypes.array,
-  onChange: PropTypes.func.isRequired,
-  onChangeEnum: PropTypes.func.isRequired,
-  onChangeAnyOf: PropTypes.func.isRequired,
-  onUpdateFormSchema: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-};
-
-SubmitNodeForm.defaultProps = {
-  requireds: [],
+  node: PropTypes.any.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onChangeAnyOf: PropTypes.func.isRequired,
+  onChangeEnum: PropTypes.func.isRequired,
+  onUpdateFormSchema: PropTypes.func.isRequired,
+  properties: PropTypes.arrayOf(PropTypes.string).isRequired,
+  requireds: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default SubmitNodeForm;

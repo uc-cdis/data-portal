@@ -9,23 +9,10 @@ import {
 import './DataDictionaryPropertyTable.css';
 
 /**
- * @typedef {Object} DataDictionaryProperty
- * @property {string} description
- * @property {string} name
- * @property {string | string[]} type
- */
-
-/**
- * @typedef {Object} MatchedResult
- * @property {{ description: string; id: string; properties: DataDictionaryProperty[]; title: string }} items
- * @property {{ arrayIndex: number; indicies: number[][]; key: string; value: string }} matches
- */
-
-/**
  * @typedef {Object} DataDictionaryPropertyTableProps
  * @property {boolean} [hasBorder]
  * @property {boolean} [hideIsRequired]
- * @property {MatchedResult} [matchedResult]
+ * @property {import('../../types').MatchedResult} [matchedResult]
  * @property {boolean} [needHighlightSearchResult]
  * @property {boolean} [onlyShowMatchedProperties]
  * @property {Object[]} properties

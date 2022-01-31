@@ -9,7 +9,12 @@ import SingleSelectFilter from '../SingleSelectFilter';
 import Chip from '../Chip';
 import RangeFilter from '../RangeFilter';
 import './FilterSection.css';
-import '../typedef';
+
+/** @typedef {import('react-select-async-paginate').Response<any, null, null>} PaginateResponse */
+/** @typedef {import('../types').OptionFilterStatus} OptionFilterStatus */
+/** @typedef {import('../types').RangeFilterOption} RangeFilterOption */
+/** @typedef {import('../types').RangeFilterStatus} RangeFilterStatus */
+/** @typedef {import('../types').SingleSelectFilterOption} SingleSelectFilterOption */
 
 /** @param {OptionFilterStatus | RangeFilterStatus} filterStatus */
 function getNumValuesSelected(filterStatus) {
@@ -24,24 +29,23 @@ function getNumValuesSelected(filterStatus) {
 
 /**
  * @typedef {Object} FilterSectionProps
- * @property {string} disabledTooltipMessage
- * @property {boolean} expanded
- * @property {OptionFilterStatus | RangeFilterStatus} filterStatus
- * @property {boolean} hideZero
+ * @property {string} [disabledTooltipMessage]
+ * @property {boolean} [expanded]
+ * @property {OptionFilterStatus | RangeFilterStatus} [filterStatus]
+ * @property {boolean} [hideZero]
  * @property {number} [initVisibleItemNumber]
- * @property {boolean} isArrayField
- * @property {boolean} isSearchFilter
- * @property {string} lockedTooltipMessage
+ * @property {boolean} [isArrayField]
+ * @property {boolean} [isSearchFilter]
+ * @property {string} [lockedTooltipMessage]
  * @property {(lowerBound: number, upperBound: number, min: number, max: number, rangeStep: number) => void} onAfterDrag
- * @property {() => void} onClear
- * @property {(searchString: string, offset: number) => import('react-select-async-paginate').Response<any, null>} onSearchFilterLoadOptions
+ * @property {() => void} [onClear]
+ * @property {(searchString: string, offset: number) => PaginateResponse} [onSearchFilterLoadOptions]
  * @property {(label: string) => void} onSelect
- * @property {(isExpanded: boolean) => void} onToggle
- * @property {(fieldName: string, value: string) => void} onToggleCombineMode
+ * @property {(isExpanded: boolean) => void} [onToggle]
+ * @property {(fieldName: string, value: string) => void} [onToggleCombineMode]
  * @property {(SingleSelectFilterOption[] | RangeFilterOption[])} options
- * @property {number} tierAccessLimit
- * @property {string} title
- * @property {string} tooltip
+ * @property {string} [title]
+ * @property {string} [tooltip]
  */
 
 /**
@@ -76,7 +80,6 @@ function FilterSection({
   onToggle = () => {},
   onToggleCombineMode = () => {},
   options = defaultOptions,
-  tierAccessLimit,
   title = '',
   tooltip,
 }) {
@@ -271,7 +274,6 @@ function FilterSection({
 
     return (
       <AsyncPaginate
-        cacheOptions
         className={
           state.isExpanded ? '' : 'g3-filter-section__search-filter--hidden'
         }
@@ -356,80 +358,73 @@ function FilterSection({
 
   /** @param {RangeFilterStatus} filterStatus */
   function renderRangeFilter(filterStatus) {
-    return options.map(
-      /** @param {RangeFilterOption} option */
-      (option) => {
-        if (!state.optionsVisibleStatus[option.text]) {
-          return null;
-        }
-        const lowerBound =
-          filterStatus === undefined || filterStatus.length !== 2
-            ? undefined
-            : filterStatus[0];
-        const upperBound =
-          filterStatus === undefined || filterStatus.length !== 2
-            ? undefined
-            : filterStatus[1];
-        return (
-          // We use the 'key' prop to force the SingleSelectFilter
-          // to rerender if the `reset` button is clicked.
-          // Each reset button click increments the counter and changes the key.
-          // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
-          <RangeFilter
-            key={`${option.text}-${option.min}-${option.max}-${lowerBound}-${upperBound}-${state.resetClickCounter}`}
-            count={option.count}
-            // NOTE: Guppy returns a count of -1 when the count is hidden from the end user.
-            hideValue={-1}
-            inactive={lowerBound === undefined && upperBound === undefined}
-            label={option.text}
-            max={option.max}
-            min={option.min}
-            lowerBound={lowerBound}
-            upperBound={upperBound}
-            onAfterDrag={handleDragRangeFilter}
-          />
-        );
+    return /** @type {RangeFilterOption[]} */ (options).map((option) => {
+      if (!state.optionsVisibleStatus[option.text]) {
+        return null;
       }
-    );
+      const lowerBound =
+        filterStatus === undefined || filterStatus.length !== 2
+          ? undefined
+          : filterStatus[0];
+      const upperBound =
+        filterStatus === undefined || filterStatus.length !== 2
+          ? undefined
+          : filterStatus[1];
+      return (
+        // We use the 'key' prop to force the SingleSelectFilter
+        // to rerender if the `reset` button is clicked.
+        // Each reset button click increments the counter and changes the key.
+        // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
+        <RangeFilter
+          key={`${option.text}-${option.min}-${option.max}-${lowerBound}-${upperBound}-${state.resetClickCounter}`}
+          count={option.count}
+          // NOTE: Guppy returns a count of -1 when the count is hidden from the end user.
+          hideValue={-1}
+          inactive={lowerBound === undefined && upperBound === undefined}
+          label={option.text}
+          max={option.max}
+          min={option.min}
+          lowerBound={lowerBound}
+          upperBound={upperBound}
+          onAfterDrag={handleDragRangeFilter}
+        />
+      );
+    });
   }
 
   /** @param {OptionFilterStatus} filterStatus */
   function renderTextFilter(filterStatus) {
-    return options.map(
-      /** @param {SingleSelectFilterOption} option */
-      (option) => {
-        if (
-          // For searchFilters, options are treated differently -- the only
-          // options passed are the already selected options, as opposed
-          // to all available options in textfilters. So don't filter out
-          // any options based on `optionsVisibleStatus`.
-          !isSearchFilter &&
-          !state.optionsVisibleStatus[option.text]
-        ) {
-          return null;
-        }
-        return (
-          // We use the 'key' prop to force the SingleSelectFilter
-          // to rerender on filterStatus change.
-          // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
-          <SingleSelectFilter
-            key={`${option.text}-${
-              filterStatus[option.text] ? 'enabled' : 'disabled'
-            }`}
-            accessible={option.accessible}
-            count={isSearchFilter ? null : option.count}
-            disabled={option.disabled}
-            disabledTooltipMessage={disabledTooltipMessage}
-            hideZero={hideZero}
-            label={option.text}
-            lockedTooltipMessage={lockedTooltipMessage}
-            onSelect={handleSelectSingleSelectFilter}
-            selected={filterStatus[option.text]}
-            tierAccessLimit={tierAccessLimit}
-          />
-        );
+    return /** @type {SingleSelectFilterOption[]} */ (options).map((option) => {
+      if (
+        // For searchFilters, options are treated differently -- the only
+        // options passed are the already selected options, as opposed
+        // to all available options in textfilters. So don't filter out
+        // any options based on `optionsVisibleStatus`.
+        !isSearchFilter &&
+        !state.optionsVisibleStatus[option.text]
+      ) {
+        return null;
       }
-    );
+      return (
+        // We use the 'key' prop to force the SingleSelectFilter
+        // to rerender on filterStatus change.
+        // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
+        <SingleSelectFilter
+          key={`${option.text}-${
+            filterStatus[option.text] ? 'enabled' : 'disabled'
+          }`}
+          accessible={option.accessible}
+          count={isSearchFilter ? null : option.count}
+          disabled={option.disabled}
+          disabledTooltipMessage={disabledTooltipMessage}
+          hideZero={hideZero}
+          label={option.text}
+          lockedTooltipMessage={lockedTooltipMessage}
+          onSelect={handleSelectSingleSelectFilter}
+          selected={filterStatus[option.text]}
+        />
+      );
+    });
   }
 
   // Takes in parent component's filterStatus or self state's filterStatus
@@ -570,8 +565,14 @@ function FilterSection({
       {state.isExpanded &&
         (options.length > 0 ? (
           <div className='g3-filter-section__options'>
-            {(isTextFilter || isSearchFilter) && renderTextFilter(filterStatus)}
-            {isRangeFilter && renderRangeFilter(filterStatus)}
+            {(isTextFilter || isSearchFilter) &&
+              renderTextFilter(
+                /** @type {OptionFilterStatus} */ (filterStatus)
+              )}
+            {isRangeFilter &&
+              renderRangeFilter(
+                /** @type {RangeFilterStatus} */ (filterStatus)
+              )}
             {isTextFilter && state.isSearchInputEmpty && renderShowMoreButton()}
           </div>
         ) : (
@@ -613,7 +614,6 @@ FilterSection.propTypes = {
       rangeStep: PropTypes.number, // by default 1
     })
   ),
-  tierAccessLimit: PropTypes.number,
   title: PropTypes.string,
   tooltip: PropTypes.string,
   lockedTooltipMessage: PropTypes.string,

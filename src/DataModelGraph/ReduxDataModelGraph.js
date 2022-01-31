@@ -8,11 +8,9 @@ import { submissionApiPath } from '../localconf';
  * Compose and send a single graphql query to get a count of how
  * many of each node and edge are in the current state
  *
- * @method getCounts
- * @param {Array<string>} typeList
+ * @param {string[]} typeList
  * @param {string} project
  * @param {Object} [dictionary]
- * @return {import('redux-thunk').ThunkAction<Promise, any, any, any>}
  * async thunk action that fetches data from backend and updates redux when dispatched
  */
 export const getCounts = (typeList, project, dictionary = {}) => {
@@ -102,6 +100,7 @@ export const getCounts = (typeList, project, dictionary = {}) => {
 
   query = query.concat('}');
 
+  /** @param {import('redux').Dispatch} dispatch */
   return (dispatch) =>
     fetchWithCreds({
       path: `${submissionApiPath}graphql`,
@@ -133,6 +132,7 @@ export const getCounts = (typeList, project, dictionary = {}) => {
       });
 };
 
+/** @param {{ submission: import('../Submission/types').SubmissionState }} state */
 const mapStateToProps = (state) => {
   const props = {
     dictionary: state.submission.dictionary,
@@ -145,11 +145,5 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  onGetCounts: (type, project) => dispatch(getCounts(type, project)),
-});
-const ReduxDataModelGraph = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DataModelGraph);
+const ReduxDataModelGraph = connect(mapStateToProps)(DataModelGraph);
 export default ReduxDataModelGraph;

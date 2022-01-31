@@ -1,0 +1,88 @@
+.spinner {
+  width: 100%;
+  padding: 50px 0;
+}
+
+.spinner__svg {
+  display: block;
+  margin: 0 auto;
+  fill: #000;
+}
+
+@keyframes jumping {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  25% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  75% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+}
+
+.spinner__svg circle {
+  animation-name: jumping;
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(0.05, 0.2, 0.35, 1);
+  animation-iteration-count: infinite;
+}
+
+.spinner__svg circle:nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.spinner__svg circle:nth-child(3) {
+  animation-delay: 0.36s;
+}
+
+.spinner__text {
+  text-align: center;
+}
+
+.spinning-spinner-cell {
+  width: 100%;
+}
+
+.spinning-spinner-cell .wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 10rem;
+  margin: 10px;
+}
+
+.spinning-spinner-cell .wrapper::after {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 0.2rem;
+  text-align: center;
+}
+
+.spinning-spinner {
+  margin: auto;
+  width: 4rem;
+  height: 4rem;
+  border: 3px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.5);
+  border-bottom-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  animation: rotation 0.8s ease infinite;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

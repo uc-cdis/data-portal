@@ -9,8 +9,8 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Button from '../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../utils';
-import './Workspace.less';
-import '../Login/Login.less';
+import './Workspace.css';
+import '../Login/Login.css';
 
 const getLoginUrl = (providerLoginUrl) => {
   const queryChar = providerLoginUrl.includes('?') ? '&' : '?';

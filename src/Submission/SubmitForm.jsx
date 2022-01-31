@@ -1,166 +1,146 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { jsonToString, overrideSelectTheme } from '../utils';
 import SubmitNodeForm from './SubmitNodeForm';
-import './SubmitForm.less';
+import { SubmissionStateType } from './propTypeDef';
+import './SubmitForm.css';
+
+/**
+ * @typedef {Object} SubmissionState
+ * @property {Object} [dictionary]
+ * @property {Object} [formSchema]
+ * @property {string[]} [nodeTypes]
+ */
 
 /**
  * Form-based data submission.  The results of this form submission are subsequently
  * processed by the SubmitTSV component, and treated
  * the same way uploaded tsv/json data is treated.
+ * @param {Object} props
+ * @param {(formSchema: Object) => void} props.onUpdateFormSchema
+ * @param {(value: string, type: string) => void} props.onUploadClick
+ * @param {SubmissionState} props.submission
  */
-class SubmitForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      chosenNode: { value: null, label: '' },
-      fill_form: false,
-      form: {},
-    };
+function SubmitForm({ onUpdateFormSchema, onUploadClick, submission }) {
+  const [nodeOption, setNodeOption] = useState({ label: '', value: '' });
+  const [form, setForm] = useState({});
+  const [showForm, setShowForm] = useState(false);
+
+  function toggleForm() {
+    setShowForm((s) => !s);
   }
 
-  onFormToggle = () => {
-    this.setState((prevState) => ({
-      fill_form: !prevState.fill_form,
-    }));
-  };
+  /** @type {React.ChangeEventHandler<HTMLInputElement>} */
+  function handleChange(event) {
+    const { checked, name, value, type } = event.target;
+    setForm((f) => ({ ...f, [name]: type === 'checkbox' ? checked : value }));
+  }
 
-  onChange = (event) => {
-    const { target } = event;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const { name } = target;
-    this.setState((prevState) => ({
-      form: {
-        ...prevState.form,
-        [name]: value,
-      },
-    }));
-  };
+  /**
+   * @param {string} name
+   * @param {{ value: string | null }} newEnum
+   */
+  function handleChangeEnum(name, newEnum) {
+    setForm((f) => ({ ...f, [name]: newEnum.value ? newEnum.value : null }));
+  }
 
-  onChangeEnum = (name, newValue) => {
-    this.setState((prevState) => ({
-      form: { ...prevState.form, [name]: newValue.value },
-    }));
-  };
+  /**
+   * @param {string} name
+   * @param {React.ChangeEvent<HTMLInputElement>} event
+   * @param {string[]} properties
+   */
+  function handleChangeAnyOf(name, event, properties) {
+    const { checked, name: subName, value, type } = event.target;
+    const subValue = type === 'checkbox' ? checked : value;
 
-  onChangeAnyOf = (name, event, properties) => {
-    const { target } = event;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const subname = target.name;
+    setForm((f) => {
+      const currentValues = f[name];
+      const newValue = { [subName]: subValue };
 
-    if (this.state.form[name] === null || this.state.form[name] === undefined) {
-      this.setState((prevState) => ({
-        form: {
-          ...prevState.form,
-          [name]: [{ [subname]: value }],
-        },
-      }));
-    } else if (properties.every((prop) => prop in this.state.form[name])) {
-      this.setState((prevState) => ({
-        form: {
-          ...prevState.form,
-          [name]: [...prevState.form[name], { [subname]: value }],
-        },
-      }));
-    } else {
-      this.setState((prevState) => ({
-        form: {
-          ...prevState.form,
-          [name]: [
-            ...prevState.form[name].slice(0, prevState.form[name].length - 2),
-            {
-              ...prevState.form[name][prevState.form[name].length - 1],
-              [subname]: value,
-            },
-          ],
-        },
-      }));
-    }
-  };
+      if (currentValues === null || currentValues === undefined)
+        return { ...f, [name]: [newValue] };
 
-  handleSubmit = (event) => {
+      if (properties.every((p) => p in currentValues))
+        return { ...f, [name]: [...currentValues, newValue] };
+
+      return {
+        ...f,
+        [name]: [
+          ...currentValues.slice(0, currentValues.length - 2),
+          { ...currentValues[currentValues.length - 1], ...newValue },
+        ],
+      };
+    });
+  }
+
+  /** @type {React.FormEventHandler} */
+  function handleSubmit(event) {
     event.preventDefault();
 
-    const value = jsonToString(
-      this.state.form,
-      this.props.submission.formSchema
-    );
-    this.props.onUploadClick(value, 'application/json');
-  };
-
-  render() {
-    const { dictionary, nodeTypes } = this.props.submission;
-    const node = dictionary[this.state.chosenNode.value];
-    const options = nodeTypes.map((nodeType) => ({
-      value: nodeType,
-      label: nodeType,
-    }));
-
-    const updateChosenNode = (newValue) => {
-      this.setState({
-        chosenNode: newValue,
-        form: {
-          type: newValue.value,
-        },
-      });
-    };
-
-    return (
-      <div>
-        <form className='submit-form__form'>
-          <label>
-            <input
-              type='checkbox'
-              checked={this.state.fill_form}
-              onChange={this.onFormToggle}
-            />
-            Use Form Submission
-          </label>
-          {this.state.fill_form && (
-            <Select
-              inputId='Node type'
-              name='nodeType'
-              options={options}
-              value={this.state.chosenNode}
-              onChange={updateChosenNode}
-              className='submit-form__select'
-              theme={overrideSelectTheme}
-            />
-          )}
-        </form>
-        {this.state.chosenNode.value !== null && this.state.fill_form && (
-          <div>
-            <h5> Properties: </h5>
-            <span className='submit-form__required-notification'>
-              {' '}
-              * Denotes Required Property{' '}
-            </span>
-            <br />
-            <SubmitNodeForm
-              node={node}
-              form={this.state.form}
-              properties={Object.keys(node.properties).filter(
-                (prop) => node.systemProperties.indexOf(prop) < 0
-              )}
-              requireds={'required' in node ? node.required : []}
-              onChange={this.onChange}
-              onChangeEnum={this.onChangeEnum}
-              onChangeAnyOf={this.onChangeAnyOf}
-              onUpdateFormSchema={this.props.onUpdateFormSchema}
-              handleSubmit={this.handleSubmit}
-            />
-          </div>
-        )}
-      </div>
+    onUploadClick(
+      jsonToString(form, submission.formSchema),
+      'application/json'
     );
   }
+
+  const { dictionary, nodeTypes } = submission;
+  const node = dictionary[nodeOption.value];
+  const options = nodeTypes.map((type) => ({ label: type, value: type }));
+
+  return (
+    <div>
+      <form className='submit-form__form'>
+        <label>
+          <input type='checkbox' checked={showForm} onChange={toggleForm} />
+          Use Form Submission
+        </label>
+        {showForm && (
+          <Select
+            inputId='Node type'
+            name='nodeType'
+            options={options}
+            value={nodeOption}
+            onChange={({ label, value }) => {
+              setNodeOption({ label, value });
+              setForm({ type: value });
+            }}
+            className='submit-form__select'
+            theme={overrideSelectTheme}
+          />
+        )}
+      </form>
+      {showForm && nodeOption.value !== '' && (
+        <div>
+          <h5> Properties: </h5>
+          <span className='submit-form__required-notification'>
+            {' '}
+            * Denotes Required Property{' '}
+          </span>
+          <br />
+          <SubmitNodeForm
+            node={node}
+            form={form}
+            properties={Object.keys(node.properties).filter(
+              (p) => node.systemProperties.indexOf(p) < 0
+            )}
+            requireds={node.required ?? []}
+            onChange={handleChange}
+            onChangeEnum={handleChangeEnum}
+            onChangeAnyOf={handleChangeAnyOf}
+            onUpdateFormSchema={onUpdateFormSchema}
+            handleSubmit={handleSubmit}
+          />
+        </div>
+      )}
+    </div>
+  );
 }
 
 SubmitForm.propTypes = {
-  submission: PropTypes.object.isRequired,
-  onUploadClick: PropTypes.func.isRequired,
   onUpdateFormSchema: PropTypes.func.isRequired,
+  onUploadClick: PropTypes.func.isRequired,
+  submission: SubmissionStateType.isRequired,
 };
 
 export default SubmitForm;

@@ -1,5 +1,4 @@
 import { logoutInactiveUsers, workspaceTimeoutInMinutes } from '../localconf';
-import getReduxStore from '../reduxStore';
 import { fetchUser, logoutAPI } from '../actions';
 
 /** @param {string} currentURL */
@@ -26,6 +25,10 @@ export class SessionMonitor {
     this.popupShown = false;
   }
 
+  useDispatch(/** @type {import('redux-thunk').ThunkDispatch} */ dispatch) {
+    this.dispatch = dispatch;
+  }
+
   start() {
     if (this.interval) {
       // interval already started
@@ -48,10 +51,8 @@ export class SessionMonitor {
   }
 
   logoutUser() {
-    getReduxStore().then((store) => {
-      store.dispatch(logoutAPI(true));
-      this.popupShown = true;
-    });
+    this.dispatch?.(logoutAPI(true));
+    this.popupShown = true;
   }
 
   updateUserActivity = () => {
@@ -59,9 +60,7 @@ export class SessionMonitor {
   };
 
   updateSession() {
-    if (isUserOnPage('login') || this.popupShown) {
-      return Promise.resolve(0);
-    }
+    if (isUserOnPage('login') || this.popupShown) return;
 
     if (logoutInactiveUsers) {
       const inactiveTimeLimit = isUserOnPage('workspace')
@@ -72,20 +71,17 @@ export class SessionMonitor {
         // Allow Fence to log out the user.
         // If we don't refresh, Fence will mark them as inactive.
         this.logoutUser();
-        return Promise.resolve(0);
       }
     }
 
-    return this.refreshSession();
+    this.refreshSession();
   }
 
   refreshSession() {
     // hitting Fence endpoint refreshes token
-    return getReduxStore()
-      .then((store) => store.dispatch(fetchUser()))
-      .then((action) => {
-        if (action.type === 'UPDATE_POPUP') this.popupShown = true;
-      });
+    this.dispatch?.(fetchUser()).then((action) => {
+      if (action.type === 'UPDATE_POPUP') this.popupShown = true;
+    });
   }
 }
 

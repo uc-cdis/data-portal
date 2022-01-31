@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Popup from '../components/Popup';
 
-/** @param {{ authPopup: boolean; }} props  */
+/** @typedef {import('./types').PopupState} PopupState */
+
+/** @param {{ authPopup: PopupState['authPopup'] }} props  */
 function AuthPopup({ authPopup }) {
-  const history = useHistory();
+  const navigate = useNavigate();
   return authPopup ? (
     <Popup
       message='Your session has expired or you are logged out. Please log in to continue.'
@@ -13,7 +15,7 @@ function AuthPopup({ authPopup }) {
         {
           caption: 'Go to Login',
           fn: () => {
-            history.push('/login');
+            navigate('/login');
             // Refresh the page.jsx.
             window.location.reload();
           },
@@ -27,6 +29,7 @@ AuthPopup.propTypes = {
   authPopup: PropTypes.bool,
 };
 
+/** @param {{ popups: PopupState }} state */
 const mapStateToProps = (state) => ({
   authPopup: state.popups.authPopup,
 });

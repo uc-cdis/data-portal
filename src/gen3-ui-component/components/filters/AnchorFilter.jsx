@@ -44,13 +44,7 @@ function AnchorFilter({
   );
 
   return (
-    <div
-      className='g3-filter-section'
-      style={{
-        borderTop: '1px solid var(--g3-color__silver)',
-        borderBottom: 'none',
-      }}
-    >
+    <div className='g3-filter-section'>
       <div
         className='g3-filter-section__header'
         style={{ marginBottom: '0.875rem' }}

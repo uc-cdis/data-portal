@@ -1,24 +1,9 @@
 import { connect } from 'react-redux';
 import MapDataModel from './MapDataModel';
-import { headers, submissionApiPath } from '../localconf';
-
-export const submitFiles = (program, project, params) =>
-  fetch(`${submissionApiPath}${program}/${project}`, {
-    credentials: 'include',
-    headers,
-    method: 'POST',
-    body: JSON.stringify(params),
-  })
-    .then((response) => response.text())
-    .then((responseBody) => {
-      try {
-        return JSON.parse(responseBody);
-      } catch (error) {
-        return responseBody;
-      }
-    });
+import { getProjectsList } from './relayer';
 
 const ReduxMapDataModel = (() => {
+  /** @param {{ submission: import('./types').SubmissionState }} state */
   const mapStateToProps = (state) => ({
     filesToMap: state.submission.filesToMap,
     projects: state.submission.projectsByName,
@@ -26,9 +11,11 @@ const ReduxMapDataModel = (() => {
     dictionary: state.submission.dictionary,
   });
 
-  const mapDispatchToProps = () => ({
-    submitFiles: (program, project, params) =>
-      submitFiles(program, project, params),
+  /** @param {import('redux-thunk').ThunkDispatch} dispatch */
+  const mapDispatchToProps = (dispatch) => ({
+    getProjectsList: () => {
+      dispatch(getProjectsList());
+    },
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(MapDataModel);

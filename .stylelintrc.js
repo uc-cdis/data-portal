@@ -1,6 +1,5 @@
 module.exports = {
   rules: {
-    indentation: 2,
     'max-nesting-depth': 1,
     'declaration-colon-space-after': 'always',
     'declaration-colon-space-before': 'never',

@@ -299,7 +299,7 @@ ul {
 }
 
 .Select.is-open {
-  z-index: 99 !important;
+  z-index: 99 !important; /* stylelint-disable-line declaration-no-important */
 }
 
 .material-icons {
@@ -317,30 +317,6 @@ ul {
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: 'liga';
-}
-
-.form-body {
-  font-size: 12px;
-  font-weight: regular;
-  line-height: 1em;
-  letter-spacing: 0.03rem;
-  color: var(--g3-color__gray);
-}
-
-.form-special-number {
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1em;
-  letter-spacing: 0.02rem;
-  color: var(--pcdc-color__primary);
-}
-
-.form-caption {
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 1em;
-  letter-spacing: 0.02rem;
-  color: var(--pcdc-color__primary);
 }
 
 .spacer {

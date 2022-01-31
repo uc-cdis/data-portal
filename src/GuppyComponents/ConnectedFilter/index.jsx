@@ -2,14 +2,18 @@
 import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
-import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 import { queryGuppyForStatus } from '../Utils/queries';
 import {
   getFilterSections,
   updateCountsInInitialTabsOptions,
   sortTabsOptions,
 } from '../Utils/filters';
-import '../typedef';
+
+/** @typedef {import('../types').FilterChangeHandler} FilterChangeHandler */
+/** @typedef {import('../types').FilterConfig} FilterConfig */
+/** @typedef {import('../types').FilterState} FilterState */
+/** @typedef {import('../types').GuppyConfig} GuppyConfig */
+/** @typedef {import('../types').SimpleAggsData} SimpleAggsData */
 
 /**
  * @typedef {Object} ConnectedFilterProps
@@ -27,7 +31,6 @@ import '../typedef';
  * @property {(x: string[]) => void} [onPatientIdsChange]
  * @property {string[]} [patientIds]
  * @property {SimpleAggsData} tabsOptions
- * @property {number} [tierAccessLimit]
  */
 
 /** @param {ConnectedFilterProps} props */
@@ -46,7 +49,6 @@ function ConnectedFilter({
   onPatientIdsChange,
   patientIds,
   tabsOptions,
-  tierAccessLimit,
 }) {
   if (
     hidden ||
@@ -70,40 +72,34 @@ function ConnectedFilter({
     });
   }, []);
 
-  const filterTabs = filterConfig.tabs.map(
-    ({ fields, searchFields }, index) => (
-      <FilterList
-        key={index}
-        sections={getFilterSections(
-          fields,
-          searchFields,
-          guppyConfig.fieldMapping,
-          processedTabsOptions,
-          initialTabsOptions,
-          adminAppliedPreFilters,
-          guppyConfig,
-          arrayFields.current
-        )}
-        tierAccessLimit={tierAccessLimit}
-        lockedTooltipMessage={`You may only view summary information for this project. You do not have ${guppyConfig.dataType}-level access.`}
-        disabledTooltipMessage={`This resource is currently disabled because you are exploring restricted data. When exploring restricted data you are limited to exploring cohorts of ${tierAccessLimit} ${
-          guppyConfig.nodeCountTitle?.toLowerCase() || guppyConfig.dataType
-        } or more.`}
-      />
-    )
+  const filterTabs = filterConfig.tabs.map(({ fields, searchFields }) =>
+    getFilterSections({
+      adminAppliedPreFilters,
+      arrayFields: arrayFields.current,
+      fields,
+      filterInfo: filterConfig.info,
+      guppyConfig,
+      initialTabsOptions,
+      searchFields,
+      tabsOptions: processedTabsOptions,
+    })
   );
 
   return (
     <FilterGroup
       className={className}
-      tabs={filterTabs}
+      disabledTooltipMessage={
+        'This resource is currently disabled because you are exploring restricted data. You are limited to exploring cohorts of a size greater than or equal to the access limit.'
+      }
       filterConfig={filterConfig}
+      lockedTooltipMessage={`You may only view summary information for this project. You do not have ${guppyConfig.dataType}-level access.`}
       onAnchorValueChange={onAnchorValueChange}
       onFilterChange={onFilterChange}
       onPatientIdsChange={onPatientIdsChange}
       patientIds={patientIds}
       hideZero={hideZero}
       initialAppliedFilters={initialAppliedFilters}
+      tabs={filterTabs}
     />
   );
 }
@@ -118,6 +114,12 @@ ConnectedFilter.propTypes = {
       options: PropTypes.arrayOf(PropTypes.string),
       tabs: PropTypes.arrayOf(PropTypes.string),
     }),
+    info: PropTypes.objectOf(
+      PropTypes.shape({
+        label: PropTypes.string,
+        tooltip: PropTypes.string,
+      })
+    ),
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
         title: PropTypes.string,
@@ -132,6 +134,7 @@ ConnectedFilter.propTypes = {
       PropTypes.shape({
         field: PropTypes.string,
         name: PropTypes.string,
+        tooltip: PropTypes.string,
       })
     ),
     nodeCountTitle: PropTypes.string,
@@ -145,7 +148,6 @@ ConnectedFilter.propTypes = {
   onPatientIdsChange: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),
   tabsOptions: PropTypes.object.isRequired,
-  tierAccessLimit: PropTypes.number,
 };
 
 export default ConnectedFilter;

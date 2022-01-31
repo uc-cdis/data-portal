@@ -1,7 +1,10 @@
-import { cloneElement, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
+import Select from 'react-select';
+import { overrideSelectTheme } from '../../../../utils';
 import AnchorFilter from '../AnchorFilter';
+import FilterSection from '../FilterSection';
 import PatientIdFilter from '../PatientIdFilter';
 import {
   clearFilterSection,
@@ -14,19 +17,38 @@ import {
   updateSelectedValue,
 } from './utils';
 import './FilterGroup.css';
-import '../typedef';
+
+/** @param {string} label */
+function findFilterElement(label) {
+  const selector = 'div.g3-filter-section__title-container';
+  /** @type {NodeListOf<HTMLDivElement>} */
+  const sectionTitleElements = document.querySelectorAll(selector);
+
+  for (const el of sectionTitleElements)
+    if (label === el.attributes['aria-label'].value.split(': ')[1]) {
+      el.focus();
+      break;
+    }
+}
+
+/** @typedef {import('../types').FilterChangeHandler} FilterChangeHandler */
+/** @typedef {import('../types').FilterConfig} FilterConfig */
+/** @typedef {import('../types').FilterState} FilterState */
+/** @typedef {import('../types').FilterSectionConfig} FilterSectionConfig */
 
 /**
  * @typedef {Object} FilterGroupProps
- * @property {string} className
+ * @property {string} [className]
+ * @property {string} [disabledTooltipMessage]
  * @property {FilterConfig} filterConfig
- * @property {boolean} hideZero
- * @property {FilterState} initialAppliedFilters
- * @property {(anchorValue: string) => void} onAnchorValueChange
- * @property {FilterChangeHandler} onFilterChange
- * @property {(patientIds: string[]) => void} onPatientIdsChange
- * @property {string[]} patientIds
- * @property {JSX.Element[]} tabs
+ * @property {boolean} [hideZero]
+ * @property {FilterState} [initialAppliedFilters]
+ * @property {string} [lockedTooltipMessage]
+ * @property {(anchorValue: string) => void} [onAnchorValueChange]
+ * @property {FilterChangeHandler} [onFilterChange]
+ * @property {(patientIds: string[]) => void} [onPatientIdsChange]
+ * @property {string[]} [patientIds]
+ * @property {FilterSectionConfig[][]} tabs
  */
 
 /** @type {FilterState} */
@@ -35,9 +57,11 @@ const defaultInitialAppliedFilters = {};
 /** @param {FilterGroupProps} props */
 function FilterGroup({
   className = '',
+  disabledTooltipMessage,
   filterConfig,
   hideZero = true,
   initialAppliedFilters = defaultInitialAppliedFilters,
+  lockedTooltipMessage,
   onAnchorValueChange = () => {},
   onFilterChange = () => {},
   onPatientIdsChange,
@@ -227,8 +251,40 @@ function FilterGroup({
     setExpandedStatus(getExpandedStatus(filterTabs, newExpandedStatusControl));
   }
 
+  const filterFinderOptions = filterTabs.map((tab, index) => ({
+    label: tab.title,
+    options: tabs[index].map((section) => ({
+      label: section.title,
+      value: { index, title: section.title },
+    })),
+  }));
+  const filterToFind = useRef('');
+  useEffect(() => {
+    if (filterToFind.current !== '') {
+      findFilterElement(filterToFind.current);
+      filterToFind.current = '';
+    }
+  }, [tabIndex]);
+  /** @param {{ value: { index: number; title: string }}} option */
+  function handleFindFilter({ value }) {
+    if (tabIndex !== value.index) {
+      filterToFind.current = value.title;
+      setTabIndex(value.index);
+    } else {
+      findFilterElement(value.title);
+    }
+  }
+
   return (
     <div className={`g3-filter-group ${className}`}>
+      <Select
+        className='g3-filter-group__filter-finder'
+        placeholder='Find filter to use'
+        onChange={handleFindFilter}
+        options={filterFinderOptions}
+        theme={overrideSelectTheme}
+        value={null}
+      />
       <div className='g3-filter-group__tabs'>
         {tabs.map((_, index) => (
           <div
@@ -293,17 +349,29 @@ function FilterGroup({
             patientIds={patientIds}
           />
         )}
-
-        {cloneElement(tabs[tabIndex], {
-          expandedStatus: expandedStatus[tabIndex],
-          filterStatus: filterTabStatus,
-          hideZero,
-          onAfterDrag: handleDrag,
-          onClearSection: handleClearSection,
-          onSelect: handleSelect,
-          onToggleCombineMode: handleToggleCombineMode,
-          onToggleSection: handleToggleSection,
-        })}
+        {tabs[tabIndex].map((section, index) => (
+          <FilterSection
+            key={index}
+            disabledTooltipMessage={disabledTooltipMessage}
+            expanded={expandedStatus[tabIndex][index]}
+            filterStatus={filterTabStatus[index]}
+            hideZero={hideZero}
+            isArrayField={section.isArrayField}
+            isSearchFilter={section.isSearchFilter}
+            lockedTooltipMessage={lockedTooltipMessage}
+            onAfterDrag={(...args) => handleDrag(index, ...args)}
+            onClear={() => handleClearSection(index)}
+            onSearchFilterLoadOptions={section.onSearchFilterLoadOptions}
+            onSelect={(label) => handleSelect(index, label)}
+            onToggle={(isExpanded) => handleToggleSection(index, isExpanded)}
+            onToggleCombineMode={(...args) =>
+              handleToggleCombineMode(index, ...args)
+            }
+            options={section.options}
+            title={section.title}
+            tooltip={section.tooltip}
+          />
+        ))}
       </div>
     </div>
   );
@@ -311,6 +379,7 @@ function FilterGroup({
 
 FilterGroup.propTypes = {
   className: PropTypes.string,
+  disabledTooltipMessage: PropTypes.string,
   filterConfig: PropTypes.shape({
     anchor: PropTypes.shape({
       field: PropTypes.string,
@@ -328,11 +397,12 @@ FilterGroup.propTypes = {
   }).isRequired,
   hideZero: PropTypes.bool,
   initialAppliedFilters: PropTypes.object,
+  lockedTooltipMessage: PropTypes.string,
   onAnchorValueChange: PropTypes.func,
   onFilterChange: PropTypes.func,
   onPatientIdsChange: PropTypes.func,
   patientIds: PropTypes.arrayOf(PropTypes.string),
-  tabs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tabs: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)).isRequired,
 };
 
 export default FilterGroup;

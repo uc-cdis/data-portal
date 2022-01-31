@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import './CheckBox.less';
+import './CheckBox.css';
 
 /**
  * @typedef {Object} CheckBoxProps

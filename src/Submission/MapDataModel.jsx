@@ -1,16 +1,17 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import { fetchQuery } from 'relay-runtime';
 import Button from '../gen3-ui-component/components/Button';
 import Toaster from '../gen3-ui-component/components/Toaster';
 import BackLink from '../components/BackLink';
-import { getProjectsList } from './relayer';
 import CheckmarkIcon from '../img/icons/status_confirm.svg';
 import InputWithIcon from '../components/InputWithIcon';
-import { GQLHelper } from '../gqlHelper';
+import useSessionMonitor from '../hooks/useSessionMonitor';
+import GQLHelper from '../gqlHelper';
 import environment from '../environment';
-import sessionMonitor from '../SessionMonitor';
-import './MapDataModel.less';
+import { headers, submissionApiPath } from '../localconf';
+import './MapDataModel.css';
 
 const gqlHelper = GQLHelper.getGQLHelper();
 const CHUNK_SIZE = 10;
@@ -27,6 +28,17 @@ export function isValidSubmission(state) {
   );
 }
 
+/**
+ * @typedef {Object} Link
+ * @property {string} name
+ * @property {string} target_type
+ * @property {Link[]} subgroup
+ */
+
+/**
+ * @param {Link[]} links
+ * @param {{ [type: string]: Link }} parents
+ */
 export function getParentNodes(links, parents) {
   let parentNodes = { ...parents };
   for (const link of links)
@@ -39,392 +51,451 @@ export function getParentNodes(links, parents) {
   return parentNodes;
 }
 
-class MapDataModel extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      projectId: null,
-      nodeType: null,
-      requiredFields: {},
-      parentNodeType: 'core_metadata_collection',
-      parentNodeId: null,
-      validParentIds: [],
-      parentTypesOfSelectedNode: {},
-      submitting: false,
-      submissionText: `${this.props.filesToMap.length} files ready for mapping.`,
-      chunkCounter: 0,
-    };
+/**
+ *
+ * @param {Object} dictionary
+ * @param {string} nodeType
+ * @param {{ [x: string]: { name: string }}} parentTypes
+ */
+function getRequiredFields(dictionary, nodeType, parentTypes) {
+  const fields = /** @type {{ [x: string]: any }} */ ({});
+  if (nodeType) {
+    const { required, systemProperties } = dictionary[nodeType];
+    const ignoredProperties = [
+      'file_size',
+      'file_name',
+      'md5sum',
+      'submitter_id',
+      'type',
+      ...systemProperties,
+    ];
+
+    for (const prop of required)
+      if (
+        !ignoredProperties.includes(prop) &&
+        !Object.keys(parentTypes)
+          .map((key) => parentTypes[key].name)
+          .includes(prop)
+      )
+        fields[prop] = null;
   }
 
-  componentDidMount() {
-    if (this.props.filesToMap.length === 0) {
-      // redirect if no files
-      this.props.history.push('/submission/files');
-    }
-    getProjectsList();
-  }
+  return fields;
+}
 
-  setRequiredProperties = () => {
-    let props = [];
-    const map = {};
-    if (this.state.nodeType) {
-      props = this.props.dictionary[this.state.nodeType].required.filter(
-        (prop) =>
-          prop !== 'submitter_id' &&
-          prop !== 'file_size' &&
-          prop !== 'file_name' &&
-          prop !== 'md5sum' &&
-          prop !== 'type' &&
-          !this.props.dictionary[this.state.nodeType].systemProperties.includes(
-            prop
-          ) &&
-          !Object.keys(this.state.parentTypesOfSelectedNode)
-            .map((key) => this.state.parentTypesOfSelectedNode[key].name)
-            .includes(prop)
-      );
-    }
-    props.forEach((prop) => {
-      map[prop] = null;
-    });
-    this.setState({ requiredFields: map });
-  };
-
-  selectNodeType = (option) => {
-    this.setState(
-      {
-        nodeType: option ? option.value : null,
-        parentTypesOfSelectedNode: option
-          ? getParentNodes(this.props.dictionary[option.value].links, {})
-          : {},
+/**
+ * @param {Object} args
+ * @param {string} args.nodeType
+ * @param {string} args.parentNodeType
+ * @param {{ [x: string]: Link }} args.parentTypesOfSelectedNode
+ * @param {string} args.projectId
+ * @param {React.Dispatch<React.SetStateAction<any[]>>} args.setValidParentIds
+ */
+function fetchAllSubmitterIds({
+  nodeType,
+  parentNodeType,
+  parentTypesOfSelectedNode,
+  projectId,
+  setValidParentIds,
+}) {
+  if (
+    nodeType &&
+    parentNodeType &&
+    parentTypesOfSelectedNode[parentNodeType] &&
+    projectId
+  ) {
+    fetchQuery(environment, gqlHelper.allSubmitterIdsByTypeQuery, {
+      project_id: projectId,
+    }).subscribe({
+      next: (data) => {
+        if (data?.[parentNodeType]) setValidParentIds(data[parentNodeType]);
       },
-      () => {
-        this.setRequiredProperties();
-        this.selectParentNodeId(null);
-        this.fetchAllSubmitterIds();
-      }
-    );
-  };
-
-  selectParentNodeId = (option) => {
-    this.setState({ parentNodeId: option ? option.value : null });
-  };
-
-  selectParentNodeType = (option) => {
-    this.setState(
-      {
-        parentNodeType: option ? option.value : null,
-        parentNodeId: null,
-      },
-      this.fetchAllSubmitterIds
-    );
-  };
-
-  selectProjectId = (option) => {
-    this.setState({ projectId: option ? option.value : null }, () => {
-      this.fetchAllSubmitterIds();
-      this.selectParentNodeId(null);
     });
-  };
-
-  castOption = (value, prop) => {
-    const { dictionary } = this.props;
-    const { nodeType } = this.state;
-    const { type } = dictionary[nodeType]?.properties?.[prop];
-
-    if (type === 'number') return parseFloat(value);
-    if (type === 'integer') return parseInt(value, 10);
-    return value;
-  };
-
-  selectRequiredField = (option, prop) => {
-    let castedOption = null;
-    if (option && option.target) {
-      castedOption = this.castOption(option.target.value, prop);
-    } else if (option && option.value) {
-      castedOption = this.castOption(option.value, prop);
-    }
-    this.setState((prevState) => ({
-      requiredFields: {
-        ...prevState.requiredFields,
-        [prop]: castedOption || null,
-      },
-    }));
-  };
-
-  fetchAllSubmitterIds = () => {
-    if (
-      this.state.parentNodeType &&
-      this.state.nodeType &&
-      this.state.projectId &&
-      this.state.parentTypesOfSelectedNode[this.state.parentNodeType]
-    ) {
-      fetchQuery(environment, gqlHelper.allSubmitterIdsByTypeQuery, {
-        project_id: this.state.projectId,
-      }).subscribe({
-        next: (data) => {
-          if (data && data[this.state.parentNodeType]) {
-            this.setState((prevState) => ({
-              validParentIds: data[prevState.parentNodeType],
-            }));
-          }
-        },
-      });
-    } else {
-      this.setState({ validParentIds: [] });
-    }
-  };
-
-  submit = () => {
-    const chunks = [];
-    let json = [];
-    this.props.filesToMap.forEach((file) => {
-      const obj = {
-        type: this.state.nodeType,
-        ...this.state.requiredFields,
-        file_name: file.file_name,
-        object_id: file.did,
-        submitter_id: `${this.state.projectId}_${file.file_name.substring(
-          0,
-          file.file_name.lastIndexOf('.')
-        )}_${file.did.substring(file.did.length - 4, file.did.length)}`,
-        project_id: this.state.projectId,
-        file_size: file.size,
-        md5sum: file.hashes ? file.hashes.md5 : null,
-      };
-
-      obj[
-        this.state.parentTypesOfSelectedNode[this.state.parentNodeType].name
-      ] = {
-        submitter_id: this.state.parentNodeId,
-      };
-      json.push(obj);
-
-      if (json.length === CHUNK_SIZE) {
-        chunks.push(json);
-        json = [];
-      }
-    });
-    if (json.length > 0) {
-      chunks.push(json);
-    }
-
-    const programProject = this.state.projectId.split(/-(.+)/);
-    let message = `${this.props.filesToMap.length} files mapped successfully!`;
-    this.setState({ submitting: true }, () => {
-      const promises = [];
-      chunks.forEach((chunk) => {
-        const promise = this.props
-          .submitFiles(programProject[0], programProject[1], chunk)
-          .then((res) => {
-            this.setState((prevState) => ({
-              chunkCounter: prevState.chunkCounter + 1,
-              submissionText: `Submitting ${prevState.chunkCounter + 1} of ${
-                chunks.length
-              } chunks...`,
-            }));
-            if (!res.success) {
-              message = `Error: ${
-                res.entities &&
-                res.entities.length > 0 &&
-                res.entities[0].errors
-                  ? res.entities[0].errors
-                      .map((error) => error.message)
-                      .toString()
-                  : res.message
-              } occurred during mapping.`;
-            }
-            sessionMonitor.updateUserActivity();
-          });
-        promises.push(promise);
-      });
-      Promise.all(promises).then(() => {
-        this.props.history.push(`/submission/files?message=${message}`);
-      });
-    });
-  };
-
-  render() {
-    const projectList = this.props.projects
-      ? Object.keys(this.props.projects)
-      : [];
-    const projectOptions = projectList.map((key) => ({
-      value: this.props.projects[key].name,
-      label: this.props.projects[key].name,
-    }));
-    const nodeOptions = this.props.nodeTypes
-      ? this.props.nodeTypes
-          .filter(
-            (node) =>
-              this.props.dictionary[node] &&
-              this.props.dictionary[node].category &&
-              this.props.dictionary[node].category.endsWith('_file')
-          )
-          .map((node) => ({ value: node, label: node }))
-      : [];
-    const parentIdOptions = this.state.validParentIds
-      ? this.state.validParentIds.map((parent) => ({
-          value: parent.submitter_id,
-          label: parent.submitter_id,
-        }))
-      : [];
-
-    return (
-      <div className='map-data-model'>
-        <BackLink url='/submission/files' label='Back to My Files' />
-        <div className='h1-typo'>
-          Mapping {this.props.filesToMap.length} files to Data Model
-        </div>
-        <div className='map-data-model__form'>
-          <div className='map-data-model__header'>
-            <div className='h3-typo'>Assign Project and Node Type</div>
-          </div>
-          <div className='map-data-model__form-section map-data-model__border-bottom'>
-            <label className='h4-typo' htmlFor='project'>
-              Project
-            </label>
-            <InputWithIcon
-              inputId='project'
-              inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
-              inputValue={this.state.projectId}
-              inputPlaceholderText='Select your project'
-              inputOptions={projectOptions}
-              inputOnChange={this.selectProjectId}
-              iconSvg={CheckmarkIcon}
-              shouldDisplayIcon={!!this.state.projectId}
-            />
-          </div>
-          <div className='map-data-model__node-form-section map-data-model__border-bottom'>
-            <div className='map-data-model__form-section'>
-              <label className='h4-typo' htmlFor='file-node'>
-                File Node
-              </label>
-              <InputWithIcon
-                inputId='file-node'
-                inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
-                inputValue={this.state.nodeType}
-                inputPlaceholderText='Select your node'
-                inputOptions={nodeOptions}
-                inputOnChange={this.selectNodeType}
-                iconSvg={CheckmarkIcon}
-                shouldDisplayIcon={!!this.state.nodeType}
-              />
-            </div>
-            {this.state.nodeType &&
-            Object.keys(this.state.requiredFields).length > 0 ? (
-              <div className='map-data-model__detail-section'>
-                <div className='h4-typo'>Required Fields</div>
-                {Object.keys(this.state.requiredFields).map((prop, i) => {
-                  const type = this.props.dictionary[this.state.nodeType]
-                    .properties[prop];
-                  const inputValue = this.state.requiredFields[prop]
-                    ? this.state.requiredFields[prop].toString()
-                    : null;
-
-                  return (
-                    <div key={i} className='map-data-model__required-field'>
-                      <div className='map-data-model__required-field-info'>
-                        <i className='g3-icon g3-icon--star' />
-                        <label className='h4-typo' htmlFor={prop}>
-                          {prop}
-                        </label>
-                      </div>
-                      {type && type.enum ? (
-                        <InputWithIcon
-                          inputId={prop}
-                          inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
-                          inputValue={inputValue}
-                          inputPlaceholderText='Select your field'
-                          inputOptions={type.enum.map((option) => ({
-                            value: option,
-                            label: option,
-                          }))}
-                          inputOnChange={(e) =>
-                            this.selectRequiredField(e, prop)
-                          }
-                          iconSvg={CheckmarkIcon}
-                          shouldDisplayIcon={!!this.state.requiredFields[prop]}
-                        />
-                      ) : (
-                        <InputWithIcon
-                          inputId={prop}
-                          inputClassName='map-data-model__input introduction'
-                          inputValue={inputValue}
-                          inputOnChange={(e) =>
-                            this.selectRequiredField(e, prop)
-                          }
-                          iconSvg={CheckmarkIcon}
-                          shouldDisplayIcon={!!this.state.requiredFields[prop]}
-                        />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            ) : null}
-          </div>
-          <div className='map-data-model__node-form-section map-data-model__border-bottom'>
-            <div className='map-data-model__form-section map-data-model__parent-section'>
-              <div className='h4-typo'>Link(s) to Parent Node(s)</div>
-            </div>
-            <div className='map-data-model__required-field map-data-model__parent-id-section'>
-              <div className='map-data-model__required-field-info'>
-                <i className='g3-icon g3-icon--star' />
-                <div className='h4-typo'>{this.state.parentNodeType}</div>
-              </div>
-              {parentIdOptions.length > 0 ? (
-                <InputWithIcon
-                  inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
-                  inputValue={this.state.parentNodeId}
-                  inputPlaceholderText='Select your parent node ID'
-                  inputOptions={parentIdOptions}
-                  inputOnChange={this.selectParentNodeId}
-                  iconSvg={CheckmarkIcon}
-                  shouldDisplayIcon={!!this.state.parentNodeId}
-                />
-              ) : (
-                <p className='map-data-model__missing-node'>
-                  No available collections to link to. Please create a &nbsp;{' '}
-                  {this.state.parentNodeType} node on this project to continue.
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-        {
-          <Toaster
-            isEnabled={isValidSubmission(this.state)}
-            className={'map-data-model__submission-toaster-div'}
-          >
-            <Button
-              onClick={this.submit}
-              label='Submit'
-              buttonType='primary'
-              enabled={!this.state.submitting}
-            />
-            <p className='map-data-model__submission-footer-text introduction'>
-              {this.state.submissionText}
-            </p>
-          </Toaster>
-        }
-      </div>
-    );
+  } else {
+    setValidParentIds([]);
   }
 }
 
-MapDataModel.propTypes = {
-  filesToMap: PropTypes.array,
-  projects: PropTypes.object,
-  dictionary: PropTypes.object,
-  nodeTypes: PropTypes.array,
-  history: PropTypes.object.isRequired,
-  submitFiles: PropTypes.func.isRequired,
-};
+/**
+ * @param {Object} args
+ * @param {Object[]} args.filesToMap
+ * @param {string} args.nodeType
+ * @param {string} args.parentNodeId
+ * @param {string} args.parentNodeType
+ * @param {{ [x: string]: Link }} args.parentTypesOfSelectedNode
+ * @param {string} args.projectId
+ * @param {{ [x: string]: any }} args.requiredFields
+ */
+function getFileChunksToSubmit({
+  filesToMap,
+  nodeType,
+  parentNodeId,
+  parentNodeType,
+  parentTypesOfSelectedNode,
+  projectId,
+  requiredFields,
+}) {
+  const fileChunks = [];
 
-MapDataModel.defaultProps = {
-  filesToMap: [],
-  projects: null,
-  dictionary: {},
-  nodeTypes: [],
+  let files = [];
+  for (const file of filesToMap) {
+    files.push({
+      ...requiredFields,
+      file_name: file.file_name,
+      file_size: file.size,
+      md5sum: file.hashes?.md5 ?? null,
+      object_id: file.did,
+      project_id: projectId,
+      submitter_id: `${projectId}_${file.file_name.substring(
+        0,
+        file.file_name.lastIndexOf('.')
+      )}_${file.did.substring(file.did.length - 4, file.did.length)}`,
+      type: nodeType,
+      [parentTypesOfSelectedNode[parentNodeType].name]: {
+        submitter_id: parentNodeId,
+      },
+    });
+
+    if (files.length === CHUNK_SIZE) {
+      fileChunks.push(files);
+      files = [];
+    }
+  }
+
+  if (files.length > 0) fileChunks.push(files);
+
+  return fileChunks;
+}
+
+/**
+ * @param {string} program
+ * @param {string} project
+ * @param {Object[]} files
+ */
+function submitFilesToMap(program, project, files) {
+  return fetch(`${submissionApiPath}${program}/${project}`, {
+    credentials: 'include',
+    headers,
+    method: 'POST',
+    body: JSON.stringify(files),
+  })
+    .then((response) => response.text())
+    .then((responseBody) => {
+      try {
+        return JSON.parse(responseBody);
+      } catch (error) {
+        return responseBody;
+      }
+    });
+}
+
+/**
+ * @param {Object} props
+ * @param {Object} [props.dictionary]
+ * @param {Object[]} [props.filesToMap]
+ * @param {() => void} [props.getProjectsList]
+ * @param {string[]} [props.nodeTypes]
+ * @param {Object} [props.projects]
+ * @param {Function} [props.submitFiles]
+ */
+function MapDataModel({
+  dictionary = {},
+  filesToMap = [],
+  getProjectsList = () => {},
+  nodeTypes = [],
+  projects = null,
+  submitFiles = submitFilesToMap,
+}) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (filesToMap.length === 0) navigate('/submission/files');
+    getProjectsList();
+  }, []);
+
+  const sessionMonitor = useSessionMonitor();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [nodeType, setNodeType] = useState(null);
+  const [parentNodeId, setParentNodeId] = useState(null);
+  const [parentNodeType] = useState('core_metadata_collection');
+  const [parentTypesOfSelectedNode, setParentTypesOfSelectedNode] = useState(
+    {}
+  );
+  const [projectId, setProjectId] = useState(null);
+  const [requiredFields, setRequiredFields] = useState({});
+  const [submissionText, setSubmissionText] = useState(
+    `${filesToMap.length} files ready for mapping.`
+  );
+  const [validParentIds, setValidParentIds] = useState([]);
+
+  /** @param {{ label: string; value: string }} option */
+  function haneldSelectNodeType(option) {
+    const newNodeType = option?.value ?? null;
+    const newParentTypes = option
+      ? getParentNodes(dictionary[option.value].links, {})
+      : {};
+
+    setNodeType(newNodeType);
+    setParentTypesOfSelectedNode(newParentTypes);
+    setRequiredFields(getRequiredFields(dictionary, nodeType, newParentTypes));
+    setParentNodeId(null);
+
+    fetchAllSubmitterIds({
+      nodeType: newNodeType,
+      parentNodeType,
+      parentTypesOfSelectedNode: newParentTypes,
+      projectId,
+      setValidParentIds,
+    });
+  }
+
+  /** @param {{ label: string; value: string }} option */
+  function handleSelectParentNodeId(option) {
+    setParentNodeId(option?.value ?? null);
+  }
+
+  /** @param {{ label: string; value: string }} option */
+  function handleSelectProjectId(option) {
+    const newProjectId = option?.value ?? null;
+    setProjectId(newProjectId);
+    setParentNodeId(null);
+
+    fetchAllSubmitterIds({
+      nodeType,
+      parentNodeType,
+      parentTypesOfSelectedNode,
+      projectId: newProjectId,
+      setValidParentIds,
+    });
+  }
+
+  /**
+   * @param {any} value
+   * @param {string} prop
+   */
+  function parseFieldValue(value, prop) {
+    const { type } = dictionary[nodeType]?.properties?.[prop] ?? {};
+    if (type === 'number') return parseFloat(value);
+    if (type === 'integer') return parseInt(value, 10);
+    return value;
+  }
+
+  /**
+   * @param {Object} option
+   * @param {string} prop
+   */
+  function handleSelectRequiredField(option, prop) {
+    const { target, value } = option ?? {};
+    // eslint-disable-next-line no-nested-ternary
+    const fieldValue = target
+      ? parseFieldValue(target.value, prop)
+      : value
+      ? parseFieldValue(value, prop)
+      : null;
+
+    setRequiredFields((fields) => ({ ...fields, [prop]: fieldValue || null }));
+  }
+
+  function handleSubmit() {
+    const fileChunks = getFileChunksToSubmit({
+      filesToMap,
+      nodeType,
+      parentNodeId,
+      parentNodeType,
+      parentTypesOfSelectedNode,
+      projectId,
+      requiredFields,
+    });
+
+    const programProject = projectId.split(/-(.+)/);
+    let message = `${filesToMap.length} files mapped successfully!`;
+    setIsSubmitting(true);
+
+    const promises = fileChunks.map((files, index) =>
+      submitFiles(programProject[0], programProject[1], files).then((res) => {
+        setSubmissionText(
+          `Submitting ${index + 1} of ${fileChunks.length} chunks...`
+        );
+
+        if (!res.success) {
+          const { errors } = res.entities?.[0] ?? {};
+          message = `Error: ${
+            errors?.map((err) => err.message)?.toString() ?? res.message
+          } occurred during mapping.`;
+        }
+        sessionMonitor.updateUserActivity();
+      })
+    );
+
+    Promise.all(promises).then(() =>
+      navigate(`/submission/files?message=${message}`)
+    );
+  }
+
+  const projectOptions = Object.keys(projects ?? {}).map((key) => ({
+    value: projects[key].name,
+    label: projects[key].name,
+  }));
+  const nodeOptions = (nodeTypes ?? [])
+    .filter((node) => dictionary[node]?.category?.endsWith('_file'))
+    .map((node) => ({
+      value: node,
+      label: node,
+    }));
+  const parentIdOptions = (validParentIds ?? []).map((parent) => ({
+    value: parent.submitter_id,
+    label: parent.submitter_id,
+  }));
+
+  return (
+    <div className='map-data-model'>
+      <BackLink url='/submission/files' label='Back to My Files' />
+      <div className='h1-typo'>
+        Mapping {filesToMap.length} files to Data Model
+      </div>
+      <div className='map-data-model__form'>
+        <div className='map-data-model__header'>
+          <div className='h3-typo'>Assign Project and Node Type</div>
+        </div>
+        <div className='map-data-model__form-section map-data-model__border-bottom'>
+          <label className='h4-typo' htmlFor='project'>
+            Project
+          </label>
+          <InputWithIcon
+            inputId='project'
+            inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
+            inputValue={projectId}
+            inputPlaceholderText='Select your project'
+            inputOptions={projectOptions}
+            inputOnChange={handleSelectProjectId}
+            iconSvg={CheckmarkIcon}
+            shouldDisplayIcon={!!projectId}
+          />
+        </div>
+        <div className='map-data-model__node-form-section map-data-model__border-bottom'>
+          <div className='map-data-model__form-section'>
+            <label className='h4-typo' htmlFor='file-node'>
+              File Node
+            </label>
+            <InputWithIcon
+              inputId='file-node'
+              inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
+              inputValue={nodeType}
+              inputPlaceholderText='Select your node'
+              inputOptions={nodeOptions}
+              inputOnChange={haneldSelectNodeType}
+              iconSvg={CheckmarkIcon}
+              shouldDisplayIcon={!!nodeType}
+            />
+          </div>
+          {nodeType && Object.keys(requiredFields).length > 0 ? (
+            <div className='map-data-model__detail-section'>
+              <div className='h4-typo'>Required Fields</div>
+              {Object.keys(requiredFields).map((prop) => {
+                const type = dictionary[nodeType].properties[prop];
+                const inputValue = requiredFields[prop]?.toString();
+
+                return (
+                  <div key={prop} className='map-data-model__required-field'>
+                    <div className='map-data-model__required-field-info'>
+                      <i className='g3-icon g3-icon--star' />
+                      <label className='h4-typo' htmlFor={prop}>
+                        {prop}
+                      </label>
+                    </div>
+                    {type?.enum ? (
+                      <InputWithIcon
+                        inputId={prop}
+                        inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
+                        inputValue={inputValue}
+                        inputPlaceholderText='Select your field'
+                        inputOptions={type.enum.map((option) => ({
+                          value: option,
+                          label: option,
+                        }))}
+                        inputOnChange={(e) =>
+                          handleSelectRequiredField(e, prop)
+                        }
+                        iconSvg={CheckmarkIcon}
+                        shouldDisplayIcon={!!requiredFields[prop]}
+                      />
+                    ) : (
+                      <InputWithIcon
+                        inputId={prop}
+                        inputClassName='map-data-model__input introduction'
+                        inputValue={inputValue}
+                        inputOnChange={(e) =>
+                          handleSelectRequiredField(e, prop)
+                        }
+                        iconSvg={CheckmarkIcon}
+                        shouldDisplayIcon={!!requiredFields[prop]}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
+        </div>
+        <div className='map-data-model__node-form-section map-data-model__border-bottom'>
+          <div className='map-data-model__form-section map-data-model__parent-section'>
+            <div className='h4-typo'>Link(s) to Parent Node(s)</div>
+          </div>
+          <div className='map-data-model__required-field map-data-model__parent-id-section'>
+            <div className='map-data-model__required-field-info'>
+              <i className='g3-icon g3-icon--star' />
+              <div className='h4-typo'>{parentNodeType}</div>
+            </div>
+            {parentIdOptions.length > 0 ? (
+              <InputWithIcon
+                inputClassName='map-data-model__dropdown map-data-model__dropdown--required introduction'
+                inputValue={parentNodeId}
+                inputPlaceholderText='Select your parent node ID'
+                inputOptions={parentIdOptions}
+                inputOnChange={handleSelectParentNodeId}
+                iconSvg={CheckmarkIcon}
+                shouldDisplayIcon={!!parentNodeId}
+              />
+            ) : (
+              <p className='map-data-model__missing-node'>
+                No available collections to link to. Please create a &nbsp;{' '}
+                {parentNodeType} node on this project to continue.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+      <Toaster
+        isEnabled={isValidSubmission({
+          nodeType,
+          parentNodeType,
+          parentNodeId,
+          projectId,
+          requiredFields,
+        })}
+        className={'map-data-model__submission-toaster-div'}
+      >
+        <Button
+          onClick={handleSubmit}
+          label='Submit'
+          buttonType='primary'
+          enabled={!isSubmitting}
+        />
+        <p className='map-data-model__submission-footer-text introduction'>
+          {submissionText}
+        </p>
+      </Toaster>
+    </div>
+  );
+}
+
+MapDataModel.propTypes = {
+  dictionary: PropTypes.object,
+  filesToMap: PropTypes.array,
+  getProjectsList: PropTypes.func,
+  nodeTypes: PropTypes.array,
+  projects: PropTypes.object,
+  submitFiles: PropTypes.func,
 };
 
 export default MapDataModel;

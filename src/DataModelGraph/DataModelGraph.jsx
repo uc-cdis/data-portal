@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import SvgGraph from './SvgGraph';
-import './DataModelGraph.less';
+import './DataModelGraph.css';
 
 /**
  * Wraps SVG graph in a toggle button that toggles between 'full' and 'compact' view

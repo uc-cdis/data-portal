@@ -3,62 +3,88 @@ import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-kuroir';
+import useSessionMonitor from '../hooks/useSessionMonitor';
 import { predictFileType } from '../utils';
 import SubmissionResult from './SubmissionResult';
-import './SubmitTSV.less';
+import { SubmissionStateType } from './propTypeDef';
+import './SubmitTSV.css';
+
+/**
+ * @typedef {Object} SubmissionState
+ * @property {Object} [dictionary]
+ * @property {string} [file]
+ * @property {string} [file_type]
+ * @property {string[]} [nodeTypes]
+ * @property {number} [submit_counter]
+ * @property {{ [x: string]: number }} [submit_entity_counts]
+ * @property {any} [submit_result]
+ * @property {string} [submit_result_string]
+ * @property {number} [submit_status]
+ * @property {number} [submit_total]
+ */
 
 /**
  * Manage TSV/JSON submission
- *
- * @param {string} project of form program-project
- * @param {Function} onFileChange triggered when user edits something in tsv/json AceEditor
+ * @param {Object} props
+ * @param {string} props.project of form program-project
+ * @param {SubmissionState} props.submission
+ * @param {(file: string, fileType: string) => void} props.onFileChange triggered when user edits something in tsv/json AceEditor
+ * @param {(nodeTypes: string[], project: string, dictionary: Object) => void} props.onFinish
+ * @param {(file: string, fileType: string) => void} props.onUploadClick
+ * @param {(project: string, callback?: () => void) => void} props.onSubmitClick
  */
-const SubmitTSV = ({
+function SubmitTSV({
   project,
-  submission,
-  onUploadClick,
-  onSubmitClick,
+  submission = { submit_counter: 0 },
   onFileChange,
   onFinish,
-}) => {
+  onSubmitClick,
+  onUploadClick,
+}) {
   const fileUploadRef = useRef(null);
 
-  //
-  // Reads the bytes from the tsv/json file the user submits,
-  // then notify onUploadClick listener which might stuff data
-  // into Redux or whatever it wants ...
-  //
-  const processUpload = (event) => {
-    const f = event.target.files[0];
+  /**
+   * Reads the bytes from the tsv/json file the user submits,
+   * then notify onUploadClick listener which might stuff data
+   * into Redux or whatever it wants ...
+   * @type {React.ChangeEventHandler<HTMLInputElement>}
+   */
+  function processUpload(e) {
+    const file = e.target.files[0];
+    const fileType = file.name.endsWith('.tsv')
+      ? 'text/tab-separated-values'
+      : file.type;
+
     const reader = new FileReader();
-    let fileType = f.type;
-    if (f.name.endsWith('.tsv')) {
-      fileType = 'text/tab-separated-values';
-    }
-    reader.onload = (e) => {
-      const data = e ? e.target.result : reader.content;
+    reader.onload = ({ target }) => {
+      const data = /** @type {string} */ (target.result);
       onUploadClick(data, predictFileType(data, fileType));
     };
-    reader.readAsText(f);
-  };
+    reader.readAsText(file);
+  }
 
-  const resetFileBeforeUpdate = (e) => {
-    // In chrome we need to reset the file input value so that
-    // onChange will be triggered when user upload same file again.
+  /**
+   * In chrome we need to reset the file input value so that
+   * onChange will be triggered when user upload same file again.
+   * @type {React.MouseEventHandler<HTMLInputElement>}
+   */
+  function resetFileBeforeUpdate(e) {
     e.currentTarget.value = null;
-  };
+  }
 
-  const onSubmitClickEvent = () => {
-    onSubmitClick(project);
-  };
+  const sessionMonitor = useSessionMonitor();
+  function handleSubmitFile() {
+    onSubmitClick(project, () => sessionMonitor.updateUserActivity());
+  }
 
-  const onChange = (newValue) => {
-    onFileChange(newValue, submission.file_type);
-  };
+  /** @param {string} value */
+  function handleAceEditorChange(value) {
+    onFileChange(value, submission.file_type);
+  }
 
-  const onFinishSubmitEvent = () => {
+  function handleFinishSubmit() {
     onFinish(submission.nodeTypes, project, submission.dictionary);
-  };
+  }
 
   return (
     <form>
@@ -94,8 +120,7 @@ const SubmitTSV = ({
             type='button'
             className='submit-tsv__upload-button button-primary-white'
             id='cd-submit-tsv__submit-button'
-            onClick={onSubmitClickEvent}
-            onKeyPress={onSubmitClickEvent}
+            onClick={handleSubmitFile}
           >
             Submit
           </button>
@@ -112,8 +137,7 @@ const SubmitTSV = ({
           theme='kuroir'
           value={submission.file}
           editorProps={{ $blockScrolling: Infinity }} // mutes console warning
-          onChange={onChange}
-          id='uploaded'
+          onChange={handleAceEditorChange}
         />
       )}
       {submission.submit_result && (
@@ -126,45 +150,24 @@ const SubmitTSV = ({
             status={submission.submit_status}
             data={submission.submit_result}
             dataString={submission.submit_result_string}
-            entityCounts={
-              'submit_entity_counts' in submission
-                ? submission.submit_entity_counts
-                : {}
-            }
+            entityCounts={submission.submit_entity_counts ?? {}}
             counter={submission.submit_counter}
             total={submission.submit_total}
-            onFinish={onFinishSubmitEvent}
+            onFinish={handleFinishSubmit}
           />
         </div>
       )}
     </form>
   );
-};
+}
 
 SubmitTSV.propTypes = {
   project: PropTypes.string.isRequired, // from react-router
-  submission: PropTypes.shape({
-    file: PropTypes.string,
-    file_type: PropTypes.string,
-    submit_result: PropTypes.any,
-    submit_result_string: PropTypes.string,
-    submit_status: PropTypes.number,
-    submit_counter: PropTypes.number,
-    submit_total: PropTypes.number,
-    submit_entity_counts: PropTypes.number,
-    nodeTypes: PropTypes.arrayOf(PropTypes.string),
-    dictionary: PropTypes.object,
-  }),
-  onUploadClick: PropTypes.func.isRequired,
-  onSubmitClick: PropTypes.func.isRequired,
+  submission: SubmissionStateType.isRequired,
   onFileChange: PropTypes.func.isRequired,
   onFinish: PropTypes.func.isRequired,
-};
-
-SubmitTSV.defaultProps = {
-  submission: {
-    submit_counter: 0,
-  },
+  onSubmitClick: PropTypes.func.isRequired,
+  onUploadClick: PropTypes.func.isRequired,
 };
 
 export default SubmitTSV;

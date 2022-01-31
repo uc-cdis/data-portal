@@ -9,7 +9,7 @@ import {
   workspaceTerminateUrl,
   workspaceStatusUrl,
 } from '../localconf';
-import './Workspace.less';
+import './Workspace.css';
 import { fetchWithCreds } from '../actions';
 import Spinner from '../components/Spinner';
 import jupyterIcon from '../img/icons/jupyter.svg';

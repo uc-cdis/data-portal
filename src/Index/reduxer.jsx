@@ -1,13 +1,17 @@
 import { connect } from 'react-redux';
 import dictIcons from '../img/icons';
 import IndexBarChart from '../components/charts/IndexBarChart';
-// import IndexCounts from '../components/cards/IndexCounts/.';
 import IndexButtonBar from '../components/IndexButtonBar';
 import Introduction from '../components/Introduction';
 import IndexOverview from './IndexOverview';
 import { components } from '../params';
 
+/** @typedef {import('./types').IndexState} IndexState */
+/** @typedef {import('../types').UserAccessState} UserAccessState */
+/** @typedef {import('../types').UserState} UserState */
+
 export const ReduxIndexBarChart = (() => {
+  /** @param {{ index: IndexState }} state */
   const mapStateToProps = (state) =>
     state.index && state.index.projectList
       ? {
@@ -19,19 +23,8 @@ export const ReduxIndexBarChart = (() => {
   return connect(mapStateToProps)(IndexBarChart);
 })();
 
-// export const ReduxIndexCounts = (() => {
-//   const mapStateToProps = (state) =>
-//     state.index && state.index.projectList
-//       ? {
-//           projectList: state.index.projectList,
-//           countNames: state.index.countNames,
-//         }
-//       : {};
-
-//   return connect(mapStateToProps)(IndexCounts);
-// })();
-
 export const ReduxIndexOverview = (() => {
+  /** @param {{ index: IndexState }} state */
   const mapStateToProps = (state) =>
     state.index && state.index.overviewCounts
       ? { overviewCounts: state.index.overviewCounts }
@@ -41,6 +34,7 @@ export const ReduxIndexOverview = (() => {
 })();
 
 export const ReduxIndexButtonBar = (() => {
+  /** @param {{ index: IndexState; userAccess: UserAccessState }} state */
   const mapStateToProps = (state) => ({
     buttons: components.index.buttons,
     dictIcons,
@@ -51,6 +45,7 @@ export const ReduxIndexButtonBar = (() => {
 })();
 
 export const ReduxIntroduction = (() => {
+  /** @param {{ user: UserState }} state */
   const mapStateToProps = (state) => {
     const resourcePath = '/services/sheepdog/submission/project';
     return {

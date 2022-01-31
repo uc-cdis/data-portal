@@ -4,6 +4,9 @@ import {
   addSearchHistoryItems,
 } from './utils';
 
+/** @typedef {import('./types').DdgraphState} DdgraphState */
+
+/** @type {DdgraphState} */
 const ddgraphInitialState = {
   isGraphView: false,
   layoutInitialized: false,
@@ -33,6 +36,7 @@ const ddgraphInitialState = {
   highlightingMatchedNodeOpened: false,
 };
 
+/** @type {import('redux').Reducer<DdgraphState>} */
 const ddgraph = (state = ddgraphInitialState, action) => {
   switch (action.type) {
     case 'TOGGLE_GRAPH_TABLE_VIEW': {

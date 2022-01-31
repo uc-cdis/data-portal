@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import './CountBox.less';
+import './CountBox.css';
 
 /**
  * @typedef {Object} CountBoxProps

@@ -8,35 +8,30 @@ import {
   submissionApiPath,
   authzPath,
   guppyUrl,
+  jobapiPath,
 } from './localconf';
 import { config } from './params';
+import { asyncSetInterval } from './utils';
+
+/** @typedef {import('redux').AnyAction} AnyAction */
+/** @typedef {import('redux').Dispatch} Dispatch */
+/** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
+/** @typedef {import('./types').FetchHelperOptions} FetchHelperOptions */
+/** @typedef {import('./types').FetchHelperResult} FetchHelperResult */
+/** @typedef {import('./types').KubeState} KubeState */
+/** @typedef {import('./types').UserAccessState} UserAccessState */
+/** @typedef {import('./Popup/types').PopupState} PopupState */
 
 /**
- * @typedef {Object} FetchOptions
- * @property {string} path
- * @property {string} [method] Default is "GET"
- * @property {object} [body] Default is null
- * @property {Headers} [customHeaders]
- * @property {import('redux-thunk').ThunkDispatch} [dispatch] Redux store dispatch
- * @property {boolean} [useCache]
- * @property {AbortSignal} [signal]
+ * @param {Partial<PopupState>} state
+ * @returns {AnyAction}
  */
-
-/**
- * @typedef {Object} FetchResult
- * @property {any} data
- * @property {Headers} [headers]  if not using cache
- * @property {Response} [response]  if not using cache
- * @property {number} status
- */
-
-/** @returns {import('redux').AnyAction} */
 export const updatePopup = (state) => ({
   type: 'UPDATE_POPUP',
   data: state,
 });
 
-/** @returns {import('redux').AnyAction} */
+/** @returns {AnyAction} */
 export const connectionError = () => {
   console.log('connection error');
   return {
@@ -53,7 +48,7 @@ const fetchCache = {};
  * @param {Response} response
  * @param {boolean} useCache
  * @param {string} method
- * @returns {Promise<FetchResult>}
+ * @returns {Promise<FetchHelperResult>}
  */
 const getJsonOrText = (path, response, useCache, method = 'GET') =>
   response.text().then((textData) => {
@@ -75,13 +70,13 @@ const getJsonOrText = (path, response, useCache, method = 'GET') =>
     };
   });
 
-/** @type {Promise<FetchResult>} */
+/** @type {Promise<FetchHelperResult>} */
 let pendingRequest = null;
 /**
  * @param {Object} opts
  * @param {string} [opts.path]
  * @param {string} [opts.method]
- * @param {import('redux-thunk').ThunkDispatch} [opts.dispatch]
+ * @param {Dispatch} [opts.dispatch]
  */
 export const fetchCreds = (opts) => {
   if (pendingRequest) {
@@ -118,8 +113,8 @@ export const fetchCreds = (opts) => {
  * the result promise only includes {data, status} - where JSON data is re-parsed
  * every time to avoid mutation by the client
  *
- * @param {FetchOptions} opts
- * @return {Promise<FetchResult>}
+ * @param {FetchHelperOptions} opts
+ * @return {Promise<FetchHelperResult>}
  */
 export const fetchWithCreds = (opts) => {
   const {
@@ -172,8 +167,7 @@ export const fetchWithCreds = (opts) => {
 };
 
 /**
- *
- * @param {FetchOptions} opts
+ * @param {FetchHelperOptions} opts
  * @param {number} timeoutInMS
  */
 export const fetchWithCredsAndTimeout = (opts, timeoutInMS) => {
@@ -203,8 +197,8 @@ export const fetchWithCredsAndTimeout = (opts, timeoutInMS) => {
 };
 
 /**
- * @param {FetchResult} result
- * @returns {import('redux').AnyAction}
+ * @param {FetchHelperResult} result
+ * @returns {AnyAction}
  */
 const handleFetchUser = ({ status, data }) => {
   switch (status) {
@@ -226,36 +220,34 @@ const handleFetchUser = ({ status, data }) => {
   }
 };
 
-/** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
-export const fetchUser = () => (dispatch) =>
+export const fetchUser = () => (/** @type {Dispatch} */ dispatch) =>
   fetchCreds({ dispatch }).then((res) => dispatch(handleFetchUser(res)));
 
-/**
- * @param {boolean} displayAuthPopup
- * @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>}
- */
-export const logoutAPI = (displayAuthPopup = false) => (dispatch) =>
-  fetch(
-    `${userapiPath}/logout?next=${hostname}${
-      process.env.NODE_ENV === 'development' ? 'dev.html' : ''
-    }`
-  ).then((response) => {
-    if (displayAuthPopup)
-      dispatch({
-        type: 'UPDATE_POPUP',
-        data: {
-          authPopup: true,
-        },
-      });
-    else document.location.replace(response.url);
-  });
+/** @param {boolean} displayAuthPopup */
+export const logoutAPI =
+  (displayAuthPopup = false) =>
+  (/** @type {Dispatch} */ dispatch) =>
+    fetch(
+      `${userapiPath}/logout?next=${hostname}${
+        process.env.NODE_ENV === 'development' ? 'dev.html' : ''
+      }`
+    ).then((response) => {
+      if (displayAuthPopup)
+        dispatch({
+          type: 'UPDATE_POPUP',
+          data: {
+            authPopup: true,
+          },
+        });
+      else document.location.replace(response.url);
+    });
 
 /**
  * @param {Object} opts
  * @param {string} [opts.path]
  * @param {string} [opts.method]
- * @param {import('redux-thunk').ThunkDispatch} [opts.dispatch]
- * @returns {?Promise<FetchResult>}
+ * @param {Dispatch} [opts.dispatch]
+ * @returns {?Promise<FetchHelperResult>}
  */
 export const fetchIsUserLoggedInNoRefresh = (opts) => {
   const { path = `${submissionApiPath}`, method = 'GET', dispatch } = opts;
@@ -279,18 +271,16 @@ export const fetchIsUserLoggedInNoRefresh = (opts) => {
   return requestPromise;
 };
 
-/** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
-export const fetchUserNoRefresh = () => (dispatch) =>
-  fetchIsUserLoggedInNoRefresh({
-    dispatch,
-  }).then((res) => dispatch(handleFetchUser(res)));
+export const fetchUserNoRefresh = () => (/** @type {Dispatch} */ dispatch) =>
+  fetchIsUserLoggedInNoRefresh({ dispatch }).then((res) =>
+    dispatch(handleFetchUser(res))
+  );
 
 /**
  * redux-thunk support asynchronous redux actions via 'thunks' -
  * lambdas that accept dispatch and getState functions as arguments
- * @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>}
  */
-export const fetchProjects = () => (dispatch) =>
+export const fetchProjects = () => (/** @type {Dispatch} */ dispatch) =>
   fetchWithCreds({
     path: `${submissionApiPath}graphql`,
     body: JSON.stringify({
@@ -314,17 +304,15 @@ export const fetchProjects = () => (dispatch) =>
 
 /**
  * Fetch the schema for graphi, and stuff it into redux - handled by router
- * @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>}
  */
-export const fetchSchema = () => (dispatch) =>
-  fetch('../data/schema.json')
+export const fetchSchema = () => (/** @type {Dispatch} */ dispatch) =>
+  fetch('/data/schema.json')
     .then((response) => response.json())
     .then(({ data }) =>
       dispatch({ type: 'RECEIVE_SCHEMA', schema: buildClientSchema(data) })
     );
 
-/** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
-export const fetchGuppySchema = () => (dispatch) =>
+export const fetchGuppySchema = () => (/** @type {Dispatch} */ dispatch) =>
   fetch(guppyGraphQLUrl, {
     credentials: 'include',
     headers,
@@ -336,17 +324,18 @@ export const fetchGuppySchema = () => (dispatch) =>
   })
     .then((response) => response.json())
     .then(({ data }) =>
-      dispatch({ type: 'RECEIVE_GUPPY_SCHEMA', data: buildClientSchema(data) })
+      dispatch({
+        type: 'RECEIVE_GUPPY_SCHEMA',
+        data: buildClientSchema(data),
+      })
     );
 
-/** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
-export const fetchDictionary = () => (dispatch) =>
-  fetch('../data/dictionary.json')
+export const fetchDictionary = () => (/** @type {Dispatch} */ dispatch) =>
+  fetch('/data/dictionary.json')
     .then((response) => response.json())
     .then((data) => dispatch({ type: 'RECEIVE_DICTIONARY', data }));
 
-/** @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>} */
-export const fetchVersionInfo = () => (dispatch) =>
+export const fetchVersionInfo = () => (/** @type {Dispatch} */ dispatch) =>
   fetchWithCreds({
     path: `${guppyUrl}/_data_version`,
     method: 'GET',
@@ -366,46 +355,155 @@ export const fetchVersionInfo = () => (dispatch) =>
 
 /**
  * Asks arborist which restricted access components the user has access to
- * @returns {import('redux-thunk').ThunkAction<Promise, any, any, any>}
  */
-export const fetchUserAccess = () => async (dispatch) => {
-  /**
-   * restricted access components and their associated arborist resources:
-   * @type {{ [name: string]: { [key: string]: string } }}
-   */
-  const resourceMapping = config.componentToResourceMapping || {};
-  const resourceNames = Object.keys(resourceMapping);
+export const fetchUserAccess =
+  () => async (/** @type {Dispatch} */ dispatch) => {
+    /**
+     * restricted access components and their associated arborist resources:
+     * @type {{ [name: string]: { [key: string]: string } }}
+     */
+    const resourceMapping = config.componentToResourceMapping || {};
+    const resourceNames = Object.keys(resourceMapping);
 
-  const userAccessResults = await Promise.all(
-    resourceNames.map((name) => {
-      const { resource, method, service } = resourceMapping[name];
-      return fetch(
-        `${authzPath}?resource=${resource}&method=${method}&service=${service}`
-      ).then(({ status, ok }) => {
+    const userAccessResults = await Promise.all(
+      resourceNames.map((name) => {
+        const { resource, method, service } = resourceMapping[name];
+        return fetch(
+          `${authzPath}?resource=${resource}&method=${method}&service=${service}`
+        ).then(({ status, ok }) => {
+          switch (status) {
+            case 401: // user is not logged in
+            case 403: // user is not allowed to access the resource
+              return false;
+            case 200: // valid input -> check "ok" field for authorization
+              return ok;
+            default:
+              console.error(
+                `Unknown status "${status}" returned by arborist call`
+              );
+              return false;
+          }
+        });
+      })
+    );
+
+    /** @type {{ [name: string]: boolean }} */
+    const userAccess = {};
+    userAccessResults.forEach((hasAccess, i) => {
+      userAccess[resourceNames[i]] = hasAccess;
+    });
+
+    dispatch({
+      type: 'RECEIVE_USER_ACCESS',
+      data: userAccess,
+    });
+  };
+
+/**
+ * @param {string} did
+ * @param {string} method
+ */
+export const getPresignedUrl = (did, method) => {
+  const urlPath = `${userapiPath}data/${method}/${did}`;
+  return fetchWithCreds({ path: urlPath, method: 'GET' }).then(
+    ({ data }) => /** @type {string} */ (data.url)
+  );
+};
+
+/** @param {any} body */
+export const dispatchJob = (body) => (/** @type {Dispatch} */ dispatch) =>
+  fetchWithCreds({
+    path: `${jobapiPath}dispatch`,
+    body: JSON.stringify(body),
+    method: 'POST',
+    dispatch,
+  })
+    .then(
+      ({ status, data }) => {
         switch (status) {
-          case 401: // user is not logged in
-          case 403: // user is not allowed to access the resource
-            return false;
-          case 200: // valid input -> check "ok" field for authorization
-            return ok;
+          case 200:
+            return {
+              type: 'RECEIVE_JOB_DISPATCH',
+              data,
+            };
           default:
-            console.error(
-              `Unknown status "${status}" returned by arborist call`
-            );
-            return false;
+            return {
+              type: 'FETCH_ERROR',
+              error: data,
+            };
         }
-      });
-    })
+      },
+      (err) => ({ type: 'FETCH_ERROR', error: err })
+    )
+    .then((msg) => {
+      dispatch(msg);
+    });
+
+/**
+ *
+ * @param {Dispatch} dispatch
+ * @param {() => ({ kube: KubeState })} getState
+ * @returns
+ */
+export const checkJobStatus = (dispatch, getState) => {
+  const state = getState();
+  let jobId = null;
+  if (state.kube.job) {
+    jobId = state.kube.job.uid;
+  }
+  return fetchWithCreds({
+    path: `${jobapiPath}status?UID=${jobId}`,
+    method: 'GET',
+    dispatch,
+  })
+    .then(
+      ({ status, data }) => {
+        // stop fetching job status once it stops running
+        if (data.status !== 'Running') {
+          window.clearInterval(state.kube.jobStatusInterval);
+        }
+        switch (status) {
+          case 200:
+            return {
+              type: 'RECEIVE_JOB_STATUS',
+              data,
+            };
+          default:
+            return {
+              type: 'FETCH_ERROR',
+              error: data,
+            };
+        }
+      },
+      (err) => ({ type: 'FETCH_ERROR', error: err })
+    )
+    .then((msg) => {
+      dispatch(msg);
+    });
+};
+
+// dispatch the job with body
+// then start pulling job status
+// save the interval id in redux that can be used to clear the timer later
+
+// TODO: need to get result urls from a Gen3 service
+export const submitJob = (body) => (/** @type {ThunkDispatch} */ dispatch) =>
+  dispatch(dispatchJob(body));
+
+export const checkJob = () => (/** @type {ThunkDispatch} */ dispatch) =>
+  asyncSetInterval(() => dispatch(checkJobStatus), 1000).then(
+    (intervalValue) => {
+      dispatch({ type: 'JOB_STATUS_INTERVAL', value: intervalValue });
+    }
   );
 
-  /** @type {{ [name: string]: boolean }} */
-  const userAccess = {};
-  userAccessResults.forEach((hasAccess, i) => {
-    userAccess[resourceNames[i]] = hasAccess;
-  });
+/** @param {string} jobId */
+export const fetchJobResult = (jobId) => (/** @type {Dispatch} */ dispatch) =>
+  fetchWithCreds({
+    path: `${jobapiPath}output?UID=${jobId}`,
+    method: 'GET',
+    dispatch,
+  }).then((data) => data);
 
-  dispatch({
-    type: 'RECEIVE_USER_ACCESS',
-    data: userAccess,
-  });
-};
+export const resetJobState = () => (/** @type {Dispatch} */ dispatch) =>
+  dispatch({ type: 'RESET_JOB' });

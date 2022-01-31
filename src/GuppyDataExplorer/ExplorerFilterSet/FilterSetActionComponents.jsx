@@ -5,21 +5,26 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../../utils';
+import { defaultFilterSet as survivalDefaultFilterSet } from '../ExplorerSurvivalAnalysis/ControlForm';
 import { stringifyFilters } from './utils';
 import './ExplorerFilterSet.css';
-import './typedef';
+
+/** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('./types').ExplorerFilterSetActionType} ExplorerFilterSetActionType */
 
 /**
  * @param {Object} prop
  * @param {boolean} prop.isFilterSetEmpty
  * @param {boolean} prop.hasNoSavedFilterSets
- * @param {({ value: ExplorerFilterSetActionType }) => void} prop.onSelectAction
+ * @param {(option: { label: string; value: ExplorerFilterSetActionType }) => void} prop.onSelectAction
  */
 export function FilterSetActionMenu({
   isFilterSetEmpty,
   hasNoSavedFilterSets,
   onSelectAction,
 }) {
+  /** @type {{ label: string; value: ExplorerFilterSetActionType; isDisabled?: boolean }[]} */
   const options = [
     { label: 'New', value: 'new', isDisabled: isFilterSetEmpty },
     { label: 'Open', value: 'open', isDisabled: hasNoSavedFilterSets },
@@ -82,8 +87,8 @@ function FilterSetOpenForm({
               inputId='open-filter-set-name'
               options={options}
               value={selected}
-              autoFocus
-              clearable={false}
+              autoFocus // eslint-disable-line jsx-a11y/no-autofocus
+              isClearable={false}
               theme={overrideSelectTheme}
               onChange={(e) => setSelected(e)}
             />
@@ -169,6 +174,8 @@ function FilterSetCreateForm({
   function validate() {
     if (filterSet.name === '')
       setError({ isError: true, message: 'Name is required!' });
+    else if (filterSet.name === survivalDefaultFilterSet.name)
+      setError({ isError: true, message: 'Name is reserved!' });
     else if (filterSets.filter((c) => c.name === filterSet.name).length > 0)
       setError({ isError: true, message: 'Name is already in use!' });
     else setError({ isError: false, message: '' });
@@ -191,7 +198,7 @@ function FilterSetCreateForm({
           input={
             <input
               id='create-filter-set-name'
-              autoFocus
+              autoFocus // eslint-disable-line jsx-a11y/no-autofocus
               placeholder='Enter the Filter Set name'
               value={filterSet.name}
               onBlur={validate}
@@ -317,7 +324,7 @@ function FilterSetUpdateForm({
           input={
             <input
               id='update-ohort-name'
-              autoFocus
+              autoFocus // eslint-disable-line jsx-a11y/no-autofocus
               placeholder='Enter the Filter Set name'
               value={filterSet.name}
               onBlur={validate}
@@ -471,13 +478,8 @@ export function FilterSetActionForm({
   handlers,
   isFiltersChanged,
 }) {
-  const {
-    handleOpen,
-    handleCreate,
-    handleUpdate,
-    handleDelete,
-    handleClose,
-  } = handlers;
+  const { handleOpen, handleCreate, handleUpdate, handleDelete, handleClose } =
+    handlers;
 
   switch (actionType) {
     case 'open':

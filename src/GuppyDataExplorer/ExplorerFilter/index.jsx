@@ -4,28 +4,22 @@ import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerState } from '../ExplorerStateContext';
 import './ExplorerFilter.css';
 
+/** @typedef {import('../types').GuppyData} GuppyData */
+
 /**
  * @typedef {Object} ExplorerFilterProps
  * @property {string} [className]
- * @property {FilterState} [initialAppliedFilters]
- * @property {SimpleAggsData} [initialTabsOptions]
- * @property {FilterState} filter
- * @property {FilterChangeHandler} onFilterChange
- * @property {() => void} [onFilterClear]
- * @property {(anchorValue: string) => void} onAnchorValueChange
- * @property {(x: string[]) => void} [onPatientIdsChange]
- * @property {string[]} [patientIds]
- * @property {SimpleAggsData} tabsOptions
+ * @property {GuppyData['initialTabsOptions']} [initialTabsOptions]
+ * @property {GuppyData['filter']} filter
+ * @property {GuppyData['onFilterChange']} onFilterChange
+ * @property {GuppyData['onAnchorValueChange']} onAnchorValueChange
+ * @property {GuppyData['tabsOptions']} tabsOptions
  */
 
 /** @param {ExplorerFilterProps} props */
-function ExplorerFilter({ className = '', onFilterClear, ...filterProps }) {
-  const {
-    adminAppliedPreFilters,
-    filterConfig,
-    guppyConfig,
-    tierAccessLimit,
-  } = useExplorerConfig().current;
+function ExplorerFilter({ className = '', ...filterProps }) {
+  const { adminAppliedPreFilters, filterConfig, guppyConfig } =
+    useExplorerConfig().current;
   const {
     initialAppliedFilters,
     patientIds,
@@ -39,7 +33,6 @@ function ExplorerFilter({ className = '', onFilterClear, ...filterProps }) {
     guppyConfig,
     initialAppliedFilters,
     patientIds,
-    tierAccessLimit,
     onPatientIdsChange: handlePatientIdsChange,
   };
   const hasAppliedFilters = Object.keys(filterProps.filter).length > 0;
@@ -65,10 +58,6 @@ function ExplorerFilter({ className = '', onFilterClear, ...filterProps }) {
 
 ExplorerFilter.propTypes = {
   className: PropTypes.string,
-  initialAppliedFilters: PropTypes.object,
-  onFilterClear: PropTypes.func,
-  onPatientIdsChange: PropTypes.func,
-  patientIds: PropTypes.arrayOf(PropTypes.string),
   filter: PropTypes.object.isRequired, // from GuppyWrapper
   initialTabsOptions: PropTypes.object, // from GuppyWrapper
   onAnchorValueChange: PropTypes.func.isRequired, // from GuppyWrapper

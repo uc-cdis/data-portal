@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import Button from '../gen3-ui-component/components/Button';
 import IconComponent from './Icon';
 import dictIcons from '../img/icons/index';
-import './Popup.less';
+import './Popup.css';
 
 /**
  * @typedef {Object} PopupButton
  * @property {string} caption
  * @property {boolean} [enabled]
- * @property {function} fn
+ * @property {React.MouseEventHandler} fn
  * @property {string} [icon]
  * @property {string} [value]
  */
@@ -19,7 +19,7 @@ import './Popup.less';
  * @property {string} [error]
  * @property {string} [iconName]
  * @property {PopupButton[]} [leftButtons]
- * @property {{ code: string; label: string }[]} [lines]
+ * @property {{ code: string; label?: string }[]} [lines]
  * @property {string} [message]
  * @property {() => void} [onClose]
  * @property {PopupButton[]} [rightButtons]

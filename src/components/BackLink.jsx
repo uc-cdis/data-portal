@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import dictIcons from '../img/icons/index';
 import IconComponent from './Icon';
-import './BackLink.less';
+import './BackLink.css';
 
 /**
  * @typedef {Object} BackLinkProps

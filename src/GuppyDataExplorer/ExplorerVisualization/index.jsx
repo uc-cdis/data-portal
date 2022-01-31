@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 import Spinner from '../../components/Spinner';
@@ -10,11 +10,17 @@ import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import ExplorerRequestAccessButton from '../ExplorerRequestAccessButton';
 import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
+import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import './ExplorerVisualization.css';
-import '../typedef';
+
+/** @typedef {import('../types').ChartConfig} ChartConfig */
+/** @typedef {import('../types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('../types').GqlSort} GqlSort */
+/** @typedef {import('../types').SimpleAggsData} SimpleAggsData */
+/** @typedef {import('../types').SurvivalAnalysisConfig} SurvivalAnalysisConfig */
 
 /**
  * @typedef {Object} ViewContainerProps
@@ -47,7 +53,7 @@ ViewContainer.propTypes = {
 /** @param {SurvivalAnalysisConfig} survivalAnalysisConfig */
 function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
   if (survivalAnalysisConfig.result !== undefined)
-    for (const resultOption of ['pval', 'risktable', 'survival'])
+    for (const resultOption of ['risktable', 'survival'])
       if (survivalAnalysisConfig.result[resultOption]) return true;
 
   return false;
@@ -57,7 +63,7 @@ function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
  * @param {Object} args
  * @param {SimpleAggsData} args.aggsChartData
  * @param {ChartConfig} args.chartConfig
- * @param {FilterState} args.filter
+ * @param {ExplorerFilters} args.filter
  * @param {string} args.nodeCountTitle
  * @param {number} args.totalCount
  */
@@ -132,17 +138,16 @@ function getChartData({
  * @typedef {Object} ExplorerVisualizationProps
  * @property {number} accessibleCount
  * @property {number} totalCount
- * @property {AggsData} aggsData
  * @property {SimpleAggsData} aggsChartData
  * @property {Object[]} rawData
  * @property {string[]} allFields
- * @property {FilterState} filter
+ * @property {ExplorerFilters} filter
  * @property {boolean} isLoadingAggsData
  * @property {boolean} isLoadingRawData
  * @property {(args: {  sort: GqlSort; format: string }) => Promise} downloadRawData
  * @property {(args: { fields: string[]; sort: GqlSort }) => Promise} downloadRawDataByFields
- * @property {(type: string, filter: FilterState, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
- * @property {(type: string, filter: FilterState) => Promise} getTotalCountsByTypeAndFilter
+ * @property {(type: string, filter: ExplorerFilters, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
+ * @property {(type: string, filter: ExplorerFilters) => Promise} getTotalCountsByTypeAndFilter
  * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise} fetchAndUpdateRawData
  * @property {string} [className]
  */
@@ -151,7 +156,6 @@ function getChartData({
 function ExplorerVisualization({
   accessibleCount = 0,
   totalCount = 0,
-  aggsData = {},
   aggsChartData = {},
   rawData = [],
   allFields = [],
@@ -168,13 +172,13 @@ function ExplorerVisualization({
   const {
     buttonConfig,
     chartConfig,
+    filterConfig,
     getAccessButtonLink,
     guppyConfig,
     hideGetAccessButton = false,
     patientIdsConfig,
     survivalAnalysisConfig,
     tableConfig,
-    tierAccessLimit,
   } = useExplorerConfig().current;
   const nodeCountTitle =
     guppyConfig.nodeCountTitle || capitalizeFirstLetter(guppyConfig.dataType);
@@ -193,11 +197,9 @@ function ExplorerVisualization({
     totalCount,
   });
   const isComponentLocked = accessibleCount === 0;
-  const lockMessage = `The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit of ${tierAccessLimit} ${
-    guppyConfig.nodeCountTitle.toLowerCase() || guppyConfig.dataType
-  }.`;
+  const lockMessage =
+    'The chart is hidden because you are exploring restricted access data and one or more of the values within the chart has a count below the access limit.';
 
-  const history = useHistory();
   const buttonGroupProps = {
     buttonConfig,
     guppyConfig,
@@ -208,7 +210,7 @@ function ExplorerVisualization({
     downloadRawDataByTypeAndFilter,
     getTotalCountsByTypeAndFilter,
     filter,
-    history,
+    navigate: useNavigate(),
     isLocked: isComponentLocked,
     isPending: isLoadingAggsData,
   };
@@ -218,6 +220,7 @@ function ExplorerVisualization({
     className: 'explorer-visualization__table',
     tableConfig: {
       fields: tableColumnsOrdered ? tableConfig.fields : allFields,
+      filterInfo: filterConfig.info,
       ordered: tableColumnsOrdered,
       linkFields: tableConfig.linkFields || [],
     },
@@ -227,12 +230,6 @@ function ExplorerVisualization({
     totalCount,
     guppyConfig,
     isLocked: isComponentLocked,
-  };
-  const survivalProps = {
-    aggsData,
-    config: survivalAnalysisConfig,
-    fieldMapping: guppyConfig.fieldMapping,
-    filter,
   };
 
   return (
@@ -267,6 +264,9 @@ function ExplorerVisualization({
           <ReduxExplorerButtonGroup {...buttonGroupProps} />
         </div>
       </div>
+      {explorerView !== 'survival analysis' && (
+        <ExplorerFilterDisplay filter={filter} filterInfo={filterConfig.info} />
+      )}
       <ViewContainer
         showIf={explorerView === 'summary view'}
         isLoading={isLoadingAggsData}
@@ -320,7 +320,7 @@ function ExplorerVisualization({
       )}
       {isSurvivalAnalysisEnabled(survivalAnalysisConfig) && (
         <ViewContainer showIf={explorerView === 'survival analysis'}>
-          <ExplorerSurvivalAnalysis {...survivalProps} />
+          <ExplorerSurvivalAnalysis />
         </ViewContainer>
       )}
     </div>
@@ -330,7 +330,6 @@ function ExplorerVisualization({
 ExplorerVisualization.propTypes = {
   accessibleCount: PropTypes.number, // inherited from GuppyWrapper
   totalCount: PropTypes.number, // inherited from GuppyWrapper
-  aggsData: PropTypes.object, // inherited from GuppyWrapper
   aggsChartData: PropTypes.object, // inherited from GuppyWrapper
   rawData: PropTypes.array, // inherited from GuppyWrapper
   allFields: PropTypes.array, // inherited from GuppyWrapper

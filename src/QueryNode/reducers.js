@@ -1,3 +1,9 @@
+/** @typedef {import('./types').QueryNodeState} QueryNodeState */
+
+/**
+ * @param {QueryNodeState} state
+ * @param {string} id
+ */
 const removeDeletedNode = (state, id) => {
   const searchResult = state.search_result;
   const nodeType = Object.keys(searchResult.data)[0];
@@ -6,7 +12,8 @@ const removeDeletedNode = (state, id) => {
   return searchResult;
 };
 
-const queryNodes = (state = {}, action) => {
+/** @type {import('redux').Reducer<QueryNodeState>} */
+const queryNodes = (state = /** @type {QueryNodeState} */ ({}), action) => {
   switch (action.type) {
     case 'SUBMIT_SEARCH_FORM':
       return { ...state, search_form: action.data };

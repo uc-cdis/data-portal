@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Redirect, useLocation, useRouteMatch } from 'react-router-dom';
+import { useStore } from 'react-redux';
+import { matchPath, Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   fetchDictionary,
@@ -10,15 +11,27 @@ import {
   fetchUserAccess,
 } from '../actions';
 import Spinner from '../components/Spinner';
-import getReduxStore from '../reduxStore';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
+
+/** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
+/** @typedef {import('../types').ProjectState} ProjectState */
+/** @typedef {import('../types').UserState} UserState */
+/** @typedef {import('../GraphQLEditor/types').GraphiqlState} GraphiqlState */
+/** @typedef {import('../Submission/types').SubmissionState} SubmissionState */
+/**
+ * @typedef {Object} ReduxState
+ * @property {GraphiqlState} graphiql
+ * @property {ProjectState} project
+ * @property {SubmissionState} submission
+ * @property {UserState} user
+ */
 
 /**
  * @typedef {Object} ProtectedContentState
  * @property {boolean} authenticated
  * @property {boolean} dataLoaded
- * @property {?string} redirectTo
- * @property {?Object} user
+ * @property {string} redirectTo
+ * @property {UserState} user
  */
 
 /**
@@ -30,10 +43,9 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
  */
 
 const LOCATIONS_DICTIONARY = [
-  '/dd',
-  '/dd/:node',
+  '/dd/*',
   '/submission/map',
-  '/:project',
+  '/submission/:project/*',
 ];
 const LOCATIONS_PROJECTS = ['/files/*'];
 const LOCATIONS_SCHEMA = ['/query'];
@@ -48,6 +60,9 @@ function ProtectedContent({
   isPublic = false,
   filter,
 }) {
+  /** @type {{  dispatch: ThunkDispatch; getState: () => ReduxState }} */
+  const reduxStore = useStore();
+
   /** @type {ProtectedContentState} */
   const initialState = {
     authenticated: false,
@@ -57,40 +72,34 @@ function ProtectedContent({
   };
   const [state, setState] = useState(initialState);
   const location = useLocation();
-  const match = useRouteMatch();
 
   /**
    * Start filter the 'newState' for the checkLoginStatus component.
    * Check if the user is logged in, and update state accordingly.
-   * @param {Object} store
-   * @param {import('redux-thunk').ThunkDispatch<any, any, Promise>} store.dispatch
-   * @param {() => any} store.getState
    * @param {ProtectedContentState} currentState
-   * @returns {Promise<ProtectedContentState>}
    */
-  function checkLoginStatus(store, currentState) {
-    const newState = {
+  function checkLoginStatus(currentState) {
+    const newState = /** @type {ProtectedContentState} */ ({
       ...currentState,
       authenticated: true,
       redirectTo: null,
-      user: store.getState().user,
-    };
+      user: reduxStore.getState().user,
+    });
 
     // assume we're still logged in after 1 minute ...
     if (Date.now() - newState.user.lastAuthMs < 60000)
       return Promise.resolve(newState);
 
-    /** @type {{ dispatch: import('redux-thunk').ThunkDispatch}} */
-    return store
+    return reduxStore
       .dispatch(fetchUser()) // make an API call to see if we're still logged in ...
       .then(() => {
-        newState.user = store.getState().user;
+        newState.user = reduxStore.getState().user;
         if (!newState.user.username) {
           // not authenticated
           newState.redirectTo = '/login';
           newState.authenticated = false;
         } else {
-          store.dispatch(fetchUserAccess());
+          reduxStore.dispatch(fetchUserAccess());
         }
         return newState;
       });
@@ -99,7 +108,6 @@ function ProtectedContent({
   /**
    * Check if user is registered, and update state accordingly.
    * @param {ProtectedContentState} currentState
-   * @returns {ProtectedContentState}
    */
   function checkIfRegisterd(currentState) {
     const isUserRegistered =
@@ -114,7 +122,6 @@ function ProtectedContent({
   /**
    * Check if user is admin if needed, and update state accordingly.
    * @param {ProtectedContentState} currentState
-   * @returns {ProtectedContentState}
    */
   function checkIfAdmin(currentState) {
     if (!isAdminOnly) return currentState;
@@ -125,23 +132,21 @@ function ProtectedContent({
     return isAdminUser ? currentState : { ...currentState, redirectTo: '/' };
   }
 
-  /**
-   * Fetch resources on demand based on path
-   * @param {Object} store
-   * @param {import('redux-thunk').ThunkDispatch} store.dispatch
-   * @param {() => any} store.getState
-   */
-  function fetchResources({ dispatch, getState }) {
-    const { graphiql, project, submission } = getState();
-    const { path } = match;
+  /** Fetch resources on demand based on path */
+  function fetchResources() {
+    const { graphiql, project, submission } = reduxStore.getState();
+    /** @param {string[]} patterns */
+    function matchPathOneOf(patterns) {
+      return patterns.some((pattern) => matchPath(pattern, location.pathname));
+    }
 
-    if (LOCATIONS_DICTIONARY.includes(path) && !submission.dictionary) {
-      dispatch(fetchDictionary());
-    } else if (LOCATIONS_PROJECTS.includes(path) && !project.projects) {
-      dispatch(fetchProjects());
-    } else if (LOCATIONS_SCHEMA.includes(path)) {
-      if (!graphiql.schema) dispatch(fetchSchema());
-      if (!graphiql.guppySchema) dispatch(fetchGuppySchema());
+    if (matchPathOneOf(LOCATIONS_DICTIONARY) && !submission.dictionary) {
+      reduxStore.dispatch(fetchDictionary());
+    } else if (matchPathOneOf(LOCATIONS_PROJECTS) && !project.projects) {
+      reduxStore.dispatch(fetchProjects());
+    } else if (matchPathOneOf(LOCATIONS_SCHEMA)) {
+      if (!graphiql.schema) reduxStore.dispatch(fetchSchema());
+      if (!graphiql.guppySchema) reduxStore.dispatch(fetchGuppySchema());
     }
   }
 
@@ -152,37 +157,36 @@ function ProtectedContent({
     setState(newState);
   }
   useEffect(() => {
-    window.scrollTo(0, location.state?.scrollY ?? 0);
-
-    getReduxStore().then((store) =>
-      Promise.all([
-        store.dispatch({ type: 'CLEAR_COUNTS' }), // clear some counters
-        store.dispatch({ type: 'CLEAR_QUERY_NODES' }),
-      ]).then(() => {
-        if (isPublic)
-          if (typeof filter === 'function')
-            filter().finally(() => updateState(state));
-          else updateState(state);
-        else
-          checkLoginStatus(store, state)
-            .then(checkIfRegisterd)
-            .then(checkIfAdmin)
-            .then((newState) => {
-              if (newState.authenticated && typeof filter === 'function')
-                filter().finally(() => {
-                  updateState(newState);
-                  fetchResources(store);
-                });
-              else {
-                updateState(newState);
-                fetchResources(store);
-              }
-            });
-      })
+    window.scrollTo(
+      0,
+      /** @type {{ scrollY?: number }} */ (location?.state)?.scrollY ?? 0
     );
+
+    reduxStore.dispatch({ type: 'CLEAR_COUNTS' }); // clear some counters
+    reduxStore.dispatch({ type: 'CLEAR_QUERY_NODES' });
+
+    if (isPublic)
+      if (typeof filter === 'function')
+        filter().finally(() => updateState(state));
+      else updateState(state);
+    else
+      checkLoginStatus(state)
+        .then(checkIfRegisterd)
+        .then(checkIfAdmin)
+        .then((newState) => {
+          if (newState.authenticated && typeof filter === 'function')
+            filter().finally(() => {
+              updateState(newState);
+              fetchResources();
+            });
+          else {
+            updateState(newState);
+            fetchResources();
+          }
+        });
   }, [location]);
 
-  if (state.redirectTo) return <Redirect to={state.redirectTo} />;
+  if (state.redirectTo) return <Navigate to={state.redirectTo} replace />;
   if (isPublic && (state.dataLoaded || typeof filter !== 'function'))
     return children;
   if (state.authenticated)

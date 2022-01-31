@@ -11,7 +11,7 @@ import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-type
 import Spinner from '../../Spinner';
 import TooltipCDIS from '../TooltipCDIS';
 import Tick from '../Tick';
-import './IndexBarChart.less';
+import './IndexBarChart.css';
 import { getCategoryColor } from '../helper';
 
 const sortCount = (a, b) => {

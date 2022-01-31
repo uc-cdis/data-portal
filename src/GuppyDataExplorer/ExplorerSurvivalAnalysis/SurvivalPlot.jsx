@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
-import { Fragment, memo, useEffect, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { schemeCategory10 } from 'd3-scale-chromatic';
 import {
   ResponsiveContainer,
   LineChart,
@@ -11,21 +12,34 @@ import {
   Legend,
 } from 'recharts';
 import { filterSurvivalByTime, getXAxisTicks } from './utils';
-import './typedef';
+
+/** @typedef {import('./types').ColorScheme} ColorScheme */
+/** @typedef {import('./types').SurvivalData} SurvivalData */
 
 /**
- * @param {Object} prop
- * @param {ColorScheme} prop.colorScheme
- * @param {SurvivalData[]} prop.data
- * @param {number} prop.endTime
- * @param {number} prop.timeInterval
+ * @typedef {Object} SurvivalPlotProps
+ * @property {SurvivalData[]} data
+ * @property {number} [endTime]
+ * @property {number} startTime
+ * @property {number} timeInterval
  */
-const Plot = ({ colorScheme, data, endTime, timeInterval }) => {
+
+/** @param {SurvivalPlotProps} props */
+function Plot({ data, endTime, startTime, timeInterval }) {
+  const colorScheme = useMemo(() => {
+    /** @type {ColorScheme} */
+    const colorScheme = {};
+    for (const [count, { name }] of data.entries())
+      if (colorScheme[name] === undefined)
+        colorScheme[name] = schemeCategory10[count % 9];
+
+    return colorScheme;
+  }, [data]);
+
   const [opacity, setOpacity] = useState({});
   useEffect(() => {
     const initOpacity = {};
-    for (const { group } of data)
-      initOpacity[group.length === 0 ? 'All' : group[0].value] = 1;
+    for (const { name } of data) initOpacity[name] = 1;
     setOpacity(initOpacity);
   }, [data]);
 
@@ -42,9 +56,14 @@ const Plot = ({ colorScheme, data, endTime, timeInterval }) => {
     setOpacity(newOpacity);
   }
 
+  const filteredData = filterSurvivalByTime(data, startTime, endTime);
+
   return (
     <ResponsiveContainer height={300 + Math.floor(data.length / 5) * 25}>
-      <LineChart data={data} margin={{ left: 20, bottom: 10, right: 20 }}>
+      <LineChart
+        data={filteredData}
+        margin={{ left: 20, bottom: 10, right: 20 }}
+      >
         <XAxis
           dataKey='time'
           type='number'
@@ -53,7 +72,7 @@ const Plot = ({ colorScheme, data, endTime, timeInterval }) => {
             position: 'insideBottom',
             offset: -5,
           }}
-          ticks={getXAxisTicks(data, timeInterval, endTime)}
+          ticks={getXAxisTicks(filteredData, timeInterval, endTime)}
           domain={['dataMin', endTime]}
         />
         <YAxis
@@ -69,28 +88,24 @@ const Plot = ({ colorScheme, data, endTime, timeInterval }) => {
           onMouseEnter={handleLegendMouseEnter}
           onMouseLeave={handleLegendMouseLeave}
         />
-        {data.map(({ group, data }) => {
-          const factorValue = group.length === 0 ? 'All' : group[0].value;
-          return (
-            <Line
-              key={factorValue}
-              data={data}
-              dataKey='prob'
-              dot={false}
-              name={factorValue}
-              type='stepAfter'
-              stroke={colorScheme[factorValue]}
-              strokeOpacity={opacity[factorValue]}
-            />
-          );
-        })}
+        {filteredData.map(({ data, name }) => (
+          <Line
+            key={name}
+            data={data}
+            dataKey='prob'
+            dot={false}
+            name={name}
+            type='stepAfter'
+            stroke={colorScheme[name]}
+            strokeOpacity={opacity[name]}
+          />
+        ))}
       </LineChart>
     </ResponsiveContainer>
   );
-};
+}
 
 Plot.propTypes = {
-  colorScheme: PropTypes.object.isRequired,
   data: PropTypes.arrayOf(
     PropTypes.exact({
       data: PropTypes.arrayOf(
@@ -99,92 +114,29 @@ Plot.propTypes = {
           time: PropTypes.number,
         })
       ),
-      group: PropTypes.arrayOf(
-        PropTypes.exact({
-          variable: PropTypes.string,
-          value: PropTypes.string,
-        })
-      ),
+      name: PropTypes.string,
     })
   ).isRequired,
-  endTime: PropTypes.number.isRequired,
+  endTime: PropTypes.number,
+  startTime: PropTypes.number.isRequired,
   timeInterval: PropTypes.number.isRequired,
 };
 
-/**
- * @param {Object} prop
- * @param {ColorScheme} prop.colorScheme
- * @param {SurvivalData[]} prop.data
- * @param {number} prop.endTime
- * @param {boolean} prop.isStratified
- * @param {number} prop.startTime
- * @param {number} prop.timeInterval
- */
-function SurvivalPlot({
-  colorScheme,
-  data,
-  endTime,
-  isStratified,
-  timeInterval,
-  startTime,
-}) {
-  const filteredData = filterSurvivalByTime(data, startTime, endTime);
+/** @param {SurvivalPlotProps} props */
+function SurvivalPlot(props) {
   return (
     <div className='explorer-survival-analysis__survival-plot'>
-      {/* eslint-disable-next-line no-nested-ternary */}
-      {filteredData.length === 0 ? (
+      {props.data.length === 0 ? (
         <div className='explorer-survival-analysis__figure-placeholder'>
-          {'Click "Apply" to get the survival plot here.'}
+          The survival curves plot will appear here.
         </div>
-      ) : isStratified ? (
-        Object.entries(
-          filteredData.reduce((acc, { group, data }) => {
-            const [factor, stratification] = group;
-            const stratificationKey = JSON.stringify(stratification);
-            const stratificationValue =
-              acc[stratificationKey] !== undefined
-                ? [...acc[stratificationKey], { group: [factor], data }]
-                : [{ group: [factor], data }];
-
-            return { ...acc, [stratificationKey]: stratificationValue };
-          }, {})
-        ).map(([key, data]) => (
-          <Fragment key={key}>
-            <div className='explorer-survival-analysis__figure-title'>
-              {JSON.parse(key).value}
-            </div>
-            <Plot {...{ colorScheme, data, endTime, timeInterval }} />
-          </Fragment>
-        ))
       ) : (
-        <Plot {...{ colorScheme, data: filteredData, endTime, timeInterval }} />
+        <Plot {...props} />
       )}
     </div>
   );
 }
 
-SurvivalPlot.propTypes = {
-  colorScheme: PropTypes.object.isRequired,
-  data: PropTypes.arrayOf(
-    PropTypes.exact({
-      data: PropTypes.arrayOf(
-        PropTypes.exact({
-          prob: PropTypes.number,
-          time: PropTypes.number,
-        })
-      ),
-      group: PropTypes.arrayOf(
-        PropTypes.exact({
-          variable: PropTypes.string,
-          value: PropTypes.string,
-        })
-      ),
-    })
-  ).isRequired,
-  endTime: PropTypes.number.isRequired,
-  isStratified: PropTypes.bool.isRequired,
-  startTime: PropTypes.number.isRequired,
-  timeInterval: PropTypes.number.isRequired,
-};
+SurvivalPlot.propTypes = Plot.propTypes;
 
 export default memo(SurvivalPlot);

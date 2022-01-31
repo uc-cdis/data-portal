@@ -1,77 +1,69 @@
-import { Component, createRef } from 'react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 import PropTypes from 'prop-types';
 import './AutoCompleteInput.css';
 
-class AutoCompleteInput extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      closeIconHidden: true,
-    };
-    this.inputElem = createRef();
-  }
+const AutoCompleteInput = forwardRef(
+  /**
+   * @param {Object} props
+   * @param {string} [props.icon]
+   * @param {string} [props.inputTitle]
+   * @param {(input: string) => void} [props.onInputChange]
+   * @param {(input: string) => void} [props.onSubmitInput]
+   * @param {string} [props.placeHolderText]
+   * @param {React.Ref<any>} ref
+   */
+  // eslint-disable-next-line prefer-arrow-callback
+  function AutoCompleteInput(props, ref) {
+    const {
+      icon = 'search',
+      inputTitle = 'Search Input',
+      onInputChange,
+      onSubmitInput,
+      placeHolderText = 'Search',
+    } = props;
 
-  handleChange() {
-    const currentInput = this.inputElem.current.value;
-    this.props.onInputChange(currentInput);
-    this.updateCloseIcon();
-  }
+    const [input, setInput] = useState('');
 
-  handleClear() {
-    this.inputElem.current.value = '';
-    this.updateCloseIcon();
-    this.props.onInputChange('');
-  }
+    useImperativeHandle(ref, () => ({
+      setInputText: setInput,
+      clearInput() {
+        setInput('');
+      },
+    }));
 
-  handleSubmit(e) {
-    if (e && e.preventDefault) e.preventDefault();
-    this.props.onSubmitInput(this.inputElem.current.value);
-  }
+    /** @param {React.SyntheticEvent} e */
+    function handleSubmit(e) {
+      e.preventDefault();
+      onSubmitInput?.(input);
+    }
 
-  setInputText(text) {
-    this.inputElem.current.value = text;
-    this.updateCloseIcon();
-  }
-
-  clearInput() {
-    this.inputElem.current.value = '';
-    this.updateCloseIcon();
-  }
-
-  updateCloseIcon() {
-    const currentInput = this.inputElem.current.value;
-    this.setState({
-      closeIconHidden: !currentInput || currentInput.length === 0,
-    });
-  }
-
-  render() {
     return (
       <div className='auto-complete-input'>
-        <form
-          className='auto-complete-input__form'
-          onSubmit={(e) => this.handleSubmit(e)}
-        >
+        <form className='auto-complete-input__form' onSubmit={handleSubmit}>
           <input
-            title={this.props.inputTitle}
+            value={input}
+            title={inputTitle}
             className='auto-complete-input__input-box body'
-            onChange={() => {
-              this.handleChange();
+            onChange={(e) => {
+              const newInput = e.currentTarget.value;
+              setInput(newInput);
+              onInputChange?.(newInput);
             }}
-            placeholder={this.props.placeHolderText}
-            ref={this.inputElem}
+            placeholder={placeHolderText}
           />
         </form>
-        {!this.state.closeIconHidden && (
+        {input.length > 0 && (
           <>
             <span
               onClick={() => {
-                this.handleClear();
+                setInput('');
+                onInputChange?.('');
               }}
               onKeyPress={(e) => {
                 if (e.charCode === 13 || e.charCode === 32) {
                   e.preventDefault();
-                  this.handleClear();
+                  setInput('');
+                  onInputChange?.('');
                 }
               }}
               role='button'
@@ -84,25 +76,20 @@ class AutoCompleteInput extends Component {
           </>
         )}
         <span
-          onClick={() => this.handleSubmit()}
+          onClick={handleSubmit}
           onKeyPress={(e) => {
-            if (e.charCode === 13 || e.charCode === 32) {
-              e.preventDefault();
-              this.handleSubmit();
-            }
+            if (e.charCode === 13 || e.charCode === 32) handleSubmit(e);
           }}
           role='button'
           tabIndex={0}
           aria-label='Search'
         >
-          <i
-            className={`g3-icon g3-icon--${this.props.icon} auto-complete-input__icon`}
-          />
+          <i className={`g3-icon g3-icon--${icon} auto-complete-input__icon`} />
         </span>
       </div>
     );
   }
-}
+);
 
 AutoCompleteInput.propTypes = {
   onInputChange: PropTypes.func,
@@ -110,14 +97,6 @@ AutoCompleteInput.propTypes = {
   icon: PropTypes.string,
   onSubmitInput: PropTypes.func,
   inputTitle: PropTypes.string,
-};
-
-AutoCompleteInput.defaultProps = {
-  onInputChange: () => {},
-  placeHolderText: 'Search',
-  icon: 'search',
-  onSubmitInput: () => {},
-  inputTitle: 'Search Input',
 };
 
 export default AutoCompleteInput;

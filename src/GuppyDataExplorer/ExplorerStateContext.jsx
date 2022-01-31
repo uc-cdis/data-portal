@@ -7,17 +7,18 @@ import {
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useExplorerConfig } from './ExplorerConfigContext';
 import { extractExplorerStateFromURL } from './utils';
-import './typedef';
+
+/** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
 
 /**
  * @typedef {Object} ExplorerStateContext
- * @property {FilterState} initialAppliedFilters
+ * @property {ExplorerFilters} initialAppliedFilters
  * @property {string[]} patientIds
  * @property {() => void} handleBrowserNavigationForState
- * @property {(filter: FilterState) => void} handleFilterChange
+ * @property {(filter: ExplorerFilters) => void} handleFilterChange
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
  * @property {() => void} clearFilters
  * @property {(filters) => void} updateFilters
@@ -27,7 +28,8 @@ import './typedef';
 const ExplorerStateContext = createContext(null);
 
 export function ExplorerStateProvider({ children }) {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const {
     current: { filterConfig, patientIdsConfig },
     shouldUpdateState,
@@ -36,11 +38,7 @@ export function ExplorerStateProvider({ children }) {
 
   const initialState = useMemo(
     () =>
-      extractExplorerStateFromURL(
-        new URLSearchParams(history.location.search),
-        filterConfig,
-        patientIdsConfig
-      ),
+      extractExplorerStateFromURL(searchParams, filterConfig, patientIdsConfig),
     []
   );
   const [filters, setFilters] = useState(initialState.initialAppliedFilters);
@@ -48,7 +46,7 @@ export function ExplorerStateProvider({ children }) {
   useEffect(() => {
     if (shouldUpdateState) {
       const newState = extractExplorerStateFromURL(
-        new URLSearchParams(history.location.search),
+        searchParams,
         filterConfig,
         patientIdsConfig
       );
@@ -62,7 +60,7 @@ export function ExplorerStateProvider({ children }) {
   function handleBrowserNavigationForState() {
     isBrowserNavigation.current = true;
     const newState = extractExplorerStateFromURL(
-      new URLSearchParams(history.location.search),
+      searchParams,
       filterConfig,
       patientIdsConfig
     );
@@ -71,10 +69,10 @@ export function ExplorerStateProvider({ children }) {
     isBrowserNavigation.current = false;
   }
 
-  /** @param {FilterState} filter */
+  /** @param {ExplorerFilters} filter */
   function handleFilterChange(filter) {
-    const searchParams = new URLSearchParams(history.location.search);
-    searchParams.delete('filter');
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.delete('filter');
 
     if (filter && Object.keys(filter).length > 0) {
       /** @type {string[]} */
@@ -83,7 +81,7 @@ export function ExplorerStateProvider({ children }) {
         if (searchFields?.length > 0) allSearchFields.push(...searchFields);
 
       if (allSearchFields.length === 0) {
-        searchParams.set('filter', JSON.stringify(filter));
+        newSearchParams.set('filter', JSON.stringify(filter));
       } else {
         const allSearchFieldSet = new Set(allSearchFields);
         const filterWithoutSearchFields = {};
@@ -92,13 +90,15 @@ export function ExplorerStateProvider({ children }) {
             filterWithoutSearchFields[field] = filter[field];
 
         if (Object.keys(filterWithoutSearchFields).length > 0)
-          searchParams.set('filter', JSON.stringify(filterWithoutSearchFields));
+          newSearchParams.set(
+            'filter',
+            JSON.stringify(filterWithoutSearchFields)
+          );
       }
     }
 
     if (!isBrowserNavigation.current)
-      history.push({
-        search: decodeURIComponent(searchParams.toString()),
+      navigate(`?${decodeURIComponent(newSearchParams.toString())}`, {
         state: { scrollY: window.scrollY },
       });
   }
@@ -107,32 +107,35 @@ export function ExplorerStateProvider({ children }) {
   function handlePatientIdsChange(ids) {
     if (patientIdsConfig?.filter === undefined) return;
 
-    const searchParams = new URLSearchParams(history.location.search);
-    searchParams.delete('patientIds');
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.delete('patientIds');
 
-    if (ids.length > 0) searchParams.set('patientIds', ids.join(','));
+    if (ids.length > 0) newSearchParams.set('patientIds', ids.join(','));
 
     setPatientIds(ids);
     if (!isBrowserNavigation.current)
-      history.push({ search: decodeURIComponent(searchParams.toString()) });
+      navigate(`?${decodeURIComponent(newSearchParams.toString())}`);
   }
 
   function clearFilters() {
     setFilters({});
   }
 
+  const value = useMemo(
+    () => ({
+      initialAppliedFilters: filters,
+      patientIds,
+      handleBrowserNavigationForState,
+      handleFilterChange,
+      handlePatientIdsChange,
+      clearFilters,
+      updateFilters: setFilters,
+    }),
+    [filters, patientIds]
+  );
+
   return (
-    <ExplorerStateContext.Provider
-      value={{
-        initialAppliedFilters: filters,
-        patientIds,
-        handleBrowserNavigationForState,
-        handleFilterChange,
-        handlePatientIdsChange,
-        clearFilters,
-        updateFilters: setFilters,
-      }}
-    >
+    <ExplorerStateContext.Provider value={value}>
       {children}
     </ExplorerStateContext.Provider>
   );

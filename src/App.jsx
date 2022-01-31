@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
-import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
 import Layout from './Layout';
@@ -9,14 +9,13 @@ import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 // import { fetchCoreMetadata } from './CoreMetadata/reduxer';
 import { fetchAccess } from './UserProfile/ReduxUserProfile';
-import { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
-  basename,
   enableResourceBrowser,
   // workspaceUrl,
   // workspaceErrorUrl,
 } from './localconf';
 import { fetchVersionInfo } from './actions';
+import useSessionMonitor from './hooks/useSessionMonitor';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
@@ -39,155 +38,143 @@ const UserProfile = lazy(() => import('./UserProfile/ReduxUserProfile'));
 // const Indexing = lazy(() => import('./Indexing/Indexing'));
 // const Workspace = lazy(() => import('./Workspace'));
 
-function App({ store }) {
-  useEffect(() => {
-    store.dispatch(fetchVersionInfo());
-  }, []);
-  return (
-    <Provider store={store}>
-      <BrowserRouter basename={basename}>
-        <Layout>
-          <Suspense
-            fallback={
-              <div style={{ height: '100vh' }}>
-                <Spinner />
-              </div>
-            }
-          >
-            <Switch>
-              <Route path='/login'>
-                <ProtectedContent
-                  isPublic
-                  filter={() => store.dispatch(fetchLogin())}
-                >
-                  <ReduxLogin />
-                </ProtectedContent>
-              </Route>
-              <Route exact path='/'>
-                <ProtectedContent>
-                  <IndexPage />
-                </ProtectedContent>
-              </Route>
-              <Route exact path='/submission'>
-                <ProtectedContent isAdminOnly>
-                  <SubmissionPage />
-                </ProtectedContent>
-              </Route>
-              <Route
-                exact
-                path='/submission/files'
-                component={({ history }) => (
-                  <ProtectedContent isAdminOnly>
-                    <ReduxMapFiles history={history} />
-                  </ProtectedContent>
-                )}
-              />
-              <Route
-                exact
-                path='/submission/map'
-                component={({ history }) => (
-                  <ProtectedContent isAdminOnly>
-                    <ReduxMapDataModel history={history} />
-                  </ProtectedContent>
-                )}
-              />
-              <Route path='/query'>
-                <ProtectedContent>
-                  <GraphQLQuery />
-                </ProtectedContent>
-              </Route>
-              <Route path='/identity'>
-                <ProtectedContent filter={() => store.dispatch(fetchAccess())}>
-                  <UserProfile />
-                </ProtectedContent>
-              </Route>
-              <Route path='/dd/:node'>
-                <ProtectedContent>
-                  <DataDictionary />
-                </ProtectedContent>
-              </Route>
-              <Route path='/dd'>
-                <ProtectedContent>
-                  <DataDictionary />
-                </ProtectedContent>
-              </Route>
-              <Route
-                path='/:project/search'
-                component={({ location, match }) => {
-                  const queryFilter = () => {
-                    const searchParams = new URLSearchParams(location.search);
+function App() {
+  useSessionMonitor();
 
-                    return Array.from(searchParams.keys()).length > 0
-                      ? // Linking directly to a search result,
-                        // so kick-off search here (rather than on button click)
-                        store.dispatch(
-                          submitSearchForm({
-                            project: match.params.project,
-                            ...Object.fromEntries(searchParams.entries()),
-                          })
-                        )
-                      : Promise.resolve('ok');
-                  };
-                  return (
-                    <ProtectedContent filter={queryFilter}>
-                      <ReduxQueryNode />
-                    </ProtectedContent>
-                  );
-                }}
-              />
-              <Route path='/explorer'>
-                <ProtectedContent>
-                  <Explorer />
-                </ProtectedContent>
-              </Route>
-              {enableResourceBrowser && (
-                <Route path='/resource-browser'>
-                  <ProtectedContent>
-                    <ResourceBrowser />
-                  </ProtectedContent>
-                </Route>
-              )}
-              <Route path='/:project'>
-                <ProtectedContent>
-                  <ProjectSubmission />
-                </ProtectedContent>
-              </Route>
-              {/* <Route path='/indexing'>
-                <ProtectedContent>
-                  <Indexing />
-                </ProtectedContent>
-              </Route>
-              <Route
-                exact
-                path='/files/*'
-                component={({ match }) => (
-                  <ProtectedContent
-                    filter={() =>
-                      store.dispatch(fetchCoreMetadata(props.match.params[0]))
-                    }
-                  >
-                    <CoreMetadataPage />
-                  </ProtectedContent>
-                )}
-              />
-              <Route path='/workspace'>
-                <ProtectedContent>
-                  <Workspace />
-                </ProtectedContent>
-              </Route>
-              <Route
-                path={workspaceUrl}
-                component={ErrorWorkspacePlaceholder}
-              />
-              <Route
-                path={workspaceErrorUrl}
-                component={ErrorWorkspacePlaceholder}
-              /> */}
-            </Switch>
-          </Suspense>
-        </Layout>
-      </BrowserRouter>
-    </Provider>
+  /** @type {import('redux-thunk').ThunkDispatch} */
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchVersionInfo());
+  }, []);
+
+  return (
+    <Routes>
+      <Route
+        path='/'
+        element={
+          <Layout>
+            <Suspense
+              fallback={
+                <div style={{ height: '100vh' }}>
+                  <Spinner />
+                </div>
+              }
+            >
+              <Outlet />
+            </Suspense>
+          </Layout>
+        }
+      >
+        <Route
+          index
+          element={
+            <ProtectedContent>
+              <IndexPage />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='login'
+          element={
+            <ProtectedContent isPublic filter={() => dispatch(fetchLogin())}>
+              <ReduxLogin />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='submission'
+          element={
+            <ProtectedContent isAdminOnly>
+              <Outlet />
+            </ProtectedContent>
+          }
+        >
+          <Route index element={<SubmissionPage />} />
+          <Route path='files' element={<ReduxMapFiles />} />
+          <Route path='map' element={<ReduxMapDataModel />} />
+          <Route path=':project' element={<Outlet />}>
+            <Route index element={<ProjectSubmission />} />
+            <Route path='search' element={<ReduxQueryNode />} />
+          </Route>
+        </Route>
+        <Route
+          path='query'
+          element={
+            <ProtectedContent>
+              <GraphQLQuery />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='identity'
+          element={
+            <ProtectedContent filter={() => dispatch(fetchAccess())}>
+              <UserProfile />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='dd/*'
+          element={
+            <ProtectedContent>
+              <DataDictionary />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='explorer'
+          element={
+            <ProtectedContent>
+              <Explorer />
+            </ProtectedContent>
+          }
+        />
+        {enableResourceBrowser && (
+          <Route
+            path='resource-browser'
+            element={
+              <ProtectedContent>
+                <ResourceBrowser />
+              </ProtectedContent>
+            }
+          />
+        )}
+        <Route path='*' element={<Navigate to='' replace />} />
+        {/* <Route
+          path='/indexing'
+          element={
+            <ProtectedContent>
+              <Indexing />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='/files/*'
+          element={
+            <ProtectedContent
+              filter={() =>
+                dispatch(fetchCoreMetadata(props.match.params[0]))
+              }
+            >
+              <CoreMetadataPage />
+            </ProtectedContent>
+          }
+        />
+        <Route
+          path='/workspace'
+          element={
+            <ProtectedContent>
+              <Workspace />
+            </ProtectedContent>
+          }
+        />
+        <Route path={workspaceUrl} element={<ErrorWorkspacePlaceholder />} />
+        <Route
+          path={workspaceErrorUrl}
+          element={<ErrorWorkspacePlaceholder />}
+        /> */}
+      </Route>
+    </Routes>
   );
 }
 

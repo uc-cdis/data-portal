@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 /** @param {TickProps} props */
 function Tick({ payload = {}, x = 0, y = 0 }) {
-  const [countNumber, countName] = payload.value?.split('#');
+  const [countNumber, countName] = payload.value.split('#');
   return (
     <g>
       <text textAnchor='end' x={x} y={y} dy={0}>

@@ -15,7 +15,6 @@ import './SingleSelectFilter.css';
  * @property {string} lockedTooltipMessage
  * @property {(label: string) => void} onSelect
  * @property {boolean} selected
- * @property {number} tierAccessLimit
  */
 
 function SingleSelectFilter({
@@ -29,7 +28,6 @@ function SingleSelectFilter({
   lockedTooltipMessage = '',
   onSelect,
   selected,
-  tierAccessLimit,
 }) {
   if (count === 0 && hideZero) {
     return null;
@@ -49,14 +47,9 @@ function SingleSelectFilter({
   if (count === hideValue) {
     // we don't disable selected filters
     inputDisabled = !isChecked;
-    countIconComponent = tierAccessLimit ? (
-      <span className='g3-badge g3-single-select-filter__count'>
-        {Number(tierAccessLimit).toLocaleString()}
-        <i className='g3-icon--under g3-icon g3-icon--sm g3-icon-color__base-blue' />
-      </span>
-    ) : (
+    countIconComponent = (
       <span className='g3-single-select-filter__icon-background'>
-        <i className='g3-icon--under g3-icon g3-icon--sm g3-icon-color__base-blue' />
+        <i className='g3-icon--lock g3-icon g3-icon--sm g3-icon-color__base-blue' />
       </span>
     );
 
@@ -127,7 +120,6 @@ SingleSelectFilter.propTypes = {
   lockedTooltipMessage: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
   selected: PropTypes.bool,
-  tierAccessLimit: PropTypes.number,
 };
 
 export default SingleSelectFilter;

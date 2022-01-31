@@ -2,7 +2,10 @@ import { components } from '../params';
 import { getFileNodes, getNodeTypes } from '../graphutils';
 import { getDictionaryWithExcludeSystemProperties } from './utils';
 
-const submission = (state = {}, action) => {
+/** @typedef {import('./types').SubmissionState} SubmissionState */
+
+/** @type {import('redux').Reducer<SubmissionState>} */
+const submission = (state = /** @type {SubmissionState} */ ({}), action) => {
   switch (action.type) {
     case 'REQUEST_UPLOAD':
       return { ...state, file: action.file, file_type: action.file_type };
@@ -49,8 +52,6 @@ const submission = (state = {}, action) => {
     case 'RECEIVE_RELAY_FAIL': {
       return { ...state, error: action.data };
     }
-    case 'RECEIVE_NODE_TYPES':
-      return { ...state, nodeTypes: action.data };
     case 'RECEIVE_DICTIONARY':
       return {
         ...state,
@@ -96,7 +97,10 @@ const submission = (state = {}, action) => {
     case 'RECEIVE_COUNTS':
       return {
         ...state,
-        counts_search: action.data,
+        counts_search: Object.entries(action.data).reduce((acc, [k, v]) => {
+          if (k.endsWith('_count')) acc[k] = v;
+          return acc;
+        }, {}),
         links_search: Object.entries(action.data).reduce((acc, entry) => {
           acc[entry[0]] = entry[1].length;
           return acc;
@@ -117,7 +121,7 @@ const submission = (state = {}, action) => {
     case 'RESET_SUBMISSION_STATUS':
       return {
         ...state,
-        submit_entity_counts: [],
+        submit_entity_counts: {},
         submit_result: null,
         submit_result_string: '',
         submit_status: 0,

@@ -15,28 +15,35 @@ import {
 } from '../../localconf';
 import './ExplorerButtonGroup.css';
 import Popup from '../../components/Popup';
-import '../typedef';
+
+/** @typedef {import('../../types').KubeState} KubeState */
+/** @typedef {import('../../types').UserAccessState} UserAccessState */
+/** @typedef {import('../types').ButtonConfig} ButtonConfig */
+/** @typedef {import('../types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('../types').GqlSort} GqlSort */
+/** @typedef {import('../types').GuppyConfig} GuppyConfig */
+/** @typedef {import('../types').SingleButtonConfig} SingleButtonConfig */
 
 /**
  * @typedef {Object} ExplorerButtonGroupProps
- * @property {Object} job
+ * @property {KubeState['job']} [job]
  * @property {(args: { sort?: GqlSort; format?: string }) => Promise} downloadRawData
  * @property {(args: { fields: string[]; sort?: GqlSort }) => Promise} downloadRawDataByFields
- * @property {(type: string, filter: FilterState, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
- * @property {(type: string, filter: FilterState) => Promise} getTotalCountsByTypeAndFilter
+ * @property {(type: string, filter: ExplorerFilters, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
+ * @property {(type: string, filter: ExplorerFilters) => Promise} getTotalCountsByTypeAndFilter
  * @property {number} accessibleCount
  * @property {number} totalCount
- * @property {FilterState} filter
- * @property {boolean} isPending: PropTypes.bool,
+ * @property {ExplorerFilters} filter
+ * @property {boolean} [isPending] : PropTypes.bool,
  * @property {ButtonConfig} buttonConfig: ButtonConfigType.isRequired,
  * @property {GuppyConfig} guppyConfig: GuppyConfigType.isRequired,
- * @property {import('history').History} history: PropTypes.object.isRequired,
+ * @property {import('react-router-dom').NavigateFunction} navigate: PropTypes.func.isRequired,
  * @property {(body: any) => void} submitJob: PropTypes.func.isRequired,
  * @property {() => void} resetJobState: PropTypes.func.isRequired,
  * @property {() => void} checkJobStatus: PropTypes.func.isRequired,
- * @property {(jobId: any) => Promise} fetchJobResult: PropTypes.func.isRequired,
+ * @property {(jobId: string) => Promise} fetchJobResult: PropTypes.func.isRequired,
  * @property {boolean} isLocked: PropTypes.bool.isRequired,
- * @property {Object} userAccess: PropTypes.object.isRequired,
+ * @property {UserAccessState['access']} userAccess: PropTypes.object.isRequired,
  */
 
 /**
@@ -61,7 +68,7 @@ import '../typedef';
  * @property {string} workspaceSuccessText
  */
 
-/** @augments {React.Component<ExplorerButtonGroupProps, ExplorerButtonGroupState>} */
+/** @extends {React.Component<ExplorerButtonGroupProps, ExplorerButtonGroupState>} */
 class ExplorerButtonGroup extends Component {
   /** @param {ExplorerButtonGroupProps} props */
   constructor(props) {
@@ -97,6 +104,13 @@ class ExplorerButtonGroup extends Component {
       workspaceSuccessText:
         'Your cohort has been saved! In order to view and run analysis on this cohort, please go to the workspace.',
     };
+    this.fileButtonTypes = [
+      'manifest',
+      'export',
+      'export-to-seven-bridges',
+      'export-to-workspace',
+      'export-to-pfb',
+    ];
   }
 
   /** @param {ExplorerButtonGroupProps} prevProps */
@@ -216,8 +230,8 @@ class ExplorerButtonGroup extends Component {
         )
       );
     }
-    const refField = this.props.guppyConfig.manifestMapping
-      .referenceIdFieldInDataIndex;
+    const refField =
+      this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
     const md5Field = 'md5sum';
     const fileNameField = 'file_name';
     const fileSizeField = 'file_size';
@@ -241,12 +255,12 @@ class ExplorerButtonGroup extends Component {
     const refIDList = await this.props
       .downloadRawDataByFields({ fields: [refField] })
       .then((res) => res.map((i) => i[refField]));
-    const refFieldInResourceIndex = this.props.guppyConfig.manifestMapping
-      .referenceIdFieldInResourceIndex;
-    const resourceFieldInResourceIndex = this.props.guppyConfig.manifestMapping
-      .resourceIdField;
-    const resourceType = this.props.guppyConfig.manifestMapping
-      .resourceIndexType;
+    const refFieldInResourceIndex =
+      this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
+    const resourceFieldInResourceIndex =
+      this.props.guppyConfig.manifestMapping.resourceIdField;
+    const resourceType =
+      this.props.guppyConfig.manifestMapping.resourceIndexType;
     const filter = {
       [refFieldInResourceIndex]: {
         selectedValues: refIDList,
@@ -365,7 +379,7 @@ class ExplorerButtonGroup extends Component {
 
   isPFBRunning = () => this.props.job && this.props.job.status === 'Running';
 
-  gotoWorkspace = () => this.props.history.push('/workspace');
+  gotoWorkspace = () => this.props.navigate('/workspace');
 
   closeToaster = () => {
     this.setState({
@@ -538,12 +552,7 @@ class ExplorerButtonGroup extends Component {
   };
 
   /** @param {SingleButtonConfig} buttonConfig */
-  isFileButton = (buttonConfig) =>
-    buttonConfig.type === 'manifest' ||
-    buttonConfig.type === 'export' ||
-    buttonConfig.type === 'export-to-seven-bridges' ||
-    buttonConfig.type === 'export-to-workspace' ||
-    buttonConfig.type === 'export-to-pfb';
+  isFileButton = ({ type }) => this.fileButtonTypes.includes(type);
 
   refreshManifestEntryCount = async () => {
     if (
@@ -553,10 +562,10 @@ class ExplorerButtonGroup extends Component {
       !this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex
     )
       return;
-    const caseField = this.props.guppyConfig.manifestMapping
-      .referenceIdFieldInDataIndex;
-    const caseFieldInFileIndex = this.props.guppyConfig.manifestMapping
-      .referenceIdFieldInResourceIndex;
+    const caseField =
+      this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
+    const caseFieldInFileIndex =
+      this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
     if (
       this.props.buttonConfig &&
       this.props.buttonConfig.buttons &&
@@ -581,8 +590,8 @@ class ExplorerButtonGroup extends Component {
         });
         if (caseIDResult) {
           const caseIDList = caseIDResult.map((i) => i[caseField]);
-          const fileType = this.props.guppyConfig.manifestMapping
-            .resourceIndexType;
+          const fileType =
+            this.props.guppyConfig.manifestMapping.resourceIndexType;
           const countResult = await this.props.getTotalCountsByTypeAndFilter(
             fileType,
             {
@@ -866,7 +875,7 @@ ExplorerButtonGroup.propTypes = {
   isPending: PropTypes.bool,
   buttonConfig: ButtonConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
-  history: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
   submitJob: PropTypes.func.isRequired,
   resetJobState: PropTypes.func.isRequired,
   checkJobStatus: PropTypes.func.isRequired,

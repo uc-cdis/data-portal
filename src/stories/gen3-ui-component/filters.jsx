@@ -6,7 +6,6 @@ import RangeFilter from '../../gen3-ui-component/components/filters/RangeFilter'
 import PatientIdFilter from '../../gen3-ui-component/components/filters/PatientIdFilter';
 import AnchorFilter from '../../gen3-ui-component/components/filters/AnchorFilter';
 import FilterSection from '../../gen3-ui-component/components/filters/FilterSection';
-import FilterList from '../../gen3-ui-component/components/filters/FilterList';
 import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
 
 const projectOptions = [
@@ -177,28 +176,12 @@ const fileSectionsWithTooltips = [
   },
 ];
 
-const tabs = [
-  <FilterList key={0} sections={projectSections} tierAccessLimit={1000} />,
-  <FilterList key={1} sections={subjectSections} tierAccessLimit={1000} />,
-  <FilterList key={2} sections={fileSections} tierAccessLimit={1000} />,
-];
+const tabs = [projectSections, subjectSections, fileSections];
 
 const tabsWithTooltips = [
-  <FilterList
-    key={0}
-    sections={projectSectionsWithTooltips}
-    tierAccessLimit={1000}
-  />,
-  <FilterList
-    key={1}
-    sections={subjectSectionsWithTooltips}
-    tierAccessLimit={1000}
-  />,
-  <FilterList
-    key={2}
-    sections={fileSectionsWithTooltips}
-    tierAccessLimit={1000}
-  />,
+  projectSectionsWithTooltips,
+  subjectSectionsWithTooltips,
+  fileSectionsWithTooltips,
 ];
 
 const filterConfig = {
@@ -238,7 +221,6 @@ storiesOf('Filters', module)
         onSelect={action('checked')}
         count={-1}
         accessible
-        tierAccessLimit={1000}
       />
       <SingleSelectFilter
         label='Option4'
@@ -251,7 +233,6 @@ storiesOf('Filters', module)
         onSelect={action('checked')}
         count={-1}
         accessible={false}
-        tierAccessLimit={1000}
       />
       <SingleSelectFilter
         label='Option6'
@@ -264,13 +245,11 @@ storiesOf('Filters', module)
         onSelect={action('checked')}
         count={-1}
         accessible
-        tierAccessLimit={123456789}
       />
       <SingleSelectFilter
         label='Option8'
         onSelect={action('checked')}
         count={123456789}
-        accessible={false}
       />
     </div>
   ))
@@ -328,7 +307,6 @@ storiesOf('Filters', module)
       options={ethnicityOptions}
       onSelect={action('checked')}
       onAfterDrag={action('range change')}
-      tierAccessLimit={1000}
     />
   ))
   .add('FilterSection for array-type field', () => (
@@ -338,7 +316,6 @@ storiesOf('Filters', module)
       onSelect={action('checked')}
       onAfterDrag={action('range change')}
       onCombineOptionToggle={action('combine mode change')}
-      tierAccessLimit={1000}
       isArrayField
     />
   ))
@@ -358,7 +335,6 @@ storiesOf('Filters', module)
         title={'File GUIDs'}
         onSelect={handleSelect}
         options={selectedOptions}
-        tierAccessLimit={1000}
         isSearchFilter
         onSearchFilterLoadOptions={(searchString, offset = 0) => {
           const pageSize = 20;
@@ -383,24 +359,6 @@ storiesOf('Filters', module)
       />
     );
   })
-  .add('FilterList', () => (
-    <FilterList
-      sections={subjectSections}
-      onSelect={action('checked')}
-      onAfterDrag={action('range change')}
-      tierAccessLimit={1000}
-    />
-  ))
-  .add('FilterList with icon tooltips', () => (
-    <FilterList
-      sections={subjectSections}
-      onSelect={action('checked')}
-      onAfterDrag={action('range change')}
-      tierAccessLimit={1000}
-      lockedTooltipMessage='locked'
-      disabledTooltipMessage='disabled'
-    />
-  ))
   .add('FilterGroup', () => (
     <FilterGroup
       tabs={tabs}

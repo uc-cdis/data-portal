@@ -1,69 +1,7 @@
-import { fetchWithCreds } from '../../actions';
 import { capitalizeFirstLetter } from '../../utils';
-import './typedef';
 
-const FILTER_SET_URL = '/amanuensis/filter-set';
-
-/**
- * @returns {Promise<ExplorerFilterSet[]>}
- */
-export function fetchFilterSets() {
-  return fetchWithCreds({
-    path: FILTER_SET_URL,
-    method: 'GET',
-  }).then(({ response, data, status }) => {
-    if (status !== 200) throw response.statusText;
-    if (
-      data === null ||
-      typeof data !== 'object' ||
-      data.searches === undefined ||
-      !Array.isArray(data.searches)
-    )
-      throw new Error('Error: Incorrect Response Data');
-    return data.searches;
-  });
-}
-
-/**
- * @param {ExplorerFilterSet} filterSet
- * @returns {Promise<ExplorerFilterSet>}
- */
-export function createFilterSet(filterSet) {
-  return fetchWithCreds({
-    path: FILTER_SET_URL,
-    method: 'POST',
-    body: JSON.stringify(filterSet),
-  }).then(({ response, data, status }) => {
-    if (status !== 200) throw response.statusText;
-    return data;
-  });
-}
-
-/**
- * @param {ExplorerFilterSet} filterSet
- */
-export function updateFilterSet(filterSet) {
-  const { id, ...requestBody } = filterSet;
-  return fetchWithCreds({
-    path: `${FILTER_SET_URL}/${id}`,
-    method: 'PUT',
-    body: JSON.stringify(requestBody),
-  }).then(({ response, status }) => {
-    if (status !== 200) throw response.statusText;
-  });
-}
-
-/**
- * @param {ExplorerFilterSet} filterSet
- */
-export function deleteFilterSet(filterSet) {
-  return fetchWithCreds({
-    path: `${FILTER_SET_URL}/${filterSet.id}`,
-    method: 'DELETE',
-  }).then(({ response, status }) => {
-    if (status !== 200) throw response.statusText;
-  });
-}
+/** @typedef {import('../types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
 
 /**
  * @return {ExplorerFilterSet}

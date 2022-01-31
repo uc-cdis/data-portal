@@ -17,7 +17,16 @@ import {
   mergeFilters,
   unnestAggsData,
 } from '../Utils/filters';
-import '../typedef';
+
+/** @typedef {import('../types').AggsData} AggsData */
+/** @typedef {import('../types').FilterConfig} FilterConfig */
+/** @typedef {import('../types').FilterState} FilterState */
+/** @typedef {import('../types').FilterTabsOption} FilterTabsOption */
+/** @typedef {import('../types').GqlSort} GqlSort */
+/** @typedef {import('../types').GuppyConfig} GuppyConfig */
+/** @typedef {import('../types').GuppyData} GuppyData */
+/** @typedef {import('../types').OptionFilter} OptionFilter */
+/** @typedef {import('../types').SimpleAggsData} SimpleAggsData */
 
 /**
  * @typedef {Object} GuppyWrapperProps
@@ -36,7 +45,7 @@ import '../typedef';
  * @typedef {Object} GuppyWrapperState
  * @property {number} accessibleCount
  * @property {AggsData} aggsData
- * @property {AggsData} aggsChartData
+ * @property {SimpleAggsData} aggsChartData
  * @property {string[]} allFields
  * @property {FilterState} filter
  * @property {SimpleAggsData} [initialTabsOptions]
@@ -117,9 +126,11 @@ function GuppyWrapper({
         );
 
       return {
-        aggsChartData: excludeSelfFilterFromAggsData(
-          data._aggregation[guppyConfig.dataType],
-          filter
+        aggsChartData: /** @type {SimpleAggsData} */ (
+          excludeSelfFilterFromAggsData(
+            data._aggregation[guppyConfig.dataType],
+            filter
+          )
         ),
       };
     });
@@ -427,7 +438,7 @@ function GuppyWrapper({
       sort,
       size,
       updateDataWhenReceive: true,
-    });
+    }).then();
   }
 
   /**

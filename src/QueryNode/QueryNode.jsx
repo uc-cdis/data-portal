@@ -1,21 +1,32 @@
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { jsonToString, getSubmitPath } from '../utils';
+import checkProjectPermission from '../hooks/checkProjectPermission';
 import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
-import './QueryNode.less';
+import './QueryNode.css';
+
+/** @typedef {import('./types').QueryNodeState} QueryNodeState */
+/** @typedef {import('../Popup/types').PopupState} PopupState */
+/** @typedef {import('../Submission/types').SubmissionState} SubmissionState */
 
 /**
  * QueryNode shows the details of a particular node
  * @param {Object} props
- * @param {Object} props.submission
- * @param {Object} props.queryNodes
- * @param {Object} props.popups
- * @param {(value: any, url: string, history: any ) => void} props.onSearchFormSubmit
- * @param {(param: { view_popup: string; nodedelete_popup: boolean | string; }) => void} props.onUpdatePopup
+ * @param {SubmissionState} props.submission
+ * @param {QueryNodeState} props.queryNodes
+ * @param {PopupState} props.popups
+ * @param {(value: any, cb?: Function) => void} props.onSearchFormSubmit
+ * @param {(state: Partial<PopupState>) => void} props.onUpdatePopup
  * @param {() => void} props.onClearDeleteSession
- * @param {(param: { project: string; id: string; }) => void} props.onDeleteNode
- * @param {(param: { project: string; id: string; }) => void} props.onStoreNodeInfo
+ * @param {(param: { id: string; project: string }) => void} props.onDeleteNode
+ * @param {(param: { id: string; project: string }) => Promise<void>} props.onStoreNodeInfo
  */
 function QueryNode({
   submission = null,
@@ -27,13 +38,28 @@ function QueryNode({
   onDeleteNode,
   onStoreNodeInfo,
 }) {
-  const history = useHistory();
   const { project } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    if (Array.from(searchParams.keys()).length > 0)
+      // Linking directly to a search result,
+      // so kick-off search here (rather than on button click)
+      onSearchFormSubmit({
+        project,
+        ...Object.fromEntries(searchParams.entries()),
+      });
+  }, []);
+
+  const navigate = useNavigate();
+  const isUserWithPermission = checkProjectPermission(project);
+  useEffect(() => {
+    if (!isUserWithPermission) navigate(-1);
+  }, []);
 
   /**
    * Internal helper to render the 'view node" popup if necessary
    * based on the popups and queryNodes properties attached to this component.
-   * @return {{ state: 'vieNode' | 'noPopup'; popupEl: JSX.Element | null; }}
+   * @return {{ state: 'viewNode' | 'noPopup'; popupEl: JSX.Element | null; }}
    * state (just used for testing) is string one of [viewNode, noPopup], and
    * popupEl is either null or a <Popup> properly configured to render
    */
@@ -152,13 +178,13 @@ function QueryNode({
   return (
     <div>
       <h3>
-        browse <Link to={`/${project}`}>{project}</Link>{' '}
+        browse <Link to='..'>{project}</Link>{' '}
       </h3>
       {renderViewPopup().popupEl}
       {renderDeletePopup().popupEl}
       <QueryForm
-        onSearchFormSubmit={(data, url) =>
-          onSearchFormSubmit(data, url, history)
+        onSearchFormSubmit={(data, newSearchParams) =>
+          onSearchFormSubmit(data, () => setSearchParams(newSearchParams))
         }
         project={project}
         nodeTypes={submission.nodeTypes}
@@ -167,7 +193,7 @@ function QueryNode({
       <h4>most recent 20:</h4>
       {queryNodesList.map(([key, value]) => (
         <ul key={key}>
-          {value.map(({ id, submitter_id: submitterId }, i) => (
+          {value.map(({ id, submitter_id: submitterId }) => (
             <li key={submitterId}>
               <span>{submitterId}</span>
               <a
@@ -176,32 +202,28 @@ function QueryNode({
               >
                 Download
               </a>
-              <a
-                role='button'
-                tabIndex={0}
+              <button
                 className='query-node__button query-node__button--view'
                 onClick={() =>
                   onStoreNodeInfo({ project, id }).then(() =>
                     onUpdatePopup({ view_popup: true })
                   )
                 }
-                aria-label='View'
+                type='button'
               >
                 View
-              </a>
-              <a
-                role='button'
-                tabIndex={0}
+              </button>
+              <button
                 className='query-node__button query-node__button--delete'
                 onClick={() =>
                   onStoreNodeInfo({ project, id }).then(() =>
                     onUpdatePopup({ nodedelete_popup: true })
                   )
                 }
-                aria-label='Delete'
+                type='button'
               >
                 Delete
-              </a>
+              </button>
             </li>
           ))}
         </ul>
