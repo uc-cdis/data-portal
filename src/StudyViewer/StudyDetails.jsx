@@ -387,6 +387,8 @@ class StudyDetails extends React.Component {
                              );
                            }
                            return item;
+                         } else if (_.isNumber(item)) {
+                           return item;
                          }
                          if (!item) {
                            return null;
