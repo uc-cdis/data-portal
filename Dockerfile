@@ -44,7 +44,7 @@ RUN npm config set unsafe-perm=true \
     && npm run relay \
     && npm run params
     # see https://stackoverflow.com/questions/48387040/nodejs-recommended-max-old-space-size
-RUN NODE_OPTIONS=--max-old-space-size=3584 NODE_ENV=production time ./node_modules/.bin/webpack --bail
+RUN NODE_OPTIONS=--max-old-space-size=3584 NODE_ENV=production time npx webpack build
 RUN cp nginx.conf /etc/nginx/conf.d/nginx.conf \
     && rm /etc/nginx/sites-enabled/default
 
