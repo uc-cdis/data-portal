@@ -3,16 +3,16 @@ import './DictionarySearchHistory.css';
 
 /**
  * @param {Object} props
- * @param {() => void} props.onClearSearchHistoryItems
- * @param {(keyword: string) => void} props.onClickSearchHistoryItem
- * @param {import('../../types').SearchHistoryItem[]} props.searchHistoryItems
+ * @param {() => void} [props.onClearSearchHistoryItems]
+ * @param {(keyword: string) => void} [props.onClickSearchHistoryItem]
+ * @param {import('../../types').SearchHistoryItem[]} [props.searchHistoryItems]
  */
 function DictionarySearchHistory({
   onClearSearchHistoryItems,
   onClickSearchHistoryItem,
-  searchHistoryItems = [],
+  searchHistoryItems,
 }) {
-  return searchHistoryItems.length > 0 ? (
+  return searchHistoryItems?.length > 0 ? (
     <div className='dictionary-search-history'>
       <div className='dictionary-search-history__title'>
         <h4 className='dictionary-search-history__title-text'>Last Search</h4>
