@@ -8,7 +8,6 @@ covid19Bundle.js
 nctBundle.js
 index.html
 workspaces.html
-package-lock.json
 custom/sponsors/
 custom/*/gitops*
 data/parameters.json
