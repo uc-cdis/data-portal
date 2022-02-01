@@ -48,9 +48,9 @@ export const filterRisktableByTime = (data, startTime, endTime = Infinity) =>
 const userAgreementLocalStorageKey = `survival:userAgreement`;
 
 export function checkUserAgreement() {
-  return window.sessionStorage.getItem(userAgreementLocalStorageKey) === 'true';
+  return window.localStorage.getItem(userAgreementLocalStorageKey) === 'true';
 }
 
 export function handleUserAgreement() {
-  return window.sessionStorage.setItem(userAgreementLocalStorageKey, 'true');
+  return window.localStorage.setItem(userAgreementLocalStorageKey, 'true');
 }
