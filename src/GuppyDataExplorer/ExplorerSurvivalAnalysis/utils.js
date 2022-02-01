@@ -44,3 +44,13 @@ export const filterRisktableByTime = (data, startTime, endTime = Infinity) =>
     data: data.filter(({ time }) => time >= startTime && time <= endTime),
     name,
   }));
+
+const userAgreementLocalStorageKey = `survival:userAgreement`;
+
+export function checkUserAgreement() {
+  return window.sessionStorage.getItem(userAgreementLocalStorageKey) === 'true';
+}
+
+export function handleUserAgreement() {
+  return window.sessionStorage.setItem(userAgreementLocalStorageKey, 'true');
+}
