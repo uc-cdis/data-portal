@@ -166,11 +166,11 @@ export REACT_APP_DISABLE_SOCKET=true
 echo "INFO: Ready for webpack"
 if [[ "$NODE_ENV" == "dev" || "$NODE_ENV" == "auto" ]]; then
   echo npx webpack serve
-  npx webpack serve
+  npx webpack serve --mode development
 else
   # see https://nodejs.org/api/cli.html#cli_max_old_space_size_size_in_megabytes
   export NODE_OPTIONS='--max-old-space-size=3584'
   export NODE_ENV="production"
   echo npx webpack build
-  npx webpack build
+  npx webpack build --mode production
 fi
