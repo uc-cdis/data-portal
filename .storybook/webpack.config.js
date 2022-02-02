@@ -16,7 +16,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|eot|ttf|woff|woff2)$/,
-        loader: 'url-loader',
+        loader: 'asset/inline',
       },
     ],
   },
