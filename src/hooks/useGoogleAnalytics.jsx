@@ -10,7 +10,7 @@ if (isUsingGoogleAnalytics)
 
 const origin = hostname.slice(0, -1);
 
-/** @param {import('history').Location} location */
+/** @param {import('react-router').Location} location */
 function useGoogleAnalytics(location) {
   const page = location.pathname + location.search;
   useEffect(() => {
