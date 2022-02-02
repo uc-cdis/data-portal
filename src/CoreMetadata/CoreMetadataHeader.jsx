@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import copy from 'clipboard-plus';
 import Button from '../gen3-ui-component/components/Button';
 import Popup from '../components/Popup';
 import { userapiPath } from '../localconf';
@@ -106,7 +105,7 @@ function CoreMetadataHeader({
           rightButtons={[
             {
               caption: 'Copy',
-              fn: () => copy(signedURL),
+              fn: () => navigator.clipboard.writeText(signedURL),
               icon: 'copy',
               enabled: !error,
             },
