@@ -59,6 +59,7 @@
     "react-helmet": "^6.1.0",
     "react-redux": "^7.2.6",
     "react-relay": "^11.0.2",
+    "react-resize-detector": "^6.7.8",
     "react-responsive": "^8.2.0",
     "react-router-dom": "^6.2.1",
     "react-select": "^5.2.2",
