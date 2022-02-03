@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
-import { Radio } from 'antd';
-import 'antd/lib/radio/style/index.css';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import SingleSelectFilter from '../SingleSelectFilter';
 import Chip from '../Chip';
@@ -136,10 +134,11 @@ function FilterSection({
     }));
   }
 
-  /** @param {import('antd').RadioChangeEvent} e */
+  /** @param {React.ChangeEvent<HTMLInputElement>} e */
   function handleSetCombineModeOption(e) {
-    /** @type {'AND' | 'OR'} combineMode */
-    const combineMode = e.target.value;
+    const combineMode = /** @type {FilterSectionState['combineMode']} */ (
+      e.target.value
+    );
     setState((prevState) => ({ ...prevState, combineMode }));
     onToggleCombineMode('__combineMode', combineMode);
   }
@@ -242,16 +241,20 @@ function FilterSection({
         }
       >
         <span style={{ marginRight: '5px' }}>Combine with </span>
-        <Radio.Group
-          buttonStyle='solid'
-          defaultValue={state.combineMode}
-          onChange={handleSetCombineModeOption}
-          options={[
-            { label: 'AND', value: 'AND' },
-            { label: 'OR', value: 'OR' },
-          ]}
-          optionType='button'
-        />
+        {['AND', 'OR'].map(
+          (/** @type {FilterSectionState['combineMode']} */ combineMode) => (
+            <label>
+              <input
+                checked={state.combineMode === combineMode}
+                name='combineMode'
+                onChange={handleSetCombineModeOption}
+                value={combineMode}
+                type='radio'
+              />
+              {combineMode}
+            </label>
+          )
+        )}
         <Tooltip
           arrowContent={<div className='rc-tooltip-arrow-inner' />}
           overlay={tooltipText}
