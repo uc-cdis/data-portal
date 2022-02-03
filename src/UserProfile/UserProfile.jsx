@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import FileSaver from 'file-saver';
-import copy from 'clipboard-plus';
 import Button from '../gen3-ui-component/components/Button';
 import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
@@ -137,7 +136,8 @@ function UserProfile({
                 },
                 {
                   caption: 'Copy',
-                  fn: () => copy(userProfile.strRefreshCred),
+                  fn: () =>
+                    navigator.clipboard.writeText(userProfile.strRefreshCred),
                   icon: 'copy',
                 },
               ]}
