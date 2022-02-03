@@ -488,7 +488,7 @@ function FilterSection({
                 reset
               </div>
               <div className='g3-filter-section__range-filter-clear-btn-icon'>
-                <i className='g3-icon g3-icon--sm g3-icon-color__lightgray g3-icon--sm g3-icon--undo' />
+                <i className='g3-icon g3-icon--sm g3-icon-color__lightgray g3-icon--undo' />
               </div>
             </div>
           </div>
