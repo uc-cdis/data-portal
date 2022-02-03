@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import MediaQuery from 'react-responsive';
+import { useResizeDetector } from 'react-resize-detector';
 import {
   ReduxIndexButtonBar,
   ReduxIndexBarChart,
@@ -20,6 +20,11 @@ function IndexPage() {
     dispatch(getIndexPageCounts());
   }, []);
 
+  const { width: screenWidth } = useResizeDetector({
+    handleHeight: false,
+    targetRef: useRef(document.body),
+  });
+
   return (
     <div className='index-page'>
       <div className='index-page__top'>
@@ -29,11 +34,11 @@ function IndexPage() {
             dictIcons={dictIcons}
           />
         </div>
-        <div className='index-page__bar-chart'>
-          <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
+        {screenWidth > breakpoints.tablet && (
+          <div className='index-page__bar-chart'>
             <ReduxIndexBarChart />
-          </MediaQuery>
-        </div>
+          </div>
+        )}
       </div>
       <ReduxIndexOverview />
       <ReduxIndexButtonBar />
