@@ -243,7 +243,7 @@ function FilterSection({
         <span style={{ marginRight: '5px' }}>Combine with </span>
         {['AND', 'OR'].map(
           (/** @type {FilterSectionState['combineMode']} */ combineMode) => (
-            <label>
+            <label key={combineMode}>
               <input
                 checked={state.combineMode === combineMode}
                 name='combineMode'
