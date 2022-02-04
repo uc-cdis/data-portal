@@ -99,7 +99,10 @@ function getChartData({
           summaries.push({
             type,
             title,
-            data: histogram.map((i) => ({ name: i.key, value: i.count })),
+            data: histogram.map((i) => ({
+              name: /** @type {string} */ (i.key),
+              value: i.count,
+            })),
             showPercentage,
           });
           break;
@@ -107,7 +110,10 @@ function getChartData({
           stackedBarCharts.push({
             type,
             title,
-            data: histogram.map((i) => ({ name: i.key, value: i.count })),
+            data: histogram.map((i) => ({
+              name: /** @type {string} */ (i.key),
+              value: i.count,
+            })),
           });
           break;
         default:
