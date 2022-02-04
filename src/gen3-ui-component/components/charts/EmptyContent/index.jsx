@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import './EmptyContent.css';
 
+/** @param {{ message: string }} props */
 function EmptyContent({ message }) {
   return (
     <div className='empty-content__div'>
