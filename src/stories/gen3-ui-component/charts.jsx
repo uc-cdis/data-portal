@@ -4,6 +4,8 @@ import SummaryPieChart from '../../gen3-ui-component/components/charts/SummaryPi
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 
+/** @typedef {import('../../gen3-ui-component/components/charts/SummaryChartGroup').ChartSummary} ChartSummary */
+
 const virusData = [
   { name: 'H1N1', value: 4000 },
   { name: 'VN1203', value: 3000 },
@@ -45,6 +47,7 @@ for (let i = 0; i < NUM_OPTIONS; i += 1) {
   });
 }
 
+/** @type {ChartSummary[]} */
 const summaries = [
   { type: 'bar', title: 'Gender', data: genderData },
   { type: 'pie', title: 'Birth-Year', data: birthData, showPercentage: true },
@@ -69,6 +72,7 @@ const lockedBirth = [
   { name: '30-40', value: 300 },
 ];
 
+/** @type {ChartSummary[]} */
 const lockedSummaries = [
   { type: 'bar', title: 'Gender', data: genderData },
   { type: 'pie', title: 'Birth-Year', data: lockedBirth },
@@ -77,6 +81,7 @@ const lockedSummaries = [
   { type: 'bar', title: 'Virus', data: lockedVirus },
 ];
 
+/** @type {ChartSummary[]} */
 const summariesWithOneEmpty = [
   { type: 'bar', title: 'Gender', data: genderData, chartIsEmpty: true },
   { type: 'pie', title: 'Birth-Year', data: lockedBirth },
