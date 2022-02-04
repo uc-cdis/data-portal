@@ -1,39 +1,7 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import Button from '../../gen3-ui-component/components/Button';
-
-class ButtonWrapper extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-    };
-
-    this.mockLoadData = this.mockLoadData.bind(this);
-  }
-
-  mockLoadData() {
-    this.setState({ loading: true }, () => {
-      setTimeout(() => {
-        this.setState({ loading: false });
-      }, 5000);
-    });
-  }
-
-  render() {
-    return (
-      <Button
-        buttonType='primary'
-        label='Loading Button'
-        onClick={this.mockLoadData}
-        leftIcon='download'
-        rightIcon='copy'
-        isPending={this.state.loading}
-      />
-    );
-  }
-}
 
 storiesOf('Buttons', module)
   .add('Primary', () => (
@@ -105,4 +73,22 @@ storiesOf('Buttons', module)
       />
     </div>
   ))
-  .add('Loading state', () => <ButtonWrapper />);
+  .add('Loading state', () => {
+    const [isLoading, setIsLoading] = useState(false);
+    function mockLoadData() {
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 5000);
+    }
+    return (
+      <Button
+        buttonType='primary'
+        label='Loading Button'
+        onClick={mockLoadData}
+        leftIcon='download'
+        rightIcon='copy'
+        isPending={isLoading}
+      />
+    );
+  });
