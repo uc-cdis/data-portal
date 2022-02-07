@@ -127,13 +127,9 @@ const mapDispatchToProps = (dispatch) => ({
   onFileChange: (value) => {
     dispatch(updateFileContent(value));
   },
-  /**
-   * @param {string[]} nodeTypes
-   * @param {string} project
-   * @param {SubmissionState['dictionary']} [dictionary]
-   */
-  onFinish: (nodeTypes, project, dictionary) => {
-    dispatch(getCounts(nodeTypes, project, dictionary));
+  /** @param {string} project */
+  onFinish: (project) => {
+    dispatch(getCounts(project));
   },
 });
 

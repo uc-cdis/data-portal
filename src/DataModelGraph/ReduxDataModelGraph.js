@@ -8,101 +8,105 @@ import { submissionApiPath } from '../localconf';
  * Compose and send a single graphql query to get a count of how
  * many of each node and edge are in the current state
  *
- * @param {string[]} typeList
  * @param {string} project
- * @param {Object} [dictionary]
  * async thunk action that fetches data from backend and updates redux when dispatched
  */
-export const getCounts = (typeList, project, dictionary = {}) => {
-  let query = '{';
+export const getCounts =
+  (project) =>
+  /**
+   * @param {import('redux').Dispatch} dispatch
+   * @param {() => { submission: import('../Submission/types').SubmissionState }} getState
+   */
+  (dispatch, getState) => {
+    const { dictionary, nodeTypes } = getState().submission;
 
-  function appendCountToQuery(element) {
-    const node = dictionary[element];
-    if (
-      element !== 'metaschema' &&
-      !element.startsWith('_') &&
-      node.category !== 'internal'
-    ) {
-      query += `_${element}_count (project_id:"${project}"),`;
+    let query = '{';
+
+    function appendCountToQuery(element) {
+      const node = dictionary[element];
+      if (
+        element !== 'metaschema' &&
+        !element.startsWith('_') &&
+        node.category !== 'internal'
+      ) {
+        query += `_${element}_count (project_id:"${project}"),`;
+      }
     }
-  }
 
-  function appendLinkToQuery(source, dest, name) {
-    if (
-      source.id !== 'metaschema' &&
-      !source.id.startsWith('_') &&
-      source.category !== 'internal' &&
-      name != null &&
-      dest != null
-    ) {
-      query += `${source.id}_${name}_to_${dest.id}_link: ${source.id}(with_links: ["${name}"], first:1, project_id:"${project}"){submitter_id},`;
+    function appendLinkToQuery(source, dest, name) {
+      if (
+        source.id !== 'metaschema' &&
+        !source.id.startsWith('_') &&
+        source.category !== 'internal' &&
+        name != null &&
+        dest != null
+      ) {
+        query += `${source.id}_${name}_to_${dest.id}_link: ${source.id}(with_links: ["${name}"], first:1, project_id:"${project}"){submitter_id},`;
+      }
     }
-  }
 
-  typeList.forEach((element) => {
-    if (element !== 'program') {
-      appendCountToQuery(element);
-    }
-  });
+    nodeTypes.forEach((element) => {
+      if (element !== 'program') {
+        appendCountToQuery(element);
+      }
+    });
 
-  const nodesToHide = { program: true };
-  // Add links to query
-  Object.keys(dictionary)
-    .filter(
-      (name) =>
-        !name.startsWith('_' && dictionary[name].links) &&
-        dictionary[name].category !== 'internal'
-    )
-    .reduce(
-      // extract links from each node
-      (linkList, name) => {
-        const node = dictionary[name];
-        const newLinks = node.links;
-        let results = linkList;
-        if (newLinks) {
-          // extract subgroups from each link
-          const sgLinks = newLinks.reduce((listlist, link) => {
-            if (link.subgroup) {
-              return link.subgroup
-                .map((sg) => ({
+    const nodesToHide = { program: true };
+    // Add links to query
+    Object.keys(dictionary)
+      .filter(
+        (name) =>
+          !name.startsWith('_' && dictionary[name].links) &&
+          dictionary[name].category !== 'internal'
+      )
+      .reduce(
+        // extract links from each node
+        (linkList, name) => {
+          const node = dictionary[name];
+          const newLinks = node.links;
+          let results = linkList;
+          if (newLinks) {
+            // extract subgroups from each link
+            const sgLinks = newLinks.reduce((listlist, link) => {
+              if (link.subgroup) {
+                return link.subgroup
+                  .map((sg) => ({
+                    source: dictionary[name],
+                    target: dictionary[sg.target_type],
+                    name: sg.name,
+                  }))
+                  .concat(listlist);
+              }
+              return listlist;
+            }, []);
+            results = sgLinks.concat(linkList);
+          }
+          return newLinks
+            ? newLinks
+                .map((l) => ({
                   source: dictionary[name],
-                  target: dictionary[sg.target_type],
-                  name: sg.name,
+                  target: dictionary[l.target_type],
+                  name: l.name,
                 }))
-                .concat(listlist);
-            }
-            return listlist;
-          }, []);
-          results = sgLinks.concat(linkList);
-        }
-        return newLinks
-          ? newLinks
-              .map((l) => ({
-                source: dictionary[name],
-                target: dictionary[l.target_type],
-                name: l.name,
-              }))
-              .concat(results)
-          : results;
-      },
-      []
-    )
-    .filter(
-      (l) =>
-        l.source &&
-        l.target &&
-        !nodesToHide[l.source.id] &&
-        !nodesToHide[l.target.id]
-    )
-    .forEach(({ source, target, name }) =>
-      appendLinkToQuery(source, target, name)
-    );
+                .concat(results)
+            : results;
+        },
+        []
+      )
+      .filter(
+        (l) =>
+          l.source &&
+          l.target &&
+          !nodesToHide[l.source.id] &&
+          !nodesToHide[l.target.id]
+      )
+      .forEach(({ source, target, name }) =>
+        appendLinkToQuery(source, target, name)
+      );
 
-  query = query.concat('}');
+    query = query.concat('}');
 
-  /** @param {import('redux').Dispatch} dispatch */
-  return (dispatch) =>
-    fetchWithCreds({
+    return fetchWithCreds({
       path: `${submissionApiPath}graphql`,
       body: JSON.stringify({
         query,
@@ -130,7 +134,7 @@ export const getCounts = (typeList, project, dictionary = {}) => {
       .then((msg) => {
         dispatch(msg);
       });
-};
+  };
 
 /** @param {{ submission: import('../Submission/types').SubmissionState }} state */
 const mapStateToProps = (state) => {

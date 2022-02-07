@@ -11,8 +11,9 @@ const mapStateToProps = (state) => ({
 
 /** @param {import('redux-thunk').ThunkDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
-  onGetCounts: (typeList, project, dictionary) =>
-    dispatch(getCounts(typeList, project, dictionary)),
+  onGetCounts: (project) => {
+    dispatch(getCounts(project));
+  },
 });
 
 const ReduxProjectSubmission = connect(
