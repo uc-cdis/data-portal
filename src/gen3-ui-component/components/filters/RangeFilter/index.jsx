@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -13,188 +13,196 @@ import './RangeFilter.css';
  * @param {number} rangeStep
  */
 
-/**
- * @param {Object} props
- * @param {number} [props.count]
- * @param {number} [props.decimalDigitsLen]
- * @param {number} [props.hideValue]
- * @param {boolean} [props.inactive]
- * @param {string} [props.label]
- * @param {number} [props.lowerBound]
- * @param {number} props.max
- * @param {number} props.min
- * @param {AfterDragHandler} props.onAfterDrag
- * @param {number} [props.upperBound]
- * @param {number} [props.rangeStep]
- */
-function RangeFilter({
-  count,
-  decimalDigitsLen,
-  hideValue,
-  inactive,
-  label,
-  lowerBound,
-  max,
-  min,
-  onAfterDrag,
-  upperBound,
-  rangeStep,
-}) {
-  const [range, setRange] = useState({
-    lowerBound: lowerBound > min ? lowerBound : min,
-    upperBound: upperBound <= max ? upperBound : max,
-  });
-  const [inputRange, setInputRange] = useState(range);
+const RangeFilter = forwardRef(
+  /**
+   * @param {Object} props
+   * @param {number} [props.count]
+   * @param {number} [props.decimalDigitsLen]
+   * @param {number} [props.hideValue]
+   * @param {boolean} [props.inactive]
+   * @param {string} [props.label]
+   * @param {number} [props.lowerBound]
+   * @param {number} props.max
+   * @param {number} props.min
+   * @param {AfterDragHandler} props.onAfterDrag
+   * @param {number} [props.upperBound]
+   * @param {number} [props.rangeStep]
+   * @param {React.Ref<any>} [ref]
+   */
+  // eslint-disable-next-line prefer-arrow-callback
+  function RangeFilter(props, ref) {
+    const {
+      count = 0,
+      decimalDigitsLen = 2,
+      hideValue = -1,
+      inactive = false,
+      label = '',
+      lowerBound,
+      max,
+      min,
+      onAfterDrag,
+      upperBound,
+      rangeStep = 1,
+    } = props;
 
-  /** @type {React.ChangeEventHandler<HTMLInputElement>} */
-  function handleLowerBoundInputChange({ currentTarget: { value } }) {
-    setInputRange((prev) => ({
-      ...prev,
-      lowerBound: Number.parseFloat(value),
-    }));
-  }
-  /** @type {React.ChangeEventHandler<HTMLInputElement>} */
-  function handleUpperBoundInputChange({ currentTarget: { value } }) {
-    setInputRange((prev) => ({
-      ...prev,
-      upperBound: Number.parseFloat(value),
-    }));
-  }
-  function handleInputSubmit() {
-    // If the input values are not valid numbers, reset to current range values
-    if (
-      Number.isNaN(inputRange.lowerBound) ||
-      Number.isNaN(inputRange.upperBound)
-    ) {
-      setInputRange(range);
-      return;
+    const [range, setRange] = useState({
+      lowerBound: lowerBound > min ? lowerBound : min,
+      upperBound: upperBound <= max ? upperBound : max,
+    });
+    const [inputRange, setInputRange] = useState(range);
+
+    /** @type {React.ChangeEventHandler<HTMLInputElement>} */
+    function handleLowerBoundInputChange({ currentTarget: { value } }) {
+      setInputRange((prev) => ({
+        ...prev,
+        lowerBound: Number.parseFloat(value),
+      }));
+    }
+    /** @type {React.ChangeEventHandler<HTMLInputElement>} */
+    function handleUpperBoundInputChange({ currentTarget: { value } }) {
+      setInputRange((prev) => ({
+        ...prev,
+        upperBound: Number.parseFloat(value),
+      }));
+    }
+    function handleInputSubmit() {
+      // If the input values are not valid numbers, reset to current range values
+      if (
+        Number.isNaN(inputRange.lowerBound) ||
+        Number.isNaN(inputRange.upperBound)
+      ) {
+        setInputRange(range);
+        return;
+      }
+
+      // If count === hideValue, prevent lowerBound from increasing and upperBound from decreasing
+      if (
+        count === hideValue &&
+        (inputRange.lowerBound > range.lowerBound ||
+          inputRange.upperBound < range.upperBound)
+      ) {
+        setInputRange(range);
+        return;
+      }
+
+      const newRange = { ...inputRange };
+
+      // Clamp newLowerBound to [min, upperBound]
+      if (newRange.lowerBound < min) newRange.lowerBound = min;
+      if (newRange.lowerBound > range.upperBound)
+        newRange.lowerBound = range.upperBound;
+
+      // Clamp newUpperBound to [lowerBound, max]
+      if (newRange.upperBound < range.lowerBound)
+        newRange.upperBound = range.lowerBound;
+      if (newRange.upperBound > max) newRange.upperBound = max;
+
+      // Update the input range.
+      setInputRange(newRange);
+
+      // If the range have changed, update the range state and call onAfterDrag.
+      if (
+        newRange.lowerBound !== range.lowerBound ||
+        newRange.upperBound !== range.upperBound
+      ) {
+        setRange(newRange);
+        onAfterDrag(
+          newRange.lowerBound,
+          newRange.upperBound,
+          min,
+          max,
+          rangeStep
+        );
+      }
     }
 
-    // If count === hideValue, prevent lowerBound from increasing and upperBound from decreasing
-    if (
-      count === hideValue &&
-      (inputRange.lowerBound > range.lowerBound ||
-        inputRange.upperBound < range.upperBound)
-    ) {
-      setInputRange(range);
-      return;
-    }
+    const [sliderChanged, setSliderChanged] = useState(false);
+    /** @param {[sliderLowerBound:number, sliderUpperBound: number]} sliderRange */
+    function onSliderChange([sliderLowerBound, sliderUpperBound]) {
+      const newRange = {
+        lowerBound:
+          count === hideValue && range.lowerBound < sliderLowerBound
+            ? range.lowerBound
+            : sliderLowerBound,
+        upperBound:
+          count === hideValue && range.upperBound > sliderUpperBound
+            ? range.upperBound
+            : sliderUpperBound,
+      };
 
-    const newRange = { ...inputRange };
-
-    // Clamp newLowerBound to [min, upperBound]
-    if (newRange.lowerBound < min) newRange.lowerBound = min;
-    if (newRange.lowerBound > range.upperBound)
-      newRange.lowerBound = range.upperBound;
-
-    // Clamp newUpperBound to [lowerBound, max]
-    if (newRange.upperBound < range.lowerBound)
-      newRange.upperBound = range.lowerBound;
-    if (newRange.upperBound > max) newRange.upperBound = max;
-
-    // Update the input range.
-    setInputRange(newRange);
-
-    // If the range have changed, update the range state and call onAfterDrag.
-    if (
-      newRange.lowerBound !== range.lowerBound ||
-      newRange.upperBound !== range.upperBound
-    ) {
       setRange(newRange);
-      onAfterDrag(
-        newRange.lowerBound,
-        newRange.upperBound,
-        min,
-        max,
-        rangeStep
-      );
+      setInputRange(newRange);
+      setSliderChanged(true);
     }
-  }
+    useImperativeHandle(ref, () => ({ onSliderChange }));
+    function onAfterSliderChange() {
+      if (sliderChanged)
+        onAfterDrag(range.lowerBound, range.upperBound, min, max, rangeStep);
+    }
 
-  const [sliderChanged, setSliderChanged] = useState(false);
-  /** @param {[sliderLowerBound:number, sliderUpperBound: number]} sliderRange */
-  function onSliderChange([sliderLowerBound, sliderUpperBound]) {
-    const newRange = {
-      lowerBound:
-        count === hideValue && range.lowerBound < sliderLowerBound
-          ? range.lowerBound
-          : sliderLowerBound,
-      upperBound:
-        count === hideValue && range.upperBound > sliderUpperBound
-          ? range.upperBound
-          : sliderUpperBound,
-    };
+    /** @param {number} num */
+    function getNumberToFixed(num) {
+      return Number.isInteger(num)
+        ? num
+        : Number.parseFloat(num.toFixed(decimalDigitsLen));
+    }
 
-    setRange(newRange);
-    setInputRange(newRange);
-    setSliderChanged(true);
-  }
-  function onAfterSliderChange() {
-    if (sliderChanged)
-      onAfterDrag(range.lowerBound, range.upperBound, min, max, rangeStep);
-  }
-
-  /** @param {number} num */
-  function getNumberToFixed(num) {
-    return Number.isInteger(num)
-      ? num
-      : Number.parseFloat(num.toFixed(decimalDigitsLen));
-  }
-
-  return (
-    <div className='g3-range-filter'>
-      {label && <p className='g3-range-filter__title'>{label}</p>}
-      <div className='g3-range-filter__bounds'>
-        <label htmlFor={`${label}-lower-bound-input`}>
-          Min:&nbsp;
-          <input
-            type='number'
-            id={`${label}-lower-bound-input`}
-            min={min}
-            max={range.upperBound !== undefined ? range.upperBound : max}
-            value={inputRange.lowerBound}
-            onChange={handleLowerBoundInputChange}
-            onKeyPress={(ev) => {
-              if (ev.key === 'Enter') handleInputSubmit();
-            }}
-            onBlur={handleInputSubmit}
-            className='g3-range-filter__bound g3-range-filter__bound--lower'
-          />
-        </label>
-        <label htmlFor={`${label}-upper-bound-input`}>
-          Max:&nbsp;
-          <input
-            type='number'
-            id={`${label}-upper-bound-input`}
-            min={range.lowerBound !== undefined ? range.lowerBound : min}
-            max={max}
-            value={inputRange.upperBound}
-            onChange={handleUpperBoundInputChange}
-            onKeyPress={(ev) => {
-              if (ev.key === 'Enter') handleInputSubmit();
-            }}
-            onBlur={handleInputSubmit}
-            className='g3-range-filter__bound g3-range-filter__bound--lower'
-          />
-        </label>
+    return (
+      <div className='g3-range-filter'>
+        {label && <p className='g3-range-filter__title'>{label}</p>}
+        <div className='g3-range-filter__bounds'>
+          <label htmlFor={`${label}-lower-bound-input`}>
+            Min:&nbsp;
+            <input
+              type='number'
+              id={`${label}-lower-bound-input`}
+              min={min}
+              max={range.upperBound !== undefined ? range.upperBound : max}
+              value={inputRange.lowerBound}
+              onChange={handleLowerBoundInputChange}
+              onKeyPress={(ev) => {
+                if (ev.key === 'Enter') handleInputSubmit();
+              }}
+              onBlur={handleInputSubmit}
+              className='g3-range-filter__bound g3-range-filter__bound--lower'
+            />
+          </label>
+          <label htmlFor={`${label}-upper-bound-input`}>
+            Max:&nbsp;
+            <input
+              type='number'
+              id={`${label}-upper-bound-input`}
+              min={range.lowerBound !== undefined ? range.lowerBound : min}
+              max={max}
+              value={inputRange.upperBound}
+              onChange={handleUpperBoundInputChange}
+              onKeyPress={(ev) => {
+                if (ev.key === 'Enter') handleInputSubmit();
+              }}
+              onBlur={handleInputSubmit}
+              className='g3-range-filter__bound g3-range-filter__bound--lower'
+            />
+          </label>
+        </div>
+        <Range
+          className={`g3-range-filter__slider ${
+            inactive ? 'g3-range-filter__slider--inactive' : ''
+          }`}
+          min={getNumberToFixed(min)}
+          max={getNumberToFixed(max)}
+          value={[
+            getNumberToFixed(range.lowerBound),
+            getNumberToFixed(range.upperBound),
+          ]}
+          onChange={onSliderChange}
+          onAfterChange={onAfterSliderChange}
+          step={rangeStep}
+        />
       </div>
-      <Range
-        className={`g3-range-filter__slider ${
-          inactive ? 'g3-range-filter__slider--inactive' : ''
-        }`}
-        min={getNumberToFixed(min)}
-        max={getNumberToFixed(max)}
-        value={[
-          getNumberToFixed(range.lowerBound),
-          getNumberToFixed(range.upperBound),
-        ]}
-        onChange={onSliderChange}
-        onAfterChange={onAfterSliderChange}
-        step={rangeStep}
-      />
-    </div>
-  );
-}
+    );
+  }
+);
+
 RangeFilter.propTypes = {
   count: PropTypes.number,
   decimalDigitsLen: PropTypes.number,
@@ -207,15 +215,6 @@ RangeFilter.propTypes = {
   onAfterDrag: PropTypes.func.isRequired,
   upperBound: PropTypes.number,
   rangeStep: PropTypes.number,
-};
-
-RangeFilter.defaultProps = {
-  count: 0,
-  decimalDigitsLen: 2,
-  hideValue: -1,
-  inactive: false,
-  label: '',
-  rangeStep: 1,
 };
 
 export default RangeFilter;
