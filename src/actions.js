@@ -1,4 +1,3 @@
-import 'isomorphic-fetch';
 import { buildClientSchema, getIntrospectionQuery } from 'graphql/utilities';
 import {
   userapiPath,
