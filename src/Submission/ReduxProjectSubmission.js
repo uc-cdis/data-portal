@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import ProjectSubmission from './ProjectSubmission';
-import { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
+import { getCounts } from './actions';
 
 /** @param {{ submission: import('./types').SubmissionState }} state */
 const mapStateToProps = (state) => ({
