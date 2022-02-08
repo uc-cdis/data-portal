@@ -14,7 +14,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.14.0",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.0",
-    "@gen3/guppy": "^0.14.3",
+    "@gen3/guppy": "uc-cdis/guppy#chore/dep-update",
     "@gen3/ui-component": "uc-cdis/gen3-ui-component#chore/dep-patch",
     "@storybook/addon-actions": "^6.0.0",
     "@storybook/react": "^6.0.0",
@@ -145,6 +145,9 @@
   },
   "overrides": {
     "html-webpack-plugin": {
+      "strip-ansi": "6.0.1"
+    },
+    "jest": {
       "strip-ansi": "6.0.1"
     },
     "showdown": {
