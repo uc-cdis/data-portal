@@ -10,9 +10,8 @@ class Introduction extends Component {
   render() {
     let buttonText = 'Submit Data';
     if (this.props.data.buttonText) {
-      buttonText = this.props.data.buttonText;
-    }
-    else if (useArboristUI) {
+      ({ buttonText } = this.props.data);
+    } else if (useArboristUI) {
       if (userHasCreateOrUpdateOnAnyProject(this.props.userAuthMapping)) {
         buttonText = 'Submit/Browse Data';
       } else {
