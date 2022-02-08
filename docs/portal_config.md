@@ -96,25 +96,21 @@ Below is an example, with inline comments describing what each JSON block config
         {
           "icon": "dictionary", // required; icon from /img/icons for the button
           "link": "/DD", // required; the link for the button
-          "color": "#a2a2a2", // optional; hex color of the icon
           "name": "Dictionary" // required; text for the button
         },
         {
           "icon": "exploration",
           "link": "/explorer",
-          "color": "#a2a2a2",
           "name": "Exploration"
         },
         {
           "icon": "workspace",
           "link": "/workspace",
-          "color": "#a2a2a2",
           "name": "Workspace"
         },
         {
           "icon": "profile",
           "link": "/identity",
-          "color": "#a2a2a2",
           "name": "Profile"
         }
       ]
