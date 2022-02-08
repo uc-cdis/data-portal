@@ -19,90 +19,44 @@ export const getCounts =
    */
   (dispatch, getState) => {
     const { dictionary, nodeTypes } = getState().submission;
+    function checkIfRelevantNode(name) {
+      return (
+        !name.startsWith('_') &&
+        name !== 'program' &&
+        name !== 'metaschema' &&
+        dictionary[name].category !== 'internal'
+      );
+    }
 
     let query = '{';
 
-    function appendCountToQuery(element) {
-      const node = dictionary[element];
-      if (
-        element !== 'metaschema' &&
-        !element.startsWith('_') &&
-        node.category !== 'internal'
-      ) {
-        query += `_${element}_count (project_id:"${project}"),`;
-      }
+    function appendCountToQuery(name) {
+      query += `_${name}_count (project_id:"${project}"),`;
     }
+    for (const name of nodeTypes)
+      if (checkIfRelevantNode(name)) appendCountToQuery(name);
 
-    function appendLinkToQuery(source, dest, name) {
-      if (
-        source.id !== 'metaschema' &&
-        !source.id.startsWith('_') &&
-        source.category !== 'internal' &&
-        name != null &&
-        dest != null
-      ) {
-        query += `${source.id}_${name}_to_${dest.id}_link: ${source.id}(with_links: ["${name}"], first:1, project_id:"${project}"){submitter_id},`;
-      }
+    function appendLinkToQuery({ name, source, target }) {
+      if (name && target && target !== 'program')
+        query += `${source}_${name}_to_${target}_link: ${source}(with_links: ["${name}"], first:1, project_id:"${project}"){submitter_id},`;
     }
+    for (const [name, node] of Object.entries(dictionary))
+      if (checkIfRelevantNode(name) && node.links)
+        for (const link of node.links) {
+          appendLinkToQuery({
+            name: link.name,
+            source: name,
+            target: dictionary[link.target_type]?.id,
+          });
 
-    nodeTypes.forEach((element) => {
-      if (element !== 'program') {
-        appendCountToQuery(element);
-      }
-    });
-
-    const nodesToHide = { program: true };
-    // Add links to query
-    Object.keys(dictionary)
-      .filter(
-        (name) =>
-          !name.startsWith('_' && dictionary[name].links) &&
-          dictionary[name].category !== 'internal'
-      )
-      .reduce(
-        // extract links from each node
-        (linkList, name) => {
-          const node = dictionary[name];
-          const newLinks = node.links;
-          let results = linkList;
-          if (newLinks) {
-            // extract subgroups from each link
-            const sgLinks = newLinks.reduce((listlist, link) => {
-              if (link.subgroup) {
-                return link.subgroup
-                  .map((sg) => ({
-                    source: dictionary[name],
-                    target: dictionary[sg.target_type],
-                    name: sg.name,
-                  }))
-                  .concat(listlist);
-              }
-              return listlist;
-            }, []);
-            results = sgLinks.concat(linkList);
-          }
-          return newLinks
-            ? newLinks
-                .map((l) => ({
-                  source: dictionary[name],
-                  target: dictionary[l.target_type],
-                  name: l.name,
-                }))
-                .concat(results)
-            : results;
-        },
-        []
-      )
-      .filter(
-        (l) =>
-          l.source &&
-          l.target &&
-          !nodesToHide[l.source.id] &&
-          !nodesToHide[l.target.id]
-      )
-      .forEach(({ source, target, name }) =>
-        appendLinkToQuery(source, target, name)
-      );
+          if (link.subgroup)
+            for (const sLink of link.subgroup)
+              appendLinkToQuery({
+                name: sLink.name,
+                source: name,
+                target: dictionary[sLink.target_type]?.id,
+              });
+        }
 
     query = query.concat('}');
 
