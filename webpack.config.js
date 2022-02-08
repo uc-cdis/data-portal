@@ -254,7 +254,8 @@ module.exports = {
     },
     {
       test: /\.svg$/,
-      loaders: ['babel-loader', 'react-svg-loader'],
+      // loaders: ['babel-loader', 'react-svg-loader'],
+      loader: 'svg-react-loader',
     },
     {
       test: /\.(png|jpg|gif|woff|ttf|eot)$/,
