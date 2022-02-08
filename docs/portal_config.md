@@ -51,7 +51,8 @@ Below is an example, with inline comments describing what each JSON block config
       "introduction": { // optional; text on homepage
         "heading": "", // optional; title of introduction
         "text": "This is an example Gen3 Data Commons", // optional; text of homepage
-        "link": "/submission" // optional; link for button underneath the text
+        "buttonText": "Browse Studies", // optional; default is Submit/Browse Data
+        "link": "/submission" // optional; link for button underneath the text, default is /submission
       },
       "buttons": [ // optional; button “cards” displayed on the bottom of the homepage
         {
