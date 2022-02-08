@@ -1,6 +1,7 @@
 import { fetchWithCreds } from '../actions';
 import { submissionApiPath } from '../localconf';
 import { predictFileType } from '../utils';
+import { buildCountsQuery } from './utils';
 
 /** @typedef {import('redux').Dispatch} Dispatch */
 /** @typedef {import('./types').SubmissionState} SubmissionState */
@@ -18,51 +19,10 @@ export const getCounts =
    */
   (dispatch, getState) => {
     const { dictionary, nodeTypes } = getState().submission;
-    function checkIfRelevantNode(name) {
-      return (
-        !name.startsWith('_') &&
-        name !== 'program' &&
-        name !== 'metaschema' &&
-        dictionary[name].category !== 'internal'
-      );
-    }
-
-    let query = '{';
-
-    function appendCountToQuery(name) {
-      query += `_${name}_count (project_id:"${project}"),`;
-    }
-    for (const name of nodeTypes)
-      if (checkIfRelevantNode(name)) appendCountToQuery(name);
-
-    function appendLinkToQuery({ name, source, target }) {
-      if (name && target && target !== 'program')
-        query += `${source}_${name}_to_${target}_link: ${source}(with_links: ["${name}"], first:1, project_id:"${project}"){submitter_id},`;
-    }
-    for (const [name, node] of Object.entries(dictionary))
-      if (checkIfRelevantNode(name) && node.links)
-        for (const link of node.links) {
-          appendLinkToQuery({
-            name: link.name,
-            source: name,
-            target: dictionary[link.target_type]?.id,
-          });
-
-          if (link.subgroup)
-            for (const sLink of link.subgroup)
-              appendLinkToQuery({
-                name: sLink.name,
-                source: name,
-                target: dictionary[sLink.target_type]?.id,
-              });
-        }
-
-    query = query.concat('}');
-
     return fetchWithCreds({
       path: `${submissionApiPath}graphql`,
       body: JSON.stringify({
-        query,
+        query: buildCountsQuery(dictionary, nodeTypes, project),
       }),
       method: 'POST',
       dispatch,
