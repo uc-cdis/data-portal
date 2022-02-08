@@ -113,8 +113,15 @@
   padding: 5px 0 5px 8px;
 }
 
-.g3-filter-section__combine_label {
-  text-overflow: ellipsis;
+.g3-filter-section__and-or-toggle label {
+  align-items: baseline;
+  display: inline-flex;
+  margin: 0 4px;
+}
+
+.g3-filter-section__and-or-toggle input[type='radio'] {
+  margin-right: 4px;
+  align-self: center;
 }
 
 .g3-filter-section__and-or-toggle button {
@@ -128,42 +135,6 @@
   padding: 2px 3px;
   font-weight: 200;
   color: #333;
-}
-
-.g3-filter-section__and-or-toggle .ant-radio-button-wrapper {
-  text-align: center;
-}
-
-.ant-radio-button-wrapper:hover {
-  /* stylelint-disable-next-line declaration-no-important */
-  color: var(--g3-primary-btn__bg-color) !important;
-}
-
-.ant-radio-button-wrapper.ant-radio-button-wrapper-checked:hover {
-  color: white !important; /* stylelint-disable-line declaration-no-important */
-}
-
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before {
-  background-color: #d9d9d9 !important; /* stylelint-disable-line declaration-no-important */
-}
-
-.ant-radio-button-wrapper-checked {
-  background-color: var(--g3-primary-btn__bg-color);
-}
-
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-  background-color: var(--g3-primary-btn__bg-color);
-  color: white;
-  border-color: var(--g3-primary-btn__bg-color);
-}
-
-.ant-radio-group-solid
-  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-  /* stylelint-disable-next-line declaration-no-important */
-  background: var(--g3-primary-btn__bg-color) !important;
-  color: white;
-  /* stylelint-disable-next-line declaration-no-important */
-  border-color: var(--g3-primary-btn__bg-color) !important;
 }
 
 .g3-filter-section__search-input-box {
@@ -184,28 +155,6 @@
   width: 10px;
   height: 10px;
   background-color: var(--g3-color__gray);
-}
-
-.g3-filter-section__search-input-spinner {
-  width: 20px;
-  height: 10px;
-  position: relative;
-  top: 10px;
-  right: 6px;
-  cursor: pointer;
-}
-
-.g3-filter-section__search-input-separator {
-  width: 1px;
-  border-left: 1px solid var(--g3-color__lightgray);
-  margin: 0 10px;
-}
-
-.g3-filter-section__search-input-icon {
-  background-color: var(--g3-color__gray);
-  position: relative;
-  top: 3px;
-  cursor: pointer;
 }
 
 .g3-filter-section__search-filter--hidden {
@@ -267,10 +216,6 @@
 .g3-filter-section__and-or-toggle-helper-tooltip .rc-tooltip-content {
   top: -1px;
   position: relative;
-}
-
-.g3-select-filter {
-  margin-top: 14px;
 }
 
 .g3-filter-section__no-option {
