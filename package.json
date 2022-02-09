@@ -146,9 +146,6 @@
     "html-webpack-plugin": {
       "strip-ansi": "6.0.1"
     },
-    "jest": {
-      "strip-ansi": "6.0.1"
-    },
     "showdown": {
       "strip-ansi": "6.0.1"
     }
