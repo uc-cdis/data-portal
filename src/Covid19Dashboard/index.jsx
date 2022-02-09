@@ -198,7 +198,7 @@ class Covid19Dashboard extends React.Component {
         <p>{monthNames[date.getUTCMonth()]} {date.getUTCDate()}, {date.getUTCFullYear()}</p>
         {
           props.payload.map((data, i) => {
-            const val = typeof (rawData[data.name]) === 'number' ? rawData[data.name].toLocaleString() : rawData[data.name];
+            const val = typeof (rawData[data.dataKey]) === 'number' ? rawData[data.dataKey].toLocaleString() : rawData[data.dataKey];
             return (
               <p
                 style={{ color: data.stroke }}
