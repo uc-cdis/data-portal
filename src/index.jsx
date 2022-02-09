@@ -22,8 +22,8 @@ import { gaTracking } from './params';
 import { basename } from './localconf';
 import App from './App';
 import '@fontsource/raleway';
-import './gen3-ui-component/css/base.css';
-import './gen3-ui-component/css/icon.css';
+import './base.css';
+import './icon.css';
 
 // Google Analytics
 ReactGA.initialize(gaTracking);
