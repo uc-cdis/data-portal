@@ -367,9 +367,12 @@
   align-items: baseline;
 }
 
+/* hide the dropdown arrow from the panel, this is intended */
+/* stylelint-disable declaration-no-important */
 .discovery-header__dropdown-tags-display-panel .ant-collapse-header {
   display: none!important;
 }
+/* stylelint-enable declaration-no-important */
 
 .discovery-header__dropdown-tags-search {
   width: 50%;
