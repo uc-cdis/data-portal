@@ -186,7 +186,8 @@ function ProtectedContent({
         });
   }, [location]);
 
-  if (state.redirectTo) return <Navigate to={state.redirectTo} replace />;
+  if (state.redirectTo && state.redirectTo !== location.pathname)
+    return <Navigate to={state.redirectTo} replace />;
   if (isPublic && (state.dataLoaded || typeof filter !== 'function'))
     return children;
   if (state.authenticated)
