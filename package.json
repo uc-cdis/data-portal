@@ -14,8 +14,8 @@
     "@fortawesome/free-brands-svg-icons": "^5.14.0",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.0",
-    "@gen3/guppy": "uc-cdis/guppy#chore/dep-update",
-    "@gen3/ui-component": "uc-cdis/gen3-ui-component#chore/dep-patch",
+    "@gen3/guppy": "^0.15.0",
+    "@gen3/ui-component": "^0.11.0",
     "@storybook/addon-actions": "^6.0.0",
     "@storybook/react": "^6.0.0",
     "@types/redux-mock-store": "^1.0.3",
@@ -148,6 +148,9 @@
     },
     "showdown": {
       "strip-ansi": "6.0.1"
+    },
+    "@storybook/cli": {
+      "trim": "0.0.3"
     }
   },
   "jest": {
