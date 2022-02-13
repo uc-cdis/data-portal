@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-types#prop-types
 import { useLocation } from 'react-router-dom';
 import Select, { createFilter } from 'react-select';
@@ -14,6 +14,7 @@ import './Login.css';
  * @typedef {Object} LoginProps
  * @property {LoginData} data
  * @property {LoginProvider[]} [providers]
+ * @property {string} username
  */
 
 /** @type {LoginProvider[]} */
@@ -56,7 +57,20 @@ function getLoginOptions(providers) {
 }
 
 /** @param {LoginProps} props */
-function Login({ data, providers = defaultProviders }) {
+function Login({ data, providers = defaultProviders, username }) {
+  useEffect(() => {
+    // WARNING: TEMPORARY WORKAROUND
+    // A login issue was reported where attempts to re-login (especially using
+    // a different account) after logging out from the portal takes to a fence
+    // location, instead of back to the portal homepage.
+    // Erasing csrftoken cookie value for unauthenticated visitor seemingly
+    // resolvess the issue, but this should not be considered a permandent fix.
+    if (username === undefined) {
+      console.warn('Clearing csrftoken for an unauthenticated visitor.');
+      document.cookie = 'csrftoken=;';
+    }
+  }, []);
+
   const location = useLocation();
   /** @type {{ label: string; value: string; }} */
   const emptyOption = undefined;
@@ -181,6 +195,7 @@ Login.propTypes = {
       url: PropTypes.string, // deprecated; use urls
     }).isRequired
   ),
+  username: PropTypes.string,
 };
 
 export default Login;
