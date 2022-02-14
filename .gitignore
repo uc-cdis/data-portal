@@ -6,6 +6,7 @@ vendors*.js
 workspaceBundle.js
 covid19Bundle.js
 nctBundle.js
+ecosystemBundle.js
 index.html
 workspaces.html
 custom/sponsors/

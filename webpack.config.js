@@ -220,7 +220,6 @@ module.exports = {
     historyApiFallback: {
       index: 'dev.html',
     },
-    disableHostCheck: true,
     compress: true,
     hot: true,
     port: 9443,
@@ -255,7 +254,8 @@ module.exports = {
     },
     {
       test: /\.svg$/,
-      loaders: ['babel-loader', 'react-svg-loader'],
+      // loaders: ['babel-loader', 'react-svg-loader'], // to address the `css-what` vulnerability issue, after updating to webpack 5 and latest `react-svg-loader` we can switch back to this
+      loader: 'svg-react-loader',
     },
     {
       test: /\.(png|jpg|gif|woff|ttf|eot)$/,

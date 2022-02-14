@@ -17,10 +17,11 @@ module.exports = {
     jest: true,
   },
   globals: {
-    JSX: true
+    JSX: true,
   },
   plugins: [
     'react',
+    'react-hooks',
     'jsx-a11y',
     'import',
   ],
@@ -95,6 +96,8 @@ module.exports = {
     'react/destructuring-assignment': ['off'],
     'react/jsx-one-expression-per-line': ['off'],
     'react/jsx-props-no-spreading': ['off'],
+    'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
+    'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
   },
   overrides: [
     {

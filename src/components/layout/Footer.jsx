@@ -93,7 +93,7 @@ const LogoObject = PropTypes.shape({
 });
 
 const FooterLink = PropTypes.shape({
-  text: PropTypes.string.isRequired,
+  text: PropTypes.string,
   href: PropTypes.string.isRequired,
 });
 

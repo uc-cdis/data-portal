@@ -122,9 +122,9 @@ class IllinoisMapChart extends React.Component {
   }
 
   componentDidUpdate() {
-    if (!this.state.time_data.fetchStatus && Object.entries(this.props.jsonByTime.il_county_list).length > 0) {
+    if (!this.state.time_data.fetchStatus && Object.entries(this.props.jsonByDate.il_county_list).length > 0) {
       const geoJson = this.addDataToGeoJsonBase(
-        this.props.jsonByTime.il_county_list,
+        this.props.jsonByDate.il_county_list,
         (data, location) => {
           const dateProps = {};
           Object.entries(data[location.properties.FIPS].by_date).forEach((x) => {
@@ -139,10 +139,10 @@ class IllinoisMapChart extends React.Component {
       this.setState({ // eslint-disable-line react/no-did-update-set-state, max-len
         time_data: {
           data: geoJson,
-          lastUpdated: this.props.jsonByTime.last_updated,
+          lastUpdated: this.props.jsonByDate.last_updated,
           fetchStatus: 'done',
         },
-        lastUpdated: this.props.jsonByTime.last_updated,
+        lastUpdated: this.props.jsonByDate.last_updated,
       });
 
       this.mapData.illinoisCountiesGeoJson = filterIllinoisCountiesGeoJson();
@@ -156,7 +156,7 @@ class IllinoisMapChart extends React.Component {
       // Due to cook county being an extreme outlier
       const maxVal = geoJson.features
         .map((obj) => {
-          const confirmedCases = obj.properties[`C_${this.props.jsonByTime.last_updated}`];
+          const confirmedCases = obj.properties[`C_${this.props.jsonByDate.last_updated}`];
           // this is to handle <5 strings in dataset, makes it 0
           if (typeof confirmedCases === 'string') {
             return 0;
@@ -377,7 +377,7 @@ class IllinoisMapChart extends React.Component {
   setMapLegendColors(id) {
     if (id === 'C_time_data') {
       this.setState({
-        mapColors: this.mapData.colors, legendTitle: 'Confirmed Cases', legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' }, lastUpdated: this.props.jsonByTime.last_updated,
+        mapColors: this.mapData.colors, legendTitle: 'Confirmed Cases', legendDataSource: { title: 'Johns Hopkins University CSSE', link: 'https://systems.jhu.edu' }, lastUpdated: this.props.jsonByDate.last_updated,
       });
     }
     if (id === 'V_time_data') {
@@ -658,20 +658,21 @@ class IllinoisMapChart extends React.Component {
           <LayerTemplate visibility={this.state.overlay_layers.us_counties.visible} />
           <PopulationIL visibility={this.state.overlay_layers.il_population.visible} /> */}
           {/* Outline a set of counties from IL */}
-          {this.state.activeLayer === 'C_time_data' &&
-            <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountiesGeoJson}>
-              <ReactMapGL.Layer
-                id='county-highlight'
-                type='line'
-                beforeId='waterway-label'
-                paint={{
-                  'line-color': '#421C52',
-                  'line-width': 3,
-                }}
-              />
-            </ReactMapGL.Source>
-          }
-        <ReactMapGL.Source type='geojson' data={this.mapData.illinoisCountiesGeoJson}>
+          {this.state.activeLayer === 'C_time_data'
+            && (
+              <ReactMapGL.Source type='geojson' data={this.mapData.modeledCountiesGeoJson}>
+                <ReactMapGL.Layer
+                  id='county-highlight'
+                  type='line'
+                  beforeId='waterway-label'
+                  paint={{
+                    'line-color': '#421C52',
+                    'line-width': 3,
+                  }}
+                />
+              </ReactMapGL.Source>
+            )}
+          <ReactMapGL.Source type='geojson' data={this.mapData.illinoisCountiesGeoJson}>
             <ReactMapGL.Layer
               id='county-outline'
               type='line'
@@ -691,7 +692,7 @@ class IllinoisMapChart extends React.Component {
 }
 
 IllinoisMapChart.propTypes = {
-  jsonByTime: PropTypes.object.isRequired,
+  jsonByDate: PropTypes.object.isRequired,
   modeledFipsList: PropTypes.array.isRequired,
   fetchTimeSeriesData: PropTypes.func.isRequired,
   jsonVaccinated: PropTypes.object.isRequired,

@@ -70,6 +70,10 @@ const footerGovLinks = [
     href: 'http://www.usa.gov/',
     text: 'USA.gov',
   },
+  {
+    href: 'https://www.hhs.gov/vulnerability-disclosure-policy/index.html',
+    text: 'HHS Responsible Disclosure Form',
+  },
 ];
 
 class FooterNIAID extends Component {

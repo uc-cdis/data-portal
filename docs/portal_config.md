@@ -51,7 +51,8 @@ Below is an example, with inline comments describing what each JSON block config
       "introduction": { // optional; text on homepage
         "heading": "", // optional; title of introduction
         "text": "This is an example Gen3 Data Commons", // optional; text of homepage
-        "link": "/submission" // optional; link for button underneath the text
+        "buttonText": "Browse Studies", // optional; default is Submit/Browse Data
+        "link": "/submission" // optional; link for button underneath the text, default is /submission
       },
       "buttons": [ // optional; button “cards” displayed on the bottom of the homepage
         {
@@ -96,25 +97,21 @@ Below is an example, with inline comments describing what each JSON block config
         {
           "icon": "dictionary", // required; icon from /img/icons for the button
           "link": "/DD", // required; the link for the button
-          "color": "#a2a2a2", // optional; hex color of the icon
           "name": "Dictionary" // required; text for the button
         },
         {
           "icon": "exploration",
           "link": "/explorer",
-          "color": "#a2a2a2",
           "name": "Exploration"
         },
         {
           "icon": "workspace",
           "link": "/workspace",
-          "color": "#a2a2a2",
           "name": "Workspace"
         },
         {
           "icon": "profile",
           "link": "/identity",
-          "color": "#a2a2a2",
           "name": "Profile"
         }
       ]
@@ -145,6 +142,14 @@ Below is an example, with inline comments describing what each JSON block config
       "systemUseTitle" : "", // required; Title of the popup dialog
       "systemUseText" : [""] // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
       "expireUseMsgDays" : optional; 0, // the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
+    },
+    "footer": {
+      "links": [
+        {
+          "text": "Link title",
+          "href": "https://example.com"
+        }
+      ]
     },
     "footerLogos": [ // optional; logos to be displayed in the footer, usually sponsors
       {
