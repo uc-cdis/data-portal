@@ -17,6 +17,12 @@ import { useExplorerConfig } from '../ExplorerConfigContext';
  */
 
 /**
+ * @typedef {Object} ParsedSurvivalAnalysisResult
+ * @property {RisktableData[]} risktable
+ * @property {SurvivalData[]} survival
+ */
+
+/**
  * @param {{ name: string }} a a.name has a format: [index]. [filterSetName]
  * @param {{ name: string }} b b.name has a format: [index]. [filterSetName]
  */
@@ -29,16 +35,16 @@ function sortByIndexCompareFn(a, b) {
 /** @type {SurvivalAnalysisResult} */
 const emptyData = {};
 
-/** @returns {[[RisktableData[], SurvivalData[]], (usedFilterSets: ExplorerFilterSet[]) => Promise<void>]} */
+/** @returns {[ParsedSurvivalAnalysisResult, (usedFilterSets: ExplorerFilterSet[]) => Promise<void>]} */
 export default function useSurvivalAnalysisResult() {
   const { current, explorerId } = useExplorerConfig();
   const config = current.survivalAnalysisConfig;
 
   const [result, setResult] = useState(emptyData);
   const parsedResult = useMemo(() => {
-    /** @type {[RisktableData[], SurvivalData[]]} */
-    const parsed = [[], []];
-    const [r, s] = parsed;
+    /** @type {ParsedSurvivalAnalysisResult} */
+    const parsed = { risktable: [], survival: [] };
+    const { risktable: r, survival: s } = parsed;
     for (const { name, risktable, survival } of Object.values(result)) {
       if (config.result?.risktable) r.push({ data: risktable, name });
       if (config.result?.survival) s.push({ data: survival, name });

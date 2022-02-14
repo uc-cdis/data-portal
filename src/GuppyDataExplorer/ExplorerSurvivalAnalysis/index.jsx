@@ -15,7 +15,7 @@ import './ExplorerSurvivalAnalysis.css';
 function ExplorerSurvivalAnalysis() {
   const [isUserCompliant, setIsUserCompliant] = useState(checkUserAgreement());
 
-  const [[risktable, survival], refershResult] = useSurvivalAnalysisResult();
+  const [{ risktable, survival }, refershResult] = useSurvivalAnalysisResult();
   const [timeInterval, setTimeInterval] = useState(4);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(undefined);
