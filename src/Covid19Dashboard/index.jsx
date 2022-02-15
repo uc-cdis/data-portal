@@ -51,7 +51,7 @@ class Covid19Dashboard extends React.Component {
     let scrollFlag = false;
 
     // Options for the observer (which mutations to observe)
-    const config = { attributes: true, childList: true, subtree: true };
+    const config = { attributes: false, childList: true, subtree: true };
 
     // Callback function to execute when mutations are observed
     const callback = function (mutationsList, observer) {
@@ -62,7 +62,7 @@ class Covid19Dashboard extends React.Component {
           window.scrollTo({
             top: covid19DashboardDiv.y,
             left: 0,
-            behavior: 'smooth',
+            behavior: 'smooth'
           });
           scrollFlag = true;
           observer.disconnect();
