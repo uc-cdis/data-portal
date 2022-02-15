@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import { fetchWithCreds } from '../../actions';
 import { useExplorerConfig } from '../ExplorerConfigContext';
@@ -18,6 +18,13 @@ import { useExplorerConfig } from '../ExplorerConfigContext';
  */
 
 /**
+ * @typedef {Object} SurvivalAnalysisRequestBody
+ * @property {boolean} efsFlag
+ * @property {ExplorerFilterSetDTO[]} filterSets
+ * @property {number[]} usedFilterSetIds
+ */
+
+/**
  * @param {{ name: string }} a a.name has a format: [index]. [filterSetName]
  * @param {{ name: string }} b b.name has a format: [index]. [filterSetName]
  */
@@ -30,11 +37,18 @@ function sortByIndexCompareFn(a, b) {
 /** @type {SurvivalAnalysisResult} */
 const emptyData = {};
 
-/** @returns {[ParsedSurvivalAnalysisResult, (usedFilterSets: ExplorerFilterSet[]) => Promise<void>]} */
+/**
+ * @callback SurvivalAnalysisRefreshHandler
+ * @param {{ efsFlag: boolean; usedFilterSets: ExplorerFilterSet[]}} args
+ * @returns {Promise<void>}
+ */
+
+/** @returns {[ ParsedSurvivalAnalysisResult, SurvivalAnalysisRefreshHandler ]} */
 export default function useSurvivalAnalysisResult() {
   const { current, explorerId } = useExplorerConfig();
   const config = current.survivalAnalysisConfig;
 
+  const prevEfsFlag = useRef(false);
   const [result, setResult] = useState(emptyData);
   const parsedResult = useMemo(() => {
     /** @type {ParsedSurvivalAnalysisResult} */
@@ -51,9 +65,7 @@ export default function useSurvivalAnalysisResult() {
   }, [result]);
 
   /**
-   * @param {Object} body
-   * @param {ExplorerFilterSetDTO[]} body.filterSets
-   * @param {number[]} body.usedFilterSetIds
+   * @param {SurvivalAnalysisRequestBody} body
    * @returns {Promise<SurvivalAnalysisResult>}
    */
   function fetchResult(body) {
@@ -67,16 +79,19 @@ export default function useSurvivalAnalysisResult() {
     });
   }
 
-  /** @param {ExplorerFilterSet[]} usedFilterSets */
-  function refreshResult(usedFilterSets) {
-    /** @type {{ filterSets: ExplorerFilterSetDTO[]; usedFilterSetIds: number[] }} */
-    const body = { filterSets: [], usedFilterSetIds: [] };
+  /** @type {SurvivalAnalysisRefreshHandler} */
+  function refreshResult({ efsFlag, usedFilterSets }) {
+    const isSurvivalTypeChanged = prevEfsFlag.current !== efsFlag;
+    if (isSurvivalTypeChanged) prevEfsFlag.current = efsFlag;
+
+    /** @type {SurvivalAnalysisRequestBody} */
+    const body = { efsFlag, filterSets: [], usedFilterSetIds: [] };
     /** @type {SurvivalAnalysisResult} */
     const cache = {};
     for (const [index, usedFilterSet] of usedFilterSets.entries()) {
       const { filters, id, name } = usedFilterSet;
       body.usedFilterSetIds.push(id);
-      if (id in result)
+      if (id in result && !isSurvivalTypeChanged)
         cache[id] = { ...result[id], name: `${index + 1}. ${name}` };
       else
         body.filterSets.push({
