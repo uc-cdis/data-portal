@@ -126,7 +126,7 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval, isError }) {
   };
 
   const resetUserInput = () => {
-    setLocalTimeInterval(2);
+    setLocalTimeInterval(4);
     setStartTime(0);
     setEndTime(undefined);
     setSurvivalType(survivalTypeOptions[0]);
