@@ -8,6 +8,7 @@ import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import FilterSetCard from './FilterSetCard';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('./types').ParsedSurvivalAnalysisResult} ParsedSurvivalAnalysisResult */
 /** @typedef {import('./types').UserInputSubmitHandler} UserInputSubmitHandler */
 
 /** @param {{ label: string; [x: string]: any }} props */
@@ -78,11 +79,12 @@ function validateNumberInput(e, setStateAction) {
 
 /**
  * @param {Object} prop
+ * @param {ParsedSurvivalAnalysisResult['count']} [prop.countByFilterSet]
  * @param {UserInputSubmitHandler} prop.onSubmit
  * @param {number} prop.timeInterval
  * @param {boolean} prop.isError
  */
-function ControlForm({ onSubmit, timeInterval, isError }) {
+function ControlForm({ countByFilterSet, onSubmit, timeInterval, isError }) {
   const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(undefined);
@@ -225,6 +227,7 @@ function ControlForm({ onSubmit, timeInterval, isError }) {
         usedFilterSets.map((filterSet, i) => (
           <FilterSetCard
             key={filterSet.id}
+            count={countByFilterSet?.[filterSet.name]}
             filterSet={filterSet}
             label={`${i + 1}. ${filterSet.name}`}
             onClose={() => {
@@ -250,6 +253,12 @@ function ControlForm({ onSubmit, timeInterval, isError }) {
 }
 
 ControlForm.propTypes = {
+  countByFilterSet: PropTypes.objectOf(
+    PropTypes.exact({
+      fitted: PropTypes.number,
+      total: PropTypes.number,
+    })
+  ),
   onSubmit: PropTypes.func.isRequired,
   timeInterval: PropTypes.number.isRequired,
   isError: PropTypes.bool,

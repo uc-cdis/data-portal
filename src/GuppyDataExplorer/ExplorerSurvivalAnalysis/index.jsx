@@ -15,7 +15,7 @@ import './ExplorerSurvivalAnalysis.css';
 function ExplorerSurvivalAnalysis() {
   const [isUserCompliant, setIsUserCompliant] = useState(checkUserAgreement());
 
-  const [{ risktable, survival }, refershResult] = useSurvivalAnalysisResult();
+  const [parsedResult, refershResult] = useSurvivalAnalysisResult();
   const [timeInterval, setTimeInterval] = useState(4);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(undefined);
@@ -51,6 +51,7 @@ function ExplorerSurvivalAnalysis() {
         <>
           <div className='explorer-survival-analysis__column-left'>
             <ControlForm
+              countByFilterSet={parsedResult.count}
               onSubmit={handleSubmit}
               timeInterval={timeInterval}
               isError={isError}
@@ -73,7 +74,7 @@ function ExplorerSurvivalAnalysis() {
               <>
                 {config.result?.survival && (
                   <SurvivalPlot
-                    data={survival}
+                    data={parsedResult.survival}
                     endTime={endTime}
                     startTime={startTime}
                     timeInterval={timeInterval}
@@ -81,7 +82,7 @@ function ExplorerSurvivalAnalysis() {
                 )}
                 {config.result?.risktable && (
                   <RiskTable
-                    data={risktable}
+                    data={parsedResult.risktable}
                     endTime={endTime}
                     startTime={startTime}
                     timeInterval={timeInterval}
