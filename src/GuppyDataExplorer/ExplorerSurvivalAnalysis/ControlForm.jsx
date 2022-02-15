@@ -139,7 +139,6 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval, isError }) {
     <form className='explorer-survival-analysis__control-form'>
       <ControlFormSelect
         inputId='survival-type'
-        isDisabled
         label='Survival type'
         options={[
           { label: 'Overall Survival', value: 'all' },
