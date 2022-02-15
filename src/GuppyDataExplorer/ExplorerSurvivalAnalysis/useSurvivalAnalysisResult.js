@@ -8,18 +8,13 @@ import { useExplorerConfig } from '../ExplorerConfigContext';
 /** @typedef {import('./types').RisktableData} RisktableData */
 /** @typedef {import('./types').SurvivalAnalysisResult} SurvivalAnalysisResult */
 /** @typedef {import('./types').SurvivalData} SurvivalData */
+/** @typedef {import('./types').ParsedSurvivalAnalysisResult} ParsedSurvivalAnalysisResult */
 
 /**
  * @typedef {Object} ExplorerFilterSetDTO
  * @property {GqlFilter} filters
  * @property {number} id
  * @property {string} name
- */
-
-/**
- * @typedef {Object} ParsedSurvivalAnalysisResult
- * @property {RisktableData[]} risktable
- * @property {SurvivalData[]} survival
  */
 
 /**
@@ -43,9 +38,10 @@ export default function useSurvivalAnalysisResult() {
   const [result, setResult] = useState(emptyData);
   const parsedResult = useMemo(() => {
     /** @type {ParsedSurvivalAnalysisResult} */
-    const parsed = { risktable: [], survival: [] };
-    const { risktable: r, survival: s } = parsed;
-    for (const { name, risktable, survival } of Object.values(result)) {
+    const parsed = { count: {}, risktable: [], survival: [] };
+    const { count: c, risktable: r, survival: s } = parsed;
+    for (const { name, count, risktable, survival } of Object.values(result)) {
+      if (count !== undefined) c[name.split('. ')[1]] = count;
       if (config.result?.risktable) r.push({ data: risktable, name });
       if (config.result?.survival) s.push({ data: survival, name });
     }

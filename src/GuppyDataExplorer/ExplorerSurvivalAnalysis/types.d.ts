@@ -27,12 +27,24 @@ export type SurvivalData = {
 
 export type SurvivalResultForFilterSet = {
   name: string;
+  count: {
+    fitted: number;
+    total: number;
+  };
   risktable: RisktableDataPoint[];
   survival: SurvivalDataPoint[];
 };
 
 export type SurvivalAnalysisResult = {
   [id: string]: SurvivalResultForFilterSet;
+};
+
+export type ParsedSurvivalAnalysisResult = {
+  count: {
+    [name: string]: SurvivalResultForFilterSet['count'];
+  };
+  risktable: RisktableData[];
+  survival: SurvivalData[];
 };
 
 export type UserInput = {
