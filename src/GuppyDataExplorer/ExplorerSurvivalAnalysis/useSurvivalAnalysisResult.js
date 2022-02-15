@@ -8,6 +8,7 @@ import { useExplorerConfig } from '../ExplorerConfigContext';
 /** @typedef {import('./types').RisktableData} RisktableData */
 /** @typedef {import('./types').SurvivalAnalysisResult} SurvivalAnalysisResult */
 /** @typedef {import('./types').SurvivalData} SurvivalData */
+/** @typedef {import('./types').ParsedSurvivalAnalysisResult} ParsedSurvivalAnalysisResult */
 
 /**
  * @typedef {Object} ExplorerFilterSetDTO
@@ -29,17 +30,18 @@ function sortByIndexCompareFn(a, b) {
 /** @type {SurvivalAnalysisResult} */
 const emptyData = {};
 
-/** @returns {[[RisktableData[], SurvivalData[]], (usedFilterSets: ExplorerFilterSet[]) => Promise<void>]} */
+/** @returns {[ParsedSurvivalAnalysisResult, (usedFilterSets: ExplorerFilterSet[]) => Promise<void>]} */
 export default function useSurvivalAnalysisResult() {
   const { current, explorerId } = useExplorerConfig();
   const config = current.survivalAnalysisConfig;
 
   const [result, setResult] = useState(emptyData);
   const parsedResult = useMemo(() => {
-    /** @type {[RisktableData[], SurvivalData[]]} */
-    const parsed = [[], []];
-    const [r, s] = parsed;
-    for (const { name, risktable, survival } of Object.values(result)) {
+    /** @type {ParsedSurvivalAnalysisResult} */
+    const parsed = { count: {}, risktable: [], survival: [] };
+    const { count: c, risktable: r, survival: s } = parsed;
+    for (const { name, count, risktable, survival } of Object.values(result)) {
+      if (count !== undefined) c[name.split('. ')[1]] = count;
       if (config.result?.risktable) r.push({ data: risktable, name });
       if (config.result?.survival) s.push({ data: survival, name });
     }

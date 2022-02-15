@@ -79,6 +79,10 @@
   margin-right: 0.5rem;
 }
 
+.explorer-survival-analysis__filter-set-card > header > em {
+  margin: 0 0.5rem;
+}
+
 .explorer-survival-analysis__filter-set-select {
   margin: 1rem;
   display: flex;
