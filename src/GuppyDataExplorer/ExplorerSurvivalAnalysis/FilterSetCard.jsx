@@ -30,7 +30,7 @@ export default function FilterSetCard({ count, filterSet, label, onClose }) {
           {label}
         </button>
         {count === undefined ? (
-          <em style={{ margin: '0 .5rem' }}>N/A</em>
+          <em>N/A</em>
         ) : (
           <Tooltip
             arrowContent={<div className='rc-tooltip-arrow-inner' />}
@@ -39,9 +39,11 @@ export default function FilterSetCard({ count, filterSet, label, onClose }) {
             placement='top'
             trigger={['hover', 'focus']}
           >
-            <em style={{ margin: '0 .5rem' }}>
-              {count.fitted}/{count.total}
-            </em>
+            <button type='button'>
+              <em>
+                {count.fitted}/{count.total}
+              </em>
+            </button>
           </Tooltip>
         )}
         <button aria-label='Clear' type='button' onClick={onClose}>
