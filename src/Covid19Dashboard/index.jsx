@@ -47,25 +47,27 @@ class Covid19Dashboard extends React.Component {
     // scrolling effect added to show homepage starting from covid counts
     const targetNode = document.getElementsByClassName('covid19-dashboard_panel')[0];
 
-    //defined a scroll flag to only scroll for one time
-    var scrollFlag = false;
+    // defined a scroll flag to only scroll for one time
+    let scrollFlag = false;
 
     // Options for the observer (which mutations to observe)
     const config = { attributes: true, childList: true, subtree: true };
 
     // Callback function to execute when mutations are observed
-    const callback = function(mutationsList, observer) {
-        for(const mutation of mutationsList) {
-            if (mutation.type === 'childList' && mutation.addedNodes[0] == document.getElementById('map-slider') && scrollFlag == false) {
-              var covid19DashboardDiv = document.getElementsByClassName("covid19-dashboard_counts")[0].getBoundingClientRect();
-              window.scrollTo({
-                  top: covid19DashboardDiv.y,
-                  left: 0,
-                  behavior: 'smooth'
-              });
-              scrollFlag = true;
-            }
+    const callback = function (mutationsList, observer) {
+      Object.values(mutationsList).forEach((mutation) => {
+        // condiiton to scroll when "map-chart-il" div adds "map-slider" in the childList
+        if (mutation.type === 'childList' && mutation.addedNodes[0] === document.getElementById('map-slider') && scrollFlag === false) {
+          const covid19DashboardDiv = document.getElementsByClassName('covid19-dashboard_counts')[0].getBoundingClientRect();
+          window.scrollTo({
+            top: covid19DashboardDiv.y,
+            left: 0,
+            behavior: 'smooth',
+          });
+          scrollFlag = true;
+          observer.disconnect();
         }
+      });
     };
 
     /**
@@ -77,7 +79,6 @@ class Covid19Dashboard extends React.Component {
 
     // Start observing the target node for configured mutations
     observer.observe(targetNode, config);
-
   }
 
   getTotalCounts() {
