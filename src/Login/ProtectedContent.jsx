@@ -165,7 +165,11 @@ function ProtectedContent({
     reduxStore.dispatch({ type: 'CLEAR_COUNTS' }); // clear some counters
     reduxStore.dispatch({ type: 'CLEAR_QUERY_NODES' });
 
-    if (isPublic)
+    if (location.pathname === '/login')
+      checkLoginStatus(state).then((newState) =>
+        filter().finally(() => updateState(newState))
+      );
+    else if (isPublic)
       if (typeof filter === 'function')
         filter().finally(() => updateState(state));
       else updateState(state);
