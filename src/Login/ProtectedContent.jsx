@@ -12,6 +12,7 @@ import {
 } from '../actions';
 import Spinner from '../components/Spinner';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
+import { fetchLogin } from './ReduxLogin';
 
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('../types').ProjectState} ProjectState */
@@ -153,7 +154,6 @@ function ProtectedContent({
   /** @param {ProtectedContentState} currentState */
   function updateState(currentState) {
     const newState = { ...currentState, dataLoaded: true };
-    if (isLoginPage && currentState.authenticated) newState.redirectTo = '/';
     setState(newState);
   }
   useEffect(() => {
@@ -166,9 +166,14 @@ function ProtectedContent({
     reduxStore.dispatch({ type: 'CLEAR_QUERY_NODES' });
 
     if (isLoginPage)
-      checkLoginStatus(state).then((newState) =>
-        filter().finally(() => updateState(newState))
-      );
+      checkLoginStatus(state).then((newState) => {
+        if (newState.authenticated)
+          updateState({ ...newState, redirectTo: '/' });
+        else
+          reduxStore
+            .dispatch(fetchLogin())
+            .finally(() => updateState(newState));
+      });
     else
       checkLoginStatus(state)
         .then(checkIfRegisterd)

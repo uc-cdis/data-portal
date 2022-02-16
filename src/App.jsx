@@ -5,7 +5,7 @@ import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
 import Layout from './Layout';
-import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
+import ReduxLogin from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 // import { fetchCoreMetadata } from './CoreMetadata/reduxer';
 import { fetchAccess } from './UserProfile/ReduxUserProfile';
@@ -76,7 +76,7 @@ function App() {
         <Route
           path='login'
           element={
-            <ProtectedContent isLoginPage filter={() => dispatch(fetchLogin())}>
+            <ProtectedContent isLoginPage>
               <ReduxLogin />
             </ProtectedContent>
           }
