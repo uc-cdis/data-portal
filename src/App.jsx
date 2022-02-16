@@ -76,7 +76,7 @@ function App() {
         <Route
           path='login'
           element={
-            <ProtectedContent isPublic filter={() => dispatch(fetchLogin())}>
+            <ProtectedContent isLoginPage filter={() => dispatch(fetchLogin())}>
               <ReduxLogin />
             </ProtectedContent>
           }
