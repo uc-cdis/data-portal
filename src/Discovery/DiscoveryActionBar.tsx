@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef, ReactElement } from 'react';
+import React, {
+  useState, useEffect, useRef,
+} from 'react';
 import { datadogRum } from '@datadog/browser-rum';
 import {
   Space,
@@ -8,7 +10,7 @@ import {
   Table,
   Card,
   Row,
-  Col
+  Col,
 } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
@@ -21,12 +23,12 @@ import {
   SelectOutlined,
 } from '@ant-design/icons';
 import FileSaver from 'file-saver';
+import throttle from 'lodash/throttle';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
 import {
   manifestServiceApiPath, hostname, jobAPIPath, externalLoginOptionsUrl,
 } from '../localconf';
-import throttle from 'lodash/throttle';
 
 interface User {
   username: string
@@ -390,7 +392,7 @@ const DiscoveryActionBar = (props: Props) => {
     message: { title: '', content: <React.Fragment />, active: false },
   });
 
-   // begin monitoring download job when component mounts if one already exists and is running
+  // begin monitoring download job when component mounts if one already exists and is running
   useEffect(
     () => {
       fetchWithCreds({ path: `${jobAPIPath}list` }).then(
@@ -445,7 +447,7 @@ const DiscoveryActionBar = (props: Props) => {
     }, [props.discovery.actionToResume],
   );
 
-  let domElementReference = useRef<HTMLElement>(null);
+  const domElementReference = useRef<HTMLElement>(null);
   const [floating, setFloating] = useState(false);
 
   useEffect(
@@ -455,11 +457,11 @@ const DiscoveryActionBar = (props: Props) => {
           const actionBarVerticalPosition = domElementReference.current?.getBoundingClientRect().y;
           const actionBarHidden = actionBarVerticalPosition < 0;
           setFloating(actionBarHidden);
-        }, 100
+        }, 100,
       ) as (ev: Event) => any;
       document.addEventListener('scroll', onScroll);
       return () => document.removeEventListener('scroll', onScroll);
-    }, []
+    }, [],
   );
 
   const handleRedirectToLoginClick = (action:'download'|'export'|'manifest' = null) => {
@@ -478,17 +480,18 @@ const DiscoveryActionBar = (props: Props) => {
   };
 
   const downloadZipButton = (
-    props.config.features.exportToWorkspace?.enableDownloadZip &&
-    <React.Fragment>
-      <Popover
-      className='discovery-popover'
-      arrowPointAtCenter
-      content={(
-        <React.Fragment>
+    props.config.features.exportToWorkspace?.enableDownloadZip
+    && (
+      <React.Fragment>
+        <Popover
+          className='discovery-popover'
+          arrowPointAtCenter
+          content={(
+            <React.Fragment>
           Directly download data (up to 250Mb) from selected studies
-        </React.Fragment>
-        )}
-      >
+            </React.Fragment>
+          )}
+        >
           <Button
             onClick={
               async () => {
@@ -522,161 +525,168 @@ const DiscoveryActionBar = (props: Props) => {
                 }
                 return `Login to ${props.config.features.exportToWorkspace.downloadZipButtonText || 'Download Zip'}`;
               }
-              )()
-            }
-        </Button>
-      </Popover>
-      <Modal
-        closable={false}
-        visible={downloadStatus.message.active}
-        title={downloadStatus.message.title}
-        footer={(
-          <Button
-            onClick={
-              () => setDownloadStatus({
-                ...downloadStatus,
-                message: {
-                  title: '',
-                  content: <React.Fragment />,
-                  active: false,
-                },
-              })
-            }
-          >
-            Close
+            )()}
           </Button>
-        )}>
+        </Popover>
+        <Modal
+          closable={false}
+          visible={downloadStatus.message.active}
+          title={downloadStatus.message.title}
+          footer={(
+            <Button
+              onClick={
+                () => setDownloadStatus({
+                  ...downloadStatus,
+                  message: {
+                    title: '',
+                    content: <React.Fragment />,
+                    active: false,
+                  },
+                })
+              }
+            >
+            Close
+            </Button>
+          )}
+        >
           { downloadStatus.message.content }
-      </Modal>
-    </React.Fragment>
+        </Modal>
+      </React.Fragment>
+    )
   );
 
   const downloadManifestButton = (
     props.config.features.exportToWorkspace?.enableDownloadManifest && (
-    <Popover
-      className='discovery-popover'
-      arrowPointAtCenter
-      title={(
-        <React.Fragment>
+      <Popover
+        className='discovery-popover'
+        arrowPointAtCenter
+        title={(
+          <React.Fragment>
       Download a Manifest File for use with the&nbsp;
-          <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/'>
-            {'Gen3 Client'}
-          </a>.
-        </React.Fragment>
-      )}
-      content={(
-        <span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
+            <a target='_blank' rel='noreferrer' href='https://gen3.org/resources/user/gen3-client/'>
+              {'Gen3 Client'}
+            </a>.
+          </React.Fragment>
+        )}
+        content={(
+          <span className='discovery-popover__text'>With the Manifest File, you can use the Gen3 Client
     to download the data from the selected studies to your local computer.
-        </span>
-      )}
-    >
-      <Button
-        onClick={(props.user.username) ? () => {
-          handleDownloadManifestClick(props.config, props.discovery.selectedResources);
-        }
-          : () => { handleRedirectToLoginClick('manifest'); }}
-        type='default'
-        className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
-        disabled={props.discovery.selectedResources.length === 0}
-        icon={<FileTextOutlined />}
+          </span>
+        )}
       >
-        {(props.user.username) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
-          : `Login to ${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`}
-      </Button>
+        <Button
+          onClick={(props.user.username) ? () => {
+            handleDownloadManifestClick(props.config, props.discovery.selectedResources);
+          }
+            : () => { handleRedirectToLoginClick('manifest'); }}
+          type='default'
+          className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
+          disabled={props.discovery.selectedResources.length === 0}
+          icon={<FileTextOutlined />}
+        >
+          {(props.user.username) ? `${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`
+            : `Login to ${props.config.features.exportToWorkspace.downloadManifestButtonText || 'Download Manifest'}`}
+        </Button>
 
-    </Popover>
+      </Popover>
     )
   );
 
   const exportToWorkspaceButton = (
-    props.config.features.exportToWorkspace?.enabled &&
-    <Popover
-          className='discovery-popover'
-          arrowPointAtCenter
-          content={(
-            <React.Fragment>
+    props.config.features.exportToWorkspace?.enabled
+    && (
+      <Popover
+        className='discovery-popover'
+        arrowPointAtCenter
+        content={(
+          <React.Fragment>
           Open selected studies in the&nbsp;
-              <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
-                {'Gen3 Workspace'}
-              </a>.
-            </React.Fragment>
-          )}
+            <a target='blank' rel='noreferrer' href='https://gen3.org/resources/user/analyze-data/'>
+              {'Gen3 Workspace'}
+            </a>.
+          </React.Fragment>
+        )}
+      >
+        <Button
+          type='default'
+          className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
+          disabled={props.discovery.selectedResources.length === 0}
+          loading={props.exportingToWorkspace}
+          icon={<ExportOutlined />}
+          onClick={(props.user.username) ? async () => {
+            handleExportToWorkspaceClick(
+              props.config,
+              props.discovery.selectedResources,
+              props.setExportingToWorkspace,
+              setDownloadStatus,
+              history,
+              location,
+            );
+          }
+            : () => { handleRedirectToLoginClick('export'); }}
         >
-          <Button
-            type='default'
-            className={`discovery-action-bar-button${(props.discovery.selectedResources.length === 0) ? '--disabled' : ''}`}
-            disabled={props.discovery.selectedResources.length === 0}
-            loading={props.exportingToWorkspace}
-            icon={<ExportOutlined />}
-            onClick={(props.user.username) ? async () => {
-              handleExportToWorkspaceClick(
-                props.config,
-                props.discovery.selectedResources,
-                props.setExportingToWorkspace,
-                setDownloadStatus,
-                history,
-                location,
-              );
-            }
-              : () => { handleRedirectToLoginClick('export'); }}
-          >
-            {(props.user.username) ? 'Open In Workspace' : 'Login to Open In Workspace'}
-          </Button>
-        </Popover>
-  )
+          {(props.user.username) ? 'Open In Workspace' : 'Login to Open In Workspace'}
+        </Button>
+      </Popover>
+    )
+  );
 
   return (
     <React.Fragment>
-    <div className='discovery-studies__header'
-    ref={domElement=>{domElementReference.current=domElement;}}>
-      {/* Advanced search show/hide UI */}
-      { (props.config.features.advSearchFilters?.enabled)
-        ? (
-          <Button
-            className='discovery-adv-filter-button'
-            onClick={() => props.setFiltersVisible(!props.filtersVisible)}
-            type='text'
-          >
+      <div
+        className='discovery-studies__header'
+        ref={(domElement) => { domElementReference.current = domElement; }}
+      >
+        {/* Advanced search show/hide UI */}
+        { (props.config.features.advSearchFilters?.enabled)
+          ? (
+            <Button
+              className='discovery-adv-filter-button'
+              onClick={() => props.setFiltersVisible(!props.filtersVisible)}
+              type='text'
+            >
           ADVANCED SEARCH
-            { props.filtersVisible
-              ? <LeftOutlined />
-              : <RightOutlined />}
-          </Button>
-        )
-        : <div />}
-       <Space>
-        <span className='discovery-export__selected-ct'>{props.discovery.selectedResources.length} selected</span>
-        { downloadZipButton }
-        { downloadManifestButton }
-        { exportToWorkspaceButton }
-      </Space>
-    </div>
-    {
-        floating && props.config.features.exportToWorkspace?.enabled &&
-        <div className="discovery-floating-action-bar">
-            <Card style={{borderRadius: "5px"}}>
-                <Row gutter={[8,0]}>
-                  <Col>
+              { props.filtersVisible
+                ? <LeftOutlined />
+                : <RightOutlined />}
+            </Button>
+          )
+          : <div />}
+        <Space>
+          <span className='discovery-export__selected-ct'>{props.discovery.selectedResources.length} selected</span>
+          { downloadZipButton }
+          { downloadManifestButton }
+          { exportToWorkspaceButton }
+        </Space>
+      </div>
+      {
+        floating && props.config.features.exportToWorkspace?.enabled
+        && (
+          <div className='discovery-floating-action-bar'>
+            <Card style={{ borderRadius: '5px' }}>
+              <Row gutter={[8, 0]}>
+                <Col>
                   <h3>
-                    <Space align={"center"}>
-                    <SelectOutlined />
-                    {props.discovery.selectedResources.length} selected
+                    <Space align={'center'}>
+                      <SelectOutlined />
+                      {props.discovery.selectedResources.length} selected
                     </Space>
-                    </h3>
-                  </Col>
-                  <Col/>
-                  <Col>
+                  </h3>
+                </Col>
+                <Col />
+                <Col>
                   { downloadZipButton }
-                  </Col>
-                  <Col>
+                </Col>
+                <Col>
                   { downloadManifestButton }
-                  </Col>
-                  <Col>
+                </Col>
+                <Col>
                   { exportToWorkspaceButton }
-                  </Col>
-                </Row>
+                </Col>
+              </Row>
             </Card>
-        </div>
+          </div>
+        )
       }
     </React.Fragment>
   );
