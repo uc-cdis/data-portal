@@ -34,9 +34,6 @@ import './NavBar.css';
  * @param {NavBarProps} props
  */
 function NavBar({ dictIcons, navItems, navTitle, userAccess }) {
-  const location = useLocation();
-  if (location.pathname === '/login') return null;
-
   const { width: screenWidth } = useResizeDetector({
     handleHeight: false,
     targetRef: useRef(document.body),
@@ -48,6 +45,9 @@ function NavBar({ dictIcons, navItems, navTitle, userAccess }) {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [tooltipDetails, setTooltipDetails] = useState({ content: '' });
+
+  const location = useLocation();
+  if (location.pathname === '/login') return null;
 
   function toggleMenu() {
     setIsMenuOpen(!isMenuOpen);
