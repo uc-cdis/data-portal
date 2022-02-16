@@ -153,7 +153,8 @@ function ProtectedContent({
   /** @param {ProtectedContentState} currentState */
   function updateState(currentState) {
     const newState = { ...currentState, dataLoaded: true };
-    if (isPublic) newState.redirectTo = null;
+    if (isPublic)
+      newState.redirectTo = location.pathname === '/login' ? '/' : null;
     setState(newState);
   }
   useEffect(() => {
