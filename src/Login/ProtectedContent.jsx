@@ -12,6 +12,7 @@ import {
 } from '../actions';
 import Spinner from '../components/Spinner';
 import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
+import { fetchLogin } from './ReduxLogin';
 
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('../types').ProjectState} ProjectState */
@@ -38,7 +39,7 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
  * @typedef {object} ProtectedContentProps
  * @property {JSX.Element} children required child component
  * @property {boolean} [isAdminOnly] default false - if true, redirect to index page
- * @property {boolean} [isPublic] default false - set true to disable auth-guard
+ * @property {boolean} [isLoginPage] default false
  * @property {() => Promise} [filter] optional filter to apply before rendering the child component
  */
 
@@ -57,7 +58,7 @@ const LOCATIONS_SCHEMA = ['/query'];
 function ProtectedContent({
   children,
   isAdminOnly = false,
-  isPublic = false,
+  isLoginPage = false,
   filter,
 }) {
   /** @type {{  dispatch: ThunkDispatch; getState: () => ReduxState }} */
@@ -153,7 +154,6 @@ function ProtectedContent({
   /** @param {ProtectedContentState} currentState */
   function updateState(currentState) {
     const newState = { ...currentState, dataLoaded: true };
-    if (isPublic) newState.redirectTo = null;
     setState(newState);
   }
   useEffect(() => {
@@ -165,10 +165,15 @@ function ProtectedContent({
     reduxStore.dispatch({ type: 'CLEAR_COUNTS' }); // clear some counters
     reduxStore.dispatch({ type: 'CLEAR_QUERY_NODES' });
 
-    if (isPublic)
-      if (typeof filter === 'function')
-        filter().finally(() => updateState(state));
-      else updateState(state);
+    if (isLoginPage)
+      checkLoginStatus(state).then((newState) => {
+        if (newState.authenticated)
+          updateState({ ...newState, redirectTo: '/' });
+        else
+          reduxStore
+            .dispatch(fetchLogin())
+            .finally(() => updateState(newState));
+      });
     else
       checkLoginStatus(state)
         .then(checkIfRegisterd)
@@ -188,8 +193,7 @@ function ProtectedContent({
 
   if (state.redirectTo && state.redirectTo !== location.pathname)
     return <Navigate to={state.redirectTo} replace />;
-  if (isPublic && (state.dataLoaded || typeof filter !== 'function'))
-    return children;
+  if (isLoginPage && state.dataLoaded) return children;
   if (state.authenticated)
     return (
       <>
@@ -203,7 +207,7 @@ function ProtectedContent({
 ProtectedContent.propTypes = {
   children: PropTypes.node.isRequired,
   isAdminOnly: PropTypes.bool,
-  isPublic: PropTypes.bool,
+  isLoginPage: PropTypes.bool,
   filter: PropTypes.func,
 };
 
