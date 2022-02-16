@@ -27,6 +27,7 @@ function ExplorerSurvivalAnalysis() {
     timeInterval,
     startTime,
     endTime,
+    efsFlag,
     usedFilterSets,
   }) => {
     if (isError) setIsError(false);
@@ -35,7 +36,7 @@ function ExplorerSurvivalAnalysis() {
     setStartTime(startTime);
     setEndTime(endTime);
 
-    refershResult(usedFilterSets)
+    refershResult({ efsFlag, usedFilterSets })
       .then(() => setIsUpdating(false))
       .catch(() => {
         setIsError(true);
