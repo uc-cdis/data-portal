@@ -62,7 +62,7 @@ function RegistrationForm({
   }
 
   const viewInput = (
-    <div className='user-registration__view-input'>
+    <div className='user-popup__view-input'>
       <p>
         <FontAwesomeIcon
           icon='exclamation-triangle'
@@ -115,7 +115,7 @@ function RegistrationForm({
           />
         }
       />
-      <div className='user-registration__document-review-group'>
+      <div className='user-popup__document-review-group'>
         {docsToBeReviewed.map((doc) => (
           <label key={doc.id}>
             <input
@@ -140,13 +140,13 @@ function RegistrationForm({
   );
 
   const viewSuccess = (
-    <div className='user-registration__view-success'>
+    <div className='user-popup__view-success'>
       <h2>Thank you for registering!</h2>
       <p>
         You now have access to PCDC data based on your institutional
         affiliation.
       </p>
-      <div className='user-registration__subscribe'>
+      <div className='user-popup__subscribe'>
         <input
           type='checkbox'
           checked={isSubscribed}
@@ -159,7 +159,7 @@ function RegistrationForm({
   );
 
   const viewError = (
-    <div className='user-registration__view-error'>
+    <div className='user-popup__view-error'>
       <FontAwesomeIcon
         icon='exclamation-triangle'
         color='var(--g3-color__highlight-rose)'
@@ -173,7 +173,7 @@ function RegistrationForm({
   );
 
   return (
-    <form className='user-registration__form'>
+    <form className='user-popup__form'>
       {/* eslint-disable-next-line no-nested-ternary */}
       {currentView === 'input'
         ? viewInput

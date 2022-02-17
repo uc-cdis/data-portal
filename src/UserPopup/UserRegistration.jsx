@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SimplePopup from '../components/SimplePopup';
 import { headers, userapiPath } from '../localconf';
 import RegistrationForm from './RegistrationForm';
-import './UserRegistration.css';
+import './UserPopup.css';
 
 /** @typedef {import('../types').User} User */
 /** @typedef {import('./types').UserReviewDocument} UserReviewDocument */
