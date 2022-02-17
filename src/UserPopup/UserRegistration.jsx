@@ -6,12 +6,12 @@ import RegistrationForm from './RegistrationForm';
 import './UserRegistration.css';
 
 /** @typedef {import('../types').User} User */
-/** @typedef {import('./types').UserRegistrationDocument} UserRegistrationDocument */
+/** @typedef {import('./types').UserReviewDocument} UserReviewDocument */
 /** @typedef {import('./types').UserRegistrationInput} UserRegistrationInput */
 
 /**
  * @param {Object} prop
- * @param {UserRegistrationDocument[]} prop.docsToBeReviewed
+ * @param {UserReviewDocument[]} prop.docsToBeReviewed
  * @param {boolean} prop.shouldRegister
  * @param {(user: User) => ('success')} prop.updateAccess
  */

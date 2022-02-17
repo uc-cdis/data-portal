@@ -4,14 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '../gen3-ui-component/components/Button';
 import SimpleInputField from '../components/SimpleInputField';
 
-/** @typedef {import('./types').UserRegistrationDocument} UserRegistrationDocument */
+/** @typedef {import('./types').UserReviewDocument} UserReviewDocument */
 /** @typedef {import('./types').UserRegistrationInput} UserRegistrationInput */
 
 /** @typedef {('input' | 'success' | 'error')} UserRegistrationView  */
 
 /**
  * @param {Object} prop
- * @param {UserRegistrationDocument[]} prop.docsToBeReviewed
+ * @param {UserReviewDocument[]} prop.docsToBeReviewed
  * @param {() => void} prop.onClose
  * @param {(userInput: UserRegistrationInput) => Promise<('success' | 'error')>} prop.onRegister
  * @param {(userInput: UserRegistrationInput) => void} prop.onSubscribe
