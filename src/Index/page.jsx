@@ -7,7 +7,7 @@ import {
   ReduxIndexOverview,
   ReduxIntroduction,
 } from './reduxer';
-import ReduxUserRegistration from '../UserPopup/ReduxUserRegistration';
+import UserPopup from '../UserPopup';
 import { getIndexPageCounts } from './utils';
 import dictIcons from '../img/icons';
 import { components } from '../params';
@@ -42,7 +42,7 @@ function IndexPage() {
       </div>
       <ReduxIndexOverview />
       <ReduxIndexButtonBar />
-      <ReduxUserRegistration />
+      <UserPopup />
     </div>
   );
 }
