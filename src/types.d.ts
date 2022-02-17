@@ -1,5 +1,5 @@
 import type { Dispatch, ReturnType } from 'redux';
-import type { UserRegistrationDocument } from './UserRegistration/types';
+import type { UserRegistrationDocument } from './UserPopup/types';
 
 export type FetchHelperOptions = {
   path: string;

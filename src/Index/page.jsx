@@ -7,7 +7,7 @@ import {
   ReduxIndexOverview,
   ReduxIntroduction,
 } from './reduxer';
-import ReduxUserRegistration from '../UserRegistration/ReduxUserRegistration';
+import ReduxUserRegistration from '../UserPopup/ReduxUserRegistration';
 import { getIndexPageCounts } from './utils';
 import dictIcons from '../img/icons';
 import { components } from '../params';
