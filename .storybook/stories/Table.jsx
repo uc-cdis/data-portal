@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { storiesOf } from '@storybook/react';
-import Table from '../../src/GuppyDataExplorer/ExplorerTable/Table';
+import Table from '@src/GuppyDataExplorer/ExplorerTable/Table';
 
 const rawData = [
   { foo: 0, bar: 't', baz: 'yes' },

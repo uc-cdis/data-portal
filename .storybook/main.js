@@ -1,3 +1,4 @@
+const path = require('path');
 const customWebpackConfig = require('../webpack.config.js');
 
 module.exports = {
@@ -7,6 +8,12 @@ module.exports = {
     return {
       ...config,
       module: { ...config.module, rules: customWebpackConfig.module.rules },
+      resolve: {
+        ...config.resolve,
+        alias: {
+          '@src': path.resolve(__dirname, '../src'),
+        },
+      },
     };
   },
   core: {

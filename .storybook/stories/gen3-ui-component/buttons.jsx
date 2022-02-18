@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import Button from '../../../src/gen3-ui-component/components/Button';
+import Button from '@src/gen3-ui-component/components/Button';
 
 storiesOf('Buttons', module)
   .add('Primary', () => (

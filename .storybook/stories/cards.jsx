@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/react';
-import DataSummaryCardGroup from '../../src/components/cards/DataSummaryCardGroup';
+import DataSummaryCardGroup from '@src/components/cards/DataSummaryCardGroup';
 
 const countItems0 = [
   {

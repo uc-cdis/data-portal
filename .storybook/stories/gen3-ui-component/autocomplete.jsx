@@ -1,8 +1,8 @@
 import { createRef } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import AutoComplete from '../../../src/gen3-ui-component/components/AutoComplete';
-import Button from '../../../src/gen3-ui-component/components/Button';
+import AutoComplete from '@src/gen3-ui-component/components/AutoComplete';
+import Button from '@src/gen3-ui-component/components/Button';
 
 const suggestionItem1 = {
   fullString: 'abcdea',
