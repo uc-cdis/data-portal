@@ -42,8 +42,8 @@ function RegistrationForm({
     );
   }, [firstName, lastName, institution, reviewStatus]);
 
-  /** @type {[UserRegistrationView, React.Dispatch<React.SetStateAction<UserRegistrationView>>]} */
-  const [currentView, setCurrentView] = useState('input');
+  const initialView = /** @type {UserRegistrationView} */ ('input');
+  const [currentView, setCurrentView] = useState(initialView);
   const [isRegistering, setIsRegistering] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   function handleRegister() {
@@ -187,9 +187,9 @@ function RegistrationForm({
           buttonType='default'
           onClick={handleClose}
         />
-        {currentView === 'input' && (
+        {currentView !== 'success' && (
           <Button
-            label='Register'
+            label={currentView === 'error' ? 'Retry' : 'Register'}
             enabled={isValidInput && !isRegistering}
             onClick={handleRegister}
           />
