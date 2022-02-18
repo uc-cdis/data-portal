@@ -115,7 +115,9 @@ function ProtectedContent({
       currentState.user.authz !== undefined &&
       Object.keys(currentState.user.authz).length > 0;
 
-    return location.pathname === '/' || isUserRegistered
+    const hasDocsToReview = currentState.user.docs_to_be_reviewed?.length > 0;
+
+    return location.pathname === '/' || isUserRegistered || !hasDocsToReview
       ? currentState
       : { ...currentState, redirectTo: '/' };
   }

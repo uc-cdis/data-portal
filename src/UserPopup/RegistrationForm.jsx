@@ -4,14 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '../gen3-ui-component/components/Button';
 import SimpleInputField from '../components/SimpleInputField';
 
-/** @typedef {import('./types').UserRegistrationDocument} UserRegistrationDocument */
+/** @typedef {import('./types').UserReviewDocument} UserReviewDocument */
 /** @typedef {import('./types').UserRegistrationInput} UserRegistrationInput */
 
 /** @typedef {('input' | 'success' | 'error')} UserRegistrationView  */
 
 /**
  * @param {Object} prop
- * @param {UserRegistrationDocument[]} prop.docsToBeReviewed
+ * @param {UserReviewDocument[]} prop.docsToBeReviewed
  * @param {() => void} prop.onClose
  * @param {(userInput: UserRegistrationInput) => Promise<('success' | 'error')>} prop.onRegister
  * @param {(userInput: UserRegistrationInput) => void} prop.onSubscribe
@@ -42,8 +42,8 @@ function RegistrationForm({
     );
   }, [firstName, lastName, institution, reviewStatus]);
 
-  /** @type {[UserRegistrationView, React.Dispatch<React.SetStateAction<UserRegistrationView>>]} */
-  const [currentView, setCurrentView] = useState('input');
+  const initialView = /** @type {UserRegistrationView} */ ('input');
+  const [currentView, setCurrentView] = useState(initialView);
   const [isRegistering, setIsRegistering] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   function handleRegister() {
@@ -62,7 +62,7 @@ function RegistrationForm({
   }
 
   const viewInput = (
-    <div className='user-registration__view-input'>
+    <div className='user-popup__view-input'>
       <p>
         <FontAwesomeIcon
           icon='exclamation-triangle'
@@ -115,7 +115,7 @@ function RegistrationForm({
           />
         }
       />
-      <div className='user-registration__document-review-group'>
+      <div className='user-popup__document-review-group'>
         {docsToBeReviewed.map((doc) => (
           <label key={doc.id}>
             <input
@@ -132,7 +132,8 @@ function RegistrationForm({
             I have read and agree to the{' '}
             <a href={doc.formatted} target='_blank' rel='noreferrer'>
               {doc.name}
-            </a>
+            </a>{' '}
+            (v{doc.version})
           </label>
         ))}
       </div>
@@ -140,13 +141,13 @@ function RegistrationForm({
   );
 
   const viewSuccess = (
-    <div className='user-registration__view-success'>
+    <div className='user-popup__view-success'>
       <h2>Thank you for registering!</h2>
       <p>
         You now have access to PCDC data based on your institutional
         affiliation.
       </p>
-      <div className='user-registration__subscribe'>
+      <div className='user-popup__subscribe'>
         <input
           type='checkbox'
           checked={isSubscribed}
@@ -159,10 +160,10 @@ function RegistrationForm({
   );
 
   const viewError = (
-    <div className='user-registration__view-error'>
+    <div className='user-popup__view-error'>
       <FontAwesomeIcon
         icon='exclamation-triangle'
-        color='var(--g3-color__highlight-rose)'
+        color='var(--g3-color__rose)'
       />
       <h2>Error registering to gain access...</h2>
       <p>
@@ -173,7 +174,7 @@ function RegistrationForm({
   );
 
   return (
-    <form className='user-registration__form'>
+    <form className='user-popup__form'>
       {/* eslint-disable-next-line no-nested-ternary */}
       {currentView === 'input'
         ? viewInput
@@ -186,10 +187,9 @@ function RegistrationForm({
           buttonType='default'
           onClick={handleClose}
         />
-        {currentView === 'input' && (
+        {currentView !== 'success' && (
           <Button
-            type='submit'
-            label='Register'
+            label={currentView === 'error' ? 'Retry' : 'Register'}
             enabled={isValidInput && !isRegistering}
             onClick={handleRegister}
           />
