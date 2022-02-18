@@ -107,10 +107,10 @@ function ProtectedContent({
   }
 
   /**
-   * Check if user is registered, and update state accordingly.
+   * Check if user has access to portal, and update state accordingly.
    * @param {ProtectedContentState} currentState
    */
-  function checkIfRegisterd(currentState) {
+  function checkAccess(currentState) {
     const isUserRegistered =
       currentState.user.authz !== undefined &&
       Object.keys(currentState.user.authz).length > 0;
@@ -178,7 +178,7 @@ function ProtectedContent({
       });
     else
       checkLoginStatus(state)
-        .then(checkIfRegisterd)
+        .then(checkAccess)
         .then(checkIfAdmin)
         .then((newState) => {
           if (newState.authenticated && typeof filter === 'function')
