@@ -189,7 +189,6 @@ function RegistrationForm({
         />
         {currentView === 'input' && (
           <Button
-            type='submit'
             label='Register'
             enabled={isValidInput && !isRegistering}
             onClick={handleRegister}
