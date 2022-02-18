@@ -163,7 +163,7 @@ function RegistrationForm({
     <div className='user-popup__view-error'>
       <FontAwesomeIcon
         icon='exclamation-triangle'
-        color='var(--g3-color__highlight-rose)'
+        color='var(--g3-color__rose)'
       />
       <h2>Error registering to gain access...</h2>
       <p>
