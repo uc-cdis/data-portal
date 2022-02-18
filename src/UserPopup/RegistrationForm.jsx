@@ -132,7 +132,8 @@ function RegistrationForm({
             I have read and agree to the{' '}
             <a href={doc.formatted} target='_blank' rel='noreferrer'>
               {doc.name}
-            </a>
+            </a>{' '}
+            (v{doc.version})
           </label>
         ))}
       </div>
