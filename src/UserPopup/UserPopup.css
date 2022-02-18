@@ -1,24 +1,21 @@
 .user-popup__form {
-  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 300px;
+  text-align: center;
 }
 
 .user-popup__form button {
   margin: 0.5rem;
 }
 
-.user-popup__form h2 {
-  margin-bottom: 1rem;
-}
-
+.user-popup__form h2,
 .user-popup__form p {
-  margin-bottom: 0.5rem;
+  margin-bottom: 2rem;
 }
 
-.user-popup__view-input svg,
-.user-popup__view-error svg {
+.user-popup__form svg {
   margin-right: 0.25rem;
 }
 
@@ -38,7 +35,7 @@
 
 .user-popup__subscribe {
   font-weight: bold;
-  margin: 2rem 0 1rem;
+  margin-bottom: 1rem;
 }
 
 .user-popup__subscribe input {
