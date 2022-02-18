@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import Dropdown from '../../gen3-ui-component/components/Dropdown';
+import Dropdown from '../../../src/gen3-ui-component/components/Dropdown';
 
 storiesOf('Dropdown', module)
   .add('Split Button', () => (
