@@ -1,10 +1,10 @@
 import { storiesOf } from '@storybook/react';
-import SummaryHorizontalBarChart from '../../gen3-ui-component/components/charts/SummaryHorizontalBarChart';
-import SummaryPieChart from '../../gen3-ui-component/components/charts/SummaryPieChart';
-import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
-import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
+import SummaryHorizontalBarChart from '@src/gen3-ui-component/components/charts/SummaryHorizontalBarChart';
+import SummaryPieChart from '@src/gen3-ui-component/components/charts/SummaryPieChart';
+import SummaryChartGroup from '@src/gen3-ui-component/components/charts/SummaryChartGroup';
+import PercentageStackedBarChart from '@src/gen3-ui-component/components/charts/PercentageStackedBarChart';
 
-/** @typedef {import('../../gen3-ui-component/components/charts/SummaryChartGroup').ChartSummary} ChartSummary */
+/** @typedef {import('@src/gen3-ui-component/components/charts/SummaryChartGroup').ChartSummary} ChartSummary */
 
 const virusData = [
   { name: 'H1N1', value: 4000 },

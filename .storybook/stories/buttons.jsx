@@ -2,8 +2,8 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { MemoryRouter } from 'react-router-dom';
 
-import IconicButton from '../components/buttons/IconicButton';
-import IconicLink from '../components/buttons/IconicLink';
+import IconicButton from '@src/components/buttons/IconicButton';
+import IconicLink from '@src/components/buttons/IconicLink';
 
 storiesOf('IconicButton', module)
   .add('with caption', () => (

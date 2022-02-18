@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { storiesOf } from '@storybook/react';
-import Toaster from '../../gen3-ui-component/components/Toaster';
-import Button from '../../gen3-ui-component/components/Button';
+import Toaster from '@src/gen3-ui-component/components/Toaster';
+import Button from '@src/gen3-ui-component/components/Button';
 
 storiesOf('Toaster', module).add('Basic', () => {
   const [show, setShow] = useState(false);

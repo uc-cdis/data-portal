@@ -1,4 +1,4 @@
 import '@fontsource/raleway';
-import '../base.css';
-import '../icon.css';
+import '@src/base.css';
+import '@src/icon.css';
 import 'graphiql/graphiql.css';

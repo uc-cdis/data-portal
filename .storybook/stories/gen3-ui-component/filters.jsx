@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import SingleSelectFilter from '../../gen3-ui-component/components/filters/SingleSelectFilter';
-import RangeFilter from '../../gen3-ui-component/components/filters/RangeFilter';
-import PatientIdFilter from '../../gen3-ui-component/components/filters/PatientIdFilter';
-import AnchorFilter from '../../gen3-ui-component/components/filters/AnchorFilter';
-import FilterSection from '../../gen3-ui-component/components/filters/FilterSection';
-import FilterGroup from '../../gen3-ui-component/components/filters/FilterGroup';
+import SingleSelectFilter from '@src/gen3-ui-component/components/filters/SingleSelectFilter';
+import RangeFilter from '@src/gen3-ui-component/components/filters/RangeFilter';
+import PatientIdFilter from '@src/gen3-ui-component/components/filters/PatientIdFilter';
+import AnchorFilter from '@src/gen3-ui-component/components/filters/AnchorFilter';
+import FilterSection from '@src/gen3-ui-component/components/filters/FilterSection';
+import FilterGroup from '@src/gen3-ui-component/components/filters/FilterGroup';
 
 const projectOptions = [
   { text: 'big-number', filterType: 'singleSelect', count: 123456789 },
