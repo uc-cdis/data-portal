@@ -14,6 +14,7 @@ import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
+import { isSurvivalAnalysisEnabled } from '../utils';
 import './ExplorerVisualization.css';
 
 /** @typedef {import('../types').ChartConfig} ChartConfig */
@@ -49,15 +50,6 @@ ViewContainer.propTypes = {
   children: PropTypes.node.isRequired,
   isLoading: PropTypes.bool,
 };
-
-/** @param {SurvivalAnalysisConfig} survivalAnalysisConfig */
-function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
-  if (survivalAnalysisConfig.result !== undefined)
-    for (const resultOption of ['risktable', 'survival'])
-      if (survivalAnalysisConfig.result[resultOption]) return true;
-
-  return false;
-}
 
 /**
  * @param {Object} args
