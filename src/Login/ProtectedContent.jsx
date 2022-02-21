@@ -11,7 +11,7 @@ import {
   fetchUserAccess,
 } from '../actions';
 import Spinner from '../components/Spinner';
-import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
+import AuthPopup from './AuthPopup';
 import { fetchLogin } from './ReduxLogin';
 
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
@@ -199,7 +199,7 @@ function ProtectedContent({
   if (state.authenticated)
     return (
       <>
-        <ReduxAuthTimeoutPopup />
+        <AuthPopup />
         {children}
       </>
     );
