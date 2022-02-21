@@ -19,7 +19,7 @@ import { asyncSetInterval } from './utils';
 /** @typedef {import('./types').FetchHelperResult} FetchHelperResult */
 /** @typedef {import('./types').KubeState} KubeState */
 /** @typedef {import('./types').UserAccessState} UserAccessState */
-/** @typedef {import('./Popup/types').PopupState} PopupState */
+/** @typedef {import('./types').PopupState} PopupState */
 
 /**
  * @param {Partial<PopupState>} state

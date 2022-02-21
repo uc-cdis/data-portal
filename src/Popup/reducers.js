@@ -1,4 +1,4 @@
-/** @typedef {import('./types').PopupState} PopupState */
+/** @typedef {import('../types').PopupState} PopupState */
 
 /** @type {import('redux').Reducer<PopupState>} */
 const popups = (state = /** @type {PopupState} */ ({}), action) => {

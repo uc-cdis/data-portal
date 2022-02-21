@@ -25,7 +25,7 @@ export const saveToFile = (savingStr, filename) => {
   FileSaver.saveAs(blob, filename);
 };
 
-/** @typedef {import('../Popup/types').PopupState} PopupState */
+/** @typedef {import('../types').PopupState} PopupState */
 
 /**
  * @typedef {Object} UserProfileData

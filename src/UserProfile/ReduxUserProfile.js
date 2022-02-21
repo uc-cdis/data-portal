@@ -10,7 +10,7 @@ import { credentialCdisPath } from '../localconf';
 /** @typedef {import('./types').JtiData} JtiData */
 /** @typedef {import('./types').UserProfileState} UserProfileState */
 /** @typedef {import('../types').UserState} UserState */
-/** @typedef {import('../Popup/types').PopupState} PopupState */
+/** @typedef {import('../types').PopupState} PopupState */
 
 export const fetchAccess = () => (/** @type {Dispatch} */ dispatch) =>
   fetchWithCreds({
