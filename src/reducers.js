@@ -4,12 +4,12 @@ import ddgraph from './DataDictionary/reducers';
 import graphiql from './GraphQLEditor/reducers';
 import index from './Index/reducers';
 import login from './Login/reducers';
-import popups from './Popup/reducers';
 import queryNodes from './QueryNode/reducers';
 import submission from './Submission/reducers';
 import userProfile from './UserProfile/reducers';
 
 /** @typedef {import('./types').KubeState} KubeState */
+/** @typedef {import('./types').PopupState} PopupState */
 /** @typedef {import('./types').ProjectState} ProjectState */
 /** @typedef {import('./types').StatusState} StatusState */
 /** @typedef {import('./types').UserState} UserState */
@@ -29,6 +29,16 @@ const kube = (state = /** @type {KubeState} */ ({}), action) => {
       return { ...state, jobStatusInterval: action.value };
     case 'RESET_JOB':
       return { ...state, job: null, jobStatusInterval: null, resultURL: null };
+    default:
+      return state;
+  }
+};
+
+/** @type {import('redux').Reducer<PopupState>} */
+const popups = (state = /** @type {PopupState} */ ({}), action) => {
+  switch (action.type) {
+    case 'UPDATE_POPUP':
+      return { ...state, ...action.data };
     default:
       return state;
   }
