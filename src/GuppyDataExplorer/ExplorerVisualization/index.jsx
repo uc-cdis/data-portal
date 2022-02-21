@@ -14,7 +14,6 @@ import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
-import { isSurvivalAnalysisEnabled } from '../utils';
 import './ExplorerVisualization.css';
 
 /** @typedef {import('../types').ChartConfig} ChartConfig */
@@ -183,8 +182,7 @@ function ExplorerVisualization({
 
   const explorerViews = ['summary view'];
   if (tableConfig.enabled) explorerViews.push('table view');
-  if (isSurvivalAnalysisEnabled(survivalAnalysisConfig))
-    explorerViews.push('survival analysis');
+  if (survivalAnalysisConfig.enabled) explorerViews.push('survival analysis');
   const [explorerView, setExplorerView] = useState(explorerViews[0]);
 
   const chartData = getChartData({
@@ -316,7 +314,7 @@ function ExplorerVisualization({
           <ExplorerTable {...tableProps} />
         </ViewContainer>
       )}
-      {isSurvivalAnalysisEnabled(survivalAnalysisConfig) && (
+      {survivalAnalysisConfig.enabled && (
         <ViewContainer showIf={explorerView === 'survival analysis'}>
           <ExplorerSurvivalAnalysis />
         </ViewContainer>
