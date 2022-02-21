@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
@@ -194,6 +195,10 @@ function ExplorerVisualization({
       state: { scrollY: window.scrollY },
     });
   }
+  useEffect(() => {
+    if (!explorerViews.includes(explorerView))
+      updateExplorerView(explorerViews[0]);
+  }, []);
 
   const chartData = getChartData({
     aggsChartData,
