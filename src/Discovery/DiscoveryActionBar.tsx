@@ -455,7 +455,7 @@ const DiscoveryActionBar = (props: Props) => {
       const onScroll = throttle(
         () => {
           const actionBarVerticalPosition = domElementReference.current?.getBoundingClientRect().y;
-          const actionBarHidden = actionBarVerticalPosition < 0;
+          const actionBarHidden = actionBarVerticalPosition && actionBarVerticalPosition < 0;
           setFloating(actionBarHidden);
         }, 100,
       ) as (ev: Event) => any;
