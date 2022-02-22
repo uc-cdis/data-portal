@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 import Spinner from '../../components/Spinner';
@@ -166,6 +166,9 @@ function ExplorerVisualization({
   getTotalCountsByTypeAndFilter,
   className = '',
 }) {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const {
     buttonConfig,
     chartConfig,
@@ -183,7 +186,19 @@ function ExplorerVisualization({
   const explorerViews = ['summary view'];
   if (tableConfig.enabled) explorerViews.push('table view');
   if (survivalAnalysisConfig.enabled) explorerViews.push('survival analysis');
-  const [explorerView, setExplorerView] = useState(explorerViews[0]);
+
+  const explorerView = searchParams.get('view') ?? explorerViews[0];
+  function updateExplorerView(view) {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('view', view);
+    navigate(`?${decodeURIComponent(newSearchParams.toString())}`, {
+      state: { scrollY: window.scrollY },
+    });
+  }
+  useEffect(() => {
+    if (!explorerViews.includes(explorerView))
+      updateExplorerView(explorerViews[0]);
+  }, []);
 
   const chartData = getChartData({
     aggsChartData,
@@ -206,7 +221,7 @@ function ExplorerVisualization({
     downloadRawDataByTypeAndFilter,
     getTotalCountsByTypeAndFilter,
     filter,
-    navigate: useNavigate(),
+    navigate,
     isLocked: isComponentLocked,
     isPending: isLoadingAggsData,
   };
@@ -236,7 +251,7 @@ function ExplorerVisualization({
             <button
               key={view}
               className={explorerView === view ? 'active' : ''}
-              onClick={() => setExplorerView(view)}
+              onClick={() => updateExplorerView(view)}
               type='button'
             >
               {view}
