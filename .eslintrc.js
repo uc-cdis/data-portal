@@ -17,7 +17,7 @@ module.exports = {
     jest: true,
   },
   globals: {
-    JSX: true
+    JSX: true,
   },
   plugins: [
     'react',
