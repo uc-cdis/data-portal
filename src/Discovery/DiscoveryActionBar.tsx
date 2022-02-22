@@ -664,14 +664,12 @@ const DiscoveryActionBar = (props: Props) => {
         && (
           <div className='discovery-floating-action-bar'>
             <Card style={{ borderRadius: '5px' }}>
-              <Row gutter={[8, 0]}>
+              <Row gutter={[8, 0]} align="middle" justify="space-around">
                 <Col>
-                  <h3>
-                    <Space align={'center'}>
-                      <SelectOutlined />
-                      {props.discovery.selectedResources.length} selected
-                    </Space>
-                  </h3>
+                  <SelectOutlined style={{fontSize: "125%"}}/>
+                </Col>
+                <Col>
+                  {props.discovery.selectedResources.length} selected
                 </Col>
                 <Col />
                 <Col>
