@@ -85,12 +85,14 @@ function UserAgreement({ onAgree }) {
           </li>
         ))}
       </ul>
-      <Button
-        buttonType='primary'
-        label='I Agree'
-        enabled={Object.values(checkStatus).every(Boolean)}
-        onClick={onAgree}
-      />
+      <div className='explorer-survival-analysis__button-group'>
+        <Button
+          buttonType='primary'
+          label='I Agree'
+          enabled={Object.values(checkStatus).every(Boolean)}
+          onClick={onAgree}
+        />
+      </div>
     </div>
   );
 }
