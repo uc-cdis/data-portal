@@ -177,11 +177,17 @@
   width: 100%;
 }
 
-.explorer-survival-analysis__user-agreement > ul {
-  list-style-type: initial;
-  margin-top: 1rem;
+.explorer-survival-analysis__user-agreement > * {
+  margin-bottom: 1rem;
   max-width: 80ch;
+}
+
+.explorer-survival-analysis__user-agreement > ul {
   padding-left: 2rem;
+}
+
+.explorer-survival-analysis__user-agreement > ul > li {
+  margin-top: 0.5rem;
 }
 
 .explorer-survival-analysis__user-agreement > button {
