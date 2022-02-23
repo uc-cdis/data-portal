@@ -345,8 +345,8 @@
 }
 
 .discovery-action-bar-button:hover {
-  color: #fff;
-  border-color: #fff;
+  color: var(--secondary-color_light);
+  border-color: var(--secondary-color_light);
   background-color: var(--primary-color);
 }
 
