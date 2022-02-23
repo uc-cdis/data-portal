@@ -33,7 +33,7 @@ import WorkspaceOption from './WorkspaceOption';
 import WorkspaceLogin from './WorkspaceLogin';
 import sessionMonitor from '../SessionMonitor';
 import workspaceSessionMonitor from './WorkspaceSessionMonitor';
-import { Menu, Dropdown, Button as Btn, Space, Tooltip } from 'antd';
+import { Menu, Dropdown, Button as Btn, Tooltip } from 'antd';
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
 
 
@@ -164,6 +164,7 @@ class Workspace extends React.Component {
         if (status === 200) {
           return data
         }
+        return null
       }).catch(() => 'Error');
     if (payModels.current_pay_model) {
       return payModels;
@@ -419,7 +420,7 @@ class Workspace extends React.Component {
     await fetchWithCreds({
       path: `${workspaceSetPayModelUrl}?id=${this.state.payModel.all_pay_models[e.key].bmh_workspace_id}`,
       method: 'GET',
-    }).then(({ status, data }) => {
+    }).then(({ status }) => {
       if (status === 200) {
         this.getWorkspacePayModel().then((data) => {
           this.setState({
