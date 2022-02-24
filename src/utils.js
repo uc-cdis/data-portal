@@ -254,3 +254,12 @@ export function overrideSelectTheme(theme) {
     },
   };
 }
+
+/** @param {number | string} datetime */
+export function formatLocalTime(datetime) {
+  if (!datetime) return '';
+
+  const date = new Date(datetime);
+  const offset = -date.getTimezoneOffset() / 60;
+  return `${date.toLocaleString()} UTC${offset < 0 ? '' : '+'}${offset}`;
+}
