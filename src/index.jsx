@@ -9,10 +9,6 @@ import {
   faFlask,
   faMicroscope,
   faUser,
-  faFolderOpen,
-  faSave,
-  faPen,
-  faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
@@ -38,11 +34,7 @@ library.add(
   faExclamationTriangle,
   faFlask,
   faMicroscope,
-  faUser,
-  faFolderOpen,
-  faSave,
-  faPen,
-  faTrashAlt
+  faUser
 );
 
 render(
