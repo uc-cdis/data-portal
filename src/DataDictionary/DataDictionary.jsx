@@ -5,6 +5,7 @@ import Dashboard from '../Layout/Dashboard';
 import ReduxDataDictionaryTable from './table/DataDictionaryTable';
 import ReduxDataModelStructure from './DataModelStructure';
 import DataDictionaryGraph from './graph/DataDictionaryGraph';
+import ReduxGraphCalculator from './graph/GraphCalculator';
 import ReduxDictionarySearcher from './search/DictionarySearcher';
 import ReduxDictionarySearchHistory from './search/DictionarySearchHistory';
 import './DataDictionary.css';
@@ -13,12 +14,14 @@ import './DataDictionary.css';
  * @param {Object} props
  * @param {string} props.dataVersion
  * @param {boolean} props.isGraphView
+ * @param {boolean} props.layoutInitialized
  * @param {(isGraphView: boolean) => void} props.onSetGraphView
  * @param {string} props.portalVersion
  */
 function DataDictionary({
   dataVersion,
   isGraphView,
+  layoutInitialized,
   onSetGraphView,
   portalVersion,
 }) {
@@ -114,25 +117,25 @@ function DataDictionary({
         </div>
       </Dashboard.Sidebar>
       <Dashboard.Main className='data-dictionary__main'>
-        {isGraphView ? (
-          <div
-            className={`data-dictionary__graph ${
-              isGraphView ? '' : 'data-dictionary__graph--hidden'
-            }`}
-          >
+        <div
+          className={`data-dictionary__graph ${
+            isGraphView ? '' : 'data-dictionary__graph--hidden'
+          }`}
+        >
+          <ReduxGraphCalculator />
+          {isGraphView && layoutInitialized && (
             <DataDictionaryGraph
               onClearSearchResult={handleClearSearchResult}
             />
-          </div>
-        ) : (
-          <div
-            className={`data-dictionary__table ${
-              !isGraphView ? '' : 'data-dictionary__table--hidden'
-            }`}
-          >
-            <ReduxDataDictionaryTable />
-          </div>
-        )}
+          )}
+        </div>
+        <div
+          className={`data-dictionary__table ${
+            !isGraphView ? '' : 'data-dictionary__table--hidden'
+          }`}
+        >
+          <ReduxDataDictionaryTable />
+        </div>
       </Dashboard.Main>
     </Dashboard>
   );
@@ -141,6 +144,7 @@ function DataDictionary({
 DataDictionary.propTypes = {
   dataVersion: PropTypes.string,
   isGraphView: PropTypes.bool,
+  layoutInitialized: PropTypes.bool,
   onSetGraphView: PropTypes.func,
   portalVersion: PropTypes.string,
 };
