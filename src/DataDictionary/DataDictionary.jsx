@@ -1,5 +1,6 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useSearchParams } from 'react-router-dom';
 import Dashboard from '../Layout/Dashboard';
 import ReduxDataDictionaryTable from './table/DataDictionaryTable';
 import ReduxDataModelStructure from './DataModelStructure';
@@ -21,6 +22,22 @@ function DataDictionary({
   onSetGraphView,
   portalVersion,
 }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isInitialRenderRef = useRef(true);
+  useEffect(() => {
+    if (isInitialRenderRef.current) {
+      isInitialRenderRef.current = false;
+
+      const searchParamView = searchParams.get('view');
+      if (!['graph', 'table'].includes(searchParamView))
+        setSearchParams(isGraphView ? 'view=graph' : 'view=table');
+      else if (isGraphView !== (searchParamView === 'graph'))
+        onSetGraphView(searchParamView === 'graph');
+    } else {
+      setSearchParams(isGraphView ? 'view=graph' : 'view=table');
+    }
+  }, [isGraphView]);
+
   const dictionarySearcherRef = useRef(null);
 
   function handleClickSearchHistoryItem(keyword) {
