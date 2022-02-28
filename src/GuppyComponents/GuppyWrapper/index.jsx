@@ -331,20 +331,28 @@ function GuppyWrapper({
     });
   }
 
+  /**
+   * @param {Object} args
+   * @param {string} [args.anchorValue]
+   * @param {string[]} args.fields
+   */
+  function fetchGuppyData({ anchorValue, fields }) {
+    controller.current.abort();
+    controller.current = new AbortController();
+    fetchAggsDataFromGuppy({ anchorValue, filter: state.filter });
+    fetchRawDataFromGuppy({ fields, updateDataWhenReceive: true });
+  }
+
   useEffect(() => {
     getAllFieldsFromGuppy({
       type: guppyConfig.dataType,
     }).then((allFields) => {
       if (isMounted.current) {
         setState((prevState) => ({ ...prevState, allFields }));
-        fetchAggsDataFromGuppy({
+        fetchGuppyData({
           anchorValue: filterConfig.anchor !== undefined ? '' : undefined,
-          filter: state.filter,
-        });
-        fetchRawDataFromGuppy({
           fields:
             rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : allFields,
-          updateDataWhenReceive: true,
         });
       }
     });
@@ -359,11 +367,7 @@ function GuppyWrapper({
       isInitialRenderRef.current = false;
       return;
     }
-    fetchAggsDataFromGuppy({ filter: state.filter });
-    fetchRawDataFromGuppy({
-      fields: rawDataFields,
-      updateDataWhenReceive: true,
-    });
+    fetchGuppyData({ fields: rawDataFields });
   }, [patientIds]);
 
   /**
