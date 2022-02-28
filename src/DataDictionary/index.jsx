@@ -9,6 +9,7 @@ const ReduxDataDictionary = (() => {
   /** @param {{ ddgraph: DdgraphState, versionInfo: VersionInfoState }} state */
   const mapStateToProps = (state) => ({
     isGraphView: state.ddgraph.isGraphView,
+    layoutInitialized: state.ddgraph.layoutInitialized,
     ...state.versionInfo,
   });
 
