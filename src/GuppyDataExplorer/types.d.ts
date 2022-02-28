@@ -93,7 +93,7 @@ export type AlteredExplorerConfig = {
   guppyConfig: GuppyConfig;
   hideGetAccessButton?: boolean;
   patientIdsConfig?: PatientIdsConfig;
-  survivalAnalysisConfig: SurvivalAnalysisConfig;
+  survivalAnalysisConfig: SurvivalAnalysisConfig & { enabled: Boolean };
   tableConfig: TableConfig;
 };
 

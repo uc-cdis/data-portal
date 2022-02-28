@@ -86,10 +86,9 @@ function Login({ data, providers = defaultProviders, username }) {
     const queryChar = providerLoginUrl.includes('?') ? '&' : '?';
 
     const searchParams = new URLSearchParams(location.search);
-    // eslint-disable-next-line no-nested-ternary
-    const next = (
-      searchParams.has('next') ? basename + searchParams.get('next') : basename
-    ).replace(/\/+/g, '/'); // clean up url: no double slashes
+    const next = `${basename}${
+      searchParams.has('next') ? searchParams.get('next') : ''
+    }`.replace(/\/+/g, '/'); // clean up url: no double slashes
 
     window.location.href = `${providerLoginUrl}${queryChar}redirect=${window.location.origin}${next}`;
   }

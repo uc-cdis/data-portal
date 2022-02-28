@@ -1,7 +1,11 @@
 import PropTypes from 'prop-types';
 import Table from './base/Table';
 import Spinner from '../Spinner';
-import { capitalizeFirstLetter, humanFileSize } from '../../utils.js';
+import {
+  capitalizeFirstLetter,
+  formatLocalTime,
+  humanFileSize,
+} from '../../utils.js';
 import './TransactionLogTable.css';
 
 /** @typedef {{ doc: string; doc_size: number; }} LogEntryDocument */
@@ -17,15 +21,6 @@ import './TransactionLogTable.css';
  * @property {LogEntryDocument[]} documents
  * @property {LogEntryState} state
  */
-
-function getLocalTime(/** @type {string} */ gmtTimeString) {
-  const date = new Date(gmtTimeString);
-  const offsetMins = date.getTimezoneOffset();
-  const offsetHous = -offsetMins / 60;
-  return `${date.toLocaleString()} UTC${
-    offsetMins > 0 ? '' : '+'
-  }${offsetHous}`;
-}
 
 function getTotalFileSize(/** @type {LogEntryDocument[]} */ documents) {
   let totalSize = 0;
@@ -83,7 +78,7 @@ function TransactionLogTable({ log }) {
         entry.id,
         entry.submitter,
         entry.project_id,
-        getLocalTime(entry.created_datetime),
+        formatLocalTime(entry.created_datetime),
         humanFileSize(getTotalFileSize(entry.documents)),
         stateToColor(entry.state),
       ])}

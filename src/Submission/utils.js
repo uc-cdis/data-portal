@@ -1,3 +1,60 @@
+/** @typedef {import('./types').SubmissionState} SubmissionState */
+
+/**
+ * @param {SubmissionState['dictionary']} dictionary
+ * @param {string} name
+ */
+function checkIfRelevantNodeForCounts(dictionary, name) {
+  return (
+    !name.startsWith('_') &&
+    name !== 'program' &&
+    name !== 'metaschema' &&
+    dictionary[name].category !== 'internal'
+  );
+}
+
+/**
+ * @param {SubmissionState['dictionary']} dictionary
+ * @param {SubmissionState['nodeTypes']} nodeTypes
+ * @param {string} project
+ */
+export function buildCountsQuery(dictionary, nodeTypes, project) {
+  let query = '{';
+
+  function appendCountToQuery(name) {
+    query += `_${name}_count (project_id:"${project}"),`;
+  }
+  for (const name of nodeTypes)
+    if (checkIfRelevantNodeForCounts(dictionary, name))
+      appendCountToQuery(name);
+
+  function appendLinkToQuery({ name, source, target }) {
+    if (name && target && target !== 'program')
+      query += `${source}_${name}_to_${target}_link: ${source}(with_links: ["${name}"], first:1, project_id:"${project}"){submitter_id},`;
+  }
+  for (const [name, node] of Object.entries(dictionary))
+    if (checkIfRelevantNodeForCounts(dictionary, name) && node.links)
+      for (const link of node.links) {
+        appendLinkToQuery({
+          name: link.name,
+          source: name,
+          target: dictionary[link.target_type]?.id,
+        });
+
+        if (link.subgroup)
+          for (const sLink of link.subgroup)
+            appendLinkToQuery({
+              name: sLink.name,
+              source: name,
+              target: dictionary[sLink.target_type]?.id,
+            });
+      }
+
+  query += '}';
+
+  return query;
+}
+
 export const excludeSystemProperties = (node) => {
   const properties =
     node.properties &&

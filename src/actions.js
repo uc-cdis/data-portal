@@ -1,4 +1,3 @@
-import 'isomorphic-fetch';
 import { buildClientSchema, getIntrospectionQuery } from 'graphql/utilities';
 import {
   userapiPath,
@@ -20,7 +19,7 @@ import { asyncSetInterval } from './utils';
 /** @typedef {import('./types').FetchHelperResult} FetchHelperResult */
 /** @typedef {import('./types').KubeState} KubeState */
 /** @typedef {import('./types').UserAccessState} UserAccessState */
-/** @typedef {import('./Popup/types').PopupState} PopupState */
+/** @typedef {import('./types').PopupState} PopupState */
 
 /**
  * @param {Partial<PopupState>} state
@@ -240,6 +239,8 @@ export const logoutAPI =
           },
         });
       else document.location.replace(response.url);
+
+      window.localStorage.clear();
     });
 
 /**

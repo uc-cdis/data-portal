@@ -29,7 +29,7 @@ import './SubmitTSV.css';
  * @param {string} props.project of form program-project
  * @param {SubmissionState} props.submission
  * @param {(file: string, fileType: string) => void} props.onFileChange triggered when user edits something in tsv/json AceEditor
- * @param {(nodeTypes: string[], project: string, dictionary: Object) => void} props.onFinish
+ * @param {(project: string) => void} props.onFinish
  * @param {(file: string, fileType: string) => void} props.onUploadClick
  * @param {(project: string, callback?: () => void) => void} props.onSubmitClick
  */
@@ -83,7 +83,7 @@ function SubmitTSV({
   }
 
   function handleFinishSubmit() {
-    onFinish(submission.nodeTypes, project, submission.dictionary);
+    onFinish(project);
   }
 
   return (

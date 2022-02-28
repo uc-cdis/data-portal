@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import MediaQuery from 'react-responsive';
+import { useResizeDetector } from 'react-resize-detector';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavButton from './NavButton';
@@ -34,8 +34,10 @@ import './NavBar.css';
  * @param {NavBarProps} props
  */
 function NavBar({ dictIcons, navItems, navTitle, userAccess }) {
-  const location = useLocation();
-  if (location.pathname === '/login') return null;
+  const { width: screenWidth } = useResizeDetector({
+    handleHeight: false,
+    targetRef: useRef(document.body),
+  });
 
   const navButtonRefs = {};
   for (const { link } of navItems)
@@ -43,6 +45,9 @@ function NavBar({ dictIcons, navItems, navTitle, userAccess }) {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [tooltipDetails, setTooltipDetails] = useState({ content: '' });
+
+  const location = useLocation();
+  if (location.pathname === '/login') return null;
 
   function toggleMenu() {
     setIsMenuOpen(!isMenuOpen);
@@ -121,34 +126,41 @@ function NavBar({ dictIcons, navItems, navTitle, userAccess }) {
           </div>
         )}
       </div>
-      <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
-        <div
-          className='nav-bar__menu'
-          onClick={toggleMenu}
-          onKeyPress={(e) => {
-            if (e.charCode === 13 || e.charCode === 32) {
-              e.preventDefault();
-              toggleMenu();
-            }
-          }}
-          role='button'
-          tabIndex={0}
-          aria-expanded={isMenuOpen}
-          aria-label={`${isMenuOpen ? 'Expand' : 'Collapse'} navigation menu`}
-        >
-          Menu
-          <FontAwesomeIcon
-            className='nav-bar__menu-icon'
-            icon={isMenuOpen ? 'angle-down' : 'angle-up'}
-            size='lg'
-          />
-        </div>
-        {isMenuOpen && <div className='nav-bar__nav--items'>{navButtons}</div>}
-      </MediaQuery>
-      <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
-        <div className='nav-bar__nav--items'>{navButtons}</div>
-        {tooltipDetails.content !== '' && <NavBarTooltip {...tooltipDetails} />}
-      </MediaQuery>
+      {screenWidth <= breakpoints.tablet ? (
+        <>
+          <div
+            className='nav-bar__menu'
+            onClick={toggleMenu}
+            onKeyPress={(e) => {
+              if (e.charCode === 13 || e.charCode === 32) {
+                e.preventDefault();
+                toggleMenu();
+              }
+            }}
+            role='button'
+            tabIndex={0}
+            aria-expanded={isMenuOpen}
+            aria-label={`${isMenuOpen ? 'Expand' : 'Collapse'} navigation menu`}
+          >
+            Menu
+            <FontAwesomeIcon
+              className='nav-bar__menu-icon'
+              icon={isMenuOpen ? 'angle-down' : 'angle-up'}
+              size='lg'
+            />
+          </div>
+          {isMenuOpen && (
+            <div className='nav-bar__nav--items'>{navButtons}</div>
+          )}
+        </>
+      ) : (
+        <>
+          <div className='nav-bar__nav--items'>{navButtons}</div>
+          {tooltipDetails.content !== '' && (
+            <NavBarTooltip {...tooltipDetails} />
+          )}
+        </>
+      )}
     </nav>
   );
 }

@@ -1,9 +1,8 @@
 import { connect } from 'react-redux';
 import SubmitTSV from './SubmitTSV';
-import { getCounts } from '../DataModelGraph/ReduxDataModelGraph';
 import { submissionApiPath, lineLimit } from '../localconf';
 import { fetchWithCreds } from '../actions';
-import { uploadTSV, updateFileContent } from './actions';
+import { getCounts, uploadTSV, updateFileContent } from './actions';
 
 /** @typedef {import('redux').Dispatch} Dispatch */
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
@@ -127,13 +126,9 @@ const mapDispatchToProps = (dispatch) => ({
   onFileChange: (value) => {
     dispatch(updateFileContent(value));
   },
-  /**
-   * @param {string[]} nodeTypes
-   * @param {string} project
-   * @param {SubmissionState['dictionary']} [dictionary]
-   */
-  onFinish: (nodeTypes, project, dictionary) => {
-    dispatch(getCounts(nodeTypes, project, dictionary));
+  /** @param {string} project */
+  onFinish: (project) => {
+    dispatch(getCounts(project));
   },
 });
 

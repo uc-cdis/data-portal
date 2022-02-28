@@ -7,7 +7,7 @@ import QueryNode from './QueryNode';
 
 /** @typedef {import('redux').Dispatch} Dispatch */
 /** @typedef {import('./types').QueryNodeState} QueryNodeState */
-/** @typedef {import('../Popup/types').PopupState} PopupState */
+/** @typedef {import('../types').PopupState} PopupState */
 /** @typedef {import('../Submission/types').SubmissionState} SubmissionState */
 
 const clearDeleteSession = {

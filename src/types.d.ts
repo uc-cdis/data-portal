@@ -1,5 +1,5 @@
 import type { Dispatch, ReturnType } from 'redux';
-import type { UserRegistrationDocument } from './UserRegistration/types';
+import type { UserReviewDocument } from './UserPopup/types';
 
 export type FetchHelperOptions = {
   path: string;
@@ -28,7 +28,7 @@ export type User = {
   azp: any;
   certificates_uploaded: any[];
   display_name: string;
-  docs_to_be_reviewed: UserRegistrationDocument[];
+  docs_to_be_reviewed: UserReviewDocument[];
   email: string;
   ga4gh_passport_v1: any[];
   groups: any[];
@@ -80,4 +80,13 @@ export type KubeState = {
   };
   jobStatusInterval: number;
   resultURL: string;
+};
+
+export type PopupState = {
+  authPopup: boolean;
+  nodedelete_popup: boolean | string;
+  deleteTokenPopup: boolean;
+  saveTokenPopup: boolean;
+  keypairsApi: string;
+  view_popup: boolean;
 };

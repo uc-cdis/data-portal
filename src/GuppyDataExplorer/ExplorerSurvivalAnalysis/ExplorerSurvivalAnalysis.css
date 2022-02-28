@@ -79,6 +79,10 @@
   margin-right: 0.5rem;
 }
 
+.explorer-survival-analysis__filter-set-card > header > em {
+  margin: 0 0.5rem;
+}
+
 .explorer-survival-analysis__filter-set-select {
   margin: 1rem;
   display: flex;
@@ -99,7 +103,7 @@
   left: var(--dashboard__sidebar-width);
   padding: 1rem 1rem 2rem;
   position: fixed;
-  width: inherit;
+  width: 100%;
   z-index: 1;
 }
 
@@ -166,4 +170,24 @@
     min-width: 100%;
     max-width: auto;
   }
+}
+
+.explorer-survival-analysis__user-agreement {
+  margin: 1rem 1rem 2rem;
+  width: 100%;
+}
+
+.explorer-survival-analysis__user-agreement > p,
+.explorer-survival-analysis__user-agreement > ul,
+.explorer-survival-analysis__user-agreement > video {
+  margin-bottom: 1rem;
+  max-width: 80ch;
+}
+
+.explorer-survival-analysis__user-agreement > ul {
+  padding-left: 2rem;
+}
+
+.explorer-survival-analysis__user-agreement > ul > li {
+  margin-top: 0.5rem;
 }

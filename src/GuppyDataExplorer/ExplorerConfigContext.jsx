@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
-import { createFilterInfo } from './utils';
+import { createFilterInfo, isSurvivalAnalysisEnabled } from './utils';
 
 /** @typedef {import('./types').AlteredExplorerConfig} AlteredExplorerConfig */
 
@@ -96,7 +96,10 @@ export function ExplorerConfigProvider({ children }) {
         guppyConfig: config.guppyConfig,
         hideGetAccessButton: config.hideGetAccessButton,
         patientIdsConfig: config.patientIds,
-        survivalAnalysisConfig: config.survivalAnalysis,
+        survivalAnalysisConfig: {
+          ...config.survivalAnalysis,
+          enabled: isSurvivalAnalysisEnabled(config.survivalAnalysis),
+        },
         tableConfig: config.table,
       },
       explorerId,

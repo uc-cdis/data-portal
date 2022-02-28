@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import MediaQuery from 'react-responsive';
+import { useResizeDetector } from 'react-resize-detector';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Spinner from '../components/Spinner';
@@ -14,6 +14,11 @@ const defaultConsortiumOption = { label: 'All PCDC', value: 'total' };
 
 /** @param {{ overviewCounts: import('./types').OverviewCounts }} props */
 function IndexOverview({ overviewCounts }) {
+  const { width: screenWidth } = useResizeDetector({
+    handleHeight: false,
+    targetRef: useRef(document.body),
+  });
+
   const [consortium, setConsortium] = useState(defaultConsortiumOption);
   const consortiumOptions = [
     defaultConsortiumOption,
@@ -77,13 +82,13 @@ function IndexOverview({ overviewCounts }) {
               theme={overrideSelectTheme}
             />
           </div>
-          <MediaQuery query={`(min-width: ${breakpoints.tablet + 1}px)`}>
+          {screenWidth > breakpoints.tablet && (
             <Button
               label='Explore more'
               buttonType='primary'
               onClick={() => navigate(explorerLocation)}
             />
-          </MediaQuery>
+          )}
         </div>
       </div>
       <div className='index-overview__body'>
@@ -101,7 +106,7 @@ function IndexOverview({ overviewCounts }) {
           <Spinner />
         )}
       </div>
-      <MediaQuery query={`(max-width: ${breakpoints.tablet}px)`}>
+      {screenWidth <= breakpoints.tablet && (
         <div className='index-overview__footer'>
           <Button
             label='Explore more'
@@ -109,7 +114,7 @@ function IndexOverview({ overviewCounts }) {
             onClick={() => navigate(explorerLocation)}
           />
         </div>
-      </MediaQuery>
+      )}
     </div>
   );
 }

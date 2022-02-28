@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import './LockedContent.css';
 
+/** @param {{ lockMessage: string }} props */
 function LockedContent({ lockMessage }) {
   return (
     <div className='locked-content__lock-div'>

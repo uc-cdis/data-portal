@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import { fetchWithCreds } from '../../actions';
 import { useExplorerConfig } from '../ExplorerConfigContext';
@@ -8,12 +8,20 @@ import { useExplorerConfig } from '../ExplorerConfigContext';
 /** @typedef {import('./types').RisktableData} RisktableData */
 /** @typedef {import('./types').SurvivalAnalysisResult} SurvivalAnalysisResult */
 /** @typedef {import('./types').SurvivalData} SurvivalData */
+/** @typedef {import('./types').ParsedSurvivalAnalysisResult} ParsedSurvivalAnalysisResult */
 
 /**
  * @typedef {Object} ExplorerFilterSetDTO
  * @property {GqlFilter} filters
  * @property {number} id
  * @property {string} name
+ */
+
+/**
+ * @typedef {Object} SurvivalAnalysisRequestBody
+ * @property {boolean} efsFlag
+ * @property {ExplorerFilterSetDTO[]} filterSets
+ * @property {number[]} usedFilterSetIds
  */
 
 /**
@@ -29,17 +37,25 @@ function sortByIndexCompareFn(a, b) {
 /** @type {SurvivalAnalysisResult} */
 const emptyData = {};
 
-/** @returns {[[RisktableData[], SurvivalData[]], (usedFilterSets: ExplorerFilterSet[]) => Promise<void>]} */
+/**
+ * @callback SurvivalAnalysisRefreshHandler
+ * @param {{ efsFlag: boolean; usedFilterSets: ExplorerFilterSet[]}} args
+ * @returns {Promise<void>}
+ */
+
+/** @returns {[ ParsedSurvivalAnalysisResult, SurvivalAnalysisRefreshHandler ]} */
 export default function useSurvivalAnalysisResult() {
   const { current, explorerId } = useExplorerConfig();
   const config = current.survivalAnalysisConfig;
 
+  const prevEfsFlag = useRef(false);
   const [result, setResult] = useState(emptyData);
   const parsedResult = useMemo(() => {
-    /** @type {[RisktableData[], SurvivalData[]]} */
-    const parsed = [[], []];
-    const [r, s] = parsed;
-    for (const { name, risktable, survival } of Object.values(result)) {
+    /** @type {ParsedSurvivalAnalysisResult} */
+    const parsed = { count: {}, risktable: [], survival: [] };
+    const { count: c, risktable: r, survival: s } = parsed;
+    for (const { name, count, risktable, survival } of Object.values(result)) {
+      if (count !== undefined) c[name.split('. ')[1]] = count;
       if (config.result?.risktable) r.push({ data: risktable, name });
       if (config.result?.survival) s.push({ data: survival, name });
     }
@@ -49,9 +65,7 @@ export default function useSurvivalAnalysisResult() {
   }, [result]);
 
   /**
-   * @param {Object} body
-   * @param {ExplorerFilterSetDTO[]} body.filterSets
-   * @param {number[]} body.usedFilterSetIds
+   * @param {SurvivalAnalysisRequestBody} body
    * @returns {Promise<SurvivalAnalysisResult>}
    */
   function fetchResult(body) {
@@ -65,16 +79,19 @@ export default function useSurvivalAnalysisResult() {
     });
   }
 
-  /** @param {ExplorerFilterSet[]} usedFilterSets */
-  function refreshResult(usedFilterSets) {
-    /** @type {{ filterSets: ExplorerFilterSetDTO[]; usedFilterSetIds: number[] }} */
-    const body = { filterSets: [], usedFilterSetIds: [] };
+  /** @type {SurvivalAnalysisRefreshHandler} */
+  function refreshResult({ efsFlag, usedFilterSets }) {
+    const isSurvivalTypeChanged = prevEfsFlag.current !== efsFlag;
+    if (isSurvivalTypeChanged) prevEfsFlag.current = efsFlag;
+
+    /** @type {SurvivalAnalysisRequestBody} */
+    const body = { efsFlag, filterSets: [], usedFilterSetIds: [] };
     /** @type {SurvivalAnalysisResult} */
     const cache = {};
     for (const [index, usedFilterSet] of usedFilterSets.entries()) {
       const { filters, id, name } = usedFilterSet;
       body.usedFilterSetIds.push(id);
-      if (id in result)
+      if (id in result && !isSurvivalTypeChanged)
         cache[id] = { ...result[id], name: `${index + 1}. ${name}` };
       else
         body.filterSets.push({

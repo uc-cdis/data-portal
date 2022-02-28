@@ -11,21 +11,15 @@ import './ProjectSubmission.css';
 /**
  * @param {Object} props
  * @param {Object} [props.dictionary]
- * @param {(typeList: string[], project: string, dictionary: Object) => void} props.onGetCounts
+ * @param {(project: string) => void} props.onGetCounts
  * @param {boolean} [props.dataIsReady]
- * @param {string[]} [props.typeList]
  */
-function ProjectSubmission({
-  dictionary,
-  onGetCounts,
-  dataIsReady = false,
-  typeList = [],
-}) {
+function ProjectSubmission({ dictionary, onGetCounts, dataIsReady = false }) {
   if (dictionary === undefined) return <Spinner />;
 
   const { project } = useParams();
   // hack to detect if dictionary data is available, and to trigger fetch if not
-  if (!dataIsReady) onGetCounts(typeList, project, dictionary);
+  if (!dataIsReady) onGetCounts(project);
 
   const navigate = useNavigate();
   const isUserWithPermission = checkProjectPermission(project);
@@ -54,7 +48,6 @@ ProjectSubmission.propTypes = {
   dictionary: PropTypes.object,
   onGetCounts: PropTypes.func.isRequired,
   dataIsReady: PropTypes.bool,
-  typeList: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default ProjectSubmission;

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 import Spinner from '../../components/Spinner';
@@ -50,15 +50,6 @@ ViewContainer.propTypes = {
   isLoading: PropTypes.bool,
 };
 
-/** @param {SurvivalAnalysisConfig} survivalAnalysisConfig */
-function isSurvivalAnalysisEnabled(survivalAnalysisConfig) {
-  if (survivalAnalysisConfig.result !== undefined)
-    for (const resultOption of ['risktable', 'survival'])
-      if (survivalAnalysisConfig.result[resultOption]) return true;
-
-  return false;
-}
-
 /**
  * @param {Object} args
  * @param {SimpleAggsData} args.aggsChartData
@@ -99,7 +90,10 @@ function getChartData({
           summaries.push({
             type,
             title,
-            data: histogram.map((i) => ({ name: i.key, value: i.count })),
+            data: histogram.map((i) => ({
+              name: /** @type {string} */ (i.key),
+              value: i.count,
+            })),
             showPercentage,
           });
           break;
@@ -107,7 +101,10 @@ function getChartData({
           stackedBarCharts.push({
             type,
             title,
-            data: histogram.map((i) => ({ name: i.key, value: i.count })),
+            data: histogram.map((i) => ({
+              name: /** @type {string} */ (i.key),
+              value: i.count,
+            })),
           });
           break;
         default:
@@ -169,6 +166,9 @@ function ExplorerVisualization({
   getTotalCountsByTypeAndFilter,
   className = '',
 }) {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const {
     buttonConfig,
     chartConfig,
@@ -185,9 +185,20 @@ function ExplorerVisualization({
 
   const explorerViews = ['summary view'];
   if (tableConfig.enabled) explorerViews.push('table view');
-  if (isSurvivalAnalysisEnabled(survivalAnalysisConfig))
-    explorerViews.push('survival analysis');
-  const [explorerView, setExplorerView] = useState(explorerViews[0]);
+  if (survivalAnalysisConfig.enabled) explorerViews.push('survival analysis');
+
+  const explorerView = searchParams.get('view') ?? explorerViews[0];
+  function updateExplorerView(view) {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('view', view);
+    navigate(`?${decodeURIComponent(newSearchParams.toString())}`, {
+      state: { scrollY: window.scrollY },
+    });
+  }
+  useEffect(() => {
+    if (!explorerViews.includes(explorerView))
+      updateExplorerView(explorerViews[0]);
+  }, []);
 
   const chartData = getChartData({
     aggsChartData,
@@ -210,7 +221,7 @@ function ExplorerVisualization({
     downloadRawDataByTypeAndFilter,
     getTotalCountsByTypeAndFilter,
     filter,
-    navigate: useNavigate(),
+    navigate,
     isLocked: isComponentLocked,
     isPending: isLoadingAggsData,
   };
@@ -240,7 +251,7 @@ function ExplorerVisualization({
             <button
               key={view}
               className={explorerView === view ? 'active' : ''}
-              onClick={() => setExplorerView(view)}
+              onClick={() => updateExplorerView(view)}
               type='button'
             >
               {view}
@@ -318,7 +329,7 @@ function ExplorerVisualization({
           <ExplorerTable {...tableProps} />
         </ViewContainer>
       )}
-      {isSurvivalAnalysisEnabled(survivalAnalysisConfig) && (
+      {survivalAnalysisConfig.enabled && (
         <ViewContainer showIf={explorerView === 'survival analysis'}>
           <ExplorerSurvivalAnalysis />
         </ViewContainer>

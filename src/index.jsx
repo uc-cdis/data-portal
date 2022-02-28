@@ -9,10 +9,6 @@ import {
   faFlask,
   faMicroscope,
   faUser,
-  faFolderOpen,
-  faSave,
-  faPen,
-  faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
@@ -22,8 +18,8 @@ import { gaTracking } from './params';
 import { basename } from './localconf';
 import App from './App';
 import '@fontsource/raleway';
-import './gen3-ui-component/css/base.css';
-import './gen3-ui-component/css/icon.css';
+import './base.css';
+import './icon.css';
 
 // Google Analytics
 ReactGA.initialize(gaTracking);
@@ -38,11 +34,7 @@ library.add(
   faExclamationTriangle,
   faFlask,
   faMicroscope,
-  faUser,
-  faFolderOpen,
-  faSave,
-  faPen,
-  faTrashAlt
+  faUser
 );
 
 render(

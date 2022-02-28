@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import {
   BarChart,
   Bar,
@@ -10,120 +9,124 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import PropTypes from 'prop-types';
+import LockedContent from '../LockedContent';
 import helper from '../helper';
 import './PercentageStackedBarChart.css';
-import LockedContent from '../LockedContent';
-
-const getPercentageDataLabels = (chartData) =>
-  chartData.map((entry) => entry.name);
 
 // FIXME: add back in animation (https://github.com/recharts/recharts/issues/1083)
-class PercentageStackedBarChart extends Component {
-  getItemColor(index) {
-    if (this.props.useCustomizedColorMap) {
-      return this.props.customizedColorMap[
-        index % this.props.customizedColorMap.length
-      ];
-    }
-    return helper.getCategoryColor(index);
+/**
+ * @param {Object} props
+ * @param {any} [props.barChartStyle]
+ * @param {string[]} [props.customizedColorMap]
+ * @param {{ name: string; value: number }[]} props.data
+ * @param {any} [props.labelListStyle]
+ * @param {string} [props.lockMessage]
+ * @param {number} [props.lockValue]
+ * @param {number} [props.percentageFixedPoint]
+ * @param {string} props.title
+ * @param {boolean} [props.useCustomizedColorMap]
+ * @param {any} [props.xAxisStyle]
+ */
+function PercentageStackedBarChart({
+  barChartStyle,
+  customizedColorMap,
+  data,
+  labelListStyle,
+  lockMessage,
+  lockValue,
+  percentageFixedPoint,
+  title,
+  useCustomizedColorMap,
+  xAxisStyle,
+}) {
+  function getItemColor(index) {
+    return useCustomizedColorMap
+      ? customizedColorMap[index % customizedColorMap.length]
+      : helper.getCategoryColor(index);
   }
-
-  render() {
-    let chart = null;
-    if (helper.shouldHideChart(this.props.data, this.props.lockValue)) {
-      chart = (
-        <div className='percentage-bar-chart__locked'>
-          <LockedContent lockMessage={this.props.lockMessage} />
-        </div>
-      );
-    } else {
-      const percentageData = helper.getPercentageData(
-        this.props.data,
-        this.props.percentageFixedPoint
-      );
-      const percentageDataLabels = getPercentageDataLabels(this.props.data);
-      const { barChartStyle, xAxisStyle, labelListStyle } = this.props;
-      chart = (
-        <div className='percentage-bar-chart__content'>
-          <div className='percentage-bar-chart__chart'>
-            <ResponsiveContainer width='100%' height='100%'>
-              <BarChart data={percentageData} {...barChartStyle}>
-                <Tooltip />
-                <CartesianGrid />
-                <XAxis
-                  type='number'
-                  style={xAxisStyle}
-                  tickFormatter={helper.addPercentage}
-                  {...xAxisStyle}
-                />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  dataKey='name'
-                  type='category'
-                  hide
-                />
-                {percentageDataLabels.map((name, index) => (
-                  <Bar
-                    key={name}
-                    dataKey={name}
-                    stackId='a'
-                    isAnimationActive={false}
-                    fill={this.getItemColor(index)}
-                  >
-                    <LabelList
-                      dataKey={name}
-                      position={labelListStyle.position}
-                      style={labelListStyle}
-                      formatter={helper.addPercentage}
-                      className='percentage-bar-chart__label-list'
-                    />
-                  </Bar>
-                ))}
-              </BarChart>
-            </ResponsiveContainer>
+  return (
+    <div className='percentage-bar-chart'>
+      <div className='percentage-bar-chart__title-box'>
+        <p className='percentage-bar-chart__title h4-typo'>{title}</p>
+      </div>
+      <div className='percentage-bar-chart__content-box'>
+        {helper.shouldHideChart(data, lockValue) ? (
+          <div className='percentage-bar-chart__locked'>
+            <LockedContent lockMessage={lockMessage} />
           </div>
-          <div className='percentage-bar-chart__legend'>
-            <div className='percentage-bar-chart__ul'>
-              {percentageDataLabels.map((name, index) => (
-                <li
-                  className='percentage-bar-chart__legend-item'
-                  key={`label-${name}`}
+        ) : (
+          <div className='percentage-bar-chart__content'>
+            <div className='percentage-bar-chart__chart'>
+              <ResponsiveContainer width='100%' height='100%'>
+                <BarChart
+                  data={helper.getPercentageData(data, percentageFixedPoint)}
+                  {...barChartStyle}
                 >
-                  <span
-                    className='percentage-bar-chart__legend-color'
-                    style={{
-                      background: this.getItemColor(index),
-                    }}
+                  <Tooltip />
+                  <CartesianGrid />
+                  <XAxis
+                    type='number'
+                    style={xAxisStyle}
+                    tickFormatter={helper.addPercentage}
+                    {...xAxisStyle}
                   />
-                  <span className='percentage-bar-chart__legend-name'>
-                    {name}
-                  </span>
-                  <span className='percentage-bar-chart__legend-value'>
-                    {'('
-                      .concat(
-                        Number(this.props.data[index].value).toLocaleString()
-                      )
-                      .concat(')')}
-                  </span>
-                </li>
-              ))}
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    dataKey='name'
+                    type='category'
+                    hide
+                  />
+                  {data.map(({ name }, index) => (
+                    <Bar
+                      key={name}
+                      dataKey={name}
+                      stackId='a'
+                      isAnimationActive={false}
+                      fill={getItemColor(index)}
+                    >
+                      <LabelList
+                        dataKey={name}
+                        position={labelListStyle.position}
+                        style={labelListStyle}
+                        formatter={helper.addPercentage}
+                        className='percentage-bar-chart__label-list'
+                      />
+                    </Bar>
+                  ))}
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className='percentage-bar-chart__legend'>
+              <div className='percentage-bar-chart__ul'>
+                {data.map(({ name }, index) => (
+                  <li
+                    className='percentage-bar-chart__legend-item'
+                    key={`label-${name}`}
+                  >
+                    <span
+                      className='percentage-bar-chart__legend-color'
+                      style={{
+                        background: getItemColor(index),
+                      }}
+                    />
+                    <span className='percentage-bar-chart__legend-name'>
+                      {name}
+                    </span>
+                    <span className='percentage-bar-chart__legend-value'>
+                      {'('
+                        .concat(Number(data[index].value).toLocaleString())
+                        .concat(')')}
+                    </span>
+                  </li>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      );
-    }
-    return (
-      <div className='percentage-bar-chart'>
-        <div className='percentage-bar-chart__title-box'>
-          <p className='percentage-bar-chart__title h4-typo'>
-            {this.props.title}
-          </p>
-        </div>
-        <div className='percentage-bar-chart__content-box'>{chart}</div>
+        )}
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 const ChartDataShape = PropTypes.shape({
@@ -132,20 +135,19 @@ const ChartDataShape = PropTypes.shape({
 });
 
 PercentageStackedBarChart.propTypes = {
-  title: PropTypes.string.isRequired,
-  data: PropTypes.arrayOf(ChartDataShape).isRequired,
-  percentageFixedPoint: PropTypes.number,
   barChartStyle: PropTypes.object,
-  xAxisStyle: PropTypes.object,
-  labelListStyle: PropTypes.object,
-  lockValue: PropTypes.number, // if one of the value is equal to `lockValue`, lock the chart
-  lockMessage: PropTypes.string,
-  useCustomizedColorMap: PropTypes.bool,
   customizedColorMap: PropTypes.arrayOf(PropTypes.string),
+  data: PropTypes.arrayOf(ChartDataShape).isRequired,
+  labelListStyle: PropTypes.object,
+  lockMessage: PropTypes.string,
+  lockValue: PropTypes.number, // if one of the value is equal to `lockValue`, lock the chart
+  percentageFixedPoint: PropTypes.number,
+  title: PropTypes.string.isRequired,
+  useCustomizedColorMap: PropTypes.bool,
+  xAxisStyle: PropTypes.object,
 };
 
 PercentageStackedBarChart.defaultProps = {
-  percentageFixedPoint: 2,
   barChartStyle: {
     layout: 'vertical',
     margin: {
@@ -156,6 +158,18 @@ PercentageStackedBarChart.defaultProps = {
     },
     barSize: 30,
   },
+  customizedColorMap: ['var(--pcdc-color__primary)'],
+  percentageFixedPoint: 2,
+  labelListStyle: {
+    fill: '#FFFFFF',
+    fontSize: '14px',
+    fontWeight: 600,
+    position: 'center',
+  },
+  lockValue: -1,
+  lockMessage:
+    'This chart is hidden because it contains fewer than 1000 subjects',
+  useCustomizedColorMap: false,
   xAxisStyle: {
     fontSize: '10px',
     fontWeight: 600,
@@ -168,17 +182,6 @@ PercentageStackedBarChart.defaultProps = {
     domain: [0, 100],
     tickMargin: 10,
   },
-  labelListStyle: {
-    fill: '#FFFFFF',
-    fontSize: '14px',
-    fontWeight: 600,
-    position: 'center',
-  },
-  lockValue: -1,
-  lockMessage:
-    'This chart is hidden because it contains fewer than 1000 subjects',
-  useCustomizedColorMap: false,
-  customizedColorMap: ['var(--pcdc-color__primary)'],
 };
 
 export default PercentageStackedBarChart;

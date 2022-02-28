@@ -4,6 +4,7 @@
 /** @typedef {import('./types').GuppyConfig} GuppyConfig */
 /** @typedef {import('./types').PatientIdsConfig} PatientIdsConfig */
 /** @typedef {import('./types').SingleButtonConfig} SingleButtonConfig */
+/** @typedef {import('./types').SurvivalAnalysisConfig} SurvivalAnalysisConfig */
 
 import { capitalizeFirstLetter } from '../utils';
 
@@ -183,4 +184,13 @@ export function createFilterInfo(filterConfig, fieldMapping = []) {
     if (!(field in map)) map[field] = { label: capitalizeFirstLetter(field) };
 
   return map;
+}
+
+/** @param {SurvivalAnalysisConfig} config */
+export function isSurvivalAnalysisEnabled({ result }) {
+  if (result !== undefined)
+    for (const option of ['risktable', 'survival'])
+      if (result[option] !== undefined) return true;
+
+  return false;
 }

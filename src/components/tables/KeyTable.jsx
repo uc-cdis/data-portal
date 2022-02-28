@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import Table from './base/Table';
 import dictIcons from '../../img/icons/index';
 import IconicButton from '../buttons/IconicButton';
+import { formatLocalTime } from '../../utils';
 import './KeyTable.css';
 
 const LIST_API_KEY_MSG = 'You have the following API key(s)';
@@ -27,7 +28,7 @@ function KeyTable({ jtis, onDelete }) {
         header={[API_KEY_COLUMN, EXPIRES_COLUMN, '']}
         data={jtis.map((jti) => [
           jti.jti,
-          new Date(jti.exp * 1000).toLocaleString(),
+          formatLocalTime(jti.exp * 1000),
           <IconicButton
             onClick={() => onDelete(jti)}
             caption={DELETE_BTN}

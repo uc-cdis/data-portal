@@ -1,5 +1,4 @@
 import cloneDeep from 'lodash.clonedeep';
-import fetch from 'isomorphic-fetch';
 import flat from 'flat';
 import papaparse from 'papaparse';
 import { FILE_DELIMITERS, GUPPY_URL } from './const';

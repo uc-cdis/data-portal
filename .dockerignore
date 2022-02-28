@@ -1,7 +1,11 @@
 __mocks__
 .git
 .storybook
+data/dictionary.*
+data/schema.*
 docs
 node_modules
 src/**/__generated__
 src/stories
+**/setupJest.js
+**/*.test.*

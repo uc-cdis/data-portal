@@ -4,16 +4,37 @@ import SummaryHorizontalBarChart from '../SummaryHorizontalBarChart';
 import './SummaryChartGroup.css';
 import helper from '../helper.js';
 
+/**
+ * @typedef {Object} ChartSummary
+ * @property {boolean} [chartIsEmpty]
+ * @property {{ name: string; value: number }[]} data
+ * @property {boolean} [showPercentage]
+ * @property {string} title
+ * @property {'bar' | 'pie'} type
+ */
+
+/**
+ * @param {Object} props
+ * @param {string} props.barChartColor
+ * @param {string} props.chartEmptyMessage
+ * @param {string[]} props.customizedColorMap
+ * @param {string} props.lockMessage
+ * @param {number} props.lockValue
+ * @param {number} props.maximumDisplayItem
+ * @param {ChartSummary[]} props.summaries
+ * @param {boolean} props.useCustomizedColorMap
+ * @param {number | string} props.width
+ */
 function SummaryChartGroup({
-  summaries,
-  width,
   barChartColor,
+  chartEmptyMessage,
+  customizedColorMap,
   lockMessage,
   lockValue,
-  useCustomizedColorMap,
-  customizedColorMap,
   maximumDisplayItem,
-  chartEmptyMessage,
+  summaries,
+  useCustomizedColorMap,
+  width,
 }) {
   return (
     <div
@@ -42,7 +63,6 @@ function SummaryChartGroup({
             <SummaryHorizontalBarChart
               data={item.data}
               title={item.title}
-              vertical
               color={useCustomizedColorMap ? undefined : barChartColor}
               lockValue={lockValue}
               lockMessage={lockMessage}
@@ -61,27 +81,27 @@ function SummaryChartGroup({
 }
 
 SummaryChartGroup.propTypes = {
-  summaries: PropTypes.arrayOf(PropTypes.object).isRequired,
-  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   barChartColor: PropTypes.string,
-  lockValue: PropTypes.number, // if one of the value is equal to `lockValue`, lock the chart
-  lockMessage: PropTypes.string,
-  useCustomizedColorMap: PropTypes.bool,
-  customizedColorMap: PropTypes.arrayOf(PropTypes.string),
-  maximumDisplayItem: PropTypes.number,
   chartEmptyMessage: PropTypes.string,
+  customizedColorMap: PropTypes.arrayOf(PropTypes.string),
+  lockMessage: PropTypes.string,
+  lockValue: PropTypes.number, // if one of the value is equal to `lockValue`, lock the chart
+  maximumDisplayItem: PropTypes.number,
+  summaries: PropTypes.arrayOf(PropTypes.object).isRequired,
+  useCustomizedColorMap: PropTypes.bool,
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
 SummaryChartGroup.defaultProps = {
-  width: '100%',
   barChartColor: 'var(--pcdc-color__primary)',
-  lockValue: -1,
+  chartEmptyMessage: "Cannot render this chart because some fields don't apply",
+  customizedColorMap: ['var(--pcdc-color__primary)'],
   lockMessage:
     'This chart is hidden because it contains fewer than 1000 subjects',
+  lockValue: -1,
   useCustomizedColorMap: false,
-  customizedColorMap: ['var(--pcdc-color__primary)'],
   maximumDisplayItem: 15,
-  chartEmptyMessage: "Cannot render this chart because some fields don't apply",
+  width: '100%',
 };
 
 export default SummaryChartGroup;

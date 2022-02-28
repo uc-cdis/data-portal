@@ -14,12 +14,15 @@
       "es2019.array",
       "esnext"
     ],
-    "target": "es6"
+    "target": "es6",
+    "paths": {
+      "@src/*": ["./src/*"]
+    }
   },
   "typeAcquisition": {
     "exclude": ["jest-fetch-mock"]
   },
-  "include": ["src", "index.d.ts"],
+  "include": ["src", "index.d.ts", ".storybook/stories"],
   "exclude": [
     "src/CoreMetadata",
     "src/DataDictionary",

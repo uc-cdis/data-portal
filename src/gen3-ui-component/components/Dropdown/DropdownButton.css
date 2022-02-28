@@ -26,7 +26,7 @@
   mask-repeat: no-repeat;
   width: 12px;
   height: 12px;
-  mask-image: svg-load(../../images/icons/chevron-down.svg);
+  mask-image: svg-load('../../../img/icons/chevron-down.svg');
 }
 
 .g3-dropdown-button__button--without-split-trigger .g3-dropdown-button__icon {
@@ -36,7 +36,7 @@
   mask-size: 100% 100%;
   -webkit-mask-size: contain;
   mask-repeat: no-repeat;
-  mask-image: svg-load(../../images/icons/more.svg);
+  mask-image: svg-load('../../../img/icons/more.svg');
   position: absolute;
   right: 0;
 }
@@ -163,5 +163,5 @@
 }
 
 .g3-dropdown-button__icon--menu-opened {
-  mask-image: svg-load(../../images/icons/chevron-up.svg);
+  mask-image: svg-load('../../../img/icons/chevron-up.svg');
 }
