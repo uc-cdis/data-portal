@@ -136,20 +136,20 @@ function ProtectedContent({
   }
 
   /** Fetch resources on demand based on path */
-  function fetchResources() {
+  async function fetchResources() {
     const { graphiql, project, submission } = reduxStore.getState();
     /** @param {string[]} patterns */
     function matchPathOneOf(patterns) {
       return patterns.some((pattern) => matchPath(pattern, location.pathname));
     }
 
-    if (matchPathOneOf(LOCATIONS_DICTIONARY) && !submission.dictionary) {
-      reduxStore.dispatch(fetchDictionary());
-    } else if (matchPathOneOf(LOCATIONS_PROJECTS) && !project.projects) {
-      reduxStore.dispatch(fetchProjects());
-    } else if (matchPathOneOf(LOCATIONS_SCHEMA)) {
-      if (!graphiql.schema) reduxStore.dispatch(fetchSchema());
-      if (!graphiql.guppySchema) reduxStore.dispatch(fetchGuppySchema());
+    if (matchPathOneOf(LOCATIONS_DICTIONARY) && !submission.dictionary)
+      await reduxStore.dispatch(fetchDictionary());
+    else if (matchPathOneOf(LOCATIONS_PROJECTS) && !project.projects)
+      await reduxStore.dispatch(fetchProjects());
+    else if (matchPathOneOf(LOCATIONS_SCHEMA)) {
+      if (!graphiql.schema) await reduxStore.dispatch(fetchSchema());
+      if (!graphiql.guppySchema) await reduxStore.dispatch(fetchGuppySchema());
     }
   }
 
@@ -181,15 +181,11 @@ function ProtectedContent({
         .then(checkAccess)
         .then(checkIfAdmin)
         .then((newState) => {
-          if (newState.authenticated && typeof filter === 'function')
-            filter().finally(() => {
-              updateState(newState);
-              fetchResources();
-            });
-          else {
-            updateState(newState);
-            fetchResources();
-          }
+          fetchResources().then(() => {
+            if (newState.authenticated && typeof filter === 'function')
+              filter().finally(() => updateState(newState));
+            else updateState(newState);
+          });
         });
   }, [location]);
 
