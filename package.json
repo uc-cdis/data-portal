@@ -125,7 +125,7 @@
     "stylelint": "stylelint 'src/**/*.css' --config .stylelintrc.js --fix",
     "sanity-check": "node ./sanity-check",
     "format": "prettier --write .",
-    "graphvizlib": "test -f ./node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm && gzip -k ./node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm"
+    "graphvizlib": "test -f ./node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm && gzip -fk ./node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm"
   },
   "graphql": {
     "file": "./data/schema.json"
