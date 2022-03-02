@@ -125,7 +125,8 @@
     "storybook": "STORYBOOK_PROJECT_ID=search start-storybook -p 9001 -c .storybook",
     "stylelint": "stylelint 'src/**/*.css' --config .stylelintrc.js --fix",
     "sanity-check": "node ./sanity-check",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "graphvizlib": "test -f ./node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm && gzip -k ./node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm"
   },
   "graphql": {
     "file": "./data/schema.json"
