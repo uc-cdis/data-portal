@@ -181,11 +181,14 @@ function ProtectedContent({
         .then(checkAccess)
         .then(checkIfAdmin)
         .then((newState) => {
-          fetchResources().then(() => {
-            if (newState.authenticated && typeof filter === 'function')
-              filter().finally(() => updateState(newState));
-            else updateState(newState);
-          });
+          if (newState.redirectTo && newState.redirectTo !== location.pathname)
+            updateState(newState);
+          else
+            fetchResources().then(() => {
+              if (newState.authenticated && typeof filter === 'function')
+                filter().finally(() => updateState(newState));
+              else updateState(newState);
+            });
         });
   }, [location]);
 
