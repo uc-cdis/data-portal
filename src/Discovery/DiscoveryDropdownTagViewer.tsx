@@ -4,12 +4,13 @@ import {
   Select, Row, Col, Tag,
 } from 'antd';
 import { DiscoveryConfig } from './DiscoveryConfig';
+import { DiscoveryResource } from './Discovery';
 
 const { Option } = Select;
 
 interface DiscoveryTagViewerProps {
   config: DiscoveryConfig
-  studies?: {__accessible: boolean, [any: string]: any}[]
+  studies?: DiscoveryResource[]
   selectedTags: any
   setSelectedTags: any
 }

@@ -34,6 +34,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
 
   return (
     <Table
+      scroll={{ y: 450 }}
       pagination={false} // handled in separate element
       loading={props.studies.length === 0}
       locale={{
