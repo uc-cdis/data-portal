@@ -69,7 +69,6 @@
     "relay-runtime": "^11.0.2",
     "string-similarity": "^4.0.4",
     "style-loader": "^3.3.1",
-    "viz.js": "2.0.0",
     "webpack": "^5.69.1",
     "webpack-cli": "^4.9.2"
   },
