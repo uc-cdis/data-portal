@@ -344,12 +344,6 @@
   border-color: var(--g3-color__base-blue);
 }
 
-.discovery-action-bar-button:hover {
-  color: var(--secondary-color_light);
-  border-color: var(--secondary-color_light);
-  background-color: var(--primary-color);
-}
-
 .discovery-action-bar-button--disabled {
   color: unset;
   border-color: unset;
