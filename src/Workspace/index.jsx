@@ -514,7 +514,7 @@ class Workspace extends React.Component {
                   >
                     <Col className='gutter-row' span={8}>
                       <Card title='Account'>
-                        {(this.state.workspaceStatus === 'Not Found')
+                        {(this.state.workspaceStatus !== 'Not Found')
                           ? (
                             <div className='workspace__pay-model-selector--disabled'>
                               <Dropdown overlay={menu} disabled>
