@@ -33,6 +33,8 @@ npm run relay
 npm run params
 # run a sanity check to make sure portal config works
 npm run sanity-check
+# create a compressed file for graphvizlib wasm
+npm run graphvizlib
 
 export STORYBOOK_PROJECT_ID=search
 export REACT_APP_PROJECT_ID=search
