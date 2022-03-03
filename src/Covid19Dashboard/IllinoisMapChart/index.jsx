@@ -610,6 +610,8 @@ class IllinoisMapChart extends React.Component {
   render() {
     return (
       <div className='map-chart map-chart-il'>
+        {this.state.sliderDate
+        && <MapSlider title={`View Data by Date: ${this.state.sliderDate}`} value={this.state.sliderValue} maxValue={this.state.sliderDataLastUpdated} onChange={this.sliderOnChange} />}
         {this.state.mapColors
         && (
           <ControlPanel
@@ -684,8 +686,7 @@ class IllinoisMapChart extends React.Component {
             />
           </ReactMapGL.Source>
         </ReactMapGL.InteractiveMap>
-        {this.state.sliderDate
-        && <MapSlider title={`View data by date: ${this.state.sliderDate}`} value={this.state.sliderValue} maxValue={this.state.sliderDataLastUpdated} onChange={this.sliderOnChange} />}
+
       </div>
     );
   }
