@@ -114,10 +114,10 @@ function ProtectedContent({
     const isUserRegistered =
       currentState.user.authz !== undefined &&
       Object.keys(currentState.user.authz).length > 0;
-
     const hasDocsToReview = currentState.user.docs_to_be_reviewed?.length > 0;
+    const hasAccess = isUserRegistered && !hasDocsToReview;
 
-    return location.pathname === '/' || isUserRegistered || !hasDocsToReview
+    return location.pathname === '/' || hasAccess
       ? currentState
       : { ...currentState, redirectTo: '/' };
   }
@@ -181,11 +181,14 @@ function ProtectedContent({
         .then(checkAccess)
         .then(checkIfAdmin)
         .then((newState) => {
-          fetchResources().then(() => {
-            if (newState.authenticated && typeof filter === 'function')
-              filter().finally(() => updateState(newState));
-            else updateState(newState);
-          });
+          if (newState.redirectTo && newState.redirectTo !== location.pathname)
+            updateState(newState);
+          else
+            fetchResources().then(() => {
+              if (newState.authenticated && typeof filter === 'function')
+                filter().finally(() => updateState(newState));
+              else updateState(newState);
+            });
         });
   }, [location]);
 
