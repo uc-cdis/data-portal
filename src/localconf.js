@@ -105,6 +105,7 @@ function buildConfig(opts) {
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
   const workspacePayModelUrl = `${workspaceUrl}paymodels`;
+  const workspaceAllPayModelsUrl = `${workspaceUrl}allpaymodels`;
   const workspaceTerminateUrl = `${workspaceUrl}terminate`;
   const workspaceLaunchUrl = `${workspaceUrl}launch`;
   const datasetUrl = `${hostname}api/search/datasets`;
@@ -462,6 +463,7 @@ function buildConfig(opts) {
     workspaceOptionsUrl,
     workspaceStatusUrl,
     workspacePayModelUrl,
+    workspaceAllPayModelsUrl,
     workspaceLaunchUrl,
     workspaceTerminateUrl,
     homepageChartNodes: components.index.homepageChartNodes,
