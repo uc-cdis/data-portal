@@ -514,7 +514,7 @@ class Workspace extends React.Component {
                   }}
                   >
                     <Col className='gutter-row' span={8}>
-                        <Card title="Account" extra={<a href="#">Request New Account</a>}>
+                        <Card title="Account">
                           <Dropdown overlay={menu} disabled={this.state.workspaceStatus !== "Not Found" ? true : false}>
                             <Btn block size="large">
                               {this.state.payModel.current_pay_model.workspace_type} <DownOutlined />
@@ -526,12 +526,12 @@ class Workspace extends React.Component {
                         </Card>
                     </Col>
                     <Col className='gutter-row' span={8}>
-                      <Card title="Total Charges (USD)" extra={<a href="#">Help</a>}>
+                      <Card title="Total Charges (USD)" >
                         <Statistic value={this.state.payModel.current_pay_model["total-usage"]} precision={2} />
                       </Card>
                     </Col>
                     <Col className='gutter-row' span={8}>
-                      <Card title="Spending Limit (USD)" extra={<a href="#">Help</a>}>
+                      <Card title="Spending Limit (USD)">
                         <Statistic precision={2} value={this.state.payModel.current_pay_model["hard-limit"] || "N/A"} />
                       </Card>
                     </Col>
