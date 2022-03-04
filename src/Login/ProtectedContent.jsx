@@ -24,7 +24,7 @@ import { fetchLogin } from './ReduxLogin';
  * @property {JSX.Element} children required child component
  * @property {boolean} [isAdminOnly] default false - if true, redirect to index page
  * @property {boolean} [isLoginPage] default false
- * @property {(location?: import('react-router').Location) => Promise} [preload] optional async function to run before rendering the child component, meant for fetching resources
+ * @property {(location?: import('react-router').Location) => Promise} [preload] optional async function to preload resources before rendering the child component
  */
 
 /**
