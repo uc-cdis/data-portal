@@ -3,9 +3,14 @@ import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
 import {
   Popconfirm, Steps, Collapse, Row, Col, Statistic, Alert, message, Card,
+  Menu, Dropdown, Button as Btn, Tooltip, Space,
 } from 'antd';
 import { datadogRum } from '@datadog/browser-rum';
 
+import {
+  DownOutlined, UserOutlined, QuestionCircleOutlined, LoadingOutlined,
+} from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   workspaceUrl,
   wtsPath,
@@ -18,8 +23,9 @@ import {
   workspaceAllPayModelsUrl,
   workspacePageTitle,
   workspacePageDescription,
+  stridesPortalURL,
+  showExternalLoginsOnProfile,
 } from '../localconf';
-import { showExternalLoginsOnProfile } from '../configs';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
 import getReduxStore from '../reduxStore';
@@ -33,9 +39,6 @@ import WorkspaceOption from './WorkspaceOption';
 import WorkspaceLogin from './WorkspaceLogin';
 import sessionMonitor from '../SessionMonitor';
 import workspaceSessionMonitor from './WorkspaceSessionMonitor';
-import { Menu, Dropdown, Button as Btn, Tooltip } from 'antd';
-import { DownOutlined, UserOutlined } from '@ant-design/icons';
-
 
 const { Step } = Steps;
 const { Panel } = Collapse;
@@ -109,10 +112,15 @@ class Workspace extends React.Component {
       method: 'GET',
     }).then(
       ({ data }) => {
-        /* eslint-disable */
-        const sortedResults = data.sort((a, b) =>
-          (a.name !== b.name ? a.name < b.name ? -1 : 1 : 0));
-        /* eslint-enable */
+        const sortedResults = data.sort((a, b) => {
+          if (a.name === b.name) {
+            return 0;
+          }
+          if (a.name < b.name) {
+            return -1;
+          }
+          return 1;
+        });
         this.setState({ options: sortedResults });
       },
     ).catch(() => this.setState({ defaultWorkspace: true }));
@@ -162,9 +170,9 @@ class Workspace extends React.Component {
     }).then(
       ({ status, data }) => {
         if (status === 200) {
-          return data
+          return data;
         }
-        return null
+        return null;
       }).catch(() => 'Error');
     if (payModels.current_pay_model) {
       return payModels;
@@ -289,18 +297,18 @@ class Workspace extends React.Component {
         method: 'POST',
       }).then(({ status }) => {
         switch (status) {
-          case 200:
-            datadogRum.addAction('workspaceLaunch', {
-              workspaceName: workspace.name,
-            });
-            this.checkWorkspaceStatus();
-            break;
-          default:
-            message.error('There is an error when trying to launch your workspace');
-            this.setState({
-              workspaceID: null,
-              workspaceLaunchStepsConfig: null,
-            });
+        case 200:
+          datadogRum.addAction('workspaceLaunch', {
+            workspaceName: workspace.name,
+          });
+          this.checkWorkspaceStatus();
+          break;
+        default:
+          message.error('There is an error when trying to launch your workspace');
+          this.setState({
+            workspaceID: null,
+            workspaceLaunchStepsConfig: null,
+          });
         }
       });
     });
@@ -431,7 +439,6 @@ class Workspace extends React.Component {
     });
   };
 
-
   render() {
     const terminateButton = (
       // wrap up terminate button with Popconfirm
@@ -473,25 +480,21 @@ class Workspace extends React.Component {
     const menu = (
       <Menu onClick={this.handleMenuClick}>
         {
-          ((this.state.payModel.all_pay_models !== null && this.state.payModel.all_pay_models !== undefined )) ? (
+          ((this.state.payModel.all_pay_models !== null && this.state.payModel.all_pay_models !== undefined)) ? (
             console.log(this.state.payModel),
             console.log(this.state.payModel.all_pay_models),
-            this.state.payModel.all_pay_models.map((option, i) => {
-              return (
-                <Menu.Item
-                  key={i}
-                  id={option.bmh_workspace_id}
-                  icon={<UserOutlined />}
-                >
-                  {option.workspace_type + " \t - $" + option["total-usage"]}
-                </Menu.Item>
-              );
-            })
+            this.state.payModel.all_pay_models.map((option, i) => (
+              <Menu.Item
+                key={i}
+                id={option.bmh_workspace_id}
+                icon={<UserOutlined />}
+              >
+                {`${option.workspace_type} \t - $${option['total-usage']}`}
+              </Menu.Item>
+            ))
           ) : null
         }
-
       </Menu>
-
     );
 
     if (this.state.connectedStatus && this.state.workspaceStatus && !this.state.defaultWorkspace) {
@@ -508,31 +511,57 @@ class Workspace extends React.Component {
             (Object.keys(this.state.payModel).length > 0) ? (
               <Collapse className='workspace__pay-model' onClick={(event) => event.stopPropagation()}>
                 <Panel header='Account Information' key='1'>
-
                   <Row gutter={{
                     xs: 8, sm: 16, md: 24, lg: 32,
                   }}
                   >
                     <Col className='gutter-row' span={8}>
-                        <Card title="Account">
-                          <Dropdown overlay={menu} disabled={this.state.workspaceStatus !== "Not Found" ? true : false}>
-                            <Btn block size="large">
-                              {this.state.payModel.current_pay_model.workspace_type} <DownOutlined />
-                            </Btn>
-                          </Dropdown>
-                          {this.state.workspaceStatus !== "Not Found" ? <Tooltip title="Switching paymodels is only allowed when you have no running workspaces.">
-                        <span>Disabled</span>
-                      </Tooltip> : null}
-                        </Card>
-                    </Col>
-                    <Col className='gutter-row' span={8}>
-                      <Card title="Total Charges (USD)" >
-                        <Statistic value={this.state.payModel.current_pay_model["total-usage"]} precision={2} />
+                      <Card
+                        title='Account'
+                        extra={(stridesPortalURL)
+                          ? (
+                            <a href={stridesPortalURL} target='_blank' rel='noreferrer'>
+                              <Space>
+                                Apply for an account
+                                <Tooltip title='This link is external'>
+                                  <FontAwesomeIcon
+                                    icon={'external-link-alt'}
+                                  />
+                                </Tooltip>
+                              </Space>
+                            </a>
+                          )
+                          : null}
+                      >
+                        {(this.state.workspaceStatus !== 'Not Found')
+                          ? (
+                            <div className='workspace__pay-model-selector--disabled'>
+                              <Dropdown overlay={menu} disabled>
+                                <Btn block size='large'>
+                                  {this.state.payModel.current_pay_model.workspace_type} <LoadingOutlined />
+                                </Btn>
+                              </Dropdown>
+                              <Tooltip title='Switching paymodels is only allowed when you have no running workspaces.'>
+                                <QuestionCircleOutlined className='workspace__pay-model-helper' />
+                              </Tooltip>
+                            </div>
+                          ) : (
+                            <Dropdown overlay={menu}>
+                              <Btn block size='large'>
+                                {this.state.payModel.current_pay_model.workspace_type} <DownOutlined />
+                              </Btn>
+                            </Dropdown>
+                          )}
                       </Card>
                     </Col>
                     <Col className='gutter-row' span={8}>
-                      <Card title="Spending Limit (USD)">
-                        <Statistic precision={2} value={this.state.payModel.current_pay_model["hard-limit"] || "N/A"} />
+                      <Card title='Total Charges (USD)'>
+                        <Statistic value={this.state.payModel.current_pay_model['total-usage']} precision={2} />
+                      </Card>
+                    </Col>
+                    <Col className='gutter-row' span={8}>
+                      <Card title='Spending Limit (USD)'>
+                        <Statistic precision={2} value={this.state.payModel.current_pay_model['hard-limit'] || 'N/A'} />
                       </Card>
                     </Col>
                   </Row>
@@ -540,9 +569,7 @@ class Workspace extends React.Component {
                     xs: 8, sm: 16, md: 24, lg: 32,
                   }}
                   >
-                    <Col className='gutter-row' span={32}>
-
-                    </Col>
+                    <Col className='gutter-row' span={32} />
                   </Row>
                 </Panel>
               </Collapse>
