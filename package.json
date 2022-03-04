@@ -33,7 +33,7 @@
     "echarts-for-react": "^2.0.16",
     "file-saver": "^2.0.5",
     "flat": "^5.0.2",
-    "fuse.js": "^3.3.0",
+    "fuse.js": "^6.5.3",
     "graphiql": "^1.6.0",
     "graphql": "^15.8.0",
     "html-webpack-plugin": "^5.5.0",
