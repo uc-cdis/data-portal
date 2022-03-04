@@ -3,11 +3,12 @@ import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
 import {
   Popconfirm, Steps, Collapse, Row, Col, Statistic, Alert, message, Card,
-  Menu, Dropdown, Button as Btn, Tooltip,
+  Menu, Dropdown, Button as Btn, Tooltip, Space,
 } from 'antd';
 import { datadogRum } from '@datadog/browser-rum';
 
 import { DownOutlined, UserOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   workspaceUrl,
   wtsPath,
@@ -20,8 +21,9 @@ import {
   workspaceAllPayModelsUrl,
   workspacePageTitle,
   workspacePageDescription,
+  stridesPortalURL,
+  showExternalLoginsOnProfile,
 } from '../localconf';
-import { showExternalLoginsOnProfile } from '../configs';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
 import getReduxStore from '../reduxStore';
@@ -492,7 +494,7 @@ class Workspace extends React.Component {
         }
       </Menu>
     );
-
+    console.log(stridesPortalURL);
     if (this.state.connectedStatus && this.state.workspaceStatus && !this.state.defaultWorkspace) {
       // NOTE both the containing element and the iframe have class '.workspace',
       // although no styles should be shared between them. The reason for this
@@ -507,13 +509,28 @@ class Workspace extends React.Component {
             (Object.keys(this.state.payModel).length > 0) ? (
               <Collapse className='workspace__pay-model' onClick={(event) => event.stopPropagation()}>
                 <Panel header='Account Information' key='1'>
-
                   <Row gutter={{
                     xs: 8, sm: 16, md: 24, lg: 32,
                   }}
                   >
                     <Col className='gutter-row' span={8}>
-                      <Card title='Account'>
+                      <Card
+                        title='Account'
+                        extra={(stridesPortalURL)
+                          ? (
+                            <a href={stridesPortalURL} target='_blank' rel='noreferrer'>
+                              <Space>
+                                Apply for an account
+                                <Tooltip title='This link is external'>
+                                  <FontAwesomeIcon
+                                    icon={'external-link-alt'}
+                                  />
+                                </Tooltip>
+                              </Space>
+                            </a>
+                          )
+                          : null}
+                      >
                         {(this.state.workspaceStatus !== 'Not Found')
                           ? (
                             <div className='workspace__pay-model-selector--disabled'>

@@ -197,7 +197,7 @@ function buildConfig(opts) {
     }
   });
 
-  const { dataAvailabilityToolConfig } = config;
+  const { dataAvailabilityToolConfig, stridesPortalURL } = config;
 
   let showSystemUse = false;
   if (components.systemUse && components.systemUse.systemUseText) {
@@ -468,6 +468,7 @@ function buildConfig(opts) {
     workspaceAllPayModelsUrl,
     workspaceLaunchUrl,
     workspaceTerminateUrl,
+    stridesPortalURL,
     homepageChartNodes: components.index.homepageChartNodes,
     homepageChartNodesChunkSize,
     customHomepageChartConfig: components.index.customHomepageChartConfig,
