@@ -15,17 +15,8 @@ import AuthPopup from './AuthPopup';
 import { fetchLogin } from './ReduxLogin';
 
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
-/** @typedef {import('../types').ProjectState} ProjectState */
 /** @typedef {import('../types').UserState} UserState */
-/** @typedef {import('../GraphQLEditor/types').GraphiqlState} GraphiqlState */
-/** @typedef {import('../Submission/types').SubmissionState} SubmissionState */
-/**
- * @typedef {Object} ReduxState
- * @property {GraphiqlState} graphiql
- * @property {ProjectState} project
- * @property {SubmissionState} submission
- * @property {UserState} user
- */
+/** @typedef {{ user: UserState }} ReduxState */
 
 /**
  * @typedef {Object} ProtectedContentState
@@ -137,24 +128,19 @@ function ProtectedContent({
 
   /** Fetch resources on demand based on path */
   async function fetchResources() {
-    const { graphiql, project, submission } = reduxStore.getState();
     /** @param {string[]} patterns */
     function matchPathOneOf(patterns) {
       return patterns.some((pattern) => matchPath(pattern, location.pathname));
     }
 
-    if (matchPathOneOf(LOCATIONS_DICTIONARY) && !submission.dictionary)
+    if (matchPathOneOf(LOCATIONS_DICTIONARY))
       await reduxStore.dispatch(fetchDictionary());
-    else if (matchPathOneOf(LOCATIONS_PROJECTS) && !project.projects)
+    else if (matchPathOneOf(LOCATIONS_PROJECTS))
       await reduxStore.dispatch(fetchProjects());
     else if (matchPathOneOf(LOCATIONS_SCHEMA))
       await Promise.all([
-        !graphiql.schema
-          ? reduxStore.dispatch(fetchSchema())
-          : Promise.resolve(),
-        !graphiql.guppySchema
-          ? reduxStore.dispatch(fetchGuppySchema())
-          : Promise.resolve(),
+        reduxStore.dispatch(fetchSchema()),
+        reduxStore.dispatch(fetchGuppySchema()),
       ]);
   }
 
