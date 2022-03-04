@@ -424,7 +424,6 @@ class Workspace extends React.Component {
   }
 
   handleMenuClick = async (e) => {
-    console.log('pm', this.state.payModel.all_pay_models[e.key].bmh_workspace_id);
     await fetchWithCreds({
       path: `${workspaceSetPayModelUrl}?id=${this.state.payModel.all_pay_models[e.key].bmh_workspace_id}`,
       method: 'GET',
@@ -481,8 +480,6 @@ class Workspace extends React.Component {
       <Menu onClick={this.handleMenuClick}>
         {
           ((this.state.payModel.all_pay_models !== null && this.state.payModel.all_pay_models !== undefined)) ? (
-            console.log(this.state.payModel),
-            console.log(this.state.payModel.all_pay_models),
             this.state.payModel.all_pay_models.map((option, i) => (
               <Menu.Item
                 key={i}
