@@ -7,7 +7,9 @@ import {
 } from 'antd';
 import { datadogRum } from '@datadog/browser-rum';
 
-import { DownOutlined, UserOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import {
+  DownOutlined, UserOutlined, QuestionCircleOutlined, LoadingOutlined,
+} from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   workspaceUrl,
@@ -494,7 +496,7 @@ class Workspace extends React.Component {
         }
       </Menu>
     );
-    console.log(stridesPortalURL);
+
     if (this.state.connectedStatus && this.state.workspaceStatus && !this.state.defaultWorkspace) {
       // NOTE both the containing element and the iframe have class '.workspace',
       // although no styles should be shared between them. The reason for this
@@ -536,7 +538,7 @@ class Workspace extends React.Component {
                             <div className='workspace__pay-model-selector--disabled'>
                               <Dropdown overlay={menu} disabled>
                                 <Btn block size='large'>
-                                  {this.state.payModel.current_pay_model.workspace_type} <DownOutlined />
+                                  {this.state.payModel.current_pay_model.workspace_type} <LoadingOutlined />
                                 </Btn>
                               </Dropdown>
                               <Tooltip title='Switching paymodels is only allowed when you have no running workspaces.'>
