@@ -105,6 +105,7 @@ function buildConfig(opts) {
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
   const workspacePayModelUrl = `${workspaceUrl}paymodels`;
+  const workspaceSetPayModelUrl = `${workspaceUrl}setpaymodel`;
   const workspaceAllPayModelsUrl = `${workspaceUrl}allpaymodels`;
   const workspaceTerminateUrl = `${workspaceUrl}terminate`;
   const workspaceLaunchUrl = `${workspaceUrl}launch`;
@@ -463,6 +464,7 @@ function buildConfig(opts) {
     workspaceOptionsUrl,
     workspaceStatusUrl,
     workspacePayModelUrl,
+    workspaceSetPayModelUrl,
     workspaceAllPayModelsUrl,
     workspaceLaunchUrl,
     workspaceTerminateUrl,
