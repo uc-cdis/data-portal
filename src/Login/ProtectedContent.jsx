@@ -24,7 +24,7 @@ import { fetchLogin } from './ReduxLogin';
  * @property {JSX.Element} children required child component
  * @property {boolean} [isAdminOnly] default false - if true, redirect to index page
  * @property {boolean} [isLoginPage] default false
- * @property {() => Promise} [preload] optional async function to run before rendering the child component, meant for fetching resources
+ * @property {(location?: import('react-router').Location) => Promise} [preload] optional async function to run before rendering the child component, meant for fetching resources
  */
 
 /**
@@ -145,7 +145,7 @@ function ProtectedContent({
             newState.redirectTo && newState.redirectTo !== location.pathname;
 
           if (!shouldPreload || shouldRedirect) updateState(newState);
-          else preload().finally(() => updateState(newState));
+          else preload(location).finally(() => updateState(newState));
         });
   }, [location]);
 
