@@ -14,7 +14,7 @@ import {
   // workspaceUrl,
   // workspaceErrorUrl,
 } from './localconf';
-import { fetchVersionInfo } from './actions';
+import { fetchGuppySchema, fetchSchema, fetchVersionInfo } from './actions';
 import useSessionMonitor from './hooks/useSessionMonitor';
 
 // lazy-loaded pages
@@ -100,7 +100,14 @@ function App() {
         <Route
           path='query'
           element={
-            <ProtectedContent>
+            <ProtectedContent
+              preload={() =>
+                Promise.all([
+                  dispatch(fetchSchema()),
+                  dispatch(fetchGuppySchema()),
+                ])
+              }
+            >
               <GraphQLQuery />
             </ProtectedContent>
           }

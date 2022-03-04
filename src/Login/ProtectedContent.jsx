@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 import {
   fetchDictionary,
   fetchProjects,
-  fetchSchema,
-  fetchGuppySchema,
   fetchUser,
   fetchUserAccess,
 } from '../actions';
@@ -40,7 +38,6 @@ const LOCATIONS_DICTIONARY = [
   '/submission/:project/*',
 ];
 const LOCATIONS_PROJECTS = ['/files/*'];
-const LOCATIONS_SCHEMA = ['/query'];
 
 /**
  * Container for components that require authentication to access.
@@ -137,11 +134,6 @@ function ProtectedContent({
       await reduxStore.dispatch(fetchDictionary());
     else if (matchPathOneOf(LOCATIONS_PROJECTS))
       await reduxStore.dispatch(fetchProjects());
-    else if (matchPathOneOf(LOCATIONS_SCHEMA))
-      await Promise.all([
-        reduxStore.dispatch(fetchSchema()),
-        reduxStore.dispatch(fetchGuppySchema()),
-      ]);
   }
 
   /** @param {ProtectedContentState} currentState */
