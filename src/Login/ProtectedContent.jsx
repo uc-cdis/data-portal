@@ -40,7 +40,7 @@ import { fetchLogin } from './ReduxLogin';
  * @property {JSX.Element} children required child component
  * @property {boolean} [isAdminOnly] default false - if true, redirect to index page
  * @property {boolean} [isLoginPage] default false
- * @property {() => Promise} [filter] optional filter to apply before rendering the child component
+ * @property {() => Promise} [preload] optional async function to run before rendering the child component, meant for fetching resources
  */
 
 const LOCATIONS_DICTIONARY = [
@@ -59,7 +59,7 @@ function ProtectedContent({
   children,
   isAdminOnly = false,
   isLoginPage = false,
-  filter,
+  preload,
 }) {
   /** @type {{  dispatch: ThunkDispatch; getState: () => ReduxState }} */
   const reduxStore = useStore();
@@ -185,8 +185,8 @@ function ProtectedContent({
             updateState(newState);
           else
             fetchResources().then(() => {
-              if (newState.authenticated && typeof filter === 'function')
-                filter().finally(() => updateState(newState));
+              if (newState.authenticated && typeof preload === 'function')
+                preload().finally(() => updateState(newState));
               else updateState(newState);
             });
         });
@@ -209,7 +209,7 @@ ProtectedContent.propTypes = {
   children: PropTypes.node.isRequired,
   isAdminOnly: PropTypes.bool,
   isLoginPage: PropTypes.bool,
-  filter: PropTypes.func,
+  preload: PropTypes.func,
 };
 
 export default ProtectedContent;

@@ -108,7 +108,7 @@ function App() {
         <Route
           path='identity'
           element={
-            <ProtectedContent filter={() => dispatch(fetchAccess())}>
+            <ProtectedContent preload={() => dispatch(fetchAccess())}>
               <UserProfile />
             </ProtectedContent>
           }
@@ -152,7 +152,7 @@ function App() {
           path='/files/*'
           element={
             <ProtectedContent
-              filter={() =>
+              preload={() =>
                 dispatch(fetchCoreMetadata(props.match.params[0]))
               }
             >
