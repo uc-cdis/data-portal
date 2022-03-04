@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useStore } from 'react-redux';
-import { matchPath, Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchDictionary, fetchUser, fetchUserAccess } from '../actions';
+import { fetchUser, fetchUserAccess } from '../actions';
 import Spinner from '../components/Spinner';
 import AuthPopup from './AuthPopup';
 import { fetchLogin } from './ReduxLogin';
@@ -26,12 +26,6 @@ import { fetchLogin } from './ReduxLogin';
  * @property {boolean} [isLoginPage] default false
  * @property {() => Promise} [preload] optional async function to run before rendering the child component, meant for fetching resources
  */
-
-const LOCATIONS_DICTIONARY = [
-  '/dd/*',
-  '/submission/map',
-  '/submission/:project/*',
-];
 
 /**
  * Container for components that require authentication to access.
@@ -117,17 +111,6 @@ function ProtectedContent({
     return isAdminUser ? currentState : { ...currentState, redirectTo: '/' };
   }
 
-  /** Fetch resources on demand based on path */
-  async function fetchResources() {
-    /** @param {string[]} patterns */
-    function matchPathOneOf(patterns) {
-      return patterns.some((pattern) => matchPath(pattern, location.pathname));
-    }
-
-    if (matchPathOneOf(LOCATIONS_DICTIONARY))
-      await reduxStore.dispatch(fetchDictionary());
-  }
-
   /** @param {ProtectedContentState} currentState */
   function updateState(currentState) {
     const newState = { ...currentState, dataLoaded: true };
@@ -158,12 +141,9 @@ function ProtectedContent({
         .then((newState) => {
           if (newState.redirectTo && newState.redirectTo !== location.pathname)
             updateState(newState);
-          else
-            fetchResources().then(() => {
-              if (newState.authenticated && typeof preload === 'function')
-                preload().finally(() => updateState(newState));
-              else updateState(newState);
-            });
+          else if (newState.authenticated && typeof preload === 'function')
+            preload().finally(() => updateState(newState));
+          else updateState(newState);
         });
   }, [location]);
 

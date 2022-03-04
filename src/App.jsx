@@ -1,7 +1,14 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import {
+  matchPath,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
 import Layout from './Layout';
@@ -14,7 +21,12 @@ import {
   // workspaceUrl,
   // workspaceErrorUrl,
 } from './localconf';
-import { fetchGuppySchema, fetchSchema, fetchVersionInfo } from './actions';
+import {
+  fetchDictionary,
+  fetchGuppySchema,
+  fetchSchema,
+  fetchVersionInfo,
+} from './actions';
 import useSessionMonitor from './hooks/useSessionMonitor';
 
 // lazy-loaded pages
@@ -46,6 +58,8 @@ function App() {
   useEffect(() => {
     dispatch(fetchVersionInfo());
   }, []);
+
+  const location = useLocation();
 
   return (
     <Routes>
@@ -84,7 +98,16 @@ function App() {
         <Route
           path='submission'
           element={
-            <ProtectedContent isAdminOnly>
+            <ProtectedContent
+              isAdminOnly
+              preload={() =>
+                ['/submission/map', '/submission/:project/*'].some((pattern) =>
+                  matchPath(pattern, location.pathname)
+                )
+                  ? dispatch(fetchDictionary())
+                  : Promise.resolve()
+              }
+            >
               <Outlet />
             </ProtectedContent>
           }
@@ -123,7 +146,7 @@ function App() {
         <Route
           path='dd/*'
           element={
-            <ProtectedContent>
+            <ProtectedContent preload={() => dispatch(fetchDictionary())}>
               <DataDictionary />
             </ProtectedContent>
           }
