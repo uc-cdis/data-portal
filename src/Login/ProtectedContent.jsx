@@ -2,12 +2,7 @@ import { useEffect, useState } from 'react';
 import { useStore } from 'react-redux';
 import { matchPath, Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {
-  fetchDictionary,
-  fetchProjects,
-  fetchUser,
-  fetchUserAccess,
-} from '../actions';
+import { fetchDictionary, fetchUser, fetchUserAccess } from '../actions';
 import Spinner from '../components/Spinner';
 import AuthPopup from './AuthPopup';
 import { fetchLogin } from './ReduxLogin';
@@ -37,7 +32,6 @@ const LOCATIONS_DICTIONARY = [
   '/submission/map',
   '/submission/:project/*',
 ];
-const LOCATIONS_PROJECTS = ['/files/*'];
 
 /**
  * Container for components that require authentication to access.
@@ -132,8 +126,6 @@ function ProtectedContent({
 
     if (matchPathOneOf(LOCATIONS_DICTIONARY))
       await reduxStore.dispatch(fetchDictionary());
-    else if (matchPathOneOf(LOCATIONS_PROJECTS))
-      await reduxStore.dispatch(fetchProjects());
   }
 
   /** @param {ProtectedContentState} currentState */

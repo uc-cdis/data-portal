@@ -160,7 +160,10 @@ function App() {
           element={
             <ProtectedContent
               preload={() =>
-                dispatch(fetchCoreMetadata(props.match.params[0]))
+                Promise.all([
+                  dispatch(fetchProjects()),
+                  dispatch(fetchCoreMetadata(props.match.params[0])),
+                ])
               }
             >
               <CoreMetadataPage />
