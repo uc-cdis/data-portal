@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { matchPath, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
 import Layout from './Layout';
@@ -14,7 +14,12 @@ import {
   // workspaceUrl,
   // workspaceErrorUrl,
 } from './localconf';
-import { fetchVersionInfo } from './actions';
+import {
+  fetchDictionary,
+  fetchGuppySchema,
+  fetchSchema,
+  fetchVersionInfo,
+} from './actions';
 import useSessionMonitor from './hooks/useSessionMonitor';
 
 // lazy-loaded pages
@@ -84,7 +89,16 @@ function App() {
         <Route
           path='submission'
           element={
-            <ProtectedContent isAdminOnly>
+            <ProtectedContent
+              isAdminOnly
+              preload={(/** @type {import('react-router').Location} */ loc) =>
+                ['/submission/map', '/submission/:project/*'].some((pattern) =>
+                  matchPath(pattern, loc.pathname)
+                )
+                  ? dispatch(fetchDictionary())
+                  : Promise.resolve()
+              }
+            >
               <Outlet />
             </ProtectedContent>
           }
@@ -100,7 +114,14 @@ function App() {
         <Route
           path='query'
           element={
-            <ProtectedContent>
+            <ProtectedContent
+              preload={() =>
+                Promise.all([
+                  dispatch(fetchSchema()),
+                  dispatch(fetchGuppySchema()),
+                ])
+              }
+            >
               <GraphQLQuery />
             </ProtectedContent>
           }
@@ -108,7 +129,7 @@ function App() {
         <Route
           path='identity'
           element={
-            <ProtectedContent filter={() => dispatch(fetchAccess())}>
+            <ProtectedContent preload={() => dispatch(fetchAccess())}>
               <UserProfile />
             </ProtectedContent>
           }
@@ -116,7 +137,7 @@ function App() {
         <Route
           path='dd/*'
           element={
-            <ProtectedContent>
+            <ProtectedContent preload={() => dispatch(fetchDictionary())}>
               <DataDictionary />
             </ProtectedContent>
           }
@@ -152,8 +173,11 @@ function App() {
           path='/files/*'
           element={
             <ProtectedContent
-              filter={() =>
-                dispatch(fetchCoreMetadata(props.match.params[0]))
+              preload={() =>
+                Promise.all([
+                  dispatch(fetchProjects()),
+                  dispatch(fetchCoreMetadata(props.match.params[0])),
+                ])
               }
             >
               <CoreMetadataPage />

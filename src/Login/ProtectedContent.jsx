@@ -1,31 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useStore } from 'react-redux';
-import { matchPath, Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {
-  fetchDictionary,
-  fetchProjects,
-  fetchSchema,
-  fetchGuppySchema,
-  fetchUser,
-  fetchUserAccess,
-} from '../actions';
+import { fetchUser, fetchUserAccess } from '../actions';
 import Spinner from '../components/Spinner';
 import AuthPopup from './AuthPopup';
 import { fetchLogin } from './ReduxLogin';
 
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
-/** @typedef {import('../types').ProjectState} ProjectState */
 /** @typedef {import('../types').UserState} UserState */
-/** @typedef {import('../GraphQLEditor/types').GraphiqlState} GraphiqlState */
-/** @typedef {import('../Submission/types').SubmissionState} SubmissionState */
-/**
- * @typedef {Object} ReduxState
- * @property {GraphiqlState} graphiql
- * @property {ProjectState} project
- * @property {SubmissionState} submission
- * @property {UserState} user
- */
+/** @typedef {{ user: UserState }} ReduxState */
 
 /**
  * @typedef {Object} ProtectedContentState
@@ -40,16 +24,8 @@ import { fetchLogin } from './ReduxLogin';
  * @property {JSX.Element} children required child component
  * @property {boolean} [isAdminOnly] default false - if true, redirect to index page
  * @property {boolean} [isLoginPage] default false
- * @property {() => Promise} [filter] optional filter to apply before rendering the child component
+ * @property {(location?: import('react-router').Location) => Promise} [preload] optional async function to preload resources before rendering the child component
  */
-
-const LOCATIONS_DICTIONARY = [
-  '/dd/*',
-  '/submission/map',
-  '/submission/:project/*',
-];
-const LOCATIONS_PROJECTS = ['/files/*'];
-const LOCATIONS_SCHEMA = ['/query'];
 
 /**
  * Container for components that require authentication to access.
@@ -59,7 +35,7 @@ function ProtectedContent({
   children,
   isAdminOnly = false,
   isLoginPage = false,
-  filter,
+  preload,
 }) {
   /** @type {{  dispatch: ThunkDispatch; getState: () => ReduxState }} */
   const reduxStore = useStore();
@@ -135,24 +111,6 @@ function ProtectedContent({
     return isAdminUser ? currentState : { ...currentState, redirectTo: '/' };
   }
 
-  /** Fetch resources on demand based on path */
-  async function fetchResources() {
-    const { graphiql, project, submission } = reduxStore.getState();
-    /** @param {string[]} patterns */
-    function matchPathOneOf(patterns) {
-      return patterns.some((pattern) => matchPath(pattern, location.pathname));
-    }
-
-    if (matchPathOneOf(LOCATIONS_DICTIONARY) && !submission.dictionary)
-      await reduxStore.dispatch(fetchDictionary());
-    else if (matchPathOneOf(LOCATIONS_PROJECTS) && !project.projects)
-      await reduxStore.dispatch(fetchProjects());
-    else if (matchPathOneOf(LOCATIONS_SCHEMA)) {
-      if (!graphiql.schema) await reduxStore.dispatch(fetchSchema());
-      if (!graphiql.guppySchema) await reduxStore.dispatch(fetchGuppySchema());
-    }
-  }
-
   /** @param {ProtectedContentState} currentState */
   function updateState(currentState) {
     const newState = { ...currentState, dataLoaded: true };
@@ -181,14 +139,13 @@ function ProtectedContent({
         .then(checkAccess)
         .then(checkIfAdmin)
         .then((newState) => {
-          if (newState.redirectTo && newState.redirectTo !== location.pathname)
-            updateState(newState);
-          else
-            fetchResources().then(() => {
-              if (newState.authenticated && typeof filter === 'function')
-                filter().finally(() => updateState(newState));
-              else updateState(newState);
-            });
+          const shouldPreload =
+            newState.authenticated && typeof preload === 'function';
+          const shouldRedirect =
+            newState.redirectTo && newState.redirectTo !== location.pathname;
+
+          if (!shouldPreload || shouldRedirect) updateState(newState);
+          else preload(location).finally(() => updateState(newState));
         });
   }, [location]);
 
@@ -209,7 +166,7 @@ ProtectedContent.propTypes = {
   children: PropTypes.node.isRequired,
   isAdminOnly: PropTypes.bool,
   isLoginPage: PropTypes.bool,
-  filter: PropTypes.func,
+  preload: PropTypes.func,
 };
 
 export default ProtectedContent;
