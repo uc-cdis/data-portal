@@ -147,10 +147,15 @@ function ProtectedContent({
       await reduxStore.dispatch(fetchDictionary());
     else if (matchPathOneOf(LOCATIONS_PROJECTS) && !project.projects)
       await reduxStore.dispatch(fetchProjects());
-    else if (matchPathOneOf(LOCATIONS_SCHEMA)) {
-      if (!graphiql.schema) await reduxStore.dispatch(fetchSchema());
-      if (!graphiql.guppySchema) await reduxStore.dispatch(fetchGuppySchema());
-    }
+    else if (matchPathOneOf(LOCATIONS_SCHEMA))
+      await Promise.all([
+        !graphiql.schema
+          ? reduxStore.dispatch(fetchSchema())
+          : Promise.resolve(),
+        !graphiql.guppySchema
+          ? reduxStore.dispatch(fetchGuppySchema())
+          : Promise.resolve(),
+      ]);
   }
 
   /** @param {ProtectedContentState} currentState */
