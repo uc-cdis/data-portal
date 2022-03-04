@@ -139,11 +139,13 @@ function ProtectedContent({
         .then(checkAccess)
         .then(checkIfAdmin)
         .then((newState) => {
-          if (newState.redirectTo && newState.redirectTo !== location.pathname)
-            updateState(newState);
-          else if (newState.authenticated && typeof preload === 'function')
-            preload().finally(() => updateState(newState));
-          else updateState(newState);
+          const shouldPreload =
+            newState.authenticated && typeof preload === 'function';
+          const shouldRedirect =
+            newState.redirectTo && newState.redirectTo !== location.pathname;
+
+          if (!shouldPreload || shouldRedirect) updateState(newState);
+          else preload().finally(() => updateState(newState));
         });
   }, [location]);
 
