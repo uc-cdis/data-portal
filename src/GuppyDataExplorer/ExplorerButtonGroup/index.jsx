@@ -159,9 +159,9 @@ class ExplorerButtonGroup extends React.Component {
     }
     if (buttonConfig.type === 'export-file-pfb-to-url') {
       if (!buttonConfig.targetURLTemplate) {
-        throw new Error('Misconfiguration Error! Expected button of type `export-pfb-to-url` to have the required `targetURLTemplate` property');
+        throw new Error('Misconfiguration Error! Expected button of type `export-file-pfb-to-url` to have the required `targetURLTemplate` property');
       } else if (buttonConfig.targetURLTemplate.indexOf(PRESIGNED_URL_TEMPLATE_VARIABLE) === -1) {
-        throw new Error(`Misconfiguration error! An \`export-pfb-to-url\` button has a bad \`targetURLTemplate\` property. The string \`${PRESIGNED_URL_TEMPLATE_VARIABLE}\` must appear in the \`targetURLTemplate\` property. Bad \`targetURLTemplate\`: ${this.state.targetURLTemplate}`);
+        throw new Error(`Misconfiguration error! An \`export-file-pfb-to-url\` button has a bad \`targetURLTemplate\` property. The string \`${PRESIGNED_URL_TEMPLATE_VARIABLE}\` must appear in the \`targetURLTemplate\` property. Bad \`targetURLTemplate\`: ${this.state.targetURLTemplate}`);
       }
       clickFunc = this.exportFilePFBToURL(buttonConfig.targetURLTemplate);
     }
@@ -1011,14 +1011,12 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
               const btnConfigs = entry.buttonConfigs;
               const dropdownTitle = entry.dropdownConfig.title;
 
-              const showLimitedFilePFBExportTooltip = (buttonConfig) =>
-                // If limited file PFB export is enabled, PFB export buttons will be disabled
-                // if the user selects multiple files that are on different nodes in the graph.
-                // (See https://github.com/uc-cdis/data-portal/pull/729).
-                // If the user has selected multiple files on different nodes, display a
-                // tooltip explaining that the user can only export files of the same type.
-                // eslint-disable-next-line implicit-arrow-linebreak
-                this.props.buttonConfig.enableLimitedFilePFBExport
+              // If limited file PFB export is enabled, PFB export buttons will be disabled
+              // if the user selects multiple files that are on different nodes in the graph.
+              // (See https://github.com/uc-cdis/data-portal/pull/729).
+              // If the user has selected multiple files on different nodes, display a
+              // tooltip explaining that the user can only export files of the same type.
+              const showLimitedFilePFBExportTooltip = (buttonConfig) => this.props.buttonConfig.enableLimitedFilePFBExport
                 && this.isFilePFBButton(buttonConfig)
                 && this.state.sourceNodesInCohort.length > 1;
 
