@@ -31,114 +31,91 @@ function getSubgroupLinks(link, nameToNode, sourceId) {
 }
 
 /**
- * Given a data dictionary that defines a set of nodes
- *    and edges, returns the nodes and edges in correct format
- *
- * @method createNodesAndEdges
- * @param {Object} props: Object (normally taken from redux state) that includes dictionary
- *    property defining the dictionary as well as other optional properties
- *    such as counts_search and links_search (created by getCounts) with
- *    information about the number of each type (node) and link (between
- *    nodes with a link's source and target types) that actually
- *    exist in the data
- * @param {DataDictionary} props.dictionary
+ * Given a data dictionary that defines a set of nodes and edges,
+ * returns the nodes and edges in correct format
+ * @param {Object} props: Object (normally taken from redux state) that includes
+ * dictionary property defining the dictionary as well as other optional
+ * properties such as counts_search and links_search (created by getCounts)
+ * with information about the number of each type (node) and link (between
+ * nodes with a link's source and target types) that actually exist in the data
+ * @param {Object} props.dictionary
  * @param {{ [key: string]: number }} props.counts_search
  * @param {{ [key: string]: number }} props.links_search
- * @param createAll: Include all nodes and edges or only those that are populated in
- *    counts_search and links_search
- * @param nodesToHide: Array of nodes to hide from graph
- * @returns {{ nodes: array; edges: array }} Object containing nodes and edges
+ * @param {boolean} createAll: Include all nodes and edges or only those that
+ * are populated in counts_search and links_search
+ * @param {string[]} [nodesToHide] Array of nodes to hide from graph
+ * @returns {{ nodes: Array; edges: Array }} Object containing nodes and edges
  */
 export function createNodesAndEdges(
   props,
   createAll,
   nodesToHide = ['program']
 ) {
-  const { dictionary } = props;
+  const {
+    dictionary,
+    counts_search: countsSearch,
+    links_search: linksSearch,
+  } = props;
 
-  const nodes = Object.keys(dictionary)
-    .filter(
-      (key) =>
-        !key.startsWith('_') &&
-        dictionary[key].type === 'object' &&
-        dictionary[key].category !== 'internal' &&
-        !nodesToHide.includes(key)
-    )
-    .map((key) => {
-      let count = 0;
-      if (props.counts_search) {
-        count = props.counts_search[`_${key}_count`];
-      }
-      return {
-        name: dictionary[key].title,
-        count,
-        ...dictionary[key],
-      };
-    })
-    .filter((node) => createAll || node.count !== 0);
+  const nodes = [];
+  for (const key of Object.keys(dictionary)) {
+    const isValidNode =
+      !key.startsWith('_') &&
+      dictionary[key].type === 'object' &&
+      dictionary[key].category !== 'internal' &&
+      !nodesToHide.includes(key);
 
-  const nameToNode = nodes.reduce((db, node) => {
-    db[node.id] = node;
-    return db;
-  }, {});
-  const hideDb = nodesToHide.reduce((db, name) => {
-    db[name] = true;
-    return db;
-  }, {});
+    if (isValidNode) {
+      const searchKey = `_${key}_count`;
+      const count = countsSearch?.[searchKey] ?? 0;
 
-  const edges = nodes
-    .filter((node) => node.links && node.links.length > 0)
-    .reduce(
-      // add each node's links to the edge list
-      (list, node) => {
-        const newLinks = node.links.map((link) => ({
+      if (createAll || count !== 0)
+        nodes.push({ count, name: dictionary[key].title, ...dictionary[key] });
+    }
+  }
+
+  const nameToNode = {};
+  for (const node of nodes) nameToNode[node.id] = node;
+
+  const hideDb = {};
+  for (const name of nodesToHide) hideDb[name] = true;
+
+  const edges = [];
+  for (const node of nodes)
+    if (node.links?.length > 0) {
+      const newLinks = [];
+      for (const link of node.links) {
+        const newLink = {
           source: node,
           target: nameToNode[link.target_type],
           exists: 1,
           ...link,
-        }));
-        return list.concat(newLinks);
-      },
-      []
-    )
-    .reduce(
-      // add link subgroups to the edge list
-      (list, link) => {
-        let result = list;
-        if (link.target) {
-          // "subgroup" link entries in dictionary are not links themselves ...
-          result.push(link);
+        };
+
+        if (newLink.target) newLinks.push(newLink);
+        if (newLink.subgroup)
+          newLinks.push(...getSubgroupLinks(newLink, nameToNode, node.id));
+      }
+
+      const newEdges = [];
+      for (const link of newLinks) {
+        const isValidEdge =
+          link.target &&
+          link.target.id in nameToNode &&
+          !(link.target.id in hideDb);
+
+        if (isValidEdge) {
+          const searchKey = `${link.source.id}_${link.name}_to_${link.target.id}_link`;
+          const exists = linksSearch?.[searchKey];
+
+          if (createAll || exists || exists === undefined)
+            newEdges.push({ exists, ...link });
         }
-        if (link.subgroup) {
-          const sgLinks = getSubgroupLinks(link, nameToNode, link.source.id);
-          result = result.concat(sgLinks);
-        }
-        return result;
-      },
-      []
-    )
-    .filter(
-      // target type exist and is not in hide list
-      (link) =>
-        link.target &&
-        link.target.id in nameToNode &&
-        !(link.target.id in hideDb)
-    )
-    .map((link) => {
-      // decorate each link with its "exists" count if available
-      //  (number of instances of link between source and target types in the data)
-      const res = link;
-      res.exists = props.links_search
-        ? props.links_search[
-            `${res.source.id}_${res.name}_to_${res.target.id}_link`
-          ]
-        : undefined;
-      return res;
-    })
-    .filter(
-      // filter out if no instances of this link exists and createAll is not specified
-      (link) => createAll || link.exists || link.exists === undefined
-    );
+      }
+
+      edges.push(...newEdges);
+    }
+
   return {
     nodes,
     edges,
