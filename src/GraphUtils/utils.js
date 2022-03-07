@@ -1,30 +1,34 @@
 /**
- * Get subgroup links from link
- * @param {object} link - array of links
- * @param {object} nameToNode - key (node name) value (node object) map
- * @param {string} sourceId - source id for subgroup links
- * This function traverse links recursively and return all nested subgroup lnks
+ * @typedef {Object} Link
+ * @property {Link[]} [subgroup]
+ * @property {string} target_type
  */
-const getSubgroupLinks = (link, nameToNode, sourceId) => {
-  let subgroupLinks = [];
-  if (link.subgroup) {
-    link.subgroup.forEach((sgLink) => {
-      if (sgLink.subgroup) {
-        subgroupLinks = subgroupLinks.concat(
-          getSubgroupLinks(sgLink, nameToNode, sourceId)
-        );
-      } else {
-        subgroupLinks.push({
-          source: nameToNode[sourceId],
-          target: nameToNode[sgLink.target_type],
-          exists: 1,
-          ...sgLink,
-        });
-      }
-    });
-  }
+
+/**
+ * Get subgroup links from link.
+ * Traverse links recursively and return all nested subgroup lnks.
+ * @param {Link} link - array of links
+ * @param {{ [name: string]: any }} nameToNode - key (node name) value (node object) map
+ * @param {string} sourceId - source id for subgroup links
+ * @returns {Array}
+ */
+function getSubgroupLinks(link, nameToNode, sourceId) {
+  if (!link.subgroup) return [];
+
+  const subgroupLinks = [];
+  for (const sgLink of link.subgroup)
+    if (sgLink.subgroup)
+      subgroupLinks.push(...getSubgroupLinks(sgLink, nameToNode, sourceId));
+    else
+      subgroupLinks.push({
+        source: nameToNode[sourceId],
+        target: nameToNode[sgLink.target_type],
+        exists: 1,
+        ...sgLink,
+      });
+
   return subgroupLinks;
-};
+}
 
 /**
  * Given a data dictionary that defines a set of nodes
