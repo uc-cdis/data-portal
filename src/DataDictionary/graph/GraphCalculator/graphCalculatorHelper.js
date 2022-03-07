@@ -49,7 +49,6 @@ function getGraphvizlibWasm() {
 export function calculateGraphLayout(dictionary) {
   const { nodes, edges } = createNodesAndEdges({ dictionary }, true, []);
   const dotString = createDotStrinByNodesEdges(nodes, edges);
-  // const viz = new Viz({ Module, render });
 
   return getGraphvizlibWasm().then((wasm) =>
     graphviz
