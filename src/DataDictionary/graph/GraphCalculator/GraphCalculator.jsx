@@ -17,11 +17,7 @@ class GraphCalculator extends Component {
 
   componentDidMount() {
     if (!this.props.layoutInitialized) {
-      calculateGraphLayout(
-        this.props.dictionary,
-        this.props.countsSearch,
-        this.props.linksSearch
-      ).then((layoutResult) => {
+      calculateGraphLayout(this.props.dictionary).then((layoutResult) => {
         this.props.onGraphLayoutCalculated(layoutResult);
         const legendItems = getAllTypes(layoutResult.nodes);
         this.props.onGraphLegendCalculated(legendItems);

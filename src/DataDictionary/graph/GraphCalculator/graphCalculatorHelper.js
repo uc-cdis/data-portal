@@ -45,17 +45,9 @@ function getGraphvizlibWasm() {
   });
 }
 
-/**
- * @param {Object} dictionary
- * @param {SubmissionState['counts_search']} countsSearch
- * @param {SubmissionState['links_search']} linksSearch
- */
-export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
-  const { nodes, edges } = createNodesAndEdges(
-    { dictionary, countsSearch, linksSearch },
-    true,
-    []
-  );
+/** @param {Object} dictionary */
+export function calculateGraphLayout(dictionary) {
+  const { nodes, edges } = createNodesAndEdges({ dictionary }, true, []);
   const dotString = createDotStrinByNodesEdges(nodes, edges);
   // const viz = new Viz({ Module, render });
 
@@ -193,7 +185,7 @@ export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
         throw e;
       })
   );
-};
+}
 /* eslint-enable no-underscore-dangle */
 
 /**
