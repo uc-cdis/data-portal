@@ -182,45 +182,41 @@ export function getTreeHierarchy(root, name2EdgesIn) {
 }
 
 /**
+ * @typedef {Object} NodesBreathFirst
+ * @property {string[]} bfOrder array of node names
+ * @property {string[][]} treeLevel2Names array of arrays of node names
+ * @property {{ [name: string]: number }} name2Level mapping of node name to level
+ */
+
+/**
  * Arrange nodes in dictionary graph breadth first, and build level database.
  * If a node links to multiple parents, then place it under the highest parent ...
  * Exported for testing.
- *
  * @param {Array} nodes
  * @param {Array} edges
- * @return { nodesBreadthFirst, treeLevel2Names, name2Level } where
- *          nodesBreadthFirst is array of node names, and
- *          treeLevel2Names is an array of arrays of node names,
- *          and name2Level is a mapping of node name to level
+ * @return {NodesBreathFirst}
  */
 export function nodesBreadthFirst(nodes, edges) {
+  /** @type {NodesBreathFirst} */
   const result = {
     bfOrder: [],
     treeLevel2Names: [],
     name2Level: {},
   };
 
-  // mapping of node name to edges that point into that node
-  const name2EdgesIn = edges.reduce(
-    (db, edge) => {
-      // At some point the d3 force layout converts edge.source
-      //   and edge.target into node references ...
-      const targetName =
-        typeof edge.target === 'object' ? edge.target.id : edge.target;
-      if (db[targetName]) {
-        db[targetName].push(edge);
-      } else {
-        console.error(`Edge points to unknown node: ${targetName}`);
-      }
-      return db;
-    },
-    // initialize emptyDb - include nodes that have no incoming edges (leaves)
-    nodes.reduce((emptyDb, node) => {
-      const res = emptyDb;
-      res[node.id] = [];
-      return res;
-    }, {})
-  );
+  /**
+   * mapping of node name to edges that point into that node
+   * @type {{ [name: string]: Object[] }}
+   */
+  const name2EdgesIn = {};
+  for (const node of nodes) name2EdgesIn[node.id] = [];
+  for (const edge of edges) {
+    const targetName =
+      typeof edge.target === 'object' ? edge.target.id : edge.target;
+    if (Array.isArray(name2EdgesIn[targetName]))
+      name2EdgesIn[targetName].push(edge);
+    else console.error(`Edge points to unknown node: ${targetName}`);
+  }
 
   // root node has no edges coming out of it, just edges coming in
   const root = findRoot(nodes, edges);
@@ -229,74 +225,61 @@ export function nodesBreadthFirst(nodes, edges) {
     return result;
   }
 
-  const processedNodes = new Set(); // account for nodes that link to multiple other nodes
-  let queue = [];
-  queue.push({ query: root, level: 0 });
+  // just to be safe - could be user gives us a graph without a 'project'
+  if (!Array.isArray(name2EdgesIn[root])) name2EdgesIn[root] = [];
 
-  // just 2b safe - could be user gives us a graph without a 'project'
-  if (!name2EdgesIn[root]) {
-    name2EdgesIn[root] = [];
-  }
-
-  const name2ActualLvl = {};
   const hierarchy = getTreeHierarchy(root, name2EdgesIn);
+  const name2ActualLvl = {};
+  const preQueue = [{ query: root, level: 0 }];
   // Run through this once to determine the actual level of each node
-  for (let head = 0; head < queue.length; head += 1) {
-    const { query, level } = queue[head]; // breadth first
+  for (let head = 0; head < preQueue.length; head += 1) {
+    const { query, level } = preQueue[head]; // breadth first
     name2ActualLvl[query] = level;
-    name2EdgesIn[query].forEach((edge) => {
-      // At some point the d3 force layout converts edge.source
-      //   and edge.target into node references ...
+
+    for (const edge of name2EdgesIn[query]) {
       const sourceName =
         typeof edge.source === 'object' ? edge.source.id : edge.source;
-      if (name2EdgesIn[sourceName]) {
-        const isAncestor = hierarchy.get(sourceName).has(query);
-        // only push node if it is not an ancestor of the current node, or else --> cycle
-        if (!isAncestor) {
-          queue.push({ query: sourceName, level: level + 1 });
-        }
-      } else {
+      const isAncestor = hierarchy.get(sourceName).has(query);
+
+      if (name2EdgesIn[sourceName] && !isAncestor)
+        preQueue.push({ query: sourceName, level: level + 1 });
+      else {
         console.log(`Edge comes from unknown node ${sourceName}`);
       }
-    });
+    }
   }
 
-  // Reset and run for real
-  queue = [];
-  queue.push({ query: root, level: 0 });
-
-  // queue.shift is O(n), so just keep pushing, and move the head
+  // account for nodes that link to multiple other nodes
+  const processedNodes = new Set();
+  const queue = [{ query: root, level: 0 }];
+  // Run for real; queue.shift is O(n), so just keep pushing, and move the head
   for (let head = 0; head < queue.length; head += 1) {
     const { query, level } = queue[head]; // breadth first
     result.bfOrder.push(query);
     processedNodes.add(query);
-    if (result.treeLevel2Names.length <= level) {
-      result.treeLevel2Names.push([]);
-    }
+
+    if (result.treeLevel2Names.length <= level) result.treeLevel2Names.push([]);
     result.treeLevel2Names[level].push(query);
     result.name2Level[query] = level;
-    name2EdgesIn[query].forEach((edge) => {
-      // At some point the d3 force layout converts edge.source
-      //   and edge.target into node references ...
+
+    for (const edge of name2EdgesIn[query]) {
       const sourceName =
         typeof edge.source === 'object' ? edge.source.id : edge.source;
-      if (name2EdgesIn[sourceName]) {
-        if (
-          !processedNodes.has(sourceName) &&
-          name2ActualLvl[sourceName] === level + 1
-        ) {
-          //
-          // edge source has not yet been processed via another link from the source
-          // to a node higher in the graph
-          //
-          processedNodes.add(sourceName); // don't double-queue a node
-          queue.push({ query: sourceName, level: level + 1 });
-        }
+      if (
+        name2EdgesIn[sourceName] &&
+        !processedNodes.has(sourceName) &&
+        name2ActualLvl[sourceName] === level + 1
+      ) {
+        // edge source has not yet been processed via another link from
+        // the source to a node higher in the graph
+        processedNodes.add(sourceName); // don't double-queue a node
+        queue.push({ query: sourceName, level: level + 1 });
       } else {
         console.log(`Edge comes from unknown node ${sourceName}`);
       }
-    });
+    }
   }
+
   return result;
 }
 
