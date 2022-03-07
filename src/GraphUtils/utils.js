@@ -286,66 +286,44 @@ export function nodesBreadthFirst(nodes, edges) {
 /**
  * Decorate the nodes of a graph with a position based on the node's position in the graph
  * Exported for testing.  Decorates nodes with position property array [x,y] on a [0,1) space
- *
- * @method assignNodePositions
- * @param nodes
- * @param edges
- * @param opts {breadthFirstInfo,numPerRow} breadthFirstInfo is output
- *          from nodesBreadthFirst - otherwise call it ourselves,
- *          numPerRow specifies number of nodes per row if we want a
- *          grid under the root rather than the tree structure
+ * @param {Array} nodes
+ * @param {Array} edges
+ * @param {{ breadthFirstInfo?: NodesBreathFirst; numPerRow?: number }} [opts]
+ * breadthFirstInfo is output from nodesBreadthFirst; otherwise call it ourselves,
+ * numPerRow specifies number of nodes per row if we want a grid under the root
+ * rather than the tree structure
  */
 export function assignNodePositions(nodes, edges, opts) {
   const breadthFirstInfo =
-    opts && opts.breadthFirstInfo
-      ? opts.breadthFirstInfo
-      : nodesBreadthFirst(nodes, edges);
-  const name2Node = nodes.reduce((db, node) => {
-    const res = db;
-    res[node.id] = node;
-    return res;
-  }, {});
+    opts?.breadthFirstInfo ?? nodesBreadthFirst(nodes, edges);
 
   // the tree has some number of levels with some number of nodes each,
   // but we may want to break each level down into multiple rows
-  // @return {rowNumber:[nodeNameList]}
-  const row2Names = (() => {
-    if (!opts || !opts.numPerRow) {
-      return breadthFirstInfo.treeLevel2Names;
-    }
-    const { numPerRow } = opts;
-    const { bfOrder } = breadthFirstInfo;
-    // put the root on its own level
-    return bfOrder.reduce((db, node) => {
-      if (db.length < 2) {
-        // put root node on its own level
-        db.push([node]);
-      } else {
-        const lastRow = db[db.length - 1];
-        if (lastRow.length < numPerRow) {
-          lastRow.push(node);
-        } else {
-          db.push([node]);
-        }
-      }
-      return db;
-    }, []);
-  })();
+  const row2Names = /** @type {string[][]} */ ([]);
+  if (!opts?.numPerRow) row2Names.push(...breadthFirstInfo.treeLevel2Names);
+  else
+    for (const node of breadthFirstInfo.bfOrder)
+      if (
+        row2Names.length < 2 ||
+        row2Names[row2Names.length - 1].length >= opts.numPerRow
+      )
+        // put the root node on its own level
+        row2Names.push([node]);
+
+  const name2Node = {};
+  for (const node of nodes) name2Node[node.id] = node;
 
   // Assign a (x,y) position in [0,1) space to each node based on its level in the tree
-  const numLevels = row2Names.length;
-  row2Names.forEach((nodesAtLevel, level) => {
-    const numNodesAtLevel = nodesAtLevel.length;
-    nodesAtLevel.forEach((nodeName, posAtLevel) => {
+  for (const [level, nodesAtLevel] of row2Names.entries())
+    for (const [posAtLevel, nodeName] of nodesAtLevel.entries()) {
+      const posX = (posAtLevel + 1) / (nodesAtLevel.length + 1);
+      const posY = (level + 1) / (row2Names.length + 1);
+
       const node = name2Node[nodeName];
-      node.position = [
-        // (x,y) in [0,1) coordinates
-        (posAtLevel + 1) / (numNodesAtLevel + 1),
-        (level + 1) / (numLevels + 1),
-      ];
+      node.position = [posX, posY];
       node.positionIndex = [posAtLevel, level];
-    });
-  });
+    }
+
   return breadthFirstInfo;
 }
 
