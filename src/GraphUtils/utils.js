@@ -146,42 +146,39 @@ export function findRoot(nodes, edges) {
  * Recursive helper function for getTreeHierarchy
  * Returns the hierarchy of the tree in the form of a map
  * Each (key, value) consists of (node, node's descendants including the node itself)
- * @method getTreeHierarchyHelper
- * @param root
- * @param name2EdgesIn
- * @param hierarchy
- * @return {map}
+ * @param {string} root
+ * @param {{ [name:string]: { source: { id: string } | string }[] }} name2EdgesIn
+ * @param {Map<string, Set<string>>} hierarchy
  */
-function getTreeHierarchyHelper(node, name2EdgesIn, hierarchy) {
-  const descendants = new Set();
-  descendants.add(node);
-  hierarchy.set(node, descendants);
-  name2EdgesIn[node].forEach((edge) => {
+function getTreeHierarchyHelper(root, name2EdgesIn, hierarchy) {
+  const descendants = /** @type {Set<string>} */ (new Set());
+  descendants.add(root);
+
+  hierarchy.set(root, descendants);
+  for (const edge of name2EdgesIn[root]) {
     const sourceName =
       typeof edge.source === 'object' ? edge.source.id : edge.source;
     if (!hierarchy.get(sourceName)) {
       // don't want to visit node again
       hierarchy = getTreeHierarchyHelper(sourceName, name2EdgesIn, hierarchy);
       descendants.add(sourceName);
-      hierarchy.get(sourceName).forEach((n) => {
-        descendants.add(n);
-      });
+      for (const n of hierarchy.get(sourceName)) descendants.add(n);
     }
-  });
-  hierarchy.set(node, descendants);
+  }
+
+  hierarchy.set(root, descendants);
   return hierarchy;
 }
 
 /**
  * Returns the hierarchy of the tree in the form of a map
  * Each (key, value) consists of (node, node's descendants including the node itself)
- * @method getTreeHierarchy
- * @param root
- * @param name2EdgesIn
- * @return {map}
+ * @param {string} root
+ * @param {{ [name:string]: { source: { id: string } | string }[] }} name2EdgesIn
  */
 export function getTreeHierarchy(root, name2EdgesIn) {
-  return getTreeHierarchyHelper(root, name2EdgesIn, new Map());
+  const hierarchy = /** @type {Map<string, Set<string>>} */ (new Map());
+  return getTreeHierarchyHelper(root, name2EdgesIn, hierarchy);
 }
 
 /**
