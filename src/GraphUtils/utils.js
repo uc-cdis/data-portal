@@ -361,11 +361,6 @@ fixedsize=true width=${nodeWidth} height=${nodeHeight} shape=rectangle]\n`;
 };
 
 export function createDotStrinByNodesEdges(nodes, edges) {
-  const posInfo = assignNodePositions(nodes, edges);
-  const dotString = buildGraphVizDOTString(
-    nodes,
-    edges,
-    posInfo.treeLevel2Names
-  );
-  return dotString;
+  const { treeLevel2Names } = assignNodePositions(nodes, edges);
+  return buildGraphVizDOTString(nodes, edges, treeLevel2Names);
 }
