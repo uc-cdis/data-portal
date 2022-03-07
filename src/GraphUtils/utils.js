@@ -332,7 +332,7 @@ export function assignNodePositions(nodes, edges, opts) {
  * DOT Language ref: http://www.graphviz.org/doc/info/lang.html
  * @param {Array} nodes
  * @param {Array} edges
- * @params {Object} treeLevel2Names - levels and nodes in each level, {levelNum:[nodeNameList]}
+ * @param {string[][]} treeLevel2Names - levels and nodes in each level, {levelNum:[nodeNameList]}
  * @returns {string} graph translated into DOT language
  */
 const buildGraphVizDOTString = (nodes, edges, treeLevel2Names) => {
@@ -340,24 +340,22 @@ const buildGraphVizDOTString = (nodes, edges, treeLevel2Names) => {
   const canvasSize = 5;
   const nodeWidth = 1.2;
   const nodeHeight = 0.8;
-  let graphString = 'digraph dictionary {\n';
-  graphString += `size="${canvasSize}, ${canvasSize}"\n`;
-  graphString += `ratio=${whRatio}\n`;
-  nodes.forEach((node) => {
-    graphString += `${node.id} [type="${node.category}" \
-label="${node.name}" \
-fixedsize=true width=${nodeWidth} height=${nodeHeight} \
-shape=rectangle
-]\n`;
-  });
-  edges.forEach((edge) => {
+
+  let graphString = `digraph dictionary {
+size="${canvasSize}, ${canvasSize}"
+ratio=${whRatio}\n`;
+
+  for (const node of nodes)
+    graphString += `${node.id} [type="${node.category}" label="${node.name}" \
+fixedsize=true width=${nodeWidth} height=${nodeHeight} shape=rectangle]\n`;
+
+  for (const edge of edges)
     graphString += `${edge.source.id} -> ${edge.target.id}[arrowhead=none tailport=s ]\n`;
-  });
-  if (treeLevel2Names) {
-    treeLevel2Names.forEach((IDsInThisLevel, i) => {
+
+  if (treeLevel2Names)
+    for (const [i, IDsInThisLevel] of treeLevel2Names.entries())
       graphString += `{rank=${i} ${IDsInThisLevel.join(' ')}}\n`;
-    });
-  }
+
   graphString += '}';
   return graphString;
 };
