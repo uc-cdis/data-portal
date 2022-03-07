@@ -158,8 +158,6 @@ class GraphCalculator extends Component {
 
 GraphCalculator.propTypes = {
   dictionary: PropTypes.object,
-  countsSearch: PropTypes.array,
-  linksSearch: PropTypes.array,
   onGraphLayoutCalculated: PropTypes.func,
   onGraphLegendCalculated: PropTypes.func,
   nodes: PropTypes.arrayOf(PropTypes.object),
@@ -175,8 +173,6 @@ GraphCalculator.propTypes = {
 
 GraphCalculator.defaultProps = {
   dictionary: {},
-  countsSearch: [],
-  linksSearch: [],
   onGraphLayoutCalculated: () => {},
   onGraphLegendCalculated: () => {},
   highlightingNode: null,
