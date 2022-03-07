@@ -124,32 +124,22 @@ export function createNodesAndEdges(
 
 /**
  * Find the root of the given graph (no edges out)
- * @method findRoot
- * @param nodes
- * @param edges
+ * @param {{ id: string }[]} nodes
+ * @param {{ source: { id: string } | string }[]} edges
  * @return {string} rootName or null if no root
  */
 export function findRoot(nodes, edges) {
-  const couldBeRoot = edges.reduce(
-    (db, edge) => {
-      // At some point the d3 force layout converts
-      //   edge.source and edge.target into node references ...
-      const sourceName =
-        typeof edge.source === 'object' ? edge.source.id : edge.source;
-      if (db[sourceName]) {
-        db[sourceName] = false;
-      }
-      return db;
-    },
-    // initialize emptyDb - any node could be the root
-    nodes.reduce((emptyDb, node) => {
-      const res = emptyDb;
-      res[node.id] = true;
-      return res;
-    }, {})
-  );
-  const rootNode = nodes.find((n) => couldBeRoot[n.id]);
-  return rootNode ? rootNode.id : null;
+  /** @type {{ [name: string]: boolean }} */
+  const couldBeRoot = {};
+  for (const node of nodes) couldBeRoot[node.id] = true;
+  for (const edge of edges) {
+    const sourceName =
+      typeof edge.source === 'object' ? edge.source.id : edge.source;
+    if (couldBeRoot[sourceName]) couldBeRoot[sourceName] = false;
+  }
+
+  const rootNode = nodes.find(({ id }) => couldBeRoot[id]);
+  return rootNode?.id ?? null;
 }
 
 /**
