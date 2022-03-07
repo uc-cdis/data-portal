@@ -104,8 +104,8 @@ export const buildTestData = () => {
     dictionary,
     nodes,
     edges: edges.concat(expectedSubgoupLinks),
-    counts_search: nodeCounts,
-    links_search: linkCounts,
+    countsSearch: nodeCounts,
+    linksSearch: linkCounts,
     expectedTree,
   };
 };

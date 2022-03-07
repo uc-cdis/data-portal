@@ -39,8 +39,8 @@ function getSubgroupLinks(link, nameToNode, sourceId) {
  * with information about the number of each type (node) and link (between
  * nodes with a link's source and target types) that actually exist in the data
  * @param {Object} props.dictionary
- * @param {{ [key: string]: number }} props.counts_search
- * @param {{ [key: string]: number }} props.links_search
+ * @param {{ [key: string]: number }} props.countsSearch
+ * @param {{ [key: string]: number }} props.linksSearch
  * @param {boolean} createAll: Include all nodes and edges or only those that
  * are populated in counts_search and links_search
  * @param {string[]} [nodesToHide] Array of nodes to hide from graph
@@ -51,11 +51,7 @@ export function createNodesAndEdges(
   createAll,
   nodesToHide = ['program']
 ) {
-  const {
-    dictionary,
-    counts_search: countsSearch,
-    links_search: linksSearch,
-  } = props;
+  const { dictionary, countsSearch, linksSearch } = props;
 
   const nodes = [];
   for (const key of Object.keys(dictionary)) {

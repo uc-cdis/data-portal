@@ -52,11 +52,7 @@ function getGraphvizlibWasm() {
  */
 export const calculateGraphLayout = (dictionary, countsSearch, linksSearch) => {
   const { nodes, edges } = createNodesAndEdges(
-    {
-      dictionary,
-      counts_search: countsSearch,
-      links_search: linksSearch,
-    },
+    { dictionary, countsSearch, linksSearch },
     true,
     []
   );
