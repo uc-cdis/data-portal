@@ -27,14 +27,14 @@ export WORKSPACE_TIMEOUT_IN_MINUTES="${WORKSPACE_TIMEOUT_IN_MINUTES:-"480"}"
 cd "$(dirname "${BASH_SOURCE}")"
 # download the graphql schema for the commons from HOSTNAME
 npm run schema
+# create a graphviz layout from dictionary
+npm run graphviz-layout
 # run the relay compiler against the graphql schema
 npm run relay
 # generate a parameters.json file by overlaying $APP.json on default.json
 npm run params
 # run a sanity check to make sure portal config works
 npm run sanity-check
-# create a compressed file for graphvizlib wasm
-npm run graphvizlib
 
 export STORYBOOK_PROJECT_ID=search
 export REACT_APP_PROJECT_ID=search

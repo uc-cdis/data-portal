@@ -1,8 +1,4 @@
-import { graphviz } from '@hpcc-js/wasm';
-import {
-  createNodesAndEdges,
-  createDotStrinByNodesEdges,
-} from '../../../GraphUtils/utils';
+import { createNodesAndEdges } from '../../../GraphUtils/utils';
 import { truncateLines, graphStyleConfig } from '../../utils';
 import {
   getAllChildrenNodeIDs,
@@ -32,16 +28,16 @@ export const getAllTypes = (nodes) => {
   return uniqueTypes;
 };
 
-/** @type {Promise<ArrayBuffer>} */
-let _wasm;
-function getGraphvizlibWasm() {
-  return fetch('/node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm', {
+/** @type {Promise} */
+let _layout;
+function getGraphvizLayout() {
+  return fetch('/data/graphvizLayout.json', {
     credentials: 'same-origin',
   }).then((res) => {
-    if (!res.ok) throw new Error(`failed to load wasm binary file`);
+    if (!res.ok) throw new Error(`failed to load graphviz layout file`);
 
-    if (_wasm === undefined) _wasm = res.arrayBuffer();
-    return _wasm;
+    if (_layout === undefined) _layout = res.json();
+    return _layout;
   });
 }
 
@@ -163,26 +159,21 @@ function buildGraphEdges({ edges, graphNodes, layout }) {
 /** @param {Object} dictionary */
 export function calculateGraphLayout(dictionary) {
   const { nodes, edges } = createNodesAndEdges({ dictionary }, true, []);
-  const dotString = createDotStrinByNodesEdges(nodes, edges);
 
-  return getGraphvizlibWasm().then((wasm) =>
-    graphviz
-      .layout(dotString, 'json', 'dot', { wasmBinary: new Uint8Array(wasm) })
-      .then((json) => {
-        const layout = JSON.parse(json);
-        const graphNodes = buildGraphNodes({ edges, layout, nodes });
-        const graphEdges = buildGraphEdges({ edges, graphNodes, layout });
+  return getGraphvizLayout()
+    .then((layout) => {
+      const graphNodes = buildGraphNodes({ edges, layout, nodes });
+      const graphEdges = buildGraphEdges({ edges, graphNodes, layout });
 
-        return /** @type {GraphLayout} */ ({
-          nodes: graphNodes,
-          edges: graphEdges,
-          graphBoundingBox: layout._draw_.find(({ op }) => op === 'P').points,
-        });
-      })
-      .catch((e) => {
-        throw e;
-      })
-  );
+      return /** @type {GraphLayout} */ ({
+        nodes: graphNodes,
+        edges: graphEdges,
+        graphBoundingBox: layout._draw_.find(({ op }) => op === 'P').points,
+      });
+    })
+    .catch((e) => {
+      throw e;
+    });
 }
 /* eslint-enable no-underscore-dangle */
 
