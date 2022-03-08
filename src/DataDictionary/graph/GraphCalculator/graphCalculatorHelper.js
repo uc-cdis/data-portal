@@ -45,6 +45,121 @@ function getGraphvizlibWasm() {
   });
 }
 
+/** @returns {GraphNode[]} */
+function buildGraphNodes({ edges, layout, nodes }) {
+  return layout.objects
+    .filter((n) => !n.rank)
+    .map((n) => {
+      const boundingBox = n._draw_[1].points.reduce(
+        (acc, cur) => {
+          const [x, y] = cur;
+          if (acc.x1 > x) acc.x1 = x;
+          if (acc.y1 > y) acc.y1 = y;
+          if (acc.x2 < x) acc.x2 = x;
+          if (acc.y2 < y) acc.y2 = y;
+          return acc;
+        },
+        {
+          x1: Infinity,
+          y1: Infinity,
+          x2: -Infinity,
+          y2: -Infinity,
+        }
+      );
+      const iconRadius = graphStyleConfig.nodeIconRadius;
+      const topCenterX = (boundingBox.x1 + boundingBox.x2) / 2;
+      const topCenterY = boundingBox.y1;
+      const width = boundingBox.x2 - boundingBox.x1;
+      const height = boundingBox.y2 - boundingBox.y1;
+      const originNode = nodes.find((node) => node.id === n.name);
+      const outLinks = edges
+        .filter((edge) => edge.source.id === n.name)
+        .map((edge) => edge.target.id);
+      const inLinks = edges
+        .filter((edge) => edge.target.id === n.name)
+        .map((edge) => edge.source.id);
+
+      const nodeType = n.type.toLowerCase();
+      const nodeColor = getCategoryColor(nodeType);
+      const textPadding = graphStyleConfig.nodeContentPadding;
+      const fontSize = graphStyleConfig.nodeTextFontSize;
+      const textLineGap = graphStyleConfig.nodeTextLineGap;
+      const nodeNames = truncateLines(n.label);
+      const rectMinHeight = height;
+      const rectHeight = Math.max(
+        rectMinHeight,
+        textPadding * 2 + nodeNames.length * (fontSize + textLineGap)
+      );
+      const requiredPropertiesCount = originNode.required
+        ? originNode.required.length
+        : 0;
+      const optionalPropertiesCount = originNode.properties
+        ? Object.keys(originNode.properties).length - requiredPropertiesCount
+        : 0;
+      const nodeLevel =
+        originNode?.positionIndex?.length >= 2
+          ? originNode.positionIndex[1]
+          : 0;
+      return {
+        id: n.name,
+        type: nodeType,
+        boundingBox,
+        topCenterX,
+        topCenterY,
+        width,
+        height: rectHeight,
+        color: nodeColor,
+        iconRadius,
+        textPadding,
+        fontSize,
+        textLineGap,
+        names: nodeNames,
+        label: n.label,
+        level: nodeLevel,
+        outLinks,
+        inLinks,
+        _gvid: n._gvid,
+        requiredPropertiesCount,
+        optionalPropertiesCount,
+      };
+    });
+}
+
+/** @returns {GraphEdge[]} */
+function buildGraphEdges({ edges, graphNodes, layout }) {
+  return layout.edges.map((edge) => {
+    const controlPoints = edge._draw_[1].points;
+    let pathString = `M${controlPoints[0].join(',')}C${controlPoints
+      .slice(1)
+      .map((pair) => `${pair[0]},${pair[1]}`)
+      .join(' ')}`;
+    const sourceNode = graphNodes.find((node) => node._gvid === edge.tail);
+    const targetNode = graphNodes.find((node) => node._gvid === edge.head);
+    if (sourceNode.level === targetNode.level + 1) {
+      const sourePosition = [
+        (sourceNode.boundingBox.x1 + sourceNode.boundingBox.x2) / 2,
+        sourceNode.boundingBox.y1,
+      ];
+      const targetPosition = [
+        (targetNode.boundingBox.x1 + targetNode.boundingBox.x2) / 2,
+        targetNode.boundingBox.y2,
+      ];
+      pathString = `M${sourePosition[0]} ${sourePosition[1]} 
+      L ${targetPosition[0]} ${targetPosition[1]}`;
+    }
+    const { required } = edges.find(
+      (e) => e.source.id === sourceNode.id && e.target.id === targetNode.id
+    );
+    return {
+      source: sourceNode.id,
+      target: targetNode.id,
+      controlPoints,
+      pathString,
+      required,
+    };
+  });
+}
+
 /** @param {Object} dictionary */
 export function calculateGraphLayout(dictionary) {
   const { nodes, edges } = createNodesAndEdges({ dictionary }, true, []);
@@ -54,130 +169,14 @@ export function calculateGraphLayout(dictionary) {
     graphviz
       .layout(dotString, 'json', 'dot', { wasmBinary: new Uint8Array(wasm) })
       .then((json) => {
-        const renderedJSON = JSON.parse(json);
-
-        // draw nodes
-        const renderedNodes = renderedJSON.objects
-          .filter((n) => !n.rank)
-          .map((n) => {
-            const boundingBox = n._draw_[1].points.reduce(
-              (acc, cur) => {
-                const [x, y] = cur;
-                if (acc.x1 > x) acc.x1 = x;
-                if (acc.y1 > y) acc.y1 = y;
-                if (acc.x2 < x) acc.x2 = x;
-                if (acc.y2 < y) acc.y2 = y;
-                return acc;
-              },
-              {
-                x1: Infinity,
-                y1: Infinity,
-                x2: -Infinity,
-                y2: -Infinity,
-              }
-            );
-            const iconRadius = graphStyleConfig.nodeIconRadius;
-            const topCenterX = (boundingBox.x1 + boundingBox.x2) / 2;
-            const topCenterY = boundingBox.y1;
-            const width = boundingBox.x2 - boundingBox.x1;
-            const height = boundingBox.y2 - boundingBox.y1;
-            const originNode = nodes.find((node) => node.id === n.name);
-            const outLinks = edges
-              .filter((edge) => edge.source.id === n.name)
-              .map((edge) => edge.target.id);
-            const inLinks = edges
-              .filter((edge) => edge.target.id === n.name)
-              .map((edge) => edge.source.id);
-
-            const nodeType = n.type.toLowerCase();
-            const nodeColor = getCategoryColor(nodeType);
-            const textPadding = graphStyleConfig.nodeContentPadding;
-            const fontSize = graphStyleConfig.nodeTextFontSize;
-            const textLineGap = graphStyleConfig.nodeTextLineGap;
-            const nodeNames = truncateLines(n.label);
-            const rectMinHeight = height;
-            const rectHeight = Math.max(
-              rectMinHeight,
-              textPadding * 2 + nodeNames.length * (fontSize + textLineGap)
-            );
-            const requiredPropertiesCount = originNode.required
-              ? originNode.required.length
-              : 0;
-            const optionalPropertiesCount = originNode.properties
-              ? Object.keys(originNode.properties).length -
-                requiredPropertiesCount
-              : 0;
-            const nodeLevel =
-              originNode?.positionIndex?.length >= 2
-                ? originNode.positionIndex[1]
-                : 0;
-            return {
-              id: n.name,
-              type: nodeType,
-              boundingBox,
-              topCenterX,
-              topCenterY,
-              width,
-              height: rectHeight,
-              color: nodeColor,
-              iconRadius,
-              textPadding,
-              fontSize,
-              textLineGap,
-              names: nodeNames,
-              label: n.label,
-              level: nodeLevel,
-              outLinks,
-              inLinks,
-              _gvid: n._gvid,
-              requiredPropertiesCount,
-              optionalPropertiesCount,
-            };
-          });
-
-        // draw edges
-        const renderedEdges = renderedJSON.edges.map((edge) => {
-          const controlPoints = edge._draw_[1].points;
-          let pathString = `M${controlPoints[0].join(',')}C${controlPoints
-            .slice(1)
-            .map((pair) => `${pair[0]},${pair[1]}`)
-            .join(' ')}`;
-          const sourceNode = renderedNodes.find(
-            (node) => node._gvid === edge.tail
-          );
-          const targetNode = renderedNodes.find(
-            (node) => node._gvid === edge.head
-          );
-          if (sourceNode.level === targetNode.level + 1) {
-            const sourePosition = [
-              (sourceNode.boundingBox.x1 + sourceNode.boundingBox.x2) / 2,
-              sourceNode.boundingBox.y1,
-            ];
-            const targetPosition = [
-              (targetNode.boundingBox.x1 + targetNode.boundingBox.x2) / 2,
-              targetNode.boundingBox.y2,
-            ];
-            pathString = `M${sourePosition[0]} ${sourePosition[1]} 
-            L ${targetPosition[0]} ${targetPosition[1]}`;
-          }
-          const { required } = edges.find(
-            (e) =>
-              e.source.id === sourceNode.id && e.target.id === targetNode.id
-          );
-          return {
-            source: sourceNode.id,
-            target: targetNode.id,
-            controlPoints,
-            pathString,
-            required,
-          };
-        });
+        const layout = JSON.parse(json);
+        const graphNodes = buildGraphNodes({ edges, layout, nodes });
+        const graphEdges = buildGraphEdges({ edges, graphNodes, layout });
 
         return /** @type {GraphLayout} */ ({
-          nodes: renderedNodes,
-          edges: renderedEdges,
-          graphBoundingBox: renderedJSON._draw_.find(({ op }) => op === 'P')
-            .points,
+          nodes: graphNodes,
+          edges: graphEdges,
+          graphBoundingBox: layout._draw_.find(({ op }) => op === 'P').points,
         });
       })
       .catch((e) => {
