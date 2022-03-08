@@ -8,9 +8,6 @@ import {
   Button,
   Modal,
   Table,
-  Card,
-  Row,
-  Col,
 } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
@@ -20,10 +17,8 @@ import {
   DownloadOutlined,
   FileTextOutlined,
   LinkOutlined,
-  SelectOutlined,
 } from '@ant-design/icons';
 import FileSaver from 'file-saver';
-import throttle from 'lodash/throttle';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { fetchWithCreds } from '../actions';
 import {
@@ -447,23 +442,6 @@ const DiscoveryActionBar = (props: Props) => {
     }, [props.discovery.actionToResume],
   );
 
-  const domElementReference = useRef<HTMLElement>(null);
-  const [floating, setFloating] = useState(false);
-
-  useEffect(
-    () => {
-      const onScroll = throttle(
-        () => {
-          const actionBarVerticalPosition = domElementReference.current?.getBoundingClientRect().y;
-          const actionBarHidden = actionBarVerticalPosition && actionBarVerticalPosition < 0;
-          setFloating(actionBarHidden);
-        }, 100,
-      ) as (ev: Event) => any;
-      document.addEventListener('scroll', onScroll);
-      return () => document.removeEventListener('scroll', onScroll);
-    }, [],
-  );
-
   const handleRedirectToLoginClick = (action:'download'|'export'|'manifest' = null) => {
     const serializableState = {
       ...props.discovery,
@@ -635,7 +613,6 @@ const DiscoveryActionBar = (props: Props) => {
     <React.Fragment>
       <div
         className='discovery-studies__header'
-        ref={(domElement) => { domElementReference.current = domElement; }}
       >
         {/* Advanced search show/hide UI */}
         { (props.config.features.advSearchFilters?.enabled)
@@ -659,35 +636,6 @@ const DiscoveryActionBar = (props: Props) => {
           { exportToWorkspaceButton }
         </Space>
       </div>
-      {
-        floating && props.config.features.exportToWorkspace?.enabled
-        && (
-          <div className='discovery-floating-action-bar'>
-            <Card style={{ borderRadius: '5px' }}>
-              <Row gutter={[8, 0]} align='middle' justify='space-around'>
-                <Col>
-                  <SelectOutlined style={{ fontSize: '125%' }} />
-                </Col>
-                <Col>
-                  {props.discovery.selectedResources.length} selected
-                </Col>
-                <Col />
-                <Row gutter={[8, 0]} align='middle' justify='space-around'>
-                  <Col>
-                    { downloadZipButton }
-                  </Col>
-                  <Col>
-                    { downloadManifestButton }
-                  </Col>
-                  <Col>
-                    { exportToWorkspaceButton }
-                  </Col>
-                </Row>
-              </Row>
-            </Card>
-          </div>
-        )
-      }
     </React.Fragment>
   );
 };

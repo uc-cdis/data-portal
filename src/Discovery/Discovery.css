@@ -518,11 +518,3 @@
   color: #313839;
   font-weight: normal;
 }
-
-.discovery-floating-action-bar {
-  position: fixed;
-  top: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index:100;
-}
