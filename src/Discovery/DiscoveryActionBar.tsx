@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useRef,
+  useState, useEffect,
 } from 'react';
 import { datadogRum } from '@datadog/browser-rum';
 import {
