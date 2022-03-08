@@ -426,7 +426,7 @@ class Workspace extends React.Component {
   handleMenuClick = async (e) => {
     await fetchWithCreds({
       path: `${workspaceSetPayModelUrl}?id=${this.state.payModel.all_pay_models[e.key].bmh_workspace_id}`,
-      method: 'GET',
+      method: 'POST',
     }).then(({ status }) => {
       if (status === 200) {
         this.getWorkspacePayModel().then((data) => {
