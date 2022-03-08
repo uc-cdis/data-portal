@@ -165,31 +165,26 @@ function getTreeLevel2Names(nodes, edges) {
   return treeLevel2Names;
 }
 
-// MODYFYING: src/GraphUtils/utils > buildGraphVizDOTString
-// Adds minor changes to the output string format to improve readability
-function buildGraphVizDOTString(nodes, edges, treeLevel2Names) {
-  let graphString = `digraph dictionary {\n  size="5, 5"\n  ratio=1\n\n`;
-
-  for (const node of nodes)
-    graphString += `  ${node.id} [type="${node.category}" label="${node.name}" \
-fixedsize=true width=1.2 height=0.8 shape=rectangle]\n`;
-  graphString += '\n';
-
-  for (const edge of edges)
-    graphString += `  ${edge.source.id} -> ${edge.target.id}[arrowhead=none tailport=s ]\n`;
-  graphString += '\n';
-
-  for (const [i, names] of treeLevel2Names.entries())
-    graphString += `  {rank=${i} ${names.join(' ')}}\n`;
-
-  graphString += '}';
-  return graphString;
-}
-
 function createDotStringFromDictionary(dictionary) {
   const { nodes, edges } = createNodesAndEdges(dictionary);
   const treeLevel2Names = getTreeLevel2Names(nodes, edges);
-  return buildGraphVizDOTString(nodes, edges, treeLevel2Names);
+
+  let dotString = `digraph dictionary {\n  size="5, 5"\n  ratio=1\n\n`;
+
+  for (const node of nodes)
+    dotString += `  ${node.id} [type="${node.category}" label="${node.name}" \
+fixedsize=true width=1.2 height=0.8 shape=rectangle]\n`;
+  dotString += '\n';
+
+  for (const edge of edges)
+    dotString += `  ${edge.source.id} -> ${edge.target.id}[arrowhead=none tailport=s ]\n`;
+  dotString += '\n';
+
+  for (const [i, names] of treeLevel2Names.entries())
+    dotString += `  {rank=${i} ${names.join(' ')}}\n`;
+
+  dotString += '}';
+  return dotString;
 }
 
 module.exports = {
