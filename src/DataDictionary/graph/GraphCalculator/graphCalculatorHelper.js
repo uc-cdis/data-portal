@@ -30,7 +30,7 @@ export const getAllTypes = (nodes) => {
 
 /** @type {Promise} */
 let _layout;
-function getGraphvizLayout() {
+function fetchGraphvizLayout() {
   return fetch('/data/graphvizLayout.json', {
     credentials: 'same-origin',
   }).then((res) => {
@@ -160,7 +160,7 @@ function buildGraphEdges({ edges, graphNodes, layout }) {
 export function calculateGraphLayout(dictionary) {
   const { nodes, edges } = createNodesAndEdges({ dictionary }, true, []);
 
-  return getGraphvizLayout()
+  return fetchGraphvizLayout()
     .then((layout) => {
       const graphNodes = buildGraphNodes({ edges, layout, nodes });
       const graphEdges = buildGraphEdges({ edges, graphNodes, layout });
