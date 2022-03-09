@@ -49,6 +49,29 @@ export type GraphLayout = {
   graphBoundingBox: GraphBoundingBox;
 };
 
+export type GraphvizLayout = {
+  _draw_: { p: string; points?: [number, number] }[];
+  edges: {
+    _draw_: { points: [number, number] }[];
+    head: number;
+    tail: number;
+  }[];
+  objects: (
+    | {
+        _draw_: { points: [number, number] }[];
+        _gvid: number;
+        label: string;
+        name: string;
+        type: string;
+      }
+    | {
+        _gvid: number;
+        name: string;
+        rank: string;
+      }
+  )[];
+};
+
 export type SearchItemProperty = {
   description: string;
   name: string;
@@ -93,6 +116,7 @@ export type DdgraphState = {
   edges: GraphEdge[];
   graphBoundingBox: GraphBoundingBox;
   graphNodesSVGElements: { [x: string]: SVGSVGElement };
+  graphvizLayout: GraphvizLayout;
   highlightingMatchedNodeID: GraphNode['id'];
   highlightingMatchedNodeOpened: boolean;
   highlightingNode: GraphNode;
