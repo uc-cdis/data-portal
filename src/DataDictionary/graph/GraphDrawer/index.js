@@ -29,10 +29,10 @@ const ReduxGraphDrawer = (() => {
 
   const mapDispatchToProps = (dispatch) => ({
     /** @param {GraphNode['id']} nodeId */
-    onHoverNode: (nodeID) => dispatch(hoverNode(nodeID)),
+    onHoverNode: (nodeId) => dispatch(hoverNode(nodeId)),
     onCancelHoverNode: () => dispatch(hoverNode(null)),
     /** @param {GraphNode['id']} nodeId */
-    onClickNode: (nodeID) => dispatch(clickNode(nodeID)),
+    onClickNode: (nodeId) => dispatch(clickNode(nodeId)),
     /** @param {DdgraphState['graphNodesSVGElements']} graphNodesSVGElements */
     onGraphNodesSVGElementsUpdated: (graphNodesSVGElements) =>
       dispatch(setGraphNodesSVGElements(graphNodesSVGElements)),
