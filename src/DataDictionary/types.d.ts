@@ -50,7 +50,7 @@ export type GraphLayout = {
 };
 
 export type GraphvizLayout = {
-  _draw_: { p: string; points?: [number, number] }[];
+  _draw_: { op: string; points?: [number, number][] }[];
   edges: {
     _draw_: { points: [number, number] }[];
     head: number;
