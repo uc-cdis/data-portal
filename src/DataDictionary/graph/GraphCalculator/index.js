@@ -32,7 +32,7 @@ const ReduxGraphCalculator = (() => {
     /** @param {DdgraphState['legendItems']} legendItems */
     onGraphLegendCalculated: (legendItems) =>
       dispatch(setGraphLegend(legendItems)),
-    /** @param {DdgraphState['relatedNodeIDs']} legendItems */
+    /** @param {DdgraphState['relatedNodeIDs']} relatedNodeIDs */
     onHighlightRelatedNodesCalculated: (relatedNodeIDs) =>
       dispatch(setRelatedNodeIDs(relatedNodeIDs)),
     /** @param {DdgraphState['secondHighlightingNodeCandidateIDs']} secondHighlightingNodeCandidateIDs */
