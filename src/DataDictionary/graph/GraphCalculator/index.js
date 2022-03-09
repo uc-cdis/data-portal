@@ -17,6 +17,7 @@ const ReduxGraphCalculator = (() => {
   /** @param {{ ddgraph: DdgraphState; submission: SubmissionState }} state */
   const mapStateToProps = (state) => ({
     dictionary: state.submission.dictionary,
+    graphvizLayout: state.ddgraph.graphvizLayout,
     highlightingNode: state.ddgraph.highlightingNode,
     nodes: state.ddgraph.nodes,
     edges: state.ddgraph.edges,

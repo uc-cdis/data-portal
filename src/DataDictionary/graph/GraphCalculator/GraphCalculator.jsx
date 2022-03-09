@@ -17,11 +17,14 @@ class GraphCalculator extends Component {
 
   componentDidMount() {
     if (!this.props.layoutInitialized) {
-      calculateGraphLayout(this.props.dictionary).then((layoutResult) => {
-        this.props.onGraphLayoutCalculated(layoutResult);
-        const legendItems = getAllTypes(layoutResult.nodes);
-        this.props.onGraphLegendCalculated(legendItems);
-      });
+      const layoutResult = calculateGraphLayout(
+        this.props.dictionary,
+        this.props.graphvizLayout
+      );
+
+      this.props.onGraphLayoutCalculated(layoutResult);
+      const legendItems = getAllTypes(layoutResult.nodes);
+      this.props.onGraphLegendCalculated(legendItems);
     }
   }
 
@@ -158,6 +161,7 @@ class GraphCalculator extends Component {
 
 GraphCalculator.propTypes = {
   dictionary: PropTypes.object,
+  graphvizLayout: PropTypes.object,
   onGraphLayoutCalculated: PropTypes.func,
   onGraphLegendCalculated: PropTypes.func,
   nodes: PropTypes.arrayOf(PropTypes.object),
@@ -173,6 +177,7 @@ GraphCalculator.propTypes = {
 
 GraphCalculator.defaultProps = {
   dictionary: {},
+  graphvizLayout: {},
   onGraphLayoutCalculated: () => {},
   onGraphLegendCalculated: () => {},
   highlightingNode: null,
