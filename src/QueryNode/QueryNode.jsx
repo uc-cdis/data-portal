@@ -233,9 +233,9 @@ function QueryNode({
 }
 
 QueryNode.propTypes = {
-  submission: PropTypes.object,
-  queryNodes: PropTypes.object,
-  popups: PropTypes.object,
+  submission: PropTypes.any,
+  queryNodes: PropTypes.any,
+  popups: PropTypes.any,
   onSearchFormSubmit: PropTypes.func.isRequired,
   onUpdatePopup: PropTypes.func.isRequired,
   onClearDeleteSession: PropTypes.func.isRequired,

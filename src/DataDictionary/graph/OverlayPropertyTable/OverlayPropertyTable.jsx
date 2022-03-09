@@ -138,7 +138,7 @@ OverlayPropertyTable.propTypes = {
   isSearchMode: PropTypes.bool,
   isSearchResultNodeOpened: PropTypes.bool,
   matchedResult: SearchResultItemShape,
-  node: PropTypes.object,
+  node: PropTypes.any,
   onCloseMatchedProperties: PropTypes.func,
   onCloseOverlayPropertyTable: PropTypes.func,
   onOpenMatchedProperties: PropTypes.func,

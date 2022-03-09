@@ -71,9 +71,9 @@ function NodePopup({
 }
 
 NodePopup.propTypes = {
-  canvasBoundingRect: PropTypes.object,
-  graphNodesSVGElements: PropTypes.object,
-  highlightingNode: PropTypes.object,
+  canvasBoundingRect: PropTypes.objectOf(PropTypes.number),
+  graphNodesSVGElements: PropTypes.objectOf(PropTypes.any),
+  highlightingNode: PropTypes.any,
   onClosePopup: PropTypes.func,
   onOpenOverlayPropertyTable: PropTypes.func,
 };

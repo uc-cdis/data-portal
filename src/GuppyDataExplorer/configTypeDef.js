@@ -1,20 +1,29 @@
 import PropTypes from 'prop-types';
 
-export const GuppyConfigType = PropTypes.shape({
+export const GuppyConfigType = PropTypes.exact({
   dataType: PropTypes.string.isRequired,
+  nodeCountTitle: PropTypes.string.isRequired,
   fieldMapping: PropTypes.arrayOf(
-    PropTypes.shape({
+    PropTypes.exact({
       field: PropTypes.string,
       name: PropTypes.string,
       tooltip: PropTypes.string,
     })
   ),
-  manifestMapping: PropTypes.shape({
+  manifestMapping: PropTypes.exact({
     resourceIndexType: PropTypes.string,
     resourceIdField: PropTypes.string,
     referenceIdFieldInResourceIndex: PropTypes.string,
     referenceIdFieldInDataIndex: PropTypes.string,
   }),
+  getAccessButtonLink: PropTypes.string,
+  terraExportURL: PropTypes.string,
+  mainField: PropTypes.string,
+  mainFieldTitle: PropTypes.string,
+  mainFieldIsNumeric: PropTypes.bool,
+  aggFields: PropTypes.arrayOf(PropTypes.string),
+  downloadAccessor: PropTypes.string,
+  fileCountField: PropTypes.string,
 });
 
 export const FilterConfigType = PropTypes.shape({
@@ -37,7 +46,7 @@ export const TableConfigType = PropTypes.shape({
   ordered: PropTypes.bool,
 });
 
-export const ButtonConfigType = PropTypes.shape({
+export const ButtonConfigType = PropTypes.exact({
   buttons: PropTypes.arrayOf(
     PropTypes.exact({
       enabled: PropTypes.bool.isRequired,
@@ -50,7 +59,11 @@ export const ButtonConfigType = PropTypes.shape({
       tooltipText: PropTypes.string,
     })
   ),
-  dropdowns: PropTypes.objectOf(PropTypes.string),
+  dropdowns: PropTypes.objectOf(
+    PropTypes.exact({
+      title: PropTypes.string,
+    })
+  ),
   terraExportURL: PropTypes.string,
   terraTemplate: PropTypes.arrayOf(PropTypes.string),
   sevenBridgesExportURL: PropTypes.string,
