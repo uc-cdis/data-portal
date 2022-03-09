@@ -15,6 +15,7 @@ import { getCategoryColor } from '../../NodeCategories/helper';
 /** @typedef {import('../../types').GraphEdge} GraphEdge */
 /** @typedef {import('../../types').GraphNode} GraphNode */
 /** @typedef {import('../../types').GraphLayout} GraphLayout */
+/** @typedef {import('../../types').GraphvizLayout} GraphvizLayout */
 /** @typedef {import('../../../Submission/types').SubmissionState} SubmissionState */
 
 /**
@@ -27,19 +28,6 @@ export const getAllTypes = (nodes) => {
   const uniqueTypes = [...new Set(types)];
   return uniqueTypes;
 };
-
-/** @type {Promise} */
-let _layout;
-function fetchGraphvizLayout() {
-  return fetch('/data/graphvizLayout.json', {
-    credentials: 'same-origin',
-  }).then((res) => {
-    if (!res.ok) throw new Error(`failed to load graphviz layout file`);
-
-    if (_layout === undefined) _layout = res.json();
-    return _layout;
-  });
-}
 
 /** @returns {GraphNode[]} */
 function buildGraphNodes({ edges, layout, nodes }) {
@@ -156,24 +144,20 @@ function buildGraphEdges({ edges, graphNodes, layout }) {
   });
 }
 
-/** @param {Object} dictionary */
-export function calculateGraphLayout(dictionary) {
+/**
+ * @param {Object} dictionary
+ * @param {GraphvizLayout} layout
+ */
+export function calculateGraphLayout(dictionary, layout) {
   const { nodes, edges } = createNodesAndEdges({ dictionary }, true, []);
+  const graphNodes = buildGraphNodes({ edges, layout, nodes });
+  const graphEdges = buildGraphEdges({ edges, graphNodes, layout });
 
-  return fetchGraphvizLayout()
-    .then((layout) => {
-      const graphNodes = buildGraphNodes({ edges, layout, nodes });
-      const graphEdges = buildGraphEdges({ edges, graphNodes, layout });
-
-      return /** @type {GraphLayout} */ ({
-        nodes: graphNodes,
-        edges: graphEdges,
-        graphBoundingBox: layout._draw_.find(({ op }) => op === 'P').points,
-      });
-    })
-    .catch((e) => {
-      throw e;
-    });
+  return /** @type {GraphLayout} */ ({
+    nodes: graphNodes,
+    edges: graphEdges,
+    graphBoundingBox: layout._draw_.find(({ op }) => op === 'P').points,
+  });
 }
 /* eslint-enable no-underscore-dangle */
 

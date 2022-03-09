@@ -1,8 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  getAllTypes,
-  calculateGraphLayout,
   calculatePathRelatedToSecondHighlightingNode,
   calculateHighlightRelatedNodeIDs,
   calculateDataModelStructure,
@@ -16,13 +14,7 @@ class GraphCalculator extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.layoutInitialized) {
-      calculateGraphLayout(this.props.dictionary).then((layoutResult) => {
-        this.props.onGraphLayoutCalculated(layoutResult);
-        const legendItems = getAllTypes(layoutResult.nodes);
-        this.props.onGraphLegendCalculated(legendItems);
-      });
-    }
+    if (!this.props.layoutInitialized) this.props.initializeLayout();
   }
 
   // eslint-disable-next-line camelcase
@@ -157,9 +149,7 @@ class GraphCalculator extends Component {
 }
 
 GraphCalculator.propTypes = {
-  dictionary: PropTypes.object,
-  onGraphLayoutCalculated: PropTypes.func,
-  onGraphLegendCalculated: PropTypes.func,
+  initializeLayout: PropTypes.func,
   nodes: PropTypes.arrayOf(PropTypes.object),
   edges: PropTypes.arrayOf(PropTypes.object),
   highlightingNode: PropTypes.object,
@@ -172,9 +162,7 @@ GraphCalculator.propTypes = {
 };
 
 GraphCalculator.defaultProps = {
-  dictionary: {},
-  onGraphLayoutCalculated: () => {},
-  onGraphLegendCalculated: () => {},
+  initializeLayout: () => {},
   highlightingNode: null,
   nodes: [],
   edges: [],

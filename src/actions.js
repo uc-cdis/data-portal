@@ -21,6 +21,7 @@ import { asyncSetInterval } from './utils';
 /** @typedef {import('./types').UserAccessState} UserAccessState */
 /** @typedef {import('./types').PopupState} PopupState */
 /** @typedef {import('./types').ProjectState} ProjectState */
+/** @typedef {import('./DataDictionary/types').DdgraphState} DdgraphState */
 /** @typedef {import('./GraphQLEditor/types').GraphiqlState} GraphiqlState */
 /** @typedef {import('./Submission/types').SubmissionState} SubmissionState */
 
@@ -374,6 +375,19 @@ export const fetchDictionary =
       : fetch('/data/dictionary.json')
           .then((response) => response.json())
           .then((data) => dispatch({ type: 'RECEIVE_DICTIONARY', data }));
+
+export const fetchGraphvizLayout =
+  () =>
+  /**
+   * @param {import('redux').Dispatch} dispatch
+   * @param {() => { ddgraph: DdgraphState }} getState
+   */
+  (dispatch, getState) =>
+    getState().ddgraph.graphvizLayout
+      ? Promise.resolve()
+      : fetch('/data/graphvizLayout.json')
+          .then((response) => response.json())
+          .then((data) => dispatch({ type: 'RECEIVE_GRAPHVIZ_LAYOUT', data }));
 
 export const fetchVersionInfo = () => (/** @type {Dispatch} */ dispatch) =>
   fetchWithCreds({

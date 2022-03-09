@@ -16,6 +16,7 @@ import {
 } from './localconf';
 import {
   fetchDictionary,
+  fetchGraphvizLayout,
   fetchGuppySchema,
   fetchSchema,
   fetchVersionInfo,
@@ -137,7 +138,14 @@ function App() {
         <Route
           path='dd/*'
           element={
-            <ProtectedContent preload={() => dispatch(fetchDictionary())}>
+            <ProtectedContent
+              preload={() =>
+                Promise.all([
+                  dispatch(fetchDictionary()),
+                  dispatch(fetchGraphvizLayout()),
+                ])
+              }
+            >
               <DataDictionary />
             </ProtectedContent>
           }

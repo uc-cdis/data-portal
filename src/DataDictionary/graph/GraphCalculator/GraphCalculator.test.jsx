@@ -1,22 +1,16 @@
 import { render, waitFor } from '@testing-library/react';
 import GraphCalculator from './GraphCalculator';
-import { buildTestData, testGraph1 } from '../../../GraphUtils/testData';
+import { testGraph1 } from '../../../GraphUtils/testData';
 
-const data = buildTestData();
-
-test('calculates layout and legend on mount', () => {
-  const onGraphLayoutCalculated = jest.fn();
-  const onGraphLegendCalculated = jest.fn();
+test('initializes layout on mount', () => {
+  const initializeGraphLayout = jest.fn();
   const props = {
-    dictionary: data.dictionary,
-    onGraphLayoutCalculated,
-    onGraphLegendCalculated,
+    initializeGraphLayout,
   };
   render(<GraphCalculator {...props} />);
 
   waitFor(() => {
-    expect(onGraphLayoutCalculated).toHaveBeenCalledTimes(1);
-    expect(onGraphLegendCalculated).toHaveBeenCalledTimes(1);
+    expect(initializeGraphLayout).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -26,7 +20,6 @@ test('updates related highlighted nodes and clickable nodes when highlighted nod
   const onPathRelatedToSecondHighlightingNodeCalculated = jest.fn();
   const onSecondHighlightingNodeCandidateIDsCalculated = jest.fn();
   const props = {
-    dictionary: data.dictionary,
     edges: testGraph1.graphEdges,
     nodes: testGraph1.graphNodes,
     onDataModelStructureCalculated,
