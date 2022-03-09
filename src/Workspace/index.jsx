@@ -8,7 +8,7 @@ import {
 import { datadogRum } from '@datadog/browser-rum';
 
 import {
-  DownOutlined, UserOutlined, QuestionCircleOutlined, LoadingOutlined,
+  DownOutlined, UserOutlined, QuestionCircleOutlined, LoadingOutlined, ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -65,6 +65,7 @@ class Workspace extends React.Component {
       'Terminating',
       'Running',
       'Stopped',
+      'Errored',
     ];
   }
 
@@ -385,6 +386,10 @@ class Workspace extends React.Component {
               clearInterval(this.state.interval);
             }
           });
+        } else if (data.status && data.status.toLowerCase().includes('Exception')) {
+          this.setState({
+            workspaceStatus: 'Errored',
+          });
         }
       }, 10000);
       this.setState({ interval });
@@ -500,6 +505,7 @@ class Workspace extends React.Component {
       // is for backwards compatibility with Jenkins integration tests that select by classname.
       const showExternalLoginsHintBanner = this.state.externalLoginOptions.length > 0
         && this.state.externalLoginOptions.some((option) => !option.refresh_token_expiration);
+
       return (
         <div
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
@@ -532,22 +538,29 @@ class Workspace extends React.Component {
                       >
                         {(this.state.workspaceStatus !== 'Not Found')
                           ? (
-                            <div className='workspace__pay-model-selector--disabled'>
+                            <div className='workspace__pay-model-selector'>
                               <Dropdown overlay={menu} disabled>
                                 <Btn block size='large'>
                                   {this.state.payModel.current_pay_model.workspace_type} <LoadingOutlined />
                                 </Btn>
                               </Dropdown>
                               <Tooltip title='Switching paymodels is only allowed when you have no running workspaces.'>
-                                <QuestionCircleOutlined className='workspace__pay-model-helper' />
+                                <QuestionCircleOutlined className='workspace__pay-model-selector-icon' />
                               </Tooltip>
                             </div>
                           ) : (
-                            <Dropdown overlay={menu}>
-                              <Btn block size='large'>
-                                {this.state.payModel.current_pay_model.workspace_type} <DownOutlined />
-                              </Btn>
-                            </Dropdown>
+                            <div className='workspace__pay-model-selector'>
+                              <Dropdown overlay={menu}>
+                                <Btn block size='large'>
+                                  {this.state.payModel.current_pay_model.workspace_type} <DownOutlined />
+                                </Btn>
+                              </Dropdown>
+                              {(this.state.workspaceStatus === 'Errored') ? (
+                                <Tooltip title='There is an error with this pay model, please contact support for help.'>
+                                  <ExclamationCircleOutlined className='workspace__pay-model-selector-icon__error' />
+                                </Tooltip>
+                              ) : null}
+                            </div>
                           )}
                       </Card>
                     </Col>
