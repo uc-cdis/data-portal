@@ -1,25 +1,29 @@
 const { params } = require('./parameters');
-const { getAppConfigParamByKey, getGraphQL } = require('./dictionaryHelper');
+const {
+  getAppConfigParamByKey,
+  getCountsAndDetailsToQuery,
+} = require('./dictionaryHelper');
 
 const componentTexts = getAppConfigParamByKey(params, 'components');
 
 function getChartText() {
-  const graphQL = getGraphQL(getAppConfigParamByKey(params, 'graphql'));
-  const boardPluralNames = graphQL.boardCounts.map((item) => item.plural);
+  const { boardCounts, chartCounts, projectDetails } =
+    getCountsAndDetailsToQuery(params);
+  const boardPluralNames = boardCounts.map((item) => item.plural);
   if (boardPluralNames.length < 4) {
     boardPluralNames.push('Files');
   }
-  const detailPluralNames = graphQL.projectDetails.map((item) => item.plural);
+  const detailPluralNames = projectDetails.map((item) => item.plural);
   if (detailPluralNames.length < 4) {
     detailPluralNames.push('Files');
   }
-  const indexChartNames = graphQL.boardCounts.map((item) => item.plural);
+  const indexChartNames = boardCounts.map((item) => item.plural);
   if (indexChartNames.length < 4) {
     indexChartNames.push('Files');
   }
   return {
     boardPluralNames,
-    chartNames: graphQL.chartCounts.map((item) => item.name),
+    chartNames: chartCounts.map((item) => item.name),
     indexChartNames,
     detailPluralNames,
   };

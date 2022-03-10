@@ -55,34 +55,35 @@ function getAppConfigParamByKey(params, key) {
   return params[app][key];
 }
 
-function getGraphQL(graphQLParams) {
-  const { boardCounts, chartCounts, projectDetails } = graphQLParams;
+function getCountsAndDetailsToQuery(params) {
+  const graphqlParam = getAppConfigParamByKey(params, 'graphql');
+  const { boardCounts, chartCounts, projectDetails } = graphqlParam;
+
   return {
     boardCounts,
     chartCounts,
     projectDetails:
       typeof projectDetails === 'string'
-        ? graphQLParams[projectDetails]
-        : projectDetails,
+        ? graphqlParam[projectDetails]
+        : graphqlParam.projectDetails,
   };
 }
 
 const { params } = require('./parameters');
 
 function paramSetup() {
-  const countsAndDetails = getGraphQL(
-    getAppConfigParamByKey(params, 'graphql')
-  );
+  const { boardCounts, chartCounts, projectDetails } =
+    getCountsAndDetailsToQuery(params);
   return {
-    boardCounts: countsAndDetails.boardCounts.map((item) => item.graphql),
-    chartCounts: countsAndDetails.chartCounts.map((item) => item.graphql),
-    projectDetails: countsAndDetails.projectDetails.map((item) => item.graphql),
+    boardCounts: boardCounts.map((item) => item.graphql),
+    chartCounts: chartCounts.map((item) => item.graphql),
+    projectDetails: projectDetails.map((item) => item.graphql),
   };
 }
 
 module.exports = {
   createGqlSetupFromDictionary,
-  getGraphQL,
+  getCountsAndDetailsToQuery,
   getAppConfigParamByKey,
   paramSetup,
 };
