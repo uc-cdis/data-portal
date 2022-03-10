@@ -43,7 +43,7 @@ function createGqlSetupFromDictionary(dict) {
   };
 }
 
-function paramByApp(params, key) {
+function getAppConfigParamByKey(params, key) {
   let app = 'default';
   if (
     process.env.APP &&
@@ -70,7 +70,9 @@ function getGraphQL(graphQLParams) {
 const { params } = require('./parameters');
 
 function paramSetup() {
-  const countsAndDetails = getGraphQL(paramByApp(params, 'graphql'));
+  const countsAndDetails = getGraphQL(
+    getAppConfigParamByKey(params, 'graphql')
+  );
   return {
     boardCounts: countsAndDetails.boardCounts.map((item) => item.graphql),
     chartCounts: countsAndDetails.chartCounts.map((item) => item.graphql),
@@ -81,6 +83,6 @@ function paramSetup() {
 module.exports = {
   createGqlSetupFromDictionary,
   getGraphQL,
-  paramByApp,
+  getAppConfigParamByKey,
   paramSetup,
 };

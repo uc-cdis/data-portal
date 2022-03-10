@@ -1,10 +1,10 @@
 const { params } = require('./parameters');
-const { paramByApp, getGraphQL } = require('./dictionaryHelper');
+const { getAppConfigParamByKey, getGraphQL } = require('./dictionaryHelper');
 
-const componentTexts = paramByApp(params, 'components');
+const componentTexts = getAppConfigParamByKey(params, 'components');
 
 function getChartText() {
-  const graphQL = getGraphQL(paramByApp(params, 'graphql'));
+  const graphQL = getGraphQL(getAppConfigParamByKey(params, 'graphql'));
   const boardPluralNames = graphQL.boardCounts.map((item) => item.plural);
   if (boardPluralNames.length < 4) {
     boardPluralNames.push('Files');
@@ -30,8 +30,8 @@ function paramByDefault(prs, key) {
 }
 
 const defaultTexts = paramByDefault(params, 'components');
-const defaultGA = paramByApp(params, 'gaTrackingId');
-const defaultRequiredCerts = paramByApp(params, 'requiredCerts');
+const defaultGA = getAppConfigParamByKey(params, 'gaTrackingId');
+const defaultRequiredCerts = getAppConfigParamByKey(params, 'requiredCerts');
 
 function fillDefaultValues(values, defaultValues) {
   const res = values;
