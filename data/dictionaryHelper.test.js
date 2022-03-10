@@ -21,7 +21,7 @@ describe('the dictionaryHelper', () => {
   });
 
   it('identifies experiment-type dictionaries', () => {
-    const info = helper.dictToGQLSetup({
+    const info = helper.createGqlSetupFromDictionary({
       experiment: {},
       case: {},
       aliquot: {},
@@ -34,7 +34,7 @@ describe('the dictionaryHelper', () => {
   });
 
   it('identifies study-type dictionaries', () => {
-    const info = helper.dictToGQLSetup({
+    const info = helper.createGqlSetupFromDictionary({
       study: {
         category: 'administrative',
         links: [{ target_type: 'project', required: true }],
@@ -55,7 +55,7 @@ describe('the dictionaryHelper', () => {
       file3: { category: 'data_file' },
     };
 
-    const info = helper.dictToGQLSetup(dict);
+    const info = helper.createGqlSetupFromDictionary(dict);
     expect(info.experimentType).toBe('experiment');
     expect(info.fileTypeList.length).toBe(3);
     expect(info.fileTypeList.sort()).toEqual(['file1', 'file2', 'file3']);
@@ -64,7 +64,7 @@ describe('the dictionaryHelper', () => {
   it('finds under-project admin types', () => {
     const dict = utils.loadJsonFile(`${__dirname}/dictionary.json`);
     expect(dict.status).toBe('ok');
-    const setup = helper.dictToGQLSetup(dict.data);
+    const setup = helper.createGqlSetupFromDictionary(dict.data);
     expect(setup.adminTypeList.length > 0).toBe(true);
   });
 });

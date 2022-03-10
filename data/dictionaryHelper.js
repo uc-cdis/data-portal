@@ -1,9 +1,10 @@
 /**
- * Extract gqlSetup object from a dictionary
- * @param {Object} dict from dictionary.json or whatever: https://domain/api/v0/submission/_dictionary/_all
- * @return {experimentType, fileTypeList} gqlSetup object used by data/gqlSetup.js
+ * Extract gqlSetup object from a dictionary data
+ * sourced from https://domain/api/v0/submission/_dictionary/_all
+ * @param {Object} dict
+ * @return gqlSetup object used by data/gqlSetup.js
  */
-function dictToGQLSetup(dict) {
+function createGqlSetupFromDictionary(dict) {
   const fileTypeList = Object.keys(dict).filter(
     (key) => typeof dict[key] === 'object' && dict[key].category === 'data_file'
   );
@@ -78,7 +79,7 @@ function paramSetup() {
 }
 
 module.exports = {
-  dictToGQLSetup,
+  createGqlSetupFromDictionary,
   getGraphQL,
   paramByApp,
   paramSetup,

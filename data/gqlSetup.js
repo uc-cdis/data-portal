@@ -23,7 +23,7 @@ if (dict.status !== 'ok') {
   process.exit(3);
 }
 
-let gqlSetup = helper.dictToGQLSetup(dict.data);
+let gqlSetup = helper.createGqlSetupFromDictionary(dict.data);
 
 if (!gqlSetup) {
   console.error('ERR: unable to interpret data/dictionary.json - baling out');
