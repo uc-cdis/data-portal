@@ -9,11 +9,10 @@ const {
   getGqlSetupFromConfigParams,
   getGqlSetupFromDictionary,
   loadConfigParams,
+  loadDictionary,
 } = require('./dictionaryHelper.js');
 
-const dataFolder = __dirname;
-const dictPath = `${dataFolder}/dictionary.json`;
-
+const dictPath = `${__dirname}/dictionary.json`;
 if (!fs.existsSync(dictPath)) {
   console.error(
     `ERR: ${dictPath} does not exists - npm run schema - bailing out`
@@ -21,10 +20,9 @@ if (!fs.existsSync(dictPath)) {
   process.exit(2);
 }
 
-const dictString = fs.readFileSync(dictPath);
 let dictionary;
 try {
-  dictionary = JSON.parse(dictString);
+  dictionary = loadDictionary();
 } catch (err) {
   console.error(`Error loading dictionary at ${dictPath}`, err);
   process.exit(3);

@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
-const { readFileSync, writeFileSync } = require('fs');
+const { writeFileSync } = require('fs');
 const { graphviz } = require('@hpcc-js/wasm');
+const { loadDictionary } = require('./dictionaryHelper');
 const { createDotStringFromDictionary } = require('./graphvizLayoutHelper');
 
-const dictString = readFileSync(`${__dirname}/dictionary.json`, 'utf8');
-const dictionary = JSON.parse(dictString);
-
+const dictionary = loadDictionary();
 const dotString = createDotStringFromDictionary(dictionary);
 console.log('Creating graphviz layout for the following DOT string:');
 console.log(dotString);
