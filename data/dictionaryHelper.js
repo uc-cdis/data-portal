@@ -1,24 +1,5 @@
 const fs = require('fs');
 
-/**
- * Little helper script just accumulates the .json
- * files in a data/config directory into an object keyed
- * on the file basename with .json stripped.
- */
-function collectConfigParams() {
-  const configDirPath = `${__dirname}/config`;
-  const filenames = fs.readdirSync(configDirPath);
-  const params = {};
-  for (const filename of filenames)
-    if (filename.endsWith('.json')) {
-      const key = filename.substring(0, filename.length - 5); // strip .json
-      const valueStr = fs.readFileSync(`${configDirPath}/${filename}`, 'utf8');
-      params[key] = JSON.parse(valueStr);
-    }
-
-  return params;
-}
-
 function getAppConfigParamByKey(params, key) {
   let app = 'default';
   if (
@@ -70,10 +51,29 @@ function getGqlSetupFromDictionary(dict) {
   return { fileTypeList };
 }
 
+/**
+ * Little helper script just accumulates the .json
+ * files in a data/config directory into an object keyed
+ * on the file basename with .json stripped.
+ */
+function loadConfigParams() {
+  const configDirPath = `${__dirname}/config`;
+  const filenames = fs.readdirSync(configDirPath);
+  const params = {};
+  for (const filename of filenames)
+    if (filename.endsWith('.json')) {
+      const key = filename.substring(0, filename.length - 5); // strip .json
+      const valueStr = fs.readFileSync(`${configDirPath}/${filename}`, 'utf8');
+      params[key] = JSON.parse(valueStr);
+    }
+
+  return params;
+}
+
 module.exports = {
-  collectConfigParams,
   getAppConfigParamByKey,
   getCountsAndDetailsToQuery,
   getGqlSetupFromConfigParams,
   getGqlSetupFromDictionary,
+  loadConfigParams,
 };

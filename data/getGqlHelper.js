@@ -6,9 +6,9 @@
 const fs = require('fs');
 const path = require('path');
 const {
-  collectConfigParams,
   getGqlSetupFromConfigParams,
   getGqlSetupFromDictionary,
+  loadConfigParams,
 } = require('./dictionaryHelper.js');
 
 const dataFolder = __dirname;
@@ -36,7 +36,7 @@ if (!gqlSetupFromDict) {
   process.exit(4);
 }
 
-const params = collectConfigParams();
+const params = loadConfigParams();
 const gqlSetupFromParams = getGqlSetupFromConfigParams(params);
 if (!gqlSetupFromParams) {
   console.error('ERR: unable to interpret data/parameters.js - baling out');
