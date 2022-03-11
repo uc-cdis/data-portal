@@ -135,32 +135,24 @@ async function fetchJson(url) {
   });
 }
 
-const actionList = [];
-
-actionList.push(
-  // Save JSON of full schema introspection for Babel Relay Plugin to use
+Promise.all([
   fetchJson(schemaUrl).then((schema) => {
+    // Save JSON of full schema introspection for Babel Relay Plugin to use
     fs.writeFileSync(schemaPath, JSON.stringify(schema, null, 2));
 
     // Save user readable type system shorthand of schema
     const graphQLSchema = buildClientSchema(schema.data);
     fs.writeFileSync(`${__dirname}/schema.graphql`, printSchema(graphQLSchema));
-  })
-);
-
-actionList.push(
+  }),
   fetchJson(dictUrl).then((dict) => {
     fs.writeFileSync(dictPath, JSON.stringify(dict, null, 2));
-  })
-);
-
-Promise.all(actionList).then(
-  () => {
+  }),
+])
+  .then(() => {
     console.log('All done!');
     process.exit(0);
-  },
-  (err) => {
+  })
+  .catch((err) => {
     console.error('Error: ', err);
     process.exit(2);
-  }
-);
+  });
