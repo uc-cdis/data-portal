@@ -1,85 +1,97 @@
+const fs = require('fs');
+
+/** @typedef {{ [name: string]: Object }} ConfigParams */
+/** @typedef {Object} Dictionary */
+/** @typedef {{ [x: string]: string }} CountInfo */
+
 /**
- * Extract gqlSetup object from a dictionary
- * @param {Object} dict from dictionary.json or whatever: https://domain/api/v0/submission/_dictionary/_all
- * @return {experimentType, fileTypeList} gqlSetup object used by data/gqlSetup.js
+ * @param {ConfigParams} params
+ * @param {string} key
  */
-function dictToGQLSetup(dict) {
-  const fileTypeList = Object.keys(dict).filter(
-    (key) => typeof dict[key] === 'object' && dict[key].category === 'data_file'
-  );
-  // admin types that link to the 'project' level and are not project or program
-  const adminTypeList = Object.keys(dict)
-    .filter((key) => {
-      const entry = dict[key];
-      return (
-        key !== 'program' &&
-        key !== 'project' &&
-        typeof entry === 'object' &&
-        entry.category === 'administrative' &&
-        Array.isArray(entry.links) &&
-        entry.links.length > 0
-      );
-    })
-    .map((key) => {
-      const entry = dict[key];
-      return {
-        typeName: key,
-        entry,
-        projectLink: entry.links.find(
-          (link) => link.target_type === 'project' && link.required
-        ),
-      };
-    });
-
-  const experimentType = ['experiment', 'study', 'trio'].find((name) =>
-    Object.prototype.hasOwnProperty.call(dict, name)
-  );
-
-  return {
-    fileTypeList,
-    adminTypeList,
-    experimentType,
-  };
-}
-
-function paramByApp(params, key) {
-  let app = 'default';
-  if (
+function getAppConfigParamByKey(params, key) {
+  const app =
     process.env.APP &&
     Object.keys(params).includes(process.env.APP) &&
     Object.keys(params[process.env.APP]).includes(key)
-  ) {
-    app = process.env.APP;
-  }
+      ? process.env.APP
+      : 'default';
+
   return params[app][key];
 }
 
-function getGraphQL(graphQLParams) {
-  const { boardCounts, chartCounts, projectDetails } = graphQLParams;
-  return {
+/** @param {ConfigParams} */
+function getCountsAndDetailsToQuery(params) {
+  const graphqlParam = getAppConfigParamByKey(params, 'graphql');
+  const { boardCounts, chartCounts, projectDetails } = graphqlParam;
+
+  return /** @type {{ [x: string]: CountInfo[] }} */ ({
     boardCounts,
     chartCounts,
     projectDetails:
       typeof projectDetails === 'string'
-        ? graphQLParams[projectDetails]
-        : projectDetails,
+        ? graphqlParam[projectDetails]
+        : graphqlParam.projectDetails,
+  });
+}
+
+/** @param {ConfigParams} */
+function getGqlSetupFromConfigParams(params) {
+  const { boardCounts, chartCounts, projectDetails } =
+    getCountsAndDetailsToQuery(params);
+  return {
+    boardCounts: boardCounts.map((item) => item.graphql),
+    chartCounts: chartCounts.map((item) => item.graphql),
+    projectDetails: projectDetails.map((item) => item.graphql),
   };
 }
 
-const { params } = require('./parameters');
+/**
+ * Extract gqlSetup object from a dictionary data
+ * sourced from https://domain/api/v0/submission/_dictionary/_all
+ * @param {Dictionary} dictionary
+ * @return gqlSetup object used by data/getGqlHelper.js
+ */
+function getGqlSetupFromDictionary(dictionary) {
+  const fileTypeList = /** @type {string[]} */ ([]);
+  for (const [key, entry] of Object.entries(dictionary))
+    if (typeof entry === 'object' && entry.category === 'data_file')
+      fileTypeList.push(key);
 
-function paramSetup() {
-  const countsAndDetails = getGraphQL(paramByApp(params, 'graphql'));
-  return {
-    boardCounts: countsAndDetails.boardCounts.map((item) => item.graphql),
-    chartCounts: countsAndDetails.chartCounts.map((item) => item.graphql),
-    projectDetails: countsAndDetails.projectDetails.map((item) => item.graphql),
-  };
+  return { fileTypeList };
+}
+
+/**
+ * Little helper script just accumulates the .json
+ * files in a data/config directory into an object keyed
+ * on the file basename with .json stripped.
+ * @returns {ConfigParams}
+ */
+function loadConfigParams() {
+  const configDirPath = `${__dirname}/config`;
+  const filenames = fs.readdirSync(configDirPath);
+  const params = {};
+  for (const filename of filenames)
+    if (filename.endsWith('.json')) {
+      const key = filename.substring(0, filename.length - 5); // strip .json
+      const valueStr = fs.readFileSync(`${configDirPath}/${filename}`, 'utf8');
+      params[key] = JSON.parse(valueStr);
+    }
+
+  return params;
+}
+
+/** @returns {Dictionary} */
+function loadDictionary() {
+  const dictionaryPath = `${__dirname}/dictionary.json`;
+  const dictionaryString = fs.readFileSync(dictionaryPath, 'utf8');
+  return JSON.parse(dictionaryString);
 }
 
 module.exports = {
-  dictToGQLSetup,
-  getGraphQL,
-  paramByApp,
-  paramSetup,
+  getAppConfigParamByKey,
+  getCountsAndDetailsToQuery,
+  getGqlSetupFromConfigParams,
+  getGqlSetupFromDictionary,
+  loadConfigParams,
+  loadDictionary,
 };

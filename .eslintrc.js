@@ -46,8 +46,8 @@ module.exports = {
         'src/GraphUtils/utils.test.js',
         'src/actions.js',
         'data/getSchema.js',
-        'data/getTexts.js',
-        'data/gqlSetup.js',
+        'data/getConfigParams.js',
+        'data/getGqlHelepr.js',
         'src/SessionMonitor/index.js',
         'src/Index/utils.js',
         'src/Workspace/index.jsx',
@@ -93,7 +93,7 @@ module.exports = {
       },
     },
     {
-      files: ['data/getTexts.js'],
+      files: ['data/getConfigParams.js'],
       rules: {
         'no-useless-escape': 'off',
         'no-template-curly-in-string': 'off',

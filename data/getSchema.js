@@ -1,6 +1,6 @@
 /**
  * Little helper to fetch schema.json (used by the Relayjs compiler) from indexd,
- * and dataDictionary.json from the gdc api (used by data/gqlSetup.js to customize gql queries
+ * and dataDictionary.json from the gdc api (used by data/getGqlHelper.js to customize gql queries
  * based on the active dictionary before Relay compile).
  *
  * Ex: https://dev.bionimbus.org/api/v0/submission/getschema
@@ -70,97 +70,75 @@ const retryBackoff = [2000, 4000, 8000, 16000];
 /**
  * Wrapper around fetch - retries call on 429 status
  * up to 4 times with exponential backoff
- *
- * @param {string} urlStr
- * @param {*} opts
+ * @param {string} url
  */
-async function fetchJsonRetry(urlStr, opts) {
+function fetchJsonRetry(url) {
   let retryCount = 0;
-  let doRequest = null; // for eslint happiness
 
-  async function doRetry(reason) {
-    if (retryCount > retryBackoff.length) {
-      return Promise.reject(
-        new Error(
-          `failed fetch ${reason}, max retries ${retryBackoff.length} exceeded for ${urlStr}`
+  function retry(reason) {
+    return retryCount > retryBackoff.length
+      ? Promise.reject(
+          new Error(
+            `failed fetch ${reason}, max retries ${retryBackoff.length} exceeded for ${url}`
+          )
         )
-      );
-    }
-
-    return new Promise((resolve) => {
-      // sleep and try again ...
-      const retryIndex = Math.min(retryCount, retryBackoff.length - 1);
-      const sleepMs =
-        retryBackoff[retryIndex] + Math.floor(Math.random() * 2000);
-      retryCount += 1;
-      console.log(
-        `failed fetch - ${reason}, sleeping ${sleepMs} then retry ${urlStr}`
-      );
-      setTimeout(() => {
-        resolve('ok');
-        console.log(`Retrying ${urlStr} after sleep - ${retryCount}`);
-      }, sleepMs);
-    }).then(doRequest);
+      : new Promise((resolve) => {
+          // sleep and try again ...
+          const retryIndex = Math.min(retryCount, retryBackoff.length - 1);
+          const sleepMs =
+            retryBackoff[retryIndex] + Math.floor(Math.random() * 2000);
+          retryCount += 1;
+          console.log(
+            `failed fetch - ${reason}, sleeping ${sleepMs} then retry ${url}`
+          );
+          setTimeout(() => {
+            resolve('ok');
+            console.log(`Retrying ${url} after sleep - ${retryCount}`);
+          }, sleepMs);
+        }).then(fetchJson); // eslint-disable-line no-use-before-define
   }
 
-  doRequest = async function () {
-    if (retryCount > 0) {
-      console.log(`Re-fetching ${urlStr} - retry no ${retryCount}`);
-    }
-    return fetch(urlStr, opts).then(
-      (res) => {
-        if (res.status === 200) {
-          return res
-            .json()
-            .catch((err) => doRetry(`failed json parse - ${err}`));
-        }
-        return doRetry(`non-200 from server: ${res.status}`);
+  function fetchJson() {
+    if (retryCount > 0)
+      console.log(`Re-fetching ${url} - retry no ${retryCount}`);
+
+    return fetch(url, {
+      agent: url.match(/^https:/) ? httpsAgent : httpAgent,
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-      (err) => doRetry(err)
-    );
-  };
+    })
+      .then((res) =>
+        res.status === 200
+          ? res.json().catch((err) => retry(`failed json parse - ${err}`))
+          : retry(`non-200 from server: ${res.status}`)
+      )
+      .catch(retry);
+  }
 
-  return doRequest();
+  return fetchJson();
 }
 
-async function fetchJson(url) {
-  console.log(`Fetching ${url}`);
-  return fetchJsonRetry(url, {
-    agent: url.match(/^https:/) ? httpsAgent : httpAgent,
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
-}
-
-const actionList = [];
-
-actionList.push(
-  // Save JSON of full schema introspection for Babel Relay Plugin to use
-  fetchJson(schemaUrl).then((schema) => {
+Promise.all([
+  fetchJsonRetry(schemaUrl).then((schema) => {
+    // Save JSON of full schema introspection for Babel Relay Plugin to use
     fs.writeFileSync(schemaPath, JSON.stringify(schema, null, 2));
 
     // Save user readable type system shorthand of schema
     const graphQLSchema = buildClientSchema(schema.data);
     fs.writeFileSync(`${__dirname}/schema.graphql`, printSchema(graphQLSchema));
-  })
-);
-
-actionList.push(
-  fetchJson(dictUrl).then((dict) => {
+  }),
+  fetchJsonRetry(dictUrl).then((dict) => {
     fs.writeFileSync(dictPath, JSON.stringify(dict, null, 2));
-  })
-);
-
-Promise.all(actionList).then(
-  () => {
+  }),
+])
+  .then(() => {
     console.log('All done!');
     process.exit(0);
-  },
-  (err) => {
+  })
+  .catch((err) => {
     console.error('Error: ', err);
     process.exit(2);
-  }
-);
+  });

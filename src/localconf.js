@@ -196,5 +196,5 @@ function buildConfig(opts) {
 }
 
 const defaultConf = buildConfig();
-// Commonjs style export, so can load from nodejs into data/gqlSetup
+// Commonjs style export, so can load from nodejs into data/getGqlHelper
 module.exports = defaultConf;

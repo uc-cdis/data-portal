@@ -116,9 +116,9 @@
   },
   "scripts": {
     "test": "jest",
-    "relay": "node ./data/gqlSetup.js > src/gqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' --schema ./data/schema.json --extensions js jsx",
+    "relay": "node ./data/getGqlHelper.js && relay-compiler --verbose --src src --exclude '**/generated/**' --schema ./data/schema.json --extensions js jsx",
     "schema": "node ./data/getSchema",
-    "params": "node ./data/getTexts > src/params.js",
+    "params": "node ./data/getConfigParams",
     "eslint": "./node_modules/.bin/eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --fix src data",
     "elint": "./node_modules/.bin/eslint --ext js --ext jsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'",
     "storybook": "STORYBOOK_PROJECT_ID=search start-storybook -p 9001 -c .storybook",
