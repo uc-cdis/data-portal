@@ -69,9 +69,7 @@ function getCountsAndDetailsToQuery(params) {
   };
 }
 
-const { params } = require('./parameters');
-
-function createGqlSetupFromConfigParams() {
+function createGqlSetupFromConfigParams(params) {
   const { boardCounts, chartCounts, projectDetails } =
     getCountsAndDetailsToQuery(params);
   return {
