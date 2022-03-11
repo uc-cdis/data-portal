@@ -47,14 +47,6 @@ function fillDefaultValues(values, defaultValues) {
   return res;
 }
 
-function insertSpace(times) {
-  let first = '';
-  for (let i = 0; i < times; i += 1) {
-    first += ' ';
-  }
-  return first;
-}
-
 function containsVariables(value, variables) {
   for (let i = 0; i < variables.length; i += 1) {
     if (value.includes(variables[i])) {
@@ -68,7 +60,7 @@ function doWrapping(value, leftWrapper, rightWrapper, indent, spaces) {
   const ending = spaces === 0 ? '' : '\n';
   const lWrapper = spaces === 0 ? leftWrapper : `${leftWrapper}\n`;
   const rWrapper = spaces === 0 ? rightWrapper : `${rightWrapper}`;
-  return `${lWrapper}${value}${ending}${insertSpace(indent)}${rWrapper}`;
+  return `${lWrapper}${value}${ending}${' '.repeat(indent)}${rWrapper}`;
 }
 
 function doStringify(value, variables, indent = 0, spaces = 0) {
@@ -77,7 +69,7 @@ function doStringify(value, variables, indent = 0, spaces = 0) {
     const objs = value
       .map(
         (item) =>
-          `${insertSpace(indent + spaces)}${doStringify(
+          `${' '.repeat(indent + spaces)}${doStringify(
             item,
             variables,
             indent + spaces,
@@ -104,7 +96,7 @@ function doStringify(value, variables, indent = 0, spaces = 0) {
   const props = Object.keys(value)
     .map(
       (key) =>
-        `${insertSpace(indent + spaces)}${key}:${doStringify(
+        `${' '.repeat(indent + spaces)}${key}:${doStringify(
           value[key],
           variables,
           indent + spaces,
