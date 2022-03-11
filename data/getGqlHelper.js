@@ -5,8 +5,11 @@
 
 const fs = require('fs');
 const path = require('path');
-const helper = require('./dictionaryHelper.js');
-const { params } = require('./parameters');
+const {
+  collectConfigParams,
+  getGqlSetupFromConfigParams,
+  getGqlSetupFromDictionary,
+} = require('./dictionaryHelper.js');
 
 const dataFolder = __dirname;
 const dictPath = `${dataFolder}/dictionary.json`;
@@ -27,13 +30,14 @@ try {
   process.exit(3);
 }
 
-const gqlSetupFromDict = helper.getGqlSetupFromDictionary(dictionary);
+const gqlSetupFromDict = getGqlSetupFromDictionary(dictionary);
 if (!gqlSetupFromDict) {
   console.error('ERR: unable to interpret data/dictionary.json - baling out');
   process.exit(4);
 }
 
-const gqlSetupFromParams = helper.getGqlSetupFromConfigParams(params);
+const params = collectConfigParams();
+const gqlSetupFromParams = getGqlSetupFromConfigParams(params);
 if (!gqlSetupFromParams) {
   console.error('ERR: unable to interpret data/parameters.js - baling out');
   process.exit(4);

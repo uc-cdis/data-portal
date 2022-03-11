@@ -1,11 +1,12 @@
 const fs = require('fs');
 const path = require('path');
-const { params } = require('./parameters');
 const {
+  collectConfigParams,
   getAppConfigParamByKey,
   getCountsAndDetailsToQuery,
 } = require('./dictionaryHelper');
 
+const params = collectConfigParams();
 const componentTexts = getAppConfigParamByKey(params, 'components');
 
 function getChartText() {
