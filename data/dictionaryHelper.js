@@ -19,21 +19,6 @@ function collectConfigParams() {
   return params;
 }
 
-/**
- * Extract gqlSetup object from a dictionary data
- * sourced from https://domain/api/v0/submission/_dictionary/_all
- * @param {Object} dict
- * @return gqlSetup object used by data/getGqlHelper.js
- */
-function getGqlSetupFromDictionary(dict) {
-  const fileTypeList = /** @type {string[]} */ ([]);
-  for (const [key, entry] of Object.entries(dict))
-    if (typeof entry === 'object' && entry.category === 'data_file')
-      fileTypeList.push(key);
-
-  return { fileTypeList };
-}
-
 function getAppConfigParamByKey(params, key) {
   let app = 'default';
   if (
@@ -70,10 +55,25 @@ function getGqlSetupFromConfigParams(params) {
   };
 }
 
+/**
+ * Extract gqlSetup object from a dictionary data
+ * sourced from https://domain/api/v0/submission/_dictionary/_all
+ * @param {Object} dict
+ * @return gqlSetup object used by data/getGqlHelper.js
+ */
+function getGqlSetupFromDictionary(dict) {
+  const fileTypeList = /** @type {string[]} */ ([]);
+  for (const [key, entry] of Object.entries(dict))
+    if (typeof entry === 'object' && entry.category === 'data_file')
+      fileTypeList.push(key);
+
+  return { fileTypeList };
+}
+
 module.exports = {
   collectConfigParams,
-  getGqlSetupFromDictionary,
-  getCountsAndDetailsToQuery,
   getAppConfigParamByKey,
+  getCountsAndDetailsToQuery,
   getGqlSetupFromConfigParams,
+  getGqlSetupFromDictionary,
 };
