@@ -70,10 +70,17 @@ function loadConfigParams() {
   return params;
 }
 
+function loadDictionary() {
+  const dictionaryPath = `${__dirname}/dictionary.json`;
+  const dictionaryString = fs.readFileSync(dictionaryPath, 'utf8');
+  return JSON.parse(dictionaryString);
+}
+
 module.exports = {
   getAppConfigParamByKey,
   getCountsAndDetailsToQuery,
   getGqlSetupFromConfigParams,
   getGqlSetupFromDictionary,
   loadConfigParams,
+  loadDictionary,
 };
