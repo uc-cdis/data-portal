@@ -47,7 +47,7 @@ function fillDefaultValues(values, defaultValues) {
   return res;
 }
 
-function doWrapping(value, leftWrapper, rightWrapper, indent, spaces) {
+function wrapString(value, leftWrapper, rightWrapper, indent, spaces) {
   const ending = spaces === 0 ? '' : '\n';
   const lWrapper = spaces === 0 ? leftWrapper : `${leftWrapper}\n`;
   const rWrapper = spaces === 0 ? rightWrapper : `${rightWrapper}`;
@@ -68,7 +68,7 @@ function recursiveStringify(value, variables, indent = 0, spaces = 0) {
           )}`
       )
       .join(`,${ending}`);
-    return doWrapping(objs, '[', ']', indent, spaces);
+    return wrapString(objs, '[', ']', indent, spaces);
   }
   if (typeof value === 'string') {
     let variable = null;
@@ -97,7 +97,7 @@ function recursiveStringify(value, variables, indent = 0, spaces = 0) {
         )}`
     )
     .join(`,${ending}`);
-  return doWrapping(props, '{', '}', indent, spaces);
+  return wrapString(props, '{', '}', indent, spaces);
 }
 
 function stringify(value, variables = [], spaces = 0) {
