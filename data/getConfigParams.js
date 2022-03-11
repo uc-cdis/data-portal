@@ -34,11 +34,7 @@ function getChartText() {
   };
 }
 
-function paramByDefault(prs, key) {
-  return prs.default[key];
-}
-
-const defaultTexts = paramByDefault(params, 'components');
+const defaultTexts = params.default.components;
 const defaultGA = getAppConfigParamByKey(params, 'gaTrackingId');
 const defaultRequiredCerts = getAppConfigParamByKey(params, 'requiredCerts');
 
