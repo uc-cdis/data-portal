@@ -47,15 +47,6 @@ function fillDefaultValues(values, defaultValues) {
   return res;
 }
 
-function containsVariables(value, variables) {
-  for (let i = 0; i < variables.length; i += 1) {
-    if (value.includes(variables[i])) {
-      return variables[i];
-    }
-  }
-  return null;
-}
-
 function doWrapping(value, leftWrapper, rightWrapper, indent, spaces) {
   const ending = spaces === 0 ? '' : '\n';
   const lWrapper = spaces === 0 ? leftWrapper : `${leftWrapper}\n`;
@@ -80,7 +71,9 @@ function doStringify(value, variables, indent = 0, spaces = 0) {
     return doWrapping(objs, '[', ']', indent, spaces);
   }
   if (typeof value === 'string') {
-    const variable = containsVariables(value, variables);
+    let variable = null;
+    for (const v of variables) if (value.includes(v)) variable = v;
+
     if (variable !== null) {
       return `\`${value.replace(`#${variable}#`, `\$\{${variable}\}`)}\``;
     }
