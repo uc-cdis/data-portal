@@ -5,42 +5,12 @@
  * @return gqlSetup object used by data/gqlSetup.js
  */
 function createGqlSetupFromDictionary(dict) {
-  const fileTypeList = Object.keys(dict).filter(
-    (key) => typeof dict[key] === 'object' && dict[key].category === 'data_file'
-  );
-  // admin types that link to the 'project' level and are not project or program
-  const adminTypeList = Object.keys(dict)
-    .filter((key) => {
-      const entry = dict[key];
-      return (
-        key !== 'program' &&
-        key !== 'project' &&
-        typeof entry === 'object' &&
-        entry.category === 'administrative' &&
-        Array.isArray(entry.links) &&
-        entry.links.length > 0
-      );
-    })
-    .map((key) => {
-      const entry = dict[key];
-      return {
-        typeName: key,
-        entry,
-        projectLink: entry.links.find(
-          (link) => link.target_type === 'project' && link.required
-        ),
-      };
-    });
+  const fileTypeList = /** @type {string[]} */ ([]);
+  for (const [key, entry] of Object.entries(dict))
+    if (typeof entry === 'object' && entry.category === 'data_file')
+      fileTypeList.push(key);
 
-  const experimentType = ['experiment', 'study', 'trio'].find((name) =>
-    Object.prototype.hasOwnProperty.call(dict, name)
-  );
-
-  return {
-    fileTypeList,
-    adminTypeList,
-    experimentType,
-  };
+  return { fileTypeList };
 }
 
 function getAppConfigParamByKey(params, key) {
