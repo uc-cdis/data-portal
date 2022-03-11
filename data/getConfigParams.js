@@ -54,13 +54,13 @@ function doWrapping(value, leftWrapper, rightWrapper, indent, spaces) {
   return `${lWrapper}${value}${ending}${' '.repeat(indent)}${rWrapper}`;
 }
 
-function doStringify(value, variables, indent = 0, spaces = 0) {
+function recursiveStringify(value, variables, indent = 0, spaces = 0) {
   const ending = spaces === 0 ? '' : '\n';
   if (Array.isArray(value)) {
     const objs = value
       .map(
         (item) =>
-          `${' '.repeat(indent + spaces)}${doStringify(
+          `${' '.repeat(indent + spaces)}${recursiveStringify(
             item,
             variables,
             indent + spaces,
@@ -89,7 +89,7 @@ function doStringify(value, variables, indent = 0, spaces = 0) {
   const props = Object.keys(value)
     .map(
       (key) =>
-        `${' '.repeat(indent + spaces)}${key}:${doStringify(
+        `${' '.repeat(indent + spaces)}${key}:${recursiveStringify(
           value[key],
           variables,
           indent + spaces,
@@ -101,7 +101,7 @@ function doStringify(value, variables, indent = 0, spaces = 0) {
 }
 
 function stringify(value, variables = [], spaces = 0) {
-  return doStringify(value, variables, 0, spaces);
+  return recursiveStringify(value, variables, 0, spaces);
 }
 
 function isPlainObject(o) {
