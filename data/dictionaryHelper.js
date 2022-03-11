@@ -2,7 +2,7 @@
  * Extract gqlSetup object from a dictionary data
  * sourced from https://domain/api/v0/submission/_dictionary/_all
  * @param {Object} dict
- * @return gqlSetup object used by data/gqlSetup.js
+ * @return gqlSetup object used by data/getGqlHelper.js
  */
 function getGqlSetupFromDictionary(dict) {
   const fileTypeList = /** @type {string[]} */ ([]);

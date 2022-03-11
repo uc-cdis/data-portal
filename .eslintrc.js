@@ -47,7 +47,7 @@ module.exports = {
         'src/actions.js',
         'data/getSchema.js',
         'data/getTexts.js',
-        'data/gqlSetup.js',
+        'data/getGqlHelepr.js',
         'src/SessionMonitor/index.js',
         'src/Index/utils.js',
         'src/Workspace/index.jsx',

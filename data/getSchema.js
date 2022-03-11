@@ -1,6 +1,6 @@
 /**
  * Little helper to fetch schema.json (used by the Relayjs compiler) from indexd,
- * and dataDictionary.json from the gdc api (used by data/gqlSetup.js to customize gql queries
+ * and dataDictionary.json from the gdc api (used by data/getGqlHelper.js to customize gql queries
  * based on the active dictionary before Relay compile).
  *
  * Ex: https://dev.bionimbus.org/api/v0/submission/getschema
