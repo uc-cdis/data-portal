@@ -30,7 +30,7 @@ if (!gqlSetup) {
   process.exit(4);
 }
 
-const paramGQLSetup = helper.paramSetup();
+const paramGQLSetup = helper.createGqlSetupFromConfigParams();
 if (!paramGQLSetup) {
   console.error('ERR: unable to interpret data/parameters.js - baling out');
   process.exit(4);

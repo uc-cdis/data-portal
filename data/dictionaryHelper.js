@@ -71,7 +71,7 @@ function getCountsAndDetailsToQuery(params) {
 
 const { params } = require('./parameters');
 
-function paramSetup() {
+function createGqlSetupFromConfigParams() {
   const { boardCounts, chartCounts, projectDetails } =
     getCountsAndDetailsToQuery(params);
   return {
@@ -85,5 +85,5 @@ module.exports = {
   createGqlSetupFromDictionary,
   getCountsAndDetailsToQuery,
   getAppConfigParamByKey,
-  paramSetup,
+  createGqlSetupFromConfigParams,
 };
