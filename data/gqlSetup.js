@@ -5,7 +5,6 @@
 
 const fs = require('fs');
 const helper = require('./dictionaryHelper.js');
-const utils = require('./utils.js');
 const { params } = require('./parameters');
 
 const dataFolder = __dirname;
@@ -18,14 +17,16 @@ if (!fs.existsSync(dictPath)) {
   process.exit(2);
 }
 
-const dict = utils.loadJsonFile(dictPath);
-if (dict.status !== 'ok') {
-  console.error(`Error loading dictionary at ${dictPath}`, dict.error);
+const dictString = fs.readFileSync(dictPath);
+let dictionary;
+try {
+  dictionary = JSON.parse(dictString);
+} catch (err) {
+  console.error(`Error loading dictionary at ${dictPath}`, err);
   process.exit(3);
 }
 
-const gqlSetupFromDict = helper.getGqlSetupFromDictionary(dict.data);
-
+const gqlSetupFromDict = helper.getGqlSetupFromDictionary(dictionary);
 if (!gqlSetupFromDict) {
   console.error('ERR: unable to interpret data/dictionary.json - baling out');
   process.exit(4);
