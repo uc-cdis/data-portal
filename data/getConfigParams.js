@@ -10,6 +10,13 @@ const {
 const dictionary = loadDictionary();
 const params = loadConfigParams();
 
+/**
+ * @param {string} value
+ * @param {string} leftWrapper
+ * @param {string} rightWrapper
+ * @param {number} indent
+ * @param {number} spaces
+ */
 function wrapString(value, leftWrapper, rightWrapper, indent, spaces) {
   const ending = spaces === 0 ? '' : '\n';
   const lWrapper = spaces === 0 ? leftWrapper : `${leftWrapper}\n`;
@@ -17,6 +24,13 @@ function wrapString(value, leftWrapper, rightWrapper, indent, spaces) {
   return `${lWrapper}${value}${ending}${' '.repeat(indent)}${rWrapper}`;
 }
 
+/**
+ * @param {*} value
+ * @param {string[]} variables
+ * @param {number} indent
+ * @param {number} spaces
+ * @returns {string}
+ */
 function recursiveStringify(value, variables, indent = 0, spaces = 0) {
   const ending = spaces === 0 ? '' : '\n';
   if (Array.isArray(value)) {
@@ -33,20 +47,21 @@ function recursiveStringify(value, variables, indent = 0, spaces = 0) {
       .join(`,${ending}`);
     return wrapString(objs, '[', ']', indent, spaces);
   }
+
   if (typeof value === 'string') {
     let variable = null;
     for (const v of variables) if (value.includes(v)) variable = v;
 
-    if (variable !== null) {
-      return `\`${value.replace(`#${variable}#`, `\$\{${variable}\}`)}\``;
-    }
-    return JSON.stringify(value);
+    return variable === null
+      ? JSON.stringify(value)
+      : `\`${value.replace(`#${variable}#`, `\$\{${variable}\}`)}\``;
   }
 
   if (typeof value !== 'object') {
     // not an object, stringify using native function
     return JSON.stringify(value);
   }
+
   // Implements recursive object serialization according to JSON spec
   // but without quotes around the keys.
   const props = Object.keys(value)
