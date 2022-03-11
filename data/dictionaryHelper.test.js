@@ -25,7 +25,7 @@ describe('the dictionaryHelper', () => {
       file3: { category: 'data_file' },
     };
 
-    const info = helper.createGqlSetupFromDictionary(dict);
+    const info = helper.getGqlSetupFromDictionary(dict);
     expect(info.fileTypeList.length).toBe(3);
     expect(info.fileTypeList.sort()).toEqual(['file1', 'file2', 'file3']);
   });

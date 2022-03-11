@@ -4,7 +4,7 @@
  * @param {Object} dict
  * @return gqlSetup object used by data/gqlSetup.js
  */
-function createGqlSetupFromDictionary(dict) {
+function getGqlSetupFromDictionary(dict) {
   const fileTypeList = /** @type {string[]} */ ([]);
   for (const [key, entry] of Object.entries(dict))
     if (typeof entry === 'object' && entry.category === 'data_file')
@@ -39,7 +39,7 @@ function getCountsAndDetailsToQuery(params) {
   };
 }
 
-function createGqlSetupFromConfigParams(params) {
+function getGqlSetupFromConfigParams(params) {
   const { boardCounts, chartCounts, projectDetails } =
     getCountsAndDetailsToQuery(params);
   return {
@@ -50,8 +50,8 @@ function createGqlSetupFromConfigParams(params) {
 }
 
 module.exports = {
-  createGqlSetupFromDictionary,
+  getGqlSetupFromDictionary,
   getCountsAndDetailsToQuery,
   getAppConfigParamByKey,
-  createGqlSetupFromConfigParams,
+  getGqlSetupFromConfigParams,
 };

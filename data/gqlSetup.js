@@ -24,14 +24,14 @@ if (dict.status !== 'ok') {
   process.exit(3);
 }
 
-const gqlSetupFromDict = helper.createGqlSetupFromDictionary(dict.data);
+const gqlSetupFromDict = helper.getGqlSetupFromDictionary(dict.data);
 
 if (!gqlSetupFromDict) {
   console.error('ERR: unable to interpret data/dictionary.json - baling out');
   process.exit(4);
 }
 
-const gqlSetupFromParams = helper.createGqlSetupFromConfigParams(params);
+const gqlSetupFromParams = helper.getGqlSetupFromConfigParams(params);
 if (!gqlSetupFromParams) {
   console.error('ERR: unable to interpret data/parameters.js - baling out');
   process.exit(4);
