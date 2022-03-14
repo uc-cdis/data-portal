@@ -44,27 +44,33 @@ function IndexOverview({ overviewCounts }) {
   }, [overviewCounts]);
 
   /** @typedef {import('@fortawesome/fontawesome-svg-core').IconName} FaIconName */
-  /** @returns {{ count: number; faIcon: FaIconName; name: { singular: string; plural: string }}[]} */
-  const getCountDataList = () => [
-    {
-      count: overviewCounts.data[consortium.value].subject,
-      faIcon: 'user',
-      name: { singular: 'Subject', plural: 'Subjects' },
-    },
-    {
-      count: overviewCounts.data[consortium.value].study,
-      faIcon: 'flask',
-      name: { singular: 'Study', plural: 'Studies' },
-    },
-    {
-      count: overviewCounts.data[consortium.value].molecular_analysis,
-      faIcon: 'microscope',
-      name: {
-        singular: 'Molecular analysis',
-        plural: 'Molecular analyses',
-      },
-    },
-  ];
+  /** @returns {({ count: number; faIcon: FaIconName; name: { singular: string; plural: string }} | 'error')[]} */
+  const getCountDataList = () => {
+    try {
+      return [
+        {
+          count: overviewCounts.data[consortium.value].subject,
+          faIcon: 'user',
+          name: { singular: 'Subject', plural: 'Subjects' },
+        },
+        {
+          count: overviewCounts.data[consortium.value].study,
+          faIcon: 'flask',
+          name: { singular: 'Study', plural: 'Studies' },
+        },
+        {
+          count: overviewCounts.data[consortium.value].molecular_analysis,
+          faIcon: 'microscope',
+          name: {
+            singular: 'Molecular analysis',
+            plural: 'Molecular analyses',
+          },
+        },
+      ];
+    } catch (e) {
+      return ['error'];
+    }
+  };
 
   return (
     <div className='index-overview'>
@@ -93,15 +99,22 @@ function IndexOverview({ overviewCounts }) {
       </div>
       <div className='index-overview__body'>
         {isDataLoaded ? (
-          getCountDataList().map(({ count, faIcon, name }) => (
-            <div className='index-overview__count' key={name.singular}>
-              <h3>{count}</h3>
-              <div>
-                <FontAwesomeIcon icon={faIcon} size='lg' />
-                {count > 1 ? name.plural : name.singular}
+          getCountDataList().map((data) =>
+            data === 'error' ? (
+              <div className='index-overview__count'>
+                <FontAwesomeIcon icon='exclamation-triangle' />
+                Error in fetching the overview counts data...
               </div>
-            </div>
-          ))
+            ) : (
+              <div className='index-overview__count' key={data.name.singular}>
+                <h3>{data.count}</h3>
+                <div>
+                  <FontAwesomeIcon icon={data.faIcon} size='lg' />
+                  {data.count > 1 ? data.name.plural : data.name.singular}
+                </div>
+              </div>
+            )
+          )
         ) : (
           <Spinner />
         )}
