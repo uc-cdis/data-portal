@@ -29,6 +29,7 @@ function buildConfig(opts) {
     workspaceURL: process.env.WORKSPACE_URL,
     manifestServiceURL: process.env.MANIFEST_SERVICE_URL,
     requestorURL: process.env.REQUESTOR_URL,
+    dicomViewerURL: process.env.DICOM_VIEWER_URL,
     gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
@@ -61,6 +62,7 @@ function buildConfig(opts) {
     workspaceURL,
     manifestServiceURL,
     requestorURL,
+    dicomViewerURL,
     gaDebug,
     tierAccessLevel,
     tierAccessLimit,
@@ -113,6 +115,8 @@ function buildConfig(opts) {
   const guppyDownloadUrl = `${guppyUrl}/download`;
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
   const requestorPath = typeof requestorURL === 'undefined' ? `${hostname}requestor/` : ensureTrailingSlash(requestorURL);
+  // TODO should be `dicom-viewer/` instead of `viewer/` once fixed in cloud-automation
+  const dicomViewerPath = typeof dicomViewerURL === 'undefined' ? `${hostname}viewer/` : ensureTrailingSlash(dicomViewerURL);
   const auspiceUrl = `${protocol}//auspice.${hostnameOnly}/covid19`;
   const auspiceUrlIL = `${protocol}//auspice.${hostnameOnly}/covid19/il`;
   const workspaceStorageUrl = `${hostname}ws-storage`;
@@ -499,6 +503,7 @@ function buildConfig(opts) {
     useNewExplorerConfigFormat,
     dataAvailabilityToolConfig,
     requestorPath,
+    dicomViewerPath,
     studyViewerConfig,
     covid19DashboardConfig,
     discoveryConfig,
