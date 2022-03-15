@@ -190,7 +190,7 @@ export function createFilterInfo(filterConfig, fieldMapping = []) {
 export function isSurvivalAnalysisEnabled({ result }) {
   if (result !== undefined)
     for (const option of ['risktable', 'survival'])
-      if (result[option] !== undefined) return true;
+      if (result[option] !== undefined && result[option]) return true;
 
   return false;
 }
