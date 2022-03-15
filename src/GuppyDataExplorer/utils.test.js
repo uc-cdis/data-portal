@@ -2,6 +2,7 @@ import {
   calculateDropdownButtonConfigs,
   createFilterInfo,
   humanizeNumber,
+  isSurvivalAnalysisEnabled,
 } from './utils';
 
 describe('utils for data visualization explorer', () => {
@@ -92,5 +93,34 @@ describe('utils for data visualization explorer', () => {
     expect(humanizeNumber(1200000000, 1)).toBe('1.2B');
     expect(humanizeNumber(1200000000000, 1)).toBe('1.2T');
     expect(humanizeNumber(1200000000000000, 1)).toBe('1.2Qa');
+  });
+
+  it('checks whether survival analysis is enabled', () => {
+    // not enabled
+    let falsyConfig;
+    expect(isSurvivalAnalysisEnabled(falsyConfig)).toBe(false);
+    falsyConfig = {};
+    expect(isSurvivalAnalysisEnabled(falsyConfig)).toBe(false);
+    falsyConfig = { result: {} };
+    expect(isSurvivalAnalysisEnabled(falsyConfig)).toBe(false);
+    falsyConfig = { result: { survival: false } };
+    expect(isSurvivalAnalysisEnabled(falsyConfig)).toBe(false);
+    falsyConfig = { result: { risktable: false } };
+    expect(isSurvivalAnalysisEnabled(falsyConfig)).toBe(false);
+    falsyConfig = { result: { survival: false, risktable: false } };
+    expect(isSurvivalAnalysisEnabled(falsyConfig)).toBe(false);
+
+    // enabled
+    let truthyConfig;
+    truthyConfig = { result: { survival: true } };
+    expect(isSurvivalAnalysisEnabled(truthyConfig)).toBe(true);
+    truthyConfig = { result: { risktable: true } };
+    expect(isSurvivalAnalysisEnabled(truthyConfig)).toBe(true);
+    truthyConfig = { result: { survival: true, risktable: false } };
+    expect(isSurvivalAnalysisEnabled(truthyConfig)).toBe(true);
+    truthyConfig = { result: { survival: false, risktable: true } };
+    expect(isSurvivalAnalysisEnabled(truthyConfig)).toBe(true);
+    truthyConfig = { result: { survival: true, risktable: true } };
+    expect(isSurvivalAnalysisEnabled(truthyConfig)).toBe(true);
   });
 });
