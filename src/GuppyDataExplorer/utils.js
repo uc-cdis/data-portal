@@ -187,10 +187,11 @@ export function createFilterInfo(filterConfig, fieldMapping = []) {
 }
 
 /** @param {SurvivalAnalysisConfig} config */
-export function isSurvivalAnalysisEnabled({ result }) {
-  if (result !== undefined)
+export function isSurvivalAnalysisEnabled(config) {
+  if (config?.result !== undefined)
     for (const option of ['risktable', 'survival'])
-      if (result[option] !== undefined) return true;
+      if (config.result[option] !== undefined && config.result[option])
+        return true;
 
   return false;
 }
