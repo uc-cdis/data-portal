@@ -178,7 +178,7 @@ export type GuppyData = {
     offset: number;
     size: number;
     sort: GqlSort;
-  }) => Promise<void>;
+  }) => Promise<any>;
   onAnchorValueChange: (anchorValue: string) => void;
   onFilterChange: FilterChangeHandler;
 };
