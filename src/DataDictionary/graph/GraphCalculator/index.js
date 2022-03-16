@@ -73,7 +73,9 @@ const ReduxGraphCalculator = (() => {
       ),
   });
 
-  return connect(mapStateToProps, mapDispatchToProps)(GraphCalculator);
+  return connect(mapStateToProps, mapDispatchToProps, null, {
+    forwardRef: true,
+  })(GraphCalculator);
 })();
 
 export default ReduxGraphCalculator;

@@ -16,17 +16,7 @@ class GraphCalculator extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.layoutInitialized) {
-      calculateGraphLayout(
-        this.props.dictionary,
-        this.props.countsSearch,
-        this.props.linksSearch
-      ).then((layoutResult) => {
-        this.props.onGraphLayoutCalculated(layoutResult);
-        const legendItems = getAllTypes(layoutResult.nodes);
-        this.props.onGraphLegendCalculated(legendItems);
-      });
-    }
+    if (!this.props.layoutInitialized) this.calculateLayout();
   }
 
   // eslint-disable-next-line camelcase
@@ -153,6 +143,18 @@ class GraphCalculator extends Component {
       dataModelStructureRelatedNodeIDs: subgraphNodeIDs,
       routesBetweenStartEndNodes,
     };
+  }
+
+  calculateLayout() {
+    calculateGraphLayout(
+      this.props.dictionary,
+      this.props.countsSearch,
+      this.props.linksSearch
+    ).then((layoutResult) => {
+      this.props.onGraphLayoutCalculated(layoutResult);
+      const legendItems = getAllTypes(layoutResult.nodes);
+      this.props.onGraphLegendCalculated(legendItems);
+    });
   }
 
   render() {
