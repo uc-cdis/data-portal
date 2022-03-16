@@ -37,6 +37,11 @@ class DictionarySearcher extends Component {
     }
   }
 
+  componentDidUpdate() {
+    if (this.searchData.length === 0)
+      this.searchData = prepareSearchData(this.props.dictionary);
+  }
+
   onClearResult = () => {
     this.resetSearchResult();
     this.autoCompleteRef.current.clearInput();
