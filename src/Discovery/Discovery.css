@@ -518,3 +518,8 @@
   color: #313839;
   font-weight: normal;
 }
+
+.discovery-modal__field {
+  display: flex;
+  justify-content: space-between;
+}

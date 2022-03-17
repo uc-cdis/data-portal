@@ -103,7 +103,7 @@ export interface DiscoveryConfig {
             // showBackground?: boolean // defaults to `true`
             includeName?: boolean,
             fields: StudyPageFieldConfig[]
-        }[]
+        }[],
         // descriptionField: {
         //     name: string
         //     field: string
@@ -111,6 +111,20 @@ export interface DiscoveryConfig {
         //     valueIfNotAvailable?: string[] // defaults to 'n/a'
         // }
     },
+    detailView: {
+        headerField: string
+        tabs: {
+            tabName: string
+            groups: {
+                header: string
+                fields: {
+                    type: "block" | "text" | "link" | "textList" | "linkList"
+                    sourceField?: string
+                    label?: string
+                }[]
+            }[]
+        } []
+    }
     minimalFieldMapping: {
         tagsListFieldName: string,
         authzField: string,
