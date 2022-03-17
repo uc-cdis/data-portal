@@ -328,14 +328,12 @@ export const fetchSchema =
   (dispatch, getState) =>
     getState().graphiql.schema
       ? Promise.resolve()
-      : fetch('/data/schema.json')
-          .then((response) => response.json())
-          .then(({ data }) =>
-            dispatch({
-              type: 'RECEIVE_SCHEMA',
-              schema: buildClientSchema(data),
-            })
-          );
+      : import('../data/schema.json').then(({ default: { data } }) =>
+          dispatch({
+            type: 'RECEIVE_SCHEMA',
+            schema: buildClientSchema(data),
+          })
+        );
 
 export const fetchGuppySchema =
   () =>
@@ -372,9 +370,9 @@ export const fetchDictionary =
   (dispatch, getState) =>
     getState().submission.dictionary
       ? Promise.resolve()
-      : fetch('/data/dictionary.json')
-          .then((response) => response.json())
-          .then((data) => dispatch({ type: 'RECEIVE_DICTIONARY', data }));
+      : import('../data/dictionary.json').then(({ default: data }) =>
+          dispatch({ type: 'RECEIVE_DICTIONARY', data })
+        );
 
 export const fetchGraphvizLayout =
   () =>
@@ -385,9 +383,9 @@ export const fetchGraphvizLayout =
   (dispatch, getState) =>
     getState().ddgraph.graphvizLayout
       ? Promise.resolve()
-      : fetch('/data/graphvizLayout.json')
-          .then((response) => response.json())
-          .then((data) => dispatch({ type: 'RECEIVE_GRAPHVIZ_LAYOUT', data }));
+      : import('../data/graphvizLayout.json').then(({ default: data }) => {
+          dispatch({ type: 'RECEIVE_GRAPHVIZ_LAYOUT', data });
+        });
 
 export const fetchVersionInfo = () => (/** @type {Dispatch} */ dispatch) =>
   fetchWithCreds({
