@@ -115,8 +115,7 @@ function buildConfig(opts) {
   const guppyDownloadUrl = `${guppyUrl}/download`;
   const manifestServiceApiPath = typeof manifestServiceURL === 'undefined' ? `${hostname}manifests/` : ensureTrailingSlash(manifestServiceURL);
   const requestorPath = typeof requestorURL === 'undefined' ? `${hostname}requestor/` : ensureTrailingSlash(requestorURL);
-  // TODO should be `dicom-viewer/` instead of `viewer/` once fixed in cloud-automation
-  const dicomViewerPath = typeof dicomViewerURL === 'undefined' ? `${hostname}viewer/` : ensureTrailingSlash(dicomViewerURL);
+  const dicomViewerPath = typeof dicomViewerURL === 'undefined' ? `${hostname}dicom-viewer/` : ensureTrailingSlash(dicomViewerURL);
   const auspiceUrl = `${protocol}//auspice.${hostnameOnly}/covid19`;
   const auspiceUrlIL = `${protocol}//auspice.${hostnameOnly}/covid19/il`;
   const workspaceStorageUrl = `${hostname}ws-storage`;
