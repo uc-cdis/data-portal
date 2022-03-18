@@ -1,0 +1,22 @@
+.data-requests {
+  margin: 20px;
+}
+
+.data-requests__header {
+  margin-bottom: 20px;
+}
+
+.data-requests__header > h1 {
+  font-size: 24px;
+  letter-spacing: 0.02rem;
+  line-height: 80px;
+  color: inherit;
+}
+
+.data-requests__status-approved {
+  color: var(--pcdc-color__primary);
+}
+
+.data-requests__status-rejected {
+  color: var(--g3-color__rose);
+}
