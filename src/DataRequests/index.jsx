@@ -22,6 +22,31 @@ const tableHeader = [
  * @property {string | null} completed_at timestamp
  */
 
+/** @type {DataRequestProject[]} */
+const mockProjects = [
+  {
+    id: 0,
+    name: 'Foo',
+    status: 'APPROVED',
+    submitted_at: new Date().toISOString(),
+    completed_at: new Date().toISOString(),
+  },
+  {
+    id: 1,
+    name: 'Bar',
+    status: 'REJECTED',
+    submitted_at: new Date().toISOString(),
+    completed_at: new Date().toISOString(),
+  },
+  {
+    id: 2,
+    name: 'Baz',
+    status: 'IN REVIEW',
+    submitted_at: new Date().toISOString(),
+    completed_at: null,
+  },
+];
+
 /** @returns {Promise<DataRequestProject[]>} */
 function fetchProjects() {
   return fetch('/amanuensis/projects').then((res) => res.json());
@@ -61,7 +86,9 @@ const emptyTableData = [];
 export default function DataRequests() {
   const [tableData, setTableData] = useState(emptyTableData);
   useEffect(() => {
-    fetchProjects().then((data) => setTableData(parseTableData(data)));
+    fetchProjects().then((data) =>
+      setTableData(parseTableData([...data, ...mockProjects]))
+    );
   }, []);
 
   return (
