@@ -137,6 +137,11 @@ class ExplorerHeatMap extends React.Component {
   });
 
   render() {
+    //check for data, stop if no data or data loading
+    if (this.props.rawData.length === 0
+      || this.props.aggsDataIsLoading) {
+      return null;
+    }
     // y axis items name mapping
     const yAxisVarsMapping = [this.props.mainYAxisVar].concat(
       this.props.guppyConfig.aggFields,
