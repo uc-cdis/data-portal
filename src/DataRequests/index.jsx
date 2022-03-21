@@ -52,33 +52,39 @@ function fetchProjects() {
   return fetch('/amanuensis/projects').then((res) => res.json());
 }
 
-function parseTableData(/** @type {DataRequestProject[]} */ projects) {
-  return projects.map((project) => [
-    project.id,
-    project.name,
-    formatLocalTime(project.submitted_at),
-    formatLocalTime(project.completed_at),
-    <span
-      className={`data-requests__status-${project.status
-        .toLowerCase()
-        .replaceAll(' ', '-')}`}
-    >
-      {capitalizeFirstLetter(project.status)}
-    </span>,
-    <Button
-      buttonType='primary'
-      enabled={project.status === 'APPROVED'}
-      onClick={() =>
-        fetch(`/amanuensis/download-urls/${project.id}`)
-          .then((res) => res.json())
-          .then((data) =>
-            window.open(data.download_url, '_blank', 'noopener, noreferrer')
-          )
-      }
-      label='Download Data'
-      rightIcon='download'
-    />,
-  ]);
+/**
+ * @param {DataRequestProject[]} projects
+ * @param {boolean} showApprovedOnly
+ */
+function parseTableData(projects, showApprovedOnly) {
+  return projects
+    .filter((project) => !showApprovedOnly || project.status === 'APPROVED')
+    .map((project) => [
+      project.id,
+      project.name,
+      formatLocalTime(project.submitted_at),
+      formatLocalTime(project.completed_at),
+      <span
+        className={`data-requests__status-${project.status
+          .toLowerCase()
+          .replaceAll(' ', '-')}`}
+      >
+        {capitalizeFirstLetter(project.status)}
+      </span>,
+      <Button
+        buttonType='primary'
+        enabled={project.status === 'APPROVED'}
+        onClick={() =>
+          fetch(`/amanuensis/download-urls/${project.id}`)
+            .then((res) => res.json())
+            .then((data) =>
+              window.open(data.download_url, '_blank', 'noopener, noreferrer')
+            )
+        }
+        label='Download Data'
+        rightIcon='download'
+      />,
+    ]);
 }
 
 /** @type {DataRequestProject[]} */
@@ -86,7 +92,11 @@ const emptyProjects = [];
 
 export default function DataRequests() {
   const [projects, setProjects] = useState(emptyProjects);
-  const tableData = useMemo(() => parseTableData(projects), [projects]);
+  const [showApprovedOnly, setShowApprovedOnly] = useState(false);
+  const tableData = useMemo(
+    () => parseTableData(projects, showApprovedOnly),
+    [projects, showApprovedOnly]
+  );
   useEffect(() => {
     fetchProjects().then((data) => setProjects([...data, ...mockProjects]));
   }, []);
@@ -98,7 +108,15 @@ export default function DataRequests() {
       </header>
       <main>
         <Table
-          title='List of My Requests'
+          title={
+            <>
+              List of My Requests
+              <Button
+                label={showApprovedOnly ? 'Show All' : 'Show Approved Only'}
+                onClick={() => setShowApprovedOnly((s) => !s)}
+              />
+            </>
+          }
           header={tableHeader}
           data={tableData}
         />
