@@ -73,6 +73,28 @@ const labeledMultipleLinkField = (labelText: string, linksText: string[]) => (
 : <></>
 )
 
+// const accessDescriptor  = ()=> (
+//   props.config.features.authorization.enabled
+//       && props.modalData[accessibleFieldName] !== AccessLevel.NOT_AVAILABLE
+//       && props.modalData[accessibleFieldName] !== AccessLevel.PENDING
+// )
+//     && (props.modalData[accessibleFieldName] === AccessLevel.ACCESSIBLE
+//       ? (
+//         <Alert
+//           className='discovery-modal__access-alert'
+//           type='success'
+//           message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
+//         />
+//       )
+//       : (
+//         <Alert
+//           className='discovery-modal__access-alert'
+//           type='warning'
+//           message={<React.Fragment>You do not have access to this study.</React.Fragment>}
+//         />
+//       )
+//     );
+
 const tabField = (fieldConfig: TabFieldConfig, resource: DiscoveryResource): JSX.Element => {
   const resourceFieldValue = fieldConfig.sourceField && resource[fieldConfig.sourceField];
   if (resourceFieldValue) {
