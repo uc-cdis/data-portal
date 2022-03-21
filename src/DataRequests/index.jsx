@@ -69,7 +69,7 @@ function parseTableData(/** @type {DataRequestProject[]} */ projects) {
       buttonType='primary'
       enabled={project.status === 'APPROVED'}
       onClick={() =>
-        fetch(`amanuensis/downlod-links/${project.id}`)
+        fetch(`/amanuensis/download-urls/${project.id}`)
           .then((res) => res.json())
           .then((data) =>
             window.open(data.download_url, '_blank', 'noopener, noreferrer')
