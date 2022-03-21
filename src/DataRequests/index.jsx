@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Table from '../components/tables/base/Table';
 import Button from '../gen3-ui-component/components/Button';
 import { capitalizeFirstLetter, formatLocalTime } from '../utils';
@@ -81,14 +81,14 @@ function parseTableData(/** @type {DataRequestProject[]} */ projects) {
   ]);
 }
 
-/** @type {(string | number | JSX.Element)[][]} */
-const emptyTableData = [];
+/** @type {DataRequestProject[]} */
+const emptyProjects = [];
+
 export default function DataRequests() {
-  const [tableData, setTableData] = useState(emptyTableData);
+  const [projects, setProjects] = useState(emptyProjects);
+  const tableData = useMemo(() => parseTableData(projects), [projects]);
   useEffect(() => {
-    fetchProjects().then((data) =>
-      setTableData(parseTableData([...data, ...mockProjects]))
-    );
+    fetchProjects().then((data) => setProjects([...data, ...mockProjects]));
   }, []);
 
   return (
