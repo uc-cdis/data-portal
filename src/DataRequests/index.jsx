@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Table from '../components/tables/base/Table';
 import Button from '../gen3-ui-component/components/Button';
-import { capitalizeFirstLetter, formatLocalTime } from '../utils';
+import { formatLocalTime } from '../utils';
 import './DataRequests.css';
 
 const tableHeader = [
@@ -44,7 +44,7 @@ function parseTableData(projects, showApprovedOnly) {
           .toLowerCase()
           .replaceAll(' ', '-')}`}
       >
-        {capitalizeFirstLetter(project.status)}
+        {project.status}
       </span>,
       <Button
         buttonType='primary'
