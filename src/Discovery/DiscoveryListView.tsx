@@ -34,9 +34,9 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
 
   return (
     <Table
+      scroll={{ y: 450 }}
       pagination={false} // handled in separate element
       loading={props.studies.length === 0}
-      width={'500px'}
       locale={{
         emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No Studies' />,
       }}
