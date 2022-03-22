@@ -17,7 +17,7 @@ const tableHeader = [
  * @typedef {Object} DataRequestProject
  * @property {number} id
  * @property {string} name
- * @property {'APPROVED' | 'REJECTED' | 'IN REVIEW'} status
+ * @property {'Approved' | 'Rejected' | 'In Review'} status
  * @property {string | null} submitted_at timestamp
  * @property {string | null} completed_at timestamp
  */
@@ -33,7 +33,7 @@ function fetchProjects() {
  */
 function parseTableData(projects, showApprovedOnly) {
   return projects
-    .filter((project) => !showApprovedOnly || project.status === 'APPROVED')
+    .filter((project) => !showApprovedOnly || project.status === 'Approved')
     .map((project) => [
       project.id,
       project.name,
@@ -48,7 +48,7 @@ function parseTableData(projects, showApprovedOnly) {
       </span>,
       <Button
         buttonType='primary'
-        enabled={project.status === 'APPROVED'}
+        enabled={project.status === 'Approved'}
         onClick={() =>
           fetch(`/amanuensis/download-urls/${project.id}`)
             .then((res) => res.json())
