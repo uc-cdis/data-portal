@@ -82,19 +82,14 @@ export default function DataRequests() {
         <h1>Data Requests</h1>
       </header>
       <main>
-        <Table
-          title={
-            <>
-              List of My Requests
-              <Button
-                label={showApprovedOnly ? 'Show All' : 'Show Approved Only'}
-                onClick={() => setShowApprovedOnly((s) => !s)}
-              />
-            </>
-          }
-          header={tableHeader}
-          data={tableData}
-        />
+        <h2>
+          List of My Requests
+          <Button
+            label={showApprovedOnly ? 'Show All' : 'Show Approved Only'}
+            onClick={() => setShowApprovedOnly((s) => !s)}
+          />
+        </h2>
+        <Table header={tableHeader} data={tableData} />
       </main>
     </div>
   );
