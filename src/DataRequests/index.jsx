@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Spinner from '../components/Spinner';
 import Table from '../components/tables/base/Table';
 import Button from '../gen3-ui-component/components/Button';
@@ -34,7 +35,7 @@ function fetchProjects() {
  */
 function parseTableData(projects, showApprovedOnly) {
   return projects
-    .filter((project) => !showApprovedOnly || project.status === 'Approved')
+    ?.filter((project) => !showApprovedOnly || project.status === 'Approved')
     .map((project) => [
       project.id,
       project.name,
@@ -78,6 +79,7 @@ export default function DataRequests() {
     setIsLoading(true);
     fetchProjects()
       .then(setProjects)
+      .catch(() => setProjects(null))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -87,17 +89,35 @@ export default function DataRequests() {
         <h1>Data Requests</h1>
       </header>
       <main>
-        <h2>
-          List of My Requests
-          <Button
-            label={showApprovedOnly ? 'Show All' : 'Show Approved Only'}
-            onClick={() => setShowApprovedOnly((s) => !s)}
-          />
-        </h2>
-        {isLoading ? (
-          <Spinner />
+        {Array.isArray(tableData) ? (
+          <div className='data-requests__table'>
+            <h2>
+              List of My Requests
+              <Button
+                label={showApprovedOnly ? 'Show All' : 'Show Approved Only'}
+                onClick={() => setShowApprovedOnly((s) => !s)}
+              />
+            </h2>
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <Table header={tableHeader} data={tableData} />
+            )}
+          </div>
         ) : (
-          <Table header={tableHeader} data={tableData} />
+          <div className='data-requests__error'>
+            <h2>
+              <FontAwesomeIcon
+                icon='exclamation-triangle'
+                color='var(--g3-primary-btn__bg-color'
+              />{' '}
+              Error in fetching your projects...
+            </h2>
+            <p>
+              Please retry or refreshing the page. If the problem persists,
+              please contact administrator for more information.
+            </p>
+          </div>
         )}
       </main>
     </div>

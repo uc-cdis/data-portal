@@ -21,8 +21,16 @@
   color: var(--g3-color__rose);
 }
 
-.data-requests main h2 {
+.data-requests__table > h2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.data-requests__error {
+  text-align: center;
+}
+
+.data-requests__error > h2 {
+  display: block !important;
 }
