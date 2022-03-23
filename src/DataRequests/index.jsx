@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import Spinner from '../components/Spinner';
 import Table from '../components/tables/base/Table';
 import Button from '../gen3-ui-component/components/Button';
 import { formatLocalTime } from '../utils';
@@ -66,6 +67,7 @@ function parseTableData(projects, showApprovedOnly) {
 const emptyProjects = [];
 
 export default function DataRequests() {
+  const [isLoading, setIsLoading] = useState(false);
   const [projects, setProjects] = useState(emptyProjects);
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);
   const tableData = useMemo(
@@ -73,7 +75,10 @@ export default function DataRequests() {
     [projects, showApprovedOnly]
   );
   useEffect(() => {
-    fetchProjects().then(setProjects);
+    setIsLoading(true);
+    fetchProjects()
+      .then(setProjects)
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
@@ -89,7 +94,11 @@ export default function DataRequests() {
             onClick={() => setShowApprovedOnly((s) => !s)}
           />
         </h2>
-        <Table header={tableHeader} data={tableData} />
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <Table header={tableHeader} data={tableData} />
+        )}
       </main>
     </div>
   );
