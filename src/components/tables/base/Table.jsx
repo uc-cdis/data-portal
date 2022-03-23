@@ -26,7 +26,7 @@ function Table({ title, header, data, footer }) {
 }
 
 Table.propTypes = {
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  title: PropTypes.string,
   header: PropTypes.array,
   data: PropTypes.array,
   footer: PropTypes.array,
