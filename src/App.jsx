@@ -25,6 +25,7 @@ import useSessionMonitor from './hooks/useSessionMonitor';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
+const DataRequests = lazy(() => import('./DataRequests'));
 const Explorer = lazy(() => import('./GuppyDataExplorer'));
 const GraphQLQuery = lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
 const IndexPage = lazy(() => import('./Index/page'));
@@ -168,6 +169,14 @@ function App() {
             }
           />
         )}
+        <Route
+          path='requests'
+          element={
+            <ProtectedContent>
+              <DataRequests />
+            </ProtectedContent>
+          }
+        />
         <Route path='*' element={<Navigate to='' replace />} />
         {/* <Route
           path='/indexing'

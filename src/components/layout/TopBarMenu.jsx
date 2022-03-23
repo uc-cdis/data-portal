@@ -32,6 +32,9 @@ function TopBarMenu({ items, onLogoutClick, username }) {
           <li className='top-bar-menu__item'>
             <Link to='/identity'>View Profile</Link>
           </li>
+          <li className='top-bar-menu__item'>
+            <Link to='/requests'>Data Requests</Link>
+          </li>
           {items?.map((item) => (
             <li key={item.link} className='top-bar-menu__item'>
               <a href={item.link} target='_blank' rel='noopener noreferrer'>
