@@ -150,14 +150,14 @@ const fallbackElement = (
 
 export default function Explorer() {
   return explorerConfig.length === 0 ? null : (
-    <ExplorerConfigProvider>
-      <ExplorerStateProvider>
-        <ExplorerFilterSetsProvider>
-          <ErrorBoundary fallback={fallbackElement}>
+    <ErrorBoundary fallback={fallbackElement}>
+      <ExplorerConfigProvider>
+        <ExplorerStateProvider>
+          <ExplorerFilterSetsProvider>
             <ReduxExplorerDashboard />
-          </ErrorBoundary>
-        </ExplorerFilterSetsProvider>
-      </ExplorerStateProvider>
-    </ExplorerConfigProvider>
+          </ExplorerFilterSetsProvider>
+        </ExplorerStateProvider>
+      </ExplorerConfigProvider>
+    </ErrorBoundary>
   );
 }
