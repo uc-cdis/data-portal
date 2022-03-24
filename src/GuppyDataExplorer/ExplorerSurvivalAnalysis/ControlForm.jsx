@@ -82,9 +82,8 @@ function validateNumberInput(e, setStateAction) {
  * @param {ParsedSurvivalAnalysisResult['count']} [prop.countByFilterSet]
  * @param {UserInputSubmitHandler} prop.onSubmit
  * @param {number} prop.timeInterval
- * @param {boolean} prop.isError
  */
-function ControlForm({ countByFilterSet, onSubmit, timeInterval, isError }) {
+function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
   const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(undefined);
@@ -103,9 +102,8 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval, isError }) {
 
   const [isInputChanged, setIsInputChanged] = useState(false);
   useEffect(() => {
-    if (!isInputChanged && isError) setIsInputChanged(true);
-  }, [isInputChanged, isError]);
-
+    if (countByFilterSet === undefined) setIsInputChanged(true);
+  }, [countByFilterSet]);
   const [shouldSubmit, setShouldSubmit] = useState(false);
   useEffect(() => {
     if (shouldSubmit) {
@@ -260,7 +258,6 @@ ControlForm.propTypes = {
   ),
   onSubmit: PropTypes.func.isRequired,
   timeInterval: PropTypes.number.isRequired,
-  isError: PropTypes.bool,
 };
 
 export default ControlForm;
