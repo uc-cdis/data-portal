@@ -2,8 +2,10 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { explorerConfig } from '../localconf';
+import ErrorBoundary from '../components/ErrorBoundary';
 import Dashboard from '../Layout/Dashboard';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
+import NotFoundSVG from '../img/not-found.svg';
 import {
   ExplorerConfigProvider,
   useExplorerConfig,
@@ -13,7 +15,6 @@ import {
   useExplorerState,
 } from './ExplorerStateContext';
 import { ExplorerFilterSetsProvider } from './ExplorerFilterSetsContext';
-import ExplorerErrorBoundary from './ExplorerErrorBoundary';
 import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
@@ -135,14 +136,26 @@ ExplorerDashboard.propTypes = {
 const mapStateToProps = ({ versionInfo }) => versionInfo;
 const ReduxExplorerDashboard = connect(mapStateToProps)(ExplorerDashboard);
 
+const fallbackElement = (
+  <div className='explorer__error'>
+    <h1>Error opening the Exploration page...</h1>
+    <p>
+      The Exploration page is not working correctly. Please try refreshing the
+      page. If the problem continues, please contact administrator for more
+      information.
+    </p>
+    <NotFoundSVG />
+  </div>
+);
+
 export default function Explorer() {
   return explorerConfig.length === 0 ? null : (
     <ExplorerConfigProvider>
       <ExplorerStateProvider>
         <ExplorerFilterSetsProvider>
-          <ExplorerErrorBoundary>
+          <ErrorBoundary fallback={fallbackElement}>
             <ReduxExplorerDashboard />
-          </ExplorerErrorBoundary>
+          </ErrorBoundary>
         </ExplorerFilterSetsProvider>
       </ExplorerStateProvider>
     </ExplorerConfigProvider>
