@@ -7,7 +7,7 @@ import { Switch } from 'antd';
 import 'react-table/react-table.css';
 import IconicLink from '../../components/buttons/IconicLink';
 import { GuppyConfigType, TableConfigType } from '../configTypeDef';
-import { dicomViewerPath } from '../../localconf';
+import { hostname } from '../../localconf';
 import { capitalizeFirstLetter, humanFileSize } from '../../utils';
 import './ExplorerTable.css';
 import LockIcon from '../../img/icons/lock.svg';
@@ -130,7 +130,7 @@ class ExplorerTable extends React.Component {
 
         // if this field is the `dicomViewerId`, convert the value to a link to the DICOM viewer
         if (this.props.tableConfig.dicomViewerId && this.props.tableConfig.dicomViewerId === field && valueStr) {
-          const dicomViewerLink = `${dicomViewerPath}viewer/${valueStr}`;
+          const dicomViewerLink = `${hostname}dicom-viewer/viewer/${valueStr}`;
           if (this.props.tableConfig.linkFields.includes(field)) { // link button
             valueStr = dicomViewerLink;
           } else { // direct link
