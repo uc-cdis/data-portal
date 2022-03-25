@@ -94,7 +94,7 @@ function getCellElement({
     return <span title={valueStr}>{humanFileSize(valueStr)}</span>;
 
   if (field === 'external_references.external_links') {
-    if (!value) return null;
+    if (!value?.[0]?.external_links) return null;
     const [resourceName, resourceIconPath, subjectUrl] =
       value[0].external_links.split('|');
     return (
