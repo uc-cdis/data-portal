@@ -287,12 +287,16 @@ function ExplorerTable({
         defaultPageSize={defaultPageSize}
         NoDataComponent={() =>
           isLocked ? (
-            <div className='rt-noData'>
-              <LockIcon width={30} />
-              <p>You only have access to summary data</p>
-            </div>
+            <tr className='rt-noData'>
+              <td>
+                <LockIcon width={30} />
+                <p>You only have access to summary data</p>
+              </td>
+            </tr>
           ) : (
-            <div className='rt-noData'>No data to display</div>
+            <tr className='rt-noData'>
+              <td>No data to display</td>
+            </tr>
           )
         }
         // SubComponent={isLocked ? null : SubComponent}
