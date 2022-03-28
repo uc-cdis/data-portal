@@ -67,7 +67,7 @@ function UserAgreement({ onAgree }) {
       <p>I, {fullname}, agree that:</p>
       <ul>
         {checkItems.map((item, i) => (
-          <li>
+          <li key={i}>
             <label>
               <input
                 type='checkbox'
