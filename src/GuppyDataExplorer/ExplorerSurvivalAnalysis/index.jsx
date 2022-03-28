@@ -7,7 +7,7 @@ import useSurvivalAnalysisResult from './useSurvivalAnalysisResult';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
-import UserAgreement from './UserAgreeement';
+import UserAgreement from './UserAgreement';
 import { checkUserAgreement, handleUserAgreement } from './utils';
 import './ExplorerSurvivalAnalysis.css';
 
