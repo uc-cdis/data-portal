@@ -96,15 +96,16 @@ function Table({
             page.map((row, i) => {
               prepareRow(row);
               return (
-                <div className='rt-tr-group' {...row.getRowProps()}>
-                  <tr className={`rt-tr ${i % 2 === 0 ? '-even' : '-odd'}`}>
-                    {row.cells.map((cell) => (
-                      <td {...cell.getCellProps()} className='rt-td'>
-                        {cell.render('Cell')}
-                      </td>
-                    ))}
-                  </tr>
-                </div>
+                <tr
+                  className={`rt-tr ${i % 2 === 0 ? '-even' : '-odd'}`}
+                  {...row.getRowProps()}
+                >
+                  {row.cells.map((cell) => (
+                    <td {...cell.getCellProps()} className='rt-td'>
+                      {cell.render('Cell')}
+                    </td>
+                  ))}
+                </tr>
               );
             })
           ) : (
