@@ -29,6 +29,8 @@ export const TableConfigType = PropTypes.shape({
   enabled: PropTypes.bool,
   fields: PropTypes.arrayOf(PropTypes.string),
   ordered: PropTypes.bool,
+  linkFields: PropTypes.arrayOf(PropTypes.string),
+  dicomViewerId: PropTypes.string,
 });
 
 export const ButtonConfigType = PropTypes.shape({
