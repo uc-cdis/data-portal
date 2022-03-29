@@ -79,8 +79,14 @@
   fill: #3283c8;
 }
 
-.explorer-table-external-links img {
-  display: block;
+.explorer-table-external-links {
+  display: flex;
+  height: 1.5rem;
+}
+
+.explorer-table-external-links:not(:last-child) {
+  margin-bottom: 0.25rem;
+  margin-right: 0.25rem;
 }
 
 .explorer-nested-table {
