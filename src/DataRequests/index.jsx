@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Spinner from '../components/Spinner';
 import Table from '../components/tables/base/Table';
@@ -15,6 +16,8 @@ const tableHeader = [
   'Status',
   '',
 ];
+
+/** @typedef {import('../types').UserState} UserState */
 
 /**
  * @typedef {Object} ResearcherInfo
@@ -49,14 +52,17 @@ function parseResearcherInfo(researcher) {
 /**
  * @param {DataRequestProject[]} projects
  * @param {boolean} showApprovedOnly
+ * @param {UserState['user_id']} userId
  */
-function parseTableData(projects, showApprovedOnly) {
+function parseTableData(projects, showApprovedOnly, userId) {
   return projects
     ?.filter((project) => !showApprovedOnly || project.status === 'Approved')
     .map((project) => [
       project.id,
       project.name,
-      parseResearcherInfo(project.researcher),
+      project.researcher?.id === userId
+        ? 'Me'
+        : parseResearcherInfo(project.researcher),
       formatLocalTime(project.submitted_at),
       formatLocalTime(project.completed_at),
       <span
@@ -86,12 +92,16 @@ function parseTableData(projects, showApprovedOnly) {
 const emptyProjects = [];
 
 export default function DataRequests() {
+  const userId = useSelector(
+    (/** @type {{ user: UserState }} */ state) => state.user.user_id
+  );
+
   const [isLoading, setIsLoading] = useState(false);
   const [projects, setProjects] = useState(emptyProjects);
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);
   const tableData = useMemo(
-    () => parseTableData(projects, showApprovedOnly),
-    [projects, showApprovedOnly]
+    () => parseTableData(projects, showApprovedOnly, userId),
+    [projects, showApprovedOnly, userId]
   );
   useEffect(() => {
     setIsLoading(true);
