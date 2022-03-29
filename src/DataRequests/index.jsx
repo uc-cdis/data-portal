@@ -9,11 +9,20 @@ import './DataRequests.css';
 const tableHeader = [
   'ID',
   'Research Title',
+  'Researcher',
   'Submitted Date',
   'Completed Date',
   'Status',
   '',
 ];
+
+/**
+ * @typedef {Object} ResearcherInfo
+ * @property {number} id
+ * @property {string} first_name
+ * @property {string} last_name
+ * @property {string} institution
+ */
 
 /**
  * @typedef {Object} DataRequestProject
@@ -22,11 +31,19 @@ const tableHeader = [
  * @property {'Approved' | 'Rejected' | 'In Review'} status
  * @property {string | null} submitted_at timestamp
  * @property {string | null} completed_at timestamp
+ * @property {ResearcherInfo} researcher
  */
 
 /** @returns {Promise<DataRequestProject[]>} */
 function fetchProjects() {
   return fetch('/amanuensis/projects').then((res) => res.json());
+}
+
+/** @param {ResearcherInfo} researcher */
+function parseResearcherInfo(researcher) {
+  return researcher
+    ? `${researcher.first_name} ${researcher.last_name} (${researcher.institution})`
+    : '';
 }
 
 /**
@@ -39,6 +56,7 @@ function parseTableData(projects, showApprovedOnly) {
     .map((project) => [
       project.id,
       project.name,
+      parseResearcherInfo(project.researcher),
       formatLocalTime(project.submitted_at),
       formatLocalTime(project.completed_at),
       <span
