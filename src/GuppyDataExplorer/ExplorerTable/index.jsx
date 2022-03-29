@@ -94,19 +94,22 @@ function getCellElement({
     return <span title={valueStr}>{humanFileSize(valueStr)}</span>;
 
   if (field === 'external_references.external_links') {
-    if (!value?.[0]?.external_links) return null;
-    const [resourceName, resourceIconPath, subjectUrl] =
-      value[0].external_links.split('|');
-    return (
-      <a
-        className='explorer-table-external-links'
-        href={subjectUrl}
-        target='_blank'
-        rel='noopener noreferrer'
-      >
-        <img src={resourceIconPath} alt={resourceName} />
-      </a>
-    );
+    return Array.isArray(value)
+      ? value.map((s) => {
+          const [resourceName, resourceIconPath, subjectUrl] = s.split('|');
+          return (
+            <a
+              key={resourceName}
+              className='explorer-table-external-links'
+              href={subjectUrl}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <img src={resourceIconPath} alt={resourceName} />
+            </a>
+          );
+        })
+      : null;
   }
 
   return (
