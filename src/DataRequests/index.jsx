@@ -44,9 +44,14 @@ function fetchProjects() {
 
 /** @param {ResearcherInfo} researcher */
 function parseResearcherInfo(researcher) {
-  return researcher
-    ? `${researcher.first_name} ${researcher.last_name} (${researcher.institution})`
-    : '';
+  return researcher ? (
+    <span>
+      {researcher.first_name} {researcher.last_name}
+      <br />({researcher.institution})
+    </span>
+  ) : (
+    ''
+  );
 }
 
 /**
