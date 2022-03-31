@@ -6,7 +6,7 @@ import { useExplorerConfig } from '../ExplorerConfigContext';
 import './ExplorerFilterDisplay.css';
 
 /** @param {{ filter: import('../types').ExplorerFilters }} props */
-function FilterDisplay({ filter }) {
+export function FilterDisplay({ filter }) {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   const filterElements = /** @type {JSX.Element[]} */ ([]);
   for (const [key, value] of Object.entries(filter))
