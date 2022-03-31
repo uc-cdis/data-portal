@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Alert, Button, Drawer, Space, Collapse, List, Tabs, Divider, Card
+  Alert, Button, Drawer, Space, Collapse, List, Tabs, Divider, Card,
 } from 'antd';
 import {
   LinkOutlined,
@@ -9,9 +9,11 @@ import {
   DoubleLeftOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
-import { hostname, fenceDownloadPath, discoveryConfig } from '../localconf';
+import { hostname, fenceDownloadPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
-import { AccessLevel, accessibleFieldName, renderFieldContent, DiscoveryResource } from './Discovery';
+import {
+  AccessLevel, accessibleFieldName, renderFieldContent, DiscoveryResource,
+} from './Discovery';
 
 const { Panel } = Collapse;
 
@@ -30,293 +32,301 @@ interface ListItem {
   guid: string
 }
 
-const modalField = {className: "discovery-modal__field"}
+const modalField = { className: 'discovery-modal__field' };
 
-const blockTextField = (text: string) => <Card>{text}</Card>
-const label = (text: string) => <b>{text}</b>
-const textField = (text: string) => <span>{text}</span>
-const linkField = (text: string) => <a href={text}>{text}</a>
+const blockTextField = (text: string) => <Card>{text}</Card>;
+const label = (text: string) => <b>{text}</b>;
+const textField = (text: string) => <span>{text}</span>;
+const linkField = (text: string) => <a href={text}>{text}</a>;
 
-const subHeading = (text: string) => <Divider orientation="left" orientationMargin={0}><b>{text}</b></Divider>
-const labeledSingleTextField = (labelText: string, fieldText: string) => <div {...modalField}>{label(labelText)} {textField(fieldText)}</div>
-const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => {
-  console.log(fieldsText)
-  return (
-  fieldsText.length ?
-  <div>
-    {
-      [
-        // labeled first field
-        <div {...modalField}>{label(labelText)} {textField(fieldsText[0])}</div>,
-        // unlabeled subsequent fields
-        ...fieldsText.slice(1).map(
-          (text, i) => {
-          console.log(text); return <div {...modalField} key={i}><div></div> {textField(text)}</div>
-          }
-        )
-      ]
-    }
-  </div>
-: <></>
-)
-  }
-const labeledSingleLinkField = (labelText: string, linkText: string) => <div {...modalField}>{label(labelText)} {linkField(linkText)}</div>
+const subHeading = (text: string) => <Divider orientation='left' orientationMargin={0}><b>{text}</b></Divider>;
+const labeledSingleTextField = (labelText: string, fieldText: string) => <div {...modalField}>{label(labelText)} {textField(fieldText)}</div>;
+const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (
+  fieldsText.length
+    ? (
+      <div>
+        {
+          [
+            // labeled first field
+            <div {...modalField}>{label(labelText)} {textField(fieldsText[0])}</div>,
+            // unlabeled subsequent fields
+            ...fieldsText.slice(1).map(
+              (text, i) => <div {...modalField} key={i}><div /> {textField(text)}</div>,
+            ),
+          ]
+        }
+      </div>
+    )
+    : <React.Fragment />
+);
+const labeledSingleLinkField = (labelText: string, linkText: string) => <div {...modalField}>{label(labelText)} {linkField(linkText)}</div>;
 const labeledMultipleLinkField = (labelText: string, linksText: string[]) => (
-  linksText.length ?
-  <div>
-    {
-      [
-        // labeled first field
-        <div {...modalField}>{label(labelText)} {linkField(linksText[0])}</div>,
-        // unlabeled subsequent fields
-        ...linksText.slice(1).map(
-          (linkText, i) => <div {...modalField} key={i}><div></div> {linkField(linkText)}</div>
-        )
-      ]
-    }
-  </div>
-: <></>
-)
+  linksText.length
+    ? (
+      <div>
+        {
+          [
+            // labeled first field
+            <div {...modalField}>{label(labelText)} {linkField(linksText[0])}</div>,
+            // unlabeled subsequent fields
+            ...linksText.slice(1).map(
+              (linkText, i) => <div {...modalField} key={i}><div /> {linkField(linkText)}</div>,
+            ),
+          ]
+        }
+      </div>
+    )
+    : <React.Fragment />
+);
 
-const accessDescriptor  = (resource: DiscoveryResource) => {
+const accessDescriptor = (resource: DiscoveryResource) => {
   if (resource[accessibleFieldName] === AccessLevel.ACCESSIBLE) {
-    return <Alert
-            className='discovery-modal__access-alert'
-            type='success'
-            message={<><UnlockOutlined /> You have access to this study.</>}
-            />
+    return (
+      <Alert
+        className='discovery-modal__access-alert'
+        type='success'
+        message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
+      />
+    );
   }
-  else if (resource[accessibleFieldName] === AccessLevel.UNACCESSIBLE) {
-    return <Alert
-            className='discovery-modal__access-alert'
-            type='warning'
-            message={<>You do not have access to this study.</>}
-            />
+  if (resource[accessibleFieldName] === AccessLevel.UNACCESSIBLE) {
+    return (
+      <Alert
+        className='discovery-modal__access-alert'
+        type='warning'
+        message={<React.Fragment>You do not have access to this study.</React.Fragment>}
+      />
+    );
   }
-  return <Alert
-          className='discovery-modal__access-alert'
-          type="info"
-          message={<>This study does not include data access authorization details.</>}
-          />
-}
+  return (
+    <Alert
+      className='discovery-modal__access-alert'
+      type='info'
+      message={<React.Fragment>This study does not include data access authorization details.</React.Fragment>}
+    />
+  );
+};
 
-type TabFieldConfig = TabFieldGroup["fields"][0]
-type TabFieldGroup = DiscoveryConfig["detailView"]["tabs"][0]["groups"][0];
-
+type TabFieldConfig = TabFieldGroup['fields'][0]
+type TabFieldGroup = DiscoveryConfig['detailView']['tabs'][0]['groups'][0];
 
 const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element => {
-
   const resourceFieldValue = fieldConfig.sourceField && resource[fieldConfig.sourceField];
   if (resourceFieldValue) {
-    if (fieldConfig.type === "text") {
-      return labeledSingleTextField(fieldConfig.label, resourceFieldValue)
+    if (fieldConfig.type === 'text') {
+      return labeledSingleTextField(fieldConfig.label, resourceFieldValue);
     }
-    else if (fieldConfig.type === "link") {
-      return labeledSingleLinkField(fieldConfig.label, resourceFieldValue)
+    if (fieldConfig.type === 'link') {
+      return labeledSingleLinkField(fieldConfig.label, resourceFieldValue);
     }
-    else if (fieldConfig.type === "textList") {
-      console.log("text list", resourceFieldValue)
-      return labeledMultipleTextField(fieldConfig.label, resourceFieldValue)
+    if (fieldConfig.type === 'textList') {
+      return labeledMultipleTextField(fieldConfig.label, resourceFieldValue);
     }
-    else if (fieldConfig.type === "linkList") {
-      return labeledMultipleTextField(fieldConfig.label, resourceFieldValue)
+    if (fieldConfig.type === 'linkList') {
+      return labeledMultipleLinkField(fieldConfig.label, resourceFieldValue);
     }
-    else if (fieldConfig.type === "block") {
-      return blockTextField(resourceFieldValue)
+    if (fieldConfig.type === 'block') {
+      return blockTextField(resourceFieldValue);
     }
-  }
-  else {
-    if (fieldConfig.type === "accessDescriptor") {
-      return accessDescriptor(resource)
+  } else {
+    if (fieldConfig.type === 'accessDescriptor') {
+      return accessDescriptor(resource);
     }
-    else if (fieldConfig.type === "tags") {
+    if (fieldConfig.type === 'tags') {
       const tags = fieldConfig.categories ? (resource.tags || []).filter(
-        tag => fieldConfig.categories.includes(tag.category)
+        (tag) => fieldConfig.categories.includes(tag.category),
       ) : resource.tags;
-      return <>{renderFieldContent(tags, "tags", discoveryConfig)}</>
+      return <React.Fragment>{renderFieldContent(tags, 'tags', discoveryConfig)}</React.Fragment>;
     }
   }
-  return <></>
-}
+  return <React.Fragment />;
+};
 
-const fieldGroup = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource) => <div>
+const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource) => (
+  <div>
     {group.header ? subHeading(group.header) : null}
     {
       group.fields.map(
-        (field, i) => <div key={i}>{tabField(field, discoveryConfig, resource)}</div>
+        (field, i) => <div key={i}>{tabField(field, discoveryConfig, resource)}</div>,
       )
     }
   </div>
-
+);
 
 const DiscoveryDetails = (props: Props) => {
-
-  const headerField = props.config.detailView?.headerField || props.config.studyPageFields.header?.field
-  const header = <Space align='baseline'>
-        <h3 className='discovery-modal__header-text'>{props.modalData[headerField]}</h3>
-      </Space>
+  const headerField = props.config.detailView?.headerField || props.config.studyPageFields.header?.field;
+  const header = (
+    <Space align='baseline'>
+      <h3 className='discovery-modal__header-text'>{props.modalData[headerField]}</h3>
+    </Space>
+  );
 
   return (
-  <Drawer
-    className='discovery-modal'
-    visible={props.modalVisible}
-    width={'50vw'}
-    closable={false}
-    onClose={() => props.setModalVisible(false)}
-  >
-    <div className='discovery-modal__header-buttons'>
-      <Button
-        type='text'
-        onClick={() => props.setModalVisible(false)}
-        className='discovery-modal__close-button'
-      >
-        <DoubleLeftOutlined />
+    <Drawer
+      className='discovery-modal'
+      visible={props.modalVisible}
+      width={'50vw'}
+      closable={false}
+      onClose={() => props.setModalVisible(false)}
+    >
+      <div className='discovery-modal__header-buttons'>
+        <Button
+          type='text'
+          onClick={() => props.setModalVisible(false)}
+          className='discovery-modal__close-button'
+        >
+          <DoubleLeftOutlined />
           Back
-      </Button>
-      <Button
-        type='text'
-        onClick={() => {
-          navigator.clipboard.writeText(`${hostname}discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`)
-            .then(() => {
-              props.setPermalinkCopied(true);
-            });
-        }}
-      >
-        { props.permalinkCopied
-          ? <><CheckOutlined /> Copied! </>
-          : <><LinkOutlined /> Permalink </>}
-      </Button>
-    </div>
-    {
-      props.config.detailView?.tabs ?
-      <div className='discovery-modal-content'>
-      {header}
-      <Tabs>
-        {
-          props.config.detailView.tabs.map(
-            ({tabName, groups}) => <Tabs.TabPane key={tabName} tab={tabName}>
-              {
-                (groups || []).map(
-                  (group, i) => <div key={i}>{fieldGroup(group, props.config, props.modalData)}</div>
-                )
-              }
-              </Tabs.TabPane>
-            )
-        }
-      </Tabs>
+        </Button>
+        <Button
+          type='text'
+          onClick={() => {
+            navigator.clipboard.writeText(`${hostname}discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`)
+              .then(() => {
+                props.setPermalinkCopied(true);
+              });
+          }}
+        >
+          { props.permalinkCopied
+            ? <React.Fragment><CheckOutlined /> Copied! </React.Fragment>
+            : <React.Fragment><LinkOutlined /> Permalink </React.Fragment>}
+        </Button>
       </div>
-       :
-      <>
+      {
+        props.config.detailView?.tabs
+          ? (
+            <div className='discovery-modal-content'>
+              {header}
+              <Tabs>
+                {
+                  props.config.detailView.tabs.map(
+                    ({ tabName, groups }) => (
+                      <Tabs.TabPane key={tabName} tab={tabName}>
+                        {
+                          (groups || []).map(
+                            (group, i) => <div key={i}>{fieldGrouping(group, props.config, props.modalData)}</div>,
+                          )
+                        }
+                      </Tabs.TabPane>
+                    ),
+                  )
+                }
+              </Tabs>
+            </div>
+          )
+          : (
+            <React.Fragment>
 
-      <div className='discovery-modal-content'>
-         {header}
-         {(
-          props.config.features.authorization.enabled
+              <div className='discovery-modal-content'>
+                {header}
+                {(
+                  props.config.features.authorization.enabled
               && props.modalData[accessibleFieldName] !== AccessLevel.NOT_AVAILABLE
               && props.modalData[accessibleFieldName] !== AccessLevel.PENDING
-        )
+                )
             && (props.modalData[accessibleFieldName] === AccessLevel.ACCESSIBLE
               ? (
                 <Alert
                   className='discovery-modal__access-alert'
                   type='success'
-                  message={<><UnlockOutlined /> You have access to this study.</>}
+                  message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
                 />
               )
               : (
                 <Alert
                   className='discovery-modal__access-alert'
                   type='warning'
-                  message={<>You do not have access to this study.</>}
+                  message={<React.Fragment>You do not have access to this study.</React.Fragment>}
                 />
               )
             )}
-        <div className='discovery-modal-attributes-container'>
-          { props.config.studyPageFields.fieldsToShow.map((fieldGroup, i) => {
-            let groupWidth;
-            switch (fieldGroup.groupWidth) {
-            case 'full':
-              groupWidth = 'fullwidth';
-              break;
-            case 'half':
-            default:
-              groupWidth = 'halfwidth';
-              break;
-            }
-            return (
-              <div key={i} className={`discovery-modal__attribute-group discovery-modal__attribute-group--${groupWidth}`}>
-                { fieldGroup.includeName
+                <div className='discovery-modal-attributes-container'>
+                  { props.config.studyPageFields.fieldsToShow.map((fieldGroup, i) => {
+                    let groupWidth;
+                    switch (fieldGroup.groupWidth) {
+                    case 'full':
+                      groupWidth = 'fullwidth';
+                      break;
+                    case 'half':
+                    default:
+                      groupWidth = 'halfwidth';
+                      break;
+                    }
+                    return (
+                      <div key={i} className={`discovery-modal__attribute-group discovery-modal__attribute-group--${groupWidth}`}>
+                        { fieldGroup.includeName
                     && <h3 className='discovery-modal__attribute-group-name'>{fieldGroup.groupName}</h3>}
-                { fieldGroup.fields.map((field) => {
-                // display nothing if selected study doesn't have this field
-                // and this field isn't configured to show a default value
-                  if (!props.modalData[field.field] && !field.includeIfNotAvailable) {
-                    return null;
-                  }
-                  // If the field contains a particularly long string, add some special styles
-                  const MULTILINE_FIELD_CHARLIMIT = 200;
-                  const multiline = props.modalData[field.field]
+                        { fieldGroup.fields.map((field) => {
+                        // display nothing if selected study doesn't have this field
+                        // and this field isn't configured to show a default value
+                          if (!props.modalData[field.field] && !field.includeIfNotAvailable) {
+                            return null;
+                          }
+                          // If the field contains a particularly long string, add some special styles
+                          const MULTILINE_FIELD_CHARLIMIT = 200;
+                          const multiline = props.modalData[field.field]
                     && props.modalData[field.field].length > MULTILINE_FIELD_CHARLIMIT;
-                  return (
-                    <div key={field.name} className='discovery-modal__attribute'>
-                      { field.includeName !== false
+                          return (
+                            <div key={field.name} className='discovery-modal__attribute'>
+                              { field.includeName !== false
                           && <span className='discovery-modal__attribute-name'>{field.name}</span>}
-                      <span className={`discovery-modal__attribute-value ${multiline ? 'discovery-modal__attribute-value--multiline' : ''}`}>
-                        { props.modalData[field.field]
-                          ? renderFieldContent(props.modalData[field.field], field.contentType, props.config)
-                          : (field.valueIfNotAvailable || 'Not available')}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
-        { (props.config.studyPageFields.downloadLinks && props.config.studyPageFields.downloadLinks.field
+                              <span className={`discovery-modal__attribute-value ${multiline ? 'discovery-modal__attribute-value--multiline' : ''}`}>
+                                { props.modalData[field.field]
+                                  ? renderFieldContent(props.modalData[field.field], field.contentType, props.config)
+                                  : (field.valueIfNotAvailable || 'Not available')}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+                </div>
+                { (props.config.studyPageFields.downloadLinks && props.config.studyPageFields.downloadLinks.field
           && props.modalData[props.config.studyPageFields.downloadLinks.field])
-          ? (
-            <Collapse className='discovery-modal__download-panel' defaultActiveKey={['1']}>
-              <Panel
-                className='discovery-modal__download-panel-header'
-                header={props.config.studyPageFields.downloadLinks.name || 'Data Download Links'}
-                key='1'
-              >
-                <List
-                  itemLayout='horizontal'
-                  dataSource={props.modalData[props.config.studyPageFields.downloadLinks.field]}
-                  renderItem={(item:ListItem) => (
-                    <List.Item
-                      actions={[
-                        <Button
-                          className='discovery-modal__download-button'
-                          href={`${fenceDownloadPath}/${item.guid}?expires_in=900&redirect`}
-                          target='_blank'
-                          type='text'
-                          // disable button if data has no GUID
-                          disabled={!item.guid}
-                          icon={<DownloadOutlined />}
-                        >
+                  ? (
+                    <Collapse className='discovery-modal__download-panel' defaultActiveKey={['1']}>
+                      <Panel
+                        className='discovery-modal__download-panel-header'
+                        header={props.config.studyPageFields.downloadLinks.name || 'Data Download Links'}
+                        key='1'
+                      >
+                        <List
+                          itemLayout='horizontal'
+                          dataSource={props.modalData[props.config.studyPageFields.downloadLinks.field]}
+                          renderItem={(item:ListItem) => (
+                            <List.Item
+                              actions={[
+                                <Button
+                                  className='discovery-modal__download-button'
+                                  href={`${fenceDownloadPath}/${item.guid}?expires_in=900&redirect`}
+                                  target='_blank'
+                                  type='text'
+                                  // disable button if data has no GUID
+                                  disabled={!item.guid}
+                                  icon={<DownloadOutlined />}
+                                >
                         Download File
-                        </Button>]}
-                    >
-                      <List.Item.Meta
-                        title={<div className='discovery-modal__download-list-title'>{item.title}</div>}
-                        description={<div className='discovery-modal__download-list-description'>{item.description || ''}</div>}
-                      />
-                    </List.Item>
-                  )}
-                />
-              </Panel>
-            </Collapse>
+                                </Button>]}
+                            >
+                              <List.Item.Meta
+                                title={<div className='discovery-modal__download-list-title'>{item.title}</div>}
+                                description={<div className='discovery-modal__download-list-description'>{item.description || ''}</div>}
+                              />
+                            </List.Item>
+                          )}
+                        />
+                      </Panel>
+                    </Collapse>
+                  )
+                  : null}
+              </div>
+            </React.Fragment>
           )
-          : null}
-      </div>
-      </>
-    }
+      }
 
-  </Drawer>
-);
-}
+    </Drawer>
+  );
+};
 
 export default DiscoveryDetails;
