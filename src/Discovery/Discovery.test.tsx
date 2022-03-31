@@ -123,6 +123,7 @@ describe('Configuration', () => {
 });
 
 describe('Modal', () => {
+
   // test('Modal header field is enabled/disabled', () => {
   //   const modalDataIndex = 2;
   //   [true, false].forEach((enabled) => {
