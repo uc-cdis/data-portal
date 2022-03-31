@@ -37,9 +37,11 @@ const label = (text: string) => <b>{text}</b>
 const textField = (text: string) => <span>{text}</span>
 const linkField = (text: string) => <a href={text}>{text}</a>
 
-const subHeading = (text: string) => <Divider orientation="left" orientationMargin={0}>{text}</Divider>
+const subHeading = (text: string) => <Divider orientation="left" orientationMargin={0}><b>{text}</b></Divider>
 const labeledSingleTextField = (labelText: string, fieldText: string) => <div {...modalField}>{label(labelText)} {textField(fieldText)}</div>
-const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (
+const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => {
+  console.log(fieldsText)
+  return (
   fieldsText.length ?
   <div>
     {
@@ -48,13 +50,16 @@ const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (
         <div {...modalField}>{label(labelText)} {textField(fieldsText[0])}</div>,
         // unlabeled subsequent fields
         ...fieldsText.slice(1).map(
-          (text, i) => <div {...modalField} key={i}><div></div> {textField(text)}</div>
+          (text, i) => {
+          console.log(text); return <div {...modalField} key={i}><div></div> {textField(text)}</div>
+          }
         )
       ]
     }
   </div>
 : <></>
 )
+  }
 const labeledSingleLinkField = (labelText: string, linkText: string) => <div {...modalField}>{label(labelText)} {linkField(linkText)}</div>
 const labeledMultipleLinkField = (labelText: string, linksText: string[]) => (
   linksText.length ?
@@ -73,29 +78,34 @@ const labeledMultipleLinkField = (labelText: string, linksText: string[]) => (
 : <></>
 )
 
-// const accessDescriptor  = ()=> (
-//   props.config.features.authorization.enabled
-//       && props.modalData[accessibleFieldName] !== AccessLevel.NOT_AVAILABLE
-//       && props.modalData[accessibleFieldName] !== AccessLevel.PENDING
-// )
-//     && (props.modalData[accessibleFieldName] === AccessLevel.ACCESSIBLE
-//       ? (
-//         <Alert
-//           className='discovery-modal__access-alert'
-//           type='success'
-//           message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
-//         />
-//       )
-//       : (
-//         <Alert
-//           className='discovery-modal__access-alert'
-//           type='warning'
-//           message={<React.Fragment>You do not have access to this study.</React.Fragment>}
-//         />
-//       )
-//     );
+const accessDescriptor  = (resource: DiscoveryResource) => {
+  if (resource[accessibleFieldName] === AccessLevel.ACCESSIBLE) {
+    return <Alert
+            className='discovery-modal__access-alert'
+            type='success'
+            message={<><UnlockOutlined /> You have access to this study.</>}
+            />
+  }
+  else if (resource[accessibleFieldName] === AccessLevel.UNACCESSIBLE) {
+    return <Alert
+            className='discovery-modal__access-alert'
+            type='warning'
+            message={<>You do not have access to this study.</>}
+            />
+  }
+  return <Alert
+          className='discovery-modal__access-alert'
+          type="info"
+          message={<>This study does not include data access authorization details.</>}
+          />
+}
 
-const tabField = (fieldConfig: TabFieldConfig, resource: DiscoveryResource): JSX.Element => {
+type TabFieldConfig = TabFieldGroup["fields"][0]
+type TabFieldGroup = DiscoveryConfig["detailView"]["tabs"][0]["groups"][0];
+
+
+const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource): JSX.Element => {
+
   const resourceFieldValue = fieldConfig.sourceField && resource[fieldConfig.sourceField];
   if (resourceFieldValue) {
     if (fieldConfig.type === "text") {
@@ -105,6 +115,7 @@ const tabField = (fieldConfig: TabFieldConfig, resource: DiscoveryResource): JSX
       return labeledSingleLinkField(fieldConfig.label, resourceFieldValue)
     }
     else if (fieldConfig.type === "textList") {
+      console.log("text list", resourceFieldValue)
       return labeledMultipleTextField(fieldConfig.label, resourceFieldValue)
     }
     else if (fieldConfig.type === "linkList") {
@@ -114,46 +125,37 @@ const tabField = (fieldConfig: TabFieldConfig, resource: DiscoveryResource): JSX
       return blockTextField(resourceFieldValue)
     }
   }
+  else {
+    if (fieldConfig.type === "accessDescriptor") {
+      return accessDescriptor(resource)
+    }
+    else if (fieldConfig.type === "tags") {
+      const tags = fieldConfig.categories ? (resource.tags || []).filter(
+        tag => fieldConfig.categories.includes(tag.category)
+      ) : resource.tags;
+      return <>{renderFieldContent(tags, "tags", discoveryConfig)}</>
+    }
+  }
   return <></>
 }
 
-type TabFieldConfig = TabFieldGroup["fields"][0]
-type TabFieldGroup = DiscoveryConfig["detailView"]["tabs"][0]["groups"][0];
-
-const fieldGroup = (group: TabFieldGroup, resource: DiscoveryResource) => {
-  return <div>
-    {subHeading(group.header)}
+const fieldGroup = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource) => <div>
+    {group.header ? subHeading(group.header) : null}
     {
-      group.fields.map((field, i) => <div key={i}>{tabField(field, resource)}</div>)
-    }</div>
-}
+      group.fields.map(
+        (field, i) => <div key={i}>{tabField(field, discoveryConfig, resource)}</div>
+      )
+    }
+  </div>
 
-const tabComponents = {
-  "Study": (resource: DiscoveryResource) => <>
-    {subHeading("Study Description Summary")}
-    {blockTextField(resource.study_description_summary)}
-
-    {subHeading("(Meta)Data Location")}
-    {labeledSingleTextField("Gen3 id", "g3id")}
-    {labeledMultipleTextField("list of fields", ["l1", "l1", "l1", "l1"])}
-    {labeledSingleLinkField("Some link", "https://example.com")}
-    {labeledMultipleLinkField("Some links", ["https://example.com", "https://example.com", "https://example.com"])}
-
-  </>,
-  "Datasets": (resource: DiscoveryResource) => <></>,
-  "Repository": (resource: DiscoveryResource) => <></>,
-  "Access": (resource: DiscoveryResource) => <></>,
-};
 
 const DiscoveryDetails = (props: Props) => {
 
-  console.log(props.modalData)
   const headerField = props.config.detailView?.headerField || props.config.studyPageFields.header?.field
   const header = <Space align='baseline'>
         <h3 className='discovery-modal__header-text'>{props.modalData[headerField]}</h3>
       </Space>
 
-  console.log(props.config)
   return (
   <Drawer
     className='discovery-modal'
@@ -181,8 +183,8 @@ const DiscoveryDetails = (props: Props) => {
         }}
       >
         { props.permalinkCopied
-          ? <React.Fragment><CheckOutlined /> Copied! </React.Fragment>
-          : <React.Fragment><LinkOutlined /> Permalink </React.Fragment>}
+          ? <><CheckOutlined /> Copied! </>
+          : <><LinkOutlined /> Permalink </>}
       </Button>
     </div>
     {
@@ -195,7 +197,7 @@ const DiscoveryDetails = (props: Props) => {
             ({tabName, groups}) => <Tabs.TabPane key={tabName} tab={tabName}>
               {
                 (groups || []).map(
-                  (group, i) => <div key={i}>{fieldGroup(group, props.modalData)}</div>
+                  (group, i) => <div key={i}>{fieldGroup(group, props.config, props.modalData)}</div>
                 )
               }
               </Tabs.TabPane>
@@ -204,7 +206,7 @@ const DiscoveryDetails = (props: Props) => {
       </Tabs>
       </div>
        :
-      <React.Fragment>
+      <>
 
       <div className='discovery-modal-content'>
          {header}
@@ -218,14 +220,14 @@ const DiscoveryDetails = (props: Props) => {
                 <Alert
                   className='discovery-modal__access-alert'
                   type='success'
-                  message={<React.Fragment><UnlockOutlined /> You have access to this study.</React.Fragment>}
+                  message={<><UnlockOutlined /> You have access to this study.</>}
                 />
               )
               : (
                 <Alert
                   className='discovery-modal__access-alert'
                   type='warning'
-                  message={<React.Fragment>You do not have access to this study.</React.Fragment>}
+                  message={<>You do not have access to this study.</>}
                 />
               )
             )}
@@ -310,7 +312,7 @@ const DiscoveryDetails = (props: Props) => {
           )
           : null}
       </div>
-      </React.Fragment>
+      </>
     }
 
   </Drawer>
