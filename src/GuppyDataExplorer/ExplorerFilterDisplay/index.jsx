@@ -2,16 +2,12 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
+import { useExplorerConfig } from '../ExplorerConfigContext';
 import './ExplorerFilterDisplay.css';
 
-/**
- * @typedef {Object} FilterDisplayProps
- * @property {import('../types').ExplorerFilters} filter
- * @property {import('../types').FilterConfig['info']} filterInfo
- */
-
-/** @param {FilterDisplayProps} props */
-function FilterDisplay({ filter, filterInfo }) {
+/** @param {{ filter: import('../types').ExplorerFilters }} props */
+function FilterDisplay({ filter }) {
+  const filterInfo = useExplorerConfig().current.filterConfig.info;
   const filterElements = /** @type {JSX.Element[]} */ ([]);
   for (const [key, value] of Object.entries(filter))
     if ('filter' in value) {
@@ -23,7 +19,7 @@ function FilterDisplay({ filter, filterInfo }) {
             <code>{`"${anchorValue}"`}</code>
           </span>
           <span className='token'>
-            ( <FilterDisplay filter={value.filter} filterInfo={filterInfo} /> )
+            ( <FilterDisplay filter={value.filter} /> )
           </span>
         </span>
       );
@@ -81,11 +77,10 @@ function FilterDisplay({ filter, filterInfo }) {
 
 FilterDisplay.propTypes = {
   filter: PropTypes.any,
-  filterInfo: PropTypes.any,
 };
 
-/** @param {FilterDisplayProps} props */
-function ExplorerFilterDisplay({ filter, filterInfo }) {
+/** @param {{ filter: import('../types').ExplorerFilters }} props */
+function ExplorerFilterDisplay({ filter }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const ref = useRef(null);
@@ -117,7 +112,7 @@ function ExplorerFilterDisplay({ filter, filterInfo }) {
             />
           </button>
           <h4>Filters in Use:</h4>
-          <FilterDisplay filter={filter} filterInfo={filterInfo} />
+          <FilterDisplay filter={filter} />
         </>
       ) : (
         <h4>← Try Filters to explore data</h4>
