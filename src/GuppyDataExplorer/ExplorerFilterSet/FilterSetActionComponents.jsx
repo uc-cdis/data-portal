@@ -6,7 +6,7 @@ import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../../utils';
 import { defaultFilterSet as survivalDefaultFilterSet } from '../ExplorerSurvivalAnalysis/ControlForm';
-import { stringifyFilters } from './utils';
+import FilterSetFilterDisplay from './FilterSetFilterDisplay';
 import './ExplorerFilterSet.css';
 
 /** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
@@ -105,17 +105,7 @@ function FilterSetOpenForm({
             />
           }
         />
-        <SimpleInputField
-          label='Filters'
-          input={
-            <textarea
-              id='open-filter-set-filters'
-              disabled
-              placeholder='No filters'
-              value={stringifyFilters(selected.value.filters)}
-            />
-          }
-        />
+        <FilterSetFilterDisplay filters={selected.value.filters} />
       </form>
       <div>
         <FilterSetButton
@@ -227,17 +217,7 @@ function FilterSetCreateForm({
             />
           }
         />
-        <SimpleInputField
-          label='Filters'
-          input={
-            <textarea
-              id='create-filter-set-filters'
-              disabled
-              placeholder='No filters'
-              value={stringifyFilters(currentFilters)}
-            />
-          }
-        />
+        <FilterSetFilterDisplay filters={currentFilters} />
       </form>
       <div>
         <FilterSetButton
@@ -353,28 +333,11 @@ function FilterSetUpdateForm({
             />
           }
         />
-        <SimpleInputField
-          label='Filters'
-          input={
-            <textarea
-              id='update-filter-set-filters'
-              disabled
-              placeholder='No filters'
-              value={stringifyFilters(filterSet.filters)}
-            />
-          }
-        />
+        <FilterSetFilterDisplay filters={filterSet.filters} />
         {isFiltersChanged && (
-          <SimpleInputField
-            label='Filters (changed)'
-            input={
-              <textarea
-                id='update-filter-set-changed-filters'
-                disabled
-                placeholder='No filters'
-                value={stringifyFilters(currentFilters)}
-              />
-            }
+          <FilterSetFilterDisplay
+            filters={currentFilters}
+            title='Filters (changed)'
           />
         )}
       </form>
