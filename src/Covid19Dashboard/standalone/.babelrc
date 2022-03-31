@@ -3,7 +3,9 @@
     [
       "@babel/preset-env",
       {
-        "targets": "> 2%, not dead"
+        "targets": "> 2%, not dead",
+        "useBuiltIns": "usage",
+        "corejs": 3
       }
     ],
     "@babel/preset-react",
@@ -13,6 +15,7 @@
     "dev-expression",
     "@babel/plugin-transform-runtime",
     [ "@babel/plugin-proposal-class-properties", { "loose" : true }],
-    "@babel/plugin-syntax-class-properties"
+    "@babel/plugin-syntax-class-properties",
+    "@babel/plugin-transform-flow-strip-types"
   ]
 }
