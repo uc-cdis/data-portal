@@ -64,14 +64,14 @@ function FilterDisplay({ filter }) {
     }
 
   return (
-    <>
+    <span className='filter-display'>
       {filterElements.map((filterElement, i) => (
         <>
           {filterElement}
           {i < filterElements.length - 1 && <span className='pill'>AND</span>}
         </>
       ))}
-    </>
+    </span>
   );
 }
 
@@ -94,8 +94,8 @@ function ExplorerFilterDisplay({ filter }) {
   return (
     <div
       ref={ref}
-      className={`explorer-filter-info ${
-        isCollapsed ? 'explorer-filter-info__collapsed' : ''
+      className={`explorer-filter-display ${
+        isCollapsed ? 'explorer-filter-display__collapsed' : ''
       }`.trim()}
     >
       {Object.keys(filter).length > 0 ? (
