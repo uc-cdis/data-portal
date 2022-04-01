@@ -131,7 +131,7 @@ export function ExplorerStateProvider({ children }) {
       clearFilters,
       updateFilters: setFilters,
     }),
-    [filters, patientIds]
+    [filters, patientIds, searchParams]
   );
 
   return (
