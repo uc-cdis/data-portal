@@ -24,6 +24,7 @@ function buildConfig(opts) {
     fenceURL: process.env.FENCE_URL,
     indexdURL: process.env.INDEXD_URL,
     cohortMiddlewareURL: process.env.COHORT_MIDDLEWARE_URL,
+    gwasWorkflowURL: process.env.GWAS_WORKFLOW_URL,
     arboristURL: process.env.ARBORIST_URL,
     wtsURL: process.env.WTS_URL,
     workspaceURL: process.env.WORKSPACE_URL,
@@ -56,6 +57,7 @@ function buildConfig(opts) {
     fenceURL,
     indexdURL,
     cohortMiddlewareURL,
+    gwasWorkflowURL,
     arboristURL,
     wtsURL,
     workspaceURL,
@@ -86,7 +88,10 @@ function buildConfig(opts) {
   const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
+
   const cohortMiddlewarePath = typeof cohortMiddlewareURL === 'undefined' ? `${hostname}cohort-middleware/` : ensureTrailingSlash(cohortMiddlewareURL);
+  const gwasWorkflowPath = typeof gwasWorkflowURL === 'undefined' ? `${hostname}ga4gh/wes/v2/` : ensureTrailingSlash(gwasWorkflowURL);
+
   const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
   const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
   let login = {
@@ -388,8 +393,8 @@ function buildConfig(opts) {
           break;
         case 'GWASApp':
           analysisApps.GWASApp = {
-            title: 'GWAS',
-            description: 'GWAS App',
+            title: 'GWAS UI',
+            description: 'GWAS UI App',
             image: '/src/img/analysis-icons/gwas.svg',
           };
           break;
@@ -444,6 +449,7 @@ function buildConfig(opts) {
     coreMetadataPath,
     indexdPath,
     cohortMiddlewarePath,
+    gwasWorkflowPath,
     graphqlPath,
     dataDictionaryTemplatePath,
     graphqlSchemaUrl,
