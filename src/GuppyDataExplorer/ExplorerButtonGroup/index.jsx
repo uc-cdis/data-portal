@@ -3,6 +3,7 @@ import FileSaver from 'file-saver';
 import _ from 'lodash';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import Tooltip from 'rc-tooltip';
 import Toaster from '@gen3/ui-component/dist/components/Toaster';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
 import PropTypes from 'prop-types';
@@ -13,7 +14,7 @@ import { manifestServiceApiPath, guppyGraphQLUrl, terraExportWarning } from '../
 import './ExplorerButtonGroup.css';
 import Popup from '../../components/Popup';
 
-// template variable for export-pfb-to-url button config.
+// template variable for export-pfb-to-url/export-file-pfb-to-url button config.
 // see docs/export_pfb_to_url.md
 const PRESIGNED_URL_TEMPLATE_VARIABLE = '{{PRESIGNED_URL}}';
 class ExplorerButtonGroup extends React.Component {
@@ -155,6 +156,14 @@ class ExplorerButtonGroup extends React.Component {
         throw new Error(`Misconfiguration error! An \`export-pfb-to-url\` button has a bad \`targetURLTemplate\` property. The string \`${PRESIGNED_URL_TEMPLATE_VARIABLE}\` must appear in the \`targetURLTemplate\` property. Bad \`targetURLTemplate\`: ${this.state.targetURLTemplate}`);
       }
       clickFunc = this.exportPFBToURL(buttonConfig.targetURLTemplate);
+    }
+    if (buttonConfig.type === 'export-file-pfb-to-url') {
+      if (!buttonConfig.targetURLTemplate) {
+        throw new Error('Misconfiguration Error! Expected button of type `export-file-pfb-to-url` to have the required `targetURLTemplate` property');
+      } else if (buttonConfig.targetURLTemplate.indexOf(PRESIGNED_URL_TEMPLATE_VARIABLE) === -1) {
+        throw new Error(`Misconfiguration error! An \`export-file-pfb-to-url\` button has a bad \`targetURLTemplate\` property. The string \`${PRESIGNED_URL_TEMPLATE_VARIABLE}\` must appear in the \`targetURLTemplate\` property. Bad \`targetURLTemplate\`: ${this.state.targetURLTemplate}`);
+      }
+      clickFunc = this.exportFilePFBToURL(buttonConfig.targetURLTemplate);
     }
     if (buttonConfig.type === 'export') {
       // REMOVE THIS CODE WHEN TERRA EXPORT WORKS
@@ -474,6 +483,17 @@ class ExplorerButtonGroup extends React.Component {
     });
   }
 
+  // counterpart to exportPFBToURL, allows export of a PFB to a third
+  // party from the Files tab. Deprecates exportFilesToTerra, exportFilesToSevenBridges.
+  exportFilePFBToURL = (targetURLTemplate) => () => {
+    this.setState({
+      exportingPFBToURL: true,
+      targetURLTemplate,
+    }, () => {
+      this.exportFilesToPFB();
+    });
+  }
+
   sendPFBToURL = (targetURLTemplate, presignedURL) => {
     const signedURL = encodeURIComponent(presignedURL);
     // the PFB export target URL is a template URL that should have a {{PRESIGNED_URL}} template
@@ -635,14 +655,20 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     });
   };
 
-  isFileButton = (buttonConfig) => buttonConfig.type === 'manifest'
-    || buttonConfig.type === 'export'
-    || buttonConfig.type === 'export-to-seven-bridges'
-    || buttonConfig.type === 'export-to-workspace'
-    || buttonConfig.type === 'export-to-pfb'
-    || buttonConfig.type === 'export-pfb-to-workspace';
+  isFilePFBButton = (buttonConfig) => buttonConfig.type === 'export-file-pfb-to-url'
+    || buttonConfig.type === 'export-files-to-pfb'
+    || buttonConfig.type === 'export-files' // deprecated
+    || buttonConfig.type === 'export-files-to-seven-bridges'; // deprecated
 
   refreshManifestEntryCount = async () => {
+    const isFileButton = (buttonConfig) => buttonConfig.type === 'export-pfb-to-url'
+      || buttonConfig.type === 'manifest'
+      || buttonConfig.type === 'export-to-workspace'
+      || buttonConfig.type === 'export-to-pfb'
+      || buttonConfig.type === 'export-pfb-to-workspace'
+      || buttonConfig.type === 'export' // deprecated
+      || buttonConfig.type === 'export-to-seven-bridges'; // deprecated
+
     if (this.props.isLocked || !this.props.guppyConfig.manifestMapping
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex) return;
@@ -651,7 +677,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     if (this.props.buttonConfig
       && this.props.buttonConfig.buttons
       && this.props.buttonConfig.buttons.some(
-        (btnCfg) => this.isFileButton(btnCfg) && btnCfg.enabled)) {
+        (btnCfg) => isFileButton(btnCfg) && btnCfg.enabled)) {
       if (this.props.guppyConfig.fileCountField) {
         // if "fileCountField" is set, just ask for sum of file_count field
         const totalFileCount = await this.getFileCountSum();
@@ -776,6 +802,16 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     if (buttonConfig.type === 'export-pfb-to-url') {
       return !pfbJobIsRunning;
     }
+    if (buttonConfig.type === 'export-file-pfb-to-url') {
+      if (pfbJobIsRunning) {
+        return false;
+      }
+      // If limited file PFB export is enabled, disable the button if the selected
+      // data files are on more than one source node. (See https://github.com/uc-cdis/data-portal/pull/729)
+      if (this.props.buttonConfig.enableLimitedFilePFBExport) {
+        return this.state.sourceNodesInCohort.length === 1;
+      }
+    }
     if (buttonConfig.type === 'export') {
       // disable the terra export button if any of the
       // pfb export operations are running.
@@ -851,7 +887,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       return this.isPFBRunning()
         && this.state.exportingToSevenBridges;
     }
-    if (buttonConfig.type === 'export-pfb-to-url') {
+    if (buttonConfig.type === 'export-pfb-to-url' || buttonConfig.type === 'export-file-pfb-to-url') {
       return this.isPFBRunning()
         && this.state.exportingPFBToURL
         // because we can have multiple `export-pfb-to-url` buttons, only make the
@@ -883,9 +919,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     // (See https://github.com/uc-cdis/data-portal/pull/729).
     // If the user has selected multiple files on different nodes, display a
     // tooltip explaining that the user can only export files of the same type.
-    const isFilePFBButton = buttonConfig.type === 'export-files' || buttonConfig.type === 'export-files-to-pfb' || buttonConfig.type === 'export-files-to-seven-bridges';
     if (this.props.buttonConfig.enableLimitedFilePFBExport
-      && isFilePFBButton
+      && this.isFilePFBButton(buttonConfig)
       && this.state.sourceNodesInCohort.length > 1) {
       tooltipEnabled = true;
       btnTooltipText = 'Currently you cannot export files with different Data Types. Please choose a single Data Type from the Data Type filter on the left.';
@@ -976,6 +1011,15 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
               const btnConfigs = entry.buttonConfigs;
               const dropdownTitle = entry.dropdownConfig.title;
 
+              // If limited file PFB export is enabled, PFB export buttons will be disabled
+              // if the user selects multiple files that are on different nodes in the graph.
+              // (See https://github.com/uc-cdis/data-portal/pull/729).
+              // If the user has selected multiple files on different nodes, display a
+              // tooltip explaining that the user can only export files of the same type.
+              const showLimitedFilePFBExportTooltip = (buttonConfig) => this.props.buttonConfig.enableLimitedFilePFBExport
+                && this.isFilePFBButton(buttonConfig)
+                && this.state.sourceNodesInCohort.length > 1;
+
               return (
                 <Dropdown
                   key={dropdownId}
@@ -983,11 +1027,18 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
                   disabled={this.props.totalCount === 0 || this.props.isLocked}
                 >
                   <Dropdown.Button>{(!this.props.user.username && this.isLoginForDownloadEnabled())
-                             ? `Login to ${dropdownTitle.toLowerCase()}` : dropdownTitle}</Dropdown.Button>
+                    ? `Login to ${dropdownTitle.toLowerCase()}` : dropdownTitle}
+                  </Dropdown.Button>
                   <Dropdown.Menu>
                     {
                       btnConfigs.map((btnCfg) => {
                         const onClick = this.getOnClickFunction(btnCfg);
+                        const buttonText = (!this.props.user.username
+                          && this.isLoginForDownloadEnabled()
+                          && this.isDownloadButton(btnCfg))
+                          ? `Login to download ${btnCfg.title}`
+                          : btnCfg.title;
+
                         return (
                           <Dropdown.Item
                             key={`${btnCfg.type}-${btnCfg.title}`}
@@ -996,8 +1047,17 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
                             onClick={() => ((!this.props.user.username && this.isLoginForDownloadEnabled()
                               && this.isDownloadButton(btnCfg)) ? this.goToLogin() : onClick())}
                           >
-                            {(!this.props.user.username && this.isLoginForDownloadEnabled()
-                            && this.isDownloadButton(btnCfg)) ? `Login to download ${btnCfg.title}` : btnCfg.title}
+                            {showLimitedFilePFBExportTooltip(btnCfg)
+                              ? (
+                                <Tooltip
+                                  placement='right'
+                                  overlay={'Currently you cannot export files with different Data Types. Please choose a single Data Type from the Data Type filter on the left.'}
+                                  arrowContent={<div className='rc-tooltip-arrow-inner' />}
+                                >
+                                  <div>{buttonText}</div>
+                                </Tooltip>
+                              )
+                              : <div>{buttonText}</div>}
                           </Dropdown.Item>
                         );
                       })

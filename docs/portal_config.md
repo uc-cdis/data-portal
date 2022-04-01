@@ -51,7 +51,8 @@ Below is an example, with inline comments describing what each JSON block config
       "introduction": { // optional; text on homepage
         "heading": "", // optional; title of introduction
         "text": "This is an example Gen3 Data Commons", // optional; text of homepage
-        "link": "/submission" // optional; link for button underneath the text
+        "buttonText": "Browse Studies", // optional; default is Submit/Browse Data
+        "link": "/submission" // optional; link for button underneath the text, default is /submission
       },
       "buttons": [ // optional; button “cards” displayed on the bottom of the homepage
         {
@@ -96,25 +97,21 @@ Below is an example, with inline comments describing what each JSON block config
         {
           "icon": "dictionary", // required; icon from /img/icons for the button
           "link": "/DD", // required; the link for the button
-          "color": "#a2a2a2", // optional; hex color of the icon
           "name": "Dictionary" // required; text for the button
         },
         {
           "icon": "exploration",
           "link": "/explorer",
-          "color": "#a2a2a2",
           "name": "Exploration"
         },
         {
           "icon": "workspace",
           "link": "/workspace",
-          "color": "#a2a2a2",
           "name": "Workspace"
         },
         {
           "icon": "profile",
           "link": "/identity",
-          "color": "#a2a2a2",
           "name": "Profile"
         }
       ]
@@ -243,7 +240,8 @@ Below is an example, with inline comments describing what each JSON block config
       ],
       "linkFields": [ // optional; fields (must exist in "field" list above) to display as clickable buttons
         "url"
-      ]
+      ],
+      "dicomViewerId": "" // optional; field name used as the ID in the DICOM viewer. Use this to link to the DICOM viewer
     },
     "dropdowns": { // optional; lists dropdowns if you want to combine multiple buttons into one dropdown (ie. Download dropdown has Download Manifest and Download Clinical Data as options)
       "download": { // required; id of dropdown button

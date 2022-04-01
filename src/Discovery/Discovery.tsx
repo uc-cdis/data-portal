@@ -338,7 +338,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   // Set up table columns
   // -----
-  const columns: any = config.studyColumns.map((column) => ({
+  const columns = config.studyColumns.map((column) => ({
     title: <div className='discovery-table-header'>{column.name}</div>,
     ellipsis: !!column.ellipsis,
     textWrap: 'word-break',
@@ -528,7 +528,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         </div>),
       sortOrder: 'descend',
       ellipsis: false,
-      width: '106px',
+      width: '200px',
       textWrap: 'word-break',
       render: (_, record) => {
         if (record[accessibleFieldName] === AccessLevel.PENDING) {

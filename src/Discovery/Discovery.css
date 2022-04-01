@@ -235,7 +235,7 @@
 }
 
 .discovery-table-container .ant-table-column-sorter {
-  display:none;
+  display: none;
 }
 
 /* HACK: Because the study description row is a separate row under the hood,
@@ -280,6 +280,7 @@
 }
 
 .discovery-table-container .ant-table-tbody > tr.discovery-table__row--hover > td {
+  cursor: pointer;
   border-bottom: 0;
   background: #fff;
   /* transition: background-color 0.3s, border-color 0.3s; */
@@ -367,9 +368,12 @@
   align-items: baseline;
 }
 
+/* hide the dropdown arrow from the panel, this is intended */
+/* stylelint-disable declaration-no-important */
 .discovery-header__dropdown-tags-display-panel .ant-collapse-header {
-  display: none;
+  display: none!important;
 }
+/* stylelint-enable declaration-no-important */
 
 .discovery-header__dropdown-tags-search {
   width: 50%;
