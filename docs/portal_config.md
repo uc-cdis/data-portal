@@ -240,7 +240,8 @@ Below is an example, with inline comments describing what each JSON block config
       ],
       "linkFields": [ // optional; fields (must exist in "field" list above) to display as clickable buttons
         "url"
-      ]
+      ],
+      "dicomViewerId": "" // optional; field name used as the ID in the DICOM viewer. Use this to link to the DICOM viewer
     },
     "dropdowns": { // optional; lists dropdowns if you want to combine multiple buttons into one dropdown (ie. Download dropdown has Download Manifest and Download Clinical Data as options)
       "download": { // required; id of dropdown button

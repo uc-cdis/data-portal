@@ -1,4 +1,5 @@
 module.exports = {
+  "customSyntax": "postcss-less",
   "rules": {
     "indentation": 2,
     "max-nesting-depth": 1,
