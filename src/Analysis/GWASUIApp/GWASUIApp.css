@@ -71,3 +71,70 @@
 .GWASUI-selectedCohort {
   color: var(--g3-color__base-blue);
 }
+
+
+.GWASUI-selectInstruction {
+  color: var(--g3-color__base-blue);
+  font-weight: bold;
+}
+
+.GWASUI-searchInput {
+  align-items: center;
+  width: 240px;
+  border-radius: 2px;
+  padding: 10px;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.ant-select-selector, .ant-select-selection-item, .ant-input, .ant-input-disabled {
+  background-color: white !important;
+  color: black !important;
+}
+
+.ant-select-inline-collapsed-tooltip {
+  display: none;
+}
+
+.GWASApp-jobStatus {
+  width: 600px;
+}
+
+.GWAS-headingContainer {
+  clear: both;
+  width: 450px;
+}
+
+.GWAS-leftHeading {
+  float: left;
+}
+
+.GWAS-rightHeading {
+  float: right;
+}
+
+.GWAS-leftHeading, .GWAS-rightHeading {
+  border: 1px solid gray;
+  color: white;
+  background-color: rgb(24, 144, 255);
+  padding: 3px;
+  border-radius: 2px;
+}
+
+.GWAS-btnContainer {
+  display: flex;
+  float: left;
+  padding: 2px;
+}
+
+.ant-modal-footer {
+  height: 80px;
+}
+
+.ant-modal-body {
+  width: 600px;
+}
+
+.ant-modal-content {
+  width: 600px;
+}
