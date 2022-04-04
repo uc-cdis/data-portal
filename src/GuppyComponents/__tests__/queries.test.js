@@ -193,7 +193,7 @@ describe('Get GQL filter from filter object from', () => {
 
 describe('Get query info objects for aggregation options data', () => {
   const anchorConfig = {
-    fieldName: 'a',
+    field: 'a',
     tabs: ['t1'],
     options: ['a0', 'a1'],
   };
