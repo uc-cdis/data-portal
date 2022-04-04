@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Spinner from '../components/Spinner';
 import Table from '../components/tables/base/Table';
@@ -9,11 +10,22 @@ import './DataRequests.css';
 const tableHeader = [
   'ID',
   'Research Title',
+  'Researcher',
   'Submitted Date',
   'Completed Date',
   'Status',
   '',
 ];
+
+/** @typedef {import('../types').UserState} UserState */
+
+/**
+ * @typedef {Object} ResearcherInfo
+ * @property {number} id
+ * @property {string} first_name
+ * @property {string} last_name
+ * @property {string} institution
+ */
 
 /**
  * @typedef {Object} DataRequestProject
@@ -22,6 +34,8 @@ const tableHeader = [
  * @property {'Approved' | 'Rejected' | 'In Review'} status
  * @property {string | null} submitted_at timestamp
  * @property {string | null} completed_at timestamp
+ * @property {ResearcherInfo} researcher
+ * @property {boolean} has_access
  */
 
 /** @returns {Promise<DataRequestProject[]>} */
@@ -29,16 +43,32 @@ function fetchProjects() {
   return fetch('/amanuensis/projects').then((res) => res.json());
 }
 
+/** @param {ResearcherInfo} researcher */
+function parseResearcherInfo(researcher) {
+  return researcher ? (
+    <span>
+      {researcher.first_name} {researcher.last_name}
+      <br />({researcher.institution})
+    </span>
+  ) : (
+    ''
+  );
+}
+
 /**
  * @param {DataRequestProject[]} projects
  * @param {boolean} showApprovedOnly
+ * @param {UserState['user_id']} userId
  */
-function parseTableData(projects, showApprovedOnly) {
+function parseTableData(projects, showApprovedOnly, userId) {
   return projects
     ?.filter((project) => !showApprovedOnly || project.status === 'Approved')
     .map((project) => [
       project.id,
       project.name,
+      project.researcher?.id === userId
+        ? 'Me'
+        : parseResearcherInfo(project.researcher),
       formatLocalTime(project.submitted_at),
       formatLocalTime(project.completed_at),
       <span
@@ -48,19 +78,21 @@ function parseTableData(projects, showApprovedOnly) {
       >
         {project.status}
       </span>,
-      <Button
-        buttonType='primary'
-        enabled={project.status === 'Approved'}
-        onClick={() =>
-          fetch(`/amanuensis/download-urls/${project.id}`)
-            .then((res) => res.json())
-            .then((data) =>
-              window.open(data.download_url, '_blank', 'noopener, noreferrer')
-            )
-        }
-        label='Download Data'
-        rightIcon='download'
-      />,
+      project.has_access ? (
+        <Button
+          buttonType='primary'
+          enabled={project.status === 'Approved' && project.has_access}
+          onClick={() =>
+            fetch(`/amanuensis/download-urls/${project.id}`)
+              .then((res) => res.json())
+              .then((data) =>
+                window.open(data.download_url, '_blank', 'noopener, noreferrer')
+              )
+          }
+          label='Download Data'
+          rightIcon='download'
+        />
+      ) : null,
     ]);
 }
 
@@ -68,12 +100,16 @@ function parseTableData(projects, showApprovedOnly) {
 const emptyProjects = [];
 
 export default function DataRequests() {
+  const userId = useSelector(
+    (/** @type {{ user: UserState }} */ state) => state.user.user_id
+  );
+
   const [isLoading, setIsLoading] = useState(false);
   const [projects, setProjects] = useState(emptyProjects);
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);
   const tableData = useMemo(
-    () => parseTableData(projects, showApprovedOnly),
-    [projects, showApprovedOnly]
+    () => parseTableData(projects, showApprovedOnly, userId),
+    [projects, showApprovedOnly, userId]
   );
   useEffect(() => {
     setIsLoading(true);
