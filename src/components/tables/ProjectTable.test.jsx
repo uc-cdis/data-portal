@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 import ProjectTable from './ProjectTable';
 
@@ -12,7 +13,9 @@ const summaryFields = ['a', 'b', 'c', 'd'];
 
 test('renders', () => {
   const { container } = render(
-    <ProjectTable projectList={projectList} summaryFields={summaryFields} />
+    <MemoryRouter>
+      <ProjectTable projectList={projectList} summaryFields={summaryFields} />
+    </MemoryRouter>
   );
 
   // summary totals row
