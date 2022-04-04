@@ -78,19 +78,21 @@ function parseTableData(projects, showApprovedOnly, userId) {
       >
         {project.status}
       </span>,
-      <Button
-        buttonType='primary'
-        enabled={project.status === 'Approved' && project.has_access}
-        onClick={() =>
-          fetch(`/amanuensis/download-urls/${project.id}`)
-            .then((res) => res.json())
-            .then((data) =>
-              window.open(data.download_url, '_blank', 'noopener, noreferrer')
-            )
-        }
-        label='Download Data'
-        rightIcon='download'
-      />,
+      project.has_access ? (
+        <Button
+          buttonType='primary'
+          enabled={project.status === 'Approved' && project.has_access}
+          onClick={() =>
+            fetch(`/amanuensis/download-urls/${project.id}`)
+              .then((res) => res.json())
+              .then((data) =>
+                window.open(data.download_url, '_blank', 'noopener, noreferrer')
+              )
+          }
+          label='Download Data'
+          rightIcon='download'
+        />
+      ) : null,
     ]);
 }
 
