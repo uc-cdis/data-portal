@@ -23,12 +23,14 @@
 }
 
 .GWASUI-mainTable {
+  min-width: 400px;
   padding: 0 8px;
   border: 1px solid #e9e9e9;
 }
 
-.GWASUI-jobStatus {
+.GWASApp-jobStatus {
   margin-bottom: 16px;
+  min-width: 800px;
 }
 
 .GWASUI-navBtn {
@@ -96,10 +98,6 @@
   display: none;
 }
 
-.GWASApp-jobStatus {
-  width: 600px;
-}
-
 .GWAS-headingContainer {
   clear: both;
   width: 450px;
@@ -137,4 +135,8 @@
 
 .ant-modal-content {
   width: 600px;
+}
+
+.GWASApp-jobStatus .ant-collapse {
+  width: 100%;
 }

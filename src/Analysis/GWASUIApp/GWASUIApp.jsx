@@ -13,7 +13,7 @@ import {
   QuestionCircleOutlined,
   MinusCircleOutlined,
 } from '@ant-design/icons';
-import { manifestObj } from './utils';
+import { manifestObj, demoJobStatuses } from './utils';
 
 const { Step } = Steps;
 
@@ -49,6 +49,7 @@ const GWASUIApp = (props) => {
   const [current, setCurrent] = useState(0);
   const [sourceId, setSourceId] = useState(2);
   const [cohortDefinitions, setCohortDefinitions] = useState([]);
+  const [allConcepts, setAllConcepts] = useState([])
   const [cohortConcepts, setCohortConcepts] = useState([]);
 
   const [selectedCohort, setSelectedCohort] = useState(undefined);
@@ -99,7 +100,6 @@ const GWASUIApp = (props) => {
 
   useEffect(() => {
     getCohortDefinitions();
-    console.log('gwasworkflowpath', gwasWorkflowPath);
   }, [])
 
   async function getConceptsBySource(cohortDefinitionId) {
@@ -120,6 +120,7 @@ const GWASUIApp = (props) => {
     })
       .then(data => {
         if (data) {
+          setAllConcepts(data.concepts);
           setCohortConcepts(data.concepts);
         }
       });
@@ -158,6 +159,11 @@ const GWASUIApp = (props) => {
   };
 
   const step2TableConfig = [
+    {
+      title: 'Concept ID',
+      dataIndex: 'concept_id',
+      key: 'concept_name'
+    },
     {
       title: 'Concept Name',
       dataIndex: 'concept_name',
@@ -219,8 +225,8 @@ const GWASUIApp = (props) => {
 
   const filterConcept = (term) => {
     setSearchTerm(term);
-    const filteredConcepts = cohortConcepts.filter(entry => entry.name.toLowerCase().includes(term.toLowerCase()) || entry.concept_id.toString().includes(term));
-    filteredConcepts.length ? setConcepts(filteredConcepts) : setConcepts(cohortConcepts);
+    const filteredConcepts = allConcepts.filter(entry => entry.concept_name.toLowerCase().includes(term.toLowerCase()) || entry.concept_id.toString().includes(term));
+    filteredConcepts.length ? setCohortConcepts(filteredConcepts) : setCohortConcepts(cohortConcepts);
   }
 
   const handleGwasSubmit = () => {
@@ -326,11 +332,13 @@ const GWASUIApp = (props) => {
   }
 
   const getActionButtons = (listItem) => {
-    const actionButtons = [<Button type='link' size='small' onClick={(event) => {
-      event.stopPropagation();
-      handleJobStatusModalShow(listItem.runID);
-    }}>show logs</Button>];
-    // if (listItem.status === 'running') {
+    console.log(listItem);
+    // <Button type='link' size='small' onClick={(event) => {
+    //   event.stopPropagation();
+    //   handleJobStatusModalShow(listItem.runID);
+    // }}>show logs</Button>
+    const actionButtons = [];
+    if (listItem.status === 'running') {
     actionButtons.unshift(
       <Popconfirm
         title='Are you sure you want to cancel this job?'
@@ -343,10 +351,11 @@ const GWASUIApp = (props) => {
       >
         <Button type='link' size='small' danger>cancel job</Button>
       </Popconfirm>);
-    // }
+    }
     if (listItem.status === 'completed') {
       actionButtons.unshift(
         <Button
+          primary
           type='link'
           size='small'
           onClick={(event) => {
@@ -354,7 +363,7 @@ const GWASUIApp = (props) => {
             handleJobStatusModalShow(listItem.runID, false);
           }}
         >
-          show output file paths
+          show output
         </Button>);
     }
     return actionButtons;
@@ -391,6 +400,7 @@ const GWASUIApp = (props) => {
         return (
           <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
             <h4 className="GWASUI-selectInstruction">The selection will be used for both covariates and phenotype selection</h4>
+            <input className="GWASUI-searchInput" placeholder="Search by concept name or ID..." type="text" value={searchTerm} onChange={(e) => filterConcept(e.target.value)}></input>
             <div className='GWASUI-mainTable'>
               <Table
                 className='GWASUI-table2'
@@ -406,8 +416,6 @@ const GWASUIApp = (props) => {
       case 2: {
         return (
           <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-            {/* <div>Search by concept name or ID</div> */}
-            <input className="GWASUI-searchInput" placeholder="Search by concept name or ID..." type="text" value={searchTerm} onChange={(e) => filterConcept(e.target.value)}></input>
             <hr />
             <div className="GWAS-headingContainer"><h4 className="GWAS-leftHeading">* Select Phenotype</h4><h4 className="GWAS-rightHeading">* Select Covariates to Remove</h4></div>
             <div className='GWASUI-mainTable'>
@@ -531,7 +539,8 @@ const GWASUIApp = (props) => {
         }
 
         return (
-          <><div className='GWASApp-jobStatus'>
+          <>
+          {/* <div className='GWASApp-jobStatus'>
             <Collapse onClick={(event) => event.stopPropagation()}>
               <Panel header='Submitted Job Statuses' key='1'>
                 <List
@@ -581,7 +590,7 @@ const GWASUIApp = (props) => {
               <TextArea rows={10} value={jobStatusModalData} readOnly />
 
             </Modal>
-          </div>
+          </div> */}
             <div className='GWASUI-mainArea'>
               <Form
                 {...layout}
@@ -626,6 +635,57 @@ const GWASUIApp = (props) => {
 
   return (
     <Space direction={'vertical'} style={{ width: '100%' }}>
+       <div className='GWASApp-jobStatus'>
+            <Collapse onClick={(event) => event.stopPropagation()}>
+              <Panel header='Submitted Job Statuses' key='1'>
+                <List
+                  className='GWASApp__jobStatusList'
+                  itemLayout='horizontal'
+                  pagination={{ pageSize: 5 }}
+                  dataSource={demoJobStatuses}
+                  renderItem={(item) => (
+                    <List.Item
+                      actions={getActionButtons(item)}
+                    >
+                      <List.Item.Meta
+                        title={`Run ID: ${item.runID}`}
+                        description={(item.jobName) ? `GWAS Job Name: ${item.jobName}` : null}
+                      />
+                      {/* <Button>Output</Button> */}
+                      <span>&nbsp;</span>
+                      <div>{getStatusTag(item.status)}</div>
+
+                    </List.Item>
+
+                  )}
+                />
+
+              </Panel>
+            </Collapse>
+            <Modal
+              visible={showJobStatusModal}
+              closable={false}
+              title={'Show job logs'}
+              footer={[
+                <div className="GWAS-btnContainer">
+                  <Button key='copy' className="g3-button g3-button--tertiary">
+                    Copy JSON
+                  </Button>
+                  <Button key='download' className="explorer-button-group__download-button g3-button g3-button--primary">
+                    <i className="g3-icon g3-icon--sm g3-icon--datafile g3-button__icon g3-button__icon--left"></i>
+                    Download Manifest
+                    <i className="g3-icon g3-icon--sm g3-icon--download g3-button__icon g3-button__icon--right"></i>
+                  </Button>
+                  <Button className="g3-button g3-button--secondary" key='close' onClick={() => handleJobStatusModalCancel()}>
+                    Close
+                  </Button>
+                </div>,
+              ]}
+            >
+              <TextArea rows={10} value={jobStatusModalData} readOnly />
+
+            </Modal>
+          </div>
       <Steps current={current}>
         {steps.map((item) => (
           <Step key={item.title} title={item.title} description={item.description} />
@@ -655,9 +715,12 @@ const GWASUIApp = (props) => {
                 setSelectedPhenotype(selectedConcepts[0]);
                 setSelectedCovariates([...selectedConcepts].slice(1));
                 form.setFieldsValue({
-                  covariates: [...selectedConcepts].slice(1).map((val) => val.name),
-                  outcome: selectedConcepts[0].name,
+                  covariates: [...selectedConcepts].slice(1).map((val) => val.concept_name),
+                  outcome: selectedConcepts[0].concept_name,
                 });
+              }
+              if (current === 2) {
+                setSelectedPhenotype(selectedConcepts[0]);
               }
               if (current === 3) {
                 form.submit();
