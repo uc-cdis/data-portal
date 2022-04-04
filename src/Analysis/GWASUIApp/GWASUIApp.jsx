@@ -13,7 +13,7 @@ import {
   QuestionCircleOutlined,
   MinusCircleOutlined,
 } from '@ant-design/icons';
-import { argoWrapperBody } from './utils';
+import { manifestObj } from './utils';
 
 const { Step } = Steps;
 
@@ -272,7 +272,7 @@ const GWASUIApp = (props) => {
   const handleJobStatusModalShow = (runID, displayFullLog = true) => {
     // TODO Fetch GWAS status endpoint
     // fetch(`${gwasWorkflow}status)
-    setJobStatusModalData(JSON.stringify(argoWrapperBody));
+    setJobStatusModalData(JSON.stringify(manifestObj));
     setShowJobStatusModal(true);
   };
 
