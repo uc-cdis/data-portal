@@ -35,6 +35,7 @@ const tableHeader = [
  * @property {string | null} submitted_at timestamp
  * @property {string | null} completed_at timestamp
  * @property {ResearcherInfo} researcher
+ * @property {boolean} has_access
  */
 
 /** @returns {Promise<DataRequestProject[]>} */
@@ -79,7 +80,7 @@ function parseTableData(projects, showApprovedOnly, userId) {
       </span>,
       <Button
         buttonType='primary'
-        enabled={project.status === 'Approved'}
+        enabled={project.status === 'Approved' && project.has_access}
         onClick={() =>
           fetch(`/amanuensis/download-urls/${project.id}`)
             .then((res) => res.json())
