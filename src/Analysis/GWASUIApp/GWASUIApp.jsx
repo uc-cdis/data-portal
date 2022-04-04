@@ -236,8 +236,8 @@ const GWASUIApp = (props) => {
     setSelectedCovariates([]);
     setNumOfPC(3);
     setJobName(undefined);
-    setShowJobSubmissionResult(false);
-    setJobSubmittedRunID("newGwasJob");
+    // setShowJobSubmissionResult(true);
+    // setJobSubmittedRunID("newGwasJob");
 
     // const requestBody = {
     //   "n_pcs": gwasBody.numOfPC,
@@ -596,9 +596,10 @@ const GWASUIApp = (props) => {
                 {...layout}
                 name='control-hooks'
                 onFinish={(values) => {
-                  setJobName(values.GWASJobName);
-                  setJobSubmittedRunID('run-12345');
-                  setShowJobSubmissionResult(true);
+                  console.log(values);
+                  // setJobName(values.GWASJobName);
+                  // setJobSubmittedRunID('run-12345');
+                  // setShowJobSubmissionResult(true);
                 }}
               >
                 <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name for GWAS job!' }]}>
@@ -608,7 +609,11 @@ const GWASUIApp = (props) => {
                   <Button
                     htmlType='submit'
                     type='primary'
-                    onClick={() => handleGwasSubmit()}
+                    onClick={() => {
+                      setJobName('vadc-gwas-cwr7h');
+                      setJobSubmittedRunID('run-12345');
+                      setShowJobSubmissionResult(true);
+                    }}
                   >
                     Submit
                   </Button>
@@ -699,7 +704,7 @@ const GWASUIApp = (props) => {
       <div className='steps-action'>
         <Button
           className='GWASUI-navBtn'
-          style={{ margin: '0 8px' }}
+          // style={{ margin: '0 16px' }}
           onClick={() => {
             setCurrent(current - 1);
           }}
@@ -709,6 +714,7 @@ const GWASUIApp = (props) => {
         {current < steps.length - 1 && (
           <Button
             className='GWASUI-navBtn GWASUI-navBtn__next'
+            // style={{ margin: '0 16px' }}
             type='primary'
             onClick={() => {
               if (current === 1) {
