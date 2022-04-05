@@ -116,7 +116,7 @@ function IndexOverview({ overviewCounts }) {
           <ErrorBoundary
             fallback={
               <div className='index-overview__count'>
-                <FontAwesomeIcon icon='exclamation-triangle' />
+                <FontAwesomeIcon icon='triangle-exclamation' />
                 Error in fetching the overview counts data...
               </div>
             }

@@ -141,7 +141,7 @@ function ExplorerFilterSet({ className, filter }) {
                     tabIndex={0}
                   >
                     <FontAwesomeIcon
-                      icon='exclamation-triangle'
+                      icon='triangle-exclamation'
                       color='var(--pcdc-color__secondary)'
                       size='xs'
                       style={{

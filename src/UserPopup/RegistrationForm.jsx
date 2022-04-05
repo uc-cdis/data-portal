@@ -65,7 +65,7 @@ function RegistrationForm({
     <div className='user-popup__view-input'>
       <p>
         <FontAwesomeIcon
-          icon='exclamation-triangle'
+          icon='triangle-exclamation'
           color='var(--pcdc-color__secondary)'
         />
         Your account does not have access to PCDC data.
@@ -162,7 +162,7 @@ function RegistrationForm({
   const viewError = (
     <div className='user-popup__view-error'>
       <FontAwesomeIcon
-        icon='exclamation-triangle'
+        icon='triangle-exclamation'
         color='var(--g3-color__rose)'
       />
       <h2>Error registering to gain access...</h2>

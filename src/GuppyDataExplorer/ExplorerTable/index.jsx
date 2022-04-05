@@ -274,7 +274,7 @@ function ExplorerTable({
               }
             >
               <FontAwesomeIcon
-                icon='exclamation-triangle'
+                icon='triangle-exclamation'
                 color='var(--pcdc-color__secondary)'
               />
             </Tooltip>

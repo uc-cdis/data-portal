@@ -176,7 +176,7 @@ function FilterSetCreateForm({
       {currentFilterSet.name !== '' && isFiltersChanged && (
         <p>
           <FontAwesomeIcon
-            icon='exclamation-triangle'
+            icon='triangle-exclamation'
             color='var(--pcdc-color__secondary)'
           />{' '}
           You have changed filters for this Filter Set.
@@ -292,7 +292,7 @@ function FilterSetUpdateForm({
       {isFiltersChanged && (
         <p>
           <FontAwesomeIcon
-            icon='exclamation-triangle'
+            icon='triangle-exclamation'
             color='var(--pcdc-color__secondary)'
           />{' '}
           You have changed filters for this Filter Set.
