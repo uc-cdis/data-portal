@@ -12,6 +12,7 @@ const tableConfig = {
   fields: ['foo', 'bar', 'fizz.buzz'],
   linkFields: ['bar'],
   ordered: false,
+  filterInfo: {},
 };
 const rawData = [
   { foo: 0, bar: 'a', fizz: { buzz: true } },

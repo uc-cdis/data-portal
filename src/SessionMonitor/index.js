@@ -71,6 +71,7 @@ export class SessionMonitor {
         // Allow Fence to log out the user.
         // If we don't refresh, Fence will mark them as inactive.
         this.logoutUser();
+        return;
       }
     }
 
