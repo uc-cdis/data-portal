@@ -120,8 +120,8 @@ function GqlEditor({ guppySchema, schema }) {
 }
 
 GqlEditor.propTypes = {
-  guppySchema: PropTypes.object,
-  schema: PropTypes.object,
+  guppySchema: PropTypes.any,
+  schema: PropTypes.any,
 };
 
 export default GqlEditor;

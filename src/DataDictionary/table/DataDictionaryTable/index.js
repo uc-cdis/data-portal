@@ -18,8 +18,8 @@ const mapStateToProps = (state) => ({
 /** @param {import('redux').Dispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
   /** @param {GraphNode['id']} nodeId */
-  onExpandNode: (nodeID) => {
-    dispatch(setExpandNode(nodeID));
+  onExpandNode: (nodeId) => {
+    dispatch(setExpandNode(nodeId));
   },
 });
 

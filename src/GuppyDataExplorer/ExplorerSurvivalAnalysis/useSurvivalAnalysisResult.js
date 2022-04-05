@@ -51,6 +51,8 @@ export default function useSurvivalAnalysisResult() {
   const prevEfsFlag = useRef(false);
   const [result, setResult] = useState(emptyData);
   const parsedResult = useMemo(() => {
+    if (result === null) return {};
+
     /** @type {ParsedSurvivalAnalysisResult} */
     const parsed = { count: {}, risktable: [], survival: [] };
     const { count: c, risktable: r, survival: s } = parsed;
@@ -91,7 +93,7 @@ export default function useSurvivalAnalysisResult() {
     for (const [index, usedFilterSet] of usedFilterSets.entries()) {
       const { filters, id, name } = usedFilterSet;
       body.usedFilterSetIds.push(id);
-      if (id in result && !isSurvivalTypeChanged)
+      if (result !== null && id in result && !isSurvivalTypeChanged)
         cache[id] = { ...result[id], name: `${index + 1}. ${name}` };
       else
         body.filterSets.push({
@@ -102,7 +104,9 @@ export default function useSurvivalAnalysisResult() {
     }
 
     if (body.filterSets.length > 0)
-      return fetchResult(body).then((data) => setResult({ ...cache, ...data }));
+      return fetchResult(body)
+        .then((data) => setResult({ ...cache, ...data }))
+        .catch(() => setResult(null));
 
     setResult(cache);
     return Promise.resolve();

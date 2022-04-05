@@ -276,7 +276,7 @@ function ExplorerVisualization({
         </div>
       </div>
       {explorerView !== 'survival analysis' && (
-        <ExplorerFilterDisplay filter={filter} filterInfo={filterConfig.info} />
+        <ExplorerFilterDisplay filter={filter} />
       )}
       <ViewContainer
         showIf={explorerView === 'summary view'}

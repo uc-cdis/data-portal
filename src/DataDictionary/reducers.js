@@ -13,6 +13,7 @@ const ddgraphInitialState = {
   nodes: [],
   edges: [],
   graphBoundingBox: [],
+  graphvizLayout: null,
   legendItems: [],
   hoveringNode: null,
   highlightingNode: null,
@@ -39,6 +40,12 @@ const ddgraphInitialState = {
 /** @type {import('redux').Reducer<DdgraphState>} */
 const ddgraph = (state = ddgraphInitialState, action) => {
   switch (action.type) {
+    case 'RECEIVE_GRAPHVIZ_LAYOUT': {
+      return {
+        ...state,
+        graphvizLayout: action.data,
+      };
+    }
     case 'TOGGLE_GRAPH_TABLE_VIEW': {
       return {
         ...state,

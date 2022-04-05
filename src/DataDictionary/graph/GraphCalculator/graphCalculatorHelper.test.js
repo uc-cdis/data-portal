@@ -8,10 +8,11 @@ import {
 } from './graphCalculatorHelper';
 
 describe('graphCalculatorHelper', () => {
-  const { dictionary, nodes, edges } = buildTestData();
+  const { dictionary, nodes, edges, getGraphvizLayout } = buildTestData();
 
   it('can calculate layout', async () => {
-    const layout = await calculateGraphLayout(dictionary);
+    const graphvizLayout = await getGraphvizLayout(dictionary);
+    const layout = await calculateGraphLayout(dictionary, graphvizLayout);
     layout.nodes.forEach((n) => {
       expect(nodes.find((testN) => testN.id === n.id)).toBeDefined();
     });
@@ -39,11 +40,12 @@ describe('graphCalculatorHelper', () => {
   });
 
   it('can calculate second highlighting node path', () => {
-    const pathRelatedToSecondHighlightingNode = calculatePathRelatedToSecondHighlightingNode(
-      testGraph1.testClickNode,
-      testGraph1.testSecondClickNodeID,
-      testGraph1.graphNodes
-    );
+    const pathRelatedToSecondHighlightingNode =
+      calculatePathRelatedToSecondHighlightingNode(
+        testGraph1.testClickNode,
+        testGraph1.testSecondClickNodeID,
+        testGraph1.graphNodes
+      );
     expect(pathRelatedToSecondHighlightingNode).toEqual(
       testGraph1.expectedSecondHighlightedPath
     );

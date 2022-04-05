@@ -94,19 +94,22 @@ function getCellElement({
     return <span title={valueStr}>{humanFileSize(valueStr)}</span>;
 
   if (field === 'external_references.external_links') {
-    if (!value?.[0]?.external_links) return null;
-    const [resourceName, resourceIconPath, subjectUrl] =
-      value[0].external_links.split('|');
-    return (
-      <a
-        className='explorer-table-external-links'
-        href={subjectUrl}
-        target='_blank'
-        rel='noopener noreferrer'
-      >
-        <img src={resourceIconPath} alt={resourceName} />
-      </a>
-    );
+    return Array.isArray(value)
+      ? value.map((s) => {
+          const [resourceName, resourceIconPath, subjectUrl] = s.split('|');
+          return (
+            <a
+              key={resourceName}
+              className='explorer-table-external-links'
+              href={subjectUrl}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <img src={resourceIconPath} alt={resourceName} />
+            </a>
+          );
+        })
+      : null;
   }
 
   return (
@@ -271,7 +274,7 @@ function ExplorerTable({
               }
             >
               <FontAwesomeIcon
-                icon='exclamation-triangle'
+                icon='triangle-exclamation'
                 color='var(--pcdc-color__secondary)'
               />
             </Tooltip>
@@ -287,12 +290,16 @@ function ExplorerTable({
         defaultPageSize={defaultPageSize}
         NoDataComponent={() =>
           isLocked ? (
-            <div className='rt-noData'>
-              <LockIcon width={30} />
-              <p>You only have access to summary data</p>
-            </div>
+            <tr className='rt-noData'>
+              <td>
+                <LockIcon width={30} />
+                <p>You only have access to summary data</p>
+              </td>
+            </tr>
           ) : (
-            <div className='rt-noData'>No data to display</div>
+            <tr className='rt-noData'>
+              <td>No data to display</td>
+            </tr>
           )
         }
         // SubComponent={isLocked ? null : SubComponent}

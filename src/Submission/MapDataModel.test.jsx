@@ -1,3 +1,5 @@
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import MapDataModel, {
@@ -5,6 +7,9 @@ import MapDataModel, {
   isValidSubmission,
 } from './MapDataModel';
 import * as testData from './__test__/data.json';
+import reducers from '../reducers';
+
+const testReduxStore = createStore(reducers, {});
 
 const projects = {
   test: { name: 'test', counts: [], charts: [], code: 'test' },
@@ -32,16 +37,18 @@ const dictionary = {
 
 test('renders', () => {
   const { container } = render(
-    <MemoryRouter>
-      <MapDataModel
-        filesToMap={testData.records}
-        projects={projects}
-        dictionary={dictionary}
-        nodeTypes={['aligned_reads_index']}
-        getProjectsList={() => {}}
-        submitFiles={() => {}}
-      />
-    </MemoryRouter>
+    <Provider store={testReduxStore}>
+      <MemoryRouter>
+        <MapDataModel
+          filesToMap={testData.records}
+          projects={projects}
+          dictionary={dictionary}
+          nodeTypes={['aligned_reads_index']}
+          getProjectsList={() => {}}
+          submitFiles={() => {}}
+        />
+      </MemoryRouter>
+    </Provider>
   );
   expect(container.firstElementChild).toHaveClass('map-data-model');
 });

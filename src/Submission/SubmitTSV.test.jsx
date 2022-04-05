@@ -1,23 +1,30 @@
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import { fireEvent, render } from '@testing-library/react';
 import * as testData from './__test__/data.json';
+import reducers from '../reducers';
 import SubmitTSV from './SubmitTSV';
 
 const testProjName = 'bogusProject';
+const testReduxStore = createStore(reducers, {});
 
 test('hides the "submit" button when data is not available', () => {
   const { container } = render(
-    <SubmitTSV
-      project={testProjName}
-      submission={{
-        file: '',
-        submit_result: '',
-        submit_status: 200,
-      }}
-      onUploadClick={() => {}}
-      onSubmitClick={() => {}}
-      onFileChange={() => {}}
-      onFinish={() => {}}
-    />
+    <Provider store={testReduxStore}>
+      <SubmitTSV
+        project={testProjName}
+        submission={{
+          file: '',
+          submit_result: '',
+          submit_status: 200,
+          submit_total: 0,
+        }}
+        onUploadClick={() => {}}
+        onSubmitClick={() => {}}
+        onFileChange={() => {}}
+        onFinish={() => {}}
+      />
+    </Provider>
   );
   expect(
     container.querySelector('label[id="cd-submit-tsv__upload-button"]')
@@ -32,18 +39,21 @@ test('hides the "submit" button when data is not available', () => {
 
 test('shows a "submit" button when a tsv or json file has been uploaded', () => {
   const { container } = render(
-    <SubmitTSV
-      project={testProjName}
-      submission={{
-        file: JSON.stringify({ type: 'whatever', submitter_id: 'frickjack' }),
-        submit_result: '',
-        submit_status: 200,
-      }}
-      onUploadClick={() => {}}
-      onSubmitClick={() => {}}
-      onFileChange={() => {}}
-      onFinish={() => {}}
-    />
+    <Provider store={testReduxStore}>
+      <SubmitTSV
+        project={testProjName}
+        submission={{
+          file: JSON.stringify({ type: 'whatever', submitter_id: 'frickjack' }),
+          submit_result: '',
+          submit_status: 200,
+          submit_total: 0,
+        }}
+        onUploadClick={() => {}}
+        onSubmitClick={() => {}}
+        onFileChange={() => {}}
+        onFinish={() => {}}
+      />
+    </Provider>
   );
 
   const submitElement = container.querySelector(
@@ -58,21 +68,26 @@ test('shows a "submit" button when a tsv or json file has been uploaded', () => 
 
 test('shows a submit result when appropriate', () => {
   const { container } = render(
-    <SubmitTSV
-      project={testProjName}
-      submission={{
-        file: JSON.stringify({ type: 'whatever', submitter_id: 'frickjack' }),
-        submit_result: {
-          message: 'submission ok',
-          entities: [{ type: 'frickjack' }],
-        },
-        submit_status: 200,
-      }}
-      onUploadClick={() => {}}
-      onSubmitClick={() => {}}
-      onFileChange={() => {}}
-      onFinish={() => {}}
-    />
+    <Provider store={testReduxStore}>
+      <SubmitTSV
+        project={testProjName}
+        submission={{
+          file: JSON.stringify({ type: 'whatever', submitter_id: 'frickjack' }),
+          submit_counter: 0,
+          submit_result: {
+            message: 'submission ok',
+            entities: [{ type: 'frickjack' }],
+          },
+          submit_result_string: '',
+          submit_status: 200,
+          submit_total: 0,
+        }}
+        onUploadClick={() => {}}
+        onSubmitClick={() => {}}
+        onFileChange={() => {}}
+        onFinish={() => {}}
+      />
+    </Provider>
   );
   expect(
     container.querySelector('label[id="cd-submit-tsv__upload-button"]')
@@ -107,14 +122,22 @@ test('correctly handles utf-8 files, without corrupting multi-byte special chara
   }
 
   const { container } = render(
-    <SubmitTSV
-      project={testProjName}
-      submission={{ file: '', submit_result: '', submit_status: 200 }}
-      onUploadClick={onUploadClick}
-      onSubmitClick={() => {}}
-      onFileChange={() => {}}
-      onFinish={() => {}}
-    />
+    <Provider store={testReduxStore}>
+      <SubmitTSV
+        project={testProjName}
+        submission={{
+          file: '',
+          submit_counter: 0,
+          submit_result: '',
+          submit_status: 200,
+          submit_total: 0,
+        }}
+        onUploadClick={onUploadClick}
+        onSubmitClick={() => {}}
+        onFileChange={() => {}}
+        onFinish={() => {}}
+      />
+    </Provider>
   );
 
   // 1. Find the file upload button and upload our JSON file with non-ascii characters.

@@ -442,7 +442,7 @@ function GuppyWrapper({
       sort,
       size,
       updateDataWhenReceive: true,
-    }).then();
+    });
   }
 
   /**

@@ -1,3 +1,12 @@
+import { graphviz } from '@hpcc-js/wasm';
+import { createDotStringFromDictionary } from '../../data/graphvizLayoutHelper';
+
+function getGraphvizLayout(dictionary) {
+  return graphviz
+    .layout(createDotStringFromDictionary(dictionary), 'json', 'dot')
+    .then((json) => JSON.parse(json));
+}
+
 /**
  * Little helper for building test data
  */
@@ -102,10 +111,11 @@ export const buildTestData = () => {
   const expectedTree = [['project'], ['b'], ['c', 'x', 'y'], ['d', 'a']];
   return {
     dictionary,
+    getGraphvizLayout,
     nodes,
     edges: edges.concat(expectedSubgoupLinks),
-    counts_search: nodeCounts,
-    links_search: linkCounts,
+    countsSearch: nodeCounts,
+    linksSearch: linkCounts,
     expectedTree,
   };
 };

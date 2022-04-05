@@ -17,7 +17,7 @@ import DictionarySearcher from './DictionarySearcher';
 const ReduxDictionarySearcher = (() => {
   /** @param {{ ddgraph: DdgraphState; submission: SubmissionState }} state */
   const mapStateToProps = (state) => ({
-    dictionary: state.submission.dictionary,
+    dictionary: state.submission.dictionary ?? {},
     currentSearchKeyword: state.ddgraph.currentSearchKeyword,
   });
 

@@ -40,11 +40,11 @@ export type SurvivalAnalysisResult = {
 };
 
 export type ParsedSurvivalAnalysisResult = {
-  count: {
+  count?: {
     [name: string]: SurvivalResultForFilterSet['count'];
   };
-  risktable: RisktableData[];
-  survival: SurvivalData[];
+  risktable?: RisktableData[];
+  survival?: SurvivalData[];
 };
 
 export type UserInput = {

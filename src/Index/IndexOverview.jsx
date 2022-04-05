@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useResizeDetector } from 'react-resize-detector';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ErrorBoundary from '../components/ErrorBoundary';
 import Spinner from '../components/Spinner';
 import Button from '../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../utils';
@@ -11,6 +12,48 @@ import { breakpoints } from '../localconf';
 import './IndexOverview.css';
 
 const defaultConsortiumOption = { label: 'All PCDC', value: 'total' };
+
+function CountsDataView({ counts }) {
+  /** @typedef {import('@fortawesome/fontawesome-svg-core').IconName} FaIconName */
+  /** @type {{ count: number; faIcon: FaIconName; name: { singular: string; plural: string }}[]} */
+  const data = [
+    {
+      count: counts.subject,
+      faIcon: 'user',
+      name: { singular: 'Subject', plural: 'Subjects' },
+    },
+    {
+      count: counts.study,
+      faIcon: 'flask',
+      name: { singular: 'Study', plural: 'Studies' },
+    },
+    {
+      count: counts.molecular_analysis,
+      faIcon: 'microscope',
+      name: {
+        singular: 'Molecular analysis',
+        plural: 'Molecular analyses',
+      },
+    },
+  ];
+  return (
+    <>
+      {data.map(({ count, faIcon, name }) => (
+        <div className='index-overview__count' key={name.singular}>
+          <h3>{count}</h3>
+          <div>
+            <FontAwesomeIcon icon={faIcon} size='lg' />
+            {count > 1 ? name.plural : name.singular}
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}
+
+CountsDataView.propTypes = {
+  counts: PropTypes.object,
+};
 
 /** @param {{ overviewCounts: import('./types').OverviewCounts }} props */
 function IndexOverview({ overviewCounts }) {
@@ -43,29 +86,6 @@ function IndexOverview({ overviewCounts }) {
     if (overviewCounts !== undefined) setIsDataLoaded(true);
   }, [overviewCounts]);
 
-  /** @typedef {import('@fortawesome/fontawesome-svg-core').IconName} FaIconName */
-  /** @returns {{ count: number; faIcon: FaIconName; name: { singular: string; plural: string }}[]} */
-  const getCountDataList = () => [
-    {
-      count: overviewCounts.data[consortium.value].subject,
-      faIcon: 'user',
-      name: { singular: 'Subject', plural: 'Subjects' },
-    },
-    {
-      count: overviewCounts.data[consortium.value].study,
-      faIcon: 'flask',
-      name: { singular: 'Study', plural: 'Studies' },
-    },
-    {
-      count: overviewCounts.data[consortium.value].molecular_analysis,
-      faIcon: 'microscope',
-      name: {
-        singular: 'Molecular analysis',
-        plural: 'Molecular analyses',
-      },
-    },
-  ];
-
   return (
     <div className='index-overview'>
       <div className='index-overview__title'>
@@ -93,15 +113,16 @@ function IndexOverview({ overviewCounts }) {
       </div>
       <div className='index-overview__body'>
         {isDataLoaded ? (
-          getCountDataList().map(({ count, faIcon, name }) => (
-            <div className='index-overview__count' key={name.singular}>
-              <h3>{count}</h3>
-              <div>
-                <FontAwesomeIcon icon={faIcon} size='lg' />
-                {count > 1 ? name.plural : name.singular}
+          <ErrorBoundary
+            fallback={
+              <div className='index-overview__count'>
+                <FontAwesomeIcon icon='triangle-exclamation' />
+                Error in fetching the overview counts data...
               </div>
-            </div>
-          ))
+            }
+          >
+            <CountsDataView counts={overviewCounts.data?.[consortium.value]} />
+          </ErrorBoundary>
         ) : (
           <Spinner />
         )}

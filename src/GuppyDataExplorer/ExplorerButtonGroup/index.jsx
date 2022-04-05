@@ -864,14 +864,17 @@ class ExplorerButtonGroup extends Component {
 }
 
 ExplorerButtonGroup.propTypes = {
-  job: PropTypes.object,
+  job: PropTypes.exact({
+    status: PropTypes.string,
+    uid: PropTypes.string,
+  }),
   downloadRawData: PropTypes.func.isRequired, // from GuppyWrapper
   downloadRawDataByFields: PropTypes.func.isRequired, // from GuppyWrapper
   getTotalCountsByTypeAndFilter: PropTypes.func.isRequired, // from GuppyWrapper
   downloadRawDataByTypeAndFilter: PropTypes.func.isRequired, // from GuppyWrapper
   accessibleCount: PropTypes.number.isRequired, // from GuppyWrapper
   totalCount: PropTypes.number.isRequired, // from GuppyWrapper
-  filter: PropTypes.object.isRequired, // from GuppyWrapper
+  filter: PropTypes.any.isRequired, // from GuppyWrapper
   isPending: PropTypes.bool,
   buttonConfig: ButtonConfigType.isRequired,
   guppyConfig: GuppyConfigType.isRequired,
@@ -881,7 +884,7 @@ ExplorerButtonGroup.propTypes = {
   checkJobStatus: PropTypes.func.isRequired,
   fetchJobResult: PropTypes.func.isRequired,
   isLocked: PropTypes.bool.isRequired,
-  userAccess: PropTypes.object.isRequired,
+  userAccess: PropTypes.objectOf(PropTypes.bool).isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {

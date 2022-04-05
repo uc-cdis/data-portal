@@ -12,6 +12,7 @@ const tableConfig = {
   fields: ['foo', 'bar', 'fizz.buzz'],
   linkFields: ['bar'],
   ordered: false,
+  filterInfo: {},
 };
 const rawData = [
   { foo: 0, bar: 'a', fizz: { buzz: true } },
@@ -79,7 +80,7 @@ test('update description based on data access', () => {
   );
   expect(screen.queryByText('Showing 0 of 0 subjects')).toBeInTheDocument();
   const RequestAccessInfoIcon = container.querySelector(
-    'svg[data-icon="exclamation-triangle"]'
+    'svg[data-icon="triangle-exclamation"]'
   );
   expect(RequestAccessInfoIcon).toBeInTheDocument();
 

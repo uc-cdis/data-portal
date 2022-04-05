@@ -1,15 +1,15 @@
-.explorer-filter-info {
+.explorer-filter-display {
   background-color: var(--g3-color__white);
   padding: 0.5rem 1rem;
   margin: 0.5rem 0;
 }
 
-.explorer-filter-info__collapsed {
+.explorer-filter-display__collapsed {
   max-height: 5.5rem;
   overflow-y: scroll;
 }
 
-.explorer-filter-info > button {
+.explorer-filter-display > button {
   background-color: inherit;
   border: none;
   height: 1rem;
@@ -17,25 +17,25 @@
   margin-right: 0.25rem;
 }
 
-.explorer-filter-info > button:disabled {
+.explorer-filter-display > button:disabled {
   cursor: not-allowed;
 }
 
-.explorer-filter-info > button > i {
+.explorer-filter-display > button > i {
   background-color: var(--g3-color__bg-coal);
 }
 
-.explorer-filter-info__collapse {
+.explorer-filter-display__collapse {
   max-height: 90px;
   overflow-x: scroll;
 }
 
-.explorer-filter-info > h4 {
+.explorer-filter-display > h4 {
   display: inline-block;
   margin-right: 0.25rem;
 }
 
-.explorer-filter-info .pill {
+.filter-display .pill {
   background-color: var(--g3-color__bg-cloud);
   border: 1px solid var(--g3-color__lightgray);
   border-radius: 4px;
@@ -46,26 +46,26 @@
 
 /* Tablet width and less */
 @media screen and (max-width: 820px) {
-  .explorer-filter-info .pill {
+  .filter-display .pill {
     font-size: 12px;
   }
 }
 
-.explorer-filter-info .pill.anchor {
+.filter-display .pill.anchor {
   padding: 8px 4px;
   line-height: 2.2rem;
 }
 
-.explorer-filter-info .pill > * {
+.filter-display .pill > * {
   border-right: 1px solid var(--g3-color__lightgray);
   padding: 2px 4px;
   margin: 0 2px;
 }
 
-.explorer-filter-info .pill > *:last-child {
+.filter-display .pill > *:last-child {
   border-right: none;
 }
 
-.explorer-filter-info .pill code {
+.filter-display .pill code {
   background-color: inherit;
 }

@@ -114,7 +114,8 @@ module.exports = {
       },
       {
         test: /\.jsx?$/,
-        exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
+        exclude:
+          /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
         loader: 'babel-loader',
       },
       {
@@ -123,11 +124,15 @@ module.exports = {
       },
       {
         test: /\.svg$/,
-        use: ['babel-loader', '@svgr/webpack'],
+        use: ['@svgr/webpack'],
       },
       {
-        test: /\.(png|jpg|gif|woff|ttf|eot|woff2)$/,
+        test: /\.(png|jpg|gif)$/,
         type: 'asset/inline',
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
       },
     ],
   },

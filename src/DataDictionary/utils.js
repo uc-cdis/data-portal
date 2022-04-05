@@ -243,14 +243,14 @@ export const MatchedIndicesShape = PropTypes.arrayOf(
   PropTypes.arrayOf(PropTypes.number)
 );
 
-export const MatchedItemShape = PropTypes.shape({
+export const MatchedItemShape = PropTypes.exact({
   indices: MatchedIndicesShape,
   arrayIndex: PropTypes.number,
   key: PropTypes.string,
   value: PropTypes.string,
 });
 
-export const SearchItemPropertyShape = PropTypes.shape({
+export const SearchItemPropertyShape = PropTypes.exact({
   name: PropTypes.string,
   description: PropTypes.string,
   type: PropTypes.oneOfType([
@@ -259,14 +259,14 @@ export const SearchItemPropertyShape = PropTypes.shape({
   ]),
 });
 
-export const SearchItemShape = PropTypes.shape({
+export const SearchItemShape = PropTypes.exact({
   id: PropTypes.string,
   title: PropTypes.string,
   description: PropTypes.string,
   properties: PropTypes.arrayOf(SearchItemPropertyShape),
 });
 
-export const SearchResultItemShape = PropTypes.shape({
+export const SearchResultItemShape = PropTypes.exact({
   item: SearchItemShape,
   matches: PropTypes.arrayOf(MatchedItemShape),
 });

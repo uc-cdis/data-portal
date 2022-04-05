@@ -1,11 +1,19 @@
 import { render, fireEvent } from '@testing-library/react';
+import { graphviz } from '@hpcc-js/wasm';
+import { createDotStringFromDictionary } from '../../../../data/graphvizLayoutHelper';
 import GraphDrawer from './GraphDrawer';
 import { calculateGraphLayout } from '../GraphCalculator/graphCalculatorHelper';
 import { buildTestData } from '../../../GraphUtils/testData';
 
+async function getGraphLayout(dictionary) {
+  const dotString = createDotStringFromDictionary(dictionary);
+  const layout = JSON.parse(await graphviz.layout(dotString, 'json', 'dot'));
+  return calculateGraphLayout(dictionary, layout);
+}
+
 test('renders nodes and edges in graph', async () => {
   const { dictionary } = buildTestData();
-  const layout = await calculateGraphLayout(dictionary);
+  const layout = await getGraphLayout(dictionary);
   const props = {
     nodes: layout.nodes,
     edges: layout.edges,
@@ -26,7 +34,7 @@ test('renders nodes and edges in graph', async () => {
 
 test('hovers and clicks nodes, and updates svg element', async () => {
   const { dictionary } = buildTestData();
-  const layout = await calculateGraphLayout(dictionary);
+  const layout = await getGraphLayout(dictionary);
 
   const onHoverNode = jest.fn();
   const onCancelHoverNode = jest.fn();

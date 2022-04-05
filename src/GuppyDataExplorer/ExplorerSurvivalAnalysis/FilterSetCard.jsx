@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
 import SimpleInputField from '../../components/SimpleInputField';
-import { stringifyFilters } from '../ExplorerFilterSet/utils';
+import FilterSetFilterDisplay from '../ExplorerFilterSet/FilterSetFilterDisplay';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 
@@ -62,16 +62,7 @@ export default function FilterSetCard({ count, filterSet, label, onClose }) {
               />
             }
           />
-          <SimpleInputField
-            label='Filters'
-            input={
-              <textarea
-                disabled
-                placeholder='No filters'
-                value={stringifyFilters(filterSet.filters)}
-              />
-            }
-          />
+          <FilterSetFilterDisplay filters={filterSet.filters} />
         </>
       ) : null}
     </div>

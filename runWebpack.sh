@@ -27,6 +27,8 @@ export WORKSPACE_TIMEOUT_IN_MINUTES="${WORKSPACE_TIMEOUT_IN_MINUTES:-"480"}"
 cd "$(dirname "${BASH_SOURCE}")"
 # download the graphql schema for the commons from HOSTNAME
 npm run schema
+# create a graphviz layout from dictionary
+npm run graphviz-layout
 # run the relay compiler against the graphql schema
 npm run relay
 # generate a parameters.json file by overlaying $APP.json on default.json

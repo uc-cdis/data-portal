@@ -6,8 +6,8 @@ import { createNodesAndEdges } from '../GraphUtils/utils';
 const mapStateToProps = (state) => {
   const props = {
     dictionary: state.submission.dictionary,
-    counts_search: state.submission.counts_search,
-    links_search: state.submission.links_search,
+    countsSearch: state.submission.counts_search,
+    linksSearch: state.submission.links_search,
   };
   return {
     full: createNodesAndEdges(props, true),

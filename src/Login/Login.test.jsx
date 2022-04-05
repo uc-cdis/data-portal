@@ -31,6 +31,10 @@ const testProps = {
   data: components.login,
 };
 
+beforeEach(() => {
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+});
+
 test('lists login providers', () => {
   const { container } = render(
     <MemoryRouter>

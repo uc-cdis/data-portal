@@ -20,6 +20,10 @@ import { asyncSetInterval } from './utils';
 /** @typedef {import('./types').KubeState} KubeState */
 /** @typedef {import('./types').UserAccessState} UserAccessState */
 /** @typedef {import('./types').PopupState} PopupState */
+/** @typedef {import('./types').ProjectState} ProjectState */
+/** @typedef {import('./DataDictionary/types').DdgraphState} DdgraphState */
+/** @typedef {import('./GraphQLEditor/types').GraphiqlState} GraphiqlState */
+/** @typedef {import('./Submission/types').SubmissionState} SubmissionState */
 
 /**
  * @param {Partial<PopupState>} state
@@ -281,60 +285,107 @@ export const fetchUserNoRefresh = () => (/** @type {Dispatch} */ dispatch) =>
  * redux-thunk support asynchronous redux actions via 'thunks' -
  * lambdas that accept dispatch and getState functions as arguments
  */
-export const fetchProjects = () => (/** @type {Dispatch} */ dispatch) =>
-  fetchWithCreds({
-    path: `${submissionApiPath}graphql`,
-    body: JSON.stringify({
-      query: 'query { project(first:0) {code, project_id, availability_type}}',
-    }),
-    method: 'POST',
-  }).then(({ status, data }) => {
-    if (status === 200)
-      dispatch({
-        type: 'RECEIVE_PROJECTS',
-        data: data.data.project,
-        status,
-      });
-    else
-      dispatch({
-        type: 'FETCH_ERROR',
-        error: data,
-        status,
-      });
-  });
+export const fetchProjects =
+  () =>
+  /**
+   * @param {Dispatch} dispatch
+   * @param {() => { project: ProjectState }} getState
+   */
+  (dispatch, getState) =>
+    getState().project.projects
+      ? Promise.resolve()
+      : fetchWithCreds({
+          path: `${submissionApiPath}graphql`,
+          body: JSON.stringify({
+            query:
+              'query { project(first:0) {code, project_id, availability_type}}',
+          }),
+          method: 'POST',
+        }).then(({ status, data }) => {
+          if (status === 200)
+            dispatch({
+              type: 'RECEIVE_PROJECTS',
+              data: data.data.project,
+              status,
+            });
+          else
+            dispatch({
+              type: 'FETCH_ERROR',
+              error: data,
+              status,
+            });
+        });
 
 /**
  * Fetch the schema for graphi, and stuff it into redux - handled by router
  */
-export const fetchSchema = () => (/** @type {Dispatch} */ dispatch) =>
-  fetch('/data/schema.json')
-    .then((response) => response.json())
-    .then(({ data }) =>
-      dispatch({ type: 'RECEIVE_SCHEMA', schema: buildClientSchema(data) })
-    );
+export const fetchSchema =
+  () =>
+  /**
+   * @param {Dispatch} dispatch
+   * @param {() => { graphiql: GraphiqlState }} getState
+   */
+  (dispatch, getState) =>
+    getState().graphiql.schema
+      ? Promise.resolve()
+      : import('../data/schema.json').then(({ default: { data } }) =>
+          dispatch({
+            type: 'RECEIVE_SCHEMA',
+            schema: buildClientSchema(data),
+          })
+        );
 
-export const fetchGuppySchema = () => (/** @type {Dispatch} */ dispatch) =>
-  fetch(guppyGraphQLUrl, {
-    credentials: 'include',
-    headers,
-    method: 'POST',
-    body: JSON.stringify({
-      query: getIntrospectionQuery(),
-      operationName: 'IntrospectionQuery',
-    }),
-  })
-    .then((response) => response.json())
-    .then(({ data }) =>
-      dispatch({
-        type: 'RECEIVE_GUPPY_SCHEMA',
-        data: buildClientSchema(data),
-      })
-    );
+export const fetchGuppySchema =
+  () =>
+  /**
+   * @param {Dispatch} dispatch
+   * @param {() => { graphiql: GraphiqlState }} getState
+   */
+  (dispatch, getState) =>
+    getState().graphiql.guppySchema
+      ? Promise.resolve()
+      : fetch(guppyGraphQLUrl, {
+          credentials: 'include',
+          headers,
+          method: 'POST',
+          body: JSON.stringify({
+            query: getIntrospectionQuery(),
+            operationName: 'IntrospectionQuery',
+          }),
+        })
+          .then((response) => response.json())
+          .then(({ data }) =>
+            dispatch({
+              type: 'RECEIVE_GUPPY_SCHEMA',
+              data: buildClientSchema(data),
+            })
+          );
 
-export const fetchDictionary = () => (/** @type {Dispatch} */ dispatch) =>
-  fetch('/data/dictionary.json')
-    .then((response) => response.json())
-    .then((data) => dispatch({ type: 'RECEIVE_DICTIONARY', data }));
+export const fetchDictionary =
+  () =>
+  /**
+   * @param {Dispatch} dispatch
+   * @param {() => { submission: SubmissionState }} getState
+   */
+  (dispatch, getState) =>
+    getState().submission.dictionary
+      ? Promise.resolve()
+      : import('../data/dictionary.json').then(({ default: data }) =>
+          dispatch({ type: 'RECEIVE_DICTIONARY', data })
+        );
+
+export const fetchGraphvizLayout =
+  () =>
+  /**
+   * @param {import('redux').Dispatch} dispatch
+   * @param {() => { ddgraph: DdgraphState }} getState
+   */
+  (dispatch, getState) =>
+    getState().ddgraph.graphvizLayout
+      ? Promise.resolve()
+      : import('../data/graphvizLayout.json').then(({ default: data }) => {
+          dispatch({ type: 'RECEIVE_GRAPHVIZ_LAYOUT', data });
+        });
 
 export const fetchVersionInfo = () => (/** @type {Dispatch} */ dispatch) =>
   fetchWithCreds({

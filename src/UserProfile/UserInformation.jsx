@@ -98,7 +98,7 @@ function UserInformationField({
         (submitStatus === 'success' ? (
           <div className='user-information__submit-message'>
             <FontAwesomeIcon
-              icon='check-circle'
+              icon='circle-check'
               color='var(--g3-color__lime)'
             />
             Updated successfully!
@@ -106,7 +106,7 @@ function UserInformationField({
         ) : (
           <div className='user-information__submit-message'>
             <FontAwesomeIcon
-              icon='exclamation-triangle'
+              icon='triangle-exclamation'
               color='var(--g3-color__rose)'
             />
             Update failed! Please try again.

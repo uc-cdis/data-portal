@@ -9,8 +9,6 @@ import ReduxGraphCalculator from './graph/GraphCalculator';
 import ReduxDictionarySearcher from './search/DictionarySearcher';
 import ReduxDictionarySearchHistory from './search/DictionarySearchHistory';
 import './DataDictionary.css';
-import Button from '../gen3-ui-component/components/Button';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 /**
  * @param {Object} props
@@ -29,7 +27,6 @@ function DataDictionary({
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const isInitialRenderRef = useRef(true);
-  const graphCalculatorRef = useRef(null);
   useEffect(() => {
     if (isInitialRenderRef.current) {
       isInitialRenderRef.current = false;
@@ -125,30 +122,12 @@ function DataDictionary({
             isGraphView ? '' : 'data-dictionary__graph--hidden'
           }`}
         >
-          <ReduxGraphCalculator ref={graphCalculatorRef} />
-          {isGraphView &&
-            (layoutInitialized ? (
-              <DataDictionaryGraph
-                onClearSearchResult={handleClearSearchResult}
-              />
-            ) : (
-              <div style={{ margin: '1rem', textAlign: 'center' }}>
-                <h2 style={{ marginBottom: '1rem' }}>
-                  {' '}
-                  <FontAwesomeIcon
-                    icon='exclamation-triangle'
-                    color='var(--g3-color__highlight-orange)'
-                    size='sm'
-                  />{' '}
-                  Error in drawing the Data Dictionary graph...
-                </h2>
-                <Button
-                  buttonType='primary'
-                  label='Redraw graph'
-                  onClick={() => graphCalculatorRef.current.calculateLayout()}
-                />
-              </div>
-            ))}
+          <ReduxGraphCalculator />
+          {isGraphView && layoutInitialized && (
+            <DataDictionaryGraph
+              onClearSearchResult={handleClearSearchResult}
+            />
+          )}
         </div>
         <div
           className={`data-dictionary__table ${

@@ -1,8 +1,8 @@
 __mocks__
 .git
 .storybook
-data/dictionary.*
-data/schema.*
+data/*.json
+data/*.graphql
 docs
 node_modules
 src/**/__generated__

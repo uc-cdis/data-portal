@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { matchPath, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
 import Layout from './Layout';
@@ -14,11 +14,18 @@ import {
   // workspaceUrl,
   // workspaceErrorUrl,
 } from './localconf';
-import { fetchVersionInfo } from './actions';
+import {
+  fetchDictionary,
+  fetchGraphvizLayout,
+  fetchGuppySchema,
+  fetchSchema,
+  fetchVersionInfo,
+} from './actions';
 import useSessionMonitor from './hooks/useSessionMonitor';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
+const DataRequests = lazy(() => import('./DataRequests'));
 const Explorer = lazy(() => import('./GuppyDataExplorer'));
 const GraphQLQuery = lazy(() => import('./GraphQLEditor/ReduxGqlEditor'));
 const IndexPage = lazy(() => import('./Index/page'));
@@ -84,7 +91,16 @@ function App() {
         <Route
           path='submission'
           element={
-            <ProtectedContent isAdminOnly>
+            <ProtectedContent
+              isAdminOnly
+              preload={(/** @type {import('react-router').Location} */ loc) =>
+                ['/submission/map', '/submission/:project/*'].some((pattern) =>
+                  matchPath(pattern, loc.pathname)
+                )
+                  ? dispatch(fetchDictionary())
+                  : Promise.resolve()
+              }
+            >
               <Outlet />
             </ProtectedContent>
           }
@@ -100,7 +116,14 @@ function App() {
         <Route
           path='query'
           element={
-            <ProtectedContent>
+            <ProtectedContent
+              preload={() =>
+                Promise.all([
+                  dispatch(fetchSchema()),
+                  dispatch(fetchGuppySchema()),
+                ])
+              }
+            >
               <GraphQLQuery />
             </ProtectedContent>
           }
@@ -108,7 +131,7 @@ function App() {
         <Route
           path='identity'
           element={
-            <ProtectedContent filter={() => dispatch(fetchAccess())}>
+            <ProtectedContent preload={() => dispatch(fetchAccess())}>
               <UserProfile />
             </ProtectedContent>
           }
@@ -116,7 +139,14 @@ function App() {
         <Route
           path='dd/*'
           element={
-            <ProtectedContent>
+            <ProtectedContent
+              preload={() =>
+                Promise.all([
+                  dispatch(fetchDictionary()),
+                  dispatch(fetchGraphvizLayout()),
+                ])
+              }
+            >
               <DataDictionary />
             </ProtectedContent>
           }
@@ -139,6 +169,14 @@ function App() {
             }
           />
         )}
+        <Route
+          path='requests'
+          element={
+            <ProtectedContent>
+              <DataRequests />
+            </ProtectedContent>
+          }
+        />
         <Route path='*' element={<Navigate to='' replace />} />
         {/* <Route
           path='/indexing'
@@ -152,8 +190,11 @@ function App() {
           path='/files/*'
           element={
             <ProtectedContent
-              filter={() =>
-                dispatch(fetchCoreMetadata(props.match.params[0]))
+              preload={() =>
+                Promise.all([
+                  dispatch(fetchProjects()),
+                  dispatch(fetchCoreMetadata(props.match.params[0])),
+                ])
               }
             >
               <CoreMetadataPage />
