@@ -29,7 +29,7 @@ function ReviewForm({ docsToBeReviewed, onClose, onReview }) {
       {status === 'error' ? (
         <div>
           <FontAwesomeIcon
-            icon='exclamation-triangle'
+            icon='triangle-exclamation'
             color='var(--g3-color__rose)'
           />
           <h2>Error in your document review...</h2>
@@ -42,7 +42,7 @@ function ReviewForm({ docsToBeReviewed, onClose, onReview }) {
         <div>
           <p>
             <FontAwesomeIcon
-              icon='exclamation-triangle'
+              icon='triangle-exclamation'
               color='var(--pcdc-color__secondary)'
             />
             Please review the following updated documents to

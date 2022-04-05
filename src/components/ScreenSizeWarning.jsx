@@ -7,7 +7,7 @@ function ScreenSizeWarning() {
     <div className='screen-size-warning__container'>
       <FontAwesomeIcon
         className='screen-size-warning__icon'
-        icon='exclamation-triangle'
+        icon='triangle-exclamation'
         color='var(--pcdc-color__secondary)'
       />
       To get the full Data Commons experience, please switch to a larger screen.

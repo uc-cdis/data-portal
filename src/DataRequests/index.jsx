@@ -144,7 +144,7 @@ export default function DataRequests() {
           <div className='data-requests__error'>
             <h2>
               <FontAwesomeIcon
-                icon='exclamation-triangle'
+                icon='triangle-exclamation'
                 color='var(--g3-primary-btn__bg-color'
               />{' '}
               Error in fetching your projects...

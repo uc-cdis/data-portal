@@ -4,10 +4,10 @@ import {
   faAnchor,
   faAngleUp,
   faAngleDown,
-  faCheckCircle,
-  faExclamationTriangle,
+  faCircleCheck,
   faFlask,
   faMicroscope,
+  faTriangleExclamation,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
@@ -30,10 +30,10 @@ library.add(
   faAnchor,
   faAngleUp,
   faAngleDown,
-  faCheckCircle,
-  faExclamationTriangle,
+  faCircleCheck,
   faFlask,
   faMicroscope,
+  faTriangleExclamation,
   faUser
 );
 
