@@ -538,3 +538,8 @@
 .discovery-modal__fieldgroup {
   padding: 4px;
 }
+
+.discovery-modal__tagsfield {
+  display: flex;
+  justify-content: end;
+}

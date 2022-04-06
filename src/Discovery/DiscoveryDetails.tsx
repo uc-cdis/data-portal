@@ -36,6 +36,7 @@ const fieldCls = { className: 'discovery-modal__field' };
 const subHeadingCls = { className: 'discovery-modal__subheading' };
 const fieldGroupingClass = { className: 'discovery-modal__fieldgroup' };
 const labelCls = { className: 'discovery-modal__fieldlabel' }
+const tagsCls = { className: 'discovery-modal__tagsfield' };
 
 const blockTextField = (text: string) => <div {...fieldCls} >{text}</div>;
 const label = (text: string) => <b {...labelCls}>{text}</b>;
@@ -139,10 +140,10 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
       const tags = fieldConfig.categories ? (resource.tags || []).filter(
         (tag) => fieldConfig.categories.includes(tag.category),
       ) : resource.tags;
-      return <React.Fragment>{renderFieldContent(tags, 'tags', discoveryConfig)}</React.Fragment>;
+      return <div {...tagsCls}>{renderFieldContent(tags, 'tags', discoveryConfig)}</div>;
     }
   }
-  return <React.Fragment />;
+  return <></>;
 };
 
 const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource) => {
