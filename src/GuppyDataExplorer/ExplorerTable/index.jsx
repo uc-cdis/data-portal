@@ -134,7 +134,7 @@ class ExplorerTable extends React.Component {
           if (this.props.tableConfig.linkFields.includes(field)) { // link button
             valueStr = dicomViewerLink;
           } else { // direct link
-            return (<div><span title={valueStr}><a href={dicomViewerLink} target='_blank'>{valueStr}</a></span></div>);
+            return (<div><span title={valueStr}><a href={dicomViewerLink} target='_blank' rel='noreferrer'>{valueStr}</a></span></div>);
           }
         }
 
