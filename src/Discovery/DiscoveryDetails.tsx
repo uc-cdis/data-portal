@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Alert, Button, Drawer, Space, Collapse, List, Tabs, Divider, Card,
+  Alert, Button, Drawer, Space, Collapse, List, Tabs
 } from 'antd';
 import {
   LinkOutlined,
@@ -35,10 +35,10 @@ interface ListItem {
 const fieldCls = { className: 'discovery-modal__field' };
 const subHeadingCls = { className: 'discovery-modal__subheading' };
 const fieldGroupingClass = { className: 'discovery-modal__fieldgroup' };
-const labelCls = { className: 'discovery-modal__fieldlabel' }
+const labelCls = { className: 'discovery-modal__fieldlabel' };
 const tagsCls = { className: 'discovery-modal__tagsfield' };
 
-const blockTextField = (text: string) => <div {...fieldCls} >{text}</div>;
+const blockTextField = (text: string) => <div {...fieldCls}>{text}</div>;
 const label = (text: string) => <b {...labelCls}>{text}</b>;
 const textField = (text: string) => <span>{text}</span>;
 const linkField = (text: string) => <a href={text}>{text}</a>;
@@ -143,30 +143,29 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
       return <div {...tagsCls}>{renderFieldContent(tags, 'tags', discoveryConfig)}</div>;
     }
   }
-  return <></>;
+  return <React.Fragment />;
 };
 
 const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource) => {
-    // at least one field from this group is either populated in the resource, or isn't configured to pull from a field (e.g. tags)
-    const groupHasContent = group.fields.some(
-      field => !field.sourceField || resource[field.sourceField]
+  // at least one field from this group is either populated in the resource, or isn't configured to pull from a field (e.g. tags)
+  const groupHasContent = group.fields.some(
+    (field) => !field.sourceField || resource[field.sourceField],
+  );
+  if (groupHasContent) {
+    return (
+      <div {...fieldGroupingClass}>
+        {group.header ? subHeading(group.header) : null}
+        {
+          group.fields.map(
+            (field, i) => <div key={i}>{tabField(field, discoveryConfig, resource)}</div>,
+          )
+        }
+      </div>
     );
-    if (groupHasContent) {
-      return (
-        <div {...fieldGroupingClass}>
-          {group.header ? subHeading(group.header) : null}
-          {
-            group.fields.map(
-              (field, i) => <div key={i}>{tabField(field, discoveryConfig, resource)}</div>,
-            )
-          }
-        </div>
-        );
-    }
-    else {
-      return <></>
-    }
   }
+
+  return <React.Fragment />;
+};
 
 const DiscoveryDetails = (props: Props) => {
   const headerField = props.config.detailView?.headerField || props.config.studyPageFields.header?.field;
@@ -212,7 +211,7 @@ const DiscoveryDetails = (props: Props) => {
           ? (
             <div className='discovery-modal-content'>
               {header}
-              <Tabs type={'card'} className={"mytabs"}>
+              <Tabs type={'card'} className={'mytabs'}>
                 {
                   props.config.detailView.tabs.map(
                     ({ tabName, groups }) => (
