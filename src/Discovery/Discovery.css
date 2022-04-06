@@ -522,4 +522,24 @@
 .discovery-modal__field {
   display: flex;
   justify-content: space-between;
+  padding: 2px 0px;
+}
+
+.discovery-modal__fieldlabel {
+  padding-right: 10px;
+}
+
+.discovery-modal__subheading {
+  background-color: #dfe3e2;
+  border-radius: 4px;
+  padding: 0px 10px;
+}
+
+.discovery-modal__fieldgroup {
+  padding: 4px;
+}
+
+/* // add me to gitops css */
+.ant-tabs-tab {
+  background-color: red;
 }

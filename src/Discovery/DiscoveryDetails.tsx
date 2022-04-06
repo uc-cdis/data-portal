@@ -32,15 +32,18 @@ interface ListItem {
   guid: string
 }
 
-const modalField = { className: 'discovery-modal__field' };
+const fieldCls = { className: 'discovery-modal__field' };
+const subHeadingCls = { className: 'discovery-modal__subheading' };
+const fieldGroupingClass = { className: 'discovery-modal__fieldgroup' };
+const labelCls = { className: 'discovery-modal__fieldlabel' }
 
-const blockTextField = (text: string) => <Card>{text}</Card>;
-const label = (text: string) => <b>{text}</b>;
+const blockTextField = (text: string) => <div {...fieldCls} >{text}</div>;
+const label = (text: string) => <b {...labelCls}>{text}</b>;
 const textField = (text: string) => <span>{text}</span>;
 const linkField = (text: string) => <a href={text}>{text}</a>;
 
-const subHeading = (text: string) => <Divider orientation='left' orientationMargin={0}><b>{text}</b></Divider>;
-const labeledSingleTextField = (labelText: string, fieldText: string) => <div {...modalField}>{label(labelText)} {textField(fieldText)}</div>;
+const subHeading = (text: string) => <h3 {...subHeadingCls}>{text}</h3>;
+const labeledSingleTextField = (labelText: string, fieldText: string) => <div {...fieldCls}>{label(labelText)} {textField(fieldText)}</div>;
 const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (
   fieldsText.length
     ? (
@@ -48,10 +51,10 @@ const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (
         {
           [
             // labeled first field
-            <div {...modalField}>{label(labelText)} {textField(fieldsText[0])}</div>,
+            <div {...fieldCls}>{label(labelText)} {textField(fieldsText[0])}</div>,
             // unlabeled subsequent fields
             ...fieldsText.slice(1).map(
-              (text, i) => <div {...modalField} key={i}><div /> {textField(text)}</div>,
+              (text, i) => <div {...fieldCls} key={i}><div /> {textField(text)}</div>,
             ),
           ]
         }
@@ -59,7 +62,7 @@ const labeledMultipleTextField = (labelText: string, fieldsText: string[]) => (
     )
     : <React.Fragment />
 );
-const labeledSingleLinkField = (labelText: string, linkText: string) => <div {...modalField}>{label(labelText)} {linkField(linkText)}</div>;
+const labeledSingleLinkField = (labelText: string, linkText: string) => <div {...fieldCls}>{label(labelText)} {linkField(linkText)}</div>;
 const labeledMultipleLinkField = (labelText: string, linksText: string[]) => (
   linksText.length
     ? (
@@ -67,10 +70,10 @@ const labeledMultipleLinkField = (labelText: string, linksText: string[]) => (
         {
           [
             // labeled first field
-            <div {...modalField}>{label(labelText)} {linkField(linksText[0])}</div>,
+            <div {...fieldCls}>{label(labelText)} {linkField(linksText[0])}</div>,
             // unlabeled subsequent fields
             ...linksText.slice(1).map(
-              (linkText, i) => <div {...modalField} key={i}><div /> {linkField(linkText)}</div>,
+              (linkText, i) => <div {...fieldCls} key={i}><div /> {linkField(linkText)}</div>,
             ),
           ]
         }
@@ -142,16 +145,27 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
   return <React.Fragment />;
 };
 
-const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource) => (
-  <div>
-    {group.header ? subHeading(group.header) : null}
-    {
-      group.fields.map(
-        (field, i) => <div key={i}>{tabField(field, discoveryConfig, resource)}</div>,
-      )
+const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, resource: DiscoveryResource) => {
+    // at least one field from this group is either populated in the resource, or isn't configured to pull from a field (e.g. tags)
+    const groupHasContent = group.fields.some(
+      field => !field.sourceField || resource[field.sourceField]
+    );
+    if (groupHasContent) {
+      return (
+        <div {...fieldGroupingClass}>
+          {group.header ? subHeading(group.header) : null}
+          {
+            group.fields.map(
+              (field, i) => <div key={i}>{tabField(field, discoveryConfig, resource)}</div>,
+            )
+          }
+        </div>
+        );
     }
-  </div>
-);
+    else {
+      return <></>
+    }
+  }
 
 const DiscoveryDetails = (props: Props) => {
   const headerField = props.config.detailView?.headerField || props.config.studyPageFields.header?.field;
@@ -197,7 +211,7 @@ const DiscoveryDetails = (props: Props) => {
           ? (
             <div className='discovery-modal-content'>
               {header}
-              <Tabs>
+              <Tabs type={'card'} className={"mytabs"}>
                 {
                   props.config.detailView.tabs.map(
                     ({ tabName, groups }) => (
