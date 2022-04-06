@@ -14,7 +14,7 @@ services:
     - docker
 
 before_install:
-    - npm install -g npm@8
+    - npm install -g npm@8.5
 
 install:
     - npm ci
