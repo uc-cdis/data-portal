@@ -6,19 +6,9 @@ import {
 import './GWASUIApp.css';
 import { headers, fetchAndSetCsrfToken } from '../../configs';
 import { gwasWorkflowPath, cohortMiddlewarePath } from '../../localconf';
-import {
-  CheckCircleOutlined,
-  SyncOutlined,
-  CloseCircleOutlined,
-  QuestionCircleOutlined,
-  MinusCircleOutlined,
-} from '@ant-design/icons';
-import { manifestObj, demoJobStatuses } from './utils';
+import GWASWorkflowList from './GWASWorkflowList';
 
 const { Step } = Steps;
-
-const { Panel } = Collapse;
-const { TextArea } = Input;
 
 const steps = [
   {
@@ -48,13 +38,17 @@ const GWASUIApp = (props) => {
   const [form] = Form.useForm();
   const [current, setCurrent] = useState(0);
   const [sourceId, setSourceId] = useState(2);
+  const [cohortDefinitionId, setCohortDefinitionId] = useState(undefined);
   const [cohortDefinitions, setCohortDefinitions] = useState([]);
   const [allConcepts, setAllConcepts] = useState([])
   const [cohortConcepts, setCohortConcepts] = useState([]);
-
   const [selectedCohort, setSelectedCohort] = useState(undefined);
-
   const [selectedConcepts, setSelectedConcepts] = useState([]);
+  const [covariates, setCovariates] = useState([]);
+  const [selectedOutcome, setSelectedOutcome] = useState([]);
+  const [imputationScore, setImputationScore] = useState(undefined);
+  const [mafThreshold, setMafThreshold] = useState(undefined);
+  const [currentWorkflows, setCurrentWorkflow] = useState(["argo-wrapper-workflow-5536413310", "argo-wrapper-workflow-3238210855"]);
 
   const [numOfPC, setNumOfPC] = useState(3);
   const [selectedPhenotype, setSelectedPhenotype] = useState(undefined);
@@ -68,21 +62,33 @@ const GWASUIApp = (props) => {
   const [workflowName, setWorkflowName] = useState(undefined);
 
   const [gwasBody, setGwasBody] = useState({});
-  const [showJobStatusModal, setShowJobStatusModal] = useState(false);
-  const [jobStatusModalData, setJobStatusModalData] = useState({});
 
 
-  const onStep3FormSubmit = useCallback((values) => {
-    setGwasBody(values);
-    setNumOfPC(values.numOfPC);
+
+  const onStep4FormSubmit = useCallback((values) => {
+    console.log('values', values);
   }, []);
+
+  const onStep5FormSubmit = (values) => {
+    setImputationScore(values.imputationCutoff);
+    setMafThreshold(values.mafCutoff);
+    setNumOfPC(values.numOfPC);
+    // setJobName(values.GWASJobName);
+    // setJobSubmittedRunID('run-12345');
+    // setShowJobSubmissionResult(true);
+  }
 
   const handleDelete = (key) => {
     const newlySelectedPhenotype = (selectedPhenotype.concept_id === key) ? undefined : selectedPhenotype;
     const newlySelectedCovariates = selectedCovariates.filter((item) => item.concept_id !== key);
+    console.log('selectedConceptsbefore', selectedConcepts);
     setSelectedConcepts(selectedConcepts.filter((item) => item.concept_id !== key));
+    console.log('selectedconcepts after', selectedConcepts);
     setSelectedPhenotype(newlySelectedPhenotype);
     setSelectedCovariates(newlySelectedCovariates);
+    console.log('newlySelectedPhenotype', (selectedPhenotype.concept_id === key) ? undefined : selectedPhenotype);
+    console.log("newlySelectedCovariates", selectedCovariates.filter((item) => item.concept_id !== key));
+    debugger;
     form.setFieldsValue({
       covariates: newlySelectedCovariates.map((val) => val.name),
       outcome: newlySelectedPhenotype.name,
@@ -94,11 +100,19 @@ const GWASUIApp = (props) => {
     const getCohortDefinitions = await fetch(cohortEndPoint);
     const data = await getCohortDefinitions.json();
     if (data) {
+      console.log('defs&stats', data.cohort_definitions_and_stats);
       setCohortDefinitions(data.cohort_definitions_and_stats);
     }
   }
 
   useEffect(() => {
+    // console.log('hi');
+    // const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;
+    // fetch(cohortEndPoint).then((res) => {
+    //   return res
+    // }).then(data => {
+    //   console.log(data.json())
+    // })
     getCohortDefinitions();
   }, [])
 
@@ -132,7 +146,7 @@ const GWASUIApp = (props) => {
     selectedRowKeys: (selectedCohort) ? [selectedCohort.cohort_definition_id] : [],
     onChange: (_, selectedRows) => {
       setSelectedCohort(selectedRows[0]);
-      getConceptsBySource(9); // or 10
+      setCohortDefinitionId(selectedRows[0].cohort_definition_id);
     },
   };
 
@@ -154,6 +168,7 @@ const GWASUIApp = (props) => {
     columnTitle: 'Select',
     selectedRowKeys: selectedConcepts.map((val) => val.concept_id),
     onChange: (_, selectedRows) => {
+      // console.log('selectedRows', selectedRows);
       setSelectedConcepts(selectedRows);
     },
   };
@@ -204,7 +219,7 @@ const GWASUIApp = (props) => {
       dataIndex: 'n_missing_ratio',
       key: 'n_missing_ratio',
       render: (_, record) => (
-        <span>{`${(record.n_missing_ratio * 100).toFixed(0)}%`}</span>
+        <span onClick={() => { console.log('record', record) }}>{`${(record.n_missing_ratio * 100).toFixed(0)}%`}</span>
       ),
     },
     {
@@ -223,10 +238,49 @@ const GWASUIApp = (props) => {
     fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
   }, [props]);
 
+  useEffect(() => {
+    getConceptsBySource(cohortDefinitionId);
+  }, [cohortDefinitionId]);
+
+  useEffect(() => {
+    console.log('gwas effect', gwasBody);
+  }, [gwasBody])
+
   const filterConcept = (term) => {
     setSearchTerm(term);
     const filteredConcepts = allConcepts.filter(entry => entry.concept_name.toLowerCase().includes(term.toLowerCase()) || entry.concept_id.toString().includes(term));
     filteredConcepts.length ? setCohortConcepts(filteredConcepts) : setCohortConcepts(cohortConcepts);
+  }
+
+  const testSubmit = () => {
+    const requestBody = {
+      "n_pcs": numOfPC,
+      "covariates": covariates,
+      "out_prefix": Date.now().toString(),
+      "outcome": selectedOutcome,
+      "outcome_is_binary": true,
+      "maf_threshold": Number(mafThreshold),
+      "imputation_score_cutoff": Number(imputationScore),
+      "template_version": "hello-world-template",
+      "source_id": sourceId,
+      "cohort_definition_id": cohortDefinitionId
+    };
+    console.log('requestBody', requestBody);
+
+    const newWorkflow = fetch(`${gwasWorkflowPath}submit`, {
+      method: "POST",
+      credentials: "include",
+      headers: headers,
+      body: JSON.stringify(requestBody)
+    })
+      .then((response) => {
+        console.log('response', response);
+        return response.json();
+      })
+      .then(newWorkflow => {
+        console.log('newWorkflow', newWorkflow);
+      });
+      if (newWorkFlow) console.log('submitted', newWorkflow);
   }
 
   const handleGwasSubmit = () => {
@@ -238,141 +292,7 @@ const GWASUIApp = (props) => {
     setJobName(undefined);
     // setShowJobSubmissionResult(true);
     // setJobSubmittedRunID("newGwasJob");
-
-    // const requestBody = {
-    //   "n_pcs": gwasBody.numOfPC,
-    //   "covariates": gwasBody.covariates,
-    //   "out_prefix": "genesis_vadc",
-    //   "outcome": selectedPhenotype,
-    //   "outcome_is_binary": "TRUE",
-    //   "maf_threshold": gwasBody.mafCutoff,
-    //   "imputation_score_cutoff": gwasBody.imputationCutoff,
-    //   "template_version": "hello-world-1.0",
-    //   "gen3_user_name": "Craig.Teerlink@va.gov"
-    // };
-    const requestBody = {
-      "n_pcs": 5,
-      "covariantes": "test_cov",
-      "out_prefix": "test_out_prefix",
-      "outcome": "test_outcome",
-      "outcome_is_binary": "TRUE",
-      "maf_threshold": 1.01,
-      "imputation_score_cutoff": 2.02,
-      "template_version": "hello-world-1.0"
-    };
-
-    fetch(`${gwasWorkflowPath}submit`, {
-      method: "POST",
-      credentials: "include",
-      headers: headers,
-      body: JSON.stringify(requestBody)
-    })
-      .then((response) => {
-        return response.json()
-      })
-      .then(newWorkflow => {
-        // console.log('newWorkflow', newWorkflow);
-      });
   }
-
-  const handleJobStatusModalShow = (runID, displayFullLog = true) => {
-    // TODO Fetch GWAS status endpoint
-    // fetch(`${gwasWorkflow}status)
-    setJobStatusModalData(JSON.stringify(manifestObj));
-    setShowJobStatusModal(true);
-  };
-
-
-  const getStatusTag = (jobStatus) => {
-    if (!jobStatus) {
-      return (
-        <Tag icon={<QuestionCircleOutlined />} color='default'>
-          Unknown
-        </Tag>
-      );
-    }
-    switch (jobStatus) {
-      case 'running':
-        return (
-          <Tag icon={<SyncOutlined spin />} color='processing'>
-            In Progress
-          </Tag>
-        );
-      case 'completed':
-        return (
-          <Tag icon={<CheckCircleOutlined />} color='success'>
-            Completed
-          </Tag>
-        );
-      case 'failed':
-        return (
-          <Tag icon={<CloseCircleOutlined />} color='error'>
-            Failed
-          </Tag>
-        );
-      case 'cancelled':
-        return (
-          <Tag icon={<MinusCircleOutlined />} color='warning'>
-            Cancelled
-          </Tag>
-        );
-      default:
-        return (
-          <Tag icon={<QuestionCircleOutlined />} color='default'>
-            Unknown
-          </Tag>
-        );
-    }
-  }
-
-  const cancelGwasJob = (jobId) => {
-    // TODO Fetch GWAS cancel endpoint
-    // fetch(`${gwasWorkflow}cancel)
-    setShowJobStatusModal(false);
-  }
-
-  const getActionButtons = (listItem) => {
-    console.log(listItem);
-    // <Button type='link' size='small' onClick={(event) => {
-    //   event.stopPropagation();
-    //   handleJobStatusModalShow(listItem.runID);
-    // }}>show logs</Button>
-    const actionButtons = [];
-    if (listItem.status === 'running') {
-    actionButtons.unshift(
-      <Popconfirm
-        title='Are you sure you want to cancel this job?'
-        onConfirm={(event) => {
-          event.stopPropagation();
-          cancelGwasJob("123");
-        }}
-        okText='Yes'
-        cancelText='No'
-      >
-        <Button type='link' size='small' danger>cancel job</Button>
-      </Popconfirm>);
-    }
-    if (listItem.status === 'completed') {
-      actionButtons.unshift(
-        <Button
-          primary
-          type='link'
-          size='small'
-          onClick={(event) => {
-            event.stopPropagation();
-            handleJobStatusModalShow(listItem.runID, false);
-          }}
-        >
-          show output
-        </Button>);
-    }
-    return actionButtons;
-  }
-
-  const handleJobStatusModalCancel = () => {
-    setShowJobStatusModal(false);
-  }
-
 
   const generateContentForStep = (stepIndex) => {
     switch (stepIndex) {
@@ -449,7 +369,7 @@ const GWASUIApp = (props) => {
                   mafCutoff: 0.01,
                   imputationCutoff: 0.3
                 }}
-                onFinish={onStep3FormSubmit}
+                onFinish={() => onStep4FormSubmit()}
                 autoComplete='off'
               >
                 <Form.Item
@@ -493,13 +413,13 @@ const GWASUIApp = (props) => {
                   label='MAF Cutoff'
                   name='mafCutoff'
                 >
-                  <InputNumber disabled stringMode step="0.1" min={"0"} max={"1"} />
+                  <InputNumber stringMode step="0.1" min={"0"} max={"1"} />
                 </Form.Item>
                 <Form.Item
                   label='Imputation Score Cutoff'
                   name='imputationCutoff'
                 >
-                  <InputNumber disabled stringMode step="0.1" min={"0"} max={"1"} />
+                  <InputNumber stringMode step="0.1" min={"0"} max={"1"} />
                 </Form.Item>
               </Form>
             </div>
@@ -540,7 +460,7 @@ const GWASUIApp = (props) => {
 
         return (
           <>
-          {/* <div className='GWASApp-jobStatus'>
+            {/* <div className='GWASApp-jobStatus'>
             <Collapse onClick={(event) => event.stopPropagation()}>
               <Panel header='Submitted Job Statuses' key='1'>
                 <List
@@ -595,11 +515,9 @@ const GWASUIApp = (props) => {
               <Form
                 {...layout}
                 name='control-hooks'
+                form={form}
                 onFinish={(values) => {
-                  console.log(values);
-                  // setJobName(values.GWASJobName);
-                  // setJobSubmittedRunID('run-12345');
-                  // setShowJobSubmissionResult(true);
+                  onStep5FormSubmit(values);
                 }}
               >
                 <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name for GWAS job!' }]}>
@@ -617,6 +535,9 @@ const GWASUIApp = (props) => {
                   >
                     Submit
                   </Button>
+                  <Button onClick={() => {
+                    testSubmit()
+                  }}>test Submit</Button>
                 </Form.Item>
               </Form>
             </div>
@@ -640,57 +561,7 @@ const GWASUIApp = (props) => {
 
   return (
     <Space direction={'vertical'} style={{ width: '100%' }}>
-       <div className='GWASApp-jobStatus'>
-            <Collapse onClick={(event) => event.stopPropagation()}>
-              <Panel header='Submitted Job Statuses' key='1'>
-                <List
-                  className='GWASApp__jobStatusList'
-                  itemLayout='horizontal'
-                  pagination={{ pageSize: 5 }}
-                  dataSource={demoJobStatuses}
-                  renderItem={(item) => (
-                    <List.Item
-                      actions={getActionButtons(item)}
-                    >
-                      <List.Item.Meta
-                        title={`Run ID: ${item.runID}`}
-                        description={(item.jobName) ? `GWAS Job Name: ${item.jobName}` : null}
-                      />
-                      {/* <Button>Output</Button> */}
-                      <span>&nbsp;</span>
-                      <div>{getStatusTag(item.status)}</div>
-
-                    </List.Item>
-
-                  )}
-                />
-
-              </Panel>
-            </Collapse>
-            <Modal
-              visible={showJobStatusModal}
-              closable={false}
-              title={'Show job logs'}
-              footer={[
-                <div className="GWAS-btnContainer">
-                  <Button key='copy' className="g3-button g3-button--tertiary">
-                    Copy JSON
-                  </Button>
-                  <Button key='download' className="explorer-button-group__download-button g3-button g3-button--primary">
-                    <i className="g3-icon g3-icon--sm g3-icon--datafile g3-button__icon g3-button__icon--left"></i>
-                    Download Manifest
-                    <i className="g3-icon g3-icon--sm g3-icon--download g3-button__icon g3-button__icon--right"></i>
-                  </Button>
-                  <Button className="g3-button g3-button--secondary" key='close' onClick={() => handleJobStatusModalCancel()}>
-                    Close
-                  </Button>
-                </div>,
-              ]}
-            >
-              <TextArea rows={10} value={jobStatusModalData} readOnly />
-
-            </Modal>
-          </div>
+      <GWASWorkflowList currentWorkflows={currentWorkflows}></GWASWorkflowList>
       <Steps current={current}>
         {steps.map((item) => (
           <Step key={item.title} title={item.title} description={item.description} />
@@ -714,12 +585,13 @@ const GWASUIApp = (props) => {
         {current < steps.length - 1 && (
           <Button
             className='GWASUI-navBtn GWASUI-navBtn__next'
-            // style={{ margin: '0 16px' }}
             type='primary'
             onClick={() => {
               if (current === 1) {
                 setSelectedPhenotype(selectedConcepts[0]);
                 setSelectedCovariates([...selectedConcepts].slice(1));
+                setCovariates([...selectedConcepts].slice(1).map((val) => val.prefixed_concept_id));
+                setSelectedOutcome(selectedConcepts[0].prefixed_concept_id);
                 form.setFieldsValue({
                   covariates: [...selectedConcepts].slice(1).map((val) => val.concept_name),
                   outcome: selectedConcepts[0].concept_name,
