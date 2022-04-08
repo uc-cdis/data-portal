@@ -673,11 +673,17 @@ export function getGQLFilter(filterState, combineMode = 'AND') {
  * @param {object} args
  * @param {string} args.type
  * @param {string[]} [args.fields]
- * @param {FilterState} [args.filter]
+ * @param {GqlFilter} [args.gqlFilter]
  * @param {GqlSort} [args.sort]
  * @param {string} [args.format]
  */
-export function downloadDataFromGuppy({ type, fields, filter, sort, format }) {
+export function downloadDataFromGuppy({
+  type,
+  fields,
+  gqlFilter,
+  sort,
+  format,
+}) {
   const JSON_FORMAT = format === 'json' || format === undefined;
   return fetch(downloadEndpoint, {
     method: 'POST',
@@ -686,7 +692,7 @@ export function downloadDataFromGuppy({ type, fields, filter, sort, format }) {
     },
     body: JSON.stringify({
       accessibility: 'accessible',
-      filter: getGQLFilter(filter),
+      filter: gqlFilter,
       type,
       fields,
       sort,

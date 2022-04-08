@@ -386,7 +386,7 @@ function GuppyWrapper({
       type: guppyConfig.dataType,
       fields: rawDataFields,
       sort,
-      filter: augmentFilter(state.filter),
+      gqlFilter: getGQLFilter(augmentFilter(state.filter)),
       format,
     });
   }
@@ -404,7 +404,7 @@ function GuppyWrapper({
       type: guppyConfig.dataType,
       fields: fields || rawDataFields,
       sort,
-      filter: state.filter,
+      gqlFilter: getGQLFilter(state.filter),
     });
   }
 
@@ -424,7 +424,11 @@ function GuppyWrapper({
    * @param {string[]} fields
    */
   function downloadRawDataByTypeAndFilter(type, filter, fields) {
-    return downloadDataFromGuppy({ type, fields, filter });
+    return downloadDataFromGuppy({
+      type,
+      fields,
+      gqlFilter: getGQLFilter(filter),
+    });
   }
 
   /**
