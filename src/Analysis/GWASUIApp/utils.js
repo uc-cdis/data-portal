@@ -11,16 +11,16 @@ export const demoJobStatuses = [
   {
     runID: "1234324",
     status: "running",
-    jobName: "vadc-gwas-cwr7h"
+    jobName: "argo-wrapper-workflow-5536413310"
   },
   {
     runID: "8970890",
     status: "completed",
-    jobName: "vadc-gwas-bfg9h"
+    jobName: "argo-wrapper-workflow-3238210855"
   },
   {
     runID: "981233",
     status: "running",
-    jobName: "vadc-gwas-akl3h"
+    jobName: "argo-wrapper-workflow-7538210896"
   }
 ]
