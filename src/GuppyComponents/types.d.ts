@@ -35,22 +35,35 @@ export type GqlRangeFilter = {
   };
 };
 
-export type GqlSimpleAndFilter = {
-  AND: GqlSimpleFilter[];
-};
+export type GqlSimpleAndFilter =
+  | {
+      AND: GqlSimpleFilter[];
+    }
+  | {
+      OR: GqlSimpleFilter[];
+    };
 
 export type GqlSimpleFilter = GqlInFilter | GqlRangeFilter | GqlSimpleAndFilter;
 
 export type GqlNestedFilter = {
-  nested: {
-    path: string;
-    AND: GqlFilter[];
-  };
+  nested:
+    | {
+        path: string;
+        AND: GqlFilter[];
+      }
+    | {
+        path: string;
+        OR: GqlFilter[];
+      };
 };
 
-export type GqlAndFilter = {
-  AND: GqlFilter[];
-};
+export type GqlAndFilter =
+  | {
+      AND: GqlFilter[];
+    }
+  | {
+      OR: GqlFilter[];
+    };
 
 export type GqlSearchFilter = {
   search: {
