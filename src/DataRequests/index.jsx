@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ErrorBoundary from '../components/ErrorBoundary';
+import Button from '../gen3-ui-component/components/Button';
 import DataRequestsTable from './DataRequestsTable';
 import './DataRequests.css';
 
@@ -34,12 +35,15 @@ const emptyProjects = [];
 export default function DataRequests() {
   const [isLoading, setIsLoading] = useState(false);
   const [projects, setProjects] = useState(emptyProjects);
-  useEffect(() => {
+  function getProjects() {
     setIsLoading(true);
     fetchProjects()
       .then(setProjects)
       .catch(() => setProjects(null))
       .finally(() => setIsLoading(false));
+  }
+  useEffect(() => {
+    getProjects();
   }, []);
 
   return (
@@ -62,6 +66,13 @@ export default function DataRequests() {
                 Please retry or refreshing the page. If the problem persists,
                 please contact administrator for more information.
               </p>
+              <br />
+              <Button
+                buttonType='primary'
+                label='Retry'
+                onClick={getProjects}
+                enabled={!isLoading}
+              />
             </div>
           }
         >
