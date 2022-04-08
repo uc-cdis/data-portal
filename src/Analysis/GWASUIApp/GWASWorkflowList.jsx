@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import { has } from 'lodash';
 import { demoJobStatuses, manifestObj } from "./utils";
+import './GWASUIApp.css';
 
 const GWASWorkflowList = ({ currentWorkflows }) => {
     const { Panel } = Collapse;
@@ -21,7 +22,7 @@ const GWASWorkflowList = ({ currentWorkflows }) => {
 
 
     useEffect(() => {
-        console.log('currentWorkflows', currentWorkflows);
+        // console.log('currentWorkflows', currentWorkflows);
     }, [currentWorkflows]);
 
     const cancelGwasJob = (jobId) => {
@@ -84,7 +85,6 @@ const GWASWorkflowList = ({ currentWorkflows }) => {
     }
 
     const getActionButtons = (listItem) => {
-        console.log(listItem);
         // <Button type='link' size='small' onClick={(event) => {
         //   event.stopPropagation();
         //   handleJobStatusModalShow(listItem.runID);
@@ -101,22 +101,24 @@ const GWASWorkflowList = ({ currentWorkflows }) => {
                     okText='Yes'
                     cancelText='No'
                 >
-                    <Button type='link' size='small' danger>cancel job</Button>
+                    <Button type='link' size='medium' danger>cancel job</Button>
                 </Popconfirm>);
         }
         if (listItem.status === 'completed') {
             actionButtons.unshift(
-                <Button
-                    primary="true"
-                    type='link'
-                    size='small'
-                    onClick={(event) => {
-                        event.stopPropagation();
-                        handleJobStatusModalShow(listItem.runID, false);
-                    }}
-                >
-                    show output
-                </Button>);
+                    <Button
+                        primary="true"
+                        type='link'
+                        size='small'
+                        className='GWAS-completedBtn'
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            handleJobStatusModalShow(listItem.runID, false);
+                        }}
+                    >
+                        show output
+                    </Button>
+                );
         }
         return actionButtons;
     }
@@ -137,10 +139,8 @@ const GWASWorkflowList = ({ currentWorkflows }) => {
                             >
                                 <List.Item.Meta
                                     title={`Run ID: ${item.runID}`}
-                                    description={(item.jobName) ? `GWAS Job Name: ${item.jobName}` : null}
+                                    description={(item.jobName) ? `Name: ${item.jobName}` : null}
                                 />
-                                {/* <Button>Output</Button> */}
-                                <span>&nbsp;</span>
                                 <div>{getStatusTag(item.status)}</div>
 
                             </List.Item>

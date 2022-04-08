@@ -15,7 +15,8 @@
 .steps-action {
   margin-top: 24px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .ant-btn {
@@ -35,10 +36,6 @@
 
 .GWASUI-navBtn {
   width: 150px;
-}
-
-.GWASUI-navBtn__next {
-  margin-left: auto;
 }
 
 .GWASUI-specifyTable {
@@ -139,4 +136,8 @@
 
 .GWASApp-jobStatus .ant-collapse {
   width: 100%;
+}
+
+.ant-list-items {
+  content: center;
 }

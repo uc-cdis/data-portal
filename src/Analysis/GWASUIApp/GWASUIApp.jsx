@@ -49,24 +49,18 @@ const GWASUIApp = (props) => {
   const [imputationScore, setImputationScore] = useState(undefined);
   const [mafThreshold, setMafThreshold] = useState(undefined);
   const [currentWorkflows, setCurrentWorkflow] = useState(["argo-wrapper-workflow-5536413310", "argo-wrapper-workflow-3238210855"]);
+  const [gwasJobName, setGwasJobName] = useState("");
 
   const [numOfPC, setNumOfPC] = useState(3);
   const [selectedPhenotype, setSelectedPhenotype] = useState(undefined);
   const [selectedCovariates, setSelectedCovariates] = useState([]);
-  const [jobName, setJobName] = useState("mockedJobName");
+  const [jobName, setJobName] = useState("");
   const [showJobSubmissionResult, setShowJobSubmissionResult] = useState(false);
   const [jobSubmittedRunID, setJobSubmittedRunID] = useState(undefined);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [submission, setSubmission] = useState(false);
-  const [workflowName, setWorkflowName] = useState(undefined);
-
-  const [gwasBody, setGwasBody] = useState({});
-
-
-
   const onStep4FormSubmit = useCallback((values) => {
-    console.log('values', values);
+    // console.log('values', values);
   }, []);
 
   const onStep5FormSubmit = (values) => {
@@ -81,45 +75,40 @@ const GWASUIApp = (props) => {
   const handleDelete = (key) => {
     const newlySelectedPhenotype = (selectedPhenotype.concept_id === key) ? undefined : selectedPhenotype;
     const newlySelectedCovariates = selectedCovariates.filter((item) => item.concept_id !== key);
-    console.log('selectedConceptsbefore', selectedConcepts);
     setSelectedConcepts(selectedConcepts.filter((item) => item.concept_id !== key));
-    console.log('selectedconcepts after', selectedConcepts);
     setSelectedPhenotype(newlySelectedPhenotype);
     setSelectedCovariates(newlySelectedCovariates);
-    console.log('newlySelectedPhenotype', (selectedPhenotype.concept_id === key) ? undefined : selectedPhenotype);
-    console.log("newlySelectedCovariates", selectedCovariates.filter((item) => item.concept_id !== key));
-    debugger;
     form.setFieldsValue({
-      covariates: newlySelectedCovariates.map((val) => val.name),
-      outcome: newlySelectedPhenotype.name,
+      covariates: newlySelectedCovariates.map((val) => val.concept_name),
+      outcome: newlySelectedPhenotype.concept_name,
     });
   };
+
+  useEffect(() => {
+    fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
+  }, [props]);
 
   async function getCohortDefinitions() {
     const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;
     const getCohortDefinitions = await fetch(cohortEndPoint);
     const data = await getCohortDefinitions.json();
     if (data) {
-      console.log('defs&stats', data.cohort_definitions_and_stats);
+      // console.log('defs&stats', data.cohort_definitions_and_stats);
       setCohortDefinitions(data.cohort_definitions_and_stats);
     }
   }
 
   useEffect(() => {
-    // console.log('hi');
-    // const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;
-    // fetch(cohortEndPoint).then((res) => {
-    //   return res
-    // }).then(data => {
-    //   console.log(data.json())
-    // })
     getCohortDefinitions();
-  }, [])
+  }, []);
+
 
   async function getConceptsBySource(cohortDefinitionId) {
     const conceptList = {
-      "ConceptIds": [2000006886, 2000000280, 2000000323, 2000000846, 2000000324, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708]
+      "ConceptIds": [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000324, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708]
     };
+
+    // 2000000323
 
     const sourceEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
     fetch(sourceEndPoint,
@@ -140,6 +129,11 @@ const GWASUIApp = (props) => {
       });
   }
 
+  useEffect(() => {
+    getConceptsBySource(cohortDefinitionId);
+  }, [cohortDefinitionId]);
+
+
   const step1TableRowSelection = {
     type: 'radio',
     columnTitle: 'Select',
@@ -148,6 +142,9 @@ const GWASUIApp = (props) => {
       setSelectedCohort(selectedRows[0]);
       setCohortDefinitionId(selectedRows[0].cohort_definition_id);
     },
+    getCheckboxProps: (record) => ({
+      disabled: record.size === 0
+    })
   };
 
   const step1TableConfig = [
@@ -168,7 +165,6 @@ const GWASUIApp = (props) => {
     columnTitle: 'Select',
     selectedRowKeys: selectedConcepts.map((val) => val.concept_id),
     onChange: (_, selectedRows) => {
-      // console.log('selectedRows', selectedRows);
       setSelectedConcepts(selectedRows);
     },
   };
@@ -222,34 +218,33 @@ const GWASUIApp = (props) => {
         <span onClick={() => { console.log('record', record) }}>{`${(record.n_missing_ratio * 100).toFixed(0)}%`}</span>
       ),
     },
-    {
-      title: selectedConcepts.length > 2 ? 'Action' : null,
-      dataIndex: 'action',
-      render: (_, record) => (
-        selectedConcepts.length > 2 ? (
-          <Popconfirm title='Remove this entry?' onConfirm={() => handleDelete(record.concept_id)}>
-            <a>Remove</a>
-          </Popconfirm>
-        ) : null),
-    },
+    // {
+    //   title: selectedConcepts.length > 2 ? 'Action' : null,
+    //   dataIndex: 'action',
+    //   render: (_, record) => (
+    //     (selectedConcepts.length > 2 && selectedPhenotype.concept_id !== record.concept_id) ? (
+    //       <Popconfirm title='Remove this entry?' onConfirm={() => handleDelete(record.concept_id)}>
+    //         <a>Remove</a>
+    //       </Popconfirm>
+    //     ) : null),
+    // },
   ];
-
-  useEffect(() => {
-    fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
-  }, [props]);
-
-  useEffect(() => {
-    getConceptsBySource(cohortDefinitionId);
-  }, [cohortDefinitionId]);
-
-  useEffect(() => {
-    console.log('gwas effect', gwasBody);
-  }, [gwasBody])
 
   const filterConcept = (term) => {
     setSearchTerm(term);
     const filteredConcepts = allConcepts.filter(entry => entry.concept_name.toLowerCase().includes(term.toLowerCase()) || entry.concept_id.toString().includes(term));
     filteredConcepts.length ? setCohortConcepts(filteredConcepts) : setCohortConcepts(cohortConcepts);
+  }
+
+  const handleCovariateDelete = (remainingCovariates) => {
+    const filterCovList = (element) => remainingCovariates.some(item => item === element.concept_name);
+    const newCovariates = selectedCovariates.filter(elem => filterCovList(elem));
+
+    setSelectedCovariates(newCovariates);
+    setSelectedConcepts([...selectedConcepts, selectedCovariates]);
+    form.setFieldsValue({
+      covariates: remainingCovariates
+    });
   }
 
   const testSubmit = () => {
@@ -265,7 +260,7 @@ const GWASUIApp = (props) => {
       "source_id": sourceId,
       "cohort_definition_id": cohortDefinitionId
     };
-    console.log('requestBody', requestBody);
+    // console.log('requestBody', requestBody);
 
     const newWorkflow = fetch(`${gwasWorkflowPath}submit`, {
       method: "POST",
@@ -274,24 +269,31 @@ const GWASUIApp = (props) => {
       body: JSON.stringify(requestBody)
     })
       .then((response) => {
-        console.log('response', response);
+        // console.log('response', response);
         return response.json();
       })
       .then(newWorkflow => {
-        console.log('newWorkflow', newWorkflow);
+        // console.log('newWorkflow', newWorkflow);
       });
-      if (newWorkFlow) console.log('submitted', newWorkflow);
+    if (newWorkFlow) {
+      // console.log('submitted', newWorkflow);
+    }
   }
 
   const handleGwasSubmit = () => {
+    setJobSubmittedRunID("5536413310");
+    setShowJobSubmissionResult(true);
+    setGwasJobName(currentWorkflows[0]);
+    setJobName(gwasJobName);
+  }
+
+  const handleReset = () => {
     setCurrent(0);
     setSelectedConcepts([]);
     setSelectedPhenotype(undefined);
     setSelectedCovariates([]);
     setNumOfPC(3);
-    setJobName(undefined);
-    // setShowJobSubmissionResult(true);
-    // setJobSubmittedRunID("newGwasJob");
+    setGwasJobName(undefined);
   }
 
   const generateContentForStep = (stepIndex) => {
@@ -337,7 +339,7 @@ const GWASUIApp = (props) => {
         return (
           <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
             <hr />
-            <div className="GWAS-headingContainer"><h4 className="GWAS-leftHeading">* Select Phenotype</h4><h4 className="GWAS-rightHeading">* Select Covariates to Remove</h4></div>
+            <h4 className="GWASUI-selectInstruction">* Select Phenotype</h4>
             <div className='GWASUI-mainTable'>
               <Table
                 className='GWASUI-table3'
@@ -390,7 +392,9 @@ const GWASUIApp = (props) => {
                 >
                   <Select
                     mode='multiple'
-                    disabled
+                    value={selectedCovariates}
+                    disabled={selectedCovariates.length === 1}
+                    onChange={(e) => handleCovariateDelete(e)}
                     style={{ width: '70%' }}
                   />
                 </Form.Item>
@@ -446,7 +450,7 @@ const GWASUIApp = (props) => {
                   <Button
                     key='done'
                     onClick={() => {
-                      handleGwasSubmit()
+                      handleReset()
                       // setSubmission(true);
                     }}
                   >
@@ -460,57 +464,6 @@ const GWASUIApp = (props) => {
 
         return (
           <>
-            {/* <div className='GWASApp-jobStatus'>
-            <Collapse onClick={(event) => event.stopPropagation()}>
-              <Panel header='Submitted Job Statuses' key='1'>
-                <List
-                  className='GWASApp__jobStatusList'
-                  itemLayout='horizontal'
-                  pagination={{ pageSize: 5 }}
-                  dataSource={'running'}
-                  renderItem={(item) => (
-                    <List.Item
-                      actions={getActionButtons(item)}
-                    >
-                      <List.Item.Meta
-                        title={`Run ID: ${item.runID}`}
-                        description={(item.jobName) ? `GWAS Job Name: ${item.jobName}` : null}
-                      />
-                      <Button>Output</Button>
-                      <span>&nbsp;</span>
-                      <div>{getStatusTag('running')}</div>
-
-                    </List.Item>
-
-                  )}
-                />
-
-              </Panel>
-            </Collapse>
-            <Modal
-              visible={showJobStatusModal}
-              closable={false}
-              title={'Show job logs'}
-              footer={[
-                <div className="GWAS-btnContainer">
-                  <Button key='copy' className="g3-button g3-button--tertiary">
-                    Copy JSON
-                  </Button>
-                  <Button key='download' className="explorer-button-group__download-button g3-button g3-button--primary">
-                    <i className="g3-icon g3-icon--sm g3-icon--datafile g3-button__icon g3-button__icon--left"></i>
-                    Download Manifest
-                    <i className="g3-icon g3-icon--sm g3-icon--download g3-button__icon g3-button__icon--right"></i>
-                  </Button>
-                  <Button className="g3-button g3-button--secondary" key='close' onClick={() => handleJobStatusModalCancel()}>
-                    Close
-                  </Button>
-                </div>,
-              ]}
-            >
-              <TextArea rows={10} value={jobStatusModalData} readOnly />
-
-            </Modal>
-          </div> */}
             <div className='GWASUI-mainArea'>
               <Form
                 {...layout}
@@ -520,24 +473,23 @@ const GWASUIApp = (props) => {
                   onStep5FormSubmit(values);
                 }}
               >
-                <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name for GWAS job!' }]}>
-                  <Input placeholder='my_gwas_20201101_1' />
+                <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name' }]}>
+                  <Input placeholder='my_gwas_20201101_1' onChange={(e) => setGwasJobName(e.target.value)} />
                 </Form.Item>
                 <Form.Item {...tailLayout}>
                   <Button
                     htmlType='submit'
                     type='primary'
+                    disabled={gwasJobName.length === 0}
                     onClick={() => {
-                      setJobName('vadc-gwas-cwr7h');
-                      setJobSubmittedRunID('run-12345');
-                      setShowJobSubmissionResult(true);
+                      handleGwasSubmit()
                     }}
                   >
                     Submit
                   </Button>
-                  <Button onClick={() => {
+                  {/* <Button onClick={() => {
                     testSubmit()
-                  }}>test Submit</Button>
+                  }}>Test Submit</Button> */}
                 </Form.Item>
               </Form>
             </div>
@@ -574,8 +526,7 @@ const GWASUIApp = (props) => {
       </div>
       <div className='steps-action'>
         <Button
-          className='GWASUI-navBtn'
-          // style={{ margin: '0 16px' }}
+          className='GWASUI-navBtn GWASUI-navBtn__prev'
           onClick={() => {
             setCurrent(current - 1);
           }}
