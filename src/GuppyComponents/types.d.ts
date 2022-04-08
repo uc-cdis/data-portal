@@ -156,16 +156,14 @@ export type AggsData = {
     | SimpleAggsData;
 };
 
-export type FilterChangeHandler = (args: {
-  anchorValue?: string;
-  filter: FilterState;
-}) => void;
+export type FilterChangeHandler = (filter: FilterState) => void;
 
 export type GuppyData = {
   accessibleCount: number;
   aggsChartData: SimpleAggsData;
   aggsData: AggsData;
   allFields: string[];
+  anchorValue: string;
   filter: FilterState;
   initialTabsOptions?: SimpleAggsData;
   isLoadingAggsData: boolean;

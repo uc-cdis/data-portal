@@ -8,6 +8,7 @@ import './ExplorerFilter.css';
 
 /**
  * @typedef {Object} ExplorerFilterProps
+ * @property {string} [anchorValue]
  * @property {string} [className]
  * @property {GuppyData['initialTabsOptions']} [initialTabsOptions]
  * @property {GuppyData['filter']} filter
@@ -57,6 +58,7 @@ function ExplorerFilter({ className = '', ...filterProps }) {
 }
 
 ExplorerFilter.propTypes = {
+  anchorValue: PropTypes.string, // from GuppyWrapper
   className: PropTypes.string,
   filter: PropTypes.object.isRequired, // from GuppyWrapper
   initialTabsOptions: PropTypes.object, // from GuppyWrapper
