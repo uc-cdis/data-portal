@@ -9,7 +9,8 @@ import './ExplorerFilterDisplay.css';
 export function FilterDisplay({ filter }) {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   const filterElements = /** @type {JSX.Element[]} */ ([]);
-  for (const [key, value] of Object.entries(filter))
+  const { __combineMode, ...__filter } = filter;
+  for (const [key, value] of Object.entries(__filter))
     if ('filter' in value) {
       const [anchorKey, anchorValue] = key.split(':');
       filterElements.push(
@@ -68,7 +69,9 @@ export function FilterDisplay({ filter }) {
       {filterElements.map((filterElement, i) => (
         <>
           {filterElement}
-          {i < filterElements.length - 1 && <span className='pill'>AND</span>}
+          {i < filterElements.length - 1 && (
+            <span className='pill'>{__combineMode ?? 'AND'}</span>
+          )}
         </>
       ))}
     </span>
