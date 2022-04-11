@@ -33,11 +33,12 @@ export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
       filterResultsByAnchor[`${anchorConfig.field}:${anchorValue}`] = {};
 
   for (const [filterKey, filterValues] of Object.entries(filterResults))
-    if ('filter' in filterValues) {
-      filterResultsByAnchor[filterKey] = filterValues.filter;
-    } else {
-      filterResultsByAnchor[''][filterKey] = filterValues;
-    }
+    if (typeof filterValues !== 'string')
+      if ('filter' in filterValues) {
+        filterResultsByAnchor[filterKey] = filterValues.filter;
+      } else {
+        filterResultsByAnchor[''][filterKey] = filterValues;
+      }
 
   return filterResultsByAnchor;
 }
