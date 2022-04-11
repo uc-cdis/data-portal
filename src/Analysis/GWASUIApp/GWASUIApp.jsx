@@ -37,7 +37,7 @@ const GWASUIApp = (props) => {
 
   const [form] = Form.useForm();
   const [current, setCurrent] = useState(0);
-  const [sourceId, setSourceId] = useState(2);
+  const [sourceId, setSourceId] = useState(4);
   const [cohortDefinitionId, setCohortDefinitionId] = useState(undefined);
   const [cohortDefinitions, setCohortDefinitions] = useState([]);
   const [allConcepts, setAllConcepts] = useState([])
