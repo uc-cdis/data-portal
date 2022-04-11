@@ -596,10 +596,9 @@ function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
 /**
  * Convert filter obj into GQL filter format
  * @param {FilterState} filterState
- * @param {'AND' | 'OR'} [combineMode]
  * @returns {GqlFilter}
  */
-export function getGQLFilter(filterState, combineMode = 'AND') {
+export function getGQLFilter(filterState) {
   if (filterState === undefined || Object.keys(filterState).length === 0)
     return undefined;
 
@@ -612,57 +611,60 @@ export function getGQLFilter(filterState, combineMode = 'AND') {
   const nestedFilterIndices = {};
   let nestedFilterIndex = 0;
 
-  for (const [filterKey, filterValues] of Object.entries(filterState)) {
+  const { __combineMode, ...__filterState } = filterState;
+  const combineMode = __combineMode ?? 'AND';
+  for (const [filterKey, filterValues] of Object.entries(__filterState)) {
     const [fieldStr, nestedFieldStr] = filterKey.split('.');
     const isNestedField = nestedFieldStr !== undefined;
     const fieldName = isNestedField ? nestedFieldStr : fieldStr;
 
-    if ('filter' in filterValues) {
-      const parsedAnchoredFilters = parseAnchoredFilters(
-        fieldName,
-        filterValues,
-        combineMode
-      );
-      for (const { nested } of parsedAnchoredFilters) {
-        if (!(nested.path in nestedFilterIndices)) {
-          nestedFilterIndices[nested.path] = nestedFilterIndex;
-          nestedFilters.push({
-            nested:
-              combineMode === 'AND'
-                ? { path: nested.path, AND: [] }
-                : { path: nested.path, OR: [] },
-          });
-          nestedFilterIndex += 1;
-        }
-
-        nestedFilters[nestedFilterIndices[nested.path]].nested[
+    if (typeof filterValues !== 'string')
+      if ('filter' in filterValues) {
+        const parsedAnchoredFilters = parseAnchoredFilters(
+          fieldName,
+          filterValues,
           combineMode
-        ].push({ [combineMode]: nested[combineMode] });
-      }
-    } else {
-      const simpleFilter = parseSimpleFilter(fieldName, filterValues);
-
-      if (simpleFilter !== undefined) {
-        if (isNestedField) {
-          const path = fieldStr; // parent path
-
-          if (!(path in nestedFilterIndices)) {
-            nestedFilterIndices[path] = nestedFilterIndex;
+        );
+        for (const { nested } of parsedAnchoredFilters) {
+          if (!(nested.path in nestedFilterIndices)) {
+            nestedFilterIndices[nested.path] = nestedFilterIndex;
             nestedFilters.push({
               nested:
-                combineMode === 'AND' ? { path, AND: [] } : { path, OR: [] },
+                combineMode === 'AND'
+                  ? { path: nested.path, AND: [] }
+                  : { path: nested.path, OR: [] },
             });
             nestedFilterIndex += 1;
           }
 
-          nestedFilters[nestedFilterIndices[path]].nested[combineMode].push(
-            simpleFilter
-          );
-        } else {
-          simpleFilters.push(simpleFilter);
+          nestedFilters[nestedFilterIndices[nested.path]].nested[
+            combineMode
+          ].push({ [combineMode]: nested[combineMode] });
+        }
+      } else {
+        const simpleFilter = parseSimpleFilter(fieldName, filterValues);
+
+        if (simpleFilter !== undefined) {
+          if (isNestedField) {
+            const path = fieldStr; // parent path
+
+            if (!(path in nestedFilterIndices)) {
+              nestedFilterIndices[path] = nestedFilterIndex;
+              nestedFilters.push({
+                nested:
+                  combineMode === 'AND' ? { path, AND: [] } : { path, OR: [] },
+              });
+              nestedFilterIndex += 1;
+            }
+
+            nestedFilters[nestedFilterIndices[path]].nested[combineMode].push(
+              simpleFilter
+            );
+          } else {
+            simpleFilters.push(simpleFilter);
+          }
         }
       }
-    }
   }
 
   return { [combineMode]: [...simpleFilters, ...nestedFilters] };
