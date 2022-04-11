@@ -69,7 +69,9 @@ export function queryGuppyForAggregationChartData({
     gqlFilter !== undefined
       ? `query ($filter: JSON) {
         _aggregation {
-          ${type} (filter: $filter, filterSelf: false, accessibility: all) {
+          ${type} (filter: $filter, filterSelf: ${
+          Object.keys(gqlFilter)[0] === 'OR'
+        }, accessibility: all) {
             ${fields.map(buildHistogramQueryStrForField).join('\n')}
           }
         }
@@ -211,12 +213,14 @@ export function getQueryInfoForAggregationOptionsData({
 
 /**
  * @param {object} args
+ * @param {boolean} [args.filterSelf]
  * @param {{ [group: string]: string[]}} args.fieldsByGroup
  * @param {boolean} [args.isFilterEmpty]
  * @param {boolean} [args.isInitialQuery]
  * @param {string} args.type
  */
 export function buildQueryForAggregationOptionsData({
+  filterSelf = false,
   fieldsByGroup,
   isFilterEmpty,
   isInitialQuery = false,
@@ -236,7 +240,7 @@ export function buildQueryForAggregationOptionsData({
     ? `main: ${type} ${
         isFilterEmpty
           ? '(accessibility: all)'
-          : '(filter: $filter_main, filterSelf: false, accessibility: all)'
+          : `(filter: $filter_main, filterSelf: ${filterSelf}, accessibility: all)`
       } {
       ${mainHistogramQueryFragment}
     }`
@@ -252,7 +256,7 @@ export function buildQueryForAggregationOptionsData({
   const anchoredPathQueryFragments = [];
   for (const [group, fields] of Object.entries(fieldsByAnchoredGroup))
     anchoredPathQueryFragments.push(`
-      anchored_${group}: ${type} (filter: $filter_${group}, filterSelf: false, accessibility: all) {
+      anchored_${group}: ${type} (filter: $filter_${group}, filterSelf: ${filterSelf}, accessibility: all) {
         ${fields.map(buildHistogramQueryStrForField).join('\n')}
       }
     `);
@@ -295,9 +299,12 @@ export function queryGuppyForAggregationOptionsData({
       gqlFilter,
     });
 
+  const isFilterEmpty = gqlFilter === undefined;
+  const filterSelf = !isFilterEmpty && Object.keys(gqlFilter)[0] === 'OR';
   const query = buildQueryForAggregationOptionsData({
+    filterSelf,
     fieldsByGroup,
-    isFilterEmpty: gqlFilter === undefined,
+    isFilterEmpty,
     isInitialQuery,
     type,
   });
@@ -369,7 +376,9 @@ export function queryGuppyForSubAggregationData({
     gqlFilter !== undefined
       ? `query ($filter: JSON, $nestedAggFields: JSON) {
         _aggregation {
-            ${type} (filter: $filter, filterSelf: false, nestedAggFields: $nestedAggFields, accessibility: all) {
+            ${type} (filter: $filter, filterSelf: ${
+          Object.keys(gqlFilter)[0] === 'OR'
+        }, nestedAggFields: $nestedAggFields, accessibility: all) {
               ${nestedHistogramQueryStrForEachField(
                 mainField,
                 numericAggAsText
