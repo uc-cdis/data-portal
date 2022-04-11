@@ -122,7 +122,9 @@ export function validateFilter(value, filterConfig) {
   const testFieldSet = new Set(allFields);
   const isAnchorFilterEnabled = filterConfig.anchor !== undefined;
   for (const [field, filterContent] of Object.entries(value)) {
-    if (isAnchorFilterEnabled && 'filter' in filterContent)
+    if (field === '__combineMode') {
+      if (!['AND', 'OR'].includes(filterContent)) return false;
+    } else if (isAnchorFilterEnabled && 'filter' in filterContent)
       for (const [anchoredField, anchoredfilterContent] of Object.entries(
         filterContent.filter
       ))
