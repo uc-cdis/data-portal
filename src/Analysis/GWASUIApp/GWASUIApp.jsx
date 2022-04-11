@@ -21,11 +21,11 @@ const steps = [
   },
   {
     title: 'Step 3',
-    description: 'Select which variable is your phenotype and remove unwanted covariates',
+    description: 'Select which variable is your phenotype',
   },
   {
     title: 'Step 4',
-    description: 'Set workflow parameters',
+    description: 'Set workflow parameters and remove unwanted covariates',
   },
   {
     title: 'Step 5',
@@ -256,7 +256,7 @@ const GWASUIApp = (props) => {
       "outcome_is_binary": true,
       "maf_threshold": Number(mafThreshold),
       "imputation_score_cutoff": Number(imputationScore),
-      "template_version": "hello-world-template",
+      "template_version": "gwas-template-9d9d56323b20b5e34fd593da877beeacec7a27b1",
       "source_id": sourceId,
       "cohort_definition_id": cohortDefinitionId
     };
