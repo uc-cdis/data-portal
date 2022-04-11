@@ -570,23 +570,26 @@ function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
 
   for (const [filterKey, filterValues] of Object.entries(filterState)) {
     const [path, fieldName] = filterKey.split('.');
-    const simpleFilter = parseSimpleFilter(fieldName, filterValues);
 
-    if (simpleFilter !== undefined) {
-      if (!(path in nestedFilterIndices)) {
-        nestedFilterIndices[path] = nestedFilterIndex;
-        nestedFilters.push({
-          nested:
-            combineMode === 'AND'
-              ? { path, AND: [anchorFilter] }
-              : { path, OR: [anchorFilter] },
-        });
-        nestedFilterIndex += 1;
+    if (typeof filterValues !== 'string') {
+      const simpleFilter = parseSimpleFilter(fieldName, filterValues);
+
+      if (simpleFilter !== undefined) {
+        if (!(path in nestedFilterIndices)) {
+          nestedFilterIndices[path] = nestedFilterIndex;
+          nestedFilters.push({
+            nested:
+              combineMode === 'AND'
+                ? { path, AND: [anchorFilter] }
+                : { path, OR: [anchorFilter] },
+          });
+          nestedFilterIndex += 1;
+        }
+
+        nestedFilters[nestedFilterIndices[path]].nested[combineMode].push(
+          simpleFilter
+        );
       }
-
-      nestedFilters[nestedFilterIndices[path]].nested[combineMode].push(
-        simpleFilter
-      );
     }
   }
 
