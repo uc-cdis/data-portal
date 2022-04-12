@@ -141,6 +141,7 @@ export interface DiscoveryConfig {
         displayName?: string
     }[],
     tagsDisplayName?: string
+    tableScrollHeight?: number
 }
 export interface StudyPageFieldConfig {
     name: string
