@@ -543,3 +543,7 @@
   display: flex;
   justify-content: end;
 }
+
+.ant-tabs-tab-active > .ant-tabs-tab-btn > .discovery-modal__tablabel {
+  color: var(--g3-color__base-blue);
+}

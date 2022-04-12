@@ -37,11 +37,12 @@ const subHeadingCls = { className: 'discovery-modal__subheading' };
 const fieldGroupingClass = { className: 'discovery-modal__fieldgroup' };
 const labelCls = { className: 'discovery-modal__fieldlabel' };
 const tagsCls = { className: 'discovery-modal__tagsfield' };
+const tabLabelCls = { className: 'discovery-modal__tablabel' }
 
 const blockTextField = (text: string) => <div {...fieldCls}>{text}</div>;
 const label = (text: string) => <b {...labelCls}>{text}</b>;
 const textField = (text: string) => <span>{text}</span>;
-const linkField = (text: string) => <a href={text}>{text}</a>;
+const linkField = (text: string) => <a href={text} target="_blank">{text}</a>;
 
 const subHeading = (text: string) => <h3 {...subHeadingCls}>{text}</h3>;
 const labeledSingleTextField = (labelText: string, fieldText: string) => <div {...fieldCls}>{label(labelText)} {textField(fieldText)}</div>;
@@ -211,11 +212,11 @@ const DiscoveryDetails = (props: Props) => {
           ? (
             <div className='discovery-modal-content'>
               {header}
-              <Tabs type={'card'} className={'mytabs'}>
+              <Tabs type={'card'}>
                 {
                   props.config.detailView.tabs.map(
                     ({ tabName, groups }) => (
-                      <Tabs.TabPane key={tabName} tab={tabName}>
+                      <Tabs.TabPane key={tabName} tab={<span {...tabLabelCls}>{tabName}</span>}>
                         {
                           (groups || []).map(
                             (group, i) => <div key={i}>{fieldGrouping(group, props.config, props.modalData)}</div>,
