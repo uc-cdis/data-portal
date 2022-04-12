@@ -542,6 +542,8 @@
 .discovery-modal__tagsfield {
   display: flex;
   justify-content: end;
+  flex-wrap: wrap;
+
 }
 
 .ant-tabs-tab-active > .ant-tabs-tab-btn > .discovery-modal__tablabel {
