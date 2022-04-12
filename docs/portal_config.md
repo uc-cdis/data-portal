@@ -514,6 +514,7 @@ Below is an example, with inline comments describing what each JSON block config
       "includeIfNotAvailable": true,
       "valueIfNotAvailable": "No description has been provided for this study."
     },
+    // consider updated "detailView" configufation with tabbing option
     "studyPageFields": { // studyPageFields configures the fields that are displayed when a user opens a study page by clicking on a row in the table.
       "header": { // if present, shows a header field at the top of the study page.
         "field": "name"
@@ -572,6 +573,7 @@ Below is an example, with inline comments describing what each JSON block config
         }
       ]
     },
+    // takes precedence over "studyPageFields"
     "detailView": {
       "headerField": "project_title", // field from which to pull detail view title
       "tabs": [
@@ -619,6 +621,7 @@ Below is an example, with inline comments describing what each JSON block config
       }
     ],
     "tagsDisplayName": "Tags" // optional, overrides the name of the mandatory tags column
+    "tableScrollHeight": 450 // optional
   },
   "resourceBrowser": {), // see Resource Browser documentation
   "workspacePageTitle": "", // title to display above workspacePageDescription
