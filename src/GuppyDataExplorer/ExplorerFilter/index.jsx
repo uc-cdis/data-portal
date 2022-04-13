@@ -37,6 +37,13 @@ function ExplorerFilter({ className = '', ...filterProps }) {
     onPatientIdsChange: handlePatientIdsChange,
   };
   const hasAppliedFilters = Object.keys(filterProps.filter).length > 0;
+  const filterCombineMode = filterProps.filter.__combineMode ?? 'AND';
+  function updateFilterCombineMode(e) {
+    filterProps.onFilterChange({
+      ...filterProps.filter,
+      __combineMode: e.target.value,
+    });
+  }
 
   return (
     <div className={className}>
@@ -51,6 +58,24 @@ function ExplorerFilter({ className = '', ...filterProps }) {
             Clear all
           </button>
         )}
+      </div>
+      <div className='explorer-filter__combine-mode'>
+        Combine filters with
+        {['AND', 'OR'].map((/** @type {'AND' | 'OR'} */ combineMode) => (
+          <label
+            key={combineMode}
+            className={filterCombineMode === combineMode ? 'active' : undefined}
+          >
+            <input
+              name='combineMode'
+              value={combineMode}
+              type='radio'
+              onChange={updateFilterCombineMode}
+              checked={filterCombineMode === combineMode}
+            />
+            {combineMode}
+          </label>
+        ))}
       </div>
       <ConnectedFilter {...connectedFilterProps} />
     </div>
