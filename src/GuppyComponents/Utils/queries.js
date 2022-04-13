@@ -70,7 +70,7 @@ export function queryGuppyForAggregationChartData({
       ? `query ($filter: JSON) {
         _aggregation {
           ${type} (filter: $filter, filterSelf: ${
-          Object.keys(gqlFilter)[0] === 'OR'
+          'OR' in gqlFilter && gqlFilter.OR.length > 1
         }, accessibility: all) {
             ${fields.map(buildHistogramQueryStrForField).join('\n')}
           }
@@ -300,7 +300,8 @@ export function queryGuppyForAggregationOptionsData({
     });
 
   const isFilterEmpty = gqlFilter === undefined;
-  const filterSelf = !isFilterEmpty && Object.keys(gqlFilter)[0] === 'OR';
+  const filterSelf =
+    !isFilterEmpty && 'OR' in gqlFilter && gqlFilter.OR.length > 1;
   const query = buildQueryForAggregationOptionsData({
     filterSelf,
     fieldsByGroup,
@@ -377,7 +378,7 @@ export function queryGuppyForSubAggregationData({
       ? `query ($filter: JSON, $nestedAggFields: JSON) {
         _aggregation {
             ${type} (filter: $filter, filterSelf: ${
-          Object.keys(gqlFilter)[0] === 'OR'
+          'OR' in gqlFilter && gqlFilter.OR.length > 1
         }, nestedAggFields: $nestedAggFields, accessibility: all) {
               ${nestedHistogramQueryStrForEachField(
                 mainField,
