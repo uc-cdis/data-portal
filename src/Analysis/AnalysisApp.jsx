@@ -9,6 +9,10 @@ import ReduxGWASApp from './GWASApp/ReduxGWASApp';
 import ReduxGWASUIApp from './GWASUIApp/ReduxGWASUIApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 class AnalysisApp extends React.Component {
   constructor(props) {
@@ -48,51 +52,54 @@ class AnalysisApp extends React.Component {
 
   getAppContent = (app) => {
     switch (app) {
-    case 'vaGWAS':
-      return (
-        <React.Fragment>
-          <Select
-            value={this.state.jobInput}
-            placeholder='Select your organ'
-            options={analysisApps[app].options}
-            onChange={this.selectChange}
-          />
-          <Button label='Run Analysis' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
-        </React.Fragment>
-      );
-    case 'ndhHIV':
-      return (
-        <HIVCohortFilter />
-      );
-    case 'ndhVirus':
-      return (
-        <React.Fragment>
-          <input className='text-input' type='text' placeholder='input data' name='input' />
-          <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
-        </React.Fragment>
-      );
-    case 'GWASApp':
-      return (
-        <ReduxGWASApp />
-      );
-    case 'GWASUIApp':
-      return (
-        <ReduxGWASUIApp />
-      );
-    default:
-      return (
-        <React.Fragment>
-          <div className='analysis-app__iframe-wrapper'>
-            <iframe
-              className='analysis-app__iframe'
-              title='Analysis App'
-              frameBorder='0'
-              src={`${this.state.app.applicationUrl}`}
-              onLoad={this.handleIframeApp}
+      case 'vaGWAS':
+        return (
+          <React.Fragment>
+            <Select
+              value={this.state.jobInput}
+              placeholder='Select your organ'
+              options={analysisApps[app].options}
+              onChange={this.selectChange}
             />
-          </div>
-        </React.Fragment>
-      );
+            <Button label='Run Analysis' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+          </React.Fragment>
+        );
+      case 'ndhHIV':
+        return (
+          <HIVCohortFilter />
+        );
+      case 'ndhVirus':
+        return (
+          <React.Fragment>
+            <input className='text-input' type='text' placeholder='input data' name='input' />
+            <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+          </React.Fragment>
+        );
+      case 'GWASApp':
+        return (
+          <ReduxGWASApp />
+        );
+      case 'GWASUIApp':
+        return (
+          <QueryClientProvider client={queryClient}>
+            <ReduxGWASUIApp />
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        );
+      default:
+        return (
+          <React.Fragment>
+            <div className='analysis-app__iframe-wrapper'>
+              <iframe
+                className='analysis-app__iframe'
+                title='Analysis App'
+                frameBorder='0'
+                src={`${this.state.app.applicationUrl}`}
+                onLoad={this.handleIframeApp}
+              />
+            </div>
+          </React.Fragment>
+        );
     }
   }
 
@@ -167,22 +174,22 @@ class AnalysisApp extends React.Component {
                 <p className='analysis-app__description'>{app.description}</p>
                 <div className={`${this.state.analysisIsFullscreen ? 'analysis-app__fullscreen' : ''}`}>
                   <div className='analysis-app__actions'>
-                    { appContent }
+                    {appContent}
                   </div>
-                  { this.state.isIframeApp
+                  {this.state.isIframeApp
                     ? (
                       <div className='analysis-app__buttongroup'>
-                        { fullscreenButton }
+                        {fullscreenButton}
                       </div>
                     ) : null}
                 </div>
                 {(showJobStatus)
                   ? (
                     <div className='analysis-app__job-status'>
-                      { this.isJobRunning() ? <Spin size='large' tip='Job in progress...' /> : null }
-                      { job && job.status === 'Completed' ? <h3>Job Completed</h3> : null }
-                      { job && job.status === 'Failed' ? <h3>Job Failed</h3> : null }
-                      { results ? results.map((line, i) => <p key={i}>{line}</p>) : null }
+                      {this.isJobRunning() ? <Spin size='large' tip='Job in progress...' /> : null}
+                      {job && job.status === 'Completed' ? <h3>Job Completed</h3> : null}
+                      {job && job.status === 'Failed' ? <h3>Job Failed</h3> : null}
+                      {results ? results.map((line, i) => <p key={i}>{line}</p>) : null}
                     </div>
                   )
                   : null}

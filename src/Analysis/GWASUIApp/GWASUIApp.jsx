@@ -7,6 +7,7 @@ import './GWASUIApp.css';
 import { headers, fetchAndSetCsrfToken } from '../../configs';
 import { gwasWorkflowPath, cohortMiddlewarePath } from '../../localconf';
 import GWASWorkflowList from './GWASWorkflowList';
+import { useQuery } from 'react-query';
 
 const { Step } = Steps;
 
@@ -34,11 +35,18 @@ const steps = [
 ];
 
 const GWASUIApp = (props) => {
+  const [current, setCurrent] = useState(0);
+  const [sourceId, setSourceId] = useState(undefined);
+  const [cohortDefinitionId, setCohortDefinitionId] = useState(undefined);
+  const [conceptVars] = useState({
+    "ConceptIds": [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000324, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708]
+  });
+  const [selectedConceptVars, setSelectedConceptVars] = useState([]);
 
   const [form] = Form.useForm();
-  const [current, setCurrent] = useState(0);
-  const [sourceId, setSourceId] = useState(4);
-  const [cohortDefinitionId, setCohortDefinitionId] = useState(undefined);
+
+
+
   const [cohortDefinitions, setCohortDefinitions] = useState([]);
   const [allConcepts, setAllConcepts] = useState([])
   const [cohortConcepts, setCohortConcepts] = useState([]);
@@ -84,39 +92,91 @@ const GWASUIApp = (props) => {
     });
   };
 
-  useEffect(() => {
-    fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
-  }, [props]);
-
-  async function getCohortDefinitions() {
-    const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;
-    const getCohortDefinitions = await fetch(cohortEndPoint);
-    const data = await getCohortDefinitions.json();
-    if (data) {
-      // console.log('defs&stats', data.cohort_definitions_and_stats);
-      setCohortDefinitions(data.cohort_definitions_and_stats);
+  const handleNextStep = (e) => {
+    console.log('event', e);
+    if (current === 1) {
+      console.log('hi current 1');
+      setSelectedPhenotype(selectedConcepts[0]);
+      setSelectedCovariates([...selectedConcepts].slice(1));
+      setCovariates([...selectedConcepts].slice(1).map((val) => val.prefixed_concept_id));
+      setSelectedOutcome(selectedConcepts[0].prefixed_concept_id);
+      form.setFieldsValue({
+        covariates: [...selectedConcepts].slice(1).map((val) => val.concept_name),
+        outcome: selectedConcepts[0].concept_name,
+      });
+    }
+    if (current === 2) {
+      console.log('hi current 2');
+      setSelectedPhenotype(selectedConcepts[0]);
+    }
+    if (current === 3) {
+      console.log('hi current 3')
+      form.submit();
     }
   }
 
   useEffect(() => {
-    getCohortDefinitions();
+    fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
+  }, [props]);
+
+
+
+
+  async function fetchSources() {
+    const sourcesEndpoint = `${cohortMiddlewarePath}sources`;
+    const getSources = await fetch(sourcesEndpoint);
+    return getSources.json();
+  }
+
+  useEffect(() => {
+    fetchSources().then(res => setSourceId(res.sources[0].source_id));
   }, []);
+
+  async function fetchCohortDefinitions() {
+    // dependent query to sourceId (only result from fetchSources());
+    const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;
+    const getCohortDefinitions = await fetch(cohortEndPoint);
+    return getCohortDefinitions.json();
+    // if (data) {
+    // console.log('defs&stats', data.cohort_definitions_and_stats);
+    // setCohortDefinitions(data.cohort_definitions_and_stats);
+    // }
+  }
+
+  async function fetchConcepts() {
+    const conceptEndpoint = `${cohortMiddlewarePath}concept/by-source-id/${sourceId}`;
+    const reqBody = {
+      method: "POST",
+      credentials: "include",
+      headers: headers,
+      body: JSON.stringify(conceptVars)
+    }
+    const getConcepts = await fetch(conceptEndpoint, reqBody);
+    return getConcepts.json();
+  }
+
+  async function fetchConceptStats() {
+    const conceptStatsVars = { "ConceptIds": selectedConceptVars };
+    const conceptStatsEndpoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
+    const reqBody = {
+      method: "POST",
+      credentials: "include",
+      headers: headers,
+      body: JSON.stringify(conceptStatsVars)
+    }
+    const getConceptStats = await fetch(conceptStatsEndpoint, reqBody);
+    return getConceptStats.json();
+  }
 
 
   async function getConceptsBySource(cohortDefinitionId) {
-    const conceptList = {
-      "ConceptIds": [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000324, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708]
-    };
-
-    // 2000000323
-
     const sourceEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
     fetch(sourceEndPoint,
       {
         method: "POST",
         credentials: "include",
         headers: headers,
-        body: JSON.stringify(conceptList)
+        body: JSON.stringify(conceptVars)
       }
     ).then(res => {
       return res.json();
@@ -165,6 +225,7 @@ const GWASUIApp = (props) => {
     columnTitle: 'Select',
     selectedRowKeys: selectedConcepts.map((val) => val.concept_id),
     onChange: (_, selectedRows) => {
+      setSelectedConceptVars(selectedRows.map((item) => item.concept_id));
       setSelectedConcepts(selectedRows);
     },
   };
@@ -199,7 +260,7 @@ const GWASUIApp = (props) => {
 
   };
 
-  const step3TableConfig = [
+  const step3TableConfig = [ // pass prop for loading status
     {
       title: 'Concept ID',
       dataIndex: 'concept_id',
@@ -215,6 +276,8 @@ const GWASUIApp = (props) => {
       dataIndex: 'n_missing_ratio',
       key: 'n_missing_ratio',
       render: (_, record) => (
+        // names and concept ids load before this
+        // (isLoading ? <>Loading</> : <span onClick={() => { console.log('record', record) }}>{`${(record.n_missing_ratio * 100).toFixed(0)}%`}</span>)
         <span onClick={() => { console.log('record', record) }}>{`${(record.n_missing_ratio * 100).toFixed(0)}%`}</span>
       ),
     },
@@ -296,60 +359,110 @@ const GWASUIApp = (props) => {
     setGwasJobName(undefined);
   }
 
+  const CohortDefinitions = () => {
+    const { data, status } = useQuery('cohortdefinitions', fetchCohortDefinitions);
+    // const { data: concepts, status } = useQuery('concepts', fetchConcepts);
+
+    if (status === 'loading') {
+      return <>Loading</>
+    }
+    if (status === 'error') {
+      return <>Error</>
+    }
+    return (
+      <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+        <div className='GWASUI-mainTable'>
+          <Table
+            className='GWASUI-table1'
+            rowKey='cohort_definition_id'
+            size='middle'
+            rowSelection={step1TableRowSelection}
+            columns={step1TableConfig}
+            dataSource={data.cohort_definitions_and_stats}
+          />
+        </div>
+      </Space>
+    )
+  }
+
+  const CohortConcepts = () => {
+    const { data, status } = useQuery('cohortconcepts', fetchConcepts);
+
+    if (status === 'loading') {
+      return <>Loading</>
+    }
+    if (status === 'error') {
+      return <>Error</>
+    }
+    return (
+
+      <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+        <h4 className="GWASUI-selectInstruction">The selection will be used for both covariates and phenotype selection</h4>
+        <input className="GWASUI-searchInput" placeholder="Search by concept name or ID..." type="text" value={searchTerm} onChange={(e) => filterConcept(e.target.value)}></input>
+        <div className='GWASUI-mainTable'>
+          <Table
+            className='GWASUI-table2'
+            rowKey='concept_id'
+            rowSelection={step2TableRowSelection}
+            columns={step2TableConfig}
+            dataSource={data.concepts}
+          />
+        </div>
+      </Space>
+    )
+  }
+
+  const CohortConceptStats = () => {
+    const { data, status } = useQuery('cohortconceptstats', fetchConceptStats);
+
+    if (status === 'loading') {
+      return <>Loading</>
+    }
+    if (status === 'error') {
+      return <>Error</>
+    }
+    return (
+      <button onClick={() => console.log('data', data)}>There is data</button>
+    )
+  }
+
+
   const generateContentForStep = (stepIndex) => {
     switch (stepIndex) {
       case 0: {
         return (
           <>
-            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <div className='GWASUI-mainTable'>
-                <Table
-                  className='GWASUI-table1'
-                  rowKey='cohort_definition_id'
-                  size='middle'
-                  rowSelection={step1TableRowSelection}
-                  columns={step1TableConfig}
-                  dataSource={cohortDefinitions}
-                />
-              </div>
-            </Space>
+            <CohortDefinitions></CohortDefinitions>
           </>
-
-
         );
       }
       case 1: {
         return (
-          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-            <h4 className="GWASUI-selectInstruction">The selection will be used for both covariates and phenotype selection</h4>
-            <input className="GWASUI-searchInput" placeholder="Search by concept name or ID..." type="text" value={searchTerm} onChange={(e) => filterConcept(e.target.value)}></input>
-            <div className='GWASUI-mainTable'>
-              <Table
-                className='GWASUI-table2'
-                rowKey='concept_id'
-                rowSelection={step2TableRowSelection}
-                columns={step2TableConfig}
-                dataSource={cohortConcepts}
-              />
-            </div>
-          </Space>
+          <>
+            <CohortConcepts></CohortConcepts>
+          </>
         );
       }
       case 2: {
         return (
-          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-            <hr />
-            <h4 className="GWASUI-selectInstruction">* Select Phenotype</h4>
-            <div className='GWASUI-mainTable'>
-              <Table
-                className='GWASUI-table3'
-                rowKey='concept_id'
-                rowSelection={step3TableRowSelection}
-                columns={step3TableConfig}
-                dataSource={selectedConcepts}
-              />
-            </div>
-          </Space>
+          <CohortConceptStats></CohortConceptStats>
+          // <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+          //   <hr />
+          //   <h4 className="GWASUI-selectInstruction">* Select Phenotype</h4>
+          //   <button onClick={() => {
+          //     console.log('selected Concepts', selectedConcepts);
+          //     console.log('selected vars', selectedConceptVars);
+          //   }}>click me</button>
+          //   <div className='GWASUI-mainTable'>
+          //     <Table
+          //       className='GWASUI-table3'
+          //       rowKey='concept_id'
+          //       rowSelection={step3TableRowSelection}
+          //       columns={step3TableConfig} // (status.loading) pass status as a prop
+          //       dataSource={selectedConcepts}
+          //     />
+          //   </div>
+          // </Space>
         );
       }
       case 3: {
@@ -537,23 +650,8 @@ const GWASUIApp = (props) => {
           <Button
             className='GWASUI-navBtn GWASUI-navBtn__next'
             type='primary'
-            onClick={() => {
-              if (current === 1) {
-                setSelectedPhenotype(selectedConcepts[0]);
-                setSelectedCovariates([...selectedConcepts].slice(1));
-                setCovariates([...selectedConcepts].slice(1).map((val) => val.prefixed_concept_id));
-                setSelectedOutcome(selectedConcepts[0].prefixed_concept_id);
-                form.setFieldsValue({
-                  covariates: [...selectedConcepts].slice(1).map((val) => val.concept_name),
-                  outcome: selectedConcepts[0].concept_name,
-                });
-              }
-              if (current === 2) {
-                setSelectedPhenotype(selectedConcepts[0]);
-              }
-              if (current === 3) {
-                form.submit();
-              }
+            onClick={(e) => {
+              handleNextStep(e);
               setCurrent(current + 1);
             }}
             disabled={!nextButtonEnabled}
