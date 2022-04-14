@@ -246,6 +246,7 @@ function GuppyWrapper({
   /**
    * @param {Object} args
    * @param {string[]} args.fields
+   * @param {FilterState} [args.filter]
    * @param {number} [args.offset]
    * @param {number} [args.size]
    * @param {GqlSort} [args.sort]
@@ -253,6 +254,7 @@ function GuppyWrapper({
    */
   function fetchRawDataFromGuppy({
     fields,
+    filter = state.filter,
     offset,
     size,
     sort,
@@ -275,7 +277,7 @@ function GuppyWrapper({
         numericAggAsText,
         termsFields: guppyConfig.aggFields,
         missingFields: [],
-        gqlFilter: getGQLFilter(augmentFilter(state.filter)),
+        gqlFilter: getGQLFilter(augmentFilter(filter)),
         signal: controller.current.signal,
       }).then((res) => {
         if (!res || !res.data)
@@ -303,7 +305,7 @@ function GuppyWrapper({
     return queryGuppyForRawData({
       type: guppyConfig.dataType,
       fields,
-      gqlFilter: getGQLFilter(augmentFilter(state.filter)),
+      gqlFilter: getGQLFilter(augmentFilter(filter)),
       sort,
       offset,
       size,
@@ -497,6 +499,7 @@ function GuppyWrapper({
     fetchAggsDataFromGuppy(mergedFilter);
     fetchRawDataFromGuppy({
       fields: rawDataFields,
+      filter: mergedFilter,
       updateDataWhenReceive: true,
     });
   }
