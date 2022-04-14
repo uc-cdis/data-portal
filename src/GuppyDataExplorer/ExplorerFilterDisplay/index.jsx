@@ -5,8 +5,12 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import './ExplorerFilterDisplay.css';
 
-/** @param {{ filter: import('../types').ExplorerFilters }} props */
-export function FilterDisplay({ filter }) {
+/**
+ * @param {Object} props
+ * @param {import('../types').ExplorerFilters} props.filter
+ * @param {'AND' | 'OR'} [props.combineMode]
+ */
+export function FilterDisplay({ filter, combineMode }) {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   const filterElements = /** @type {JSX.Element[]} */ ([]);
   const { __combineMode, ...__filter } = filter;
@@ -20,7 +24,9 @@ export function FilterDisplay({ filter }) {
             <code>{`"${anchorValue}"`}</code>
           </span>
           <span className='token'>
-            ( <FilterDisplay filter={value.filter} /> )
+            ({' '}
+            <FilterDisplay filter={value.filter} combineMode={__combineMode} />{' '}
+            )
           </span>
         </span>
       );
@@ -70,7 +76,9 @@ export function FilterDisplay({ filter }) {
         <>
           {filterElement}
           {i < filterElements.length - 1 && (
-            <span className='pill'>{__combineMode ?? 'AND'}</span>
+            <span className='pill'>
+              {combineMode ?? __combineMode ?? 'AND'}
+            </span>
           )}
         </>
       ))}
