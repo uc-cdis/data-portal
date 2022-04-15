@@ -50,7 +50,7 @@ export type GqlSimpleAndFilter =
 
 export type GqlSimpleFilter = GqlInFilter | GqlRangeFilter | GqlSimpleAndFilter;
 
-export type GqlNestedFilter = {
+export type GqlNestedAnchoredFilter = {
   nested: {
     path: string;
     AND:
@@ -58,6 +58,20 @@ export type GqlNestedFilter = {
       | [GqlInFilter, { AND: GqlFilter[] } | { OR: GqlFilter[] }];
   };
 };
+
+export type GqlNestedFilter =
+  | GqlNestedAnchoredFilter
+  | {
+      nested:
+        | {
+            path: string;
+            AND: GqlFilter[];
+          }
+        | {
+            path: string;
+            OR: GqlFilter[];
+          };
+    };
 
 export type GqlAndFilter =
   | {
