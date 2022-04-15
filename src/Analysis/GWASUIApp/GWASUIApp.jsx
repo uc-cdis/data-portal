@@ -1,13 +1,14 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Steps, Button, Space, Table, Input, Modal, Collapse, List, Tag, Form, Result, Alert, Popconfirm, InputNumber, Select, Checkbox, Switch
+  Steps, Button, Space, Table, Input, Form, Result, InputNumber, Select, Switch
 } from 'antd';
 import './GWASUIApp.css';
 import { headers, fetchAndSetCsrfToken } from '../../configs';
 import { gwasWorkflowPath, cohortMiddlewarePath } from '../../localconf';
 import GWASWorkflowList from './GWASWorkflowList';
-import { useQuery } from 'react-query';
+import { useQuery, useMutation } from 'react-query'
+
 
 const { Step } = Steps;
 
@@ -39,13 +40,11 @@ const GWASUIApp = (props) => {
   const [sourceId, setSourceId] = useState(undefined);
   const [cohortDefinitionId, setCohortDefinitionId] = useState(undefined);
   const [conceptVars] = useState({
-    "ConceptIds": [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000324, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708]
+    "ConceptIds": [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708]
   });
   const [selectedConceptVars, setSelectedConceptVars] = useState([]);
 
   const [form] = Form.useForm();
-
-
 
   const [cohortDefinitions, setCohortDefinitions] = useState([]);
   const [allConcepts, setAllConcepts] = useState([])
@@ -54,10 +53,9 @@ const GWASUIApp = (props) => {
   const [selectedConcepts, setSelectedConcepts] = useState([]);
   const [covariates, setCovariates] = useState([]);
   const [selectedOutcome, setSelectedOutcome] = useState([]);
-  const [imputationScore, setImputationScore] = useState(undefined);
-  const [mafThreshold, setMafThreshold] = useState(undefined);
-  const [currentWorkflows, setCurrentWorkflow] = useState(["argo-wrapper-workflow-5536413310", "argo-wrapper-workflow-3238210855"]);
-  const [gwasJobName, setGwasJobName] = useState("");
+  const [imputationScore, setImputationScore] = useState(0.3);
+  const [mafThreshold, setMafThreshold] = useState(0.01);
+  // const [gwasJobName, setGwasJobName] = useState("");
 
   const [numOfPC, setNumOfPC] = useState(3);
   const [selectedPhenotype, setSelectedPhenotype] = useState(undefined);
@@ -80,6 +78,7 @@ const GWASUIApp = (props) => {
     // setShowJobSubmissionResult(true);
   }
 
+
   const handleDelete = (key) => {
     const newlySelectedPhenotype = (selectedPhenotype.concept_id === key) ? undefined : selectedPhenotype;
     const newlySelectedCovariates = selectedCovariates.filter((item) => item.concept_id !== key);
@@ -93,9 +92,7 @@ const GWASUIApp = (props) => {
   };
 
   const handleNextStep = (e) => {
-    console.log('event', e);
     if (current === 1) {
-      console.log('hi current 1');
       setSelectedPhenotype(selectedConcepts[0]);
       setSelectedCovariates([...selectedConcepts].slice(1));
       setCovariates([...selectedConcepts].slice(1).map((val) => val.prefixed_concept_id));
@@ -106,11 +103,9 @@ const GWASUIApp = (props) => {
       });
     }
     if (current === 2) {
-      console.log('hi current 2');
       setSelectedPhenotype(selectedConcepts[0]);
     }
     if (current === 3) {
-      console.log('hi current 3')
       form.submit();
     }
   }
@@ -119,28 +114,22 @@ const GWASUIApp = (props) => {
     fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
   }, [props]);
 
-
-
-
   async function fetchSources() {
     const sourcesEndpoint = `${cohortMiddlewarePath}sources`;
     const getSources = await fetch(sourcesEndpoint);
     return getSources.json();
   }
 
-  useEffect(() => {
-    fetchSources().then(res => setSourceId(res.sources[0].source_id));
-  }, []);
-
   async function fetchCohortDefinitions() {
-    // dependent query to sourceId (only result from fetchSources());
     const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;
     const getCohortDefinitions = await fetch(cohortEndPoint);
     return getCohortDefinitions.json();
-    // if (data) {
-    // console.log('defs&stats', data.cohort_definitions_and_stats);
-    // setCohortDefinitions(data.cohort_definitions_and_stats);
-    // }
+  }
+
+  async function addGwasJob(body) {
+    const submitEndpoint = `${gwasWorkflowPath}submit`;
+    const submittedJob = await fetch(submitEndpoint, body);
+    return submittedJob.json();
   }
 
   async function fetchConcepts() {
@@ -169,29 +158,29 @@ const GWASUIApp = (props) => {
   }
 
 
-  async function getConceptsBySource(cohortDefinitionId) {
-    const sourceEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
-    fetch(sourceEndPoint,
-      {
-        method: "POST",
-        credentials: "include",
-        headers: headers,
-        body: JSON.stringify(conceptVars)
-      }
-    ).then(res => {
-      return res.json();
-    })
-      .then(data => {
-        if (data) {
-          setAllConcepts(data.concepts);
-          setCohortConcepts(data.concepts);
-        }
-      });
-  }
+  // async function getConceptsBySource(cohortDefinitionId) {
+  //   const sourceEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
+  //   fetch(sourceEndPoint,
+  //     {
+  //       method: "POST",
+  //       credentials: "include",
+  //       headers: headers,
+  //       body: JSON.stringify(conceptVars)
+  //     }
+  //   ).then(res => {
+  //     return res.json();
+  //   })
+  //     .then(data => {
+  //       if (data) {
+  //         setAllConcepts(data.concepts);
+  //         setCohortConcepts(data.concepts);
+  //       }
+  //     });
+  // }
 
-  useEffect(() => {
-    getConceptsBySource(cohortDefinitionId);
-  }, [cohortDefinitionId]);
+  // useEffect(() => {
+
+  // }, [cohortDefinitionId]);
 
 
   const step1TableRowSelection = {
@@ -293,11 +282,7 @@ const GWASUIApp = (props) => {
     // },
   ];
 
-  const filterConcept = (term) => {
-    setSearchTerm(term);
-    const filteredConcepts = allConcepts.filter(entry => entry.concept_name.toLowerCase().includes(term.toLowerCase()) || entry.concept_id.toString().includes(term));
-    filteredConcepts.length ? setCohortConcepts(filteredConcepts) : setCohortConcepts(cohortConcepts);
-  }
+
 
   const handleCovariateDelete = (remainingCovariates) => {
     const filterCovList = (element) => remainingCovariates.some(item => item === element.concept_name);
@@ -310,58 +295,12 @@ const GWASUIApp = (props) => {
     });
   }
 
-  const testSubmit = () => {
-    const requestBody = {
-      "n_pcs": numOfPC,
-      "covariates": covariates,
-      "out_prefix": Date.now().toString(),
-      "outcome": selectedOutcome,
-      "outcome_is_binary": true,
-      "maf_threshold": Number(mafThreshold),
-      "imputation_score_cutoff": Number(imputationScore),
-      "template_version": "gwas-template-9d9d56323b20b5e34fd593da877beeacec7a27b1",
-      "source_id": sourceId,
-      "cohort_definition_id": cohortDefinitionId
-    };
-    // console.log('requestBody', requestBody);
-
-    const newWorkflow = fetch(`${gwasWorkflowPath}submit`, {
-      method: "POST",
-      credentials: "include",
-      headers: headers,
-      body: JSON.stringify(requestBody)
-    })
-      .then((response) => {
-        // console.log('response', response);
-        return response.json();
-      })
-      .then(newWorkflow => {
-        // console.log('newWorkflow', newWorkflow);
-      });
-    if (newWorkFlow) {
-      // console.log('submitted', newWorkflow);
-    }
-  }
-
-  const handleGwasSubmit = () => {
-    setJobSubmittedRunID("5536413310");
-    setShowJobSubmissionResult(true);
-    setGwasJobName(currentWorkflows[0]);
-    setJobName(gwasJobName);
-  }
-
-  const handleReset = () => {
-    setCurrent(0);
-    setSelectedConcepts([]);
-    setSelectedPhenotype(undefined);
-    setSelectedCovariates([]);
-    setNumOfPC(3);
-    setGwasJobName(undefined);
-  }
+  useEffect(() => {
+    fetchSources().then(res => setSourceId(res.sources[0].source_id))
+  }, []);
 
   const CohortDefinitions = () => {
     const { data, status } = useQuery('cohortdefinitions', fetchCohortDefinitions);
-    // const { data: concepts, status } = useQuery('concepts', fetchConcepts);
 
     if (status === 'loading') {
       return <>Loading</>
@@ -370,6 +309,7 @@ const GWASUIApp = (props) => {
       return <>Error</>
     }
     return (
+      <>
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
         <div className='GWASUI-mainTable'>
           <Table
@@ -382,10 +322,16 @@ const GWASUIApp = (props) => {
           />
         </div>
       </Space>
+      </>
     )
   }
 
   const CohortConcepts = () => {
+    const filterConcept = (term) => {
+      setSearchTerm(term);
+      const filteredConcepts = allConcepts.filter(entry => entry.concept_name.toLowerCase().includes(term.toLowerCase()) || entry.concept_id.toString().includes(term));
+      filteredConcepts.length ? setCohortConcepts(filteredConcepts) : setCohortConcepts(cohortConcepts);
+    }
     const { data, status } = useQuery('cohortconcepts', fetchConcepts);
 
     if (status === 'loading') {
@@ -413,7 +359,7 @@ const GWASUIApp = (props) => {
   }
 
   const CohortConceptStats = () => {
-    const { data, status } = useQuery('cohortconceptstats', fetchConceptStats);
+    const { data, status } = useQuery('cohortstats', fetchConceptStats);
 
     if (status === 'loading') {
       return <>Loading</>
@@ -422,7 +368,82 @@ const GWASUIApp = (props) => {
       return <>Error</>
     }
     return (
-      <button onClick={() => console.log('data', data)}>There is data</button>
+      <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+        <hr />
+        <h4 className="GWASUI-selectInstruction">* Select Phenotype</h4>
+        <div className='GWASUI-mainTable'>
+          <Table
+            className='GWASUI-table3'
+            rowKey='concept_id'
+            rowSelection={step3TableRowSelection}
+            columns={step3TableConfig} // (status.loading) pass status as a prop
+            dataSource={data.concepts}
+          />
+        </div>
+      </Space>
+    )
+  }
+
+  async function fetchGwasSubmit() {
+    const submitEndpoint = `${gwasWorkflowPath}submit`;
+    const requestBody = {
+      "n_pcs": numOfPC,
+      "covariates": covariates,
+      "out_prefix": Date.now().toString(),
+      "outcome": selectedOutcome,
+      "outcome_is_binary": false, // true?
+      "maf_threshold": Number(mafThreshold),
+      "imputation_score_cutoff": Number(imputationScore),
+      "template_version": "gwas-template-320145385461a33a25bd4d6817936c436570c84a",
+      "source_id": sourceId,
+      "cohort_definition_id": cohortDefinitionId
+    };
+    const res = await fetch(submitEndpoint, {
+      method: "POST",
+      credentials: "include",
+      headers: headers,
+      body: JSON.stringify(requestBody)
+    });
+    return res;
+  }
+
+  const resetFields = () => {
+    setCurrent(0);
+    setNumOfPC(3);
+    setSelectedOutcome([]);
+    setCovariates([]);
+    setSelectedConcepts([]);
+    setSelectedConceptVars([]);
+    setMafThreshold(0.01);
+    setImputationScore(0.3);
+    setCohortDefinitionId(undefined);
+    setSelectedCohort(undefined);
+    props.refreshWorkflows();
+  }
+
+  const useSubmitJob = () => {
+    const submission = useMutation(fetchGwasSubmit, {
+      onSuccess: () => {
+        resetFields()
+      }
+    })
+    return submission
+  }
+
+  const GWASFormSubmit = () => {
+    const submitJob = useSubmitJob();
+
+    return (
+      <Button
+        htmlType='submit'
+        type='primary'
+        onClick={(e) => {
+          e.stopPropagation()
+          submitJob.mutate()
+        }}
+      >
+        Submit
+      </Button>
     )
   }
 
@@ -431,38 +452,17 @@ const GWASUIApp = (props) => {
     switch (stepIndex) {
       case 0: {
         return (
-          <>
-            <CohortDefinitions></CohortDefinitions>
-          </>
+          sourceId ? <CohortDefinitions></CohortDefinitions> : null
         );
       }
       case 1: {
         return (
-          <>
-            <CohortConcepts></CohortConcepts>
-          </>
+          <CohortConcepts></CohortConcepts>
         );
       }
       case 2: {
         return (
           <CohortConceptStats></CohortConceptStats>
-          // <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-          //   <hr />
-          //   <h4 className="GWASUI-selectInstruction">* Select Phenotype</h4>
-          //   <button onClick={() => {
-          //     console.log('selected Concepts', selectedConcepts);
-          //     console.log('selected vars', selectedConceptVars);
-          //   }}>click me</button>
-          //   <div className='GWASUI-mainTable'>
-          //     <Table
-          //       className='GWASUI-table3'
-          //       rowKey='concept_id'
-          //       rowSelection={step3TableRowSelection}
-          //       columns={step3TableConfig} // (status.loading) pass status as a prop
-          //       dataSource={selectedConcepts}
-          //     />
-          //   </div>
-          // </Space>
         );
       }
       case 3: {
@@ -530,13 +530,13 @@ const GWASUIApp = (props) => {
                   label='MAF Cutoff'
                   name='mafCutoff'
                 >
-                  <InputNumber stringMode step="0.1" min={"0"} max={"1"} />
+                  <InputNumber value={mafThreshold.toString()}  onChange={(e) => setMafThreshold(Number(e.target.value))} stringMode step="0.01" min={"0"} max={"0.5"} />
                 </Form.Item>
                 <Form.Item
                   label='Imputation Score Cutoff'
                   name='imputationCutoff'
                 >
-                  <InputNumber stringMode step="0.1" min={"0"} max={"1"} />
+                  <InputNumber value={imputationScore.toString()} onChange={(e) => setImputationScore(Number(e.target.value))} stringMode step="0.1" min={"0"} max={"1"} />
                 </Form.Item>
               </Form>
             </div>
@@ -586,23 +586,11 @@ const GWASUIApp = (props) => {
                   onStep5FormSubmit(values);
                 }}
               >
-                <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name' }]}>
+                {/* <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name' }]}>
                   <Input placeholder='my_gwas_20201101_1' onChange={(e) => setGwasJobName(e.target.value)} />
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item {...tailLayout}>
-                  <Button
-                    htmlType='submit'
-                    type='primary'
-                    disabled={gwasJobName.length === 0}
-                    onClick={() => {
-                      handleGwasSubmit()
-                    }}
-                  >
-                    Submit
-                  </Button>
-                  {/* <Button onClick={() => {
-                    testSubmit()
-                  }}>Test Submit</Button> */}
+                  <GWASFormSubmit refreshWorkflows={props.refreshWorkflows}></GWASFormSubmit>
                 </Form.Item>
               </Form>
             </div>
@@ -626,7 +614,7 @@ const GWASUIApp = (props) => {
 
   return (
     <Space direction={'vertical'} style={{ width: '100%' }}>
-      <GWASWorkflowList currentWorkflows={currentWorkflows}></GWASWorkflowList>
+      <GWASWorkflowList refreshWorkflows={props.refreshWorkflows}></GWASWorkflowList>
       <Steps current={current}>
         {steps.map((item) => (
           <Step key={item.title} title={item.title} description={item.description} />

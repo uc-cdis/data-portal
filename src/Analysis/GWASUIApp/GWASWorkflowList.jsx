@@ -1,178 +1,86 @@
-import React, { useState, useEffect } from 'react';
-import {
-    Button, Modal, Input, Collapse, List, Tag, Popconfirm,
-} from 'antd';
-import {
-    CheckCircleOutlined,
-    SyncOutlined,
-    CloseCircleOutlined,
-    QuestionCircleOutlined,
-    MinusCircleOutlined,
-} from '@ant-design/icons';
-import { has } from 'lodash';
-import { demoJobStatuses, manifestObj } from "./utils";
+import React, { useEffect } from 'react';
+import { Collapse, List, } from 'antd';
 import './GWASUIApp.css';
+import { useQuery } from 'react-query';
+import { gwasWorkflowPath } from '../../localconf';
+import { headers, fetchAndSetCsrfToken } from '../../configs';
+import GWASJob from './GWASJob';
 
-const GWASWorkflowList = ({ currentWorkflows }) => {
+
+const GWASWorkflowList = ({ refreshWorkflows }) => {
     const { Panel } = Collapse;
-    const { TextArea } = Input;
-    const [workflows, setWorkflows] = useState([]);
-    const [showJobStatusModal, setShowJobStatusModal] = useState(false);
-    const [jobStatusModalData, setJobStatusModalData] = useState({});
-
 
     useEffect(() => {
-        // console.log('currentWorkflows', currentWorkflows);
-    }, [currentWorkflows]);
+        fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
+    }, []);
 
-    const cancelGwasJob = (jobId) => {
-        // TODO Fetch GWAS cancel endpoint
-        // fetch(`${gwasWorkflow}cancel)
-        setShowJobStatusModal(false);
+    async function fetchGwasWorkflows() {
+        const workflowsEndpoint = `${gwasWorkflowPath}workflows`;
+        const getWorkflows = await fetch(workflowsEndpoint);
+        return getWorkflows.json();
     }
-    const handleJobStatusModalShow = (runID, displayFullLog = true) => {
-        // TODO Fetch GWAS status endpoint
-        // fetch(`${gwasWorkflow}status)
-        setJobStatusModalData(JSON.stringify(manifestObj));
-        setShowJobStatusModal(true);
-    };
 
-    const getStatusTag = (jobStatus) => {
-        if (!jobStatus) {
-            return (
-                <Tag icon={<QuestionCircleOutlined />} color='default'>
-                    Unknown
-                </Tag>
-            );
+    async function addJob() {
+        const body = {
+            "n_pcs": 4,
+            "covariates": ["ID_2000006885", "ID_2000006886"],
+            "out_prefix": Date.now().toString(),
+            "outcome": "ID_2000000872",
+            "outcome_is_binary": true,
+            "maf_threshold": Number(0.01),
+            "imputation_score_cutoff": Number(0.3),
+            "template_version": "hello-world-320145385461a33a25bd4d6817936c436570c84a",
+            "source_id": 2,
+            "cohort_definition_id": 4
+        };
+        const req = {
+            method: "POST",
+            credentials: "include",
+            headers: headers,
+            body: JSON.stringify(body)
         }
-        switch (jobStatus) {
-            case 'running':
-                return (
-                    <Tag icon={<SyncOutlined spin />} color='processing'>
-                        In Progress
-                    </Tag>
-                );
-            case 'completed':
-                return (
-                    <Tag icon={<CheckCircleOutlined />} color='success'>
-                        Completed
-                    </Tag>
-                );
-            case 'failed':
-                return (
-                    <Tag icon={<CloseCircleOutlined />} color='error'>
-                        Failed
-                    </Tag>
-                );
-            case 'cancelled':
-                return (
-                    <Tag icon={<MinusCircleOutlined />} color='warning'>
-                        Cancelled
-                    </Tag>
-                );
-            default:
-                return (
-                    <Tag icon={<QuestionCircleOutlined />} color='default'>
-                        Unknown
-                    </Tag>
-                );
-        }
+        const submitEndpoint = `${gwasWorkflowPath}submit`;
+        const submittedJob = await fetch(submitEndpoint, req);
+        return submittedJob.json();
     }
 
 
-    const handleJobStatusModalCancel = () => {
-        setShowJobStatusModal(false);
-    }
-
-    const getActionButtons = (listItem) => {
-        // <Button type='link' size='small' onClick={(event) => {
-        //   event.stopPropagation();
-        //   handleJobStatusModalShow(listItem.runID);
-        // }}>show logs</Button>
-        const actionButtons = [];
-        if (listItem.status === 'running') {
-            actionButtons.unshift(
-                <Popconfirm
-                    title='Are you sure you want to cancel this job?'
-                    onConfirm={(event) => {
-                        event.stopPropagation();
-                        cancelGwasJob("123");
-                    }}
-                    okText='Yes'
-                    cancelText='No'
-                >
-                    <Button type='link' size='medium' danger>cancel job</Button>
-                </Popconfirm>);
+    const GWASWorkflows = () => {
+        const { data, status } = useQuery('workflows', fetchGwasWorkflows);
+        if (status === 'loading') {
+            return <>Loading</>
         }
-        if (listItem.status === 'completed') {
-            actionButtons.unshift(
-                    <Button
-                        primary="true"
-                        type='link'
-                        size='small'
-                        className='GWAS-completedBtn'
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            handleJobStatusModalShow(listItem.runID, false);
-                        }}
-                    >
-                        show output
-                    </Button>
-                );
+        if (status === 'error') {
+            return <>Error</>
         }
-        return actionButtons;
-    }
 
+        return (
+            <>
+                <Collapse onClick={(event) => event.stopPropagation()}>
+                    <Panel header='Submitted Job Statuses' key='1'>
+                        <List
+                            className='GWASApp__jobStatusList'
+                            itemLayout='horizontal'
+                            pagination={{ pageSize: 5 }}
+                            dataSource={data}
+                            renderItem={(item) => (
+                                <>
+                                    <GWASJob refreshWorkflows={refreshWorkflows} workflow={item}></GWASJob>
+                                </>
+                            )}
+                        />
+
+                    </Panel>
+                </Collapse>
+            </>
+        )
+    }
 
     return (
         <div className='GWASApp-jobStatus'>
-            <Collapse onClick={(event) => event.stopPropagation()}>
-                <Panel header='Submitted Job Statuses' key='1'>
-                    <List
-                        className='GWASApp__jobStatusList'
-                        itemLayout='horizontal'
-                        pagination={{ pageSize: 5 }}
-                        dataSource={demoJobStatuses}
-                        renderItem={(item) => (
-                            <List.Item
-                                actions={getActionButtons(item)}
-                            >
-                                <List.Item.Meta
-                                    title={`Run ID: ${item.runID}`}
-                                    description={(item.jobName) ? `Name: ${item.jobName}` : null}
-                                />
-                                <div>{getStatusTag(item.status)}</div>
-
-                            </List.Item>
-
-                        )}
-                    />
-
-                </Panel>
-            </Collapse>
-            <Modal
-                visible={showJobStatusModal}
-                closable={false}
-                title={'Show job logs'}
-                footer={[
-                    <div className="GWAS-btnContainer">
-                        <Button key='copy' className="g3-button g3-button--tertiary">
-                            Copy JSON
-                        </Button>
-                        <Button key='download' className="explorer-button-group__download-button g3-button g3-button--primary">
-                            <i className="g3-icon g3-icon--sm g3-icon--datafile g3-button__icon g3-button__icon--left"></i>
-                            Download Manifest
-                            <i className="g3-icon g3-icon--sm g3-icon--download g3-button__icon g3-button__icon--right"></i>
-                        </Button>
-                        <Button className="g3-button g3-button--secondary" key='close' onClick={() => handleJobStatusModalCancel()}>
-                            Close
-                        </Button>
-                    </div>,
-                ]}
-            >
-                <TextArea rows={10} value={jobStatusModalData} readOnly />
-
-            </Modal>
+            {/* <button onClick={() => addJob()}>click to add job</button> */}
+            {/* <CreateGwasJob></CreateGwasJob> */}
+            <GWASWorkflows></GWASWorkflows>
         </div>
     )
 }
