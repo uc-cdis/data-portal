@@ -10,11 +10,13 @@ import ReduxGWASUIApp from './GWASUIApp/ReduxGWASUIApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { QueryClient, QueryClientProvider } from 'react-query';
+
+import { QueryClient, QueryClientProvider} from 'react-query'
 
 const queryClient = new QueryClient();
 
 class AnalysisApp extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -50,6 +52,11 @@ class AnalysisApp extends React.Component {
     this.props.checkJobStatus();
   }
 
+  refreshWorkflows = () => {
+    queryClient.invalidateQueries('workflows');
+  }
+
+
   getAppContent = (app) => {
     switch (app) {
       case 'vaGWAS':
@@ -81,8 +88,8 @@ class AnalysisApp extends React.Component {
         );
       case 'GWASUIApp':
         return (
-          <QueryClientProvider client={queryClient}>
-            <ReduxGWASUIApp />
+          <QueryClientProvider client={queryClient} contextSharing={true}>
+            <ReduxGWASUIApp refreshWorkflows={this.refreshWorkflows} />
             <ReactQueryDevtools initialIsOpen={false} />
           </QueryClientProvider>
         );
