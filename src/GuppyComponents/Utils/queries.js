@@ -10,6 +10,7 @@ import { FILE_DELIMITERS, GUPPY_URL } from './const';
 /** @typedef {import('../types').GqlFilter} GqlFilter */
 /** @typedef {import('../types').GqlInFilter} GqlInFilter */
 /** @typedef {import('../types').GqlNestedFilter} GqlNestedFilter */
+/** @typedef {import('../types').GqlNestedAnchoredFilter} GqlNestedAnchoredFilter */
 /** @typedef {import('../types').GqlSimpleAndFilter} GqlSimpleAndFilter */
 /** @typedef {import('../types').GqlSort} GqlSort */
 /** @typedef {import('../types').OptionFilter} OptionFilter */
@@ -52,6 +53,44 @@ function buildHistogramQueryStrForField(field) {
       }`;
 }
 
+/** @param {GqlFilter} gqlFilter */
+function checkFilterSelf(gqlFilter) {
+  // No filter
+  if (gqlFilter === undefined) return false;
+
+  // AND always sets `filterSelf: false`
+  if (!('OR' in gqlFilter)) return false;
+
+  // OR without any filter sets `filterSelf: false`
+  if (gqlFilter.OR.length === 0) return false;
+
+  // OR with more than one filter always sets `filterSelf: true`
+  if (gqlFilter.OR.length > 1) return true;
+
+  // OR with a single non-nested filter sets `filterSelf: false`
+  if (!('nested' in gqlFilter.OR[0])) return false;
+
+  // OR with a single nested filter is complicated due to anchored filter
+  if ('OR' in gqlFilter.OR[0].nested) {
+    const { nested } = gqlFilter.OR[0];
+
+    // Nested OR sets `filter: true` if with more than one filter
+    if (nested.OR.length > 1) return true;
+
+    // Nested OR with anchored filter sets `filter: true`
+    // if more than one filter is used with anchor
+    if (
+      'AND' in nested.OR[0] &&
+      nested.OR[0].AND.length === 2 &&
+      'OR' in nested.OR[0].AND[1]
+    )
+      return nested.OR[0].AND[1].OR.length > 1;
+  }
+
+  // default to `filterSelf: false`
+  return false;
+}
+
 /**
  * @param {object} args
  * @param {string} args.type
@@ -69,9 +108,9 @@ export function queryGuppyForAggregationChartData({
     gqlFilter !== undefined
       ? `query ($filter: JSON) {
         _aggregation {
-          ${type} (filter: $filter, filterSelf: ${
-          'OR' in gqlFilter && gqlFilter.OR.length > 1
-        }, accessibility: all) {
+          ${type} (filter: $filter, filterSelf: ${checkFilterSelf(
+          gqlFilter
+        )}, accessibility: all) {
             ${fields.map(buildHistogramQueryStrForField).join('\n')}
           }
         }
@@ -180,12 +219,12 @@ export function getQueryInfoForAggregationOptionsData({
               const filters = /** @type {GqlFilter[]} */ (
                 groupGqlFilter[combineMode]
               );
-              const found = /** @type {GqlNestedFilter} */ (
+              const found = /** @type {GqlNestedAnchoredFilter} */ (
                 filters.find((f) => 'nested' in f && f.nested.path === path)
               );
               if (found === undefined) {
                 filters.push(
-                  /** @type {GqlNestedFilter} */ ({
+                  /** @type {GqlNestedAnchoredFilter} */ ({
                     nested: { path, AND: [anchorFilterPiece] },
                   })
                 );
@@ -298,8 +337,7 @@ export function queryGuppyForAggregationOptionsData({
     });
 
   const isFilterEmpty = gqlFilter === undefined;
-  const filterSelf =
-    !isFilterEmpty && 'OR' in gqlFilter && gqlFilter.OR.length > 1;
+  const filterSelf = checkFilterSelf(gqlFilter);
   const query = buildQueryForAggregationOptionsData({
     filterSelf,
     fieldsByGroup,
@@ -375,9 +413,9 @@ export function queryGuppyForSubAggregationData({
     gqlFilter !== undefined
       ? `query ($filter: JSON, $nestedAggFields: JSON) {
         _aggregation {
-            ${type} (filter: $filter, filterSelf: ${
-          'OR' in gqlFilter && gqlFilter.OR.length > 1
-        }, nestedAggFields: $nestedAggFields, accessibility: all) {
+            ${type} (filter: $filter, filterSelf: ${checkFilterSelf(
+          gqlFilter
+        )}, nestedAggFields: $nestedAggFields, accessibility: all) {
               ${nestedHistogramQueryStrForEachField(
                 mainField,
                 numericAggAsText
@@ -560,7 +598,7 @@ function parseSimpleFilter(fieldName, filterValues) {
  * @param {string} anchorName Formatted as "[anchorFieldName]:[anchorValue]"
  * @param {AnchoredFilterState} anchoredFilterState
  * @param {'AND' | 'OR'} combineMode
- * @returns {GqlNestedFilter[]}
+ * @returns {GqlNestedAnchoredFilter[]}
  */
 function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
   const filterState = anchoredFilterState.filter;
@@ -570,7 +608,7 @@ function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
   const [anchorFieldName, anchorValue] = anchorName.split(':');
   const anchorFilter = { IN: { [anchorFieldName]: [anchorValue] } };
 
-  /** @type {GqlNestedFilter[]} */
+  /** @type {GqlNestedAnchoredFilter[]} */
   const nestedFilters = [];
   /** @type {{ [path: string]: number }} */
   const nestedFilterIndices = {};
@@ -586,7 +624,7 @@ function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
         if (!(path in nestedFilterIndices)) {
           nestedFilterIndices[path] = nestedFilterIndex;
           nestedFilters.push(
-            /** @type {GqlNestedFilter} */ ({
+            /** @type {GqlNestedAnchoredFilter} */ ({
               nested: { path, AND: [anchorFilter, { [combineMode]: [] }] },
             })
           );
