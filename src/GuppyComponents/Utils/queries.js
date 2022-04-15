@@ -184,17 +184,15 @@ export function getQueryInfoForAggregationOptionsData({
                 filters.find((f) => 'nested' in f && f.nested.path === path)
               );
               if (found === undefined) {
-                filters.push({
-                  nested:
-                    combineMode === 'AND'
-                      ? { path, AND: [anchorFilterPiece] }
-                      : { path, OR: [anchorFilterPiece] },
-                });
-              } else if (combineMode in found.nested) {
-                found.nested[combineMode].push(anchorFilterPiece);
+                filters.push(
+                  /** @type {GqlNestedFilter} */ ({
+                    nested: { path, AND: [anchorFilterPiece] },
+                  })
+                );
+              } else if (Array.isArray(found.nested.AND)) {
+                found.nested.AND.push(anchorFilterPiece);
               }
             }
-
             gqlFilterByGroup[`filter_${path}`] = groupGqlFilter;
           }
         }
@@ -587,18 +585,17 @@ function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
       if (simpleFilter !== undefined) {
         if (!(path in nestedFilterIndices)) {
           nestedFilterIndices[path] = nestedFilterIndex;
-          nestedFilters.push({
-            nested:
-              combineMode === 'AND'
-                ? { path, AND: [anchorFilter] }
-                : { path, OR: [anchorFilter] },
-          });
+          nestedFilters.push(
+            /** @type {GqlNestedFilter} */ ({
+              nested: { path, AND: [anchorFilter, { [combineMode]: [] }] },
+            })
+          );
           nestedFilterIndex += 1;
         }
 
-        nestedFilters[nestedFilterIndices[path]].nested[combineMode].push(
-          simpleFilter
-        );
+        nestedFilters[nestedFilterIndices[path]].nested.AND[1][
+          combineMode
+        ].push(simpleFilter);
       }
     }
   }
@@ -641,18 +638,17 @@ export function getGQLFilter(filterState) {
         for (const { nested } of parsedAnchoredFilters) {
           if (!(nested.path in nestedFilterIndices)) {
             nestedFilterIndices[nested.path] = nestedFilterIndex;
-            nestedFilters.push({
-              nested:
-                combineMode === 'AND'
-                  ? { path: nested.path, AND: [] }
-                  : { path: nested.path, OR: [] },
-            });
+            nestedFilters.push(
+              /** @type {GqlNestedFilter} */ ({
+                nested: { path: nested.path, [combineMode]: [] },
+              })
+            );
             nestedFilterIndex += 1;
           }
 
           nestedFilters[nestedFilterIndices[nested.path]].nested[
             combineMode
-          ].push({ [combineMode]: nested[combineMode] });
+          ].push({ AND: nested.AND });
         }
       } else {
         const simpleFilter = parseSimpleFilter(fieldName, filterValues);
@@ -663,10 +659,11 @@ export function getGQLFilter(filterState) {
 
             if (!(path in nestedFilterIndices)) {
               nestedFilterIndices[path] = nestedFilterIndex;
-              nestedFilters.push({
-                nested:
-                  combineMode === 'AND' ? { path, AND: [] } : { path, OR: [] },
-              });
+              nestedFilters.push(
+                /** @type {GqlNestedFilter} */ ({
+                  nested: { path, [combineMode]: [] },
+                })
+              );
               nestedFilterIndex += 1;
             }
 
