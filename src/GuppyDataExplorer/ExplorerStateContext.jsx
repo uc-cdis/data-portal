@@ -81,7 +81,10 @@ export function ExplorerStateProvider({ children }) {
         if (searchFields?.length > 0) allSearchFields.push(...searchFields);
 
       if (allSearchFields.length === 0) {
-        newSearchParams.set('filter', JSON.stringify(filter));
+        newSearchParams.set(
+          'filter',
+          JSON.stringify({ __combineMode: filters.__combineMode, ...filter })
+        );
       } else {
         const allSearchFieldSet = new Set(allSearchFields);
         const filterWithoutSearchFields = {};
@@ -92,7 +95,10 @@ export function ExplorerStateProvider({ children }) {
         if (Object.keys(filterWithoutSearchFields).length > 0)
           newSearchParams.set(
             'filter',
-            JSON.stringify(filterWithoutSearchFields)
+            JSON.stringify({
+              __combineMode: filters.__combineMode,
+              ...filterWithoutSearchFields,
+            })
           );
       }
     }

@@ -81,6 +81,7 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
                 filter={data.filter}
               />
               <ExplorerFilter
+                anchorValue={data.anchorValue}
                 className='explorer__filter'
                 filter={data.filter}
                 initialTabsOptions={data.initialTabsOptions}

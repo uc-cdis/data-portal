@@ -33,11 +33,12 @@ export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
       filterResultsByAnchor[`${anchorConfig.field}:${anchorValue}`] = {};
 
   for (const [filterKey, filterValues] of Object.entries(filterResults))
-    if ('filter' in filterValues) {
-      filterResultsByAnchor[filterKey] = filterValues.filter;
-    } else {
-      filterResultsByAnchor[''][filterKey] = filterValues;
-    }
+    if (typeof filterValues !== 'string')
+      if ('filter' in filterValues) {
+        filterResultsByAnchor[filterKey] = filterValues.filter;
+      } else {
+        filterResultsByAnchor[''][filterKey] = filterValues;
+      }
 
   return filterResultsByAnchor;
 }
@@ -96,24 +97,25 @@ export function removeEmptyFilter(filterResults) {
   const newFilterResults = {};
   for (const field of Object.keys(filterResults)) {
     const filterValues = filterResults[field];
-    if ('filter' in filterValues) {
-      const newAnchoredFilterResults = removeEmptyFilter(filterValues.filter);
-      if (Object.keys(newAnchoredFilterResults).length > 0)
-        newFilterResults[field] = { filter: newAnchoredFilterResults };
-    } else {
-      const hasRangeFilter = 'lowerBound' in filterValues;
-      const hasOptionFilter =
-        'selectedValues' in filterValues &&
-        filterValues.selectedValues.length > 0;
-      // Filter settings are prefaced with two underscores, e.g., __combineMode
-      // A given config setting is still informative to Guppy even if the setting becomes empty
-      const hasConfigSetting = Object.keys(filterValues).some((x) =>
-        x.startsWith('__')
-      );
-      if (hasRangeFilter || hasOptionFilter || hasConfigSetting) {
-        newFilterResults[field] = filterValues;
+    if (typeof filterValues !== 'string')
+      if ('filter' in filterValues) {
+        const newAnchoredFilterResults = removeEmptyFilter(filterValues.filter);
+        if (Object.keys(newAnchoredFilterResults).length > 0)
+          newFilterResults[field] = { filter: newAnchoredFilterResults };
+      } else {
+        const hasRangeFilter = 'lowerBound' in filterValues;
+        const hasOptionFilter =
+          'selectedValues' in filterValues &&
+          filterValues.selectedValues.length > 0;
+        // Filter settings are prefaced with two underscores, e.g., __combineMode
+        // A given config setting is still informative to Guppy even if the setting becomes empty
+        const hasConfigSetting = Object.keys(filterValues).some((x) =>
+          x.startsWith('__')
+        );
+        if (hasRangeFilter || hasOptionFilter || hasConfigSetting) {
+          newFilterResults[field] = filterValues;
+        }
       }
-    }
   }
 
   return newFilterResults;

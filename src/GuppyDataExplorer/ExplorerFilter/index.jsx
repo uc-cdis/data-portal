@@ -8,6 +8,7 @@ import './ExplorerFilter.css';
 
 /**
  * @typedef {Object} ExplorerFilterProps
+ * @property {string} [anchorValue]
  * @property {string} [className]
  * @property {GuppyData['initialTabsOptions']} [initialTabsOptions]
  * @property {GuppyData['filter']} filter
@@ -36,6 +37,13 @@ function ExplorerFilter({ className = '', ...filterProps }) {
     onPatientIdsChange: handlePatientIdsChange,
   };
   const hasAppliedFilters = Object.keys(filterProps.filter).length > 0;
+  const filterCombineMode = filterProps.filter.__combineMode ?? 'AND';
+  function updateFilterCombineMode(e) {
+    filterProps.onFilterChange({
+      ...filterProps.filter,
+      __combineMode: e.target.value,
+    });
+  }
 
   return (
     <div className={className}>
@@ -51,12 +59,31 @@ function ExplorerFilter({ className = '', ...filterProps }) {
           </button>
         )}
       </div>
+      <div className='explorer-filter__combine-mode'>
+        Combine filters with
+        {['AND', 'OR'].map((/** @type {'AND' | 'OR'} */ combineMode) => (
+          <label
+            key={combineMode}
+            className={filterCombineMode === combineMode ? 'active' : undefined}
+          >
+            <input
+              name='combineMode'
+              value={combineMode}
+              type='radio'
+              onChange={updateFilterCombineMode}
+              checked={filterCombineMode === combineMode}
+            />
+            {combineMode}
+          </label>
+        ))}
+      </div>
       <ConnectedFilter {...connectedFilterProps} />
     </div>
   );
 }
 
 ExplorerFilter.propTypes = {
+  anchorValue: PropTypes.string, // from GuppyWrapper
   className: PropTypes.string,
   filter: PropTypes.object.isRequired, // from GuppyWrapper
   initialTabsOptions: PropTypes.object, // from GuppyWrapper

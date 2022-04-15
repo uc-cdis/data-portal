@@ -38,6 +38,7 @@ function findFilterElement(label) {
 
 /**
  * @typedef {Object} FilterGroupProps
+ * @property {string} [anchorValue]
  * @property {string} [className]
  * @property {string} [disabledTooltipMessage]
  * @property {FilterConfig} filterConfig
@@ -56,6 +57,7 @@ const defaultInitialAppliedFilters = {};
 
 /** @param {FilterGroupProps} props */
 function FilterGroup({
+  anchorValue = '',
   className = '',
   disabledTooltipMessage,
   filterConfig,
@@ -83,15 +85,10 @@ function FilterGroup({
   const showPatientIdsFilter =
     patientIds !== undefined && tabTitle === 'Subject';
 
-  const [anchorValue, setAnchorValue] = useState('');
   const anchorLabel =
     filterConfig.anchor !== undefined && anchorValue !== '' && showAnchorFilter
       ? `${filterConfig.anchor.field}:${anchorValue}`
       : '';
-  function handleAnchorValueChange(value) {
-    setAnchorValue(value);
-    onAnchorValueChange(value);
-  }
 
   const [expandedStatusControl, setExpandedStatusControl] = useState(false);
   const expandedStatusText = expandedStatusControl
@@ -125,7 +122,7 @@ function FilterGroup({
 
     setFilterStatus(newFilterStatus);
     setFilterResults(newFilterResults);
-    onFilterChange({ anchorValue, filter: newFilterResults });
+    onFilterChange(newFilterResults);
   }, [initialAppliedFilters]);
 
   const filterTabStatus = showAnchorFilter
@@ -156,7 +153,7 @@ function FilterGroup({
     });
     setFilterResults(updated.filterResults);
     setFilterStatus(updated.filterStatus);
-    onFilterChange({ anchorValue, filter: updated.filterResults });
+    onFilterChange(updated.filterResults);
   }
 
   /**
@@ -189,7 +186,7 @@ function FilterGroup({
       'selectedValues' in filterValues &&
       filterValues.selectedValues.length > 0
     )
-      onFilterChange({ anchorValue, filter: updated.filterResults });
+      onFilterChange(updated.filterResults);
   }
 
   /**
@@ -208,7 +205,7 @@ function FilterGroup({
     });
     setFilterStatus(updated.filterStatus);
     setFilterResults(updated.filterResults);
-    onFilterChange({ anchorValue, filter: updated.filterResults });
+    onFilterChange(updated.filterResults);
   }
 
   /**
@@ -242,7 +239,7 @@ function FilterGroup({
     });
     setFilterStatus(updated.filterStatus);
     setFilterResults(updated.filterResults);
-    onFilterChange({ anchorValue, filter: updated.filterResults });
+    onFilterChange(updated.filterResults);
   }
 
   function toggleSections() {
@@ -337,7 +334,7 @@ function FilterGroup({
           <AnchorFilter
             anchorField={filterConfig.anchor.field}
             anchorValue={anchorValue}
-            onChange={handleAnchorValueChange}
+            onChange={onAnchorValueChange}
             options={filterConfig.anchor.options}
             optionsInUse={selectedAnchors[tabIndex]}
             tooltip={filterConfig.anchor.tooltip}
@@ -378,6 +375,7 @@ function FilterGroup({
 }
 
 FilterGroup.propTypes = {
+  anchorValue: PropTypes.string,
   className: PropTypes.string,
   disabledTooltipMessage: PropTypes.string,
   filterConfig: PropTypes.shape({

@@ -5,11 +5,16 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import './ExplorerFilterDisplay.css';
 
-/** @param {{ filter: import('../types').ExplorerFilters }} props */
-export function FilterDisplay({ filter }) {
+/**
+ * @param {Object} props
+ * @param {import('../types').ExplorerFilters} props.filter
+ * @param {'AND' | 'OR'} [props.combineMode]
+ */
+export function FilterDisplay({ filter, combineMode }) {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   const filterElements = /** @type {JSX.Element[]} */ ([]);
-  for (const [key, value] of Object.entries(filter))
+  const { __combineMode, ...__filter } = filter;
+  for (const [key, value] of Object.entries(__filter))
     if ('filter' in value) {
       const [anchorKey, anchorValue] = key.split(':');
       filterElements.push(
@@ -19,7 +24,9 @@ export function FilterDisplay({ filter }) {
             <code>{`"${anchorValue}"`}</code>
           </span>
           <span className='token'>
-            ( <FilterDisplay filter={value.filter} /> )
+            ({' '}
+            <FilterDisplay filter={value.filter} combineMode={__combineMode} />{' '}
+            )
           </span>
         </span>
       );
@@ -68,7 +75,11 @@ export function FilterDisplay({ filter }) {
       {filterElements.map((filterElement, i) => (
         <>
           {filterElement}
-          {i < filterElements.length - 1 && <span className='pill'>AND</span>}
+          {i < filterElements.length - 1 && (
+            <span className='pill'>
+              {combineMode ?? __combineMode ?? 'AND'}
+            </span>
+          )}
         </>
       ))}
     </span>

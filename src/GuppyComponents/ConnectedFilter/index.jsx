@@ -18,6 +18,7 @@ import {
 /**
  * @typedef {Object} ConnectedFilterProps
  * @property {object} [adminAppliedPreFilters]
+ * @property {string} [anchorValue]
  * @property {string} [className]
  * @property {FilterState} filter
  * @property {FilterConfig} filterConfig
@@ -36,6 +37,7 @@ import {
 /** @param {ConnectedFilterProps} props */
 function ConnectedFilter({
   adminAppliedPreFilters = {},
+  anchorValue,
   className = '',
   filter,
   filterConfig,
@@ -87,6 +89,7 @@ function ConnectedFilter({
 
   return (
     <FilterGroup
+      anchorValue={anchorValue}
       className={className}
       disabledTooltipMessage={
         'This resource is currently disabled because you are exploring restricted data. You are limited to exploring cohorts of a size greater than or equal to the access limit.'
@@ -106,6 +109,7 @@ function ConnectedFilter({
 
 ConnectedFilter.propTypes = {
   adminAppliedPreFilters: PropTypes.object,
+  anchorValue: PropTypes.string,
   className: PropTypes.string,
   filter: PropTypes.object.isRequired,
   filterConfig: PropTypes.shape({
