@@ -316,9 +316,10 @@ const GWASUIApp = (props) => {
             className='GWASUI-table1'
             rowKey='cohort_definition_id'
             size='middle'
+            pagination={{ pageSize: 10 }}
             rowSelection={step1TableRowSelection}
             columns={step1TableConfig}
-            dataSource={data.cohort_definitions_and_stats}
+            dataSource={data.cohort_definitions_and_stats.filter(x => x.size > 0)} // many entries w/ size 0 in prod
           />
         </div>
       </Space>
@@ -349,6 +350,7 @@ const GWASUIApp = (props) => {
           <Table
             className='GWASUI-table2'
             rowKey='concept_id'
+            pagination={{ pageSize: 10 }}
             rowSelection={step2TableRowSelection}
             columns={step2TableConfig}
             dataSource={data.concepts}
@@ -375,6 +377,7 @@ const GWASUIApp = (props) => {
           <Table
             className='GWASUI-table3'
             rowKey='concept_id'
+            pagination={{ pageSize: 10 }}
             rowSelection={step3TableRowSelection}
             columns={step3TableConfig} // (status.loading) pass status as a prop
             dataSource={data.concepts}
