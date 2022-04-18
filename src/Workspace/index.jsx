@@ -491,7 +491,7 @@ class Workspace extends React.Component {
                 id={option.bmh_workspace_id}
                 icon={<UserOutlined />}
               >
-                {`${option.workspace_type} \t - $${option['total-usage']}`}
+                {`${option.workspace_type} \t - $${Number.parseFloat(option['total-usage']).toFixed(2)}`}
               </Menu.Item>
             ))
           ) : null
