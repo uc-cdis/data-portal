@@ -5,7 +5,8 @@ import {
 } from 'antd';
 import './GWASUIApp.css';
 import { headers, fetchAndSetCsrfToken } from '../../configs';
-import { gwasWorkflowPath, cohortMiddlewarePath } from '../../localconf';
+import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath } from '../../localconf';
+import { fetchWithCreds } from '../../actions';
 import GWASWorkflowList from './GWASWorkflowList';
 import { useQuery, useMutation } from 'react-query'
 
@@ -296,7 +297,22 @@ const GWASUIApp = (props) => {
   }
 
   useEffect(() => {
-    fetchSources().then(res => setSourceId(res.sources[0].source_id))
+    // setup sources on first load
+    fetchSources().then(res => setSourceId(res.sources[0].source_id));
+    // do wts login
+    fetchWithCreds({
+      path: `${wtsPath}connected`,
+      method: 'GET',
+    })
+      .then(
+	      ({ status }) => {
+		      if (status !== 200) {
+			      window.location.href = `${wtsPath}/authorization_url?redirect=${window.location.pathname}`;
+		      } else {
+			      // We could in the future set a state here and then watch the connected endpoint and refresh
+		      }
+	      }
+      );
   }, []);
 
   const CohortDefinitions = () => {
