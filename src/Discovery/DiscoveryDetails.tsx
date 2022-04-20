@@ -42,7 +42,7 @@ const tabLabelCls = { className: 'discovery-modal__tablabel' }
 const blockTextField = (text: string) => <div {...fieldCls}>{text}</div>;
 const label = (text: string) => <b {...labelCls}>{text}</b>;
 const textField = (text: string) => <span>{text}</span>;
-const linkField = (text: string) => <a href={text} target="_blank">{text}</a>;
+const linkField = (text: string) => <a href={text} target='_blank' rel='noreferrer'>{text}</a>;
 
 const subHeading = (text: string) => <h3 {...subHeadingCls}>{text}</h3>;
 const labeledSingleTextField = (labelText: string, fieldText: string) => <div {...fieldCls}>{label(labelText)} {textField(fieldText)}</div>;
