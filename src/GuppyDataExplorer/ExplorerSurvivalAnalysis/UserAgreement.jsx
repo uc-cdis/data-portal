@@ -4,8 +4,11 @@ import { useSelector } from 'react-redux';
 import Button from '../../gen3-ui-component/components/Button';
 
 const pcdcStatisticalManualLink = (
-  // this resource is currently a work in progress
-  <a href='/' target='_black' rel='noopener noreferrer'>
+  <a
+    href='https://commons.cri.uchicago.edu/wp-content/uploads/2022/04/PCDC-Analytics-Tool-Documentation-Statistical-Manual.pdf'
+    target='_black'
+    rel='noopener noreferrer'
+  >
     PCDC Statistical Manual
     <i className='g3-icon g3-icon--external-link g3-icon--sm g3-icon-color__gray' />
   </a>
