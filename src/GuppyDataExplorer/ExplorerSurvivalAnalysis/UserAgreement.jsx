@@ -3,19 +3,16 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import Button from '../../gen3-ui-component/components/Button';
 
-// The following resources are currently works in progress
-const statisticalManualHref = '/';
-const statisticalCondiserationVideoHref = 'https://youtu.be/d_x8taJ-lP8';
-
 const pcdcStatisticalManualLink = (
-  <a href={statisticalManualHref} target='_black' rel='noopener noreferrer'>
+  // this resource is currently a work in progress
+  <a href='/' target='_black' rel='noopener noreferrer'>
     PCDC Statistical Manual
     <i className='g3-icon g3-icon--external-link g3-icon--sm g3-icon-color__gray' />
   </a>
 );
 const statisticalConsiderationVidoeLink = (
   <a
-    href={statisticalCondiserationVideoHref}
+    href='https://youtu.be/d_x8taJ-lP8'
     target='_black'
     rel='noopener noreferrer'
   >
