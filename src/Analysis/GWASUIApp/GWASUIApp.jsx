@@ -5,9 +5,10 @@ import {
 } from 'antd';
 import './GWASUIApp.css';
 import { headers, fetchAndSetCsrfToken } from '../../configs';
-import { gwasWorkflowPath, cohortMiddlewarePath } from '../../localconf';
+import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath } from '../../localconf';
 import GWASWorkflowList from './GWASWorkflowList';
-import { useQuery, useMutation } from 'react-query'
+import { useQuery, useMutation } from 'react-query';
+import { fetchWithCreds } from '../../actions';
 
 
 const { Step } = Steps;
@@ -124,12 +125,6 @@ const GWASUIApp = (props) => {
     const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;
     const getCohortDefinitions = await fetch(cohortEndPoint);
     return getCohortDefinitions.json();
-  }
-
-  async function addGwasJob(body) {
-    const submitEndpoint = `${gwasWorkflowPath}submit`;
-    const submittedJob = await fetch(submitEndpoint, body);
-    return submittedJob.json();
   }
 
   async function fetchConcepts() {
@@ -296,7 +291,20 @@ const GWASUIApp = (props) => {
   }
 
   useEffect(() => {
-    fetchSources().then(res => setSourceId(res.sources[0].source_id))
+    // setup sources on first load
+    fetchSources().then(res => setSourceId(res.sources[0].source_id));
+    // do wts login
+    fetchWithCreds({
+      path: `${wtsPath}connected`,
+      method: 'GET',
+    })
+      .then(
+	      (res) => {
+            if (res.status !== 200) {
+              window.location.href = `${wtsPath}authorization_url?redirect=${window.location.pathname}`;
+            }
+		      }
+      );
   }, []);
 
   const CohortDefinitions = () => {
@@ -310,19 +318,19 @@ const GWASUIApp = (props) => {
     }
     return (
       <>
-      <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-        <div className='GWASUI-mainTable'>
-          <Table
-            className='GWASUI-table1'
-            rowKey='cohort_definition_id'
-            size='middle'
-            pagination={{ pageSize: 10 }}
-            rowSelection={step1TableRowSelection}
-            columns={step1TableConfig}
-            dataSource={data.cohort_definitions_and_stats.filter(x => x.size > 0)} // many entries w/ size 0 in prod
-          />
-        </div>
-      </Space>
+        <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+          <div className='GWASUI-mainTable'>
+            <Table
+              className='GWASUI-table1'
+              rowKey='cohort_definition_id'
+              size='middle'
+              pagination={{ pageSize: 10 }}
+              rowSelection={step1TableRowSelection}
+              columns={step1TableConfig}
+              dataSource={data.cohort_definitions_and_stats.filter(x => x.size > 0)} // many entries w/ size 0 in prod
+            />
+          </div>
+        </Space>
       </>
     )
   }
@@ -342,7 +350,6 @@ const GWASUIApp = (props) => {
       return <>Error</>
     }
     return (
-
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
         <h4 className="GWASUI-selectInstruction">The selection will be used for both covariates and phenotype selection</h4>
         <input className="GWASUI-searchInput" placeholder="Search by concept name or ID..." type="text" value={searchTerm} onChange={(e) => filterConcept(e.target.value)}></input>
@@ -378,7 +385,10 @@ const GWASUIApp = (props) => {
             className='GWASUI-table3'
             rowKey='concept_id'
             pagination={{ pageSize: 10 }}
-            rowSelection={step3TableRowSelection}
+            rowSelection={(e) => {
+              e.stopPropagation();
+              step3TableRowSelection
+            }}
             columns={step3TableConfig} // (status.loading) pass status as a prop
             dataSource={data.concepts}
           />
@@ -441,8 +451,8 @@ const GWASUIApp = (props) => {
         htmlType='submit'
         type='primary'
         onClick={(e) => {
-          e.stopPropagation()
-          submitJob.mutate()
+          e.stopPropagation();
+          submitJob.mutate();
         }}
       >
         Submit
@@ -533,7 +543,7 @@ const GWASUIApp = (props) => {
                   label='MAF Cutoff'
                   name='mafCutoff'
                 >
-                  <InputNumber value={mafThreshold.toString()}  onChange={(e) => setMafThreshold(Number(e.target.value))} stringMode step="0.01" min={"0"} max={"0.5"} />
+                  <InputNumber value={mafThreshold.toString()} onChange={(e) => setMafThreshold(Number(e.target.value))} stringMode step="0.01" min={"0"} max={"0.5"} />
                 </Form.Item>
                 <Form.Item
                   label='Imputation Score Cutoff'
@@ -566,8 +576,7 @@ const GWASUIApp = (props) => {
                   <Button
                     key='done'
                     onClick={() => {
-                      handleReset()
-                      // setSubmission(true);
+                      handleReset();
                     }}
                   >
                     Done
