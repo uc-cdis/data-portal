@@ -64,9 +64,7 @@ const GWASWorkflowList = ({ refreshWorkflows }) => {
                             pagination={{ pageSize: 5 }}
                             dataSource={data}
                             renderItem={(item) => (
-                                <>
                                     <GWASJob refreshWorkflows={refreshWorkflows} workflow={item}></GWASJob>
-                                </>
                             )}
                         />
 
