@@ -15,17 +15,16 @@ const pcdcStatisticalManualLink = (
 );
 
 const checkItems = [
-  <>I have read and understand the {pcdcStatisticalManualLink}.</>,
   <>
-    I will abide by the principles and policies set forth in the{' '}
-    {pcdcStatisticalManualLink}.
+    I have read the {pcdcStatisticalManualLink} and agree to abide by the
+    principles and policies set forth in the manual.
   </>,
-  'My activity on PCDC web-based analytics tools will be recorded and audited to assess the effectiveness of the pilot and to investigate possible misuse or abuse.',
-  'PCDC may contact me to investigate cases of suspected abuse or misuse of web-based analytics tools. I will promptly respond to inquiries regarding my use of the tools.',
-  'I will not violate PCDC policies or terms of use.',
+  'My activity on the PCDC Data Portal will be logged and audited to assess the effectiveness of the pilot and to investigate possible misuse or abuse.',
+  'PCDC staff may contact me to investigate cases of suspected abuse or misuse of web-based analytics tools. I will promptly respond to inquiries regarding my use of the tools.',
+  'I will not violate the PCDC Terms of Use or Acceptable Use Policy.',
   'I will not engage in p-hacking or other forms of statistical misuse.',
   'I will not reproduce or distribute results generated using web-based analytics tools.',
-  'I will follow a hypothesis-driven approach when performing analyses and maintain a hypothesis record, which may be audited.',
+  'I will follow a hypothesis-driven approach when performing analyses and maintain a hypothesis record.',
 ];
 
 function fullnameSelector(state) {
@@ -49,16 +48,17 @@ function UserAgreement({ onAgree }) {
   return (
     <div className='explorer-survival-analysis__user-agreement'>
       <p>
-        The PCDC has partnered with consortia to pilot web-based analytics
-        tools. Due to the potential for statistical misuse and abuse with use of
-        the tools, safeguards have been implemented to facilitate responsible
-        data exploration.
+        The PCDC is piloting a Kaplan-Meier survival analysis tool. Due to the
+        potential for statistical misuse and abuse with use of the tool,
+        safeguards have been implemented to facilitate responsible data
+        exploration.
       </p>
       <p>
-        All users of analytics tools are required to review the{' '}
-        {pcdcStatisticalManualLink}. The manual outlines principles for
-        responsible data exploration and sets forth policies users must agree to
-        abide by. A summary video is included below:
+        All users of the Kaplan-Meier survival analysis tool are required to
+        review the {pcdcStatisticalManualLink}. The manual outlines principles
+        for responsible data exploration and sets forth policies users must
+        agree to abide by. A summary of important statistical considerations is
+        below:
       </p>
       {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
       <video controls>
