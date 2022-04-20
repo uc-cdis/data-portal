@@ -5,11 +5,21 @@ import Button from '../../gen3-ui-component/components/Button';
 
 // The following resources are currently works in progress
 const statisticalManualHref = '/';
-const summaryVideoHref = '/';
+const statisticalCondiserationVideoHref = 'https://youtu.be/d_x8taJ-lP8';
 
 const pcdcStatisticalManualLink = (
   <a href={statisticalManualHref} target='_black' rel='noopener noreferrer'>
     PCDC Statistical Manual
+    <i className='g3-icon g3-icon--external-link g3-icon--sm g3-icon-color__gray' />
+  </a>
+);
+const statisticalConsiderationVidoeLink = (
+  <a
+    href={statisticalCondiserationVideoHref}
+    target='_black'
+    rel='noopener noreferrer'
+  >
+    Watch this video
     <i className='g3-icon g3-icon--external-link g3-icon--sm g3-icon-color__gray' />
   </a>
 );
@@ -57,13 +67,9 @@ function UserAgreement({ onAgree }) {
         All users of the Kaplan-Meier survival analysis tool are required to
         review the {pcdcStatisticalManualLink}. The manual outlines principles
         for responsible data exploration and sets forth policies users must
-        agree to abide by. A summary of important statistical considerations is
-        below:
+        agree to abide by. {statisticalConsiderationVidoeLink} for a summary of
+        important statistical considerations.
       </p>
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-      <video controls>
-        <source src={summaryVideoHref} type='video/mp4' />
-      </video>
       <p>I, {fullname}, agree that:</p>
       <ul>
         {checkItems.map((item, i) => (
