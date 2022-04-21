@@ -99,7 +99,7 @@ function AgreementForm({ isSubmitting, onAgree }) {
       <div className='explorer-survival-analysis__button-group'>
         <Button
           buttonType='primary'
-          label='I Agree'
+          label='Agree'
           enabled={Object.values(checkStatus).every(Boolean) && !isSubmitting}
           onClick={handleAgree}
         />
