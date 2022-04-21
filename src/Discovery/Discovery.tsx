@@ -193,7 +193,8 @@ const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, co
 
 export interface DiscoveryResource {
   [accessibleFieldName]: AccessLevel,
-  [any: string]: any
+  [any: string]: any,
+  tags?: { name: string, category: string }[]
 }
 
 interface Props {

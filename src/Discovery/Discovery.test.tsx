@@ -123,20 +123,6 @@ describe('Configuration', () => {
 });
 
 describe('Modal', () => {
-  test('Modal header field is enabled/disabled', () => {
-    const modalDataIndex = 2;
-    [true, false].forEach((enabled) => {
-      testConfig.studyPageFields.header = enabled
-        ? { field: testConfig.minimalFieldMapping.uid }
-        : undefined;
-      const wrapper = mount(getDiscoveryComponent(mockStore(initStoreData), testConfig));
-      wrapper.find('.discovery-table__row').at(modalDataIndex).simulate('click');
-      const modal = wrapper.find('.discovery-modal').first();
-      expect(modal.exists('.discovery-modal__header-text')).toBe(enabled);
-
-      wrapper.unmount();
-    });
-  });
 
   test('Modal header field shows configured field', () => {
     const modalDataIndex = 2;

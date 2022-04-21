@@ -31,10 +31,13 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
       props.setAdvSearchFilterHeight(document.getElementById('discovery-table-of-records').offsetHeight);
     }
   });
-
+  const scroll = (
+    props.config.tableScrollHeight ?
+    {scroll:{ y: props.config.tableScrollHeight }} : {}
+  );
   return (
     <Table
-      scroll={{ y: 450 }}
+      { ...scroll}
       pagination={false} // handled in separate element
       loading={props.studies.length === 0}
       locale={{
