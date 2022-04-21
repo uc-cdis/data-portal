@@ -90,7 +90,10 @@ function ProtectedContent({
     const isUserRegistered =
       currentState.user.authz !== undefined &&
       Object.keys(currentState.user.authz).length > 0;
-    const hasDocsToReview = currentState.user.docs_to_be_reviewed?.length > 0;
+    const hasDocsToReview =
+      currentState.user.docs_to_be_reviewed?.filter(
+        ({ type }) => type !== 'survival-user-agreement'
+      ).length > 0;
     const hasAccess = isUserRegistered && !hasDocsToReview;
 
     return location.pathname === '/' || hasAccess
