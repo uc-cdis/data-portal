@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { headers, userapiPath } from '../../localconf';
 import Button from '../../gen3-ui-component/components/Button';
 
 const pcdcStatisticalManualLink = (
@@ -37,6 +38,7 @@ const checkItems = [
   'I will follow a hypothesis-driven approach when performing analyses and maintain a hypothesis record.',
 ];
 
+/** @param {{ user: import('@src/types').UserState }} state */
 function fullnameSelector(state) {
   const { additional_info: info, username } = state.user;
   return info?.firstName && info?.lastName
@@ -44,19 +46,15 @@ function fullnameSelector(state) {
     : username;
 }
 
-/**
- * @param {Object} props
- * @param {() => void} props.onAgree
- */
-function UserAgreement({ onAgree }) {
+/** @param {{ onAgree: () => void }} props */
+function AgreementForm({ onAgree }) {
   const fullname = useSelector(fullnameSelector);
 
   const initalCheckStatus = {};
   for (const i of checkItems.keys()) initalCheckStatus[i] = false;
   const [checkStatus, setCheckstatus] = useState(initalCheckStatus);
-
   return (
-    <div className='explorer-survival-analysis__user-agreement'>
+    <>
       <p>
         The PCDC is piloting a Kaplan-Meier survival analysis tool. Due to the
         potential for statistical misuse and abuse with use of the tool,
@@ -99,12 +97,69 @@ function UserAgreement({ onAgree }) {
           onClick={onAgree}
         />
       </div>
+    </>
+  );
+}
+
+AgreementForm.propTypes = { onAgree: PropTypes.func };
+
+/** @param {{ onAgree: () => void }} props */
+function ReminderForm({ onAgree }) {
+  return (
+    <>
+      <p>
+        You must agree to the following terms, as outlined in the{' '}
+        {pcdcStatisticalManualLink} and Acceptable Use Policy, to proceed:
+      </p>
+      <ul style={{ listStyleType: 'initial' }}>
+        <li>I will not engage in p-hacking.</li>
+        <li>I will maintain a hypothesis record.</li>
+        <li>I will not reproduce or distribute results without permission.</li>
+        <li>My use will be logged and audited.</li>
+      </ul>
+
+      <div className='explorer-survival-analysis__button-group'>
+        <Button buttonType='primary' label='Continue' onClick={onAgree} />
+      </div>
+    </>
+  );
+}
+
+ReminderForm.propTypes = { onAgree: PropTypes.func };
+
+/** @param {{ user: import('@src/types').UserState }} state */
+function userAgreementDocSelector(state) {
+  return state.user.docs_to_be_reviewed.find(
+    ({ type }) => type === 'survival-user-agreement'
+  );
+}
+
+/** @param {{ onAgree: () => void }} props */
+function UserAgreement({ onAgree }) {
+  const userAgreementDoc = useSelector(userAgreementDocSelector);
+
+  function submitSurvivalUserAgreement() {
+    fetch(`${userapiPath}user/documents`, {
+      body: JSON.stringify({ [userAgreementDoc?.id]: true }),
+      credentials: 'include',
+      headers,
+      method: 'POST',
+    }).then(() => {
+      onAgree();
+    });
+  }
+
+  return (
+    <div className='explorer-survival-analysis__user-agreement'>
+      {userAgreementDoc !== undefined ? (
+        <AgreementForm onAgree={submitSurvivalUserAgreement} />
+      ) : (
+        <ReminderForm onAgree={onAgree} />
+      )}
     </div>
   );
 }
 
-UserAgreement.propTypes = {
-  onAgree: PropTypes.func,
-};
+UserAgreement.propTypes = { onAgree: PropTypes.func };
 
 export default UserAgreement;
