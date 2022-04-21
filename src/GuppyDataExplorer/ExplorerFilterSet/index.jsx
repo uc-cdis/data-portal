@@ -113,8 +113,11 @@ function ExplorerFilterSet({ className, filter }) {
           <p>
             Please retry by clicking {'"Retry"'} button or refreshing the page.
             <br />
-            If the problem persists, please contact administrator for more
-            information.
+            If the problem persists, please contact the administrator (
+            <a href='mailto:pcdc_help@lists.uchicago.edu'>
+              pcdc_help@lists.uchicago.edu
+            </a>
+            ) for more information.
           </p>
           <Button label='Retry' onClick={() => setIsError(false)} />
         </div>
