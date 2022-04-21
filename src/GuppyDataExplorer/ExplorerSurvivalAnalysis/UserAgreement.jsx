@@ -14,16 +14,6 @@ const pcdcStatisticalManualLink = (
     <i className='g3-icon g3-icon--external-link g3-icon--sm g3-icon-color__gray' />
   </a>
 );
-const statisticalConsiderationVidoeLink = (
-  <a
-    href='https://youtu.be/d_x8taJ-lP8'
-    target='_black'
-    rel='noopener noreferrer'
-  >
-    Watch this video
-    <i className='g3-icon g3-icon--external-link g3-icon--sm g3-icon-color__gray' />
-  </a>
-);
 
 const checkItems = [
   <>
@@ -65,8 +55,16 @@ function AgreementForm({ onAgree }) {
         All users of the Kaplan-Meier survival analysis tool are required to
         review the {pcdcStatisticalManualLink}. The manual outlines principles
         for responsible data exploration and sets forth policies users must
-        agree to abide by. {statisticalConsiderationVidoeLink} for a summary of
-        important statistical considerations.
+        agree to abide by.{' '}
+        <a
+          href='https://youtu.be/d_x8taJ-lP8'
+          target='_black'
+          rel='noopener noreferrer'
+        >
+          Watch this video
+          <i className='g3-icon g3-icon--external-link g3-icon--sm g3-icon-color__gray' />
+        </a>{' '}
+        for a summary of important statistical considerations.
       </p>
       <p>I, {fullname}, agree that:</p>
       <ul>
