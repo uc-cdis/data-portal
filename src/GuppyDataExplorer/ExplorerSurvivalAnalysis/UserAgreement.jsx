@@ -43,7 +43,10 @@ function AgreementForm({ isSubmitting, onAgree }) {
   const [error, setError] = useState(/** @type {Error | null} */ (null));
   if (error) throw error;
   function handleAgree() {
-    onAgree().catch(setError);
+    onAgree().catch((err) => {
+      console.error(err); // eslint-disable-line no-console
+      setError(err);
+    });
   }
 
   const fullname = useSelector(fullnameSelector);
