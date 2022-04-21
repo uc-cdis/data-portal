@@ -23,7 +23,11 @@ export type UserAuthz = {
 };
 
 export type User = {
-  additional_info: Object;
+  additional_info: {
+    firstName?: string;
+    lastName?: string;
+    institution?: string;
+  };
   authz: UserAuthz;
   azp: any;
   certificates_uploaded: any[];
