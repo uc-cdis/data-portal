@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { headers, userapiPath } from '../../localconf';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import Button from '../../gen3-ui-component/components/Button';
 
 const pcdcStatisticalManualLink = (
@@ -36,13 +38,20 @@ function fullnameSelector(state) {
     : username;
 }
 
-/** @param {{ onAgree: () => void }} props */
+/** @param {{ onAgree: () => Promise<void> }} props */
 function AgreementForm({ onAgree }) {
+  const [error, setError] = useState(/** @type {Error | null} */ (null));
+  if (error) throw error;
+  function handleAgree() {
+    onAgree().catch(setError);
+  }
+
   const fullname = useSelector(fullnameSelector);
 
   const initalCheckStatus = {};
   for (const i of checkItems.keys()) initalCheckStatus[i] = false;
   const [checkStatus, setCheckstatus] = useState(initalCheckStatus);
+
   return (
     <>
       <p>
@@ -92,7 +101,7 @@ function AgreementForm({ onAgree }) {
           buttonType='primary'
           label='I Agree'
           enabled={Object.values(checkStatus).every(Boolean)}
-          onClick={onAgree}
+          onClick={handleAgree}
         />
       </div>
     </>
@@ -137,7 +146,7 @@ function UserAgreement({ onAgree }) {
   const userAgreementDoc = useSelector(userAgreementDocSelector);
 
   function submitSurvivalUserAgreement() {
-    fetch(`${userapiPath}user/documents`, {
+    return fetch(`${userapiPath}user/documents`, {
       body: JSON.stringify({ [userAgreementDoc?.id]: true }),
       credentials: 'include',
       headers,
@@ -150,7 +159,37 @@ function UserAgreement({ onAgree }) {
   return (
     <div className='explorer-survival-analysis__user-agreement'>
       {userAgreementDoc !== undefined ? (
-        <AgreementForm onAgree={submitSurvivalUserAgreement} />
+        <ErrorBoundary
+          fallback={
+            <>
+              <h2>
+                <FontAwesomeIcon
+                  icon='triangle-exclamation'
+                  color='var(--g3-primary-btn__bg-color)'
+                />{' '}
+                Error in submitting your response...
+              </h2>
+              <p>
+                Please retry by clicking the {'"Agree"'} button again or
+                refreshing the page. If the problem persists, please contact the
+                administrator (
+                <a href='mailto:pcdc_help@lists.uchicago.edu'>
+                  pcdc_help@lists.uchicago.edu
+                </a>
+                ) for more information.
+              </p>
+              <div className='explorer-survival-analysis__button-group'>
+                <Button
+                  buttonType='primary'
+                  label='Agree'
+                  onClick={submitSurvivalUserAgreement}
+                />
+              </div>
+            </>
+          }
+        >
+          <AgreementForm onAgree={submitSurvivalUserAgreement} />
+        </ErrorBoundary>
       ) : (
         <ReminderForm onAgree={onAgree} />
       )}
