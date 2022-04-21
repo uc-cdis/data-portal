@@ -38,8 +38,8 @@ function fullnameSelector(state) {
     : username;
 }
 
-/** @param {{ onAgree: () => Promise<void> }} props */
-function AgreementForm({ onAgree }) {
+/** @param {{ isSubmitting: boolean; onAgree: () => Promise<void> }} props */
+function AgreementForm({ isSubmitting, onAgree }) {
   const [error, setError] = useState(/** @type {Error | null} */ (null));
   if (error) throw error;
   function handleAgree() {
@@ -100,7 +100,7 @@ function AgreementForm({ onAgree }) {
         <Button
           buttonType='primary'
           label='I Agree'
-          enabled={Object.values(checkStatus).every(Boolean)}
+          enabled={Object.values(checkStatus).every(Boolean) && !isSubmitting}
           onClick={handleAgree}
         />
       </div>
@@ -108,7 +108,10 @@ function AgreementForm({ onAgree }) {
   );
 }
 
-AgreementForm.propTypes = { onAgree: PropTypes.func };
+AgreementForm.propTypes = {
+  isSubmitting: PropTypes.bool,
+  onAgree: PropTypes.func,
+};
 
 /** @param {{ onAgree: () => void }} props */
 function ReminderForm({ onAgree }) {
@@ -144,16 +147,18 @@ function userAgreementDocSelector(state) {
 /** @param {{ onAgree: () => void }} props */
 function UserAgreement({ onAgree }) {
   const userAgreementDoc = useSelector(userAgreementDocSelector);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function submitSurvivalUserAgreement() {
+    setIsSubmitting(true);
     return fetch(`${userapiPath}user/documents`, {
       body: JSON.stringify({ [userAgreementDoc?.id]: true }),
       credentials: 'include',
       headers,
       method: 'POST',
-    }).then(() => {
-      onAgree();
-    });
+    })
+      .then(() => onAgree())
+      .finally(() => setIsSubmitting(false));
   }
 
   return (
@@ -182,13 +187,17 @@ function UserAgreement({ onAgree }) {
                 <Button
                   buttonType='primary'
                   label='Agree'
+                  enabled={!isSubmitting}
                   onClick={submitSurvivalUserAgreement}
                 />
               </div>
             </>
           }
         >
-          <AgreementForm onAgree={submitSurvivalUserAgreement} />
+          <AgreementForm
+            isSubmitting={isSubmitting}
+            onAgree={submitSurvivalUserAgreement}
+          />
         </ErrorBoundary>
       ) : (
         <ReminderForm onAgree={onAgree} />
