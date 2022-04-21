@@ -38,7 +38,10 @@ function updateDocsToReview(reviewStatus) {
 /** @param {{ user: import('../types').UserState }} state */
 function userPopupSelector({ user }) {
   const isRegistered = user.authz?.['/portal']?.length > 0;
-  const docsToBeReviewed = user.docs_to_be_reviewed ?? [];
+  const docsToBeReviewed =
+    user.docs_to_be_reviewed.filter(
+      ({ type }) => type !== 'survival-user-agreement'
+    ) ?? [];
   return {
     docsToBeReviewed,
     shouldRegister: !isRegistered,
