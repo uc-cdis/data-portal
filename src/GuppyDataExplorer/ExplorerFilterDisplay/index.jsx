@@ -88,6 +88,7 @@ export function FilterDisplay({ filter, combineMode }) {
 
 FilterDisplay.propTypes = {
   filter: PropTypes.any,
+  combineMode: PropTypes.oneOf(['AND', 'OR']),
 };
 
 /** @param {{ filter: import('../types').ExplorerFilters }} props */
@@ -132,6 +133,8 @@ function ExplorerFilterDisplay({ filter }) {
   );
 }
 
-ExplorerFilterDisplay.propTypes = FilterDisplay.propTypes;
+ExplorerFilterDisplay.propTypes = {
+  filter: PropTypes.any,
+};
 
 export default ExplorerFilterDisplay;
