@@ -3,20 +3,18 @@ import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-type
 import Select from 'react-select';
 import { Spin } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import ReduxGWASApp from './GWASApp/ReduxGWASApp';
 import ReduxGWASUIApp from './GWASUIApp/ReduxGWASUIApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
-import { ReactQueryDevtools } from 'react-query/devtools';
-
-import { QueryClient, QueryClientProvider} from 'react-query'
 
 const queryClient = new QueryClient();
 
 class AnalysisApp extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -56,57 +54,56 @@ class AnalysisApp extends React.Component {
     queryClient.invalidateQueries('workflows');
   }
 
-
   getAppContent = (app) => {
     switch (app) {
-      case 'vaGWAS':
-        return (
-          <React.Fragment>
-            <Select
-              value={this.state.jobInput}
-              placeholder='Select your organ'
-              options={analysisApps[app].options}
-              onChange={this.selectChange}
+    case 'vaGWAS':
+      return (
+        <React.Fragment>
+          <Select
+            value={this.state.jobInput}
+            placeholder='Select your organ'
+            options={analysisApps[app].options}
+            onChange={this.selectChange}
+          />
+          <Button label='Run Analysis' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+        </React.Fragment>
+      );
+    case 'ndhHIV':
+      return (
+        <HIVCohortFilter />
+      );
+    case 'ndhVirus':
+      return (
+        <React.Fragment>
+          <input className='text-input' type='text' placeholder='input data' name='input' />
+          <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+        </React.Fragment>
+      );
+    case 'GWASApp':
+      return (
+        <ReduxGWASApp />
+      );
+    case 'GWASUIApp':
+      return (
+        <QueryClientProvider client={queryClient} contextSharing>
+          <ReduxGWASUIApp refreshWorkflows={this.refreshWorkflows} />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      );
+    default:
+      return (
+        <React.Fragment>
+          <div className='analysis-app__iframe-wrapper'>
+            <iframe
+              className='analysis-app__iframe'
+              title='Analysis App'
+              frameBorder='0'
+              src={`${this.state.app.applicationUrl}`}
+              onLoad={this.handleIframeApp}
             />
-            <Button label='Run Analysis' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
-          </React.Fragment>
-        );
-      case 'ndhHIV':
-        return (
-          <HIVCohortFilter />
-        );
-      case 'ndhVirus':
-        return (
-          <React.Fragment>
-            <input className='text-input' type='text' placeholder='input data' name='input' />
-            <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
-          </React.Fragment>
-        );
-      case 'GWASApp':
-        return (
-          <ReduxGWASApp />
-        );
-      case 'GWASUIApp':
-        return (
-          <QueryClientProvider client={queryClient} contextSharing={true}>
-            <ReduxGWASUIApp refreshWorkflows={this.refreshWorkflows} />
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
-        );
-      default:
-        return (
-          <React.Fragment>
-            <div className='analysis-app__iframe-wrapper'>
-              <iframe
-                className='analysis-app__iframe'
-                title='Analysis App'
-                frameBorder='0'
-                src={`${this.state.app.applicationUrl}`}
-                onLoad={this.handleIframeApp}
-              />
-            </div>
-          </React.Fragment>
-        );
+          </div>
+        </React.Fragment>
+      );
     }
   }
 
