@@ -74,23 +74,7 @@ const GWASUIApp = (props) => {
     setImputationScore(values.imputationCutoff);
     setMafThreshold(values.mafCutoff);
     setNumOfPC(values.numOfPC);
-    // setJobName(values.GWASJobName);
-    // setJobSubmittedRunID('run-12345');
-    // setShowJobSubmissionResult(true);
   }
-
-
-  const handleDelete = (key) => {
-    const newlySelectedPhenotype = (selectedPhenotype.concept_id === key) ? undefined : selectedPhenotype;
-    const newlySelectedCovariates = selectedCovariates.filter((item) => item.concept_id !== key);
-    setSelectedConcepts(selectedConcepts.filter((item) => item.concept_id !== key));
-    setSelectedPhenotype(newlySelectedPhenotype);
-    setSelectedCovariates(newlySelectedCovariates);
-    form.setFieldsValue({
-      covariates: newlySelectedCovariates.map((val) => val.concept_name),
-      outcome: newlySelectedPhenotype.concept_name,
-    });
-  };
 
   const handleNextStep = (e) => {
     if (current === 1) {
@@ -98,13 +82,11 @@ const GWASUIApp = (props) => {
       setSelectedCovariates([...selectedConcepts].slice(1));
       setCovariates([...selectedConcepts].slice(1).map((val) => val.prefixed_concept_id));
       setSelectedOutcome(selectedConcepts[0].prefixed_concept_id);
+
       form.setFieldsValue({
         covariates: [...selectedConcepts].slice(1).map((val) => val.concept_name),
         outcome: selectedConcepts[0].concept_name,
       });
-    }
-    if (current === 2) {
-      setSelectedPhenotype(selectedConcepts[0]);
     }
     if (current === 3) {
       form.submit();
@@ -233,8 +215,9 @@ const GWASUIApp = (props) => {
     columnTitle: 'Phenotype',
     selectedRowKeys: (selectedPhenotype) ? [selectedPhenotype.concept_id] : [],
     onChange: (_, selectedRows) => {
-      const newlySelectedCovariates = selectedConcepts.filter(((data) => data.concept_id !== selectedRows[0].concept_id));
+      const newlySelectedCovariates = selectedConcepts.filter((data) => data.concept_id !== selectedRows[0].concept_id);
       setSelectedPhenotype(selectedRows[0]);
+      setSelectedOutcome(selectedRows[0].prefixed_concept_id);
       setSelectedCovariates(newlySelectedCovariates);
       form.setFieldsValue({
         covariates: newlySelectedCovariates.map((val) => val.concept_name),
@@ -280,20 +263,26 @@ const GWASUIApp = (props) => {
 
 
   const handleCovariateDelete = (remainingCovariates) => {
-    const filterCovList = (element) => remainingCovariates.some(item => item === element.concept_name);
-    const newCovariates = selectedCovariates.filter(elem => filterCovList(elem));
+    const remainingCovArr = [];
+    remainingCovariates.forEach(name => {
+      selectedCovariates.forEach(covObj => {
+        if (covObj.concept_name === name) {
+          remainingCovArr.push(covObj)
+        }
+      })
+    });
+    setCovariates(remainingCovArr.map(c => c.prefixed_concept_id))
+    setSelectedCovariates(remainingCovArr);
+    setSelectedConcepts([...remainingCovArr, selectedPhenotype]);
+    setSelectedConceptVars([...remainingCovArr, selectedPhenotype].map(r => r.concept_id));
 
-    setSelectedCovariates(newCovariates);
-    setSelectedConcepts([...selectedConcepts, selectedCovariates]);
     form.setFieldsValue({
       covariates: remainingCovariates
     });
   }
 
   useEffect(() => {
-    // setup sources on first load
-    fetchSources().then(res => setSourceId(res.sources[0].source_id));
-    // do wts login
+    // do wts login and fetch sources on initialization
     fetchWithCreds({
       path: `${wtsPath}connected`,
       method: 'GET',
@@ -302,6 +291,8 @@ const GWASUIApp = (props) => {
 	      (res) => {
             if (res.status !== 200) {
               window.location.href = `${wtsPath}authorization_url?redirect=${window.location.pathname}`;
+            } else {
+              fetchSources().then(res => setSourceId(res.sources[0].source_id));
             }
 		      }
       );
@@ -385,10 +376,7 @@ const GWASUIApp = (props) => {
             className='GWASUI-table3'
             rowKey='concept_id'
             pagination={{ pageSize: 10 }}
-            rowSelection={(e) => {
-              e.stopPropagation();
-              step3TableRowSelection
-            }}
+            rowSelection={step3TableRowSelection}
             columns={step3TableConfig} // (status.loading) pass status as a prop
             dataSource={data.concepts}
           />
@@ -460,7 +448,6 @@ const GWASUIApp = (props) => {
     )
   }
 
-
   const generateContentForStep = (stepIndex) => {
     switch (stepIndex) {
       case 0: {
@@ -518,7 +505,7 @@ const GWASUIApp = (props) => {
                 >
                   <Select
                     mode='multiple'
-                    value={selectedCovariates}
+                    value={selectedCovariates.map(s => s.concept_name)}
                     disabled={selectedCovariates.length === 1}
                     onChange={(e) => handleCovariateDelete(e)}
                     style={{ width: '70%' }}
@@ -530,6 +517,7 @@ const GWASUIApp = (props) => {
                 >
                   <Input
                     disabled
+                    value={selectedPhenotype}
                     style={{ width: '70%' }}
                   />
                 </Form.Item>
@@ -543,13 +531,13 @@ const GWASUIApp = (props) => {
                   label='MAF Cutoff'
                   name='mafCutoff'
                 >
-                  <InputNumber value={mafThreshold.toString()} onChange={(e) => setMafThreshold(Number(e.target.value))} stringMode step="0.01" min={"0"} max={"0.5"} />
+                  <InputNumber value={mafThreshold} onChange={(e) => setMafThreshold(e)} stringMode step="0.01" min={"0"} max={"0.5"} />
                 </Form.Item>
                 <Form.Item
                   label='Imputation Score Cutoff'
                   name='imputationCutoff'
                 >
-                  <InputNumber value={imputationScore.toString()} onChange={(e) => setImputationScore(Number(e.target.value))} stringMode step="0.1" min={"0"} max={"1"} />
+                  <InputNumber value={imputationScore} onChange={(e) => setImputationScore(e)} stringMode step="0.1" min={"0"} max={"1"} />
                 </Form.Item>
               </Form>
             </div>
