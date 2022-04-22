@@ -111,12 +111,12 @@ const fetchRequestedAccess = (receivedData) => {
   }).then(
     ({ status, data }) => {
       switch (status) {
-        case 200:
-          return data;
-        default:
-          console.error('Unable to get requested access:', status, data);
-          return {};
-        }
+      case 200:
+        return data;
+      default:
+        console.error('Unable to get requested access:', status, data);
+        return {};
+      }
     },
   );
 };

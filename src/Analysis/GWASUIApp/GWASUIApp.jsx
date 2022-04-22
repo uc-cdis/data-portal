@@ -1,15 +1,14 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Steps, Button, Space, Table, Input, Form, Result, InputNumber, Select, Switch
-} from 'antd';
+  Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch,
+} from 'antd'; // TODO: use Result later
 import './GWASUIApp.css';
+import { useQuery, useMutation } from 'react-query';
 import { headers, fetchAndSetCsrfToken } from '../../configs';
 import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath } from '../../localconf';
 import GWASWorkflowList from './GWASWorkflowList';
-import { useQuery, useMutation } from 'react-query';
 import { fetchWithCreds } from '../../actions';
-
 
 const { Step } = Steps;
 
@@ -41,15 +40,15 @@ const GWASUIApp = (props) => {
   const [sourceId, setSourceId] = useState(undefined);
   const [cohortDefinitionId, setCohortDefinitionId] = useState(undefined);
   const [conceptVars] = useState({
-    "ConceptIds": [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708]
+    ConceptIds: [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708],
   });
   const [selectedConceptVars, setSelectedConceptVars] = useState([]);
 
   const [form] = Form.useForm();
 
-  const [cohortDefinitions, setCohortDefinitions] = useState([]);
-  const [allConcepts, setAllConcepts] = useState([])
-  const [cohortConcepts, setCohortConcepts] = useState([]);
+  // const [cohortDefinitions, setCohortDefinitions] = useState([]);
+  // const [allConcepts, setAllConcepts] = useState([]);
+  // const [cohortConcepts, setCohortConcepts] = useState([]);
   const [selectedCohort, setSelectedCohort] = useState(undefined);
   const [selectedConcepts, setSelectedConcepts] = useState([]);
   const [covariates, setCovariates] = useState([]);
@@ -61,22 +60,21 @@ const GWASUIApp = (props) => {
   const [numOfPC, setNumOfPC] = useState(3);
   const [selectedPhenotype, setSelectedPhenotype] = useState(undefined);
   const [selectedCovariates, setSelectedCovariates] = useState([]);
-  const [jobName, setJobName] = useState("");
-  const [showJobSubmissionResult, setShowJobSubmissionResult] = useState(false);
-  const [jobSubmittedRunID, setJobSubmittedRunID] = useState(undefined);
+  // const [jobName, setJobName] = useState('');
+  // const [showJobSubmissionResult, setShowJobSubmissionResult] = useState(false);
+  // const [jobSubmittedRunID, setJobSubmittedRunID] = useState(undefined);
 
-
-  const onStep4FormSubmit = useCallback((values) => {
-    // console.log('values', values);
-  }, []);
+  // const onStep4FormSubmit = useCallback((values) => {
+  //   // console.log('values', values);
+  // }, []);
 
   const onStep5FormSubmit = (values) => {
     setImputationScore(values.imputationCutoff);
     setMafThreshold(values.mafCutoff);
     setNumOfPC(values.numOfPC);
-  }
+  };
 
-  const handleNextStep = (e) => {
+  const handleNextStep = () => {
     if (current === 1) {
       setSelectedPhenotype(selectedConcepts[0]);
       setSelectedCovariates([...selectedConcepts].slice(1));
@@ -91,7 +89,7 @@ const GWASUIApp = (props) => {
     if (current === 3) {
       form.submit();
     }
-  }
+  };
 
   useEffect(() => {
     fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
@@ -112,28 +110,27 @@ const GWASUIApp = (props) => {
   async function fetchConcepts() {
     const conceptEndpoint = `${cohortMiddlewarePath}concept/by-source-id/${sourceId}`;
     const reqBody = {
-      method: "POST",
-      credentials: "include",
-      headers: headers,
-      body: JSON.stringify(conceptVars)
-    }
+      method: 'POST',
+      credentials: 'include',
+      headers,
+      body: JSON.stringify(conceptVars),
+    };
     const getConcepts = await fetch(conceptEndpoint, reqBody);
     return getConcepts.json();
   }
 
   async function fetchConceptStats() {
-    const conceptStatsVars = { "ConceptIds": selectedConceptVars };
+    const conceptStatsVars = { ConceptIds: selectedConceptVars };
     const conceptStatsEndpoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
     const reqBody = {
-      method: "POST",
-      credentials: "include",
-      headers: headers,
-      body: JSON.stringify(conceptStatsVars)
-    }
+      method: 'POST',
+      credentials: 'include',
+      headers,
+      body: JSON.stringify(conceptStatsVars),
+    };
     const getConceptStats = await fetch(conceptStatsEndpoint, reqBody);
     return getConceptStats.json();
   }
-
 
   // async function getConceptsBySource(cohortDefinitionId) {
   //   const sourceEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
@@ -159,7 +156,6 @@ const GWASUIApp = (props) => {
 
   // }, [cohortDefinitionId]);
 
-
   const step1TableRowSelection = {
     type: 'radio',
     columnTitle: 'Select',
@@ -169,8 +165,8 @@ const GWASUIApp = (props) => {
       setCohortDefinitionId(selectedRows[0].cohort_definition_id);
     },
     getCheckboxProps: (record) => ({
-      disabled: record.size === 0
-    })
+      disabled: record.size === 0,
+    }),
   };
 
   const step1TableConfig = [
@@ -182,7 +178,7 @@ const GWASUIApp = (props) => {
     {
       title: 'Size',
       dataIndex: 'size',
-      key: 'size'
+      key: 'size',
     },
   ];
 
@@ -200,7 +196,7 @@ const GWASUIApp = (props) => {
     {
       title: 'Concept ID',
       dataIndex: 'concept_id',
-      key: 'concept_name'
+      key: 'concept_name',
     },
     {
       title: 'Concept Name',
@@ -245,7 +241,7 @@ const GWASUIApp = (props) => {
       render: (_, record) => (
         // names and concept ids load before this
         // (isLoading ? <>Loading</> : <span onClick={() => { console.log('record', record) }}>{`${(record.n_missing_ratio * 100).toFixed(0)}%`}</span>)
-        <span onClick={() => { console.log('record', record) }}>{`${(record.n_missing_ratio * 100).toFixed(0)}%`}</span>
+        <span>{`${(record.n_missing_ratio * 100).toFixed(0)}%`}</span>
       ),
     },
     // {
@@ -260,26 +256,24 @@ const GWASUIApp = (props) => {
     // },
   ];
 
-
-
   const handleCovariateDelete = (remainingCovariates) => {
     const remainingCovArr = [];
-    remainingCovariates.forEach(name => {
-      selectedCovariates.forEach(covObj => {
+    remainingCovariates.forEach((name) => {
+      selectedCovariates.forEach((covObj) => {
         if (covObj.concept_name === name) {
-          remainingCovArr.push(covObj)
+          remainingCovArr.push(covObj);
         }
-      })
+      });
     });
-    setCovariates(remainingCovArr.map(c => c.prefixed_concept_id))
+    setCovariates(remainingCovArr.map((c) => c.prefixed_concept_id));
     setSelectedCovariates(remainingCovArr);
     setSelectedConcepts([...remainingCovArr, selectedPhenotype]);
-    setSelectedConceptVars([...remainingCovArr, selectedPhenotype].map(r => r.concept_id));
+    setSelectedConceptVars([...remainingCovArr, selectedPhenotype].map((r) => r.concept_id));
 
     form.setFieldsValue({
-      covariates: remainingCovariates
+      covariates: remainingCovariates,
     });
-  }
+  };
 
   useEffect(() => {
     // do wts login and fetch sources on initialization
@@ -288,13 +282,13 @@ const GWASUIApp = (props) => {
       method: 'GET',
     })
       .then(
-	      (res) => {
-            if (res.status !== 200) {
-              window.location.href = `${wtsPath}authorization_url?redirect=${window.location.pathname}`;
-            } else {
-              fetchSources().then(res => setSourceId(res.sources[0].source_id));
-            }
-		      }
+        (res) => {
+          if (res.status !== 200) {
+            window.location.href = `${wtsPath}authorization_url?redirect=${window.location.pathname}`;
+          } else {
+            fetchSources().then((data) => setSourceId(data.sources[0].source_id));
+          }
+        },
       );
   }, []);
 
@@ -302,13 +296,13 @@ const GWASUIApp = (props) => {
     const { data, status } = useQuery('cohortdefinitions', fetchCohortDefinitions);
 
     if (status === 'loading') {
-      return <>Loading</>
+      return <React.Fragment>Loading</React.Fragment>;
     }
     if (status === 'error') {
-      return <>Error</>
+      return <React.Fragment>Error</React.Fragment>;
     }
     return (
-      <>
+      <React.Fragment>
         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
           <div className='GWASUI-mainTable'>
             <Table
@@ -318,13 +312,13 @@ const GWASUIApp = (props) => {
               pagination={{ pageSize: 10 }}
               rowSelection={step1TableRowSelection}
               columns={step1TableConfig}
-              dataSource={data.cohort_definitions_and_stats.filter(x => x.size > 0)} // many entries w/ size 0 in prod
+              dataSource={data.cohort_definitions_and_stats.filter((x) => x.size > 0)} // many entries w/ size 0 in prod
             />
           </div>
         </Space>
-      </>
-    )
-  }
+      </React.Fragment>
+    );
+  };
 
   const CohortConcepts = () => {
     const { data, status } = useQuery('cohortconcepts', fetchConcepts);
@@ -335,10 +329,10 @@ const GWASUIApp = (props) => {
     // }, [data])
 
     if (status === 'loading') {
-      return <>Loading</>
+      return <React.Fragment>Loading</React.Fragment>;
     }
     if (status === 'error') {
-      return <>Error</>
+      return <React.Fragment>Error</React.Fragment>;
     }
 
     // TODO: add back cohort concept filter after useQuery refactor
@@ -353,7 +347,7 @@ const GWASUIApp = (props) => {
 
     return (
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-        <h4 className="GWASUI-selectInstruction">The selection will be used for both covariates and phenotype selection</h4>
+        <h4 className='GWASUI-selectInstruction'>The selection will be used for both covariates and phenotype selection</h4>
         {/* <input className="GWASUI-searchInput" placeholder="Search by concept name or ID..." type="text" value={searchTerm} onChange={(e) => filterConcept(e.target.value, data.concepts)}></input> */}
         <div className='GWASUI-mainTable'>
           <Table
@@ -366,22 +360,22 @@ const GWASUIApp = (props) => {
           />
         </div>
       </Space>
-    )
-  }
+    );
+  };
 
   const CohortConceptStats = () => {
     const { data, status } = useQuery('cohortstats', fetchConceptStats);
 
     if (status === 'loading') {
-      return <>Loading</>
+      return <React.Fragment>Loading</React.Fragment>;
     }
     if (status === 'error') {
-      return <>Error</>
+      return <React.Fragment>Error</React.Fragment>;
     }
     return (
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
         <hr />
-        <h4 className="GWASUI-selectInstruction">* Select Phenotype</h4>
+        <h4 className='GWASUI-selectInstruction'>* Select Phenotype</h4>
         <div className='GWASUI-mainTable'>
           <Table
             className='GWASUI-table3'
@@ -393,28 +387,28 @@ const GWASUIApp = (props) => {
           />
         </div>
       </Space>
-    )
-  }
+    );
+  };
 
   async function fetchGwasSubmit() {
     const submitEndpoint = `${gwasWorkflowPath}submit`;
     const requestBody = {
-      "n_pcs": numOfPC,
-      "covariates": covariates,
-      "out_prefix": Date.now().toString(),
-      "outcome": selectedOutcome,
-      "outcome_is_binary": false, // true?
-      "maf_threshold": Number(mafThreshold),
-      "imputation_score_cutoff": Number(imputationScore),
-      "template_version": "gwas-template-320145385461a33a25bd4d6817936c436570c84a",
-      "source_id": sourceId,
-      "cohort_definition_id": cohortDefinitionId
+      n_pcs: numOfPC,
+      covariates,
+      out_prefix: Date.now().toString(),
+      outcome: selectedOutcome,
+      outcome_is_binary: false, // true?
+      maf_threshold: Number(mafThreshold),
+      imputation_score_cutoff: Number(imputationScore),
+      template_version: 'gwas-template-320145385461a33a25bd4d6817936c436570c84a',
+      source_id: sourceId,
+      cohort_definition_id: cohortDefinitionId,
     };
     const res = await fetch(submitEndpoint, {
-      method: "POST",
-      credentials: "include",
-      headers: headers,
-      body: JSON.stringify(requestBody)
+      method: 'POST',
+      credentials: 'include',
+      headers,
+      body: JSON.stringify(requestBody),
     });
     return res;
   }
@@ -431,16 +425,16 @@ const GWASUIApp = (props) => {
     setCohortDefinitionId(undefined);
     setSelectedCohort(undefined);
     props.refreshWorkflows();
-  }
+  };
 
   const useSubmitJob = () => {
     const submission = useMutation(fetchGwasSubmit, {
       onSuccess: () => {
-        resetFields()
-      }
-    })
-    return submission
-  }
+        resetFields();
+      },
+    });
+    return submission;
+  };
 
   const GWASFormSubmit = () => {
     const submitJob = useSubmitJob();
@@ -456,160 +450,160 @@ const GWASUIApp = (props) => {
       >
         Submit
       </Button>
-    )
-  }
+    );
+  };
 
   const generateContentForStep = (stepIndex) => {
     switch (stepIndex) {
-      case 0: {
-        return (
-          sourceId ? <CohortDefinitions></CohortDefinitions> : null
-        );
-      }
-      case 1: {
-        return (
-          <CohortConcepts></CohortConcepts>
-        );
-      }
-      case 2: {
-        return (
-          <CohortConceptStats></CohortConceptStats>
-        );
-      }
-      case 3: {
-        return (
-          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-            <div className='GWASUI-mainArea'>
-              <Form
-                name='GWASUI-parameter-form'
-                form={form}
-                labelCol={{
-                  span: 8,
-                }}
-                wrapperCol={{
-                  span: 16,
-                }}
-                initialValues={{
-                  numOfPC,
-                  isBinary: false,
-                  mafCutoff: 0.01,
-                  imputationCutoff: 0.3
-                }}
-                onFinish={() => onStep4FormSubmit()}
-                autoComplete='off'
-              >
-                <Form.Item
-                  label='Number of PCs to use'
-                  name='numOfPC'
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please input a value between 1 to 10',
-                    },
-                  ]}
-                >
-                  <InputNumber min={1} max={10} />
-                </Form.Item>
-                <Form.Item
-                  label='Covariates'
-                  name='covariates'
-                >
-                  <Select
-                    mode='multiple'
-                    value={selectedCovariates.map(s => s.concept_name)}
-                    disabled={selectedCovariates.length === 1}
-                    onChange={(e) => handleCovariateDelete(e)}
-                    style={{ width: '70%' }}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label='Phenotype'
-                  name='outcome'
-                >
-                  <Input
-                    disabled
-                    value={selectedPhenotype}
-                    style={{ width: '70%' }}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label='Is Binary Outcome?'
-                  name='isBinary'
-                >
-                  <Switch disabled checked={false} style={{ width: '5%' }} />
-                </Form.Item>
-                <Form.Item
-                  label='MAF Cutoff'
-                  name='mafCutoff'
-                >
-                  <InputNumber value={mafThreshold} onChange={(e) => setMafThreshold(e)} stringMode step="0.01" min={"0"} max={"0.5"} />
-                </Form.Item>
-                <Form.Item
-                  label='Imputation Score Cutoff'
-                  name='imputationCutoff'
-                >
-                  <InputNumber value={imputationScore} onChange={(e) => setImputationScore(e)} stringMode step="0.1" min={"0"} max={"1"} />
-                </Form.Item>
-              </Form>
-            </div>
-          </Space>
-        );
-      }
-      case 4: {
-        const layout = {
-          labelCol: { span: 8 },
-          wrapperCol: { span: 16 },
-        };
-        const tailLayout = {
-          wrapperCol: { offset: 8, span: 16 },
-        };
-
-        if (showJobSubmissionResult) {
-          return (
-            <div className='GWASUI-mainArea'>
-              <Result
-                status={(jobSubmittedRunID) ? 'success' : 'error'}
-                title={(jobSubmittedRunID) ? 'GWAS Job Submitted Successfully' : 'GWAS Job Submission Failed'}
-                subTitle={`GWAS Job Name: ${jobName}, run ID: ${jobSubmittedRunID}`}
-                extra={[
-                  <Button
-                    key='done'
-                    onClick={() => {
-                      handleReset();
-                    }}
-                  >
-                    Done
-                  </Button>,
+    case 0: {
+      return (
+        sourceId ? <CohortDefinitions /> : null
+      );
+    }
+    case 1: {
+      return (
+        <CohortConcepts />
+      );
+    }
+    case 2: {
+      return (
+        <CohortConceptStats />
+      );
+    }
+    case 3: {
+      return (
+        <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+          <div className='GWASUI-mainArea'>
+            <Form
+              name='GWASUI-parameter-form'
+              form={form}
+              labelCol={{
+                span: 8,
+              }}
+              wrapperCol={{
+                span: 16,
+              }}
+              initialValues={{
+                numOfPC,
+                isBinary: false,
+                mafCutoff: 0.01,
+                imputationCutoff: 0.3,
+              }}
+              // onFinish={() => onStep4FormSubmit()}
+              autoComplete='off'
+            >
+              <Form.Item
+                label='Number of PCs to use'
+                name='numOfPC'
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input a value between 1 to 10',
+                  },
                 ]}
-              />
-            </div>
-          );
-        }
-
-        return (
-          <>
-            <div className='GWASUI-mainArea'>
-              <Form
-                {...layout}
-                name='control-hooks'
-                form={form}
-                onFinish={(values) => {
-                  onStep5FormSubmit(values);
-                }}
               >
-                {/* <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name' }]}>
+                <InputNumber min={1} max={10} />
+              </Form.Item>
+              <Form.Item
+                label='Covariates'
+                name='covariates'
+              >
+                <Select
+                  mode='multiple'
+                  value={selectedCovariates.map((s) => s.concept_name)}
+                  disabled={selectedCovariates.length === 1}
+                  onChange={(e) => handleCovariateDelete(e)}
+                  style={{ width: '70%' }}
+                />
+              </Form.Item>
+              <Form.Item
+                label='Phenotype'
+                name='outcome'
+              >
+                <Input
+                  disabled
+                  value={selectedPhenotype}
+                  style={{ width: '70%' }}
+                />
+              </Form.Item>
+              <Form.Item
+                label='Is Binary Outcome?'
+                name='isBinary'
+              >
+                <Switch disabled checked={false} style={{ width: '5%' }} />
+              </Form.Item>
+              <Form.Item
+                label='MAF Cutoff'
+                name='mafCutoff'
+              >
+                <InputNumber value={mafThreshold} onChange={(e) => setMafThreshold(e)} stringMode step='0.01' min={'0'} max={'0.5'} />
+              </Form.Item>
+              <Form.Item
+                label='Imputation Score Cutoff'
+                name='imputationCutoff'
+              >
+                <InputNumber value={imputationScore} onChange={(e) => setImputationScore(e)} stringMode step='0.1' min={'0'} max={'1'} />
+              </Form.Item>
+            </Form>
+          </div>
+        </Space>
+      );
+    }
+    case 4: {
+      const layout = {
+        labelCol: { span: 8 },
+        wrapperCol: { span: 16 },
+      };
+      const tailLayout = {
+        wrapperCol: { offset: 8, span: 16 },
+      };
+
+      // if (showJobSubmissionResult) {
+      //   return (
+      //     <div className='GWASUI-mainArea'>
+      //       <Result
+      //         status={(jobSubmittedRunID) ? 'success' : 'error'}
+      //         title={(jobSubmittedRunID) ? 'GWAS Job Submitted Successfully' : 'GWAS Job Submission Failed'}
+      //         // subTitle={`GWAS Job Name: ${jobName}, run ID: ${jobSubmittedRunID}`}
+      //         extra={[
+      //           <Button
+      //             key='done'
+      //             onClick={() => {
+      //               handleReset();
+      //             }}
+      //           >
+      //             Done
+      //           </Button>,
+      //         ]}
+      //       />
+      //     </div>
+      //   );
+      // }
+
+      return (
+        <React.Fragment>
+          <div className='GWASUI-mainArea'>
+            <Form
+              {...layout}
+              name='control-hooks'
+              form={form}
+              onFinish={(values) => {
+                onStep5FormSubmit(values);
+              }}
+            >
+              {/* <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name' }]}>
                   <Input placeholder='my_gwas_20201101_1' onChange={(e) => setGwasJobName(e.target.value)} />
                 </Form.Item> */}
-                <Form.Item {...tailLayout}>
-                  <GWASFormSubmit refreshWorkflows={props.refreshWorkflows}></GWASFormSubmit>
-                </Form.Item>
-              </Form>
-            </div>
-          </>
-        );
-      }
-      default:
-        return <React.Fragment />;
+              <Form.Item {...tailLayout}>
+                <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
+              </Form.Item>
+            </Form>
+          </div>
+        </React.Fragment>
+      );
+    }
+    default:
+      return <React.Fragment />;
     }
   };
 
@@ -625,7 +619,7 @@ const GWASUIApp = (props) => {
 
   return (
     <Space direction={'vertical'} style={{ width: '100%' }}>
-      <GWASWorkflowList refreshWorkflows={props.refreshWorkflows}></GWASWorkflowList>
+      <GWASWorkflowList refreshWorkflows={props.refreshWorkflows} />
       <Steps current={current}>
         {steps.map((item) => (
           <Step key={item.title} title={item.title} description={item.description} />
@@ -649,8 +643,8 @@ const GWASUIApp = (props) => {
           <Button
             className='GWASUI-navBtn GWASUI-navBtn__next'
             type='primary'
-            onClick={(e) => {
-              handleNextStep(e);
+            onClick={() => {
+              handleNextStep();
               setCurrent(current + 1);
             }}
             disabled={!nextButtonEnabled}
@@ -665,6 +659,7 @@ const GWASUIApp = (props) => {
 
 GWASUIApp.propTypes = {
   userAuthMapping: PropTypes.object.isRequired,
+  refreshWorkflows: PropTypes.func.isRequired,
 };
 
 export default GWASUIApp;
