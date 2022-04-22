@@ -1,18 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Collapse, List } from 'antd';
 import './GWASUIApp.css';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
 import { gwasWorkflowPath } from '../../localconf';
-import { fetchAndSetCsrfToken } from '../../configs';
 import GWASJob from './GWASJob';
 
 const GWASWorkflowList = ({ refreshWorkflows }) => {
   const { Panel } = Collapse;
-
-  useEffect(() => {
-    fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
-  }, []);
 
   async function fetchGwasWorkflows() {
     const workflowsEndpoint = `${gwasWorkflowPath}workflows`;
