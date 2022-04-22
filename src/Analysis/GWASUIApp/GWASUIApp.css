@@ -87,8 +87,8 @@
 }
 
 .ant-select-selector, .ant-select-selection-item, .ant-input, .ant-input-disabled {
-  background-color: white !important;
-  color: black !important;
+  background-color: white;
+  color: black;
 }
 
 .ant-select-inline-collapsed-tooltip {
