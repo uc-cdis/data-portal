@@ -7,6 +7,10 @@
   line-height: 2rem;
 }
 
+.query-display .pill[role='button'] {
+  cursor: pointer;
+}
+
 /* Tablet width and less */
 @media screen and (max-width: 820px) {
   .query-display .pill {

@@ -3,15 +3,34 @@ import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import './QueryDisplay.css';
 
+/** @typedef {'clickCombineMode' | 'clickFilter' } QueryDisplayActionType */
+/** @typedef {{ type: QueryDisplayActionType; payload?: any }} QueryDisplayAction */
+
 /**
  * @param {Object} props
  * @param {import('../GuppyComponents/types').FilterState} props.filter
  * @param {import('../GuppyComponents/types').FilterConfig['info']} props.filterInfo
  * @param {'AND' | 'OR'} [props.combineMode]
+ * @param {(action: QueryDisplayAction) => void} [props.onAction]
  */
-function QueryDisplay({ filter, filterInfo, combineMode }) {
+function QueryDisplay({ filter, filterInfo, combineMode, onAction }) {
   const filterElements = /** @type {JSX.Element[]} */ ([]);
   const { __combineMode, ...__filter } = filter;
+  const queryCombineMode = combineMode ?? __combineMode ?? 'AND';
+
+  function handleClickCombineMode() {
+    onAction({
+      type: 'clickCombineMode',
+      payload: queryCombineMode,
+    });
+  }
+  function handleClickFilter(/** @type {React.SyntheticEvent} */ e) {
+    onAction({
+      type: 'clickFilter',
+      payload: e.currentTarget.attributes.getNamedItem('filter-key').value,
+    });
+  }
+
   for (const [key, value] of Object.entries(__filter))
     if ('filter' in value) {
       const [anchorKey, anchorValue] = key.split(':');
@@ -25,8 +44,9 @@ function QueryDisplay({ filter, filterInfo, combineMode }) {
             ({' '}
             <QueryDisplay
               filter={value.filter}
-              combineMode={__combineMode}
               filterInfo={filterInfo}
+              combineMode={__combineMode}
+              onAction={onAction}
             />{' '}
             )
           </span>
@@ -34,7 +54,15 @@ function QueryDisplay({ filter, filterInfo, combineMode }) {
       );
     } else if ('selectedValues' in value) {
       filterElements.push(
-        <span key={key} className='pill'>
+        <span
+          key={key}
+          className='pill'
+          role='button'
+          tabIndex={0}
+          onClick={handleClickFilter}
+          onKeyDown={handleClickFilter}
+          filter-key={key}
+        >
           <span className='token'>
             <code>{filterInfo[key].label}</code>{' '}
             {value.selectedValues.length > 1 ? 'is any of ' : 'is '}
@@ -59,7 +87,15 @@ function QueryDisplay({ filter, filterInfo, combineMode }) {
       );
     } else {
       filterElements.push(
-        <span key={key} className='pill'>
+        <span
+          key={key}
+          className='pill'
+          role='button'
+          tabIndex={0}
+          onClick={handleClickFilter}
+          onKeyDown={handleClickFilter}
+          filter-key={key}
+        >
           <span className='token'>
             <code>{filterInfo[key].label}</code> is between
           </span>
@@ -78,8 +114,14 @@ function QueryDisplay({ filter, filterInfo, combineMode }) {
         <>
           {filterElement}
           {i < filterElements.length - 1 && (
-            <span className='pill'>
-              {combineMode ?? __combineMode ?? 'AND'}
+            <span
+              className='pill'
+              role='button'
+              tabIndex={0}
+              onClick={handleClickCombineMode}
+              onKeyDown={handleClickCombineMode}
+            >
+              {queryCombineMode}
             </span>
           )}
         </>
@@ -89,13 +131,14 @@ function QueryDisplay({ filter, filterInfo, combineMode }) {
 }
 
 QueryDisplay.propTypes = {
-  filter: PropTypes.any,
+  filter: PropTypes.any.isRequired,
   filterInfo: PropTypes.objectOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
     })
   ),
   combineMode: PropTypes.oneOf(['AND', 'OR']),
+  onAction: PropTypes.func,
 };
 
 export default QueryDisplay;
