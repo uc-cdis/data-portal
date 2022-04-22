@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Button, List, Tag, Popconfirm,
 } from 'antd';
@@ -13,13 +13,10 @@ import {
 import { useQuery, useMutation } from 'react-query';
 import PropTypes from 'prop-types';
 import { gwasWorkflowPath } from '../../localconf';
-import { headers, fetchAndSetCsrfToken } from '../../configs';
+import { headers } from '../../configs';
 import { getPresignedUrl } from '../AnalysisJob';
 
 const GWASJob = ({ workflow, refreshWorkflows }) => {
-  useEffect(() => {
-    fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
-  }, []);
 
   async function handleWorkflowOutput(url) {
     const response = await fetch(url, { headers }).then((res) => res.json()).then((data) => data);

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-type
 import Select from 'react-select';
 import { Spin } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
@@ -87,7 +86,6 @@ class AnalysisApp extends React.Component {
       return (
         <QueryClientProvider client={queryClient} contextSharing>
           <ReduxGWASUIApp refreshWorkflows={this.refreshWorkflows} />
-          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       );
     default:

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch,
-} from 'antd'; // TODO: use Result later
+} from 'antd';
 import './GWASUIApp.css';
 import { useQuery, useMutation } from 'react-query';
 import { headers, fetchAndSetCsrfToken } from '../../configs';
@@ -199,7 +199,7 @@ const GWASUIApp = (props) => {
 
   };
 
-  const step3TableConfig = [ // pass prop for loading status
+  const step3TableConfig = [
     {
       title: 'Concept ID',
       dataIndex: 'concept_id',
@@ -215,21 +215,9 @@ const GWASUIApp = (props) => {
       dataIndex: 'n_missing_ratio',
       key: 'n_missing_ratio',
       render: (_, record) => (
-        // names and concept ids load before this
-        // (isLoading ? <>Loading</> : <span onClick={() => { console.log('record', record) }}>{`${(record.n_missing_ratio * 100).toFixed(0)}%`}</span>)
         <span>{`${(record.n_missing_ratio * 100).toFixed(0)}%`}</span>
       ),
     },
-    // {
-    //   title: selectedConcepts.length > 2 ? 'Action' : null,
-    //   dataIndex: 'action',
-    //   render: (_, record) => (
-    //     (selectedConcepts.length > 2 && selectedPhenotype.concept_id !== record.concept_id) ? (
-    //       <Popconfirm title='Remove this entry?' onConfirm={() => handleDelete(record.concept_id)}>
-    //         <a>Remove</a>
-    //       </Popconfirm>
-    //     ) : null),
-    // },
   ];
 
   const handleCovariateDelete = (remainingCovariates) => {
@@ -299,11 +287,6 @@ const GWASUIApp = (props) => {
   const CohortConcepts = () => {
     const { data, status } = useQuery('cohortconcepts', fetchConcepts);
 
-    // useEffect(() => {
-    //   setCohortConcepts(data.concepts);
-    //   console.log(cohortConcepts)
-    // }, [data])
-
     if (status === 'loading') {
       return <React.Fragment>Loading</React.Fragment>;
     }
@@ -311,20 +294,9 @@ const GWASUIApp = (props) => {
       return <React.Fragment>Error</React.Fragment>;
     }
 
-    // TODO: add back cohort concept filter after useQuery refactor
-
-    // const [cohortConcepts, setCohortConcepts] = useState([]);
-    // const [searchTerm, setSearchTerm] = useState("");
-    // const filterConcept = (term, source) => {
-    //   setSearchTerm(term);
-    //   const filteredConcepts = source.filter(entry => entry.concept_name.toLowerCase().includes(term.toLowerCase()) || entry.concept_id.toString().includes(term));
-    //   filteredConcepts.length ? setCohortConcepts(filteredConcepts) : setCohortConcepts(source);
-    // }
-
     return (
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
         <h4 className='GWASUI-selectInstruction'>The selection will be used for both covariates and phenotype selection</h4>
-        {/* <input className="GWASUI-searchInput" placeholder="Search by concept name or ID..." type="text" value={searchTerm} onChange={(e) => filterConcept(e.target.value, data.concepts)}></input> */}
         <div className='GWASUI-mainTable'>
           <Table
             className='GWASUI-table2'
@@ -358,7 +330,7 @@ const GWASUIApp = (props) => {
             rowKey='concept_id'
             pagination={{ pageSize: 10 }}
             rowSelection={step3TableRowSelection}
-            columns={step3TableConfig} // (status.loading) pass status as a prop
+            columns={step3TableConfig}
             dataSource={data.concepts}
           />
         </div>
@@ -373,7 +345,7 @@ const GWASUIApp = (props) => {
       covariates,
       out_prefix: Date.now().toString(),
       outcome: selectedOutcome,
-      outcome_is_binary: false, // true?
+      outcome_is_binary: false,
       maf_threshold: Number(mafThreshold),
       imputation_score_cutoff: Number(imputationScore),
       template_version: 'gwas-template-320145385461a33a25bd4d6817936c436570c84a',
@@ -465,7 +437,6 @@ const GWASUIApp = (props) => {
                 mafCutoff: 0.01,
                 imputationCutoff: 0.3,
               }}
-              // onFinish={() => onStep4FormSubmit()}
               autoComplete='off'
             >
               <Form.Item
@@ -534,28 +505,6 @@ const GWASUIApp = (props) => {
         wrapperCol: { offset: 8, span: 16 },
       };
 
-      // if (showJobSubmissionResult) {
-      //   return (
-      //     <div className='GWASUI-mainArea'>
-      //       <Result
-      //         status={(jobSubmittedRunID) ? 'success' : 'error'}
-      //         title={(jobSubmittedRunID) ? 'GWAS Job Submitted Successfully' : 'GWAS Job Submission Failed'}
-      //         // subTitle={`GWAS Job Name: ${jobName}, run ID: ${jobSubmittedRunID}`}
-      //         extra={[
-      //           <Button
-      //             key='done'
-      //             onClick={() => {
-      //               handleReset();
-      //             }}
-      //           >
-      //             Done
-      //           </Button>,
-      //         ]}
-      //       />
-      //     </div>
-      //   );
-      // }
-
       return (
         <React.Fragment>
           <div className='GWASUI-mainArea'>
@@ -567,9 +516,6 @@ const GWASUIApp = (props) => {
                 onStep5FormSubmit(values);
               }}
             >
-              {/* <Form.Item name='GWASJobName' label='GWAS Job Name' rules={[{ required: true, message: 'Please enter a name' }]}>
-                  <Input placeholder='my_gwas_20201101_1' onChange={(e) => setGwasJobName(e.target.value)} />
-                </Form.Item> */}
               <Form.Item {...tailLayout}>
                 <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
               </Form.Item>
