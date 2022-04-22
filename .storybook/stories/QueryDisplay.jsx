@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import QueryDisplay from '@src/components/QueryDisplay';
 
 const simpleFilter = {
@@ -28,8 +29,16 @@ const filterInfo = {
 
 storiesOf('QueryDisplay', module)
   .add('Simple', () => (
-    <QueryDisplay filter={simpleFilter} filterInfo={filterInfo} />
+    <QueryDisplay
+      filter={simpleFilter}
+      filterInfo={filterInfo}
+      onAction={action('action')}
+    />
   ))
   .add('Complex', () => (
-    <QueryDisplay filter={complexFilter} filterInfo={filterInfo} />
+    <QueryDisplay
+      filter={complexFilter}
+      filterInfo={filterInfo}
+      onAction={action('action')}
+    />
   ));
