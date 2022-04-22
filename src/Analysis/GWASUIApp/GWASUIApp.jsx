@@ -64,7 +64,7 @@ const GWASUIApp = (props) => {
   const [jobName, setJobName] = useState("");
   const [showJobSubmissionResult, setShowJobSubmissionResult] = useState(false);
   const [jobSubmittedRunID, setJobSubmittedRunID] = useState(undefined);
-  const [searchTerm, setSearchTerm] = useState("");
+
 
   const onStep4FormSubmit = useCallback((values) => {
     // console.log('values', values);
@@ -327,12 +327,12 @@ const GWASUIApp = (props) => {
   }
 
   const CohortConcepts = () => {
-    const filterConcept = (term) => {
-      setSearchTerm(term);
-      const filteredConcepts = allConcepts.filter(entry => entry.concept_name.toLowerCase().includes(term.toLowerCase()) || entry.concept_id.toString().includes(term));
-      filteredConcepts.length ? setCohortConcepts(filteredConcepts) : setCohortConcepts(cohortConcepts);
-    }
     const { data, status } = useQuery('cohortconcepts', fetchConcepts);
+
+    // useEffect(() => {
+    //   setCohortConcepts(data.concepts);
+    //   console.log(cohortConcepts)
+    // }, [data])
 
     if (status === 'loading') {
       return <>Loading</>
@@ -340,10 +340,21 @@ const GWASUIApp = (props) => {
     if (status === 'error') {
       return <>Error</>
     }
+
+    // TODO: add back cohort concept filter after useQuery refactor
+
+    // const [cohortConcepts, setCohortConcepts] = useState([]);
+    // const [searchTerm, setSearchTerm] = useState("");
+    // const filterConcept = (term, source) => {
+    //   setSearchTerm(term);
+    //   const filteredConcepts = source.filter(entry => entry.concept_name.toLowerCase().includes(term.toLowerCase()) || entry.concept_id.toString().includes(term));
+    //   filteredConcepts.length ? setCohortConcepts(filteredConcepts) : setCohortConcepts(source);
+    // }
+
     return (
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
         <h4 className="GWASUI-selectInstruction">The selection will be used for both covariates and phenotype selection</h4>
-        <input className="GWASUI-searchInput" placeholder="Search by concept name or ID..." type="text" value={searchTerm} onChange={(e) => filterConcept(e.target.value)}></input>
+        {/* <input className="GWASUI-searchInput" placeholder="Search by concept name or ID..." type="text" value={searchTerm} onChange={(e) => filterConcept(e.target.value, data.concepts)}></input> */}
         <div className='GWASUI-mainTable'>
           <Table
             className='GWASUI-table2'
