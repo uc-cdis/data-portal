@@ -391,13 +391,6 @@ function buildConfig(opts) {
             ],
           };
           break;
-        case 'GWASApp':
-          analysisApps.GWASApp = {
-            title: 'GWAS',
-            description: 'A GWAS App',
-            image: '/src/img/analysis-icons/gwas.svg',
-          };
-          break;
         case 'GWASUIApp':
           analysisApps.GWASUIApp = {
             title: 'GWAS',

@@ -6,7 +6,6 @@ import Button from '@gen3/ui-component/dist/components/Button';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
-import ReduxGWASApp from './GWASApp/ReduxGWASApp';
 import ReduxGWASUIApp from './GWASUIApp/ReduxGWASUIApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
@@ -77,10 +76,6 @@ class AnalysisApp extends React.Component {
           <input className='text-input' type='text' placeholder='input data' name='input' />
           <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
         </React.Fragment>
-      );
-    case 'GWASApp':
-      return (
-        <ReduxGWASApp />
       );
     case 'GWASUIApp':
       return (
