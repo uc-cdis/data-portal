@@ -136,7 +136,11 @@ const GWASJob = ({ workflow, refreshWorkflows }) => {
   }
 
   const Status = () => {
-    const { data, status } = useQuery(['workflowId', workflow], fetchWorkflowStatus);
+    const { data, status } = useQuery(['workflowId', workflow], fetchWorkflowStatus, {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    });
     if (status === 'loading') {
       return <React.Fragment>Loading</React.Fragment>;
     }
