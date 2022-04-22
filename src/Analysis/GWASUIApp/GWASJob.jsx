@@ -7,6 +7,8 @@ import {
   SyncOutlined,
   CloseCircleOutlined,
   QuestionCircleOutlined,
+  MinusCircleOutlined,
+  StopOutlined
 } from '@ant-design/icons';
 import { useQuery, useMutation } from 'react-query';
 import PropTypes from 'prop-types';
@@ -31,20 +33,6 @@ const GWASJob = ({ workflow, refreshWorkflows }) => {
 
   const getActionButtons = (phase, workflowName) => {
     const actionButtons = [];
-    // if (phase === 'Running') {
-    //     actionButtons.unshift(
-    //     <Popconfirm
-    //         title='Are you sure you want to cancel this job?'
-    //         onConfirm={(event) => {
-    //             event.stopPropagation();
-    //             // cancelGwasJob("123");
-    //         }}
-    //         okText='Yes'
-    //         cancelText='No'
-    //     >
-    //         <Button type='link' size='medium' danger>cancel job</Button>
-    //     </Popconfirm>);
-    // }
     if (phase === 'Succeeded') {
       actionButtons.unshift(
         <Button
@@ -89,6 +77,18 @@ const GWASJob = ({ workflow, refreshWorkflows }) => {
       return (
         <Tag icon={<CloseCircleOutlined />} color='error'>
             Failed
+        </Tag>
+      );
+      case 'Canceling':
+      return (
+        <Tag icon={<MinusCircleOutlined />} color='warning'>
+        Canceling
+        </Tag>
+      );
+      case 'Canceled':
+      return (
+        <Tag icon={<StopOutlined />} color='warning'>
+        Canceled
         </Tag>
       );
     default:

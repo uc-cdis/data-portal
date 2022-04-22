@@ -132,30 +132,6 @@ const GWASUIApp = (props) => {
     return getConceptStats.json();
   }
 
-  // async function getConceptsBySource(cohortDefinitionId) {
-  //   const sourceEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
-  //   fetch(sourceEndPoint,
-  //     {
-  //       method: "POST",
-  //       credentials: "include",
-  //       headers: headers,
-  //       body: JSON.stringify(conceptVars)
-  //     }
-  //   ).then(res => {
-  //     return res.json();
-  //   })
-  //     .then(data => {
-  //       if (data) {
-  //         setAllConcepts(data.concepts);
-  //         setCohortConcepts(data.concepts);
-  //       }
-  //     });
-  // }
-
-  // useEffect(() => {
-
-  // }, [cohortDefinitionId]);
-
   const step1TableRowSelection = {
     type: 'radio',
     columnTitle: 'Select',
