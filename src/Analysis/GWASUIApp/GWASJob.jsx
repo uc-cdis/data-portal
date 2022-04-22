@@ -8,7 +8,7 @@ import {
   CloseCircleOutlined,
   QuestionCircleOutlined,
   MinusCircleOutlined,
-  StopOutlined
+  StopOutlined,
 } from '@ant-design/icons';
 import { useQuery, useMutation } from 'react-query';
 import PropTypes from 'prop-types';
@@ -17,7 +17,6 @@ import { headers } from '../../configs';
 import { getPresignedUrl } from '../AnalysisJob';
 
 const GWASJob = ({ workflow, refreshWorkflows }) => {
-
   async function handleWorkflowOutput(url) {
     const response = await fetch(url, { headers }).then((res) => res.json()).then((data) => data);
     if (response) {
@@ -76,13 +75,13 @@ const GWASJob = ({ workflow, refreshWorkflows }) => {
             Failed
         </Tag>
       );
-      case 'Canceling':
+    case 'Canceling':
       return (
         <Tag icon={<MinusCircleOutlined />} color='warning'>
         Canceling
         </Tag>
       );
-      case 'Canceled':
+    case 'Canceled':
       return (
         <Tag icon={<StopOutlined />} color='warning'>
         Canceled

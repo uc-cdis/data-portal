@@ -39,7 +39,7 @@ const GWASUIApp = (props) => {
   const queryConfig = {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    refetchOnReconnect: false
+    refetchOnReconnect: false,
   };
   const [current, setCurrent] = useState(0);
   const [sourceId, setSourceId] = useState(undefined);
@@ -408,129 +408,129 @@ const GWASUIApp = (props) => {
 
   const generateContentForStep = (stepIndex) => {
     switch (stepIndex) {
-      case 0: {
-        return (
-          sourceId ? <CohortDefinitions /> : null
-        );
-      }
-      case 1: {
-        return (
-          <CohortConcepts />
-        );
-      }
-      case 2: {
-        return (
-          <CohortConceptStats />
-        );
-      }
-      case 3: {
-        return (
-          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-            <div className='GWASUI-mainArea'>
-              <Form
-                name='GWASUI-parameter-form'
-                form={form}
-                labelCol={{
-                  span: 8,
-                }}
-                wrapperCol={{
-                  span: 16,
-                }}
-                initialValues={{
-                  numOfPC,
-                  isBinary: false,
-                  mafCutoff: 0.01,
-                  imputationCutoff: 0.3,
-                }}
-                autoComplete='off'
+    case 0: {
+      return (
+        sourceId ? <CohortDefinitions /> : null
+      );
+    }
+    case 1: {
+      return (
+        <CohortConcepts />
+      );
+    }
+    case 2: {
+      return (
+        <CohortConceptStats />
+      );
+    }
+    case 3: {
+      return (
+        <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+          <div className='GWASUI-mainArea'>
+            <Form
+              name='GWASUI-parameter-form'
+              form={form}
+              labelCol={{
+                span: 8,
+              }}
+              wrapperCol={{
+                span: 16,
+              }}
+              initialValues={{
+                numOfPC,
+                isBinary: false,
+                mafCutoff: 0.01,
+                imputationCutoff: 0.3,
+              }}
+              autoComplete='off'
+            >
+              <Form.Item
+                label='Number of PCs to use'
+                name='numOfPC'
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input a value between 1 to 10',
+                  },
+                ]}
               >
-                <Form.Item
-                  label='Number of PCs to use'
-                  name='numOfPC'
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please input a value between 1 to 10',
-                    },
-                  ]}
-                >
-                  <InputNumber min={1} max={10} />
-                </Form.Item>
-                <Form.Item
-                  label='Covariates'
-                  name='covariates'
-                >
-                  <Select
-                    mode='multiple'
-                    value={selectedCovariates.map((s) => s.concept_name)}
-                    disabled={selectedCovariates.length === 1}
-                    onChange={(e) => handleCovariateDelete(e)}
-                    style={{ width: '70%' }}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label='Phenotype'
-                  name='outcome'
-                >
-                  <Input
-                    disabled
-                    value={selectedPhenotype}
-                    style={{ width: '70%' }}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label='Is Binary Outcome?'
-                  name='isBinary'
-                >
-                  <Switch disabled checked={false} style={{ width: '5%' }} />
-                </Form.Item>
-                <Form.Item
-                  label='MAF Cutoff'
-                  name='mafCutoff'
-                >
-                  <InputNumber value={mafThreshold} onChange={(e) => setMafThreshold(e)} stringMode step='0.01' min={'0'} max={'0.5'} />
-                </Form.Item>
-                <Form.Item
-                  label='Imputation Score Cutoff'
-                  name='imputationCutoff'
-                >
-                  <InputNumber value={imputationScore} onChange={(e) => setImputationScore(e)} stringMode step='0.1' min={'0'} max={'1'} />
-                </Form.Item>
-              </Form>
-            </div>
-          </Space>
-        );
-      }
-      case 4: {
-        const layout = {
-          labelCol: { span: 8 },
-          wrapperCol: { span: 16 },
-        };
-        const tailLayout = {
-          wrapperCol: { offset: 8, span: 16 },
-        };
+                <InputNumber min={1} max={10} />
+              </Form.Item>
+              <Form.Item
+                label='Covariates'
+                name='covariates'
+              >
+                <Select
+                  mode='multiple'
+                  value={selectedCovariates.map((s) => s.concept_name)}
+                  disabled={selectedCovariates.length === 1}
+                  onChange={(e) => handleCovariateDelete(e)}
+                  style={{ width: '70%' }}
+                />
+              </Form.Item>
+              <Form.Item
+                label='Phenotype'
+                name='outcome'
+              >
+                <Input
+                  disabled
+                  value={selectedPhenotype}
+                  style={{ width: '70%' }}
+                />
+              </Form.Item>
+              <Form.Item
+                label='Is Binary Outcome?'
+                name='isBinary'
+              >
+                <Switch disabled checked={false} style={{ width: '5%' }} />
+              </Form.Item>
+              <Form.Item
+                label='MAF Cutoff'
+                name='mafCutoff'
+              >
+                <InputNumber value={mafThreshold} onChange={(e) => setMafThreshold(e)} stringMode step='0.01' min={'0'} max={'0.5'} />
+              </Form.Item>
+              <Form.Item
+                label='Imputation Score Cutoff'
+                name='imputationCutoff'
+              >
+                <InputNumber value={imputationScore} onChange={(e) => setImputationScore(e)} stringMode step='0.1' min={'0'} max={'1'} />
+              </Form.Item>
+            </Form>
+          </div>
+        </Space>
+      );
+    }
+    case 4: {
+      const layout = {
+        labelCol: { span: 8 },
+        wrapperCol: { span: 16 },
+      };
+      const tailLayout = {
+        wrapperCol: { offset: 8, span: 16 },
+      };
 
-        return (
-          <React.Fragment>
-            <div className='GWASUI-mainArea'>
-              <Form
-                {...layout}
-                name='control-hooks'
-                form={form}
-                onFinish={(values) => {
-                  onStep5FormSubmit(values);
-                }}
-              >
-                <Form.Item {...tailLayout}>
-                  <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
-                </Form.Item>
-              </Form>
-            </div>
-          </React.Fragment>
-        );
-      }
-      default:
-        return <React.Fragment />;
+      return (
+        <React.Fragment>
+          <div className='GWASUI-mainArea'>
+            <Form
+              {...layout}
+              name='control-hooks'
+              form={form}
+              onFinish={(values) => {
+                onStep5FormSubmit(values);
+              }}
+            >
+              <Form.Item {...tailLayout}>
+                <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
+              </Form.Item>
+            </Form>
+          </div>
+        </React.Fragment>
+      );
+    }
+    default:
+      return <React.Fragment />;
     }
   };
 
