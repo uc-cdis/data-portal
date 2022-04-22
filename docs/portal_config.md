@@ -514,6 +514,7 @@ Below is an example, with inline comments describing what each JSON block config
       "includeIfNotAvailable": true,
       "valueIfNotAvailable": "No description has been provided for this study."
     },
+    // consider updated "detailView" configufation with tabbing option
     "studyPageFields": { // studyPageFields configures the fields that are displayed when a user opens a study page by clicking on a row in the table.
       "header": { // if present, shows a header field at the top of the study page.
         "field": "name"
@@ -572,6 +573,29 @@ Below is an example, with inline comments describing what each JSON block config
         }
       ]
     },
+    // takes precedence over "studyPageFields"
+    "detailView": {
+      "headerField": "project_title", // field from which to pull detail view title
+      "tabs": [
+        "tabName": "Study",
+        "groups": [
+          {
+            "header": "Study Description Summary", // subheading above a group of fields, optional
+            "fields": [
+              {
+              "header": "Study Description Summary",
+              "fields": [
+                {
+                  "type": "block",
+                  "sourceField": "study_description_summary"
+                }
+              ]
+              }
+            ]
+          }
+        ]
+      ]
+    }
     "minimalFieldMapping": { // maps
       "tagsListFieldName": "tags", // required; the field which contains the list of tags (format: [{name: string, category: string}] )
       "authzField": "authz", // optional if features.authorization.enabled is false, otherwise required
@@ -597,6 +621,7 @@ Below is an example, with inline comments describing what each JSON block config
       }
     ],
     "tagsDisplayName": "Tags" // optional, overrides the name of the mandatory tags column
+    "tableScrollHeight": 450 // optional, no scroll if omitted
   },
   "resourceBrowser": {), // see Resource Browser documentation
   "workspacePageTitle": "", // title to display above workspacePageDescription
