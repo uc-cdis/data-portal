@@ -348,7 +348,7 @@ const GWASUIApp = (props) => {
       outcome_is_binary: false,
       maf_threshold: Number(mafThreshold),
       imputation_score_cutoff: Number(imputationScore),
-      template_version: 'gwas-template-320145385461a33a25bd4d6817936c436570c84a',
+      template_version: 'gwas-template-6226080403eb62585981d9782aec0f3a82a7e906',
       source_id: sourceId,
       cohort_definition_id: cohortDefinitionId,
     };
