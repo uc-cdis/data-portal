@@ -8,12 +8,19 @@ import './QueryDisplay.css';
 
 /**
  * @param {Object} props
+ * @param {[anchorKey: string, anchorValue: string]} [props.anchorInfo]
+ * @param {'AND' | 'OR'} [props.combineMode]
  * @param {import('../GuppyComponents/types').FilterState} props.filter
  * @param {import('../GuppyComponents/types').FilterConfig['info']} props.filterInfo
- * @param {'AND' | 'OR'} [props.combineMode]
  * @param {(action: QueryDisplayAction) => void} [props.onAction]
  */
-function QueryDisplay({ filter, filterInfo, combineMode, onAction }) {
+function QueryDisplay({
+  anchorInfo,
+  combineMode,
+  filter,
+  filterInfo,
+  onAction,
+}) {
   const filterElements = /** @type {JSX.Element[]} */ ([]);
   const { __combineMode, ...__filter } = filter;
   const queryCombineMode = combineMode ?? __combineMode ?? 'AND';
@@ -27,7 +34,11 @@ function QueryDisplay({ filter, filterInfo, combineMode, onAction }) {
   function handleClickFilter(/** @type {React.SyntheticEvent} */ e) {
     onAction({
       type: 'clickFilter',
-      payload: e.currentTarget.attributes.getNamedItem('filter-key').value,
+      payload: {
+        filterKey: e.currentTarget.attributes.getNamedItem('filter-key').value,
+        anchorKey: anchorInfo?.[0],
+        anchorValue: anchorInfo?.[1],
+      },
     });
   }
 
@@ -43,6 +54,7 @@ function QueryDisplay({ filter, filterInfo, combineMode, onAction }) {
           <span className='token'>
             ({' '}
             <QueryDisplay
+              anchorInfo={[anchorKey, anchorValue]}
               filter={value.filter}
               filterInfo={filterInfo}
               combineMode={__combineMode}
@@ -131,13 +143,14 @@ function QueryDisplay({ filter, filterInfo, combineMode, onAction }) {
 }
 
 QueryDisplay.propTypes = {
+  anchorInfo: PropTypes.string,
+  combineMode: PropTypes.oneOf(['AND', 'OR']),
   filter: PropTypes.any.isRequired,
   filterInfo: PropTypes.objectOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
     })
   ),
-  combineMode: PropTypes.oneOf(['AND', 'OR']),
   onAction: PropTypes.func,
 };
 
