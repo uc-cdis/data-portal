@@ -142,8 +142,11 @@ const fallbackElement = (
     <h1>Error opening the Exploration page...</h1>
     <p>
       The Exploration page is not working correctly. Please try refreshing the
-      page. If the problem continues, please contact administrator for more
-      information.
+      page. If the problem continues, please contact the administrator (
+      <a href='mailto:pcdc_help@lists.uchicago.edu'>
+        pcdc_help@lists.uchicago.edu
+      </a>
+      ) for more information.
     </p>
     <NotFoundSVG />
   </div>

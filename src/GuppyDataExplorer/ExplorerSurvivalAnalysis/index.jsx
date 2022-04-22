@@ -63,8 +63,12 @@ function ExplorerSurvivalAnalysis() {
                     <h1>Error obtaining survival analysis result...</h1>
                     <p>
                       Please retry by clicking {'"Apply"'} button or refreshing
-                      the page. If the problem persists, please contact
-                      administrator for more information.
+                      the page. If the problem persists, please contact the
+                      administrator (
+                      <a href='mailto:pcdc_help@lists.uchicago.edu'>
+                        pcdc_help@lists.uchicago.edu
+                      </a>
+                      ) for more information.
                     </p>
                   </div>
                 }
