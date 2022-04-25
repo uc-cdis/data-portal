@@ -7,7 +7,7 @@ import Button from '../../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../../utils';
 import { fetchWithCreds } from '../../actions';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
-import FilterSetFilterDisplay from '../ExplorerFilterSet/FilterSetFilterDisplay';
+import FilterSetQueryDisplay from '../ExplorerFilterSet/FilterSetQueryDisplay';
 import './ExplorerExploreExternalButton.css';
 
 /** @typedef {import('../types').ExplorerFilters} ExplorerFilters */
@@ -82,7 +82,7 @@ function ExplorerExploreExternalButton({ filter }) {
                   />
                 }
               />
-              <FilterSetFilterDisplay filters={filter} />
+              <FilterSetQueryDisplay filters={filter} />
             </form>
             <div>
               <Button

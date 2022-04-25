@@ -6,7 +6,7 @@ import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../../utils';
 import { defaultFilterSet as survivalDefaultFilterSet } from '../ExplorerSurvivalAnalysis/ControlForm';
-import FilterSetFilterDisplay from './FilterSetFilterDisplay';
+import FilterSetQueryDisplay from './FilterSetQueryDisplay';
 import './ExplorerFilterSet.css';
 
 /** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
@@ -105,7 +105,7 @@ function FilterSetOpenForm({
             />
           }
         />
-        <FilterSetFilterDisplay filters={selected.value.filters} />
+        <FilterSetQueryDisplay filters={selected.value.filters} />
       </form>
       <div>
         <FilterSetButton
@@ -217,7 +217,7 @@ function FilterSetCreateForm({
             />
           }
         />
-        <FilterSetFilterDisplay filters={currentFilters} />
+        <FilterSetQueryDisplay filters={currentFilters} />
       </form>
       <div>
         <FilterSetButton
@@ -333,9 +333,9 @@ function FilterSetUpdateForm({
             />
           }
         />
-        <FilterSetFilterDisplay filters={filterSet.filters} />
+        <FilterSetQueryDisplay filters={filterSet.filters} />
         {isFiltersChanged && (
-          <FilterSetFilterDisplay
+          <FilterSetQueryDisplay
             filters={currentFilters}
             title='Filters (changed)'
           />

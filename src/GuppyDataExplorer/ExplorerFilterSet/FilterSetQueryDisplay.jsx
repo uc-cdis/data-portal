@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
 import QueryDisplay from '../../components/QueryDisplay';
 import { useExplorerConfig } from '../ExplorerConfigContext';
-import './FilterSetFilterDisplay.css';
+import './FilterSetQueryDisplay.css';
 
 /**
  * @param {Object} props
  * @param {import('../types').ExplorerFilters} props.filters
  * @param {string} [props.title]
  */
-function FilterSetFilterDisplay({ filters, title = 'Filters' }) {
+function FilterSetQueryDisplay({ filters, title = 'Filters' }) {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   return (
-    <div className='filter-set-filter-display'>
+    <div className='filter-set-query-display'>
       {Object.keys(filters).length > 0 ? (
         <>
           <header>{title}</header>
@@ -28,9 +28,9 @@ function FilterSetFilterDisplay({ filters, title = 'Filters' }) {
   );
 }
 
-FilterSetFilterDisplay.propTypes = {
+FilterSetQueryDisplay.propTypes = {
   filters: PropTypes.any,
   title: PropTypes.string,
 };
 
-export default FilterSetFilterDisplay;
+export default FilterSetQueryDisplay;
