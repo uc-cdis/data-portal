@@ -8,6 +8,37 @@ import './QueryDisplay.css';
 
 /**
  * @param {Object} props
+ * @param {string} [props.className]
+ * @param {React.ReactNode} props.children
+ * @param {string} [props.filterKey]
+ * @param {React.EventHandler<any>} [props.onClick]
+ */
+function QueryPill({ className = 'pill', children, filterKey, onClick }) {
+  return typeof onClick === 'function' ? (
+    <span
+      className={className}
+      role='button'
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={onClick}
+      filter-key={filterKey}
+    >
+      {children}
+    </span>
+  ) : (
+    <span className={className}>{children}</span>
+  );
+}
+
+QueryPill.propTypes = {
+  className: PropTypes.string,
+  children: PropTypes.node.isRequired,
+  filterKey: PropTypes.element,
+  onClick: PropTypes.func,
+};
+
+/**
+ * @param {Object} props
  * @param {[anchorKey: string, anchorValue: string]} [props.anchorInfo]
  * @param {'AND' | 'OR'} [props.combineMode]
  * @param {import('../GuppyComponents/types').FilterState} props.filter
@@ -46,7 +77,7 @@ function QueryDisplay({
     if ('filter' in value) {
       const [anchorKey, anchorValue] = key.split(':');
       filterElements.push(
-        <span key={key} className='pill anchor'>
+        <QueryPill key={key} className='pill anchor'>
           <span className='token field'>
             With <code>{filterInfo[anchorKey].label}</code> of{' '}
             <code>{`"${anchorValue}"`}</code>
@@ -62,19 +93,11 @@ function QueryDisplay({
             />{' '}
             )
           </span>
-        </span>
+        </QueryPill>
       );
     } else if ('selectedValues' in value) {
       filterElements.push(
-        <span
-          key={key}
-          className='pill'
-          role='button'
-          tabIndex={0}
-          onClick={handleClickFilter}
-          onKeyDown={handleClickFilter}
-          filter-key={key}
-        >
+        <QueryPill key={key} onClick={handleClickFilter} filterKey={key}>
           <span className='token'>
             <code>{filterInfo[key].label}</code>{' '}
             {value.selectedValues.length > 1 ? 'is any of ' : 'is '}
@@ -95,19 +118,11 @@ function QueryDisplay({
               <code>{`"${value.selectedValues[0]}"`}</code>
             )}
           </span>
-        </span>
+        </QueryPill>
       );
     } else {
       filterElements.push(
-        <span
-          key={key}
-          className='pill'
-          role='button'
-          tabIndex={0}
-          onClick={handleClickFilter}
-          onKeyDown={handleClickFilter}
-          filter-key={key}
-        >
+        <QueryPill key={key} onClick={handleClickFilter} filterKey={key}>
           <span className='token'>
             <code>{filterInfo[key].label}</code> is between
           </span>
@@ -116,7 +131,7 @@ function QueryDisplay({
               ({value.lowerBound}, {value.upperBound})
             </code>
           </span>
-        </span>
+        </QueryPill>
       );
     }
 
@@ -126,15 +141,9 @@ function QueryDisplay({
         <>
           {filterElement}
           {i < filterElements.length - 1 && (
-            <span
-              className='pill'
-              role='button'
-              tabIndex={0}
-              onClick={handleClickCombineMode}
-              onKeyDown={handleClickCombineMode}
-            >
+            <QueryPill onClick={handleClickCombineMode}>
               {queryCombineMode}
-            </span>
+            </QueryPill>
           )}
         </>
       ))}
