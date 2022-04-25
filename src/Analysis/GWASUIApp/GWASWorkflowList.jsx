@@ -20,7 +20,7 @@ const GWASWorkflowList = ({ refreshWorkflows }) => {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      refetchInterval: 60000
+      refetchInterval: 60000,
     });
     if (status === 'loading') {
       return <React.Fragment>Loading</React.Fragment>;

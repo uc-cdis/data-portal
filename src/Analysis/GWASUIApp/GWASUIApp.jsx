@@ -51,27 +51,16 @@ const GWASUIApp = (props) => {
 
   const [form] = Form.useForm();
 
-  // const [cohortDefinitions, setCohortDefinitions] = useState([]);
-  // const [allConcepts, setAllConcepts] = useState([]);
-  // const [cohortConcepts, setCohortConcepts] = useState([]);
   const [selectedCohort, setSelectedCohort] = useState(undefined);
   const [selectedConcepts, setSelectedConcepts] = useState([]);
   const [covariates, setCovariates] = useState([]);
   const [selectedOutcome, setSelectedOutcome] = useState([]);
   const [imputationScore, setImputationScore] = useState(0.3);
   const [mafThreshold, setMafThreshold] = useState(0.01);
-  // const [gwasJobName, setGwasJobName] = useState("");
 
   const [numOfPC, setNumOfPC] = useState(3);
   const [selectedPhenotype, setSelectedPhenotype] = useState(undefined);
   const [selectedCovariates, setSelectedCovariates] = useState([]);
-  // const [jobName, setJobName] = useState('');
-  // const [showJobSubmissionResult, setShowJobSubmissionResult] = useState(false);
-  // const [jobSubmittedRunID, setJobSubmittedRunID] = useState(undefined);
-
-  // const onStep4FormSubmit = useCallback((values) => {
-  //   // console.log('values', values);
-  // }, []);
 
   const onStep5FormSubmit = (values) => {
     setImputationScore(values.imputationCutoff);
