@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import QueryDisplay from '../../components/QueryDisplay';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerState } from '../ExplorerStateContext';
+import { pluckFromAnchorFilter, pluckFromFilter } from './utils';
 import './ExplorerQueryController.css';
 
 /** @param {{ filter: import('../types').ExplorerFilters }} props */
@@ -20,24 +21,12 @@ function ExplorerQueryController({ filter }) {
       }
       case 'clickFilter': {
         const { filterKey, anchorKey, anchorValue } = payload;
-        const newFilters = {};
         if (anchorKey !== undefined && anchorValue !== undefined) {
           const anchor = `${anchorKey}:${anchorValue}`;
-          for (const [key, value] of Object.entries(filter))
-            if (key !== anchor) newFilters[key] = value;
-            else if (typeof value === 'object' && 'filter' in value) {
-              const newAnchorValue = {};
-              for (const [aKey, aValue] of Object.entries(value.filter))
-                if (aKey !== filterKey) newAnchorValue[aKey] = aValue;
-
-              if (Object.keys(newAnchorValue).length > 0)
-                newFilters[key] = { filter: newAnchorValue };
-            }
+          updateFilters(pluckFromAnchorFilter({ anchor, filter, filterKey }));
         } else {
-          for (const [key, value] of Object.entries(filter))
-            if (key !== filterKey) newFilters[key] = value;
+          updateFilters(pluckFromFilter({ filter, filterKey }));
         }
-        updateFilters(newFilters);
         break;
       }
       default:
