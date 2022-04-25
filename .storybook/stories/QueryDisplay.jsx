@@ -29,6 +29,9 @@ const filterInfo = {
 
 storiesOf('QueryDisplay', module)
   .add('Simple', () => (
+    <QueryDisplay filter={simpleFilter} filterInfo={filterInfo} />
+  ))
+  .add('Simple with action', () => (
     <QueryDisplay
       filter={simpleFilter}
       filterInfo={filterInfo}
@@ -36,6 +39,10 @@ storiesOf('QueryDisplay', module)
     />
   ))
   .add('Complex', () => (
+    <QueryDisplay filter={complexFilter} filterInfo={filterInfo} />
+  ))
+
+  .add('Complex with action', () => (
     <QueryDisplay
       filter={complexFilter}
       filterInfo={filterInfo}
