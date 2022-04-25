@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
@@ -142,14 +143,14 @@ function QueryDisplay({
   return (
     <span className='query-display'>
       {filterElements.map((filterElement, i) => (
-        <>
+        <Fragment key={i}>
           {filterElement}
           {i < filterElements.length - 1 && (
             <QueryPill onClick={handleClickCombineMode}>
               {queryCombineMode}
             </QueryPill>
           )}
-        </>
+        </Fragment>
       ))}
     </span>
   );
