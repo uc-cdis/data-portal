@@ -156,7 +156,7 @@ function QueryDisplay({
 }
 
 QueryDisplay.propTypes = {
-  anchorInfo: PropTypes.string,
+  anchorInfo: PropTypes.arrayOf(PropTypes.string),
   combineMode: PropTypes.oneOf(['AND', 'OR']),
   filter: PropTypes.any.isRequired,
   filterInfo: PropTypes.objectOf(
