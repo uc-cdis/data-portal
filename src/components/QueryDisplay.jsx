@@ -4,8 +4,22 @@ import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import './QueryDisplay.css';
 
-/** @typedef {'clickCombineMode' | 'clickFilter' } QueryDisplayActionType */
-/** @typedef {{ type: QueryDisplayActionType; payload?: any }} QueryDisplayAction */
+/**
+ * @typedef {Object} ClickCombineModeAction
+ * @property {'clickCombineMode'} type
+ * @property {'AND' | 'OR'} payload
+ */
+/**
+ * @typedef {Object} ClickFilterAction
+ * @property {'clickFilter'} type
+ * @property {Object} payload
+ * @property {string} [payload.anchorKey]
+ * @property {string} [payload.anchorValue]
+ * @property {string} payload.filterKey
+ */
+/**
+ * @typedef {ClickCombineModeAction | ClickFilterAction} QueryDisplayAction
+ */
 
 /**
  * @param {Object} props
