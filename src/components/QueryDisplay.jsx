@@ -56,22 +56,26 @@ function QueryDisplay({
   const { __combineMode, ...__filter } = filter;
   const queryCombineMode = combineMode ?? __combineMode ?? 'AND';
 
-  function handleClickCombineMode() {
-    onAction({
-      type: 'clickCombineMode',
-      payload: queryCombineMode,
-    });
-  }
-  function handleClickFilter(/** @type {React.SyntheticEvent} */ e) {
-    onAction({
-      type: 'clickFilter',
-      payload: {
-        filterKey: e.currentTarget.attributes.getNamedItem('filter-key').value,
-        anchorKey: anchorInfo?.[0],
-        anchorValue: anchorInfo?.[1],
-      },
-    });
-  }
+  const [handleClickCombineMode, handleClickFilter] =
+    typeof onAction === 'function'
+      ? [
+          () =>
+            onAction({
+              type: 'clickCombineMode',
+              payload: queryCombineMode,
+            }),
+          (/** @type {React.SyntheticEvent} */ e) =>
+            onAction({
+              type: 'clickFilter',
+              payload: {
+                filterKey:
+                  e.currentTarget.attributes.getNamedItem('filter-key').value,
+                anchorKey: anchorInfo?.[0],
+                anchorValue: anchorInfo?.[1],
+              },
+            }),
+        ]
+      : [];
 
   for (const [key, value] of Object.entries(__filter))
     if ('filter' in value) {
