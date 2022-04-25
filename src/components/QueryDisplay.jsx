@@ -33,7 +33,7 @@ function QueryPill({ className = 'pill', children, filterKey, onClick }) {
 QueryPill.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node.isRequired,
-  filterKey: PropTypes.element,
+  filterKey: PropTypes.string,
   onClick: PropTypes.func,
 };
 
