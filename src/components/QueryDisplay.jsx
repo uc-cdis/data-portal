@@ -22,16 +22,14 @@ import './QueryDisplay.css';
  */
 function QueryPill({ className = 'pill', children, filterKey, onClick }) {
   return typeof onClick === 'function' ? (
-    <span
+    <button
       className={className}
-      role='button'
-      tabIndex={0}
+      type='button'
       onClick={onClick}
-      onKeyDown={onClick}
       filter-key={filterKey}
     >
       {children}
-    </span>
+    </button>
   ) : (
     <span className={className}>{children}</span>
   );
