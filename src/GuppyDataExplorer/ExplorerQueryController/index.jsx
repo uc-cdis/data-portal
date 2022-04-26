@@ -11,26 +11,19 @@ function ExplorerQueryController({ filter }) {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   const { updateFilters } = useExplorerState();
 
-  /** @param {import('../../components/QueryDisplay').QueryDisplayAction} action */
-  function handleQueryDisplayAction({ type, payload }) {
-    switch (type) {
-      case 'clickCombineMode': {
-        const newCombineMode = payload === 'AND' ? 'OR' : 'AND';
-        updateFilters({ ...filter, __combineMode: newCombineMode });
-        break;
-      }
-      case 'clickFilter': {
-        const { filterKey, anchorKey, anchorValue } = payload;
-        if (anchorKey !== undefined && anchorValue !== undefined) {
-          const anchor = `${anchorKey}:${anchorValue}`;
-          updateFilters(pluckFromAnchorFilter({ anchor, filter, filterKey }));
-        } else {
-          updateFilters(pluckFromFilter({ filter, filterKey }));
-        }
-        break;
-      }
-      default:
-        break;
+  /** @type {import('../../components/QueryDisplay').ClickCombineModeHandler} */
+  function handleClickCombineMode(payload) {
+    const newCombineMode = payload === 'AND' ? 'OR' : 'AND';
+    updateFilters({ ...filter, __combineMode: newCombineMode });
+  }
+  /** @type {import('../../components/QueryDisplay').ClickFilterHandler} */
+  function handleClickFilter(payload) {
+    const { field, anchorField, anchorValue } = payload;
+    if (anchorField !== undefined && anchorValue !== undefined) {
+      const anchor = `${anchorField}:${anchorValue}`;
+      updateFilters(pluckFromAnchorFilter({ anchor, field, filter }));
+    } else {
+      updateFilters(pluckFromFilter({ field, filter }));
     }
   }
 
@@ -46,8 +39,7 @@ function ExplorerQueryController({ filter }) {
   });
 
   const hasFilter =
-    Object.keys(pluckFromFilter({ filter, filterKey: '__combineMode' }))
-      .length > 0;
+    Object.keys(pluckFromFilter({ field: '__combineMode', filter })).length > 0;
   return (
     <div
       ref={ref}
@@ -72,7 +64,8 @@ function ExplorerQueryController({ filter }) {
           <QueryDisplay
             filter={filter}
             filterInfo={filterInfo}
-            onAction={handleQueryDisplayAction}
+            onClickCombineMode={handleClickCombineMode}
+            onClickFilter={handleClickFilter}
           />
         </>
       ) : (

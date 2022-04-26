@@ -4,11 +4,13 @@
   border-radius: 4px;
   padding: 4px;
   margin: 2px;
-  line-height: 2rem;
-}
-
-.query-display .pill[role='button'] {
-  cursor: pointer;
+  line-height: 1rem;
+  letter-spacing: normal;
+  color: inherit;
+  height: inherit;
+  width: inherit;
+  display: inline-block;
+  vertical-align: baseline;
 }
 
 /* Tablet width and less */
@@ -19,8 +21,8 @@
 }
 
 .query-display .pill.anchor {
-  padding: 8px 4px;
-  line-height: 2.2rem;
+  padding: 1px 4px;
+  line-height: 1rem;
 }
 
 .query-display .pill > * {
