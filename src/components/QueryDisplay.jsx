@@ -10,7 +10,7 @@ import './QueryDisplay.css';
  */
 /**
  * @callback ClickFilterHandler
- * @param {{ anchorKey?: string; anchorValue?: string; filterKey: string }} payload
+ * @param {{ anchorField?: string; anchorValue?: string; field: string }} payload
  */
 
 /**
@@ -46,7 +46,7 @@ QueryPill.propTypes = {
 
 /**
  * @param {Object} props
- * @param {[anchorKey: string, anchorValue: string]} [props.anchorInfo]
+ * @param {[anchorField: string, anchorValue: string]} [props.anchorInfo]
  * @param {'AND' | 'OR'} [props.combineMode]
  * @param {import('../GuppyComponents/types').FilterState} props.filter
  * @param {import('../GuppyComponents/types').FilterConfig['info']} props.filterInfo
@@ -70,25 +70,25 @@ function QueryDisplay({
   }
   function handleClickFilter(/** @type {React.SyntheticEvent} */ e) {
     onClickFilter?.({
-      filterKey: e.currentTarget.attributes.getNamedItem('filter-key').value,
-      anchorKey: anchorInfo?.[0],
+      field: e.currentTarget.attributes.getNamedItem('filter-key').value,
+      anchorField: anchorInfo?.[0],
       anchorValue: anchorInfo?.[1],
     });
   }
 
   for (const [key, value] of Object.entries(__filter))
     if ('filter' in value) {
-      const [anchorKey, anchorValue] = key.split(':');
+      const [anchorField, anchorValue] = key.split(':');
       filterElements.push(
         <QueryPill key={key} className='pill anchor'>
           <span className='token field'>
-            With <code>{filterInfo[anchorKey].label}</code> of{' '}
+            With <code>{filterInfo[anchorField].label}</code> of{' '}
             <code>{`"${anchorValue}"`}</code>
           </span>
           <span className='token'>
             ({' '}
             <QueryDisplay
-              anchorInfo={[anchorKey, anchorValue]}
+              anchorInfo={[anchorField, anchorValue]}
               filter={value.filter}
               filterInfo={filterInfo}
               combineMode={__combineMode}

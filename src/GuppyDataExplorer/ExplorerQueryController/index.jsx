@@ -18,12 +18,12 @@ function ExplorerQueryController({ filter }) {
   }
   /** @type {import('../../components/QueryDisplay').ClickFilterHandler} */
   function handleClickFilter(payload) {
-    const { filterKey, anchorKey, anchorValue } = payload;
-    if (anchorKey !== undefined && anchorValue !== undefined) {
-      const anchor = `${anchorKey}:${anchorValue}`;
-      updateFilters(pluckFromAnchorFilter({ anchor, filter, filterKey }));
+    const { field, anchorField, anchorValue } = payload;
+    if (anchorField !== undefined && anchorValue !== undefined) {
+      const anchor = `${anchorField}:${anchorValue}`;
+      updateFilters(pluckFromAnchorFilter({ anchor, field, filter }));
     } else {
-      updateFilters(pluckFromFilter({ filter, filterKey }));
+      updateFilters(pluckFromFilter({ field, filter }));
     }
   }
 
@@ -39,8 +39,7 @@ function ExplorerQueryController({ filter }) {
   });
 
   const hasFilter =
-    Object.keys(pluckFromFilter({ filter, filterKey: '__combineMode' }))
-      .length > 0;
+    Object.keys(pluckFromFilter({ field: '__combineMode', filter })).length > 0;
   return (
     <div
       ref={ref}

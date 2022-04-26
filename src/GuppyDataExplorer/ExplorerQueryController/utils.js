@@ -1,20 +1,28 @@
-export function pluckFromFilter({ filter, filterKey }) {
+/**
+ * @param {Object} args
+ * @param {string} args.field
+ * @param {import("../types").ExplorerFilters} args.filter
+ */
+export function pluckFromFilter({ field, filter }) {
   const newFilter = {};
   for (const [key, value] of Object.entries(filter))
-    if (key !== filterKey) newFilter[key] = value;
+    if (key !== field) newFilter[key] = value;
 
   return newFilter;
 }
 
-export function pluckFromAnchorFilter({ anchor, filter, filterKey }) {
+/**
+ * @param {Object} args
+ * @param {string} args.anchor
+ * @param {string} args.field
+ * @param {import("../types").ExplorerFilters} args.filter
+ */
+export function pluckFromAnchorFilter({ anchor, field, filter }) {
   const newFilter = {};
   for (const [key, value] of Object.entries(filter))
     if (key !== anchor) newFilter[key] = value;
     else if (typeof value === 'object' && 'filter' in value) {
-      const newAnchorFilter = pluckFromFilter({
-        filter: value.filter,
-        filterKey,
-      });
+      const newAnchorFilter = pluckFromFilter({ field, filter: value.filter });
       if (Object.keys(newAnchorFilter).length > 0)
         newFilter[key] = { filter: newAnchorFilter };
     }
