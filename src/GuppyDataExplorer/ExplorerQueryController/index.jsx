@@ -44,6 +44,10 @@ function ExplorerQueryController({ filter }) {
       setIsOverflowing(false);
     }
   });
+
+  const hasFilter =
+    Object.keys(pluckFromFilter({ filter, filterKey: '__combineMode' }))
+      .length > 0;
   return (
     <div
       ref={ref}
@@ -51,7 +55,7 @@ function ExplorerQueryController({ filter }) {
         isCollapsed ? 'explorer-query-controller__collapsed' : ''
       }`.trim()}
     >
-      {Object.keys(filter).length > 0 ? (
+      {hasFilter ? (
         <>
           <button
             type='button'
