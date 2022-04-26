@@ -35,7 +35,8 @@ storiesOf('QueryDisplay', module)
     <QueryDisplay
       filter={simpleFilter}
       filterInfo={filterInfo}
-      onAction={action('action')}
+      onClickCombineMode={action('clickCombineMode')}
+      onClickFilter={action('clickFilter')}
     />
   ))
   .add('Complex', () => (
@@ -46,6 +47,7 @@ storiesOf('QueryDisplay', module)
     <QueryDisplay
       filter={complexFilter}
       filterInfo={filterInfo}
-      onAction={action('action')}
+      onClickCombineMode={action('clickCombineMode')}
+      onClickFilter={action('clickFilter')}
     />
   ));
