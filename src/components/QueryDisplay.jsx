@@ -65,16 +65,20 @@ function QueryDisplay({
   const { __combineMode, ...__filter } = filter;
   const queryCombineMode = combineMode ?? __combineMode ?? 'AND';
 
-  function handleClickCombineMode() {
-    onClickCombineMode?.(queryCombineMode);
-  }
-  function handleClickFilter(/** @type {React.SyntheticEvent} */ e) {
-    onClickFilter?.({
-      field: e.currentTarget.attributes.getNamedItem('filter-key').value,
-      anchorField: anchorInfo?.[0],
-      anchorValue: anchorInfo?.[1],
-    });
-  }
+  const handleClickCombineMode =
+    typeof onClickCombineMode === 'function'
+      ? () => onClickCombineMode(queryCombineMode)
+      : undefined;
+  const handleClickFilter =
+    typeof onClickFilter === 'function'
+      ? (/** @type {React.SyntheticEvent} */ e) => {
+          onClickFilter({
+            field: e.currentTarget.attributes.getNamedItem('filter-key').value,
+            anchorField: anchorInfo?.[0],
+            anchorValue: anchorInfo?.[1],
+          });
+        }
+      : undefined;
 
   for (const [key, value] of Object.entries(__filter))
     if ('filter' in value) {
