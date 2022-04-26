@@ -1,15 +1,15 @@
-.explorer-filter-display {
+.explorer-query-controller {
   background-color: var(--g3-color__white);
   padding: 0.5rem 1rem;
   margin: 0.5rem 0;
 }
 
-.explorer-filter-display__collapsed {
+.explorer-query-controller__collapsed {
   max-height: 5.5rem;
   overflow-y: scroll;
 }
 
-.explorer-filter-display > button {
+.explorer-query-controller > button {
   background-color: inherit;
   border: none;
   height: 1rem;
@@ -17,20 +17,20 @@
   margin-right: 0.25rem;
 }
 
-.explorer-filter-display > button:disabled {
+.explorer-query-controller > button:disabled {
   cursor: not-allowed;
 }
 
-.explorer-filter-display > button > i {
+.explorer-query-controller > button > i {
   background-color: var(--g3-color__bg-coal);
 }
 
-.explorer-filter-display__collapse {
+.explorer-query-controller__collapse {
   max-height: 90px;
   overflow-x: scroll;
 }
 
-.explorer-filter-display > h4 {
+.explorer-query-controller > h4 {
   display: inline-block;
   margin-right: 0.25rem;
 }
