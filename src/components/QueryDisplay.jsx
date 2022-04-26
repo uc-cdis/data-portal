@@ -5,20 +5,12 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import './QueryDisplay.css';
 
 /**
- * @typedef {Object} ClickCombineModeAction
- * @property {'clickCombineMode'} type
- * @property {'AND' | 'OR'} payload
+ * @callback ClickCombineModeHandler
+ * @param {'AND' | 'OR'} payload
  */
 /**
- * @typedef {Object} ClickFilterAction
- * @property {'clickFilter'} type
- * @property {Object} payload
- * @property {string} [payload.anchorKey]
- * @property {string} [payload.anchorValue]
- * @property {string} payload.filterKey
- */
-/**
- * @typedef {ClickCombineModeAction | ClickFilterAction} QueryDisplayAction
+ * @callback ClickFilterHandler
+ * @param {{ anchorKey?: string; anchorValue?: string; filterKey: string }} payload
  */
 
 /**
@@ -58,39 +50,31 @@ QueryPill.propTypes = {
  * @param {'AND' | 'OR'} [props.combineMode]
  * @param {import('../GuppyComponents/types').FilterState} props.filter
  * @param {import('../GuppyComponents/types').FilterConfig['info']} props.filterInfo
- * @param {(action: QueryDisplayAction) => void} [props.onAction]
+ * @param {ClickCombineModeHandler} [props.onClickCombineMode]
+ * @param {ClickFilterHandler} [props.onClickFilter]
  */
 function QueryDisplay({
   anchorInfo,
   combineMode,
   filter,
   filterInfo,
-  onAction,
+  onClickCombineMode,
+  onClickFilter,
 }) {
   const filterElements = /** @type {JSX.Element[]} */ ([]);
   const { __combineMode, ...__filter } = filter;
   const queryCombineMode = combineMode ?? __combineMode ?? 'AND';
 
-  const [handleClickCombineMode, handleClickFilter] =
-    typeof onAction === 'function'
-      ? [
-          () =>
-            onAction({
-              type: 'clickCombineMode',
-              payload: queryCombineMode,
-            }),
-          (/** @type {React.SyntheticEvent} */ e) =>
-            onAction({
-              type: 'clickFilter',
-              payload: {
-                filterKey:
-                  e.currentTarget.attributes.getNamedItem('filter-key').value,
-                anchorKey: anchorInfo?.[0],
-                anchorValue: anchorInfo?.[1],
-              },
-            }),
-        ]
-      : [];
+  function handleClickCombineMode() {
+    onClickCombineMode?.(queryCombineMode);
+  }
+  function handleClickFilter(/** @type {React.SyntheticEvent} */ e) {
+    onClickFilter?.({
+      filterKey: e.currentTarget.attributes.getNamedItem('filter-key').value,
+      anchorKey: anchorInfo?.[0],
+      anchorValue: anchorInfo?.[1],
+    });
+  }
 
   for (const [key, value] of Object.entries(__filter))
     if ('filter' in value) {
@@ -108,7 +92,8 @@ function QueryDisplay({
               filter={value.filter}
               filterInfo={filterInfo}
               combineMode={__combineMode}
-              onAction={onAction}
+              onClickCombineMode={onClickCombineMode}
+              onClickFilter={onClickFilter}
             />{' '}
             )
           </span>
@@ -179,7 +164,8 @@ QueryDisplay.propTypes = {
       label: PropTypes.string.isRequired,
     })
   ),
-  onAction: PropTypes.func,
+  onClickCombineMode: PropTypes.func,
+  onClickFilter: PropTypes.func,
 };
 
 export default QueryDisplay;
