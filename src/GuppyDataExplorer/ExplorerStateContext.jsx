@@ -100,9 +100,9 @@ export function ExplorerStateProvider({ children }) {
           });
       }
 
-      setFilters(newFilters);
       newSearchParams.set('filter', JSON.stringify(newFilters));
     }
+    setFilters(newFilters);
 
     if (!isBrowserNavigation.current)
       navigate(`?${decodeURIComponent(newSearchParams.toString())}`, {
