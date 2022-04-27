@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   queryGuppyForAggregationChartData,
@@ -84,6 +84,10 @@ function GuppyWrapper({
     tabsOptions: {},
     totalCount: 0,
   });
+  const filterState = useMemo(
+    () => mergeFilters(initialAppliedFilters, adminAppliedPreFilters),
+    [initialAppliedFilters, adminAppliedPreFilters]
+  );
   const controller = useRef(new AbortController());
   const isMounted = useRef(false);
   useEffect(() => {
@@ -254,7 +258,7 @@ function GuppyWrapper({
    */
   function fetchRawDataFromGuppy({
     fields,
-    filter = state.filter,
+    filter = filterState,
     offset,
     size,
     sort,
@@ -335,7 +339,7 @@ function GuppyWrapper({
   function fetchGuppyData(fields) {
     controller.current.abort();
     controller.current = new AbortController();
-    fetchAggsDataFromGuppy(state.filter);
+    fetchAggsDataFromGuppy(filterState);
     fetchRawDataFromGuppy({ fields, updateDataWhenReceive: true });
   }
 
@@ -380,7 +384,7 @@ function GuppyWrapper({
       type: guppyConfig.dataType,
       fields: rawDataFields,
       sort,
-      gqlFilter: getGQLFilter(augmentFilter(state.filter)),
+      gqlFilter: getGQLFilter(augmentFilter(filterState)),
       format,
     });
   }
@@ -398,7 +402,7 @@ function GuppyWrapper({
       type: guppyConfig.dataType,
       fields: fields || rawDataFields,
       sort,
-      gqlFilter: getGQLFilter(state.filter),
+      gqlFilter: getGQLFilter(filterState),
     });
   }
 
@@ -462,7 +466,7 @@ function GuppyWrapper({
       setState((prevState) => ({ ...prevState, anchorValue }));
       fetchAggsOptionsDataFromGuppy({
         anchorValue,
-        filter: state.filter,
+        filter: filterState,
         filterTabs: filterConfig.tabs.filter(({ title }) =>
           filterConfig.anchor.tabs.includes(title)
         ),
@@ -484,15 +488,12 @@ function GuppyWrapper({
   /** @param {FilterState} filter */
   function handleFilterChange(filter) {
     const userFilter = /** @type {FilterState} */ ({
-      __combineMode: state.filter.__combineMode ?? 'AND',
+      __combineMode: filterState.__combineMode ?? 'AND',
       ...filter,
     });
     const mergedFilter = mergeFilters(userFilter, adminAppliedPreFilters);
 
     if (onFilterChange) onFilterChange(mergedFilter);
-
-    if (isMounted.current)
-      setState((prevState) => ({ ...prevState, filter: mergedFilter }));
 
     controller.current.abort();
     controller.current = new AbortController();
@@ -506,6 +507,7 @@ function GuppyWrapper({
 
   return children({
     ...state,
+    filter: filterState,
     downloadRawData,
     downloadRawDataByFields,
     downloadRawDataByTypeAndFilter,
