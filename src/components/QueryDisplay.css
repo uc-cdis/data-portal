@@ -1,16 +1,38 @@
-.query-display .pill {
+.query-display .pill-container {
+  display: inline-block;
   background-color: var(--g3-color__bg-cloud);
   border: 1px solid var(--g3-color__lightgray);
   border-radius: 4px;
-  padding: 4px;
+  padding: 1px 4px;
   margin: 2px;
-  line-height: 1rem;
-  letter-spacing: normal;
+}
+
+.query-display button {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
   color: inherit;
   height: inherit;
   width: inherit;
-  display: inline-block;
   vertical-align: baseline;
+  font-size: inherit;
+}
+
+.query-display .pill {
+  letter-spacing: normal;
+}
+
+.query-display .close {
+  border-left: 1px solid var(--g3-color__lightgray);
+  border-radius: 0;
+  padding: 0 4px;
+  height: 100%;
+}
+
+.query-display .pill-container > .close > i {
+  background-color: var(--g3-color__gray);
+  width: 0.5rem;
+  height: 0.5rem;
 }
 
 /* Tablet width and less */
@@ -18,11 +40,6 @@
   .query-display .pill {
     font-size: 12px;
   }
-}
-
-.query-display .pill.anchor {
-  padding: 1px 4px;
-  line-height: 1rem;
 }
 
 .query-display .pill > * {
