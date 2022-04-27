@@ -9,21 +9,23 @@ import './ExplorerQueryController.css';
 /** @param {{ filter: import('../types').ExplorerFilters }} props */
 function ExplorerQueryController({ filter }) {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
-  const { updateFilters } = useExplorerState();
+  const { handleFilterChange } = useExplorerState();
 
   /** @type {import('../../components/QueryDisplay').ClickCombineModeHandler} */
   function handleClickCombineMode(payload) {
-    const newCombineMode = payload === 'AND' ? 'OR' : 'AND';
-    updateFilters({ ...filter, __combineMode: newCombineMode });
+    handleFilterChange({
+      ...filter,
+      __combineMode: payload === 'AND' ? 'OR' : 'AND',
+    });
   }
   /** @type {import('../../components/QueryDisplay').ClickFilterHandler} */
   function handleCloseFilter(payload) {
     const { field, anchorField, anchorValue } = payload;
     if (anchorField !== undefined && anchorValue !== undefined) {
       const anchor = `${anchorField}:${anchorValue}`;
-      updateFilters(pluckFromAnchorFilter({ anchor, field, filter }));
+      handleFilterChange(pluckFromAnchorFilter({ anchor, field, filter }));
     } else {
-      updateFilters(pluckFromFilter({ field, filter }));
+      handleFilterChange(pluckFromFilter({ field, filter }));
     }
   }
 
