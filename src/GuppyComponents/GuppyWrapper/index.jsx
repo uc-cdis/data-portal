@@ -366,7 +366,7 @@ function GuppyWrapper({
       return;
     }
     fetchGuppyData(rawDataFields);
-  }, [patientIds]);
+  }, [filterState, patientIds]);
 
   /**
    * Download all data from Guppy server and return raw data

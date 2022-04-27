@@ -122,7 +122,6 @@ function FilterGroup({
 
     setFilterStatus(newFilterStatus);
     setFilterResults(newFilterResults);
-    onFilterChange(newFilterResults);
   }, [initialAppliedFilters]);
 
   const filterTabStatus = showAnchorFilter
