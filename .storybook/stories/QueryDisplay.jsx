@@ -32,22 +32,59 @@ storiesOf('QueryDisplay', module)
     <QueryDisplay filter={simpleFilter} filterInfo={filterInfo} />
   ))
   .add('Simple with action', () => (
-    <QueryDisplay
-      filter={simpleFilter}
-      filterInfo={filterInfo}
-      onClickCombineMode={action('clickCombineMode')}
-      onClickFilter={action('clickFilter')}
-    />
+    <>
+      <div style={{ marginBottom: '1rem' }}>
+        <p>
+          Handle click <code>combineMode</code> and click <code>filter</code>:
+        </p>
+        <QueryDisplay
+          filter={simpleFilter}
+          filterInfo={filterInfo}
+          onClickCombineMode={action('clickCombineMode')}
+          onClickFilter={action('clickFilter')}
+        />
+      </div>
+      <div style={{ marginBottom: '1rem' }}>
+        <p>
+          Handle click <code>combineMode</code> and close <code>filter</code>:
+        </p>
+        <QueryDisplay
+          filter={simpleFilter}
+          filterInfo={filterInfo}
+          onClickCombineMode={action('clickCombineMode')}
+          onCloseFilter={action('closeFilter')}
+        />
+      </div>
+      <div style={{ marginBottom: '1rem' }}>
+        <p>
+          Handle click <code>combineMode</code> and click/close{' '}
+          <code>filter</code>:
+        </p>
+        <QueryDisplay
+          filter={simpleFilter}
+          filterInfo={filterInfo}
+          onClickCombineMode={action('clickCombineMode')}
+          onClickFilter={action('clickFilter')}
+          onCloseFilter={action('closeFilter')}
+        />
+      </div>
+    </>
   ))
   .add('Complex', () => (
     <QueryDisplay filter={complexFilter} filterInfo={filterInfo} />
   ))
-
   .add('Complex with action', () => (
-    <QueryDisplay
-      filter={complexFilter}
-      filterInfo={filterInfo}
-      onClickCombineMode={action('clickCombineMode')}
-      onClickFilter={action('clickFilter')}
-    />
+    <div>
+      <p>
+        Handle click <code>combineMode</code> and click/close{' '}
+        <code>filter</code>:
+      </p>
+      <QueryDisplay
+        filter={complexFilter}
+        filterInfo={filterInfo}
+        onClickCombineMode={action('clickCombineMode')}
+        onClickFilter={action('clickFilter')}
+        onCloseFilter={action('closeFilter')}
+      />
+    </div>
   ));

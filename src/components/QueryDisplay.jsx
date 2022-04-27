@@ -19,19 +19,40 @@ import './QueryDisplay.css';
  * @param {React.ReactNode} props.children
  * @param {string} [props.filterKey]
  * @param {React.EventHandler<any>} [props.onClick]
+ * @param {React.EventHandler<any>} [props.onClose]
  */
-function QueryPill({ className = 'pill', children, filterKey, onClick }) {
-  return typeof onClick === 'function' ? (
-    <button
-      className={className}
-      type='button'
-      onClick={onClick}
-      filter-key={filterKey}
-    >
-      {children}
-    </button>
-  ) : (
-    <span className={className}>{children}</span>
+function QueryPill({
+  className = 'pill',
+  children,
+  filterKey,
+  onClick,
+  onClose,
+}) {
+  return (
+    <div className='pill-container'>
+      {typeof onClick === 'function' ? (
+        <button
+          className={className}
+          type='button'
+          onClick={onClick}
+          filter-key={filterKey}
+        >
+          {children}
+        </button>
+      ) : (
+        <span className={className}>{children}</span>
+      )}
+      {typeof onClose === 'function' ? (
+        <button
+          className='pill close'
+          type='button'
+          onClick={onClose}
+          filter-key={filterKey}
+        >
+          <i className='g3-icon g3-icon--cross g3-icon--sm' />
+        </button>
+      ) : null}
+    </div>
   );
 }
 
@@ -40,6 +61,7 @@ QueryPill.propTypes = {
   children: PropTypes.node.isRequired,
   filterKey: PropTypes.string,
   onClick: PropTypes.func,
+  onClose: PropTypes.func,
 };
 
 /**
@@ -50,6 +72,7 @@ QueryPill.propTypes = {
  * @param {import('../GuppyComponents/types').FilterConfig['info']} props.filterInfo
  * @param {ClickCombineModeHandler} [props.onClickCombineMode]
  * @param {ClickFilterHandler} [props.onClickFilter]
+ * @param {ClickFilterHandler} [props.onCloseFilter]
  */
 function QueryDisplay({
   anchorInfo,
@@ -58,6 +81,7 @@ function QueryDisplay({
   filterInfo,
   onClickCombineMode,
   onClickFilter,
+  onCloseFilter,
 }) {
   const filterElements = /** @type {JSX.Element[]} */ ([]);
   const { __combineMode, ...__filter } = filter;
@@ -71,6 +95,16 @@ function QueryDisplay({
     typeof onClickFilter === 'function'
       ? (/** @type {React.SyntheticEvent} */ e) => {
           onClickFilter({
+            field: e.currentTarget.attributes.getNamedItem('filter-key').value,
+            anchorField: anchorInfo?.[0],
+            anchorValue: anchorInfo?.[1],
+          });
+        }
+      : undefined;
+  const handleCloseFilter =
+    typeof onCloseFilter === 'function'
+      ? (/** @type {React.SyntheticEvent} */ e) => {
+          onCloseFilter({
             field: e.currentTarget.attributes.getNamedItem('filter-key').value,
             anchorField: anchorInfo?.[0],
             anchorValue: anchorInfo?.[1],
@@ -96,6 +130,7 @@ function QueryDisplay({
               combineMode={__combineMode}
               onClickCombineMode={onClickCombineMode}
               onClickFilter={onClickFilter}
+              onCloseFilter={onCloseFilter}
             />{' '}
             )
           </span>
@@ -103,7 +138,12 @@ function QueryDisplay({
       );
     } else if ('selectedValues' in value) {
       filterElements.push(
-        <QueryPill key={key} onClick={handleClickFilter} filterKey={key}>
+        <QueryPill
+          key={key}
+          onClick={handleClickFilter}
+          onClose={handleCloseFilter}
+          filterKey={key}
+        >
           <span className='token'>
             <code>{filterInfo[key].label}</code>{' '}
             {value.selectedValues.length > 1 ? 'is any of ' : 'is '}
@@ -128,7 +168,12 @@ function QueryDisplay({
       );
     } else {
       filterElements.push(
-        <QueryPill key={key} onClick={handleClickFilter} filterKey={key}>
+        <QueryPill
+          key={key}
+          onClick={handleClickFilter}
+          onClose={handleCloseFilter}
+          filterKey={key}
+        >
           <span className='token'>
             <code>{filterInfo[key].label}</code> is between
           </span>
@@ -168,6 +213,7 @@ QueryDisplay.propTypes = {
   ),
   onClickCombineMode: PropTypes.func,
   onClickFilter: PropTypes.func,
+  onCloseFilter: PropTypes.func,
 };
 
 export default QueryDisplay;

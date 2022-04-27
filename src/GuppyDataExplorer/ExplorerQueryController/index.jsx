@@ -17,7 +17,7 @@ function ExplorerQueryController({ filter }) {
     updateFilters({ ...filter, __combineMode: newCombineMode });
   }
   /** @type {import('../../components/QueryDisplay').ClickFilterHandler} */
-  function handleClickFilter(payload) {
+  function handleCloseFilter(payload) {
     const { field, anchorField, anchorValue } = payload;
     if (anchorField !== undefined && anchorValue !== undefined) {
       const anchor = `${anchorField}:${anchorValue}`;
@@ -65,7 +65,7 @@ function ExplorerQueryController({ filter }) {
             filter={filter}
             filterInfo={filterInfo}
             onClickCombineMode={handleClickCombineMode}
-            onClickFilter={handleClickFilter}
+            onCloseFilter={handleCloseFilter}
           />
         </>
       ) : (
