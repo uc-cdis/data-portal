@@ -74,6 +74,7 @@ export function ExplorerStateProvider({ children }) {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.delete('filter');
 
+    let newFilters = /** @type {ExplorerFilters} */ ({});
     if (filter && Object.keys(filter).length > 0) {
       /** @type {string[]} */
       const allSearchFields = [];
@@ -81,26 +82,26 @@ export function ExplorerStateProvider({ children }) {
         if (searchFields?.length > 0) allSearchFields.push(...searchFields);
 
       if (allSearchFields.length === 0) {
-        newSearchParams.set(
-          'filter',
-          JSON.stringify({ __combineMode: filters.__combineMode, ...filter })
-        );
+        newFilters = /** @type {ExplorerFilters} */ ({
+          __combineMode: filters.__combineMode,
+          ...filter,
+        });
       } else {
         const allSearchFieldSet = new Set(allSearchFields);
-        const filterWithoutSearchFields = {};
+        const filterWithoutSearchFields = /** @type {ExplorerFilters} */ ({});
         for (const field of Object.keys(filter))
           if (!allSearchFieldSet.has(field))
             filterWithoutSearchFields[field] = filter[field];
 
         if (Object.keys(filterWithoutSearchFields).length > 0)
-          newSearchParams.set(
-            'filter',
-            JSON.stringify({
-              __combineMode: filters.__combineMode,
-              ...filterWithoutSearchFields,
-            })
-          );
+          newFilters = /** @type {ExplorerFilters} */ ({
+            __combineMode: filters.__combineMode,
+            ...filterWithoutSearchFields,
+          });
       }
+
+      setFilters(newFilters);
+      newSearchParams.set('filter', JSON.stringify(newFilters));
     }
 
     if (!isBrowserNavigation.current)
