@@ -13,10 +13,12 @@ function ExplorerQueryController({ filter }) {
 
   /** @type {import('../../components/QueryDisplay').ClickCombineModeHandler} */
   function handleClickCombineMode(payload) {
-    handleFilterChange({
-      ...filter,
-      __combineMode: payload === 'AND' ? 'OR' : 'AND',
-    });
+    handleFilterChange(
+      /** @type {import('../types').ExplorerFilters} */ ({
+        ...filter,
+        __combineMode: payload === 'AND' ? 'OR' : 'AND',
+      })
+    );
   }
   /** @type {import('../../components/QueryDisplay').ClickFilterHandler} */
   function handleCloseFilter(payload) {
