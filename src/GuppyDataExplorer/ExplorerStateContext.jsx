@@ -40,7 +40,9 @@ export function ExplorerStateProvider({ children }) {
       extractExplorerStateFromURL(searchParams, filterConfig, patientIdsConfig),
     []
   );
-  const [filters, setFilters] = useState(initialState.initialAppliedFilters);
+  const [explorerFilter, setExplorerFilter] = useState(
+    initialState.explorerFilter
+  );
   const [patientIds, setPatientIds] = useState(initialState.patientIds);
   useEffect(() => {
     if (shouldUpdateState) {
@@ -49,7 +51,7 @@ export function ExplorerStateProvider({ children }) {
         filterConfig,
         patientIdsConfig
       );
-      setFilters(newState.initialAppliedFilters);
+      setExplorerFilter(newState.explorerFilter);
       setPatientIds(newState.patientIds);
       setShouldUpdateState(false);
     }
@@ -63,7 +65,7 @@ export function ExplorerStateProvider({ children }) {
       filterConfig,
       patientIdsConfig
     );
-    setFilters(newState.initialAppliedFilters);
+    setExplorerFilter(newState.explorerFilter);
     setPatientIds(newState.patientIds);
     isBrowserNavigation.current = false;
   }
@@ -73,7 +75,7 @@ export function ExplorerStateProvider({ children }) {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.delete('filter');
 
-    let newFilters = /** @type {ExplorerFilter} */ ({});
+    let newFilter = /** @type {ExplorerFilter} */ ({});
     if (filter && Object.keys(filter).length > 0) {
       /** @type {string[]} */
       const allSearchFields = [];
@@ -81,8 +83,8 @@ export function ExplorerStateProvider({ children }) {
         if (searchFields?.length > 0) allSearchFields.push(...searchFields);
 
       if (allSearchFields.length === 0) {
-        newFilters = /** @type {ExplorerFilter} */ ({
-          __combineMode: filters.__combineMode,
+        newFilter = /** @type {ExplorerFilter} */ ({
+          __combineMode: explorerFilter.__combineMode,
           ...filter,
         });
       } else {
@@ -93,15 +95,15 @@ export function ExplorerStateProvider({ children }) {
             filterWithoutSearchFields[field] = filter[field];
 
         if (Object.keys(filterWithoutSearchFields).length > 0)
-          newFilters = /** @type {ExplorerFilter} */ ({
-            __combineMode: filters.__combineMode,
+          newFilter = /** @type {ExplorerFilter} */ ({
+            __combineMode: explorerFilter.__combineMode,
             ...filterWithoutSearchFields,
           });
       }
 
-      newSearchParams.set('filter', JSON.stringify(newFilters));
+      newSearchParams.set('filter', JSON.stringify(newFilter));
     }
-    setFilters(newFilters);
+    setExplorerFilter(newFilter);
 
     if (!isBrowserNavigation.current)
       navigate(`?${decodeURIComponent(newSearchParams.toString())}`, {
@@ -129,14 +131,14 @@ export function ExplorerStateProvider({ children }) {
 
   const value = useMemo(
     () => ({
-      initialAppliedFilters: filters,
+      initialAppliedFilters: explorerFilter,
       patientIds,
       handleBrowserNavigationForState,
       handleFilterChange,
       handleFilterClear,
       handlePatientIdsChange,
     }),
-    [filters, patientIds, searchParams]
+    [explorerFilter, patientIds, searchParams]
   );
 
   return (

@@ -148,12 +148,12 @@ export function extractExplorerStateFromURL(
   patientIdsConfig
 ) {
   /** @type {ExplorerFilter} */
-  let initialAppliedFilters = {};
+  let explorerFilter = {};
   if (searchParams.has('filter'))
     try {
       const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
       if (validateFilter(filterInUrl, filterConfig))
-        initialAppliedFilters = filterInUrl;
+        explorerFilter = filterInUrl;
       else throw new Error(undefined);
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -167,7 +167,7 @@ export function extractExplorerStateFromURL(
       : []
     : undefined;
 
-  return { initialAppliedFilters, patientIds };
+  return { explorerFilter, patientIds };
 }
 /**
  * @param {FilterConfig} filterConfig
