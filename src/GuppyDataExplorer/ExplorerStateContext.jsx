@@ -138,7 +138,7 @@ export function ExplorerStateProvider({ children }) {
       handleFilterClear,
       handlePatientIdsChange,
     }),
-    [explorerFilter, patientIds, searchParams]
+    [explorerFilter, patientIds]
   );
 
   return (
