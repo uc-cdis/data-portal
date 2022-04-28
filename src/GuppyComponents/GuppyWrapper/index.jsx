@@ -48,7 +48,6 @@ import {
  * @property {AggsData} aggsData
  * @property {SimpleAggsData} aggsChartData
  * @property {string[]} allFields
- * @property {FilterState} filter
  * @property {SimpleAggsData} [initialTabsOptions]
  * @property {boolean} isLoadingAggsData
  * @property {boolean} isLoadingRawData
@@ -76,7 +75,6 @@ function GuppyWrapper({
     allFields: [],
     aggsData: {},
     aggsChartData: {},
-    filter: mergeFilters(initialAppliedFilters, adminAppliedPreFilters),
     initialTabsOptions: undefined,
     isLoadingAggsData: false,
     isLoadingRawData: false,
