@@ -9,7 +9,7 @@ import { defaultFilterSet as survivalDefaultFilterSet } from '../ExplorerSurviva
 import FilterSetQueryDisplay from './FilterSetQueryDisplay';
 import './ExplorerFilterSet.css';
 
-/** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('./types').ExplorerFilter} ExplorerFilter */
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ExplorerFilterSetActionType} ExplorerFilterSetActionType */
 
@@ -145,7 +145,7 @@ FilterSetOpenForm.propTypes = {
 /**
  * @param {Object} prop
  * @param {ExplorerFilterSet} prop.currentFilterSet
- * @param {ExplorerFilters} prop.currentFilters
+ * @param {ExplorerFilter} prop.currentFilters
  * @param {ExplorerFilterSet[]} prop.filterSets
  * @param {boolean} prop.isFiltersChanged
  * @param {(created: ExplorerFilterSet) => void} prop.onAction
@@ -259,7 +259,7 @@ FilterSetCreateForm.propTypes = {
 /**
  * @param {Object} prop
  * @param {ExplorerFilterSet} prop.currentFilterSet
- * @param {ExplorerFilters} prop.currentFilters
+ * @param {ExplorerFilter} prop.currentFilters
  * @param {ExplorerFilterSet[]} prop.filterSets
  * @param {boolean} prop.isFiltersChanged
  * @param {(updated: ExplorerFilterSet) => void} prop.onAction
@@ -423,7 +423,7 @@ FilterSetDeleteForm.propTypes = {
  * @param {Object} prop
  * @param {ExplorerFilterSetActionType} prop.actionType
  * @param {ExplorerFilterSet} prop.currentFilterSet
- * @param {ExplorerFilters} prop.currentFilters
+ * @param {ExplorerFilter} prop.currentFilters
  * @param {ExplorerFilterSet[]} prop.filterSets
  * @param {object} prop.handlers
  * @param {(opened: ExplorerFilterSet) => void} prop.handlers.handleOpen

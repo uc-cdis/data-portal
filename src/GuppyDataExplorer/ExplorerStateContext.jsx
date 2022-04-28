@@ -11,14 +11,14 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useExplorerConfig } from './ExplorerConfigContext';
 import { extractExplorerStateFromURL } from './utils';
 
-/** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('./types').ExplorerFilter} ExplorerFilter */
 
 /**
  * @typedef {Object} ExplorerStateContext
- * @property {ExplorerFilters} initialAppliedFilters
+ * @property {ExplorerFilter} initialAppliedFilters
  * @property {string[]} patientIds
  * @property {() => void} handleBrowserNavigationForState
- * @property {(filter: ExplorerFilters) => void} handleFilterChange
+ * @property {(filter: ExplorerFilter) => void} handleFilterChange
  * @property {() => void} handleFilterClear
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
  */
@@ -68,12 +68,12 @@ export function ExplorerStateProvider({ children }) {
     isBrowserNavigation.current = false;
   }
 
-  /** @param {ExplorerFilters} filter */
+  /** @param {ExplorerFilter} filter */
   function handleFilterChange(filter) {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.delete('filter');
 
-    let newFilters = /** @type {ExplorerFilters} */ ({});
+    let newFilters = /** @type {ExplorerFilter} */ ({});
     if (filter && Object.keys(filter).length > 0) {
       /** @type {string[]} */
       const allSearchFields = [];
@@ -81,19 +81,19 @@ export function ExplorerStateProvider({ children }) {
         if (searchFields?.length > 0) allSearchFields.push(...searchFields);
 
       if (allSearchFields.length === 0) {
-        newFilters = /** @type {ExplorerFilters} */ ({
+        newFilters = /** @type {ExplorerFilter} */ ({
           __combineMode: filters.__combineMode,
           ...filter,
         });
       } else {
         const allSearchFieldSet = new Set(allSearchFields);
-        const filterWithoutSearchFields = /** @type {ExplorerFilters} */ ({});
+        const filterWithoutSearchFields = /** @type {ExplorerFilter} */ ({});
         for (const field of Object.keys(filter))
           if (!allSearchFieldSet.has(field))
             filterWithoutSearchFields[field] = filter[field];
 
         if (Object.keys(filterWithoutSearchFields).length > 0)
-          newFilters = /** @type {ExplorerFilters} */ ({
+          newFilters = /** @type {ExplorerFilter} */ ({
             __combineMode: filters.__combineMode,
             ...filterWithoutSearchFields,
           });

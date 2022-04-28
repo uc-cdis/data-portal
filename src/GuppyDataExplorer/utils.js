@@ -1,5 +1,5 @@
 /** @typedef {import('./types').ButtonConfig} ButtonConfig */
-/** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('./types').ExplorerFilter} ExplorerFilter */
 /** @typedef {import('./types').FilterConfig} FilterConfig */
 /** @typedef {import('./types').GuppyConfig} GuppyConfig */
 /** @typedef {import('./types').PatientIdsConfig} PatientIdsConfig */
@@ -147,7 +147,7 @@ export function extractExplorerStateFromURL(
   filterConfig,
   patientIdsConfig
 ) {
-  /** @type {ExplorerFilters} */
+  /** @type {ExplorerFilter} */
   let initialAppliedFilters = {};
   if (searchParams.has('filter'))
     try {

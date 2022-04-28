@@ -1,6 +1,6 @@
 import { capitalizeFirstLetter } from '../../utils';
 
-/** @typedef {import('../types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
 /** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
 
 /**
@@ -25,7 +25,7 @@ export function truncateWithEllipsis(string, maxLength) {
 }
 
 /**
- * @param {ExplorerFilters} filters
+ * @param {ExplorerFilter} filters
  * @param {number} level Nesting level
  */
 export function stringifyFilters(filters, level = 0) {

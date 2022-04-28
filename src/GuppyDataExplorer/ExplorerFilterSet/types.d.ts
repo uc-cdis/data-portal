@@ -1,4 +1,4 @@
-export type { ExplorerFilters, ExplorerFilterSet } from '../types';
+export type { ExplorerFilter, ExplorerFilterSet } from '../types';
 
 export type ExplorerFilterSetActionType =
   | 'new'

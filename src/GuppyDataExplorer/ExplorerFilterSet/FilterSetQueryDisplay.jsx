@@ -5,7 +5,7 @@ import './FilterSetQueryDisplay.css';
 
 /**
  * @param {Object} props
- * @param {import('../types').ExplorerFilters} props.filters
+ * @param {import('../types').ExplorerFilter} props.filters
  * @param {string} [props.title]
  */
 function FilterSetQueryDisplay({ filters, title = 'Filters' }) {
