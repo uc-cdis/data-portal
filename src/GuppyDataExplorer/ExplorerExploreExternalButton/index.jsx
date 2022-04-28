@@ -82,7 +82,7 @@ function ExplorerExploreExternalButton({ filter }) {
                   />
                 }
               />
-              <FilterSetQueryDisplay filters={filter} />
+              <FilterSetQueryDisplay filter={filter} />
             </form>
             <div>
               <Button

@@ -57,7 +57,7 @@ function ExplorerFilterSet({ className, filter }) {
   }
   function handleOpen(/** @type {ExplorerFilterSet} */ opened) {
     setFilterSet(cloneDeep(opened));
-    handleFilterChange(cloneDeep(opened.filters));
+    handleFilterChange(cloneDeep(opened.filter));
     closeActionForm();
   }
   async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
@@ -103,7 +103,7 @@ function ExplorerFilterSet({ className, filter }) {
   }
 
   const isFiltersChanged =
-    JSON.stringify(filter) !== JSON.stringify(filterSet.filters);
+    JSON.stringify(filter) !== JSON.stringify(filterSet.filter);
 
   return (
     <div className={className}>
@@ -134,12 +134,12 @@ function ExplorerFilterSet({ className, filter }) {
                 >
                   <span
                     onClick={() =>
-                      handleFilterChange(cloneDeep(filterSet.filters))
+                      handleFilterChange(cloneDeep(filterSet.filter))
                     }
                     onKeyPress={(e) => {
                       if (e.charCode === 13 || e.charCode === 32) {
                         e.preventDefault();
-                        handleFilterChange(cloneDeep(filterSet.filters));
+                        handleFilterChange(cloneDeep(filterSet.filter));
                       }
                     }}
                     role='button'
@@ -186,7 +186,7 @@ function ExplorerFilterSet({ className, filter }) {
           <FilterSetActionForm
             actionType={actionType}
             currentFilterSet={filterSet}
-            currentFilters={filter}
+            currentFilter={filter}
             filterSets={filterSets}
             handlers={{
               handleOpen,

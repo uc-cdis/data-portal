@@ -105,7 +105,7 @@ function FilterSetOpenForm({
             />
           }
         />
-        <FilterSetQueryDisplay filters={selected.value.filters} />
+        <FilterSetQueryDisplay filter={selected.value.filter} />
       </form>
       <div>
         <FilterSetButton
@@ -145,7 +145,7 @@ FilterSetOpenForm.propTypes = {
 /**
  * @param {Object} prop
  * @param {ExplorerFilterSet} prop.currentFilterSet
- * @param {ExplorerFilter} prop.currentFilters
+ * @param {ExplorerFilter} prop.currentFilter
  * @param {ExplorerFilterSet[]} prop.filterSets
  * @param {boolean} prop.isFiltersChanged
  * @param {(created: ExplorerFilterSet) => void} prop.onAction
@@ -153,7 +153,7 @@ FilterSetOpenForm.propTypes = {
  */
 function FilterSetCreateForm({
   currentFilterSet,
-  currentFilters,
+  currentFilter,
   filterSets,
   isFiltersChanged,
   onAction,
@@ -217,7 +217,7 @@ function FilterSetCreateForm({
             />
           }
         />
-        <FilterSetQueryDisplay filters={currentFilters} />
+        <FilterSetQueryDisplay filter={currentFilter} />
       </form>
       <div>
         <FilterSetButton
@@ -228,7 +228,7 @@ function FilterSetCreateForm({
         <FilterSetButton
           enabled={filterSet.name !== currentFilterSet.name && !error.isError}
           label='Save Filter Set'
-          onClick={() => onAction({ ...filterSet, filters: currentFilters })}
+          onClick={() => onAction({ ...filterSet, filter: currentFilter })}
         />
       </div>
     </div>
@@ -242,7 +242,7 @@ FilterSetCreateForm.propTypes = {
     filters: PropTypes.object,
     id: PropTypes.number,
   }),
-  currentFilters: PropTypes.object,
+  currentFilter: PropTypes.object,
   filterSets: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -259,7 +259,7 @@ FilterSetCreateForm.propTypes = {
 /**
  * @param {Object} prop
  * @param {ExplorerFilterSet} prop.currentFilterSet
- * @param {ExplorerFilter} prop.currentFilters
+ * @param {ExplorerFilter} prop.currentFilter
  * @param {ExplorerFilterSet[]} prop.filterSets
  * @param {boolean} prop.isFiltersChanged
  * @param {(updated: ExplorerFilterSet) => void} prop.onAction
@@ -267,7 +267,7 @@ FilterSetCreateForm.propTypes = {
  */
 function FilterSetUpdateForm({
   currentFilterSet,
-  currentFilters,
+  currentFilter,
   filterSets,
   isFiltersChanged,
   onAction,
@@ -333,10 +333,10 @@ function FilterSetUpdateForm({
             />
           }
         />
-        <FilterSetQueryDisplay filters={filterSet.filters} />
+        <FilterSetQueryDisplay filter={filterSet.filter} />
         {isFiltersChanged && (
           <FilterSetQueryDisplay
-            filters={currentFilters}
+            filter={currentFilter}
             title='Filters (changed)'
           />
         )}
@@ -355,7 +355,7 @@ function FilterSetUpdateForm({
               filterSet.description !== currentFilterSet.description) &&
             !error.isError
           }
-          onClick={() => onAction({ ...filterSet, filters: currentFilters })}
+          onClick={() => onAction({ ...filterSet, filter: currentFilter })}
         />
       </div>
     </div>
@@ -369,7 +369,7 @@ FilterSetUpdateForm.propTypes = {
     filters: PropTypes.object,
     id: PropTypes.number,
   }),
-  currentFilters: PropTypes.object,
+  currentFilter: PropTypes.object,
   filterSets: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
@@ -423,7 +423,7 @@ FilterSetDeleteForm.propTypes = {
  * @param {Object} prop
  * @param {ExplorerFilterSetActionType} prop.actionType
  * @param {ExplorerFilterSet} prop.currentFilterSet
- * @param {ExplorerFilter} prop.currentFilters
+ * @param {ExplorerFilter} prop.currentFilter
  * @param {ExplorerFilterSet[]} prop.filterSets
  * @param {object} prop.handlers
  * @param {(opened: ExplorerFilterSet) => void} prop.handlers.handleOpen
@@ -436,7 +436,7 @@ FilterSetDeleteForm.propTypes = {
 export function FilterSetActionForm({
   actionType,
   currentFilterSet,
-  currentFilters,
+  currentFilter,
   filterSets,
   handlers,
   isFiltersChanged,
@@ -458,7 +458,7 @@ export function FilterSetActionForm({
       return currentFilterSet.name === '' ? (
         <FilterSetCreateForm
           currentFilterSet={currentFilterSet}
-          currentFilters={currentFilters}
+          currentFilter={currentFilter}
           filterSets={filterSets}
           isFiltersChanged={isFiltersChanged}
           onAction={handleCreate}
@@ -467,7 +467,7 @@ export function FilterSetActionForm({
       ) : (
         <FilterSetUpdateForm
           currentFilterSet={currentFilterSet}
-          currentFilters={currentFilters}
+          currentFilter={currentFilter}
           filterSets={filterSets}
           isFiltersChanged={isFiltersChanged}
           onAction={handleUpdate}
@@ -478,7 +478,7 @@ export function FilterSetActionForm({
       return (
         <FilterSetCreateForm
           currentFilterSet={currentFilterSet}
-          currentFilters={currentFilters}
+          currentFilter={currentFilter}
           filterSets={filterSets}
           isFiltersChanged={isFiltersChanged}
           onAction={handleCreate}
@@ -506,7 +506,7 @@ FilterSetActionForm.propTypes = {
     filters: PropTypes.object,
     id: PropTypes.number,
   }),
-  currentFilters: PropTypes.object,
+  currentFilter: PropTypes.object,
   filterSets: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,

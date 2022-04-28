@@ -59,7 +59,7 @@ const emptyFilterSets = [];
 export const defaultFilterSet = {
   name: '*** All Subjects ***',
   description: '',
-  filters: {},
+  filter: {},
   id: -1,
 };
 

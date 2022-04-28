@@ -100,7 +100,7 @@ export type AlteredExplorerConfig = {
 export type ExplorerFilterSet = {
   description: string;
   explorerId?: number;
-  filters: ExplorerFilter;
+  filter: ExplorerFilter;
   id?: number;
   name: string;
 };

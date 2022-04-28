@@ -5,18 +5,18 @@ import './FilterSetQueryDisplay.css';
 
 /**
  * @param {Object} props
- * @param {import('../types').ExplorerFilter} props.filters
+ * @param {import('../types').ExplorerFilterSet['filter']} props.filter
  * @param {string} [props.title]
  */
-function FilterSetQueryDisplay({ filters, title = 'Filters' }) {
+function FilterSetQueryDisplay({ filter, title = 'Filters' }) {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   return (
     <div className='filter-set-query-display'>
-      {Object.keys(filters).length > 0 ? (
+      {Object.keys(filter).length > 0 ? (
         <>
           <header>{title}</header>
           <main>
-            <QueryDisplay filter={filters} filterInfo={filterInfo} />
+            <QueryDisplay filter={filter} filterInfo={filterInfo} />
           </main>
         </>
       ) : (
@@ -29,7 +29,7 @@ function FilterSetQueryDisplay({ filters, title = 'Filters' }) {
 }
 
 FilterSetQueryDisplay.propTypes = {
-  filters: PropTypes.any,
+  filter: PropTypes.any,
   title: PropTypes.string,
 };
 

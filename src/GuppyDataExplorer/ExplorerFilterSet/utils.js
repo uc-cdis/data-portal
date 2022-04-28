@@ -10,7 +10,7 @@ export function createEmptyFilterSet() {
   return {
     name: '',
     description: '',
-    filters: {},
+    filter: {},
   };
 }
 

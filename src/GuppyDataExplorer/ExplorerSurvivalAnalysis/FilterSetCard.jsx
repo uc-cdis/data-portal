@@ -62,7 +62,7 @@ export default function FilterSetCard({ count, filterSet, label, onClose }) {
               />
             }
           />
-          <FilterSetQueryDisplay filters={filterSet.filters} />
+          <FilterSetQueryDisplay filter={filterSet.filter} />
         </>
       ) : null}
     </div>

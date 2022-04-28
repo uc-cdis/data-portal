@@ -91,13 +91,13 @@ export default function useSurvivalAnalysisResult() {
     /** @type {SurvivalAnalysisResult} */
     const cache = {};
     for (const [index, usedFilterSet] of usedFilterSets.entries()) {
-      const { filters, id, name } = usedFilterSet;
+      const { filter, id, name } = usedFilterSet;
       body.usedFilterSetIds.push(id);
       if (result !== null && id in result && !isSurvivalTypeChanged)
         cache[id] = { ...result[id], name: `${index + 1}. ${name}` };
       else
         body.filterSets.push({
-          filters: getGQLFilter(filters) ?? {},
+          filters: getGQLFilter(filter) ?? {},
           id,
           name: `${index + 1}. ${name}`,
         });
