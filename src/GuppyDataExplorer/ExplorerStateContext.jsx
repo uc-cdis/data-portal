@@ -21,7 +21,6 @@ import { extractExplorerStateFromURL } from './utils';
  * @property {(filter: ExplorerFilters) => void} handleFilterChange
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
  * @property {() => void} clearFilters
- * @property {(filters) => void} updateFilters
  */
 
 /** @type {React.Context<ExplorerStateContext>} */
@@ -136,7 +135,6 @@ export function ExplorerStateProvider({ children }) {
       handleFilterChange,
       handlePatientIdsChange,
       clearFilters,
-      updateFilters: setFilters,
     }),
     [filters, patientIds, searchParams]
   );
