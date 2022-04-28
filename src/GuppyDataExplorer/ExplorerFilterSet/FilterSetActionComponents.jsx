@@ -127,14 +127,14 @@ FilterSetOpenForm.propTypes = {
   currentFilterSet: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
-    filters: PropTypes.object,
+    filter: PropTypes.object,
     id: PropTypes.number,
   }),
   filterSets: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
       description: PropTypes.string,
-      filters: PropTypes.object,
+      filter: PropTypes.object,
       id: PropTypes.number,
     })
   ),
@@ -239,7 +239,7 @@ FilterSetCreateForm.propTypes = {
   currentFilterSet: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
-    filters: PropTypes.object,
+    filter: PropTypes.object,
     id: PropTypes.number,
   }),
   currentFilter: PropTypes.object,
@@ -247,7 +247,7 @@ FilterSetCreateForm.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       description: PropTypes.string,
-      filters: PropTypes.object,
+      filter: PropTypes.object,
       id: PropTypes.number,
     })
   ),
@@ -366,7 +366,7 @@ FilterSetUpdateForm.propTypes = {
   currentFilterSet: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
-    filters: PropTypes.object,
+    filter: PropTypes.object,
     id: PropTypes.number,
   }),
   currentFilter: PropTypes.object,
@@ -374,7 +374,7 @@ FilterSetUpdateForm.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       description: PropTypes.string,
-      filters: PropTypes.object,
+      filter: PropTypes.object,
       id: PropTypes.number,
     })
   ),
@@ -412,7 +412,7 @@ FilterSetDeleteForm.propTypes = {
   currentFilterSet: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
-    filters: PropTypes.object,
+    filter: PropTypes.object,
     id: PropTypes.number,
   }),
   onAction: PropTypes.func,
@@ -503,7 +503,7 @@ FilterSetActionForm.propTypes = {
   currentFilterSet: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
-    filters: PropTypes.object,
+    filter: PropTypes.object,
     id: PropTypes.number,
   }),
   currentFilter: PropTypes.object,
@@ -511,7 +511,7 @@ FilterSetActionForm.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       description: PropTypes.string,
-      filters: PropTypes.object,
+      filter: PropTypes.object,
       id: PropTypes.number,
     })
   ),
