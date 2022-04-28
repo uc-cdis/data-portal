@@ -139,7 +139,7 @@ if [[ ! -z "$BASENAME" && "$BASENAME" != "/" ]]; then
   newBootJsPath="$BASENAME/boot.js"
   echo $newBootJsPath
   sed -i.bak "s%/boot.js%$newBootJsPath%g" dev.html
-  sed -i.bak "s%basename=\"\"%basename=$BASENAME%g" dev.html
+  sed -i.bak "s%basename=\"\"%basename=\"$BASENAME\"%g" dev.html
 fi
 
 #
