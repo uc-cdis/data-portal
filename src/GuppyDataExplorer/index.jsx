@@ -45,7 +45,7 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
     handleBrowserNavigationForConfig,
   } = useExplorerConfig();
   const {
-    initialAppliedFilters,
+    explorerFilter,
     patientIds,
     handleBrowserNavigationForState,
     handleFilterChange,
@@ -63,7 +63,7 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
     <GuppyWrapper
       key={explorerId}
       adminAppliedPreFilters={adminAppliedPreFilters}
-      initialAppliedFilters={initialAppliedFilters}
+      explorerFilter={explorerFilter}
       chartConfig={chartConfig}
       filterConfig={filterConfig}
       guppyConfig={guppyConfig}

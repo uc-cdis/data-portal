@@ -22,7 +22,7 @@ function ExplorerFilter({ className = '', ...filterProps }) {
   const { adminAppliedPreFilters, filterConfig, guppyConfig } =
     useExplorerConfig().current;
   const {
-    initialAppliedFilters,
+    explorerFilter,
     patientIds,
     handleFilterClear,
     handlePatientIdsChange,
@@ -32,11 +32,11 @@ function ExplorerFilter({ className = '', ...filterProps }) {
     adminAppliedPreFilters,
     filterConfig,
     guppyConfig,
-    initialAppliedFilters,
+    explorerFilter,
     patientIds,
     onPatientIdsChange: handlePatientIdsChange,
   };
-  const hasAppliedFilters = Object.keys(filterProps.filter).length > 0;
+  const hasExplorerFilter = Object.keys(filterProps.filter).length > 0;
   const filterCombineMode = filterProps.filter.__combineMode ?? 'AND';
   function updateFilterCombineMode(e) {
     filterProps.onFilterChange({
@@ -49,7 +49,7 @@ function ExplorerFilter({ className = '', ...filterProps }) {
     <div className={className}>
       <div className='explorer-filter__title-container'>
         <h4 className='explorer-filter__title'>Filters</h4>
-        {hasAppliedFilters && (
+        {hasExplorerFilter && (
           <button
             type='button'
             className='explorer-filter__clear-button'

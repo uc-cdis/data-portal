@@ -15,7 +15,7 @@ import { extractExplorerStateFromURL } from './utils';
 
 /**
  * @typedef {Object} ExplorerStateContext
- * @property {ExplorerFilter} initialAppliedFilters
+ * @property {ExplorerFilter} explorerFilter
  * @property {string[]} patientIds
  * @property {() => void} handleBrowserNavigationForState
  * @property {(filter: ExplorerFilter) => void} handleFilterChange
@@ -131,7 +131,7 @@ export function ExplorerStateProvider({ children }) {
 
   const value = useMemo(
     () => ({
-      initialAppliedFilters: explorerFilter,
+      explorerFilter,
       patientIds,
       handleBrowserNavigationForState,
       handleFilterChange,

@@ -20,12 +20,12 @@ import {
  * @property {object} [adminAppliedPreFilters]
  * @property {string} [anchorValue]
  * @property {string} [className]
+ * @property {FilterState} [explorerFilter]
  * @property {FilterState} filter
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
  * @property {boolean} [hidden]
  * @property {boolean} [hideZero]
- * @property {FilterState} [initialAppliedFilters]
  * @property {SimpleAggsData} [initialTabsOptions]
  * @property {(anchorValue: string) => void} onAnchorValueChange
  * @property {FilterChangeHandler} onFilterChange
@@ -44,7 +44,7 @@ function ConnectedFilter({
   guppyConfig,
   hidden = false,
   hideZero = false,
-  initialAppliedFilters = {},
+  explorerFilter = {},
   initialTabsOptions = {},
   onAnchorValueChange,
   onFilterChange,
@@ -94,6 +94,7 @@ function ConnectedFilter({
       disabledTooltipMessage={
         'This resource is currently disabled because you are exploring restricted data. You are limited to exploring cohorts of a size greater than or equal to the access limit.'
       }
+      explorerFilter={explorerFilter}
       filterConfig={filterConfig}
       lockedTooltipMessage={`You may only view summary information for this project. You do not have ${guppyConfig.dataType}-level access.`}
       onAnchorValueChange={onAnchorValueChange}
@@ -101,7 +102,6 @@ function ConnectedFilter({
       onPatientIdsChange={onPatientIdsChange}
       patientIds={patientIds}
       hideZero={hideZero}
-      initialAppliedFilters={initialAppliedFilters}
       tabs={filterTabs}
     />
   );
@@ -111,6 +111,7 @@ ConnectedFilter.propTypes = {
   adminAppliedPreFilters: PropTypes.object,
   anchorValue: PropTypes.string,
   className: PropTypes.string,
+  explorerFilter: PropTypes.object,
   filter: PropTypes.object.isRequired,
   filterConfig: PropTypes.shape({
     anchor: PropTypes.shape({
@@ -145,7 +146,6 @@ ConnectedFilter.propTypes = {
   }).isRequired,
   hidden: PropTypes.bool,
   hideZero: PropTypes.bool,
-  initialAppliedFilters: PropTypes.object,
   initialTabsOptions: PropTypes.object,
   onAnchorValueChange: PropTypes.func.isRequired,
   onFilterChange: PropTypes.func.isRequired,

@@ -30,15 +30,15 @@ import {
 
 /**
  * @typedef {Object} GuppyWrapperProps
+ * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
  * @property {{ [fieldName: string]: any }} chartConfig
+ * @property {((data: GuppyData) => JSX.Element)} children
+ * @property {FilterState} explorerFilter
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
- * @property {((data: GuppyData) => JSX.Element)} children
  * @property {(x: FilterState) => void} onFilterChange
- * @property {string[]} rawDataFields
- * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
- * @property {FilterState} initialAppliedFilters
  * @property {string[]} patientIds
+ * @property {string[]} rawDataFields
  */
 
 /**
@@ -58,15 +58,15 @@ import {
 
 /** @param {GuppyWrapperProps} props */
 function GuppyWrapper({
+  adminAppliedPreFilters = {},
   chartConfig,
+  children,
+  explorerFilter = {},
   filterConfig,
   guppyConfig,
-  children,
   onFilterChange = () => {},
-  rawDataFields: rawDataFieldsConfig = [],
-  adminAppliedPreFilters = {},
-  initialAppliedFilters = {},
   patientIds,
+  rawDataFields: rawDataFieldsConfig = [],
 }) {
   /** @type {[GuppyWrapperState, React.Dispatch<React.SetStateAction<GuppyWrapperState>>]} */
   const [state, setState] = useState({
@@ -83,8 +83,8 @@ function GuppyWrapper({
     totalCount: 0,
   });
   const filterState = useMemo(
-    () => mergeFilters(initialAppliedFilters, adminAppliedPreFilters),
-    [initialAppliedFilters, adminAppliedPreFilters]
+    () => mergeFilters(explorerFilter, adminAppliedPreFilters),
+    [explorerFilter, adminAppliedPreFilters]
   );
   const controller = useRef(new AbortController());
   const isMounted = useRef(false);
@@ -517,14 +517,9 @@ function GuppyWrapper({
 }
 
 GuppyWrapper.propTypes = {
-  guppyConfig: PropTypes.shape({
-    type: PropTypes.string,
-    mainField: PropTypes.string,
-    mainFieldIsNumeric: PropTypes.bool,
-    aggFields: PropTypes.array,
-    dataType: PropTypes.string.isRequired,
-  }).isRequired,
+  adminAppliedPreFilters: PropTypes.object,
   children: PropTypes.func.isRequired,
+  explorerFilter: PropTypes.object,
   filterConfig: PropTypes.shape({
     anchor: PropTypes.shape({
       field: PropTypes.string,
@@ -539,11 +534,16 @@ GuppyWrapper.propTypes = {
       })
     ),
   }).isRequired,
-  rawDataFields: PropTypes.arrayOf(PropTypes.string),
+  guppyConfig: PropTypes.shape({
+    type: PropTypes.string,
+    mainField: PropTypes.string,
+    mainFieldIsNumeric: PropTypes.bool,
+    aggFields: PropTypes.array,
+    dataType: PropTypes.string.isRequired,
+  }).isRequired,
   onFilterChange: PropTypes.func,
-  adminAppliedPreFilters: PropTypes.object,
-  initialAppliedFilters: PropTypes.object,
   patientIds: PropTypes.arrayOf(PropTypes.string),
+  rawDataFields: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default GuppyWrapper;
