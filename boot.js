@@ -1,5 +1,5 @@
 (function () {
-  const basename = process.env.BASENAME;
+  const basename = document.currentScript.getAttribute('basename');
   const isDevMode = !!location.pathname.match(/^\/dev.html/);
   let buildSrc = '/bundle.js';
   if (isDevMode) {
