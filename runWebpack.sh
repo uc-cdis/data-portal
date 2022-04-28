@@ -134,9 +134,8 @@ if [[ "$NODE_ENV" == "auto" || "$NODE_ENV" == "autoprod" ]]; then
   fi
 fi
 
-if [[ ! -z "$BASENAME" && "$BASENAME" != "/" ]]
+if [[ ! -z "$BASENAME" && "$BASENAME" != "/" ]]; then
   echo "BASENAME has customized value, updating boot.js for dev.html"
-  local newBootJsPath
   newBootJsPath="$BASENAME/boot.js"
   echo $newBootJsPath
   sed -i.bak "s%/boot.js%$newBootJsPath%g" dev.html

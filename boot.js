@@ -37,7 +37,7 @@
   linkNode.src = stylesheetLessSrc;
   linkNode.type = 'text/css';
   linkNode.rel = 'stylesheet/less';
-  linkNode.media = 'all'
+  linkNode.media = 'all';
   document.head.appendChild(linkNode);
   // create graphiql stylesheet node in head
   const stylesheetSrc = (basename && basename !== '/') ? `${basename}/src/css/graphiql.css` : '/src/css/graphiql.css';
@@ -45,7 +45,7 @@
   linkNode.src = stylesheetSrc;
   linkNode.type = 'text/css';
   linkNode.rel = 'stylesheet';
-  linkNode.media = 'all'
+  linkNode.media = 'all';
   document.head.appendChild(linkNode);
   // create favicon  node in head
   const faviconSrc = (basename && basename !== '/') ? `${basename}/src/img/favicon.ico` : '/src/img/favicon.ico';
