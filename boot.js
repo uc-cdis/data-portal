@@ -19,7 +19,7 @@
   // create theme override node in body
   const themeOverridesSrc = (basename && basename !== '/') ? `${basename}/src/css/themeoverrides.css` : '/src/css/themeoverrides.css';
   let linkNode = document.createElement('link');
-  linkNode.src = themeOverridesSrc;
+  linkNode.href = themeOverridesSrc;
   linkNode.type = 'text/css';
   linkNode.id = 'gen3-theme-overrides';
   linkNode.rel = 'stylesheet';
@@ -27,14 +27,14 @@
   // create local theme override node in body
   const localThemeOverridesSrc = (basename && basename !== '/') ? `https://localhost:9443${basename}/src/css/themeoverrides.css` : 'https://localhost:9443/src/css/themeoverrides.css';
   linkNode = document.createElement('link');
-  linkNode.src = localThemeOverridesSrc;
+  linkNode.href = localThemeOverridesSrc;
   linkNode.type = 'text/css';
   linkNode.rel = 'stylesheet';
   document.body.appendChild(linkNode);
   // create stylesheet-less node in head
   const stylesheetLessSrc = (basename && basename !== '/') ? `${basename}/src/css/base.less` : '/src/css/base.less';
   linkNode = document.createElement('link');
-  linkNode.src = stylesheetLessSrc;
+  linkNode.href = stylesheetLessSrc;
   linkNode.type = 'text/css';
   linkNode.rel = 'stylesheet/less';
   linkNode.media = 'all';
@@ -42,7 +42,7 @@
   // create graphiql stylesheet node in head
   const stylesheetSrc = (basename && basename !== '/') ? `${basename}/src/css/graphiql.css` : '/src/css/graphiql.css';
   linkNode = document.createElement('link');
-  linkNode.src = stylesheetSrc;
+  linkNode.href = stylesheetSrc;
   linkNode.type = 'text/css';
   linkNode.rel = 'stylesheet';
   linkNode.media = 'all';
@@ -50,7 +50,7 @@
   // create favicon  node in head
   const faviconSrc = (basename && basename !== '/') ? `${basename}/src/img/favicon.ico` : '/src/img/favicon.ico';
   linkNode = document.createElement('link');
-  linkNode.src = faviconSrc;
+  linkNode.href = faviconSrc;
   linkNode.type = 'image/png';
   linkNode.rel = 'icon';
   document.head.appendChild(linkNode);
