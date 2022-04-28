@@ -125,7 +125,7 @@ export function ExplorerStateProvider({ children }) {
   }
 
   function clearFilters() {
-    setFilters({});
+    handleFilterChange(undefined);
   }
 
   const value = useMemo(
