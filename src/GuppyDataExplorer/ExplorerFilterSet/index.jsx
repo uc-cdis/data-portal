@@ -25,7 +25,7 @@ import './ExplorerFilterSet.css';
  * @param {ExplorerFilters} prop.filter
  */
 function ExplorerFilterSet({ className, filter }) {
-  const { clearFilters, updateFilters } = useExplorerState();
+  const { clearFilters, handleFilterChange } = useExplorerState();
   const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
   const {
@@ -57,7 +57,7 @@ function ExplorerFilterSet({ className, filter }) {
   }
   function handleOpen(/** @type {ExplorerFilterSet} */ opened) {
     setFilterSet(cloneDeep(opened));
-    updateFilters(cloneDeep(opened.filters));
+    handleFilterChange(cloneDeep(opened.filters));
     closeActionForm();
   }
   async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
@@ -133,11 +133,13 @@ function ExplorerFilterSet({ className, filter }) {
                   trigger={['hover', 'focus']}
                 >
                   <span
-                    onClick={() => updateFilters(cloneDeep(filterSet.filters))}
+                    onClick={() =>
+                      handleFilterChange(cloneDeep(filterSet.filters))
+                    }
                     onKeyPress={(e) => {
                       if (e.charCode === 13 || e.charCode === 32) {
                         e.preventDefault();
-                        updateFilters(cloneDeep(filterSet.filters));
+                        handleFilterChange(cloneDeep(filterSet.filters));
                       }
                     }}
                     role='button'
