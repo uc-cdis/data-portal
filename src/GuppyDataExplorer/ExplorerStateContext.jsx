@@ -19,8 +19,8 @@ import { extractExplorerStateFromURL } from './utils';
  * @property {string[]} patientIds
  * @property {() => void} handleBrowserNavigationForState
  * @property {(filter: ExplorerFilters) => void} handleFilterChange
+ * @property {() => void} handleFilterClear
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
- * @property {() => void} clearFilters
  */
 
 /** @type {React.Context<ExplorerStateContext>} */
@@ -123,7 +123,7 @@ export function ExplorerStateProvider({ children }) {
       navigate(`?${decodeURIComponent(newSearchParams.toString())}`);
   }
 
-  function clearFilters() {
+  function handleFilterClear() {
     handleFilterChange(undefined);
   }
 
@@ -133,8 +133,8 @@ export function ExplorerStateProvider({ children }) {
       patientIds,
       handleBrowserNavigationForState,
       handleFilterChange,
+      handleFilterClear,
       handlePatientIdsChange,
-      clearFilters,
     }),
     [filters, patientIds, searchParams]
   );

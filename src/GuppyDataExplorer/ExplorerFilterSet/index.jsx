@@ -25,7 +25,7 @@ import './ExplorerFilterSet.css';
  * @param {ExplorerFilters} prop.filter
  */
 function ExplorerFilterSet({ className, filter }) {
-  const { clearFilters, handleFilterChange } = useExplorerState();
+  const { handleFilterChange, handleFilterClear } = useExplorerState();
   const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
   const {
@@ -53,7 +53,7 @@ function ExplorerFilterSet({ className, filter }) {
 
   function handleNew() {
     setFilterSet(createEmptyFilterSet());
-    clearFilters();
+    handleFilterClear();
   }
   function handleOpen(/** @type {ExplorerFilterSet} */ opened) {
     setFilterSet(cloneDeep(opened));
@@ -86,7 +86,7 @@ function ExplorerFilterSet({ className, filter }) {
       await deleteFilterSet(deleted);
       setFilterSet(createEmptyFilterSet());
       await refreshFilterSets();
-      clearFilters();
+      handleFilterClear();
     } catch (e) {
       setIsError(true);
     } finally {
