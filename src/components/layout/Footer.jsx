@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { basename } from '../../localconf';
 import './Footer.less';
 
 class Footer extends Component {
@@ -50,7 +51,7 @@ class Footer extends Component {
                 >
                   <img
                     className='footer__img'
-                    src={logoObj.src}
+                    src={(basename === '') ? logoObj.src : `${basename}${logoObj.src}`}
                     alt={logoObj.alt}
                     style={{ height: logoObj.height ? logoObj.height : 60 }}
                   />

@@ -5,6 +5,7 @@ import {
   Space, Row, Col, Tooltip,
 } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { basename } from '../../localconf';
 import './FooterNIAID.less';
 
 const footerSocialIconLinks = [
@@ -98,7 +99,7 @@ class FooterNIAID extends Component {
                     >
                       <img
                         className='footer__img'
-                        src={logoObj.src}
+                        src={(basename === '') ? logoObj.src : `${basename}${logoObj.src}`}
                         alt={logoObj.alt}
                         style={{ height: logoObj.height ? logoObj.height : 60 }}
                       />
