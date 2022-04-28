@@ -77,6 +77,7 @@ const footerGovLinks = [
   },
 ];
 
+const cleanBasename = basename.replace(/(dev.html$)/, '');
 class FooterNIAID extends Component {
   render() {
     return (
@@ -99,7 +100,7 @@ class FooterNIAID extends Component {
                     >
                       <img
                         className='footer__img'
-                        src={(basename === '') ? logoObj.src : `${basename}${logoObj.src}`}
+                        src={(cleanBasename === '/') ? logoObj.src : `${cleanBasename}${logoObj.src}`}
                         alt={logoObj.alt}
                         style={{ height: logoObj.height ? logoObj.height : 60 }}
                       />

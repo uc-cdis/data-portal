@@ -10,6 +10,8 @@ import { breakpoints, commonsWideAltText, basename } from '../../localconf';
 import { config, components } from '../../params';
 import './NavBar.less';
 
+const cleanBasename = basename.replace(/(\/dev.html$)/, '');
+
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
  * @param { dictIcons, navTitle, navItems } params
@@ -99,7 +101,7 @@ class NavBar extends Component {
                   <a href={homepageHref}>
                     <img
                       className='nav-bar__logo-img'
-                      src={(basename === '') ? '/src/img/logo.png' : `${basename}/src/img/logo.png`}
+                      src={(cleanBasename === '/') ? '/src/img/logo.png' : `${cleanBasename}/src/img/logo.png`}
                       alt={commonsWideAltText.portalLogo || 'Gen3 Data Commons - home'}
                     />
                   </a>
@@ -108,7 +110,7 @@ class NavBar extends Component {
                   <NavLink exact to=''>
                     <img
                       className='nav-bar__logo-img'
-                      src={(basename === '') ? '/src/img/logo.png' : `${basename}/src/img/logo.png`}
+                      src={(cleanBasename === '/') ? '/src/img/logo.png' : `${cleanBasename}/src/img/logo.png`}
                       alt={commonsWideAltText.portalLogo || 'Gen3 Data Commons - home'}
                     />
                   </NavLink>

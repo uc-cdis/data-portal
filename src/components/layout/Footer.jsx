@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { basename } from '../../localconf';
 import './Footer.less';
 
+const cleanBasename = basename.replace(/(dev.html$)/, '');
+
 class Footer extends Component {
   render() {
     if (this.props.hidden) {
@@ -51,7 +53,7 @@ class Footer extends Component {
                 >
                   <img
                     className='footer__img'
-                    src={(basename === '') ? logoObj.src : `${basename}${logoObj.src}`}
+                    src={(cleanBasename === '/') ? logoObj.src : `${cleanBasename}${logoObj.src}`}
                     alt={logoObj.alt}
                     style={{ height: logoObj.height ? logoObj.height : 60 }}
                   />
