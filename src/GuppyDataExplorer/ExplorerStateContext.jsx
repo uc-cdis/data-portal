@@ -59,7 +59,7 @@ export function ExplorerStateProvider({ children }) {
   function handleBrowserNavigationForState() {
     isBrowserNavigation.current = true;
     const newState = extractExplorerStateFromURL(
-      searchParams,
+      new URL(document.URL).searchParams,
       filterConfig,
       patientIdsConfig
     );
