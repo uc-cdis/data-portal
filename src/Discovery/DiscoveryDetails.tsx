@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Alert, Button, Drawer, Space, Collapse, List, Tabs
+  Alert, Button, Drawer, Space, Collapse, List, Tabs,
 } from 'antd';
 import {
   LinkOutlined,
@@ -37,7 +37,7 @@ const subHeadingCls = { className: 'discovery-modal__subheading' };
 const fieldGroupingClass = { className: 'discovery-modal__fieldgroup' };
 const labelCls = { className: 'discovery-modal__fieldlabel' };
 const tagsCls = { className: 'discovery-modal__tagsfield' };
-const tabLabelCls = { className: 'discovery-modal__tablabel' }
+const tabLabelCls = { className: 'discovery-modal__tablabel' };
 
 const blockTextField = (text: string) => <div {...fieldCls}>{text}</div>;
 const label = (text: string) => <b {...labelCls}>{text}</b>;
