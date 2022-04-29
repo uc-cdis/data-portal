@@ -74,9 +74,10 @@ export function ExplorerStateProvider({ children }) {
     if (patientIds.length > 0)
       newSearchParams.set('patientIds', patientIds.join(','));
 
-    navigate(`?${decodeURIComponent(newSearchParams.toString())}`, {
-      state: { scrollY: window.scrollY },
-    });
+    if (searchParams.toString() !== newSearchParams.toString())
+      navigate(`?${decodeURIComponent(newSearchParams.toString())}`, {
+        state: { scrollY: window.scrollY },
+      });
   }, [explorerFilter, patientIds]);
 
   function handleBrowserNavigationForState() {
