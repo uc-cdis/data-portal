@@ -541,7 +541,7 @@ class Workspace extends React.Component {
                             <div className='workspace__pay-model-selector'>
                               <Dropdown overlay={menu} disabled>
                                 <Btn block size='large'>
-                                  {this.state.payModel.current_pay_model.workspace_type} <LoadingOutlined />
+                                  {this.state.payModel.current_pay_model?.workspace_type || 'N/A'} <LoadingOutlined />
                                 </Btn>
                               </Dropdown>
                               <Tooltip title='Switching paymodels is only allowed when you have no running workspaces.'>
@@ -552,7 +552,7 @@ class Workspace extends React.Component {
                             <div className='workspace__pay-model-selector'>
                               <Dropdown overlay={menu}>
                                 <Btn block size='large'>
-                                  {this.state.payModel.current_pay_model.workspace_type} <DownOutlined />
+                                  {this.state.payModel.current_pay_model?.workspace_type || 'N/A'} <DownOutlined />
                                 </Btn>
                               </Dropdown>
                               {(this.state.workspaceStatus === 'Errored') ? (
@@ -566,12 +566,12 @@ class Workspace extends React.Component {
                     </Col>
                     <Col className='gutter-row' span={8}>
                       <Card title='Total Charges (USD)'>
-                        <Statistic value={this.state.payModel.current_pay_model['total-usage']} precision={2} />
+                        <Statistic value={this.state.payModel.current_pay_model?.['total-usage'] || 'N/A'} precision={2} />
                       </Card>
                     </Col>
                     <Col className='gutter-row' span={8}>
                       <Card title='Spending Limit (USD)'>
-                        <Statistic precision={2} value={this.state.payModel.current_pay_model['hard-limit'] || 'N/A'} />
+                        <Statistic precision={2} value={this.state.payModel.current_pay_model?.['hard-limit'] || 'N/A'} />
                       </Card>
                     </Col>
                   </Row>
