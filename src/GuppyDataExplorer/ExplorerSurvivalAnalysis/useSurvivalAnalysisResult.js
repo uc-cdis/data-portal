@@ -106,7 +106,10 @@ export default function useSurvivalAnalysisResult() {
     if (body.filterSets.length > 0)
       return fetchResult(body)
         .then((data) => setResult({ ...cache, ...data }))
-        .catch(() => setResult(null));
+        .catch((e) => {
+          setResult(null);
+          throw e;
+        });
 
     setResult(cache);
     return Promise.resolve();
