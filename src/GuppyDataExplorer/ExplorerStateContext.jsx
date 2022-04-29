@@ -71,7 +71,7 @@ export function ExplorerStateProvider({ children }) {
     if (explorerFilter && Object.keys(explorerFilter).length > 0)
       newSearchParams.set('filter', JSON.stringify(explorerFilter));
 
-    if (patientIds.length > 0)
+    if (patientIds?.length > 0)
       newSearchParams.set('patientIds', patientIds.join(','));
 
     if (searchParams.toString() !== newSearchParams.toString())
