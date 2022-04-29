@@ -6,22 +6,22 @@ import {
   useRef,
   useState,
 } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useExplorerConfig } from './ExplorerConfigContext';
 import { extractExplorerStateFromURL } from './utils';
 
-/** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('./types').ExplorerFilter} ExplorerFilter */
 
 /**
  * @typedef {Object} ExplorerStateContext
- * @property {ExplorerFilters} initialAppliedFilters
+ * @property {ExplorerFilter} explorerFilter
  * @property {string[]} patientIds
  * @property {() => void} handleBrowserNavigationForState
- * @property {(filter: ExplorerFilters) => void} handleFilterChange
+ * @property {(filter: ExplorerFilter) => void} handleFilterChange
+ * @property {() => void} handleFilterClear
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
- * @property {() => void} clearFilters
- * @property {(filters) => void} updateFilters
  */
 
 /** @type {React.Context<ExplorerStateContext>} */
@@ -41,7 +41,9 @@ export function ExplorerStateProvider({ children }) {
       extractExplorerStateFromURL(searchParams, filterConfig, patientIdsConfig),
     []
   );
-  const [filters, setFilters] = useState(initialState.initialAppliedFilters);
+  const [explorerFilter, setExplorerFilter] = useState(
+    initialState.explorerFilter
+  );
   const [patientIds, setPatientIds] = useState(initialState.patientIds);
   useEffect(() => {
     if (shouldUpdateState) {
@@ -50,30 +52,50 @@ export function ExplorerStateProvider({ children }) {
         filterConfig,
         patientIdsConfig
       );
-      setFilters(newState.initialAppliedFilters);
+      setExplorerFilter(newState.explorerFilter);
       setPatientIds(newState.patientIds);
       setShouldUpdateState(false);
     }
   }, [shouldUpdateState]);
 
   const isBrowserNavigation = useRef(false);
+  useEffect(() => {
+    if (isBrowserNavigation.current) {
+      isBrowserNavigation.current = false;
+      return;
+    }
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.delete('filter');
+    newSearchParams.delete('patientIds');
+
+    if (explorerFilter && Object.keys(explorerFilter).length > 0)
+      newSearchParams.set('filter', JSON.stringify(explorerFilter));
+
+    if (patientIds?.length > 0)
+      newSearchParams.set('patientIds', patientIds.join(','));
+
+    if (searchParams.toString() !== newSearchParams.toString())
+      navigate(`?${decodeURIComponent(newSearchParams.toString())}`, {
+        state: { scrollY: window.scrollY },
+      });
+  }, [explorerFilter, patientIds]);
+
   function handleBrowserNavigationForState() {
     isBrowserNavigation.current = true;
     const newState = extractExplorerStateFromURL(
-      searchParams,
+      new URL(document.URL).searchParams,
       filterConfig,
       patientIdsConfig
     );
-    setFilters(newState.initialAppliedFilters);
-    setPatientIds(newState.patientIds);
-    isBrowserNavigation.current = false;
+    // batch to avoid double-triggering useEffect() above
+    ReactDOM.unstable_batchedUpdates(() => {
+      setExplorerFilter(newState.explorerFilter);
+      setPatientIds(newState.patientIds);
+    });
   }
 
-  /** @param {ExplorerFilters} filter */
-  function handleFilterChange(filter) {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.delete('filter');
-
+  function handleFilterChange(/** @type {ExplorerFilter} */ filter) {
+    let newFilter = /** @type {ExplorerFilter} */ ({});
     if (filter && Object.keys(filter).length > 0) {
       /** @type {string[]} */
       const allSearchFields = [];
@@ -81,63 +103,45 @@ export function ExplorerStateProvider({ children }) {
         if (searchFields?.length > 0) allSearchFields.push(...searchFields);
 
       if (allSearchFields.length === 0) {
-        newSearchParams.set(
-          'filter',
-          JSON.stringify({ __combineMode: filters.__combineMode, ...filter })
-        );
+        newFilter = /** @type {ExplorerFilter} */ ({
+          __combineMode: explorerFilter.__combineMode,
+          ...filter,
+        });
       } else {
         const allSearchFieldSet = new Set(allSearchFields);
-        const filterWithoutSearchFields = {};
+        const filterWithoutSearchFields = /** @type {ExplorerFilter} */ ({});
         for (const field of Object.keys(filter))
           if (!allSearchFieldSet.has(field))
             filterWithoutSearchFields[field] = filter[field];
 
         if (Object.keys(filterWithoutSearchFields).length > 0)
-          newSearchParams.set(
-            'filter',
-            JSON.stringify({
-              __combineMode: filters.__combineMode,
-              ...filterWithoutSearchFields,
-            })
-          );
+          newFilter = /** @type {ExplorerFilter} */ ({
+            __combineMode: explorerFilter.__combineMode,
+            ...filterWithoutSearchFields,
+          });
       }
     }
-
-    if (!isBrowserNavigation.current)
-      navigate(`?${decodeURIComponent(newSearchParams.toString())}`, {
-        state: { scrollY: window.scrollY },
-      });
+    setExplorerFilter(newFilter);
   }
 
-  /** @param {string[]} ids */
-  function handlePatientIdsChange(ids) {
-    if (patientIdsConfig?.filter === undefined) return;
-
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.delete('patientIds');
-
-    if (ids.length > 0) newSearchParams.set('patientIds', ids.join(','));
-
-    setPatientIds(ids);
-    if (!isBrowserNavigation.current)
-      navigate(`?${decodeURIComponent(newSearchParams.toString())}`);
+  function handleFilterClear() {
+    handleFilterChange(undefined);
   }
 
-  function clearFilters() {
-    setFilters({});
+  function handlePatientIdsChange(/** @type {string[]} */ ids) {
+    if (patientIdsConfig?.filter !== undefined) setPatientIds(ids);
   }
 
   const value = useMemo(
     () => ({
-      initialAppliedFilters: filters,
+      explorerFilter,
       patientIds,
       handleBrowserNavigationForState,
       handleFilterChange,
+      handleFilterClear,
       handlePatientIdsChange,
-      clearFilters,
-      updateFilters: setFilters,
     }),
-    [filters, patientIds, searchParams]
+    [explorerFilter, patientIds]
   );
 
   return (

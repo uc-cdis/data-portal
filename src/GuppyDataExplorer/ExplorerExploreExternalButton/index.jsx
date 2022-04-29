@@ -10,11 +10,11 @@ import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import FilterSetQueryDisplay from '../ExplorerFilterSet/FilterSetQueryDisplay';
 import './ExplorerExploreExternalButton.css';
 
-/** @typedef {import('../types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
 
 /**
  * @param {Object} props
- * @param {ExplorerFilters} props.filter
+ * @param {ExplorerFilter} props.filter
  */
 function ExplorerExploreExternalButton({ filter }) {
   const emptyOption = {
@@ -82,7 +82,7 @@ function ExplorerExploreExternalButton({ filter }) {
                   />
                 }
               />
-              <FilterSetQueryDisplay filters={filter} />
+              <FilterSetQueryDisplay filter={filter} />
             </form>
             <div>
               <Button

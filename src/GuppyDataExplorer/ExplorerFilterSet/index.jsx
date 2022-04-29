@@ -15,17 +15,17 @@ import {
 import { createEmptyFilterSet, truncateWithEllipsis } from './utils';
 import './ExplorerFilterSet.css';
 
-/** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('./types').ExplorerFilter} ExplorerFilter */
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ExplorerFilterSetActionType} ExplorerFilterSetActionType */
 
 /**
  * @param {Object} prop
  * @param {string} prop.className
- * @param {ExplorerFilters} prop.filter
+ * @param {ExplorerFilter} prop.filter
  */
 function ExplorerFilterSet({ className, filter }) {
-  const { clearFilters, updateFilters } = useExplorerState();
+  const { handleFilterChange, handleFilterClear } = useExplorerState();
   const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
   const {
@@ -53,11 +53,11 @@ function ExplorerFilterSet({ className, filter }) {
 
   function handleNew() {
     setFilterSet(createEmptyFilterSet());
-    clearFilters();
+    handleFilterClear();
   }
   function handleOpen(/** @type {ExplorerFilterSet} */ opened) {
     setFilterSet(cloneDeep(opened));
-    updateFilters(cloneDeep(opened.filters));
+    handleFilterChange(cloneDeep(opened.filter));
     closeActionForm();
   }
   async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
@@ -86,7 +86,7 @@ function ExplorerFilterSet({ className, filter }) {
       await deleteFilterSet(deleted);
       setFilterSet(createEmptyFilterSet());
       await refreshFilterSets();
-      clearFilters();
+      handleFilterClear();
     } catch (e) {
       setIsError(true);
     } finally {
@@ -103,7 +103,7 @@ function ExplorerFilterSet({ className, filter }) {
   }
 
   const isFiltersChanged =
-    JSON.stringify(filter) !== JSON.stringify(filterSet.filters);
+    JSON.stringify(filter) !== JSON.stringify(filterSet.filter);
 
   return (
     <div className={className}>
@@ -133,11 +133,13 @@ function ExplorerFilterSet({ className, filter }) {
                   trigger={['hover', 'focus']}
                 >
                   <span
-                    onClick={() => updateFilters(cloneDeep(filterSet.filters))}
+                    onClick={() =>
+                      handleFilterChange(cloneDeep(filterSet.filter))
+                    }
                     onKeyPress={(e) => {
                       if (e.charCode === 13 || e.charCode === 32) {
                         e.preventDefault();
-                        updateFilters(cloneDeep(filterSet.filters));
+                        handleFilterChange(cloneDeep(filterSet.filter));
                       }
                     }}
                     role='button'
@@ -184,7 +186,7 @@ function ExplorerFilterSet({ className, filter }) {
           <FilterSetActionForm
             actionType={actionType}
             currentFilterSet={filterSet}
-            currentFilters={filter}
+            currentFilter={filter}
             filterSets={filterSets}
             handlers={{
               handleOpen,

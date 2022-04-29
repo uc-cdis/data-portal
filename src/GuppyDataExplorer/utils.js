@@ -1,5 +1,5 @@
 /** @typedef {import('./types').ButtonConfig} ButtonConfig */
-/** @typedef {import('./types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('./types').ExplorerFilter} ExplorerFilter */
 /** @typedef {import('./types').FilterConfig} FilterConfig */
 /** @typedef {import('./types').GuppyConfig} GuppyConfig */
 /** @typedef {import('./types').PatientIdsConfig} PatientIdsConfig */
@@ -147,13 +147,13 @@ export function extractExplorerStateFromURL(
   filterConfig,
   patientIdsConfig
 ) {
-  /** @type {ExplorerFilters} */
-  let initialAppliedFilters = {};
+  /** @type {ExplorerFilter} */
+  let explorerFilter = {};
   if (searchParams.has('filter'))
     try {
       const filterInUrl = JSON.parse(decodeURI(searchParams.get('filter')));
       if (validateFilter(filterInUrl, filterConfig))
-        initialAppliedFilters = filterInUrl;
+        explorerFilter = filterInUrl;
       else throw new Error(undefined);
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -167,7 +167,7 @@ export function extractExplorerStateFromURL(
       : []
     : undefined;
 
-  return { initialAppliedFilters, patientIds };
+  return { explorerFilter, patientIds };
 }
 /**
  * @param {FilterConfig} filterConfig

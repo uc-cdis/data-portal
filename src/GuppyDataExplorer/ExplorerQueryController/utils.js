@@ -1,21 +1,23 @@
+/** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
+
 /**
  * @param {Object} args
  * @param {string} args.field
- * @param {import("../types").ExplorerFilters} args.filter
+ * @param {ExplorerFilter} args.filter
  */
 export function pluckFromFilter({ field, filter }) {
   const newFilter = {};
   for (const [key, value] of Object.entries(filter))
     if (key !== field) newFilter[key] = value;
 
-  return newFilter;
+  return /** @type {ExplorerFilter} */ (newFilter);
 }
 
 /**
  * @param {Object} args
  * @param {string} args.anchor
  * @param {string} args.field
- * @param {import("../types").ExplorerFilters} args.filter
+ * @param {ExplorerFilter} args.filter
  */
 export function pluckFromAnchorFilter({ anchor, field, filter }) {
   const newFilter = {};
@@ -27,5 +29,5 @@ export function pluckFromAnchorFilter({ anchor, field, filter }) {
         newFilter[key] = { filter: newAnchorFilter };
     }
 
-  return newFilter;
+  return /** @type {ExplorerFilter} */ (newFilter);
 }

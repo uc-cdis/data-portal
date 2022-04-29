@@ -41,9 +41,9 @@ function findFilterElement(label) {
  * @property {string} [anchorValue]
  * @property {string} [className]
  * @property {string} [disabledTooltipMessage]
+ * @property {FilterState} [explorerFilter]
  * @property {FilterConfig} filterConfig
  * @property {boolean} [hideZero]
- * @property {FilterState} [initialAppliedFilters]
  * @property {string} [lockedTooltipMessage]
  * @property {(anchorValue: string) => void} [onAnchorValueChange]
  * @property {FilterChangeHandler} [onFilterChange]
@@ -53,7 +53,7 @@ function findFilterElement(label) {
  */
 
 /** @type {FilterState} */
-const defaultInitialAppliedFilters = {};
+const defaultExplorerFilter = {};
 
 /** @param {FilterGroupProps} props */
 function FilterGroup({
@@ -62,7 +62,7 @@ function FilterGroup({
   disabledTooltipMessage,
   filterConfig,
   hideZero = true,
-  initialAppliedFilters = defaultInitialAppliedFilters,
+  explorerFilter = defaultExplorerFilter,
   lockedTooltipMessage,
   onAnchorValueChange = () => {},
   onFilterChange = () => {},
@@ -98,11 +98,11 @@ function FilterGroup({
     getExpandedStatus(filterTabs, false)
   );
 
-  const [filterResults, setFilterResults] = useState(initialAppliedFilters);
+  const [filterResults, setFilterResults] = useState(explorerFilter);
   const [filterStatus, setFilterStatus] = useState(
     getFilterStatus({
       anchorConfig: filterConfig.anchor,
-      filterResults: initialAppliedFilters,
+      filterResults: explorerFilter,
       filterTabs,
     })
   );
@@ -115,15 +115,14 @@ function FilterGroup({
 
     const newFilterStatus = getFilterStatus({
       anchorConfig: filterConfig.anchor,
-      filterResults: initialAppliedFilters,
+      filterResults: explorerFilter,
       filterTabs,
     });
-    const newFilterResults = initialAppliedFilters;
+    const newFilterResults = explorerFilter;
 
     setFilterStatus(newFilterStatus);
     setFilterResults(newFilterResults);
-    onFilterChange(newFilterResults);
-  }, [initialAppliedFilters]);
+  }, [explorerFilter]);
 
   const filterTabStatus = showAnchorFilter
     ? filterStatus[tabIndex][anchorLabel]
@@ -378,6 +377,7 @@ FilterGroup.propTypes = {
   anchorValue: PropTypes.string,
   className: PropTypes.string,
   disabledTooltipMessage: PropTypes.string,
+  explorerFilter: PropTypes.object,
   filterConfig: PropTypes.shape({
     anchor: PropTypes.shape({
       field: PropTypes.string,
@@ -394,7 +394,6 @@ FilterGroup.propTypes = {
     ),
   }).isRequired,
   hideZero: PropTypes.bool,
-  initialAppliedFilters: PropTypes.object,
   lockedTooltipMessage: PropTypes.string,
   onAnchorValueChange: PropTypes.func,
   onFilterChange: PropTypes.func,

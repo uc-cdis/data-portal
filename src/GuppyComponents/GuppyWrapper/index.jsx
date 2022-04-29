@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   queryGuppyForAggregationChartData,
@@ -30,15 +30,15 @@ import {
 
 /**
  * @typedef {Object} GuppyWrapperProps
+ * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
  * @property {{ [fieldName: string]: any }} chartConfig
+ * @property {((data: GuppyData) => JSX.Element)} children
+ * @property {FilterState} explorerFilter
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
- * @property {((data: GuppyData) => JSX.Element)} children
  * @property {(x: FilterState) => void} onFilterChange
- * @property {string[]} rawDataFields
- * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
- * @property {FilterState} initialAppliedFilters
  * @property {string[]} patientIds
+ * @property {string[]} rawDataFields
  */
 
 /**
@@ -48,7 +48,6 @@ import {
  * @property {AggsData} aggsData
  * @property {SimpleAggsData} aggsChartData
  * @property {string[]} allFields
- * @property {FilterState} filter
  * @property {SimpleAggsData} [initialTabsOptions]
  * @property {boolean} isLoadingAggsData
  * @property {boolean} isLoadingRawData
@@ -59,15 +58,15 @@ import {
 
 /** @param {GuppyWrapperProps} props */
 function GuppyWrapper({
+  adminAppliedPreFilters = {},
   chartConfig,
+  children,
+  explorerFilter = {},
   filterConfig,
   guppyConfig,
-  children,
   onFilterChange = () => {},
-  rawDataFields: rawDataFieldsConfig = [],
-  adminAppliedPreFilters = {},
-  initialAppliedFilters = {},
   patientIds,
+  rawDataFields: rawDataFieldsConfig = [],
 }) {
   /** @type {[GuppyWrapperState, React.Dispatch<React.SetStateAction<GuppyWrapperState>>]} */
   const [state, setState] = useState({
@@ -76,7 +75,6 @@ function GuppyWrapper({
     allFields: [],
     aggsData: {},
     aggsChartData: {},
-    filter: mergeFilters(initialAppliedFilters, adminAppliedPreFilters),
     initialTabsOptions: undefined,
     isLoadingAggsData: false,
     isLoadingRawData: false,
@@ -84,6 +82,10 @@ function GuppyWrapper({
     tabsOptions: {},
     totalCount: 0,
   });
+  const filterState = useMemo(
+    () => mergeFilters(explorerFilter, adminAppliedPreFilters),
+    [explorerFilter, adminAppliedPreFilters]
+  );
   const controller = useRef(new AbortController());
   const isMounted = useRef(false);
   useEffect(() => {
@@ -254,7 +256,7 @@ function GuppyWrapper({
    */
   function fetchRawDataFromGuppy({
     fields,
-    filter = state.filter,
+    filter = filterState,
     offset,
     size,
     sort,
@@ -335,7 +337,7 @@ function GuppyWrapper({
   function fetchGuppyData(fields) {
     controller.current.abort();
     controller.current = new AbortController();
-    fetchAggsDataFromGuppy(state.filter);
+    fetchAggsDataFromGuppy(filterState);
     fetchRawDataFromGuppy({ fields, updateDataWhenReceive: true });
   }
 
@@ -362,7 +364,7 @@ function GuppyWrapper({
       return;
     }
     fetchGuppyData(rawDataFields);
-  }, [patientIds]);
+  }, [filterState, patientIds]);
 
   /**
    * Download all data from Guppy server and return raw data
@@ -380,7 +382,7 @@ function GuppyWrapper({
       type: guppyConfig.dataType,
       fields: rawDataFields,
       sort,
-      gqlFilter: getGQLFilter(augmentFilter(state.filter)),
+      gqlFilter: getGQLFilter(augmentFilter(filterState)),
       format,
     });
   }
@@ -398,7 +400,7 @@ function GuppyWrapper({
       type: guppyConfig.dataType,
       fields: fields || rawDataFields,
       sort,
-      gqlFilter: getGQLFilter(state.filter),
+      gqlFilter: getGQLFilter(filterState),
     });
   }
 
@@ -462,7 +464,7 @@ function GuppyWrapper({
       setState((prevState) => ({ ...prevState, anchorValue }));
       fetchAggsOptionsDataFromGuppy({
         anchorValue,
-        filter: state.filter,
+        filter: filterState,
         filterTabs: filterConfig.tabs.filter(({ title }) =>
           filterConfig.anchor.tabs.includes(title)
         ),
@@ -484,15 +486,12 @@ function GuppyWrapper({
   /** @param {FilterState} filter */
   function handleFilterChange(filter) {
     const userFilter = /** @type {FilterState} */ ({
-      __combineMode: state.filter.__combineMode ?? 'AND',
+      __combineMode: filterState.__combineMode ?? 'AND',
       ...filter,
     });
     const mergedFilter = mergeFilters(userFilter, adminAppliedPreFilters);
 
     if (onFilterChange) onFilterChange(mergedFilter);
-
-    if (isMounted.current)
-      setState((prevState) => ({ ...prevState, filter: mergedFilter }));
 
     controller.current.abort();
     controller.current = new AbortController();
@@ -506,6 +505,7 @@ function GuppyWrapper({
 
   return children({
     ...state,
+    filter: filterState,
     downloadRawData,
     downloadRawDataByFields,
     downloadRawDataByTypeAndFilter,
@@ -517,14 +517,9 @@ function GuppyWrapper({
 }
 
 GuppyWrapper.propTypes = {
-  guppyConfig: PropTypes.shape({
-    type: PropTypes.string,
-    mainField: PropTypes.string,
-    mainFieldIsNumeric: PropTypes.bool,
-    aggFields: PropTypes.array,
-    dataType: PropTypes.string.isRequired,
-  }).isRequired,
+  adminAppliedPreFilters: PropTypes.object,
   children: PropTypes.func.isRequired,
+  explorerFilter: PropTypes.object,
   filterConfig: PropTypes.shape({
     anchor: PropTypes.shape({
       field: PropTypes.string,
@@ -539,11 +534,16 @@ GuppyWrapper.propTypes = {
       })
     ),
   }).isRequired,
-  rawDataFields: PropTypes.arrayOf(PropTypes.string),
+  guppyConfig: PropTypes.shape({
+    type: PropTypes.string,
+    mainField: PropTypes.string,
+    mainFieldIsNumeric: PropTypes.bool,
+    aggFields: PropTypes.array,
+    dataType: PropTypes.string.isRequired,
+  }).isRequired,
   onFilterChange: PropTypes.func,
-  adminAppliedPreFilters: PropTypes.object,
-  initialAppliedFilters: PropTypes.object,
   patientIds: PropTypes.arrayOf(PropTypes.string),
+  rawDataFields: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default GuppyWrapper;
