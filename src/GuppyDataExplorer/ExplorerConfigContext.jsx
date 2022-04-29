@@ -68,7 +68,7 @@ export function ExplorerConfigProvider({ children }) {
 
   function handleBrowserNavigationForConfig() {
     const searchParamId = Number(searchParams.get('id'));
-    setExporerId(searchParamId);
+    if (explorerIds.includes(searchParamId)) setExporerId(searchParamId);
   }
 
   const config = explorerConfig.find(({ id }) => id === explorerId);
