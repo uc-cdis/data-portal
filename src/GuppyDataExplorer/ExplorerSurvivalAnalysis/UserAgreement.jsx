@@ -6,6 +6,17 @@ import { headers, userapiPath } from '../../localconf';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import Button from '../../gen3-ui-component/components/Button';
 
+const acceptableUsePolicyLink = (
+  <a
+    href='https://github.com/chicagopcdc/Documents/blob/pcdc_dev/governance/acceptable_use_policy/PCDC%20Acceptable%20Use%20Policy.pdf'
+    target='_black'
+    rel='noopener noreferrer'
+  >
+    Acceptable Use Policy
+    <i className='g3-icon g3-icon--external-link g3-icon--sm g3-icon-color__gray' />
+  </a>
+);
+
 const pcdcStatisticalManualLink = (
   <a
     href='https://commons.cri.uchicago.edu/wp-content/uploads/2022/04/PCDC-Analytics-Tool-Documentation-Statistical-Manual.pdf'
@@ -24,7 +35,7 @@ const checkItems = [
   </>,
   'My activity on the PCDC Data Portal will be logged and audited to assess the effectiveness of the pilot and to investigate possible misuse or abuse.',
   'PCDC staff may contact me to investigate cases of suspected abuse or misuse of web-based analytics tools. I will promptly respond to inquiries regarding my use of the tools.',
-  'I will not violate the PCDC Terms of Use or Acceptable Use Policy.',
+  <>I will not violate the PCDC Terms of Use or {acceptableUsePolicyLink}.</>,
   'I will not engage in p-hacking or other forms of statistical misuse.',
   'I will not reproduce or distribute results generated using web-based analytics tools.',
   'I will follow a hypothesis-driven approach when performing analyses and maintain a hypothesis record.',
@@ -122,7 +133,7 @@ function ReminderForm({ onAgree }) {
     <>
       <p>
         You must agree to the following terms, as outlined in the{' '}
-        {pcdcStatisticalManualLink} and Acceptable Use Policy, to proceed:
+        {pcdcStatisticalManualLink} and {acceptableUsePolicyLink}, to proceed:
       </p>
       <ul style={{ listStyleType: 'initial' }}>
         <li>I will not engage in p-hacking.</li>
