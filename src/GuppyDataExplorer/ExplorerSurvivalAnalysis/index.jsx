@@ -22,6 +22,7 @@ function ExplorerSurvivalAnalysis() {
   const [endTime, setEndTime] = useState(undefined);
 
   const [isUpdating, setIsUpdating] = useState(false);
+  const [error, setError] = useState(null);
   /** @type {UserInputSubmitHandler} */
   const handleSubmit = ({
     timeInterval,
@@ -30,14 +31,15 @@ function ExplorerSurvivalAnalysis() {
     efsFlag,
     usedFilterSets,
   }) => {
+    setError(null);
     setIsUpdating(true);
     setTimeInterval(timeInterval);
     setStartTime(startTime);
     setEndTime(endTime);
 
-    refershResult({ efsFlag, usedFilterSets }).finally(() =>
-      setIsUpdating(false)
-    );
+    refershResult({ efsFlag, usedFilterSets })
+      .catch(setError)
+      .finally(() => setIsUpdating(false));
   };
 
   const { survivalAnalysisConfig: config } = useExplorerConfig().current;
@@ -61,6 +63,13 @@ function ExplorerSurvivalAnalysis() {
                 fallback={
                   <div className='explorer-survival-analysis__error'>
                     <h1>Error obtaining survival analysis result...</h1>
+                    {error?.message ? (
+                      <p className='explorer-survival-analysis__error-message'>
+                        <pre>
+                          <strong>Error message:</strong> {error.message}
+                        </pre>
+                      </p>
+                    ) : null}
                     <p>
                       Please retry by clicking {'"Apply"'} button or refreshing
                       the page. If the problem persists, please contact the
