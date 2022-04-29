@@ -59,20 +59,6 @@ export function ExplorerStateProvider({ children }) {
   }, [shouldUpdateState]);
 
   const isBrowserNavigation = useRef(false);
-  function handleBrowserNavigationForState() {
-    isBrowserNavigation.current = true;
-    const newState = extractExplorerStateFromURL(
-      new URL(document.URL).searchParams,
-      filterConfig,
-      patientIdsConfig
-    );
-    // batch to avoid double-triggering useEffect() below
-    ReactDOM.unstable_batchedUpdates(() => {
-      setExplorerFilter(newState.explorerFilter);
-      setPatientIds(newState.patientIds);
-    });
-  }
-
   useEffect(() => {
     if (isBrowserNavigation.current) {
       isBrowserNavigation.current = false;
@@ -93,8 +79,21 @@ export function ExplorerStateProvider({ children }) {
     });
   }, [explorerFilter, patientIds]);
 
-  /** @param {ExplorerFilter} filter */
-  function handleFilterChange(filter) {
+  function handleBrowserNavigationForState() {
+    isBrowserNavigation.current = true;
+    const newState = extractExplorerStateFromURL(
+      new URL(document.URL).searchParams,
+      filterConfig,
+      patientIdsConfig
+    );
+    // batch to avoid double-triggering useEffect() above
+    ReactDOM.unstable_batchedUpdates(() => {
+      setExplorerFilter(newState.explorerFilter);
+      setPatientIds(newState.patientIds);
+    });
+  }
+
+  function handleFilterChange(/** @type {ExplorerFilter} */ filter) {
     let newFilter = /** @type {ExplorerFilter} */ ({});
     if (filter && Object.keys(filter).length > 0) {
       /** @type {string[]} */
@@ -124,14 +123,12 @@ export function ExplorerStateProvider({ children }) {
     setExplorerFilter(newFilter);
   }
 
-  /** @param {string[]} ids */
-  function handlePatientIdsChange(ids) {
-    if (patientIdsConfig?.filter === undefined) return;
-    setPatientIds(ids);
-  }
-
   function handleFilterClear() {
     handleFilterChange(undefined);
+  }
+
+  function handlePatientIdsChange(/** @type {string[]} */ ids) {
+    if (patientIdsConfig?.filter !== undefined) setPatientIds(ids);
   }
 
   const value = useMemo(
