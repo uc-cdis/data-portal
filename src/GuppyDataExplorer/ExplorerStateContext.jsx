@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useExplorerConfig } from './ExplorerConfigContext';
@@ -65,16 +66,35 @@ export function ExplorerStateProvider({ children }) {
       filterConfig,
       patientIdsConfig
     );
-    setExplorerFilter(newState.explorerFilter);
-    setPatientIds(newState.patientIds);
-    isBrowserNavigation.current = false;
+    // batch to avoid double-triggering useEffect() below
+    ReactDOM.unstable_batchedUpdates(() => {
+      setExplorerFilter(newState.explorerFilter);
+      setPatientIds(newState.patientIds);
+    });
   }
+
+  useEffect(() => {
+    if (isBrowserNavigation.current) {
+      isBrowserNavigation.current = false;
+      return;
+    }
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.delete('filter');
+    newSearchParams.delete('patientIds');
+
+    if (explorerFilter && Object.keys(explorerFilter).length > 0)
+      newSearchParams.set('filter', JSON.stringify(explorerFilter));
+
+    if (patientIds.length > 0)
+      newSearchParams.set('patientIds', patientIds.join(','));
+
+    navigate(`?${decodeURIComponent(newSearchParams.toString())}`, {
+      state: { scrollY: window.scrollY },
+    });
+  }, [explorerFilter, patientIds]);
 
   /** @param {ExplorerFilter} filter */
   function handleFilterChange(filter) {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.delete('filter');
-
     let newFilter = /** @type {ExplorerFilter} */ ({});
     if (filter && Object.keys(filter).length > 0) {
       /** @type {string[]} */
@@ -100,29 +120,14 @@ export function ExplorerStateProvider({ children }) {
             ...filterWithoutSearchFields,
           });
       }
-
-      newSearchParams.set('filter', JSON.stringify(newFilter));
     }
     setExplorerFilter(newFilter);
-
-    if (!isBrowserNavigation.current)
-      navigate(`?${decodeURIComponent(newSearchParams.toString())}`, {
-        state: { scrollY: window.scrollY },
-      });
   }
 
   /** @param {string[]} ids */
   function handlePatientIdsChange(ids) {
     if (patientIdsConfig?.filter === undefined) return;
-
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.delete('patientIds');
-
-    if (ids.length > 0) newSearchParams.set('patientIds', ids.join(','));
-
     setPatientIds(ids);
-    if (!isBrowserNavigation.current)
-      navigate(`?${decodeURIComponent(newSearchParams.toString())}`);
   }
 
   function handleFilterClear() {
