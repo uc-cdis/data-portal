@@ -72,8 +72,14 @@ const accessibleDataFilterToggle = () => {
 export const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number'|'link'|'tags' = 'string', config: DiscoveryConfig): React.ReactNode => {
   switch (contentType) {
   case 'string':
+    if (Array.isArray(content)) {
+      return content.join(', ');
+    }
     return content;
   case 'number':
+    if (Array.isArray(content)) {
+      return content.join(', ');
+    }
     return content.toLocaleString();
   case 'paragraphs':
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
@@ -187,7 +193,8 @@ const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, co
 
 export interface DiscoveryResource {
   [accessibleFieldName]: AccessLevel,
-  [any: string]: any
+  [any: string]: any,
+  tags?: { name: string, category: string }[]
 }
 
 interface Props {
