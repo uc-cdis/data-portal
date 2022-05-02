@@ -72,8 +72,14 @@ const accessibleDataFilterToggle = () => {
 export const renderFieldContent = (content: any, contentType: 'string'|'paragraphs'|'number'|'link'|'tags' = 'string', config: DiscoveryConfig): React.ReactNode => {
   switch (contentType) {
   case 'string':
+    if (Array.isArray(content)) {
+      return content.join(', ');
+    }
     return content;
   case 'number':
+    if (Array.isArray(content)) {
+      return content.join(', ');
+    }
     return content.toLocaleString();
   case 'paragraphs':
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
@@ -187,7 +193,8 @@ const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, co
 
 export interface DiscoveryResource {
   [accessibleFieldName]: AccessLevel,
-  [any: string]: any
+  [any: string]: any,
+  tags?: { name: string, category: string }[]
 }
 
 interface Props {
@@ -338,7 +345,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   // Set up table columns
   // -----
-  const columns: any = config.studyColumns.map((column) => ({
+  const columns = config.studyColumns.map((column) => ({
     title: <div className='discovery-table-header'>{column.name}</div>,
     ellipsis: !!column.ellipsis,
     textWrap: 'word-break',
@@ -528,7 +535,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         </div>),
       sortOrder: 'descend',
       ellipsis: false,
-      width: '106px',
+      width: '200px',
       textWrap: 'word-break',
       render: (_, record) => {
         if (record[accessibleFieldName] === AccessLevel.PENDING) {

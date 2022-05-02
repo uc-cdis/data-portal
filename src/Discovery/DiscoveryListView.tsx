@@ -31,12 +31,15 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
       props.setAdvSearchFilterHeight(document.getElementById('discovery-table-of-records').offsetHeight);
     }
   });
-
+  const scroll = (
+    props.config.tableScrollHeight ?
+    {scroll:{ y: props.config.tableScrollHeight }} : {}
+  );
   return (
     <Table
+      { ...scroll}
       pagination={false} // handled in separate element
       loading={props.studies.length === 0}
-      width={'500px'}
       locale={{
         emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No Studies' />,
       }}
