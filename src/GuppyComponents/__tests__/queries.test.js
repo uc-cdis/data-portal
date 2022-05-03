@@ -38,12 +38,13 @@ describe('Get GQL filter from filter object from', () => {
 
   test('simple filters', () => {
     const filterState = {
+      __combineMode: 'OR',
       a: { selectedValues: ['foo', 'bar'] },
       b: { __combineMode: 'AND', selectedValues: ['foo', 'bar'] },
       c: { lowerBound: 0, upperBound: 1 },
     };
     const gqlFilter = {
-      AND: [
+      OR: [
         { IN: { a: ['foo', 'bar'] } },
         { AND: [{ IN: { b: ['foo'] } }, { IN: { b: ['bar'] } }] },
         { AND: [{ GTE: { c: 0 } }, { LTE: { c: 1 } }] },
@@ -68,9 +69,12 @@ describe('Get GQL filter from filter object from', () => {
   });
 
   test('a nested filter', () => {
-    const filterState = { 'a.b': { selectedValues: ['foo', 'bar'] } };
+    const filterState = {
+      __combineMode: 'OR',
+      'a.b': { selectedValues: ['foo', 'bar'] },
+    };
     const gqlFilter = {
-      AND: [{ nested: { path: 'a', AND: [{ IN: { b: ['foo', 'bar'] } }] } }],
+      OR: [{ nested: { path: 'a', OR: [{ IN: { b: ['foo', 'bar'] } }] } }],
     };
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
@@ -122,6 +126,7 @@ describe('Get GQL filter from filter object from', () => {
 
   test('an anchored filter state', () => {
     const filterState = {
+      __combineMode: 'OR',
       'x:y': {
         filter: {
           'a.b': { selectedValues: ['foo', 'bar'] },
@@ -130,13 +135,16 @@ describe('Get GQL filter from filter object from', () => {
       },
     };
     const gqlFilter = {
-      AND: [
+      OR: [
         {
           nested: {
             path: 'a',
-            AND: [
+            OR: [
               {
-                AND: [{ IN: { x: ['y'] } }, { IN: { b: ['foo', 'bar'] } }],
+                AND: [
+                  { IN: { x: ['y'] } },
+                  { OR: [{ IN: { b: ['foo', 'bar'] } }] },
+                ],
               },
             ],
           },
@@ -144,11 +152,11 @@ describe('Get GQL filter from filter object from', () => {
         {
           nested: {
             path: 'c',
-            AND: [
+            OR: [
               {
                 AND: [
                   { IN: { x: ['y'] } },
-                  { AND: [{ GTE: { d: 0 } }, { LTE: { d: 1 } }] },
+                  { OR: [{ AND: [{ GTE: { d: 0 } }, { LTE: { d: 1 } }] }] },
                 ],
               },
             ],
@@ -332,11 +340,27 @@ describe('Get query info objects for aggregation options data', () => {
     expect(queryInfo).toEqual(expected);
   });
   test('With filter, with anchor value', () => {
+    const gqlFilterWithAnchor = {
+      AND: [
+        { IN: { f0: ['x'] } },
+        { AND: [{ GTE: { f1: 0 } }, { LTE: { f1: 1 } }] },
+        {
+          nested: {
+            path: 'f2',
+            AND: [
+              {
+                AND: [{ IN: { a: ['a0'] } }, { AND: [{ IN: { foo: ['y'] } }] }],
+              },
+            ],
+          },
+        },
+      ],
+    };
     const queryInfo = getQueryInfoForAggregationOptionsData({
       anchorConfig,
       anchorValue,
       filterTabs,
-      gqlFilter,
+      gqlFilter: gqlFilterWithAnchor,
     });
     const expected = {
       fieldsByGroup: {
@@ -345,71 +369,29 @@ describe('Get query info objects for aggregation options data', () => {
         f3: ['f3.baz'],
       },
       gqlFilterByGroup: {
-        filter_main: gqlFilter,
+        filter_main: gqlFilterWithAnchor,
         filter_f2: {
           AND: [
-            { IN: { f0: ['x'] } },
-            { AND: [{ GTE: { f1: 0 } }, { LTE: { f1: 1 } }] },
+            ...gqlFilterWithAnchor.AND.slice(0, 2),
             {
               nested: {
                 path: 'f2',
-                AND: [{ IN: { foo: ['y'] } }, { IN: { a: ['a0'] } }],
+                AND: [
+                  {
+                    AND: [
+                      { IN: { a: ['a0'] } },
+                      { AND: [{ IN: { foo: ['y'] } }] },
+                    ],
+                  },
+                  { IN: { a: ['a0'] } },
+                ],
               },
             },
           ],
         },
         filter_f3: {
           AND: [
-            { IN: { f0: ['x'] } },
-            { AND: [{ GTE: { f1: 0 } }, { LTE: { f1: 1 } }] },
-            {
-              nested: {
-                path: 'f2',
-                AND: [{ IN: { foo: ['y'] } }],
-              },
-            },
-            { nested: { path: 'f3', AND: [{ IN: { a: ['a0'] } }] } },
-          ],
-        },
-      },
-    };
-    expect(queryInfo).toEqual(expected);
-  });
-  test('No filter, with anchor value, anchored tabs only', () => {
-    const queryInfo = getQueryInfoForAggregationOptionsData({
-      anchorConfig,
-      anchorValue,
-      filterTabs: anchoredFilterTabs,
-      gqlFilter,
-    });
-    const expected = {
-      fieldsByGroup: {
-        f2: ['f2.foo', 'f2.bar'],
-        f3: ['f3.baz'],
-      },
-      gqlFilterByGroup: {
-        filter_f2: {
-          AND: [
-            { IN: { f0: ['x'] } },
-            { AND: [{ GTE: { f1: 0 } }, { LTE: { f1: 1 } }] },
-            {
-              nested: {
-                path: 'f2',
-                AND: [{ IN: { foo: ['y'] } }, { IN: { a: ['a0'] } }],
-              },
-            },
-          ],
-        },
-        filter_f3: {
-          AND: [
-            { IN: { f0: ['x'] } },
-            { AND: [{ GTE: { f1: 0 } }, { LTE: { f1: 1 } }] },
-            {
-              nested: {
-                path: 'f2',
-                AND: [{ IN: { foo: ['y'] } }],
-              },
-            },
+            ...gqlFilterWithAnchor.AND,
             { nested: { path: 'f3', AND: [{ IN: { a: ['a0'] } }] } },
           ],
         },

@@ -45,7 +45,7 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
     handleBrowserNavigationForConfig,
   } = useExplorerConfig();
   const {
-    initialAppliedFilters,
+    explorerFilter,
     patientIds,
     handleBrowserNavigationForState,
     handleFilterChange,
@@ -63,7 +63,7 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
     <GuppyWrapper
       key={explorerId}
       adminAppliedPreFilters={adminAppliedPreFilters}
-      initialAppliedFilters={initialAppliedFilters}
+      explorerFilter={explorerFilter}
       chartConfig={chartConfig}
       filterConfig={filterConfig}
       guppyConfig={guppyConfig}
@@ -81,6 +81,7 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
                 filter={data.filter}
               />
               <ExplorerFilter
+                anchorValue={data.anchorValue}
                 className='explorer__filter'
                 filter={data.filter}
                 initialTabsOptions={data.initialTabsOptions}
@@ -141,8 +142,11 @@ const fallbackElement = (
     <h1>Error opening the Exploration page...</h1>
     <p>
       The Exploration page is not working correctly. Please try refreshing the
-      page. If the problem continues, please contact administrator for more
-      information.
+      page. If the problem continues, please contact the administrator (
+      <a href='mailto:pcdc_help@lists.uchicago.edu'>
+        pcdc_help@lists.uchicago.edu
+      </a>
+      ) for more information.
     </p>
     <NotFoundSVG />
   </div>

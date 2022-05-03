@@ -10,14 +10,14 @@ import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import ExplorerRequestAccessButton from '../ExplorerRequestAccessButton';
 import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
-import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
+import ExplorerQueryController from '../ExplorerQueryController';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import './ExplorerVisualization.css';
 
 /** @typedef {import('../types').ChartConfig} ChartConfig */
-/** @typedef {import('../types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
 /** @typedef {import('../types').GqlSort} GqlSort */
 /** @typedef {import('../types').SimpleAggsData} SimpleAggsData */
 /** @typedef {import('../types').SurvivalAnalysisConfig} SurvivalAnalysisConfig */
@@ -54,7 +54,7 @@ ViewContainer.propTypes = {
  * @param {Object} args
  * @param {SimpleAggsData} args.aggsChartData
  * @param {ChartConfig} args.chartConfig
- * @param {ExplorerFilters} args.filter
+ * @param {ExplorerFilter} args.filter
  * @param {string} args.nodeCountTitle
  * @param {number} args.totalCount
  */
@@ -138,13 +138,13 @@ function getChartData({
  * @property {SimpleAggsData} aggsChartData
  * @property {Object[]} rawData
  * @property {string[]} allFields
- * @property {ExplorerFilters} filter
+ * @property {ExplorerFilter} filter
  * @property {boolean} isLoadingAggsData
  * @property {boolean} isLoadingRawData
  * @property {(args: {  sort: GqlSort; format: string }) => Promise} downloadRawData
  * @property {(args: { fields: string[]; sort: GqlSort }) => Promise} downloadRawDataByFields
- * @property {(type: string, filter: ExplorerFilters, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
- * @property {(type: string, filter: ExplorerFilters) => Promise} getTotalCountsByTypeAndFilter
+ * @property {(type: string, filter: ExplorerFilter, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
+ * @property {(type: string, filter: ExplorerFilter) => Promise} getTotalCountsByTypeAndFilter
  * @property {(args: { offset: number; size: number; sort: GqlSort }) => Promise} fetchAndUpdateRawData
  * @property {string} [className]
  */
@@ -276,7 +276,7 @@ function ExplorerVisualization({
         </div>
       </div>
       {explorerView !== 'survival analysis' && (
-        <ExplorerFilterDisplay filter={filter} />
+        <ExplorerQueryController filter={filter} />
       )}
       <ViewContainer
         showIf={explorerView === 'summary view'}

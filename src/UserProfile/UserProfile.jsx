@@ -8,8 +8,15 @@ import KeyTable from '../components/tables/KeyTable';
 import ReduxUserInformation from './ReduxUserInformation';
 import './UserProfile.css';
 
-const NO_ACCESS_MSG =
-  'You have no access to storage service. Please contact an admin to get it!';
+const NO_ACCESS_MSG = (
+  <>
+    You have no access to storage service. Please contact the administrator (
+    <a href='mailto:pcdc_help@lists.uchicago.edu'>
+      pcdc_help@lists.uchicago.edu
+    </a>
+    ) to get it!
+  </>
+);
 const NO_API_KEY = "You don't have any API key. Please create one!";
 const CONFIRM_DELETE_MSG = 'Are you sure you want to make this key inactive?';
 const SECRET_KEY_MSG =

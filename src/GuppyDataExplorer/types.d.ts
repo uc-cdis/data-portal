@@ -1,6 +1,6 @@
 export type {
   FilterConfig,
-  FilterState as ExplorerFilters,
+  FilterState as ExplorerFilter,
   GqlSort,
   GuppyConfig,
   GuppyData,
@@ -100,7 +100,7 @@ export type AlteredExplorerConfig = {
 export type ExplorerFilterSet = {
   description: string;
   explorerId?: number;
-  filters: ExplorerFilters;
+  filter: ExplorerFilter;
   id?: number;
   name: string;
 };

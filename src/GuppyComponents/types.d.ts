@@ -9,7 +9,8 @@ export type RangeFilter = {
 };
 
 export type SimpleFilterState = {
-  [x: string]: OptionFilter | RangeFilter;
+  [x: Exclude<string, '__combineMode'>]: OptionFilter | RangeFilter;
+  __combineMode?: 'AND' | 'OR';
 };
 
 export type AnchoredFilterState = {
@@ -17,7 +18,11 @@ export type AnchoredFilterState = {
 };
 
 export type FilterState = {
-  [x: string]: OptionFilter | RangeFilter | AnchoredFilterState;
+  [x: Exclude<string, '__combineMode'>]:
+    | OptionFilter
+    | RangeFilter
+    | AnchoredFilterState;
+  __combineMode?: 'AND' | 'OR';
 };
 
 export type GqlInFilter = {
@@ -35,22 +40,46 @@ export type GqlRangeFilter = {
   };
 };
 
-export type GqlSimpleAndFilter = {
-  AND: GqlSimpleFilter[];
-};
+export type GqlSimpleAndFilter =
+  | {
+      AND: GqlSimpleFilter[];
+    }
+  | {
+      OR: GqlSimpleFilter[];
+    };
 
 export type GqlSimpleFilter = GqlInFilter | GqlRangeFilter | GqlSimpleAndFilter;
 
-export type GqlNestedFilter = {
+export type GqlNestedAnchoredFilter = {
   nested: {
     path: string;
-    AND: GqlFilter[];
+    AND:
+      | [GqlInFilter]
+      | [GqlInFilter, { AND: GqlFilter[] } | { OR: GqlFilter[] }];
   };
 };
 
-export type GqlAndFilter = {
-  AND: GqlFilter[];
-};
+export type GqlNestedFilter =
+  | GqlNestedAnchoredFilter
+  | {
+      nested:
+        | {
+            path: string;
+            AND: GqlFilter[];
+          }
+        | {
+            path: string;
+            OR: GqlFilter[];
+          };
+    };
+
+export type GqlAndFilter =
+  | {
+      AND: GqlFilter[];
+    }
+  | {
+      OR: GqlFilter[];
+    };
 
 export type GqlSearchFilter = {
   search: {
@@ -143,16 +172,14 @@ export type AggsData = {
     | SimpleAggsData;
 };
 
-export type FilterChangeHandler = (args: {
-  anchorValue?: string;
-  filter: FilterState;
-}) => void;
+export type FilterChangeHandler = (filter: FilterState) => void;
 
 export type GuppyData = {
   accessibleCount: number;
   aggsChartData: SimpleAggsData;
   aggsData: AggsData;
   allFields: string[];
+  anchorValue: string;
   filter: FilterState;
   initialTabsOptions?: SimpleAggsData;
   isLoadingAggsData: boolean;

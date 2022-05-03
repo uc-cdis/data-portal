@@ -76,6 +76,7 @@ export default function useSurvivalAnalysisResult() {
       method: 'POST',
       body: JSON.stringify({ ...body, explorerId, result: config.result }),
     }).then(({ response, data, status }) => {
+      if (status === 404) throw data;
       if (status !== 200) throw response.statusText;
       return data;
     });
@@ -91,13 +92,13 @@ export default function useSurvivalAnalysisResult() {
     /** @type {SurvivalAnalysisResult} */
     const cache = {};
     for (const [index, usedFilterSet] of usedFilterSets.entries()) {
-      const { filters, id, name } = usedFilterSet;
+      const { filter, id, name } = usedFilterSet;
       body.usedFilterSetIds.push(id);
       if (result !== null && id in result && !isSurvivalTypeChanged)
         cache[id] = { ...result[id], name: `${index + 1}. ${name}` };
       else
         body.filterSets.push({
-          filters: getGQLFilter(filters) ?? {},
+          filters: getGQLFilter(filter) ?? {},
           id,
           name: `${index + 1}. ${name}`,
         });
@@ -106,7 +107,10 @@ export default function useSurvivalAnalysisResult() {
     if (body.filterSets.length > 0)
       return fetchResult(body)
         .then((data) => setResult({ ...cache, ...data }))
-        .catch(() => setResult(null));
+        .catch((e) => {
+          setResult(null);
+          throw e;
+        });
 
     setResult(cache);
     return Promise.resolve();

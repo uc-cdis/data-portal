@@ -64,7 +64,11 @@ export default function DataRequests() {
               </h2>
               <p>
                 Please retry or refreshing the page. If the problem persists,
-                please contact administrator for more information.
+                please contact the administrator (
+                <a href='mailto:pcdc_help@lists.uchicago.edu'>
+                  pcdc_help@lists.uchicago.edu
+                </a>
+                ) for more information.
               </p>
               <br />
               <Button

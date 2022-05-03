@@ -10,6 +10,7 @@ import { FILE_DELIMITERS, GUPPY_URL } from './const';
 /** @typedef {import('../types').GqlFilter} GqlFilter */
 /** @typedef {import('../types').GqlInFilter} GqlInFilter */
 /** @typedef {import('../types').GqlNestedFilter} GqlNestedFilter */
+/** @typedef {import('../types').GqlNestedAnchoredFilter} GqlNestedAnchoredFilter */
 /** @typedef {import('../types').GqlSimpleAndFilter} GqlSimpleAndFilter */
 /** @typedef {import('../types').GqlSort} GqlSort */
 /** @typedef {import('../types').OptionFilter} OptionFilter */
@@ -52,6 +53,44 @@ function buildHistogramQueryStrForField(field) {
       }`;
 }
 
+/** @param {GqlFilter} gqlFilter */
+function checkFilterSelf(gqlFilter) {
+  // No filter
+  if (gqlFilter === undefined) return false;
+
+  // AND always sets `filterSelf: false`
+  if (!('OR' in gqlFilter)) return false;
+
+  // OR without any filter sets `filterSelf: false`
+  if (gqlFilter.OR.length === 0) return false;
+
+  // OR with more than one filter always sets `filterSelf: true`
+  if (gqlFilter.OR.length > 1) return true;
+
+  // OR with a single non-nested filter sets `filterSelf: false`
+  if (!('nested' in gqlFilter.OR[0])) return false;
+
+  // OR with a single nested filter is complicated due to anchored filter
+  if ('OR' in gqlFilter.OR[0].nested) {
+    const { nested } = gqlFilter.OR[0];
+
+    // Nested OR sets `filter: true` if with more than one filter
+    if (nested.OR.length > 1) return true;
+
+    // Nested OR with anchored filter sets `filter: true`
+    // if more than one filter is used with anchor
+    if (
+      'AND' in nested.OR[0] &&
+      nested.OR[0].AND.length === 2 &&
+      'OR' in nested.OR[0].AND[1]
+    )
+      return nested.OR[0].AND[1].OR.length > 1;
+  }
+
+  // default to `filterSelf: false`
+  return false;
+}
+
 /**
  * @param {object} args
  * @param {string} args.type
@@ -69,7 +108,9 @@ export function queryGuppyForAggregationChartData({
     gqlFilter !== undefined
       ? `query ($filter: JSON) {
         _aggregation {
-          ${type} (filter: $filter, filterSelf: false, accessibility: all) {
+          ${type} (filter: $filter, filterSelf: ${checkFilterSelf(
+          gqlFilter
+        )}, accessibility: all) {
             ${fields.map(buildHistogramQueryStrForField).join('\n')}
           }
         }
@@ -169,20 +210,28 @@ export function getQueryInfoForAggregationOptionsData({
 
           // add gqlFilterGroup for each nested field object path
           if (!(path in gqlFilterByGroup)) {
-            const groupGqlFilter = cloneDeep(gqlFilter ?? { AND: [] });
+            const combineMode = gqlFilter ? Object.keys(gqlFilter)[0] : 'AND';
+            const groupGqlFilter = cloneDeep(
+              gqlFilter ?? { [combineMode]: [] }
+            );
 
             if (anchorValue !== '' && 'AND' in groupGqlFilter) {
-              const filters = /** @type {GqlFilter[]} */ (groupGqlFilter.AND);
-              const found = /** @type {GqlNestedFilter} */ (
+              const filters = /** @type {GqlFilter[]} */ (
+                groupGqlFilter[combineMode]
+              );
+              const found = /** @type {GqlNestedAnchoredFilter} */ (
                 filters.find((f) => 'nested' in f && f.nested.path === path)
               );
               if (found === undefined) {
-                filters.push({ nested: { path, AND: [anchorFilterPiece] } });
-              } else {
+                filters.push(
+                  /** @type {GqlNestedAnchoredFilter} */ ({
+                    nested: { path, AND: [anchorFilterPiece] },
+                  })
+                );
+              } else if (Array.isArray(found.nested.AND)) {
                 found.nested.AND.push(anchorFilterPiece);
               }
             }
-
             gqlFilterByGroup[`filter_${path}`] = groupGqlFilter;
           }
         }
@@ -201,12 +250,14 @@ export function getQueryInfoForAggregationOptionsData({
 
 /**
  * @param {object} args
+ * @param {boolean} [args.filterSelf]
  * @param {{ [group: string]: string[]}} args.fieldsByGroup
  * @param {boolean} [args.isFilterEmpty]
  * @param {boolean} [args.isInitialQuery]
  * @param {string} args.type
  */
 export function buildQueryForAggregationOptionsData({
+  filterSelf = false,
   fieldsByGroup,
   isFilterEmpty,
   isInitialQuery = false,
@@ -226,7 +277,7 @@ export function buildQueryForAggregationOptionsData({
     ? `main: ${type} ${
         isFilterEmpty
           ? '(accessibility: all)'
-          : '(filter: $filter_main, filterSelf: false, accessibility: all)'
+          : `(filter: $filter_main, filterSelf: ${filterSelf}, accessibility: all)`
       } {
       ${mainHistogramQueryFragment}
     }`
@@ -242,7 +293,7 @@ export function buildQueryForAggregationOptionsData({
   const anchoredPathQueryFragments = [];
   for (const [group, fields] of Object.entries(fieldsByAnchoredGroup))
     anchoredPathQueryFragments.push(`
-      anchored_${group}: ${type} (filter: $filter_${group}, filterSelf: false, accessibility: all) {
+      anchored_${group}: ${type} (filter: $filter_${group}, filterSelf: ${filterSelf}, accessibility: all) {
         ${fields.map(buildHistogramQueryStrForField).join('\n')}
       }
     `);
@@ -285,9 +336,12 @@ export function queryGuppyForAggregationOptionsData({
       gqlFilter,
     });
 
+  const isFilterEmpty = gqlFilter === undefined;
+  const filterSelf = checkFilterSelf(gqlFilter);
   const query = buildQueryForAggregationOptionsData({
+    filterSelf,
     fieldsByGroup,
-    isFilterEmpty: gqlFilter === undefined,
+    isFilterEmpty,
     isInitialQuery,
     type,
   });
@@ -359,7 +413,9 @@ export function queryGuppyForSubAggregationData({
     gqlFilter !== undefined
       ? `query ($filter: JSON, $nestedAggFields: JSON) {
         _aggregation {
-            ${type} (filter: $filter, filterSelf: false, nestedAggFields: $nestedAggFields, accessibility: all) {
+            ${type} (filter: $filter, filterSelf: ${checkFilterSelf(
+          gqlFilter
+        )}, nestedAggFields: $nestedAggFields, accessibility: all) {
               ${nestedHistogramQueryStrForEachField(
                 mainField,
                 numericAggAsText
@@ -541,9 +597,10 @@ function parseSimpleFilter(fieldName, filterValues) {
 /**
  * @param {string} anchorName Formatted as "[anchorFieldName]:[anchorValue]"
  * @param {AnchoredFilterState} anchoredFilterState
- * @returns {GqlNestedFilter[]}
+ * @param {'AND' | 'OR'} combineMode
+ * @returns {GqlNestedAnchoredFilter[]}
  */
-function parseAnchoredFilters(anchorName, anchoredFilterState) {
+function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
   const filterState = anchoredFilterState.filter;
   if (filterState === undefined || Object.keys(filterState).length === 0)
     return undefined;
@@ -551,7 +608,7 @@ function parseAnchoredFilters(anchorName, anchoredFilterState) {
   const [anchorFieldName, anchorValue] = anchorName.split(':');
   const anchorFilter = { IN: { [anchorFieldName]: [anchorValue] } };
 
-  /** @type {GqlNestedFilter[]} */
+  /** @type {GqlNestedAnchoredFilter[]} */
   const nestedFilters = [];
   /** @type {{ [path: string]: number }} */
   const nestedFilterIndices = {};
@@ -559,16 +616,25 @@ function parseAnchoredFilters(anchorName, anchoredFilterState) {
 
   for (const [filterKey, filterValues] of Object.entries(filterState)) {
     const [path, fieldName] = filterKey.split('.');
-    const simpleFilter = parseSimpleFilter(fieldName, filterValues);
 
-    if (simpleFilter !== undefined) {
-      if (!(path in nestedFilterIndices)) {
-        nestedFilterIndices[path] = nestedFilterIndex;
-        nestedFilters.push({ nested: { path, AND: [anchorFilter] } });
-        nestedFilterIndex += 1;
+    if (typeof filterValues !== 'string') {
+      const simpleFilter = parseSimpleFilter(fieldName, filterValues);
+
+      if (simpleFilter !== undefined) {
+        if (!(path in nestedFilterIndices)) {
+          nestedFilterIndices[path] = nestedFilterIndex;
+          nestedFilters.push(
+            /** @type {GqlNestedAnchoredFilter} */ ({
+              nested: { path, AND: [anchorFilter, { [combineMode]: [] }] },
+            })
+          );
+          nestedFilterIndex += 1;
+        }
+
+        nestedFilters[nestedFilterIndices[path]].nested.AND[1][
+          combineMode
+        ].push(simpleFilter);
       }
-
-      nestedFilters[nestedFilterIndices[path]].nested.AND.push(simpleFilter);
     }
   }
 
@@ -593,47 +659,63 @@ export function getGQLFilter(filterState) {
   const nestedFilterIndices = {};
   let nestedFilterIndex = 0;
 
-  for (const [filterKey, filterValues] of Object.entries(filterState)) {
+  const { __combineMode, ...__filterState } = filterState;
+  const combineMode = __combineMode ?? 'AND';
+  for (const [filterKey, filterValues] of Object.entries(__filterState)) {
     const [fieldStr, nestedFieldStr] = filterKey.split('.');
     const isNestedField = nestedFieldStr !== undefined;
     const fieldName = isNestedField ? nestedFieldStr : fieldStr;
 
-    if ('filter' in filterValues) {
-      for (const { nested } of parseAnchoredFilters(fieldName, filterValues)) {
-        const { path, AND } = nested;
-
-        if (!(path in nestedFilterIndices)) {
-          nestedFilterIndices[path] = nestedFilterIndex;
-          nestedFilters.push({ nested: { path, AND: [] } });
-          nestedFilterIndex += 1;
-        }
-
-        nestedFilters[nestedFilterIndices[path]].nested.AND.push({ AND });
-      }
-    } else {
-      const simpleFilter = parseSimpleFilter(fieldName, filterValues);
-
-      if (simpleFilter !== undefined) {
-        if (isNestedField) {
-          const path = fieldStr; // parent path
-
-          if (!(path in nestedFilterIndices)) {
-            nestedFilterIndices[path] = nestedFilterIndex;
-            nestedFilters.push({ nested: { path, AND: [] } });
+    if (typeof filterValues !== 'string')
+      if ('filter' in filterValues) {
+        const parsedAnchoredFilters = parseAnchoredFilters(
+          fieldName,
+          filterValues,
+          combineMode
+        );
+        for (const { nested } of parsedAnchoredFilters) {
+          if (!(nested.path in nestedFilterIndices)) {
+            nestedFilterIndices[nested.path] = nestedFilterIndex;
+            nestedFilters.push(
+              /** @type {GqlNestedFilter} */ ({
+                nested: { path: nested.path, [combineMode]: [] },
+              })
+            );
             nestedFilterIndex += 1;
           }
 
-          nestedFilters[nestedFilterIndices[path]].nested.AND.push(
-            simpleFilter
-          );
-        } else {
-          simpleFilters.push(simpleFilter);
+          nestedFilters[nestedFilterIndices[nested.path]].nested[
+            combineMode
+          ].push({ AND: nested.AND });
+        }
+      } else {
+        const simpleFilter = parseSimpleFilter(fieldName, filterValues);
+
+        if (simpleFilter !== undefined) {
+          if (isNestedField) {
+            const path = fieldStr; // parent path
+
+            if (!(path in nestedFilterIndices)) {
+              nestedFilterIndices[path] = nestedFilterIndex;
+              nestedFilters.push(
+                /** @type {GqlNestedFilter} */ ({
+                  nested: { path, [combineMode]: [] },
+                })
+              );
+              nestedFilterIndex += 1;
+            }
+
+            nestedFilters[nestedFilterIndices[path]].nested[combineMode].push(
+              simpleFilter
+            );
+          } else {
+            simpleFilters.push(simpleFilter);
+          }
         }
       }
-    }
   }
 
-  return { AND: [...simpleFilters, ...nestedFilters] };
+  return { [combineMode]: [...simpleFilters, ...nestedFilters] };
 }
 
 /**
@@ -641,11 +723,17 @@ export function getGQLFilter(filterState) {
  * @param {object} args
  * @param {string} args.type
  * @param {string[]} [args.fields]
- * @param {FilterState} [args.filter]
+ * @param {GqlFilter} [args.gqlFilter]
  * @param {GqlSort} [args.sort]
  * @param {string} [args.format]
  */
-export function downloadDataFromGuppy({ type, fields, filter, sort, format }) {
+export function downloadDataFromGuppy({
+  type,
+  fields,
+  gqlFilter,
+  sort,
+  format,
+}) {
   const JSON_FORMAT = format === 'json' || format === undefined;
   return fetch(downloadEndpoint, {
     method: 'POST',
@@ -654,7 +742,7 @@ export function downloadDataFromGuppy({ type, fields, filter, sort, format }) {
     },
     body: JSON.stringify({
       accessibility: 'accessible',
-      filter: getGQLFilter(filter),
+      filter: gqlFilter,
       type,
       fields,
       sort,

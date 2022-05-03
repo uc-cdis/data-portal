@@ -19,7 +19,7 @@ import Popup from '../../components/Popup';
 /** @typedef {import('../../types').KubeState} KubeState */
 /** @typedef {import('../../types').UserAccessState} UserAccessState */
 /** @typedef {import('../types').ButtonConfig} ButtonConfig */
-/** @typedef {import('../types').ExplorerFilters} ExplorerFilters */
+/** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
 /** @typedef {import('../types').GqlSort} GqlSort */
 /** @typedef {import('../types').GuppyConfig} GuppyConfig */
 /** @typedef {import('../types').SingleButtonConfig} SingleButtonConfig */
@@ -29,11 +29,11 @@ import Popup from '../../components/Popup';
  * @property {KubeState['job']} [job]
  * @property {(args: { sort?: GqlSort; format?: string }) => Promise} downloadRawData
  * @property {(args: { fields: string[]; sort?: GqlSort }) => Promise} downloadRawDataByFields
- * @property {(type: string, filter: ExplorerFilters, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
- * @property {(type: string, filter: ExplorerFilters) => Promise} getTotalCountsByTypeAndFilter
+ * @property {(type: string, filter: ExplorerFilter, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
+ * @property {(type: string, filter: ExplorerFilter) => Promise} getTotalCountsByTypeAndFilter
  * @property {number} accessibleCount
  * @property {number} totalCount
- * @property {ExplorerFilters} filter
+ * @property {ExplorerFilter} filter
  * @property {boolean} [isPending] : PropTypes.bool,
  * @property {ButtonConfig} buttonConfig: ButtonConfigType.isRequired,
  * @property {GuppyConfig} guppyConfig: GuppyConfigType.isRequired,

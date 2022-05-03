@@ -59,7 +59,7 @@ const emptyFilterSets = [];
 export const defaultFilterSet = {
   name: '*** All Subjects ***',
   description: '',
-  filters: {},
+  filter: {},
   id: -1,
 };
 
@@ -180,7 +180,7 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
       />
       <ControlFormInput
         id='survival-time-interval'
-        label='Time interval'
+        label='Time interval (year)'
         type='number'
         min={1}
         max={5}

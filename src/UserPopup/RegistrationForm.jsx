@@ -168,7 +168,11 @@ function RegistrationForm({
       <h2>Error registering to gain access...</h2>
       <p>
         Please retry or refreshing the page. If the problem persists, please
-        contact administrator for more information.
+        contact the administrator (
+        <a href='mailto:pcdc_help@lists.uchicago.edu'>
+          pcdc_help@lists.uchicago.edu
+        </a>
+        ) for more information.
       </p>
     </div>
   );
