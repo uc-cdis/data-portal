@@ -9,7 +9,7 @@ import {
   DoubleLeftOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
-import { hostname, fenceDownloadPath } from '../localconf';
+import { hostname, basename, fenceDownloadPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import {
   AccessLevel, accessibleFieldName, renderFieldContent, DiscoveryResource,
@@ -196,7 +196,7 @@ const DiscoveryDetails = (props: Props) => {
         <Button
           type='text'
           onClick={() => {
-            navigator.clipboard.writeText(`${hostname}discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`)
+            navigator.clipboard.writeText(`${hostname}${(basename && basename !== '/') ? basename : ''}/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`)
               .then(() => {
                 props.setPermalinkCopied(true);
               });
