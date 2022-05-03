@@ -4,8 +4,25 @@ import { fetchWithCreds } from '../actions';
 import { useExplorerConfig } from './ExplorerConfigContext';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('./types').ExplorerFilterSetDTO} ExplorerFilterSetDTO */
 
 const FILTER_SET_URL = '/amanuensis/filter-sets';
+
+/**
+ * @param {ExplorerFilterSet} filterSet
+ * @returns {ExplorerFilterSetDTO}
+ */
+function convertToFilterSetDTO({ filter: filters, ...rest }) {
+  return { filters, ...rest };
+}
+
+/**
+ * @param {ExplorerFilterSetDTO} filterSetDTO
+ * @returns {ExplorerFilterSet}
+ */
+function convertFromFilterSetDTO({ filters: filter, ...rest }) {
+  return { filter, ...rest };
+}
 
 /**
  * @param {number} explorerId
@@ -24,7 +41,7 @@ function fetchFilterSets(explorerId) {
       !Array.isArray(data.filter_sets)
     )
       throw new Error('Error: Incorrect Response Data');
-    return data.filter_sets;
+    return data.filter_sets.map(convertFromFilterSetDTO);
   });
 }
 
@@ -37,7 +54,7 @@ export function createFilterSet(explorerId, filterSet) {
   return fetchWithCreds({
     path: `${FILTER_SET_URL}?explorerId=${explorerId}`,
     method: 'POST',
-    body: JSON.stringify(filterSet),
+    body: JSON.stringify(convertToFilterSetDTO(filterSet)),
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
     return data;
@@ -66,7 +83,7 @@ export function updateFilterSet(explorerId, filterSet) {
   return fetchWithCreds({
     path: `${FILTER_SET_URL}/${id}?explorerId=${explorerId}`,
     method: 'PUT',
-    body: JSON.stringify(requestBody),
+    body: JSON.stringify(convertToFilterSetDTO(requestBody)),
   }).then(({ response, status }) => {
     if (status !== 200) throw response.statusText;
   });
