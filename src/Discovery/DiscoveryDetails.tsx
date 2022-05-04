@@ -196,7 +196,8 @@ const DiscoveryDetails = (props: Props) => {
         <Button
           type='text'
           onClick={() => {
-            navigator.clipboard.writeText(`${hostname}${(basename && basename !== '/') ? basename : ''}/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`)
+            const cleanBasename = basename.replace(/^\/+/g, '');
+            navigator.clipboard.writeText(`${hostname}${cleanBasename}/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`)
               .then(() => {
                 props.setPermalinkCopied(true);
               });
