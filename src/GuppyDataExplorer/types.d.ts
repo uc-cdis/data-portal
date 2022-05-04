@@ -104,3 +104,11 @@ export type ExplorerFilterSet = {
   id?: number;
   name: string;
 };
+
+export type ExplorerFilterSetDTO = {
+  description: string;
+  explorerId?: number;
+  filters: ExplorerFilter;
+  id?: number;
+  name: string;
+};
