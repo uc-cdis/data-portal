@@ -12,7 +12,7 @@ function FilterSetQueryDisplay({ filter, title = 'Filters' }) {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   return (
     <div className='filter-set-query-display'>
-      {Object.keys(filter).length > 0 ? (
+      {Object.keys(filter ?? {}).length > 0 ? (
         <>
           <header>{title}</header>
           <main>
