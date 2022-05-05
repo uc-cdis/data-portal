@@ -20,8 +20,15 @@ function convertToFilterSetDTO({ filter: filters, ...rest }) {
  * @param {ExplorerFilterSetDTO} filterSetDTO
  * @returns {ExplorerFilterSet}
  */
-function convertFromFilterSetDTO({ filters: filter, ...rest }) {
-  return { filter, ...rest };
+function convertFromFilterSetDTO({ filters, ...rest }) {
+  return {
+    filter:
+      '__combineMode' in filters
+        ? filters
+        : // backward compat for old filter sets missing __combineMode value
+          { __combineMode: 'AND', ...filters },
+    ...rest,
+  };
 }
 
 /**
