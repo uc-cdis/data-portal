@@ -1,7 +1,7 @@
 (function () {
   const basename = document.currentScript.getAttribute('basename');
   const { pathname } = location;
-  const isDevMode = !!pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length).match(/^dev.html/);
+  const isDevMode = !!pathname.match(/^.*(\/dev\.html)/);
   let buildSrc = '/bundle.js';
   if (isDevMode) {
     if (basename && basename !== '/') {
