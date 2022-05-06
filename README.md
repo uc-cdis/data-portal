@@ -67,7 +67,7 @@ at build time:
 
 * `commons` - the default data commons portal
 * `covid19` - a portal for pandemic response commons
-* `nct` - a portal for clinical trails
+* `nct` - a portal for clinical trials
 * `ecosystem` - a portal for Gen3 data ecosystem
 * `workspace` - a scaled down portal for workspace accounts
 
