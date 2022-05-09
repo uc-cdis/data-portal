@@ -123,7 +123,6 @@ describe('Configuration', () => {
 });
 
 describe('Modal', () => {
-
   test('Modal header field shows configured field', () => {
     const modalDataIndex = 2;
     const headerField = testConfig.minimalFieldMapping.uid;

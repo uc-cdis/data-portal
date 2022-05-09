@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Alert, Button, Drawer, Space, Collapse, List, Tabs
+  Alert, Button, Drawer, Space, Collapse, List, Tabs,
 } from 'antd';
 import {
   LinkOutlined,
@@ -9,7 +9,7 @@ import {
   DoubleLeftOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
-import { hostname, fenceDownloadPath } from '../localconf';
+import { hostname, basename, fenceDownloadPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import {
   AccessLevel, accessibleFieldName, renderFieldContent, DiscoveryResource,
@@ -37,7 +37,7 @@ const subHeadingCls = { className: 'discovery-modal__subheading' };
 const fieldGroupingClass = { className: 'discovery-modal__fieldgroup' };
 const labelCls = { className: 'discovery-modal__fieldlabel' };
 const tagsCls = { className: 'discovery-modal__tagsfield' };
-const tabLabelCls = { className: 'discovery-modal__tablabel' }
+const tabLabelCls = { className: 'discovery-modal__tablabel' };
 
 const blockTextField = (text: string) => <div {...fieldCls}>{text}</div>;
 const label = (text: string) => <b {...labelCls}>{text}</b>;
@@ -196,7 +196,8 @@ const DiscoveryDetails = (props: Props) => {
         <Button
           type='text'
           onClick={() => {
-            navigator.clipboard.writeText(`${hostname}discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`)
+            const cleanBasename = basename.replace(/^\/+/g, '');
+            navigator.clipboard.writeText(`${hostname}${cleanBasename}/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`)
               .then(() => {
                 props.setPermalinkCopied(true);
               });

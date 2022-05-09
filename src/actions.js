@@ -4,6 +4,7 @@ import {
   userAPIPath,
   headers,
   hostname,
+  basename,
   submissionApiPath,
   graphqlPath,
   guppyGraphQLUrl,
@@ -287,7 +288,8 @@ export const fetchUser = (dispatch) => fetchCreds({
 export const refreshUser = () => fetchUser;
 
 export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
-  fetch(`${userAPIPath}/logout?next=${hostname}`)
+  const cleanBasename = basename.replace(/^\/+/g, '').replace(/(dev.html$)/, '');
+  fetch(`${userAPIPath}/logout?next=${hostname}${cleanBasename}`)
     .then((response) => {
       if (displayAuthPopup) {
         dispatch({
