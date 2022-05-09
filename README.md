@@ -62,11 +62,14 @@ HOSTNAME=qa.planx-pla.net NODE_ENV=dev APP=dev bash ./runWebpack.sh
 
 ### Portal Bundles
 
-The portal webpack configurations selects between two application entry points
+The portal webpack configurations selects between multiple application entry points
 at build time:
 
 * `commons` - the default data commons portal
-* `workspace` - a scaled down port for workspace accounts
+* `covid19` - a portal for pandemic response commons
+* `nct` - a portal for clinical trials
+* `ecosystem` - a portal for Gen3 data ecosystem
+* `workspace` - a scaled down portal for workspace accounts
 
 We can use the https://remote/dev.html trick to test a local workspace build by setting the `GEN3_BUNDLE` variable to `workspace`:
 ```
@@ -75,8 +78,22 @@ HOSTNAME=qa.planx-pla.net GEN3_BUNDLE=workspace bash ./runWebpack.sh
 
 That just changes the webpack config to serve the workspace bundle as `bundle.js` - which is what `dev.html` expects.
 
-The protal `Dockerfile` runs a deploy time webpack build to incorporate
+The portal `Dockerfile` runs a deploy time webpack build to incorporate
 deploy-time configuration.  The `GEN3_BUNDLE` environment variable determines which application gets built at run time.
+
+
+### Customized Basename
+
+>:warning: To use this feature, make sure the to set the `BASENAME` to a customized value in the portal deployed to the remote before you run the local dev server with the customized basename. Also the customized basename you used for local portal dev server should be the same as you have set for the remote deployment.
+
+Available from `3.23.0`, you can supply a customized basename for portal by setting the `BASENAME` variable:
+```
+HOSTNAME=qa.planx-pla.net NODE_ENV=auto BASENAME=/portal bash ./runWebpack.sh
+```
+
+After that you can visit the local development portal from https://qa.planx-pla.net/portal/dev.html
+
+If this environmental variable is set in production bundle then portal should be accessed from https://qa.planx-pla.net/portal
 
 ### Component story books
 
@@ -191,7 +208,7 @@ All the configurations of necessary certificates are define in src/<common-name>
         {
           "name": "Things you can do with data",
           "question": "How can I share data with other people according to the policy of the commons",
-          "options": ["I can not share data", "I can only share data with BPA memebers", "I can share data with family", "I can share data with my wife"],
+          "options": ["I can not share data", "I can only share data with BPA members", "I can share data with family", "I can share data with my wife"],
           "answer": 1,
           "hint": "Some information about this question"
         }
@@ -210,9 +227,9 @@ Then, specify all the required certificates that need to be completed before usi
 Default is an empty list.
 
 ### Style Guide
-When styling components, we adhere to a few rules. We style using class selectors (`.class-name` instead of `#class-name`), and separate class names with hypens instead of camel case (`.class-name` instead of `.className`). The CSS file should be named {component}.css, and be in the same folder as the component. It is then imported into the component's .jsx file.
+When styling components, we adhere to a few rules. We style using class selectors (`.class-name` instead of `#class-name`), and separate class names with hyphens instead of camel case (`.class-name` instead of `.className`). The CSS file should be named {component}.css, and be in the same folder as the component. It is then imported into the component's .jsx file.
 
-We are moving toward using the [BEM methodology](http://getbem.com/introduction/) in terms of CSS organizational conventions. This means we are dividing chunks of code within a component into blocks, are avoiding nesting components, and are using the naming convention of `{block}__{elements}--{modifer}`. `{element}` and `{modifier}` are optional depending on the situation - see the [BEM guidelines](http://getbem.com/introduction/) for more examples.
+We are moving toward using the [BEM methodology](http://getbem.com/introduction/) in terms of CSS organizational conventions. This means we are dividing chunks of code within a component into blocks, are avoiding nesting components, and are using the naming convention of `{block}__{elements}--{modifier}`. `{element}` and `{modifier}` are optional depending on the situation - see the [BEM guidelines](http://getbem.com/introduction/) for more examples.
 
 For our example, say we have a simple component called `Component`:
 ```
