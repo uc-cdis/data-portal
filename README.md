@@ -86,7 +86,7 @@ deploy-time configuration.  The `GEN3_BUNDLE` environment variable determines wh
 
 >:warning: To use this feature, make sure the to set the `BASENAME` to a customized value in the portal deployed to the remote before you run the local dev server with the customized basename. Also the customized basename you used for local portal dev server should be the same as you have set for the remote deployment.
 
-Available from <VERSION_NUMBER_PLACEHOLDER>, you can supply a customized basename for portal by setting the `BASENAME` variable:
+Available from `3.23.0`, you can supply a customized basename for portal by setting the `BASENAME` variable:
 ```
 HOSTNAME=qa.planx-pla.net NODE_ENV=auto BASENAME=/portal bash ./runWebpack.sh
 ```
