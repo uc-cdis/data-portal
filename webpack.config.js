@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const CompressionPlugin = require('compression-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const path = require('path');
 const portalVersion = require('./package.json').version;
 
@@ -76,6 +77,9 @@ if (isProduction) {
 } else {
   // add sourcemap tools for development mode
   devtool = 'eval-source-map';
+
+  // add react-refresh to plugins for development mode
+  plugins.push(new ReactRefreshWebpackPlugin());
 }
 
 module.exports = {
@@ -117,6 +121,9 @@ module.exports = {
         exclude:
           /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
         loader: 'babel-loader',
+        options: isProduction
+          ? undefined
+          : { plugins: [require.resolve('react-refresh/babel')] },
       },
       {
         test: /\.css$/,
