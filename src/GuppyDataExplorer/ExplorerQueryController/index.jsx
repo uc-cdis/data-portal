@@ -6,7 +6,9 @@ import { useExplorerState } from '../ExplorerStateContext';
 import { pluckFromAnchorFilter, pluckFromFilter } from './utils';
 import './ExplorerQueryController.css';
 
-/** @param {{ filter: import('../types').ExplorerFilter }} props */
+/** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
+
+/** @param {{ filter: ExplorerFilter }} props */
 function ExplorerQueryController({ filter }) {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   const { handleFilterChange } = useExplorerState();
@@ -14,7 +16,7 @@ function ExplorerQueryController({ filter }) {
   /** @type {import('../../components/QueryDisplay').ClickCombineModeHandler} */
   function handleClickCombineMode(payload) {
     handleFilterChange(
-      /** @type {import('../types').ExplorerFilter} */ ({
+      /** @type {ExplorerFilter} */ ({
         ...filter,
         __combineMode: payload === 'AND' ? 'OR' : 'AND',
       })
