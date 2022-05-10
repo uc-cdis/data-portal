@@ -28,11 +28,6 @@
   background-color: var(--g3-color__bg-coal);
 }
 
-.explorer-query-controller__collapse {
-  max-height: 90px;
-  overflow-x: scroll;
-}
-
 .explorer-query-controller__query > h4 {
   display: inline-block;
   margin-right: 0.25rem;
