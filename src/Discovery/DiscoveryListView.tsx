@@ -32,12 +32,12 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
     }
   });
   const scroll = (
-    props.config.tableScrollHeight ?
-    {scroll:{ y: props.config.tableScrollHeight }} : {}
+    props.config.tableScrollHeight
+      ? { scroll: { y: props.config.tableScrollHeight } } : {}
   );
   return (
     <Table
-      { ...scroll}
+      {...scroll}
       pagination={false} // handled in separate element
       loading={props.studies.length === 0}
       locale={{
