@@ -1,15 +1,18 @@
 .explorer-query-controller {
   background-color: var(--g3-color__white);
-  padding: 0.5rem 1rem;
-  margin: 0.5rem 0;
 }
 
-.explorer-query-controller__collapsed {
+.explorer-query-controller__query {
+  padding: 0.5rem 1rem;
+  margin: 0.25rem;
+}
+
+.explorer-query-controller__query--collapsed {
   max-height: 5.5rem;
   overflow-y: scroll;
 }
 
-.explorer-query-controller > button {
+.explorer-query-controller__query > button {
   background-color: inherit;
   border: none;
   height: 1rem;
@@ -17,11 +20,11 @@
   margin-right: 0.25rem;
 }
 
-.explorer-query-controller > button:disabled {
+.explorer-query-controller__query > button:disabled {
   cursor: not-allowed;
 }
 
-.explorer-query-controller > button > i {
+.explorer-query-controller__query > button > i {
   background-color: var(--g3-color__bg-coal);
 }
 
@@ -30,7 +33,7 @@
   overflow-x: scroll;
 }
 
-.explorer-query-controller > h4 {
+.explorer-query-controller__query > h4 {
   display: inline-block;
   margin-right: 0.25rem;
 }

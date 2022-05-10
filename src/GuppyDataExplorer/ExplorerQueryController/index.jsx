@@ -47,36 +47,38 @@ function ExplorerQueryController({ filter }) {
   const hasFilter =
     Object.keys(pluckFromFilter({ field: '__combineMode', filter })).length > 0;
   return (
-    <div
-      ref={ref}
-      className={`explorer-query-controller ${
-        isCollapsed ? 'explorer-query-controller__collapsed' : ''
-      }`.trim()}
-    >
-      {hasFilter ? (
-        <>
-          <button
-            type='button'
-            onClick={() => setIsCollapsed((s) => !s)}
-            disabled={isCollapsed && !isOverflowing}
-          >
-            <i
-              className={`g3-icon g3-icon--sm g3-icon--chevron-${
-                isCollapsed ? 'right' : 'down'
-              }`}
+    <div className='explorer-query-controller'>
+      <div
+        ref={ref}
+        className={`explorer-query-controller__query ${
+          isCollapsed ? 'explorer-query-controller__query--collapsed' : ''
+        }`.trim()}
+      >
+        {hasFilter ? (
+          <>
+            <button
+              type='button'
+              onClick={() => setIsCollapsed((s) => !s)}
+              disabled={isCollapsed && !isOverflowing}
+            >
+              <i
+                className={`g3-icon g3-icon--sm g3-icon--chevron-${
+                  isCollapsed ? 'right' : 'down'
+                }`}
+              />
+            </button>
+            <h4>Filters in Use:</h4>
+            <QueryDisplay
+              filter={filter}
+              filterInfo={filterInfo}
+              onClickCombineMode={handleClickCombineMode}
+              onCloseFilter={handleCloseFilter}
             />
-          </button>
-          <h4>Filters in Use:</h4>
-          <QueryDisplay
-            filter={filter}
-            filterInfo={filterInfo}
-            onClickCombineMode={handleClickCombineMode}
-            onCloseFilter={handleCloseFilter}
-          />
-        </>
-      ) : (
-        <h4>← Try Filters to explore data</h4>
-      )}
+          </>
+        ) : (
+          <h4>← Try Filters to explore data</h4>
+        )}
+      </div>
     </div>
   );
 }
