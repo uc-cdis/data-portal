@@ -31,7 +31,7 @@ Below is an example, with inline comments describing what each JSON block config
         "name": "Aliquot",
         "plural": "Aliquots"
       }
-    ],systemUseTitle
+    ],
     "chartCounts": [ // required;
       {
         "graphql": "_case_count",
