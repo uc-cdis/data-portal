@@ -59,7 +59,7 @@ function parseTableData(projects, showApprovedOnly, userId) {
       project.has_access ? (
         <Button
           buttonType='primary'
-          enabled={project.status === 'Approved' && project.has_access}
+          enabled={project.status === 'Data Delivered' && project.has_access}
           onClick={() =>
             fetch(`/amanuensis/download-urls/${project.id}`)
               .then((res) => res.json())
