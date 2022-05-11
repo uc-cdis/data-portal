@@ -5,6 +5,7 @@ import Spinner from '../components/Spinner';
 import Table from '../components/tables/base/Table';
 import Button from '../gen3-ui-component/components/Button';
 import { formatLocalTime } from '../utils';
+import DataDownloadButton from './DataDownloadButton';
 import './DataRequests.css';
 
 /** @typedef {import('../types').UserState} UserState */
@@ -57,21 +58,7 @@ function parseTableData({ projects, showApprovedOnly, userId }) {
       >
         {project.status}
       </span>,
-      project.has_access ? (
-        <Button
-          buttonType='primary'
-          enabled={project.status === 'Data Delivered' && project.has_access}
-          onClick={() =>
-            fetch(`/amanuensis/download-urls/${project.id}`)
-              .then((res) => res.json())
-              .then((data) =>
-                window.open(data.download_url, '_blank', 'noopener, noreferrer')
-              )
-          }
-          label='Download Data'
-          rightIcon='download'
-        />
-      ) : null,
+      project.has_access ? <DataDownloadButton project={project} /> : null,
     ]);
 }
 
