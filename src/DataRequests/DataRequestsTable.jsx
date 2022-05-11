@@ -5,6 +5,7 @@ import Spinner from '../components/Spinner';
 import Table from '../components/tables/base/Table';
 import Button from '../gen3-ui-component/components/Button';
 import { formatLocalTime } from '../utils';
+import DataDownloadButton from './DataDownloadButton';
 import './DataRequests.css';
 
 /** @typedef {import('../types').UserState} UserState */
@@ -34,11 +35,12 @@ function parseResearcherInfo(researcher) {
 }
 
 /**
- * @param {DataRequestProject[]} projects
- * @param {boolean} showApprovedOnly
- * @param {UserState['user_id']} userId
+ * @param {Object} args
+ * @param {DataRequestProject[]} args.projects
+ * @param {boolean} args.showApprovedOnly
+ * @param {UserState['user_id']} args.userId
  */
-function parseTableData(projects, showApprovedOnly, userId) {
+function parseTableData({ projects, showApprovedOnly, userId }) {
   return projects
     ?.filter((project) => !showApprovedOnly || project.status === 'Approved')
     .map((project) => [
@@ -56,21 +58,7 @@ function parseTableData(projects, showApprovedOnly, userId) {
       >
         {project.status}
       </span>,
-      project.has_access ? (
-        <Button
-          buttonType='primary'
-          enabled={project.status === 'Approved' && project.has_access}
-          onClick={() =>
-            fetch(`/amanuensis/download-urls/${project.id}`)
-              .then((res) => res.json())
-              .then((data) =>
-                window.open(data.download_url, '_blank', 'noopener, noreferrer')
-              )
-          }
-          label='Download Data'
-          rightIcon='download'
-        />
-      ) : null,
+      project.has_access ? <DataDownloadButton project={project} /> : null,
     ]);
 }
 
@@ -89,7 +77,7 @@ function DataRequestsTable({ className = '', isLoading, projects }) {
   const userId = useSelector(userIdSelector);
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);
   const tableData = useMemo(
-    () => parseTableData(projects, showApprovedOnly, userId),
+    () => parseTableData({ projects, showApprovedOnly, userId }),
     [projects, showApprovedOnly, userId]
   );
   return (
