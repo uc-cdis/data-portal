@@ -34,11 +34,12 @@ function parseResearcherInfo(researcher) {
 }
 
 /**
- * @param {DataRequestProject[]} projects
- * @param {boolean} showApprovedOnly
- * @param {UserState['user_id']} userId
+ * @param {Object} args
+ * @param {DataRequestProject[]} args.projects
+ * @param {boolean} args.showApprovedOnly
+ * @param {UserState['user_id']} args.userId
  */
-function parseTableData(projects, showApprovedOnly, userId) {
+function parseTableData({ projects, showApprovedOnly, userId }) {
   return projects
     ?.filter((project) => !showApprovedOnly || project.status === 'Approved')
     .map((project) => [
@@ -89,7 +90,7 @@ function DataRequestsTable({ className = '', isLoading, projects }) {
   const userId = useSelector(userIdSelector);
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);
   const tableData = useMemo(
-    () => parseTableData(projects, showApprovedOnly, userId),
+    () => parseTableData({ projects, showApprovedOnly, userId }),
     [projects, showApprovedOnly, userId]
   );
   return (
