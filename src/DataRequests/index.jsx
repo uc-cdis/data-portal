@@ -17,7 +17,7 @@ import './DataRequests.css';
  * @typedef {Object} DataRequestProject
  * @property {number} id
  * @property {string} name
- * @property {'Approved' | 'Rejected' | 'In Review'} status
+ * @property {'Approved' | 'Rejected' | 'In Review' | 'Data Delivered'} status
  * @property {string | null} submitted_at timestamp
  * @property {string | null} completed_at timestamp
  * @property {ResearcherInfo} researcher
