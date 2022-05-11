@@ -79,7 +79,7 @@ if (isProduction) {
   devtool = 'eval-source-map';
 
   // add react-refresh to plugins for development mode
-  plugins.push(new ReactRefreshWebpackPlugin());
+  plugins.push(new ReactRefreshWebpackPlugin({ overlay: false }));
 }
 
 module.exports = {
