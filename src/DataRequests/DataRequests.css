@@ -13,7 +13,8 @@
   color: inherit;
 }
 
-.data-requests__status-approved {
+.data-requests__status-approved,
+.data-requests__status-data-delivered {
   color: var(--pcdc-color__primary);
 }
 
