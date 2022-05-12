@@ -64,6 +64,7 @@ import ReduxWorkspaceShutdownPopup from './Popup/ReduxWorkspaceShutdownPopup';
 import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
+import StudyRegistration from './StudyRegistration';
 import NotFound from './components/NotFound';
 
 // monitor user's session
@@ -168,19 +169,28 @@ async function init() {
                       )
                     }
                   />
-                  <Route
-                    exact
-                    path='/'
-                    component={
-                      (props) => (
-                        <ProtectedContent
-                          public={discoveryConfig.public !== false}
-                          component={Discovery}
-                          {...props}
-                        />
-                      )
-                    }
-                  />
+                  {isEnabled('discovery')
+                    ? (
+                      <Route
+                        exact
+                        path='/'
+                        component={
+                          (props) => (
+                            <ProtectedContent
+                              public={discoveryConfig.public !== false}
+                              component={Discovery}
+                              {...props}
+                            />
+                          )
+                        }
+                      />
+                    ) : (
+                      <Route
+                        exact
+                        path='/'
+                        component={NotFound}
+                      />
+                    )}
                   <Route
                     exact
                     path='/submission'
@@ -478,6 +488,19 @@ async function init() {
                         }
                       />
                     )}
+                  <Route
+                    exact
+                    path='/study-reg'
+                    component={
+                      (props) => (
+                        <ProtectedContent
+                          public
+                          component={StudyRegistration}
+                          {...props}
+                        />
+                      )
+                    }
+                  />
                   <Route
                     path='/not-found'
                     component={NotFound}
