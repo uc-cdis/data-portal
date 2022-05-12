@@ -82,7 +82,7 @@ class AnalysisApp extends React.Component {
       );
     default:
       return (
-        <AtlasWrapper handleIframeApp={this.handleIframeApp}></AtlasWrapper>
+        <AtlasWrapper handleIframeApp={this.handleIframeApp} url={`${this.state.app.applicationUrl}`}></AtlasWrapper>
       );
     }
   }

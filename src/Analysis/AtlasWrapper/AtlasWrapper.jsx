@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const AtlasWrapper = ({ handleIframeApp }) => {
+const AtlasWrapper = ({ handleIframeApp, url }) => {
     const EVENT_TYPE = "message"; // from event types https://developer.mozilla.org/en-US/docs/Web/API/EventSource/message_event
 
     useEffect(() => {
@@ -17,7 +17,7 @@ const AtlasWrapper = ({ handleIframeApp }) => {
               className='analysis-app__iframe'
               title='Analysis App'
               frameBorder='0'
-              src={`${this.state.app.applicationUrl}`}
+              src={url}
               onLoad={handleIframeApp}
             />
           </div>
