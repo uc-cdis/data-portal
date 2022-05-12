@@ -9,6 +9,7 @@ import ReduxGWASApp from './GWASApp/ReduxGWASApp';
 import ReduxGWASUIApp from './GWASUIApp/ReduxGWASUIApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
+import AtlasWrapper from './AtlasWrapper/AtlasWrapper';
 
 class AnalysisApp extends React.Component {
   constructor(props) {
@@ -81,17 +82,7 @@ class AnalysisApp extends React.Component {
       );
     default:
       return (
-        <React.Fragment>
-          <div className='analysis-app__iframe-wrapper'>
-            <iframe
-              className='analysis-app__iframe'
-              title='Analysis App'
-              frameBorder='0'
-              src={`${this.state.app.applicationUrl}`}
-              onLoad={this.handleIframeApp}
-            />
-          </div>
-        </React.Fragment>
+        <AtlasWrapper handleIframeApp={this.handleIframeApp}></AtlasWrapper>
       );
     }
   }
