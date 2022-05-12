@@ -73,6 +73,7 @@ Example configuration:
             {
                 // configuration specific to the "Request Access" button
                 "type": "request_access",
+                "required_idp": "ImmPort",// optional, requires user to have specific type to request access
                 "resourceDisplayNameField": "title",
                 "redirectModalText": "", // optional, link label for the URL in "You will now be sent to <URL>"
                 "accessRequestedText": "DAR In Progress", // optional, button text that will be overridden for the disabled button when user already has a request in SUBMITTED state. If omitted, the default text will be "Access Requested"

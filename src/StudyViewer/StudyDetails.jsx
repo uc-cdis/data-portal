@@ -49,12 +49,16 @@ class StudyDetails extends React.Component {
     // `?request_access` means user got here by clicking the `Request Access` button
     // and `?request_access_logged_in` means user got here by redirecting from the login page
     // in that case, don't redirect user again, just wait for user props to update
-    if ((!this.props.user || !this.props.user.username)
+    const requiredIdp = this.props.studyViewerConfig.buttons.find((obj) => obj.type === 'request_access')?.required_idp;
+    if ((!this.props.user
+      || !this.props.user.username
+      || (requiredIdp && requiredIdp !== this.props.user.idp))
     && this.props.location.search
     && this.props.location.search === '?request_access') {
       this.props.history.push('/login', { from: `${this.props.location.pathname}?request_access` });
     } else if (this.props.user
       && this.props.user.username
+      && !(requiredIdp && requiredIdp !== this.props.user.idp)
       && this.props.location.search
       && this.props.location.search.includes('?request_access')) {
       // if we still have either `?request_access` or `?request_access_logged_in`
@@ -171,6 +175,10 @@ class StudyDetails extends React.Component {
         this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
       };
       let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
+      if (buttonConfig.required_idp) {
+        // if required_idp set requires user to have specific type to request access
+        requestAccessText = buttonConfig.required_idp === this.props.user?.idp ? 'Request Access' : `Login through ${buttonConfig.required_idp.toUpperCase()} to Request Access`;
+      }
       if (enableButton && this.state.accessRequested) {
         // the button is disabled because the user has already requested access
         requestAccessText = (buttonConfig.accessRequestedText) ? buttonConfig.accessRequestedText : 'Access Requested';
