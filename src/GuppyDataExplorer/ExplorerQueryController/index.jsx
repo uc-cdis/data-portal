@@ -43,6 +43,8 @@ function ExplorerQueryController({ filter }) {
     queryState.update(filter);
   }, [filter]);
 
+  const disableNew = Object.values(queryState.all).some(checkIfFilterEmpty);
+
   return (
     <div className='explorer-query-controller'>
       <header>
@@ -50,7 +52,8 @@ function ExplorerQueryController({ filter }) {
           className='explorer-query-controller__action-button'
           type='button'
           onClick={() => queryState.create(handleFilterChange)}
-          disabled={Object.values(queryState.all).some(checkIfFilterEmpty)}
+          disabled={disableNew}
+          title={disableNew && 'No new query if queries without filter exist'}
         >
           New
         </button>
