@@ -31,3 +31,9 @@ export function pluckFromAnchorFilter({ anchor, field, filter }) {
 
   return /** @type {ExplorerFilter} */ (newFilter);
 }
+
+/** @param {ExplorerFilter} filter */
+export function checkIfFilterEmpty(filter) {
+  const { __combineMode, ..._filter } = filter;
+  return Object.keys(_filter).length === 0;
+}
