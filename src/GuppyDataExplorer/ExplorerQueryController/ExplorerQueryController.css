@@ -1,36 +1,69 @@
 .explorer-query-controller {
   background-color: var(--g3-color__white);
   padding: 0.5rem 1rem;
-  margin: 0.5rem 0;
 }
 
-.explorer-query-controller__collapsed {
-  max-height: 5.5rem;
+.explorer-query-controller > main {
+  margin-top: 1rem;
+  max-height: 12rem;
   overflow-y: scroll;
 }
 
-.explorer-query-controller > button {
+.explorer-query-controller button {
   background-color: inherit;
   border: none;
-  height: 1rem;
-  width: 1rem;
-  margin-right: 0.25rem;
+  height: initial;
+  width: initial;
 }
 
-.explorer-query-controller > button:disabled {
+.explorer-query-controller button:disabled {
   cursor: not-allowed;
 }
 
-.explorer-query-controller > button > i {
-  background-color: var(--g3-color__bg-coal);
+.explorer-query-controller button.explorer-query-controller__action-button {
+  margin-right: 0.25rem;
+  padding: 0.25rem;
 }
 
-.explorer-query-controller__collapse {
-  max-height: 90px;
-  overflow-x: scroll;
+.explorer-query-controller
+  button.explorer-query-controller__action-button:hover:not(:disabled) {
+  background-color: var(--g3-color__silver);
 }
 
-.explorer-query-controller > h4 {
+.explorer-query-controller__query {
+  display: flex;
+  padding: 0.25rem;
+  background-color: var(--g3-color__bg-cloud);
+}
+
+.explorer-query-controller__query > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-width: 5rem;
+}
+
+.explorer-query-controller__query > header > h3 {
+  font-size: 1rem;
+  line-height: 1rem;
+  padding: 0.25rem;
+  color: inherit;
+}
+
+.explorer-query-controller__query--active {
+  background-color: transparent;
+  border: 1px solid var(--g3-color__lime);
+  border-left-width: 0.25rem;
+  padding-left: 0;
+}
+
+.explorer-query-controller__query--active
+  button.explorer-query-controller__action-button {
+  color: var(--g3-color__lime);
+  cursor: initial;
+}
+
+.explorer-query-controller__query > h4 {
   display: inline-block;
   margin-right: 0.25rem;
 }

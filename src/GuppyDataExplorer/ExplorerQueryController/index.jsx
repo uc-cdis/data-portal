@@ -1,12 +1,19 @@
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import QueryDisplay from '../../components/QueryDisplay';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerState } from '../ExplorerStateContext';
-import { pluckFromAnchorFilter, pluckFromFilter } from './utils';
+import useQueryState from './useQueryState';
+import {
+  checkIfFilterEmpty,
+  pluckFromAnchorFilter,
+  pluckFromFilter,
+} from './utils';
 import './ExplorerQueryController.css';
 
-/** @param {{ filter: import('../types').ExplorerFilter }} props */
+/** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
+
+/** @param {{ filter: ExplorerFilter }} props */
 function ExplorerQueryController({ filter }) {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   const { handleFilterChange } = useExplorerState();
@@ -14,7 +21,7 @@ function ExplorerQueryController({ filter }) {
   /** @type {import('../../components/QueryDisplay').ClickCombineModeHandler} */
   function handleClickCombineMode(payload) {
     handleFilterChange(
-      /** @type {import('../types').ExplorerFilter} */ ({
+      /** @type {ExplorerFilter} */ ({
         ...filter,
         __combineMode: payload === 'AND' ? 'OR' : 'AND',
       })
@@ -31,50 +38,100 @@ function ExplorerQueryController({ filter }) {
     }
   }
 
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  const [isOverflowing, setIsOverflowing] = useState(false);
-  const ref = useRef(null);
+  const queryState = useQueryState(filter);
   useEffect(() => {
-    if (ref.current?.offsetHeight < ref.current?.scrollHeight) {
-      if (!isOverflowing) setIsOverflowing(true);
-    } else if (isOverflowing) {
-      setIsOverflowing(false);
-    }
-  });
+    queryState.update(filter);
+  }, [filter]);
 
-  const hasFilter =
-    Object.keys(pluckFromFilter({ field: '__combineMode', filter })).length > 0;
+  const disableNew = Object.values(queryState.all).some(checkIfFilterEmpty);
+
   return (
-    <div
-      ref={ref}
-      className={`explorer-query-controller ${
-        isCollapsed ? 'explorer-query-controller__collapsed' : ''
-      }`.trim()}
-    >
-      {hasFilter ? (
-        <>
-          <button
-            type='button'
-            onClick={() => setIsCollapsed((s) => !s)}
-            disabled={isCollapsed && !isOverflowing}
-          >
-            <i
-              className={`g3-icon g3-icon--sm g3-icon--chevron-${
-                isCollapsed ? 'right' : 'down'
-              }`}
-            />
-          </button>
-          <h4>Filters in Use:</h4>
-          <QueryDisplay
-            filter={filter}
-            filterInfo={filterInfo}
-            onClickCombineMode={handleClickCombineMode}
-            onCloseFilter={handleCloseFilter}
-          />
-        </>
-      ) : (
-        <h4>← Try Filters to explore data</h4>
-      )}
+    <div className='explorer-query-controller'>
+      <header>
+        <button
+          className='explorer-query-controller__action-button'
+          type='button'
+          onClick={() => queryState.create(handleFilterChange)}
+          disabled={disableNew}
+          title={
+            disableNew
+              ? 'No new query if queries without filter exist'
+              : undefined
+          }
+        >
+          New
+        </button>
+        <button
+          className='explorer-query-controller__action-button'
+          type='button'
+          onClick={() => queryState.duplicate(handleFilterChange)}
+          disabled={checkIfFilterEmpty(queryState.current.filter)}
+        >
+          Duplicate
+        </button>
+        <button
+          className='explorer-query-controller__action-button'
+          type='button'
+          onClick={() => queryState.remove(handleFilterChange)}
+          disabled={queryState.size < 2}
+        >
+          Remove
+        </button>
+      </header>
+      <main>
+        {Object.keys(queryState.all).map((id, i) => {
+          const queryFilter = queryState.all[id];
+          return queryState.current.id === id ? (
+            <div
+              className='explorer-query-controller__query explorer-query-controller__query--active'
+              key={id}
+            >
+              <header>
+                <button
+                  className='explorer-query-controller__action-button'
+                  type='button'
+                  disabled
+                >
+                  Active
+                </button>
+                <h3>{`#${i + 1}`}</h3>
+              </header>
+              <main>
+                {checkIfFilterEmpty(queryFilter) ? (
+                  <h4>Try Filters to explore data</h4>
+                ) : (
+                  <QueryDisplay
+                    filter={queryFilter}
+                    filterInfo={filterInfo}
+                    onClickCombineMode={handleClickCombineMode}
+                    onCloseFilter={handleCloseFilter}
+                  />
+                )}
+              </main>
+            </div>
+          ) : (
+            <div className='explorer-query-controller__query' key={id}>
+              <header>
+                <button
+                  className='explorer-query-controller__action-button'
+                  type='button'
+                  onClick={() => queryState.use(id, handleFilterChange)}
+                >
+                  Use
+                </button>
+                <h3>{`#${i + 1}`}</h3>
+              </header>
+              <main>
+                {checkIfFilterEmpty(queryFilter) ? (
+                  <h4>Try Filters to explore data</h4>
+                ) : (
+                  <QueryDisplay filter={queryFilter} filterInfo={filterInfo} />
+                )}
+              </main>
+            </div>
+          );
+        })}
+      </main>
     </div>
   );
 }
