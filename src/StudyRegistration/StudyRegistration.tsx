@@ -18,6 +18,8 @@ import {
 
 import { StudyRegistrationConfig } from './StudyRegistrationConfig';
 import './StudyRegistration.css';
+import { userHasMethodForServiceOnResource } from '../authMappingUtils';
+import { useArboristUI } from '../localconf';
 
 const { Option } = Select;
 const layout = {
@@ -64,6 +66,7 @@ export interface DiscoveryResource {
   [any: string]: any,
 }
 interface Props {
+  userAuthMapping: any,
   config: StudyRegistrationConfig
   studies: DiscoveryResource[]
 }
@@ -71,6 +74,13 @@ interface Props {
 const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
   const { studies } = props;
   const [form] = Form.useForm();
+
+  const userHasAccess = () => {
+    if (!useArboristUI) {
+      return true;
+    }
+    return (userHasMethodForServiceOnResource('access', 'mds_gateway', '/mds_gateway', props.userAuthMapping));
+  };
 
   const onFinish = (values) => {
     console.log(values);
@@ -189,11 +199,19 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
           </Form.Item>
           <Form.Item {...tailLayout}>
             <Space>
-              <Button type='primary' htmlType='submit'>
-          Submit
-              </Button>
+              {(!userHasAccess()) ? (
+                <Tooltip title={'You don\'t have permission to register a study'}>
+                  <Button type='primary' htmlType='submit' disabled>
+                    Submit
+                  </Button>
+                </Tooltip>
+              ) : (
+                <Button type='primary' htmlType='submit'>
+                  Submit
+                </Button>
+              )}
               <Button htmlType='button' onClick={onReset}>
-          Reset
+                Reset
               </Button>
             </Space>
           </Form.Item>

@@ -488,19 +488,25 @@ async function init() {
                         }
                       />
                     )}
-                  <Route
-                    exact
-                    path='/study-reg'
-                    component={
-                      (props) => (
-                        <ProtectedContent
-                          public
-                          component={StudyRegistration}
-                          {...props}
+                  {
+                    isEnabled('studyRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/study-reg'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                public
+                                component={StudyRegistration}
+                                {...props}
+                              />
+                            )
+                          }
                         />
                       )
-                    }
-                  />
+                      : null
+                  }
                   <Route
                     path='/not-found'
                     component={NotFound}
