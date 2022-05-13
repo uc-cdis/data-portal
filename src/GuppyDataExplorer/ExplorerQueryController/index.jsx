@@ -78,7 +78,10 @@ function ExplorerQueryController({ filter }) {
         {Object.keys(queryState.all).map((id, i) => {
           const queryFilter = queryState.all[id];
           return queryState.current.id === id ? (
-            <div className='explorer-query-controller__query explorer-query-controller__query--active'>
+            <div
+              className='explorer-query-controller__query explorer-query-controller__query--active'
+              key={id}
+            >
               <header>
                 <button
                   className='explorer-query-controller__action-button'
@@ -103,7 +106,7 @@ function ExplorerQueryController({ filter }) {
               </main>
             </div>
           ) : (
-            <div className='explorer-query-controller__query'>
+            <div className='explorer-query-controller__query' key={id}>
               <header>
                 <button
                   className='explorer-query-controller__action-button'
