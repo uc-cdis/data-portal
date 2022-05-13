@@ -53,9 +53,7 @@ function reducer(state, action) {
 /** @param {ExplorerFilter} initialFilter */
 export default function useQueryState(initialFilter) {
   const [id, setId] = useState(crypto.randomUUID());
-  const initialState = { [id]: initialFilter };
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const size = Object.keys(state).length;
+  const [state, dispatch] = useReducer(reducer, { [id]: initialFilter });
 
   /** @param {(filter: ExplorerFilter) => void} [callback] */
   function create(callback) {
@@ -128,7 +126,7 @@ export default function useQueryState(initialFilter) {
     () => ({
       all: state,
       current: { id, filter: state[id] },
-      size,
+      size: Object.keys(state).length,
       create,
       duplicate,
       remove,
