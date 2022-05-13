@@ -44,19 +44,11 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
     explorerId,
     handleBrowserNavigationForConfig,
   } = useExplorerConfig();
-  const {
-    explorerFilter,
-    patientIds,
-    handleBrowserNavigationForState,
-    handleFilterChange,
-  } = useExplorerState();
+  const { explorerFilter, patientIds, handleFilterChange } = useExplorerState();
   useEffect(() => {
     window.addEventListener('popstate', handleBrowserNavigationForConfig);
-    window.addEventListener('popstate', handleBrowserNavigationForState);
-    return () => {
+    return () =>
       window.removeEventListener('popstate', handleBrowserNavigationForConfig);
-      window.removeEventListener('popstate', handleBrowserNavigationForState);
-    };
   }, []);
 
   return (

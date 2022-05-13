@@ -8,7 +8,6 @@ import { useExplorerConfig } from './ExplorerConfigContext';
  * @typedef {Object} ExplorerStateContext
  * @property {ExplorerFilter} explorerFilter
  * @property {string[]} patientIds
- * @property {() => void} handleBrowserNavigationForState
  * @property {(filter: ExplorerFilter) => void} handleFilterChange
  * @property {() => void} handleFilterClear
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
@@ -72,7 +71,6 @@ export function ExplorerStateProvider({ children }) {
     () => ({
       explorerFilter,
       patientIds,
-      handleBrowserNavigationForState() {},
       handleFilterChange,
       handleFilterClear,
       handlePatientIdsChange,
