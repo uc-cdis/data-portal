@@ -53,7 +53,11 @@ function ExplorerQueryController({ filter }) {
           type='button'
           onClick={() => queryState.create(handleFilterChange)}
           disabled={disableNew}
-          title={disableNew && 'No new query if queries without filter exist'}
+          title={
+            disableNew
+              ? 'No new query if queries without filter exist'
+              : undefined
+          }
         >
           New
         </button>
