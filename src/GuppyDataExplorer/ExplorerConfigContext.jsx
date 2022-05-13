@@ -13,8 +13,6 @@ import { createFilterInfo, isSurvivalAnalysisEnabled } from './utils';
  * @property {number} explorerId
  * @property {{ label: string; value: string }[]} explorerOptions
  * @property {() => void} handleBrowserNavigationForConfig
- * @property {boolean} shouldUpdateState
- * @property {(v: boolean) => void} setShouldUpdateState
  * @property {(id: number) => void} updateExplorerId
  */
 
@@ -46,7 +44,6 @@ export function ExplorerConfigProvider({ children }) {
       hasSearchParamId && isSearchParamIdValid,
     ];
   }, []);
-  const [shouldUpdateState, setShouldUpdateState] = useState(false);
   useEffect(() => {
     if (!hasValidInitialSearchParamId) {
       setSearchParams(
@@ -56,7 +53,6 @@ export function ExplorerConfigProvider({ children }) {
           : `id=${initialExplorerId}`,
         { replace: true }
       );
-      setShouldUpdateState(true);
     }
   }, []);
 
@@ -105,11 +101,9 @@ export function ExplorerConfigProvider({ children }) {
       explorerId,
       explorerOptions,
       handleBrowserNavigationForConfig,
-      shouldUpdateState,
-      setShouldUpdateState,
       updateExplorerId,
     }),
-    [config, explorerId, explorerOptions, shouldUpdateState]
+    [config, explorerId, explorerOptions]
   );
 
   return (
