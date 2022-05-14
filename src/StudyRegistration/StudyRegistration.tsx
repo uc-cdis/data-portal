@@ -52,15 +52,19 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
   if (!ctID) {
     return Promise.resolve(true);
   }
-  const resp = await fetch(`https://clinicaltrials.gov/ct2/results?id=${ctID}`);
-
-  if (resp?.status === 200) {
-    return Promise.resolve(true);
+  const resp = await fetch(`https://clinicaltrials.gov/api/query/field_values?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&field=NCTId&fmt=json`);
+  if (!resp || resp.status !== 200) {
+    return Promise.reject('Unable to verify ClinicalTrial.gov ID');
   }
-  if (resp?.status === 404) {
+  try {
+    const respJson = await resp.json();
+    if (respJson.FieldValuesResponse?.FieldValues?.length === 1 && respJson.FieldValuesResponse.FieldValues[0].FieldValue === ctID) {
+      return Promise.resolve(true);
+    }
     return Promise.reject('Invalid ClinicalTrial.gov ID');
+  } catch {
+    return Promise.reject('Unable to verify ClinicalTrial.gov ID');
   }
-  return Promise.reject('Unable to verify ClinicalTrial.gov ID');
 };
 export interface DiscoveryResource {
   [any: string]: any,
