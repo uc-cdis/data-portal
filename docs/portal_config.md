@@ -656,6 +656,7 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
     "https://example.s3.amazonaws.com" // full url to be added
-  ]
+  ],
+  "stridesPortalURL": "https://strides-admin-portal.org" // optional; If configured, will display a link on the workspace page which can direct user to the STRIDES admin portal
 }
 ```
