@@ -410,8 +410,8 @@ function buildConfig(opts) {
           break;
         case 'GWASUIApp':
           analysisApps.GWASUIApp = {
-            title: 'GWAS',
-            description: 'A GWAS App',
+            title: 'Gen3 GWAS',
+            description: 'Use this app to perform a high throughput GWAS on MVP data using the University of Washington Genesis pipeline',
             image: '/src/img/analysis-icons/gwas.svg',
           };
           break;
