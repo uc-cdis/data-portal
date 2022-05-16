@@ -9,6 +9,7 @@ import { headers, fetchAndSetCsrfToken } from '../../configs';
 import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath } from '../../localconf';
 import GWASWorkflowList from './GWASWorkflowList';
 import { fetchWithCreds } from '../../actions';
+import Spinner from "../../components/Spinner";
 
 const { Step } = Steps;
 
@@ -254,7 +255,7 @@ const GWASUIApp = (props) => {
     const { data, status } = useQuery(['cohortdefinitions', sourceId], fetchCohortDefinitions, queryConfig);
 
     if (status === 'loading') {
-      return <React.Fragment>Loading</React.Fragment>;
+      return <Spinner />;
     }
     if (status === 'error') {
       return <React.Fragment>Error</React.Fragment>;
@@ -282,7 +283,7 @@ const GWASUIApp = (props) => {
     const { data, status } = useQuery(['cohortconcepts', sourceId], fetchConcepts, queryConfig);
 
     if (status === 'loading') {
-      return <React.Fragment>Loading</React.Fragment>;
+      return <Spinner />;
     }
     if (status === 'error') {
       return <React.Fragment>Error</React.Fragment>;
@@ -309,7 +310,7 @@ const GWASUIApp = (props) => {
     const { data, status } = useQuery(['cohortstats', selectedConcepts], fetchConceptStats, queryConfig);
 
     if (status === 'loading') {
-      return <React.Fragment>Loading</React.Fragment>;
+      return <Spinner />;
     }
     if (status === 'error') {
       return <React.Fragment>Error</React.Fragment>;
