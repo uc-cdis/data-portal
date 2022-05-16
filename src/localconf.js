@@ -106,6 +106,8 @@ function buildConfig(opts) {
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
   const workspacePayModelUrl = `${workspaceUrl}paymodels`;
+  const workspaceSetPayModelUrl = `${workspaceUrl}setpaymodel`;
+  const workspaceAllPayModelsUrl = `${workspaceUrl}allpaymodels`;
   const workspaceTerminateUrl = `${workspaceUrl}terminate`;
   const workspaceLaunchUrl = `${workspaceUrl}launch`;
   const datasetUrl = `${hostname}api/search/datasets`;
@@ -196,7 +198,7 @@ function buildConfig(opts) {
     }
   });
 
-  const { dataAvailabilityToolConfig } = config;
+  const { dataAvailabilityToolConfig, stridesPortalURL } = config;
 
   let showSystemUse = false;
   if (components.systemUse && components.systemUse.systemUseText) {
@@ -463,8 +465,11 @@ function buildConfig(opts) {
     workspaceOptionsUrl,
     workspaceStatusUrl,
     workspacePayModelUrl,
+    workspaceSetPayModelUrl,
+    workspaceAllPayModelsUrl,
     workspaceLaunchUrl,
     workspaceTerminateUrl,
+    stridesPortalURL,
     homepageChartNodes: components.index.homepageChartNodes,
     homepageChartNodesChunkSize,
     customHomepageChartConfig: components.index.customHomepageChartConfig,

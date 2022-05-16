@@ -2,10 +2,15 @@ import React from 'react';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
 import {
-  Popconfirm, Steps, Collapse, Row, Col, Statistic, Alert, message,
+  Popconfirm, Steps, Collapse, Row, Col, Statistic, Alert, message, Card,
+  Menu, Dropdown, Button as Btn, Tooltip, Space,
 } from 'antd';
 import { datadogRum } from '@datadog/browser-rum';
 
+import {
+  DownOutlined, UserOutlined, QuestionCircleOutlined, LoadingOutlined, ExclamationCircleOutlined,
+} from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   workspaceUrl,
   wtsPath,
@@ -14,11 +19,13 @@ import {
   workspaceLaunchUrl,
   workspaceTerminateUrl,
   workspaceStatusUrl,
-  workspacePayModelUrl,
+  workspaceSetPayModelUrl,
+  workspaceAllPayModelsUrl,
   workspacePageTitle,
   workspacePageDescription,
+  stridesPortalURL,
+  showExternalLoginsOnProfile,
 } from '../localconf';
-import { showExternalLoginsOnProfile } from '../configs';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
 import getReduxStore from '../reduxStore';
@@ -58,6 +65,7 @@ class Workspace extends React.Component {
       'Terminating',
       'Running',
       'Stopped',
+      'Errored',
     ];
   }
 
@@ -105,10 +113,15 @@ class Workspace extends React.Component {
       method: 'GET',
     }).then(
       ({ data }) => {
-        /* eslint-disable */
-        const sortedResults = data.sort((a, b) =>
-          (a.name !== b.name ? a.name < b.name ? -1 : 1 : 0));
-        /* eslint-enable */
+        const sortedResults = data.sort((a, b) => {
+          if (a.name === b.name) {
+            return 0;
+          }
+          if (a.name < b.name) {
+            return -1;
+          }
+          return 1;
+        });
         this.setState({ options: sortedResults });
       },
     ).catch(() => this.setState({ defaultWorkspace: true }));
@@ -151,19 +164,22 @@ class Workspace extends React.Component {
     return workspaceStatus;
   }
 
-  getWorkspacePayModels = async () => fetchWithCreds({
-    path: `${workspacePayModelUrl}`,
-    method: 'GET',
-  }).then(
-    ({ status, data }) => {
-      // check if is valid pay model data
-      // older hatchery will also return 200 for /paymodels with workspace options in it
-      if (status === 200 && data.aws_account_id) {
-        return data;
-      }
-      return {};
-    },
-  ).catch(() => 'Error');
+  getWorkspacePayModel = async () => {
+    const payModels = await fetchWithCreds({
+      path: `${workspaceAllPayModelsUrl}`,
+      method: 'GET',
+    }).then(
+      ({ status, data }) => {
+        if (status === 200) {
+          return data;
+        }
+        return null;
+      }).catch(() => 'Error');
+    if (payModels.current_pay_model) {
+      return payModels;
+    }
+    return {};
+  }
 
   getIcon = (workspace) => {
     if (this.regIcon(workspace, 'R Studio') || this.regIcon(workspace, 'RStudio')) {
@@ -182,7 +198,7 @@ class Workspace extends React.Component {
 
   getWorkspaceLaunchSteps = (workspaceStatusData) => {
     if (!(workspaceStatusData.status !== 'Launching' || workspaceStatusData.status !== 'Stopped')
-    || !workspaceStatusData.conditions || workspaceStatusData.conditions.length === 0) {
+      || !workspaceStatusData.conditions || workspaceStatusData.conditions.length === 0) {
       // if status is not 'Launching', or 'Stopped',
       // or we don't have conditions array, don't display steps bar
       return undefined;
@@ -323,7 +339,7 @@ class Workspace extends React.Component {
   connected = () => {
     this.getWorkspaceOptions();
     this.getExternalLoginOptions();
-    this.getWorkspacePayModels().then((data) => {
+    this.getWorkspacePayModel().then((data) => {
       this.checkWorkspacePayModel();
       this.setState({
         payModel: data,
@@ -370,6 +386,10 @@ class Workspace extends React.Component {
               clearInterval(this.state.interval);
             }
           });
+        } else if (data.status && data.status.toLowerCase().includes('Exception')) {
+          this.setState({
+            workspaceStatus: 'Errored',
+          });
         }
       }, 10000);
       this.setState({ interval });
@@ -384,7 +404,7 @@ class Workspace extends React.Component {
     }
     try {
       const payModelInterval = setInterval(async () => {
-        const data = await this.getWorkspacePayModels();
+        const data = await this.getWorkspacePayModel();
         this.setState({
           payModel: data,
         });
@@ -407,6 +427,21 @@ class Workspace extends React.Component {
       workspaceIsFullpage: !prevState.workspaceIsFullpage,
     }));
   }
+
+  handleMenuClick = async (e) => {
+    await fetchWithCreds({
+      path: `${workspaceSetPayModelUrl}?id=${this.state.payModel.all_pay_models[e.key].bmh_workspace_id}`,
+      method: 'POST',
+    }).then(({ status }) => {
+      if (status === 200) {
+        this.getWorkspacePayModel().then((data) => {
+          this.setState({
+            payModel: data,
+          });
+        });
+      }
+    });
+  };
 
   render() {
     const terminateButton = (
@@ -446,12 +481,31 @@ class Workspace extends React.Component {
       />
     );
 
+    const menu = (
+      <Menu onClick={this.handleMenuClick}>
+        {
+          ((this.state.payModel.all_pay_models !== null && this.state.payModel.all_pay_models !== undefined)) ? (
+            this.state.payModel.all_pay_models.map((option, i) => (
+              <Menu.Item
+                key={i}
+                id={option.bmh_workspace_id}
+                icon={<UserOutlined />}
+              >
+                {`${option.workspace_type} \t - $${Number.parseFloat(option['total-usage']).toFixed(2)}`}
+              </Menu.Item>
+            ))
+          ) : null
+        }
+      </Menu>
+    );
+
     if (this.state.connectedStatus && this.state.workspaceStatus && !this.state.defaultWorkspace) {
       // NOTE both the containing element and the iframe have class '.workspace',
       // although no styles should be shared between them. The reason for this
       // is for backwards compatibility with Jenkins integration tests that select by classname.
       const showExternalLoginsHintBanner = this.state.externalLoginOptions.length > 0
-      && this.state.externalLoginOptions.some((option) => !option.refresh_token_expiration);
+        && this.state.externalLoginOptions.some((option) => !option.refresh_token_expiration);
+
       return (
         <div
           className={`workspace ${this.state.workspaceIsFullpage ? 'workspace--fullpage' : ''}`}
@@ -459,24 +513,73 @@ class Workspace extends React.Component {
           {
             (Object.keys(this.state.payModel).length > 0) ? (
               <Collapse className='workspace__pay-model' onClick={(event) => event.stopPropagation()}>
-                <Panel header='User Pay Model Information' key='1'>
+                <Panel header='Account Information' key='1'>
                   <Row gutter={{
                     xs: 8, sm: 16, md: 24, lg: 32,
                   }}
                   >
                     <Col className='gutter-row' span={8}>
-                      <Statistic title='Pay Model Name' value={this.state.payModel.name || 'N/A'} />
+                      <Card
+                        title='Account'
+                        extra={(stridesPortalURL)
+                          ? (
+                            <a href={stridesPortalURL} target='_blank' rel='noreferrer'>
+                              <Space>
+                                Apply for an account
+                                <Tooltip title='This link is external'>
+                                  <FontAwesomeIcon
+                                    icon={'external-link-alt'}
+                                  />
+                                </Tooltip>
+                              </Space>
+                            </a>
+                          )
+                          : null}
+                      >
+                        {(this.state.workspaceStatus !== 'Not Found')
+                          ? (
+                            <div className='workspace__pay-model-selector'>
+                              <Dropdown overlay={menu} disabled>
+                                <Btn block size='large'>
+                                  {this.state.payModel.current_pay_model?.workspace_type || 'N/A'} <LoadingOutlined />
+                                </Btn>
+                              </Dropdown>
+                              <Tooltip title='Switching paymodels is only allowed when you have no running workspaces.'>
+                                <QuestionCircleOutlined className='workspace__pay-model-selector-icon' />
+                              </Tooltip>
+                            </div>
+                          ) : (
+                            <div className='workspace__pay-model-selector'>
+                              <Dropdown overlay={menu}>
+                                <Btn block size='large'>
+                                  {this.state.payModel.current_pay_model?.workspace_type || 'N/A'} <DownOutlined />
+                                </Btn>
+                              </Dropdown>
+                              {(this.state.workspaceStatus === 'Errored') ? (
+                                <Tooltip title='There is an error with this pay model, please contact support for help.'>
+                                  <ExclamationCircleOutlined className='workspace__pay-model-selector-icon__error' />
+                                </Tooltip>
+                              ) : null}
+                            </div>
+                          )}
+                      </Card>
                     </Col>
                     <Col className='gutter-row' span={8}>
-                      <Statistic title='AWS Account ID' groupSeparator='' value={this.state.payModel.aws_account_id || 'N/A'} />
+                      <Card title='Total Charges (USD)'>
+                        <Statistic value={this.state.payModel.current_pay_model?.['total-usage'] || 'N/A'} precision={2} />
+                      </Card>
                     </Col>
                     <Col className='gutter-row' span={8}>
-                      <Statistic title='AWS Account Region' value={this.state.payModel.region || 'N/A'} />
+                      <Card title='Spending Limit (USD)'>
+                        <Statistic precision={2} value={this.state.payModel.current_pay_model?.['hard-limit'] || 'N/A'} />
+                      </Card>
                     </Col>
-                    {/* Total Charges column will be added back later */}
-                    {/* <Col className='gutter-row' span={6}>
-                      <Statistic title='Total Charges (USD)' value={this.state.payModel.cost || 'N/A'} precision={2} />
-                    </Col> */}
+                  </Row>
+                  <Row gutter={{
+                    xs: 8, sm: 16, md: 24, lg: 32,
+                  }}
+                  >
+                    <Col className='gutter-row' span={32} />
                   </Row>
                 </Panel>
               </Collapse>
@@ -497,8 +600,8 @@ class Workspace extends React.Component {
                     />
                   </div>
                   <div className='workspace__buttongroup'>
-                    { terminateButton }
-                    { fullpageButton }
+                    {terminateButton}
+                    {fullpageButton}
                   </div>
                 </React.Fragment>
               )
@@ -506,7 +609,7 @@ class Workspace extends React.Component {
           }
           {
             this.state.workspaceStatus === 'Launching'
-            || this.state.workspaceStatus === 'Stopped'
+              || this.state.workspaceStatus === 'Stopped'
               ? (
                 <React.Fragment>
                   <div className='workspace__spinner-container'>
@@ -516,13 +619,13 @@ class Workspace extends React.Component {
                           current={this.state.workspaceLaunchStepsConfig.currentIndex}
                           status={this.state.workspaceLaunchStepsConfig.currentStepsStatus}
                         >
-                          { (this.state.workspaceLaunchStepsConfig.steps.map((step) => (
+                          {(this.state.workspaceLaunchStepsConfig.steps.map((step) => (
                             <Step
                               key={step.title}
                               title={step.title}
                               description={step.description}
                             />
-                          ))) }
+                          )))}
                         </Steps>
                       )
                       : null}
@@ -540,7 +643,7 @@ class Workspace extends React.Component {
                       : null}
                   </div>
                   <div className='workspace__buttongroup'>
-                    { cancelButton }
+                    {cancelButton}
                   </div>
                 </React.Fragment>
               )
@@ -557,9 +660,9 @@ class Workspace extends React.Component {
           }
           {
             this.state.workspaceStatus !== 'Launching'
-            && this.state.workspaceStatus !== 'Terminating'
-            && this.state.workspaceStatus !== 'Running'
-            && this.state.workspaceStatus !== 'Stopped'
+              && this.state.workspaceStatus !== 'Terminating'
+              && this.state.workspaceStatus !== 'Running'
+              && this.state.workspaceStatus !== 'Stopped'
               ? (
                 <div>
                   {workspacePageTitle
@@ -589,7 +692,7 @@ class Workspace extends React.Component {
                         closable
                       />
                     )
-                    : null }
+                    : null}
                   <div className='workspace__options'>
                     {
                       this.state.options.map((option, i) => {
@@ -606,7 +709,7 @@ class Workspace extends React.Component {
                             isPending={this.state.workspaceID === option.id}
                             isDisabled={
                               !!this.state.workspaceID
-                            && this.state.workspaceID !== option.id
+                              && this.state.workspaceID !== option.id
                             }
                           />
                         );
