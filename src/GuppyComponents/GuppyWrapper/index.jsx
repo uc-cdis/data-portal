@@ -490,8 +490,7 @@ function GuppyWrapper({
       ...filter,
     });
     const mergedFilter = mergeFilters(userFilter, adminAppliedPreFilters);
-
-    if (onFilterChange) onFilterChange(mergedFilter);
+    onFilterChange?.(mergedFilter);
   }
 
   return children({
