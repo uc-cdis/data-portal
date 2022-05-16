@@ -40,7 +40,11 @@ export const fetchFiles = (dataType, typeOfFileIndex, rowAccessorValue) => {
     });
   }
   let nameOfIndex;
-  const fieldsToFetch = ['file_name', 'file_size', 'data_format', 'data_type', 'required_idp', targetStudyViewerConfig.rowAccessor];
+  const fieldsToFetch = ['file_name', 'file_size', 'data_format', 'data_type', targetStudyViewerConfig.rowAccessor];
+  const requiredIdpField = targetStudyViewerConfig.buttons.find((obj) => obj.type === 'request_access')?.required_idp_field;
+  if (requiredIdpField) {
+    fieldsToFetch.push(requiredIdpField);
+  }
   switch (typeOfFileIndex) {
   case 'object':
     nameOfIndex = targetStudyViewerConfig.fileDataType;
@@ -128,7 +132,7 @@ const removeEmptyFields = (inputObj, flag) => {
   return inputObj;
 };
 
-const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFields, required_idp_field) => {
+const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFields, requiredIdpField) => {
   const targetStudyViewerConfig = fetchStudyViewerConfig(nameOfIndex);
   const processedDataset = [];
   if (receivedData) {
@@ -145,7 +149,7 @@ const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFie
           processedItem.accessRequested = !!(requestedAccess
           && requestedAccess[dataElement.auth_resource_path]);
           processedDataset.push(processedItem);
-          processedItem.required_idp_field = dataElement[required_idp_field];
+          processedItem.requiredIdpField = dataElement[requiredIdpField];
         });
       },
     ).then(() => processedDataset);
@@ -178,9 +182,9 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
   fieldsToFetch.push(targetStudyViewerConfig.titleField);
   fieldsToFetch.push(targetStudyViewerConfig.rowAccessor);
 
-  const required_idp_field = targetStudyViewerConfig.buttons.find((obj) => obj.type === 'request_access')?.required_idp_field;
-  if (required_idp_field) {
-    fieldsToFetch.push(required_idp_field);
+  const requiredIdpField = targetStudyViewerConfig.buttons.find((obj) => obj.type === 'request_access')?.required_idp_field;
+  if (requiredIdpField) {
+    fieldsToFetch.push(requiredIdpField);
   }
 
   const displayButtonsFields = targetStudyViewerConfig.buttons
@@ -215,7 +219,7 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
               data.data[dataType],
               itemConfig,
               displayButtonsFields,
-              required_idp_field,
+              requiredIdpField,
             ).then((pd) => ({
               type: 'RECEIVE_SINGLE_STUDY_DATASET',
               datasets: pd,
@@ -226,7 +230,7 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
             data.data[dataType],
             itemConfig,
             displayButtonsFields,
-            required_idp_field,
+            requiredIdpField,
           ).then((pd) => ({
             type: 'RECEIVE_STUDY_DATASET_LIST',
             datasets: pd,
