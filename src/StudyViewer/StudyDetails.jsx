@@ -49,7 +49,7 @@ class StudyDetails extends React.Component {
     // `?request_access` means user got here by clicking the `Request Access` button
     // and `?request_access_logged_in` means user got here by redirecting from the login page
     // in that case, don't redirect user again, just wait for user props to update
-    const requiredIdp = this.props.studyViewerConfig.buttons.find((obj) => obj.type === 'request_access')?.required_idp;
+    const requiredIdp = this.props.data.required_idp_field;
     if ((!this.props.user
       || !this.props.user.username
       || (requiredIdp && requiredIdp !== this.props.user.idp))
@@ -175,9 +175,9 @@ class StudyDetails extends React.Component {
         this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
       };
       let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
-      if (buttonConfig.required_idp) {
+      if (this.props.data.required_idp_field) {
         // if required_idp set requires user to have specific type to request access
-        requestAccessText = buttonConfig.required_idp === this.props.user?.idp ? 'Request Access' : `Login through ${buttonConfig.required_idp.toUpperCase()} to Request Access`;
+        requestAccessText = this.props.data.required_idp_field === this.props.user?.idp ? 'Request Access' : `Login through ${this.props.data.required_idp_field.toUpperCase()} to Request Access`;
       }
       if (enableButton && this.state.accessRequested) {
         // the button is disabled because the user has already requested access
@@ -272,20 +272,24 @@ class StudyDetails extends React.Component {
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
            <Space>
-             {this.props.isSingleItemView
-               ? (
-                 <Button
-                   label={'Learn More'}
-                   buttonType='primary'
-                   onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
-                 />
-               )
-               : null}
-             {
-               (this.props.studyViewerConfig.buttons) ? this.props.studyViewerConfig.buttons.map(
-                 (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
-               ) : null
-             }
+             <div>
+              {this.props.isSingleItemView
+                ? (
+                  <Button
+                    label={'Learn More'}
+                    buttonType='primary'
+                    onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
+                  />
+                )
+                : null}
+             </div>
+             <div>
+              {
+                (this.props.studyViewerConfig.buttons) ? this.props.studyViewerConfig.buttons.map(
+                  (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
+                ) : null
+              }
+             </div>
            </Space>
            {(requestAccessConfig) ? (
              <Modal
@@ -443,6 +447,7 @@ StudyDetails.propTypes = {
     blockData: PropTypes.object,
     tableData: PropTypes.object,
     displayButtonsData: PropTypes.object,
+    required_idp_field: PropTypes.string,
     accessibleValidationValue: PropTypes.string,
   }).isRequired,
   fileData: PropTypes.arrayOf(
