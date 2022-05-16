@@ -492,15 +492,6 @@ function GuppyWrapper({
     const mergedFilter = mergeFilters(userFilter, adminAppliedPreFilters);
 
     if (onFilterChange) onFilterChange(mergedFilter);
-
-    controller.current.abort();
-    controller.current = new AbortController();
-    fetchAggsDataFromGuppy(mergedFilter);
-    fetchRawDataFromGuppy({
-      fields: rawDataFields,
-      filter: mergedFilter,
-      updateDataWhenReceive: true,
-    });
   }
 
   return children({
