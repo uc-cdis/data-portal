@@ -2,11 +2,12 @@ import { useMemo, useReducer, useState } from 'react';
 import cloneDeep from 'lodash.clonedeep';
 
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
+/** @typedef {import('./types').QueryState} QueryState */
 /** @typedef {import('./types').QueryStateAction} QueryStateAction */
 /** @typedef {import('./types').QueryStateActionCallback} QueryStateActionCallback */
 
 /**
- * @param {{ [id: string]: ExplorerFilter }} state
+ * @param {QueryState} state
  * @param {QueryStateAction} action
  */
 function reducer(state, action) {

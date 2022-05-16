@@ -1,5 +1,7 @@
 import type { ExplorerFilter } from '../types';
 
+export type QueryState = { [key: string]: ExplorerFilter };
+
 export type QueryStateActionCallback = (args: {
   id: string;
   filter: ExplorerFilter;
