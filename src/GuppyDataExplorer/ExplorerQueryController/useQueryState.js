@@ -1,5 +1,6 @@
-import { useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import cloneDeep from 'lodash.clonedeep';
+import { useExplorerState } from '../ExplorerStateContext';
 
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
 /** @typedef {import('./types').QueryState} QueryState */
@@ -51,10 +52,10 @@ function reducer(state, action) {
   }
 }
 
-/** @param {ExplorerFilter} initialFilter */
-export default function useQueryState(initialFilter) {
+export default function useQueryState() {
+  const { explorerFilter } = useExplorerState();
   const [id, setId] = useState(crypto.randomUUID());
-  const [state, dispatch] = useReducer(reducer, { [id]: initialFilter });
+  const [state, dispatch] = useReducer(reducer, { [id]: explorerFilter });
 
   /** @param {(filter: ExplorerFilter) => void} [callback] */
   function create(callback) {
@@ -113,6 +114,8 @@ export default function useQueryState(initialFilter) {
       },
     });
   }
+
+  useEffect(() => update(explorerFilter), [explorerFilter]);
 
   /**
    * @param {string} newId

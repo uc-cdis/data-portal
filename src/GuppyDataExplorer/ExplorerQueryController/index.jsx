@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-import { useEffect } from 'react';
 import QueryDisplay from '../../components/QueryDisplay';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerState } from '../ExplorerStateContext';
@@ -11,18 +9,16 @@ import {
 } from './utils';
 import './ExplorerQueryController.css';
 
-/** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
-
-/** @param {{ filter: ExplorerFilter }} props */
-function ExplorerQueryController({ filter }) {
+function ExplorerQueryController() {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   const { handleFilterChange } = useExplorerState();
+  const queryState = useQueryState();
 
   /** @type {import('../../components/QueryDisplay').ClickCombineModeHandler} */
   function handleClickCombineMode(payload) {
     handleFilterChange(
-      /** @type {ExplorerFilter} */ ({
-        ...filter,
+      /** @type {import('../types').ExplorerFilter} */ ({
+        ...queryState.current.filter,
         __combineMode: payload === 'AND' ? 'OR' : 'AND',
       })
     );
@@ -30,6 +26,7 @@ function ExplorerQueryController({ filter }) {
   /** @type {import('../../components/QueryDisplay').ClickFilterHandler} */
   function handleCloseFilter(payload) {
     const { field, anchorField, anchorValue } = payload;
+    const { filter } = queryState.current;
     if (anchorField !== undefined && anchorValue !== undefined) {
       const anchor = `${anchorField}:${anchorValue}`;
       handleFilterChange(pluckFromAnchorFilter({ anchor, field, filter }));
@@ -37,11 +34,6 @@ function ExplorerQueryController({ filter }) {
       handleFilterChange(pluckFromFilter({ field, filter }));
     }
   }
-
-  const queryState = useQueryState(filter);
-  useEffect(() => {
-    queryState.update(filter);
-  }, [filter]);
 
   const disableNew = Object.values(queryState.all).some(checkIfFilterEmpty);
 
@@ -135,9 +127,5 @@ function ExplorerQueryController({ filter }) {
     </div>
   );
 }
-
-ExplorerQueryController.propTypes = {
-  filter: PropTypes.any,
-};
 
 export default ExplorerQueryController;
