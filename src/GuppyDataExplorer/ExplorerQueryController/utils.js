@@ -39,12 +39,12 @@ export function checkIfFilterEmpty(filter) {
   return Object.keys(_filter).length === 0;
 }
 
-const queryStateLocalStorageKey = 'explorer:queryState';
+const queryStateSessionStorageKey = 'explorer:queryState';
 
 /** @returns {QueryState} */
 export function retrieveQueryState() {
   try {
-    const str = window.localStorage.getItem(queryStateLocalStorageKey);
+    const str = window.sessionStorage.getItem(queryStateSessionStorageKey);
     if (str === null) throw new Error('No stored query');
     return JSON.parse(str);
   } catch (e) {
@@ -62,5 +62,8 @@ export function getInitialQueryState(filter) {
 
 /** @param {QueryState} state */
 export function storeQueryState(state) {
-  window.localStorage.setItem(queryStateLocalStorageKey, JSON.stringify(state));
+  window.sessionStorage.setItem(
+    queryStateSessionStorageKey,
+    JSON.stringify(state)
+  );
 }
