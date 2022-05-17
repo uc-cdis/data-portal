@@ -41,10 +41,6 @@ export const fetchFiles = (dataType, typeOfFileIndex, rowAccessorValue) => {
   }
   let nameOfIndex;
   const fieldsToFetch = ['file_name', 'file_size', 'data_format', 'data_type', targetStudyViewerConfig.rowAccessor];
-  const requiredIdpField = targetStudyViewerConfig.buttons.find((obj) => obj.type === 'request_access')?.required_idp_field;
-  if (requiredIdpField) {
-    fieldsToFetch.push(requiredIdpField);
-  }
   switch (typeOfFileIndex) {
   case 'object':
     nameOfIndex = targetStudyViewerConfig.fileDataType;
