@@ -72,14 +72,17 @@ function IndexOverview({ overviewCounts }) {
   ];
 
   const navigate = useNavigate();
-  const explorerLocation =
-    consortium.value === 'total'
-      ? { pathname: '/explorer' }
-      : {
-          pathname: '/explorer',
-          search: `filter={"consortium":{"selectedValues":["${consortium.value}"]}}`,
-          state: { keepSearch: true },
-        };
+  /** @type {[to: string, options?: import('react-router').NavigateOptions]} */
+  const navigateParams = ['/explorer'];
+  if (consortium.value !== 'total')
+    navigateParams.push({
+      state: {
+        filter: {
+          __combineMode: 'AND',
+          consortium: { selectedValues: [consortium.value] },
+        },
+      },
+    });
 
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   useEffect(() => {
@@ -106,7 +109,7 @@ function IndexOverview({ overviewCounts }) {
             <Button
               label='Explore more'
               buttonType='primary'
-              onClick={() => navigate(explorerLocation)}
+              onClick={() => navigate(...navigateParams)}
             />
           )}
         </div>
@@ -132,7 +135,7 @@ function IndexOverview({ overviewCounts }) {
           <Button
             label='Explore more'
             buttonType='primary'
-            onClick={() => navigate(explorerLocation)}
+            onClick={() => navigate(...navigateParams)}
           />
         </div>
       )}

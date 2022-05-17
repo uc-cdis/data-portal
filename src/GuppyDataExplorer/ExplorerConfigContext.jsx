@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 import { createFilterInfo, isSurvivalAnalysisEnabled } from './utils';
@@ -21,7 +21,6 @@ const ExplorerConfigContext = createContext(null);
 
 export function ExplorerConfigProvider({ children }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const location = useLocation();
 
   const explorerOptions = [];
   const explorerIds = [];
@@ -45,15 +44,8 @@ export function ExplorerConfigProvider({ children }) {
     ];
   }, []);
   useEffect(() => {
-    if (!hasValidInitialSearchParamId) {
-      setSearchParams(
-        // @ts-ignore
-        location.state?.keepSearch === true
-          ? `id=${initialExplorerId}&${location.search.slice(1)}`
-          : `id=${initialExplorerId}`,
-        { replace: true }
-      );
-    }
+    if (!hasValidInitialSearchParamId)
+      setSearchParams(`id=${initialExplorerId}`);
   }, []);
 
   const [explorerId, setExporerId] = useState(initialExplorerId);
