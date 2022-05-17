@@ -130,7 +130,6 @@ export default function useQueryState() {
       },
     });
   }
-
   useEffect(() => update(explorerFilter), [explorerFilter]);
 
   /**
