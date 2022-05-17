@@ -1,12 +1,19 @@
-import { useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import cloneDeep from 'lodash.clonedeep';
+import { useExplorerState } from '../ExplorerStateContext';
+import {
+  checkIfFilterEmpty,
+  getInitialQueryState,
+  storeQueryState,
+} from './utils';
 
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
+/** @typedef {import('./types').QueryState} QueryState */
 /** @typedef {import('./types').QueryStateAction} QueryStateAction */
 /** @typedef {import('./types').QueryStateActionCallback} QueryStateActionCallback */
 
 /**
- * @param {{ [id: string]: ExplorerFilter }} state
+ * @param {QueryState} state
  * @param {QueryStateAction} action
  */
 function reducer(state, action) {
@@ -50,10 +57,21 @@ function reducer(state, action) {
   }
 }
 
-/** @param {ExplorerFilter} initialFilter */
-export default function useQueryState(initialFilter) {
-  const [id, setId] = useState(crypto.randomUUID());
-  const [state, dispatch] = useReducer(reducer, { [id]: initialFilter });
+export default function useQueryState() {
+  const { explorerFilter, handleFilterChange } = useExplorerState();
+  const initialState = useMemo(() => {
+    const state = getInitialQueryState(explorerFilter);
+
+    // sync filter UI with non-empty initial filter
+    const filters = Object.values(state);
+    if (filters.length > 1 || !checkIfFilterEmpty(filters[0]))
+      handleFilterChange(filters[0]);
+
+    return state;
+  }, []);
+  const [id, setId] = useState(Object.keys(initialState)[0]);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  useEffect(() => storeQueryState(state), [state]);
 
   /** @param {(filter: ExplorerFilter) => void} [callback] */
   function create(callback) {
@@ -112,6 +130,7 @@ export default function useQueryState(initialFilter) {
       },
     });
   }
+  useEffect(() => update(explorerFilter), [explorerFilter]);
 
   /**
    * @param {string} newId

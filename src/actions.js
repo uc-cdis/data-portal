@@ -245,6 +245,7 @@ export const logoutAPI =
       else document.location.replace(response.url);
 
       window.localStorage.clear();
+      window.sessionStorage.clear();
     });
 
 /**
