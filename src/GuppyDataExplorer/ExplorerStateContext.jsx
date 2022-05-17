@@ -1,5 +1,6 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 import { useExplorerConfig } from './ExplorerConfigContext';
 
 /** @typedef {import('./types').ExplorerFilter} ExplorerFilter */
@@ -21,8 +22,9 @@ export function ExplorerStateProvider({ children }) {
     current: { filterConfig, patientIdsConfig },
   } = useExplorerConfig();
 
-  /** @type {ExplorerFilter} */
-  const initialExplorerFilter = {};
+  const initialExplorerFilter =
+    /** @type {{ filter?: ExplorerFilter  }} */ (useLocation().state)?.filter ??
+    /** @type {ExplorerFilter} */ ({});
   const [explorerFilter, setExplorerFilter] = useState(initialExplorerFilter);
 
   /** @type {string[]} */
