@@ -577,25 +577,27 @@ Below is an example, with inline comments describing what each JSON block config
     "detailView": {
       "headerField": "project_title", // field from which to pull detail view title
       "tabs": [
-        "tabName": "Study",
-        "groups": [
-          {
-            "header": "Study Description Summary", // subheading above a group of fields, optional
-            "fields": [
-              {
-              "header": "Study Description Summary",
+        {
+          "tabName": "Study",
+          "groups": [
+            {
+              "header": "Study Description Summary", // subheading above a group of fields, optional
               "fields": [
                 {
-                  "type": "block",
-                  "sourceField": "study_description_summary"
+                  "header": "Study Description Summary",
+                  "fields": [
+                    {
+                      "type": "block",
+                      "sourceField": "study_description_summary"
+                    }
+                  ]
                 }
               ]
-              }
-            ]
-          }
-        ]
+            }
+          ]
+        }
       ]
-    }
+    },
     "minimalFieldMapping": { // maps
       "tagsListFieldName": "tags", // required; the field which contains the list of tags (format: [{name: string, category: string}] )
       "authzField": "authz", // optional if features.authorization.enabled is false, otherwise required
