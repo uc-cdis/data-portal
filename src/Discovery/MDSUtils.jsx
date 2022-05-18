@@ -1,10 +1,11 @@
 import { hostname } from '../localconf';
+import { fetchWithCreds } from '../actions';
 
-const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
-  const LIMIT = 1000; // required or else mds defaults to returning 10 records
-  const MDS_URL = `${hostname}mds/metadata`;
-  const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
+const LIMIT = 1000; // required or else mds defaults to returning 10 records
+const MDS_URL = `${hostname}mds/metadata`;
+const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
 
+export const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
   try {
     let allStudies = [];
     let offset = 0;
@@ -37,4 +38,31 @@ const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
   }
 };
 
-export default loadStudiesFromMDS;
+export const registerStudyInMDS = async (username, metadataID, updatedValues = {}, GUIDType = 'discovery_metadata') => {
+  try {
+    const queryURL = `${MDS_URL}/${metadataID}`;
+    const queryRes = await fetch(queryURL);
+    if (queryRes.status !== 200) {
+      throw new Error(`Request for query study data at ${queryURL} failed. Response: ${JSON.stringify(queryRes, null, 2)}`);
+    }
+    const studyMetadata = await queryRes.json();
+    const metadataToUpdate = { ...studyMetadata, ...updatedValues };
+    metadataToUpdate._guid_type = GUIDType;
+    metadataToUpdate[STUDY_DATA_FIELD].registrant_username = username;
+    console.log(metadataToUpdate);
+    // const updateURL = `${MDS_URL}/${metadataID}?overwrite=true`;
+    // fetchWithCreds({
+    //   path: updateURL,
+    //   method: 'POST',
+    //   customHeaders: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(jsonResponse),
+    // }).then((response) => {
+    //   if (response.status !== 200) {
+    //     throw new Error(`Request for update study data at ${updateURL} failed. Response: ${JSON.stringify(response, null, 2)}`);
+    //   }
+    //   return null;
+    // });
+  } catch (err) {
+    throw new Error(`Request for update study data failed: ${err}`);
+  }
+};

@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 
 import StudyRegistration from './StudyRegistration';
 import { StudyRegistrationConfig } from './StudyRegistrationConfig';
-import loadStudiesFromMDS from '../Discovery/MDSUtils';
+import { loadStudiesFromMDS } from '../Discovery/MDSUtils';
 
 const StudyRegistrationWithMDSBackend: React.FC<{
+    user: any,
     userAuthMapping: any,
     config: StudyRegistrationConfig,
 }> = (props) => {
@@ -29,6 +30,7 @@ const StudyRegistrationWithMDSBackend: React.FC<{
 };
 
 const mapStateToProps = (state) => ({
+  user: state.user,
   userAuthMapping: state.userAuthMapping,
   ...state.studyRegistration,
 });

@@ -497,7 +497,6 @@ async function init() {
                           component={
                             (props) => (
                               <ProtectedContent
-                                public
                                 component={StudyRegistration}
                                 {...props}
                               />

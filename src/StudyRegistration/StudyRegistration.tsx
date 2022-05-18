@@ -8,18 +8,21 @@ import {
   Tooltip,
   Typography,
   Space,
+  Result,
 } from 'antd';
 import {
   MinusCircleOutlined,
   PlusOutlined,
   QuestionCircleOutlined,
-  ExportOutlined,
 } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 
 import { StudyRegistrationConfig } from './StudyRegistrationConfig';
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI } from '../localconf';
+import { registerStudyInMDS } from '../Discovery/MDSUtils';
 
 const { Option } = Select;
 const layout = {
@@ -44,7 +47,7 @@ const formItemLayoutWithOutLabel = {
 };
 /* eslint-disable no-template-curly-in-string */
 const validateMessages = {
-  required: '${label} is required!',
+  required: '${label} is required',
 };
 /* eslint-enable no-template-curly-in-string */
 
@@ -66,10 +69,28 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
     return Promise.reject('Unable to verify ClinicalTrial.gov ID');
   }
 };
+
+const isUUID = (input) => {
+  // regexp for checking if a string is possibly an UUID, from https://melvingeorge.me/blog/check-if-string-valid-uuid-regex-javascript
+  const regexp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+  return new RegExp(regexp).test(input);
+};
+
+const handleUUIDValidation = (_, UUID: string): Promise<boolean|void> => {
+  if (!UUID || !isUUID(UUID)) {
+    return Promise.reject('Invalid CEDAR user UUID');
+  }
+  return Promise.resolve(true);
+};
+
 export interface DiscoveryResource {
   [any: string]: any,
 }
+interface User {
+  username: string
+}
 interface Props {
+  user: User,
   userAuthMapping: any,
   config: StudyRegistrationConfig
   studies: DiscoveryResource[]
@@ -79,6 +100,8 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
   const { studies } = props;
   const [form] = Form.useForm();
 
+  const [formSubmissionStatus, setFormSubmissionStatus] = useState(null);
+
   const userHasAccess = () => {
     if (!useArboristUI) {
       return true;
@@ -86,43 +109,67 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
     return (userHasMethodForServiceOnResource('access', 'mds_gateway', '/mds_gateway', props.userAuthMapping));
   };
 
+  const handleRegisterFormSubmission = (formValues) => {
+    const CEDARUUID = formValues.cedar_uuid;
+    // Use CEDAR UUID here
+    const studyID = formValues.study_id;
+    registerStudyInMDS(props.user.username, studyID, { ...formValues.repository, ...formValues.object_ids, ...formValues.clinical_trials_id })
+      .then(() => setFormSubmissionStatus({ status: 'success', text: formValues.study_id }))
+      .catch((err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
+  };
+
   const onFinish = (values) => {
     console.log(values);
+    handleRegisterFormSubmission(values);
   };
 
   const onReset = () => {
     form.resetFields();
   };
 
+  if (formSubmissionStatus) {
+    return (
+      <div className='study-reg-container'>
+        <div className='study-reg-form-container'>
+          {(formSubmissionStatus.status === 'success') ? (
+            <Result
+              status={formSubmissionStatus.status}
+              title='Your study has been registered!'
+              subTitle='Please allow up to 24 hours until the platform is updated'
+              extra={[
+                <Button type='primary' key='register' onClick={() => setFormSubmissionStatus(null)}>
+                  Register Another Study
+                </Button>,
+                <Link key='discovery' to={'/discovery'}>
+                  <Button>Go To Discovery Page</Button>
+                </Link>,
+              ]}
+            />
+          ) : (
+            <Result
+              status={formSubmissionStatus.status}
+              title='A problem has occurred during registration!'
+              subTitle={formSubmissionStatus.text}
+              extra={[
+                <Button type='primary' key='close' onClick={() => setFormSubmissionStatus(null)}>
+                  Close
+                </Button>,
+              ]}
+            />
+          )}
+
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='study-reg-container'>
       <div className='study-reg-form-container'>
         <Form className='study-reg-form' {...layout} form={form} name='control-hooks' onFinish={onFinish} validateMessages={validateMessages}>
-          <Divider plain>CEDAR API</Divider>
-          <Form.Item
-            label='CEDAR User UUID'
-            hasFeedback
-            name='cedar_uuid'
-            rules={[{ required: true }]}
-          >
-            <div className='study-reg-form-item'>
-              <Input
-                placeholder='Provide your CEDAR user UUID here'
-              />
-              <Tooltip title='A CEDAR user UUID is required in this process so the created CEDAR instances can be shared with you. We do not save this ID on the platform'>
-                <QuestionCircleOutlined className='study-reg-form-item__middle-icon' />
-              </Tooltip>
-              <div className='study-reg-form-item__last-item'>
-                <Typography.Link href='https://cedar.metadatacenter.org/' target='_blank' rel='noreferrer'>
-              Get CEDAR User UUID
-                  <ExportOutlined />
-                </Typography.Link>
-              </div>
-            </div>
-          </Form.Item>
           <Divider plain>Study Selection</Divider>
           <Form.Item
-            name='study'
+            name='study_id'
             label='Study'
             hasFeedback
             rules={[{ required: true }]}
@@ -135,18 +182,49 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
               ))}
             </Select>
           </Form.Item>
+          <Divider plain>CEDAR API</Divider>
+          <Form.Item
+            label='CEDAR User UUID'
+            hasFeedback
+            name='cedar_uuid'
+            rules={[
+              { required: true },
+              {
+                validator: handleUUIDValidation,
+                validateTrigger: 'onSubmit',
+              },
+            ]}
+          >
+            <div className='study-reg-form-item'>
+              <Input
+                placeholder='Provide your CEDAR user UUID here'
+              />
+              <Tooltip title='A CEDAR user UUID is required in this process so the created CEDAR instances can be shared with you. We do not save this ID on the platform'>
+                <QuestionCircleOutlined className='study-reg-form-item__middle-icon' />
+              </Tooltip>
+              <div className='study-reg-form-item__last-item'>
+                <Typography.Link href='https://cedar.metadatacenter.org/' target='_blank' rel='noreferrer'>
+                  <Space>
+                    Get CEDAR User UUID
+                    <FontAwesomeIcon
+                      icon={'external-link-alt'}
+                    />
+                  </Space>
+                </Typography.Link>
+              </div>
+            </div>
+          </Form.Item>
           <Divider plain>Metadata Fields</Divider>
           <Form.Item
             name='repository'
             label='Study Data Repository'
             hasFeedback
-            rules={[{ required: true }]}
+            help='Leave this section blank if your data is not yet available'
           >
             <Select placeholder='Select a data repository' showSearch allowClear>
               <Option value='HEAL FAIR'>HEAL FAIR</Option>
               <Option value='JCOIN'>JCOIN</Option>
               <Option value='ICPSR'>ICPSR</Option>
-              <Option value='N/A'>N/A</Option>
             </Select>
           </Form.Item>
           <Form.List name='object_ids' initialValue={['']}>
@@ -183,14 +261,14 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
                     onClick={() => add()}
                     icon={<PlusOutlined />}
                   >
-                Add another object ID
+                    Add another object ID
                   </Button>
                 </Form.Item>
               </React.Fragment>
             )}
           </Form.List>
           <Form.Item
-            name='ct_id'
+            name='clinical_trials_id'
             label='ClinicalTrials.gov ID'
             rules={[
               {
