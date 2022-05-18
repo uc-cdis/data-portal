@@ -272,7 +272,7 @@ class StudyDetails extends React.Component {
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
            <Space>
-             <div>
+             <React.Fragment>
                {this.props.isSingleItemView
                  ? (
                    <Button
@@ -282,14 +282,14 @@ class StudyDetails extends React.Component {
                    />
                  )
                  : null}
-             </div>
-             <div>
+             </React.Fragment>
+             <React.Fragment>
                {
                  (this.props.studyViewerConfig.buttons) ? this.props.studyViewerConfig.buttons.map(
                    (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
                  ) : null
                }
-             </div>
+             </React.Fragment>
            </Space>
            {(requestAccessConfig) ? (
              <Modal
