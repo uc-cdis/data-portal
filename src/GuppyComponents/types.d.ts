@@ -1,11 +1,11 @@
 export type OptionFilter = {
-  selectedValues: string[];
+  selectedValues?: string[];
   __combineMode?: 'AND' | 'OR';
 };
 
 export type RangeFilter = {
-  lowerBound: number;
-  upperBound: number;
+  lowerBound?: number;
+  upperBound?: number;
 };
 
 export type SimpleFilterState = {
