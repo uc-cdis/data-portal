@@ -46,6 +46,10 @@
   cursor: pointer;
 }
 
+.explorer-filter__combine-mode > label.active {
+  border-color: var(--pcdc-color__secondary);
+}
+
 .explorer-filter__combine-mode > label.active,
 .explorer-filter__combine-mode > label:hover {
   background-color: var(--g3-color__white);

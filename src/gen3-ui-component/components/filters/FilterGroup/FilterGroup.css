@@ -25,6 +25,10 @@
   padding: 4px 12px;
 }
 
+.g3-filter-group__tab--selected {
+  border-color: var(--pcdc-color__secondary);
+}
+
 .g3-filter-group__tab--selected,
 .g3-filter-group__tab:hover {
   background-color: var(--g3-color__white);
