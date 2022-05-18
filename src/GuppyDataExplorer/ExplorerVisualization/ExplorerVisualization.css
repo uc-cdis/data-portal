@@ -58,6 +58,10 @@
   margin-right: 0;
 }
 
+.explorer-visualization__view-group > button.active {
+  border-color: var(--pcdc-color__secondary);
+}
+
 .explorer-visualization__view-group > button.active,
 .explorer-visualization__view-group > button:hover {
   background-color: var(--g3-color__white);
