@@ -390,7 +390,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       width: config.tagColumnWidth || '200px',
       render: (_, record) => (
         <React.Fragment>
-          {record.tags.map(({ name, category }) => {
+          {record[config.minimalFieldMapping.tagsListFieldName].map(({ name, category }) => {
             const isSelected = !!props.selectedTags[name];
             const color = getTagColor(category, config);
             if (typeof name !== 'string') {

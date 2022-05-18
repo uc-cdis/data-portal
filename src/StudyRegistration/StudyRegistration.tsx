@@ -22,7 +22,7 @@ import { StudyRegistrationConfig } from './StudyRegistrationConfig';
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI } from '../localconf';
-import { registerStudyInMDS } from '../Discovery/MDSUtils';
+import { loadStudiesFromMDS, registerStudyInMDS } from '../Discovery/MDSUtils';
 
 const { Option } = Select;
 const layout = {
@@ -93,14 +93,23 @@ interface Props {
   user: User,
   userAuthMapping: any,
   config: StudyRegistrationConfig
-  studies: DiscoveryResource[]
 }
 
 const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
-  const { studies } = props;
   const [form] = Form.useForm();
 
   const [formSubmissionStatus, setFormSubmissionStatus] = useState(null);
+  const [studies, setStudies] = useState(null);
+  const [regRequestPending, setRegRequestPending] = useState(false);
+
+  useEffect(() => {
+    loadStudiesFromMDS('unregistered_discovery_metadata').then((rawStudies) => {
+      setStudies(rawStudies);
+    }).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error('Error encountered while loading studies: ', err);
+    });
+  }, [formSubmissionStatus]);
 
   const userHasAccess = () => {
     if (!useArboristUI) {
@@ -113,7 +122,13 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
     const CEDARUUID = formValues.cedar_uuid;
     // Use CEDAR UUID here
     const studyID = formValues.study_id;
-    registerStudyInMDS(props.user.username, studyID, { ...formValues.repository, ...formValues.object_ids, ...formValues.clinical_trials_id })
+    setRegRequestPending(true);
+    registerStudyInMDS(props.user.username, studyID,
+      {
+        repository: formValues.repository || '',
+        object_ids: ((!formValues.object_ids || formValues.object_ids[0] === '') ? [] : formValues.object_ids),
+        clinical_trials_id: formValues.clinical_trials_id || '',
+      })
       .then(() => setFormSubmissionStatus({ status: 'success', text: formValues.study_id }))
       .catch((err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
   };
@@ -137,7 +152,7 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
               title='Your study has been registered!'
               subTitle='Please allow up to 24 hours until the platform is updated'
               extra={[
-                <Button type='primary' key='register' onClick={() => setFormSubmissionStatus(null)}>
+                <Button type='primary' key='register' onClick={() => { setFormSubmissionStatus(null); setRegRequestPending(false); }}>
                   Register Another Study
                 </Button>,
                 <Link key='discovery' to={'/discovery'}>
@@ -151,7 +166,7 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
               title='A problem has occurred during registration!'
               subTitle={formSubmissionStatus.text}
               extra={[
-                <Button type='primary' key='close' onClick={() => setFormSubmissionStatus(null)}>
+                <Button type='primary' key='close' onClick={() => { setFormSubmissionStatus(null); setRegRequestPending(false); }}>
                   Close
                 </Button>,
               ]}
@@ -288,11 +303,11 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
                   </Button>
                 </Tooltip>
               ) : (
-                <Button type='primary' htmlType='submit'>
+                <Button type='primary' htmlType='submit' disabled={regRequestPending} loading={regRequestPending}>
                   Submit
                 </Button>
               )}
-              <Button htmlType='button' onClick={onReset}>
+              <Button htmlType='button' onClick={onReset} disabled={regRequestPending}>
                 Reset
               </Button>
             </Space>

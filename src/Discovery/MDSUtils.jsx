@@ -46,22 +46,22 @@ export const registerStudyInMDS = async (username, metadataID, updatedValues = {
       throw new Error(`Request for query study data at ${queryURL} failed. Response: ${JSON.stringify(queryRes, null, 2)}`);
     }
     const studyMetadata = await queryRes.json();
-    const metadataToUpdate = { ...studyMetadata, ...updatedValues };
+    const metadataToUpdate = { ...studyMetadata };
     metadataToUpdate._guid_type = GUIDType;
     metadataToUpdate[STUDY_DATA_FIELD].registrant_username = username;
-    console.log(metadataToUpdate);
-    // const updateURL = `${MDS_URL}/${metadataID}?overwrite=true`;
-    // fetchWithCreds({
-    //   path: updateURL,
-    //   method: 'POST',
-    //   customHeaders: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(jsonResponse),
-    // }).then((response) => {
-    //   if (response.status !== 200) {
-    //     throw new Error(`Request for update study data at ${updateURL} failed. Response: ${JSON.stringify(response, null, 2)}`);
-    //   }
-    //   return null;
-    // });
+    metadataToUpdate[STUDY_DATA_FIELD] = { ...metadataToUpdate[STUDY_DATA_FIELD], ...updatedValues };
+    const updateURL = `${MDS_URL}/${metadataID}?overwrite=true`;
+    fetchWithCreds({
+      path: updateURL,
+      method: 'POST',
+      customHeaders: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(metadataToUpdate),
+    }).then((response) => {
+      if (response.status !== 200) {
+        throw new Error(`Request for update study data at ${updateURL} failed. Response: ${JSON.stringify(response, null, 2)}`);
+      }
+      return null;
+    });
   } catch (err) {
     throw new Error(`Request for update study data failed: ${err}`);
   }
