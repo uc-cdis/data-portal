@@ -128,7 +128,7 @@ const removeEmptyFields = (inputObj, flag) => {
   return inputObj;
 };
 
-const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFields) => {
+const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFields, requiredIdpField) => {
   const targetStudyViewerConfig = fetchStudyViewerConfig(nameOfIndex);
   const processedDataset = [];
   if (receivedData) {
@@ -145,6 +145,7 @@ const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFie
           processedItem.accessRequested = !!(requestedAccess
           && requestedAccess[dataElement.auth_resource_path]);
           processedDataset.push(processedItem);
+          processedItem.requiredIdpField = dataElement[requiredIdpField];
         });
       },
     ).then(() => processedDataset);
@@ -176,6 +177,12 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
   fieldsToFetch.push('auth_resource_path');
   fieldsToFetch.push(targetStudyViewerConfig.titleField);
   fieldsToFetch.push(targetStudyViewerConfig.rowAccessor);
+
+  const requiredIdpField = targetStudyViewerConfig.buttons.find((obj) => obj.type === 'request_access')?.required_idp_field;
+  if (requiredIdpField) {
+    fieldsToFetch.push(requiredIdpField);
+  }
+
   const displayButtonsFields = targetStudyViewerConfig.buttons
     ? targetStudyViewerConfig.buttons.map((b) => b.enableButtonField) : [];
   fieldsToFetch = [
@@ -208,6 +215,7 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
               data.data[dataType],
               itemConfig,
               displayButtonsFields,
+              requiredIdpField,
             ).then((pd) => ({
               type: 'RECEIVE_SINGLE_STUDY_DATASET',
               datasets: pd,
@@ -218,6 +226,7 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
             data.data[dataType],
             itemConfig,
             displayButtonsFields,
+            requiredIdpField,
           ).then((pd) => ({
             type: 'RECEIVE_STUDY_DATASET_LIST',
             datasets: pd,

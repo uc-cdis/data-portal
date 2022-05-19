@@ -49,12 +49,16 @@ class StudyDetails extends React.Component {
     // `?request_access` means user got here by clicking the `Request Access` button
     // and `?request_access_logged_in` means user got here by redirecting from the login page
     // in that case, don't redirect user again, just wait for user props to update
-    if ((!this.props.user || !this.props.user.username)
+    const requiredIdp = this.props.data.requiredIdpField;
+    if ((!this.props.user
+      || !this.props.user.username
+      || (requiredIdp && requiredIdp !== this.props.user.idp))
     && this.props.location.search
     && this.props.location.search === '?request_access') {
       this.props.history.push('/login', { from: `${this.props.location.pathname}?request_access` });
     } else if (this.props.user
       && this.props.user.username
+      && !(requiredIdp && requiredIdp !== this.props.user.idp)
       && this.props.location.search
       && this.props.location.search.includes('?request_access')) {
       // if we still have either `?request_access` or `?request_access_logged_in`
@@ -171,6 +175,10 @@ class StudyDetails extends React.Component {
         this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
       };
       let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
+      if (this.props.data.requiredIdpField) {
+        // if required_idp set requires user to have specific type to request access
+        requestAccessText = this.props.data.requiredIdpField === this.props.user?.idp ? 'Request Access' : `Login through ${this.props.data.requiredIdpField.toUpperCase()} to Request Access`;
+      }
       if (enableButton && this.state.accessRequested) {
         // the button is disabled because the user has already requested access
         requestAccessText = (buttonConfig.accessRequestedText) ? buttonConfig.accessRequestedText : 'Access Requested';
@@ -264,20 +272,24 @@ class StudyDetails extends React.Component {
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
            <Space>
-             {this.props.isSingleItemView
-               ? (
-                 <Button
-                   label={'Learn More'}
-                   buttonType='primary'
-                   onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
-                 />
-               )
-               : null}
-             {
-               (this.props.studyViewerConfig.buttons) ? this.props.studyViewerConfig.buttons.map(
-                 (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
-               ) : null
-             }
+             <React.Fragment>
+               {this.props.isSingleItemView
+                 ? (
+                   <Button
+                     label={'Learn More'}
+                     buttonType='primary'
+                     onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
+                   />
+                 )
+                 : null}
+             </React.Fragment>
+             <React.Fragment>
+               {
+                 (this.props.studyViewerConfig.buttons) ? this.props.studyViewerConfig.buttons.map(
+                   (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
+                 ) : null
+               }
+             </React.Fragment>
            </Space>
            {(requestAccessConfig) ? (
              <Modal
@@ -435,6 +447,7 @@ StudyDetails.propTypes = {
     blockData: PropTypes.object,
     tableData: PropTypes.object,
     displayButtonsData: PropTypes.object,
+    requiredIdpField: PropTypes.string,
     accessibleValidationValue: PropTypes.string,
   }).isRequired,
   fileData: PropTypes.arrayOf(
