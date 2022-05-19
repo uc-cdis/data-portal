@@ -10,6 +10,8 @@ import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath } from '../../localconf
 import GWASWorkflowList from './GWASWorkflowList';
 import { fetchWithCreds } from '../../actions';
 import Spinner from "../../components/Spinner";
+import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+
 
 const { Step } = Steps;
 
@@ -48,6 +50,7 @@ const GWASUIApp = (props) => {
   const [conceptVars] = useState({
     ConceptIds: [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708],
   });
+  const hareConceptId = 2090006880;
   const [selectedConceptVars, setSelectedConceptVars] = useState([]);
 
   const [form] = Form.useForm();
@@ -62,6 +65,8 @@ const GWASUIApp = (props) => {
   const [numOfPC, setNumOfPC] = useState(3);
   const [selectedPhenotype, setSelectedPhenotype] = useState(undefined);
   const [selectedCovariates, setSelectedCovariates] = useState([]);
+
+  const [selectedHare, setSelectedHare] = useState("-select one-");
 
   const onStep5FormSubmit = (values) => {
     setImputationScore(values.imputationCutoff);
@@ -100,6 +105,20 @@ const GWASUIApp = (props) => {
     const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;
     const getCohortDefinitions = await fetch(cohortEndPoint);
     return getCohortDefinitions.json();
+  }
+
+  async function fetchConceptStatsByHare() {
+    var conceptIds = [...selectedConcepts].map((val) => val.concept_id);
+    const conceptIdsPayload = { ConceptIds: conceptIds };
+    const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
+    const reqBody = {
+      method: 'POST',
+      credentials: 'include',
+      headers,
+      body: JSON.stringify(conceptIdsPayload),
+    };
+    const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
+    return getConceptStats.json();
   }
 
   async function fetchConcepts() {
@@ -333,6 +352,49 @@ const GWASUIApp = (props) => {
     );
   };
 
+
+  const ConceptStatsByHare = () => {
+    const { data, status } = useQuery(['conceptstatsbyhare', selectedConcepts], fetchConceptStatsByHare, queryConfig);
+
+    if (status === 'loading') {
+      return <Spinner />;
+    }
+    if (status === 'error') {
+      return <React.Fragment>Error</React.Fragment>;
+    }
+    if (data) {
+      // special case - endpoint returns empty result:
+      if (data.concept_breakdown == null) {
+        return <React.Fragment>Error: there are no subjects in this cohort that have data available on all the selected covariates
+          and phenotype. Please review your selections</React.Fragment>;
+      }
+      // normal scenario - there is breakdown data, so show in dropdown:
+      return (
+        <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
+          <Dropdown.Button rightIcon='dropdown' buttonType='secondary'>
+            {selectedHare}
+          </Dropdown.Button>
+          <Dropdown.Menu>
+            {
+              data.concept_breakdown.map((datum) => {
+                return (
+                  <Dropdown.Item
+                    key={`${datum.concept_value}`}
+                    value={`${datum.concept_value}`}
+                    onClick={() => setSelectedHare(datum.concept_value)}
+                  >
+                    {<div>{datum.concept_value} {" (size:" + datum.persons_in_cohort_with_value + ")"}</div>}
+                  </Dropdown.Item>
+                );
+              })
+            }
+          </Dropdown.Menu>
+        </Dropdown>
+      );
+    }
+  };
+
+
   async function fetchGwasSubmit() {
     const submitEndpoint = `${gwasWorkflowPath}submit`;
     const requestBody = {
@@ -341,6 +403,7 @@ const GWASUIApp = (props) => {
       out_prefix: Date.now().toString(),
       outcome: selectedOutcome,
       outcome_is_binary: false,
+      hare_code: selectedHare, // TODO - align w/ Zuyi
       maf_threshold: Number(mafThreshold),
       imputation_score_cutoff: Number(imputationScore),
       template_version: 'gwas-template-6226080403eb62585981d9782aec0f3a82a7e906',
@@ -367,6 +430,7 @@ const GWASUIApp = (props) => {
     setImputationScore(0.3);
     setCohortDefinitionId(undefined);
     setSelectedCohort(undefined);
+    setSelectedHare("-select one-");
     props.refreshWorkflows();
   };
 
@@ -398,129 +462,135 @@ const GWASUIApp = (props) => {
 
   const generateContentForStep = (stepIndex) => {
     switch (stepIndex) {
-    case 0: {
-      return (
-        sourceId ? <CohortDefinitions /> : null
-      );
-    }
-    case 1: {
-      return (
-        <CohortConcepts />
-      );
-    }
-    case 2: {
-      return (
-        <CohortConceptStats />
-      );
-    }
-    case 3: {
-      return (
-        <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-          <div className='GWASUI-mainArea'>
-            <Form
-              name='GWASUI-parameter-form'
-              form={form}
-              labelCol={{
-                span: 8,
-              }}
-              wrapperCol={{
-                span: 16,
-              }}
-              initialValues={{
-                numOfPC,
-                isBinary: false,
-                mafCutoff: 0.01,
-                imputationCutoff: 0.3,
-              }}
-              autoComplete='off'
-            >
-              <Form.Item
-                label='Number of PCs to use'
-                name='numOfPC'
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input a value between 1 to 10',
-                  },
-                ]}
+      case 0: {
+        return (
+          sourceId ? <CohortDefinitions /> : null
+        );
+      }
+      case 1: {
+        return (
+          <CohortConcepts />
+        );
+      }
+      case 2: {
+        return (
+          <CohortConceptStats />
+        );
+      }
+      case 3: {
+        return (
+          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+            <div className='GWASUI-mainArea'>
+              <Form
+                name='GWASUI-parameter-form'
+                form={form}
+                labelCol={{
+                  span: 8,
+                }}
+                wrapperCol={{
+                  span: 16,
+                }}
+                initialValues={{
+                  numOfPC,
+                  isBinary: false,
+                  mafCutoff: 0.01,
+                  imputationCutoff: 0.3,
+                }}
+                autoComplete='off'
               >
-                <InputNumber min={1} max={10} />
-              </Form.Item>
-              <Form.Item
-                label='Covariates'
-                name='covariates'
-              >
-                <Select
-                  mode='multiple'
-                  value={selectedCovariates.map((s) => s.concept_name)}
-                  disabled={selectedCovariates.length === 1}
-                  onChange={(e) => handleCovariateDelete(e)}
-                  style={{ width: '70%' }}
-                />
-              </Form.Item>
-              <Form.Item
-                label='Phenotype'
-                name='outcome'
-              >
-                <Input
-                  disabled
-                  value={selectedPhenotype}
-                  style={{ width: '70%' }}
-                />
-              </Form.Item>
-              <Form.Item
-                label='Is Binary Outcome?'
-                name='isBinary'
-              >
-                <Switch disabled checked={false} style={{ width: '5%' }} />
-              </Form.Item>
-              <Form.Item
-                label='MAF Cutoff'
-                name='mafCutoff'
-              >
-                <InputNumber value={mafThreshold} onChange={(e) => setMafThreshold(e)} stringMode step='0.01' min={'0'} max={'0.5'} />
-              </Form.Item>
-              <Form.Item
-                label='Imputation Score Cutoff'
-                name='imputationCutoff'
-              >
-                <InputNumber value={imputationScore} onChange={(e) => setImputationScore(e)} stringMode step='0.1' min={'0'} max={'1'} />
-              </Form.Item>
-            </Form>
-          </div>
-        </Space>
-      );
-    }
-    case 4: {
-      const layout = {
-        labelCol: { span: 8 },
-        wrapperCol: { span: 16 },
-      };
-      const tailLayout = {
-        wrapperCol: { offset: 8, span: 16 },
-      };
+                <Form.Item
+                  label='Number of PCs to use'
+                  name='numOfPC'
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input a value between 1 to 10',
+                    },
+                  ]}
+                >
+                  <InputNumber min={1} max={10} />
+                </Form.Item>
+                <Form.Item
+                  label='Covariates'
+                  name='covariates'
+                >
+                  <Select
+                    mode='multiple'
+                    value={selectedCovariates.map((s) => s.concept_name)}
+                    disabled={selectedCovariates.length === 1}
+                    onChange={(e) => handleCovariateDelete(e)}
+                    style={{ width: '70%' }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label='Phenotype'
+                  name='outcome'
+                >
+                  <Input
+                    disabled
+                    value={selectedPhenotype}
+                    style={{ width: '70%' }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label='Select HARE group'
+                  name='hareGroup'
+                >
+                  <ConceptStatsByHare />
+                </Form.Item>
+                <Form.Item
+                  label='Is Binary Outcome?'
+                  name='isBinary'
+                >
+                  <Switch disabled checked={false} style={{ width: '5%' }} />
+                </Form.Item>
+                <Form.Item
+                  label='MAF Cutoff'
+                  name='mafCutoff'
+                >
+                  <InputNumber value={mafThreshold} onChange={(e) => setMafThreshold(e)} stringMode step='0.01' min={'0'} max={'0.5'} />
+                </Form.Item>
+                <Form.Item
+                  label='Imputation Score Cutoff'
+                  name='imputationCutoff'
+                >
+                  <InputNumber value={imputationScore} onChange={(e) => setImputationScore(e)} stringMode step='0.1' min={'0'} max={'1'} />
+                </Form.Item>
+              </Form>
+            </div>
+          </Space>
+        );
+      }
+      case 4: {
+        const layout = {
+          labelCol: { span: 8 },
+          wrapperCol: { span: 16 },
+        };
+        const tailLayout = {
+          wrapperCol: { offset: 8, span: 16 },
+        };
 
-      return (
-        <React.Fragment>
-          <div className='GWASUI-mainArea'>
-            <Form
-              {...layout}
-              name='control-hooks'
-              form={form}
-              onFinish={(values) => {
-                onStep5FormSubmit(values);
-              }}
-            >
-              <Form.Item {...tailLayout}>
-                <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
-              </Form.Item>
-            </Form>
-          </div>
-        </React.Fragment>
-      );
-    }
-    default:
-      return <React.Fragment />;
+        return (
+          <React.Fragment>
+            <div className='GWASUI-mainArea'>
+              <Form
+                {...layout}
+                name='control-hooks'
+                form={form}
+                onFinish={(values) => {
+                  onStep5FormSubmit(values);
+                }}
+              >
+                <Form.Item {...tailLayout}>
+                  <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
+                </Form.Item>
+              </Form>
+            </div>
+          </React.Fragment>
+        );
+      }
+      default:
+        return <React.Fragment />;
     }
   };
 
