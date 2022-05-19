@@ -10,7 +10,7 @@ import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import ExplorerRequestAccessButton from '../ExplorerRequestAccessButton';
 import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
-import ExplorerQueryController from '../ExplorerQueryController';
+import ExplorerFilterSetWorkplace from '../ExplorerFilterSetWorkplace';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
@@ -275,9 +275,7 @@ function ExplorerVisualization({
           <ReduxExplorerButtonGroup {...buttonGroupProps} />
         </div>
       </div>
-      {explorerView !== 'survival analysis' && (
-        <ExplorerQueryController filter={filter} />
-      )}
+      {explorerView !== 'survival analysis' && <ExplorerFilterSetWorkplace />}
       <ViewContainer
         showIf={explorerView === 'summary view'}
         isLoading={isLoadingAggsData}
