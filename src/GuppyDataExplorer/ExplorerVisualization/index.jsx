@@ -199,6 +199,7 @@ function ExplorerVisualization({
     if (!explorerViews.includes(explorerView))
       updateExplorerView(explorerViews[0]);
   }, []);
+  const showFilterSetWorkspace = explorerView !== 'survival analysis';
 
   const chartData = getChartData({
     aggsChartData,
@@ -275,7 +276,9 @@ function ExplorerVisualization({
           <ReduxExplorerButtonGroup {...buttonGroupProps} />
         </div>
       </div>
-      {explorerView !== 'survival analysis' && <ExplorerFilterSetWorkplace />}
+      <div style={{ display: showFilterSetWorkspace ? 'initial' : 'none' }}>
+        <ExplorerFilterSetWorkplace />
+      </div>
       <ViewContainer
         showIf={explorerView === 'summary view'}
         isLoading={isLoadingAggsData}
