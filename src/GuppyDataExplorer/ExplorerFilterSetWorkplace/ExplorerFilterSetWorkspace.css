@@ -4,6 +4,13 @@
   margin-top: 10px;
 }
 
+/* Medium screen and less */
+@media screen and (max-width: 1090px) {
+  .explorer-filter-set-workplace {
+    display: none;
+  }
+}
+
 .explorer-filter-set-workplace > header > h2 {
   font-size: 14px;
   line-height: 1rem;
