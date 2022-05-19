@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
-import './QueryDisplay.css';
+import './FilterDisplay.css';
 
 /**
  * @callback ClickCombineModeHandler
@@ -21,13 +21,7 @@ import './QueryDisplay.css';
  * @param {React.EventHandler<any>} [props.onClick]
  * @param {React.EventHandler<any>} [props.onClose]
  */
-function QueryPill({
-  className = 'pill',
-  children,
-  filterKey,
-  onClick,
-  onClose,
-}) {
+function Pill({ className = 'pill', children, filterKey, onClick, onClose }) {
   return (
     <div className='pill-container'>
       {typeof onClick === 'function' ? (
@@ -56,7 +50,7 @@ function QueryPill({
   );
 }
 
-QueryPill.propTypes = {
+Pill.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node.isRequired,
   filterKey: PropTypes.string,
@@ -74,7 +68,7 @@ QueryPill.propTypes = {
  * @param {ClickFilterHandler} [props.onClickFilter]
  * @param {ClickFilterHandler} [props.onCloseFilter]
  */
-function QueryDisplay({
+function FilterDisplay({
   anchorInfo,
   combineMode,
   filter,
@@ -85,11 +79,11 @@ function QueryDisplay({
 }) {
   const filterElements = /** @type {JSX.Element[]} */ ([]);
   const { __combineMode, ...__filter } = filter;
-  const queryCombineMode = combineMode ?? __combineMode ?? 'AND';
+  const filterCombineMode = combineMode ?? __combineMode ?? 'AND';
 
   const handleClickCombineMode =
     typeof onClickCombineMode === 'function'
-      ? () => onClickCombineMode(queryCombineMode)
+      ? () => onClickCombineMode(filterCombineMode)
       : undefined;
   const handleClickFilter =
     typeof onClickFilter === 'function'
@@ -116,14 +110,14 @@ function QueryDisplay({
     if ('filter' in value) {
       const [anchorField, anchorValue] = key.split(':');
       filterElements.push(
-        <QueryPill key={key} className='pill anchor'>
+        <Pill key={key} className='pill anchor'>
           <span className='token field'>
             With <code>{filterInfo[anchorField].label}</code> of{' '}
             <code>{`"${anchorValue}"`}</code>
           </span>
           <span className='token'>
             ({' '}
-            <QueryDisplay
+            <FilterDisplay
               anchorInfo={[anchorField, anchorValue]}
               filter={value.filter}
               filterInfo={filterInfo}
@@ -134,11 +128,11 @@ function QueryDisplay({
             />{' '}
             )
           </span>
-        </QueryPill>
+        </Pill>
       );
     } else if ('selectedValues' in value) {
       filterElements.push(
-        <QueryPill
+        <Pill
           key={key}
           onClick={handleClickFilter}
           onClose={handleCloseFilter}
@@ -164,11 +158,11 @@ function QueryDisplay({
               <code>{`"${value.selectedValues[0]}"`}</code>
             )}
           </span>
-        </QueryPill>
+        </Pill>
       );
-    } else {
+    } else if ('lowerBound' in value) {
       filterElements.push(
-        <QueryPill
+        <Pill
           key={key}
           onClick={handleClickFilter}
           onClose={handleCloseFilter}
@@ -182,19 +176,17 @@ function QueryDisplay({
               ({value.lowerBound}, {value.upperBound})
             </code>
           </span>
-        </QueryPill>
+        </Pill>
       );
     }
 
   return (
-    <span className='query-display'>
+    <span className='filter-display'>
       {filterElements.map((filterElement, i) => (
         <Fragment key={i}>
           {filterElement}
           {i < filterElements.length - 1 && (
-            <QueryPill onClick={handleClickCombineMode}>
-              {queryCombineMode}
-            </QueryPill>
+            <Pill onClick={handleClickCombineMode}>{filterCombineMode}</Pill>
           )}
         </Fragment>
       ))}
@@ -202,7 +194,7 @@ function QueryDisplay({
   );
 }
 
-QueryDisplay.propTypes = {
+FilterDisplay.propTypes = {
   anchorInfo: PropTypes.arrayOf(PropTypes.string),
   combineMode: PropTypes.oneOf(['AND', 'OR']),
   filter: PropTypes.any.isRequired,
@@ -216,4 +208,4 @@ QueryDisplay.propTypes = {
   onCloseFilter: PropTypes.func,
 };
 
-export default QueryDisplay;
+export default FilterDisplay;

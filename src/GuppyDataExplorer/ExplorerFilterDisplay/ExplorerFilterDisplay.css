@@ -1,13 +1,13 @@
-.filter-set-query-display {
+.explorer-filter-display {
   margin: 1rem;
   min-height: 6.5rem;
 }
 
-.filter-set-query-display header {
+.explorer-filter-display header {
   margin-bottom: 0.25rem;
 }
 
-.filter-set-query-display main {
+.explorer-filter-display main {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 12px;

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import QueryDisplay from '@src/components/QueryDisplay';
+import FilterDisplay from '@src/components/FilterDisplay';
 
 const simpleFilter = {
   __combineMode: 'AND',
@@ -27,9 +27,9 @@ const filterInfo = {
   lorem: { label: 'Lorem' },
 };
 
-storiesOf('QueryDisplay', module)
+storiesOf('FilterDisplay', module)
   .add('Simple', () => (
-    <QueryDisplay filter={simpleFilter} filterInfo={filterInfo} />
+    <FilterDisplay filter={simpleFilter} filterInfo={filterInfo} />
   ))
   .add('Simple with action', () => (
     <>
@@ -37,7 +37,7 @@ storiesOf('QueryDisplay', module)
         <p>
           Handle click <code>combineMode</code> and click <code>filter</code>:
         </p>
-        <QueryDisplay
+        <FilterDisplay
           filter={simpleFilter}
           filterInfo={filterInfo}
           onClickCombineMode={action('clickCombineMode')}
@@ -48,7 +48,7 @@ storiesOf('QueryDisplay', module)
         <p>
           Handle click <code>combineMode</code> and close <code>filter</code>:
         </p>
-        <QueryDisplay
+        <FilterDisplay
           filter={simpleFilter}
           filterInfo={filterInfo}
           onClickCombineMode={action('clickCombineMode')}
@@ -60,7 +60,7 @@ storiesOf('QueryDisplay', module)
           Handle click <code>combineMode</code> and click/close{' '}
           <code>filter</code>:
         </p>
-        <QueryDisplay
+        <FilterDisplay
           filter={simpleFilter}
           filterInfo={filterInfo}
           onClickCombineMode={action('clickCombineMode')}
@@ -71,7 +71,7 @@ storiesOf('QueryDisplay', module)
     </>
   ))
   .add('Complex', () => (
-    <QueryDisplay filter={complexFilter} filterInfo={filterInfo} />
+    <FilterDisplay filter={complexFilter} filterInfo={filterInfo} />
   ))
   .add('Complex with action', () => (
     <div>
@@ -79,7 +79,7 @@ storiesOf('QueryDisplay', module)
         Handle click <code>combineMode</code> and click/close{' '}
         <code>filter</code>:
       </p>
-      <QueryDisplay
+      <FilterDisplay
         filter={complexFilter}
         filterInfo={filterInfo}
         onClickCombineMode={action('clickCombineMode')}

@@ -1,32 +1,32 @@
-import QueryDisplay from '../../components/QueryDisplay';
+import FilterDisplay from '../../components/FilterDisplay';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerState } from '../ExplorerStateContext';
-import useQueryState from './useQueryState';
+import useFilterSetWorkspace from './useFilterSetWorkspace';
 import {
   checkIfFilterEmpty,
   pluckFromAnchorFilter,
   pluckFromFilter,
 } from './utils';
-import './ExplorerQueryController.css';
+import './ExplorerFilterSetWorkspace.css';
 
-function ExplorerQueryController() {
+function ExplorerFilterSetWorkspace() {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   const { handleFilterChange } = useExplorerState();
-  const queryState = useQueryState();
+  const workspace = useFilterSetWorkspace();
 
-  /** @type {import('../../components/QueryDisplay').ClickCombineModeHandler} */
+  /** @type {import('../../components/FilterDisplay').ClickCombineModeHandler} */
   function handleClickCombineMode(payload) {
     handleFilterChange(
       /** @type {import('../types').ExplorerFilter} */ ({
-        ...queryState.current.filter,
+        ...workspace.active.filter,
         __combineMode: payload === 'AND' ? 'OR' : 'AND',
       })
     );
   }
-  /** @type {import('../../components/QueryDisplay').ClickFilterHandler} */
+  /** @type {import('../../components/FilterDisplay').ClickFilterHandler} */
   function handleCloseFilter(payload) {
     const { field, anchorField, anchorValue } = payload;
-    const { filter } = queryState.current;
+    const { filter } = workspace.active;
     if (anchorField !== undefined && anchorValue !== undefined) {
       const anchor = `${anchorField}:${anchorValue}`;
       handleFilterChange(pluckFromAnchorFilter({ anchor, field, filter }));
@@ -35,15 +35,16 @@ function ExplorerQueryController() {
     }
   }
 
-  const disableNew = Object.values(queryState.all).some(checkIfFilterEmpty);
+  const disableNew = Object.values(workspace.all).some(checkIfFilterEmpty);
 
   return (
-    <div className='explorer-query-controller'>
+    <div className='explorer-filter-set-workplace'>
       <header>
+        <h2>Filter Set Workspace</h2>
         <button
-          className='explorer-query-controller__action-button'
+          className='explorer-filter-set-workplace__action-button'
           type='button'
-          onClick={() => queryState.create(handleFilterChange)}
+          onClick={() => workspace.create(handleFilterChange)}
           disabled={disableNew}
           title={
             disableNew
@@ -54,33 +55,33 @@ function ExplorerQueryController() {
           New
         </button>
         <button
-          className='explorer-query-controller__action-button'
+          className='explorer-filter-set-workplace__action-button'
           type='button'
-          onClick={() => queryState.duplicate(handleFilterChange)}
-          disabled={checkIfFilterEmpty(queryState.current.filter)}
+          onClick={() => workspace.duplicate(handleFilterChange)}
+          disabled={checkIfFilterEmpty(workspace.active.filter)}
         >
           Duplicate
         </button>
         <button
-          className='explorer-query-controller__action-button'
+          className='explorer-filter-set-workplace__action-button'
           type='button'
-          onClick={() => queryState.remove(handleFilterChange)}
-          disabled={queryState.size < 2}
+          onClick={() => workspace.remove(handleFilterChange)}
+          disabled={workspace.size < 2}
         >
           Remove
         </button>
       </header>
       <main>
-        {Object.keys(queryState.all).map((id, i) => {
-          const queryFilter = queryState.all[id];
-          return queryState.current.id === id ? (
+        {Object.keys(workspace.all).map((id, i) => {
+          const _filter = workspace.all[id];
+          return workspace.active.id === id ? (
             <div
-              className='explorer-query-controller__query explorer-query-controller__query--active'
+              className='explorer-filter-set-workplace__query explorer-filter-set-workplace__query--active'
               key={id}
             >
               <header>
                 <button
-                  className='explorer-query-controller__action-button'
+                  className='explorer-filter-set-workplace__action-button'
                   type='button'
                   disabled
                 >
@@ -89,11 +90,11 @@ function ExplorerQueryController() {
                 <h3>{`#${i + 1}`}</h3>
               </header>
               <main>
-                {checkIfFilterEmpty(queryFilter) ? (
+                {checkIfFilterEmpty(_filter) ? (
                   <h4>Try Filters to explore data</h4>
                 ) : (
-                  <QueryDisplay
-                    filter={queryFilter}
+                  <FilterDisplay
+                    filter={_filter}
                     filterInfo={filterInfo}
                     onClickCombineMode={handleClickCombineMode}
                     onCloseFilter={handleCloseFilter}
@@ -102,22 +103,22 @@ function ExplorerQueryController() {
               </main>
             </div>
           ) : (
-            <div className='explorer-query-controller__query' key={id}>
+            <div className='explorer-filter-set-workplace__query' key={id}>
               <header>
                 <button
-                  className='explorer-query-controller__action-button'
+                  className='explorer-filter-set-workplace__action-button'
                   type='button'
-                  onClick={() => queryState.use(id, handleFilterChange)}
+                  onClick={() => workspace.use(id, handleFilterChange)}
                 >
                   Use
                 </button>
                 <h3>{`#${i + 1}`}</h3>
               </header>
               <main>
-                {checkIfFilterEmpty(queryFilter) ? (
+                {checkIfFilterEmpty(_filter) ? (
                   <h4>Try Filters to explore data</h4>
                 ) : (
-                  <QueryDisplay filter={queryFilter} filterInfo={filterInfo} />
+                  <FilterDisplay filter={_filter} filterInfo={filterInfo} />
                 )}
               </main>
             </div>
@@ -128,4 +129,4 @@ function ExplorerQueryController() {
   );
 }
 
-export default ExplorerQueryController;
+export default ExplorerFilterSetWorkspace;

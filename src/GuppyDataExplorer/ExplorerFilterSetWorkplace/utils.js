@@ -1,5 +1,5 @@
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
-/** @typedef {import('./types').QueryState} QueryState */
+/** @typedef {import('./types').FilterSetWorkspaceState} FilterSetWorkspaceState */
 
 /**
  * @param {Object} args
@@ -39,12 +39,12 @@ export function checkIfFilterEmpty(filter) {
   return Object.keys(_filter).length === 0;
 }
 
-const queryStateSessionStorageKey = 'explorer:queryState';
+const workspaceStateSessionStorageKey = 'explorer:filterSetWorkspace';
 
-/** @returns {QueryState} */
-export function retrieveQueryState() {
+/** @returns {FilterSetWorkspaceState} */
+export function retrieveWorkspaceState() {
   try {
-    const str = window.sessionStorage.getItem(queryStateSessionStorageKey);
+    const str = window.sessionStorage.getItem(workspaceStateSessionStorageKey);
     if (str === null) throw new Error('No stored query');
     return JSON.parse(str);
   } catch (e) {
@@ -54,16 +54,16 @@ export function retrieveQueryState() {
 }
 
 /** @param {ExplorerFilter} filter */
-export function getInitialQueryState(filter) {
+export function initializeWorkspaceState(filter) {
   return checkIfFilterEmpty(filter)
-    ? retrieveQueryState()
+    ? retrieveWorkspaceState()
     : { [crypto.randomUUID()]: filter };
 }
 
-/** @param {QueryState} state */
-export function storeQueryState(state) {
+/** @param {FilterSetWorkspaceState} state */
+export function storeWorkspaceState(state) {
   window.sessionStorage.setItem(
-    queryStateSessionStorageKey,
+    workspaceStateSessionStorageKey,
     JSON.stringify(state)
   );
 }

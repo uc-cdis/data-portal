@@ -3,18 +3,17 @@ import cloneDeep from 'lodash.clonedeep';
 import { useExplorerState } from '../ExplorerStateContext';
 import {
   checkIfFilterEmpty,
-  getInitialQueryState,
-  storeQueryState,
+  initializeWorkspaceState,
+  storeWorkspaceState,
 } from './utils';
 
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
-/** @typedef {import('./types').QueryState} QueryState */
-/** @typedef {import('./types').QueryStateAction} QueryStateAction */
-/** @typedef {import('./types').QueryStateActionCallback} QueryStateActionCallback */
+/** @typedef {import('./types').FilterSetWorkspaceState} FilterSetWorkspaceState */
+/** @typedef {import('./types').FilterSetWorkspaceAction} FilterSetWorkspaceAction */
 
 /**
- * @param {QueryState} state
- * @param {QueryStateAction} action
+ * @param {FilterSetWorkspaceState} state
+ * @param {FilterSetWorkspaceAction} action
  */
 function reducer(state, action) {
   const { type, payload } = action;
@@ -57,21 +56,21 @@ function reducer(state, action) {
   }
 }
 
-export default function useQueryState() {
+export default function useFilterSetWorkspace() {
   const { explorerFilter, handleFilterChange } = useExplorerState();
-  const initialState = useMemo(() => {
-    const state = getInitialQueryState(explorerFilter);
+  const initialWsState = useMemo(() => {
+    const wsState = initializeWorkspaceState(explorerFilter);
 
     // sync filter UI with non-empty initial filter
-    const filters = Object.values(state);
+    const filters = Object.values(wsState);
     if (filters.length > 1 || !checkIfFilterEmpty(filters[0]))
       handleFilterChange(filters[0]);
 
-    return state;
+    return wsState;
   }, []);
-  const [id, setId] = useState(Object.keys(initialState)[0]);
-  const [state, dispatch] = useReducer(reducer, initialState);
-  useEffect(() => storeQueryState(state), [state]);
+  const [id, setId] = useState(Object.keys(initialWsState)[0]);
+  const [wsState, dispatch] = useReducer(reducer, initialWsState);
+  useEffect(() => storeWorkspaceState(wsState), [wsState]);
 
   /** @param {(filter: ExplorerFilter) => void} [callback] */
   function create(callback) {
@@ -138,20 +137,20 @@ export default function useQueryState() {
    */
   function use(newId, callback) {
     setId(newId);
-    callback?.(state[newId]);
+    callback?.(wsState[newId]);
   }
 
   return useMemo(
     () => ({
-      all: state,
-      current: { id, filter: state[id] },
-      size: Object.keys(state).length,
+      active: { id, filter: wsState[id] },
+      all: wsState,
+      size: Object.keys(wsState).length,
       create,
       duplicate,
       remove,
       update,
       use,
     }),
-    [id, state]
+    [id, wsState]
   );
 }

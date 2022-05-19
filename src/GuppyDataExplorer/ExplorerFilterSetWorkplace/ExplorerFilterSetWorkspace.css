@@ -1,0 +1,95 @@
+.explorer-filter-set-workplace {
+  background-color: var(--g3-color__white);
+  padding: 1rem;
+  margin-top: 10px;
+}
+
+/* Medium screen and less */
+@media screen and (max-width: 1090px) {
+  .explorer-filter-set-workplace {
+    display: none;
+  }
+}
+
+.explorer-filter-set-workplace > header > h2 {
+  font-size: 14px;
+  line-height: 1rem;
+  margin-right: 0.5rem;
+  display: inline-block;
+}
+
+.explorer-filter-set-workplace > header > h2::after {
+  border-left: 1px solid var(--g3-color__lightgray);
+  content: '';
+  margin-left: 10px;
+}
+
+.explorer-filter-set-workplace > main {
+  margin-top: 1rem;
+  max-height: 12rem;
+  overflow-y: scroll;
+}
+
+.explorer-filter-set-workplace button {
+  background-color: inherit;
+  border: none;
+  height: initial;
+  width: initial;
+}
+
+.explorer-filter-set-workplace button:disabled {
+  cursor: not-allowed;
+}
+
+.explorer-filter-set-workplace button:not(:disabled) {
+  color: var(--g3-color__gray);
+}
+
+.explorer-filter-set-workplace
+  button.explorer-filter-set-workplace__action-button {
+  margin-right: 0.25rem;
+  padding: 0.25rem;
+}
+
+.explorer-filter-set-workplace
+  button.explorer-filter-set-workplace__action-button:hover:not(:disabled) {
+  background-color: var(--g3-color__silver);
+}
+
+.explorer-filter-set-workplace__query {
+  display: flex;
+  padding: 0.25rem;
+  background-color: var(--g3-color__bg-cloud);
+}
+
+.explorer-filter-set-workplace__query > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-width: 5rem;
+}
+
+.explorer-filter-set-workplace__query > header > h3 {
+  font-size: 1rem;
+  line-height: 1rem;
+  padding: 0.25rem;
+  color: inherit;
+}
+
+.explorer-filter-set-workplace__query--active {
+  background-color: transparent;
+  border: 1px solid var(--g3-color__lime);
+  border-left-width: 0.25rem;
+  padding-left: 0;
+}
+
+.explorer-filter-set-workplace__query--active
+  button.explorer-filter-set-workplace__action-button {
+  color: var(--g3-color__lime);
+  cursor: initial;
+}
+
+.explorer-filter-set-workplace__query > h4 {
+  display: inline-block;
+  margin-right: 0.25rem;
+}
