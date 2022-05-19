@@ -51,6 +51,9 @@ export interface DiscoveryConfig {
             //     }
             // }
         },
+        tagsColumn?: {
+            enabled: boolean,
+        },
         advSearchFilters?: {
             enabled: boolean,
             field: string,

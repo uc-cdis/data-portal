@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 import Discovery, { AccessLevel, AccessSortDirection, DiscoveryResource } from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { discoveryConfig, useArboristUI } from '../localconf';
+import { discoveryConfig, studyRegistrationConfig, useArboristUI } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
 import loadStudiesFromAggMDS from './aggMDSUtils';
 import { loadStudiesFromMDS } from './MDSUtils';
@@ -35,13 +36,21 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    let loadStudiesFunction;
-    if (isEnabled('discoveryUseAggMDS')) {
-      loadStudiesFunction = loadStudiesFromAggMDS;
-    } else {
-      loadStudiesFunction = loadStudiesFromMDS;
+    async function fetchRawStudies() {
+      let loadStudiesFunction;
+      if (isEnabled('discoveryUseAggMDS')) {
+        loadStudiesFunction = loadStudiesFromAggMDS;
+      } else {
+        loadStudiesFunction = loadStudiesFromMDS;
+      }
+      const rawStudiesRegistered = await loadStudiesFunction();
+      let rawStudiesUnregistered = [];
+      if (isEnabled('studyRegistration')) {
+        rawStudiesUnregistered = await loadStudiesFromMDS('unregistered_discovery_metadata');
+      }
+      return _.union(rawStudiesRegistered, rawStudiesUnregistered);
     }
-    loadStudiesFunction().then((rawStudies) => {
+    fetchRawStudies().then((rawStudies) => {
       let studiesToSet;
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
@@ -92,9 +101,14 @@ const DiscoveryWithMDSBackend: React.FC<{
     props.onDiscoveryPageActive();
   }, [props]);
 
+  let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField || 'registrant_username';
+  if (!isEnabled('studyRegistration')) {
+    studyRegistrationValidationField = undefined;
+  }
   return (
     <Discovery
       studies={studies === null ? [] : studies}
+      studyRegistrationValidationField={studyRegistrationValidationField}
       {...props}
     />
   );

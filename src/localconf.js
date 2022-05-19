@@ -271,6 +271,7 @@ function buildConfig(opts) {
   }
 
   const { discoveryConfig } = config;
+  const { studyRegistrationConfig } = config;
 
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
@@ -508,6 +509,7 @@ function buildConfig(opts) {
     studyViewerConfig,
     covid19DashboardConfig,
     discoveryConfig,
+    studyRegistrationConfig,
     mapboxAPIToken,
     auspiceUrl,
     auspiceUrlIL,

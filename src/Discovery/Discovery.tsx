@@ -4,7 +4,7 @@ import {
   Tag, Popover, Space, Collapse, Button, Dropdown, Menu, Pagination, Tooltip,
 } from 'antd';
 import {
-  UnlockOutlined, ClockCircleOutlined, DashOutlined, UpOutlined, DownOutlined, UndoOutlined, FilterFilled, FilterOutlined, MinusOutlined,
+  UnlockOutlined, ClockCircleOutlined, DashOutlined, UpOutlined, DownOutlined, UndoOutlined, FilterFilled, FilterOutlined, MinusOutlined, CheckCircleTwoTone, MinusCircleTwoTone,
 } from '@ant-design/icons';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import MenuItem from 'antd/lib/menu/MenuItem';
@@ -200,6 +200,7 @@ export interface DiscoveryResource {
 interface Props {
   config: DiscoveryConfig
   studies: DiscoveryResource[]
+  studyRegistrationValidationField: string
   params?: {studyUID: string} // from React Router
   selectedResources,
   pagination: { currentPage: number, resultsPerPage: number },
@@ -225,7 +226,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filterState, setFilterState] = useState({} as FilterState);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState({} as DiscoveryResource);
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [advSearchFilterHeight, setAdvSearchFilterHeight] = useState('100vh');
@@ -382,57 +383,79 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     },
   }),
   );
-  columns.push(
-    {
-      textWrap: 'word-break',
-      title: <div className='discovery-table-header'> { config.tagsDisplayName || 'Tags' }</div>,
-      ellipsis: false,
-      width: config.tagColumnWidth || '200px',
-      render: (_, record) => (
-        <React.Fragment>
-          {record[config.minimalFieldMapping.tagsListFieldName].map(({ name, category }) => {
-            const isSelected = !!props.selectedTags[name];
-            const color = getTagColor(category, config);
-            if (typeof name !== 'string') {
-              return null;
-            }
-            return (
-              <Tag
-                key={record.name + name}
-                role='button'
-                tabIndex={0}
-                aria-pressed={isSelected ? 'true' : 'false'}
-                className={`discovery-tag ${isSelected ? 'discovery-tag--selected' : ''}`}
-                aria-label={name}
-                style={{
-                  backgroundColor: isSelected ? color : 'initial',
-                  borderColor: color,
-                }}
-                onKeyPress={(ev) => {
-                  ev.stopPropagation();
-                  const selectedTags = {
-                    ...props.selectedTags,
-                    [name]: props.selectedTags[name] ? undefined : true,
-                  };
-                  props.onTagsSelected(selectedTags);
-                }}
-                onClick={(ev) => {
-                  ev.stopPropagation();
-                  const selectedTags = {
-                    ...props.selectedTags,
-                    [name]: props.selectedTags[name] ? undefined : true,
-                  };
-                  props.onTagsSelected(selectedTags);
-                }}
-              >
-                {name}
-              </Tag>
-            );
-          })}
-        </React.Fragment>
-      ),
-    },
-  );
+  if (!config.features.tagsColumn || config.features.tagsColumn.enabled) {
+    columns.push(
+      {
+        textWrap: 'word-break',
+        title: <div className='discovery-table-header'> { config.tagsDisplayName || 'Tags' }</div>,
+        ellipsis: false,
+        width: config.tagColumnWidth || '200px',
+        render: (_, record) => (
+          <React.Fragment>
+            {record[config.minimalFieldMapping.tagsListFieldName].map(({ name, category }) => {
+              const isSelected = !!props.selectedTags[name];
+              const color = getTagColor(category, config);
+              if (typeof name !== 'string') {
+                return null;
+              }
+              return (
+                <Tag
+                  key={record.name + name}
+                  role='button'
+                  tabIndex={0}
+                  aria-pressed={isSelected ? 'true' : 'false'}
+                  className={`discovery-tag ${isSelected ? 'discovery-tag--selected' : ''}`}
+                  aria-label={name}
+                  style={{
+                    backgroundColor: isSelected ? color : 'initial',
+                    borderColor: color,
+                  }}
+                  onKeyPress={(ev) => {
+                    ev.stopPropagation();
+                    const selectedTags = {
+                      ...props.selectedTags,
+                      [name]: props.selectedTags[name] ? undefined : true,
+                    };
+                    props.onTagsSelected(selectedTags);
+                  }}
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    const selectedTags = {
+                      ...props.selectedTags,
+                      [name]: props.selectedTags[name] ? undefined : true,
+                    };
+                    props.onTagsSelected(selectedTags);
+                  }}
+                >
+                  {name}
+                </Tag>
+              );
+            })}
+          </React.Fragment>
+        ),
+      },
+    );
+  }
+  if (props.studyRegistrationValidationField) {
+    columns.push(
+      {
+        textWrap: 'word-break',
+        title: <div className='discovery-table-header'> { 'Registration Status' }</div>,
+        ellipsis: false,
+        width: config.tagColumnWidth || '200px',
+        render: (_, record) => ((record[props.studyRegistrationValidationField]) ? (
+          <React.Fragment>
+            <CheckCircleTwoTone twoToneColor='#52c41a' />
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <MinusCircleTwoTone twoToneColor='#eb2f96' />
+          </React.Fragment>
+        )
+        ),
+      },
+    );
+  }
   if (config.features.authorization.enabled) {
     columns.push({
       title: (
@@ -775,7 +798,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             />
           </Space>
         </div>
-
         <DiscoveryDetails
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
