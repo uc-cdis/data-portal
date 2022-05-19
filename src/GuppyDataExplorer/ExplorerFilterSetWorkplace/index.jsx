@@ -1,4 +1,4 @@
-import QueryDisplay from '../../components/QueryDisplay';
+import FilterDisplay from '../../components/FilterDisplay';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerState } from '../ExplorerStateContext';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
@@ -14,7 +14,7 @@ function ExplorerFilterSetWorkspace() {
   const { handleFilterChange } = useExplorerState();
   const workspace = useFilterSetWorkspace();
 
-  /** @type {import('../../components/QueryDisplay').ClickCombineModeHandler} */
+  /** @type {import('../../components/FilterDisplay').ClickCombineModeHandler} */
   function handleClickCombineMode(payload) {
     handleFilterChange(
       /** @type {import('../types').ExplorerFilter} */ ({
@@ -23,7 +23,7 @@ function ExplorerFilterSetWorkspace() {
       })
     );
   }
-  /** @type {import('../../components/QueryDisplay').ClickFilterHandler} */
+  /** @type {import('../../components/FilterDisplay').ClickFilterHandler} */
   function handleCloseFilter(payload) {
     const { field, anchorField, anchorValue } = payload;
     const { filter } = workspace.active;
@@ -72,7 +72,7 @@ function ExplorerFilterSetWorkspace() {
       </header>
       <main>
         {Object.keys(workspace.all).map((id, i) => {
-          const queryFilter = workspace.all[id];
+          const _filter = workspace.all[id];
           return workspace.active.id === id ? (
             <div
               className='explorer-filter-set-workplace__query explorer-filter-set-workplace__query--active'
@@ -89,11 +89,11 @@ function ExplorerFilterSetWorkspace() {
                 <h3>{`#${i + 1}`}</h3>
               </header>
               <main>
-                {checkIfFilterEmpty(queryFilter) ? (
+                {checkIfFilterEmpty(_filter) ? (
                   <h4>Try Filters to explore data</h4>
                 ) : (
-                  <QueryDisplay
-                    filter={queryFilter}
+                  <FilterDisplay
+                    filter={_filter}
                     filterInfo={filterInfo}
                     onClickCombineMode={handleClickCombineMode}
                     onCloseFilter={handleCloseFilter}
@@ -114,10 +114,10 @@ function ExplorerFilterSetWorkspace() {
                 <h3>{`#${i + 1}`}</h3>
               </header>
               <main>
-                {checkIfFilterEmpty(queryFilter) ? (
+                {checkIfFilterEmpty(_filter) ? (
                   <h4>Try Filters to explore data</h4>
                 ) : (
-                  <QueryDisplay filter={queryFilter} filterInfo={filterInfo} />
+                  <FilterDisplay filter={_filter} filterInfo={filterInfo} />
                 )}
               </main>
             </div>

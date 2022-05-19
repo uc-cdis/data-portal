@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import QueryDisplay from '../../components/QueryDisplay';
+import FilterDisplay from '../../components/FilterDisplay';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import './FilterSetQueryDisplay.css';
 
@@ -16,7 +16,7 @@ function FilterSetQueryDisplay({ filter, title = 'Filters' }) {
         <>
           <header>{title}</header>
           <main>
-            <QueryDisplay filter={filter} filterInfo={filterInfo} />
+            <FilterDisplay filter={filter} filterInfo={filterInfo} />
           </main>
         </>
       ) : (
