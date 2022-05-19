@@ -1,0 +1,17 @@
+.explorer-filter-display {
+  margin: 1rem;
+  min-height: 6.5rem;
+}
+
+.explorer-filter-display header {
+  margin-bottom: 0.25rem;
+}
+
+.explorer-filter-display main {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  height: 5rem;
+  overflow: scroll;
+  padding: 4px;
+}
