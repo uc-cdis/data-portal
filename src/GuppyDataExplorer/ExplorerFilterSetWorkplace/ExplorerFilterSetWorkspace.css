@@ -1,6 +1,20 @@
 .explorer-filter-set-workplace {
   background-color: var(--g3-color__white);
-  padding: 0.5rem 1rem;
+  padding: 1rem;
+  margin-top: 10px;
+}
+
+.explorer-filter-set-workplace > header > h2 {
+  font-size: 14px;
+  line-height: 1rem;
+  margin-right: 0.5rem;
+  display: inline-block;
+}
+
+.explorer-filter-set-workplace > header > h2::after {
+  border-left: 1px solid var(--g3-color__lightgray);
+  content: '';
+  margin-left: 10px;
 }
 
 .explorer-filter-set-workplace > main {
@@ -18,6 +32,10 @@
 
 .explorer-filter-set-workplace button:disabled {
   cursor: not-allowed;
+}
+
+.explorer-filter-set-workplace button:not(:disabled) {
+  color: var(--g3-color__gray);
 }
 
 .explorer-filter-set-workplace

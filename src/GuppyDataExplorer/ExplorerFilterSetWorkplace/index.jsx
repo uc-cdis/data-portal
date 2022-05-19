@@ -40,6 +40,7 @@ function ExplorerFilterSetWorkspace() {
   return (
     <div className='explorer-filter-set-workplace'>
       <header>
+        <h2>Filter Set Workspace</h2>
         <button
           className='explorer-filter-set-workplace__action-button'
           type='button'
