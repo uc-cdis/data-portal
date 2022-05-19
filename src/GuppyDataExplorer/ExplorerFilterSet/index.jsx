@@ -15,9 +15,9 @@ import {
 import { createEmptyFilterSet, truncateWithEllipsis } from './utils';
 import './ExplorerFilterSet.css';
 
-/** @typedef {import('./types').ExplorerFilter} ExplorerFilter */
-/** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
-/** @typedef {import('./types').ExplorerFilterSetActionType} ExplorerFilterSetActionType */
+/** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
+/** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('../types').ExplorerFilterSetActionType} ExplorerFilterSetActionType */
 
 /**
  * @param {Object} prop

@@ -112,3 +112,10 @@ export type ExplorerFilterSetDTO = {
   id?: number;
   name: string;
 };
+
+export type ExplorerFilterSetActionType =
+  | 'new'
+  | 'open'
+  | 'save'
+  | 'save as'
+  | 'delete';
