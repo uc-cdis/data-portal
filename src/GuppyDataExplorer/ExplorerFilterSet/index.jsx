@@ -125,7 +125,7 @@ function ExplorerFilterSet({ className, filter }) {
         <>
           <div>
             <h4 className='explorer-filter-set__title'>
-              My filter sets{' '}
+              Saved Filter Sets{' '}
               {filterSet.name && isFiltersChanged && (
                 <Tooltip
                   overlay='You have changed filters for this Filter Set. Click this icon to undo.'
