@@ -1,6 +1,10 @@
-import type { ExplorerFilter } from '../types';
+import type { ExplorerFilter, ExplorerFilterSet } from '../types';
 
-export type FilterSetWorkspaceState = { [key: string]: ExplorerFilter };
+export type UnsavedExplorerFilterSet = Pick<ExplorerFilterSet, 'filter'>;
+
+export type FilterSetWorkspaceState = {
+  [key: string]: ExplorerFilterSet | UnsavedExplorerFilterSet;
+};
 
 type FilterSetWorkspaceActionCallback = (args: {
   id: string;

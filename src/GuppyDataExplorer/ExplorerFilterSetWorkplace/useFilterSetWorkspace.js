@@ -24,24 +24,24 @@ function reducer(state, action) {
 
       payload.callback?.({ filter, id });
 
-      return { ...state, [id]: filter };
+      return { ...state, [id]: { filter } };
     }
     case 'REMOVE': {
       const newState = cloneDeep(state);
       delete newState[payload.id];
 
-      const [id, filter] = Object.entries(newState)[0];
+      const [id, { filter }] = Object.entries(newState)[0];
       payload.callback?.({ filter, id });
 
       return newState;
     }
     case 'DUPLICATE': {
       const id = crypto.randomUUID();
-      const filter = cloneDeep(state[payload.id]);
+      const filter = cloneDeep(state[payload.id].filter);
 
       payload.callback?.({ filter, id });
 
-      return { ...state, [id]: filter };
+      return { ...state, [id]: { filter } };
     }
     case 'UPDATE': {
       const { id, filter: newFilter } = payload;
@@ -49,7 +49,7 @@ function reducer(state, action) {
 
       payload.callback?.({ filter, id });
 
-      return { ...state, [id]: filter };
+      return { ...state, [id]: { filter } };
     }
     default:
       return state;
@@ -62,9 +62,9 @@ export default function useFilterSetWorkspace() {
     const wsState = initializeWorkspaceState(explorerFilter);
 
     // sync filter UI with non-empty initial filter
-    const filters = Object.values(wsState);
-    if (filters.length > 1 || !checkIfFilterEmpty(filters[0]))
-      handleFilterChange(filters[0]);
+    const values = Object.values(wsState);
+    if (values.length > 1 || !checkIfFilterEmpty(values[0].filter))
+      handleFilterChange(values[0].filter);
 
     return wsState;
   }, []);
@@ -137,12 +137,12 @@ export default function useFilterSetWorkspace() {
    */
   function use(newId, callback) {
     setId(newId);
-    callback?.(wsState[newId]);
+    callback?.(wsState[newId].filter);
   }
 
   return useMemo(
     () => ({
-      active: { id, filter: wsState[id] },
+      active: { id, filter: wsState[id].filter },
       all: wsState,
       size: Object.keys(wsState).length,
       create,

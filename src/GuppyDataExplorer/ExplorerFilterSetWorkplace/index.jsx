@@ -35,7 +35,9 @@ function ExplorerFilterSetWorkspace() {
     }
   }
 
-  const disableNew = Object.values(workspace.all).some(checkIfFilterEmpty);
+  const disableNew = Object.values(workspace.all).some(({ filter }) =>
+    checkIfFilterEmpty(filter)
+  );
 
   return (
     <div className='explorer-filter-set-workplace'>
@@ -73,7 +75,7 @@ function ExplorerFilterSetWorkspace() {
       </header>
       <main>
         {Object.keys(workspace.all).map((id, i) => {
-          const _filter = workspace.all[id];
+          const _filter = workspace.all[id].filter;
           return workspace.active.id === id ? (
             <div
               className='explorer-filter-set-workplace__query explorer-filter-set-workplace__query--active'
