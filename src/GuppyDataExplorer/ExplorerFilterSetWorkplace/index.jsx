@@ -89,7 +89,8 @@ function ExplorerFilterSetWorkspace() {
       </header>
       <main>
         {Object.keys(workspace.all).map((id, i) => {
-          const _filter = workspace.all[id].filter;
+          const filterSet = workspace.all[id];
+          const name = `#${i + 1}`;
           return workspace.active.id === id ? (
             <div
               className='explorer-filter-set-workplace__query explorer-filter-set-workplace__query--active'
@@ -103,14 +104,14 @@ function ExplorerFilterSetWorkspace() {
                 >
                   Active
                 </button>
-                <h3>{`#${i + 1}`}</h3>
+                <h3>{name}</h3>
               </header>
               <main>
-                {checkIfFilterEmpty(_filter) ? (
+                {checkIfFilterEmpty(filterSet.filter) ? (
                   <h4>Try Filters to explore data</h4>
                 ) : (
                   <FilterDisplay
-                    filter={_filter}
+                    filter={filterSet.filter}
                     filterInfo={filterInfo}
                     onClickCombineMode={handleClickCombineMode}
                     onCloseFilter={handleCloseFilter}
@@ -128,13 +129,16 @@ function ExplorerFilterSetWorkspace() {
                 >
                   Use
                 </button>
-                <h3>{`#${i + 1}`}</h3>
+                <h3>{name}</h3>
               </header>
               <main>
-                {checkIfFilterEmpty(_filter) ? (
+                {checkIfFilterEmpty(filterSet.filter) ? (
                   <h4>Try Filters to explore data</h4>
                 ) : (
-                  <FilterDisplay filter={_filter} filterInfo={filterInfo} />
+                  <FilterDisplay
+                    filter={filterSet.filter}
+                    filterInfo={filterInfo}
+                  />
                 )}
               </main>
             </div>
