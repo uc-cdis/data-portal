@@ -8,6 +8,7 @@ import {
 } from './utils';
 
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
+/** @typedef {import("../types").ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').FilterSetWorkspaceState} FilterSetWorkspaceState */
 /** @typedef {import('./types').FilterSetWorkspaceAction} FilterSetWorkspaceAction */
 
@@ -34,6 +35,14 @@ function reducer(state, action) {
       payload.callback?.({ filter, id });
 
       return newState;
+    }
+    case 'LOAD': {
+      const id = crypto.randomUUID();
+      const filterSet = cloneDeep(payload.filterSet);
+
+      payload.callback?.({ filter: filterSet.filter, id });
+
+      return { ...state, [id]: filterSet };
     }
     case 'DUPLICATE': {
       const id = crypto.randomUUID();
@@ -98,6 +107,23 @@ export default function useFilterSetWorkspace() {
     });
   }
 
+  /**
+   * @param {ExplorerFilterSet} filterSet
+   * @param {(filter: ExplorerFilter) => void} [callback]
+   */
+  function load(filterSet, callback) {
+    dispatch({
+      type: 'LOAD',
+      payload: {
+        filterSet,
+        callback(args) {
+          setId(args.id);
+          callback?.(args.filter);
+        },
+      },
+    });
+  }
+
   /** @param {(filter: ExplorerFilter) => void} [callback] */
   function remove(callback) {
     dispatch({
@@ -147,6 +173,7 @@ export default function useFilterSetWorkspace() {
       size: Object.keys(wsState).length,
       create,
       duplicate,
+      load,
       remove,
       update,
       use,

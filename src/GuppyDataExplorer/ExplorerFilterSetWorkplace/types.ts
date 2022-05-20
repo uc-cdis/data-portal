@@ -26,6 +26,14 @@ type FilterSetWorkspaceDuplicateAction = {
   };
 };
 
+type FilterSetWorkspaceLoadAction = {
+  type: 'LOAD';
+  payload: {
+    filterSet: ExplorerFilterSet;
+    callback?: FilterSetWorkspaceActionCallback;
+  };
+};
+
 type FilterSetWorkspaceRemoveAction = {
   type: 'REMOVE';
   payload: {
@@ -46,5 +54,6 @@ type FilterSetWorkspaceUpdateAction = {
 export type FilterSetWorkspaceAction =
   | FilterSetWorkspaceCreactAction
   | FilterSetWorkspaceDuplicateAction
+  | FilterSetWorkspaceLoadAction
   | FilterSetWorkspaceRemoveAction
   | FilterSetWorkspaceUpdateAction;
