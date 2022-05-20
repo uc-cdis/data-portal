@@ -15,17 +15,17 @@ function ExplorerFilterSetWorkspace() {
   const workspace = useFilterSetWorkspace();
 
   function handleCreate() {
-    workspace.create(handleFilterChange);
+    workspace.create(({ filter }) => handleFilterChange(filter));
   }
   function handleDuplicate() {
-    workspace.duplicate(handleFilterChange);
+    workspace.duplicate(({ filter }) => handleFilterChange(filter));
   }
   function handleRemove() {
-    workspace.remove(handleFilterChange);
+    workspace.remove(({ filter }) => handleFilterChange(filter));
   }
   /** @param {string} id */
   function handleUse(id) {
-    workspace.use(id, handleFilterChange);
+    workspace.use(id, ({ filter }) => handleFilterChange(filter));
   }
 
   /** @type {import('../../components/FilterDisplay').ClickCombineModeHandler} */

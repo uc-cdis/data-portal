@@ -6,9 +6,9 @@ export type FilterSetWorkspaceState = {
   [key: string]: ExplorerFilterSet | UnsavedExplorerFilterSet;
 };
 
-type FilterSetWorkspaceActionCallback = (args: {
+export type FilterSetWorkspaceActionCallback = (args: {
   id: string;
-  filter: ExplorerFilter;
+  filterSet: ExplorerFilterSet | UnsavedExplorerFilterSet;
 }) => void;
 
 type FilterSetWorkspaceCreactAction = {
