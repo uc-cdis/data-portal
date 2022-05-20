@@ -13,12 +13,9 @@ import {
   FilterFilled,
   FilterOutlined,
   MinusOutlined,
-  CheckCircleOutlined,
-  MinusCircleOutlined,
 } from '@ant-design/icons';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import MenuItem from 'antd/lib/menu/MenuItem';
-import { Link } from 'react-router-dom';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
@@ -448,32 +445,33 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     );
   }
   if (props.studyRegistrationValidationField) {
-    columns.push(
-      {
-        textWrap: 'word-break',
-        title: <div className='discovery-table-header'> { 'Registration Status' }</div>,
-        ellipsis: false,
-        width: config.tagColumnWidth || '200px',
-        render: (_, record) => ((record[props.studyRegistrationValidationField]) ? (
-          <React.Fragment>
-            <Tag icon={<CheckCircleOutlined />} color='success'>
-              Registered
-            </Tag>
-          </React.Fragment>
-        ) : (
-          <Link to={{
-            pathname: '/study-reg',
-            state: { study_id: record[config.minimalFieldMapping.uid] },
-          }}
-          >
-            <Tag icon={<MinusCircleOutlined />} color='default'>
-            Click to register this study
-            </Tag>
-          </Link>
-        )
-        ),
-      },
-    );
+    // Leaving it here for a possible update for study registration
+    // columns.push(
+    //   {
+    //     textWrap: 'word-break',
+    //     title: <div className='discovery-table-header'> { 'Registration Status' }</div>,
+    //     ellipsis: false,
+    //     width: config.tagColumnWidth || '200px',
+    //     render: (_, record) => ((record[props.studyRegistrationValidationField]) ? (
+    //       <React.Fragment>
+    //         <Tag icon={<CheckCircleOutlined />} color='success'>
+    //           Registered
+    //         </Tag>
+    //       </React.Fragment>
+    //     ) : (
+    //       <Link to={{
+    //         pathname: '/study-reg',
+    //         state: { study_id: record[config.minimalFieldMapping.uid] },
+    //       }}
+    //       >
+    //         <Tag icon={<MinusCircleOutlined />} color='default'>
+    //         Click to register this study
+    //         </Tag>
+    //       </Link>
+    //     )
+    //     ),
+    //   },
+    // );
   }
   if (config.features.authorization.enabled) {
     columns.push({

@@ -114,7 +114,7 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
   const location = useLocation();
   useEffect(() => {
     form.setFieldsValue({
-      study_id: location.state?.study_id || '',
+      study_id: location.state?.study_id,
     });
   }, [form, location.state?.study_id]);
 
