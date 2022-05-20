@@ -126,6 +126,7 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
   };
 
   const handleRegisterFormSubmission = (formValues) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const CEDARUUID = formValues.cedar_uuid;
     // Use CEDAR UUID here
     const studyID = formValues.study_id;
