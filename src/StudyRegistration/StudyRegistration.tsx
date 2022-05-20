@@ -16,7 +16,7 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { StudyRegistrationConfig } from './StudyRegistrationConfig';
 import './StudyRegistration.css';
@@ -111,6 +111,13 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
     });
   }, [formSubmissionStatus]);
 
+  const location = useLocation();
+  useEffect(() => {
+    form.setFieldsValue({
+      study_id: location.state?.study_id || '',
+    });
+  }, [form, location.state?.study_id]);
+
   const userHasAccess = () => {
     if (!useArboristUI) {
       return true;
@@ -134,7 +141,6 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
   };
 
   const onFinish = (values) => {
-    console.log(values);
     handleRegisterFormSubmission(values);
   };
 

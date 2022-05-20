@@ -4,10 +4,21 @@ import {
   Tag, Popover, Space, Collapse, Button, Dropdown, Menu, Pagination, Tooltip,
 } from 'antd';
 import {
-  UnlockOutlined, ClockCircleOutlined, DashOutlined, UpOutlined, DownOutlined, UndoOutlined, FilterFilled, FilterOutlined, MinusOutlined, CheckCircleTwoTone, MinusCircleTwoTone,
+  UnlockOutlined,
+  ClockCircleOutlined,
+  DashOutlined,
+  UpOutlined,
+  DownOutlined,
+  UndoOutlined,
+  FilterFilled,
+  FilterOutlined,
+  MinusOutlined,
+  CheckCircleOutlined,
+  MinusCircleOutlined,
 } from '@ant-design/icons';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import MenuItem from 'antd/lib/menu/MenuItem';
+import { Link } from 'react-router-dom';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
@@ -445,12 +456,20 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         width: config.tagColumnWidth || '200px',
         render: (_, record) => ((record[props.studyRegistrationValidationField]) ? (
           <React.Fragment>
-            <CheckCircleTwoTone twoToneColor='#52c41a' />
+            <Tag icon={<CheckCircleOutlined />} color='success'>
+              Registered
+            </Tag>
           </React.Fragment>
         ) : (
-          <React.Fragment>
-            <MinusCircleTwoTone twoToneColor='#eb2f96' />
-          </React.Fragment>
+          <Link to={{
+            pathname: '/study-reg',
+            state: { study_id: record[config.minimalFieldMapping.uid] },
+          }}
+          >
+            <Tag icon={<MinusCircleOutlined />} color='default'>
+            Click to register this study
+            </Tag>
+          </Link>
         )
         ),
       },
