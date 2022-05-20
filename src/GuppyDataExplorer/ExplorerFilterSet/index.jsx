@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import Tooltip from 'rc-tooltip';
@@ -19,6 +19,8 @@ import './ExplorerFilterSet.css';
 /** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('../types').ExplorerFilterSetActionType} ExplorerFilterSetActionType */
 
+const emptyFilterSet = createEmptyFilterSet();
+
 /**
  * @param {Object} prop
  * @param {string} prop.className
@@ -26,9 +28,12 @@ import './ExplorerFilterSet.css';
  */
 function ExplorerFilterSet({ className, filter }) {
   const { handleFilterChange, handleFilterClear } = useExplorerState();
-  const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
   const filterSets = useExplorerFilterSets();
+  const filterSet = useMemo(
+    () => filterSets.active ?? emptyFilterSet,
+    [filterSets]
+  );
   const [isError, setIsError] = useState(false);
   useEffect(() => {
     if (!isError) filterSets.refresh().catch(() => setIsError(true));
@@ -46,17 +51,17 @@ function ExplorerFilterSet({ className, filter }) {
   }
 
   function handleNew() {
-    setFilterSet(createEmptyFilterSet());
+    filterSets.use();
     handleFilterClear();
   }
   function handleOpen(/** @type {ExplorerFilterSet} */ opened) {
-    setFilterSet(cloneDeep(opened));
+    filterSets.use(opened.id);
     handleFilterChange(cloneDeep(opened.filter));
     closeActionForm();
   }
   async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
     try {
-      setFilterSet(await filterSets.create(created));
+      filterSets.use((await filterSets.create(created)).id);
       await filterSets.refresh();
     } catch (e) {
       setIsError(true);
@@ -67,7 +72,7 @@ function ExplorerFilterSet({ className, filter }) {
   async function handleUpdate(/** @type {ExplorerFilterSet} */ updated) {
     try {
       await filterSets.update(updated);
-      setFilterSet(cloneDeep(updated));
+      filterSets.use(updated.id);
       await filterSets.refresh();
     } catch (e) {
       setIsError(true);
@@ -78,7 +83,7 @@ function ExplorerFilterSet({ className, filter }) {
   async function handleDelete(/** @type {ExplorerFilterSet} */ deleted) {
     try {
       await filterSets.delete(deleted);
-      setFilterSet(createEmptyFilterSet());
+      filterSets.use();
       await filterSets.refresh();
       handleFilterClear();
     } catch (e) {
