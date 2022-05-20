@@ -46,26 +46,28 @@ export class AtlasSessionMonitor {
     this.mostRecentActivityTimestamp = Date.now();
   }
 
-  // checkAtlasStatus() {
-  //   if (idleLimit < 0) {
-  //       this.stop()
-  //   }
-  //   if (idleLimit > 0 && lastActivityTime > 0) {
-  //       getReduxStore().then(
-  //           (store) => {
-  //               const remainingSessionTime = idleLimit  - (Date.now() - lastActivityTime);
-  //             if (remainingSessionTime <= 0) { // kernel has died due to inactivity
-  //               store.dispatch({ type: 'UPDATE_ATLAS_ALERT', data: { showShutdownBanner: false, showShutdownPopup: true, idleTimeLimit: idleTimeLimit } });
-  //               this.stop();
-  //             } else if (remainingSessionTime <= this.workspaceShutdownAlertLimit) {
-  //               store.dispatch({ type: 'UPDATE_ATLAS_ALERT', data: { showShutdownBanner: true, showShutdownPopup: false, remainingWorkspaceKernelLife } });
-  //             } else if (store.getState().popups.showShutdownBanner) {
-  //               store.dispatch({ type: 'UPDATE_ATLAS_ALERT', data: { showShutdownBanner: false } });
-  //             }
-  //           },
-  //         );
-  //       }
-  //   }
+  checkAtlasStatus() {
+    if (idleLimit < 0) {
+      this.stop()
+    }
+    if (idleLimit > 0 && lastActivityTime > 0) {
+      getReduxStore().then(
+          (store) => {
+              const remainingSessionTime = idleLimit  - (Date.now() - lastActivityTime);
+            if (remainingSessionTime <= 0) {
+              store.dispatch({ type: 'UPDATE_ATLAS_ALERT', data: { showShutdownBanner: false, showShutdownPopup: true, idleTimeLimit: idleTimeLimit } });
+              this.stop();
+            } else if (remainingSessionTime <= this.workspaceShutdownAlertLimit) {
+              store.dispatch({ type: 'UPDATE_ATLAS_ALERT', data: { showShutdownBanner: true, showShutdownPopup: false, remainingSessionTime } });
+            } else if (store.getState().popups.showShutdownBanner) {
+              store.dispatch({ type: 'UPDATE_ATLAS_ALERT', data: { showShutdownBanner: false } });
+            }
+          },
+        );
+      }
+
+  }
+
 }
 
 const singleton = new AtlasSessionMonitor();
