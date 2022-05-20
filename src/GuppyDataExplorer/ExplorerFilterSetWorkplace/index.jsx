@@ -14,6 +14,20 @@ function ExplorerFilterSetWorkspace() {
   const { handleFilterChange } = useExplorerState();
   const workspace = useFilterSetWorkspace();
 
+  function handleCreate() {
+    workspace.create(handleFilterChange);
+  }
+  function handleDuplicate() {
+    workspace.duplicate(handleFilterChange);
+  }
+  function handleRemove() {
+    workspace.remove(handleFilterChange);
+  }
+  /** @param {string} id */
+  function handleUse(id) {
+    workspace.use(id, handleFilterChange);
+  }
+
   /** @type {import('../../components/FilterDisplay').ClickCombineModeHandler} */
   function handleClickCombineMode(payload) {
     handleFilterChange(
@@ -46,7 +60,7 @@ function ExplorerFilterSetWorkspace() {
         <button
           className='explorer-filter-set-workplace__action-button'
           type='button'
-          onClick={() => workspace.create(handleFilterChange)}
+          onClick={handleCreate}
           disabled={disableNew}
           title={
             disableNew
@@ -59,7 +73,7 @@ function ExplorerFilterSetWorkspace() {
         <button
           className='explorer-filter-set-workplace__action-button'
           type='button'
-          onClick={() => workspace.duplicate(handleFilterChange)}
+          onClick={handleDuplicate}
           disabled={checkIfFilterEmpty(workspace.active.filter)}
         >
           Duplicate
@@ -67,7 +81,7 @@ function ExplorerFilterSetWorkspace() {
         <button
           className='explorer-filter-set-workplace__action-button'
           type='button'
-          onClick={() => workspace.remove(handleFilterChange)}
+          onClick={handleRemove}
           disabled={workspace.size < 2}
         >
           Remove
@@ -110,7 +124,7 @@ function ExplorerFilterSetWorkspace() {
                 <button
                   className='explorer-filter-set-workplace__action-button'
                   type='button'
-                  onClick={() => workspace.use(id, handleFilterChange)}
+                  onClick={() => handleUse(id)}
                 >
                   Use
                 </button>
