@@ -98,11 +98,11 @@ export function updateFilterSet(explorerId, filterSet) {
 
 /**
  * @typedef {Object} ExplorerFilterSetsContext
- * @property {ExplorerFilterSet[]} filterSets
- * @property {() => Promise<void>} refreshFilterSets
- * @property {(filerSet: ExplorerFilterSet) => Promise<ExplorerFilterSet>} createFilterSet
- * @property {(filerSet: ExplorerFilterSet) => Promise<void>} deleteFilterSet
- * @property {(filerSet: ExplorerFilterSet) => Promise<void>} updateFilterSet
+ * @property {ExplorerFilterSet[]} all
+ * @property {() => Promise<void>} refresh
+ * @property {(filerSet: ExplorerFilterSet) => Promise<ExplorerFilterSet>} create
+ * @property {(filerSet: ExplorerFilterSet) => Promise<void>} delete
+ * @property {(filerSet: ExplorerFilterSet) => Promise<void>} update
  */
 
 /** @type {React.Context<ExplorerFilterSetsContext>} */
@@ -115,11 +115,11 @@ export function ExplorerFilterSetsProvider({ children }) {
   const [filterSets, setFilterSets] = useState(emptyFilterSets);
   const value = useMemo(
     () => ({
-      filterSets,
-      refreshFilterSets: () => fetchFilterSets(explorerId).then(setFilterSets),
-      createFilterSet: (filterSet) => createFilterSet(explorerId, filterSet),
-      deleteFilterSet: (filterSet) => deleteFilterSet(explorerId, filterSet),
-      updateFilterSet: (filterSet) => updateFilterSet(explorerId, filterSet),
+      all: filterSets,
+      refresh: () => fetchFilterSets(explorerId).then(setFilterSets),
+      create: (filterSet) => createFilterSet(explorerId, filterSet),
+      delete: (filterSet) => deleteFilterSet(explorerId, filterSet),
+      update: (filterSet) => updateFilterSet(explorerId, filterSet),
     }),
     [filterSets, explorerId]
   );

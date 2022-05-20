@@ -28,16 +28,10 @@ function ExplorerFilterSet({ className, filter }) {
   const { handleFilterChange, handleFilterClear } = useExplorerState();
   const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
-  const {
-    filterSets,
-    refreshFilterSets,
-    createFilterSet,
-    deleteFilterSet,
-    updateFilterSet,
-  } = useExplorerFilterSets();
+  const filterSets = useExplorerFilterSets();
   const [isError, setIsError] = useState(false);
   useEffect(() => {
-    if (!isError) refreshFilterSets().catch(() => setIsError(true));
+    if (!isError) filterSets.refresh().catch(() => setIsError(true));
   }, [isError]);
 
   /** @type {[ExplorerFilterSetActionType, React.Dispatch<React.SetStateAction<ExplorerFilterSetActionType>>]} */
@@ -62,8 +56,8 @@ function ExplorerFilterSet({ className, filter }) {
   }
   async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
     try {
-      setFilterSet(await createFilterSet(created));
-      await refreshFilterSets();
+      setFilterSet(await filterSets.create(created));
+      await filterSets.refresh();
     } catch (e) {
       setIsError(true);
     } finally {
@@ -72,9 +66,9 @@ function ExplorerFilterSet({ className, filter }) {
   }
   async function handleUpdate(/** @type {ExplorerFilterSet} */ updated) {
     try {
-      await updateFilterSet(updated);
+      await filterSets.update(updated);
       setFilterSet(cloneDeep(updated));
-      await refreshFilterSets();
+      await filterSets.refresh();
     } catch (e) {
       setIsError(true);
     } finally {
@@ -83,9 +77,9 @@ function ExplorerFilterSet({ className, filter }) {
   }
   async function handleDelete(/** @type {ExplorerFilterSet} */ deleted) {
     try {
-      await deleteFilterSet(deleted);
+      await filterSets.delete(deleted);
       setFilterSet(createEmptyFilterSet());
-      await refreshFilterSets();
+      await filterSets.refresh();
       handleFilterClear();
     } catch (e) {
       setIsError(true);
@@ -176,7 +170,7 @@ function ExplorerFilterSet({ className, filter }) {
           </div>
           <FilterSetActionMenu
             isFilterSetEmpty={filterSet.name === ''}
-            hasNoSavedFilterSets={filterSets.length === 0}
+            hasNoSavedFilterSets={filterSets.all.length === 0}
             onSelectAction={handleSelectAction}
           />
         </>
@@ -187,7 +181,7 @@ function ExplorerFilterSet({ className, filter }) {
             actionType={actionType}
             currentFilterSet={filterSet}
             currentFilter={filter}
-            filterSets={filterSets}
+            filterSets={filterSets.all}
             handlers={{
               handleOpen,
               handleCreate,
