@@ -10,6 +10,7 @@ import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath } from '../../localconf
 import GWASWorkflowList from './GWASWorkflowList';
 import { fetchWithCreds } from '../../actions';
 import Spinner from "../../components/Spinner";
+import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 
 const { Step } = Steps;
 
@@ -48,6 +49,7 @@ const QuantitativeGWAS = (props) => {
     const [conceptVars] = useState({
         ConceptIds: [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708],
     });
+    const hareConceptId = 2090006880;
     const [selectedConceptVars, setSelectedConceptVars] = useState([]);
 
     const [form] = Form.useForm();
@@ -62,6 +64,7 @@ const QuantitativeGWAS = (props) => {
     const [numOfPC, setNumOfPC] = useState(3);
     const [selectedPhenotype, setSelectedPhenotype] = useState(undefined);
     const [selectedCovariates, setSelectedCovariates] = useState([]);
+    const [selectedHare, setSelectedHare] = useState("-select one-");
 
     const onStep5FormSubmit = (values) => {
         setImputationScore(values.imputationCutoff);
@@ -96,6 +99,20 @@ const QuantitativeGWAS = (props) => {
         const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;
         const getCohortDefinitions = await fetch(cohortEndPoint);
         return getCohortDefinitions.json();
+    }
+
+    async function fetchConceptStatsByHare() {
+        var conceptIds = [...selectedConcepts].map((val) => val.concept_id);
+        const conceptIdsPayload = { ConceptIds: conceptIds };
+        const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
+        const reqBody = {
+            method: 'POST',
+            credentials: 'include',
+            headers,
+            body: JSON.stringify(conceptIdsPayload),
+        };
+        const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
+        return getConceptStats.json();
     }
 
     async function fetchConcepts() {
@@ -329,6 +346,41 @@ const QuantitativeGWAS = (props) => {
         );
     };
 
+    const ConceptStatsByHare = () => {
+        const { data, status } = useQuery(['conceptstatsbyhare', selectedConcepts], fetchConceptStatsByHare, queryConfig);
+
+        if (status === 'loading') {
+            return <Spinner />;
+        }
+        if (status === 'error') {
+            return <React.Fragment>Error</React.Fragment>;
+        }
+        if (data) {
+            return (
+                <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
+                    <Dropdown.Button rightIcon='dropdown' buttonType='secondary'>
+                        {selectedHare}
+                    </Dropdown.Button>
+                    <Dropdown.Menu>
+                        {
+                            data.concept_breakdown.map((datum) => {
+                                return (
+                                    <Dropdown.Item
+                                        key={`${datum.concept_value}`}
+                                        value={`${datum.concept_value}`}
+                                        onClick={() => setSelectedHare(datum.concept_value)}
+                                    >
+                                        {<div>{datum.concept_value} {" (size:" + datum.persons_in_cohort_with_value + ")"}</div>}
+                                    </Dropdown.Item>
+                                );
+                            })
+                        }
+                    </Dropdown.Menu>
+                </Dropdown>
+            );
+        }
+    };
+
     async function fetchGwasSubmit() {
         const submitEndpoint = `${gwasWorkflowPath}submit`;
         const requestBody = {
@@ -337,6 +389,7 @@ const QuantitativeGWAS = (props) => {
             out_prefix: Date.now().toString(),
             outcome: selectedOutcome,
             outcome_is_binary: false,
+            hare_code: selectedHare, // TODO - align w/ Zuyi
             maf_threshold: Number(mafThreshold),
             imputation_score_cutoff: Number(imputationScore),
             template_version: 'gwas-template-6226080403eb62585981d9782aec0f3a82a7e906',
@@ -363,6 +416,7 @@ const QuantitativeGWAS = (props) => {
         setImputationScore(0.3);
         setCohortDefinitionId(undefined);
         setSelectedCohort(undefined);
+        setSelectedHare("-select one-");
         props.refreshWorkflows();
     };
 
@@ -463,6 +517,12 @@ const QuantitativeGWAS = (props) => {
                                         value={selectedPhenotype}
                                         style={{ width: '70%' }}
                                     />
+                                </Form.Item>
+                                <Form.Item
+                                    label='Select HARE group'
+                                    name='hareGroup'
+                                >
+                                    <ConceptStatsByHare />
                                 </Form.Item>
                                 <Form.Item
                                     label='Is Binary Outcome?'
