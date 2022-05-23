@@ -22,6 +22,7 @@ import {
 /**
  * @param {FilterSetWorkspaceState} state
  * @param {FilterSetWorkspaceAction} action
+ * @returns {FilterSetWorkspaceState}
  */
 function reducer(state, action) {
   const { type, payload } = action;
