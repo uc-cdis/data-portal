@@ -9,6 +9,7 @@ import FilterSetOpenForm from '../ExplorerFilterSetForms/FilterSetOpenForm';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 import {
   checkIfFilterEmpty,
+  findFilterSetIdInWorkspaceState,
   pluckFromAnchorFilter,
   pluckFromFilter,
 } from './utils';
@@ -48,10 +49,14 @@ function ExplorerFilterSetWorkspace() {
   }
   /** @param {ExplorerFilterSet} loaded */
   function handleLoad(loaded) {
-    filterSets.use(loaded.id);
-    const shouldOverwrite = checkIfFilterEmpty(workspace.active.filter);
-    workspace.load(loaded, shouldOverwrite);
-    closeActionForm();
+    const foundId = findFilterSetIdInWorkspaceState(loaded.id, workspace.all);
+    if (foundId !== undefined) {
+      workspace.use(foundId, closeActionForm);
+    } else {
+      filterSets.use(loaded.id);
+      const shouldOverwrite = checkIfFilterEmpty(workspace.active.filter);
+      workspace.load(loaded, shouldOverwrite, closeActionForm);
+    }
   }
   function handleRemove() {
     workspace.remove(updateFilterSet);

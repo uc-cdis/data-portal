@@ -1,4 +1,5 @@
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
+/** @typedef {import("../types").ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').FilterSetWorkspaceState} FilterSetWorkspaceState */
 
 /**
@@ -66,4 +67,15 @@ export function storeWorkspaceState(state) {
     workspaceStateSessionStorageKey,
     JSON.stringify(state)
   );
+}
+
+/**
+ * @param {number} filterSetId
+ * @param {FilterSetWorkspaceState} state
+ */
+export function findFilterSetIdInWorkspaceState(filterSetId, state) {
+  for (const [id, filterSet] of Object.entries(state))
+    if ('id' in filterSet && filterSet.id === filterSetId) return id;
+
+  return undefined;
 }
