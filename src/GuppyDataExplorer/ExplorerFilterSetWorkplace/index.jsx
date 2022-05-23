@@ -26,6 +26,10 @@ function ExplorerFilterSetWorkspace() {
   const filterSets = useExplorerFilterSets();
   const workspace = useFilterSetWorkspace();
   useEffect(() => {
+    const activeFilterSetId = workspace.all[workspace.active.id].id;
+    if (activeFilterSetId !== undefined) filterSets.use(activeFilterSetId);
+  }, []);
+  useEffect(() => {
     if (filterSets.active?.id !== undefined)
       workspace.load(filterSets.active, true);
   }, [filterSets.active]);
