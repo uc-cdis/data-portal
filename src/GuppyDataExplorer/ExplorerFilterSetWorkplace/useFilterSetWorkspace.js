@@ -45,7 +45,7 @@ function reducer(state, action) {
       return newState;
     }
     case 'LOAD': {
-      const id = crypto.randomUUID();
+      const id = payload.id ?? crypto.randomUUID();
       const filterSet = cloneDeep(payload.filterSet);
 
       payload.callback?.({ filterSet, id });
@@ -117,12 +117,14 @@ export default function useFilterSetWorkspace() {
 
   /**
    * @param {ExplorerFilterSet} filterSet
+   * @param {boolean} [shouldOverwrite]
    * @param {FilterSetWorkspaceMethodCallback} [callback]
    */
-  function load(filterSet, callback) {
+  function load(filterSet, shouldOverwrite, callback) {
     dispatch({
       type: 'LOAD',
       payload: {
+        id: shouldOverwrite ? id : undefined,
         filterSet,
         callback(args) {
           setId(args.id);

@@ -29,6 +29,7 @@ type FilterSetWorkspaceDuplicateAction = {
 type FilterSetWorkspaceLoadAction = {
   type: 'LOAD';
   payload: {
+    id?: string;
     filterSet: ExplorerFilterSet;
     callback?: FilterSetWorkspaceActionCallback;
   };
