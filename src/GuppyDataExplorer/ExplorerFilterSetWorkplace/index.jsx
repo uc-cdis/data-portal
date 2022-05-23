@@ -32,11 +32,15 @@ function ExplorerFilterSetWorkspace() {
     setShowActionForm(undefined);
   }
 
+  function updateFilterSet(updated) {
+    filterSets.use(updated.id);
+    handleFilterChange(updated.filter);
+  }
   function handleCreate() {
-    workspace.create(({ filter }) => handleFilterChange(filter));
+    workspace.create(updateFilterSet);
   }
   function handleDuplicate() {
-    workspace.duplicate(({ filter }) => handleFilterChange(filter));
+    workspace.duplicate(updateFilterSet);
   }
   /** @param {ExplorerFilterSet} loaded */
   function handleLoad(loaded) {
@@ -45,14 +49,11 @@ function ExplorerFilterSetWorkspace() {
     closeActionForm();
   }
   function handleRemove() {
-    workspace.remove(({ filter }) => handleFilterChange(filter));
+    workspace.remove(updateFilterSet);
   }
   /** @param {string} id */
   function handleUse(id) {
-    workspace.use(id, (used) => {
-      filterSets.use(used.id);
-      handleFilterChange(used.filter);
-    });
+    workspace.use(id, updateFilterSet);
   }
 
   /** @type {import('../../components/FilterDisplay').ClickCombineModeHandler} */
