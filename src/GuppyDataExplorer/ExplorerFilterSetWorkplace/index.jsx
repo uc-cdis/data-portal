@@ -125,7 +125,7 @@ function ExplorerFilterSetWorkspace() {
       <main>
         {Object.keys(workspace.all).map((id, i) => {
           const filterSet = workspace.all[id];
-          const name = `#${i + 1}`;
+          const name = 'name' in filterSet ? filterSet.name : undefined;
           return workspace.active.id === id ? (
             <div
               className='explorer-filter-set-workplace__query explorer-filter-set-workplace__query--active'
@@ -139,7 +139,9 @@ function ExplorerFilterSetWorkspace() {
                 >
                   Active
                 </button>
-                <h3>{name}</h3>
+                <h3 title={name}>
+                  #{i + 1} {name}
+                </h3>
               </header>
               <main>
                 {checkIfFilterEmpty(filterSet.filter) ? (
@@ -164,7 +166,9 @@ function ExplorerFilterSetWorkspace() {
                 >
                   Use
                 </button>
-                <h3>{name}</h3>
+                <h3 title={name}>
+                  #{i + 1} {name}
+                </h3>
               </header>
               <main>
                 {checkIfFilterEmpty(filterSet.filter) ? (
