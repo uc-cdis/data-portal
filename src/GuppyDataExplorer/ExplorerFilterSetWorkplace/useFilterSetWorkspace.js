@@ -62,7 +62,7 @@ function reducer(state, action) {
     }
     case 'UPDATE': {
       const { id, filter: newFilter } = payload;
-      const filterSet = { filter: cloneDeep(newFilter) };
+      const filterSet = { ...state[id], filter: cloneDeep(newFilter) };
 
       payload.callback?.({ filterSet, id });
 
