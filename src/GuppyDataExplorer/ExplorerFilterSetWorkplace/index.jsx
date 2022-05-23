@@ -1,6 +1,11 @@
+import { useState } from 'react';
 import FilterDisplay from '../../components/FilterDisplay';
+import SimplePopup from '../../components/SimplePopup';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerState } from '../ExplorerStateContext';
+import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
+import { createEmptyFilterSet } from '../ExplorerFilterSet/utils';
+import FilterSetOpenForm from '../ExplorerFilterSetForms/FilterSetOpenForm';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 import {
   checkIfFilterEmpty,
@@ -9,10 +14,23 @@ import {
 } from './utils';
 import './ExplorerFilterSetWorkspace.css';
 
+/** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('./types').FilterSetWorkspaceAction['type']} WorkspaceActionType */
+
+const emptyFilterSet = createEmptyFilterSet();
+
 function ExplorerFilterSetWorkspace() {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
   const { handleFilterChange } = useExplorerState();
+  const filterSets = useExplorerFilterSets();
   const workspace = useFilterSetWorkspace();
+
+  const [showActionForm, setShowActionForm] = useState(
+    /** @type {WorkspaceActionType} */ (undefined)
+  );
+  function closeActionForm() {
+    setShowActionForm(undefined);
+  }
 
   function handleCreate() {
     workspace.create(({ filter }) => handleFilterChange(filter));
@@ -20,12 +38,21 @@ function ExplorerFilterSetWorkspace() {
   function handleDuplicate() {
     workspace.duplicate(({ filter }) => handleFilterChange(filter));
   }
+  /** @param {ExplorerFilterSet} loaded */
+  function handleLoad(loaded) {
+    filterSets.use(loaded.id);
+    workspace.load(loaded);
+    closeActionForm();
+  }
   function handleRemove() {
     workspace.remove(({ filter }) => handleFilterChange(filter));
   }
   /** @param {string} id */
   function handleUse(id) {
-    workspace.use(id, ({ filter }) => handleFilterChange(filter));
+    workspace.use(id, (used) => {
+      filterSets.use(used.id);
+      handleFilterChange(used.filter);
+    });
   }
 
   /** @type {import('../../components/FilterDisplay').ClickCombineModeHandler} */
@@ -77,6 +104,14 @@ function ExplorerFilterSetWorkspace() {
           disabled={checkIfFilterEmpty(workspace.active.filter)}
         >
           Duplicate
+        </button>
+        <button
+          className='explorer-filter-set-workplace__action-button'
+          type='button'
+          onClick={() => setShowActionForm('LOAD')}
+          disabled={filterSets.all.length < 1}
+        >
+          Load
         </button>
         <button
           className='explorer-filter-set-workplace__action-button'
@@ -145,6 +180,18 @@ function ExplorerFilterSetWorkspace() {
           );
         })}
       </main>
+      {showActionForm !== undefined && (
+        <SimplePopup>
+          {showActionForm === 'LOAD' && (
+            <FilterSetOpenForm
+              currentFilterSet={filterSets.active ?? emptyFilterSet}
+              filterSets={filterSets.all}
+              onAction={handleLoad}
+              onClose={closeActionForm}
+            />
+          )}
+        </SimplePopup>
+      )}
     </div>
   );
 }
