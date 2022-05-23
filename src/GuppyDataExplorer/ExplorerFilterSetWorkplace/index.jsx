@@ -49,7 +49,8 @@ function ExplorerFilterSetWorkspace() {
   /** @param {ExplorerFilterSet} loaded */
   function handleLoad(loaded) {
     filterSets.use(loaded.id);
-    workspace.load(loaded);
+    const shouldOverwrite = checkIfFilterEmpty(workspace.active.filter);
+    workspace.load(loaded, shouldOverwrite);
     closeActionForm();
   }
   function handleRemove() {
