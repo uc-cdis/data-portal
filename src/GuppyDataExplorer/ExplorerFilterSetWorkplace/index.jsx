@@ -26,7 +26,7 @@ function ExplorerFilterSetWorkspace() {
   const filterSets = useExplorerFilterSets();
   const workspace = useFilterSetWorkspace();
   useEffect(() => {
-    const activeFilterSetId = workspace.all[workspace.active.id].id;
+    const activeFilterSetId = workspace.active.filterSet.id;
     if (activeFilterSetId !== undefined) filterSets.use(activeFilterSetId);
   }, []);
   useEffect(() => {
@@ -58,7 +58,9 @@ function ExplorerFilterSetWorkspace() {
       workspace.use(foundId, closeActionForm);
     } else {
       filterSets.use(loaded.id);
-      const shouldOverwrite = checkIfFilterEmpty(workspace.active.filter);
+      const shouldOverwrite = checkIfFilterEmpty(
+        workspace.active.filterSet.filter
+      );
       workspace.load(loaded, shouldOverwrite, closeActionForm);
     }
   }
@@ -74,7 +76,7 @@ function ExplorerFilterSetWorkspace() {
   function handleClickCombineMode(payload) {
     handleFilterChange(
       /** @type {import('../types').ExplorerFilter} */ ({
-        ...workspace.active.filter,
+        ...workspace.active.filterSet.filter,
         __combineMode: payload === 'AND' ? 'OR' : 'AND',
       })
     );
@@ -82,7 +84,7 @@ function ExplorerFilterSetWorkspace() {
   /** @type {import('../../components/FilterDisplay').ClickFilterHandler} */
   function handleCloseFilter(payload) {
     const { field, anchorField, anchorValue } = payload;
-    const { filter } = workspace.active;
+    const { filter } = workspace.active.filterSet;
     if (anchorField !== undefined && anchorValue !== undefined) {
       const anchor = `${anchorField}:${anchorValue}`;
       handleFilterChange(pluckFromAnchorFilter({ anchor, field, filter }));
@@ -116,7 +118,7 @@ function ExplorerFilterSetWorkspace() {
           className='explorer-filter-set-workplace__action-button'
           type='button'
           onClick={handleDuplicate}
-          disabled={checkIfFilterEmpty(workspace.active.filter)}
+          disabled={checkIfFilterEmpty(workspace.active.filterSet.filter)}
         >
           Duplicate
         </button>

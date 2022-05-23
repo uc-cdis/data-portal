@@ -179,7 +179,7 @@ export default function useFilterSetWorkspace() {
 
   return useMemo(
     () => ({
-      active: { id, filter: wsState[id].filter },
+      active: { id, filterSet: wsState[id] },
       all: wsState,
       size: Object.keys(wsState).length,
       create,
