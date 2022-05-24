@@ -100,6 +100,7 @@ export function updateFilterSet(explorerId, filterSet) {
  * @typedef {Object} ExplorerFilterSetsContext
  * @property {ExplorerFilterSet} active
  * @property {ExplorerFilterSet[]} all
+ * @property {boolean} isError
  * @property {() => Promise<void>} refresh
  * @property {(filerSet: ExplorerFilterSet) => Promise<ExplorerFilterSet>} create
  * @property {(filerSet: ExplorerFilterSet) => Promise<void>} delete
@@ -116,17 +117,34 @@ export function ExplorerFilterSetsProvider({ children }) {
   const { explorerId } = useExplorerConfig();
   const [filterSets, setFilterSets] = useState(emptyFilterSets);
   const [id, setId] = useState(/** @type {number} */ (undefined));
+
+  const [isError, setIsError] = useState(false);
+  function handleCatch(e) {
+    console.error(e);
+    setIsError(true);
+    return undefined;
+  }
+
   const value = useMemo(
     () => ({
       active: filterSets.find((filterSet) => filterSet.id === id),
       all: filterSets,
-      refresh: () => fetchFilterSets(explorerId).then(setFilterSets),
-      create: (filterSet) => createFilterSet(explorerId, filterSet),
-      delete: (filterSet) => deleteFilterSet(explorerId, filterSet),
-      update: (filterSet) => updateFilterSet(explorerId, filterSet),
+      isError,
+      refresh: () => {
+        if (isError) setIsError(false);
+        return fetchFilterSets(explorerId)
+          .then(setFilterSets)
+          .catch(handleCatch);
+      },
+      create: (filterSet) =>
+        createFilterSet(explorerId, filterSet).catch(handleCatch),
+      delete: (filterSet) =>
+        deleteFilterSet(explorerId, filterSet).catch(handleCatch),
+      update: (filterSet) =>
+        updateFilterSet(explorerId, filterSet).catch(handleCatch),
       use: setId,
     }),
-    [explorerId, filterSets, id]
+    [explorerId, filterSets, id, isError]
   );
   return (
     <ExplorerFilterSetsContext.Provider value={value}>
