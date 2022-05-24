@@ -55,14 +55,15 @@ function ExplorerFilterSetWorkspace() {
   function handleLoad(loaded) {
     const foundId = findFilterSetIdInWorkspaceState(loaded.id, workspace.all);
     if (foundId !== undefined) {
-      workspace.use(foundId, closeActionForm);
+      workspace.use(foundId, updateFilterSet);
     } else {
       filterSets.use(loaded.id);
       const shouldOverwrite = checkIfFilterEmpty(
         workspace.active.filterSet.filter
       );
-      workspace.load(loaded, shouldOverwrite, closeActionForm);
+      workspace.load(loaded, shouldOverwrite, updateFilterSet);
     }
+    closeActionForm();
   }
   function handleRemove() {
     workspace.remove(updateFilterSet);
