@@ -99,11 +99,11 @@ function ExplorerFilterSetWorkspace() {
   );
 
   return (
-    <div className='explorer-filter-set-workplace'>
+    <div className='explorer-filter-set-workspace'>
       <header>
         <h2>Filter Set Workspace</h2>
         <button
-          className='explorer-filter-set-workplace__action-button'
+          className='explorer-filter-set-workspace__action-button'
           type='button'
           onClick={handleCreate}
           disabled={disableNew}
@@ -116,7 +116,7 @@ function ExplorerFilterSetWorkspace() {
           New
         </button>
         <button
-          className='explorer-filter-set-workplace__action-button'
+          className='explorer-filter-set-workspace__action-button'
           type='button'
           onClick={handleDuplicate}
           disabled={checkIfFilterEmpty(
@@ -126,7 +126,7 @@ function ExplorerFilterSetWorkspace() {
           Duplicate
         </button>
         <button
-          className='explorer-filter-set-workplace__action-button'
+          className='explorer-filter-set-workspace__action-button'
           type='button'
           onClick={() => setShowActionForm('LOAD')}
           disabled={filterSets.all.length < 1}
@@ -134,7 +134,7 @@ function ExplorerFilterSetWorkspace() {
           Load
         </button>
         <button
-          className='explorer-filter-set-workplace__action-button'
+          className='explorer-filter-set-workspace__action-button'
           type='button'
           onClick={handleRemove}
           disabled={workspace.size < 2}
@@ -148,12 +148,12 @@ function ExplorerFilterSetWorkspace() {
           const name = 'name' in filterSet ? filterSet.name : undefined;
           return workspace.active.id === id ? (
             <div
-              className='explorer-filter-set-workplace__query explorer-filter-set-workplace__query--active'
+              className='explorer-filter-set-workspace__query explorer-filter-set-workspace__query--active'
               key={id}
             >
               <header>
                 <button
-                  className='explorer-filter-set-workplace__action-button'
+                  className='explorer-filter-set-workspace__action-button'
                   type='button'
                   disabled
                 >
@@ -177,10 +177,10 @@ function ExplorerFilterSetWorkspace() {
               </main>
             </div>
           ) : (
-            <div className='explorer-filter-set-workplace__query' key={id}>
+            <div className='explorer-filter-set-workspace__query' key={id}>
               <header>
                 <button
-                  className='explorer-filter-set-workplace__action-button'
+                  className='explorer-filter-set-workspace__action-button'
                   type='button'
                   onClick={() => handleUse(id)}
                 >
