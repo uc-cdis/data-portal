@@ -6,12 +6,18 @@ import {
   Checkbox, Card
 } from 'antd';
 import { fetchAndSetCsrfToken } from "../../configs"
+import { setConstantValue } from 'typescript';
 
 const cardContent = { width: 350, height: 280, margin: 10, textAlign: "center" };
 
 const GWASUIApp = (props) => {
   const [gwasTypeSelected, setGwasTypeSelected] = useState(false);
   const [gwasType, setGwasType] = useState("");
+
+  const resetGWASType = () => {
+    setGwasType("");
+    setGwasTypeSelected(false);
+  }
 
   useEffect(() => {
     fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
@@ -48,8 +54,8 @@ const GWASUIApp = (props) => {
   }
   return (
     <React.Fragment>
-      {gwasTypeSelected && gwasType === "caseControl" && (<CaseControlGWAS></CaseControlGWAS>)}
-      {gwasTypeSelected && gwasType === "quantitative" && (<QuantitativeGWAS refreshWorkflows={props.refreshWorkflows}></QuantitativeGWAS>)}
+      {gwasTypeSelected && gwasType === "caseControl" && (<CaseControlGWAS resetGWASType={resetGWASType}></CaseControlGWAS>)}
+      {gwasTypeSelected && gwasType === "quantitative" && (<QuantitativeGWAS resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}></QuantitativeGWAS>)}
     </React.Fragment>
   )
 };
