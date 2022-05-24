@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch,
+    Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch, Popconfirm
 } from 'antd';
 import './GWASUIApp.css';
 import { useQuery, useMutation } from 'react-query';
@@ -612,12 +612,23 @@ const QuantitativeGWAS = (props) => {
             <div className='steps-action'>
                 <Button
                     className='GWASUI-navBtn GWASUI-navBtn__prev'
+                    disabled={current === 0}
                     onClick={() => {
                         setCurrent(current - 1);
                     }}
                 >
                     Previous
                 </Button>
+                <Popconfirm
+                    title='Are you sure you want to leave this page?'
+                    onConfirm={(event) => {
+                        props.resetGWASType();
+                    }}
+                    okText='Yes'
+                    cancelText='No'
+                >
+                    <Button type='link' size='medium' ghost>Select Different GWAS Type</Button>
+                </Popconfirm>
                 {current < steps.length - 1 && (
                     <Button
                         className='GWASUI-navBtn GWASUI-navBtn__next'
