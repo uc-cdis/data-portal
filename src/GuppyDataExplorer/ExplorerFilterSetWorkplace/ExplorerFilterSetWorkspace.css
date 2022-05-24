@@ -64,16 +64,30 @@
 
 .explorer-filter-set-workplace__query > header {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  min-width: 5rem;
+  align-items: center;
+}
+
+.explorer-filter-set-workplace__query > header::after {
+  border: 0.5px solid var(--g3-color__lightgray);
+  content: '';
+  margin: 0 0.5rem;
+  height: 1rem;
+}
+
+.explorer-filter-set-workplace__query > header > button {
+  width: 3rem;
+  text-align: center;
 }
 
 .explorer-filter-set-workplace__query > header > h3 {
-  font-size: 1rem;
+  font-size: 0.8rem;
   line-height: 1rem;
   padding: 0.25rem;
   color: inherit;
+  max-width: 6rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .explorer-filter-set-workplace__query--active {

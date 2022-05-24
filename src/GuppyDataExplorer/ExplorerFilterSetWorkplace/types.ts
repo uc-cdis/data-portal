@@ -1,10 +1,14 @@
-import type { ExplorerFilter } from '../types';
+import type { ExplorerFilter, ExplorerFilterSet } from '../types';
 
-export type FilterSetWorkspaceState = { [key: string]: ExplorerFilter };
+export type UnsavedExplorerFilterSet = Pick<ExplorerFilterSet, 'filter' | 'id'>;
 
-type FilterSetWorkspaceActionCallback = (args: {
+export type FilterSetWorkspaceState = {
+  [key: string]: ExplorerFilterSet | UnsavedExplorerFilterSet;
+};
+
+export type FilterSetWorkspaceActionCallback = (args: {
   id: string;
-  filter: ExplorerFilter;
+  filterSet: ExplorerFilterSet | UnsavedExplorerFilterSet;
 }) => void;
 
 type FilterSetWorkspaceCreactAction = {
@@ -18,6 +22,15 @@ type FilterSetWorkspaceDuplicateAction = {
   type: 'DUPLICATE';
   payload: {
     id: string;
+    callback?: FilterSetWorkspaceActionCallback;
+  };
+};
+
+type FilterSetWorkspaceLoadAction = {
+  type: 'LOAD';
+  payload: {
+    id?: string;
+    filterSet: ExplorerFilterSet;
     callback?: FilterSetWorkspaceActionCallback;
   };
 };
@@ -42,5 +55,6 @@ type FilterSetWorkspaceUpdateAction = {
 export type FilterSetWorkspaceAction =
   | FilterSetWorkspaceCreactAction
   | FilterSetWorkspaceDuplicateAction
+  | FilterSetWorkspaceLoadAction
   | FilterSetWorkspaceRemoveAction
   | FilterSetWorkspaceUpdateAction;

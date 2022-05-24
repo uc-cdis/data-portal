@@ -1,4 +1,5 @@
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
+/** @typedef {import("../types").ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').FilterSetWorkspaceState} FilterSetWorkspaceState */
 
 /**
@@ -49,7 +50,7 @@ export function retrieveWorkspaceState() {
     return JSON.parse(str);
   } catch (e) {
     if (e.message !== 'No stored query') console.error(e);
-    return { [crypto.randomUUID()]: {} };
+    return { [crypto.randomUUID()]: { filter: {} } };
   }
 }
 
@@ -57,7 +58,7 @@ export function retrieveWorkspaceState() {
 export function initializeWorkspaceState(filter) {
   return checkIfFilterEmpty(filter)
     ? retrieveWorkspaceState()
-    : { [crypto.randomUUID()]: filter };
+    : { [crypto.randomUUID()]: { filter } };
 }
 
 /** @param {FilterSetWorkspaceState} state */
@@ -66,4 +67,15 @@ export function storeWorkspaceState(state) {
     workspaceStateSessionStorageKey,
     JSON.stringify(state)
   );
+}
+
+/**
+ * @param {number} filterSetId
+ * @param {FilterSetWorkspaceState} state
+ */
+export function findFilterSetIdInWorkspaceState(filterSetId, state) {
+  for (const [id, filterSet] of Object.entries(state))
+    if ('id' in filterSet && filterSet.id === filterSetId) return id;
+
+  return undefined;
 }
