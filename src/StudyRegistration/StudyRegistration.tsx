@@ -16,7 +16,7 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { StudyRegistrationConfig } from './StudyRegistrationConfig';
 import './StudyRegistration.css';
@@ -110,13 +110,6 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
       console.error('Error encountered while loading studies: ', err);
     });
   }, [formSubmissionStatus]);
-
-  const location = useLocation();
-  useEffect(() => {
-    form.setFieldsValue({
-      study_id: location.state?.study_id,
-    });
-  }, [form, location.state?.study_id]);
 
   const userHasAccess = () => {
     if (!useArboristUI) {
