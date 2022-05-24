@@ -76,15 +76,15 @@ function reducer(state, action) {
 
 export default function useFilterSetWorkspace() {
   const { explorerFilter, handleFilterChange } = useExplorerState();
-  const initialWsState = useMemo(() => {
-    const wsState = initializeWorkspaceState(explorerFilter);
-
-    // sync filter UI with non-empty initial filter
-    const values = Object.values(wsState);
+  const initialWsState = useMemo(
+    () => initializeWorkspaceState(explorerFilter),
+    []
+  );
+  useEffect(() => {
+    // sync filter UI with non-empty initial workspace filter
+    const values = Object.values(initialWsState);
     if (values.length > 1 || !checkIfFilterEmpty(values[0].filter))
       handleFilterChange(values[0].filter);
-
-    return wsState;
   }, []);
   const [id, setId] = useState(Object.keys(initialWsState)[0]);
   const [wsState, dispatch] = useReducer(reducer, initialWsState);
