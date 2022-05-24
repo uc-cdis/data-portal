@@ -118,7 +118,9 @@ function ExplorerFilterSetWorkspace() {
           className='explorer-filter-set-workplace__action-button'
           type='button'
           onClick={handleDuplicate}
-          disabled={checkIfFilterEmpty(workspace.active.filterSet.filter)}
+          disabled={checkIfFilterEmpty(
+            (workspace.active.filterSet ?? emptyFilterSet).filter
+          )}
         >
           Duplicate
         </button>
