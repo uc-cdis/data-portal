@@ -49,7 +49,7 @@ function ExplorerFilterSetWorkspace() {
     workspace.create(updateFilterSet);
   }
   function handleDuplicate() {
-    workspace.duplicate(updateFilterSet);
+    workspace.duplicate(({ id }) => filterSets.use(id));
   }
   /** @param {ExplorerFilterSet} loaded */
   function handleLoad(loaded) {
