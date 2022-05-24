@@ -48,11 +48,13 @@ const CaseControlGWAS = (props) => {
         switch (stepIndex) {
             case 0: {
                 return (
+                    // select case [fetchedCohorts]
                     <span>step 1</span>
                 );
             }
             case 1: {
                 return (
+                    // select control [fetchedCohorts]  (ui validation so control !== case)
                     <span>step 2</span>
                 );
             }
