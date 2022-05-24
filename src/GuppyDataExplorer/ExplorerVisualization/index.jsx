@@ -10,7 +10,7 @@ import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import ExplorerRequestAccessButton from '../ExplorerRequestAccessButton';
 import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
-import ExplorerFilterSetWorkplace from '../ExplorerFilterSetWorkplace';
+import ExplorerFilterSetWorkspace from '../ExplorerFilterSetWorkspace';
 import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
@@ -277,7 +277,7 @@ function ExplorerVisualization({
         </div>
       </div>
       <div style={{ display: showFilterSetWorkspace ? 'initial' : 'none' }}>
-        <ExplorerFilterSetWorkplace />
+        <ExplorerFilterSetWorkspace />
       </div>
       <ViewContainer
         showIf={explorerView === 'summary view'}
