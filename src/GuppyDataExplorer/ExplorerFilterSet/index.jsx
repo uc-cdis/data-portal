@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import Tooltip from 'rc-tooltip';
@@ -34,10 +34,6 @@ function ExplorerFilterSet({ className, filter }) {
     () => filterSets.active ?? emptyFilterSet,
     [filterSets]
   );
-  const [isError, setIsError] = useState(false);
-  useEffect(() => {
-    if (!isError) filterSets.refresh().catch(() => setIsError(true));
-  }, [isError]);
 
   /** @type {[ExplorerFilterSetActionType, React.Dispatch<React.SetStateAction<ExplorerFilterSetActionType>>]} */
   const [actionType, setActionType] = useState('open');
@@ -63,8 +59,6 @@ function ExplorerFilterSet({ className, filter }) {
     try {
       filterSets.use((await filterSets.create(created)).id);
       await filterSets.refresh();
-    } catch (e) {
-      setIsError(true);
     } finally {
       closeActionForm();
     }
@@ -74,8 +68,6 @@ function ExplorerFilterSet({ className, filter }) {
       await filterSets.update(updated);
       filterSets.use(updated.id);
       await filterSets.refresh();
-    } catch (e) {
-      setIsError(true);
     } finally {
       closeActionForm();
     }
@@ -86,8 +78,6 @@ function ExplorerFilterSet({ className, filter }) {
       filterSets.use();
       await filterSets.refresh();
       handleFilterClear();
-    } catch (e) {
-      setIsError(true);
     } finally {
       closeActionForm();
     }
@@ -106,7 +96,7 @@ function ExplorerFilterSet({ className, filter }) {
 
   return (
     <div className={className}>
-      {isError ? (
+      {filterSets.isError ? (
         <div className='explorer-filter-set__error'>
           <h2>Error obtaining saved Filter Set data...</h2>
           <p>
@@ -118,7 +108,7 @@ function ExplorerFilterSet({ className, filter }) {
             </a>
             ) for more information.
           </p>
-          <Button label='Retry' onClick={() => setIsError(false)} />
+          <Button label='Retry' onClick={() => filterSets.refresh()} />
         </div>
       ) : (
         <>

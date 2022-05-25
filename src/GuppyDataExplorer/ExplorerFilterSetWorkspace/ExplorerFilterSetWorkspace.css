@@ -10,12 +10,15 @@
     display: none;
   }
 }
+.explorer-filter-set-workspace > header {
+  display: flex;
+}
 
 .explorer-filter-set-workspace > header > h2 {
   font-size: 14px;
-  line-height: 1rem;
+  line-height: 1.5rem;
   margin-right: 0.5rem;
-  display: inline-block;
+  white-space: nowrap;
 }
 
 .explorer-filter-set-workspace > header > h2::after {
@@ -54,6 +57,20 @@
 .explorer-filter-set-workspace
   button.explorer-filter-set-workspace__action-button:hover:not(:disabled) {
   background-color: var(--g3-color__silver);
+}
+
+.explorer-filter-set-workspace
+  .explorer-filter-set-workspace__error
+  button.explorer-filter-set-workspace__action-button {
+  margin-left: 0.5rem;
+  color: black;
+  background-color: var(--pcdc-color__secondary);
+}
+
+.explorer-filter-set-workspace
+  .explorer-filter-set-workspace__error
+  button.explorer-filter-set-workspace__action-button:hover {
+  background-color: var(--pcdc-color__secondary-light);
 }
 
 .explorer-filter-set-workspace__query {
