@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import FilterDisplay from '../../components/FilterDisplay';
 import SimplePopup from '../../components/SimplePopup';
@@ -102,45 +103,74 @@ function ExplorerFilterSetWorkspace() {
     <div className='explorer-filter-set-workspace'>
       <header>
         <h2>Filter Set Workspace</h2>
-        <button
-          className='explorer-filter-set-workspace__action-button'
-          type='button'
-          onClick={handleCreate}
-          disabled={disableNew}
-          title={
-            disableNew
-              ? 'No new query if queries without filter exist'
-              : undefined
-          }
-        >
-          New
-        </button>
-        <button
-          className='explorer-filter-set-workspace__action-button'
-          type='button'
-          onClick={handleDuplicate}
-          disabled={checkIfFilterEmpty(
-            (workspace.active.filterSet ?? emptyFilterSet).filter
-          )}
-        >
-          Duplicate
-        </button>
-        <button
-          className='explorer-filter-set-workspace__action-button'
-          type='button'
-          onClick={() => setShowActionForm('LOAD')}
-          disabled={filterSets.all.length < 1}
-        >
-          Load
-        </button>
-        <button
-          className='explorer-filter-set-workspace__action-button'
-          type='button'
-          onClick={handleRemove}
-          disabled={workspace.size < 2}
-        >
-          Remove
-        </button>
+        {filterSets.isError ? (
+          <div className='explorer-filter-set-workspace__error'>
+            <p>
+              <FontAwesomeIcon
+                className='screen-size-warning__icon'
+                icon='triangle-exclamation'
+                color='var(--pcdc-color__secondary)'
+              />
+              Error obtaining saved Filter Set data...
+              <button
+                className='explorer-filter-set-workspace__action-button'
+                type='button'
+                onClick={() => filterSets.refresh()}
+              >
+                Retry
+              </button>
+            </p>
+            <p>
+              If the problem persists, please contact the administrator (
+              <a href='mailto:pcdc_help@lists.uchicago.edu'>
+                pcdc_help@lists.uchicago.edu
+              </a>
+              ) for more information.
+            </p>
+          </div>
+        ) : (
+          <div>
+            <button
+              className='explorer-filter-set-workspace__action-button'
+              type='button'
+              onClick={handleCreate}
+              disabled={disableNew}
+              title={
+                disableNew
+                  ? 'No new query if queries without filter exist'
+                  : undefined
+              }
+            >
+              New
+            </button>
+            <button
+              className='explorer-filter-set-workspace__action-button'
+              type='button'
+              onClick={handleDuplicate}
+              disabled={checkIfFilterEmpty(
+                (workspace.active.filterSet ?? emptyFilterSet).filter
+              )}
+            >
+              Duplicate
+            </button>
+            <button
+              className='explorer-filter-set-workspace__action-button'
+              type='button'
+              onClick={() => setShowActionForm('LOAD')}
+              disabled={filterSets.all.length < 1}
+            >
+              Load
+            </button>
+            <button
+              className='explorer-filter-set-workspace__action-button'
+              type='button'
+              onClick={handleRemove}
+              disabled={workspace.size < 2}
+            >
+              Remove
+            </button>
+          </div>
+        )}
       </header>
       <main>
         {Object.keys(workspace.all).map((id, i) => {
