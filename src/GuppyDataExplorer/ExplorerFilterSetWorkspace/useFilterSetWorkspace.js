@@ -53,6 +53,13 @@ function reducer(state, action) {
 
       return { ...state, [id]: filterSet };
     }
+    case 'SAVE': {
+      const { filterSet, id } = payload;
+
+      payload.callback?.({ filterSet, id });
+
+      return { ...state, [id]: filterSet };
+    }
     case 'DUPLICATE': {
       const id = crypto.randomUUID();
       const filterSet = { filter: cloneDeep(state[payload.id].filter) };
@@ -135,6 +142,24 @@ export default function useFilterSetWorkspace() {
     });
   }
 
+  /**
+   * @param {ExplorerFilterSet} filterSet
+   * @param {FilterSetWorkspaceMethodCallback} [callback]
+   */
+  function save(filterSet, callback) {
+    dispatch({
+      type: 'SAVE',
+      payload: {
+        id,
+        filterSet,
+        callback(args) {
+          setId(args.id);
+          callback?.(args.filterSet);
+        },
+      },
+    });
+  }
+
   /** @param {FilterSetWorkspaceMethodCallback} [callback] */
   function remove(callback) {
     dispatch({
@@ -185,6 +210,7 @@ export default function useFilterSetWorkspace() {
       create,
       duplicate,
       load,
+      save,
       remove,
       update,
       use,
