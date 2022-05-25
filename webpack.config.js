@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const CompressionPlugin = require('compression-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const path = require('path');
 const portalVersion = require('./package.json').version;
 
@@ -79,7 +78,10 @@ if (isProduction) {
   devtool = 'eval-source-map';
 
   // add react-refresh to plugins for development mode
-  plugins.push(new ReactRefreshWebpackPlugin({ overlay: false }));
+  plugins.push(
+    // eslint-disable-next-line global-require
+    new (require('@pmmmwh/react-refresh-webpack-plugin'))({ overlay: false })
+  );
 }
 
 module.exports = {
