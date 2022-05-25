@@ -138,17 +138,35 @@ class StudyDetails extends React.Component {
       && this.isDataAccessible(this.props.data.accessibleValidationValue)
       && this.props.fileData.length > 0;
 
-      button = displayDownloadButton ? (
-        <Button
-          key={key}
-          label={'Download'}
-          buttonType='primary'
-          onClick={this.showDownloadModal}
-          enabled={enableButton}
-          tooltipEnabled={tooltipEnabled}
-          tooltipText={tooltipText}
-        />
-      ) : null;
+      if (this.props.data.overrideDownloadUrlField && displayDownloadButton) {
+        button = (
+          <Button
+            key={key}
+            label={`Download ${this.props.data.requiredIdpField
+              ? `on ${this.props.data.requiredIdpField.toUpperCase()}`
+              : 'Externally'
+            }`}
+            buttonType='primary'
+            onClick={() => window.open(this.props.data.overrideDownloadUrlField, '_blank')}
+            enabled={enableButton}
+            tooltipEnabled={tooltipEnabled}
+            tooltipText={tooltipText}
+            rightIcon='external-link'
+          />
+        );
+      } else {
+        button = displayDownloadButton ? (
+          <Button
+            key={key}
+            label={'Download'}
+            buttonType='primary'
+            onClick={this.showDownloadModal}
+            enabled={enableButton}
+            tooltipEnabled={tooltipEnabled}
+            tooltipText={tooltipText}
+          />
+        ) : null;
+      }
     } else if (buttonConfig.type === 'export-pfb-to-workspace') {
       // 'Export to Workspace' button
       const displayDownloadButton = userHasLoggedIn
@@ -449,6 +467,7 @@ StudyDetails.propTypes = {
     displayButtonsData: PropTypes.object,
     requiredIdpField: PropTypes.string,
     accessibleValidationValue: PropTypes.string,
+    overrideDownloadUrlField: PropTypes.string,
   }).isRequired,
   fileData: PropTypes.arrayOf(
     PropTypes.shape({
