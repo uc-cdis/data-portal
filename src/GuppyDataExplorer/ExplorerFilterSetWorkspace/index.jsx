@@ -66,6 +66,21 @@ function ExplorerFilterSetWorkspace() {
     }
     closeActionForm();
   }
+  /** @param {ExplorerFilterSet} saved */
+  async function handleSave(saved) {
+    try {
+      let filterSet = saved;
+      if (saved.id === undefined) filterSet = await filterSets.create(saved);
+      else await filterSets.update(saved);
+
+      filterSets.use(filterSet.id);
+      await filterSets.refresh();
+
+      workspace.load(filterSet, true);
+    } finally {
+      closeActionForm();
+    }
+  }
   function handleRemove() {
     workspace.remove(updateFilterSet);
   }
@@ -164,6 +179,16 @@ function ExplorerFilterSetWorkspace() {
             <button
               className='explorer-filter-set-workspace__action-button'
               type='button'
+              onClick={() => setShowActionForm('SAVE')}
+              disabled={checkIfFilterEmpty(
+                (workspace.active.filterSet ?? emptyFilterSet).filter
+              )}
+            >
+              Save
+            </button>
+            <button
+              className='explorer-filter-set-workspace__action-button'
+              type='button'
               onClick={handleRemove}
               disabled={workspace.size < 2}
             >
@@ -241,6 +266,7 @@ function ExplorerFilterSetWorkspace() {
             handlers={{
               close: closeActionForm,
               load: handleLoad,
+              save: handleSave,
             }}
           />
         </SimplePopup>
