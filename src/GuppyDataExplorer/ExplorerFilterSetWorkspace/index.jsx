@@ -6,7 +6,7 @@ import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerState } from '../ExplorerStateContext';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import { createEmptyFilterSet } from '../ExplorerFilterSet/utils';
-import FilterSetOpenForm from '../ExplorerFilterSetForms/FilterSetOpenForm';
+import FilterSetActionForm from './FilterSetActionForm';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 import {
   checkIfFilterEmpty,
@@ -236,14 +236,13 @@ function ExplorerFilterSetWorkspace() {
       </main>
       {showActionForm !== undefined && (
         <SimplePopup>
-          {showActionForm === 'LOAD' && (
-            <FilterSetOpenForm
-              currentFilterSet={filterSets.active ?? emptyFilterSet}
-              filterSets={filterSets.all}
-              onAction={handleLoad}
-              onClose={closeActionForm}
-            />
-          )}
+          <FilterSetActionForm
+            actionType={showActionForm}
+            handlers={{
+              close: closeActionForm,
+              load: handleLoad,
+            }}
+          />
         </SimplePopup>
       )}
     </div>
