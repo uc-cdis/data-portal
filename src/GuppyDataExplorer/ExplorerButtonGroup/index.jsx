@@ -695,6 +695,9 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
           let caseIDList = caseIDResult.map((i) => i[caseField]);
           caseIDList = _.uniq(caseIDList);
           const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
+          if (!fileType) {
+            throw Error('guppyConfig.manifestMapping.resourceIndexType is not defined');
+          }
           const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
             [caseFieldInFileIndex]: {
               selectedValues: caseIDList,
