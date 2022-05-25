@@ -6,7 +6,7 @@ import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerState } from '../ExplorerStateContext';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import { createEmptyFilterSet } from '../ExplorerFilterSet/utils';
-import FilterSetOpenForm from '../ExplorerFilterSetForms/FilterSetOpenForm';
+import FilterSetActionForm from './FilterSetActionForm';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 import {
   checkIfFilterEmpty,
@@ -65,6 +65,21 @@ function ExplorerFilterSetWorkspace() {
       workspace.load(loaded, shouldOverwrite, updateFilterSet);
     }
     closeActionForm();
+  }
+  /** @param {ExplorerFilterSet} saved */
+  async function handleSave(saved) {
+    try {
+      let filterSet = saved;
+      if (saved.id === undefined) filterSet = await filterSets.create(saved);
+      else await filterSets.update(saved);
+
+      filterSets.use(filterSet.id);
+      await filterSets.refresh();
+
+      workspace.load(filterSet, true);
+    } finally {
+      closeActionForm();
+    }
   }
   function handleRemove() {
     workspace.remove(updateFilterSet);
@@ -164,6 +179,16 @@ function ExplorerFilterSetWorkspace() {
             <button
               className='explorer-filter-set-workspace__action-button'
               type='button'
+              onClick={() => setShowActionForm('SAVE')}
+              disabled={checkIfFilterEmpty(
+                (workspace.active.filterSet ?? emptyFilterSet).filter
+              )}
+            >
+              Save
+            </button>
+            <button
+              className='explorer-filter-set-workspace__action-button'
+              type='button'
               onClick={handleRemove}
               disabled={workspace.size < 2}
             >
@@ -236,14 +261,14 @@ function ExplorerFilterSetWorkspace() {
       </main>
       {showActionForm !== undefined && (
         <SimplePopup>
-          {showActionForm === 'LOAD' && (
-            <FilterSetOpenForm
-              currentFilterSet={filterSets.active ?? emptyFilterSet}
-              filterSets={filterSets.all}
-              onAction={handleLoad}
-              onClose={closeActionForm}
-            />
-          )}
+          <FilterSetActionForm
+            actionType={showActionForm}
+            handlers={{
+              close: closeActionForm,
+              load: handleLoad,
+              save: handleSave,
+            }}
+          />
         </SimplePopup>
       )}
     </div>
