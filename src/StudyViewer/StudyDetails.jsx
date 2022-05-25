@@ -142,10 +142,7 @@ class StudyDetails extends React.Component {
         button = (
           <Button
             key={key}
-            label={`Download ${this.props.data.requiredIdpField
-              ? `on ${this.props.data.requiredIdpField.toUpperCase()}`
-              : 'Externally'
-            }`}
+            label={'Download'}
             buttonType='primary'
             onClick={() => window.open(this.props.data.overrideDownloadUrlField, '_blank')}
             enabled={enableButton}
