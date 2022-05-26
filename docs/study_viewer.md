@@ -69,11 +69,12 @@ Example configuration:
                 // configuration specific to the "Download" button
                 "type": "download",
                 "downloadField": "object_id" // GUID - Note: unused for now, hardcoded to "object_id" (TODO)
+                "overrideUrlField": "external_url"// optional, field to look for in the file to specify the download location of the file
             },
             {
                 // configuration specific to the "Request Access" button
                 "type": "request_access",
-                "required_idp_field": "required_idp", // optional, requires user to have logged in through this identity provider to request access
+                "requiredIdpField": "required_idp", // optional, requires user to have logged in through this identity provider to request access
                 "resourceDisplayNameField": "title",
                 "redirectModalText": "", // optional, link label for the URL in "You will now be sent to <URL>"
                 "accessRequestedText": "DAR In Progress", // optional, button text that will be overridden for the disabled button when user already has a request in SUBMITTED state. If omitted, the default text will be "Access Requested"
