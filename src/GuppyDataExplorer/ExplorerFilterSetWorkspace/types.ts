@@ -1,6 +1,12 @@
 import type { ExplorerFilter, ExplorerFilterSet } from '../types';
 
-export type UnsavedExplorerFilterSet = Pick<ExplorerFilterSet, 'filter' | 'id'>;
+export type UnsavedExplorerFilterSet = Pick<
+  ExplorerFilterSet,
+  'filter' | 'id'
+> & {
+  name?: never;
+  description?: never;
+};
 
 export type FilterSetWorkspaceState = {
   [key: string]: ExplorerFilterSet | UnsavedExplorerFilterSet;
