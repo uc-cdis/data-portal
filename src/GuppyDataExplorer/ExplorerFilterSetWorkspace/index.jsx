@@ -18,7 +18,7 @@ import {
 import './ExplorerFilterSetWorkspace.css';
 
 /** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
-/** @typedef {import('./types').FilterSetWorkspaceAction['type']} WorkspaceActionType */
+/** @typedef {'DELETE' | import('./types').FilterSetWorkspaceAction['type']} WorkspaceActionType */
 
 const emptyFilterSet = createEmptyFilterSet();
 
@@ -49,6 +49,17 @@ function ExplorerFilterSetWorkspace() {
   }
   function handleCreate() {
     workspace.create(updateFilterSet);
+  }
+  /** @param {ExplorerFilterSet} deleted */
+  async function handleDelete(deleted) {
+    try {
+      await filterSets.delete(deleted);
+      filterSets.use();
+      await filterSets.refresh();
+      workspace.remove();
+    } finally {
+      closeActionForm();
+    }
   }
   function handleDuplicate() {
     workspace.duplicate(({ id }) => filterSets.use(id));
@@ -190,6 +201,16 @@ function ExplorerFilterSetWorkspace() {
             <button
               className='explorer-filter-set-workspace__action-button'
               type='button'
+              onClick={() => setShowActionForm('DELETE')}
+              disabled={
+                !('id' in (workspace.active.filterSet ?? emptyFilterSet))
+              }
+            >
+              Delete
+            </button>
+            <button
+              className='explorer-filter-set-workspace__action-button'
+              type='button'
               onClick={handleRemove}
               disabled={workspace.size < 2}
             >
@@ -261,6 +282,7 @@ function ExplorerFilterSetWorkspace() {
             actionType={showActionForm}
             handlers={{
               close: closeActionForm,
+              delete: handleDelete,
               load: handleLoad,
               save: handleSave,
             }}
