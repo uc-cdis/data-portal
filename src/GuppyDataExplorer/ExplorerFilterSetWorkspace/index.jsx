@@ -18,7 +18,7 @@ import {
 import './ExplorerFilterSetWorkspace.css';
 
 /** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
-/** @typedef {'DELETE' | import('./types').FilterSetWorkspaceAction['type']} WorkspaceActionType */
+/** @typedef {import('./FilterSetActionForm').ActionFormType} ActionFormType */
 
 const emptyFilterSet = createEmptyFilterSet();
 
@@ -36,11 +36,11 @@ function ExplorerFilterSetWorkspace() {
       workspace.load(filterSets.active, true);
   }, [filterSets.active]);
 
-  const [showActionForm, setShowActionForm] = useState(
-    /** @type {WorkspaceActionType} */ (undefined)
+  const [actionFormType, setActionFormType] = useState(
+    /** @type {ActionFormType} */ (undefined)
   );
   function closeActionForm() {
-    setShowActionForm(undefined);
+    setActionFormType(undefined);
   }
 
   function updateFilterSet(updated) {
@@ -183,7 +183,7 @@ function ExplorerFilterSetWorkspace() {
             <button
               className='explorer-filter-set-workspace__action-button'
               type='button'
-              onClick={() => setShowActionForm('LOAD')}
+              onClick={() => setActionFormType('LOAD')}
               disabled={filterSets.all.length < 1}
             >
               Load
@@ -191,7 +191,7 @@ function ExplorerFilterSetWorkspace() {
             <button
               className='explorer-filter-set-workspace__action-button'
               type='button'
-              onClick={() => setShowActionForm('SAVE')}
+              onClick={() => setActionFormType('SAVE')}
               disabled={checkIfFilterEmpty(
                 (workspace.active.filterSet ?? emptyFilterSet).filter
               )}
@@ -201,7 +201,7 @@ function ExplorerFilterSetWorkspace() {
             <button
               className='explorer-filter-set-workspace__action-button'
               type='button'
-              onClick={() => setShowActionForm('DELETE')}
+              onClick={() => setActionFormType('DELETE')}
               disabled={
                 !('id' in (workspace.active.filterSet ?? emptyFilterSet))
               }
@@ -276,16 +276,16 @@ function ExplorerFilterSetWorkspace() {
           );
         })}
       </main>
-      {showActionForm !== undefined && (
+      {actionFormType !== undefined && (
         <SimplePopup>
           <FilterSetActionForm
-            actionType={showActionForm}
             handlers={{
               close: closeActionForm,
               delete: handleDelete,
               load: handleLoad,
               save: handleSave,
             }}
+            type={actionFormType}
           />
         </SimplePopup>
       )}

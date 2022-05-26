@@ -8,22 +8,23 @@ import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 
 /** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {'DELETE' | 'LOAD' | 'SAVE'} ActionFormType */
 
 const emptyFilterSet = createEmptyFilterSet();
 
 /**
  * @param {Object} prop
- * @param {'DELETE' | import('./types').FilterSetWorkspaceAction['type']} prop.actionType
+ * @param {ActionFormType} prop.type
  * @param {Object} prop.handlers
  * @param {() => void} prop.handlers.close
  * @param {(deleted: ExplorerFilterSet) => void} prop.handlers.delete
  * @param {(loaded: ExplorerFilterSet) => void} prop.handlers.load
  * @param {(saved: ExplorerFilterSet) => void} prop.handlers.save
  */
-function FilterSetActionForm({ actionType, handlers }) {
+function FilterSetActionForm({ handlers, type }) {
   const filterSets = useExplorerFilterSets();
   const workspace = useFilterSetWorkspace();
-  switch (actionType) {
+  switch (type) {
     case 'LOAD':
       return (
         <FilterSetOpenForm
@@ -67,13 +68,13 @@ function FilterSetActionForm({ actionType, handlers }) {
 }
 
 FilterSetActionForm.propTypes = {
-  actionType: PropTypes.oneOf(['DELETE', 'LOAD', 'SAVE']),
   handlers: PropTypes.shape({
     close: PropTypes.func,
     delete: PropTypes.func,
     load: PropTypes.func,
     save: PropTypes.func,
   }),
+  type: PropTypes.oneOf(['DELETE', 'LOAD', 'SAVE']),
 };
 
 export default FilterSetActionForm;
