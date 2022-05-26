@@ -20,7 +20,7 @@ const mapStateToProps = (state) => ({
   ...state.studyRegistration,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = () => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudyRegistrationWithMDSBackend);

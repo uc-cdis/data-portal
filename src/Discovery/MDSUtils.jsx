@@ -1,4 +1,4 @@
-import { hostname } from '../localconf';
+import { hostname, studyRegistrationConfig } from '../localconf';
 import { fetchWithCreds } from '../actions';
 
 const LIMIT = 1000; // required or else mds defaults to returning 10 records
@@ -46,9 +46,12 @@ export const registerStudyInMDS = async (username, metadataID, updatedValues = {
       throw new Error(`Request for query study data at ${queryURL} failed. Response: ${JSON.stringify(queryRes, null, 2)}`);
     }
     const studyMetadata = await queryRes.json();
+    const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField || 'is_registered';
+    const studyRegistrationTrackingField = studyRegistrationConfig?.studyRegistrationTrackingField || 'registrant_username';
     const metadataToUpdate = { ...studyMetadata };
     metadataToUpdate._guid_type = GUIDType;
-    metadataToUpdate[STUDY_DATA_FIELD].registrant_username = username;
+    metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationValidationField] = true;
+    metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationTrackingField] = username;
     metadataToUpdate[STUDY_DATA_FIELD] = { ...metadataToUpdate[STUDY_DATA_FIELD], ...updatedValues };
     const updateURL = `${MDS_URL}/${metadataID}?overwrite=true`;
     fetchWithCreds({

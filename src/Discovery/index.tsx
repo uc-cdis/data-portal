@@ -36,6 +36,7 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
+    const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField || 'is_registered';
     async function fetchRawStudies() {
       let loadStudiesFunction;
       if (isEnabled('discoveryUseAggMDS')) {
@@ -47,6 +48,8 @@ const DiscoveryWithMDSBackend: React.FC<{
       let rawStudiesUnregistered = [];
       if (isEnabled('studyRegistration')) {
         rawStudiesUnregistered = await loadStudiesFromMDS('unregistered_discovery_metadata');
+        rawStudiesUnregistered = rawStudiesUnregistered
+          .map((unregisteredStudy) => ({ ...unregisteredStudy, [studyRegistrationValidationField]: false }));
       }
       return _.union(rawStudiesRegistered, rawStudiesUnregistered);
     }
@@ -101,7 +104,7 @@ const DiscoveryWithMDSBackend: React.FC<{
     props.onDiscoveryPageActive();
   }, [props]);
 
-  let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField || 'registrant_username';
+  let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField || 'is_registered';
   if (!isEnabled('studyRegistration')) {
     studyRegistrationValidationField = undefined;
   }

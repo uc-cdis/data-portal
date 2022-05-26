@@ -453,7 +453,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         title: <div className='discovery-table-header'> { 'Registration Status' }</div>,
         ellipsis: false,
         width: '200px',
-        render: (_, record) => ((record[props.studyRegistrationValidationField]) ? (
+        render: (_, record) => ((record[props.studyRegistrationValidationField] !== false) ? (
           <React.Fragment>
             <Tag icon={<CheckCircleOutlined />} color='success'>
               Linked
