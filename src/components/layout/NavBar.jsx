@@ -123,7 +123,7 @@ class NavBar extends Component {
                 >
                   <NavLink
                     exact
-                    to=''
+                    to={homepageHref || ''}
                     className='h3-typo nav-bar__link nav-bar__link--home g3-ring-on-focus'
                   >
                     {this.props.navTitle}
