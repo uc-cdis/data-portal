@@ -204,7 +204,6 @@ const QuantitativeGWAS = (props) => {
                 outcome: selectedRows[0].concept_name,
             });
         },
-
     };
 
     const step3TableConfig = [
@@ -394,13 +393,13 @@ const QuantitativeGWAS = (props) => {
             covariates,
             out_prefix: Date.now().toString(),
             outcome: selectedOutcome,
-            outcome_is_binary: false,
-            hare_code: selectedHare, // TODO - align w/ Zuyi
+            // hare_code: selectedHare, // TODO - align w/ Zuyi
             maf_threshold: Number(mafThreshold),
             imputation_score_cutoff: Number(imputationScore),
-            template_version: 'gwas-template-6226080403eb62585981d9782aec0f3a82a7e906',
+            // template_version: 'gwas-template-6226080403eb62585981d9782aec0f3a82a7e906',
             source_id: sourceId,
-            cohort_definition_id: cohortDefinitionId,
+            case_cohort_definition_id: cohortDefinitionId,
+            control_cohort_definition_id: "-1"
         };
         const res = await fetch(submitEndpoint, {
             method: 'POST',
