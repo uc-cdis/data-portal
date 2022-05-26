@@ -57,12 +57,16 @@ const CaseControlGWAS = (props) => {
         ConceptIds: [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708],
     });
 
+    const [form] = Form.useForm();
+
     const [selectedCovariates, setSelectedCovariates] = useState([]);
     const [selectedCovariateIds, setSelectedCovariateIds] = useState([]);
 
     const [imputationScore, setImputationScore] = useState(0.3);
     const [mafThreshold, setMafThreshold] = useState(0.01);
     const [numOfPC, setNumOfPC] = useState(3);
+    const [selectedCaseHare, setSelectedCaseHare] = useState(undefined);
+    const [selectedControlHare, setSelectedControlHare] = useState(undefined);
 
     async function fetchSources() {
         const sourcesEndpoint = `${cohortMiddlewarePath}sources`;
@@ -105,6 +109,34 @@ const CaseControlGWAS = (props) => {
         return getCovariates.json();
     }
 
+    async function fetchCaseConceptStatsByHare() {
+        var conceptIds = [...selectedCovariates].map((val) => val.concept_id);
+        const conceptIdsPayload = { ConceptIds: conceptIds };
+        const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${caseCohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
+        const reqBody = {
+            method: 'POST',
+            credentials: 'include',
+            headers,
+            body: JSON.stringify(conceptIdsPayload),
+        };
+        const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
+        return getConceptStats.json();
+    }
+
+    async function fetchControlConceptStatsByHare() {
+        var conceptIds = [...selectedCovariates].map((val) => val.concept_id);
+        const conceptIdsPayload = { ConceptIds: conceptIds };
+        const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${controlCohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
+        const reqBody = {
+            method: 'POST',
+            credentials: 'include',
+            headers,
+            body: JSON.stringify(conceptIdsPayload),
+        };
+        const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
+        return getConceptStats.json();
+    }
+
     const step1TableRowSelection = {
         type: 'radio',
         columnTitle: 'Select',
@@ -138,7 +170,7 @@ const CaseControlGWAS = (props) => {
         columnTitle: 'Select',
         selectedRowKeys: selectedCovariates.map((val) => val.concept_id),
         onChange: (_, selectedRows) => {
-            setSelectedCovariateIds(selectedRows.map((item) => item.concept_id));
+            setSelectedCovariateVars(selectedRows.map((item) => item.concept_id));
             setSelectedCovariates(selectedRows);
         },
     };
@@ -254,6 +286,192 @@ const CaseControlGWAS = (props) => {
         );
     };
 
+    const ConceptStatsByHare = (gwasType) => {
+        const { data, status } = useQuery(['conceptstatsbyhare', selectedCovariates], gwasType === "case" ? fetchCaseConceptStatsByHare : fetchControlConceptStatsByHare, queryConfig);
+
+        if (status === 'loading') {
+            return <Spinner />;
+        }
+        if (status === 'error') {
+            return <React.Fragment>Error</React.Fragment>;
+        }
+        if (data) {
+            // special case - endpoint returns empty result:
+            if (data.concept_breakdown == null) {
+                return <React.Fragment>Error: there are no subjects in this cohort that have data available on all the selected covariates
+                    and phenotype. Please review your selections</React.Fragment>;
+            }
+            // normal scenario - there is breakdown data, so show in dropdown:
+            return (
+                <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
+                    <Dropdown.Button rightIcon='dropdown' buttonType='secondary'>
+                        {selectedHare}
+                    </Dropdown.Button>
+                    <Dropdown.Menu>
+                        {
+                            data.concept_breakdown.map((datum) => {
+                                return (
+                                    <Dropdown.Item
+                                        key={`${datum.concept_value}`}
+                                        value={`${datum.concept_value}`}
+                                        onClick={() => {
+                                            gwasType === "case" ? setSelectedCaseHare(datum.concept_value) : setSelectedControlHare(datum.concept_value)
+                                            }
+                                        }
+                                    >
+                                        {<div>{datum.concept_value} {" (size:" + datum.persons_in_cohort_with_value + ")"}</div>}
+                                    </Dropdown.Item>
+                                );
+                            })
+                        }
+                    </Dropdown.Menu>
+                </Dropdown>
+            );
+        }
+    };
+
+    const handleCovariateDelete = (remainingCovariates) => {
+        const remainingCovArr = [];
+        remainingCovariates.forEach((name) => {
+            selectedCovariates.forEach((covObj) => {
+                if (covObj.concept_name === name) {
+                    remainingCovArr.push(covObj);
+                }
+            });
+        });
+        setSelectedCovariateIds(remainingCovArr.map((c) => c.prefixed_concept_id));
+        setSelectedCovariates(remainingCovArr);
+        form.setFieldsValue({
+            covariates: remainingCovariates,
+        });
+    };
+
+    async function fetchGwasSubmit() {
+        const submitEndpoint = `${gwasWorkflowPath}submit`;
+        const requestBody = {
+            n_pcs: numOfPC,
+            covariates,
+            out_prefix: Date.now().toString(),
+            outcome: "-1",
+            // hare_codes: // TODO
+            maf_threshold: Number(mafThreshold),
+            imputation_score_cutoff: Number(imputationScore),
+            // template_version: 'gwas-template-6226080403eb62585981d9782aec0f3a82a7e906',
+            source_id: sourceId,
+            case_cohort_definition_id: selectedCaseCohort,
+            control_cohort_definition_id: selectedControlCohort,
+        };
+        const res = await fetch(submitEndpoint, {
+            method: 'POST',
+            credentials: 'include',
+            headers,
+            body: JSON.stringify(requestBody),
+        });
+        return res;
+    }
+
+    const resetFields = () => {
+        setCurrent(0);
+        setNumOfPC(3);
+        setSelectedCovariates([]);
+        setSelectedCovariateIds([]);
+        setMafThreshold(0.01);
+        setImputationScore(0.3);
+        setCaseCohortDefinitionId(undefined);
+        setControlCohortDefinitionId(undefined);
+        setCaseCohortName(undefined);
+        setSelectedControlCohort(undefined);
+        setSelectedCaseCohort(undefined);
+        setSelectedCaseHare("-select one-");
+        setSelectedControlHare("-select one-")
+        // props.refreshWorkflows();
+    };
+
+    // const useSubmitJob = () => {
+    //     const submission = useMutation(fetchGwasSubmit, {
+    //         onSuccess: () => {
+    //             resetFields();
+    //         },
+    //     });
+    //     return submission;
+    // };
+
+    const CohortParameters = () => {
+        return (
+            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                <div className='GWASUI-mainArea'>
+                    <Form
+                        name='GWASUI-parameter-form'
+                        form={form}
+                        labelCol={{
+                            span: 8,
+                        }}
+                        wrapperCol={{
+                            span: 16,
+                        }}
+                        initialValues={{
+                            numOfPC,
+                            isBinary: false,
+                            mafCutoff: 0.01,
+                            imputationCutoff: 0.3,
+                        }}
+                        autoComplete='off'
+                    >
+                        <Form.Item
+                            label='Number of PCs to use'
+                            name='numOfPC'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input a value between 1 to 10',
+                                },
+                            ]}
+                        >
+                            <InputNumber min={1} max={10} />
+                        </Form.Item>
+                        <Form.Item
+                            label='Covariates'
+                            name='covariates'
+                        >
+                            <Select
+                                mode='multiple'
+                                value={selectedCovariates.map((s) => s.concept_name)}
+                                disabled={selectedCovariates.length === 1}
+                                onChange={(e) => handleCovariateDelete(e)}
+                                style={{ width: '70%' }}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            label='Select HARE group'
+                            name='hareGroup'
+                        >
+                            <ConceptStatsByHare gwasType={"case"} />
+                            <ConceptStatsByHare gwasType={"control"} />
+                        </Form.Item>
+                        <Form.Item
+                            label='Is Binary Outcome?'
+                            name='isBinary'
+                        >
+                            <Switch disabled checked={false} style={{ width: '5%' }} />
+                        </Form.Item>
+                        <Form.Item
+                            label='MAF Cutoff'
+                            name='mafCutoff'
+                        >
+                            <InputNumber value={mafThreshold} onChange={(e) => setMafThreshold(e)} stringMode step='0.01' min={'0'} max={'0.5'} />
+                        </Form.Item>
+                        <Form.Item
+                            label='Imputation Score Cutoff'
+                            name='imputationCutoff'
+                        >
+                            <InputNumber value={imputationScore} onChange={(e) => setImputationScore(e)} stringMode step='0.1' min={'0'} max={'1'} />
+                        </Form.Item>
+                    </Form>
+                </div>
+            </Space>
+        )
+    }
+
     const generateContentForStep = (stepIndex) => {
         switch (stepIndex) {
             case 0: {
@@ -273,86 +491,7 @@ const CaseControlGWAS = (props) => {
             }
             case 3: {
                 return (
-                    <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                        <div className='GWASUI-mainArea'>
-                            <Form
-                                name='GWASUI-parameter-form'
-                                form={form}
-                                labelCol={{
-                                    span: 8,
-                                }}
-                                wrapperCol={{
-                                    span: 16,
-                                }}
-                                initialValues={{
-                                    numOfPC,
-                                    isBinary: false,
-                                    mafCutoff: 0.01,
-                                    imputationCutoff: 0.3,
-                                }}
-                                autoComplete='off'
-                            >
-                                <Form.Item
-                                    label='Number of PCs to use'
-                                    name='numOfPC'
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Please input a value between 1 to 10',
-                                        },
-                                    ]}
-                                >
-                                    <InputNumber min={1} max={10} />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Covariates'
-                                    name='covariates'
-                                >
-                                    <Select
-                                        mode='multiple'
-                                        value={selectedCovariates.map((s) => s.concept_name)}
-                                        disabled={selectedCovariates.length === 1}
-                                        onChange={(e) => handleCovariateDelete(e)}
-                                        style={{ width: '70%' }}
-                                    />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Phenotype'
-                                    name='outcome'
-                                >
-                                    <Input
-                                        disabled
-                                        value={selectedPhenotype}
-                                        style={{ width: '70%' }}
-                                    />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Select HARE group'
-                                    name='hareGroup'
-                                >
-                                    <ConceptStatsByHare />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Is Binary Outcome?'
-                                    name='isBinary'
-                                >
-                                    <Switch disabled checked={false} style={{ width: '5%' }} />
-                                </Form.Item>
-                                <Form.Item
-                                    label='MAF Cutoff'
-                                    name='mafCutoff'
-                                >
-                                    <InputNumber value={mafThreshold} onChange={(e) => setMafThreshold(e)} stringMode step='0.01' min={'0'} max={'0.5'} />
-                                </Form.Item>
-                                <Form.Item
-                                    label='Imputation Score Cutoff'
-                                    name='imputationCutoff'
-                                >
-                                    <InputNumber value={imputationScore} onChange={(e) => setImputationScore(e)} stringMode step='0.1' min={'0'} max={'1'} />
-                                </Form.Item>
-                            </Form>
-                        </div>
-                    </Space>
+                    <CohortParameters></CohortParameters>
                 );
             }
             case 4: {
@@ -364,6 +503,18 @@ const CaseControlGWAS = (props) => {
     }
 
     const handleNextStep = () => {
+        if (current === 1) {
+            // setSelectedCovariates([...selectedConcepts].slice(1).map((val) => val.prefixed_concept_id));
+            // setSelectedOutcome(selectedConcepts[0].prefixed_concept_id);
+
+            // form.setFieldsValue({
+            //     covariates: [...selectedConcepts].slice(1).map((val) => val.concept_name),
+            //     outcome: selectedConcepts[0].concept_name,
+            // });
+        }
+        if (current === 3) {
+            form.submit();
+        }
         // based off current, make changes to local state variables
     }
 
