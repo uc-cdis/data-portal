@@ -119,7 +119,7 @@ function ExplorerFilterSetWorkspace() {
   }
 
   const disableNew = Object.values(workspace.all).some(({ filter }) =>
-    checkIfFilterEmpty(filter)
+    checkIfFilterEmpty(filter ?? {})
   );
 
   return (
