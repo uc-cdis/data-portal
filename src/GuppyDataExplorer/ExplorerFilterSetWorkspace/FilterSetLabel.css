@@ -1,0 +1,21 @@
+.filter-set-label h4 {
+  font-size: 0.8rem;
+}
+
+.filter-set-label h4:not(:first-of-type) {
+  margin-top: 0.5rem;
+}
+
+.filter-set-label textarea {
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  height: auto;
+  resize: none;
+  width: auto;
+}
+
+.filter-set-label textarea:disabled {
+  background-color: transparent;
+}

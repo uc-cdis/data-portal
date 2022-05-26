@@ -7,6 +7,7 @@ import { useExplorerState } from '../ExplorerStateContext';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import { createEmptyFilterSet } from '../ExplorerFilterSet/utils';
 import FilterSetActionForm from './FilterSetActionForm';
+import FilterSetLabel from './FilterSetLabel';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 import {
   checkIfFilterEmpty,
@@ -200,7 +201,6 @@ function ExplorerFilterSetWorkspace() {
       <main>
         {Object.keys(workspace.all).map((id, i) => {
           const filterSet = workspace.all[id];
-          const name = 'name' in filterSet ? filterSet.name : undefined;
           return workspace.active.id === id ? (
             <div
               className='explorer-filter-set-workspace__query explorer-filter-set-workspace__query--active'
@@ -214,9 +214,7 @@ function ExplorerFilterSetWorkspace() {
                 >
                   Active
                 </button>
-                <h3 title={name}>
-                  #{i + 1} {name}
-                </h3>
+                <FilterSetLabel filterSet={filterSet} index={i + 1} />
               </header>
               <main>
                 {checkIfFilterEmpty(filterSet.filter) ? (
@@ -241,9 +239,7 @@ function ExplorerFilterSetWorkspace() {
                 >
                   Use
                 </button>
-                <h3 title={name}>
-                  #{i + 1} {name}
-                </h3>
+                <FilterSetLabel filterSet={filterSet} index={i + 1} />
               </header>
               <main>
                 {checkIfFilterEmpty(filterSet.filter) ? (
