@@ -5,7 +5,6 @@ import SimplePopup from '../../components/SimplePopup';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerState } from '../ExplorerStateContext';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
-import { createEmptyFilterSet } from '../ExplorerFilterSet/utils';
 import FilterSetActionForm from './FilterSetActionForm';
 import FilterSetLabel from './FilterSetLabel';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
@@ -19,8 +18,6 @@ import './ExplorerFilterSetWorkspace.css';
 
 /** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./FilterSetActionForm').ActionFormType} ActionFormType */
-
-const emptyFilterSet = createEmptyFilterSet();
 
 function ExplorerFilterSetWorkspace() {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
@@ -171,7 +168,7 @@ function ExplorerFilterSetWorkspace() {
               type='button'
               onClick={handleDuplicate}
               disabled={checkIfFilterEmpty(
-                (workspace.active.filterSet ?? emptyFilterSet).filter
+                (workspace.active.filterSet ?? filterSets.empty).filter
               )}
             >
               Duplicate
@@ -189,7 +186,7 @@ function ExplorerFilterSetWorkspace() {
               type='button'
               onClick={() => setActionFormType('SAVE')}
               disabled={checkIfFilterEmpty(
-                (workspace.active.filterSet ?? emptyFilterSet).filter
+                (workspace.active.filterSet ?? filterSets.empty).filter
               )}
             >
               Save
@@ -199,7 +196,7 @@ function ExplorerFilterSetWorkspace() {
               type='button'
               onClick={() => setActionFormType('DELETE')}
               disabled={
-                !('id' in (workspace.active.filterSet ?? emptyFilterSet))
+                !('id' in (workspace.active.filterSet ?? filterSets.empty))
               }
             >
               Delete

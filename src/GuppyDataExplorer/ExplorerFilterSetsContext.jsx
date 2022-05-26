@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { fetchWithCreds } from '../actions';
 import { useExplorerConfig } from './ExplorerConfigContext';
+import { createEmptyFilterSet } from './ExplorerFilterSet/utils';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ExplorerFilterSetDTO} ExplorerFilterSetDTO */
@@ -100,6 +101,7 @@ export function updateFilterSet(explorerId, filterSet) {
  * @typedef {Object} ExplorerFilterSetsContext
  * @property {ExplorerFilterSet} active
  * @property {ExplorerFilterSet[]} all
+ * @property {ExplorerFilterSet} empty
  * @property {boolean} isError
  * @property {() => Promise<void>} refresh
  * @property {(filerSet: ExplorerFilterSet) => Promise<ExplorerFilterSet>} create
@@ -133,6 +135,7 @@ export function ExplorerFilterSetsProvider({ children }) {
     () => ({
       active: filterSets.find((filterSet) => filterSet.id === id),
       all: filterSets,
+      empty: createEmptyFilterSet(),
       isError,
       refresh: () => {
         if (isError) setIsError(false);

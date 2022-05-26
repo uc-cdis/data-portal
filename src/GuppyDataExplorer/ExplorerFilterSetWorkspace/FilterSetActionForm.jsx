@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { createEmptyFilterSet } from '../ExplorerFilterSet/utils';
 import FilterSetCreateForm from '../ExplorerFilterSetForms/FilterSetCreateForm';
 import FilterSetDeleteForm from '../ExplorerFilterSetForms/FilterSetDeleteForm';
 import FilterSetOpenForm from '../ExplorerFilterSetForms/FilterSetOpenForm';
@@ -9,8 +8,6 @@ import useFilterSetWorkspace from './useFilterSetWorkspace';
 
 /** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {'DELETE' | 'LOAD' | 'SAVE'} ActionFormType */
-
-const emptyFilterSet = createEmptyFilterSet();
 
 /**
  * @param {Object} prop
@@ -28,7 +25,7 @@ function FilterSetActionForm({ handlers, type }) {
     case 'LOAD':
       return (
         <FilterSetOpenForm
-          currentFilterSet={filterSets.active ?? emptyFilterSet}
+          currentFilterSet={filterSets.active ?? filterSets.empty}
           filterSets={filterSets.all}
           onAction={handlers.load}
           onClose={handlers.close}
@@ -38,7 +35,7 @@ function FilterSetActionForm({ handlers, type }) {
       return filterSets.active === undefined ? (
         <FilterSetCreateForm
           currentFilter={workspace.active.filterSet.filter}
-          currentFilterSet={emptyFilterSet}
+          currentFilterSet={filterSets.empty}
           filterSets={filterSets.all}
           onAction={handlers.save}
           onClose={handlers.close}
