@@ -128,7 +128,7 @@ const removeEmptyFields = (inputObj, flag) => {
   return inputObj;
 };
 
-const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFields, requiredIdpField) => {
+const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFields, requiredIdpField, overrideUrlField) => {
   const targetStudyViewerConfig = fetchStudyViewerConfig(nameOfIndex);
   const processedDataset = [];
   if (receivedData) {
@@ -146,6 +146,7 @@ const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFie
           && requestedAccess[dataElement.auth_resource_path]);
           processedDataset.push(processedItem);
           processedItem.requiredIdpField = dataElement[requiredIdpField];
+          processedItem.overrideDownloadUrlField = dataElement[overrideUrlField];
         });
       },
     ).then(() => processedDataset);
@@ -178,9 +179,14 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
   fieldsToFetch.push(targetStudyViewerConfig.titleField);
   fieldsToFetch.push(targetStudyViewerConfig.rowAccessor);
 
-  const requiredIdpField = targetStudyViewerConfig.buttons.find((obj) => obj.type === 'request_access')?.required_idp_field;
+  const requiredIdpField = targetStudyViewerConfig.buttons.find((obj) => obj.type === 'request_access')?.requiredIdpField;
   if (requiredIdpField) {
     fieldsToFetch.push(requiredIdpField);
+  }
+
+  const overrideUrlField = targetStudyViewerConfig.buttons.find((obj) => obj.type === 'download')?.overrideUrlField;
+  if (overrideUrlField) {
+    fieldsToFetch.push(overrideUrlField);
   }
 
   const displayButtonsFields = targetStudyViewerConfig.buttons
@@ -216,6 +222,7 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
               itemConfig,
               displayButtonsFields,
               requiredIdpField,
+              overrideUrlField,
             ).then((pd) => ({
               type: 'RECEIVE_SINGLE_STUDY_DATASET',
               datasets: pd,
@@ -227,6 +234,7 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
             itemConfig,
             displayButtonsFields,
             requiredIdpField,
+            overrideUrlField,
           ).then((pd) => ({
             type: 'RECEIVE_STUDY_DATASET_LIST',
             datasets: pd,
