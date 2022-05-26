@@ -1,21 +1,22 @@
 import PropTypes from 'prop-types';
 import { createEmptyFilterSet } from '../ExplorerFilterSet/utils';
 import FilterSetCreateForm from '../ExplorerFilterSetForms/FilterSetCreateForm';
+import FilterSetDeleteForm from '../ExplorerFilterSetForms/FilterSetDeleteForm';
 import FilterSetOpenForm from '../ExplorerFilterSetForms/FilterSetOpenForm';
 import FilterSetUpdateForm from '../ExplorerFilterSetForms/FilterSetUpdateForm';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 
 /** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
-/** @typedef {import('./types').FilterSetWorkspaceAction} FilterSetWorkspaceAction */
 
 const emptyFilterSet = createEmptyFilterSet();
 
 /**
  * @param {Object} prop
- * @param {FilterSetWorkspaceAction['type']} prop.actionType
- * @param {object} prop.handlers
+ * @param {'DELETE' | import('./types').FilterSetWorkspaceAction['type']} prop.actionType
+ * @param {Object} prop.handlers
  * @param {() => void} prop.handlers.close
+ * @param {(deleted: ExplorerFilterSet) => void} prop.handlers.delete
  * @param {(loaded: ExplorerFilterSet) => void} prop.handlers.load
  * @param {(saved: ExplorerFilterSet) => void} prop.handlers.save
  */
@@ -52,15 +53,24 @@ function FilterSetActionForm({ actionType, handlers }) {
           isFiltersChanged={false}
         />
       );
+    case 'DELETE':
+      return (
+        <FilterSetDeleteForm
+          currentFilterSet={filterSets.active}
+          onAction={handlers.delete}
+          onClose={handlers.close}
+        />
+      );
     default:
       return null;
   }
 }
 
 FilterSetActionForm.propTypes = {
-  actionType: PropTypes.oneOf(['LOAD', 'SAVE']),
+  actionType: PropTypes.oneOf(['DELETE', 'LOAD', 'SAVE']),
   handlers: PropTypes.shape({
     close: PropTypes.func,
+    delete: PropTypes.func,
     load: PropTypes.func,
     save: PropTypes.func,
   }),
