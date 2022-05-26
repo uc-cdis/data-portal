@@ -40,10 +40,15 @@ function reducer(state, action) {
       const newState = cloneDeep(state);
       delete newState[payload.id];
 
-      const [id, filterSet] = Object.entries(newState)[0];
+      const [firstEntry] = Object.entries(newState);
+      const [id, filterSet] = firstEntry ?? [
+        crypto.randomUUID(),
+        { filter: {} },
+      ];
+
       payload.callback?.({ filterSet, id });
 
-      return newState;
+      return { ...newState, [id]: filterSet };
     }
     case 'LOAD': {
       const id = payload.id ?? crypto.randomUUID();
