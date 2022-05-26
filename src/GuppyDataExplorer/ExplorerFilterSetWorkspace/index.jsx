@@ -54,9 +54,8 @@ function ExplorerFilterSetWorkspace() {
   async function handleDelete(deleted) {
     try {
       await filterSets.delete(deleted);
-      filterSets.use();
       await filterSets.refresh();
-      workspace.remove();
+      workspace.remove(updateFilterSet);
     } finally {
       closeActionForm();
     }
