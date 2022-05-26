@@ -69,7 +69,6 @@ function ExplorerFilterSetWorkspace() {
     if (foundId !== undefined) {
       workspace.use(foundId, updateFilterSet);
     } else {
-      filterSets.use(loaded.id);
       const shouldOverwrite = checkIfFilterEmpty(
         workspace.active.filterSet.filter
       );
@@ -84,10 +83,8 @@ function ExplorerFilterSetWorkspace() {
       if (saved.id === undefined) filterSet = await filterSets.create(saved);
       else await filterSets.update(saved);
 
-      filterSets.use(filterSet.id);
       await filterSets.refresh();
-
-      workspace.load(filterSet, true);
+      workspace.load(filterSet, true, updateFilterSet);
     } finally {
       closeActionForm();
     }
