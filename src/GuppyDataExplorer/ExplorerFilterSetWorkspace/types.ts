@@ -17,6 +17,13 @@ export type FilterSetWorkspaceActionCallback = (args: {
   filterSet: ExplorerFilterSet | UnsavedExplorerFilterSet;
 }) => void;
 
+type FilterSetWorkspaceClearAction = {
+  type: 'CLEAR';
+  payload: {
+    callback?: FilterSetWorkspaceActionCallback;
+  };
+};
+
 type FilterSetWorkspaceCreactAction = {
   type: 'CREATE';
   payload: {
@@ -68,6 +75,7 @@ type FilterSetWorkspaceUpdateAction = {
 };
 
 export type FilterSetWorkspaceAction =
+  | FilterSetWorkspaceClearAction
   | FilterSetWorkspaceCreactAction
   | FilterSetWorkspaceDuplicateAction
   | FilterSetWorkspaceLoadAction
