@@ -44,8 +44,8 @@ function ExplorerFilterSetWorkspace() {
     filterSets.use(updated.id);
     handleFilterChange(updated.filter);
   }
-  function handleClear() {
-    workspace.clear((filterSet) => {
+  function handleClearAll() {
+    workspace.clearAll((filterSet) => {
       updateFilterSet(filterSet);
       closeActionForm();
     });
@@ -225,7 +225,7 @@ function ExplorerFilterSetWorkspace() {
             <button
               className='explorer-filter-set-workspace__action-button'
               type='button'
-              onClick={() => setActionFormType('CLEAR')}
+              onClick={() => setActionFormType('CLEAR-ALL')}
               disabled={Object.keys(workspace.all).length < 2}
             >
               Clear all
@@ -312,7 +312,7 @@ function ExplorerFilterSetWorkspace() {
         <SimplePopup>
           <FilterSetActionForm
             handlers={{
-              clear: handleClear,
+              clearAll: handleClearAll,
               close: closeActionForm,
               delete: handleDelete,
               load: handleLoad,

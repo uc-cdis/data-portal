@@ -27,7 +27,7 @@ import {
 function reducer(state, action) {
   const { type, payload } = action;
   switch (type) {
-    case 'CLEAR': {
+    case 'CLEAR-ALL': {
       const id = crypto.randomUUID();
       /** @type {UnsavedExplorerFilterSet} */
       const filterSet = { filter: {} };
@@ -112,9 +112,9 @@ export default function useFilterSetWorkspace() {
   useEffect(() => storeWorkspaceState(wsState), [wsState]);
 
   /** @param {FilterSetWorkspaceMethodCallback} [callback] */
-  function clear(callback) {
+  function clearAll(callback) {
     dispatch({
-      type: 'CLEAR',
+      type: 'CLEAR-ALL',
       payload: {
         callback(args) {
           setId(args.id);
@@ -233,7 +233,7 @@ export default function useFilterSetWorkspace() {
       active: { id, filterSet: wsState[id] },
       all: wsState,
       size: Object.keys(wsState).length,
-      clear,
+      clearAll,
       create,
       duplicate,
       load,

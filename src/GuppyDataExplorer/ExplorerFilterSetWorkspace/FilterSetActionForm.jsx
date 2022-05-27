@@ -8,13 +8,13 @@ import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 
 /** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
-/** @typedef {'CLEAR' | 'DELETE' | 'LOAD' | 'SAVE'} ActionFormType */
+/** @typedef {'CLEAR-ALL' | 'DELETE' | 'LOAD' | 'SAVE'} ActionFormType */
 
 /**
  * @param {Object} prop
  * @param {ActionFormType} prop.type
  * @param {Object} prop.handlers
- * @param {() => void} prop.handlers.clear
+ * @param {() => void} prop.handlers.clearAll
  * @param {() => void} prop.handlers.close
  * @param {(deleted: ExplorerFilterSet) => void} prop.handlers.delete
  * @param {(loaded: ExplorerFilterSet) => void} prop.handlers.load
@@ -24,13 +24,13 @@ function FilterSetActionForm({ handlers, type }) {
   const filterSets = useExplorerFilterSets();
   const workspace = useFilterSetWorkspace();
   switch (type) {
-    case 'CLEAR':
+    case 'CLEAR-ALL':
       return (
         <div className='explorer-filter-set-form'>
           <h4>
             Are you sure to clear Workspace?
             <br />
-            All unsaved filter sets will be lost.
+            All unsaved changes to Filter Sets will be lost.
           </h4>
           <div>
             <Button
@@ -38,7 +38,7 @@ function FilterSetActionForm({ handlers, type }) {
               label='Back to page'
               onClick={handlers.close}
             />
-            <Button label='Clear Workspace' onClick={handlers.clear} />
+            <Button label='Clear Workspace' onClick={handlers.clearAll} />
           </div>
         </div>
       );
@@ -86,13 +86,13 @@ function FilterSetActionForm({ handlers, type }) {
 
 FilterSetActionForm.propTypes = {
   handlers: PropTypes.shape({
-    clear: PropTypes.func,
+    clearAll: PropTypes.func,
     close: PropTypes.func,
     delete: PropTypes.func,
     load: PropTypes.func,
     save: PropTypes.func,
   }),
-  type: PropTypes.oneOf(['CLEAR', 'DELETE', 'LOAD', 'SAVE']),
+  type: PropTypes.oneOf(['CLEAR-ALL', 'DELETE', 'LOAD', 'SAVE']),
 };
 
 export default FilterSetActionForm;
