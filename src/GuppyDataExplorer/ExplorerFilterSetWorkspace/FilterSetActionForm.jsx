@@ -4,25 +4,23 @@ import FilterSetCreateForm from '../ExplorerFilterSetForms/FilterSetCreateForm';
 import FilterSetDeleteForm from '../ExplorerFilterSetForms/FilterSetDeleteForm';
 import FilterSetOpenForm from '../ExplorerFilterSetForms/FilterSetOpenForm';
 import FilterSetUpdateForm from '../ExplorerFilterSetForms/FilterSetUpdateForm';
-import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
-import useFilterSetWorkspace from './useFilterSetWorkspace';
 
 /** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {'CLEAR-ALL' | 'DELETE' | 'LOAD' | 'SAVE'} ActionFormType */
 
 /**
  * @param {Object} prop
- * @param {ActionFormType} prop.type
+ * @param {import('../ExplorerFilterSetsContext').ExplorerFilterSetsContext} prop.filterSets
  * @param {Object} prop.handlers
  * @param {() => void} prop.handlers.clearAll
  * @param {() => void} prop.handlers.close
  * @param {(deleted: ExplorerFilterSet) => void} prop.handlers.delete
  * @param {(loaded: ExplorerFilterSet) => void} prop.handlers.load
  * @param {(saved: ExplorerFilterSet) => void} prop.handlers.save
+ * @param {ActionFormType} prop.type
+ * @param {ReturnType<import('./useFilterSetWorkspace').default>} prop.workspace
  */
-function FilterSetActionForm({ handlers, type }) {
-  const filterSets = useExplorerFilterSets();
-  const workspace = useFilterSetWorkspace();
+function FilterSetActionForm({ filterSets, handlers, type, workspace }) {
   switch (type) {
     case 'CLEAR-ALL':
       return (
@@ -85,6 +83,7 @@ function FilterSetActionForm({ handlers, type }) {
 }
 
 FilterSetActionForm.propTypes = {
+  filterSets: PropTypes.object,
   handlers: PropTypes.shape({
     clearAll: PropTypes.func,
     close: PropTypes.func,
@@ -93,6 +92,7 @@ FilterSetActionForm.propTypes = {
     save: PropTypes.func,
   }),
   type: PropTypes.oneOf(['CLEAR-ALL', 'DELETE', 'LOAD', 'SAVE']),
+  workspace: PropTypes.object,
 };
 
 export default FilterSetActionForm;

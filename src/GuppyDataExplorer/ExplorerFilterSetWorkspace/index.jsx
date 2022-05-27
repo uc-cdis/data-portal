@@ -318,6 +318,7 @@ function ExplorerFilterSetWorkspace() {
       {actionFormType !== undefined && (
         <SimplePopup>
           <FilterSetActionForm
+            filterSets={filterSets}
             handlers={{
               clearAll: handleClearAll,
               close: closeActionForm,
@@ -326,6 +327,7 @@ function ExplorerFilterSetWorkspace() {
               save: handleSave,
             }}
             type={actionFormType}
+            workspace={workspace}
           />
         </SimplePopup>
       )}
