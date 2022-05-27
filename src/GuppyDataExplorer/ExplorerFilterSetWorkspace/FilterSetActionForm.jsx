@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import Button from '../../gen3-ui-component/components/Button';
 import FilterSetCreateForm from '../ExplorerFilterSetForms/FilterSetCreateForm';
 import FilterSetDeleteForm from '../ExplorerFilterSetForms/FilterSetDeleteForm';
 import FilterSetOpenForm from '../ExplorerFilterSetForms/FilterSetOpenForm';
@@ -7,12 +8,13 @@ import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 
 /** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
-/** @typedef {'DELETE' | 'LOAD' | 'SAVE'} ActionFormType */
+/** @typedef {'CLEAR' | 'DELETE' | 'LOAD' | 'SAVE'} ActionFormType */
 
 /**
  * @param {Object} prop
  * @param {ActionFormType} prop.type
  * @param {Object} prop.handlers
+ * @param {() => void} prop.handlers.clear
  * @param {() => void} prop.handlers.close
  * @param {(deleted: ExplorerFilterSet) => void} prop.handlers.delete
  * @param {(loaded: ExplorerFilterSet) => void} prop.handlers.load
@@ -22,6 +24,24 @@ function FilterSetActionForm({ handlers, type }) {
   const filterSets = useExplorerFilterSets();
   const workspace = useFilterSetWorkspace();
   switch (type) {
+    case 'CLEAR':
+      return (
+        <div className='explorer-filter-set-form'>
+          <h4>
+            Are you sure to clear Workspace?
+            <br />
+            All unsaved filter sets will be lost.
+          </h4>
+          <div>
+            <Button
+              buttonType='default'
+              label='Back to page'
+              onClick={handlers.close}
+            />
+            <Button label='Clear Workspace' onClick={handlers.clear} />
+          </div>
+        </div>
+      );
     case 'LOAD':
       return (
         <FilterSetOpenForm
@@ -66,12 +86,13 @@ function FilterSetActionForm({ handlers, type }) {
 
 FilterSetActionForm.propTypes = {
   handlers: PropTypes.shape({
+    clear: PropTypes.func,
     close: PropTypes.func,
     delete: PropTypes.func,
     load: PropTypes.func,
     save: PropTypes.func,
   }),
-  type: PropTypes.oneOf(['DELETE', 'LOAD', 'SAVE']),
+  type: PropTypes.oneOf(['CLEAR', 'DELETE', 'LOAD', 'SAVE']),
 };
 
 export default FilterSetActionForm;
