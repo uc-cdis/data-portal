@@ -34,7 +34,7 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { [id]: filterSet };
+      return { ...state, [id]: filterSet };
     }
     case 'CLEAR-ALL': {
       const id = crypto.randomUUID();
