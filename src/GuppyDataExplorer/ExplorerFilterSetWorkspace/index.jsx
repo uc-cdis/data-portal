@@ -86,6 +86,9 @@ function ExplorerFilterSetWorkspace() {
       closeActionForm();
     }
   }
+  function handleReset() {
+    handleFilterChange(filterSets.active.filter);
+  }
   function handleRemove() {
     workspace.remove(updateFilterSet);
   }
@@ -190,6 +193,18 @@ function ExplorerFilterSetWorkspace() {
               )}
             >
               Save
+            </button>
+            <button
+              className='explorer-filter-set-workspace__action-button'
+              type='button'
+              onClick={handleReset}
+              disabled={
+                filterSets.active === undefined ||
+                JSON.stringify(filterSets.active.filter) ===
+                  JSON.stringify(workspace.active.filterSet.filter)
+              }
+            >
+              Reset
             </button>
             <button
               className='explorer-filter-set-workspace__action-button'
