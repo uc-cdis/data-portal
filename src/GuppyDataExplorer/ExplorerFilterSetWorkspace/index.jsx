@@ -44,6 +44,9 @@ function ExplorerFilterSetWorkspace() {
     filterSets.use(updated.id);
     handleFilterChange(updated.filter);
   }
+  function handleClearAll() {
+    workspace.clear(updateFilterSet);
+  }
   function handleCreate() {
     workspace.create(updateFilterSet);
   }
@@ -215,6 +218,14 @@ function ExplorerFilterSetWorkspace() {
               )}
             >
               Clear
+            </button>
+            <button
+              className='explorer-filter-set-workspace__action-button'
+              type='button'
+              onClick={handleClearAll}
+              disabled={Object.keys(workspace.all).length < 2}
+            >
+              Clear all
             </button>
             <button
               className='explorer-filter-set-workspace__action-button'
