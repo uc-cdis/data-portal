@@ -161,97 +161,101 @@ function ExplorerFilterSetWorkspace() {
             </p>
           </div>
         ) : (
-          <div>
-            <button
-              className='explorer-filter-set-workspace__action-button'
-              type='button'
-              onClick={handleCreate}
-              disabled={disableNew}
-              title={
-                disableNew
-                  ? 'No new query if queries without filter exist'
-                  : undefined
-              }
-            >
-              New
-            </button>
-            <button
-              className='explorer-filter-set-workspace__action-button'
-              type='button'
-              onClick={handleDuplicate}
-              disabled={checkIfFilterEmpty(
-                (workspace.active.filterSet ?? filterSets.empty).filter
-              )}
-            >
-              Duplicate
-            </button>
-            <button
-              className='explorer-filter-set-workspace__action-button'
-              type='button'
-              onClick={() => setActionFormType('LOAD')}
-              disabled={filterSets.all.length < 1}
-            >
-              Load
-            </button>
-            <button
-              className='explorer-filter-set-workspace__action-button'
-              type='button'
-              onClick={() => setActionFormType('SAVE')}
-              disabled={checkIfFilterEmpty(
-                (workspace.active.filterSet ?? filterSets.empty).filter
-              )}
-            >
-              Save
-            </button>
-            <button
-              className='explorer-filter-set-workspace__action-button'
-              type='button'
-              onClick={handleReset}
-              disabled={
-                filterSets.active === undefined ||
-                JSON.stringify(filterSets.active.filter) ===
-                  JSON.stringify(workspace.active.filterSet.filter)
-              }
-            >
-              Reset
-            </button>
-            <button
-              className='explorer-filter-set-workspace__action-button'
-              type='button'
-              onClick={handleClear}
-              disabled={checkIfFilterEmpty(
-                (workspace.active.filterSet ?? filterSets.empty).filter
-              )}
-            >
-              Clear
-            </button>
-            <button
-              className='explorer-filter-set-workspace__action-button'
-              type='button'
-              onClick={() => setActionFormType('CLEAR-ALL')}
-              disabled={Object.keys(workspace.all).length < 2}
-            >
-              Clear all
-            </button>
-            <button
-              className='explorer-filter-set-workspace__action-button'
-              type='button'
-              onClick={() => setActionFormType('DELETE')}
-              disabled={
-                !('id' in (workspace.active.filterSet ?? filterSets.empty))
-              }
-            >
-              Delete
-            </button>
-            <button
-              className='explorer-filter-set-workspace__action-button'
-              type='button'
-              onClick={handleRemove}
-              disabled={workspace.size < 2}
-            >
-              Remove
-            </button>
-          </div>
+          <>
+            <div className='explorer-filter-set-workspace__action-button-group'>
+              <button
+                className='explorer-filter-set-workspace__action-button'
+                type='button'
+                onClick={handleCreate}
+                disabled={disableNew}
+                title={
+                  disableNew
+                    ? 'No new query if queries without filter exist'
+                    : undefined
+                }
+              >
+                New
+              </button>
+              <button
+                className='explorer-filter-set-workspace__action-button'
+                type='button'
+                onClick={handleDuplicate}
+                disabled={checkIfFilterEmpty(
+                  (workspace.active.filterSet ?? filterSets.empty).filter
+                )}
+              >
+                Duplicate
+              </button>
+              <button
+                className='explorer-filter-set-workspace__action-button'
+                type='button'
+                onClick={handleRemove}
+                disabled={workspace.size < 2}
+              >
+                Remove
+              </button>
+              <button
+                className='explorer-filter-set-workspace__action-button'
+                type='button'
+                onClick={handleClear}
+                disabled={checkIfFilterEmpty(
+                  (workspace.active.filterSet ?? filterSets.empty).filter
+                )}
+              >
+                Clear
+              </button>
+              <button
+                className='explorer-filter-set-workspace__action-button'
+                type='button'
+                onClick={() => setActionFormType('CLEAR-ALL')}
+                disabled={Object.keys(workspace.all).length < 2}
+              >
+                Clear all
+              </button>
+            </div>
+            <div className='explorer-filter-set-workspace__action-button-group'>
+              <button
+                className='explorer-filter-set-workspace__action-button'
+                type='button'
+                onClick={() => setActionFormType('LOAD')}
+                disabled={filterSets.all.length < 1}
+              >
+                Load
+              </button>
+              <button
+                className='explorer-filter-set-workspace__action-button'
+                type='button'
+                onClick={() => setActionFormType('SAVE')}
+                disabled={checkIfFilterEmpty(
+                  (workspace.active.filterSet ?? filterSets.empty).filter
+                )}
+              >
+                Save
+              </button>
+              <button
+                className='explorer-filter-set-workspace__action-button'
+                type='button'
+                onClick={handleReset}
+                disabled={
+                  filterSets.active === undefined ||
+                  JSON.stringify(filterSets.active.filter) ===
+                    JSON.stringify(workspace.active.filterSet.filter)
+                }
+              >
+                Reset
+              </button>
+              <button
+                className='explorer-filter-set-workspace__action-button'
+                type='button'
+                onClick={() => setActionFormType('DELETE')}
+                disabled={
+                  !('id' in (workspace.active.filterSet ?? filterSets.empty))
+                }
+              >
+                Delete
+              </button>
+            </div>
+          </>
         )}
       </header>
       <main>

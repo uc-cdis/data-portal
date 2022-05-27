@@ -21,10 +21,11 @@
   white-space: nowrap;
 }
 
-.explorer-filter-set-workspace > header > h2::after {
-  border-left: 1px solid var(--g3-color__lightgray);
+.explorer-filter-set-workspace
+  .explorer-filter-set-workspace__action-button-group::before {
+  border-right: 1px solid var(--g3-color__lightgray);
   content: '';
-  margin-left: 10px;
+  margin: 0 0.5rem;
 }
 
 .explorer-filter-set-workspace > main {
