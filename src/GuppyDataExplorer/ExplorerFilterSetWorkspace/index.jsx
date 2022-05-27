@@ -21,7 +21,7 @@ import './ExplorerFilterSetWorkspace.css';
 
 function ExplorerFilterSetWorkspace() {
   const filterInfo = useExplorerConfig().current.filterConfig.info;
-  const { handleFilterChange } = useExplorerState();
+  const { handleFilterChange, handleFilterClear } = useExplorerState();
   const filterSets = useExplorerFilterSets();
   const workspace = useFilterSetWorkspace();
   useEffect(() => {
@@ -205,6 +205,16 @@ function ExplorerFilterSetWorkspace() {
               }
             >
               Reset
+            </button>
+            <button
+              className='explorer-filter-set-workspace__action-button'
+              type='button'
+              onClick={handleFilterClear}
+              disabled={checkIfFilterEmpty(
+                (workspace.active.filterSet ?? filterSets.empty).filter
+              )}
+            >
+              Clear
             </button>
             <button
               className='explorer-filter-set-workspace__action-button'
