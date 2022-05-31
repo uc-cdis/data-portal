@@ -34,7 +34,9 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { all: { ...state.all, [id]: filterSet } };
+      const all = { ...state.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { all, size };
     }
     case 'CLEAR-ALL': {
       const { id } = payload;
@@ -42,7 +44,9 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { all: { [id]: filterSet } };
+      const all = { [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { all, size };
     }
     case 'CREATE': {
       const { id } = payload;
@@ -50,7 +54,9 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { all: { ...state.all, [id]: filterSet } };
+      const all = { ...state.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { all, size };
     }
     case 'REMOVE': {
       const newState = cloneDeep(state);
@@ -64,7 +70,9 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { all: { ...newState.all, [id]: filterSet } };
+      const all = { ...newState.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { all, size };
     }
     case 'LOAD': {
       const { id } = payload;
@@ -72,14 +80,18 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { all: { ...state.all, [id]: filterSet } };
+      const all = { ...state.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { all, size };
     }
     case 'SAVE': {
       const { filterSet, id } = payload;
 
       payload.callback?.({ filterSet, id });
 
-      return { all: { ...state.all, [id]: filterSet } };
+      const all = { ...state.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { all, size };
     }
     case 'DUPLICATE': {
       const { newId } = payload;
@@ -87,7 +99,9 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id: newId });
 
-      return { all: { ...state.all, [newId]: filterSet } };
+      const all = { ...state.all, [newId]: filterSet };
+      const size = Object.keys(all).length;
+      return { all, size };
     }
     case 'UPDATE': {
       const { id, filter: newFilter } = payload;
@@ -95,7 +109,9 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { all: { ...state.all, [id]: filterSet } };
+      const all = { ...state.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { all, size };
     }
     default:
       return state;
@@ -256,7 +272,6 @@ export default function useFilterSetWorkspace() {
     () => ({
       ...wsState,
       active: { id, filterSet: wsState.all[id] },
-      size: Object.keys(wsState.all).length,
       clear,
       clearAll,
       create,

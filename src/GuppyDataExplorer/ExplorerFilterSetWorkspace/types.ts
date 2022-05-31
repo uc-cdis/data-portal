@@ -12,6 +12,7 @@ export type FilterSetWorkspaceState = {
   all: {
     [id: string]: ExplorerFilterSet | UnsavedExplorerFilterSet;
   };
+  size: number;
 };
 
 export type FilterSetWorkspaceActionCallback = (args: {

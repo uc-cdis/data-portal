@@ -50,7 +50,7 @@ export function retrieveWorkspaceState() {
     return JSON.parse(str);
   } catch (e) {
     if (e.message !== 'No stored query') console.error(e);
-    return { all: { [crypto.randomUUID()]: { filter: {} } } };
+    return { all: { [crypto.randomUUID()]: { filter: {} } }, size: 1 };
   }
 }
 
@@ -58,7 +58,7 @@ export function retrieveWorkspaceState() {
 export function initializeWorkspaceState(filter) {
   return checkIfFilterEmpty(filter)
     ? retrieveWorkspaceState()
-    : { all: { [crypto.randomUUID()]: { filter } } };
+    : { all: { [crypto.randomUUID()]: { filter } }, size: 1 };
 }
 
 /** @param {FilterSetWorkspaceState} state */
