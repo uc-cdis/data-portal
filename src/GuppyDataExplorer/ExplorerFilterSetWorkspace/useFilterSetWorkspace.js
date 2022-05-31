@@ -39,7 +39,7 @@ function reducer(state, action) {
       return { ...state, [id]: filterSet };
     }
     case 'CLEAR-ALL': {
-      const id = crypto.randomUUID();
+      const { id } = payload;
       const filterSet = EMPTY_WORKSPACE_FILTERSET;
 
       payload.callback?.({ filterSet, id });
@@ -47,7 +47,7 @@ function reducer(state, action) {
       return { [id]: filterSet };
     }
     case 'CREATE': {
-      const id = crypto.randomUUID();
+      const { id } = payload;
       const filterSet = EMPTY_WORKSPACE_FILTERSET;
 
       payload.callback?.({ filterSet, id });
@@ -60,7 +60,7 @@ function reducer(state, action) {
 
       const [firstEntry] = Object.entries(newState);
       const [id, filterSet] = firstEntry ?? [
-        crypto.randomUUID(),
+        payload.newId,
         EMPTY_WORKSPACE_FILTERSET,
       ];
 
@@ -69,7 +69,7 @@ function reducer(state, action) {
       return { ...newState, [id]: filterSet };
     }
     case 'LOAD': {
-      const id = payload.id ?? crypto.randomUUID();
+      const { id } = payload;
       const filterSet = cloneDeep(payload.filterSet);
 
       payload.callback?.({ filterSet, id });
@@ -84,12 +84,12 @@ function reducer(state, action) {
       return { ...state, [id]: filterSet };
     }
     case 'DUPLICATE': {
-      const id = crypto.randomUUID();
+      const { newId } = payload;
       const filterSet = { filter: cloneDeep(state[payload.id].filter) };
 
-      payload.callback?.({ filterSet, id });
+      payload.callback?.({ filterSet, id: newId });
 
-      return { ...state, [id]: filterSet };
+      return { ...state, [newId]: filterSet };
     }
     case 'UPDATE': {
       const { id, filter: newFilter } = payload;
@@ -138,6 +138,7 @@ export default function useFilterSetWorkspace() {
     dispatch({
       type: 'CLEAR-ALL',
       payload: {
+        id: crypto.randomUUID(),
         callback(args) {
           setId(args.id);
           callback?.(args.filterSet);
@@ -150,6 +151,7 @@ export default function useFilterSetWorkspace() {
     dispatch({
       type: 'CREATE',
       payload: {
+        id: crypto.randomUUID(),
         callback(args) {
           setId(args.id);
           callback?.(args.filterSet);
@@ -163,6 +165,7 @@ export default function useFilterSetWorkspace() {
       type: 'DUPLICATE',
       payload: {
         id,
+        newId: crypto.randomUUID(),
         callback(args) {
           setId(args.id);
           callback?.(args.filterSet);
@@ -180,7 +183,7 @@ export default function useFilterSetWorkspace() {
     dispatch({
       type: 'LOAD',
       payload: {
-        id: shouldOverwrite ? id : undefined,
+        id: shouldOverwrite ? id : crypto.randomUUID(),
         filterSet,
         callback(args) {
           setId(args.id);
@@ -214,6 +217,7 @@ export default function useFilterSetWorkspace() {
       type: 'REMOVE',
       payload: {
         id,
+        newId: crypto.randomUUID(),
         callback(args) {
           setId(args.id);
           callback?.(args.filterSet);

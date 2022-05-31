@@ -28,6 +28,7 @@ type FilterSetWorkspaceClearAction = {
 type FilterSetWorkspaceClearAllAction = {
   type: 'CLEAR-ALL';
   payload: {
+    id: string;
     callback?: FilterSetWorkspaceActionCallback;
   };
 };
@@ -35,6 +36,7 @@ type FilterSetWorkspaceClearAllAction = {
 type FilterSetWorkspaceCreactAction = {
   type: 'CREATE';
   payload: {
+    id: string;
     callback?: FilterSetWorkspaceActionCallback;
   };
 };
@@ -43,6 +45,7 @@ type FilterSetWorkspaceDuplicateAction = {
   type: 'DUPLICATE';
   payload: {
     id: string;
+    newId: string;
     callback?: FilterSetWorkspaceActionCallback;
   };
 };
@@ -69,6 +72,7 @@ type FilterSetWorkspaceRemoveAction = {
   type: 'REMOVE';
   payload: {
     id: string;
+    newId: string;
     callback?: FilterSetWorkspaceActionCallback;
   };
 };
