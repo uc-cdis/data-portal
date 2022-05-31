@@ -19,6 +19,9 @@ import {
  * @returns {void}
  */
 
+/** @type {UnsavedExplorerFilterSet} */
+const EMPTY_WORKSPACE_FILTERSET = { filter: {} };
+
 /**
  * @param {FilterSetWorkspaceState} state
  * @param {FilterSetWorkspaceAction} action
@@ -29,8 +32,7 @@ function reducer(state, action) {
   switch (type) {
     case 'CLEAR': {
       const { id } = payload;
-      /** @type {UnsavedExplorerFilterSet} */
-      const filterSet = { filter: {} };
+      const filterSet = EMPTY_WORKSPACE_FILTERSET;
 
       payload.callback?.({ filterSet, id });
 
@@ -38,8 +40,7 @@ function reducer(state, action) {
     }
     case 'CLEAR-ALL': {
       const id = crypto.randomUUID();
-      /** @type {UnsavedExplorerFilterSet} */
-      const filterSet = { filter: {} };
+      const filterSet = EMPTY_WORKSPACE_FILTERSET;
 
       payload.callback?.({ filterSet, id });
 
@@ -47,8 +48,7 @@ function reducer(state, action) {
     }
     case 'CREATE': {
       const id = crypto.randomUUID();
-      /** @type {UnsavedExplorerFilterSet} */
-      const filterSet = { filter: {} };
+      const filterSet = EMPTY_WORKSPACE_FILTERSET;
 
       payload.callback?.({ filterSet, id });
 
@@ -61,7 +61,7 @@ function reducer(state, action) {
       const [firstEntry] = Object.entries(newState);
       const [id, filterSet] = firstEntry ?? [
         crypto.randomUUID(),
-        { filter: {} },
+        EMPTY_WORKSPACE_FILTERSET,
       ];
 
       payload.callback?.({ filterSet, id });
