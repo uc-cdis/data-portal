@@ -9,7 +9,9 @@ export type UnsavedExplorerFilterSet = Pick<
 };
 
 export type FilterSetWorkspaceState = {
-  [key: string]: ExplorerFilterSet | UnsavedExplorerFilterSet;
+  all: {
+    [id: string]: ExplorerFilterSet | UnsavedExplorerFilterSet;
+  };
 };
 
 export type FilterSetWorkspaceActionCallback = (args: {

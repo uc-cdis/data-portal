@@ -34,7 +34,7 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { ...state, [id]: filterSet };
+      return { all: { ...state.all, [id]: filterSet } };
     }
     case 'CLEAR-ALL': {
       const { id } = payload;
@@ -42,7 +42,7 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { [id]: filterSet };
+      return { all: { [id]: filterSet } };
     }
     case 'CREATE': {
       const { id } = payload;
@@ -50,13 +50,13 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { ...state, [id]: filterSet };
+      return { all: { ...state.all, [id]: filterSet } };
     }
     case 'REMOVE': {
       const newState = cloneDeep(state);
-      delete newState[payload.id];
+      delete newState.all[payload.id];
 
-      const [firstEntry] = Object.entries(newState);
+      const [firstEntry] = Object.entries(newState.all);
       const [id, filterSet] = firstEntry ?? [
         payload.newId,
         createEmptyWorkspaceFilterSet(),
@@ -64,7 +64,7 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { ...newState, [id]: filterSet };
+      return { all: { ...newState.all, [id]: filterSet } };
     }
     case 'LOAD': {
       const { id } = payload;
@@ -72,14 +72,14 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { ...state, [id]: filterSet };
+      return { all: { ...state.all, [id]: filterSet } };
     }
     case 'SAVE': {
       const { filterSet, id } = payload;
 
       payload.callback?.({ filterSet, id });
 
-      return { ...state, [id]: filterSet };
+      return { all: { ...state.all, [id]: filterSet } };
     }
     case 'DUPLICATE': {
       const { newId } = payload;
@@ -87,7 +87,7 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id: newId });
 
-      return { ...state, [newId]: filterSet };
+      return { all: { ...state.all, [newId]: filterSet } };
     }
     case 'UPDATE': {
       const { id, filter: newFilter } = payload;
@@ -95,7 +95,7 @@ function reducer(state, action) {
 
       payload.callback?.({ filterSet, id });
 
-      return { ...state, [id]: filterSet };
+      return { all: { ...state.all, [id]: filterSet } };
     }
     default:
       return state;
@@ -110,11 +110,11 @@ export default function useFilterSetWorkspace() {
   );
   useEffect(() => {
     // sync filter UI with non-empty initial workspace filter
-    const values = Object.values(initialWsState);
+    const values = Object.values(initialWsState.all);
     if (values.length > 1 || !checkIfFilterEmpty(values[0].filter))
       handleFilterChange(values[0].filter);
   }, []);
-  const [id, setId] = useState(Object.keys(initialWsState)[0]);
+  const [id, setId] = useState(Object.keys(initialWsState.all)[0]);
   const [wsState, dispatch] = useReducer(reducer, initialWsState);
   useEffect(() => storeWorkspaceState(wsState), [wsState]);
 
@@ -254,9 +254,9 @@ export default function useFilterSetWorkspace() {
 
   return useMemo(
     () => ({
-      active: { id, filterSet: wsState[id] },
-      all: wsState,
-      size: Object.keys(wsState).length,
+      ...wsState,
+      active: { id, filterSet: wsState.all[id] },
+      size: Object.keys(wsState.all).length,
       clear,
       clearAll,
       create,

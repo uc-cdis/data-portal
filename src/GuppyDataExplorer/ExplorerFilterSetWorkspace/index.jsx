@@ -71,7 +71,7 @@ function ExplorerFilterSetWorkspace() {
   }
   /** @param {ExplorerFilterSet} loaded */
   function handleLoad(loaded) {
-    const foundId = findFilterSetIdInWorkspaceState(loaded.id, workspace.all);
+    const foundId = findFilterSetIdInWorkspaceState(loaded.id, workspace);
     if (foundId !== undefined) {
       workspace.use(foundId, updateFilterSet);
     } else {
