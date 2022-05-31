@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useReducer } from 'react';
 import cloneDeep from 'lodash.clonedeep';
 import { useExplorerState } from '../ExplorerStateContext';
 import {
@@ -29,38 +29,41 @@ function reducer(state, action) {
   const { type, payload } = action;
   switch (type) {
     case 'CLEAR': {
-      const { id } = payload;
+      const { id } = state.active;
       const filterSet = createEmptyWorkspaceFilterSet();
 
-      payload.callback?.({ filterSet, id });
+      const active = { filterSet, id };
+      payload.callback?.(active);
 
       const all = { ...state.all, [id]: filterSet };
       const size = Object.keys(all).length;
-      return { all, size };
+      return { active, all, size };
     }
     case 'CLEAR-ALL': {
       const { id } = payload;
       const filterSet = createEmptyWorkspaceFilterSet();
 
-      payload.callback?.({ filterSet, id });
+      const active = { filterSet, id };
+      payload.callback?.(active);
 
       const all = { [id]: filterSet };
       const size = Object.keys(all).length;
-      return { all, size };
+      return { active, all, size };
     }
     case 'CREATE': {
       const { id } = payload;
       const filterSet = createEmptyWorkspaceFilterSet();
 
-      payload.callback?.({ filterSet, id });
+      const active = { filterSet, id };
+      payload.callback?.(active);
 
       const all = { ...state.all, [id]: filterSet };
       const size = Object.keys(all).length;
-      return { all, size };
+      return { active, all, size };
     }
     case 'REMOVE': {
       const newState = cloneDeep(state);
-      delete newState.all[payload.id];
+      delete newState.all[state.active.id];
 
       const [firstEntry] = Object.entries(newState.all);
       const [id, filterSet] = firstEntry ?? [
@@ -68,58 +71,67 @@ function reducer(state, action) {
         createEmptyWorkspaceFilterSet(),
       ];
 
-      payload.callback?.({ filterSet, id });
+      const active = { filterSet, id };
+      payload.callback?.(active);
 
       const all = { ...newState.all, [id]: filterSet };
       const size = Object.keys(all).length;
-      return { all, size };
+      return { active, all, size };
     }
     case 'LOAD': {
-      const { id } = payload;
+      const id = payload.id ?? state.active.id;
       const filterSet = cloneDeep(payload.filterSet);
 
-      payload.callback?.({ filterSet, id });
+      const active = { filterSet, id };
+      payload.callback?.(active);
 
       const all = { ...state.all, [id]: filterSet };
       const size = Object.keys(all).length;
-      return { all, size };
+      return { active, all, size };
     }
     case 'SAVE': {
-      const { filterSet, id } = payload;
+      const { id } = state.active;
+      const { filterSet } = payload;
 
-      payload.callback?.({ filterSet, id });
+      const active = { filterSet, id };
+      payload.callback?.(active);
 
       const all = { ...state.all, [id]: filterSet };
       const size = Object.keys(all).length;
-      return { all, size };
+      return { active, all, size };
     }
     case 'DUPLICATE': {
+      const { id } = state.active;
       const { newId } = payload;
-      const filterSet = { filter: cloneDeep(state.all[payload.id].filter) };
+      const filterSet = { filter: cloneDeep(state.all[id].filter) };
 
-      payload.callback?.({ filterSet, id: newId });
+      const active = { filterSet, id: newId };
+      payload.callback?.(active);
 
       const all = { ...state.all, [newId]: filterSet };
       const size = Object.keys(all).length;
-      return { all, size };
+      return { active, all, size };
     }
     case 'UPDATE': {
-      const { id, filter: newFilter } = payload;
+      const { id } = state.active;
+      const { filter: newFilter } = payload;
       const filterSet = { ...state.all[id], filter: cloneDeep(newFilter) };
 
-      payload.callback?.({ filterSet, id });
+      const active = { filterSet, id };
+      payload.callback?.(active);
 
       const all = { ...state.all, [id]: filterSet };
       const size = Object.keys(all).length;
-      return { all, size };
+      return { active, all, size };
     }
     case 'USE': {
       const { id } = payload;
       const filterSet = state.all[id];
 
-      payload.callback?.({ filterSet, id });
+      const active = { filterSet, id };
+      payload.callback?.(active);
 
-      return state;
+      return { ...state, active };
     }
     default:
       return state;
@@ -134,11 +146,9 @@ export default function useFilterSetWorkspace() {
   );
   useEffect(() => {
     // sync filter UI with non-empty initial workspace filter
-    const values = Object.values(initialWsState.all);
-    if (values.length > 1 || !checkIfFilterEmpty(values[0].filter))
-      handleFilterChange(values[0].filter);
+    if (!checkIfFilterEmpty(initialWsState.active.filterSet.filter))
+      handleFilterChange(initialWsState.active.filterSet.filter);
   }, []);
-  const [id, setId] = useState(Object.keys(initialWsState.all)[0]);
   const [wsState, dispatch] = useReducer(reducer, initialWsState);
   useEffect(() => storeWorkspaceState(wsState), [wsState]);
 
@@ -147,9 +157,7 @@ export default function useFilterSetWorkspace() {
     dispatch({
       type: 'CLEAR',
       payload: {
-        id,
         callback(args) {
-          setId(args.id);
           callback?.(args.filterSet);
         },
       },
@@ -162,7 +170,6 @@ export default function useFilterSetWorkspace() {
       payload: {
         id: crypto.randomUUID(),
         callback(args) {
-          setId(args.id);
           callback?.(args.filterSet);
         },
       },
@@ -175,7 +182,6 @@ export default function useFilterSetWorkspace() {
       payload: {
         id: crypto.randomUUID(),
         callback(args) {
-          setId(args.id);
           callback?.(args.filterSet);
         },
       },
@@ -186,10 +192,8 @@ export default function useFilterSetWorkspace() {
     dispatch({
       type: 'DUPLICATE',
       payload: {
-        id,
         newId: crypto.randomUUID(),
         callback(args) {
-          setId(args.id);
           callback?.(args.filterSet);
         },
       },
@@ -205,10 +209,9 @@ export default function useFilterSetWorkspace() {
     dispatch({
       type: 'LOAD',
       payload: {
-        id: shouldOverwrite ? id : crypto.randomUUID(),
+        id: shouldOverwrite ? undefined : crypto.randomUUID(),
         filterSet,
         callback(args) {
-          setId(args.id);
           callback?.(args.filterSet);
         },
       },
@@ -223,10 +226,8 @@ export default function useFilterSetWorkspace() {
     dispatch({
       type: 'SAVE',
       payload: {
-        id,
         filterSet,
         callback(args) {
-          setId(args.id);
           callback?.(args.filterSet);
         },
       },
@@ -238,10 +239,8 @@ export default function useFilterSetWorkspace() {
     dispatch({
       type: 'REMOVE',
       payload: {
-        id,
         newId: crypto.randomUUID(),
         callback(args) {
-          setId(args.id);
           callback?.(args.filterSet);
         },
       },
@@ -256,10 +255,8 @@ export default function useFilterSetWorkspace() {
     dispatch({
       type: 'UPDATE',
       payload: {
-        id,
         filter: newFilter,
         callback(args) {
-          setId(args.id);
           callback?.(args.filterSet);
         },
       },
@@ -277,7 +274,6 @@ export default function useFilterSetWorkspace() {
       payload: {
         id: newId,
         callback(args) {
-          setId(args.id);
           callback?.(args.filterSet);
         },
       },
@@ -287,7 +283,6 @@ export default function useFilterSetWorkspace() {
   return useMemo(
     () => ({
       ...wsState,
-      active: { id, filterSet: wsState.all[id] },
       clear,
       clearAll,
       create,
@@ -298,6 +293,6 @@ export default function useFilterSetWorkspace() {
       update,
       use,
     }),
-    [id, wsState]
+    [wsState]
   );
 }

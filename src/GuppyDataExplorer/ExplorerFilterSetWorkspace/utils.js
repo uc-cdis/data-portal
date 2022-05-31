@@ -53,7 +53,7 @@ export function retrieveWorkspaceState() {
 
     const id = crypto.randomUUID();
     const filterSet = { filter: {} };
-    return { all: { [id]: filterSet }, size: 1 };
+    return { active: { filterSet, id }, all: { [id]: filterSet }, size: 1 };
   }
 }
 
@@ -63,7 +63,7 @@ export function initializeWorkspaceState(filter) {
 
   const id = crypto.randomUUID();
   const filterSet = { filter };
-  return { all: { [id]: filterSet }, size: 1 };
+  return { active: { filterSet, id }, all: { [id]: filterSet }, size: 1 };
 }
 
 /** @param {FilterSetWorkspaceState} state */
