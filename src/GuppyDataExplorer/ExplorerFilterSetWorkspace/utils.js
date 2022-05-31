@@ -50,15 +50,20 @@ export function retrieveWorkspaceState() {
     return JSON.parse(str);
   } catch (e) {
     if (e.message !== 'No stored query') console.error(e);
-    return { all: { [crypto.randomUUID()]: { filter: {} } }, size: 1 };
+
+    const id = crypto.randomUUID();
+    const filterSet = { filter: {} };
+    return { all: { [id]: filterSet }, size: 1 };
   }
 }
 
 /** @param {ExplorerFilter} filter */
 export function initializeWorkspaceState(filter) {
-  return checkIfFilterEmpty(filter)
-    ? retrieveWorkspaceState()
-    : { all: { [crypto.randomUUID()]: { filter } }, size: 1 };
+  if (checkIfFilterEmpty(filter)) return retrieveWorkspaceState();
+
+  const id = crypto.randomUUID();
+  const filterSet = { filter };
+  return { all: { [id]: filterSet }, size: 1 };
 }
 
 /** @param {FilterSetWorkspaceState} state */
