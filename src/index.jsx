@@ -41,6 +41,7 @@ import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
 import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
+import ExternalFooter from './components/layout/ExternalFooter';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
@@ -508,10 +509,14 @@ async function init() {
                   />
                 </Switch>
               </div>
-              <ReduxFooter
-                logos={components.footerLogos}
-                privacyPolicy={components.privacyPolicy}
-              />
+              {
+                components.footer.externalURL ?
+                <ExternalFooter url={components.footer.externalURL}/>:
+                <ReduxFooter
+                  logos={components.footerLogos}
+                  privacyPolicy={components.privacyPolicy}
+                />
+              }
             </div>
           </BrowserRouter>
         </ThemeProvider>

@@ -365,6 +365,14 @@ const handleExportToWorkspaceClick = async (
       }
     }
   });
+
+  const projectNumber = selectedResources.map((study) => study.project_number);
+  const studyName = selectedResources.map((study) => study.study_name);
+  datadogRum.addAction('exportToWorkspace', {
+    manifestDownloadProjectNumber: projectNumber,
+    manifestDownloadStudyName: studyName,
+  });
+
   // post selected resources to manifestservice
   const res = await fetchWithCreds({
     path: `${manifestServiceApiPath}`,
