@@ -4,7 +4,7 @@ import {
     Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch, Popconfirm
 } from 'antd';
 import './GWASUIApp.css';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useQueries, useMutation } from 'react-query';
 import { headers, fetchAndSetCsrfToken } from '../../configs';
 import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath } from '../../localconf';
 import GWASWorkflowList from './GWASWorkflowList';
@@ -31,10 +31,14 @@ const steps = [
     },
     {
         title: 'Step 4',
-        description: 'Set workflow parameters and remove unwanted covariates',
+        description: 'Review your covariate selections',
     },
     {
         title: 'Step 5',
+        description: 'Set workflow parameters and remove unwanted covariates',
+    },
+    {
+        title: 'Step 6',
         description: 'Submit GWAS job',
     },
 ];
@@ -61,6 +65,7 @@ const CaseControlGWAS = (props) => {
 
     const [selectedCovariates, setSelectedCovariates] = useState([]);
     const [selectedCovariateIds, setSelectedCovariateIds] = useState([]);
+    const [selectedCovariateVars, setSelectedCovariateVars] = useState([]);
 
     const [imputationScore, setImputationScore] = useState(0.3);
     const [mafThreshold, setMafThreshold] = useState(0.01);
@@ -110,7 +115,7 @@ const CaseControlGWAS = (props) => {
     }
 
     async function fetchCaseConceptStatsByHare() {
-        var conceptIds = [...selectedCovariates].map((val) => val.concept_id);
+        const conceptIds = [...selectedCovariates].map((val) => val.concept_id);
         const conceptIdsPayload = { ConceptIds: conceptIds };
         const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${caseCohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
         const reqBody = {
@@ -124,7 +129,7 @@ const CaseControlGWAS = (props) => {
     }
 
     async function fetchControlConceptStatsByHare() {
-        var conceptIds = [...selectedCovariates].map((val) => val.concept_id);
+        const conceptIds = [...selectedCovariates].map((val) => val.concept_id);
         const conceptIdsPayload = { ConceptIds: conceptIds };
         const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${controlCohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
         const reqBody = {
@@ -286,6 +291,112 @@ const CaseControlGWAS = (props) => {
         );
     };
 
+    function fetchConceptStatsCase() {
+        return fetchConceptStats(caseCohortDefinitionId);
+    }
+
+    function fetchConceptStatsControl() {
+        return fetchConceptStats(controlCohortDefinitionId);
+    }
+
+    async function fetchConceptStats(cohortDefinitionId) {
+        const conceptStatsVars = { ConceptIds: selectedCovariateVars };
+        const conceptStatsEndpoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
+        const reqBody = {
+            method: 'POST',
+            credentials: 'include',
+            headers,
+            body: JSON.stringify(conceptStatsVars),
+        };
+        const getConceptStats = await fetch(conceptStatsEndpoint, reqBody);
+        return getConceptStats.json();
+    }
+
+    const step4TableConfig = [
+        {
+            title: 'Concept ID',
+            dataIndex: 'concept_id',
+            key: 'concept_id',
+        },
+        {
+            title: 'Concept Name',
+            dataIndex: 'concept_name',
+            key: 'concept_name',
+        },
+        {
+            title: 'Missing in Case',
+            dataIndex: 'n_missing_ratio_case',
+            key: 'n_missing_ratio_case',
+            render: (_, record) => (
+                <span>{`${(record.n_missing_ratio_case * 100).toFixed(0)}%`}</span>
+            ),
+        },
+        {
+            title: 'Missing in Control',
+            dataIndex: 'n_missing_ratio_control',
+            key: 'n_missing_ratio_control',
+            render: (_, record) => (
+                <span>{`${(record.n_missing_ratio_control * 100).toFixed(0)}%`}</span>
+            ),
+        },
+    ];
+
+    function getMissingRatioForControl(concept_id, concepts) {
+        // iterate over concepts and return the n_missing_ratio for the
+        // concept where concept_id matches the givent concept_id
+        for (const concept_idx in concepts) {
+            const concept = concepts[concept_idx];
+            if (concept.concept_id === concept_id) {
+                return concept.n_missing_ratio;
+            }
+        }
+        throw Exception("Unexpected error: concept id not found on control set!");
+    }
+
+    const ReviewCovariates = () => {
+        const results = useQueries([
+            { queryKey: ['cohortstats', selectedCovariates, caseCohortDefinitionId], queryFn: fetchConceptStatsCase },
+            { queryKey: ['cohortstats', selectedCovariates, controlCohortDefinitionId], queryFn: fetchConceptStatsControl },
+          ]);
+        const statusCase = results[0].status;
+        const statusControl = results[1].status;
+        const dataCase = results[0].data;
+        const dataControl = results[1].data;
+
+        if (statusCase === 'loading' || statusControl === 'loading') {
+            return <Spinner />;
+        }
+        if (statusCase === 'error' || statusControl === 'error') {
+            return <React.Fragment>Error</React.Fragment>;
+        }
+        if (dataCase && dataControl) {
+            // fuse both datasets by adding a new "n_missing_ratio_control" attribute to dataCase based on
+            // what is found in dataControl for the same concept:
+            for (const concept_idx in dataCase.concepts) {
+                const concept = dataCase.concepts[concept_idx];
+                concept.n_missing_ratio_case = concept.n_missing_ratio;
+                concept.n_missing_ratio_control = getMissingRatioForControl(concept.concept_id, dataControl.concepts);
+            }
+            // after loop above, dataCase contains both case and control stats:
+            const data = dataCase;
+            return (
+                <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                    <hr />
+                    <h4 className='GWASUI-selectInstruction'>Review your covariates</h4>
+                    <div className='GWASUI-mainTable'>
+                        <Table
+                            className='GWASUI-review-table'
+                            rowKey='concept_id'
+                            pagination={{ pageSize: 10 }}
+                            columns={step4TableConfig}
+                            dataSource={data.concepts}
+                        />
+                    </div>
+                </Space>
+            );
+        }
+    };
+
     const ConceptStatsByHare = (gwasType) => {
         const { data, status } = useQuery(['conceptstatsbyhare', selectedCovariates], gwasType === "case" ? fetchCaseConceptStatsByHare : fetchControlConceptStatsByHare, queryConfig);
 
@@ -341,6 +452,7 @@ const CaseControlGWAS = (props) => {
         });
         setSelectedCovariateIds(remainingCovArr.map((c) => c.prefixed_concept_id));
         setSelectedCovariates(remainingCovArr);
+        setSelectedCovariateVars(remainingCovArr.map((c) => c.concept_id));
         form.setFieldsValue({
             covariates: remainingCovariates,
         });
@@ -491,12 +603,17 @@ const CaseControlGWAS = (props) => {
             }
             case 3: {
                 return (
-                    <CohortParameters></CohortParameters>
+                    <ReviewCovariates></ReviewCovariates>
                 );
             }
             case 4: {
                 return (
-                    <span>step 5</span>
+                    <CohortParameters></CohortParameters>
+                );
+            }
+            case 5: {
+                return (
+                    <span>step 6</span>
                 );
             }
         }
@@ -512,7 +629,7 @@ const CaseControlGWAS = (props) => {
             //     outcome: selectedConcepts[0].concept_name,
             // });
         }
-        if (current === 3) {
+        if (current === 4) {
             form.submit();
         }
         // based off current, make changes to local state variables
