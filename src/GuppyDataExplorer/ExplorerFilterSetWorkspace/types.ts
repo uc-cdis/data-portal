@@ -26,16 +26,13 @@ export type FilterSetWorkspaceActionCallback = (args: {
 
 type FilterSetWorkspaceClearAction = {
   type: 'CLEAR';
-  payload: {
-    callback?: FilterSetWorkspaceActionCallback;
-  };
+  payload: undefined;
 };
 
 type FilterSetWorkspaceClearAllAction = {
   type: 'CLEAR-ALL';
   payload: {
     id: string;
-    callback?: FilterSetWorkspaceActionCallback;
   };
 };
 
@@ -43,7 +40,6 @@ type FilterSetWorkspaceCreactAction = {
   type: 'CREATE';
   payload: {
     id: string;
-    callback?: FilterSetWorkspaceActionCallback;
   };
 };
 
@@ -51,7 +47,6 @@ type FilterSetWorkspaceDuplicateAction = {
   type: 'DUPLICATE';
   payload: {
     newId: string;
-    callback?: FilterSetWorkspaceActionCallback;
   };
 };
 
@@ -60,7 +55,6 @@ type FilterSetWorkspaceLoadAction = {
   payload: {
     id?: string;
     filterSet: ExplorerFilterSet;
-    callback?: FilterSetWorkspaceActionCallback;
   };
 };
 
@@ -68,7 +62,6 @@ type FilterSetWorkspaceSaveAction = {
   type: 'SAVE';
   payload: {
     filterSet: ExplorerFilterSet;
-    callback?: FilterSetWorkspaceActionCallback;
   };
 };
 
@@ -76,7 +69,6 @@ type FilterSetWorkspaceRemoveAction = {
   type: 'REMOVE';
   payload: {
     newId: string;
-    callback?: FilterSetWorkspaceActionCallback;
   };
 };
 
@@ -84,7 +76,6 @@ type FilterSetWorkspaceUpdateAction = {
   type: 'UPDATE';
   payload: {
     filter: ExplorerFilter;
-    callback?: FilterSetWorkspaceActionCallback;
   };
 };
 
@@ -92,7 +83,6 @@ type FilterSetWorkspaceUseAction = {
   type: 'USE';
   payload: {
     id: string;
-    callback?: FilterSetWorkspaceActionCallback;
   };
 };
 
