@@ -3,6 +3,7 @@ import cloneDeep from 'lodash.clonedeep';
 import { useExplorerState } from '../ExplorerStateContext';
 import {
   checkIfFilterEmpty,
+  createEmptyWorkspaceFilterSet,
   initializeWorkspaceState,
   storeWorkspaceState,
 } from './utils';
@@ -19,9 +20,6 @@ import {
  * @returns {void}
  */
 
-/** @type {UnsavedExplorerFilterSet} */
-const EMPTY_WORKSPACE_FILTERSET = { filter: {} };
-
 /**
  * @param {FilterSetWorkspaceState} state
  * @param {FilterSetWorkspaceAction} action
@@ -32,7 +30,7 @@ function reducer(state, action) {
   switch (type) {
     case 'CLEAR': {
       const { id } = payload;
-      const filterSet = EMPTY_WORKSPACE_FILTERSET;
+      const filterSet = createEmptyWorkspaceFilterSet();
 
       payload.callback?.({ filterSet, id });
 
@@ -40,7 +38,7 @@ function reducer(state, action) {
     }
     case 'CLEAR-ALL': {
       const { id } = payload;
-      const filterSet = EMPTY_WORKSPACE_FILTERSET;
+      const filterSet = createEmptyWorkspaceFilterSet();
 
       payload.callback?.({ filterSet, id });
 
@@ -48,7 +46,7 @@ function reducer(state, action) {
     }
     case 'CREATE': {
       const { id } = payload;
-      const filterSet = EMPTY_WORKSPACE_FILTERSET;
+      const filterSet = createEmptyWorkspaceFilterSet();
 
       payload.callback?.({ filterSet, id });
 
@@ -61,7 +59,7 @@ function reducer(state, action) {
       const [firstEntry] = Object.entries(newState);
       const [id, filterSet] = firstEntry ?? [
         payload.newId,
-        EMPTY_WORKSPACE_FILTERSET,
+        createEmptyWorkspaceFilterSet(),
       ];
 
       payload.callback?.({ filterSet, id });

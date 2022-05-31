@@ -79,3 +79,8 @@ export function findFilterSetIdInWorkspaceState(filterSetId, state) {
 
   return undefined;
 }
+
+/** @returns {import('./types').UnsavedExplorerFilterSet} */
+export function createEmptyWorkspaceFilterSet() {
+  return { filter: {} };
+}
