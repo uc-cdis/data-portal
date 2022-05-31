@@ -113,6 +113,14 @@ function reducer(state, action) {
       const size = Object.keys(all).length;
       return { all, size };
     }
+    case 'USE': {
+      const { id } = payload;
+      const filterSet = state.all[id];
+
+      payload.callback?.({ filterSet, id });
+
+      return state;
+    }
     default:
       return state;
   }
@@ -264,8 +272,16 @@ export default function useFilterSetWorkspace() {
    * @param {FilterSetWorkspaceMethodCallback} [callback]
    */
   function use(newId, callback) {
-    setId(newId);
-    callback?.(wsState[newId]);
+    dispatch({
+      type: 'USE',
+      payload: {
+        id: newId,
+        callback(args) {
+          setId(args.id);
+          callback?.(args.filterSet);
+        },
+      },
+    });
   }
 
   return useMemo(

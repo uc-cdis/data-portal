@@ -89,6 +89,14 @@ type FilterSetWorkspaceUpdateAction = {
   };
 };
 
+type FilterSetWorkspaceUseAction = {
+  type: 'USE';
+  payload: {
+    id: string;
+    callback?: FilterSetWorkspaceActionCallback;
+  };
+};
+
 export type FilterSetWorkspaceAction =
   | FilterSetWorkspaceClearAction
   | FilterSetWorkspaceClearAllAction
@@ -97,4 +105,5 @@ export type FilterSetWorkspaceAction =
   | FilterSetWorkspaceLoadAction
   | FilterSetWorkspaceSaveAction
   | FilterSetWorkspaceRemoveAction
-  | FilterSetWorkspaceUpdateAction;
+  | FilterSetWorkspaceUpdateAction
+  | FilterSetWorkspaceUseAction;
