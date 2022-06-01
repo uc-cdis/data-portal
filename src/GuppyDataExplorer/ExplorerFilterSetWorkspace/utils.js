@@ -1,6 +1,9 @@
+import cloneDeep from 'lodash.clonedeep';
+
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
 /** @typedef {import("../types").ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').FilterSetWorkspaceState} FilterSetWorkspaceState */
+/** @typedef {import('./types').FilterSetWorkspaceAction} FilterSetWorkspaceAction */
 
 /**
  * @param {Object} args
@@ -88,4 +91,104 @@ export function findFilterSetIdInWorkspaceState(filterSetId, state) {
 /** @returns {import('./types').UnsavedExplorerFilterSet} */
 export function createEmptyWorkspaceFilterSet() {
   return { filter: {} };
+}
+
+/**
+ * @param {FilterSetWorkspaceState} state
+ * @param {FilterSetWorkspaceAction} action
+ * @returns {FilterSetWorkspaceState}
+ */
+export function workspaceReducer(state, action) {
+  const { type, payload } = action;
+  switch (type) {
+    case 'CLEAR': {
+      const { id } = state.active;
+      const filterSet = createEmptyWorkspaceFilterSet();
+
+      const active = { filterSet, id };
+      const all = { ...state.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { active, all, size };
+    }
+    case 'CLEAR-ALL': {
+      const id = payload.newId;
+      const filterSet = createEmptyWorkspaceFilterSet();
+
+      const active = { filterSet, id };
+      const all = { [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { active, all, size };
+    }
+    case 'CREATE': {
+      const id = payload.newId;
+      const filterSet = createEmptyWorkspaceFilterSet();
+
+      const active = { filterSet, id };
+      const all = { ...state.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { active, all, size };
+    }
+    case 'DUPLICATE': {
+      const { id } = state.active;
+      const { newId } = payload;
+      const filterSet = { filter: cloneDeep(state.all[id].filter) };
+
+      const active = { filterSet, id: newId };
+      const all = { ...state.all, [newId]: filterSet };
+      const size = Object.keys(all).length;
+      return { active, all, size };
+    }
+    case 'LOAD': {
+      const id = payload.newId ?? state.active.id;
+      const filterSet = cloneDeep(payload.filterSet);
+
+      const active = { filterSet, id };
+      const all = { ...state.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { active, all, size };
+    }
+    case 'REMOVE': {
+      const newState = cloneDeep(state);
+      delete newState.all[state.active.id];
+
+      const [firstEntry] = Object.entries(newState.all);
+      const [id, filterSet] = firstEntry ?? [
+        payload.newId,
+        createEmptyWorkspaceFilterSet(),
+      ];
+
+      const active = { filterSet, id };
+      const all = { ...newState.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { active, all, size };
+    }
+    case 'SAVE': {
+      const { id } = state.active;
+      const { filterSet } = payload;
+
+      const active = { filterSet, id };
+      const all = { ...state.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { active, all, size };
+    }
+    case 'UPDATE': {
+      const { id } = state.active;
+      const { filter: newFilter } = payload;
+      const filterSet = { ...state.all[id], filter: cloneDeep(newFilter) };
+
+      const active = { filterSet, id };
+      const all = { ...state.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { active, all, size };
+    }
+    case 'USE': {
+      const { id } = payload;
+      const filterSet = state.all[id];
+
+      const active = { filterSet, id };
+      return { ...state, active };
+    }
+    default:
+      return state;
+  }
 }
