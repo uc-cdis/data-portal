@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch, Popconfirm
+    Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch, Popconfirm, notification
 } from 'antd';
 import './GWASUIApp.css';
 import { useQuery, useMutation } from 'react-query';
@@ -11,6 +11,7 @@ import GWASWorkflowList from './GWASWorkflowList';
 import { fetchWithCreds } from '../../actions';
 import Spinner from "../../components/Spinner";
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import { CheckOutlined } from '@ant-design/icons';
 
 const { Step } = Steps;
 
@@ -65,6 +66,7 @@ const QuantitativeGWAS = (props) => {
     const [selectedPhenotype, setSelectedPhenotype] = useState(undefined);
     const [selectedCovariates, setSelectedCovariates] = useState([]);
     const [selectedHare, setSelectedHare] = useState("-select one-");
+    const [gwasJobName, setGwasJobName] = useState("");
 
     const onStep5FormSubmit = (values) => {
         setImputationScore(values.imputationCutoff);
@@ -422,12 +424,31 @@ const QuantitativeGWAS = (props) => {
         setCohortDefinitionId(undefined);
         setSelectedCohort(undefined);
         setSelectedHare("-select one-");
+        setGwasJobName("");
         props.refreshWorkflows();
     };
 
     const useSubmitJob = () => {
+        const openNotification = () => {
+            const key = `open${Date.now()}`;
+            const btn = (
+                <Button type="primary" size="small" onClick={() => notification.close(key)}>
+                    Confirm
+                </Button>
+            );
+            notification.open({
+                message: 'Successful Submission',
+                description:
+                    `${gwasJobName} job starting!`,
+                icon: (<CheckOutlined/>),
+                placement: 'bottom',
+                btn,
+                key,
+            });
+        };
         const submission = useMutation(fetchGwasSubmit, {
             onSuccess: () => {
+                openNotification();
                 resetFields();
             },
         });
@@ -437,17 +458,65 @@ const QuantitativeGWAS = (props) => {
     const GWASFormSubmit = () => {
         const submitJob = useSubmitJob();
 
+        const handleNameInputChange = (e) => {
+            setGwasJobName(e.target.value);
+        }
+
         return (
-            <Button
-                htmlType='submit'
-                type='primary'
-                onClick={(e) => {
-                    e.stopPropagation();
-                    submitJob.mutate();
-                }}
-            >
-                Submit
-            </Button>
+            <React.Fragment>
+                <div className="GWASUI-flexRow GWASUI-headerColor"><h2 className="GWASUI-title">Review Details</h2></div>
+                <div className="GWASUI-flexRow GWASUI-rowItem">
+                    <div className="GWASUI-flexCol GWASUI-flexHeader1">Number of PCs</div>
+                    <div className="GWASUI-flexCol">{numOfPC}</div>
+                    <div className="GWASUI-flexCol GWASUI-flexHeader2">MAF Cutoff</div>
+                    <div className="GWASUI-flexCol"> {mafThreshold}</div>
+                </div>
+                <div className="GWASUI-flexRow GWASUI-rowItem">
+                    <div className="GWASUI-flexCol GWASUI-flexHeader1">HARE Ancestry</div>
+                    <div className="GWASUI-flexCol">{selectedHare}</div>
+                    <div className="GWASUI-flexCol GWASUI-flexHeader2">Imputation Score Cutoff</div>
+                    <div className="GWASUI-flexCol">{imputationScore}</div>
+                </div>
+                <div className="GWASUI-flexRow GWASUI-rowItem">
+                    <div className="GWASUI-flexCol GWASUI-flexHeader1">Selected Cohort</div>
+                    <div className="GWASUI-flexCol">{selectedCohort?.cohort_name}</div>
+                    <div className="GWASUI-flexCol GWASUI-flexHeader2">Phenotype</div>
+                    <div className="GWASUI-flexCol">{selectedPhenotype?.concept_name}</div>
+                </div>
+                <div className="GWASUI-flexRow">
+                    <div className="GWASUI-flexCol GWASUI-rowItem">Covariates</div>
+                </div>
+                <div className="GWASUI-flexRow">{selectedCovariates.map((cov, key) => {
+                    return (
+                        <div>
+                            <li className="GWASUI-listItem" key={key}>{cov.concept_name}</li>
+                        </div>
+                    )
+                })}</div>
+                <div className="GWASUI-flexRow">
+                    <input
+                        type="text"
+                        autoFocus="autoFocus"
+                        className="GWASUI-nameInput"
+                        onChange={handleNameInputChange}
+                        value={gwasJobName}
+                        placeholder="Enter a job name..."
+                        style={{ width: '70%', height: '90%' }}
+                    />
+                    <div className="GWASUI-submitContainer">
+                        <Button
+                            htmlType='submit'
+                            type='primary'
+                            disabled={gwasJobName.length === 0}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                submitJob.mutate();
+                            }}
+                        >
+                            Submit
+                        </Button></div>
+                </div>
+            </React.Fragment>
         );
     };
 
@@ -572,9 +641,9 @@ const QuantitativeGWAS = (props) => {
                                     onStep5FormSubmit(values);
                                 }}
                             >
-                                <Form.Item {...tailLayout}>
-                                    <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
-                                </Form.Item>
+                                {/* <Form.Item {...tailLayout}> */}
+                                <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
+                                {/* </Form.Item> */}
                             </Form>
                         </div>
                     </React.Fragment>
@@ -641,6 +710,8 @@ const QuantitativeGWAS = (props) => {
                         Next
                     </Button>
                 )}
+                {/* added so "select diff gwas" btn retains center position on last page */}
+                {current === steps.length - 1 && (<div className="GWASUI-navBtn"></div>)}
             </div>
         </Space>
     );
