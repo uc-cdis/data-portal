@@ -124,7 +124,6 @@ describe('workspaceReducer', () => {
     const initialState = /** @type {FilterSetWorkspaceState} */ ({
       active: { filterSet: SIMPLE_FILTER_SET, id: 'foo' },
       all: { foo: SIMPLE_FILTER_SET },
-      size: 1,
     });
     const action =
       /** @type {import('./types').FilterSetWorkspaceClearAction} */ ({
@@ -145,7 +144,6 @@ describe('workspaceReducer', () => {
     const initialState = /** @type {FilterSetWorkspaceState} */ ({
       active: { filterSet: EMPTY_FILTER_SET, id: 'foo' },
       all: { foo: EMPTY_FILTER_SET },
-      size: 1,
     });
     const action =
       /** @type {import('./types').FilterSetWorkspaceClearAllAction} */ ({
@@ -158,7 +156,6 @@ describe('workspaceReducer', () => {
       all: {
         [action.payload.newId]: EMPTY_FILTER_SET,
       },
-      size: 1,
     };
     expect(newState).toStrictEqual(expected);
   });
@@ -166,7 +163,6 @@ describe('workspaceReducer', () => {
     const initialState = /** @type {FilterSetWorkspaceState} */ ({
       active: { filterSet: SIMPLE_FILTER_SET, id: 'foo' },
       all: { foo: SIMPLE_FILTER_SET },
-      size: 1,
     });
     const action =
       /** @type {import('./types').FilterSetWorkspaceCreateAction} */ ({
@@ -180,7 +176,6 @@ describe('workspaceReducer', () => {
         ...initialState.all,
         [action.payload.newId]: EMPTY_FILTER_SET,
       },
-      size: initialState.size + 1,
     };
     expect(newState).toStrictEqual(expected);
   });
@@ -188,7 +183,6 @@ describe('workspaceReducer', () => {
     const initialState = /** @type {FilterSetWorkspaceState} */ ({
       active: { filterSet: SIMPLE_SAVED_FILTER_SET, id: 'foo' },
       all: { foo: SIMPLE_SAVED_FILTER_SET },
-      size: 1,
     });
     const action =
       /** @type {import('./types').FilterSetWorkspaceDuplicateAction} */ ({
@@ -202,7 +196,6 @@ describe('workspaceReducer', () => {
         ...initialState.all,
         [action.payload.newId]: SIMPLE_FILTER_SET,
       },
-      size: initialState.size + 1,
     };
     expect(newState).toStrictEqual(expected);
   });
@@ -210,7 +203,6 @@ describe('workspaceReducer', () => {
     const initialState = /** @type {FilterSetWorkspaceState} */ ({
       active: { filterSet: EMPTY_FILTER_SET, id: 'foo' },
       all: { foo: EMPTY_FILTER_SET },
-      size: 1,
     });
     const action =
       /** @type {import('./types').FilterSetWorkspaceLoadAction} */ ({
@@ -224,7 +216,6 @@ describe('workspaceReducer', () => {
         ...initialState.all,
         [action.payload.newId]: action.payload.filterSet,
       },
-      size: initialState.size + 1,
     };
     expect(newState).toStrictEqual(expected);
   });
@@ -232,7 +223,6 @@ describe('workspaceReducer', () => {
     const initialState = /** @type {FilterSetWorkspaceState} */ ({
       active: { filterSet: EMPTY_FILTER_SET, id: 'foo' },
       all: { foo: EMPTY_FILTER_SET },
-      size: 1,
     });
     const action =
       /** @type {import('./types').FilterSetWorkspaceLoadAction} */ ({
@@ -254,7 +244,6 @@ describe('workspaceReducer', () => {
     const initialState = /** @type {FilterSetWorkspaceState} */ ({
       active: { filterSet: SIMPLE_FILTER_SET, id: 'foo' },
       all: { foo: SIMPLE_FILTER_SET, bar: SIMPLE_FILTER_SET },
-      size: 2,
     });
     const action =
       /** @type {import('./types').FilterSetWorkspaceRemoveAction} */ ({
@@ -267,7 +256,6 @@ describe('workspaceReducer', () => {
       all: {
         bar: initialState.all.bar,
       },
-      size: initialState.size - 1,
     };
     expect(newState).toStrictEqual(expected);
   });
@@ -275,7 +263,6 @@ describe('workspaceReducer', () => {
     const initialState = /** @type {FilterSetWorkspaceState} */ ({
       active: { filterSet: SIMPLE_FILTER_SET, id: 'foo' },
       all: { foo: SIMPLE_FILTER_SET },
-      size: 1,
     });
     const action =
       /** @type {import('./types').FilterSetWorkspaceRemoveAction} */ ({
@@ -288,7 +275,6 @@ describe('workspaceReducer', () => {
       all: {
         [action.payload.newId]: EMPTY_FILTER_SET,
       },
-      size: 1,
     };
     expect(newState).toStrictEqual(expected);
   });
@@ -296,7 +282,6 @@ describe('workspaceReducer', () => {
     const initialState = /** @type {FilterSetWorkspaceState} */ ({
       active: { filterSet: EMPTY_FILTER_SET, id: 'foo' },
       all: { foo: EMPTY_FILTER_SET },
-      size: 1,
     });
     const action =
       /** @type {import('./types').FilterSetWorkspaceSaveAction} */ ({
@@ -318,7 +303,6 @@ describe('workspaceReducer', () => {
     const initialState = /** @type {FilterSetWorkspaceState} */ ({
       active: { filterSet: SIMPLE_FILTER_SET, id: 'foo' },
       all: { foo: SIMPLE_FILTER_SET },
-      size: 1,
     });
     const action =
       /** @type {import('./types').FilterSetWorkspaceUpdateAction} */ ({
@@ -349,7 +333,6 @@ describe('workspaceReducer', () => {
     const initialState = /** @type {FilterSetWorkspaceState} */ ({
       active: { filterSet: EMPTY_FILTER_SET, id: 'foo' },
       all: { foo: EMPTY_FILTER_SET, bar: EMPTY_FILTER_SET },
-      size: 2,
     });
     const action =
       /** @type {import('./types').FilterSetWorkspaceUseAction} */ ({

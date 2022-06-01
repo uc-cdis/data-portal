@@ -56,7 +56,7 @@ export function retrieveWorkspaceState() {
 
     const id = crypto.randomUUID();
     const filterSet = { filter: {} };
-    return { active: { filterSet, id }, all: { [id]: filterSet }, size: 1 };
+    return { active: { filterSet, id }, all: { [id]: filterSet } };
   }
 }
 
@@ -66,7 +66,7 @@ export function initializeWorkspaceState(filter) {
 
   const id = crypto.randomUUID();
   const filterSet = { filter };
-  return { active: { filterSet, id }, all: { [id]: filterSet }, size: 1 };
+  return { active: { filterSet, id }, all: { [id]: filterSet } };
 }
 
 /** @param {FilterSetWorkspaceState} state */
@@ -107,8 +107,7 @@ export function workspaceReducer(state, action) {
 
       const active = { filterSet, id };
       const all = { ...state.all, [id]: filterSet };
-      const size = Object.keys(all).length;
-      return { active, all, size };
+      return { active, all };
     }
     case 'CLEAR-ALL': {
       const id = payload.newId;
@@ -116,8 +115,7 @@ export function workspaceReducer(state, action) {
 
       const active = { filterSet, id };
       const all = { [id]: filterSet };
-      const size = Object.keys(all).length;
-      return { active, all, size };
+      return { active, all };
     }
     case 'CREATE': {
       const id = payload.newId;
@@ -125,8 +123,7 @@ export function workspaceReducer(state, action) {
 
       const active = { filterSet, id };
       const all = { ...state.all, [id]: filterSet };
-      const size = Object.keys(all).length;
-      return { active, all, size };
+      return { active, all };
     }
     case 'DUPLICATE': {
       const { id } = state.active;
@@ -135,8 +132,7 @@ export function workspaceReducer(state, action) {
 
       const active = { filterSet, id: newId };
       const all = { ...state.all, [newId]: filterSet };
-      const size = Object.keys(all).length;
-      return { active, all, size };
+      return { active, all };
     }
     case 'LOAD': {
       const id = payload.newId ?? state.active.id;
@@ -144,8 +140,7 @@ export function workspaceReducer(state, action) {
 
       const active = { filterSet, id };
       const all = { ...state.all, [id]: filterSet };
-      const size = Object.keys(all).length;
-      return { active, all, size };
+      return { active, all };
     }
     case 'REMOVE': {
       const newState = cloneDeep(state);
@@ -159,8 +154,7 @@ export function workspaceReducer(state, action) {
 
       const active = { filterSet, id };
       const all = { ...newState.all, [id]: filterSet };
-      const size = Object.keys(all).length;
-      return { active, all, size };
+      return { active, all };
     }
     case 'SAVE': {
       const { id } = state.active;
@@ -168,8 +162,7 @@ export function workspaceReducer(state, action) {
 
       const active = { filterSet, id };
       const all = { ...state.all, [id]: filterSet };
-      const size = Object.keys(all).length;
-      return { active, all, size };
+      return { active, all };
     }
     case 'UPDATE': {
       const { id } = state.active;
@@ -178,8 +171,7 @@ export function workspaceReducer(state, action) {
 
       const active = { filterSet, id };
       const all = { ...state.all, [id]: filterSet };
-      const size = Object.keys(all).length;
-      return { active, all, size };
+      return { active, all };
     }
     case 'USE': {
       const { id } = payload;

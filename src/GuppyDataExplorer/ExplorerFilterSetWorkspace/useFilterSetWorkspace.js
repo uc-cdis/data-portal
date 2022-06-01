@@ -104,6 +104,7 @@ export default function useFilterSetWorkspace() {
   return useMemo(
     () => ({
       ...state,
+      size: Object.keys(state.all).length,
       clear,
       clearAll,
       create,
