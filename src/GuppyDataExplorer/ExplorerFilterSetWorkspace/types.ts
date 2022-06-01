@@ -20,7 +20,6 @@ export type FilterSetWorkspaceState = {
 
 export type FilterSetWorkspaceClearAction = {
   type: 'CLEAR';
-  payload: undefined;
 };
 
 export type FilterSetWorkspaceClearAllAction = {

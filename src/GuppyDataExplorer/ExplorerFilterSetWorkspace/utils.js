@@ -99,8 +99,7 @@ export function createEmptyWorkspaceFilterSet() {
  * @returns {FilterSetWorkspaceState}
  */
 export function workspaceReducer(state, action) {
-  const { type, payload } = action;
-  switch (type) {
+  switch (action.type) {
     case 'CLEAR': {
       const { id } = state.active;
       const filterSet = createEmptyWorkspaceFilterSet();
@@ -110,7 +109,7 @@ export function workspaceReducer(state, action) {
       return { active, all };
     }
     case 'CLEAR-ALL': {
-      const id = payload.newId;
+      const id = action.payload.newId;
       const filterSet = createEmptyWorkspaceFilterSet();
 
       const active = { filterSet, id };
@@ -118,7 +117,7 @@ export function workspaceReducer(state, action) {
       return { active, all };
     }
     case 'CREATE': {
-      const id = payload.newId;
+      const id = action.payload.newId;
       const filterSet = createEmptyWorkspaceFilterSet();
 
       const active = { filterSet, id };
@@ -127,7 +126,7 @@ export function workspaceReducer(state, action) {
     }
     case 'DUPLICATE': {
       const { id } = state.active;
-      const { newId } = payload;
+      const { newId } = action.payload;
       const filterSet = { filter: cloneDeep(state.all[id].filter) };
 
       const active = { filterSet, id: newId };
@@ -135,8 +134,8 @@ export function workspaceReducer(state, action) {
       return { active, all };
     }
     case 'LOAD': {
-      const id = payload.newId ?? state.active.id;
-      const filterSet = cloneDeep(payload.filterSet);
+      const id = action.payload.newId ?? state.active.id;
+      const filterSet = cloneDeep(action.payload.filterSet);
 
       const active = { filterSet, id };
       const all = { ...state.all, [id]: filterSet };
@@ -148,7 +147,7 @@ export function workspaceReducer(state, action) {
 
       const [firstEntry] = Object.entries(newState.all);
       const [id, filterSet] = firstEntry ?? [
-        payload.newId,
+        action.payload.newId,
         createEmptyWorkspaceFilterSet(),
       ];
 
@@ -158,7 +157,7 @@ export function workspaceReducer(state, action) {
     }
     case 'SAVE': {
       const { id } = state.active;
-      const { filterSet } = payload;
+      const { filterSet } = action.payload;
 
       const active = { filterSet, id };
       const all = { ...state.all, [id]: filterSet };
@@ -166,7 +165,7 @@ export function workspaceReducer(state, action) {
     }
     case 'UPDATE': {
       const { id } = state.active;
-      const { filter: newFilter } = payload;
+      const { filter: newFilter } = action.payload;
       const filterSet = { ...state.all[id], filter: cloneDeep(newFilter) };
 
       const active = { filterSet, id };
@@ -174,7 +173,7 @@ export function workspaceReducer(state, action) {
       return { active, all };
     }
     case 'USE': {
-      const { id } = payload;
+      const { id } = action.payload;
       const filterSet = state.all[id];
 
       const active = { filterSet, id };

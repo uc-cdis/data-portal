@@ -38,7 +38,6 @@ export default function useFilterSetWorkspace() {
   function clear() {
     dispatch({
       type: 'CLEAR',
-      payload: undefined,
     });
   }
   function clearAll() {
