@@ -10,7 +10,7 @@ import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath } from '../../localconf
 import GWASWorkflowList from './GWASWorkflowList';
 import { fetchWithCreds } from '../../actions';
 import Spinner from "../../components/Spinner";
-
+import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 // the quantitative argo id is
 // gwas-template-wrapper-k5w9t and the tar GUID is dg.VA03/7484ce92-313b-4286-954c-b71ad5d9bf54
 
@@ -72,6 +72,7 @@ const CaseControlGWAS = (props) => {
     const [numOfPC, setNumOfPC] = useState(3);
     const [selectedCaseHare, setSelectedCaseHare] = useState(undefined);
     const [selectedControlHare, setSelectedControlHare] = useState(undefined);
+    const hareConceptId = 2090006880;
 
     async function fetchSources() {
         const sourcesEndpoint = `${cohortMiddlewarePath}sources`;
@@ -114,34 +115,6 @@ const CaseControlGWAS = (props) => {
         return getCovariates.json();
     }
 
-    async function fetchCaseConceptStatsByHare() {
-        const conceptIds = [...selectedCovariates].map((val) => val.concept_id);
-        const conceptIdsPayload = { ConceptIds: conceptIds };
-        const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${caseCohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
-        const reqBody = {
-            method: 'POST',
-            credentials: 'include',
-            headers,
-            body: JSON.stringify(conceptIdsPayload),
-        };
-        const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
-        return getConceptStats.json();
-    }
-
-    async function fetchControlConceptStatsByHare() {
-        const conceptIds = [...selectedCovariates].map((val) => val.concept_id);
-        const conceptIdsPayload = { ConceptIds: conceptIds };
-        const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${controlCohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
-        const reqBody = {
-            method: 'POST',
-            credentials: 'include',
-            headers,
-            body: JSON.stringify(conceptIdsPayload),
-        };
-        const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
-        return getConceptStats.json();
-    }
-
     const step1TableRowSelection = {
         type: 'radio',
         columnTitle: 'Select',
@@ -177,6 +150,9 @@ const CaseControlGWAS = (props) => {
         onChange: (_, selectedRows) => {
             setSelectedCovariateVars(selectedRows.map((item) => item.concept_id));
             setSelectedCovariates(selectedRows);
+            form.setFieldsValue({
+                covariates: selectedCovariates.map((val) => val.concept_name),
+            });
         },
     };
 
@@ -291,15 +267,8 @@ const CaseControlGWAS = (props) => {
         );
     };
 
-    function fetchConceptStatsCase() {
-        return fetchConceptStats(caseCohortDefinitionId);
-    }
 
-    function fetchConceptStatsControl() {
-        return fetchConceptStats(controlCohortDefinitionId);
-    }
-
-    async function fetchConceptStats(cohortDefinitionId) {
+    const fetchConceptStats = async (cohortDefinitionId) => {
         const conceptStatsVars = { ConceptIds: selectedCovariateVars };
         const conceptStatsEndpoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
         const reqBody = {
@@ -310,6 +279,15 @@ const CaseControlGWAS = (props) => {
         };
         const getConceptStats = await fetch(conceptStatsEndpoint, reqBody);
         return getConceptStats.json();
+    }
+
+
+    function fetchConceptStatsCase() {
+        return fetchConceptStats(caseCohortDefinitionId);
+    }
+
+    function fetchConceptStatsControl() {
+        return fetchConceptStats(controlCohortDefinitionId);
     }
 
     const step4TableConfig = [
@@ -357,7 +335,7 @@ const CaseControlGWAS = (props) => {
         const results = useQueries([
             { queryKey: ['cohortstats', selectedCovariates, caseCohortDefinitionId], queryFn: fetchConceptStatsCase },
             { queryKey: ['cohortstats', selectedCovariates, controlCohortDefinitionId], queryFn: fetchConceptStatsControl },
-          ]);
+        ]);
         const statusCase = results[0].status;
         const statusControl = results[1].status;
         const dataCase = results[0].data;
@@ -397,65 +375,99 @@ const CaseControlGWAS = (props) => {
         }
     };
 
-    const ConceptStatsByHare = (gwasType) => {
-        const { data, status } = useQuery(['conceptstatsbyhare', selectedCovariates], gwasType === "case" ? fetchCaseConceptStatsByHare : fetchControlConceptStatsByHare, queryConfig);
+    async function fetchConceptStatsByHare(cohortDefinitionId) {
+        var conceptIds = [...selectedCovariates].map((val) => val.concept_id);
+        const conceptIdsPayload = { ConceptIds: conceptIds };
+        const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
+        const reqBody = {
+            method: 'POST',
+            credentials: 'include',
+            headers,
+            body: JSON.stringify(conceptIdsPayload),
+        };
+        const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
+        return getConceptStats.json();
+    }
 
-        if (status === 'loading') {
+    function fetchCaseConceptStatsByHare() {
+        return fetchConceptStatsByHare(caseCohortDefinitionId);
+    }
+
+    function fetchControlConceptStatsByHare() {
+        return fetchConceptStatsByHare(controlCohortDefinitionId);
+    }
+
+    const ConceptsStatsByHare = () => {
+        const results = useQueries([
+            { queryKey: ['conceptsstats', selectedCovariates, caseCohortDefinitionId], queryFn: fetchCaseConceptStatsByHare },
+            { queryKey: ['conceptsstats', selectedCovariates, controlCohortDefinitionId], queryFn: fetchControlConceptStatsByHare },
+        ]);
+        // const { data, status } = useQuery(['conceptstatsbyhare', selectedCovariates], gwasType === "case" ? fetchCaseConceptStatsByHare : fetchControlConceptStatsByHare, queryConfig);
+        const statusCase = results[0].status;
+        const statusControl = results[1].status;
+        const dataCase = results[0].data;
+        const dataControl = results[1].data;
+
+        if (statusCase === 'loading' || statusControl === 'loading') {
             return <Spinner />;
         }
-        if (status === 'error') {
+        if (statusCase === 'error' || statusControl === 'error') {
             return <React.Fragment>Error</React.Fragment>;
         }
-        if (data) {
+        if (dataControl && dataCase) {
             // special case - endpoint returns empty result:
-            if (data.concept_breakdown == null) {
+            if (dataControl.concept_breakdown || dataCase.concept_breakdown == null) {
                 return <React.Fragment>Error: there are no subjects in this cohort that have data available on all the selected covariates
                     and phenotype. Please review your selections</React.Fragment>;
             }
             // normal scenario - there is breakdown data, so show in dropdown:
             return (
-                <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
-                    <Dropdown.Button rightIcon='dropdown' buttonType='secondary'>
-                        {selectedHare}
-                    </Dropdown.Button>
-                    <Dropdown.Menu>
-                        {
-                            data.concept_breakdown.map((datum) => {
-                                return (
-                                    <Dropdown.Item
-                                        key={`${datum.concept_value}`}
-                                        value={`${datum.concept_value}`}
-                                        onClick={() => {
-                                            gwasType === "case" ? setSelectedCaseHare(datum.concept_value) : setSelectedControlHare(datum.concept_value)
+                <div className="GWASUI-flexRow">
+                    <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
+                        <Dropdown.Button rightIcon='dropdown' buttonType='secondary'>
+                            {selectedCaseHare}
+                        </Dropdown.Button>
+                        <Dropdown.Menu>
+                            {
+                                dataCase.concept_breakdown.map((datum) => {
+                                    return (
+                                        <Dropdown.Item
+                                            key={`${datum.concept_value}`}
+                                            value={`${datum.concept_value}`}
+                                            onClick={() => setSelectedCaseHare(datum.concept_value)
                                             }
-                                        }
-                                    >
-                                        {<div>{datum.concept_value} {" (size:" + datum.persons_in_cohort_with_value + ")"}</div>}
-                                    </Dropdown.Item>
-                                );
-                            })
-                        }
-                    </Dropdown.Menu>
-                </Dropdown>
+                                        >
+                                            {<div>{datum.concept_value} {" (size:" + datum.persons_in_cohort_with_value + ")"}</div>}
+                                        </Dropdown.Item>
+                                    );
+                                })
+                            }
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
+                        <Dropdown.Button rightIcon='dropdown' buttonType='secondary'>
+                            {selectedControlHare}
+                        </Dropdown.Button>
+                        <Dropdown.Menu>
+                            {
+                                dataControl.concept_breakdown.map((datum) => {
+                                    return (
+                                        <Dropdown.Item
+                                            key={`${datum.concept_value}`}
+                                            value={`${datum.concept_value}`}
+                                            onClick={() => setSelectedControlHare(datum.concept_value)
+                                            }
+                                        >
+                                            {<div>{datum.concept_value} {" (size:" + datum.persons_in_cohort_with_value + ")"}</div>}
+                                        </Dropdown.Item>
+                                    );
+                                })
+                            }
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
             );
         }
-    };
-
-    const handleCovariateDelete = (remainingCovariates) => {
-        const remainingCovArr = [];
-        remainingCovariates.forEach((name) => {
-            selectedCovariates.forEach((covObj) => {
-                if (covObj.concept_name === name) {
-                    remainingCovArr.push(covObj);
-                }
-            });
-        });
-        setSelectedCovariateIds(remainingCovArr.map((c) => c.prefixed_concept_id));
-        setSelectedCovariates(remainingCovArr);
-        setSelectedCovariateVars(remainingCovArr.map((c) => c.concept_id));
-        form.setFieldsValue({
-            covariates: remainingCovariates,
-        });
     };
 
     async function fetchGwasSubmit() {
@@ -557,8 +569,7 @@ const CaseControlGWAS = (props) => {
                             label='Select HARE group'
                             name='hareGroup'
                         >
-                            <ConceptStatsByHare gwasType={"case"} />
-                            <ConceptStatsByHare gwasType={"control"} />
+                            <ConceptsStatsByHare />
                         </Form.Item>
                         <Form.Item
                             label='Is Binary Outcome?'
@@ -619,15 +630,31 @@ const CaseControlGWAS = (props) => {
         }
     }
 
+    const handleCovariateDelete = (remainingCovariates) => {
+        const remainingCovArr = [];
+        remainingCovariates.forEach((name) => {
+            selectedCovariates.forEach((covObj) => {
+                if (covObj.concept_name === name) {
+                    remainingCovArr.push(covObj);
+                }
+            });
+        });
+        setSelectedCovariates(remainingCovArr);
+        setSelectedCovariateVars(remainingCovArr.map((c) => c.prefixed_concept_id));
+        setSelectedCovariateIds(remainingCovArr.map((r) => r.concept_id));
+
+        form.setFieldsValue({
+            covariates: remainingCovariates,
+        });
+    };
+
     const handleNextStep = () => {
         if (current === 1) {
-            // setSelectedCovariates([...selectedConcepts].slice(1).map((val) => val.prefixed_concept_id));
-            // setSelectedOutcome(selectedConcepts[0].prefixed_concept_id);
+            setSelectedCovariates([...selectedCovariates].map((val) => val.prefixed_concept_id));
 
-            // form.setFieldsValue({
-            //     covariates: [...selectedConcepts].slice(1).map((val) => val.concept_name),
-            //     outcome: selectedConcepts[0].concept_name,
-            // });
+            form.setFieldsValue({
+                covariates: [...selectedCovariates].map((val) => val.concept_name),
+            });
         }
         if (current === 4) {
             form.submit();

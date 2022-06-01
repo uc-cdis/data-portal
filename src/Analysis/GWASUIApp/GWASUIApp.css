@@ -150,3 +150,53 @@
 .ant-list-items {
   content: center;
 }
+
+.GWASUI-flexRow {
+  display: flex;
+  width: 650px;
+}
+
+.GWASUI-title {
+  color: white;
+  padding: 5px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+.GWASUI-headerColor {
+  background-color: rgb(24, 144, 255);
+}
+
+.GWASUI-flexHeader1 {
+  border-right: 1px solid lightgray;
+}
+
+.GWASUI-flexHeader2 {
+  border-left: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+}
+
+.GWASUI-rowItem {
+  border-bottom: 1px solid lightgray;
+  align-items: center;
+}
+
+.GWASUI-flexCol {
+  flex: 2;
+  padding: 10px;
+  margin: 10px;
+}
+
+.GWASUI-listItem {
+  padding: 3px;
+}
+
+.GWASUI-submitContainer {
+  margin-left: auto;
+  margin-top: 20px;
+}
+
+.GWASUI-nameInput {
+  padding: 5px;
+  margin-right: auto;
+  margin-top: 20px;
+}
