@@ -19,33 +19,33 @@ export type FilterSetWorkspaceState = {
   size: number;
 };
 
-type FilterSetWorkspaceClearAction = {
+export type FilterSetWorkspaceClearAction = {
   type: 'CLEAR';
   payload: undefined;
 };
 
-type FilterSetWorkspaceClearAllAction = {
+export type FilterSetWorkspaceClearAllAction = {
   type: 'CLEAR-ALL';
   payload: {
     newId: string;
   };
 };
 
-type FilterSetWorkspaceCreactAction = {
+export type FilterSetWorkspaceCreactAction = {
   type: 'CREATE';
   payload: {
     newId: string;
   };
 };
 
-type FilterSetWorkspaceDuplicateAction = {
+export type FilterSetWorkspaceDuplicateAction = {
   type: 'DUPLICATE';
   payload: {
     newId: string;
   };
 };
 
-type FilterSetWorkspaceLoadAction = {
+export type FilterSetWorkspaceLoadAction = {
   type: 'LOAD';
   payload: {
     newId?: string;
@@ -53,28 +53,28 @@ type FilterSetWorkspaceLoadAction = {
   };
 };
 
-type FilterSetWorkspaceSaveAction = {
-  type: 'SAVE';
-  payload: {
-    filterSet: ExplorerFilterSet;
-  };
-};
-
-type FilterSetWorkspaceRemoveAction = {
+export type FilterSetWorkspaceRemoveAction = {
   type: 'REMOVE';
   payload: {
     newId: string;
   };
 };
 
-type FilterSetWorkspaceUpdateAction = {
+export type FilterSetWorkspaceSaveAction = {
+  type: 'SAVE';
+  payload: {
+    filterSet: ExplorerFilterSet;
+  };
+};
+
+export type FilterSetWorkspaceUpdateAction = {
   type: 'UPDATE';
   payload: {
     filter: ExplorerFilter;
   };
 };
 
-type FilterSetWorkspaceUseAction = {
+export type FilterSetWorkspaceUseAction = {
   type: 'USE';
   payload: {
     id: string;
@@ -87,7 +87,7 @@ export type FilterSetWorkspaceAction =
   | FilterSetWorkspaceCreactAction
   | FilterSetWorkspaceDuplicateAction
   | FilterSetWorkspaceLoadAction
-  | FilterSetWorkspaceSaveAction
   | FilterSetWorkspaceRemoveAction
+  | FilterSetWorkspaceSaveAction
   | FilterSetWorkspaceUpdateAction
   | FilterSetWorkspaceUseAction;
