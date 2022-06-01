@@ -64,7 +64,7 @@ export function createFilterSet(explorerId, filterSet) {
     body: JSON.stringify(convertToFilterSetDTO(filterSet)),
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
-    return data;
+    return convertFromFilterSetDTO(data);
   });
 }
 
