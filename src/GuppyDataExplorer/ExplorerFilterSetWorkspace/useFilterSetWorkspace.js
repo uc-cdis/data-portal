@@ -12,13 +12,6 @@ import {
 /** @typedef {import("../types").ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').FilterSetWorkspaceState} FilterSetWorkspaceState */
 /** @typedef {import('./types').FilterSetWorkspaceAction} FilterSetWorkspaceAction */
-/** @typedef {import('./types').UnsavedExplorerFilterSet} UnsavedExplorerFilterSet */
-
-/**
- * @callback FilterSetWorkspaceMethodCallback
- * @param {ExplorerFilterSet | UnsavedExplorerFilterSet} filterSet
- * @returns {void}
- */
 
 /**
  * @param {FilterSetWorkspaceState} state

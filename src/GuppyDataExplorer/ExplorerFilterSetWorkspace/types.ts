@@ -19,11 +19,6 @@ export type FilterSetWorkspaceState = {
   size: number;
 };
 
-export type FilterSetWorkspaceActionCallback = (args: {
-  id: string;
-  filterSet: ExplorerFilterSet | UnsavedExplorerFilterSet;
-}) => void;
-
 type FilterSetWorkspaceClearAction = {
   type: 'CLEAR';
   payload: undefined;
