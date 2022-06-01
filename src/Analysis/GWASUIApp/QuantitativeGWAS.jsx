@@ -481,7 +481,7 @@ const QuantitativeGWAS = (props) => {
 
         return (
             <React.Fragment>
-                <div className="GWASUI-flexRow GWASUI-headerColor"><h2 className="GWASUI-title">Review Details</h2></div>
+                <div className="GWASUI-flexRow GWASUI-headerColor"><h3 className="GWASUI-title">Review Details</h3></div>
                 <div className="GWASUI-flexRow GWASUI-rowItem">
                     <div className="GWASUI-flexCol GWASUI-flexHeader1">Number of PCs</div>
                     <div className="GWASUI-flexCol">{numOfPC}</div>
