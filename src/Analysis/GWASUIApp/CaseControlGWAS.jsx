@@ -151,7 +151,7 @@ const CaseControlGWAS = (props) => {
             setSelectedCovariateVars(selectedRows.map((item) => item.concept_id));
             setSelectedCovariates(selectedRows);
             form.setFieldsValue({
-                covariates: selectedCovariates.map((val) => val.concept_name),
+                covariates: selectedRows.map((val) => val.concept_name),
             });
         },
     };
@@ -633,11 +633,10 @@ const CaseControlGWAS = (props) => {
             });
         });
         setSelectedCovariates(remainingCovArr);
-        setSelectedCovariateVars(remainingCovArr.map((c) => c.prefixed_concept_id));
-        setSelectedCovariateIds(remainingCovArr.map((r) => r.concept_id));
-
+        setSelectedCovariateVars(remainingCovArr.map((c) => c.concept_id));
+        setSelectedCovariateIds(remainingCovArr.map((p) => p.prefixed_concept_id));
         form.setFieldsValue({
-            covariates: remainingCovariates,
+            covariates: remainingCovArr.map((val) => val.concept_name)
         });
     };
 
