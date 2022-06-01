@@ -38,7 +38,7 @@ function reducer(state, action) {
       return { active, all, size };
     }
     case 'CLEAR-ALL': {
-      const { id } = payload;
+      const id = payload.newId;
       const filterSet = createEmptyWorkspaceFilterSet();
 
       const active = { filterSet, id };
@@ -47,8 +47,27 @@ function reducer(state, action) {
       return { active, all, size };
     }
     case 'CREATE': {
-      const { id } = payload;
+      const id = payload.newId;
       const filterSet = createEmptyWorkspaceFilterSet();
+
+      const active = { filterSet, id };
+      const all = { ...state.all, [id]: filterSet };
+      const size = Object.keys(all).length;
+      return { active, all, size };
+    }
+    case 'DUPLICATE': {
+      const { id } = state.active;
+      const { newId } = payload;
+      const filterSet = { filter: cloneDeep(state.all[id].filter) };
+
+      const active = { filterSet, id: newId };
+      const all = { ...state.all, [newId]: filterSet };
+      const size = Object.keys(all).length;
+      return { active, all, size };
+    }
+    case 'LOAD': {
+      const id = payload.newId ?? state.active.id;
+      const filterSet = cloneDeep(payload.filterSet);
 
       const active = { filterSet, id };
       const all = { ...state.all, [id]: filterSet };
@@ -70,31 +89,12 @@ function reducer(state, action) {
       const size = Object.keys(all).length;
       return { active, all, size };
     }
-    case 'LOAD': {
-      const id = payload.id ?? state.active.id;
-      const filterSet = cloneDeep(payload.filterSet);
-
-      const active = { filterSet, id };
-      const all = { ...state.all, [id]: filterSet };
-      const size = Object.keys(all).length;
-      return { active, all, size };
-    }
     case 'SAVE': {
       const { id } = state.active;
       const { filterSet } = payload;
 
       const active = { filterSet, id };
       const all = { ...state.all, [id]: filterSet };
-      const size = Object.keys(all).length;
-      return { active, all, size };
-    }
-    case 'DUPLICATE': {
-      const { id } = state.active;
-      const { newId } = payload;
-      const filterSet = { filter: cloneDeep(state.all[id].filter) };
-
-      const active = { filterSet, id: newId };
-      const all = { ...state.all, [newId]: filterSet };
       const size = Object.keys(all).length;
       return { active, all, size };
     }
@@ -131,19 +131,19 @@ export default function useFilterSetWorkspace() {
     if (!checkIfFilterEmpty(initialWsState.active.filterSet.filter))
       handleFilterChange(initialWsState.active.filterSet.filter);
   }, []);
-  const [wsState, dispatch] = useReducer(reducer, initialWsState);
-  const prevActiveFilter = useRef(wsState.active.filterSet.filter);
+  const [state, dispatch] = useReducer(reducer, initialWsState);
+  const prevActiveFilter = useRef(state.active.filterSet.filter);
   useEffect(() => {
-    storeWorkspaceState(wsState);
+    storeWorkspaceState(state);
 
-    const { filter } = wsState.active.filterSet;
+    const { filter } = state.active.filterSet;
     const isActiveFilterChanged =
       JSON.stringify(prevActiveFilter.current) !== JSON.stringify(filter);
     if (isActiveFilterChanged) {
       prevActiveFilter.current = filter;
       handleFilterChange(filter);
     }
-  }, [wsState]);
+  }, [state]);
 
   function clear() {
     dispatch({
@@ -154,13 +154,13 @@ export default function useFilterSetWorkspace() {
   function clearAll() {
     dispatch({
       type: 'CLEAR-ALL',
-      payload: { id: crypto.randomUUID() },
+      payload: { newId: crypto.randomUUID() },
     });
   }
   function create() {
     dispatch({
       type: 'CREATE',
-      payload: { id: crypto.randomUUID() },
+      payload: { newId: crypto.randomUUID() },
     });
   }
   function duplicate() {
@@ -169,7 +169,6 @@ export default function useFilterSetWorkspace() {
       payload: { newId: crypto.randomUUID() },
     });
   }
-
   /**
    * @param {ExplorerFilterSet} filterSet
    * @param {boolean} [shouldOverwrite]
@@ -178,53 +177,43 @@ export default function useFilterSetWorkspace() {
     dispatch({
       type: 'LOAD',
       payload: {
-        id: shouldOverwrite ? undefined : crypto.randomUUID(),
+        newId: shouldOverwrite ? undefined : crypto.randomUUID(),
         filterSet,
       },
     });
   }
-
-  /**
-   * @param {ExplorerFilterSet} filterSet
-   */
-  function save(filterSet) {
-    dispatch({
-      type: 'SAVE',
-      payload: { filterSet },
-    });
-  }
-
   function remove() {
     dispatch({
       type: 'REMOVE',
       payload: { newId: crypto.randomUUID() },
     });
   }
-
-  /**
-   * @param {ExplorerFilter} newFilter
-   */
-  function update(newFilter) {
+  /** @param {ExplorerFilterSet} filterSet */
+  function save(filterSet) {
+    dispatch({
+      type: 'SAVE',
+      payload: { filterSet },
+    });
+  }
+  /** @param {ExplorerFilter} filter */
+  function update(filter) {
     dispatch({
       type: 'UPDATE',
-      payload: { filter: newFilter },
+      payload: { filter },
     });
   }
   useEffect(() => update(explorerFilter), [explorerFilter]);
-
-  /**
-   * @param {string} newId
-   */
-  function use(newId) {
+  /** @param {string} id */
+  function use(id) {
     dispatch({
       type: 'USE',
-      payload: { id: newId },
+      payload: { id },
     });
   }
 
   return useMemo(
     () => ({
-      ...wsState,
+      ...state,
       clear,
       clearAll,
       create,
@@ -235,6 +224,6 @@ export default function useFilterSetWorkspace() {
       update,
       use,
     }),
-    [wsState]
+    [state]
   );
 }

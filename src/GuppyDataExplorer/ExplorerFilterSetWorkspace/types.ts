@@ -32,14 +32,14 @@ type FilterSetWorkspaceClearAction = {
 type FilterSetWorkspaceClearAllAction = {
   type: 'CLEAR-ALL';
   payload: {
-    id: string;
+    newId: string;
   };
 };
 
 type FilterSetWorkspaceCreactAction = {
   type: 'CREATE';
   payload: {
-    id: string;
+    newId: string;
   };
 };
 
@@ -53,7 +53,7 @@ type FilterSetWorkspaceDuplicateAction = {
 type FilterSetWorkspaceLoadAction = {
   type: 'LOAD';
   payload: {
-    id?: string;
+    newId?: string;
     filterSet: ExplorerFilterSet;
   };
 };
