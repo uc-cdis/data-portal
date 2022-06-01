@@ -9,85 +9,83 @@ export type UnsavedExplorerFilterSet = Pick<
 };
 
 export type FilterSetWorkspaceState = {
-  [key: string]: ExplorerFilterSet | UnsavedExplorerFilterSet;
-};
-
-export type FilterSetWorkspaceActionCallback = (args: {
-  id: string;
-  filterSet: ExplorerFilterSet | UnsavedExplorerFilterSet;
-}) => void;
-
-type FilterSetWorkspaceClearAction = {
-  type: 'CLEAR';
-  payload: {
+  active: {
+    filterSet: ExplorerFilterSet | UnsavedExplorerFilterSet;
     id: string;
-    callback?: FilterSetWorkspaceActionCallback;
+  };
+  all: {
+    [id: string]: ExplorerFilterSet | UnsavedExplorerFilterSet;
   };
 };
 
-type FilterSetWorkspaceClearAllAction = {
+export type FilterSetWorkspaceClearAction = {
+  type: 'CLEAR';
+};
+
+export type FilterSetWorkspaceClearAllAction = {
   type: 'CLEAR-ALL';
   payload: {
-    callback?: FilterSetWorkspaceActionCallback;
+    newId: string;
   };
 };
 
-type FilterSetWorkspaceCreactAction = {
+export type FilterSetWorkspaceCreateAction = {
   type: 'CREATE';
   payload: {
-    callback?: FilterSetWorkspaceActionCallback;
+    newId: string;
   };
 };
 
-type FilterSetWorkspaceDuplicateAction = {
+export type FilterSetWorkspaceDuplicateAction = {
   type: 'DUPLICATE';
   payload: {
-    id: string;
-    callback?: FilterSetWorkspaceActionCallback;
+    newId: string;
   };
 };
 
-type FilterSetWorkspaceLoadAction = {
+export type FilterSetWorkspaceLoadAction = {
   type: 'LOAD';
   payload: {
-    id?: string;
+    newId?: string;
     filterSet: ExplorerFilterSet;
-    callback?: FilterSetWorkspaceActionCallback;
   };
 };
 
-type FilterSetWorkspaceSaveAction = {
-  type: 'SAVE';
-  payload: {
-    id: string;
-    filterSet: ExplorerFilterSet;
-    callback?: FilterSetWorkspaceActionCallback;
-  };
-};
-
-type FilterSetWorkspaceRemoveAction = {
+export type FilterSetWorkspaceRemoveAction = {
   type: 'REMOVE';
   payload: {
-    id: string;
-    callback?: FilterSetWorkspaceActionCallback;
+    newId: string;
   };
 };
 
-type FilterSetWorkspaceUpdateAction = {
+export type FilterSetWorkspaceSaveAction = {
+  type: 'SAVE';
+  payload: {
+    filterSet: ExplorerFilterSet;
+  };
+};
+
+export type FilterSetWorkspaceUpdateAction = {
   type: 'UPDATE';
   payload: {
-    id: string;
     filter: ExplorerFilter;
-    callback?: FilterSetWorkspaceActionCallback;
+  };
+};
+
+export type FilterSetWorkspaceUseAction = {
+  type: 'USE';
+  payload: {
+    id: string;
   };
 };
 
 export type FilterSetWorkspaceAction =
   | FilterSetWorkspaceClearAction
   | FilterSetWorkspaceClearAllAction
-  | FilterSetWorkspaceCreactAction
+  | FilterSetWorkspaceCreateAction
   | FilterSetWorkspaceDuplicateAction
   | FilterSetWorkspaceLoadAction
-  | FilterSetWorkspaceSaveAction
   | FilterSetWorkspaceRemoveAction
-  | FilterSetWorkspaceUpdateAction;
+  | FilterSetWorkspaceSaveAction
+  | FilterSetWorkspaceUpdateAction
+  | FilterSetWorkspaceUseAction;

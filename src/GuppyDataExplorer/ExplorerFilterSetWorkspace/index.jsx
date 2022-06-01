@@ -40,45 +40,39 @@ function ExplorerFilterSetWorkspace() {
     setActionFormType(undefined);
   }
 
-  function updateFilterSet(updated) {
-    filterSets.use(updated.id);
-    handleFilterChange(updated.filter);
-  }
   function handleClear() {
-    workspace.clear(updateFilterSet);
+    workspace.clear();
   }
   function handleClearAll() {
-    workspace.clearAll((filterSet) => {
-      updateFilterSet(filterSet);
-      closeActionForm();
-    });
+    workspace.clearAll();
+    closeActionForm();
   }
   function handleCreate() {
-    workspace.create(updateFilterSet);
+    workspace.create();
   }
   /** @param {ExplorerFilterSet} deleted */
   async function handleDelete(deleted) {
     try {
       await filterSets.delete(deleted);
       await filterSets.refresh();
-      workspace.remove(updateFilterSet);
+      workspace.remove();
     } finally {
       closeActionForm();
     }
   }
   function handleDuplicate() {
-    workspace.duplicate(({ id }) => filterSets.use(id));
+    workspace.duplicate();
   }
   /** @param {ExplorerFilterSet} loaded */
   function handleLoad(loaded) {
-    const foundId = findFilterSetIdInWorkspaceState(loaded.id, workspace.all);
+    const foundId = findFilterSetIdInWorkspaceState(loaded.id, workspace);
     if (foundId !== undefined) {
-      workspace.use(foundId, updateFilterSet);
+      workspace.use(foundId);
     } else {
       const shouldOverwrite = checkIfFilterEmpty(
         workspace.active.filterSet.filter
       );
-      workspace.load(loaded, shouldOverwrite, updateFilterSet);
+      workspace.load(loaded, shouldOverwrite);
     }
     closeActionForm();
   }
@@ -90,7 +84,7 @@ function ExplorerFilterSetWorkspace() {
       else await filterSets.update(saved);
 
       await filterSets.refresh();
-      workspace.load(filterSet, true, updateFilterSet);
+      workspace.load(filterSet, true);
     } finally {
       closeActionForm();
     }
@@ -99,11 +93,11 @@ function ExplorerFilterSetWorkspace() {
     handleFilterChange(filterSets.active.filter);
   }
   function handleRemove() {
-    workspace.remove(updateFilterSet);
+    workspace.remove();
   }
   /** @param {string} id */
   function handleUse(id) {
-    workspace.use(id, updateFilterSet);
+    workspace.use(id);
   }
 
   /** @type {import('../../components/FilterDisplay').ClickCombineModeHandler} */

@@ -1,108 +1,14 @@
-import { useEffect, useMemo, useReducer, useState } from 'react';
-import cloneDeep from 'lodash.clonedeep';
+import { useEffect, useMemo, useReducer, useRef } from 'react';
 import { useExplorerState } from '../ExplorerStateContext';
 import {
   checkIfFilterEmpty,
   initializeWorkspaceState,
   storeWorkspaceState,
+  workspaceReducer,
 } from './utils';
 
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
 /** @typedef {import("../types").ExplorerFilterSet} ExplorerFilterSet */
-/** @typedef {import('./types').FilterSetWorkspaceState} FilterSetWorkspaceState */
-/** @typedef {import('./types').FilterSetWorkspaceAction} FilterSetWorkspaceAction */
-/** @typedef {import('./types').UnsavedExplorerFilterSet} UnsavedExplorerFilterSet */
-
-/**
- * @callback FilterSetWorkspaceMethodCallback
- * @param {ExplorerFilterSet | UnsavedExplorerFilterSet} filterSet
- * @returns {void}
- */
-
-/**
- * @param {FilterSetWorkspaceState} state
- * @param {FilterSetWorkspaceAction} action
- * @returns {FilterSetWorkspaceState}
- */
-function reducer(state, action) {
-  const { type, payload } = action;
-  switch (type) {
-    case 'CLEAR': {
-      const { id } = payload;
-      /** @type {UnsavedExplorerFilterSet} */
-      const filterSet = { filter: {} };
-
-      payload.callback?.({ filterSet, id });
-
-      return { ...state, [id]: filterSet };
-    }
-    case 'CLEAR-ALL': {
-      const id = crypto.randomUUID();
-      /** @type {UnsavedExplorerFilterSet} */
-      const filterSet = { filter: {} };
-
-      payload.callback?.({ filterSet, id });
-
-      return { [id]: filterSet };
-    }
-    case 'CREATE': {
-      const id = crypto.randomUUID();
-      /** @type {UnsavedExplorerFilterSet} */
-      const filterSet = { filter: {} };
-
-      payload.callback?.({ filterSet, id });
-
-      return { ...state, [id]: filterSet };
-    }
-    case 'REMOVE': {
-      const newState = cloneDeep(state);
-      delete newState[payload.id];
-
-      const [firstEntry] = Object.entries(newState);
-      const [id, filterSet] = firstEntry ?? [
-        crypto.randomUUID(),
-        { filter: {} },
-      ];
-
-      payload.callback?.({ filterSet, id });
-
-      return { ...newState, [id]: filterSet };
-    }
-    case 'LOAD': {
-      const id = payload.id ?? crypto.randomUUID();
-      const filterSet = cloneDeep(payload.filterSet);
-
-      payload.callback?.({ filterSet, id });
-
-      return { ...state, [id]: filterSet };
-    }
-    case 'SAVE': {
-      const { filterSet, id } = payload;
-
-      payload.callback?.({ filterSet, id });
-
-      return { ...state, [id]: filterSet };
-    }
-    case 'DUPLICATE': {
-      const id = crypto.randomUUID();
-      const filterSet = { filter: cloneDeep(state[payload.id].filter) };
-
-      payload.callback?.({ filterSet, id });
-
-      return { ...state, [id]: filterSet };
-    }
-    case 'UPDATE': {
-      const { id, filter: newFilter } = payload;
-      const filterSet = { ...state[id], filter: cloneDeep(newFilter) };
-
-      payload.callback?.({ filterSet, id });
-
-      return { ...state, [id]: filterSet };
-    }
-    default:
-      return state;
-  }
-}
 
 export default function useFilterSetWorkspace() {
   const { explorerFilter, handleFilterChange } = useExplorerState();
@@ -112,149 +18,92 @@ export default function useFilterSetWorkspace() {
   );
   useEffect(() => {
     // sync filter UI with non-empty initial workspace filter
-    const values = Object.values(initialWsState);
-    if (values.length > 1 || !checkIfFilterEmpty(values[0].filter))
-      handleFilterChange(values[0].filter);
+    if (!checkIfFilterEmpty(initialWsState.active.filterSet.filter))
+      handleFilterChange(initialWsState.active.filterSet.filter);
   }, []);
-  const [id, setId] = useState(Object.keys(initialWsState)[0]);
-  const [wsState, dispatch] = useReducer(reducer, initialWsState);
-  useEffect(() => storeWorkspaceState(wsState), [wsState]);
+  const [state, dispatch] = useReducer(workspaceReducer, initialWsState);
+  const prevActiveFilter = useRef(state.active.filterSet.filter);
+  useEffect(() => {
+    storeWorkspaceState(state);
 
-  /** @param {FilterSetWorkspaceMethodCallback} [callback] */
-  function clear(callback) {
+    const { filter } = state.active.filterSet;
+    const isActiveFilterChanged =
+      JSON.stringify(prevActiveFilter.current) !== JSON.stringify(filter);
+    if (isActiveFilterChanged) {
+      prevActiveFilter.current = filter;
+      handleFilterChange(filter);
+    }
+  }, [state]);
+
+  function clear() {
     dispatch({
       type: 'CLEAR',
-      payload: {
-        id,
-        callback(args) {
-          setId(args.id);
-          callback?.(args.filterSet);
-        },
-      },
     });
   }
-  /** @param {FilterSetWorkspaceMethodCallback} [callback] */
-  function clearAll(callback) {
+  function clearAll() {
     dispatch({
       type: 'CLEAR-ALL',
-      payload: {
-        callback(args) {
-          setId(args.id);
-          callback?.(args.filterSet);
-        },
-      },
+      payload: { newId: crypto.randomUUID() },
     });
   }
-  /** @param {FilterSetWorkspaceMethodCallback} [callback] */
-  function create(callback) {
+  function create() {
     dispatch({
       type: 'CREATE',
-      payload: {
-        callback(args) {
-          setId(args.id);
-          callback?.(args.filterSet);
-        },
-      },
+      payload: { newId: crypto.randomUUID() },
     });
   }
-  /** @param {FilterSetWorkspaceMethodCallback} [callback] */
-  function duplicate(callback) {
+  function duplicate() {
     dispatch({
       type: 'DUPLICATE',
-      payload: {
-        id,
-        callback(args) {
-          setId(args.id);
-          callback?.(args.filterSet);
-        },
-      },
+      payload: { newId: crypto.randomUUID() },
     });
   }
-
   /**
    * @param {ExplorerFilterSet} filterSet
    * @param {boolean} [shouldOverwrite]
-   * @param {FilterSetWorkspaceMethodCallback} [callback]
    */
-  function load(filterSet, shouldOverwrite, callback) {
+  function load(filterSet, shouldOverwrite) {
     dispatch({
       type: 'LOAD',
       payload: {
-        id: shouldOverwrite ? id : undefined,
+        newId: shouldOverwrite ? undefined : crypto.randomUUID(),
         filterSet,
-        callback(args) {
-          setId(args.id);
-          callback?.(args.filterSet);
-        },
       },
     });
   }
-
-  /**
-   * @param {ExplorerFilterSet} filterSet
-   * @param {FilterSetWorkspaceMethodCallback} [callback]
-   */
-  function save(filterSet, callback) {
-    dispatch({
-      type: 'SAVE',
-      payload: {
-        id,
-        filterSet,
-        callback(args) {
-          setId(args.id);
-          callback?.(args.filterSet);
-        },
-      },
-    });
-  }
-
-  /** @param {FilterSetWorkspaceMethodCallback} [callback] */
-  function remove(callback) {
+  function remove() {
     dispatch({
       type: 'REMOVE',
-      payload: {
-        id,
-        callback(args) {
-          setId(args.id);
-          callback?.(args.filterSet);
-        },
-      },
+      payload: { newId: crypto.randomUUID() },
     });
   }
-
-  /**
-   * @param {ExplorerFilter} newFilter
-   * @param {FilterSetWorkspaceMethodCallback} [callback]
-   */
-  function update(newFilter, callback) {
+  /** @param {ExplorerFilterSet} filterSet */
+  function save(filterSet) {
+    dispatch({
+      type: 'SAVE',
+      payload: { filterSet },
+    });
+  }
+  /** @param {ExplorerFilter} filter */
+  function update(filter) {
     dispatch({
       type: 'UPDATE',
-      payload: {
-        id,
-        filter: newFilter,
-        callback(args) {
-          setId(args.id);
-          callback?.(args.filterSet);
-        },
-      },
+      payload: { filter },
     });
   }
   useEffect(() => update(explorerFilter), [explorerFilter]);
-
-  /**
-   * @param {string} newId
-   * @param {FilterSetWorkspaceMethodCallback} [callback]
-   */
-  function use(newId, callback) {
-    setId(newId);
-    callback?.(wsState[newId]);
+  /** @param {string} id */
+  function use(id) {
+    dispatch({
+      type: 'USE',
+      payload: { id },
+    });
   }
 
   return useMemo(
     () => ({
-      active: { id, filterSet: wsState[id] },
-      all: wsState,
-      size: Object.keys(wsState).length,
+      ...state,
+      size: Object.keys(state.all).length,
       clear,
       clearAll,
       create,
@@ -265,6 +114,6 @@ export default function useFilterSetWorkspace() {
       update,
       use,
     }),
-    [id, wsState]
+    [state]
   );
 }
