@@ -535,7 +535,6 @@ const CaseControlGWAS = (props) => {
                         }}
                         initialValues={{
                             numOfPC,
-                            isBinary: false,
                             mafCutoff: 0.01,
                             imputationCutoff: 0.3,
                         }}
@@ -570,12 +569,6 @@ const CaseControlGWAS = (props) => {
                             name='hareGroup'
                         >
                             <ConceptsStatsByHare />
-                        </Form.Item>
-                        <Form.Item
-                            label='Is Binary Outcome?'
-                            name='isBinary'
-                        >
-                            <Switch disabled checked={false} style={{ width: '5%' }} />
                         </Form.Item>
                         <Form.Item
                             label='MAF Cutoff'
