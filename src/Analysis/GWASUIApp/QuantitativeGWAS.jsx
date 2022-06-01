@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch, Popconfirm, notification
+    Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch, Popconfirm, notification, Popover
 } from 'antd';
 import './GWASUIApp.css';
 import { useQuery, useMutation } from 'react-query';
@@ -11,7 +11,7 @@ import GWASWorkflowList from './GWASWorkflowList';
 import { fetchWithCreds } from '../../actions';
 import Spinner from "../../components/Spinner";
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
-import { CheckOutlined } from '@ant-design/icons';
+import { CheckOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
 const { Step } = Steps;
 
@@ -274,9 +274,17 @@ const QuantitativeGWAS = (props) => {
         if (status === 'error') {
             return <React.Fragment>Error</React.Fragment>;
         }
+        const content = (
+            <div>
+                <p>example content</p>
+            </div>
+        );
         return (
             <React.Fragment>
                 <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                    <Popover content={content} title="example title">
+                        <InfoCircleOutlined />
+                    </Popover>
                     <div className='GWASUI-mainTable'>
                         <Table
                             className='GWASUI-table1'
@@ -303,8 +311,17 @@ const QuantitativeGWAS = (props) => {
             return <React.Fragment>Error</React.Fragment>;
         }
 
+        const content = (
+            <div>
+                <p>example content</p>
+            </div>
+        );
+
         return (
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                <Popover content={content} title="example title">
+                    <InfoCircleOutlined />
+                </Popover>
                 <h4 className='GWASUI-selectInstruction'>The selection will be used for both covariates and phenotype selection</h4>
                 <div className='GWASUI-mainTable'>
                     <Table
@@ -440,7 +457,7 @@ const QuantitativeGWAS = (props) => {
                 message: 'Successful Submission',
                 description:
                     `${gwasJobName} job starting!`,
-                icon: (<CheckOutlined/>),
+                icon: (<CheckOutlined />),
                 placement: 'bottom',
                 btn,
                 key,
