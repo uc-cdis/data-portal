@@ -31,7 +31,7 @@ export type FilterSetWorkspaceClearAllAction = {
   };
 };
 
-export type FilterSetWorkspaceCreactAction = {
+export type FilterSetWorkspaceCreateAction = {
   type: 'CREATE';
   payload: {
     newId: string;
@@ -84,7 +84,7 @@ export type FilterSetWorkspaceUseAction = {
 export type FilterSetWorkspaceAction =
   | FilterSetWorkspaceClearAction
   | FilterSetWorkspaceClearAllAction
-  | FilterSetWorkspaceCreactAction
+  | FilterSetWorkspaceCreateAction
   | FilterSetWorkspaceDuplicateAction
   | FilterSetWorkspaceLoadAction
   | FilterSetWorkspaceRemoveAction
