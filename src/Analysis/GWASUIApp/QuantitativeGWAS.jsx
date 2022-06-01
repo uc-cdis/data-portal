@@ -301,6 +301,20 @@ const QuantitativeGWAS = (props) => {
         );
     };
 
+    // allow only continuous concepts for now:
+    const allowedConceptTypes = ["contin"];
+
+    function filterConcepts(concepts) {
+        const filteredConcepts = [];
+        for (const concept_idx in concepts) {
+            const concept = concepts[concept_idx];
+            if (allowedConceptTypes.indexOf(concept.concept_type) != -1) {
+                filteredConcepts.push(concept);
+            }
+        }
+        return filteredConcepts;
+    }
+
     const CohortConcepts = () => {
         const { data, status } = useQuery(['cohortconcepts', sourceId], fetchConcepts, queryConfig);
 
@@ -317,6 +331,11 @@ const QuantitativeGWAS = (props) => {
             </div>
         );
 
+        // filter concepts to only allow for certain concept types:
+        const filteredConcepts = filterConcepts(data.concepts);
+        if (filteredConcepts.length === 0) {
+            return <React.Fragment>Unexpected error: no continuous concepts found!</React.Fragment>;
+        }
         return (
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                 <Popover content={content} title="example title">
@@ -330,7 +349,7 @@ const QuantitativeGWAS = (props) => {
                         pagination={{ pageSize: 10 }}
                         rowSelection={step2TableRowSelection}
                         columns={step2TableConfig}
-                        dataSource={data.concepts}
+                        dataSource={filteredConcepts}
                     />
                 </div>
             </Space>
