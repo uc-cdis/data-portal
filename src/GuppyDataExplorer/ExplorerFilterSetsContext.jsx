@@ -14,7 +14,7 @@ const FILTER_SET_URL = '/amanuensis/filter-sets';
  * @returns {ExplorerFilterSetDTO}
  */
 function convertToFilterSetDTO({ filter: filters, ...rest }) {
-  return { filters, ...rest };
+  return { ...rest, filters };
 }
 
 /**
@@ -23,12 +23,12 @@ function convertToFilterSetDTO({ filter: filters, ...rest }) {
  */
 function convertFromFilterSetDTO({ filters, ...rest }) {
   return {
+    ...rest,
     filter:
       '__combineMode' in filters
         ? filters
         : // backward compat for old filter sets missing __combineMode value
           { __combineMode: 'AND', ...filters },
-    ...rest,
   };
 }
 
@@ -65,7 +65,7 @@ export function createFilterSet(explorerId, filterSet) {
     body: JSON.stringify(convertToFilterSetDTO(filterSet)),
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
-    return data;
+    return convertFromFilterSetDTO(data);
   });
 }
 
