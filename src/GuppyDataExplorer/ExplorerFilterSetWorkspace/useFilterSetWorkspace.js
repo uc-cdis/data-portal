@@ -24,20 +24,22 @@ export default function useFilterSetWorkspace() {
       handleFilterChange(initialWsState.active.filterSet.filter);
   }, []);
   const [state, dispatch] = useReducer(workspaceReducer, initialWsState);
-  const prevActiveFilter = useRef(state.active.filterSet.filter);
+  const prevActiveFilterSet = useRef(state.active.filterSet);
   useEffect(() => {
     storeWorkspaceState(state);
 
+    const { filter: prevFilter, id: prevId } = prevActiveFilterSet.current;
     const { filter, id } = state.active.filterSet;
 
-    const isActiveFilterChanged =
-      JSON.stringify(prevActiveFilter.current) !== JSON.stringify(filter);
-    if (isActiveFilterChanged) {
-      prevActiveFilter.current = filter;
-      handleFilterChange(filter);
-    }
+    const isFilterChanged =
+      JSON.stringify(prevFilter) !== JSON.stringify(filter);
+    if (isFilterChanged) handleFilterChange(filter);
 
-    filterSets.use(id);
+    const isFilterSetIdChanged = prevId !== id;
+    if (isFilterSetIdChanged) filterSets.use(id);
+
+    if (isFilterChanged || isFilterSetIdChanged)
+      prevActiveFilterSet.current = state.active.filterSet;
   }, [state]);
 
   function clear() {
