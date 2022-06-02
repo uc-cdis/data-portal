@@ -41,7 +41,6 @@ import GraphQLQuery from './GraphQLEditor/ReduxGqlEditor';
 import theme from './theme';
 import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
-import ExternalFooter from './components/layout/ExternalFooter';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
   basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
@@ -120,8 +119,6 @@ async function init() {
       components.footerLogos[i].alt = commonsWideAltText[components.footerLogos[i].href];
     }
   }
-
-  console.log("components", components)
 
   render(
     <div>
@@ -511,22 +508,10 @@ async function init() {
                   />
                 </Switch>
               </div>
-              {
-                (() => {
-                  console.log(components);
-                  console.log(components.footer);
-                  console.log(components.footer?.externalURL);
-                  if (components.footer.externalURL) {
-                    return <ExternalFooter url={components.footer.externalURL}/>
-                  }
-                  else {
-                    return <ReduxFooter
-                    logos={components.footerLogos}
-                    privacyPolicy={components.privacyPolicy}
-                  />
-                  }
-                })()
-              }
+              <ReduxFooter
+                logos={components.footerLogos}
+                privacyPolicy={components.privacyPolicy}
+              />
             </div>
           </BrowserRouter>
         </ThemeProvider>
