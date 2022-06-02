@@ -9,6 +9,9 @@ import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import ReduxGWASUIApp from './GWASUIApp/ReduxGWASUIApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
+import sessionMonitor from '../SessionMonitor';
+// monitor user's session
+sessionMonitor.start();
 
 const queryClient = new QueryClient();
 
@@ -52,6 +55,22 @@ class AnalysisApp extends React.Component {
     queryClient.invalidateQueries('workflows');
   }
 
+  processAppMessages = (event) => {
+    const pathArray = this.state.app.applicationUrl.split( '/' );
+    const protocol = pathArray[0];
+    const host = pathArray[2];
+    const applicationBaseUrl = protocol + '//' + host;
+
+    // ONLY process messages coming from the app AND
+    // which contain the message "refresh token!":
+    if (event.origin === applicationBaseUrl &&
+        event.data === "refresh token!") {
+        console.log( "received: " + event.data );
+        //Call function to refresh session:
+        sessionMonitor.updateUserActivity();
+    }
+  }
+
   getAppContent = (app) => {
     switch (app) {
     case 'vaGWAS':
@@ -84,6 +103,8 @@ class AnalysisApp extends React.Component {
         </QueryClientProvider>
       );
     default:
+      // this will ensure the main window will process the app messages (if any):
+      window.addEventListener("message", this.processAppMessages);
       return (
         <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
