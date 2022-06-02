@@ -121,6 +121,8 @@ async function init() {
     }
   }
 
+  console.log("components", components)
+
   render(
     <div>
       <Provider store={store}>
