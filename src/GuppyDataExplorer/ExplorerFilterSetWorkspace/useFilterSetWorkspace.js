@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useReducer, useRef } from 'react';
+import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import { useExplorerState } from '../ExplorerStateContext';
 import {
   checkIfFilterEmpty,
@@ -12,6 +13,7 @@ import {
 
 export default function useFilterSetWorkspace() {
   const { explorerFilter, handleFilterChange } = useExplorerState();
+  const filterSets = useExplorerFilterSets();
   const initialWsState = useMemo(
     () => initializeWorkspaceState(explorerFilter),
     []
@@ -22,17 +24,24 @@ export default function useFilterSetWorkspace() {
       handleFilterChange(initialWsState.active.filterSet.filter);
   }, []);
   const [state, dispatch] = useReducer(workspaceReducer, initialWsState);
-  const prevActiveFilter = useRef(state.active.filterSet.filter);
+  const prevActiveFilterSet = useRef(state.active.filterSet);
   useEffect(() => {
+    // sync with browser store
     storeWorkspaceState(state);
 
-    const { filter } = state.active.filterSet;
-    const isActiveFilterChanged =
-      JSON.stringify(prevActiveFilter.current) !== JSON.stringify(filter);
-    if (isActiveFilterChanged) {
-      prevActiveFilter.current = filter;
-      handleFilterChange(filter);
-    }
+    const { filter: prevFilter, id: prevId } = prevActiveFilterSet.current;
+    const { filter, id } = state.active.filterSet;
+
+    // sync with explorer filter state
+    const isFilterChanged =
+      JSON.stringify(prevFilter) !== JSON.stringify(filter);
+    if (isFilterChanged) handleFilterChange(filter);
+
+    // sync with explorer filter sets state
+    const isFilterSetIdChanged = prevId !== id;
+    if (isFilterSetIdChanged) filterSets.use(id);
+
+    prevActiveFilterSet.current = state.active.filterSet;
   }, [state]);
 
   function clear() {
