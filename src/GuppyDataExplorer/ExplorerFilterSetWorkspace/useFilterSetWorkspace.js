@@ -26,15 +26,18 @@ export default function useFilterSetWorkspace() {
   const [state, dispatch] = useReducer(workspaceReducer, initialWsState);
   const prevActiveFilterSet = useRef(state.active.filterSet);
   useEffect(() => {
+    // sync with browser store
     storeWorkspaceState(state);
 
     const { filter: prevFilter, id: prevId } = prevActiveFilterSet.current;
     const { filter, id } = state.active.filterSet;
 
+    // sync with explorer filter state
     const isFilterChanged =
       JSON.stringify(prevFilter) !== JSON.stringify(filter);
     if (isFilterChanged) handleFilterChange(filter);
 
+    // sync with explorer filter sets state
     const isFilterSetIdChanged = prevId !== id;
     if (isFilterSetIdChanged) filterSets.use(id);
 
