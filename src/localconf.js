@@ -192,6 +192,7 @@ function buildConfig(opts) {
     resourceBrowserPublic,
     explorerConfig: config.explorerConfig,
     headers,
+    contactEmail: 'pcdc_help@lists.uchicago.edu',
   };
 }
 
