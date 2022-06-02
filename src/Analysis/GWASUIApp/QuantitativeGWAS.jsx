@@ -415,10 +415,11 @@ const QuantitativeGWAS = (props) => {
             // hare_code: selectedHare, // TODO - align w/ Zuyi
             maf_threshold: Number(mafThreshold),
             imputation_score_cutoff: Number(imputationScore),
-            // template_version: 'gwas-template-6226080403eb62585981d9782aec0f3a82a7e906',
+            template_version: "gwas-template-e4b5fa6bf50d7ccd6dcb058d225c1da674d67e5b",
             source_id: sourceId,
             case_cohort_definition_id: cohortDefinitionId,
-            control_cohort_definition_id: "-1"
+            control_cohort_definition_id: "-1",
+            workflow_name: gwasJobName
         };
         const res = await fetch(submitEndpoint, {
             method: 'POST',
