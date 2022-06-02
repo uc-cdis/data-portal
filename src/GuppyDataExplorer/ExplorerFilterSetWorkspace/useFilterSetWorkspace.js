@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useReducer, useRef } from 'react';
+import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import { useExplorerState } from '../ExplorerStateContext';
 import {
   checkIfFilterEmpty,
@@ -12,6 +13,7 @@ import {
 
 export default function useFilterSetWorkspace() {
   const { explorerFilter, handleFilterChange } = useExplorerState();
+  const filterSets = useExplorerFilterSets();
   const initialWsState = useMemo(
     () => initializeWorkspaceState(explorerFilter),
     []
@@ -26,13 +28,16 @@ export default function useFilterSetWorkspace() {
   useEffect(() => {
     storeWorkspaceState(state);
 
-    const { filter } = state.active.filterSet;
+    const { filter, id } = state.active.filterSet;
+
     const isActiveFilterChanged =
       JSON.stringify(prevActiveFilter.current) !== JSON.stringify(filter);
     if (isActiveFilterChanged) {
       prevActiveFilter.current = filter;
       handleFilterChange(filter);
     }
+
+    filterSets.use(id);
   }, [state]);
 
   function clear() {
