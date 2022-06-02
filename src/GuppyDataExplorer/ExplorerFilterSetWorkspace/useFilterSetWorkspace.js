@@ -41,8 +41,7 @@ export default function useFilterSetWorkspace() {
     const isFilterSetIdChanged = prevId !== id;
     if (isFilterSetIdChanged) filterSets.use(id);
 
-    if (isFilterChanged || isFilterSetIdChanged)
-      prevActiveFilterSet.current = state.active.filterSet;
+    prevActiveFilterSet.current = state.active.filterSet;
   }, [state]);
 
   function clear() {
