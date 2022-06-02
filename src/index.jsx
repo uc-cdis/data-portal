@@ -510,12 +510,20 @@ async function init() {
                 </Switch>
               </div>
               {
-                components.footer.externalURL ?
-                <ExternalFooter url={components.footer.externalURL}/>:
-                <ReduxFooter
-                  logos={components.footerLogos}
-                  privacyPolicy={components.privacyPolicy}
-                />
+                (() => {
+                  console.log(components);
+                  console.log(components.footer);
+                  console.log(components.footer?.externalURL);
+                  if (components.footer.externalURL) {
+                    return <ExternalFooter url={components.footer.externalURL}/>
+                  }
+                  else {
+                    return <ReduxFooter
+                    logos={components.footerLogos}
+                    privacyPolicy={components.privacyPolicy}
+                  />
+                  }
+                })()
               }
             </div>
           </BrowserRouter>
