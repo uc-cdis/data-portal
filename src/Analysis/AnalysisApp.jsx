@@ -61,7 +61,7 @@ class AnalysisApp extends React.Component {
     const host = pathArray[2];
     const applicationBaseUrl = protocol + '//' + host;
 
-    // ONLY process messages coming from the app AND
+    // ONLY process messages coming from the same domain as the app AND
     // which contain the message "refresh token!":
     if (event.origin === applicationBaseUrl &&
         event.data === "refresh token!") {
