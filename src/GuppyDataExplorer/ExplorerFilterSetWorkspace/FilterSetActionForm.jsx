@@ -66,7 +66,10 @@ function FilterSetActionForm({ filterSets, handlers, type, workspace }) {
           filterSets={filterSets.all}
           onAction={handlers.save}
           onClose={handlers.close}
-          isFiltersChanged={false}
+          isFiltersChanged={
+            JSON.stringify(workspace.active.filterSet.filter) !==
+            JSON.stringify(filterSets.active.filter)
+          }
         />
       );
     case 'DELETE':
