@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
+import { contactEmail } from '../localconf';
 import Dashboard from '../Layout/Dashboard';
 import ReduxDataDictionaryTable from './table/DataDictionaryTable';
 import ReduxDataModelStructure from './DataModelStructure';
@@ -113,6 +114,10 @@ function DataDictionary({
                 <span>Portal Version:</span> {portalVersion}
               </div>
             )}
+            <div className='data-dictionary__version-info'>
+              <span>Help:</span>{' '}
+              <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+            </div>
           </div>
         </div>
       </Dashboard.Sidebar>

@@ -1,5 +1,6 @@
 /* eslint-disable no-shadow */
 import { memo, useState } from 'react';
+import { contactEmail } from '../../localconf';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import Spinner from '../../components/Spinner';
 import { useExplorerConfig } from '../ExplorerConfigContext';
@@ -74,10 +75,8 @@ function ExplorerSurvivalAnalysis() {
                       Please retry by clicking {'"Apply"'} button or refreshing
                       the page. If the problem persists, please contact the
                       administrator (
-                      <a href='mailto:pcdc_help@lists.uchicago.edu'>
-                        pcdc_help@lists.uchicago.edu
-                      </a>
-                      ) for more information.
+                      <a href={`mailto:${contactEmail}`}>{contactEmail}</a>) for
+                      more information.
                     </p>
                   </div>
                 }

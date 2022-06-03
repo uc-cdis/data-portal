@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { contactEmail } from '../localconf';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Button from '../gen3-ui-component/components/Button';
 import DataRequestsTable from './DataRequestsTable';
@@ -65,10 +66,8 @@ export default function DataRequests() {
               <p>
                 Please retry or refreshing the page. If the problem persists,
                 please contact the administrator (
-                <a href='mailto:pcdc_help@lists.uchicago.edu'>
-                  pcdc_help@lists.uchicago.edu
-                </a>
-                ) for more information.
+                <a href={`mailto:${contactEmail}`}>{contactEmail}</a>) for more
+                information.
               </p>
               <br />
               <Button

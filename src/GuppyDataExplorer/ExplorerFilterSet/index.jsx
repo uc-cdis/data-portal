@@ -4,6 +4,7 @@ import cloneDeep from 'lodash.clonedeep';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { contactEmail } from '../../localconf';
 import SimplePopup from '../../components/SimplePopup';
 import Button from '../../gen3-ui-component/components/Button';
 import { useExplorerState } from '../ExplorerStateContext';
@@ -101,10 +102,8 @@ function ExplorerFilterSet({ className, filter }) {
             Please retry by clicking {'"Retry"'} button or refreshing the page.
             <br />
             If the problem persists, please contact the administrator (
-            <a href='mailto:pcdc_help@lists.uchicago.edu'>
-              pcdc_help@lists.uchicago.edu
-            </a>
-            ) for more information.
+            <a href={`mailto:${contactEmail}`}>{contactEmail}</a>) for more
+            information.
           </p>
           <Button label='Retry' onClick={() => filterSets.refresh()} />
         </div>
