@@ -274,20 +274,29 @@ const QuantitativeGWAS = (props) => {
         if (status === 'error') {
             return <React.Fragment>Error</React.Fragment>;
         }
-        const content = (
+        // TODO: handle long text w/ wrapping
+        const newCohortContent = (
             <div>
-                <p>example content</p>
+                <p>This button will open a new tab in your browser, outside of the Gen3 GWAS App and send you to OHDSI Atlas App</p>
             </div>
         );
+        const chooseCohortContent = (
+            <div>
+                <p>You may only see cohorts that you have access to. Please select only one cohort. The size of the cohort population is indicated in the right hand side of the table. To browse the table please scroll down to the bottom.</p>
+            </div>
+        )
         return (
             <React.Fragment>
                 <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                    <Popover content={content} title="example title">
+                    <h4 className='GWASUI-selectInstruction'>In this step, you will determine the study population. To begin, select the cohort that you would like to define your study population with.</h4>
+                    <Popover content={newCohortContent} title="Create a new cohort">
                         <InfoCircleOutlined />
                     </Popover>
-                    <h4 className='GWASUI-selectInstruction'>In this step, you will determine the study population. To begin, select the cohort that you would like to define your study population with.</h4>
                     <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>+ Add a new cohort</button>
                     <div className='GWASUI-mainTable'>
+                        <Popover content={chooseCohortContent} title="Choosing a cohort">
+                            <InfoCircleOutlined />
+                        </Popover>
                         <Table
                             className='GWASUI-table1'
                             rowKey='cohort_definition_id'
@@ -327,11 +336,13 @@ const QuantitativeGWAS = (props) => {
             return <React.Fragment>Error</React.Fragment>;
         }
 
-        const content = (
+        const chooseVarContent = (
             <div>
-                <p>example content</p>
+                <p>Please choose as many variables as you wish, you may remove them later in the pipeline. Currently, only continuous variables can be selected. All variables are harmonized. To browse the table please scroll down to the bottom.</p>
             </div>
         );
+
+
 
         // filter concepts to only allow for certain concept types:
         const filteredConcepts = filterConcepts(data.concepts);
@@ -340,7 +351,7 @@ const QuantitativeGWAS = (props) => {
         }
         return (
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                <Popover content={content} title="example title">
+                <Popover content={chooseVarContent} title="Choosing Variables">
                     <InfoCircleOutlined />
                 </Popover>
                 <h4 className='GWASUI-selectInstruction'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
@@ -367,9 +378,18 @@ const QuantitativeGWAS = (props) => {
         if (status === 'error') {
             return <React.Fragment>Error</React.Fragment>;
         }
+
+        const choosePhenoContent = (
+            <div>
+                <p>Here you may choose your phenotype. All data are harmonized from different projects through the collaborative development of a data dictionary. In the right hand side of the table a missing % is calculated. This is to reflect how many subjects of the chosen population do not have this information available. To browse the table please scroll down to the bottom.</p>
+            </div>
+        )
         return (
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                 <hr />
+                <Popover content={choosePhenoContent} title="Choosing Phenotype">
+                    <InfoCircleOutlined />
+                </Popover>
                 <h4 className='GWASUI-selectInstruction'>In this Step, you will determine your phenotype, using the selected variables from Step 2. Please choose one of the selected variables to be the study’s phenotype.</h4>
                 <div className='GWASUI-mainTable'>
                     <Table
@@ -505,7 +525,8 @@ const QuantitativeGWAS = (props) => {
             <React.Fragment>
                 <div className="GWASUI-flexRow GWASUI-headerColor"><h3 className="GWASUI-title">Review Details</h3></div>
                 <div className="GWASUI-flexRow GWASUI-rowItem">
-                    <div className="GWASUI-flexCol GWASUI-flexHeader1">Number of PCs</div>
+                    <div className="GWASUI-flexCol GWASUI-flexHeader1">
+                        Number of PCs</div>
                     <div className="GWASUI-flexCol">{numOfPC}</div>
                     <div className="GWASUI-flexCol GWASUI-flexHeader2">MAF Cutoff</div>
                     <div className="GWASUI-flexCol"> {mafThreshold}</div>
@@ -577,6 +598,10 @@ const QuantitativeGWAS = (props) => {
                 );
             }
             case 3: {
+                const numPcContent = (
+                    <div>
+                        <p>Population Principal components (PCs) refer to linear combinations of genome-wide genotyping data to control for population structure/stratification (select up to 10 PCs)</p>
+                    </div>)
                 return (
                     <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                         <h4 className="GWASUI-selectInstruction">In this step, you will determine workflow parameters.</h4>
@@ -599,6 +624,11 @@ const QuantitativeGWAS = (props) => {
                                 }}
                                 autoComplete='off'
                             >
+                                {/* TODO Refactor this part of the component to have flexibility to add info buttons to specific parts in form */}
+                                {/* https://docs.google.com/document/d/1h__1e4PmKmMRMcR8T--etRenEwIXpaziLy-DoOye0Vw/edit */}
+                                {/* <Popover content={numPcContent} title="Number of PCs">
+                                    <InfoCircleOutlined />
+                                </Popover> */}
                                 <Form.Item
                                     label='Number of PCs to use'
                                     name='numOfPC'
