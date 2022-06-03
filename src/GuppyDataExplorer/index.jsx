@@ -101,6 +101,10 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
                   <span>Portal Version:</span> {portalVersion}
                 </div>
               )}
+              <div className='explorer__version-info'>
+                <span>Help:</span>{' '}
+                <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+              </div>
             </div>
           </Dashboard.Sidebar>
           <Dashboard.Main className='explorer__main'>
