@@ -137,3 +137,7 @@
 .footer__version-info > span {
   font-style: italic;
 }
+
+.footer__version-info > a {
+  color: white;
+}

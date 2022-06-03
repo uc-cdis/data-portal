@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { explorerConfig } from '../localconf';
+import { contactEmail, explorerConfig } from '../localconf';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Dashboard from '../Layout/Dashboard';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
@@ -101,6 +101,10 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
                   <span>Portal Version:</span> {portalVersion}
                 </div>
               )}
+              <div className='explorer__version-info'>
+                <span>Help:</span>{' '}
+                <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+              </div>
             </div>
           </Dashboard.Sidebar>
           <Dashboard.Main className='explorer__main'>
@@ -143,10 +147,8 @@ const fallbackElement = (
     <p>
       The Exploration page is not working correctly. Please try refreshing the
       page. If the problem continues, please contact the administrator (
-      <a href='mailto:pcdc_help@lists.uchicago.edu'>
-        pcdc_help@lists.uchicago.edu
-      </a>
-      ) for more information.
+      <a href={`mailto:${contactEmail}`}>{contactEmail}</a>) for more
+      information.
     </p>
     <NotFoundSVG />
   </div>

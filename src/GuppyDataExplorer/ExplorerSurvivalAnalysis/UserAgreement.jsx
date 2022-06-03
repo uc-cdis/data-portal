@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { headers, userapiPath } from '../../localconf';
+import { contactEmail, headers, userapiPath } from '../../localconf';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import Button from '../../gen3-ui-component/components/Button';
 
@@ -192,10 +192,8 @@ function UserAgreement({ onAgree }) {
                 Please retry by clicking the {'"Agree"'} button again or
                 refreshing the page. If the problem persists, please contact the
                 administrator (
-                <a href='mailto:pcdc_help@lists.uchicago.edu'>
-                  pcdc_help@lists.uchicago.edu
-                </a>
-                ) for more information.
+                <a href={`mailto:${contactEmail}`}>{contactEmail}</a>) for more
+                information.
               </p>
               <div className='explorer-survival-analysis__button-group'>
                 <Button
