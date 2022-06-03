@@ -3,7 +3,7 @@ import FileSaver from 'file-saver';
 import Button from '../gen3-ui-component/components/Button';
 import { jsonToString } from '../utils';
 import Popup from '../components/Popup';
-import { credentialCdisPath } from '../localconf';
+import { contactEmail, credentialCdisPath } from '../localconf';
 import KeyTable from '../components/tables/KeyTable';
 import ReduxUserInformation from './ReduxUserInformation';
 import './UserProfile.css';
@@ -11,10 +11,7 @@ import './UserProfile.css';
 const NO_ACCESS_MSG = (
   <>
     You have no access to storage service. Please contact the administrator (
-    <a href='mailto:pcdc_help@lists.uchicago.edu'>
-      pcdc_help@lists.uchicago.edu
-    </a>
-    ) to get it!
+    <a href={`mailto:${contactEmail}`}>{contactEmail}</a>) to get it!
   </>
 );
 const NO_API_KEY = "You don't have any API key. Please create one!";

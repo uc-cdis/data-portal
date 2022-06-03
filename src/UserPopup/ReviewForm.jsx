@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { contactEmail } from '../localconf';
 import Button from '../gen3-ui-component/components/Button';
 
 /** @typedef {import('../types').UserState} UserState */
@@ -36,10 +37,8 @@ function ReviewForm({ docsToBeReviewed, onClose, onReview }) {
           <p>
             Please retry or refreshing the page. If the problem persists, please
             contact the administrator (
-            <a href='mailto:pcdc_help@lists.uchicago.edu'>
-              pcdc_help@lists.uchicago.edu
-            </a>
-            ) for more information.
+            <a href={`mailto:${contactEmail}`}>{contactEmail}</a>) for more
+            information.
           </p>
         </div>
       ) : (
