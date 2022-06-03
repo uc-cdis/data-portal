@@ -285,6 +285,8 @@ const QuantitativeGWAS = (props) => {
                     <Popover content={content} title="example title">
                         <InfoCircleOutlined />
                     </Popover>
+                    <h4 className='GWASUI-selectInstruction'>In this step, you will determine the study population. To begin, select the cohort that you would like to define your study population with.</h4>
+                    <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>+ Add a new cohort</button>
                     <div className='GWASUI-mainTable'>
                         <Table
                             className='GWASUI-table1'
@@ -341,7 +343,7 @@ const QuantitativeGWAS = (props) => {
                 <Popover content={content} title="example title">
                     <InfoCircleOutlined />
                 </Popover>
-                <h4 className='GWASUI-selectInstruction'>The selection will be used for both covariates and phenotype selection</h4>
+                <h4 className='GWASUI-selectInstruction'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
                 <div className='GWASUI-mainTable'>
                     <Table
                         className='GWASUI-table2'
@@ -368,7 +370,7 @@ const QuantitativeGWAS = (props) => {
         return (
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                 <hr />
-                <h4 className='GWASUI-selectInstruction'>* Select Phenotype</h4>
+                <h4 className='GWASUI-selectInstruction'>In this Step, you will determine your phenotype, using the selected variables from Step 2. Please choose one of the selected variables to be the study’s phenotype.</h4>
                 <div className='GWASUI-mainTable'>
                     <Table
                         className='GWASUI-table3'
@@ -478,7 +480,7 @@ const QuantitativeGWAS = (props) => {
                 description:
                     `${gwasJobName} job starting!`,
                 icon: (<CheckOutlined />),
-                placement: 'bottom',
+                placement: 'top',  // TODO: try to center this. antd seems to only have variations of top/bottom/left/right - https://ant.design/components/notification/
                 btn,
                 key,
             });
@@ -577,6 +579,9 @@ const QuantitativeGWAS = (props) => {
             case 3: {
                 return (
                     <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                        <h4 className="GWASUI-selectInstruction">In this step, you will determine workflow parameters.</h4>
+                        <h4 className="GWASUI-selectInstruction">Please adjust the number of population principal components to control for population structure, minor allele frequency cutoff and imputation score cutoff. You may also remove unwanted covariates.</h4>
+                        <h4 className="GWASUI-selectInstruction">Please also choose the ancestry population on which you would like to perform your study.</h4>
                         <div className='GWASUI-mainArea'>
                             <Form
                                 name='GWASUI-parameter-form'
@@ -662,6 +667,8 @@ const QuantitativeGWAS = (props) => {
 
                 return (
                     <React.Fragment>
+                        <h4 className="GWASUI-selectInstruction">In this step, you may review your selections for the study, give a name to the study, and submit the GWAS for analysis.</h4>
+                        <h4 className="GWASUI-selectInstruction">Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps (dropdown menu).</h4>
                         <div className='GWASUI-mainArea'>
                             <Form
                                 {...layout}

@@ -75,6 +75,9 @@
 .GWASUI-selectInstruction {
   color: var(--g3-color__base-blue);
   font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
 }
 
 .GWASUI-searchInput {
@@ -93,6 +96,10 @@
   justify-content: center;
   width: 100%;
   padding: 10px;
+}
+
+.GWASUI-typeTitle {
+  float: relative;
 }
 
 .ant-select-selector, .ant-select-selection-item, .ant-input, .ant-input-disabled {
@@ -154,6 +161,11 @@
 .GWASUI-flexRow {
   display: flex;
   width: 650px;
+}
+
+.GWASUI-navRow {
+  display: flex;
+  flex-direction: row;
 }
 
 .GWASUI-title {

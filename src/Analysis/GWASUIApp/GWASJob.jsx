@@ -157,7 +157,7 @@ const GWASJob = ({ workflow, refreshWorkflows }) => {
             description={`Started at ${data.startedAt} ${data.finishedAt ? `& finished at ${data.finishedAt}` : ''}`}
           />
           <div>{getStatusTag(data.phase)}</div>
-          <GWASDelete />
+          {/* <GWASDelete /> */}
         </List.Item>
       </React.Fragment>
     );

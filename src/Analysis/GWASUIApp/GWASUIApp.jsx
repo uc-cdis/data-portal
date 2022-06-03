@@ -6,7 +6,6 @@ import {
   Checkbox, Card
 } from 'antd';
 import { fetchAndSetCsrfToken } from "../../configs"
-import { setConstantValue } from 'typescript';
 
 const cardContent = { width: 350, height: 280, margin: 10, textAlign: "center" };
 
@@ -25,8 +24,10 @@ const GWASUIApp = (props) => {
 
   if (!gwasTypeSelected) {
     return (<>
+    {/* <div className="GWASUI-typeTitle"><span>Select your analysis</span></div> */}
       <div className="GWASUI-typeSelector">
-        <div>
+      {/* <div className="GWASUI-navRow"> */}
+      <div>
           <Card title="Case Control GWAS" bordered={true} style={cardContent}>
             <p>Genome-wide association studies (GWAS) for a case-control study. Here, the genotypes of roughly equal number of diseased (“cases”) and healthy (“controls”) people are compared to determine which genetic variants are associated with the disease. Cases are encoded as ‘1’ while controls are encoded as ‘0’ and a binary model is used.</p>
           </Card>
@@ -50,11 +51,12 @@ const GWASUIApp = (props) => {
           </div>
         </div>
       </div>
+      {/* </div> */}
     </>)
   }
   return (
     <React.Fragment>
-      {gwasTypeSelected && gwasType === "caseControl" && (<CaseControlGWAS resetGWASType={resetGWASType}></CaseControlGWAS>)}
+      {gwasTypeSelected && gwasType === "caseControl" && (<CaseControlGWAS resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}></CaseControlGWAS>)}
       {gwasTypeSelected && gwasType === "quantitative" && (<QuantitativeGWAS resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}></QuantitativeGWAS>)}
     </React.Fragment>
   )
