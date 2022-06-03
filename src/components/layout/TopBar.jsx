@@ -45,21 +45,19 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
         ))}
       </div>
       <div>
-        {rightItems.map(
-          (item) =>
-            (item.link !== '/submission' || isAdminUser) && (
-              <TopBarLink
-                key={item.link}
-                className='hidden-md-and-down'
-                name={item.name}
-                icon={item.icon}
-                isActive={location.pathname === item.link}
-                to={item.link}
-              />
-            )
-        )}
+        {rightItems.map((item) => (
+          <TopBarLink
+            key={item.link}
+            className='hidden-md-and-down'
+            name={item.name}
+            icon={item.icon}
+            isActive={location.pathname === item.link}
+            to={item.link}
+          />
+        ))}
         {username !== undefined ? (
           <TopBarMenu
+            isAdminUser={isAdminUser}
             items={config.menuItems}
             onLogoutClick={onLogoutClick}
             username={username}
