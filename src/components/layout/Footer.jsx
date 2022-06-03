@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { contactEmail } from '../../localconf';
 import './Footer.css';
 
 /**
@@ -24,6 +25,10 @@ function Footer({ dataVersion, links, logos, portalVersion, privacyPolicy }) {
               <span>Portal Version:</span> {portalVersion}
             </div>
           )}
+          <div className='footer__version-info'>
+            <span>Help:</span>{' '}
+            <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+          </div>
         </div>
         <div className='footer__spacer-area' />
         {privacyPolicy?.text && (
