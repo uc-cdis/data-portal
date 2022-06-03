@@ -31,7 +31,7 @@ const steps = [
     },
     {
         title: 'Step 4',
-        description: 'Review your covariate selections',
+        description: 'Assess % missing in selected covariates',
     },
     {
         title: 'Step 5',
@@ -70,8 +70,9 @@ const CaseControlGWAS = (props) => {
     const [imputationScore, setImputationScore] = useState(0.3);
     const [mafThreshold, setMafThreshold] = useState(0.01);
     const [numOfPC, setNumOfPC] = useState(3);
-    const [selectedCaseHare, setSelectedCaseHare] = useState(undefined);
-    const [selectedControlHare, setSelectedControlHare] = useState(undefined);
+    const [selectedCaseHare, setSelectedCaseHare] = useState("-select one-");
+    const [selectedControlHare, setSelectedControlHare] = useState("-select one-");
+    const [gwasJobName, setGwasJobName] = useState("");
     const hareConceptId = 2090006880;
 
     async function fetchSources() {
@@ -195,7 +196,9 @@ const CaseControlGWAS = (props) => {
         }
         return (
             <React.Fragment>
+                <h4 className="GWASUI-selectInstruction">In this step, you will begin to define the study population. To begin, select the cohort that you would like to define as your study “cases” population.</h4>
                 <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>+ Add a new cohort</button>
                     <div className='GWASUI-mainTable'>
                         <Table
                             className='GWASUI-table1'
@@ -223,7 +226,10 @@ const CaseControlGWAS = (props) => {
         }
         return (
             <React.Fragment>
+                {/* window.open(`${}`, '_blank') */}
+                 <h4 className="GWASUI-selectInstruction">In this step, you will continue to define the study population. Please select the cohort that you would like to define as your study “control” population.</h4>
                 <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>+ Add a new cohort</button>
                     <div className='GWASUI-mainTable'>
                         <Table
                             className='GWASUI-table1'
@@ -252,7 +258,7 @@ const CaseControlGWAS = (props) => {
 
         return (
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                <h4 className='GWASUI-selectInstruction'>Select one or more covariates</h4>
+                <h4 className='GWASUI-selectInstruction'>In this step, you will select covariates for your study. Please choose any of the harmonized variables.</h4>
                 <div className='GWASUI-mainTable'>
                     <Table
                         className='GWASUI-table2'
@@ -360,7 +366,7 @@ const CaseControlGWAS = (props) => {
             return (
                 <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                     <hr />
-                    <h4 className='GWASUI-selectInstruction'>Review your covariates</h4>
+                    <h4 className='GWASUI-selectInstruction'>In this step, you can review the covariates selection based on % missing metrics. To adjust covariates please return to Step 3. </h4>
                     <div className='GWASUI-mainTable'>
                         <Table
                             className='GWASUI-review-table'
@@ -511,18 +517,11 @@ const CaseControlGWAS = (props) => {
         // props.refreshWorkflows();
     };
 
-    // const useSubmitJob = () => {
-    //     const submission = useMutation(fetchGwasSubmit, {
-    //         onSuccess: () => {
-    //             resetFields();
-    //         },
-    //     });
-    //     return submission;
-    // };
-
     const CohortParameters = () => {
         return (
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                <h4 className="GWASUI-selectInstruction">In this step, you will determine workflow parameters. Please adjust the number of population principal components to control for population structure, minor allele frequency cutoff and imputation score cutoff.</h4>
+                <h4 className="GWASUI-selectInstruction">You may also remove unwanted covariates. Please also choose the ancestry population on which you would like to perform your study.</h4>
                 <div className='GWASUI-mainArea'>
                     <Form
                         name='GWASUI-parameter-form'
@@ -588,6 +587,99 @@ const CaseControlGWAS = (props) => {
         )
     }
 
+    const useSubmitJob = () => {
+        const openNotification = () => {
+            const key = `open${Date.now()}`;
+            const btn = (
+                <Button type="primary" size="small" onClick={() => notification.close(key)}>
+                    Confirm
+                </Button>
+            );
+            notification.open({
+                message: 'Successful Submission',
+                description:
+                    `${gwasJobName} job starting!`,
+                icon: (<CheckOutlined />),
+                placement: 'bottom',
+                btn,
+                key,
+            });
+        };
+        const submission = useMutation(fetchGwasSubmit, {
+            onSuccess: () => {
+                openNotification();
+                resetFields();
+            },
+        });
+        return submission;
+    };
+
+
+    const GWASFormSubmit = () => {
+        const submitJob = useSubmitJob();
+
+        const handleNameInputChange = (e) => {
+            setGwasJobName(e.target.value);
+        }
+
+        return (<React.Fragment>
+            <div className="GWASUI-flexRow GWASUI-headerColor"><h3 className="GWASUI-title">Review Details</h3></div>
+            <div className="GWASUI-flexRow GWASUI-rowItem">
+                <div className="GWASUI-flexCol GWASUI-flexHeader1">Number of PCs</div>
+                <div className="GWASUI-flexCol">{numOfPC}</div>
+                <div className="GWASUI-flexCol GWASUI-flexHeader2">MAF Cutoff</div>
+                <div className="GWASUI-flexCol"> {mafThreshold}</div>
+            </div>
+            <div className="GWASUI-flexRow GWASUI-rowItem">
+                <div className="GWASUI-flexCol GWASUI-flexHeader1">Case HARE</div>
+                <div className="GWASUI-flexCol">{selectedCaseHare}</div>
+                <div className="GWASUI-flexCol GWASUI-flexHeader2">Control HARE</div>
+                <div className="GWASUI-flexCol">{selectedControlHare}</div>
+                <div className="GWASUI-flexCol GWASUI-flexHeader2">Imputation Score Cutoff</div>
+                <div className="GWASUI-flexCol">{imputationScore}</div>
+            </div>
+            <div className="GWASUI-flexRow GWASUI-rowItem">
+                <div className="GWASUI-flexCol GWASUI-flexHeader1">Selected Case Cohort</div>
+                <div className="GWASUI-flexCol">{selectedCaseCohort?.cohort_name}</div>
+                <div className="GWASUI-flexCol GWASUI-flexHeader2">Selected Control Cohort</div>
+                <div className="GWASUI-flexCol">{selectedControlCohort?.cohort_name}</div>
+            </div>
+            <div className="GWASUI-flexRow">
+                <div className="GWASUI-flexCol GWASUI-rowItem">Covariates</div>
+            </div>
+            <div className="GWASUI-flexRow">{selectedCovariates.map((cov, key) => {
+                return (
+                    <div>
+                        <li className="GWASUI-listItem" key={key}>{cov.concept_name}</li>
+                    </div>
+                )
+            })}</div>
+            <div className="GWASUI-flexRow">
+                <input
+                    type="text"
+                    autoFocus="autoFocus"
+                    className="GWASUI-nameInput"
+                    onChange={handleNameInputChange}
+                    value={gwasJobName}
+                    placeholder="Enter a job name..."
+                    style={{ width: '70%', height: '90%' }}
+                />
+                <div className="GWASUI-submitContainer">
+                    <Button
+                        htmlType='submit'
+                        type='primary'
+                        disabled={gwasJobName.length === 0}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            submitJob.mutate();
+                        }}
+                    >
+                        Submit
+                    </Button></div>
+            </div>
+        </React.Fragment>)
+    }
+
     const generateContentForStep = (stepIndex) => {
         switch (stepIndex) {
             case 0: {
@@ -616,8 +708,28 @@ const CaseControlGWAS = (props) => {
                 );
             }
             case 5: {
+                const layout = {
+                    labelCol: { span: 8 },
+                    wrapperCol: { span: 16 },
+                };
                 return (
-                    <span>step 6</span>
+                    <React.Fragment>
+                         <h4 className="GWASUI-selectInstruction">In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
+                         <h4 className="GWASUI-selectInstruction">Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
+                    <div className='GWASUI-mainArea'>
+                        <Form
+                            {...layout}
+                            name='control-hooks'
+                            form={form}
+                            onFinish={(values) => {
+                                onStep5FormSubmit(values);
+                            }}
+                        >
+                            <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
+                        </Form>
+                    </div>
+                    </React.Fragment>
+
                 );
             }
         }
@@ -640,6 +752,13 @@ const CaseControlGWAS = (props) => {
         });
     };
 
+
+    const onStep5FormSubmit = (values) => {
+        setImputationScore(values.imputationCutoff);
+        setMafThreshold(values.mafCutoff);
+        setNumOfPC(values.numOfPC);
+    };
+
     const handleNextStep = () => {
         if (current === 1) {
             setSelectedCovariates([...selectedCovariates].map((val) => val.prefixed_concept_id));
@@ -658,7 +777,7 @@ const CaseControlGWAS = (props) => {
 
     return (
         <Space direction={'vertical'} style={{ width: '100%' }}>
-            {/* <GWASWorkflowList refreshWorkflows={props.refreshWorkflows} /> */}
+            <GWASWorkflowList refreshWorkflows={props.refreshWorkflows} />
             <Steps current={current}>
                 {steps.map((item) => (
                     <Step key={item.title} title={item.title} description={item.description} />
@@ -697,11 +816,13 @@ const CaseControlGWAS = (props) => {
                             handleNextStep();
                             setCurrent(current + 1);
                         }}
-                        disabled={!nextButtonEnabled}
+                        disabled={!nextButtonEnabled} // TODO: update nextButtonEnabled logic to disable when necessary. right now its just defaulted true
                     >
                         Next
                     </Button>
                 )}
+                {/* added so "select diff gwas" btn retains center position on last page */}
+                {current === steps.length - 1 && (<div className="GWASUI-navBtn"></div>)}
             </div>
         </Space>
     )
