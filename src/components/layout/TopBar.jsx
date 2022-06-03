@@ -60,6 +60,7 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
         )}
         {username !== undefined ? (
           <TopBarMenu
+            isAdminUser={isAdminUser}
             items={config.menuItems}
             onLogoutClick={onLogoutClick}
             username={username}
