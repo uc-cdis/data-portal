@@ -61,7 +61,7 @@ gitops_config() {
     echo "ERROR: gitops_config requires hostname arg"
     return 1
   fi
-  if [[ "$hostname" =~ ^qa- ]]; then
+  if [[ "$hostname" =~ ^qa[-.] ]]; then
     gitRepo="gitops-qa"
   elif [[ "$hostname" =~ planx-pla.net$ ]]; then
     gitRepo="gitops-dev"
