@@ -94,7 +94,36 @@ function ExplorerFilterSet({ className, filter }) {
     JSON.stringify(filter) !== JSON.stringify(filterSet.filter);
 
   return (
-    <div className={className}>
+    <div className={className} style={{ backgroundColor: '#f001' }}>
+      <Tooltip
+        overlay={
+          <div>
+            All Saved Filter Sets features have been incorporated into the
+            Filter Set Workspace. This interface will be removed in an upcoming
+            release.
+          </div>
+        }
+        arrowContent={<div className='rc-tooltip-arrow-inner' />}
+        trigger={['hover', 'focus']}
+      >
+        <div
+          style={{
+            padding: '-0.5rem',
+            letterSpacing: '0rem',
+            fontWeight: 'var(--g3-font__semi-bold-weight)',
+          }}
+        >
+          <FontAwesomeIcon
+            icon='triangle-exclamation'
+            color='red'
+            size='xs'
+            style={{
+              cursor: 'pointer',
+            }}
+          />{' '}
+          Deprecated! Use Filter Set Workspace instead.
+        </div>
+      </Tooltip>
       {filterSets.isError ? (
         <div className='explorer-filter-set__error'>
           <h2>Error obtaining saved Filter Set data...</h2>
