@@ -36,6 +36,7 @@
     "fuse.js": "^6.6.2",
     "graphiql": "^1.9.6",
     "graphql": "^15.8.0",
+    "graphql-ws": "^5.8.2",
     "html-webpack-plugin": "^5.5.0",
     "jszip": "^3.10.0",
     "lodash.clonedeep": "^4.5.0",
