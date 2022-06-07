@@ -76,6 +76,12 @@ if (isProduction) {
 } else {
   // add sourcemap tools for development mode
   devtool = 'eval-source-map';
+
+  // add react-refresh to plugins for development mode
+  plugins.push(
+    // eslint-disable-next-line global-require
+    new (require('@pmmmwh/react-refresh-webpack-plugin'))({ overlay: false })
+  );
 }
 
 module.exports = {
@@ -117,6 +123,9 @@ module.exports = {
         exclude:
           /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
         loader: 'babel-loader',
+        options: isProduction
+          ? undefined
+          : { plugins: [require.resolve('react-refresh/babel')] },
       },
       {
         test: /\.css$/,

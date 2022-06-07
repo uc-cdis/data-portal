@@ -1,7 +1,8 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { fetchWithCreds } from '../actions';
 import { useExplorerConfig } from './ExplorerConfigContext';
+import { createEmptyFilterSet } from './ExplorerFilterSet/utils';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ExplorerFilterSetDTO} ExplorerFilterSetDTO */
@@ -98,11 +99,15 @@ export function updateFilterSet(explorerId, filterSet) {
 
 /**
  * @typedef {Object} ExplorerFilterSetsContext
- * @property {ExplorerFilterSet[]} filterSets
- * @property {() => Promise<void>} refreshFilterSets
- * @property {(filerSet: ExplorerFilterSet) => Promise<ExplorerFilterSet>} createFilterSet
- * @property {(filerSet: ExplorerFilterSet) => Promise<void>} deleteFilterSet
- * @property {(filerSet: ExplorerFilterSet) => Promise<void>} updateFilterSet
+ * @property {ExplorerFilterSet} active
+ * @property {ExplorerFilterSet[]} all
+ * @property {ExplorerFilterSet} empty
+ * @property {boolean} isError
+ * @property {() => Promise<void>} refresh
+ * @property {(filerSet: ExplorerFilterSet) => Promise<ExplorerFilterSet>} create
+ * @property {(filerSet: ExplorerFilterSet) => Promise<void>} delete
+ * @property {(filerSet: ExplorerFilterSet) => Promise<void>} update
+ * @property {(id?: number) => void} use
  */
 
 /** @type {React.Context<ExplorerFilterSetsContext>} */
@@ -113,15 +118,40 @@ const emptyFilterSets = [];
 export function ExplorerFilterSetsProvider({ children }) {
   const { explorerId } = useExplorerConfig();
   const [filterSets, setFilterSets] = useState(emptyFilterSets);
+  const [id, setId] = useState(/** @type {number} */ (undefined));
+
+  const [isError, setIsError] = useState(false);
+  function handleCatch(e) {
+    console.error(e);
+    setIsError(true);
+    return undefined;
+  }
+
+  useEffect(() => {
+    fetchFilterSets(explorerId).then(setFilterSets).catch(handleCatch);
+  }, []);
+
   const value = useMemo(
     () => ({
-      filterSets,
-      refreshFilterSets: () => fetchFilterSets(explorerId).then(setFilterSets),
-      createFilterSet: (filterSet) => createFilterSet(explorerId, filterSet),
-      deleteFilterSet: (filterSet) => deleteFilterSet(explorerId, filterSet),
-      updateFilterSet: (filterSet) => updateFilterSet(explorerId, filterSet),
+      active: filterSets.find((filterSet) => filterSet.id === id),
+      all: filterSets,
+      empty: createEmptyFilterSet(),
+      isError,
+      refresh: () => {
+        if (isError) setIsError(false);
+        return fetchFilterSets(explorerId)
+          .then(setFilterSets)
+          .catch(handleCatch);
+      },
+      create: (filterSet) =>
+        createFilterSet(explorerId, filterSet).catch(handleCatch),
+      delete: (filterSet) =>
+        deleteFilterSet(explorerId, filterSet).catch(handleCatch),
+      update: (filterSet) =>
+        updateFilterSet(explorerId, filterSet).catch(handleCatch),
+      use: setId,
     }),
-    [filterSets, explorerId]
+    [explorerId, filterSets, id, isError]
   );
   return (
     <ExplorerFilterSetsContext.Provider value={value}>

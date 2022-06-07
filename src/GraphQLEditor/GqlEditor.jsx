@@ -114,6 +114,7 @@ function GqlEditor({ guppySchema, schema }) {
         variables={parameters.variables}
         onEditQuery={editQuery}
         onEditVariables={editVariables}
+        storage={window.sessionStorage}
       />
     </div>
   );

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
 import SimpleInputField from '../../components/SimpleInputField';
-import FilterSetQueryDisplay from '../ExplorerFilterSet/FilterSetQueryDisplay';
+import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 
@@ -62,7 +62,7 @@ export default function FilterSetCard({ count, filterSet, label, onClose }) {
               />
             }
           />
-          <FilterSetQueryDisplay filter={filterSet.filter} />
+          <ExplorerFilterDisplay filter={filterSet.filter} />
         </>
       ) : null}
     </div>

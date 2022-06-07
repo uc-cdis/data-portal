@@ -1,6 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
 
 /** @typedef {import('../types').AnchorConfig} AnchorConfig */
+/** @typedef {import('../types').AnchoredFilterState} AnchoredFilterState */
 /** @typedef {import('../types').AnchoredFilterTabStatus} AnchoredFilterTabStatus */
 /** @typedef {import('../types').FilterSectionStatus} FilterSectionStatus */
 /** @typedef {import('../types').FilterState} FilterState */
@@ -8,6 +9,9 @@ import cloneDeep from 'lodash.clonedeep';
 /** @typedef {import('../types').FilterTabsOption} FilterTabsOption */
 /** @typedef {import('../types').FilterTabStatus} FilterTabStatus */
 /** @typedef {import('../types').SimpleFilterState} SimpleFilterState */
+/** @typedef {import('../types').OptionFilter} OptionFilter */
+/** @typedef {import('../types').RangeFilter} RangeFilter */
+/** @typedef {OptionFilter | RangeFilter} BasicFilter */
 
 /**
  * @param {FilterTabsOption[]} filterTabs
@@ -21,7 +25,7 @@ export function getExpandedStatus(filterTabs, expandedStatusControl) {
 
 /**
  * @param {Object} args
- * @param {AnchorConfig} args.anchorConfig
+ * @param {AnchorConfig} [args.anchorConfig]
  * @param {FilterState} args.filterResults
  */
 export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
@@ -68,7 +72,7 @@ function getFilterTabStatus(fields, filterResults) {
 
 /**
  * @param {Object} args
- * @param {AnchorConfig} args.anchorConfig
+ * @param {AnchorConfig} [args.anchorConfig]
  * @param {FilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @returns {FilterStatus}
@@ -99,7 +103,9 @@ export function removeEmptyFilter(filterResults) {
     const filterValues = filterResults[field];
     if (typeof filterValues !== 'string')
       if ('filter' in filterValues) {
-        const newAnchoredFilterResults = removeEmptyFilter(filterValues.filter);
+        const newAnchoredFilterResults = /** @type {SimpleFilterState} */ (
+          removeEmptyFilter(filterValues.filter)
+        );
         if (Object.keys(newAnchoredFilterResults).length > 0)
           newFilterResults[field] = { filter: newAnchoredFilterResults };
       } else {
@@ -148,9 +154,11 @@ export function clearFilterSection({
   let newFilterResults = cloneDeep(filterResults);
   const fieldName = filterTabs[tabIndex].fields[sectionIndex];
   if (anchorLabel === undefined || anchorLabel === '') {
-    newFilterResults[fieldName] = {};
+    newFilterResults[fieldName] = /** @type {BasicFilter} */ ({});
   } else {
-    newFilterResults[anchorLabel].filter[fieldName] = {};
+    /** @type {AnchoredFilterState} */ (newFilterResults[anchorLabel]).filter[
+      fieldName
+    ] = /** @type {BasicFilter} */ ({});
   }
   newFilterResults = removeEmptyFilter(newFilterResults);
 
@@ -220,8 +228,12 @@ export function updateCombineMode({
     if (!(anchorLabel in newFilterResults))
       newFilterResults[anchorLabel] = { filter: {} };
     if (!('filter' in newFilterResults[anchorLabel]))
-      newFilterResults[anchorLabel].filter = {};
-    const newAnchoredFilterResults = newFilterResults[anchorLabel].filter;
+      /** @type {AnchoredFilterState} */ (
+        newFilterResults[anchorLabel]
+      ).filter = {};
+    const newAnchoredFilterResults = /** @type {AnchoredFilterState} */ (
+      newFilterResults[anchorLabel]
+    ).filter;
     if (newAnchoredFilterResults[fieldName] === undefined) {
       newAnchoredFilterResults[fieldName] = {
         [combineModeFieldName]: combineModeValue,
@@ -292,8 +304,12 @@ export function updateRangeValue({
     if (!(anchorLabel in newFilterResults))
       newFilterResults[anchorLabel] = { filter: {} };
     if (!('filter' in newFilterResults[anchorLabel]))
-      newFilterResults[anchorLabel].filter = {};
-    const newAnchoredFilterResults = newFilterResults[anchorLabel].filter;
+      /** @type {AnchoredFilterState} */ (
+        newFilterResults[anchorLabel]
+      ).filter = {};
+    const newAnchoredFilterResults = /** @type {AnchoredFilterState} */ (
+      newFilterResults[anchorLabel]
+    ).filter;
     newAnchoredFilterResults[fieldName] = { lowerBound, upperBound };
     // if lowerbound and upperbound values equal min and max,
     // remove this range from filter
@@ -352,10 +368,16 @@ export function updateSelectedValue({
   if (anchorLabel === undefined || anchorLabel === '') {
     if (newFilterResults[fieldName] === undefined)
       newFilterResults[fieldName] = { selectedValues: [selectedValue] };
-    else if (newFilterResults[fieldName].selectedValues === undefined)
-      newFilterResults[fieldName].selectedValues = [selectedValue];
+    else if (
+      /** @type {OptionFilter} */ (newFilterResults[fieldName])
+        .selectedValues === undefined
+    )
+      /** @type {OptionFilter} */ (newFilterResults[fieldName]).selectedValues =
+        [selectedValue];
     else {
-      const { selectedValues } = newFilterResults[fieldName];
+      const { selectedValues } = /** @type {OptionFilter} */ (
+        newFilterResults[fieldName]
+      );
       const selectedValueIndex = selectedValues.indexOf(selectedValue);
       if (selectedValueIndex >= 0 && !isSelected)
         selectedValues.splice(selectedValueIndex, 1);
@@ -366,14 +388,25 @@ export function updateSelectedValue({
     if (!(anchorLabel in newFilterResults))
       newFilterResults[anchorLabel] = { filter: {} };
     if (!('filter' in newFilterResults[anchorLabel]))
-      newFilterResults[anchorLabel].filter = {};
-    const newAnchoredFilterResults = newFilterResults[anchorLabel].filter;
+      /** @type {AnchoredFilterState} */ (
+        newFilterResults[anchorLabel]
+      ).filter = {};
+    const newAnchoredFilterResults = /** @type {AnchoredFilterState} */ (
+      newFilterResults[anchorLabel]
+    ).filter;
     if (newAnchoredFilterResults[fieldName] === undefined)
       newAnchoredFilterResults[fieldName] = { selectedValues: [selectedValue] };
-    else if (newAnchoredFilterResults[fieldName].selectedValues === undefined)
-      newAnchoredFilterResults[fieldName].selectedValues = [selectedValue];
+    else if (
+      /** @type {OptionFilter} */ (newAnchoredFilterResults[fieldName])
+        .selectedValues === undefined
+    )
+      /** @type {OptionFilter} */ (
+        newAnchoredFilterResults[fieldName]
+      ).selectedValues = [selectedValue];
     else {
-      const { selectedValues } = newAnchoredFilterResults[fieldName];
+      const { selectedValues } = /** @type {OptionFilter} */ (
+        newAnchoredFilterResults[fieldName]
+      );
       const selectedValueIndex = selectedValues.indexOf(selectedValue);
       if (selectedValueIndex >= 0 && !isSelected)
         selectedValues.splice(selectedValueIndex, 1);

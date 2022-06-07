@@ -13,7 +13,8 @@
   color: inherit;
 }
 
-.data-requests__status-approved {
+.data-requests__status-approved,
+.data-requests__status-data-delivered {
   color: var(--pcdc-color__primary);
 }
 
@@ -33,4 +34,14 @@
 
 .data-requests__error > h2 {
   display: block !important;
+}
+
+.data-requests .download-button {
+  min-width: 240px;
+}
+
+.data-requests .download-button__error-message {
+  color: red;
+  font-size: 0.8rem;
+  font-style: italic;
 }

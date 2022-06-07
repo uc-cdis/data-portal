@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash.clonedeep';
 import Tooltip from 'rc-tooltip';
@@ -13,12 +13,12 @@ import {
   FilterSetActionMenu,
   FilterSetActionForm,
 } from './FilterSetActionComponents';
-import { createEmptyFilterSet, truncateWithEllipsis } from './utils';
+import { truncateWithEllipsis } from './utils';
 import './ExplorerFilterSet.css';
 
-/** @typedef {import('./types').ExplorerFilter} ExplorerFilter */
-/** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
-/** @typedef {import('./types').ExplorerFilterSetActionType} ExplorerFilterSetActionType */
+/** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
+/** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('../types').ExplorerFilterSetActionType} ExplorerFilterSetActionType */
 
 /**
  * @param {Object} prop
@@ -27,19 +27,12 @@ import './ExplorerFilterSet.css';
  */
 function ExplorerFilterSet({ className, filter }) {
   const { handleFilterChange, handleFilterClear } = useExplorerState();
-  const [filterSet, setFilterSet] = useState(createEmptyFilterSet());
 
-  const {
-    filterSets,
-    refreshFilterSets,
-    createFilterSet,
-    deleteFilterSet,
-    updateFilterSet,
-  } = useExplorerFilterSets();
-  const [isError, setIsError] = useState(false);
-  useEffect(() => {
-    if (!isError) refreshFilterSets().catch(() => setIsError(true));
-  }, [isError]);
+  const filterSets = useExplorerFilterSets();
+  const filterSet = useMemo(
+    () => filterSets.active ?? filterSets.empty,
+    [filterSets]
+  );
 
   /** @type {[ExplorerFilterSetActionType, React.Dispatch<React.SetStateAction<ExplorerFilterSetActionType>>]} */
   const [actionType, setActionType] = useState('open');
@@ -53,43 +46,37 @@ function ExplorerFilterSet({ className, filter }) {
   }
 
   function handleNew() {
-    setFilterSet(createEmptyFilterSet());
+    filterSets.use();
     handleFilterClear();
   }
   function handleOpen(/** @type {ExplorerFilterSet} */ opened) {
-    setFilterSet(cloneDeep(opened));
+    filterSets.use(opened.id);
     handleFilterChange(cloneDeep(opened.filter));
     closeActionForm();
   }
   async function handleCreate(/** @type {ExplorerFilterSet} */ created) {
     try {
-      setFilterSet(await createFilterSet(created));
-      await refreshFilterSets();
-    } catch (e) {
-      setIsError(true);
+      filterSets.use((await filterSets.create(created)).id);
+      await filterSets.refresh();
     } finally {
       closeActionForm();
     }
   }
   async function handleUpdate(/** @type {ExplorerFilterSet} */ updated) {
     try {
-      await updateFilterSet(updated);
-      setFilterSet(cloneDeep(updated));
-      await refreshFilterSets();
-    } catch (e) {
-      setIsError(true);
+      await filterSets.update(updated);
+      filterSets.use(updated.id);
+      await filterSets.refresh();
     } finally {
       closeActionForm();
     }
   }
   async function handleDelete(/** @type {ExplorerFilterSet} */ deleted) {
     try {
-      await deleteFilterSet(deleted);
-      setFilterSet(createEmptyFilterSet());
-      await refreshFilterSets();
+      await filterSets.delete(deleted);
+      filterSets.use();
+      await filterSets.refresh();
       handleFilterClear();
-    } catch (e) {
-      setIsError(true);
     } finally {
       closeActionForm();
     }
@@ -107,8 +94,37 @@ function ExplorerFilterSet({ className, filter }) {
     JSON.stringify(filter) !== JSON.stringify(filterSet.filter);
 
   return (
-    <div className={className}>
-      {isError ? (
+    <div className={className} style={{ backgroundColor: '#f001' }}>
+      <Tooltip
+        overlay={
+          <div>
+            All Saved Filter Sets features have been incorporated into the
+            Filter Set Workspace. This interface will be removed in an upcoming
+            release.
+          </div>
+        }
+        arrowContent={<div className='rc-tooltip-arrow-inner' />}
+        trigger={['hover', 'focus']}
+      >
+        <div
+          style={{
+            padding: '-0.5rem',
+            letterSpacing: '0rem',
+            fontWeight: 'var(--g3-font__semi-bold-weight)',
+          }}
+        >
+          <FontAwesomeIcon
+            icon='triangle-exclamation'
+            color='red'
+            size='xs'
+            style={{
+              cursor: 'pointer',
+            }}
+          />{' '}
+          Deprecated! Use Filter Set Workspace instead.
+        </div>
+      </Tooltip>
+      {filterSets.isError ? (
         <div className='explorer-filter-set__error'>
           <h2>Error obtaining saved Filter Set data...</h2>
           <p>
@@ -118,13 +134,13 @@ function ExplorerFilterSet({ className, filter }) {
             <a href={`mailto:${contactEmail}`}>{contactEmail}</a>) for more
             information.
           </p>
-          <Button label='Retry' onClick={() => setIsError(false)} />
+          <Button label='Retry' onClick={() => filterSets.refresh()} />
         </div>
       ) : (
         <>
           <div>
             <h4 className='explorer-filter-set__title'>
-              My filter sets{' '}
+              Saved Filter Sets{' '}
               {filterSet.name && isFiltersChanged && (
                 <Tooltip
                   overlay='You have changed filters for this Filter Set. Click this icon to undo.'
@@ -175,7 +191,7 @@ function ExplorerFilterSet({ className, filter }) {
           </div>
           <FilterSetActionMenu
             isFilterSetEmpty={filterSet.name === ''}
-            hasNoSavedFilterSets={filterSets.length === 0}
+            hasNoSavedFilterSets={filterSets.all.length === 0}
             onSelectAction={handleSelectAction}
           />
         </>
@@ -186,7 +202,7 @@ function ExplorerFilterSet({ className, filter }) {
             actionType={actionType}
             currentFilterSet={filterSet}
             currentFilter={filter}
-            filterSets={filterSets}
+            filterSets={filterSets.all}
             handlers={{
               handleOpen,
               handleCreate,

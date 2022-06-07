@@ -1,0 +1,17 @@
+.explorer-filter-set-form {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+}
+
+.explorer-filter-set-form button {
+  margin-right: 10px;
+}
+
+@media screen and (max-width: 1170px) {
+  .explorer-filter-set-form button {
+    margin-bottom: 10px;
+  }
+}

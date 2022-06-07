@@ -347,7 +347,7 @@ function FilterGroup({
         )}
         {tabs[tabIndex].map((section, index) => (
           <FilterSection
-            key={index}
+            key={section.title}
             disabledTooltipMessage={disabledTooltipMessage}
             expanded={expandedStatus[tabIndex][index]}
             filterStatus={filterTabStatus[index]}

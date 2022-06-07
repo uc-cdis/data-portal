@@ -2,10 +2,13 @@ import type { Response as PaginateResponse } from 'react-select-async-paginate';
 
 export type {
   AnchorConfig,
+  AnchoredFilterState,
   FilterChangeHandler,
   FilterConfig,
   FilterState,
   FilterTabsOption,
+  OptionFilter,
+  RangeFilter,
   SimpleFilterState,
 } from '../../../GuppyComponents/types';
 

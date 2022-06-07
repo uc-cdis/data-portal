@@ -11,6 +11,10 @@ import {
   getSelectedAnchors,
 } from './utils';
 
+/** @typedef {import('../types').FilterState} FilterState */
+/** @typedef {import('../types').FilterStatus} FilterStatus */
+/** @typedef {import('../types').FilterTabsOption} FilterTabsOption */
+
 describe('Get expanded status array for all tabs', () => {
   const filterTabs = [
     { title: 'a', fields: ['x', 'y'] },
@@ -256,6 +260,15 @@ describe('Get filter status from filter results', () => {
 });
 
 describe('Clear a single filter section', () => {
+  /**
+   * @param {Object} args
+   * @param {string} [args.anchorLabel]
+   * @param {FilterState} [args.filterResults]
+   * @param {FilterStatus} [args.filterStatus]
+   * @param {FilterTabsOption[]} [args.filterTabs]
+   * @param {number} args.sectionIndex
+   * @param {number} args.tabIndex
+   */
   function helper({
     filterResults = {
       x: { selectedValues: ['foo', 'bar'] },
@@ -445,6 +458,13 @@ describe('Check if a tab has active filter', () => {
 });
 
 describe('Toggles combine mode in option filter', () => {
+  /**
+   * @param {Object} args
+   * @param {FilterStatus} args.filterStatus
+   * @param {FilterState} args.filterResults
+   * @param {string} [args.anchorLabel]
+   * @param {'AND' | 'OR'} args.combineModeValue
+   */
   function helper({
     filterStatus,
     filterResults,
@@ -547,6 +567,14 @@ describe('Toggles combine mode in option filter', () => {
 
 describe('Update a range filter', () => {
   const [minValue, maxValue] = [0, 5];
+  /**
+   * @param {Object} args
+   * @param {FilterStatus} [args.filterStatus]
+   * @param {FilterState} [args.filterResults]
+   * @param {string} [args.anchorLabel]
+   * @param {number} args.lowerBound
+   * @param {number} args.upperBound
+   */
   function helper({
     filterStatus = [[[0, 1]]],
     filterResults = { x: { lowerBound: 0, upperBound: 1 } },
@@ -643,6 +671,13 @@ describe('Update a range filter', () => {
 });
 
 describe('Update an option filter', () => {
+  /**
+   * @param {Object} args
+   * @param {FilterStatus} args.filterStatus
+   * @param {FilterState} args.filterResults
+   * @param {string} [args.anchorLabel]
+   * @param {string} args.selectedValue
+   */
   function helper({ filterStatus, filterResults, anchorLabel, selectedValue }) {
     return updateSelectedValue({
       filterStatus,

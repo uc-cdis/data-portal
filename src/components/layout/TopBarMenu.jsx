@@ -6,11 +6,12 @@ import './TopBarMenu.css';
 
 /**
  * @param {Object} props
+ * @param {boolean} [props.isAdminUser]
  * @param {{ icon?: string; link: string; name: string; }[]} [props.items]
  * @param {React.MouseEventHandler<HTMLButtonElement>} props.onLogoutClick
  * @param {string} props.username
  */
-function TopBarMenu({ items, onLogoutClick, username }) {
+function TopBarMenu({ isAdminUser, items, onLogoutClick, username }) {
   const [showMenu, setShowMenu] = useState(false);
   function handleMenuBlur(e) {
     if (showMenu && !e.currentTarget.contains(e.relatedTarget))
@@ -35,6 +36,11 @@ function TopBarMenu({ items, onLogoutClick, username }) {
           <li className='top-bar-menu__item'>
             <Link to='/requests'>Data Requests</Link>
           </li>
+          {isAdminUser && (
+            <li className='top-bar-menu__item'>
+              <Link to='/submission'>Data Submission</Link>
+            </li>
+          )}
           {items?.map((item) => (
             <li key={item.link} className='top-bar-menu__item'>
               <a href={item.link} target='_blank' rel='noopener noreferrer'>
@@ -56,6 +62,7 @@ function TopBarMenu({ items, onLogoutClick, username }) {
 }
 
 TopBarMenu.propTypes = {
+  isAdminUser: PropTypes.bool,
   items: PropTypes.arrayOf(
     PropTypes.exact({
       icon: PropTypes.string,
