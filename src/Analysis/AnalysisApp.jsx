@@ -10,8 +10,6 @@ import ReduxGWASUIApp from './GWASUIApp/ReduxGWASUIApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
-// monitor user's session
-sessionMonitor.start();
 
 const queryClient = new QueryClient();
 
