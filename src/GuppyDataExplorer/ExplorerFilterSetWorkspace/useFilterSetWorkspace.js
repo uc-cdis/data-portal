@@ -100,7 +100,13 @@ export default function useFilterSetWorkspace() {
       payload: { filter },
     });
   }
-  useEffect(() => update(explorerFilter), [explorerFilter]);
+
+  const isInitialRender = useRef(true);
+  useEffect(() => {
+    if (isInitialRender.current) isInitialRender.current = false;
+    else update(explorerFilter);
+  }, [explorerFilter]);
+
   /** @param {string} id */
   function use(id) {
     dispatch({
