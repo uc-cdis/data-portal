@@ -63,7 +63,6 @@ class AnalysisApp extends React.Component {
     // which contain the message "refresh token!":
     if (event.origin === applicationBaseUrl &&
         event.data === "refresh token!") {
-        console.log( "received: " + event.data );
         //Call function to refresh session:
         sessionMonitor.updateUserActivity();
     }
