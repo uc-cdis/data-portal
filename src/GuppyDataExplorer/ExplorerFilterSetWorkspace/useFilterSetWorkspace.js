@@ -14,114 +14,87 @@ import {
 export default function useFilterSetWorkspace() {
   const { explorerFilter, handleFilterChange } = useExplorerState();
   const filterSets = useExplorerFilterSets();
+
   const initialWsState = useMemo(
     () => initializeWorkspaceState(explorerFilter),
     []
   );
   useEffect(() => {
-    // sync filter UI with non-empty initial workspace filter
+    // sync explorer filter state with non-empty initial workspace active filter
     if (!checkIfFilterEmpty(initialWsState.active.filterSet.filter))
       handleFilterChange(initialWsState.active.filterSet.filter);
   }, []);
+
   const [state, dispatch] = useReducer(workspaceReducer, initialWsState);
   const prevActiveFilterSet = useRef(state.active.filterSet);
   useEffect(() => {
-    // sync with browser store
-    storeWorkspaceState(state);
-
     const { filter: prevFilter, id: prevId } = prevActiveFilterSet.current;
     const { filter, id } = state.active.filterSet;
+    prevActiveFilterSet.current = state.active.filterSet;
 
-    // sync with explorer filter state
+    // sync explorer filter state with workspace active filter
     const isFilterChanged =
       JSON.stringify(prevFilter) !== JSON.stringify(filter);
     if (isFilterChanged) handleFilterChange(filter);
 
-    // sync with explorer filter sets state
+    // sync explorer filter sets state with workspace active filter set
     const isFilterSetIdChanged = prevId !== id;
     if (isFilterSetIdChanged) filterSets.use(id);
 
-    prevActiveFilterSet.current = state.active.filterSet;
+    // sync browser store with workspace state
+    storeWorkspaceState(state);
   }, [state]);
 
-  function clear() {
-    dispatch({
-      type: 'CLEAR',
-    });
-  }
-  function clearAll() {
-    dispatch({
-      type: 'CLEAR-ALL',
-      payload: { newId: crypto.randomUUID() },
-    });
-  }
-  function create() {
-    dispatch({
-      type: 'CREATE',
-      payload: { newId: crypto.randomUUID() },
-    });
-  }
-  function duplicate() {
-    dispatch({
-      type: 'DUPLICATE',
-      payload: { newId: crypto.randomUUID() },
-    });
-  }
-  /**
-   * @param {ExplorerFilterSet} filterSet
-   * @param {boolean} [shouldOverwrite]
-   */
-  function load(filterSet, shouldOverwrite) {
-    dispatch({
-      type: 'LOAD',
-      payload: {
-        newId: shouldOverwrite ? undefined : crypto.randomUUID(),
-        filterSet,
-      },
-    });
-  }
-  function remove() {
-    dispatch({
-      type: 'REMOVE',
-      payload: { newId: crypto.randomUUID() },
-    });
-  }
-  /** @param {ExplorerFilterSet} filterSet */
-  function save(filterSet) {
-    dispatch({
-      type: 'SAVE',
-      payload: { filterSet },
-    });
-  }
-  /** @param {ExplorerFilter} filter */
-  function update(filter) {
-    dispatch({
-      type: 'UPDATE',
-      payload: { filter },
-    });
-  }
-  useEffect(() => update(explorerFilter), [explorerFilter]);
-  /** @param {string} id */
-  function use(id) {
-    dispatch({
-      type: 'USE',
-      payload: { id },
-    });
-  }
+  const isInitialRender = useRef(true);
+  useEffect(() => {
+    // sync workspace active filter with explorer filter state (skip initial render)
+    if (isInitialRender.current) isInitialRender.current = false;
+    else dispatch({ type: 'UPDATE', payload: { filter: explorerFilter } });
+  }, [explorerFilter]);
 
   return useMemo(
     () => ({
       ...state,
       size: Object.keys(state.all).length,
-      clear,
-      clearAll,
-      create,
-      duplicate,
-      load,
-      save,
-      remove,
-      update,
-      use,
+      clear() {
+        dispatch({ type: 'CLEAR' });
+      },
+      clearAll() {
+        const newId = crypto.randomUUID();
+        dispatch({ type: 'CLEAR-ALL', payload: { newId } });
+      },
+      create() {
+        const newId = crypto.randomUUID();
+        dispatch({ type: 'CREATE', payload: { newId } });
+      },
+      duplicate() {
+        const newId = crypto.randomUUID();
+        dispatch({ type: 'DUPLICATE', payload: { newId } });
+      },
+      /**
+       * @param {ExplorerFilterSet} filterSet
+       * @param {boolean} [shouldOverwrite]
+       */
+      load(filterSet, shouldOverwrite) {
+        const newId = shouldOverwrite ? undefined : crypto.randomUUID();
+        dispatch({ type: 'LOAD', payload: { newId, filterSet } });
+      },
+      remove() {
+        const newId = crypto.randomUUID();
+        dispatch({ type: 'REMOVE', payload: { newId } });
+      },
+      /** @param {ExplorerFilterSet} filterSet */
+      save(filterSet) {
+        dispatch({ type: 'SAVE', payload: { filterSet } });
+      },
+      /** @param {ExplorerFilter} filter */
+      update(filter) {
+        dispatch({ type: 'UPDATE', payload: { filter } });
+      },
+      /** @param {string} id */
+      use(id) {
+        dispatch({ type: 'USE', payload: { id } });
+      },
     }),
     [state]
   );
