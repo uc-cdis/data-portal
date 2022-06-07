@@ -341,19 +341,6 @@ function GuppyWrapper({
     fetchRawDataFromGuppy({ fields, updateDataWhenReceive: true });
   }
 
-  useEffect(() => {
-    getAllFieldsFromGuppy({
-      type: guppyConfig.dataType,
-    }).then((allFields) => {
-      if (isMounted.current) {
-        setState((prevState) => ({ ...prevState, allFields }));
-        fetchGuppyData(
-          rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : allFields
-        );
-      }
-    });
-  }, []);
-
   const rawDataFields =
     rawDataFieldsConfig?.length > 0 ? rawDataFieldsConfig : state.allFields;
 
@@ -361,8 +348,14 @@ function GuppyWrapper({
   useEffect(() => {
     if (isInitialRenderRef.current) {
       isInitialRenderRef.current = false;
-      return;
+
+      // initialize allFields
+      getAllFieldsFromGuppy({ type: guppyConfig.dataType }).then((fields) => {
+        if (isMounted.current)
+          setState((prevState) => ({ ...prevState, allFields: fields }));
+      });
     }
+
     fetchGuppyData(rawDataFields);
   }, [filterState, patientIds]);
 
