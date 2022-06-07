@@ -144,6 +144,7 @@ Below is an example, with inline comments describing what each JSON block config
       "expireUseMsgDays" : optional; 0, // the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
     },
     "footer": {
+      "externalURL": "/external/footer" // iframe link to raw html from another source (ie frontend framework) to pull a footer from
       "links": [
         {
           "text": "Link title",
