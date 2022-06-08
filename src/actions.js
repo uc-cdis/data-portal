@@ -397,6 +397,15 @@ export const fetchVersionInfo = () => (/** @type {Dispatch} */ dispatch) =>
   });
 
 /**
+ * @param {UserAccessState['access']} payload
+ * @returns {AnyAction}
+ */
+const receiveUserAccess = (payload) => ({
+  type: 'RECEIVE_USER_ACCESS',
+  payload,
+});
+
+/**
  * Asks arborist which restricted access components the user has access to
  */
 export const fetchUserAccess =
@@ -430,16 +439,13 @@ export const fetchUserAccess =
       })
     );
 
-    /** @type {{ [name: string]: boolean }} */
+    /** @type {UserAccessState['access']} */
     const userAccess = {};
     userAccessResults.forEach((hasAccess, i) => {
       userAccess[resourceNames[i]] = hasAccess;
     });
 
-    dispatch({
-      type: 'RECEIVE_USER_ACCESS',
-      data: userAccess,
-    });
+    dispatch(receiveUserAccess(userAccess));
   };
 
 /**

@@ -102,7 +102,7 @@ const userAccess = (
 ) => {
   switch (action.type) {
     case 'RECEIVE_USER_ACCESS':
-      return { ...state, access: action.data };
+      return { ...state, access: action.payload };
     default:
       return state;
   }
