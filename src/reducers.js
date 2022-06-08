@@ -20,13 +20,13 @@ import userProfile from './UserProfile/reducers';
 const kube = (state = /** @type {KubeState} */ ({}), action) => {
   switch (action.type) {
     case 'RECEIVE_JOB_DISPATCH':
-      return { ...state, job: action.data };
+      return { ...state, job: action.payload };
     case 'RECEIVE_JOB_STATUS': {
-      const job = { ...action.data, resultURL: action.resultURL };
-      return { ...state, job };
+      const { resultURL, ...job } = action.payload;
+      return { ...state, job, resultURL };
     }
     case 'JOB_STATUS_INTERVAL':
-      return { ...state, jobStatusInterval: action.value };
+      return { ...state, jobStatusInterval: action.payload };
     case 'RESET_JOB':
       return { ...state, job: null, jobStatusInterval: null, resultURL: null };
     default:

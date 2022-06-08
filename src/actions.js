@@ -477,7 +477,7 @@ export const dispatchJob = (body) => (/** @type {Dispatch} */ dispatch) =>
           case 200:
             return {
               type: 'RECEIVE_JOB_DISPATCH',
-              data,
+              payload: data,
             };
           default:
             return {
@@ -519,7 +519,7 @@ export const checkJobStatus = (dispatch, getState) => {
           case 200:
             return {
               type: 'RECEIVE_JOB_STATUS',
-              data,
+              payload: data,
             };
           default:
             return {
@@ -546,7 +546,7 @@ export const submitJob = (body) => (/** @type {ThunkDispatch} */ dispatch) =>
 export const checkJob = () => (/** @type {ThunkDispatch} */ dispatch) =>
   asyncSetInterval(() => dispatch(checkJobStatus), 1000).then(
     (intervalValue) => {
-      dispatch({ type: 'JOB_STATUS_INTERVAL', value: intervalValue });
+      dispatch({ type: 'JOB_STATUS_INTERVAL', payload: intervalValue });
     }
   );
 
