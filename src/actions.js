@@ -1,4 +1,5 @@
 import { buildClientSchema, getIntrospectionQuery } from 'graphql/utilities';
+import { receiveGraphvizLayout } from './DataDictionary/action';
 import {
   userapiPath,
   guppyGraphQLUrl,
@@ -379,7 +380,11 @@ export const fetchGraphvizLayout =
     getState().ddgraph.graphvizLayout
       ? Promise.resolve()
       : import('../data/graphvizLayout.json').then(({ default: data }) => {
-          dispatch({ type: 'RECEIVE_GRAPHVIZ_LAYOUT', data });
+          dispatch(
+            receiveGraphvizLayout(
+              /** @type {DdgraphState['graphvizLayout']} */ (data)
+            )
+          );
         });
 
 /**
