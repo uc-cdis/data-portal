@@ -382,17 +382,22 @@ export const fetchGraphvizLayout =
           dispatch({ type: 'RECEIVE_GRAPHVIZ_LAYOUT', data });
         });
 
+/**
+ * @param {import('./types').VersionInfoState['dataVersion']} payload
+ * @returns {AnyAction}
+ */
+const receiveDataVersion = (payload = '') => ({
+  type: 'RECEIVE_DATA_VERSION',
+  payload,
+});
+
 export const fetchVersionInfo = () => (/** @type {Dispatch} */ dispatch) =>
   fetchWithCreds({
     path: `${guppyUrl}/_data_version`,
     method: 'GET',
     useCache: true,
   }).then(({ status, data }) => {
-    if (status === 200)
-      dispatch({
-        type: 'RECEIVE_VERSION_INFO',
-        data,
-      });
+    if (status === 200) dispatch(receiveDataVersion(data));
     else dispatch(fetchErrored(data));
   });
 

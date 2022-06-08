@@ -111,11 +111,8 @@ const userAccess = (
 /** @type {import('redux').Reducer<VersionInfoState>} */
 const versionInfo = (state = /** @type {VersionInfoState} */ ({}), action) => {
   switch (action.type) {
-    case 'RECEIVE_VERSION_INFO':
-      return {
-        ...state,
-        dataVersion: action.data || '',
-      };
+    case 'RECEIVE_DATA_VERSION':
+      return { ...state, dataVersion: action.payload };
     default:
       return state;
   }
