@@ -50,7 +50,7 @@ const QuantitativeGWAS = (props) => {
     const [conceptVars] = useState({
         ConceptIds: [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708],
     });
-    const hareConceptId = 2090006880;
+    const hareConceptId = 2000007027;
     const [selectedConceptVars, setSelectedConceptVars] = useState([]);
 
     const [form] = Form.useForm();
