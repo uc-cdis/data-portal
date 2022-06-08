@@ -339,8 +339,8 @@ const CaseControlGWAS = (props) => {
 
     const ReviewCovariates = () => {
         const results = useQueries([
-            { queryKey: ['cohortstats', selectedCovariates, caseCohortDefinitionId], queryFn: fetchConceptStatsCase },
-            { queryKey: ['cohortstats', selectedCovariates, controlCohortDefinitionId], queryFn: fetchConceptStatsControl },
+            { queryKey: ['cohortstats', selectedCovariates, caseCohortDefinitionId], queryFn: fetchConceptStatsCase, ...queryConfig },
+            { queryKey: ['cohortstats', selectedCovariates, controlCohortDefinitionId], queryFn: fetchConceptStatsControl, ...queryConfig },
         ]);
         const statusCase = results[0].status;
         const statusControl = results[1].status;
@@ -405,8 +405,8 @@ const CaseControlGWAS = (props) => {
 
     const ConceptsStatsByHare = () => {
         const results = useQueries([
-            { queryKey: ['conceptsstats', selectedCovariates, caseCohortDefinitionId], queryFn: fetchCaseConceptStatsByHare },
-            { queryKey: ['conceptsstats', selectedCovariates, controlCohortDefinitionId], queryFn: fetchControlConceptStatsByHare },
+            { queryKey: ['conceptsstats', selectedCovariates, caseCohortDefinitionId], queryFn: fetchCaseConceptStatsByHare, ...queryConfig },
+            { queryKey: ['conceptsstats', selectedCovariates, controlCohortDefinitionId], queryFn: fetchControlConceptStatsByHare, ...queryConfig },
         ]);
         // const { data, status } = useQuery(['conceptstatsbyhare', selectedCovariates], gwasType === "case" ? fetchCaseConceptStatsByHare : fetchControlConceptStatsByHare, queryConfig);
         const statusCase = results[0].status;
