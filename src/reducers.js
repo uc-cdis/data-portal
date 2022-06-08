@@ -52,9 +52,9 @@ const project = (state = /** @type {ProjectState} */ ({}), action) => {
   const projectAvail = {};
   switch (action.type) {
     case 'RECEIVE_PROJECTS':
-      for (const d of action.data) {
-        projects[d.code] = d.project_id;
-        projectAvail[d.project_id] = d.availability_type;
+      for (const p of action.payload) {
+        projects[p.code] = p.project_id;
+        projectAvail[p.project_id] = p.availability_type;
       }
       return { ...state, projects, projectAvail };
     default:

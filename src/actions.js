@@ -273,6 +273,11 @@ export const fetchUserNoRefresh = () => (/** @type {Dispatch} */ dispatch) =>
     dispatch(handleFetchUser(res))
   );
 
+const receiveProjects = (payload) => ({
+  type: 'RECEIVE_PROJECTS',
+  payload,
+});
+
 /**
  * redux-thunk support asynchronous redux actions via 'thunks' -
  * lambdas that accept dispatch and getState functions as arguments
@@ -294,12 +299,7 @@ export const fetchProjects =
           }),
           method: 'POST',
         }).then(({ status, data }) => {
-          if (status === 200)
-            dispatch({
-              type: 'RECEIVE_PROJECTS',
-              data: data.data.project,
-              status,
-            });
+          if (status === 200) dispatch(receiveProjects(data.data.project));
           else
             dispatch({
               type: 'FETCH_ERROR',
