@@ -73,7 +73,7 @@ const CaseControlGWAS = (props) => {
     const [selectedCaseHare, setSelectedCaseHare] = useState("-select one-");
     const [selectedControlHare, setSelectedControlHare] = useState("-select one-");
     const [gwasJobName, setGwasJobName] = useState("");
-    const hareConceptId = 2090006880;
+    const hareConceptId = 2000007027;
 
     async function fetchSources() {
         const sourcesEndpoint = `${cohortMiddlewarePath}sources`;
@@ -422,7 +422,7 @@ const CaseControlGWAS = (props) => {
         }
         if (dataControl && dataCase) {
             // special case - endpoint returns empty result:
-            if (dataControl.concept_breakdown || dataCase.concept_breakdown == null) {
+            if (dataControl.concept_breakdown == null || dataCase.concept_breakdown == null) {
                 return <React.Fragment>Error: there are no subjects in this cohort that have data available on all the selected covariates
                     and phenotype. Please review your selections</React.Fragment>;
             }
