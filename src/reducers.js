@@ -38,7 +38,7 @@ const kube = (state = /** @type {KubeState} */ ({}), action) => {
 const popups = (state = /** @type {PopupState} */ ({}), action) => {
   switch (action.type) {
     case 'UPDATE_POPUP':
-      return { ...state, ...action.data };
+      return { ...state, ...action.payload };
     default:
       return state;
   }

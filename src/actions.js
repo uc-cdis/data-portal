@@ -31,7 +31,7 @@ import { asyncSetInterval } from './utils';
  */
 export const updatePopup = (state) => ({
   type: 'UPDATE_POPUP',
-  data: state,
+  payload: state,
 });
 
 /** @returns {AnyAction} */
@@ -211,10 +211,7 @@ const handleFetchUser = ({ status, data }) => {
         user: data,
       };
     case 401:
-      return {
-        type: 'UPDATE_POPUP',
-        data: { authPopup: true },
-      };
+      return updatePopup({ authPopup: true });
     default:
       return {
         type: 'FETCH_ERROR',
@@ -235,13 +232,7 @@ export const logoutAPI =
         process.env.NODE_ENV === 'development' ? 'dev.html' : ''
       }`
     ).then((response) => {
-      if (displayAuthPopup)
-        dispatch({
-          type: 'UPDATE_POPUP',
-          data: {
-            authPopup: true,
-          },
-        });
+      if (displayAuthPopup) dispatch(updatePopup({ authPopup: true }));
       else document.location.replace(response.url);
 
       window.localStorage.clear();

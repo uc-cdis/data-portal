@@ -65,7 +65,7 @@ test('creates, fetches, and lists user access keys', (done) => {
       },
       {
         type: 'UPDATE_POPUP',
-        data: { saveTokenPopup: true },
+        payload: { saveTokenPopup: true },
       },
       {
         type: 'RECEIVE_USER_PROFILE',
@@ -92,7 +92,7 @@ test('updates the redux store', (done) => {
       },
       {
         type: 'UPDATE_POPUP',
-        data: { saveTokenPopup: true },
+        payload: { saveTokenPopup: true },
       },
       {
         type: 'RECEIVE_USER_PROFILE',
@@ -119,7 +119,7 @@ test('deletes key', (done) => {
       },
       {
         type: 'UPDATE_POPUP',
-        data: { deleteTokenPopup: false },
+        payload: { deleteTokenPopup: false },
       },
       {
         type: 'RECEIVE_USER_PROFILE',
