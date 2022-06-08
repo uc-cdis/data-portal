@@ -15,12 +15,12 @@ export default function useFilterSetWorkspace() {
   const { explorerFilter, handleFilterChange } = useExplorerState();
   const filterSets = useExplorerFilterSets();
 
-  const initialWsState = useMemo(
+  const initialState = useMemo(
     () => initializeWorkspaceState(explorerFilter),
     []
   );
   useEffect(() => {
-    const initialActiveFilterSet = initialWsState.active.filterSet;
+    const initialActiveFilterSet = initialState.active.filterSet;
 
     // sync explorer filter set state with initial workspace active filter set
     if ('id' in initialActiveFilterSet)
@@ -31,7 +31,7 @@ export default function useFilterSetWorkspace() {
       handleFilterChange(initialActiveFilterSet.filter);
   }, []);
 
-  const [state, dispatch] = useReducer(workspaceReducer, initialWsState);
+  const [state, dispatch] = useReducer(workspaceReducer, initialState);
   const prevActiveFilterSet = useRef(state.active.filterSet);
   useEffect(() => {
     const { filter: prevFilter, id: prevId } = prevActiveFilterSet.current;
