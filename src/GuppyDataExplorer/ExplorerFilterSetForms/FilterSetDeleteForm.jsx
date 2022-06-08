@@ -14,6 +14,9 @@ function FilterSetDeleteForm({ currentFilterSet, onAction, onClose }) {
   return (
     <div className='explorer-filter-set-form'>
       <h4>Are you sure to delete the current Filter Set?</h4>
+      <p style={{ marginBottom: '2rem' }}>
+        Once deleted, this Filter Set will no longer be available.
+      </p>
       <div>
         <Button buttonType='default' label='Back to page' onClick={onClose} />
         <Button

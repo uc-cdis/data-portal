@@ -99,8 +99,8 @@ function ExplorerFilterSet({ className, filter }) {
         overlay={
           <div>
             All Saved Filter Sets features have been incorporated into the
-            Filter Set Workspace. This interface will be removed in an upcoming
-            release.
+            Filter Set Workspace. This interface will be removed in the July
+            2022 release.
           </div>
         }
         arrowContent={<div className='rc-tooltip-arrow-inner' />}
