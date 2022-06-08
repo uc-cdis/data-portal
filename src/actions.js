@@ -39,7 +39,7 @@ export const connectionError = () => {
   console.log('connection error');
   return {
     type: 'REQUEST_ERROR',
-    error: 'connection_error',
+    payload: 'connection_error',
   };
 };
 

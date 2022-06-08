@@ -66,7 +66,11 @@ const project = (state = /** @type {ProjectState} */ ({}), action) => {
 const status = (state = /** @type {StatusState} */ ({}), action) => {
   switch (action.type) {
     case 'REQUEST_ERROR':
-      return { ...state, request_state: 'error', error_type: action.error };
+      return {
+        ...state,
+        error_type: action.payload,
+        request_state: 'error',
+      };
     default:
       return state;
   }
