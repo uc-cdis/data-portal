@@ -198,6 +198,7 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
           placeholder='Select Filter Set to analyze'
           options={filterSetOptions}
           onChange={setSelectFilterSetOption}
+          maxMenuHeight={160}
           value={selectFilterSetOption}
           theme={overrideSelectTheme}
         />
