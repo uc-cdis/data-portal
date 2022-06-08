@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import FilterDisplay from '../../components/FilterDisplay';
 import SimplePopup from '../../components/SimplePopup';
 import { useExplorerConfig } from '../ExplorerConfigContext';
@@ -24,14 +24,6 @@ function ExplorerFilterSetWorkspace() {
   const { handleFilterChange } = useExplorerState();
   const filterSets = useExplorerFilterSets();
   const workspace = useFilterSetWorkspace();
-  useEffect(() => {
-    const activeFilterSetId = workspace.active.filterSet.id;
-    if (activeFilterSetId !== undefined) filterSets.use(activeFilterSetId);
-  }, []);
-  useEffect(() => {
-    if (filterSets.active?.id !== undefined)
-      workspace.load(filterSets.active, true);
-  }, [filterSets.active]);
 
   const [actionFormType, setActionFormType] = useState(
     /** @type {ActionFormType} */ (undefined)

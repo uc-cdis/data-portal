@@ -15,17 +15,23 @@ export default function useFilterSetWorkspace() {
   const { explorerFilter, handleFilterChange } = useExplorerState();
   const filterSets = useExplorerFilterSets();
 
-  const initialWsState = useMemo(
+  const initialState = useMemo(
     () => initializeWorkspaceState(explorerFilter),
     []
   );
   useEffect(() => {
+    const initialActiveFilterSet = initialState.active.filterSet;
+
+    // sync explorer filter set state with initial workspace active filter set
+    if ('id' in initialActiveFilterSet)
+      filterSets.use(initialActiveFilterSet.id);
+
     // sync explorer filter state with non-empty initial workspace active filter
-    if (!checkIfFilterEmpty(initialWsState.active.filterSet.filter))
-      handleFilterChange(initialWsState.active.filterSet.filter);
+    if (!checkIfFilterEmpty(initialActiveFilterSet.filter))
+      handleFilterChange(initialActiveFilterSet.filter);
   }, []);
 
-  const [state, dispatch] = useReducer(workspaceReducer, initialWsState);
+  const [state, dispatch] = useReducer(workspaceReducer, initialState);
   const prevActiveFilterSet = useRef(state.active.filterSet);
   useEffect(() => {
     const { filter: prevFilter, id: prevId } = prevActiveFilterSet.current;
@@ -44,6 +50,12 @@ export default function useFilterSetWorkspace() {
     // sync browser store with workspace state
     storeWorkspaceState(state);
   }, [state]);
+
+  useEffect(() => {
+    // sync workspace active filter with explorer filter set state
+    if (filterSets.active?.id !== undefined)
+      dispatch({ type: 'LOAD', payload: { filterSet: filterSets.active } });
+  }, [filterSets.active]);
 
   const isInitialRender = useRef(true);
   useEffect(() => {
