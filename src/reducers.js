@@ -82,12 +82,12 @@ const user = (state = /** @type {UserState} */ ({}), action) => {
     case 'RECEIVE_USER':
       return {
         ...state,
-        ...action.user,
+        ...action.payload,
         fetched_user: true,
         lastAuthMs: Date.now(),
       };
     case 'FETCH_ERROR':
-      return { ...state, fetched_user: true, fetch_error: action.error };
+      return { ...state, fetched_user: true, fetch_error: action.payload };
     case 'RECEIVE_API_LOGOUT':
       return { ...state, lastAuthMs: 0 };
     default:

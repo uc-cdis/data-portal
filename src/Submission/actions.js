@@ -1,4 +1,4 @@
-import { fetchWithCreds } from '../actions';
+import { fetchErrored, fetchWithCreds } from '../actions';
 import { submissionApiPath } from '../localconf';
 import { predictFileType } from '../utils';
 import { buildCountsQuery } from './utils';
@@ -27,23 +27,17 @@ export const getCounts =
       method: 'POST',
       dispatch,
     })
-      .then(
-        ({ status, data }) => {
-          switch (status) {
-            case 200:
-              return {
-                type: 'RECEIVE_COUNTS',
-                data: data.data,
-              };
-            default:
-              return {
-                type: 'FETCH_ERROR',
-                error: data.data,
-              };
-          }
-        },
-        (err) => ({ type: 'FETCH_ERROR', error: err })
-      )
+      .then(({ status, data }) => {
+        switch (status) {
+          case 200:
+            return {
+              type: 'RECEIVE_COUNTS',
+              data: data.data,
+            };
+          default:
+            return fetchErrored(data.data);
+        }
+      }, fetchErrored)
       .then((msg) => {
         dispatch(msg);
       });

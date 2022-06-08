@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import MapFiles from './MapFiles';
-import { fetchWithCreds } from '../actions';
+import { fetchErrored, fetchWithCreds } from '../actions';
 import { STARTING_DID, FETCH_LIMIT } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
 
@@ -21,33 +21,27 @@ const fetchUnmappedFiles =
       path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${username}&start=${start}&limit=${FETCH_LIMIT}`,
       method: 'GET',
     })
-      .then(
-        ({ status, data }) => {
-          switch (status) {
-            case 200:
-              total = total.concat(data.records ?? []);
-              if (data.records?.length === FETCH_LIMIT) {
-                return dispatch(
-                  fetchUnmappedFiles(
-                    username,
-                    total,
-                    data.records[FETCH_LIMIT - 1].did
-                  )
-                );
-              }
-              return {
-                type: 'RECEIVE_UNMAPPED_FILES',
-                data: total,
-              };
-            default:
-              return {
-                type: 'FETCH_ERROR',
-                error: data.records,
-              };
-          }
-        },
-        (err) => ({ type: 'FETCH_ERROR', error: err })
-      )
+      .then(({ status, data }) => {
+        switch (status) {
+          case 200:
+            total = total.concat(data.records ?? []);
+            if (data.records?.length === FETCH_LIMIT) {
+              return dispatch(
+                fetchUnmappedFiles(
+                  username,
+                  total,
+                  data.records[FETCH_LIMIT - 1].did
+                )
+              );
+            }
+            return {
+              type: 'RECEIVE_UNMAPPED_FILES',
+              data: total,
+            };
+          default:
+            return fetchErrored(data.records);
+        }
+      }, fetchErrored)
       .then((msg) => {
         if (msg) dispatch(msg);
       });

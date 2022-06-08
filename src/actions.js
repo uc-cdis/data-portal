@@ -43,6 +43,11 @@ export const connectionError = () => {
   };
 };
 
+export const fetchErrored = (payload) => ({
+  type: 'FETCH_ERROR',
+  payload,
+});
+
 /** @type {{ [path: string]: string; }} */
 const fetchCache = {};
 
@@ -200,23 +205,26 @@ export const fetchWithCredsAndTimeout = (opts, timeoutInMS) => {
 };
 
 /**
+ * @param {import('./types').User} payload
+ * @returns {AnyAction}
+ */
+export const receiveUser = (payload) => ({
+  type: 'RECEIVE_USER',
+  payload,
+});
+
+/**
  * @param {FetchHelperResult} result
  * @returns {AnyAction}
  */
 const handleFetchUser = ({ status, data }) => {
   switch (status) {
     case 200:
-      return {
-        type: 'RECEIVE_USER',
-        user: data,
-      };
+      return receiveUser(data);
     case 401:
       return updatePopup({ authPopup: true });
     default:
-      return {
-        type: 'FETCH_ERROR',
-        error: data.error,
-      };
+      return fetchErrored(data.error);
   }
 };
 
@@ -300,12 +308,7 @@ export const fetchProjects =
           method: 'POST',
         }).then(({ status, data }) => {
           if (status === 200) dispatch(receiveProjects(data.data.project));
-          else
-            dispatch({
-              type: 'FETCH_ERROR',
-              error: data,
-              status,
-            });
+          else dispatch(fetchErrored(data));
         });
 
 /**
@@ -390,11 +393,7 @@ export const fetchVersionInfo = () => (/** @type {Dispatch} */ dispatch) =>
         type: 'RECEIVE_VERSION_INFO',
         data,
       });
-    else
-      dispatch({
-        type: 'FETCH_ERROR',
-        error: data,
-      });
+    else dispatch(fetchErrored(data));
   });
 
 /**
@@ -462,23 +461,17 @@ export const dispatchJob = (body) => (/** @type {Dispatch} */ dispatch) =>
     method: 'POST',
     dispatch,
   })
-    .then(
-      ({ status, data }) => {
-        switch (status) {
-          case 200:
-            return {
-              type: 'RECEIVE_JOB_DISPATCH',
-              payload: data,
-            };
-          default:
-            return {
-              type: 'FETCH_ERROR',
-              error: data,
-            };
-        }
-      },
-      (err) => ({ type: 'FETCH_ERROR', error: err })
-    )
+    .then(({ status, data }) => {
+      switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_JOB_DISPATCH',
+            payload: data,
+          };
+        default:
+          return fetchErrored(data);
+      }
+    }, fetchErrored)
     .then((msg) => {
       dispatch(msg);
     });
@@ -500,27 +493,21 @@ export const checkJobStatus = (dispatch, getState) => {
     method: 'GET',
     dispatch,
   })
-    .then(
-      ({ status, data }) => {
-        // stop fetching job status once it stops running
-        if (data.status !== 'Running') {
-          window.clearInterval(state.kube.jobStatusInterval);
-        }
-        switch (status) {
-          case 200:
-            return {
-              type: 'RECEIVE_JOB_STATUS',
-              payload: data,
-            };
-          default:
-            return {
-              type: 'FETCH_ERROR',
-              error: data,
-            };
-        }
-      },
-      (err) => ({ type: 'FETCH_ERROR', error: err })
-    )
+    .then(({ status, data }) => {
+      // stop fetching job status once it stops running
+      if (data.status !== 'Running') {
+        window.clearInterval(state.kube.jobStatusInterval);
+      }
+      switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_JOB_STATUS',
+            payload: data,
+          };
+        default:
+          return fetchErrored(data);
+      }
+    }, fetchErrored)
     .then((msg) => {
       dispatch(msg);
     });

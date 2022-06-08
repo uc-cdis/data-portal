@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import SimplePopup from '../components/SimplePopup';
-import { fetchUser, fetchUserAccess } from '../actions';
+import { fetchUser, fetchUserAccess, receiveUser } from '../actions';
 import { getIndexPageCounts } from '../Index/utils';
 import { headers, userapiPath } from '../localconf';
 import RegistrationForm from './RegistrationForm';
@@ -88,7 +88,7 @@ function UserPopup() {
       if (user.authz['/portal'] === undefined)
         throw new Error('Failed to update authorization information.');
 
-      dispatch({ type: 'RECEIVE_USER', user });
+      dispatch(receiveUser(user));
       dispatch(fetchUserAccess());
       dispatch(getIndexPageCounts());
       return 'success';
