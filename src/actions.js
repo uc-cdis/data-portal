@@ -1,5 +1,6 @@
 import { buildClientSchema, getIntrospectionQuery } from 'graphql/utilities';
 import { receiveGraphvizLayout } from './DataDictionary/action';
+import { receiveGuppySchema, receiveSchema } from './GraphQLEditor/actions';
 import {
   userapiPath,
   guppyGraphQLUrl,
@@ -325,10 +326,7 @@ export const fetchSchema =
     getState().graphiql.schema
       ? Promise.resolve()
       : import('../data/schema.json').then(({ default: { data } }) =>
-          dispatch({
-            type: 'RECEIVE_SCHEMA',
-            schema: buildClientSchema(data),
-          })
+          dispatch(receiveSchema(buildClientSchema(data)))
         );
 
 export const fetchGuppySchema =
@@ -351,10 +349,7 @@ export const fetchGuppySchema =
         })
           .then((response) => response.json())
           .then(({ data }) =>
-            dispatch({
-              type: 'RECEIVE_GUPPY_SCHEMA',
-              data: buildClientSchema(data),
-            })
+            dispatch(receiveGuppySchema(buildClientSchema(data)))
           );
 
 export const fetchDictionary =
