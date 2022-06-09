@@ -4,6 +4,7 @@ import Login from './Login';
 import { fetchWithCreds } from '../actions';
 import { loginPath } from '../localconf';
 import { components } from '../params';
+import { loginEndpointErrored, receiveLoginEndpoint } from './actions';
 
 /** @typedef {import('./types').LoginProvider} LoginProvider */
 /** @typedef {import('./types').LoginState} LoginState */
@@ -16,31 +17,22 @@ import { components } from '../params';
 function getLoginAction(data, status) {
   switch (status) {
     case 200:
-      return {
-        type: 'RECEIVE_LOGIN_ENDPOINT',
-        providers: data.providers,
-      };
+      return receiveLoginEndpoint(data.providers);
     case 404:
-      return {
-        type: 'RECEIVE_LOGIN_ENDPOINT',
-        providers: [
-          {
-            idp: 'google',
-            name: 'Google OAuth',
-            urls: [
-              {
-                name: 'Google OAuth',
-                url: `${loginPath}google/`,
-              },
-            ],
-          },
-        ],
-      };
+      return receiveLoginEndpoint([
+        {
+          idp: 'google',
+          name: 'Google OAuth',
+          urls: [
+            {
+              name: 'Google OAuth',
+              url: `${loginPath}google/`,
+            },
+          ],
+        },
+      ]);
     default:
-      return {
-        type: 'LOGIN_ENDPOINT_ERROR',
-        error: data.error,
-      };
+      return loginEndpointErrored(data.error);
   }
 }
 
