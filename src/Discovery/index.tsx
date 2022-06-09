@@ -8,7 +8,7 @@ import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { discoveryConfig, studyRegistrationConfig, useArboristUI } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
 import loadStudiesFromAggMDS from './aggMDSUtils';
-import { loadStudiesFromMDS } from './MDSUtils';
+import loadStudiesFromMDS from './MDSUtils';
 
 const DiscoveryWithMDSBackend: React.FC<{
     userAuthMapping: any,
