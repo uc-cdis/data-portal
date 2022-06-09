@@ -1,18 +1,16 @@
-import { hostname, studyRegistrationConfig } from '../localconf';
-import { fetchWithCreds } from '../actions';
+import { mdsURL } from '../localconf';
 
 const LIMIT = 1000; // required or else mds defaults to returning 10 records
-const MDS_URL = `${hostname}mds/metadata`;
 const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
 
-export const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
+const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
   try {
     let allStudies = [];
     let offset = 0;
     // request up to LIMIT studies from MDS at a time.
     let shouldContinue = true;
     while (shouldContinue) {
-      const url = `${MDS_URL}?data=True&_guid_type=${guidType}&limit=${LIMIT}&offset=${offset}`;
+      const url = `${mdsURL}?data=True&_guid_type=${guidType}&limit=${LIMIT}&offset=${offset}`;
       // It's OK to disable no-await-in-loop rule here -- it's telling us to refactor
       // using Promise.all() so that we can fire multiple requests at one.
       // But we WANT to delay sending the next request to MDS until we know we need it.
@@ -38,34 +36,4 @@ export const loadStudiesFromMDS = async (guidType = 'discovery_metadata') => {
   }
 };
 
-export const registerStudyInMDS = async (username, metadataID, updatedValues = {}, GUIDType = 'discovery_metadata') => {
-  try {
-    const queryURL = `${MDS_URL}/${metadataID}`;
-    const queryRes = await fetch(queryURL);
-    if (queryRes.status !== 200) {
-      throw new Error(`Request for query study data at ${queryURL} failed. Response: ${JSON.stringify(queryRes, null, 2)}`);
-    }
-    const studyMetadata = await queryRes.json();
-    const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField || 'is_registered';
-    const studyRegistrationTrackingField = studyRegistrationConfig?.studyRegistrationTrackingField || 'registrant_username';
-    const metadataToUpdate = { ...studyMetadata };
-    metadataToUpdate._guid_type = GUIDType;
-    metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationValidationField] = true;
-    metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationTrackingField] = username;
-    metadataToUpdate[STUDY_DATA_FIELD] = { ...metadataToUpdate[STUDY_DATA_FIELD], ...updatedValues };
-    const updateURL = `${MDS_URL}/${metadataID}?overwrite=true`;
-    fetchWithCreds({
-      path: updateURL,
-      method: 'POST',
-      customHeaders: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(metadataToUpdate),
-    }).then((response) => {
-      if (response.status !== 200) {
-        throw new Error(`Request for update study data at ${updateURL} failed. Response: ${JSON.stringify(response, null, 2)}`);
-      }
-      return null;
-    });
-  } catch (err) {
-    throw new Error(`Request for update study data failed: ${err}`);
-  }
-};
+export default loadStudiesFromMDS;

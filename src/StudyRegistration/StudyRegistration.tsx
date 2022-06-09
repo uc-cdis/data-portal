@@ -22,7 +22,8 @@ import { StudyRegistrationConfig } from './StudyRegistrationConfig';
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI } from '../localconf';
-import { loadStudiesFromMDS, registerStudyInMDS } from '../Discovery/MDSUtils';
+import loadStudiesFromMDS from '../Discovery/MDSUtils';
+import { registerStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
 
 const { Option } = Select;
 const layout = {
@@ -115,23 +116,21 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
     if (!useArboristUI) {
       return true;
     }
-    return (userHasMethodForServiceOnResource('access', 'mds_gateway', '/mds_gateway', props.userAuthMapping));
+    return (userHasMethodForServiceOnResource('access', 'mds_gateway', '/mds_gateway', props.userAuthMapping) && userHasMethodForServiceOnResource('access', 'cedar', '/cedar', props.userAuthMapping));
   };
 
   const handleRegisterFormSubmission = (formValues) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const CEDARUUID = formValues.cedar_uuid;
-    // Use CEDAR UUID here
+    const cedarUserUUID = formValues.cedar_uuid;
     const studyID = formValues.study_id;
     setRegRequestPending(true);
-    registerStudyInMDS(props.user.username, studyID,
+    preprocessStudyRegistrationMetadata(props.user.username, studyID,
       {
         repository: formValues.repository || '',
         object_ids: ((!formValues.object_ids || formValues.object_ids[0] === '') ? [] : formValues.object_ids),
         clinical_trials_id: formValues.clinical_trials_id || '',
-      })
-      .then(() => setFormSubmissionStatus({ status: 'success', text: formValues.study_id }))
-      .catch((err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
+      }).then((preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
+      .then(() => registerStudyInMDS(studyID, preprocessedMetadata), (err) => setFormSubmissionStatus({ status: 'error', text: err.message })),
+    (err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
   };
 
   const onFinish = (values) => {
