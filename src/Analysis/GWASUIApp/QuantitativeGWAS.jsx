@@ -313,7 +313,7 @@ const QuantitativeGWAS = (props) => {
     };
 
     // allow only continuous concepts for now:
-    const allowedConceptTypes = ["contin"];
+    const allowedConceptTypes = ["MVP Continuous"];
 
     function filterConcepts(concepts) {
         const filteredConcepts = [];
