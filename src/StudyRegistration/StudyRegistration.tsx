@@ -129,7 +129,8 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
         object_ids: ((!formValues.object_ids || formValues.object_ids[0] === '') ? [] : formValues.object_ids),
         clinical_trials_id: formValues.clinical_trials_id || '',
       }).then((preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
-      .then(() => registerStudyInMDS(studyID, preprocessedMetadata), (err) => setFormSubmissionStatus({ status: 'error', text: err.message })),
+      .then(() => registerStudyInMDS(studyID, preprocessedMetadata).then(() => setFormSubmissionStatus({ status: 'success' })),
+        (err) => setFormSubmissionStatus({ status: 'error', text: err.message })),
     (err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
   };
 

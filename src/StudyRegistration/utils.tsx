@@ -36,7 +36,7 @@ export const createCEDARInstance = async (cedarUserUUID, metadataToRegister = {}
       if (response.status !== 201) {
         throw new Error(`Request for create CEDAR instance failed with status ${response.status}`);
       }
-      return response.json();
+      return response;
     });
   } catch (err) {
     throw new Error(`Request for create CEDAR instance failed: ${err}`);
@@ -55,7 +55,7 @@ export const registerStudyInMDS = async (metadataID, metadataToRegister = {}) =>
       if (response.status !== 200) {
         throw new Error(`Request for update study data at ${updateURL} failed with status ${response.status}`);
       }
-      return response.json();
+      return response;
     });
   } catch (err) {
     throw new Error(`Request for update study data failed: ${err}`);
