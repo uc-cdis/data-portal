@@ -12,6 +12,7 @@ import {
   jobapiPath,
 } from './localconf';
 import { config } from './params';
+import { receiveDictionary } from './Submission/actions';
 import { asyncSetInterval } from './utils';
 
 /** @typedef {import('redux').AnyAction} AnyAction */
@@ -362,7 +363,7 @@ export const fetchDictionary =
     getState().submission.dictionary
       ? Promise.resolve()
       : import('../data/dictionary.json').then(({ default: data }) =>
-          dispatch({ type: 'RECEIVE_DICTIONARY', data })
+          dispatch(receiveDictionary(data))
         );
 
 export const fetchGraphvizLayout =

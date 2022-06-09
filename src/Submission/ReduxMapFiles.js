@@ -3,6 +3,7 @@ import MapFiles from './MapFiles';
 import { fetchErrored, fetchWithCreds } from '../actions';
 import { STARTING_DID, FETCH_LIMIT } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
+import { receiveFilesToMap, receiveUnmappedFiles } from './actions';
 
 /** @typedef {import('redux').AnyAction} AnyAction */
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
@@ -34,10 +35,7 @@ const fetchUnmappedFiles =
                 )
               );
             }
-            return {
-              type: 'RECEIVE_UNMAPPED_FILES',
-              data: total,
-            };
+            return receiveUnmappedFiles(total);
           default:
             return fetchErrored(data.records);
         }
@@ -46,16 +44,6 @@ const fetchUnmappedFiles =
         if (msg) dispatch(msg);
       });
   };
-
-/**
- *
- * @param {SubmissionState['filesToMap']} files
- * @returns {AnyAction}
- */
-const mapSelectedFiles = (files) => ({
-  type: 'RECEIVE_FILES_TO_MAP',
-  data: files,
-});
 
 const ReduxMapFiles = (() => {
   /** @param {{ submission: SubmissionState; user: UserState }} state */
@@ -72,7 +60,7 @@ const ReduxMapFiles = (() => {
     },
     /** @param {SubmissionState['filesToMap']} files */
     mapSelectedFiles: (files) => {
-      dispatch(mapSelectedFiles(files));
+      dispatch(receiveFilesToMap(files));
     },
   });
 

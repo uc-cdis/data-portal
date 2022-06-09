@@ -2,7 +2,13 @@ import { connect } from 'react-redux';
 import SubmitTSV from './SubmitTSV';
 import { submissionApiPath, lineLimit } from '../localconf';
 import { fetchWithCreds } from '../actions';
-import { getCounts, uploadTSV, updateFileContent } from './actions';
+import {
+  getCounts,
+  uploadTSV,
+  updateFileContent,
+  receiveSubmission,
+  resetSubmissionStatus,
+} from './actions';
 
 /** @typedef {import('redux').Dispatch} Dispatch */
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
@@ -21,7 +27,7 @@ const submitToServer =
    * @param {() => { submission: SubmissionState }} getState
    */
   (dispatch, getState) => {
-    dispatch({ type: 'RESET_SUBMISSION_STATUS' });
+    dispatch(resetSubmissionStatus());
 
     /** @type {string[]} */
     const fileArray = [];
@@ -91,12 +97,13 @@ const submitToServer =
         dispatch,
       })
         .then(recursiveFetch(chunkArray))
-        .then(({ status, data }) => ({
-          type: 'RECEIVE_SUBMISSION',
-          submit_status: status,
-          data,
-          total: totalChunk,
-        }))
+        .then(({ status, data }) =>
+          receiveSubmission({
+            data,
+            submit_status: status,
+            submit_total: totalChunk,
+          })
+        )
         .then((msg) => dispatch(msg))
         .then(callback);
     }

@@ -3,6 +3,7 @@ import SubmissionHeader from './SubmissionHeader';
 import { fetchErrored, fetchWithCreds } from '../actions';
 import { FETCH_LIMIT, STARTING_DID } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
+import { receiveUnmappedFileStatistics } from './actions';
 
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('./types').SubmissionState} SubmissionState */
@@ -35,20 +36,17 @@ const fetchUnmappedFileStats =
                 )
               );
             }
-            return {
-              type: 'RECEIVE_UNMAPPED_FILE_STATISTICS',
-              data: {
-                count: total.length,
-                totalSize: total.reduce(
-                  /**
-                   * @param {number} size
-                   * @param {Object} current
-                   */
-                  (size, current) => size + current.size,
-                  0
-                ),
-              },
-            };
+            return receiveUnmappedFileStatistics({
+              unmappedFileCount: total.length,
+              unmappedFileSize: total.reduce(
+                /**
+                 * @param {number} size
+                 * @param {Object} current
+                 */
+                (size, current) => size + current.size,
+                0
+              ),
+            });
 
           default:
             return fetchErrored(data.records);
