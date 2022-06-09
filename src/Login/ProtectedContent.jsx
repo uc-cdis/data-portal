@@ -3,6 +3,7 @@ import { useStore } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { fetchUser, fetchUserAccess } from '../actions';
+import { clearQueryNodes } from '../QueryNode/actions';
 import Spinner from '../components/Spinner';
 import AuthPopup from './AuthPopup';
 import { fetchLogin } from './ReduxLogin';
@@ -126,7 +127,7 @@ function ProtectedContent({
     );
 
     reduxStore.dispatch({ type: 'CLEAR_COUNTS' }); // clear some counters
-    reduxStore.dispatch({ type: 'CLEAR_QUERY_NODES' });
+    reduxStore.dispatch(clearQueryNodes());
 
     if (isLoginPage)
       checkLoginStatus(state).then((newState) => {
