@@ -394,7 +394,7 @@ function buildConfig(opts) {
         case 'GWASUIApp':
           analysisApps.GWASUIApp = {
             title: 'Gen3 GWAS',
-            description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline"',
+            description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
             image: '/src/img/analysis-icons/gwas.svg',
           };
           break;
