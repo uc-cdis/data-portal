@@ -147,6 +147,7 @@ const GWASJob = ({ workflow, refreshWorkflows }) => {
     if (status === 'error') {
       return <React.Fragment />;
     }
+    const finishedAt = (data.finishedAt === null) ? "" : data.finishedAt;
     return (
       <React.Fragment>
         <List.Item
@@ -154,7 +155,11 @@ const GWASJob = ({ workflow, refreshWorkflows }) => {
         >
           <List.Item.Meta
             title={`Run ID: ${data.name}`}
-            description={`Started at ${data.startedAt} ${data.finishedAt ? `& finished at ${data.finishedAt}` : ''}`}
+            description={<dl>
+              <dt>Workflow Name: {data.wf_name}</dt>
+              <dt>Started at {data.startedAt} and finished at {finishedAt}</dt>
+            </dl>}
+
           />
           <div>{getStatusTag(data.phase)}</div>
           {/* <GWASDelete /> */}
