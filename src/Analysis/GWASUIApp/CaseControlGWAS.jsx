@@ -56,6 +56,7 @@ const CaseControlGWAS = (props) => {
     const [controlCohortDefinitionId, setControlCohortDefinitionId] = useState(undefined);
     const [selectedControlCohort, setSelectedControlCohort] = useState(undefined);
     const [caseCohortName, setCaseCohortName] = useState(undefined);
+    const [controlCohortName, setControlCohortName] = useState(undefined);
 
     const [covariateVars] = useState({
         ConceptIds: [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708],
@@ -72,6 +73,9 @@ const CaseControlGWAS = (props) => {
     const [numOfPC, setNumOfPC] = useState(3);
     const [selectedCaseHare, setSelectedCaseHare] = useState("-select one-");
     const [selectedControlHare, setSelectedControlHare] = useState("-select one-");
+    const [selectedCaseSize, setSelectedCaseSize] = useState(0);
+    const [selectedControlSize, setSelectedControlSize] = useState(0);
+
     const [gwasJobName, setGwasJobName] = useState("");
     const hareConceptId = 2000007027;
 
@@ -137,6 +141,7 @@ const CaseControlGWAS = (props) => {
         onChange: (_, selectedRows) => {
             setSelectedControlCohort(selectedRows[0]);
             setControlCohortDefinitionId(selectedRows[0].cohort_definition_id);
+            setControlCohortName(selectedRows[0].cohort_name);
         },
         getCheckboxProps: (record) => ({
             disabled: record.size === 0 || record.cohort_name === caseCohortName,
@@ -403,6 +408,16 @@ const CaseControlGWAS = (props) => {
         return fetchConceptStatsByHare(controlCohortDefinitionId);
     }
 
+    function setSelectedCaseSubsetDetails(concept_stats_for_value){
+        setSelectedCaseHare(concept_stats_for_value.concept_value);
+        setSelectedCaseSize(concept_stats_for_value.persons_in_cohort_with_value);
+    }
+
+    function setSelectedContolSubsetDetails(concept_stats_for_value){
+        setSelectedControlHare(concept_stats_for_value.concept_value);
+        setSelectedControlSize(concept_stats_for_value.persons_in_cohort_with_value);
+    }
+
     const ConceptsStatsByHare = () => {
         const results = useQueries([
             { queryKey: ['conceptsstats', selectedCovariates, caseCohortDefinitionId], queryFn: fetchCaseConceptStatsByHare, ...queryConfig },
@@ -440,7 +455,7 @@ const CaseControlGWAS = (props) => {
                                         <Dropdown.Item
                                             key={`${datum.concept_value}`}
                                             value={`${datum.concept_value}`}
-                                            onClick={() => setSelectedCaseHare(datum.concept_value)
+                                            onClick={() => setSelectedCaseSubsetDetails(datum)
                                             }
                                         >
                                             {<div>{datum.concept_value} {" (size:" + datum.persons_in_cohort_with_value + ")"}</div>}
@@ -461,7 +476,7 @@ const CaseControlGWAS = (props) => {
                                         <Dropdown.Item
                                             key={`${datum.concept_value}`}
                                             value={`${datum.concept_value}`}
-                                            onClick={() => setSelectedControlHare(datum.concept_value)
+                                            onClick={() => setSelectedContolSubsetDetails(datum)
                                             }
                                         >
                                             {<div>{datum.concept_value} {" (size:" + datum.persons_in_cohort_with_value + ")"}</div>}
@@ -474,6 +489,58 @@ const CaseControlGWAS = (props) => {
                 </div>
             );
         }
+    };
+
+    async function fetchOverlapInfo() {
+        var conceptIds = [...selectedCovariates].map((val) => val.concept_id);
+        const conceptIdsPayload = { ConceptIds: conceptIds };
+        const statsEndPoint = `${cohortMiddlewarePath}cohort-stats/check-overlap/by-source-id/${sourceId}/by-case-control-cohort-definition-ids/${caseCohortDefinitionId}/${controlCohortDefinitionId}/filter-by-concept-id-and-value/${hareConceptId}/${selectedCaseHare}`;
+        const reqBody = {
+            method: 'POST',
+            credentials: 'include',
+            headers,
+            body: JSON.stringify(conceptIdsPayload),
+        };
+        const getOverlapStats = await fetch(statsEndPoint, reqBody);
+        return getOverlapStats.json();
+    }
+
+    const QCShowOverlap = () => {
+        const { data, status } = useQuery(['checkoverlap', sourceId, caseCohortDefinitionId, controlCohortDefinitionId, hareConceptId, selectedCaseHare, selectedCovariates], fetchOverlapInfo, queryConfig);
+
+        if (status === 'loading') {
+            return <Spinner />;
+        }
+        if (status === 'error') {
+            return <React.Fragment>Error</React.Fragment>;
+        }
+
+        if (data.cohort_overlap.case_control_overlap_after_filter === 0) {
+            return (
+                <div className="GWASUI-flexCol">
+                    Based on the selected covariates their respective data within the study population,<br/>
+                    {selectedCaseSize} subjects were found in {caseCohortName} cohort and <br/>
+                    {selectedControlSize} subjects were found in {controlCohortName} cohort.<br/>
+                    <strong style={{color: '#006644'}}>No overlap found between both cohorts.</strong>
+                </div>
+            );
+        } else {
+            // display an error message if there is any overlap between case and control populations:
+            return (
+                <div className="GWASUI-flexCol">
+                    Based on the selected covariates their respective data within the study population,<br/>
+                    {selectedCaseSize} subjects were found in <b>{caseCohortName}</b> cohort and <br/>
+                    {selectedControlSize} subjects were found in <b>{controlCohortName}</b> cohort.<br/>
+                    <strong style={{color: '#bf2600'}}>Warning: overlap found between both cohorts!<br/>
+                    ({data.cohort_overlap.case_control_overlap_after_filter} subjects were found to be present in both cohorts).<br/>
+                    Please review your selections.<br/>
+                    If you choose to continue, be aware that these {data.cohort_overlap.case_control_overlap_after_filter} subjects will <i>not</i> be considered in the analysis.
+                    </strong>
+                </div>
+            );
+
+        }
+
     };
 
     async function fetchGwasSubmit() {
@@ -510,6 +577,7 @@ const CaseControlGWAS = (props) => {
         setCaseCohortDefinitionId(undefined);
         setControlCohortDefinitionId(undefined);
         setCaseCohortName(undefined);
+        setControlCohortName(undefined);
         setSelectedControlCohort(undefined);
         setSelectedCaseCohort(undefined);
         setSelectedCaseHare("-select one-");
@@ -644,16 +712,19 @@ const CaseControlGWAS = (props) => {
                 <div className="GWASUI-flexCol GWASUI-flexHeader2">Selected Control Cohort</div>
                 <div className="GWASUI-flexCol">{selectedControlCohort?.cohort_name}</div>
             </div>
-            <div className="GWASUI-flexRow">
-                <div className="GWASUI-flexCol GWASUI-rowItem">Covariates</div>
+            <div className="GWASUI-flexRow GWASUI-rowItem">
+                <div className="GWASUI-flexCol">Covariates</div>
+                <div className="GWASUI-flexCol">{selectedCovariates.map((cov, key) => {
+                    return (
+                        <div>
+                            <li className="GWASUI-listItem" key={key}>{cov.concept_name}</li>
+                        </div>
+                    )
+                })}</div>
             </div>
-            <div className="GWASUI-flexRow">{selectedCovariates.map((cov, key) => {
-                return (
-                    <div>
-                        <li className="GWASUI-listItem" key={key}>{cov.concept_name}</li>
-                    </div>
-                )
-            })}</div>
+            <div className="GWASUI-flexRow GWASUI-rowItem">
+                <QCShowOverlap/>
+            </div>
             <div className="GWASUI-flexRow">
                 <input
                     type="text"
