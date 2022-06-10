@@ -7,7 +7,7 @@ import Toaster from '../../gen3-ui-component/components/Toaster';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import { calculateDropdownButtonConfigs, humanizeNumber } from '../utils';
 import { ButtonConfigType, GuppyConfigType } from '../configTypeDef';
-import { fetchWithCreds } from '../../actions';
+import { fetchWithCreds } from '../../actions.thunk';
 import {
   manifestServiceApiPath,
   guppyGraphQLUrl,

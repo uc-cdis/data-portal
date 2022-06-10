@@ -4,13 +4,13 @@ export type JtiData = {
 };
 
 export type UserProfileState = {
-  create_error: any;
+  create_error: string;
   delete_error: any;
   jtis: JtiData[];
   refreshCred: {
-    api_key: string;
+    api_key: Object;
     key_id: string;
-    refreshCred: string;
+    refreshCred?: string;
   };
   requestDeleteJTI: JtiData['jti'];
   requestDeleteExp: JtiData['exp'];

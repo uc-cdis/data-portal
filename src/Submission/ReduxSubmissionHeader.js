@@ -1,8 +1,10 @@
 import { connect } from 'react-redux';
 import SubmissionHeader from './SubmissionHeader';
-import { fetchWithCreds } from '../actions';
+import { fetchErrored } from '../actions';
+import { fetchWithCreds } from '../actions.thunk';
 import { FETCH_LIMIT, STARTING_DID } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
+import { receiveUnmappedFileStatistics } from './actions';
 
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('./types').SubmissionState} SubmissionState */
@@ -22,44 +24,35 @@ const fetchUnmappedFileStats =
       path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${username}&start=${start}&limit=${FETCH_LIMIT}`,
       method: 'GET',
     })
-      .then(
-        ({ status, data }) => {
-          switch (status) {
-            case 200:
-              total = total.concat(data.records ?? []);
-              if (data.records?.length === FETCH_LIMIT) {
-                return dispatch(
-                  fetchUnmappedFileStats(
-                    username,
-                    total,
-                    data.records[FETCH_LIMIT - 1].did
-                  )
-                );
-              }
-              return {
-                type: 'RECEIVE_UNMAPPED_FILE_STATISTICS',
-                data: {
-                  count: total.length,
-                  totalSize: total.reduce(
-                    /**
-                     * @param {number} size
-                     * @param {Object} current
-                     */
-                    (size, current) => size + current.size,
-                    0
-                  ),
-                },
-              };
+      .then(({ status, data }) => {
+        switch (status) {
+          case 200:
+            total = total.concat(data.records ?? []);
+            if (data.records?.length === FETCH_LIMIT) {
+              return dispatch(
+                fetchUnmappedFileStats(
+                  username,
+                  total,
+                  data.records[FETCH_LIMIT - 1].did
+                )
+              );
+            }
+            return receiveUnmappedFileStatistics({
+              unmappedFileCount: total.length,
+              unmappedFileSize: total.reduce(
+                /**
+                 * @param {number} size
+                 * @param {Object} current
+                 */
+                (size, current) => size + current.size,
+                0
+              ),
+            });
 
-            default:
-              return {
-                type: 'FETCH_ERROR',
-                error: data.records,
-              };
-          }
-        },
-        (err) => ({ type: 'FETCH_ERROR', error: err })
-      )
+          default:
+            return fetchErrored(data.records);
+        }
+      }, fetchErrored)
       .then((msg) => {
         if (msg) dispatch(msg);
       });

@@ -10,98 +10,87 @@ export const clickBlankSpace = () => ({
 });
 
 /**
- * @param {DdgraphState['canvasBoundingRect']} canvasBoundingRect
+ * @param {DdgraphState['canvasBoundingRect']} payload
  * @returns {AnyAction}
  */
-export const setCanvasBoundingRect = (canvasBoundingRect) => ({
+export const setCanvasBoundingRect = (payload) => ({
   type: 'GRAPH_UPDATE_CANVAS_BOUNDING_RECT',
-  canvasBoundingRect,
+  payload,
 });
 
 /**
- * @param {DdgraphState['secondHighlightingNodeCandidateIDs']} secondHighlightingNodeCandidateIDs
+ * @param {DdgraphState['secondHighlightingNodeCandidateIDs']} payload
  * @returns {AnyAction}
  */
-export const setSecondHighlightingNodeCandidateIDs = (
-  secondHighlightingNodeCandidateIDs
-) => ({
+export const setSecondHighlightingNodeCandidateIDs = (payload) => ({
   type: 'GRAPH_UPDATE_SECOND_HIGHLIGHTING_NODE_CANDIDATES',
-  secondHighlightingNodeCandidateIDs,
+  payload,
 });
 
 /**
- * @param {DdgraphState['pathRelatedToSecondHighlightingNode']} pathRelatedToSecondHighlightingNode
+ * @param {DdgraphState['pathRelatedToSecondHighlightingNode']} payload
  * @returns {AnyAction}
  */
-export const setPathRelatedToSecondHighlightingNode = (
-  pathRelatedToSecondHighlightingNode
-) => ({
+export const setPathRelatedToSecondHighlightingNode = (payload) => ({
   type: 'GRAPH_UPDATE_PATH_RELATED_TO_SECOND_HIGHLIGHTING_NODE',
-  pathRelatedToSecondHighlightingNode,
+  payload,
 });
 
 /**
- * @param {DdgraphState['dataModelStructure']} dataModelStructure
- * @param {DdgraphState['dataModelStructureRelatedNodeIDs']} dataModelStructureRelatedNodeIDs
- * @param {DdgraphState['routesBetweenStartEndNodes']} routesBetweenStartEndNodes
+ * @param {Object} payload
+ * @param {DdgraphState['dataModelStructure']} payload.dataModelStructure
+ * @param {DdgraphState['dataModelStructureRelatedNodeIDs']} payload.dataModelStructureRelatedNodeIDs
+ * @param {DdgraphState['routesBetweenStartEndNodes']} payload.routesBetweenStartEndNodes
  * @returns {AnyAction}
  */
-export const setDataModelStructure = (
-  dataModelStructure,
-  dataModelStructureRelatedNodeIDs,
-  routesBetweenStartEndNodes
-) => ({
+export const setDataModelStructure = (payload) => ({
   type: 'GRAPH_UPDATE_DATA_MODEL_STRUCTURE',
-  dataModelStructure,
-  dataModelStructureRelatedNodeIDs,
-  routesBetweenStartEndNodes,
+  payload,
 });
 
 /**
- * @param {DdgraphState['relatedNodeIDs']} relatedNodeIDs
+ * @param {DdgraphState['relatedNodeIDs']} payload
  * @returns {AnyAction}
  */
-export const setRelatedNodeIDs = (relatedNodeIDs) => ({
+export const setRelatedNodeIDs = (payload) => ({
   type: 'GRAPH_UPDATE_RELATED_HIGHLIGHTING_NODE',
-  relatedNodeIDs,
+  payload,
 });
 
 /**
- * @param {GraphLayout} layout
+ * @param {GraphLayout} payload
  * @returns {AnyAction}
  */
-export const setGraphLayout = (layout) => ({
+export const setGraphLayout = (payload) => ({
   type: 'GRAPH_LAYOUT_CALCULATED',
-  nodes: layout.nodes,
-  edges: layout.edges,
-  graphBoundingBox: layout.graphBoundingBox,
+  payload,
 });
 
 /**
- * @param {DdgraphState['legendItems']} legendItems
+ * @param {DdgraphState['legendItems']} payload
  * @returns {AnyAction}
  */
-export const setGraphLegend = (legendItems) => ({
+export const setGraphLegend = (payload) => ({
   type: 'GRAPH_LEGEND_CALCULATED',
-  legendItems,
+  payload,
 });
 
 /**
- * @param {GraphNode['id']} nodeID
+ * @param {GraphNode['id']} payload
  * @returns {AnyAction}
  */
-export const hoverNode = (nodeID) => ({
+export const hoverNode = (payload) => ({
   type: 'GRAPH_UPDATE_HOVERING_NODE',
-  nodeID,
+  payload,
 });
 
 /**
- * @param {GraphNode['id']} nodeID
+ * @param {GraphNode['id']} payload
  * @returns {AnyAction}
  */
-export const clickNode = (nodeID) => ({
+export const clickNode = (payload) => ({
   type: 'GRAPH_CLICK_NODE',
-  nodeID,
+  payload,
 });
 
 /** @returns {AnyAction} */
@@ -110,48 +99,48 @@ export const resetGraphHighlight = () => ({
 });
 
 /**
- * @param {DdgraphState['overlayPropertyHidden']} isHidden
+ * @param {DdgraphState['overlayPropertyHidden']} payload
  * @returns {AnyAction}
  */
-export const setOverlayPropertyTableHidden = (isHidden) => ({
+export const setOverlayPropertyTableHidden = (payload) => ({
   type: 'GRAPH_SET_OVERLAY_PROPERTY_TABLE_HIDDEN',
-  isHidden,
+  payload,
 });
 
 /**
- * @param {GraphNode['id']} nodeID
+ * @param {GraphNode['id']} payload
  * @returns {AnyAction}
  */
-export const setExpandNode = (nodeID) => ({
+export const setExpandNode = (payload) => ({
   type: 'TABLE_EXPAND_NODE',
-  nodeID,
+  payload,
 });
 
 /**
- * @param {DdgraphState['isGraphView']} isGraphView
+ * @param {DdgraphState['isGraphView']} payload
  * @returns {AnyAction}
  */
-export const setGraphView = (isGraphView) => ({
+export const setGraphView = (payload) => ({
   type: 'TOGGLE_GRAPH_TABLE_VIEW',
-  isGraphView,
+  payload,
 });
 
 /**
- * @param {DdgraphState['needReset']} needReset
+ * @param {DdgraphState['needReset']} payload
  * @returns {AnyAction}
  */
-export const setNeedReset = (needReset) => ({
+export const setNeedReset = (payload) => ({
   type: 'GRAPH_CANVAS_RESET_REQUIRED',
-  needReset,
+  payload,
 });
 
 /**
- * @param {DdgraphState['isSearching']} isSearching
+ * @param {DdgraphState['isSearching']} payload
  * @returns {AnyAction}
  */
-export const setIsSearching = (isSearching) => ({
+export const setIsSearching = (payload) => ({
   type: 'SEARCH_SET_IS_SEARCHING_STATUS',
-  isSearching,
+  payload,
 });
 
 /**
@@ -162,14 +151,14 @@ export const setIsSearching = (isSearching) => ({
  */
 
 /**
- * @param {DdgraphState['searchResult']} searchResult
- * @param {SearchResultSummary} searchResultSummary
+ * @param {Object} payload
+ * @param {DdgraphState['searchResult']} payload.searchResult
+ * @param {SearchResultSummary} payload.searchResultSummary
  * @returns {AnyAction}
  */
-export const setSearchResult = (searchResult, searchResultSummary) => ({
+export const setSearchResult = (payload) => ({
   type: 'SEARCH_RESULT_UPDATED',
-  searchResult,
-  searchResultSummary,
+  payload,
 });
 
 /** @returns {AnyAction} */
@@ -178,21 +167,21 @@ export const clearSearchHistoryItems = () => ({
 });
 
 /**
- * @param {SearchHistoryItem} searchHistoryItem
+ * @param {SearchHistoryItem} payload
  * @returns {AnyAction}
  */
-export const addSearchHistoryItem = (searchHistoryItem) => ({
+export const addSearchHistoryItem = (payload) => ({
   type: 'SEARCH_HISTORY_ITEM_CREATED',
-  searchHistoryItem,
+  payload,
 });
 
 /**
- * @param {DdgraphState['graphNodesSVGElements']} graphNodesSVGElements
+ * @param {DdgraphState['graphNodesSVGElements']} payload
  * @returns {AnyAction}
  */
-export const setGraphNodesSVGElements = (graphNodesSVGElements) => ({
+export const setGraphNodesSVGElements = (payload) => ({
   type: 'GRAPH_NODES_SVG_ELEMENTS_UPDATED',
-  graphNodesSVGElements,
+  payload,
 });
 
 /** @returns {AnyAction} */
@@ -210,10 +199,19 @@ export const saveCurrentSearchKeyword = (keyword) => ({
 });
 
 /**
- * @param {boolean} opened
+ * @param {boolean} payload
  * @returns {AnyAction}
  */
-export const setHighlightingMatchedNodeOpened = (opened) => ({
+export const setHighlightingMatchedNodeOpened = (payload) => ({
   type: 'GRAPH_MATCHED_NODE_OPENED',
-  opened,
+  payload,
+});
+
+/**
+ * @param {DdgraphState['graphvizLayout']} payload
+ * @returns {AnyAction}
+ */
+export const receiveGraphvizLayout = (payload) => ({
+  type: 'RECEIVE_GRAPHVIZ_LAYOUT',
+  payload,
 });

@@ -5,7 +5,7 @@ const index = (state = /** @type {IndexState} */ ({}), action) => {
     case 'RECEIVE_INDEX_PAGE_COUNTS': {
       return {
         ...state,
-        ...action.data,
+        ...action.payload,
         updatedAt: Date.now(),
       };
     }

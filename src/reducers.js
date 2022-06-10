@@ -20,13 +20,12 @@ import userProfile from './UserProfile/reducers';
 const kube = (state = /** @type {KubeState} */ ({}), action) => {
   switch (action.type) {
     case 'RECEIVE_JOB_DISPATCH':
-      return { ...state, job: action.data };
+      return { ...state, job: action.payload };
     case 'RECEIVE_JOB_STATUS': {
-      const job = { ...action.data, resultURL: action.resultURL };
-      return { ...state, job };
+      return { ...state, ...action.payload };
     }
     case 'JOB_STATUS_INTERVAL':
-      return { ...state, jobStatusInterval: action.value };
+      return { ...state, jobStatusInterval: action.payload };
     case 'RESET_JOB':
       return { ...state, job: null, jobStatusInterval: null, resultURL: null };
     default:
@@ -38,7 +37,7 @@ const kube = (state = /** @type {KubeState} */ ({}), action) => {
 const popups = (state = /** @type {PopupState} */ ({}), action) => {
   switch (action.type) {
     case 'UPDATE_POPUP':
-      return { ...state, ...action.data };
+      return { ...state, ...action.payload };
     default:
       return state;
   }
@@ -52,9 +51,9 @@ const project = (state = /** @type {ProjectState} */ ({}), action) => {
   const projectAvail = {};
   switch (action.type) {
     case 'RECEIVE_PROJECTS':
-      for (const d of action.data) {
-        projects[d.code] = d.project_id;
-        projectAvail[d.project_id] = d.availability_type;
+      for (const p of action.payload) {
+        projects[p.code] = p.project_id;
+        projectAvail[p.project_id] = p.availability_type;
       }
       return { ...state, projects, projectAvail };
     default:
@@ -66,7 +65,11 @@ const project = (state = /** @type {ProjectState} */ ({}), action) => {
 const status = (state = /** @type {StatusState} */ ({}), action) => {
   switch (action.type) {
     case 'REQUEST_ERROR':
-      return { ...state, request_state: 'error', error_type: action.error };
+      return {
+        ...state,
+        error_type: action.payload,
+        request_state: 'error',
+      };
     default:
       return state;
   }
@@ -78,12 +81,12 @@ const user = (state = /** @type {UserState} */ ({}), action) => {
     case 'RECEIVE_USER':
       return {
         ...state,
-        ...action.user,
+        ...action.payload,
         fetched_user: true,
         lastAuthMs: Date.now(),
       };
     case 'FETCH_ERROR':
-      return { ...state, fetched_user: true, fetch_error: action.error };
+      return { ...state, fetched_user: true, fetch_error: action.payload };
     case 'RECEIVE_API_LOGOUT':
       return { ...state, lastAuthMs: 0 };
     default:
@@ -98,7 +101,7 @@ const userAccess = (
 ) => {
   switch (action.type) {
     case 'RECEIVE_USER_ACCESS':
-      return { ...state, access: action.data };
+      return { ...state, access: action.payload };
     default:
       return state;
   }
@@ -107,11 +110,8 @@ const userAccess = (
 /** @type {import('redux').Reducer<VersionInfoState>} */
 const versionInfo = (state = /** @type {VersionInfoState} */ ({}), action) => {
   switch (action.type) {
-    case 'RECEIVE_VERSION_INFO':
-      return {
-        ...state,
-        dataVersion: action.data || '',
-      };
+    case 'RECEIVE_DATA_VERSION':
+      return { ...state, dataVersion: action.payload };
     default:
       return state;
   }

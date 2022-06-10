@@ -1,5 +1,5 @@
 import { logoutInactiveUsers, workspaceTimeoutInMinutes } from '../localconf';
-import { fetchUser, logoutAPI } from '../actions';
+import { fetchUser, logoutAPI } from '../actions.thunk';
 
 /** @param {string} currentURL */
 export function pageFromURL(currentURL) {

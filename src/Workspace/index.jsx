@@ -10,7 +10,7 @@ import {
   workspaceStatusUrl,
 } from '../localconf';
 import './Workspace.css';
-import { fetchWithCreds } from '../actions';
+import { fetchWithCreds } from '../actions.thunk';
 import Spinner from '../components/Spinner';
 import jupyterIcon from '../img/icons/jupyter.svg';
 import rStudioIcon from '../img/icons/rstudio.svg';

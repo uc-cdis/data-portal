@@ -16,25 +16,21 @@ const removeDeletedNode = (state, id) => {
 const queryNodes = (state = /** @type {QueryNodeState} */ ({}), action) => {
   switch (action.type) {
     case 'SUBMIT_SEARCH_FORM':
-      return { ...state, search_form: action.data };
+      return { ...state, search_form: action.payload };
     case 'RECEIVE_SEARCH_ENTITIES':
-      return {
-        ...state,
-        search_result: action.data,
-        search_status: action.search_status,
-      };
+      return { ...state, ...action.payload };
     case 'STORE_NODE_INFO':
-      return { ...state, stored_node_info: action.id };
+      return { ...state, stored_node_info: action.payload };
     case 'DELETE_SUCCEED':
       return {
         ...state,
-        search_result: removeDeletedNode(state, action.id),
+        search_result: removeDeletedNode(state, action.payload),
         delete_error: null,
       };
     case 'DELETE_FAIL':
-      return { ...state, delete_error: action.error };
+      return { ...state, delete_error: action.payload };
     case 'RECEIVE_QUERY_NODE':
-      return { ...state, query_node: action.data };
+      return { ...state, query_node: action.payload };
     case 'CLEAR_DELETE_SESSION':
       return { ...state, query_node: null, delete_error: null };
     case 'CLEAR_QUERY_NODES':

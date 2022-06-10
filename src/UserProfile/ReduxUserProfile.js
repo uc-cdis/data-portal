@@ -1,8 +1,20 @@
 import { connect } from 'react-redux';
 
 import UserProfile from './UserProfile';
-import { fetchWithCreds, updatePopup } from '../actions';
+import { updatePopup } from '../actions';
+import { fetchWithCreds } from '../actions.thunk';
 import { credentialCdisPath } from '../localconf';
+import {
+  clearCreationSession,
+  clearDeleteKeySession,
+  createFailed,
+  createSucceeded,
+  deleteKeyFailed,
+  deleteKeySucceeded,
+  receiveUserProfile,
+  requestDeleteKey,
+  userProfileErrored,
+} from './actions';
 
 /** @typedef {import('redux').AnyAction} AnyAction */
 /** @typedef {import('redux').Dispatch} Dispatch */
@@ -20,34 +32,12 @@ export const fetchAccess = () => (/** @type {Dispatch} */ dispatch) =>
     .then(({ status, data }) => {
       switch (status) {
         case 200:
-          return {
-            type: 'RECEIVE_USER_PROFILE',
-            jtis: data.jtis,
-          };
+          return receiveUserProfile(data.jtis);
         default:
-          return {
-            type: 'USER_PROFILE_ERROR',
-            error: data.error,
-          };
+          return userProfileErrored(data.error);
       }
     })
     .then((msg) => dispatch(msg));
-
-/**
- * @param {JtiData['jti']} jti
- * @param {JtiData['exp']} exp
- * @returns {AnyAction}
- */
-const requestDeleteKey = (jti, exp) => ({
-  type: 'REQUEST_DELETE_KEY',
-  jti,
-  exp,
-});
-
-/** @returns {AnyAction} */
-const clearDeleteSession = () => ({
-  type: 'CLEAR_DELETE_KEY_SESSION',
-});
 
 /**
  * @param {JtiData['jti']} jti
@@ -64,16 +54,12 @@ export const deleteKey =
     }).then(({ status, data }) => {
       switch (status) {
         case 204:
-          dispatch({ type: 'DELETE_KEY_SUCCEED' });
-          dispatch(clearDeleteSession());
+          dispatch(deleteKeySucceeded());
+          dispatch(clearDeleteKeySession());
           dispatch(updatePopup({ deleteTokenPopup: false }));
           return dispatch(fetchAccess());
         default:
-          return dispatch({
-            type: 'DELETE_KEY_FAIL',
-            jti,
-            error: data,
-          });
+          return dispatch(deleteKeyFailed(data));
       }
     });
 
@@ -90,26 +76,19 @@ export const createKey = (path) => (/** @type {ThunkDispatch} */ dispatch) =>
   }).then(({ status, data }) => {
     switch (status) {
       case 200:
-        dispatch({
-          type: 'CREATE_SUCCEED',
-          refreshCred: data,
-          strRefreshCred: JSON.stringify(data, null, '\t'),
-        });
+        dispatch(
+          createSucceeded({
+            refreshCred: data,
+            strRefreshCred: JSON.stringify(data, null, '\t'),
+          })
+        );
         dispatch(updatePopup({ saveTokenPopup: true }));
         return dispatch(fetchAccess());
       default:
-        dispatch({
-          type: 'CREATE_FAIL',
-          error: `Error: ${data.error || data.message}`,
-        });
+        dispatch(createFailed(`Error: ${data.error || data.message}`));
         return dispatch(updatePopup({ saveTokenPopup: true }));
     }
   });
-
-/** @returns {AnyAction} */
-const clearCreationSession = () => ({
-  type: 'CLEAR_CREATION_SESSION',
-});
 
 /**
  * @param {Object} state
@@ -132,7 +111,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(clearCreationSession());
   },
   onClearDeleteSession: () => {
-    dispatch(clearDeleteSession());
+    dispatch(clearDeleteKeySession());
   },
   /** @param {string} path */
   onCreateKey: (path) => {
@@ -147,11 +126,13 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(deleteKey(jti, exp, path));
   },
   /**
-   * @param {JtiData['jti']} jti
-   * @param {JtiData['exp']} exp
+   * @param {JtiData['jti']} requestDeleteJTI
+   * @param {JtiData['exp']} requestDeleteExp
    */
-  onRequestDeleteKey: (jti, exp) => {
-    dispatch(fetchAccess()).then(() => dispatch(requestDeleteKey(jti, exp)));
+  onRequestDeleteKey: (requestDeleteJTI, requestDeleteExp) => {
+    dispatch(fetchAccess()).then(() =>
+      dispatch(requestDeleteKey({ requestDeleteJTI, requestDeleteExp }))
+    );
   },
   /** @param {Partial<PopupState>} state */
   onUpdatePopup: (state) => {

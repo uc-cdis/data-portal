@@ -1,8 +1,10 @@
 import { connect } from 'react-redux';
 import MapFiles from './MapFiles';
-import { fetchWithCreds } from '../actions';
+import { fetchErrored } from '../actions';
+import { fetchWithCreds } from '../actions.thunk';
 import { STARTING_DID, FETCH_LIMIT } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
+import { receiveFilesToMap, receiveUnmappedFiles } from './actions';
 
 /** @typedef {import('redux').AnyAction} AnyAction */
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
@@ -21,47 +23,28 @@ const fetchUnmappedFiles =
       path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${username}&start=${start}&limit=${FETCH_LIMIT}`,
       method: 'GET',
     })
-      .then(
-        ({ status, data }) => {
-          switch (status) {
-            case 200:
-              total = total.concat(data.records ?? []);
-              if (data.records?.length === FETCH_LIMIT) {
-                return dispatch(
-                  fetchUnmappedFiles(
-                    username,
-                    total,
-                    data.records[FETCH_LIMIT - 1].did
-                  )
-                );
-              }
-              return {
-                type: 'RECEIVE_UNMAPPED_FILES',
-                data: total,
-              };
-            default:
-              return {
-                type: 'FETCH_ERROR',
-                error: data.records,
-              };
-          }
-        },
-        (err) => ({ type: 'FETCH_ERROR', error: err })
-      )
+      .then(({ status, data }) => {
+        switch (status) {
+          case 200:
+            total = total.concat(data.records ?? []);
+            if (data.records?.length === FETCH_LIMIT) {
+              return dispatch(
+                fetchUnmappedFiles(
+                  username,
+                  total,
+                  data.records[FETCH_LIMIT - 1].did
+                )
+              );
+            }
+            return receiveUnmappedFiles(total);
+          default:
+            return fetchErrored(data.records);
+        }
+      }, fetchErrored)
       .then((msg) => {
         if (msg) dispatch(msg);
       });
   };
-
-/**
- *
- * @param {SubmissionState['filesToMap']} files
- * @returns {AnyAction}
- */
-const mapSelectedFiles = (files) => ({
-  type: 'RECEIVE_FILES_TO_MAP',
-  data: files,
-});
 
 const ReduxMapFiles = (() => {
   /** @param {{ submission: SubmissionState; user: UserState }} state */
@@ -78,7 +61,7 @@ const ReduxMapFiles = (() => {
     },
     /** @param {SubmissionState['filesToMap']} files */
     mapSelectedFiles: (files) => {
-      dispatch(mapSelectedFiles(files));
+      dispatch(receiveFilesToMap(files));
     },
   });
 

@@ -1,13 +1,15 @@
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import SimplePopup from '../components/SimplePopup';
-import { fetchUser, fetchUserAccess } from '../actions';
+import { receiveUser } from '../actions';
+import { fetchUser, fetchUserAccess } from '../actions.thunk';
 import { getIndexPageCounts } from '../Index/utils';
 import { headers, userapiPath } from '../localconf';
 import RegistrationForm from './RegistrationForm';
 import ReviewForm from './ReviewForm';
 import './UserPopup.css';
 
+/** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('../types').User} User */
 /** @typedef {import('./types').UserReviewDocument} UserReviewDocument */
 /** @typedef {import('./types').UserRegistrationInput} UserRegistrationInput */
@@ -88,9 +90,9 @@ function UserPopup() {
       if (user.authz['/portal'] === undefined)
         throw new Error('Failed to update authorization information.');
 
-      dispatch({ type: 'RECEIVE_USER', user });
-      dispatch(fetchUserAccess());
-      dispatch(getIndexPageCounts());
+      dispatch(receiveUser(user));
+      /** @type {ThunkDispatch} */ (dispatch)(fetchUserAccess());
+      /** @type {ThunkDispatch} */ (dispatch)(getIndexPageCounts());
       return 'success';
     } catch (e) {
       console.error(e); // eslint-disable-line no-console
@@ -102,7 +104,7 @@ function UserPopup() {
     return updateDocsToReview(reviewStatus).then(({ ok }) => {
       if (!ok) throw Error('Failed to update reviewed documents.');
 
-      dispatch(fetchUser());
+      /** @type {ThunkDispatch} */ (dispatch)(fetchUser());
       handleClose();
     });
   }

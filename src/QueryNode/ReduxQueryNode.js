@@ -1,18 +1,22 @@
 import { connect } from 'react-redux';
-
-import { fetchWithCreds, updatePopup } from '../actions';
+import { updatePopup } from '../actions';
+import { fetchWithCreds } from '../actions.thunk';
 import { getSubmitPath } from '../utils';
 import { submissionApiPath } from '../localconf';
 import QueryNode from './QueryNode';
+import {
+  clearDeleteSession,
+  deleteErrored,
+  deleteSucceded,
+  receiveQueryNode,
+  receiveSearchEntities,
+  storeNodeInfo,
+} from './actions';
 
 /** @typedef {import('redux').Dispatch} Dispatch */
 /** @typedef {import('./types').QueryNodeState} QueryNodeState */
 /** @typedef {import('../types').PopupState} PopupState */
 /** @typedef {import('../Submission/types').SubmissionState} SubmissionState */
-
-const clearDeleteSession = {
-  type: 'CLEAR_DELETE_SESSION',
-};
 
 /**
  * @param {any} opts
@@ -34,17 +38,15 @@ export const submitSearchForm =
       .then(({ status, data }) => {
         switch (status) {
           case 200:
-            return {
-              type: 'RECEIVE_SEARCH_ENTITIES',
+            return receiveSearchEntities({
+              search_result: data,
               search_status: `succeed: ${status}`,
-              data,
-            };
+            });
           default:
-            return {
-              type: 'RECEIVE_SEARCH_ENTITIES',
+            return receiveSearchEntities({
+              search_result: data,
               search_status: `failed: ${status}`,
-              data,
-            };
+            });
         }
       })
       .then((msg) => dispatch(msg))
@@ -65,24 +67,12 @@ const deleteNode =
 
       switch (status) {
         case 200:
-          dispatch({
-            type: 'DELETE_SUCCEED',
-            id,
-          });
-          return dispatch(clearDeleteSession);
+          dispatch(deleteSucceded(id));
+          return dispatch(clearDeleteSession());
         default:
-          return dispatch({
-            type: 'DELETE_FAIL',
-            id,
-            error: data,
-          });
+          return dispatch(deleteErrored(data));
       }
     });
-
-const storeNodeInfo = ({ id }) => ({
-  type: 'STORE_NODE_INFO',
-  id,
-});
 
 /** @param {{ project: string; id: string; }} param */
 const fetchQueryNode =
@@ -91,24 +81,14 @@ const fetchQueryNode =
     fetchWithCreds({
       path: `${getSubmitPath(project)}/export?ids=${id}&format=json`,
       dispatch,
-    })
-      .then(({ status, data }) => {
-        switch (status) {
-          case 200:
-            return {
-              type: 'RECEIVE_QUERY_NODE',
-              data: data[0],
-            };
-          default:
-            return {
-              type: 'QUERY_ERROR',
-              error: data,
-            };
-        }
-      })
-      .then((msg) => {
-        dispatch(msg);
-      });
+    }).then(({ status, data }) => {
+      switch (status) {
+        case 200:
+          return dispatch(receiveQueryNode(data[0]));
+        default:
+          return null;
+      }
+    });
 
 /**
  *
@@ -148,7 +128,7 @@ const mapDispatchToProps = (dispatch) => ({
    */
   onStoreNodeInfo: ({ id, project }) =>
     dispatch(fetchQueryNode({ id, project })).then(() =>
-      dispatch(storeNodeInfo({ id }))
+      dispatch(storeNodeInfo(id))
     ),
 });
 const ReduxQueryNode = connect(mapStateToProps, mapDispatchToProps)(QueryNode);

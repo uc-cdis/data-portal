@@ -14,13 +14,10 @@ import {
   // workspaceUrl,
   // workspaceErrorUrl,
 } from './localconf';
-import {
-  fetchDictionary,
-  fetchGraphvizLayout,
-  fetchGuppySchema,
-  fetchSchema,
-  fetchVersionInfo,
-} from './actions';
+import { fetchVersionInfo } from './actions.thunk';
+import { fetchGraphvizLayout } from './DataDictionary/actions.thunk';
+import { fetchGuppySchema, fetchSchema } from './GraphQLEditor/actions.thunk';
+import { fetchDictionary } from './Submission/actions.thunk';
 import useSessionMonitor from './hooks/useSessionMonitor';
 
 // lazy-loaded pages

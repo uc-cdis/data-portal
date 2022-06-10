@@ -4,6 +4,12 @@ import configureMockStore from 'redux-mock-store';
 import fetchMock from 'jest-fetch-mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import ReduxUserProfile, { createKey, deleteKey } from './ReduxUserProfile';
+import {
+  clearDeleteKeySession,
+  createSucceeded,
+  deleteKeySucceeded,
+  receiveUserProfile,
+} from './actions';
 
 const { mockResponseOnce } = fetchMock;
 const expectedData = {
@@ -58,19 +64,15 @@ test('creates, fetches, and lists user access keys', (done) => {
     // Note that mock-store does not register reducers, so UI does not update,
     // but can check for expected actions
     expect(mockStore.getActions()).toEqual([
-      {
-        type: 'CREATE_SUCCEED',
+      createSucceeded({
         refreshCred: expectedData,
         strRefreshCred: JSON.stringify(expectedData, null, '\t'),
-      },
+      }),
       {
         type: 'UPDATE_POPUP',
-        data: { saveTokenPopup: true },
+        payload: { saveTokenPopup: true },
       },
-      {
-        type: 'RECEIVE_USER_PROFILE',
-        jtis: [{ jti, exp }],
-      },
+      receiveUserProfile([{ jti, exp }]),
     ]);
     done();
   });
@@ -81,23 +83,21 @@ test('updates the redux store', (done) => {
   mockResponseOnce(JSON.stringify({ jtis: [{ jti, exp }] }), { status: 200 });
 
   const mockStore = getMockStore();
-  mockStore.dispatch(createKey('http://anything.com'));
+  /** @type {import('redux-thunk').ThunkDispatch} */ (mockStore.dispatch)(
+    createKey('http://anything.com')
+  );
 
   waitFor(() => {
     expect(mockStore.getActions()).toEqual([
-      {
-        type: 'CREATE_SUCCEED',
+      createSucceeded({
         refreshCred: expectedData,
         strRefreshCred: JSON.stringify(expectedData, null, '\t'),
-      },
+      }),
       {
         type: 'UPDATE_POPUP',
-        data: { saveTokenPopup: true },
+        payload: { saveTokenPopup: true },
       },
-      {
-        type: 'RECEIVE_USER_PROFILE',
-        jtis: [{ jti, exp }],
-      },
+      receiveUserProfile([{ jti, exp }]),
     ]);
     done();
   });
@@ -108,23 +108,18 @@ test('deletes key', (done) => {
   mockResponseOnce(JSON.stringify({ jtis: [] }), { status: 200 });
 
   const mockStore = getMockStore();
-  mockStore.dispatch(deleteKey(jti, exp, 'test.com/action=delete'));
+  /** @type {import('redux-thunk').ThunkDispatch} */ (mockStore.dispatch)(
+    deleteKey(jti, exp, 'test.com/action=delete')
+  );
   waitFor(() => {
     expect(mockStore.getActions()).toEqual([
-      {
-        type: 'DELETE_KEY_SUCCEED',
-      },
-      {
-        type: 'CLEAR_DELETE_KEY_SESSION',
-      },
+      deleteKeySucceeded(),
+      clearDeleteKeySession(),
       {
         type: 'UPDATE_POPUP',
-        data: { deleteTokenPopup: false },
+        payload: { deleteTokenPopup: false },
       },
-      {
-        type: 'RECEIVE_USER_PROFILE',
-        jtis: [],
-      },
+      receiveUserProfile([]),
     ]);
     done();
   });
