@@ -78,6 +78,8 @@
   white-space: nowrap;
   overflow: hidden;
   display: block;
+  padding-right: 8rem;
+  padding-left: 8rem;
 }
 
 .GWASUI-searchInput {
