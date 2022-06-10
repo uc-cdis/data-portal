@@ -75,9 +75,13 @@
 .GWASUI-selectInstruction {
   color: var(--g3-color__base-blue);
   font-weight: bold;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
   display: block;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 .GWASUI-searchInput {

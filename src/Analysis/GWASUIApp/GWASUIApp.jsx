@@ -18,6 +18,8 @@ const GWASUIApp = (props) => {
     setGwasTypeSelected(false);
   }
 
+  console.log("GWAS");
+
   useEffect(() => {
     fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
   }, [props]);
