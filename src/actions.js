@@ -21,7 +21,7 @@ export function receiveJobDispatch(payload) {
 export function receiveJobStatus(payload) {
   return {
     type: 'RECEIVE_JOB_STATUS',
-    payload: { ...payload.job, resultURL: payload.resultURL },
+    payload,
   };
 }
 

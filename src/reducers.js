@@ -22,8 +22,7 @@ const kube = (state = /** @type {KubeState} */ ({}), action) => {
     case 'RECEIVE_JOB_DISPATCH':
       return { ...state, job: action.payload };
     case 'RECEIVE_JOB_STATUS': {
-      const { resultURL, ...job } = action.payload;
-      return { ...state, job, resultURL };
+      return { ...state, ...action.payload };
     }
     case 'JOB_STATUS_INTERVAL':
       return { ...state, jobStatusInterval: action.payload };
