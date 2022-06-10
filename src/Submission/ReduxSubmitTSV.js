@@ -1,14 +1,9 @@
 import { connect } from 'react-redux';
 import SubmitTSV from './SubmitTSV';
 import { submissionApiPath, lineLimit } from '../localconf';
-import { fetchWithCreds } from '../actions';
-import {
-  getCounts,
-  uploadTSV,
-  updateFileContent,
-  receiveSubmission,
-  resetSubmissionStatus,
-} from './actions';
+import { fetchWithCreds } from '../actions.thunk';
+import { receiveSubmission, resetSubmissionStatus } from './actions';
+import { getCounts, uploadTSV, updateFileContent } from './actions.thunk';
 
 /** @typedef {import('redux').Dispatch} Dispatch */
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */

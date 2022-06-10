@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 
 import UserProfile from './UserProfile';
-import { fetchWithCreds, updatePopup } from '../actions';
+import { updatePopup } from '../actions';
+import { fetchWithCreds } from '../actions.thunk';
 import { credentialCdisPath } from '../localconf';
 import {
   clearCreationSession,

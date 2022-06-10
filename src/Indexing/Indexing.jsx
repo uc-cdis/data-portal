@@ -6,7 +6,7 @@ import {
   jobapiPath,
   hostname,
 } from '../localconf';
-import { fetchWithCreds, fetchWithCredsAndTimeout } from '../actions';
+import { fetchWithCreds, fetchWithCredsAndTimeout } from '../actions.thunk';
 import './Indexing.css';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';

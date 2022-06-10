@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-
-import { fetchWithCreds, updatePopup } from '../actions';
+import { updatePopup } from '../actions';
+import { fetchWithCreds } from '../actions.thunk';
 import { getSubmitPath } from '../utils';
 import { submissionApiPath } from '../localconf';
 import QueryNode from './QueryNode';

@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import MapFiles from './MapFiles';
-import { fetchErrored, fetchWithCreds } from '../actions';
+import { fetchErrored } from '../actions';
+import { fetchWithCreds } from '../actions.thunk';
 import { STARTING_DID, FETCH_LIMIT } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
 import { receiveFilesToMap, receiveUnmappedFiles } from './actions';

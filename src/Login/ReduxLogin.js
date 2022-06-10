@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import Login from './Login';
-import { fetchWithCreds } from '../actions';
+import { fetchWithCreds } from '../actions.thunk';
 import { loginPath } from '../localconf';
 import { components } from '../params';
 import { loginEndpointErrored, receiveLoginEndpoint } from './actions';

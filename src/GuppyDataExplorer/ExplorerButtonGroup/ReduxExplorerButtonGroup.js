@@ -5,7 +5,7 @@ import {
   checkJob,
   fetchJobResult,
   resetJobState,
-} from '../../actions';
+} from '../../actions.thunk';
 
 /** @typedef {import('../../types').KubeState} KubeState */
 /** @typedef {import('../../types').UserAccessState} UserAccessState */

@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import SubmitForm from './SubmitForm';
-import { uploadTSV, updateFormSchema } from './actions';
+import { updateFormSchema } from './actions';
+import { uploadTSV } from './actions.thunk';
 
 /** @typedef {import('./types').SubmissionState} SubmissionState */
 

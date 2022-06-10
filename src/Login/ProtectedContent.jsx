@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useStore } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchUser, fetchUserAccess } from '../actions';
+import { fetchUser, fetchUserAccess } from '../actions.thunk';
 import { clearQueryNodes } from '../QueryNode/actions';
 import { clearCounts } from '../Submission/actions';
 import Spinner from '../components/Spinner';

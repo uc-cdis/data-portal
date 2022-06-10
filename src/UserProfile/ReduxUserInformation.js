@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import UserInformation from './UserInformation';
-import { fetchUserAccess, receiveUser } from '../actions';
+import { receiveUser } from '../actions';
+import { fetchUserAccess } from '../actions.thunk';
 
 /** @param {import('redux-thunk').ThunkDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({

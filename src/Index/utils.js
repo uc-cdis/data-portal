@@ -1,4 +1,4 @@
-import { fetchWithCreds } from '../actions';
+import { fetchWithCreds } from '../actions.thunk';
 import { consortiumList } from '../params';
 import { receiveIndexPageCounts } from './actions';
 

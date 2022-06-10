@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import SubmissionHeader from './SubmissionHeader';
-import { fetchErrored, fetchWithCreds } from '../actions';
+import { fetchErrored } from '../actions';
+import { fetchWithCreds } from '../actions.thunk';
 import { FETCH_LIMIT, STARTING_DID } from './utils';
 import { indexdPath, useIndexdAuthz } from '../localconf';
 import { receiveUnmappedFileStatistics } from './actions';
