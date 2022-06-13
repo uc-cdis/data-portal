@@ -159,7 +159,7 @@ const filterByTags = (studies: any[], selectedTags: any, config: DiscoveryConfig
     return studies;
   }
   const tagField = config.minimalFieldMapping.tagsListFieldName;
-  return studies.filter((study) => study[tagField].some((tag) => selectedTags[tag.name]));
+  return studies.filter((study) => study[tagField]?.some((tag) => selectedTags[tag.name]));
 };
 
 interface FilterState {
