@@ -58,8 +58,8 @@ const CaseControlGWAS = (props) => {
     const [caseCohortName, setCaseCohortName] = useState(undefined);
     const [controlCohortName, setControlCohortName] = useState(undefined);
 
-    const [covariateVars] = useState({
-        ConceptIds: [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708],
+    const [allowedConceptTypes] = useState({
+        ConceptTypes: ['MVP Continuous'],
     });
 
     const [form] = Form.useForm();
@@ -109,14 +109,20 @@ const CaseControlGWAS = (props) => {
     }
 
     async function fetchCovariates() {
-        const conceptEndpoint = `${cohortMiddlewarePath}concept/by-source-id/${sourceId}`;
+        const conceptEndpoint = `${cohortMiddlewarePath}concept/by-source-id/${sourceId}/by-type`;
         const reqBody = {
             method: 'POST',
             credentials: 'include',
             headers,
-            body: JSON.stringify(covariateVars),
+            body: JSON.stringify(allowedConceptTypes),
         };
         const getCovariates = await fetch(conceptEndpoint, reqBody);
+        // TODO - see https://github.com/TanStack/query/issues/2258#issuecomment-1034889517
+        // and https://react-query.tanstack.com/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default
+        // Maybe add this to avoid repeated calls when getting 4** errors?
+        // if (!getCovariates.ok) {
+        //     throw new Error('Error while fetching covariates');
+        // }
         return getCovariates.json();
     }
 
@@ -251,8 +257,8 @@ const CaseControlGWAS = (props) => {
         );
     };
 
-    const CohortCovariates = () => {
-        const { data, status } = useQuery(['cohortcovariates', sourceId], fetchCovariates, queryConfig);
+    const Covariates = () => {
+        const { data, status } = useQuery(['covariates', allowedConceptTypes.ConceptTypes, sourceId], fetchCovariates, queryConfig);
 
         if (status === 'loading') {
             return <Spinner />;
@@ -261,6 +267,9 @@ const CaseControlGWAS = (props) => {
             return <React.Fragment>Error</React.Fragment>;
         }
 
+        if (data.concepts.length === 0) {
+            return <React.Fragment>Unexpected error: no convariates found!</React.Fragment>;
+        }
         return (
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                 <h4 className='GWASUI-selectInstruction'>In this step, you will select covariates for your study. Please choose any of the harmonized variables.</h4>
@@ -765,7 +774,7 @@ const CaseControlGWAS = (props) => {
             }
             case 2: {
                 return (
-                    <CohortCovariates></CohortCovariates>
+                    <Covariates></Covariates>
                 );
             }
             case 3: {
