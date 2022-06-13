@@ -47,9 +47,11 @@ const QuantitativeGWAS = (props) => {
   const [current, setCurrent] = useState(0);
   const [sourceId, setSourceId] = useState(undefined);
   const [cohortDefinitionId, setCohortDefinitionId] = useState(undefined);
-  const [conceptVars] = useState({
-    ConceptIds: [2000006886, 2000000280, 2000000895, 2000000914, 2000000900, 2000000846, 2000000872, 2000000873, 2000000874, 2000006885, 2000000708],
+
+  const [allowedConceptTypes] = useState({
+    ConceptTypes: ['MVP Continuous'],
   });
+
   const hareConceptId = 2000007027;
   const [selectedConceptVars, setSelectedConceptVars] = useState([]);
 
@@ -117,13 +119,13 @@ const QuantitativeGWAS = (props) => {
     return getConceptStats.json();
   }
 
-  async function fetchConcepts() {
-    const conceptEndpoint = `${cohortMiddlewarePath}concept/by-source-id/${sourceId}`;
+  async function fetchCovariates() {
+    const conceptEndpoint = `${cohortMiddlewarePath}concept/by-source-id/${sourceId}/by-type`;
     const reqBody = {
       method: 'POST',
       credentials: 'include',
       headers,
-      body: JSON.stringify(conceptVars),
+      body: JSON.stringify(allowedConceptTypes),
     };
     const getConcepts = await fetch(conceptEndpoint, reqBody);
     return getConcepts.json();
@@ -312,22 +314,8 @@ const QuantitativeGWAS = (props) => {
     );
   };
 
-  // allow only continuous concepts for now:
-  const allowedConceptTypes = ['MVP Continuous'];
-
-  function filterConcepts(concepts) {
-    const filteredConcepts = [];
-    for (const concept_idx in concepts) {
-      const concept = concepts[concept_idx];
-      if (allowedConceptTypes.indexOf(concept.concept_type) != -1) {
-        filteredConcepts.push(concept);
-      }
-    }
-    return filteredConcepts;
-  }
-
-  const CohortConcepts = () => {
-    const { data, status } = useQuery(['cohortconcepts', sourceId], fetchConcepts, queryConfig);
+  const Covariates = () => {
+    const { data, status } = useQuery(['covariates', allowedConceptTypes.ConceptTypes, sourceId], fetchCovariates, queryConfig);
 
     if (status === 'loading') {
       return <Spinner />;
@@ -342,10 +330,8 @@ const QuantitativeGWAS = (props) => {
       </div>
     );
 
-    // filter concepts to only allow for certain concept types:
-    const filteredConcepts = filterConcepts(data.concepts);
-    if (filteredConcepts.length === 0) {
-      return <React.Fragment>Unexpected error: no continuous concepts found!</React.Fragment>;
+    if (data.concepts.length === 0) {
+      return <React.Fragment>Unexpected error: no convariates found!</React.Fragment>;
     }
     return (
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
@@ -360,14 +346,14 @@ const QuantitativeGWAS = (props) => {
             pagination={{ pageSize: 10 }}
             rowSelection={step2TableRowSelection}
             columns={step2TableConfig}
-            dataSource={filteredConcepts}
+            dataSource={data.concepts}
           />
         </div>
       </Space>
     );
   };
 
-  const CohortConceptStats = () => {
+  const CovariateStats = () => {
     const { data, status } = useQuery(['cohortstats', selectedConcepts], fetchConceptStats, queryConfig);
 
     if (status === 'loading') {
@@ -589,12 +575,12 @@ const QuantitativeGWAS = (props) => {
     }
     case 1: {
       return (
-        <CohortConcepts />
+        <Covariates />
       );
     }
     case 2: {
       return (
-        <CohortConceptStats />
+        <CovariateStats />
       );
     }
     case 3: {
