@@ -55,7 +55,17 @@ class StudyDetails extends React.Component {
       || (requiredIdp && requiredIdp !== this.props.user.idp))
     && this.props.location.search
     && this.props.location.search === '?request_access') {
-      this.props.history.push('/login', { from: `${this.props.location.pathname}?request_access` });
+      if (requiredIdp) {
+        // we should redirect directly to the configured IDP’s login page.
+        fetch('/user/login')
+          .then((res) => res.json())
+          .then((result) => {
+            const loginMatch = result?.providers?.find((obj) => obj.id === requiredIdp);
+            this.props.history.push(loginMatch?.url || '/login', { from: `${this.props.location.pathname}?request_access` });
+          });
+      } else {
+        this.props.history.push('/login', { from: `${this.props.location.pathname}?request_access` });
+      }
     } else if (this.props.user
       && this.props.user.username
       && !(requiredIdp && requiredIdp !== this.props.user.idp)
