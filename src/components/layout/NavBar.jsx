@@ -121,13 +121,24 @@ class NavBar extends Component {
                 <div
                   className='nav-bar__home-button'
                 >
-                  <NavLink
-                    exact
-                    to=''
-                    className='h3-typo nav-bar__link nav-bar__link--home g3-ring-on-focus'
-                  >
-                    {this.props.navTitle}
-                  </NavLink>
+                  {homepageHref
+                    ? (
+                      <a
+                        href={homepageHref}
+                        className='h3-typo nav-bar__link nav-bar__link--home g3-ring-on-focus'
+                      >
+                        {this.props.navTitle}
+                      </a>
+                    )
+                    : (
+                      <NavLink
+                        exact
+                        to=''
+                        className='h3-typo nav-bar__link nav-bar__link--home g3-ring-on-focus'
+                      >
+                        {this.props.navTitle}
+                      </NavLink>
+                    )}
                 </div>
               )
             }
