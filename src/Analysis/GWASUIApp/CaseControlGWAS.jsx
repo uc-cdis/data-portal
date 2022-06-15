@@ -592,8 +592,9 @@ const CaseControlGWAS = (props) => {
         setSelectedControlCohort(undefined);
         setSelectedCaseCohort(undefined);
         setSelectedCaseHare("-select one-");
-        setSelectedControlHare("-select one-")
-        // props.refreshWorkflows();
+        setSelectedControlHare("-select one-");
+        setGwasJobName('');
+        props.refreshWorkflows();
     };
 
     const CohortParameters = () => {
@@ -856,6 +857,13 @@ const CaseControlGWAS = (props) => {
     }
 
     let nextButtonEnabled = true;
+    if ((current === 0 && !selectedCaseCohort) || (current === 1 && !selectedControlCohort)) {
+      // Cohort selection
+      nextButtonEnabled = false;
+    } else if (current === 2 && selectedCovariates.length < 1) {
+      // covariate selection
+      nextButtonEnabled = false;
+    }
 
     return (
         <Space direction={'vertical'} style={{ width: '100%' }}>
