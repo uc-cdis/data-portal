@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch, Popconfirm
+    Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch, Popconfirm, notification
 } from 'antd';
 import './GWASUIApp.css';
 import { useQuery, useQueries, useMutation } from 'react-query';
@@ -11,6 +11,7 @@ import GWASWorkflowList from './GWASWorkflowList';
 import { fetchWithCreds } from '../../actions';
 import Spinner from "../../components/Spinner";
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import CheckOutlined from '@ant-design/icons';
 // the quantitative argo id is
 // gwas-template-wrapper-k5w9t and the tar GUID is dg.VA03/7484ce92-313b-4286-954c-b71ad5d9bf54
 
@@ -556,7 +557,7 @@ const CaseControlGWAS = (props) => {
         const submitEndpoint = `${gwasWorkflowPath}submit`;
         const requestBody = {
             n_pcs: numOfPC,
-            covariates,
+            covariates: selectedCovariates.map((val) => val.prefixed_concept_id),
             out_prefix: Date.now().toString(),
             outcome: "-1",
             hare_population: selectedCaseHare, // TODO: single selection for both case and control
@@ -566,6 +567,7 @@ const CaseControlGWAS = (props) => {
             source_id: sourceId,
             case_cohort_definition_id: caseCohortDefinitionId,
             control_cohort_definition_id: controlCohortDefinitionId,
+            workflow_name: gwasJobName,
         };
         const res = await fetch(submitEndpoint, {
             method: 'POST',
@@ -677,7 +679,7 @@ const CaseControlGWAS = (props) => {
                 description:
                     `${gwasJobName} job starting!`,
                 icon: (<CheckOutlined />),
-                placement: 'bottom',
+                placement: 'top',
                 btn,
                 key,
             });
