@@ -857,6 +857,13 @@ const CaseControlGWAS = (props) => {
     }
 
     let nextButtonEnabled = true;
+    if ((current === 0 && !selectedCaseCohort) || (current === 1 && !selectedControlCohort)) {
+      // Cohort selection
+      nextButtonEnabled = false;
+    } else if (current === 2 && selectedCovariates.length < 1) {
+      // covariate selection
+      nextButtonEnabled = false;
+    }
 
     return (
         <Space direction={'vertical'} style={{ width: '100%' }}>
