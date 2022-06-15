@@ -559,7 +559,7 @@ const CaseControlGWAS = (props) => {
             covariates,
             out_prefix: Date.now().toString(),
             outcome: "-1",
-            // hare_codes: // TODO
+            hare_population: selectedCaseHare, // TODO: single selection for both case and control
             maf_threshold: Number(mafThreshold),
             imputation_score_cutoff: Number(imputationScore),
             template_version: "gwas-template-latest",
