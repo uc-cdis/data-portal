@@ -14,6 +14,7 @@ class ControlPanel extends PureComponent {
     const tooltipText1 = (<> Google Mobility Data shows movement trends as a percentage variance from an established baseline for a given day and place. <br /> Google LLC "Google COVID-19 Community Mobility Reports". <a href="https://www.google.com/covid19/mobility/"> https://www.google.com/covid19/mobility/</a>  <br /> Accessed: Today</>);
     const tooltipText2 = 'Additional data of interest to display in map tool-tip pop-up.  These data will not influence color gradients on the map.';
 
+    const tooltipText1Style = {'word-wrap': 'break-word'}
     return (
       <div className='control-panel'>
         <h3>{this.props.legendTitle}</h3>
@@ -27,6 +28,7 @@ class ControlPanel extends PureComponent {
               <Tooltip
                 placement='right'
                 overlay={tooltipText1}
+                overlayInnerStyle={tooltipText1Style}
                 overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
                 arrowContent={<div className='rc-tooltip-arrow-inner' />}
                 width='300px'
