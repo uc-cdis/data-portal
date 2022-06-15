@@ -592,8 +592,9 @@ const CaseControlGWAS = (props) => {
         setSelectedControlCohort(undefined);
         setSelectedCaseCohort(undefined);
         setSelectedCaseHare("-select one-");
-        setSelectedControlHare("-select one-")
-        // props.refreshWorkflows();
+        setSelectedControlHare("-select one-");
+        setGwasJobName('');
+        props.refreshWorkflows();
     };
 
     const CohortParameters = () => {
