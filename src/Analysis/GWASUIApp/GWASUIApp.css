@@ -30,6 +30,7 @@
 }
 
 .GWASApp-jobStatus {
+  width: 100%;
   margin-bottom: 16px;
   min-width: 800px;
 }
