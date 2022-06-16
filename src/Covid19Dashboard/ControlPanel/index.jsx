@@ -28,7 +28,7 @@ class ControlPanel extends PureComponent {
               <Tooltip
                 placement='right'
                 overlay={tooltipText1}
-                overlayInnerStyle={tooltipText1Style}
+                overlayStyle={tooltipText1Style}
                 overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
                 arrowContent={<div className='rc-tooltip-arrow-inner' />}
                 width='300px'
