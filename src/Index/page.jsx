@@ -8,16 +8,17 @@ import {
   ReduxIntroduction,
 } from './reduxer';
 import UserPopup from '../UserPopup';
-import { getIndexPageCounts } from './utils';
+import { fetchIndexPageCounts } from './actions.thunk';
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { breakpoints } from '../localconf';
 import './page.css';
 
 function IndexPage() {
+  /** @type {import('redux-thunk').ThunkDispatch} */
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getIndexPageCounts());
+    dispatch(fetchIndexPageCounts());
   }, []);
 
   const { width: screenWidth } = useResizeDetector({

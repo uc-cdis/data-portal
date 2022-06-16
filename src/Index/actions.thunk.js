@@ -43,7 +43,7 @@ function parseCounts(data) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export function getIndexPageCounts() {
+export function fetchIndexPageCounts() {
   /**
    * @param {import('redux').Dispatch} dispatch
    * @param {() => { index: import('./types').IndexState }} getState
