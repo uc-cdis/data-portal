@@ -185,17 +185,6 @@ export const fetchWithCredsAndTimeout = (opts, timeoutInMS) => {
   });
 };
 
-/**
- * @param {string} did
- * @param {string} method
- */
-export const getPresignedUrl = (did, method) => {
-  const urlPath = `${userapiPath}data/${method}/${did}`;
-  return fetchWithCreds({ path: urlPath, method: 'GET' }).then(
-    ({ data }) => /** @type {string} */ (data.url)
-  );
-};
-
 /* SLICE: KUBE */
 /** @param {any} body */
 export const dispatchJob = (body) => (/** @type {Dispatch} */ dispatch) =>
@@ -252,14 +241,6 @@ export const checkJobStatus = (dispatch, getState) => {
     });
 };
 
-// dispatch the job with body
-// then start pulling job status
-// save the interval id in redux that can be used to clear the timer later
-
-// TODO: need to get result urls from a Gen3 service
-export const submitJob = (body) => (/** @type {ThunkDispatch} */ dispatch) =>
-  dispatch(dispatchJob(body));
-
 export const checkJob = () => (/** @type {ThunkDispatch} */ dispatch) =>
   asyncSetInterval(() => dispatch(checkJobStatus), 1000).then(
     (intervalValue) => {
@@ -304,36 +285,6 @@ export const fetchProjects =
           else dispatch(fetchErrored(data));
         });
 
-/* SLICE: STATUS */
-/**
- * @param {Object} opts
- * @param {string} [opts.path]
- * @param {string} [opts.method]
- * @param {Dispatch} [opts.dispatch]
- * @returns {?Promise<FetchHelperResult>}
- */
-export const fetchIsUserLoggedInNoRefresh = (opts) => {
-  const { path = `${submissionApiPath}`, method = 'GET', dispatch } = opts;
-
-  let requestPromise = fetch(path, {
-    credentials: 'include',
-    headers,
-    method,
-  }).then(
-    (response) => {
-      requestPromise = null;
-      return getJsonOrText(path, response, false);
-    },
-    (error) => {
-      requestPromise = null;
-      if (dispatch) dispatch(connectionError());
-
-      return error;
-    }
-  );
-  return requestPromise;
-};
-
 /* SLICE: USER */
 /** @param {FetchHelperResult} result */
 export const handleFetchUser = ({ status, data }) => {
@@ -349,11 +300,6 @@ export const handleFetchUser = ({ status, data }) => {
 
 export const fetchUser = () => (/** @type {Dispatch} */ dispatch) =>
   fetchCreds({ dispatch }).then((res) => dispatch(handleFetchUser(res)));
-
-export const fetchUserNoRefresh = () => (/** @type {Dispatch} */ dispatch) =>
-  fetchIsUserLoggedInNoRefresh({ dispatch }).then((res) =>
-    dispatch(handleFetchUser(res))
-  );
 
 /** @param {boolean} displayAuthPopup */
 export const logoutAPI =
