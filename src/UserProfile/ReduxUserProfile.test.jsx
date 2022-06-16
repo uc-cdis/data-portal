@@ -3,13 +3,14 @@ import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import fetchMock from 'jest-fetch-mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import ReduxUserProfile, { createKey, deleteKey } from './ReduxUserProfile';
+import ReduxUserProfile from './ReduxUserProfile';
 import {
   clearDeleteKeySession,
   createSucceeded,
   deleteKeySucceeded,
   receiveUserProfile,
 } from './actions';
+import { createKey, deleteKey } from './actions.thunk';
 
 const { mockResponseOnce } = fetchMock;
 const expectedData = {
