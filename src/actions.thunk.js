@@ -63,13 +63,13 @@ let pendingRequest = null;
  * @param {Object} opts
  * @param {string} [opts.path]
  * @param {string} [opts.method]
- * @param {Dispatch} [opts.dispatch]
+ * @param {() => void} [opts.onError]
  */
 export const fetchCreds = (opts) => {
   if (pendingRequest) {
     return pendingRequest;
   }
-  const { path = `${userapiPath}user/`, method = 'GET', dispatch } = opts;
+  const { path = `${userapiPath}user/`, method = 'GET', onError } = opts;
 
   pendingRequest = fetch(path, {
     credentials: 'include',
@@ -82,9 +82,7 @@ export const fetchCreds = (opts) => {
     })
     .catch((error) => {
       pendingRequest = null;
-      if (dispatch) {
-        dispatch(connectionError());
-      }
+      onError?.();
       return error;
     });
   return pendingRequest;
@@ -109,7 +107,7 @@ export const fetchWithCreds = (opts) => {
     method = 'GET',
     body = null,
     customHeaders,
-    dispatch,
+    onError,
     useCache,
     signal,
   } = opts;
@@ -129,7 +127,7 @@ export const fetchWithCreds = (opts) => {
       if (response.status !== 403 && response.status !== 401)
         return getJsonOrText(path, response, useCache, method);
 
-      return fetchCreds({ dispatch }).then((resp) => {
+      return fetchCreds({ onError }).then((resp) => {
         switch (resp.status) {
           case 200:
             return fetch(path, request).then((res) =>
@@ -146,9 +144,7 @@ export const fetchWithCreds = (opts) => {
       });
     })
     .catch((error) => {
-      if (dispatch) {
-        dispatch(connectionError());
-      }
+      onError?.();
       return Promise.reject(error);
     });
 };
@@ -190,7 +186,7 @@ export const dispatchJob = (body) => (/** @type {Dispatch} */ dispatch) =>
     path: `${jobapiPath}dispatch`,
     body: JSON.stringify(body),
     method: 'POST',
-    dispatch,
+    onError: () => dispatch(connectionError()),
   })
     .then(({ status, data }) => {
       switch (status) {
@@ -219,7 +215,7 @@ export const checkJobStatus =
     return fetchWithCreds({
       path: `${jobapiPath}status?UID=${jobId}`,
       method: 'GET',
-      dispatch,
+      onError: () => dispatch(connectionError()),
     })
       .then(({ status, data }) => {
         // stop fetching job status once it stops running
@@ -245,7 +241,7 @@ export const fetchJobResult = (jobId) => (/** @type {Dispatch} */ dispatch) =>
   fetchWithCreds({
     path: `${jobapiPath}output?UID=${jobId}`,
     method: 'GET',
-    dispatch,
+    onError: () => dispatch(connectionError()),
   }).then((data) => data);
 
 export const resetJobState = () => (/** @type {Dispatch} */ dispatch) =>
@@ -291,7 +287,9 @@ export const handleFetchUser = ({ status, data }) => {
 };
 
 export const fetchUser = () => (/** @type {Dispatch} */ dispatch) =>
-  fetchCreds({ dispatch }).then((res) => dispatch(handleFetchUser(res)));
+  fetchCreds({ onError: () => dispatch(connectionError()) }).then((res) =>
+    dispatch(handleFetchUser(res))
+  );
 
 /** @param {boolean} displayAuthPopup */
 export const logoutAPI =

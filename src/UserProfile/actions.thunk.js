@@ -1,4 +1,4 @@
-import { updatePopup } from '../actions';
+import { connectionError, updatePopup } from '../actions';
 import { fetchWithCreds } from '../actions.thunk';
 import { credentialCdisPath } from '../localconf';
 import {
@@ -19,7 +19,7 @@ import {
 export const fetchAccess = () => (/** @type {Dispatch} */ dispatch) =>
   fetchWithCreds({
     path: credentialCdisPath,
-    dispatch,
+    onError: () => dispatch(connectionError()),
   })
     .then(({ status, data }) => {
       switch (status) {
@@ -39,7 +39,7 @@ export const createKey = (path) => (/** @type {ThunkDispatch} */ dispatch) =>
     body: JSON.stringify({
       scope: ['data', 'user'],
     }),
-    dispatch,
+    onError: () => dispatch(connectionError()),
     customHeaders: new Headers({ 'Content-Type': 'application/json' }),
   }).then(({ status, data }) => {
     switch (status) {
@@ -68,7 +68,7 @@ export const deleteKey =
       path: path + jti,
       method: 'DELETE',
       body: JSON.stringify({ exp }),
-      dispatch,
+      onError: () => dispatch(connectionError()),
     }).then(({ status, data }) => {
       switch (status) {
         case 204:

@@ -1,4 +1,4 @@
-import { updatePopup } from '../actions';
+import { connectionError, updatePopup } from '../actions';
 import { fetchWithCreds } from '../actions.thunk';
 import { getSubmitPath } from '../utils';
 import { submissionApiPath } from '../localconf';
@@ -22,7 +22,7 @@ export const deleteNode =
     const { data, status } = await fetchWithCreds({
       path: `${getSubmitPath(project)}/entities/${id}`,
       method: 'DELETE',
-      dispatch,
+      onError: () => dispatch(connectionError()),
     });
     // console.log('receive delete');
     dispatch(updatePopup({ nodedelete_popup: false, view_popup: false }));
@@ -41,7 +41,7 @@ export const fetchQueryNode =
   async (/** @type {Dispatch} */ dispatch) => {
     const { data, status } = await fetchWithCreds({
       path: `${getSubmitPath(project)}/export?ids=${id}&format=json`,
-      dispatch,
+      onError: () => dispatch(connectionError()),
     });
 
     if (status === 200) dispatch(receiveQueryNode(data[0]));
@@ -62,7 +62,7 @@ export const submitSearchForm =
         query: `query Test { ${nodeType} (first: 20, project_id: "${opts.project}", quick_search: "${submitterId}", order_by_desc: "updated_datetime") {id, type, submitter_id}}`,
       }),
       method: 'POST',
-      dispatch,
+      onError: () => dispatch(connectionError()),
     });
 
     const payload = {

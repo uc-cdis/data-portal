@@ -3,13 +3,13 @@ import CoreMetadataHeader from './CoreMetadataHeader';
 import FileTypePicture from '../components/FileTypePicture';
 import CoreMetadataTable from './CoreMetadataTable';
 import { coreMetadataPath, userapiPath } from '../localconf';
-import { updatePopup } from '../actions';
+import { connectionError, updatePopup } from '../actions';
 import { fetchWithCreds } from '../actions.thunk';
 
 export const generateSignedURL = (objectId) => (dispatch) =>
   fetchWithCreds({
     path: `${userapiPath}/data/download/${objectId}?expires_in=3600`,
-    dispatch,
+    onError: () => dispatch(connectionError()),
   }).then(({ status, data }) => {
     switch (status) {
       case 200:
@@ -35,7 +35,7 @@ export const fetchCoreMetadata = (objectId) => (dispatch) =>
   fetchWithCreds({
     path: coreMetadataPath + objectId,
     customHeaders: { Accept: 'application/json' },
-    dispatch,
+    onError: () => dispatch(connectionError()),
   })
     .then(({ status, data }) => {
       switch (status) {

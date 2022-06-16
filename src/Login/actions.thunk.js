@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
+import { connectionError } from '../actions';
 import { fetchWithCreds } from '../actions.thunk';
 import { loginPath } from '../localconf';
 import { loginEndpointErrored, receiveLoginEndpoint } from './actions';
@@ -23,7 +24,7 @@ export function fetchLogin() {
   return async (dispatch) => {
     const { data, status } = await fetchWithCreds({
       path: loginPath,
-      dispatch,
+      onError: () => dispatch(connectionError()),
     });
 
     if (status === 200) return dispatch(receiveLoginEndpoint(data.providers));

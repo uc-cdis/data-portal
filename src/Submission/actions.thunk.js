@@ -1,4 +1,4 @@
-import { fetchErrored } from '../actions';
+import { connectionError, fetchErrored } from '../actions';
 import { fetchWithCreds } from '../actions.thunk';
 import {
   indexdPath,
@@ -137,7 +137,7 @@ export const getCounts =
         query: buildCountsQuery(dictionary, nodeTypes, project),
       }),
       method: 'POST',
-      dispatch,
+      onError: () => dispatch(connectionError()),
     })
       .then(({ status, data }) => {
         switch (status) {
@@ -232,7 +232,7 @@ export const submitToServer =
         method,
         customHeaders: new Headers({ 'Content-Type': submission.file_type }),
         body: chunkArray.shift(),
-        dispatch,
+        onError: () => dispatch(connectionError()),
       })
         .then(recursiveFetch(chunkArray))
         .then(({ status, data }) =>
