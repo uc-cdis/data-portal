@@ -8,7 +8,6 @@ import {
   receiveUser,
   receiveUserAccess,
   resetJob,
-  setJobStatusInterval,
   updatePopup,
 } from './actions';
 import {
@@ -21,7 +20,6 @@ import {
   jobapiPath,
 } from './localconf';
 import { config } from './params';
-import { asyncSetInterval } from './utils';
 
 /** @typedef {import('redux').AnyAction} AnyAction */
 /** @typedef {import('redux').Dispatch} Dispatch */
@@ -206,47 +204,41 @@ export const dispatchJob = (body) => (/** @type {Dispatch} */ dispatch) =>
       dispatch(msg);
     });
 
-/**
- * @param {Dispatch} dispatch
- * @param {() => ({ kube: import('./types').KubeState })} getState
- * @returns
- */
-export const checkJobStatus = (dispatch, getState) => {
-  const state = getState();
-  let jobId = null;
-  if (state.kube.job) {
-    jobId = state.kube.job.uid;
-  }
-  return fetchWithCreds({
-    path: `${jobapiPath}status?UID=${jobId}`,
-    method: 'GET',
-    dispatch,
-  })
-    .then(({ status, data }) => {
-      // stop fetching job status once it stops running
-      if (data.status !== 'Running') {
-        window.clearInterval(state.kube.jobStatusInterval);
-      }
-      switch (status) {
-        case 200: {
-          const { resultURL, ...job } = data;
-          return receiveJobStatus({ job, resultURL });
-        }
-        default:
-          return fetchErrored(data);
-      }
-    }, fetchErrored)
-    .then((msg) => {
-      dispatch(msg);
-    });
-};
-
-export const checkJob = () => (/** @type {ThunkDispatch} */ dispatch) =>
-  asyncSetInterval(() => dispatch(checkJobStatus), 1000).then(
-    (intervalValue) => {
-      dispatch(setJobStatusInterval(intervalValue));
+export const checkJobStatus =
+  () =>
+  /**
+   * @param {Dispatch} dispatch
+   * @param {() => ({ kube: import('./types').KubeState })} getState
+   */
+  (dispatch, getState) => {
+    const state = getState();
+    let jobId = null;
+    if (state.kube.job) {
+      jobId = state.kube.job.uid;
     }
-  );
+    return fetchWithCreds({
+      path: `${jobapiPath}status?UID=${jobId}`,
+      method: 'GET',
+      dispatch,
+    })
+      .then(({ status, data }) => {
+        // stop fetching job status once it stops running
+        if (data.status !== 'Running') {
+          window.clearInterval(state.kube.jobStatusInterval);
+        }
+        switch (status) {
+          case 200: {
+            const { resultURL, ...job } = data;
+            return receiveJobStatus({ job, resultURL });
+          }
+          default:
+            return fetchErrored(data);
+        }
+      }, fetchErrored)
+      .then((msg) => {
+        dispatch(msg);
+      });
+  };
 
 /** @param {string} jobId */
 export const fetchJobResult = (jobId) => (/** @type {Dispatch} */ dispatch) =>

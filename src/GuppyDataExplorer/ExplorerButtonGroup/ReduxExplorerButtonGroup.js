@@ -1,11 +1,13 @@
 import { connect } from 'react-redux';
 import ExplorerButtonGroup from '.';
+import { setJobStatusInterval } from '../../actions';
 import {
   dispatchJob,
-  checkJob,
   fetchJobResult,
   resetJobState,
+  checkJobStatus,
 } from '../../actions.thunk';
+import { asyncSetInterval } from '../../utils';
 
 /** @typedef {import('../../types').KubeState} KubeState */
 /** @typedef {import('../../types').UserAccessState} UserAccessState */
@@ -22,7 +24,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(dispatchJob(body));
   },
   checkJobStatus: () => {
-    dispatch(checkJob());
+    const interval = asyncSetInterval(() => dispatch(checkJobStatus()), 1000);
+    dispatch(setJobStatusInterval(interval));
   },
   /** @param {string} jobId */
   fetchJobResult: (jobId) => dispatch(fetchJobResult(jobId)),
