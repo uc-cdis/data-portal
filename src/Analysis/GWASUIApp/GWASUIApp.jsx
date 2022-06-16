@@ -3,9 +3,10 @@ import QuantitativeGWAS from "./QuantitativeGWAS";
 import CaseControlGWAS from "./CaseControlGWAS";
 import PropTypes from 'prop-types';
 import {
-  Checkbox, Card
+  Checkbox, Card, Space
 } from 'antd';
-import { fetchAndSetCsrfToken } from "../../configs"
+import GWASWorkflowList from './GWASWorkflowList';
+import { fetchAndSetCsrfToken } from "../../configs";
 
 const cardContent = { width: 350, height: 280, margin: 10, textAlign: "center" };
 
@@ -18,8 +19,6 @@ const GWASUIApp = (props) => {
     setGwasTypeSelected(false);
   }
 
-  console.log("GWAS");
-
   useEffect(() => {
     fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
   }, [props]);
@@ -27,8 +26,9 @@ const GWASUIApp = (props) => {
   if (!gwasTypeSelected) {
     return (<>
     {/* <div className="GWASUI-typeTitle"><span>Select your analysis</span></div> */}
+    <Space direction={'vertical'} style={{ width: '100%' }} align={'center'}>
+    <GWASWorkflowList refreshWorkflows={props.refreshWorkflows} />
       <div className="GWASUI-typeSelector">
-      {/* <div className="GWASUI-navRow"> */}
       <div>
           <Card title="Case Control GWAS" bordered={true} style={cardContent}>
             <p>Genome-wide association studies (GWAS) for a case-control study. Here, the genotypes of roughly equal number of diseased (“cases”) and healthy (“controls”) people are compared to determine which genetic variants are associated with the disease. Cases are encoded as ‘1’ while controls are encoded as ‘0’ and a binary model is used.</p>
@@ -53,7 +53,8 @@ const GWASUIApp = (props) => {
           </div>
         </div>
       </div>
-      {/* </div> */}
+    </Space>
+
     </>)
   }
   return (

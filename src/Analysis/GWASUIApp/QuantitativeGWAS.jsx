@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import {
   Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch, Popconfirm, notification, Popover,
@@ -314,8 +314,48 @@ const QuantitativeGWAS = (props) => {
     );
   };
 
-  const Covariates = () => {
+  const Covariates = ({ selectedConcepts }) => {
     const { data, status } = useQuery(['covariates', allowedConceptTypes.ConceptTypes, sourceId], fetchCovariates, queryConfig);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [allConcepts, setAllConcepts] = useState([]);
+    const [filteredConcepts, setFilteredConcepts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1)
+
+    useEffect(() => {
+      if (searchTerm.length > 0) {
+        const results = allConcepts.filter(c => c.concept_name.toLowerCase().includes(searchTerm.toLowerCase()))
+        console.log('results,', results);
+        results.length > 0 ? setFilteredConcepts(results) : setFilteredConcepts([])
+      }
+    }, [searchTerm]);
+    // useEffect(() => {
+    //   if (filteredConcepts && filteredConcepts.length > 0) {
+    //     if (selectedConcepts.length > 0) {
+    //       let lastSelectedConcept = selectedConcepts[selectedConcepts.length - 1];
+    //       let lastIndex = filteredConcepts.indexOf(lastSelectedConcept);
+    //       console.log('current page???', Math.floor((lastIndex / 10) + 1))
+    //       setCurrentPage(Math.floor((lastIndex / 10) + 1))
+    //     }
+    //   }
+    // }, [filteredConcepts, selectedConcepts]);
+
+    useEffect(() => {
+      if (filteredConcepts && filteredConcepts.length > 0) {
+        if (selectedConcepts.length > 0) {
+          let lastSelectedConcept = selectedConcepts[selectedConcepts.length - 1];
+          let lastIndex = filteredConcepts.indexOf(lastSelectedConcept);
+          console.log('negative?', Math.floor((lastIndex / 10) + 1))
+          setCurrentPage(Math.floor((lastIndex / 10) + 1))
+        }
+      }
+    }, [filteredConcepts, selectedConcepts])
+
+    useEffect(() => {
+      if (data && data.concepts) {
+        setFilteredConcepts(data.concepts);
+        setAllConcepts(data.concepts);
+      }
+    }, [data]);
 
     if (status === 'loading') {
       return <Spinner />;
@@ -333,20 +373,22 @@ const QuantitativeGWAS = (props) => {
     if (data.concepts.length === 0) {
       return <React.Fragment>Unexpected error: no convariates found!</React.Fragment>;
     }
+
     return (
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
         <Popover content={chooseVarContent} title='Choosing Variables'>
           <InfoCircleOutlined />
         </Popover>
         <h4 className='GWASUI-selectInstruction'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
+        <input placeholder="Filter options by name" onChange={(e) => setSearchTerm(e.target.value)} />
         <div className='GWASUI-mainTable'>
           <Table
             className='GWASUI-table2'
             rowKey='concept_id'
-            pagination={{ pageSize: 10 }}
+            pagination={{ pageSize: 10, onChange: (e) => setCurrentPage(e) ,current: currentPage}}
             rowSelection={step2TableRowSelection}
             columns={step2TableConfig}
-            dataSource={data.concepts}
+            dataSource={filteredConcepts}
           />
         </div>
       </Space>
@@ -403,7 +445,7 @@ const QuantitativeGWAS = (props) => {
       if (data.concept_breakdown == null) {
         return (
           <React.Fragment>Error: there are no subjects in this cohort that have data available on all the selected covariates
-                    and phenotype. Please review your selections
+            and phenotype. Please review your selections
           </React.Fragment>
         );
       }
@@ -477,13 +519,13 @@ const QuantitativeGWAS = (props) => {
       const key = `open${Date.now()}`;
       const btn = (
         <Button type='primary' size='small' onClick={() => notification.close(key)}>
-                    Confirm
+          Confirm
         </Button>
       );
       notification.open({
         message: 'Successful Submission',
         description:
-                    `${gwasJobName} job starting!`,
+          `${gwasJobName} job starting!`,
         icon: (<CheckOutlined />),
         placement: 'top', // TODO: try to center this. antd seems to only have variations of top/bottom/left/right - https://ant.design/components/notification/
         btn,
@@ -511,7 +553,7 @@ const QuantitativeGWAS = (props) => {
         <div className='GWASUI-flexRow GWASUI-headerColor'><h3 className='GWASUI-title'>Review Details</h3></div>
         <div className='GWASUI-flexRow GWASUI-rowItem'>
           <div className='GWASUI-flexCol GWASUI-flexHeader1'>
-                        Number of PCs
+            Number of PCs
           </div>
           <div className='GWASUI-flexCol'>{numOfPC}</div>
           <div className='GWASUI-flexCol GWASUI-flexHeader2'>MAF Cutoff</div>
@@ -558,7 +600,7 @@ const QuantitativeGWAS = (props) => {
                 submitJob.mutate();
               }}
             >
-                            Submit
+              Submit
             </Button>
           </div>
         </div>
@@ -568,144 +610,144 @@ const QuantitativeGWAS = (props) => {
 
   const generateContentForStep = (stepIndex) => {
     switch (stepIndex) {
-    case 0: {
-      return (
-        sourceId ? <CohortDefinitions /> : null
-      );
-    }
-    case 1: {
-      return (
-        <Covariates />
-      );
-    }
-    case 2: {
-      return (
-        <CovariateStats />
-      );
-    }
-    case 3: {
-      const numPcContent = (
-        <div>
-          <p>Population Principal components (PCs) refer to linear combinations of genome-wide genotyping data to control for population structure/stratification (select up to 10 PCs)</p>
-        </div>
-      );
-      return (
-        <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-          <h4 className='GWASUI-selectInstruction'>In this step, you will determine workflow parameters.
-                        Please adjust the number of population principal components to control for population structure, minor allele frequency cutoff and imputation score cutoff. You may also remove unwanted covariates.
-                        Please also choose the ancestry population on which you would like to perform your study.
-          </h4>
-          <div className='GWASUI-mainArea'>
-            <Form
-              name='GWASUI-parameter-form'
-              form={form}
-              labelCol={{
-                span: 8,
-              }}
-              wrapperCol={{
-                span: 16,
-              }}
-              initialValues={{
-                numOfPC,
-                mafCutoff: 0.01,
-                imputationCutoff: 0.3,
-              }}
-              autoComplete='off'
-            >
-              {/* TODO Refactor this part of the component to have flexibility to add info buttons to specific parts in form */}
-              {/* https://docs.google.com/document/d/1h__1e4PmKmMRMcR8T--etRenEwIXpaziLy-DoOye0Vw/edit */}
-              {/* <Popover content={numPcContent} title="Number of PCs">
+      case 0: {
+        return (
+          sourceId ? <CohortDefinitions /> : null
+        );
+      }
+      case 1: {
+        return (
+          <Covariates selectedConcepts={selectedConcepts} />
+        );
+      }
+      case 2: {
+        return (
+          <CovariateStats />
+        );
+      }
+      case 3: {
+        const numPcContent = (
+          <div>
+            <p>Population Principal components (PCs) refer to linear combinations of genome-wide genotyping data to control for population structure/stratification (select up to 10 PCs)</p>
+          </div>
+        );
+        return (
+          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+            <h4 className='GWASUI-selectInstruction'>In this step, you will determine workflow parameters.
+              Please adjust the number of population principal components to control for population structure, minor allele frequency cutoff and imputation score cutoff. You may also remove unwanted covariates.
+              Please also choose the ancestry population on which you would like to perform your study.
+            </h4>
+            <div className='GWASUI-mainArea'>
+              <Form
+                name='GWASUI-parameter-form'
+                form={form}
+                labelCol={{
+                  span: 8,
+                }}
+                wrapperCol={{
+                  span: 16,
+                }}
+                initialValues={{
+                  numOfPC,
+                  mafCutoff: 0.01,
+                  imputationCutoff: 0.3,
+                }}
+                autoComplete='off'
+              >
+                {/* TODO Refactor this part of the component to have flexibility to add info buttons to specific parts in form */}
+                {/* https://docs.google.com/document/d/1h__1e4PmKmMRMcR8T--etRenEwIXpaziLy-DoOye0Vw/edit */}
+                {/* <Popover content={numPcContent} title="Number of PCs">
                                     <InfoCircleOutlined />
                                 </Popover> */}
-              <Form.Item
-                label='Number of PCs to use'
-                name='numOfPC'
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input a value between 1 to 10',
-                  },
-                ]}
-              >
-                <InputNumber min={1} max={10} />
-              </Form.Item>
-              <Form.Item
-                label='Covariates'
-                name='covariates'
-              >
-                <Select
-                  mode='multiple'
-                  value={selectedCovariates.map((s) => s.concept_name)}
-                  disabled={selectedCovariates.length === 1}
-                  onChange={(e) => handleCovariateDelete(e)}
-                  style={{ width: '70%' }}
-                />
-              </Form.Item>
-              <Form.Item
-                label='Phenotype'
-                name='outcome'
-              >
-                <Input
-                  disabled
-                  value={selectedPhenotype}
-                  style={{ width: '70%' }}
-                />
-              </Form.Item>
-              <Form.Item
-                label='Select HARE group'
-                name='hareGroup'
-              >
-                <ConceptStatsByHare />
-              </Form.Item>
-              <Form.Item
-                label='MAF Cutoff'
-                name='mafCutoff'
-              >
-                <InputNumber value={mafThreshold} onChange={(e) => setMafThreshold(e)} stringMode step='0.01' min={'0'} max={'0.5'} />
-              </Form.Item>
-              <Form.Item
-                label='Imputation Score Cutoff'
-                name='imputationCutoff'
-              >
-                <InputNumber value={imputationScore} onChange={(e) => setImputationScore(e)} stringMode step='0.1' min={'0'} max={'1'} />
-              </Form.Item>
-            </Form>
-          </div>
-        </Space>
-      );
-    }
-    case 4: {
-      const layout = {
-        labelCol: { span: 8 },
-        wrapperCol: { span: 16 },
-      };
-      const tailLayout = {
-        wrapperCol: { offset: 8, span: 16 },
-      };
+                <Form.Item
+                  label='Number of PCs to use'
+                  name='numOfPC'
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input a value between 1 to 10',
+                    },
+                  ]}
+                >
+                  <InputNumber min={1} max={10} />
+                </Form.Item>
+                <Form.Item
+                  label='Covariates'
+                  name='covariates'
+                >
+                  <Select
+                    mode='multiple'
+                    value={selectedCovariates.map((s) => s.concept_name)}
+                    disabled={selectedCovariates.length === 1}
+                    onChange={(e) => handleCovariateDelete(e)}
+                    style={{ width: '70%' }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label='Phenotype'
+                  name='outcome'
+                >
+                  <Input
+                    disabled
+                    value={selectedPhenotype}
+                    style={{ width: '70%' }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label='Select HARE group'
+                  name='hareGroup'
+                >
+                  <ConceptStatsByHare />
+                </Form.Item>
+                <Form.Item
+                  label='MAF Cutoff'
+                  name='mafCutoff'
+                >
+                  <InputNumber value={mafThreshold} onChange={(e) => setMafThreshold(e)} stringMode step='0.01' min={'0'} max={'0.5'} />
+                </Form.Item>
+                <Form.Item
+                  label='Imputation Score Cutoff'
+                  name='imputationCutoff'
+                >
+                  <InputNumber value={imputationScore} onChange={(e) => setImputationScore(e)} stringMode step='0.1' min={'0'} max={'1'} />
+                </Form.Item>
+              </Form>
+            </div>
+          </Space>
+        );
+      }
+      case 4: {
+        const layout = {
+          labelCol: { span: 8 },
+          wrapperCol: { span: 16 },
+        };
+        const tailLayout = {
+          wrapperCol: { offset: 8, span: 16 },
+        };
 
-      return (
-        <React.Fragment>
-          <h4 className='GWASUI-selectInstruction'>In this step, you may review your selections for the study, give a name to the study, and submit the GWAS for analysis.</h4>
-          <h4 className='GWASUI-selectInstruction'>Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps (dropdown menu).</h4>
-          <div className='GWASUI-mainArea'>
-            <Form
-              {...layout}
-              name='control-hooks'
-              form={form}
-              onFinish={(values) => {
-                onStep5FormSubmit(values);
-              }}
-            >
-              {/* <Form.Item {...tailLayout}> */}
-              <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
-              {/* </Form.Item> */}
-            </Form>
-          </div>
-        </React.Fragment>
-      );
-    }
-    default:
-      return <React.Fragment />;
+        return (
+          <React.Fragment>
+            <h4 className='GWASUI-selectInstruction'>In this step, you may review your selections for the study, give a name to the study, and submit the GWAS for analysis.</h4>
+            <h4 className='GWASUI-selectInstruction'>Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps (dropdown menu).</h4>
+            <div className='GWASUI-mainArea'>
+              <Form
+                {...layout}
+                name='control-hooks'
+                form={form}
+                onFinish={(values) => {
+                  onStep5FormSubmit(values);
+                }}
+              >
+                {/* <Form.Item {...tailLayout}> */}
+                <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
+                {/* </Form.Item> */}
+              </Form>
+            </div>
+          </React.Fragment>
+        );
+      }
+      default:
+        return <React.Fragment />;
     }
   };
 
@@ -740,7 +782,7 @@ const QuantitativeGWAS = (props) => {
             setCurrent(current - 1);
           }}
         >
-                    Previous
+          Previous
         </Button>
         <Popconfirm
           title='Are you sure you want to leave this page?'
@@ -762,7 +804,7 @@ const QuantitativeGWAS = (props) => {
             }}
             disabled={!nextButtonEnabled}
           >
-                        Next
+            Next
           </Button>
         )}
         {/* added so "select diff gwas" btn retains center position on last page */}
