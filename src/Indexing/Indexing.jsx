@@ -6,12 +6,12 @@ import {
   jobapiPath,
   hostname,
 } from '../localconf';
-import { fetchWithCreds, fetchWithCredsAndTimeout } from '../actions.thunk';
-import './Indexing.css';
+import { fetchWithCreds, fetchWithCredsAndTimeout } from '../utils.fetch';
 import Popup from '../components/Popup';
 import Spinner from '../components/Spinner';
 import IconComponent from '../components/Icon';
 import dictIcons from '../img/icons/index';
+import './Indexing.css';
 
 class Indexing extends Component {
   constructor(props) {

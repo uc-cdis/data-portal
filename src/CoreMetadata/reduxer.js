@@ -4,7 +4,7 @@ import FileTypePicture from '../components/FileTypePicture';
 import CoreMetadataTable from './CoreMetadataTable';
 import { coreMetadataPath, userapiPath } from '../localconf';
 import { connectionError, updatePopup } from '../actions';
-import { fetchWithCreds } from '../actions.thunk';
+import { fetchWithCreds } from '../utils.fetch';
 
 export const generateSignedURL = (objectId) => (dispatch) =>
   fetchWithCreds({

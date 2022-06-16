@@ -1,5 +1,5 @@
 import { connectionError, updatePopup } from '../actions';
-import { fetchWithCreds } from '../actions.thunk';
+import { fetchWithCreds } from '../utils.fetch';
 import { getSubmitPath } from '../utils';
 import { submissionApiPath } from '../localconf';
 import {

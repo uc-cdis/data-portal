@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import { connectionError } from '../actions';
-import { fetchWithCreds } from '../actions.thunk';
+import { fetchWithCreds } from '../utils.fetch';
 import { loginPath } from '../localconf';
 import { loginEndpointErrored, receiveLoginEndpoint } from './actions';
 

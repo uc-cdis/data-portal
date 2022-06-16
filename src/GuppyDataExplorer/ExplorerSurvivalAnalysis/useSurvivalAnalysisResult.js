@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
-import { fetchWithCreds } from '../../actions.thunk';
+import { fetchWithCreds } from '../../utils.fetch';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
