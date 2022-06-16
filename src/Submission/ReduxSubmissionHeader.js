@@ -1,62 +1,11 @@
 import { connect } from 'react-redux';
+import { fetchUnmappedFileStats } from './actions.thunk';
 import SubmissionHeader from './SubmissionHeader';
-import { fetchErrored } from '../actions';
-import { fetchWithCreds } from '../actions.thunk';
-import { FETCH_LIMIT, STARTING_DID } from './utils';
-import { indexdPath, useIndexdAuthz } from '../localconf';
-import { receiveUnmappedFileStatistics } from './actions';
+import { STARTING_DID } from './utils';
 
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('./types').SubmissionState} SubmissionState */
 /** @typedef {import('../types').UserState} UserState */
-
-/**
- *
- * @param {UserState['username']} username
- * @param {SubmissionState['unmappedFiles']} total
- * @param {string} start
- * @returns
- */
-const fetchUnmappedFileStats =
-  (username, total, start) => (/** @type {ThunkDispatch} */ dispatch) => {
-    const unmappedFilesCheck = useIndexdAuthz ? 'authz=null' : 'acl=null';
-    return fetchWithCreds({
-      path: `${indexdPath}index?${unmappedFilesCheck}&uploader=${username}&start=${start}&limit=${FETCH_LIMIT}`,
-      method: 'GET',
-    })
-      .then(({ status, data }) => {
-        switch (status) {
-          case 200:
-            total = total.concat(data.records ?? []);
-            if (data.records?.length === FETCH_LIMIT) {
-              return dispatch(
-                fetchUnmappedFileStats(
-                  username,
-                  total,
-                  data.records[FETCH_LIMIT - 1].did
-                )
-              );
-            }
-            return receiveUnmappedFileStatistics({
-              unmappedFileCount: total.length,
-              unmappedFileSize: total.reduce(
-                /**
-                 * @param {number} size
-                 * @param {Object} current
-                 */
-                (size, current) => size + current.size,
-                0
-              ),
-            });
-
-          default:
-            return fetchErrored(data.records);
-        }
-      }, fetchErrored)
-      .then((msg) => {
-        if (msg) dispatch(msg);
-      });
-  };
 
 const ReduxSubmissionHeader = (() => {
   /** @param {{ submission: SubmissionState; user: UserState }} state */

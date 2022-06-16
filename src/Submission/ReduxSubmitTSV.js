@@ -1,110 +1,14 @@
 import { connect } from 'react-redux';
 import SubmitTSV from './SubmitTSV';
-import { submissionApiPath, lineLimit } from '../localconf';
-import { fetchWithCreds } from '../actions.thunk';
-import { receiveSubmission, resetSubmissionStatus } from './actions';
-import { getCounts, uploadTSV, updateFileContent } from './actions.thunk';
+import {
+  getCounts,
+  uploadTSV,
+  updateFileContent,
+  submitToServer,
+} from './actions.thunk';
 
-/** @typedef {import('redux').Dispatch} Dispatch */
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('./types').SubmissionState} SubmissionState */
-
-/**
- * @param {Object} args
- * @param {string} args.fullProject
- * @param {string} [args.methodIn]
- * @param {() => void} [args.callback]
- */
-const submitToServer =
-  ({ fullProject, methodIn = 'PUT', callback }) =>
-  /**
-   * @param {Dispatch} dispatch
-   * @param {() => { submission: SubmissionState }} getState
-   */
-  (dispatch, getState) => {
-    dispatch(resetSubmissionStatus());
-
-    /** @type {string[]} */
-    const fileArray = [];
-    const path = fullProject.split('-');
-    const program = path[0];
-    const project = path.slice(1).join('-');
-    const { submission } = getState();
-    const method = /* path === 'graphql' ? 'POST' : */ methodIn;
-
-    let { file } = submission;
-    if (!file) {
-      return Promise.reject(new Error('No file to submit'));
-    }
-    if (submission.file_type !== 'text/tab-separated-values') {
-      // remove line break in json file
-      file = file.replace(/\r\n?|\n/g, '');
-    }
-
-    if (submission.file_type === 'text/tab-separated-values') {
-      const fileSplited = file.split(/\r\n?|\n/g);
-      if (fileSplited.length > lineLimit && lineLimit > 0) {
-        let fileHeader = fileSplited[0];
-        fileHeader += '\n';
-        let count = lineLimit;
-        let fileChunk = fileHeader;
-
-        for (let i = 1; i < fileSplited.length; i += 1) {
-          if (fileSplited[i] !== '') {
-            fileChunk += fileSplited[i];
-            fileChunk += '\n';
-            count -= 1;
-          }
-          if (count === 0) {
-            fileArray.push(fileChunk);
-            fileChunk = fileHeader;
-            count = lineLimit;
-          }
-        }
-        if (fileChunk !== fileHeader) {
-          fileArray.push(fileChunk);
-        }
-      } else {
-        fileArray.push(file);
-      }
-    } else {
-      fileArray.push(file);
-    }
-
-    let subUrl = submissionApiPath;
-    if (program !== '_root') {
-      subUrl = `${subUrl + program}/${project}/`;
-    }
-
-    const totalChunk = fileArray.length;
-
-    /** @param {string[]} chunkArray */
-    function recursiveFetch(chunkArray) {
-      if (chunkArray.length === 0) {
-        return null;
-      }
-
-      return fetchWithCreds({
-        path: subUrl,
-        method,
-        customHeaders: new Headers({ 'Content-Type': submission.file_type }),
-        body: chunkArray.shift(),
-        dispatch,
-      })
-        .then(recursiveFetch(chunkArray))
-        .then(({ status, data }) =>
-          receiveSubmission({
-            data,
-            submit_status: status,
-            submit_total: totalChunk,
-          })
-        )
-        .then((msg) => dispatch(msg))
-        .then(callback);
-    }
-
-    return recursiveFetch(fileArray);
-  };
 
 /** @param {{ submission: SubmissionState }} state */
 const mapStateToProps = (state) => ({
