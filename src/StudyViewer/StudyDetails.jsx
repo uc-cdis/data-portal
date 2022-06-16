@@ -60,10 +60,10 @@ class StudyDetails extends React.Component {
         fetch('/user/login')
           .then((res) => res.json())
           .then((result) => {
-            const loginMatch = result?.providers?.find((obj) => obj.id === requiredIdp);
-            if (loginMatch?.url) {
-              const queryChar = loginMatch.url.includes('?') ? '&' : '?';
-              window.location.href = `${loginMatch.url}${queryChar}redirect=${window.location.origin}${this.props.location.pathname}?request_access`;
+            const loginMatchUrl = result?.providers?.find((obj) => obj.id === requiredIdp)?.urls?.[0]?.url;
+            if (loginMatchUrl) {
+              const queryChar = loginMatchUrl.includes('?') ? '&' : '?';
+              window.location.href = `${loginMatchUrl}${queryChar}redirect=${window.location.origin}${this.props.location.pathname}?request_access`;
             } else {
               this.props.history.push('/login', { from: `${this.props.location.pathname}?request_access` });
             }
