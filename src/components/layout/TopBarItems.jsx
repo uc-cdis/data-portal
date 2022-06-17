@@ -12,7 +12,7 @@ function joinClassNames(...args) {
  * @property {string} [className]
  * @property {string} [icon]
  * @property {boolean} [isActive]
- * @property {string} name
+ * @property {string} [name]
  * @property {React.MouseEventHandler<HTMLButtonElement>} onClick
  */
 
@@ -46,7 +46,7 @@ TopBarButton.propTypes = {
   className: PropTypes.string,
   icon: PropTypes.string,
   isActive: PropTypes.bool,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   onClick: PropTypes.func.isRequired,
 };
 
