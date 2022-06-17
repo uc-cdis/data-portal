@@ -7,7 +7,7 @@ import { clearQueryNodes } from '../QueryNode/actions';
 import { clearCounts } from '../Submission/actions';
 import Spinner from '../components/Spinner';
 import AuthPopup from './AuthPopup';
-import { fetchLogin } from './ReduxLogin';
+import { fetchLogin } from './actions.thunk';
 
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('../types').UserState} UserState */

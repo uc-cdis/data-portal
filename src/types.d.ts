@@ -3,12 +3,12 @@ import type { UserReviewDocument } from './UserPopup/types';
 
 export type FetchHelperOptions = {
   path: string;
-  method?: string; // Default is "GET"
   body?: any; // Default is null
   customHeaders?: Headers;
-  dispatch?: Dispatch;
-  useCache?: boolean;
+  method?: string; // Default is "GET"
+  onError?: () => void;
   signal?: AbortSignal;
+  useCache?: boolean;
 };
 
 export type FetchHelperResult = {

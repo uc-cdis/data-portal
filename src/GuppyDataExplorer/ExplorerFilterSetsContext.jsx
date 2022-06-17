@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { fetchWithCreds } from '../actions.thunk';
+import { fetchWithCreds } from '../utils.fetch';
 import { useExplorerConfig } from './ExplorerConfigContext';
 import { createEmptyFilterSet } from './ExplorerFilterSet/utils';
 

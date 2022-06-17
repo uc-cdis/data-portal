@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import SimplePopup from '../components/SimplePopup';
 import { receiveUser } from '../actions';
 import { fetchUser, fetchUserAccess } from '../actions.thunk';
-import { getIndexPageCounts } from '../Index/utils';
+import { fetchIndexPageCounts } from '../Index/actions.thunk';
 import { headers, userapiPath } from '../localconf';
 import RegistrationForm from './RegistrationForm';
 import ReviewForm from './ReviewForm';
@@ -92,7 +92,7 @@ function UserPopup() {
 
       dispatch(receiveUser(user));
       /** @type {ThunkDispatch} */ (dispatch)(fetchUserAccess());
-      /** @type {ThunkDispatch} */ (dispatch)(getIndexPageCounts());
+      /** @type {ThunkDispatch} */ (dispatch)(fetchIndexPageCounts());
       return 'success';
     } catch (e) {
       console.error(e); // eslint-disable-line no-console

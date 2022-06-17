@@ -1,4 +1,4 @@
-import { fetchWithCreds } from '../actions.thunk';
+import { fetchWithCreds } from '../utils.fetch';
 import { consortiumList } from '../params';
 import { receiveIndexPageCounts } from './actions';
 
@@ -43,7 +43,7 @@ function parseCounts(data) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export function getIndexPageCounts() {
+export function fetchIndexPageCounts() {
   /**
    * @param {import('redux').Dispatch} dispatch
    * @param {() => { index: import('./types').IndexState }} getState

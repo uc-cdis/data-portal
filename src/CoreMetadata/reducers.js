@@ -10,10 +10,6 @@ const coreMetadata = (state = {}, action) => {
       return { ...state, error: action.error };
     case 'CLEAR_SIGNED_URL':
       return { ...state, url: null, error: null };
-    case 'DOWNLOAD_FILE':
-      return { ...state, file: action.data };
-    case 'DOWNLOAD_FILE_ERROR':
-      return { ...state, error: action.error };
     default:
       return state;
   }

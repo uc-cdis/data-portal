@@ -8,7 +8,6 @@ import Layout from './Layout';
 import ReduxLogin from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 // import { fetchCoreMetadata } from './CoreMetadata/reduxer';
-import { fetchAccess } from './UserProfile/ReduxUserProfile';
 import {
   enableResourceBrowser,
   // workspaceUrl,
@@ -18,6 +17,7 @@ import { fetchVersionInfo } from './actions.thunk';
 import { fetchGraphvizLayout } from './DataDictionary/actions.thunk';
 import { fetchGuppySchema, fetchSchema } from './GraphQLEditor/actions.thunk';
 import { fetchDictionary } from './Submission/actions.thunk';
+import { fetchAccess } from './UserProfile/actions.thunk';
 import useSessionMonitor from './hooks/useSessionMonitor';
 
 // lazy-loaded pages
