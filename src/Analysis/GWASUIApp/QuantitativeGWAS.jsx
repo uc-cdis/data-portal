@@ -67,7 +67,8 @@ const QuantitativeGWAS = (props) => {
   const [numOfPC, setNumOfPC] = useState(3);
   const [selectedPhenotype, setSelectedPhenotype] = useState(undefined);
   const [selectedCovariates, setSelectedCovariates] = useState([]);
-  const [selectedHare, setSelectedHare] = useState('-select one-');
+  const [selectedHare, setSelectedHare] = useState('');
+  const [selectedHareDescription, setSelectedHareDescription] = useState('-select one of the ancestry groups below-');
   const [gwasJobName, setGwasJobName] = useState('');
 
   const onStep5FormSubmit = (values) => {
@@ -431,6 +432,22 @@ const QuantitativeGWAS = (props) => {
     );
   };
 
+  const getHareAndDescription = (concept_value_name, cohort_size) => {
+    return `${concept_value_name} (size: ${cohort_size})`;
+  }
+
+  const setSelectedHareAndDescription = (concept_value, allHareBreakDownItems) => {
+    setSelectedHare(concept_value);
+    var selectedHareBreakDownItem = null;
+    for (let hareBreakDownItem of allHareBreakDownItems) {
+      if (hareBreakDownItem.concept_value === concept_value) {
+        selectedHareBreakDownItem = hareBreakDownItem;
+        break;
+      }
+    }
+    setSelectedHareDescription(getHareAndDescription(selectedHareBreakDownItem.concept_value_name, selectedHareBreakDownItem.persons_in_cohort_with_value));
+  }
+
   const ConceptStatsByHare = () => {
     const { data, status } = useQuery(['conceptstatsbyhare', selectedConcepts], fetchConceptStatsByHare, queryConfig);
 
@@ -450,10 +467,13 @@ const QuantitativeGWAS = (props) => {
         );
       }
       // normal scenario - there is breakdown data, so show in dropdown:
+      if (selectedHare != '') {
+        setSelectedHareAndDescription(selectedHare, data.concept_breakdown)
+      }
       return (
         <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
           <Dropdown.Button rightIcon='dropdown' buttonType='secondary'>
-            {selectedHare}
+            {selectedHareDescription}
           </Dropdown.Button>
           <Dropdown.Menu>
             {
@@ -461,9 +481,9 @@ const QuantitativeGWAS = (props) => {
                 <Dropdown.Item
                   key={`${datum.concept_value}`}
                   value={`${datum.concept_value}`}
-                  onClick={() => setSelectedHare(datum.concept_value)}
+                  onClick={() => setSelectedHareAndDescription(datum.concept_value, data.concept_breakdown)}
                 >
-                  {<div>{datum.concept_value} {` (size:${datum.persons_in_cohort_with_value})`}</div>}
+                  {<div>{getHareAndDescription(datum.concept_value_name, datum.persons_in_cohort_with_value)}</div>}
                 </Dropdown.Item>
               ))
             }
@@ -509,7 +529,8 @@ const QuantitativeGWAS = (props) => {
     setImputationScore(0.3);
     setCohortDefinitionId(undefined);
     setSelectedCohort(undefined);
-    setSelectedHare('-select one-');
+    setSelectedHare('');
+    setSelectedHareDescription('-select one of the ancestry groups below-');
     setGwasJobName('');
     props.refreshWorkflows();
   };
@@ -561,7 +582,7 @@ const QuantitativeGWAS = (props) => {
         </div>
         <div className='GWASUI-flexRow GWASUI-rowItem'>
           <div className='GWASUI-flexCol GWASUI-flexHeader1'>HARE Ancestry</div>
-          <div className='GWASUI-flexCol'>{selectedHare}</div>
+          <div className='GWASUI-flexCol'>{selectedHareDescription}</div>
           <div className='GWASUI-flexCol GWASUI-flexHeader2'>Imputation Score Cutoff</div>
           <div className='GWASUI-flexCol'>{imputationScore}</div>
         </div>
