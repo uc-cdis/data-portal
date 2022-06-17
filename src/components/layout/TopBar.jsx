@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { TopBarLink } from './TopBarItems';
 import TopBarMenu from './TopBarMenu';
@@ -56,12 +56,35 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
           />
         ))}
         {username !== undefined ? (
-          <TopBarMenu
-            isAdminUser={isAdminUser}
-            items={config.menuItems}
-            onLogoutClick={onLogoutClick}
-            username={username}
-          />
+          <TopBarMenu buttonProps={{ icon: 'user-circle', name: username }}>
+            <TopBarMenu.Item>
+              <Link to='/identity'>View Profile</Link>
+            </TopBarMenu.Item>
+            <TopBarMenu.Item>
+              <Link to='/requests'>Data Requests</Link>
+            </TopBarMenu.Item>
+            {isAdminUser && (
+              <TopBarMenu.Item>
+                <Link to='/submission'>Data Submission</Link>
+              </TopBarMenu.Item>
+            )}
+            {config.menuItems?.map((item) => (
+              <TopBarMenu.Item key={item.link}>
+                <a href={item.link} target='_blank' rel='noopener noreferrer'>
+                  {item.name}
+                  {item.icon && (
+                    <i className={`g3-icon g3-icon--${item.icon}`} />
+                  )}
+                </a>
+              </TopBarMenu.Item>
+            ))}
+            <hr />
+            <TopBarMenu.Item>
+              <button onClick={onLogoutClick} type='button'>
+                Logout <i className='g3-icon g3-icon--exit' />
+              </button>
+            </TopBarMenu.Item>
+          </TopBarMenu>
         ) : (
           location.pathname !== '/login' && (
             <TopBarLink icon='exit' name='Login' to='/login' />
