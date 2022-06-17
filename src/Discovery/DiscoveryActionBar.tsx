@@ -218,9 +218,11 @@ const checkDownloadStatus = (
                 setTimeout(() => window.open(output), 2000);
                 const projectNumber = selectedResources.map((study) => study.project_number);
                 const studyName = selectedResources.map((study) => study.study_name);
+                const repositoryName = selectedResources.map((study) => study.commons);
                 datadogRum.addAction('datasetDownload', {
                   datasetDownloadProjectNumber: projectNumber,
                   datasetDownloadStudyName: studyName,
+                  datasetDownloadRepositoryName: repositoryName,
                 });
               } catch {
                 // job output is not a url -> is an error message
@@ -316,9 +318,11 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
   });
   const projectNumber = selectedResources.map((study) => study.project_number);
   const studyName = selectedResources.map((study) => study.study_name);
+  const repositoryName = selectedResources.map((study) => study.commons);
   datadogRum.addAction('manifestDownload', {
     manifestDownloadProjectNumber: projectNumber,
     manifestDownloadStudyName: studyName,
+    manifestDownloadRepositoryName: repositoryName,
   });
   // download the manifest
   const MANIFEST_FILENAME = 'manifest.json';
@@ -368,9 +372,11 @@ const handleExportToWorkspaceClick = async (
 
   const projectNumber = selectedResources.map((study) => study.project_number);
   const studyName = selectedResources.map((study) => study.study_name);
+  const repositoryName = selectedResources.map((study) => study.commons);
   datadogRum.addAction('exportToWorkspace', {
-    manifestDownloadProjectNumber: projectNumber,
-    manifestDownloadStudyName: studyName,
+    exportToWorkspaceProjectNumber: projectNumber,
+    exportToWorkspaceStudyName: studyName,
+    exportToWorkspaceRepositoryName: repositoryName,
   });
 
   // post selected resources to manifestservice
