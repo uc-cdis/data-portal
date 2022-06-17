@@ -390,6 +390,10 @@ const QuantitativeGWAS = (props) => {
     );
   };
 
+  const getHareAndDescription = (concept_value, cohort_size) => {
+    return `${concept_value} (size: ${cohort_size})`;
+  }
+
   const setSelectedHareAndDescription = (concept_value, allHareBreakDownItems) => {
     setSelectedHare(concept_value);
     var selectedHareBreakDownItem = null;
@@ -399,7 +403,7 @@ const QuantitativeGWAS = (props) => {
         break;
       }
     }
-    setSelectedHareDescription(`${selectedHareBreakDownItem.concept_value_name} (size:${selectedHareBreakDownItem.persons_in_cohort_with_value})`);
+    setSelectedHareDescription(getHareAndDescription(selectedHareBreakDownItem.concept_value_name, selectedHareBreakDownItem.persons_in_cohort_with_value));
   }
 
   const ConceptStatsByHare = () => {
@@ -437,7 +441,7 @@ const QuantitativeGWAS = (props) => {
                   value={`${datum.concept_value}`}
                   onClick={() => setSelectedHareAndDescription(datum.concept_value, data.concept_breakdown)}
                 >
-                  {<div>{datum.concept_value_name} {` (size:${datum.persons_in_cohort_with_value})`}</div>}
+                  {<div>{getHareAndDescription(datum.concept_value, datum.persons_in_cohort_with_value)}</div>}
                 </Dropdown.Item>
               ))
             }
