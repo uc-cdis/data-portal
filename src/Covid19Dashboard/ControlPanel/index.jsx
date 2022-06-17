@@ -11,10 +11,10 @@ import './ControlPanel.less';
 
 class ControlPanel extends PureComponent {
   render() {
-    const tooltipText1 = (<> Google Mobility Data shows movement trends as a percentage variance from an established baseline for a given day and place. <br /> Google LLC "Google COVID-19 Community Mobility Reports". <a href="https://www.google.com/covid19/mobility/"> https://www.google.com/covid19/mobility/</a>  <br /> Accessed: Today</>);
+    const tooltipText1 = (<React.Fragment> Google Mobility Data shows movement trends as a percentage variance from an established baseline for a given day and place. <br /> Google LLC &quot;Google COVID-19 Community Mobility Reports&quot;. <a href='https://www.google.com/covid19/mobility/'> https://www.google.com/covid19/mobility/</a>  <br /> Accessed: Today</React.Fragment>);
     const tooltipText2 = 'Additional data of interest to display in map tool-tip pop-up.  These data will not influence color gradients on the map.';
 
-    const tooltipText1Style = {'word-wrap': 'break-word'}
+    const tooltipText1Style = { 'word-wrap': 'break-word' };
     return (
       <div className='control-panel'>
         <h3>{this.props.legendTitle}</h3>

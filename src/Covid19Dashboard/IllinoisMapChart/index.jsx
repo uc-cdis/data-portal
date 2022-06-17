@@ -463,7 +463,6 @@ class IllinoisMapChart extends React.Component {
         const geoJson = this.addDataToGeoJsonBase(
           baseData,
           (data, location) => data[location.properties.FIPS]);
-
         this.setState({ mobility_data: { data: geoJson, fetchStatus: 'done' } });
       })
       .then(() => {
