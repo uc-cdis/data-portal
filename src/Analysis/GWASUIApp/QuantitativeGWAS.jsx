@@ -390,8 +390,15 @@ const QuantitativeGWAS = (props) => {
     );
   };
 
-  const setSelectedHareAndDescription = (selectedHareBreakDownItem) => {
-    setSelectedHare(selectedHareBreakDownItem.concept_value);
+  const setSelectedHareAndDescription = (concept_value, allHareBreakDownItems) => {
+    setSelectedHare(concept_value);
+    var selectedHareBreakDownItem = null;
+    for (let hareBreakDownItem of allHareBreakDownItems) {
+      if (hareBreakDownItem.concept_value === concept_value) {
+        selectedHareBreakDownItem = hareBreakDownItem;
+        break;
+      }
+    }
     setSelectedHareDescription(`${selectedHareBreakDownItem.concept_value_name} (size:${selectedHareBreakDownItem.persons_in_cohort_with_value})`);
   }
 
@@ -414,6 +421,9 @@ const QuantitativeGWAS = (props) => {
         );
       }
       // normal scenario - there is breakdown data, so show in dropdown:
+      if (selectedHare != '') {
+        setSelectedHareAndDescription(selectedHare, data.concept_breakdown)
+      }
       return (
         <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
           <Dropdown.Button rightIcon='dropdown' buttonType='secondary'>
@@ -425,7 +435,7 @@ const QuantitativeGWAS = (props) => {
                 <Dropdown.Item
                   key={`${datum.concept_value}`}
                   value={`${datum.concept_value}`}
-                  onClick={() => setSelectedHareAndDescription(datum)}
+                  onClick={() => setSelectedHareAndDescription(datum.concept_value, data.concept_breakdown)}
                 >
                   {<div>{datum.concept_value_name} {` (size:${datum.persons_in_cohort_with_value})`}</div>}
                 </Dropdown.Item>
