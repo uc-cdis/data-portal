@@ -56,7 +56,11 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
           />
         ))}
         {username !== undefined ? (
-          <TopBarMenu buttonProps={{ icon: 'user-circle', name: username }}>
+          <TopBarMenu buttonIcon='user-circle'>
+            <TopBarMenu.Item>
+              <span>{username}</span>
+            </TopBarMenu.Item>
+            <hr />
             <TopBarMenu.Item>
               <Link to='/identity'>View Profile</Link>
             </TopBarMenu.Item>

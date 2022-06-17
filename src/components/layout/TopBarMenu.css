@@ -33,7 +33,7 @@
   width: 100%;
 }
 
-.top-bar-menu__item > *:hover {
+.top-bar-menu__item > *:not(span):hover {
   background-color: var(--g3-color__silver);
   color: var(--g3-color__gray);
 }
@@ -45,4 +45,29 @@
   position: relative;
   top: 2px;
   width: 14px;
+}
+
+.top-bar-menu {
+  margin-right: 20px;
+}
+
+.top-bar-menu button .top-bar-item__content {
+  margin: 0;
+}
+
+.top-bar-menu > button i.g3-icon {
+  height: 24px;
+  width: 24px;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
+.top-bar-menu > button.top-bar-item--active > .top-bar-item__content,
+.top-bar-menu > button > .top-bar-item__content:hover {
+  border-bottom: none;
+}
+
+.top-bar-menu > button.top-bar-item--active > .top-bar-item__content i.g3-icon,
+.top-bar-menu > button > .top-bar-item__content:hover i.g3-icon {
+  background-color: var(--pcdc-color__secondary-light);
 }
