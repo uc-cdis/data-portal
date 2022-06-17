@@ -73,7 +73,7 @@ const CaseControlGWAS = (props) => {
     const [mafThreshold, setMafThreshold] = useState(0.01);
     const [numOfPC, setNumOfPC] = useState(3);
     const [selectedHare, setSelectedHare] = useState('');
-    const [selectedHareDescription, setSelectedHareDescription] = useState('-select one-');
+    const [selectedHareDescription, setSelectedHareDescription] = useState('-select one of the ancestry groups below-');
     const [selectedHareValueAsConceptId, setSelectedHareValueAsConceptId] = useState(0);
 
     const [selectedCaseSize, setSelectedCaseSize] = useState(0);
@@ -438,7 +438,7 @@ const CaseControlGWAS = (props) => {
         return [selecteCasedHareBreakDownItem, selecteControlHareBreakDownItem];
     }
 
-    const getSelectedHareAndDescription = (concept_value, allCaseHareBreakDownItems, allControlHareBreakDownItems) => {
+    const getHareAndDescriptionUsingValueAndBreakDownItems = (concept_value, allCaseHareBreakDownItems, allControlHareBreakDownItems) => {
         const selectedBreakDownItems = getSelectedCaseAndControlBreakdownItems(concept_value,
             allCaseHareBreakDownItems, allControlHareBreakDownItems);
         const selecteCasedHareBreakDownItem = selectedBreakDownItems[0];
@@ -448,8 +448,8 @@ const CaseControlGWAS = (props) => {
             selecteControlHareBreakDownItem.persons_in_cohort_with_value);
     }
 
-    const getHareAndDescription = (concept_value, case_cohort_size, control_cohort_size) => {
-        return `${concept_value} (sizes: ${case_cohort_size}, ${control_cohort_size})`;
+    const getHareAndDescription = (concept_value_name, case_cohort_size, control_cohort_size) => {
+        return `${concept_value_name} (sizes: ${case_cohort_size}, ${control_cohort_size})`;
     }
 
     const setSelectedHareAndDescription = (concept_value, allCaseHareBreakDownItems, allControlHareBreakDownItems) => {
@@ -509,7 +509,7 @@ const CaseControlGWAS = (props) => {
                                             onClick={() => setSelectedHareAndDescription(datum.concept_value, dataCase.concept_breakdown, dataControl.concept_breakdown)
                                             }
                                         >
-                                            {<div>{getSelectedHareAndDescription(datum.concept_value, dataCase.concept_breakdown, dataControl.concept_breakdown)}</div>}
+                                            {<div>{getHareAndDescriptionUsingValueAndBreakDownItems(datum.concept_value, dataCase.concept_breakdown, dataControl.concept_breakdown)}</div>}
                                         </Dropdown.Item>
                                     );
                                 })
@@ -612,6 +612,7 @@ const CaseControlGWAS = (props) => {
         setSelectedControlCohort(undefined);
         setSelectedCaseCohort(undefined);
         setSelectedHare('');
+        setSelectedHareDescription('-select one of the ancestry groups below-');
         setSelectedHareValueAsConceptId(0);
         setGwasJobName('');
         props.refreshWorkflows();
