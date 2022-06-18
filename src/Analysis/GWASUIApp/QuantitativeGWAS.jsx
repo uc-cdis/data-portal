@@ -691,7 +691,8 @@ const QuantitativeGWAS = (props) => {
                     },
                   ]}
                 >
-                  <InputNumber min={1} max={10} />
+                  <InputNumber min={1} max={10}
+                    onChange={(e) => setNumOfPC(e)}/>
                 </Form.Item>
                 <Form.Item
                   label='Covariates'
@@ -718,6 +719,10 @@ const QuantitativeGWAS = (props) => {
                 <Form.Item
                   label='Select HARE group'
                   name='hareGroup'
+                  rules={[
+                    {
+                      required: true,
+                    }]}
                 >
                   <ConceptStatsByHare />
                 </Form.Item>
@@ -781,6 +786,8 @@ const QuantitativeGWAS = (props) => {
   } else if (current === 2) {
     // next button enabled if selected phenotype array length > 0
     nextButtonEnabled = !!selectedPhenotype;
+  } else if (current === 3) {
+    nextButtonEnabled = selectedHare != '' && numOfPC && numOfPC != '';
   }
 
   return (
