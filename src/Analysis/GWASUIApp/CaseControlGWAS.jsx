@@ -651,7 +651,8 @@ const CaseControlGWAS = (props) => {
                                 },
                             ]}
                         >
-                            <InputNumber min={1} max={10} />
+                            <InputNumber min={1} max={10}
+                              onChange={(e) => setNumOfPC(e)}/>
                         </Form.Item>
                         <Form.Item
                             label='Covariates'
@@ -668,6 +669,10 @@ const CaseControlGWAS = (props) => {
                         <Form.Item
                             label='Select HARE group'
                             name='hareGroup'
+                            rules={[
+                                {
+                                    required: true,
+                                }]}
                         >
                             <ConceptsStatsByHare />
                         </Form.Item>
@@ -883,7 +888,9 @@ const CaseControlGWAS = (props) => {
     } else if (current === 2 && selectedCovariates.length < 1) {
       // covariate selection
       nextButtonEnabled = false;
-    }
+    } else if (current === 4) {
+        nextButtonEnabled = selectedHare != '' && numOfPC && numOfPC != '';
+      }
 
     return (
         <Space direction={'vertical'} style={{ width: '100%' }}>
