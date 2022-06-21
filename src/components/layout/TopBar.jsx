@@ -55,6 +55,20 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
             to={item.link}
           />
         ))}
+        {config.menuItems?.length > 0 && (
+          <TopBarMenu buttonIcon='copy'>
+            {config.menuItems.map((item) => (
+              <TopBarMenu.Item key={item.link}>
+                <a href={item.link} target='_blank' rel='noopener noreferrer'>
+                  {item.name}
+                  {item.icon && (
+                    <i className={`g3-icon g3-icon--${item.icon}`} />
+                  )}
+                </a>
+              </TopBarMenu.Item>
+            ))}
+          </TopBarMenu>
+        )}
         {username !== undefined ? (
           <TopBarMenu buttonIcon='user-circle'>
             <TopBarMenu.Item>
@@ -72,16 +86,6 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
                 <Link to='/submission'>Data Submission</Link>
               </TopBarMenu.Item>
             )}
-            {config.menuItems?.map((item) => (
-              <TopBarMenu.Item key={item.link}>
-                <a href={item.link} target='_blank' rel='noopener noreferrer'>
-                  {item.name}
-                  {item.icon && (
-                    <i className={`g3-icon g3-icon--${item.icon}`} />
-                  )}
-                </a>
-              </TopBarMenu.Item>
-            ))}
             <hr />
             <TopBarMenu.Item>
               <button onClick={onLogoutClick} type='button'>
