@@ -1,14 +1,4 @@
-/**
- * @return {import('../types').ExplorerFilterSet}
- */
-export function createEmptyFilterSet() {
-  return {
-    name: '',
-    description: '',
-    filter: {},
-  };
-}
-
+/* eslint-disable import/prefer-default-export */
 /**
  * @param {string} string
  * @param {number} maxLength
