@@ -35,7 +35,7 @@ export function TopBarButton({
       type='button'
       title={title}
     >
-      <span className='top-bar-item__content body-typo'>{icon}</span>
+      {icon}
     </button>
   );
 }
