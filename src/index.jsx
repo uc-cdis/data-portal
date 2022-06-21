@@ -9,6 +9,8 @@ import {
   faMicroscope,
   faTriangleExclamation,
   faUser,
+  faCircleUser,
+  faCircleQuestion,
 } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
@@ -31,6 +33,8 @@ library.add(
   faAngleUp,
   faAngleDown,
   faCircleCheck,
+  faCircleQuestion,
+  faCircleUser,
   faFlask,
   faMicroscope,
   faTriangleExclamation,

@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { TopBarLink } from './TopBarItems';
 import TopBarMenu from './TopBarMenu';
 import './TopBar.css';
@@ -58,7 +59,9 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
         <div className='top-bar__menu-group'>
           {config.menuItems?.length > 0 && (
             <TopBarMenu
-              buttonIcon={<i className='g3-icon g3-icon--copy' />}
+              buttonIcon={
+                <FontAwesomeIcon icon='circle-question' fontSize={24} />
+              }
               title='Documents'
             >
               {config.menuItems.map((item) => (
@@ -75,7 +78,7 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
           )}
           {username !== undefined ? (
             <TopBarMenu
-              buttonIcon={<i className='g3-icon g3-icon--user-circle' />}
+              buttonIcon={<FontAwesomeIcon icon='circle-user' fontSize={24} />}
               title='Profile'
             >
               <TopBarMenu.Item>
