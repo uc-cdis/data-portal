@@ -71,3 +71,8 @@
 .top-bar-menu > button > .top-bar-item__content:hover i.g3-icon {
   background-color: var(--pcdc-color__secondary-light);
 }
+
+.top-bar-menu > button.top-bar-item--active > .top-bar-item__content svg,
+.top-bar-menu > button > .top-bar-item__content:hover svg {
+  color: var(--pcdc-color__secondary-light);
+}

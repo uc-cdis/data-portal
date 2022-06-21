@@ -5,7 +5,7 @@ import './TopBarMenu.css';
 
 /**
  * @param {Object} props
- * @param {string} props.buttonIcon
+ * @param {React.ReactNode} props.buttonIcon
  * @param {React.ReactNode[]} props.children
  * @param {string} [props.title]
  */
@@ -31,7 +31,7 @@ function TopBarMenu({ buttonIcon, children, title }) {
 }
 
 TopBarMenu.propTypes = {
-  buttonIcon: PropTypes.string.isRequired,
+  buttonIcon: PropTypes.node.isRequired,
   children: PropTypes.arrayOf(PropTypes.node),
   title: PropTypes.string,
 };

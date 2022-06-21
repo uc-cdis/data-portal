@@ -10,7 +10,7 @@ function joinClassNames(...args) {
 /**
  * @typedef {Object} TopBarButtonProps
  * @property {string} [className]
- * @property {string} [icon]
+ * @property {React.ReactNode} [icon]
  * @property {boolean} [isActive]
  * @property {string} [name]
  * @property {React.MouseEventHandler<HTMLButtonElement>} onClick
@@ -36,7 +36,7 @@ export function TopBarButton({
     >
       <span className='top-bar-item__content body-typo'>
         {name}
-        {icon && <i className={`g3-icon g3-icon--${icon}`} />}
+        {icon}
       </span>
     </button>
   );
@@ -44,7 +44,7 @@ export function TopBarButton({
 
 TopBarButton.propTypes = {
   className: PropTypes.string,
-  icon: PropTypes.string,
+  icon: PropTypes.node,
   isActive: PropTypes.bool,
   name: PropTypes.string,
   onClick: PropTypes.func.isRequired,
