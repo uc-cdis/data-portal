@@ -74,37 +74,43 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
               ))}
             </TopBarMenu>
           )}
-          {username !== undefined ? (
+          {(location.pathname !== '/login' || username !== undefined) && (
             <TopBarMenu
               buttonIcon={<FontAwesomeIcon icon='circle-user' />}
               title='Profile'
             >
-              <TopBarMenu.Item>
-                <span>{username}</span>
-              </TopBarMenu.Item>
-              <hr />
-              <TopBarMenu.Item>
-                <Link to='/identity'>View Profile</Link>
-              </TopBarMenu.Item>
-              <TopBarMenu.Item>
-                <Link to='/requests'>Data Requests</Link>
-              </TopBarMenu.Item>
-              {isAdminUser && (
+              {username === undefined ? (
                 <TopBarMenu.Item>
-                  <Link to='/submission'>Data Submission</Link>
+                  <Link to='/login'>
+                    Login <i className='g3-icon g3-icon--exit' />
+                  </Link>
                 </TopBarMenu.Item>
+              ) : (
+                <>
+                  <TopBarMenu.Item>
+                    <span>{username}</span>
+                  </TopBarMenu.Item>
+                  <hr />
+                  <TopBarMenu.Item>
+                    <Link to='/identity'>View Profile</Link>
+                  </TopBarMenu.Item>
+                  <TopBarMenu.Item>
+                    <Link to='/requests'>Data Requests</Link>
+                  </TopBarMenu.Item>
+                  {isAdminUser && (
+                    <TopBarMenu.Item>
+                      <Link to='/submission'>Data Submission</Link>
+                    </TopBarMenu.Item>
+                  )}
+                  <hr />
+                  <TopBarMenu.Item>
+                    <button onClick={onLogoutClick} type='button'>
+                      Logout <i className='g3-icon g3-icon--exit' />
+                    </button>
+                  </TopBarMenu.Item>
+                </>
               )}
-              <hr />
-              <TopBarMenu.Item>
-                <button onClick={onLogoutClick} type='button'>
-                  Logout <i className='g3-icon g3-icon--exit' />
-                </button>
-              </TopBarMenu.Item>
             </TopBarMenu>
-          ) : (
-            location.pathname !== '/login' && (
-              <TopBarLink icon='exit' name='Login' to='/login' />
-            )
           )}
         </div>
       </div>
