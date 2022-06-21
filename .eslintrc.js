@@ -25,7 +25,7 @@ module.exports = {
     'jsx-a11y',
     'import',
   ],
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 6,

@@ -22,7 +22,8 @@ export const updatePopup = (state) => ({
 });
 
 export const connectionError = () => {
-  console.log('connection error');
+  // eslint-disable-next-line no-console
+  console.error('connection error');
   return {
     type: 'REQUEST_ERROR',
     error: 'connection_error',
@@ -362,9 +363,7 @@ export const updateSystemUseNotice = (displayUseWarning) => (dispatch) => {
   });
 };
 
-export const displaySystemUseNotice = () => function (dispatch, getState) {
-  return dispatch(checkIfDisplaySystemUseNotice(getState().popups.systemUseWarnPopup));
-};
+export const displaySystemUseNotice = () => (dispatch, getState) => dispatch(checkIfDisplaySystemUseNotice(getState().popups.systemUseWarnPopup));
 
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -

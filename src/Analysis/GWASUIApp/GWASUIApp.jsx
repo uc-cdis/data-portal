@@ -108,6 +108,7 @@ const GWASUIApp = (props) => {
   };
 
   const initializeCohortData = async (name) => {
+    // eslint-disable-next-line no-console
     const json = await getCohortJsonByName(name).catch((err) => { console.error('Failed to retrieve cohort json by name', err); });
     if (json.Cohort.length > 0) getMissingRatio(json.Cohort);
   };
