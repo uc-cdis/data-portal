@@ -51,7 +51,7 @@
   margin-right: 8px;
 }
 
-.top-bar-menu button {
+.top-bar-menu > button {
   margin: 0;
   height: auto;
   width: auto;
