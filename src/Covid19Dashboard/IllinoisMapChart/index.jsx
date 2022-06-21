@@ -412,7 +412,7 @@ class IllinoisMapChart extends React.Component {
         ['No Data Available', '#5f5d59'],
       ];
       this.setState({
-        mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google Mobility Data', link: 'https://www.google.com/covid19/mobility/' }, lastUpdated: null,
+        mapColors: colors, legendTitle: 'Mobility Data', legendDataSource: { title: 'Google COVID-19 Community Mobility Reports', link: 'https://www.google.com/covid19/mobility/' }, lastUpdated: null,
       });
     }
   }
@@ -463,7 +463,6 @@ class IllinoisMapChart extends React.Component {
         const geoJson = this.addDataToGeoJsonBase(
           baseData,
           (data, location) => data[location.properties.FIPS]);
-
         this.setState({ mobility_data: { data: geoJson, fetchStatus: 'done' } });
       })
       .then(() => {
