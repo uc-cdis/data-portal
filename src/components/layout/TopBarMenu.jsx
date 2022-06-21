@@ -19,11 +19,12 @@ function TopBarMenu({ buttonIcon, children, title }) {
     setShowMenu((s) => !s);
   }
   return (
-    <span className='top-bar-menu' onBlur={handleMenuBlur} title={title}>
+    <span className='top-bar-menu' onBlur={handleMenuBlur}>
       <TopBarButton
         isActive={showMenu}
         icon={buttonIcon}
         onClick={toggleMenu}
+        title={title}
       />
       {showMenu && <ul className='top-bar-menu__items'>{children}</ul>}
     </span>

@@ -12,8 +12,8 @@ function joinClassNames(...args) {
  * @property {string} [className]
  * @property {React.ReactNode} [icon]
  * @property {boolean} [isActive]
- * @property {string} [name]
  * @property {React.MouseEventHandler<HTMLButtonElement>} onClick
+ * @property {string} [title]
  */
 
 /** @param {TopBarButtonProps} props */
@@ -21,8 +21,8 @@ export function TopBarButton({
   className,
   icon,
   isActive = false,
-  name,
   onClick,
+  title,
 }) {
   const baseClassName = isActive
     ? 'top-bar-item top-bar-item--active'
@@ -33,11 +33,9 @@ export function TopBarButton({
       className={joinClassNames(baseClassName, className)}
       onClick={onClick}
       type='button'
+      title={title}
     >
-      <span className='top-bar-item__content body-typo'>
-        {name}
-        {icon}
-      </span>
+      <span className='top-bar-item__content body-typo'>{icon}</span>
     </button>
   );
 }
@@ -46,8 +44,8 @@ TopBarButton.propTypes = {
   className: PropTypes.string,
   icon: PropTypes.node,
   isActive: PropTypes.bool,
-  name: PropTypes.string,
   onClick: PropTypes.func.isRequired,
+  title: PropTypes.string,
 };
 
 /**
