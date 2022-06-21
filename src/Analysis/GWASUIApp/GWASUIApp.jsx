@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import {
   Checkbox, Card, Space
 } from 'antd';
-import GWASWorkflowList from './GWASWorkflowList';
 import { fetchAndSetCsrfToken } from "../../configs";
 
 const cardContent = { width: 350, height: 280, margin: 10, textAlign: "center" };
@@ -25,9 +24,7 @@ const GWASUIApp = (props) => {
 
   if (!gwasTypeSelected) {
     return (<>
-    {/* <div className="GWASUI-typeTitle"><span>Select your analysis</span></div> */}
     <Space direction={'vertical'} style={{ width: '100%' }} align={'center'}>
-    <GWASWorkflowList refreshWorkflows={props.refreshWorkflows} />
       <div className="GWASUI-typeSelector">
       <div>
           <Card title="Case Control GWAS" bordered={true} style={cardContent}>
