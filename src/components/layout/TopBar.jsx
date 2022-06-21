@@ -56,7 +56,7 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
           />
         ))}
         {config.menuItems?.length > 0 && (
-          <TopBarMenu buttonIcon='copy'>
+          <TopBarMenu buttonIcon='copy' title='Documents'>
             {config.menuItems.map((item) => (
               <TopBarMenu.Item key={item.link}>
                 <a href={item.link} target='_blank' rel='noopener noreferrer'>
@@ -70,7 +70,7 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
           </TopBarMenu>
         )}
         {username !== undefined ? (
-          <TopBarMenu buttonIcon='user-circle'>
+          <TopBarMenu buttonIcon='user-circle' title='Profile'>
             <TopBarMenu.Item>
               <span>{username}</span>
             </TopBarMenu.Item>

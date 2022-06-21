@@ -7,8 +7,9 @@ import './TopBarMenu.css';
  * @param {Object} props
  * @param {string} props.buttonIcon
  * @param {React.ReactNode[]} props.children
+ * @param {string} [props.title]
  */
-function TopBarMenu({ buttonIcon, children }) {
+function TopBarMenu({ buttonIcon, children, title }) {
   const [showMenu, setShowMenu] = useState(false);
   function handleMenuBlur(e) {
     if (showMenu && !e.currentTarget.contains(e.relatedTarget))
@@ -18,7 +19,7 @@ function TopBarMenu({ buttonIcon, children }) {
     setShowMenu((s) => !s);
   }
   return (
-    <span className='top-bar-menu' onBlur={handleMenuBlur}>
+    <span className='top-bar-menu' onBlur={handleMenuBlur} title={title}>
       <TopBarButton
         isActive={showMenu}
         icon={buttonIcon}
@@ -32,6 +33,7 @@ function TopBarMenu({ buttonIcon, children }) {
 TopBarMenu.propTypes = {
   buttonIcon: PropTypes.string.isRequired,
   children: PropTypes.arrayOf(PropTypes.node),
+  title: PropTypes.string,
 };
 
 /** @param {{ children: React.ReactNode }} */
