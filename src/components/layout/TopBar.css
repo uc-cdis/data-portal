@@ -10,6 +10,10 @@
   width: 100%;
 }
 
+.top-bar__menu-group {
+  margin-right: 20px;
+}
+
 @media screen and (max-width: 1090px) {
   .top-bar {
     justify-content: flex-end;

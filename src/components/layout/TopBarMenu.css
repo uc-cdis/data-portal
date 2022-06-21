@@ -47,8 +47,8 @@
   width: 14px;
 }
 
-.top-bar-menu {
-  margin-right: 20px;
+.top-bar-menu:not(:last-child) {
+  margin-right: 8px;
 }
 
 .top-bar-menu button .top-bar-item__content {
