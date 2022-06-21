@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { TopBarButton } from './TopBarItems';
 import './TopBarMenu.css';
 
 /**
@@ -20,12 +19,14 @@ function TopBarMenu({ buttonIcon, children, title }) {
   }
   return (
     <span className='top-bar-menu' onBlur={handleMenuBlur}>
-      <TopBarButton
-        isActive={showMenu}
-        icon={buttonIcon}
+      <button
+        data-menu-active={showMenu}
         onClick={toggleMenu}
         title={title}
-      />
+        type='button'
+      >
+        {buttonIcon}
+      </button>
       {showMenu && <ul className='top-bar-menu__items'>{children}</ul>}
     </span>
   );

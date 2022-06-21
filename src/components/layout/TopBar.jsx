@@ -59,13 +59,7 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
         <div className='top-bar__menu-group'>
           {config.menuItems?.length > 0 && (
             <TopBarMenu
-              buttonIcon={
-                <FontAwesomeIcon
-                  color='white'
-                  fontSize={24}
-                  icon='circle-question'
-                />
-              }
+              buttonIcon={<FontAwesomeIcon icon='circle-question' />}
               title='Documents'
             >
               {config.menuItems.map((item) => (
@@ -82,13 +76,7 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
           )}
           {username !== undefined ? (
             <TopBarMenu
-              buttonIcon={
-                <FontAwesomeIcon
-                  color='white'
-                  fontSize={24}
-                  icon='circle-user'
-                />
-              }
+              buttonIcon={<FontAwesomeIcon icon='circle-user' />}
               title='Profile'
             >
               <TopBarMenu.Item>
