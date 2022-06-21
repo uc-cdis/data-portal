@@ -2,12 +2,16 @@
   background-color: var(--pcdc-color__primary);
   color: white;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   margin: auto;
   min-height: 40px;
   overflow: hidden;
-  vertical-align: middle;
   width: 100%;
+}
+
+.top-bar__menu-group {
+  margin-right: 20px;
 }
 
 @media screen and (max-width: 1090px) {

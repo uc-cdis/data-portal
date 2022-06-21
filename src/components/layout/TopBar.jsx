@@ -1,5 +1,6 @@
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { TopBarLink } from './TopBarItems';
 import TopBarMenu from './TopBarMenu';
 import './TopBar.css';
@@ -55,18 +56,63 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
             to={item.link}
           />
         ))}
-        {username !== undefined ? (
-          <TopBarMenu
-            isAdminUser={isAdminUser}
-            items={config.menuItems}
-            onLogoutClick={onLogoutClick}
-            username={username}
-          />
-        ) : (
-          location.pathname !== '/login' && (
-            <TopBarLink icon='exit' name='Login' to='/login' />
-          )
-        )}
+        <div className='top-bar__menu-group'>
+          {config.menuItems?.length > 0 && (
+            <TopBarMenu
+              buttonIcon={<FontAwesomeIcon icon='circle-question' />}
+              title='Documents'
+            >
+              {config.menuItems.map((item) => (
+                <TopBarMenu.Item key={item.link}>
+                  <a href={item.link} target='_blank' rel='noopener noreferrer'>
+                    {item.name}
+                    {item.icon && (
+                      <i className={`g3-icon g3-icon--${item.icon}`} />
+                    )}
+                  </a>
+                </TopBarMenu.Item>
+              ))}
+            </TopBarMenu>
+          )}
+          {(location.pathname !== '/login' || username !== undefined) && (
+            <TopBarMenu
+              buttonIcon={<FontAwesomeIcon icon='circle-user' />}
+              title='Profile'
+            >
+              {username === undefined ? (
+                <TopBarMenu.Item>
+                  <Link to='/login'>
+                    Login <i className='g3-icon g3-icon--exit' />
+                  </Link>
+                </TopBarMenu.Item>
+              ) : (
+                <>
+                  <TopBarMenu.Item>
+                    <span>{username}</span>
+                  </TopBarMenu.Item>
+                  <hr />
+                  <TopBarMenu.Item>
+                    <Link to='/identity'>View Profile</Link>
+                  </TopBarMenu.Item>
+                  <TopBarMenu.Item>
+                    <Link to='/requests'>Data Requests</Link>
+                  </TopBarMenu.Item>
+                  {isAdminUser && (
+                    <TopBarMenu.Item>
+                      <Link to='/submission'>Data Submission</Link>
+                    </TopBarMenu.Item>
+                  )}
+                  <hr />
+                  <TopBarMenu.Item>
+                    <button onClick={onLogoutClick} type='button'>
+                      Logout <i className='g3-icon g3-icon--exit' />
+                    </button>
+                  </TopBarMenu.Item>
+                </>
+              )}
+            </TopBarMenu>
+          )}
+        </div>
       </div>
     </nav>
   );

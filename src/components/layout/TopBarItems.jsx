@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './TopBarItems.css';
@@ -6,49 +7,6 @@ import './TopBarItems.css';
 function joinClassNames(...args) {
   return args.filter(Boolean).join(' ');
 }
-
-/**
- * @typedef {Object} TopBarButtonProps
- * @property {string} [className]
- * @property {string} [icon]
- * @property {boolean} [isActive]
- * @property {string} name
- * @property {React.MouseEventHandler<HTMLButtonElement>} onClick
- */
-
-/** @param {TopBarButtonProps} props */
-export function TopBarButton({
-  className,
-  icon,
-  isActive = false,
-  name,
-  onClick,
-}) {
-  const baseClassName = isActive
-    ? 'top-bar-item top-bar-item--active'
-    : 'top-bar-item';
-
-  return (
-    <button
-      className={joinClassNames(baseClassName, className)}
-      onClick={onClick}
-      type='button'
-    >
-      <span className='top-bar-item__content body-typo'>
-        {name}
-        {icon && <i className={`g3-icon g3-icon--${icon}`} />}
-      </span>
-    </button>
-  );
-}
-
-TopBarButton.propTypes = {
-  className: PropTypes.string,
-  icon: PropTypes.string,
-  isActive: PropTypes.bool,
-  name: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
-};
 
 /**
  * @typedef {Object} TopBarLinkProps

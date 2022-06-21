@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { TopBarButton } from './TopBarItems';
 import './TopBarMenu.css';
 
 /**
  * @param {Object} props
- * @param {boolean} [props.isAdminUser]
- * @param {{ icon?: string; link: string; name: string; }[]} [props.items]
- * @param {React.MouseEventHandler<HTMLButtonElement>} props.onLogoutClick
- * @param {string} props.username
+ * @param {React.ReactNode} props.buttonIcon
+ * @param {React.ReactNode | React.ReactNode[]} props.children
+ * @param {string} [props.title]
  */
-function TopBarMenu({ isAdminUser, items, onLogoutClick, username }) {
+function TopBarMenu({ buttonIcon, children, title }) {
   const [showMenu, setShowMenu] = useState(false);
   function handleMenuBlur(e) {
     if (showMenu && !e.currentTarget.contains(e.relatedTarget))
@@ -21,57 +18,37 @@ function TopBarMenu({ isAdminUser, items, onLogoutClick, username }) {
     setShowMenu((s) => !s);
   }
   return (
-    <span onBlur={handleMenuBlur}>
-      <TopBarButton
-        isActive={showMenu}
-        icon='user-circle'
-        name={username}
+    <span className='top-bar-menu' onBlur={handleMenuBlur}>
+      <button
+        data-menu-active={showMenu}
         onClick={toggleMenu}
-      />
-      {showMenu && (
-        <ul className='top-bar-menu__items'>
-          <li className='top-bar-menu__item'>
-            <Link to='/identity'>View Profile</Link>
-          </li>
-          <li className='top-bar-menu__item'>
-            <Link to='/requests'>Data Requests</Link>
-          </li>
-          {isAdminUser && (
-            <li className='top-bar-menu__item'>
-              <Link to='/submission'>Data Submission</Link>
-            </li>
-          )}
-          {items?.map((item) => (
-            <li key={item.link} className='top-bar-menu__item'>
-              <a href={item.link} target='_blank' rel='noopener noreferrer'>
-                {item.name}
-                {item.icon && <i className={`g3-icon g3-icon--${item.icon}`} />}
-              </a>
-            </li>
-          ))}
-          <hr />
-          <li className='top-bar-menu__item'>
-            <button onClick={onLogoutClick} type='button'>
-              Logout <i className='g3-icon g3-icon--exit' />
-            </button>
-          </li>
-        </ul>
-      )}
+        title={title}
+        type='button'
+      >
+        {buttonIcon}
+      </button>
+      {showMenu && <ul className='top-bar-menu__items'>{children}</ul>}
     </span>
   );
 }
 
 TopBarMenu.propTypes = {
-  isAdminUser: PropTypes.bool,
-  items: PropTypes.arrayOf(
-    PropTypes.exact({
-      icon: PropTypes.string,
-      link: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    })
-  ),
-  onLogoutClick: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
+  buttonIcon: PropTypes.node.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node),
+  ]),
+  title: PropTypes.string,
 };
 
+/** @param {{ children: React.ReactNode }} */
+function Item({ children }) {
+  return <li className='top-bar-menu__item'>{children}</li>;
+}
+
+Item.propTypes = {
+  children: PropTypes.node,
+};
+
+TopBarMenu.Item = Item;
 export default TopBarMenu;
