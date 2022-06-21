@@ -18,7 +18,6 @@ import { ExplorerFilterSetsProvider } from './ExplorerFilterSetsContext';
 import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
-import ExplorerFilterSet from './ExplorerFilterSet';
 import './Explorer.css';
 
 /** @typedef {import('./types').OptionFilter} OptionFilter */
@@ -68,10 +67,6 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
           <Dashboard.Sidebar className='explorer__sidebar'>
             <div>
               <ExplorerSelect />
-              <ExplorerFilterSet
-                className='explorer__filter-set'
-                filter={data.filter}
-              />
               <ExplorerFilter
                 anchorValue={data.anchorValue}
                 className='explorer__filter'
