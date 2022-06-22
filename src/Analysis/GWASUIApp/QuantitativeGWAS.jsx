@@ -450,7 +450,7 @@ const QuantitativeGWAS = (props) => {
   }
 
   const ConceptStatsByHare = () => {
-    const { data, status } = useQuery(['conceptstatsbyhare', selectedConcepts], fetchConceptStatsByHare, queryConfig);
+    const { data, status } = useQuery(['conceptstatsbyhare', selectedConcepts, selectedCohort], fetchConceptStatsByHare, queryConfig);
     useEffect(() => {
       if (selectedHare && data && data.concept_breakdown) {
           setSelectedHareDescriptionFromSelectedHare(selectedHare, data.concept_breakdown)
