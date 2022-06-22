@@ -82,7 +82,8 @@ const QuantitativeGWAS = (props) => {
       setSelectedCovariates([...selectedConcepts].slice(1));
       setCovariates([...selectedConcepts].slice(1).map((val) => val.prefixed_concept_id));
       setSelectedOutcome(selectedConcepts[0].prefixed_concept_id);
-
+    }
+    if (current === 2) {
       form.setFieldsValue({
         covariates: [...selectedConcepts].slice(1).map((val) => val.concept_name),
         outcome: selectedConcepts[0].concept_name,
@@ -431,24 +432,30 @@ const QuantitativeGWAS = (props) => {
     );
   };
 
-  const getHareAndDescription = (concept_value_name, cohort_size) => {
-    return `${concept_value_name} (size: ${cohort_size})`;
+  const getHareAndDescription = (hareBreakDownItem) => {
+    return `${hareBreakDownItem.concept_value_name} (size: ${hareBreakDownItem.persons_in_cohort_with_value})`;
   }
 
-  const setSelectedHareAndDescription = (concept_value, allHareBreakDownItems) => {
-    setSelectedHare(concept_value);
+  const setSelectedHareDescriptionFromSelectedHare = (hare_as_concept_value, allHareBreakDownItems) => {
     var selectedHareBreakDownItem = null;
+    // this lookup is needed since the description can change because of changes in the persons_in_cohort_with_value,
+    // even though hare stays the same (happens when selectedConcepts change for example):
     for (let hareBreakDownItem of allHareBreakDownItems) {
-      if (hareBreakDownItem.concept_value === concept_value) {
+      if (hareBreakDownItem.concept_value === hare_as_concept_value) {
         selectedHareBreakDownItem = hareBreakDownItem;
         break;
       }
     }
-    setSelectedHareDescription(getHareAndDescription(selectedHareBreakDownItem.concept_value_name, selectedHareBreakDownItem.persons_in_cohort_with_value));
+    setSelectedHareDescription(getHareAndDescription(selectedHareBreakDownItem));
   }
 
   const ConceptStatsByHare = () => {
-    const { data, status } = useQuery(['conceptstatsbyhare', selectedConcepts], fetchConceptStatsByHare, queryConfig);
+    const { data, status } = useQuery(['conceptstatsbyhare', selectedConcepts, selectedCohort], fetchConceptStatsByHare, queryConfig);
+    useEffect(() => {
+      if (selectedHare && data && data.concept_breakdown) {
+          setSelectedHareDescriptionFromSelectedHare(selectedHare, data.concept_breakdown)
+        }
+    }, [selectedHare, data]);
 
     if (status === 'loading') {
       return <Spinner />;
@@ -466,9 +473,6 @@ const QuantitativeGWAS = (props) => {
         );
       }
       // normal scenario - there is breakdown data, so show in dropdown:
-      if (selectedHare != '') {
-        setSelectedHareAndDescription(selectedHare, data.concept_breakdown)
-      }
       return (
         <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
           <Dropdown.Button rightIcon='dropdown' buttonType='secondary'>
@@ -480,9 +484,9 @@ const QuantitativeGWAS = (props) => {
                 <Dropdown.Item
                   key={`${datum.concept_value}`}
                   value={`${datum.concept_value}`}
-                  onClick={() => setSelectedHareAndDescription(datum.concept_value, data.concept_breakdown)}
+                  onClick={() => setSelectedHare(datum.concept_value)}
                 >
-                  {<div>{getHareAndDescription(datum.concept_value_name, datum.persons_in_cohort_with_value)}</div>}
+                  {<div>{getHareAndDescription(datum)}</div>}
                 </Dropdown.Item>
               ))
             }
