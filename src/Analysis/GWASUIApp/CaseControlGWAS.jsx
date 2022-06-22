@@ -581,6 +581,7 @@ const CaseControlGWAS = (props) => {
             out_prefix: Date.now().toString(),
             outcome: "-1",
             hare_population: selectedHare,
+            hare_concept_id: hareConceptId,
             maf_threshold: Number(mafThreshold),
             imputation_score_cutoff: Number(imputationScore),
             template_version: "gwas-template-latest",
@@ -650,7 +651,8 @@ const CaseControlGWAS = (props) => {
                                 },
                             ]}
                         >
-                            <InputNumber min={1} max={10} />
+                            <InputNumber min={1} max={10}
+                              onChange={(e) => setNumOfPC(e)}/>
                         </Form.Item>
                         <Form.Item
                             label='Covariates'
@@ -667,6 +669,10 @@ const CaseControlGWAS = (props) => {
                         <Form.Item
                             label='Select HARE group'
                             name='hareGroup'
+                            rules={[
+                                {
+                                    required: true,
+                                }]}
                         >
                             <ConceptsStatsByHare />
                         </Form.Item>
