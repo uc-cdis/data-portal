@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { fetchWithCreds } from '../utils.fetch';
 import { useExplorerConfig } from './ExplorerConfigContext';
-import { createEmptyFilterSet } from './ExplorerFilterSet/utils';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ExplorerFilterSetDTO} ExplorerFilterSetDTO */
@@ -30,6 +29,11 @@ function convertFromFilterSetDTO({ filters, ...rest }) {
         : // backward compat for old filter sets missing __combineMode value
           { __combineMode: 'AND', ...filters },
   };
+}
+
+/** @returns {ExplorerFilterSet} */
+function createEmptyFilterSet() {
+  return { name: '', description: '', filter: {} };
 }
 
 /**
