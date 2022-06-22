@@ -295,7 +295,7 @@ const QuantitativeGWAS = (props) => {
           <Popover content={newCohortContent} title='Create a new cohort'>
             <InfoCircleOutlined />
           </Popover>
-          <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>+ Add a new cohort</button>
+          {/* <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>+ Add a new cohort</button> */}
           <div className='GWASUI-mainTable'>
             <Popover content={chooseCohortContent} title='Choosing a cohort'>
               <InfoCircleOutlined />
@@ -784,7 +784,7 @@ const QuantitativeGWAS = (props) => {
 
   return (
     <Space direction={'vertical'} style={{ width: '100%' }}>
-      <GWASWorkflowList refreshWorkflows={props.refreshWorkflows} />
+      {/* <GWASWorkflowList refreshWorkflows={props.refreshWorkflows} /> */}
       <Steps current={current}>
         {steps.map((item) => (
           <Step key={item.title} title={item.title} description={item.description} />

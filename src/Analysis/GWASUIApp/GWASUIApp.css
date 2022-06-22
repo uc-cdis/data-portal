@@ -217,3 +217,13 @@
   margin-right: auto;
   margin-top: 20px;
 }
+
+.GWASUI-cohortSelector {
+  width: 800px;
+}
+
+.GWASUI-addCohortBtn {
+  width: 15px;
+  flex-basis: 20%;
+  align-self: flex-end;
+}

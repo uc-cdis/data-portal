@@ -212,7 +212,7 @@ const CaseControlGWAS = (props) => {
             <React.Fragment>
                 <h4 className="GWASUI-selectInstruction">In this step, you will begin to define the study population. To begin, select the cohort that you would like to define as your study “cases” population.</h4>
                 <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>+ Add a new cohort</button>
+                    {/* <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>+ Add a new cohort</button> */}
                     <div className='GWASUI-mainTable'>
                         <Table
                             className='GWASUI-table1'
@@ -241,9 +241,9 @@ const CaseControlGWAS = (props) => {
         return (
             <React.Fragment>
                 {/* window.open(`${}`, '_blank') */}
-                 <h4 className="GWASUI-selectInstruction">In this step, you will continue to define the study population. Please select the cohort that you would like to define as your study “control” population.</h4>
+                <h4 className="GWASUI-selectInstruction">In this step, you will continue to define the study population. Please select the cohort that you would like to define as your study “control” population.</h4>
                 <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>+ Add a new cohort</button>
+                    {/* <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>+ Add a new cohort</button> */}
                     <div className='GWASUI-mainTable'>
                         <Table
                             className='GWASUI-table1'
@@ -424,15 +424,15 @@ const CaseControlGWAS = (props) => {
         var selecteCasedHareBreakDownItem = null;
         var selecteControlHareBreakDownItem = null;
         for (let hareBreakDownItem of allCaseHareBreakDownItems) {
-          if (hareBreakDownItem.concept_value === concept_value) {
-            selecteCasedHareBreakDownItem = hareBreakDownItem;
-            break;
-          }
+            if (hareBreakDownItem.concept_value === concept_value) {
+                selecteCasedHareBreakDownItem = hareBreakDownItem;
+                break;
+            }
         }
         for (let hareBreakDownItem of allControlHareBreakDownItems) {
             if (hareBreakDownItem.concept_value === concept_value) {
                 selecteControlHareBreakDownItem = hareBreakDownItem;
-              break;
+                break;
             }
         }
         return [selecteCasedHareBreakDownItem, selecteControlHareBreakDownItem];
@@ -464,7 +464,7 @@ const CaseControlGWAS = (props) => {
         setSelectedCaseSize(selecteCasedHareBreakDownItem.persons_in_cohort_with_value);
         setSelectedHareValueAsConceptId(selecteCasedHareBreakDownItem.concept_value_as_concept_id);
         setSelectedControlSize(selecteControlHareBreakDownItem.persons_in_cohort_with_value);
-      }
+    }
 
     const ConceptsStatsByHare = () => {
         const results = useQueries([
@@ -492,7 +492,7 @@ const CaseControlGWAS = (props) => {
             // normal scenario - there is breakdown data, so show in dropdown:
             if (selectedHare != '') {
                 setSelectedHareAndDescription(selectedHare, dataCase.concept_breakdown, dataControl.concept_breakdown)
-              }
+            }
             return (
                 <div className="GWASUI-flexRow">
                     <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
@@ -548,23 +548,23 @@ const CaseControlGWAS = (props) => {
         if (data.cohort_overlap.case_control_overlap_after_filter === 0) {
             return (
                 <div className="GWASUI-flexCol">
-                    Based on the selected covariates their respective data within the study population,<br/>
-                    {selectedCaseSize} subjects were found in {caseCohortName} cohort and <br/>
-                    {selectedControlSize} subjects were found in {controlCohortName} cohort.<br/>
-                    <strong style={{color: '#006644'}}>No overlap found between both cohorts.</strong>
+                    Based on the selected covariates their respective data within the study population,<br />
+                    {selectedCaseSize} subjects were found in {caseCohortName} cohort and <br />
+                    {selectedControlSize} subjects were found in {controlCohortName} cohort.<br />
+                    <strong style={{ color: '#006644' }}>No overlap found between both cohorts.</strong>
                 </div>
             );
         } else {
             // display an error message if there is any overlap between case and control populations:
             return (
                 <div className="GWASUI-flexCol">
-                    Based on the selected covariates their respective data within the study population,<br/>
-                    {selectedCaseSize} subjects were found in <b>{caseCohortName}</b> cohort and <br/>
-                    {selectedControlSize} subjects were found in <b>{controlCohortName}</b> cohort.<br/>
-                    <strong style={{color: '#bf2600'}}>Warning: overlap found between both cohorts!<br/>
-                    ({data.cohort_overlap.case_control_overlap_after_filter} subjects were found to be present in both cohorts).<br/>
-                    Please review your selections.<br/>
-                    If you choose to continue, be aware that these {data.cohort_overlap.case_control_overlap_after_filter} subjects will <i>not</i> be considered in the analysis.
+                    Based on the selected covariates their respective data within the study population,<br />
+                    {selectedCaseSize} subjects were found in <b>{caseCohortName}</b> cohort and <br />
+                    {selectedControlSize} subjects were found in <b>{controlCohortName}</b> cohort.<br />
+                    <strong style={{ color: '#bf2600' }}>Warning: overlap found between both cohorts!<br />
+                        ({data.cohort_overlap.case_control_overlap_after_filter} subjects were found to be present in both cohorts).<br />
+                        Please review your selections.<br />
+                        If you choose to continue, be aware that these {data.cohort_overlap.case_control_overlap_after_filter} subjects will <i>not</i> be considered in the analysis.
                     </strong>
                 </div>
             );
@@ -754,7 +754,7 @@ const CaseControlGWAS = (props) => {
                 })}</div>
             </div>
             <div className="GWASUI-flexRow GWASUI-rowItem">
-                <QCShowOverlap/>
+                <QCShowOverlap />
             </div>
             <div className="GWASUI-flexRow">
                 <input
@@ -786,7 +786,21 @@ const CaseControlGWAS = (props) => {
         switch (stepIndex) {
             case 0: {
                 return (
-                    sourceId ? <CaseCohortDefinition></CaseCohortDefinition> : <Spinner></Spinner>
+                    sourceId ? (
+                        <div className="GWASUI-flexRow GWASUI-cohortSelector">
+                            <div className="GWASUI-flexCol GWASUI-addCohortBtn">
+                                {/* <div className="GWASUI-addCohortBtn"> */}
+                                <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>
+                                {/* This button will open a new tab with the OHDSI Atlas App where you can create a new cohort. To see the new cohort in the list below please refresh your browser */}
+                                + Add a new cohort
+                                </button>
+                                {/* </div>    */}
+                            </div>
+                            <div className="GWASUI-flexCol">
+                                <CaseCohortDefinition></CaseCohortDefinition>
+                            </div>
+                        </div>
+                    ) : <Spinner></Spinner>
                 );
             }
             case 1: {
@@ -816,20 +830,20 @@ const CaseControlGWAS = (props) => {
                 };
                 return (
                     <React.Fragment>
-                         <h4 className="GWASUI-selectInstruction">In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
-                         <h4 className="GWASUI-selectInstruction">Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
-                    <div className='GWASUI-mainArea'>
-                        <Form
-                            {...layout}
-                            name='control-hooks'
-                            form={form}
-                            onFinish={(values) => {
-                                onStep5FormSubmit(values);
-                            }}
-                        >
-                            <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
-                        </Form>
-                    </div>
+                        <h4 className="GWASUI-selectInstruction">In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
+                        <h4 className="GWASUI-selectInstruction">Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
+                        <div className='GWASUI-mainArea'>
+                            <Form
+                                {...layout}
+                                name='control-hooks'
+                                form={form}
+                                onFinish={(values) => {
+                                    onStep5FormSubmit(values);
+                                }}
+                            >
+                                <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
+                            </Form>
+                        </div>
                     </React.Fragment>
 
                 );
@@ -877,16 +891,16 @@ const CaseControlGWAS = (props) => {
 
     let nextButtonEnabled = true;
     if ((current === 0 && !selectedCaseCohort) || (current === 1 && !selectedControlCohort)) {
-      // Cohort selection
-      nextButtonEnabled = false;
+        // Cohort selection
+        nextButtonEnabled = false;
     } else if (current === 2 && selectedCovariates.length < 1) {
-      // covariate selection
-      nextButtonEnabled = false;
+        // covariate selection
+        nextButtonEnabled = false;
     }
 
     return (
         <Space direction={'vertical'} style={{ width: '100%' }}>
-            <GWASWorkflowList refreshWorkflows={props.refreshWorkflows} />
+            {/* <GWASWorkflowList refreshWorkflows={props.refreshWorkflows} /> */}
             <Steps current={current}>
                 {steps.map((item) => (
                     <Step key={item.title} title={item.title} description={item.description} />

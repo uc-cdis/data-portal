@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
 import { gwasWorkflowPath } from '../../localconf';
 import GWASJob from './GWASJob';
+import Spinner from "../../components/Spinner";
 
 const GWASWorkflowList = ({ refreshWorkflows }) => {
   const { Panel } = Collapse;
@@ -23,7 +24,7 @@ const GWASWorkflowList = ({ refreshWorkflows }) => {
       refetchInterval: 60000,
     });
     if (status === 'loading') {
-      return <React.Fragment>Loading</React.Fragment>;
+      return <React.Fragment><Spinner /></React.Fragment>;
     }
     if (status === 'error') {
       return <React.Fragment>Error</React.Fragment>;
