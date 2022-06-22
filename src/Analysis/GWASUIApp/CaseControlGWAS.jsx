@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch, Popconfirm, notification
+    Steps, Button, Space, Table, Form, InputNumber, Select, Popconfirm, notification
 } from 'antd';
 import './GWASUIApp.css';
 import { useQuery, useQueries, useMutation } from 'react-query';
-import { headers, fetchAndSetCsrfToken } from '../../configs';
+import { headers } from '../../configs';
 import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath } from '../../localconf';
-import GWASWorkflowList from './GWASWorkflowList';
 import { fetchWithCreds } from '../../actions';
 import Spinner from "../../components/Spinner";
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import CheckOutlined from '@ant-design/icons';
+
 // the quantitative argo id is
 // gwas-template-wrapper-k5w9t and the tar GUID is dg.VA03/7484ce92-313b-4286-954c-b71ad5d9bf54
 
@@ -212,7 +212,6 @@ const CaseControlGWAS = (props) => {
             <React.Fragment>
                 <h4 className="GWASUI-selectInstruction">In this step, you will begin to define the study population. To begin, select the cohort that you would like to define as your study “cases” population.</h4>
                 <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                    {/* <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>+ Add a new cohort</button> */}
                     <div className='GWASUI-mainTable'>
                         <Table
                             className='GWASUI-table1'
@@ -240,7 +239,6 @@ const CaseControlGWAS = (props) => {
         }
         return (
             <React.Fragment>
-                {/* window.open(`${}`, '_blank') */}
                 <h4 className="GWASUI-selectInstruction">In this step, you will continue to define the study population. Please select the cohort that you would like to define as your study “control” population.</h4>
                 <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                     {/* <button onClick={() => window.open(cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas'), '_blank')}>+ Add a new cohort</button> */}
@@ -906,7 +904,6 @@ const CaseControlGWAS = (props) => {
 
     return (
         <Space direction={'vertical'} style={{ width: '100%' }}>
-            {/* <GWASWorkflowList refreshWorkflows={props.refreshWorkflows} /> */}
             <Steps current={current}>
                 {steps.map((item) => (
                     <Step key={item.title} title={item.title} description={item.description} />
@@ -945,7 +942,7 @@ const CaseControlGWAS = (props) => {
                             handleNextStep();
                             setCurrent(current + 1);
                         }}
-                        disabled={!nextButtonEnabled} // TODO: update nextButtonEnabled logic to disable when necessary. right now its just defaulted true
+                        disabled={!nextButtonEnabled}
                     >
                         Next
                     </Button>
@@ -958,7 +955,7 @@ const CaseControlGWAS = (props) => {
 }
 
 CaseControlGWAS.propTypes = {
-    // TODO: different workflows refresh?
+    refreshWorkflows: PropTypes.func.isRequired,
 }
 
 export default CaseControlGWAS;

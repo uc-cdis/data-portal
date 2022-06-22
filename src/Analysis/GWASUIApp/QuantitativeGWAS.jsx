@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Steps, Button, Space, Table, Input, Form, InputNumber, Select, Switch, Popconfirm, notification, Popover,
+  Steps, Button, Space, Table, Input, Form, InputNumber, Select, Popconfirm, notification, Popover,
 } from 'antd';
 import './GWASUIApp.css';
 import { useQuery, useMutation } from 'react-query';
@@ -9,7 +9,6 @@ import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { CheckOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { headers } from '../../configs';
 import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath } from '../../localconf';
-import GWASWorkflowList from './GWASWorkflowList';
 import { fetchWithCreds } from '../../actions';
 import Spinner from '../../components/Spinner';
 
@@ -765,9 +764,7 @@ const QuantitativeGWAS = (props) => {
                   onStep5FormSubmit(values);
                 }}
               >
-                {/* <Form.Item {...tailLayout}> */}
                 <GWASFormSubmit refreshWorkflows={props.refreshWorkflows} />
-                {/* </Form.Item> */}
               </Form>
             </div>
           </React.Fragment>
@@ -792,7 +789,6 @@ const QuantitativeGWAS = (props) => {
 
   return (
     <Space direction={'vertical'} style={{ width: '100%' }}>
-      {/* <GWASWorkflowList refreshWorkflows={props.refreshWorkflows} /> */}
       <Steps current={current}>
         {steps.map((item) => (
           <Step key={item.title} title={item.title} description={item.description} />
