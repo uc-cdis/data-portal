@@ -58,7 +58,6 @@ const QuantitativeGWAS = (props) => {
 
   const [selectedCohort, setSelectedCohort] = useState(undefined);
   const [selectedConcepts, setSelectedConcepts] = useState([]);
-  const [covariates, setCovariates] = useState([]);
   const [selectedOutcome, setSelectedOutcome] = useState([]);
   const [imputationScore, setImputationScore] = useState(0.3);
   const [mafThreshold, setMafThreshold] = useState(0.01);
@@ -81,14 +80,7 @@ const QuantitativeGWAS = (props) => {
     if (current === 1) {
       setSelectedPhenotype(selectedConcepts[0]);
       setSelectedCovariates([...selectedConcepts].slice(1));
-      setCovariates([...selectedConcepts].slice(1).map((val) => val.prefixed_concept_id));
       setSelectedOutcome(selectedConcepts[0].prefixed_concept_id);
-    }
-    if (current === 2) {
-      form.setFieldsValue({
-        covariates: [...selectedConcepts].slice(1).map((val) => val.concept_name),
-        outcome: selectedConcepts[0].concept_name,
-      });
     }
     if (current === 3) {
       form.submit();
@@ -242,7 +234,6 @@ const QuantitativeGWAS = (props) => {
         }
       });
     });
-    setCovariates(remainingCovArr.map((c) => c.prefixed_concept_id));
     setSelectedCovariates(remainingCovArr);
     setSelectedConcepts([...remainingCovArr, selectedPhenotype]);
     setSelectedConceptVars([...remainingCovArr, selectedPhenotype].map((r) => r.concept_id));
@@ -501,7 +492,7 @@ const QuantitativeGWAS = (props) => {
     const submitEndpoint = `${gwasWorkflowPath}submit`;
     const requestBody = {
       n_pcs: numOfPC,
-      covariates,
+      covariates: selectedCovariates.map((val) => val.prefixed_concept_id),
       out_prefix: Date.now().toString(),
       outcome: selectedOutcome,
       hare_population: selectedHareValueName,
@@ -527,7 +518,6 @@ const QuantitativeGWAS = (props) => {
     setCurrent(0);
     setNumOfPC(3);
     setSelectedOutcome([]);
-    setCovariates([]);
     setSelectedConcepts([]);
     setSelectedConceptVars([]);
     setMafThreshold(0.01);
