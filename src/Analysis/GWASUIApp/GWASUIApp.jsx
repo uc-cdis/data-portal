@@ -6,6 +6,8 @@ import {
   Checkbox, Card, Space
 } from 'antd';
 import { fetchAndSetCsrfToken } from "../../configs";
+// import GWASQuantitative from '../GWASWizard/GWASQuantitative';
+// import GWASCaseControl from '../GWASWizard/GWASCaseControl';
 
 const cardContent = { width: 350, height: 280, margin: 10, textAlign: "center" };
 
@@ -58,6 +60,7 @@ const GWASUIApp = (props) => {
     <React.Fragment>
       {gwasTypeSelected && gwasType === "caseControl" && (<CaseControlGWAS resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}></CaseControlGWAS>)}
       {gwasTypeSelected && gwasType === "quantitative" && (<QuantitativeGWAS resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}></QuantitativeGWAS>)}
+      {/* {gwasTypeSelected && gwasType === "quantitative" && (<GWASQuantitative resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}></GWASQuantitative>)} */}
     </React.Fragment>
   )
 };
