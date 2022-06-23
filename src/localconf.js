@@ -137,6 +137,7 @@ function buildConfig(opts) {
   let ddSampleRate = 100;
   if (config.ddSampleRate) {
     if (Number.isNaN(config.ddSampleRate)) {
+      // eslint-disable-next-line no-console
       console.warn('Datadog sampleRate value in Portal config is not a number, ignoring');
     } else {
       ddSampleRate = config.ddSampleRate;
