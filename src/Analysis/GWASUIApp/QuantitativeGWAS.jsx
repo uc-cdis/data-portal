@@ -485,7 +485,7 @@ const QuantitativeGWAS = (props) => {
                 <Dropdown.Item
                   key={`${datum.concept_value}`}
                   value={`${datum.concept_value}`}
-                  onClick={() => setSelectedHare(datum.concept_value); setSelectedHareValueName(datum.concept_value_name); }
+                  onClick={() => { setSelectedHare(datum.concept_value); setSelectedHareValueName(datum.concept_value_name);}}
                 >
                   {<div>{getHareAndDescription(datum)}</div>}
                 </Dropdown.Item>
