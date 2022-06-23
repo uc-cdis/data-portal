@@ -16,7 +16,7 @@ export default function useLatestDocuments() {
   function refresh() {
     setIsError(false);
     fetchLatestDocuments()
-      .then(setData)
+      .then((docs) => setData(docs.filter((d) => Boolean(d.formatted))))
       .catch(() => setIsError(true));
   }
   useEffect(refresh, []);
