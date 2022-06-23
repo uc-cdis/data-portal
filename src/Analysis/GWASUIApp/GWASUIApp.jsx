@@ -60,7 +60,8 @@ const GWASUIApp = (props) => {
     <React.Fragment>
       {gwasTypeSelected && gwasType === "caseControl" && (<CaseControlGWAS resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}></CaseControlGWAS>)}
       {gwasTypeSelected && gwasType === "quantitative" && (<QuantitativeGWAS resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}></QuantitativeGWAS>)}
-      {/* {gwasTypeSelected && gwasType === "quantitative" && (<GWASQuantitative resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}></GWASQuantitative>)} */}
+      {/* {gwasTypeSelected && gwasType === "caseControl" && (<GWASCaseControl resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}></GWASCaseControl>)}
+      {gwasTypeSelected && gwasType === "quantitative" && (<GWASQuantitative resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}></GWASQuantitative>)} */}
     </React.Fragment>
   )
 };
