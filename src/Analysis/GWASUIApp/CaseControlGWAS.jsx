@@ -75,6 +75,7 @@ const CaseControlGWAS = (props) => {
     const [selectedHare, setSelectedHare] = useState('');
     const [selectedHareDescription, setSelectedHareDescription] = useState('-select one of the ancestry groups below-');
     const [selectedHareValueAsConceptId, setSelectedHareValueAsConceptId] = useState(0);
+    const [selectedHareValueName, setSelectedHareValueName] = useState('');
 
     const [selectedCaseSize, setSelectedCaseSize] = useState(0);
     const [selectedControlSize, setSelectedControlSize] = useState(0);
@@ -165,9 +166,6 @@ const CaseControlGWAS = (props) => {
         onChange: (_, selectedRows) => {
             setSelectedCovariateVars(selectedRows.map((item) => item.concept_id));
             setSelectedCovariates(selectedRows);
-            form.setFieldsValue({
-                covariates: selectedRows.map((val) => val.concept_name),
-            });
         },
     };
 
@@ -419,61 +417,59 @@ const CaseControlGWAS = (props) => {
     }
 
     const getSelectedCaseAndControlBreakdownItems = (concept_value, allCaseHareBreakDownItems, allControlHareBreakDownItems) => {
-        var selecteCasedHareBreakDownItem = null;
-        var selecteControlHareBreakDownItem = null;
+        var selectedCasedHareBreakDownItem = null;
+        var selectedControlHareBreakDownItem = null;
         for (let hareBreakDownItem of allCaseHareBreakDownItems) {
-            if (hareBreakDownItem.concept_value === concept_value) {
-                selecteCasedHareBreakDownItem = hareBreakDownItem;
-                break;
-            }
+          if (hareBreakDownItem.concept_value === concept_value) {
+            selectedCasedHareBreakDownItem = hareBreakDownItem;
+            break;
+          }
         }
         for (let hareBreakDownItem of allControlHareBreakDownItems) {
             if (hareBreakDownItem.concept_value === concept_value) {
-                selecteControlHareBreakDownItem = hareBreakDownItem;
-                break;
+                selectedControlHareBreakDownItem = hareBreakDownItem;
+              break;
             }
         }
-        return [selecteCasedHareBreakDownItem, selecteControlHareBreakDownItem];
+        return [selectedCasedHareBreakDownItem, selectedControlHareBreakDownItem];
     }
 
     const getHareAndDescriptionUsingValueAndBreakDownItems = (concept_value, allCaseHareBreakDownItems, allControlHareBreakDownItems) => {
         const selectedBreakDownItems = getSelectedCaseAndControlBreakdownItems(concept_value,
             allCaseHareBreakDownItems, allControlHareBreakDownItems);
-        const selecteCasedHareBreakDownItem = selectedBreakDownItems[0];
-        const selecteControlHareBreakDownItem = selectedBreakDownItems[1];
-        return getHareAndDescription(selecteCasedHareBreakDownItem.concept_value_name,
-            selecteCasedHareBreakDownItem.persons_in_cohort_with_value,
-            selecteControlHareBreakDownItem.persons_in_cohort_with_value);
+        const selectedCasedHareBreakDownItem = selectedBreakDownItems[0];
+        const selectedControlHareBreakDownItem = selectedBreakDownItems[1];
+        return getHareAndDescription(selectedCasedHareBreakDownItem, selectedControlHareBreakDownItem);
     }
 
-    const getHareAndDescription = (concept_value_name, case_cohort_size, control_cohort_size) => {
-        return `${concept_value_name} (sizes: ${case_cohort_size}, ${control_cohort_size})`;
+    const getHareAndDescription = (caseHareBreakDownItem, controlHareBreakDownItem) => {
+        return `${caseHareBreakDownItem.concept_value_name} (sizes: ${caseHareBreakDownItem.persons_in_cohort_with_value}, ${controlHareBreakDownItem.persons_in_cohort_with_value})`;
     }
 
-    const setSelectedHareAndDescription = (concept_value, allCaseHareBreakDownItems, allControlHareBreakDownItems) => {
-        setSelectedHare(concept_value);
-        const selectedBreakDownItems = getSelectedCaseAndControlBreakdownItems(concept_value,
+    const setSelectedHareDescriptionFromSelectedHare = (hare_as_concept_value, allCaseHareBreakDownItems, allControlHareBreakDownItems) => {
+        const selectedBreakDownItems = getSelectedCaseAndControlBreakdownItems(hare_as_concept_value,
             allCaseHareBreakDownItems, allControlHareBreakDownItems);
-        const selecteCasedHareBreakDownItem = selectedBreakDownItems[0];
-        const selecteControlHareBreakDownItem = selectedBreakDownItems[1];
-        setSelectedHareDescription(getHareAndDescription(selecteCasedHareBreakDownItem.concept_value_name,
-            selecteCasedHareBreakDownItem.persons_in_cohort_with_value,
-            selecteControlHareBreakDownItem.persons_in_cohort_with_value));
-        setSelectedCaseSize(selecteCasedHareBreakDownItem.persons_in_cohort_with_value);
-        setSelectedHareValueAsConceptId(selecteCasedHareBreakDownItem.concept_value_as_concept_id);
-        setSelectedControlSize(selecteControlHareBreakDownItem.persons_in_cohort_with_value);
-    }
+        const selectedCasedHareBreakDownItem = selectedBreakDownItems[0];
+        const selectedControlHareBreakDownItem = selectedBreakDownItems[1];
+        setSelectedHareDescription(getHareAndDescription(selectedCasedHareBreakDownItem, selectedControlHareBreakDownItem));
+        setSelectedCaseSize(selectedCasedHareBreakDownItem.persons_in_cohort_with_value);
+        setSelectedControlSize(selectedControlHareBreakDownItem.persons_in_cohort_with_value);
+      }
 
     const ConceptsStatsByHare = () => {
         const results = useQueries([
             { queryKey: ['conceptsstats', selectedCovariates, caseCohortDefinitionId], queryFn: fetchCaseConceptStatsByHare, ...queryConfig },
             { queryKey: ['conceptsstats', selectedCovariates, controlCohortDefinitionId], queryFn: fetchControlConceptStatsByHare, ...queryConfig },
         ]);
-        // const { data, status } = useQuery(['conceptstatsbyhare', selectedCovariates], gwasType === "case" ? fetchCaseConceptStatsByHare : fetchControlConceptStatsByHare, queryConfig);
         const statusCase = results[0].status;
         const statusControl = results[1].status;
         const dataCase = results[0].data;
         const dataControl = results[1].data;
+        useEffect(() => {
+            if (selectedHare && dataCase && dataControl && dataCase.concept_breakdown && dataControl.concept_breakdown) {
+                setSelectedHareDescriptionFromSelectedHare(selectedHare, dataCase.concept_breakdown, dataControl.concept_breakdown)
+            }
+          }, [selectedHare, dataCase, dataControl]);
 
         if (statusCase === 'loading' || statusControl === 'loading') {
             return <Spinner />;
@@ -488,9 +484,6 @@ const CaseControlGWAS = (props) => {
                     and phenotype. Please review your selections</React.Fragment>;
             }
             // normal scenario - there is breakdown data, so show in dropdown:
-            if (selectedHare != '') {
-                setSelectedHareAndDescription(selectedHare, dataCase.concept_breakdown, dataControl.concept_breakdown)
-            }
             return (
                 <div className="GWASUI-flexRow">
                     <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
@@ -504,8 +497,7 @@ const CaseControlGWAS = (props) => {
                                         <Dropdown.Item
                                             key={`${datum.concept_value}`}
                                             value={`${datum.concept_value}`}
-                                            onClick={() => setSelectedHareAndDescription(datum.concept_value, dataCase.concept_breakdown, dataControl.concept_breakdown)
-                                            }
+                                            onClick={() => {setSelectedHare(datum.concept_value); setSelectedHareValueAsConceptId(datum.concept_value_as_concept_id); setSelectedHareValueName(datum.concept_value_name); }}
                                         >
                                             {<div>{getHareAndDescriptionUsingValueAndBreakDownItems(datum.concept_value, dataCase.concept_breakdown, dataControl.concept_breakdown)}</div>}
                                         </Dropdown.Item>
@@ -578,7 +570,7 @@ const CaseControlGWAS = (props) => {
             covariates: selectedCovariates.map((val) => val.prefixed_concept_id),
             out_prefix: Date.now().toString(),
             outcome: "-1",
-            hare_population: selectedHare,
+            hare_population: selectedHareValueName,
             hare_concept_id: hareConceptId,
             maf_threshold: Number(mafThreshold),
             imputation_score_cutoff: Number(imputationScore),
@@ -611,6 +603,7 @@ const CaseControlGWAS = (props) => {
         setSelectedControlCohort(undefined);
         setSelectedCaseCohort(undefined);
         setSelectedHare('');
+        setSelectedHareValueName('');
         setSelectedHareDescription('-select one of the ancestry groups below-');
         setSelectedHareValueAsConceptId(0);
         setGwasJobName('');
@@ -882,7 +875,8 @@ const CaseControlGWAS = (props) => {
     const handleNextStep = () => {
         if (current === 1) {
             setSelectedCovariates([...selectedCovariates].map((val) => val.prefixed_concept_id));
-
+        }
+        if (current === 3) {
             form.setFieldsValue({
                 covariates: [...selectedCovariates].map((val) => val.concept_name),
             });
