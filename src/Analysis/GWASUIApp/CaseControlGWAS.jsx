@@ -75,6 +75,7 @@ const CaseControlGWAS = (props) => {
     const [selectedHare, setSelectedHare] = useState('');
     const [selectedHareDescription, setSelectedHareDescription] = useState('-select one of the ancestry groups below-');
     const [selectedHareValueAsConceptId, setSelectedHareValueAsConceptId] = useState(0);
+    const [selectedHareValueName, setSelectedHareValueName] = useState('');
 
     const [selectedCaseSize, setSelectedCaseSize] = useState(0);
     const [selectedControlSize, setSelectedControlSize] = useState(0);
@@ -496,7 +497,7 @@ const CaseControlGWAS = (props) => {
                                         <Dropdown.Item
                                             key={`${datum.concept_value}`}
                                             value={`${datum.concept_value}`}
-                                            onClick={() => {setSelectedHare(datum.concept_value); setSelectedHareValueAsConceptId(datum.concept_value_as_concept_id);}}
+                                            onClick={() => {setSelectedHare(datum.concept_value); setSelectedHareValueAsConceptId(datum.concept_value_as_concept_id); setSelectedHareValueName(datum.concept_value_name); }}
                                         >
                                             {<div>{getHareAndDescriptionUsingValueAndBreakDownItems(datum.concept_value, dataCase.concept_breakdown, dataControl.concept_breakdown)}</div>}
                                         </Dropdown.Item>
@@ -569,7 +570,7 @@ const CaseControlGWAS = (props) => {
             covariates: selectedCovariates.map((val) => val.prefixed_concept_id),
             out_prefix: Date.now().toString(),
             outcome: "-1",
-            hare_population: selectedHare,
+            hare_population: selectedHareValueName,
             hare_concept_id: hareConceptId,
             maf_threshold: Number(mafThreshold),
             imputation_score_cutoff: Number(imputationScore),
@@ -602,6 +603,7 @@ const CaseControlGWAS = (props) => {
         setSelectedControlCohort(undefined);
         setSelectedCaseCohort(undefined);
         setSelectedHare('');
+        setSelectedHareValueName('');
         setSelectedHareDescription('-select one of the ancestry groups below-');
         setSelectedHareValueAsConceptId(0);
         setGwasJobName('');
