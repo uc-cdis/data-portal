@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useLatestDocuments from '../../hooks/useDocumentItems';
 import { TopBarLink } from './TopBarItems';
 import TopBarMenu from './TopBarMenu';
 import './TopBar.css';
@@ -31,6 +32,8 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
     if (item.leftOrientation) leftItems.push(item);
     else rightItems.push(item);
 
+  const documents = useLatestDocuments();
+
   return (
     <nav className='top-bar' aria-label='Top Navigation'>
       <div>
@@ -57,21 +60,42 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
           />
         ))}
         <div className='top-bar__menu-group'>
-          {config.menuItems?.length > 0 && (
+          {(documents.data?.length > 0 || documents.isError) && (
             <TopBarMenu
               buttonIcon={<FontAwesomeIcon icon='circle-question' />}
               title='Documents'
             >
-              {config.menuItems.map((item) => (
-                <TopBarMenu.Item key={item.link}>
-                  <a href={item.link} target='_blank' rel='noopener noreferrer'>
-                    {item.name}
-                    {item.icon && (
-                      <i className={`g3-icon g3-icon--${item.icon}`} />
-                    )}
-                  </a>
-                </TopBarMenu.Item>
-              ))}
+              {documents.isError ? (
+                <>
+                  <TopBarMenu.Item>
+                    <small>
+                      <FontAwesomeIcon
+                        icon='triangle-exclamation'
+                        color='var(--g3-primary-btn__bg-color)'
+                      />{' '}
+                      Error in fetching documents...
+                    </small>
+                  </TopBarMenu.Item>
+                  <TopBarMenu.Item>
+                    <button onClick={documents.refresh} type='button'>
+                      Refresh documents
+                    </button>
+                  </TopBarMenu.Item>
+                </>
+              ) : (
+                documents.data.map((item) => (
+                  <TopBarMenu.Item key={item.formatted}>
+                    <a
+                      href={item.formatted}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      {item.name}
+                      <i className='g3-icon g3-icon--external-link' />
+                    </a>
+                  </TopBarMenu.Item>
+                ))
+              )}
             </TopBarMenu>
           )}
           {(location.pathname !== '/login' || username !== undefined) && (
