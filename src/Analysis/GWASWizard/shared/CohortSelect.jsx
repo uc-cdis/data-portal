@@ -8,7 +8,7 @@ import {
 } from 'antd';
 
 
-const CohortSelect = ({ selectedCohort, handleCohortSelect, sourceId }) => {
+const CohortSelect = ({ selectedCohort, handleCohortSelect, sourceId, caseSelected = '' }) => {
     const newCohortContent = (
         <div>
           <p>This button will open a new tab in your browser, outside of the Gen3 GWAS App and send you to OHDSI Atlas App</p>
@@ -31,7 +31,7 @@ const CohortSelect = ({ selectedCohort, handleCohortSelect, sourceId }) => {
                     <Popover content={chooseCohortContent} title='Choosing a cohort'>
                         <InfoCircleOutlined />
                     </Popover>
-                    <CohortDefinitions selectedCohort={selectedCohort} handleCohortSelect={handleCohortSelect} sourceId={sourceId}></CohortDefinitions>
+                    <CohortDefinitions selectedCohort={selectedCohort} handleCohortSelect={handleCohortSelect} sourceId={sourceId} caseSelected={caseSelected}></CohortDefinitions>
                 </div>
             </Space>
         </React.Fragment>
