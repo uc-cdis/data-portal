@@ -37,13 +37,17 @@ function updateDocsToReview(reviewStatus) {
   });
 }
 
+const MUST_REVIEW_DOC_TYPE_SET = new Set([
+  'acceptable-use-policy',
+  'privacy-policy',
+  'terms-and-conditions',
+]);
 /** @param {{ user: import('../types').UserState }} state */
 function userPopupSelector({ user }) {
   const isRegistered = user.authz?.['/portal']?.length > 0;
-  const docsToBeReviewed =
-    user.docs_to_be_reviewed.filter(
-      ({ type }) => type !== 'survival-user-agreement'
-    ) ?? [];
+  const docsToBeReviewed = (user.docs_to_be_reviewed ?? []).filter(({ type }) =>
+    MUST_REVIEW_DOC_TYPE_SET.has(type)
+  );
   return {
     docsToBeReviewed,
     shouldRegister: !isRegistered,
