@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Space, Popover } from 'antd';
-import { chooseCovariateCaption } from './constants';
+import { chooseCovariateCaption } from './captions';
 
 const CovariateSelect = ({ sourceId, selectedCovariates, handleCovariateSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
