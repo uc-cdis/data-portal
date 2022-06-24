@@ -15,28 +15,14 @@ import { createKey, deleteKey } from './actions.thunk';
 const { mockResponseOnce } = fetchMock;
 const expectedData = {
   key_id: 'f8733984-8164-4689-9c25-56707962d7e0',
-  api_key: {
-    sub: '1234567',
-    iss: 'dcfauth:56fc3842ccf2c1c7ec5c5d14',
-    iat: 1459458458,
-    exp: 1459487258,
-    jti: 'f8733984-8164-4689-9c25-56707962d7e0',
-    aud: ['refresh'],
-    azp: 'nIBmveVwqw0GNImXkIUwYD4uBg1Rnc98QlWLMm06',
-    access_aud: ['user'],
-    context: {
-      user: {
-        name: 'NIH_USERNAME',
-        projects: {
-          phs000178: ['member'],
-          phs000218: ['member', 'submitter'],
-        },
-        email: 'user@university.edu',
-      },
-    },
-  },
+  api_key: 'some_key',
 };
-const { jti, exp } = expectedData.api_key;
+const jtis = [
+  {
+    jti: 'f8733984-8164-4689-9c25-56707962d7e0',
+    exp: 1459487258,
+  },
+];
 
 function getMockStore() {
   return configureMockStore([thunk])({
@@ -49,7 +35,7 @@ function getMockStore() {
 
 test('creates, fetches, and lists user access keys', (done) => {
   mockResponseOnce(JSON.stringify(expectedData), { status: 200 });
-  mockResponseOnce(JSON.stringify({ jtis: [{ jti, exp }] }), { status: 200 });
+  mockResponseOnce(JSON.stringify({ jtis }), { status: 200 });
 
   const mockStore = getMockStore();
   render(
@@ -73,7 +59,7 @@ test('creates, fetches, and lists user access keys', (done) => {
         type: 'UPDATE_POPUP',
         payload: { saveTokenPopup: true },
       },
-      receiveUserProfile([{ jti, exp }]),
+      receiveUserProfile(jtis),
     ]);
     done();
   });
@@ -81,7 +67,7 @@ test('creates, fetches, and lists user access keys', (done) => {
 
 test('updates the redux store', (done) => {
   mockResponseOnce(JSON.stringify(expectedData), { status: 200 });
-  mockResponseOnce(JSON.stringify({ jtis: [{ jti, exp }] }), { status: 200 });
+  mockResponseOnce(JSON.stringify({ jtis }), { status: 200 });
 
   const mockStore = getMockStore();
   /** @type {import('redux-thunk').ThunkDispatch} */ (mockStore.dispatch)(
@@ -98,13 +84,14 @@ test('updates the redux store', (done) => {
         type: 'UPDATE_POPUP',
         payload: { saveTokenPopup: true },
       },
-      receiveUserProfile([{ jti, exp }]),
+      receiveUserProfile(jtis),
     ]);
     done();
   });
 });
 
 test('deletes key', (done) => {
+  const { jti, exp } = jtis[0];
   mockResponseOnce(JSON.stringify({ exp }), { status: 204 });
   mockResponseOnce(JSON.stringify({ jtis: [] }), { status: 200 });
 
