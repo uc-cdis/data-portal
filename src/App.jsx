@@ -18,6 +18,7 @@ import { fetchGraphvizLayout } from './DataDictionary/actions.thunk';
 import { fetchGuppySchema, fetchSchema } from './GraphQLEditor/actions.thunk';
 import {
   fetchDictionary,
+  fetchUnmappedFiles,
   fetchUnmappedFileStats,
 } from './Submission/actions.thunk';
 import { getProjectsList, getTransactionList } from './Submission/relayer';
@@ -103,16 +104,20 @@ function App() {
                   return matchPath(`/submission${pattern}`, location.pathname);
                 }
 
+                /** @type {import('./types').UserState} */
+                const { username } = state.user;
+                const start = STARTING_DID;
+
                 if (matchPattern('/')) {
-                  /** @type {import('./types').UserState} */
-                  const { username } = state.user;
-                  const start = STARTING_DID;
                   return Promise.all([
                     dispatch(getProjectsList()),
                     dispatch(getTransactionList()),
                     dispatch(fetchUnmappedFileStats(username, [], start)),
                   ]);
                 }
+
+                if (matchPattern('/files'))
+                  return dispatch(fetchUnmappedFiles(username, [], start));
 
                 if (matchPattern('/map') || matchPattern('/:project/*'))
                   return dispatch(fetchDictionary());
