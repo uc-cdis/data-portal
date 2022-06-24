@@ -22,11 +22,16 @@ import { fetchLogin } from './actions.thunk';
  */
 
 /**
+ * @typedef {Object} PreloadArgs
+ * @property {import('react-router').Location} [location]
+ */
+
+/**
  * @typedef {object} ProtectedContentProps
  * @property {JSX.Element} children required child component
  * @property {boolean} [isAdminOnly] default false - if true, redirect to index page
  * @property {boolean} [isLoginPage] default false
- * @property {(location?: import('react-router').Location) => Promise} [preload] optional async function to preload resources before rendering the child component
+ * @property {(args: PreloadArgs) => Promise} [preload] optional async function to preload resources before rendering the child component
  */
 
 /**
@@ -150,7 +155,7 @@ function ProtectedContent({
             newState.redirectTo && newState.redirectTo !== location.pathname;
 
           if (!shouldPreload || shouldRedirect) updateState(newState);
-          else preload(location).finally(() => updateState(newState));
+          else preload({ location }).finally(() => updateState(newState));
         });
   }, [location]);
 

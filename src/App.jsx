@@ -94,9 +94,9 @@ function App() {
           element={
             <ProtectedContent
               isAdminOnly
-              preload={(/** @type {import('react-router').Location} */ loc) => {
+              preload={({ location }) => {
                 function matchPattern(pattern) {
-                  return matchPath(`/submission${pattern}`, loc.pathname);
+                  return matchPath(`/submission${pattern}`, location.pathname);
                 }
 
                 if (matchPattern('/map') || matchPattern('/:project/*'))
