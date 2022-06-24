@@ -19,6 +19,7 @@ import { fetchGuppySchema, fetchSchema } from './GraphQLEditor/actions.thunk';
 import { fetchDictionary } from './Submission/actions.thunk';
 import { fetchAccess } from './UserProfile/actions.thunk';
 import useSessionMonitor from './hooks/useSessionMonitor';
+import { getProjectsList, getTransactionList } from './Submission/relayer';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
@@ -90,13 +91,22 @@ function App() {
           element={
             <ProtectedContent
               isAdminOnly
-              preload={(/** @type {import('react-router').Location} */ loc) =>
-                ['/submission/map', '/submission/:project/*'].some((pattern) =>
-                  matchPath(pattern, loc.pathname)
-                )
-                  ? dispatch(fetchDictionary())
-                  : Promise.resolve()
-              }
+              preload={(/** @type {import('react-router').Location} */ loc) => {
+                function matchPattern(pattern) {
+                  return matchPath(`/submission${pattern}`, loc.pathname);
+                }
+
+                if (matchPattern('/map') || matchPattern('/:project/*'))
+                  return dispatch(fetchDictionary());
+
+                if (matchPattern('/'))
+                  return Promise.all([
+                    dispatch(getProjectsList()),
+                    dispatch(getTransactionList()),
+                  ]);
+
+                return Promise.resolve();
+              }}
             >
               <Outlet />
             </ProtectedContent>
