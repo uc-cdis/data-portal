@@ -16,10 +16,14 @@ import {
 import { fetchVersionInfo } from './actions.thunk';
 import { fetchGraphvizLayout } from './DataDictionary/actions.thunk';
 import { fetchGuppySchema, fetchSchema } from './GraphQLEditor/actions.thunk';
-import { fetchDictionary } from './Submission/actions.thunk';
+import {
+  fetchDictionary,
+  fetchUnmappedFileStats,
+} from './Submission/actions.thunk';
+import { getProjectsList, getTransactionList } from './Submission/relayer';
+import { STARTING_DID } from './Submission/utils';
 import { fetchAccess } from './UserProfile/actions.thunk';
 import useSessionMonitor from './hooks/useSessionMonitor';
-import { getProjectsList, getTransactionList } from './Submission/relayer';
 import { fetchIndexPageCounts } from './Index/actions.thunk';
 
 // lazy-loaded pages
@@ -94,7 +98,7 @@ function App() {
           element={
             <ProtectedContent
               isAdminOnly
-              preload={({ location }) => {
+              preload={({ location, state }) => {
                 function matchPattern(pattern) {
                   return matchPath(`/submission${pattern}`, location.pathname);
                 }
@@ -102,11 +106,16 @@ function App() {
                 if (matchPattern('/map') || matchPattern('/:project/*'))
                   return dispatch(fetchDictionary());
 
-                if (matchPattern('/'))
+                if (matchPattern('/')) {
+                  /** @type {import('./types').UserState} */
+                  const { username } = state.user;
+                  const start = STARTING_DID;
                   return Promise.all([
                     dispatch(getProjectsList()),
                     dispatch(getTransactionList()),
+                    dispatch(fetchUnmappedFileStats(username, [], start)),
                   ]);
+                }
 
                 return Promise.resolve();
               }}
