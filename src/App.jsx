@@ -103,9 +103,6 @@ function App() {
                   return matchPath(`/submission${pattern}`, location.pathname);
                 }
 
-                if (matchPattern('/map') || matchPattern('/:project/*'))
-                  return dispatch(fetchDictionary());
-
                 if (matchPattern('/')) {
                   /** @type {import('./types').UserState} */
                   const { username } = state.user;
@@ -116,6 +113,9 @@ function App() {
                     dispatch(fetchUnmappedFileStats(username, [], start)),
                   ]);
                 }
+
+                if (matchPattern('/map') || matchPattern('/:project/*'))
+                  return dispatch(fetchDictionary());
 
                 return Promise.resolve();
               }}
