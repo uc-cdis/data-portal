@@ -5,6 +5,7 @@ import ReduxTransaction from './ReduxTransaction';
 import { getTransactionList, getProjectsList } from './relayer';
 
 function SubmissionPage() {
+  /** @type {import('redux-thunk').ThunkDispatch} */
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getProjectsList());
