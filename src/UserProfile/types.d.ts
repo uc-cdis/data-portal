@@ -8,7 +8,7 @@ export type UserProfileState = {
   delete_error: any;
   jtis: JtiData[];
   refreshCred: {
-    api_key: Object;
+    api_key: string;
     key_id: string;
     refreshCred?: string;
   };

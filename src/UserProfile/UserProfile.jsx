@@ -24,17 +24,7 @@ export const saveToFile = (savingStr, filename) => {
 };
 
 /** @typedef {import('../types').PopupState} PopupState */
-
-/**
- * @typedef {Object} UserProfileData
- * @property {any} [create_error]
- * @property {any} [delete_error]
- * @property {{ exp: number; jti: string; }[]} [jtis]
- * @property {{ api_key: string; key_id: string; refreshCred: string; }} [refreshCred]
- * @property {string} [requestDeleteJTI]
- * @property {number} [requestDeleteExp]
- * @property {string} [strRefreshCred]
- */
+/** @typedef {import('./types').UserProfileState} UserProfileState */
 
 /**
  * @typedef {Object} UserProfileProps
@@ -46,7 +36,7 @@ export const saveToFile = (savingStr, filename) => {
  * @property {(state: Partial<PopupState>) => void} onUpdatePopup
  * @property {Partial<PopupState>} popups
  * @property {import('./UserInformation').UserInformationProps} userInformation
- * @property {UserProfileData} userProfile
+ * @property {UserProfileState} userProfile
  */
 
 /** @param {UserProfileProps} props */
@@ -207,6 +197,8 @@ UserProfile.propTypes = {
     requestDeleteJTI: PropTypes.string,
     requestDeleteExp: PropTypes.number,
     strRefreshCred: PropTypes.any,
+    request_delete_key: PropTypes.any,
+    userProfile_error: PropTypes.any,
   }).isRequired,
 };
 
