@@ -8,12 +8,6 @@ import KeyTable from '../components/tables/KeyTable';
 import ReduxUserInformation from './ReduxUserInformation';
 import './UserProfile.css';
 
-const NO_ACCESS_MSG = (
-  <>
-    You have no access to storage service. Please contact the administrator (
-    <a href={`mailto:${contactEmail}`}>{contactEmail}</a>) to get it!
-  </>
-);
 const NO_API_KEY = "You don't have any API key. Please create one!";
 const CONFIRM_DELETE_MSG = 'Are you sure you want to make this key inactive?';
 const SECRET_KEY_MSG =
@@ -83,8 +77,13 @@ function UserProfile({
 
   return (
     <div className='user-profile'>
-      {userProfile.jtis === undefined && <div>{NO_ACCESS_MSG}</div>}
-      {userProfile.jtis !== undefined && userProfile.jtis !== [] && (
+      {userProfile.jtis === undefined ? (
+        <div>
+          You have no access to storage service. Please contact the
+          administrator (<a href={`mailto:${contactEmail}`}>{contactEmail}</a>)
+          to get it!
+        </div>
+      ) : (
         <ul className='user-profile__key-pair-table'>
           {popups.deleteTokenPopup === true && (
             <Popup
@@ -155,8 +154,9 @@ function UserProfile({
             buttonType='primary'
             rightIcon='key'
           />
-          {userProfile.jtis.length === 0 && <div>{NO_API_KEY}</div>}
-          {userProfile.jtis && (
+          {userProfile.jtis.length === 0 ? (
+            <div>{NO_API_KEY}</div>
+          ) : (
             <KeyTable
               jtis={userProfile.jtis}
               onDelete={(jti) => {
