@@ -33,9 +33,9 @@ const GWASJob = ({ workflow, refreshWorkflows }) => {
 
   const getActionButtons = (phase, workflowName) => {
     const actionButtons = [];
-    var actionUrl;
-    var buttonText;
-    var buttonClickHandler;
+    let actionUrl;
+    let buttonText;
+    let buttonClickHandler;
 
     if (phase === 'Succeeded') {
       actionUrl = `${gwasWorkflowPath}status/${workflowName}`;
