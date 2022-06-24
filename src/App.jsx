@@ -20,6 +20,7 @@ import { fetchDictionary } from './Submission/actions.thunk';
 import { fetchAccess } from './UserProfile/actions.thunk';
 import useSessionMonitor from './hooks/useSessionMonitor';
 import { getProjectsList, getTransactionList } from './Submission/relayer';
+import { fetchIndexPageCounts } from './Index/actions.thunk';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
@@ -73,7 +74,9 @@ function App() {
         <Route
           index
           element={
-            <ProtectedContent>
+            <ProtectedContent
+              preload={async () => dispatch(fetchIndexPageCounts())}
+            >
               <IndexPage />
             </ProtectedContent>
           }
