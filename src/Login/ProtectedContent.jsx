@@ -24,6 +24,7 @@ import { fetchLogin } from './actions.thunk';
 /**
  * @typedef {Object} PreloadArgs
  * @property {import('react-router').Location} [location]
+ * @property {any} [state]
  */
 
 /**
@@ -155,7 +156,10 @@ function ProtectedContent({
             newState.redirectTo && newState.redirectTo !== location.pathname;
 
           if (!shouldPreload || shouldRedirect) updateState(newState);
-          else preload({ location }).finally(() => updateState(newState));
+          else
+            preload({ location, state: reduxStore.getState() }).finally(() =>
+              updateState(newState)
+            );
         });
   }, [location]);
 
