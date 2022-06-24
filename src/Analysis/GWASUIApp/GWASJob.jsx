@@ -27,21 +27,39 @@ const GWASJob = ({ workflow, refreshWorkflows }) => {
     }
   }
 
+  async function handleWorkflowLogs(url) {
+    window.open(url, '_blank');
+  }
+
   const getActionButtons = (phase, workflowName) => {
     const actionButtons = [];
+    let actionUrl;
+    let buttonText;
+    let buttonClickHandler;
+
     if (phase === 'Succeeded') {
+      actionUrl = `${gwasWorkflowPath}status/${workflowName}`;
+      buttonText = 'download outputs';
+      buttonClickHandler = handleWorkflowOutput;
+    } else if (phase === 'Failed') {
+      actionUrl = `${gwasWorkflowPath}logs/${workflowName}`;
+      buttonText = 'view logs';
+      buttonClickHandler = handleWorkflowLogs;
+    }
+    if (['Succeeded','Failed'].includes(phase)) {
       actionButtons.unshift(
         <Button
           primary='true'
           type='link'
           size='small'
           className='GWAS-completedBtn'
+          style={{ width: '150px' }}
           onClick={(event) => {
             event.stopPropagation();
-            handleWorkflowOutput(`${gwasWorkflowPath}status/${workflowName}`);
+            buttonClickHandler(actionUrl);
           }}
         >
-          download outputs
+          {buttonText}
         </Button>,
       );
     }
