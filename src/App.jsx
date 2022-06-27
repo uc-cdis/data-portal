@@ -119,7 +119,16 @@ function App() {
                 if (matchPattern('/files'))
                   return dispatch(fetchUnmappedFiles(username, [], start));
 
-                if (matchPattern('/map') || matchPattern('/:project/*'))
+                /** @type {import('./Submission/types').SubmissionState} */
+                const { filesToMap } = state.submission;
+
+                if (matchPattern('/map') && filesToMap.length !== 0)
+                  return Promise.all([
+                    dispatch(fetchDictionary()),
+                    dispatch(getProjectsList()),
+                  ]);
+
+                if (matchPattern('/:project/*'))
                   return dispatch(fetchDictionary());
 
                 return Promise.resolve();
