@@ -17,7 +17,7 @@ import './TopBar.css';
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
  * @typedef {Object} TopBarProps
- * @property {{ items: TopBarItem[]; menuItems?: TopBarItem[] }} config
+ * @property {{ items: TopBarItem[] }} config
  * @property {boolean} isAdminUser
  * @property {React.MouseEventHandler<HTMLButtonElement>} onLogoutClick
  * @property {string} [username]
@@ -145,7 +145,6 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
 TopBar.propTypes = {
   config: PropTypes.exact({
     items: PropTypes.array.isRequired,
-    menuItems: PropTypes.array,
   }).isRequired,
   isAdminUser: PropTypes.bool.isRequired,
   onLogoutClick: PropTypes.func.isRequired,
