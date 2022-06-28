@@ -6,16 +6,13 @@ import {
   submissionApiPath,
   useIndexdAuthz,
 } from '../localconf';
-import { predictFileType } from '../utils';
 import {
   receiveCounts,
   receiveDictionary,
   receiveSubmission,
   receiveUnmappedFiles,
   receiveUnmappedFileStatistics,
-  requestUpload,
   resetSubmissionStatus,
-  updateFile,
 } from './actions';
 import { buildCountsQuery, FETCH_LIMIT } from './utils';
 
@@ -247,27 +244,4 @@ export const submitToServer =
     }
 
     return recursiveFetch(fileArray);
-  };
-
-/**
- * @param {SubmissionState['file']} value
- * @param {SubmissionState['file_type']} type
- */
-export const uploadTSV =
-  (value, type) => (/** @type {Dispatch} */ dispatch) => {
-    dispatch(requestUpload({ file: value, file_type: type }));
-  };
-
-/**
- * @param {SubmissionState['file']} value
- * @param {string} [fileType]
- */
-export const updateFileContent =
-  (value, fileType) => (/** @type {Dispatch} */ dispatch) => {
-    dispatch(
-      updateFile({
-        file: value,
-        file_type: predictFileType(value, fileType),
-      })
-    );
   };
