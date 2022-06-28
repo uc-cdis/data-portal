@@ -13,7 +13,7 @@ import {
   receiveUnmappedFiles,
   receiveUnmappedFileStatistics,
 } from './actions';
-import { buildCountsQuery, FETCH_LIMIT } from './utils';
+import { buildCountsQuery, FETCH_LIMIT, getFileChunksToSubmit } from './utils';
 
 /** @typedef {import('redux').AnyAction} AnyAction */
 /** @typedef {import('redux').Dispatch} Dispatch */
@@ -158,78 +158,29 @@ export const getCounts =
 export const submitToServer =
   ({ file, fileType, fullProject, callback }) =>
   /** @param {Dispatch} dispatch */
-  (dispatch) => {
-    if (!file) return Promise.reject(new Error('No file to submit'));
+  async (dispatch) => {
+    if (!file) throw new Error('No file to submit');
 
-    /** @type {string[]} */
-    const fileArray = [];
-    const path = fullProject.split('-');
-    const program = path[0];
-    const project = path.slice(1).join('-');
-    const method = /* path === 'graphql' ? 'POST' : */ 'PUT';
+    const [program, ...rest] = fullProject.split('-');
+    const path =
+      program === '_root'
+        ? submissionApiPath
+        : `${submissionApiPath + program}/${rest.join('-')}/`;
+    const method = /* fullProject === 'graphql' ? 'POST' : */ 'PUT';
 
-    if (fileType === 'text/tab-separated-values') {
-      const fileSplited = file.split(/\r\n?|\n/g);
-      if (fileSplited.length > lineLimit && lineLimit > 0) {
-        let fileHeader = fileSplited[0];
-        fileHeader += '\n';
-        let count = lineLimit;
-        let fileChunk = fileHeader;
-
-        for (let i = 1; i < fileSplited.length; i += 1) {
-          if (fileSplited[i] !== '') {
-            fileChunk += fileSplited[i];
-            fileChunk += '\n';
-            count -= 1;
-          }
-          if (count === 0) {
-            fileArray.push(fileChunk);
-            fileChunk = fileHeader;
-            count = lineLimit;
-          }
-        }
-        if (fileChunk !== fileHeader) {
-          fileArray.push(fileChunk);
-        }
-      } else {
-        fileArray.push(file);
-      }
-    } else {
-      // remove line break in json file
-      fileArray.push(file.replace(/\r\n?|\n/g, ''));
-    }
-
-    let subUrl = submissionApiPath;
-    if (program !== '_root') {
-      subUrl = `${subUrl + program}/${project}/`;
-    }
-
-    const totalChunk = fileArray.length;
-
-    /** @param {string[]} chunkArray */
-    function recursiveFetch(chunkArray) {
-      if (chunkArray.length === 0) {
-        return null;
-      }
-
-      return fetchWithCreds({
-        path: subUrl,
+    const fileChunks = getFileChunksToSubmit({ file, fileType, lineLimit });
+    const chunkTotal = fileChunks.length;
+    for await (const fileChunk of fileChunks) {
+      const { data, status } = await fetchWithCreds({
+        path,
         method,
         customHeaders: new Headers({ 'Content-Type': fileType }),
-        body: chunkArray.shift(),
+        body: fileChunk,
         onError: () => dispatch(connectionError()),
-      }).then(({ status, data }) => {
-        dispatch(
-          receiveSubmission({
-            data,
-            submit_status: status,
-            submit_total: totalChunk,
-          })
-        );
-        callback?.();
-        recursiveFetch(chunkArray);
       });
-    }
 
-    return recursiveFetch(fileArray);
+      const payload = { data, submit_status: status, submit_total: chunkTotal };
+      dispatch(receiveSubmission(payload));
+      callback?.();
+    }
   };

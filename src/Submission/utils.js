@@ -86,5 +86,49 @@ export const getDictionaryWithExcludeSystemProperties = (dictionary) => {
   return ret;
 };
 
+/**
+ * @param {Object} args
+ * @param {string} args.file
+ * @param {string} args.fileType
+ * @param {number} args.lineLimit
+ */
+export function getFileChunksToSubmit({ file, fileType, lineLimit }) {
+  /** @type {string[]} */
+  const fileChunks = [];
+
+  if (fileType === 'text/tab-separated-values') {
+    const fileSplited = file.split(/\r\n?|\n/g);
+    if (fileSplited.length > lineLimit && lineLimit > 0) {
+      let fileHeader = fileSplited[0];
+      fileHeader += '\n';
+      let count = lineLimit;
+      let fileChunk = fileHeader;
+
+      for (let i = 1; i < fileSplited.length; i += 1) {
+        if (fileSplited[i] !== '') {
+          fileChunk += fileSplited[i];
+          fileChunk += '\n';
+          count -= 1;
+        }
+        if (count === 0) {
+          fileChunks.push(fileChunk);
+          fileChunk = fileHeader;
+          count = lineLimit;
+        }
+      }
+      if (fileChunk !== fileHeader) {
+        fileChunks.push(fileChunk);
+      }
+    } else {
+      fileChunks.push(file);
+    }
+  } else {
+    // remove line break in json file
+    fileChunks.push(file.replace(/\r\n?|\n/g, ''));
+  }
+
+  return fileChunks;
+}
+
 export const FETCH_LIMIT = 1024;
 export const STARTING_DID = '00000000-0000-0000-0000-000000000000';
