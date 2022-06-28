@@ -150,35 +150,25 @@ export const getCounts =
 
 /**
  * @param {Object} args
+ * @param {string} args.file
+ * @param {string} args.fileType
  * @param {string} args.fullProject
- * @param {string} [args.methodIn]
  * @param {() => void} [args.callback]
  */
 export const submitToServer =
-  ({ fullProject, methodIn = 'PUT', callback }) =>
-  /**
-   * @param {Dispatch} dispatch
-   * @param {() => { submission: SubmissionState }} getState
-   */
-  (dispatch, getState) => {
+  ({ file, fileType, fullProject, callback }) =>
+  /** @param {Dispatch} dispatch */
+  (dispatch) => {
+    if (!file) return Promise.reject(new Error('No file to submit'));
+
     /** @type {string[]} */
     const fileArray = [];
     const path = fullProject.split('-');
     const program = path[0];
     const project = path.slice(1).join('-');
-    const { submission } = getState();
-    const method = /* path === 'graphql' ? 'POST' : */ methodIn;
+    const method = /* path === 'graphql' ? 'POST' : */ 'PUT';
 
-    let { file } = submission;
-    if (!file) {
-      return Promise.reject(new Error('No file to submit'));
-    }
-    if (submission.file_type !== 'text/tab-separated-values') {
-      // remove line break in json file
-      file = file.replace(/\r\n?|\n/g, '');
-    }
-
-    if (submission.file_type === 'text/tab-separated-values') {
+    if (fileType === 'text/tab-separated-values') {
       const fileSplited = file.split(/\r\n?|\n/g);
       if (fileSplited.length > lineLimit && lineLimit > 0) {
         let fileHeader = fileSplited[0];
@@ -205,7 +195,8 @@ export const submitToServer =
         fileArray.push(file);
       }
     } else {
-      fileArray.push(file);
+      // remove line break in json file
+      fileArray.push(file.replace(/\r\n?|\n/g, ''));
     }
 
     let subUrl = submissionApiPath;
@@ -224,20 +215,20 @@ export const submitToServer =
       return fetchWithCreds({
         path: subUrl,
         method,
-        customHeaders: new Headers({ 'Content-Type': submission.file_type }),
+        customHeaders: new Headers({ 'Content-Type': fileType }),
         body: chunkArray.shift(),
         onError: () => dispatch(connectionError()),
-      })
-        .then(recursiveFetch(chunkArray))
-        .then(({ status, data }) =>
+      }).then(({ status, data }) => {
+        dispatch(
           receiveSubmission({
             data,
             submit_status: status,
             submit_total: totalChunk,
           })
-        )
-        .then((msg) => dispatch(msg))
-        .then(callback);
+        );
+        callback?.();
+        recursiveFetch(chunkArray);
+      });
     }
 
     return recursiveFetch(fileArray);

@@ -21,10 +21,16 @@ const mapDispatchToProps = (dispatch) => ({
   onUploadClick: (file, fileType) => {
     dispatch(requestUpload({ file, file_type: fileType }));
   },
-  /** @param {string} project */
-  onSubmitClick: (project, callback) => {
+  /**
+   * @param {Object} args
+   * @param {string} args.file
+   * @param {string} args.fileType
+   * @param {string} args.fullProject
+   * @param {() => void} [args.callback]
+   */
+  onSubmitClick: (args) => {
     dispatch(resetSubmissionStatus());
-    dispatch(submitToServer({ fullProject: project, callback }));
+    dispatch(submitToServer(args));
   },
   /** @param {SubmissionState['file']} file */
   onFileChange: (file) => {
