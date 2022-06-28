@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import SubmitTSV from './SubmitTSV';
-import { lineLimit } from '../localconf';
 import { requestUpload, resetSubmissionStatus, updateFile } from './actions';
 import { getCounts, submitFileChunk } from './actions.thunk';
 import { predictFileType } from '../utils';
@@ -33,7 +32,7 @@ const mapDispatchToProps = (dispatch) => ({
   onSubmitClick: ({ file, fileType, fullProject, callback }) => {
     dispatch(resetSubmissionStatus());
 
-    const fileChunks = getFileChunksToSubmit({ file, fileType, lineLimit });
+    const fileChunks = getFileChunksToSubmit({ file, fileType });
     const fileChunkTotal = fileChunks.length;
     async function submitFile() {
       for await (const fileChunk of fileChunks) {

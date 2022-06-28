@@ -1,3 +1,5 @@
+import { lineLimit } from '../localconf';
+
 /** @typedef {import('./types').SubmissionState} SubmissionState */
 
 /**
@@ -90,9 +92,8 @@ export const getDictionaryWithExcludeSystemProperties = (dictionary) => {
  * @param {Object} args
  * @param {string} args.file
  * @param {string} args.fileType
- * @param {number} args.lineLimit
  */
-export function getFileChunksToSubmit({ file, fileType, lineLimit }) {
+export function getFileChunksToSubmit({ file, fileType }) {
   /** @type {string[]} */
   const fileChunks = [];
 
