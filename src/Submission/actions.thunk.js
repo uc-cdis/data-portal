@@ -1,11 +1,6 @@
 import { connectionError, fetchErrored } from '../actions';
 import { fetchWithCreds } from '../utils.fetch';
-import {
-  indexdPath,
-  lineLimit,
-  submissionApiPath,
-  useIndexdAuthz,
-} from '../localconf';
+import { indexdPath, submissionApiPath, useIndexdAuthz } from '../localconf';
 import {
   receiveCounts,
   receiveDictionary,
@@ -13,7 +8,7 @@ import {
   receiveUnmappedFiles,
   receiveUnmappedFileStatistics,
 } from './actions';
-import { buildCountsQuery, FETCH_LIMIT, getFileChunksToSubmit } from './utils';
+import { buildCountsQuery, FETCH_LIMIT } from './utils';
 
 /** @typedef {import('redux').AnyAction} AnyAction */
 /** @typedef {import('redux').Dispatch} Dispatch */
@@ -150,17 +145,15 @@ export const getCounts =
 
 /**
  * @param {Object} args
- * @param {string} args.file
+ * @param {string} args.fileChunk
+ * @param {number} args.fileChunkTotal
  * @param {string} args.fileType
  * @param {string} args.fullProject
- * @param {() => void} [args.callback]
  */
-export const submitToServer =
-  ({ file, fileType, fullProject, callback }) =>
+export const submitFileChunk =
+  ({ fileChunk, fileChunkTotal, fileType, fullProject }) =>
   /** @param {Dispatch} dispatch */
   async (dispatch) => {
-    if (!file) throw new Error('No file to submit');
-
     const [program, ...rest] = fullProject.split('-');
     const path =
       program === '_root'
@@ -168,19 +161,18 @@ export const submitToServer =
         : `${submissionApiPath + program}/${rest.join('-')}/`;
     const method = /* fullProject === 'graphql' ? 'POST' : */ 'PUT';
 
-    const fileChunks = getFileChunksToSubmit({ file, fileType, lineLimit });
-    const chunkTotal = fileChunks.length;
-    for await (const fileChunk of fileChunks) {
-      const { data, status } = await fetchWithCreds({
-        path,
-        method,
-        customHeaders: new Headers({ 'Content-Type': fileType }),
-        body: fileChunk,
-        onError: () => dispatch(connectionError()),
-      });
+    const { data, status } = await fetchWithCreds({
+      path,
+      method,
+      customHeaders: new Headers({ 'Content-Type': fileType }),
+      body: fileChunk,
+      onError: () => dispatch(connectionError()),
+    });
 
-      const payload = { data, submit_status: status, submit_total: chunkTotal };
-      dispatch(receiveSubmission(payload));
-      callback?.();
-    }
+    const payload = {
+      data,
+      submit_status: status,
+      submit_total: fileChunkTotal,
+    };
+    dispatch(receiveSubmission(payload));
   };

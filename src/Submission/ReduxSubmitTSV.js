@@ -1,8 +1,10 @@
 import { connect } from 'react-redux';
 import SubmitTSV from './SubmitTSV';
+import { lineLimit } from '../localconf';
 import { requestUpload, resetSubmissionStatus, updateFile } from './actions';
-import { getCounts, submitToServer } from './actions.thunk';
+import { getCounts, submitFileChunk } from './actions.thunk';
 import { predictFileType } from '../utils';
+import { getFileChunksToSubmit } from './utils';
 
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('./types').SubmissionState} SubmissionState */
@@ -28,9 +30,19 @@ const mapDispatchToProps = (dispatch) => ({
    * @param {string} args.fullProject
    * @param {() => void} [args.callback]
    */
-  onSubmitClick: (args) => {
+  onSubmitClick: ({ file, fileType, fullProject, callback }) => {
     dispatch(resetSubmissionStatus());
-    dispatch(submitToServer(args));
+
+    const fileChunks = getFileChunksToSubmit({ file, fileType, lineLimit });
+    const fileChunkTotal = fileChunks.length;
+    async function submitFile() {
+      for await (const fileChunk of fileChunks) {
+        const args = { fileChunk, fileChunkTotal, fileType, fullProject };
+        await dispatch(submitFileChunk(args));
+        callback?.();
+      }
+    }
+    submitFile();
   },
   /** @param {SubmissionState['file']} file */
   onFileChange: (file) => {
