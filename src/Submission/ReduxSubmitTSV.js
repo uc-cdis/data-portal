@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import SubmitTSV from './SubmitTSV';
-import { requestUpload, updateFile } from './actions';
+import { requestUpload, resetSubmissionStatus, updateFile } from './actions';
 import { getCounts, submitToServer } from './actions.thunk';
 import { predictFileType } from '../utils';
 
@@ -23,6 +23,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
   /** @param {string} project */
   onSubmitClick: (project, callback) => {
+    dispatch(resetSubmissionStatus());
     dispatch(submitToServer({ fullProject: project, callback }));
   },
   /** @param {SubmissionState['file']} file */

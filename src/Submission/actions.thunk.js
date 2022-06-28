@@ -12,7 +12,6 @@ import {
   receiveSubmission,
   receiveUnmappedFiles,
   receiveUnmappedFileStatistics,
-  resetSubmissionStatus,
 } from './actions';
 import { buildCountsQuery, FETCH_LIMIT } from './utils';
 
@@ -162,8 +161,6 @@ export const submitToServer =
    * @param {() => { submission: SubmissionState }} getState
    */
   (dispatch, getState) => {
-    dispatch(resetSubmissionStatus());
-
     /** @type {string[]} */
     const fileArray = [];
     const path = fullProject.split('-');
