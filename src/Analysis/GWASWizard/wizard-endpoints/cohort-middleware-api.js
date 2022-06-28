@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cohortMiddlewarePath, wtsPath } from '../../../localconf';
 import { fetchWithCreds } from '../../../actions';
 import { allowedConceptTypes } from '../shared/constants';
+import { headers } from "../../../configs";
 
 export const fetchCohortDefinitions = async(sourceId) => {
     const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;

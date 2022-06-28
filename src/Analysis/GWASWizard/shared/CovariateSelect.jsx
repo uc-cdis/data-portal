@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { Space, Popover } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import { chooseCovariateCaption } from './captions';
+import Covariates from './Covariates';
 
 const CovariateSelect = ({ sourceId, selectedCovariates, handleCovariateSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [covariatePage, setCovariatePage] = useState(1);
 
     const handleCovariatePage = () => {
+        console.log('hi handle cov');
     }
 
     return (

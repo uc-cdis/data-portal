@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import CohortSelect from './shared/CohortSelect';
+import CovariateSelect from './shared/CovariateSelect';
 import { caseControlSteps } from './shared/constants';
 import { useSourceFetch } from "./wizard-endpoints/cohort-middleware-api";
 import {
@@ -16,6 +17,7 @@ const GWASCaseControl = () => {
     const [selectedCaseCohort, setSelectedCaseCohort] = useState(undefined);
     const [selectedControlCohort, setSelectedControlCohort] = useState(undefined);
     const [selectedCovariates, setSelectedCovariates] = useState([]);
+
     const { loading, sourceId } = useSourceFetch();
 
     const handleCaseCohortSelect = (cohort) => {
@@ -39,7 +41,7 @@ const GWASCaseControl = () => {
             case 1:
                 return (<CohortSelect selectedCohort={selectedControlCohort} handleCohortSelect={handleControlCohortSelect} sourceId={sourceId} caseSelected={selectedCaseCohort ? selectedCaseCohort.cohort_name : ''}></CohortSelect>);
             case 2:
-                return (<CovariateSelect selectedCovariates={selectedCovariates} handleCovariateSelect={handleCovariateSelect}></CovariateSelect>)
+                return (<CovariateSelect selectedCovariates={selectedCovariates} handleCovariateSelect={handleCovariateSelect} sourceId={sourceId}></CovariateSelect>)
         }
     }
 
