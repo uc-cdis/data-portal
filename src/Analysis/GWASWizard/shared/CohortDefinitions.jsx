@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { fetchCohortDefinitions, queryConfig } from "../wizard-endpoints/cohort-middleware-api";
 import { useQuery } from 'react-query';
 import { Spinner } from "../../../components/Spinner";
