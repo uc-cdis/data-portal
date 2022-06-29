@@ -1,10 +1,9 @@
 import { connect } from 'react-redux';
 import ExplorerButtonGroup from '.';
-import { setJobStatusInterval } from '../../actions';
+import { resetJob, setJobStatusInterval } from '../../actions';
 import {
   dispatchJob,
   fetchJobResult,
-  resetJobState,
   checkJobStatus,
 } from '../../actions.thunk';
 import { asyncSetInterval } from '../../utils';
@@ -30,7 +29,7 @@ const mapDispatchToProps = (dispatch) => ({
   /** @param {string} jobId */
   fetchJobResult: (jobId) => dispatch(fetchJobResult(jobId)),
   resetJobState: () => {
-    dispatch(resetJobState());
+    dispatch(resetJob());
   },
 });
 const ReduxExplorerButtonGroup = connect(

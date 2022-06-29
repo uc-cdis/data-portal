@@ -7,7 +7,6 @@ import {
   receiveProjects,
   receiveUser,
   receiveUserAccess,
-  resetJob,
   updatePopup,
 } from './actions';
 import {
@@ -89,9 +88,6 @@ export const fetchJobResult = (jobId) => (/** @type {Dispatch} */ dispatch) =>
     method: 'GET',
     onError: () => dispatch(connectionError()),
   }).then((data) => data);
-
-export const resetJobState = () => (/** @type {Dispatch} */ dispatch) =>
-  dispatch(resetJob());
 
 /* SLICE: PROJECT */
 /**
