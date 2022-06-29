@@ -1,21 +1,12 @@
 import { connectionError, fetchErrored } from '../actions';
 import { fetchWithCreds } from '../utils.fetch';
-import {
-  indexdPath,
-  lineLimit,
-  submissionApiPath,
-  useIndexdAuthz,
-} from '../localconf';
-import { predictFileType } from '../utils';
+import { indexdPath, submissionApiPath, useIndexdAuthz } from '../localconf';
 import {
   receiveCounts,
   receiveDictionary,
   receiveSubmission,
   receiveUnmappedFiles,
   receiveUnmappedFileStatistics,
-  requestUpload,
-  resetSubmissionStatus,
-  updateFile,
 } from './actions';
 import { buildCountsQuery, FETCH_LIMIT } from './utils';
 
@@ -154,120 +145,34 @@ export const getCounts =
 
 /**
  * @param {Object} args
+ * @param {string} args.fileChunk
+ * @param {number} args.fileChunkTotal
+ * @param {string} args.fileType
  * @param {string} args.fullProject
- * @param {string} [args.methodIn]
- * @param {() => void} [args.callback]
  */
-export const submitToServer =
-  ({ fullProject, methodIn = 'PUT', callback }) =>
-  /**
-   * @param {Dispatch} dispatch
-   * @param {() => { submission: SubmissionState }} getState
-   */
-  (dispatch, getState) => {
-    dispatch(resetSubmissionStatus());
+export const submitFileChunk =
+  ({ fileChunk, fileChunkTotal, fileType, fullProject }) =>
+  /** @param {Dispatch} dispatch */
+  async (dispatch) => {
+    const [program, ...rest] = fullProject.split('-');
+    const path =
+      program === '_root'
+        ? submissionApiPath
+        : `${submissionApiPath + program}/${rest.join('-')}/`;
+    const method = /* fullProject === 'graphql' ? 'POST' : */ 'PUT';
 
-    /** @type {string[]} */
-    const fileArray = [];
-    const path = fullProject.split('-');
-    const program = path[0];
-    const project = path.slice(1).join('-');
-    const { submission } = getState();
-    const method = /* path === 'graphql' ? 'POST' : */ methodIn;
+    const { data, status } = await fetchWithCreds({
+      path,
+      method,
+      customHeaders: new Headers({ 'Content-Type': fileType }),
+      body: fileChunk,
+      onError: () => dispatch(connectionError()),
+    });
 
-    let { file } = submission;
-    if (!file) {
-      return Promise.reject(new Error('No file to submit'));
-    }
-    if (submission.file_type !== 'text/tab-separated-values') {
-      // remove line break in json file
-      file = file.replace(/\r\n?|\n/g, '');
-    }
-
-    if (submission.file_type === 'text/tab-separated-values') {
-      const fileSplited = file.split(/\r\n?|\n/g);
-      if (fileSplited.length > lineLimit && lineLimit > 0) {
-        let fileHeader = fileSplited[0];
-        fileHeader += '\n';
-        let count = lineLimit;
-        let fileChunk = fileHeader;
-
-        for (let i = 1; i < fileSplited.length; i += 1) {
-          if (fileSplited[i] !== '') {
-            fileChunk += fileSplited[i];
-            fileChunk += '\n';
-            count -= 1;
-          }
-          if (count === 0) {
-            fileArray.push(fileChunk);
-            fileChunk = fileHeader;
-            count = lineLimit;
-          }
-        }
-        if (fileChunk !== fileHeader) {
-          fileArray.push(fileChunk);
-        }
-      } else {
-        fileArray.push(file);
-      }
-    } else {
-      fileArray.push(file);
-    }
-
-    let subUrl = submissionApiPath;
-    if (program !== '_root') {
-      subUrl = `${subUrl + program}/${project}/`;
-    }
-
-    const totalChunk = fileArray.length;
-
-    /** @param {string[]} chunkArray */
-    function recursiveFetch(chunkArray) {
-      if (chunkArray.length === 0) {
-        return null;
-      }
-
-      return fetchWithCreds({
-        path: subUrl,
-        method,
-        customHeaders: new Headers({ 'Content-Type': submission.file_type }),
-        body: chunkArray.shift(),
-        onError: () => dispatch(connectionError()),
-      })
-        .then(recursiveFetch(chunkArray))
-        .then(({ status, data }) =>
-          receiveSubmission({
-            data,
-            submit_status: status,
-            submit_total: totalChunk,
-          })
-        )
-        .then((msg) => dispatch(msg))
-        .then(callback);
-    }
-
-    return recursiveFetch(fileArray);
-  };
-
-/**
- * @param {SubmissionState['file']} value
- * @param {SubmissionState['file_type']} type
- */
-export const uploadTSV =
-  (value, type) => (/** @type {Dispatch} */ dispatch) => {
-    dispatch(requestUpload({ file: value, file_type: type }));
-  };
-
-/**
- * @param {SubmissionState['file']} value
- * @param {string} [fileType]
- */
-export const updateFileContent =
-  (value, fileType) => (/** @type {Dispatch} */ dispatch) => {
-    dispatch(
-      updateFile({
-        file: value,
-        file_type: predictFileType(value, fileType),
-      })
-    );
+    const payload = {
+      data,
+      submit_status: status,
+      submit_total: fileChunkTotal,
+    };
+    dispatch(receiveSubmission(payload));
   };
