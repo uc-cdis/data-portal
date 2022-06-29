@@ -108,21 +108,13 @@ export const fetchProjects =
         });
 
 /* SLICE: USER */
-/** @param {import('./types').FetchHelperResult} result */
-export const handleFetchUser = ({ status, data }) => {
-  switch (status) {
-    case 200:
-      return receiveUser(data);
-    case 401:
-      return updatePopup({ authPopup: true });
-    default:
-      return fetchErrored(data.error);
-  }
-};
-
 export const fetchUser = () => (/** @type {Dispatch} */ dispatch) =>
-  fetchCreds({ onError: () => dispatch(connectionError()) }).then((res) =>
-    dispatch(handleFetchUser(res))
+  fetchCreds({ onError: () => dispatch(connectionError()) }).then(
+    ({ status, data }) => {
+      if (status === 200) return dispatch(receiveUser(data));
+      if (status === 401) return dispatch(updatePopup({ authPopup: true }));
+      return dispatch(fetchErrored(data.error));
+    }
   );
 
 /** @param {boolean} displayAuthPopup */
