@@ -81,14 +81,6 @@ export const checkJobStatus =
       });
   };
 
-/** @param {string} jobId */
-export const fetchJobResult = (jobId) => (/** @type {Dispatch} */ dispatch) =>
-  fetchWithCreds({
-    path: `${jobapiPath}output?UID=${jobId}`,
-    method: 'GET',
-    onError: () => dispatch(connectionError()),
-  }).then((data) => data);
-
 /* SLICE: PROJECT */
 /**
  * redux-thunk support asynchronous redux actions via 'thunks' -
