@@ -7,7 +7,7 @@ async function fetchLatestDocuments() {
 }
 
 const initialData =
-  /** @type {import('../UserPopup').UserReviewDocument[]} */ ([]);
+  /** @type {import('../UserPopup/types').UserReviewDocument[]} */ ([]);
 
 export default function useLatestDocuments() {
   const [data, setData] = useState(initialData);
