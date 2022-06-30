@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash.clonedeep';
 
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
-/** @typedef {import("../types").ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').FilterSetWorkspaceState} FilterSetWorkspaceState */
 /** @typedef {import('./types').FilterSetWorkspaceAction} FilterSetWorkspaceAction */
 

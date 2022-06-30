@@ -11,7 +11,6 @@ import './UserPopup.css';
 
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('../types').User} User */
-/** @typedef {import('./types').UserReviewDocument} UserReviewDocument */
 /** @typedef {import('./types').UserRegistrationInput} UserRegistrationInput */
 
 /** @typedef {{ firstName: string; lastName: string; institution: string }} UserInformation */

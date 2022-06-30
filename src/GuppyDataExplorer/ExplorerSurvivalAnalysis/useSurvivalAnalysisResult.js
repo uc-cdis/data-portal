@@ -5,9 +5,7 @@ import { useExplorerConfig } from '../ExplorerConfigContext';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').GqlFilter} GqlFilter */
-/** @typedef {import('./types').RisktableData} RisktableData */
 /** @typedef {import('./types').SurvivalAnalysisResult} SurvivalAnalysisResult */
-/** @typedef {import('./types').SurvivalData} SurvivalData */
 /** @typedef {import('./types').ParsedSurvivalAnalysisResult} ParsedSurvivalAnalysisResult */
 
 /**

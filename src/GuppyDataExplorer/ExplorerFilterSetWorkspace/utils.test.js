@@ -6,7 +6,6 @@ import {
 } from './utils';
 
 /** @typedef {import('./types').FilterSetWorkspaceState} FilterSetWorkspaceState */
-/** @typedef {import('./types').FilterSetWorkspaceAction} FilterSetWorkspaceAction */
 
 describe('pluckFromFilter', () => {
   test('no filter', () => {
