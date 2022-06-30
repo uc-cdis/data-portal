@@ -881,8 +881,9 @@ const CaseControlGWAS = (props) => {
                 covariates: [...selectedCovariates].map((val) => val.concept_name),
             });
         }
-        if (current === 4) {
+        if (current === 5) {
             form.submit();
+            // does submit() reset covariates field?
         }
         // based off current, make changes to local state variables
     }

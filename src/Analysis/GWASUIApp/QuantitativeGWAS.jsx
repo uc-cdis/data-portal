@@ -77,15 +77,17 @@ const QuantitativeGWAS = (props) => {
   };
 
   const handleNextStep = () => {
-    if (current === 1) {
-      setSelectedPhenotype(selectedConcepts[0]);
-      setSelectedCovariates([...selectedConcepts].slice(1));
-      setSelectedOutcome(selectedConcepts[0].prefixed_concept_id);
+    if (current === 2) {
+        setSelectedCovariates([...selectedCovariates].map((val) => val.prefixed_concept_id));
     }
-    if (current === 3) {
-      form.submit();
+
+    if (current === 4) {
+      form.setFieldsValue({
+        covariates: [...selectedCovariates].map((val) => val.concept_name),
+    });
     }
-  };
+    // based off current, make changes to local state variables
+}
 
   async function fetchSources() {
     const sourcesEndpoint = `${cohortMiddlewarePath}sources`;
