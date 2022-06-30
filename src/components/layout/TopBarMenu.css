@@ -33,7 +33,8 @@
   width: 100%;
 }
 
-.top-bar-menu__item > *:hover {
+.top-bar-menu__item > a:hover,
+.top-bar-menu__item > button:hover {
   background-color: var(--g3-color__silver);
   color: var(--g3-color__gray);
 }
@@ -45,4 +46,47 @@
   position: relative;
   top: 2px;
   width: 14px;
+}
+
+.top-bar-menu {
+  color: var(--g3-color__gray);
+}
+
+.top-bar-menu:not(:last-child) {
+  margin-right: 8px;
+}
+
+.top-bar-menu > button {
+  margin: 0;
+  height: auto;
+  width: auto;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+.top-bar-menu > button i.g3-icon,
+.top-bar-menu > button svg {
+  height: 24px;
+  width: 24px;
+  margin-left: 0.1rem;
+  margin-right: 0.1rem;
+}
+
+.top-bar-menu > button i.g3-icon {
+  background-color: white;
+}
+
+.top-bar-menu > button svg {
+  color: white;
+}
+
+.top-bar-menu > button[data-menu-active='true'] i.g3-icon,
+.top-bar-menu > button:hover i.g3-icon {
+  background-color: var(--pcdc-color__secondary-light);
+}
+
+.top-bar-menu > button[data-menu-active='true'] svg,
+.top-bar-menu > button:hover svg {
+  color: var(--pcdc-color__secondary-light);
 }

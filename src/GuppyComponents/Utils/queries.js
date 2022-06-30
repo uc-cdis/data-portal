@@ -6,7 +6,6 @@ import { FILE_DELIMITERS, GUPPY_URL } from './const';
 /** @typedef {import('../types').AnchorConfig} AnchorConfig */
 /** @typedef {import('../types').AnchoredFilterState} AnchoredFilterState */
 /** @typedef {import('../types').FilterState} FilterState */
-/** @typedef {import('../types').GqlAndFilter} GqlAndFilter */
 /** @typedef {import('../types').GqlFilter} GqlFilter */
 /** @typedef {import('../types').GqlInFilter} GqlInFilter */
 /** @typedef {import('../types').GqlNestedFilter} GqlNestedFilter */

@@ -1,5 +1,6 @@
-import { fetchWithCreds } from '../actions';
+import { fetchWithCreds } from '../utils.fetch';
 import { consortiumList } from '../params';
+import { receiveIndexPageCounts } from './actions';
 
 /** @typedef {import('./types').IndexState} IndexState */
 /** @typedef {import('./types').ConsortiumCountsData} ConsortiumCountsData */
@@ -42,7 +43,7 @@ function parseCounts(data) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export function getIndexPageCounts() {
+export function fetchIndexPageCounts() {
   /**
    * @param {import('redux').Dispatch} dispatch
    * @param {() => { index: import('./types').IndexState }} getState
@@ -58,11 +59,7 @@ export function getIndexPageCounts() {
         method: 'POST',
         body: JSON.stringify({ consortiumList }),
       }).then(({ data, response, status }) => {
-        if (status === 200)
-          dispatch({
-            type: 'RECEIVE_INDEX_PAGE_COUNTS',
-            data: parseCounts(data),
-          });
+        if (status === 200) dispatch(receiveIndexPageCounts(parseCounts(data)));
         else
           console.error('WARNING: failed to with status', response.statusText);
       });

@@ -24,6 +24,14 @@ import './SubmitTSV.css';
  */
 
 /**
+ * @typedef {Object} SubmitHandlerArgs
+ * @property {string} args.file
+ * @property {string} args.fileType
+ * @property {string} args.fullProject
+ * @property {() => void} [args.callback]
+ */
+
+/**
  * Manage TSV/JSON submission
  * @param {Object} props
  * @param {string} props.project of form program-project
@@ -31,7 +39,7 @@ import './SubmitTSV.css';
  * @param {(file: string, fileType: string) => void} props.onFileChange triggered when user edits something in tsv/json AceEditor
  * @param {(project: string) => void} props.onFinish
  * @param {(file: string, fileType: string) => void} props.onUploadClick
- * @param {(project: string, callback?: () => void) => void} props.onSubmitClick
+ * @param {(args: SubmitHandlerArgs) => void} props.onSubmitClick
  */
 function SubmitTSV({
   project,
@@ -74,7 +82,12 @@ function SubmitTSV({
 
   const sessionMonitor = useSessionMonitor();
   function handleSubmitFile() {
-    onSubmitClick(project, () => sessionMonitor.updateUserActivity());
+    onSubmitClick({
+      file: submission.file,
+      fileType: submission.file_type,
+      fullProject: project,
+      callback: () => sessionMonitor.updateUserActivity(),
+    });
   }
 
   /** @param {string} value */

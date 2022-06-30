@@ -5,7 +5,6 @@ import {
 } from '../../action';
 import OverlayPropertyTable from './OverlayPropertyTable';
 
-/** @typedef {import('../../types').MatchedResult} MatchedResult */
 /** @typedef {import('../../types').DdgraphState} DdgraphState */
 /** @typedef {import('../../../Submission/types').SubmissionState} SubmissionState */
 

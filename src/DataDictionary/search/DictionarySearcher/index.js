@@ -28,11 +28,11 @@ const ReduxDictionarySearcher = (() => {
       dispatch(setIsSearching(isSearching));
     },
     /**
-     * @param {MatchedResult[]} result
-     * @param {Object} summary
+     * @param {MatchedResult[]} searchResult
+     * @param {Object} searchResultSummary
      */
-    onSearchResultUpdated: (result, summary) => {
-      dispatch(setSearchResult(result, summary));
+    onSearchResultUpdated: (searchResult, searchResultSummary) => {
+      dispatch(setSearchResult({ searchResult, searchResultSummary }));
     },
     /** @param {SearchHistoryItem} searchHistoryItem */
     onSearchHistoryItemCreated: (searchHistoryItem) => {

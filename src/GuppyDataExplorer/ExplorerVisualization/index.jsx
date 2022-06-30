@@ -20,7 +20,6 @@ import './ExplorerVisualization.css';
 /** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
 /** @typedef {import('../types').GqlSort} GqlSort */
 /** @typedef {import('../types').SimpleAggsData} SimpleAggsData */
-/** @typedef {import('../types').SurvivalAnalysisConfig} SurvivalAnalysisConfig */
 
 /**
  * @typedef {Object} ViewContainerProps

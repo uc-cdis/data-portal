@@ -23,7 +23,7 @@ export function ExplorerStateProvider({ children }) {
   } = useExplorerConfig();
 
   const initialExplorerFilter =
-    /** @type {{ filter?: ExplorerFilter  }} */ (useLocation().state)?.filter ??
+    /** @type {{ filter?: ExplorerFilter }} */ (useLocation().state)?.filter ??
     /** @type {ExplorerFilter} */ ({});
   const [explorerFilter, setExplorerFilter] = useState(initialExplorerFilter);
 
@@ -34,18 +34,16 @@ export function ExplorerStateProvider({ children }) {
   function handleFilterChange(/** @type {ExplorerFilter} */ filter) {
     let newFilter = /** @type {ExplorerFilter} */ ({});
     if (filter && Object.keys(filter).length > 0) {
-      /** @type {string[]} */
-      const allSearchFields = [];
+      const allSearchFieldSet = new Set();
       for (const { searchFields } of filterConfig.tabs)
-        if (searchFields?.length > 0) allSearchFields.push(...searchFields);
+        for (const field of searchFields ?? []) allSearchFieldSet.add(field);
 
-      if (allSearchFields.length === 0) {
+      if (allSearchFieldSet.size === 0) {
         newFilter = /** @type {ExplorerFilter} */ ({
           __combineMode: explorerFilter.__combineMode,
           ...filter,
         });
       } else {
-        const allSearchFieldSet = new Set(allSearchFields);
         const filterWithoutSearchFields = /** @type {ExplorerFilter} */ ({});
         for (const field of Object.keys(filter))
           if (!allSearchFieldSet.has(field))

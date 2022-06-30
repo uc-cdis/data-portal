@@ -2,10 +2,10 @@
 /** @type {import('redux').Reducer<GraphiqlState>} */
 const graphiql = (state = /** @type {GraphiqlState} */ ({}), action) => {
   switch (action.type) {
-    case 'RECEIVE_SCHEMA':
-      return { ...state, schema: action.schema };
     case 'RECEIVE_GUPPY_SCHEMA':
-      return { ...state, guppySchema: action.data };
+      return { ...state, guppySchema: action.payload };
+    case 'RECEIVE_SCHEMA':
+      return { ...state, schema: action.payload };
     default:
       return state;
   }

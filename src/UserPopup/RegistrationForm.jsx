@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { contactEmail } from '../localconf';
 import Button from '../gen3-ui-component/components/Button';
 import SimpleInputField from '../components/SimpleInputField';
 
-/** @typedef {import('./types').UserReviewDocument} UserReviewDocument */
+/** @typedef {import('./types').UserDocument} UserDocument */
 /** @typedef {import('./types').UserRegistrationInput} UserRegistrationInput */
 
 /** @typedef {('input' | 'success' | 'error')} UserRegistrationView  */
 
 /**
  * @param {Object} prop
- * @param {UserReviewDocument[]} prop.docsToBeReviewed
+ * @param {UserDocument[]} prop.docsToBeReviewed
  * @param {() => void} prop.onClose
  * @param {(userInput: UserRegistrationInput) => Promise<('success' | 'error')>} prop.onRegister
  * @param {(userInput: UserRegistrationInput) => void} prop.onSubscribe
@@ -32,16 +32,12 @@ function RegistrationForm({
   for (const { id } of docsToBeReviewed) initialReviewStatus[id] = false;
   const [reviewStatus, setReviewStatus] = useState(initialReviewStatus);
 
-  const [isValidInput, setIsValidInput] = useState(false);
-  useEffect(() => {
-    const isAllDocumentsReviewed = Object.values(reviewStatus).every(Boolean);
-    setIsValidInput(
-      firstName !== '' &&
-        lastName !== '' &&
-        institution !== '' &&
-        isAllDocumentsReviewed
-    );
-  }, [firstName, lastName, institution, reviewStatus]);
+  const isAllDocumentsReviewed = Object.values(reviewStatus).every(Boolean);
+  const isValidInput =
+    firstName !== '' &&
+    lastName !== '' &&
+    institution !== '' &&
+    isAllDocumentsReviewed;
 
   const initialView = /** @type {UserRegistrationView} */ ('input');
   const [currentView, setCurrentView] = useState(initialView);

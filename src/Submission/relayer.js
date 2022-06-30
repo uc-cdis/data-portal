@@ -2,6 +2,12 @@ import { fetchQuery, graphql } from 'relay-runtime';
 import environment from '../environment';
 import GQLHelper from '../gqlHelper';
 import { config } from '../params';
+import {
+  receiveProjectDetail,
+  receiveProjectList,
+  receiveRelayFail,
+  receiveTransactionList,
+} from './actions';
 
 export const getTransactionList =
   () => (/** @type {import('redux').Dispatch} */ dispatch) => {
@@ -21,14 +27,11 @@ export const getTransactionList =
       }
     `;
     fetchQuery(environment, query, {}).subscribe({
-      next: (data) => {
-        dispatch({
-          type: 'RECEIVE_TRANSACTION_LIST',
-          data: data.transactionList,
-        });
+      next: (/** @type {any} */ data) => {
+        dispatch(receiveTransactionList(data.transactionList));
       },
       error: (error) => {
-        dispatch({ type: 'RECEIVE_RELAY_FAIL', data: error });
+        dispatch(receiveRelayFail(error));
       },
     });
   };
@@ -91,15 +94,14 @@ const getProjectDetail =
       fetchQuery(environment, gqlHelper.projectDetailQuery, {
         name: project.name,
       }).subscribe({
-        next: (data) => {
-          dispatch({
-            type: 'RECEIVE_PROJECT_DETAIL',
-            data: {
+        next: (/** @type {any} */ data) => {
+          dispatch(
+            receiveProjectDetail({
               ...data.project[0],
               counts: extractCounts(data),
               charts: extractCharts(data),
-            },
-          });
+            })
+          );
         },
       });
     });
@@ -117,14 +119,11 @@ export const getProjectsList =
       fetchQuery(environment, gqlHelper.submissionPageQuery, {}).subscribe({
         next: (data) => {
           const { projectList, summaryCounts } = transformRelayProps(data);
-          dispatch({
-            type: 'RECEIVE_PROJECT_LIST',
-            data: { projectList, summaryCounts },
-          });
+          dispatch(receiveProjectList({ projectList, summaryCounts }));
           dispatch(getProjectDetail(projectList));
         },
         error: (error) => {
-          dispatch({ type: 'RECEIVE_RELAY_FAIL', data: error });
+          dispatch(receiveRelayFail(error));
         },
       });
   };

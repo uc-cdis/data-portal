@@ -146,21 +146,10 @@ const defaultUnmapedFiles = [];
 
 /**
  * @param {Object} props
- * @param {SubmissionFile[]} [props.unmappedFiles]
- * @param {(username: string) => void} props.fetchUnmappedFiles
  * @param {(files: SubmissionFile[]) => void} props.mapSelectedFiles
- * @param {string} props.username
+ * @param {SubmissionFile[]} [props.unmappedFiles]
  */
-function MapFiles({
-  unmappedFiles = defaultUnmapedFiles,
-  fetchUnmappedFiles,
-  mapSelectedFiles,
-  username,
-}) {
-  useEffect(() => {
-    fetchUnmappedFiles(username);
-  }, []);
-
+function MapFiles({ mapSelectedFiles, unmappedFiles = defaultUnmapedFiles }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -394,10 +383,8 @@ function MapFiles({
 }
 
 MapFiles.propTypes = {
-  unmappedFiles: PropTypes.array,
-  fetchUnmappedFiles: PropTypes.func.isRequired,
   mapSelectedFiles: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
+  unmappedFiles: PropTypes.array,
 };
 
 export default MapFiles;

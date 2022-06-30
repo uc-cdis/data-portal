@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../gen3-ui-component/components/Button';
@@ -9,21 +8,10 @@ import './SubmissionHeader.css';
 
 /**
  * @param {Object} props
- * @param {string} props.username
- * @param {(username: string) => void} props.fetchUnmappedFileStats
  * @param {number} [props.unmappedFileCount]
  * @param {number} [props.unmappedFileSize]
  */
-function SubmissionHeader({
-  username,
-  fetchUnmappedFileStats,
-  unmappedFileCount = 0,
-  unmappedFileSize = 0,
-}) {
-  useEffect(() => {
-    fetchUnmappedFileStats(username);
-  }, []);
-
+function SubmissionHeader({ unmappedFileCount = 0, unmappedFileSize = 0 }) {
   function openGen3DataClient() {
     window.open(
       'https://github.com/uc-cdis/cdis-data-client/releases',
@@ -97,8 +85,6 @@ function SubmissionHeader({
 }
 
 SubmissionHeader.propTypes = {
-  username: PropTypes.string.isRequired,
-  fetchUnmappedFileStats: PropTypes.func.isRequired,
   unmappedFileSize: PropTypes.number,
   unmappedFileCount: PropTypes.number,
 };

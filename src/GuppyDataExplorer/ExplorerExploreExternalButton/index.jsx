@@ -5,7 +5,7 @@ import SimplePopup from '../../components/SimplePopup';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
 import { overrideSelectTheme } from '../../utils';
-import { fetchWithCreds } from '../../actions';
+import { fetchWithCreds } from '../../utils.fetch';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 import './ExplorerExploreExternalButton.css';

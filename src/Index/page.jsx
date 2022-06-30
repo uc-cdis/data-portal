@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useRef } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import {
   ReduxIndexButtonBar,
@@ -8,18 +7,12 @@ import {
   ReduxIntroduction,
 } from './reduxer';
 import UserPopup from '../UserPopup';
-import { getIndexPageCounts } from './utils';
 import dictIcons from '../img/icons';
 import { components } from '../params';
 import { breakpoints } from '../localconf';
 import './page.css';
 
 function IndexPage() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getIndexPageCounts());
-  }, []);
-
   const { width: screenWidth } = useResizeDetector({
     handleHeight: false,
     targetRef: useRef(document.body),

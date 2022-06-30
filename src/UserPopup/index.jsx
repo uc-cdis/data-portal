@@ -1,15 +1,16 @@
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import SimplePopup from '../components/SimplePopup';
-import { fetchUser, fetchUserAccess } from '../actions';
-import { getIndexPageCounts } from '../Index/utils';
+import { receiveUser } from '../actions';
+import { fetchUser, fetchUserAccess } from '../actions.thunk';
+import { fetchIndexPageCounts } from '../Index/actions.thunk';
 import { headers, userapiPath } from '../localconf';
 import RegistrationForm from './RegistrationForm';
 import ReviewForm from './ReviewForm';
 import './UserPopup.css';
 
+/** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('../types').User} User */
-/** @typedef {import('./types').UserReviewDocument} UserReviewDocument */
 /** @typedef {import('./types').UserRegistrationInput} UserRegistrationInput */
 
 /** @typedef {{ firstName: string; lastName: string; institution: string }} UserInformation */
@@ -35,13 +36,17 @@ function updateDocsToReview(reviewStatus) {
   });
 }
 
+const MUST_REVIEW_DOC_TYPE_SET = new Set([
+  'acceptable-use-policy',
+  'privacy-policy',
+  'terms-and-conditions',
+]);
 /** @param {{ user: import('../types').UserState }} state */
 function userPopupSelector({ user }) {
   const isRegistered = user.authz?.['/portal']?.length > 0;
-  const docsToBeReviewed =
-    user.docs_to_be_reviewed.filter(
-      ({ type }) => type !== 'survival-user-agreement'
-    ) ?? [];
+  const docsToBeReviewed = (user.docs_to_be_reviewed ?? []).filter(({ type }) =>
+    MUST_REVIEW_DOC_TYPE_SET.has(type)
+  );
   return {
     docsToBeReviewed,
     shouldRegister: !isRegistered,
@@ -88,9 +93,9 @@ function UserPopup() {
       if (user.authz['/portal'] === undefined)
         throw new Error('Failed to update authorization information.');
 
-      dispatch({ type: 'RECEIVE_USER', user });
-      dispatch(fetchUserAccess());
-      dispatch(getIndexPageCounts());
+      dispatch(receiveUser(user));
+      /** @type {ThunkDispatch} */ (dispatch)(fetchUserAccess());
+      /** @type {ThunkDispatch} */ (dispatch)(fetchIndexPageCounts());
       return 'success';
     } catch (e) {
       console.error(e); // eslint-disable-line no-console
@@ -102,7 +107,7 @@ function UserPopup() {
     return updateDocsToReview(reviewStatus).then(({ ok }) => {
       if (!ok) throw Error('Failed to update reviewed documents.');
 
-      dispatch(fetchUser());
+      /** @type {ThunkDispatch} */ (dispatch)(fetchUser());
       handleClose();
     });
   }

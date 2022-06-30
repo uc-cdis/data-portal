@@ -193,7 +193,6 @@ function submitFilesToMap(program, project, files) {
  * @param {Object} props
  * @param {Object} [props.dictionary]
  * @param {Object[]} [props.filesToMap]
- * @param {() => void} [props.getProjectsList]
  * @param {string[]} [props.nodeTypes]
  * @param {Object} [props.projects]
  * @param {Function} [props.submitFiles]
@@ -201,7 +200,6 @@ function submitFilesToMap(program, project, files) {
 function MapDataModel({
   dictionary = {},
   filesToMap = [],
-  getProjectsList = () => {},
   nodeTypes = [],
   projects = null,
   submitFiles = submitFilesToMap,
@@ -209,7 +207,6 @@ function MapDataModel({
   const navigate = useNavigate();
   useEffect(() => {
     if (filesToMap.length === 0) navigate('/submission/files');
-    getProjectsList();
   }, []);
 
   const sessionMonitor = useSessionMonitor();
@@ -492,7 +489,6 @@ function MapDataModel({
 MapDataModel.propTypes = {
   dictionary: PropTypes.object,
   filesToMap: PropTypes.array,
-  getProjectsList: PropTypes.func,
   nodeTypes: PropTypes.array,
   projects: PropTypes.object,
   submitFiles: PropTypes.func,

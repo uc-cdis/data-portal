@@ -1,13 +1,11 @@
 import { useMemo, useRef, useState } from 'react';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
-import { fetchWithCreds } from '../../actions';
+import { fetchWithCreds } from '../../utils.fetch';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').GqlFilter} GqlFilter */
-/** @typedef {import('./types').RisktableData} RisktableData */
 /** @typedef {import('./types').SurvivalAnalysisResult} SurvivalAnalysisResult */
-/** @typedef {import('./types').SurvivalData} SurvivalData */
 /** @typedef {import('./types').ParsedSurvivalAnalysisResult} ParsedSurvivalAnalysisResult */
 
 /**

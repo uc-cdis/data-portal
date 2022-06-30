@@ -2,26 +2,27 @@
   background-color: var(--pcdc-color__primary);
   color: white;
   display: flex;
-  justify-content: space-between;
-  margin: auto;
+  align-items: center;
   min-height: 40px;
-  overflow: hidden;
-  vertical-align: middle;
-  width: 100%;
 }
 
-@media screen and (max-width: 1090px) {
+.top-bar__items {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.top-bar__menu-group {
+  flex-basis: auto;
+  margin: 0 20px;
+}
+
+@media screen and (max-width: 820px) {
   .top-bar {
     justify-content: flex-end;
   }
 
-  .top-bar .hidden-lg-and-down {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 820px) {
-  .top-bar .hidden-md-and-down {
+  .top-bar .top-bar__items {
     display: none;
   }
 }

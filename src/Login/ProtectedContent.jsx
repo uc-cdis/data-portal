@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { useStore } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchUser, fetchUserAccess } from '../actions';
+import { fetchUser, fetchUserAccess } from '../actions.thunk';
+import { clearQueryNodes } from '../QueryNode/actions';
+import { clearCounts } from '../Submission/actions';
 import Spinner from '../components/Spinner';
 import AuthPopup from './AuthPopup';
-import { fetchLogin } from './ReduxLogin';
+import { fetchLogin } from './actions.thunk';
 
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('../types').UserState} UserState */
@@ -20,11 +22,17 @@ import { fetchLogin } from './ReduxLogin';
  */
 
 /**
+ * @typedef {Object} PreloadArgs
+ * @property {import('react-router').Location} [location]
+ * @property {any} [state]
+ */
+
+/**
  * @typedef {object} ProtectedContentProps
  * @property {JSX.Element} children required child component
  * @property {boolean} [isAdminOnly] default false - if true, redirect to index page
  * @property {boolean} [isLoginPage] default false
- * @property {(location?: import('react-router').Location) => Promise} [preload] optional async function to preload resources before rendering the child component
+ * @property {(args: PreloadArgs) => Promise} [preload] optional async function to preload resources before rendering the child component
  */
 
 /**
@@ -125,8 +133,8 @@ function ProtectedContent({
       /** @type {{ scrollY?: number }} */ (location?.state)?.scrollY ?? 0
     );
 
-    reduxStore.dispatch({ type: 'CLEAR_COUNTS' }); // clear some counters
-    reduxStore.dispatch({ type: 'CLEAR_QUERY_NODES' });
+    reduxStore.dispatch(clearCounts()); // clear some counters
+    reduxStore.dispatch(clearQueryNodes());
 
     if (isLoginPage)
       checkLoginStatus(state).then((newState) => {
@@ -148,7 +156,10 @@ function ProtectedContent({
             newState.redirectTo && newState.redirectTo !== location.pathname;
 
           if (!shouldPreload || shouldRedirect) updateState(newState);
-          else preload(location).finally(() => updateState(newState));
+          else
+            preload({ location, state: reduxStore.getState() }).finally(() =>
+              updateState(newState)
+            );
         });
   }, [location]);
 

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import TopBar from '../components/layout/TopBar';
-import { logoutAPI } from '../actions';
+import { logoutAPI } from '../actions.thunk';
 
 const resourcePath = '/services/sheepdog/submission/project';
 

@@ -1,108 +1,12 @@
 import { connect } from 'react-redux';
 import SubmitTSV from './SubmitTSV';
-import { submissionApiPath, lineLimit } from '../localconf';
-import { fetchWithCreds } from '../actions';
-import { getCounts, uploadTSV, updateFileContent } from './actions';
+import { requestUpload, resetSubmissionStatus, updateFile } from './actions';
+import { getCounts, submitFileChunk } from './actions.thunk';
+import { predictFileType } from '../utils';
+import { getFileChunksToSubmit } from './utils';
 
-/** @typedef {import('redux').Dispatch} Dispatch */
 /** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('./types').SubmissionState} SubmissionState */
-
-/**
- * @param {Object} args
- * @param {string} args.fullProject
- * @param {string} [args.methodIn]
- * @param {() => void} [args.callback]
- */
-const submitToServer =
-  ({ fullProject, methodIn = 'PUT', callback }) =>
-  /**
-   * @param {Dispatch} dispatch
-   * @param {() => { submission: SubmissionState }} getState
-   */
-  (dispatch, getState) => {
-    dispatch({ type: 'RESET_SUBMISSION_STATUS' });
-
-    /** @type {string[]} */
-    const fileArray = [];
-    const path = fullProject.split('-');
-    const program = path[0];
-    const project = path.slice(1).join('-');
-    const { submission } = getState();
-    const method = /* path === 'graphql' ? 'POST' : */ methodIn;
-
-    let { file } = submission;
-    if (!file) {
-      return Promise.reject(new Error('No file to submit'));
-    }
-    if (submission.file_type !== 'text/tab-separated-values') {
-      // remove line break in json file
-      file = file.replace(/\r\n?|\n/g, '');
-    }
-
-    if (submission.file_type === 'text/tab-separated-values') {
-      const fileSplited = file.split(/\r\n?|\n/g);
-      if (fileSplited.length > lineLimit && lineLimit > 0) {
-        let fileHeader = fileSplited[0];
-        fileHeader += '\n';
-        let count = lineLimit;
-        let fileChunk = fileHeader;
-
-        for (let i = 1; i < fileSplited.length; i += 1) {
-          if (fileSplited[i] !== '') {
-            fileChunk += fileSplited[i];
-            fileChunk += '\n';
-            count -= 1;
-          }
-          if (count === 0) {
-            fileArray.push(fileChunk);
-            fileChunk = fileHeader;
-            count = lineLimit;
-          }
-        }
-        if (fileChunk !== fileHeader) {
-          fileArray.push(fileChunk);
-        }
-      } else {
-        fileArray.push(file);
-      }
-    } else {
-      fileArray.push(file);
-    }
-
-    let subUrl = submissionApiPath;
-    if (program !== '_root') {
-      subUrl = `${subUrl + program}/${project}/`;
-    }
-
-    const totalChunk = fileArray.length;
-
-    /** @param {string[]} chunkArray */
-    function recursiveFetch(chunkArray) {
-      if (chunkArray.length === 0) {
-        return null;
-      }
-
-      return fetchWithCreds({
-        path: subUrl,
-        method,
-        customHeaders: new Headers({ 'Content-Type': submission.file_type }),
-        body: chunkArray.shift(),
-        dispatch,
-      })
-        .then(recursiveFetch(chunkArray))
-        .then(({ status, data }) => ({
-          type: 'RECEIVE_SUBMISSION',
-          submit_status: status,
-          data,
-          total: totalChunk,
-        }))
-        .then((msg) => dispatch(msg))
-        .then(callback);
-    }
-
-    return recursiveFetch(fileArray);
-  };
 
 /** @param {{ submission: SubmissionState }} state */
 const mapStateToProps = (state) => ({
@@ -112,19 +16,36 @@ const mapStateToProps = (state) => ({
 /** @param {ThunkDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
   /**
-   * @param {SubmissionState['file']} value
-   * @param {SubmissionState['file_type']} type
+   * @param {SubmissionState['file']} file
+   * @param {SubmissionState['file_type']} fileType
    */
-  onUploadClick: (value, type) => {
-    dispatch(uploadTSV(value, type));
+  onUploadClick: (file, fileType) => {
+    dispatch(requestUpload({ file, file_type: fileType }));
   },
-  /** @param {string} project */
-  onSubmitClick: (project, callback) => {
-    dispatch(submitToServer({ fullProject: project, callback }));
+  /**
+   * @param {Object} args
+   * @param {string} args.file
+   * @param {string} args.fileType
+   * @param {string} args.fullProject
+   * @param {() => void} [args.callback]
+   */
+  onSubmitClick: ({ file, fileType, fullProject, callback }) => {
+    dispatch(resetSubmissionStatus());
+
+    const fileChunks = getFileChunksToSubmit({ file, fileType });
+    const fileChunkTotal = fileChunks.length;
+    async function submitFile() {
+      for await (const fileChunk of fileChunks) {
+        const args = { fileChunk, fileChunkTotal, fileType, fullProject };
+        await dispatch(submitFileChunk(args));
+        callback?.();
+      }
+    }
+    submitFile();
   },
-  /** @param {SubmissionState['file']} value */
-  onFileChange: (value) => {
-    dispatch(updateFileContent(value));
+  /** @param {SubmissionState['file']} file */
+  onFileChange: (file) => {
+    dispatch(updateFile({ file, file_type: predictFileType(file) }));
   },
   /** @param {string} project */
   onFinish: (project) => {

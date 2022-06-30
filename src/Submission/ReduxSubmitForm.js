@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import SubmitForm from './SubmitForm';
-import { uploadTSV, updateFormSchema } from './actions';
+import { requestUpload, updateFormSchema } from './actions';
 
 /** @typedef {import('./types').SubmissionState} SubmissionState */
 
@@ -12,10 +12,11 @@ const mapStateToProps = (state) => ({
 /** @param {import('redux-thunk').ThunkDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
   /**
-   * @param {SubmissionState['file']} value
-   * @param {SubmissionState['file_type']} type
+   * @param {SubmissionState['file']} file
+   * @param {SubmissionState['file_type']} fileType
    */
-  onUploadClick: (value, type) => dispatch(uploadTSV(value, type)),
+  onUploadClick: (file, fileType) =>
+    dispatch(requestUpload({ file, file_type: fileType })),
   /**
    * @param {SubmissionState['formSchema']} formSchema
    */

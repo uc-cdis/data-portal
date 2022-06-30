@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import FilterDisplay from '../../components/FilterDisplay';
 import SimplePopup from '../../components/SimplePopup';
+import { contactEmail } from '../../localconf';
 import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerState } from '../ExplorerStateContext';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
@@ -140,10 +141,7 @@ function ExplorerFilterSetWorkspace() {
             </p>
             <p>
               If the problem persists, please contact the administrator (
-              <a href='mailto:pcdc_help@lists.uchicago.edu'>
-                pcdc_help@lists.uchicago.edu
-              </a>
-              ) for more information.
+              <a href={contactEmail}>{contactEmail}</a>) for more information.
             </p>
           </div>
         ) : (

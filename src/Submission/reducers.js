@@ -8,13 +8,13 @@ import { getDictionaryWithExcludeSystemProperties } from './utils';
 const submission = (state = /** @type {SubmissionState} */ ({}), action) => {
   switch (action.type) {
     case 'REQUEST_UPLOAD':
-      return { ...state, file: action.file, file_type: action.file_type };
+      return { ...state, ...action.payload };
     case 'UPDATE_FILE':
-      return { ...state, file: action.file, file_type: action.file_type };
+      return { ...state, ...action.payload };
     case 'UPDATE_FORM_SCHEMA':
       return {
         ...state,
-        formSchema: { ...state.formSchema, ...action.formSchema },
+        formSchema: { ...state.formSchema, ...action.payload },
       };
     case 'RECEIVE_PROJECT_LIST': {
       //
@@ -22,13 +22,13 @@ const submission = (state = /** @type {SubmissionState} */ ({}), action) => {
       // over time
       //
       const projectsByName = { ...(state.projectsByName || {}) };
-      action.data.projectList.forEach((proj) => {
+      action.payload.projectList.forEach((proj) => {
         const old = projectsByName[proj.name] || {};
         projectsByName[proj.name] = Object.assign(old, proj);
       });
       const summaryCounts = {
         ...(state.summaryCounts || {}),
-        ...action.data.summaryCounts,
+        ...action.payload.summaryCounts,
       };
       const lastestListUpdating = Date.now();
       // const { error, ...state } = state;
@@ -42,26 +42,26 @@ const submission = (state = /** @type {SubmissionState} */ ({}), action) => {
     }
     case 'RECEIVE_PROJECT_DETAIL': {
       const projectsByName = { ...(state.projectsByName || {}) };
-      projectsByName[action.data.name] = action.data;
+      projectsByName[action.payload.name] = action.payload;
       const lastestDetailsUpdating = Date.now();
       return { ...state, projectsByName, lastestDetailsUpdating };
     }
     case 'RECEIVE_TRANSACTION_LIST': {
-      return { ...state, transactions: action.data };
+      return { ...state, transactions: action.payload };
     }
     case 'RECEIVE_RELAY_FAIL': {
-      return { ...state, error: action.data };
+      return { ...state, error: action.payload };
     }
     case 'RECEIVE_DICTIONARY':
       return {
         ...state,
-        dictionary: getDictionaryWithExcludeSystemProperties(action.data),
-        nodeTypes: getNodeTypes(action.data),
-        file_nodes: getFileNodes(action.data),
+        dictionary: getDictionaryWithExcludeSystemProperties(action.payload),
+        nodeTypes: getNodeTypes(action.payload),
+        file_nodes: getFileNodes(action.payload),
       };
     case 'RECEIVE_SUBMISSION': {
       const prevCounts = state.submit_entity_counts ?? {};
-      const newCounts = (action.data.entities || [])
+      const newCounts = (action.payload.data.entities || [])
         .map((ent) => ent.type || 'unknown')
         .reduce((db, type) => {
           const res = db;
@@ -69,39 +69,35 @@ const submission = (state = /** @type {SubmissionState} */ ({}), action) => {
           return res;
         }, prevCounts);
       const data = state.submit_result
-        ? state.submit_result.concat(action.data.entities || [])
-        : action.data.entities;
+        ? state.submit_result.concat(action.payload.data.entities || [])
+        : action.payload.data.entities;
       const status = state.submit_status
-        ? Math.max(state.submit_status, action.submit_status)
-        : action.submit_status;
+        ? Math.max(state.submit_status, action.payload.submit_status)
+        : action.payload.submit_status;
       return {
         ...state,
         submit_entity_counts: newCounts,
         submit_result: data,
         submit_result_string: state.submit_result_string
-          .concat(JSON.stringify(action.data, null, '    '))
+          .concat(JSON.stringify(action.payload.data, null, '    '))
           .concat('\n\n'),
         submit_status: status,
         submit_counter: state.submit_counter + 1,
-        submit_total: action.total,
+        submit_total: action.payload.submit_total,
       };
     }
     case 'SUBMIT_SEARCH_FORM':
-      return { ...state, search_form: action.data };
+      return { ...state, search_form: action.payload };
     case 'RECEIVE_SEARCH_ENTITIES':
-      return {
-        ...state,
-        search_result: action.data,
-        search_status: action.search_status,
-      };
+      return { ...state, ...action.payload };
     case 'RECEIVE_COUNTS':
       return {
         ...state,
-        counts_search: Object.entries(action.data).reduce((acc, [k, v]) => {
+        counts_search: Object.entries(action.payload).reduce((acc, [k, v]) => {
           if (k.endsWith('_count')) acc[k] = v;
           return acc;
         }, {}),
-        links_search: Object.entries(action.data).reduce((acc, entry) => {
+        links_search: Object.entries(action.payload).reduce((acc, entry) => {
           acc[entry[0]] = entry[1].length;
           return acc;
         }, {}),
@@ -109,15 +105,11 @@ const submission = (state = /** @type {SubmissionState} */ ({}), action) => {
     case 'CLEAR_COUNTS':
       return { ...state, counts_search: null, links_search: null };
     case 'RECEIVE_UNMAPPED_FILES':
-      return { ...state, unmappedFiles: action.data };
+      return { ...state, unmappedFiles: action.payload };
     case 'RECEIVE_UNMAPPED_FILE_STATISTICS':
-      return {
-        ...state,
-        unmappedFileCount: action.data.count,
-        unmappedFileSize: action.data.totalSize,
-      };
+      return { ...state, ...action.payload };
     case 'RECEIVE_FILES_TO_MAP':
-      return { ...state, filesToMap: action.data };
+      return { ...state, filesToMap: action.payload };
     case 'RESET_SUBMISSION_STATUS':
       return {
         ...state,

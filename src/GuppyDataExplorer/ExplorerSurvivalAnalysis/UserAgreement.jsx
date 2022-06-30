@@ -8,7 +8,7 @@ import Button from '../../gen3-ui-component/components/Button';
 
 const acceptableUsePolicyLink = (
   <a
-    href='https://github.com/chicagopcdc/Documents/blob/pcdc_dev/governance/acceptable_use_policy/PCDC%20Acceptable%20Use%20Policy.pdf'
+    href='https://docs.pedscommons.org/AcceptableUsePolicy/'
     target='_black'
     rel='noopener noreferrer'
   >
@@ -19,7 +19,7 @@ const acceptableUsePolicyLink = (
 
 const pcdcStatisticalManualLink = (
   <a
-    href='https://commons.cri.uchicago.edu/wp-content/uploads/2022/04/PCDC-Analytics-Tool-Documentation-Statistical-Manual.pdf'
+    href='https://docs.pedscommons.org/StatisticalManual/'
     target='_black'
     rel='noopener noreferrer'
   >

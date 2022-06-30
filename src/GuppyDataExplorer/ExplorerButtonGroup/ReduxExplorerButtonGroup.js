@@ -1,11 +1,10 @@
 import { connect } from 'react-redux';
 import ExplorerButtonGroup from '.';
-import {
-  dispatchJob,
-  checkJob,
-  fetchJobResult,
-  resetJobState,
-} from '../../actions';
+import { requestErrored, resetJob, setJobStatusInterval } from '../../actions';
+import { dispatchJob, checkJobStatus } from '../../actions.thunk';
+import { jobapiPath } from '../../localconf';
+import { asyncSetInterval } from '../../utils';
+import { fetchWithCreds } from '../../utils.fetch';
 
 /** @typedef {import('../../types').KubeState} KubeState */
 /** @typedef {import('../../types').UserAccessState} UserAccessState */
@@ -22,12 +21,18 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(dispatchJob(body));
   },
   checkJobStatus: () => {
-    dispatch(checkJob());
+    const interval = asyncSetInterval(() => dispatch(checkJobStatus()), 1000);
+    dispatch(setJobStatusInterval(interval));
   },
   /** @param {string} jobId */
-  fetchJobResult: (jobId) => dispatch(fetchJobResult(jobId)),
+  fetchJobResult: (jobId) =>
+    fetchWithCreds({
+      path: `${jobapiPath}output?UID=${jobId}`,
+      method: 'GET',
+      onError: () => dispatch(requestErrored()),
+    }),
   resetJobState: () => {
-    dispatch(resetJobState());
+    dispatch(resetJob());
   },
 });
 const ReduxExplorerButtonGroup = connect(

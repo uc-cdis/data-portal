@@ -1,14 +1,14 @@
 import type { Dispatch, ReturnType } from 'redux';
-import type { UserReviewDocument } from './UserPopup/types';
+import type { UserDocument } from './UserPopup/types';
 
 export type FetchHelperOptions = {
   path: string;
-  method?: string; // Default is "GET"
   body?: any; // Default is null
   customHeaders?: Headers;
-  dispatch?: Dispatch;
-  useCache?: boolean;
+  method?: string; // Default is "GET"
+  onError?: () => void;
   signal?: AbortSignal;
+  useCache?: boolean;
 };
 
 export type FetchHelperResult = {
@@ -32,7 +32,7 @@ export type User = {
   azp: any;
   certificates_uploaded: any[];
   display_name: string;
-  docs_to_be_reviewed: UserReviewDocument[];
+  docs_to_be_reviewed: UserDocument[];
   email: string;
   ga4gh_passport_v1: any[];
   groups: any[];
@@ -74,7 +74,6 @@ export type VersionInfoState = {
 
 export type StatusState = {
   request_state?: string;
-  error_type?: string;
 };
 
 export type KubeState = {

@@ -11,12 +11,10 @@ import {
 } from './graphStructureHelper.js';
 import { getCategoryColor } from '../../NodeCategories/helper';
 
-/** @typedef {import('../../types').GraphBoundingBox} GraphBoundingBox */
 /** @typedef {import('../../types').GraphEdge} GraphEdge */
 /** @typedef {import('../../types').GraphNode} GraphNode */
 /** @typedef {import('../../types').GraphLayout} GraphLayout */
 /** @typedef {import('../../types').GraphvizLayout} GraphvizLayout */
-/** @typedef {import('../../../Submission/types').SubmissionState} SubmissionState */
 
 /**
  * Get a set of types from an array of nodes

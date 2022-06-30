@@ -8,20 +8,24 @@ import Layout from './Layout';
 import ReduxLogin from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
 // import { fetchCoreMetadata } from './CoreMetadata/reduxer';
-import { fetchAccess } from './UserProfile/ReduxUserProfile';
 import {
   enableResourceBrowser,
   // workspaceUrl,
   // workspaceErrorUrl,
 } from './localconf';
+import { fetchVersionInfo } from './actions.thunk';
+import { fetchGraphvizLayout } from './DataDictionary/actions.thunk';
+import { fetchGuppySchema, fetchSchema } from './GraphQLEditor/actions.thunk';
 import {
   fetchDictionary,
-  fetchGraphvizLayout,
-  fetchGuppySchema,
-  fetchSchema,
-  fetchVersionInfo,
-} from './actions';
+  fetchUnmappedFiles,
+  fetchUnmappedFileStats,
+} from './Submission/actions.thunk';
+import { getProjectsList, getTransactionList } from './Submission/relayer';
+import { STARTING_DID } from './Submission/utils';
+import { fetchAccess } from './UserProfile/actions.thunk';
 import useSessionMonitor from './hooks/useSessionMonitor';
+import { fetchIndexPageCounts } from './Index/actions.thunk';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
@@ -75,7 +79,9 @@ function App() {
         <Route
           index
           element={
-            <ProtectedContent>
+            <ProtectedContent
+              preload={async () => dispatch(fetchIndexPageCounts())}
+            >
               <IndexPage />
             </ProtectedContent>
           }
@@ -93,13 +99,40 @@ function App() {
           element={
             <ProtectedContent
               isAdminOnly
-              preload={(/** @type {import('react-router').Location} */ loc) =>
-                ['/submission/map', '/submission/:project/*'].some((pattern) =>
-                  matchPath(pattern, loc.pathname)
-                )
-                  ? dispatch(fetchDictionary())
-                  : Promise.resolve()
-              }
+              preload={({ location, state }) => {
+                function matchPattern(pattern) {
+                  return matchPath(`/submission${pattern}`, location.pathname);
+                }
+
+                /** @type {import('./types').UserState} */
+                const { username } = state.user;
+                const start = STARTING_DID;
+
+                if (matchPattern('/')) {
+                  return Promise.all([
+                    dispatch(getProjectsList()),
+                    dispatch(getTransactionList()),
+                    dispatch(fetchUnmappedFileStats(username, [], start)),
+                  ]);
+                }
+
+                if (matchPattern('/files'))
+                  return dispatch(fetchUnmappedFiles(username, [], start));
+
+                /** @type {import('./Submission/types').SubmissionState} */
+                const { filesToMap } = state.submission;
+
+                if (matchPattern('/map') && filesToMap.length !== 0)
+                  return Promise.all([
+                    dispatch(fetchDictionary()),
+                    dispatch(getProjectsList()),
+                  ]);
+
+                if (matchPattern('/:project/*'))
+                  return dispatch(fetchDictionary());
+
+                return Promise.resolve();
+              }}
             >
               <Outlet />
             </ProtectedContent>

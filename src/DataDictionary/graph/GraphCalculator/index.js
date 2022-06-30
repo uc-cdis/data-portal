@@ -93,11 +93,11 @@ const ReduxGraphCalculator = (() => {
       routesBetweenStartEndNodes
     ) =>
       dispatch(
-        setDataModelStructure(
+        setDataModelStructure({
           dataModelStructure,
           dataModelStructureRelatedNodeIDs,
-          routesBetweenStartEndNodes
-        )
+          routesBetweenStartEndNodes,
+        })
       ),
   });
 

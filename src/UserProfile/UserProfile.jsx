@@ -8,12 +8,6 @@ import KeyTable from '../components/tables/KeyTable';
 import ReduxUserInformation from './ReduxUserInformation';
 import './UserProfile.css';
 
-const NO_ACCESS_MSG = (
-  <>
-    You have no access to storage service. Please contact the administrator (
-    <a href={`mailto:${contactEmail}`}>{contactEmail}</a>) to get it!
-  </>
-);
 const NO_API_KEY = "You don't have any API key. Please create one!";
 const CONFIRM_DELETE_MSG = 'Are you sure you want to make this key inactive?';
 const SECRET_KEY_MSG =
@@ -30,17 +24,7 @@ export const saveToFile = (savingStr, filename) => {
 };
 
 /** @typedef {import('../types').PopupState} PopupState */
-
-/**
- * @typedef {Object} UserProfileData
- * @property {any} [create_error]
- * @property {any} [delete_error]
- * @property {{ exp: number; jti: string; }[]} [jtis]
- * @property {{ api_key: string; key_id: string; refreshCred: string; }} [refreshCred]
- * @property {string} [requestDeleteJTI]
- * @property {number} [requestDeleteExp]
- * @property {string} [strRefreshCred]
- */
+/** @typedef {import('./types').UserProfileState} UserProfileState */
 
 /**
  * @typedef {Object} UserProfileProps
@@ -52,7 +36,7 @@ export const saveToFile = (savingStr, filename) => {
  * @property {(state: Partial<PopupState>) => void} onUpdatePopup
  * @property {Partial<PopupState>} popups
  * @property {import('./UserInformation').UserInformationProps} userInformation
- * @property {UserProfileData} userProfile
+ * @property {UserProfileState} userProfile
  */
 
 /** @param {UserProfileProps} props */
@@ -83,8 +67,13 @@ function UserProfile({
 
   return (
     <div className='user-profile'>
-      {userProfile.jtis === undefined && <div>{NO_ACCESS_MSG}</div>}
-      {userProfile.jtis !== undefined && userProfile.jtis !== [] && (
+      {userProfile.jtis === undefined ? (
+        <div>
+          You have no access to storage service. Please contact the
+          administrator (<a href={`mailto:${contactEmail}`}>{contactEmail}</a>)
+          to get it!
+        </div>
+      ) : (
         <ul className='user-profile__key-pair-table'>
           {popups.deleteTokenPopup === true && (
             <Popup
@@ -155,8 +144,9 @@ function UserProfile({
             buttonType='primary'
             rightIcon='key'
           />
-          {userProfile.jtis.length === 0 && <div>{NO_API_KEY}</div>}
-          {userProfile.jtis && (
+          {userProfile.jtis.length === 0 ? (
+            <div>{NO_API_KEY}</div>
+          ) : (
             <KeyTable
               jtis={userProfile.jtis}
               onDelete={(jti) => {
@@ -207,6 +197,8 @@ UserProfile.propTypes = {
     requestDeleteJTI: PropTypes.string,
     requestDeleteExp: PropTypes.number,
     strRefreshCred: PropTypes.any,
+    request_delete_key: PropTypes.any,
+    userProfile_error: PropTypes.any,
   }).isRequired,
 };
 
