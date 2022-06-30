@@ -4,7 +4,7 @@ import QueryNode from './QueryNode';
 import { clearDeleteSession, storeNodeInfo } from './actions';
 import { deleteNode, fetchQueryNode, submitSearchForm } from './actions.thunk';
 
-/** @typedef {import('redux').Dispatch} Dispatch */
+/** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
 /** @typedef {import('./types').QueryNodeState} QueryNodeState */
 /** @typedef {import('../types').PopupState} PopupState */
 /** @typedef {import('../Submission/types').SubmissionState} SubmissionState */
@@ -21,6 +21,7 @@ const mapStateToProps = (state) => ({
   popups: state.popups,
 });
 
+/** @param {ThunkDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
   /**
    * @param {any} value
@@ -45,9 +46,9 @@ const mapDispatchToProps = (dispatch) => ({
    * @returns {Promise<void>}
    */
   onStoreNodeInfo: ({ id, project }) =>
-    dispatch(fetchQueryNode({ id, project })).then(() =>
-      dispatch(storeNodeInfo(id))
-    ),
+    dispatch(fetchQueryNode({ id, project })).then(() => {
+      dispatch(storeNodeInfo(id));
+    }),
 });
 const ReduxQueryNode = connect(mapStateToProps, mapDispatchToProps)(QueryNode);
 export default ReduxQueryNode;
