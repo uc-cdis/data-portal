@@ -1,5 +1,5 @@
 import {
-  fetchErrored,
+  fetchUserErrored,
   receiveDataVersion,
   receiveJobDispatch,
   receiveJobStatus,
@@ -38,9 +38,9 @@ export const dispatchJob = (body) => (/** @type {Dispatch} */ dispatch) =>
         case 200:
           return receiveJobDispatch(data);
         default:
-          return fetchErrored(data);
+          return fetchUserErrored(data);
       }
-    }, fetchErrored)
+    }, fetchUserErrored)
     .then((msg) => {
       dispatch(msg);
     });
@@ -73,9 +73,9 @@ export const checkJobStatus =
             return receiveJobStatus({ job, resultURL });
           }
           default:
-            return fetchErrored(data);
+            return fetchUserErrored(data);
         }
-      }, fetchErrored)
+      }, fetchUserErrored)
       .then((msg) => {
         dispatch(msg);
       });
@@ -104,7 +104,7 @@ export const fetchProjects =
           method: 'POST',
         }).then(({ status, data }) => {
           if (status === 200) dispatch(receiveProjects(data.data.project));
-          else dispatch(fetchErrored(data));
+          else dispatch(fetchUserErrored(data));
         });
 
 /* SLICE: USER */
@@ -113,7 +113,7 @@ export const fetchUser = () => (/** @type {Dispatch} */ dispatch) =>
     ({ status, data }) => {
       if (status === 200) return dispatch(receiveUser(data));
       if (status === 401) return dispatch(updatePopup({ authPopup: true }));
-      return dispatch(fetchErrored(data.error));
+      return dispatch(fetchUserErrored(data.error));
     }
   );
 
@@ -185,5 +185,5 @@ export const fetchVersionInfo = () => (/** @type {Dispatch} */ dispatch) =>
     useCache: true,
   }).then(({ status, data }) => {
     if (status === 200) dispatch(receiveDataVersion(data));
-    else dispatch(fetchErrored(data));
+    else dispatch(fetchUserErrored(data));
   });

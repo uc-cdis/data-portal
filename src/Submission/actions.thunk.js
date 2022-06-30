@@ -1,4 +1,4 @@
-import { fetchErrored, requestErrored } from '../actions';
+import { fetchUserErrored, requestErrored } from '../actions';
 import { fetchWithCreds } from '../utils.fetch';
 import { indexdPath, submissionApiPath, useIndexdAuthz } from '../localconf';
 import {
@@ -54,9 +54,9 @@ export const fetchUnmappedFiles =
             }
             return receiveUnmappedFiles(files);
           default:
-            return fetchErrored(data.records);
+            return fetchUserErrored(data.records);
         }
-      }, fetchErrored)
+      }, fetchUserErrored)
       .then((msg) => {
         if (msg) dispatch(msg);
       });
@@ -101,9 +101,9 @@ export const fetchUnmappedFileStats =
             });
 
           default:
-            return fetchErrored(data.records);
+            return fetchUserErrored(data.records);
         }
-      }, fetchErrored)
+      }, fetchUserErrored)
       .then((msg) => {
         if (msg) dispatch(msg);
       });
@@ -135,9 +135,9 @@ export const getCounts =
           case 200:
             return receiveCounts(data.data);
           default:
-            return fetchErrored(data.data);
+            return fetchUserErrored(data.data);
         }
-      }, fetchErrored)
+      }, fetchUserErrored)
       .then((msg) => {
         dispatch(msg);
       });

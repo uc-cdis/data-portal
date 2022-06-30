@@ -80,7 +80,7 @@ export const receiveUser = (payload) => ({
  * @param {import('./types').UserState['fetch_error']} payload
  * @returns {AnyAction}
  */
-export const fetchErrored = (payload) => ({
+export const fetchUserErrored = (payload) => ({
   type: 'FETCH_ERROR',
   payload,
 });
