@@ -76,18 +76,13 @@ const QuantitativeGWAS = (props) => {
     setNumOfPC(values.numOfPC);
   };
 
-  const handleNextStep = () => {
-    if (current === 2) {
-        setSelectedCovariates([...selectedCovariates].map((val) => val.prefixed_concept_id));
-    }
-
-    if (current === 4) {
-      form.setFieldsValue({
-        covariates: [...selectedCovariates].map((val) => val.concept_name),
-    });
-    }
-    // based off current, make changes to local state variables
-}
+//   const handleNextStep = () => {
+//     if (current === 2) {
+//         setSelectedCovariates([...selectedCovariates].map((val) => val.prefixed_concept_id));
+//         setSelectedConcepts([...selectedCovariates].map((val) => val.prefixed_concept_id));
+//     }
+//     // based off current, make changes to local state variables
+// }
 
   async function fetchSources() {
     const sourcesEndpoint = `${cohortMiddlewarePath}sources`;
@@ -173,6 +168,12 @@ const QuantitativeGWAS = (props) => {
     onChange: (_, selectedRows) => {
       setSelectedConceptVars(selectedRows.map((item) => item.concept_id));
       setSelectedConcepts(selectedRows);
+      let currentCovariates = selectedPhenotype ? selectedRows.filter((row) => row.concept_id !== selectedPhenotype.concept_id) : selectedRows
+      setSelectedCovariates(currentCovariates);
+      form.setFieldsValue({
+        covariates: currentCovariates.map((val) => val.concept_name),
+        outcome: selectedPhenotype ? selectedPhenotype.concept_name : 'Outcome not selected'
+      })
     },
   };
 
@@ -201,7 +202,7 @@ const QuantitativeGWAS = (props) => {
       setSelectedCovariates(newlySelectedCovariates);
       form.setFieldsValue({
         covariates: newlySelectedCovariates.map((val) => val.concept_name),
-        outcome: selectedRows[0].concept_name,
+        outcome: selectedRows[0].concept_name
       });
     },
   };
@@ -309,20 +310,20 @@ const QuantitativeGWAS = (props) => {
     );
   };
 
-  const Covariates = ({ selectedConcepts }) => {
+  const Covariates = () => {
     const { data, status } = useQuery(['covariates', allowedConceptTypes.ConceptTypes, sourceId], fetchCovariates, queryConfig);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [allConcepts, setAllConcepts] = useState([]);
-    const [filteredConcepts, setFilteredConcepts] = useState([]);
+    // const [searchTerm, setSearchTerm] = useState('');
+    // const [allConcepts, setAllConcepts] = useState([]);
+    // const [filteredConcepts, setFilteredConcepts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1)
 
-    useEffect(() => {
-      if (searchTerm.length > 0) {
-        const results = allConcepts.filter(c => c.concept_name.toLowerCase().includes(searchTerm.toLowerCase()))
-        console.log('results,', results);
-        results.length > 0 ? setFilteredConcepts(results) : setFilteredConcepts([])
-      }
-    }, [searchTerm]);
+    // useEffect(() => {
+    //   if (searchTerm.length > 0) {
+    //     const results = allConcepts.filter(c => c.concept_name.toLowerCase().includes(searchTerm.toLowerCase()))
+    //     console.log('results,', results);
+    //     results.length > 0 ? setFilteredConcepts(results) : setFilteredConcepts([])
+    //   }
+    // }, [searchTerm]);
     // useEffect(() => {
     //   if (filteredConcepts && filteredConcepts.length > 0) {
     //     if (selectedConcepts.length > 0) {
@@ -334,23 +335,23 @@ const QuantitativeGWAS = (props) => {
     //   }
     // }, [filteredConcepts, selectedConcepts]);
 
-    useEffect(() => {
-      if (filteredConcepts && filteredConcepts.length > 0) {
-        if (selectedConcepts.length > 0) {
-          let lastSelectedConcept = selectedConcepts[selectedConcepts.length - 1];
-          let lastIndex = filteredConcepts.indexOf(lastSelectedConcept);
-          console.log('negative?', Math.floor((lastIndex / 10) + 1))
-          setCurrentPage(Math.floor((lastIndex / 10) + 1))
-        }
-      }
-    }, [filteredConcepts, selectedConcepts])
+    // useEffect(() => {
+    //   if (filteredConcepts && filteredConcepts.length > 0) {
+    //     if (selectedConcepts.length > 0) {
+    //       let lastSelectedConcept = selectedConcepts[selectedConcepts.length - 1];
+    //       let lastIndex = filteredConcepts.indexOf(lastSelectedConcept);
+    //       console.log('negative?', Math.floor((lastIndex / 10) + 1))
+    //       setCurrentPage(Math.floor((lastIndex / 10) + 1))
+    //     }
+    //   }
+    // }, [filteredConcepts, selectedConcepts])
 
-    useEffect(() => {
-      if (data && data.concepts) {
-        setFilteredConcepts(data.concepts);
-        setAllConcepts(data.concepts);
-      }
-    }, [data]);
+    // useEffect(() => {
+    //   if (data && data.concepts) {
+    //     setFilteredConcepts(data.concepts);
+    //     setAllConcepts(data.concepts);
+    //   }
+    // }, [data]);
 
     if (status === 'loading') {
       return <Spinner />;
@@ -368,14 +369,15 @@ const QuantitativeGWAS = (props) => {
     if (data.concepts.length === 0) {
       return <React.Fragment>Unexpected error: no convariates found!</React.Fragment>;
     }
-
+    // onChange={(e) => setSearchTerm(e.target.value)}
     return (
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
         <Popover content={chooseVarContent} title='Choosing Variables'>
           <InfoCircleOutlined />
         </Popover>
         <h4 className='GWASUI-selectInstruction'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
-        <input placeholder="Filter options by name" onChange={(e) => setSearchTerm(e.target.value)} />
+
+        <input placeholder="Filter options by name"  />
         <div className='GWASUI-mainTable'>
           <Table
             className='GWASUI-table2'
@@ -383,7 +385,7 @@ const QuantitativeGWAS = (props) => {
             pagination={{ pageSize: 10, onChange: (e) => setCurrentPage(e) ,current: currentPage}}
             rowSelection={step2TableRowSelection}
             columns={step2TableConfig}
-            dataSource={filteredConcepts}
+            dataSource={data.concepts}
           />
         </div>
       </Space>
@@ -636,7 +638,7 @@ const QuantitativeGWAS = (props) => {
       }
       case 1: {
         return (
-          <Covariates selectedConcepts={selectedConcepts} />
+          <Covariates />
         );
       }
       case 2: {
@@ -822,7 +824,7 @@ const QuantitativeGWAS = (props) => {
             className='GWASUI-navBtn GWASUI-navBtn__next'
             type='primary'
             onClick={() => {
-              handleNextStep();
+              // handleNextStep();
               setCurrent(current + 1);
             }}
             disabled={!nextButtonEnabled}
