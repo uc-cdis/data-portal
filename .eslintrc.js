@@ -105,5 +105,13 @@ module.exports = {
         'react/no-unused-prop-types': 'off',
       },
     },
+    {
+      files: ['src/redux/**/*.js'],
+      rules: { 'import/prefer-default-export': 'off' },
+    },
+    {
+      files: ['src/redux/**/slice.js'],
+      rules: { 'no-param-reassign': 'off' },
+    },
   ],
 };
