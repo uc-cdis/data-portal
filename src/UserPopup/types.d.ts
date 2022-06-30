@@ -1,4 +1,4 @@
-export type UserReviewDocument = {
+export type UserDocument = {
   formatted: string;
   id: number;
   name: string;

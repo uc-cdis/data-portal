@@ -5,14 +5,14 @@ import { contactEmail } from '../localconf';
 import Button from '../gen3-ui-component/components/Button';
 import SimpleInputField from '../components/SimpleInputField';
 
-/** @typedef {import('./types').UserReviewDocument} UserReviewDocument */
+/** @typedef {import('./types').UserDocument} UserDocument */
 /** @typedef {import('./types').UserRegistrationInput} UserRegistrationInput */
 
 /** @typedef {('input' | 'success' | 'error')} UserRegistrationView  */
 
 /**
  * @param {Object} prop
- * @param {UserReviewDocument[]} prop.docsToBeReviewed
+ * @param {UserDocument[]} prop.docsToBeReviewed
  * @param {() => void} prop.onClose
  * @param {(userInput: UserRegistrationInput) => Promise<('success' | 'error')>} prop.onRegister
  * @param {(userInput: UserRegistrationInput) => void} prop.onSubscribe

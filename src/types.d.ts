@@ -1,5 +1,5 @@
 import type { Dispatch, ReturnType } from 'redux';
-import type { UserReviewDocument } from './UserPopup/types';
+import type { UserDocument } from './UserPopup/types';
 
 export type FetchHelperOptions = {
   path: string;
@@ -32,7 +32,7 @@ export type User = {
   azp: any;
   certificates_uploaded: any[];
   display_name: string;
-  docs_to_be_reviewed: UserReviewDocument[];
+  docs_to_be_reviewed: UserDocument[];
   email: string;
   ga4gh_passport_v1: any[];
   groups: any[];
