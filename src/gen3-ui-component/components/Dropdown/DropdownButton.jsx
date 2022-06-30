@@ -17,6 +17,7 @@ import './DropdownButton.css';
  * @property {boolean} [split]
  */
 
+/** @param {DropdownButtonProps} props */
 function DropdownButton({
   afterClick = () => {},
   buttonType = 'primary',
