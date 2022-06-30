@@ -5,18 +5,19 @@ import './SingleSelectFilter.css';
 
 /**
  * @typedef {Object} SingleSelectFilterProps
- * @property {boolean} accessible
- * @property {number} count
- * @property {boolean} disabled
- * @property {string} disabledTooltipMessage
- * @property {number} hideValue
- * @property {boolean} hideZero
+ * @property {boolean} [accessible]
+ * @property {number} [count]
+ * @property {boolean} [disabled]
+ * @property {string} [disabledTooltipMessage]
+ * @property {number} [hideValue]
+ * @property {boolean} [hideZero]
  * @property {string} label
- * @property {string} lockedTooltipMessage
+ * @property {string} [lockedTooltipMessage]
  * @property {(label: string) => void} onSelect
- * @property {boolean} selected
+ * @property {boolean} [selected]
  */
 
+/** @param {SingleSelectFilterProps} props */
 function SingleSelectFilter({
   accessible = true,
   count = 0,
