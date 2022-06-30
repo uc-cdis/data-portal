@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import ExplorerButtonGroup from '.';
-import { connectionError, resetJob, setJobStatusInterval } from '../../actions';
+import { requestErrored, resetJob, setJobStatusInterval } from '../../actions';
 import { dispatchJob, checkJobStatus } from '../../actions.thunk';
 import { jobapiPath } from '../../localconf';
 import { asyncSetInterval } from '../../utils';
@@ -29,7 +29,7 @@ const mapDispatchToProps = (dispatch) => ({
     fetchWithCreds({
       path: `${jobapiPath}output?UID=${jobId}`,
       method: 'GET',
-      onError: () => dispatch(connectionError()),
+      onError: () => dispatch(requestErrored()),
     }),
   resetJobState: () => {
     dispatch(resetJob());

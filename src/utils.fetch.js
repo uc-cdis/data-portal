@@ -69,7 +69,7 @@ export const fetchCreds = (opts) => {
  * Little helper issues fetch, then resolves response
  * as text, and tries to JSON.parse the text before resolving, but
  * ignores JSON.parse failure and reponse.status, and returns {response, data} either way.
- * If dispatch is supplied, then dispatch(connectionError()) on fetch reject.
+ * If dispatch is supplied, then dispatch(requestErrored()) on fetch reject.
  * If useCache is supplied and method is GET,
  * then text for 200 JSON responses are cached, and re-used, and
  * the result promise only includes {data, status} - where JSON data is re-parsed

@@ -1,4 +1,4 @@
-import { connectionError, fetchErrored } from '../actions';
+import { fetchErrored, requestErrored } from '../actions';
 import { fetchWithCreds } from '../utils.fetch';
 import { indexdPath, submissionApiPath, useIndexdAuthz } from '../localconf';
 import {
@@ -128,7 +128,7 @@ export const getCounts =
         query: buildCountsQuery(dictionary, nodeTypes, project),
       }),
       method: 'POST',
-      onError: () => dispatch(connectionError()),
+      onError: () => dispatch(requestErrored()),
     })
       .then(({ status, data }) => {
         switch (status) {
@@ -166,7 +166,7 @@ export const submitFileChunk =
       method,
       customHeaders: new Headers({ 'Content-Type': fileType }),
       body: fileChunk,
-      onError: () => dispatch(connectionError()),
+      onError: () => dispatch(requestErrored()),
     });
 
     const payload = {

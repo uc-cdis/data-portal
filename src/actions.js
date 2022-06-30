@@ -62,13 +62,9 @@ export const receiveProjects = (payload) => ({
 
 /* SLICE: STATUS */
 /** @returns {AnyAction} */
-export const connectionError = () => {
-  console.log('connection error');
-  return {
-    type: 'REQUEST_ERROR',
-    payload: 'connection_error',
-  };
-};
+export const requestErrored = () => ({
+  type: 'REQUEST_ERROR',
+});
 
 /* SLICE: USER */
 /**

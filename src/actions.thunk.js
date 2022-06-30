@@ -1,5 +1,4 @@
 import {
-  connectionError,
   fetchErrored,
   receiveDataVersion,
   receiveJobDispatch,
@@ -7,6 +6,7 @@ import {
   receiveProjects,
   receiveUser,
   receiveUserAccess,
+  requestErrored,
   updatePopup,
 } from './actions';
 import {
@@ -31,7 +31,7 @@ export const dispatchJob = (body) => (/** @type {Dispatch} */ dispatch) =>
     path: `${jobapiPath}dispatch`,
     body: JSON.stringify(body),
     method: 'POST',
-    onError: () => dispatch(connectionError()),
+    onError: () => dispatch(requestErrored()),
   })
     .then(({ status, data }) => {
       switch (status) {
@@ -60,7 +60,7 @@ export const checkJobStatus =
     return fetchWithCreds({
       path: `${jobapiPath}status?UID=${jobId}`,
       method: 'GET',
-      onError: () => dispatch(connectionError()),
+      onError: () => dispatch(requestErrored()),
     })
       .then(({ status, data }) => {
         // stop fetching job status once it stops running
@@ -109,7 +109,7 @@ export const fetchProjects =
 
 /* SLICE: USER */
 export const fetchUser = () => (/** @type {Dispatch} */ dispatch) =>
-  fetchCreds({ onError: () => dispatch(connectionError()) }).then(
+  fetchCreds({ onError: () => dispatch(requestErrored()) }).then(
     ({ status, data }) => {
       if (status === 200) return dispatch(receiveUser(data));
       if (status === 401) return dispatch(updatePopup({ authPopup: true }));

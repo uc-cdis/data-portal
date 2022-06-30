@@ -67,7 +67,6 @@ const status = (state = /** @type {StatusState} */ ({}), action) => {
     case 'REQUEST_ERROR':
       return {
         ...state,
-        error_type: action.payload,
         request_state: 'error',
       };
     default:
