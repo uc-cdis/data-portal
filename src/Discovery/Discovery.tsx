@@ -24,9 +24,8 @@ import DiscoverySummary from './DiscoverySummary';
 import DiscoveryTagViewer from './DiscoveryTagViewer';
 import DiscoveryDropdownTagViewer from './DiscoveryDropdownTagViewer';
 import DiscoveryListView from './DiscoveryListView';
-import DiscoveryDetails from './DiscoveryDetails';
 import DiscoveryAdvancedSearchPanel from './DiscoveryAdvancedSearchPanel';
-import ReduxDiscoveryActionBar from './reduxer';
+import { ReduxDiscoveryActionBar, ReduxDiscoveryDetails } from './reduxer';
 import DiscoveryMDSSearch from './DiscoveryMDSSearch';
 import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 
@@ -812,7 +811,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             />
           </Space>
         </div>
-        <DiscoveryDetails
+        <ReduxDiscoveryDetails
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
           permalinkCopied={permalinkCopied}

@@ -65,6 +65,7 @@ import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import StudyRegistration from './StudyRegistration';
+import StudyRegistrationRequestForm from './StudyRegistration/StudyRegistrationRequestForm'
 import NotFound from './components/NotFound';
 
 // monitor user's session
@@ -500,6 +501,24 @@ async function init() {
                             (props) => (
                               <ProtectedContent
                                 component={StudyRegistration}
+                                {...props}
+                              />
+                            )
+                          }
+                        />
+                      )
+                      : null
+                  }
+                  {
+                    isEnabled('studyRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/study-reg/request-access'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={StudyRegistrationRequestForm}
                                 {...props}
                               />
                             )

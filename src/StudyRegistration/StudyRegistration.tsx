@@ -71,7 +71,7 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
   }
 };
 
-const isUUID = (input) => {
+const isUUID = (input: string) => {
   // regexp for checking if a string is possibly an UUID, from https://melvingeorge.me/blog/check-if-string-valid-uuid-regex-javascript
   const regexp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
   return new RegExp(regexp).test(input);
@@ -172,7 +172,6 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
               ]}
             />
           )}
-
         </div>
       </div>
     );
@@ -181,7 +180,7 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
   return (
     <div className='study-reg-container'>
       <div className='study-reg-form-container'>
-        <Form className='study-reg-form' {...layout} form={form} name='control-hooks' onFinish={onFinish} validateMessages={validateMessages}>
+        <Form className='study-reg-form' {...layout} form={form} name='study-reg-form' onFinish={onFinish} validateMessages={validateMessages}>
           <Divider plain>Study Selection</Divider>
           <Form.Item
             name='study_id'

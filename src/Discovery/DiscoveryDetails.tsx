@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Alert, Button, Drawer, Space, Collapse, List, Tabs,
+  Alert, Button, Drawer, Space, Collapse, List, Tabs, Divider,
 } from 'antd';
 import {
   LinkOutlined,
@@ -8,7 +8,9 @@ import {
   UnlockOutlined,
   DoubleLeftOutlined,
   DownloadOutlined,
+  AuditOutlined,
 } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
 import { hostname, basename, fenceDownloadPath } from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import {
@@ -24,12 +26,17 @@ interface Props {
   modalData: DiscoveryResource;
   config: DiscoveryConfig;
   permalinkCopied: boolean;
+  user: User;
 }
 
 interface ListItem {
   title: string,
   description: string,
   guid: string
+}
+
+interface User {
+  username: string
 }
 
 const fieldCls = { className: 'discovery-modal__field' };
@@ -169,6 +176,30 @@ const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, r
 };
 
 const DiscoveryDetails = (props: Props) => {
+  const history = useHistory();
+
+  const pagePath = `/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`;
+  const permalink = `${(basename === '/' ? '' : basename)}${pagePath}`;
+
+  const handleRedirectToRegstrationClick = (studyUID: String = null) => {
+    // TODO: not impemented, redirect to study reg page
+  };
+
+  const handleRedirectToRequestRegstrationAccessClick = (
+    requestID: String = null,
+    studyUID: String|Number = null,
+    studyName: String = null,
+    studyNumber: String = null) => {
+    // call requestor and redirect to request access page (by requestor) when requestor service is ready
+    history.push('/study-reg/request-access', {
+      requestID, studyUID, studyName, studyNumber,
+    });
+  };
+
+  const handleRedirectToLoginClick = () => {
+    history.push('/login', { from: pagePath });
+  };
+
   const headerField = props.config.detailView?.headerField || props.config.studyPageFields.header?.field;
   const header = (
     <Space align='baseline'>
@@ -193,20 +224,46 @@ const DiscoveryDetails = (props: Props) => {
           <DoubleLeftOutlined />
           Back
         </Button>
-        <Button
-          type='text'
-          onClick={() => {
-            const cleanBasename = basename.replace(/^\/+/g, '');
-            navigator.clipboard.writeText(`${hostname}${cleanBasename}/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`)
-              .then(() => {
-                props.setPermalinkCopied(true);
-              });
-          }}
-        >
-          { props.permalinkCopied
-            ? <React.Fragment><CheckOutlined /> Copied! </React.Fragment>
-            : <React.Fragment><LinkOutlined /> Permalink </React.Fragment>}
-        </Button>
+        <Space split={<Divider type='vertical' />}>
+          <Button
+            type='text'
+            onClick={() => {
+              if (props.user.username) {
+                if (false) { // TODO: all set, can go to study reg, use userHasMethodForServiceOnResource()
+                  return handleRedirectToRegstrationClick();
+                }
+                return handleRedirectToRequestRegstrationAccessClick('12345', props.modalData[props.config.minimalFieldMapping.uid], props.modalData.project_title, props.modalData.project_number);
+              }
+              return handleRedirectToLoginClick();
+            }}
+          >
+            <React.Fragment><AuditOutlined />{(
+              () => {
+                if (props.user.username) {
+                  if (false) { // TODO: all set, can go to study reg, use userHasMethodForServiceOnResource()
+                    return ' Register This Study ';
+                  }
+                  return ' Request Access to Register This Study ';
+                }
+                return ' Login to Register This Study ';
+              }
+            )()}
+            </React.Fragment>
+          </Button>
+          <Button
+            type='text'
+            onClick={() => {
+              navigator.clipboard.writeText(`${hostname}${permalink.replace(/^\/+/g, '')}`)
+                .then(() => {
+                  props.setPermalinkCopied(true);
+                });
+            }}
+          >
+            { props.permalinkCopied
+              ? <React.Fragment><CheckOutlined /> Copied! </React.Fragment>
+              : <React.Fragment><LinkOutlined /> Permalink </React.Fragment>}
+          </Button>
+        </Space>
       </div>
       {
         props.config.detailView?.tabs
