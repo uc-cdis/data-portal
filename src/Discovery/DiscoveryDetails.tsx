@@ -169,6 +169,9 @@ const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, r
 };
 
 const DiscoveryDetails = (props: Props) => {
+  const pagePath = `/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`;
+  const permalink = `${(basename === '/' ? '' : basename)}${pagePath}`;
+
   const headerField = props.config.detailView?.headerField || props.config.studyPageFields.header?.field;
   const header = (
     <Space align='baseline'>
@@ -196,8 +199,7 @@ const DiscoveryDetails = (props: Props) => {
         <Button
           type='text'
           onClick={() => {
-            const cleanBasename = basename.replace(/^\/+/g, '');
-            navigator.clipboard.writeText(`${hostname}${cleanBasename}/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`)
+            navigator.clipboard.writeText(`${hostname}${permalink.replace(/^\/+/g, '')}`)
               .then(() => {
                 props.setPermalinkCopied(true);
               });
