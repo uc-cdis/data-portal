@@ -423,10 +423,9 @@ const DiscoveryActionBar = (props: Props) => {
           }
         },
       );
-    },
-    [],
+    }
   );
-
+  const { onActionResumed } = props;
   useEffect(
     () => {
       if (props.discovery.actionToResume === 'download') {
@@ -438,7 +437,7 @@ const DiscoveryActionBar = (props: Props) => {
           history,
           location,
         );
-        props.onActionResumed();
+        onActionResumed();
       } else if (props.discovery.actionToResume === 'export') {
         handleExportToWorkspaceClick(
           props.config,
@@ -448,12 +447,12 @@ const DiscoveryActionBar = (props: Props) => {
           history,
           location,
         );
-        props.onActionResumed();
+        onActionResumed();
       } else if (props.discovery.actionToResume === 'manifest') {
         handleDownloadManifestClick(props.config, props.discovery.selectedResources);
-        props.onActionResumed();
+        onActionResumed();
       }
-    }, [props.discovery.actionToResume],
+    }, [props.discovery, props.config, downloadStatus, setDownloadStatus, history, location, props.setExportingToWorkspace, onActionResumed],
   );
 
   const handleRedirectToLoginClick = (action:'download'|'export'|'manifest' = null) => {

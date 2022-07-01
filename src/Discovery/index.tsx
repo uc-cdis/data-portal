@@ -130,7 +130,7 @@ const DiscoveryWithMDSBackend: React.FC<{
 
     // indicate discovery tag is active even if we didn't click a button to get here
     props.onDiscoveryPageActive();
-  }, []);
+  });
 
   return (
     <Discovery

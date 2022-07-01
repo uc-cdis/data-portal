@@ -280,9 +280,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     setVisibleResources(filteredResources);
   };
 
-  useEffect(doSearchFilterSort,
-    [props.searchTerm, props.accessSortDirection, props.studies, props.pagination, props.accessFilters, props.selectedTags],
-  );
+  useEffect(doSearchFilterSort);
 
   useEffect(() => {
     // Load studies into JS Search.
@@ -315,7 +313,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     search.addDocuments(props.studies);
     // expose the search function
     setJsSearch(search);
-  }, [props.studies]);
+  }, [props.studies, config]);
 
   useEffect(() => {
     // If opening to a study by default, open that study
@@ -333,7 +331,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         console.error(`Could not find study with UID ${studyID}.`);
       }
     }
-  }, [props.params.studyUID, props.studies]);
+  }, [props.params.studyUID, props.studies, config.minimalFieldMapping.uid]);
 
   useEffect(() => {
     const filterPopup = document.querySelector('#discovery-table-of-records .ant-table-filter-column .ant-dropdown-trigger');
