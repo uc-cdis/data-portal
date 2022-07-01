@@ -423,7 +423,7 @@ const DiscoveryActionBar = (props: Props) => {
           }
         },
       );
-    }
+    },
   );
   const { onActionResumed } = props;
   useEffect(
