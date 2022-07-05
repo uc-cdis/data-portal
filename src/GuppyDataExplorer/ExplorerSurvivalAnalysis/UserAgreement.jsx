@@ -41,7 +41,7 @@ const checkItems = [
   'I will follow a hypothesis-driven approach when performing analyses and maintain a hypothesis record.',
 ];
 
-/** @param {{ user: import('@src/types').UserState }} state */
+/** @param {import('../../redux/types').RootState} state */
 function fullnameSelector(state) {
   const { additional_info: info, username } = state.user;
   return info?.firstName && info?.lastName
@@ -151,7 +151,7 @@ function ReminderForm({ onAgree }) {
 
 ReminderForm.propTypes = { onAgree: PropTypes.func };
 
-/** @param {{ user: import('@src/types').UserState }} state */
+/** @param {import('../../redux/types').RootState} state */
 function userAgreementDocSelector(state) {
   return state.user.docs_to_be_reviewed.find(
     ({ type }) => type === 'survival-user-agreement'

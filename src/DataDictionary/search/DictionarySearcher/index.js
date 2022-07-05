@@ -19,7 +19,7 @@ const ReduxDictionarySearcher = (() => {
     currentSearchKeyword: state.ddgraph.currentSearchKeyword,
   });
 
-  /** @param {import('redux').Dispatch} dispatch */
+  /** @param {import('../../../redux/types').AppDispatch} dispatch */
   const mapDispatchToProps = (dispatch) => ({
     /** @param {RootState['ddgraph']['isSearching']} isSearching */
     setIsSearching: (isSearching) => {

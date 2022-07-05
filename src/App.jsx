@@ -52,7 +52,7 @@ const UserProfile = lazy(() => import('./UserProfile/ReduxUserProfile'));
 function App() {
   useSessionMonitor();
 
-  /** @type {import('redux-thunk').ThunkDispatch} */
+  /** @type {import('./redux/types').AppDispatch} */
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchDataVersion());

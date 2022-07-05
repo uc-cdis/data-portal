@@ -1,7 +1,6 @@
 import { lineLimit } from '../localconf';
 
 /** @typedef {import('../redux/types').RootState} RootState */
-/** @typedef {import('./types').SubmissionState} SubmissionState */
 
 /**
  * @param {RootState['submission']['dictionary']} dictionary

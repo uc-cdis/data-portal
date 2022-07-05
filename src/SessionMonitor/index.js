@@ -25,7 +25,7 @@ export class SessionMonitor {
     this.popupShown = false;
   }
 
-  useDispatch(/** @type {import('redux-thunk').ThunkDispatch} */ dispatch) {
+  useDispatch(/** @type {import('../redux/types').AppDispatch} */ dispatch) {
     this.dispatch = dispatch;
   }
 

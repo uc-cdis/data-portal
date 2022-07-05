@@ -58,7 +58,7 @@ const ReduxGraphCalculator = (() => {
     layoutInitialized: state.ddgraph.layoutInitialized,
   });
 
-  /** @param {import('redux-thunk').ThunkDispatch} dispatch */
+  /** @param {import('../../../redux/types').AppDispatch} dispatch */
   const mapDispatchToProps = (dispatch) => ({
     initializeLayout: () => dispatch(initializeLayout()),
     /** @param {RootState['ddgraph']['relatedNodeIDs']} relatedNodeIDs */
