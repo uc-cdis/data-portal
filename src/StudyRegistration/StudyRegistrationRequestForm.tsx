@@ -63,7 +63,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
   const [reqAccessRequestPending, setReqAccessRequestPending] = useState(false);
 
   useEffect(() => {
-    const locationStateData = location.state as LocationState;
+    const locationStateData = location.state as LocationState || {};
     setRequestID(locationStateData.requestID);
     setStudyUID(locationStateData.studyUID);
     setStudyNumber(locationStateData.studyNumber);
@@ -136,7 +136,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
           <Form.Item
             name='study_grant'
             label='Study Name - Grant Number'
-            initialValue={`${studyName} - ${studyNumber}`}
+            initialValue={(!studyNumber && !studyNumber) ? '' : `${studyName} - ${studyNumber}`}
             rules={[
               {
                 required: true,
