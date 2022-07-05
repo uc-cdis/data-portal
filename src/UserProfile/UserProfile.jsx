@@ -23,9 +23,7 @@ export const saveToFile = (savingStr, filename) => {
   FileSaver.saveAs(blob, filename);
 };
 
-/** @typedef {import('../types').PopupState} PopupState */
-/** @typedef {import('./types').UserProfileState} UserProfileState */
-
+/** @typedef {import('../redux/types').RootState} RootState */
 /**
  * @typedef {Object} UserProfileProps
  * @property {() => void} onClearCreationSession
@@ -33,10 +31,10 @@ export const saveToFile = (savingStr, filename) => {
  * @property {(path: string) => void} onCreateKey
  * @property {(jti: string, exp: number, path: string) => void} onDeleteKey
  * @property {(jti: string, exp: number) => void} onRequestDeleteKey
- * @property {(state: Partial<PopupState>) => void} onUpdatePopup
- * @property {Partial<PopupState>} popups
+ * @property {(state: Partial<RootState['popups']>) => void} onUpdatePopup
+ * @property {Partial<RootState['popups']>} popups
  * @property {import('./UserInformation').UserInformationProps} userInformation
- * @property {UserProfileState} userProfile
+ * @property {RootState['userProfile']} userProfile
  */
 
 /** @param {UserProfileProps} props */
