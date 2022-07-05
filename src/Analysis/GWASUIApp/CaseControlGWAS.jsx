@@ -66,6 +66,8 @@ const CaseControlGWAS = (props) => {
     const [form] = Form.useForm();
 
     const [selectedCovariates, setSelectedCovariates] = useState([]);
+    // TODO - remove dummy value - assigning a static value here until the UI component is ready to populate selectedDichotomousCovariates:
+    const [selectedDichotomousCovariates, setSelectedDichotomousCovariates] = useState([{'name': 'dummy dichotomous variable', 'cohort1': 400, 'cohort2': 401}]);
     const [selectedCovariateIds, setSelectedCovariateIds] = useState([]);
     const [selectedCovariateVars, setSelectedCovariateVars] = useState([]);
 
@@ -395,14 +397,12 @@ const CaseControlGWAS = (props) => {
     };
 
     async function fetchConceptStatsByHare(cohortDefinitionId) {
-        var conceptIds = [...selectedCovariates].map((val) => val.concept_id);
-        const conceptIdsPayload = { ConceptIds: conceptIds };
         const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
         const reqBody = {
             method: 'POST',
             credentials: 'include',
             headers,
-            body: JSON.stringify(conceptIdsPayload),
+            body: JSON.stringify(getVariablesList(selectedDichotomousCovariates, selectedCovariates)),
         };
         const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
         return getConceptStats.json();
@@ -511,15 +511,28 @@ const CaseControlGWAS = (props) => {
         }
     };
 
+    // This function takes in list of dichotomous covariates (cohort-pair based) and other regular covariates (concept-based)
+    // and produces the generic "variables" list that can be used as input argument in different cohort-middleware endpoints.
+    function getVariablesList(dichotomousCovariates, otherCovariates) {
+        const variables = [];
+        for (let dichotomousCovariate of dichotomousCovariates) {
+            const variableItem = {'variable_type': 'custom_dichotomous', 'cohort_ids': [dichotomousCovariate.cohort1, dichotomousCovariate.cohort2] };
+            variables.push(variableItem);
+        }
+        for (let otherCovariate of otherCovariates) {
+            const variableItem = {'variable_type': 'concept', 'concept_id': otherCovariate.concept_id };
+            variables.push(variableItem);
+        }
+        return {'variables': variables};
+    }
+
     async function fetchOverlapInfo() {
-        var conceptIds = [...selectedCovariates].map((val) => val.concept_id);
-        const conceptIdsPayload = { ConceptIds: conceptIds };
         const statsEndPoint = `${cohortMiddlewarePath}cohort-stats/check-overlap/by-source-id/${sourceId}/by-case-control-cohort-definition-ids/${caseCohortDefinitionId}/${controlCohortDefinitionId}/filter-by-concept-id-and-value/${hareConceptId}/${selectedHareValueAsConceptId}`;
         const reqBody = {
             method: 'POST',
             credentials: 'include',
             headers,
-            body: JSON.stringify(conceptIdsPayload),
+            body: JSON.stringify(getVariablesList(selectedDichotomousCovariates, selectedCovariates)),
         };
         const getOverlapStats = await fetch(statsEndPoint, reqBody);
         return getOverlapStats.json();
@@ -567,7 +580,9 @@ const CaseControlGWAS = (props) => {
         const submitEndpoint = `${gwasWorkflowPath}submit`;
         const requestBody = {
             n_pcs: numOfPC,
+            // TODO - deprecated - remove this "covariates" item as selectedCovariates are already part of "variables" below:
             covariates: selectedCovariates.map((val) => val.prefixed_concept_id),
+            variables: getVariablesList(selectedDichotomousCovariates, selectedCovariates),
             out_prefix: Date.now().toString(),
             outcome: "-1",
             hare_population: selectedHareValueName,
