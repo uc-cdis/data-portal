@@ -1,24 +1,24 @@
 import { connect } from 'react-redux';
 import SubmitForm from './SubmitForm';
-import { requestUpload, updateFormSchema } from './actions';
+import { requestUpload, updateFormSchema } from '../redux/submission/slice';
 
-/** @typedef {import('./types').SubmissionState} SubmissionState */
+/** @typedef {import('../redux/types').RootState} RootState */
 
-/** @param {{ submission: SubmissionState }} state */
+/** @param {RootState} state */
 const mapStateToProps = (state) => ({
   submission: state.submission,
 });
 
-/** @param {import('redux-thunk').ThunkDispatch} dispatch */
+/** @param {import('../redux/types').AppDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
   /**
-   * @param {SubmissionState['file']} file
-   * @param {SubmissionState['file_type']} fileType
+   * @param {RootState['submission']['file']} file
+   * @param {RootState['submission']['file_type']} fileType
    */
   onUploadClick: (file, fileType) =>
     dispatch(requestUpload({ file, file_type: fileType })),
   /**
-   * @param {SubmissionState['formSchema']} formSchema
+   * @param {RootState['submission']['formSchema']} formSchema
    */
   onUpdateFormSchema: (formSchema) => dispatch(updateFormSchema(formSchema)),
 });

@@ -1,19 +1,18 @@
 import { connect } from 'react-redux';
 import MapFiles from './MapFiles';
-import { receiveFilesToMap } from './actions';
+import { receiveFilesToMap } from '../redux/submission/slice';
 
-/** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
-/** @typedef {import('./types').SubmissionState} SubmissionState */
+/** @typedef {import('../redux/types').RootState} RootState */
 
 const ReduxMapFiles = (() => {
-  /** @param {{ submission: SubmissionState }} state */
+  /** @param {RootState} state */
   const mapStateToProps = (state) => ({
     unmappedFiles: state.submission.unmappedFiles,
   });
 
-  /** @param {ThunkDispatch} dispatch */
+  /** @param {import('../redux/types').AppDispatch} dispatch */
   const mapDispatchToProps = (dispatch) => ({
-    /** @param {SubmissionState['filesToMap']} files */
+    /** @param {RootState['submission']['filesToMap']} files */
     mapSelectedFiles: (files) => {
       dispatch(receiveFilesToMap(files));
     },

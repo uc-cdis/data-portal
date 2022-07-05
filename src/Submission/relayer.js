@@ -7,10 +7,12 @@ import {
   receiveProjectList,
   receiveRelayFail,
   receiveTransactionList,
-} from './actions';
+} from '../redux/submission/slice';
 
 export const getTransactionList =
-  () => (/** @type {import('redux').Dispatch} */ dispatch) => {
+  () =>
+  /** @param {import('../redux/types').AppDispatch} dispatch */
+  (dispatch) => {
     const query = graphql`
       query relayerTransactionLogComponentQuery {
         transactionList: transaction_log(last: 20) {
@@ -89,7 +91,9 @@ const extractCharts = (data) =>
     .map((key) => data[key]);
 
 const getProjectDetail =
-  (projectList) => (/** @type {import('redux').Dispatch} */ dispatch) => {
+  (projectList) =>
+  /** @param {import('../redux/types').AppDispatch} dispatch */
+  (dispatch) => {
     projectList.forEach((project) => {
       fetchQuery(environment, gqlHelper.projectDetailQuery, {
         name: project.name,
@@ -110,8 +114,8 @@ const getProjectDetail =
 export const getProjectsList =
   () =>
   /**
-   * @param {import('redux-thunk').ThunkDispatch} dispatch
-   * @param {() => { submission: import('./types').SubmissionState }} getState
+   * @param {import('../redux/types').AppDispatch} dispatch
+   * @param {import('../redux/types').AppGetState} getState
    */
   (dispatch, getState) => {
     const { lastestListUpdating } = getState().submission;

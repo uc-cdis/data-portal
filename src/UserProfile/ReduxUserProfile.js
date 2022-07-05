@@ -1,26 +1,21 @@
 import { connect } from 'react-redux';
 
 import UserProfile from './UserProfile';
-import { updatePopup } from '../actions';
+import { updatePopup } from '../redux/popups/slice';
 import {
   clearCreationSession,
   clearDeleteKeySession,
   requestDeleteKey,
-} from './actions';
-import { createKey, deleteKey, fetchAccess } from './actions.thunk';
+} from '../redux/userProfile/slice';
+import {
+  createKey,
+  deleteKey,
+  fetchAccess,
+} from '../redux/userProfile/asyncThunks';
 
-/** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
-/** @typedef {import('../types').PopupState} PopupState */
-/** @typedef {import('../types').UserState} UserState */
 /** @typedef {import('./types').JtiData} JtiData */
-/** @typedef {import('./types').UserProfileState} UserProfileState */
 
-/**
- * @param {Object} state
- * @param {PopupState} state.popups
- * @param {UserState} state.user
- * @param {UserProfileState} state.userProfile
- */
+/** @param {import('../redux/types').RootState} state */
 const mapStateToProps = (state) => ({
   userInformation: {
     ...state.user.additional_info,
@@ -30,7 +25,7 @@ const mapStateToProps = (state) => ({
   popups: state.popups,
 });
 
-/** @param {ThunkDispatch} dispatch */
+/** @param {import('../redux/types').AppDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
   onClearCreationSession: () => {
     dispatch(clearCreationSession());
@@ -48,7 +43,7 @@ const mapDispatchToProps = (dispatch) => ({
    * @param {string} path
    */
   onDeleteKey: (jti, exp, path) => {
-    dispatch(deleteKey(jti, exp, path));
+    dispatch(deleteKey({ jti, exp, path }));
   },
   /**
    * @param {JtiData['jti']} requestDeleteJTI
@@ -59,7 +54,7 @@ const mapDispatchToProps = (dispatch) => ({
       dispatch(requestDeleteKey({ requestDeleteJTI, requestDeleteExp }))
     );
   },
-  /** @param {Partial<PopupState>} state */
+  /** @param {Partial<import('../redux/types').RootState['popups']>} state */
   onUpdatePopup: (state) => {
     dispatch(updatePopup(state));
   },

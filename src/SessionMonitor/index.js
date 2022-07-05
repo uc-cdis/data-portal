@@ -1,5 +1,5 @@
 import { logoutInactiveUsers, workspaceTimeoutInMinutes } from '../localconf';
-import { fetchUser, logoutAPI } from '../actions.thunk';
+import { fetchUser, logoutAPI } from '../redux/user/asyncThunks';
 
 /** @param {string} currentURL */
 export function pageFromURL(currentURL) {
@@ -78,11 +78,11 @@ export class SessionMonitor {
     this.refreshSession();
   }
 
-  refreshSession() {
+  async refreshSession() {
     // hitting Fence endpoint refreshes token
-    this.dispatch?.(fetchUser()).then((action) => {
-      if (action.type === 'UPDATE_POPUP') this.popupShown = true;
-    });
+    const shouldUpdatePopup =
+      (await this.dispatch?.(fetchUser()).unwrap()) === 'UPDATE_POPUP';
+    if (shouldUpdatePopup) this.popupShown = true;
   }
 }
 
