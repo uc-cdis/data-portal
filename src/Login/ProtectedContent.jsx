@@ -161,7 +161,7 @@ function ProtectedContent({
               updateState(newState)
             );
         });
-  }, [location]);
+  }, [location.pathname]);
 
   if (state.redirectTo && state.redirectTo !== location.pathname)
     return <Navigate to={state.redirectTo} replace />;
