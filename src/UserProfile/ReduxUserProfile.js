@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-
 import UserProfile from './UserProfile';
 import { updatePopup } from '../redux/popups/slice';
 import {
@@ -35,7 +34,13 @@ const mapDispatchToProps = (dispatch) => ({
   },
   /** @param {string} path */
   onCreateKey: (path) => {
-    dispatch(createKey(path));
+    dispatch(createKey(path))
+      .then(() => {
+        dispatch(fetchAccess());
+      })
+      .finally(() => {
+        dispatch(updatePopup({ saveTokenPopup: true }));
+      });
   },
   /**
    * @param {JtiData['jti']} jti
@@ -43,7 +48,10 @@ const mapDispatchToProps = (dispatch) => ({
    * @param {string} path
    */
   onDeleteKey: (jti, exp, path) => {
-    dispatch(deleteKey({ jti, exp, path }));
+    dispatch(deleteKey({ jti, exp, path })).then(() => {
+      dispatch(fetchAccess());
+      dispatch(updatePopup({ deleteTokenPopup: false }));
+    });
   },
   /**
    * @param {JtiData['jti']} requestDeleteJTI

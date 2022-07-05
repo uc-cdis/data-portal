@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { credentialCdisPath } from '../../localconf';
 import { fetchWithCreds } from '../../utils.fetch';
-import { updatePopup } from '../popups/slice';
 import { requestErrored } from '../status/slice';
 
 export const fetchAccess = createAsyncThunk(
@@ -28,10 +27,7 @@ export const createKey = createAsyncThunk(
       customHeaders: new Headers({ 'Content-Type': 'application/json' }),
     });
 
-    dispatch(updatePopup({ saveTokenPopup: true }));
     if (status !== 200) throw rejectWithValue(data.error || data.message);
-
-    dispatch(fetchAccess());
     return data;
   }
 );
@@ -53,8 +49,5 @@ export const deleteKey = createAsyncThunk(
     });
 
     if (status !== 204) throw rejectWithValue(data);
-
-    dispatch(updatePopup({ deleteTokenPopup: false }));
-    dispatch(fetchAccess());
   }
 );
