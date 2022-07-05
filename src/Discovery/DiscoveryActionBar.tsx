@@ -310,6 +310,9 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
           ...x,
           commons_url: ('commons_url' in x)
             ? x.commons_url : study.commons_url,
+            project_number: study.project_number,
+            study_name: study.study_name_title.trim().toLowerCase().replaceAll(' ', '_'),
+            repository_name: study.commons,
         })));
       } else {
         manifest.push(...study[manifestFieldName]);
@@ -363,6 +366,9 @@ const handleExportToWorkspaceClick = async (
           ...x,
           commons_url: ('commons_url' in x)
             ? x.commons_url : study.commons_url,
+            project_number: study.project_number,
+            study_name: study.study_name_title.trim().toLowerCase().replaceAll(' ', '_'),
+            repository_name: study.commons,
         })));
       } else {
         manifest.push(...study[manifestFieldName]);
