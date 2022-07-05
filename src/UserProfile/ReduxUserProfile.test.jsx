@@ -1,16 +1,12 @@
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
 import fetchMock from 'jest-fetch-mock';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import { configureStore } from '@reduxjs/toolkit';
+import popupsReducer from '../redux/popups/slice';
+import statusReducer from '../redux/status/slice';
+import userReducer from '../redux/user/slice';
+import userProfileReducer from '../redux/userProfile/slice';
 import ReduxUserProfile from './ReduxUserProfile';
-import {
-  clearDeleteKeySession,
-  createSucceeded,
-  deleteKeySucceeded,
-  receiveUserProfile,
-} from './actions';
-import { createKey, deleteKey } from './actions.thunk';
 
 const { mockResponseOnce } = fetchMock;
 const expectedData = {
@@ -24,91 +20,77 @@ const jtis = [
   },
 ];
 
-function getMockStore() {
-  return configureMockStore([thunk])({
+const mockStore = configureStore({
+  preloadedState: {
     user: { username: 'test@test.com', project_access: [] },
-    status: {},
     userProfile: { jtis: [] },
-    popups: {},
-  });
-}
+  },
+  reducer: {
+    popups: popupsReducer,
+    status: statusReducer,
+    user: userReducer,
+    userProfile: userProfileReducer,
+  },
+});
 
-test('creates, fetches, and lists user access keys', (done) => {
+test('creates, fetches, and lists user access keys', async () => {
   mockResponseOnce(JSON.stringify(expectedData), { status: 200 });
   mockResponseOnce(JSON.stringify({ jtis }), { status: 200 });
-
-  const mockStore = getMockStore();
-  render(
+  const { container, getAllByRole, getByText } = render(
     <Provider store={mockStore}>
       <ReduxUserProfile />
     </Provider>
   );
-  const createButtonElement = screen.getByText('Create API key');
+  const createButtonElement = getByText('Create API key');
   expect(createButtonElement).toBeInTheDocument();
 
   fireEvent.click(createButtonElement);
-  waitFor(() => {
-    // Note that mock-store does not register reducers, so UI does not update,
-    // but can check for expected actions
-    expect(mockStore.getActions()).toEqual([
-      createSucceeded({
-        refreshCred: expectedData,
-        strRefreshCred: JSON.stringify(expectedData, null, '\t'),
-      }),
-      {
-        type: 'UPDATE_POPUP',
-        payload: { saveTokenPopup: true },
-      },
-      receiveUserProfile(jtis),
-    ]);
-    done();
+  await waitFor(() => {
+    const popupElement = container.querySelector('.popup__mask');
+    expect(popupElement).toBeInTheDocument();
+    expect(
+      getByText('This secret key is only displayed this time. Please save it!')
+    ).toBeInTheDocument();
+    expect(getByText(expectedData.key_id)).toBeInTheDocument();
   });
+
+  const closePopupButtonElement = getByText('Close');
+  expect(closePopupButtonElement).toBeInTheDocument();
+
+  fireEvent.click(closePopupButtonElement);
+  expect(container.querySelector('.popup__mask')).not.toBeInTheDocument();
+  expect(getByText('You have the following API key(s)')).toBeInTheDocument();
+  expect(getAllByRole('row')).toHaveLength(2); // 2 rows including header
+  expect(getByText(expectedData.key_id)).toBeInTheDocument();
 });
 
-test('updates the redux store', (done) => {
-  mockResponseOnce(JSON.stringify(expectedData), { status: 200 });
-  mockResponseOnce(JSON.stringify({ jtis }), { status: 200 });
-
-  const mockStore = getMockStore();
-  /** @type {import('redux-thunk').ThunkDispatch} */ (mockStore.dispatch)(
-    createKey('http://anything.com')
-  );
-
-  waitFor(() => {
-    expect(mockStore.getActions()).toEqual([
-      createSucceeded({
-        refreshCred: expectedData,
-        strRefreshCred: JSON.stringify(expectedData, null, '\t'),
-      }),
-      {
-        type: 'UPDATE_POPUP',
-        payload: { saveTokenPopup: true },
-      },
-      receiveUserProfile(jtis),
-    ]);
-    done();
-  });
-});
-
-test('deletes key', (done) => {
-  const { jti, exp } = jtis[0];
-  mockResponseOnce(JSON.stringify({ exp }), { status: 204 });
+test('deletes key', async () => {
+  mockResponseOnce(null);
+  mockResponseOnce(JSON.stringify({ exp: jtis[0].exp }), { status: 204 });
   mockResponseOnce(JSON.stringify({ jtis: [] }), { status: 200 });
 
-  const mockStore = getMockStore();
-  /** @type {import('redux-thunk').ThunkDispatch} */ (mockStore.dispatch)(
-    deleteKey(jti, exp, 'test.com/action=delete')
+  const { container, getByText } = render(
+    <Provider store={mockStore}>
+      <ReduxUserProfile />
+    </Provider>
   );
-  waitFor(() => {
-    expect(mockStore.getActions()).toEqual([
-      deleteKeySucceeded(),
-      clearDeleteKeySession(),
-      {
-        type: 'UPDATE_POPUP',
-        payload: { deleteTokenPopup: false },
-      },
-      receiveUserProfile([]),
-    ]);
-    done();
+
+  const deleteButtonElement = getByText('Delete');
+  expect(deleteButtonElement).toBeInTheDocument();
+
+  fireEvent.click(deleteButtonElement);
+  const popupElement = container.querySelector('.popup__mask');
+  expect(popupElement).toBeInTheDocument();
+  expect(getByText('Inactivate API Key')).toBeInTheDocument();
+
+  const confirmButtonElement = getByText('Confirm');
+  expect(confirmButtonElement).toBeInTheDocument();
+
+  fireEvent.click(confirmButtonElement);
+
+  fireEvent.click(confirmButtonElement);
+  await waitFor(() => {
+    expect(confirmButtonElement).not.toBeInTheDocument();
+    expect(deleteButtonElement).not.toBeInTheDocument();
   });
 });

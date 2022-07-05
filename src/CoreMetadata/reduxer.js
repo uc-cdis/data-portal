@@ -3,7 +3,8 @@ import CoreMetadataHeader from './CoreMetadataHeader';
 import FileTypePicture from '../components/FileTypePicture';
 import CoreMetadataTable from './CoreMetadataTable';
 import { coreMetadataPath, userapiPath } from '../localconf';
-import { requestErrored, updatePopup } from '../actions';
+import { updatePopup } from '../redux/popups/slice';
+import { requestErrored } from '../redux/status/slice';
 import { fetchWithCreds } from '../utils.fetch';
 
 export const generateSignedURL = (objectId) => (dispatch) =>

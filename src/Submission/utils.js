@@ -1,9 +1,9 @@
 import { lineLimit } from '../localconf';
 
-/** @typedef {import('./types').SubmissionState} SubmissionState */
+/** @typedef {import('../redux/types').RootState} RootState */
 
 /**
- * @param {SubmissionState['dictionary']} dictionary
+ * @param {RootState['submission']['dictionary']} dictionary
  * @param {string} name
  */
 function checkIfRelevantNodeForCounts(dictionary, name) {
@@ -16,8 +16,8 @@ function checkIfRelevantNodeForCounts(dictionary, name) {
 }
 
 /**
- * @param {SubmissionState['dictionary']} dictionary
- * @param {SubmissionState['nodeTypes']} nodeTypes
+ * @param {RootState['submission']['dictionary']} dictionary
+ * @param {RootState['submission']['nodeTypes']} nodeTypes
  * @param {string} project
  */
 export function buildCountsQuery(dictionary, nodeTypes, project) {

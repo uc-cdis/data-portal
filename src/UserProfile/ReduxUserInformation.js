@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import UserInformation from './UserInformation';
-import { receiveUser } from '../actions';
-import { fetchUserAccess } from '../actions.thunk';
+import { receiveUser } from '../redux/user/slice';
+import { fetchUserAccess } from '../redux/userAccess/asyncThunks';
 
-/** @param {import('redux-thunk').ThunkDispatch} dispatch */
+/** @param {import('../redux/types').AppDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
   /**
    * @param {Response} response
@@ -11,7 +11,7 @@ const mapDispatchToProps = (dispatch) => ({
    */
   updateInformation: (response) =>
     response.ok
-      ? response.json().then((/** @type {import('../types').User} */ user) => {
+      ? response.json().then((/** @type {import('./types').User} */ user) => {
           dispatch(receiveUser(user));
           dispatch(fetchUserAccess());
           return 'success';

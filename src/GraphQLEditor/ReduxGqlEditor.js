@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import GqlEditor from './GqlEditor';
 
-/** @param {{ graphiql: import('./types').GraphiqlState }} state */
+/** @param {import('../redux/types').RootState} state */
 const mapStateToProps = (state) => ({
   schema: state.graphiql.schema,
   guppySchema: state.graphiql.guppySchema,

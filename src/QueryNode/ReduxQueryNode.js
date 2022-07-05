@@ -1,36 +1,32 @@
 import { connect } from 'react-redux';
-import { updatePopup } from '../actions';
+import { updatePopup } from '../redux/popups/slice';
 import QueryNode from './QueryNode';
-import { clearDeleteSession, storeNodeInfo } from './actions';
-import { deleteNode, fetchQueryNode, submitSearchForm } from './actions.thunk';
+import {
+  deleteNode,
+  fetchQueryNode,
+  submitSearchForm,
+} from '../redux/queryNodes/asyncThunks';
+import { clearDeleteSession, storeNodeInfo } from '../redux/queryNodes/slice';
 
-/** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
-/** @typedef {import('./types').QueryNodeState} QueryNodeState */
-/** @typedef {import('../types').PopupState} PopupState */
-/** @typedef {import('../Submission/types').SubmissionState} SubmissionState */
+/** @typedef {import('../redux/types').RootState} RootState */
 
-/**
- * @param {Object} state
- * @param {PopupState} state.popups
- * @param {QueryNodeState} state.queryNodes
- * @param {SubmissionState} state.submission
- */
+/** @param {RootState} state */
 const mapStateToProps = (state) => ({
   submission: state.submission,
   queryNodes: state.queryNodes,
   popups: state.popups,
 });
 
-/** @param {ThunkDispatch} dispatch */
+/** @param {import('../redux/types').AppDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
   /**
-   * @param {any} value
-   * @param {Function} [cb]
+   * @param {Object} value
+   * @param {Function} [callback]
    */
-  onSearchFormSubmit: (value, cb) => {
-    dispatch(submitSearchForm(value, cb));
+  onSearchFormSubmit: (value, callback) => {
+    dispatch(submitSearchForm({ callback, ...value }));
   },
-  /** @param {{ nodedelete_popup?: PopupState['nodedelete_popup']; view_popup?: PopupState['view_popup'] }} state */
+  /** @param {Partial<RootState['popups']>} state */
   onUpdatePopup: (state) => {
     dispatch(updatePopup(state));
   },
@@ -41,10 +37,7 @@ const mapDispatchToProps = (dispatch) => ({
   onDeleteNode: ({ id, project }) => {
     dispatch(deleteNode({ id, project }));
   },
-  /**
-   * @param {{ project: string; id: string; }} param
-   * @returns {Promise<void>}
-   */
+  /** @param {{ project: string; id: string; }} param */
   onStoreNodeInfo: ({ id, project }) =>
     dispatch(fetchQueryNode({ id, project })).then(() => {
       dispatch(storeNodeInfo(id));

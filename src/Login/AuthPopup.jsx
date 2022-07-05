@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Popup from '../components/Popup';
 
-/** @param {{ popups: import('../types').PopupState }} state */
+/** @param {import('../redux/types').RootState} state */
 function authPopupSelector(state) {
   return state.popups.authPopup;
 }

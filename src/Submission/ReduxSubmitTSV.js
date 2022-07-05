@@ -1,23 +1,26 @@
 import { connect } from 'react-redux';
 import SubmitTSV from './SubmitTSV';
-import { requestUpload, resetSubmissionStatus, updateFile } from './actions';
-import { getCounts, submitFileChunk } from './actions.thunk';
+import {
+  requestUpload,
+  resetSubmissionStatus,
+  updateFile,
+} from '../redux/submission/slice';
+import { fetchCounts, submitFileChunk } from '../redux/submission/asyncThunks';
 import { predictFileType } from '../utils';
 import { getFileChunksToSubmit } from './utils';
 
-/** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
-/** @typedef {import('./types').SubmissionState} SubmissionState */
+/** @typedef {import('../redux/types').RootState} RootState */
 
-/** @param {{ submission: SubmissionState }} state */
+/** @param {RootState} state */
 const mapStateToProps = (state) => ({
   submission: state.submission,
 });
 
-/** @param {ThunkDispatch} dispatch */
+/** @param {import('../redux/types').AppDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
   /**
-   * @param {SubmissionState['file']} file
-   * @param {SubmissionState['file_type']} fileType
+   * @param {RootState['submission']['file']} file
+   * @param {RootState['submission']['file_type']} fileType
    */
   onUploadClick: (file, fileType) => {
     dispatch(requestUpload({ file, file_type: fileType }));
@@ -43,13 +46,13 @@ const mapDispatchToProps = (dispatch) => ({
     }
     submitFile();
   },
-  /** @param {SubmissionState['file']} file */
+  /** @param {RootState['submission']['file']} file */
   onFileChange: (file) => {
     dispatch(updateFile({ file, file_type: predictFileType(file) }));
   },
   /** @param {string} project */
   onFinish: (project) => {
-    dispatch(getCounts(project));
+    dispatch(fetchCounts(project));
   },
 });
 

@@ -3,14 +3,11 @@ import {
   setGraphView,
   setOverlayPropertyTableHidden,
   setNeedReset,
-} from '../action.js';
+} from '../../redux/ddgraph/slice';
 import DataModelStructure from './DataModelStructure';
 
-/** @typedef {import('../types').DdgraphState} DdgraphState */
-/** @typedef {import('../../types').VersionInfoState} VersionInfoState */
-
 const ReduxDataModelStructure = (() => {
-  /** @param {{ ddgraph: DdgraphState; versionInfo: VersionInfoState }} state */
+  /** @param {import('../../redux/types').RootState} state */
   const mapStateToProps = (state) => ({
     dataModelStructure: state.ddgraph.dataModelStructure,
     isGraphView: state.ddgraph.isGraphView,
@@ -23,7 +20,7 @@ const ReduxDataModelStructure = (() => {
     dictionaryVersion: state.versionInfo.dictionaryVersion,
   });
 
-  /** @param {import('redux').Dispatch} dispatch */
+  /** @param {import('../../redux/types').AppDispatch} dispatch */
   const mapDispatchToProps = (dispatch) => ({
     onSetGraphView: (isGraphView) => {
       dispatch(setGraphView(isGraphView));

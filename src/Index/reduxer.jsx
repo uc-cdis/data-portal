@@ -6,12 +6,10 @@ import Introduction from '../components/Introduction';
 import IndexOverview from './IndexOverview';
 import { components } from '../params';
 
-/** @typedef {import('./types').IndexState} IndexState */
-/** @typedef {import('../types').UserAccessState} UserAccessState */
-/** @typedef {import('../types').UserState} UserState */
+/** @typedef {import('../redux/types').RootState} RootState */
 
 export const ReduxIndexBarChart = (() => {
-  /** @param {{ index: IndexState }} state */
+  /** @param {RootState} state */
   const mapStateToProps = (state) =>
     state.index && state.index.projectList
       ? {
@@ -24,7 +22,7 @@ export const ReduxIndexBarChart = (() => {
 })();
 
 export const ReduxIndexOverview = (() => {
-  /** @param {{ index: IndexState }} state */
+  /** @param {RootState} state */
   const mapStateToProps = (state) =>
     state.index && state.index.overviewCounts
       ? { overviewCounts: state.index.overviewCounts }
@@ -34,18 +32,18 @@ export const ReduxIndexOverview = (() => {
 })();
 
 export const ReduxIndexButtonBar = (() => {
-  /** @param {{ index: IndexState; userAccess: UserAccessState }} state */
+  /** @param {RootState} state */
   const mapStateToProps = (state) => ({
     buttons: components.index.buttons,
     dictIcons,
-    userAccess: state.userAccess.access,
+    userAccess: state.userAccess,
   });
 
   return connect(mapStateToProps)(IndexButtonBar);
 })();
 
 export const ReduxIntroduction = (() => {
-  /** @param {{ user: UserState }} state */
+  /** @param {RootState} state */
   const mapStateToProps = (state) => {
     const resourcePath = '/services/sheepdog/submission/project';
     return {

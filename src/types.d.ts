@@ -1,6 +1,3 @@
-import type { Dispatch, ReturnType } from 'redux';
-import type { UserDocument } from './UserPopup/types';
-
 export type FetchHelperOptions = {
   path: string;
   body?: any; // Default is null
@@ -16,80 +13,4 @@ export type FetchHelperResult = {
   headers?: Headers; // if not using cache
   response?: Response; // if not using cache
   status: number;
-};
-
-export type UserAuthz = {
-  [path: string]: { method: string; service: string }[];
-};
-
-export type User = {
-  additional_info: {
-    firstName?: string;
-    lastName?: string;
-    institution?: string;
-  };
-  authz: UserAuthz;
-  azp: any;
-  certificates_uploaded: any[];
-  display_name: string;
-  docs_to_be_reviewed: UserDocument[];
-  email: string;
-  ga4gh_passport_v1: any[];
-  groups: any[];
-  idp: string;
-  is_admin: boolean;
-  message: string;
-  name: string;
-  phone_number: string;
-  preferred_username: string;
-  primary_google_service_account: any;
-  project_access: Object;
-  resources_granted: any[];
-  role: string;
-  sub: string;
-  user_id: number;
-  username: string;
-};
-
-export type UserState = Partial<User> & {
-  fetch_error?: any;
-  fetched_user?: boolean;
-  lastAuthMs?: number;
-};
-
-export type UserAccessState = {
-  access?: { [name: string]: boolean };
-};
-
-export type ProjectState = {
-  projects?: Object;
-  projectAvail?: Object;
-};
-
-export type VersionInfoState = {
-  dataVersion: string;
-  dictionaryVersion: string;
-  portalVersion: string;
-};
-
-export type StatusState = {
-  request_state?: string;
-};
-
-export type KubeState = {
-  job: {
-    status: string;
-    uid: string;
-  };
-  jobStatusInterval: number;
-  resultURL: string;
-};
-
-export type PopupState = {
-  authPopup: boolean;
-  nodedelete_popup: boolean | string;
-  deleteTokenPopup: boolean;
-  saveTokenPopup: boolean;
-  keypairsApi: string;
-  view_popup: boolean;
 };

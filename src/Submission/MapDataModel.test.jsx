@@ -1,4 +1,4 @@
-import { createStore } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
@@ -7,9 +7,13 @@ import MapDataModel, {
   isValidSubmission,
 } from './MapDataModel';
 import * as testData from './__test__/data.json';
-import reducers from '../reducers';
+import submissionReducer from '../redux/submission/slice';
 
-const testReduxStore = createStore(reducers, {});
+const testReduxStore = configureStore({
+  reducer: {
+    submission: submissionReducer,
+  },
+});
 
 const projects = {
   test: { name: 'test', counts: [], charts: [], code: 'test' },

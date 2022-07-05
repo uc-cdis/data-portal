@@ -2,9 +2,7 @@ import { connect } from 'react-redux';
 import Login from './Login';
 import { components } from '../params';
 
-/** @typedef {import('./types').LoginState} LoginState */
-
-/** @param {{ login: LoginState; user: import('../types').UserState }} state */
+/** @param {import('../redux/types').RootState} state */
 const mapStateToProps = (state) => ({
   data: components.login,
   providers: state.login.providers,

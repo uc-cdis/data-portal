@@ -20,16 +20,16 @@ import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
 import './Explorer.css';
 
+/** @typedef {import('../redux/types').RootState} RootState */
 /** @typedef {import('./types').OptionFilter} OptionFilter */
-/** @typedef {import('../types').VersionInfoState} VersionInfoState */
 
 /** @type {{ [x: string]: OptionFilter }} */
 const emptyAdminAppliedPreFilters = {};
 
 /**
  * @param {Object} props
- * @param {VersionInfoState['dataVersion']} props.dataVersion
- * @param {string} props.portalVersion
+ * @param {RootState['versionInfo']['dataVersion']} props.dataVersion
+ * @param {RootState['versionInfo']['portalVersion']} props.portalVersion
  */
 function ExplorerDashboard({ dataVersion, portalVersion }) {
   const {
@@ -124,7 +124,7 @@ ExplorerDashboard.propTypes = {
   portalVersion: PropTypes.string,
 };
 
-/** @param {{ versionInfo: VersionInfoState }} state */
+/** @param {RootState} state */
 const mapStateToProps = ({ versionInfo }) => versionInfo;
 const ReduxExplorerDashboard = connect(mapStateToProps)(ExplorerDashboard);
 

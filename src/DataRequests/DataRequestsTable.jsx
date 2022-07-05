@@ -8,7 +8,7 @@ import { formatLocalTime } from '../utils';
 import DataDownloadButton from './DataDownloadButton';
 import './DataRequests.css';
 
-/** @typedef {import('../types').UserState} UserState */
+/** @typedef {import('../redux/types').RootState} RootState */
 /** @typedef {import('./index.jsx').ResearcherInfo} ResearcherInfo */
 /** @typedef {import('./index.jsx').DataRequestProject} DataRequestProject */
 
@@ -38,7 +38,7 @@ function parseResearcherInfo(researcher) {
  * @param {Object} args
  * @param {DataRequestProject[]} args.projects
  * @param {boolean} args.showApprovedOnly
- * @param {UserState['user_id']} args.userId
+ * @param {RootState['user']['user_id']} args.userId
  */
 function parseTableData({ projects, showApprovedOnly, userId }) {
   return projects
@@ -62,7 +62,7 @@ function parseTableData({ projects, showApprovedOnly, userId }) {
     ]);
 }
 
-/** @param {{ user: UserState }} state */
+/** @param {RootState} state */
 function userIdSelector(state) {
   return state.user.user_id;
 }

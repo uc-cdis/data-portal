@@ -2,29 +2,29 @@ import { useEffect, useState } from 'react';
 import { useStore } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchUser, fetchUserAccess } from '../actions.thunk';
-import { clearQueryNodes } from '../QueryNode/actions';
-import { clearCounts } from '../Submission/actions';
+import { fetchLoginProviders } from '../redux/login/asyncThunks';
+import { clearQueryNodes } from '../redux/queryNodes/slice';
+import { clearCounts } from '../redux/submission/slice';
+import { fetchUser } from '../redux/user/asyncThunks';
+import { fetchUserAccess } from '../redux/userAccess/asyncThunks';
 import Spinner from '../components/Spinner';
 import AuthPopup from './AuthPopup';
-import { fetchLogin } from './actions.thunk';
 
-/** @typedef {import('redux-thunk').ThunkDispatch} ThunkDispatch */
-/** @typedef {import('../types').UserState} UserState */
-/** @typedef {{ user: UserState }} ReduxState */
+/** @typedef {import('../redux/types').RootState} RootState */
+/** @typedef {import('../redux/types').RootStore} RootStore */
 
 /**
  * @typedef {Object} ProtectedContentState
  * @property {boolean} authenticated
  * @property {boolean} dataLoaded
  * @property {string} redirectTo
- * @property {UserState} user
+ * @property {RootState['user']} user
  */
 
 /**
  * @typedef {Object} PreloadArgs
  * @property {import('react-router').Location} [location]
- * @property {any} [state]
+ * @property {RootState} [state]
  */
 
 /**
@@ -45,7 +45,7 @@ function ProtectedContent({
   isLoginPage = false,
   preload,
 }) {
-  /** @type {{  dispatch: ThunkDispatch; getState: () => ReduxState }} */
+  /** @type {RootStore} */
   const reduxStore = useStore();
 
   /** @type {ProtectedContentState} */
@@ -142,7 +142,7 @@ function ProtectedContent({
           updateState({ ...newState, redirectTo: '/' });
         else
           reduxStore
-            .dispatch(fetchLogin())
+            .dispatch(fetchLoginProviders())
             .finally(() => updateState(newState));
       });
     else

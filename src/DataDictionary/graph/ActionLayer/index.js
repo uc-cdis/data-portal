@@ -1,10 +1,8 @@
 import { connect } from 'react-redux';
 import ActionLayer from './ActionLayer';
 
-/** @typedef {import('../../types').DdgraphState} DdgraphState */
-
 const ReduxActionLayer = (() => {
-  /** @param {{ ddgraph: DdgraphState }} state */
+  /** @param {import('../../../redux/types').RootState} state */
   const mapStateToProps = (state) => ({
     isSearchMode: state.ddgraph.isSearchMode,
   });

@@ -6,7 +6,7 @@ import './ActionLayer.css';
  * A layer over the graph.
  * Put action buttons here.
  * @param {Object} props
- * @param {import('../../types').DdgraphState['isSearchMode']} [props.isSearchMode]
+ * @param {import('../../../redux/types').RootState['ddgraph']['isSearchMode']} [props.isSearchMode]
  * @param {() => void} [props.onClearSearchResult]
  */
 function ActionLayer({ isSearchMode = false, onClearSearchResult }) {

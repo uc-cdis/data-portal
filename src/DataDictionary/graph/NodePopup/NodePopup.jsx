@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import Button from '../../../gen3-ui-component/components/Button';
 import './NodePopup.css';
 
-/** @typedef {import('../../types').DdgraphState} DdgraphState */
+/** @typedef {import('../../../redux/types').RootState} RootState */
 
 /**
  * @param {Object} props
- * @param {DdgraphState['canvasBoundingRect']} props.canvasBoundingRect
- * @param {DdgraphState['graphNodesSVGElements']} props.graphNodesSVGElements
- * @param {DdgraphState['highlightingNode']} props.highlightingNode
+ * @param {RootState['ddgraph']['canvasBoundingRect']} props.canvasBoundingRect
+ * @param {RootState['ddgraph']['graphNodesSVGElements']} props.graphNodesSVGElements
+ * @param {RootState['ddgraph']['highlightingNode']} props.highlightingNode
  * @param {() => void} props.onClosePopup
  * @param {() => void} props.onOpenOverlayPropertyTable
  */

@@ -1,6 +1,9 @@
 import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
+import { configureStore } from '@reduxjs/toolkit';
 import { fireEvent, render, screen } from '@testing-library/react';
+import userReducer from '../redux/user/slice';
+import userProfileReducer from '../redux/userProfile/slice';
+import popupsReducer from '../redux/popups/slice';
 import UserProfile from './UserProfile';
 
 const testProps = {
@@ -16,7 +19,13 @@ const testProps = {
   popups: {},
 };
 
-const mockStore = configureMockStore()({});
+const mockStore = configureStore({
+  reducer: {
+    user: userReducer,
+    userProfile: userProfileReducer,
+    popups: popupsReducer,
+  },
+});
 const noop = () => {};
 
 test('lists access keys', () => {
