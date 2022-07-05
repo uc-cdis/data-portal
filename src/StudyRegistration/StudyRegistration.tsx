@@ -93,7 +93,7 @@ interface User {
 interface Props {
   user: User,
   userAuthMapping: any,
-  config: StudyRegistrationConfig
+  studyRegConfig: StudyRegistrationConfig
 }
 
 const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
@@ -105,7 +105,17 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
 
   useEffect(() => {
     loadStudiesFromMDS('unregistered_discovery_metadata').then((rawStudies) => {
-      setStudies(rawStudies);
+      if (!useArboristUI || !props.studyRegConfig.studyRegistrationAccessCheckField) {
+        setStudies(rawStudies);
+      } else {
+        const studiesToSet = rawStudies.filter((study) => {
+          if (!study[props.studyRegConfig.studyRegistrationAccessCheckField]) {
+            return false;
+          }
+          return (userHasMethodForServiceOnResource('access', 'study_registration', study[props.studyRegConfig.studyRegistrationAccessCheckField], props.userAuthMapping));
+        });
+        setStudies(studiesToSet);
+      }
     }).catch((err) => {
       // eslint-disable-next-line no-console
       console.error('Error encountered while loading studies: ', err);
@@ -126,7 +136,7 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
     preprocessStudyRegistrationMetadata(props.user.username, studyID,
       {
         repository: formValues.repository || '',
-        object_ids: ((!formValues.object_ids || formValues.object_ids[0] === '') ? [] : formValues.object_ids),
+        repository_study_ids: ((!formValues.repository_study_ids || formValues.repository_study_ids[0] === '') ? [] : formValues.repository_study_ids),
         clinical_trials_id: formValues.clinical_trials_id || '',
       }).then((preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
       .then(() => registerStudyInMDS(studyID, preprocessedMetadata).then(() => setFormSubmissionStatus({ status: 'success' })),
@@ -181,7 +191,7 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
     <div className='study-reg-container'>
       <div className='study-reg-form-container'>
         <Form className='study-reg-form' {...layout} form={form} name='study-reg-form' onFinish={onFinish} validateMessages={validateMessages}>
-          <Divider plain>Study Selection</Divider>
+          <Divider plain>Registration Information</Divider>
           <Form.Item
             name='study_id'
             label='Study'
@@ -196,7 +206,6 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
               ))}
             </Select>
           </Form.Item>
-          <Divider plain>CEDAR API</Divider>
           <Form.Item
             label='CEDAR User UUID'
             hasFeedback
@@ -228,7 +237,19 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
               </div>
             </div>
           </Form.Item>
-          <Divider plain>Metadata Fields</Divider>
+          <Form.Item
+            name='clinical_trials_id'
+            label='ClinicalTrials.gov ID'
+            rules={[
+              {
+                validator: handleClinicalTrialIDValidation,
+                validateTrigger: 'onSubmit',
+              },
+            ]}
+          >
+            <Input placeholder='Provide ClinicalTrials.gov ID for this study, if any' />
+          </Form.Item>
+          <Divider plain>Repository Information</Divider>
           <Form.Item
             name='repository'
             label='Study Data Repository'
@@ -241,13 +262,13 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
               <Option value='ICPSR'>ICPSR</Option>
             </Select>
           </Form.Item>
-          <Form.List name='object_ids' initialValue={['']}>
+          <Form.List name='repository_study_ids' initialValue={['']}>
             {(fields, { add, remove }) => (
               <React.Fragment>
                 {fields.map((field, index) => (
                   <Form.Item
                     {...(index === 0 ? layout : formItemLayoutWithOutLabel)}
-                    label={index === 0 ? 'Object ID from Data Repository' : ''}
+                    label={index === 0 ? 'Study Data ID from Repository' : ''}
                     required={false}
                     key={field.key}
                   >
@@ -257,7 +278,7 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
                         noStyle
                       >
                         <Input
-                          placeholder='Enter an object ID'
+                          placeholder='Enter the unique ID for the study within the repository'
                         />
                       </Form.Item>
                       {fields.length > 1 ? (
@@ -275,24 +296,12 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
                     onClick={() => add()}
                     icon={<PlusOutlined />}
                   >
-                    Add another object ID
+                    Add another study data ID
                   </Button>
                 </Form.Item>
               </React.Fragment>
             )}
           </Form.List>
-          <Form.Item
-            name='clinical_trials_id'
-            label='ClinicalTrials.gov ID'
-            rules={[
-              {
-                validator: handleClinicalTrialIDValidation,
-                validateTrigger: 'onSubmit',
-              },
-            ]}
-          >
-            <Input placeholder='Provide ClinicalTrials.gov ID for this study, if any' />
-          </Form.Item>
           <Form.Item {...tailLayout}>
             <Space>
               {(!userHasAccess()) ? (

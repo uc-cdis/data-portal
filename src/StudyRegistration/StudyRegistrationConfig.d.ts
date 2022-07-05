@@ -1,4 +1,5 @@
 export interface StudyRegistrationConfig {
-    studyRegistrationTrackingField?: Text
-    studyRegistrationValidationField?: Text
+    studyRegistrationTrackingField?: string
+    studyRegistrationValidationField?: string
+    studyRegistrationAccessCheckField?: string
 }
