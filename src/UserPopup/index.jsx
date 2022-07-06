@@ -33,16 +33,11 @@ function updateDocsToReview(reviewStatus) {
   });
 }
 
-const MUST_REVIEW_DOC_TYPE_SET = new Set([
-  'acceptable-use-policy',
-  'privacy-policy',
-  'terms-and-conditions',
-]);
 /** @param {import('../redux/types').RootState} state */
 function userPopupSelector({ user }) {
   const isRegistered = user.authz?.['/portal']?.length > 0;
-  const docsToBeReviewed = (user.docs_to_be_reviewed ?? []).filter(({ type }) =>
-    MUST_REVIEW_DOC_TYPE_SET.has(type)
+  const docsToBeReviewed = (user.docs_to_be_reviewed ?? []).filter(
+    (doc) => doc.required
   );
   return {
     docsToBeReviewed,
