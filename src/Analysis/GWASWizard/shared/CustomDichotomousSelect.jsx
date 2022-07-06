@@ -4,17 +4,9 @@ import CohortSelect from './CohortSelect';
 import '../../GWASUIApp/GWASUIApp.css';
 
 const CustomDichotomousSelect = ({ handleCDSelect, customDichotomous, sourceId }) => {
-    const [firstCohort, setFirstCohort] = useState([]);
-    const [secondCohort, setSecondCohort] = useState([]);
+    const [firstCohort, setFirstCohort] = useState(undefined);
+    const [secondCohort, setSecondCohort] = useState(undefined);
     const [editMode, setEditMode] = useState(false);
-
-    useEffect(() => {
-        console.log('firstCohort', firstCohort);
-    }, [firstCohort]);
-
-    useEffect(() => {
-        console.log('secondCohort', secondCohort);
-    }, [secondCohort]);
 
     return (<React.Fragment>
         <div className="GWASUI-cdBtnContainer"><button onClick={() => setEditMode(true)}><PlusOutlined /><span className="GWASUI-btnText">Add Custom Dichotomous</span></button></div>
@@ -22,10 +14,10 @@ const CustomDichotomousSelect = ({ handleCDSelect, customDichotomous, sourceId }
             <React.Fragment>
                 <div className="GWASUI-flexRow">
                     <div className="GWASUI-flexCol GWASUI-subTable">
-                        <CohortSelect selectedCohort={firstCohort} handleCohortSelect={setFirstCohort} sourceId={sourceId} otherCohortSelected={''}></CohortSelect>
+                        <CohortSelect selectedCohort={firstCohort} handleCohortSelect={setFirstCohort} sourceId={sourceId} otherCohortSelected={secondCohort ? secondCohort.cohort_name: ''}></CohortSelect>
                     </div>
                     <div className="GWASUI-flexCol GWASUI-subTable">
-                        <CohortSelect selectedCohort={secondCohort} handleCohortSelect={setSecondCohort} sourceId={sourceId} otherCohortSelected={firstCohort.length > 0 ? firstCohort[0]: ''}></CohortSelect>
+                        <CohortSelect selectedCohort={secondCohort} handleCohortSelect={setSecondCohort} sourceId={sourceId} otherCohortSelected={firstCohort ? firstCohort.cohort_name: ''}></CohortSelect>
                     </div>
                 </div>
             </React.Fragment>
