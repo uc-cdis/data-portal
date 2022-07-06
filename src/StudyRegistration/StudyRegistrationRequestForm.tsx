@@ -56,7 +56,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
 
   const [formSubmissionStatus, setFormSubmissionStatus] = useState(null);
   const [requestID, setRequestID] = useState(null);
-  const [studyUID, setStudyUID] = useState(null);
+  // const [studyUID, setStudyUID] = useState(null);
   const [studyNumber, setStudyNumber] = useState(null);
   const [studyName, setStudyName] = useState(null);
   const [role, setRole] = useState('Principal Investigator');
@@ -65,7 +65,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
   useEffect(() => {
     const locationStateData = location.state as LocationState || {};
     setRequestID(locationStateData.requestID);
-    setStudyUID(locationStateData.studyUID);
+    // setStudyUID(locationStateData.studyUID);
     setStudyNumber(locationStateData.studyNumber);
     setStudyName(locationStateData.studyName);
   }, [location.state]);
@@ -78,6 +78,19 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
   };
 
   const handleRegisterFormSubmission = (formValues) => {
+    const kayakoPayload = {
+      fullname: `${formValues['First Name']} ${formValues['Last Name']}`,
+      email: formValues['E-mail Address'],
+      subject: `Registration Access Request for ${studyNumber} ${studyName}`,
+      contents: [`Request ID: ${requestID}`, `Grant Number: ${studyNumber}`, `Study Name: ${studyName}`],
+      departmentid: 21,
+    };
+    Object.entries(formValues).forEach((entry) => {
+      const [key, value] = entry;
+      kayakoPayload.contents.push(`${key}: ${value}`);
+    });
+    console.log(kayakoPayload);
+    // TODO: POST to kayako wrapper
   };
 
   const onFinish = (values) => {
@@ -134,19 +147,18 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
           </Typography>
           <Divider plain />
           <Form.Item
-            name='study_grant'
             label='Study Name - Grant Number'
             initialValue={(!studyNumber && !studyNumber) ? '' : `${studyName} - ${studyNumber}`}
-            rules={[
-              {
-                required: true,
-              },
-            ]}
+            // rules={[
+            //   {
+            //     required: true,
+            //   },
+            // ]}
           >
             <Input disabled />
           </Form.Item>
           <Form.Item
-            name='firstname'
+            name='First Name'
             label='Registrant First Name'
             rules={[
               {
@@ -157,7 +169,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
             <Input />
           </Form.Item>
           <Form.Item
-            name='lastname'
+            name='Last Name'
             label='Registrant Last Name'
             rules={[
               {
@@ -168,7 +180,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
             <Input />
           </Form.Item>
           <Form.Item
-            name='email'
+            name='E-mail Address'
             label='E-mail Address'
             rules={[
               {
@@ -183,7 +195,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
             <Input />
           </Form.Item>
           <Form.Item
-            name='institution'
+            name='Affiliated Institution'
             label='Affiliated Institution'
             rules={[
               {
@@ -193,37 +205,45 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name='role'
-            label='Role on Project'
-            initialValue={1}
-            rules={[{ required: true, message: 'Please select a role' }]}
-          >
-            <Radio.Group onChange={onRadioChange} value={role}>
-              <Space direction='vertical'>
-                <Radio value={'Principal Investigator'}>Principal Investigator</Radio>
-                <Radio value={'Co-Principal Investigator'}>Co-Principal Investigator</Radio>
-                <Radio value={'Co-Investigator'}>Co-Investigator</Radio>
-                <Radio value={'Administrator'}>Administrator</Radio>
-                <Radio value={'Clinical Collaborator'}>Clinical Collaborator</Radio>
-                <Radio value={'Clinical Coordinator'}>Clinical Coordinator</Radio>
-                <Radio value={'Data Analyst<'}>Data Analyst</Radio>
-                <Radio value={'Data Manager'}>Data Manager</Radio>
-                <Radio value={'Research Coordinator'}>Research Coordinator</Radio>
-                <Radio value={'Other'}>
+          <Form.Item label='Role on Project'>
+            <Form.Item
+              name='Role on Project'
+              noStyle
+              initialValue={role}
+              rules={[{ required: true, message: 'Please select a role' }]}
+            >
+              <Radio.Group onChange={onRadioChange} value={role}>
+                <Space direction='vertical'>
+                  <Radio value={'Principal Investigator'}>Principal Investigator</Radio>
+                  <Radio value={'Co-Principal Investigator'}>Co-Principal Investigator</Radio>
+                  <Radio value={'Co-Investigator'}>Co-Investigator</Radio>
+                  <Radio value={'Administrator'}>Administrator</Radio>
+                  <Radio value={'Clinical Collaborator'}>Clinical Collaborator</Radio>
+                  <Radio value={'Clinical Coordinator'}>Clinical Coordinator</Radio>
+                  <Radio value={'Data Analyst<'}>Data Analyst</Radio>
+                  <Radio value={'Data Manager'}>Data Manager</Radio>
+                  <Radio value={'Research Coordinator'}>Research Coordinator</Radio>
+                  <Radio value={'Other'}>
                   Other...
-                  {role === 'Other' ? (
-                    <Input style={{ width: 300, marginLeft: 10 }} />
-                  ) : null}
-                </Radio>
-              </Space>
-            </Radio.Group>
+                    {role === 'Other' ? (
+                      <Form.Item
+                        name='Custom Role'
+                        noStyle
+                        rules={[{ required: true, message: 'Please provide a role' }]}
+                      >
+                        <Input style={{ width: 200, marginLeft: 8 }} />
+                      </Form.Item>
+                    ) : null}
+                  </Radio>
+                </Space>
+              </Radio.Group>
+            </Form.Item>
           </Form.Item>
           <Form.Item {...tailLayout}>
             <Space>
               {(!userHasAccess()) ? (
                 <Tooltip title={'You don\'t have permission to request for access to study registration'}>
-                  <Button type='primary' htmlType='submit' disabled>
+                  <Button type='primary' htmlType='submit'>
                     Submit
                   </Button>
                 </Tooltip>
