@@ -9,10 +9,11 @@ import {
 } from 'antd';
 import Spinner from '../../components/Spinner';
 import '../GWASUIApp/GWASUIApp.css';
+import { useQuery, useMutation } from 'react-query';
 
 const { Step } = Steps;
 
-const GWASCaseControl = () => {
+const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     const [current, setCurrent] = useState(0);
     const [selectedCaseCohort, setSelectedCaseCohort] = useState(undefined);
     const [selectedControlCohort, setSelectedControlCohort] = useState(undefined);
@@ -31,8 +32,10 @@ const GWASCaseControl = () => {
         setSelectedCovariates(cov);
     }
 
-    const handleNextStep = () => {
-    };
+    const resetFields = () => {
+        // TODO reset to initial state
+        refreshWorkflows();
+    }
 
     const generateStep = () => {
         switch (current) {
@@ -80,9 +83,7 @@ const GWASCaseControl = () => {
                 </Button>
                 <Popconfirm
                     title='Are you sure you want to leave this page?'
-                    onConfirm={(event) => {
-                        props.resetGWASType();
-                    }}
+                    onConfirm={() => resetGWASType()}
                     okText='Yes'
                     cancelText='No'
                 >

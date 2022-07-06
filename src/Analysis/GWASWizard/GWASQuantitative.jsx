@@ -8,10 +8,11 @@ import {
 } from 'antd';
 import Spinner from '../../components/Spinner';
 import '../GWASUIApp/GWASUIApp.css';
+import { useQuery, useMutation } from 'react-query';
 
 const { Step } = Steps;
 
-const GWASQuantitative = () => {
+const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     const [current, setCurrent] = useState(0);
     const [selectedCohort, setSelectedCohort] = useState(undefined);
     const { loading, sourceId } = useSourceFetch();
@@ -29,10 +30,10 @@ const GWASQuantitative = () => {
         }
     }
 
-    const handleNextStep = () => {
-    };
-
-
+    const resetFields = () => {
+        // TODO reset to initial state
+        refreshWorkflows();
+    }
 
     let nextButtonEnabled = true;
     if (current === 0 && !selectedCohort) {
@@ -71,9 +72,7 @@ const GWASQuantitative = () => {
                 </Button>
                 <Popconfirm
                     title='Are you sure you want to leave this page?'
-                    onConfirm={(event) => {
-                        props.resetGWASType();
-                    }}
+                    onConfirm={() => resetGWASType()}
                     okText='Yes'
                     cancelText='No'
                 >
