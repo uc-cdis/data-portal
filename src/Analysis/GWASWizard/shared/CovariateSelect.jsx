@@ -3,6 +3,7 @@ import { Space, Popover } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { chooseCovariateCaption } from './captions';
 import Covariates from './Covariates';
+import '../../GWASUIApp/GWASUIApp.css';
 
 const CovariateSelect = ({ sourceId, selectedCovariates, handleCovariateSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');

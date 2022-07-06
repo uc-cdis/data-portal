@@ -54,7 +54,7 @@ export const caseControlSteps = [
     },
 ];
 
-export const cohortSelection = (handler, selectedCohort, caseCohortName) => {
+export const cohortSelection = (handler, selectedCohort, otherCohortSelected) => {
     return {
         type: 'radio',
         columnTitle: 'Select',
@@ -63,7 +63,7 @@ export const cohortSelection = (handler, selectedCohort, caseCohortName) => {
             handler(selectedRows[0]);
         },
         getCheckboxProps: (record) => ({
-            disabled: record.size === 0 || record.cohort_name === caseCohortName,
+            disabled: record.size === 0 || record.cohort_name === otherCohortSelected,
         }),
     }
 }

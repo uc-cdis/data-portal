@@ -83,7 +83,6 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
                         className='GWASUI-navBtn GWASUI-navBtn__next'
                         type='primary'
                         onClick={() => {
-                            handleNextStep();
                             setCurrent(current + 1);
                         }}
                         disabled={!nextButtonEnabled}

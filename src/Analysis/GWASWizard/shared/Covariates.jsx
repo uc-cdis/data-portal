@@ -4,6 +4,7 @@ import { fetchCovariates, queryConfig } from "../wizard-endpoints/cohort-middlew
 import { useQuery } from 'react-query';
 import { Table } from 'antd';
 import { Spinner } from "../../../components/Spinner";
+import '../../GWASUIApp/GWASUIApp.css';
 
 const Covariates = ({ sourceId, searchTerm, selectedCovariates, handleCovariateSelect, page, handlePage }) => {
     const covariates = useQuery(['covariates', sourceId], () => fetchCovariates(sourceId), queryConfig);
