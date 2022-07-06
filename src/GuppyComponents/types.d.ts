@@ -1,6 +1,8 @@
+type CombineMode = 'AND' | 'OR';
+
 export type OptionFilter = {
   selectedValues?: string[];
-  __combineMode?: 'AND' | 'OR';
+  __combineMode?: CombineMode;
 };
 
 export type RangeFilter = {
@@ -10,7 +12,7 @@ export type RangeFilter = {
 
 export type SimpleFilterState = {
   [x: Exclude<string, '__combineMode'>]: OptionFilter | RangeFilter;
-  __combineMode?: 'AND' | 'OR';
+  __combineMode?: CombineMode;
 };
 
 export type AnchoredFilterState = {
@@ -22,7 +24,7 @@ export type FilterState = {
     | OptionFilter
     | RangeFilter
     | AnchoredFilterState;
-  __combineMode?: 'AND' | 'OR';
+  __combineMode?: CombineMode;
 };
 
 export type GqlInFilter = {
