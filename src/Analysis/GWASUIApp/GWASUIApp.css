@@ -24,9 +24,14 @@
 }
 
 .GWASUI-mainTable {
-  min-width: 400px;
+  min-width: 500px;
   padding: 0 8px;
   border: 1px solid #e9e9e9;
+}
+
+.GWASUI-subTable {
+  min-width: 350px;
+  padding: 0 4px;
 }
 
 .GWASApp-jobStatus {
@@ -226,4 +231,12 @@
   width: 15px;
   flex-basis: 20%;
   align-self: flex-end;
+}
+
+.GWASUI-btnText {
+  font-size: 12px;
+}
+
+.GWASUI-cdBtnContainer {
+  width: 200px;
 }
