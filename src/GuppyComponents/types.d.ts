@@ -11,8 +11,10 @@ export type RangeFilter = {
 };
 
 export type SimpleFilterState = {
-  [x: Exclude<string, '__combineMode'>]: OptionFilter | RangeFilter;
   __combineMode?: CombineMode;
+  value: {
+    [x: string]: OptionFilter | RangeFilter;
+  };
 };
 
 export type AnchoredFilterState = {
@@ -20,11 +22,10 @@ export type AnchoredFilterState = {
 };
 
 export type FilterState = {
-  [x: Exclude<string, '__combineMode'>]:
-    | OptionFilter
-    | RangeFilter
-    | AnchoredFilterState;
   __combineMode?: CombineMode;
+  value: {
+    [x: string]: OptionFilter | RangeFilter | AnchoredFilterState;
+  };
 };
 
 export type GqlInFilter = {
