@@ -58,13 +58,13 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
                 return (!loading && sourceId ? (<>
                     <AddCohortButton></AddCohortButton>
                     <React.Fragment>
-                        <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                        {/* <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                             <h4 className='GWASUI-selectInstruction'>In this step, you will determine the study population. To begin, select the cohort that you would like to define your study population with.</h4>
                             <div className='GWASUI-mainTable'>
                                 <CohortSelect selectedCohort={selectedCaseCohort} handleCohortSelect={handleCaseCohortSelect} sourceId={sourceId}></CohortSelect>
                             </div>
-                        </Space>
-                        <CustomDichotomousSelect handleCDSelect={handleCDSelect} customDichotomous={customDichotomous}></CustomDichotomousSelect>
+                        </Space> */}
+                        <CustomDichotomousSelect sourceId={sourceId} handleCDSelect={handleCDSelect} customDichotomous={customDichotomous}></CustomDichotomousSelect>
                     </React.Fragment>
                 </>) : <Spinner></Spinner>);
             case 1:
