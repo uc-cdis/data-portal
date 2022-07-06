@@ -46,6 +46,7 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "components": {
     "appName": "Gen3 Generic Data Commons", // required; title of commons that appears on the homepage
+    "metaDescription": "", // optional; meta description used by search engines
     "homepageHref": "https://example.gen3.org/", // optional; link that the logo in header will pointing to
     "index": { // required; relates to the homepage
       "introduction": { // optional; text on homepage
