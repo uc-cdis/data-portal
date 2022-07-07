@@ -36,7 +36,7 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField || 'is_registered';
+    const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
     async function fetchRawStudies() {
       let loadStudiesFunction;
       if (isEnabled('discoveryUseAggMDS')) {
@@ -104,7 +104,7 @@ const DiscoveryWithMDSBackend: React.FC<{
     props.onDiscoveryPageActive();
   }, [props]);
 
-  let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField || 'is_registered';
+  let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
   if (!isEnabled('studyRegistration')) {
     studyRegistrationValidationField = undefined;
   }
