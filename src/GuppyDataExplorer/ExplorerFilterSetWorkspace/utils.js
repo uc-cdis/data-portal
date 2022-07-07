@@ -60,13 +60,20 @@ export function retrieveWorkspaceState(explorerId) {
   }
 }
 
+/** @type {number} */
+let prevExplorerId;
+
 /**
  * @param {Object} args
  * @param {ExplorerFilter} args.explorerFilter
  * @param {number} args.explorerId
  */
 export function initializeWorkspaceState({ explorerFilter, explorerId }) {
-  if (checkIfFilterEmpty(explorerFilter))
+  const isSwitchingExplorer =
+    prevExplorerId !== undefined && prevExplorerId !== explorerId;
+  prevExplorerId = explorerId;
+
+  if (isSwitchingExplorer || checkIfFilterEmpty(explorerFilter))
     return retrieveWorkspaceState(explorerId);
 
   const id = crypto.randomUUID();
