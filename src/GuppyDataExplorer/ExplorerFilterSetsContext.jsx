@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { fetchWithCreds } from '../utils.fetch';
 import { useExplorerConfig } from './ExplorerConfigContext';
@@ -131,9 +138,13 @@ export function ExplorerFilterSetsProvider({ children }) {
     return undefined;
   }
 
+  const prevExplorerId = useRef(explorerId);
   useEffect(() => {
-    fetchFilterSets(explorerId).then(setFilterSets).catch(handleCatch);
-  }, []);
+    if (prevExplorerId.current !== explorerId) {
+      prevExplorerId.current = explorerId;
+      fetchFilterSets(explorerId).then(setFilterSets).catch(handleCatch);
+    }
+  }, [explorerId]);
 
   const value = useMemo(
     () => ({
