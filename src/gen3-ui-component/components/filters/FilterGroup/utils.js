@@ -38,13 +38,14 @@ export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
         value: {},
       };
 
-  for (const [filterKey, filterValues] of Object.entries(filterResults.value))
-    if (typeof filterValues !== 'string')
-      if ('filter' in filterValues) {
-        filterResultsByAnchor[filterKey] = filterValues.filter;
-      } else {
-        filterResultsByAnchor[''].value[filterKey] = filterValues;
-      }
+  if (filterResults.value !== undefined)
+    for (const [filterKey, filterValues] of Object.entries(filterResults.value))
+      if (typeof filterValues !== 'string')
+        if ('filter' in filterValues) {
+          filterResultsByAnchor[filterKey] = filterValues.filter;
+        } else {
+          filterResultsByAnchor[''].value[filterKey] = filterValues;
+        }
 
   return filterResultsByAnchor;
 }
@@ -292,6 +293,7 @@ export function updateRangeValue({
 
   // update filter results
   let newFilterResults = cloneDeep(filterResults);
+  if (newFilterResults.value === undefined) newFilterResults.value = {};
   const fieldName = filterTabs[tabIndex].fields[sectionIndex];
   if (anchorLabel === undefined || anchorLabel === '') {
     newFilterResults.value[fieldName] = { lowerBound, upperBound };
@@ -367,6 +369,7 @@ export function updateSelectedValue({
 
   // update filter results
   let newFilterResults = cloneDeep(filterResults);
+  if (newFilterResults.value === undefined) newFilterResults.value = {};
   const fieldName = filterTabs[tabIndex].fields[sectionIndex];
   if (anchorLabel === undefined || anchorLabel === '') {
     if (newFilterResults.value[fieldName] === undefined)
