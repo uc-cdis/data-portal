@@ -7,12 +7,14 @@ import {
 } from '../Utils/filters';
 
 describe('can merge simple selectedValue filters', () => {
-  const userFilter = { data_format: { selectedValues: ['VCF'] } };
+  const userFilter = { value: { data_format: { selectedValues: ['VCF'] } } };
   const adminFilter = { project_id: { selectedValues: ['jnkns-jenkins'] } };
 
   const mergedFilterExpected = {
-    project_id: { selectedValues: ['jnkns-jenkins'] },
-    data_format: { selectedValues: ['VCF'] },
+    value: {
+      project_id: { selectedValues: ['jnkns-jenkins'] },
+      data_format: { selectedValues: ['VCF'] },
+    },
   };
 
   test('merge filters', async () => {
@@ -23,19 +25,23 @@ describe('can merge simple selectedValue filters', () => {
 
 describe('can merge admin-provided selectedValue filters with user-provided range filters', () => {
   const userFilter = {
-    bmi: { lowerBound: 28, upperBound: 99 },
-    age: { lowerBound: 26, upperBound: 33 },
-    data_type: { selectedValues: ['Aligned Reads'] },
+    value: {
+      bmi: { lowerBound: 28, upperBound: 99 },
+      age: { lowerBound: 26, upperBound: 33 },
+      data_type: { selectedValues: ['Aligned Reads'] },
+    },
   };
   const adminFilter = {
     project_id: { selectedValues: ['jnkns-jenkins', 'jnkns-jenkins2'] },
   };
 
   const mergedFilterExpected = {
-    project_id: { selectedValues: ['jnkns-jenkins', 'jnkns-jenkins2'] },
-    bmi: { lowerBound: 28, upperBound: 99 },
-    age: { lowerBound: 26, upperBound: 33 },
-    data_type: { selectedValues: ['Aligned Reads'] },
+    value: {
+      project_id: { selectedValues: ['jnkns-jenkins', 'jnkns-jenkins2'] },
+      bmi: { lowerBound: 28, upperBound: 99 },
+      age: { lowerBound: 26, upperBound: 33 },
+      data_type: { selectedValues: ['Aligned Reads'] },
+    },
   };
 
   test('merge filters', async () => {
@@ -46,18 +52,22 @@ describe('can merge admin-provided selectedValue filters with user-provided rang
 
 describe('will select user-applied filter for a given key if it is more exclusive than admin filter', () => {
   const userFilter = {
-    project_id: { selectedValues: ['jnkns-jenkins2'] },
-    age: { lowerBound: 26, upperBound: 33 },
-    data_type: { selectedValues: ['Aligned Reads'] },
+    value: {
+      project_id: { selectedValues: ['jnkns-jenkins2'] },
+      age: { lowerBound: 26, upperBound: 33 },
+      data_type: { selectedValues: ['Aligned Reads'] },
+    },
   };
   const adminFilter = {
     project_id: { selectedValues: ['jnkns-jenkins', 'jnkns-jenkins2'] },
   };
 
   const mergedFilterExpected = {
-    project_id: { selectedValues: ['jnkns-jenkins2'] },
-    age: { lowerBound: 26, upperBound: 33 },
-    data_type: { selectedValues: ['Aligned Reads'] },
+    value: {
+      project_id: { selectedValues: ['jnkns-jenkins2'] },
+      age: { lowerBound: 26, upperBound: 33 },
+      data_type: { selectedValues: ['Aligned Reads'] },
+    },
   };
 
   test('merge filters', async () => {
@@ -91,7 +101,11 @@ describe('can update a small set of tabs with new counts', () => {
     extra_data: { histogram: [] },
   };
 
-  const filtersApplied = { annotated_sex: { selectedValues: ['silver'] } };
+  const filtersApplied = {
+    value: {
+      annotated_sex: { selectedValues: ['silver'] },
+    },
+  };
 
   // Silver has a count of zero, but it is in the filter, so it should remain visible
   const expectedUpdatedTabsOptions = {
@@ -129,7 +143,13 @@ describe('can update a small set of tabs with new counts, test with ranger slide
       ],
     },
     field2: {
-      histogram: [{ key: [0, 100], count: 100 }],
+      histogram: [
+        {
+          /** @type {[number, number]} */
+          key: [0, 100],
+          count: 100,
+        },
+      ],
     },
   };
 
@@ -140,6 +160,7 @@ describe('can update a small set of tabs with new counts, test with ranger slide
     field2: {
       histogram: [
         {
+          /** @type {[number, number]} */
           key: [4, 39],
           count: 49,
         },
@@ -148,12 +169,14 @@ describe('can update a small set of tabs with new counts, test with ranger slide
   };
 
   const filtersApplied = {
-    field1: {
-      selectedValues: ['option2'],
-    },
-    field2: {
-      lowerBound: 4,
-      upperBound: 39,
+    value: {
+      field1: {
+        selectedValues: ['option2'],
+      },
+      field2: {
+        lowerBound: 4,
+        upperBound: 39,
+      },
     },
   };
 
