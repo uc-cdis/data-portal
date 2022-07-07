@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useReducer, useRef } from 'react';
+import { useExplorerConfig } from '../ExplorerConfigContext';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import { useExplorerState } from '../ExplorerStateContext';
 import {
@@ -12,11 +13,12 @@ import {
 /** @typedef {import("../types").ExplorerFilterSet} ExplorerFilterSet */
 
 export default function useFilterSetWorkspace() {
+  const { explorerId } = useExplorerConfig();
   const { explorerFilter, handleFilterChange } = useExplorerState();
   const filterSets = useExplorerFilterSets();
 
   const initialState = useMemo(
-    () => initializeWorkspaceState(explorerFilter),
+    () => initializeWorkspaceState({ explorerFilter, explorerId }),
     []
   );
   useEffect(() => {
@@ -48,7 +50,7 @@ export default function useFilterSetWorkspace() {
     if (isFilterSetIdChanged) filterSets.use(id);
 
     // sync browser store with workspace state
-    storeWorkspaceState(state);
+    storeWorkspaceState({ explorerId, state });
   }, [state]);
 
   useEffect(() => {
