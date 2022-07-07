@@ -12,7 +12,7 @@ export type RangeFilter = {
 
 export type SimpleFilterState = {
   __combineMode?: CombineMode;
-  value: {
+  value?: {
     [x: string]: OptionFilter | RangeFilter;
   };
 };
@@ -23,7 +23,7 @@ export type AnchoredFilterState = {
 
 export type FilterState = {
   __combineMode?: CombineMode;
-  value: {
+  value?: {
     [x: string]: OptionFilter | RangeFilter | AnchoredFilterState;
   };
 };
