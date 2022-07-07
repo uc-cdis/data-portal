@@ -246,7 +246,7 @@ const DiscoveryDetails = (props: Props) => {
             <React.Fragment><AuditOutlined />{(
               () => {
                 if (props.user.username) {
-                  if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
+                  if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig?.studyRegistrationAccessCheckField], props.userAuthMapping)) {
                     return ' Register This Study ';
                   }
                   return ' Request Access to Register This Study ';

@@ -11,8 +11,8 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
       throw new Error(`Request for query study data at ${queryURL} failed with status ${queryRes.status}}`);
     }
     const studyMetadata = await queryRes.json();
-    const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField || 'is_registered';
-    const studyRegistrationTrackingField = studyRegistrationConfig?.studyRegistrationTrackingField || 'registrant_username';
+    const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
+    const studyRegistrationTrackingField = studyRegistrationConfig?.studyRegistrationTrackingField;
     const metadataToUpdate = { ...studyMetadata };
     metadataToUpdate._guid_type = GUIDType;
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationValidationField] = true;
