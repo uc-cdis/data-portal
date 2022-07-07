@@ -6,11 +6,16 @@
  * @param {ExplorerFilter} args.filter
  */
 export function pluckFromFilter({ field, filter }) {
-  const newFilter = {};
-  for (const [key, value] of Object.entries(filter))
-    if (key !== field) newFilter[key] = value;
+  /** @type {ExplorerFilter} */
+  const newFilter = { ...filter };
+  if (Object.keys(newFilter).length === 0) return newFilter;
 
-  return /** @type {ExplorerFilter} */ (newFilter);
+  newFilter.value = {};
+  for (const [key, value] of Object.entries(filter.value))
+    if (key !== field) newFilter.value[key] = value;
+
+  if (Object.keys(newFilter.value).length === 0) delete newFilter.value;
+  return newFilter;
 }
 
 /**
@@ -20,20 +25,27 @@ export function pluckFromFilter({ field, filter }) {
  * @param {ExplorerFilter} args.filter
  */
 export function pluckFromAnchorFilter({ anchor, field, filter }) {
-  const newFilter = {};
-  for (const [key, value] of Object.entries(filter))
-    if (key !== anchor) newFilter[key] = value;
-    else if (typeof value === 'object' && 'filter' in value) {
+  /** @type {ExplorerFilter} */
+  const newFilter = { ...filter };
+  if (Object.keys(newFilter).length === 0) return newFilter;
+
+  newFilter.value = {};
+  for (const [key, value] of Object.entries(filter.value))
+    if (key !== anchor) newFilter.value[key] = value;
+    else if ('filter' in value) {
       const newAnchorFilter = pluckFromFilter({ field, filter: value.filter });
-      if (Object.keys(newAnchorFilter).length > 0)
-        newFilter[key] = { filter: newAnchorFilter };
+      if (Object.keys(newAnchorFilter.value ?? {}).length > 0)
+        newFilter.value[key] =
+          /** @type {import('../../GuppyComponents/types').AnchoredFilterState} */ ({
+            filter: newAnchorFilter,
+          });
     }
 
-  return /** @type {ExplorerFilter} */ (newFilter);
+  if (Object.keys(newFilter.value).length === 0) delete newFilter.value;
+  return newFilter;
 }
 
 /** @param {ExplorerFilter} filter */
 export function checkIfFilterEmpty(filter) {
-  const { __combineMode, ..._filter } = filter;
-  return Object.keys(_filter).length === 0;
+  return Object.keys(filter.value ?? {}).length === 0;
 }
