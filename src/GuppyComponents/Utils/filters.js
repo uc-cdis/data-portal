@@ -118,7 +118,7 @@ export function updateCountsInInitialTabsOptions(
         }
       }
 
-      const filter = filtersApplied.value[fieldName];
+      const filter = filtersApplied.value?.[fieldName];
       if (filter !== undefined && 'selectedValues' in filter)
         for (const key of filter.selectedValues) {
           const found = updatedTabsOptions[fieldName].histogram.find(
