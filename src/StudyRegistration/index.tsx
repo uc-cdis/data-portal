@@ -2,12 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import StudyRegistration from './StudyRegistration';
-import { StudyRegistrationConfig } from './StudyRegistrationConfig';
 
 const StudyRegistrationWithMDSBackend: React.FC<{
     user: any,
     userAuthMapping: any,
-    config: StudyRegistrationConfig,
 }> = (props) => (
   <StudyRegistration
     {...props}

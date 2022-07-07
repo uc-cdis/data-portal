@@ -18,10 +18,9 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useLocation } from 'react-router-dom';
 
-import { StudyRegistrationConfig } from './StudyRegistrationConfig';
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { useArboristUI } from '../localconf';
+import { useArboristUI, studyRegistrationConfig } from '../localconf';
 import loadStudiesFromMDS from '../Discovery/MDSUtils';
 import { registerStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
 
@@ -95,8 +94,7 @@ interface User {
 }
 interface Props {
   user: User,
-  userAuthMapping: any,
-  studyRegConfig: StudyRegistrationConfig
+  userAuthMapping: any
 }
 
 const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
@@ -112,14 +110,14 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
     const locationStateData = location.state as LocationState || {};
     setStudyUID(locationStateData.studyUID);
     loadStudiesFromMDS('unregistered_discovery_metadata').then((rawStudies) => {
-      if (!useArboristUI || !props.studyRegConfig.studyRegistrationAccessCheckField) {
+      if (!useArboristUI || !studyRegistrationConfig.studyRegistrationAccessCheckField) {
         setStudies(rawStudies);
       } else {
         const studiesToSet = rawStudies.filter((study) => {
-          if (!study[props.studyRegConfig.studyRegistrationAccessCheckField]) {
+          if (!study[studyRegistrationConfig.studyRegistrationAccessCheckField]) {
             return false;
           }
-          return (userHasMethodForServiceOnResource('access', 'study_registration', study[props.studyRegConfig.studyRegistrationAccessCheckField], props.userAuthMapping));
+          return (userHasMethodForServiceOnResource('access', 'study_registration', study[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping));
         });
         setStudies(studiesToSet);
       }
@@ -127,7 +125,9 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
       // eslint-disable-next-line no-console
       console.error('Error encountered while loading studies: ', err);
     });
-  }, [formSubmissionStatus, location.state]);
+  }, [formSubmissionStatus, location.state, props.userAuthMapping]);
+
+  useEffect(() => form.resetFields(), [studyUID, form]);
 
   const userHasAccess = () => {
     if (!useArboristUI) {

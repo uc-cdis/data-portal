@@ -16,6 +16,8 @@ import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI } from '../localconf';
 
+const { TextArea } = Input;
+
 const layout = {
   labelCol: {
     span: 8,
@@ -68,6 +70,8 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
     setStudyName(locationStateData.studyName);
   }, [location.state]);
 
+  useEffect(() => form.resetFields(), [studyNumber, studyName, form]);
+
   const userHasAccess = () => {
     if (!useArboristUI) {
       return true;
@@ -83,12 +87,13 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
       contents: [`Request ID: ${requestID}`, `Grant Number: ${studyNumber}`, `Study Name: ${studyName}`],
       departmentid: 21,
     };
-    Object.entries(formValues).forEach((entry) => {
+    Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
       const [key, value] = entry;
       kayakoPayload.contents.push(`${key}: ${value}`);
     });
     console.log(kayakoPayload);
     // TODO: POST to kayako wrapper
+    setFormSubmissionStatus({ status: 'success' });
   };
 
   const onFinish = (values) => {
@@ -146,14 +151,15 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
           <Divider plain />
           <Form.Item
             label='Study Name - Grant Number'
-            initialValue={(!studyNumber && !studyNumber) ? '' : `${studyName} - ${studyNumber}`}
-            // rules={[
-            //   {
-            //     required: true,
-            //   },
-            // ]}
+            name='Study Grant_doNotInclude'
+            initialValue={(!studyName && !studyNumber) ? '' : `${studyName || 'N/A'} - ${studyNumber || 'N/A'}`}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
           >
-            <Input disabled />
+            <TextArea disabled autoSize />
           </Form.Item>
           <Form.Item
             name='First Name'
@@ -241,7 +247,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
             <Space>
               {(!userHasAccess()) ? (
                 <Tooltip title={'You don\'t have permission to request for access to study registration'}>
-                  <Button type='primary' htmlType='submit'>
+                  <Button type='primary' htmlType='submit' disabled>
                     Submit
                   </Button>
                 </Tooltip>

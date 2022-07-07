@@ -207,10 +207,10 @@ export interface DiscoveryResource {
 }
 
 interface Props {
-  config: DiscoveryConfig
-  studies: DiscoveryResource[]
-  studyRegistrationValidationField: string
-  params?: {studyUID: string} // from React Router
+  config: DiscoveryConfig,
+  studies: DiscoveryResource[],
+  studyRegistrationValidationField: string,
+  params?: {studyUID: string}, // from React Router
   selectedResources,
   pagination: { currentPage: number, resultsPerPage: number },
   selectedTags,

@@ -11,11 +11,14 @@ import {
   AuditOutlined,
 } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-import { hostname, basename, fenceDownloadPath } from '../localconf';
+import {
+  hostname, basename, fenceDownloadPath, studyRegistrationConfig,
+} from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import {
   AccessLevel, accessibleFieldName, renderFieldContent, DiscoveryResource,
 } from './Discovery';
+import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 
 const { Panel } = Collapse;
 
@@ -27,6 +30,7 @@ interface Props {
   config: DiscoveryConfig;
   permalinkCopied: boolean;
   user: User;
+  userAuthMapping: any;
 }
 
 interface ListItem {
@@ -231,8 +235,8 @@ const DiscoveryDetails = (props: Props) => {
             type='text'
             onClick={() => {
               if (props.user.username) {
-                if (false) { // TODO: all set, can go to study reg, use userHasMethodForServiceOnResource()
-                  return handleRedirectToRegstrationClick(props.modalData[props.config.minimalFieldMapping.uid]);
+                if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
+                  return handleRedirectToRegstrationClick(props.modalData.appl_id);
                 }
                 return handleRedirectToRequestRegstrationAccessClick(props.modalData.project_title, props.modalData.project_number);
               }
@@ -242,7 +246,7 @@ const DiscoveryDetails = (props: Props) => {
             <React.Fragment><AuditOutlined />{(
               () => {
                 if (props.user.username) {
-                  if (false) { // TODO: all set, can go to study reg, use userHasMethodForServiceOnResource()
+                  if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
                     return ' Register This Study ';
                   }
                   return ' Request Access to Register This Study ';

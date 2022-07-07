@@ -65,7 +65,7 @@ import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import StudyRegistration from './StudyRegistration';
-import StudyRegistrationRequestForm from './StudyRegistration/StudyRegistrationRequestForm'
+import { ReduxStudyRegistrationRequestForm } from './StudyRegistration/reduxer'
 import NotFound from './components/NotFound';
 
 // monitor user's session
@@ -518,7 +518,7 @@ async function init() {
                           component={
                             (props) => (
                               <ProtectedContent
-                                component={StudyRegistrationRequestForm}
+                                component={ReduxStudyRegistrationRequestForm}
                                 {...props}
                               />
                             )

@@ -18,6 +18,7 @@ export const ReduxDiscoveryActionBar = (() => {
 export const ReduxDiscoveryDetails = (() => {
   const mapStateToProps = (state) => ({
     user: state.user,
+    userAuthMapping: state.userAuthMapping,
   });
 
 
