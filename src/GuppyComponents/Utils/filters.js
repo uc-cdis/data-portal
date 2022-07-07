@@ -28,16 +28,16 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   for (const [key, adminFilterValues] of Object.entries(
     adminAppliedPreFilter
   )) {
-    if (key in userFilter) {
-      const userFilterValues = userFilter[key];
+    if (key in userFilter.value) {
+      const userFilterValues = userFilter.value[key];
 
       if ('selectedValues' in userFilterValues) {
         const userFilterSubset = userFilterValues.selectedValues.filter((x) =>
           adminFilterValues.selectedValues.includes(x)
         );
 
-        mergedFilterState[key] = {
-          ...mergedFilterState[key],
+        mergedFilterState.value[key] = {
+          ...mergedFilterState.value[key],
           selectedValues:
             userFilterSubset.length > 0
               ? // The user-applied filter is more exclusive than the admin-applied filter.
@@ -47,7 +47,7 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
         };
       }
     } else {
-      mergedFilterState[key] = adminFilterValues;
+      mergedFilterState.value[key] = adminFilterValues;
     }
   }
 
@@ -118,7 +118,7 @@ export function updateCountsInInitialTabsOptions(
         }
       }
 
-      const filter = filtersApplied[fieldName];
+      const filter = filtersApplied.value[fieldName];
       if (filter !== undefined && 'selectedValues' in filter)
         for (const key of filter.selectedValues) {
           const found = updatedTabsOptions[fieldName].histogram.find(
