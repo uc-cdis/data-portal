@@ -272,7 +272,7 @@ function buildConfig(opts) {
   }
 
   const { discoveryConfig } = config;
-  const { studyRegistrationConfig } = config;
+  const studyRegistrationConfig = config.studyRegistrationConfig || {};
   if (!studyRegistrationConfig.studyRegistrationTrackingField) {
     studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username'
   }
