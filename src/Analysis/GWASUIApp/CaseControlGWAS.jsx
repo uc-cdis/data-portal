@@ -516,7 +516,7 @@ const CaseControlGWAS = (props) => {
     function getVariablesList(dichotomousCovariates, otherCovariates) {
         const variables = [];
         for (let dichotomousCovariate of dichotomousCovariates) {
-            const variableItem = {'variable_type': 'custom_dichotomous', 'cohort_ids': [dichotomousCovariate.cohort1, dichotomousCovariate.cohort2] };
+            const variableItem = {'variable_type': 'custom_dichotomous', 'provided_name': dichotomousCovariate.name, 'cohort_ids': [dichotomousCovariate.cohort1, dichotomousCovariate.cohort2] };
             variables.push(variableItem);
         }
         for (let otherCovariate of otherCovariates) {
