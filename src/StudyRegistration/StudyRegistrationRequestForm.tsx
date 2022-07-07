@@ -56,7 +56,6 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
 
   const [formSubmissionStatus, setFormSubmissionStatus] = useState(null);
   const [requestID, setRequestID] = useState(null);
-  // const [studyUID, setStudyUID] = useState(null);
   const [studyNumber, setStudyNumber] = useState(null);
   const [studyName, setStudyName] = useState(null);
   const [role, setRole] = useState('Principal Investigator');
@@ -65,7 +64,6 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
   useEffect(() => {
     const locationStateData = location.state as LocationState || {};
     setRequestID(locationStateData.requestID);
-    // setStudyUID(locationStateData.studyUID);
     setStudyNumber(locationStateData.studyNumber);
     setStudyName(locationStateData.studyName);
   }, [location.state]);

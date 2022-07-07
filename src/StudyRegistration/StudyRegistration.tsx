@@ -16,7 +16,7 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { StudyRegistrationConfig } from './StudyRegistrationConfig';
 import './StudyRegistration.css';
@@ -87,6 +87,9 @@ const handleUUIDValidation = (_, UUID: string): Promise<boolean|void> => {
 export interface DiscoveryResource {
   [any: string]: any,
 }
+interface LocationState {
+  studyUID?: string|number;
+}
 interface User {
   username: string
 }
@@ -98,12 +101,16 @@ interface Props {
 
 const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
   const [form] = Form.useForm();
+  const location = useLocation();
 
   const [formSubmissionStatus, setFormSubmissionStatus] = useState(null);
   const [studies, setStudies] = useState(null);
   const [regRequestPending, setRegRequestPending] = useState(false);
+  const [studyUID, setStudyUID] = useState(null);
 
   useEffect(() => {
+    const locationStateData = location.state as LocationState || {};
+    setStudyUID(locationStateData.studyUID);
     loadStudiesFromMDS('unregistered_discovery_metadata').then((rawStudies) => {
       if (!useArboristUI || !props.studyRegConfig.studyRegistrationAccessCheckField) {
         setStudies(rawStudies);
@@ -120,7 +127,7 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
       // eslint-disable-next-line no-console
       console.error('Error encountered while loading studies: ', err);
     });
-  }, [formSubmissionStatus]);
+  }, [formSubmissionStatus, location.state]);
 
   const userHasAccess = () => {
     if (!useArboristUI) {
@@ -195,6 +202,7 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
           <Form.Item
             name='study_id'
             label='Study'
+            initialValue={studyUID}
             hasFeedback
             rules={[{ required: true }]}
           >

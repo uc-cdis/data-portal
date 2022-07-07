@@ -181,18 +181,20 @@ const DiscoveryDetails = (props: Props) => {
   const pagePath = `/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`;
   const permalink = `${(basename === '/' ? '' : basename)}${pagePath}`;
 
-  const handleRedirectToRegstrationClick = (studyUID: String = null) => {
+  const handleRedirectToRegstrationClick = (studyUID: string|number = null) => {
     // TODO: not impemented, redirect to study reg page
+    history.push('/study-reg', {
+      studyUID,
+    });
   };
 
   const handleRedirectToRequestRegstrationAccessClick = (
-    requestID: String = null,
-    studyUID: String|Number = null,
     studyName: String = null,
     studyNumber: String = null) => {
-    // call requestor and redirect to request access page (by requestor) when requestor service is ready
+    // TODO: call requestor and redirect to request access page (by requestor) when requestor service is ready
+    const requestID = '12345';
     history.push('/study-reg/request-access', {
-      requestID, studyUID, studyName, studyNumber,
+      requestID, studyName, studyNumber,
     });
   };
 
@@ -230,9 +232,9 @@ const DiscoveryDetails = (props: Props) => {
             onClick={() => {
               if (props.user.username) {
                 if (false) { // TODO: all set, can go to study reg, use userHasMethodForServiceOnResource()
-                  return handleRedirectToRegstrationClick();
+                  return handleRedirectToRegstrationClick(props.modalData[props.config.minimalFieldMapping.uid]);
                 }
-                return handleRedirectToRequestRegstrationAccessClick('12345', props.modalData[props.config.minimalFieldMapping.uid], props.modalData.project_title, props.modalData.project_number);
+                return handleRedirectToRequestRegstrationAccessClick(props.modalData.project_title, props.modalData.project_number);
               }
               return handleRedirectToLoginClick();
             }}
@@ -289,7 +291,6 @@ const DiscoveryDetails = (props: Props) => {
           )
           : (
             <React.Fragment>
-
               <div className='discovery-modal-content'>
                 {header}
                 {(
