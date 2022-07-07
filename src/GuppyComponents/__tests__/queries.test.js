@@ -3,16 +3,27 @@ import {
   getQueryInfoForAggregationOptionsData,
 } from '../Utils/queries';
 
+/** @typedef {import('../types').CombineMode} CombineMode */
+
 describe('Get GQL filter from filter object from', () => {
   test('a simple option filter', async () => {
-    const filterState = { a: { selectedValues: ['foo', 'bar'] } };
+    const filterState = {
+      value: {
+        a: { selectedValues: ['foo', 'bar'] },
+      },
+    };
     const gqlFilter = { AND: [{ IN: { a: ['foo', 'bar'] } }] };
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
 
   test('a simple option filter with combine mode OR', () => {
     const filterState = {
-      a: { __combineMode: 'OR', selectedValues: ['foo', 'bar'] },
+      value: {
+        a: {
+          __combineMode: /** @type {CombineMode} */ ('OR'),
+          selectedValues: ['foo', 'bar'],
+        },
+      },
     };
     const gqlFilter = { AND: [{ IN: { a: ['foo', 'bar'] } }] };
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
@@ -20,7 +31,12 @@ describe('Get GQL filter from filter object from', () => {
 
   test('a simple option filter with combine mode AND', () => {
     const filterState = {
-      a: { __combineMode: 'AND', selectedValues: ['foo', 'bar'] },
+      value: {
+        a: {
+          __combineMode: /** @type {CombineMode} */ ('AND'),
+          selectedValues: ['foo', 'bar'],
+        },
+      },
     };
     const gqlFilter = {
       AND: [{ AND: [{ IN: { a: ['foo'] } }, { IN: { a: ['bar'] } }] }],
@@ -29,7 +45,11 @@ describe('Get GQL filter from filter object from', () => {
   });
 
   test('a simple range filter', () => {
-    const filterState = { a: { lowerBound: 0, upperBound: 1 } };
+    const filterState = {
+      value: {
+        a: { lowerBound: 0, upperBound: 1 },
+      },
+    };
     const gqlFilter = {
       AND: [{ AND: [{ GTE: { a: 0 } }, { LTE: { a: 1 } }] }],
     };
@@ -38,10 +58,15 @@ describe('Get GQL filter from filter object from', () => {
 
   test('simple filters', () => {
     const filterState = {
-      __combineMode: 'OR',
-      a: { selectedValues: ['foo', 'bar'] },
-      b: { __combineMode: 'AND', selectedValues: ['foo', 'bar'] },
-      c: { lowerBound: 0, upperBound: 1 },
+      __combineMode: /** @type {CombineMode} */ ('OR'),
+      value: {
+        a: { selectedValues: ['foo', 'bar'] },
+        b: {
+          __combineMode: /** @type {CombineMode} */ ('AND'),
+          selectedValues: ['foo', 'bar'],
+        },
+        c: { lowerBound: 0, upperBound: 1 },
+      },
     };
     const gqlFilter = {
       OR: [
@@ -54,7 +79,13 @@ describe('Get GQL filter from filter object from', () => {
   });
 
   test('a combine mode only filter', () => {
-    const filterState = { a: { __combineMode: 'OR' } };
+    const filterState = {
+      value: {
+        a: {
+          __combineMode: /** @type {CombineMode} */ ('OR'),
+        },
+      },
+    };
     const gqlFilter = { AND: [] };
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
@@ -62,7 +93,7 @@ describe('Get GQL filter from filter object from', () => {
   test('an invalid filter', () => {
     const fieldName = 'a';
     const filterValue = {};
-    const filterState = { [fieldName]: filterValue };
+    const filterState = { value: { [fieldName]: filterValue } };
     expect(() => getGQLFilter(filterState)).toThrow(
       `Invalid filter object for "${fieldName}": ${JSON.stringify(filterValue)}`
     );
@@ -70,8 +101,10 @@ describe('Get GQL filter from filter object from', () => {
 
   test('a nested filter', () => {
     const filterState = {
-      __combineMode: 'OR',
-      'a.b': { selectedValues: ['foo', 'bar'] },
+      __combineMode: /** @type {CombineMode} */ ('OR'),
+      value: {
+        'a.b': { selectedValues: ['foo', 'bar'] },
+      },
     };
     const gqlFilter = {
       OR: [{ nested: { path: 'a', OR: [{ IN: { b: ['foo', 'bar'] } }] } }],
@@ -81,8 +114,10 @@ describe('Get GQL filter from filter object from', () => {
 
   test('nested filters with same parent path', () => {
     const filterState = {
-      'a.b': { selectedValues: ['foo', 'bar'] },
-      'a.c': { lowerBound: 0, upperBound: 1 },
+      value: {
+        'a.b': { selectedValues: ['foo', 'bar'] },
+        'a.c': { lowerBound: 0, upperBound: 1 },
+      },
     };
     const gqlFilter = {
       AND: [
@@ -102,8 +137,10 @@ describe('Get GQL filter from filter object from', () => {
 
   test('nested filters with different parent paths', () => {
     const filterState = {
-      'a.b': { selectedValues: ['foo', 'bar'] },
-      'c.d': { lowerBound: 0, upperBound: 1 },
+      value: {
+        'a.b': { selectedValues: ['foo', 'bar'] },
+        'c.d': { lowerBound: 0, upperBound: 1 },
+      },
     };
     const gqlFilter = {
       AND: [
@@ -126,11 +163,15 @@ describe('Get GQL filter from filter object from', () => {
 
   test('an anchored filter state', () => {
     const filterState = {
-      __combineMode: 'OR',
-      'x:y': {
-        filter: {
-          'a.b': { selectedValues: ['foo', 'bar'] },
-          'c.d': { lowerBound: 0, upperBound: 1 },
+      __combineMode: /** @type {CombineMode} */ ('OR'),
+      value: {
+        'x:y': {
+          filter: {
+            value: {
+              'a.b': { selectedValues: ['foo', 'bar'] },
+              'c.d': { lowerBound: 0, upperBound: 1 },
+            },
+          },
         },
       },
     };
@@ -169,11 +210,16 @@ describe('Get GQL filter from filter object from', () => {
 
   test('various filters', () => {
     const filterState = {
-      a: { selectedValues: ['foo', 'bar'] },
-      'b.c': { __combineMode: 'AND', selectedValues: ['foo', 'bar'] },
-      'b.d': { lowerBound: 0, upperBound: 1 },
-      e: { __combineMode: 'OR' },
-      'f.g': { lowerBound: 0, upperBound: 1 },
+      value: {
+        a: { selectedValues: ['foo', 'bar'] },
+        'b.c': {
+          __combineMode: /** @type {CombineMode} */ ('AND'),
+          selectedValues: ['foo', 'bar'],
+        },
+        'b.d': { lowerBound: 0, upperBound: 1 },
+        e: { __combineMode: /** @type {CombineMode} */ ('OR') },
+        'f.g': { lowerBound: 0, upperBound: 1 },
+      },
     };
     const gqlFilter = {
       AND: [
