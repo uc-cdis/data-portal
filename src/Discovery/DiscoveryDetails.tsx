@@ -231,31 +231,35 @@ const DiscoveryDetails = (props: Props) => {
           Back
         </Button>
         <Space split={<Divider type='vertical' />}>
-          <Button
-            type='text'
-            onClick={() => {
-              if (props.user.username) {
-                if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
-                  return handleRedirectToRegstrationClick(props.modalData.appl_id);
-                }
-                return handleRedirectToRequestRegstrationAccessClick(props.modalData.project_title, props.modalData.project_number);
-              }
-              return handleRedirectToLoginClick();
-            }}
-          >
-            <React.Fragment><AuditOutlined />{(
-              () => {
-                if (props.user.username) {
-                  if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig?.studyRegistrationAccessCheckField], props.userAuthMapping)) {
-                    return ' Register This Study ';
+          {(props.modalData[studyRegistrationConfig.studyRegistrationValidationField] === false)
+            ? (
+              <Button
+                type='text'
+                onClick={() => {
+                  if (props.user.username) {
+                    if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
+                      return handleRedirectToRegstrationClick(props.modalData.appl_id);
+                    }
+                    return handleRedirectToRequestRegstrationAccessClick(props.modalData.project_title, props.modalData.project_number);
                   }
-                  return ' Request Access to Register This Study ';
-                }
-                return ' Login to Register This Study ';
-              }
-            )()}
-            </React.Fragment>
-          </Button>
+                  return handleRedirectToLoginClick();
+                }}
+              >
+                <React.Fragment><AuditOutlined />{(
+                  () => {
+                    if (props.user.username) {
+                      if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig?.studyRegistrationAccessCheckField], props.userAuthMapping)) {
+                        return ' Register This Study ';
+                      }
+                      return ' Request Access to Register This Study ';
+                    }
+                    return ' Login to Register This Study ';
+                  }
+                )()}
+                </React.Fragment>
+              </Button>
+            )
+            : null}
           <Button
             type='text'
             onClick={() => {
