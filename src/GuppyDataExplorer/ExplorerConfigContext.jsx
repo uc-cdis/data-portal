@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import { explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
-import { createFilterInfo, isSurvivalAnalysisEnabled } from './utils';
+import { getCurrentConfig } from './utils';
 
 const explorerIds = [];
 const explorerOptions = [];
@@ -58,43 +58,15 @@ export function ExplorerConfigProvider({ children }) {
     if (explorerIds.includes(searchParamId)) setExporerId(searchParamId);
   }
 
-  const config = explorerConfig.find(({ id }) => id === explorerId);
-
   const value = useMemo(
     () => ({
-      current: {
-        adminAppliedPreFilters: config.adminAppliedPreFilters,
-        buttonConfig: {
-          buttons: config.buttons,
-          dropdowns: config.dropdowns,
-          sevenBridgesExportURL: config.sevenBridgesExportURL,
-          terraExportURL: config.terraExportURL,
-          terraTemplate: config.terraTemplate,
-        },
-        chartConfig: config.charts,
-        filterConfig: {
-          ...config.filters,
-          info: createFilterInfo(
-            config.filters,
-            config.guppyConfig.fieldMapping
-          ),
-        },
-        getAccessButtonLink: config.getAccessButtonLink,
-        guppyConfig: config.guppyConfig,
-        hideGetAccessButton: config.hideGetAccessButton,
-        patientIdsConfig: config.patientIds,
-        survivalAnalysisConfig: {
-          ...config.survivalAnalysis,
-          enabled: isSurvivalAnalysisEnabled(config.survivalAnalysis),
-        },
-        tableConfig: config.table,
-      },
+      current: getCurrentConfig(explorerId),
       explorerId,
       explorerOptions,
       handleBrowserNavigationForConfig,
       updateExplorerId,
     }),
-    [config, explorerId, explorerOptions]
+    [explorerId]
   );
 
   return (
