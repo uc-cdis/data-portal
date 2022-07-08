@@ -21,6 +21,9 @@
     <link rel="icon"
     type="image/png" href="<%= htmlWebpackPlugin.options.basename %>/src/img/favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <% if(htmlWebpackPlugin.options.metaDescription) { %>
+      <meta name="description" content="<%= htmlWebpackPlugin.options.metaDescription %>" />
+    <% } %>
     <% if(htmlWebpackPlugin.options.dap_url) { %>
       <!-- We participate in the US government's analytics program. See the data at analytics.usa.gov. -->
       <script async type="text/javascript" src="<%= htmlWebpackPlugin.options.dap_url %>" id="_fed_an_ua_tag"></script>
