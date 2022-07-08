@@ -2,20 +2,11 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import { explorerConfig } from '../localconf';
-import { capitalizeFirstLetter } from '../utils';
 import { getCurrentConfig } from './utils';
 
 /** @type {number[]} */
 const explorerIds = [];
-/** @type {{ label: string; value: string }[]} */
-const explorerOptions = [];
-for (const { guppyConfig, id, label } of explorerConfig) {
-  explorerIds.push(id);
-  explorerOptions.push({
-    label: capitalizeFirstLetter(label || guppyConfig.dataType),
-    value: String(id),
-  });
-}
+for (const { id } of explorerConfig) explorerIds.push(id);
 
 /** @typedef {import('./types').AlteredExplorerConfig} AlteredExplorerConfig */
 
@@ -23,7 +14,6 @@ for (const { guppyConfig, id, label } of explorerConfig) {
  * @typedef {Object} ExplorerConfigContext
  * @property {AlteredExplorerConfig} current
  * @property {number} explorerId
- * @property {{ label: string; value: string }[]} explorerOptions
  * @property {() => void} handleBrowserNavigationForConfig
  * @property {(id: number) => void} updateExplorerId
  */
@@ -64,7 +54,6 @@ export function ExplorerConfigProvider({ children }) {
     () => ({
       current: getCurrentConfig(explorerId),
       explorerId,
-      explorerOptions,
       handleBrowserNavigationForConfig,
       updateExplorerId,
     }),
