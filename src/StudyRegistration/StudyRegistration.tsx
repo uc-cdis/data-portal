@@ -133,6 +133,7 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
     if (!useArboristUI) {
       return true;
     }
+    // to actually kicks off study registration request, user needs to have MDS and CEDAR access
     return (userHasMethodForServiceOnResource('access', 'mds_gateway', '/mds_gateway', props.userAuthMapping) && userHasMethodForServiceOnResource('access', 'cedar', '/cedar', props.userAuthMapping));
   };
 
@@ -265,9 +266,30 @@ const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
             help='Leave this section blank if your data is not yet available'
           >
             <Select placeholder='Select a data repository' showSearch allowClear>
-              <Option value='HEAL FAIR'>HEAL FAIR</Option>
-              <Option value='JCOIN'>JCOIN</Option>
+              <Option value='Database of Genotypes and Phenotypes (dbGaP)'>Database of Genotypes and Phenotypes (dbGaP)</Option>
+              <Option value='Dataverse'>Dataverse</Option>
+              <Option value='Dryad'>Dryad</Option>
+              <Option value='Figshare'>Figshare</Option>
               <Option value='ICPSR'>ICPSR</Option>
+              <Option value='ICPSR/NAHDAP'>ICPSR/NAHDAP</Option>
+              <Option value='JCOIN'>JCOIN</Option>
+              <Option value='Mendeley Data'>Mendeley Data</Option>
+              <Option value='Metabolomics Workbench'>Metabolomics Workbench</Option>
+              <Option value='Microphysiology Systems Database'>Microphysiology Systems Database</Option>
+              <Option value='Mouse Genome Informatics (MGI)'>Mouse Genome Informatics (MGI)</Option>
+              <Option value='Mouse Phenome Database (MPD)'>Mouse Phenome Database (MPD)</Option>
+              <Option value='NICHD DASH'>NICHD DASH</Option>
+              <Option value='NIDA Data Share'>NIDA Data Share</Option>
+              <Option value='NIDDK Central'>NIDDK Central</Option>
+              <Option value='NIMH Data Archive'>NIMH Data Archive</Option>
+              <Option value='NINDS Data Share'>NINDS Data Share</Option>
+              <Option value='OpenNEURO'>OpenNEURO</Option>
+              <Option value='OpenScience Framework'>OpenScience Framework</Option>
+              <Option value='Syracuse Qualitative'>Syracuse Qualitative</Option>
+              <Option value='Rat Genome Database (RGD)'>Rat Genome Database (RGD)</Option>
+              <Option value='Vivli'>Vivli</Option>
+              <Option value='The Zebrafish Model Organism Database (ZFIN)'>The Zebrafish Model Organism Database (ZFIN)</Option>
+              <Option value='Zenodo'>Zenodo</Option>
             </Select>
           </Form.Item>
           <Form.List name='repository_study_ids' initialValue={['']}>
