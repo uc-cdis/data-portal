@@ -79,9 +79,11 @@ export class SessionMonitor {
   }
 
   async refreshSession() {
-    // hitting Fence endpoint refreshes token
+    // hitting Fence endpoint refreshes tokenq
     const shouldUpdatePopup =
-      (await this.dispatch?.(fetchUser()).unwrap()) === 'UPDATE_POPUP';
+      (await this.dispatch?.(fetchUser())
+        .unwrap()
+        .then((res) => res.data)) === 'UPDATE_POPUP';
     if (shouldUpdatePopup) this.popupShown = true;
   }
 }

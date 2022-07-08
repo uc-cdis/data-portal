@@ -11,8 +11,8 @@ export const fetchUser = createAsyncThunk(
       const { status, data } = await fetchCreds({
         onError: () => dispatch(requestErrored()),
       });
-      if (status === 200) return data;
-      if (status === 401) return 'UPDATE_POPUP';
+      if (status === 200) return { data, status };
+      if (status === 401) return { data: 'UPDATE_POPUP', status };
       throw data.error;
     } catch (e) {
       return rejectWithValue(e);

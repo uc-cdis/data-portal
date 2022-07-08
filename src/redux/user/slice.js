@@ -29,11 +29,13 @@ const slice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchUser.fulfilled, (state, action) => {
-        for (const [k, v] of Object.entries(action.payload)) {
-          state[k] = v;
+        if (action.payload.status === 200) {
+          for (const [k, v] of Object.entries(action.payload.data)) {
+            state[k] = v;
+          }
+          state.fetched_user = true;
+          state.lastAuthMs = Date.now();
         }
-        state.fetched_user = true;
-        state.lastAuthMs = Date.now();
       })
 
       .addCase(
