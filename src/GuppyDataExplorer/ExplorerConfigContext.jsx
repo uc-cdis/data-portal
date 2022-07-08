@@ -5,6 +5,16 @@ import { explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 import { createFilterInfo, isSurvivalAnalysisEnabled } from './utils';
 
+const explorerIds = [];
+const explorerOptions = [];
+for (const { guppyConfig, id, label } of explorerConfig) {
+  explorerIds.push(id);
+  explorerOptions.push({
+    label: capitalizeFirstLetter(label || guppyConfig.dataType),
+    value: String(id),
+  });
+}
+
 /** @typedef {import('./types').AlteredExplorerConfig} AlteredExplorerConfig */
 
 /**
@@ -21,17 +31,6 @@ const ExplorerConfigContext = createContext(null);
 
 export function ExplorerConfigProvider({ children }) {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const explorerOptions = [];
-  const explorerIds = [];
-  for (const { guppyConfig, id, label } of explorerConfig) {
-    explorerIds.push(id);
-    explorerOptions.push({
-      label: capitalizeFirstLetter(label || guppyConfig.dataType),
-      value: String(id),
-    });
-  }
-
   const [initialExplorerId, hasValidInitialSearchParamId] = useMemo(() => {
     const hasSearchParamId = searchParams.has('id');
     const searchParamId = hasSearchParamId
