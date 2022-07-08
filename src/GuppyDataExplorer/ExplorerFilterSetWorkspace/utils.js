@@ -67,6 +67,7 @@ let prevExplorerId;
  * @param {Object} args
  * @param {ExplorerFilter} args.explorerFilter
  * @param {number} args.explorerId
+ * @returns {FilterSetWorkspaceState}
  */
 export function initializeWorkspaceState({ explorerFilter, explorerId }) {
   const isSwitchingExplorer =

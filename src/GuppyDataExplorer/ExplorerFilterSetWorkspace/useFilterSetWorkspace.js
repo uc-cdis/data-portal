@@ -25,8 +25,7 @@ export default function useFilterSetWorkspace() {
     const initialActiveFilterSet = initialState.active.filterSet;
 
     // sync explorer filter set state with initial workspace active filter set
-    if ('id' in initialActiveFilterSet)
-      filterSets.use(initialActiveFilterSet.id);
+    filterSets.use(initialActiveFilterSet.id);
 
     // sync explorer filter state with non-empty initial workspace active filter
     if (!checkIfFilterEmpty(initialActiveFilterSet.filter))
