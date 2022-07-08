@@ -154,6 +154,12 @@ class Login extends React.Component {
                 <Button
                   className='login-page__entry-button'
                   onClick={() => {
+                    console.log('login url:', getLoginUrl(
+                      loginOptions[i].length > 1
+                        ? this.state.selectedLoginOption[i].value
+                        : loginOptions[i][0].value,
+                      next,
+                    ));
                     window.location.href = getLoginUrl(
                       loginOptions[i].length > 1
                         ? this.state.selectedLoginOption[i].value
