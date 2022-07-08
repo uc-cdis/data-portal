@@ -45,9 +45,10 @@ export function checkIfFilterEmpty(filter) {
 const workspaceStateSessionStorageKey = 'explorer:filterSetWorkspace';
 
 /** @returns {FilterSetWorkspaceState} */
-export function retrieveWorkspaceState() {
+export function retrieveWorkspaceState(explorerId) {
   try {
-    const str = window.sessionStorage.getItem(workspaceStateSessionStorageKey);
+    const storageKey = `${workspaceStateSessionStorageKey}:${explorerId}`;
+    const str = window.sessionStorage.getItem(storageKey);
     if (str === null) throw new Error('No stored query');
     return JSON.parse(str);
   } catch (e) {
@@ -59,21 +60,36 @@ export function retrieveWorkspaceState() {
   }
 }
 
-/** @param {ExplorerFilter} filter */
-export function initializeWorkspaceState(filter) {
-  if (checkIfFilterEmpty(filter)) return retrieveWorkspaceState();
+/** @type {number} */
+let prevExplorerId;
+
+/**
+ * @param {Object} args
+ * @param {ExplorerFilter} args.explorerFilter
+ * @param {number} args.explorerId
+ * @returns {FilterSetWorkspaceState}
+ */
+export function initializeWorkspaceState({ explorerFilter, explorerId }) {
+  const isSwitchingExplorer =
+    prevExplorerId !== undefined && prevExplorerId !== explorerId;
+  prevExplorerId = explorerId;
+
+  if (isSwitchingExplorer || checkIfFilterEmpty(explorerFilter))
+    return retrieveWorkspaceState(explorerId);
 
   const id = crypto.randomUUID();
-  const filterSet = { filter };
+  const filterSet = { filter: explorerFilter };
   return { active: { filterSet, id }, all: { [id]: filterSet } };
 }
 
-/** @param {FilterSetWorkspaceState} state */
-export function storeWorkspaceState(state) {
-  window.sessionStorage.setItem(
-    workspaceStateSessionStorageKey,
-    JSON.stringify(state)
-  );
+/**
+ * @param {Object} args
+ * @param {number} args.explorerId
+ * @param {FilterSetWorkspaceState} args.state
+ */
+export function storeWorkspaceState({ explorerId, state }) {
+  const storageKey = `${workspaceStateSessionStorageKey}:${explorerId}`;
+  window.sessionStorage.setItem(storageKey, JSON.stringify(state));
 }
 
 /**
