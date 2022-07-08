@@ -52,16 +52,18 @@ export default function useFilterSetWorkspace() {
     storeWorkspaceState({ explorerId, state });
   }, [state]);
 
+  const isInitialRender1 = useRef(true);
   useEffect(() => {
-    // sync workspace active filter with explorer filter set state
-    if (filterSets.active?.id !== undefined)
+    // sync workspace active filter with explorer filter set state (skip initial render)
+    if (isInitialRender1.current) isInitialRender1.current = false;
+    else if (filterSets.active?.id !== undefined)
       dispatch({ type: 'LOAD', payload: { filterSet: filterSets.active } });
   }, [filterSets.active]);
 
-  const isInitialRender = useRef(true);
+  const isInitialRender2 = useRef(true);
   useEffect(() => {
     // sync workspace active filter with explorer filter state (skip initial render)
-    if (isInitialRender.current) isInitialRender.current = false;
+    if (isInitialRender2.current) isInitialRender2.current = false;
     else dispatch({ type: 'UPDATE', payload: { filter: explorerFilter } });
   }, [explorerFilter]);
 
