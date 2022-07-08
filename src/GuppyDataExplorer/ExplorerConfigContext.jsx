@@ -5,7 +5,9 @@ import { explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 import { getCurrentConfig } from './utils';
 
+/** @type {number[]} */
 const explorerIds = [];
+/** @type {{ label: string; value: string }[]} */
 const explorerOptions = [];
 for (const { guppyConfig, id, label } of explorerConfig) {
   explorerIds.push(id);
