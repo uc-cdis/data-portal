@@ -4,27 +4,30 @@ import UserProfile from './UserProfile';
 import { fetchWithCreds, updatePopup } from '../actions';
 import { credentialCdisPath } from '../localconf';
 
-export const fetchAccess = () => (dispatch) => fetchWithCreds({
-  path: credentialCdisPath,
-  dispatch,
-})
-  .then(
-    ({ status, data }) => {
-      switch (status) {
-      case 200:
-        return {
-          type: 'RECEIVE_USER_PROFILE',
-          jtis: data.jtis,
-        };
-      default:
-        return {
-          type: 'USER_PROFILE_ERROR',
-          error: data.error,
-        };
-      }
-    },
-  )
-  .then((msg) => dispatch(msg));
+export const fetchAccess = () => (dispatch) => {
+  console.log(credentialCdisPath);
+  fetchWithCreds({
+    path: credentialCdisPath,
+    dispatch,
+  })
+    .then(
+      ({ status, data }) => {
+        switch (status) {
+        case 200:
+          return {
+            type: 'RECEIVE_USER_PROFILE',
+            jtis: data.jtis,
+          };
+        default:
+          return {
+            type: 'USER_PROFILE_ERROR',
+            error: data.error,
+          };
+        }
+      },
+    )
+    .then((msg) => dispatch(msg));
+}
 
 const requestDeleteKey = (jti, exp) => ({
   type: 'REQUEST_DELETE_KEY',

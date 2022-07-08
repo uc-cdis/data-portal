@@ -55,7 +55,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
     const studies = metadataResponse[commonsName];
 
     const editedStudies = studies.map((entry, index) => {
-      const keys = Object.keys(entry);
+``      const keys = Object.keys(entry);
       const studyId = keys[0];
 
       const entryUnpacked = entry[studyId].gen3_discovery;
