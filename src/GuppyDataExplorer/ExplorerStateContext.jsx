@@ -1,15 +1,19 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
-import { useExplorerConfig } from './ExplorerConfigContext';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  updateExplorerFilter,
+  updatePatientIds,
+} from '../redux/explorer/slice';
 
-/** @typedef {import('./types').ExplorerFilter} ExplorerFilter */
+/** @typedef {import('../redux/types').RootState} RootState */
 
 /**
  * @typedef {Object} ExplorerStateContext
- * @property {ExplorerFilter} explorerFilter
+ * @property {RootState['explorer']['explorerFilter']} explorerFilter
  * @property {string[]} patientIds
- * @property {(filter: ExplorerFilter) => void} handleFilterChange
+ * @property {(filter: RootState['explorer']['explorerFilter']) => void} handleFilterChange
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
  */
 
@@ -17,47 +21,26 @@ import { useExplorerConfig } from './ExplorerConfigContext';
 const ExplorerStateContext = createContext(null);
 
 export function ExplorerStateProvider({ children }) {
-  const {
-    current: { filterConfig, patientIdsConfig },
-  } = useExplorerConfig();
+  /** @type {import('../redux/types').AppDispatch} */
+  const dispatch = useDispatch();
+  const { explorerFilter, patientIds } = useSelector(
+    (/** @type {RootState} */ state) => state.explorer
+  );
 
-  const initialExplorerFilter =
-    /** @type {{ filter?: ExplorerFilter }} */ (useLocation().state)?.filter ??
-    /** @type {ExplorerFilter} */ ({});
-  const [explorerFilter, setExplorerFilter] = useState(initialExplorerFilter);
-  function handleFilterChange(/** @type {ExplorerFilter} */ filter) {
-    let newFilter = /** @type {ExplorerFilter} */ ({});
-    if (filter && Object.keys(filter).length > 0) {
-      const allSearchFieldSet = new Set();
-      for (const { searchFields } of filterConfig.tabs)
-        for (const field of searchFields ?? []) allSearchFieldSet.add(field);
-
-      if (allSearchFieldSet.size === 0) {
-        newFilter = /** @type {ExplorerFilter} */ ({
-          __combineMode: explorerFilter.__combineMode,
-          ...filter,
-        });
-      } else {
-        const filterWithoutSearchFields = /** @type {ExplorerFilter} */ ({});
-        for (const field of Object.keys(filter))
-          if (!allSearchFieldSet.has(field))
-            filterWithoutSearchFields[field] = filter[field];
-
-        if (Object.keys(filterWithoutSearchFields).length > 0)
-          newFilter = /** @type {ExplorerFilter} */ ({
-            __combineMode: explorerFilter.__combineMode,
-            ...filterWithoutSearchFields,
-          });
-      }
-    }
-    setExplorerFilter(newFilter);
+  const location = useLocation();
+  /** @param {RootState['explorer']['explorerFilter']} filter */
+  function handleFilterChange(filter) {
+    dispatch(updateExplorerFilter(filter));
   }
+  useEffect(() => {
+    /** @type {{ filter?: RootState['explorer']['explorerFilter'] }} */
+    const { filter } = location.state ?? {};
+    if (filter !== undefined) handleFilterChange(filter);
+  }, []);
 
-  /** @type {string[]} */
-  const initielPatientIds = patientIdsConfig?.filter ? [] : undefined;
-  const [patientIds, setPatientIds] = useState(initielPatientIds);
-  function handlePatientIdsChange(/** @type {string[]} */ ids) {
-    if (patientIdsConfig?.filter !== undefined) setPatientIds(ids);
+  /** @param {RootState['explorer']['patientIds']} ids */
+  function handlePatientIdsChange(ids) {
+    dispatch(updatePatientIds(ids));
   }
 
   const value = useMemo(
