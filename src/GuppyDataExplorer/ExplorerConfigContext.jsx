@@ -41,7 +41,7 @@ export function ExplorerConfigProvider({ children }) {
   useEffect(() => {
     if (!hasValidInitialSearchParamId) {
       setSearchParams(`id=${initialSearchParamId}`);
-      setExplorerId(initialSearchParamId);
+      dispatch(setExplorerId(initialSearchParamId));
     }
   }, []);
 
