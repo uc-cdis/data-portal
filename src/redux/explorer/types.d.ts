@@ -2,7 +2,7 @@ import type {
   FilterConfig,
   GuppyConfig,
   OptionFilter,
-} from '../GuppyComponents/types';
+} from '../../GuppyComponents/types';
 import type {
   ButtonConfig,
   ChartConfig,
