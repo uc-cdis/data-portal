@@ -6,6 +6,7 @@ import type {
 import type {
   ButtonConfig,
   ChartConfig,
+  ExplorerFilter,
   PatientIdsConfig,
   SurvivalAnalysisConfig,
   TableConfig,
@@ -26,8 +27,12 @@ export type ExplorerConfig = {
   tableConfig: TableConfig;
 };
 
+export type ExplorerFilter = ExplorerFilter;
+
 export type ExplorerState = {
   config: ExplorerConfig;
+  explorerFilter: ExplorerFilter;
   explorerId: number;
   explorerIds: ExplorerState['explorerId'][];
+  patientIds: string[];
 };
