@@ -24,7 +24,7 @@ function ExplorerFilter({ className = '', ...filterProps }) {
   const {
     explorerFilter,
     patientIds,
-    handleFilterClear,
+    handleFilterChange,
     handlePatientIdsChange,
   } = useExplorerState();
   const connectedFilterProps = {
@@ -53,7 +53,7 @@ function ExplorerFilter({ className = '', ...filterProps }) {
           <button
             type='button'
             className='explorer-filter__clear-button'
-            onClick={handleFilterClear}
+            onClick={() => handleFilterChange(undefined)}
           >
             Clear all
           </button>

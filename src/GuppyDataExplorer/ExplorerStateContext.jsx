@@ -10,7 +10,6 @@ import { useExplorerConfig } from './ExplorerConfigContext';
  * @property {ExplorerFilter} explorerFilter
  * @property {string[]} patientIds
  * @property {(filter: ExplorerFilter) => void} handleFilterChange
- * @property {() => void} handleFilterClear
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
  */
 
@@ -59,10 +58,6 @@ export function ExplorerStateProvider({ children }) {
     setExplorerFilter(newFilter);
   }
 
-  function handleFilterClear() {
-    handleFilterChange(undefined);
-  }
-
   function handlePatientIdsChange(/** @type {string[]} */ ids) {
     if (patientIdsConfig?.filter !== undefined) setPatientIds(ids);
   }
@@ -72,7 +67,6 @@ export function ExplorerStateProvider({ children }) {
       explorerFilter,
       patientIds,
       handleFilterChange,
-      handleFilterClear,
       handlePatientIdsChange,
     }),
     [explorerFilter, patientIds]
