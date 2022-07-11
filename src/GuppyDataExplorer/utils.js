@@ -6,6 +6,7 @@
 /** @typedef {import('./types').SingleButtonConfig} SingleButtonConfig */
 /** @typedef {import('./types').SurvivalAnalysisConfig} SurvivalAnalysisConfig */
 
+import { explorerConfig } from '../localconf';
 import { capitalizeFirstLetter } from '../utils';
 
 /**
@@ -196,4 +197,33 @@ export function isSurvivalAnalysisEnabled(config) {
         return true;
 
   return false;
+}
+
+/** @param {number} explorerId */
+export function getCurrentConfig(explorerId) {
+  const config = explorerConfig.find(({ id }) => id === explorerId);
+  return {
+    adminAppliedPreFilters: config.adminAppliedPreFilters,
+    buttonConfig: {
+      buttons: config.buttons,
+      dropdowns: config.dropdowns,
+      sevenBridgesExportURL: config.sevenBridgesExportURL,
+      terraExportURL: config.terraExportURL,
+      terraTemplate: config.terraTemplate,
+    },
+    chartConfig: config.charts,
+    filterConfig: {
+      ...config.filters,
+      info: createFilterInfo(config.filters, config.guppyConfig.fieldMapping),
+    },
+    getAccessButtonLink: config.getAccessButtonLink,
+    guppyConfig: config.guppyConfig,
+    hideGetAccessButton: config.hideGetAccessButton,
+    patientIdsConfig: config.patientIds,
+    survivalAnalysisConfig: {
+      ...config.survivalAnalysis,
+      enabled: isSurvivalAnalysisEnabled(config.survivalAnalysis),
+    },
+    tableConfig: config.table,
+  };
 }

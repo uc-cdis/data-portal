@@ -10,7 +10,6 @@ import { useExplorerConfig } from './ExplorerConfigContext';
  * @property {ExplorerFilter} explorerFilter
  * @property {string[]} patientIds
  * @property {(filter: ExplorerFilter) => void} handleFilterChange
- * @property {() => void} handleFilterClear
  * @property {(patientIds: string[]) => void} handlePatientIdsChange
  */
 
@@ -26,11 +25,6 @@ export function ExplorerStateProvider({ children }) {
     /** @type {{ filter?: ExplorerFilter }} */ (useLocation().state)?.filter ??
     /** @type {ExplorerFilter} */ ({});
   const [explorerFilter, setExplorerFilter] = useState(initialExplorerFilter);
-
-  /** @type {string[]} */
-  const initielPatientIds = patientIdsConfig?.filter ? [] : undefined;
-  const [patientIds, setPatientIds] = useState(initielPatientIds);
-
   function handleFilterChange(/** @type {ExplorerFilter} */ filter) {
     let newFilter = /** @type {ExplorerFilter} */ ({});
     if (filter && Object.keys(filter).length > 0) {
@@ -59,10 +53,9 @@ export function ExplorerStateProvider({ children }) {
     setExplorerFilter(newFilter);
   }
 
-  function handleFilterClear() {
-    handleFilterChange(undefined);
-  }
-
+  /** @type {string[]} */
+  const initielPatientIds = patientIdsConfig?.filter ? [] : undefined;
+  const [patientIds, setPatientIds] = useState(initielPatientIds);
   function handlePatientIdsChange(/** @type {string[]} */ ids) {
     if (patientIdsConfig?.filter !== undefined) setPatientIds(ids);
   }
@@ -72,7 +65,6 @@ export function ExplorerStateProvider({ children }) {
       explorerFilter,
       patientIds,
       handleFilterChange,
-      handleFilterClear,
       handlePatientIdsChange,
     }),
     [explorerFilter, patientIds]

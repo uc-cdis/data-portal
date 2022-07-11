@@ -1,10 +1,19 @@
 import Select from 'react-select';
+import { explorerConfig } from '../../localconf';
+import { capitalizeFirstLetter, overrideSelectTheme } from '../../utils';
 import { useExplorerConfig } from '../ExplorerConfigContext';
-import { overrideSelectTheme } from '../../utils';
 import './ExplorerSelect.css';
 
+/** @type {{ label: string; value: string }[]} */
+const explorerOptions = [];
+for (const { guppyConfig, id, label } of explorerConfig)
+  explorerOptions.push({
+    label: capitalizeFirstLetter(label || guppyConfig.dataType),
+    value: String(id),
+  });
+
 export default function ExplorerTabs() {
-  const { explorerId, explorerOptions, updateExplorerId } = useExplorerConfig();
+  const { explorerId, updateExplorerId } = useExplorerConfig();
   const currentExplorer = explorerOptions.find(
     (o) => o.value === String(explorerId)
   );

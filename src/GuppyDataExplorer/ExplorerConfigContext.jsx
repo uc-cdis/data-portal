@@ -1,9 +1,19 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import { explorerConfig } from '../localconf';
-import { capitalizeFirstLetter } from '../utils';
-import { createFilterInfo, isSurvivalAnalysisEnabled } from './utils';
+import { getCurrentConfig } from './utils';
+
+/** @type {number[]} */
+const explorerIds = [];
+for (const { id } of explorerConfig) explorerIds.push(id);
 
 /** @typedef {import('./types').AlteredExplorerConfig} AlteredExplorerConfig */
 
@@ -11,8 +21,6 @@ import { createFilterInfo, isSurvivalAnalysisEnabled } from './utils';
  * @typedef {Object} ExplorerConfigContext
  * @property {AlteredExplorerConfig} current
  * @property {number} explorerId
- * @property {{ label: string; value: string }[]} explorerOptions
- * @property {() => void} handleBrowserNavigationForConfig
  * @property {(id: number) => void} updateExplorerId
  */
 
@@ -21,17 +29,6 @@ const ExplorerConfigContext = createContext(null);
 
 export function ExplorerConfigProvider({ children }) {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const explorerOptions = [];
-  const explorerIds = [];
-  for (const { guppyConfig, id, label } of explorerConfig) {
-    explorerIds.push(id);
-    explorerOptions.push({
-      label: capitalizeFirstLetter(label || guppyConfig.dataType),
-      value: String(id),
-    });
-  }
-
   const [initialExplorerId, hasValidInitialSearchParamId] = useMemo(() => {
     const hasSearchParamId = searchParams.has('id');
     const searchParamId = hasSearchParamId
@@ -54,48 +51,25 @@ export function ExplorerConfigProvider({ children }) {
     setSearchParams(`id=${id}`);
   }
 
-  function handleBrowserNavigationForConfig() {
-    const searchParamId = Number(searchParams.get('id'));
-    if (explorerIds.includes(searchParamId)) setExporerId(searchParamId);
+  const searchParamId = useRef(null);
+  searchParamId.current = Number(searchParams.get('id'));
+  function switchExplorerOnBrowserNavigation() {
+    if (explorerIds.includes(searchParamId.current))
+      setExporerId(searchParamId.current);
   }
-
-  const config = explorerConfig.find(({ id }) => id === explorerId);
+  useEffect(() => {
+    window.addEventListener('popstate', switchExplorerOnBrowserNavigation);
+    return () =>
+      window.removeEventListener('popstate', switchExplorerOnBrowserNavigation);
+  }, []);
 
   const value = useMemo(
     () => ({
-      current: {
-        adminAppliedPreFilters: config.adminAppliedPreFilters,
-        buttonConfig: {
-          buttons: config.buttons,
-          dropdowns: config.dropdowns,
-          sevenBridgesExportURL: config.sevenBridgesExportURL,
-          terraExportURL: config.terraExportURL,
-          terraTemplate: config.terraTemplate,
-        },
-        chartConfig: config.charts,
-        filterConfig: {
-          ...config.filters,
-          info: createFilterInfo(
-            config.filters,
-            config.guppyConfig.fieldMapping
-          ),
-        },
-        getAccessButtonLink: config.getAccessButtonLink,
-        guppyConfig: config.guppyConfig,
-        hideGetAccessButton: config.hideGetAccessButton,
-        patientIdsConfig: config.patientIds,
-        survivalAnalysisConfig: {
-          ...config.survivalAnalysis,
-          enabled: isSurvivalAnalysisEnabled(config.survivalAnalysis),
-        },
-        tableConfig: config.table,
-      },
+      current: getCurrentConfig(explorerId),
       explorerId,
-      explorerOptions,
-      handleBrowserNavigationForConfig,
       updateExplorerId,
     }),
-    [config, explorerId, explorerOptions]
+    [explorerId]
   );
 
   return (
