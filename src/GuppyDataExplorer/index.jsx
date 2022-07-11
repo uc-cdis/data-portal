@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { contactEmail, explorerConfig } from '../localconf';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Dashboard from '../Layout/Dashboard';
@@ -6,7 +8,6 @@ import NotFoundSVG from '../img/not-found.svg';
 import { updateExplorerFilter } from '../redux/explorer/slice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { ExplorerConfigProvider } from './ExplorerConfigContext';
-import { ExplorerStateProvider } from './ExplorerStateContext';
 import { ExplorerFilterSetsProvider } from './ExplorerFilterSetsContext';
 import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
@@ -25,6 +26,13 @@ function ExplorerDashboard() {
   function handleFilterChange(filter) {
     dispatch(updateExplorerFilter(filter));
   }
+  const location = useLocation();
+  useEffect(() => {
+    /** @type {{ filter?: RootState['explorer']['explorerFilter'] }} */
+    const { filter } = location.state ?? {};
+    if (filter !== undefined) handleFilterChange(filter);
+  }, []);
+
   const {
     config: {
       adminAppliedPreFilters = emptyAdminAppliedPreFilters,
@@ -127,11 +135,9 @@ export default function Explorer() {
   return explorerConfig.length === 0 ? null : (
     <ErrorBoundary fallback={fallbackElement}>
       <ExplorerConfigProvider>
-        <ExplorerStateProvider>
-          <ExplorerFilterSetsProvider>
-            <ExplorerDashboard />
-          </ExplorerFilterSetsProvider>
-        </ExplorerStateProvider>
+        <ExplorerFilterSetsProvider>
+          <ExplorerDashboard />
+        </ExplorerFilterSetsProvider>
       </ExplorerConfigProvider>
     </ErrorBoundary>
   );
