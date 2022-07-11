@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { contactEmail, explorerConfig } from '../localconf';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Dashboard from '../Layout/Dashboard';
@@ -21,12 +19,7 @@ import './Explorer.css';
 /** @type {{ [x: string]: OptionFilter }} */
 const emptyAdminAppliedPreFilters = {};
 
-/**
- * @param {Object} props
- * @param {RootState['versionInfo']['dataVersion']} props.dataVersion
- * @param {RootState['versionInfo']['portalVersion']} props.portalVersion
- */
-function ExplorerDashboard({ dataVersion, portalVersion }) {
+function ExplorerDashboard() {
   const dispatch = useAppDispatch();
   /** @param {RootState['explorer']['explorerFilter']} filter */
   function handleFilterChange(filter) {
@@ -44,6 +37,9 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
     explorerId,
     patientIds,
   } = useAppSelector((state) => state.explorer);
+  const { dataVersion, portalVersion } = useAppSelector(
+    (state) => state.versionInfo
+  );
 
   return (
     <GuppyWrapper
@@ -114,15 +110,6 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
   );
 }
 
-ExplorerDashboard.propTypes = {
-  dataVersion: PropTypes.string,
-  portalVersion: PropTypes.string,
-};
-
-/** @param {RootState} state */
-const mapStateToProps = ({ versionInfo }) => versionInfo;
-const ReduxExplorerDashboard = connect(mapStateToProps)(ExplorerDashboard);
-
 const fallbackElement = (
   <div className='explorer__error'>
     <h1>Error opening the Exploration page...</h1>
@@ -142,7 +129,7 @@ export default function Explorer() {
       <ExplorerConfigProvider>
         <ExplorerStateProvider>
           <ExplorerFilterSetsProvider>
-            <ReduxExplorerDashboard />
+            <ExplorerDashboard />
           </ExplorerFilterSetsProvider>
         </ExplorerStateProvider>
       </ExplorerConfigProvider>
