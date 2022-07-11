@@ -3,7 +3,7 @@ import { useState } from 'react';
 import FilterDisplay from '../../components/FilterDisplay';
 import SimplePopup from '../../components/SimplePopup';
 import { contactEmail } from '../../localconf';
-import { useExplorerConfig } from '../ExplorerConfigContext';
+import { useAppSelector } from '../../redux/hooks';
 import { useExplorerState } from '../ExplorerStateContext';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import FilterSetActionForm from './FilterSetActionForm';
@@ -21,7 +21,9 @@ import './ExplorerFilterSetWorkspace.css';
 /** @typedef {import('./FilterSetActionForm').ActionFormType} ActionFormType */
 
 function ExplorerFilterSetWorkspace() {
-  const filterInfo = useExplorerConfig().current.filterConfig.info;
+  const filterInfo = useAppSelector(
+    (state) => state.explorer.config.filterConfig.info
+  );
   const { handleFilterChange } = useExplorerState();
   const filterSets = useExplorerFilterSets();
   const workspace = useFilterSetWorkspace();

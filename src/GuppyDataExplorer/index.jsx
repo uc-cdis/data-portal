@@ -5,10 +5,8 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import Dashboard from '../Layout/Dashboard';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
 import NotFoundSVG from '../img/not-found.svg';
-import {
-  ExplorerConfigProvider,
-  useExplorerConfig,
-} from './ExplorerConfigContext';
+import { useAppSelector } from '../redux/hooks';
+import { ExplorerConfigProvider } from './ExplorerConfigContext';
 import {
   ExplorerStateProvider,
   useExplorerState,
@@ -32,7 +30,7 @@ const emptyAdminAppliedPreFilters = {};
  */
 function ExplorerDashboard({ dataVersion, portalVersion }) {
   const {
-    current: {
+    config: {
       adminAppliedPreFilters = emptyAdminAppliedPreFilters,
       chartConfig,
       filterConfig,
@@ -40,7 +38,8 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
       tableConfig,
     },
     explorerId,
-  } = useExplorerConfig();
+  } = useAppSelector((state) => state.explorer);
+
   const { explorerFilter, patientIds, handleFilterChange } = useExplorerState();
 
   return (

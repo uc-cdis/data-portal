@@ -3,7 +3,7 @@ import { memo, useState } from 'react';
 import { contactEmail } from '../../localconf';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import Spinner from '../../components/Spinner';
-import { useExplorerConfig } from '../ExplorerConfigContext';
+import { useAppSelector } from '../../redux/hooks';
 import useSurvivalAnalysisResult from './useSurvivalAnalysisResult';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
@@ -43,8 +43,9 @@ function ExplorerSurvivalAnalysis() {
       .finally(() => setIsUpdating(false));
   };
 
-  const { survivalAnalysisConfig: config } = useExplorerConfig().current;
-
+  const config = useAppSelector(
+    (state) => state.explorer.config.survivalAnalysisConfig
+  );
   return (
     <div className='explorer-survival-analysis'>
       {isUserCompliant ? (

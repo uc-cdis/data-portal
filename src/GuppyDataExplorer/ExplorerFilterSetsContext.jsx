@@ -7,8 +7,8 @@ import {
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
+import { useAppSelector } from '../redux/hooks';
 import { fetchWithCreds } from '../utils.fetch';
-import { useExplorerConfig } from './ExplorerConfigContext';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ExplorerFilterSetDTO} ExplorerFilterSetDTO */
@@ -127,7 +127,7 @@ const ExplorerFilterSetsContext = createContext(null);
 /** @type {ExplorerFilterSet[]} */
 const emptyFilterSets = [];
 export function ExplorerFilterSetsProvider({ children }) {
-  const { explorerId } = useExplorerConfig();
+  const explorerId = useAppSelector((state) => state.explorer.explorerId);
   const [filterSets, setFilterSets] = useState(emptyFilterSets);
   const [id, setId] = useState(/** @type {number} */ (undefined));
 

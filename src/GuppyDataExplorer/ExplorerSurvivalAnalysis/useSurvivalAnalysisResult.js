@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
+import { useAppSelector } from '../../redux/hooks';
 import { fetchWithCreds } from '../../utils.fetch';
-import { useExplorerConfig } from '../ExplorerConfigContext';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').GqlFilter} GqlFilter */
@@ -43,8 +43,10 @@ const emptyData = {};
 
 /** @returns {[ ParsedSurvivalAnalysisResult, SurvivalAnalysisRefreshHandler ]} */
 export default function useSurvivalAnalysisResult() {
-  const { current, explorerId } = useExplorerConfig();
-  const config = current.survivalAnalysisConfig;
+  const { config, explorerId } = useAppSelector((state) => ({
+    config: state.explorer.config.survivalAnalysisConfig,
+    explorerId: state.explorer.explorerId,
+  }));
 
   const prevEfsFlag = useRef(false);
   const [result, setResult] = useState(emptyData);

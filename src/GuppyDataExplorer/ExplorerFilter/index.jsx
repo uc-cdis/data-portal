@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import ConnectedFilter from '../../GuppyComponents/ConnectedFilter';
-import { useExplorerConfig } from '../ExplorerConfigContext';
+import { useAppSelector } from '../../redux/hooks';
 import { useExplorerState } from '../ExplorerStateContext';
 import './ExplorerFilter.css';
 
@@ -19,8 +19,9 @@ import './ExplorerFilter.css';
 
 /** @param {ExplorerFilterProps} props */
 function ExplorerFilter({ className = '', ...filterProps }) {
-  const { adminAppliedPreFilters, filterConfig, guppyConfig } =
-    useExplorerConfig().current;
+  const { adminAppliedPreFilters, filterConfig, guppyConfig } = useAppSelector(
+    (state) => state.explorer.config
+  );
   const {
     explorerFilter,
     patientIds,

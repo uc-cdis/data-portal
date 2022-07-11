@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useReducer, useRef } from 'react';
-import { useExplorerConfig } from '../ExplorerConfigContext';
+import { useAppSelector } from '../../redux/hooks';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import { useExplorerState } from '../ExplorerStateContext';
 import {
@@ -13,7 +13,7 @@ import {
 /** @typedef {import("../types").ExplorerFilterSet} ExplorerFilterSet */
 
 export default function useFilterSetWorkspace() {
-  const { explorerId } = useExplorerConfig();
+  const explorerId = useAppSelector((state) => state.explorer.explorerId);
   const { explorerFilter, handleFilterChange } = useExplorerState();
   const filterSets = useExplorerFilterSets();
 
