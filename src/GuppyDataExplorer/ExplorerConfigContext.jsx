@@ -1,25 +1,13 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
-import { explorerConfig } from '../localconf';
-import { getCurrentConfig } from './utils';
+import { setExplorerId } from '../redux/explorer/slice';
 
-/** @type {number[]} */
-const explorerIds = [];
-for (const { id } of explorerConfig) explorerIds.push(id);
-
-/** @typedef {import('./types').AlteredExplorerConfig} AlteredExplorerConfig */
-
+/** @typedef {import('../redux/types').RootState} RootState */
 /**
  * @typedef {Object} ExplorerConfigContext
- * @property {AlteredExplorerConfig} current
+ * @property {RootState['explorer']['config']} current
  * @property {number} explorerId
  * @property {(id: number) => void} updateExplorerId
  */
@@ -28,8 +16,18 @@ for (const { id } of explorerConfig) explorerIds.push(id);
 const ExplorerConfigContext = createContext(null);
 
 export function ExplorerConfigProvider({ children }) {
+  /** @type {import('../redux/types').AppDispatch} */
+  const dispatch = useDispatch();
+  const { config, explorerId, explorerIds } = useSelector(
+    (/** @type {RootState} */ state) => state.explorer
+  );
   const [searchParams, setSearchParams] = useSearchParams();
-  const [initialExplorerId, hasValidInitialSearchParamId] = useMemo(() => {
+  function updateExplorerId(id) {
+    dispatch(setExplorerId(id));
+    setSearchParams(`id=${id}`);
+  }
+
+  const [initialSearchParamId, hasValidInitialSearchParamId] = useMemo(() => {
     const hasSearchParamId = searchParams.has('id');
     const searchParamId = hasSearchParamId
       ? Number(searchParams.get('id'))
@@ -41,21 +39,17 @@ export function ExplorerConfigProvider({ children }) {
     ];
   }, []);
   useEffect(() => {
-    if (!hasValidInitialSearchParamId)
-      setSearchParams(`id=${initialExplorerId}`);
+    if (!hasValidInitialSearchParamId) {
+      setSearchParams(`id=${initialSearchParamId}`);
+      setExplorerId(initialSearchParamId);
+    }
   }, []);
 
-  const [explorerId, setExporerId] = useState(initialExplorerId);
-  function updateExplorerId(id) {
-    setExporerId(id);
-    setSearchParams(`id=${id}`);
-  }
-
-  const searchParamId = useRef(null);
+  const searchParamId = useRef(initialSearchParamId);
   searchParamId.current = Number(searchParams.get('id'));
   function switchExplorerOnBrowserNavigation() {
     if (explorerIds.includes(searchParamId.current))
-      setExporerId(searchParamId.current);
+      dispatch(setExplorerId(searchParamId.current));
   }
   useEffect(() => {
     window.addEventListener('popstate', switchExplorerOnBrowserNavigation);
@@ -64,11 +58,7 @@ export function ExplorerConfigProvider({ children }) {
   }, []);
 
   const value = useMemo(
-    () => ({
-      current: getCurrentConfig(explorerId),
-      explorerId,
-      updateExplorerId,
-    }),
+    () => ({ current: config, explorerId, updateExplorerId }),
     [explorerId]
   );
 
