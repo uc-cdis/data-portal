@@ -5,12 +5,10 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import Dashboard from '../Layout/Dashboard';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
 import NotFoundSVG from '../img/not-found.svg';
-import { useAppSelector } from '../redux/hooks';
+import { updateExplorerFilter } from '../redux/explorer/slice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { ExplorerConfigProvider } from './ExplorerConfigContext';
-import {
-  ExplorerStateProvider,
-  useExplorerState,
-} from './ExplorerStateContext';
+import { ExplorerStateProvider } from './ExplorerStateContext';
 import { ExplorerFilterSetsProvider } from './ExplorerFilterSetsContext';
 import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
@@ -29,6 +27,11 @@ const emptyAdminAppliedPreFilters = {};
  * @param {RootState['versionInfo']['portalVersion']} props.portalVersion
  */
 function ExplorerDashboard({ dataVersion, portalVersion }) {
+  const dispatch = useAppDispatch();
+  /** @param {RootState['explorer']['explorerFilter']} filter */
+  function handleFilterChange(filter) {
+    dispatch(updateExplorerFilter(filter));
+  }
   const {
     config: {
       adminAppliedPreFilters = emptyAdminAppliedPreFilters,
@@ -37,10 +40,10 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
       guppyConfig,
       tableConfig,
     },
+    explorerFilter,
     explorerId,
+    patientIds,
   } = useAppSelector((state) => state.explorer);
-
-  const { explorerFilter, patientIds, handleFilterChange } = useExplorerState();
 
   return (
     <GuppyWrapper

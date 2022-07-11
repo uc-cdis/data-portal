@@ -3,8 +3,8 @@ import { useState } from 'react';
 import FilterDisplay from '../../components/FilterDisplay';
 import SimplePopup from '../../components/SimplePopup';
 import { contactEmail } from '../../localconf';
-import { useAppSelector } from '../../redux/hooks';
-import { useExplorerState } from '../ExplorerStateContext';
+import { updateExplorerFilter } from '../../redux/explorer/slice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import FilterSetActionForm from './FilterSetActionForm';
 import FilterSetLabel from './FilterSetLabel';
@@ -21,10 +21,14 @@ import './ExplorerFilterSetWorkspace.css';
 /** @typedef {import('./FilterSetActionForm').ActionFormType} ActionFormType */
 
 function ExplorerFilterSetWorkspace() {
+  const dispatch = useAppDispatch();
+  /** @param {import('../types').ExplorerFilter} filter */
+  function handleFilterChange(filter) {
+    dispatch(updateExplorerFilter(filter));
+  }
   const filterInfo = useAppSelector(
     (state) => state.explorer.config.filterConfig.info
   );
-  const { handleFilterChange } = useExplorerState();
   const filterSets = useExplorerFilterSets();
   const workspace = useFilterSetWorkspace();
 

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useReducer, useRef } from 'react';
-import { useAppSelector } from '../../redux/hooks';
+import { updateExplorerFilter } from '../../redux/explorer/slice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
-import { useExplorerState } from '../ExplorerStateContext';
 import {
   checkIfFilterEmpty,
   initializeWorkspaceState,
@@ -13,8 +13,13 @@ import {
 /** @typedef {import("../types").ExplorerFilterSet} ExplorerFilterSet */
 
 export default function useFilterSetWorkspace() {
-  const explorerId = useAppSelector((state) => state.explorer.explorerId);
-  const { explorerFilter, handleFilterChange } = useExplorerState();
+  const appDispatch = useAppDispatch();
+  function handleFilterChange(filter) {
+    appDispatch(updateExplorerFilter(filter));
+  }
+  const { explorerFilter, explorerId } = useAppSelector(
+    (state) => state.explorer
+  );
   const filterSets = useExplorerFilterSets();
 
   const initialState = useMemo(
