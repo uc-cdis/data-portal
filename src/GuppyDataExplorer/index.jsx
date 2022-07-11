@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { contactEmail, explorerConfig } from '../localconf';
@@ -41,14 +40,8 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
       tableConfig,
     },
     explorerId,
-    handleBrowserNavigationForConfig,
   } = useExplorerConfig();
   const { explorerFilter, patientIds, handleFilterChange } = useExplorerState();
-  useEffect(() => {
-    window.addEventListener('popstate', handleBrowserNavigationForConfig);
-    return () =>
-      window.removeEventListener('popstate', handleBrowserNavigationForConfig);
-  }, []);
 
   return (
     <GuppyWrapper

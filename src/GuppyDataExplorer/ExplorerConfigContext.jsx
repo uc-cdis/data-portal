@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 import { explorerConfig } from '../localconf';
@@ -14,7 +21,6 @@ for (const { id } of explorerConfig) explorerIds.push(id);
  * @typedef {Object} ExplorerConfigContext
  * @property {AlteredExplorerConfig} current
  * @property {number} explorerId
- * @property {() => void} handleBrowserNavigationForConfig
  * @property {(id: number) => void} updateExplorerId
  */
 
@@ -45,16 +51,22 @@ export function ExplorerConfigProvider({ children }) {
     setSearchParams(`id=${id}`);
   }
 
-  function handleBrowserNavigationForConfig() {
-    const searchParamId = Number(searchParams.get('id'));
-    if (explorerIds.includes(searchParamId)) setExporerId(searchParamId);
+  const searchParamId = useRef(null);
+  searchParamId.current = Number(searchParams.get('id'));
+  function switchExplorerOnBrowserNavigation() {
+    if (explorerIds.includes(searchParamId.current))
+      setExporerId(searchParamId.current);
   }
+  useEffect(() => {
+    window.addEventListener('popstate', switchExplorerOnBrowserNavigation);
+    return () =>
+      window.removeEventListener('popstate', switchExplorerOnBrowserNavigation);
+  }, []);
 
   const value = useMemo(
     () => ({
       current: getCurrentConfig(explorerId),
       explorerId,
-      handleBrowserNavigationForConfig,
       updateExplorerId,
     }),
     [explorerId]
