@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useReducer, useRef } from 'react';
-import { updateExplorerFilter } from '../../redux/explorer/slice';
+import {
+  updateExplorerFilter,
+  useFilterSetById,
+} from '../../redux/explorer/slice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import {
   checkIfFilterEmpty,
   initializeWorkspaceState,
@@ -17,10 +19,9 @@ export default function useFilterSetWorkspace() {
   function handleFilterChange(filter) {
     appDispatch(updateExplorerFilter(filter));
   }
-  const { explorerFilter, explorerId } = useAppSelector(
+  const { explorerFilter, explorerId, filterSetActive } = useAppSelector(
     (state) => state.explorer
   );
-  const filterSets = useExplorerFilterSets();
 
   const initialState = useMemo(
     () => initializeWorkspaceState({ explorerFilter, explorerId }),
@@ -30,7 +31,7 @@ export default function useFilterSetWorkspace() {
     const initialActiveFilterSet = initialState.active.filterSet;
 
     // sync explorer filter set state with initial workspace active filter set
-    filterSets.use(initialActiveFilterSet.id);
+    appDispatch(useFilterSetById(initialActiveFilterSet.id));
 
     // sync explorer filter state with non-empty initial workspace active filter
     if (!checkIfFilterEmpty(initialActiveFilterSet.filter))
@@ -51,7 +52,7 @@ export default function useFilterSetWorkspace() {
 
     // sync explorer filter sets state with workspace active filter set
     const isFilterSetIdChanged = prevId !== id;
-    if (isFilterSetIdChanged) filterSets.use(id);
+    if (isFilterSetIdChanged) appDispatch(useFilterSetById(id));
 
     // sync browser store with workspace state
     storeWorkspaceState({ explorerId, state });
@@ -61,9 +62,9 @@ export default function useFilterSetWorkspace() {
   useEffect(() => {
     // sync workspace active filter with explorer filter set state (skip initial render)
     if (isInitialRender1.current) isInitialRender1.current = false;
-    else if (filterSets.active?.id !== undefined)
-      dispatch({ type: 'LOAD', payload: { filterSet: filterSets.active } });
-  }, [filterSets.active]);
+    else if (filterSetActive?.id !== undefined)
+      dispatch({ type: 'LOAD', payload: { filterSet: filterSetActive } });
+  }, [filterSetActive]);
 
   const isInitialRender2 = useRef(true);
   useEffect(() => {

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Button from '../../gen3-ui-component/components/Button';
 import SimpleInputField from '../../components/SimpleInputField';
+import { useAppSelector } from '../../redux/hooks';
 import { overrideSelectTheme } from '../../utils';
-import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import FilterSetCard from './FilterSetCard';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
@@ -91,8 +91,8 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
 
   const [selectFilterSetOption, setSelectFilterSetOption] = useState(null);
   const [usedFilterSets, setUsedFilterSets] = useState(emptyFilterSets);
-  const filterSets = useExplorerFilterSets();
-  const filterSetOptions = [defaultFilterSet, ...filterSets.all].map(
+  const filterSets = useAppSelector((state) => state.explorer.filterSets);
+  const filterSetOptions = [defaultFilterSet, ...filterSets].map(
     (filterSet) => ({
       label: filterSet.name,
       value: filterSet,

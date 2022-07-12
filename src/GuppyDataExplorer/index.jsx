@@ -8,7 +8,6 @@ import NotFoundSVG from '../img/not-found.svg';
 import { fetchFilterSets } from '../redux/explorer/asyncThunks';
 import { setExplorerId, updateExplorerFilter } from '../redux/explorer/slice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { ExplorerFilterSetsProvider } from './ExplorerFilterSetsContext';
 import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
@@ -163,9 +162,7 @@ const fallbackElement = (
 export default function Explorer() {
   return explorerConfig.length === 0 ? null : (
     <ErrorBoundary fallback={fallbackElement}>
-      <ExplorerFilterSetsProvider>
-        <ExplorerDashboard />
-      </ExplorerFilterSetsProvider>
+      <ExplorerDashboard />
     </ErrorBoundary>
   );
 }

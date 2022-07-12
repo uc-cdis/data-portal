@@ -10,7 +10,7 @@ import FilterSetUpdateForm from '../ExplorerFilterSetForms/FilterSetUpdateForm';
 
 /**
  * @param {Object} prop
- * @param {import('../ExplorerFilterSetsContext').ExplorerFilterSetsContext} prop.filterSets
+ * @param {{ active: ExplorerFilterSet; all: ExplorerFilterSet[]; empty: ExplorerFilterSet }} prop.filterSets
  * @param {Object} prop.handlers
  * @param {() => void} prop.handlers.clearAll
  * @param {() => void} prop.handlers.close

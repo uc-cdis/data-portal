@@ -3,9 +3,14 @@ import { useState } from 'react';
 import FilterDisplay from '../../components/FilterDisplay';
 import SimplePopup from '../../components/SimplePopup';
 import { contactEmail } from '../../localconf';
+import {
+  createFilterSet,
+  deleteFilterSet,
+  fetchFilterSets,
+  updateFilterSet,
+} from '../../redux/explorer/asyncThunks';
 import { updateExplorerFilter } from '../../redux/explorer/slice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
 import FilterSetActionForm from './FilterSetActionForm';
 import FilterSetLabel from './FilterSetLabel';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
@@ -29,7 +34,12 @@ function ExplorerFilterSetWorkspace() {
   const filterInfo = useAppSelector(
     (state) => state.explorer.config.filterConfig.info
   );
-  const filterSets = useExplorerFilterSets();
+  const filterSets = useAppSelector((state) => ({
+    active: state.explorer.filterSetActive,
+    all: state.explorer.filterSets,
+    empty: { name: '', description: '', filter: {} },
+    isError: state.explorer.filterSetsErrored,
+  }));
   const workspace = useFilterSetWorkspace();
 
   const [actionFormType, setActionFormType] = useState(
@@ -52,7 +62,7 @@ function ExplorerFilterSetWorkspace() {
   /** @param {ExplorerFilterSet} deleted */
   async function handleDelete(deleted) {
     try {
-      await filterSets.delete(deleted);
+      await dispatch(deleteFilterSet(deleted));
       workspace.remove();
     } finally {
       closeActionForm();
@@ -78,8 +88,9 @@ function ExplorerFilterSetWorkspace() {
   async function handleSave(saved) {
     try {
       let filterSet = saved;
-      if (saved.id === undefined) filterSet = await filterSets.create(saved);
-      else await filterSets.update(saved);
+      if (saved.id === undefined)
+        filterSet = await dispatch(createFilterSet(saved)).unwrap();
+      else await dispatch(updateFilterSet(saved));
 
       workspace.load(filterSet, true);
     } finally {
@@ -138,7 +149,9 @@ function ExplorerFilterSetWorkspace() {
               <button
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
-                onClick={() => filterSets.refresh()}
+                onClick={() =>
+                  dispatch(fetchFilterSets()).unwrap().catch(console.error)
+                }
               >
                 Retry
               </button>
