@@ -53,7 +53,6 @@ function ExplorerFilterSetWorkspace() {
   async function handleDelete(deleted) {
     try {
       await filterSets.delete(deleted);
-      await filterSets.refresh();
       workspace.remove();
     } finally {
       closeActionForm();
@@ -82,7 +81,6 @@ function ExplorerFilterSetWorkspace() {
       if (saved.id === undefined) filterSet = await filterSets.create(saved);
       else await filterSets.update(saved);
 
-      await filterSets.refresh();
       workspace.load(filterSet, true);
     } finally {
       closeActionForm();

@@ -87,8 +87,17 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(createFilterSet.fulfilled, (state, action) => {
+        state.filterSets.push(action.payload);
+      })
       .addCase(createFilterSet.rejected, (state) => {
         state.filterSetsErrored = true;
+      })
+      .addCase(deleteFilterSet.fulfilled, (state) => {
+        const index = state.filterSets.findIndex(
+          ({ id }) => id === state.filterSetActive.id
+        );
+        if (index !== undefined) state.filterSets.splice(index, 1);
       })
       .addCase(deleteFilterSet.rejected, (state) => {
         state.filterSetsErrored = true;
@@ -104,6 +113,12 @@ const slice = createSlice({
       })
       .addCase(fetchFilterSets.rejected, (state) => {
         state.filterSetsErrored = true;
+      })
+      .addCase(updateFilterSet.fulfilled, (state) => {
+        const index = state.filterSets.findIndex(
+          ({ id }) => id === state.filterSetActive.id
+        );
+        state.filterSets[index] = state.filterSetActive;
       })
       .addCase(updateFilterSet.rejected, (state) => {
         state.filterSetsErrored = true;
