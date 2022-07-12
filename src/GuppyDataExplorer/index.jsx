@@ -1,13 +1,12 @@
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { contactEmail, explorerConfig } from '../localconf';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Dashboard from '../Layout/Dashboard';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
 import NotFoundSVG from '../img/not-found.svg';
-import { updateExplorerFilter } from '../redux/explorer/slice';
+import { setExplorerId, updateExplorerFilter } from '../redux/explorer/slice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { ExplorerConfigProvider } from './ExplorerConfigContext';
 import { ExplorerFilterSetsProvider } from './ExplorerFilterSetsContext';
 import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
@@ -43,11 +42,35 @@ function ExplorerDashboard() {
     },
     explorerFilter,
     explorerId,
+    explorerIds,
     patientIds,
   } = useAppSelector((state) => state.explorer);
   const { dataVersion, portalVersion } = useAppSelector(
     (state) => state.versionInfo
   );
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isSearchParamIdValid =
+    searchParams.has('id') &&
+    explorerIds.includes(Number(searchParams.get('id')));
+  const searchParamId = useRef(undefined);
+  searchParamId.current = isSearchParamIdValid
+    ? Number(searchParams.get('id'))
+    : explorerIds[0];
+  useEffect(() => {
+    // sync search param with explorer id state
+    setSearchParams(`id=${searchParamId.current}`);
+    if (explorerId !== searchParamId.current)
+      dispatch(setExplorerId(searchParamId.current));
+
+    function switchExplorerOnBrowserNavigation() {
+      if (explorerIds.includes(searchParamId.current))
+        dispatch(setExplorerId(searchParamId.current));
+    }
+    window.addEventListener('popstate', switchExplorerOnBrowserNavigation);
+    return () =>
+      window.removeEventListener('popstate', switchExplorerOnBrowserNavigation);
+  }, []);
 
   return (
     <GuppyWrapper
@@ -134,11 +157,9 @@ const fallbackElement = (
 export default function Explorer() {
   return explorerConfig.length === 0 ? null : (
     <ErrorBoundary fallback={fallbackElement}>
-      <ExplorerConfigProvider>
-        <ExplorerFilterSetsProvider>
-          <ExplorerDashboard />
-        </ExplorerFilterSetsProvider>
-      </ExplorerConfigProvider>
+      <ExplorerFilterSetsProvider>
+        <ExplorerDashboard />
+      </ExplorerFilterSetsProvider>
     </ErrorBoundary>
   );
 }
