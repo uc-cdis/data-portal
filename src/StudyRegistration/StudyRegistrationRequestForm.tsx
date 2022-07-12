@@ -15,6 +15,8 @@ import { Link, useLocation } from 'react-router-dom';
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI } from '../localconf';
+import { FormSubmissionState, StudyRegistrationProps } from './StudyRegistration';
+import { createKayakoTicket } from './utils';
 
 const { TextArea } = Input;
 
@@ -44,22 +46,15 @@ interface LocationState {
   studyNumber?: string;
   studyName?: string;
 }
-interface User {
-  username: string
-}
-interface Props {
-  user: User,
-  userAuthMapping: any,
-}
 
-const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Props) => {
+const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationProps> = (props: StudyRegistrationProps) => {
   const [form] = Form.useForm();
   const location = useLocation();
 
-  const [formSubmissionStatus, setFormSubmissionStatus] = useState(null);
-  const [requestID, setRequestID] = useState(null);
-  const [studyNumber, setStudyNumber] = useState(null);
-  const [studyName, setStudyName] = useState(null);
+  const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
+  const [requestID, setRequestID] = useState<string|undefined|null>(null);
+  const [studyNumber, setStudyNumber] = useState<string|undefined|null>(null);
+  const [studyName, setStudyName] = useState<string|undefined|null>(null);
   const [role, setRole] = useState('Principal Investigator');
   const [reqAccessRequestPending, setReqAccessRequestPending] = useState(false);
 
@@ -80,20 +75,16 @@ const StudyRegistrationRequestForm: React.FunctionComponent<Props> = (props: Pro
   };
 
   const handleRegisterFormSubmission = (formValues) => {
-    const kayakoPayload = {
-      fullname: `${formValues['First Name']} ${formValues['Last Name']}`,
-      email: formValues['E-mail Address'],
-      subject: `Registration Access Request for ${studyNumber} ${studyName}`,
-      contents: [`Request ID: ${requestID}`, `Grant Number: ${studyNumber}`, `Study Name: ${studyName}`],
-      departmentid: 21,
-    };
+    const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
+    const email = formValues['E-mail Address'];
+    const subject = `Registration Access Request for ${studyNumber} ${studyName}`;
+    const contents = [`Request ID: ${requestID}`, `Grant Number: ${studyNumber}`, `Study Name: ${studyName}`];
     Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
       const [key, value] = entry;
-      kayakoPayload.contents.push(`${key}: ${value}`);
+      contents.push(`${key}: ${value}`);
     });
-    console.log(kayakoPayload);
-    // TODO: POST to kayako wrapper
-    setFormSubmissionStatus({ status: 'success' });
+    createKayakoTicket(subject, fullName, email, contents, 21).then(() => setFormSubmissionStatus({ status: 'success' }),
+      (err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
   };
 
   const onFinish = (values) => {

@@ -1,4 +1,6 @@
-import { studyRegistrationConfig, mdsURL, cedarWrapperURL } from '../localconf';
+import {
+  studyRegistrationConfig, mdsURL, cedarWrapperURL, kayakoWrapperURL,
+} from '../localconf';
 import { fetchWithCreds } from '../actions';
 
 const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
@@ -59,5 +61,26 @@ export const registerStudyInMDS = async (metadataID, metadataToRegister = {}) =>
     });
   } catch (err) {
     throw new Error(`Request for update study data failed: ${err}`);
+  }
+};
+
+export const createKayakoTicket = async (subject, fullName, email, contents, departmentID) => {
+  try {
+    const kayakoTicketCreationURL = `${kayakoWrapperURL}/ticket`;
+    await fetchWithCreds({
+      path: kayakoTicketCreationURL,
+      method: 'POST',
+      customHeaders: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        subject, fullname: fullName, email, contents, departmentid: departmentID,
+      }),
+    }).then((response) => {
+      if (response.status !== 201) {
+        throw new Error(`Request for create Kayako ticket failed with status ${response.status}`);
+      }
+      return response;
+    });
+  } catch (err) {
+    throw new Error(`Request for create Kayako ticket failed: ${err}`);
   }
 };

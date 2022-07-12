@@ -10,6 +10,7 @@ import {
   Space,
   Result,
 } from 'antd';
+import { ResultStatusType } from 'antd/lib/result';
 import {
   MinusCircleOutlined,
   PlusOutlined,
@@ -25,6 +26,22 @@ import loadStudiesFromMDS from '../Discovery/MDSUtils';
 import { registerStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
 
 const { Option } = Select;
+
+export interface FormSubmissionState {
+  status?: ResultStatusType;
+  text?: string
+}
+export interface User {
+  username: string
+}
+export interface StudyRegistrationProps {
+  user: User,
+  userAuthMapping: any
+}
+interface LocationState {
+  studyUID?: string | number;
+}
+
 const layout = {
   labelCol: {
     span: 8,
@@ -83,28 +100,14 @@ const handleUUIDValidation = (_, UUID: string): Promise<boolean|void> => {
   return Promise.resolve(true);
 };
 
-export interface DiscoveryResource {
-  [any: string]: any,
-}
-interface LocationState {
-  studyUID?: string|number;
-}
-interface User {
-  username: string
-}
-interface Props {
-  user: User,
-  userAuthMapping: any
-}
-
-const StudyRegistration: React.FunctionComponent<Props> = (props: Props) => {
+const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (props:StudyRegistrationProps) => {
   const [form] = Form.useForm();
   const location = useLocation();
 
-  const [formSubmissionStatus, setFormSubmissionStatus] = useState(null);
-  const [studies, setStudies] = useState(null);
+  const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
+  const [studies, setStudies] = useState<any[] | null>(null);
   const [regRequestPending, setRegRequestPending] = useState(false);
-  const [studyUID, setStudyUID] = useState(null);
+  const [studyUID, setStudyUID] = useState<string | number | undefined | null>(null);
 
   useEffect(() => {
     const locationStateData = location.state as LocationState || {};
