@@ -83,11 +83,9 @@ const slice = createSlice({
     },
     /** @param {PayloadAction<ExplorerState['savedFilterSets']['active']['id']>} action */
     useFilterSetById(state, action) {
-      const filterSetActive = state.savedFilterSets.all.find(
+      state.savedFilterSets.active = state.savedFilterSets.all.find(
         ({ id }) => id === action.payload
       );
-      state.explorerFilter = filterSetActive?.filter ?? {};
-      state.savedFilterSets.active = filterSetActive;
     },
   },
   extraReducers: (builder) => {
