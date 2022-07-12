@@ -5,6 +5,7 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import Dashboard from '../Layout/Dashboard';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
 import NotFoundSVG from '../img/not-found.svg';
+import { fetchFilterSets } from '../redux/explorer/asyncThunks';
 import { setExplorerId, updateExplorerFilter } from '../redux/explorer/slice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { ExplorerFilterSetsProvider } from './ExplorerFilterSetsContext';
@@ -45,6 +46,11 @@ function ExplorerDashboard() {
     explorerIds,
     patientIds,
   } = useAppSelector((state) => state.explorer);
+  useEffect(() => {
+    // sync saved filter sets with explorer id state
+    dispatch(fetchFilterSets()).unwrap().catch(console.error);
+  }, [explorerId]);
+
   const { dataVersion, portalVersion } = useAppSelector(
     (state) => state.versionInfo
   );

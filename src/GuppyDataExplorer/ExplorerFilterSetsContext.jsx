@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   createFilterSet,
@@ -42,9 +42,6 @@ export function ExplorerFilterSetsProvider({ children }) {
     console.error(e);
     return undefined;
   }
-  useEffect(() => {
-    dispatch(fetchFilterSets()).unwrap().catch(handleCatch);
-  }, [explorerId]);
 
   const value = useMemo(
     () => ({
