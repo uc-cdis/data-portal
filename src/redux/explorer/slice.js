@@ -31,10 +31,12 @@ const slice = createSlice({
     explorerFilter: {},
     explorerId: initialExplorerId,
     explorerIds,
-    filterSetActive: undefined,
-    filterSets: [],
-    filterSetsErrored: false,
     patientIds: initialPatientIds,
+    savedFilterSets: {
+      active: undefined,
+      all: [],
+      isError: false,
+    },
   }),
   reducers: {
     /** @param {PayloadAction<ExplorerState['explorerFilter']>} action */
@@ -79,52 +81,52 @@ const slice = createSlice({
       state.explorerFilter = {};
       state.explorerId = action.payload;
     },
-    /** @param {PayloadAction<ExplorerState['filterSetActive']['id']>} action */
+    /** @param {PayloadAction<ExplorerState['savedFilterSets']['active']['id']>} action */
     useFilterSetById(state, action) {
-      const filterSetActive = state.filterSets.find(
+      const filterSetActive = state.savedFilterSets.all.find(
         ({ id }) => id === action.payload
       );
       state.explorerFilter = filterSetActive?.filter ?? {};
-      state.filterSetActive = filterSetActive;
+      state.savedFilterSets.active = filterSetActive;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(createFilterSet.fulfilled, (state, action) => {
-        state.filterSets.push(action.payload);
+        state.savedFilterSets.all.push(action.payload);
       })
       .addCase(createFilterSet.rejected, (state) => {
-        state.filterSetsErrored = true;
+        state.savedFilterSets.isError = true;
       })
       .addCase(deleteFilterSet.fulfilled, (state) => {
-        const index = state.filterSets.findIndex(
-          ({ id }) => id === state.filterSetActive.id
+        const index = state.savedFilterSets.all.findIndex(
+          ({ id }) => id === state.savedFilterSets.active.id
         );
-        if (index !== undefined) state.filterSets.splice(index, 1);
+        if (index !== undefined) state.savedFilterSets.all.splice(index, 1);
       })
       .addCase(deleteFilterSet.rejected, (state) => {
-        state.filterSetsErrored = true;
+        state.savedFilterSets.isError = true;
       })
       .addCase(fetchFilterSets.fulfilled, (state, action) => {
-        state.filterSets = action.payload;
-        state.filterSetActive = state.filterSets.find(
-          ({ id }) => id === state.filterSetActive?.id
+        state.savedFilterSets.all = action.payload;
+        state.savedFilterSets.active = state.savedFilterSets.all.find(
+          ({ id }) => id === state.savedFilterSets.active?.id
         );
       })
       .addCase(fetchFilterSets.pending, (state) => {
-        state.filterSetsErrored = false;
+        state.savedFilterSets.isError = false;
       })
       .addCase(fetchFilterSets.rejected, (state) => {
-        state.filterSetsErrored = true;
+        state.savedFilterSets.isError = true;
       })
       .addCase(updateFilterSet.fulfilled, (state) => {
-        const index = state.filterSets.findIndex(
-          ({ id }) => id === state.filterSetActive.id
+        const index = state.savedFilterSets.all.findIndex(
+          ({ id }) => id === state.savedFilterSets.active.id
         );
-        state.filterSets[index] = state.filterSetActive;
+        state.savedFilterSets.all[index] = state.savedFilterSets.active;
       })
       .addCase(updateFilterSet.rejected, (state) => {
-        state.filterSetsErrored = true;
+        state.savedFilterSets.isError = true;
       });
   },
 });

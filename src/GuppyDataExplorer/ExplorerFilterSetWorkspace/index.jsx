@@ -34,12 +34,9 @@ function ExplorerFilterSetWorkspace() {
   const filterInfo = useAppSelector(
     (state) => state.explorer.config.filterConfig.info
   );
-  const filterSets = useAppSelector((state) => ({
-    active: state.explorer.filterSetActive,
-    all: state.explorer.filterSets,
-    empty: { name: '', description: '', filter: {} },
-    isError: state.explorer.filterSetsErrored,
-  }));
+  const savedFilterSets = useAppSelector(
+    (state) => state.explorer.savedFilterSets
+  );
   const workspace = useFilterSetWorkspace();
 
   const [actionFormType, setActionFormType] = useState(
@@ -98,7 +95,7 @@ function ExplorerFilterSetWorkspace() {
     }
   }
   function handleReset() {
-    handleFilterChange(filterSets.active.filter);
+    handleFilterChange(savedFilterSets.active.filter);
   }
   function handleRemove() {
     workspace.remove();
@@ -137,7 +134,7 @@ function ExplorerFilterSetWorkspace() {
     <div className='explorer-filter-set-workspace'>
       <header>
         <h2>Filter Set Workspace</h2>
-        {filterSets.isError ? (
+        {savedFilterSets.isError ? (
           <div className='explorer-filter-set-workspace__error'>
             <p>
               <FontAwesomeIcon
@@ -182,7 +179,7 @@ function ExplorerFilterSetWorkspace() {
                 type='button'
                 onClick={handleDuplicate}
                 disabled={checkIfFilterEmpty(
-                  (workspace.active.filterSet ?? filterSets.empty).filter
+                  workspace.active.filterSet?.filter ?? {}
                 )}
               >
                 Duplicate
@@ -200,7 +197,7 @@ function ExplorerFilterSetWorkspace() {
                 type='button'
                 onClick={handleClear}
                 disabled={checkIfFilterEmpty(
-                  (workspace.active.filterSet ?? filterSets.empty).filter
+                  workspace.active.filterSet?.filter ?? {}
                 )}
               >
                 Clear
@@ -219,7 +216,7 @@ function ExplorerFilterSetWorkspace() {
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
                 onClick={() => setActionFormType('LOAD')}
-                disabled={filterSets.all.length < 1}
+                disabled={savedFilterSets.all.length < 1}
               >
                 Load
               </button>
@@ -228,7 +225,7 @@ function ExplorerFilterSetWorkspace() {
                 type='button'
                 onClick={() => setActionFormType('SAVE')}
                 disabled={checkIfFilterEmpty(
-                  (workspace.active.filterSet ?? filterSets.empty).filter
+                  workspace.active.filterSet?.filter ?? {}
                 )}
               >
                 Save
@@ -238,8 +235,8 @@ function ExplorerFilterSetWorkspace() {
                 type='button'
                 onClick={handleReset}
                 disabled={
-                  filterSets.active === undefined ||
-                  JSON.stringify(filterSets.active.filter) ===
+                  savedFilterSets.active === undefined ||
+                  JSON.stringify(savedFilterSets.active.filter) ===
                     JSON.stringify(workspace.active.filterSet.filter)
                 }
               >
@@ -249,9 +246,7 @@ function ExplorerFilterSetWorkspace() {
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
                 onClick={() => setActionFormType('DELETE')}
-                disabled={
-                  !('id' in (workspace.active.filterSet ?? filterSets.empty))
-                }
+                disabled={!('id' in (workspace.active.filterSet ?? {}))}
               >
                 Delete
               </button>
@@ -319,7 +314,10 @@ function ExplorerFilterSetWorkspace() {
       {actionFormType !== undefined && (
         <SimplePopup>
           <FilterSetActionForm
-            filterSets={filterSets}
+            filterSets={{
+              ...savedFilterSets,
+              empty: { name: '', description: '', filter: {} },
+            }}
             handlers={{
               clearAll: handleClearAll,
               close: closeActionForm,

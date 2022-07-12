@@ -91,7 +91,9 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
 
   const [selectFilterSetOption, setSelectFilterSetOption] = useState(null);
   const [usedFilterSets, setUsedFilterSets] = useState(emptyFilterSets);
-  const filterSets = useAppSelector((state) => state.explorer.filterSets);
+  const filterSets = useAppSelector(
+    (state) => state.explorer.savedFilterSets.all
+  );
   const filterSetOptions = [defaultFilterSet, ...filterSets].map(
     (filterSet) => ({
       label: filterSet.name,

@@ -19,8 +19,11 @@ export default function useFilterSetWorkspace() {
   function handleFilterChange(filter) {
     appDispatch(updateExplorerFilter(filter));
   }
-  const { explorerFilter, explorerId, filterSetActive } = useAppSelector(
+  const { explorerFilter, explorerId } = useAppSelector(
     (state) => state.explorer
+  );
+  const activeSavedFilterSet = useAppSelector(
+    (state) => state.explorer.savedFilterSets.active
   );
 
   const initialState = useMemo(
@@ -62,9 +65,9 @@ export default function useFilterSetWorkspace() {
   useEffect(() => {
     // sync workspace active filter with explorer filter set state (skip initial render)
     if (isInitialRender1.current) isInitialRender1.current = false;
-    else if (filterSetActive?.id !== undefined)
-      dispatch({ type: 'LOAD', payload: { filterSet: filterSetActive } });
-  }, [filterSetActive]);
+    else if (activeSavedFilterSet?.id !== undefined)
+      dispatch({ type: 'LOAD', payload: { filterSet: activeSavedFilterSet } });
+  }, [activeSavedFilterSet]);
 
   const isInitialRender2 = useRef(true);
   useEffect(() => {
