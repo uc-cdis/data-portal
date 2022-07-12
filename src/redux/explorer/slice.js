@@ -39,8 +39,9 @@ const slice = createSlice({
   reducers: {
     /** @param {PayloadAction<ExplorerState['explorerId']>} action */
     setExplorerId(state, action) {
-      state.explorerId = action.payload;
       state.config = getCurrentConfig(action.payload);
+      state.explorerFilter = {};
+      state.explorerId = action.payload;
     },
     /** @param {PayloadAction<ExplorerState['explorerFilter']>} action */
     updateExplorerFilter(state, action) {
