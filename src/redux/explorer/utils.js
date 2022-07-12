@@ -3,7 +3,32 @@ import { capitalizeFirstLetter } from '../../utils';
 
 /** @typedef {import('../../GuppyComponents/types').GuppyConfig} GuppyConfig */
 /** @typedef {import('../../GuppyComponents/types').FilterConfig} FilterConfig */
+/** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSetDTO} ExplorerFilterSetDTO */
 /** @typedef {import('../../GuppyDataExplorer/types').SurvivalAnalysisConfig} SurvivalAnalysisConfig */
+
+/**
+ * @param {ExplorerFilterSet} filterSet
+ * @returns {ExplorerFilterSetDTO}
+ */
+export function convertToFilterSetDTO({ filter: filters, ...rest }) {
+  return { ...rest, filters };
+}
+
+/**
+ * @param {ExplorerFilterSetDTO} filterSetDTO
+ * @returns {ExplorerFilterSet}
+ */
+export function convertFromFilterSetDTO({ filters, ...rest }) {
+  return {
+    ...rest,
+    filter:
+      '__combineMode' in filters
+        ? filters
+        : // backward compat for old filter sets missing __combineMode value
+          { __combineMode: 'AND', ...filters },
+  };
+}
 
 /**
  * @param {FilterConfig} filterConfig

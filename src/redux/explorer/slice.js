@@ -1,5 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { explorerConfig } from '../../localconf';
+import {
+  createFilterSet,
+  deleteFilterSet,
+  fetchFilterSets,
+  updateFilterSet,
+} from './asyncThunks';
 import { getCurrentConfig } from './utils';
 
 /**
@@ -21,10 +27,13 @@ const initialPatientIds = initialConfig.patientIdsConfig?.filter
 const slice = createSlice({
   name: 'explorer',
   initialState: /** @type {ExplorerState} */ ({
+    config: initialConfig,
     explorerFilter: {},
     explorerId: initialExplorerId,
     explorerIds,
-    config: initialConfig,
+    filterSetActive: undefined,
+    filterSets: [],
+    filterSetsErrored: false,
     patientIds: initialPatientIds,
   }),
   reducers: {
@@ -69,10 +78,44 @@ const slice = createSlice({
       if (state.config.patientIdsConfig?.filter !== undefined)
         state.patientIds = action.payload;
     },
+    /** @param {PayloadAction<ExplorerState['filterSetActive']['id']>} action */
+    useFilterSetById(state, action) {
+      state.filterSetActive = state.filterSets.find(
+        ({ id }) => id === action.payload
+      );
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(createFilterSet.rejected, (state) => {
+        state.filterSetsErrored = true;
+      })
+      .addCase(deleteFilterSet.rejected, (state) => {
+        state.filterSetsErrored = true;
+      })
+      .addCase(fetchFilterSets.fulfilled, (state, action) => {
+        state.filterSets = action.payload;
+        state.filterSetActive = state.filterSets.find(
+          ({ id }) => id === state.filterSetActive?.id
+        );
+      })
+      .addCase(fetchFilterSets.pending, (state) => {
+        state.filterSetsErrored = false;
+      })
+      .addCase(fetchFilterSets.rejected, (state) => {
+        state.filterSetsErrored = true;
+      })
+      .addCase(updateFilterSet.rejected, (state) => {
+        state.filterSetsErrored = true;
+      });
   },
 });
 
-export const { setExplorerId, updateExplorerFilter, updatePatientIds } =
-  slice.actions;
+export const {
+  setExplorerId,
+  updateExplorerFilter,
+  updatePatientIds,
+  useFilterSetById,
+} = slice.actions;
 
 export default slice.reducer;
