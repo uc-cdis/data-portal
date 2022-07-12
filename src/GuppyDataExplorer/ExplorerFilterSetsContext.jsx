@@ -1,111 +1,20 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { useAppSelector } from '../redux/hooks';
-import { fetchWithCreds } from '../utils.fetch';
+import {
+  createFilterSet,
+  deleteFilterSet,
+  fetchFilterSets,
+  updateFilterSet,
+} from '../redux/explorer/asyncThunks';
+import { useFilterSetById } from '../redux/explorer/slice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ExplorerFilterSetDTO} ExplorerFilterSetDTO */
 
-const FILTER_SET_URL = '/amanuensis/filter-sets';
-
-/**
- * @param {ExplorerFilterSet} filterSet
- * @returns {ExplorerFilterSetDTO}
- */
-function convertToFilterSetDTO({ filter: filters, ...rest }) {
-  return { ...rest, filters };
-}
-
-/**
- * @param {ExplorerFilterSetDTO} filterSetDTO
- * @returns {ExplorerFilterSet}
- */
-function convertFromFilterSetDTO({ filters, ...rest }) {
-  return {
-    ...rest,
-    filter:
-      '__combineMode' in filters
-        ? filters
-        : // backward compat for old filter sets missing __combineMode value
-          { __combineMode: 'AND', ...filters },
-  };
-}
-
 /** @returns {ExplorerFilterSet} */
 function createEmptyFilterSet() {
   return { name: '', description: '', filter: {} };
-}
-
-/**
- * @param {number} explorerId
- * @returns {Promise<ExplorerFilterSet[]>}
- */
-function fetchFilterSets(explorerId) {
-  return fetchWithCreds({
-    path: `${FILTER_SET_URL}?explorerId=${explorerId}`,
-    method: 'GET',
-  }).then(({ response, data, status }) => {
-    if (status !== 200) throw response.statusText;
-    if (
-      data === null ||
-      typeof data !== 'object' ||
-      data.filter_sets === undefined ||
-      !Array.isArray(data.filter_sets)
-    )
-      throw new Error('Error: Incorrect Response Data');
-    return data.filter_sets.map(convertFromFilterSetDTO);
-  });
-}
-
-/**
- * @param {number} explorerId
- * @param {ExplorerFilterSet} filterSet
- * @returns {Promise<ExplorerFilterSet>}
- */
-export function createFilterSet(explorerId, filterSet) {
-  return fetchWithCreds({
-    path: `${FILTER_SET_URL}?explorerId=${explorerId}`,
-    method: 'POST',
-    body: JSON.stringify(convertToFilterSetDTO(filterSet)),
-  }).then(({ response, data, status }) => {
-    if (status !== 200) throw response.statusText;
-    return convertFromFilterSetDTO(data);
-  });
-}
-
-/**
- * @param {number} explorerId
- * @param {ExplorerFilterSet} filterSet
- */
-export function deleteFilterSet(explorerId, filterSet) {
-  return fetchWithCreds({
-    path: `${FILTER_SET_URL}/${filterSet.id}?explorerId=${explorerId}`,
-    method: 'DELETE',
-  }).then(({ response, status }) => {
-    if (status !== 200) throw response.statusText;
-  });
-}
-
-/**
- * @param {number} explorerId
- * @param {ExplorerFilterSet} filterSet
- */
-export function updateFilterSet(explorerId, filterSet) {
-  const { id, ...requestBody } = filterSet;
-  return fetchWithCreds({
-    path: `${FILTER_SET_URL}/${id}?explorerId=${explorerId}`,
-    method: 'PUT',
-    body: JSON.stringify(convertToFilterSetDTO(requestBody)),
-  }).then(({ response, status }) => {
-    if (status !== 200) throw response.statusText;
-  });
 }
 
 /**
@@ -114,7 +23,7 @@ export function updateFilterSet(explorerId, filterSet) {
  * @property {ExplorerFilterSet[]} all
  * @property {ExplorerFilterSet} empty
  * @property {boolean} isError
- * @property {() => Promise<void>} refresh
+ * @property {() => Promise<ExplorerFilterSet[] | void>} refresh
  * @property {(filerSet: ExplorerFilterSet) => Promise<ExplorerFilterSet>} create
  * @property {(filerSet: ExplorerFilterSet) => Promise<void>} delete
  * @property {(filerSet: ExplorerFilterSet) => Promise<void>} update
@@ -124,49 +33,37 @@ export function updateFilterSet(explorerId, filterSet) {
 /** @type {React.Context<ExplorerFilterSetsContext>} */
 const ExplorerFilterSetsContext = createContext(null);
 
-/** @type {ExplorerFilterSet[]} */
-const emptyFilterSets = [];
 export function ExplorerFilterSetsProvider({ children }) {
-  const explorerId = useAppSelector((state) => state.explorer.explorerId);
-  const [filterSets, setFilterSets] = useState(emptyFilterSets);
-  const [id, setId] = useState(/** @type {number} */ (undefined));
+  const dispatch = useAppDispatch();
+  const { explorerId, filterSetActive, filterSets, filterSetsErrored } =
+    useAppSelector((state) => state.explorer);
 
-  const [isError, setIsError] = useState(false);
   function handleCatch(e) {
     console.error(e);
-    setIsError(true);
     return undefined;
   }
-
-  const prevExplorerId = useRef(explorerId);
   useEffect(() => {
-    if (prevExplorerId.current !== explorerId) {
-      prevExplorerId.current = explorerId;
-      fetchFilterSets(explorerId).then(setFilterSets).catch(handleCatch);
-    }
+    dispatch(fetchFilterSets()).unwrap().catch(handleCatch);
   }, [explorerId]);
 
   const value = useMemo(
     () => ({
-      active: filterSets.find((filterSet) => filterSet.id === id),
+      active: filterSetActive,
       all: filterSets,
       empty: createEmptyFilterSet(),
-      isError,
-      refresh: () => {
-        if (isError) setIsError(false);
-        return fetchFilterSets(explorerId)
-          .then(setFilterSets)
-          .catch(handleCatch);
-      },
+      isError: filterSetsErrored,
+      refresh: () => dispatch(fetchFilterSets()).unwrap().catch(handleCatch),
       create: (filterSet) =>
-        createFilterSet(explorerId, filterSet).catch(handleCatch),
+        dispatch(createFilterSet(filterSet)).unwrap().catch(handleCatch),
       delete: (filterSet) =>
-        deleteFilterSet(explorerId, filterSet).catch(handleCatch),
+        dispatch(deleteFilterSet(filterSet)).unwrap().catch(handleCatch),
       update: (filterSet) =>
-        updateFilterSet(explorerId, filterSet).catch(handleCatch),
-      use: setId,
+        dispatch(updateFilterSet(filterSet)).unwrap().catch(handleCatch),
+      use: (id) => {
+        dispatch(useFilterSetById(id));
+      },
     }),
-    [explorerId, filterSets, id, isError]
+    [explorerId, filterSetActive, filterSets, filterSetsErrored]
   );
   return (
     <ExplorerFilterSetsContext.Provider value={value}>
