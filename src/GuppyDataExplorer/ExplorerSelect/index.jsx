@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 import Select from 'react-select';
 import { explorerConfig } from '../../localconf';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { setExplorerId } from '../../redux/explorer/slice';
+import { useExplorerById } from '../../redux/explorer/slice';
 import { capitalizeFirstLetter, overrideSelectTheme } from '../../utils';
 import './ExplorerSelect.css';
 
@@ -21,7 +21,7 @@ export default function ExplorerTabs() {
   // eslint-disable-next-line no-unused-vars
   const [_, setSearchParams] = useSearchParams();
   function updateExplorerId(id) {
-    dispatch(setExplorerId(id));
+    dispatch(useExplorerById(id));
     setSearchParams(`id=${id}`);
   }
 

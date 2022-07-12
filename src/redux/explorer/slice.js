@@ -37,12 +37,6 @@ const slice = createSlice({
     patientIds: initialPatientIds,
   }),
   reducers: {
-    /** @param {PayloadAction<ExplorerState['explorerId']>} action */
-    setExplorerId(state, action) {
-      state.config = getCurrentConfig(action.payload);
-      state.explorerFilter = {};
-      state.explorerId = action.payload;
-    },
     /** @param {PayloadAction<ExplorerState['explorerFilter']>} action */
     updateExplorerFilter(state, action) {
       const filter = action.payload;
@@ -78,6 +72,12 @@ const slice = createSlice({
     updatePatientIds(state, action) {
       if (state.config.patientIdsConfig?.filter !== undefined)
         state.patientIds = action.payload;
+    },
+    /** @param {PayloadAction<ExplorerState['explorerId']>} action */
+    useExplorerById(state, action) {
+      state.config = getCurrentConfig(action.payload);
+      state.explorerFilter = {};
+      state.explorerId = action.payload;
     },
     /** @param {PayloadAction<ExplorerState['filterSetActive']['id']>} action */
     useFilterSetById(state, action) {
@@ -130,9 +130,9 @@ const slice = createSlice({
 });
 
 export const {
-  setExplorerId,
   updateExplorerFilter,
   updatePatientIds,
+  useExplorerById,
   useFilterSetById,
 } = slice.actions;
 

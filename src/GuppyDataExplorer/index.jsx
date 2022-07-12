@@ -6,7 +6,7 @@ import Dashboard from '../Layout/Dashboard';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
 import NotFoundSVG from '../img/not-found.svg';
 import { fetchFilterSets } from '../redux/explorer/asyncThunks';
-import { setExplorerId, updateExplorerFilter } from '../redux/explorer/slice';
+import { updateExplorerFilter, useExplorerById } from '../redux/explorer/slice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
@@ -66,11 +66,11 @@ function ExplorerDashboard() {
     // sync search param with explorer id state
     setSearchParams(`id=${searchParamId.current}`);
     if (explorerId !== searchParamId.current)
-      dispatch(setExplorerId(searchParamId.current));
+      dispatch(useExplorerById(searchParamId.current));
 
     function switchExplorerOnBrowserNavigation() {
       if (explorerIds.includes(searchParamId.current))
-        dispatch(setExplorerId(searchParamId.current));
+        dispatch(useExplorerById(searchParamId.current));
     }
     window.addEventListener('popstate', switchExplorerOnBrowserNavigation);
     return () =>
