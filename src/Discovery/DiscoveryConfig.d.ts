@@ -123,7 +123,7 @@ export interface DiscoveryConfig {
                 fields: {
                     type: 'block' | 'text' | 'link' | 'textList' | 'linkList' | 'accessDescriptor' | 'tags'
                     sourceField?: string
-                    label?: string
+                    label: string
                     // optionally refine tags by categories
                     categories?: string[]
                 }[]

@@ -150,7 +150,7 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
     }
     if (fieldConfig.type === 'tags') {
       const tags = fieldConfig.categories ? (resource.tags || []).filter(
-        (tag) => fieldConfig.categories.includes(tag.category),
+        (tag) => fieldConfig.categories?.includes(tag.category),
       ) : resource.tags;
       return <div {...tagsCls}>{renderFieldContent(tags, 'tags', discoveryConfig)}</div>;
     }
@@ -185,16 +185,15 @@ const DiscoveryDetails = (props: Props) => {
   const pagePath = `/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`;
   const permalink = `${(basename === '/' ? '' : basename)}${pagePath}`;
 
-  const handleRedirectToRegstrationClick = (studyUID: string|number = null) => {
-    // TODO: not impemented, redirect to study reg page
+  const handleRedirectToRegistrationClick = (studyUID: string|number|null = null) => {
     history.push('/study-reg', {
       studyUID,
     });
   };
 
-  const handleRedirectToRequestRegstrationAccessClick = (
-    studyName: String = null,
-    studyNumber: String = null) => {
+  const handleRedirectToRequestRegistrationAccessClick = (
+    studyName: string|null = null,
+    studyNumber: string|null = null) => {
     // TODO: call requestor and redirect to request access page (by requestor) when requestor service is ready
     const requestID = '12345';
     history.push('/study-reg/request-access', {
@@ -206,7 +205,7 @@ const DiscoveryDetails = (props: Props) => {
     history.push('/login', { from: pagePath });
   };
 
-  const headerField = props.config.detailView?.headerField || props.config.studyPageFields.header?.field;
+  const headerField = props.config.detailView?.headerField || props.config.studyPageFields.header?.field || '';
   const header = (
     <Space align='baseline'>
       <h3 className='discovery-modal__header-text'>{props.modalData[headerField]}</h3>
@@ -238,9 +237,9 @@ const DiscoveryDetails = (props: Props) => {
                 onClick={() => {
                   if (props.user.username) {
                     if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
-                      return handleRedirectToRegstrationClick(props.modalData.appl_id);
+                      return handleRedirectToRegistrationClick(props.modalData.appl_id);
                     }
-                    return handleRedirectToRequestRegstrationAccessClick(props.modalData.project_title, props.modalData.project_number);
+                    return handleRedirectToRequestRegistrationAccessClick(props.modalData.project_title, props.modalData.project_number);
                   }
                   return handleRedirectToLoginClick();
                 }}

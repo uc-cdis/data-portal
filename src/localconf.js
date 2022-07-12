@@ -433,6 +433,7 @@ function buildConfig(opts) {
   const aggMDSURL = `${hostname}mds/aggregate`;
   const aggMDSDataURL = `${aggMDSURL}/metadata`;
   const cedarWrapperURL = `${hostname}cedar`;
+  const kayakoWrapperURL = `${hostname}kayako`;
 
   // Disallow gitops.json configurability of Gen3 Data Commons and CTDS logo alt text.
   // This allows for one point-of-change in the case of future rebranding.
@@ -535,6 +536,7 @@ function buildConfig(opts) {
     mdsURL,
     aggMDSDataURL,
     cedarWrapperURL,
+    kayakoWrapperURL,
     commonsWideAltText,
     ddApplicationId,
     ddClientToken,
