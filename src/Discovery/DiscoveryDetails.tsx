@@ -192,12 +192,12 @@ const DiscoveryDetails = (props: Props) => {
   };
 
   const handleRedirectToRequestRegistrationAccessClick = (
+    studyRegistrationAuthZ: string|null = null,
     studyName: string|null = null,
-    studyNumber: string|null = null) => {
-    // TODO: call requestor and redirect to request access page (by requestor) when requestor service is ready
-    const requestID = '12345';
+    studyNumber: string|null = null,
+    studyUID: string|number|null = null) => {
     history.push('/study-reg/request-access', {
-      requestID, studyName, studyNumber,
+      studyName, studyNumber, studyRegistrationAuthZ, studyUID,
     });
   };
 
@@ -239,7 +239,12 @@ const DiscoveryDetails = (props: Props) => {
                     if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
                       return handleRedirectToRegistrationClick(props.modalData.appl_id);
                     }
-                    return handleRedirectToRequestRegistrationAccessClick(props.modalData.project_title, props.modalData.project_number);
+                    return handleRedirectToRequestRegistrationAccessClick(
+                      props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
+                      props.modalData.project_title,
+                      props.modalData.project_number,
+                      props.modalData.appl_id,
+                    );
                   }
                   return handleRedirectToLoginClick();
                 }}
