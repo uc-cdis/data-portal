@@ -179,6 +179,13 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
                 <Link key='discovery' to={'/discovery'}>
                   <Button>Go To Discovery Page</Button>
                 </Link>,
+                <Tooltip title='Check the newly created CEDAR metadata instance on CEDAR platform. It should be available under the "Shared with Me" tab'>
+                  <Button href='https://cedar.metadatacenter.org/' target='_blank' rel='noreferrer'>
+                    <Space>
+                      Go To CEDAR <FontAwesomeIcon icon={'external-link-alt'} />
+                    </Space>
+                  </Button>
+                </Tooltip>,
               ]}
             />
           ) : (
