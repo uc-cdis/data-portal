@@ -117,11 +117,17 @@ const slice = createSlice({
       .addCase(fetchFilterSets.rejected, (state) => {
         state.savedFilterSets.isError = true;
       })
-      .addCase(updateFilterSet.fulfilled, (state) => {
+      .addCase(updateFilterSet.fulfilled, (state, action) => {
+        const filterSet = {
+          ...state.savedFilterSets.active,
+          ...action.payload,
+        };
         const index = state.savedFilterSets.all.findIndex(
-          ({ id }) => id === state.savedFilterSets.active.id
+          ({ id }) => id === filterSet.id
         );
-        state.savedFilterSets.all[index] = state.savedFilterSets.active;
+
+        state.savedFilterSets.active = filterSet;
+        state.savedFilterSets.all[index] = filterSet;
       })
       .addCase(updateFilterSet.rejected, (state) => {
         state.savedFilterSets.isError = true;

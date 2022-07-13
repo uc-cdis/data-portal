@@ -67,5 +67,6 @@ export function updateById(explorerId, filterSet) {
     body: JSON.stringify(convertToFilterSetDTO(requestBody)),
   }).then(({ response, status }) => {
     if (status !== 200) throw response.statusText;
+    return filterSet;
   });
 }
