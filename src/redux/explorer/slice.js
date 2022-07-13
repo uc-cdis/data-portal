@@ -91,7 +91,9 @@ const slice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createFilterSet.fulfilled, (state, action) => {
-        state.savedFilterSets.all.push(action.payload);
+        const filterSet = action.payload;
+        state.savedFilterSets.active = filterSet;
+        state.savedFilterSets.all.push(filterSet);
       })
       .addCase(createFilterSet.rejected, (state) => {
         state.savedFilterSets.isError = true;
