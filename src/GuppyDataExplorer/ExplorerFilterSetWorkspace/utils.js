@@ -44,7 +44,10 @@ export function checkIfFilterEmpty(filter) {
 
 const workspaceStateSessionStorageKey = 'explorer:filterSetWorkspace';
 
-/** @returns {FilterSetWorkspaceState} */
+/**
+ * @param {number} explorerId
+ * @returns {FilterSetWorkspaceState}
+ */
 export function retrieveWorkspaceState(explorerId) {
   try {
     const storageKey = `${workspaceStateSessionStorageKey}:${explorerId}`;
@@ -60,9 +63,6 @@ export function retrieveWorkspaceState(explorerId) {
   }
 }
 
-/** @type {number} */
-let prevExplorerId;
-
 /**
  * @param {Object} args
  * @param {ExplorerFilter} args.explorerFilter
@@ -70,16 +70,21 @@ let prevExplorerId;
  * @returns {FilterSetWorkspaceState}
  */
 export function initializeWorkspaceState({ explorerFilter, explorerId }) {
-  const isSwitchingExplorer =
-    prevExplorerId !== undefined && prevExplorerId !== explorerId;
-  prevExplorerId = explorerId;
+  const state = retrieveWorkspaceState(explorerId);
+  if (checkIfFilterEmpty(state.active.filterSet.filter)) {
+    state.active.filterSet.filter = explorerFilter;
+    state.all[state.active.id].filter = explorerFilter;
+  } else if (
+    JSON.stringify(state.active.filterSet.filter) !==
+    JSON.stringify(explorerFilter)
+  ) {
+    const id = crypto.randomUUID();
+    const filterSet = { filter: explorerFilter };
+    state.active = { filterSet, id };
+    state.all[id] = filterSet;
+  }
 
-  if (isSwitchingExplorer || checkIfFilterEmpty(explorerFilter))
-    return retrieveWorkspaceState(explorerId);
-
-  const id = crypto.randomUUID();
-  const filterSet = { filter: explorerFilter };
-  return { active: { filterSet, id }, all: { [id]: filterSet } };
+  return state;
 }
 
 /**

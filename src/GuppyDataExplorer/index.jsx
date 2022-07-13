@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { contactEmail, explorerConfig } from '../localconf';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Dashboard from '../Layout/Dashboard';
@@ -25,13 +25,6 @@ function ExplorerDashboard() {
   function handleFilterChange(filter) {
     dispatch(updateExplorerFilter(filter));
   }
-  const location = useLocation();
-  useEffect(() => {
-    /** @type {{ filter?: RootState['explorer']['explorerFilter'] }} */
-    const { filter } = location.state ?? {};
-    if (filter !== undefined) handleFilterChange(filter);
-  }, []);
-
   const {
     config: {
       adminAppliedPreFilters = emptyAdminAppliedPreFilters,

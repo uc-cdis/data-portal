@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useReducer, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   updateExplorerFilter,
   useFilterSetById,
@@ -26,10 +27,16 @@ export default function useFilterSetWorkspace() {
     (state) => state.explorer.savedFilterSets.active
   );
 
-  const initialState = useMemo(
-    () => initializeWorkspaceState({ explorerFilter, explorerId }),
-    []
-  );
+  const location = useLocation();
+  const initialState = useMemo(() => {
+    /** @type {{ filter?: ExplorerFilter }} */
+    const { filter } = location.state ?? {};
+
+    return initializeWorkspaceState({
+      explorerFilter: filter ?? explorerFilter,
+      explorerId,
+    });
+  }, []);
   useEffect(() => {
     const initialActiveFilterSet = initialState.active.filterSet;
 
