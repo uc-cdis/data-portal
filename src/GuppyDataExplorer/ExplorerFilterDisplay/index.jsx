@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import FilterDisplay from '../../components/FilterDisplay';
-import { useExplorerConfig } from '../ExplorerConfigContext';
+import { useAppSelector } from '../../redux/hooks';
 import './ExplorerFilterDisplay.css';
+
+/** @typedef {import('../../redux/types').RootState} RootState */
 
 /**
  * @param {Object} props
@@ -9,7 +11,9 @@ import './ExplorerFilterDisplay.css';
  * @param {string} [props.title]
  */
 function ExplorerFilterDisplay({ filter, title = 'Filters' }) {
-  const filterInfo = useExplorerConfig().current.filterConfig.info;
+  const filterInfo = useAppSelector(
+    (state) => state.explorer.config.filterConfig.info
+  );
   return (
     <div className='explorer-filter-display'>
       {Object.keys(filter ?? {}).length > 0 ? (

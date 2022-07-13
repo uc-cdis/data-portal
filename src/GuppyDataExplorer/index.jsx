@@ -1,19 +1,13 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useEffect, useRef } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { contactEmail, explorerConfig } from '../localconf';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Dashboard from '../Layout/Dashboard';
 import GuppyWrapper from '../GuppyComponents/GuppyWrapper';
 import NotFoundSVG from '../img/not-found.svg';
-import {
-  ExplorerConfigProvider,
-  useExplorerConfig,
-} from './ExplorerConfigContext';
-import {
-  ExplorerStateProvider,
-  useExplorerState,
-} from './ExplorerStateContext';
-import { ExplorerFilterSetsProvider } from './ExplorerFilterSetsContext';
+import { fetchFilterSets } from '../redux/explorer/asyncThunks';
+import { updateExplorerFilter, useExplorerById } from '../redux/explorer/slice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
@@ -25,23 +19,63 @@ import './Explorer.css';
 /** @type {{ [x: string]: OptionFilter }} */
 const emptyAdminAppliedPreFilters = {};
 
-/**
- * @param {Object} props
- * @param {RootState['versionInfo']['dataVersion']} props.dataVersion
- * @param {RootState['versionInfo']['portalVersion']} props.portalVersion
- */
-function ExplorerDashboard({ dataVersion, portalVersion }) {
+function ExplorerDashboard() {
+  const dispatch = useAppDispatch();
+  /** @param {RootState['explorer']['explorerFilter']} filter */
+  function handleFilterChange(filter) {
+    dispatch(updateExplorerFilter(filter));
+  }
+  const location = useLocation();
+  useEffect(() => {
+    /** @type {{ filter?: RootState['explorer']['explorerFilter'] }} */
+    const { filter } = location.state ?? {};
+    if (filter !== undefined) handleFilterChange(filter);
+  }, []);
+
   const {
-    current: {
+    config: {
       adminAppliedPreFilters = emptyAdminAppliedPreFilters,
       chartConfig,
       filterConfig,
       guppyConfig,
       tableConfig,
     },
+    explorerFilter,
     explorerId,
-  } = useExplorerConfig();
-  const { explorerFilter, patientIds, handleFilterChange } = useExplorerState();
+    explorerIds,
+    patientIds,
+  } = useAppSelector((state) => state.explorer);
+  useEffect(() => {
+    // sync saved filter sets with explorer id state
+    dispatch(fetchFilterSets()).unwrap().catch(console.error);
+  }, [explorerId]);
+
+  const { dataVersion, portalVersion } = useAppSelector(
+    (state) => state.versionInfo
+  );
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isSearchParamIdValid =
+    searchParams.has('id') &&
+    explorerIds.includes(Number(searchParams.get('id')));
+  const searchParamId = useRef(undefined);
+  searchParamId.current = isSearchParamIdValid
+    ? Number(searchParams.get('id'))
+    : explorerIds[0];
+  useEffect(() => {
+    // sync search param with explorer id state
+    setSearchParams(`id=${searchParamId.current}`);
+    if (explorerId !== searchParamId.current)
+      dispatch(useExplorerById(searchParamId.current));
+
+    function switchExplorerOnBrowserNavigation() {
+      if (explorerIds.includes(searchParamId.current))
+        dispatch(useExplorerById(searchParamId.current));
+    }
+    window.addEventListener('popstate', switchExplorerOnBrowserNavigation);
+    return () =>
+      window.removeEventListener('popstate', switchExplorerOnBrowserNavigation);
+  }, []);
 
   return (
     <GuppyWrapper
@@ -112,15 +146,6 @@ function ExplorerDashboard({ dataVersion, portalVersion }) {
   );
 }
 
-ExplorerDashboard.propTypes = {
-  dataVersion: PropTypes.string,
-  portalVersion: PropTypes.string,
-};
-
-/** @param {RootState} state */
-const mapStateToProps = ({ versionInfo }) => versionInfo;
-const ReduxExplorerDashboard = connect(mapStateToProps)(ExplorerDashboard);
-
 const fallbackElement = (
   <div className='explorer__error'>
     <h1>Error opening the Exploration page...</h1>
@@ -137,13 +162,7 @@ const fallbackElement = (
 export default function Explorer() {
   return explorerConfig.length === 0 ? null : (
     <ErrorBoundary fallback={fallbackElement}>
-      <ExplorerConfigProvider>
-        <ExplorerStateProvider>
-          <ExplorerFilterSetsProvider>
-            <ReduxExplorerDashboard />
-          </ExplorerFilterSetsProvider>
-        </ExplorerStateProvider>
-      </ExplorerConfigProvider>
+      <ExplorerDashboard />
     </ErrorBoundary>
   );
 }

@@ -61,42 +61,6 @@ export type SurvivalAnalysisConfig = {
   };
 };
 
-export type SingleExplorerConfig = {
-  adminAppliedPreFilters?: {
-    [x: string]: OptionFilter;
-  };
-  buttons: SingleButtonConfig[];
-  charts: ChartConfig;
-  dropdowns?: DropdownsConfig;
-  filters: FilterConfig;
-  getAccessButtonLink?: string;
-  guppyConfig: GuppyConfig;
-  hideGetAccessButton?: boolean;
-  id: number;
-  label?: string;
-  patientIds?: PatientIdsConfig;
-  sevenBridgesExportURL?: string;
-  survivalAnalysis: SurvivalAnalysisConfig;
-  table: TableConfig;
-  terraExportURL?: string;
-  terraTemplate?: string[];
-};
-
-export type AlteredExplorerConfig = {
-  adminAppliedPreFilters?: {
-    [x: string]: OptionFilter;
-  };
-  buttonConfig: ButtonConfig;
-  chartConfig: ChartConfig;
-  filterConfig: FilterConfig;
-  getAccessButtonLink?: string;
-  guppyConfig: GuppyConfig;
-  hideGetAccessButton?: boolean;
-  patientIdsConfig?: PatientIdsConfig;
-  survivalAnalysisConfig: SurvivalAnalysisConfig & { enabled: Boolean };
-  tableConfig: TableConfig;
-};
-
 export type ExplorerFilterSet = {
   description: string;
   explorerId?: number;
@@ -112,10 +76,3 @@ export type ExplorerFilterSetDTO = {
   id?: number;
   name: string;
 };
-
-export type ExplorerFilterSetActionType =
-  | 'new'
-  | 'open'
-  | 'save'
-  | 'save as'
-  | 'delete';

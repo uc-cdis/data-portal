@@ -1,7 +1,9 @@
+import { useSearchParams } from 'react-router-dom';
 import Select from 'react-select';
 import { explorerConfig } from '../../localconf';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { useExplorerById } from '../../redux/explorer/slice';
 import { capitalizeFirstLetter, overrideSelectTheme } from '../../utils';
-import { useExplorerConfig } from '../ExplorerConfigContext';
 import './ExplorerSelect.css';
 
 /** @type {{ label: string; value: string }[]} */
@@ -13,7 +15,16 @@ for (const { guppyConfig, id, label } of explorerConfig)
   });
 
 export default function ExplorerTabs() {
-  const { explorerId, updateExplorerId } = useExplorerConfig();
+  const dispatch = useAppDispatch();
+  const explorerId = useAppSelector((state) => state.explorer.explorerId);
+
+  // eslint-disable-next-line no-unused-vars
+  const [_, setSearchParams] = useSearchParams();
+  function updateExplorerId(id) {
+    dispatch(useExplorerById(id));
+    setSearchParams(`id=${id}`);
+  }
+
   const currentExplorer = explorerOptions.find(
     (o) => o.value === String(explorerId)
   );

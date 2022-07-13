@@ -1,9 +1,13 @@
 import PropTypes from 'prop-types';
 import ConnectedFilter from '../../GuppyComponents/ConnectedFilter';
-import { useExplorerConfig } from '../ExplorerConfigContext';
-import { useExplorerState } from '../ExplorerStateContext';
+import {
+  updateExplorerFilter,
+  updatePatientIds,
+} from '../../redux/explorer/slice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import './ExplorerFilter.css';
 
+/** @typedef {import('../../redux/types').RootState} RootState */
 /** @typedef {import('../types').GuppyData} GuppyData */
 
 /**
@@ -19,14 +23,21 @@ import './ExplorerFilter.css';
 
 /** @param {ExplorerFilterProps} props */
 function ExplorerFilter({ className = '', ...filterProps }) {
-  const { adminAppliedPreFilters, filterConfig, guppyConfig } =
-    useExplorerConfig().current;
+  const dispatch = useAppDispatch();
+  /** @param {RootState['explorer']['explorerFilter']} filter */
+  function handleFilterChange(filter) {
+    dispatch(updateExplorerFilter(filter));
+  }
+  /** @param {RootState['explorer']['patientIds']} ids */
+  function handlePatientIdsChange(ids) {
+    dispatch(updatePatientIds(ids));
+  }
   const {
+    config: { adminAppliedPreFilters, filterConfig, guppyConfig },
     explorerFilter,
     patientIds,
-    handleFilterChange,
-    handlePatientIdsChange,
-  } = useExplorerState();
+  } = useAppSelector((state) => state.explorer);
+
   const connectedFilterProps = {
     ...filterProps,
     adminAppliedPreFilters,
