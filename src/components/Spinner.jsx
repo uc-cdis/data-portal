@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Spinner.less';
+import './Spinner.css';
 
 class Spinner extends React.Component {
   render() {

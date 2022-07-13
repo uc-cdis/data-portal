@@ -3,12 +3,15 @@ import { covariateTableConfig, covariateSelection } from './constants';
 import { fetchCovariates, queryConfig } from "../wizard-endpoints/cohort-middleware-api";
 import { useQuery } from 'react-query';
 import { Table } from 'antd';
-import { Spinner } from "../../../components/Spinner";
+import Spinner from "../../../components/Spinner";
+
 import '../../GWASUIApp/GWASUIApp.css';
 
 const Covariates = ({ sourceId, searchTerm, selectedCovariates, handleCovariateSelect, page, handlePage }) => {
     const covariates = useQuery(['covariates', sourceId], () => fetchCovariates(sourceId), queryConfig);
-
+    if (covariates.status === 'loading') {
+        return <Spinner />;
+    }
     return (<>{covariates ? (
         (covariates.status === 'success') ? (
             // covariates.data && covariates.data.concepts.length > 0 ?
