@@ -103,6 +103,7 @@ const slice = createSlice({
           ({ id }) => id === state.savedFilterSets.active.id
         );
         if (index !== undefined) state.savedFilterSets.all.splice(index, 1);
+        state.savedFilterSets.active = undefined;
       })
       .addCase(deleteFilterSet.rejected, (state) => {
         state.savedFilterSets.isError = true;
