@@ -122,9 +122,9 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
           // something has gone wrong
           setFormSubmissionStatus({ status: 'error', text: `Failed to create a request with error code: ${status}. Please try again later. If the error persists, please contact us for help.` });
         }
+        setReqAccessRequestPending(false);
       },
     );
-    setReqAccessRequestPending(false);
   };
 
   const onFinish = (values) => {
