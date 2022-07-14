@@ -1,9 +1,5 @@
 // TODO put antd/query configs in here
 
-export const allowedConceptTypes = {
-    ConceptTypes: ['MVP Continuous'],
-};
-
 export const quantitativeSteps = [
     {
         title: 'Step 1',
@@ -46,38 +42,38 @@ export const caseControlSteps = [
     },
     {
         title: 'Step 5',
-        description: 'Set workflow parameters and remove unwanted covariates',
+        description: 'Add custom dichotomous covariates',
     },
     {
         title: 'Step 6',
+        description: 'Set workflow parameters and remove unwanted covariates'
+    },
+    {
+        title: 'Step 7',
         description: 'Submit GWAS job',
     },
 ];
 
-export const cohortSelection = (handler, selectedCohort, otherCohortSelected) => {
-    return {
-        type: 'radio',
-        columnTitle: 'Select',
-        selectedRowKeys: (selectedCohort) ? [selectedCohort.cohort_definition_id] : [],
-        onChange: (_, selectedRows) => {
-            handler(selectedRows[0]);
-        },
-        getCheckboxProps: (record) => ({
-            disabled: record.size === 0 || record.cohort_name === otherCohortSelected,
-        }),
-    }
-}
+export const cohortSelection = (handler, selectedCohort, otherCohortSelected) => ({
+    type: 'radio',
+    columnTitle: 'Select',
+    selectedRowKeys: (selectedCohort) ? [selectedCohort.cohort_definition_id] : [],
+    onChange: (_, selectedRows) => {
+        handler(selectedRows[0]);
+    },
+    getCheckboxProps: (record) => ({
+        disabled: record.size === 0 || record.cohort_name === otherCohortSelected,
+    }),
+});
 
-export const covariateSelection = (handler, selectedCovariates) => {
-    return {
-        type: 'checkbox',
-        columnTitle: 'Select',
-        selectedRowKeys: selectedCovariates.map((val) => val.concept_id),
-        onChange: (_, selectedRows) => {
-            handler(selectedRows);
-        },
-    };
-}
+export const covariateSelection = (handler, selectedCovariates) => ({
+    type: 'checkbox',
+    columnTitle: 'Select',
+    selectedRowKeys: selectedCovariates.map((val) => val.concept_id),
+    onChange: (_, selectedRows) => {
+        handler(selectedRows);
+    },
+});
 
 export const cohortTableConfig = [
     {
@@ -97,11 +93,11 @@ export const covariateTableConfig = [
         title: 'Concept ID',
         dataIndex: 'concept_id',
         key: 'concept_name',
-    },
-    {
+      },
+      {
         title: 'Concept Name',
         dataIndex: 'concept_name',
         key: 'concept_name',
         filterSearch: true,
-    },
+      },
 ];

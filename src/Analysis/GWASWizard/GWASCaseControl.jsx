@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import CohortSelect from './shared/CohortSelect';
 import CovariateSelect from './shared/CovariateSelect';
@@ -12,6 +12,8 @@ import Spinner from '../../components/Spinner';
 import '../GWASUIApp/GWASUIApp.css';
 import { useQuery, useMutation } from 'react-query';
 import AddCohortButton from './shared/AddCohortButton';
+import CovariateReview from './CovariateReview';
+import WorkflowParameters from './shared/WorkflowParameters';
 
 const { Step } = Steps;
 
@@ -20,7 +22,8 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     const [selectedCaseCohort, setSelectedCaseCohort] = useState(undefined);
     const [selectedControlCohort, setSelectedControlCohort] = useState(undefined);
     const [selectedCovariates, setSelectedCovariates] = useState([]);
-    const [customDichotomous, setCustomDichotomous] = useState([]);
+    const [selectedDichotomousCovariates, setSelectedDichotomousCovariates] = useState([]);
+    const [selectedHare, setSelectedHare] = useState('');
 
     const { loading, sourceId } = useSourceFetch();
 
@@ -35,15 +38,15 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
         setSelectedCovariates(cov);
     }
 
-    const handleCDSelect = (cd) => {
-        // setCustomDichotomous((prevCd) => {
-        //     return [...prevCd, cd]
-        // });
-
-        // or
-
-        // setCustomDichotomous(cd);
+    const handleCDAdd = (cd) => {
+        setSelectedDichotomousCovariates((prevCDArr) => {
+            return [...prevCDArr, cd]
+        });
     }
+
+    useEffect(() => {
+        console.log('selectedDichotomousCovariates!', selectedDichotomousCovariates);
+    }, [selectedDichotomousCovariates])
 
     const resetFields = () => {
         // TODO reset to initial state
@@ -53,36 +56,92 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     const generateStep = () => {
         switch (current) {
             case 0:
-                // TODO: move this CD Select Component to new step (4) after completed
-                // return (<CustomDichotomousSelect handleCDSelect={handleCDSelect}></CustomDichotomousSelect>)
                 return (!loading && sourceId ? (<>
                     <AddCohortButton></AddCohortButton>
                     <React.Fragment>
-                        {/* <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                        <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                             <h4 className='GWASUI-selectInstruction'>In this step, you will determine the study population. To begin, select the cohort that you would like to define your study population with.</h4>
                             <div className='GWASUI-mainTable'>
-                                <CohortSelect selectedCohort={selectedCaseCohort} handleCohortSelect={handleCaseCohortSelect} sourceId={sourceId}></CohortSelect>
+                                <CohortSelect
+                                    selectedCohort={selectedCaseCohort}
+                                    handleCohortSelect={handleCaseCohortSelect}
+                                    sourceId={sourceId} />
                             </div>
-                        </Space> */}
-                        <CustomDichotomousSelect sourceId={sourceId} handleCDSelect={handleCDSelect} customDichotomous={customDichotomous}></CustomDichotomousSelect>
+                        </Space>
                     </React.Fragment>
                 </>) : <Spinner></Spinner>);
             case 1:
                 return (<>
-                    <AddCohortButton></AddCohortButton>
+                    <AddCohortButton />
                     <React.Fragment>
                         <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                             <h4 className='GWASUI-selectInstruction'>In this step, you will continue to define the study population. Please select the cohort that you would like to define as your study “control” population.</h4>
                             <div className='GWASUI-mainTable'>
-                                <CohortSelect selectedCohort={selectedControlCohort} handleCohortSelect={handleControlCohortSelect} sourceId={sourceId} otherCohortSelected={selectedCaseCohort ? selectedCaseCohort.cohort_name : ''}></CohortSelect>
+                                <CohortSelect
+                                    selectedCohort={selectedControlCohort}
+                                    handleCohortSelect={handleControlCohortSelect}
+                                    sourceId={sourceId}
+                                    otherCohortSelected={selectedCaseCohort ? selectedCaseCohort.cohort_name : ''} />
                             </div>
                         </Space>
                     </React.Fragment>
                 </>);
             case 2:
-                return (<CovariateSelect selectedCovariates={selectedCovariates} handleCovariateSelect={handleCovariateSelect} sourceId={sourceId}></CovariateSelect>);
+                return (
+                    <>
+                    <React.Fragment>
+                        <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                            <h4 className='GWASUI-selectInstruction'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
+                            <div className='GWASUI-mainTable'>
+                                <CovariateSelect
+                                    selectedCovariates={selectedCovariates}
+                                    handleCovariateSelect={handleCovariateSelect}
+                                    sourceId={sourceId} />
+                            </div>
+                        </Space>
+                    </React.Fragment>
+                    </>
+                );
             case 3:
-                return (<CustomDichotomousSelect sourceId={sourceId} handleCDSelect={handleCDSelect}></CustomDichotomousSelect>)
+                return (
+                    <React.Fragment>
+                        <CovariateReview
+                            caseCohortDefinitionId={selectedCaseCohort.cohort_definition_id}
+                            controlCohortDefinitionId={selectedControlCohort.cohort_definition_id}
+                            selectedCovariates={selectedCovariates}
+                            sourceId={sourceId}>
+                        </CovariateReview>
+                    </React.Fragment>
+                )
+            case 4:
+                return (
+                    <React.Fragment>
+                        <CustomDichotomousSelect
+                            sourceId={sourceId}
+                            handleCDAdd={handleCDAdd}
+                            selectedDichotomousCovariates={selectedDichotomousCovariates}>
+                        </CustomDichotomousSelect>
+                    </React.Fragment>
+                );
+            case 5:
+                return (
+                    <React.Fragment>
+                        <WorkflowParameters
+                            caseCohortDefinitionId={selectedCaseCohort.cohort_definition_id}
+                            controlCohortDefinitionId={selectedControlCohort.cohort_definition_id}
+                            selectedCovariates={selectedCovariates}
+                            selectedDichotomousCovariates={selectedDichotomousCovariates}
+                            sourceId={sourceId} workflowType={"caseControl"}
+                            selectedHare={selectedHare}>
+                        </WorkflowParameters>
+                    </React.Fragment>
+                )
+            case 6:
+                return (
+                    <React.Fragment>
+                        <span>new step whats good</span>
+                    </React.Fragment>
+                )
         }
     }
 
@@ -93,9 +152,10 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     } else if (current === 2 && selectedCovariates.length < 1) {
         // covariate selection
         nextButtonEnabled = false;
-    } else if (current === 4) {
-        nextButtonEnabled = selectedHare != '' && numOfPC && numOfPC != '';
     }
+    // else if (current === 4) {
+    //     nextButtonEnabled = selectedHare != '' && numOfPC && numOfPC != '';
+    // }
 
     return (<>
         <Space direction={'vertical'} style={{ width: '100%' }}>
