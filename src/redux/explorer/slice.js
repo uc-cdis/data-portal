@@ -187,12 +187,6 @@ const slice = createSlice({
       // sync with explorerFilter
       state.explorerFilter = workspace.all[workspace.activeId].filter;
     },
-    /** @param {PayloadAction<ExplorerState['savedFilterSets']['active']['id']>} action */
-    useFilterSetById(state, action) {
-      state.savedFilterSets.active = state.savedFilterSets.all.find(
-        ({ id }) => id === action.payload
-      );
-    },
     /** @param {PayloadAction<string>} action */
     useWorkspaceFilterSet(state, action) {
       const newActiveId = action.payload;
@@ -280,7 +274,6 @@ export const {
   updateExplorerFilter,
   updatePatientIds,
   useExplorerById,
-  useFilterSetById,
   useWorkspaceFilterSet,
 } = slice.actions;
 
