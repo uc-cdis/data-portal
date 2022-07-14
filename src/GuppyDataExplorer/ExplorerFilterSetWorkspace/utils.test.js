@@ -1,7 +1,5 @@
 import { pluckFromFilter, pluckFromAnchorFilter } from './utils';
 
-/** @typedef {import('./types').FilterSetWorkspaceState} FilterSetWorkspaceState */
-
 describe('pluckFromFilter', () => {
   test('no filter', () => {
     const received = pluckFromFilter({ filter: {}, field: 'foo' });

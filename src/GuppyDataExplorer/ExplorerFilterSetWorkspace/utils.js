@@ -1,6 +1,4 @@
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
-/** @typedef {import('./types').FilterSetWorkspaceState} FilterSetWorkspaceState */
-/** @typedef {import('./types').FilterSetWorkspaceAction} FilterSetWorkspaceAction */
 
 /**
  * @param {Object} args
