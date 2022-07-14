@@ -87,3 +87,28 @@ export function getCurrentConfig(explorerId) {
     tableConfig: config.table,
   };
 }
+
+/** @param {import('./types').ExplorerFilter} filter */
+export function checkIfFilterEmpty(filter) {
+  const { __combineMode, ..._filter } = filter;
+  return Object.keys(_filter).length === 0;
+}
+
+export const workspacesSessionStorageKey = 'explorer:workspaces';
+
+/** @returns {import('./types').ExplorerState['workspaces']} */
+export function initializeWorkspaces(explorerId) {
+  try {
+    const str = window.sessionStorage.getItem(workspacesSessionStorageKey);
+    if (str === null) throw new Error('No stored workspaces');
+    return JSON.parse(str);
+  } catch (e) {
+    if (e.message !== 'No stored workspaces') console.error(e);
+
+    const activeId = crypto.randomUUID();
+    const filterSet = { filter: {} };
+    return {
+      [explorerId]: { activeId, all: { [activeId]: filterSet } },
+    };
+  }
+}

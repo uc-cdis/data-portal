@@ -16,7 +16,6 @@ import FilterSetLabel from './FilterSetLabel';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 import {
   checkIfFilterEmpty,
-  findFilterSetIdInWorkspaceState,
   pluckFromAnchorFilter,
   pluckFromFilter,
 } from './utils';
@@ -38,6 +37,10 @@ function ExplorerFilterSetWorkspace() {
     (state) => state.explorer.savedFilterSets
   );
   const workspace = useFilterSetWorkspace();
+  const activeFilterSet = workspace.all[workspace.activeId];
+  const activeSavedFilterSet = savedFilterSets.data.find(
+    ({ id }) => id === activeFilterSet.id
+  );
 
   const [actionFormType, setActionFormType] = useState(
     /** @type {ActionFormType} */ (undefined)
@@ -70,32 +73,29 @@ function ExplorerFilterSetWorkspace() {
   }
   /** @param {ExplorerFilterSet} loaded */
   function handleLoad(loaded) {
-    const foundId = findFilterSetIdInWorkspaceState(loaded.id, workspace);
-    if (foundId !== undefined) {
-      workspace.use(foundId);
-    } else {
-      const shouldOverwrite = checkIfFilterEmpty(
-        workspace.active.filterSet.filter
-      );
-      workspace.load(loaded, shouldOverwrite);
-    }
+    let newActiveId;
+    for (const [id, filterSet] of Object.entries(workspace.all))
+      if (filterSet.id === loaded.id) {
+        newActiveId = id;
+        break;
+      }
+
+    if (newActiveId) workspace.use(newActiveId);
+    else workspace.load(loaded);
+
     closeActionForm();
   }
   /** @param {ExplorerFilterSet} saved */
   async function handleSave(saved) {
     try {
-      let filterSet = saved;
-      if (saved.id === undefined)
-        filterSet = await dispatch(createFilterSet(saved)).unwrap();
+      if (saved.id === undefined) await dispatch(createFilterSet(saved));
       else await dispatch(updateFilterSet(saved));
-
-      workspace.load(filterSet, true);
     } finally {
       closeActionForm();
     }
   }
   function handleReset() {
-    handleFilterChange(savedFilterSets.active.filter);
+    handleFilterChange(activeSavedFilterSet.filter);
   }
   function handleRemove() {
     workspace.remove();
@@ -109,7 +109,7 @@ function ExplorerFilterSetWorkspace() {
   function handleClickCombineMode(payload) {
     handleFilterChange(
       /** @type {import('../types').ExplorerFilter} */ ({
-        ...workspace.active.filterSet.filter,
+        ...activeFilterSet.filter,
         __combineMode: payload === 'AND' ? 'OR' : 'AND',
       })
     );
@@ -117,7 +117,7 @@ function ExplorerFilterSetWorkspace() {
   /** @type {import('../../components/FilterDisplay').ClickFilterHandler} */
   function handleCloseFilter(payload) {
     const { field, anchorField, anchorValue } = payload;
-    const { filter } = workspace.active.filterSet;
+    const { filter } = activeFilterSet;
     if (anchorField !== undefined && anchorValue !== undefined) {
       const anchor = `${anchorField}:${anchorValue}`;
       handleFilterChange(pluckFromAnchorFilter({ anchor, field, filter }));
@@ -178,9 +178,7 @@ function ExplorerFilterSetWorkspace() {
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
                 onClick={handleDuplicate}
-                disabled={checkIfFilterEmpty(
-                  workspace.active.filterSet?.filter ?? {}
-                )}
+                disabled={checkIfFilterEmpty(activeFilterSet?.filter ?? {})}
               >
                 Duplicate
               </button>
@@ -196,9 +194,7 @@ function ExplorerFilterSetWorkspace() {
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
                 onClick={handleClear}
-                disabled={checkIfFilterEmpty(
-                  workspace.active.filterSet?.filter ?? {}
-                )}
+                disabled={checkIfFilterEmpty(activeFilterSet?.filter ?? {})}
               >
                 Clear
               </button>
@@ -216,7 +212,7 @@ function ExplorerFilterSetWorkspace() {
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
                 onClick={() => setActionFormType('LOAD')}
-                disabled={savedFilterSets.all.length < 1}
+                disabled={savedFilterSets.data.length < 1}
               >
                 Load
               </button>
@@ -224,9 +220,7 @@ function ExplorerFilterSetWorkspace() {
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
                 onClick={() => setActionFormType('SAVE')}
-                disabled={checkIfFilterEmpty(
-                  workspace.active.filterSet?.filter ?? {}
-                )}
+                disabled={checkIfFilterEmpty(activeFilterSet?.filter ?? {})}
               >
                 Save
               </button>
@@ -235,9 +229,9 @@ function ExplorerFilterSetWorkspace() {
                 type='button'
                 onClick={handleReset}
                 disabled={
-                  savedFilterSets.active === undefined ||
-                  JSON.stringify(savedFilterSets.active.filter) ===
-                    JSON.stringify(workspace.active.filterSet.filter)
+                  activeSavedFilterSet === undefined ||
+                  JSON.stringify(activeSavedFilterSet.filter) ===
+                    JSON.stringify(activeFilterSet.filter)
                 }
               >
                 Reset
@@ -246,7 +240,7 @@ function ExplorerFilterSetWorkspace() {
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
                 onClick={() => setActionFormType('DELETE')}
-                disabled={!('id' in (workspace.active.filterSet ?? {}))}
+                disabled={!('id' in (workspace.all[workspace.activeId] ?? {}))}
               >
                 Delete
               </button>
@@ -257,7 +251,7 @@ function ExplorerFilterSetWorkspace() {
       <main>
         {Object.keys(workspace.all).map((id, i) => {
           const filterSet = workspace.all[id];
-          return workspace.active.id === id ? (
+          return workspace.activeId === id ? (
             <div
               className='explorer-filter-set-workspace__query explorer-filter-set-workspace__query--active'
               key={id}
@@ -314,8 +308,10 @@ function ExplorerFilterSetWorkspace() {
       {actionFormType !== undefined && (
         <SimplePopup>
           <FilterSetActionForm
+            currentFilter={activeFilterSet?.filter ?? {}}
             filterSets={{
-              ...savedFilterSets,
+              active: activeSavedFilterSet,
+              all: savedFilterSets.data,
               empty: { name: '', description: '', filter: {} },
             }}
             handlers={{
@@ -326,7 +322,6 @@ function ExplorerFilterSetWorkspace() {
               save: handleSave,
             }}
             type={actionFormType}
-            workspace={workspace}
           />
         </SimplePopup>
       )}
