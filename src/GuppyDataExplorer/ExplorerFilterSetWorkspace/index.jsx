@@ -16,7 +16,6 @@ import FilterSetLabel from './FilterSetLabel';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 import {
   checkIfFilterEmpty,
-  findFilterSetIdInWorkspaceState,
   pluckFromAnchorFilter,
   pluckFromFilter,
 } from './utils';
@@ -71,12 +70,16 @@ function ExplorerFilterSetWorkspace() {
   }
   /** @param {ExplorerFilterSet} loaded */
   function handleLoad(loaded) {
-    const foundId = findFilterSetIdInWorkspaceState(loaded.id, workspace.all);
-    if (foundId !== undefined) {
-      workspace.use(foundId);
-    } else {
-      workspace.load(loaded);
-    }
+    let newActiveId;
+    for (const [id, filterSet] of Object.entries(workspace.all))
+      if (filterSet.id === loaded.id) {
+        newActiveId = id;
+        break;
+      }
+
+    if (newActiveId) workspace.use(newActiveId);
+    else workspace.load(loaded);
+
     closeActionForm();
   }
   /** @param {ExplorerFilterSet} saved */
