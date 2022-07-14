@@ -237,13 +237,13 @@ const DiscoveryDetails = (props: Props) => {
                 onClick={() => {
                   if (props.user.username) {
                     if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
-                      return handleRedirectToRegistrationClick(props.modalData.appl_id);
+                      return handleRedirectToRegistrationClick(props.modalData[studyRegistrationConfig.studyRegistrationUIDField]);
                     }
                     return handleRedirectToRequestRegistrationAccessClick(
                       props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
                       props.modalData.project_title,
                       props.modalData.project_number,
-                      props.modalData.appl_id,
+                      props.modalData[studyRegistrationConfig.studyRegistrationUIDField],
                     );
                   }
                   return handleRedirectToLoginClick();

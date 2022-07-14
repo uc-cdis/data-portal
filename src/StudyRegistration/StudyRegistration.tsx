@@ -219,8 +219,11 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
           >
             <Select placeholder='Select a study to register' showSearch allowClear>
               {studies?.map((study) => (
-                <Option key={study.appl_id} value={study.appl_id}>
-                  {`${study.project_number} : ${study.project_title} : ${study.appl_id}`}
+                <Option
+                  key={study[studyRegistrationConfig.studyRegistrationUIDField]}
+                  value={study[studyRegistrationConfig.studyRegistrationUIDField]}
+                >
+                  {`${study.project_number} : ${study.project_title} : ${study[studyRegistrationConfig.studyRegistrationUIDField]}`}
                 </Option>
               ))}
             </Select>

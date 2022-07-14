@@ -282,6 +282,9 @@ function buildConfig(opts) {
   if (!studyRegistrationConfig.studyRegistrationAccessCheckField) {
     studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz'
   }
+  if (!studyRegistrationConfig.studyRegistrationUIDField) {
+    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id'
+  }
 
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
