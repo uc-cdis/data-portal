@@ -30,6 +30,25 @@ export type ExplorerConfig = {
 
 export type ExplorerFilter = ExplorerFilter;
 
+export type ExplorerFilterSet = ExplorerFilterSet;
+
+export type UnsavedExplorerFilterSet = {
+  filter: ExplorerFilterSet['filter'];
+  id?: never;
+  name?: never;
+  description?: never;
+};
+
+export type ExplorerWorkspace = {
+  active: {
+    filterSet: ExplorerFilterSet | UnsavedExplorerFilterSet;
+    id: string;
+  };
+  all: {
+    [id: string]: ExplorerFilterSet | UnsavedExplorerFilterSet;
+  };
+};
+
 export type ExplorerState = {
   config: ExplorerConfig;
   explorerFilter: ExplorerFilter;
@@ -40,5 +59,8 @@ export type ExplorerState = {
     active: ExplorerFilterSet;
     all: ExplorerFilterSet[];
     isError: boolean;
+  };
+  workspaces: {
+    [explorerId: ExplorerState['explorerId']]: ExplorerWorkspace;
   };
 };
