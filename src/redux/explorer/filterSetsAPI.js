@@ -31,6 +31,7 @@ export function deleteById(explorerId, filterSet) {
     method: 'DELETE',
   }).then(({ response, status }) => {
     if (status !== 200) throw response.statusText;
+    return filterSet.id;
   });
 }
 

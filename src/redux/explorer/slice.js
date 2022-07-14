@@ -40,8 +40,7 @@ const slice = createSlice({
     explorerIds,
     patientIds: initialPatientIds,
     savedFilterSets: {
-      active: undefined,
-      all: [],
+      data: [],
       isError: false,
     },
     workspaces: initialWorkspaces,
@@ -101,11 +100,6 @@ const slice = createSlice({
 
       // sync with exploreFilter
       state.explorerFilter = filterSet.filter;
-
-      // sync with savedFilterSets
-      state.savedFilterSets.active = state.savedFilterSets.all.find(
-        (fs) => fs.id === filterSet.id
-      );
     },
     removeWorkspaceFilterSet(state) {
       const { activeId, all } = state.workspaces[state.explorerId];
@@ -122,11 +116,6 @@ const slice = createSlice({
 
       // sync with exploreFilter
       state.explorerFilter = filterSet.filter;
-
-      // sync with savedFilterSets
-      state.savedFilterSets.active = state.savedFilterSets.all.find(
-        (fs) => fs.id === filterSet.id
-      );
     },
     /** @param {PayloadAction<ExplorerState['explorerFilter']>} action */
     updateExplorerFilter(state, action) {
@@ -194,21 +183,15 @@ const slice = createSlice({
       state.workspaces[explorerId].activeId = newActiveId;
 
       // sync with exploreFilter
-      const { filter, id } = state.workspaces[explorerId].all[newActiveId];
+      const { filter } = state.workspaces[explorerId].all[newActiveId];
       state.explorerFilter = filter;
-
-      // sync with savedFilterSets
-      state.savedFilterSets.active = state.savedFilterSets.all.find(
-        (filterSet) => filterSet.id === id
-      );
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(createFilterSet.fulfilled, (state, action) => {
         const filterSet = action.payload;
-        state.savedFilterSets.active = filterSet;
-        state.savedFilterSets.all.push(filterSet);
+        state.savedFilterSets.data.push(filterSet);
 
         // sync with workspaces
         const { activeId } = state.workspaces[state.explorerId];
@@ -217,24 +200,17 @@ const slice = createSlice({
       .addCase(createFilterSet.rejected, (state) => {
         state.savedFilterSets.isError = true;
       })
-      .addCase(deleteFilterSet.fulfilled, (state) => {
-        const index = state.savedFilterSets.all.findIndex(
-          ({ id }) => id === state.savedFilterSets.active.id
+      .addCase(deleteFilterSet.fulfilled, (state, action) => {
+        const index = state.savedFilterSets.data.findIndex(
+          ({ id }) => id === action.payload
         );
-        if (index !== undefined) state.savedFilterSets.all.splice(index, 1);
-        state.savedFilterSets.active = undefined;
+        if (index !== undefined) state.savedFilterSets.data.splice(index, 1);
       })
       .addCase(deleteFilterSet.rejected, (state) => {
         state.savedFilterSets.isError = true;
       })
       .addCase(fetchFilterSets.fulfilled, (state, action) => {
-        state.savedFilterSets.all = action.payload;
-        state.savedFilterSets.active = state.savedFilterSets.all.find(
-          ({ id }) => {
-            const { activeId, all } = state.workspaces[state.explorerId];
-            return id === all[activeId]?.id;
-          }
-        );
+        state.savedFilterSets.data = action.payload;
       })
       .addCase(fetchFilterSets.pending, (state) => {
         state.savedFilterSets.isError = false;
@@ -243,16 +219,11 @@ const slice = createSlice({
         state.savedFilterSets.isError = true;
       })
       .addCase(updateFilterSet.fulfilled, (state, action) => {
-        const filterSet = {
-          ...state.savedFilterSets.active,
-          ...action.payload,
-        };
-        const index = state.savedFilterSets.all.findIndex(
+        const filterSet = action.payload;
+        const index = state.savedFilterSets.data.findIndex(
           ({ id }) => id === filterSet.id
         );
-
-        state.savedFilterSets.active = filterSet;
-        state.savedFilterSets.all[index] = filterSet;
+        state.savedFilterSets.data[index] = filterSet;
 
         // sync with workspaces
         const { activeId } = state.workspaces[state.explorerId];

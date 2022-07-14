@@ -53,8 +53,7 @@ export type ExplorerState = {
   explorerIds: ExplorerState['explorerId'][];
   patientIds: string[];
   savedFilterSets: {
-    active: ExplorerFilterSet;
-    all: ExplorerFilterSet[];
+    data: ExplorerFilterSet[];
     isError: boolean;
   };
   workspaces: {

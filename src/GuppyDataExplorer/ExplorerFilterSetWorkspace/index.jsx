@@ -38,6 +38,9 @@ function ExplorerFilterSetWorkspace() {
   );
   const workspace = useFilterSetWorkspace();
   const activeFilterSet = workspace.all[workspace.activeId];
+  const activeSavedFilterSet = savedFilterSets.data.find(
+    ({ id }) => id === activeFilterSet.id
+  );
 
   const [actionFormType, setActionFormType] = useState(
     /** @type {ActionFormType} */ (undefined)
@@ -92,7 +95,7 @@ function ExplorerFilterSetWorkspace() {
     }
   }
   function handleReset() {
-    handleFilterChange(savedFilterSets.active.filter);
+    handleFilterChange(activeSavedFilterSet.filter);
   }
   function handleRemove() {
     workspace.remove();
@@ -209,7 +212,7 @@ function ExplorerFilterSetWorkspace() {
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
                 onClick={() => setActionFormType('LOAD')}
-                disabled={savedFilterSets.all.length < 1}
+                disabled={savedFilterSets.data.length < 1}
               >
                 Load
               </button>
@@ -226,8 +229,8 @@ function ExplorerFilterSetWorkspace() {
                 type='button'
                 onClick={handleReset}
                 disabled={
-                  savedFilterSets.active === undefined ||
-                  JSON.stringify(savedFilterSets.active.filter) ===
+                  activeSavedFilterSet === undefined ||
+                  JSON.stringify(activeSavedFilterSet.filter) ===
                     JSON.stringify(activeFilterSet.filter)
                 }
               >
@@ -307,7 +310,8 @@ function ExplorerFilterSetWorkspace() {
           <FilterSetActionForm
             currentFilter={activeFilterSet?.filter ?? {}}
             filterSets={{
-              ...savedFilterSets,
+              active: activeSavedFilterSet,
+              all: savedFilterSets.data,
               empty: { name: '', description: '', filter: {} },
             }}
             handlers={{
