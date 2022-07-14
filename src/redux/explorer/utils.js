@@ -105,10 +105,10 @@ export function initializeWorkspaces(explorerId) {
   } catch (e) {
     if (e.message !== 'No stored workspaces') console.error(e);
 
-    const id = crypto.randomUUID();
+    const activeId = crypto.randomUUID();
     const filterSet = { filter: {} };
     return {
-      [explorerId]: { active: { filterSet, id }, all: { [id]: filterSet } },
+      [explorerId]: { activeId, all: { [activeId]: filterSet } },
     };
   }
 }

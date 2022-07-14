@@ -51,17 +51,16 @@ const slice = createSlice({
       const id = crypto.randomUUID();
       const filterSet = { filter: {} };
 
-      state.workspaces[state.explorerId].active = { id, filterSet };
+      state.workspaces[state.explorerId].activeId = id;
       state.workspaces[state.explorerId].all = { [id]: filterSet };
 
       // sync with exploreFilter
       state.explorerFilter = filterSet.filter;
     },
     clearWorkspaceFilterSet(state) {
-      const { id } = state.workspaces[state.explorerId].active;
+      const id = state.workspaces[state.explorerId].activeId;
       const filterSet = { filter: {} };
 
-      state.workspaces[state.explorerId].active = { id, filterSet };
       state.workspaces[state.explorerId].all[id] = filterSet;
 
       // sync with exploreFilter
@@ -71,7 +70,7 @@ const slice = createSlice({
       const id = crypto.randomUUID();
       const filterSet = { filter: {} };
 
-      state.workspaces[state.explorerId].active = { id, filterSet };
+      state.workspaces[state.explorerId].activeId = id;
       state.workspaces[state.explorerId].all[id] = filterSet;
 
       // sync with exploreFilter
@@ -79,10 +78,11 @@ const slice = createSlice({
     },
     duplicateWorkspaceFilterSet(state) {
       const id = crypto.randomUUID();
-      const { filter } = state.workspaces[state.explorerId].active.filterSet;
+      const { activeId } = state.workspaces[state.explorerId];
+      const { filter } = state.workspaces[state.explorerId].all[activeId];
       const filterSet = { filter };
 
-      state.workspaces[state.explorerId].active = { id, filterSet };
+      state.workspaces[state.explorerId].activeId = id;
       state.workspaces[state.explorerId].all[id] = filterSet;
 
       // sync with exploreFilter
@@ -90,12 +90,13 @@ const slice = createSlice({
     },
     /** @param {PayloadAction<ExplorerFilterSet | UnsavedExplorerFilterSet>} action */
     loadWorkspaceFilterSet(state, action) {
-      const { active } = state.workspaces[state.explorerId];
-      const shouldOverwrite = checkIfFilterEmpty(active.filterSet.filter);
-      const id = shouldOverwrite ? active.id : crypto.randomUUID();
+      const { activeId } = state.workspaces[state.explorerId];
+      const activeFilterSet = state.workspaces[state.explorerId].all[activeId];
+      const shouldOverwrite = checkIfFilterEmpty(activeFilterSet.filter);
+      const id = shouldOverwrite ? activeId : crypto.randomUUID();
       const filterSet = action.payload;
 
-      state.workspaces[state.explorerId].active = { id, filterSet };
+      state.workspaces[state.explorerId].activeId = id;
       state.workspaces[state.explorerId].all[id] = filterSet;
 
       // sync with exploreFilter
@@ -107,8 +108,8 @@ const slice = createSlice({
       );
     },
     removeWorkspaceFilterSet(state) {
-      const { active, all } = state.workspaces[state.explorerId];
-      delete state.workspaces[state.explorerId].all[active.id];
+      const { activeId, all } = state.workspaces[state.explorerId];
+      delete state.workspaces[state.explorerId].all[activeId];
 
       const [firstEntry] = Object.entries(all);
       const [id, filterSet] = firstEntry ?? [
@@ -116,7 +117,7 @@ const slice = createSlice({
         { filter: {} },
       ];
 
-      state.workspaces[state.explorerId].active = { id, filterSet };
+      state.workspaces[state.explorerId].activeId = id;
       state.workspaces[state.explorerId].all[id] = filterSet;
 
       // sync with exploreFilter
@@ -159,9 +160,8 @@ const slice = createSlice({
       state.explorerFilter = newFilter;
 
       // sync with workspaces
-      const { id } = state.workspaces[state.explorerId].active;
-      state.workspaces[state.explorerId].all[id].filter = newFilter;
-      state.workspaces[state.explorerId].active.filterSet.filter = newFilter;
+      const { activeId } = state.workspaces[state.explorerId];
+      state.workspaces[state.explorerId].all[activeId].filter = newFilter;
     },
     /** @param {PayloadAction<ExplorerState['patientIds']>} action */
     updatePatientIds(state, action) {
@@ -180,13 +180,12 @@ const slice = createSlice({
         const id = crypto.randomUUID();
         const filterSet = { filter: {} };
 
-        workspace = { active: { id, filterSet }, all: { [id]: filterSet } };
+        workspace = { activeId: id, all: { [id]: filterSet } };
         state.workspaces[explorerId] = workspace;
       }
 
       // sync with explorerFilter
-      const { filterSet } = workspace.active;
-      state.explorerFilter = filterSet.filter;
+      state.explorerFilter = workspace.all[workspace.activeId].filter;
     },
     /** @param {PayloadAction<ExplorerState['savedFilterSets']['active']['id']>} action */
     useFilterSetById(state, action) {
@@ -196,17 +195,17 @@ const slice = createSlice({
     },
     /** @param {PayloadAction<string>} action */
     useWorkspaceFilterSet(state, action) {
-      const id = action.payload;
-      const filterSet = state.workspaces[state.explorerId].all[id];
-
-      state.workspaces[state.explorerId].active = { id, filterSet };
+      const newActiveId = action.payload;
+      const { explorerId } = state;
+      state.workspaces[explorerId].activeId = newActiveId;
 
       // sync with exploreFilter
-      state.explorerFilter = filterSet.filter;
+      const { filter, id } = state.workspaces[explorerId].all[newActiveId];
+      state.explorerFilter = filter;
 
       // sync with savedFilterSets
       state.savedFilterSets.active = state.savedFilterSets.all.find(
-        (fs) => fs.id === filterSet.id
+        (filterSet) => filterSet.id === id
       );
     },
   },
@@ -218,9 +217,8 @@ const slice = createSlice({
         state.savedFilterSets.all.push(filterSet);
 
         // sync with workspaces
-        const { id } = state.workspaces[state.explorerId].active;
-        state.workspaces[state.explorerId].active.filterSet = filterSet;
-        state.workspaces[state.explorerId].all[id] = filterSet;
+        const { activeId } = state.workspaces[state.explorerId];
+        state.workspaces[state.explorerId].all[activeId] = filterSet;
       })
       .addCase(createFilterSet.rejected, (state) => {
         state.savedFilterSets.isError = true;
@@ -238,8 +236,10 @@ const slice = createSlice({
       .addCase(fetchFilterSets.fulfilled, (state, action) => {
         state.savedFilterSets.all = action.payload;
         state.savedFilterSets.active = state.savedFilterSets.all.find(
-          ({ id }) =>
-            id === state.workspaces[state.explorerId].active?.filterSet?.id
+          ({ id }) => {
+            const { activeId, all } = state.workspaces[state.explorerId];
+            return id === all[activeId]?.id;
+          }
         );
       })
       .addCase(fetchFilterSets.pending, (state) => {
@@ -261,9 +261,8 @@ const slice = createSlice({
         state.savedFilterSets.all[index] = filterSet;
 
         // sync with workspaces
-        const { id } = state.workspaces[state.explorerId].active;
-        state.workspaces[state.explorerId].active = { id, filterSet };
-        state.workspaces[state.explorerId].all[id] = filterSet;
+        const { activeId } = state.workspaces[state.explorerId];
+        state.workspaces[state.explorerId].all[activeId] = filterSet;
       })
       .addCase(updateFilterSet.rejected, (state) => {
         state.savedFilterSets.isError = true;

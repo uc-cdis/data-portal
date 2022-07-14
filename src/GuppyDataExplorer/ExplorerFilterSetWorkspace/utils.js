@@ -99,10 +99,10 @@ export function storeWorkspaceState({ explorerId, state }) {
 
 /**
  * @param {number} filterSetId
- * @param {FilterSetWorkspaceState} state
+ * @param {FilterSetWorkspaceState['all']} allFilterSets
  */
-export function findFilterSetIdInWorkspaceState(filterSetId, state) {
-  for (const [id, filterSet] of Object.entries(state.all))
+export function findFilterSetIdInWorkspaceState(filterSetId, allFilterSets) {
+  for (const [id, filterSet] of Object.entries(allFilterSets))
     if ('id' in filterSet && filterSet.id === filterSetId) return id;
 
   return undefined;

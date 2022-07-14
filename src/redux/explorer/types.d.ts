@@ -40,10 +40,7 @@ export type UnsavedExplorerFilterSet = {
 };
 
 export type ExplorerWorkspace = {
-  active: {
-    filterSet: ExplorerFilterSet | UnsavedExplorerFilterSet;
-    id: string;
-  };
+  activeId: string;
   all: {
     [id: string]: ExplorerFilterSet | UnsavedExplorerFilterSet;
   };
