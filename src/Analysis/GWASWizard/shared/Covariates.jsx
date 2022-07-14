@@ -1,26 +1,32 @@
 import React from 'react';
-import { covariateTableConfig, covariateSelection } from './constants';
-import { fetchCovariates, queryConfig } from "../wizard-endpoints/cohort-middleware-api";
 import { useQuery } from 'react-query';
 import { Table } from 'antd';
-import { Spinner } from "../../../components/Spinner";
+import { covariateTableConfig, covariateSelection } from './constants';
+import { fetchCovariates, queryConfig } from '../wizard-endpoints/cohort-middleware-api';
+import Spinner from '../../../components/Spinner';
 import '../../GWASUIApp/GWASUIApp.css';
+import { useFetch, useFilter } from "./form-hooks";
 
-const Covariates = ({ sourceId, searchTerm, selectedCovariates, handleCovariateSelect, page, handlePage }) => {
+const Covariates = ({ sourceId, searchTerm, selectedCovariates, handleCovariateSelect }) => {
     const covariates = useQuery(['covariates', sourceId], () => fetchCovariates(sourceId), queryConfig);
+    const fetchedCovariates = useFetch(covariates, "concepts");
+    const displayedCovariates = useFilter(fetchedCovariates, searchTerm, "concept_name");
 
-    return (<>{covariates ? (
-        (covariates.status === 'success') ? (
-            // covariates.data && covariates.data.concepts.length > 0 ?
+    return (<>
+        {(covariates?.status === 'success') ? (
             <Table
                 className='GWASUI-table2'
                 rowKey='concept_id'
-                pagination={{ pageSize: 10, onChange: (e) => handlePage(e), current: page }}
+                size='middle'
+                pagination={{ pageSize: 10 }}
                 rowSelection={covariateSelection(handleCovariateSelect, selectedCovariates)}
                 columns={covariateTableConfig}
-                //.filter((cov) => cov.concept_name.toLowerCase().includes(searchTerm.toLowerCase()))
-                dataSource={covariates.data.concepts}
-            />) : <span>is loading</span>) : <React.Fragment>Unexpected error: no convariates found!</React.Fragment>}</>)
-}
+                dataSource={displayedCovariates}
+            />
+        ) : <Spinner />
+    }</>)
+
+};
+
 
 export default Covariates;

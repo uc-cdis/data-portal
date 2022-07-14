@@ -1,28 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import CohortDefinitions from "./CohortDefinitions";
-import { InfoCircleOutlined } from '@ant-design/icons';
-
+import CohortDefinitions from './CohortDefinitions';
 import '../../GWASUIApp/GWASUIApp.css';
-import {
-    Space, Popover
-} from 'antd';
+import SearchBar from './SearchBar';
 
 
-const CohortSelect = ({ selectedCohort, handleCohortSelect, sourceId, otherCohortSelected = '' }) => {
-
-
+const CohortSelect = ({ selectedCohort, handleCohortSelect, sourceId, otherCohortSelected = ''}) => {
+    const [searchTerm, setSearchTerm] = useState('');
     return (
-        // <React.Fragment>
-        //     <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-        //         <h4 className='GWASUI-selectInstruction'>In this step, you will determine the study population. To begin, select the cohort that you would like to define your study population with.</h4>
-
-        //         <div className='GWASUI-mainTable'>
-                    <CohortDefinitions selectedCohort={selectedCohort} handleCohortSelect={handleCohortSelect} sourceId={sourceId} otherCohortSelected={otherCohortSelected}></CohortDefinitions>
-        //         </div>
-        //     </Space>
-        // </React.Fragment>
+    <div>
+        <SearchBar searchTerm={searchTerm} handleSearch={setSearchTerm} fields={'cohort name...'}/>
+         <CohortDefinitions
+         selectedCohort={selectedCohort}
+         handleCohortSelect={handleCohortSelect}
+         sourceId={sourceId}
+         searchTerm={searchTerm}
+         otherCohortSelected={otherCohortSelected} />
+    </div>
     )
 }
-
 
 export default CohortSelect;

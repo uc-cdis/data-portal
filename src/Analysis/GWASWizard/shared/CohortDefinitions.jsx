@@ -1,26 +1,34 @@
-import React from 'react';
-import { fetchCohortDefinitions, queryConfig } from "../wizard-endpoints/cohort-middleware-api";
+import React, { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
-import { Spinner } from "../../../components/Spinner";
 import { Space, Table, Popover } from 'antd';
+import { fetchCohortDefinitions, queryConfig } from '../wizard-endpoints/cohort-middleware-api';
+import Spinner from '../../../components/Spinner';
 import { cohortTableConfig, cohortSelection } from './constants';
 import '../../GWASUIApp/GWASUIApp.css';
+import { useFetch, useFilter } from "./form-hooks";
 
-const CohortDefinitions = ({ sourceId, selectedCohort, handleCohortSelect, otherCohortSelected }) => {
+
+const CohortDefinitions = ({
+    sourceId, selectedCohort, handleCohortSelect, otherCohortSelected, searchTerm
+}) => {
     const cohorts = useQuery(['cohortdefinitions', sourceId], () => fetchCohortDefinitions(sourceId), queryConfig);
+    const fetchedCohorts = useFetch(cohorts, "cohort_definitions_and_stats");
+    const displayedCohorts = useFilter(fetchedCohorts, searchTerm, "cohort_name");
 
     return (cohorts ? (
-        (cohorts.status === 'success') ? (<Table
-            className='GWASUI-table1'
-            rowKey='cohort_definition_id'
-            size='middle'
-            pagination={{ pageSize: 10 }}
-            rowSelection={cohortSelection(handleCohortSelect, selectedCohort, otherCohortSelected)}
-            columns={cohortTableConfig}
-            dataSource={cohorts.data.cohort_definitions_and_stats} // many entries w/ size 0 in prod .filter((x) => x.size > 0)
-        />) : <span>Something went wrong.</span>
+        (cohorts.status === 'success') ? (
+            <Table
+                className='GWASUI-table1'
+                rowKey='cohort_definition_id'
+                size='middle'
+                pagination={{ pageSize: 10 }}
+                rowSelection={cohortSelection(handleCohortSelect, selectedCohort, otherCohortSelected)}
+                columns={cohortTableConfig}
+                dataSource={displayedCohorts}
+            />
+        ) : <span>Something went wrong.</span>
     )
-        : <Spinner />)
+        : <Spinner />);
 };
 
 export default CohortDefinitions;

@@ -46,7 +46,7 @@ const GWASJob = ({ workflow, refreshWorkflows }) => {
       buttonText = 'view logs';
       buttonClickHandler = handleWorkflowLogs;
     }
-    if (['Succeeded','Failed'].includes(phase)) {
+    if (['Succeeded', 'Failed'].includes(phase)) {
       actionButtons.unshift(
         <Button
           primary='true'
@@ -165,7 +165,7 @@ const GWASJob = ({ workflow, refreshWorkflows }) => {
     if (status === 'error') {
       return <React.Fragment />;
     }
-    const finishedAt = (data.finishedAt === null) ? "" : data.finishedAt;
+    const finishedAt = (data.finishedAt === null) ? '' : data.finishedAt;
     return (
       <React.Fragment>
         <List.Item
@@ -173,10 +173,12 @@ const GWASJob = ({ workflow, refreshWorkflows }) => {
         >
           <List.Item.Meta
             title={`Run ID: ${data.name}`}
-            description={<dl>
-              <dt>Workflow Name: {data.wf_name}</dt>
-              <dt>Started at {data.startedAt} and finished at {finishedAt}</dt>
-            </dl>}
+            description={(
+              <dl>
+                <dt>Workflow Name: {data.wf_name}</dt>
+                <dt>Started at {data.startedAt} and finished at {finishedAt}</dt>
+              </dl>
+            )}
 
           />
           <div>{getStatusTag(data.phase)}</div>

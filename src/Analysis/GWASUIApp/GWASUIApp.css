@@ -90,13 +90,27 @@
   margin-right: 2rem;
 }
 
-.GWASUI-searchInput {
+.GWASUI-searchContainer {
+  border: 1px solid black;
+  background-color: white;
   align-items: center;
-  width: 240px;
-  border-radius: 2px;
-  padding: 10px;
+  border-radius: 5px;
+  padding: 8px;
+  margin-top: 5px;
+  width: 100%;
+}
+
+.GWASUI-searchInput {
+  padding: 5px;
   font-size: 14px;
   font-style: italic;
+  border: none;
+  width: 90%;
+}
+
+.GWASUI-searchInput:focus {
+  outline-color: transparent;
+  outline-style: none;
 }
 
 .GWASUI-typeSelector {
@@ -239,4 +253,18 @@
 
 .GWASUI-cdBtnContainer {
   width: 200px;
+}
+
+.GWASUI-align {
+  margin: auto;
+  padding: 5px;
+}
+
+.GWASUI-form {
+  justify-content: space-between;
+}
+
+.GWASUI-formItem {
+  margin: 5px;
+  padding: 2px;
 }

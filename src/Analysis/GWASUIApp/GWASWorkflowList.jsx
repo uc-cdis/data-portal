@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
 import { gwasWorkflowPath } from '../../localconf';
 import GWASJob from './GWASJob';
-import Spinner from "../../components/Spinner";
+import Spinner from '../../components/Spinner';
 
 const GWASWorkflowList = ({ refreshWorkflows }) => {
   const { Panel } = Collapse;
