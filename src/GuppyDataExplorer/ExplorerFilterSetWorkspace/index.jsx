@@ -74,22 +74,15 @@ function ExplorerFilterSetWorkspace() {
     if (foundId !== undefined) {
       workspace.use(foundId);
     } else {
-      const shouldOverwrite = checkIfFilterEmpty(
-        workspace.active.filterSet.filter
-      );
-      workspace.load(loaded, shouldOverwrite);
+      workspace.load(loaded);
     }
     closeActionForm();
   }
   /** @param {ExplorerFilterSet} saved */
   async function handleSave(saved) {
     try {
-      let filterSet = saved;
-      if (saved.id === undefined)
-        filterSet = await dispatch(createFilterSet(saved)).unwrap();
+      if (saved.id === undefined) await dispatch(createFilterSet(saved));
       else await dispatch(updateFilterSet(saved));
-
-      workspace.load(filterSet, true);
     } finally {
       closeActionForm();
     }
