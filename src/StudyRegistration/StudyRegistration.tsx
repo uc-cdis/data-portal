@@ -130,7 +130,11 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
     });
   }, [formSubmissionStatus, location.state, props.userAuthMapping]);
 
-  useEffect(() => form.resetFields(), [studyUID, form]);
+  useEffect(() => {
+    if (studies?.map((study) => study[studyRegistrationConfig.studyRegistrationUIDField]).includes(studyUID) && studyUID !== null) {
+      form.resetFields();
+    }
+  }, [studyUID, form, studies]);
 
   const userHasAccess = () => {
     if (!useArboristUI) {
