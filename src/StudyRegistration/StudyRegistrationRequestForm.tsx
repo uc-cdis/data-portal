@@ -241,39 +241,37 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
           >
             <Input />
           </Form.Item>
-          <Form.Item label='Role on Project'>
-            <Form.Item
-              name='Role on Project'
-              noStyle
-              initialValue={role}
-              rules={[{ required: true, message: 'Please select a role' }]}
-            >
-              <Radio.Group onChange={onRadioChange} value={role}>
-                <Space direction='vertical'>
-                  <Radio value={'Principal Investigator'}>Principal Investigator</Radio>
-                  <Radio value={'Co-Principal Investigator'}>Co-Principal Investigator</Radio>
-                  <Radio value={'Co-Investigator'}>Co-Investigator</Radio>
-                  <Radio value={'Administrator'}>Administrator</Radio>
-                  <Radio value={'Clinical Collaborator'}>Clinical Collaborator</Radio>
-                  <Radio value={'Clinical Coordinator'}>Clinical Coordinator</Radio>
-                  <Radio value={'Data Analyst'}>Data Analyst</Radio>
-                  <Radio value={'Data Manager'}>Data Manager</Radio>
-                  <Radio value={'Research Coordinator'}>Research Coordinator</Radio>
-                  <Radio value={'Other'}>
+          <Form.Item
+            label='Role on Project'
+            name='Role on Project'
+            initialValue={role}
+            rules={[{ required: true, message: 'Please select a role' }]}
+          >
+            <Radio.Group onChange={onRadioChange} value={role}>
+              <Space direction='vertical'>
+                <Radio value={'Principal Investigator'}>Principal Investigator</Radio>
+                <Radio value={'Co-Principal Investigator'}>Co-Principal Investigator</Radio>
+                <Radio value={'Co-Investigator'}>Co-Investigator</Radio>
+                <Radio value={'Administrator'}>Administrator</Radio>
+                <Radio value={'Clinical Collaborator'}>Clinical Collaborator</Radio>
+                <Radio value={'Clinical Coordinator'}>Clinical Coordinator</Radio>
+                <Radio value={'Data Analyst'}>Data Analyst</Radio>
+                <Radio value={'Data Manager'}>Data Manager</Radio>
+                <Radio value={'Research Coordinator'}>Research Coordinator</Radio>
+                <Radio value={'Other'}>
                   Other...
-                    {role === 'Other' ? (
-                      <Form.Item
-                        name='Custom Role'
-                        noStyle
-                        rules={[{ required: true, message: 'Please provide a role' }]}
-                      >
-                        <Input style={{ width: 200, marginLeft: 8 }} />
-                      </Form.Item>
-                    ) : null}
-                  </Radio>
-                </Space>
-              </Radio.Group>
-            </Form.Item>
+                  {role === 'Other' ? (
+                    <Form.Item
+                      name='Custom Role'
+                      noStyle
+                      rules={[{ required: true, message: 'Please provide a role' }]}
+                    >
+                      <Input style={{ width: 200, marginLeft: 8 }} />
+                    </Form.Item>
+                  ) : null}
+                </Radio>
+              </Space>
+            </Radio.Group>
           </Form.Item>
           <Form.Item {...tailLayout}>
             <Space>
