@@ -12,6 +12,10 @@ import type {
   SurvivalAnalysisConfig,
   TableConfig,
 } from '../../GuppyDataExplorer/types';
+import type {
+  ParsedSurvivalAnalysisResult,
+  SurvivalAnalysisResult,
+} from '../../GuppyDataExplorer/ExplorerSurvivalAnalysis/types';
 
 export type ExplorerConfig = {
   adminAppliedPreFilters?: {
@@ -55,6 +59,12 @@ export type ExplorerState = {
   savedFilterSets: {
     data: ExplorerFilterSet[];
     isError: boolean;
+  };
+  survivalAnalysisResult: {
+    data: SurvivalAnalysisResult;
+    error: Error;
+    isPending: boolean;
+    parsed: ParsedSurvivalAnalysisResult;
   };
   workspaces: {
     [explorerId: ExplorerState['explorerId']]: ExplorerWorkspace;

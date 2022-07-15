@@ -112,3 +112,29 @@ export function initializeWorkspaces(explorerId) {
     };
   }
 }
+
+/**
+ * @param {{ name: string }} a a.name has a format: [index]. [filterSetName]
+ * @param {{ name: string }} b b.name has a format: [index]. [filterSetName]
+ */
+function sortByIndexCompareFn(a, b) {
+  const [aIndex] = a.name.split('.');
+  const [bIndex] = b.name.split('.');
+  return Number.parseInt(aIndex, 10) - Number.parseInt(bIndex, 10);
+}
+
+export function parseSurvivalResult({ config, result }) {
+  if (result === null) return {};
+
+  /** @type {import('./types').ExplorerState['survivalAnalysisResult']['parsed']} */
+  const parsed = { count: {}, risktable: [], survival: [] };
+  const { count: c, risktable: r, survival: s } = parsed;
+  for (const { name, count, risktable, survival } of Object.values(result)) {
+    if (count !== undefined) c[name.split('. ')[1]] = count;
+    if (config.result?.risktable) r.push({ data: risktable, name });
+    if (config.result?.survival) s.push({ data: survival, name });
+  }
+  r.sort(sortByIndexCompareFn);
+  s.sort(sortByIndexCompareFn);
+  return parsed;
+}

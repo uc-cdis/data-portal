@@ -5,11 +5,13 @@ import {
   deleteFilterSet,
   fetchFilterSets,
   updateFilterSet,
+  updateSurvivalResult,
 } from './asyncThunks';
 import {
   checkIfFilterEmpty,
   getCurrentConfig,
   initializeWorkspaces,
+  parseSurvivalResult,
 } from './utils';
 
 /**
@@ -43,6 +45,12 @@ const slice = createSlice({
     savedFilterSets: {
       data: [],
       isError: false,
+    },
+    survivalAnalysisResult: {
+      data: {},
+      error: null,
+      isPending: false,
+      parsed: { count: {}, risktable: [], survival: [] },
     },
     workspaces: initialWorkspaces,
   }),
@@ -267,6 +275,25 @@ const slice = createSlice({
       })
       .addCase(updateFilterSet.rejected, (state) => {
         state.savedFilterSets.isError = true;
+      })
+      .addCase(updateSurvivalResult.fulfilled, (state, action) => {
+        const result = action.payload;
+        state.survivalAnalysisResult.data = result;
+        state.survivalAnalysisResult.isPending = false;
+        state.survivalAnalysisResult.parsed = parseSurvivalResult({
+          result,
+          config: state.config.survivalAnalysisConfig,
+        });
+      })
+      .addCase(updateSurvivalResult.pending, (state) => {
+        state.survivalAnalysisResult.error = null;
+        state.survivalAnalysisResult.isPending = true;
+      })
+      .addCase(updateSurvivalResult.rejected, (state, action) => {
+        state.survivalAnalysisResult.data = null;
+        state.survivalAnalysisResult.error = Error(String(action.payload));
+        state.survivalAnalysisResult.isPending = false;
+        state.survivalAnalysisResult.parsed = null;
       });
   },
 });
