@@ -5,6 +5,7 @@ import * as survivalAnalysisAPI from './survivalAnalysisAPI';
 
 /** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('../types').AppGetState} AppGetState */
+/** @typedef {import('./types').ExplorerState} ExplorerState */
 
 export const createFilterSet = createAsyncThunk(
   'explorer/createFilterSet',
@@ -70,6 +71,7 @@ export const updateSurvivalResult = createAsyncThunk(
     const { explorer } = /** @type {AppGetState} */ (getState)();
     const result = explorer.survivalAnalysisResult.data;
 
+    /** @type {ExplorerState['survivalAnalysisResult']['data']} */
     const cache = {};
     const filterSets = [];
     const usedFilterSetIds = [];

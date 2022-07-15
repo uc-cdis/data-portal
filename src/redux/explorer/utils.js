@@ -6,6 +6,7 @@ import { capitalizeFirstLetter } from '../../utils';
 /** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSetDTO} ExplorerFilterSetDTO */
 /** @typedef {import('../../GuppyDataExplorer/types').SurvivalAnalysisConfig} SurvivalAnalysisConfig */
+/** @typedef {import('./types').ExplorerState} ExplorerState */
 
 /**
  * @param {ExplorerFilterSet} filterSet
@@ -123,10 +124,15 @@ function sortByIndexCompareFn(a, b) {
   return Number.parseInt(aIndex, 10) - Number.parseInt(bIndex, 10);
 }
 
+/**
+ * @param {Object} args
+ * @param {ExplorerState['config']['survivalAnalysisConfig']} args.config
+ * @param {ExplorerState['survivalAnalysisResult']['data']} args.result
+ * @returns {ExplorerState['survivalAnalysisResult']['parsed']}
+ */
 export function parseSurvivalResult({ config, result }) {
   if (result === null) return {};
 
-  /** @type {import('./types').ExplorerState['survivalAnalysisResult']['parsed']} */
   const parsed = { count: {}, risktable: [], survival: [] };
   const { count: c, risktable: r, survival: s } = parsed;
   for (const { name, count, risktable, survival } of Object.values(result)) {

@@ -18,6 +18,7 @@ import { fetchWithCreds } from '../utils.fetch';
  * @param {SurvivalFilterSetDTO[]} body.filterSets
  * @param {ExplorerConfig['survivalAnalysisConfig']['result']} body.result
  * @param {SurvivalFilterSetDTO['id'][]} body.usedFilterSetIds
+ * @returns {Promise<ExplorerState['survivalAnalysisResult']['data']>}
  */
 export function fetchResult(body) {
   return fetchWithCreds({
