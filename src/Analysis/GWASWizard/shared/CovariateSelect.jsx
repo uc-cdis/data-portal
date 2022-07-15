@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import Covariates from './Covariates';
-import SearchBar from './SearchBar';
+import { SearchBar } from './SearchBar';
 import '../../GWASUIApp/GWASUIApp.css';
 
 const CovariateSelect = ({ sourceId, selectedCovariates, handleCovariateSelect }) => {
-    const [searchTerm, setSearchTerm] = useState('');
+    const [covariateSearchTerm, setCovariateSearchTerm] = useState('');
+
+    const handleCovariateSearch = (searchTerm) => {
+        setCovariateSearchTerm(searchTerm);
+    }
 
     return (
         <div>
-            <SearchBar searchTerm={searchTerm} handleSearch={setSearchTerm} fields={"concept name..."}/>
+            <SearchBar
+            searchTerm={covariateSearchTerm}
+            handleSearch={handleCovariateSearch}
+            fields={"concept name..."}/>
             <Covariates
             sourceId={sourceId}
-            searchTerm={searchTerm}
+            searchTerm={covariateSearchTerm}
             selectedCovariates={selectedCovariates}
             handleCovariateSelect={handleCovariateSelect}/>
         </div>

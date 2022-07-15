@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQueries } from 'react-query';
 import { fetchConceptStatsByHare, queryConfig } from "./wizard-endpoints/cohort-middleware-api";
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
@@ -7,9 +7,10 @@ import Spinner from '../../components/Spinner';
 const CovariateStatsByHareCC = ({ selectedHare, caseCohortDefinitionId, controlCohortDefinitionId, selectedCovariates, selectedDichotomousCovariates, sourceId, handleHareSelect }) => {
     const results = useQueries([
         // .map((cov) => cov.concept_id), sourceId)
-        { queryKey: ['conceptsstats', selectedCovariates, caseCohortDefinitionId], queryFn: () => fetchConceptStatsByHare(caseCohortDefinitionId, selectedCovariates, selectedDichotomousCovariates, sourceId), ...queryConfig },
-        { queryKey: ['conceptsstats', selectedCovariates, controlCohortDefinitionId], queryFn: () => fetchConceptStatsByHare(controlCohortDefinitionId, selectedCovariates, selectedDichotomousCovariates, sourceId), ...queryConfig },
+        { queryKey: ['conceptsstats', selectedCovariates, selectedDichotomousCovariates, caseCohortDefinitionId], queryFn: () => fetchConceptStatsByHare(caseCohortDefinitionId, selectedCovariates, selectedDichotomousCovariates, sourceId), ...queryConfig },
+        { queryKey: ['conceptsstats', selectedCovariates, selectedDichotomousCovariates, controlCohortDefinitionId], queryFn: () => fetchConceptStatsByHare(controlCohortDefinitionId, selectedCovariates, selectedDichotomousCovariates, sourceId), ...queryConfig },
     ]);
+    const [selectedHareDescription, setSelectedHareDescription] = useState('-select one of the ancestry groups below-');
     const statusCase = results[0].status;
     const statusControl = results[1].status;
     const dataCase = results[0].data;
@@ -32,7 +33,8 @@ const CovariateStatsByHareCC = ({ selectedHare, caseCohortDefinitionId, controlC
       }
     }
     console.log(`getSelectedCaseAndControlBreakdownItems called w/ concept_value: ${concept_value}, allCaseHareBreakDownItems: ${allCaseHareBreakDownItems}`, `allControlHareBreakDownItems: ${allControlHareBreakDownItems}`);
-    console.log(`result [selectedCasedHareBreakDownItem, selectedControlHareBreakDownItem]:`, [selectedCasedHareBreakDownItem, selectedControlHareBreakDownItem]);
+    const result = [selectedCasedHareBreakDownItem, selectedControlHareBreakDownItem];
+    console.log(`result [selectedCasedHareBreakDownItem, selectedControlHareBreakDownItem]:`, result);
     return [selectedCasedHareBreakDownItem, selectedControlHareBreakDownItem];
   };
 
@@ -41,9 +43,9 @@ const CovariateStatsByHareCC = ({ selectedHare, caseCohortDefinitionId, controlC
     const getHareAndDescriptionUsingValueAndBreakDownItems = (concept_value, allCaseHareBreakDownItems, allControlHareBreakDownItems) => {
         const selectedBreakDownItems = getSelectedCaseAndControlBreakdownItems(concept_value,
           allCaseHareBreakDownItems, allControlHareBreakDownItems);
-        // const selectedCasedHareBreakDownItem = selectedBreakDownItems[0];
-        // const selectedControlHareBreakDownItem = selectedBreakDownItems[1];
-        return `${caseHareBreakDownItem.concept_value_name} (sizes: ${selectedBreakDownItems[0].persons_in_cohort_with_value}, ${selectedBreakDownItems[1].persons_in_cohort_with_value})`
+        const selectedCasedHareBreakDownItem = selectedBreakDownItems[0];
+        const selectedControlHareBreakDownItem = selectedBreakDownItems[1];
+        return `${selectedCasedHareBreakDownItem.concept_value_name} (sizes: ${selectedCasedHareBreakDownItem.persons_in_cohort_with_value}, ${selectedControlHareBreakDownItem.persons_in_cohort_with_value})`
         // return getHareAndDescription(selectedCasedHareBreakDownItem, selectedControlHareBreakDownItem);
       };
 
@@ -92,7 +94,7 @@ const CovariateStatsByHareCC = ({ selectedHare, caseCohortDefinitionId, controlC
                                 <Dropdown.Item
                                     key={`${datum.concept_value}`}
                                     value={`${datum.concept_value}`}
-                                    onClick={() => { setSelectedHare(datum.concept_value); setSelectedHareValueAsConceptId(datum.concept_value_as_concept_id); setSelectedHareValueName(datum.concept_value_name); }}
+                                    // onClick={() => { setSelectedHare(datum.concept_value); setSelectedHareValueAsConceptId(datum.concept_value_as_concept_id); setSelectedHareValueName(datum.concept_value_name); }}
                                 >
                                     {<div>{getHareAndDescriptionUsingValueAndBreakDownItems(datum.concept_value, dataCase.concept_breakdown, dataControl.concept_breakdown)}</div>}
                                 </Dropdown.Item>

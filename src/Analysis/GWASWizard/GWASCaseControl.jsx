@@ -44,9 +44,13 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
         });
     }
 
+    const handleHareSelect = (hare) => {
+        setSelectedHare(hare);
+    }
+
     useEffect(() => {
         console.log('selectedDichotomousCovariates!', selectedDichotomousCovariates);
-    }, [selectedDichotomousCovariates])
+    }, [selectedDichotomousCovariates]);
 
     const resetFields = () => {
         // TODO reset to initial state
@@ -89,17 +93,17 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             case 2:
                 return (
                     <>
-                    <React.Fragment>
-                        <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                            <h4 className='GWASUI-selectInstruction'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
-                            <div className='GWASUI-mainTable'>
-                                <CovariateSelect
-                                    selectedCovariates={selectedCovariates}
-                                    handleCovariateSelect={handleCovariateSelect}
-                                    sourceId={sourceId} />
-                            </div>
-                        </Space>
-                    </React.Fragment>
+                        <React.Fragment>
+                            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+                                <h4 className='GWASUI-selectInstruction'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
+                                <div className='GWASUI-mainTable'>
+                                    <CovariateSelect
+                                        selectedCovariates={selectedCovariates}
+                                        handleCovariateSelect={handleCovariateSelect}
+                                        sourceId={sourceId} />
+                                </div>
+                            </Space>
+                        </React.Fragment>
                     </>
                 );
             case 3:
@@ -132,8 +136,8 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
                             selectedCovariates={selectedCovariates}
                             selectedDichotomousCovariates={selectedDichotomousCovariates}
                             sourceId={sourceId} workflowType={"caseControl"}
-                            selectedHare={selectedHare}>
-                        </WorkflowParameters>
+                            selectedHare={selectedHare}
+                            handleHareSelect={handleHareSelect} />
                     </React.Fragment>
                 )
             case 6:
