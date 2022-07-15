@@ -16,9 +16,6 @@ import './ExplorerSurvivalAnalysis.css';
 
 function ExplorerSurvivalAnalysis() {
   const dispatch = useAppDispatch();
-  const config = useAppSelector(
-    (state) => state.explorer.config.survivalAnalysisConfig
-  );
   const result = useAppSelector(
     (state) => state.explorer.survivalAnalysisResult
   );
@@ -52,7 +49,7 @@ function ExplorerSurvivalAnalysis() {
         <>
           <div className='explorer-survival-analysis__column-left'>
             <ControlForm
-              countByFilterSet={result.parsed?.count}
+              countByFilterSet={result.parsed.count}
               onSubmit={handleSubmit}
               timeInterval={timeInterval}
             />
@@ -82,17 +79,17 @@ function ExplorerSurvivalAnalysis() {
                   </div>
                 }
               >
-                {config.result?.survival && (
+                {'survival' in result.parsed && (
                   <SurvivalPlot
-                    data={result.parsed?.survival}
+                    data={result.parsed.survival}
                     endTime={endTime}
                     startTime={startTime}
                     timeInterval={timeInterval}
                   />
                 )}
-                {config.result?.risktable && (
+                {'risktable' in result.parsed && (
                   <RiskTable
-                    data={result.parsed?.risktable}
+                    data={result.parsed.risktable}
                     endTime={endTime}
                     startTime={startTime}
                     timeInterval={timeInterval}

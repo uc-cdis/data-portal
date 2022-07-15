@@ -47,10 +47,13 @@ const slice = createSlice({
       isError: false,
     },
     survivalAnalysisResult: {
-      data: {},
+      data: null,
       error: null,
       isPending: false,
-      parsed: { count: {}, risktable: [], survival: [] },
+      parsed: parseSurvivalResult({
+        config: initialConfig.survivalAnalysisConfig,
+        result: null,
+      }),
     },
     workspaces: initialWorkspaces,
   }),
@@ -293,7 +296,7 @@ const slice = createSlice({
         state.survivalAnalysisResult.data = null;
         state.survivalAnalysisResult.error = Error(String(action.payload));
         state.survivalAnalysisResult.isPending = false;
-        state.survivalAnalysisResult.parsed = null;
+        state.survivalAnalysisResult.parsed = {};
       });
   },
 });

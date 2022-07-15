@@ -131,16 +131,17 @@ function sortByIndexCompareFn(a, b) {
  * @returns {ExplorerState['survivalAnalysisResult']['parsed']}
  */
 export function parseSurvivalResult({ config, result }) {
-  const parsed = { count: {}, risktable: [], survival: [] };
+  const parsed = { count: {} };
+  if (config.result?.risktable) parsed.risktable = [];
+  if (config.result?.survival) parsed.survival = [];
   if (result === null) return parsed;
 
-  const { count: c, risktable: r, survival: s } = parsed;
   for (const { name, count, risktable, survival } of Object.values(result)) {
-    if (count !== undefined) c[name.split('. ')[1]] = count;
-    if (config.result?.risktable) r.push({ data: risktable, name });
-    if (config.result?.survival) s.push({ data: survival, name });
+    if (count !== undefined) parsed.count[name.split('. ')[1]] = count;
+    parsed.risktable?.push({ data: risktable, name });
+    parsed.survival?.push({ data: survival, name });
   }
-  r.sort(sortByIndexCompareFn);
-  s.sort(sortByIndexCompareFn);
+  parsed.risktable?.sort(sortByIndexCompareFn);
+  parsed.survival?.sort(sortByIndexCompareFn);
   return parsed;
 }
