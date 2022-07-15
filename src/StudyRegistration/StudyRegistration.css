@@ -14,9 +14,14 @@
 }
 
 .study-reg-form {
-    padding: 0 5rem 0 5rem;
-    width: 60%;
-    min-width: 50%;
+    width: 100%;
+}
+
+@media screen and (min-width: 1280px) {
+    .study-reg-form {
+        width: 60%;
+        min-width: 50%;
+    }
 }
 
 .study-reg-form-item {
