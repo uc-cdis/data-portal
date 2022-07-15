@@ -252,7 +252,8 @@
 }
 
 .GWASUI-cdBtnContainer {
-  width: 200px;
+  width: 100%;
+  justify-content: center;
 }
 
 .GWASUI-align {
@@ -267,4 +268,8 @@
 .GWASUI-formItem {
   margin: 5px;
   padding: 2px;
+}
+
+.GWASUI-cdNameInput {
+  width: 600px;
 }

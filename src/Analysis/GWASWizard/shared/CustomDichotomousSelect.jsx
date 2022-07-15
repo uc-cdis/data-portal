@@ -33,26 +33,30 @@ const CustomDichotomousSelect = ({ handleCDAdd, selectedDichotomousCovariates, s
         {!editMode && (<div className="GWASUI-cdBtnContainer GWASUI-align"><button onClick={() => setEditMode(true)}><PlusOutlined /><span className="GWASUI-btnText">Add Custom Dichotomous</span></button></div>)}
         {editMode && (
             <React.Fragment>
-                <div className="GWASUI-flexRow">
-                    <input
-                        type="text"
-                        autoFocus="autoFocus"
-                        className="GWASUI-align"
-                        onChange={(e) => setCdName(e.target.value)}
-                        value={cdName}
-                        placeholder="Enter a name for custom dichotomous selection"
-                        style={{ width: '70%', height: '90%' }}
-                    />
-                </div>
-                <div className="GWASUI-flexRow">
-                    <div className="GWASUI-flexCol GWASUI-subTable">
-                        <CohortSelect selectedCohort={firstCohort} handleCohortSelect={setFirstCohort} sourceId={sourceId} otherCohortSelected={secondCohort ? secondCohort.cohort_name : ''}></CohortSelect>
+                <div className="GWASUI-align">
+                    <div className="GWASUI-flexRow">
+                        <div className="GWASUI-searchContainer">
+                        <input
+                            type="text"
+                            autoFocus="autoFocus"
+                            className="GWASUI-searchInput"
+                            onChange={(e) => setCdName(e.target.value)}
+                            value={cdName}
+                            placeholder="Enter a name for custom dichotomous selection"
+                            style={{ width: '70%', height: '90%' }}
+                        />
+                        </div>
                     </div>
-                    <div className="GWASUI-flexCol GWASUI-subTable">
-                        <CohortSelect selectedCohort={secondCohort} handleCohortSelect={setSecondCohort} sourceId={sourceId} otherCohortSelected={firstCohort ? firstCohort.cohort_name : ''}></CohortSelect>
+                    <div className="GWASUI-flexRow">
+                        <div className="GWASUI-flexCol GWASUI-subTable">
+                            <CohortSelect selectedCohort={firstCohort} handleCohortSelect={setFirstCohort} sourceId={sourceId} otherCohortSelected={secondCohort ? secondCohort.cohort_name : ''}></CohortSelect>
+                        </div>
+                        <div className="GWASUI-flexCol GWASUI-subTable">
+                            <CohortSelect selectedCohort={secondCohort} handleCohortSelect={setSecondCohort} sourceId={sourceId} otherCohortSelected={firstCohort ? firstCohort.cohort_name : ''}></CohortSelect>
+                        </div>
                     </div>
-                </div>
-                <div>
+                    <div>
+                    </div>
                     <button disabled={isCDEnabled()} onClick={() => handleCDSubmit()}>Add</button>
                 </div>
             </React.Fragment>
