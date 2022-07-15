@@ -63,7 +63,7 @@ function TopBar({ config, isAdminUser, onLogoutClick, username }) {
       <div className='top-bar__menu-group'>
         {(documents.data?.length > 0 || documents.isError) && (
           <TopBarMenu
-            buttonIcon={<FontAwesomeIcon icon='circle-question' />}
+            buttonIcon={<FontAwesomeIcon icon='circle-info' />}
             title='Documents'
           >
             {documents.isError ? (
