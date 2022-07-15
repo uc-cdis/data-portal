@@ -281,8 +281,8 @@ const slice = createSlice({
         state.survivalAnalysisResult.data = result;
         state.survivalAnalysisResult.isPending = false;
         state.survivalAnalysisResult.parsed = parseSurvivalResult({
-          result,
           config: state.config.survivalAnalysisConfig,
+          result,
         });
       })
       .addCase(updateSurvivalResult.pending, (state) => {
