@@ -8,7 +8,8 @@ import { hostname, discoveryConfig, useArboristUI } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
 import loadStudiesFromAggMDS from './aggMDSUtils';
 
-const loadStudiesFromMDS = async (): Promise<any[]> => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const loadStudiesFromMDS = async (_config): Promise<any[]> => {
   // Why `_guid_type='discovery_metadata'? We need to distinguish the discovery page studies in MDS
   // from other data in MDS. So all MDS records with `_guid_type='discovery_metadata'` should be
   // the full list of studies for this commons.
@@ -81,7 +82,7 @@ const DiscoveryWithMDSBackend: React.FC<{
     } else {
       loadStudiesFunction = loadStudiesFromMDS;
     }
-    loadStudiesFunction().then((rawStudies) => {
+    loadStudiesFunction(props.config).then((rawStudies) => {
       let studiesToSet;
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user

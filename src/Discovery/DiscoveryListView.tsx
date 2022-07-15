@@ -70,7 +70,6 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
 
           const { manifestFieldName } = exportToWorkspaceConfig;
-          console.log(record[manifestFieldName]);
           if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
             disabled = true;
           }

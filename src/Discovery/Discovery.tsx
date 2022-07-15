@@ -80,7 +80,7 @@ export const renderFieldContent = (content: any, contentType: 'string'|'paragrap
     if (Array.isArray(content)) {
       return content.join(', ');
     }
-    return content.toLocaleString();
+    return content ? content.toLocaleString() : 'N/A';
   case 'paragraphs':
     return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
   case 'link':
