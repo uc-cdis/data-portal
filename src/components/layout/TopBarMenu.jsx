@@ -41,7 +41,7 @@ TopBarMenu.propTypes = {
   title: PropTypes.string,
 };
 
-/** @param {{ children: React.ReactNode }} */
+/** @param {{ children: React.ReactNode }} children */
 function Item({ children }) {
   return <li className='top-bar-menu__item'>{children}</li>;
 }
