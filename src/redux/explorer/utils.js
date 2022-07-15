@@ -6,6 +6,7 @@ import { capitalizeFirstLetter } from '../../utils';
 /** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSetDTO} ExplorerFilterSetDTO */
 /** @typedef {import('../../GuppyDataExplorer/types').SurvivalAnalysisConfig} SurvivalAnalysisConfig */
+/** @typedef {import('./types').ExplorerState} ExplorerState */
 
 /**
  * @param {ExplorerFilterSet} filterSet
@@ -111,4 +112,36 @@ export function initializeWorkspaces(explorerId) {
       [explorerId]: { activeId, all: { [activeId]: filterSet } },
     };
   }
+}
+
+/**
+ * @param {{ name: string }} a a.name has a format: [index]. [filterSetName]
+ * @param {{ name: string }} b b.name has a format: [index]. [filterSetName]
+ */
+function sortByIndexCompareFn(a, b) {
+  const [aIndex] = a.name.split('.');
+  const [bIndex] = b.name.split('.');
+  return Number.parseInt(aIndex, 10) - Number.parseInt(bIndex, 10);
+}
+
+/**
+ * @param {Object} args
+ * @param {ExplorerState['config']['survivalAnalysisConfig']} args.config
+ * @param {ExplorerState['survivalAnalysisResult']['data']} args.result
+ * @returns {ExplorerState['survivalAnalysisResult']['parsed']}
+ */
+export function parseSurvivalResult({ config, result }) {
+  const parsed = { count: {} };
+  if (config.result?.risktable) parsed.risktable = [];
+  if (config.result?.survival) parsed.survival = [];
+  if (result === null) return parsed;
+
+  for (const { name, count, risktable, survival } of Object.values(result)) {
+    if (count !== undefined) parsed.count[name.split('. ')[1]] = count;
+    parsed.risktable?.push({ data: risktable, name });
+    parsed.survival?.push({ data: survival, name });
+  }
+  parsed.risktable?.sort(sortByIndexCompareFn);
+  parsed.survival?.sort(sortByIndexCompareFn);
+  return parsed;
 }
