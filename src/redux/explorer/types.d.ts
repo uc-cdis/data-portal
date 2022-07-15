@@ -65,6 +65,7 @@ export type ExplorerState = {
     error: Error;
     isPending: boolean;
     parsed: ParsedSurvivalAnalysisResult;
+    usedFilterSetIds: number[];
   };
   workspaces: {
     [explorerId: ExplorerState['explorerId']]: ExplorerWorkspace;

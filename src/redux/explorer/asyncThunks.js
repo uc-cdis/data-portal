@@ -88,7 +88,7 @@ export const updateSurvivalResult = createAsyncThunk(
         });
     }
 
-    if (filterSets.length === 0) return { data: cache };
+    if (filterSets.length === 0) return { data: cache, usedFilterSetIds };
 
     try {
       const newResult = await survivalAnalysisAPI.fetchResult({
@@ -98,7 +98,7 @@ export const updateSurvivalResult = createAsyncThunk(
         result: explorer.config.survivalAnalysisConfig.result,
         usedFilterSetIds,
       });
-      return { data: { ...cache, ...newResult } };
+      return { data: { ...cache, ...newResult }, usedFilterSetIds };
     } catch (e) {
       return rejectWithValue(e);
     }
