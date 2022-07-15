@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../redux/hooks';
 import sessionMonitor from '../SessionMonitor';
 
 export default function useSessionMonitor() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   useEffect(() => {
     sessionMonitor.useDispatch(dispatch);
     sessionMonitor.start();

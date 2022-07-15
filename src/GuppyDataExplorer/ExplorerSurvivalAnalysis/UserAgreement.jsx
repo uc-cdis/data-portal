@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { contactEmail, headers, userapiPath } from '../../localconf';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import Button from '../../gen3-ui-component/components/Button';
+import { useAppSelector } from '../../redux/hooks';
 
 const acceptableUsePolicyLink = (
   <a
@@ -41,14 +41,6 @@ const checkItems = [
   'I will follow a hypothesis-driven approach when performing analyses and maintain a hypothesis record.',
 ];
 
-/** @param {import('../../redux/types').RootState} state */
-function fullnameSelector(state) {
-  const { additional_info: info, username } = state.user;
-  return info?.firstName && info?.lastName
-    ? `${info?.firstName} ${info?.lastName}`
-    : username;
-}
-
 /** @param {{ isSubmitting: boolean; onAgree: () => Promise<void> }} props */
 function AgreementForm({ isSubmitting, onAgree }) {
   const [error, setError] = useState(/** @type {Error | null} */ (null));
@@ -60,7 +52,12 @@ function AgreementForm({ isSubmitting, onAgree }) {
     });
   }
 
-  const fullname = useSelector(fullnameSelector);
+  const fullname = useAppSelector((state) => {
+    const { additional_info: info, username } = state.user;
+    return info?.firstName && info?.lastName
+      ? `${info?.firstName} ${info?.lastName}`
+      : username;
+  });
 
   const initalCheckStatus = {};
   for (const i of checkItems.keys()) initalCheckStatus[i] = false;
@@ -151,16 +148,13 @@ function ReminderForm({ onAgree }) {
 
 ReminderForm.propTypes = { onAgree: PropTypes.func };
 
-/** @param {import('../../redux/types').RootState} state */
-function userAgreementDocSelector(state) {
-  return state.user.docs_to_be_reviewed.find(
-    ({ type }) => type === 'survival-user-agreement'
-  );
-}
-
 /** @param {{ onAgree: () => void }} props */
 function UserAgreement({ onAgree }) {
-  const userAgreementDoc = useSelector(userAgreementDocSelector);
+  const userAgreementDoc = useAppSelector((state) =>
+    state.user.docs_to_be_reviewed.find(
+      ({ type }) => type === 'survival-user-agreement'
+    )
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   function submitSurvivalUserAgreement() {

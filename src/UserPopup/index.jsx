@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import SimplePopup from '../components/SimplePopup';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { fetchIndexPageCounts } from '../redux/index/asyncThunks';
 import { receiveUser } from '../redux/user/slice';
 import { fetchUser } from '../redux/user/asyncThunks';
@@ -48,8 +48,7 @@ function userPopupSelector({ user }) {
 
 function UserPopup() {
   const { docsToBeReviewed, shouldRegister, shouldReview } =
-    useSelector(userPopupSelector);
-  /** @type {'register' | 'review'} */
+    useAppSelector(userPopupSelector);
   const popupType = useMemo(() => {
     if (shouldRegister) return 'register';
     if (shouldReview) return 'review';
@@ -61,7 +60,7 @@ function UserPopup() {
     setShow(false);
   }
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   async function handleRegister(
     /** @type {import('./types').UserRegistrationInput} */ userInput
   ) {

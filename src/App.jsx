@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { matchPath, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
@@ -26,6 +25,7 @@ import {
 import { fetchGuppySchema, fetchSchema } from './redux/graphiql/asyncThunks';
 import { fetchAccess } from './redux/userProfile/asyncThunks';
 import { fetchGraphvizLayout } from './redux/ddgraph/asyncThunks';
+import { useAppDispatch } from './redux/hooks';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
@@ -52,8 +52,7 @@ const UserProfile = lazy(() => import('./UserProfile/ReduxUserProfile'));
 function App() {
   useSessionMonitor();
 
-  /** @type {import('./redux/types').AppDispatch} */
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(fetchDataVersion());
   }, []);

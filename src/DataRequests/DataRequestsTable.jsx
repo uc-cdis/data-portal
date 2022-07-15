@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import Spinner from '../components/Spinner';
 import Table from '../components/tables/base/Table';
 import Button from '../gen3-ui-component/components/Button';
+import { useAppSelector } from '../redux/hooks';
 import { formatLocalTime } from '../utils';
 import DataDownloadButton from './DataDownloadButton';
 import './DataRequests.css';
@@ -62,11 +62,6 @@ function parseTableData({ projects, showApprovedOnly, userId }) {
     ]);
 }
 
-/** @param {RootState} state */
-function userIdSelector(state) {
-  return state.user.user_id;
-}
-
 /**
  * @param {Object} props
  * @param {string} [props.className]
@@ -74,7 +69,7 @@ function userIdSelector(state) {
  * @param {DataRequestProject[]} props.projects
  */
 function DataRequestsTable({ className = '', isLoading, projects }) {
-  const userId = useSelector(userIdSelector);
+  const userId = useAppSelector((state) => state.user.user_id);
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);
   const tableData = useMemo(
     () => parseTableData({ projects, showApprovedOnly, userId }),
