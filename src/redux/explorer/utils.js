@@ -131,9 +131,9 @@ function sortByIndexCompareFn(a, b) {
  * @returns {ExplorerState['survivalAnalysisResult']['parsed']}
  */
 export function parseSurvivalResult({ config, result }) {
-  if (result === null) return {};
-
   const parsed = { count: {}, risktable: [], survival: [] };
+  if (result === null) return parsed;
+
   const { count: c, risktable: r, survival: s } = parsed;
   for (const { name, count, risktable, survival } of Object.values(result)) {
     if (count !== undefined) c[name.split('. ')[1]] = count;
