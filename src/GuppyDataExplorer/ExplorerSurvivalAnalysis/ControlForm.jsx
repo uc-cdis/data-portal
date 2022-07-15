@@ -106,23 +106,16 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
   useEffect(() => {
     if (countByFilterSet === undefined) setIsInputChanged(true);
   }, [countByFilterSet]);
-  const [shouldSubmit, setShouldSubmit] = useState(false);
-  useEffect(() => {
-    if (shouldSubmit) {
-      onSubmit({
-        timeInterval: localTimeInterval,
-        startTime,
-        endTime: endTime || undefined,
-        efsFlag: survivalType.value === 'efs',
-        usedFilterSets,
-      });
-      setShouldSubmit(false);
-    }
-  }, [shouldSubmit]);
 
   const submitUserInput = () => {
     setIsInputChanged(false);
-    setShouldSubmit(true);
+    onSubmit({
+      timeInterval: localTimeInterval,
+      startTime,
+      endTime: endTime || undefined,
+      efsFlag: survivalType.value === 'efs',
+      usedFilterSets,
+    });
   };
 
   const resetUserInput = () => {
@@ -132,7 +125,6 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
     setSurvivalType(survivalTypeOptions[0]);
     setUsedFilterSets(emptyFilterSets);
     setIsInputChanged(false);
-    setShouldSubmit(true);
   };
 
   return (
