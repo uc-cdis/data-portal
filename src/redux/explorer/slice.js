@@ -280,7 +280,7 @@ const slice = createSlice({
         state.savedFilterSets.isError = true;
       })
       .addCase(updateSurvivalResult.fulfilled, (state, action) => {
-        const result = action.payload;
+        const result = action.payload.data;
         state.survivalAnalysisResult.data = result;
         state.survivalAnalysisResult.isPending = false;
         state.survivalAnalysisResult.parsed = parseSurvivalResult({
