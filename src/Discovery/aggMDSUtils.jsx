@@ -7,7 +7,7 @@ const retrieveCommonsInfo = async (commonsName) => {
     throw new Error(`Request for commons info at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
   }
 
-  return await res.json();
+  return res.json();
 };
 
 /**
@@ -123,7 +123,7 @@ const loadStudyFromMDS = async (study, manifestFieldName) => {
   return { ...study, [manifestFieldName]: studyWithManifest[manifestFieldName] };
 };
 
-export const loadManifestFromResources = async (selectedResources, manifestFieldName) =>
-  await Promise.all(selectedResources.map((x) => loadStudyFromMDS(x, manifestFieldName)));
+export const loadManifestFromResources =
+  async (selectedResources, manifestFieldName) => Promise.all(selectedResources.map((x) => loadStudyFromMDS(x, manifestFieldName)));
 
 export default loadStudiesFromAggMDS;

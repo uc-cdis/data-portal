@@ -79,7 +79,7 @@ const DOWNLOAD_FAIL_STATUS = {
 
 const checkFederatedLoginStatus = async (
   setDownloadStatus: (arg0: DownloadStatus) => void,
-  selectedStudies: any[],
+  selectedResources: any[],
   manifestFieldName: string,
   history,
   location,
