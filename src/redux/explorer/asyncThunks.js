@@ -64,7 +64,7 @@ export const updateSurvivalResult = createAsyncThunk(
    * @param {{
    *  efsFlag: boolean;
    *  shouldRefetch?: boolean
-   *  usedFilterSets: ExplorerFilterSet[];
+   *  usedFilterSets: (ExplorerFilterSet & { isStale?: boolean })[];
    * }} args
    */
   async (args, { getState, rejectWithValue }) => {
@@ -76,9 +76,11 @@ export const updateSurvivalResult = createAsyncThunk(
     const filterSets = [];
     const usedFilterSetIds = [];
     for (const [index, filterSet] of args.usedFilterSets.entries()) {
-      const { filter, id, name } = filterSet;
+      const { filter, id, name, isStale } = filterSet;
       usedFilterSetIds.push(id);
-      if (result !== null && id in result && !args.shouldRefetch)
+
+      const shouldRefetch = args.shouldRefetch || isStale;
+      if (result !== null && id in result && !shouldRefetch)
         cache[id] = { ...result[id], name: `${index + 1}. ${name}` };
       else
         filterSets.push({

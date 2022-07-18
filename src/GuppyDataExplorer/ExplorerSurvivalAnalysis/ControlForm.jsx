@@ -243,7 +243,10 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
           label='Apply'
           buttonType='primary'
           onClick={submitUserInput}
-          enabled={isInputChanged && usedFilterSets.length > 0}
+          enabled={
+            usedFilterSets.length > 0 &&
+            (isInputChanged || staleFilterSetIdSet.size > 0)
+          }
         />
       </div>
     </form>
