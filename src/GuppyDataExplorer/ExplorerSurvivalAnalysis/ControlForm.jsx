@@ -89,20 +89,27 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
 
   const [selectFilterSetId, setSelectFilterSetId] = useState(null);
-  const [usedFilterSetIds, setUsedFilterSetIds] = useState(emptyFilterSetIds);
   const savedFilterSets = useAppSelector(
     (state) => state.explorer.savedFilterSets.data
   );
-  const usedFilterSets = [defaultFilterSet, ...savedFilterSets].filter(
-    ({ id }) => usedFilterSetIds.includes(id)
+  const staleFilterSetIdSet = useAppSelector(
+    (state) => new Set(state.explorer.survivalAnalysisResult.staleFilterSetIds)
   );
-  const filterSetOptions = [defaultFilterSet, ...savedFilterSets].map(
-    (filterSet) => ({
-      label: filterSet.name,
-      value: filterSet.id,
-      isDisabled: usedFilterSetIds.some((id) => id === filterSet.id),
-    })
-  );
+  const [usedFilterSetIds, setUsedFilterSetIds] = useState(emptyFilterSetIds);
+  const usedFilterSetIdSet = new Set(usedFilterSetIds);
+
+  const filterSetOptions = [];
+  const usedFilterSets = [];
+  for (const filterSet of [defaultFilterSet, ...savedFilterSets]) {
+    const { name: label, id: value } = filterSet;
+    const isUsed = usedFilterSetIdSet.has(value);
+    filterSetOptions.push({ label, value, isDisabled: isUsed });
+
+    if (isUsed) {
+      const isStale = staleFilterSetIdSet.has(value);
+      usedFilterSets.push({ ...filterSet, isStale });
+    }
+  }
 
   const [isInputChanged, setIsInputChanged] = useState(false);
   useEffect(() => {

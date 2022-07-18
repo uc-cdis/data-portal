@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SimpleInputField from '../../components/SimpleInputField';
 import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 
@@ -9,7 +10,7 @@ import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 /**
  * @typedef {Object} FilterSetCardProps
  * @property {{ fitted: number; total: number }} [count]
- * @property {ExplorerFilterSet} filterSet
+ * @property {ExplorerFilterSet & { isStale: boolean }} filterSet
  * @property {string} label
  * @property {React.MouseEventHandler<HTMLButtonElement>} onClose
  */
@@ -29,6 +30,24 @@ export default function FilterSetCard({ count, filterSet, label, onClose }) {
           />
           {label}
         </button>
+        {filterSet.isStale ? (
+          <Tooltip
+            arrowContent={<div className='rc-tooltip-arrow-inner' />}
+            mouseLeaveDelay={0}
+            overlay={
+              'This Filter Set has been updated and its survival analysis result may be stale'
+            }
+            placement='top'
+            trigger={['hover', 'focus']}
+          >
+            <button type='button'>
+              <FontAwesomeIcon
+                icon='triangle-exclamation'
+                color='var(--pcdc-color__secondary)'
+              />
+            </button>
+          </Tooltip>
+        ) : null}
         {count === undefined ? (
           <em>N/A</em>
         ) : (
