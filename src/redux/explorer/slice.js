@@ -54,6 +54,7 @@ const slice = createSlice({
         config: initialConfig.survivalAnalysisConfig,
         result: null,
       }),
+      staleFilterSetIds: [],
       usedFilterSetIds: [],
     },
     workspaces: initialWorkspaces,
@@ -276,6 +277,11 @@ const slice = createSlice({
         // sync with workspaces
         const { activeId } = state.workspaces[state.explorerId];
         state.workspaces[state.explorerId].all[activeId] = filterSet;
+
+        // sync with survival result
+        const { id } = filterSet;
+        if (state.survivalAnalysisResult.usedFilterSetIds.includes(id))
+          state.survivalAnalysisResult.staleFilterSetIds.push(id);
       })
       .addCase(updateFilterSet.rejected, (state) => {
         state.savedFilterSets.isError = true;
@@ -288,6 +294,7 @@ const slice = createSlice({
           config: state.config.survivalAnalysisConfig,
           result: data,
         });
+        state.survivalAnalysisResult.staleFilterSetIds = [];
         state.survivalAnalysisResult.usedFilterSetIds = usedFilterSetIds;
       })
       .addCase(updateSurvivalResult.pending, (state) => {
@@ -299,6 +306,7 @@ const slice = createSlice({
         state.survivalAnalysisResult.error = Error(String(action.payload));
         state.survivalAnalysisResult.isPending = false;
         state.survivalAnalysisResult.parsed = {};
+        state.survivalAnalysisResult.staleFilterSetIds = [];
         state.survivalAnalysisResult.usedFilterSetIds = [];
       });
   },
