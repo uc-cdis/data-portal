@@ -31,39 +31,39 @@ export default function FilterSetCard({ count, filterSet, label, onClose }) {
           {label}
         </button>
         {filterSet.isStale ? (
-          <Tooltip
-            arrowContent={<div className='rc-tooltip-arrow-inner' />}
-            mouseLeaveDelay={0}
-            overlay={
-              'This Filter Set has been updated and its survival analysis result may be stale'
-            }
-            placement='top'
-            trigger={['hover', 'focus']}
-          >
-            <button type='button'>
+          <button type='button'>
+            <Tooltip
+              arrowContent={<div className='rc-tooltip-arrow-inner' />}
+              mouseLeaveDelay={0}
+              overlay={
+                'This Filter Set has been updated and its survival analysis result may be stale'
+              }
+              placement='top'
+              trigger={['hover', 'focus']}
+            >
               <FontAwesomeIcon
                 icon='triangle-exclamation'
                 color='var(--pcdc-color__secondary)'
               />
-            </button>
-          </Tooltip>
+            </Tooltip>
+          </button>
         ) : null}
         {count === undefined ? (
           <em>N/A</em>
         ) : (
-          <Tooltip
-            arrowContent={<div className='rc-tooltip-arrow-inner' />}
-            mouseLeaveDelay={0}
-            overlay={`${count.fitted} of ${count.total} subjects for this Filter Set is used to calculate survival rates`}
-            placement='top'
-            trigger={['hover', 'focus']}
-          >
-            <button type='button'>
+          <button type='button'>
+            <Tooltip
+              arrowContent={<div className='rc-tooltip-arrow-inner' />}
+              mouseLeaveDelay={0}
+              overlay={`${count.fitted} of ${count.total} subjects for this Filter Set is used to calculate survival rates`}
+              placement='top'
+              trigger={['hover', 'focus']}
+            >
               <em>
                 {count.fitted}/{count.total}
               </em>
-            </button>
-          </Tooltip>
+            </Tooltip>
+          </button>
         )}
         <button aria-label='Clear' type='button' onClick={onClose}>
           <i className='g3-icon g3-icon--sm g3-icon--cross' />
