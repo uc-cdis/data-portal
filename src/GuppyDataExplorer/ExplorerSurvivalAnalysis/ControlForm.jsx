@@ -52,9 +52,8 @@ const survivalTypeOptions = [
   { label: 'Event-Free Survival (EFS)', value: 'efs' },
 ];
 
-/** @type {ExplorerFilterSet[]} */
-const emptyFilterSets = [];
-
+/** @type {ExplorerFilterSet['id'][]} */
+const emptyFilterSetIds = [];
 /** @type {ExplorerFilterSet} */
 export const defaultFilterSet = {
   name: '*** All Subjects ***',
@@ -84,45 +83,47 @@ function validateNumberInput(e, setStateAction) {
  * @param {number} prop.timeInterval
  */
 function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
+  const savedFilterSets = useAppSelector(
+    (state) => state.explorer.savedFilterSets.data
+  );
+  const staleFilterSetIdSet = useAppSelector(
+    (state) => new Set(state.explorer.survivalAnalysisResult.staleFilterSetIds)
+  );
+
   const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(undefined);
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
+  const [selectFilterSetId, setSelectFilterSetId] = useState(null);
+  const [usedFilterSetIds, setUsedFilterSetIds] = useState(emptyFilterSetIds);
 
-  const [selectFilterSetOption, setSelectFilterSetOption] = useState(null);
-  const [usedFilterSets, setUsedFilterSets] = useState(emptyFilterSets);
-  const filterSets = useAppSelector(
-    (state) => state.explorer.savedFilterSets.data
-  );
-  const filterSetOptions = [defaultFilterSet, ...filterSets].map(
-    (filterSet) => ({
-      label: filterSet.name,
-      value: filterSet,
-      isDisabled: usedFilterSets.some(({ id }) => id === filterSet.id),
-    })
-  );
+  const filterSetOptions = [];
+  const usedFilterSets = [];
+  for (const filterSet of [defaultFilterSet, ...savedFilterSets]) {
+    const { name: label, id: value } = filterSet;
+    const isUsed = usedFilterSetIds.includes(value);
+    filterSetOptions.push({ label, value, isDisabled: isUsed });
+
+    if (isUsed) {
+      const isStale = staleFilterSetIdSet.has(value);
+      usedFilterSets.push({ ...filterSet, isStale });
+    }
+  }
 
   const [isInputChanged, setIsInputChanged] = useState(false);
   useEffect(() => {
     if (countByFilterSet === undefined) setIsInputChanged(true);
   }, [countByFilterSet]);
-  const [shouldSubmit, setShouldSubmit] = useState(false);
-  useEffect(() => {
-    if (shouldSubmit) {
-      onSubmit({
-        timeInterval: localTimeInterval,
-        startTime,
-        endTime: endTime || undefined,
-        efsFlag: survivalType.value === 'efs',
-        usedFilterSets,
-      });
-      setShouldSubmit(false);
-    }
-  }, [shouldSubmit]);
 
   const submitUserInput = () => {
     setIsInputChanged(false);
-    setShouldSubmit(true);
+    onSubmit({
+      timeInterval: localTimeInterval,
+      startTime,
+      endTime: endTime || undefined,
+      efsFlag: survivalType.value === 'efs',
+      usedFilterSets,
+    });
   };
 
   const resetUserInput = () => {
@@ -130,9 +131,8 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
     setStartTime(0);
     setEndTime(undefined);
     setSurvivalType(survivalTypeOptions[0]);
-    setUsedFilterSets(emptyFilterSets);
+    setUsedFilterSetIds([]);
     setIsInputChanged(false);
-    setShouldSubmit(true);
   };
 
   return (
@@ -199,21 +199,18 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
           inputId='survival-filter-sets'
           placeholder='Select Filter Set to analyze'
           options={filterSetOptions}
-          onChange={setSelectFilterSetOption}
+          onChange={({ value }) => setSelectFilterSetId(value)}
           maxMenuHeight={160}
-          value={selectFilterSetOption}
+          value={selectFilterSetId}
           theme={overrideSelectTheme}
         />
         <Button
           label='Add'
           buttonType='default'
-          enabled={selectFilterSetOption !== null}
+          enabled={selectFilterSetId !== null}
           onClick={() => {
-            setUsedFilterSets((prevFilterSets) => [
-              ...prevFilterSets,
-              selectFilterSetOption.value,
-            ]);
-            setSelectFilterSetOption(null);
+            setUsedFilterSetIds((ids) => [...ids, selectFilterSetId]);
+            setSelectFilterSetId(null);
             setIsInputChanged(true);
           }}
         />
@@ -231,8 +228,8 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
             filterSet={filterSet}
             label={`${i + 1}. ${filterSet.name}`}
             onClose={() => {
-              setUsedFilterSets((prevFilterSets) =>
-                prevFilterSets.filter(({ id }) => id !== filterSet.id)
+              setUsedFilterSetIds((ids) =>
+                ids.filter((id) => id !== filterSet.id)
               );
               setIsInputChanged(true);
             }}
@@ -245,7 +242,10 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
           label='Apply'
           buttonType='primary'
           onClick={submitUserInput}
-          enabled={isInputChanged && usedFilterSets.length > 0}
+          enabled={
+            usedFilterSets.length > 0 &&
+            (isInputChanged || staleFilterSetIdSet.size > 0)
+          }
         />
       </div>
     </form>

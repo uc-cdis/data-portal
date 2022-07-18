@@ -54,6 +54,8 @@ const slice = createSlice({
         config: initialConfig.survivalAnalysisConfig,
         result: null,
       }),
+      staleFilterSetIds: [],
+      usedFilterSetIds: [],
     },
     workspaces: initialWorkspaces,
   }),
@@ -275,18 +277,25 @@ const slice = createSlice({
         // sync with workspaces
         const { activeId } = state.workspaces[state.explorerId];
         state.workspaces[state.explorerId].all[activeId] = filterSet;
+
+        // sync with survival result
+        const { id } = filterSet;
+        if (state.survivalAnalysisResult.usedFilterSetIds.includes(id))
+          state.survivalAnalysisResult.staleFilterSetIds.push(id);
       })
       .addCase(updateFilterSet.rejected, (state) => {
         state.savedFilterSets.isError = true;
       })
       .addCase(updateSurvivalResult.fulfilled, (state, action) => {
-        const result = action.payload;
-        state.survivalAnalysisResult.data = result;
+        const { data, usedFilterSetIds } = action.payload;
+        state.survivalAnalysisResult.data = data;
         state.survivalAnalysisResult.isPending = false;
         state.survivalAnalysisResult.parsed = parseSurvivalResult({
           config: state.config.survivalAnalysisConfig,
-          result,
+          result: data,
         });
+        state.survivalAnalysisResult.staleFilterSetIds = [];
+        state.survivalAnalysisResult.usedFilterSetIds = usedFilterSetIds;
       })
       .addCase(updateSurvivalResult.pending, (state) => {
         state.survivalAnalysisResult.error = null;
@@ -297,6 +306,8 @@ const slice = createSlice({
         state.survivalAnalysisResult.error = Error(String(action.payload));
         state.survivalAnalysisResult.isPending = false;
         state.survivalAnalysisResult.parsed = {};
+        state.survivalAnalysisResult.staleFilterSetIds = [];
+        state.survivalAnalysisResult.usedFilterSetIds = [];
       });
   },
 });
