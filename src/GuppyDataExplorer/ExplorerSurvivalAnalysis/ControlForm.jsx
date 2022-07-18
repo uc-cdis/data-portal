@@ -83,26 +83,25 @@ function validateNumberInput(e, setStateAction) {
  * @param {number} prop.timeInterval
  */
 function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
-  const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
-  const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(undefined);
-  const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
-
-  const [selectFilterSetId, setSelectFilterSetId] = useState(null);
   const savedFilterSets = useAppSelector(
     (state) => state.explorer.savedFilterSets.data
   );
   const staleFilterSetIdSet = useAppSelector(
     (state) => new Set(state.explorer.survivalAnalysisResult.staleFilterSetIds)
   );
+
+  const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(undefined);
+  const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
+  const [selectFilterSetId, setSelectFilterSetId] = useState(null);
   const [usedFilterSetIds, setUsedFilterSetIds] = useState(emptyFilterSetIds);
-  const usedFilterSetIdSet = new Set(usedFilterSetIds);
 
   const filterSetOptions = [];
   const usedFilterSets = [];
   for (const filterSet of [defaultFilterSet, ...savedFilterSets]) {
     const { name: label, id: value } = filterSet;
-    const isUsed = usedFilterSetIdSet.has(value);
+    const isUsed = usedFilterSetIds.includes(value);
     filterSetOptions.push({ label, value, isDisabled: isUsed });
 
     if (isUsed) {
