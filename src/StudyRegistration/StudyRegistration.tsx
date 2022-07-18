@@ -94,10 +94,10 @@ const isUUID = (input: string) => {
 };
 
 const handleUUIDValidation = (_, UUID: string): Promise<boolean|void> => {
-  if (!UUID || !isUUID(UUID)) {
-    return Promise.reject('Invalid CEDAR user UUID');
+  if (UUID && isUUID(UUID)) {
+    return Promise.resolve(true);
   }
-  return Promise.resolve(true);
+  return Promise.reject('Invalid CEDAR user UUID');
 };
 
 const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (props:StudyRegistrationProps) => {
