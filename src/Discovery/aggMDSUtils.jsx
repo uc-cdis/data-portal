@@ -123,7 +123,7 @@ const loadStudyFromMDS = async (study, manifestFieldName) => {
   return { ...study, [manifestFieldName]: studyWithManifest[manifestFieldName] };
 };
 
-export const loadManifestFromResources =
-  async (selectedResources, manifestFieldName) => Promise.all(selectedResources.map((x) => loadStudyFromMDS(x, manifestFieldName)));
+// eslint-disable-next-line max-len
+export const loadManifestFromResources = async (selectedResources, manifestFieldName) => Promise.all(selectedResources.map((x) => loadStudyFromMDS(x, manifestFieldName)));
 
 export default loadStudiesFromAggMDS;
