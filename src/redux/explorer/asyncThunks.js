@@ -69,25 +69,20 @@ export const updateSurvivalResult = createAsyncThunk(
    */
   async (args, { getState, rejectWithValue }) => {
     const { explorer } = /** @type {AppGetState} */ (getState)();
-    const result = explorer.survivalAnalysisResult.data;
+    const result = explorer.survivalAnalysisResult.data ?? {};
 
     /** @type {ExplorerState['survivalAnalysisResult']['data']} */
     const cache = {};
     const filterSets = [];
     const usedFilterSetIds = [];
     for (const [index, filterSet] of args.usedFilterSets.entries()) {
-      const { filter, id, name, isStale } = filterSet;
-      usedFilterSetIds.push(id);
+      const { filter, id, isStale, name: _name } = filterSet;
+      const name = `${index + 1}. ${_name}`;
+      const shouldUseCache = id in result && !isStale && !args.shouldRefetch;
+      if (shouldUseCache) cache[id] = { ...result[id], name };
+      else filterSets.push({ filters: getGQLFilter(filter) ?? {}, id, name });
 
-      const shouldRefetch = args.shouldRefetch || isStale;
-      if (result !== null && id in result && !shouldRefetch)
-        cache[id] = { ...result[id], name: `${index + 1}. ${name}` };
-      else
-        filterSets.push({
-          filters: getGQLFilter(filter) ?? {},
-          id,
-          name: `${index + 1}. ${name}`,
-        });
+      usedFilterSetIds.push(id);
     }
 
     if (filterSets.length === 0) return { data: cache, usedFilterSetIds };
