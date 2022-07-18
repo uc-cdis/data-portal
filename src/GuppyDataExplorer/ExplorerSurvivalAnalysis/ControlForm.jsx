@@ -90,13 +90,13 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
 
   const [selectFilterSetId, setSelectFilterSetId] = useState(null);
   const [usedFilterSetIds, setUsedFilterSetIds] = useState(emptyFilterSetIds);
-  const filterSets = useAppSelector(
+  const savedFilterSets = useAppSelector(
     (state) => state.explorer.savedFilterSets.data
   );
-  const usedFilterSets = [defaultFilterSet, ...filterSets].filter(({ id }) =>
-    usedFilterSetIds.includes(id)
+  const usedFilterSets = [defaultFilterSet, ...savedFilterSets].filter(
+    ({ id }) => usedFilterSetIds.includes(id)
   );
-  const filterSetOptions = [defaultFilterSet, ...filterSets].map(
+  const filterSetOptions = [defaultFilterSet, ...savedFilterSets].map(
     (filterSet) => ({
       label: filterSet.name,
       value: filterSet.id,
