@@ -78,7 +78,7 @@ function FilterDisplay({
   onCloseFilter,
 }) {
   const filterElements = /** @type {JSX.Element[]} */ ([]);
-  const { __combineMode, ...__filter } = filter;
+  const { __combineMode, value: __filter } = filter;
   const filterCombineMode = combineMode ?? __combineMode ?? 'AND';
 
   const handleClickCombineMode =
