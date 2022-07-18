@@ -36,7 +36,7 @@ export default function FilterSetCard({ count, filterSet, label, onClose }) {
               arrowContent={<div className='rc-tooltip-arrow-inner' />}
               mouseLeaveDelay={0}
               overlay={
-                'This Filter Set has been updated and its survival analysis result may be stale'
+                'This Filter Set has been updated and its survival analysis result may be stale. Click "Apply" button at the bottom to update the result.'
               }
               placement='top'
               trigger={['hover', 'focus']}
@@ -55,7 +55,7 @@ export default function FilterSetCard({ count, filterSet, label, onClose }) {
             <Tooltip
               arrowContent={<div className='rc-tooltip-arrow-inner' />}
               mouseLeaveDelay={0}
-              overlay={`${count.fitted} of ${count.total} subjects for this Filter Set is used to calculate survival rates`}
+              overlay={`${count.fitted} of ${count.total} subjects for this Filter Set is used to calculate survival rates.`}
               placement='top'
               trigger={['hover', 'focus']}
             >
