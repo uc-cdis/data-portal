@@ -112,6 +112,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
             createKayakoTicket(subject, fullName, email, contents, 21).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
           } else {
+            // eslint-disable-next-line no-console
             console.error('Requestor returns 201 but no request_id in payload body'); // shouldn't get here
           }
         } else if (status === 409) {
