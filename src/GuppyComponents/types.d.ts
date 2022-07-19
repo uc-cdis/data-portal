@@ -1,11 +1,15 @@
 type CombineMode = 'AND' | 'OR';
 
+export type EmptyFilter = { __type?: never };
+
 export type OptionFilter = {
-  selectedValues?: string[];
   __combineMode?: CombineMode;
+  __type: 'OPTION';
+  selectedValues?: string[];
 };
 
 export type RangeFilter = {
+  __type: 'RANGE';
   lowerBound?: number;
   upperBound?: number;
 };
@@ -13,18 +17,19 @@ export type RangeFilter = {
 export type SimpleFilterState = {
   __combineMode?: CombineMode;
   value?: {
-    [x: string]: OptionFilter | RangeFilter;
+    [x: string]: EmptyFilter | OptionFilter | RangeFilter;
   };
 };
 
 export type AnchoredFilterState = {
+  __type: 'ANCHORED';
   filter: SimpleFilterState;
 };
 
 export type FilterState = {
   __combineMode?: CombineMode;
   value?: {
-    [x: string]: OptionFilter | RangeFilter | AnchoredFilterState;
+    [x: string]: EmptyFilter | OptionFilter | RangeFilter | AnchoredFilterState;
   };
 };
 
