@@ -191,17 +191,15 @@ describe('Get GQL filter from filter object from', () => {
       value: {
         'x:y': {
           __type: FILTER_TYPE.ANCHORED,
-          filter: {
-            value: {
-              'a.b': {
-                __type: FILTER_TYPE.OPTION,
-                selectedValues: ['foo', 'bar'],
-              },
-              'c.d': {
-                __type: FILTER_TYPE.RANGE,
-                lowerBound: 0,
-                upperBound: 1,
-              },
+          value: {
+            'a.b': {
+              __type: FILTER_TYPE.OPTION,
+              selectedValues: ['foo', 'bar'],
+            },
+            'c.d': {
+              __type: FILTER_TYPE.RANGE,
+              lowerBound: 0,
+              upperBound: 1,
             },
           },
         },
