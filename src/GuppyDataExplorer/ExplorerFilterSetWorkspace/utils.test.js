@@ -1,4 +1,4 @@
-import { pluckFromFilter, pluckFromAnchorFilter } from './utils';
+import { FILTER_TYPE, pluckFromFilter, pluckFromAnchorFilter } from './utils';
 
 describe('pluckFromFilter', () => {
   test('no filter', () => {
@@ -61,7 +61,14 @@ describe('pluckFromAnchorFilter', () => {
     const received1 = pluckFromAnchorFilter({
       anchor: 'x:y',
       field: 'foo',
-      filter: { value: { 'x:y': { filter: { value: { foo: {} } } } } },
+      filter: {
+        value: {
+          'x:y': {
+            __type: FILTER_TYPE.ANCHORED,
+            filter: { value: { foo: {} } },
+          },
+        },
+      },
     });
     const expected1 = {};
     expect(received1).toStrictEqual(expected1);
@@ -69,15 +76,34 @@ describe('pluckFromAnchorFilter', () => {
     const received2 = pluckFromAnchorFilter({
       anchor: 'x:y',
       field: 'foo',
-      filter: { value: { 'x:y': { filter: { value: { foo: {}, bar: {} } } } } },
+      filter: {
+        value: {
+          'x:y': {
+            __type: FILTER_TYPE.ANCHORED,
+            filter: { value: { foo: {}, bar: {} } },
+          },
+        },
+      },
     });
-    const expected2 = { value: { 'x:y': { filter: { value: { bar: {} } } } } };
+    const expected2 = {
+      value: {
+        'x:y': { __type: FILTER_TYPE.ANCHORED, filter: { value: { bar: {} } } },
+      },
+    };
     expect(received2).toStrictEqual(expected2);
 
     const received3 = pluckFromAnchorFilter({
       anchor: 'x:y',
       field: 'foo',
-      filter: { value: { foo: {}, 'x:y': { filter: { value: { foo: {} } } } } },
+      filter: {
+        value: {
+          foo: {},
+          'x:y': {
+            __type: FILTER_TYPE.ANCHORED,
+            filter: { value: { foo: {} } },
+          },
+        },
+      },
     });
     const expected3 = { value: { foo: {} } };
     expect(received3).toStrictEqual(expected3);
@@ -86,18 +112,40 @@ describe('pluckFromAnchorFilter', () => {
     const received1 = pluckFromAnchorFilter({
       anchor: 'x:y',
       field: 'foo',
-      filter: { value: { 'x:y': { filter: { value: { bar: {} } } } } },
+      filter: {
+        value: {
+          'x:y': {
+            __type: FILTER_TYPE.ANCHORED,
+            filter: { value: { bar: {} } },
+          },
+        },
+      },
     });
-    const expected1 = { value: { 'x:y': { filter: { value: { bar: {} } } } } };
+    const expected1 = {
+      value: {
+        'x:y': { __type: FILTER_TYPE.ANCHORED, filter: { value: { bar: {} } } },
+      },
+    };
     expect(received1).toStrictEqual(expected1);
 
     const received2 = pluckFromAnchorFilter({
       anchor: 'x:y',
       field: 'foo',
-      filter: { value: { foo: {}, 'x:y': { filter: { value: { bar: {} } } } } },
+      filter: {
+        value: {
+          foo: {},
+          'x:y': {
+            __type: FILTER_TYPE.ANCHORED,
+            filter: { value: { bar: {} } },
+          },
+        },
+      },
     });
     const expected2 = {
-      value: { foo: {}, 'x:y': { filter: { value: { bar: {} } } } },
+      value: {
+        foo: {},
+        'x:y': { __type: FILTER_TYPE.ANCHORED, filter: { value: { bar: {} } } },
+      },
     };
     expect(received2).toStrictEqual(expected2);
   });
