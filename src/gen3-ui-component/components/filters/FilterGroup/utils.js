@@ -1,4 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
+import { FILTER_TYPE } from '../../../../GuppyComponents/Utils/const';
+
+export { FILTER_TYPE } from '../../../../GuppyComponents/Utils/const';
 
 /** @typedef {import('../types').AnchorConfig} AnchorConfig */
 /** @typedef {import('../types').AnchoredFilterState} AnchoredFilterState */
@@ -40,12 +43,11 @@ export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
 
   if (filterResults.value !== undefined)
     for (const [filterKey, filterValues] of Object.entries(filterResults.value))
-      if (typeof filterValues !== 'string')
-        if ('filter' in filterValues) {
-          filterResultsByAnchor[filterKey] = filterValues.filter;
-        } else {
-          filterResultsByAnchor[''].value[filterKey] = filterValues;
-        }
+      if (filterValues.__type === FILTER_TYPE.ANCHORED) {
+        filterResultsByAnchor[filterKey] = filterValues.filter;
+      } else {
+        filterResultsByAnchor[''].value[filterKey] = filterValues;
+      }
 
   return filterResultsByAnchor;
 }
@@ -104,27 +106,29 @@ export function removeEmptyFilter(filterResults) {
   const newFilterResults = { value: {} };
   for (const field of Object.keys(filterResults.value)) {
     const filterValues = filterResults.value[field];
-    if (typeof filterValues !== 'string')
-      if ('filter' in filterValues) {
-        const newAnchoredFilterResults = /** @type {SimpleFilterState} */ (
-          removeEmptyFilter(filterValues.filter)
-        );
-        if (Object.keys(newAnchoredFilterResults.value).length > 0)
-          newFilterResults.value[field] = { filter: newAnchoredFilterResults };
-      } else {
-        const hasRangeFilter = 'lowerBound' in filterValues;
-        const hasOptionFilter =
-          'selectedValues' in filterValues &&
-          filterValues.selectedValues.length > 0;
-        // Filter settings are prefaced with two underscores, e.g., __combineMode
-        // A given config setting is still informative to Guppy even if the setting becomes empty
-        const hasConfigSetting = Object.keys(filterValues).some((x) =>
-          x.startsWith('__')
-        );
-        if (hasRangeFilter || hasOptionFilter || hasConfigSetting) {
-          newFilterResults.value[field] = filterValues;
-        }
+    if (filterValues.__type === FILTER_TYPE.ANCHORED) {
+      const newAnchoredFilterResults = /** @type {SimpleFilterState} */ (
+        removeEmptyFilter(filterValues.filter)
+      );
+      if (Object.keys(newAnchoredFilterResults.value).length > 0)
+        newFilterResults.value[field] = {
+          __type: FILTER_TYPE.ANCHORED,
+          filter: newAnchoredFilterResults,
+        };
+    } else {
+      const hasRangeFilter = filterValues.__type === FILTER_TYPE.RANGE;
+      const hasOptionFilter =
+        filterValues.__type === FILTER_TYPE.OPTION &&
+        filterValues.selectedValues?.length > 0;
+      // Filter settings are prefaced with two underscores, e.g., __combineMode
+      // A given config setting is still informative to Guppy even if the setting becomes empty
+      const hasConfigSetting = Object.keys(filterValues).some(
+        (x) => x !== '__type' && x.startsWith('__')
+      );
+      if (hasRangeFilter || hasOptionFilter || hasConfigSetting) {
+        newFilterResults.value[field] = filterValues;
       }
+    }
   }
 
   return newFilterResults;
@@ -223,6 +227,7 @@ export function updateCombineMode({
     if (newFilterResults.value[fieldName] === undefined) {
       newFilterResults.value[fieldName] = {
         [combineModeFieldName]: combineModeValue,
+        __type: FILTER_TYPE.OPTION,
       };
     } else {
       newFilterResults.value[fieldName][combineModeFieldName] =
@@ -230,7 +235,10 @@ export function updateCombineMode({
     }
   } else {
     if (!(anchorLabel in newFilterResults.value))
-      newFilterResults.value[anchorLabel] = { filter: { value: {} } };
+      newFilterResults.value[anchorLabel] = {
+        __type: FILTER_TYPE.ANCHORED,
+        filter: { value: {} },
+      };
     if (!('filter' in newFilterResults.value[anchorLabel]))
       /** @type {AnchoredFilterState} */ (
         newFilterResults.value[anchorLabel]
@@ -241,6 +249,7 @@ export function updateCombineMode({
     if (newAnchoredFilterResults.filter.value[fieldName] === undefined) {
       newAnchoredFilterResults.filter.value[fieldName] = {
         [combineModeFieldName]: combineModeValue,
+        __type: FILTER_TYPE.OPTION,
       };
     } else {
       newAnchoredFilterResults.filter.value[fieldName][combineModeFieldName] =
@@ -296,7 +305,11 @@ export function updateRangeValue({
   if (newFilterResults.value === undefined) newFilterResults.value = {};
   const fieldName = filterTabs[tabIndex].fields[sectionIndex];
   if (anchorLabel === undefined || anchorLabel === '') {
-    newFilterResults.value[fieldName] = { lowerBound, upperBound };
+    newFilterResults.value[fieldName] = {
+      __type: FILTER_TYPE.RANGE,
+      lowerBound,
+      upperBound,
+    };
     // if lowerbound and upperbound values equal min and max,
     // remove this range from filter
     if (
@@ -307,15 +320,22 @@ export function updateRangeValue({
     }
   } else {
     if (!(anchorLabel in newFilterResults.value))
-      newFilterResults.value[anchorLabel] = { filter: { value: {} } };
-    if (!('filter' in newFilterResults.value[anchorLabel]))
+      newFilterResults.value[anchorLabel] = {
+        __type: FILTER_TYPE.ANCHORED,
+        filter: { value: {} },
+      };
+    if (newFilterResults.value[anchorLabel].__type !== FILTER_TYPE.ANCHORED)
       /** @type {AnchoredFilterState} */ (
         newFilterResults.value[anchorLabel]
       ).filter.value = {};
     const newAnchoredFilterResults = /** @type {AnchoredFilterState} */ (
       newFilterResults.value[anchorLabel]
     ).filter;
-    newAnchoredFilterResults.value[fieldName] = { lowerBound, upperBound };
+    newAnchoredFilterResults.value[fieldName] = {
+      __type: FILTER_TYPE.RANGE,
+      lowerBound,
+      upperBound,
+    };
     // if lowerbound and upperbound values equal min and max,
     // remove this range from filter
     if (
@@ -373,7 +393,10 @@ export function updateSelectedValue({
   const fieldName = filterTabs[tabIndex].fields[sectionIndex];
   if (anchorLabel === undefined || anchorLabel === '') {
     if (newFilterResults.value[fieldName] === undefined)
-      newFilterResults.value[fieldName] = { selectedValues: [selectedValue] };
+      newFilterResults.value[fieldName] = {
+        __type: FILTER_TYPE.OPTION,
+        selectedValues: [selectedValue],
+      };
     else if (
       /** @type {OptionFilter} */ (newFilterResults.value[fieldName])
         .selectedValues === undefined
@@ -393,8 +416,11 @@ export function updateSelectedValue({
     }
   } else {
     if (!(anchorLabel in newFilterResults.value))
-      newFilterResults.value[anchorLabel] = { filter: { value: {} } };
-    if (!('filter' in newFilterResults.value[anchorLabel]))
+      newFilterResults.value[anchorLabel] = {
+        __type: FILTER_TYPE.ANCHORED,
+        filter: { value: {} },
+      };
+    if (newFilterResults.value[anchorLabel].__type !== FILTER_TYPE.ANCHORED)
       /** @type {AnchoredFilterState} */ (
         newFilterResults.value[anchorLabel]
       ).filter.value = {};
@@ -403,6 +429,7 @@ export function updateSelectedValue({
     ).filter;
     if (newAnchoredFilterResults.value[fieldName] === undefined)
       newAnchoredFilterResults.value[fieldName] = {
+        __type: FILTER_TYPE.OPTION,
         selectedValues: [selectedValue],
       };
     else if (
