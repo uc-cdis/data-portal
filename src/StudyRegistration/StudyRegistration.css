@@ -17,6 +17,12 @@
     width: 100%;
 }
 
+.study-reg-exp-text {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
 @media screen and (min-width: 1280px) {
     .study-reg-form {
         width: 60%;

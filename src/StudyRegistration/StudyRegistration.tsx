@@ -26,6 +26,7 @@ import loadStudiesFromMDS from '../Discovery/MDSUtils';
 import { registerStudyInMDS, preprocessStudyRegistrationMetadata, createCEDARInstance } from './utils';
 
 const { Option } = Select;
+const { Text } = Typography;
 
 export interface FormSubmissionState {
   status?: ResultStatusType;
@@ -214,6 +215,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
       <div className='study-reg-form-container'>
         <Form className='study-reg-form' {...layout} form={form} name='study-reg-form' onFinish={onFinish} validateMessages={validateMessages}>
           <Divider plain>Registration Information</Divider>
+          <div className='study-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
           <Form.Item
             name='study_id'
             label='Study'

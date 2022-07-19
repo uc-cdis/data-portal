@@ -20,6 +20,7 @@ import { createKayakoTicket } from './utils';
 import { fetchWithCreds } from '../actions';
 
 const { TextArea } = Input;
+const { Text } = Typography;
 
 const KAYAKO_MAX_SUBJECT_LENGTH = 255;
 
@@ -182,6 +183,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
             Please fill out this form to request and be approved for access to register your study with the HEAL Platform.
           </Typography>
           <Divider plain />
+          <div className='study-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
           <Form.Item
             label='Study Name - Grant Number'
             name='Study Grant_doNotInclude'
