@@ -1,4 +1,5 @@
 import flat from 'flat';
+import { FILTER_TYPE } from './const';
 import { queryGuppyForRawData } from './queries';
 
 /** @typedef {import('../types').AggsCount} AggsCount */
@@ -19,7 +20,7 @@ import { queryGuppyForRawData } from './queries';
  * amount of data shown when combined, but an admin filter should always decrease
  * or keep constant the amount of data shown when combined with a user filter).
  * @param {FilterState} userFilter
- * @param {{ [x: string]: OptionFilter }} adminAppliedPreFilter
+ * @param {{ [x: string]: { selectedValues?: string[] } }} adminAppliedPreFilter
  * */
 export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   /** @type {FilterState} */
@@ -38,6 +39,7 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
 
         mergedFilterState.value[key] = {
           ...mergedFilterState.value[key],
+          __type: FILTER_TYPE.OPTION,
           selectedValues:
             userFilterSubset.length > 0
               ? // The user-applied filter is more exclusive than the admin-applied filter.
@@ -47,7 +49,10 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
         };
       }
     } else {
-      mergedFilterState.value[key] = adminFilterValues;
+      mergedFilterState.value[key] = {
+        __type: FILTER_TYPE.OPTION,
+        ...adminFilterValues,
+      };
     }
   }
 
