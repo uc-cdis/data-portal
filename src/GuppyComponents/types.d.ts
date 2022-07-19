@@ -23,7 +23,9 @@ export type SimpleFilterState = {
 
 export type AnchoredFilterState = {
   __type: 'ANCHORED';
-  filter: SimpleFilterState;
+  value?: {
+    [x: string]: EmptyFilter | OptionFilter | RangeFilter;
+  };
 };
 
 export type FilterState = {
