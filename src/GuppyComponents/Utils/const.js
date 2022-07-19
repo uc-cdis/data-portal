@@ -15,4 +15,13 @@ export const FILE_DELIMITERS = {
   csv: ',',
 };
 
+export const FILTER_TYPE = {
+  /** @type {'ANCHORED'} */
+  ANCHORED: 'ANCHORED',
+  /** @type {'OPTION'} */
+  OPTION: 'OPTION',
+  /** @type {'RANGE'} */
+  RANGE: 'RANGE',
+};
+
 export { guppyUrl as GUPPY_URL } from '../../localconf';
