@@ -65,7 +65,7 @@ describe('pluckFromAnchorFilter', () => {
         value: {
           'x:y': {
             __type: FILTER_TYPE.ANCHORED,
-            filter: { value: { foo: {} } },
+            value: { foo: {} },
           },
         },
       },
@@ -80,14 +80,14 @@ describe('pluckFromAnchorFilter', () => {
         value: {
           'x:y': {
             __type: FILTER_TYPE.ANCHORED,
-            filter: { value: { foo: {}, bar: {} } },
+            value: { foo: {}, bar: {} },
           },
         },
       },
     });
     const expected2 = {
       value: {
-        'x:y': { __type: FILTER_TYPE.ANCHORED, filter: { value: { bar: {} } } },
+        'x:y': { __type: FILTER_TYPE.ANCHORED, value: { bar: {} } },
       },
     };
     expect(received2).toStrictEqual(expected2);
@@ -100,7 +100,7 @@ describe('pluckFromAnchorFilter', () => {
           foo: {},
           'x:y': {
             __type: FILTER_TYPE.ANCHORED,
-            filter: { value: { foo: {} } },
+            value: { foo: {} },
           },
         },
       },
@@ -116,14 +116,14 @@ describe('pluckFromAnchorFilter', () => {
         value: {
           'x:y': {
             __type: FILTER_TYPE.ANCHORED,
-            filter: { value: { bar: {} } },
+            value: { bar: {} },
           },
         },
       },
     });
     const expected1 = {
       value: {
-        'x:y': { __type: FILTER_TYPE.ANCHORED, filter: { value: { bar: {} } } },
+        'x:y': { __type: FILTER_TYPE.ANCHORED, value: { bar: {} } },
       },
     };
     expect(received1).toStrictEqual(expected1);
@@ -136,7 +136,7 @@ describe('pluckFromAnchorFilter', () => {
           foo: {},
           'x:y': {
             __type: FILTER_TYPE.ANCHORED,
-            filter: { value: { bar: {} } },
+            value: { bar: {} },
           },
         },
       },
@@ -144,7 +144,7 @@ describe('pluckFromAnchorFilter', () => {
     const expected2 = {
       value: {
         foo: {},
-        'x:y': { __type: FILTER_TYPE.ANCHORED, filter: { value: { bar: {} } } },
+        'x:y': { __type: FILTER_TYPE.ANCHORED, value: { bar: {} } },
       },
     };
     expect(received2).toStrictEqual(expected2);
