@@ -321,7 +321,7 @@
   /* --------- */
 }
 
-discovery-table__expanded-row-vstack {
+.discovery-table__expanded-row-vstack {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
