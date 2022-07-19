@@ -1,4 +1,5 @@
 import {
+  FILTER_TYPE,
   getExpandedStatus,
   getFilterResultsByAnchor,
   getFilterStatus,
@@ -37,16 +38,16 @@ describe('Get filter results by anchor label', () => {
     const received = getFilterResultsByAnchor({
       filterResults: {
         value: {
-          x: { selectedValues: ['foo', 'bar'] },
-          y: { lowerBound: 0, upperBound: 1 },
+          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+          y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
         },
       },
     });
     const expected = {
       '': {
         value: {
-          x: { selectedValues: ['foo', 'bar'] },
-          y: { lowerBound: 0, upperBound: 1 },
+          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+          y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
         },
       },
     };
@@ -62,16 +63,16 @@ describe('Get filter results by anchor label', () => {
       anchorConfig,
       filterResults: {
         value: {
-          x: { selectedValues: ['foo', 'bar'] },
-          y: { lowerBound: 0, upperBound: 1 },
+          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+          y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
         },
       },
     });
     const expected = {
       '': {
         value: {
-          x: { selectedValues: ['foo', 'bar'] },
-          y: { lowerBound: 0, upperBound: 1 },
+          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+          y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
         },
       },
       'a:a0': { value: {} },
@@ -85,10 +86,11 @@ describe('Get filter results by anchor label', () => {
       filterResults: {
         value: {
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
               value: {
-                x: { selectedValues: ['foo'] },
-                y: { lowerBound: 0, upperBound: 1 },
+                x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo'] },
+                y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
               },
             },
           },
@@ -99,8 +101,8 @@ describe('Get filter results by anchor label', () => {
       '': { value: {} },
       'a:a0': {
         value: {
-          x: { selectedValues: ['foo'] },
-          y: { lowerBound: 0, upperBound: 1 },
+          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo'] },
+          y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
         },
       },
       'a:a1': { value: {} },
@@ -113,14 +115,18 @@ describe('Get filter results by anchor label', () => {
       filterResults: {
         value: {
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
-              value: { x: { selectedValues: ['foo'] } },
+              value: {
+                x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo'] },
+              },
             },
           },
           'a:a1': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
               value: {
-                y: { lowerBound: 0, upperBound: 1 },
+                y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
               },
             },
           },
@@ -131,12 +137,12 @@ describe('Get filter results by anchor label', () => {
       '': { value: {} },
       'a:a0': {
         value: {
-          x: { selectedValues: ['foo'] },
+          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo'] },
         },
       },
       'a:a1': {
         value: {
-          y: { lowerBound: 0, upperBound: 1 },
+          y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
         },
       },
     };
@@ -146,14 +152,20 @@ describe('Get filter results by anchor label', () => {
 
 describe('Get filter status from filter results', () => {
   test('Single tab, single option filter', () => {
-    const filterResults = { value: { x: { selectedValues: ['foo', 'bar'] } } };
+    const filterResults = {
+      value: {
+        x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+      },
+    };
     const filterTabs = [{ title: 'a', fields: ['x'] }];
     const filerStatus = getFilterStatus({ filterResults, filterTabs });
     const expected = [[{ foo: true, bar: true }]];
     expect(filerStatus).toEqual(expected);
   });
   test('Single tab, single range filter', () => {
-    const filterResults = { value: { x: { lowerBound: 0, upperBound: 1 } } };
+    const filterResults = {
+      value: { x: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 } },
+    };
     const filterTabs = [{ title: 'a', fields: ['x'] }];
     const filerStatus = getFilterStatus({ filterResults, filterTabs });
     const expected = [[[0, 1]]];
@@ -162,8 +174,8 @@ describe('Get filter status from filter results', () => {
   test('Single tab, multiple filters', () => {
     const filterResults = {
       value: {
-        x: { selectedValues: ['foo', 'bar'] },
-        y: { lowerBound: 0, upperBound: 1 },
+        x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+        y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
       },
     };
     const filterTabs = [{ title: 'a', fields: ['x', 'y'] }];
@@ -174,9 +186,9 @@ describe('Get filter status from filter results', () => {
   test('Multiple tabs', () => {
     const filterResults = {
       value: {
-        x: { selectedValues: ['foo', 'bar'] },
-        y: { lowerBound: 0, upperBound: 1 },
-        z: { selectedValues: ['baz'] },
+        x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+        y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+        z: { __type: FILTER_TYPE.OPTION, selectedValues: ['baz'] },
       },
     };
     const filterTabs = [
@@ -196,13 +208,19 @@ describe('Get filter status from filter results', () => {
     const filterResults = {
       value: {
         'a:a0': {
+          __type: FILTER_TYPE.ANCHORED,
           filter: {
-            value: { x: { selectedValues: ['foo', 'bar'] } },
+            value: {
+              x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+            },
           },
         },
         'a:a1': {
+          __type: FILTER_TYPE.ANCHORED,
           filter: {
-            value: { y: { lowerBound: 0, upperBound: 1 } },
+            value: {
+              y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+            },
           },
         },
       },
@@ -231,15 +249,19 @@ describe('Get filter status from filter results', () => {
     const filterResults = {
       value: {
         'a:a0': {
+          __type: FILTER_TYPE.ANCHORED,
           filter: {
-            value: { x: { selectedValues: ['foo', 'bar'] } },
+            value: {
+              x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+            },
           },
         },
         'a:a1': {
+          __type: FILTER_TYPE.ANCHORED,
           filter: {
             value: {
-              y: { lowerBound: 0, upperBound: 1 },
-              z: { selectedValues: ['baz'] },
+              y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+              z: { __type: FILTER_TYPE.OPTION, selectedValues: ['baz'] },
             },
           },
         },
@@ -276,19 +298,21 @@ describe('Get filter status from filter results', () => {
     };
     const filterResults = {
       value: {
-        x: { selectedValues: ['foo', 'bar'] },
+        x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
         'a:a0': {
+          __type: FILTER_TYPE.ANCHORED,
           filter: {
             value: {
-              y: { lowerBound: 0, upperBound: 1 },
-              z: { selectedValues: ['baz'] },
+              y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+              z: { __type: FILTER_TYPE.OPTION, selectedValues: ['baz'] },
             },
           },
         },
         'a:a1': {
+          __type: FILTER_TYPE.ANCHORED,
           filter: {
             value: {
-              z: { selectedValues: ['baz'] },
+              z: { __type: FILTER_TYPE.OPTION, selectedValues: ['baz'] },
             },
           },
         },
@@ -334,9 +358,9 @@ describe('Clear a single filter section', () => {
   function helper({
     filterResults = {
       value: {
-        x: { selectedValues: ['foo', 'bar'] },
-        y: { lowerBound: 0, upperBound: 1 },
-        z: { selectedValues: ['baz'] },
+        x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+        y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+        z: { __type: FILTER_TYPE.OPTION, selectedValues: ['baz'] },
       },
     },
     filterStatus = [[{ foo: true, bar: true }, { baz: true }], [[0, 1]]],
@@ -366,8 +390,8 @@ describe('Clear a single filter section', () => {
       filterStatus: [[{}, { baz: true }], [[0, 1]]],
       filterResults: {
         value: {
-          y: { lowerBound: 0, upperBound: 1 },
-          z: { selectedValues: ['baz'] },
+          y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+          z: { __type: FILTER_TYPE.OPTION, selectedValues: ['baz'] },
         },
       },
     };
@@ -382,8 +406,8 @@ describe('Clear a single filter section', () => {
       filterStatus: [[{ foo: true, bar: true }, { baz: true }], [{}]],
       filterResults: {
         value: {
-          x: { selectedValues: ['foo', 'bar'] },
-          z: { selectedValues: ['baz'] },
+          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+          z: { __type: FILTER_TYPE.OPTION, selectedValues: ['baz'] },
         },
       },
     };
@@ -393,11 +417,14 @@ describe('Clear a single filter section', () => {
     const cleared = helper({
       filterResults: {
         value: {
-          x: { selectedValues: ['foo', 'bar'] },
-          z: { selectedValues: ['baz'] },
+          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+          z: { __type: FILTER_TYPE.OPTION, selectedValues: ['baz'] },
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
-              value: { y: { lowerBound: 0, upperBound: 1 } },
+              value: {
+                y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+              },
             },
           },
         },
@@ -417,8 +444,8 @@ describe('Clear a single filter section', () => {
       ],
       filterResults: {
         value: {
-          x: { selectedValues: ['foo', 'bar'] },
-          z: { selectedValues: ['baz'] },
+          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+          z: { __type: FILTER_TYPE.OPTION, selectedValues: ['baz'] },
         },
       },
     };
@@ -430,15 +457,15 @@ describe('Remove empty filter in filter results', () => {
   test('Single empty filter', () => {
     const removed = removeEmptyFilter({
       value: {
-        x: { selectedValues: ['foo', 'bar'] },
+        x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
         y: {},
-        z: { __combineMode: 'AND' },
+        z: { __combineMode: 'AND', __type: FILTER_TYPE.OPTION },
       },
     });
     const expected = {
       value: {
-        x: { selectedValues: ['foo', 'bar'] },
-        z: { __combineMode: 'AND' },
+        x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+        z: { __combineMode: 'AND', __type: FILTER_TYPE.OPTION },
       },
     };
     expect(removed).toEqual(expected);
@@ -447,13 +474,13 @@ describe('Remove empty filter in filter results', () => {
     const removed = removeEmptyFilter({
       value: {
         x: {},
-        y: { lowerBound: 0, upperBound: 1 },
+        y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
         z: {},
       },
     });
     const expected = {
       value: {
-        y: { lowerBound: 0, upperBound: 1 },
+        y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
       },
     };
     expect(removed).toEqual(expected);
@@ -462,11 +489,12 @@ describe('Remove empty filter in filter results', () => {
     const removed = removeEmptyFilter({
       value: {
         'a:a0': {
+          __type: FILTER_TYPE.ANCHORED,
           filter: {
             value: {
               x: {},
-              y: { lowerBound: 0, upperBound: 1 },
-              z: { __combineMode: 'AND' },
+              y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+              z: { __combineMode: 'AND', __type: FILTER_TYPE.OPTION },
             },
           },
         },
@@ -475,10 +503,11 @@ describe('Remove empty filter in filter results', () => {
     const expected = {
       value: {
         'a:a0': {
+          __type: FILTER_TYPE.ANCHORED,
           filter: {
             value: {
-              y: { lowerBound: 0, upperBound: 1 },
-              z: { __combineMode: 'AND' },
+              y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+              z: { __combineMode: 'AND', __type: FILTER_TYPE.OPTION },
             },
           },
         },
@@ -490,6 +519,7 @@ describe('Remove empty filter in filter results', () => {
     const removed = removeEmptyFilter({
       value: {
         'a:a0': {
+          __type: FILTER_TYPE.ANCHORED,
           filter: {
             value: {
               x: {},
@@ -505,13 +535,14 @@ describe('Remove empty filter in filter results', () => {
   test('Empty filters with and without anchor', () => {
     const removed = removeEmptyFilter({
       value: {
-        x: { selectedValues: ['foo', 'bar'] },
+        x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
         y: {},
         'a:a0': {
+          __type: FILTER_TYPE.ANCHORED,
           filter: {
             value: {
               x: {},
-              y: { lowerBound: 0, upperBound: 1 },
+              y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
             },
           },
         },
@@ -519,11 +550,12 @@ describe('Remove empty filter in filter results', () => {
     });
     const expected = {
       value: {
-        x: { selectedValues: ['foo', 'bar'] },
+        x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
         'a:a0': {
+          __type: FILTER_TYPE.ANCHORED,
           filter: {
             value: {
-              y: { lowerBound: 0, upperBound: 1 },
+              y: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
             },
           },
         },
@@ -561,7 +593,7 @@ describe('Check if a tab has active filter', () => {
   });
 });
 
-describe('Toggles combine mode in option filter', () => {
+describe.only('Toggles combine mode in option filter', () => {
   /**
    * @param {Object} args
    * @param {FilterStatus} args.filterStatus
@@ -591,7 +623,7 @@ describe('Toggles combine mode in option filter', () => {
       filterStatus: [[{ foo: true }]],
       filterResults: {
         value: {
-          x: { selectedValues: ['foo'] },
+          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo'] },
         },
       },
       combineModeValue: 'OR',
@@ -599,7 +631,11 @@ describe('Toggles combine mode in option filter', () => {
     const expected = {
       filterResults: {
         value: {
-          x: { selectedValues: ['foo'], __combineMode: 'OR' },
+          x: {
+            __combineMode: 'OR',
+            __type: FILTER_TYPE.OPTION,
+            selectedValues: ['foo'],
+          },
         },
       },
       filterStatus: [[{ foo: true, __combineMode: 'OR' }]],
@@ -611,7 +647,11 @@ describe('Toggles combine mode in option filter', () => {
       filterStatus: [[{ foo: true, __combineMode: 'OR' }]],
       filterResults: {
         value: {
-          x: { selectedValues: ['foo'], __combineMode: 'OR' },
+          x: {
+            __combineMode: 'OR',
+            __type: FILTER_TYPE.OPTION,
+            selectedValues: ['foo'],
+          },
         },
       },
       combineModeValue: 'AND',
@@ -619,7 +659,11 @@ describe('Toggles combine mode in option filter', () => {
     const expected = {
       filterResults: {
         value: {
-          x: { selectedValues: ['foo'], __combineMode: 'AND' },
+          x: {
+            __combineMode: 'AND',
+            __type: FILTER_TYPE.OPTION,
+            selectedValues: ['foo'],
+          },
         },
       },
       filterStatus: [[{ foo: true, __combineMode: 'AND' }]],
@@ -632,9 +676,10 @@ describe('Toggles combine mode in option filter', () => {
       filterResults: {
         value: {
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
               value: {
-                x: { selectedValues: ['foo'] },
+                x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo'] },
               },
             },
           },
@@ -647,9 +692,14 @@ describe('Toggles combine mode in option filter', () => {
       filterResults: {
         value: {
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
               value: {
-                x: { selectedValues: ['foo'], __combineMode: 'AND' },
+                x: {
+                  __combineMode: 'AND',
+                  __type: FILTER_TYPE.OPTION,
+                  selectedValues: ['foo'],
+                },
               },
             },
           },
@@ -672,9 +722,10 @@ describe('Toggles combine mode in option filter', () => {
       filterResults: {
         value: {
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
               value: {
-                x: { __combineMode: 'AND' },
+                x: { __combineMode: 'AND', __type: FILTER_TYPE.OPTION },
               },
             },
           },
@@ -692,9 +743,14 @@ describe('Toggles combine mode in option filter', () => {
       filterResults: {
         value: {
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
               value: {
-                x: { selectedValues: ['foo'], __combineMode: 'OR' },
+                x: {
+                  __combineMode: 'OR',
+                  __type: FILTER_TYPE.OPTION,
+                  selectedValues: ['foo'],
+                },
               },
             },
           },
@@ -707,9 +763,14 @@ describe('Toggles combine mode in option filter', () => {
       filterResults: {
         value: {
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
               value: {
-                x: { selectedValues: ['foo'], __combineMode: 'AND' },
+                x: {
+                  __combineMode: 'AND',
+                  __type: FILTER_TYPE.OPTION,
+                  selectedValues: ['foo'],
+                },
               },
             },
           },
@@ -737,7 +798,7 @@ describe('Update a range filter', () => {
     filterStatus = [[[0, 1]]],
     filterResults = {
       value: {
-        x: { lowerBound: 0, upperBound: 1 },
+        x: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
       },
     },
     anchorLabel,
@@ -765,7 +826,9 @@ describe('Update a range filter', () => {
     });
     const expected = {
       filterResults: {
-        value: { x: { lowerBound: 1, upperBound: 2 } },
+        value: {
+          x: { __type: FILTER_TYPE.RANGE, lowerBound: 1, upperBound: 2 },
+        },
       },
       filterStatus: [[[1, 2]]],
     };
@@ -788,9 +851,10 @@ describe('Update a range filter', () => {
       filterResults: {
         value: {
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
               value: {
-                x: { lowerBound: 0, upperBound: 1 },
+                x: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
               },
             },
           },
@@ -804,9 +868,10 @@ describe('Update a range filter', () => {
       filterResults: {
         value: {
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
               value: {
-                x: { lowerBound: 1, upperBound: 2 },
+                x: { __type: FILTER_TYPE.RANGE, lowerBound: 1, upperBound: 2 },
               },
             },
           },
@@ -844,9 +909,10 @@ describe('Update a range filter', () => {
       filterResults: {
         value: {
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
               value: {
-                x: { lowerBound: 0, upperBound: 1 },
+                x: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
               },
             },
           },
@@ -892,7 +958,7 @@ describe('Update an option filter', () => {
     const expected = {
       filterResults: {
         value: {
-          x: { selectedValues: ['foo'] },
+          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo'] },
         },
       },
       filterStatus: [[{ foo: true }]],
@@ -904,7 +970,7 @@ describe('Update an option filter', () => {
       filterStatus: [[{ foo: true }]],
       filterResults: {
         value: {
-          x: { selectedValues: ['foo'] },
+          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo'] },
         },
       },
       selectedValue: 'foo',
@@ -926,9 +992,10 @@ describe('Update an option filter', () => {
       filterResults: {
         value: {
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
               value: {
-                x: { selectedValues: ['foo'] },
+                x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo'] },
               },
             },
           },
@@ -944,9 +1011,10 @@ describe('Update an option filter', () => {
       filterResults: {
         value: {
           'a:a0': {
+            __type: FILTER_TYPE.ANCHORED,
             filter: {
               value: {
-                x: { selectedValues: ['foo'] },
+                x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo'] },
               },
             },
           },
