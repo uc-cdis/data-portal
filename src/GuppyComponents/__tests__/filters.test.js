@@ -5,15 +5,19 @@ import {
   updateCountsInInitialTabsOptions,
   sortTabsOptions,
 } from '../Utils/filters';
+import { FILTER_TYPE } from '../Utils/const';
 
 describe('can merge simple selectedValue filters', () => {
-  const userFilter = { value: { data_format: { selectedValues: ['VCF'] } } };
+  const __type = FILTER_TYPE.OPTION;
+  const userFilter = {
+    value: { data_format: { __type, selectedValues: ['VCF'] } },
+  };
   const adminFilter = { project_id: { selectedValues: ['jnkns-jenkins'] } };
 
   const mergedFilterExpected = {
     value: {
-      project_id: { selectedValues: ['jnkns-jenkins'] },
-      data_format: { selectedValues: ['VCF'] },
+      project_id: { __type, selectedValues: ['jnkns-jenkins'] },
+      data_format: { __type, selectedValues: ['VCF'] },
     },
   };
 
@@ -26,9 +30,12 @@ describe('can merge simple selectedValue filters', () => {
 describe('can merge admin-provided selectedValue filters with user-provided range filters', () => {
   const userFilter = {
     value: {
-      bmi: { lowerBound: 28, upperBound: 99 },
-      age: { lowerBound: 26, upperBound: 33 },
-      data_type: { selectedValues: ['Aligned Reads'] },
+      bmi: { __type: FILTER_TYPE.RANGE, lowerBound: 28, upperBound: 99 },
+      age: { __type: FILTER_TYPE.RANGE, lowerBound: 26, upperBound: 33 },
+      data_type: {
+        __type: FILTER_TYPE.OPTION,
+        selectedValues: ['Aligned Reads'],
+      },
     },
   };
   const adminFilter = {
@@ -37,10 +44,16 @@ describe('can merge admin-provided selectedValue filters with user-provided rang
 
   const mergedFilterExpected = {
     value: {
-      project_id: { selectedValues: ['jnkns-jenkins', 'jnkns-jenkins2'] },
-      bmi: { lowerBound: 28, upperBound: 99 },
-      age: { lowerBound: 26, upperBound: 33 },
-      data_type: { selectedValues: ['Aligned Reads'] },
+      project_id: {
+        __type: FILTER_TYPE.OPTION,
+        selectedValues: ['jnkns-jenkins', 'jnkns-jenkins2'],
+      },
+      bmi: { __type: FILTER_TYPE.RANGE, lowerBound: 28, upperBound: 99 },
+      age: { __type: FILTER_TYPE.RANGE, lowerBound: 26, upperBound: 33 },
+      data_type: {
+        __type: FILTER_TYPE.OPTION,
+        selectedValues: ['Aligned Reads'],
+      },
     },
   };
 
@@ -53,9 +66,15 @@ describe('can merge admin-provided selectedValue filters with user-provided rang
 describe('will select user-applied filter for a given key if it is more exclusive than admin filter', () => {
   const userFilter = {
     value: {
-      project_id: { selectedValues: ['jnkns-jenkins2'] },
-      age: { lowerBound: 26, upperBound: 33 },
-      data_type: { selectedValues: ['Aligned Reads'] },
+      project_id: {
+        __type: FILTER_TYPE.OPTION,
+        selectedValues: ['jnkns-jenkins2'],
+      },
+      age: { __type: FILTER_TYPE.RANGE, lowerBound: 26, upperBound: 33 },
+      data_type: {
+        __type: FILTER_TYPE.OPTION,
+        selectedValues: ['Aligned Reads'],
+      },
     },
   };
   const adminFilter = {
@@ -64,9 +83,15 @@ describe('will select user-applied filter for a given key if it is more exclusiv
 
   const mergedFilterExpected = {
     value: {
-      project_id: { selectedValues: ['jnkns-jenkins2'] },
-      age: { lowerBound: 26, upperBound: 33 },
-      data_type: { selectedValues: ['Aligned Reads'] },
+      project_id: {
+        __type: FILTER_TYPE.OPTION,
+        selectedValues: ['jnkns-jenkins2'],
+      },
+      age: { __type: FILTER_TYPE.RANGE, lowerBound: 26, upperBound: 33 },
+      data_type: {
+        __type: FILTER_TYPE.OPTION,
+        selectedValues: ['Aligned Reads'],
+      },
     },
   };
 
@@ -103,7 +128,7 @@ describe('can update a small set of tabs with new counts', () => {
 
   const filtersApplied = {
     value: {
-      annotated_sex: { selectedValues: ['silver'] },
+      annotated_sex: { __type: FILTER_TYPE.OPTION, selectedValues: ['silver'] },
     },
   };
 
@@ -171,9 +196,11 @@ describe('can update a small set of tabs with new counts, test with ranger slide
   const filtersApplied = {
     value: {
       field1: {
+        __type: FILTER_TYPE.OPTION,
         selectedValues: ['option2'],
       },
       field2: {
+        __type: FILTER_TYPE.RANGE,
         lowerBound: 4,
         upperBound: 39,
       },

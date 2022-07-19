@@ -1,3 +1,4 @@
+import { FILTER_TYPE } from '../Utils/const';
 import {
   getGQLFilter,
   getQueryInfoForAggregationOptionsData,
@@ -6,10 +7,28 @@ import {
 /** @typedef {import('../types').CombineMode} CombineMode */
 
 describe('Get GQL filter from filter object from', () => {
+  test('an undefined filter', () => {
+    const filterState = undefined;
+    const gqlFilter = undefined;
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
+
+  test('an empty filter', () => {
+    const filterState = {};
+    const gqlFilter = undefined;
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
+
+  test('an empty value filter', () => {
+    const filterState = { __combindMode: 'AND', value: {} };
+    const gqlFilter = undefined;
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
+
   test('a simple option filter', async () => {
     const filterState = {
       value: {
-        a: { selectedValues: ['foo', 'bar'] },
+        a: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
       },
     };
     const gqlFilter = { AND: [{ IN: { a: ['foo', 'bar'] } }] };
@@ -21,6 +40,7 @@ describe('Get GQL filter from filter object from', () => {
       value: {
         a: {
           __combineMode: /** @type {CombineMode} */ ('OR'),
+          __type: FILTER_TYPE.OPTION,
           selectedValues: ['foo', 'bar'],
         },
       },
@@ -34,6 +54,7 @@ describe('Get GQL filter from filter object from', () => {
       value: {
         a: {
           __combineMode: /** @type {CombineMode} */ ('AND'),
+          __type: FILTER_TYPE.OPTION,
           selectedValues: ['foo', 'bar'],
         },
       },
@@ -47,7 +68,7 @@ describe('Get GQL filter from filter object from', () => {
   test('a simple range filter', () => {
     const filterState = {
       value: {
-        a: { lowerBound: 0, upperBound: 1 },
+        a: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
       },
     };
     const gqlFilter = {
@@ -60,12 +81,13 @@ describe('Get GQL filter from filter object from', () => {
     const filterState = {
       __combineMode: /** @type {CombineMode} */ ('OR'),
       value: {
-        a: { selectedValues: ['foo', 'bar'] },
+        a: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
         b: {
           __combineMode: /** @type {CombineMode} */ ('AND'),
+          __type: FILTER_TYPE.OPTION,
           selectedValues: ['foo', 'bar'],
         },
-        c: { lowerBound: 0, upperBound: 1 },
+        c: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
       },
     };
     const gqlFilter = {
@@ -83,6 +105,7 @@ describe('Get GQL filter from filter object from', () => {
       value: {
         a: {
           __combineMode: /** @type {CombineMode} */ ('OR'),
+          __type: FILTER_TYPE.OPTION,
         },
       },
     };
@@ -94,6 +117,7 @@ describe('Get GQL filter from filter object from', () => {
     const fieldName = 'a';
     const filterValue = {};
     const filterState = { value: { [fieldName]: filterValue } };
+    // @ts-ignore: error expected for invalid filter
     expect(() => getGQLFilter(filterState)).toThrow(
       `Invalid filter object for "${fieldName}": ${JSON.stringify(filterValue)}`
     );
@@ -103,7 +127,7 @@ describe('Get GQL filter from filter object from', () => {
     const filterState = {
       __combineMode: /** @type {CombineMode} */ ('OR'),
       value: {
-        'a.b': { selectedValues: ['foo', 'bar'] },
+        'a.b': { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
       },
     };
     const gqlFilter = {
@@ -115,8 +139,8 @@ describe('Get GQL filter from filter object from', () => {
   test('nested filters with same parent path', () => {
     const filterState = {
       value: {
-        'a.b': { selectedValues: ['foo', 'bar'] },
-        'a.c': { lowerBound: 0, upperBound: 1 },
+        'a.b': { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+        'a.c': { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
       },
     };
     const gqlFilter = {
@@ -138,8 +162,8 @@ describe('Get GQL filter from filter object from', () => {
   test('nested filters with different parent paths', () => {
     const filterState = {
       value: {
-        'a.b': { selectedValues: ['foo', 'bar'] },
-        'c.d': { lowerBound: 0, upperBound: 1 },
+        'a.b': { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+        'c.d': { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
       },
     };
     const gqlFilter = {
@@ -166,10 +190,18 @@ describe('Get GQL filter from filter object from', () => {
       __combineMode: /** @type {CombineMode} */ ('OR'),
       value: {
         'x:y': {
+          __type: FILTER_TYPE.ANCHORED,
           filter: {
             value: {
-              'a.b': { selectedValues: ['foo', 'bar'] },
-              'c.d': { lowerBound: 0, upperBound: 1 },
+              'a.b': {
+                __type: FILTER_TYPE.OPTION,
+                selectedValues: ['foo', 'bar'],
+              },
+              'c.d': {
+                __type: FILTER_TYPE.RANGE,
+                lowerBound: 0,
+                upperBound: 1,
+              },
             },
           },
         },
@@ -211,14 +243,18 @@ describe('Get GQL filter from filter object from', () => {
   test('various filters', () => {
     const filterState = {
       value: {
-        a: { selectedValues: ['foo', 'bar'] },
+        a: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
         'b.c': {
           __combineMode: /** @type {CombineMode} */ ('AND'),
+          __type: FILTER_TYPE.OPTION,
           selectedValues: ['foo', 'bar'],
         },
-        'b.d': { lowerBound: 0, upperBound: 1 },
-        e: { __combineMode: /** @type {CombineMode} */ ('OR') },
-        'f.g': { lowerBound: 0, upperBound: 1 },
+        'b.d': { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+        e: {
+          __combineMode: /** @type {CombineMode} */ ('OR'),
+          __type: FILTER_TYPE.OPTION,
+        },
+        'f.g': { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
       },
     };
     const gqlFilter = {
