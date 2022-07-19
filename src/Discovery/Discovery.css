@@ -321,6 +321,14 @@
   /* --------- */
 }
 
+discovery-table__expanded-row-vstack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background-color: #FFEEAA;
+}
+
 .discovery-table-container .ant-table, .discovery-table-container .ant-btn {
   font-size: 0.875rem;
 }

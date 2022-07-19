@@ -139,72 +139,74 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
             return value;
           };
           return (
-            <div className='discovery-table__expanded-row-content'>
-              <div
-                role='button'
-                tabIndex={0}
-                onMouseEnter={(ev) => {
-                  ev.stopPropagation();
-                  setOnHoverRowIndex(index);
-                }}
-                onMouseLeave={(ev) => {
-                  ev.stopPropagation();
-                  setOnHoverRowIndex(null);
-                }}
-                onClick={() => {
-                  props.setPermalinkCopied(false);
-                  props.setModalData(record);
-                  props.setModalVisible(true);
-                }}
-                onKeyPress={() => {
-                  props.setPermalinkCopied(false);
-                  props.setModalData(record);
-                  props.setModalVisible(true);
-                }}
-              >
-                {renderValue(studyPreviewText)}
+            <div className='discovery-table__expanded-row-content'>\
+              <div className='discovery-table__expanded-row-vstack'>
+                <div
+                  role='button'
+                  tabIndex={0}
+                  onMouseEnter={(ev) => {
+                    ev.stopPropagation();
+                    setOnHoverRowIndex(index);
+                  }}
+                  onMouseLeave={(ev) => {
+                    ev.stopPropagation();
+                    setOnHoverRowIndex(null);
+                  }}
+                  onClick={() => {
+                    props.setPermalinkCopied(false);
+                    props.setModalData(record);
+                    props.setModalVisible(true);
+                  }}
+                  onKeyPress={() => {
+                    props.setPermalinkCopied(false);
+                    props.setModalData(record);
+                    props.setModalVisible(true);
+                  }}
+                >
+                  {renderValue(studyPreviewText)}
+                </div>
+                <React.Fragment>
+                  {record[config.minimalFieldMapping.tagsListFieldName]?.map(({ name, category }) => {
+                    const isSelected = !!props.selectedTags[name];
+                    const color = getTagColor(category, config);
+                    if (typeof name !== 'string') {
+                      return null;
+                    }
+                    return (
+                      <Tag
+                        key={record.name + name}
+                        role='button'
+                        tabIndex={0}
+                        aria-pressed={isSelected ? 'true' : 'false'}
+                        className={`discovery-tag ${isSelected ? 'discovery-tag--selected' : ''}`}
+                        aria-label={name}
+                        style={{
+                          backgroundColor: isSelected ? color : 'initial',
+                          borderColor: color,
+                        }}
+                        onKeyPress={(ev) => {
+                          ev.stopPropagation();
+                          const selectedTags = {
+                            ...props.selectedTags,
+                            [name]: props.selectedTags[name] ? undefined : true,
+                          };
+                          props.onTagsSelected(selectedTags);
+                        }}
+                        onClick={(ev) => {
+                          ev.stopPropagation();
+                          const selectedTags = {
+                            ...props.selectedTags,
+                            [name]: props.selectedTags[name] ? undefined : true,
+                          };
+                          props.onTagsSelected(selectedTags);
+                        }}
+                      >
+                        {name}
+                      </Tag>
+                    );
+                  })}
+                </React.Fragment>
               </div>
-              <React.Fragment>
-                {record[config.minimalFieldMapping.tagsListFieldName]?.map(({ name, category }) => {
-                  const isSelected = !!props.selectedTags[name];
-                  const color = getTagColor(category, config);
-                  if (typeof name !== 'string') {
-                    return null;
-                  }
-                  return (
-                    <Tag
-                      key={record.name + name}
-                      role='button'
-                      tabIndex={0}
-                      aria-pressed={isSelected ? 'true' : 'false'}
-                      className={`discovery-tag ${isSelected ? 'discovery-tag--selected' : ''}`}
-                      aria-label={name}
-                      style={{
-                        backgroundColor: isSelected ? color : 'initial',
-                        borderColor: color,
-                      }}
-                      onKeyPress={(ev) => {
-                        ev.stopPropagation();
-                        const selectedTags = {
-                          ...props.selectedTags,
-                          [name]: props.selectedTags[name] ? undefined : true,
-                        };
-                        props.onTagsSelected(selectedTags);
-                      }}
-                      onClick={(ev) => {
-                        ev.stopPropagation();
-                        const selectedTags = {
-                          ...props.selectedTags,
-                          [name]: props.selectedTags[name] ? undefined : true,
-                        };
-                        props.onTagsSelected(selectedTags);
-                      }}
-                    >
-                      {name}
-                    </Tag>
-                  );
-                })}
-              </React.Fragment>
             </div>
           );
         },
