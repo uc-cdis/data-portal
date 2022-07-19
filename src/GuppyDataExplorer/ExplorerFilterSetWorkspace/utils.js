@@ -37,12 +37,12 @@ export function pluckFromAnchorFilter({ anchor, field, filter }) {
   for (const [key, value] of Object.entries(filter.value))
     if (key !== anchor) newFilter.value[key] = value;
     else if (value.__type === FILTER_TYPE.ANCHORED) {
-      const newAnchorFilter = pluckFromFilter({ field, filter: value.filter });
+      const newAnchorFilter = pluckFromFilter({ field, filter: value });
       if (Object.keys(newAnchorFilter.value ?? {}).length > 0)
         newFilter.value[key] =
           /** @type {import('../../GuppyComponents/types').AnchoredFilterState} */ ({
             __type: FILTER_TYPE.ANCHORED,
-            filter: newAnchorFilter,
+            value: newAnchorFilter.value,
           });
     }
 
