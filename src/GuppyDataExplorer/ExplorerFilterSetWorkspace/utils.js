@@ -1,3 +1,7 @@
+import { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
+
+export { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
+
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
 
 /**
@@ -32,11 +36,12 @@ export function pluckFromAnchorFilter({ anchor, field, filter }) {
   newFilter.value = {};
   for (const [key, value] of Object.entries(filter.value))
     if (key !== anchor) newFilter.value[key] = value;
-    else if ('filter' in value) {
+    else if (value.__type === FILTER_TYPE.ANCHORED) {
       const newAnchorFilter = pluckFromFilter({ field, filter: value.filter });
       if (Object.keys(newAnchorFilter.value ?? {}).length > 0)
         newFilter.value[key] =
           /** @type {import('../../GuppyComponents/types').AnchoredFilterState} */ ({
+            __type: FILTER_TYPE.ANCHORED,
             filter: newAnchorFilter,
           });
     }
