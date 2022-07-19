@@ -32,7 +32,7 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
     if (key in userFilter.value) {
       const userFilterValues = userFilter.value[key];
 
-      if ('selectedValues' in userFilterValues) {
+      if (userFilterValues.__type === FILTER_TYPE.OPTION) {
         const userFilterSubset = userFilterValues.selectedValues.filter((x) =>
           adminFilterValues.selectedValues.includes(x)
         );
@@ -124,7 +124,7 @@ export function updateCountsInInitialTabsOptions(
       }
 
       const filter = filtersApplied.value?.[fieldName];
-      if (filter !== undefined && 'selectedValues' in filter)
+      if (filter !== undefined && filter.__type === FILTER_TYPE.OPTION)
         for (const key of filter.selectedValues) {
           const found = updatedTabsOptions[fieldName].histogram.find(
             (o) => o.key === key
@@ -420,7 +420,7 @@ export function excludeSelfFilterFromAggsData(aggsData, filterResults) {
       if (fieldName in filterResults) {
         const filterValue = filterResults[fieldName];
         resultAggsData[fieldName].histogram =
-          'selectedValues' in filterValue
+          filterValue.__type === FILTER_TYPE.OPTION
             ? histogram.filter(
                 ({ key }) =>
                   typeof key === 'string' &&

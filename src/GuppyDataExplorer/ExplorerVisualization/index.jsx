@@ -15,6 +15,7 @@ import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import './ExplorerVisualization.css';
+import { FILTER_TYPE } from '../ExplorerFilterSetWorkspace/utils';
 
 /** @typedef {import('../types').ChartConfig} ChartConfig */
 /** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
@@ -74,11 +75,11 @@ function getChartData({
       const { histogram } = aggsChartData[field];
       switch (type) {
         case 'count': {
-          const optionFilter = filter[field];
+          const optionFilter = filter.value[field];
           countItems.push({
             label: title,
             value:
-              'selectedValues' in optionFilter
+              optionFilter.__type === FILTER_TYPE.OPTION
                 ? optionFilter.selectedValues.length
                 : histogram.length,
           });

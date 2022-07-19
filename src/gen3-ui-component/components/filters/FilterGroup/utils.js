@@ -61,13 +61,13 @@ function getFilterTabStatus(fields, filterResults) {
   return fields.map((field) => {
     if (field in filterResults.value) {
       const filterValues = filterResults.value[field];
-      if ('selectedValues' in filterValues) {
+      if (filterValues.__type === FILTER_TYPE.OPTION) {
         const status = {};
         for (const selected of filterValues.selectedValues)
           status[selected] = true;
         return status;
       }
-      if ('lowerBound' in filterValues) {
+      if (filterValues.__type === FILTER_TYPE.RANGE) {
         return [filterValues.lowerBound, filterValues.upperBound];
       }
     }

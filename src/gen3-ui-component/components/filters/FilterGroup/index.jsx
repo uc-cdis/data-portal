@@ -8,6 +8,7 @@ import FilterSection from '../FilterSection';
 import PatientIdFilter from '../PatientIdFilter';
 import {
   clearFilterSection,
+  FILTER_TYPE,
   getExpandedStatus,
   getFilterStatus,
   getSelectedAnchors,
@@ -182,7 +183,7 @@ function FilterGroup({
     const field = filterTabs[tabIndex].fields[sectionIndex];
     const filterValues = filterResults[field];
     if (
-      'selectedValues' in filterValues &&
+      filterValues.__type === FILTER_TYPE.OPTION &&
       filterValues.selectedValues.length > 0
     )
       onFilterChange(updated.filterResults);
