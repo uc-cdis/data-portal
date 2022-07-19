@@ -299,7 +299,7 @@ class StudyDetails extends React.Component {
      const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find((e) => e.type === 'request_access');
 
      let loginAlertMessage = 'Researchers are required to log in to request access to this dataset. Use the button above to login or create an account.';
-     if (this.props.data.requiredIdpField && this.props.data.requiredIdpField !== this.props.user?.idp)) {
+     if (this.props.data.requiredIdpField && this.props.data.requiredIdpField !== this.props.user?.idp) {
        const loginAlertAccountSnippet = `a${/^([aeiou])/i.test(this.props.data.requiredIdpField) ? 'n' : ''} ${this.props.data.requiredIdpField.toUpperCase()}`;
        loginAlertMessage = `Researchers are required to log in with ${loginAlertAccountSnippet} account to request access to this dataset. Use the button above to login or create ${loginAlertAccountSnippet} account.`;
      }
