@@ -601,7 +601,7 @@ function parseSimpleFilter(fieldName, filterValues) {
  * @returns {GqlNestedAnchoredFilter[]}
  */
 function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
-  const filterState = anchoredFilterState.filter;
+  const filterState = anchoredFilterState;
   if (filterState === undefined || Object.keys(filterState).length === 0)
     return undefined;
 
