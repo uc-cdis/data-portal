@@ -48,23 +48,31 @@ The following is the updated filter state data structure modeled in TypeScript:
 ```ts
 type OptionFilter = {
   __combineMode?: 'AND' | 'OR';
+  __type: 'OPTION';
   selectedValues: string[];
 };
 
 type RangeFilter = {
+  __type: 'RANGE';
   lowerBound: number;
   upperBound: number;
 };
 
-type SimpleFilterState = {
-  [fieldName: string]: OptionFilter | RangeFilter;
+type AnchoredFilterState = {
+  __type: 'ANCHORED';
+  value: {
+    [fieldName: string]: OptionFilter | RangeFilter;
+  };
 };
 
 type FilterState = {
-  [fieldNameOrAnchorLabel: string]:
-    | OptionFilter
-    | RangeFilter
-    | { filter: SimpleFilterState }; // for anchored filters
+  __combineMode?: 'AND' | 'OR';
+  value: {
+    [fieldNameOrAnchorLabel: string]:
+      | OptionFilter
+      | RangeFilter
+      | AnchoredFilterState; // for anchored filters
+  };
 };
 ```
 
@@ -77,18 +85,23 @@ The anchor label is used only if anchor value is set to be a non-empty value (i.
 ```ts
 const filterState: FilterState = {
   sex: {
+    __type: 'OPTION',
     selectedValues: ['Female'],
   },
   'disease_phase:Initial Diagnosis': {
-    filter: {
+    __type: 'ANCHORED',
+    value: {
       'histologies.histology_grade': {
+        __type: 'OPTION',
         selectedValues: ['Differentiating'],
       },
     },
   },
   'disease_phase:Relapse': {
-    filter: {
+    __type: 'ANCHORED',
+    value: {
       'tumor_assessments.tumor_classification': {
+        __type: 'OPTION',
         selectedValues: ['Primary'],
       },
     },
