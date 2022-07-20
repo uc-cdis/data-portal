@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'antd';
 import {
-  PlusOutlined, TeamOutlined, EditOutlined, DeleteOutlined,
+  TeamOutlined, DeleteOutlined,
 } from '@ant-design/icons';
 import CohortSelect from './CohortSelect';
 import '../../GWASUIApp/GWASUIApp.css';
@@ -15,7 +15,6 @@ const CustomDichotomousSelect = ({
   const [firstCohort, setFirstCohort] = useState(undefined);
   const [secondCohort, setSecondCohort] = useState(undefined);
   const [cdName, setCdName] = useState('');
-  const [editMode, setEditMode] = useState(false);
 
   const handleCDSubmit = () => {
     handleCDAdd({
@@ -26,7 +25,6 @@ const CustomDichotomousSelect = ({
     setFirstCohort(undefined);
     setSecondCohort(undefined);
     setCdName('');
-    setEditMode(false);
   };
 
   const disableCD = cdName.length === 0 || firstCohort === undefined || secondCohort === undefined;
@@ -34,8 +32,6 @@ const CustomDichotomousSelect = ({
   return (
     <React.Fragment>
       <div className='cd-flex'>
-        {!editMode && (<div className='GWASUI-cdBtnContainer GWASUI-align'><button type='button' onClick={() => setEditMode(true)}><PlusOutlined /><span className='GWASUI-btnText'>Add Custom Dichotomous</span></button></div>)}
-        {editMode && (
           <React.Fragment>
             <div className='GWASUI-align'>
               <div className='GWASUI-flexRow'>
@@ -73,18 +69,17 @@ const CustomDichotomousSelect = ({
               </div>
             </div>
           </React.Fragment>
-        )}
-        {!editMode && (<div className='GWASUI-align' />)}
+        <div className='GWASUI-align' />
         <div className='GWASUI-cdList'>
           {selectedDichotomousCovariates.map((cd, key) => (
             <Card
               key={`cd-list-option-${key}`}
               style={{
                 width: 300,
+                height: 100,
               }}
               actions={[
                 <DeleteOutlined key='delete' />,
-                <EditOutlined key='edit' />,
               ]}
             >
               <Meta
