@@ -14,24 +14,27 @@ export type RangeFilter = {
   upperBound?: number;
 };
 
+export type BaseFilter = EmptyFilter | OptionFilter | RangeFilter;
+
 export type SimpleFilterState = {
   __combineMode?: CombineMode;
   value?: {
-    [x: string]: EmptyFilter | OptionFilter | RangeFilter;
+    [x: string]: BaseFilter;
   };
 };
 
 export type AnchoredFilterState = {
   __type: 'ANCHORED';
   value?: {
-    [x: string]: EmptyFilter | OptionFilter | RangeFilter;
+    [x: string]: BaseFilter;
   };
 };
 
 export type FilterState = {
   __combineMode?: CombineMode;
+  __type?: 'STANDARD';
   value?: {
-    [x: string]: EmptyFilter | OptionFilter | RangeFilter | AnchoredFilterState;
+    [x: string]: BaseFilter | AnchoredFilterState;
   };
 };
 
