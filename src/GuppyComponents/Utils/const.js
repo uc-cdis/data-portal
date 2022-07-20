@@ -22,6 +22,8 @@ export const FILTER_TYPE = {
   OPTION: 'OPTION',
   /** @type {'RANGE'} */
   RANGE: 'RANGE',
+  /** @type {'STANDARD'} */
+  STANDARD: 'STANDARD',
 };
 
 export { guppyUrl as GUPPY_URL } from '../../localconf';
