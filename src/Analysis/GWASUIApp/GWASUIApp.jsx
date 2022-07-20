@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import QuantitativeGWAS from "./QuantitativeGWAS";
-import CaseControlGWAS from "./CaseControlGWAS";
+// import QuantitativeGWAS from "./QuantitativeGWAS";
+// import CaseControlGWAS from "./CaseControlGWAS";
 import PropTypes from 'prop-types';
 import {
   Checkbox, Card, Space,
 } from 'antd';
 import { fetchAndSetCsrfToken } from '../../configs';
-// import GWASQuantitative from '../GWASWizard/GWASQuantitative';
-// import GWASCaseControl from '../GWASWizard/GWASCaseControl';
+import GWASQuantitative from '../GWASWizard/GWASQuantitative';
+import GWASCaseControl from '../GWASWizard/GWASCaseControl';
 
 const cardContent = {
   width: 350, height: 280, margin: 10, textAlign: 'center',
@@ -72,24 +72,24 @@ const GWASUIApp = (props) => {
   }
   return (
     <React.Fragment>
-      {gwasTypeSelected && gwasType === "caseControl" && (
+      {/* {gwasTypeSelected && gwasType === "caseControl" && (
         <CaseControlGWAS resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}>
         </CaseControlGWAS>)}
       {gwasTypeSelected && gwasType === "quantitative" && (
         <QuantitativeGWAS resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}>
-        </QuantitativeGWAS>)}
-      {/* {gwasTypeSelected && gwasType === 'caseControl' && (
+        </QuantitativeGWAS>)} */}
+      {gwasTypeSelected && gwasType === 'caseControl' && (
         <GWASCaseControl
           resetGWASType={resetGWASType}
           refreshWorkflows={props.refreshWorkflows}
         />
-      )} */}
-      {/* {gwasTypeSelected && gwasType === 'quantitative' && (
+      )}
+      {gwasTypeSelected && gwasType === 'quantitative' && (
         <GWASQuantitative
           resetGWASType={resetGWASType}
           refreshWorkflows={props.refreshWorkflows}
         />
-      )} */}
+      )}
     </React.Fragment>
   );
 };
