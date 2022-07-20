@@ -1,13 +1,11 @@
 import React from 'react';
-import { Collapse, List } from 'antd';
+import { Collapse, List, Spin } from 'antd';
 import './GWASUIApp.css';
 import { useQuery } from 'react-query';
-import PropTypes from 'prop-types';
 import { gwasWorkflowPath } from '../../localconf';
 import GWASJob from './GWASJob';
-import Spinner from '../../components/Spinner';
 
-const GWASWorkflowList = ({ refreshWorkflows }) => {
+const GWASWorkflowList = () => {
   const { Panel } = Collapse;
 
   async function fetchGwasWorkflows() {
@@ -24,7 +22,7 @@ const GWASWorkflowList = ({ refreshWorkflows }) => {
       refetchInterval: 60000,
     });
     if (status === 'loading') {
-      return <React.Fragment><Spinner /></React.Fragment>;
+      return <React.Fragment><div className='GWASUI-spinnerContainer'><Spin /></div></React.Fragment>;
     }
     if (status === 'error') {
       return <React.Fragment>Error</React.Fragment>;
@@ -40,7 +38,7 @@ const GWASWorkflowList = ({ refreshWorkflows }) => {
               pagination={{ pageSize: 5 }}
               dataSource={data}
               renderItem={(item) => (
-                <GWASJob refreshWorkflows={refreshWorkflows} workflow={item} />
+                <GWASJob workflow={item} />
               )}
             />
 
@@ -55,10 +53,6 @@ const GWASWorkflowList = ({ refreshWorkflows }) => {
       <GWASWorkflows />
     </div>
   );
-};
-
-GWASWorkflowList.propTypes = {
-  refreshWorkflows: PropTypes.func.isRequired,
 };
 
 export default GWASWorkflowList;

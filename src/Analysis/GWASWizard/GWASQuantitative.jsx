@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+// import { useQuery, useMutation } from 'react-query';
 import {
-  Steps, Button, Space, Popconfirm,
+  Steps, Button, Space, Popconfirm, Spin,
 } from 'antd';
 import CohortSelect from './shared/CohortSelect';
 import { quantitativeSteps } from './shared/constants';
 import { useSourceFetch } from './wizard-endpoints/cohort-middleware-api';
-import Spinner from '../../components/Spinner';
 import '../GWASUIApp/GWASUIApp.css';
-import { useQuery, useMutation } from 'react-query';
 
 const { Step } = Steps;
 
@@ -17,6 +16,12 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
   const [selectedCohort, setSelectedCohort] = useState(undefined);
   const { loading, sourceId } = useSourceFetch();
   // const [selectedCohortId, setSelectedCohortId] = useState(undefined); // not needed if selected cohort is obj that includes id
+
+  const [selectedCovariates, setSelectedCovariates] = useState([]);
+  const [outcome, setOutcome] = useState(undefined);
+  const [numOfPC, setNumOfPC] = useState(3);
+  const [selectedHare, setSelectedHare] = useState('');
+
   const handleCohortSelect = (cohort) => {
     setSelectedCohort(cohort);
   };
@@ -24,7 +29,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
   const generateStep = () => {
     switch (current) {
     case 0:
-      return (!loading && sourceId ? <CohortSelect selectedCohort={selectedCohort} handleCohortSelect={handleCohortSelect} sourceId={sourceId} /> : <Spinner />);
+      return (!loading && sourceId ? <CohortSelect selectedCohort={selectedCohort} handleCohortSelect={handleCohortSelect} sourceId={sourceId} /> : <Spin />);
             // case 1:
             //     return ()
     }
@@ -44,7 +49,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     // next button enabled if selected phenotype array length > 0
     nextButtonEnabled = !!selectedPhenotype;
   } else if (current === 3) {
-    nextButtonEnabled = selectedHare != '' && numOfPC && numOfPC != '';
+    nextButtonEnabled = selectedHare !== '' && numOfPC && numOfPC !== '';
   }
 
   return (
@@ -87,7 +92,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
               }}
               disabled={!nextButtonEnabled}
             >
-                        Next
+            Next
             </Button>
           )}
           {/* added so "select diff gwas" btn retains center position on last page */}
@@ -100,6 +105,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
 
 GWASQuantitative.propTypes = {
   refreshWorkflows: PropTypes.func.isRequired,
+  resetGWASType: PropTypes.func.isRequired,
 };
 
 export default GWASQuantitative;

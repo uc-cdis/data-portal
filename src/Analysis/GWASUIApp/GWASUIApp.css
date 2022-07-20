@@ -30,8 +30,8 @@
 }
 
 .GWASUI-subTable {
-  min-width: 350px;
-  padding: 0 4px;
+  min-width: 305px;
+  padding: 0 2px;
 }
 
 .GWASApp-jobStatus {
@@ -98,6 +98,7 @@
   padding: 8px;
   margin-top: 5px;
   width: 100%;
+  height: 50px;
 }
 
 .GWASUI-searchInput {
@@ -156,7 +157,7 @@
   border-radius: 2px;
 }
 
-.GWAS-btnContainer {
+.GWASUI-btnContainer {
   display: flex;
   float: left;
   padding: 2px;
@@ -272,4 +273,34 @@
 
 .GWASUI-cdNameInput {
   width: 600px;
+}
+
+.GWASUI-btnEnable {
+  background-color:rgb(24, 144, 255);
+  color: white;
+  transition: all 0.5s ease-in-out;
+}
+
+.cd-flex {
+  display: flex;
+}
+
+.GWASUI-cdList, .GWASUI-align {
+  flex: 1
+}
+
+.GWASUI-cdBtn {
+  margin: 7px 7px;
+  height: 45px;
+}
+
+.GWASUI-spinnerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.GWASUI-emptyTable {
+  height: 400px;
 }
