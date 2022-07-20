@@ -139,8 +139,8 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
             return value;
           };
           return (
-            <div className='discovery-table__expanded-row-content'>\
-              <div className='discovery-table__expanded-row-vstack'>
+            <div className='discovery-table__row-vertical-content'>
+              <div className='discovery-table__expanded-row-content'>
                 <div
                   role='button'
                   tabIndex={0}
@@ -165,7 +165,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                 >
                   {renderValue(studyPreviewText)}
                 </div>
-                <React.Fragment>
+                <div className='discovery-table__row-vertical-content'>
                   {record[config.minimalFieldMapping.tagsListFieldName]?.map(({ name, category }) => {
                     const isSelected = !!props.selectedTags[name];
                     const color = getTagColor(category, config);
@@ -205,7 +205,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                       </Tag>
                     );
                   })}
-                </React.Fragment>
+                </div>
               </div>
             </div>
           );
