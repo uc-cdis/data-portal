@@ -335,6 +335,7 @@
   justify-content: flex-start;
   padding: 4px 16px 0 16px;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 .discovery-table-container .ant-table, .discovery-table-container .ant-btn {

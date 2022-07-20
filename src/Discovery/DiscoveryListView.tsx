@@ -166,47 +166,51 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                   {renderValue(studyPreviewText)}
                 </div>
               </div>
-              <div className='discovery-table__row-horizontal-content'>
-                {record[config.minimalFieldMapping.tagsListFieldName]?.map(({ name, category }) => {
-                  const isSelected = !!props.selectedTags[name];
-                  const color = getTagColor(category, config);
-                  if (typeof name !== 'string') {
-                    return null;
-                  }
-                  return (
-                    <Tag
-                      key={record.name + name}
-                      role='button'
-                      tabIndex={0}
-                      aria-pressed={isSelected ? 'true' : 'false'}
-                      className={`discovery-tag ${isSelected ? 'discovery-tag--selected' : ''}`}
-                      aria-label={name}
-                      style={{
-                        backgroundColor: isSelected ? color : 'initial',
-                        borderColor: color,
-                      }}
-                      onKeyPress={(ev) => {
-                        ev.stopPropagation();
-                        const selectedTags = {
-                          ...props.selectedTags,
-                          [name]: props.selectedTags[name] ? undefined : true,
-                        };
-                        props.onTagsSelected(selectedTags);
-                      }}
-                      onClick={(ev) => {
-                        ev.stopPropagation();
-                        const selectedTags = {
-                          ...props.selectedTags,
-                          [name]: props.selectedTags[name] ? undefined : true,
-                        };
-                        props.onTagsSelected(selectedTags);
-                      }}
-                    >
-                      {name}
-                    </Tag>
-                  );
-                })}
-              </div>
+              { config.features.tagsInDescription?.enabled
+                ? (
+                  <div className='discovery-table__row-horizontal-content'>
+                    {record[config.minimalFieldMapping.tagsListFieldName]?.map(({ name, category }) => {
+                      const isSelected = !!props.selectedTags[name];
+                      const color = getTagColor(category, config);
+                      if (typeof name !== 'string') {
+                        return null;
+                      }
+                      return (
+                        <Tag
+                          key={record.name + name}
+                          role='button'
+                          tabIndex={0}
+                          aria-pressed={isSelected ? 'true' : 'false'}
+                          className={`discovery-tag ${isSelected ? 'discovery-tag--selected' : ''}`}
+                          aria-label={name}
+                          style={{
+                            backgroundColor: isSelected ? color : 'initial',
+                            borderColor: color,
+                          }}
+                          onKeyPress={(ev) => {
+                            ev.stopPropagation();
+                            const selectedTags = {
+                              ...props.selectedTags,
+                              [name]: props.selectedTags[name] ? undefined : true,
+                            };
+                            props.onTagsSelected(selectedTags);
+                          }}
+                          onClick={(ev) => {
+                            ev.stopPropagation();
+                            const selectedTags = {
+                              ...props.selectedTags,
+                              [name]: props.selectedTags[name] ? undefined : true,
+                            };
+                            props.onTagsSelected(selectedTags);
+                          }}
+                        >
+                          {name}
+                        </Tag>
+                      );
+                    })}
+                  </div>
+                )
+                : null}
             </div>
           );
         },
