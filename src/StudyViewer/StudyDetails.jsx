@@ -298,6 +298,12 @@ class StudyDetails extends React.Component {
      // button. if there are more than 1 with different configs, TODO fix
      const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find((e) => e.type === 'request_access');
 
+     let loginAlertMessage = 'Researchers are required to log in to request access to this dataset. Use the button above to login or create an account.';
+     if (this.props.data.requiredIdpField && this.props.data.requiredIdpField !== this.props.user?.idp) {
+       const loginAlertAccountSnippet = `a${/^([aeiou])/i.test(this.props.data.requiredIdpField) ? 'n' : ''} ${this.props.data.requiredIdpField.toUpperCase()}`;
+       loginAlertMessage = `Researchers are required to log in with ${loginAlertAccountSnippet} account to request access to this dataset. Use the button above to login or create ${loginAlertAccountSnippet} account.`;
+     }
+
      return (
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
@@ -379,7 +385,7 @@ class StudyDetails extends React.Component {
            {this.requestAccessButtonVisible && !userHasLoggedIn && !this.state.accessRequested
              ? (
                <Alert
-                 message='Please note that researchers are required to log in before requesting access.'
+                 message={loginAlertMessage}
                  type='info'
                  showIcon
                />
