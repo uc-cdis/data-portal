@@ -641,11 +641,12 @@ function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
 
 /**
  * Convert filter obj into GQL filter format
- * @param {FilterState} filterState
+ * @param {EmptyFilter | FilterState} filterState
  * @returns {GqlFilter}
  */
 export function getGQLFilter(filterState) {
   if (
+    filterState?.__type === undefined ||
     filterState?.value === undefined ||
     Object.keys(filterState.value).length === 0
   )

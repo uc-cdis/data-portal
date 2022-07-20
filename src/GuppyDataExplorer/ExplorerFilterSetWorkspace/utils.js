@@ -2,15 +2,16 @@ import { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
 
 export { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
 
+/** @typedef {import('../../GuppyComponents/types').AnchoredFilterState} AnchoredFilterState */
+/** @typedef {import('../../GuppyComponents/types').FilterState} FilterState */
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
-
 /**
+ * @template T
  * @param {Object} args
  * @param {string} args.field
- * @param {ExplorerFilter} args.filter
+ * @param {T extends AnchoredFilterState ? AnchoredFilterState : ExplorerFilter} args.filter
  */
-export function pluckFromFilter({ field, filter }) {
-  /** @type {ExplorerFilter} */
+function _pluckFromFilter({ field, filter }) {
   const newFilter = { ...filter };
   if (Object.keys(newFilter).length === 0) return newFilter;
 
@@ -21,6 +22,9 @@ export function pluckFromFilter({ field, filter }) {
   if (Object.keys(newFilter.value).length === 0) delete newFilter.value;
   return newFilter;
 }
+
+/** @type {typeof _pluckFromFilter<ExplorerFilter>} */
+export const pluckFromFilter = _pluckFromFilter;
 
 /**
  * @param {Object} args
@@ -37,13 +41,12 @@ export function pluckFromAnchorFilter({ anchor, field, filter }) {
   for (const [key, value] of Object.entries(filter.value))
     if (key !== anchor) newFilter.value[key] = value;
     else if (value.__type === FILTER_TYPE.ANCHORED) {
-      const newAnchorFilter = pluckFromFilter({ field, filter: value });
+      const newAnchorFilter =
+        /** @type {typeof _pluckFromFilter<AnchoredFilterState>} */ (
+          _pluckFromFilter
+        )({ field, filter: value });
       if (Object.keys(newAnchorFilter.value ?? {}).length > 0)
-        newFilter.value[key] =
-          /** @type {import('../../GuppyComponents/types').AnchoredFilterState} */ ({
-            __type: FILTER_TYPE.ANCHORED,
-            value: newAnchorFilter.value,
-          });
+        newFilter.value[key] = newAnchorFilter;
     }
 
   if (Object.keys(newFilter.value).length === 0) delete newFilter.value;

@@ -12,9 +12,8 @@ export { FILTER_TYPE } from '../../../../GuppyComponents/Utils/const';
 /** @typedef {import('../types').FilterTabsOption} FilterTabsOption */
 /** @typedef {import('../types').FilterTabStatus} FilterTabStatus */
 /** @typedef {import('../types').SimpleFilterState} SimpleFilterState */
+/** @typedef {import('../types').BaseFilter} BaseFilter */
 /** @typedef {import('../types').OptionFilter} OptionFilter */
-/** @typedef {import('../types').RangeFilter} RangeFilter */
-/** @typedef {OptionFilter | RangeFilter} BasicFilter */
 
 /**
  * @param {FilterTabsOption[]} filterTabs
@@ -100,38 +99,49 @@ export function getFilterStatus({ anchorConfig, filterResults, filterTabs }) {
   });
 }
 
-/** @param {FilterState} filterResults */
-export function removeEmptyFilter(filterResults) {
-  /** @type {FilterState} */
-  const newFilterResults = { value: {} };
-  for (const field of Object.keys(filterResults.value)) {
-    const filterValues = filterResults.value[field];
-    if (filterValues.__type === FILTER_TYPE.ANCHORED) {
-      const newAnchoredFilterResults = /** @type {AnchoredFilterState} */ (
-        removeEmptyFilter(filterValues)
-      );
-      if (Object.keys(newAnchoredFilterResults.value).length > 0)
-        newFilterResults.value[field] = {
-          __type: FILTER_TYPE.ANCHORED,
-          value: newAnchoredFilterResults.value,
-        };
-    } else {
-      const hasRangeFilter = filterValues.__type === FILTER_TYPE.RANGE;
-      const hasOptionFilter =
-        filterValues.__type === FILTER_TYPE.OPTION &&
-        filterValues.selectedValues?.length > 0;
-      // Filter settings are prefaced with two underscores, e.g., __combineMode
-      // A given config setting is still informative to Guppy even if the setting becomes empty
-      const hasConfigSetting = Object.keys(filterValues).some(
-        (x) => x !== '__type' && x.startsWith('__')
-      );
-      if (hasRangeFilter || hasOptionFilter || hasConfigSetting) {
-        newFilterResults.value[field] = filterValues;
-      }
-    }
-  }
+/** @param {BaseFilter} baseFilter */
+function _isNonEmptyFilter(baseFilter) {
+  const hasRangeFilter = baseFilter.__type === FILTER_TYPE.RANGE;
+  const hasOptionFilter =
+    baseFilter.__type === FILTER_TYPE.OPTION &&
+    baseFilter.selectedValues?.length > 0;
+  // Filter settings are prefaced with two underscores, e.g., __combineMode
+  // A given config setting is still informative to Guppy even if the setting becomes empty
+  const hasConfigSetting = Object.keys(baseFilter).some(
+    (x) => x !== '__type' && x.startsWith('__')
+  );
 
-  return newFilterResults;
+  return hasRangeFilter || hasOptionFilter || hasConfigSetting;
+}
+
+/**
+ * @param {AnchoredFilterState} anchoredFilter
+ * @returns {AnchoredFilterState}
+ */
+function _removeEmptyFilter(anchoredFilter) {
+  const newValue = /** @type {AnchoredFilterState['value']} */ ({});
+  for (const [field, filter] of Object.entries(anchoredFilter.value))
+    if (_isNonEmptyFilter(filter)) newValue[field] = filter;
+
+  return { ...anchoredFilter, value: newValue };
+}
+
+/**
+ * @param {FilterState} filterResults
+ * @returns {FilterState}
+ */
+export function removeEmptyFilter(filterResults) {
+  const newValue = /** @type {FilterState['value']} */ ({});
+  for (const [field, filter] of Object.entries(filterResults.value))
+    if (filter.__type === FILTER_TYPE.ANCHORED) {
+      const newAnchoredFilter = _removeEmptyFilter(filter);
+      if (Object.keys(newAnchoredFilter.value).length > 0)
+        newValue[field] = newAnchoredFilter;
+    } else if (_isNonEmptyFilter(filter)) {
+      newValue[field] = filter;
+    }
+
+  return { ...filterResults, value: newValue };
 }
 
 /**
@@ -161,13 +171,13 @@ export function clearFilterSection({
   let newFilterResults = cloneDeep(filterResults);
   const fieldName = filterTabs[tabIndex].fields[sectionIndex];
   if (anchorLabel === undefined || anchorLabel === '') {
-    newFilterResults.value[fieldName] = /** @type {BasicFilter} */ ({});
+    newFilterResults.value[fieldName] = /** @type {BaseFilter} */ ({});
   } else {
     console.log('newFilterResults', newFilterResults);
 
     /** @type {AnchoredFilterState} */ (
       newFilterResults.value[anchorLabel]
-    ).value[fieldName] = /** @type {BasicFilter} */ ({});
+    ).value[fieldName] = /** @type {BaseFilter} */ ({});
   }
   newFilterResults = removeEmptyFilter(newFilterResults);
 

@@ -32,6 +32,7 @@ function findFilterElement(label) {
     }
 }
 
+/** @typedef {import('../types').EmptyFilter} EmptyFilter */
 /** @typedef {import('../types').FilterChangeHandler} FilterChangeHandler */
 /** @typedef {import('../types').FilterConfig} FilterConfig */
 /** @typedef {import('../types').FilterState} FilterState */
@@ -42,7 +43,7 @@ function findFilterElement(label) {
  * @property {string} [anchorValue]
  * @property {string} [className]
  * @property {string} [disabledTooltipMessage]
- * @property {FilterState} [explorerFilter]
+ * @property {EmptyFilter | FilterState} [explorerFilter]
  * @property {FilterConfig} filterConfig
  * @property {boolean} [hideZero]
  * @property {string} [lockedTooltipMessage]
@@ -53,7 +54,6 @@ function findFilterElement(label) {
  * @property {FilterSectionConfig[][]} tabs
  */
 
-/** @type {FilterState} */
 const defaultExplorerFilter = {};
 
 /** @param {FilterGroupProps} props */
