@@ -75,8 +75,7 @@ const CustomDichotomousSelect = ({
             <Card
               key={`cd-list-option-${key}`}
               style={{
-                width: 300,
-                height: 100,
+                width: 300
               }}
               actions={[
                 <DeleteOutlined key='delete' />,
