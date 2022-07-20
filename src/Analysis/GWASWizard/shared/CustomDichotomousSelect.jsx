@@ -1,72 +1,111 @@
-import React, { useEffect, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { Card } from 'antd';
+import {
+  PlusOutlined, TeamOutlined, EditOutlined, DeleteOutlined,
+} from '@ant-design/icons';
 import CohortSelect from './CohortSelect';
 import '../../GWASUIApp/GWASUIApp.css';
 
-const CustomDichotomousSelect = ({ handleCDAdd, selectedDichotomousCovariates, sourceId }) => {
-    const [firstCohort, setFirstCohort] = useState(undefined);
-    const [secondCohort, setSecondCohort] = useState(undefined);
-    const [cdName, setCdName] = useState('');
-    const [editMode, setEditMode] = useState(false);
+const { Meta } = Card;
 
-    const isCDEnabled = () => {
-        return cdName.length === 0 || firstCohort === undefined || secondCohort === undefined
-    }
+const CustomDichotomousSelect = ({
+  handleCDAdd, selectedDichotomousCovariates, sourceId, current,
+}) => {
+  const [firstCohort, setFirstCohort] = useState(undefined);
+  const [secondCohort, setSecondCohort] = useState(undefined);
+  const [cdName, setCdName] = useState('');
+  const [editMode, setEditMode] = useState(false);
 
-    const handleCDSubmit = () => {
-        handleCDAdd({
-            "variable_type": "custom_dichotomous",
-            "cohort_ids": [firstCohort.cohort_definition_id, secondCohort.cohort_definition_id],
-            "provided_name": cdName
-        });
-        setFirstCohort(undefined);
-        setSecondCohort(undefined);
-        setCdName('');
-        setEditMode(false);
-    }
+  const handleCDSubmit = () => {
+    handleCDAdd({
+      variable_type: 'custom_dichotomous',
+      cohort_ids: [firstCohort.cohort_definition_id, secondCohort.cohort_definition_id],
+      provided_name: cdName,
+    });
+    setFirstCohort(undefined);
+    setSecondCohort(undefined);
+    setCdName('');
+    setEditMode(false);
+  };
 
-    useEffect(() => {
-        console.log(firstCohort);
-    }, [firstCohort])
+  const disableCD = cdName.length === 0 || firstCohort === undefined || secondCohort === undefined;
 
-    return (<React.Fragment>
-        {!editMode && (<div className="GWASUI-cdBtnContainer GWASUI-align"><button onClick={() => setEditMode(true)}><PlusOutlined /><span className="GWASUI-btnText">Add Custom Dichotomous</span></button></div>)}
+  return (
+    <React.Fragment>
+      <div className='cd-flex'>
+        {!editMode && (<div className='GWASUI-cdBtnContainer GWASUI-align'><button type='button' onClick={() => setEditMode(true)}><PlusOutlined /><span className='GWASUI-btnText'>Add Custom Dichotomous</span></button></div>)}
         {editMode && (
-            <React.Fragment>
-                <div className="GWASUI-align">
-                    <div className="GWASUI-flexRow">
-                        <div className="GWASUI-searchContainer">
-                        <input
-                            type="text"
-                            autoFocus="autoFocus"
-                            className="GWASUI-searchInput"
-                            onChange={(e) => setCdName(e.target.value)}
-                            value={cdName}
-                            placeholder="Enter a name for custom dichotomous selection"
-                            style={{ width: '70%', height: '90%' }}
-                        />
-                        </div>
-                    </div>
-                    <div className="GWASUI-flexRow">
-                        <div className="GWASUI-flexCol GWASUI-subTable">
-                            <CohortSelect selectedCohort={firstCohort} handleCohortSelect={setFirstCohort} sourceId={sourceId} otherCohortSelected={secondCohort ? secondCohort.cohort_name : ''}></CohortSelect>
-                        </div>
-                        <div className="GWASUI-flexCol GWASUI-subTable">
-                            <CohortSelect selectedCohort={secondCohort} handleCohortSelect={setSecondCohort} sourceId={sourceId} otherCohortSelected={firstCohort ? firstCohort.cohort_name : ''}></CohortSelect>
-                        </div>
-                    </div>
-                    <div>
-                    </div>
-                    <button disabled={isCDEnabled()} onClick={() => handleCDSubmit()}>Add</button>
+          <React.Fragment>
+            <div className='GWASUI-align'>
+              <div className='GWASUI-flexRow'>
+                <div className='GWASUI-flexCol GWASUI-subTable'>
+                  <CohortSelect
+                    selectedCohort={firstCohort}
+                    handleCohortSelect={setFirstCohort}
+                    sourceId={sourceId}
+                    otherCohortSelected={secondCohort ? secondCohort.cohort_name : ''}
+                    current={current}
+                  />
                 </div>
-            </React.Fragment>
+                <div className='GWASUI-flexCol GWASUI-subTable'>
+                  <CohortSelect
+                    selectedCohort={secondCohort}
+                    handleCohortSelect={setSecondCohort}
+                    sourceId={sourceId}
+                    otherCohortSelected={firstCohort ? firstCohort.cohort_name : ''}
+                    current={current}
+                  />
+                </div>
+              </div>
+              <div className='GWASUI-flexRow'>
+                <div className='GWASUI-searchContainer'>
+                  <input
+                    type='text'
+                    className='GWASUI-searchInput'
+                    onChange={(e) => setCdName(e.target.value)}
+                    value={cdName}
+                    placeholder='Enter a name for custom dichotomous selection'
+                    style={{ width: '70%', height: '90%' }}
+                  />
+                </div>
+                <button type='submit' disabled={disableCD} className={`${!disableCD ? 'GWASUI-btnEnable' : ''} GWASUI-cdBtn`} onClick={() => handleCDSubmit()}>Add</button>
+              </div>
+            </div>
+          </React.Fragment>
         )}
-        <div className="GWASUI-">{selectedDichotomousCovariates.map((cd, key) => {
-            // {cd.name} {cd.cohort1} {cd.cohort2}
-            return (<div key={key}>{cd.provided_name} w/ cohort ids: [{cd.cohort_ids[0]}, {cd.cohort_ids[1]}]</div>)
-        })}</div>
+        {!editMode && (<div className='GWASUI-align' />)}
+        <div className='GWASUI-cdList'>
+          {selectedDichotomousCovariates.map((cd, key) => (
+            <Card
+              key={`cd-list-option-${key}`}
+              style={{
+                width: 300,
+              }}
+              actions={[
+                <DeleteOutlined key='delete' />,
+                <EditOutlined key='edit' />,
+              ]}
+            >
+              <Meta
+                avatar={<TeamOutlined />}
+                title={`${cd.provided_name}`}
+                description={`Cohorts: [${cd.cohort_ids[0]}, ${cd.cohort_ids[1]}]`}
+              />
+            </Card>
+          ),
+          )}
+        </div>
+      </div>
     </React.Fragment>
-    );
-}
+  );
+};
+
+CustomDichotomousSelect.propTypes = {
+  handleCDAdd: PropTypes.func.isRequired,
+  selectedDichotomousCovariates: PropTypes.array.isRequired,
+  sourceId: PropTypes.number.isRequired,
+  current: PropTypes.number.isRequired,
+};
 
 export default CustomDichotomousSelect;

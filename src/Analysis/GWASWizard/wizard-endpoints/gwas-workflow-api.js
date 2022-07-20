@@ -1,6 +1,18 @@
 import { gwasWorkflowPath } from '../../../localconf';
+import { headers } from '../../../configs';
 
-export const useGwasSubmit = async (numOfPC, covariates, selectedOutcome, selectedHare, hareConceptId, mafThreshold, imputationScore, cohortDefinitionId, gwasJobName) => {
+export const useGwasSubmit = async (
+  sourceId,
+  numOfPC,
+  covariates,
+  selectedOutcome,
+  selectedHare,
+  hareConceptId,
+  mafThreshold,
+  imputationScore,
+  cohortDefinitionId,
+  gwasJobName,
+) => {
   const submitEndpoint = `${gwasWorkflowPath}submit`;
   const requestBody = {
     n_pcs: numOfPC,

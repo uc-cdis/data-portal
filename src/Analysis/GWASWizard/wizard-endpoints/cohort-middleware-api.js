@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { cohortMiddlewarePath, wtsPath } from '../../../localconf';
 import { fetchWithCreds } from '../../../actions';
 import { headers } from '../../../configs';
@@ -9,13 +9,11 @@ export const fetchConceptStatsByHare = async (cohortDefinitionId, selectedCovari
     variables:
       [
         ...selectedDichotomousCovariates,
-        ...selectedCovariates.map(c => {
-          return {
-            "variable_type": "concept",
-            "concept_id": c.concept_id
-          }
-        })
-      ]
+        ...selectedCovariates.map((c) => ({
+          variable_type: 'concept',
+          concept_id: c.concept_id,
+        })),
+      ],
   };
   const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
   const reqBody = {
@@ -26,7 +24,7 @@ export const fetchConceptStatsByHare = async (cohortDefinitionId, selectedCovari
   };
   const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
   return getConceptStats.json();
-}
+};
 
 export const fetchCovariateStats = async (cohortDefinitionId, selectedCovariateIds, sourceId) => {
   const covariateIds = { ConceptIds: selectedCovariateIds };
