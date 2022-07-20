@@ -22,7 +22,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
   const [selectedControlCohort, setSelectedControlCohort] = useState(undefined);
   const [selectedCovariates, setSelectedCovariates] = useState([]);
   const [selectedDichotomousCovariates, setSelectedDichotomousCovariates] = useState([]);
-  const [selectedHare, setSelectedHare] = useState('');
+  const [selectedHare, setSelectedHare] = useState({ concept_value: '' });
 
   const { loading, sourceId } = useSourceFetch();
 
@@ -41,7 +41,8 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     setSelectedDichotomousCovariates((prevCDArr) => [...prevCDArr, cd]);
   };
 
-  const handleHareSelect = (hare) => {
+  const handleHareChange = (hare) => {
+    console.log('hare', hare);
     setSelectedHare(hare);
   };
 
@@ -146,14 +147,14 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             sourceId={sourceId}
             workflowType={'caseControl'}
             selectedHare={selectedHare}
-            handleHareSelect={handleHareSelect}
+            handleHareChange={handleHareChange}
           />
         </React.Fragment>
       );
     case 6:
       return (
         <React.Fragment>
-          <span>new step whats good</span>
+          <></>
         </React.Fragment>
       );
     }

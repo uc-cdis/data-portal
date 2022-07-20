@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
@@ -13,51 +13,72 @@ const CovariateStatsByHareCC = ({
   selectedCovariates,
   selectedDichotomousCovariates,
   sourceId,
-  handleHareSelect,
+  handleHareChange,
 }) => {
+  const hareStatsParams = [
+    'conceptsstats',
+    selectedCovariates,
+    selectedDichotomousCovariates,
+  ];
   const results = useQueries([
-    { queryKey: ['conceptsstats', selectedCovariates, selectedDichotomousCovariates, caseCohortDefinitionId], queryFn: () => fetchConceptStatsByHare(caseCohortDefinitionId, selectedCovariates, selectedDichotomousCovariates, sourceId), ...queryConfig },
-    { queryKey: ['conceptsstats', selectedCovariates, selectedDichotomousCovariates, controlCohortDefinitionId], queryFn: () => fetchConceptStatsByHare(controlCohortDefinitionId, selectedCovariates, selectedDichotomousCovariates, sourceId), ...queryConfig },
+    {
+      queryKey: [
+        ...hareStatsParams,
+        caseCohortDefinitionId,
+      ],
+      queryFn: () => fetchConceptStatsByHare(
+        caseCohortDefinitionId,
+        selectedCovariates,
+        selectedDichotomousCovariates,
+        sourceId,
+      ),
+      ...queryConfig,
+    },
+    {
+      queryKey: [
+        ...hareStatsParams,
+        controlCohortDefinitionId,
+      ],
+      queryFn: () => fetchConceptStatsByHare(
+        controlCohortDefinitionId,
+        selectedCovariates,
+        selectedDichotomousCovariates,
+        sourceId,
+      ),
+      ...queryConfig,
+    },
   ]);
-
-  const [selectedHareDescription, setSelectedHareDescription] = useState('-select one of the ancestry groups below-');
 
   const {
     statusCase, statusControl, dataCase, dataControl,
   } = {
-    statusCase: results[0].status, statusControl: results[1].status, dataCase: results[0].data, dataControl: results[1].data,
+    statusCase: results[0].status,
+    statusControl: results[1].status,
+    dataCase: results[0].data,
+    dataControl: results[1].data,
   };
 
-  const getSelectedCaseAndControlBreakdownItems = (concept_value, allCaseHareBreakdownItems, allControlHareBreakdownItems) => {
-    const caseHareBreakdown = allCaseHareBreakdownItems.find((hare) => hare.concept_value === concept_value);
-    const controlHareBreakdown = allControlHareBreakdownItems.find((hare) => hare.concept_value === concept_value);
+  const getAllHareItems = (concept_value, allCaseHares, allControlHares) => {
+    const caseHareBreakdown = allCaseHares.find((hare) => hare.concept_value === concept_value);
+    const controlHareBreakdown = allControlHares.find((hare) => hare.concept_value === concept_value);
     return [caseHareBreakdown, controlHareBreakdown];
   };
 
-  const getHareAndDescriptionUsingValueAndBreakdownItems = (concept_value, allCaseHareBreakdownItems, allControlHareBreakdownItems) => {
-    const hareBreakdown = getSelectedCaseAndControlBreakdownItems(concept_value,
-      allCaseHareBreakdownItems, allControlHareBreakdownItems);
-    const { selectedCaseHare, selectedControlHare } = { selectedCaseHare: hareBreakdown[0], selectedControlHare: hareBreakdown[0] };
+  const getHareDescriptionBreakdown = (singleHare, allCaseHares, allControlHares) => {
+    const hareBreakdown = getAllHareItems(singleHare.concept_value,
+      allCaseHares, allControlHares);
+    const { selectedCaseHare, selectedControlHare } = {
+      selectedCaseHare: hareBreakdown[0],
+      selectedControlHare: hareBreakdown[0],
+    };
     return `${selectedCaseHare.concept_value_name} (sizes: ${selectedCaseHare.persons_in_cohort_with_value}, ${selectedControlHare.persons_in_cohort_with_value})`;
   };
 
-  const setSelectedHareDescriptionFromSelectedHare = (hare_as_concept_value, allCaseHareBreakdownItems, allControlHareBreakdownItems) => {
-    const hareBreakdown = getSelectedCaseAndControlBreakdownItems(hare_as_concept_value,
-      allCaseHareBreakdownItems, allControlHareBreakdownItems);
-    const { selectedCaseHare, selectedControlHare } = { selectedCaseHare: hareBreakdown[0], selectedControlHare: hareBreakdown[0] };
-    setSelectedHareDescription(
-      `${selectedCaseHare.concept_value_name} (sizes: ${selectedCaseHare.persons_in_cohort_with_value}, ${selectedControlHare.persons_in_cohort_with_value})`,
-    );
-    // handle size update by passing up
-    // setSelectedCaseSize(selectedCaseHare.persons_in_cohort_with_value);
-    // setSelectedControlSize(selectedControlHare.persons_in_cohort_with_value);
-  };
-
   useEffect(() => {
-    if (selectedHare && dataCase && dataControl && dataCase.concept_breakdown && dataControl.concept_breakdown) {
-      setSelectedHareDescriptionFromSelectedHare(selectedHare, dataCase.concept_breakdown, dataControl.concept_breakdown);
+    if (selectedHare && dataCase?.concept_breakdown && dataControl?.concept_breakdown) {
+      handleHareChange(selectedHare);
     }
-  }, [selectedHare, dataCase, dataControl]);
+  }, [selectedHare, dataCase, dataControl, handleHareChange]);
 
   if (statusCase === 'loading' || statusControl === 'loading') {
     return <Spin />;
@@ -69,8 +90,9 @@ const CovariateStatsByHareCC = ({
     // special case - endpoint returns empty result:
     if (dataControl.concept_breakdown == null || dataCase.concept_breakdown == null) {
       return (
-        <React.Fragment>Error: there are no subjects in this cohort that have data available on all the selected covariates
-                    and phenotype. Please review your selections
+        <React.Fragment>
+          Error: there are no subjects in this cohort that have data available on all the selected covariates
+          and phenotype. Please review your selections
         </React.Fragment>
       );
     }
@@ -79,17 +101,21 @@ const CovariateStatsByHareCC = ({
       <div className='GWASUI-flexRow'>
         <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
           <Dropdown.Button rightIcon='dropdown' buttonType='secondary'>
-            {selectedHareDescription}
+            {(selectedHare?.concept_value?.length)
+              ? getHareDescriptionBreakdown(selectedHare, dataCase.concept_breakdown, dataControl.concept_breakdown)
+              : '-select one of the ancestry groups below-'}
           </Dropdown.Button>
           <Dropdown.Menu>
             {
-              dataCase.concept_breakdown.map((datum) => (
+              dataCase.concept_breakdown.map((hare) => (
                 <Dropdown.Item
-                  key={`${datum.concept_value}`}
-                  value={`${datum.concept_value}`}
-                  // onClick={() => { setSelectedHare(datum.concept_value); setSelectedHareValueAsConceptId(datum.concept_value_as_concept_id); setSelectedHareValueName(datum.concept_value_name); }}
+                  key={`key-${hare.concept_value}`}
+                  value={`${hare}`}
+                  onClick={() => handleHareChange(hare)}
                 >
-                  {<div>{getHareAndDescriptionUsingValueAndBreakdownItems(datum.concept_value, dataCase.concept_breakdown, dataControl.concept_breakdown)}</div>}
+                  <div>
+                    {getHareDescriptionBreakdown(hare, dataCase.concept_breakdown, dataControl.concept_breakdown)}
+                  </div>
                 </Dropdown.Item>
               ))
             }
@@ -98,16 +124,17 @@ const CovariateStatsByHareCC = ({
       </div>
     );
   }
+  return false;
 };
 
 CovariateStatsByHareCC.propTypes = {
-  selectedHare: PropTypes.string.isRequired, // double check this one w/ Pieter
+  selectedHare: PropTypes.object.isRequired,
   caseCohortDefinitionId: PropTypes.number.isRequired,
   controlCohortDefinitionId: PropTypes.number.isRequired,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
-  handleHareSelect: PropTypes.func.isRequired,
+  handleHareChange: PropTypes.func.isRequired,
 };
 
 export default CovariateStatsByHareCC;
