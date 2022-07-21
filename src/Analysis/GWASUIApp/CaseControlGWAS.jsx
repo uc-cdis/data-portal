@@ -842,7 +842,6 @@ const CaseControlGWAS = (props) => {
                             </Form>
                         </div>
                     </React.Fragment>
-
                 );
             }
         }
