@@ -272,6 +272,19 @@ function buildConfig(opts) {
   }
 
   const { discoveryConfig } = config;
+  const studyRegistrationConfig = config.studyRegistrationConfig || {};
+  if (!studyRegistrationConfig.studyRegistrationTrackingField) {
+    studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username'
+  }
+  if (!studyRegistrationConfig.studyRegistrationValidationField) {
+    studyRegistrationConfig.studyRegistrationValidationField = 'is_registered'
+  }
+  if (!studyRegistrationConfig.studyRegistrationAccessCheckField) {
+    studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz'
+  }
+  if (!studyRegistrationConfig.studyRegistrationUIDField) {
+    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id'
+  }
 
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
@@ -419,8 +432,11 @@ function buildConfig(opts) {
     mobile: 480,
   };
 
+  const mdsURL = `${hostname}mds/metadata`;
   const aggMDSURL = `${hostname}mds/aggregate`;
   const aggMDSDataURL = `${aggMDSURL}/metadata`;
+  const cedarWrapperURL = `${hostname}cedar`;
+  const kayakoWrapperURL = `${hostname}kayako`;
 
   // Disallow gitops.json configurability of Gen3 Data Commons and CTDS logo alt text.
   // This allows for one point-of-change in the case of future rebranding.
@@ -509,6 +525,7 @@ function buildConfig(opts) {
     studyViewerConfig,
     covid19DashboardConfig,
     discoveryConfig,
+    studyRegistrationConfig,
     mapboxAPIToken,
     auspiceUrl,
     auspiceUrlIL,
@@ -519,7 +536,10 @@ function buildConfig(opts) {
     workspaceStorageListUrl,
     workspaceStorageDownloadUrl,
     marinerUrl,
+    mdsURL,
     aggMDSDataURL,
+    cedarWrapperURL,
+    kayakoWrapperURL,
     commonsWideAltText,
     ddApplicationId,
     ddClientToken,

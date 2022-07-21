@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import DiscoveryActionBar from './DiscoveryActionBar';
+import DiscoveryDetails from './DiscoveryDetails';
 
-const ReduxDiscoveryActionBar = (() => {
+export const ReduxDiscoveryActionBar = (() => {
   const mapStateToProps = (state) => ({
     user: state.user,
     discovery: state.discovery,
@@ -14,4 +15,12 @@ const ReduxDiscoveryActionBar = (() => {
   return connect(mapStateToProps, mapDispatchToProps)(DiscoveryActionBar);
 })();
 
-export default ReduxDiscoveryActionBar;
+export const ReduxDiscoveryDetails = (() => {
+  const mapStateToProps = (state) => ({
+    user: state.user,
+    userAuthMapping: state.userAuthMapping,
+  });
+
+
+  return connect(mapStateToProps)(DiscoveryDetails);
+})();

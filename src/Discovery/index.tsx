@@ -1,53 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 import Discovery, { AccessLevel, AccessSortDirection, DiscoveryResource } from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { hostname, discoveryConfig, useArboristUI } from '../localconf';
+import { discoveryConfig, studyRegistrationConfig, useArboristUI } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
 import loadStudiesFromAggMDS from './aggMDSUtils';
-
-const loadStudiesFromMDS = async (): Promise<any[]> => {
-  // Why `_guid_type='discovery_metadata'? We need to distinguish the discovery page studies in MDS
-  // from other data in MDS. So all MDS records with `_guid_type='discovery_metadata'` should be
-  // the full list of studies for this commons.
-  const GUID_TYPE = 'discovery_metadata';
-  const LIMIT = 1000; // required or else mds defaults to returning 10 records
-  const MDS_URL = `${hostname}mds/metadata`;
-  const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
-
-  try {
-    let allStudies = [];
-    let offset = 0;
-    // request up to LIMIT studies from MDS at a time.
-    let shouldContinue = true;
-    while (shouldContinue) {
-      const url = `${MDS_URL}?data=True&_guid_type=${GUID_TYPE}&limit=${LIMIT}&offset=${offset}`;
-      // It's OK to disable no-await-in-loop rule here -- it's telling us to refactor
-      // using Promise.all() so that we can fire multiple requests at one.
-      // But we WANT to delay sending the next request to MDS until we know we need it.
-      // eslint-disable-next-line no-await-in-loop
-      const res = await fetch(url);
-      if (res.status !== 200) {
-        throw new Error(`Request for study data at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
-      }
-      // eslint-disable-next-line no-await-in-loop
-      const jsonResponse = await res.json();
-      const studies = Object.values(jsonResponse).map((entry) => entry[STUDY_DATA_FIELD]);
-      allStudies = allStudies.concat(studies);
-      const noMoreStudiesToLoad = studies.length < LIMIT;
-      if (noMoreStudiesToLoad) {
-        shouldContinue = false;
-        return allStudies;
-      }
-      offset += LIMIT;
-    }
-    return allStudies;
-  } catch (err) {
-    throw new Error(`Request for study data failed: ${err}`);
-  }
-};
+import loadStudiesFromMDS from './MDSUtils';
 
 const DiscoveryWithMDSBackend: React.FC<{
     userAuthMapping: any,
@@ -75,13 +36,24 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    let loadStudiesFunction;
-    if (isEnabled('discoveryUseAggMDS')) {
-      loadStudiesFunction = loadStudiesFromAggMDS;
-    } else {
-      loadStudiesFunction = loadStudiesFromMDS;
+    const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
+    async function fetchRawStudies() {
+      let loadStudiesFunction;
+      if (isEnabled('discoveryUseAggMDS')) {
+        loadStudiesFunction = loadStudiesFromAggMDS;
+      } else {
+        loadStudiesFunction = loadStudiesFromMDS;
+      }
+      const rawStudiesRegistered = await loadStudiesFunction();
+      let rawStudiesUnregistered = [];
+      if (isEnabled('studyRegistration')) {
+        rawStudiesUnregistered = await loadStudiesFromMDS('unregistered_discovery_metadata');
+        rawStudiesUnregistered = rawStudiesUnregistered
+          .map((unregisteredStudy) => ({ ...unregisteredStudy, [studyRegistrationValidationField]: false }));
+      }
+      return _.union(rawStudiesRegistered, rawStudiesUnregistered);
     }
-    loadStudiesFunction().then((rawStudies) => {
+    fetchRawStudies().then((rawStudies) => {
       let studiesToSet;
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
@@ -130,11 +102,16 @@ const DiscoveryWithMDSBackend: React.FC<{
 
     // indicate discovery tag is active even if we didn't click a button to get here
     props.onDiscoveryPageActive();
-  }, []);
+  }, [props]);
 
+  let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
+  if (!isEnabled('studyRegistration')) {
+    studyRegistrationValidationField = undefined;
+  }
   return (
     <Discovery
       studies={studies === null ? [] : studies}
+      studyRegistrationValidationField={studyRegistrationValidationField}
       {...props}
     />
   );
