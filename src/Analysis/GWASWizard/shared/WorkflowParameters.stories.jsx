@@ -16,8 +16,13 @@ const mockedQueryClient = new QueryClient({
 
 const MockTemplate = () => {
 
-  const [selectedDichotomousCovariates, setSelectedDichotomousCovariates] = useState([]);
-  const [selectedCovariates, setSelectedCovariates] = useState([]);
+  const [selectedDichotomousCovariates, setSelectedDichotomousCovariates] = useState([
+        {variable_type: 'custom_dichotomous', cohort_ids: [1,2], provided_name: 'test1'},
+        {variable_type: 'custom_dichotomous', cohort_ids: [3,4], provided_name: 'test2'}]);
+  const [selectedCovariates, setSelectedCovariates] = useState([
+        {concept_id: 2000006886, prefixed_concept_id: 'ID_2000006886', concept_name: 'Attribute1', concept_code: '', concept_type: 'MVP Continuous'},
+        {concept_id: 2000006885, prefixed_concept_id: 'ID_2000006885', concept_name: 'Attribute10', concept_code: '', concept_type: 'MVP Continuous'},
+        {concept_id: 2000000708, prefixed_concept_id: 'ID_2000000708', concept_name: 'Attribute11', concept_code: '', concept_type: 'MVP Continuous'}]);
   const [selectedHare, setSelectedHare] = useState({});
 
 
@@ -40,8 +45,6 @@ const MockTemplate = () => {
     </QueryClientProvider>
   );
 }
-
-///cPOST /cohort-middleware/concept-stats/by-source-id/1/by-cohort-definition-id/1/breakdown-by-concept-id/2000007027
 
 export const MockedSuccess = MockTemplate.bind({});
 MockedSuccess.parameters = {
