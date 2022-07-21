@@ -12,15 +12,18 @@ const WorkflowParameters = ({
   handleHareChange,
   caseCohortDefinitionId,
   controlCohortDefinitionId,
-  quantitativeCohortDefinitionId,
+  // quantitativeCohortDefinitionId,
   selectedCovariates,
   selectedDichotomousCovariates,
   sourceId,
   workflowType,
+  numOfPC,
+  handleNumOfPC,
+  mafThreshold,
+  handleMaf,
+  imputationScore,
+  handleImputation,
 }) => {
-  const [numOfPC, setNumOfPC] = useState(3);
-  const [imputationScore, setImputationScore] = useState(0.3);
-  const [mafThreshold, setMafThreshold] = useState(0.01);
 
   // const handleCovariateDelete = (remainingCovariates) => {
   //     const remainingCovArr = [];
@@ -55,7 +58,7 @@ const WorkflowParameters = ({
               value={numOfPC}
               min={1}
               max={10}
-              onChange={(e) => setNumOfPC(e)}
+              onChange={(e) => handleNumOfPC(e)}
             />
             Number of PCs to use
           </label>
@@ -74,6 +77,18 @@ const WorkflowParameters = ({
           </label>
         </div>
         <div className='GWASUI-formItem'>
+          <label htmlFor='select-dichotomous-covariates'>
+            <Select
+              id='select-dichotomous-covariates'
+              mode='multiple'
+              value={selectedDichotomousCovariates.map((s) => s.provided_name)}
+              // onChange={(e) => handleDichotomousCovariateDelete(e)}
+              style={{ width: '70%' }}
+            />
+            Dichotomous Covariates
+          </label>
+        </div>
+        <div className='GWASUI-formItem'>
           {/* TODO: import this component & selection required */}
           {workflowType === 'caseControl' && (
             <label htmlFor='select-hare-case-control'>
@@ -87,11 +102,10 @@ const WorkflowParameters = ({
                 sourceId={sourceId}
                 handleHareChange={handleHareChange}
               />
-                  Select HARE group
+              Select HARE group
             </label>
           )}
-
-          {workflowType === 'quantitative' && (
+          {/* {workflowType === 'quantitative' && (
             <label htmlFor='select-hare-quantitative'>
               <ConceptStatsByHareQ
                 id='select-hare-quantitative'
@@ -104,16 +118,16 @@ const WorkflowParameters = ({
                 sourceId={sourceId}
                 handleHareChange={handleHareChange}
               />
-           Select HARE group
+              Select HARE group
             </label>
-          )}
+          )} */}
         </div>
         <div className='GWASUI-formItem'>
           <label htmlFor='input-maf'>
             <InputNumber
               id='input-maf'
               value={mafThreshold}
-              onChange={(e) => setMafThreshold(e)}
+              onChange={(e) => handleMaf(Number(e))}
               stringMode
               step='0.01'
               min={'0'}
@@ -127,7 +141,7 @@ const WorkflowParameters = ({
             <InputNumber
               id='input-imputation'
               value={imputationScore}
-              onChange={(e) => setImputationScore(e)}
+              onChange={(e) => handleImputation(Number(e))}
               stringMode
               step='0.1'
               min={'0'}
@@ -151,6 +165,9 @@ WorkflowParameters.propTypes = {
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
   workflowType: PropTypes.string.isRequired,
+  handleImputation: PropTypes.func.isRequired,
+  handleMaf: PropTypes.func.isRequired,
+  handleNumOfPC: PropTypes.func.isRequired,
 };
 
 WorkflowParameters.defaultPropTypes = {
