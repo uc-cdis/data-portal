@@ -26,7 +26,7 @@ const Covariates = ({
           columns={covariateTableConfig}
           dataSource={displayedCovariates}
         />
-      ) : <div className='GWASUI-spinnerContainer GWASUI-emptyTable'><Spin /></div>}
+      ) : (covariates?.status === 'error') ? <a>Error!</a> : <div className='GWASUI-spinnerContainer GWASUI-emptyTable'><Spin /></div>}
     </React.Fragment>
   );
 };
