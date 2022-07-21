@@ -24,15 +24,11 @@ const MockTemplate = () => {
       setSelectedCovariates(cov);
   };
 
-  const handleCovariatePage = () => {
-    console.log('handleCovariatePage');
-  };
-
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <Covariates
-        sourceId={1} searchTerm={''} selectedCovariates={selectedCovariates} page={1}
-        handleCovariateSelect={handleCovariateSelect} handlePage={handleCovariatePage}
+        sourceId={1} searchTerm={''} selectedCovariates={selectedCovariates}
+        handleCovariateSelect={handleCovariateSelect}
       />
     </QueryClientProvider>
   );
