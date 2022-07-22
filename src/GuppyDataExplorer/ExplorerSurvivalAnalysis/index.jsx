@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import { memo, useRef, useState } from 'react';
+import { memo, useState } from 'react';
 import { contactEmail } from '../../localconf';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import Spinner from '../../components/Spinner';
@@ -23,24 +23,25 @@ function ExplorerSurvivalAnalysis() {
   const [isUserCompliant, setIsUserCompliant] = useState(checkUserAgreement());
   const [timeInterval, setTimeInterval] = useState(4);
   const [startTime, setStartTime] = useState(0);
+  const [efsFlag, setEfsFlag] = useState(false);
   const [endTime, setEndTime] = useState(undefined);
 
-  const prevEfsFlag = useRef(false);
   /** @type {UserInputSubmitHandler} */
-  const handleSubmit = ({
-    timeInterval,
-    startTime,
-    endTime,
-    efsFlag,
-    usedFilterSets,
-  }) => {
-    setTimeInterval(timeInterval);
-    setStartTime(startTime);
-    setEndTime(endTime);
+  const handleSubmit = (input) => {
+    const shouldRefetch = efsFlag !== input.efsFlag;
 
-    const shouldRefetch = prevEfsFlag.current !== efsFlag;
-    if (shouldRefetch) prevEfsFlag.current = efsFlag;
-    dispatch(updateSurvivalResult({ efsFlag, shouldRefetch, usedFilterSets }));
+    setEfsFlag(input.efsFlag);
+    setTimeInterval(input.timeInterval);
+    setStartTime(input.startTime);
+    setEndTime(input.endTime);
+
+    dispatch(
+      updateSurvivalResult({
+        efsFlag: input.efsFlag,
+        shouldRefetch,
+        usedFilterSets: input.usedFilterSets,
+      })
+    );
   };
 
   return (
