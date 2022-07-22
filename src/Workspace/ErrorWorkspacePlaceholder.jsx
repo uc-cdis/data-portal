@@ -4,8 +4,8 @@ import NotFoundSVG from '../img/not-found.svg';
 import { components } from '../params';
 
 class ErrorWorkspacePlaceholder extends React.Component {
-  supportEmail = components.login?.email || 'support@datacommons.io';
   render() {
+    const supportEmail = components.login?.email || 'support@datacommons.io';
     return (
       <div className='error-workspace-placeholder__error-msg'>
         <h1>Error opening workspace...</h1>
