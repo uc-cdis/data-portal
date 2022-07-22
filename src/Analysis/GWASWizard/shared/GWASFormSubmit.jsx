@@ -52,9 +52,11 @@ const GWASFormSubmit = ({
             selectedControlCohort,
             gwasName
         ), {
-            onSuccess: () => {
-                openNotification();
-                resetGWAS();
+            onSuccess: (data) => {
+                if (data?.status === 200) {
+                    openNotification();
+                    resetGWAS();
+                }
             },
         });
         return submission;
