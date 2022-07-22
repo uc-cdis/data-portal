@@ -11,7 +11,6 @@ export { FILTER_TYPE } from '../../../../GuppyComponents/Utils/const';
 /** @typedef {import('../types').FilterStatus} FilterStatus */
 /** @typedef {import('../types').FilterTabsOption} FilterTabsOption */
 /** @typedef {import('../types').FilterTabStatus} FilterTabStatus */
-/** @typedef {import('../types').SimpleFilterState} SimpleFilterState */
 /** @typedef {import('../types').BaseFilter} BaseFilter */
 /** @typedef {import('../types').OptionFilter} OptionFilter */
 
@@ -53,7 +52,7 @@ export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
 
 /**
  * @param {string[]} fields
- * @param {SimpleFilterState} filterResults
+ * @param {FilterState} filterResults
  * @returns {FilterTabStatus}
  */
 function getFilterTabStatus(fields, filterResults) {

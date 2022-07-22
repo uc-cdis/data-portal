@@ -16,13 +16,6 @@ export type RangeFilter = {
 
 export type BaseFilter = EmptyFilter | OptionFilter | RangeFilter;
 
-export type SimpleFilterState = {
-  __combineMode?: CombineMode;
-  value?: {
-    [x: string]: BaseFilter;
-  };
-};
-
 export type AnchoredFilterState = {
   __type: 'ANCHORED';
   value?: {
