@@ -646,8 +646,8 @@ function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
  */
 export function getGQLFilter(filterState) {
   if (
-    filterState?.__type === undefined ||
-    filterState?.value === undefined ||
+    filterState === undefined ||
+    !('value' in filterState) ||
     Object.keys(filterState.value).length === 0
   )
     return undefined;
