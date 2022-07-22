@@ -84,6 +84,7 @@ function ExplorerSurvivalAnalysis() {
                   <SurvivalPlot
                     data={result.parsed.survival}
                     endTime={endTime}
+                    efsFlag={efsFlag}
                     startTime={startTime}
                     timeInterval={timeInterval}
                   />
