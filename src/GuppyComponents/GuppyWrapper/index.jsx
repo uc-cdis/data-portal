@@ -195,8 +195,9 @@ function GuppyWrapper({
         for (const [fieldName, value] of Object.entries(group))
           receivedAggsData[fieldName] = value;
       const unfilteredAggsData =
-        Object.keys(filter).length === 0 ? receivedAggsData : unfiltered;
-
+        Object.keys(filter.value ?? {}).length === 0
+          ? receivedAggsData
+          : unfiltered;
       return {
         aggsData: excludeSelfFilterFromAggsData(receivedAggsData, filter),
         initialTabsOptions:

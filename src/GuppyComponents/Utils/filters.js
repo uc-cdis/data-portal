@@ -406,7 +406,7 @@ export const getFilterSections = ({
  * @param {FilterState} filterResults
  */
 export function excludeSelfFilterFromAggsData(aggsData, filterResults) {
-  if (!filterResults) return aggsData;
+  if (filterResults?.value === undefined) return aggsData;
 
   /** @type {SimpleAggsData} */
   const resultAggsData = {};
@@ -417,8 +417,8 @@ export function excludeSelfFilterFromAggsData(aggsData, filterResults) {
     if (histogram !== undefined) {
       const fieldName = flatFieldName.replace('.histogram', '');
       resultAggsData[fieldName] = { histogram };
-      if (fieldName in filterResults) {
-        const filterValue = filterResults[fieldName];
+      if (fieldName in filterResults.value) {
+        const filterValue = filterResults.value[fieldName];
         resultAggsData[fieldName].histogram =
           filterValue.__type === FILTER_TYPE.OPTION
             ? histogram.filter(

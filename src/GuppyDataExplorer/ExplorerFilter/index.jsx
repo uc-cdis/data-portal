@@ -47,7 +47,8 @@ function ExplorerFilter({ className = '', ...filterProps }) {
     patientIds,
     onPatientIdsChange: handlePatientIdsChange,
   };
-  const hasExplorerFilter = Object.keys(filterProps.filter).length > 0;
+  const hasExplorerFilter =
+    Object.keys(filterProps.filter.value ?? {}).length > 0;
   const filterCombineMode = filterProps.filter.__combineMode ?? 'AND';
   function updateFilterCombineMode(e) {
     filterProps.onFilterChange({

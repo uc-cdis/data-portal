@@ -265,7 +265,7 @@ class ExplorerButtonGroup extends Component {
         selectedValues: refIDList,
       },
     };
-    if (this.props.filter.data_format) {
+    if (this.props.filter.value.data_format) {
       // @ts-ignore
       filter.data_format = this.props.filter.data_format;
     }
