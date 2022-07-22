@@ -1,5 +1,6 @@
 import { explorerConfig } from '../../localconf';
 import { capitalizeFirstLetter } from '../../utils';
+import { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
 
 /** @typedef {import('../../GuppyComponents/types').GuppyConfig} GuppyConfig */
 /** @typedef {import('../../GuppyComponents/types').FilterConfig} FilterConfig */
@@ -16,6 +17,40 @@ export function convertToFilterSetDTO({ filter: filters, ...rest }) {
   return { ...rest, filters };
 }
 
+/** @returns {ExplorerFilterSet['filter']['value']} */
+export function polyfillFilterValue(filter) {
+  const value = {};
+  for (const [key, val] of Object.entries(filter))
+    if (key.includes(':'))
+      value[key] = {
+        __type: FILTER_TYPE.ANCHORED,
+        value: polyfillFilterValue(val.filter),
+      };
+    else if ('selectedValues' in val)
+      value[key] = { __type: FILTER_TYPE.OPTION, ...val };
+    else if ('lowerBound' in val)
+      value[key] = { __type: FILTER_TYPE.RANGE, ...val };
+
+  return value;
+}
+
+/**
+ * @param {{ [key: string]: any }} filter
+ * @returns {ExplorerFilterSet['filter']}
+ */
+export function polyfillFilter({ __combineMode, __type, ...rest }) {
+  const shouldPolyfill =
+    !('value' in rest) ||
+    (Object.keys(rest.value).length > 0 &&
+      !('__type' in Object.values(rest.value)[0]));
+
+  return {
+    __combineMode: __combineMode ?? 'AND',
+    __type: __type ?? FILTER_TYPE.STANDARD,
+    value: shouldPolyfill ? polyfillFilterValue(rest) : rest.value,
+  };
+}
+
 /**
  * @param {ExplorerFilterSetDTO} filterSetDTO
  * @returns {ExplorerFilterSet}
@@ -23,11 +58,7 @@ export function convertToFilterSetDTO({ filter: filters, ...rest }) {
 export function convertFromFilterSetDTO({ filters, ...rest }) {
   return {
     ...rest,
-    filter:
-      '__combineMode' in filters
-        ? filters
-        : // backward compat for old filter sets missing __combineMode value
-          { __combineMode: 'AND', ...filters },
+    filter: polyfillFilter(filters),
   };
 }
 

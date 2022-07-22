@@ -1,4 +1,10 @@
-import { createFilterInfo, isSurvivalAnalysisEnabled } from './utils';
+import { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
+import {
+  createFilterInfo,
+  isSurvivalAnalysisEnabled,
+  polyfillFilter,
+  polyfillFilterValue,
+} from './utils';
 
 test('creates filter info object', () => {
   const filterConfig = {
@@ -48,4 +54,102 @@ test('checks whether survival analysis is enabled', () => {
   expect(isSurvivalAnalysisEnabled(truthyConfig)).toBe(true);
   truthyConfig = { result: { survival: true, risktable: true } };
   expect(isSurvivalAnalysisEnabled(truthyConfig)).toBe(true);
+});
+
+describe('polyfill legacy filter value', () => {
+  const option = { selectedValues: [] };
+  const range = { lowerBound: 0, upperBound: 1 };
+
+  test('single option filter', () => {
+    const value = { foo: option };
+    expect(polyfillFilterValue(value)).toStrictEqual({
+      foo: { __type: FILTER_TYPE.OPTION, ...option },
+    });
+  });
+  test('single range filter', () => {
+    const value = { foo: range };
+    expect(polyfillFilterValue(value)).toStrictEqual({
+      foo: { __type: FILTER_TYPE.RANGE, ...range },
+    });
+  });
+  test('single anchored filter', () => {
+    const value = { 'foo:bar': { filter: { foo: option } } };
+    expect(polyfillFilterValue(value)).toStrictEqual({
+      'foo:bar': {
+        __type: FILTER_TYPE.ANCHORED,
+        value: { foo: { __type: FILTER_TYPE.OPTION, ...option } },
+      },
+    });
+  });
+  test('multiple filters', () => {
+    const value = {
+      foo: option,
+      bar: range,
+      'foo:bar': { filter: { foo: option, bar: range } },
+    };
+    expect(polyfillFilterValue(value)).toStrictEqual({
+      foo: { __type: FILTER_TYPE.OPTION, ...option },
+      bar: { __type: FILTER_TYPE.RANGE, ...range },
+      'foo:bar': {
+        __type: FILTER_TYPE.ANCHORED,
+        value: {
+          foo: { __type: FILTER_TYPE.OPTION, ...option },
+          bar: { __type: FILTER_TYPE.RANGE, ...range },
+        },
+      },
+    });
+  });
+});
+
+describe('polyfill legacy filter', () => {
+  const option = { selectedValues: [] };
+  const range = { lowerBound: 0, upperBound: 1 };
+
+  test('valid: no polyfill', () => {
+    const value = {
+      __combineMode: 'AND',
+      __type: FILTER_TYPE.STANDARD,
+      value: {},
+    };
+    expect(polyfillFilter(value)).toStrictEqual(value);
+  });
+  test('no __combindMode: no polyfill', () => {
+    const value = {
+      __type: FILTER_TYPE.STANDARD,
+      value: {},
+    };
+    expect(polyfillFilter(value)).toStrictEqual({
+      __combineMode: 'AND',
+      ...value,
+    });
+  });
+  test('no __type: no polyfill', () => {
+    const value = {
+      __combineMode: 'OR',
+      value: {},
+    };
+    expect(polyfillFilter(value)).toStrictEqual({
+      __type: FILTER_TYPE.STANDARD,
+      ...value,
+    });
+  });
+  test('polyfill empty', () => {
+    const value = {};
+    expect(polyfillFilter(value)).toStrictEqual({
+      __combineMode: 'AND',
+      __type: FILTER_TYPE.STANDARD,
+      value: {},
+    });
+  });
+  test('polyfill non-empty', () => {
+    const value = { foo: option, bar: range };
+    expect(polyfillFilter(value)).toStrictEqual({
+      __combineMode: 'AND',
+      __type: FILTER_TYPE.STANDARD,
+      value: {
+        foo: { __type: FILTER_TYPE.OPTION, ...option },
+        bar: { __type: FILTER_TYPE.RANGE, ...range },
+      },
+    });
+  });
 });
