@@ -479,12 +479,7 @@ function GuppyWrapper({
 
   /** @param {FilterState} filter */
   function handleFilterChange(filter) {
-    const userFilter = /** @type {FilterState} */ ({
-      __combineMode: filterState.__combineMode ?? 'AND',
-      ...filter,
-    });
-    const mergedFilter = mergeFilters(userFilter, adminAppliedPreFilters);
-    onFilterChange?.(mergedFilter);
+    onFilterChange?.(mergeFilters(filter, adminAppliedPreFilters));
   }
 
   return children({

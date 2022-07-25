@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
 import { explorerConfig } from '../../localconf';
 import {
   createFilterSet,
@@ -158,7 +159,12 @@ const slice = createSlice({
     },
     /** @param {PayloadAction<ExplorerState['explorerFilter']>} action */
     updateExplorerFilter(state, action) {
-      const newFilter = action.payload;
+      const newFilter = {
+        /** @type {ExplorerFilter['__combineMode']} */
+        __combineMode: 'AND',
+        __type: FILTER_TYPE.STANDARD,
+        ...action.payload,
+      };
       const fields = Object.keys(newFilter.value ?? {});
       if (fields.length > 0) {
         const allSearchFieldSet = new Set();
