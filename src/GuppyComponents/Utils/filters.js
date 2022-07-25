@@ -1,4 +1,5 @@
 import flat from 'flat';
+import { FILTER_TYPE } from './const';
 import { queryGuppyForRawData } from './queries';
 
 /** @typedef {import('../types').AggsCount} AggsCount */
@@ -19,7 +20,7 @@ import { queryGuppyForRawData } from './queries';
  * amount of data shown when combined, but an admin filter should always decrease
  * or keep constant the amount of data shown when combined with a user filter).
  * @param {FilterState} userFilter
- * @param {{ [x: string]: OptionFilter }} adminAppliedPreFilter
+ * @param {{ [x: string]: { selectedValues?: string[] } }} adminAppliedPreFilter
  * */
 export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   /** @type {FilterState} */
@@ -28,16 +29,17 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   for (const [key, adminFilterValues] of Object.entries(
     adminAppliedPreFilter
   )) {
-    if (key in userFilter) {
-      const userFilterValues = userFilter[key];
+    if (key in userFilter.value) {
+      const userFilterValues = userFilter.value[key];
 
-      if ('selectedValues' in userFilterValues) {
+      if (userFilterValues.__type === FILTER_TYPE.OPTION) {
         const userFilterSubset = userFilterValues.selectedValues.filter((x) =>
           adminFilterValues.selectedValues.includes(x)
         );
 
-        mergedFilterState[key] = {
-          ...mergedFilterState[key],
+        mergedFilterState.value[key] = {
+          ...mergedFilterState.value[key],
+          __type: FILTER_TYPE.OPTION,
           selectedValues:
             userFilterSubset.length > 0
               ? // The user-applied filter is more exclusive than the admin-applied filter.
@@ -47,7 +49,10 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
         };
       }
     } else {
-      mergedFilterState[key] = adminFilterValues;
+      mergedFilterState.value[key] = {
+        __type: FILTER_TYPE.OPTION,
+        ...adminFilterValues,
+      };
     }
   }
 
@@ -118,8 +123,8 @@ export function updateCountsInInitialTabsOptions(
         }
       }
 
-      const filter = filtersApplied[fieldName];
-      if (filter !== undefined && 'selectedValues' in filter)
+      const filter = filtersApplied.value?.[fieldName];
+      if (filter !== undefined && filter.__type === FILTER_TYPE.OPTION)
         for (const key of filter.selectedValues) {
           const found = updatedTabsOptions[fieldName].histogram.find(
             (o) => o.key === key
@@ -401,7 +406,7 @@ export const getFilterSections = ({
  * @param {FilterState} filterResults
  */
 export function excludeSelfFilterFromAggsData(aggsData, filterResults) {
-  if (!filterResults) return aggsData;
+  if (filterResults?.value === undefined) return aggsData;
 
   /** @type {SimpleAggsData} */
   const resultAggsData = {};
@@ -412,10 +417,10 @@ export function excludeSelfFilterFromAggsData(aggsData, filterResults) {
     if (histogram !== undefined) {
       const fieldName = flatFieldName.replace('.histogram', '');
       resultAggsData[fieldName] = { histogram };
-      if (fieldName in filterResults) {
-        const filterValue = filterResults[fieldName];
+      if (fieldName in filterResults.value) {
+        const filterValue = filterResults.value[fieldName];
         resultAggsData[fieldName].histogram =
-          'selectedValues' in filterValue
+          filterValue.__type === FILTER_TYPE.OPTION
             ? histogram.filter(
                 ({ key }) =>
                   typeof key === 'string' &&

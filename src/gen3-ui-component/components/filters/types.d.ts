@@ -7,9 +7,9 @@ export type {
   FilterConfig,
   FilterState,
   FilterTabsOption,
+  BaseFilter,
+  EmptyFilter,
   OptionFilter,
-  RangeFilter,
-  SimpleFilterState,
 } from '../../../GuppyComponents/types';
 
 export type EmptyFilterStatus = {};

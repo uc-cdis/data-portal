@@ -1,4 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
+import { FILTER_TYPE } from '../../../../GuppyComponents/Utils/const';
+
+export { FILTER_TYPE } from '../../../../GuppyComponents/Utils/const';
 
 /** @typedef {import('../types').AnchorConfig} AnchorConfig */
 /** @typedef {import('../types').AnchoredFilterState} AnchoredFilterState */
@@ -8,10 +11,8 @@ import cloneDeep from 'lodash.clonedeep';
 /** @typedef {import('../types').FilterStatus} FilterStatus */
 /** @typedef {import('../types').FilterTabsOption} FilterTabsOption */
 /** @typedef {import('../types').FilterTabStatus} FilterTabStatus */
-/** @typedef {import('../types').SimpleFilterState} SimpleFilterState */
+/** @typedef {import('../types').BaseFilter} BaseFilter */
 /** @typedef {import('../types').OptionFilter} OptionFilter */
-/** @typedef {import('../types').RangeFilter} RangeFilter */
-/** @typedef {OptionFilter | RangeFilter} BasicFilter */
 
 /**
  * @param {FilterTabsOption[]} filterTabs
@@ -29,19 +30,21 @@ export function getExpandedStatus(filterTabs, expandedStatusControl) {
  * @param {FilterState} args.filterResults
  */
 export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
-  /** @type {{ [anchorLabel: string]: SimpleFilterState }} */
-  const filterResultsByAnchor = { '': {} };
+  /** @type {{ [anchorLabel: string]: AnchoredFilterState['value'] }} */
+  const filterResultsByAnchor = { '': { value: {} } };
 
   if (anchorConfig !== undefined)
     for (const anchorValue of anchorConfig.options)
-      filterResultsByAnchor[`${anchorConfig.field}:${anchorValue}`] = {};
+      filterResultsByAnchor[`${anchorConfig.field}:${anchorValue}`] = {
+        value: {},
+      };
 
-  for (const [filterKey, filterValues] of Object.entries(filterResults))
-    if (typeof filterValues !== 'string')
-      if ('filter' in filterValues) {
-        filterResultsByAnchor[filterKey] = filterValues.filter;
+  if (filterResults.value !== undefined)
+    for (const [filterKey, filterValues] of Object.entries(filterResults.value))
+      if (filterValues.__type === FILTER_TYPE.ANCHORED) {
+        filterResultsByAnchor[filterKey].value = filterValues.value;
       } else {
-        filterResultsByAnchor[''][filterKey] = filterValues;
+        filterResultsByAnchor[''].value[filterKey] = filterValues;
       }
 
   return filterResultsByAnchor;
@@ -49,20 +52,20 @@ export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
 
 /**
  * @param {string[]} fields
- * @param {SimpleFilterState} filterResults
+ * @param {FilterState} filterResults
  * @returns {FilterTabStatus}
  */
 function getFilterTabStatus(fields, filterResults) {
   return fields.map((field) => {
-    if (field in filterResults) {
-      const filterValues = filterResults[field];
-      if ('selectedValues' in filterValues) {
+    if (field in filterResults.value) {
+      const filterValues = filterResults.value[field];
+      if (filterValues.__type === FILTER_TYPE.OPTION) {
         const status = {};
         for (const selected of filterValues.selectedValues)
           status[selected] = true;
         return status;
       }
-      if ('lowerBound' in filterValues) {
+      if (filterValues.__type === FILTER_TYPE.RANGE) {
         return [filterValues.lowerBound, filterValues.upperBound];
       }
     }
@@ -95,36 +98,49 @@ export function getFilterStatus({ anchorConfig, filterResults, filterTabs }) {
   });
 }
 
-/** @param {FilterState} filterResults */
-export function removeEmptyFilter(filterResults) {
-  /** @type {FilterState} */
-  const newFilterResults = {};
-  for (const field of Object.keys(filterResults)) {
-    const filterValues = filterResults[field];
-    if (typeof filterValues !== 'string')
-      if ('filter' in filterValues) {
-        const newAnchoredFilterResults = /** @type {SimpleFilterState} */ (
-          removeEmptyFilter(filterValues.filter)
-        );
-        if (Object.keys(newAnchoredFilterResults).length > 0)
-          newFilterResults[field] = { filter: newAnchoredFilterResults };
-      } else {
-        const hasRangeFilter = 'lowerBound' in filterValues;
-        const hasOptionFilter =
-          'selectedValues' in filterValues &&
-          filterValues.selectedValues.length > 0;
-        // Filter settings are prefaced with two underscores, e.g., __combineMode
-        // A given config setting is still informative to Guppy even if the setting becomes empty
-        const hasConfigSetting = Object.keys(filterValues).some((x) =>
-          x.startsWith('__')
-        );
-        if (hasRangeFilter || hasOptionFilter || hasConfigSetting) {
-          newFilterResults[field] = filterValues;
-        }
-      }
-  }
+/** @param {BaseFilter} baseFilter */
+function _isNonEmptyFilter(baseFilter) {
+  const hasRangeFilter = baseFilter.__type === FILTER_TYPE.RANGE;
+  const hasOptionFilter =
+    baseFilter.__type === FILTER_TYPE.OPTION &&
+    baseFilter.selectedValues?.length > 0;
+  // Filter settings are prefaced with two underscores, e.g., __combineMode
+  // A given config setting is still informative to Guppy even if the setting becomes empty
+  const hasConfigSetting = Object.keys(baseFilter).some(
+    (x) => x !== '__type' && x.startsWith('__')
+  );
 
-  return newFilterResults;
+  return hasRangeFilter || hasOptionFilter || hasConfigSetting;
+}
+
+/**
+ * @param {AnchoredFilterState} anchoredFilter
+ * @returns {AnchoredFilterState}
+ */
+function _removeEmptyFilter(anchoredFilter) {
+  const newValue = /** @type {AnchoredFilterState['value']} */ ({});
+  for (const [field, filter] of Object.entries(anchoredFilter.value))
+    if (_isNonEmptyFilter(filter)) newValue[field] = filter;
+
+  return { ...anchoredFilter, value: newValue };
+}
+
+/**
+ * @param {FilterState} filterResults
+ * @returns {FilterState}
+ */
+export function removeEmptyFilter(filterResults) {
+  const newValue = /** @type {FilterState['value']} */ ({});
+  for (const [field, filter] of Object.entries(filterResults.value))
+    if (filter.__type === FILTER_TYPE.ANCHORED) {
+      const newAnchoredFilter = _removeEmptyFilter(filter);
+      if (Object.keys(newAnchoredFilter.value).length > 0)
+        newValue[field] = newAnchoredFilter;
+    } else if (_isNonEmptyFilter(filter)) {
+      newValue[field] = filter;
+    }
+
+  return { ...filterResults, value: newValue };
 }
 
 /**
@@ -154,11 +170,13 @@ export function clearFilterSection({
   let newFilterResults = cloneDeep(filterResults);
   const fieldName = filterTabs[tabIndex].fields[sectionIndex];
   if (anchorLabel === undefined || anchorLabel === '') {
-    newFilterResults[fieldName] = /** @type {BasicFilter} */ ({});
+    newFilterResults.value[fieldName] = /** @type {BaseFilter} */ ({});
   } else {
-    /** @type {AnchoredFilterState} */ (newFilterResults[anchorLabel]).filter[
-      fieldName
-    ] = /** @type {BasicFilter} */ ({});
+    console.log('newFilterResults', newFilterResults);
+
+    /** @type {AnchoredFilterState} */ (
+      newFilterResults.value[anchorLabel]
+    ).value[fieldName] = /** @type {BaseFilter} */ ({});
   }
   newFilterResults = removeEmptyFilter(newFilterResults);
 
@@ -217,29 +235,35 @@ export function updateCombineMode({
   let newFilterResults = cloneDeep(filterResults);
   const fieldName = filterTabs[tabIndex].fields[sectionIndex];
   if (anchorLabel === undefined || anchorLabel === '') {
-    if (newFilterResults[fieldName] === undefined) {
-      newFilterResults[fieldName] = {
+    if (newFilterResults.value[fieldName] === undefined) {
+      newFilterResults.value[fieldName] = {
         [combineModeFieldName]: combineModeValue,
+        __type: FILTER_TYPE.OPTION,
       };
     } else {
-      newFilterResults[fieldName][combineModeFieldName] = combineModeValue;
+      newFilterResults.value[fieldName][combineModeFieldName] =
+        combineModeValue;
     }
   } else {
-    if (!(anchorLabel in newFilterResults))
-      newFilterResults[anchorLabel] = { filter: {} };
-    if (!('filter' in newFilterResults[anchorLabel]))
+    if (!(anchorLabel in newFilterResults.value))
+      newFilterResults.value[anchorLabel] = {
+        __type: FILTER_TYPE.ANCHORED,
+        value: {},
+      };
+    if (newFilterResults.value[anchorLabel].__type !== FILTER_TYPE.ANCHORED)
       /** @type {AnchoredFilterState} */ (
-        newFilterResults[anchorLabel]
-      ).filter = {};
+        newFilterResults.value[anchorLabel]
+      ).value = {};
     const newAnchoredFilterResults = /** @type {AnchoredFilterState} */ (
-      newFilterResults[anchorLabel]
-    ).filter;
-    if (newAnchoredFilterResults[fieldName] === undefined) {
-      newAnchoredFilterResults[fieldName] = {
+      newFilterResults.value[anchorLabel]
+    );
+    if (newAnchoredFilterResults.value[fieldName] === undefined) {
+      newAnchoredFilterResults.value[fieldName] = {
         [combineModeFieldName]: combineModeValue,
+        __type: FILTER_TYPE.OPTION,
       };
     } else {
-      newAnchoredFilterResults[fieldName][combineModeFieldName] =
+      newAnchoredFilterResults.value[fieldName][combineModeFieldName] =
         combineModeValue;
     }
   }
@@ -289,35 +313,47 @@ export function updateRangeValue({
 
   // update filter results
   let newFilterResults = cloneDeep(filterResults);
+  if (newFilterResults.value === undefined) newFilterResults.value = {};
   const fieldName = filterTabs[tabIndex].fields[sectionIndex];
   if (anchorLabel === undefined || anchorLabel === '') {
-    newFilterResults[fieldName] = { lowerBound, upperBound };
+    newFilterResults.value[fieldName] = {
+      __type: FILTER_TYPE.RANGE,
+      lowerBound,
+      upperBound,
+    };
     // if lowerbound and upperbound values equal min and max,
     // remove this range from filter
     if (
       Math.abs(lowerBound - minValue) < rangeStep &&
       Math.abs(upperBound - maxValue) < rangeStep
     ) {
-      delete newFilterResults[fieldName];
+      delete newFilterResults.value[fieldName];
     }
   } else {
-    if (!(anchorLabel in newFilterResults))
-      newFilterResults[anchorLabel] = { filter: {} };
-    if (!('filter' in newFilterResults[anchorLabel]))
+    if (!(anchorLabel in newFilterResults.value))
+      newFilterResults.value[anchorLabel] = {
+        __type: FILTER_TYPE.ANCHORED,
+        value: {},
+      };
+    if (newFilterResults.value[anchorLabel].__type !== FILTER_TYPE.ANCHORED)
       /** @type {AnchoredFilterState} */ (
-        newFilterResults[anchorLabel]
-      ).filter = {};
+        newFilterResults.value[anchorLabel]
+      ).value = {};
     const newAnchoredFilterResults = /** @type {AnchoredFilterState} */ (
-      newFilterResults[anchorLabel]
-    ).filter;
-    newAnchoredFilterResults[fieldName] = { lowerBound, upperBound };
+      newFilterResults.value[anchorLabel]
+    );
+    newAnchoredFilterResults.value[fieldName] = {
+      __type: FILTER_TYPE.RANGE,
+      lowerBound,
+      upperBound,
+    };
     // if lowerbound and upperbound values equal min and max,
     // remove this range from filter
     if (
       Math.abs(lowerBound - minValue) < rangeStep &&
       Math.abs(upperBound - maxValue) < rangeStep
     ) {
-      delete newAnchoredFilterResults[fieldName];
+      delete newAnchoredFilterResults.value[fieldName];
     }
   }
   newFilterResults = removeEmptyFilter(newFilterResults);
@@ -364,19 +400,24 @@ export function updateSelectedValue({
 
   // update filter results
   let newFilterResults = cloneDeep(filterResults);
+  if (newFilterResults.value === undefined) newFilterResults.value = {};
   const fieldName = filterTabs[tabIndex].fields[sectionIndex];
   if (anchorLabel === undefined || anchorLabel === '') {
-    if (newFilterResults[fieldName] === undefined)
-      newFilterResults[fieldName] = { selectedValues: [selectedValue] };
+    if (newFilterResults.value[fieldName] === undefined)
+      newFilterResults.value[fieldName] = {
+        __type: FILTER_TYPE.OPTION,
+        selectedValues: [selectedValue],
+      };
     else if (
-      /** @type {OptionFilter} */ (newFilterResults[fieldName])
+      /** @type {OptionFilter} */ (newFilterResults.value[fieldName])
         .selectedValues === undefined
     )
-      /** @type {OptionFilter} */ (newFilterResults[fieldName]).selectedValues =
-        [selectedValue];
+      /** @type {OptionFilter} */ (
+        newFilterResults.value[fieldName]
+      ).selectedValues = [selectedValue];
     else {
       const { selectedValues } = /** @type {OptionFilter} */ (
-        newFilterResults[fieldName]
+        newFilterResults.value[fieldName]
       );
       const selectedValueIndex = selectedValues.indexOf(selectedValue);
       if (selectedValueIndex >= 0 && !isSelected)
@@ -385,27 +426,33 @@ export function updateSelectedValue({
         selectedValues.push(selectedValue);
     }
   } else {
-    if (!(anchorLabel in newFilterResults))
-      newFilterResults[anchorLabel] = { filter: {} };
-    if (!('filter' in newFilterResults[anchorLabel]))
+    if (!(anchorLabel in newFilterResults.value))
+      newFilterResults.value[anchorLabel] = {
+        __type: FILTER_TYPE.ANCHORED,
+        value: {},
+      };
+    if (newFilterResults.value[anchorLabel].__type !== FILTER_TYPE.ANCHORED)
       /** @type {AnchoredFilterState} */ (
-        newFilterResults[anchorLabel]
-      ).filter = {};
+        newFilterResults.value[anchorLabel]
+      ).value = {};
     const newAnchoredFilterResults = /** @type {AnchoredFilterState} */ (
-      newFilterResults[anchorLabel]
-    ).filter;
-    if (newAnchoredFilterResults[fieldName] === undefined)
-      newAnchoredFilterResults[fieldName] = { selectedValues: [selectedValue] };
+      newFilterResults.value[anchorLabel]
+    );
+    if (newAnchoredFilterResults.value[fieldName] === undefined)
+      newAnchoredFilterResults.value[fieldName] = {
+        __type: FILTER_TYPE.OPTION,
+        selectedValues: [selectedValue],
+      };
     else if (
-      /** @type {OptionFilter} */ (newAnchoredFilterResults[fieldName])
+      /** @type {OptionFilter} */ (newAnchoredFilterResults.value[fieldName])
         .selectedValues === undefined
     )
       /** @type {OptionFilter} */ (
-        newAnchoredFilterResults[fieldName]
+        newAnchoredFilterResults.value[fieldName]
       ).selectedValues = [selectedValue];
     else {
       const { selectedValues } = /** @type {OptionFilter} */ (
-        newAnchoredFilterResults[fieldName]
+        newAnchoredFilterResults.value[fieldName]
       );
       const selectedValueIndex = selectedValues.indexOf(selectedValue);
       if (selectedValueIndex >= 0 && !isSelected)

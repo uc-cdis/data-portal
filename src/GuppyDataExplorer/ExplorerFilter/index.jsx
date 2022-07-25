@@ -1,9 +1,6 @@
 import PropTypes from 'prop-types';
 import ConnectedFilter from '../../GuppyComponents/ConnectedFilter';
-import {
-  updateExplorerFilter,
-  updatePatientIds,
-} from '../../redux/explorer/slice';
+import { updatePatientIds } from '../../redux/explorer/slice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import './ExplorerFilter.css';
 
@@ -24,17 +21,12 @@ import './ExplorerFilter.css';
 /** @param {ExplorerFilterProps} props */
 function ExplorerFilter({ className = '', ...filterProps }) {
   const dispatch = useAppDispatch();
-  /** @param {RootState['explorer']['explorerFilter']} filter */
-  function handleFilterChange(filter) {
-    dispatch(updateExplorerFilter(filter));
-  }
   /** @param {RootState['explorer']['patientIds']} ids */
   function handlePatientIdsChange(ids) {
     dispatch(updatePatientIds(ids));
   }
   const {
     config: { adminAppliedPreFilters, filterConfig, guppyConfig },
-    explorerFilter,
     patientIds,
   } = useAppSelector((state) => state.explorer);
 
@@ -43,11 +35,11 @@ function ExplorerFilter({ className = '', ...filterProps }) {
     adminAppliedPreFilters,
     filterConfig,
     guppyConfig,
-    explorerFilter,
     patientIds,
     onPatientIdsChange: handlePatientIdsChange,
   };
-  const hasExplorerFilter = Object.keys(filterProps.filter).length > 0;
+  const hasExplorerFilter =
+    Object.keys(filterProps.filter.value ?? {}).length > 0;
   const filterCombineMode = filterProps.filter.__combineMode ?? 'AND';
   function updateFilterCombineMode(e) {
     filterProps.onFilterChange({
@@ -64,7 +56,7 @@ function ExplorerFilter({ className = '', ...filterProps }) {
           <button
             type='button'
             className='explorer-filter__clear-button'
-            onClick={() => handleFilterChange(undefined)}
+            onClick={() => filterProps.onFilterChange(undefined)}
           >
             Clear all
           </button>
