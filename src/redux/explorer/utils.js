@@ -1,6 +1,7 @@
 import { explorerConfig } from '../../localconf';
 import { capitalizeFirstLetter } from '../../utils';
 import { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
+import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 
 /** @typedef {import('../../GuppyComponents/types').GuppyConfig} GuppyConfig */
 /** @typedef {import('../../GuppyComponents/types').FilterConfig} FilterConfig */
@@ -14,7 +15,7 @@ import { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
  * @returns {ExplorerFilterSetDTO}
  */
 export function convertToFilterSetDTO({ filter: filters, ...rest }) {
-  return { ...rest, filters };
+  return { ...rest, filters, gqlFilter: getGQLFilter(filters) };
 }
 
 /** @returns {ExplorerFilterSet['filter']['value']} */

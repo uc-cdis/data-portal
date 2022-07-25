@@ -1,3 +1,5 @@
+import { GqlFilter } from '../GuppyComponents/types';
+
 export type {
   FilterConfig,
   FilterState as ExplorerFilter,
@@ -73,6 +75,7 @@ export type ExplorerFilterSetDTO = {
   description: string;
   explorerId?: number;
   filters: ExplorerFilter;
+  gqlFilter: GqlFilter;
   id?: number;
   name: string;
 };
