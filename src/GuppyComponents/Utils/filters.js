@@ -207,10 +207,15 @@ export const mergeTabOptions = (firstTabsOptions, secondTabsOptions) => {
 
 /**
  * @param {Object} args
+ * @param {OptionFilter['selectedValues']} [args.adminAppliedPreFilterValues]
  * @param {{ histogram: AggsCount[] }} args.histogramResult
  * @param {{ histogram: AggsCount[] }} args.initialHistogramResult
  */
-const getSingleFilterOption = ({ histogramResult, initialHistogramResult }) => {
+const getSingleFilterOption = ({
+  adminAppliedPreFilterValues,
+  histogramResult,
+  initialHistogramResult,
+}) => {
   if (!histogramResult || !histogramResult.histogram) {
     throw new Error(
       `Error parsing field options ${JSON.stringify(histogramResult)}`
@@ -241,6 +246,7 @@ const getSingleFilterOption = ({ histogramResult, initialHistogramResult }) => {
         filterType: 'singleSelect',
         count: item.count,
         accessible: item.accessible,
+        disabled: adminAppliedPreFilterValues?.includes(item.key),
       });
     }
   }
@@ -357,6 +363,8 @@ export const getFilterSections = ({
       let selectedOptions = [];
       if (tabsOptionsFiltered && tabsOptionsFiltered.histogram) {
         selectedOptions = getSingleFilterOption({
+          adminAppliedPreFilterValues:
+            adminAppliedPreFilters[field]?.selectedValues,
           histogramResult: tabsOptionsFiltered,
           initialHistogramResult: initialTabsOptions
             ? initialTabsOptions[field]
@@ -390,6 +398,8 @@ export const getFilterSections = ({
     }
 
     const defaultOptions = getSingleFilterOption({
+      adminAppliedPreFilterValues:
+        adminAppliedPreFilters[field]?.selectedValues,
       histogramResult: tabsOptionsFiltered,
       initialHistogramResult: initialTabsOptions
         ? initialTabsOptions[field]
