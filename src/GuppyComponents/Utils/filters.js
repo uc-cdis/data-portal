@@ -1,4 +1,5 @@
 import flat from 'flat';
+import cloneDeep from 'lodash.clonedeep';
 import { FILTER_TYPE } from './const';
 import { queryGuppyForRawData } from './queries';
 
@@ -24,13 +25,14 @@ import { queryGuppyForRawData } from './queries';
  * */
 export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   /** @type {FilterState} */
-  const mergedFilterState = { ...userFilter };
+  const mergedFilterState = cloneDeep(userFilter);
+  if (mergedFilterState.value === undefined) mergedFilterState.value = {};
 
   for (const [key, adminFilterValues] of Object.entries(
     adminAppliedPreFilter
   )) {
-    if (key in userFilter.value) {
-      const userFilterValues = userFilter.value[key];
+    if (key in mergedFilterState.value) {
+      const userFilterValues = mergedFilterState.value[key];
 
       if (userFilterValues.__type === FILTER_TYPE.OPTION) {
         const userFilterSubset = userFilterValues.selectedValues.filter((x) =>
@@ -204,10 +206,16 @@ export const mergeTabOptions = (firstTabsOptions, secondTabsOptions) => {
 };
 
 /**
- * @param {{ histogram: AggsCount[] }} histogramResult
- * @param {{ histogram: AggsCount[] }} initHistogramRes
+ * @param {Object} args
+ * @param {OptionFilter['selectedValues']} [args.adminAppliedPreFilterValues]
+ * @param {{ histogram: AggsCount[] }} args.histogramResult
+ * @param {{ histogram: AggsCount[] }} args.initialHistogramResult
  */
-const getSingleFilterOption = (histogramResult, initHistogramRes) => {
+const getSingleFilterOption = ({
+  adminAppliedPreFilterValues,
+  histogramResult,
+  initialHistogramResult,
+}) => {
   if (!histogramResult || !histogramResult.histogram) {
     throw new Error(
       `Error parsing field options ${JSON.stringify(histogramResult)}`
@@ -219,10 +227,10 @@ const getSingleFilterOption = (histogramResult, initHistogramRes) => {
     if (typeof item.key !== 'string') {
       let [minValue, maxValue] = item.key;
       if (
-        initHistogramRes &&
-        typeof initHistogramRes.histogram[0].key !== 'string'
+        initialHistogramResult &&
+        typeof initialHistogramResult.histogram[0].key !== 'string'
       )
-        [minValue, maxValue] = initHistogramRes.histogram[0].key;
+        [minValue, maxValue] = initialHistogramResult.histogram[0].key;
 
       options.push({
         filterType: 'range',
@@ -238,6 +246,7 @@ const getSingleFilterOption = (histogramResult, initHistogramRes) => {
         filterType: 'singleSelect',
         count: item.count,
         accessible: item.accessible,
+        disabled: adminAppliedPreFilterValues?.includes(item.key),
       });
     }
   }
@@ -353,10 +362,14 @@ export const getFilterSections = ({
       // This allows selected options to appear below the search box once they are selected.
       let selectedOptions = [];
       if (tabsOptionsFiltered && tabsOptionsFiltered.histogram) {
-        selectedOptions = getSingleFilterOption(
-          tabsOptionsFiltered,
-          initialTabsOptions ? initialTabsOptions[field] : undefined
-        );
+        selectedOptions = getSingleFilterOption({
+          adminAppliedPreFilterValues:
+            adminAppliedPreFilters[field]?.selectedValues,
+          histogramResult: tabsOptionsFiltered,
+          initialHistogramResult: initialTabsOptions
+            ? initialTabsOptions[field]
+            : undefined,
+        });
       }
 
       return {
@@ -384,10 +397,14 @@ export const getFilterSections = ({
       );
     }
 
-    const defaultOptions = getSingleFilterOption(
-      tabsOptionsFiltered,
-      initialTabsOptions ? initialTabsOptions[field] : undefined
-    );
+    const defaultOptions = getSingleFilterOption({
+      adminAppliedPreFilterValues:
+        adminAppliedPreFilters[field]?.selectedValues,
+      histogramResult: tabsOptionsFiltered,
+      initialHistogramResult: initialTabsOptions
+        ? initialTabsOptions[field]
+        : undefined,
+    });
 
     const fieldIsArrayField = checkIsArrayField(field, arrayFields);
 
