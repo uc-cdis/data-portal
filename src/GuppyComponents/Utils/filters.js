@@ -24,13 +24,13 @@ import { queryGuppyForRawData } from './queries';
  * */
 export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   /** @type {FilterState} */
-  const mergedFilterState = { ...userFilter };
+  const mergedFilterState = { value: {}, ...userFilter };
 
   for (const [key, adminFilterValues] of Object.entries(
     adminAppliedPreFilter
   )) {
-    if (key in userFilter.value) {
-      const userFilterValues = userFilter.value[key];
+    if (key in mergedFilterState.value) {
+      const userFilterValues = mergedFilterState.value[key];
 
       if (userFilterValues.__type === FILTER_TYPE.OPTION) {
         const userFilterSubset = userFilterValues.selectedValues.filter((x) =>
