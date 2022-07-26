@@ -1,4 +1,5 @@
 import flat from 'flat';
+import cloneDeep from 'lodash.clonedeep';
 import { FILTER_TYPE } from './const';
 import { queryGuppyForRawData } from './queries';
 
@@ -24,7 +25,8 @@ import { queryGuppyForRawData } from './queries';
  * */
 export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   /** @type {FilterState} */
-  const mergedFilterState = { value: {}, ...userFilter };
+  const mergedFilterState = cloneDeep(userFilter);
+  if (mergedFilterState.value === undefined) mergedFilterState.value = {};
 
   for (const [key, adminFilterValues] of Object.entries(
     adminAppliedPreFilter
