@@ -7,19 +7,23 @@ import { FILTER_TYPE } from '@src/GuppyComponents/Utils/const';
 const simpleFilter = {
   __combineMode: 'AND',
   __type: FILTER_TYPE.STANDARD,
-  foo: { __type: FILTER_TYPE.OPTION, selectedValues: ['x', 'y'] },
-  bar: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+  value: {
+    foo: { __type: FILTER_TYPE.OPTION, selectedValues: ['x', 'y'] },
+    bar: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+  },
 };
 
 const complexFilter = {
   __combineMode: 'OR',
   __type: FILTER_TYPE.STANDARD,
-  foo: { __type: FILTER_TYPE.OPTION, selectedValues: ['x', 'y'] },
-  'lorem:ipsum': {
-    __type: FILTER_TYPE.ANCHORED,
-    filter: {
-      bar: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
-      baz: { __type: FILTER_TYPE.OPTION, selectedValues: ['hello', 'world'] },
+  value: {
+    foo: { __type: FILTER_TYPE.OPTION, selectedValues: ['x', 'y'] },
+    'lorem:ipsum': {
+      __type: FILTER_TYPE.ANCHORED,
+      value: {
+        bar: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+        baz: { __type: FILTER_TYPE.OPTION, selectedValues: ['hello', 'world'] },
+      },
     },
   },
 };
