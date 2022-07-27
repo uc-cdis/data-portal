@@ -150,6 +150,32 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
             />
           </React.Fragment>
         )
+      case 5:
+        return (
+          <React.Fragment>
+            <h4 className='GWASUI-selectInstruction'>In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
+            <h4 className='GWASUI-selectInstruction'>Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
+            <div className='GWASUI-mainArea'>
+              <GWASFormSubmit
+                sourceId={sourceId}
+                numOfPC={numOfPC}
+                mafThreshold={mafThreshold}
+                imputationScore={imputationScore}
+                selectedHare={selectedHare}
+                selectedQuantitativeCohort={selectedCohort}
+                workflowType={'quantitative'}
+                outcome={outcome}
+                // selectedCaseCohort={selectedCaseCohort}
+                // selectedControlCohort={selectedControlCohort}
+                selectedCovariates={selectedCovariates}
+                selectedDichotomousCovariates={selectedDichotomousCovariates}
+                gwasName={gwasName}
+                handleGwasNameChange={handleGwasNameChange}
+                resetGWAS={resetGWAS}
+              />
+            </div>
+          </React.Fragment>
+        )
     }
   };
 

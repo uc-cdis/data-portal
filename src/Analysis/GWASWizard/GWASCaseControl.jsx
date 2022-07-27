@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import {
   Steps, Button, Space, Popconfirm, Spin,
 } from 'antd';
-import { CheckOutlined } from '@ant-design/icons';
-import { useQuery, useMutation } from 'react-query';
 import CohortSelect from './shared/CohortSelect';
 import CovariateSelect from './shared/CovariateSelect';
 import CustomDichotomousSelect from './shared/CustomDichotomousSelect';
@@ -48,7 +46,6 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
   };
 
   const handleHareChange = (hare) => {
-    console.log('hare', hare);
     setSelectedHare(hare);
   };
 
@@ -189,6 +186,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
               selectedHare={selectedHare}
               selectedCaseCohort={selectedCaseCohort}
               selectedControlCohort={selectedControlCohort}
+              workflowType={'caseControl'}
               selectedCovariates={selectedCovariates}
               selectedDichotomousCovariates={selectedDichotomousCovariates}
               gwasName={gwasName}
@@ -197,7 +195,6 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             />
           </div>
         </React.Fragment>
-
       );
     }
   };

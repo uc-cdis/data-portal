@@ -15,6 +15,9 @@ const GWASFormSubmit = ({
   selectedHare,
   selectedCaseCohort,
   selectedControlCohort,
+  selectedQuantitativeCohort,
+  outcome,
+  workflowType,
   selectedCovariates,
   selectedDichotomousCovariates,
   gwasName,
@@ -26,13 +29,13 @@ const GWASFormSubmit = ({
       const key = `open${Date.now()}`;
       const btn = (
         <Button type='primary' size='small' onClick={() => notification.close(key)}>
-                    Confirm
+          Confirm
         </Button>
       );
       notification.open({
         message: 'Successful Submission',
         description:
-                    `${gwasName} job starting!`,
+          `${gwasName} job starting!`,
         icon: (<CheckOutlined />),
         placement: 'top',
         btn,
@@ -78,15 +81,27 @@ const GWASFormSubmit = ({
         <div className='GWASUI-flexCol'>{imputationScore}</div>
       </div>
       <div className='GWASUI-flexRow GWASUI-rowItem'>
-        <div className='GWASUI-flexCol GWASUI-flexHeader1'>Selected Case Cohort</div>
-        <div className='GWASUI-flexCol'>{selectedCaseCohort?.cohort_name}</div>
-        <div className='GWASUI-flexCol GWASUI-flexHeader2'>Selected Control Cohort</div>
-        <div className='GWASUI-flexCol'>{selectedControlCohort?.cohort_name}</div>
+        {workflowType === 'caseControl' && (
+          <React.Fragment>
+            <div className='GWASUI-flexCol GWASUI-flexHeader1'>Selected Case Cohort</div>
+            <div className='GWASUI-flexCol'>{selectedCaseCohort?.cohort_name}</div>
+            <div className='GWASUI-flexCol GWASUI-flexHeader2'>Selected Control Cohort</div>
+            <div className='GWASUI-flexCol'>{selectedControlCohort?.cohort_name}</div>
+          </React.Fragment>
+        )}
+         {workflowType === 'quantitative' && (
+          <React.Fragment>
+            <div className='GWASUI-flexCol GWASUI-flexHeader1'>Selected Cohort</div>
+            <div className='GWASUI-flexCol'>{selectedQuantitativeCohort?.cohort_name}</div>
+            <div className='GWASUI-flexCol GWASUI-flexHeader2'>Selected Outcome</div>
+            <div className='GWASUI-flexCol'>{outcome?.cohort_name}</div>
+          </React.Fragment>
+        )}
       </div>
       <div className='GWASUI-flexRow GWASUI-rowItem'>
         <div className='GWASUI-flexCol'>Covariates</div>
         <div className='GWASUI-flexCol'>{selectedCovariates?.map((cov, key) => (
-          <li className='GWASUI-listItem' key={`covariate-${key}`}>{ cov?.concept_name }</li>
+          <li className='GWASUI-listItem' key={`covariate-${key}`}>{cov?.concept_name}</li>
         ))}
         </div>
       </div>
@@ -118,7 +133,7 @@ const GWASFormSubmit = ({
               submitJob.mutate();
             }}
           >
-                    Submit
+            Submit
           </Button>
         </div>
       </div>
@@ -131,13 +146,22 @@ GWASFormSubmit.propTypes = {
   mafThreshold: PropTypes.number.isRequired,
   imputationScore: PropTypes.number.isRequired,
   selectedHare: PropTypes.object.isRequired,
-  selectedCaseCohort: PropTypes.object.isRequired,
-  selectedControlCohort: PropTypes.object.isRequired,
+  selectedCaseCohort: PropTypes.object || undefined,
+  selectedControlCohort: PropTypes.object || undefined,
+  selectedQuantitativeCohort: PropTypes.object || undefined,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   gwasName: PropTypes.string.isRequired,
   handleGwasNameChange: PropTypes.func.isRequired,
   resetGWAS: PropTypes.func.isRequired,
+  workflowType: PropTypes.string.isRequired
+};
+
+
+GWASFormSubmit.defaultPropTypes = {
+  selectedControlCohort: undefined,
+  selectedCaseCohort: undefined,
+  quantitativeCohortDefinitionId: undefined,
 };
 
 export default GWASFormSubmit;

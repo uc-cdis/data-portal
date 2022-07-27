@@ -100,7 +100,7 @@ const CovariateStatsByHareCC = ({
     return (
       <div className='GWASUI-flexRow'>
         <Dropdown
-          disabled
+          // disabled
           buttonType='secondary'
           id='cohort-hare-selection-dropdown'
         >
