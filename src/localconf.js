@@ -212,6 +212,11 @@ function buildConfig(opts) {
     showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
   }
 
+  let gwasTemplate = "gwas-template-latest";
+  if (config.argoTemplate) {
+    gwasTemplate = config.argoTemplate
+  }
+
   let showFenceAuthzOnProfile = true;
   if (config.showFenceAuthzOnProfile === false) {
     showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
@@ -431,6 +436,7 @@ function buildConfig(opts) {
     basename,
     breakpoints,
     buildConfig,
+    gwasTemplate,
     dev,
     hostname,
     gaDebug,

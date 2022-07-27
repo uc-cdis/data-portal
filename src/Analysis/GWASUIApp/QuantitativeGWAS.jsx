@@ -8,7 +8,7 @@ import { useQuery, useMutation } from 'react-query';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { CheckOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { headers } from '../../configs';
-import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath } from '../../localconf';
+import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath, gwasTemplate } from '../../localconf';
 import { fetchWithCreds } from '../../actions';
 import Spinner from '../../components/Spinner';
 
@@ -503,7 +503,7 @@ const QuantitativeGWAS = (props) => {
       hare_concept_id: hareConceptId,
       maf_threshold: Number(mafThreshold),
       imputation_score_cutoff: Number(imputationScore),
-      template_version: 'gwas-template-latest',
+      template_version: gwasTemplate,
       source_id: sourceId,
       case_cohort_definition_id: cohortDefinitionId,
       control_cohort_definition_id: '-1',
