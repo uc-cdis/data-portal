@@ -23,7 +23,7 @@ const WorkflowParameters = ({
   handleMaf,
   imputationScore,
   handleImputation,
-}) => {
+}) =>
 
   // const handleCovariateDelete = (remainingCovariates) => {
   //     const remainingCovArr = [];
@@ -38,7 +38,7 @@ const WorkflowParameters = ({
   //     setSelectedCovariateVars(remainingCovArr.map((c) => c.concept_id));
   //     setSelectedCovariateIds(remainingCovArr.map((p) => p.prefixed_concept_id));
   // };
-  return (
+  (
     <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
       <h4 className='GWASUI-selectInstruction'>
         In this step, you will determine workflow parameters.
@@ -52,6 +52,7 @@ const WorkflowParameters = ({
       <div className='GWASUI-mainArea GWASUI-form'>
         <div className='GWASUI-formItem'>
           {/* value required (between 1 and 10) */}
+          Number of PCs to use
           <label htmlFor='input-numOfPC'>
             <InputNumber
               id='input-numOfPC'
@@ -60,11 +61,11 @@ const WorkflowParameters = ({
               max={10}
               onChange={(e) => handleNumOfPC(e)}
             />
-            Number of PCs to use
           </label>
         </div>
         <div className='GWASUI-formItem'>
           <label htmlFor='select-covariates'>
+            Covariates
             <Select
               id='select-covariates'
               mode='multiple'
@@ -73,11 +74,11 @@ const WorkflowParameters = ({
               // onChange={(e) => handleCovariateDelete(e)}
               style={{ width: '70%' }}
             />
-            Covariates
           </label>
         </div>
         <div className='GWASUI-formItem'>
           <label htmlFor='select-dichotomous-covariates'>
+            Dichotomous Covariates
             <Select
               id='select-dichotomous-covariates'
               mode='multiple'
@@ -85,13 +86,13 @@ const WorkflowParameters = ({
               // onChange={(e) => handleDichotomousCovariateDelete(e)}
               style={{ width: '70%' }}
             />
-            Dichotomous Covariates
           </label>
         </div>
         <div className='GWASUI-formItem'>
           {/* TODO: import this component & selection required */}
           {workflowType === 'caseControl' && (
             <label htmlFor='select-hare-case-control'>
+              Select HARE group
               <CovariateStatsByHareCC
                 id='select-hare-case-control'
                 selectedHare={selectedHare}
@@ -102,7 +103,6 @@ const WorkflowParameters = ({
                 sourceId={sourceId}
                 handleHareChange={handleHareChange}
               />
-              Select HARE group
             </label>
           )}
           {/* {workflowType === 'quantitative' && (
@@ -124,6 +124,7 @@ const WorkflowParameters = ({
         </div>
         <div className='GWASUI-formItem'>
           <label htmlFor='input-maf'>
+          MAF Cutoff
             <InputNumber
               id='input-maf'
               value={mafThreshold}
@@ -133,7 +134,6 @@ const WorkflowParameters = ({
               min={'0'}
               max={'0.5'}
             />
-            MAF Cutoff
           </label>
         </div>
         <div className='GWASUI-formItem'>
@@ -153,8 +153,6 @@ const WorkflowParameters = ({
       </div>
     </Space>
   );
-};
-
 WorkflowParameters.propTypes = {
   selectedHare: PropTypes.object.isRequired,
   handleHareChange: PropTypes.func.isRequired,

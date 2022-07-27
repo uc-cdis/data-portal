@@ -13,14 +13,14 @@ export const useGwasSubmitCC = async (
   imputationScore,
   selectedCaseCohort,
   selectedControlCohort,
-  gwasName
+  gwasName,
 ) => {
   const submitEndpoint = `${gwasWorkflowPath}submit`;
   const requestBody = {
     n_pcs: numOfPC,
     covariates: [...selectedCovariates, ...selectedDichotomousCovariates],
     out_prefix: Date.now().toString(),
-    outcome: "-1",
+    outcome: '-1',
     hare_population: selectedHare,
     hare_concept_id: 2000007027,
     maf_threshold: Number(mafThreshold),
@@ -62,7 +62,6 @@ export const useGwasSubmitCC = async (
 //   //   caseCohortDefinitionId,
 //   //   // controlCohortDefinitionId, -1 for Q
 //   //   )
-
 
 //   const submitEndpoint = `${gwasWorkflowPath}submit`;
 //   const requestBody = {

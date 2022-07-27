@@ -12,67 +12,68 @@ export default {
 
 const mockedQueryClient = new QueryClient({
   defaultOptions: {
-    queries: { retry: false  },
+    queries: { retry: false },
   },
 });
 
 const MockTemplate = () => {
-
   const [selectedCovariates, setSelectedCovariates] = useState([]);
 
   const handleCovariateSelect = (cov) => {
-      setSelectedCovariates(cov);
+    setSelectedCovariates(cov);
   };
 
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <Covariates
-        sourceId={1} searchTerm={''} selectedCovariates={selectedCovariates}
+        sourceId={1}
+        searchTerm={''}
+        selectedCovariates={selectedCovariates}
         handleCovariateSelect={handleCovariateSelect}
       />
     </QueryClientProvider>
   );
-}
+};
 
 export const MockedSuccess = MockTemplate.bind({});
 MockedSuccess.parameters = {
   msw: {
     handlers: [
-      rest.post("http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type", (req, res, ctx) => {
-        const { cohortmiddlewarepath } = req.params
-        const { sourceid } = req.params
+      rest.post('http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type', (req, res, ctx) => {
+        const { cohortmiddlewarepath } = req.params;
+        const { sourceid } = req.params;
         console.log(cohortmiddlewarepath);
         console.log(sourceid);
         return res(
           ctx.delay(1100),
           ctx.json({
-            "concepts": [
-                {
-                    "concept_id": 2000006885,
-                    "prefixed_concept_id": "ID_2000006885",
-                    "concept_name": "Average height ",
-                    "concept_code": "",
-                    "concept_type": "Measurement"
-                },
-                {
-                    "concept_id": 2000000280,
-                    "prefixed_concept_id": "ID_2000000280",
-                    "concept_name": "BMI at enrollment",
-                    "concept_code": "",
-                    "concept_type": "Measurement"
-                },
-                {
-                    "concept_id": 2000000323,
-                    "prefixed_concept_id": "ID_2000000323",
-                    "concept_name": "MVP Age Group",
-                    "concept_code": "",
-                    "concept_type": "Person"
-                }
-            ]
+            concepts: [
+              {
+                concept_id: 2000006885,
+                prefixed_concept_id: 'ID_2000006885',
+                concept_name: 'Average height ',
+                concept_code: '',
+                concept_type: 'Measurement',
+              },
+              {
+                concept_id: 2000000280,
+                prefixed_concept_id: 'ID_2000000280',
+                concept_name: 'BMI at enrollment',
+                concept_code: '',
+                concept_type: 'Measurement',
+              },
+              {
+                concept_id: 2000000323,
+                prefixed_concept_id: 'ID_2000000323',
+                concept_name: 'MVP Age Group',
+                concept_code: '',
+                concept_type: 'Person',
+              },
+            ],
           }),
         );
       }),
-    ]
+    ],
   },
 };
 
@@ -80,12 +81,10 @@ export const MockedError = MockTemplate.bind({});
 MockedError.parameters = {
   msw: {
     handlers: [
-      rest.post("http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type", (req, res, ctx) => {
-        return res(
-          ctx.delay(800),
-          ctx.status(403),
-        );
-      }),
-    ]
+      rest.post('http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type', (req, res, ctx) => res(
+        ctx.delay(800),
+        ctx.status(403),
+      )),
+    ],
   },
 };
