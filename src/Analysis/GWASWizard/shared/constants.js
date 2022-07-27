@@ -15,11 +15,16 @@ export const quantitativeSteps = [
   },
   {
     title: 'Step 4',
-    description: 'Set workflow parameters and remove unwanted covariates',
+    description: 'Add custom dichotomous covariates',
   },
   {
     title: 'Step 5',
-    description: 'Submit GWAS job',
+    description: 'Set workflow parameters and remove unwanted covariates',
+  },
+
+  {
+    title: 'Step 6',
+    description: 'Review and Submit GWAS job',
   },
 ];
 
@@ -50,7 +55,7 @@ export const caseControlSteps = [
   },
   {
     title: 'Step 7',
-    description: 'Submit GWAS job',
+    description: 'Review and Submit GWAS job',
   },
 ];
 
