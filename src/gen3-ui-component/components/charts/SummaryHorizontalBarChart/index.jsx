@@ -80,9 +80,16 @@ function SummaryBarChart({
                       backgroundColor: getItemColor(index),
                     }}
                   />
-                  <div className='summary-horizontal-bar-chart__item-value'>
-                    {showPercentage ? `${item.percentage}%` : item.value}
-                  </div>
+                  {showPercentage ? (
+                    <div className='summary-horizontal-bar-chart__item-value percentage'>
+                      {item.value}
+                      <br />({item.percentage}%)
+                    </div>
+                  ) : (
+                    <div className='summary-horizontal-bar-chart__item-value'>
+                      {item.value}
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
