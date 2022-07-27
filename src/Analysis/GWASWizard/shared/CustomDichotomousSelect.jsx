@@ -32,50 +32,50 @@ const CustomDichotomousSelect = ({
   return (
     <React.Fragment>
       <div className='cd-flex'>
-          <React.Fragment>
-            <div className='GWASUI-align'>
-              <div className='GWASUI-flexRow'>
-                <div className='GWASUI-flexCol GWASUI-subTable'>
-                  <CohortSelect
-                    selectedCohort={firstCohort}
-                    handleCohortSelect={setFirstCohort}
-                    sourceId={sourceId}
-                    otherCohortSelected={secondCohort ? secondCohort.cohort_name : ''}
-                    current={current}
-                  />
-                </div>
-                <div className='GWASUI-flexCol GWASUI-subTable'>
-                  <CohortSelect
-                    selectedCohort={secondCohort}
-                    handleCohortSelect={setSecondCohort}
-                    sourceId={sourceId}
-                    otherCohortSelected={firstCohort ? firstCohort.cohort_name : ''}
-                    current={current}
-                  />
-                </div>
+        <React.Fragment>
+          <div className='GWASUI-align'>
+            <div className='GWASUI-flexRow'>
+              <div className='GWASUI-flexCol GWASUI-subTable'>
+                <CohortSelect
+                  selectedCohort={firstCohort}
+                  handleCohortSelect={setFirstCohort}
+                  sourceId={sourceId}
+                  otherCohortSelected={secondCohort ? secondCohort.cohort_name : ''}
+                  current={current}
+                />
               </div>
-              <div className='GWASUI-flexRow'>
-                <div className='GWASUI-searchContainer'>
-                  <input
-                    type='text'
-                    className='GWASUI-searchInput'
-                    onChange={(e) => setCdName(e.target.value)}
-                    value={cdName}
-                    placeholder='Enter a name for custom dichotomous selection'
-                    style={{ width: '70%', height: '90%' }}
-                  />
-                </div>
-                <button type='submit' disabled={disableCD} className={`${!disableCD ? 'GWASUI-btnEnable' : ''} GWASUI-cdBtn`} onClick={() => handleCDSubmit()}>Add</button>
+              <div className='GWASUI-flexCol GWASUI-subTable'>
+                <CohortSelect
+                  selectedCohort={secondCohort}
+                  handleCohortSelect={setSecondCohort}
+                  sourceId={sourceId}
+                  otherCohortSelected={firstCohort ? firstCohort.cohort_name : ''}
+                  current={current}
+                />
               </div>
             </div>
-          </React.Fragment>
+            <div className='GWASUI-flexRow'>
+              <div className='GWASUI-searchContainer'>
+                <input
+                  type='text'
+                  className='GWASUI-searchInput'
+                  onChange={(e) => setCdName(e.target.value)}
+                  value={cdName}
+                  placeholder='Enter a name for custom dichotomous selection'
+                  style={{ width: '70%', height: '90%' }}
+                />
+              </div>
+              <button type='submit' disabled={disableCD} className={`${!disableCD ? 'GWASUI-btnEnable' : ''} GWASUI-cdBtn`} onClick={() => handleCDSubmit()}>Add</button>
+            </div>
+          </div>
+        </React.Fragment>
         <div className='GWASUI-align' />
         <div className='GWASUI-cdList'>
           {selectedDichotomousCovariates.map((cd, key) => (
             <Card
               key={`cd-list-option-${key}`}
               style={{
-                width: 300
+                width: 300,
               }}
               actions={[
                 <DeleteOutlined key='delete' />,

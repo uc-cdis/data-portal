@@ -99,7 +99,11 @@ const CovariateStatsByHareCC = ({
     // normal scenario - there is breakdown data, so show in dropdown:
     return (
       <div className='GWASUI-flexRow'>
-        <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
+        <Dropdown
+          // disabled
+          buttonType='secondary'
+          id='cohort-hare-selection-dropdown'
+        >
           <Dropdown.Button rightIcon='dropdown' buttonType='secondary'>
             {(selectedHare?.concept_value?.length)
               ? getHareDescriptionBreakdown(selectedHare, dataCase.concept_breakdown, dataControl.concept_breakdown)

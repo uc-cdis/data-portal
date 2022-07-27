@@ -1,6 +1,9 @@
 /* eslint-disable camelcase */
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useQuery } from 'react-query';
+import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import { Spin } from 'antd';
 import { fetchConceptStatsByHare, queryConfig } from './wizard-endpoints/cohort-middleware-api';
 
 const CovariateStatsByHareQ = ({
@@ -11,6 +14,7 @@ const CovariateStatsByHareQ = ({
   sourceId,
   handleHareChange,
 }) => {
+
   const { data, status } = useQuery(
     ['conceptstatsbyhare', selectedCovariates, selectedDichotomousCovariates, quantitativeCohortDefinitionId],
     () => fetchConceptStatsByHare(
@@ -19,8 +23,12 @@ const CovariateStatsByHareQ = ({
       selectedDichotomousCovariates,
       sourceId,
     ),
-    ...queryConfig,
+    queryConfig,
   );
+
+  useEffect(() => {
+    console.log(selectedCovariates, selectedDichotomousCovariates, quantitativeCohortDefinitionId);
+  }, [])
 
   const getHareDescriptionBreakdown = (singleHare, allHares) => {
     const hareBreakdown = allHares.find((hare) => hare.concept_value === singleHare.concept_value);
@@ -35,7 +43,7 @@ const CovariateStatsByHareQ = ({
   }, [selectedHare, data, handleHareChange]);
 
   if (status === 'loading') {
-    return <Spinner />;
+    return <Spin />;
   }
   if (status === 'error') {
     return <React.Fragment>Error</React.Fragment>;
@@ -66,7 +74,7 @@ const CovariateStatsByHareQ = ({
                 value={`${hare}`}
                 onClick={() => handleHareChange(hare)}
               >
-                <div>{getHareAndDescription(hare, data.concept_breakdown)}</div>
+                <div>{getHareDescriptionBreakdown(hare, data.concept_breakdown)}</div>
               </Dropdown.Item>
             ))
           }
