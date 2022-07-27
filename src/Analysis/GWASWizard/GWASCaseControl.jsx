@@ -65,8 +65,17 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     setImputationScore(imp);
   };
 
-  const resetGWAS = () => {
-    // TODO reset to initial state
+  const resetCaseControl = () => {
+    setCurrent(0);
+    setSelectedCaseCohort(undefined);
+    setSelectedControlCohort(undefined);
+    setSelectedCovariates([]);
+    selectedDichotomousCovariates([]);
+    setSelectedHare({ concept_value: '' });
+    setNumOfPC(3);
+    setImputationScore(0.3);
+    setMafThreshold(0.01);
+    setGwasName('');
     refreshWorkflows();
   };
 
@@ -191,7 +200,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
               selectedDichotomousCovariates={selectedDichotomousCovariates}
               gwasName={gwasName}
               handleGwasNameChange={handleGwasNameChange}
-              resetGWAS={resetGWAS}
+              resetGWAS={resetCaseControl}
             />
           </div>
         </React.Fragment>
