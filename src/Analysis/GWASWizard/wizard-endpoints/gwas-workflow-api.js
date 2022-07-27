@@ -1,8 +1,6 @@
 import { gwasTemplate, gwasWorkflowPath } from '../../../localconf';
 import { headers } from '../../../configs';
 
-// export const hareConceptId = 2000007027;
-
 export const useGwasSubmitCC = async (
   sourceId,
   numOfPC,
@@ -18,10 +16,10 @@ export const useGwasSubmitCC = async (
   const submitEndpoint = `${gwasWorkflowPath}submit`;
   const requestBody = {
     n_pcs: numOfPC,
-    covariates: [...selectedCovariates, ...selectedDichotomousCovariates],
+    variables: [...selectedCovariates, ...selectedDichotomousCovariates],
     out_prefix: Date.now().toString(),
     outcome: '-1',
-    hare_population: selectedHare,
+    hare_population: selectedHare.concept_value,
     hare_concept_id: 2000007027,
     maf_threshold: Number(mafThreshold),
     imputation_score_cutoff: Number(imputationScore),
@@ -40,50 +38,39 @@ export const useGwasSubmitCC = async (
   return res;
 };
 
-// export const useGwasSubmitQ = async (
-//   sourceId,
-//   numOfPC,
-//   covariates,
-//   selectedOutcome,
-//   selectedHare,
-//   mafThreshold,
-//   imputationScore,
-//   cohortDefinitionId,
-//   gwasJobName,
-// ) => {
-//   // () => useGwasSubmit(
-//   //   sourceId,
-//   //   numOfPC,
-//   //   selectedCovariates,
-//   //   // selectedOutcome, -1 for CC
-//   //   selectedHare,
-//   //   mafThreshold,
-//   //   imputationScore,
-//   //   caseCohortDefinitionId,
-//   //   // controlCohortDefinitionId, -1 for Q
-//   //   )
-
-//   const submitEndpoint = `${gwasWorkflowPath}submit`;
-//   const requestBody = {
-//     n_pcs: numOfPC,
-//     covariates,
-//     out_prefix: Date.now().toString(),
-//     outcome: selectedOutcome,
-//     hare_population: selectedHare,
-//     hare_concept_id: 2000007027,
-//     maf_threshold: Number(mafThreshold),
-//     imputation_score_cutoff: Number(imputationScore),
-//     template_version: 'gwas-template-latest',
-//     source_id: sourceId,
-//     case_cohort_definition_id: cohortDefinitionId,
-//     control_cohort_definition_id: '-1',
-//     workflow_name: gwasJobName,
-//   };
-//   const res = await fetch(submitEndpoint, {
-//     method: 'POST',
-//     credentials: 'include',
-//     headers,
-//     body: JSON.stringify(requestBody),
-//   });
-//   return res;
-// };
+export const useGwasSubmitQ = async (
+  sourceId,
+  numOfPC,
+  selectedCovariates,
+  selectedDichotomousCovariates,
+  outcome,
+  selectedHare,
+  mafThreshold,
+  imputationScore,
+  selectedQuantitativeCohort,
+  gwasName,
+) => {
+  const submitEndpoint = `${gwasWorkflowPath}submit`;
+  const requestBody = {
+    n_pcs: numOfPC,
+    variables: [...selectedCovariates, ...selectedDichotomousCovariates],
+    out_prefix: Date.now().toString(),
+    outcome: outcome.concept_id,
+    hare_population: selectedHare.concept_value,
+    hare_concept_id: 2000007027,
+    maf_threshold: Number(mafThreshold),
+    imputation_score_cutoff: Number(imputationScore),
+    template_version: 'gwas-template-latest',
+    source_id: sourceId,
+    case_cohort_definition_id: selectedQuantitativeCohort.cohort_definition_id,
+    control_cohort_definition_id: '-1',
+    workflow_name: gwasName,
+  };
+  const res = await fetch(submitEndpoint, {
+    method: 'POST',
+    credentials: 'include',
+    headers,
+    body: JSON.stringify(requestBody),
+  });
+  return res;
+};

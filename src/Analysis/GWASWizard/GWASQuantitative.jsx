@@ -13,23 +13,23 @@ import AddCohortButton from './shared/AddCohortButton';
 import OutcomeSelectReview from './OutcomeSelectReview';
 import CustomDichotomousSelect from './shared/CustomDichotomousSelect';
 import WorkflowParameters from './shared/WorkflowParameters';
+import GWASFormSubmit from './shared/GWASFormSubmit';
 
 const { Step } = Steps;
 
 const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
   const [current, setCurrent] = useState(0);
   const [selectedCohort, setSelectedCohort] = useState(undefined);
-  const { loading, sourceId } = useSourceFetch();
-
   const [selectedCovariates, setSelectedCovariates] = useState([]);
   const [outcome, setOutcome] = useState(undefined);
-
   const [selectedDichotomousCovariates, setSelectedDichotomousCovariates] = useState([]);
   const [selectedHare, setSelectedHare] = useState({ concept_value: '' });
   const [numOfPC, setNumOfPC] = useState(3);
   const [imputationScore, setImputationScore] = useState(0.3);
   const [mafThreshold, setMafThreshold] = useState(0.01);
   const [gwasName, setGwasName] = useState('');
+
+  const { loading, sourceId } = useSourceFetch();
 
   const handleCohortSelect = (cohort) => {
     setSelectedCohort(cohort);
@@ -48,7 +48,6 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
   };
 
   const handleHareChange = (hare) => {
-    console.log('hare', hare);
     setSelectedHare(hare);
   };
 
@@ -67,6 +66,21 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
   const handleImputation = (imp) => {
     setImputationScore(imp);
   };
+
+  const resetQuantitative = () => {
+    setCurrent(0);
+    setSelectedCohort(undefined);
+    setSelectedCovariates([]);
+    selectedDichotomousCovariates([]);
+    setSelectedHare({ concept_value: '' });
+    setNumOfPC(3);
+    setImputationScore(0.3);
+    setMafThreshold(0.01);
+    setOutcome(undefined);
+    setGwasName('');
+    refreshWorkflows();
+  };
+
 
   const generateStep = () => {
     switch (current) {
@@ -171,17 +185,12 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
                 selectedDichotomousCovariates={selectedDichotomousCovariates}
                 gwasName={gwasName}
                 handleGwasNameChange={handleGwasNameChange}
-                resetGWAS={resetGWAS}
+                resetGWAS={resetQuantitative}
               />
             </div>
           </React.Fragment>
         )
     }
-  };
-
-  const resetFields = () => {
-    // TODO reset to initial state
-    refreshWorkflows();
   };
 
   let nextButtonEnabled = true;
