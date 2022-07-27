@@ -75,6 +75,15 @@ export const covariateSelection = (handler, selectedCovariates) => ({
   },
 });
 
+export const outcomeSelection = (handler, outcome) => ({
+  type: 'radio',
+  columnTitle: 'Select',
+  selectedRowKeys: (outcome) ? [outcome.concept_id] : [],
+  onChange: (_, selectedRows) => {
+    handler(selectedRows[0]);
+  }
+})
+
 export const cohortTableConfig = [
   {
     title: 'Cohort Name',
