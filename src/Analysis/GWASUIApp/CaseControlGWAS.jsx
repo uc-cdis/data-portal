@@ -6,7 +6,7 @@ import {
 import './GWASUIApp.css';
 import { useQuery, useQueries, useMutation } from 'react-query';
 import { headers } from '../../configs';
-import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath } from '../../localconf';
+import { gwasWorkflowPath, cohortMiddlewarePath, wtsPath, gwasTemplate } from '../../localconf';
 import { fetchWithCreds } from '../../actions';
 import Spinner from "../../components/Spinner";
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
@@ -574,7 +574,7 @@ const CaseControlGWAS = (props) => {
             hare_concept_id: hareConceptId,
             maf_threshold: Number(mafThreshold),
             imputation_score_cutoff: Number(imputationScore),
-            template_version: "gwas-template-latest",
+            template_version: gwasTemplate,
             source_id: sourceId,
             case_cohort_definition_id: caseCohortDefinitionId,
             control_cohort_definition_id: controlCohortDefinitionId,
