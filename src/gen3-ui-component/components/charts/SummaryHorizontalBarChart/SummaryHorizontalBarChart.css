@@ -36,6 +36,10 @@
   top: 1px;
 }
 
+.summary-horizontal-bar-chart__item-value.percentage {
+  line-height: 1;
+}
+
 .summary-horizontal-bar-chart__item-label,
 .summary-horizontal-bar-chart__item-value {
   user-select: none;
@@ -45,6 +49,7 @@
 
 .summary-horizontal-bar-chart__item-block-wrapper {
   display: flex;
+  align-items: center;
 }
 
 .summary-horizontal-bar-chart__item-block {
