@@ -7,7 +7,7 @@ import {
 import { ThemeProvider } from 'styled-components';
 import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { faAngleUp, faAngleDown, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 import { datadogRum } from '@datadog/browser-rum';
@@ -16,7 +16,12 @@ import 'antd/dist/antd.css';
 import '@gen3/ui-component/dist/css/base.less';
 import { fetchAndSetCsrfToken } from './configs';
 import {
-  fetchDictionary, fetchSchema, fetchVersionInfo, fetchUserAccess, fetchUserAuthMapping,
+  fetchDictionary,
+  fetchSchema,
+  fetchVersionInfo,
+  fetchUserAccess,
+  fetchUserAuthMapping,
+  updateSystemUseNotice,
 } from './actions';
 import ReduxLogin, { fetchLogin } from './Login/ReduxLogin';
 import ProtectedContent from './Login/ProtectedContent';
@@ -51,28 +56,35 @@ import { DAPRouteTracker } from './components/DAPAnalytics';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
+import workspaceSessionMonitor from './Workspace/WorkspaceSessionMonitor';
 import Workspace from './Workspace';
 import ResourceBrowser from './ResourceBrowser';
 import Discovery from './Discovery';
+import ReduxWorkspaceShutdownPopup from './Popup/ReduxWorkspaceShutdownPopup';
+import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
+import StudyRegistration from './StudyRegistration';
+import ReduxStudyRegistrationRequestForm from './StudyRegistration/ReduxStudyRegistrationRequestForm'
 import NotFound from './components/NotFound';
 
 // monitor user's session
 sessionMonitor.start();
+workspaceSessionMonitor.start();
 
 // render the app after the store is configured
 async function init() {
   const store = await getReduxStore();
 
-  // asyncSetInterval(() => store.dispatch(fetchUser), 60000);
   ReactGA.initialize(gaTracking);
   ReactGA.pageview(window.location.pathname + window.location.search);
 
   // Datadog setup
   if (ddApplicationId && !ddClientToken) {
+    // eslint-disable-next-line no-console
     console.warn('Datadog applicationId is set, but clientToken is missing');
   } else if (!ddApplicationId && ddClientToken) {
+    // eslint-disable-next-line no-console
     console.warn('Datadog clientToken is set, but applicationId is missing');
   } else if (ddApplicationId && ddClientToken) {
     datadogRum.init({
@@ -95,12 +107,13 @@ async function init() {
       // resources can be open to anonymous users, so fetch access:
       store.dispatch(fetchUserAccess),
       store.dispatch(fetchUserAuthMapping),
+      store.dispatch(updateSystemUseNotice(null)),
       // eslint-disable-next-line no-console
       fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); }),
     ],
   );
   // FontAwesome icons
-  library.add(faAngleUp, faAngleDown);
+  library.add(faAngleUp, faAngleDown, faExternalLinkAlt);
 
   render(
     <div>
@@ -120,6 +133,8 @@ async function init() {
               <ReduxTopBar />
               <ReduxNavBar />
               <div className='main-content'>
+                <ReduxWorkspaceShutdownBanner />
+                <ReduxWorkspaceShutdownPopup />
                 <Switch>
                   {/* process with trailing and duplicate slashes first */}
                   {/* see https://github.com/ReactTraining/react-router/issues/4841#issuecomment-523625186 */}
@@ -157,19 +172,28 @@ async function init() {
                       )
                     }
                   />
-                  <Route
-                    exact
-                    path='/'
-                    component={
-                      (props) => (
-                        <ProtectedContent
-                          public={discoveryConfig.public !== false}
-                          component={Discovery}
-                          {...props}
-                        />
-                      )
-                    }
-                  />
+                  {isEnabled('discovery')
+                    ? (
+                      <Route
+                        exact
+                        path='/'
+                        component={
+                          (props) => (
+                            <ProtectedContent
+                              public={discoveryConfig.public !== false}
+                              component={Discovery}
+                              {...props}
+                            />
+                          )
+                        }
+                      />
+                    ) : (
+                      <Route
+                        exact
+                        path='/'
+                        component={NotFound}
+                      />
+                    )}
                   <Route
                     exact
                     path='/submission'
@@ -467,6 +491,42 @@ async function init() {
                         }
                       />
                     )}
+                  {
+                    isEnabled('studyRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/study-reg'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={StudyRegistration}
+                                {...props}
+                              />
+                            )
+                          }
+                        />
+                      )
+                      : null
+                  }
+                  {
+                    isEnabled('studyRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/study-reg/request-access'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={ReduxStudyRegistrationRequestForm}
+                                {...props}
+                              />
+                            )
+                          }
+                        />
+                      )
+                      : null
+                  }
                   <Route
                     path='/not-found'
                     component={NotFound}

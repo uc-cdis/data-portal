@@ -3,7 +3,7 @@
 Example configuration:
 
 ```
-[
+"studyViewerConfig": [
     {
         "dataType": "dataset",
         "title": "Datasets",           // page title
@@ -13,12 +13,14 @@ Example configuration:
             "blockFields": ["short_description"],
             // displayed in table:
             "tableFields": ["condition", ...],
+            "hideEmptyFields": false //optional false by default; hides empty fields
         },
         "singleItemConfig": { // optional, if omitted, "listItemConfig" block will be used for both pages
             // displayed outside of table:
             "blockFields": ["long_description"],
             // displayed in table:
             "tableFields": ["condition", ...],
+            "hideEmptyFields": false, //optional false by default; hides empty fields
             // optional configs for side boxes, only for single study viewer
             "sideBoxes": [
                 {
@@ -67,15 +69,23 @@ Example configuration:
                 // configuration specific to the "Download" button
                 "type": "download",
                 "downloadField": "object_id" // GUID - Note: unused for now, hardcoded to "object_id" (TODO)
+                "overrideUrlField": "external_url"// optional, field to look for in the file to specify the download location of the file
             },
             {
                 // configuration specific to the "Request Access" button
                 "type": "request_access",
+                "requiredIdpField": "required_idp", // optional, requires user to have logged in through this identity provider to request access
                 "resourceDisplayNameField": "title",
                 "redirectModalText": "", // optional, link label for the URL in "You will now be sent to <URL>"
                 "accessRequestedText": "DAR In Progress", // optional, button text that will be overridden for the disabled button when user already has a request in SUBMITTED state. If omitted, the default text will be "Access Requested"
                 "accessRequestedTooltipText": "Your recently submitted DAR is being reviewed" // optional, button tooltip that will be displayed for the disabled button when user already has a request in SUBMITTED state. If omitted, there will be no tooltip showing up by default
-            }
+            },
+            {
+                // configuration specific to the "Export to Workspace" button
+                "type": "export-pfb-to-workspace",
+                "root_node": "clinical_trial_file",// name of the node corresponding to the "ROOT_NODE" ES index in the Pelican job config
+                "disableButtonTooltipText": "Working on an Export" // optional, tooltip text to display when the "Export to Workspace" button is disabled during export
+                }
         ]
     },
     {

@@ -11,7 +11,7 @@ The setting follows the syntax of a Guppy selectedValues filter.
 Syntax:
 ```
 "adminAppliedPreFilters": {
-      "<name-of-field-of-interest>": { 
+      "<name-of-field-of-interest>": {
         "selectedValues": ["<selected-value-1>", "<selected-value-2>"]
       }
     }
@@ -27,7 +27,7 @@ In the below example, an admin filter is applied that only reveals data from the
     {
       "tabTitle": "Subjects",
       "adminAppliedPreFilters": {
-         "project_id": { 
+         "project_id": {
             "selectedValues": ["jnkns-jenkins"]
           }
       },

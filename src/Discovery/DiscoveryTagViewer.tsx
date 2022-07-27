@@ -3,11 +3,12 @@ import {
   Tag, Button, Row, Col,
 } from 'antd';
 import { DiscoveryConfig } from './DiscoveryConfig';
+import { DiscoveryResource } from './Discovery';
 
 const TAG_LIST_LIMIT = 8;
 interface DiscoveryTagViewerProps {
   config: DiscoveryConfig
-  studies?: {__accessible: boolean, [any: string]: any}[]
+  studies?: DiscoveryResource[]
   selectedTags: any
   setSelectedTags: any
 }
@@ -24,16 +25,13 @@ const DiscoveryTagViewer: React.FunctionComponent<DiscoveryTagViewerProps> = (pr
     const tagMap = {};
     studies.forEach((study) => {
       const tagField = props.config.minimalFieldMapping.tagsListFieldName;
-      study[tagField].forEach((tag) => {
+      study[tagField]?.forEach((tag) => {
         if (tag.category === category.name) {
-          if (tagMap[tag.name] === undefined) {
-            tagMap[tag.name] = 1;
-          }
-          tagMap[tag.name] += 1;
+          tagMap[tag.name] = 1;
         }
       });
     });
-    const tagArray = Object.keys(tagMap).sort((a, b) => tagMap[b] - tagMap[a]);
+    const tagArray = Object.keys(tagMap).sort((a, b) => a.localeCompare(b));
 
     return (
       <div>

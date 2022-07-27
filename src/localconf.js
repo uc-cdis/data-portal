@@ -24,6 +24,7 @@ function buildConfig(opts) {
     hostnameWithSubdomain: hostnameValue,
     fenceURL: process.env.FENCE_URL,
     indexdURL: process.env.INDEXD_URL,
+    cohortMiddlewareURL: process.env.COHORT_MIDDLEWARE_URL,
     arboristURL: process.env.ARBORIST_URL,
     wtsURL: process.env.WTS_URL,
     workspaceURL: process.env.WORKSPACE_URL,
@@ -41,8 +42,9 @@ function buildConfig(opts) {
   // Override default basename if loading via /dev.html
   // dev.html loads bundle.js via https://localhost...
   //
-  if (typeof window.location !== 'undefined' && window.location.pathname.indexOf(`${defaults.basename}dev.html`) === 0) {
-    defaults.basename += 'dev.html';
+  const ensureTrailingSlashBasename = `${defaults.basename}${defaults.basename.endsWith('/') ? '' : '/'}`;
+  if (typeof window.location !== 'undefined' && window.location.pathname.indexOf(`${ensureTrailingSlashBasename}dev.html`) === 0) {
+    defaults.basename = `${ensureTrailingSlashBasename}dev.html`;
   }
 
   const {
@@ -56,6 +58,7 @@ function buildConfig(opts) {
     hostnameWithSubdomain,
     fenceURL,
     indexdURL,
+    cohortMiddlewareURL,
     arboristURL,
     wtsURL,
     workspaceURL,
@@ -86,6 +89,7 @@ function buildConfig(opts) {
   const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
+  const cohortMiddlewarePath = typeof cohortMiddlewareURL === 'undefined' ? `${hostname}cohort-middleware/` : ensureTrailingSlash(cohortMiddlewareURL);
   const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
   const wtsAggregateAuthzPath = `${hostname}wts/aggregate/authz/mapping`;
   const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
@@ -99,11 +103,14 @@ function buildConfig(opts) {
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
   const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
-  const graphqlSchemaUrl = `${hostname}data/schema.json`;
+  const graphqlSchemaUrl = `${hostname}${(basename && basename !== '/') ? basename : ''}/data/schema.json`;
   const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);
   const workspaceErrorUrl = '/no-workspace-access/';
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
+  const workspacePayModelUrl = `${workspaceUrl}paymodels`;
+  const workspaceSetPayModelUrl = `${workspaceUrl}setpaymodel`;
+  const workspaceAllPayModelsUrl = `${workspaceUrl}allpaymodels`;
   const workspaceTerminateUrl = `${workspaceUrl}terminate`;
   const workspaceLaunchUrl = `${workspaceUrl}launch`;
   const datasetUrl = `${hostname}api/search/datasets`;
@@ -133,6 +140,7 @@ function buildConfig(opts) {
   let ddSampleRate = 100;
   if (config.ddSampleRate) {
     if (Number.isNaN(config.ddSampleRate)) {
+      // eslint-disable-next-line no-console
       console.warn('Datadog sampleRate value in Portal config is not a number, ignoring');
     } else {
       ddSampleRate = config.ddSampleRate;
@@ -194,7 +202,12 @@ function buildConfig(opts) {
     }
   });
 
-  const { dataAvailabilityToolConfig } = config;
+  const { dataAvailabilityToolConfig, stridesPortalURL } = config;
+
+  let showSystemUse = false;
+  if (components.systemUse && components.systemUse.systemUseText) {
+    showSystemUse = true;
+  }
 
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
@@ -204,6 +217,11 @@ function buildConfig(opts) {
   let showFenceAuthzOnProfile = true;
   if (config.showFenceAuthzOnProfile === false) {
     showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
+  }
+
+  let showExternalLoginsOnProfile = false;
+  if (config.showExternalLoginsOnProfile === true) {
+    showExternalLoginsOnProfile = config.showExternalLoginsOnProfile;
   }
 
   let hideSubmissionIfIneligible = false;
@@ -257,6 +275,19 @@ function buildConfig(opts) {
   }
 
   const { discoveryConfig } = config;
+  const studyRegistrationConfig = config.studyRegistrationConfig || {};
+  if (!studyRegistrationConfig.studyRegistrationTrackingField) {
+    studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username'
+  }
+  if (!studyRegistrationConfig.studyRegistrationValidationField) {
+    studyRegistrationConfig.studyRegistrationValidationField = 'is_registered'
+  }
+  if (!studyRegistrationConfig.studyRegistrationAccessCheckField) {
+    studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz'
+  }
+  if (!studyRegistrationConfig.studyRegistrationUIDField) {
+    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id'
+  }
 
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
@@ -382,6 +413,13 @@ function buildConfig(opts) {
             image: '/src/img/analysis-icons/gwas.svg',
           };
           break;
+        case 'GWASUIApp':
+          analysisApps.GWASUIApp = {
+            title: 'GWAS UI',
+            description: 'Advanced GWAS UI',
+            image: '/src/img/analysis-icons/gwas.svg',
+          };
+          break;
         default:
           break;
         }
@@ -397,8 +435,11 @@ function buildConfig(opts) {
     mobile: 480,
   };
 
+  const mdsURL = `${hostname}mds/metadata`;
   const aggMDSURL = `${hostname}mds/aggregate`;
   const aggMDSDataURL = `${aggMDSURL}/metadata`;
+  const cedarWrapperURL = `${hostname}cedar`;
+  const kayakoWrapperURL = `${hostname}kayako`;
 
   // Disallow gitops.json configurability of Gen3 Data Commons and CTDS logo alt text.
   // This allows for one point-of-change in the case of future rebranding.
@@ -426,6 +467,7 @@ function buildConfig(opts) {
     credentialCdisPath,
     coreMetadataPath,
     indexdPath,
+    cohortMiddlewarePath,
     graphqlPath,
     dataDictionaryTemplatePath,
     graphqlSchemaUrl,
@@ -443,8 +485,12 @@ function buildConfig(opts) {
     workspaceErrorUrl,
     workspaceOptionsUrl,
     workspaceStatusUrl,
+    workspacePayModelUrl,
+    workspaceSetPayModelUrl,
+    workspaceAllPayModelsUrl,
     workspaceLaunchUrl,
     workspaceTerminateUrl,
+    stridesPortalURL,
     homepageChartNodes: components.index.homepageChartNodes,
     homepageChartNodesChunkSize,
     customHomepageChartConfig: components.index.customHomepageChartConfig,
@@ -461,6 +507,7 @@ function buildConfig(opts) {
     externalLoginOptionsUrl,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
+    showExternalLoginsOnProfile,
     hideSubmissionIfIneligible,
     useArboristUI,
     terraExportWarning,
@@ -483,6 +530,7 @@ function buildConfig(opts) {
     studyViewerConfig,
     covid19DashboardConfig,
     discoveryConfig,
+    studyRegistrationConfig,
     mapboxAPIToken,
     auspiceUrl,
     auspiceUrlIL,
@@ -493,12 +541,16 @@ function buildConfig(opts) {
     workspaceStorageListUrl,
     workspaceStorageDownloadUrl,
     marinerUrl,
+    mdsURL,
     aggMDSDataURL,
+    cedarWrapperURL,
+    kayakoWrapperURL,
     commonsWideAltText,
     ddApplicationId,
     ddClientToken,
     ddEnv,
     ddSampleRate,
+    showSystemUse,
   };
 }
 

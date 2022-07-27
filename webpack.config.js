@@ -19,6 +19,16 @@ if (DAPTrackingURL) {
 if (process.env.DATA_UPLOAD_BUCKET) {
   connectSrcURLs.push(`https://${process.env.DATA_UPLOAD_BUCKET}.s3.amazonaws.com`);
 }
+// add any extra URLs that should be whitelisted
+if (configFile.connectSrcCSPWhitelist && configFile.connectSrcCSPWhitelist.length > 0) {
+  connectSrcURLs.push(...configFile.connectSrcCSPWhitelist);
+}
+if (configFile.featureFlags && configFile.featureFlags.discoveryUseAggMDS) {
+  connectSrcURLs.push('https://dataguids.org');
+}
+if (configFile.featureFlags && configFile.featureFlags.studyRegistration) {
+  connectSrcURLs.push('https://clinicaltrials.gov');
+}
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
 }
@@ -68,6 +78,7 @@ const plugins = [
   }),
   new HtmlWebpackPlugin({
     title: configFile.components.appName || 'Generic Data Commons',
+    metaDescription: configFile.components.metaDescription || '',
     basename: pathPrefix,
     template: 'src/index.ejs',
     connect_src: (function () {
@@ -146,7 +157,7 @@ const entry = {
   workspaceBundle: './src/workspaceIndex.jsx',
   covid19Bundle: './src/covid19Index.jsx',
   nctBundle: './src/nctIndex.jsx',
-  healBundle: './src/healIndex.jsx',
+  ecosystemBundle: './src/ecosystemIndex.jsx',
 };
 
 // if GEN3_BUNDLE is set with a value
@@ -158,35 +169,36 @@ if (process.env.GEN3_BUNDLE) {
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
-    delete entry.healBundle;
+    delete entry.ecosystemBundle;
     break;
   case 'covid19':
     entry.bundle = entry.covid19Bundle;
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
-    delete entry.healBundle;
+    delete entry.ecosystemBundle;
     break;
   case 'nct':
     entry.bundle = entry.nctBundle;
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
-    delete entry.healBundle;
+    delete entry.ecosystemBundle;
     break;
   case 'heal':
-    entry.bundle = entry.healBundle;
+  case 'ecosystem':
+    entry.bundle = entry.ecosystemBundle;
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
-    delete entry.healBundle;
+    delete entry.ecosystemBundle;
     break;
   default:
     // by default we build for commons bundle
     delete entry.workspaceBundle;
     delete entry.covid19Bundle;
     delete entry.nctBundle;
-    delete entry.healBundle;
+    delete entry.ecosystemBundle;
     break;
   }
 }
@@ -212,11 +224,20 @@ module.exports = {
     historyApiFallback: {
       index: 'dev.html',
     },
-    disableHostCheck: true,
     compress: true,
     hot: true,
     port: 9443,
-    https: true,
+    server: 'https',
+    host: 'localhost',
+    allowedHosts: [
+      '.planx-pla.net',
+    ],
+    client: {
+      overlay: {
+        warnings: false,
+        errors: true,
+      },
+    },
   },
   module: {
     rules: [{
@@ -247,7 +268,8 @@ module.exports = {
     },
     {
       test: /\.svg$/,
-      loaders: ['babel-loader', 'react-svg-loader'],
+      // loaders: ['babel-loader', 'react-svg-loader'], // to address the `css-what` vulnerability issue, after updating to webpack 5 and latest `react-svg-loader` we can switch back to this
+      loader: 'svg-react-loader',
     },
     {
       test: /\.(png|jpg|gif|woff|ttf|eot)$/,

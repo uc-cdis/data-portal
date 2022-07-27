@@ -4,6 +4,8 @@
 #  NODE_ENV = auto|dev|production
 #  APP = commons specific
 #  HOSTNAME = where to download graphql schema from
+#  BASENAME = basename of this app
+#  GEN3_BUNDLE = bundle of this app
 #  LOGOUT_INACTIVE_USERS = bool, should inactive users be logged out before session lifetime ends
 #  USE_INDEXD_AUTHZ = bool, should we use authz or acl field to check for unmapped files in indexd
 #  WORKSPACE_TIMEOUT_IN_MINUTES = minutes after which to logout workspace user if logout_inactive false
@@ -17,6 +19,7 @@ set -e
 export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-dev}"
 export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
+export BASENAME="${BASENAME:-""}"
 export GEN3_BUNDLE="${GEN3_BUNDLE:-commons}"
 export TIER_ACCESS_LEVEL="${TIER_ACCESS_LEVEL:-"private"}"
 export TIER_ACCESS_LIMIT="${TIER_ACCESS_LIMIT:-"1000"}"
@@ -58,7 +61,7 @@ gitops_config() {
     echo "ERROR: gitops_config requires hostname arg"
     return 1
   fi
-  if [[ "$hostname" =~ ^qa- ]]; then
+  if [[ "$hostname" =~ ^qa[-.] ]]; then
     gitRepo="gitops-qa"
   elif [[ "$hostname" =~ planx-pla.net$ ]]; then
     gitRepo="gitops-dev"
@@ -131,6 +134,14 @@ if [[ "$NODE_ENV" == "auto" || "$NODE_ENV" == "autoprod" ]]; then
   fi
 fi
 
+if [[ "$NODE_ENV" == "production" && ! -z "$BASENAME" && "$BASENAME" != "/" ]]; then
+  echo "BASENAME has customized value in production mode, updating boot.js for dev.html"
+  newBootJsPath="$BASENAME/boot.js"
+  echo $newBootJsPath
+  sed -i.bak "s%/boot.js%$newBootJsPath%g" dev.html
+  sed -i.bak "s%basename=\"\"%basename=\"$BASENAME\"%g" dev.html
+fi
+
 #
 # this script copies files from custom/ to src/ based
 # on the current APP environment - ugh
@@ -165,12 +176,12 @@ export REACT_APP_DISABLE_SOCKET=true
 #
 echo "INFO: Ready for webpack"
 if [[ "$NODE_ENV" == "dev" || "$NODE_ENV" == "auto" ]]; then
-  echo ./node_modules/.bin/webpack-dev-server
-  ./node_modules/.bin/webpack-dev-server
+  echo npx webpack serve
+  npx webpack serve --mode development
 else
   # see https://nodejs.org/api/cli.html#cli_max_old_space_size_size_in_megabytes
   export NODE_OPTIONS='--max-old-space-size=3584'
   export NODE_ENV="production"
-  echo ./node_modules/.bin/webpack --bail
-  ./node_modules/.bin/webpack --bail
+  echo npx webpack build
+  npx webpack build --mode production
 fi

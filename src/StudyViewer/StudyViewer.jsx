@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, Spin, Result } from 'antd';
+import { Spin, Result } from 'antd';
 import getReduxStore from '../reduxStore';
 import {
-  fetchDataset, fetchFiles, resetSingleStudyData, fetchStudyViewerConfig,
+  fetchDataset, fetchFiles, resetSingleStudyData, fetchStudyViewerConfig, ReduxExportToWorkspace,
 } from './reduxer';
 import './StudyViewer.css';
 import StudyCard from './StudyCard';
@@ -13,6 +13,8 @@ class StudyViewer extends React.Component {
     super(props);
     this.state = {
       dataType: undefined,
+      exportToWorkspace: {},
+      exportingPFBToWorkspace: false,
     };
   }
 
@@ -21,6 +23,20 @@ class StudyViewer extends React.Component {
       return { dataType: nextProps.match.params.dataType };
     }
     return null;
+  }
+
+  componentDidMount() {
+    if (!this.props.datasets
+      && this.state.dataType) {
+      getReduxStore().then(
+        (store) => Promise.allSettled(
+          [
+            store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType))),
+            store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object')),
+            store.dispatch(resetSingleStudyData()),
+          ],
+        ));
+    }
   }
 
   getPanelExpandStatus = (openMode, index) => {
@@ -32,22 +48,31 @@ class StudyViewer extends React.Component {
     return (index === 0);
   }
 
+  exportToWorkspace = (buttonConfig) => {
+    this.setState({
+      exportToWorkspace: { ...buttonConfig },
+    });
+  };
+
+  exportingPFBToWorkspaceStateChange = (stateChange) => {
+    const tempStateChange = {
+      exportingPFBToWorkspace: stateChange,
+    };
+
+    // if set to false clear exportToWorkspace
+    if (!stateChange) {
+      tempStateChange.exportToWorkspace = {};
+    }
+
+    this.setState(tempStateChange);
+  };
+
   render() {
     if (this.props.noConfigError) {
       this.props.history.push('/not-found');
     }
 
     if (!this.props.datasets) {
-      if (this.state.dataType) {
-        getReduxStore().then(
-          (store) => Promise.allSettled(
-            [
-              store.dispatch(fetchDataset(decodeURIComponent(this.state.dataType))),
-              store.dispatch(fetchFiles(decodeURIComponent(this.state.dataType), 'object')),
-              store.dispatch(resetSingleStudyData()),
-            ],
-          ));
-      }
       return (
         <div className='study-viewer'>
           <div className='study-viewer_loading'>
@@ -113,22 +138,28 @@ class StudyViewer extends React.Component {
         <div className='h2-typo study-viewer__title'>
           {studyViewerConfig.title}
         </div>
-        {(datasets.length > 0)
-          ? (
-            <Space className='study-viewer__space' direction='vertical'>
-              {(datasets.map((d, i) => (
-                <StudyCard
-                  key={i}
-                  data={d}
-                  fileData={this.props.fileData
-                    .filter((fd) => fd.rowAccessorValue === d.rowAccessorValue)}
-                  studyViewerConfig={studyViewerConfig}
-                  initialPanelExpandStatus={this.getPanelExpandStatus(studyViewerConfig.openMode, i)}
-                />
-              )))}
-            </Space>
-          )
-          : null}
+        <div className='study-cards'>
+          {(datasets.length > 0)
+            ? (datasets.map((d, i) => (
+              <StudyCard
+                key={i}
+                data={d}
+                fileData={this.props.fileData
+                  .filter((fd) => fd.rowAccessorValue === d.rowAccessorValue)}
+                studyViewerConfig={studyViewerConfig}
+                initialPanelExpandStatus={this.getPanelExpandStatus(studyViewerConfig.openMode, i)}
+                exportToWorkspaceAction={this.exportToWorkspace}
+                exportToWorkspaceEnabled={!this.state.exportingPFBToWorkspace}
+              />
+            ))
+            )
+            : null}
+        </div>
+        <ReduxExportToWorkspace
+          exportToWorkspaceAction={this.state.exportToWorkspace}
+          exportingPFBToWorkspaceStateChange={this.exportingPFBToWorkspaceStateChange}
+          exportingPFBToWorkspace={this.state.exportingPFBToWorkspace}
+        />
       </div>
     );
   }

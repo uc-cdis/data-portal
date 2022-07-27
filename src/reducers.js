@@ -16,6 +16,7 @@ import bar from './Layout/reducers';
 import ddgraph from './DataDictionary/reducers';
 import privacyPolicy from './PrivacyPolicy/reducers';
 import study from './StudyViewer/reducers';
+import discovery from './Discovery/reducers';
 import { fetchUserAccess, fetchUserAuthMapping } from './actions';
 import getReduxStore from './reduxStore';
 
@@ -119,6 +120,7 @@ const reducers = combineReducers({
   userAccess,
   userAuthMapping,
   userAggregateAuthMappings,
+  discovery,
 });
 
 export default reducers;
