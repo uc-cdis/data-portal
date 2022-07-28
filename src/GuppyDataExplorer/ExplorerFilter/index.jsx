@@ -55,10 +55,10 @@ function ExplorerFilter({ className = '', ...filterProps }) {
         {hasExplorerFilter && (
           <button
             type='button'
-            className='explorer-filter__clear-button'
+            className='explorer-filter__unselect-button'
             onClick={() => filterProps.onFilterChange(undefined)}
           >
-            Clear all
+            Unselect all
           </button>
         )}
       </div>
