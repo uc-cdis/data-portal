@@ -25,7 +25,7 @@ import { queryGuppyForRawData } from './queries';
  * */
 export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   /** @type {FilterState} */
-  const mergedFilterState = cloneDeep(userFilter);
+  const mergedFilterState = cloneDeep(userFilter ?? {});
   if (mergedFilterState.value === undefined) mergedFilterState.value = {};
 
   for (const [key, adminFilterValues] of Object.entries(
