@@ -7,6 +7,23 @@ import {
 } from '../Utils/filters';
 import { FILTER_TYPE } from '../Utils/const';
 
+describe('can merge with undefined user filter', () => {
+  const __type = FILTER_TYPE.OPTION;
+  const userFilter = undefined;
+  const adminFilter = { project_id: { selectedValues: ['jnkns-jenkins'] } };
+
+  const mergedFilterExpected = {
+    value: {
+      project_id: { __type, selectedValues: ['jnkns-jenkins'] },
+    },
+  };
+
+  test('merge filters', async () => {
+    const mergedFilter = mergeFilters(userFilter, adminFilter);
+    expect(mergedFilter).toEqual(mergedFilterExpected);
+  });
+});
+
 describe('can merge with empty user filter', () => {
   const __type = FILTER_TYPE.OPTION;
   const userFilter = {};
