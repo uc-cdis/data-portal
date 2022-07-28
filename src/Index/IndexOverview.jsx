@@ -75,14 +75,7 @@ function IndexOverview({ overviewCounts }) {
   /** @type {[to: string, options?: import('react-router').NavigateOptions]} */
   const navigateParams = ['/explorer'];
   if (consortium.value !== 'total')
-    navigateParams.push({
-      state: {
-        filter: {
-          __combineMode: 'AND',
-          consortium: { selectedValues: [consortium.value] },
-        },
-      },
-    });
+    navigateParams.push({ state: consortium.value });
 
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   useEffect(() => {
