@@ -16,7 +16,7 @@ function ExplorerFilterDisplay({ filter, title = 'Filters' }) {
   );
   return (
     <div className='explorer-filter-display'>
-      {Object.keys(filter ?? {}).length > 0 ? (
+      {Object.keys(filter?.value ?? {}).length > 0 ? (
         <>
           <header>{title}</header>
           <main>
