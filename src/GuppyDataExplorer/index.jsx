@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { contactEmail, explorerConfig } from '../localconf';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Dashboard from '../Layout/Dashboard';
@@ -11,7 +11,6 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
 import ExplorerFilter from './ExplorerFilter';
-import { FILTER_TYPE } from './ExplorerFilterSetWorkspace/utils';
 import './Explorer.css';
 
 /** @typedef {import('../redux/types').RootState} RootState */
@@ -69,21 +68,6 @@ function ExplorerDashboard() {
     window.addEventListener('popstate', switchExplorerOnBrowserNavigation);
     return () =>
       window.removeEventListener('popstate', switchExplorerOnBrowserNavigation);
-  }, []);
-
-  const location = useLocation();
-  useEffect(() => {
-    // sync explorer filter with consortium value if provided by index overview
-    const consortium = /** @type {string} */ (location.state);
-    if (consortium !== undefined)
-      handleFilterChange({
-        value: {
-          consortium: {
-            __type: FILTER_TYPE.OPTION,
-            selectedValues: [consortium],
-          },
-        },
-      });
   }, []);
 
   return (
