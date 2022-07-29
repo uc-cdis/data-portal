@@ -108,6 +108,7 @@ const WorkflowParameters = ({
         )}
         {workflowType === 'quantitative' && (
           <label htmlFor='select-hare-quantitative'>
+            <span style={{color: 'red'}}>*</span>
             Select HARE group
             <CovariateStatsByHareQ
               id='select-hare-quantitative'

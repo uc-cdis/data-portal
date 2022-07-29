@@ -202,7 +202,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     // next button enabled if selected phenotype array length > 0
     nextButtonEnabled = !!outcome;
   } else if (current === 4) {
-    nextButtonEnabled = selectedHare !== '' && numOfPC && numOfPC !== '';
+    nextButtonEnabled = selectedHare?.concept_value != '' && numOfPC;
   }
 
   return (
