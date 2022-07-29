@@ -69,7 +69,7 @@ const CovariateStatsByHareCC = ({
       allCaseHares, allControlHares);
     const { selectedCaseHare, selectedControlHare } = {
       selectedCaseHare: hareBreakdown[0],
-      selectedControlHare: hareBreakdown[0],
+      selectedControlHare: hareBreakdown[1],
     };
     return `${selectedCaseHare.concept_value_name} (sizes: ${selectedCaseHare.persons_in_cohort_with_value}, ${selectedControlHare.persons_in_cohort_with_value})`;
   };
