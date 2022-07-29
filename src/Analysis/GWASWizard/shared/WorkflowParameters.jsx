@@ -52,7 +52,7 @@ const WorkflowParameters = ({
     <div className='GWASUI-mainArea GWASUI-form'>
       <div className='GWASUI-formItem'>
         {/* value required (between 1 and 10) */}
-        Number of PCs to use
+        <span style={{color: 'red'}}>*</span>Number of PCs to use
         <label htmlFor='input-numOfPC'>
           <InputNumber
             id='input-numOfPC'
@@ -61,6 +61,7 @@ const WorkflowParameters = ({
             max={10}
             onChange={(e) => handleNumOfPC(e)}
           />
+          {(!numOfPC) && (<span style={{color: 'red'}}> Please input a value between 1 and 10</span>)}
         </label>
       </div>
       <div className='GWASUI-formItem'>
@@ -91,6 +92,7 @@ const WorkflowParameters = ({
       <div className='GWASUI-formItem'>
         {workflowType === 'caseControl' && (
           <label htmlFor='select-hare-case-control'>
+            <span style={{color: 'red'}}>*</span>
             Select HARE group
             <CovariateStatsByHareCC
               id='select-hare-case-control'
@@ -106,6 +108,7 @@ const WorkflowParameters = ({
         )}
         {workflowType === 'quantitative' && (
           <label htmlFor='select-hare-quantitative'>
+            <span style={{color: 'red'}}>*</span>
             Select HARE group
             <CovariateStatsByHareQ
               id='select-hare-quantitative'
