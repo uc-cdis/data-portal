@@ -216,9 +216,9 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     // covariate selection
     nextButtonEnabled = false;
   }
-  // else if (current === 4) {
-  //     nextButtonEnabled = selectedHare != '' && numOfPC && numOfPC != '';
-  // }
+  else if (current === 5) {
+      nextButtonEnabled = selectedHare?.concept_value != '' && numOfPC;
+  }
 
   return (
     <React.Fragment>
