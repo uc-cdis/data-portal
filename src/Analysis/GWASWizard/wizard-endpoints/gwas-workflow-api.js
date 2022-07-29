@@ -70,7 +70,7 @@ export const useGwasSubmitQ = async (
     hare_concept_id: 2000007027,
     maf_threshold: Number(mafThreshold),
     imputation_score_cutoff: Number(imputationScore),
-    template_version: 'gwas-template-latest',
+    template_version: gwasTemplate,
     source_id: sourceId,
     case_cohort_definition_id: selectedQuantitativeCohort.cohort_definition_id,
     control_cohort_definition_id: '-1',
