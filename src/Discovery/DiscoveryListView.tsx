@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Empty } from 'antd';
+import { Table, Empty, Tooltip } from 'antd';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { AccessLevel, DiscoveryResource } from './Discovery';
@@ -56,6 +56,7 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
         selectedRowKeys: props.selectedResources.map(
           (r) => r[props.config.minimalFieldMapping.uid],
         ),
+        renderCell: (_checked, _record, _index, node) => <Tooltip title='Click to select item for download or open in workspace' overlayStyle={{ maxWidth: '150px' }}>{node}</Tooltip>,
         preserveSelectedRowKeys: true,
         onChange: (_, selectedRows) => {
           props.onResourcesSelected(selectedRows);
@@ -160,7 +161,9 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
                 props.setModalVisible(true);
               }}
             >
-              {renderValue(studyPreviewText)}
+              <Tooltip title='Click to view details'>
+                {renderValue(studyPreviewText)}
+              </Tooltip>
             </div>
           );
         },
