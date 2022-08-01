@@ -10,7 +10,7 @@
     "@fontsource/raleway": "^4.5.9",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
-    "@fortawesome/react-fontawesome": "^0.1.19",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@hpcc-js/wasm": "^1.15.0",
     "@reduxjs/toolkit": "^1.8.3",
     "@svgr/webpack": "^6.3.1",
