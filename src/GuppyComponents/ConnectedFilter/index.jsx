@@ -20,7 +20,6 @@ import {
  * @property {object} [adminAppliedPreFilters]
  * @property {string} [anchorValue]
  * @property {string} [className]
- * @property {FilterState} [explorerFilter]
  * @property {FilterState} filter
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
@@ -39,12 +38,11 @@ function ConnectedFilter({
   adminAppliedPreFilters = {},
   anchorValue,
   className = '',
-  filter,
+  filter = {},
   filterConfig,
   guppyConfig,
   hidden = false,
   hideZero = false,
-  explorerFilter = {},
   initialTabsOptions = {},
   onAnchorValueChange,
   onFilterChange,
@@ -94,7 +92,7 @@ function ConnectedFilter({
       disabledTooltipMessage={
         'This resource is currently disabled because you are exploring restricted data. You are limited to exploring cohorts of a size greater than or equal to the access limit.'
       }
-      explorerFilter={explorerFilter}
+      filter={filter}
       filterConfig={filterConfig}
       lockedTooltipMessage={`You may only view summary information for this project. You do not have ${guppyConfig.dataType}-level access.`}
       onAnchorValueChange={onAnchorValueChange}
@@ -111,7 +109,6 @@ ConnectedFilter.propTypes = {
   adminAppliedPreFilters: PropTypes.object,
   anchorValue: PropTypes.string,
   className: PropTypes.string,
-  explorerFilter: PropTypes.object,
   filter: PropTypes.object.isRequired,
   filterConfig: PropTypes.shape({
     anchor: PropTypes.shape({

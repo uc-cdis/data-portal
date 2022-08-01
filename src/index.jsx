@@ -5,17 +5,17 @@ import {
   faAngleUp,
   faAngleDown,
   faCircleCheck,
+  faCircleInfo,
+  faCircleUser,
   faFlask,
   faMicroscope,
   faTriangleExclamation,
   faUser,
-  faCircleUser,
-  faCircleQuestion,
 } from '@fortawesome/free-solid-svg-icons';
 import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import reduxStore from './reduxStore';
+import store from './redux/store';
 import { gaTracking } from './params';
 import { basename } from './localconf';
 import App from './App';
@@ -33,7 +33,7 @@ library.add(
   faAngleUp,
   faAngleDown,
   faCircleCheck,
-  faCircleQuestion,
+  faCircleInfo,
   faCircleUser,
   faFlask,
   faMicroscope,
@@ -42,7 +42,7 @@ library.add(
 );
 
 render(
-  <Provider store={reduxStore}>
+  <Provider store={store}>
     <BrowserRouter basename={basename}>
       <App />
     </BrowserRouter>

@@ -4,12 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { contactEmail } from '../localconf';
 import Button from '../gen3-ui-component/components/Button';
 
-/** @typedef {import('../types').UserState} UserState */
 /** @typedef {{ [id: number]: boolean }} ReviewStatus */
 
 /**
  * @param {Object} props
- * @param {UserState['docs_to_be_reviewed']} props.docsToBeReviewed
+ * @param {import('./types').UserDocument[]} props.docsToBeReviewed
  * @param {() => void} props.onClose
  * @param {(reviewStatus: ReviewStatus) => Promise<void>} props.onReview
  */

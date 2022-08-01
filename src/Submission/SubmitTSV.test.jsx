@@ -1,12 +1,16 @@
-import { createStore } from 'redux';
-import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { fireEvent, render } from '@testing-library/react';
-import * as testData from './__test__/data.json';
-import reducers from '../reducers';
+import { Provider } from 'react-redux';
+import submissionReducer from '../redux/submission/slice';
 import SubmitTSV from './SubmitTSV';
+import * as testData from './__test__/data.json';
 
 const testProjName = 'bogusProject';
-const testReduxStore = createStore(reducers, {});
+const testReduxStore = configureStore({
+  reducer: {
+    submission: submissionReducer,
+  },
+});
 
 test('hides the "submit" button when data is not available', () => {
   const { container } = render(

@@ -1,23 +1,19 @@
 import { connect } from 'react-redux';
 import { appname } from '../../../localconf';
-import { setExpandNode } from '../../action';
+import { setExpandNode } from '../../../redux/ddgraph/slice';
 import { parseDictionaryNodes } from '../../utils';
 import DataDictionaryTable from './DataDictionaryTable';
 
-/** @typedef {import('../../types').DdgraphState} DdgraphState */
-/** @typedef {import('../../types').GraphNode} GraphNode */
-/** @typedef {import('../../../Submission/types').SubmissionState} SubmissionState */
-
-/** @param {{ ddgraph: DdgraphState; submission: SubmissionState }} state */
+/** @param {import('../../../redux/types').RootState} state */
 const mapStateToProps = (state) => ({
   dictionaryName: appname,
   dictionaryNodes: parseDictionaryNodes(state.submission.dictionary),
   highlightingNodeID: state.ddgraph.tableExpandNodeID,
 });
 
-/** @param {import('redux').Dispatch} dispatch */
+/** @param {import('../../../redux/types').AppDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
-  /** @param {GraphNode['id']} nodeId */
+  /** @param {string} nodeId */
   onExpandNode: (nodeId) => {
     dispatch(setExpandNode(nodeId));
   },

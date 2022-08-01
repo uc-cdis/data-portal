@@ -3,8 +3,8 @@ import { memo, useState } from 'react';
 import { contactEmail } from '../../localconf';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import Spinner from '../../components/Spinner';
-import { useExplorerConfig } from '../ExplorerConfigContext';
-import useSurvivalAnalysisResult from './useSurvivalAnalysisResult';
+import { updateSurvivalResult } from '../../redux/explorer/asyncThunks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import SurvivalPlot from './SurvivalPlot';
 import ControlForm from './ControlForm';
 import RiskTable from './RiskTable';
@@ -15,35 +15,34 @@ import './ExplorerSurvivalAnalysis.css';
 /** @typedef {import('./types').UserInputSubmitHandler} UserInputSubmitHandler */
 
 function ExplorerSurvivalAnalysis() {
-  const [isUserCompliant, setIsUserCompliant] = useState(checkUserAgreement());
+  const dispatch = useAppDispatch();
+  const result = useAppSelector(
+    (state) => state.explorer.survivalAnalysisResult
+  );
 
-  const [parsedResult, refershResult] = useSurvivalAnalysisResult();
+  const [isUserCompliant, setIsUserCompliant] = useState(checkUserAgreement());
   const [timeInterval, setTimeInterval] = useState(4);
   const [startTime, setStartTime] = useState(0);
+  const [efsFlag, setEfsFlag] = useState(false);
   const [endTime, setEndTime] = useState(undefined);
 
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [error, setError] = useState(null);
   /** @type {UserInputSubmitHandler} */
-  const handleSubmit = ({
-    timeInterval,
-    startTime,
-    endTime,
-    efsFlag,
-    usedFilterSets,
-  }) => {
-    setError(null);
-    setIsUpdating(true);
-    setTimeInterval(timeInterval);
-    setStartTime(startTime);
-    setEndTime(endTime);
+  const handleSubmit = (input) => {
+    const shouldRefetch = efsFlag !== input.efsFlag;
 
-    refershResult({ efsFlag, usedFilterSets })
-      .catch(setError)
-      .finally(() => setIsUpdating(false));
+    setEfsFlag(input.efsFlag);
+    setTimeInterval(input.timeInterval);
+    setStartTime(input.startTime);
+    setEndTime(input.endTime);
+
+    dispatch(
+      updateSurvivalResult({
+        efsFlag: input.efsFlag,
+        shouldRefetch,
+        usedFilterSets: input.usedFilterSets,
+      })
+    );
   };
-
-  const { survivalAnalysisConfig: config } = useExplorerConfig().current;
 
   return (
     <div className='explorer-survival-analysis'>
@@ -51,23 +50,23 @@ function ExplorerSurvivalAnalysis() {
         <>
           <div className='explorer-survival-analysis__column-left'>
             <ControlForm
-              countByFilterSet={parsedResult.count}
+              countByFilterSet={result.parsed.count}
               onSubmit={handleSubmit}
               timeInterval={timeInterval}
             />
           </div>
           <div className='explorer-survival-analysis__column-right'>
-            {isUpdating ? (
+            {result.isPending ? (
               <Spinner />
             ) : (
               <ErrorBoundary
                 fallback={
                   <div className='explorer-survival-analysis__error'>
                     <h1>Error obtaining survival analysis result...</h1>
-                    {error?.message ? (
+                    {result.error?.message ? (
                       <p className='explorer-survival-analysis__error-message'>
                         <pre>
-                          <strong>Error message:</strong> {error.message}
+                          <strong>Error message:</strong> {result.error.message}
                         </pre>
                       </p>
                     ) : null}
@@ -81,17 +80,18 @@ function ExplorerSurvivalAnalysis() {
                   </div>
                 }
               >
-                {config.result?.survival && (
+                {'survival' in result.parsed && (
                   <SurvivalPlot
-                    data={parsedResult.survival}
+                    data={result.parsed.survival}
                     endTime={endTime}
+                    efsFlag={efsFlag}
                     startTime={startTime}
                     timeInterval={timeInterval}
                   />
                 )}
-                {config.result?.risktable && (
+                {'risktable' in result.parsed && (
                   <RiskTable
-                    data={parsedResult.risktable}
+                    data={result.parsed.risktable}
                     endTime={endTime}
                     startTime={startTime}
                     timeInterval={timeInterval}

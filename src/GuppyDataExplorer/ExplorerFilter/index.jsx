@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import ConnectedFilter from '../../GuppyComponents/ConnectedFilter';
-import { useExplorerConfig } from '../ExplorerConfigContext';
-import { useExplorerState } from '../ExplorerStateContext';
+import { updatePatientIds } from '../../redux/explorer/slice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import './ExplorerFilter.css';
 
+/** @typedef {import('../../redux/types').RootState} RootState */
 /** @typedef {import('../types').GuppyData} GuppyData */
 
 /**
@@ -19,24 +20,26 @@ import './ExplorerFilter.css';
 
 /** @param {ExplorerFilterProps} props */
 function ExplorerFilter({ className = '', ...filterProps }) {
-  const { adminAppliedPreFilters, filterConfig, guppyConfig } =
-    useExplorerConfig().current;
+  const dispatch = useAppDispatch();
+  /** @param {RootState['explorer']['patientIds']} ids */
+  function handlePatientIdsChange(ids) {
+    dispatch(updatePatientIds(ids));
+  }
   const {
-    explorerFilter,
+    config: { adminAppliedPreFilters, filterConfig, guppyConfig },
     patientIds,
-    handleFilterClear,
-    handlePatientIdsChange,
-  } = useExplorerState();
+  } = useAppSelector((state) => state.explorer);
+
   const connectedFilterProps = {
     ...filterProps,
     adminAppliedPreFilters,
     filterConfig,
     guppyConfig,
-    explorerFilter,
     patientIds,
     onPatientIdsChange: handlePatientIdsChange,
   };
-  const hasExplorerFilter = Object.keys(filterProps.filter).length > 0;
+  const hasExplorerFilter =
+    Object.keys(filterProps.filter.value ?? {}).length > 0;
   const filterCombineMode = filterProps.filter.__combineMode ?? 'AND';
   function updateFilterCombineMode(e) {
     filterProps.onFilterChange({
@@ -52,10 +55,10 @@ function ExplorerFilter({ className = '', ...filterProps }) {
         {hasExplorerFilter && (
           <button
             type='button'
-            className='explorer-filter__clear-button'
-            onClick={handleFilterClear}
+            className='explorer-filter__unselect-button'
+            onClick={() => filterProps.onFilterChange(undefined)}
           >
-            Clear all
+            Unselect all
           </button>
         )}
       </div>

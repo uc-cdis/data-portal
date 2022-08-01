@@ -12,18 +12,16 @@ import Popup from '../components/Popup';
 import QueryForm from './QueryForm';
 import './QueryNode.css';
 
-/** @typedef {import('./types').QueryNodeState} QueryNodeState */
-/** @typedef {import('../types').PopupState} PopupState */
-/** @typedef {import('../Submission/types').SubmissionState} SubmissionState */
+/** @typedef {import('../redux/types').RootState} RootState */
 
 /**
  * QueryNode shows the details of a particular node
  * @param {Object} props
- * @param {SubmissionState} props.submission
- * @param {QueryNodeState} props.queryNodes
- * @param {PopupState} props.popups
+ * @param {RootState['submission']} props.submission
+ * @param {RootState['queryNodes']} props.queryNodes
+ * @param {RootState['popups']} props.popups
  * @param {(value: any, cb?: Function) => void} props.onSearchFormSubmit
- * @param {(state: Partial<PopupState>) => void} props.onUpdatePopup
+ * @param {(state: Partial<RootState['popups']>) => void} props.onUpdatePopup
  * @param {() => void} props.onClearDeleteSession
  * @param {(param: { id: string; project: string }) => void} props.onDeleteNode
  * @param {(param: { id: string; project: string }) => Promise<void>} props.onStoreNodeInfo

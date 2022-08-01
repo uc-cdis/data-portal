@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import DataModelGraph from './DataModelGraph';
 import { createNodesAndEdges } from '../GraphUtils/utils';
 
-/** @param {{ submission: import('../Submission/types').SubmissionState }} state */
+/** @param {import('../redux/types').RootState} state */
 const mapStateToProps = (state) => {
   const props = {
     dictionary: state.submission.dictionary,

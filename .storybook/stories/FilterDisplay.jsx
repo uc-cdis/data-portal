@@ -2,20 +2,28 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import FilterDisplay from '@src/components/FilterDisplay';
+import { FILTER_TYPE } from '@src/GuppyComponents/Utils/const';
 
 const simpleFilter = {
   __combineMode: 'AND',
-  foo: { selectedValues: ['x', 'y'] },
-  bar: { lowerBound: 0, upperBound: 1 },
+  __type: FILTER_TYPE.STANDARD,
+  value: {
+    foo: { __type: FILTER_TYPE.OPTION, selectedValues: ['x', 'y'] },
+    bar: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+  },
 };
 
 const complexFilter = {
   __combineMode: 'OR',
-  foo: { selectedValues: ['x', 'y'] },
-  'lorem:ipsum': {
-    filter: {
-      bar: { lowerBound: 0, upperBound: 1 },
-      baz: { selectedValues: ['hello', 'world'] },
+  __type: FILTER_TYPE.STANDARD,
+  value: {
+    foo: { __type: FILTER_TYPE.OPTION, selectedValues: ['x', 'y'] },
+    'lorem:ipsum': {
+      __type: FILTER_TYPE.ANCHORED,
+      value: {
+        bar: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+        baz: { __type: FILTER_TYPE.OPTION, selectedValues: ['hello', 'world'] },
+      },
     },
   },
 };

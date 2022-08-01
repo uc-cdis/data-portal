@@ -63,7 +63,7 @@ function FilterSetUpdateForm({
               onBlur={validate}
               onChange={(e) => {
                 e.persist();
-                setFilterSet((prev) => ({ ...prev, name: e.target.value }));
+                setFilterSet({ ...filterSet, name: e.target.value });
               }}
             />
           }
@@ -78,10 +78,7 @@ function FilterSetUpdateForm({
               value={filterSet.description}
               onChange={(e) => {
                 e.persist();
-                setFilterSet((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }));
+                setFilterSet({ ...filterSet, description: e.target.value });
               }}
             />
           }

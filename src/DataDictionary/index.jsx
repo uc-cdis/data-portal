@@ -1,19 +1,16 @@
 import { connect } from 'react-redux';
-import { setGraphView } from './action.js';
+import { setGraphView } from '../redux/ddgraph/slice';
 import DataDictionary from './DataDictionary';
 
-/** @typedef {import('./types').DdgraphState} DdgraphState */
-/** @typedef {import('../types').VersionInfoState} VersionInfoState */
-
 const ReduxDataDictionary = (() => {
-  /** @param {{ ddgraph: DdgraphState, versionInfo: VersionInfoState }} state */
+  /** @param {import('../redux/types').RootState} state */
   const mapStateToProps = (state) => ({
     isGraphView: state.ddgraph.isGraphView,
     layoutInitialized: state.ddgraph.layoutInitialized,
     ...state.versionInfo,
   });
 
-  /** @param {import('redux').Dispatch} dispatch */
+  /** @param {import('../redux/types').AppDispatch} dispatch */
   const mapDispatchToProps = (dispatch) => ({
     onSetGraphView: (isGraphView) => {
       dispatch(setGraphView(isGraphView));

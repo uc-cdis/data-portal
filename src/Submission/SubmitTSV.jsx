@@ -6,22 +6,7 @@ import 'ace-builds/src-noconflict/theme-kuroir';
 import useSessionMonitor from '../hooks/useSessionMonitor';
 import { predictFileType } from '../utils';
 import SubmissionResult from './SubmissionResult';
-import { SubmissionStateType } from './propTypeDef';
 import './SubmitTSV.css';
-
-/**
- * @typedef {Object} SubmissionState
- * @property {Object} [dictionary]
- * @property {string} [file]
- * @property {string} [file_type]
- * @property {string[]} [nodeTypes]
- * @property {number} [submit_counter]
- * @property {{ [x: string]: number }} [submit_entity_counts]
- * @property {any} [submit_result]
- * @property {string} [submit_result_string]
- * @property {number} [submit_status]
- * @property {number} [submit_total]
- */
 
 /**
  * @typedef {Object} SubmitHandlerArgs
@@ -35,7 +20,7 @@ import './SubmitTSV.css';
  * Manage TSV/JSON submission
  * @param {Object} props
  * @param {string} props.project of form program-project
- * @param {SubmissionState} props.submission
+ * @param {import('../redux/types').RootState['submission']} props.submission
  * @param {(file: string, fileType: string) => void} props.onFileChange triggered when user edits something in tsv/json AceEditor
  * @param {(project: string) => void} props.onFinish
  * @param {(file: string, fileType: string) => void} props.onUploadClick
@@ -43,7 +28,7 @@ import './SubmitTSV.css';
  */
 function SubmitTSV({
   project,
-  submission = { submit_counter: 0 },
+  submission,
   onFileChange,
   onFinish,
   onSubmitClick,
@@ -156,7 +141,7 @@ function SubmitTSV({
       {submission.submit_result && (
         <div>
           <p>
-            Submitting chunk {submission.submit_counter} of{' '}
+            Submitting chunk {submission.submit_counter ?? 0} of{' '}
             {submission.submit_total}
           </p>
           <SubmissionResult
@@ -164,7 +149,7 @@ function SubmitTSV({
             data={submission.submit_result}
             dataString={submission.submit_result_string}
             entityCounts={submission.submit_entity_counts ?? {}}
-            counter={submission.submit_counter}
+            counter={submission.submit_counter ?? 0}
             total={submission.submit_total}
             onFinish={handleFinishSubmit}
           />
@@ -176,7 +161,7 @@ function SubmitTSV({
 
 SubmitTSV.propTypes = {
   project: PropTypes.string.isRequired, // from react-router
-  submission: SubmissionStateType.isRequired,
+  submission: PropTypes.any.isRequired,
   onFileChange: PropTypes.func.isRequired,
   onFinish: PropTypes.func.isRequired,
   onSubmitClick: PropTypes.func.isRequired,

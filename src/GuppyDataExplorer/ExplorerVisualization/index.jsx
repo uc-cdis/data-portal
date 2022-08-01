@@ -4,10 +4,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import SummaryChartGroup from '../../gen3-ui-component/components/charts/SummaryChartGroup';
 import PercentageStackedBarChart from '../../gen3-ui-component/components/charts/PercentageStackedBarChart';
 import Spinner from '../../components/Spinner';
+import { useAppSelector } from '../../redux/hooks';
 import { components } from '../../params';
 import { capitalizeFirstLetter } from '../../utils';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
-import { useExplorerConfig } from '../ExplorerConfigContext';
 import ExplorerRequestAccessButton from '../ExplorerRequestAccessButton';
 import ExplorerExploreExternalButton from '../ExplorerExploreExternalButton';
 import ExplorerFilterSetWorkspace from '../ExplorerFilterSetWorkspace';
@@ -15,6 +15,7 @@ import ExplorerTable from '../ExplorerTable';
 import ExplorerSurvivalAnalysis from '../ExplorerSurvivalAnalysis';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import './ExplorerVisualization.css';
+import { FILTER_TYPE } from '../ExplorerFilterSetWorkspace/utils';
 
 /** @typedef {import('../types').ChartConfig} ChartConfig */
 /** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
@@ -74,11 +75,11 @@ function getChartData({
       const { histogram } = aggsChartData[field];
       switch (type) {
         case 'count': {
-          const optionFilter = filter[field];
+          const optionFilter = filter.value[field];
           countItems.push({
             label: title,
             value:
-              'selectedValues' in optionFilter
+              optionFilter.__type === FILTER_TYPE.OPTION
                 ? optionFilter.selectedValues.length
                 : histogram.length,
           });
@@ -178,7 +179,7 @@ function ExplorerVisualization({
     patientIdsConfig,
     survivalAnalysisConfig,
     tableConfig,
-  } = useExplorerConfig().current;
+  } = useAppSelector((state) => state.explorer.config);
   const nodeCountTitle =
     guppyConfig.nodeCountTitle || capitalizeFirstLetter(guppyConfig.dataType);
 

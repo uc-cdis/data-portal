@@ -8,6 +8,7 @@ import FilterSection from '../FilterSection';
 import PatientIdFilter from '../PatientIdFilter';
 import {
   clearFilterSection,
+  FILTER_TYPE,
   getExpandedStatus,
   getFilterStatus,
   getSelectedAnchors,
@@ -31,6 +32,7 @@ function findFilterElement(label) {
     }
 }
 
+/** @typedef {import('../types').EmptyFilter} EmptyFilter */
 /** @typedef {import('../types').FilterChangeHandler} FilterChangeHandler */
 /** @typedef {import('../types').FilterConfig} FilterConfig */
 /** @typedef {import('../types').FilterState} FilterState */
@@ -41,7 +43,7 @@ function findFilterElement(label) {
  * @property {string} [anchorValue]
  * @property {string} [className]
  * @property {string} [disabledTooltipMessage]
- * @property {FilterState} [explorerFilter]
+ * @property {EmptyFilter | FilterState} [filter]
  * @property {FilterConfig} filterConfig
  * @property {boolean} [hideZero]
  * @property {string} [lockedTooltipMessage]
@@ -52,7 +54,6 @@ function findFilterElement(label) {
  * @property {FilterSectionConfig[][]} tabs
  */
 
-/** @type {FilterState} */
 const defaultExplorerFilter = {};
 
 /** @param {FilterGroupProps} props */
@@ -62,7 +63,7 @@ function FilterGroup({
   disabledTooltipMessage,
   filterConfig,
   hideZero = true,
-  explorerFilter = defaultExplorerFilter,
+  filter = defaultExplorerFilter,
   lockedTooltipMessage,
   onAnchorValueChange = () => {},
   onFilterChange = () => {},
@@ -98,11 +99,11 @@ function FilterGroup({
     getExpandedStatus(filterTabs, false)
   );
 
-  const [filterResults, setFilterResults] = useState(explorerFilter);
+  const [filterResults, setFilterResults] = useState(filter);
   const [filterStatus, setFilterStatus] = useState(
     getFilterStatus({
       anchorConfig: filterConfig.anchor,
-      filterResults: explorerFilter,
+      filterResults: filter,
       filterTabs,
     })
   );
@@ -115,14 +116,14 @@ function FilterGroup({
 
     const newFilterStatus = getFilterStatus({
       anchorConfig: filterConfig.anchor,
-      filterResults: explorerFilter,
+      filterResults: filter,
       filterTabs,
     });
-    const newFilterResults = explorerFilter;
+    const newFilterResults = filter;
 
     setFilterStatus(newFilterStatus);
     setFilterResults(newFilterResults);
-  }, [explorerFilter]);
+  }, [filter]);
 
   const filterTabStatus = showAnchorFilter
     ? filterStatus[tabIndex][anchorLabel]
@@ -182,7 +183,7 @@ function FilterGroup({
     const field = filterTabs[tabIndex].fields[sectionIndex];
     const filterValues = filterResults[field];
     if (
-      'selectedValues' in filterValues &&
+      filterValues.__type === FILTER_TYPE.OPTION &&
       filterValues.selectedValues.length > 0
     )
       onFilterChange(updated.filterResults);
@@ -377,7 +378,7 @@ FilterGroup.propTypes = {
   anchorValue: PropTypes.string,
   className: PropTypes.string,
   disabledTooltipMessage: PropTypes.string,
-  explorerFilter: PropTypes.object,
+  filter: PropTypes.object,
   filterConfig: PropTypes.shape({
     anchor: PropTypes.shape({
       field: PropTypes.string,

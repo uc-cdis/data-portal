@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import NavBar from '../components/layout/NavBar';
 
-/** @param {{ userAccess: import('../types').UserAccessState }} state */
+/** @param {import('../redux/types').RootState} state */
 const mapStateToProps = (state) => ({
-  userAccess: state.userAccess.access,
+  userAccess: state.userAccess,
 });
 
 const ReduxNavBar = connect(mapStateToProps)(NavBar);

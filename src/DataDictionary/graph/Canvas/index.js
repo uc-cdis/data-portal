@@ -3,24 +3,24 @@ import {
   clickBlankSpace,
   setCanvasBoundingRect,
   setNeedReset,
-} from '../../action';
+} from '../../../redux/ddgraph/slice';
 import Canvas from './Canvas';
 
-/** @typedef {import('../../types').DdgraphState} DdgraphState */
+/** @typedef {import('../../../redux/types').RootState} RootState */
 
 const ReduxCanvas = (() => {
-  /** @param {{ ddgraph: DdgraphState }} state */
+  /** @param {RootState} state */
   const mapStateToProps = (state) => ({
     isGraphView: state.ddgraph.isGraphView,
     needReset: state.ddgraph.needReset,
   });
 
-  /** @param {import('redux').Dispatch} dispatch */
+  /** @param {import('../../../redux/types').AppDispatch} dispatch */
   const mapDispatchToProps = (dispatch) => ({
     onClickBlankSpace: () => {
       dispatch(clickBlankSpace());
     },
-    /** @param {DdgraphState['canvasBoundingRect']} canvasBoundingRect */
+    /** @param {RootState['ddgraph']['canvasBoundingRect']} canvasBoundingRect */
     onCanvasBoundingBoxUpdate: (canvasBoundingRect) => {
       dispatch(setCanvasBoundingRect(canvasBoundingRect));
     },

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import TransactionLogTable from '../components/tables/TransactionLogTable';
 
 const ReduxTransaction = (() => {
-  /** @param {{ submission: import('./types').SubmissionState }} state */
+  /** @param {import('../redux/types').RootState} state */
   const mapStateToProps = (state) => ({
     log: state.submission?.transactions ?? [],
   });

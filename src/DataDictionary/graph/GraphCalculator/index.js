@@ -7,17 +7,17 @@ import {
   setSecondHighlightingNodeCandidateIDs,
   setPathRelatedToSecondHighlightingNode,
   setDataModelStructure,
-} from '../../action';
+} from '../../../redux/ddgraph/slice';
 import { calculateGraphLayout, getAllTypes } from './graphCalculatorHelper';
 
-/** @typedef {import('../../types').DdgraphState} DdgraphState */
-/** @typedef {import('../../types').GraphLayout} GraphLayout */
-/** @typedef {import('../../../Submission/types').SubmissionState} SubmissionState */
+/** @typedef {import('../../../redux/types').AppDispatch} AppDispatch */
+/** @typedef {import('../../../redux/types').AppGetState} AppGetState */
+/** @typedef {import('../../../redux/types').RootState} RootState */
 
 function initializeLayout() {
   /**
-   * @param {import('redux').Dispatch} dispatch
-   * @param {() => { ddgraph: DdgraphState; submission: SubmissionState }} getState
+   * @param {AppDispatch} dispatch
+   * @param {AppGetState} getState
    */
   return (dispatch, getState) => {
     function loadResources() {
@@ -29,8 +29,8 @@ function initializeLayout() {
     }
 
     /**
-     * @param {SubmissionState['dictionary']} dictionary
-     * @param {DdgraphState['graphvizLayout']} graphvizLayout
+     * @param {RootState['submission']['dictionary']} dictionary
+     * @param {RootState['ddgraph']['graphvizLayout']} graphvizLayout
      * @param {number} interval
      */
     function init(dictionary, graphvizLayout, interval) {
@@ -49,7 +49,7 @@ function initializeLayout() {
 }
 
 const ReduxGraphCalculator = (() => {
-  /** @param {{ ddgraph: DdgraphState }} state */
+  /** @param {RootState} state */
   const mapStateToProps = (state) => ({
     highlightingNode: state.ddgraph.highlightingNode,
     nodes: state.ddgraph.nodes,
@@ -58,13 +58,13 @@ const ReduxGraphCalculator = (() => {
     layoutInitialized: state.ddgraph.layoutInitialized,
   });
 
-  /** @param {import('redux-thunk').ThunkDispatch} dispatch */
+  /** @param {import('../../../redux/types').AppDispatch} dispatch */
   const mapDispatchToProps = (dispatch) => ({
     initializeLayout: () => dispatch(initializeLayout()),
-    /** @param {DdgraphState['relatedNodeIDs']} relatedNodeIDs */
+    /** @param {RootState['ddgraph']['relatedNodeIDs']} relatedNodeIDs */
     onHighlightRelatedNodesCalculated: (relatedNodeIDs) =>
       dispatch(setRelatedNodeIDs(relatedNodeIDs)),
-    /** @param {DdgraphState['secondHighlightingNodeCandidateIDs']} secondHighlightingNodeCandidateIDs */
+    /** @param {RootState['ddgraph']['secondHighlightingNodeCandidateIDs']} secondHighlightingNodeCandidateIDs */
     onSecondHighlightingNodeCandidateIDsCalculated: (
       secondHighlightingNodeCandidateIDs
     ) =>
@@ -73,7 +73,7 @@ const ReduxGraphCalculator = (() => {
           secondHighlightingNodeCandidateIDs
         )
       ),
-    /** @param {DdgraphState['pathRelatedToSecondHighlightingNode']} pathRelatedToSecondHighlightingNode */
+    /** @param {RootState['ddgraph']['pathRelatedToSecondHighlightingNode']} pathRelatedToSecondHighlightingNode */
     onPathRelatedToSecondHighlightingNodeCalculated: (
       pathRelatedToSecondHighlightingNode
     ) =>
@@ -83,9 +83,9 @@ const ReduxGraphCalculator = (() => {
         )
       ),
     /**
-     * @param {DdgraphState['dataModelStructure']} dataModelStructure
-     * @param {DdgraphState['dataModelStructureRelatedNodeIDs']} dataModelStructureRelatedNodeIDs
-     * @param {DdgraphState['routesBetweenStartEndNodes']} routesBetweenStartEndNodes
+     * @param {RootState['ddgraph']['dataModelStructure']} dataModelStructure
+     * @param {RootState['ddgraph']['dataModelStructureRelatedNodeIDs']} dataModelStructureRelatedNodeIDs
+     * @param {RootState['ddgraph']['routesBetweenStartEndNodes']} routesBetweenStartEndNodes
      */
     onDataModelStructureCalculated: (
       dataModelStructure,

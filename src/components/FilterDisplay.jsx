@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
+import { FILTER_TYPE } from '../GuppyComponents/Utils/const';
 import './FilterDisplay.css';
 
 /**
@@ -78,7 +79,7 @@ function FilterDisplay({
   onCloseFilter,
 }) {
   const filterElements = /** @type {JSX.Element[]} */ ([]);
-  const { __combineMode, ...__filter } = filter;
+  const { __combineMode, value: __filter } = filter;
   const filterCombineMode = combineMode ?? __combineMode ?? 'AND';
 
   const handleClickCombineMode =
@@ -107,7 +108,7 @@ function FilterDisplay({
       : undefined;
 
   for (const [key, value] of Object.entries(__filter))
-    if ('filter' in value) {
+    if (value.__type === FILTER_TYPE.ANCHORED) {
       const [anchorField, anchorValue] = key.split(':');
       filterElements.push(
         <Pill key={key} className='pill anchor'>
@@ -119,7 +120,8 @@ function FilterDisplay({
             ({' '}
             <FilterDisplay
               anchorInfo={[anchorField, anchorValue]}
-              filter={value.filter}
+              // @ts-ignore Innocuous error due to using AnchorFilterState
+              filter={value}
               filterInfo={filterInfo}
               combineMode={__combineMode}
               onClickCombineMode={onClickCombineMode}
@@ -130,7 +132,7 @@ function FilterDisplay({
           </span>
         </Pill>
       );
-    } else if ('selectedValues' in value) {
+    } else if (value.__type === FILTER_TYPE.OPTION) {
       filterElements.push(
         <Pill
           key={key}
@@ -160,7 +162,7 @@ function FilterDisplay({
           </span>
         </Pill>
       );
-    } else if ('lowerBound' in value) {
+    } else if (value.__type === FILTER_TYPE.RANGE) {
       filterElements.push(
         <Pill
           key={key}
@@ -169,7 +171,8 @@ function FilterDisplay({
           filterKey={key}
         >
           <span className='token'>
-            <code>{filterInfo[key].label}</code> is between
+            <code>{filterInfo[key].label}</code>
+            {' is between '}
           </span>
           <span className='token'>
             <code>

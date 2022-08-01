@@ -16,8 +16,7 @@ import {
 import './ExplorerButtonGroup.css';
 import Popup from '../../components/Popup';
 
-/** @typedef {import('../../types').KubeState} KubeState */
-/** @typedef {import('../../types').UserAccessState} UserAccessState */
+/** @typedef {import('../../redux/types').RootState} RootState */
 /** @typedef {import('../types').ButtonConfig} ButtonConfig */
 /** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
 /** @typedef {import('../types').GqlSort} GqlSort */
@@ -26,7 +25,7 @@ import Popup from '../../components/Popup';
 
 /**
  * @typedef {Object} ExplorerButtonGroupProps
- * @property {KubeState['job']} [job]
+ * @property {RootState['kube']['job']} [job]
  * @property {(args: { sort?: GqlSort; format?: string }) => Promise} downloadRawData
  * @property {(args: { fields: string[]; sort?: GqlSort }) => Promise} downloadRawDataByFields
  * @property {(type: string, filter: ExplorerFilter, fields: string[]) => Promise} downloadRawDataByTypeAndFilter
@@ -43,7 +42,7 @@ import Popup from '../../components/Popup';
  * @property {() => void} checkJobStatus: PropTypes.func.isRequired,
  * @property {(jobId: string) => Promise} fetchJobResult: PropTypes.func.isRequired,
  * @property {boolean} isLocked: PropTypes.bool.isRequired,
- * @property {UserAccessState['access']} userAccess: PropTypes.object.isRequired,
+ * @property {RootState['userAccess']} userAccess: PropTypes.object.isRequired,
  */
 
 /**
@@ -266,7 +265,7 @@ class ExplorerButtonGroup extends Component {
         selectedValues: refIDList,
       },
     };
-    if (this.props.filter.data_format) {
+    if (this.props.filter.value.data_format) {
       // @ts-ignore
       filter.data_format = this.props.filter.data_format;
     }

@@ -2,13 +2,12 @@ import { connect } from 'react-redux';
 import {
   setOverlayPropertyTableHidden,
   setHighlightingMatchedNodeOpened,
-} from '../../action';
+} from '../../../redux/ddgraph/slice';
 import OverlayPropertyTable from './OverlayPropertyTable';
 
-/** @typedef {import('../../types').DdgraphState} DdgraphState */
-/** @typedef {import('../../../Submission/types').SubmissionState} SubmissionState */
+/** @typedef {import('../../../redux/types').RootState} RootState */
 
-/** @param {{ ddgraph: DdgraphState; submission: SubmissionState }} state */
+/** @param {RootState} state */
 const getNode = (state) => {
   if (state.ddgraph.isSearchMode) {
     if (state.ddgraph.highlightingMatchedNodeID) {
@@ -25,7 +24,7 @@ const getNode = (state) => {
   return null;
 };
 
-/** @param {{ ddgraph: DdgraphState }} state */
+/** @param {RootState} state */
 const getSearchResultItem = (state) => {
   if (state.ddgraph.isSearchMode) {
     return state.ddgraph.searchResult.find(
@@ -36,7 +35,7 @@ const getSearchResultItem = (state) => {
 };
 
 const ReduxOverlayPropertyTable = (() => {
-  /** @param {{ ddgraph: DdgraphState; submission: SubmissionState }} state */
+  /** @param {RootState} state */
   const mapStateToProps = (state) => ({
     hidden: state.ddgraph.overlayPropertyHidden,
     isSearchMode: state.ddgraph.isSearchMode,
@@ -45,7 +44,7 @@ const ReduxOverlayPropertyTable = (() => {
     node: getNode(state),
   });
 
-  /** @param {import('redux').Dispatch} dispatch */
+  /** @param {import('../../../redux/types').AppDispatch} dispatch */
   const mapDispatchToProps = (dispatch) => ({
     onCloseOverlayPropertyTable: () => {
       dispatch(setOverlayPropertyTableHidden(true));

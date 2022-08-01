@@ -3,6 +3,7 @@ import { components } from '../params';
 import ProjectTable from '../components/tables/ProjectTable';
 
 const ReduxProjectTable = (() => {
+  /**  @param {import('../redux/types').RootState} state */
   const mapStateToProps = (state) =>
     state.submission?.projectsByName !== undefined
       ? {

@@ -20,12 +20,13 @@ import { filterSurvivalByTime, getXAxisTicks } from './utils';
  * @typedef {Object} SurvivalPlotProps
  * @property {SurvivalData[]} data
  * @property {number} [endTime]
+ * @property {boolean} [efsFlag]
  * @property {number} startTime
  * @property {number} timeInterval
  */
 
 /** @param {SurvivalPlotProps} props */
-function Plot({ data, endTime, startTime, timeInterval }) {
+function Plot({ data, endTime, efsFlag, startTime, timeInterval }) {
   const colorScheme = useMemo(() => {
     /** @type {ColorScheme} */
     const colorScheme = {};
@@ -68,7 +69,7 @@ function Plot({ data, endTime, startTime, timeInterval }) {
           dataKey='time'
           type='number'
           label={{
-            value: 'Time (in year)',
+            value: 'Time from diagnosis (in year)',
             position: 'insideBottom',
             offset: -5,
           }}
@@ -77,9 +78,12 @@ function Plot({ data, endTime, startTime, timeInterval }) {
         />
         <YAxis
           label={{
-            value: 'Survival rate',
+            value: efsFlag
+              ? 'Event-free survival rate'
+              : 'Overall survival rate',
             angle: -90,
-            position: 'insideLeft',
+            position: 'insideBottomLeft',
+            offset: 15,
           }}
         />
         <CartesianGrid strokeDasharray='3 3' />

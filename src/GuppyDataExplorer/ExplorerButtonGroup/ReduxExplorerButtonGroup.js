@@ -1,21 +1,19 @@
 import { connect } from 'react-redux';
 import ExplorerButtonGroup from '.';
-import { requestErrored, resetJob, setJobStatusInterval } from '../../actions';
-import { dispatchJob, checkJobStatus } from '../../actions.thunk';
+import { resetJob, setJobStatusInterval } from '../../redux/kube/slice';
+import { dispatchJob, checkJobStatus } from '../../redux/kube/asyncThunks';
+import { requestErrored } from '../../redux/status/slice';
 import { jobapiPath } from '../../localconf';
 import { asyncSetInterval } from '../../utils';
 import { fetchWithCreds } from '../../utils.fetch';
 
-/** @typedef {import('../../types').KubeState} KubeState */
-/** @typedef {import('../../types').UserAccessState} UserAccessState */
-
-/** @param {{ kube: KubeState; userAccess: UserAccessState }} state */
+/** @param {import('../../redux/types').RootState} state */
 const mapStateToProps = (state) => ({
   job: state.kube.job,
-  userAccess: state.userAccess.access,
+  userAccess: state.userAccess,
 });
 
-/** @param {import('redux-thunk').ThunkDispatch} dispatch */
+/** @param {import('../../redux/types').AppDispatch} dispatch */
 const mapDispatchToProps = (dispatch) => ({
   submitJob: (body) => {
     dispatch(dispatchJob(body));

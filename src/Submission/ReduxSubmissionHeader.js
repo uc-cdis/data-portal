@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import SubmissionHeader from './SubmissionHeader';
 
 const ReduxSubmissionHeader = (() => {
-  /** @param {{ submission: import('./types').SubmissionState }} state */
+  /** @param {import('../redux/types').RootState} state */
   const mapStateToProps = (state) => ({
     unmappedFileCount: state.submission.unmappedFileCount,
     unmappedFileSize: state.submission.unmappedFileSize,

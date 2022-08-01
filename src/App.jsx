@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { lazy, Suspense, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { matchPath, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Spinner from './gen3-ui-component/components/Spinner/Spinner';
 
@@ -13,19 +12,20 @@ import {
   // workspaceUrl,
   // workspaceErrorUrl,
 } from './localconf';
-import { fetchVersionInfo } from './actions.thunk';
-import { fetchGraphvizLayout } from './DataDictionary/actions.thunk';
-import { fetchGuppySchema, fetchSchema } from './GraphQLEditor/actions.thunk';
+import { getProjectsList, getTransactionList } from './Submission/relayer';
+import { STARTING_DID } from './Submission/utils';
+import useSessionMonitor from './hooks/useSessionMonitor';
+import { fetchDataVersion } from './redux/versionInfo/asyncThunks';
+import { fetchIndexPageCounts } from './redux/index/asyncThunks';
 import {
   fetchDictionary,
   fetchUnmappedFiles,
   fetchUnmappedFileStats,
-} from './Submission/actions.thunk';
-import { getProjectsList, getTransactionList } from './Submission/relayer';
-import { STARTING_DID } from './Submission/utils';
-import { fetchAccess } from './UserProfile/actions.thunk';
-import useSessionMonitor from './hooks/useSessionMonitor';
-import { fetchIndexPageCounts } from './Index/actions.thunk';
+} from './redux/submission/asyncThunks';
+import { fetchGuppySchema, fetchSchema } from './redux/graphiql/asyncThunks';
+import { fetchAccess } from './redux/userProfile/asyncThunks';
+import { fetchGraphvizLayout } from './redux/ddgraph/asyncThunks';
+import { useAppDispatch } from './redux/hooks';
 
 // lazy-loaded pages
 const DataDictionary = lazy(() => import('./DataDictionary'));
@@ -52,10 +52,9 @@ const UserProfile = lazy(() => import('./UserProfile/ReduxUserProfile'));
 function App() {
   useSessionMonitor();
 
-  /** @type {import('redux-thunk').ThunkDispatch} */
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(fetchVersionInfo());
+    dispatch(fetchDataVersion());
   }, []);
 
   return (
@@ -104,7 +103,6 @@ function App() {
                   return matchPath(`/submission${pattern}`, location.pathname);
                 }
 
-                /** @type {import('./types').UserState} */
                 const { username } = state.user;
                 const start = STARTING_DID;
 
@@ -112,14 +110,17 @@ function App() {
                   return Promise.all([
                     dispatch(getProjectsList()),
                     dispatch(getTransactionList()),
-                    dispatch(fetchUnmappedFileStats(username, [], start)),
+                    dispatch(
+                      fetchUnmappedFileStats({ start, total: [], username })
+                    ),
                   ]);
                 }
 
                 if (matchPattern('/files'))
-                  return dispatch(fetchUnmappedFiles(username, [], start));
+                  return dispatch(
+                    fetchUnmappedFiles({ start, total: [], username })
+                  );
 
-                /** @type {import('./Submission/types').SubmissionState} */
                 const { filesToMap } = state.submission;
 
                 if (matchPattern('/map') && filesToMap.length !== 0)

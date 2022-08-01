@@ -1,113 +1,66 @@
-import { useEffect, useMemo, useReducer, useRef } from 'react';
-import { useExplorerFilterSets } from '../ExplorerFilterSetsContext';
-import { useExplorerState } from '../ExplorerStateContext';
+import { useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
-  checkIfFilterEmpty,
-  initializeWorkspaceState,
-  storeWorkspaceState,
-  workspaceReducer,
-} from './utils';
+  clearWorkspaceAllFilterSets,
+  clearWorkspaceFilterSet,
+  createWorkspaceFilterSet,
+  duplicateWorkspaceFilterSet,
+  loadWorkspaceFilterSet,
+  removeWorkspaceFilterSet,
+  useWorkspaceFilterSet,
+} from '../../redux/explorer/slice';
+import { workspacesSessionStorageKey } from '../../redux/explorer/utils';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
 /** @typedef {import("../types").ExplorerFilterSet} ExplorerFilterSet */
 
 export default function useFilterSetWorkspace() {
-  const { explorerFilter, handleFilterChange } = useExplorerState();
-  const filterSets = useExplorerFilterSets();
+  const dispatch = useAppDispatch();
+  const explorerId = useAppSelector((s) => s.explorer.explorerId);
+  const workspaces = useAppSelector((s) => s.explorer.workspaces);
 
-  const initialState = useMemo(
-    () => initializeWorkspaceState(explorerFilter),
-    []
-  );
+  const location = useLocation();
   useEffect(() => {
-    const initialActiveFilterSet = initialState.active.filterSet;
-
-    // sync explorer filter set state with initial workspace active filter set
-    if ('id' in initialActiveFilterSet)
-      filterSets.use(initialActiveFilterSet.id);
-
-    // sync explorer filter state with non-empty initial workspace active filter
-    if (!checkIfFilterEmpty(initialActiveFilterSet.filter))
-      handleFilterChange(initialActiveFilterSet.filter);
+    // inject filter value passed via router
+    /** @type {{ filter?: ExplorerFilter }} */
+    const locationState = location.state;
+    if (locationState?.filter !== undefined)
+      dispatch(loadWorkspaceFilterSet({ filter: locationState.filter }));
   }, []);
 
-  const [state, dispatch] = useReducer(workspaceReducer, initialState);
-  const prevActiveFilterSet = useRef(state.active.filterSet);
   useEffect(() => {
-    const { filter: prevFilter, id: prevId } = prevActiveFilterSet.current;
-    const { filter, id } = state.active.filterSet;
-    prevActiveFilterSet.current = state.active.filterSet;
-
-    // sync explorer filter state with workspace active filter
-    const isFilterChanged =
-      JSON.stringify(prevFilter) !== JSON.stringify(filter);
-    if (isFilterChanged) handleFilterChange(filter);
-
-    // sync explorer filter sets state with workspace active filter set
-    const isFilterSetIdChanged = prevId !== id;
-    if (isFilterSetIdChanged) filterSets.use(id);
-
     // sync browser store with workspace state
-    storeWorkspaceState(state);
-  }, [state]);
-
-  useEffect(() => {
-    // sync workspace active filter with explorer filter set state
-    if (filterSets.active?.id !== undefined)
-      dispatch({ type: 'LOAD', payload: { filterSet: filterSets.active } });
-  }, [filterSets.active]);
-
-  const isInitialRender = useRef(true);
-  useEffect(() => {
-    // sync workspace active filter with explorer filter state (skip initial render)
-    if (isInitialRender.current) isInitialRender.current = false;
-    else dispatch({ type: 'UPDATE', payload: { filter: explorerFilter } });
-  }, [explorerFilter]);
+    const json = JSON.stringify(workspaces);
+    window.sessionStorage.setItem(workspacesSessionStorageKey, json);
+  }, [workspaces]);
 
   return useMemo(
     () => ({
-      ...state,
-      size: Object.keys(state.all).length,
+      ...workspaces[explorerId],
+      size: Object.keys(workspaces[explorerId].all).length,
       clear() {
-        dispatch({ type: 'CLEAR' });
+        dispatch(clearWorkspaceFilterSet());
       },
       clearAll() {
-        const newId = crypto.randomUUID();
-        dispatch({ type: 'CLEAR-ALL', payload: { newId } });
+        dispatch(clearWorkspaceAllFilterSets());
       },
       create() {
-        const newId = crypto.randomUUID();
-        dispatch({ type: 'CREATE', payload: { newId } });
+        dispatch(createWorkspaceFilterSet());
       },
       duplicate() {
-        const newId = crypto.randomUUID();
-        dispatch({ type: 'DUPLICATE', payload: { newId } });
+        dispatch(duplicateWorkspaceFilterSet());
       },
-      /**
-       * @param {ExplorerFilterSet} filterSet
-       * @param {boolean} [shouldOverwrite]
-       */
-      load(filterSet, shouldOverwrite) {
-        const newId = shouldOverwrite ? undefined : crypto.randomUUID();
-        dispatch({ type: 'LOAD', payload: { newId, filterSet } });
+      load(filterSet) {
+        dispatch(loadWorkspaceFilterSet(filterSet));
       },
       remove() {
-        const newId = crypto.randomUUID();
-        dispatch({ type: 'REMOVE', payload: { newId } });
+        dispatch(removeWorkspaceFilterSet());
       },
-      /** @param {ExplorerFilterSet} filterSet */
-      save(filterSet) {
-        dispatch({ type: 'SAVE', payload: { filterSet } });
-      },
-      /** @param {ExplorerFilter} filter */
-      update(filter) {
-        dispatch({ type: 'UPDATE', payload: { filter } });
-      },
-      /** @param {string} id */
       use(id) {
-        dispatch({ type: 'USE', payload: { id } });
+        dispatch(useWorkspaceFilterSet(id));
       },
     }),
-    [state]
+    [workspaces, explorerId]
   );
 }

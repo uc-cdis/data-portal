@@ -1,4 +1,6 @@
 import flat from 'flat';
+import cloneDeep from 'lodash.clonedeep';
+import { FILTER_TYPE } from './const';
 import { queryGuppyForRawData } from './queries';
 
 /** @typedef {import('../types').AggsCount} AggsCount */
@@ -19,25 +21,27 @@ import { queryGuppyForRawData } from './queries';
  * amount of data shown when combined, but an admin filter should always decrease
  * or keep constant the amount of data shown when combined with a user filter).
  * @param {FilterState} userFilter
- * @param {{ [x: string]: OptionFilter }} adminAppliedPreFilter
+ * @param {{ [x: string]: { selectedValues?: string[] } }} adminAppliedPreFilter
  * */
 export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   /** @type {FilterState} */
-  const mergedFilterState = { ...userFilter };
+  const mergedFilterState = cloneDeep(userFilter ?? {});
+  if (mergedFilterState.value === undefined) mergedFilterState.value = {};
 
   for (const [key, adminFilterValues] of Object.entries(
     adminAppliedPreFilter
   )) {
-    if (key in userFilter) {
-      const userFilterValues = userFilter[key];
+    if (key in mergedFilterState.value) {
+      const userFilterValues = mergedFilterState.value[key];
 
-      if ('selectedValues' in userFilterValues) {
+      if (userFilterValues.__type === FILTER_TYPE.OPTION) {
         const userFilterSubset = userFilterValues.selectedValues.filter((x) =>
           adminFilterValues.selectedValues.includes(x)
         );
 
-        mergedFilterState[key] = {
-          ...mergedFilterState[key],
+        mergedFilterState.value[key] = {
+          ...mergedFilterState.value[key],
+          __type: FILTER_TYPE.OPTION,
           selectedValues:
             userFilterSubset.length > 0
               ? // The user-applied filter is more exclusive than the admin-applied filter.
@@ -47,7 +51,10 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
         };
       }
     } else {
-      mergedFilterState[key] = adminFilterValues;
+      mergedFilterState.value[key] = {
+        __type: FILTER_TYPE.OPTION,
+        ...adminFilterValues,
+      };
     }
   }
 
@@ -118,8 +125,8 @@ export function updateCountsInInitialTabsOptions(
         }
       }
 
-      const filter = filtersApplied[fieldName];
-      if (filter !== undefined && 'selectedValues' in filter)
+      const filter = filtersApplied.value?.[fieldName];
+      if (filter !== undefined && filter.__type === FILTER_TYPE.OPTION)
         for (const key of filter.selectedValues) {
           const found = updatedTabsOptions[fieldName].histogram.find(
             (o) => o.key === key
@@ -199,10 +206,16 @@ export const mergeTabOptions = (firstTabsOptions, secondTabsOptions) => {
 };
 
 /**
- * @param {{ histogram: AggsCount[] }} histogramResult
- * @param {{ histogram: AggsCount[] }} initHistogramRes
+ * @param {Object} args
+ * @param {OptionFilter['selectedValues']} [args.adminAppliedPreFilterValues]
+ * @param {{ histogram: AggsCount[] }} args.histogramResult
+ * @param {{ histogram: AggsCount[] }} args.initialHistogramResult
  */
-const getSingleFilterOption = (histogramResult, initHistogramRes) => {
+const getSingleFilterOption = ({
+  adminAppliedPreFilterValues,
+  histogramResult,
+  initialHistogramResult,
+}) => {
   if (!histogramResult || !histogramResult.histogram) {
     throw new Error(
       `Error parsing field options ${JSON.stringify(histogramResult)}`
@@ -214,10 +227,10 @@ const getSingleFilterOption = (histogramResult, initHistogramRes) => {
     if (typeof item.key !== 'string') {
       let [minValue, maxValue] = item.key;
       if (
-        initHistogramRes &&
-        typeof initHistogramRes.histogram[0].key !== 'string'
+        initialHistogramResult &&
+        typeof initialHistogramResult.histogram[0].key !== 'string'
       )
-        [minValue, maxValue] = initHistogramRes.histogram[0].key;
+        [minValue, maxValue] = initialHistogramResult.histogram[0].key;
 
       options.push({
         filterType: 'range',
@@ -233,6 +246,7 @@ const getSingleFilterOption = (histogramResult, initHistogramRes) => {
         filterType: 'singleSelect',
         count: item.count,
         accessible: item.accessible,
+        disabled: adminAppliedPreFilterValues?.includes(item.key),
       });
     }
   }
@@ -348,10 +362,14 @@ export const getFilterSections = ({
       // This allows selected options to appear below the search box once they are selected.
       let selectedOptions = [];
       if (tabsOptionsFiltered && tabsOptionsFiltered.histogram) {
-        selectedOptions = getSingleFilterOption(
-          tabsOptionsFiltered,
-          initialTabsOptions ? initialTabsOptions[field] : undefined
-        );
+        selectedOptions = getSingleFilterOption({
+          adminAppliedPreFilterValues:
+            adminAppliedPreFilters[field]?.selectedValues,
+          histogramResult: tabsOptionsFiltered,
+          initialHistogramResult: initialTabsOptions
+            ? initialTabsOptions[field]
+            : undefined,
+        });
       }
 
       return {
@@ -379,10 +397,14 @@ export const getFilterSections = ({
       );
     }
 
-    const defaultOptions = getSingleFilterOption(
-      tabsOptionsFiltered,
-      initialTabsOptions ? initialTabsOptions[field] : undefined
-    );
+    const defaultOptions = getSingleFilterOption({
+      adminAppliedPreFilterValues:
+        adminAppliedPreFilters[field]?.selectedValues,
+      histogramResult: tabsOptionsFiltered,
+      initialHistogramResult: initialTabsOptions
+        ? initialTabsOptions[field]
+        : undefined,
+    });
 
     const fieldIsArrayField = checkIsArrayField(field, arrayFields);
 
@@ -401,7 +423,7 @@ export const getFilterSections = ({
  * @param {FilterState} filterResults
  */
 export function excludeSelfFilterFromAggsData(aggsData, filterResults) {
-  if (!filterResults) return aggsData;
+  if (filterResults?.value === undefined) return aggsData;
 
   /** @type {SimpleAggsData} */
   const resultAggsData = {};
@@ -412,10 +434,10 @@ export function excludeSelfFilterFromAggsData(aggsData, filterResults) {
     if (histogram !== undefined) {
       const fieldName = flatFieldName.replace('.histogram', '');
       resultAggsData[fieldName] = { histogram };
-      if (fieldName in filterResults) {
-        const filterValue = filterResults[fieldName];
+      if (fieldName in filterResults.value) {
+        const filterValue = filterResults.value[fieldName];
         resultAggsData[fieldName].histogram =
-          'selectedValues' in filterValue
+          filterValue.__type === FILTER_TYPE.OPTION
             ? histogram.filter(
                 ({ key }) =>
                   typeof key === 'string' &&

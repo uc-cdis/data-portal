@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import MapDataModel from './MapDataModel';
 
 const ReduxMapDataModel = (() => {
-  /** @param {{ submission: import('./types').SubmissionState }} state */
+  /** @param {import('../redux/types').RootState} state */
   const mapStateToProps = (state) => ({
     filesToMap: state.submission.filesToMap,
     projects: state.submission.projectsByName,

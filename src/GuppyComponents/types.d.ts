@@ -1,28 +1,34 @@
+type CombineMode = 'AND' | 'OR';
+
+export type EmptyFilter = { __type?: never };
+
 export type OptionFilter = {
+  __combineMode?: CombineMode;
+  __type: 'OPTION';
   selectedValues?: string[];
-  __combineMode?: 'AND' | 'OR';
 };
 
 export type RangeFilter = {
+  __type: 'RANGE';
   lowerBound?: number;
   upperBound?: number;
 };
 
-export type SimpleFilterState = {
-  [x: Exclude<string, '__combineMode'>]: OptionFilter | RangeFilter;
-  __combineMode?: 'AND' | 'OR';
-};
+export type BaseFilter = EmptyFilter | OptionFilter | RangeFilter;
 
 export type AnchoredFilterState = {
-  filter: SimpleFilterState;
+  __type: 'ANCHORED';
+  value?: {
+    [x: string]: BaseFilter;
+  };
 };
 
 export type FilterState = {
-  [x: Exclude<string, '__combineMode'>]:
-    | OptionFilter
-    | RangeFilter
-    | AnchoredFilterState;
-  __combineMode?: 'AND' | 'OR';
+  __combineMode?: CombineMode;
+  __type?: 'STANDARD';
+  value?: {
+    [x: string]: BaseFilter | AnchoredFilterState;
+  };
 };
 
 export type GqlInFilter = {

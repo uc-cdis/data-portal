@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ErrorBoundary from '../components/ErrorBoundary';
 import Spinner from '../components/Spinner';
 import Button from '../gen3-ui-component/components/Button';
+import { FILTER_TYPE } from '../GuppyComponents/Utils/const';
 import { overrideSelectTheme } from '../utils';
 import { breakpoints } from '../localconf';
 import './IndexOverview.css';
@@ -74,15 +75,15 @@ function IndexOverview({ overviewCounts }) {
   const navigate = useNavigate();
   /** @type {[to: string, options?: import('react-router').NavigateOptions]} */
   const navigateParams = ['/explorer'];
-  if (consortium.value !== 'total')
-    navigateParams.push({
-      state: {
-        filter: {
-          __combineMode: 'AND',
-          consortium: { selectedValues: [consortium.value] },
-        },
-      },
-    });
+  if (consortium.value !== 'total') {
+    const selectedValues = [consortium.value];
+    const filter = {
+      __combineMode: 'AND',
+      __type: FILTER_TYPE.STANDARD,
+      value: { consortium: { __type: FILTER_TYPE.OPTION, selectedValues } },
+    };
+    navigateParams.push({ state: { filter } });
+  }
 
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   useEffect(() => {

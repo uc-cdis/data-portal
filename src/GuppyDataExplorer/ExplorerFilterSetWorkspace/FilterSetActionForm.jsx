@@ -10,7 +10,8 @@ import FilterSetUpdateForm from '../ExplorerFilterSetForms/FilterSetUpdateForm';
 
 /**
  * @param {Object} prop
- * @param {import('../ExplorerFilterSetsContext').ExplorerFilterSetsContext} prop.filterSets
+ * @param {ExplorerFilterSet['filter']} prop.currentFilter
+ * @param {{ active: ExplorerFilterSet; all: ExplorerFilterSet[]; empty: ExplorerFilterSet }} prop.filterSets
  * @param {Object} prop.handlers
  * @param {() => void} prop.handlers.clearAll
  * @param {() => void} prop.handlers.close
@@ -18,9 +19,8 @@ import FilterSetUpdateForm from '../ExplorerFilterSetForms/FilterSetUpdateForm';
  * @param {(loaded: ExplorerFilterSet) => void} prop.handlers.load
  * @param {(saved: ExplorerFilterSet) => void} prop.handlers.save
  * @param {ActionFormType} prop.type
- * @param {ReturnType<import('./useFilterSetWorkspace').default>} prop.workspace
  */
-function FilterSetActionForm({ filterSets, handlers, type, workspace }) {
+function FilterSetActionForm({ currentFilter, filterSets, handlers, type }) {
   switch (type) {
     case 'CLEAR-ALL':
       return (
@@ -52,7 +52,7 @@ function FilterSetActionForm({ filterSets, handlers, type, workspace }) {
     case 'SAVE':
       return filterSets.active === undefined ? (
         <FilterSetCreateForm
-          currentFilter={workspace.active.filterSet.filter}
+          currentFilter={currentFilter}
           currentFilterSet={filterSets.empty}
           filterSets={filterSets.all}
           onAction={handlers.save}
@@ -61,13 +61,13 @@ function FilterSetActionForm({ filterSets, handlers, type, workspace }) {
         />
       ) : (
         <FilterSetUpdateForm
-          currentFilter={workspace.active.filterSet.filter}
+          currentFilter={currentFilter}
           currentFilterSet={filterSets.active}
           filterSets={filterSets.all}
           onAction={handlers.save}
           onClose={handlers.close}
           isFiltersChanged={
-            JSON.stringify(workspace.active.filterSet.filter) !==
+            JSON.stringify(currentFilter) !==
             JSON.stringify(filterSets.active.filter)
           }
         />
@@ -86,6 +86,7 @@ function FilterSetActionForm({ filterSets, handlers, type, workspace }) {
 }
 
 FilterSetActionForm.propTypes = {
+  currentFilter: PropTypes.object,
   filterSets: PropTypes.object,
   handlers: PropTypes.shape({
     clearAll: PropTypes.func,
@@ -95,7 +96,6 @@ FilterSetActionForm.propTypes = {
     save: PropTypes.func,
   }),
   type: PropTypes.oneOf(['CLEAR-ALL', 'DELETE', 'LOAD', 'SAVE']),
-  workspace: PropTypes.object,
 };
 
 export default FilterSetActionForm;
