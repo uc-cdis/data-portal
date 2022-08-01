@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Alert, Button, Drawer, Space, Collapse, List, Tabs,
+  Alert, Button, Drawer, Space, Collapse, List, Tabs, Divider,
 } from 'antd';
 import {
   LinkOutlined,
@@ -8,12 +8,17 @@ import {
   UnlockOutlined,
   DoubleLeftOutlined,
   DownloadOutlined,
+  AuditOutlined,
 } from '@ant-design/icons';
-import { hostname, basename, fenceDownloadPath } from '../localconf';
+import { useHistory } from 'react-router-dom';
+import {
+  hostname, basename, fenceDownloadPath, studyRegistrationConfig,
+} from '../localconf';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import {
   AccessLevel, accessibleFieldName, renderFieldContent, DiscoveryResource,
 } from './Discovery';
+import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 
 const { Panel } = Collapse;
 
@@ -24,12 +29,18 @@ interface Props {
   modalData: DiscoveryResource;
   config: DiscoveryConfig;
   permalinkCopied: boolean;
+  user: User;
+  userAuthMapping: any;
 }
 
 interface ListItem {
   title: string,
   description: string,
   guid: string
+}
+
+interface User {
+  username: string
 }
 
 const fieldCls = { className: 'discovery-modal__field' };
@@ -139,7 +150,7 @@ const tabField = (fieldConfig: TabFieldConfig, discoveryConfig: DiscoveryConfig,
     }
     if (fieldConfig.type === 'tags') {
       const tags = fieldConfig.categories ? (resource.tags || []).filter(
-        (tag) => fieldConfig.categories.includes(tag.category),
+        (tag) => fieldConfig.categories?.includes(tag.category),
       ) : resource.tags;
       return <div {...tagsCls}>{renderFieldContent(tags, 'tags', discoveryConfig)}</div>;
     }
@@ -169,10 +180,33 @@ const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, r
 };
 
 const DiscoveryDetails = (props: Props) => {
+  const [tabActiveKey, setTabActiveKey] = useState('0');
+
+  const history = useHistory();
   const pagePath = `/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`;
   const permalink = `${(basename === '/' ? '' : basename)}${pagePath}`;
 
-  const headerField = props.config.detailView?.headerField || props.config.studyPageFields.header?.field;
+  const handleRedirectToRegistrationClick = (studyUID: string|number|null = null) => {
+    history.push('/study-reg', {
+      studyUID,
+    });
+  };
+
+  const handleRedirectToRequestRegistrationAccessClick = (
+    studyRegistrationAuthZ: string|null = null,
+    studyName: string|null = null,
+    studyNumber: string|null = null,
+    studyUID: string|number|null = null) => {
+    history.push('/study-reg/request-access', {
+      studyName, studyNumber, studyRegistrationAuthZ, studyUID,
+    });
+  };
+
+  const handleRedirectToLoginClick = () => {
+    history.push('/login', { from: pagePath });
+  };
+
+  const headerField = props.config.detailView?.headerField || props.config.studyPageFields.header?.field || '';
   const header = (
     <Space align='baseline'>
       <h3 className='discovery-modal__header-text'>{props.modalData[headerField]}</h3>
@@ -185,7 +219,7 @@ const DiscoveryDetails = (props: Props) => {
       visible={props.modalVisible}
       width={'50vw'}
       closable={false}
-      onClose={() => props.setModalVisible(false)}
+      onClose={() => { props.setModalVisible(false); setTabActiveKey('0'); }}
     >
       <div className='discovery-modal__header-buttons'>
         <Button
@@ -196,30 +230,70 @@ const DiscoveryDetails = (props: Props) => {
           <DoubleLeftOutlined />
           Back
         </Button>
-        <Button
-          type='text'
-          onClick={() => {
-            navigator.clipboard.writeText(`${hostname}${permalink.replace(/^\/+/g, '')}`)
-              .then(() => {
-                props.setPermalinkCopied(true);
-              });
-          }}
-        >
-          { props.permalinkCopied
-            ? <React.Fragment><CheckOutlined /> Copied! </React.Fragment>
-            : <React.Fragment><LinkOutlined /> Permalink </React.Fragment>}
-        </Button>
+        <Space split={<Divider type='vertical' />}>
+          {(props.modalData[studyRegistrationConfig.studyRegistrationValidationField] === false)
+            ? (
+              <Button
+                type='text'
+                onClick={() => {
+                  if (props.user.username) {
+                    if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
+                      return handleRedirectToRegistrationClick(props.modalData[studyRegistrationConfig.studyRegistrationUIDField]);
+                    }
+                    return handleRedirectToRequestRegistrationAccessClick(
+                      props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
+                      props.modalData.project_title,
+                      props.modalData.project_number,
+                      props.modalData[studyRegistrationConfig.studyRegistrationUIDField],
+                    );
+                  }
+                  return handleRedirectToLoginClick();
+                }}
+              >
+                <React.Fragment><AuditOutlined />{(
+                  () => {
+                    if (props.user.username) {
+                      if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig?.studyRegistrationAccessCheckField], props.userAuthMapping)) {
+                        return ' Register This Study ';
+                      }
+                      return ' Request Access to Register This Study ';
+                    }
+                    return ' Login to Register This Study ';
+                  }
+                )()}
+                </React.Fragment>
+              </Button>
+            )
+            : null}
+          <Button
+            type='text'
+            onClick={() => {
+              navigator.clipboard.writeText(`${hostname}${permalink.replace(/^\/+/g, '')}`)
+                .then(() => {
+                  props.setPermalinkCopied(true);
+                });
+            }}
+          >
+            { props.permalinkCopied
+              ? <React.Fragment><CheckOutlined /> Copied! </React.Fragment>
+              : <React.Fragment><LinkOutlined /> Permalink </React.Fragment>}
+          </Button>
+        </Space>
       </div>
       {
         props.config.detailView?.tabs
           ? (
             <div className='discovery-modal-content'>
               {header}
-              <Tabs type={'card'}>
+              <Tabs
+                type={'card'}
+                activeKey={tabActiveKey}
+                onChange={(activeKey) => { setTabActiveKey(activeKey); }}
+              >
                 {
                   props.config.detailView.tabs.map(
-                    ({ tabName, groups }) => (
-                      <Tabs.TabPane key={tabName} tab={<span {...tabLabelCls}>{tabName}</span>}>
+                    ({ tabName, groups }, tabIndex) => (
+                      <Tabs.TabPane key={tabIndex} tab={<span {...tabLabelCls}>{tabName}</span>}>
                         {
                           (groups || []).map(
                             (group, i) => <div key={i}>{fieldGrouping(group, props.config, props.modalData)}</div>,
@@ -234,7 +308,6 @@ const DiscoveryDetails = (props: Props) => {
           )
           : (
             <React.Fragment>
-
               <div className='discovery-modal-content'>
                 {header}
                 {(

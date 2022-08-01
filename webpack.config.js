@@ -26,6 +26,9 @@ if (configFile.connectSrcCSPWhitelist && configFile.connectSrcCSPWhitelist.lengt
 if (configFile.featureFlags && configFile.featureFlags.discoveryUseAggMDS) {
   connectSrcURLs.push('https://dataguids.org');
 }
+if (configFile.featureFlags && configFile.featureFlags.studyRegistration) {
+  connectSrcURLs.push('https://clinicaltrials.gov');
+}
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
 }
@@ -134,6 +137,8 @@ const plugins = [
   new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
 ];
 
+const allowedHosts = process.env.HOSTNAME ? [process.env.HOSTNAME] : 'auto';
+
 let optimization = {};
 let devtool = false;
 
@@ -226,9 +231,7 @@ module.exports = {
     port: 9443,
     server: 'https',
     host: 'localhost',
-    allowedHosts: [
-      '.planx-pla.net',
-    ],
+    allowedHosts,
     client: {
       overlay: {
         warnings: false,
