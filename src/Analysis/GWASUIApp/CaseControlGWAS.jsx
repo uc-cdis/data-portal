@@ -11,6 +11,7 @@ import { fetchWithCreds } from '../../actions';
 import Spinner from "../../components/Spinner";
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import CheckOutlined from '@ant-design/icons';
+import TourButton from './TourButton';
 
 // the quantitative argo id is
 // gwas-template-wrapper-k5w9t and the tar GUID is dg.VA03/7484ce92-313b-4286-954c-b71ad5d9bf54
@@ -251,6 +252,7 @@ const CaseControlGWAS = (props) => {
                             dataSource={data.cohort_definitions_and_stats.filter((x) => x.size > 0)} // many entries w/ size 0 in prod
                         />
                     </div>
+
                 </Space>
             </React.Fragment>
         );
@@ -260,7 +262,7 @@ const CaseControlGWAS = (props) => {
         const { data, status } = useQuery(['covariates', allowedConceptTypes.ConceptTypes, sourceId], fetchCovariates, queryConfig);
 
         if (status === 'loading') {
-            return <Spinner />;
+               return <Spinner />
         }
         if (status === 'error') {
             return <React.Fragment>Error</React.Fragment>;
@@ -779,7 +781,13 @@ const CaseControlGWAS = (props) => {
         </React.Fragment>)
     }
 
+
+
     const generateContentForStep = (stepIndex) => {
+        let stepInfo = {
+            step: stepIndex,
+            workflow_type: "case control"
+        }
         switch (stepIndex) {
             case 0: {
                 return (
@@ -796,18 +804,22 @@ const CaseControlGWAS = (props) => {
                             <div className="GWASUI-flexCol">
                                 <CaseCohortDefinition></CaseCohortDefinition>
                             </div>
+                            <TourButton stepInfo={stepInfo}></TourButton>
                         </div>
                     ) : <Spinner></Spinner>
                 );
             }
             case 1: {
                 return (
-                    <ControlCohortDefinition></ControlCohortDefinition>
+                        <ControlCohortDefinition></ControlCohortDefinition>
                 );
             }
             case 2: {
                 return (
-                    <Covariates></Covariates>
+                    <div>
+                        <Covariates></Covariates>
+                        <TourButton stepInfo={stepInfo}></TourButton>
+                    </div>
                 );
             }
             case 3: {
@@ -817,7 +829,10 @@ const CaseControlGWAS = (props) => {
             }
             case 4: {
                 return (
-                    <CohortParameters></CohortParameters>
+                    <div>
+                        <CohortParameters></CohortParameters>
+                        <TourButton stepInfo={stepInfo}></TourButton>
+                    </div>
                 );
             }
             case 5: {
