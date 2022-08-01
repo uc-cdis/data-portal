@@ -120,6 +120,7 @@ function FilterDisplay({
             ({' '}
             <FilterDisplay
               anchorInfo={[anchorField, anchorValue]}
+              // @ts-ignore Innocuous error due to using AnchorFilterState
               filter={value}
               filterInfo={filterInfo}
               combineMode={__combineMode}
@@ -170,7 +171,8 @@ function FilterDisplay({
           filterKey={key}
         >
           <span className='token'>
-            <code>{filterInfo[key].label}</code> is between
+            <code>{filterInfo[key].label}</code>
+            {' is between '}
           </span>
           <span className='token'>
             <code>
