@@ -137,6 +137,8 @@ const plugins = [
   new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
 ];
 
+const allowedHosts = process.env.HOSTNAME ? [process.env.HOSTNAME] : 'auto';
+
 let optimization = {};
 let devtool = false;
 
@@ -229,9 +231,7 @@ module.exports = {
     port: 9443,
     server: 'https',
     host: 'localhost',
-    allowedHosts: [
-      '.planx-pla.net',
-    ],
+    allowedHosts,
     client: {
       overlay: {
         warnings: false,
