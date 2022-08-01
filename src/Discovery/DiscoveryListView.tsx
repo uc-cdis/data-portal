@@ -56,7 +56,14 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
         selectedRowKeys: props.selectedResources.map(
           (r) => r[props.config.minimalFieldMapping.uid],
         ),
-        renderCell: (_checked, _record, _index, node) => <Tooltip title='Click to select item for download or open in workspace' overlayStyle={{ maxWidth: '150px' }}>{node}</Tooltip>,
+        renderCell: (_checked, _record, _index, node) => (
+          <Tooltip
+            title={`Click to select item for ${(props.config.features.exportToWorkspace.enableDownloadManifest || props.config.features.exportToWorkspace.enableDownloadZip) ? 'download or ' : ''}open in workspace`}
+            overlayStyle={{ maxWidth: '150px' }}
+          >
+            {node}
+          </Tooltip>
+        ),
         preserveSelectedRowKeys: true,
         onChange: (_, selectedRows) => {
           props.onResourcesSelected(selectedRows);
