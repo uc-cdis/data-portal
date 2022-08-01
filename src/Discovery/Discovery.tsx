@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import * as JsSearch from 'js-search';
 import {
   Tag, Popover, Space, Collapse, Button, Dropdown, Menu, Pagination, Tooltip,
@@ -210,7 +210,7 @@ interface Props {
   config: DiscoveryConfig,
   studies: DiscoveryResource[],
   studyRegistrationValidationField: string,
-  params?: {studyUID: string}, // from React Router
+  params?: {studyUID: string|null}, // from React Router
   selectedResources,
   pagination: { currentPage: number, resultsPerPage: number },
   selectedTags,
@@ -362,33 +362,33 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     width: column.width,
     render: (_, record) => {
       let value = record[column.field];
+      let renderedCell: undefined|string|ReactNode;
 
       if (value === undefined) {
         if (column.errorIfNotAvailable !== false) {
           throw new Error(`Configuration error: Could not find field ${column.field} in record ${JSON.stringify(record)}. Check the 'study_columns' section of the Discovery config.`);
         }
         if (column.valueIfNotAvailable) {
-          return column.valueIfNotAvailable;
+          renderedCell = column.valueIfNotAvailable;
         }
-        return 'Not available';
-      }
-      const columnIsSearchable = config.features.search.searchBar.searchableTextFields
-        ? config.features.search.searchBar.searchableTextFields.indexOf(column.field) !== -1
-        : !column.contentType || column.contentType === 'string';
-      if (columnIsSearchable) {
-        // Show search highlights if there's an active search term
-        if (props.searchTerm) {
+        renderedCell = 'Not available';
+      } else {
+        const columnIsSearchable = config.features.search.searchBar.searchableTextFields
+          ? config.features.search.searchBar.searchableTextFields.indexOf(column.field) !== -1
+          : !column.contentType || column.contentType === 'string';
+        if (columnIsSearchable && props.searchTerm) {
           if (Array.isArray(value)) {
             value = value.join(', ');
           }
-          return highlightSearchTerm(value, props.searchTerm).highlighted;
+          renderedCell = highlightSearchTerm(value, props.searchTerm).highlighted;
+        } else if (column.hrefValueFromField) {
+          renderedCell = <a href={`//${record[column.hrefValueFromField]}`} target='_blank' rel='noreferrer'>{ renderFieldContent(value, column.contentType, config) }</a>;
+        } else {
+          renderedCell = renderFieldContent(value, column.contentType, config);
         }
       }
-      if (column.hrefValueFromField) {
-        return <a href={`//${record[column.hrefValueFromField]}`} target='_blank' rel='noreferrer'>{ renderFieldContent(value, column.contentType, config) }</a>;
-      }
 
-      return renderFieldContent(value, column.contentType, config);
+      return <Tooltip title='Click to view details'>{renderedCell}</Tooltip>;
     },
   }),
   );
