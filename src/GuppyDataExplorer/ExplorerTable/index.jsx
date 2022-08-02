@@ -94,8 +94,9 @@ function getCellElement({
     return <span title={valueStr}>{humanFileSize(valueStr)}</span>;
 
   if (field === 'external_references.external_links') {
-    return Array.isArray(value)
-      ? value.map((s) => {
+    return Array.isArray(value) ? (
+      <>
+        {value.map((s) => {
           const [resourceName, resourceIconPath, subjectUrl] = s.split('|');
           return (
             <a
@@ -108,8 +109,9 @@ function getCellElement({
               <img src={resourceIconPath} alt={resourceName} />
             </a>
           );
-        })
-      : null;
+        })}
+      </>
+    ) : null;
   }
 
   return (
