@@ -86,8 +86,8 @@ export const outcomeSelection = (handler, outcome) => ({
   selectedRowKeys: (outcome) ? [outcome.concept_id] : [],
   onChange: (_, selectedRows) => {
     handler(selectedRows[0]);
-  }
-})
+  },
+});
 
 export const cohortTableConfig = [
   {

@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import '../../GWASUIApp/GWASUIApp.css';
 import CovariateStatsByHareCC from '../CovariateStatsByHareCC';
-import CovariateStatsByHareQ from "../CovariateStatsByHareQ";
+import CovariateStatsByHareQ from '../CovariateStatsByHareQ';
 
 const WorkflowParameters = ({
   selectedHare,
@@ -38,8 +38,8 @@ const WorkflowParameters = ({
 //     setSelectedCovariateVars(remainingCovArr.map((c) => c.concept_id));
 //     setSelectedCovariateIds(remainingCovArr.map((p) => p.prefixed_concept_id));
 // };
-(
-  <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+  (
+    <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
     <h4 className='GWASUI-selectInstruction'>
       In this step, you will determine workflow parameters.
       Please adjust the number of population principal components to control for population structure,
