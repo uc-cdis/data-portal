@@ -11,13 +11,8 @@ import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
 import GWASWorkflowList from './GWASUIApp/GWASWorkflowList';
-import { TourProvider } from '@reactour/tour'
-import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
 const queryClient = new QueryClient();
-
-const disableBody = (target) => disableBodyScroll(target);
-const enableBody = (target) => enableBodyScroll(target);
 
 class AnalysisApp extends React.Component {
   constructor(props) {
@@ -101,17 +96,7 @@ class AnalysisApp extends React.Component {
         );
       case 'GWASUIApp':
         return (
-          <TourProvider
-          afterOpen={disableBody}
-          beforeClose={enableBody}
-          onClickClose={({ setCurrentStep, setIsOpen }) => {
-
-            setIsOpen(false)
-
-            setCurrentStep(0)
-          }}
-          >
-            <QueryClientProvider client={queryClient} contextSharing>
+          <QueryClientProvider client={queryClient} contextSharing>
             <div className="analysis-app_flex_col">
               <div className="analysis-app_flex_row">
                 <GWASWorkflowList refreshWorkflows={this.refreshWorkflows} />
@@ -120,8 +105,7 @@ class AnalysisApp extends React.Component {
                 <ReduxGWASUIApp refreshWorkflows={this.refreshWorkflows} />
               </div>
             </div>
-            </QueryClientProvider>
-          </TourProvider>
+          </QueryClientProvider>
         );
       default:
         // this will ensure the main window will process the app messages (if any):
