@@ -50,7 +50,7 @@ const WorkflowParameters = ({
       Please also choose the ancestry population on which you would like to perform your study.
     </h4>
     <div className='GWASUI-mainArea GWASUI-form'>
-      <div className='GWASUI-formItem' data-tour="number-of-pcs">
+      <div className='GWASUI-formItem'>
         {/* value required (between 1 and 10) */}
         <span style={{color: 'red'}}>*</span>Number of PCs to use
         <label htmlFor='input-numOfPC'>
@@ -64,7 +64,7 @@ const WorkflowParameters = ({
           {(!numOfPC) && (<span style={{color: 'red'}}> Please input a value between 1 and 10</span>)}
         </label>
       </div>
-      <div className='GWASUI-formItem' data-tour="covariates">
+      <div className='GWASUI-formItem'>
         <label htmlFor='select-covariates'>
           Covariates
           <Select
@@ -89,7 +89,7 @@ const WorkflowParameters = ({
           />
         </label>
       </div>
-      <div className='GWASUI-formItem' data-tour="hare">
+      <div className='GWASUI-formItem'>
         {workflowType === 'caseControl' && (
           <label htmlFor='select-hare-case-control'>
             <span style={{color: 'red'}}>*</span>
@@ -123,7 +123,7 @@ const WorkflowParameters = ({
           </label>
         )}
       </div>
-      <div className='GWASUI-formItem' data-tour="maf-cutoff">
+      <div className='GWASUI-formItem'>
         <label htmlFor='input-maf'>
           MAF Cutoff
           <InputNumber
@@ -137,7 +137,7 @@ const WorkflowParameters = ({
           />
         </label>
       </div>
-      <div className='GWASUI-formItem' data-tour="imputation-score">
+      <div className='GWASUI-formItem'>
         <label htmlFor='input-imputation'>
           Imputation Score Cutoff
           <InputNumber
