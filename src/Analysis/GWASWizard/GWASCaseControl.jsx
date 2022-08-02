@@ -71,7 +71,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     setSelectedCaseCohort(undefined);
     setSelectedControlCohort(undefined);
     setSelectedCovariates([]);
-    selectedDichotomousCovariates([]);
+    setSelectedDichotomousCovariates([]);
     setSelectedHare({ concept_value: '' });
     setNumOfPC(3);
     setImputationScore(0.3);
