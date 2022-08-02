@@ -296,10 +296,12 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
               </Button>
             </Space>
           </Form.Item>
-          { (studyRegistrationConfig.studyRegistrationFormDisclaimerField) &&
-              <Typography style={{ textAlign: 'center' }}>
-                {studyRegistrationConfig.studyRegistrationFormDisclaimerField}
-              </Typography>
+          { (studyRegistrationConfig.studyRegistrationFormDisclaimerField)
+              && (
+                <Typography className='study-reg-disclaimer-text'>
+                  {studyRegistrationConfig.studyRegistrationFormDisclaimerField}
+                </Typography>
+              )
           }
         </Form>
       </div>

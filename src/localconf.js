@@ -285,9 +285,6 @@ function buildConfig(opts) {
   if (!studyRegistrationConfig.studyRegistrationUIDField) {
     studyRegistrationConfig.studyRegistrationUIDField = 'appl_id'
   }
-  if (!studyRegistrationConfig.studyRegistrationFormDisclaimerField) {
-    studyRegistrationConfig.studyRegistrationFormDisclaimerField = null
-  }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
 
