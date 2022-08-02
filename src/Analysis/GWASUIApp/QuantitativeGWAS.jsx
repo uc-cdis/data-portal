@@ -630,20 +630,30 @@ const QuantitativeGWAS = (props) => {
   };
 
   const generateContentForStep = (stepIndex) => {
+    let stepInfo = {
+      step: stepIndex,
+      workflow_type: "quantitative"
+    }
     switch (stepIndex) {
       case 0: {
         return (
-          sourceId ? <CohortDefinitions /> : null
+          sourceId ? <div><CohortDefinitions />
+                      </div> : null
         );
       }
       case 1: {
         return (
-          <Covariates />
+          <div>
+            <Covariates />
+          </div>
         );
       }
       case 2: {
         return (
-          <CovariateStats />
+
+          <div>
+            <CovariateStats />
+          </div>
         );
       }
       case 3: {
@@ -740,6 +750,7 @@ const QuantitativeGWAS = (props) => {
               </Form>
             </div>
           </Space>
+
         );
       }
       case 4: {
