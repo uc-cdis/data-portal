@@ -216,9 +216,9 @@ function buildConfig(opts) {
     showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
   }
 
-  let gwasTemplate = "gwas-template-latest";
+  let gwasTemplate = 'gwas-template-latest';
   if (config.argoTemplate) {
-    gwasTemplate = config.argoTemplate
+    gwasTemplate = config.argoTemplate;
   }
 
   let showFenceAuthzOnProfile = true;

@@ -1,11 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Space, InputNumber, Select,
 } from 'antd';
 import '../../GWASUIApp/GWASUIApp.css';
 import CovariateStatsByHareCC from '../CovariateStatsByHareCC';
-import CovariateStatsByHareQ from "../CovariateStatsByHareQ";
+import CovariateStatsByHareQ from '../CovariateStatsByHareQ';
+
+// const handleCovariateDelete = (remainingCovariates) => {
+//     const remainingCovArr = [];
+//     remainingCovariates.forEach((name) => {
+//         selectedCovariates.forEach((covObj) => {
+//             if (covObj.concept_name === name) {
+//                 remainingCovArr.push(covObj);
+//             }
+//         });
+//     });
+//     setSelectedCovariates(remainingCovArr);
+//     setSelectedCovariateVars(remainingCovArr.map((c) => c.concept_id));
+//     setSelectedCovariateIds(remainingCovArr.map((p) => p.prefixed_concept_id));
+// };
 
 const WorkflowParameters = ({
   selectedHare,
@@ -23,36 +37,20 @@ const WorkflowParameters = ({
   handleMaf,
   imputationScore,
   handleImputation,
-}) =>
-
-// const handleCovariateDelete = (remainingCovariates) => {
-//     const remainingCovArr = [];
-//     remainingCovariates.forEach((name) => {
-//         selectedCovariates.forEach((covObj) => {
-//             if (covObj.concept_name === name) {
-//                 remainingCovArr.push(covObj);
-//             }
-//         });
-//     });
-//     setSelectedCovariates(remainingCovArr);
-//     setSelectedCovariateVars(remainingCovArr.map((c) => c.concept_id));
-//     setSelectedCovariateIds(remainingCovArr.map((p) => p.prefixed_concept_id));
-// };
-(
+}) => (
   <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
     <h4 className='GWASUI-selectInstruction'>
-      In this step, you will determine workflow parameters.
-      Please adjust the number of population principal components to control for population structure,
-      minor allele frequency cutoff and imputation score cutoff.
+        In this step, you will determine workflow parameters.
+        Please adjust the number of population principal components to control for population structure,
+        minor allele frequency cutoff and imputation score cutoff.
     </h4>
     <h4 className='GWASUI-selectInstruction'>
-      You may also remove unwanted covariates.
-      Please also choose the ancestry population on which you would like to perform your study.
+        You may also remove unwanted covariates.
+        Please also choose the ancestry population on which you would like to perform your study.
     </h4>
     <div className='GWASUI-mainArea GWASUI-form'>
-      <div className='GWASUI-formItem' data-tour="number-of-pcs">
-        {/* value required (between 1 and 10) */}
-        <span style={{color: 'red'}}>*</span>Number of PCs to use
+      <div className='GWASUI-formItem' data-tour='number-of-pcs'>
+        <span style={{ color: 'red' }}>*</span>Number of PCs to use &nbsp;
         <label htmlFor='input-numOfPC'>
           <InputNumber
             id='input-numOfPC'
@@ -61,12 +59,12 @@ const WorkflowParameters = ({
             max={10}
             onChange={(e) => handleNumOfPC(e)}
           />
-          {(!numOfPC) && (<span style={{color: 'red'}}> Please input a value between 1 and 10</span>)}
+          {(!numOfPC) && (<span style={{ color: 'red' }}> Please input a value between 1 and 10</span>)}
         </label>
       </div>
-      <div className='GWASUI-formItem' data-tour="covariates">
+      <div className='GWASUI-formItem' data-tour='covariates'>
         <label htmlFor='select-covariates'>
-          Covariates
+          Covariates &nbsp;
           <Select
             id='select-covariates'
             mode='multiple'
@@ -79,7 +77,7 @@ const WorkflowParameters = ({
       </div>
       <div className='GWASUI-formItem'>
         <label htmlFor='select-dichotomous-covariates'>
-          Dichotomous Covariates
+          Dichotomous Covariates &nbsp;
           <Select
             id='select-dichotomous-covariates'
             mode='multiple'
@@ -89,11 +87,11 @@ const WorkflowParameters = ({
           />
         </label>
       </div>
-      <div className='GWASUI-formItem' data-tour="hare">
+      <div className='GWASUI-formItem' data-tour='hare'>
         {workflowType === 'caseControl' && (
           <label htmlFor='select-hare-case-control'>
-            <span style={{color: 'red'}}>*</span>
-            Select HARE group
+            <span style={{ color: 'red' }}>*</span>
+            Select HARE group &nbsp;
             <CovariateStatsByHareCC
               id='select-hare-case-control'
               selectedHare={selectedHare}
@@ -108,8 +106,8 @@ const WorkflowParameters = ({
         )}
         {workflowType === 'quantitative' && (
           <label htmlFor='select-hare-quantitative'>
-            <span style={{color: 'red'}}>*</span>
-            Select HARE group
+            <span style={{ color: 'red' }}>*</span>
+            Select HARE group &nbsp;
             <CovariateStatsByHareQ
               id='select-hare-quantitative'
               selectedHare={selectedHare}
@@ -123,9 +121,9 @@ const WorkflowParameters = ({
           </label>
         )}
       </div>
-      <div className='GWASUI-formItem' data-tour="maf-cutoff">
+      <div className='GWASUI-formItem' data-tour='maf-cutoff'>
         <label htmlFor='input-maf'>
-          MAF Cutoff
+          MAF Cutoff &nbsp;
           <InputNumber
             id='input-maf'
             value={mafThreshold}
@@ -137,9 +135,9 @@ const WorkflowParameters = ({
           />
         </label>
       </div>
-      <div className='GWASUI-formItem' data-tour="imputation-score">
+      <div className='GWASUI-formItem' data-tour='imputation-score'>
         <label htmlFor='input-imputation'>
-          Imputation Score Cutoff
+          Imputation Score Cutoff &nbsp;
           <InputNumber
             id='input-imputation'
             value={imputationScore}
@@ -154,18 +152,22 @@ const WorkflowParameters = ({
     </div>
   </Space>
 );
+
 WorkflowParameters.propTypes = {
   selectedHare: PropTypes.object.isRequired,
   handleHareChange: PropTypes.func.isRequired,
-  caseCohortDefinitionId: PropTypes.number || undefined,
-  controlCohortDefinitionId: PropTypes.number || undefined,
-  quantitativeCohortDefinitionId: PropTypes.number || undefined,
+  caseCohortDefinitionId: PropTypes.number.isRequired,
+  controlCohortDefinitionId: PropTypes.number.isRequired,
+  quantitativeCohortDefinitionId: PropTypes.number.isRequired,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
   workflowType: PropTypes.string.isRequired,
+  imputationScore: PropTypes.number.isRequired,
   handleImputation: PropTypes.func.isRequired,
+  mafThreshold: PropTypes.number.isRequired,
   handleMaf: PropTypes.func.isRequired,
+  numOfPC: PropTypes.number.isRequired,
   handleNumOfPC: PropTypes.func.isRequired,
 };
 

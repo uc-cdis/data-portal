@@ -14,7 +14,6 @@ const CovariateStatsByHareQ = ({
   sourceId,
   handleHareChange,
 }) => {
-
   const { data, status } = useQuery(
     ['conceptstatsbyhare', selectedCovariates, selectedDichotomousCovariates, quantitativeCohortDefinitionId],
     () => fetchConceptStatsByHare(
@@ -28,7 +27,7 @@ const CovariateStatsByHareQ = ({
 
   useEffect(() => {
     console.log(selectedCovariates, selectedDichotomousCovariates, quantitativeCohortDefinitionId);
-  }, [])
+  }, []);
 
   const getHareDescriptionBreakdown = (singleHare, allHares) => {
     const hareBreakdown = allHares.find((hare) => hare.concept_value === singleHare.concept_value);
