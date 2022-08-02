@@ -1,24 +1,27 @@
-import React, { useEffect } from "react";
-import { useTour } from '@reactour/tour'
-import { case_control_steps, quantitative_steps } from "./gwassteps";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import React, { useEffect } from 'react';
+import { useTour } from '@reactour/tour';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import { case_control_steps, quantitative_steps } from './gwassteps';
 
-const TourButton = ({stepInfo}) => {
-    const { setIsOpen, setSteps, isOpen } = useTour()
+const TourButton = ({ stepInfo }) => {
+  const { setIsOpen, setSteps, isOpen } = useTour();
 
-    let current_steps = stepInfo.workflowName === "case control" ? case_control_steps : quantitative_steps
+  const current_steps = stepInfo.workflowName === 'case control' ? case_control_steps : quantitative_steps;
 
-    useEffect(() => {
-        setSteps(current_steps[stepInfo.step])
-    }, [stepInfo])
+  useEffect(() => {
+    setSteps(current_steps[stepInfo.step]);
+  }, [stepInfo]);
 
-    return (<InfoCircleOutlined onClick={() => {
+  return (
+    <InfoCircleOutlined
+      onClick={() => {
         if (!isOpen) {
-            setIsOpen(true)
+          setIsOpen(true);
         }
-    }}
-    style={{ fontSize: '25px', color: '#08c' }}
-    ></InfoCircleOutlined>)
-}
+      }}
+      style={{ fontSize: '25px', color: '#08c' }}
+    />
+  );
+};
 
-export default TourButton
+export default TourButton;

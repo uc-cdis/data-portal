@@ -116,6 +116,28 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
             </React.Fragment>
           </React.Fragment>
         ) : <Spin />);
+<<<<<<< HEAD
+=======
+    case 1:
+      return (
+        <React.Fragment>
+          <React.Fragment>
+            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+              <h4 className='GWASUI-selectInstruction' data-tour='quant-step-2-choosing-variable'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
+              <div className='GWASUI-mainTable'>
+                <CovariateSelect
+                  selectedCovariates={selectedCovariates}
+                  handleCovariateSelect={handleCovariateSelect}
+                  sourceId={sourceId}
+                  current={current}
+                />
+              </div>
+            </Space>
+            <TourButton stepInfo={stepInfo} />
+          </React.Fragment>
+        </React.Fragment>
+      );
+>>>>>>> 31587815 (fix(eslint): delete previous case control and quantitative)
     case 1:
       return (
         <React.Fragment>
@@ -208,8 +230,37 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
           </div>
         </React.Fragment>
       );
+<<<<<<< HEAD
     default:
       return <React.Fragment />;
+=======
+    case 5:
+      return (
+        <React.Fragment>
+          <h4 className='GWASUI-selectInstruction'>In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
+          <h4 className='GWASUI-selectInstruction'>Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
+          <div className='GWASUI-mainArea'>
+            <GWASFormSubmit
+              sourceId={sourceId}
+              numOfPC={numOfPC}
+              mafThreshold={mafThreshold}
+              imputationScore={imputationScore}
+              selectedHare={selectedHare}
+              selectedQuantitativeCohort={selectedCohort}
+              workflowType={'quantitative'}
+              outcome={outcome}
+              // selectedCaseCohort={selectedCaseCohort}
+              // selectedControlCohort={selectedControlCohort}
+              selectedCovariates={selectedCovariates}
+              selectedDichotomousCovariates={selectedDichotomousCovariates}
+              gwasName={gwasName}
+              handleGwasNameChange={handleGwasNameChange}
+              resetGWAS={resetQuantitative}
+            />
+          </div>
+        </React.Fragment>
+      );
+>>>>>>> 31587815 (fix(eslint): delete previous case control and quantitative)
     }
   };
 

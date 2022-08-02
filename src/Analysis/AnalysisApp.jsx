@@ -4,6 +4,8 @@ import Select from 'react-select';
 import { Spin } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { TourProvider } from '@reactour/tour';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
 import ReduxGWASUIApp from './GWASUIApp/ReduxGWASUIApp';
@@ -11,8 +13,6 @@ import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
 import GWASWorkflowList from './GWASUIApp/GWASWorkflowList';
-import { TourProvider } from '@reactour/tour'
-import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
 const queryClient = new QueryClient();
 
@@ -63,82 +63,81 @@ class AnalysisApp extends React.Component {
     const pathArray = this.state.app.applicationUrl.split('/');
     const protocol = pathArray[0];
     const host = pathArray[2];
-    const applicationBaseUrl = protocol + '//' + host;
+    const applicationBaseUrl = `${protocol}//${host}`;
 
     // ONLY process messages coming from the same domain as the app AND
     // which contain the message "refresh token!":
-    if (event.origin === applicationBaseUrl &&
-      event.data === "refresh token!") {
-      //Call function to refresh session:
+    if (event.origin === applicationBaseUrl
+      && event.data === 'refresh token!') {
+      // Call function to refresh session:
       sessionMonitor.updateUserActivity();
     }
   }
 
   getAppContent = (app) => {
     switch (app) {
-      case 'vaGWAS':
-        return (
-          <React.Fragment>
-            <Select
-              value={this.state.jobInput}
-              placeholder='Select your organ'
-              options={analysisApps[app].options}
-              onChange={this.selectChange}
-            />
-            <Button label='Run Analysis' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
-          </React.Fragment>
-        );
-      case 'ndhHIV':
-        return (
-          <HIVCohortFilter />
-        );
-      case 'ndhVirus':
-        return (
-          <React.Fragment>
-            <input className='text-input' type='text' placeholder='input data' name='input' />
-            <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
-          </React.Fragment>
-        );
-      case 'GWASUIApp':
-        return (
-          <TourProvider
+    case 'vaGWAS':
+      return (
+        <React.Fragment>
+          <Select
+            value={this.state.jobInput}
+            placeholder='Select your organ'
+            options={analysisApps[app].options}
+            onChange={this.selectChange}
+          />
+          <Button label='Run Analysis' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+        </React.Fragment>
+      );
+    case 'ndhHIV':
+      return (
+        <HIVCohortFilter />
+      );
+    case 'ndhVirus':
+      return (
+        <React.Fragment>
+          <input className='text-input' type='text' placeholder='input data' name='input' />
+          <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+        </React.Fragment>
+      );
+    case 'GWASUIApp':
+      return (
+        <TourProvider
           afterOpen={disableBody}
           beforeClose={enableBody}
           onClickClose={({ setCurrentStep, setIsOpen }) => {
+            setIsOpen(false);
 
-            setIsOpen(false)
-
-            setCurrentStep(0)
+            setCurrentStep(0);
           }}
-          >
-            <QueryClientProvider client={queryClient} contextSharing>
-            <div className="analysis-app_flex_col">
-              <div className="analysis-app_flex_row">
+        >
+          <QueryClientProvider client={queryClient} contextSharing>
+            <div className='analysis-app_flex_col'>
+              <div className='analysis-app_flex_row'>
                 <GWASWorkflowList refreshWorkflows={this.refreshWorkflows} />
               </div>
-              <div className="analysis-app_flex_row">
+              <div className='analysis-app_flex_row'>
                 <ReduxGWASUIApp refreshWorkflows={this.refreshWorkflows} />
               </div>
             </div>
-            </QueryClientProvider>
-          </TourProvider>
-        );
-      default:
-        // this will ensure the main window will process the app messages (if any):
-        window.addEventListener("message", this.processAppMessages);
-        return (
-          <React.Fragment>
-            <div className='analysis-app__iframe-wrapper'>
-              <iframe
-                className='analysis-app__iframe'
-                title='Analysis App'
-                frameBorder='0'
-                src={`${this.state.app.applicationUrl}`}
-                onLoad={this.handleIframeApp}
-              />
-            </div>
-          </React.Fragment>
-        );
+          </QueryClientProvider>
+        </TourProvider>
+      );
+    default:
+      // this will ensure the main window will process the app messages (if any):
+      window.addEventListener('message', this.processAppMessages);
+      return (
+        <React.Fragment>
+          <div className='analysis-app__iframe-wrapper'>
+            <iframe
+              className='analysis-app__iframe'
+              title='Analysis App'
+              frameBorder='0'
+              src={`${this.state.app.applicationUrl}`}
+              onLoad={this.handleIframeApp}
+            />
+          </div>
+        </React.Fragment>
+      );
     }
   }
 

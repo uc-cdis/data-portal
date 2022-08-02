@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import QuantitativeGWAS from "./QuantitativeGWAS";
-// import CaseControlGWAS from "./CaseControlGWAS";
 import PropTypes from 'prop-types';
 import {
   Checkbox, Card, Space,
@@ -72,12 +70,6 @@ const GWASUIApp = (props) => {
   }
   return (
     <React.Fragment>
-      {/* {gwasTypeSelected && gwasType === "caseControl" && (
-        <CaseControlGWAS resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}>
-        </CaseControlGWAS>)}
-      {gwasTypeSelected && gwasType === "quantitative" && (
-        <QuantitativeGWAS resetGWASType={resetGWASType} refreshWorkflows={props.refreshWorkflows}>
-        </QuantitativeGWAS>)} */}
       {gwasTypeSelected && gwasType === 'caseControl' && (
         <GWASCaseControl
           resetGWASType={resetGWASType}

@@ -81,21 +81,21 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
   };
 
   const generateStep = () => {
-    let stepInfo = {
+    const stepInfo = {
       step: current,
-      workflowName: "case control"
-    }
+      workflowName: 'case control',
+    };
     switch (current) {
     case 0:
       return (!loading && sourceId ? (
         <React.Fragment>
-          <div data-tour="step-1-new-cohort">
+          <div data-tour='step-1-new-cohort'>
             <AddCohortButton />
           </div>
 
           <React.Fragment>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <h4 className='GWASUI-selectInstruction' data-tour="step-1-cohort-selection">In this step, you will determine the study population. To begin, select the cohort that you would like to define your study population with.</h4>
+              <h4 className='GWASUI-selectInstruction' data-tour='step-1-cohort-selection'>In this step, you will determine the study population. To begin, select the cohort that you would like to define your study population with.</h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
                   selectedCohort={selectedCaseCohort}
@@ -104,7 +104,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
                   current={current}
                 />
               </div>
-              <TourButton stepInfo={stepInfo}></TourButton>
+              <TourButton stepInfo={stepInfo} />
             </Space>
           </React.Fragment>
         </React.Fragment>
@@ -134,7 +134,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
         <React.Fragment>
           <React.Fragment>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <h4 className='GWASUI-selectInstruction' data-tour="step-3-choosing-variable">In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
+              <h4 className='GWASUI-selectInstruction' data-tour='step-3-choosing-variable'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
               <div className='GWASUI-mainTable'>
                 <CovariateSelect
                   selectedCovariates={selectedCovariates}
@@ -143,7 +143,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
                   current={current}
                 />
               </div>
-              <TourButton stepInfo={stepInfo}></TourButton>
+              <TourButton stepInfo={stepInfo} />
             </Space>
           </React.Fragment>
         </React.Fragment>
@@ -189,7 +189,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             selectedHare={selectedHare}
             handleHareChange={handleHareChange}
           />
-          <TourButton stepInfo={stepInfo}></TourButton>
+          <TourButton stepInfo={stepInfo} />
         </React.Fragment>
       );
     case 6:
