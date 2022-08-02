@@ -68,7 +68,7 @@ function Table({ data, endTime, startTime, timeInterval }) {
           type='number'
           domain={['dataMin', endTime]}
           label={{
-            value: 'Time (in year)',
+            value: 'Time from diagnosis (in years)',
             position: 'insideBottom',
             offset: -5,
           }}
