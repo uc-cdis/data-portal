@@ -215,9 +215,8 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
   } else if (current === 2 && selectedCovariates.length < 1) {
     // covariate selection
     nextButtonEnabled = false;
-  }
-  else if (current === 5) {
-      nextButtonEnabled = selectedHare?.concept_value != '' && numOfPC;
+  } else if (current === 5) {
+    nextButtonEnabled = selectedHare?.concept_value != '' && numOfPC;
   }
 
   return (

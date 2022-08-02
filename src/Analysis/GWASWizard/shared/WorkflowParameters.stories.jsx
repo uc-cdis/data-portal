@@ -90,31 +90,31 @@ MockedSuccess.parameters = {
                 concept_value: 'OTH',
                 concept_value_as_concept_id: 2000007032,
                 concept_value_name: 'Other',
-                persons_in_cohort_with_value: 40029*cohortdefinition, // just to mock/generate different numbers for different cohorts
+                persons_in_cohort_with_value: 40029 * cohortdefinition, // just to mock/generate different numbers for different cohorts
               },
               {
                 concept_value: 'ASN',
                 concept_value_as_concept_id: 2000007029,
                 concept_value_name: 'non-Hispanic Asian',
-                persons_in_cohort_with_value: 40178*cohortdefinition, // just to mock/generate different numbers for different cohorts,
+                persons_in_cohort_with_value: 40178 * cohortdefinition, // just to mock/generate different numbers for different cohorts,
               },
               {
                 concept_value: 'EUR',
                 concept_value_as_concept_id: 2000007031,
                 concept_value_name: 'non-Hispanic White',
-                persons_in_cohort_with_value: 39648*cohortdefinition, // just to mock/generate different numbers for different cohorts,
+                persons_in_cohort_with_value: 39648 * cohortdefinition, // just to mock/generate different numbers for different cohorts,
               },
               {
                 concept_value: 'AFR',
                 concept_value_as_concept_id: 2000007030,
                 concept_value_name: 'non-Hispanic Black',
-                persons_in_cohort_with_value: 40107*cohortdefinition, // just to mock/generate different numbers for different cohorts,
+                persons_in_cohort_with_value: 40107 * cohortdefinition, // just to mock/generate different numbers for different cohorts,
               },
               {
                 concept_value: 'HIS',
                 concept_value_as_concept_id: 2000007028,
                 concept_value_name: 'Hispanic',
-                persons_in_cohort_with_value: 40038*cohortdefinition, // just to mock/generate different numbers for different cohorts,
+                persons_in_cohort_with_value: 40038 * cohortdefinition, // just to mock/generate different numbers for different cohorts,
               },
             ],
           }),

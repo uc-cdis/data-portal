@@ -40,8 +40,8 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
   };
 
   const handleOutcomeSelect = (outcome) => {
-    setOutcome(outcome)
-  }
+    setOutcome(outcome);
+  };
 
   const handleCDAdd = (cd) => {
     setSelectedDichotomousCovariates((prevCDArr) => [...prevCDArr, cd]);
@@ -81,11 +81,11 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     refreshWorkflows();
   };
 
-
   const generateStep = () => {
     switch (current) {
-      case 0:
-        return (!loading && sourceId ?
+    case 0:
+      return (!loading && sourceId
+        ? (
           <React.Fragment>
             <AddCohortButton />
             <React.Fragment>
@@ -101,95 +101,96 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
                 </div>
               </Space>
             </React.Fragment>
-          </React.Fragment> : <Spin />);
-      case 1:
-        return (
-          <React.Fragment>
-            <React.Fragment>
-              <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                <h4 className='GWASUI-selectInstruction'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
-                <div className='GWASUI-mainTable'>
-                  <CovariateSelect
-                    selectedCovariates={selectedCovariates}
-                    handleCovariateSelect={handleCovariateSelect}
-                    sourceId={sourceId}
-                    current={current}
-                  />
-                </div>
-              </Space>
-            </React.Fragment>
           </React.Fragment>
-        )
-      case 2:
-        return (
+        ) : <Spin />);
+    case 1:
+      return (
+        <React.Fragment>
           <React.Fragment>
-            <OutcomeSelectReview
-              cohortDefinitionId={selectedCohort.cohort_definition_id}
-              selectedCovariates={selectedCovariates}
-              outcome={outcome}
-              handleOutcomeSelect={handleOutcomeSelect}
-              sourceId={sourceId}
-              current={current}
-            />
+            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+              <h4 className='GWASUI-selectInstruction'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
+              <div className='GWASUI-mainTable'>
+                <CovariateSelect
+                  selectedCovariates={selectedCovariates}
+                  handleCovariateSelect={handleCovariateSelect}
+                  sourceId={sourceId}
+                  current={current}
+                />
+              </div>
+            </Space>
           </React.Fragment>
-        )
-      case 3:
-        return (
-          <React.Fragment>
-            <CustomDichotomousSelect
+        </React.Fragment>
+      );
+    case 2:
+      return (
+        <React.Fragment>
+          <OutcomeSelectReview
+            cohortDefinitionId={selectedCohort.cohort_definition_id}
+            selectedCovariates={selectedCovariates}
+            outcome={outcome}
+            handleOutcomeSelect={handleOutcomeSelect}
+            sourceId={sourceId}
+            current={current}
+          />
+        </React.Fragment>
+      );
+    case 3:
+      return (
+        <React.Fragment>
+          <CustomDichotomousSelect
+            sourceId={sourceId}
+            handleCDAdd={handleCDAdd}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            current={current}
+          />
+        </React.Fragment>
+      );
+    case 4:
+      return (
+        <React.Fragment>
+          <WorkflowParameters
+            quantitativeCohortDefinitionId={selectedCohort.cohort_definition_id}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            sourceId={sourceId}
+            workflowType={'quantitative'}
+            numOfPC={numOfPC}
+            handleNumOfPC={handleNumOfPC}
+            mafThreshold={mafThreshold}
+            handleMaf={handleMaf}
+            imputationScore={imputationScore}
+            handleImputation={handleImputation}
+            selectedHare={selectedHare}
+            handleHareChange={handleHareChange}
+          />
+        </React.Fragment>
+      );
+    case 5:
+      return (
+        <React.Fragment>
+          <h4 className='GWASUI-selectInstruction'>In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
+          <h4 className='GWASUI-selectInstruction'>Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
+          <div className='GWASUI-mainArea'>
+            <GWASFormSubmit
               sourceId={sourceId}
-              handleCDAdd={handleCDAdd}
-              selectedDichotomousCovariates={selectedDichotomousCovariates}
-              current={current}
-            />
-          </React.Fragment>
-        )
-      case 4:
-        return (
-          <React.Fragment>
-            <WorkflowParameters
-              quantitativeCohortDefinitionId={selectedCohort.cohort_definition_id}
-              selectedCovariates={selectedCovariates}
-              selectedDichotomousCovariates={selectedDichotomousCovariates}
-              sourceId={sourceId}
-              workflowType={'quantitative'}
               numOfPC={numOfPC}
-              handleNumOfPC={handleNumOfPC}
               mafThreshold={mafThreshold}
-              handleMaf={handleMaf}
               imputationScore={imputationScore}
-              handleImputation={handleImputation}
               selectedHare={selectedHare}
-              handleHareChange={handleHareChange}
+              selectedQuantitativeCohort={selectedCohort}
+              workflowType={'quantitative'}
+              outcome={outcome}
+              // selectedCaseCohort={selectedCaseCohort}
+              // selectedControlCohort={selectedControlCohort}
+              selectedCovariates={selectedCovariates}
+              selectedDichotomousCovariates={selectedDichotomousCovariates}
+              gwasName={gwasName}
+              handleGwasNameChange={handleGwasNameChange}
+              resetGWAS={resetQuantitative}
             />
-          </React.Fragment>
-        )
-      case 5:
-        return (
-          <React.Fragment>
-            <h4 className='GWASUI-selectInstruction'>In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
-            <h4 className='GWASUI-selectInstruction'>Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
-            <div className='GWASUI-mainArea'>
-              <GWASFormSubmit
-                sourceId={sourceId}
-                numOfPC={numOfPC}
-                mafThreshold={mafThreshold}
-                imputationScore={imputationScore}
-                selectedHare={selectedHare}
-                selectedQuantitativeCohort={selectedCohort}
-                workflowType={'quantitative'}
-                outcome={outcome}
-                // selectedCaseCohort={selectedCaseCohort}
-                // selectedControlCohort={selectedControlCohort}
-                selectedCovariates={selectedCovariates}
-                selectedDichotomousCovariates={selectedDichotomousCovariates}
-                gwasName={gwasName}
-                handleGwasNameChange={handleGwasNameChange}
-                resetGWAS={resetQuantitative}
-              />
-            </div>
-          </React.Fragment>
-        )
+          </div>
+        </React.Fragment>
+      );
     }
   };
 
