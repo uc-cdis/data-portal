@@ -121,20 +121,20 @@ const GWASFormSubmit = ({
           </React.Fragment>
         )}
       </div>
-      <div className='GWASUI-flexRow GWASUI-rowItem'>
+      {/* <div className='GWASUI-flexRow GWASUI-rowItem'>
         <div className='GWASUI-flexCol'>Covariates</div>
         <div className='GWASUI-flexCol'>{selectedCovariates?.map((cov, key) => (
           <li className='GWASUI-listItem' key={ `covariate-${ key }` }>{cov?.concept_name}</li>
         ))}
         </div>
-      </div>
-      <div className='GWASUI-flexRow GWASUI-rowItem'>
+      </div> */}
+      {/* <div className='GWASUI-flexRow GWASUI-rowItem'>
         <div className='GWASUI-flexCol'>Dichotomous Covariates</div>
         <div className='GWASUI-flexCol'>{selectedDichotomousCovariates?.map((cov, key) => (
           <li className='GWASUI-listItem' key={ `dich-covariate-${key}` }>{ cov.provided_name }</li>
         ))}
         </div>
-      </div>
+      </div> */}
       {/* <div className="GWASUI-flexRow GWASUI-rowItem">
             <QCShowOverlap />
         </div> */}
