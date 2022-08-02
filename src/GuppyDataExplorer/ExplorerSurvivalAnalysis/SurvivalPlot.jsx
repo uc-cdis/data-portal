@@ -69,7 +69,7 @@ function Plot({ data, endTime, efsFlag, startTime, timeInterval }) {
           dataKey='time'
           type='number'
           label={{
-            value: 'Time from diagnosis (in year)',
+            value: 'Time from diagnosis (in years)',
             position: 'insideBottom',
             offset: -5,
           }}
