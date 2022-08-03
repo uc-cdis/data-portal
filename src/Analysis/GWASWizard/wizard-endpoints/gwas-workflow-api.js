@@ -1,7 +1,7 @@
 import { gwasTemplate, gwasWorkflowPath } from '../../../localconf';
 import { headers } from '../../../configs';
 
-export const useGwasSubmitCC = async (
+export const caseControlSubmission = async (
   sourceId,
   numOfPC,
   selectedCovariates,
@@ -41,7 +41,7 @@ export const useGwasSubmitCC = async (
   return res;
 };
 
-export const useGwasSubmitQ = async (
+export const quantitativeSubmission = async (
   sourceId,
   numOfPC,
   selectedCovariates,

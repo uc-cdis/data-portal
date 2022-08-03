@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import { useMutation } from 'react-query';
 import CheckOutlined from '@ant-design/icons';
-import { useGwasSubmitCC, useGwasSubmitQ } from '../wizard-endpoints/gwas-workflow-api';
+import { caseControlSubmission, quantitativeSubmission } from '../wizard-endpoints/gwas-workflow-api';
 
 const GWASFormSubmit = ({
   sourceId,
@@ -43,8 +43,8 @@ const GWASFormSubmit = ({
       });
     };
 
-    if (workflowType === 'caseControl') {
-      const submission = useMutation(() => useGwasSubmitCC(
+    const submission = useMutation(() => ((workflowType === 'caseControl')
+      ? caseControlSubmission(
         sourceId,
         numOfPC,
         selectedCovariates,
@@ -55,28 +55,18 @@ const GWASFormSubmit = ({
         selectedCaseCohort,
         selectedControlCohort,
         gwasName,
-      ), {
-        onSuccess: (data) => {
-          if (data?.status === 200) {
-            openNotification();
-            resetGWAS();
-          }
-        },
-      });
-      return submission;
-    }
-    const submission = useMutation(() => useGwasSubmitQ(
-      sourceId,
-      numOfPC,
-      selectedCovariates,
-      selectedDichotomousCovariates,
-      outcome,
-      selectedHare,
-      mafThreshold,
-      imputationScore,
-      selectedQuantitativeCohort,
-      gwasName,
-    ), {
+      ) : quantitativeSubmission(
+        sourceId,
+        numOfPC,
+        selectedCovariates,
+        selectedDichotomousCovariates,
+        outcome,
+        selectedHare,
+        mafThreshold,
+        imputationScore,
+        selectedQuantitativeCohort,
+        gwasName,
+      )), {
       onSuccess: (data) => {
         if (data?.status === 200) {
           openNotification();
@@ -86,10 +76,6 @@ const GWASFormSubmit = ({
     });
     return submission;
   };
-
-  // useEffect(() => {
-  //   submitJob();
-  // }, [submitJob]);
 
   const submitJob = useSubmitJob();
 
