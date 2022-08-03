@@ -44,3 +44,8 @@
     flex-grow: 1;
     flex-shrink: 0;
 }
+
+.study-reg-disclaimer-text {
+    font-size: 0.8em;
+    text-align: center
+  }
