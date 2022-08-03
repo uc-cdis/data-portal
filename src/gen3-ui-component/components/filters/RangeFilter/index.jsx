@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Range } from 'rc-slider';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import './RangeFilter.css';
 
@@ -184,7 +184,8 @@ const RangeFilter = forwardRef(
             />
           </label>
         </div>
-        <Range
+        <Slider
+          range
           className={`g3-range-filter__slider ${
             inactive ? 'g3-range-filter__slider--inactive' : ''
           }`}
