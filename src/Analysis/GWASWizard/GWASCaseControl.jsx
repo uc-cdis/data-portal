@@ -119,7 +119,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           <AddCohortButton />
           <React.Fragment>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <h4 className='GWASUI-selectInstruction'>In this step, you will continue to define your study populations. Please select the cohort that you would like to define as your study “control” population.</h4>
+              <h4 className='GWASUI-selectInstruction'>In this step, you will continue to define your study populations. Please select the cohort that you would like to define as your study `&quot;`control`&quot;` population.</h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
                   selectedCohort={selectedControlCohort}
