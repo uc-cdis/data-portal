@@ -50,7 +50,6 @@ const WorkflowParameters = ({
     </h4>
     <div className='GWASUI-mainArea GWASUI-form'>
       <div className='GWASUI-formItem' data-tour='number-of-pcs'>
-        {/* value required (between 1 and 10) */}
         <span style={{ color: 'red' }}>*</span>Number of PCs to use
         <label htmlFor='input-numOfPC'>
           <InputNumber

@@ -19,7 +19,7 @@ export const useGwasSubmitCC = async (
     variables: [...selectedCovariates.map((cov) => ({
       variable_type: 'concept',
       concept_id: cov.concept_id,
-    })), ...selectedDichotomousCovariates],
+    })), ...selectedDichotomousCovariates.map(({ uuid, ...withNoId }) => withNoId)],
     out_prefix: Date.now().toString(),
     outcome: '-1',
     hare_population: selectedHare.concept_value,
@@ -59,7 +59,7 @@ export const useGwasSubmitQ = async (
     variables: [...selectedCovariates.map((cov) => ({
       variable_type: 'concept',
       concept_id: cov.concept_id,
-    })), ...selectedDichotomousCovariates],
+    })), ...selectedDichotomousCovariates.map(({ uuid, ...withNoId }) => withNoId)],
     out_prefix: Date.now().toString(),
     outcome: outcome.concept_id,
     hare_population: selectedHare.concept_value,

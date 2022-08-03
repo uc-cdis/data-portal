@@ -4,13 +4,14 @@ import { Card } from 'antd';
 import {
   TeamOutlined, DeleteOutlined,
 } from '@ant-design/icons';
+import _ from 'lodash';
 import CohortSelect from './CohortSelect';
 import '../../GWASUIApp/GWASUIApp.css';
 
 const { Meta } = Card;
 
 const CustomDichotomousSelect = ({
-  handleCDAdd, selectedDichotomousCovariates, sourceId, current,
+  handleCDAdd, handleCDRemove, selectedDichotomousCovariates, sourceId, current,
 }) => {
   const [firstCohort, setFirstCohort] = useState(undefined);
   const [secondCohort, setSecondCohort] = useState(undefined);
@@ -18,6 +19,7 @@ const CustomDichotomousSelect = ({
 
   const handleCDSubmit = () => {
     handleCDAdd({
+      uiid: _.uniqueId(),
       variable_type: 'custom_dichotomous',
       cohort_ids: [firstCohort.cohort_definition_id, secondCohort.cohort_definition_id],
       provided_name: cdName,
@@ -78,7 +80,7 @@ const CustomDichotomousSelect = ({
                 width: 300,
               }}
               actions={[
-                <DeleteOutlined key='delete' />,
+                <DeleteOutlined onClick={() => handleCDRemove(cd.uuid)} key='delete' />,
               ]}
             >
               <Meta
@@ -97,6 +99,7 @@ const CustomDichotomousSelect = ({
 
 CustomDichotomousSelect.propTypes = {
   handleCDAdd: PropTypes.func.isRequired,
+  handleCDRemove: PropTypes.func.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
   current: PropTypes.number.isRequired,

@@ -5,7 +5,7 @@ import '../../GWASUIApp/GWASUIApp.css';
 const AddCohortButton = () => (
   <React.Fragment>
     <button type='button' onClick={() => window.open(atlasDomain(), '_blank')}>
-            Add a new cohort
+      Add a new cohort
     </button>
   </React.Fragment>
 );
