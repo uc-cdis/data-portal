@@ -68,7 +68,6 @@ const OutcomeSelectReview = ({
 
   return (
     <div>
-
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
         <hr />
         <h4 className='GWASUI-selectInstruction'>
@@ -92,16 +91,16 @@ const OutcomeSelectReview = ({
         </div>
       </Space>
     </div>
-
   );
 };
 
 OutcomeSelectReview.propTypes = {
-  cohortDefinitionId: PropTypes.number,
+  cohortDefinitionId: PropTypes.number.isRequired,
   outcome: PropTypes.object || undefined,
   selectedCovariates: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
   handleOutcomeSelect: PropTypes.func.isRequired,
+  current: PropTypes.number.isRequired,
 };
 
 OutcomeSelectReview.defaultProps = {
