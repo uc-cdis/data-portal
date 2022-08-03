@@ -114,6 +114,7 @@ const fetchRequestedAccess = (receivedData) => {
       case 200:
         return data;
       default:
+        // eslint-disable-next-line no-console
         console.error('Unable to get requested access:', status, data);
         return {};
       }
