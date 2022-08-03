@@ -178,7 +178,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
             selectedHare={selectedHare}
             handleHareChange={handleHareChange}
           />
-          <TourButton stepInfo={stepInfo}></TourButton>
+          <TourButton stepInfo={stepInfo} />
         </React.Fragment>
       );
     case 5:

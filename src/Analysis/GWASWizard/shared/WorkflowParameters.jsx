@@ -49,8 +49,8 @@ const WorkflowParameters = ({
         Please also choose the ancestry population on which you would like to perform your study.
     </h4>
     <div className='GWASUI-mainArea GWASUI-form'>
-      <div className='GWASUI-formItem' data-tour="number-of-pcs">
-        <span style={{color: 'red'}}>*</span>Number of PCs to use &nbsp;
+      <div className='GWASUI-formItem' data-tour='number-of-pcs'>
+        <span style={{ color: 'red' }}>*</span>Number of PCs to use &nbsp;
         <label htmlFor='input-numOfPC'>
           <InputNumber
             id='input-numOfPC'
@@ -90,7 +90,7 @@ const WorkflowParameters = ({
       <div className='GWASUI-formItem' data-tour='hare'>
         {workflowType === 'caseControl' && (
           <label htmlFor='select-hare-case-control'>
-            <span style={{color: 'red'}}>*</span>
+            <span style={{ color: 'red' }}>*</span>
             Select HARE group &nbsp;
             <CovariateStatsByHareCC
               id='select-hare-case-control'
@@ -106,7 +106,7 @@ const WorkflowParameters = ({
         )}
         {workflowType === 'quantitative' && (
           <label htmlFor='select-hare-quantitative'>
-            <span style={{color: 'red'}}>*</span>
+            <span style={{ color: 'red' }}>*</span>
             Select HARE group &nbsp;
             <CovariateStatsByHareQ
               id='select-hare-quantitative'
