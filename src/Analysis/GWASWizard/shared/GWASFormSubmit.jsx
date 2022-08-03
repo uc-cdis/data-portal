@@ -77,10 +77,6 @@ const GWASFormSubmit = ({
     return submission;
   };
 
-  // useEffect(() => {
-  //   submitJob();
-  // }, [submitJob]);
-
   const submitJob = useSubmitJob();
 
   return (
