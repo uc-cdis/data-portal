@@ -116,7 +116,6 @@ const RangeFilter = forwardRef(
       }
     }
 
-    const [sliderChanged, setSliderChanged] = useState(false);
     /** @param {[sliderLowerBound:number, sliderUpperBound: number]} sliderRange */
     function onSliderChange([sliderLowerBound, sliderUpperBound]) {
       const newRange = {
@@ -132,12 +131,12 @@ const RangeFilter = forwardRef(
 
       setRange(newRange);
       setInputRange(newRange);
-      setSliderChanged(true);
     }
     useImperativeHandle(ref, () => ({ onSliderChange }));
-    function onAfterSliderChange() {
-      if (sliderChanged)
-        onAfterDrag(range.lowerBound, range.upperBound, min, max, rangeStep);
+
+    /** @param {[sliderLowerBound:number, sliderUpperBound: number]} sliderRange */
+    function onAfterSliderChange([sliderLowerBound, sliderUpperBound]) {
+      onAfterDrag(sliderLowerBound, sliderUpperBound, min, max, rangeStep);
     }
 
     /** @param {number} num */
