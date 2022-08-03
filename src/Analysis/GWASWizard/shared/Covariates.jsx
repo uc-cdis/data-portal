@@ -14,21 +14,40 @@ const Covariates = ({
   const fetchedCovariates = useFetch(covariates, 'concepts');
   const displayedCovariates = useFilter(fetchedCovariates, searchTerm, 'concept_name');
 
-  return (
-    <React.Fragment>
-      {(covariates?.status === 'success') ? (
-        <Table
-          className='GWASUI-table2'
-          rowKey='concept_id'
-          size='middle'
-          pagination={{ pageSize: 10 }}
-          rowSelection={covariateSelection(handleCovariateSelect, selectedCovariates)}
-          columns={covariateTableConfig}
-          dataSource={displayedCovariates}
-        />
-      ) : (covariates?.status === 'error') ? <a>Error!</a> : <div className='GWASUI-spinnerContainer GWASUI-emptyTable'><Spin /></div>}
-    </React.Fragment>
-  );
+  if (covariates?.status === 'loading') {
+    return (
+      <React.Fragment>
+        <div className='GWASUI-spinnerContainer GWASUI-emptyTable'>
+          <Spin />
+        </div>
+      </React.Fragment>
+    );
+  }
+
+  if (covariates?.status === 'error') {
+    return (
+      <React.Fragment>
+        <div className='GWASUI-spinnerContainer GWASUI-emptyTable'>
+          <span>Error!</span>
+        </div>
+      </React.Fragment>
+    );
+  }
+
+  if (covariates?.status === 'success') {
+    return (
+      <Table
+        className='GWASUI-table2'
+        rowKey='concept_id'
+        size='middle'
+        pagination={{ pageSize: 10 }}
+        rowSelection={covariateSelection(handleCovariateSelect, selectedCovariates)}
+        columns={covariateTableConfig}
+        dataSource={displayedCovariates}
+      />
+    );
+  }
+  return <React.Fragment />;
 };
 
 Covariates.propTypes = {

@@ -8,7 +8,7 @@ export const fetchConceptStatsByHare = async (cohortDefinitionId, selectedCovari
   const variablesPayload = {
     variables:
       [
-        ...selectedDichotomousCovariates,
+        ...selectedDichotomousCovariates.map(({ uuid, ...withNoId }) => withNoId),
         ...selectedCovariates.map((c) => ({
           variable_type: 'concept',
           concept_id: c.concept_id,

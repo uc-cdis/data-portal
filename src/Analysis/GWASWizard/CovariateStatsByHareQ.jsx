@@ -25,10 +25,6 @@ const CovariateStatsByHareQ = ({
     queryConfig,
   );
 
-  useEffect(() => {
-    console.log(selectedCovariates, selectedDichotomousCovariates, quantitativeCohortDefinitionId);
-  }, []);
-
   const getHareDescriptionBreakdown = (singleHare, allHares) => {
     const hareBreakdown = allHares.find((hare) => hare.concept_value === singleHare.concept_value);
     return `${hareBreakdown.concept_value_name} (size: ${hareBreakdown.persons_in_cohort_with_value})`;
@@ -37,7 +33,6 @@ const CovariateStatsByHareQ = ({
   useEffect(() => {
     if (selectedHare && data?.concept_breakdown) {
       handleHareChange(selectedHare);
-      // setSelectedHareDescriptionFromSelectedHare(selectedHare, data.concept_breakdown);
     }
   }, [selectedHare, data, handleHareChange]);
 
@@ -52,8 +47,8 @@ const CovariateStatsByHareQ = ({
     if (data.concept_breakdown == null) {
       return (
         <React.Fragment>
-                    Error: there are no subjects in this cohort that have data available on all the selected covariates
-                    and phenotype. Please review your selections
+          Error: there are no subjects in this cohort that have data available on all the selected covariates
+          and phenotype. Please review your selections
         </React.Fragment>
       );
     }
@@ -81,11 +76,12 @@ const CovariateStatsByHareQ = ({
       </Dropdown>
     );
   }
+  return <React.Fragment />;
 };
 
 CovariateStatsByHareQ.propTypes = {
   selectedHare: PropTypes.object.isRequired,
-  quantitativeCohortDefinitionId: PropTypes.number,
+  quantitativeCohortDefinitionId: PropTypes.number.isRequired,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,

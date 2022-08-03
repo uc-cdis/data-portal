@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // import { useQuery, useMutation } from 'react-query';
 import {
@@ -40,12 +40,16 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     setSelectedCovariates(cov);
   };
 
-  const handleOutcomeSelect = (outcome) => {
-    setOutcome(outcome);
+  const handleOutcomeSelect = (selectedOutcome) => {
+    setOutcome(selectedOutcome);
   };
 
   const handleCDAdd = (cd) => {
     setSelectedDichotomousCovariates((prevCDArr) => [...prevCDArr, cd]);
+  };
+
+  const handleCDRemove = (id) => {
+    setSelectedDichotomousCovariates((prevCD) => [...prevCD.filter((cd) => cd.id !== id)]);
   };
 
   const handleHareChange = (hare) => {
@@ -82,10 +86,10 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     refreshWorkflows();
   };
 
-  let stepInfo = {
+  const stepInfo = {
     step: current,
-    workflowName: "quantitative",
-  }
+    workflowName: 'quantitative',
+  };
 
   const generateStep = () => {
     switch (current) {
@@ -93,12 +97,12 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
       return (!loading && sourceId
         ? (
           <React.Fragment>
-          <div data-tour="quant-step-1-new-cohort">
-            <AddCohortButton />
-          </div>
+            <div data-tour='quant-step-1-new-cohort'>
+              <AddCohortButton />
+            </div>
             <React.Fragment>
               <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                <h4 className='GWASUI-selectInstruction' data-tour="quant-step-1-cohort-selection">In this step, you will determine the study population. To begin, select the cohort that you would like to define your study population with.</h4>
+                <h4 className='GWASUI-selectInstruction' data-tour='quant-step-1-cohort-selection'>In this step, you will determine the study population. To begin, select the cohort that you would like to define your study population with.</h4>
                 <div className='GWASUI-mainTable'>
                   <CohortSelect
                     selectedCohort={selectedCohort}
@@ -108,33 +112,16 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
                   />
                 </div>
               </Space>
-              <TourButton stepInfo={stepInfo}></TourButton>
+              <TourButton stepInfo={stepInfo} />
             </React.Fragment>
-          </React.Fragment> ) : <Spin />)
-      case 1:
-        return (
-          <React.Fragment>
-            <React.Fragment>
-              <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                <h4 className='GWASUI-selectInstruction' data-tour="quant-step-2-choosing-variable">In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
-                <div className='GWASUI-mainTable'>
-                  <CovariateSelect
-                    selectedCovariates={selectedCovariates}
-                    handleCovariateSelect={handleCovariateSelect}
-                    sourceId={sourceId}
-                    current={current}
-                  />
-                </div>
-              </Space>
-              <TourButton stepInfo={stepInfo}></TourButton>
-            </React.Fragment>
-        </React.Fragment>);
+          </React.Fragment>
+        ) : <Spin />);
     case 1:
       return (
         <React.Fragment>
           <React.Fragment>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <h4 className='GWASUI-selectInstruction'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
+              <h4 className='GWASUI-selectInstruction' data-tour='quant-step-2-choosing-variable'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
               <div className='GWASUI-mainTable'>
                 <CovariateSelect
                   selectedCovariates={selectedCovariates}
@@ -144,6 +131,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
                 />
               </div>
             </Space>
+            <TourButton stepInfo={stepInfo} />
           </React.Fragment>
         </React.Fragment>
       );
@@ -166,6 +154,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
           <CustomDichotomousSelect
             sourceId={sourceId}
             handleCDAdd={handleCDAdd}
+            handleCDRemove={handleCDRemove}
             selectedDichotomousCovariates={selectedDichotomousCovariates}
             current={current}
           />
@@ -189,7 +178,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
             selectedHare={selectedHare}
             handleHareChange={handleHareChange}
           />
-          <TourButton stepInfo={stepInfo}></TourButton>
+          <TourButton stepInfo={stepInfo} />
         </React.Fragment>
       );
     case 5:
@@ -215,36 +204,12 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
               handleGwasNameChange={handleGwasNameChange}
               resetGWAS={resetQuantitative}
             />
-            <TourButton stepInfo={stepInfo}></TourButton>
+            <TourButton stepInfo={stepInfo} />
           </div>
-          </React.Fragment>
-        )
-      case 5:
-        return (
-          <React.Fragment>
-            <h4 className='GWASUI-selectInstruction'>In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
-            <h4 className='GWASUI-selectInstruction'>Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
-            <div className='GWASUI-mainArea'>
-              <GWASFormSubmit
-                sourceId={sourceId}
-                numOfPC={numOfPC}
-                mafThreshold={mafThreshold}
-                imputationScore={imputationScore}
-                selectedHare={selectedHare}
-                selectedQuantitativeCohort={selectedCohort}
-                workflowType={'quantitative'}
-                outcome={outcome}
-                // selectedCaseCohort={selectedCaseCohort}
-                // selectedControlCohort={selectedControlCohort}
-                selectedCovariates={selectedCovariates}
-                selectedDichotomousCovariates={selectedDichotomousCovariates}
-                gwasName={gwasName}
-                handleGwasNameChange={handleGwasNameChange}
-                resetGWAS={resetQuantitative}
-              />
-            </div>
-          </React.Fragment>
-        )
+        </React.Fragment>
+      );
+    default:
+      return <React.Fragment />;
     }
   };
 
@@ -257,7 +222,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     // next button enabled if selected phenotype array length > 0
     nextButtonEnabled = !!outcome;
   } else if (current === 4) {
-    nextButtonEnabled = selectedHare?.concept_value != '' && numOfPC;
+    nextButtonEnabled = selectedHare?.concept_value !== '' && numOfPC;
   }
 
   return (

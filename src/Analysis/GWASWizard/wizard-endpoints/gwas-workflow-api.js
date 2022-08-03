@@ -1,7 +1,7 @@
 import { gwasTemplate, gwasWorkflowPath } from '../../../localconf';
 import { headers } from '../../../configs';
 
-export const useGwasSubmitCC = async (
+export const caseControlSubmission = async (
   sourceId,
   numOfPC,
   selectedCovariates,
@@ -19,7 +19,7 @@ export const useGwasSubmitCC = async (
     variables: [...selectedCovariates.map((cov) => ({
       variable_type: 'concept',
       concept_id: cov.concept_id,
-    })), ...selectedDichotomousCovariates],
+    })), ...selectedDichotomousCovariates.map(({ uuid, ...withNoId }) => withNoId)],
     out_prefix: Date.now().toString(),
     outcome: '-1',
     hare_population: selectedHare.concept_value_name,
@@ -41,7 +41,7 @@ export const useGwasSubmitCC = async (
   return res;
 };
 
-export const useGwasSubmitQ = async (
+export const quantitativeSubmission = async (
   sourceId,
   numOfPC,
   selectedCovariates,
@@ -59,7 +59,7 @@ export const useGwasSubmitQ = async (
     variables: [...selectedCovariates.map((cov) => ({
       variable_type: 'concept',
       concept_id: cov.concept_id,
-    })), ...selectedDichotomousCovariates],
+    })), ...selectedDichotomousCovariates.map(({ uuid, ...withNoId }) => withNoId)],
     out_prefix: Date.now().toString(),
     outcome: outcome.concept_id,
     hare_population: selectedHare.concept_value_name,

@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import { useMutation } from 'react-query';
 import CheckOutlined from '@ant-design/icons';
-import { useGwasSubmitCC, useGwasSubmitQ } from '../wizard-endpoints/gwas-workflow-api';
+import { caseControlSubmission, quantitativeSubmission } from '../wizard-endpoints/gwas-workflow-api';
 
 const GWASFormSubmit = ({
   sourceId,
@@ -43,8 +43,8 @@ const GWASFormSubmit = ({
       });
     };
 
-    if (workflowType === 'caseControl') {
-      const submission = useMutation(() => useGwasSubmitCC(
+    const submission = useMutation(() => ((workflowType === 'caseControl')
+      ? caseControlSubmission(
         sourceId,
         numOfPC,
         selectedCovariates,
@@ -55,28 +55,18 @@ const GWASFormSubmit = ({
         selectedCaseCohort,
         selectedControlCohort,
         gwasName,
-      ), {
-        onSuccess: (data) => {
-          if (data?.status === 200) {
-            openNotification();
-            resetGWAS();
-          }
-        },
-      });
-      return submission;
-    }
-    const submission = useMutation(() => useGwasSubmitQ(
-      sourceId,
-      numOfPC,
-      selectedCovariates,
-      selectedDichotomousCovariates,
-      outcome,
-      selectedHare,
-      mafThreshold,
-      imputationScore,
-      selectedQuantitativeCohort,
-      gwasName,
-    ), {
+      ) : quantitativeSubmission(
+        sourceId,
+        numOfPC,
+        selectedCovariates,
+        selectedDichotomousCovariates,
+        outcome,
+        selectedHare,
+        mafThreshold,
+        imputationScore,
+        selectedQuantitativeCohort,
+        gwasName,
+      )), {
       onSuccess: (data) => {
         if (data?.status === 200) {
           openNotification();
@@ -88,6 +78,7 @@ const GWASFormSubmit = ({
   };
 
   const submitJob = useSubmitJob();
+
   return (
     <React.Fragment>
       <div className='GWASUI-flexRow GWASUI-headerColor'><h3 className='GWASUI-title'>Review Details</h3></div>
@@ -123,15 +114,15 @@ const GWASFormSubmit = ({
       </div>
       <div className='GWASUI-flexRow GWASUI-rowItem'>
         <div className='GWASUI-flexCol'>Covariates</div>
-        <div className='GWASUI-flexCol'>{selectedCovariates?.map((cov, key) => (
-          <li className='GWASUI-listItem' key={ `covariate-${ key }` }>{cov?.concept_name}</li>
+        <div className='GWASUI-flexCol'>{selectedCovariates.map((cov, key) => (
+          <li className='GWASUI-listItem' key={`covariate-${key}`}>{cov?.concept_name}</li>
         ))}
         </div>
       </div>
       <div className='GWASUI-flexRow GWASUI-rowItem'>
         <div className='GWASUI-flexCol'>Dichotomous Covariates</div>
-        <div className='GWASUI-flexCol'>{selectedDichotomousCovariates?.map((cov, key) => (
-          <li className='GWASUI-listItem' key={ `dich-covariate-${key}` }>{ cov.provided_name }</li>
+        <div className='GWASUI-flexCol'>{selectedDichotomousCovariates.map((cov, key) => (
+          <li className='GWASUI-listItem' key={`dich-covariate-${key}`}>{cov.provided_name}</li>
         ))}
         </div>
       </div>
@@ -165,13 +156,15 @@ const GWASFormSubmit = ({
 };
 
 GWASFormSubmit.propTypes = {
+  sourceId: PropTypes.number.isRequired,
+  outcome: PropTypes.object.isRequired,
   numOfPC: PropTypes.number.isRequired,
   mafThreshold: PropTypes.number.isRequired,
   imputationScore: PropTypes.number.isRequired,
   selectedHare: PropTypes.object.isRequired,
-  selectedCaseCohort: PropTypes.object || undefined,
-  selectedControlCohort: PropTypes.object || undefined,
-  selectedQuantitativeCohort: PropTypes.object || undefined,
+  selectedCaseCohort: PropTypes.object.isRequired,
+  selectedControlCohort: PropTypes.object.isRequired,
+  selectedQuantitativeCohort: PropTypes.object.isRequired,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   gwasName: PropTypes.string.isRequired,
