@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Range } from 'rc-slider';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import './RangeFilter.css';
 
@@ -116,7 +116,6 @@ const RangeFilter = forwardRef(
       }
     }
 
-    const [sliderChanged, setSliderChanged] = useState(false);
     /** @param {[sliderLowerBound:number, sliderUpperBound: number]} sliderRange */
     function onSliderChange([sliderLowerBound, sliderUpperBound]) {
       const newRange = {
@@ -132,12 +131,12 @@ const RangeFilter = forwardRef(
 
       setRange(newRange);
       setInputRange(newRange);
-      setSliderChanged(true);
     }
     useImperativeHandle(ref, () => ({ onSliderChange }));
-    function onAfterSliderChange() {
-      if (sliderChanged)
-        onAfterDrag(range.lowerBound, range.upperBound, min, max, rangeStep);
+
+    /** @param {[sliderLowerBound:number, sliderUpperBound: number]} sliderRange */
+    function onAfterSliderChange([sliderLowerBound, sliderUpperBound]) {
+      onAfterDrag(sliderLowerBound, sliderUpperBound, min, max, rangeStep);
     }
 
     /** @param {number} num */
@@ -184,7 +183,8 @@ const RangeFilter = forwardRef(
             />
           </label>
         </div>
-        <Range
+        <Slider
+          range
           className={`g3-range-filter__slider ${
             inactive ? 'g3-range-filter__slider--inactive' : ''
           }`}
