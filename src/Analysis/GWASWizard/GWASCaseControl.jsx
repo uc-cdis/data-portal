@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Steps, Button, Space, Popconfirm, Spin,
@@ -216,6 +216,8 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           </div>
         </React.Fragment>
       );
+    default:
+      return <React.Fragment />;
     }
   };
 
@@ -227,7 +229,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     // covariate selection
     nextButtonEnabled = false;
   } else if (current === 5) {
-    nextButtonEnabled = selectedHare?.concept_value != '' && numOfPC;
+    nextButtonEnabled = selectedHare?.concept_value !== '' && numOfPC;
   }
 
   return (

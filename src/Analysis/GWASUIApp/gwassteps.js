@@ -1,4 +1,4 @@
-export const case_control_steps = {
+export const caseControlTourSteps = {
   0: [
     {
       selector: '[data-tour="step-1-cohort-selection"]',
@@ -39,7 +39,7 @@ export const case_control_steps = {
   ],
 };
 
-export const quantitative_steps = {
+export const quantitativeTourSteps = {
   0: [
     {
       selector: '[data-tour="quant-step-1-cohort-selection"]',

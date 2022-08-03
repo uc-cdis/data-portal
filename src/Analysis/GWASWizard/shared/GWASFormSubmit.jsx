@@ -87,7 +87,12 @@ const GWASFormSubmit = ({
     return submission;
   };
 
+  // useEffect(() => {
+  //   submitJob();
+  // }, [submitJob]);
+
   const submitJob = useSubmitJob();
+
   return (
     <React.Fragment>
       <div className='GWASUI-flexRow GWASUI-headerColor'><h3 className='GWASUI-title'>Review Details</h3></div>
@@ -121,20 +126,20 @@ const GWASFormSubmit = ({
           </React.Fragment>
         )}
       </div>
-      {/* <div className='GWASUI-flexRow GWASUI-rowItem'>
+      <div className='GWASUI-flexRow GWASUI-rowItem'>
         <div className='GWASUI-flexCol'>Covariates</div>
-        <div className='GWASUI-flexCol'>{selectedCovariates?.map((cov, key) => (
-          <li className='GWASUI-listItem' key={ `covariate-${ key }` }>{cov?.concept_name}</li>
+        <div className='GWASUI-flexCol'>{selectedCovariates.map((cov, key) => (
+          <li className='GWASUI-listItem' key={`covariate-${key}`}>{cov?.concept_name}</li>
         ))}
         </div>
-      </div> */}
-      {/* <div className='GWASUI-flexRow GWASUI-rowItem'>
+      </div>
+      <div className='GWASUI-flexRow GWASUI-rowItem'>
         <div className='GWASUI-flexCol'>Dichotomous Covariates</div>
-        <div className='GWASUI-flexCol'>{selectedDichotomousCovariates?.map((cov, key) => (
-          <li className='GWASUI-listItem' key={ `dich-covariate-${key}` }>{ cov.provided_name }</li>
+        <div className='GWASUI-flexCol'>{selectedDichotomousCovariates.map((cov, key) => (
+          <li className='GWASUI-listItem' key={`dich-covariate-${key}`}>{cov.provided_name}</li>
         ))}
         </div>
-      </div> */}
+      </div>
       {/* <div className="GWASUI-flexRow GWASUI-rowItem">
             <QCShowOverlap />
         </div> */}
@@ -165,13 +170,15 @@ const GWASFormSubmit = ({
 };
 
 GWASFormSubmit.propTypes = {
+  sourceId: PropTypes.number.isRequired,
+  outcome: PropTypes.object.isRequired,
   numOfPC: PropTypes.number.isRequired,
   mafThreshold: PropTypes.number.isRequired,
   imputationScore: PropTypes.number.isRequired,
   selectedHare: PropTypes.object.isRequired,
-  selectedCaseCohort: PropTypes.object || undefined,
-  selectedControlCohort: PropTypes.object || undefined,
-  selectedQuantitativeCohort: PropTypes.object || undefined,
+  selectedCaseCohort: PropTypes.object.isRequired,
+  selectedControlCohort: PropTypes.object.isRequired,
+  selectedQuantitativeCohort: PropTypes.object.isRequired,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   gwasName: PropTypes.string.isRequired,

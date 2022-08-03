@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // import { useQuery, useMutation } from 'react-query';
 import {
@@ -40,8 +40,8 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     setSelectedCovariates(cov);
   };
 
-  const handleOutcomeSelect = (outcome) => {
-    setOutcome(outcome);
+  const handleOutcomeSelect = (selectedOutcome) => {
+    setOutcome(selectedOutcome);
   };
 
   const handleCDAdd = (cd) => {
@@ -131,24 +131,6 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
           </React.Fragment>
         </React.Fragment>
       );
-    case 1:
-      return (
-        <React.Fragment>
-          <React.Fragment>
-            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <h4 className='GWASUI-selectInstruction'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
-              <div className='GWASUI-mainTable'>
-                <CovariateSelect
-                  selectedCovariates={selectedCovariates}
-                  handleCovariateSelect={handleCovariateSelect}
-                  sourceId={sourceId}
-                  current={current}
-                />
-              </div>
-            </Space>
-          </React.Fragment>
-        </React.Fragment>
-      );
     case 2:
       return (
         <React.Fragment>
@@ -220,32 +202,8 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
           </div>
         </React.Fragment>
       );
-    case 5:
-      return (
-        <React.Fragment>
-          <h4 className='GWASUI-selectInstruction'>In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
-          <h4 className='GWASUI-selectInstruction'>Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
-          <div className='GWASUI-mainArea'>
-            <GWASFormSubmit
-              sourceId={sourceId}
-              numOfPC={numOfPC}
-              mafThreshold={mafThreshold}
-              imputationScore={imputationScore}
-              selectedHare={selectedHare}
-              selectedQuantitativeCohort={selectedCohort}
-              workflowType={'quantitative'}
-              outcome={outcome}
-              // selectedCaseCohort={selectedCaseCohort}
-              // selectedControlCohort={selectedControlCohort}
-              selectedCovariates={selectedCovariates}
-              selectedDichotomousCovariates={selectedDichotomousCovariates}
-              gwasName={gwasName}
-              handleGwasNameChange={handleGwasNameChange}
-              resetGWAS={resetQuantitative}
-            />
-          </div>
-        </React.Fragment>
-      );
+    default:
+      return <React.Fragment />;
     }
   };
 
@@ -258,7 +216,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     // next button enabled if selected phenotype array length > 0
     nextButtonEnabled = !!outcome;
   } else if (current === 4) {
-    nextButtonEnabled = selectedHare?.concept_value != '' && numOfPC;
+    nextButtonEnabled = selectedHare?.concept_value !== '' && numOfPC;
   }
 
   return (

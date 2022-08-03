@@ -21,6 +21,7 @@ const GWASUIApp = (props) => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line no-console
     fetchAndSetCsrfToken().catch((err) => { console.log('error on csrf load - should still be ok', err); });
   }, [props]);
 

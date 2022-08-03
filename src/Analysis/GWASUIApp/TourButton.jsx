@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useTour } from '@reactour/tour';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { case_control_steps, quantitative_steps } from './gwassteps';
+import { caseControlTourSteps, quantitativeTourSteps } from './gwassteps';
 
 const TourButton = ({ stepInfo }) => {
   const { setIsOpen, setSteps, isOpen } = useTour();
 
-  const current_steps = stepInfo.workflowName === 'case control' ? case_control_steps : quantitative_steps;
+  const currentSteps = stepInfo.workflowName === 'case control' ? caseControlTourSteps : quantitativeTourSteps;
 
   useEffect(() => {
-    setSteps(current_steps[stepInfo.step]);
-  }, [stepInfo]);
+    setSteps(currentSteps[stepInfo.step]);
+  }, [stepInfo, currentSteps, setSteps]);
 
   return (
     <InfoCircleOutlined
@@ -22,6 +23,10 @@ const TourButton = ({ stepInfo }) => {
       style={{ fontSize: '25px', color: '#08c' }}
     />
   );
+};
+
+TourButton.propTypes = {
+  stepInfo: PropTypes.object.isRequired,
 };
 
 export default TourButton;
