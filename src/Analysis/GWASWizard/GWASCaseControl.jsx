@@ -99,7 +99,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
 
           <React.Fragment>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <h4 className='GWASUI-selectInstruction' data-tour='step-1-cohort-selection'>In this step, you will determine the study population. To begin, select the cohort that you would like to define your study population with.</h4>
+              <h4 className='GWASUI-selectInstruction' data-tour="step-1-cohort-selection">In this step, you will begin to determine your study populations. To begin, select the cohort that you would like to define as your study "case" population.</h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
                   selectedCohort={selectedCaseCohort}
@@ -119,7 +119,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           <AddCohortButton />
           <React.Fragment>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <h4 className='GWASUI-selectInstruction'>In this step, you will continue to define the study population. Please select the cohort that you would like to define as your study “control” population.</h4>
+              <h4 className='GWASUI-selectInstruction'>In this step, you will continue to define your study populations. Please select the cohort that you would like to define as your study “control” population.</h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
                   selectedCohort={selectedControlCohort}
@@ -138,7 +138,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
         <React.Fragment>
           <React.Fragment>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <h4 className='GWASUI-selectInstruction' data-tour='step-3-choosing-variable'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
+              <h4 className='GWASUI-selectInstruction' data-tour="step-3-choosing-variable">In this step, you will select the harmonized continuous covariates for your study. Please select all variables you wish to use in your model. (Note: population PCs are not included in this step)</h4>
               <div className='GWASUI-mainTable'>
                 <CovariateSelect
                   selectedCovariates={selectedCovariates}

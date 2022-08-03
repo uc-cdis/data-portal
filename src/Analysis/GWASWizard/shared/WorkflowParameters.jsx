@@ -49,8 +49,8 @@ const WorkflowParameters = ({
         Please also choose the ancestry population on which you would like to perform your study.
     </h4>
     <div className='GWASUI-mainArea GWASUI-form'>
-      <div className='GWASUI-formItem' data-tour='number-of-pcs'>
-        <span style={{ color: 'red' }}>*</span>Number of PCs to use
+      <div className='GWASUI-formItem' data-tour="number-of-pcs">
+        <span style={{color: 'red'}}>*</span>Number of PCs to use &nbsp;
         <label htmlFor='input-numOfPC'>
           <InputNumber
             id='input-numOfPC'
@@ -64,7 +64,7 @@ const WorkflowParameters = ({
       </div>
       <div className='GWASUI-formItem' data-tour='covariates'>
         <label htmlFor='select-covariates'>
-            Covariates
+          Covariates &nbsp;
           <Select
             id='select-covariates'
             mode='multiple'
@@ -77,7 +77,7 @@ const WorkflowParameters = ({
       </div>
       <div className='GWASUI-formItem'>
         <label htmlFor='select-dichotomous-covariates'>
-            Dichotomous Covariates
+          Dichotomous Covariates &nbsp;
           <Select
             id='select-dichotomous-covariates'
             mode='multiple'
@@ -90,8 +90,8 @@ const WorkflowParameters = ({
       <div className='GWASUI-formItem' data-tour='hare'>
         {workflowType === 'caseControl' && (
           <label htmlFor='select-hare-case-control'>
-            <span style={{ color: 'red' }}>*</span>
-              Select HARE group
+            <span style={{color: 'red'}}>*</span>
+            Select HARE group &nbsp;
             <CovariateStatsByHareCC
               id='select-hare-case-control'
               selectedHare={selectedHare}
@@ -106,8 +106,8 @@ const WorkflowParameters = ({
         )}
         {workflowType === 'quantitative' && (
           <label htmlFor='select-hare-quantitative'>
-            <span style={{ color: 'red' }}>*</span>
-              Select HARE group
+            <span style={{color: 'red'}}>*</span>
+            Select HARE group &nbsp;
             <CovariateStatsByHareQ
               id='select-hare-quantitative'
               selectedHare={selectedHare}
@@ -123,7 +123,7 @@ const WorkflowParameters = ({
       </div>
       <div className='GWASUI-formItem' data-tour='maf-cutoff'>
         <label htmlFor='input-maf'>
-            MAF Cutoff
+          MAF Cutoff &nbsp;
           <InputNumber
             id='input-maf'
             value={mafThreshold}
@@ -137,7 +137,7 @@ const WorkflowParameters = ({
       </div>
       <div className='GWASUI-formItem' data-tour='imputation-score'>
         <label htmlFor='input-imputation'>
-            Imputation Score Cutoff
+          Imputation Score Cutoff &nbsp;
           <InputNumber
             id='input-imputation'
             value={imputationScore}
