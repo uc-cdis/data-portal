@@ -284,16 +284,16 @@ function buildConfig(opts) {
   const { discoveryConfig } = config;
   const studyRegistrationConfig = config.studyRegistrationConfig || {};
   if (!studyRegistrationConfig.studyRegistrationTrackingField) {
-    studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username'
+    studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username';
   }
   if (!studyRegistrationConfig.studyRegistrationValidationField) {
-    studyRegistrationConfig.studyRegistrationValidationField = 'is_registered'
+    studyRegistrationConfig.studyRegistrationValidationField = 'is_registered';
   }
   if (!studyRegistrationConfig.studyRegistrationAccessCheckField) {
-    studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz'
+    studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz';
   }
   if (!studyRegistrationConfig.studyRegistrationUIDField) {
-    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id'
+    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id';
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;

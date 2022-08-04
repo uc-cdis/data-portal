@@ -1,31 +1,13 @@
 module.exports = {
   // "extends": "eslint:recommended",
-  extends: 'airbnb',
-  settings: {
-    react: {
-      pragma: 'React',
-      version: '16.14',
-    },
-    'import/resolver': {
-      typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
-    },
-  },
+  extends: ['airbnb'],
   root: true,
   env: {
     browser: true,
     es6: true,
     jest: true,
   },
-  globals: {
-    JSX: true,
-  },
-  plugins: [
-    'react',
-    'react-hooks',
-    'jsx-a11y',
-    'import',
-  ],
-  parser: '@babel/eslint-parser',
+  parser: 'babel-eslint',
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 6,
@@ -35,7 +17,6 @@ module.exports = {
     },
   },
   rules: {
-    'no-underscore-dangle': 'off',
     indent: [
       'error',
       2,
@@ -56,37 +37,15 @@ module.exports = {
       'error',
       'always',
     ],
-    'max-classes-per-file': ['error', 2],
-    'max-len': [
-      'error',
-      {
-        code: 150,
-        ignoreComments: true,
-        ignoreTrailingComments: true,
-        ignoreUrls: true,
-        ignoreStrings: true,
-        ignoreTemplateLiterals: true,
+    // fixed in newer version of jsx-a11y remove if we upgrade
+    'jsx-a11y/label-has-for': ['error', {
+      required: {
+        some: ['nesting', 'id'],
       },
-    ],
-    'prefer-destructuring': [
-      'error',
-      { object: true, array: false },
-    ],
-    'react/jsx-fragments': [
-      'error',
-      'element',
-    ],
-    'jsx-a11y/label-has-associated-control': [2, {
-      labelAttributes: ['label'],
-      controlComponents: ['Switch', 'Input'],
-      depth: 3,
     }],
-    'jsx-a11y/anchor-is-valid': ['off'],
     // see https://github.com/clayne11/eslint-import-resolver-meteor/issues/17
     // - seems to affect Codacy :-(
     'import/extensions': ['off', 'never'],
-    'import/no-cycle': 'off',
-    'prefer-promise-reject-errors': 'off',
     'react/jsx-indent': 'off',
     'react/forbid-prop-types': 'off',
     'react/prefer-stateless-function': 'off',
@@ -94,10 +53,6 @@ module.exports = {
     'function-paren-newline': ['off'],
     'react/no-array-index-key': ['off'],
     'react/destructuring-assignment': ['off'],
-    'react/jsx-one-expression-per-line': ['off'],
-    'react/jsx-props-no-spreading': ['off'],
-    'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
-    'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
   },
   overrides: [
     {
@@ -182,7 +137,10 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       parser: '@typescript-eslint/parser',
-      plugins: ['@typescript-eslint'],
+      plugins: [
+        '@typescript-eslint',
+        'react-hooks',
+      ],
       parserOptions: {
         ecmaversion: 2018,
         sourceType: 'module',
@@ -208,4 +166,9 @@ module.exports = {
       },
     },
   ],
+  settings: {
+    'import/resolver': {
+      typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
+    },
+  },
 };
