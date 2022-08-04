@@ -94,6 +94,7 @@
     "string-similarity": "^3.0.0",
     "style-loader": "^0.21.0",
     "styled-components": "^5.0.0",
+    "trim-newlines": "^4.0.2",
     "viz.js": "2.0.0"
   },
   "devDependencies": {
