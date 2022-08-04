@@ -26,6 +26,9 @@ if (configFile.connectSrcCSPWhitelist && configFile.connectSrcCSPWhitelist.lengt
 if (configFile.featureFlags && configFile.featureFlags.discoveryUseAggMDS) {
   connectSrcURLs.push('https://dataguids.org');
 }
+if (configFile.featureFlags && configFile.featureFlags.studyRegistration) {
+  connectSrcURLs.push('https://clinicaltrials.gov');
+}
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
 }
@@ -75,6 +78,7 @@ const plugins = [
   }),
   new HtmlWebpackPlugin({
     title: configFile.components.appName || 'Generic Data Commons',
+    metaDescription: configFile.components.metaDescription || '',
     basename: pathPrefix,
     template: 'src/index.ejs',
     connect_src: (function () {
@@ -132,6 +136,8 @@ const plugins = [
   */
   new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
 ];
+
+const allowedHosts = process.env.HOSTNAME ? [process.env.HOSTNAME] : 'auto';
 
 let optimization = {};
 let devtool = false;
@@ -223,7 +229,15 @@ module.exports = {
     compress: true,
     hot: true,
     port: 9443,
-    https: true,
+    server: 'https',
+    host: 'localhost',
+    allowedHosts,
+    client: {
+      overlay: {
+        warnings: false,
+        errors: true,
+      },
+    },
   },
   module: {
     rules: [{

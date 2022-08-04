@@ -31,7 +31,7 @@ Below is an example, with inline comments describing what each JSON block config
         "name": "Aliquot",
         "plural": "Aliquots"
       }
-    ],systemUseTitle
+    ],
     "chartCounts": [ // required;
       {
         "graphql": "_case_count",
@@ -46,6 +46,7 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "components": {
     "appName": "Gen3 Generic Data Commons", // required; title of commons that appears on the homepage
+    "metaDescription": "", // optional; meta description used by search engines
     "homepageHref": "https://example.gen3.org/", // optional; link that the logo in header will pointing to
     "index": { // required; relates to the homepage
       "introduction": { // optional; text on homepage
@@ -144,6 +145,7 @@ Below is an example, with inline comments describing what each JSON block config
       "expireUseMsgDays" : optional; 0, // the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
     },
     "footer": {
+      "externalURL": "/external/footer" // iframe link to raw html from another source (ie frontend framework) to pull a footer from
       "links": [
         {
           "text": "Link title",
@@ -178,6 +180,7 @@ Below is an example, with inline comments describing what each JSON block config
     lacks support for search filter state, accessibility state, table state.
     "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
     "explorerFilterValuesToHide": ["array of strings"], // optional, Values set in array will be hidden in guppy filters. Intended use is to hide missing data category from filters, for this it should be set to the same as `missing_data_alias` in Guppy server config
+    "studyRegistration": true, // optional, whether to enable the study registration feature
   },
   "dataExplorerConfig": { // required only if featureFlags.explorer is true; configuration for the Data Explorer (/explorer); can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the Data Explorer
@@ -577,25 +580,27 @@ Below is an example, with inline comments describing what each JSON block config
     "detailView": {
       "headerField": "project_title", // field from which to pull detail view title
       "tabs": [
-        "tabName": "Study",
-        "groups": [
-          {
-            "header": "Study Description Summary", // subheading above a group of fields, optional
-            "fields": [
-              {
-              "header": "Study Description Summary",
+        {
+          "tabName": "Study",
+          "groups": [
+            {
+              "header": "Study Description Summary", // subheading above a group of fields, optional
               "fields": [
                 {
-                  "type": "block",
-                  "sourceField": "study_description_summary"
+                  "header": "Study Description Summary",
+                  "fields": [
+                    {
+                      "type": "block",
+                      "sourceField": "study_description_summary"
+                    }
+                  ]
                 }
               ]
-              }
-            ]
-          }
-        ]
+            }
+          ]
+        }
       ]
-    }
+    },
     "minimalFieldMapping": { // maps
       "tagsListFieldName": "tags", // required; the field which contains the list of tags (format: [{name: string, category: string}] )
       "authzField": "authz", // optional if features.authorization.enabled is false, otherwise required
@@ -622,6 +627,13 @@ Below is an example, with inline comments describing what each JSON block config
     ],
     "tagsDisplayName": "Tags" // optional, overrides the name of the mandatory tags column
     "tableScrollHeight": 450 // optional, no scroll if omitted
+  },
+  "studyRegistrationConfig": { // optional, config for Study Registration and Study Registration Request Access page.
+    "studyRegistrationTrackingField": "registrant_username", // optional, one of the extra field that is being added to metadata when a study is registered, will be useful in the future. Defaults to "registrant_username"
+    "studyRegistrationValidationField": "is_registered", // optional, the other of the extra field that is being added to metadata when a study is registered, to check if a study has been registered, because after loading data from MDS/AggMDS into Discovery page, the metadata category information is lost. Defaults to "is_registered"
+    "studyRegistrationAccessCheckField": "registration_authz", // optional, the field that contains the value for Study Registration Request Access feature. Defaults to "registration_authz"
+    "studyRegistrationUIDField": "appl_id", // optional, the field which can be used to uniquely determine a metadata record for Study Registration. Defaults to "appl_id"
+    "studyRegistrationFormDisclaimerField": "This is a disclaimer", //optional, the disclaimer text that appears under the submit button on the study registration request access form. Defaults to undefined
   },
   "resourceBrowser": {), // see Resource Browser documentation
   "workspacePageTitle": "", // title to display above workspacePageDescription
@@ -656,6 +668,7 @@ Below is an example, with inline comments describing what each JSON block config
   },
   "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
     "https://example.s3.amazonaws.com" // full url to be added
-  ]
+  ],
+  "stridesPortalURL": "https://strides-admin-portal.org" // optional; If configured, will display a link on the workspace page which can direct user to the STRIDES admin portal
 }
 ```
