@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import cloneDeep from 'lodash.clonedeep';
@@ -43,14 +43,6 @@ function createSet(key, values) {
 /** @param {SubmissionFileSet} set */
 function getSetSize(set) {
   return Object.keys(set).length;
-}
-
-/** @param {SubmissionFile[]} files */
-function getTableHeaderText(files) {
-  const date = dayjs(files[0].created_date).format('MM/DD/YY');
-  return `uploaded on ${date}, ${files.length} ${
-    files.length > 1 ? 'files' : 'file'
-  }`;
 }
 
 /** @param {SubmissionFile[]} unmappedFiles */
@@ -294,18 +286,16 @@ function MapFiles({ mapSelectedFiles, unmappedFiles = defaultUnmapedFiles }) {
           };
 
           return (
-            <Fragment key={groupIndex}>
-              <div className='h2-typo'>{getTableHeaderText(files)}</div>
-              <MapFilesTable
-                files={files}
-                groupIndex={groupIndex}
-                onToggleCheckbox={(rowIndex) =>
-                  toggleCheckBox(groupIndex, files[rowIndex])
-                }
-                onToggleSelectAll={() => toggleSelectAll(groupIndex)}
-                selectStatus={selectStatus}
-              />
-            </Fragment>
+            <MapFilesTable
+              key={groupIndex}
+              files={files}
+              groupIndex={groupIndex}
+              onToggleCheckbox={(rowIndex) =>
+                toggleCheckBox(groupIndex, files[rowIndex])
+              }
+              onToggleSelectAll={() => toggleSelectAll(groupIndex)}
+              selectStatus={selectStatus}
+            />
           );
         })}
       </div>
