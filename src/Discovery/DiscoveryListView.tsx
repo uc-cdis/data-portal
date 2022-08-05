@@ -19,7 +19,7 @@ interface Props {
   advSearchFilterHeight: string | number;
   setAdvSearchFilterHeight: (any) => void;
   onResourcesSelected: (selectedResources: DiscoveryResource[]) => any;
-  onTagsSelected: (arg0: any) => any;
+  onTagsSelected: (selectedTags: any) => any;
 }
 
 const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
