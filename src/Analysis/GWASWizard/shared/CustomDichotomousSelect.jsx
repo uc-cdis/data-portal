@@ -19,7 +19,7 @@ const CustomDichotomousSelect = ({
 
   const handleCDSubmit = () => {
     handleCDAdd({
-      uiid: _.uniqueId(),
+      uuid: _.uniqueId(),
       variable_type: 'custom_dichotomous',
       cohort_ids: [firstCohort.cohort_definition_id, secondCohort.cohort_definition_id],
       provided_name: cdName,
