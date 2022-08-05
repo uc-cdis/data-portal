@@ -154,11 +154,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
             <Result
               status={formSubmissionStatus.status}
               title='Your access request has been submitted!'
-<<<<<<< HEAD
-              subTitle='You will be notified when a decision has been made'
-=======
               subTitle='Thank you for your submission. Requests take up to 1 business day to complete. You will be notified of the status.'
->>>>>>> master
               extra={[
                 <Link key='discovery' to={'/discovery'}>
                   <Button>Go To Discovery Page</Button>
@@ -302,8 +298,6 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
               </Button>
             </Space>
           </Form.Item>
-<<<<<<< HEAD
-=======
           { (studyRegistrationConfig.studyRegistrationFormDisclaimerField)
               && (
                 <Typography className='study-reg-disclaimer-text'>
@@ -311,7 +305,6 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
                 </Typography>
               )
           }
->>>>>>> master
         </Form>
       </div>
     </div>
