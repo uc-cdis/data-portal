@@ -321,6 +321,23 @@
   /* --------- */
 }
 
+.discovery-table__row-vertical-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.discovery-table__row-horizontal-content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 4px 16px 0 16px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
 .discovery-table-container .ant-table, .discovery-table-container .ant-btn {
   font-size: 0.875rem;
 }

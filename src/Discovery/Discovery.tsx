@@ -46,7 +46,7 @@ const { Panel } = Collapse;
 
 const ARBORIST_READ_PRIV = 'read';
 
-const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
+export const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   const categoryConfig = config.tagCategories.find((category) => category.name === tagCategory);
   if (categoryConfig === undefined) {
     return 'gray';
@@ -796,6 +796,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               setModalData={setModalData}
               setModalVisible={setModalVisible}
               columns={columns}
+              selectedTags={props.selectedTags}
+              onTagsSelected={props.onTagsSelected}
               accessibleFieldName={accessibleFieldName}
               selectedResources={props.selectedResources}
               onResourcesSelected={props.onResourcesSelected}
