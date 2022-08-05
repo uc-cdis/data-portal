@@ -60,6 +60,8 @@
   margin: 10px 0 40px 0;
   border-collapse: collapse;
   outline: none;
+  max-height: 500px;
+  overflow-y: scroll;
 }
 
 .map-files__table-header {
@@ -76,7 +78,7 @@
 
 .map-files__table-row > * {
   word-break: break-all;
-  padding: 10px 20px 10px 0;
+  padding: 10px 20px;
 }
 
 .map-files__table-checkbox {

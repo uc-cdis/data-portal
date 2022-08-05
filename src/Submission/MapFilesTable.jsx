@@ -1,15 +1,10 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import PropTypes from 'prop-types';
-import { AutoSizer, Column, Table } from 'react-virtualized';
-import 'react-virtualized/styles.css'; // only needs to be imported once
 import CheckBox from '../components/CheckBox';
 import StatusReadyIcon from '../img/icons/status_ready.svg';
 import { humanFileSize } from '../utils.js';
 import './MapFiles.css';
-
-const HEADER_HEIGHT = 70;
-const ROW_HEIGHT = 70;
 
 dayjs.extend(customParseFormat);
 
@@ -31,84 +26,58 @@ function MapFilesTable({
   const title = `Uploaded on ${dayjs(files[0].created_date).format(
     'MM/DD/YY'
   )}, ${files.length} ${files.length > 1 ? 'files' : 'file'}`;
+  const headers = ['File Name', 'Size', 'Uploaded Date', 'Status'];
+  const rows = files.map((file) => [
+    file.file_name,
+    file.size ? humanFileSize(file.size) : '0 B',
+    dayjs(file.created_date).format('MM/DD/YY, hh:mm:ss a [UTC]Z'),
+    <div
+      className={`map-files__status--${file.status ? 'ready' : 'generating'}`}
+    >
+      {file.status ? <StatusReadyIcon /> : null}
+      <div className='h2-typo'>{file.status ? 'Ready' : 'generating...'}</div>
+    </div>,
+  ]);
 
   return (
-    <>
+    <div className='map-files__table'>
       <div className='h2-typo'>{title}</div>
-      <AutoSizer disableHeight>
-        {({ width }) => (
-          <Table
-            className='map-files__table'
-            width={width}
-            height={Math.min(500, files.length * ROW_HEIGHT + HEADER_HEIGHT)}
-            headerHeight={ROW_HEIGHT}
-            rowHeight={ROW_HEIGHT}
-            rowCount={files.length}
-            rowGetter={({ index }) => files[index]}
-            rowClassName='map-files__table-row'
-          >
-            <Column
-              width={100}
-              label='Select All'
-              dataKey='selectAll'
-              headerRenderer={() => (
+      <table className='map-files__table'>
+        <thead>
+          <tr className='map-files__table-row'>
+            <th scope='col' className='map-files__table-checkbox'>
+              <CheckBox
+                id={`${groupIndex}`}
+                isSelected={selectStatus.all}
+                onChange={onToggleSelectAll}
+              />
+            </th>
+            {headers.map((header) => (
+              <th scope='col'>{header}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((cols, index) => (
+            <tr className='map-files__table-row'>
+              <th scope='row' className='map-files__table-checkbox'>
                 <CheckBox
-                  id={`${groupIndex}`}
-                  isSelected={selectStatus.all}
-                  onChange={onToggleSelectAll}
-                />
-              )}
-              cellRenderer={({ rowIndex }) => (
-                <CheckBox
-                  id={`${files[rowIndex].did}`}
-                  item={files[rowIndex]}
-                  isSelected={selectStatus.files[rowIndex]}
-                  onChange={() => onToggleCheckbox(rowIndex)}
-                  isEnabled={files[rowIndex].status}
+                  id={`${files[index].did}`}
+                  item={files[index]}
+                  isSelected={selectStatus.files[index]}
+                  onChange={() => onToggleCheckbox(index)}
+                  isEnabled={files[index].status}
                   disabledText={'This file is not ready to be mapped yet.'}
                 />
-              )}
-            />
-            <Column label='File Name' dataKey='file_name' width={400} />
-            <Column
-              label='Size'
-              dataKey='size'
-              width={100}
-              cellRenderer={({ cellData }) => (
-                <div>{cellData ? humanFileSize(cellData) : '0 B'}</div>
-              )}
-            />
-            <Column
-              label='Uploaded Date'
-              dataKey='created_date'
-              width={300}
-              cellRenderer={({ cellData }) => (
-                <div>
-                  {dayjs(cellData).format('MM/DD/YY, hh:mm:ss a [UTC]Z')}
-                </div>
-              )}
-            />
-            <Column
-              label='Status'
-              dataKey='status'
-              width={400}
-              cellRenderer={({ cellData }) => (
-                <div
-                  className={`map-files__status--${
-                    cellData ? 'ready' : 'generating'
-                  }`}
-                >
-                  {cellData ? <StatusReadyIcon /> : null}
-                  <div className='h2-typo'>
-                    {cellData ? 'Ready' : `generating...`}
-                  </div>
-                </div>
-              )}
-            />
-          </Table>
-        )}
-      </AutoSizer>
-    </>
+              </th>
+              {cols.map((col) => (
+                <td>{col}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
