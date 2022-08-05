@@ -283,11 +283,23 @@ function MapFiles({ mapSelectedFiles, unmappedFiles = defaultUnmapedFiles }) {
           </h2>
         ) : null}
         {sortedDates.map((date, groupIndex) => {
+          /** @type {SubmissionFile[]} */
           const files = filesByDate[date].map((file) => ({
             ...file,
             status: isFileReady(file) ? 'Ready' : 'generating',
           }));
           const minTableHeight = files.length * ROW_HEIGHT + HEADER_HEIGHT;
+          const selectStatus = {
+            all: isSelectAll({
+              index: groupIndex,
+              allFilesByGroup,
+              selectedFilesByGroup,
+            }),
+            files: files.map(({ did }) =>
+              isSelected({ index: groupIndex, did, selectedFilesByGroup })
+            ),
+          };
+
           return (
             <Fragment key={groupIndex}>
               <div className='h2-typo'>{getTableHeaderText(files)}</div>
@@ -310,11 +322,7 @@ function MapFiles({ mapSelectedFiles, unmappedFiles = defaultUnmapedFiles }) {
                       headerRenderer={() => (
                         <CheckBox
                           id={`${groupIndex}`}
-                          isSelected={isSelectAll({
-                            index: groupIndex,
-                            allFilesByGroup,
-                            selectedFilesByGroup,
-                          })}
+                          isSelected={selectStatus.all}
                           onChange={() => toggleSelectAll(groupIndex)}
                         />
                       )}
@@ -322,11 +330,7 @@ function MapFiles({ mapSelectedFiles, unmappedFiles = defaultUnmapedFiles }) {
                         <CheckBox
                           id={`${files[rowIndex].did}`}
                           item={files[rowIndex]}
-                          isSelected={isSelected({
-                            index: groupIndex,
-                            did: files[rowIndex].did,
-                            selectedFilesByGroup,
-                          })}
+                          isSelected={selectStatus.files[rowIndex]}
                           onChange={() =>
                             toggleCheckBox(groupIndex, files[rowIndex])
                           }
