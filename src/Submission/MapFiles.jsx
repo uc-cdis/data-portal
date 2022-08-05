@@ -269,10 +269,10 @@ function MapFiles({ mapSelectedFiles, unmappedFiles = defaultUnmapedFiles }) {
           </h2>
         ) : null}
         {sortedDates.map((date, groupIndex) => {
-          /** @type {SubmissionFile[]} */
+          /** @type {(SubmissionFile & { status: boolean })[]} */
           const files = filesByDate[date].map((file) => ({
             ...file,
-            status: isFileReady(file) ? 'Ready' : 'generating',
+            status: isFileReady(file),
           }));
           const selectStatus = {
             all: isSelectAll({

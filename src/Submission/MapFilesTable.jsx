@@ -15,7 +15,7 @@ dayjs.extend(customParseFormat);
 
 /**
  * @param {Object} props
- * @param {Array} props.files
+ * @param {(import('./types').SubmissionFile & { status: boolean })[]} props.files
  * @param {number} props.groupIndex
  * @param {(rowIndex: number) => void} props.onToggleCheckbox
  * @param {() => void} props.onToggleSelectAll
@@ -64,7 +64,7 @@ function MapFilesTable({
                   item={files[rowIndex]}
                   isSelected={selectStatus.files[rowIndex]}
                   onChange={() => onToggleCheckbox(rowIndex)}
-                  isEnabled={files[rowIndex].status === 'Ready'}
+                  isEnabled={files[rowIndex].status}
                   disabledText={'This file is not ready to be mapped yet.'}
                 />
               )}
@@ -92,17 +92,18 @@ function MapFilesTable({
               label='Status'
               dataKey='status'
               width={400}
-              cellRenderer={({ cellData }) => {
-                const className = `map-files__status--${cellData.toLowerCase()}`;
-                return (
-                  <div className={className}>
-                    {cellData === 'Ready' ? <StatusReadyIcon /> : null}
-                    <div className='h2-typo'>
-                      {cellData === 'Ready' ? cellData : `${cellData}...`}
-                    </div>
+              cellRenderer={({ cellData }) => (
+                <div
+                  className={`map-files__status--${
+                    cellData ? 'ready' : 'generating'
+                  }`}
+                >
+                  {cellData ? <StatusReadyIcon /> : null}
+                  <div className='h2-typo'>
+                    {cellData ? 'Ready' : `generating...`}
                   </div>
-                );
-              }}
+                </div>
+              )}
             />
           </Table>
         )}
