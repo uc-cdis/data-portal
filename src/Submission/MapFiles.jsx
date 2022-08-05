@@ -108,6 +108,12 @@ export function removeFromMap(map, index, setKey) {
   return tempMap;
 }
 
+/**
+ * @param {Object} args
+ * @param {number} args.index
+ * @param {SubmissionFileMap} args.allFilesByGroup
+ * @param {SubmissionFileMap} args.selectedFilesByGroup
+ */
 export function isSelectAll({ index, allFilesByGroup, selectedFilesByGroup }) {
   return selectedFilesByGroup[index]
     ? getSetSize(allFilesByGroup[index]) ===
@@ -191,7 +197,6 @@ function MapFiles({ mapSelectedFiles, unmappedFiles = defaultUnmapedFiles }) {
   }
 
   /**
-   *
    * @param {number} index
    * @param {SubmissionFile} file
    */
