@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Alert, Button, Drawer, Space, Collapse, List, Tabs, Divider,
 } from 'antd';
@@ -180,8 +180,9 @@ const fieldGrouping = (group: TabFieldGroup, discoveryConfig: DiscoveryConfig, r
 };
 
 const DiscoveryDetails = (props: Props) => {
-  const history = useHistory();
+  const [tabActiveKey, setTabActiveKey] = useState('0');
 
+  const history = useHistory();
   const pagePath = `/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`;
   const permalink = `${(basename === '/' ? '' : basename)}${pagePath}`;
 
@@ -218,7 +219,7 @@ const DiscoveryDetails = (props: Props) => {
       visible={props.modalVisible}
       width={'50vw'}
       closable={false}
-      onClose={() => props.setModalVisible(false)}
+      onClose={() => { props.setModalVisible(false); setTabActiveKey('0'); }}
     >
       <div className='discovery-modal__header-buttons'>
         <Button
@@ -284,11 +285,15 @@ const DiscoveryDetails = (props: Props) => {
           ? (
             <div className='discovery-modal-content'>
               {header}
-              <Tabs type={'card'}>
+              <Tabs
+                type={'card'}
+                activeKey={tabActiveKey}
+                onChange={(activeKey) => { setTabActiveKey(activeKey); }}
+              >
                 {
                   props.config.detailView.tabs.map(
-                    ({ tabName, groups }) => (
-                      <Tabs.TabPane key={tabName} tab={<span {...tabLabelCls}>{tabName}</span>}>
+                    ({ tabName, groups }, tabIndex) => (
+                      <Tabs.TabPane key={tabIndex} tab={<span {...tabLabelCls}>{tabName}</span>}>
                         {
                           (groups || []).map(
                             (group, i) => <div key={i}>{fieldGrouping(group, props.config, props.modalData)}</div>,

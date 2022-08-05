@@ -29,17 +29,19 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
 export const createCEDARInstance = async (cedarUserUUID, metadataToRegister = {}) => {
   try {
     const cedarCreationURL = `${cedarWrapperURL}/create`;
+    const updatedMetadataToRegister = { ...metadataToRegister };
     await fetchWithCreds({
       path: cedarCreationURL,
       method: 'POST',
       customHeaders: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ cedar_user_uuid: cedarUserUUID, metadata: metadataToRegister[STUDY_DATA_FIELD] }),
-    }).then((response) => {
-      if (response.status !== 201) {
-        throw new Error(`Request for create CEDAR instance failed with status ${response.status}`);
+    }).then(({ status, data }) => {
+      if (status !== 201) {
+        throw new Error(`Request for create CEDAR instance failed with status ${status}`);
       }
-      return response;
+      updatedMetadataToRegister[STUDY_DATA_FIELD].cedar_instance_id = data?.cedar_instance_id || '';
     });
+    return updatedMetadataToRegister;
   } catch (err) {
     throw new Error(`Request for create CEDAR instance failed: ${err}`);
   }

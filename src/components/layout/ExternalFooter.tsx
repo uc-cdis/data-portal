@@ -15,7 +15,7 @@ const ExternalFooter: React.FC<ExternalFooterProps> = (props: ExternalFooterProp
       style={{ display: 'block', width: '100%', height: elementHeight }}
       onLoad={
         () => setElementHeight(
-          `${document.getElementById('externalFooter').clientHeight}px`,
+          `${document.getElementById('externalFooter').contentWindow.document.body.scrollHeight}px`,
         )
       }
     />
