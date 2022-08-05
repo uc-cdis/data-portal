@@ -159,7 +159,7 @@
       "trim": "0.0.3"
     },
     "default-browser-id": {
-      "meow": "6.0.0"
+      "meow": "6.1.0"
     }
   },
   "jest": {
