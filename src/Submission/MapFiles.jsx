@@ -1,24 +1,18 @@
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import cloneDeep from 'lodash.clonedeep';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { AutoSizer, Column, Table } from 'react-virtualized';
-import 'react-virtualized/styles.css'; // only needs to be imported once
 import Button from '../gen3-ui-component/components/Button';
 import BackLink from '../components/BackLink';
 import StickyToolbar from '../components/StickyToolbar';
-import CheckBox from '../components/CheckBox';
 import Spinner from '../components/Spinner';
-import StatusReadyIcon from '../img/icons/status_ready.svg';
 import CloseIcon from '../img/icons/cross.svg';
-import { humanFileSize } from '../utils.js';
+import MapFilesTable from './MapFilesTable';
 import './MapFiles.css';
 
 const SET_KEY = 'did';
-const ROW_HEIGHT = 70;
-const HEADER_HEIGHT = 70;
 
 dayjs.extend(customParseFormat);
 
@@ -49,14 +43,6 @@ function createSet(key, values) {
 /** @param {SubmissionFileSet} set */
 function getSetSize(set) {
   return Object.keys(set).length;
-}
-
-/** @param {SubmissionFile[]} files */
-function getTableHeaderText(files) {
-  const date = dayjs(files[0].created_date).format('MM/DD/YY');
-  return `uploaded on ${date}, ${files.length} ${
-    files.length > 1 ? 'files' : 'file'
-  }`;
 }
 
 /** @param {SubmissionFile[]} unmappedFiles */
@@ -108,6 +94,12 @@ export function removeFromMap(map, index, setKey) {
   return tempMap;
 }
 
+/**
+ * @param {Object} args
+ * @param {number} args.index
+ * @param {SubmissionFileMap} args.allFilesByGroup
+ * @param {SubmissionFileMap} args.selectedFilesByGroup
+ */
 export function isSelectAll({ index, allFilesByGroup, selectedFilesByGroup }) {
   return selectedFilesByGroup[index]
     ? getSetSize(allFilesByGroup[index]) ===
@@ -191,7 +183,6 @@ function MapFiles({ mapSelectedFiles, unmappedFiles = defaultUnmapedFiles }) {
   }
 
   /**
-   *
    * @param {number} index
    * @param {SubmissionFile} file
    */
@@ -278,103 +269,33 @@ function MapFiles({ mapSelectedFiles, unmappedFiles = defaultUnmapedFiles }) {
           </h2>
         ) : null}
         {sortedDates.map((date, groupIndex) => {
+          /** @type {(SubmissionFile & { status: boolean })[]} */
           const files = filesByDate[date].map((file) => ({
             ...file,
-            status: isFileReady(file) ? 'Ready' : 'generating',
+            status: isFileReady(file),
           }));
-          const minTableHeight = files.length * ROW_HEIGHT + HEADER_HEIGHT;
+          const selectStatus = {
+            all: isSelectAll({
+              index: groupIndex,
+              allFilesByGroup,
+              selectedFilesByGroup,
+            }),
+            files: files.map(({ did }) =>
+              isSelected({ index: groupIndex, did, selectedFilesByGroup })
+            ),
+          };
+
           return (
-            <Fragment key={groupIndex}>
-              <div className='h2-typo'>{getTableHeaderText(files)}</div>
-              <AutoSizer disableHeight>
-                {({ width }) => (
-                  <Table
-                    className='map-files__table'
-                    width={width}
-                    height={minTableHeight < 500 ? minTableHeight : 500}
-                    headerHeight={ROW_HEIGHT}
-                    rowHeight={ROW_HEIGHT}
-                    rowCount={files.length}
-                    rowGetter={({ index }) => files[index]}
-                    rowClassName='map-files__table-row'
-                  >
-                    <Column
-                      width={100}
-                      label='Select All'
-                      dataKey='selectAll'
-                      headerRenderer={() => (
-                        <CheckBox
-                          id={`${groupIndex}`}
-                          isSelected={isSelectAll({
-                            index: groupIndex,
-                            allFilesByGroup,
-                            selectedFilesByGroup,
-                          })}
-                          onChange={() => toggleSelectAll(groupIndex)}
-                        />
-                      )}
-                      cellRenderer={({ rowIndex }) => (
-                        <CheckBox
-                          id={`${files[rowIndex].did}`}
-                          item={files[rowIndex]}
-                          isSelected={isSelected({
-                            index: groupIndex,
-                            did: files[rowIndex].did,
-                            selectedFilesByGroup,
-                          })}
-                          onChange={() =>
-                            toggleCheckBox(groupIndex, files[rowIndex])
-                          }
-                          isEnabled={files[rowIndex].status === 'Ready'}
-                          disabledText={
-                            'This file is not ready to be mapped yet.'
-                          }
-                        />
-                      )}
-                    />
-                    <Column label='File Name' dataKey='file_name' width={400} />
-                    <Column
-                      label='Size'
-                      dataKey='size'
-                      width={100}
-                      cellRenderer={({ cellData }) => (
-                        <div>{cellData ? humanFileSize(cellData) : '0 B'}</div>
-                      )}
-                    />
-                    <Column
-                      label='Uploaded Date'
-                      dataKey='created_date'
-                      width={300}
-                      cellRenderer={({ cellData }) => (
-                        <div>
-                          {dayjs(cellData).format(
-                            'MM/DD/YY, hh:mm:ss a [UTC]Z'
-                          )}
-                        </div>
-                      )}
-                    />
-                    <Column
-                      label='Status'
-                      dataKey='status'
-                      width={400}
-                      cellRenderer={({ cellData }) => {
-                        const className = `map-files__status--${cellData.toLowerCase()}`;
-                        return (
-                          <div className={className}>
-                            {cellData === 'Ready' ? <StatusReadyIcon /> : null}
-                            <div className='h2-typo'>
-                              {cellData === 'Ready'
-                                ? cellData
-                                : `${cellData}...`}
-                            </div>
-                          </div>
-                        );
-                      }}
-                    />
-                  </Table>
-                )}
-              </AutoSizer>
-            </Fragment>
+            <MapFilesTable
+              key={groupIndex}
+              files={files}
+              groupIndex={groupIndex}
+              onToggleCheckbox={(rowIndex) =>
+                toggleCheckBox(groupIndex, files[rowIndex])
+              }
+              onToggleSelectAll={() => toggleSelectAll(groupIndex)}
+              selectStatus={selectStatus}
+            />
           );
         })}
       </div>
