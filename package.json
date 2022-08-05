@@ -157,6 +157,9 @@
     },
     "@storybook/cli": {
       "trim": "0.0.3"
+    },
+    "default-browser-id": {
+      "meow": "6.0.0"
     }
   },
   "jest": {
