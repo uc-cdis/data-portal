@@ -58,6 +58,7 @@ import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
 import workspaceSessionMonitor from './Workspace/WorkspaceSessionMonitor';
 import Workspace from './Workspace';
+import WorkspaceRegistration from './WorkspaceRegistration';
 import ResourceBrowser from './ResourceBrowser';
 import Discovery from './Discovery';
 import ReduxWorkspaceShutdownPopup from './Popup/ReduxWorkspaceShutdownPopup';
@@ -349,6 +350,24 @@ async function init() {
                       (props) => <ProtectedContent component={Workspace} {...props} />
                     }
                   />
+                  {
+                    isEnabled('workspaceRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/workspace/register'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={WorkspaceRegistration}
+                                {...props}
+                              />
+                            )
+                          }
+                        />
+                      )
+                      : null
+                  }
                   <Route
                     exact
                     path={workspaceUrl}
