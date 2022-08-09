@@ -10,21 +10,18 @@ import {
   Result,
   Radio,
 } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
+import { ResultStatusType } from 'antd/lib/result';
+import { Link } from 'react-router-dom';
 
-import './StudyRegistration.css';
+import './WorkspaceRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import {
-  hostname, requestorPath, useArboristUI, studyRegistrationConfig,
+  hostname, requestorPath, useArboristUI,
 } from '../localconf';
-import { FormSubmissionState, StudyRegistrationProps } from './StudyRegistration';
 import { createKayakoTicket } from '../utils';
 import { fetchWithCreds } from '../actions';
 
-const { TextArea } = Input;
 const { Text } = Typography;
-
-const KAYAKO_MAX_SUBJECT_LENGTH = 255;
 
 const layout = {
   labelCol: {
@@ -46,36 +43,27 @@ const validateMessages = {
 };
 /* eslint-enable no-template-curly-in-string */
 
-interface LocationState {
-  studyUID?: string|Number;
-  studyNumber?: string;
-  studyName?: string;
-  studyRegistrationAuthZ?: string;
+export interface FormSubmissionState {
+  status?: ResultStatusType;
+  text?: string
+}
+export interface User {
+  username: string
+}
+export interface WorkspaceRegistrationProps {
+  user: User,
+  userAuthMapping: any
 }
 
-const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationProps> = (props: StudyRegistrationProps) => {
+const StudyRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistrationProps> = (props: WorkspaceRegistrationProps) => {
   const [form] = Form.useForm();
-  const location = useLocation();
 
   const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
-  // const [requestID, setRequestID] = useState<string|undefined|null>(null);
-  const [studyNumber, setStudyNumber] = useState<string|undefined|null>(null);
-  const [studyName, setStudyName] = useState<string|undefined|null>(null);
-  const [studyUID, setStudyUID] = useState<string|Number|undefined|null>(null);
-  const [studyRegistrationAuthZ, setStudyRegistrationAuthZ] = useState<string|undefined|null>(null);
   const [role, setRole] = useState('Principal Investigator');
   const [formSubmissionButtonDisabled, setFormSubmissionButtonDisabled] = useState(false);
   const [reqAccessRequestPending, setReqAccessRequestPending] = useState(false);
 
-  useEffect(() => {
-    const locationStateData = location.state as LocationState || {};
-    setStudyUID(locationStateData.studyUID);
-    setStudyNumber(locationStateData.studyNumber);
-    setStudyName(locationStateData.studyName);
-    setStudyRegistrationAuthZ(locationStateData.studyRegistrationAuthZ);
-  }, [location.state]);
-
-  useEffect(() => form.resetFields(), [studyNumber, studyName, form]);
+  useEffect(() => form.resetFields(), [form]);
 
   const userHasAccess = () => {
     if (!useArboristUI) {
@@ -88,9 +76,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
     // create a request in requestor
     const body = {
       username: props.user.username,
-      resource_id: studyUID,
-      resource_paths: [studyRegistrationAuthZ, '/mds_gateway', '/cedar'],
-      role_ids: ['study_registrant', 'mds_user', 'cedar_user'],
+      policy_id: 'workspace',
     };
     fetchWithCreds({
       path: `${requestorPath}request`,
@@ -103,12 +89,9 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
             // request created, now create a kayako ticket
             const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
             const email = formValues['E-mail Address'];
-            let subject = `Registration Access Request for ${studyNumber} ${studyName}`;
-            if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
-              subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
-            }
+            const subject = 'Registration Access Request for Workspace';
 
-            let contents = `Request ID: ${data.request_id}\nGrant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}`;
+            let contents = `Request ID: ${data.request_id}\nEnvironment: ${hostname}`;
 
             Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
               const [key, value] = entry;
@@ -148,8 +131,8 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
 
   if (formSubmissionStatus) {
     return (
-      <div className='study-reg-container'>
-        <div className='study-reg-form-container'>
+      <div className='workspace-reg-container'>
+        <div className='workspace-reg-form-container'>
           {(formSubmissionStatus.status === 'success') ? (
             <Result
               status={formSubmissionStatus.status}
@@ -179,27 +162,15 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
   }
 
   return (
-    <div className='study-reg-container'>
-      <div className='study-reg-form-container'>
-        <Form className='study-reg-form' {...layout} form={form} name='study-reg-request-form' onFinish={onFinish} validateMessages={validateMessages}>
-          <Divider plain>Study Registration Access Request</Divider>
+    <div className='workspace-reg-container'>
+      <div className='workspace-reg-form-container'>
+        <Form className='workspace-reg-form' {...layout} form={form} name='workspace-reg-request-form' onFinish={onFinish} validateMessages={validateMessages}>
+          <Divider plain>Workspace Registration Access Request</Divider>
           <Typography style={{ textAlign: 'center' }}>
-            Please fill out this form to request and be approved for access to register your study with the HEAL Platform.
+            Please fill out this form to request and be approved for access to workspace with the BRH Platform.
           </Typography>
           <Divider plain />
-          <div className='study-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
-          <Form.Item
-            label='Study Name - Grant Number'
-            name='Study Grant_doNotInclude'
-            initialValue={(!studyName && !studyNumber) ? '' : `${studyName || 'N/A'} - ${studyNumber || 'N/A'}`}
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <TextArea disabled autoSize />
-          </Form.Item>
+          <div className='workspace-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
           <Form.Item
             name='First Name'
             label='Registrant First Name'
@@ -249,6 +220,17 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
             <Input />
           </Form.Item>
           <Form.Item
+            name='Grant Number'
+            label='Grant Number'
+            rules={[
+              {
+                required: false,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
             label='Role on Project'
             name='Role on Project'
             initialValue={role}
@@ -283,7 +265,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
           <Form.Item {...tailLayout}>
             <Space>
               {(!userHasAccess()) ? (
-                <Tooltip title={'You don\'t have permission to request for access to study registration'}>
+                <Tooltip title={'You don\'t have permission to request for access to workspace'}>
                   <Button type='primary' htmlType='submit' disabled>
                     Submit
                   </Button>
@@ -298,13 +280,6 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
               </Button>
             </Space>
           </Form.Item>
-          { (studyRegistrationConfig.studyRegistrationFormDisclaimerField)
-              && (
-                <Typography className='study-reg-disclaimer-text'>
-                  {studyRegistrationConfig.studyRegistrationFormDisclaimerField}
-                </Typography>
-              )
-          }
         </Form>
       </div>
     </div>

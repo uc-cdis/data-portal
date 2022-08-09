@@ -65,6 +65,7 @@ import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import StudyRegistration from './StudyRegistration';
+import WorkspaceRegistration from './WorkspaceRegistration';
 import ReduxStudyRegistrationRequestForm from './StudyRegistration/ReduxStudyRegistrationRequestForm'
 import NotFound from './components/NotFound';
 
@@ -351,6 +352,24 @@ async function init() {
                       (props) => <ProtectedContent component={Workspace} {...props} />
                     }
                   />
+                  {
+                    isEnabled('workspaceRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/workspace/register'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={WorkspaceRegistration}
+                                {...props}
+                              />
+                            )
+                          }
+                        />
+                      )
+                      : null
+                  }
                   <Route
                     exact
                     path={workspaceUrl}
