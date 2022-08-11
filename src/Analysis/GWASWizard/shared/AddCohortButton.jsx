@@ -1,5 +1,5 @@
 import React from 'react';
-import { atlasDomain } from '../wizard-endpoints/cohort-middleware-api';
+import { atlasDomain } from '../wizardEndpoints/cohortMiddlewareApi';
 import '../../GWASUIApp/GWASUIApp.css';
 
 const AddCohortButton = () => (

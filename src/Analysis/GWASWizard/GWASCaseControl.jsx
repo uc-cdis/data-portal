@@ -7,13 +7,13 @@ import CohortSelect from './shared/CohortSelect';
 import CovariateSelect from './shared/CovariateSelect';
 import CustomDichotomousSelect from './shared/CustomDichotomousSelect';
 import { caseControlSteps } from './shared/constants';
-import { useSourceFetch } from './wizard-endpoints/cohort-middleware-api';
+import { useSourceFetch } from './wizardEndpoints/cohortMiddlewareApi';
 import '../GWASUIApp/GWASUIApp.css';
 import AddCohortButton from './shared/AddCohortButton';
 import CovariateReview from './CovariateReview';
 import WorkflowParameters from './shared/WorkflowParameters';
 import GWASFormSubmit from './shared/GWASFormSubmit';
-import TourButton from '../GWASUIApp/TourButton';
+import TourButton from './shared/TourButton';
 
 const { Step } = Steps;
 
@@ -40,6 +40,11 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
 
   const handleCovariateSelect = (cov) => {
     setSelectedCovariates(cov);
+  };
+
+  const handleCovariateDelete = (remainingCovariates) => {
+    const covariateMapping = remainingCovariates.map((conceptName) => selectedCovariates.find((concept) => concept.concept_name === conceptName));
+    setSelectedCovariates(covariateMapping);
   };
 
   const handleCDAdd = (cd) => {
@@ -196,6 +201,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             handleImputation={handleImputation}
             selectedHare={selectedHare}
             handleHareChange={handleHareChange}
+            handleCovariateDelete={handleCovariateDelete}
           />
           <TourButton stepInfo={stepInfo} />
         </React.Fragment>

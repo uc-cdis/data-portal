@@ -7,20 +7,6 @@ import '../../GWASUIApp/GWASUIApp.css';
 import CovariateStatsByHareCC from '../CovariateStatsByHareCC';
 import CovariateStatsByHareQ from '../CovariateStatsByHareQ';
 
-// const handleCovariateDelete = (remainingCovariates) => {
-//     const remainingCovArr = [];
-//     remainingCovariates.forEach((name) => {
-//         selectedCovariates.forEach((covObj) => {
-//             if (covObj.concept_name === name) {
-//                 remainingCovArr.push(covObj);
-//             }
-//         });
-//     });
-//     setSelectedCovariates(remainingCovArr);
-//     setSelectedCovariateVars(remainingCovArr.map((c) => c.concept_id));
-//     setSelectedCovariateIds(remainingCovArr.map((p) => p.prefixed_concept_id));
-// };
-
 const WorkflowParameters = ({
   selectedHare,
   handleHareChange,
@@ -37,16 +23,18 @@ const WorkflowParameters = ({
   handleMaf,
   imputationScore,
   handleImputation,
+  handleCovariateDelete,
+  outcomeId
 }) => (
   <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
     <h4 className='GWASUI-selectInstruction'>
-        In this step, you will determine workflow parameters.
-        Please adjust the number of population principal components to control for population structure,
-        minor allele frequency cutoff and imputation score cutoff.
+      In this step, you will determine workflow parameters.
+      Please adjust the number of population principal components to control for population structure,
+      minor allele frequency cutoff and imputation score cutoff.
     </h4>
     <h4 className='GWASUI-selectInstruction'>
-        You may also remove unwanted covariates.
-        Please also choose the ancestry population on which you would like to perform your study.
+      You may also remove unwanted covariates.
+      Please also choose the ancestry population on which you would like to perform your study.
     </h4>
     <div className='GWASUI-mainArea GWASUI-form'>
       <div className='GWASUI-formItem' data-tour='number-of-pcs'>
@@ -68,9 +56,12 @@ const WorkflowParameters = ({
           <Select
             id='select-covariates'
             mode='multiple'
-            value={selectedCovariates.map((s) => s.concept_name)}
+            value={
+              outcomeId ? selectedCovariates.filter((covs) => covs.concept_id !== outcomeId).map((s) => s.concept_name)
+                : selectedCovariates.map((s) => s.concept_name)
+            }
             disabled={selectedCovariates.length === 1}
-            // onChange={(e) => handleCovariateDelete(e)}
+            onChange={(e) => handleCovariateDelete(e)}
             style={{ width: '70%' }}
           />
         </label>
@@ -81,7 +72,8 @@ const WorkflowParameters = ({
           <Select
             id='select-dichotomous-covariates'
             mode='multiple'
-            value={selectedDichotomousCovariates.map((s) => s.provided_name)}
+            value={selectedDichotomousCovariates.map((s) => s.concept_name)}
+            // TODO currently cant delete cd's from this page
             // onChange={(e) => handleDichotomousCovariateDelete(e)}
             style={{ width: '70%' }}
           />
@@ -156,9 +148,9 @@ const WorkflowParameters = ({
 WorkflowParameters.propTypes = {
   selectedHare: PropTypes.object.isRequired,
   handleHareChange: PropTypes.func.isRequired,
-  caseCohortDefinitionId: PropTypes.number.isRequired,
-  controlCohortDefinitionId: PropTypes.number.isRequired,
-  quantitativeCohortDefinitionId: PropTypes.number.isRequired,
+  caseCohortDefinitionId: PropTypes.number,
+  controlCohortDefinitionId: PropTypes.number,
+  quantitativeCohortDefinitionId: PropTypes.number,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
@@ -169,12 +161,15 @@ WorkflowParameters.propTypes = {
   handleMaf: PropTypes.func.isRequired,
   numOfPC: PropTypes.number.isRequired,
   handleNumOfPC: PropTypes.func.isRequired,
+  handleCovariateDelete: PropTypes.func.isRequired,
+  outcomeId: PropTypes.number
 };
 
 WorkflowParameters.defaultPropTypes = {
   controlCohortDefinitionId: undefined,
   caseCohortDefinitionId: undefined,
   quantitativeCohortDefinitionId: undefined,
+  outcomeId: undefined
 };
 
 export default WorkflowParameters;

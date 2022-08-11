@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTour } from '@reactour/tour';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { caseControlTourSteps, quantitativeTourSteps } from './gwassteps';
+import { caseControlTourSteps, quantitativeTourSteps } from './gwasSteps';
 
 const TourButton = ({ stepInfo }) => {
   const { setIsOpen, setSteps, isOpen } = useTour();

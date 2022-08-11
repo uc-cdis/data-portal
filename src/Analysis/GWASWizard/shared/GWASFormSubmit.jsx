@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import { useMutation } from 'react-query';
 import CheckOutlined from '@ant-design/icons';
-import { caseControlSubmission, quantitativeSubmission } from '../wizard-endpoints/gwas-workflow-api';
+import { caseControlSubmission, quantitativeSubmission } from '../wizardEndpoints/gwasWorkflowApi';
 
 const GWASFormSubmit = ({
   sourceId,
@@ -126,7 +126,9 @@ const GWASFormSubmit = ({
         ))}
         </div>
       </div>
+
       {/* <div className="GWASUI-flexRow GWASUI-rowItem">
+          // TODO this is where functionality previously was. placeholder for when we add back in
             <QCShowOverlap />
         </div> */}
       <div className='GWASUI-flexRow'>

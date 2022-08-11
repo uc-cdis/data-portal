@@ -12,9 +12,9 @@ import {
 } from '@ant-design/icons';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
-import { gwasWorkflowPath } from '../../localconf';
-import { headers } from '../../configs';
-import { getPresignedUrl } from '../AnalysisJob';
+import { gwasWorkflowPath } from '../../../localconf';
+import { headers } from '../../../configs';
+import { getPresignedUrl } from '../../AnalysisJob';
 
 const GWASJob = ({ workflow }) => {
   async function handleWorkflowOutput(url) {
@@ -113,12 +113,6 @@ const GWASJob = ({ workflow }) => {
       );
     }
   };
-
-  // async function fetchGwasCancel() {
-  //   const cancelEndpoint = `${gwasWorkflowPath}cancel/${workflow}`;
-  //   const res = await fetch(cancelEndpoint, { method: 'POST', headers });
-  //   return res;
-  // }
 
   async function fetchWorkflowStatus() {
     const statusEndpoint = `${gwasWorkflowPath}status/${workflow}`;
