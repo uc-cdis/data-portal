@@ -4,10 +4,10 @@ import {
   Space, Table, Spin,
 } from 'antd';
 import { useQuery } from 'react-query';
-import { fetchCovariateStats, queryConfig } from './wizard-endpoints/cohort-middleware-api';
+import { fetchCovariateStats, queryConfig } from './wizardEndpoints/cohortMiddlewareApi';
 import { outcomeSelection } from './shared/constants';
 import SearchBar from './shared/SearchBar';
-import { useFetch, useFilter } from './shared/form-hooks';
+import { useFetch, useFilter } from './shared/formHooks';
 
 export const outcomeReviewTableConfig = [
   {

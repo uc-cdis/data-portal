@@ -4,10 +4,10 @@ import { useQuery } from 'react-query';
 import {
   Table, Spin,
 } from 'antd';
-import { fetchCohortDefinitions, queryConfig } from '../wizard-endpoints/cohort-middleware-api';
+import { fetchCohortDefinitions, queryConfig } from '../wizardEndpoints/cohortMiddlewareApi';
 import { cohortTableConfig, cohortSelection } from './constants';
 import '../../GWASUIApp/GWASUIApp.css';
-import { useFetch, useFilter } from './form-hooks';
+import { useFetch, useFilter } from './formHooks';
 
 const CohortDefinitions = ({
   sourceId, selectedCohort = undefined, handleCohortSelect, otherCohortSelected, searchTerm,

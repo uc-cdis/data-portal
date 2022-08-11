@@ -1,5 +1,3 @@
-// TODO put antd/query configs in here
-
 export const quantitativeSteps = [
   {
     title: 'Step 1',

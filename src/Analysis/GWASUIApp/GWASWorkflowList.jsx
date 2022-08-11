@@ -3,7 +3,7 @@ import { Collapse, List, Spin } from 'antd';
 import './GWASUIApp.css';
 import { useQuery } from 'react-query';
 import { gwasWorkflowPath } from '../../localconf';
-import GWASJob from './GWASJob';
+import GWASJob from '../GWASWizard/shared/GWASJob';
 
 const GWASWorkflowList = () => {
   const { Panel } = Collapse;

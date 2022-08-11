@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-// import { useQuery, useMutation } from 'react-query';
 import {
   Steps, Button, Space, Popconfirm, Spin,
 } from 'antd';
 import CohortSelect from './shared/CohortSelect';
 import CovariateSelect from './shared/CovariateSelect';
 import { quantitativeSteps } from './shared/constants';
-import { useSourceFetch } from './wizard-endpoints/cohort-middleware-api';
+import { useSourceFetch } from './wizardEndpoints/cohortMiddlewareApi';
 import '../GWASUIApp/GWASUIApp.css';
 import AddCohortButton from './shared/AddCohortButton';
 import OutcomeSelectReview from './OutcomeSelectReview';
 import CustomDichotomousSelect from './shared/CustomDichotomousSelect';
 import WorkflowParameters from './shared/WorkflowParameters';
 import GWASFormSubmit from './shared/GWASFormSubmit';
-import TourButton from '../GWASUIApp/TourButton';
+import TourButton from './shared/TourButton';
 
 const { Step } = Steps;
 
@@ -38,6 +37,11 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
 
   const handleCovariateSelect = (cov) => {
     setSelectedCovariates(cov);
+  };
+
+  const handleCovariateDelete = (remainingCovariates) => {
+    const covariateMapping = remainingCovariates.map((conceptName) => selectedCovariates.find((concept) => concept.concept_name === conceptName));
+    setSelectedCovariates(covariateMapping);
   };
 
   const handleOutcomeSelect = (selectedOutcome) => {
@@ -177,6 +181,8 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
             handleImputation={handleImputation}
             selectedHare={selectedHare}
             handleHareChange={handleHareChange}
+            handleCovariateDelete={handleCovariateDelete}
+            outcomeId={outcome.concept_id}
           />
           <TourButton stepInfo={stepInfo} />
         </React.Fragment>
@@ -196,8 +202,6 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
               selectedQuantitativeCohort={selectedCohort}
               workflowType={'quantitative'}
               outcome={outcome}
-              // selectedCaseCohort={selectedCaseCohort}
-              // selectedControlCohort={selectedControlCohort}
               selectedCovariates={selectedCovariates}
               selectedDichotomousCovariates={selectedDichotomousCovariates}
               gwasName={gwasName}

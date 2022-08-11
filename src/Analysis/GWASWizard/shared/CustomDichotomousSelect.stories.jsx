@@ -33,8 +33,6 @@ const MockTemplate = () => {
   );
 };
 
-/// cohort-middleware/cohortdefinition-stats/by-source-id/1
-
 export const MockedSuccess = MockTemplate.bind({});
 MockedSuccess.parameters = {
   msw: {

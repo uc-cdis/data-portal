@@ -5,7 +5,7 @@ import { useQueries } from 'react-query';
 import {
   Space, Table, Spin,
 } from 'antd';
-import { fetchCovariateStats, queryConfig } from './wizard-endpoints/cohort-middleware-api';
+import { fetchCovariateStats, queryConfig } from './wizardEndpoints/cohortMiddlewareApi';
 
 export const covariateReviewTableConfig = [
   {

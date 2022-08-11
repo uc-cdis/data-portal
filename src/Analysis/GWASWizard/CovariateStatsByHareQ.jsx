@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { Spin } from 'antd';
-import { fetchConceptStatsByHare, queryConfig } from './wizard-endpoints/cohort-middleware-api';
+import { fetchConceptStatsByHare, queryConfig } from './wizardEndpoints/cohortMiddlewareApi';
 
 const CovariateStatsByHareQ = ({
   selectedHare,
