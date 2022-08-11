@@ -106,7 +106,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistratio
         } else if (status === 409) {
           // there is already a request for this user on this study, display a message and disable the button
           setFormSubmissionButtonDisabled(true);
-          setFormSubmissionStatus({ status: 'warning', text: 'There is already a pending request for this study/user combination, please wait while we are processing your request.' });
+          setFormSubmissionStatus({ status: 'warning', text: 'There is already a pending request for workspace access, please wait while we are processing your request.' });
         } else {
           // something has gone wrong
           setFormSubmissionStatus({ status: 'error', text: `Failed to create a request with error code: ${status}. Please try again later. If the error persists, please contact us for help.` });
