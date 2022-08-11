@@ -164,9 +164,9 @@ GWASFormSubmit.propTypes = {
   mafThreshold: PropTypes.number.isRequired,
   imputationScore: PropTypes.number.isRequired,
   selectedHare: PropTypes.object.isRequired,
-  selectedCaseCohort: PropTypes.object.isRequired,
-  selectedControlCohort: PropTypes.object.isRequired,
-  selectedQuantitativeCohort: PropTypes.object.isRequired,
+  selectedCaseCohort: PropTypes.object,
+  selectedControlCohort: PropTypes.object,
+  selectedQuantitativeCohort: PropTypes.object,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   gwasName: PropTypes.string.isRequired,
@@ -175,7 +175,7 @@ GWASFormSubmit.propTypes = {
   workflowType: PropTypes.string.isRequired,
 };
 
-GWASFormSubmit.defaultPropTypes = {
+GWASFormSubmit.defaultProps = {
   selectedControlCohort: undefined,
   selectedCaseCohort: undefined,
   selectedQuantitativeCohort: undefined,

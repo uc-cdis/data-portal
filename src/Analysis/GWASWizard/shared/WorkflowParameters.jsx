@@ -24,7 +24,7 @@ const WorkflowParameters = ({
   imputationScore,
   handleImputation,
   handleCovariateDelete,
-  outcomeId
+  outcomeId,
 }) => (
   <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
     <h4 className='GWASUI-selectInstruction'>
@@ -162,14 +162,14 @@ WorkflowParameters.propTypes = {
   numOfPC: PropTypes.number.isRequired,
   handleNumOfPC: PropTypes.func.isRequired,
   handleCovariateDelete: PropTypes.func.isRequired,
-  outcomeId: PropTypes.number
+  outcomeId: PropTypes.number,
 };
 
-WorkflowParameters.defaultPropTypes = {
+WorkflowParameters.defaultProps = {
   controlCohortDefinitionId: undefined,
   caseCohortDefinitionId: undefined,
   quantitativeCohortDefinitionId: undefined,
-  outcomeId: undefined
+  outcomeId: undefined,
 };
 
 export default WorkflowParameters;
