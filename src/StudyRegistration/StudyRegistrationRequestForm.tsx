@@ -14,7 +14,9 @@ import { Link, useLocation } from 'react-router-dom';
 
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { hostname, requestorPath, useArboristUI } from '../localconf';
+import {
+  hostname, requestorPath, useArboristUI, studyRegistrationConfig
+} from '../localconf';
 import { FormSubmissionState, StudyRegistrationProps } from './StudyRegistration';
 import { createKayakoTicket } from './utils';
 import { fetchWithCreds } from '../actions';
@@ -105,7 +107,9 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
             if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
               subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
             }
+
             let contents = `Request ID: ${data.request_id}\nGrant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}`;
+
             Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
               const [key, value] = entry;
               contents = contents.concat(`\n${key}: ${value}`);
@@ -150,7 +154,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
             <Result
               status={formSubmissionStatus.status}
               title='Your access request has been submitted!'
-              subTitle='You will be notified when a decision has been made'
+              subTitle='Thank you for your submission. Requests take up to 1 business day to complete. You will be notified of the status.'
               extra={[
                 <Link key='discovery' to={'/discovery'}>
                   <Button>Go To Discovery Page</Button>
@@ -294,6 +298,13 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
               </Button>
             </Space>
           </Form.Item>
+          { (studyRegistrationConfig.studyRegistrationFormDisclaimerField)
+              && (
+                <Typography className='study-reg-disclaimer-text'>
+                  {studyRegistrationConfig.studyRegistrationFormDisclaimerField}
+                </Typography>
+              )
+          }
         </Form>
       </div>
     </div>
