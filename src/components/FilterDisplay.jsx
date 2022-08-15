@@ -111,7 +111,7 @@ function FilterDisplay({
     if (value.__type === FILTER_TYPE.ANCHORED) {
       const [anchorField, anchorValue] = key.split(':');
       filterElements.push(
-        <Pill key={key} className='pill anchor'>
+        <Pill key={key}>
           <span className='token field'>
             With <code>{filterInfo[anchorField].label}</code> of{' '}
             <code>{`"${anchorValue}"`}</code>
