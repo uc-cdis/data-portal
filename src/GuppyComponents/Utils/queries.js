@@ -8,9 +8,9 @@ import { FILE_DELIMITERS, FILTER_TYPE, GUPPY_URL } from './const';
 /** @typedef {import('../types').FilterState} FilterState */
 /** @typedef {import('../types').GqlFilter} GqlFilter */
 /** @typedef {import('../types').GqlInFilter} GqlInFilter */
+/** @typedef {import('../types').GqlSimpleFilter} GqlSimpleFilter */
 /** @typedef {import('../types').GqlNestedFilter} GqlNestedFilter */
 /** @typedef {import('../types').GqlNestedAnchoredFilter} GqlNestedAnchoredFilter */
-/** @typedef {import('../types').GqlSimpleAndFilter} GqlSimpleAndFilter */
 /** @typedef {import('../types').GqlSort} GqlSort */
 /** @typedef {import('../types').EmptyFilter} EmptyFilter */
 /** @typedef {import('../types').OptionFilter} OptionFilter */
@@ -554,7 +554,7 @@ export function queryGuppyForRawData({
 /**
  * @param {string} fieldName
  * @param {EmptyFilter | OptionFilter | RangeFilter} filterValues
- * @returns {GqlInFilter | GqlSimpleAndFilter | undefined}
+ * @returns {GqlSimpleFilter}
  */
 function parseSimpleFilter(fieldName, filterValues) {
   const invalidFilterError = new Error(
@@ -652,7 +652,7 @@ export function getGQLFilter(filterState) {
   )
     return undefined;
 
-  /** @type {(GqlInFilter | GqlSimpleAndFilter)[]} */
+  /** @type {GqlSimpleFilter[]} */
   const simpleFilters = [];
 
   /** @type {GqlNestedFilter[]} */

@@ -46,15 +46,11 @@ export type GqlRangeFilter = {
   };
 };
 
-export type GqlSimpleAndFilter =
-  | {
-      AND: GqlSimpleFilter[];
-    }
-  | {
-      OR: GqlSimpleFilter[];
-    };
-
-export type GqlSimpleFilter = GqlInFilter | GqlRangeFilter | GqlSimpleAndFilter;
+export type GqlSimpleFilter =
+  | GqlInFilter
+  | GqlRangeFilter
+  | { AND: GqlSimpleFilter[] }
+  | { OR: GqlSimpleFilter[] };
 
 export type GqlNestedAnchoredFilter = {
   nested: {
@@ -79,14 +75,6 @@ export type GqlNestedFilter =
           };
     };
 
-export type GqlAndFilter =
-  | {
-      AND: GqlFilter[];
-    }
-  | {
-      OR: GqlFilter[];
-    };
-
 export type GqlSearchFilter = {
   search: {
     keyword: string;
@@ -97,8 +85,9 @@ export type GqlSearchFilter = {
 export type GqlFilter =
   | GqlSimpleFilter
   | GqlNestedFilter
-  | GqlAndFilter
-  | GqlSearchFilter;
+  | GqlSearchFilter
+  | { AND: GqlFilter[] }
+  | { OR: GqlFilter[] };
 
 export type GqlSort = { [x: string]: 'asc' | 'desc' }[];
 
