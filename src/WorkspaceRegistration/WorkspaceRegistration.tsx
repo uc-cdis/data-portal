@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import './WorkspaceRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import {
-  hostname, requestorPath, useArboristUI,
+  hostname, requestorPath, useArboristUI, workspaceRegistrationConfig,
 } from '../localconf';
 import { createKayakoTicket } from '../utils';
 import { fetchWithCreds } from '../actions';
@@ -76,7 +76,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistratio
     // create a request in requestor
     const body = {
       username: props.user.username,
-      policy_id: 'workspace',
+      policy_id: workspaceRegistrationConfig.workspacePolicyId,
     };
     fetchWithCreds({
       path: `${requestorPath}request`,
@@ -97,7 +97,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistratio
               const [key, value] = entry;
               contents = contents.concat(`\n${key}: ${value}`);
             });
-            createKayakoTicket(subject, fullName, email, contents, 21).then(() => setFormSubmissionStatus({ status: 'success' }),
+            createKayakoTicket(subject, fullName, email, contents, workspaceRegistrationConfig.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
           } else {
             // eslint-disable-next-line no-console
