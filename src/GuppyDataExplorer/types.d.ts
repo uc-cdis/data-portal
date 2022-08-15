@@ -1,14 +1,15 @@
-import { GqlFilter } from '../GuppyComponents/types';
+import { FilterState, GqlFilter } from '../GuppyComponents/types';
 
 export type {
   FilterConfig,
-  FilterState as ExplorerFilter,
   GqlSort,
   GuppyConfig,
   GuppyData,
   OptionFilter,
   SimpleAggsData,
 } from '../GuppyComponents/types';
+
+export type ExplorerFilter = FilterState;
 
 export type SingleChartConfig = {
   chartType: string;
