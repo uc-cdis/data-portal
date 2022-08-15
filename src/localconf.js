@@ -287,6 +287,7 @@ function buildConfig(opts) {
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
+  const { workspaceRegistrationConfig } = config;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -531,6 +532,7 @@ function buildConfig(opts) {
     workspacePageTitle,
     workspacePageDescription,
     enableDAPTracker,
+    workspaceRegistrationConfig,
     workspaceStorageUrl,
     workspaceStorageListUrl,
     workspaceStorageDownloadUrl,
