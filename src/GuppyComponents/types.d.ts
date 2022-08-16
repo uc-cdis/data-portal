@@ -31,6 +31,12 @@ export type FilterState = {
   };
 };
 
+export type ComposedFilterState = {
+  __combineMode?: CombineMode;
+  __type: 'COMPOSED';
+  value?: (ComposedFilterState | FilterState)[];
+};
+
 export type GqlInFilter = {
   IN: {
     [x: string]: string[];
