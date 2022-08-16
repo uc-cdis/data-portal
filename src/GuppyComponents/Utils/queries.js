@@ -5,6 +5,7 @@ import { FILE_DELIMITERS, FILTER_TYPE, GUPPY_URL } from './const';
 
 /** @typedef {import('../types').AnchorConfig} AnchorConfig */
 /** @typedef {import('../types').AnchoredFilterState} AnchoredFilterState */
+/** @typedef {import('../types').ComposedFilterState} ComposedFilterState */
 /** @typedef {import('../types').FilterState} FilterState */
 /** @typedef {import('../types').GqlFilter} GqlFilter */
 /** @typedef {import('../types').GqlInFilter} GqlInFilter */
@@ -641,7 +642,7 @@ function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
 
 /**
  * Convert filter obj into GQL filter format
- * @param {EmptyFilter | FilterState} filterState
+ * @param {EmptyFilter | ComposedFilterState | FilterState} filterState
  * @returns {GqlFilter}
  */
 export function getGQLFilter(filterState) {
@@ -652,6 +653,10 @@ export function getGQLFilter(filterState) {
   )
     return undefined;
 
+  const combineMode = filterState.__combineMode ?? 'AND';
+  if (filterState.__type === FILTER_TYPE.COMPOSED)
+    return { [combineMode]: filterState.value.map(getGQLFilter) };
+
   /** @type {GqlSimpleFilter[]} */
   const simpleFilters = [];
 
@@ -661,7 +666,6 @@ export function getGQLFilter(filterState) {
   const nestedFilterIndices = {};
   let nestedFilterIndex = 0;
 
-  const combineMode = filterState.__combineMode ?? 'AND';
   for (const [filterKey, filterValues] of Object.entries(filterState.value)) {
     const [fieldStr, nestedFieldStr] = filterKey.split('.');
     const isNestedField = nestedFieldStr !== undefined;
