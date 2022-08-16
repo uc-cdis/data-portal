@@ -24,6 +24,8 @@ export const FILTER_TYPE = {
   RANGE: 'RANGE',
   /** @type {'STANDARD'} */
   STANDARD: 'STANDARD',
+  /** @type {'COMPOSED'} */
+  COMPOSED: 'COMPOSED',
 };
 
 export { guppyUrl as GUPPY_URL } from '../../localconf';
