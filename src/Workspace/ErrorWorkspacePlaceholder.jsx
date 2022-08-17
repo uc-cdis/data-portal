@@ -8,11 +8,14 @@ import { components } from '../params';
 class ErrorWorkspacePlaceholder extends React.Component {
   render() {
     const supportEmail = components.login?.email || 'support@datacommons.io';
+    if (isEnabled('workspaceRegistration')) {
+      return <Redirect to='/workspace/register' />;
+    }
     return (
       <div className='error-workspace-placeholder__error-msg'>
         <h1>Error opening workspace...</h1>
         <p>
-        Workspace access requires authorization. Please do not contact <a href={`mailto:${supportEmail}`}>{supportEmail}</a> for more information.
+        Workspace access requires authorization. Please contact <a href={`mailto:${supportEmail}`}>{supportEmail}</a> for more information.
         </p>
         <NotFoundSVG />
       </div>

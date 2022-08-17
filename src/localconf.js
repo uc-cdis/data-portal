@@ -103,7 +103,7 @@ function buildConfig(opts) {
   const graphqlSchemaUrl = `${hostname}${(basename && basename !== '/') ? basename : ''}/data/schema.json`;
   const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);
   const workspaceErrorUrl = '/no-workspace-access/';
-  const Error403Url = '/403Error';
+  const Error403Url = '/403error';
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
   const workspacePayModelUrl = `${workspaceUrl}paymodels`;

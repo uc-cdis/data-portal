@@ -71,7 +71,6 @@ import ErrorPage403 from './components/ErrorPage403';
 // monitor user's session
 sessionMonitor.start();
 workspaceSessionMonitor.start();
-
 // render the app after the store is configured
 async function init() {
   const store = await getReduxStore();
@@ -513,7 +512,6 @@ async function init() {
                     component={NotFound}
                   />
                   <Route
-                    exact
                     path={Error403Url}
                     component={ErrorPage403}
                   />
