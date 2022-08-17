@@ -458,6 +458,12 @@ Below is an example, with inline comments describing what each JSON block config
       },
       "authorization": {
         "enabled": true // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
+      },
+      "tagsColumn" : {
+        "enabled": true // toggles if tags should be rendered in a column
+      },
+      "tagsInDescription" : {
+        "enabled": false // toggles if tags should be rendered as last line of description
       }
     },
     "aggregations": [ // configures the statistics at the top of the discovery page (e.g. 'XX Studies', 'XX,XXX Subjects')

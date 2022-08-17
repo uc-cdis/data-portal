@@ -54,6 +54,9 @@ export interface DiscoveryConfig {
         tagsColumn?: {
             enabled: boolean,
         },
+        tagsInDescription?: {
+            enabled: boolean,
+        },
         advSearchFilters?: {
             enabled: boolean,
             field: string,

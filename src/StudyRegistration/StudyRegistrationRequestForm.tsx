@@ -107,7 +107,9 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
             if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
               subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
             }
+
             let contents = `Request ID: ${data.request_id}\nGrant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}`;
+
             Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
               const [key, value] = entry;
               contents = contents.concat(`\n${key}: ${value}`);
