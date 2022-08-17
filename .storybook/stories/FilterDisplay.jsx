@@ -95,4 +95,21 @@ storiesOf('FilterDisplay', module)
         onCloseFilter={action('closeFilter')}
       />
     </div>
+  ))
+  .add('Composed', () => (
+    <FilterDisplay
+      filter={{
+        __combineMode: 'OR',
+        __type: FILTER_TYPE.COMPOSED,
+        value: [
+          {
+            __combineMode: 'AND',
+            __type: FILTER_TYPE.COMPOSED,
+            value: [simpleFilter, complexFilter],
+          },
+          complexFilter,
+        ],
+      }}
+      filterInfo={filterInfo}
+    />
   ));
