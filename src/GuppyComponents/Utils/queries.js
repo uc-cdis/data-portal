@@ -6,7 +6,7 @@ import { FILE_DELIMITERS, FILTER_TYPE, GUPPY_URL } from './const';
 /** @typedef {import('../types').AnchorConfig} AnchorConfig */
 /** @typedef {import('../types').AnchoredFilterState} AnchoredFilterState */
 /** @typedef {import('../types').ComposedFilterState} ComposedFilterState */
-/** @typedef {import('../types').FilterState} FilterState */
+/** @typedef {import('../types').StandardFilterState} StandardFilterState */
 /** @typedef {import('../types').GqlFilter} GqlFilter */
 /** @typedef {import('../types').GqlInFilter} GqlInFilter */
 /** @typedef {import('../types').GqlSimpleFilter} GqlSimpleFilter */
@@ -640,7 +640,7 @@ function parseAnchoredFilters(anchorName, anchoredFilterState, combineMode) {
 
 /**
  * Convert filter obj into GQL filter format
- * @param {EmptyFilter | ComposedFilterState | FilterState} filterState
+ * @param {EmptyFilter | ComposedFilterState | StandardFilterState} filterState
  * @returns {GqlFilter}
  */
 export function getGQLFilter(filterState) {
@@ -757,7 +757,7 @@ export function downloadDataFromGuppy({
 /**
  * @param {object} args
  * @param {string} args.type
- * @param {FilterState} [args.filter]
+ * @param {StandardFilterState} [args.filter]
  */
 export function queryGuppyForTotalCounts({ type, filter }) {
   const query = (

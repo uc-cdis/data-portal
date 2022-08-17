@@ -12,9 +12,9 @@ import {
   getSelectedAnchors,
 } from './utils';
 
-/** @typedef {import('../types').FilterState} FilterState */
 /** @typedef {import('../types').FilterStatus} FilterStatus */
 /** @typedef {import('../types').FilterTabsOption} FilterTabsOption */
+/** @typedef {import('../types').StandardFilterState} StandardFilterState */
 
 describe('Get expanded status array for all tabs', () => {
   const filterTabs = [
@@ -331,7 +331,7 @@ describe('Clear a single filter section', () => {
   /**
    * @param {Object} args
    * @param {string} [args.anchorLabel]
-   * @param {FilterState} [args.filterResults]
+   * @param {StandardFilterState} [args.filterResults]
    * @param {FilterStatus} [args.filterStatus]
    * @param {FilterTabsOption[]} [args.filterTabs]
    * @param {number} args.sectionIndex
@@ -567,7 +567,7 @@ describe('Toggles combine mode in option filter', () => {
   /**
    * @param {Object} args
    * @param {FilterStatus} args.filterStatus
-   * @param {FilterState} args.filterResults
+   * @param {StandardFilterState} args.filterResults
    * @param {string} [args.anchorLabel]
    * @param {'AND' | 'OR'} args.combineModeValue
    */
@@ -749,7 +749,7 @@ describe('Update a range filter', () => {
   /**
    * @param {Object} args
    * @param {FilterStatus} [args.filterStatus]
-   * @param {FilterState} [args.filterResults]
+   * @param {StandardFilterState} [args.filterResults]
    * @param {string} [args.anchorLabel]
    * @param {number} args.lowerBound
    * @param {number} args.upperBound
@@ -889,7 +889,7 @@ describe('Update an option filter', () => {
   /**
    * @param {Object} args
    * @param {FilterStatus} args.filterStatus
-   * @param {FilterState} args.filterResults
+   * @param {StandardFilterState} args.filterResults
    * @param {string} [args.anchorLabel]
    * @param {string} args.selectedValue
    */

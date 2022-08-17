@@ -59,12 +59,15 @@ Pill.propTypes = {
   onClose: PropTypes.func,
 };
 
+/** @typedef {import('../GuppyComponents/types').FilterConfig} FilterConfig */
+/** @typedef {import('../GuppyComponents/types').StandardFilterState} StandardFilterState */
+
 /**
  * @param {Object} props
  * @param {[anchorField: string, anchorValue: string]} [props.anchorInfo]
  * @param {'AND' | 'OR'} [props.combineMode]
- * @param {import('../GuppyComponents/types').FilterState} props.filter
- * @param {import('../GuppyComponents/types').FilterConfig['info']} props.filterInfo
+ * @param {StandardFilterState} props.filter
+ * @param {FilterConfig['info']} props.filterInfo
  * @param {ClickCombineModeHandler} [props.onClickCombineMode]
  * @param {ClickFilterHandler} [props.onClickFilter]
  * @param {ClickFilterHandler} [props.onCloseFilter]

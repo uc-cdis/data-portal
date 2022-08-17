@@ -3,7 +3,6 @@ import { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
 export { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
 
 /** @typedef {import('../../GuppyComponents/types').AnchoredFilterState} AnchoredFilterState */
-/** @typedef {import('../../GuppyComponents/types').FilterState} FilterState */
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
 /**
  * @template T

@@ -5,7 +5,7 @@ import { queryGuppyForRawData } from './queries';
 
 /** @typedef {import('../types').AggsCount} AggsCount */
 /** @typedef {import('../types').AggsData} AggsData */
-/** @typedef {import('../types').FilterState} FilterState */
+/** @typedef {import('../types').StandardFilterState} StandardFilterState */
 /** @typedef {import('../types').FilterConfig} FilterConfig */
 /** @typedef {import('../types').GqlFilter} GqlFilter */
 /** @typedef {import('../types').GuppyConfig} GuppyConfig */
@@ -20,11 +20,11 @@ import { queryGuppyForRawData } from './queries';
  * the user undoing the admin filter. (Multiple user checkboxes increase the
  * amount of data shown when combined, but an admin filter should always decrease
  * or keep constant the amount of data shown when combined with a user filter).
- * @param {FilterState} userFilter
+ * @param {StandardFilterState} userFilter
  * @param {{ [x: string]: { selectedValues?: string[] } }} adminAppliedPreFilter
  * */
 export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
-  /** @type {FilterState} */
+  /** @type {StandardFilterState} */
   const mergedFilterState = cloneDeep(userFilter ?? {});
   if (mergedFilterState.value === undefined) mergedFilterState.value = {};
 
@@ -68,7 +68,7 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
  * they are still checked but their counts are zero.
  * @param {AggsData} initialTabsOptions
  * @param {AggsData} tabsOptions
- * @param {FilterState} filtersApplied
+ * @param {StandardFilterState} filtersApplied
  */
 export function updateCountsInInitialTabsOptions(
   initialTabsOptions,
@@ -420,7 +420,7 @@ export const getFilterSections = ({
 
 /**
  * @param {AggsData} aggsData
- * @param {FilterState} filterResults
+ * @param {StandardFilterState} filterResults
  */
 export function excludeSelfFilterFromAggsData(aggsData, filterResults) {
   if (filterResults?.value === undefined) return aggsData;

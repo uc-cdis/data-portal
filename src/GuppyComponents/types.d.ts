@@ -23,7 +23,7 @@ export type AnchoredFilterState = {
   };
 };
 
-export type FilterState = {
+export type StandardFilterState = {
   __combineMode?: CombineMode;
   __type?: 'STANDARD';
   value?: {
@@ -34,7 +34,7 @@ export type FilterState = {
 export type ComposedFilterState = {
   __combineMode?: CombineMode;
   __type: 'COMPOSED';
-  value?: (ComposedFilterState | FilterState)[];
+  value?: (ComposedFilterState | StandardFilterState)[];
 };
 
 export type GqlInFilter = {
@@ -173,7 +173,7 @@ export type AggsData = {
     | SimpleAggsData;
 };
 
-export type FilterChangeHandler = (filter: FilterState) => void;
+export type FilterChangeHandler = (filter: StandardFilterState) => void;
 
 export type GuppyData = {
   accessibleCount: number;
@@ -181,7 +181,7 @@ export type GuppyData = {
   aggsData: AggsData;
   allFields: string[];
   anchorValue: string;
-  filter: FilterState;
+  filter: StandardFilterState;
   initialTabsOptions?: SimpleAggsData;
   isLoadingAggsData: boolean;
   isLoadingRawData: boolean;
@@ -195,12 +195,12 @@ export type GuppyData = {
   }) => Promise<void>;
   downloadRawDataByTypeAndFilter: (
     type: string,
-    filter: FilterState,
+    filter: StandardFilterState,
     fields: string[]
   ) => Promise<void>;
   getTotalCountsByTypeAndFilter: (
     type: string,
-    filter: FilterState
+    filter: StandardFilterState
   ) => Promise<void>;
   fetchAndUpdateRawData: (args: {
     offset: number;

@@ -20,23 +20,23 @@ import {
 
 /** @typedef {import('../types').AggsData} AggsData */
 /** @typedef {import('../types').FilterConfig} FilterConfig */
-/** @typedef {import('../types').FilterState} FilterState */
 /** @typedef {import('../types').FilterTabsOption} FilterTabsOption */
 /** @typedef {import('../types').GqlSort} GqlSort */
 /** @typedef {import('../types').GuppyConfig} GuppyConfig */
 /** @typedef {import('../types').GuppyData} GuppyData */
 /** @typedef {import('../types').OptionFilter} OptionFilter */
 /** @typedef {import('../types').SimpleAggsData} SimpleAggsData */
+/** @typedef {import('../types').StandardFilterState} StandardFilterState */
 
 /**
  * @typedef {Object} GuppyWrapperProps
  * @property {{ [x: string]: OptionFilter }} adminAppliedPreFilters
  * @property {{ [fieldName: string]: any }} chartConfig
  * @property {((data: GuppyData) => JSX.Element)} children
- * @property {FilterState} explorerFilter
+ * @property {StandardFilterState} explorerFilter
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
- * @property {(x: FilterState) => void} onFilterChange
+ * @property {(x: StandardFilterState) => void} onFilterChange
  * @property {string[]} patientIds
  * @property {string[]} rawDataFields
  */
@@ -104,7 +104,7 @@ function GuppyWrapper({
 
   /**
    * Add patient ids to filter if provided
-   * @param {FilterState} filter
+   * @param {StandardFilterState} filter
    */
   function augmentFilter(filter) {
     return patientIds?.length > 0
@@ -114,7 +114,7 @@ function GuppyWrapper({
       : filter;
   }
 
-  /** @param {FilterState} filter */
+  /** @param {StandardFilterState} filter */
   function fetchAggsChartDataFromGuppy(filter) {
     return queryGuppyForAggregationChartData({
       type: guppyConfig.dataType,
@@ -140,7 +140,7 @@ function GuppyWrapper({
     });
   }
 
-  /** @param {FilterState} filter */
+  /** @param {StandardFilterState} filter */
   function fetchAggsCountDataFromGuppy(filter) {
     return queryGuppyForAggregationCountData({
       type: guppyConfig.dataType,
@@ -164,7 +164,7 @@ function GuppyWrapper({
   /**
    * @param {Object} args
    * @param {string} args.anchorValue
-   * @param {FilterState} args.filter
+   * @param {StandardFilterState} args.filter
    * @param {FilterTabsOption[]} [args.filterTabs]
    */
   function fetchAggsOptionsDataFromGuppy({
@@ -209,7 +209,7 @@ function GuppyWrapper({
     });
   }
 
-  /** @param {FilterState} filter */
+  /** @param {StandardFilterState} filter */
   function fetchAggsDataFromGuppy(filter) {
     if (isMounted.current)
       setState((prevState) => ({ ...prevState, isLoadingAggsData: true }));
@@ -249,7 +249,7 @@ function GuppyWrapper({
   /**
    * @param {Object} args
    * @param {string[]} args.fields
-   * @param {FilterState} [args.filter]
+   * @param {StandardFilterState} [args.filter]
    * @param {number} [args.offset]
    * @param {number} [args.size]
    * @param {GqlSort} [args.sort]
@@ -401,7 +401,7 @@ function GuppyWrapper({
   /**
    * Get total count from other es type, with filter
    * @param {string} type
-   * @param {FilterState} filter
+   * @param {StandardFilterState} filter
    */
   function getTotalCountsByTypeAndFilter(type, filter) {
     return queryGuppyForTotalCounts({ type, filter });
@@ -410,7 +410,7 @@ function GuppyWrapper({
   /**
    * Get raw data from other es type, with filter
    * @param {string} type
-   * @param {FilterState} filter
+   * @param {StandardFilterState} filter
    * @param {string[]} fields
    */
   function downloadRawDataByTypeAndFilter(type, filter, fields) {
@@ -477,7 +477,7 @@ function GuppyWrapper({
     }
   }
 
-  /** @param {FilterState} filter */
+  /** @param {StandardFilterState} filter */
   function handleFilterChange(filter) {
     onFilterChange?.(mergeFilters(filter, adminAppliedPreFilters));
   }
