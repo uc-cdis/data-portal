@@ -159,7 +159,7 @@ const GWASFormSubmit = ({
 
 GWASFormSubmit.propTypes = {
   sourceId: PropTypes.number.isRequired,
-  outcome: PropTypes.object.isRequired,
+  outcome: PropTypes.object,
   numOfPC: PropTypes.number.isRequired,
   mafThreshold: PropTypes.number.isRequired,
   imputationScore: PropTypes.number.isRequired,
@@ -179,6 +179,7 @@ GWASFormSubmit.defaultProps = {
   selectedControlCohort: undefined,
   selectedCaseCohort: undefined,
   selectedQuantitativeCohort: undefined,
+  outcome: undefined,
 };
 
 export default GWASFormSubmit;

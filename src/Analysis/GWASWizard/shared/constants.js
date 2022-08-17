@@ -1,3 +1,13 @@
+export const hareConceptId = 2000007027;
+
+export const gwasStatus = {
+  pending: 'Pending',
+  running: 'Running',
+  succeeded: 'Succeeded',
+  failed: 'Failed',
+  error: 'Error',
+};
+
 export const quantitativeSteps = [
   {
     title: 'Step 1',
