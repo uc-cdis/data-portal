@@ -43,7 +43,7 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
-  basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
+  basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl, Error403Url,
   explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
   discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
 } from './localconf';
@@ -68,6 +68,7 @@ import StudyRegistration from './StudyRegistration';
 import WorkspaceRegistration from './WorkspaceRegistration';
 import ReduxStudyRegistrationRequestForm from './StudyRegistration/ReduxStudyRegistrationRequestForm';
 import NotFound from './components/NotFound';
+import ErrorPage403 from './components/ErrorPage403';
 
 // monitor user's session
 sessionMonitor.start();
@@ -549,6 +550,11 @@ async function init() {
                   <Route
                     path='/not-found'
                     component={NotFound}
+                  />
+                  <Route
+                    exact
+                    path={Error403Url}
+                    component={ErrorPage403}
                   />
                   <Route
                     exact

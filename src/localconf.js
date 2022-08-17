@@ -103,6 +103,7 @@ function buildConfig(opts) {
   const graphqlSchemaUrl = `${hostname}${(basename && basename !== '/') ? basename : ''}/data/schema.json`;
   const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);
   const workspaceErrorUrl = '/no-workspace-access/';
+  const Error403Url = '/403Error';
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
   const workspacePayModelUrl = `${workspaceUrl}paymodels`;
@@ -272,7 +273,8 @@ function buildConfig(opts) {
   }
 
   const { discoveryConfig } = config;
-  const studyRegistrationConfig = config.studyRegistrationConfig || {};
+  const { resourceRegistrationConfig } = config;
+  const studyRegistrationConfig = resourceRegistrationConfig.studyRegistrationConfig || config.studyRegistrationConfig || {};
   if (!studyRegistrationConfig.studyRegistrationTrackingField) {
     studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username'
   }
@@ -287,7 +289,8 @@ function buildConfig(opts) {
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
-  const { workspaceRegistrationConfig } = config;
+  const { workspaceRegistrationConfig, kayakoConfig } = resourceRegistrationConfig;
+
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -525,6 +528,7 @@ function buildConfig(opts) {
     studyViewerConfig,
     covid19DashboardConfig,
     discoveryConfig,
+    kayakoConfig,
     studyRegistrationConfig,
     mapboxAPIToken,
     auspiceUrl,
@@ -547,6 +551,7 @@ function buildConfig(opts) {
     ddEnv,
     ddSampleRate,
     showSystemUse,
+    Error403Url,
   };
 }
 
