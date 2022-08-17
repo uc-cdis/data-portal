@@ -10,8 +10,9 @@ import { updateExplorerFilter, useExplorerById } from '../redux/explorer/slice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import ExplorerSelect from './ExplorerSelect';
 import ExplorerVisualization from './ExplorerVisualization';
-import ExplorerFilter from './ExplorerFilter';
+import ExplorerFilter, { DisabledExplorerFilter } from './ExplorerFilter';
 import './Explorer.css';
+import { FILTER_TYPE } from './ExplorerFilterSetWorkspace/utils';
 
 /** @typedef {import('../redux/types').RootState} RootState */
 /** @typedef {import('./types').OptionFilter} OptionFilter */
@@ -87,15 +88,19 @@ function ExplorerDashboard() {
           <Dashboard.Sidebar className='explorer__sidebar'>
             <div>
               <ExplorerSelect />
-              <ExplorerFilter
-                anchorValue={data.anchorValue}
-                className='explorer__filter'
-                filter={data.filter}
-                initialTabsOptions={data.initialTabsOptions}
-                onAnchorValueChange={data.onAnchorValueChange}
-                onFilterChange={data.onFilterChange}
-                tabsOptions={data.tabsOptions}
-              />
+              {data.filter.__type === FILTER_TYPE.COMPOSED ? (
+                <DisabledExplorerFilter className='explorer__filter' />
+              ) : (
+                <ExplorerFilter
+                  anchorValue={data.anchorValue}
+                  className='explorer__filter'
+                  filter={data.filter}
+                  initialTabsOptions={data.initialTabsOptions}
+                  onAnchorValueChange={data.onAnchorValueChange}
+                  onFilterChange={data.onFilterChange}
+                  tabsOptions={data.tabsOptions}
+                />
+              )}
             </div>
             <div className='explorer__version-info-area'>
               {dataVersion !== '' && (
