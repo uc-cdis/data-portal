@@ -8,9 +8,9 @@ class ErrorPage403 extends React.Component {
     const supportEmail = components.login?.email || 'support@datacommons.io';
     return (
       <div className='error-placeholder__error-msg'>
-        <h1>Error opening requested page...</h1>
+        <h1>Error accessing requested resource...</h1>
         <p>
-        Please contact <a href={`mailto:${supportEmail}`}>{supportEmail}</a> for more information.
+        The page you are trying to reach has restricted access. Please contact <a href={`mailto:${supportEmail}`}>{supportEmail}</a> for more information.
         </p>
         <NotFoundSVG />
       </div>
