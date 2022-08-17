@@ -49,12 +49,31 @@ class StudyDetails extends React.Component {
     // `?request_access` means user got here by clicking the `Request Access` button
     // and `?request_access_logged_in` means user got here by redirecting from the login page
     // in that case, don't redirect user again, just wait for user props to update
-    if ((!this.props.user || !this.props.user.username)
+    const requiredIdp = this.props.data.requiredIdpField;
+    if ((!this.props.user
+      || !this.props.user.username
+      || (requiredIdp && requiredIdp !== this.props.user.idp))
     && this.props.location.search
     && this.props.location.search === '?request_access') {
-      this.props.history.push('/login', { from: `${this.props.location.pathname}?request_access` });
+      if (requiredIdp) {
+        // we should redirect directly to the configured IDP’s login page.
+        fetch('/user/login')
+          .then((res) => res.json())
+          .then((result) => {
+            const loginMatchUrl = result?.providers?.find((obj) => obj.id === requiredIdp)?.urls?.[0]?.url;
+            if (loginMatchUrl) {
+              const queryChar = loginMatchUrl.includes('?') ? '&' : '?';
+              window.location.href = `${loginMatchUrl}${queryChar}redirect=${window.location.origin}${this.props.location.pathname}?request_access`;
+            } else {
+              this.props.history.push('/login', { from: `${this.props.location.pathname}?request_access` });
+            }
+          });
+      } else {
+        this.props.history.push('/login', { from: `${this.props.location.pathname}?request_access` });
+      }
     } else if (this.props.user
       && this.props.user.username
+      && !(requiredIdp && requiredIdp !== this.props.user.idp)
       && this.props.location.search
       && this.props.location.search.includes('?request_access')) {
       // if we still have either `?request_access` or `?request_access_logged_in`
@@ -134,17 +153,32 @@ class StudyDetails extends React.Component {
       && this.isDataAccessible(this.props.data.accessibleValidationValue)
       && this.props.fileData.length > 0;
 
-      button = displayDownloadButton ? (
-        <Button
-          key={key}
-          label={'Download'}
-          buttonType='primary'
-          onClick={this.showDownloadModal}
-          enabled={enableButton}
-          tooltipEnabled={tooltipEnabled}
-          tooltipText={tooltipText}
-        />
-      ) : null;
+      if (this.props.data.overrideDownloadUrlField && displayDownloadButton) {
+        button = (
+          <Button
+            key={key}
+            label={'Download'}
+            buttonType='primary'
+            onClick={() => window.open(this.props.data.overrideDownloadUrlField, '_blank')}
+            enabled={enableButton}
+            tooltipEnabled={tooltipEnabled}
+            tooltipText={tooltipText}
+            rightIcon='external-link'
+          />
+        );
+      } else {
+        button = displayDownloadButton ? (
+          <Button
+            key={key}
+            label={'Download'}
+            buttonType='primary'
+            onClick={this.showDownloadModal}
+            enabled={enableButton}
+            tooltipEnabled={tooltipEnabled}
+            tooltipText={tooltipText}
+          />
+        ) : null;
+      }
     } else if (buttonConfig.type === 'export-pfb-to-workspace') {
       // 'Export to Workspace' button
       const displayDownloadButton = userHasLoggedIn
@@ -171,6 +205,10 @@ class StudyDetails extends React.Component {
         this.props.history.push(`${this.props.location.pathname}?request_access`, { from: this.props.location.pathname });
       };
       let requestAccessText = userHasLoggedIn ? 'Request Access' : 'Login to Request Access';
+      if (this.props.data.requiredIdpField) {
+        // if required_idp set requires user to have specific type to request access
+        requestAccessText = this.props.data.requiredIdpField === this.props.user?.idp ? 'Request Access' : `Login through ${this.props.data.requiredIdpField.toUpperCase()} to Request Access`;
+      }
       if (enableButton && this.state.accessRequested) {
         // the button is disabled because the user has already requested access
         requestAccessText = (buttonConfig.accessRequestedText) ? buttonConfig.accessRequestedText : 'Access Requested';
@@ -260,24 +298,34 @@ class StudyDetails extends React.Component {
      // button. if there are more than 1 with different configs, TODO fix
      const requestAccessConfig = this.props.studyViewerConfig.buttons && this.props.studyViewerConfig.buttons.find((e) => e.type === 'request_access');
 
+     let loginAlertMessage = 'Researchers are required to log in to request access to this dataset. Use the button above to log in or create an account.';
+     if (this.props.data.requiredIdpField && this.props.data.requiredIdpField !== this.props.user?.idp) {
+       const loginAlertAccountSnippet = `a${/^([aeiou])/i.test(this.props.data.requiredIdpField) ? 'n' : ''} ${this.props.data.requiredIdpField.toUpperCase()}`;
+       loginAlertMessage = `Researchers are required to log in with ${loginAlertAccountSnippet} account to request access to this dataset. Use the button above to log in or create ${loginAlertAccountSnippet} account.`;
+     }
+
      return (
        <div className='study-details'>
          <Space className='study-viewer__space' direction='vertical'>
            <Space>
-             {this.props.isSingleItemView
-               ? (
-                 <Button
-                   label={'Learn More'}
-                   buttonType='primary'
-                   onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
-                 />
-               )
-               : null}
-             {
-               (this.props.studyViewerConfig.buttons) ? this.props.studyViewerConfig.buttons.map(
-                 (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
-               ) : null
-             }
+             <React.Fragment>
+               {this.props.isSingleItemView
+                 ? (
+                   <Button
+                     label={'Learn More'}
+                     buttonType='primary'
+                     onClick={() => this.props.history.push(`${this.props.location.pathname}/${encodeURIComponent(this.props.data.rowAccessorValue)}`)}
+                   />
+                 )
+                 : null}
+             </React.Fragment>
+             <React.Fragment>
+               {
+                 (this.props.studyViewerConfig.buttons) ? this.props.studyViewerConfig.buttons.map(
+                   (buttonConfig, i) => this.getButton(i, buttonConfig, userHasLoggedIn),
+                 ) : null
+               }
+             </React.Fragment>
            </Space>
            {(requestAccessConfig) ? (
              <Modal
@@ -337,7 +385,7 @@ class StudyDetails extends React.Component {
            {this.requestAccessButtonVisible && !userHasLoggedIn && !this.state.accessRequested
              ? (
                <Alert
-                 message='Please note that researchers are required to log in before requesting access.'
+                 message={loginAlertMessage}
                  type='info'
                  showIcon
                />
@@ -435,7 +483,9 @@ StudyDetails.propTypes = {
     blockData: PropTypes.object,
     tableData: PropTypes.object,
     displayButtonsData: PropTypes.object,
+    requiredIdpField: PropTypes.string,
     accessibleValidationValue: PropTypes.string,
+    overrideDownloadUrlField: PropTypes.string,
   }).isRequired,
   fileData: PropTypes.arrayOf(
     PropTypes.shape({

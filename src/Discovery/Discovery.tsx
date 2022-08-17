@@ -1,10 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import * as JsSearch from 'js-search';
 import {
   Tag, Popover, Space, Collapse, Button, Dropdown, Menu, Pagination, Tooltip,
 } from 'antd';
 import {
-  UnlockOutlined, ClockCircleOutlined, DashOutlined, UpOutlined, DownOutlined, UndoOutlined, FilterFilled, FilterOutlined, MinusOutlined,
+  UnlockOutlined,
+  ClockCircleOutlined,
+  DashOutlined,
+  UpOutlined,
+  DownOutlined,
+  UndoOutlined,
+  FilterFilled,
+  FilterOutlined,
+  MinusOutlined,
+  CheckCircleOutlined,
+  MinusCircleOutlined,
 } from '@ant-design/icons';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import MenuItem from 'antd/lib/menu/MenuItem';
@@ -14,9 +24,8 @@ import DiscoverySummary from './DiscoverySummary';
 import DiscoveryTagViewer from './DiscoveryTagViewer';
 import DiscoveryDropdownTagViewer from './DiscoveryDropdownTagViewer';
 import DiscoveryListView from './DiscoveryListView';
-import DiscoveryDetails from './DiscoveryDetails';
 import DiscoveryAdvancedSearchPanel from './DiscoveryAdvancedSearchPanel';
-import ReduxDiscoveryActionBar from './reduxer';
+import { ReduxDiscoveryActionBar, ReduxDiscoveryDetails } from './reduxer';
 import DiscoveryMDSSearch from './DiscoveryMDSSearch';
 import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 
@@ -37,7 +46,7 @@ const { Panel } = Collapse;
 
 const ARBORIST_READ_PRIV = 'read';
 
-const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
+export const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   const categoryConfig = config.tagCategories.find((category) => category.name === tagCategory);
   if (categoryConfig === undefined) {
     return 'gray';
@@ -149,7 +158,7 @@ const filterByTags = (studies: any[], selectedTags: any, config: DiscoveryConfig
     return studies;
   }
   const tagField = config.minimalFieldMapping.tagsListFieldName;
-  return studies.filter((study) => study[tagField].some((tag) => selectedTags[tag.name]));
+  return studies.filter((study) => study[tagField]?.some((tag) => selectedTags[tag.name]));
 };
 
 interface FilterState {
@@ -198,9 +207,10 @@ export interface DiscoveryResource {
 }
 
 interface Props {
-  config: DiscoveryConfig
-  studies: DiscoveryResource[]
-  params?: {studyUID: string} // from React Router
+  config: DiscoveryConfig,
+  studies: DiscoveryResource[],
+  studyRegistrationValidationField: string,
+  params?: {studyUID: string|null}, // from React Router
   selectedResources,
   pagination: { currentPage: number, resultsPerPage: number },
   selectedTags,
@@ -225,7 +235,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filterState, setFilterState] = useState({} as FilterState);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState({} as DiscoveryResource);
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
   const [advSearchFilterHeight, setAdvSearchFilterHeight] = useState('100vh');
@@ -352,87 +362,113 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     width: column.width,
     render: (_, record) => {
       let value = record[column.field];
+      let renderedCell: undefined|string|ReactNode;
 
       if (value === undefined) {
         if (column.errorIfNotAvailable !== false) {
           throw new Error(`Configuration error: Could not find field ${column.field} in record ${JSON.stringify(record)}. Check the 'study_columns' section of the Discovery config.`);
         }
         if (column.valueIfNotAvailable) {
-          return column.valueIfNotAvailable;
+          renderedCell = column.valueIfNotAvailable;
         }
-        return 'Not available';
-      }
-      const columnIsSearchable = config.features.search.searchBar.searchableTextFields
-        ? config.features.search.searchBar.searchableTextFields.indexOf(column.field) !== -1
-        : !column.contentType || column.contentType === 'string';
-      if (columnIsSearchable) {
-        // Show search highlights if there's an active search term
-        if (props.searchTerm) {
+        renderedCell = 'Not available';
+      } else {
+        const columnIsSearchable = config.features.search.searchBar.searchableTextFields
+          ? config.features.search.searchBar.searchableTextFields.indexOf(column.field) !== -1
+          : !column.contentType || column.contentType === 'string';
+        if (columnIsSearchable && props.searchTerm) {
           if (Array.isArray(value)) {
             value = value.join(', ');
           }
-          return highlightSearchTerm(value, props.searchTerm).highlighted;
+          renderedCell = highlightSearchTerm(value, props.searchTerm).highlighted;
+        } else if (column.hrefValueFromField) {
+          renderedCell = <a href={`//${record[column.hrefValueFromField]}`} target='_blank' rel='noreferrer'>{ renderFieldContent(value, column.contentType, config) }</a>;
+        } else {
+          renderedCell = renderFieldContent(value, column.contentType, config);
         }
       }
-      if (column.hrefValueFromField) {
-        return <a href={`//${record[column.hrefValueFromField]}`} target='_blank' rel='noreferrer'>{ renderFieldContent(value, column.contentType, config) }</a>;
-      }
 
-      return renderFieldContent(value, column.contentType, config);
+      return <Tooltip title='Click to view details'>{renderedCell}</Tooltip>;
     },
   }),
   );
-  columns.push(
-    {
-      textWrap: 'word-break',
-      title: <div className='discovery-table-header'> { config.tagsDisplayName || 'Tags' }</div>,
-      ellipsis: false,
-      width: config.tagColumnWidth || '200px',
-      render: (_, record) => (
-        <React.Fragment>
-          {record.tags.map(({ name, category }) => {
-            const isSelected = !!props.selectedTags[name];
-            const color = getTagColor(category, config);
-            if (typeof name !== 'string') {
-              return null;
-            }
-            return (
-              <Tag
-                key={record.name + name}
-                role='button'
-                tabIndex={0}
-                aria-pressed={isSelected ? 'true' : 'false'}
-                className={`discovery-tag ${isSelected ? 'discovery-tag--selected' : ''}`}
-                aria-label={name}
-                style={{
-                  backgroundColor: isSelected ? color : 'initial',
-                  borderColor: color,
-                }}
-                onKeyPress={(ev) => {
-                  ev.stopPropagation();
-                  const selectedTags = {
-                    ...props.selectedTags,
-                    [name]: props.selectedTags[name] ? undefined : true,
-                  };
-                  props.onTagsSelected(selectedTags);
-                }}
-                onClick={(ev) => {
-                  ev.stopPropagation();
-                  const selectedTags = {
-                    ...props.selectedTags,
-                    [name]: props.selectedTags[name] ? undefined : true,
-                  };
-                  props.onTagsSelected(selectedTags);
-                }}
-              >
-                {name}
-              </Tag>
-            );
-          })}
-        </React.Fragment>
-      ),
-    },
-  );
+  if (!config.features.tagsColumn || config.features.tagsColumn.enabled) {
+    columns.push(
+      {
+        textWrap: 'word-break',
+        title: <div className='discovery-table-header'> { config.tagsDisplayName || 'Tags' }</div>,
+        ellipsis: false,
+        width: config.tagColumnWidth || '200px',
+        render: (_, record) => (
+          <React.Fragment>
+            {record[config.minimalFieldMapping.tagsListFieldName]?.map(({ name, category }) => {
+              const isSelected = !!props.selectedTags[name];
+              const color = getTagColor(category, config);
+              if (typeof name !== 'string') {
+                return null;
+              }
+              return (
+                <Tag
+                  key={record.name + name}
+                  role='button'
+                  tabIndex={0}
+                  aria-pressed={isSelected ? 'true' : 'false'}
+                  className={`discovery-tag ${isSelected ? 'discovery-tag--selected' : ''}`}
+                  aria-label={name}
+                  style={{
+                    backgroundColor: isSelected ? color : 'initial',
+                    borderColor: color,
+                  }}
+                  onKeyPress={(ev) => {
+                    ev.stopPropagation();
+                    const selectedTags = {
+                      ...props.selectedTags,
+                      [name]: props.selectedTags[name] ? undefined : true,
+                    };
+                    props.onTagsSelected(selectedTags);
+                  }}
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    const selectedTags = {
+                      ...props.selectedTags,
+                      [name]: props.selectedTags[name] ? undefined : true,
+                    };
+                    props.onTagsSelected(selectedTags);
+                  }}
+                >
+                  {name}
+                </Tag>
+              );
+            })}
+          </React.Fragment>
+        ),
+      },
+    );
+  }
+  if (props.studyRegistrationValidationField) {
+    columns.push(
+      {
+        textWrap: 'word-break',
+        title: <div className='discovery-table-header'> { 'Registration Status' }</div>,
+        ellipsis: false,
+        width: '200px',
+        render: (_, record) => ((record[props.studyRegistrationValidationField] !== false) ? (
+          <React.Fragment>
+            <Tag icon={<CheckCircleOutlined />} color='success'>
+              Linked
+            </Tag>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <Tag icon={<MinusCircleOutlined />} color='default'>
+            Not Linked
+            </Tag>
+          </React.Fragment>
+        )
+        ),
+      },
+    );
+  }
   if (config.features.authorization.enabled) {
     columns.push({
       title: (
@@ -760,6 +796,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               setModalData={setModalData}
               setModalVisible={setModalVisible}
               columns={columns}
+              selectedTags={props.selectedTags}
+              onTagsSelected={props.onTagsSelected}
               accessibleFieldName={accessibleFieldName}
               selectedResources={props.selectedResources}
               onResourcesSelected={props.onResourcesSelected}
@@ -775,8 +813,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             />
           </Space>
         </div>
-
-        <DiscoveryDetails
+        <ReduxDiscoveryDetails
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
           permalinkCopied={permalinkCopied}

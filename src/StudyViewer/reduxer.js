@@ -114,6 +114,7 @@ const fetchRequestedAccess = (receivedData) => {
       case 200:
         return data;
       default:
+        // eslint-disable-next-line no-console
         console.error('Unable to get requested access:', status, data);
         return {};
       }
@@ -128,7 +129,7 @@ const removeEmptyFields = (inputObj, flag) => {
   return inputObj;
 };
 
-const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFields) => {
+const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFields, requiredIdpField, overrideUrlField) => {
   const targetStudyViewerConfig = fetchStudyViewerConfig(nameOfIndex);
   const processedDataset = [];
   if (receivedData) {
@@ -145,6 +146,8 @@ const processDataset = (nameOfIndex, receivedData, itemConfig, displayButtonsFie
           processedItem.accessRequested = !!(requestedAccess
           && requestedAccess[dataElement.auth_resource_path]);
           processedDataset.push(processedItem);
+          processedItem.requiredIdpField = dataElement[requiredIdpField];
+          processedItem.overrideDownloadUrlField = dataElement[overrideUrlField];
         });
       },
     ).then(() => processedDataset);
@@ -176,6 +179,17 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
   fieldsToFetch.push('auth_resource_path');
   fieldsToFetch.push(targetStudyViewerConfig.titleField);
   fieldsToFetch.push(targetStudyViewerConfig.rowAccessor);
+
+  const requiredIdpField = targetStudyViewerConfig.buttons.find((obj) => obj.type === 'request_access')?.requiredIdpField;
+  if (requiredIdpField) {
+    fieldsToFetch.push(requiredIdpField);
+  }
+
+  const overrideUrlField = targetStudyViewerConfig.buttons.find((obj) => obj.type === 'download')?.overrideUrlField;
+  if (overrideUrlField) {
+    fieldsToFetch.push(overrideUrlField);
+  }
+
   const displayButtonsFields = targetStudyViewerConfig.buttons
     ? targetStudyViewerConfig.buttons.map((b) => b.enableButtonField) : [];
   fieldsToFetch = [
@@ -208,6 +222,8 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
               data.data[dataType],
               itemConfig,
               displayButtonsFields,
+              requiredIdpField,
+              overrideUrlField,
             ).then((pd) => ({
               type: 'RECEIVE_SINGLE_STUDY_DATASET',
               datasets: pd,
@@ -218,6 +234,8 @@ export const fetchDataset = (dataType, rowAccessorValue) => {
             data.data[dataType],
             itemConfig,
             displayButtonsFields,
+            requiredIdpField,
+            overrideUrlField,
           ).then((pd) => ({
             type: 'RECEIVE_STUDY_DATASET_LIST',
             datasets: pd,

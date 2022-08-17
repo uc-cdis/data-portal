@@ -106,6 +106,8 @@ function buildConfig(opts) {
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
   const workspacePayModelUrl = `${workspaceUrl}paymodels`;
+  const workspaceSetPayModelUrl = `${workspaceUrl}setpaymodel`;
+  const workspaceAllPayModelsUrl = `${workspaceUrl}allpaymodels`;
   const workspaceTerminateUrl = `${workspaceUrl}terminate`;
   const workspaceLaunchUrl = `${workspaceUrl}launch`;
   const datasetUrl = `${hostname}api/search/datasets`;
@@ -135,6 +137,7 @@ function buildConfig(opts) {
   let ddSampleRate = 100;
   if (config.ddSampleRate) {
     if (Number.isNaN(config.ddSampleRate)) {
+      // eslint-disable-next-line no-console
       console.warn('Datadog sampleRate value in Portal config is not a number, ignoring');
     } else {
       ddSampleRate = config.ddSampleRate;
@@ -196,7 +199,7 @@ function buildConfig(opts) {
     }
   });
 
-  const { dataAvailabilityToolConfig } = config;
+  const { dataAvailabilityToolConfig, stridesPortalURL } = config;
 
   let showSystemUse = false;
   if (components.systemUse && components.systemUse.systemUseText) {
@@ -269,7 +272,19 @@ function buildConfig(opts) {
   }
 
   const { discoveryConfig } = config;
-
+  const studyRegistrationConfig = config.studyRegistrationConfig || {};
+  if (!studyRegistrationConfig.studyRegistrationTrackingField) {
+    studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username'
+  }
+  if (!studyRegistrationConfig.studyRegistrationValidationField) {
+    studyRegistrationConfig.studyRegistrationValidationField = 'is_registered'
+  }
+  if (!studyRegistrationConfig.studyRegistrationAccessCheckField) {
+    studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz'
+  }
+  if (!studyRegistrationConfig.studyRegistrationUIDField) {
+    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id'
+  }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
 
@@ -416,8 +431,11 @@ function buildConfig(opts) {
     mobile: 480,
   };
 
+  const mdsURL = `${hostname}mds/metadata`;
   const aggMDSURL = `${hostname}mds/aggregate`;
   const aggMDSDataURL = `${aggMDSURL}/metadata`;
+  const cedarWrapperURL = `${hostname}cedar`;
+  const kayakoWrapperURL = `${hostname}kayako`;
 
   // Disallow gitops.json configurability of Gen3 Data Commons and CTDS logo alt text.
   // This allows for one point-of-change in the case of future rebranding.
@@ -463,8 +481,11 @@ function buildConfig(opts) {
     workspaceOptionsUrl,
     workspaceStatusUrl,
     workspacePayModelUrl,
+    workspaceSetPayModelUrl,
+    workspaceAllPayModelsUrl,
     workspaceLaunchUrl,
     workspaceTerminateUrl,
+    stridesPortalURL,
     homepageChartNodes: components.index.homepageChartNodes,
     homepageChartNodesChunkSize,
     customHomepageChartConfig: components.index.customHomepageChartConfig,
@@ -503,6 +524,7 @@ function buildConfig(opts) {
     studyViewerConfig,
     covid19DashboardConfig,
     discoveryConfig,
+    studyRegistrationConfig,
     mapboxAPIToken,
     auspiceUrl,
     auspiceUrlIL,
@@ -513,7 +535,10 @@ function buildConfig(opts) {
     workspaceStorageListUrl,
     workspaceStorageDownloadUrl,
     marinerUrl,
+    mdsURL,
     aggMDSDataURL,
+    cedarWrapperURL,
+    kayakoWrapperURL,
     commonsWideAltText,
     ddApplicationId,
     ddClientToken,
