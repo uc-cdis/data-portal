@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { cohortMiddlewarePath, wtsPath } from '../../../localconf';
 import { fetchWithCreds } from '../../../actions';
 import { headers } from '../../../configs';
+import { hareConceptId } from '../shared/constants';
 
 export const fetchConceptStatsByHare = async (cohortDefinitionId, selectedCovariates, selectedDichotomousCovariates, sourceId) => {
-  const hareConceptId = 2000007027;
   const variablesPayload = {
     variables:
       [

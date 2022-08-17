@@ -72,7 +72,7 @@ const WorkflowParameters = ({
           <Select
             id='select-dichotomous-covariates'
             mode='multiple'
-            value={selectedDichotomousCovariates.map((s) => s.concept_name)}
+            value={selectedDichotomousCovariates.length ? selectedDichotomousCovariates.map((s) => s.provided_name) : []}
             // TODO currently cant delete cd's from this page
             // onChange={(e) => handleDichotomousCovariateDelete(e)}
             style={{ width: '70%' }}

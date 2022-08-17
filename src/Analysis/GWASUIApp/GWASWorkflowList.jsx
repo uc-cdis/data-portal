@@ -41,7 +41,6 @@ const GWASWorkflowList = () => {
                 <GWASJob workflow={item} />
               )}
             />
-
           </Panel>
         </Collapse>
       </React.Fragment>

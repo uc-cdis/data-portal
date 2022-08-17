@@ -7,14 +7,15 @@ import {
   SyncOutlined,
   CloseCircleOutlined,
   QuestionCircleOutlined,
-  MinusCircleOutlined,
-  StopOutlined,
+  LoadingOutlined,
+  CloseOutlined
 } from '@ant-design/icons';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
 import { gwasWorkflowPath } from '../../../localconf';
 import { headers } from '../../../configs';
 import { getPresignedUrl } from '../../AnalysisJob';
+import { gwasStatus } from './constants';
 
 const GWASJob = ({ workflow }) => {
   async function handleWorkflowOutput(url) {
@@ -37,16 +38,16 @@ const GWASJob = ({ workflow }) => {
     let buttonText;
     let buttonClickHandler;
 
-    if (phase === 'Succeeded') {
+    if (phase === gwasStatus.suceeded) {
       actionUrl = `${gwasWorkflowPath}status/${workflowName}`;
       buttonText = 'download outputs';
       buttonClickHandler = handleWorkflowOutput;
-    } else if (phase === 'Failed') {
+    } else if (phase === gwasStatus.failed) {
       actionUrl = `${gwasWorkflowPath}logs/${workflowName}`;
       buttonText = 'view logs';
       buttonClickHandler = handleWorkflowLogs;
     }
-    if (['Succeeded', 'Failed'].includes(phase)) {
+    if ([gwasStatus.suceeded, gwasStatus.failed].includes(phase)) {
       actionButtons.unshift(
         <Button
           primary='true'
@@ -75,34 +76,34 @@ const GWASJob = ({ workflow }) => {
       );
     }
     switch (phase) {
-    case 'Running':
+    case gwasStatus.running:
       return (
         <Tag icon={<SyncOutlined spin />} color='processing'>
             In Progress
         </Tag>
       );
-    case 'Succeeded':
+    case gwasStatus.succeeded:
       return (
         <Tag icon={<CheckCircleOutlined />} color='success'>
             Completed
         </Tag>
       );
-    case 'Failed':
+    case gwasStatus.failed:
       return (
         <Tag icon={<CloseCircleOutlined />} color='error'>
             Failed
         </Tag>
       );
-    case 'Canceling':
+    case gwasStatus.pending:
       return (
-        <Tag icon={<MinusCircleOutlined />} color='warning'>
-        Canceling
+        <Tag icon={<LoadingOutlined />} color='processing'>
+            Pending
         </Tag>
       );
-    case 'Canceled':
+    case gwasStatus.error:
       return (
-        <Tag icon={<StopOutlined />} color='warning'>
-        Canceled
+        <Tag icon={<CloseOutlined />} color='error'>
+            Error
         </Tag>
       );
     default:
@@ -144,7 +145,7 @@ const GWASJob = ({ workflow }) => {
             description={(
               <dl>
                 <dt>Workflow Name: {data.wf_name}</dt>
-                <dt>Started at {data.startedAt} and finished at {finishedAt}</dt>
+                <dt>Started at {data.startedAt} {data.phase === gwasStatus.succeeded ? `and finished at ${finishedAt}`: ''}</dt>
               </dl>
             )}
 

@@ -225,8 +225,8 @@ class AnalysisApp extends React.Component {
                   ? (
                     <div className='analysis-app__job-status'>
                       {this.isJobRunning() ? <Spin size='large' tip='Job in progress...' /> : null}
-                      {job && job.status === 'Completed' ? <h3>Job Completed</h3> : null}
-                      {job && job.status === 'Failed' ? <h3>Job Failed</h3> : null}
+                      {job?.status === 'Completed' ? <h3>Job Completed</h3> : null}
+                      {job?.status === 'Failed' ? <h3>Job Failed</h3> : null}
                       {results ? results.map((line, i) => <p key={i}>{line}</p>) : null}
                     </div>
                   )
