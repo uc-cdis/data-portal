@@ -21,6 +21,5 @@ export const ReduxDiscoveryDetails = (() => {
     userAuthMapping: state.userAuthMapping,
   });
 
-
   return connect(mapStateToProps)(DiscoveryDetails);
 })();
