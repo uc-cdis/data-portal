@@ -38,6 +38,7 @@ const CustomDichotomousSelect = ({
           <div className='GWASUI-align'>
             <div className='GWASUI-flexRow'>
               <div className='GWASUI-flexCol GWASUI-subTable'>
+                <h3 className='GWASUI-selectInstruction' align={'center'}>Select NO cohort</h3>
                 <CohortSelect
                   selectedCohort={firstCohort}
                   handleCohortSelect={setFirstCohort}
@@ -47,6 +48,7 @@ const CustomDichotomousSelect = ({
                 />
               </div>
               <div className='GWASUI-flexCol GWASUI-subTable'>
+                <h3 className='GWASUI-selectInstruction' align={'center'}>Select YES cohort</h3>
                 <CohortSelect
                   selectedCohort={secondCohort}
                   handleCohortSelect={setSecondCohort}
