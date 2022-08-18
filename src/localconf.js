@@ -24,6 +24,7 @@ function buildConfig(opts) {
     fenceURL: process.env.FENCE_URL,
     indexdURL: process.env.INDEXD_URL,
     cohortMiddlewareURL: process.env.COHORT_MIDDLEWARE_URL,
+    gwasWorkflowURL: process.env.GWAS_WORKFLOW_URL,
     arboristURL: process.env.ARBORIST_URL,
     wtsURL: process.env.WTS_URL,
     workspaceURL: process.env.WORKSPACE_URL,
@@ -57,6 +58,7 @@ function buildConfig(opts) {
     fenceURL,
     indexdURL,
     cohortMiddlewareURL,
+    gwasWorkflowURL,
     arboristURL,
     wtsURL,
     workspaceURL,
@@ -87,7 +89,10 @@ function buildConfig(opts) {
   const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
+
   const cohortMiddlewarePath = typeof cohortMiddlewareURL === 'undefined' ? `${hostname}cohort-middleware/` : ensureTrailingSlash(cohortMiddlewareURL);
+  const gwasWorkflowPath = typeof gwasWorkflowURL === 'undefined' ? `${hostname}ga4gh/wes/v2/` : ensureTrailingSlash(gwasWorkflowURL);
+
   const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
   const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
   let login = {
@@ -211,6 +216,11 @@ function buildConfig(opts) {
     showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
   }
 
+  let gwasTemplate = 'gwas-template-latest';
+  if (config.argoTemplate) {
+    gwasTemplate = config.argoTemplate;
+  }
+
   let showFenceAuthzOnProfile = true;
   if (config.showFenceAuthzOnProfile === false) {
     showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
@@ -274,16 +284,16 @@ function buildConfig(opts) {
   const { discoveryConfig } = config;
   const studyRegistrationConfig = config.studyRegistrationConfig || {};
   if (!studyRegistrationConfig.studyRegistrationTrackingField) {
-    studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username'
+    studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username';
   }
   if (!studyRegistrationConfig.studyRegistrationValidationField) {
-    studyRegistrationConfig.studyRegistrationValidationField = 'is_registered'
+    studyRegistrationConfig.studyRegistrationValidationField = 'is_registered';
   }
   if (!studyRegistrationConfig.studyRegistrationAccessCheckField) {
-    studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz'
+    studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz';
   }
   if (!studyRegistrationConfig.studyRegistrationUIDField) {
-    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id'
+    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id';
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
@@ -402,17 +412,10 @@ function buildConfig(opts) {
             ],
           };
           break;
-        case 'GWASApp':
-          analysisApps.GWASApp = {
-            title: 'GWAS',
-            description: 'GWAS App',
-            image: '/src/img/analysis-icons/gwas.svg',
-          };
-          break;
         case 'GWASUIApp':
           analysisApps.GWASUIApp = {
-            title: 'GWAS UI',
-            description: 'Advanced GWAS UI',
+            title: 'Gen3 GWAS',
+            description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
             image: '/src/img/analysis-icons/gwas.svg',
           };
           break;
@@ -452,6 +455,7 @@ function buildConfig(opts) {
     basename,
     breakpoints,
     buildConfig,
+    gwasTemplate,
     dev,
     hostname,
     gaDebug,
@@ -463,6 +467,7 @@ function buildConfig(opts) {
     coreMetadataPath,
     indexdPath,
     cohortMiddlewarePath,
+    gwasWorkflowPath,
     graphqlPath,
     dataDictionaryTemplatePath,
     graphqlSchemaUrl,
