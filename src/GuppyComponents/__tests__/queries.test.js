@@ -237,7 +237,6 @@ describe('Get GQL filter from filter object from', () => {
     };
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
-
   test('various filters', () => {
     const filterState = {
       value: {
