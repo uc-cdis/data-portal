@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 import Discovery, { AccessLevel, AccessSortDirection, DiscoveryResource } from './Discovery';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import { hostname, discoveryConfig, useArboristUI } from '../localconf';
+import { discoveryConfig, studyRegistrationConfig, useArboristUI } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
 import loadStudiesFromAggMDS from './aggMDSUtils';
 
@@ -76,13 +77,28 @@ const DiscoveryWithMDSBackend: React.FC<{
   }
 
   useEffect(() => {
-    let loadStudiesFunction;
-    if (isEnabled('discoveryUseAggMDS')) {
-      loadStudiesFunction = loadStudiesFromAggMDS;
-    } else {
-      loadStudiesFunction = loadStudiesFromMDS;
+    const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
+    async function fetchRawStudies() {
+      let loadStudiesFunction;
+      if (isEnabled('discoveryUseAggMDS')) {
+        loadStudiesFunction = loadStudiesFromAggMDS;
+      } else {
+        loadStudiesFunction = loadStudiesFromMDS;
+      }
+      const rawStudiesRegistered = await loadStudiesFunction();
+      let rawStudiesUnregistered = [];
+      if (isEnabled('studyRegistration')) {
+        rawStudiesUnregistered = await loadStudiesFromMDS('unregistered_discovery_metadata');
+        rawStudiesUnregistered = rawStudiesUnregistered
+          .map((unregisteredStudy) => ({ ...unregisteredStudy, [studyRegistrationValidationField]: false }));
+      }
+      return _.union(rawStudiesRegistered, rawStudiesUnregistered);
     }
+<<<<<<< HEAD
     loadStudiesFunction(props.config).then((rawStudies) => {
+=======
+    fetchRawStudies().then((rawStudies) => {
+>>>>>>> master
       let studiesToSet;
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
@@ -131,11 +147,16 @@ const DiscoveryWithMDSBackend: React.FC<{
 
     // indicate discovery tag is active even if we didn't click a button to get here
     props.onDiscoveryPageActive();
-  }, []);
+  }, [props]);
 
+  let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
+  if (!isEnabled('studyRegistration')) {
+    studyRegistrationValidationField = undefined;
+  }
   return (
     <Discovery
       studies={studies === null ? [] : studies}
+      studyRegistrationValidationField={studyRegistrationValidationField}
       {...props}
     />
   );

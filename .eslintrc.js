@@ -25,7 +25,7 @@ module.exports = {
     'jsx-a11y',
     'import',
   ],
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 6,
@@ -33,6 +33,12 @@ module.exports = {
       jsx: true,
       spread: true,
     },
+    requireConfigFile: false,
+    babelOptions: {
+      plugins: [
+        '@babel/plugin-proposal-class-properties'
+      ]
+    }
   },
   rules: {
     'no-underscore-dangle': 'off',

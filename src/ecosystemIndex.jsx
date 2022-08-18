@@ -64,6 +64,8 @@ import ReduxWorkspaceShutdownPopup from './Popup/ReduxWorkspaceShutdownPopup';
 import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
+import StudyRegistration from './StudyRegistration';
+import ReduxStudyRegistrationRequestForm from './StudyRegistration/ReduxStudyRegistrationRequestForm';
 import NotFound from './components/NotFound';
 
 // monitor user's session
@@ -79,8 +81,10 @@ async function init() {
 
   // Datadog setup
   if (ddApplicationId && !ddClientToken) {
+    // eslint-disable-next-line no-console
     console.warn('Datadog applicationId is set, but clientToken is missing');
   } else if (!ddApplicationId && ddClientToken) {
+    // eslint-disable-next-line no-console
     console.warn('Datadog clientToken is set, but applicationId is missing');
   } else if (ddApplicationId && ddClientToken) {
     datadogRum.init({
@@ -168,19 +172,28 @@ async function init() {
                       )
                     }
                   />
-                  <Route
-                    exact
-                    path='/'
-                    component={
-                      (props) => (
-                        <ProtectedContent
-                          public={discoveryConfig.public !== false}
-                          component={Discovery}
-                          {...props}
-                        />
-                      )
-                    }
-                  />
+                  {isEnabled('discovery')
+                    ? (
+                      <Route
+                        exact
+                        path='/'
+                        component={
+                          (props) => (
+                            <ProtectedContent
+                              public={discoveryConfig.public !== false}
+                              component={Discovery}
+                              {...props}
+                            />
+                          )
+                        }
+                      />
+                    ) : (
+                      <Route
+                        exact
+                        path='/'
+                        component={NotFound}
+                      />
+                    )}
                   <Route
                     exact
                     path='/submission'
@@ -478,6 +491,42 @@ async function init() {
                         }
                       />
                     )}
+                  {
+                    isEnabled('studyRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/study-reg'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={StudyRegistration}
+                                {...props}
+                              />
+                            )
+                          }
+                        />
+                      )
+                      : null
+                  }
+                  {
+                    isEnabled('studyRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/study-reg/request-access'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={ReduxStudyRegistrationRequestForm}
+                                {...props}
+                              />
+                            )
+                          }
+                        />
+                      )
+                      : null
+                  }
                   <Route
                     path='/not-found'
                     component={NotFound}

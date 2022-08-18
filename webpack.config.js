@@ -26,6 +26,9 @@ if (configFile.connectSrcCSPWhitelist && configFile.connectSrcCSPWhitelist.lengt
 if (configFile.featureFlags && configFile.featureFlags.discoveryUseAggMDS) {
   connectSrcURLs.push('https://dataguids.org');
 }
+if (configFile.featureFlags && configFile.featureFlags.studyRegistration) {
+  connectSrcURLs.push('https://clinicaltrials.gov');
+}
 if (process.env.DATADOG_APPLICATION_ID && process.env.DATADOG_CLIENT_TOKEN) {
   connectSrcURLs.push('https://*.logs.datadoghq.com');
 }
@@ -75,6 +78,7 @@ const plugins = [
   }),
   new HtmlWebpackPlugin({
     title: configFile.components.appName || 'Generic Data Commons',
+    metaDescription: configFile.components.metaDescription || '',
     basename: pathPrefix,
     template: 'src/index.ejs',
     connect_src: (function () {
@@ -121,7 +125,6 @@ const plugins = [
   }),
   /*
   Can do this kind of thing to deploy multi-page apps in the future ...
-
   new HtmlWebpackPlugin({
     title: "Gen3 Workspaces",
     filename: "workspaces.html",
@@ -132,6 +135,8 @@ const plugins = [
   */
   new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
 ];
+
+const allowedHosts = process.env.HOSTNAME ? [process.env.HOSTNAME] : 'auto';
 
 let optimization = {};
 let devtool = false;
@@ -225,9 +230,7 @@ module.exports = {
     port: 9443,
     server: 'https',
     host: 'localhost',
-    allowedHosts: [
-      '.planx-pla.net',
-    ],
+    allowedHosts,
     client: {
       overlay: {
         warnings: false,
@@ -248,6 +251,10 @@ module.exports = {
       exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
       use: {
         loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env', '@babel/react'],
+          plugins: ['@babel/plugin-proposal-class-properties'],
+        },
       },
     },
     {

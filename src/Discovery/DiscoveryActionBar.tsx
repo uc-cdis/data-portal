@@ -219,9 +219,11 @@ const checkDownloadStatus = (
                 setTimeout(() => window.open(output), 2000);
                 const projectNumber = selectedResources.map((study) => study.project_number);
                 const studyName = selectedResources.map((study) => study.study_name);
+                const repositoryName = selectedResources.map((study) => study.commons);
                 datadogRum.addAction('datasetDownload', {
                   datasetDownloadProjectNumber: projectNumber,
                   datasetDownloadStudyName: studyName,
+                  datasetDownloadRepositoryName: repositoryName,
                 });
               } catch {
                 // job output is not a url -> is an error message
@@ -252,10 +254,10 @@ const handleDownloadZipClick = async (
   history,
   location,
 ) => {
-    const { manifestFieldName } = config.features.exportToWorkspace;
-    const selectedResources = await loadManifestFromResources(selectedStudies, manifestFieldName);
+  const { manifestFieldName } = config.features.exportToWorkspace;
+  const selectedResources = await loadManifestFromResources(selectedStudies, manifestFieldName);
 
-    if (config.features.exportToWorkspace.verifyExternalLogins) {
+  if (config.features.exportToWorkspace.verifyExternalLogins) {
     const isLinked = await checkFederatedLoginStatus(setDownloadStatus, selectedResources, manifestFieldName, history, location);
     if (!isLinked) {
       return;
@@ -323,9 +325,11 @@ const handleDownloadManifestClick = async (config: DiscoveryConfig, selectedStud
   });
   const projectNumber = selectedResources.map((study) => study.project_number);
   const studyName = selectedResources.map((study) => study.study_name);
+  const repositoryName = selectedResources.map((study) => study.commons);
   datadogRum.addAction('manifestDownload', {
     manifestDownloadProjectNumber: projectNumber,
     manifestDownloadStudyName: studyName,
+    manifestDownloadRepositoryName: repositoryName,
   });
   // download the manifest
   const MANIFEST_FILENAME = 'manifest.json';
@@ -346,7 +350,7 @@ const handleExportToWorkspaceClick = async (
     throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
   }
 
-    const selectedResourcesWithManifest = await loadManifestFromResources(selectedResources, manifestFieldName);
+  const selectedResourcesWithManifest = await loadManifestFromResources(selectedResources, manifestFieldName);
 
   if (config.features.exportToWorkspace.verifyExternalLogins) {
     const isLinked = await checkFederatedLoginStatus(
@@ -360,7 +364,7 @@ const handleExportToWorkspaceClick = async (
   setExportingToWorkspace(true);
   // combine manifests from all selected studies
   const manifest = [];
-    selectedResourcesWithManifest.forEach((study) => {
+  selectedResourcesWithManifest.forEach((study) => {
     if (study[manifestFieldName]) {
       if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
         // like FUSE
@@ -377,9 +381,11 @@ const handleExportToWorkspaceClick = async (
 
   const projectNumber = selectedResourcesWithManifest.map((study) => study.project_number);
   const studyName = selectedResourcesWithManifest.map((study) => study.study_name);
+  const repositoryName = selectedResourcesWithManifest.map((study) => study.commons);
   datadogRum.addAction('exportToWorkspace', {
-    manifestDownloadProjectNumber: projectNumber,
-    manifestDownloadStudyName: studyName,
+    exportToWorkspaceProjectNumber: projectNumber,
+    exportToWorkspaceStudyName: studyName,
+    exportToWorkspaceRepositoryName: repositoryName,
   });
 
   // post selected resources to manifestservice
