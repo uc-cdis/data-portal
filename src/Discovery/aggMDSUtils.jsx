@@ -1,4 +1,4 @@
-import { aggMDSDataURL, discoveryConfig } from '../localconf';
+import { discoveryConfig, aggMDSDataURL } from '../localconf';
 
 const retrieveCommonsInfo = async (commonsName) => {
   const url = `${aggMDSDataURL}/${commonsName}/info`;
