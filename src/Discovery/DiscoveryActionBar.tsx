@@ -305,9 +305,7 @@ const handleDownloadManifestClick = async (config: DiscoveryConfig, selectedStud
   }
   // combine manifests from all selected studies
   const manifest = [];
-
   // update the manifest to handle aggregated manifestFieldName
-
   const selectedResources = await loadManifestFromResources(selectedStudies, manifestFieldName);
   selectedResources.forEach((study) => {
     if (study[manifestFieldName]) {

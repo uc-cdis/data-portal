@@ -78,7 +78,6 @@ const DiscoveryListView: React.FunctionComponent<Props> = (props: Props) => {
           }
           // disable checkbox if there's no manifest found for this study
           const exportToWorkspaceConfig = props.config.features.exportToWorkspace;
-
           const { manifestFieldName } = exportToWorkspaceConfig;
           if (!record[manifestFieldName] || record[manifestFieldName].length === 0) {
             disabled = true;
