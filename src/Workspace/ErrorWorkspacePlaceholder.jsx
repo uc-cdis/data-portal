@@ -7,10 +7,10 @@ import { components } from '../params';
 
 class ErrorWorkspacePlaceholder extends React.Component {
   render() {
-    const supportEmail = components.login?.email || 'support@datacommons.io';
     if (isEnabled('workspaceRegistration')) {
       return <Redirect to='/workspace/register' />;
     }
+    const supportEmail = components.login?.email || 'support@datacommons.io';
     return (
       <div className='error-workspace-placeholder__error-msg'>
         <h1>Error opening workspace...</h1>

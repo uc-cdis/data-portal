@@ -55,7 +55,7 @@ export interface WorkspaceRegistrationProps {
   userAuthMapping: any
 }
 
-const StudyRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistrationProps> = (props: WorkspaceRegistrationProps) => {
+const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistrationProps> = (props: WorkspaceRegistrationProps) => {
   const [form] = Form.useForm();
 
   const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
@@ -286,4 +286,4 @@ const StudyRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistratio
   );
 };
 
-export default StudyRegistrationRequestForm;
+export default WorkspaceRegistrationRequestForm;

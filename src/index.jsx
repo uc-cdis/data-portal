@@ -66,11 +66,12 @@ import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import NotFound from './components/NotFound';
-import ErrorPage403 from './components/ErrorPage403';
+import ErrorPage403 from './Workspace/ErrorPage403.jsx';
 
 // monitor user's session
 sessionMonitor.start();
 workspaceSessionMonitor.start();
+
 // render the app after the store is configured
 async function init() {
   const store = await getReduxStore();
@@ -356,14 +357,7 @@ async function init() {
                         <Route
                           exact
                           path='/workspace/register'
-                          component={
-                            (props) => (
-                              <ProtectedContent
-                                component={WorkspaceRegistration}
-                                {...props}
-                              />
-                            )
-                          }
+                          component={WorkspaceRegistration}
                         />
                       )
                       : null
