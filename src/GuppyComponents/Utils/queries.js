@@ -109,9 +109,7 @@ export function queryGuppyForAggregationChartData({
     gqlFilter !== undefined
       ? `query ($filter: JSON) {
         _aggregation {
-          ${type} (filter: $filter, filterSelf: ${checkFilterSelf(
-          gqlFilter
-        )}, accessibility: all) {
+          ${type} (filter: $filter, accessibility: all) {
             ${fields.map(buildHistogramQueryStrForField).join('\n')}
           }
         }
