@@ -4,11 +4,16 @@ import isEnabled from '../helpers/featureFlags';
 import './Workspace.less';
 import NotFoundSVG from '../img/not-found.svg';
 import { components } from '../params';
+import workspaceRegistrationConfig from '../localconf';
 
 class ErrorWorkspacePlaceholder extends React.Component {
   render() {
     if (isEnabled('workspaceRegistration')) {
-      return <Redirect to='/workspace/register' />;
+      if (workspaceRegistrationConfig) {
+        return <Redirect to='/workspace/register' />;
+      }
+      // eslint-disable-next-line no-console
+      console.log('Unable to display registration form. Missing workspaceRegistrationConfig');
     }
     const supportEmail = components.login?.email || 'support@datacommons.io';
     return (

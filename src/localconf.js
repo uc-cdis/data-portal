@@ -274,7 +274,7 @@ function buildConfig(opts) {
 
   const { discoveryConfig } = config;
   const { resourceRegistrationConfig } = config;
-  const studyRegistrationConfig = resourceRegistrationConfig.studyRegistrationConfig || config.studyRegistrationConfig || {};
+  const studyRegistrationConfig = config.studyRegistrationConfig || {};
   if (!studyRegistrationConfig.studyRegistrationTrackingField) {
     studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username'
   }
@@ -289,8 +289,9 @@ function buildConfig(opts) {
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
-  const { workspaceRegistrationConfig, kayakoConfig } = resourceRegistrationConfig;
 
+  const workspaceRegistrationConfig = resourceRegistrationConfig ? resourceRegistrationConfig.workspaceRegistrationConfig : null;
+  const kayakoConfig = resourceRegistrationConfig ? resourceRegistrationConfig.kayakoConfig : null;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [

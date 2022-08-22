@@ -75,8 +75,7 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
   const handleRegisterFormSubmission = (formValues) => {
     // create a request in requestor
     const body = {
-      username: props.user.username,
-      policy_id: workspaceRegistrationConfig.workspacePolicyId,
+      policy_id: workspaceRegistrationConfig?.workspacePolicyId ? workspaceRegistrationConfig.workspacePolicyId : 'workspace',
     };
     fetchWithCreds({
       path: `${requestorPath}request`,
@@ -161,125 +160,140 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
     );
   }
 
+  if (kayakoConfig) {
+    return (
+      <div className='workspace-reg-container'>
+        <div className='workspace-reg-form-container'>
+          <Form className='workspace-reg-form' {...layout} form={form} name='workspace-reg-request-form' onFinish={onFinish} validateMessages={validateMessages}>
+            <Divider plain>Workspace Registration Access Request</Divider>
+            <Typography style={{ textAlign: 'center' }}>
+              Please fill out this form to request and be approved for access to workspace with the BRH Platform.
+            </Typography>
+            <Divider plain />
+            <div className='workspace-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
+            <Form.Item
+              name='First Name'
+              label='Registrant First Name'
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name='Last Name'
+              label='Registrant Last Name'
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name='E-mail Address'
+              label='E-mail Address'
+              rules={[
+                {
+                  type: 'email',
+                  message: 'The input is not valid E-mail',
+                },
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name='Affiliated Institution'
+              label='Affiliated Institution'
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name='Grant Number'
+              label='Grant Number'
+              rules={[
+                {
+                  required: false,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label='Role on Project'
+              name='Role on Project'
+              initialValue={role}
+              rules={[{ required: true, message: 'Please select a role' }]}
+            >
+              <Radio.Group onChange={onRadioChange} value={role}>
+                <Space direction='vertical'>
+                  <Radio value={'Principal Investigator'}>Principal Investigator</Radio>
+                  <Radio value={'Co-Principal Investigator'}>Co-Principal Investigator</Radio>
+                  <Radio value={'Co-Investigator'}>Co-Investigator</Radio>
+                  <Radio value={'Administrator'}>Administrator</Radio>
+                  <Radio value={'Clinical Collaborator'}>Clinical Collaborator</Radio>
+                  <Radio value={'Clinical Coordinator'}>Clinical Coordinator</Radio>
+                  <Radio value={'Data Analyst'}>Data Analyst</Radio>
+                  <Radio value={'Data Manager'}>Data Manager</Radio>
+                  <Radio value={'Research Coordinator'}>Research Coordinator</Radio>
+                  <Radio value={'Other'}>
+                    Other...
+                    {role === 'Other' ? (
+                      <Form.Item
+                        name='Custom Role'
+                        noStyle
+                        rules={[{ required: true, message: 'Please provide a role' }]}
+                      >
+                        <Input style={{ width: 200, marginLeft: 8 }} />
+                      </Form.Item>
+                    ) : null}
+                  </Radio>
+                </Space>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item {...tailLayout}>
+              <Space>
+                {(!userHasAccess()) ? (
+                  <Tooltip title={'You don\'t have permission to request for access to workspace'}>
+                    <Button type='primary' htmlType='submit' disabled>
+                      Submit
+                    </Button>
+                  </Tooltip>
+                ) : (
+                  <Button type='primary' htmlType='submit' disabled={reqAccessRequestPending || formSubmissionButtonDisabled} loading={reqAccessRequestPending}>
+                    Submit
+                  </Button>
+                )}
+                <Button htmlType='button' onClick={onReset} disabled={reqAccessRequestPending}>
+                  Reset
+                </Button>
+              </Space>
+            </Form.Item>
+          </Form>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className='workspace-reg-container'>
       <div className='workspace-reg-form-container'>
         <Form className='workspace-reg-form' {...layout} form={form} name='workspace-reg-request-form' onFinish={onFinish} validateMessages={validateMessages}>
           <Divider plain>Workspace Registration Access Request</Divider>
           <Typography style={{ textAlign: 'center' }}>
-            Please fill out this form to request and be approved for access to workspace with the BRH Platform.
+            Error: Missing Kayako configuration. <br /> Please contact Administrator to request access to workspace.
           </Typography>
           <Divider plain />
-          <div className='workspace-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
-          <Form.Item
-            name='First Name'
-            label='Registrant First Name'
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name='Last Name'
-            label='Registrant Last Name'
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name='E-mail Address'
-            label='E-mail Address'
-            rules={[
-              {
-                type: 'email',
-                message: 'The input is not valid E-mail',
-              },
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name='Affiliated Institution'
-            label='Affiliated Institution'
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name='Grant Number'
-            label='Grant Number'
-            rules={[
-              {
-                required: false,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label='Role on Project'
-            name='Role on Project'
-            initialValue={role}
-            rules={[{ required: true, message: 'Please select a role' }]}
-          >
-            <Radio.Group onChange={onRadioChange} value={role}>
-              <Space direction='vertical'>
-                <Radio value={'Principal Investigator'}>Principal Investigator</Radio>
-                <Radio value={'Co-Principal Investigator'}>Co-Principal Investigator</Radio>
-                <Radio value={'Co-Investigator'}>Co-Investigator</Radio>
-                <Radio value={'Administrator'}>Administrator</Radio>
-                <Radio value={'Clinical Collaborator'}>Clinical Collaborator</Radio>
-                <Radio value={'Clinical Coordinator'}>Clinical Coordinator</Radio>
-                <Radio value={'Data Analyst'}>Data Analyst</Radio>
-                <Radio value={'Data Manager'}>Data Manager</Radio>
-                <Radio value={'Research Coordinator'}>Research Coordinator</Radio>
-                <Radio value={'Other'}>
-                  Other...
-                  {role === 'Other' ? (
-                    <Form.Item
-                      name='Custom Role'
-                      noStyle
-                      rules={[{ required: true, message: 'Please provide a role' }]}
-                    >
-                      <Input style={{ width: 200, marginLeft: 8 }} />
-                    </Form.Item>
-                  ) : null}
-                </Radio>
-              </Space>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item {...tailLayout}>
-            <Space>
-              {(!userHasAccess()) ? (
-                <Tooltip title={'You don\'t have permission to request for access to workspace'}>
-                  <Button type='primary' htmlType='submit' disabled>
-                    Submit
-                  </Button>
-                </Tooltip>
-              ) : (
-                <Button type='primary' htmlType='submit' disabled={reqAccessRequestPending || formSubmissionButtonDisabled} loading={reqAccessRequestPending}>
-                  Submit
-                </Button>
-              )}
-              <Button htmlType='button' onClick={onReset} disabled={reqAccessRequestPending}>
-                Reset
-              </Button>
-            </Space>
-          </Form.Item>
         </Form>
       </div>
     </div>
