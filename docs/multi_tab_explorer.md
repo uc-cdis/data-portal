@@ -42,17 +42,6 @@ An example of `explorerConfig` is (some contents are omitted for conciseness):
         // optional; fields (must exist in "fields" list above) to display as clickable buttons
         "linkFields": ["url"]
       },
-      "survivalAnalysis": {
-        // optional; if missing, survival analysis feature won't be used
-        "result": {
-          // optional; if true, fetch and display calculated p-value for log-rank test
-          "pval": false,
-          // optional; if true, fetch and display number-at-risk table
-          "risktable": false,
-          // optional; if true, fetch and plot survival rates
-          "survival": false
-        }
-      },
       "guppyConfig": {
         // must match the index “type” in the guppy configuration block in the manifest.json
         "dataType": "case",
