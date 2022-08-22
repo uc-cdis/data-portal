@@ -25,6 +25,7 @@ import {
 import { fetchGuppySchema, fetchSchema } from './redux/graphiql/asyncThunks';
 import { fetchAccess } from './redux/userProfile/asyncThunks';
 import { fetchGraphvizLayout } from './redux/ddgraph/asyncThunks';
+import { fetchSurvivalConfig } from './redux/explorer/asyncThunks';
 import { useAppDispatch } from './redux/hooks';
 
 // lazy-loaded pages
@@ -188,7 +189,7 @@ function App() {
         <Route
           path='explorer'
           element={
-            <ProtectedContent>
+            <ProtectedContent preload={() => dispatch(fetchSurvivalConfig())}>
               <Explorer />
             </ProtectedContent>
           }
