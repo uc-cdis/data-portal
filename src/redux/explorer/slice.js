@@ -309,9 +309,12 @@ const slice = createSlice({
         state.survivalAnalysisResult.usedFilterSetIds = [];
       })
       .addCase(fetchSurvivalConfig.fulfilled, (state, action) => {
-        state.config.survivalAnalysisConfig = action.payload;
+        const config = action.payload;
+        if (config === undefined) return;
+
+        state.config.survivalAnalysisConfig = config;
         state.survivalAnalysisResult.parsed = parseSurvivalResult({
-          config: action.payload,
+          config,
           result: null,
         });
       });
