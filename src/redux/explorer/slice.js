@@ -5,6 +5,7 @@ import {
   createFilterSet,
   deleteFilterSet,
   fetchFilterSets,
+  fetchSurvivalConfig,
   updateFilterSet,
   updateSurvivalResult,
 } from './asyncThunks';
@@ -306,6 +307,13 @@ const slice = createSlice({
         state.survivalAnalysisResult.parsed = {};
         state.survivalAnalysisResult.staleFilterSetIds = [];
         state.survivalAnalysisResult.usedFilterSetIds = [];
+      })
+      .addCase(fetchSurvivalConfig.fulfilled, (state, action) => {
+        state.config.survivalAnalysisConfig = action.payload;
+        state.survivalAnalysisResult.parsed = parseSurvivalResult({
+          config: action.payload,
+          result: null,
+        });
       });
   },
 });
