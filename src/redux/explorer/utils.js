@@ -113,10 +113,7 @@ export function getCurrentConfig(explorerId) {
     guppyConfig: config.guppyConfig,
     hideGetAccessButton: config.hideGetAccessButton,
     patientIdsConfig: config.patientIds,
-    survivalAnalysisConfig: {
-      ...config.survivalAnalysis,
-      enabled: isSurvivalAnalysisEnabled(config.survivalAnalysis),
-    },
+    survivalAnalysisConfig: { enabled: false },
     tableConfig: config.table,
   };
 }
