@@ -101,3 +101,14 @@ export const updateSurvivalResult = createAsyncThunk(
     }
   }
 );
+
+let shouldFetchSurvivalConfig = true;
+export const fetchSurvivalConfig = createAsyncThunk(
+  'explorer/fetchSurvivalConfig',
+  async () => {
+    if (!shouldFetchSurvivalConfig) return undefined;
+
+    shouldFetchSurvivalConfig = false;
+    return survivalAnalysisAPI.fetchConfig();
+  }
+);
