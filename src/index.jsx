@@ -66,7 +66,7 @@ import ReduxWorkspaceShutdownBanner from './Popup/ReduxWorkspaceShutdownBanner';
 import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import NotFound from './components/NotFound';
-import ErrorPage403 from './Workspace/ErrorPage403.jsx';
+import ErrorPage403 from './components/ErrorPage403';
 
 // monitor user's session
 sessionMonitor.start();

@@ -47,11 +47,7 @@ export interface FormSubmissionState {
   status?: ResultStatusType;
   text?: string
 }
-export interface User {
-  username: string
-}
 export interface WorkspaceRegistrationProps {
-  user: User,
   userAuthMapping: any
 }
 
