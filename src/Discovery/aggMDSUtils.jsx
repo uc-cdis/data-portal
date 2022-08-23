@@ -97,7 +97,8 @@ const loadStudiesFromAggMDS = async (config) => {
 
   const offset = 0; // For pagination
   const limit = 1000; // Total number of rows requested
-  const { manifestFieldName } = config.features.exportToWorkspace;
+  const manifestFieldName = config.features?.exportToWorkspace?.manifestFieldName ?
+    config.features.exportToWorkspace.manifestFieldName : '__manifest';
 
   const studies = await loadStudiesFromAggMDSRequests(offset, limit, manifestFieldName);
 
