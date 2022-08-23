@@ -279,7 +279,7 @@ describe('Get GQL filter from filter object from', () => {
   test('a simple composed filter', () => {
     const filterState = {
       __combineMode: /** @type {CombineMode} */ ('AND'),
-      __type: FILTER_TYPE.COMPOASED,
+      __type: FILTER_TYPE.COMPOSED,
       value: [
         {
           __combineMode: /** @type {CombineMode} */ ('AND'),
@@ -312,11 +312,11 @@ describe('Get GQL filter from filter object from', () => {
   test('a higher-order composed filter', () => {
     const filterState = {
       __combineMode: /** @type {CombineMode} */ ('AND'),
-      __type: FILTER_TYPE.COMPOASED,
+      __type: FILTER_TYPE.COMPOSED,
       value: [
         {
           __combineMode: /** @type {CombineMode} */ ('OR'),
-          __type: FILTER_TYPE.COMPOASED,
+          __type: FILTER_TYPE.COMPOSED,
           value: [
             {
               __combineMode: /** @type {CombineMode} */ ('AND'),
