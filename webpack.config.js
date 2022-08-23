@@ -125,7 +125,6 @@ const plugins = [
   }),
   /*
   Can do this kind of thing to deploy multi-page apps in the future ...
-
   new HtmlWebpackPlugin({
     title: "Gen3 Workspaces",
     filename: "workspaces.html",
@@ -252,6 +251,10 @@ module.exports = {
       exclude: /node_modules\/(?!(graphiql|graphql-language-service-parser)\/).*/,
       use: {
         loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env', '@babel/react'],
+          plugins: ['@babel/plugin-proposal-class-properties'],
+        },
       },
     },
     {

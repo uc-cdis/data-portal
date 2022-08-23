@@ -303,8 +303,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
                 <Typography className='study-reg-disclaimer-text'>
                   {studyRegistrationConfig.studyRegistrationFormDisclaimerField}
                 </Typography>
-              )
-          }
+              )}
         </Form>
       </div>
     </div>
