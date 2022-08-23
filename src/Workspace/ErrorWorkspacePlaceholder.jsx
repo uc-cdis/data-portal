@@ -10,6 +10,7 @@ const ErrorWorkspacePlaceholder = () => {
   const history = useHistory();
   if (isEnabled('workspaceRegistration')) {
     if (workspaceRegistrationConfig) {
+      console.log('Reloading to the different page!');
       // eslint-disable-next-line react/prop-types
       history.push('/workspace/register');
     }
