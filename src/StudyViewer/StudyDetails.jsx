@@ -382,7 +382,12 @@ class StudyDetails extends React.Component {
                }}
              />
            </Modal>
-           {this.requestAccessButtonVisible && !userHasLoggedIn && !this.state.accessRequested
+           {this.requestAccessButtonVisible
+            && (!userHasLoggedIn
+              || (this.props.data.requiredIdpField
+              && this.props.data.requiredIdpField !== this.props.user?.idp)
+            )
+            && !this.state.accessRequested
              ? (
                <Alert
                  message={loginAlertMessage}
