@@ -92,7 +92,7 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
               const [key, value] = entry;
               contents = contents.concat(`\n${key}: ${value}`);
             });
-            createKayakoTicket(subject, fullName, email, contents, kayakoConfig.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
+            createKayakoTicket(subject, fullName, email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
           } else {
             // eslint-disable-next-line no-console
