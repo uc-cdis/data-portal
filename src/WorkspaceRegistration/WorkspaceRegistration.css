@@ -1,5 +1,12 @@
 .workspace-reg-container {
     padding: 30px 32px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: var(--g3-color__bg-cloud);
+    width: 100%;
+    height: 100%;
 }
 
 .workspace-reg-form-container {
@@ -48,4 +55,4 @@
 .workspace-reg-disclaimer-text {
     font-size: 0.8em;
     text-align: center
-  }
+}
