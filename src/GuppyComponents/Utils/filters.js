@@ -89,7 +89,7 @@ function mergeToStandardFilterState(userFilter, adminAppliedPreFilter) {
  * @returns {FilterState}
  */
 export function mergeFilters(userFilter, adminAppliedPreFilter) {
-  return userFilter.__type === FILTER_TYPE.COMPOSED
+  return userFilter?.__type === FILTER_TYPE.COMPOSED
     ? mergeToComposedFilterState(userFilter, adminAppliedPreFilter)
     : mergeToStandardFilterState(userFilter, adminAppliedPreFilter);
 }
