@@ -250,7 +250,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
               selectedDichotomousCovariates={selectedDichotomousCovariates}
               gwasName={gwasName}
               handleGwasNameChange={handleGwasNameChange}
-              resetGWAS={resetCaseControl}
+              resetCaseControl={resetCaseControl}
             />
           </div>
         </React.Fragment>
