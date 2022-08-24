@@ -114,9 +114,9 @@ class IndexPageComponent extends React.Component {
                 </Button>
               </form>
             </div>
-            <div className='nct-right-box additionalInfo'>
+            <div className='high-light nct-right-box'>
               <p><strong>Data Sharing and Submission</strong></p>
-              <p>If you are interested in making your data available via <a href='https://accessclinicaldata.niaid.nih.gov'>accessclinicaldata.niaid.nih.gov</a>, please <a href='mailto:accessclinicaldatasupport@niaid.nih.gov'>contact us.</a></p>
+              <p>If you are interested in making your data available via this platform, please <a href='mailto:accessclinicaldatasupport@niaid.nih.gov'>contact us.</a></p>
             </div>
           </div>
         </div>
