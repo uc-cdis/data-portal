@@ -23,7 +23,7 @@ export type AnchoredFilterState = {
   };
 };
 
-export type FilterState = {
+export type StandardFilterState = {
   __combineMode?: CombineMode;
   __type?: 'STANDARD';
   value?: {
@@ -34,8 +34,10 @@ export type FilterState = {
 export type ComposedFilterState = {
   __combineMode?: CombineMode;
   __type: 'COMPOSED';
-  value?: (ComposedFilterState | FilterState)[];
+  value?: (ComposedFilterState | StandardFilterState)[];
 };
+
+export type FilterState = ComposedFilterState | StandardFilterState;
 
 export type GqlInFilter = {
   IN: {

@@ -11,7 +11,7 @@ import {
   getAllFieldsFromGuppy,
   getGQLFilter,
 } from '../Utils/queries';
-import { FILE_FORMATS, GUPPY_URL } from '../Utils/const';
+import { FILE_FORMATS, FILTER_TYPE, GUPPY_URL } from '../Utils/const';
 import {
   excludeSelfFilterFromAggsData,
   mergeFilters,
@@ -172,6 +172,13 @@ function GuppyWrapper({
     filter,
     filterTabs = filterConfig.tabs,
   }) {
+    if (filter.__type === FILTER_TYPE.COMPOSED)
+      return Promise.resolve({
+        aggsData: /** @type {AggsData} */ ({}),
+        initialTabsOptions: /** @type {SimpleAggsData} */ ({}),
+        tabsOptions: /** @type {SimpleAggsData} */ ({}),
+      });
+
     return queryGuppyForAggregationOptionsData({
       type: guppyConfig.dataType,
       anchorConfig: filterConfig.anchor,

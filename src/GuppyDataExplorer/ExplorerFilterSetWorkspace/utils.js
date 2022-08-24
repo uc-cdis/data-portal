@@ -3,13 +3,13 @@ import { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
 export { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
 
 /** @typedef {import('../../GuppyComponents/types').AnchoredFilterState} AnchoredFilterState */
-/** @typedef {import('../../GuppyComponents/types').FilterState} FilterState */
+/** @typedef {import('../../GuppyComponents/types').StandardFilterState} StandardFilterState */
 /** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
 /**
  * @template T
  * @param {Object} args
  * @param {string} args.field
- * @param {T extends AnchoredFilterState ? AnchoredFilterState : ExplorerFilter} args.filter
+ * @param {T extends AnchoredFilterState ? AnchoredFilterState : StandardFilterState} args.filter
  */
 function _pluckFromFilter({ field, filter }) {
   const newFilter = { ...filter };
@@ -23,17 +23,17 @@ function _pluckFromFilter({ field, filter }) {
   return newFilter;
 }
 
-/** @type {typeof _pluckFromFilter<ExplorerFilter>} */
+/** @type {typeof _pluckFromFilter<StandardFilterState>} */
 export const pluckFromFilter = _pluckFromFilter;
 
 /**
  * @param {Object} args
  * @param {string} args.anchor
  * @param {string} args.field
- * @param {ExplorerFilter} args.filter
+ * @param {StandardFilterState} args.filter
  */
 export function pluckFromAnchorFilter({ anchor, field, filter }) {
-  /** @type {ExplorerFilter} */
+  /** @type {StandardFilterState} */
   const newFilter = { ...filter };
   if (Object.keys(newFilter).length === 0) return newFilter;
 
@@ -55,5 +55,7 @@ export function pluckFromAnchorFilter({ anchor, field, filter }) {
 
 /** @param {ExplorerFilter} filter */
 export function checkIfFilterEmpty(filter) {
-  return Object.keys(filter.value ?? {}).length === 0;
+  return filter.__type === FILTER_TYPE.COMPOSED
+    ? filter.value.length === 0
+    : Object.keys(filter.value ?? {}).length === 0;
 }

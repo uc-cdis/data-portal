@@ -59,12 +59,15 @@ Pill.propTypes = {
   onClose: PropTypes.func,
 };
 
+/** @typedef {import('../GuppyComponents/types').FilterConfig} FilterConfig */
+/** @typedef {import('../GuppyComponents/types').FilterState} FilterState */
+
 /**
  * @param {Object} props
  * @param {[anchorField: string, anchorValue: string]} [props.anchorInfo]
  * @param {'AND' | 'OR'} [props.combineMode]
- * @param {import('../GuppyComponents/types').FilterState} props.filter
- * @param {import('../GuppyComponents/types').FilterConfig['info']} props.filterInfo
+ * @param {FilterState} props.filter
+ * @param {FilterConfig['info']} props.filterInfo
  * @param {ClickCombineModeHandler} [props.onClickCombineMode]
  * @param {ClickFilterHandler} [props.onClickFilter]
  * @param {ClickFilterHandler} [props.onCloseFilter]
@@ -78,6 +81,20 @@ function FilterDisplay({
   onClickFilter,
   onCloseFilter,
 }) {
+  if (filter.__type === FILTER_TYPE.COMPOSED)
+    return (
+      <span className='filter-display'>
+        {filter.value.map((__filter, i) => (
+          <Fragment key={i}>
+            <span className='pill-container'>
+              <FilterDisplay filter={__filter} filterInfo={filterInfo} />
+            </span>
+            {i < filter.value.length - 1 && <Pill>{filter.__combineMode}</Pill>}
+          </Fragment>
+        ))}
+      </span>
+    );
+
   const filterElements = /** @type {JSX.Element[]} */ ([]);
   const { __combineMode, value: __filter } = filter;
   const filterCombineMode = combineMode ?? __combineMode ?? 'AND';

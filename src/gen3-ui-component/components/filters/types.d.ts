@@ -3,9 +3,9 @@ import type { Response as PaginateResponse } from 'react-select-async-paginate';
 export type {
   AnchorConfig,
   AnchoredFilterState,
+  StandardFilterState,
   FilterChangeHandler,
   FilterConfig,
-  FilterState,
   FilterTabsOption,
   BaseFilter,
   EmptyFilter,
