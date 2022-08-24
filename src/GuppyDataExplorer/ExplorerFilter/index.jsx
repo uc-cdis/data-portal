@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import './ExplorerFilter.css';
 
 /** @typedef {import('../../redux/types').RootState} RootState */
+/** @typedef {import('../../GuppyComponents/types').StandardFilterState} StandardFilterState */
 /** @typedef {import('../types').GuppyData} GuppyData */
 
 /** @param {{ className: string }} props */
@@ -40,7 +41,7 @@ DisabledExplorerFilter.propTypes = {
  * @property {string} [anchorValue]
  * @property {string} [className]
  * @property {GuppyData['initialTabsOptions']} [initialTabsOptions]
- * @property {GuppyData['filter']} filter
+ * @property {StandardFilterState} filter
  * @property {GuppyData['onFilterChange']} onFilterChange
  * @property {GuppyData['onAnchorValueChange']} onAnchorValueChange
  * @property {GuppyData['tabsOptions']} tabsOptions

@@ -16,6 +16,7 @@ import FilterSetLabel from './FilterSetLabel';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 import {
   checkIfFilterEmpty,
+  FILTER_TYPE,
   pluckFromAnchorFilter,
   pluckFromFilter,
 } from './utils';
@@ -107,15 +108,17 @@ function ExplorerFilterSetWorkspace() {
 
   /** @type {import('../../components/FilterDisplay').ClickCombineModeHandler} */
   function handleClickCombineMode(payload) {
-    handleFilterChange(
-      /** @type {import('../types').ExplorerFilter} */ ({
-        ...activeFilterSet.filter,
-        __combineMode: payload === 'AND' ? 'OR' : 'AND',
-      })
-    );
+    if (activeFilterSet.filter.__type !== FILTER_TYPE.STANDARD) return;
+
+    handleFilterChange({
+      ...activeFilterSet.filter,
+      __combineMode: payload === 'AND' ? 'OR' : 'AND',
+    });
   }
   /** @type {import('../../components/FilterDisplay').ClickFilterHandler} */
   function handleCloseFilter(payload) {
+    if (activeFilterSet.filter.__type !== FILTER_TYPE.STANDARD) return;
+
     const { field, anchorField, anchorValue } = payload;
     const { filter } = activeFilterSet;
     if (anchorField !== undefined && anchorValue !== undefined) {
