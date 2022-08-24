@@ -22,7 +22,8 @@ const GWASFormSubmit = ({
   selectedDichotomousCovariates,
   gwasName,
   handleGwasNameChange,
-  resetGWAS,
+  resetCaseControl,
+  resetQuantitative,
 }) => {
   const useSubmitJob = () => {
     const openNotification = () => {
@@ -70,7 +71,8 @@ const GWASFormSubmit = ({
       onSuccess: (data) => {
         if (data?.status === 200) {
           openNotification();
-          resetGWAS();
+          if (workflowType === 'caseControl') resetCaseControl();
+          if (workflowType === 'quantitative') resetQuantitative();
         }
       },
     });
@@ -171,7 +173,8 @@ GWASFormSubmit.propTypes = {
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   gwasName: PropTypes.string.isRequired,
   handleGwasNameChange: PropTypes.func.isRequired,
-  resetGWAS: PropTypes.func.isRequired,
+  resetQuantitative: PropTypes.func,
+  resetCaseControl: PropTypes.func,
   workflowType: PropTypes.string.isRequired,
 };
 
@@ -180,6 +183,8 @@ GWASFormSubmit.defaultProps = {
   selectedCaseCohort: undefined,
   selectedQuantitativeCohort: undefined,
   outcome: undefined,
+  resetQuantitative: undefined,
+  resetCaseControl: undefined,
 };
 
 export default GWASFormSubmit;

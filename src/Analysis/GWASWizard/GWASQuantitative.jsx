@@ -227,7 +227,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
               selectedDichotomousCovariates={selectedDichotomousCovariates}
               gwasName={gwasName}
               handleGwasNameChange={handleGwasNameChange}
-              resetGWAS={resetQuantitative}
+              resetQuantitative={resetQuantitative}
             />
           </div>
         </React.Fragment>
