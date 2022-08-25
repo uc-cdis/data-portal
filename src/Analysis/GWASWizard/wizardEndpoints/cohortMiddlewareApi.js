@@ -18,8 +18,8 @@ export const fetchOverlapInfo = async (
       ...selectedCovariates.map((c) => ({
         variable_type: 'concept',
         concept_id: c.concept_id,
-      }))
-    ]
+      })),
+    ],
   };
   const statsEndPoint = `${cohortMiddlewarePath}cohort-stats/check-overlap/by-source-id/${sourceId}/by-case-control-cohort-definition-ids/${caseCohortDefinitionId}/${controlCohortDefinitionId}/filter-by-concept-id-and-value/${hareConceptId}/${selectedHare.concept_value_as_concept_id}`;
   const reqBody = {

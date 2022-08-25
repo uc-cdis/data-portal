@@ -81,8 +81,8 @@ const CovariateStatsByHareCC = ({
       caseSize: hareBreakdown[0].persons_in_cohort_with_value,
       controlSize: hareBreakdown[1].persons_in_cohort_with_value,
     };
-    return [caseSize, controlSize]
-  }
+    return [caseSize, controlSize];
+  };
 
   useEffect(() => {
     if (selectedHare && dataCase?.concept_breakdown && dataControl?.concept_breakdown) {
