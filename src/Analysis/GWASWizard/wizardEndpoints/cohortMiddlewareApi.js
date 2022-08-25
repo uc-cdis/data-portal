@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { useState, useEffect } from 'react';
 import { cohortMiddlewarePath, wtsPath } from '../../../localconf';
 import { fetchWithCreds } from '../../../actions';
@@ -134,6 +135,12 @@ export const queryConfig = {
   refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
+};
+
+export const getAllHareItems = (concept_value, allCaseHares, allControlHares) => {
+  const caseHareBreakdown = allCaseHares.find((hare) => hare.concept_value === concept_value);
+  const controlHareBreakdown = allControlHares.find((hare) => hare.concept_value === concept_value);
+  return [caseHareBreakdown, controlHareBreakdown];
 };
 
 export const atlasDomain = () => cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas');
