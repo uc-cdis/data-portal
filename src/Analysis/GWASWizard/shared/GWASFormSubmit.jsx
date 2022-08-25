@@ -130,19 +130,21 @@ const GWASFormSubmit = ({
         ))}
         </div>
       </div>
-      {workflowType === 'caseControl' && (<div className="GWASUI-flexRow GWASUI-rowItem">
-        <>
-          <CohortOverlap
-            sourceId={sourceId}
-            selectedCaseCohort={selectedCaseCohort}
-            selectedControlCohort={selectedControlCohort}
-            selectedHare={selectedHare}
-            selectedCovariates={selectedCovariates}
-            selectedDichotomousCovariates={selectedDichotomousCovariates}
-            cohortSizes={cohortSizes}
-          />
-        </>
-      </div>)}
+      {workflowType === 'caseControl' && (
+        <div className='GWASUI-flexRow GWASUI-rowItem'>
+          <React.Fragment>
+            <CohortOverlap
+              sourceId={sourceId}
+              selectedCaseCohort={selectedCaseCohort}
+              selectedControlCohort={selectedControlCohort}
+              selectedHare={selectedHare}
+              selectedCovariates={selectedCovariates}
+              selectedDichotomousCovariates={selectedDichotomousCovariates}
+              cohortSizes={cohortSizes}
+            />
+          </React.Fragment>
+        </div>
+      )}
       <div className='GWASUI-flexRow' data-tour='review-name'>
         <input
           type='text'

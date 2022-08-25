@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../GWASUIApp/GWASUIApp.css';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
@@ -34,6 +34,10 @@ const CohortOverlap = ({
     queryConfig,
   );
 
+  useEffect(() => {
+    console.log('cohortSizes', cohortSizes);
+  }, [cohortSizes]);
+
   if (status === 'loading') {
     return <Spin />;
   }
@@ -45,9 +49,9 @@ const CohortOverlap = ({
       <div className='GWASUI-flexCol'>
                 Based on the selected covariates their respective data within the study population,
         <br />
-        {500} subjects were found in {selectedCaseCohort.cohort_name} cohort and
+        {cohortSizes[0]} subjects were found in {selectedCaseCohort.cohort_name} cohort and
         <br />
-        {600} subjects were found in {selectedControlCohort.cohort_name} cohort.
+        {cohortSizes[1]} subjects were found in {selectedControlCohort.cohort_name} cohort.
         <br />
         <strong style={{ color: '#006644' }}>No overlap found between both cohorts.</strong>
       </div>
@@ -57,9 +61,9 @@ const CohortOverlap = ({
       <div className='GWASUI-flexCol'>
                 Based on covariate selections {`${'&'}`} data within respective study populations,
         <br />
-        {90} subjects were found in <b>{selectedCaseCohort.cohort_name}</b> cohort and
+        {cohortSizes[0]} subjects were found in <b>{selectedCaseCohort.cohort_name}</b> cohort and
         <br />
-        {5} subjects were found in <b>{selectedControlCohort.cohort_name}</b> cohort.
+        {cohortSizes[1]} subjects were found in <b>{selectedControlCohort.cohort_name}</b> cohort.
         <br />
         <strong style={{ color: '#bf2600' }}>
                     Warning: overlap found between both cohorts!
