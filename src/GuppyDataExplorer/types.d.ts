@@ -64,13 +64,25 @@ export type SurvivalAnalysisConfig = {
   };
 };
 
-export type ExplorerFilterSet = {
+export type SavedExplorerFilterSet = {
   description: string;
   explorerId?: number;
-  filter: ExplorerFilter;
+  filter: FilterState;
   id?: number;
   name: string;
 };
+
+export type UnsavedExplorerFilterSet = {
+  description?: never;
+  explorerId?: never;
+  filter: FilterState;
+  id?: never;
+  name?: never;
+};
+
+export type ExplorerFilterSet =
+  | SavedExplorerFilterSet
+  | UnsavedExplorerFilterSet;
 
 export type ExplorerFilterSetDTO = {
   description: string;

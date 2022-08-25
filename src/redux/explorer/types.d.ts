@@ -36,17 +36,10 @@ export type ExplorerFilter = ExplorerFilter;
 
 export type ExplorerFilterSet = ExplorerFilterSet;
 
-export type UnsavedExplorerFilterSet = {
-  filter: ExplorerFilterSet['filter'];
-  id?: never;
-  name?: never;
-  description?: never;
-};
-
 export type ExplorerWorkspace = {
   activeId: string;
   all: {
-    [id: string]: ExplorerFilterSet | UnsavedExplorerFilterSet;
+    [id: string]: ExplorerFilterSet;
   };
 };
 
