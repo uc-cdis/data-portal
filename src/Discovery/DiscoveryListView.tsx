@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Empty, Tag, Tooltip } from 'antd';
+import {
+  Table, Empty, Tag, Tooltip,
+} from 'antd';
 import './Discovery.css';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { AccessLevel, DiscoveryResource, getTagColor } from './Discovery';

@@ -178,7 +178,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
               title='Your study has been registered!'
               subTitle='Please allow up to 24 hours until the platform is updated'
               extra={[
-                <Button type='primary' key='register' onClick={() => { setFormSubmissionStatus(null); setRegRequestPending(false); setStudyUID(undefined)}}>
+                <Button type='primary' key='register' onClick={() => { setFormSubmissionStatus(null); setRegRequestPending(false); setStudyUID(undefined); }}>
                   Register Another Study
                 </Button>,
                 <Link key='discovery' to={'/discovery'}>

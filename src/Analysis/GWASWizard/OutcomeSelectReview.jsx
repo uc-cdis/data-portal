@@ -70,24 +70,28 @@ const OutcomeSelectReview = ({
     <div>
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
         <hr />
-        <h4 className='GWASUI-selectInstruction'>
+        <h4 className='GWASUI-selectInstruction' data-tour='choosing-covariates'>
                     In this step, you can review the covariates selection based on % missing metrics
                     and select an outcome variable.
         </h4>
-        <div className='GWASUI-mainTable'>
-          <SearchBar
-            searchTerm={outcomeSearchTerm}
-            handleSearch={handleOutcomeSearch}
-            fields={'outcome name...'}
-          />
-          <Table
-            className='GWASUI-review-table'
-            rowKey='concept_id'
-            rowSelection={outcomeSelection(handleOutcomeSelect, outcome)}
-            pagination={{ pageSize: 10 }}
-            columns={outcomeReviewTableConfig}
-            dataSource={displayedOutcomes}
-          />
+        <div className='GWASUI-mainTable' data-tour='covariates-table'>
+          <div data-tour='covariates-table-search'>
+            <SearchBar
+              searchTerm={outcomeSearchTerm}
+              handleSearch={handleOutcomeSearch}
+              fields={'outcome name...'}
+            />
+          </div>
+          <div data-tour='covariates-table-body'>
+            <Table
+              className='GWASUI-review-table'
+              rowKey='concept_id'
+              rowSelection={outcomeSelection(handleOutcomeSelect, outcome)}
+              pagination={{ pageSize: 10 }}
+              columns={outcomeReviewTableConfig}
+              dataSource={displayedOutcomes}
+            />
+          </div>
         </div>
       </Space>
     </div>
