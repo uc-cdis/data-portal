@@ -196,7 +196,7 @@ GWASFormSubmit.defaultProps = {
   outcome: undefined,
   resetQuantitative: undefined,
   resetCaseControl: undefined,
-  cohortSizes: undefined
+  cohortSizes: undefined,
 };
 
 export default GWASFormSubmit;
