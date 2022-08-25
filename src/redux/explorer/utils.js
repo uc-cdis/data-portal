@@ -120,8 +120,9 @@ export function getCurrentConfig(explorerId) {
 
 /** @param {import('./types').ExplorerFilter} filter */
 export function checkIfFilterEmpty(filter) {
-  const { __combineMode, ..._filter } = filter;
-  return Object.keys(_filter).length === 0;
+  return filter.__type === FILTER_TYPE.COMPOSED
+    ? filter.value.length === 0
+    : Object.keys(filter.value ?? {}).length === 0;
 }
 
 export const workspacesSessionStorageKey = 'explorer:workspaces';
