@@ -133,6 +133,11 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
               status={formSubmissionStatus.status}
               title='Your access request has been submitted!'
               subTitle='Thank you for your submission. Requests take up to 1 business day to complete. You will be notified of the status.'
+              extra={[
+                <Link key='discovery' to={'/discovery'}>
+                  <Button>Go To Discovery Page</Button>
+                </Link>,
+              ]}
             />
           ) : (
             <Result

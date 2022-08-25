@@ -12,9 +12,10 @@ const ErrorWorkspacePlaceholder = () => {
     if (workspaceRegistrationConfig) {
       // eslint-disable-next-line react/prop-types
       history.push('/workspace/register');
+    } else {
+      // eslint-disable-next-line no-console
+      console.log('Unable to display registration form. Missing workspaceRegistrationConfig');
     }
-    // eslint-disable-next-line no-console
-    console.log('Unable to display registration form. Missing workspaceRegistrationConfig');
   }
 
   const supportEmail = components.login?.email || 'support@datacommons.io';

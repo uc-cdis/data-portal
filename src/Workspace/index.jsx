@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
 import {
@@ -733,20 +734,11 @@ class Workspace extends React.Component {
           }
         </div>
       );
-    } if (this.state.defaultWorkspace && this.state.connectedStatus) {
+    }
+    if (this.state.defaultWorkspace && this.state.connectedStatus) {
       // If this commons does not use Hatchery to spawn workspaces, then this
       // default workspace is shown.
-      return (
-        <div className='workspace__default'>
-          <iframe
-            title='Workspace'
-            frameBorder='0'
-            className='workspace__iframe'
-            src={workspaceUrl}
-            onLoad={this.oniframeLoad}
-          />
-        </div>
-      );
+      return <Redirect to={workspaceUrl} />;
     }
     return <Spinner />;
   }
