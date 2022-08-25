@@ -28,6 +28,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
   const [imputationScore, setImputationScore] = useState(0.3);
   const [mafThreshold, setMafThreshold] = useState(0.01);
   const [gwasName, setGwasName] = useState('');
+  const [cohortSizes, setCohortSizes] = useState([]);
 
   const { loading, sourceId } = useSourceFetch();
 
@@ -55,8 +56,9 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     setSelectedDichotomousCovariates((prevCD) => [...prevCD.filter((cd) => cd.id !== id)]);
   };
 
-  const handleHareChange = (hare) => {
+  const handleHareChange = (hare, cohortSizes) => {
     setSelectedHare(hare);
+    setCohortSizes(cohortSizes);
   };
 
   const handleGwasNameChange = (e) => {
@@ -245,6 +247,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
               selectedHare={selectedHare}
               selectedCaseCohort={selectedCaseCohort}
               selectedControlCohort={selectedControlCohort}
+              cohortSizes={cohortSizes}
               workflowType={'caseControl'}
               selectedCovariates={selectedCovariates}
               selectedDichotomousCovariates={selectedDichotomousCovariates}
