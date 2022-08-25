@@ -74,8 +74,19 @@ const CovariateStatsByHareCC = ({
     return `${selectedCaseHare.concept_value_name} (sizes: ${selectedCaseHare.persons_in_cohort_with_value}, ${selectedControlHare.persons_in_cohort_with_value})`;
   };
 
+  const handleCohortOverlapProps = (singleHare, allCaseHares, allControlHares) => {
+    const hareBreakdown = getAllHareItems(singleHare.concept_value,
+      allCaseHares, allControlHares);
+    const { caseSize, controlSize } = {
+      caseSize: hareBreakdown[0].persons_in_cohort_with_value,
+      controlSize: hareBreakdown[1].persons_in_cohort_with_value,
+    };
+    return [caseSize, controlSize]
+  }
+
   useEffect(() => {
     if (selectedHare && dataCase?.concept_breakdown && dataControl?.concept_breakdown) {
+      //  handleCohortOverlapProps(selectedHare, dataCase.concept_breakdown, dataControl.concept_breakdown)
       handleHareChange(selectedHare);
     }
   }, [selectedHare, dataCase, dataControl, handleHareChange]);

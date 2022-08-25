@@ -6,6 +6,7 @@ import {
 import { useMutation } from 'react-query';
 import CheckOutlined from '@ant-design/icons';
 import { caseControlSubmission, quantitativeSubmission } from '../wizardEndpoints/gwasWorkflowApi';
+import CohortOverlap from '../CohortOverlap';
 
 const GWASFormSubmit = ({
   sourceId,
@@ -15,6 +16,7 @@ const GWASFormSubmit = ({
   selectedHare,
   selectedCaseCohort,
   selectedControlCohort,
+  cohortSizes,
   selectedQuantitativeCohort,
   outcome,
   workflowType,
@@ -128,11 +130,19 @@ const GWASFormSubmit = ({
         ))}
         </div>
       </div>
-
-      {/* <div className="GWASUI-flexRow GWASUI-rowItem">
-          // TODO this is where functionality previously was. placeholder for when we add back in
-            <QCShowOverlap />
-        </div> */}
+      {workflowType === 'caseControl' && (<div className="GWASUI-flexRow GWASUI-rowItem">
+        <>
+          <CohortOverlap
+            sourceId={sourceId}
+            selectedCaseCohort={selectedCaseCohort}
+            selectedControlCohort={selectedControlCohort}
+            selectedHare={selectedHare}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            cohortSizes={cohortSizes}
+          />
+        </>
+      </div>)}
       <div className='GWASUI-flexRow' data-tour='review-name'>
         <input
           type='text'
@@ -168,6 +178,7 @@ GWASFormSubmit.propTypes = {
   selectedHare: PropTypes.object.isRequired,
   selectedCaseCohort: PropTypes.object,
   selectedControlCohort: PropTypes.object,
+  cohortSizes: PropTypes.array,
   selectedQuantitativeCohort: PropTypes.object,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
@@ -185,6 +196,7 @@ GWASFormSubmit.defaultProps = {
   outcome: undefined,
   resetQuantitative: undefined,
   resetCaseControl: undefined,
+  cohortSizes: undefined
 };
 
 export default GWASFormSubmit;
