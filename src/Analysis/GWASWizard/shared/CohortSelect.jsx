@@ -17,19 +17,23 @@ const CohortSelect = ({
     setCohortSearchTerm(searchTerm);
   };
   return (
-    <div>
-      <SearchBar
-        searchTerm={cohortSearchTerm}
-        handleSearch={handleCohortSearch}
-        fields={'cohort name...'}
-      />
-      <CohortDefinitions
-        selectedCohort={selectedCohort}
-        handleCohortSelect={handleCohortSelect}
-        sourceId={sourceId}
-        searchTerm={cohortSearchTerm}
-        otherCohortSelected={otherCohortSelected}
-      />
+    <div data-tour='cohort-table'>
+      <div data-tour='cohort-table-search'>
+        <SearchBar
+          searchTerm={cohortSearchTerm}
+          handleSearch={handleCohortSearch}
+          fields={'cohort name...'}
+        />
+      </div>
+      <div data-tour='cohort-table-body'>
+        <CohortDefinitions
+          selectedCohort={selectedCohort}
+          handleCohortSelect={handleCohortSelect}
+          sourceId={sourceId}
+          searchTerm={cohortSearchTerm}
+          otherCohortSelected={otherCohortSelected}
+        />
+      </div>
     </div>
   );
 };

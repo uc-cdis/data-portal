@@ -131,7 +131,7 @@ const GWASFormSubmit = ({
           // TODO this is where functionality previously was. placeholder for when we add back in
             <QCShowOverlap />
         </div> */}
-      <div className='GWASUI-flexRow'>
+      <div className='GWASUI-flexRow' data-tour='review-name'>
         <input
           type='text'
           className='GWASUI-nameInput'
@@ -140,7 +140,7 @@ const GWASFormSubmit = ({
           placeholder='Enter a job name...'
           style={{ width: '70%', height: '90%' }}
         />
-        <div className='GWASUI-submitContainer'>
+        <div className='GWASUI-submitContainer' data-tour='review-submit-button'>
           <Button
             type='primary'
             disabled={gwasName.length === 0}

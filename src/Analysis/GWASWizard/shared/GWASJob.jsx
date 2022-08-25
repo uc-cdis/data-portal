@@ -8,7 +8,7 @@ import {
   CloseCircleOutlined,
   QuestionCircleOutlined,
   LoadingOutlined,
-  CloseOutlined
+  CloseOutlined,
 } from '@ant-design/icons';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
@@ -145,7 +145,7 @@ const GWASJob = ({ workflow }) => {
             description={(
               <dl>
                 <dt>Workflow Name: {data.wf_name}</dt>
-                <dt>Started at {data.startedAt} {data.phase === gwasStatus.succeeded ? `and finished at ${finishedAt}`: ''}</dt>
+                <dt>Started at {data.startedAt} {data.phase === gwasStatus.succeeded ? `and finished at ${finishedAt}` : ''}</dt>
               </dl>
             )}
 

@@ -105,6 +105,10 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
               <AddCohortButton />
             </div>
             <React.Fragment>
+              <div className='tour-div'>
+                <TourButton stepInfo={stepInfo} />
+                <h4>&nbsp;Tutorial</h4>
+              </div>
               <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
                 <h4 className='GWASUI-selectInstruction' data-tour='quant-step-1-cohort-selection'>In this step, you will determine the study population. To begin, select the cohort that you would like to define your study population with.</h4>
                 <div className='GWASUI-mainTable'>
@@ -116,7 +120,6 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
                   />
                 </div>
               </Space>
-              <TourButton stepInfo={stepInfo} />
             </React.Fragment>
           </React.Fragment>
         ) : <Spin />);
@@ -124,6 +127,10 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
       return (
         <React.Fragment>
           <React.Fragment>
+            <div className='tour-div'>
+              <TourButton stepInfo={stepInfo} />
+              <h4>&nbsp;Tutorial</h4>
+            </div>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
               <h4 className='GWASUI-selectInstruction' data-tour='quant-step-2-choosing-variable'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
               <div className='GWASUI-mainTable'>
@@ -135,13 +142,16 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
                 />
               </div>
             </Space>
-            <TourButton stepInfo={stepInfo} />
           </React.Fragment>
         </React.Fragment>
       );
     case 2:
       return (
         <React.Fragment>
+          <div className='tour-div'>
+            <TourButton stepInfo={stepInfo} />
+            <h4>&nbsp;Tutorial</h4>
+          </div>
           <OutcomeSelectReview
             cohortDefinitionId={selectedCohort.cohort_definition_id}
             selectedCovariates={selectedCovariates}
@@ -155,6 +165,10 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 3:
       return (
         <React.Fragment>
+          <div className='tour-div'>
+            <TourButton stepInfo={stepInfo} />
+            <h4>&nbsp;Tutorial</h4>
+          </div>
           <CustomDichotomousSelect
             sourceId={sourceId}
             handleCDAdd={handleCDAdd}
@@ -167,6 +181,10 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 4:
       return (
         <React.Fragment>
+          <div className='tour-div'>
+            <TourButton stepInfo={stepInfo} />
+            <h4>&nbsp;Tutorial</h4>
+          </div>
           <WorkflowParameters
             quantitativeCohortDefinitionId={selectedCohort.cohort_definition_id}
             selectedCovariates={selectedCovariates}
@@ -184,15 +202,18 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
             handleCovariateDelete={handleCovariateDelete}
             outcomeId={outcome.concept_id}
           />
-          <TourButton stepInfo={stepInfo} />
         </React.Fragment>
       );
     case 5:
       return (
         <React.Fragment>
+          <div className='tour-div'>
+            <TourButton stepInfo={stepInfo} />
+            <h4>&nbsp;Tutorial</h4>
+          </div>
           <h4 className='GWASUI-selectInstruction'>In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
           <h4 className='GWASUI-selectInstruction'>Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
-          <div className='GWASUI-mainArea'>
+          <div className='GWASUI-mainArea' data-tour='review-metadata'>
             <GWASFormSubmit
               sourceId={sourceId}
               numOfPC={numOfPC}
@@ -208,7 +229,6 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
               handleGwasNameChange={handleGwasNameChange}
               resetGWAS={resetQuantitative}
             />
-            <TourButton stepInfo={stepInfo} />
           </div>
         </React.Fragment>
       );
