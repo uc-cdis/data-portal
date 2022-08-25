@@ -357,7 +357,14 @@ async function init() {
                         <Route
                           exact
                           path='/workspace/register'
-                          component={WorkspaceRegistration}
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={WorkspaceRegistration}
+                                {...props}
+                              />
+                            )
+                          }
                         />
                       )
                       : null
