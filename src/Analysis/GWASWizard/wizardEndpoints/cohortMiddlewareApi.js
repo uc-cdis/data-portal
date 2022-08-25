@@ -1,10 +1,44 @@
+/* eslint-disable camelcase */
 import { useState, useEffect } from 'react';
 import { cohortMiddlewarePath, wtsPath } from '../../../localconf';
 import { fetchWithCreds } from '../../../actions';
 import { headers } from '../../../configs';
 import { hareConceptId } from '../shared/constants';
 
-export const fetchConceptStatsByHare = async (cohortDefinitionId, selectedCovariates, selectedDichotomousCovariates, sourceId) => {
+export const fetchOverlapInfo = async (
+  sourceId,
+  caseCohortDefinitionId,
+  controlCohortDefinitionId,
+  selectedHare,
+  selectedCovariates,
+  selectedDichotomousCovariates,
+) => {
+  const variablesPayload = {
+    variables: [
+      ...selectedDichotomousCovariates.map(({ uuid, ...withNoId }) => withNoId),
+      ...selectedCovariates.map((c) => ({
+        variable_type: 'concept',
+        concept_id: c.concept_id,
+      })),
+    ],
+  };
+  const statsEndPoint = `${cohortMiddlewarePath}cohort-stats/check-overlap/by-source-id/${sourceId}/by-case-control-cohort-definition-ids/${caseCohortDefinitionId}/${controlCohortDefinitionId}/filter-by-concept-id-and-value/${hareConceptId}/${selectedHare.concept_value_as_concept_id}`;
+  const reqBody = {
+    method: 'POST',
+    credentials: 'include',
+    headers,
+    body: JSON.stringify(variablesPayload),
+  };
+  const getOverlapStats = await fetch(statsEndPoint, reqBody);
+  return getOverlapStats.json();
+};
+
+export const fetchConceptStatsByHare = async (
+  cohortDefinitionId,
+  selectedCovariates,
+  selectedDichotomousCovariates,
+  sourceId,
+) => {
   const variablesPayload = {
     variables:
       [
@@ -26,7 +60,11 @@ export const fetchConceptStatsByHare = async (cohortDefinitionId, selectedCovari
   return getConceptStats.json();
 };
 
-export const fetchCovariateStats = async (cohortDefinitionId, selectedCovariateIds, sourceId) => {
+export const fetchCovariateStats = async (
+  cohortDefinitionId,
+  selectedCovariateIds,
+  sourceId,
+) => {
   const covariateIds = { ConceptIds: selectedCovariateIds };
   const conceptStatsEndpoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
   const reqBody = {
@@ -97,6 +135,12 @@ export const queryConfig = {
   refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
+};
+
+export const getAllHareItems = (concept_value, allCaseHares, allControlHares) => {
+  const caseHareBreakdown = allCaseHares.find((hare) => hare.concept_value === concept_value);
+  const controlHareBreakdown = allControlHares.find((hare) => hare.concept_value === concept_value);
+  return [caseHareBreakdown, controlHareBreakdown];
 };
 
 export const atlasDomain = () => cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas');

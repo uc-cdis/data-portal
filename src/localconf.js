@@ -419,6 +419,13 @@ function buildConfig(opts) {
             image: '/src/img/analysis-icons/gwas.svg',
           };
           break;
+        case 'GWASResults':
+          analysisApps.GWASResults = {
+            title: 'GWAS Results',
+            description: 'Use this App to view status & results of submitted workflows',
+            image: '/src/img/analysis-icons/gwasResults.svg',
+          };
+          break;
         default:
           break;
         }

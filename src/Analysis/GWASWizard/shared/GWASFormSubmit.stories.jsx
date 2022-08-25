@@ -68,7 +68,7 @@ const MockTemplate = () => {
         selectedDichotomousCovariates={selectedDichotomousCovariates}
         gwasName={gwasName}
         handleGwasNameChange={handleGwasNameChange}
-        resetGWAS={resetGWAS}
+        resetCaseControl={resetGWAS}
       />
     </QueryClientProvider>
   );

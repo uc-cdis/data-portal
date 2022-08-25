@@ -7,7 +7,7 @@ import CohortSelect from './shared/CohortSelect';
 import CovariateSelect from './shared/CovariateSelect';
 import CustomDichotomousSelect from './shared/CustomDichotomousSelect';
 import { caseControlSteps } from './shared/constants';
-import { useSourceFetch } from './wizardEndpoints/cohortMiddlewareApi';
+import { useSourceFetch, getAllHareItems } from './wizardEndpoints/cohortMiddlewareApi';
 import '../GWASUIApp/GWASUIApp.css';
 import AddCohortButton from './shared/AddCohortButton';
 import CovariateReview from './CovariateReview';
@@ -28,6 +28,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
   const [imputationScore, setImputationScore] = useState(0.3);
   const [mafThreshold, setMafThreshold] = useState(0.01);
   const [gwasName, setGwasName] = useState('');
+  const [cohortSizes, setCohortSizes] = useState([]);
 
   const { loading, sourceId } = useSourceFetch();
 
@@ -55,7 +56,16 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     setSelectedDichotomousCovariates((prevCD) => [...prevCD.filter((cd) => cd.id !== id)]);
   };
 
-  const handleHareChange = (hare) => {
+  const handleHareChange = (hare, allCaseHares, allControlHares) => {
+    if (hare.concept_value.length > 0) {
+      const hareBreakdown = getAllHareItems(hare.concept_value,
+        allCaseHares, allControlHares);
+      const { caseSize, controlSize } = {
+        caseSize: hareBreakdown[0].persons_in_cohort_with_value,
+        controlSize: hareBreakdown[1].persons_in_cohort_with_value,
+      };
+      setCohortSizes([caseSize, controlSize]);
+    }
     setSelectedHare(hare);
   };
 
@@ -109,8 +119,8 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             </div>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
               <h4 className='GWASUI-selectInstruction' data-tour='step-1-cohort-selection'>
-                In this step, you will begin to determine your study populations.
-                To begin, select the cohort that you would like to define as your study `&quot;`case`&quot;` population.
+                  In this step, you will begin to determine your study populations.
+                  To begin, select the cohort that you would like to define as your study `&quot;`case`&quot;` population.
               </h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
@@ -245,12 +255,13 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
               selectedHare={selectedHare}
               selectedCaseCohort={selectedCaseCohort}
               selectedControlCohort={selectedControlCohort}
+              cohortSizes={cohortSizes}
               workflowType={'caseControl'}
               selectedCovariates={selectedCovariates}
               selectedDichotomousCovariates={selectedDichotomousCovariates}
               gwasName={gwasName}
               handleGwasNameChange={handleGwasNameChange}
-              resetGWAS={resetCaseControl}
+              resetCaseControl={resetCaseControl}
             />
           </div>
         </React.Fragment>
