@@ -16,6 +16,7 @@ import FilterSetLabel from './FilterSetLabel';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 import {
   checkIfFilterEmpty,
+  dereferenceFilter,
   FILTER_TYPE,
   pluckFromAnchorFilter,
   pluckFromFilter,
@@ -311,7 +312,9 @@ function ExplorerFilterSetWorkspace() {
       {actionFormType !== undefined && (
         <SimplePopup>
           <FilterSetActionForm
-            currentFilter={activeFilterSet?.filter ?? {}}
+            currentFilter={
+              dereferenceFilter(activeFilterSet?.filter, workspace) ?? {}
+            }
             filterSets={{
               active: activeSavedFilterSet,
               all: savedFilterSets.data,

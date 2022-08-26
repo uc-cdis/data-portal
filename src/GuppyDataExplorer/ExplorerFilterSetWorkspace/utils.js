@@ -1,6 +1,7 @@
 import { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
 
 export { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
+export { dereferenceFilter } from '../../redux/explorer/utils';
 
 /** @typedef {import('../../GuppyComponents/types').AnchoredFilterState} AnchoredFilterState */
 /** @typedef {import('../../GuppyComponents/types').StandardFilterState} StandardFilterState */
