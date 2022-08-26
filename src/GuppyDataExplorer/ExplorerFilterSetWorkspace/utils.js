@@ -1,10 +1,11 @@
 import { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
 
 export { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
+export { dereferenceFilter } from '../../redux/explorer/utils';
 
 /** @typedef {import('../../GuppyComponents/types').AnchoredFilterState} AnchoredFilterState */
 /** @typedef {import('../../GuppyComponents/types').StandardFilterState} StandardFilterState */
-/** @typedef {import("../types").ExplorerFilter} ExplorerFilter */
+/** @typedef {import("../types").ExplorerFilterSet} ExplorerFilterSet */
 /**
  * @template T
  * @param {Object} args
@@ -53,7 +54,7 @@ export function pluckFromAnchorFilter({ anchor, field, filter }) {
   return newFilter;
 }
 
-/** @param {ExplorerFilter} filter */
+/** @param {ExplorerFilterSet['filter']} filter */
 export function checkIfFilterEmpty(filter) {
   return filter.__type === FILTER_TYPE.COMPOSED
     ? filter.value.length === 0

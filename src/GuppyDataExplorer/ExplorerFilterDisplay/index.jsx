@@ -3,11 +3,9 @@ import FilterDisplay from '../../components/FilterDisplay';
 import { useAppSelector } from '../../redux/hooks';
 import './ExplorerFilterDisplay.css';
 
-/** @typedef {import('../../redux/types').RootState} RootState */
-
 /**
  * @param {Object} props
- * @param {import('../types').ExplorerFilter} props.filter
+ * @param {import('../types').ExplorerFilterSet['filter']} props.filter
  * @param {string} [props.title]
  */
 function ExplorerFilterDisplay({ filter, title = 'Filters' }) {

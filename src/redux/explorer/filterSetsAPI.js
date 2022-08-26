@@ -1,14 +1,14 @@
 import { fetchWithCreds } from '../utils.fetch';
 import { convertFromFilterSetDTO, convertToFilterSetDTO } from './utils';
 
-/** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('../../GuppyDataExplorer/types').SavedExplorerFilterSet} SavedExplorerFilterSet */
 
 const FILTER_SET_URL = '/amanuensis/filter-sets';
 
 /**
  * @param {number} explorerId
- * @param {ExplorerFilterSet} filterSet
- * @returns {Promise<ExplorerFilterSet>}
+ * @param {SavedExplorerFilterSet} filterSet
+ * @returns {Promise<SavedExplorerFilterSet>}
  */
 export function createNew(explorerId, filterSet) {
   return fetchWithCreds({
@@ -23,7 +23,7 @@ export function createNew(explorerId, filterSet) {
 
 /**
  * @param {number} explorerId
- * @param {ExplorerFilterSet} filterSet
+ * @param {SavedExplorerFilterSet} filterSet
  */
 export function deleteById(explorerId, filterSet) {
   return fetchWithCreds({
@@ -37,7 +37,7 @@ export function deleteById(explorerId, filterSet) {
 
 /**
  * @param {number} explorerId
- * @returns {Promise<ExplorerFilterSet[]>}
+ * @returns {Promise<SavedExplorerFilterSet[]>}
  */
 export function fetchAll(explorerId) {
   return fetchWithCreds({
@@ -58,7 +58,7 @@ export function fetchAll(explorerId) {
 
 /**
  * @param {number} explorerId
- * @param {ExplorerFilterSet} filterSet
+ * @param {SavedExplorerFilterSet} filterSet
  */
 export function updateById(explorerId, filterSet) {
   const { id, ...requestBody } = filterSet;

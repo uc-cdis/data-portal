@@ -60,13 +60,13 @@ Pill.propTypes = {
 };
 
 /** @typedef {import('../GuppyComponents/types').FilterConfig} FilterConfig */
-/** @typedef {import('../GuppyComponents/types').FilterState} FilterState */
+/** @typedef {import('../GuppyDataExplorer/types').ExplorerFilterSet} ExplorerFilterSet */
 
 /**
  * @param {Object} props
  * @param {[anchorField: string, anchorValue: string]} [props.anchorInfo]
  * @param {'AND' | 'OR'} [props.combineMode]
- * @param {FilterState} props.filter
+ * @param {ExplorerFilterSet['filter']} props.filter
  * @param {FilterConfig['info']} props.filterInfo
  * @param {ClickCombineModeHandler} [props.onClickCombineMode]
  * @param {ClickFilterHandler} [props.onClickFilter]
@@ -86,9 +86,13 @@ function FilterDisplay({
       <span className='filter-display'>
         {filter.value.map((__filter, i) => (
           <Fragment key={i}>
-            <span className='pill-container'>
-              <FilterDisplay filter={__filter} filterInfo={filterInfo} />
-            </span>
+            {__filter.__type === 'REF' ? (
+              <Pill>{__filter.value.label}</Pill>
+            ) : (
+              <span className='pill-container'>
+                <FilterDisplay filter={__filter} filterInfo={filterInfo} />
+              </span>
+            )}
             {i < filter.value.length - 1 && <Pill>{filter.__combineMode}</Pill>}
           </Fragment>
         ))}

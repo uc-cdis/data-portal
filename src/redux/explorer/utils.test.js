@@ -1,6 +1,7 @@
 import { FILTER_TYPE } from '../../GuppyComponents/Utils/const';
 import {
   createFilterInfo,
+  dereferenceFilter,
   isSurvivalAnalysisEnabled,
   polyfillFilter,
   polyfillFilterValue,
@@ -150,6 +151,77 @@ describe('polyfill legacy filter', () => {
         foo: { __type: FILTER_TYPE.OPTION, ...option },
         bar: { __type: FILTER_TYPE.RANGE, ...range },
       },
+    });
+  });
+});
+
+describe('derefernece filter', () => {
+  const __combineMode = /** @type {'AND'} */ ('AND');
+  const refFilter = {
+    __type: /** @type {'REF'} */ ('REF'),
+    value: { id: 'x', label: '' },
+  };
+  const standardFilter = {
+    __combineMode,
+    __type: FILTER_TYPE.STANDARD,
+    value: { foo: { __type: FILTER_TYPE.OPTION, selectedValues: [''] } },
+  };
+
+  /** @type {import('./types').ExplorerWorkspace} */
+  const workspace = {
+    activeId: '',
+    all: {
+      x: { filter: standardFilter },
+      y: {
+        filter: {
+          __combineMode,
+          __type: FILTER_TYPE.COMPOSED,
+          value: [standardFilter],
+        },
+      },
+      z: {
+        filter: {
+          __combineMode,
+          __type: FILTER_TYPE.COMPOSED,
+          value: [standardFilter, refFilter],
+        },
+      },
+    },
+  };
+  test('standard', () => {
+    const { filter } = workspace.all.x;
+    expect(dereferenceFilter(filter, workspace)).toStrictEqual(filter);
+  });
+  test('composed, without ref', () => {
+    const { filter } = workspace.all.y;
+    expect(dereferenceFilter(filter, workspace)).toStrictEqual(filter);
+  });
+  test('composed, with ref', () => {
+    const { filter } = workspace.all.z;
+    expect(dereferenceFilter(filter, workspace)).toStrictEqual({
+      __combineMode,
+      __type: FILTER_TYPE.COMPOSED,
+      value: [workspace.all[refFilter.value.id].filter, standardFilter],
+    });
+  });
+  test('composed, with nested ref', () => {
+    const filter = {
+      __combineMode,
+      __type: FILTER_TYPE.COMPOSED,
+      value: [refFilter, standardFilter, workspace.all.z.filter],
+    };
+    expect(dereferenceFilter(filter, workspace)).toStrictEqual({
+      __combineMode,
+      __type: FILTER_TYPE.COMPOSED,
+      value: [
+        workspace.all[refFilter.value.id].filter,
+        standardFilter,
+        {
+          __combineMode,
+          __type: FILTER_TYPE.COMPOSED,
+          value: [workspace.all[refFilter.value.id].filter, standardFilter],
+        },
+      ],
     });
   });
 });
