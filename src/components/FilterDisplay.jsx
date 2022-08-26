@@ -86,9 +86,13 @@ function FilterDisplay({
       <span className='filter-display'>
         {filter.value.map((__filter, i) => (
           <Fragment key={i}>
-            <span className='pill-container'>
-              <FilterDisplay filter={__filter} filterInfo={filterInfo} />
-            </span>
+            {__filter.__type === 'REF' ? (
+              <Pill>{__filter.value.label}</Pill>
+            ) : (
+              <span className='pill-container'>
+                <FilterDisplay filter={__filter} filterInfo={filterInfo} />
+              </span>
+            )}
             {i < filter.value.length - 1 && <Pill>{filter.__combineMode}</Pill>}
           </Fragment>
         ))}
