@@ -7,9 +7,28 @@ import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 /** @typedef {import('../../GuppyComponents/types').FilterConfig} FilterConfig */
 /** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSetDTO} ExplorerFilterSetDTO */
+/** @typedef {import('../../GuppyDataExplorer/types').RefFilterState} RefFilterState */
 /** @typedef {import('../../GuppyDataExplorer/types').SurvivalAnalysisConfig} SurvivalAnalysisConfig */
 /** @typedef {import('../../GuppyDataExplorer/types').SavedExplorerFilterSet} SavedExplorerFilterSet */
 /** @typedef {import('./types').ExplorerState} ExplorerState */
+/** @typedef {import('./types').ExplorerWorkspace} ExplorerWorkspace */
+
+/**
+ * @param {ExplorerFilterSet['filter'] | RefFilterState} filter
+ * @param {ExplorerWorkspace} workspace
+ * @returns {SavedExplorerFilterSet['filter']}
+ */
+export function dereferenceFilter(filter, workspace) {
+  if (filter.__type === FILTER_TYPE.STANDARD) return filter;
+
+  if (filter.__type === 'REF')
+    return dereferenceFilter(workspace.all[filter.value.id].filter, workspace);
+
+  return {
+    ...filter,
+    value: filter.value.map((f) => dereferenceFilter(f, workspace)),
+  };
+}
 
 /**
  * @param {SavedExplorerFilterSet} filterSet
