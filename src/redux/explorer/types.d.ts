@@ -9,6 +9,7 @@ import type {
   ExplorerFilter,
   ExplorerFilterSet,
   PatientIdsConfig,
+  SavedExplorerFilterSet,
   SurvivalAnalysisConfig,
   TableConfig,
 } from '../../GuppyDataExplorer/types';
@@ -50,7 +51,7 @@ export type ExplorerState = {
   explorerIds: ExplorerState['explorerId'][];
   patientIds: string[];
   savedFilterSets: {
-    data: ExplorerFilterSet[];
+    data: SavedExplorerFilterSet[];
     isError: boolean;
   };
   survivalAnalysisResult: {

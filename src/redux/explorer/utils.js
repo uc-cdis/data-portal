@@ -8,10 +8,11 @@ import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 /** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSetDTO} ExplorerFilterSetDTO */
 /** @typedef {import('../../GuppyDataExplorer/types').SurvivalAnalysisConfig} SurvivalAnalysisConfig */
+/** @typedef {import('../../GuppyDataExplorer/types').SavedExplorerFilterSet} SavedExplorerFilterSet */
 /** @typedef {import('./types').ExplorerState} ExplorerState */
 
 /**
- * @param {ExplorerFilterSet} filterSet
+ * @param {SavedExplorerFilterSet} filterSet
  * @returns {ExplorerFilterSetDTO}
  */
 export function convertToFilterSetDTO({ filter: filters, ...rest }) {
@@ -37,7 +38,7 @@ export function polyfillFilterValue(filter) {
 
 /**
  * @param {{ [key: string]: any }} filter
- * @returns {ExplorerFilterSet['filter']}
+ * @returns {SavedExplorerFilterSet['filter']}
  */
 export function polyfillFilter({ __combineMode, __type, ...rest }) {
   const shouldPolyfill =
@@ -54,7 +55,7 @@ export function polyfillFilter({ __combineMode, __type, ...rest }) {
 
 /**
  * @param {ExplorerFilterSetDTO} filterSetDTO
- * @returns {ExplorerFilterSet}
+ * @returns {SavedExplorerFilterSet}
  */
 export function convertFromFilterSetDTO({ filters, ...rest }) {
   return {

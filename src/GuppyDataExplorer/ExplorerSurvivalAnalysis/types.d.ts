@@ -1,5 +1,5 @@
 export type { GqlFilter } from '../../GuppyComponents/types';
-export type { ExplorerFilterSet } from '../types';
+export type { ExplorerFilterSet, SavedExplorerFilterSet } from '../types';
 
 export type ColorScheme = {
   [key: string]: string;
@@ -52,7 +52,7 @@ export type UserInput = {
   startTime: number;
   endTime: number;
   efsFlag: boolean;
-  usedFilterSets: ExplorerFilterSet[];
+  usedFilterSets: SavedExplorerFilterSet[];
 };
 
 export type UserInputSubmitHandler = (userInput: UserInput) => void;

@@ -6,18 +6,19 @@ import FilterSetOpenForm from '../ExplorerFilterSetForms/FilterSetOpenForm';
 import FilterSetUpdateForm from '../ExplorerFilterSetForms/FilterSetUpdateForm';
 
 /** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('../types').SavedExplorerFilterSet} SavedExplorerFilterSet */
 /** @typedef {'CLEAR-ALL' | 'DELETE' | 'LOAD' | 'SAVE'} ActionFormType */
 
 /**
  * @param {Object} prop
- * @param {ExplorerFilterSet['filter']} prop.currentFilter
- * @param {{ active: ExplorerFilterSet; all: ExplorerFilterSet[]; empty: ExplorerFilterSet }} prop.filterSets
+ * @param {SavedExplorerFilterSet['filter']} prop.currentFilter
+ * @param {{ active: SavedExplorerFilterSet; all: SavedExplorerFilterSet[]; empty: SavedExplorerFilterSet }} prop.filterSets
  * @param {Object} prop.handlers
  * @param {() => void} prop.handlers.clearAll
  * @param {() => void} prop.handlers.close
- * @param {(deleted: ExplorerFilterSet) => void} prop.handlers.delete
- * @param {(loaded: ExplorerFilterSet) => void} prop.handlers.load
- * @param {(saved: ExplorerFilterSet) => void} prop.handlers.save
+ * @param {(deleted: SavedExplorerFilterSet) => void} prop.handlers.delete
+ * @param {(loaded: SavedExplorerFilterSet) => void} prop.handlers.load
+ * @param {(saved: SavedExplorerFilterSet) => void} prop.handlers.save
  * @param {ActionFormType} prop.type
  */
 function FilterSetActionForm({ currentFilter, filterSets, handlers, type }) {

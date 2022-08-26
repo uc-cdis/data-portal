@@ -22,7 +22,7 @@ import {
 } from './utils';
 import './ExplorerFilterSetWorkspace.css';
 
-/** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('../types').SavedExplorerFilterSet} SavedExplorerFilterSet */
 /** @typedef {import('./FilterSetActionForm').ActionFormType} ActionFormType */
 
 function ExplorerFilterSetWorkspace() {
@@ -60,7 +60,7 @@ function ExplorerFilterSetWorkspace() {
   function handleCreate() {
     workspace.create();
   }
-  /** @param {ExplorerFilterSet} deleted */
+  /** @param {SavedExplorerFilterSet} deleted */
   async function handleDelete(deleted) {
     try {
       await dispatch(deleteFilterSet(deleted));
@@ -72,7 +72,7 @@ function ExplorerFilterSetWorkspace() {
   function handleDuplicate() {
     workspace.duplicate();
   }
-  /** @param {ExplorerFilterSet} loaded */
+  /** @param {SavedExplorerFilterSet} loaded */
   function handleLoad(loaded) {
     let newActiveId;
     for (const [id, filterSet] of Object.entries(workspace.all))
@@ -86,7 +86,7 @@ function ExplorerFilterSetWorkspace() {
 
     closeActionForm();
   }
-  /** @param {ExplorerFilterSet} saved */
+  /** @param {SavedExplorerFilterSet} saved */
   async function handleSave(saved) {
     try {
       if (saved.id === undefined) await dispatch(createFilterSet(saved));

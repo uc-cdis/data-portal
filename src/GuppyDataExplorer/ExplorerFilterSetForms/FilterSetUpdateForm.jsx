@@ -6,16 +6,15 @@ import Button from '../../gen3-ui-component/components/Button';
 import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 import './ExplorerFilterSetForms.css';
 
-/** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
-/** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('../types').SavedExplorerFilterSet} SavedExplorerFilterSet */
 
 /**
  * @param {Object} prop
- * @param {ExplorerFilterSet} prop.currentFilterSet
- * @param {ExplorerFilter} prop.currentFilter
- * @param {ExplorerFilterSet[]} prop.filterSets
+ * @param {SavedExplorerFilterSet} prop.currentFilterSet
+ * @param {SavedExplorerFilterSet['filter']} prop.currentFilter
+ * @param {SavedExplorerFilterSet[]} prop.filterSets
  * @param {boolean} prop.isFiltersChanged
- * @param {(updated: ExplorerFilterSet) => void} prop.onAction
+ * @param {(updated: SavedExplorerFilterSet) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
 function FilterSetUpdateForm({
