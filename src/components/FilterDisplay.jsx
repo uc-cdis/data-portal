@@ -60,13 +60,13 @@ Pill.propTypes = {
 };
 
 /** @typedef {import('../GuppyComponents/types').FilterConfig} FilterConfig */
-/** @typedef {import('../GuppyComponents/types').FilterState} FilterState */
+/** @typedef {import('../GuppyDataExplorer/types').ExplorerFilterSet} ExplorerFilterSet */
 
 /**
  * @param {Object} props
  * @param {[anchorField: string, anchorValue: string]} [props.anchorInfo]
  * @param {'AND' | 'OR'} [props.combineMode]
- * @param {FilterState} props.filter
+ * @param {ExplorerFilterSet['filter']} props.filter
  * @param {FilterConfig['info']} props.filterInfo
  * @param {ClickCombineModeHandler} [props.onClickCombineMode]
  * @param {ClickFilterHandler} [props.onClickFilter]

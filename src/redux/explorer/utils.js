@@ -119,7 +119,7 @@ export function getCurrentConfig(explorerId) {
   };
 }
 
-/** @param {import('./types').ExplorerFilter} filter */
+/** @param {ExplorerFilterSet['filter']} filter */
 export function checkIfFilterEmpty(filter) {
   return filter.__type === FILTER_TYPE.COMPOSED
     ? filter.value.length === 0
