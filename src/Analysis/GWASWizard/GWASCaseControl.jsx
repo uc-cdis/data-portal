@@ -52,8 +52,8 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     setSelectedDichotomousCovariates((prevCD) => [...prevCD, cd]);
   };
 
-  const handleCDRemove = (id) => {
-    setSelectedDichotomousCovariates((prevCD) => [...prevCD.filter((cd) => cd.id !== id)]);
+  const handleCDRemove = (uuid) => {
+    setSelectedDichotomousCovariates((prevCD) => [...prevCD.filter((cd) => cd.uuid !== uuid)]);
   };
 
   const handleHareChange = (hare, allCaseHares, allControlHares) => {

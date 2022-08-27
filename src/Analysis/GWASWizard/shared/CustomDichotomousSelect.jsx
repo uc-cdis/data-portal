@@ -84,7 +84,7 @@ const CustomDichotomousSelect = ({
                 width: 300,
               }}
               actions={[
-                <DeleteOutlined onClick={(d) => handleCDRemove(d.uuid)} key='delete' />,
+                <DeleteOutlined onClick={() => handleCDRemove(cd.uuid)} key='delete' />,
               ]}
             >
               <Meta

@@ -52,8 +52,8 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     setSelectedDichotomousCovariates((prevCDArr) => [...prevCDArr, cd]);
   };
 
-  const handleCDRemove = (id) => {
-    setSelectedDichotomousCovariates((prevCD) => [...prevCD.filter((cd) => cd.id !== id)]);
+  const handleCDRemove = (uuid) => {
+    setSelectedDichotomousCovariates((prevCD) => [...prevCD.filter((cd) => cd.uuid !== uuid)]);
   };
 
   const handleHareChange = (hare) => {
