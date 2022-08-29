@@ -157,13 +157,14 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
   }
 
   if (kayakoConfig) {
+    const infoMessage = workspaceRegistrationConfig?.workspaceInfoMessage || 'Please fill out this form to request and be approved for access to workspace.';
     return (
       <div className='workspace-reg-container'>
         <div className='workspace-reg-form-container'>
           <Form className='workspace-reg-form' {...layout} form={form} name='workspace-reg-request-form' onFinish={onFinish} validateMessages={validateMessages}>
             <Divider plain>Workspace Registration Access Request</Divider>
             <Typography style={{ textAlign: 'center' }}>
-              Please fill out this form to request and be approved for access to workspace with the BRH Platform.
+              {infoMessage}
             </Typography>
             <Divider plain />
             <div className='workspace-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>

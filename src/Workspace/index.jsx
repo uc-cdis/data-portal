@@ -735,8 +735,6 @@ class Workspace extends React.Component {
         </div>
       );
     } if (this.state.defaultWorkspace && this.state.connectedStatus) {
-      // If this commons does not use Hatchery to spawn workspaces, then this
-      // default workspace is shown.
       return <Redirect to={workspaceUrl} />;
     }
     return <Spinner />;

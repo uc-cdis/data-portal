@@ -283,8 +283,9 @@ function buildConfig(opts) {
   }
 
   const { discoveryConfig } = config;
-  const { resourceRegistrationConfig } = config;
-  const studyRegistrationConfig = config.studyRegistrationConfig || {};
+  const { registrationConfigs } = config;
+  const studyRegistrationConfig = (registrationConfigs && registrationConfigs.features)
+    ? (registrationConfigs.features.studyRegistrationConfig || {}) : {};
   if (!studyRegistrationConfig.studyRegistrationTrackingField) {
     studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username';
   }
@@ -299,9 +300,9 @@ function buildConfig(opts) {
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
-
-  const workspaceRegistrationConfig = resourceRegistrationConfig ? resourceRegistrationConfig.workspaceRegistrationConfig : null;
-  const kayakoConfig = resourceRegistrationConfig ? resourceRegistrationConfig.kayakoConfig : null;
+  const workspaceRegistrationConfig = (registrationConfigs && registrationConfigs.features)
+    ? registrationConfigs.features.workspaceRegistrationConfig : null;
+  const kayakoConfig = registrationConfigs ? registrationConfigs.kayakoConfig : null;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [

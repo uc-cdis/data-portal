@@ -1,23 +1,14 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 import isEnabled from '../helpers/featureFlags';
 import './Workspace.less';
 import NotFoundSVG from '../img/not-found.svg';
 import { components } from '../params';
-import workspaceRegistrationConfig from '../localconf';
 
 const ErrorWorkspacePlaceholder = () => {
-  const history = useHistory();
   if (isEnabled('workspaceRegistration')) {
-    if (workspaceRegistrationConfig) {
-      // eslint-disable-next-line react/prop-types
-      history.push('/workspace/register');
-    } else {
-      // eslint-disable-next-line no-console
-      console.log('Unable to display registration form. Missing workspaceRegistrationConfig');
-    }
+    return <Redirect to='/workspace/register' />;
   }
-
   const supportEmail = components.login?.email || 'support@datacommons.io';
   return (
     <div className='error-workspace-placeholder__error-msg'>
