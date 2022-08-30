@@ -19,15 +19,17 @@ import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
  * @returns {SavedExplorerFilterSet['filter']}
  */
 export function dereferenceFilter(filter, workspace) {
-  if (filter.__type === FILTER_TYPE.STANDARD) return filter;
+  if (filter.__type === FILTER_TYPE.COMPOSED)
+    return {
+      __combineMode: filter.__combineMode,
+      __type: filter.__type,
+      value: filter.value.map((f) => dereferenceFilter(f, workspace)),
+    };
 
   if (filter.__type === 'REF')
     return dereferenceFilter(workspace.all[filter.value.id].filter, workspace);
 
-  return {
-    ...filter,
-    value: filter.value.map((f) => dereferenceFilter(f, workspace)),
-  };
+  return filter;
 }
 
 /**
