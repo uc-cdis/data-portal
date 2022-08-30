@@ -15,6 +15,7 @@ import {
   getCurrentConfig,
   initializeWorkspaces,
   parseSurvivalResult,
+  updateFilterRefs,
 } from './utils';
 
 /**
@@ -161,6 +162,7 @@ const slice = createSlice({
 
         state.workspaces[state.explorerId].activeId = id;
         state.workspaces[state.explorerId].all[id] = filterSet;
+        updateFilterRefs(state.workspaces[state.explorerId]);
 
         // sync with exploreFilter
         const workspace = state.workspaces[state.explorerId];
