@@ -240,7 +240,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
   let nextButtonEnabled = true;
   if (current === 0 && !selectedCohort) {
     nextButtonEnabled = false;
-  } else if (current === 1 && selectedCovariates.length < 2) {
+  } else if (current === 1 && selectedCovariates.length < 1) {
     nextButtonEnabled = false;
   } else if (current === 2) {
     // next button enabled if selected phenotype array length > 0
