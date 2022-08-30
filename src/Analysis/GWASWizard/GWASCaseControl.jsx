@@ -187,12 +187,24 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
-          <CovariateReview
-            caseCohortDefinitionId={selectedCaseCohort.cohort_definition_id}
-            controlCohortDefinitionId={selectedControlCohort.cohort_definition_id}
-            selectedCovariates={selectedCovariates}
-            sourceId={sourceId}
-          />
+          <React.Fragment>
+            {selectedCovariates.length === 0
+                && (
+                  <div className='GWASUI-emptyTable'>
+                    <span>No covariates to review.</span>
+                  </div>
+                )}
+          </React.Fragment>
+          {selectedCovariates.length > 0
+              && (
+                <CovariateReview
+                  caseCohortDefinitionId={selectedCaseCohort.cohort_definition_id}
+                  controlCohortDefinitionId={selectedControlCohort.cohort_definition_id}
+                  selectedCovariates={selectedCovariates}
+                  sourceId={sourceId}
+                />
+              )}
+
         </React.Fragment>
       );
     case 4:
@@ -274,9 +286,6 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
   let nextButtonEnabled = true;
   if ((current === 0 && !selectedCaseCohort) || (current === 1 && !selectedControlCohort)) {
     // Cohort selection
-    nextButtonEnabled = false;
-  } else if (current === 2 && selectedCovariates.length < 1) {
-    // covariate selection
     nextButtonEnabled = false;
   } else if (current === 5) {
     nextButtonEnabled = selectedHare?.concept_value !== '' && numOfPC;
