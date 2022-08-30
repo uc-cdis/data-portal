@@ -32,6 +32,29 @@ export function dereferenceFilter(filter, workspace) {
   return filter;
 }
 
+/** @param {ExplorerWorkspace} workspace */
+export function updateFilterRefs(workspace) {
+  const ids = Object.keys(workspace.all);
+  const filterSets = Object.values(workspace.all);
+
+  for (const { filter } of filterSets)
+    if ('refIds' in filter)
+      for (const [index, refId] of filter.refIds.entries()) {
+        const refIndex = filter.value.findIndex(
+          ({ __type, value }) => __type === 'REF' && value.id === refId
+        );
+
+        if (refId in workspace.all) {
+          /** @type {RefFilterState} */ (filter.value[refIndex]).value.label =
+            workspace.all[refId].name ??
+            `#${ids.findIndex((id) => id === refId) + 1}`;
+        } else {
+          filter.value.splice(refIndex, 1);
+          filter.refIds.splice(index, 1);
+        }
+      }
+}
+
 /**
  * @param {SavedExplorerFilterSet} filterSet
  * @returns {ExplorerFilterSetDTO}
