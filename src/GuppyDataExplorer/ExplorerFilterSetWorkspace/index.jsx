@@ -174,6 +174,11 @@ function ExplorerFilterSetWorkspace() {
     setComposeState((prev) => ({ ...prev, combineMode }));
   }
 
+  let nonEmptyFilterCount = Object.values(workspace.all).length;
+  for (const { filter } of Object.values(workspace.all))
+    if (checkIfFilterEmpty(filter)) nonEmptyFilterCount -= 1;
+  const disableCompose = nonEmptyFilterCount < 2;
+
   return (
     <div className='explorer-filter-set-workspace'>
       <header>
@@ -266,7 +271,7 @@ function ExplorerFilterSetWorkspace() {
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
                 onClick={toggleComposeState}
-                disabled={workspace.size < 2}
+                disabled={disableCompose}
               >
                 Compose
               </button>
