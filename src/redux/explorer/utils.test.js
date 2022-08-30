@@ -5,6 +5,7 @@ import {
   isSurvivalAnalysisEnabled,
   polyfillFilter,
   polyfillFilterValue,
+  updateFilterRefs,
 } from './utils';
 
 test('creates filter info object', () => {
@@ -222,6 +223,105 @@ describe('derefernece filter', () => {
           value: [workspace.all[refFilter.value.id].filter, standardFilter],
         },
       ],
+    });
+  });
+});
+
+describe('update filter references after a filter set removed', () => {
+  const __combineMode = /** @type {'AND'} */ ('AND');
+  const standardFilter = {
+    __type: FILTER_TYPE.STANDARD,
+    __combineMode,
+    value: {},
+  };
+  test('no referenced filter', () => {
+    const workspace = /** @type {import('./types').ExplorerWorkspace} */ ({
+      activeId: '',
+      all: {
+        foo: { name: 'foo', description: '', filter: standardFilter },
+        bar: { filter: standardFilter },
+      },
+    });
+
+    delete workspace.all.foo;
+    updateFilterRefs(workspace);
+
+    expect(workspace).toStrictEqual({
+      activeId: '',
+      all: { bar: { filter: standardFilter } },
+    });
+  });
+  test('non-referenced filter removed', () => {
+    const workspace = /** @type {import('./types').ExplorerWorkspace} */ ({
+      activeId: '',
+      all: {
+        foo: { name: 'foo', description: '', filter: standardFilter },
+        bar: { filter: standardFilter },
+        baz: {
+          filter: {
+            __type: FILTER_TYPE.COMPOSED,
+            __combineMode,
+            refIds: ['bar'],
+            value: [{ __type: 'REF', value: { id: 'bar', label: '#2' } }],
+          },
+        },
+      },
+    });
+
+    delete workspace.all.foo;
+    updateFilterRefs(workspace);
+
+    expect(workspace).toStrictEqual({
+      activeId: '',
+      all: {
+        bar: { filter: standardFilter },
+        baz: {
+          filter: {
+            __type: FILTER_TYPE.COMPOSED,
+            __combineMode,
+            refIds: ['bar'],
+            value: [{ __type: 'REF', value: { id: 'bar', label: '#1' } }],
+          },
+        },
+      },
+    });
+  });
+  test('referenced filter removed', () => {
+    const workspace = /** @type {import('./types').ExplorerWorkspace} */ ({
+      activeId: '',
+      all: {
+        foo: { name: 'foo', description: '', filter: standardFilter },
+        bar: { filter: standardFilter },
+        baz: {
+          filter: {
+            __type: FILTER_TYPE.COMPOSED,
+            __combineMode,
+            refIds: ['foo', 'bar'],
+            value: [
+              { __type: 'REF', value: { id: 'foo', label: 'foo' } },
+              { __type: 'REF', value: { id: 'bar', label: '#2' } },
+            ],
+          },
+        },
+      },
+    });
+
+    delete workspace.all.bar;
+    updateFilterRefs(workspace);
+
+    expect(workspace).toStrictEqual({
+      activeId: '',
+      all: {
+        foo: { name: 'foo', description: '', filter: standardFilter },
+        baz: {
+          filter: {
+            __type: FILTER_TYPE.COMPOSED,
+            __combineMode,
+            refIds: ['foo'],
+            value: [{ __type: 'REF', value: { id: 'foo', label: 'foo' } }],
+          },
+        },
+      },
     });
   });
 });
