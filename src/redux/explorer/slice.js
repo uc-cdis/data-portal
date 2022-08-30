@@ -35,10 +35,12 @@ const initialPatientIds = initialConfig.patientIdsConfig?.filter
   ? []
   : undefined;
 const initialWorkspaces = initializeWorkspaces(initialExplorerId);
-const initialExplorerFilter =
+const initialExplorerFilter = dereferenceFilter(
   initialWorkspaces[initialExplorerId].all[
     initialWorkspaces[initialExplorerId].activeId
-  ].filter;
+  ].filter,
+  initialWorkspaces[initialExplorerId]
+);
 
 const slice = createSlice({
   name: 'explorer',
