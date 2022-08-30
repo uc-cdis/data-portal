@@ -79,7 +79,7 @@ function buildConfig(opts) {
     u.search = '';
     return u.href;
   }
-
+  const commonsName = hostname.split('https://').slice(-1)[0].split('.')[0].toUpperCase();
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
@@ -468,6 +468,7 @@ function buildConfig(opts) {
     basename,
     breakpoints,
     buildConfig,
+    commonsName,
     gwasTemplate,
     dev,
     hostname,

@@ -16,13 +16,12 @@ import { Link } from 'react-router-dom';
 import './WorkspaceRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import {
-  hostname, requestorPath, useArboristUI, workspaceRegistrationConfig, kayakoConfig,
+  hostname, commonsName, requestorPath, useArboristUI, workspaceRegistrationConfig, kayakoConfig,
 } from '../localconf';
 import { createKayakoTicket } from '../utils';
 import { fetchWithCreds } from '../actions';
 
 const { Text } = Typography;
-
 const layout = {
   labelCol: {
     span: 8,
@@ -84,8 +83,7 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
             // request created, now create a kayako ticket
             const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
             const email = formValues['E-mail Address'];
-            const subject = 'Registration Access Request for Workspace';
-
+            const subject = `Registration Access Request for ${commonsName} Workspace`;
             let contents = `Request ID: ${data.request_id}\nEnvironment: ${hostname}`;
 
             Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
@@ -125,6 +123,7 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
   };
 
   if (formSubmissionStatus) {
+    const redirect = workspaceRegistrationConfig?.successRedirect || { link: '/', text: 'Go to Home Page' };
     return (
       <div className='workspace-reg-container'>
         <div className='workspace-reg-form-container'>
@@ -134,8 +133,8 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
               title='Your access request has been submitted!'
               subTitle='Thank you for your submission. Requests take up to 1 business day to complete. You will be notified of the status.'
               extra={[
-                <Link key='discovery' to={'/discovery'}>
-                  <Button>Go To Discovery Page</Button>
+                <Link key='redirect-link' to={redirect.link}>
+                  <Button>{redirect.text}</Button>
                 </Link>,
               ]}
             />
