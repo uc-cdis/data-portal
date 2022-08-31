@@ -324,7 +324,7 @@ describe('update filter references after a filter set removed', () => {
       },
     });
   });
-  test.only('referenced saved filter removed', () => {
+  test('referenced saved filter removed', () => {
     const workspace = /** @type {import('./types').ExplorerWorkspace} */ ({
       activeId: '',
       all: {
