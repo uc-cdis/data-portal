@@ -174,9 +174,9 @@ function GuppyWrapper({
   }) {
     if (filter.__type === FILTER_TYPE.COMPOSED)
       return Promise.resolve({
-        aggsData: /** @type {AggsData} */ ({}),
-        initialTabsOptions: /** @type {SimpleAggsData} */ ({}),
-        tabsOptions: /** @type {SimpleAggsData} */ ({}),
+        aggsData: state.aggsData,
+        initialTabsOptions: state.initialTabsOptions,
+        tabsOptions: state.tabsOptions,
       });
 
     return queryGuppyForAggregationOptionsData({
@@ -343,6 +343,7 @@ function GuppyWrapper({
 
   /** @param {string[]} fields */
   function fetchGuppyData(fields) {
+    console.log('fetchGuppyData');
     controller.current.abort();
     controller.current = new AbortController();
     fetchAggsDataFromGuppy(filterState);
