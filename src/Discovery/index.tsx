@@ -12,6 +12,38 @@ import isEnabled from '../helpers/featureFlags';
 import loadStudiesFromAggMDS from './aggMDSUtils';
 import loadStudiesFromMDS from './MDSUtils';
 
+const populateStudiesWithConfigInfo = (studies, config) => {
+
+  const studyMatchesStudyConfig = (study, studyConfig) => {
+    let fieldToMatch = Object.keys(studyConfig.match)[0];
+    if (study[fieldToMatch] !== undefined) {
+      let valueToMatch = Object.values(studyConfig.match)[0];
+      if (study[fieldToMatch] === valueToMatch) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const populateStudy = (study, studyConfig) => {
+    studyConfig.fieldsToValues.forEach((fieldToValue) => {
+      const [field, value] = Object.entries(fieldToValue)[0];
+      study[field] = value;
+    });
+  };
+
+  let studyConfig;
+  studies.forEach((study) => {
+    for (let i = 0; i < config.studies.length; i += 1) {
+      studyConfig = config.studies[i];
+      if (studyMatchesStudyConfig(study, studyConfig) === true) {
+        populateStudy(study, studyConfig);
+        break;
+      }
+    }
+  });
+};
+
 const DiscoveryWithMDSBackend: React.FC<{
     userAggregateAuthMappings: any,
     config: DiscoveryConfig,
@@ -60,21 +92,30 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const { authzField, dataAvailabilityField } = props.config.minimalFieldMapping;
+        const supportedAuthValues = props.config.features.authorization.supportedValues;
         // useArboristUI=true is required for userHasMethodForServiceOnResource
         if (!useArboristUI) {
           throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
         }
         const studiesWithAccessibleField = rawStudies.map((study) => {
           let accessible: AccessLevel;
-          if (dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
+          if (supportedAuthValues.pending.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
             accessible = AccessLevel.PENDING;
-          } else if (study[authzField] === undefined || study[authzField] === '') {
+          } else if (supportedAuthValues.notAvailable.enabled && (study[authzField] === undefined || study[authzField] === '')) {
             accessible = AccessLevel.NOT_AVAILABLE;
           } else {
             // TODO get study.commons_url working for regular discovery page
-            accessible = userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)])
-              ? AccessLevel.ACCESSIBLE
-              : AccessLevel.UNACCESSIBLE;
+            // TODO dont fail for undefined values
+            const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)])
+            if (supportedAuthValues.accessible.enabled && isAuthorized === true) {
+              accessible = AccessLevel.ACCESSIBLE;
+            } else if (supportedAuthValues.unaccessible.enabled && isAuthorized === false) {
+              accessible = AccessLevel.UNACCESSIBLE;
+            }
+            else {
+              // TODO should still render whole study
+              accessible = AccessLevel.OTHER;
+            }
           }
           return {
             ...study,
@@ -85,6 +126,8 @@ const DiscoveryWithMDSBackend: React.FC<{
       } else {
         studiesToSet = rawStudies;
       }
+
+      populateStudiesWithConfigInfo(studiesToSet, props.config);
       setStudies(studiesToSet);
 
       // resume action in progress if redirected from login
