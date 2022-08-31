@@ -19,15 +19,40 @@ import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
  * @returns {SavedExplorerFilterSet['filter']}
  */
 export function dereferenceFilter(filter, workspace) {
-  if (filter.__type === FILTER_TYPE.STANDARD) return filter;
+  if (filter.__type === FILTER_TYPE.COMPOSED)
+    return {
+      __combineMode: filter.__combineMode,
+      __type: filter.__type,
+      value: filter.value.map((f) => dereferenceFilter(f, workspace)),
+    };
 
   if (filter.__type === 'REF')
     return dereferenceFilter(workspace.all[filter.value.id].filter, workspace);
 
-  return {
-    ...filter,
-    value: filter.value.map((f) => dereferenceFilter(f, workspace)),
-  };
+  return filter;
+}
+
+/** @param {ExplorerWorkspace} workspace */
+export function updateFilterRefs(workspace) {
+  const ids = Object.keys(workspace.all);
+  const filterSets = Object.values(workspace.all);
+
+  for (const { filter } of filterSets)
+    if ('refIds' in filter)
+      for (const [index, refId] of filter.refIds.entries()) {
+        const refIndex = filter.value.findIndex(
+          ({ __type, value }) => __type === 'REF' && value.id === refId
+        );
+
+        if (refId in workspace.all) {
+          /** @type {RefFilterState} */ (filter.value[refIndex]).value.label =
+            workspace.all[refId].name ??
+            `#${ids.findIndex((id) => id === refId) + 1}`;
+        } else {
+          filter.value.splice(refIndex, 1);
+          filter.refIds.splice(index, 1);
+        }
+      }
 }
 
 /**

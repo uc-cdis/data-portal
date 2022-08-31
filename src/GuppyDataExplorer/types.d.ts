@@ -25,6 +25,7 @@ export type RefFilterState = {
 };
 
 export interface ComposedFilterStateWithRef extends ComposedFilterState {
+  refIds?: string[];
   value?: (ComposedFilterStateWithRef | StandardFilterState | RefFilterState)[];
 }
 
