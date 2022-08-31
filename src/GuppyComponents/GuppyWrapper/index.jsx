@@ -343,7 +343,6 @@ function GuppyWrapper({
 
   /** @param {string[]} fields */
   function fetchGuppyData(fields) {
-    console.log('fetchGuppyData');
     controller.current.abort();
     controller.current = new AbortController();
     fetchAggsDataFromGuppy(filterState);
