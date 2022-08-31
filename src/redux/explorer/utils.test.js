@@ -286,7 +286,7 @@ describe('update filter references after a filter set removed', () => {
       },
     });
   });
-  test('referenced filter removed', () => {
+  test('referenced local filter removed', () => {
     const workspace = /** @type {import('./types').ExplorerWorkspace} */ ({
       activeId: '',
       all: {
@@ -319,6 +319,44 @@ describe('update filter references after a filter set removed', () => {
             __combineMode,
             refIds: ['foo'],
             value: [{ __type: 'REF', value: { id: 'foo', label: 'foo' } }],
+          },
+        },
+      },
+    });
+  });
+  test.only('referenced saved filter removed', () => {
+    const workspace = /** @type {import('./types').ExplorerWorkspace} */ ({
+      activeId: '',
+      all: {
+        foo: { name: 'foo', description: '', filter: standardFilter },
+        bar: { filter: standardFilter },
+        baz: {
+          filter: {
+            __type: FILTER_TYPE.COMPOSED,
+            __combineMode,
+            refIds: ['foo', 'bar'],
+            value: [
+              { __type: 'REF', value: { id: 'foo', label: 'foo' } },
+              { __type: 'REF', value: { id: 'bar', label: '#2' } },
+            ],
+          },
+        },
+      },
+    });
+
+    delete workspace.all.foo;
+    updateFilterRefs(workspace);
+
+    expect(workspace).toStrictEqual({
+      activeId: '',
+      all: {
+        bar: { filter: standardFilter },
+        baz: {
+          filter: {
+            __type: FILTER_TYPE.COMPOSED,
+            __combineMode,
+            refIds: ['bar'],
+            value: [{ __type: 'REF', value: { id: 'bar', label: '#1' } }],
           },
         },
       },
