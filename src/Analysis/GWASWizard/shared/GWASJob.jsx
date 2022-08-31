@@ -38,7 +38,7 @@ const GWASJob = ({ workflow }) => {
     let buttonText;
     let buttonClickHandler;
 
-    if (phase === gwasStatus.suceeded) {
+    if (phase === gwasStatus.succeeded) {
       actionUrl = `${gwasWorkflowPath}status/${workflowName}`;
       buttonText = 'download outputs';
       buttonClickHandler = handleWorkflowOutput;
@@ -47,7 +47,7 @@ const GWASJob = ({ workflow }) => {
       buttonText = 'view logs';
       buttonClickHandler = handleWorkflowLogs;
     }
-    if ([gwasStatus.suceeded, gwasStatus.failed].includes(phase)) {
+    if ([gwasStatus.succeeded, gwasStatus.failed].includes(phase)) {
       actionButtons.unshift(
         <Button
           primary='true'
