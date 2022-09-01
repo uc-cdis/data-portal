@@ -90,7 +90,6 @@ const CustomDichotomousSelect = ({
               <Meta
                 avatar={<TeamOutlined />}
                 title={`${cd.provided_name}`}
-                description={`Cohorts: [${cd.cohort_ids[0]}, ${cd.cohort_ids[1]}]`}
               />
             </Card>
           ),
