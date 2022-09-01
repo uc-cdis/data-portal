@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import './WorkspaceRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import {
-  hostname, commonsName, requestorPath, useArboristUI, workspaceRegistrationConfig, kayakoConfig,
+  hostname, requestorPath, useArboristUI, workspaceRegistrationConfig, kayakoConfig,
 } from '../localconf';
 import { createKayakoTicket } from '../utils';
 import { fetchWithCreds } from '../actions';
@@ -83,7 +83,7 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
             // request created, now create a kayako ticket
             const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
             const email = formValues['E-mail Address'];
-            const subject = `Registration Access Request for ${commonsName} Workspace`;
+            const subject = `Registration Access Request for Workspace in ${hostname}`;
             let contents = `Request ID: ${data.request_id}\nEnvironment: ${hostname}`;
 
             Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {

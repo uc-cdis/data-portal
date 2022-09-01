@@ -26,6 +26,7 @@ import {
   workspacePageDescription,
   stridesPortalURL,
   showExternalLoginsOnProfile,
+  workspaceErrorUrl,
 } from '../localconf';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
@@ -55,7 +56,7 @@ class Workspace extends React.Component {
       interval: null,
       payModelInterval: null,
       workspaceID: null,
-      defaultWorkspace: false,
+      hasWorkspaceAccess: true,
       workspaceIsFullpage: false,
       externalLoginOptions: [],
       payModel: {},
@@ -125,7 +126,7 @@ class Workspace extends React.Component {
         });
         this.setState({ options: sortedResults });
       },
-    ).catch(() => this.setState({ defaultWorkspace: true }));
+    ).catch(() => this.setState({ hasWorkspaceAccess: false }));
   }
 
   getExternalLoginOptions = () => {
@@ -349,7 +350,7 @@ class Workspace extends React.Component {
         payModel: data,
       });
     });
-    if (!this.state.defaultWorkspace) {
+    if (this.state.hasWorkspaceAccess) {
       this.getWorkspaceStatus().then((data) => {
         if (data.status === 'Launching' || data.status === 'Terminating' || data.status === 'Stopped') {
           this.checkWorkspaceStatus();
@@ -503,7 +504,7 @@ class Workspace extends React.Component {
       </Menu>
     );
 
-    if (this.state.connectedStatus && this.state.workspaceStatus && !this.state.defaultWorkspace) {
+    if (this.state.connectedStatus && this.state.workspaceStatus && this.state.hasWorkspaceAccess) {
       // NOTE both the containing element and the iframe have class '.workspace',
       // although no styles should be shared between them. The reason for this
       // is for backwards compatibility with Jenkins integration tests that select by classname.
@@ -734,8 +735,8 @@ class Workspace extends React.Component {
           }
         </div>
       );
-    } if (this.state.defaultWorkspace && this.state.connectedStatus) {
-      return <Redirect to={workspaceUrl} />;
+    } if (this.state.connectedStatus && !this.state.hasWorkspaceAccess) {
+      return <Redirect to={workspaceErrorUrl} />;
     }
     return <Spinner />;
   }
