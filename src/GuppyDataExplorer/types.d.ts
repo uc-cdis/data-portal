@@ -76,6 +76,7 @@ export type PatientIdsConfig = {
 };
 
 export type SurvivalAnalysisConfig = {
+  consortium?: string[];
   result?: {
     risktable?: boolean;
     survival?: boolean;
