@@ -108,7 +108,7 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(undefined);
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
-  const [selectFilterSetId, setSelectFilterSetId] = useState(null);
+  const [selectFilterSet, setSelectFilterSet] = useState(null);
   const [usedFilterSetIds, setUsedFilterSetIds] = useState(emptyFilterSetIds);
 
   const filterSetOptions = [];
@@ -241,18 +241,18 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
           inputId='survival-filter-sets'
           placeholder='Select Filter Set to analyze'
           options={filterSetOptions}
-          onChange={({ value }) => setSelectFilterSetId(value)}
+          onChange={setSelectFilterSet}
           maxMenuHeight={160}
-          value={selectFilterSetId}
+          value={selectFilterSet}
           theme={overrideSelectTheme}
         />
         <Button
           label='Add'
           buttonType='default'
-          enabled={selectFilterSetId !== null}
+          enabled={selectFilterSet !== null}
           onClick={() => {
-            setUsedFilterSetIds((ids) => [...ids, selectFilterSetId]);
-            setSelectFilterSetId(null);
+            setUsedFilterSetIds((ids) => [...ids, selectFilterSet.value]);
+            setSelectFilterSet(null);
             setIsInputChanged(true);
           }}
         />
