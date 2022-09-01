@@ -1,6 +1,29 @@
 /* eslint-disable no-shadow */
+import { FILTER_TYPE } from '../ExplorerFilterSetWorkspace/utils';
+
 /** @typedef {import('./types').RisktableData} RisktableData */
 /** @typedef {import('./types').SurvivalData} SurvivalData */
+
+/**
+ * @param {string[]} consortium
+ * @param {import('../types').ExplorerFilter} filter
+ */
+export function checkIfFilterInScope(consortium, filter) {
+  if (consortium.length === 0) return true;
+
+  if (filter.__type === FILTER_TYPE.COMPOSED)
+    return filter.value.every((f) => checkIfFilterInScope(consortium, f));
+
+  for (const [key, val] of Object.entries(filter.value ?? {}))
+    if (
+      key === 'consortium' &&
+      val.__type === FILTER_TYPE.OPTION &&
+      val.selectedValues.some((v) => !consortium.includes(v))
+    )
+      return false;
+
+  return true;
+}
 
 /**
  * Builds x-axis ticks array to use in plots

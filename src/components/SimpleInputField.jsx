@@ -6,7 +6,7 @@ import './SimpleInputField.css';
  * @typedef {Object} SimpleInputFieldProps
  * @property {?{ isError: boolean; message: string }} [error]
  * @property {JSX.Element} input
- * @property {string} label
+ * @property {string | JSX.Element} label
  */
 
 /** @param {SimpleInputFieldProps} props */
@@ -41,7 +41,7 @@ SimpleInputField.propTypes = {
     message: PropTypes.string,
   }),
   input: PropTypes.object.isRequired,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
 };
 
 export default SimpleInputField;
