@@ -15,7 +15,7 @@ import { checkIfFilterInScope } from './utils';
 /** @typedef {import('./types').ParsedSurvivalAnalysisResult} ParsedSurvivalAnalysisResult */
 /** @typedef {import('./types').UserInputSubmitHandler} UserInputSubmitHandler */
 
-/** @param {{ label: string; [x: string]: any }} props */
+/** @param {{ label: string | JSX.Element; [x: string]: any }} props */
 function ControlFormSelect({ label, ...selectProps }) {
   return (
     <SimpleInputField
