@@ -25,6 +25,7 @@ const WorkflowParameters = ({
   imputationScore,
   handleImputation,
   handleCovariateDelete,
+  handleDichotomousCovariateDelete,
   outcomeId,
 }) => (
   <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
@@ -74,8 +75,7 @@ const WorkflowParameters = ({
             id='select-dichotomous-covariates'
             mode='multiple'
             value={selectedDichotomousCovariates.length ? selectedDichotomousCovariates.map((s) => s.provided_name) : []}
-            // TODO currently cant delete cd's from this page
-            // onChange={(e) => handleDichotomousCovariateDelete(e)}
+            onChange={(e) => handleDichotomousCovariateDelete(e)}
             style={{ width: '70%' }}
           />
         </label>
@@ -165,6 +165,7 @@ WorkflowParameters.propTypes = {
   numOfPC: PropTypes.number.isRequired,
   handleNumOfPC: PropTypes.func.isRequired,
   handleCovariateDelete: PropTypes.func.isRequired,
+  handleDichotomousCovariateDelete: PropTypes.func.isRequired,
   outcomeId: PropTypes.number,
 };
 

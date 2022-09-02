@@ -48,6 +48,11 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     setSelectedCovariates(covariateMapping);
   };
 
+  const handleDichotomousCovariateDelete = (remainingDichotomousCovariates) => {
+    const covariateMapping = remainingDichotomousCovariates.map((conceptName) => selectedDichotomousCovariates.find((concept) => concept.provided_name === conceptName));
+    setSelectedDichotomousCovariates(covariateMapping);
+  };
+
   const handleCDAdd = (cd) => {
     setSelectedDichotomousCovariates((prevCD) => [...prevCD, cd]);
   };
@@ -246,6 +251,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             selectedHare={selectedHare}
             handleHareChange={handleHareChange}
             handleCovariateDelete={handleCovariateDelete}
+            handleDichotomousCovariateDelete={handleDichotomousCovariateDelete}
           />
         </React.Fragment>
       );

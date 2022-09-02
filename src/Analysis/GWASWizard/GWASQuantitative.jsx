@@ -44,6 +44,11 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     setSelectedCovariates(covariateMapping);
   };
 
+  const handleDichotomousCovariateDelete = (remainingDichotomousCovariates) => {
+    const covariateMapping = remainingDichotomousCovariates.map((conceptName) => selectedDichotomousCovariates.find((concept) => concept.provided_name === conceptName));
+    setSelectedDichotomousCovariates(covariateMapping);
+  };
+
   const handleOutcomeSelect = (selectedOutcome) => {
     setOutcome(selectedOutcome);
   };
@@ -200,6 +205,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
             selectedHare={selectedHare}
             handleHareChange={handleHareChange}
             handleCovariateDelete={handleCovariateDelete}
+            handleDichotomousCovariateDelete={handleDichotomousCovariateDelete}
             outcomeId={outcome.concept_id}
           />
         </React.Fragment>
