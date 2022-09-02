@@ -17,7 +17,6 @@ import { isSurvivalAnalysisEnabled } from './utils';
  * @param {boolean} body.efsFlag
  * @param {ExplorerState['explorerId']} body.explorerId
  * @param {SurvivalFilterSetDTO[]} body.filterSets
- * @param {ExplorerConfig['survivalAnalysisConfig']['result']} body.result
  * @param {SurvivalFilterSetDTO['id'][]} body.usedFilterSetIds
  * @returns {Promise<ExplorerState['survivalAnalysisResult']['data']>}
  */

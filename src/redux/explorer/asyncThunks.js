@@ -92,7 +92,6 @@ export const updateSurvivalResult = createAsyncThunk(
         efsFlag: args.efsFlag,
         explorerId: explorer.explorerId,
         filterSets,
-        result: explorer.config.survivalAnalysisConfig.result,
         usedFilterSetIds,
       });
       return { data: { ...cache, ...newResult }, usedFilterSetIds };
