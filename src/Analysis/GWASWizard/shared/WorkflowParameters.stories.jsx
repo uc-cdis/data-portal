@@ -51,6 +51,11 @@ const MockTemplate = () => {
     setMafThreshold(imp);
   };
 
+  const handleCovariateDelete = (remainingCovariates) => {
+    const covariateMapping = remainingCovariates.map((conceptName) => selectedCovariates.find((concept) => concept.concept_name === conceptName));
+    setSelectedCovariates(covariateMapping);
+  };
+
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <WorkflowParameters
@@ -65,6 +70,7 @@ const MockTemplate = () => {
         handleNumOfPC={handleNumOfPC}
         handleImputation={handleImputation}
         handleMaf={handleMaf}
+        handleCovariateDelete={handleCovariateDelete}
         numOfPC={numOfPC}
         mafThreshold={mafThreshold}
         imputationScore={imputationScore}
