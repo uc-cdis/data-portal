@@ -104,6 +104,7 @@ class AnalysisApp extends React.Component {
         <TourProvider
           afterOpen={disableBody}
           beforeClose={enableBody}
+          disableInteraction={true}
           onClickClose={({ setCurrentStep, setIsOpen }) => {
             setIsOpen(false);
 
