@@ -5,14 +5,17 @@ import {
   createFilterSet,
   deleteFilterSet,
   fetchFilterSets,
+  fetchSurvivalConfig,
   updateFilterSet,
   updateSurvivalResult,
 } from './asyncThunks';
 import {
   checkIfFilterEmpty,
+  dereferenceFilter,
   getCurrentConfig,
   initializeWorkspaces,
   parseSurvivalResult,
+  updateFilterRefs,
 } from './utils';
 
 /**
@@ -23,7 +26,6 @@ import {
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ExplorerState} ExplorerState */
 /** @typedef {import('./types').ExplorerWorkspace} ExplorerWorkspace */
-/** @typedef {import('./types').UnsavedExplorerFilterSet} UnsavedExplorerFilterSet */
 
 /** @type {ExplorerState['explorerIds']} */
 const explorerIds = [];
@@ -34,12 +36,18 @@ const initialPatientIds = initialConfig.patientIdsConfig?.filter
   ? []
   : undefined;
 const initialWorkspaces = initializeWorkspaces(initialExplorerId);
+const initialExplorerFilter = dereferenceFilter(
+  initialWorkspaces[initialExplorerId].all[
+    initialWorkspaces[initialExplorerId].activeId
+  ].filter,
+  initialWorkspaces[initialExplorerId]
+);
 
 const slice = createSlice({
   name: 'explorer',
   initialState: /** @type {ExplorerState} */ ({
     config: initialConfig,
-    explorerFilter: {},
+    explorerFilter: initialExplorerFilter,
     explorerId: initialExplorerId,
     explorerIds,
     patientIds: initialPatientIds,
@@ -111,17 +119,18 @@ const slice = createSlice({
         state.workspaces[state.explorerId].all[newActiveId] = filterSet;
 
         // sync with exploreFilter
-        state.explorerFilter = filterSet.filter;
+        const workspace = state.workspaces[state.explorerId];
+        state.explorerFilter = dereferenceFilter(filterSet.filter, workspace);
       },
     },
     loadWorkspaceFilterSet: {
-      /** @param {ExplorerFilterSet | UnsavedExplorerFilterSet} filterSet */
+      /** @param {ExplorerFilterSet} filterSet */
       prepare: (filterSet) => ({
         payload: { filterSet, newActiveId: crypto.randomUUID() },
       }),
       /**
        * @param {PayloadAction<{
-       *  filterSet: ExplorerFilterSet | UnsavedExplorerFilterSet;
+       *  filterSet: ExplorerFilterSet;
        *  newActiveId: string;
        * }>} action
        */
@@ -137,7 +146,8 @@ const slice = createSlice({
         state.workspaces[state.explorerId].all[id] = filterSet;
 
         // sync with exploreFilter
-        state.explorerFilter = filterSet.filter;
+        const workspace = state.workspaces[state.explorerId];
+        state.explorerFilter = dereferenceFilter(filterSet.filter, workspace);
       },
     },
     removeWorkspaceFilterSet: {
@@ -152,9 +162,11 @@ const slice = createSlice({
 
         state.workspaces[state.explorerId].activeId = id;
         state.workspaces[state.explorerId].all[id] = filterSet;
+        updateFilterRefs(state.workspaces[state.explorerId]);
 
         // sync with exploreFilter
-        state.explorerFilter = filterSet.filter;
+        const workspace = state.workspaces[state.explorerId];
+        state.explorerFilter = dereferenceFilter(filterSet.filter, workspace);
       },
     },
     /** @param {PayloadAction<ExplorerState['explorerFilter']>} action */
@@ -220,7 +232,8 @@ const slice = createSlice({
         }
 
         // sync with explorerFilter
-        state.explorerFilter = workspace.all[workspace.activeId].filter;
+        const { filter } = workspace.all[workspace.activeId];
+        state.explorerFilter = dereferenceFilter(filter, workspace);
       },
     },
     /** @param {PayloadAction<string>} action */
@@ -230,8 +243,9 @@ const slice = createSlice({
       state.workspaces[explorerId].activeId = newActiveId;
 
       // sync with exploreFilter
-      const { filter } = state.workspaces[explorerId].all[newActiveId];
-      state.explorerFilter = filter;
+      const workspace = state.workspaces[explorerId];
+      const { filter } = workspace.all[newActiveId];
+      state.explorerFilter = dereferenceFilter(filter, workspace);
     },
   },
   extraReducers: (builder) => {
@@ -306,6 +320,16 @@ const slice = createSlice({
         state.survivalAnalysisResult.parsed = {};
         state.survivalAnalysisResult.staleFilterSetIds = [];
         state.survivalAnalysisResult.usedFilterSetIds = [];
+      })
+      .addCase(fetchSurvivalConfig.fulfilled, (state, action) => {
+        const config = action.payload;
+        if (config === undefined) return;
+
+        state.config.survivalAnalysisConfig = config;
+        state.survivalAnalysisResult.parsed = parseSurvivalResult({
+          config,
+          result: null,
+        });
       });
   },
 });

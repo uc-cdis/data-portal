@@ -95,4 +95,43 @@ storiesOf('FilterDisplay', module)
         onCloseFilter={action('closeFilter')}
       />
     </div>
+  ))
+  .add('Composed', () => (
+    <FilterDisplay
+      filter={{
+        __combineMode: 'OR',
+        __type: FILTER_TYPE.COMPOSED,
+        value: [
+          {
+            __combineMode: 'AND',
+            __type: FILTER_TYPE.COMPOSED,
+            value: [simpleFilter, complexFilter],
+          },
+          complexFilter,
+        ],
+      }}
+      filterInfo={filterInfo}
+    />
+  ))
+  .add('Composed with ref', () => (
+    <FilterDisplay
+      filter={{
+        __combineMode: 'OR',
+        __type: FILTER_TYPE.COMPOSED,
+        value: [
+          { __type: 'REF', value: { id: '', label: 'Ref #1' } },
+          {
+            __combineMode: 'AND',
+            __type: FILTER_TYPE.COMPOSED,
+            value: [
+              simpleFilter,
+              complexFilter,
+              { __type: 'REF', value: { id: '', label: 'Ref #2' } },
+            ],
+          },
+          complexFilter,
+        ],
+      }}
+      filterInfo={filterInfo}
+    />
   ));

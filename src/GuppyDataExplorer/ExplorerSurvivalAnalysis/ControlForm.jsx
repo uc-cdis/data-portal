@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import Tooltip from 'rc-tooltip';
+import 'rc-tooltip/assets/bootstrap_white.css';
 import Select from 'react-select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '../../gen3-ui-component/components/Button';
 import SimpleInputField from '../../components/SimpleInputField';
 import { useAppSelector } from '../../redux/hooks';
 import { overrideSelectTheme } from '../../utils';
 import FilterSetCard from './FilterSetCard';
+import { checkIfFilterInScope } from './utils';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ParsedSurvivalAnalysisResult} ParsedSurvivalAnalysisResult */
 /** @typedef {import('./types').UserInputSubmitHandler} UserInputSubmitHandler */
 
-/** @param {{ label: string; [x: string]: any }} props */
+/** @param {{ label: string | JSX.Element; [x: string]: any }} props */
 function ControlFormSelect({ label, ...selectProps }) {
   return (
     <SimpleInputField
@@ -26,6 +30,13 @@ function ControlFormSelect({ label, ...selectProps }) {
               ...provided,
               cursor: isDisabled ? 'not-allowed' : '',
               pointerEvents: 'auto',
+            }),
+            multiValue: (provided, { isDisabled }) => ({
+              ...provided,
+              backgroundColor: isDisabled
+                ? 'lightgrey'
+                : provided.backgroundColor,
+              paddingRight: isDisabled ? '3px' : provided.paddingRight,
             }),
           }}
         />
@@ -54,7 +65,7 @@ const survivalTypeOptions = [
 
 /** @type {ExplorerFilterSet['id'][]} */
 const emptyFilterSetIds = [];
-/** @type {ExplorerFilterSet} */
+/** @type {import('../types').SavedExplorerFilterSet} */
 export const defaultFilterSet = {
   name: '*** All Subjects ***',
   description: '',
@@ -83,6 +94,9 @@ function validateNumberInput(e, setStateAction) {
  * @param {number} prop.timeInterval
  */
 function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
+  const consortiums = useAppSelector(
+    (state) => state.explorer.config.survivalAnalysisConfig.consortium ?? []
+  );
   const savedFilterSets = useAppSelector(
     (state) => state.explorer.savedFilterSets.data
   );
@@ -94,7 +108,7 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(undefined);
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
-  const [selectFilterSetId, setSelectFilterSetId] = useState(null);
+  const [selectFilterSet, setSelectFilterSet] = useState(null);
   const [usedFilterSetIds, setUsedFilterSetIds] = useState(emptyFilterSetIds);
 
   const filterSetOptions = [];
@@ -102,7 +116,8 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
   for (const filterSet of [defaultFilterSet, ...savedFilterSets]) {
     const { name: label, id: value } = filterSet;
     const isUsed = usedFilterSetIds.includes(value);
-    filterSetOptions.push({ label, value, isDisabled: isUsed });
+    const isOutOfScope = !checkIfFilterInScope(consortiums, filterSet.filter);
+    filterSetOptions.push({ label, value, isDisabled: isUsed || isOutOfScope });
 
     if (isUsed) {
       const isStale = staleFilterSetIdSet.has(value);
@@ -137,6 +152,33 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
 
   return (
     <form className='explorer-survival-analysis__control-form'>
+      <ControlFormSelect
+        inputId='consortium'
+        label={
+          <Tooltip
+            arrowContent={<div className='rc-tooltip-arrow-inner' />}
+            mouseLeaveDelay={0}
+            overlay='Only data from the following sources are available for survival analysis. Filter Sets including other consortium values are disabled.'
+            placement='left'
+          >
+            <span>
+              <FontAwesomeIcon
+                icon='circle-info'
+                color='var(--pcdc-color__primary-light)'
+              />{' '}
+              Consortium
+            </span>
+          </Tooltip>
+        }
+        components={{
+          IndicatorsContainer: () => null,
+          MultiValueRemove: () => null,
+        }}
+        isMulti
+        isDisabled
+        value={consortiums.map((label) => ({ label }))}
+        theme={overrideSelectTheme}
+      />
       <ControlFormSelect
         inputId='survival-type'
         label='Survival type'
@@ -199,18 +241,18 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
           inputId='survival-filter-sets'
           placeholder='Select Filter Set to analyze'
           options={filterSetOptions}
-          onChange={({ value }) => setSelectFilterSetId(value)}
+          onChange={setSelectFilterSet}
           maxMenuHeight={160}
-          value={selectFilterSetId}
+          value={selectFilterSet}
           theme={overrideSelectTheme}
         />
         <Button
           label='Add'
           buttonType='default'
-          enabled={selectFilterSetId !== null}
+          enabled={selectFilterSet !== null}
           onClick={() => {
-            setUsedFilterSetIds((ids) => [...ids, selectFilterSetId]);
-            setSelectFilterSetId(null);
+            setUsedFilterSetIds((ids) => [...ids, selectFilterSet.value]);
+            setSelectFilterSet(null);
             setIsInputChanged(true);
           }}
         />

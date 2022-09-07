@@ -237,7 +237,6 @@ describe('Get GQL filter from filter object from', () => {
     };
     expect(getGQLFilter(filterState)).toEqual(gqlFilter);
   });
-
   test('various filters', () => {
     const filterState = {
       value: {
@@ -272,6 +271,85 @@ describe('Get GQL filter from filter object from', () => {
             path: 'f',
             AND: [{ AND: [{ GTE: { g: 0 } }, { LTE: { g: 1 } }] }],
           },
+        },
+      ],
+    };
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
+  test('a simple composed filter', () => {
+    const filterState = {
+      __combineMode: /** @type {CombineMode} */ ('AND'),
+      __type: FILTER_TYPE.COMPOSED,
+      value: [
+        {
+          __combineMode: /** @type {CombineMode} */ ('AND'),
+          __type: FILTER_TYPE.STANDARD,
+          value: {
+            a: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo', 'bar'] },
+          },
+        },
+        {
+          __combineMode: /** @type {CombineMode} */ ('OR'),
+          __type: FILTER_TYPE.STANDARD,
+          value: {
+            b: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+          },
+        },
+      ],
+    };
+    const gqlFilter = {
+      AND: [
+        {
+          AND: [{ IN: { a: ['foo', 'bar'] } }],
+        },
+        {
+          OR: [{ AND: [{ GTE: { b: 0 } }, { LTE: { b: 1 } }] }],
+        },
+      ],
+    };
+    expect(getGQLFilter(filterState)).toEqual(gqlFilter);
+  });
+  test('a higher-order composed filter', () => {
+    const filterState = {
+      __combineMode: /** @type {CombineMode} */ ('AND'),
+      __type: FILTER_TYPE.COMPOSED,
+      value: [
+        {
+          __combineMode: /** @type {CombineMode} */ ('OR'),
+          __type: FILTER_TYPE.COMPOSED,
+          value: [
+            {
+              __combineMode: /** @type {CombineMode} */ ('AND'),
+              __type: FILTER_TYPE.STANDARD,
+              value: {
+                a: {
+                  __type: FILTER_TYPE.OPTION,
+                  selectedValues: ['foo', 'bar'],
+                },
+              },
+            },
+          ],
+        },
+        {
+          __combineMode: /** @type {CombineMode} */ ('OR'),
+          __type: FILTER_TYPE.STANDARD,
+          value: {
+            b: { __type: FILTER_TYPE.RANGE, lowerBound: 0, upperBound: 1 },
+          },
+        },
+      ],
+    };
+    const gqlFilter = {
+      AND: [
+        {
+          OR: [
+            {
+              AND: [{ IN: { a: ['foo', 'bar'] } }],
+            },
+          ],
+        },
+        {
+          OR: [{ AND: [{ GTE: { b: 0 } }, { LTE: { b: 1 } }] }],
         },
       ],
     };

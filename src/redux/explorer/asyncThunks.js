@@ -3,13 +3,13 @@ import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import * as filterSetsAPI from './filterSetsAPI';
 import * as survivalAnalysisAPI from './survivalAnalysisAPI';
 
-/** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('../../GuppyDataExplorer/types').SavedExplorerFilterSet} SavedExplorerFilterSet */
 /** @typedef {import('../types').AppGetState} AppGetState */
 /** @typedef {import('./types').ExplorerState} ExplorerState */
 
 export const createFilterSet = createAsyncThunk(
   'explorer/createFilterSet',
-  /** @param {ExplorerFilterSet} filterSet */
+  /** @param {SavedExplorerFilterSet} filterSet */
   async (filterSet, { getState, rejectWithValue }) => {
     const { explorer } = /** @type {AppGetState} */ (getState)();
     try {
@@ -22,7 +22,7 @@ export const createFilterSet = createAsyncThunk(
 
 export const deleteFilterSet = createAsyncThunk(
   'explorer/deleteFilterSet',
-  /** @param {ExplorerFilterSet} filterSet */
+  /** @param {SavedExplorerFilterSet} filterSet */
   async (filterSet, { getState, rejectWithValue }) => {
     const { explorer } = /** @type {AppGetState} */ (getState)();
     try {
@@ -47,7 +47,7 @@ export const fetchFilterSets = createAsyncThunk(
 
 export const updateFilterSet = createAsyncThunk(
   'explorer/updateFilterSet',
-  /** @param {ExplorerFilterSet} filterSet */
+  /** @param {SavedExplorerFilterSet} filterSet */
   async (filterSet, { getState, rejectWithValue }) => {
     const { explorer } = /** @type {AppGetState} */ (getState)();
     try {
@@ -64,7 +64,7 @@ export const updateSurvivalResult = createAsyncThunk(
    * @param {{
    *  efsFlag: boolean;
    *  shouldRefetch?: boolean
-   *  usedFilterSets: (ExplorerFilterSet & { isStale?: boolean })[];
+   *  usedFilterSets: (SavedExplorerFilterSet & { isStale?: boolean })[];
    * }} args
    */
   async (args, { getState, rejectWithValue }) => {
@@ -92,12 +92,22 @@ export const updateSurvivalResult = createAsyncThunk(
         efsFlag: args.efsFlag,
         explorerId: explorer.explorerId,
         filterSets,
-        result: explorer.config.survivalAnalysisConfig.result,
         usedFilterSetIds,
       });
       return { data: { ...cache, ...newResult }, usedFilterSetIds };
     } catch (e) {
       return rejectWithValue(e);
     }
+  }
+);
+
+let shouldFetchSurvivalConfig = true;
+export const fetchSurvivalConfig = createAsyncThunk(
+  'explorer/fetchSurvivalConfig',
+  async () => {
+    if (!shouldFetchSurvivalConfig) return undefined;
+
+    shouldFetchSurvivalConfig = false;
+    return survivalAnalysisAPI.fetchConfig();
   }
 );

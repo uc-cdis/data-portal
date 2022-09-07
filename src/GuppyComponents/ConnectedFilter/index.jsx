@@ -11,16 +11,16 @@ import {
 
 /** @typedef {import('../types').FilterChangeHandler} FilterChangeHandler */
 /** @typedef {import('../types').FilterConfig} FilterConfig */
-/** @typedef {import('../types').FilterState} FilterState */
 /** @typedef {import('../types').GuppyConfig} GuppyConfig */
 /** @typedef {import('../types').SimpleAggsData} SimpleAggsData */
+/** @typedef {import('../types').StandardFilterState} StandardFilterState */
 
 /**
  * @typedef {Object} ConnectedFilterProps
  * @property {object} [adminAppliedPreFilters]
  * @property {string} [anchorValue]
  * @property {string} [className]
- * @property {FilterState} filter
+ * @property {StandardFilterState} filter
  * @property {FilterConfig} filterConfig
  * @property {GuppyConfig} guppyConfig
  * @property {boolean} [hidden]

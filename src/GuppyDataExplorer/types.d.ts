@@ -1,14 +1,33 @@
-import { GqlFilter } from '../GuppyComponents/types';
+import {
+  ComposedFilterState,
+  FilterState,
+  GqlFilter,
+  StandardFilterState,
+} from '../GuppyComponents/types';
 
 export type {
   FilterConfig,
-  FilterState as ExplorerFilter,
   GqlSort,
   GuppyConfig,
   GuppyData,
   OptionFilter,
   SimpleAggsData,
 } from '../GuppyComponents/types';
+
+export type ExplorerFilter = FilterState;
+
+export type RefFilterState = {
+  __type: 'REF';
+  value: {
+    id: string;
+    label: string;
+  };
+};
+
+export interface ComposedFilterStateWithRef extends ComposedFilterState {
+  refIds?: string[];
+  value?: (ComposedFilterStateWithRef | StandardFilterState | RefFilterState)[];
+}
 
 export type SingleChartConfig = {
   chartType: string;
@@ -57,19 +76,32 @@ export type PatientIdsConfig = {
 };
 
 export type SurvivalAnalysisConfig = {
+  consortium?: string[];
   result?: {
     risktable?: boolean;
     survival?: boolean;
   };
 };
 
-export type ExplorerFilterSet = {
+export type SavedExplorerFilterSet = {
   description: string;
   explorerId?: number;
-  filter: ExplorerFilter;
+  filter: FilterState;
   id?: number;
   name: string;
 };
+
+export type UnsavedExplorerFilterSet = {
+  description?: never;
+  explorerId?: never;
+  filter: ComposedFilterStateWithRef | StandardFilterState;
+  id?: never;
+  name?: never;
+};
+
+export type ExplorerFilterSet =
+  | SavedExplorerFilterSet
+  | UnsavedExplorerFilterSet;
 
 export type ExplorerFilterSetDTO = {
   description: string;

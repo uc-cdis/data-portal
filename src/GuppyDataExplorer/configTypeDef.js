@@ -72,6 +72,7 @@ export const ButtonConfigType = PropTypes.exact({
 export const ChartConfigType = PropTypes.object;
 
 export const SurvivalAnalysisConfigType = PropTypes.shape({
+  consortium: PropTypes.arrayOf(PropTypes.string),
   result: PropTypes.shape({
     risktable: PropTypes.bool,
     survival: PropTypes.bool,

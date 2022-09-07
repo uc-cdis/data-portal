@@ -35,15 +35,15 @@ function findFilterElement(label) {
 /** @typedef {import('../types').EmptyFilter} EmptyFilter */
 /** @typedef {import('../types').FilterChangeHandler} FilterChangeHandler */
 /** @typedef {import('../types').FilterConfig} FilterConfig */
-/** @typedef {import('../types').FilterState} FilterState */
 /** @typedef {import('../types').FilterSectionConfig} FilterSectionConfig */
+/** @typedef {import('../types').StandardFilterState} StandardFilterState */
 
 /**
  * @typedef {Object} FilterGroupProps
  * @property {string} [anchorValue]
  * @property {string} [className]
  * @property {string} [disabledTooltipMessage]
- * @property {EmptyFilter | FilterState} [filter]
+ * @property {EmptyFilter | StandardFilterState} [filter]
  * @property {FilterConfig} filterConfig
  * @property {boolean} [hideZero]
  * @property {string} [lockedTooltipMessage]

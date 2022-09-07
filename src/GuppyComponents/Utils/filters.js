@@ -5,12 +5,34 @@ import { queryGuppyForRawData } from './queries';
 
 /** @typedef {import('../types').AggsCount} AggsCount */
 /** @typedef {import('../types').AggsData} AggsData */
+/** @typedef {import('../types').ComposedFilterState} ComposedFilterState */
 /** @typedef {import('../types').FilterState} FilterState */
 /** @typedef {import('../types').FilterConfig} FilterConfig */
 /** @typedef {import('../types').GqlFilter} GqlFilter */
 /** @typedef {import('../types').GuppyConfig} GuppyConfig */
 /** @typedef {import('../types').OptionFilter} OptionFilter */
 /** @typedef {import('../types').SimpleAggsData} SimpleAggsData */
+/** @typedef {import('../types').StandardFilterState} StandardFilterState */
+/** @typedef {{ [x: string]: { selectedValues?: string[] } }} AdminAppliedPreFilter */
+
+/**
+ * @param {ComposedFilterState} userFilter
+ * @param {AdminAppliedPreFilter} adminAppliedPreFilter
+ */
+function mergeToComposedFilterState(userFilter, adminAppliedPreFilter) {
+  const formattedAdminAppliedPreFilter = {
+    __combineMode: 'AND',
+    __type: FILTER_TYPE.STANDARD,
+    value: {},
+  };
+  for (const [key, value] of Object.entries(adminAppliedPreFilter))
+    value[key] = { __type: FILTER_TYPE.OPTION, ...value };
+
+  return /** @type {ComposedFilterState} */ ({
+    ...userFilter,
+    value: [...userFilter.value, formattedAdminAppliedPreFilter],
+  });
+}
 
 /**
  * This function takes two objects containing filters to be applied
@@ -20,11 +42,11 @@ import { queryGuppyForRawData } from './queries';
  * the user undoing the admin filter. (Multiple user checkboxes increase the
  * amount of data shown when combined, but an admin filter should always decrease
  * or keep constant the amount of data shown when combined with a user filter).
- * @param {FilterState} userFilter
- * @param {{ [x: string]: { selectedValues?: string[] } }} adminAppliedPreFilter
+ * @param {StandardFilterState} userFilter
+ * @param {AdminAppliedPreFilter} adminAppliedPreFilter
  * */
-export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
-  /** @type {FilterState} */
+function mergeToStandardFilterState(userFilter, adminAppliedPreFilter) {
+  /** @type {StandardFilterState} */
   const mergedFilterState = cloneDeep(userFilter ?? {});
   if (mergedFilterState.value === undefined) mergedFilterState.value = {};
 
@@ -59,7 +81,18 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
   }
 
   return mergedFilterState;
-};
+}
+
+/**
+ * @param {FilterState} userFilter
+ * @param {AdminAppliedPreFilter} adminAppliedPreFilter
+ * @returns {FilterState}
+ */
+export function mergeFilters(userFilter, adminAppliedPreFilter) {
+  return userFilter?.__type === FILTER_TYPE.COMPOSED
+    ? mergeToComposedFilterState(userFilter, adminAppliedPreFilter)
+    : mergeToStandardFilterState(userFilter, adminAppliedPreFilter);
+}
 
 /**
  * This function updates the counts in the initial set of tab options
@@ -68,7 +101,7 @@ export const mergeFilters = (userFilter, adminAppliedPreFilter) => {
  * they are still checked but their counts are zero.
  * @param {AggsData} initialTabsOptions
  * @param {AggsData} tabsOptions
- * @param {FilterState} filtersApplied
+ * @param {StandardFilterState} filtersApplied
  */
 export function updateCountsInInitialTabsOptions(
   initialTabsOptions,
@@ -423,7 +456,11 @@ export const getFilterSections = ({
  * @param {FilterState} filterResults
  */
 export function excludeSelfFilterFromAggsData(aggsData, filterResults) {
-  if (filterResults?.value === undefined) return aggsData;
+  if (
+    filterResults?.value === undefined ||
+    filterResults.__type !== FILTER_TYPE.STANDARD
+  )
+    return aggsData;
 
   /** @type {SimpleAggsData} */
   const resultAggsData = {};

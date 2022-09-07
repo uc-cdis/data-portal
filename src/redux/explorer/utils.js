@@ -7,11 +7,56 @@ import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 /** @typedef {import('../../GuppyComponents/types').FilterConfig} FilterConfig */
 /** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('../../GuppyDataExplorer/types').ExplorerFilterSetDTO} ExplorerFilterSetDTO */
+/** @typedef {import('../../GuppyDataExplorer/types').RefFilterState} RefFilterState */
 /** @typedef {import('../../GuppyDataExplorer/types').SurvivalAnalysisConfig} SurvivalAnalysisConfig */
+/** @typedef {import('../../GuppyDataExplorer/types').SavedExplorerFilterSet} SavedExplorerFilterSet */
 /** @typedef {import('./types').ExplorerState} ExplorerState */
+/** @typedef {import('./types').ExplorerWorkspace} ExplorerWorkspace */
 
 /**
- * @param {ExplorerFilterSet} filterSet
+ * @param {ExplorerFilterSet['filter'] | RefFilterState} filter
+ * @param {ExplorerWorkspace} workspace
+ * @returns {SavedExplorerFilterSet['filter']}
+ */
+export function dereferenceFilter(filter, workspace) {
+  if (filter.__type === FILTER_TYPE.COMPOSED)
+    return {
+      __combineMode: filter.__combineMode,
+      __type: filter.__type,
+      value: filter.value.map((f) => dereferenceFilter(f, workspace)),
+    };
+
+  if (filter.__type === 'REF')
+    return dereferenceFilter(workspace.all[filter.value.id].filter, workspace);
+
+  return filter;
+}
+
+/** @param {ExplorerWorkspace} workspace */
+export function updateFilterRefs(workspace) {
+  const ids = Object.keys(workspace.all);
+  const filterSets = Object.values(workspace.all);
+
+  for (const { filter } of filterSets)
+    if ('refIds' in filter)
+      for (const [index, refId] of [...filter.refIds].entries()) {
+        const refIndex = filter.value.findIndex(
+          ({ __type, value }) => __type === 'REF' && value.id === refId
+        );
+
+        if (refId in workspace.all) {
+          /** @type {RefFilterState} */ (filter.value[refIndex]).value.label =
+            workspace.all[refId].name ??
+            `#${ids.findIndex((id) => id === refId) + 1}`;
+        } else {
+          filter.value.splice(refIndex, 1);
+          filter.refIds.splice(index, 1);
+        }
+      }
+}
+
+/**
+ * @param {SavedExplorerFilterSet} filterSet
  * @returns {ExplorerFilterSetDTO}
  */
 export function convertToFilterSetDTO({ filter: filters, ...rest }) {
@@ -37,7 +82,7 @@ export function polyfillFilterValue(filter) {
 
 /**
  * @param {{ [key: string]: any }} filter
- * @returns {ExplorerFilterSet['filter']}
+ * @returns {SavedExplorerFilterSet['filter']}
  */
 export function polyfillFilter({ __combineMode, __type, ...rest }) {
   const shouldPolyfill =
@@ -54,7 +99,7 @@ export function polyfillFilter({ __combineMode, __type, ...rest }) {
 
 /**
  * @param {ExplorerFilterSetDTO} filterSetDTO
- * @returns {ExplorerFilterSet}
+ * @returns {SavedExplorerFilterSet}
  */
 export function convertFromFilterSetDTO({ filters, ...rest }) {
   return {
@@ -113,18 +158,16 @@ export function getCurrentConfig(explorerId) {
     guppyConfig: config.guppyConfig,
     hideGetAccessButton: config.hideGetAccessButton,
     patientIdsConfig: config.patientIds,
-    survivalAnalysisConfig: {
-      ...config.survivalAnalysis,
-      enabled: isSurvivalAnalysisEnabled(config.survivalAnalysis),
-    },
+    survivalAnalysisConfig: { enabled: false },
     tableConfig: config.table,
   };
 }
 
-/** @param {import('./types').ExplorerFilter} filter */
+/** @param {ExplorerFilterSet['filter']} filter */
 export function checkIfFilterEmpty(filter) {
-  const { __combineMode, ..._filter } = filter;
-  return Object.keys(_filter).length === 0;
+  return filter.__type === FILTER_TYPE.COMPOSED
+    ? filter.value.length === 0
+    : Object.keys(filter.value ?? {}).length === 0;
 }
 
 export const workspacesSessionStorageKey = 'explorer:workspaces';

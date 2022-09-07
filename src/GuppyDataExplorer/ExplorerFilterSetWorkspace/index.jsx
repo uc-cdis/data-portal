@@ -16,12 +16,14 @@ import FilterSetLabel from './FilterSetLabel';
 import useFilterSetWorkspace from './useFilterSetWorkspace';
 import {
   checkIfFilterEmpty,
+  dereferenceFilter,
+  FILTER_TYPE,
   pluckFromAnchorFilter,
   pluckFromFilter,
 } from './utils';
 import './ExplorerFilterSetWorkspace.css';
 
-/** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('../types').SavedExplorerFilterSet} SavedExplorerFilterSet */
 /** @typedef {import('./FilterSetActionForm').ActionFormType} ActionFormType */
 
 function ExplorerFilterSetWorkspace() {
@@ -59,7 +61,7 @@ function ExplorerFilterSetWorkspace() {
   function handleCreate() {
     workspace.create();
   }
-  /** @param {ExplorerFilterSet} deleted */
+  /** @param {SavedExplorerFilterSet} deleted */
   async function handleDelete(deleted) {
     try {
       await dispatch(deleteFilterSet(deleted));
@@ -71,7 +73,7 @@ function ExplorerFilterSetWorkspace() {
   function handleDuplicate() {
     workspace.duplicate();
   }
-  /** @param {ExplorerFilterSet} loaded */
+  /** @param {SavedExplorerFilterSet} loaded */
   function handleLoad(loaded) {
     let newActiveId;
     for (const [id, filterSet] of Object.entries(workspace.all))
@@ -85,7 +87,7 @@ function ExplorerFilterSetWorkspace() {
 
     closeActionForm();
   }
-  /** @param {ExplorerFilterSet} saved */
+  /** @param {SavedExplorerFilterSet} saved */
   async function handleSave(saved) {
     try {
       if (saved.id === undefined) await dispatch(createFilterSet(saved));
@@ -107,15 +109,17 @@ function ExplorerFilterSetWorkspace() {
 
   /** @type {import('../../components/FilterDisplay').ClickCombineModeHandler} */
   function handleClickCombineMode(payload) {
-    handleFilterChange(
-      /** @type {import('../types').ExplorerFilter} */ ({
-        ...activeFilterSet.filter,
-        __combineMode: payload === 'AND' ? 'OR' : 'AND',
-      })
-    );
+    if (activeFilterSet.filter.__type !== FILTER_TYPE.STANDARD) return;
+
+    handleFilterChange({
+      ...activeFilterSet.filter,
+      __combineMode: payload === 'AND' ? 'OR' : 'AND',
+    });
   }
   /** @type {import('../../components/FilterDisplay').ClickFilterHandler} */
   function handleCloseFilter(payload) {
+    if (activeFilterSet.filter.__type !== FILTER_TYPE.STANDARD) return;
+
     const { field, anchorField, anchorValue } = payload;
     const { filter } = activeFilterSet;
     if (anchorField !== undefined && anchorValue !== undefined) {
@@ -130,10 +134,56 @@ function ExplorerFilterSetWorkspace() {
     checkIfFilterEmpty(filter ?? {})
   );
 
+  const defaultComposeState = {
+    isActive: false,
+    combineMode: /** @type {'AND' | 'OR'} */ ('AND'),
+    value: [],
+  };
+  const [composeState, setComposeState] = useState(defaultComposeState);
+  function handleCompose() {
+    workspace.load({
+      filter: {
+        __type: FILTER_TYPE.COMPOSED,
+        __combineMode: composeState.combineMode,
+        refIds: composeState.value.map(({ value }) => value.id),
+        value: composeState.value,
+      },
+    });
+
+    setComposeState(defaultComposeState);
+  }
+  function toggleComposeState() {
+    if (composeState.isActive) setComposeState(defaultComposeState);
+    else setComposeState({ ...defaultComposeState, isActive: true });
+  }
+  /** @param {{ checked: boolean; id: string; label: string }} args */
+  function toggleFilterToCompose({ checked, id, label }) {
+    const newValue = [...composeState.value];
+
+    if (checked) {
+      newValue.push({ __type: 'REF', value: { id, label } });
+    } else {
+      const removeIndex = newValue.findIndex(({ value }) => value.id === id);
+      newValue.splice(removeIndex, 1);
+    }
+
+    setComposeState((prev) => ({ ...prev, value: newValue }));
+  }
+  /** @param {'AND' | 'OR'} combineMode */
+  function updateComposeCombineMode(combineMode) {
+    setComposeState((prev) => ({ ...prev, combineMode }));
+  }
+
+  let nonEmptyFilterCount = Object.values(workspace.all).length;
+  for (const { filter } of Object.values(workspace.all))
+    if (checkIfFilterEmpty(filter)) nonEmptyFilterCount -= 1;
+  const disableCompose = nonEmptyFilterCount < 2;
+
   return (
     <div className='explorer-filter-set-workspace'>
       <header>
         <h2>Filter Set Workspace</h2>
+        {/* eslint-disable-next-line no-nested-ternary */}
         {savedFilterSets.isError ? (
           <div className='explorer-filter-set-workspace__error'>
             <p>
@@ -158,6 +208,49 @@ function ExplorerFilterSetWorkspace() {
               <a href={contactEmail}>{contactEmail}</a>) for more information.
             </p>
           </div>
+        ) : composeState.isActive ? (
+          <div className='explorer-filter-set-workspace__action-button-group'>
+            <span
+              className='explorer-filter__combine-mode'
+              style={{ display: 'inline-flex', margin: '0 1rem 0 0' }}
+            >
+              Compose with
+              {['AND', 'OR'].map((/** @type {'AND' | 'OR'} */ combineMode) => (
+                <label
+                  key={combineMode}
+                  className={
+                    composeState.combineMode === combineMode
+                      ? 'active'
+                      : undefined
+                  }
+                >
+                  <input
+                    name='combineMode'
+                    value={combineMode}
+                    type='radio'
+                    onChange={() => updateComposeCombineMode(combineMode)}
+                    checked={composeState.combineMode === combineMode}
+                  />
+                  {combineMode}
+                </label>
+              ))}
+            </span>
+            <button
+              className='explorer-filter-set-workspace__action-button'
+              type='button'
+              onClick={toggleComposeState}
+            >
+              Back
+            </button>
+            <button
+              className='explorer-filter-set-workspace__action-button'
+              type='button'
+              onClick={handleCompose}
+              disabled={composeState.value.length < 2}
+            >
+              Done
+            </button>
+          </div>
         ) : (
           <>
             <div className='explorer-filter-set-workspace__action-button-group'>
@@ -173,6 +266,14 @@ function ExplorerFilterSetWorkspace() {
                 }
               >
                 New
+              </button>
+              <button
+                className='explorer-filter-set-workspace__action-button'
+                type='button'
+                onClick={toggleComposeState}
+                disabled={disableCompose}
+              >
+                Compose
               </button>
               <button
                 className='explorer-filter-set-workspace__action-button'
@@ -251,12 +352,25 @@ function ExplorerFilterSetWorkspace() {
       <main>
         {Object.keys(workspace.all).map((id, i) => {
           const filterSet = workspace.all[id];
+          const isFilterEmpty = checkIfFilterEmpty(filterSet.filter);
+          const filterSetCheckbox = (
+            <input
+              disabled={isFilterEmpty}
+              type='checkbox'
+              style={{ margin: '0 4px' }}
+              onChange={({ target: { checked } }) => {
+                const label = filterSet.name ?? `#${i + 1}`;
+                toggleFilterToCompose({ checked, id, label });
+              }}
+            />
+          );
           return workspace.activeId === id ? (
             <div
               className='explorer-filter-set-workspace__query explorer-filter-set-workspace__query--active'
               key={id}
             >
               <header>
+                {composeState.isActive ? filterSetCheckbox : null}
                 <button
                   className='explorer-filter-set-workspace__action-button'
                   type='button'
@@ -267,7 +381,7 @@ function ExplorerFilterSetWorkspace() {
                 <FilterSetLabel filterSet={filterSet} index={i + 1} />
               </header>
               <main>
-                {checkIfFilterEmpty(filterSet.filter) ? (
+                {isFilterEmpty ? (
                   <h4>Try Filters to explore data</h4>
                 ) : (
                   <FilterDisplay
@@ -282,6 +396,7 @@ function ExplorerFilterSetWorkspace() {
           ) : (
             <div className='explorer-filter-set-workspace__query' key={id}>
               <header>
+                {composeState.isActive ? filterSetCheckbox : null}
                 <button
                   className='explorer-filter-set-workspace__action-button'
                   type='button'
@@ -292,7 +407,7 @@ function ExplorerFilterSetWorkspace() {
                 <FilterSetLabel filterSet={filterSet} index={i + 1} />
               </header>
               <main>
-                {checkIfFilterEmpty(filterSet.filter) ? (
+                {isFilterEmpty ? (
                   <h4>Try Filters to explore data</h4>
                 ) : (
                   <FilterDisplay
@@ -308,7 +423,9 @@ function ExplorerFilterSetWorkspace() {
       {actionFormType !== undefined && (
         <SimplePopup>
           <FilterSetActionForm
-            currentFilter={activeFilterSet?.filter ?? {}}
+            currentFilter={
+              dereferenceFilter(activeFilterSet?.filter, workspace) ?? {}
+            }
             filterSets={{
               active: activeSavedFilterSet,
               all: savedFilterSets.data,

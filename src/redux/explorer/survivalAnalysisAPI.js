@@ -1,4 +1,5 @@
 import { fetchWithCreds } from '../utils.fetch';
+import { isSurvivalAnalysisEnabled } from './utils';
 
 /** @typedef {import('../../GuppyComponents/types').GqlFilter} GqlFilter */
 /** @typedef {import('./types').ExplorerConfig} ExplorerConfig */
@@ -16,7 +17,6 @@ import { fetchWithCreds } from '../utils.fetch';
  * @param {boolean} body.efsFlag
  * @param {ExplorerState['explorerId']} body.explorerId
  * @param {SurvivalFilterSetDTO[]} body.filterSets
- * @param {ExplorerConfig['survivalAnalysisConfig']['result']} body.result
  * @param {SurvivalFilterSetDTO['id'][]} body.usedFilterSetIds
  * @returns {Promise<ExplorerState['survivalAnalysisResult']['data']>}
  */
@@ -28,5 +28,16 @@ export function fetchResult(body) {
   }).then(({ response, data, status }) => {
     if (status !== 200) throw response.statusText;
     return data;
+  });
+}
+
+/** @returns {Promise<ExplorerState['config']['survivalAnalysisConfig']>} */
+export function fetchConfig() {
+  return fetchWithCreds({
+    path: '/analysis/tools/survival/config',
+    method: 'GET',
+  }).then(({ response, data, status }) => {
+    if (status !== 200) throw response.statusText;
+    return { ...data, enabled: isSurvivalAnalysisEnabled(data) };
   });
 }

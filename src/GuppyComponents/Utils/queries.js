@@ -8,9 +8,9 @@ import { FILE_DELIMITERS, FILTER_TYPE, GUPPY_URL } from './const';
 /** @typedef {import('../types').FilterState} FilterState */
 /** @typedef {import('../types').GqlFilter} GqlFilter */
 /** @typedef {import('../types').GqlInFilter} GqlInFilter */
+/** @typedef {import('../types').GqlSimpleFilter} GqlSimpleFilter */
 /** @typedef {import('../types').GqlNestedFilter} GqlNestedFilter */
 /** @typedef {import('../types').GqlNestedAnchoredFilter} GqlNestedAnchoredFilter */
-/** @typedef {import('../types').GqlSimpleAndFilter} GqlSimpleAndFilter */
 /** @typedef {import('../types').GqlSort} GqlSort */
 /** @typedef {import('../types').EmptyFilter} EmptyFilter */
 /** @typedef {import('../types').OptionFilter} OptionFilter */
@@ -108,9 +108,7 @@ export function queryGuppyForAggregationChartData({
     gqlFilter !== undefined
       ? `query ($filter: JSON) {
         _aggregation {
-          ${type} (filter: $filter, filterSelf: ${checkFilterSelf(
-          gqlFilter
-        )}, accessibility: all) {
+          ${type} (filter: $filter, accessibility: all) {
             ${fields.map(buildHistogramQueryStrForField).join('\n')}
           }
         }
@@ -554,7 +552,7 @@ export function queryGuppyForRawData({
 /**
  * @param {string} fieldName
  * @param {EmptyFilter | OptionFilter | RangeFilter} filterValues
- * @returns {GqlInFilter | GqlSimpleAndFilter | undefined}
+ * @returns {GqlSimpleFilter}
  */
 function parseSimpleFilter(fieldName, filterValues) {
   const invalidFilterError = new Error(
@@ -652,7 +650,11 @@ export function getGQLFilter(filterState) {
   )
     return undefined;
 
-  /** @type {(GqlInFilter | GqlSimpleAndFilter)[]} */
+  const combineMode = filterState.__combineMode ?? 'AND';
+  if (filterState.__type === FILTER_TYPE.COMPOSED)
+    return { [combineMode]: filterState.value.map(getGQLFilter) };
+
+  /** @type {GqlSimpleFilter[]} */
   const simpleFilters = [];
 
   /** @type {GqlNestedFilter[]} */
@@ -661,7 +663,6 @@ export function getGQLFilter(filterState) {
   const nestedFilterIndices = {};
   let nestedFilterIndex = 0;
 
-  const combineMode = filterState.__combineMode ?? 'AND';
   for (const [filterKey, filterValues] of Object.entries(filterState.value)) {
     const [fieldStr, nestedFieldStr] = filterKey.split('.');
     const isNestedField = nestedFieldStr !== undefined;
@@ -758,8 +759,13 @@ export function downloadDataFromGuppy({
  * @param {FilterState} [args.filter]
  */
 export function queryGuppyForTotalCounts({ type, filter }) {
+  const hasFilter =
+    filter !== undefined ||
+    (filter.__type === FILTER_TYPE.COMPOSED
+      ? filter.value.length > 0
+      : Object.keys(filter.value ?? {}).length > 0);
   const query = (
-    filter !== undefined || Object.keys(filter).length > 0
+    hasFilter
       ? `query ($filter: JSON) {
         _aggregation {
           ${type} (filter: $filter, accessibility: all) {

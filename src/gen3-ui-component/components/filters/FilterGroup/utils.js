@@ -7,12 +7,12 @@ export { FILTER_TYPE } from '../../../../GuppyComponents/Utils/const';
 /** @typedef {import('../types').AnchoredFilterState} AnchoredFilterState */
 /** @typedef {import('../types').AnchoredFilterTabStatus} AnchoredFilterTabStatus */
 /** @typedef {import('../types').FilterSectionStatus} FilterSectionStatus */
-/** @typedef {import('../types').FilterState} FilterState */
 /** @typedef {import('../types').FilterStatus} FilterStatus */
 /** @typedef {import('../types').FilterTabsOption} FilterTabsOption */
 /** @typedef {import('../types').FilterTabStatus} FilterTabStatus */
 /** @typedef {import('../types').BaseFilter} BaseFilter */
 /** @typedef {import('../types').OptionFilter} OptionFilter */
+/** @typedef {import('../types').StandardFilterState} StandardFilterState */
 
 /**
  * @param {FilterTabsOption[]} filterTabs
@@ -27,7 +27,7 @@ export function getExpandedStatus(filterTabs, expandedStatusControl) {
 /**
  * @param {Object} args
  * @param {AnchorConfig} [args.anchorConfig]
- * @param {FilterState} args.filterResults
+ * @param {StandardFilterState} args.filterResults
  */
 export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
   /** @type {{ [anchorLabel: string]: AnchoredFilterState['value'] }} */
@@ -52,7 +52,7 @@ export function getFilterResultsByAnchor({ anchorConfig, filterResults }) {
 
 /**
  * @param {string[]} fields
- * @param {FilterState} filterResults
+ * @param {StandardFilterState} filterResults
  * @returns {FilterTabStatus}
  */
 function getFilterTabStatus(fields, filterResults) {
@@ -76,7 +76,7 @@ function getFilterTabStatus(fields, filterResults) {
 /**
  * @param {Object} args
  * @param {AnchorConfig} [args.anchorConfig]
- * @param {FilterState} args.filterResults
+ * @param {StandardFilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @returns {FilterStatus}
  */
@@ -126,11 +126,11 @@ function _removeEmptyFilter(anchoredFilter) {
 }
 
 /**
- * @param {FilterState} filterResults
- * @returns {FilterState}
+ * @param {StandardFilterState} filterResults
+ * @returns {StandardFilterState}
  */
 export function removeEmptyFilter(filterResults) {
-  const newValue = /** @type {FilterState['value']} */ ({});
+  const newValue = /** @type {StandardFilterState['value']} */ ({});
   for (const [field, filter] of Object.entries(filterResults.value))
     if (filter.__type === FILTER_TYPE.ANCHORED) {
       const newAnchoredFilter = _removeEmptyFilter(filter);
@@ -146,7 +146,7 @@ export function removeEmptyFilter(filterResults) {
 /**
  * @param {Object} args
  * @param {FilterStatus} args.filterStatus
- * @param {FilterState} args.filterResults
+ * @param {StandardFilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex
  * @param {string} args.anchorLabel
@@ -204,7 +204,7 @@ export function tabHasActiveFilters(filterTabStatus) {
 /**
  * @param {Object} args
  * @param {FilterStatus} args.filterStatus
- * @param {FilterState} args.filterResults
+ * @param {StandardFilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex
  * @param {string} args.anchorLabel
@@ -280,7 +280,7 @@ export function updateCombineMode({
 /**
  * @param {Object} args
  * @param {FilterStatus} args.filterStatus
- * @param {FilterState} args.filterResults
+ * @param {StandardFilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex
  * @param {string} args.anchorLabel
@@ -367,7 +367,7 @@ export function updateRangeValue({
 /**
  * @param {Object} args
  * @param {FilterStatus} args.filterStatus
- * @param {FilterState} args.filterResults
+ * @param {StandardFilterState} args.filterResults
  * @param {FilterTabsOption[]} args.filterTabs
  * @param {number} args.tabIndex
  * @param {string} args.anchorLabel

@@ -7,16 +7,15 @@ import { defaultFilterSet as survivalDefaultFilterSet } from '../ExplorerSurviva
 import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 import './ExplorerFilterSetForms.css';
 
-/** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
-/** @typedef {import('../types').ExplorerFilterSet} ExplorerFilterSet */
+/** @typedef {import('../types').SavedExplorerFilterSet} SavedExplorerFilterSet */
 
 /**
  * @param {Object} prop
- * @param {ExplorerFilterSet} prop.currentFilterSet
- * @param {ExplorerFilter} prop.currentFilter
- * @param {ExplorerFilterSet[]} prop.filterSets
+ * @param {SavedExplorerFilterSet} prop.currentFilterSet
+ * @param {SavedExplorerFilterSet['filter']} prop.currentFilter
+ * @param {SavedExplorerFilterSet[]} prop.filterSets
  * @param {boolean} prop.isFiltersChanged
- * @param {(created: ExplorerFilterSet) => void} prop.onAction
+ * @param {(created: SavedExplorerFilterSet) => void} prop.onAction
  * @param {() => void} prop.onClose
  */
 function FilterSetCreateForm({
