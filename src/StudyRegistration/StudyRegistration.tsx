@@ -89,42 +89,55 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
 };
 
 const getClinicalTrialMetadata = async (ctID: string): Promise<object> => {
-  let metadata = {};
   const errMsg = 'Unable to fetch study metadata from ClinicalTrial.gov';
-  const limit = 20; // the clinicaltrials.gov API has a limit of 20 fields
+
+  // get metadata from the clinicaltrials.gov API
+  const promiseList: Promise<any>[] = [];
+  const limit = 20; // the API has a limit of 20 fields
   let offset = 0;
   const clinicalTrialFieldsToFetch = studyRegistrationConfig.clinicalTrialFields || [];
   while (offset < clinicalTrialFieldsToFetch.length) {
     const fieldsToFetch = clinicalTrialFieldsToFetch.slice(offset, offset + limit);
     offset += limit;
-    // eslint-disable-next-line no-await-in-loop
-    const resp = await fetch(`https://clinicaltrials.gov/api/query/study_fields?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&fields=${fieldsToFetch.join(',')}&fmt=json`);
-    if (!resp || resp.status !== 200) {
-      throw new Error(errMsg);
-    }
-    // eslint-disable-next-line no-await-in-loop
-    const respJson = await resp.json();
+    promiseList.push(
+      fetch(`https://clinicaltrials.gov/api/query/study_fields?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&fields=${fieldsToFetch.join(',')}&fmt=json`)
+        .then(
+          (resp) => {
+            if (!resp || resp.status !== 200) {
+              return Promise.reject(errMsg);
+            }
+            return resp.json();
+          },
+        ),
+    );
+  }
+  const responsesJson = await Promise.all(promiseList);
+
+  // add the metadata returned by each call to a single `metadata` object
+  let metadata = {};
+  responsesJson.forEach((respJson) => {
     // it should return data for a single study
     if (respJson.StudyFieldsResponse?.StudyFields?.length !== 1) {
       // eslint-disable-next-line no-console
       console.error(`${errMsg}; received response:`, respJson);
-      return Promise.reject(errMsg);
+      throw new Error(errMsg);
     }
     // `respData` looks like this:
     // {Rank: value to discard, FieldWithData: [value], FieldWithoutData: []}
     const respData = respJson.StudyFieldsResponse.StudyFields[0];
-    delete respData.Rank;
     // `partialMetadata` looks like this: (remove Rank and fields without data)
     // {FieldWithData: value}
+    delete respData.Rank;
     const partialMetadata = Object.keys(respData).reduce((res, key) => {
       if (respData[key].length > 0) {
         res[key] = respData[key][0];
       }
       return res;
     }, {});
-    // add these new fields to the ones we already have
+    // add the new key:value pairs to the ones we already have
     metadata = { ...metadata, ...partialMetadata };
-  }
+  });
+
   return Promise.resolve(metadata);
 };
 
@@ -190,25 +203,25 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
     const cedarUserUUID = formValues.cedar_uuid;
     const studyID = formValues.study_id;
     const ctgovID = formValues.clinical_trials_id;
-    let valuesToUpdate = {
+    const valuesToUpdate = {
       repository: formValues.repository || '',
       repository_study_ids: ((!formValues.repository_study_ids || formValues.repository_study_ids[0] === '') ? [] : formValues.repository_study_ids),
       clinical_trials_id: ctgovID || '',
-    }
+    };
     if (ctgovID) {
       valuesToUpdate['clinicaltrials.gov'] = await getClinicalTrialMetadata(ctgovID);
     }
     preprocessStudyRegistrationMetadata(props.user.username, studyID, valuesToUpdate)
       .then(
         (preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
-        .then(
-          (updatedMetadataToRegister) => registerStudyInMDS(studyID, updatedMetadataToRegister)
           .then(
-            () => setFormSubmissionStatus({ status: 'success' })
+            (updatedMetadataToRegister) => registerStudyInMDS(studyID, updatedMetadataToRegister)
+              .then(
+                () => setFormSubmissionStatus({ status: 'success' }),
+              ),
+            (err) => setFormSubmissionStatus({ status: 'error', text: err.message }),
           ),
-          (err) => setFormSubmissionStatus({ status: 'error', text: err.message })
-        ),
-        (err) => setFormSubmissionStatus({ status: 'error', text: err.message })
+        (err) => setFormSubmissionStatus({ status: 'error', text: err.message }),
       );
   };
 
