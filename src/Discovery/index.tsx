@@ -28,7 +28,7 @@ const populateStudiesWithConfigInfo = (studies, config) => {
   const populateStudy = (study, studyConfig) => {
     studyConfig.fieldsToValues.forEach((fieldToValue) => {
       const [field, value] = Object.entries(fieldToValue)[0];
-      study[field] = value;
+      study[field] = value; // eslint-disable-line no-param-reassign
     });
   };
 
