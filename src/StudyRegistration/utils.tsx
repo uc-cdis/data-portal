@@ -17,6 +17,10 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
     const studyRegistrationTrackingField = studyRegistrationConfig?.studyRegistrationTrackingField;
     const metadataToUpdate = { ...studyMetadata };
     metadataToUpdate._guid_type = GUIDType;
+    if (!Object.prototype.hasOwnProperty.call(metadataToUpdate, STUDY_DATA_FIELD)) {
+      // it should already be there, but avoid errors if for some reason it's not
+      metadataToUpdate.STUDY_DATA_FIELD = {};
+    }
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationValidationField] = true;
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationTrackingField] = username;
     metadataToUpdate[STUDY_DATA_FIELD] = { ...metadataToUpdate[STUDY_DATA_FIELD], ...updatedValues };
