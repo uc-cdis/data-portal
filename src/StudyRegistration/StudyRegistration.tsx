@@ -69,8 +69,6 @@ const validateMessages = {
 };
 /* eslint-enable no-template-curly-in-string */
 
-const clinicalTrialFieldsToFetch = ['NCTId', 'OfficialTitle', 'BriefTitle', 'Acronym', 'StudyType', 'OverallStatus', 'StartDate', 'StartDateType', 'CompletionDate', 'CompletionDateType', 'IsFDARegulatedDrug', 'IsFDARegulatedDevice', 'IsPPSD', 'BriefSummary', 'DetailedDescription', 'Condition', 'DesignPrimaryPurpose', 'Phase', 'DesignInterventionModel', 'EnrollmentCount', 'EnrollmentType', 'DesignObservationalModel', 'InterventionType', 'PrimaryOutcomeMeasure', 'SecondaryOutcomeMeasure', 'OtherOutcomeMeasure', 'Gender', 'GenderBased', 'MaximumAge', 'MinimumAge', 'IPDSharing', 'IPDSharingTimeFrame', 'IPDSharingAccessCriteria', 'IPDSharingURL', 'SeeAlsoLinkURL', 'AvailIPDURL', 'AvailIPDId', 'AvailIPDComment'];
-
 const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean|void> => {
   if (!ctID) {
     return Promise.resolve(true);
@@ -95,6 +93,7 @@ const getClinicalTrialMetadata = async (ctID: string): Promise<object> => {
   const errMsg = 'Unable to fetch study metadata from ClinicalTrial.gov';
   const limit = 20; // the clinicaltrials.gov API has a limit of 20 fields
   let offset = 0;
+  const clinicalTrialFieldsToFetch = studyRegistrationConfig.clinicalTrialFields || [];
   while (offset < clinicalTrialFieldsToFetch.length) {
     const fieldsToFetch = clinicalTrialFieldsToFetch.slice(offset, offset + limit);
     offset += limit;
