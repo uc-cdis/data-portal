@@ -5,6 +5,7 @@ import { useQueries } from 'react-query';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { Spin } from 'antd';
 import { fetchConceptStatsByHare, queryConfig, getAllHareItems } from './wizardEndpoints/cohortMiddlewareApi';
+import useDebounce from './shared/useDebounce';
 
 const CovariateStatsByHareCC = ({
   selectedHare,
@@ -15,9 +16,13 @@ const CovariateStatsByHareCC = ({
   sourceId,
   handleHareChange,
 }) => {
+  // selectedCovariates can go through multiple changes in a short period of time, depending on how
+  // the user is interacting with the UI, so debounce this one:
+  const debouncedSelectedCovariates = useDebounce(selectedCovariates, 800);
+
   const hareStatsParams = [
     'conceptsstats',
-    selectedCovariates,
+    debouncedSelectedCovariates,
     selectedDichotomousCovariates,
   ];
   const results = useQueries([
@@ -28,7 +33,7 @@ const CovariateStatsByHareCC = ({
       ],
       queryFn: () => fetchConceptStatsByHare(
         caseCohortDefinitionId,
-        selectedCovariates,
+        debouncedSelectedCovariates,
         selectedDichotomousCovariates,
         sourceId,
       ),
@@ -41,7 +46,7 @@ const CovariateStatsByHareCC = ({
       ],
       queryFn: () => fetchConceptStatsByHare(
         controlCohortDefinitionId,
-        selectedCovariates,
+        debouncedSelectedCovariates,
         selectedDichotomousCovariates,
         sourceId,
       ),
