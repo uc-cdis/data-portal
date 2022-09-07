@@ -75,21 +75,21 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
   }
   const resp = await fetch(`https://clinicaltrials.gov/api/query/field_values?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&field=NCTId&fmt=json`);
   if (!resp || resp.status !== 200) {
-    return Promise.reject('Unable to verify ClinicalTrial.gov ID');
+    return Promise.reject('Unable to verify ClinicalTrials.gov ID');
   }
   try {
     const respJson = await resp.json();
     if (respJson.FieldValuesResponse?.FieldValues?.length === 1 && respJson.FieldValuesResponse.FieldValues[0].FieldValue === ctID) {
       return Promise.resolve(true);
     }
-    return Promise.reject('Invalid ClinicalTrial.gov ID');
+    return Promise.reject('Invalid ClinicalTrials.gov ID');
   } catch {
-    return Promise.reject('Unable to verify ClinicalTrial.gov ID');
+    return Promise.reject('Unable to verify ClinicalTrials.gov ID');
   }
 };
 
 const getClinicalTrialMetadata = async (ctID: string): Promise<object> => {
-  const errMsg = 'Unable to fetch study metadata from ClinicalTrial.gov';
+  const errMsg = 'Unable to fetch study metadata from ClinicalTrials.gov';
 
   // get metadata from the clinicaltrials.gov API
   const promiseList: Promise<any>[] = [];
