@@ -9,6 +9,7 @@ import CovariateStatsByHareQ from '../CovariateStatsByHareQ';
 
 const WorkflowParameters = ({
   selectedHare,
+  cohortSizes,
   handleHareChange,
   caseCohortDefinitionId,
   controlCohortDefinitionId,
@@ -92,6 +93,7 @@ const WorkflowParameters = ({
               selectedCovariates={selectedCovariates}
               selectedDichotomousCovariates={selectedDichotomousCovariates}
               sourceId={sourceId}
+              cohortSizes={cohortSizes}
               handleHareChange={handleHareChange}
             />
           </label>
@@ -147,6 +149,7 @@ const WorkflowParameters = ({
 
 WorkflowParameters.propTypes = {
   selectedHare: PropTypes.object.isRequired,
+  cohortSizes: PropTypes.array,
   handleHareChange: PropTypes.func.isRequired,
   caseCohortDefinitionId: PropTypes.number,
   controlCohortDefinitionId: PropTypes.number,
@@ -170,6 +173,7 @@ WorkflowParameters.defaultProps = {
   caseCohortDefinitionId: undefined,
   quantitativeCohortDefinitionId: undefined,
   outcomeId: undefined,
+  cohortSizes: undefined,
 };
 
 export default WorkflowParameters;

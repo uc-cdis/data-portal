@@ -18,18 +18,22 @@ const CovariateSelect = ({
   };
 
   return (
-    <div>
-      <SearchBar
-        searchTerm={covariateSearchTerm}
-        handleSearch={handleCovariateSearch}
-        fields={'concept name...'}
-      />
-      <Covariates
-        sourceId={sourceId}
-        searchTerm={covariateSearchTerm}
-        selectedCovariates={selectedCovariates}
-        handleCovariateSelect={handleCovariateSelect}
-      />
+    <div data-tour='covariate-table'>
+      <div data-tour='covariate-table-search'>
+        <SearchBar
+          searchTerm={covariateSearchTerm}
+          handleSearch={handleCovariateSearch}
+          fields={'concept name...'}
+        />
+      </div>
+      <div data-tour='covariate-table-body'>
+        <Covariates
+          sourceId={sourceId}
+          searchTerm={covariateSearchTerm}
+          selectedCovariates={selectedCovariates}
+          handleCovariateSelect={handleCovariateSelect}
+        />
+      </div>
     </div>
   );
 };

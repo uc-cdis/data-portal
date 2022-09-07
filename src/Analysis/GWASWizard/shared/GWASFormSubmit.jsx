@@ -6,6 +6,7 @@ import {
 import { useMutation } from 'react-query';
 import CheckOutlined from '@ant-design/icons';
 import { caseControlSubmission, quantitativeSubmission } from '../wizardEndpoints/gwasWorkflowApi';
+import CohortOverlap from '../CohortOverlap';
 
 const GWASFormSubmit = ({
   sourceId,
@@ -15,6 +16,7 @@ const GWASFormSubmit = ({
   selectedHare,
   selectedCaseCohort,
   selectedControlCohort,
+  cohortSizes,
   selectedQuantitativeCohort,
   outcome,
   workflowType,
@@ -22,10 +24,11 @@ const GWASFormSubmit = ({
   selectedDichotomousCovariates,
   gwasName,
   handleGwasNameChange,
-  resetGWAS,
+  resetCaseControl,
+  resetQuantitative,
 }) => {
   const useSubmitJob = () => {
-    const openNotification = () => {
+    const openNotification = (dataText, description) => {
       const key = `open${Date.now()}`;
       const btn = (
         <Button type='primary' size='small' onClick={() => notification.close(key)}>
@@ -33,9 +36,8 @@ const GWASFormSubmit = ({
         </Button>
       );
       notification.open({
-        message: 'Successful Submission',
-        description:
-          `${gwasName} job starting!`,
+        message: dataText,
+        description: description,
         icon: (<CheckOutlined />),
         placement: 'top',
         btn,
@@ -69,8 +71,22 @@ const GWASFormSubmit = ({
       )), {
       onSuccess: (data) => {
         if (data?.status === 200) {
-          openNotification();
-          resetGWAS();
+          openNotification('Sucessful Submission', `${gwasName} job starting!`);
+          if (workflowType === 'caseControl') resetCaseControl();
+          if (workflowType === 'quantitative') resetQuantitative();
+        }
+        else {
+
+          data.text().then((text) => {
+            console.log(`gwas job failed with error ${text}`)
+            const submissionError = JSON.parse(text)
+            var errorMessage = submissionError.detail[0]?.msg
+            var errorType = submissionError.detail[0]?.type
+            var errorLoc = submissionError.detail[0]?.loc
+            var errorText = `submission failed due to error ${errorType}, please fix ${errorMessage} in ${errorLoc}`
+
+            openNotification(errorText, "")
+          });
         }
       },
     });
@@ -126,12 +142,22 @@ const GWASFormSubmit = ({
         ))}
         </div>
       </div>
-
-      {/* <div className="GWASUI-flexRow GWASUI-rowItem">
-          // TODO this is where functionality previously was. placeholder for when we add back in
-            <QCShowOverlap />
-        </div> */}
-      <div className='GWASUI-flexRow'>
+      {workflowType === 'caseControl' && (
+        <div className='GWASUI-flexRow GWASUI-rowItem'>
+          <React.Fragment>
+            <CohortOverlap
+              sourceId={sourceId}
+              selectedCaseCohort={selectedCaseCohort}
+              selectedControlCohort={selectedControlCohort}
+              selectedHare={selectedHare}
+              selectedCovariates={selectedCovariates}
+              selectedDichotomousCovariates={selectedDichotomousCovariates}
+              cohortSizes={cohortSizes}
+            />
+          </React.Fragment>
+        </div>
+      )}
+      <div className='GWASUI-flexRow' data-tour='review-name'>
         <input
           type='text'
           className='GWASUI-nameInput'
@@ -140,7 +166,7 @@ const GWASFormSubmit = ({
           placeholder='Enter a job name...'
           style={{ width: '70%', height: '90%' }}
         />
-        <div className='GWASUI-submitContainer'>
+        <div className='GWASUI-submitContainer' data-tour='review-submit-button'>
           <Button
             type='primary'
             disabled={gwasName.length === 0}
@@ -166,12 +192,14 @@ GWASFormSubmit.propTypes = {
   selectedHare: PropTypes.object.isRequired,
   selectedCaseCohort: PropTypes.object,
   selectedControlCohort: PropTypes.object,
+  cohortSizes: PropTypes.array,
   selectedQuantitativeCohort: PropTypes.object,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   gwasName: PropTypes.string.isRequired,
   handleGwasNameChange: PropTypes.func.isRequired,
-  resetGWAS: PropTypes.func.isRequired,
+  resetQuantitative: PropTypes.func,
+  resetCaseControl: PropTypes.func,
   workflowType: PropTypes.string.isRequired,
 };
 
@@ -180,6 +208,9 @@ GWASFormSubmit.defaultProps = {
   selectedCaseCohort: undefined,
   selectedQuantitativeCohort: undefined,
   outcome: undefined,
+  resetQuantitative: undefined,
+  resetCaseControl: undefined,
+  cohortSizes: undefined,
 };
 
 export default GWASFormSubmit;

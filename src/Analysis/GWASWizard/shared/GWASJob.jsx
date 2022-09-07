@@ -8,7 +8,7 @@ import {
   CloseCircleOutlined,
   QuestionCircleOutlined,
   LoadingOutlined,
-  CloseOutlined
+  CloseOutlined,
 } from '@ant-design/icons';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
@@ -38,7 +38,7 @@ const GWASJob = ({ workflow }) => {
     let buttonText;
     let buttonClickHandler;
 
-    if (phase === gwasStatus.suceeded) {
+    if (phase === gwasStatus.succeeded) {
       actionUrl = `${gwasWorkflowPath}status/${workflowName}`;
       buttonText = 'download outputs';
       buttonClickHandler = handleWorkflowOutput;
@@ -47,7 +47,7 @@ const GWASJob = ({ workflow }) => {
       buttonText = 'view logs';
       buttonClickHandler = handleWorkflowLogs;
     }
-    if ([gwasStatus.suceeded, gwasStatus.failed].includes(phase)) {
+    if ([gwasStatus.succeeded, gwasStatus.failed].includes(phase)) {
       actionButtons.unshift(
         <Button
           primary='true'
@@ -145,7 +145,7 @@ const GWASJob = ({ workflow }) => {
             description={(
               <dl>
                 <dt>Workflow Name: {data.wf_name}</dt>
-                <dt>Started at {data.startedAt} {data.phase === gwasStatus.succeeded ? `and finished at ${finishedAt}`: ''}</dt>
+                <dt>Started at {data.startedAt} {data.phase === gwasStatus.succeeded ? `and finished at ${finishedAt}` : ''}</dt>
               </dl>
             )}
 
