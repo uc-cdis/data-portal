@@ -369,9 +369,9 @@ const DiscoveryDetails = (props: Props) => {
                               </span>
                             </div>
                           );
-                          const linkField = `${field.field}_link`;
-                          if (props.modalData[linkField] !== undefined) {
-                            return <a href={props.modalData[linkField]}>{renderedFieldContent}</a>;
+                          const linkingField = `${field.field}_link`;
+                          if (props.modalData[linkingField] !== undefined) {
+                            return <a href={props.modalData[linkingField]}>{renderedFieldContent}</a>;
                           }
                           return renderedFieldContent;
                         })}
