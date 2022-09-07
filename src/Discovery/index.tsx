@@ -92,24 +92,24 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const { authzField, dataAvailabilityField } = props.config.minimalFieldMapping;
-        const supportedAuthValues = props.config.features.authorization.supportedValues;
+        const supportedValues = props.config.features.authorization.supportedValues;
         // useArboristUI=true is required for userHasMethodForServiceOnResource
         if (!useArboristUI) {
           throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
         }
         const studiesWithAccessibleField = rawStudies.map((study) => {
           let accessible: AccessLevel;
-          if (supportedAuthValues.pending.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
+          if (supportedValues.pending.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
             accessible = AccessLevel.PENDING;
-          } else if (supportedAuthValues.notAvailable.enabled && (study[authzField] === undefined || study[authzField] === '')) {
+          } else if (supportedValues.notAvailable.enabled && (study[authzField] === undefined || study[authzField] === '')) {
             accessible = AccessLevel.NOT_AVAILABLE;
           } else {
             // TODO get study.commons_url working for regular discovery page
             // TODO dont fail for undefined values
             const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)])
-            if (supportedAuthValues.accessible.enabled && isAuthorized === true) {
+            if (supportedValues.accessible.enabled && isAuthorized === true) {
               accessible = AccessLevel.ACCESSIBLE;
-            } else if (supportedAuthValues.unaccessible.enabled && isAuthorized === false) {
+            } else if (supportedValues.unaccessible.enabled && isAuthorized === false) {
               accessible = AccessLevel.UNACCESSIBLE;
             }
             else {
