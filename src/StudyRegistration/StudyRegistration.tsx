@@ -75,17 +75,70 @@ const handleClinicalTrialIDValidation = async (_, ctID: string): Promise<boolean
   }
   const resp = await fetch(`https://clinicaltrials.gov/api/query/field_values?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&field=NCTId&fmt=json`);
   if (!resp || resp.status !== 200) {
-    return Promise.reject('Unable to verify ClinicalTrial.gov ID');
+    return Promise.reject('Unable to verify ClinicalTrials.gov ID');
   }
   try {
     const respJson = await resp.json();
     if (respJson.FieldValuesResponse?.FieldValues?.length === 1 && respJson.FieldValuesResponse.FieldValues[0].FieldValue === ctID) {
       return Promise.resolve(true);
     }
-    return Promise.reject('Invalid ClinicalTrial.gov ID');
+    return Promise.reject('Invalid ClinicalTrials.gov ID');
   } catch {
-    return Promise.reject('Unable to verify ClinicalTrial.gov ID');
+    return Promise.reject('Unable to verify ClinicalTrials.gov ID');
   }
+};
+
+const getClinicalTrialMetadata = async (ctID: string): Promise<object> => {
+  const errMsg = 'Unable to fetch study metadata from ClinicalTrials.gov';
+
+  // get metadata from the clinicaltrials.gov API
+  const promiseList: Promise<any>[] = [];
+  const limit = 20; // the API has a limit of 20 fields
+  let offset = 0;
+  const clinicalTrialFieldsToFetch = studyRegistrationConfig.clinicalTrialFields || [];
+  while (offset < clinicalTrialFieldsToFetch.length) {
+    const fieldsToFetch = clinicalTrialFieldsToFetch.slice(offset, offset + limit);
+    offset += limit;
+    promiseList.push(
+      fetch(`https://clinicaltrials.gov/api/query/study_fields?expr=${encodeURIComponent(`SEARCH[Study](AREA[NCTId] ${ctID})`)}&fields=${fieldsToFetch.join(',')}&fmt=json`)
+        .then(
+          (resp) => {
+            if (!resp || resp.status !== 200) {
+              return Promise.reject(errMsg);
+            }
+            return resp.json();
+          },
+        ),
+    );
+  }
+  const responsesJson = await Promise.all(promiseList);
+
+  // add the metadata returned by each call to a single `metadata` object
+  let metadata = {};
+  responsesJson.forEach((respJson) => {
+    // it should return data for a single study
+    if (respJson.StudyFieldsResponse?.StudyFields?.length !== 1) {
+      // eslint-disable-next-line no-console
+      console.error(`${errMsg}; received response:`, respJson);
+      throw new Error(errMsg);
+    }
+    // `respData` looks like this:
+    // {Rank: value to discard, FieldWithData: [value], FieldWithoutData: []}
+    const respData = respJson.StudyFieldsResponse.StudyFields[0];
+    // `partialMetadata` looks like this: (remove Rank and fields without data)
+    // {FieldWithData: value}
+    delete respData.Rank;
+    const partialMetadata = Object.keys(respData).reduce((res, key) => {
+      if (respData[key].length > 0) {
+        res[key] = respData[key][0];
+      }
+      return res;
+    }, {});
+    // add the new key:value pairs to the ones we already have
+    metadata = { ...metadata, ...partialMetadata };
+  });
+
+  return Promise.resolve(metadata);
 };
 
 const isUUID = (input: string) => {
@@ -94,7 +147,7 @@ const isUUID = (input: string) => {
   return new RegExp(regexp).test(input);
 };
 
-const handleUUIDValidation = (_, UUID: string): Promise<boolean|void> => {
+const handleCedarUserIdValidation = (_, UUID: string): Promise<boolean|void> => {
   if (UUID && isUUID(UUID)) {
     return Promise.resolve(true);
   }
@@ -145,19 +198,31 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
     return (userHasMethodForServiceOnResource('access', 'mds_gateway', '/mds_gateway', props.userAuthMapping) && userHasMethodForServiceOnResource('access', 'cedar', '/cedar', props.userAuthMapping));
   };
 
-  const handleRegisterFormSubmission = (formValues) => {
+  const handleRegisterFormSubmission = async (formValues) => {
+    setRegRequestPending(true);
     const cedarUserUUID = formValues.cedar_uuid;
     const studyID = formValues.study_id;
-    setRegRequestPending(true);
-    preprocessStudyRegistrationMetadata(props.user.username, studyID,
-      {
-        repository: formValues.repository || '',
-        repository_study_ids: ((!formValues.repository_study_ids || formValues.repository_study_ids[0] === '') ? [] : formValues.repository_study_ids),
-        clinical_trials_id: formValues.clinical_trials_id || '',
-      }).then((preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
-      .then((updatedMetadataToRegister) => registerStudyInMDS(studyID, updatedMetadataToRegister).then(() => setFormSubmissionStatus({ status: 'success' })),
-        (err) => setFormSubmissionStatus({ status: 'error', text: err.message })),
-    (err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
+    const ctgovID = formValues.clinical_trials_id;
+    const valuesToUpdate = {
+      repository: formValues.repository || '',
+      repository_study_ids: ((!formValues.repository_study_ids || formValues.repository_study_ids[0] === '') ? [] : formValues.repository_study_ids),
+      clinical_trials_id: ctgovID || '',
+    };
+    if (ctgovID) {
+      valuesToUpdate['clinicaltrials.gov'] = await getClinicalTrialMetadata(ctgovID);
+    }
+    preprocessStudyRegistrationMetadata(props.user.username, studyID, valuesToUpdate)
+      .then(
+        (preprocessedMetadata) => createCEDARInstance(cedarUserUUID, preprocessedMetadata)
+          .then(
+            (updatedMetadataToRegister) => registerStudyInMDS(studyID, updatedMetadataToRegister)
+              .then(
+                () => setFormSubmissionStatus({ status: 'success' }),
+              ),
+            (err) => setFormSubmissionStatus({ status: 'error', text: err.message }),
+          ),
+        (err) => setFormSubmissionStatus({ status: 'error', text: err.message }),
+      );
   };
 
   const onFinish = (values) => {
@@ -184,7 +249,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
                 <Link key='discovery' to={'/discovery'}>
                   <Button>Go To Discovery Page</Button>
                 </Link>,
-                <Tooltip title='Check the newly created CEDAR metadata instance on CEDAR platform. It should be available under the "Shared with Me" tab'>
+                <Tooltip key='cedar-tooltip' title='Check the newly created CEDAR metadata instance on CEDAR platform. It should be available under the "Shared with Me" tab'>
                   <Button href='https://cedar.metadatacenter.org/' target='_blank' rel='noreferrer'>
                     <Space>
                       Go To CEDAR <FontAwesomeIcon icon={'external-link-alt'} />
@@ -241,7 +306,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
             rules={[
               { required: true },
               {
-                validator: handleUUIDValidation,
+                validator: handleCedarUserIdValidation,
                 validateTrigger: 'onSubmit',
               },
             ]}
