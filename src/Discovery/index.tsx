@@ -104,16 +104,19 @@ const DiscoveryWithMDSBackend: React.FC<{
           } else if (supportedValues.notAvailable.enabled && (study[authzField] === undefined || study[authzField] === '')) {
             accessible = AccessLevel.NOT_AVAILABLE;
           } else {
-            // TODO get study.commons_url working for regular discovery page
-            // TODO dont fail for undefined values
-            const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)])
+            let authMapping;
+            if (isEnabled('discoveryUseAggMDS')) {
+              authMapping = props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)];
+            } else {
+              authMapping = props.userAuthMapping;
+            }
+            const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], authMapping)
             if (supportedValues.accessible.enabled && isAuthorized === true) {
               accessible = AccessLevel.ACCESSIBLE;
             } else if (supportedValues.unaccessible.enabled && isAuthorized === false) {
               accessible = AccessLevel.UNACCESSIBLE;
             }
             else {
-              // TODO should still render whole study
               accessible = AccessLevel.OTHER;
             }
           }
