@@ -14,6 +14,10 @@ import loadStudiesFromMDS from './MDSUtils';
 
 const populateStudiesWithConfigInfo = (studies, config) => {
 
+  if (!config.studies) {
+    return;
+  }
+
   const studyMatchesStudyConfig = (study, studyConfig) => {
     let fieldToMatch = Object.keys(studyConfig.match)[0];
     if (study[fieldToMatch] !== undefined) {
