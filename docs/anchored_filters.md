@@ -1,10 +1,10 @@
-## Anchored filters
+# Anchored filters
 
 Anchored filters refer to explorer filters that are grouped by the combination of a sepecific "anchor" field and its value. Here, the "anchor" is a loose metaphor for how the select field-value serves to fix a certain set of filters to be applied in a limited fashion.
 
 The anchor can only be applied to nested field filters, and the field used for the anchor should be a common attribute of these nested field filters. Otherwise, the use of anchored filters will fail.
 
-### Configuration
+## Configuration
 
 The use of anchored filters can be specified using a portal configuration option for data explorer filters that looks like the following:
 
