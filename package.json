@@ -158,6 +158,9 @@
     "@storybook/cli": {
       "trim": "0.0.3"
     },
+    "@storybook/react": {
+      "trim": "0.0.3"
+    },
     "default-browser-id": {
       "meow": "6.1.0"
     }
