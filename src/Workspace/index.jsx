@@ -12,6 +12,7 @@ import {
   DownOutlined, UserOutlined, QuestionCircleOutlined, LoadingOutlined, ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import isEnabled from '../helpers/featureFlags';
 import {
   workspaceUrl,
   wtsPath,
@@ -736,6 +737,10 @@ class Workspace extends React.Component {
         </div>
       );
     } if (this.state.connectedStatus && !this.state.hasWorkspaceAccess) {
+      if (isEnabled('workspaceRegistration')) {
+        console.log('This is navigated to workspace register page');
+        return <Redirect to='/workspace/register' />;
+      }
       return <Redirect to={workspaceErrorUrl} />;
     }
     return <Spinner />;

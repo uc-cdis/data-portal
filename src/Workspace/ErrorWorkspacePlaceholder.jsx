@@ -1,14 +1,9 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
-import isEnabled from '../helpers/featureFlags';
 import './Workspace.less';
 import NotFoundSVG from '../img/not-found.svg';
 import { components } from '../params';
 
 const ErrorWorkspacePlaceholder = () => {
-  if (isEnabled('workspaceRegistration')) {
-    return <Redirect to='/workspace/register' />;
-  }
   const supportEmail = components.login?.email || 'support@datacommons.io';
   return (
     <div className='error-workspace-placeholder__error-msg'>
