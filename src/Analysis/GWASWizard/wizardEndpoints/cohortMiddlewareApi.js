@@ -33,6 +33,32 @@ export const fetchOverlapInfo = async (
   return getOverlapStats.json();
 };
 
+export const fetchConceptStatsByHareForCaseControl = async (
+  queriedCohortDefinitionId,
+  otherCohortDefinitionId,
+  selectedCovariates,
+  selectedDichotomousCovariates,
+  sourceId,
+) => {
+
+  // adding an extra filter on top of the given selectedDichotomousCovariates
+  // to ensure that any person that belongs to _both_ cohorts
+  // [queriedCohortDefinitionId, otherCohortDefinitionId] also gets filtered out:
+  const extendedSelectedDichotomousCovariates = [...selectedDichotomousCovariates]
+  extendedSelectedDichotomousCovariates.push({
+    variable_type: 'custom_dichotomous',
+    cohort_ids: [queriedCohortDefinitionId, otherCohortDefinitionId],
+    provided_name: 'auto_generated_extra_item_to_filter_out_case_control_overlap',
+  })
+
+  return fetchConceptStatsByHare(
+    queriedCohortDefinitionId,
+    selectedCovariates,
+    extendedSelectedDichotomousCovariates,
+    sourceId,
+  )
+}
+
 export const fetchConceptStatsByHare = async (
   cohortDefinitionId,
   selectedCovariates,
