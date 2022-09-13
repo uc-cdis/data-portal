@@ -37,7 +37,7 @@ const GWASFormSubmit = ({
       );
       notification.open({
         message: dataText,
-        description: description,
+        description,
         icon: (<CheckOutlined />),
         placement: 'top',
         btn,
@@ -74,18 +74,16 @@ const GWASFormSubmit = ({
           openNotification('Sucessful Submission', `${gwasName} job starting!`);
           if (workflowType === 'caseControl') resetCaseControl();
           if (workflowType === 'quantitative') resetQuantitative();
-        }
-        else {
-
+        } else {
           data.text().then((text) => {
-            console.log(`gwas job failed with error ${text}`)
-            const submissionError = JSON.parse(text)
-            var errorMessage = submissionError.detail[0]?.msg
-            var errorType = submissionError.detail[0]?.type
-            var errorLoc = submissionError.detail[0]?.loc
-            var errorText = `submission failed due to error ${errorType}, please fix ${errorMessage} in ${errorLoc}`
+            console.log(`gwas job failed with error ${text}`);
+            const submissionError = JSON.parse(text);
+            const errorMessage = submissionError.detail[0]?.msg;
+            const errorType = submissionError.detail[0]?.type;
+            const errorLoc = submissionError.detail[0]?.loc;
+            const errorText = `submission failed due to error ${errorType}, please fix ${errorMessage} in ${errorLoc}`;
 
-            openNotification(errorText, "")
+            openNotification(errorText, '');
           });
         }
       },

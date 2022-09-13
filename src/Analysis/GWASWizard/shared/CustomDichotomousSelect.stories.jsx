@@ -18,7 +18,9 @@ const MockTemplate = () => {
   const [selectedDichotomousCovariates, setSelectedDichotomousCovariates] = useState([]);
 
   const handleCDAdd = (cd) => {
-    setSelectedDichotomousCovariates((prevCDArr) => [...prevCDArr, cd]);
+    if (!prevCDArr.includes(cd)) {
+      setSelectedDichotomousCovariates((prevCDArr) => [...prevCDArr, cd]);
+    }
   };
 
   return (
