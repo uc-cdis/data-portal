@@ -33,6 +33,12 @@ module.exports = {
       jsx: true,
       spread: true,
     },
+    requireConfigFile: false,
+    babelOptions: {
+      plugins: [
+        '@babel/plugin-proposal-class-properties'
+      ]
+    }
   },
   rules: {
     'no-underscore-dangle': 'off',
@@ -176,6 +182,12 @@ module.exports = {
       files: ['src/components/InputWithIcon.jsx'],
       rules: {
         'react/no-unused-prop-types': 'off',
+      },
+    },
+    {
+      files: ['src/Analysis/GWASWizard/shared/CustomDichotomousSelect.jsx'],
+      rules: {
+        'react/no-unknown-property': ['error', { ignore: ['align'] }], // centering in h3
       },
     },
     // Linting settings for Typescript

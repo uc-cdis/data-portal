@@ -15,7 +15,7 @@ import { Link, useLocation } from 'react-router-dom';
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import {
-  hostname, requestorPath, useArboristUI, studyRegistrationConfig
+  hostname, requestorPath, useArboristUI, studyRegistrationConfig,
 } from '../localconf';
 import { FormSubmissionState, StudyRegistrationProps } from './StudyRegistration';
 import { createKayakoTicket } from './utils';
@@ -303,8 +303,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
                 <Typography className='study-reg-disclaimer-text'>
                   {studyRegistrationConfig.studyRegistrationFormDisclaimerField}
                 </Typography>
-              )
-          }
+              )}
         </Form>
       </div>
     </div>

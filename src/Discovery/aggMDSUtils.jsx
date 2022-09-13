@@ -65,6 +65,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
       x.frontend_uid = `${commonsName}_${index}`;
       x._unique_id = `${commonsName}_${x._unique_id}_${index}`;
       x.commons_url = commonsInfo.commons_url;
+      x.tags = x.tags || [];
       x.tags.push(Object({ category: 'Commons', name: commonsName }));
       x.name = x.short_name; // TODO: this will need to be refactored
 
