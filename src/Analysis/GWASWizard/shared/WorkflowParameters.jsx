@@ -62,7 +62,6 @@ const WorkflowParameters = ({
               outcomeId ? selectedCovariates.filter((covs) => covs.concept_id !== outcomeId).map((s) => s.concept_name)
                 : selectedCovariates.map((s) => s.concept_name)
             }
-            disabled={selectedCovariates.length === 1}
             onChange={(e) => handleCovariateDelete(e)}
             style={{ width: '70%' }}
           />
