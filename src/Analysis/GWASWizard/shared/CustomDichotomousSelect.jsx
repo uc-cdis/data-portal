@@ -65,8 +65,8 @@ const CustomDichotomousSelect = ({
                   className='GWASUI-searchInput'
                   onChange={(e) => setCdName(e.target.value)}
                   value={cdName}
-                  placeholder='Enter a name for custom dichotomous selection'
-                  style={{ width: '70%', height: '90%' }}
+                  placeholder='Enter a unique name for custom dichotomous selection'
+                  style={{ width: '75%', height: '90%' }}
                 />
               </div>
               <div data-tour='add-button'>
