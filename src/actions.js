@@ -508,7 +508,7 @@ export const fetchUserAuthMapping = async (dispatch) => {
   }
 
   let authzMappingURL;
-  if (isEnabled('discoveryUseAggMDS')) {
+  if (isEnabled('discoveryUseAggWTS')) {
     authzMappingURL = wtsAggregateAuthzPath;
   } else {
     authzMappingURL = authzMappingPath;

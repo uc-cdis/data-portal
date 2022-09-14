@@ -109,7 +109,7 @@ const DiscoveryWithMDSBackend: React.FC<{
             accessible = AccessLevel.NOT_AVAILABLE;
           } else {
             let authMapping;
-            if (isEnabled('discoveryUseAggMDS')) {
+            if (isEnabled('discoveryUseAggWTS')) {
               authMapping = props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)];
             } else {
               authMapping = props.userAuthMapping;
