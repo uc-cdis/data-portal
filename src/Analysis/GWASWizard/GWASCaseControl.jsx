@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Steps, Button, Space, Popconfirm, Spin, notification,
+  Steps, Button, Space, Popconfirm, Spin, notification, Table,
 } from 'antd';
 import CheckOutlined from '@ant-design/icons';
 import CohortSelect from './shared/CohortSelect';
@@ -149,7 +149,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
               <h4 className='GWASUI-selectInstruction' data-tour='step-1-cohort-selection'>
                   In this step, you will begin to determine your study populations.
-                  To begin, select the cohort that you would like to define as your study `&quot;`case`&quot;` population.
+                  To begin, select the cohort that you would like to define as your study <span className='GWASUI-emphText'>case</span> population.
               </h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
@@ -173,7 +173,11 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
               <h4>&nbsp;Tutorial</h4>
             </div>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <h4 className='GWASUI-selectInstruction'>In this step, you will continue to define your study populations. Please select the cohort that you would like to define as your study `&quot;`control`&quot;` population.</h4>
+              <h4 className='GWASUI-selectInstruction'>
+                  In this step, you will continue to define your study populations.
+                  Please select the cohort that you would like to define as your study
+                <span className='GWASUI-emphText'>control</span> population.
+              </h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
                   selectedCohort={selectedControlCohort}
@@ -219,9 +223,21 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           <React.Fragment>
             {selectedCovariates.length === 0
                 && (
-                  <div className='GWASUI-emptyTable'>
-                    <span>No covariates to review.</span>
-                  </div>
+                  <React.Fragment>
+                    <div className='GWASUI-mainTable GWASUI-spinnerContainer'>
+                      <Table
+                        dataSource={[{ placeholder: 'No covariates to review' }]}
+                        columns={[
+                          {
+                            title: '',
+                            dataIndex: 'placeholder',
+                            key: 'placeholder',
+                          },
+                        ]}
+                        pagination={false}
+                      />
+                    </div>
+                  </React.Fragment>
                 )}
           </React.Fragment>
           {selectedCovariates.length > 0

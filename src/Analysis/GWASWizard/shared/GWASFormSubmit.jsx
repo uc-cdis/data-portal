@@ -161,7 +161,7 @@ const GWASFormSubmit = ({
           className='GWASUI-nameInput'
           onChange={handleGwasNameChange}
           value={gwasName}
-          placeholder='Enter a job name...'
+          placeholder='Give a name to your study'
           style={{ width: '70%', height: '90%' }}
         />
         <div className='GWASUI-submitContainer' data-tour='review-submit-button'>

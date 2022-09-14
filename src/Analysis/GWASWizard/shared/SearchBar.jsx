@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import '../../GWASUIApp/GWASUIApp.css';
 import { SearchOutlined } from '@ant-design/icons';
 
-const SearchBar = ({ searchTerm, handleSearch, fields }) => (
+const SearchBar = ({ searchTerm, handleSearch, fields = 'variable name' }) => (
   <div className={'GWASUI-searchContainer'}>
     <div>
       <SearchOutlined />
       <input
         className={'GWASUI-searchInput'}
         type='text'
-        placeholder={`Search by ${fields}`}
+        placeholder={`Search by ${fields}...`}
         value={searchTerm}
         onChange={(e) => handleSearch(e.target.value)}
       />
