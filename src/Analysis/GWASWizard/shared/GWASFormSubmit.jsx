@@ -122,13 +122,13 @@ const GWASFormSubmit = ({
             <div className='GWASUI-flexCol GWASUI-flexHeader1'>Selected Cohort</div>
             <div className='GWASUI-flexCol'>{selectedQuantitativeCohort?.cohort_name}</div>
             <div className='GWASUI-flexCol GWASUI-flexHeader2'>Selected Outcome</div>
-            <div className='GWASUI-flexCol'>{outcome?.cohort_name}</div>
+            <div className='GWASUI-flexCol'>{outcome?.concept_name}</div>
           </React.Fragment>
         )}
       </div>
       <div className='GWASUI-flexRow GWASUI-rowItem'>
         <div className='GWASUI-flexCol'>Covariates</div>
-        <div className='GWASUI-flexCol'>{selectedCovariates.map((cov, key) => (
+        <div className='GWASUI-flexCol'>{selectedCovariates.filter((covs) => covs.concept_id !== outcome.concept_id).map((cov, key) => (
           <li className='GWASUI-listItem' key={`covariate-${key}`}>{cov?.concept_name}</li>
         ))}
         </div>
