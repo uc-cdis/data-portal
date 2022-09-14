@@ -216,10 +216,12 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 3:
       return (
         <React.Fragment>
-          <div className='tour-div'>
-            <TourButton stepInfo={stepInfo} />
-            <h4>&nbsp;Tutorial</h4>
-          </div>
+          { selectedCovariates.length > 0 &&
+            <div className='tour-div'>
+              <TourButton stepInfo={stepInfo} />
+              <h4>&nbsp;Tutorial</h4>
+            </div>
+          }
           <React.Fragment>
             {selectedCovariates.length === 0
                 && (
