@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Steps, Button, Space, Popconfirm, Spin, notification,
+  Steps, Button, Space, Popconfirm, Spin, notification, Table,
 } from 'antd';
 import CheckOutlined from '@ant-design/icons';
 import CohortSelect from './shared/CohortSelect';
@@ -226,7 +226,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
                   <React.Fragment>
                     <div className='GWASUI-mainTable GWASUI-spinnerContainer'>
                       <Table
-                        dataSource={[{ placeholder: 'No covariate missingness to review' }]}
+                        dataSource={[{ placeholder: 'No covariates to review' }]}
                         columns={[
                           {
                             title: '',
