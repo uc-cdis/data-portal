@@ -23,7 +23,7 @@ export const quantitativeSteps = [
   },
   {
     title: 'Step 4',
-    description: 'Add custom dichotomous covariates',
+    description: 'Add custom dichotomous covariates (optional)',
   },
   {
     title: 'Step 5',
@@ -32,7 +32,7 @@ export const quantitativeSteps = [
 
   {
     title: 'Step 6',
-    description: 'Review and Submit GWAS job',
+    description: 'Review and submit your GWAS study',
   },
 ];
 
@@ -55,7 +55,7 @@ export const caseControlSteps = [
   },
   {
     title: 'Step 5',
-    description: 'Add custom dichotomous covariates',
+    description: 'Add custom dichotomous covariates (optional)',
   },
   {
     title: 'Step 6',
@@ -63,7 +63,7 @@ export const caseControlSteps = [
   },
   {
     title: 'Step 7',
-    description: 'Review and Submit GWAS job',
+    description: 'Review and submit your GWAS study',
   },
 ];
 
