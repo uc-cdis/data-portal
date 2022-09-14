@@ -22,7 +22,7 @@ const CohortSelect = ({
         <SearchBar
           searchTerm={cohortSearchTerm}
           handleSearch={handleCohortSearch}
-          fields={'cohort name...'}
+          fields={'cohort name'}
         />
       </div>
       <div data-tour='cohort-table-body'>

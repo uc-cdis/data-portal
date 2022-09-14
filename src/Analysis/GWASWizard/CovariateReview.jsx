@@ -9,12 +9,12 @@ import { fetchCovariateStats, queryConfig } from './wizardEndpoints/cohortMiddle
 
 export const covariateReviewTableConfig = [
   {
-    title: 'Concept ID',
+    title: 'Variable ID',
     dataIndex: 'concept_id',
     key: 'concept_id',
   },
   {
-    title: 'Concept Name',
+    title: 'Variable Name',
     dataIndex: 'concept_name',
     key: 'concept_name',
   },

@@ -161,7 +161,16 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
               <h4>&nbsp;Tutorial</h4>
             </div>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <h4 className='GWASUI-selectInstruction' data-tour='quant-step-2-choosing-variable'>In this step, you will select the harmonized variables for your study. Please select all variables you wish to use in your model, including both covariates and phenotype. (Note: population PCs are not included in this step)</h4>
+              <h4 className='GWASUI-selectInstruction' data-tour='quant-step-2-choosing-variable'>
+                In this step, you will select the harmonized variables for your study.
+                Please select all variables you wish to use in your model, including both covariates and outcome phenotype.
+              </h4>
+              <h4 className='GWASUI-selectInstruction'>
+                <span className='GWASUI-emphText '>It is mandatory to choose at least one variable to serve as your outcome phenotype.</span>
+              </h4>
+              <h4 className='GWASUI-selectInstruction'>
+              (Note: population PCs are not included in this step)
+              </h4>
               <div className='GWASUI-mainTable'>
                 <CovariateSelect
                   selectedCovariates={selectedCovariates}

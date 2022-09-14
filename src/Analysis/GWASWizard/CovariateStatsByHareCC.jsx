@@ -91,7 +91,7 @@ const CovariateStatsByHareCC = ({
     }
     // normal scenario - there is breakdown data, so show in dropdown:
     return (
-      <div className='GWASUI-flexRow'>
+      <React.Fragment>
         <Dropdown
           // disabled
           buttonType='secondary'
@@ -118,7 +118,7 @@ const CovariateStatsByHareCC = ({
             }
           </Dropdown.Menu>
         </Dropdown>
-      </div>
+      </React.Fragment>
     );
   }
   return false;

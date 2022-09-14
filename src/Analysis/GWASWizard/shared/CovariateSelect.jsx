@@ -23,7 +23,7 @@ const CovariateSelect = ({
         <SearchBar
           searchTerm={covariateSearchTerm}
           handleSearch={handleCovariateSearch}
-          fields={'concept name...'}
+          fields={'variable name'}
         />
       </div>
       <div data-tour='covariate-table-body'>

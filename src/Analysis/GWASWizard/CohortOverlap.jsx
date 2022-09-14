@@ -68,12 +68,12 @@ const CohortOverlap = ({
         <strong style={{ color: '#bf2600' }}>
                     Warning: overlap found between both cohorts!
           <br />
-                    ({data.cohort_overlap.case_control_overlap_after_filter}
+                    ({`${data.cohort_overlap.case_control_overlap_after_filter} `}
                     subjects were found to be present in both cohorts).
           <br />
                     Please review your selections.<br />
                     If you choose to continue, be aware that these
-          {data.cohort_overlap.case_control_overlap_after_filter}
+          {` ${data.cohort_overlap.case_control_overlap_after_filter} `}
                     subjects will <i>not</i> be considered in the analysis.
         </strong>
       </div>

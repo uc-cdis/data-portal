@@ -269,21 +269,12 @@
   padding: 5px;
 }
 
-.GWASUI-form {
-  justify-content: space-between;
-}
-
-.GWASUI-formItem {
-  margin: 5px;
-  padding: 2px;
-}
-
 .GWASUI-cdNameInput {
   width: 600px;
 }
 
 .GWASUI-btnEnable {
-  background-color:rgb(24, 144, 255);
+  background-color: rgb(24, 144, 255);
   color: white;
   transition: all 0.5s ease-in-out;
 }
@@ -306,8 +297,23 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  padding: 5px;
 }
 
 .GWASUI-emptyTable {
   height: 400px;
+}
+
+.GWASUI-emphText {
+  font-style: italic;
+  text-decoration: underline;
+}
+
+.GWASUI-label {
+  margin: 5px;
+  padding: 2px;
+  width: auto;
+  display: inline-block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
