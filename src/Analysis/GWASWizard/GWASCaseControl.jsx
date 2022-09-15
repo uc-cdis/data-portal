@@ -175,8 +175,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
               <h4 className='GWASUI-selectInstruction'>
                   In this step, you will continue to define your study populations.
-                  Please select the cohort that you would like to define as your study
-                <span className='GWASUI-emphText'>control</span> population.
+                  Please select the cohort that you would like to define as your study <span className='GWASUI-emphText'>control</span> population.
               </h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
