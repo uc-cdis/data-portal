@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { Spin } from 'antd';
-import { fetchConceptStatsByHare, queryConfig, getAllHareItems } from './wizardEndpoints/cohortMiddlewareApi';
+import { fetchConceptStatsByHareForCaseControl, queryConfig, getAllHareItems } from './wizardEndpoints/cohortMiddlewareApi';
 import useDebounce from './shared/useDebounce';
 
 const CovariateStatsByHareCC = ({
@@ -31,8 +31,9 @@ const CovariateStatsByHareCC = ({
         ...hareStatsParams,
         caseCohortDefinitionId,
       ],
-      queryFn: () => fetchConceptStatsByHare(
+      queryFn: () => fetchConceptStatsByHareForCaseControl(
         caseCohortDefinitionId,
+        controlCohortDefinitionId,
         debouncedSelectedCovariates,
         selectedDichotomousCovariates,
         sourceId,
@@ -44,8 +45,9 @@ const CovariateStatsByHareCC = ({
         ...hareStatsParams,
         controlCohortDefinitionId,
       ],
-      queryFn: () => fetchConceptStatsByHare(
+      queryFn: () => fetchConceptStatsByHareForCaseControl(
         controlCohortDefinitionId,
+        caseCohortDefinitionId,
         debouncedSelectedCovariates,
         selectedDichotomousCovariates,
         sourceId,

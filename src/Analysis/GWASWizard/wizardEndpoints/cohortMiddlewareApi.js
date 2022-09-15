@@ -5,6 +5,33 @@ import { fetchWithCreds } from '../../../actions';
 import { headers } from '../../../configs';
 import { hareConceptId } from '../shared/constants';
 
+export const fetchConceptStatsByHare = async (
+  cohortDefinitionId,
+  selectedCovariates,
+  selectedDichotomousCovariates,
+  sourceId,
+) => {
+  const variablesPayload = {
+    variables:
+      [
+        ...selectedDichotomousCovariates.map(({ uuid, ...withNoId }) => withNoId),
+        ...selectedCovariates.map((c) => ({
+          variable_type: 'concept',
+          concept_id: c.concept_id,
+        })),
+      ],
+  };
+  const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
+  const reqBody = {
+    method: 'POST',
+    credentials: 'include',
+    headers,
+    body: JSON.stringify(variablesPayload),
+  };
+  const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
+  return getConceptStats.json();
+};
+
 export const fetchOverlapInfo = async (
   sourceId,
   caseCohortDefinitionId,
@@ -33,31 +60,29 @@ export const fetchOverlapInfo = async (
   return getOverlapStats.json();
 };
 
-export const fetchConceptStatsByHare = async (
-  cohortDefinitionId,
+export const fetchConceptStatsByHareForCaseControl = async (
+  queriedCohortDefinitionId,
+  otherCohortDefinitionId,
   selectedCovariates,
   selectedDichotomousCovariates,
   sourceId,
 ) => {
-  const variablesPayload = {
-    variables:
-      [
-        ...selectedDichotomousCovariates.map(({ uuid, ...withNoId }) => withNoId),
-        ...selectedCovariates.map((c) => ({
-          variable_type: 'concept',
-          concept_id: c.concept_id,
-        })),
-      ],
-  };
-  const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
-  const reqBody = {
-    method: 'POST',
-    credentials: 'include',
-    headers,
-    body: JSON.stringify(variablesPayload),
-  };
-  const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
-  return getConceptStats.json();
+  // adding an extra filter on top of the given selectedDichotomousCovariates
+  // to ensure that any person that belongs to _both_ cohorts
+  // [queriedCohortDefinitionId, otherCohortDefinitionId] also gets filtered out:
+  const extendedSelectedDichotomousCovariates = [...selectedDichotomousCovariates];
+  extendedSelectedDichotomousCovariates.push({
+    variable_type: 'custom_dichotomous',
+    cohort_ids: [queriedCohortDefinitionId, otherCohortDefinitionId],
+    provided_name: 'auto_generated_extra_item_to_filter_out_case_control_overlap',
+  });
+
+  return fetchConceptStatsByHare(
+    queriedCohortDefinitionId,
+    selectedCovariates,
+    extendedSelectedDichotomousCovariates,
+    sourceId,
+  );
 };
 
 export const fetchCovariateStats = async (
