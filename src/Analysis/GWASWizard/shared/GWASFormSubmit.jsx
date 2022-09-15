@@ -37,7 +37,7 @@ const GWASFormSubmit = ({
       );
       notification.open({
         message: dataText,
-        description: description,
+        description,
         icon: (<CheckOutlined />),
         placement: 'top',
         btn,
@@ -74,18 +74,16 @@ const GWASFormSubmit = ({
           openNotification('Sucessful Submission', `${gwasName} job starting!`);
           if (workflowType === 'caseControl') resetCaseControl();
           if (workflowType === 'quantitative') resetQuantitative();
-        }
-        else {
-
+        } else {
           data.text().then((text) => {
-            console.log(`gwas job failed with error ${text}`)
-            const submissionError = JSON.parse(text)
-            var errorMessage = submissionError.detail[0]?.msg
-            var errorType = submissionError.detail[0]?.type
-            var errorLoc = submissionError.detail[0]?.loc
-            var errorText = `submission failed due to error ${errorType}, please fix ${errorMessage} in ${errorLoc}`
+            console.log(`gwas job failed with error ${text}`);
+            const submissionError = JSON.parse(text);
+            const errorMessage = submissionError.detail[0]?.msg;
+            const errorType = submissionError.detail[0]?.type;
+            const errorLoc = submissionError.detail[0]?.loc;
+            const errorText = `submission failed due to error ${errorType}, please fix ${errorMessage} in ${errorLoc}`;
 
-            openNotification(errorText, "")
+            openNotification(errorText, '');
           });
         }
       },
@@ -124,13 +122,13 @@ const GWASFormSubmit = ({
             <div className='GWASUI-flexCol GWASUI-flexHeader1'>Selected Cohort</div>
             <div className='GWASUI-flexCol'>{selectedQuantitativeCohort?.cohort_name}</div>
             <div className='GWASUI-flexCol GWASUI-flexHeader2'>Selected Outcome</div>
-            <div className='GWASUI-flexCol'>{outcome?.cohort_name}</div>
+            <div className='GWASUI-flexCol'>{outcome?.concept_name}</div>
           </React.Fragment>
         )}
       </div>
       <div className='GWASUI-flexRow GWASUI-rowItem'>
         <div className='GWASUI-flexCol'>Covariates</div>
-        <div className='GWASUI-flexCol'>{selectedCovariates.map((cov, key) => (
+        <div className='GWASUI-flexCol'>{selectedCovariates.filter((covs) => covs?.concept_id !== outcome?.concept_id).map((cov, key) => (
           <li className='GWASUI-listItem' key={`covariate-${key}`}>{cov?.concept_name}</li>
         ))}
         </div>
@@ -163,7 +161,7 @@ const GWASFormSubmit = ({
           className='GWASUI-nameInput'
           onChange={handleGwasNameChange}
           value={gwasName}
-          placeholder='Enter a job name...'
+          placeholder='Give a name to your study'
           style={{ width: '70%', height: '90%' }}
         />
         <div className='GWASUI-submitContainer' data-tour='review-submit-button'>

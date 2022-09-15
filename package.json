@@ -124,7 +124,7 @@
     "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-react": "^7.23.1",
+    "eslint-plugin-react": "~7.30.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-storybook": "^0.6.1",
     "estraverse": "^4.2.0",
@@ -158,9 +158,15 @@
     "@storybook/cli": {
       "trim": "0.0.3"
     },
+    "remark-parse": {
+      "trim": "0.0.3"
+    },
     "default-browser-id": {
       "meow": "6.1.0"
-    }
+    },
+    "@reactour/utils": "0.3.0",
+    "@reactour/popover": "0.4.1",
+    "@reactour/mask": "0.5.1"
   },
   "jest": {
     "verbose": true,

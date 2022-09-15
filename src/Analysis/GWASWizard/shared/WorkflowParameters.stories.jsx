@@ -16,7 +16,7 @@ const mockedQueryClient = new QueryClient({
 
 const MockTemplate = () => {
   const [selectedDichotomousCovariates, setSelectedDichotomousCovariates] = useState([
-    { variable_type: 'custom_dichotomous', cohort_ids: [1, 2], provided_name: 'test1' },
+    { variable_type: 'custom_dichotomous', cohort_ids: [10, 20], provided_name: 'test1' },
     { variable_type: 'custom_dichotomous', cohort_ids: [3, 4], provided_name: 'test2' }]);
   const [selectedCovariates, setSelectedCovariates] = useState([
     {
