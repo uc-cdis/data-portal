@@ -84,6 +84,7 @@ const DataDictionarySubmission: React.FunctionComponent = () => {
           <Divider plain>Data Dictionary Submission</Divider>
           <div className='study-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
           <Form.Item
+            name='study_id'
             label='Study'
             rules={[{ required: true }]}
           >
@@ -94,6 +95,7 @@ const DataDictionarySubmission: React.FunctionComponent = () => {
           </Form.Item>
           <Form.Item
             label='Select file'
+            name='select_file'
             rules={[{ required: true }]}
           >
             <Upload>
@@ -105,6 +107,7 @@ const DataDictionarySubmission: React.FunctionComponent = () => {
             </Upload>
           </Form.Item>
           <Form.Item
+            name='dd_name'
             label='Data dictionary name'
             rules={[{ required: true }]}
           >
