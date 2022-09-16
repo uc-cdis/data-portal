@@ -33,6 +33,47 @@ export const fetchOverlapInfo = async (
   return getOverlapStats.json();
 };
 
+export const filterSubsetCovariates = (subsetCovariates) => {
+  const filteredSubsets = [];
+  subsetCovariates.forEach((covariate) => {
+    if (covariate.uuid) {
+      filteredSubsets.push({
+        cohort_ids,
+        provided_name,
+        variable_type
+      })
+    } else {
+      filteredSubsets.push({
+        variable_type: 'concept',
+        concept_id: covariate.concept_id,
+      })
+    }
+  });
+  return filteredSubsets
+}
+
+export const fetchConceptStatsByHareSubset = async (
+  cohortDefinitionId,
+  subsetCovariates,
+  sourceId,
+) => {
+  const variablesPayload = {
+    variables:
+      [
+        ...filterSubsetCovariates(subsetCovariates)
+      ],
+  };
+  const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
+  const reqBody = {
+    method: 'POST',
+    credentials: 'include',
+    headers,
+    body: JSON.stringify(variablesPayload),
+  };
+  const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
+  return getConceptStats.json();
+};
+
 export const fetchConceptStatsByHare = async (
   cohortDefinitionId,
   selectedCovariates,

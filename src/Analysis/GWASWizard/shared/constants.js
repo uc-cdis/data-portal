@@ -123,3 +123,53 @@ export const covariateTableConfig = [
     filterSearch: true,
   },
 ];
+
+export const headerDataSource = [
+  {
+    type: '',
+    name: '',
+    size: '',
+    nonHispanicBlack: '',
+    nonHispanicAsian: '',
+    nonHispanicWhite: '',
+    hispanic: ''
+  }
+];
+
+export const attritionTableHeaderConfig = [
+  {
+    title: 'Type',
+    dataIndex: 'type',
+    key: 'type',
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'Size',
+    dataIndex: 'size',
+    key: 'size',
+  },
+  {
+    title: 'Non-Hispanic Black',
+    dataIndex: 'nonHispanicBlack',
+    key: 'nonHispanicBlack',
+  },
+  {
+    title: 'Non-Hispanic Asian',
+    dataIndex: 'nonHispanicAsian',
+    key: 'nonHispanicAsian',
+  },
+  {
+    title: 'Non-Hispanic White',
+    dataIndex: 'nonHispanicWhite',
+    key: 'nonHispanicWhite',
+  },
+  {
+    title: 'Hispanic',
+    dataIndex: 'hispanic',
+    key: 'hispanic',
+  }
+];
