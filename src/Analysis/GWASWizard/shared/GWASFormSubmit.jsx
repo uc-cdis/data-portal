@@ -128,7 +128,7 @@ const GWASFormSubmit = ({
       </div>
       <div className='GWASUI-flexRow GWASUI-rowItem'>
         <div className='GWASUI-flexCol'>Covariates</div>
-        <div className='GWASUI-flexCol'>{selectedCovariates.filter((covs) => covs.concept_id !== outcome.concept_id).map((cov, key) => (
+        <div className='GWASUI-flexCol'>{selectedCovariates.filter((covs) => covs?.concept_id !== outcome?.concept_id).map((cov, key) => (
           <li className='GWASUI-listItem' key={`covariate-${key}`}>{cov?.concept_name}</li>
         ))}
         </div>
