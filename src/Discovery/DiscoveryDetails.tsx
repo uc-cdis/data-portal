@@ -357,7 +357,8 @@ const DiscoveryDetails = (props: Props) => {
                           const MULTILINE_FIELD_CHARLIMIT = 200;
                           const multiline = props.modalData[field.field]
                     && props.modalData[field.field].length > MULTILINE_FIELD_CHARLIMIT;
-                          return (
+
+                          const renderedFieldContent = (
                             <div key={field.name} className='discovery-modal__attribute'>
                               { field.includeName !== false
                           && <span className='discovery-modal__attribute-name'>{field.name}</span>}
@@ -368,6 +369,11 @@ const DiscoveryDetails = (props: Props) => {
                               </span>
                             </div>
                           );
+                          const linkingField = `${field.field}_link`;
+                          if (props.modalData[linkingField] !== undefined) {
+                            return <a href={props.modalData[linkingField]}>{renderedFieldContent}</a>;
+                          }
+                          return renderedFieldContent;
                         })}
                       </div>
                     );
