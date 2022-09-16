@@ -66,6 +66,7 @@ import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import StudyRegistration from './StudyRegistration';
 import ReduxStudyRegistrationRequestForm from './StudyRegistration/ReduxStudyRegistrationRequestForm';
+import DataDictionarySubmission from './StudyRegistration/DataDictionarySubmission';
 import NotFound from './components/NotFound';
 
 // monitor user's session
@@ -519,6 +520,24 @@ async function init() {
                             (props) => (
                               <ProtectedContent
                                 component={ReduxStudyRegistrationRequestForm}
+                                {...props}
+                              />
+                            )
+                          }
+                        />
+                      )
+                      : null
+                  }
+                  {
+                    isEnabled('studyRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/study-reg/data-dictionary-submission'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={DataDictionarySubmission}
                                 {...props}
                               />
                             )
