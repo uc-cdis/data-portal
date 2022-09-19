@@ -42,6 +42,7 @@ import WorkspaceOption from './WorkspaceOption';
 import WorkspaceLogin from './WorkspaceLogin';
 import sessionMonitor from '../SessionMonitor';
 import workspaceSessionMonitor from './WorkspaceSessionMonitor';
+import { initWorkspaceRefreshToken } from './WorkspaceRefreshToken';
 
 const { Step } = Steps;
 const { Panel } = Collapse;
@@ -73,19 +74,7 @@ class Workspace extends React.Component {
   }
 
   componentDidMount() {
-    fetchWithCreds({
-      path: `${wtsPath}connected`,
-      method: 'GET',
-    })
-      .then(
-        ({ status }) => {
-          if (status !== 200) {
-            window.location.href = `${wtsPath}/authorization_url?redirect=${window.location.pathname}`;
-          } else {
-            this.connected();
-          }
-        },
-      );
+    initWorkspaceRefreshToken(this.connected);
   }
 
   componentWillUnmount() {
