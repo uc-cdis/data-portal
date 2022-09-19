@@ -66,6 +66,10 @@ import ErrorWorkspacePlaceholder from './Workspace/ErrorWorkspacePlaceholder';
 import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer';
 import NotFound from './components/NotFound';
 import ErrorPage403 from './components/ErrorPage403';
+import { initWorkspaceRefreshToken } from './Workspace/WorkspaceRefreshToken';
+
+// start workspace session for WTS
+initWorkspaceRefreshToken();
 
 // monitor user's session
 sessionMonitor.start();
