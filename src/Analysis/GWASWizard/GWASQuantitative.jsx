@@ -321,6 +321,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
           </Popconfirm>
           {current < quantitativeSteps.length - 1 && (
             <Button
+              data-tour="next-button"
               className='GWASUI-navBtn GWASUI-navBtn__next'
               type='primary'
               onClick={() => {
