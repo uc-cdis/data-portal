@@ -188,24 +188,12 @@ export const fetchSources = async () => {
 export const useSourceFetch = () => {
   const [loading, setLoading] = useState(true);
   const [sourceId, setSourceId] = useState(undefined);
-  const getSources = () => { // do wts login and fetch sources on initialization
-    fetchWithCreds({
-      path: `${wtsPath}connected`,
-      method: 'GET',
-    })
-      .then(
-        (res) => {
-          if (res.status !== 200) {
-            window.location.href = `${wtsPath}authorization_url?redirect=${window.location.pathname}`;
-          } else {
-            fetchSources().then((data) => {
-              setSourceId(data.sources[0].source_id);
-              setLoading(false);
-            });
-          }
-        },
-      );
-  };
+  const getSources = () => { // fetch sources on initialization
+    fetchSources().then((data) => {
+      setSourceId(data.sources[0].source_id);
+      setLoading(false);
+    });
+  }
   useEffect(() => {
     getSources();
   }, []);
