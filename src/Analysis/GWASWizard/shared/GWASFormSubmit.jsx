@@ -155,8 +155,9 @@ const GWASFormSubmit = ({
           </React.Fragment>
         </div>
       )}
-      <div className='GWASUI-flexRow' data-tour='review-name'>
+      <div className='GWASUI-flexRow'>
         <input
+          data-tour='review-name'
           type='text'
           className='GWASUI-nameInput'
           onChange={handleGwasNameChange}
