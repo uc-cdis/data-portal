@@ -67,6 +67,7 @@ const AttritionTable = ({
             </>)} */}
             {quantitativeCohortDefinitionId && (<>
                 <AttritionTableRow
+                    primaryRow={true}
                     quantitativeCohortDefinitionId={quantitativeCohortDefinitionId}
                     covariateSubset={[]}
                     sourceId={sourceId}
@@ -75,6 +76,7 @@ const AttritionTable = ({
             </>)}
             {quantitativeCohortDefinitionId && outcome && (<>
                 <AttritionTableRow
+                    secondaryRow={true}
                     quantitativeCohortDefinitionId={quantitativeCohortDefinitionId}
                     covariateSubset={[outcome]}
                     sourceId={sourceId}

@@ -4,6 +4,8 @@ import { useQuery } from 'react-query';
 import { fetchConceptStatsByHareSubset, queryConfig } from './../wizardEndpoints/cohortMiddlewareApi';
 
 const AttritionTableRow = ({
+    primaryRow,
+    secondaryRow,
     caseCohortDefinitionId,
     controlCohortDefinitionId,
     quantitativeCohortDefinitionId,
@@ -34,12 +36,12 @@ const AttritionTableRow = ({
 
     useEffect(() => {
         if (breakdown?.length) {
-            setBreakdownSize(breakdown
-                .filter(({ concept_value }) => concept_value !== 'OTH')
+            const filteredBreakdown = breakdown.filter(({ concept_value }) => concept_value !== 'OTH');
+            setBreakdownSize(filteredBreakdown
                 .reduce((acc, curr) => {
                     return acc + curr.persons_in_cohort_with_value
                 }, 0));
-            setBreakdownColumns(breakdown.filter(({ concept_value }) => concept_value !== 'OTH'));
+            setBreakdownColumns(filteredBreakdown);
         }
     }, [breakdown, quantitativeCohortDefinitionId, covariateSubset, sourceId]);
 
@@ -58,8 +60,14 @@ const AttritionTableRow = ({
     };
 
     return <div className="GWASUI-attritionTable GWASUI-covariateRow" onClick={() => console.log('data', breakdown)}>
-        {workflowType === "quantitative" ? <div className="GWASUI-attritionCell">Cohort</div> : <div className="GWASUI-attritionCell">Case Cohort</div>}
-        {workflowType === "quantitative" ? <div className="GWASUI-attritionCell">Outcome Phenotype</div> : <div className="GWASUI-attritionCell">Control Cohort</div>}
+        {workflowType === "quantitative" ?
+            <div className="GWASUI-attritionCell">
+                {primaryRow ? 'Cohort' : secondaryRow ? 'Outcome Phenotype' : 'Covariate'}
+            </div>
+            : <div className="GWASUI-attritionCell">
+                {primaryRow ? 'Case Cohort' :  secondaryRow ? 'Control Cohort': 'Covariate'}
+            </div>}
+        {/* {workflowType === "quantitative" ? <div className="GWASUI-attritionCell">{secondaryRow ? 'Outcome Phenotype' : 'Covariate'}</div> : <div className="GWASUI-attritionCell">{secondaryRow ? 'Control Cohort' : 'Covariate'}</div>} */}
         <div className="GWASUI-attritionCell">{quantitativeCohortDefinitionId}</div>
         <div className="GWASUI-attritionCell">{breakdownSize}</div>
         <div className="GWASUI-attritionCell">{afr}</div>
@@ -79,7 +87,9 @@ AttritionTableRow.propTypes = {
     outcome: PropTypes.object,
     covariateSubset: PropTypes.array.isRequired,
     sourceId: PropTypes.number.isRequired,
-    workflowType: PropTypes.string
+    workflowType: PropTypes.string,
+    primaryRow: PropTypes.bool,
+    secondaryRow: PropTypes.bool,
 }
 
 AttritionTableRow.defaultProps = {
@@ -87,6 +97,8 @@ AttritionTableRow.defaultProps = {
     controlCohortDefinitionId: undefined,
     quantitativeCohortDefinitionId: undefined,
     outcome: undefined,
+    primaryRow: false,
+    secondaryRow: false
     // cohortSizes: undefined,
 };
 
