@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { fetchConceptStatsByHareSubset, queryConfig } from './../wizardEndpoints/cohortMiddlewareApi';
@@ -14,8 +14,12 @@ const AttritionTableRow = ({
     workflowType
 }) => {
     const [breakdownSize, setBreakdownSize] = useState(0);
-    const [defaultBreakdownColumns] = useState(["AFR", "ASN", "EUR", "HIS"]);
+    const [afr, setAfr] = useState(undefined);
+    const [asn, setAsn] = useState(undefined);
+    const [eur, setEur] = useState(undefined);
+    const [his, setHis] = useState(undefined);
     const [breakdownColumns, setBreakdownColumns] = useState([]);
+
     const { data, status } = useQuery(
         ['conceptstatsbyharesubset', covariateSubset, quantitativeCohortDefinitionId],
         () => fetchConceptStatsByHareSubset(
@@ -26,42 +30,43 @@ const AttritionTableRow = ({
         queryConfig,
     );
 
-    const getSizeByColumn = (hare, breakdownColumns) => {
-        if (breakdownColumns.length) {
-            return breakdownColumns.includes(hare) ? breakdown[breakdown.findIndex(h => h.concept_value === hare)].persons_in_cohort_with_value : 0
-        } else {
-            return 0
-        }
-
-    }
-
     const { breakdown } = { breakdown: data?.concept_breakdown };
 
     useEffect(() => {
         if (breakdown?.length) {
-            const cols = [];
-            breakdown.forEach((hare) => cols.push(hare.concept_value));
-            setBreakdownColumns(cols);
             setBreakdownSize(breakdown
                 .filter(({ concept_value }) => concept_value !== 'OTH')
                 .reduce((acc, curr) => {
                     return acc + curr.persons_in_cohort_with_value
                 }, 0));
+            setBreakdownColumns(breakdown.filter(({ concept_value }) => concept_value !== 'OTH'));
         }
-    }, [breakdown])
-    // if workflowType === caseControl && covariateSubset === [] { && (<>case cohort</>)}
-    // if workflowType === caseControl {  && (<>controlcohort</>)}
-    // if workflowType === quantitative {  && (<>quantitativecohort</>)}
-    // if workflowType === quantitative {  && (<>outcome phenotype</>)}
+    }, [breakdown, quantitativeCohortDefinitionId, covariateSubset, sourceId]);
+
+    useEffect(() => {
+        if (breakdownColumns.length) {
+            setAfr(getSizeByColumn("AFR"));
+            setAsn(getSizeByColumn("ASN"));
+            setEur(getSizeByColumn("EUR"));
+            setHis(getSizeByColumn("HIS"));
+        }
+    }, [breakdownColumns])
+
+    const getSizeByColumn = (hare) => {
+        const hareIndex = breakdownColumns.findIndex((h) => h.concept_value === hare);
+        return hareIndex > -1 ? breakdownColumns[hareIndex].persons_in_cohort_with_value : 0
+    };
 
     return <div className="GWASUI-attritionTable GWASUI-covariateRow" onClick={() => console.log('data', breakdown)}>
         {workflowType === "quantitative" ? <div className="GWASUI-attritionCell">Cohort</div> : <div className="GWASUI-attritionCell">Case Cohort</div>}
         {workflowType === "quantitative" ? <div className="GWASUI-attritionCell">Outcome Phenotype</div> : <div className="GWASUI-attritionCell">Control Cohort</div>}
         <div className="GWASUI-attritionCell">{quantitativeCohortDefinitionId}</div>
         <div className="GWASUI-attritionCell">{breakdownSize}</div>
-        {defaultBreakdownColumns.map((col) => {
-            return (<div className="GWASUI-attritionCell">{getSizeByColumn(col, breakdownColumns)}</div>)
-        })}
+        <div className="GWASUI-attritionCell">{afr}</div>
+        <div className="GWASUI-attritionCell">{asn}</div>
+        <div className="GWASUI-attritionCell">{eur}</div>
+        <div className="GWASUI-attritionCell">{his}</div>
+
     </div>
 }
 
