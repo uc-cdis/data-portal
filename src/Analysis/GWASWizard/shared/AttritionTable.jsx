@@ -67,20 +67,20 @@ const AttritionTable = ({
             </>)} */}
             {quantitativeCohortDefinitionId && (<>
                 <AttritionTableRow
-                    primaryRow={true}
-                    quantitativeCohortDefinitionId={quantitativeCohortDefinitionId}
+                    cohortDefinitionId={quantitativeCohortDefinitionId}
+                    rowType='Cohort'
+                    rowName={'Cohort name for ' + quantitativeCohortDefinitionId} // TODO
                     covariateSubset={[]}
                     sourceId={sourceId}
-                    workflowType={"quantitative"}
                 />
             </>)}
             {quantitativeCohortDefinitionId && outcome && (<>
                 <AttritionTableRow
-                    secondaryRow={true}
-                    quantitativeCohortDefinitionId={quantitativeCohortDefinitionId}
+                    cohortDefinitionId={quantitativeCohortDefinitionId}
+                    rowType='Outcome phenotype'
+                    rowName={outcome.provided_name} // TODO use .concept_name if outcome is continuous
                     covariateSubset={[outcome]}
                     sourceId={sourceId}
-                    workflowType={"quantitative"}
                 />
             </>)}
             {quantitativeCohortDefinitionId && outcome && covariateSubsets.length > 0 ? (<List
@@ -89,10 +89,11 @@ const AttritionTable = ({
                 dataSource={covariateSubsets}
                 renderItem={(item) => (
                     <AttritionTableRow
-                        quantitativeCohortDefinitionId={quantitativeCohortDefinitionId}
+                        cohortDefinitionId={quantitativeCohortDefinitionId}
+                        rowType='Covariate'
+                        rowName={item[0].concept_name} // ?? TODO use .provided_name if outcome is dichotomous
                         covariateSubset={item}
                         sourceId={sourceId}
-                        workflowType={"quantitative"}
                     />
                 )}
             />) : null}
