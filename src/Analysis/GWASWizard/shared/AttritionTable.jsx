@@ -12,7 +12,7 @@ const { Panel } = Collapse;
 const AttritionTable = ({
     caseCohortDefinitionId,
     controlCohortDefinitionId,
-    quantitativeCohortDefinitionId,
+    cohortDefinitionId,
     outcome,
     selectedCovariates,
     selectedDichotomousCovariates,
@@ -65,34 +65,35 @@ const AttritionTable = ({
                     sourceId={sourceId}
                 />
             </>)} */}
-            {quantitativeCohortDefinitionId && (<>
+            {cohortDefinitionId && (<>
                 <AttritionTableRow
-                    primaryRow={true}
-                    quantitativeCohortDefinitionId={quantitativeCohortDefinitionId}
+                    cohortDefinitionId={cohortDefinitionId}
+                    rowType='Cohort'
+                    rowName={'Cohort name for ' + cohortDefinitionId} // TODO
                     covariateSubset={[]}
                     sourceId={sourceId}
-                    workflowType={"quantitative"}
                 />
             </>)}
-            {quantitativeCohortDefinitionId && outcome && (<>
+            {cohortDefinitionId && outcome && (<>
                 <AttritionTableRow
-                    secondaryRow={true}
-                    quantitativeCohortDefinitionId={quantitativeCohortDefinitionId}
+                    cohortDefinitionId={cohortDefinitionId}
+                    rowType='Outcome phenotype'
+                    rowName={outcome.provided_name} // TODO use .concept_name if outcome is continuous
                     covariateSubset={[outcome]}
                     sourceId={sourceId}
-                    workflowType={"quantitative"}
                 />
             </>)}
-            {quantitativeCohortDefinitionId && outcome && covariateSubsets.length > 0 ? (<List
+            {cohortDefinitionId && outcome && covariateSubsets.length > 0 ? (<List
                 className='GWASUI-attritionRow'
                 itemLayout='horizontal'
                 dataSource={covariateSubsets}
                 renderItem={(item) => (
                     <AttritionTableRow
-                        quantitativeCohortDefinitionId={quantitativeCohortDefinitionId}
+                        cohortDefinitionId={cohortDefinitionId}
+                        rowType='Covariate'
+                        rowName={item[0].concept_name} // ?? TODO use .provided_name if outcome is dichotomous
                         covariateSubset={item}
                         sourceId={sourceId}
-                        workflowType={"quantitative"}
                     />
                 )}
             />) : null}
@@ -103,7 +104,7 @@ const AttritionTable = ({
 AttritionTable.propTypes = {
     caseCohortDefinitionId: PropTypes.number,
     controlCohortDefinitionId: PropTypes.number,
-    quantitativeCohortDefinitionId: PropTypes.number,
+    cohortDefinitionId: PropTypes.number,
     outcome: PropTypes.object,
     selectedCovariates: PropTypes.array.isRequired,
     selectedDichotomousCovariates: PropTypes.array.isRequired,
@@ -114,7 +115,7 @@ AttritionTable.propTypes = {
 AttritionTable.defaultProps = {
     caseCohortDefinitionId: undefined,
     controlCohortDefinitionId: undefined,
-    quantitativeCohortDefinitionId: undefined,
+    cohortDefinitionId: undefined,
     outcome: undefined,
     // cohortSizes: undefined,
 };

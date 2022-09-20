@@ -15,9 +15,10 @@ const mockedQueryClient = new QueryClient({
 });
 
 const MockTemplate = () => {
+  const [selectedOutome, setSelectedOutcome] = useState({ variable_type: 'custom_dichotomous', cohort_ids: [1, 2], provided_name: 'test outcome', uuid: '1234' })
   const [selectedDichotomousCovariates, setSelectedDichotomousCovariates] = useState([
-    { variable_type: 'custom_dichotomous', cohort_ids: [1, 2], provided_name: 'test1' },
-    { variable_type: 'custom_dichotomous', cohort_ids: [3, 4], provided_name: 'test2' }]);
+    { variable_type: 'custom_dichotomous', cohort_ids: [1, 2], provided_name: 'test1' , uuid: '12345'},
+    { variable_type: 'custom_dichotomous', cohort_ids: [3, 4], provided_name: 'test2' , uuid: '123456'}]);
   const [selectedCovariates, setSelectedCovariates] = useState([
     {
       concept_id: 2000006886, prefixed_concept_id: 'ID_2000006886', concept_name: 'Attribute1', concept_code: '', concept_type: 'MVP Continuous',
@@ -32,18 +33,32 @@ const MockTemplate = () => {
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <AttritionTable
-        // caseCohortDefinitionId={1}
-        cohortDefinitionId={2}
-        // first endpoint call: just cohort id1
-        // second endpoint call: cohort id + firstItem (cohort + covariate) + (cohort + cov1 + cov2) n (n = length selectedCovariates)
+        // quantitative:
+        sourceId={1}
+        cohortDefinitionId={123}
+        outcome={selectedOutome}
         selectedCovariates={selectedCovariates}
         selectedDichotomousCovariates={selectedDichotomousCovariates}
-        sourceId={1}
-        // workflowType={'quantitative'}
+        workflowType={'quantitative'}  // let's remove this?
       />
+    <AttritionTable
+        // case-control:
+        sourceId={1}
+        cohortDefinitionId={123}
+        otherCohortDefinitionId={456}
+        // no outcome
+        selectedCovariates={selectedCovariates}
+        selectedDichotomousCovariates={selectedDichotomousCovariates}
+        // + use   fetchConceptStatsByHareForCaseControl
+
+        workflowType={'quantitative'} // let's remove this?
+      />
+
     </QueryClientProvider>
   );
 };
+
+let rowCount = 0;
 
 export const MockedSuccess = MockTemplate.bind({});
 MockedSuccess.parameters = {
@@ -54,39 +69,34 @@ MockedSuccess.parameters = {
         const { cohortdefinition } = req.params;
         console.log(cohortmiddlewarepath);
         console.log(cohortdefinition);
+        rowCount++;
         return res(
-          ctx.delay(1100),
+          ctx.delay(600*rowCount),
           ctx.json({
             concept_breakdown: [
-              {
-                concept_value: 'OTH',
-                concept_value_as_concept_id: 2000007032,
-                concept_value_name: 'Other',
-                persons_in_cohort_with_value: 40029 * cohortdefinition, // just to mock/generate different numbers for different cohorts
-              },
               {
                 concept_value: 'ASN',
                 concept_value_as_concept_id: 2000007029,
                 concept_value_name: 'non-Hispanic Asian',
-                persons_in_cohort_with_value: 40178 * cohortdefinition, // just to mock/generate different numbers for different cohorts,
+                persons_in_cohort_with_value: 40178 * (10-rowCount), // just to mock/generate different numbers for different cohorts,
               },
               {
                 concept_value: 'EUR',
                 concept_value_as_concept_id: 2000007031,
                 concept_value_name: 'non-Hispanic White',
-                persons_in_cohort_with_value: 39648 * cohortdefinition, // just to mock/generate different numbers for different cohorts,
+                persons_in_cohort_with_value: 39648 * (10-rowCount), // just to mock/generate different numbers for different cohorts,
               },
               {
                 concept_value: 'AFR',
                 concept_value_as_concept_id: 2000007030,
                 concept_value_name: 'non-Hispanic Black',
-                persons_in_cohort_with_value: 40107 * cohortdefinition, // just to mock/generate different numbers for different cohorts,
+                persons_in_cohort_with_value: 40107 * (10-rowCount), // just to mock/generate different numbers for different cohorts,
               },
               {
                 concept_value: 'HIS',
                 concept_value_as_concept_id: 2000007028,
                 concept_value_name: 'Hispanic',
-                persons_in_cohort_with_value: 40038 * cohortdefinition, // just to mock/generate different numbers for different cohorts,
+                persons_in_cohort_with_value: 40038 * (10-rowCount), // just to mock/generate different numbers for different cohorts,
               },
             ],
           }),
