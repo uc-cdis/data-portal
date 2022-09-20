@@ -65,9 +65,9 @@ export const filterSubsetCovariates = (subsetCovariates) => {
   subsetCovariates.forEach((covariate) => {
     if (covariate.uuid) {
       filteredSubsets.push({
-        cohort_ids,
-        provided_name,
-        variable_type
+        cohort_ids: covariate.cohort_ids,
+        provided_name: covariate.provided_name,
+        variable_type: covariate.variable_type
       })
     } else {
       filteredSubsets.push({
