@@ -33,13 +33,27 @@ const MockTemplate = () => {
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <AttritionTable
+        // quantitative:
         sourceId={1}
-        quantitativeCohortDefinitionId={123}
+        cohortDefinitionId={123}
         outcome={selectedOutome}
         selectedCovariates={selectedCovariates}
         selectedDichotomousCovariates={selectedDichotomousCovariates}
-        workflowType={'quantitative'}
+        workflowType={'quantitative'}  // let's remove this?
       />
+    <AttritionTable
+        // case-control:
+        sourceId={1}
+        cohortDefinitionId={123}
+        otherCohortDefinitionId={456}
+        // no outcome
+        selectedCovariates={selectedCovariates}
+        selectedDichotomousCovariates={selectedDichotomousCovariates}
+        // + use   fetchConceptStatsByHareForCaseControl
+
+        workflowType={'quantitative'} // let's remove this?
+      />
+
     </QueryClientProvider>
   );
 };
