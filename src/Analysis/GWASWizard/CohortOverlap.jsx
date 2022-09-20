@@ -65,19 +65,22 @@ const CohortOverlap = ({
         <br />
         {cohortSizes[1]} subjects were found in <b>{selectedControlCohort.cohort_name}</b> cohort.
         <br />
-        <strong style={{ color: '#bf2600' }}>
+        <strong style={{ color: '#F6BE00' }}>
                     Warning: overlap found between both cohorts!
           <br />
                     ({`${data.cohort_overlap.case_control_overlap_after_filter} `}
                     subjects were found to be present in both cohorts).
           <br />
                     Please review your selections.<br />
+
+        </strong>
+                    <b style={{ fontSize: '16px',  color: '#bf2600'}}>
                     If you choose to continue, be aware that these
           {` ${data.cohort_overlap.case_control_overlap_after_filter} `}
                     subjects will <i>not</i> be considered in the analysis.
           <br />
-                    The cohort sizes reported above have already been adjusted to <i>not</i> include these overlapping subjects.
-        </strong>
+                    The cohort sizes reported above have already been adjusted to <i>not</i> include these overlapping subjects.</b>
+
       </div>
     );
 };
