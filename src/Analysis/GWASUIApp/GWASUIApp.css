@@ -326,11 +326,28 @@
 
 .GWASUI-attritionRow .ant-collapse {
   width: 100%;
+  display: none;
 }
 
 .GWASUI-attritionTableHeader {
   margin: 0 auto;
   width: 100%;
   align-items: center;
+  justify-content: space-between;
+}
+
+.GWASUI-attritionTableHeader .ant-spin-nested-loading .ant-spin-container .ant-table .ant-table-container .ant-table-content table .ant-table-tbody {
+  display: none;
+}
+
+.GWASUI-covariateRow {
+  height: 60px;
+  align-items: center;
+  justify-content: center;
+}
+
+.GWASUI-attritionCell {
+  padding: 5px;
+  width: 100%;
   justify-content: space-between;
 }

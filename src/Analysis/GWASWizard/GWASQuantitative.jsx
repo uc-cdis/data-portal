@@ -291,12 +291,14 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
 
   return (
     <>
-        <AttritionTable
-          sourceId={sourceId}
-          quantitativeCohortDefinitionId={selectedCohort ? selectedCohort.cohort_definition_id : undefined}
-          selectedCovariates={selectedCovariates}
-          selectedDichotomousCovariates={selectedDichotomousCovariates}
-        />
+      {!loading && sourceId && (<AttritionTable
+        sourceId={sourceId}
+        quantitativeCohortDefinitionId={selectedCohort ? selectedCohort.cohort_definition_id : undefined}
+        outcome={outcome}
+        selectedCovariates={selectedCovariates}
+        selectedDichotomousCovariates={selectedDichotomousCovariates}
+        workflowType={'quantitative'}
+      />)}
       <React.Fragment>
         <Space direction={'vertical'} style={{ width: '100%' }}>
           <Steps current={current}>
