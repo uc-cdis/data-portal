@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import { fetchConceptStatsByHareSubset, queryConfig } from './../wizardEndpoints/cohortMiddlewareApi';
+import { fetchConceptStatsByHareSubset, fetchConceptStatsByHareForCaseControl, queryConfig } from './../wizardEndpoints/cohortMiddlewareApi';
 
 const AttritionTableRow = ({
     cohortDefinitionId,
+    otherCohortDefinitionId,
     rowType,
     rowName,
     covariateSubset,
@@ -50,7 +51,7 @@ const AttritionTableRow = ({
     }, [breakdownColumns])
 
     const getSizeByColumn = (hare) => {
-        const hareIndex = breakdownColumns.findIndex((h) => h.concept_value === hare);
+        const hareIndex = breakdownColumns.findIndex(({ concept_value }) => concept_value === hare);
         return hareIndex > -1 ? breakdownColumns[hareIndex].persons_in_cohort_with_value : 0
     };
 
@@ -70,13 +71,16 @@ const AttritionTableRow = ({
 
 AttritionTableRow.propTypes = {
     cohortDefinitionId: PropTypes.number,
-    rowType: PropTypes.string,
-    rowName: PropTypes.string,
+    otherCohortDefinitionId: PropTypes.number,
+    rowType: PropTypes.string.isRequired,
+    rowName: PropTypes.string.isRequired,
     covariateSubset: PropTypes.array.isRequired,
     sourceId: PropTypes.number.isRequired,
 }
 
 AttritionTableRow.defaultProps = {
+    cohortDefinitionId: undefined,
+    otherCohortDefinitionId: undefined
 };
 
 export default AttritionTableRow;
