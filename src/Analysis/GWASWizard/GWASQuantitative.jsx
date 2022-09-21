@@ -15,6 +15,7 @@ import CustomDichotomousSelect from './shared/CustomDichotomousSelect';
 import WorkflowParameters from './shared/WorkflowParameters';
 import GWASFormSubmit from './shared/GWASFormSubmit';
 import TourButton from './shared/TourButton';
+import AttritionTable from './shared/AttritionTable';
 
 const { Step } = Steps;
 
@@ -162,14 +163,14 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
             </div>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
               <h4 className='GWASUI-selectInstruction' data-tour='quant-step-2-choosing-variable'>
-                In this step, you will select the harmonized variables for your study.
-                Please select all variables you wish to use in your model, including both covariates and outcome phenotype.
+                  In this step, you will select the harmonized variables for your study.
+                  Please select all variables you wish to use in your model, including both covariates and outcome phenotype.
               </h4>
               <h4 className='GWASUI-selectInstruction'>
                 <span className='GWASUI-emphText '>It is mandatory to choose at least one variable to serve as your outcome phenotype.</span>
               </h4>
               <h4 className='GWASUI-selectInstruction'>
-              (Note: population PCs are not included in this step)
+                  (Note: population PCs are not included in this step)
               </h4>
               <div className='GWASUI-mainTable'>
                 <CovariateSelect
@@ -290,52 +291,64 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
 
   return (
     <React.Fragment>
-      <Space direction={'vertical'} style={{ width: '100%' }}>
-        <Steps current={current}>
-          {quantitativeSteps.map((item) => (
-            <Step key={item.title} title={item.title} description={item.description} />
-          ))}
-        </Steps>
-        <div className='steps-content'>
-          <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-            {generateStep(current)}
-          </Space>
-        </div>
-        <div className='steps-action'>
-          <Button
-            className='GWASUI-navBtn GWASUI-navBtn__prev'
-            disabled={current === 0}
-            onClick={() => {
-              setCurrent(current - 1);
-            }}
-          >
-            Previous
-          </Button>
-          <Popconfirm
-            title='Are you sure you want to leave this page?'
-            onConfirm={() => resetGWASType()}
-            okText='Yes'
-            cancelText='No'
-          >
-            <Button type='link' size='medium' ghost>Select Different GWAS Type</Button>
-          </Popconfirm>
-          {current < quantitativeSteps.length - 1 && (
+      {!loading && sourceId && (
+        <AttritionTable
+          sourceId={sourceId}
+          selectedCohort={selectedCohort || undefined}
+          outcome={outcome}
+          selectedCovariates={selectedCovariates}
+          selectedDichotomousCovariates={selectedDichotomousCovariates}
+          tableHeader={'Cohort Attrition Table'}
+        />
+      )}
+      <React.Fragment>
+        <Space direction={'vertical'} style={{ width: '100%' }}>
+          <Steps current={current}>
+            {quantitativeSteps.map((item) => (
+              <Step key={item.title} title={item.title} description={item.description} />
+            ))}
+          </Steps>
+          <div className='steps-content'>
+            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+              {generateStep(current)}
+            </Space>
+          </div>
+          <div className='steps-action'>
             <Button
-              data-tour="next-button"
+              data-tour='next-button'
               className='GWASUI-navBtn GWASUI-navBtn__next'
               type='primary'
               onClick={() => {
-                setCurrent(current + 1);
+                setCurrent(current - 1);
               }}
-              disabled={!nextButtonEnabled}
             >
-              Next
+              Previous
             </Button>
-          )}
-          {/* added so "select diff gwas" btn retains center position on last page */}
-          {current === quantitativeSteps.length - 1 && (<div className='GWASUI-navBtn' />)}
-        </div>
-      </Space>
+            <Popconfirm
+              title='Are you sure you want to leave this page?'
+              onConfirm={() => resetGWASType()}
+              okText='Yes'
+              cancelText='No'
+            >
+              <Button type='link' size='medium' ghost>Select Different GWAS Type</Button>
+            </Popconfirm>
+            {current < quantitativeSteps.length - 1 && (
+              <Button
+                className='GWASUI-navBtn GWASUI-navBtn__next'
+                type='primary'
+                onClick={() => {
+                  setCurrent(current + 1);
+                }}
+                disabled={!nextButtonEnabled}
+              >
+                Next
+              </Button>
+            )}
+            {/* added so "select diff gwas" btn retains center position on last page */}
+            {current === quantitativeSteps.length - 1 && (<div className='GWASUI-navBtn' />)}
+          </div>
+        </Space>
+      </React.Fragment>
     </React.Fragment>
   );
 };

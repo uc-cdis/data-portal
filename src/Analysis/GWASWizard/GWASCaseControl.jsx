@@ -15,6 +15,7 @@ import CovariateReview from './CovariateReview';
 import WorkflowParameters from './shared/WorkflowParameters';
 import GWASFormSubmit from './shared/GWASFormSubmit';
 import TourButton from './shared/TourButton';
+import AttritionTable from './shared/AttritionTable';
 
 const { Step } = Steps;
 
@@ -140,7 +141,6 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           <div data-tour='step-1-new-cohort'>
             <AddCohortButton />
           </div>
-
           <React.Fragment>
             <div className='tour-div'>
               <TourButton stepInfo={stepInfo} />
@@ -215,12 +215,13 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 3:
       return (
         <React.Fragment>
-          { selectedCovariates.length > 0 &&
-            <div className='tour-div'>
-              <TourButton stepInfo={stepInfo} />
-              <h4>&nbsp;Tutorial</h4>
-            </div>
-          }
+          {selectedCovariates.length > 0
+              && (
+                <div className='tour-div'>
+                  <TourButton stepInfo={stepInfo} />
+                  <h4>&nbsp;Tutorial</h4>
+                </div>
+              )}
           <React.Fragment>
             {selectedCovariates.length === 0
                 && (
@@ -340,6 +341,28 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
 
   return (
     <React.Fragment>
+      {!loading && sourceId && (
+        <React.Fragment>
+          <AttritionTable
+            sourceId={sourceId}
+            selectedCohort={selectedCaseCohort}
+            otherSelectedCohort={selectedControlCohort}
+            // outcome={outcome}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            tableHeader={'Case Cohort Attrition Table'}
+          />
+          <AttritionTable
+            sourceId={sourceId}
+            selectedCohort={selectedControlCohort}
+            otherSelectedCohort={selectedCaseCohort}
+            // outcome={outcome}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            tableHeader={'Control Cohort Attrition Table'}
+          />
+        </React.Fragment>
+      )}
       <Space direction={'vertical'} style={{ width: '100%' }}>
         <Steps current={current}>
           {caseControlSteps.map((item) => (

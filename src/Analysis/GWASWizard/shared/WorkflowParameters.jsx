@@ -169,8 +169,8 @@ WorkflowParameters.propTypes = {
 };
 
 WorkflowParameters.defaultProps = {
-  controlCohortDefinitionId: undefined,
   caseCohortDefinitionId: undefined,
+  controlCohortDefinitionId: undefined,
   quantitativeCohortDefinitionId: undefined,
   outcomeId: undefined,
   cohortSizes: undefined,

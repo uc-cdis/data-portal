@@ -6,22 +6,21 @@ import Discovery, { AccessLevel, AccessSortDirection, DiscoveryResource } from '
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import {
-  hostnameWithSubdomain, discoveryConfig, studyRegistrationConfig, useArboristUI
+  hostnameWithSubdomain, discoveryConfig, studyRegistrationConfig, useArboristUI,
 } from '../localconf';
 import isEnabled from '../helpers/featureFlags';
 import loadStudiesFromAggMDS from './aggMDSUtils';
 import loadStudiesFromMDS from './MDSUtils';
 
 const populateStudiesWithConfigInfo = (studies, config) => {
-
   if (!config.studies) {
     return;
   }
 
   const studyMatchesStudyConfig = (study, studyConfig) => {
-    let fieldToMatch = Object.keys(studyConfig.match)[0];
+    const fieldToMatch = Object.keys(studyConfig.match)[0];
     if (study[fieldToMatch] !== undefined) {
-      let valueToMatch = Object.values(studyConfig.match)[0];
+      const valueToMatch = Object.values(studyConfig.match)[0];
       if (study[fieldToMatch] === valueToMatch) {
         return true;
       }
@@ -96,7 +95,7 @@ const DiscoveryWithMDSBackend: React.FC<{
       if (props.config.features.authorization.enabled) {
         // mark studies as accessible or inaccessible to user
         const { authzField, dataAvailabilityField } = props.config.minimalFieldMapping;
-        const supportedValues = props.config.features.authorization.supportedValues;
+        const { supportedValues } = props.config.features.authorization;
         // useArboristUI=true is required for userHasMethodForServiceOnResource
         if (!useArboristUI) {
           throw new Error('Arborist UI must be enabled for the Discovery page to work if authorization is enabled in the Discovery page. Set `useArboristUI: true` in the portal config.');
@@ -114,13 +113,12 @@ const DiscoveryWithMDSBackend: React.FC<{
             } else {
               authMapping = props.userAuthMapping;
             }
-            const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], authMapping)
+            const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], authMapping);
             if (supportedValues.accessible.enabled && isAuthorized === true) {
               accessible = AccessLevel.ACCESSIBLE;
             } else if (supportedValues.unaccessible.enabled && isAuthorized === false) {
               accessible = AccessLevel.UNACCESSIBLE;
-            }
-            else {
+            } else {
               accessible = AccessLevel.OTHER;
             }
           }
