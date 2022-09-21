@@ -15,10 +15,10 @@ import { Link, useLocation } from 'react-router-dom';
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import {
-  hostname, requestorPath, useArboristUI, studyRegistrationConfig,
+  hostname, requestorPath, useArboristUI, studyRegistrationConfig, kayakoConfig,
 } from '../localconf';
 import { FormSubmissionState, StudyRegistrationProps } from './StudyRegistration';
-import { createKayakoTicket } from './utils';
+import { createKayakoTicket } from '../utils';
 import { fetchWithCreds } from '../actions';
 
 const { TextArea } = Input;
@@ -114,7 +114,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
               const [key, value] = entry;
               contents = contents.concat(`\n${key}: ${value}`);
             });
-            createKayakoTicket(subject, fullName, email, contents, 21).then(() => setFormSubmissionStatus({ status: 'success' }),
+            createKayakoTicket(subject, fullName, email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
           } else {
             // eslint-disable-next-line no-console
