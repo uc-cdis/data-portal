@@ -330,7 +330,6 @@
 }
 
 .GWASUI-attritionTableHeader {
-  margin: 0 auto;
   width: 100%;
   align-items: center;
   justify-content: space-between;
@@ -339,15 +338,34 @@
 .GWASUI-attritionTableHeader .ant-spin-nested-loading .ant-spin-container .ant-table .ant-table-container .ant-table-content table .ant-table-tbody {
   display: none;
 }
-
-.GWASUI-covariateRow {
-  height: 60px;
+.GWASUI-smCell {
+  width: 31%;
+  text-align: center;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 16px;
 }
 
-.GWASUI-attritionCell {
-  padding: 5px;
+.GWASUI-mdCell {
   width: 100%;
-  justify-content: space-between;
+  text-align: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.GWASUI-leftAttr {
+  display: flex;
+  flex-direction: row;
+  margin: 0 0 20 0;
+  width: 100%;
+  align-items: left;
+  flex: 3;
+}
+
+.GWASUI-rightAttr {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: right;
+  flex: 7;
 }

@@ -15,7 +15,7 @@ import CustomDichotomousSelect from './shared/CustomDichotomousSelect';
 import WorkflowParameters from './shared/WorkflowParameters';
 import GWASFormSubmit from './shared/GWASFormSubmit';
 import TourButton from './shared/TourButton';
-import AttritionTable from './shared/AttritionTable'
+import AttritionTable from './shared/AttritionTable';
 
 const { Step } = Steps;
 
@@ -297,6 +297,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
         outcome={outcome}
         selectedCovariates={selectedCovariates}
         selectedDichotomousCovariates={selectedDichotomousCovariates}
+        tableHeader={"Cohort Attrition Table"}
       />)}
       <React.Fragment>
         <Space direction={'vertical'} style={{ width: '100%' }}>

@@ -15,6 +15,7 @@ import CovariateReview from './CovariateReview';
 import WorkflowParameters from './shared/WorkflowParameters';
 import GWASFormSubmit from './shared/GWASFormSubmit';
 import TourButton from './shared/TourButton';
+import AttritionTable from './shared/AttritionTable';
 
 const { Step } = Steps;
 
@@ -340,21 +341,24 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
 
   return (
     <React.Fragment>
-      {!loading && sourceId && (<><AttritionTable
-        sourceId={sourceId}
-        cohortSelected={selectedCaseCohort}
-        otherCohortSelected={selectedControlCohort}
-        outcome={outcome}
-        selectedCovariates={selectedCovariates}
-        selectedDichotomousCovariates={selectedDichotomousCovariates}
-      />
+      {!loading && sourceId && (<>
         <AttritionTable
           sourceId={sourceId}
-          cohortSelected={selectedControlCohort}
-          otherCohortSelected={selectedCaseCohort}
-          outcome={outcome}
+          selectedCohort={selectedCaseCohort}
+          otherSelectedCohort={selectedControlCohort}
+          // outcome={outcome}
           selectedCovariates={selectedCovariates}
           selectedDichotomousCovariates={selectedDichotomousCovariates}
+          tableHeader={"Case Cohort Attrition Table"}
+        />
+        <AttritionTable
+          sourceId={sourceId}
+          selectedCohort={selectedControlCohort}
+          otherSelectedCohort={selectedCaseCohort}
+          // outcome={outcome}
+          selectedCovariates={selectedCovariates}
+          selectedDichotomousCovariates={selectedDichotomousCovariates}
+          tableHeader={"Control Cohort Attrition Table"}
         />
       </>)}
       <Space direction={'vertical'} style={{ width: '100%' }}>

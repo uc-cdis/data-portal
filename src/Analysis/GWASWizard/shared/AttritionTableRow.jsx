@@ -12,15 +12,20 @@ const AttritionTableRow = ({
     sourceId
 }) => {
     const [breakdownSize, setBreakdownSize] = useState(0);
+    const [breakdownColumns, setBreakdownColumns] = useState([]);
     const [afr, setAfr] = useState(undefined);
     const [asn, setAsn] = useState(undefined);
     const [eur, setEur] = useState(undefined);
     const [his, setHis] = useState(undefined);
-    const [breakdownColumns, setBreakdownColumns] = useState([]);
 
     const { data, status } = useQuery(
         ['conceptstatsbyharesubset', covariateSubset, cohortDefinitionId],
-        () => fetchConceptStatsByHareSubset(
+        () => otherCohortDefinitionId ? fetchConceptStatsByHareForCaseControl(
+            cohortDefinitionId,
+            otherCohortDefinitionId,
+            covariateSubset,
+            sourceId,
+        ) : fetchConceptStatsByHareSubset(
             cohortDefinitionId,
             covariateSubset,
             sourceId,
@@ -56,14 +61,17 @@ const AttritionTableRow = ({
     };
 
     return <div className="GWASUI-attritionTable GWASUI-covariateRow" onClick={() => console.log('data', breakdown)}>
-        <div className="GWASUI-attritionCell">{rowType}</div>
-        <div className="GWASUI-attritionCell">{rowName}</div>
-        <div className="GWASUI-attritionCell">{breakdownSize}</div>
-        <div className="GWASUI-attritionCell">{afr}</div>
-        <div className="GWASUI-attritionCell">{asn}</div>
-        <div className="GWASUI-attritionCell">{eur}</div>
-        <div className="GWASUI-attritionCell">{his}</div>
-
+        <div className="GWASUI-leftAttr">
+        <div className="GWASUI-smCell">{rowType}</div>
+        <div className="GWASUI-smCell">{rowName}</div>
+        <div className="GWASUI-smCell">{breakdownSize}</div>
+        </div>
+       <div className="GWASUI-rightAttr">
+       <div className="GWASUI-mdCell">{afr}</div>
+        <div className="GWASUI-mdCell">{asn}</div>
+        <div className="GWASUI-mdCell">{eur}</div>
+        <div className="GWASUI-mdCell">{his}</div>
+       </div>
     </div>
 }
 

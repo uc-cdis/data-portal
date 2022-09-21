@@ -15,7 +15,8 @@ const AttritionTable = ({
     outcome,
     selectedCovariates,
     selectedDichotomousCovariates,
-    sourceId
+    sourceId,
+    tableHeader
 }) => {
     const [covariateSubsets, setCovariateSubsets] = useState([]);
 
@@ -41,7 +42,7 @@ const AttritionTable = ({
     }, [selectedCovariates, selectedDichotomousCovariates]);
 
     return <Collapse onClick={(event) => event.stopPropagation()}>
-        <Panel header='Attrition Table' key='2'>
+        <Panel header={tableHeader} key='2'>
             <Table
                 className="GWASUI-attritionTableHeader"
                 key="attritionHeaderKey"
@@ -68,17 +69,18 @@ const AttritionTable = ({
                     cohortDefinitionId={selectedCohort.cohort_definition_id}
                     otherCohortDefinitionId={otherSelectedCohort ? otherSelectedCohort.cohort_definition_id : undefined}
                     rowType='Cohort'
-                    rowName={selectedCohort.cohort_name} // TODO
+                    rowName={selectedCohort.cohort_name}
                     covariateSubset={[]}
                     sourceId={sourceId}
                 />
             </>)}
+
             {selectedCohort?.cohort_definition_id && outcome && (<>
                 <AttritionTableRow
                     cohortDefinitionId={selectedCohort.cohort_definition_id}
                     otherCohortDefinitionId={otherSelectedCohort ? otherSelectedCohort.cohort_definition_id : undefined}
-                    rowType='Outcome phenotype'
-                    rowName={outcome.provided_name} // TODO use .concept_name if outcome is continuous
+                    rowType='Outcome phenotype' // should parametrize this and otherCohort by adding to this condition somehow
+                    rowName={'test'} // TODO use .concept_name if outcome is continuous
                     covariateSubset={[outcome]}
                     sourceId={sourceId}
                 />
@@ -109,11 +111,13 @@ AttritionTable.propTypes = {
     selectedCovariates: PropTypes.array.isRequired,
     selectedDichotomousCovariates: PropTypes.array.isRequired,
     sourceId: PropTypes.number.isRequired,
+    tableHeader: PropTypes.string.isRequired
 }
 
 AttritionTable.defaultProps = {
     selectedCohort: undefined,
     otherSelectedCohort: undefined,
+    outcome: undefined
 };
 
 export default AttritionTable;
