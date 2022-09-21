@@ -63,7 +63,7 @@ export const fetchOverlapInfo = async (
 export const filterSubsetCovariates = (subsetCovariates) => {
   const filteredSubsets = [];
   subsetCovariates.forEach((covariate) => {
-    if (covariate.uuid) {
+    if (covariate.variable_type === "custom_dichotomous") {
       filteredSubsets.push({
         cohort_ids: covariate.cohort_ids,
         provided_name: covariate.provided_name,
@@ -101,8 +101,34 @@ export const fetchConceptStatsByHareSubset = async (
   return getConceptStats.json();
 };
 
-// export const fetchConceptStatsByHare = async (
-//   cohortDefinitionId,
+export const addCDFilter = (cohortId, otherCohortId, covariateArr) => {
+  // adding an extra filter on top of the given selectedDichotomousCovariates
+  // to ensure that any person that belongs to _both_ cohorts
+  // [queriedCohortDefinitionId, otherCohortDefinitionId] also gets filtered out:
+  const covariateRequest = [...covariateArr];
+  const cdFilter = {
+    variable_type: 'custom_dichotomous',
+    cohort_ids: [cohortId, otherCohortId],
+    provided_name: 'auto_generated_extra_item_to_filter_out_case_control_overlap',
+  };
+  covariateRequest.push(cdFilter);
+  return covariateRequest;
+}
+
+export const fetchConceptStatsByHareSubsetCC = async (
+  cohortDefinitionId,
+  otherCohortDefinitionId,
+  covariateSubset,
+  sourceId,
+) => {
+
+  return fetchConceptStatsByHareSubset(
+    cohortDefinitionId,
+    addCDFilter(cohortDefinitionId, otherCohortDefinitionId, covariateSubset),
+    sourceId,
+  );
+}
+
 export const fetchConceptStatsByHareForCaseControl = async (
   queriedCohortDefinitionId,
   otherCohortDefinitionId,
@@ -110,20 +136,13 @@ export const fetchConceptStatsByHareForCaseControl = async (
   selectedDichotomousCovariates,
   sourceId,
 ) => {
-  // adding an extra filter on top of the given selectedDichotomousCovariates
-  // to ensure that any person that belongs to _both_ cohorts
-  // [queriedCohortDefinitionId, otherCohortDefinitionId] also gets filtered out:
-  const extendedSelectedDichotomousCovariates = [...selectedDichotomousCovariates];
-  extendedSelectedDichotomousCovariates.push({
-    variable_type: 'custom_dichotomous',
-    cohort_ids: [queriedCohortDefinitionId, otherCohortDefinitionId],
-    provided_name: 'auto_generated_extra_item_to_filter_out_case_control_overlap',
-  });
 
-  return fetchConceptStatsByHare(
+  return fetchConceptStatsByHareSubset(
     queriedCohortDefinitionId,
-    selectedCovariates,
-    extendedSelectedDichotomousCovariates,
+    addCDFilter(
+      queriedCohortDefinitionId,
+      otherCohortDefinitionId,
+      [...selectedCovariates, ...selectedDichotomousCovariates]),
     sourceId,
   );
 };

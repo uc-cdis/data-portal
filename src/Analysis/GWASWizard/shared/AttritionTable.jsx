@@ -62,7 +62,6 @@ const AttritionTable = ({
                     sourceId={sourceId}
                 />
             </>)}
-
             {selectedCohort?.cohort_definition_id && covariateSubsets.length > 0 ? (<List
                 className='GWASUI-attritionRow'
                 itemLayout='horizontal'
