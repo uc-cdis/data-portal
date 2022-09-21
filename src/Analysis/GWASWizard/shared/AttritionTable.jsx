@@ -22,6 +22,7 @@ const AttritionTable = ({
 
     const getCovariateRow = (selectedCovariates = [], selectedDichotomousCovariates = []) => {
         const covariateSubsets = [];
+        // todo: handle case of deselecting/selecting existing covariates (100% missing?) after adding custom dichotomous
         const allCovariates = [...selectedCovariates, ...selectedDichotomousCovariates];
         allCovariates
             .slice()
@@ -50,20 +51,7 @@ const AttritionTable = ({
                 columns={attritionTableHeaderConfig}
                 dataSource={headerDataSource}
             />
-            {/* {caseCohortDefinitionId && (<>
-                <AttritionTableRow
-                    caseCohortDefinitionId={caseCohortDefinitionId}
-                    covariateSubset={[]}
-                    sourceId={sourceId}
-                />
-            </>)}
-            {controlCohortDefinitionId && (<>
-                <AttritionTableRow
-                    controlCohortDefinitionId={controlCohortDefinitionId}
-                    covariateSubset={[]}
-                    sourceId={sourceId}
-                />
-            </>)} */}
+
             {selectedCohort?.cohort_definition_id && (<>
                 <AttritionTableRow
                     cohortDefinitionId={selectedCohort.cohort_definition_id}
@@ -75,17 +63,7 @@ const AttritionTable = ({
                 />
             </>)}
 
-            {selectedCohort?.cohort_definition_id && outcome && (<>
-                <AttritionTableRow
-                    cohortDefinitionId={selectedCohort.cohort_definition_id}
-                    otherCohortDefinitionId={otherSelectedCohort ? otherSelectedCohort.cohort_definition_id : undefined}
-                    rowType='Outcome phenotype' // should parametrize this and otherCohort by adding to this condition somehow
-                    rowName={'test'} // TODO use .concept_name if outcome is continuous
-                    covariateSubset={[outcome]}
-                    sourceId={sourceId}
-                />
-            </>)}
-            {selectedCohort?.cohort_definition_id && outcome && covariateSubsets.length > 0 ? (<List
+            {selectedCohort?.cohort_definition_id && covariateSubsets.length > 0 ? (<List
                 className='GWASUI-attritionRow'
                 itemLayout='horizontal'
                 dataSource={covariateSubsets}
@@ -93,8 +71,8 @@ const AttritionTable = ({
                     <AttritionTableRow
                         cohortDefinitionId={selectedCohort.cohort_definition_id}
                         otherCohortDefinitionId={otherSelectedCohort ? otherSelectedCohort.cohort_definition_id : undefined}
-                        rowType='Covariate'
-                        rowName={item[0].concept_name} // ?? TODO use .provided_name if outcome is dichotomous
+                        rowType={outcome?.concept_id === item[0].concept_id ? 'Outcome Phenotype': 'Covariate'}
+                        rowName={item[0].concept_name ? item[0].concept_name : item[0].provided_name}
                         covariateSubset={item}
                         sourceId={sourceId}
                     />

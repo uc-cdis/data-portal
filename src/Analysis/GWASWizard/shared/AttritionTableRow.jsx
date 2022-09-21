@@ -18,14 +18,10 @@ const AttritionTableRow = ({
     const [eur, setEur] = useState(undefined);
     const [his, setHis] = useState(undefined);
 
+
     const { data, status } = useQuery(
         ['conceptstatsbyharesubset', covariateSubset, cohortDefinitionId],
-        () => otherCohortDefinitionId ? fetchConceptStatsByHareForCaseControl(
-            cohortDefinitionId,
-            otherCohortDefinitionId,
-            covariateSubset,
-            sourceId,
-        ) : fetchConceptStatsByHareSubset(
+        () => fetchConceptStatsByHareSubset(
             cohortDefinitionId,
             covariateSubset,
             sourceId,
@@ -64,13 +60,13 @@ const AttritionTableRow = ({
         <div className="GWASUI-leftAttr">
         <div className="GWASUI-smCell">{rowType}</div>
         <div className="GWASUI-smCell">{rowName}</div>
-        <div className="GWASUI-smCell">{breakdownSize}</div>
+        <div className="GWASUI-smCell">{breakdownSize || "0"}</div>
         </div>
        <div className="GWASUI-rightAttr">
-       <div className="GWASUI-mdCell">{afr}</div>
-        <div className="GWASUI-mdCell">{asn}</div>
-        <div className="GWASUI-mdCell">{eur}</div>
-        <div className="GWASUI-mdCell">{his}</div>
+       <div className="GWASUI-mdCell">{afr || "0"}</div>
+        <div className="GWASUI-mdCell">{asn || "0"}</div>
+        <div className="GWASUI-mdCell">{eur || "0"}</div>
+        <div className="GWASUI-mdCell">{his || "0"}</div>
        </div>
     </div>
 }
