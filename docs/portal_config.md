@@ -181,6 +181,7 @@ Below is an example, with inline comments describing what each JSON block config
     "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
     "explorerFilterValuesToHide": ["array of strings"], // optional, Values set in array will be hidden in guppy filters. Intended use is to hide missing data category from filters, for this it should be set to the same as `missing_data_alias` in Guppy server config
     "studyRegistration": true, // optional, whether to enable the study registration feature
+    "workspaceRegistration": true, // optional, whether to enable the workspace registration feature
   },
   "dataExplorerConfig": { // required only if featureFlags.explorer is true; configuration for the Data Explorer (/explorer); can be replaced by explorerConfig, see Multi Tab Explorer doc
     "charts": { // optional; indicates which charts to display in the Data Explorer
@@ -634,14 +635,6 @@ Below is an example, with inline comments describing what each JSON block config
     "tagsDisplayName": "Tags" // optional, overrides the name of the mandatory tags column
     "tableScrollHeight": 450 // optional, no scroll if omitted
   },
-  "studyRegistrationConfig": { // optional, config for Study Registration and Study Registration Request Access page.
-    "studyRegistrationTrackingField": "registrant_username", // optional, one of the extra field that is being added to metadata when a study is registered, will be useful in the future. Defaults to "registrant_username"
-    "studyRegistrationValidationField": "is_registered", // optional, the other of the extra field that is being added to metadata when a study is registered, to check if a study has been registered, because after loading data from MDS/AggMDS into Discovery page, the metadata category information is lost. Defaults to "is_registered"
-    "studyRegistrationAccessCheckField": "registration_authz", // optional, the field that contains the value for Study Registration Request Access feature. Defaults to "registration_authz"
-    "studyRegistrationUIDField": "appl_id", // optional, the field which can be used to uniquely determine a metadata record for Study Registration. Defaults to "appl_id"
-    "studyRegistrationFormDisclaimerField": "This is a disclaimer", //optional, the disclaimer text that appears under the submit button on the study registration request access form. Defaults to undefined
-    "clinicalTrialFields": [] // optional, list of fields to fetch from ClinicalTrials.gov
-  },
   "resourceBrowser": {), // see Resource Browser documentation
   "workspacePageTitle": "", // title to display above workspacePageDescription
   "workspacePageDescription": "", // html to display above the workspace options
@@ -676,6 +669,29 @@ Below is an example, with inline comments describing what each JSON block config
   "connectSrcCSPWhitelist": [ // optional; Array of urls to add to the header CSP (Content-Security-Policy) connect-src 'self'
     "https://example.s3.amazonaws.com" // full url to be added
   ],
-  "stridesPortalURL": "https://strides-admin-portal.org" // optional; If configured, will display a link on the workspace page which can direct user to the STRIDES admin portal
+  "stridesPortalURL": "https://strides-admin-portal.org" // optional; If configured, will display a link on the workspace page which can direct user to the STRIDES admin portal,
+  "registrationConfigs": { // optional; Required when using Kayako integration with Study/Workspace registration
+      "features":{ // Optional; Required when using study/Workspace registration
+        "studyRegistrationConfig": { // optional, config for Study Registration and Study Registration Request Access page.
+          "studyRegistrationTrackingField": "registrant_username", // optional, one of the extra field that is being added to metadata when a study is registered, will be useful in the future. Defaults to "registrant_username"
+          "studyRegistrationValidationField": "is_registered", // optional, the other of the extra field that is being added to metadata when a study is registered, to check if a study has been registered, because after loading data from MDS/AggMDS into Discovery page, the metadata category information is lost. Defaults to "is_registered"
+          "studyRegistrationAccessCheckField": "registration_authz", // optional, the field that contains the value for Study Registration Request Access feature. Defaults to "registration_authz"
+          "studyRegistrationUIDField": "appl_id", // optional, the field which can be used to uniquely determine a metadata record for Study Registration. Defaults to "appl_id"
+          "studyRegistrationFormDisclaimerField": "This is a disclaimer", //optional, the disclaimer text that appears under the submit button on the study registration request access form. Defaults to undefined
+        },
+        "workspaceRegistrationConfig" : { // optional, config for Workspace Registration Request Access page.
+        "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
+        "workspaceInfoMessage": "Please fill out this form to request and be approved for access to workspace.", //optional, any info message to give users more context before they fill the request access form
+        "successRedirect" : { // optional, upon succesful submission of the registration form, the user is presented with a button to go to a specific page. defaults to `{ link: '/', text: 'Go to Home Page' }`
+          "link": "/discovery",
+          "text": "Go to Discovery Page"
+        }
+      }
+      },
+      "kayakoConfig":{ //Required; if using either of the study/workspace registration feature
+        "kayakoDepartmentId": 21        // Required; the department ID in the kayako portal. Refer to Ops team to get more info
+      }
+    }
+
 }
 ```

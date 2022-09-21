@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import parse from 'html-react-parser';
 import Button from '@gen3/ui-component/dist/components/Button';
 import {
@@ -11,6 +12,7 @@ import {
   DownOutlined, UserOutlined, QuestionCircleOutlined, LoadingOutlined, ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import isEnabled from '../helpers/featureFlags';
 import {
   workspaceUrl,
   wtsPath,
@@ -25,6 +27,7 @@ import {
   workspacePageDescription,
   stridesPortalURL,
   showExternalLoginsOnProfile,
+  workspaceErrorUrl,
 } from '../localconf';
 import './Workspace.less';
 import { fetchWithCreds } from '../actions';
@@ -54,7 +57,7 @@ class Workspace extends React.Component {
       interval: null,
       payModelInterval: null,
       workspaceID: null,
-      defaultWorkspace: false,
+      hasWorkspaceAccess: true,
       workspaceIsFullpage: false,
       externalLoginOptions: [],
       payModel: {},
@@ -124,7 +127,7 @@ class Workspace extends React.Component {
         });
         this.setState({ options: sortedResults });
       },
-    ).catch(() => this.setState({ defaultWorkspace: true }));
+    ).catch(() => this.setState({ hasWorkspaceAccess: false }));
   }
 
   getExternalLoginOptions = () => {
@@ -348,7 +351,7 @@ class Workspace extends React.Component {
         payModel: data,
       });
     });
-    if (!this.state.defaultWorkspace) {
+    if (this.state.hasWorkspaceAccess) {
       this.getWorkspaceStatus().then((data) => {
         if (data.status === 'Launching' || data.status === 'Terminating' || data.status === 'Stopped') {
           this.checkWorkspaceStatus();
@@ -502,7 +505,7 @@ class Workspace extends React.Component {
       </Menu>
     );
 
-    if (this.state.connectedStatus && this.state.workspaceStatus && !this.state.defaultWorkspace) {
+    if (this.state.connectedStatus && this.state.workspaceStatus && this.state.hasWorkspaceAccess) {
       // NOTE both the containing element and the iframe have class '.workspace',
       // although no styles should be shared between them. The reason for this
       // is for backwards compatibility with Jenkins integration tests that select by classname.
@@ -733,20 +736,12 @@ class Workspace extends React.Component {
           }
         </div>
       );
-    } if (this.state.defaultWorkspace && this.state.connectedStatus) {
-      // If this commons does not use Hatchery to spawn workspaces, then this
-      // default workspace is shown.
-      return (
-        <div className='workspace__default'>
-          <iframe
-            title='Workspace'
-            frameBorder='0'
-            className='workspace__iframe'
-            src={workspaceUrl}
-            onLoad={this.oniframeLoad}
-          />
-        </div>
-      );
+    } if (this.state.connectedStatus && !this.state.hasWorkspaceAccess) {
+      if (isEnabled('workspaceRegistration')) {
+        console.log('This is navigated to workspace register page');
+        return <Redirect to='/workspace/register' />;
+      }
+      return <Redirect to={workspaceErrorUrl} />;
     }
     return <Spinner />;
   }
