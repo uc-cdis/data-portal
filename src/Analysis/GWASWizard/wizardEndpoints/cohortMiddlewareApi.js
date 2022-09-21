@@ -63,21 +63,21 @@ export const fetchOverlapInfo = async (
 export const filterSubsetCovariates = (subsetCovariates) => {
   const filteredSubsets = [];
   subsetCovariates.forEach((covariate) => {
-    if (covariate.variable_type === "custom_dichotomous") {
+    if (covariate.variable_type === 'custom_dichotomous') {
       filteredSubsets.push({
         cohort_ids: covariate.cohort_ids,
         provided_name: covariate.provided_name,
-        variable_type: covariate.variable_type
-      })
+        variable_type: covariate.variable_type,
+      });
     } else {
       filteredSubsets.push({
         variable_type: 'concept',
         concept_id: covariate.concept_id,
-      })
+      });
     }
   });
-  return filteredSubsets
-}
+  return filteredSubsets;
+};
 
 export const fetchConceptStatsByHareSubset = async (
   cohortDefinitionId,
@@ -87,7 +87,7 @@ export const fetchConceptStatsByHareSubset = async (
   const variablesPayload = {
     variables:
       [
-        ...filterSubsetCovariates(subsetCovariates)
+        ...filterSubsetCovariates(subsetCovariates),
       ],
   };
   const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
@@ -113,21 +113,18 @@ export const addCDFilter = (cohortId, otherCohortId, covariateArr) => {
   };
   covariateRequest.push(cdFilter);
   return covariateRequest;
-}
+};
 
 export const fetchConceptStatsByHareSubsetCC = async (
   cohortDefinitionId,
   otherCohortDefinitionId,
   covariateSubset,
   sourceId,
-) => {
-
-  return fetchConceptStatsByHareSubset(
-    cohortDefinitionId,
-    addCDFilter(cohortDefinitionId, otherCohortDefinitionId, covariateSubset),
-    sourceId,
-  );
-}
+) => fetchConceptStatsByHareSubset(
+  cohortDefinitionId,
+  addCDFilter(cohortDefinitionId, otherCohortDefinitionId, covariateSubset),
+  sourceId,
+);
 
 export const fetchConceptStatsByHareForCaseControl = async (
   queriedCohortDefinitionId,
@@ -135,17 +132,14 @@ export const fetchConceptStatsByHareForCaseControl = async (
   selectedCovariates,
   selectedDichotomousCovariates,
   sourceId,
-) => {
-
-  return fetchConceptStatsByHareSubset(
+) => fetchConceptStatsByHareSubset(
+  queriedCohortDefinitionId,
+  addCDFilter(
     queriedCohortDefinitionId,
-    addCDFilter(
-      queriedCohortDefinitionId,
-      otherCohortDefinitionId,
-      [...selectedCovariates, ...selectedDichotomousCovariates]),
-    sourceId,
-  );
-};
+    otherCohortDefinitionId,
+    [...selectedCovariates, ...selectedDichotomousCovariates]),
+  sourceId,
+);
 
 export const fetchCovariateStats = async (
   cohortDefinitionId,

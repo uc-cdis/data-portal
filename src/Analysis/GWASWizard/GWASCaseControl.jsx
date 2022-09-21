@@ -135,94 +135,95 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
       workflowName: 'case control',
     };
     switch (current) {
-      case 0:
-        return (!loading && sourceId ? (
+    case 0:
+      return (!loading && sourceId ? (
+        <React.Fragment>
+          <div data-tour='step-1-new-cohort'>
+            <AddCohortButton />
+          </div>
           <React.Fragment>
-            <div data-tour='step-1-new-cohort'>
-              <AddCohortButton />
+            <div className='tour-div'>
+              <TourButton stepInfo={stepInfo} />
+              <h4>&nbsp;Tutorial</h4>
             </div>
-            <React.Fragment>
-              <div className='tour-div'>
-                <TourButton stepInfo={stepInfo} />
-                <h4>&nbsp;Tutorial</h4>
-              </div>
-              <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                <h4 className='GWASUI-selectInstruction' data-tour='step-1-cohort-selection'>
+            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+              <h4 className='GWASUI-selectInstruction' data-tour='step-1-cohort-selection'>
                   In this step, you will begin to determine your study populations.
                   To begin, select the cohort that you would like to define as your study <span className='GWASUI-emphText'>case</span> population.
-                </h4>
-                <div className='GWASUI-mainTable'>
-                  <CohortSelect
-                    selectedCohort={selectedCaseCohort}
-                    handleCohortSelect={handleCaseCohortSelect}
-                    sourceId={sourceId}
-                    current={current}
-                  />
-                </div>
-              </Space>
-            </React.Fragment>
-          </React.Fragment>
-        ) : <Spin />);
-      case 1:
-        return (
-          <React.Fragment>
-            <AddCohortButton />
-            <React.Fragment>
-              <div className='tour-div'>
-                <TourButton stepInfo={stepInfo} />
-                <h4>&nbsp;Tutorial</h4>
+              </h4>
+              <div className='GWASUI-mainTable'>
+                <CohortSelect
+                  selectedCohort={selectedCaseCohort}
+                  handleCohortSelect={handleCaseCohortSelect}
+                  sourceId={sourceId}
+                  current={current}
+                />
               </div>
-              <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                <h4 className='GWASUI-selectInstruction'  data-tour='step-2-cohort-selection'>
+            </Space>
+          </React.Fragment>
+        </React.Fragment>
+      ) : <Spin />);
+    case 1:
+      return (
+        <React.Fragment>
+          <AddCohortButton />
+          <React.Fragment>
+            <div className='tour-div'>
+              <TourButton stepInfo={stepInfo} />
+              <h4>&nbsp;Tutorial</h4>
+            </div>
+            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+              <h4 className='GWASUI-selectInstruction' data-tour='step-2-cohort-selection'>
                   In this step, you will continue to define your study populations.
                   Please select the cohort that you would like to define as your study <span className='GWASUI-emphText'>control</span> population.
-                </h4>
-                <div className='GWASUI-mainTable'>
-                  <CohortSelect
-                    selectedCohort={selectedControlCohort}
-                    handleCohortSelect={handleControlCohortSelect}
-                    sourceId={sourceId}
-                    otherCohortSelected={selectedCaseCohort ? selectedCaseCohort.cohort_name : ''}
-                    current={current}
-                  />
-                </div>
-              </Space>
-            </React.Fragment>
-          </React.Fragment>
-        );
-      case 2:
-        return (
-          <React.Fragment>
-            <React.Fragment>
-              <div className='tour-div'>
-                <TourButton stepInfo={stepInfo} />
-                <h4>&nbsp;Tutorial</h4>
+              </h4>
+              <div className='GWASUI-mainTable'>
+                <CohortSelect
+                  selectedCohort={selectedControlCohort}
+                  handleCohortSelect={handleControlCohortSelect}
+                  sourceId={sourceId}
+                  otherCohortSelected={selectedCaseCohort ? selectedCaseCohort.cohort_name : ''}
+                  current={current}
+                />
               </div>
-              <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-                <h4 className='GWASUI-selectInstruction' data-tour='step-3-choosing-variable'>In this step, you will select the harmonized continuous covariates for your study. Please select all variables you wish to use in your model. (Note: population PCs are not included in this step)</h4>
-                <div className='GWASUI-mainTable'>
-                  <CovariateSelect
-                    selectedCovariates={selectedCovariates}
-                    handleCovariateSelect={handleCovariateSelect}
-                    sourceId={sourceId}
-                    current={current}
-                  />
-                </div>
-              </Space>
-            </React.Fragment>
+            </Space>
           </React.Fragment>
-        );
-      case 3:
-        return (
+        </React.Fragment>
+      );
+    case 2:
+      return (
+        <React.Fragment>
           <React.Fragment>
-            {selectedCovariates.length > 0 &&
-              <div className='tour-div'>
-                <TourButton stepInfo={stepInfo} />
-                <h4>&nbsp;Tutorial</h4>
+            <div className='tour-div'>
+              <TourButton stepInfo={stepInfo} />
+              <h4>&nbsp;Tutorial</h4>
+            </div>
+            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+              <h4 className='GWASUI-selectInstruction' data-tour='step-3-choosing-variable'>In this step, you will select the harmonized continuous covariates for your study. Please select all variables you wish to use in your model. (Note: population PCs are not included in this step)</h4>
+              <div className='GWASUI-mainTable'>
+                <CovariateSelect
+                  selectedCovariates={selectedCovariates}
+                  handleCovariateSelect={handleCovariateSelect}
+                  sourceId={sourceId}
+                  current={current}
+                />
               </div>
-            }
-            <React.Fragment>
-              {selectedCovariates.length === 0
+            </Space>
+          </React.Fragment>
+        </React.Fragment>
+      );
+    case 3:
+      return (
+        <React.Fragment>
+          {selectedCovariates.length > 0
+              && (
+                <div className='tour-div'>
+                  <TourButton stepInfo={stepInfo} />
+                  <h4>&nbsp;Tutorial</h4>
+                </div>
+              )}
+          <React.Fragment>
+            {selectedCovariates.length === 0
                 && (
                   <React.Fragment>
                     <div className='GWASUI-mainTable GWASUI-spinnerContainer'>
@@ -240,8 +241,8 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
                     </div>
                   </React.Fragment>
                 )}
-            </React.Fragment>
-            {selectedCovariates.length > 0
+          </React.Fragment>
+          {selectedCovariates.length > 0
               && (
                 <CovariateReview
                   caseCohortDefinitionId={selectedCaseCohort.cohort_definition_id}
@@ -251,82 +252,82 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
                 />
               )}
 
-          </React.Fragment>
-        );
-      case 4:
-        return (
-          <React.Fragment>
-            <div className='tour-div'>
-              <TourButton stepInfo={stepInfo} />
-              <h4>&nbsp;Tutorial</h4>
-            </div>
-            <CustomDichotomousSelect
+        </React.Fragment>
+      );
+    case 4:
+      return (
+        <React.Fragment>
+          <div className='tour-div'>
+            <TourButton stepInfo={stepInfo} />
+            <h4>&nbsp;Tutorial</h4>
+          </div>
+          <CustomDichotomousSelect
+            sourceId={sourceId}
+            handleCDAdd={handleCDAdd}
+            handleCDRemove={handleCDRemove}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            current={current}
+          />
+        </React.Fragment>
+      );
+    case 5:
+      return (
+        <React.Fragment>
+          <div className='tour-div'>
+            <TourButton stepInfo={stepInfo} />
+            <h4>&nbsp;Tutorial</h4>
+          </div>
+          <WorkflowParameters
+            caseCohortDefinitionId={selectedCaseCohort.cohort_definition_id}
+            controlCohortDefinitionId={selectedControlCohort.cohort_definition_id}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            sourceId={sourceId}
+            workflowType={'caseControl'}
+            numOfPC={numOfPC}
+            handleNumOfPC={handleNumOfPC}
+            mafThreshold={mafThreshold}
+            handleMaf={handleMaf}
+            imputationScore={imputationScore}
+            handleImputation={handleImputation}
+            selectedHare={selectedHare}
+            handleHareChange={handleHareChange}
+            handleCovariateDelete={handleCovariateDelete}
+            handleDichotomousCovariateDelete={handleDichotomousCovariateDelete}
+          />
+        </React.Fragment>
+      );
+    case 6:
+      return (
+        <React.Fragment>
+          <div className='tour-div'>
+            <TourButton stepInfo={stepInfo} />
+            <h4>&nbsp;Tutorial</h4>
+          </div>
+          <h4 className='GWASUI-selectInstruction'>In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
+          <h4 className='GWASUI-selectInstruction'>Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
+          <div className='GWASUI-mainArea' data-tour='review-metadata'>
+            <GWASFormSubmit
               sourceId={sourceId}
-              handleCDAdd={handleCDAdd}
-              handleCDRemove={handleCDRemove}
-              selectedDichotomousCovariates={selectedDichotomousCovariates}
-              current={current}
-            />
-          </React.Fragment>
-        );
-      case 5:
-        return (
-          <React.Fragment>
-            <div className='tour-div'>
-              <TourButton stepInfo={stepInfo} />
-              <h4>&nbsp;Tutorial</h4>
-            </div>
-            <WorkflowParameters
-              caseCohortDefinitionId={selectedCaseCohort.cohort_definition_id}
-              controlCohortDefinitionId={selectedControlCohort.cohort_definition_id}
+              numOfPC={numOfPC}
+              mafThreshold={mafThreshold}
+              imputationScore={imputationScore}
+              selectedHare={selectedHare}
+              selectedCaseCohort={selectedCaseCohort}
+              selectedControlCohort={selectedControlCohort}
+              cohortSizes={cohortSizes}
+              workflowType={'caseControl'}
               selectedCovariates={selectedCovariates}
               selectedDichotomousCovariates={selectedDichotomousCovariates}
-              sourceId={sourceId}
-              workflowType={'caseControl'}
-              numOfPC={numOfPC}
-              handleNumOfPC={handleNumOfPC}
-              mafThreshold={mafThreshold}
-              handleMaf={handleMaf}
-              imputationScore={imputationScore}
-              handleImputation={handleImputation}
-              selectedHare={selectedHare}
-              handleHareChange={handleHareChange}
-              handleCovariateDelete={handleCovariateDelete}
-              handleDichotomousCovariateDelete={handleDichotomousCovariateDelete}
+              gwasName={gwasName}
+              handleGwasNameChange={handleGwasNameChange}
+              resetCaseControl={resetCaseControl}
             />
-          </React.Fragment>
-        );
-      case 6:
-        return (
-          <React.Fragment>
-            <div className='tour-div'>
-              <TourButton stepInfo={stepInfo} />
-              <h4>&nbsp;Tutorial</h4>
-            </div>
-            <h4 className='GWASUI-selectInstruction'>In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
-            <h4 className='GWASUI-selectInstruction'>Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
-            <div className='GWASUI-mainArea' data-tour='review-metadata'>
-              <GWASFormSubmit
-                sourceId={sourceId}
-                numOfPC={numOfPC}
-                mafThreshold={mafThreshold}
-                imputationScore={imputationScore}
-                selectedHare={selectedHare}
-                selectedCaseCohort={selectedCaseCohort}
-                selectedControlCohort={selectedControlCohort}
-                cohortSizes={cohortSizes}
-                workflowType={'caseControl'}
-                selectedCovariates={selectedCovariates}
-                selectedDichotomousCovariates={selectedDichotomousCovariates}
-                gwasName={gwasName}
-                handleGwasNameChange={handleGwasNameChange}
-                resetCaseControl={resetCaseControl}
-              />
-            </div>
-          </React.Fragment>
-        );
-      default:
-        return <React.Fragment />;
+          </div>
+        </React.Fragment>
+      );
+    default:
+      return <React.Fragment />;
     }
   };
 
@@ -340,26 +341,28 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
 
   return (
     <React.Fragment>
-      {!loading && sourceId && (<>
-        <AttritionTable
-          sourceId={sourceId}
-          selectedCohort={selectedCaseCohort}
-          otherSelectedCohort={selectedControlCohort}
-          // outcome={outcome}
-          selectedCovariates={selectedCovariates}
-          selectedDichotomousCovariates={selectedDichotomousCovariates}
-          tableHeader={"Case Cohort Attrition Table"}
-        />
-        <AttritionTable
-          sourceId={sourceId}
-          selectedCohort={selectedControlCohort}
-          otherSelectedCohort={selectedCaseCohort}
-          // outcome={outcome}
-          selectedCovariates={selectedCovariates}
-          selectedDichotomousCovariates={selectedDichotomousCovariates}
-          tableHeader={"Control Cohort Attrition Table"}
-        />
-      </>)}
+      {!loading && sourceId && (
+        <React.Fragment>
+          <AttritionTable
+            sourceId={sourceId}
+            selectedCohort={selectedCaseCohort}
+            otherSelectedCohort={selectedControlCohort}
+            // outcome={outcome}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            tableHeader={'Case Cohort Attrition Table'}
+          />
+          <AttritionTable
+            sourceId={sourceId}
+            selectedCohort={selectedControlCohort}
+            otherSelectedCohort={selectedCaseCohort}
+            // outcome={outcome}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            tableHeader={'Control Cohort Attrition Table'}
+          />
+        </React.Fragment>
+      )}
       <Space direction={'vertical'} style={{ width: '100%' }}>
         <Steps current={current}>
           {caseControlSteps.map((item) => (
