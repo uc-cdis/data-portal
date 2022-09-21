@@ -13,14 +13,14 @@ const AttritionTableRow = ({
   covariateSubset,
   sourceId,
 }) => {
-  const [breakdownSize, setBreakdownSize] = useState(0);
+  const [breakdownSize, setBreakdownSize] = useState(undefined);
   const [breakdownColumns, setBreakdownColumns] = useState([]);
   const [afr, setAfr] = useState(undefined);
   const [asn, setAsn] = useState(undefined);
   const [eur, setEur] = useState(undefined);
   const [his, setHis] = useState(undefined);
 
-  const { data } = useQuery(
+  const { data, status } = useQuery(
     ['conceptstatsbyharesubset', covariateSubset, cohortDefinitionId, otherCohortDefinitionId],
     () => (!(cohortDefinitionId && otherCohortDefinitionId) ? fetchConceptStatsByHareSubset(
       cohortDefinitionId,
@@ -49,7 +49,7 @@ const AttritionTableRow = ({
         .reduce((acc, curr) => acc + curr.persons_in_cohort_with_value, 0));
       setBreakdownColumns(filteredBreakdown);
     }
-  }, [breakdown, cohortDefinitionId, covariateSubset, sourceId, getSizeByColumn]);
+  }, [breakdown, cohortDefinitionId, covariateSubset, sourceId]);
 
   useEffect(() => {
     if (breakdownColumns.length) {
@@ -65,13 +65,13 @@ const AttritionTableRow = ({
       <div className='GWASUI-leftAttr'>
         <div className='GWASUI-smCell'>{rowType}</div>
         <div className='GWASUI-smCell'>{rowName}</div>
-        <div className='GWASUI-smCell'>{breakdownSize || <Spin size='small' />}</div>
+        <div className='GWASUI-smCell'>{status === "loading" ? <Spin size='small' /> : breakdownSize ? breakdownSize : 0 }</div>
       </div>
       <div className='GWASUI-rightAttr'>
-        <div className='GWASUI-mdCell'>{afr || <Spin size='small' />}</div>
-        <div className='GWASUI-mdCell'>{asn || <Spin size='small' />}</div>
-        <div className='GWASUI-mdCell'>{eur || <Spin size='small' />}</div>
-        <div className='GWASUI-mdCell'>{his || <Spin size='small' />}</div>
+        <div className='GWASUI-mdCell'>{status === "loading"  ? <Spin size='small' /> : afr ? afr : 0 }</div>
+        <div className='GWASUI-mdCell'>{status === "loading"  ? <Spin size='small' /> : asn ? asn : 0 }</div>
+        <div className='GWASUI-mdCell'>{status === "loading"  ? <Spin size='small' /> : eur ? eur : 0  }</div>
+        <div className='GWASUI-mdCell'>{status === "loading"  ? <Spin size='small' /> : his ? his : 0  }</div>
       </div>
     </div>
   );
