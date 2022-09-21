@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 /**
  * @typedef {Object} ErrorBoundaryProps
- * @property {React.ReactNode} children
- * @property {React.ReactNode} fallback
+ * @property {JSX.Element} children
+ * @property {JSX.Element} fallback
  * @property {(error: Error, info: React.ErrorInfo) => void} [onError]
  */
 

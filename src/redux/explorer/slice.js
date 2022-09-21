@@ -221,7 +221,11 @@ const slice = createSlice({
        */
       reducer: (state, action) => {
         const { explorerId } = action.payload;
-        state.config = getCurrentConfig(explorerId);
+        state.config = {
+          ...getCurrentConfig(explorerId),
+          // keep survival config
+          survivalAnalysisConfig: state.config.survivalAnalysisConfig,
+        };
         state.explorerId = explorerId;
 
         // sync with workspaces
