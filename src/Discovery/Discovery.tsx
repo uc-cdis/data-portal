@@ -51,25 +51,25 @@ const ARBORIST_READ_PRIV = 'read';
 const setUpMenuItemInfo = (menuItemInfo, supportedValues) => {
   if (supportedValues.accessible.enabled === true) {
     menuItemInfo.push(
-      [AccessLevel.ACCESSIBLE, supportedValues.accessible.menuText, <UnlockOutlined />]
-    )
+      [AccessLevel.ACCESSIBLE, supportedValues.accessible.menuText, <UnlockOutlined />],
+    );
   }
   if (supportedValues.unaccessible.enabled === true) {
     menuItemInfo.push(
-      [AccessLevel.UNACCESSIBLE, supportedValues.unaccessible.menuText, <LockOutlined />]
-    )
+      [AccessLevel.UNACCESSIBLE, supportedValues.unaccessible.menuText, <LockOutlined />],
+    );
   }
   if (supportedValues.pending.enabled === true) {
     menuItemInfo.push(
-      [AccessLevel.PENDING, supportedValues.pending.menuText, <ClockCircleOutlined />]
-    )
+      [AccessLevel.PENDING, supportedValues.pending.menuText, <ClockCircleOutlined />],
+    );
   }
   if (supportedValues.notAvailable.enabled === true) {
     menuItemInfo.push(
-      [AccessLevel.NOT_AVAILABLE, supportedValues.notAvailable.menuText, <DashOutlined />]
-    )
+      [AccessLevel.NOT_AVAILABLE, supportedValues.notAvailable.menuText, <DashOutlined />],
+    );
   }
-}
+};
 
 export const getTagColor = (tagCategory: string, config: DiscoveryConfig): string => {
   const categoryConfig = config.tagCategories.find((category) => category.name === tagCategory);
@@ -395,8 +395,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         }
         if (column.valueIfNotAvailable) {
           renderedCell = column.valueIfNotAvailable;
-        }
-        else {
+        } else {
           renderedCell = 'Not available';
         }
       } else {

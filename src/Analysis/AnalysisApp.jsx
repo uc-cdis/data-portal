@@ -112,9 +112,7 @@ class AnalysisApp extends React.Component {
           }}
         >
           <div className='analysis-app_flex_col'>
-            <div className='analysis-app_flex_row'>
-              <ReduxGWASUIApp refreshWorkflows={this.refreshWorkflows} />
-            </div>
+            <ReduxGWASUIApp refreshWorkflows={this.refreshWorkflows} />
           </div>
         </TourProvider>
       );

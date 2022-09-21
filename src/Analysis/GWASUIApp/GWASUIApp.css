@@ -317,3 +317,55 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.GWASUI-attritionTable {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+}
+
+.GWASUI-attritionRow .ant-collapse {
+  width: 100%;
+  display: none;
+}
+
+.GWASUI-attritionTableHeader {
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.GWASUI-attritionTableHeader .ant-spin-nested-loading .ant-spin-container .ant-table .ant-table-container .ant-table-content table .ant-table-tbody {
+  display: none;
+}
+.GWASUI-smCell {
+  width: 31%;
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.GWASUI-mdCell {
+  width: 100%;
+  text-align: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.GWASUI-leftAttr {
+  display: flex;
+  flex-direction: row;
+  margin: 0 0 20 0;
+  width: 100%;
+  align-items: left;
+  flex: 3;
+}
+
+.GWASUI-rightAttr {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: right;
+  flex: 7;
+}
