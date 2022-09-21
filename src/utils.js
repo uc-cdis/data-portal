@@ -1,5 +1,6 @@
-import { submissionApiPath } from './localconf';
+import { submissionApiPath, kayakoWrapperURL } from './localconf';
 import { getCategoryColor } from './DataDictionary/NodeCategories/helper';
+import { fetchWithCreds } from './actions';
 
 export const humanFileSize = (size) => {
   if (typeof size !== 'number') {
@@ -231,3 +232,24 @@ export const isFooterHidden = (pathname) => (!!((pathname
   && (pathname.toLowerCase() === '/dd'
   || pathname.toLowerCase().startsWith('/dd/')
   ))));
+
+export const createKayakoTicket = async (subject, fullName, email, contents, departmentID) => {
+  try {
+    const kayakoTicketCreationURL = `${kayakoWrapperURL}/ticket`;
+    await fetchWithCreds({
+      path: kayakoTicketCreationURL,
+      method: 'POST',
+      customHeaders: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        subject, fullname: fullName, email, contents, departmentid: departmentID,
+      }),
+    }).then((response) => {
+      if (response.status !== 201) {
+        throw new Error(`Request for create Kayako ticket failed with status ${response.status}`);
+      }
+      return response;
+    });
+  } catch (err) {
+    throw new Error(`Request for create Kayako ticket failed: ${err}`);
+  }
+};

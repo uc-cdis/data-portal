@@ -20,8 +20,16 @@ export const caseControlTourSteps = {
       selector: '[data-tour="cohort-table-body"]',
       content: 'Navigate through the pages via the arrow buttons or by clicking on the page number. Please use the per page button on the bottom right to expand/reduce the amount of cohorts shown in each page',
     },
+    {
+      selector: '[data-tour="next-button"]',
+      content: 'Please press next to continue to the next steps',
+    },
   ],
   1: [
+    {
+      selector: '[data-tour="step-2-cohort-selection"]',
+      content: 'You may only see cohorts that you have access to. Please select only one cohort. You cannot select the same cohort as step 1',
+    },
     {
       selector: '[data-tour="cohort-table"]',
       content: 'The table is sorted by size of cohort',
@@ -33,6 +41,10 @@ export const caseControlTourSteps = {
     {
       selector: '[data-tour="cohort-table-body"]',
       content: 'Navigate through the pages via the arrow buttons or by clicking on the page number. Please use the per page button on the bottom right to expand/reduce the amount of cohorts shown in each page',
+    },
+    {
+      selector: '[data-tour="next-button"]',
+      content: 'Please press next to continue to the next steps',
     },
   ],
   2: [
@@ -52,6 +64,10 @@ export const caseControlTourSteps = {
       selector: '[data-tour="covariate-table-body"]',
       content: 'Navigate through the pages via the arrow buttons or by clicking on the page number. Please use the per page button on the bottom right to expand/reduce the amount of cohorts shown in each page',
     },
+    {
+      selector: '[data-tour="next-button"]',
+      content: 'Please press next to continue to the next steps',
+    },
   ],
   3: [
     {
@@ -60,7 +76,11 @@ export const caseControlTourSteps = {
     },
     {
       selector: '[data-tour="covariates-table"]',
-      content: 'The table is sorted by variable name. The % missing column shows what is the percent of missing data out of the population chosen for this variable',
+      content: 'On the right hand side of the table a missing % is calculated. The % missing column reflects the percent of missing data out of the population chosen for this variable',
+    },
+    {
+      selector: '[data-tour="next-button"]',
+      content: 'Please press next to continue to the next steps',
     },
   ],
   4: [
@@ -79,6 +99,10 @@ export const caseControlTourSteps = {
     {
       selector: '[data-tour="table-repeat"]',
       content: 'Both tables behave the same as the select cohort table in step 1. Please refer to step 1 tutorial',
+    },
+    {
+      selector: '[data-tour="next-button"]',
+      content: 'Please press next to continue to the next steps',
     },
   ],
   5: [
@@ -101,6 +125,10 @@ export const caseControlTourSteps = {
     {
       selector: '[data-tour="imputation-score"]',
       content: 'This value reflects the quality of imputed SNPs and can be used to remove low-quality imputed markers (scale of 0-1)',
+    },
+    {
+      selector: '[data-tour="next-button"]',
+      content: 'Please press next to continue to the next steps',
     },
   ],
   6: [
@@ -141,6 +169,10 @@ export const quantitativeTourSteps = {
       selector: '[data-tour="cohort-table-body"]',
       content: 'Navigate through the pages via the arrow buttons or by clicking on the page number. Please use the per page button on the bottom right to expand/reduce the amount of cohorts shown in each page',
     },
+    {
+      selector: '[data-tour="next-button"]',
+      content: 'Please press next to continue to the next steps',
+    },
   ],
   1: [
     {
@@ -159,15 +191,19 @@ export const quantitativeTourSteps = {
       selector: '[data-tour="covariate-table-body"]',
       content: 'Navigate through the pages via the arrow buttons or by clicking on the page number. Please use the per page button on the bottom right to expand/reduce the amount of cohorts shown in each page',
     },
+    {
+      selector: '[data-tour="next-button"]',
+      content: 'Please press next to continue to the next steps',
+    },
   ],
   2: [
     {
       selector: '[data-tour="choosing-covariates"]',
-      content: 'Here you may choose your phenotype. All data are harmonized from different projects through the collaborative development of a data dictionary. In the right hand side of the table a missing % is calculated. This is to reflect how many subjects of the chosen population do not have this information available. To browse the table please scroll down to the bottom',
+      content: 'Here you may select your phenotype among the variables you previously chose. The table is sorted by variable name. To browse the table please scroll down to the bottom',
     },
     {
       selector: '[data-tour="covariates-table"]',
-      content: 'The table is sorted by variable name. The % missing column shows what is the percent of missing data out of the population chosen for this variable',
+      content: 'On the right hand side of the table a missing % is calculated. The % missing column reflects the percent of missing data out of the population chosen for this variable',
     },
     {
       selector: '[data-tour="covariates-table-search"]',
@@ -176,6 +212,10 @@ export const quantitativeTourSteps = {
     {
       selector: '[data-tour="covariates-table-body"]',
       content: 'Navigate through the pages via the arrow buttons or by clicking on the page number. Please use the per page button on the bottom right to expand/reduce the amount of cohorts shown in each page',
+    },
+    {
+      selector: '[data-tour="next-button"]',
+      content: 'Please press next to continue to the next steps',
     },
   ],
   3: [
@@ -194,6 +234,10 @@ export const quantitativeTourSteps = {
     {
       selector: '[data-tour="table-repeat"]',
       content: 'Both tables behave the same as the select cohort table in step 1. Please refer to step 1 tutorial',
+    },
+    {
+      selector: '[data-tour="next-button"]',
+      content: 'Please press next to continue to the next steps',
     },
   ],
   4: [
@@ -217,6 +261,10 @@ export const quantitativeTourSteps = {
       selector: '[data-tour="imputation-score"]',
       content: 'This value reflects the quality of imputed SNPs and can be used to remove low-quality imputed markers (scale of 0-1)',
     },
+    {
+      selector: '[data-tour="next-button"]',
+      content: 'Please press next to continue to the next steps',
+    },
   ],
   5: [
     {
@@ -226,10 +274,6 @@ export const quantitativeTourSteps = {
     {
       selector: '[data-tour="review-name"]',
       content: '‘Please enter the name for your study. Upon submission the name will appear in the ‘Submitted Job Status’ area',
-    },
-    {
-      selector: '[data-tour="review-submit-button"]',
-      content: 'Please click ‘Submit’ button when you are ready to submit the study',
     },
   ],
 };

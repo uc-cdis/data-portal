@@ -313,8 +313,9 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
           </div>
           <div className='steps-action'>
             <Button
-              className='GWASUI-navBtn GWASUI-navBtn__prev'
-              disabled={current === 0}
+              data-tour="next-button"
+              className='GWASUI-navBtn GWASUI-navBtn__next'
+              type='primary'
               onClick={() => {
                 setCurrent(current - 1);
               }}
