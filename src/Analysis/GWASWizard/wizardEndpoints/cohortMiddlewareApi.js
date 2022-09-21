@@ -102,9 +102,9 @@ export const fetchConceptStatsByHareSubset = async (
 };
 
 export const addCDFilter = (cohortId, otherCohortId, covariateArr) => {
-  // adding an extra filter on top of the given selectedDichotomousCovariates
+  // adding an extra filter on top of the given covariateArr
   // to ensure that any person that belongs to _both_ cohorts
-  // [queriedCohortDefinitionId, otherCohortDefinitionId] also gets filtered out:
+  // [cohortId, otherCohortId] also gets filtered out:
   const covariateRequest = [...covariateArr];
   const cdFilter = {
     variable_type: 'custom_dichotomous',
