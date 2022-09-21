@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
+import { Spin } from "antd";
 import { fetchConceptStatsByHareSubset, fetchConceptStatsByHareSubsetCC, queryConfig } from './../wizardEndpoints/cohortMiddlewareApi';
 
 const AttritionTableRow = ({
@@ -65,13 +66,13 @@ const AttritionTableRow = ({
         <div className="GWASUI-leftAttr">
         <div className="GWASUI-smCell">{rowType}</div>
         <div className="GWASUI-smCell">{rowName}</div>
-        <div className="GWASUI-smCell">{breakdownSize || "0"}</div>
+        <div className="GWASUI-smCell">{breakdownSize || <Spin size="small" />}</div>
         </div>
        <div className="GWASUI-rightAttr">
-       <div className="GWASUI-mdCell">{afr || "0"}</div>
-        <div className="GWASUI-mdCell">{asn || "0"}</div>
-        <div className="GWASUI-mdCell">{eur || "0"}</div>
-        <div className="GWASUI-mdCell">{his || "0"}</div>
+       <div className="GWASUI-mdCell">{afr || <Spin size="small" />}</div>
+        <div className="GWASUI-mdCell">{asn || <Spin size="small" />}</div>
+        <div className="GWASUI-mdCell">{eur || <Spin size="small" />}</div>
+        <div className="GWASUI-mdCell">{his || <Spin size="small" />}</div>
        </div>
     </div>
 }

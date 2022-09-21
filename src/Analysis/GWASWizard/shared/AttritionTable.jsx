@@ -19,7 +19,6 @@ const AttritionTable = ({
     tableHeader
 }) => {
     const [covariateSubsets, setCovariateSubsets] = useState([]);
-
     const getCovariateRow = (selectedCovariates = [], selectedDichotomousCovariates = []) => {
         const covariateSubsets = [];
         // todo: handle case of deselecting/selecting existing covariates (100% missing?) after adding custom dichotomous
@@ -51,7 +50,6 @@ const AttritionTable = ({
                 columns={attritionTableHeaderConfig}
                 dataSource={headerDataSource}
             />
-
             {selectedCohort?.cohort_definition_id && (<>
                 <AttritionTableRow
                     cohortDefinitionId={selectedCohort.cohort_definition_id}
