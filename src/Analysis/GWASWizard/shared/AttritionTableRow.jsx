@@ -65,13 +65,13 @@ const AttritionTableRow = ({
       <div className='GWASUI-leftAttr'>
         <div className='GWASUI-smCell'>{rowType}</div>
         <div className='GWASUI-smCell'>{rowName}</div>
-        <div className='GWASUI-smCell'>{status === "loading" ? <Spin size='small' /> : breakdownSize ? breakdownSize : 0 }</div>
+        <div className='GWASUI-smCell'>{status === 'loading' ? <Spin size='small' /> : breakdownSize || 0 }</div>
       </div>
       <div className='GWASUI-rightAttr'>
-        <div className='GWASUI-mdCell'>{status === "loading"  ? <Spin size='small' /> : afr ? afr : 0 }</div>
-        <div className='GWASUI-mdCell'>{status === "loading"  ? <Spin size='small' /> : asn ? asn : 0 }</div>
-        <div className='GWASUI-mdCell'>{status === "loading"  ? <Spin size='small' /> : eur ? eur : 0  }</div>
-        <div className='GWASUI-mdCell'>{status === "loading"  ? <Spin size='small' /> : his ? his : 0  }</div>
+        <div className='GWASUI-mdCell'>{status === 'loading' ? <Spin size='small' /> : afr || 0 }</div>
+        <div className='GWASUI-mdCell'>{status === 'loading' ? <Spin size='small' /> : asn || 0 }</div>
+        <div className='GWASUI-mdCell'>{status === 'loading' ? <Spin size='small' /> : eur || 0 }</div>
+        <div className='GWASUI-mdCell'>{status === 'loading' ? <Spin size='small' /> : his || 0 }</div>
       </div>
     </div>
   );
