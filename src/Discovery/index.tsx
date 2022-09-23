@@ -114,6 +114,10 @@ const DiscoveryWithMDSBackend: React.FC<{
               authMapping = props.userAuthMapping;
             }
             const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], authMapping);
+            if (study.commons_url === "jcoin.datacommons.io") {
+              console.log(authMapping)
+              console.log(isAuthorized) 
+            }
             if (supportedValues.accessible.enabled && isAuthorized === true) {
               accessible = AccessLevel.ACCESSIBLE;
             } else if (supportedValues.unaccessible.enabled && isAuthorized === false) {
