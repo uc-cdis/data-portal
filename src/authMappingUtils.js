@@ -52,6 +52,7 @@ export const userHasDataUpload = (userAuthMapping = {}) => {
 
 export const userHasMethodForServiceOnResource = (method, service, resourcePath, userAuthMapping = {}) => {
   const actions = userAuthMapping[resourcePath];
+  console.log(actions)
   // accommodate for '*' logic
   // if we need to check for a specific service/method pair for a resource,
   // e.g.: {service: sheepdog, method: update}
