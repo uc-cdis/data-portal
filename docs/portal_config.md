@@ -678,6 +678,7 @@ Below is an example, with inline comments describing what each JSON block config
           "studyRegistrationAccessCheckField": "registration_authz", // optional, the field that contains the value for Study Registration Request Access feature. Defaults to "registration_authz"
           "studyRegistrationUIDField": "appl_id", // optional, the field which can be used to uniquely determine a metadata record for Study Registration. Defaults to "appl_id"
           "studyRegistrationFormDisclaimerField": "This is a disclaimer", //optional, the disclaimer text that appears under the submit button on the study registration request access form. Defaults to undefined
+          "clinicalTrialFields": [] // optional, list of fields to fetch from ClinicalTrials.gov
         },
         "workspaceRegistrationConfig" : { // optional, config for Workspace Registration Request Access page.
         "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
