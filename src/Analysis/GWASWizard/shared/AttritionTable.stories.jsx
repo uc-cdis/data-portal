@@ -73,6 +73,14 @@ MockedSuccess.parameters = {
         console.log(cohortmiddlewarepath);
         console.log(cohortdefinition);
         rowCount++;
+        if (rowCount == 12) {
+          // simulate empty response scenario:
+          return res(
+            ctx.delay(200*rowCount),
+            ctx.json({
+              concept_breakdown: null})
+          );
+        }
         return res(
           ctx.delay(200*rowCount),
           ctx.json({
