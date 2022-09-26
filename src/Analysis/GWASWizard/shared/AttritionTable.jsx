@@ -70,7 +70,7 @@ const AttritionTable = ({
               <AttritionTableRow
                 cohortDefinitionId={selectedCohort.cohort_definition_id}
                 otherCohortDefinitionId={otherSelectedCohort ? otherSelectedCohort.cohort_definition_id : undefined}
-                rowType={outcome?.concept_id === item[0].concept_id ? 'Outcome Phenotype' : 'Covariate'}
+                rowType={outcome && outcome.concept_id === item[0].concept_id ? 'Outcome Phenotype' : 'Covariate'}
                 rowName={item[0].concept_name ? item[0].concept_name : item[0].provided_name}
                 covariateSubset={item}
                 sourceId={sourceId}
