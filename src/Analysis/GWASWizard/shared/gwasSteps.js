@@ -1,6 +1,10 @@
 export const caseControlTourSteps = {
   0: [
     {
+      selector: '[data-tour="attrition-table"]',
+      content: 'This dropdown menu will show you the attrition table. In which, every selection you make will populate the total size of the study population that has ancestry data, and the ancestry breakdown inside this population',
+    },
+    {
       selector: '[data-tour="step-1-cohort-selection"]',
       content: 'You may only see cohorts that you have access to. Please select only one cohort. The size of the cohort population is indicated in the right hand side of the table. To browse the table please scroll down to the bottom',
     },
@@ -149,6 +153,10 @@ export const caseControlTourSteps = {
 
 export const quantitativeTourSteps = {
   0: [
+    {
+      selector: '[data-tour="attrition-table"]',
+      content: 'This dropdown menu will show you the attrition table. In which, every selection you make will populate the total size of the study population that has ancestry data, and the ancestry breakdown inside this population',
+    },
     {
       selector: '[data-tour="quant-step-1-cohort-selection"]',
       content: 'You may only see cohorts that you have access to. Please select only one cohort. The size of the cohort population is indicated in the right hand side of the table. To browse the table please scroll down to the bottom',

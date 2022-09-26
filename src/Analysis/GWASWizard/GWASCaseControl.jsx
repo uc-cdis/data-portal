@@ -341,7 +341,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
 
   return (
     <React.Fragment>
-      {!loading && sourceId && (
+      {!loading && sourceId && current !== 0 && (
         <React.Fragment>
           <AttritionTable
             sourceId={sourceId}
@@ -352,6 +352,30 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             selectedDichotomousCovariates={selectedDichotomousCovariates}
             tableHeader={'Case Cohort Attrition Table'}
           />
+          <AttritionTable
+            sourceId={sourceId}
+            selectedCohort={selectedControlCohort}
+            otherSelectedCohort={selectedCaseCohort}
+            // outcome={outcome}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            tableHeader={'Control Cohort Attrition Table'}
+          />
+        </React.Fragment>
+      )}
+      {!loading && sourceId && current === 0 && (
+        <React.Fragment>
+          <div data-tour='attrition-table'>
+            <AttritionTable
+              sourceId={sourceId}
+              selectedCohort={selectedCaseCohort}
+              otherSelectedCohort={selectedControlCohort}
+              // outcome={outcome}
+              selectedCovariates={selectedCovariates}
+              selectedDichotomousCovariates={selectedDichotomousCovariates}
+              tableHeader={'Case Cohort Attrition Table'}
+            />
+          </div>
           <AttritionTable
             sourceId={sourceId}
             selectedCohort={selectedControlCohort}
