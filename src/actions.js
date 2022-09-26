@@ -532,11 +532,18 @@ export const fetchUserAuthMapping = async (dispatch) => {
   let authMapping;
   let aggregateAuthMappings = {};
   if (authzMappingURL === wtsAggregateAuthzPath) {
-    authMapping = fetchedAuthMapping[hostnameWithSubdomain];
-    aggregateAuthMappings = fetchedAuthMapping;
-    if (Object.keys(aggregateAuthMappings).length === 0) {
-      authMapping = fetchedAuthMapping;
-      aggregateAuthMappings[hostnameWithSubdomain] = fetchedAuthMapping;
+    // If WTS enabled and no externally connected commons and
+    // fetchedAuthMapping is empty through WTS, get local arborist mapping
+    if (Object.keys(fetchedAuthMapping).length === 0){
+	const localArboristMapping = await fetch(authzMappingPath)
+        authMapping = localArboristMapping[hostnameWithSubdomain];
+        aggregateAuthMappings = localArboristMapping;
+    }
+    // WTS enabled and there are externally connected commons
+    // fetchedAuthMapping is not empty
+    else{
+        authMapping = fetchedAuthMapping[hostnameWithSubdomain];
+        aggregateAuthMappings = fetchedAuthMapping;
     }
   } else {
     authMapping = fetchedAuthMapping;
