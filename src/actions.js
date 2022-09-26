@@ -534,6 +534,10 @@ export const fetchUserAuthMapping = async (dispatch) => {
   if (authzMappingURL === wtsAggregateAuthzPath) {
     authMapping = fetchedAuthMapping[hostnameWithSubdomain];
     aggregateAuthMappings = fetchedAuthMapping;
+    if (Object.keys(aggregateAuthMappings).length === 0) {
+      authMapping = fetchedAuthMapping;
+      aggregateAuthMappings[hostnameWithSubdomain] = fetchedAuthMapping;
+    }
   } else {
     authMapping = fetchedAuthMapping;
     aggregateAuthMappings[hostnameWithSubdomain] = fetchedAuthMapping;
