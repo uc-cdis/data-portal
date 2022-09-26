@@ -48,16 +48,18 @@ const AttritionTableRow = ({
       setBreakdownSize(filteredBreakdown
         .reduce((acc, curr) => acc + curr.persons_in_cohort_with_value, 0));
       setBreakdownColumns(filteredBreakdown);
+    } else {
+      setBreakdownSize(0);
+      setBreakdownColumns([]);
     }
   }, [breakdown, cohortDefinitionId, covariateSubset, sourceId]);
 
   useEffect(() => {
-    if (breakdownColumns.length) {
-      setAfr(getSizeByColumn('AFR'));
-      setAsn(getSizeByColumn('ASN'));
-      setEur(getSizeByColumn('EUR'));
-      setHis(getSizeByColumn('HIS'));
-    }
+    setAfr(getSizeByColumn('AFR'));
+    setAsn(getSizeByColumn('ASN'));
+    setEur(getSizeByColumn('EUR'));
+    setHis(getSizeByColumn('HIS'));
+
   }, [breakdownColumns]);
 
   return (
