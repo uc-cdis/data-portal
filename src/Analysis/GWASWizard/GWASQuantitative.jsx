@@ -291,7 +291,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
 
   return (
     <React.Fragment>
-      {!loading && sourceId && (
+      {!loading && sourceId && current !== 0 && (
         <AttritionTable
           sourceId={sourceId}
           selectedCohort={selectedCohort || undefined}
@@ -300,6 +300,18 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
           selectedDichotomousCovariates={selectedDichotomousCovariates}
           tableHeader={'Cohort Attrition Table'}
         />
+      )}
+      {!loading && sourceId && current === 0 && (
+        <div data-tour='attrition-table'>
+          <AttritionTable
+            sourceId={sourceId}
+            selectedCohort={selectedCohort || undefined}
+            outcome={outcome}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            tableHeader={'Cohort Attrition Table'}
+          />
+        </div>
       )}
       <React.Fragment>
         <Space direction={'vertical'} style={{ width: '100%' }}>
@@ -315,7 +327,6 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
           </div>
           <div className='steps-action'>
             <Button
-              data-tour='next-button'
               className='GWASUI-navBtn GWASUI-navBtn__next'
               type='primary'
               onClick={() => {
@@ -334,6 +345,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
             </Popconfirm>
             {current < quantitativeSteps.length - 1 && (
               <Button
+                data-tour='next-button'
                 className='GWASUI-navBtn GWASUI-navBtn__next'
                 type='primary'
                 onClick={() => {
