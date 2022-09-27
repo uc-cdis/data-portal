@@ -501,40 +501,40 @@ export const fetchUserAccess = async (dispatch) => {
   });
 };
 
+const fetchAuthMapping = (authzMappingURL) => fetch(
+  authzMappingURL,
+).then((fetchRes) => {
+  switch (fetchRes.status) {
+  case 200:
+    return fetchRes.json();
+  default:
+    // This is dispatched on app init and on user login.
+    // Could be not logged in -> no username -> 404; this is ok
+    // There may be plans to update Arborist to return anonymous access when username not found
+    return {};
+  }
+});
+
 // asks arborist for the user's auth mapping if Arborist UI enabled
 export const fetchUserAuthMapping = async (dispatch) => {
   if (!config.showArboristAuthzOnProfile && !config.useArboristUI) {
     return;
   }
 
-  let authzMappingURL;
-  if (isEnabled('discoveryUseAggWTS')) {
-    authzMappingURL = wtsAggregateAuthzPath;
-  } else {
-    authzMappingURL = authzMappingPath;
-  }
-
-  // Arborist will get the username from the jwt
-  const fetchedAuthMapping = await fetch(
-    authzMappingURL,
-  ).then((fetchRes) => {
-    switch (fetchRes.status) {
-    case 200:
-      return fetchRes.json();
-    default:
-      // This is dispatched on app init and on user login.
-      // Could be not logged in -> no username -> 404; this is ok
-      // There may be plans to update Arborist to return anonymous access when username not found
-      return {};
-    }
-  });
-
+  let fetchedAuthMapping;
   let authMapping;
   let aggregateAuthMappings = {};
-  if (authzMappingURL === wtsAggregateAuthzPath) {
+
+  if (isEnabled('discoveryUseAggWTS')) {
+    // Arborist will get the username from the jwt
+    fetchedAuthMapping = await fetchAuthMapping(wtsAggregateAuthzPath);
+  }
+
+  if (fetchedAuthMapping && Object.keys(fetchedAuthMapping).length) {
     authMapping = fetchedAuthMapping[hostnameWithSubdomain];
     aggregateAuthMappings = fetchedAuthMapping;
   } else {
+    fetchedAuthMapping = await fetchAuthMapping(authzMappingPath);
     authMapping = fetchedAuthMapping;
     aggregateAuthMappings[hostnameWithSubdomain] = fetchedAuthMapping;
   }
