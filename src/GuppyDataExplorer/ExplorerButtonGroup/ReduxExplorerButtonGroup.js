@@ -10,6 +10,7 @@ import { fetchWithCreds } from '../../utils.fetch';
 /** @param {import('../../redux/types').RootState} state */
 const mapStateToProps = (state) => ({
   job: state.kube.job,
+  user: state.user,
   userAccess: state.userAccess,
 });
 
