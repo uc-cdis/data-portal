@@ -42,6 +42,7 @@ import Popup from '../../components/Popup';
  * @property {() => void} checkJobStatus: PropTypes.func.isRequired,
  * @property {(jobId: string) => Promise} fetchJobResult: PropTypes.func.isRequired,
  * @property {boolean} isLocked: PropTypes.bool.isRequired,
+ * @property {RootState['user']} user: PropTypes.object.isRequired,
  * @property {RootState['userAccess']} userAccess: PropTypes.object.isRequired,
  */
 
@@ -615,6 +616,10 @@ class ExplorerButtonGroup extends Component {
   // check if the user has access to this resource
   /** @param {SingleButtonConfig} buttonConfig */
   isButtonDisplayed = (buttonConfig) => {
+    if (buttonConfig.type === 'export-to-pfb') {
+      return '/services/amanuensis' in this.props.user.authz ?? {};
+    }
+
     if (
       buttonConfig.type === 'export-to-workspace' ||
       buttonConfig.type === 'export-files-to-workspace'
@@ -886,6 +891,7 @@ ExplorerButtonGroup.propTypes = {
   checkJobStatus: PropTypes.func.isRequired,
   fetchJobResult: PropTypes.func.isRequired,
   isLocked: PropTypes.bool.isRequired,
+  user: PropTypes.object.isRequired,
   userAccess: PropTypes.objectOf(PropTypes.bool).isRequired,
 };
 
