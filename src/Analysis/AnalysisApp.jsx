@@ -56,6 +56,7 @@ class AnalysisApp extends React.Component {
     this.props.checkJobStatus();
   }
 
+  // TODO - is this dead code now? Remove?
   refreshWorkflows = () => {
     queryClient.invalidateQueries('workflows');
   }
@@ -120,7 +121,7 @@ class AnalysisApp extends React.Component {
     case 'GWASResults':
       return (
         <div className='analysis-app_flex_row'>
-          <GWASWorkflowList refreshWorkflows={this.refreshWorkflows} />
+            <GWASWorkflowList refetchInterval={5000} />
         </div>
       );
     case 'GWAS++': {
