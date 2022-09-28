@@ -182,6 +182,10 @@
   width: 600px;
 }
 
+.ant-collapse {
+  margin-bottom: 10px;
+}
+
 .GWASApp-jobStatus .ant-collapse {
   width: 100%;
 }
