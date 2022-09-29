@@ -13,6 +13,16 @@ import './ExplorerExploreExternalButton.css';
 /** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
 
 /**
+ * @param {{ path: string; body: string }} payload
+ * @returns {Promise<import('./types').ExternalCommonsInfo>}
+ */
+async function fetchExternalCommonsInfo(payload) {
+  const res = await fetchWithCreds({ ...payload, method: 'POST' });
+  if (res.status !== 200) throw res.response.statusText;
+  return res.data;
+}
+
+/**
  * @param {Object} props
  * @param {ExplorerFilter} props.filter
  */
@@ -39,14 +49,12 @@ function ExplorerExploreExternalButton({ filter }) {
   }
   async function handleOpenExternal() {
     try {
-      const { data, response, status } = await fetchWithCreds({
+      const info = await fetchExternalCommonsInfo({
         path: `/analysis/tools/external/${selected.value}`,
-        method: 'POST',
         body: JSON.stringify({ filter: getGQLFilter(filter) }),
       });
-      if (status !== 200) throw response.statusText;
 
-      window.open(data.link, '_blank');
+      window.open(info.link, '_blank');
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
