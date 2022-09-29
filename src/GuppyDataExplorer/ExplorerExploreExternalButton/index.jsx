@@ -37,7 +37,7 @@ function ExplorerExploreExternalButton({ filter }) {
   function closePopup() {
     setShow(false);
   }
-  async function handleFind() {
+  async function handleOpenExternal() {
     try {
       const { data, response, status } = await fetchWithCreds({
         path: `/analysis/tools/external/${selected.value}`,
@@ -94,7 +94,7 @@ function ExplorerExploreExternalButton({ filter }) {
               <Button
                 label='Open in new tab'
                 enabled={selected.value !== ''}
-                onClick={handleFind}
+                onClick={handleOpenExternal}
               />
             </div>
           </div>
