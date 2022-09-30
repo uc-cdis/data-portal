@@ -8,3 +8,17 @@
   flex-direction: column;
   justify-content: space-between;
 }
+
+.explorer-explore-external__download-manifest {
+  margin: 0 1rem 1rem;
+}
+
+.explorer-explore-external__download-manifest > p:first-child {
+  margin-bottom: 0.5rem;
+}
+
+.explorer-explore-external__download-manifest
+  > p:first-child
+  > svg:first-child {
+  margin-right: 0.25rem;
+}

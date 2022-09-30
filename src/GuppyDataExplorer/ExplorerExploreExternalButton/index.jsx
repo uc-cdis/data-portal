@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import FileSaver from 'file-saver';
 import SimplePopup from '../../components/SimplePopup';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
@@ -21,6 +23,11 @@ async function fetchExternalCommonsInfo(payload) {
   const res = await fetchWithCreds({ ...payload, method: 'POST' });
   if (res.status !== 200) throw res.response.statusText;
   return res.data;
+}
+
+function saveToFile(savingStr, filename) {
+  const blob = new Blob([savingStr], { type: 'text/plain' });
+  FileSaver.saveAs(blob, filename);
 }
 
 /**
@@ -76,6 +83,11 @@ function ExplorerExploreExternalButton({ filter }) {
     window.open(commonsInfo.link, '_blank');
     closePopup();
   }
+  function handleDownlodManifest() {
+    const dateString = new Date().toISOString().split('T')[0];
+    const filename = `${dateString}-manifest-${selected.value}.txt`;
+    saveToFile(commonsInfo.data, filename);
+  }
 
   return (
     <>
@@ -106,6 +118,22 @@ function ExplorerExploreExternalButton({ filter }) {
               />
               <ExplorerFilterDisplay filter={filter} />
             </form>
+            {commonsInfo?.type === 'file' ? (
+              <div className='explorer-explore-external__download-manifest'>
+                <p>
+                  <FontAwesomeIcon
+                    icon='triangle-exclamation'
+                    color='var(--pcdc-color__secondary)'
+                  />
+                  Download a manifest file and upload it to the select commons
+                  to use the current cohort.
+                </p>
+                <Button
+                  label='Download manifest'
+                  onClick={handleDownlodManifest}
+                />
+              </div>
+            ) : null}
             <div>
               <Button
                 className='explorer-explore-external__button'
