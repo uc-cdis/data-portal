@@ -56,6 +56,8 @@ function ExplorerExploreExternalButton({ filter }) {
     setShow(true);
   }
   function closePopup() {
+    setSelected(emptyOption);
+    setCommonsInfo(null);
     setShow(false);
   }
   /** @param {typeof selected} newSelected */
