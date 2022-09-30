@@ -11,10 +11,11 @@ import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 import './ExplorerExploreExternalButton.css';
 
 /** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
+/** @typedef {import('./types').ExternalCommonsInfo} ExternalCommonsInfo */
 
 /**
  * @param {{ path: string; body: string }} payload
- * @returns {Promise<import('./types').ExternalCommonsInfo>}
+ * @returns {Promise<ExternalCommonsInfo>}
  */
 async function fetchExternalCommonsInfo(payload) {
   const res = await fetchWithCreds({ ...payload, method: 'POST' });
@@ -40,6 +41,9 @@ function ExplorerExploreExternalButton({ filter }) {
 
   const [selected, setSelected] = useState(emptyOption);
   const [show, setShow] = useState(false);
+  const [commonsInfo, setCommonsInfo] = useState(
+    /** @type {ExternalCommonsInfo} */ (null)
+  );
 
   function openPopup() {
     setShow(true);
@@ -47,20 +51,30 @@ function ExplorerExploreExternalButton({ filter }) {
   function closePopup() {
     setShow(false);
   }
-  async function handleOpenExternal() {
+  /** @param {typeof selected} newSelected */
+  async function handleSelectExternalCommons(newSelected) {
+    if (selected.value === newSelected.value) return;
+    setSelected(newSelected);
+
+    if (newSelected.value === '') {
+      setCommonsInfo(null);
+      return;
+    }
+
     try {
-      const info = await fetchExternalCommonsInfo({
-        path: `/analysis/tools/external/${selected.value}`,
+      const newCommonsInfo = await fetchExternalCommonsInfo({
+        path: `/analysis/tools/external/${newSelected.value}`,
         body: JSON.stringify({ filter: getGQLFilter(filter) }),
       });
-
-      window.open(info.link, '_blank');
+      setCommonsInfo(newCommonsInfo);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
-    } finally {
-      closePopup();
     }
+  }
+  function handleOpenExternalCommons() {
+    window.open(commonsInfo.link, '_blank');
+    closePopup();
   }
 
   return (
@@ -86,7 +100,7 @@ function ExplorerExploreExternalButton({ filter }) {
                     autoFocus
                     isClearable={false}
                     theme={overrideSelectTheme}
-                    onChange={setSelected}
+                    onChange={handleSelectExternalCommons}
                   />
                 }
               />
@@ -101,8 +115,8 @@ function ExplorerExploreExternalButton({ filter }) {
               />
               <Button
                 label='Open in new tab'
-                enabled={selected.value !== ''}
-                onClick={handleOpenExternal}
+                enabled={commonsInfo !== null}
+                onClick={handleOpenExternalCommons}
               />
             </div>
           </div>
