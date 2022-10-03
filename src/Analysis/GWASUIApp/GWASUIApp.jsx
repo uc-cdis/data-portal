@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Checkbox, Card, Space,
-} from 'antd';
+import { Card, Space } from 'antd';
 import { fetchAndSetCsrfToken } from '../../configs';
 import GWASQuantitative from '../GWASWizard/GWASQuantitative';
 import GWASCaseControl from '../GWASWizard/GWASCaseControl';
@@ -26,17 +24,18 @@ const GWASUIApp = (props) => {
   }, [props]);
 
   if (!gwasTypeSelected) {
-    const isEnterOrSpace = (event) => (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar' || event.keycode === '32' || event.keycode === '13');
+    const isEnterOrSpace = (event) => (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar'
+      || event.keycode === '32' || event.keycode === '13');
 
-    const handleKeyPress = (event, gwasType) => {
-      if (isEnterOrSpace(event)) {
-        triggerNavigation(gwasType);
-      }
+    const triggerNavigation = (gwasTypeInput) => {
+      setGwasType(gwasTypeInput);
+      setGwasTypeSelected(true);
     };
 
-    const triggerNavigation = (gwasType) => {
-      setGwasType(gwasType);
-      setGwasTypeSelected(true);
+    const handleKeyPress = (event, gwasTypeInput) => {
+      if (isEnterOrSpace(event)) {
+        triggerNavigation(gwasTypeInput);
+      }
     };
 
     return (
@@ -48,8 +47,7 @@ const GWASUIApp = (props) => {
                 title='Case Control GWAS'
                 bordered
                 style={cardContent}
-
-                tabIndex='1'
+                tabIndex='0'
                 role='button'
                 aria-label='Case Control GWAS'
                 onKeyPress={(e) => handleKeyPress(e, 'caseControl')}
@@ -68,7 +66,7 @@ const GWASUIApp = (props) => {
                 title='Quantitative Phenotype'
                 bordered
                 style={cardContent}
-                tabIndex='1'
+                tabIndex='0'
                 role='button'
                 aria-label='Quantitative Phenotype'
                 onKeyPress={(e) => handleKeyPress(e, 'quantitative')}
