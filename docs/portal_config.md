@@ -458,7 +458,8 @@ Below is an example, with inline comments describing what each JSON block config
         "enabled": true
       },
       "authorization": {
-        "enabled": true // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
+        "enabled": true, // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
+        "supportedValues": ["accessible", "unaccessible", "pending", "notAvailable"] // no default; must be configured if `authorization.enabled=true`
       },
       "tagsColumn" : {
         "enabled": true // toggles if tags should be rendered in a column
