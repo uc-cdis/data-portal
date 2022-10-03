@@ -468,7 +468,7 @@ Below is an example, with inline comments describing what each JSON block config
             "enabled": false,
             "menuText": "Not Accessible"
           },
-          "unaccessible": {...},
+          "pending": {...},
           "notAvailable": {...}
         }
       },
