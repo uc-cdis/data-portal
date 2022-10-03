@@ -49,22 +49,22 @@ const { Panel } = Collapse;
 const ARBORIST_READ_PRIV = 'read';
 
 const setUpMenuItemInfo = (menuItemInfo, supportedValues) => {
-  if (supportedValues.accessible.enabled === true) {
+  if (supportedValues?.accessible?.enabled === true) {
     menuItemInfo.push(
       [AccessLevel.ACCESSIBLE, supportedValues.accessible.menuText, <UnlockOutlined />],
     );
   }
-  if (supportedValues.unaccessible.enabled === true) {
+  if (supportedValues?.unaccessible?.enabled === true) {
     menuItemInfo.push(
       [AccessLevel.UNACCESSIBLE, supportedValues.unaccessible.menuText, <LockOutlined />],
     );
   }
-  if (supportedValues.pending.enabled === true) {
+  if (supportedValues?.pending?.enabled === true) {
     menuItemInfo.push(
       [AccessLevel.PENDING, supportedValues.pending.menuText, <ClockCircleOutlined />],
     );
   }
-  if (supportedValues.notAvailable.enabled === true) {
+  if (supportedValues?.notAvailable?.enabled === true) {
     menuItemInfo.push(
       [AccessLevel.NOT_AVAILABLE, supportedValues.notAvailable.menuText, <DashOutlined />],
     );
@@ -497,7 +497,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   }
   if (config.features.authorization.enabled) {
     const menuItemInfo = [];
-    setUpMenuItemInfo(menuItemInfo, config.features.authorization.supportedValues);
+    setUpMenuItemInfo(menuItemInfo, config.features?.authorization?.supportedValues);
     columns.push({
       title: (
         <div className='discovery-table-header'>

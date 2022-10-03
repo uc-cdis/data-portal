@@ -102,9 +102,9 @@ const DiscoveryWithMDSBackend: React.FC<{
         }
         const studiesWithAccessibleField = rawStudies.map((study) => {
           let accessible: AccessLevel;
-          if (supportedValues.pending.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
+          if (supportedValues?.pending?.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
             accessible = AccessLevel.PENDING;
-          } else if (supportedValues.notAvailable.enabled && (study[authzField] === undefined || study[authzField] === '')) {
+          } else if (supportedValues?.notAvailable?.enabled && (study[authzField] === undefined || study[authzField] === '')) {
             accessible = AccessLevel.NOT_AVAILABLE;
           } else {
             let authMapping;
@@ -114,9 +114,9 @@ const DiscoveryWithMDSBackend: React.FC<{
               authMapping = props.userAuthMapping;
             }
             const isAuthorized = userHasMethodForServiceOnResource('read', '*', study[authzField], authMapping);
-            if (supportedValues.accessible.enabled && isAuthorized === true) {
+            if (supportedValues?.accessible?.enabled && isAuthorized === true) {
               accessible = AccessLevel.ACCESSIBLE;
-            } else if (supportedValues.unaccessible.enabled && isAuthorized === false) {
+            } else if (supportedValues?.unaccessible?.enabled && isAuthorized === false) {
               accessible = AccessLevel.UNACCESSIBLE;
             } else {
               accessible = AccessLevel.OTHER;
