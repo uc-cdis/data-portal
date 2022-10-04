@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import FileSaver from 'file-saver';
 import SimplePopup from '../../components/SimplePopup';
 import SimpleInputField from '../../components/SimpleInputField';
 import Button from '../../gen3-ui-component/components/Button';
@@ -11,6 +13,22 @@ import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 import './ExplorerExploreExternalButton.css';
 
 /** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
+/** @typedef {import('./types').ExternalCommonsInfo} ExternalCommonsInfo */
+
+/**
+ * @param {{ path: string; body: string }} payload
+ * @returns {Promise<ExternalCommonsInfo>}
+ */
+async function fetchExternalCommonsInfo(payload) {
+  const res = await fetchWithCreds({ ...payload, method: 'POST' });
+  if (res.status !== 200) throw res.response.statusText;
+  return res.data;
+}
+
+function saveToFile(savingStr, filename) {
+  const blob = new Blob([savingStr], { type: 'text/plain' });
+  FileSaver.saveAs(blob, filename);
+}
 
 /**
  * @param {Object} props
@@ -30,29 +48,47 @@ function ExplorerExploreExternalButton({ filter }) {
 
   const [selected, setSelected] = useState(emptyOption);
   const [show, setShow] = useState(false);
+  const [commonsInfo, setCommonsInfo] = useState(
+    /** @type {ExternalCommonsInfo} */ (null)
+  );
 
   function openPopup() {
     setShow(true);
   }
   function closePopup() {
+    setSelected(emptyOption);
+    setCommonsInfo(null);
     setShow(false);
   }
-  async function handleFind() {
+  /** @param {typeof selected} newSelected */
+  async function handleSelectExternalCommons(newSelected) {
+    if (selected.value === newSelected.value) return;
+    setSelected(newSelected);
+
+    if (newSelected.value === '') {
+      setCommonsInfo(null);
+      return;
+    }
+
     try {
-      const { data, response, status } = await fetchWithCreds({
-        path: `/analysis/tools/external/${selected.value}`,
-        method: 'POST',
+      const newCommonsInfo = await fetchExternalCommonsInfo({
+        path: `/analysis/tools/external/${newSelected.value}`,
         body: JSON.stringify({ filter: getGQLFilter(filter) }),
       });
-      if (status !== 200) throw response.statusText;
-
-      window.open(data.link, '_blank');
+      setCommonsInfo(newCommonsInfo);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
-    } finally {
-      closePopup();
     }
+  }
+  function handleOpenExternalCommons() {
+    window.open(commonsInfo.link, '_blank');
+    closePopup();
+  }
+  function handleDownlodManifest() {
+    const dateString = new Date().toISOString().split('T')[0];
+    const filename = `${dateString}-manifest-${selected.value}.txt`;
+    saveToFile(commonsInfo.data, filename);
   }
 
   return (
@@ -78,12 +114,28 @@ function ExplorerExploreExternalButton({ filter }) {
                     autoFocus
                     isClearable={false}
                     theme={overrideSelectTheme}
-                    onChange={setSelected}
+                    onChange={handleSelectExternalCommons}
                   />
                 }
               />
               <ExplorerFilterDisplay filter={filter} />
             </form>
+            {commonsInfo?.type === 'file' ? (
+              <div className='explorer-explore-external__download-manifest'>
+                <p>
+                  <FontAwesomeIcon
+                    icon='triangle-exclamation'
+                    color='var(--pcdc-color__secondary)'
+                  />
+                  Download a manifest file and upload it to the select commons
+                  to use the current cohort.
+                </p>
+                <Button
+                  label='Download manifest'
+                  onClick={handleDownlodManifest}
+                />
+              </div>
+            ) : null}
             <div>
               <Button
                 className='explorer-explore-external__button'
@@ -93,8 +145,8 @@ function ExplorerExploreExternalButton({ filter }) {
               />
               <Button
                 label='Open in new tab'
-                enabled={selected.value !== ''}
-                onClick={handleFind}
+                enabled={commonsInfo !== null}
+                onClick={handleOpenExternalCommons}
               />
             </div>
           </div>
