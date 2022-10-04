@@ -104,7 +104,7 @@ const DiscoveryWithMDSBackend: React.FC<{
           let accessible: AccessLevel;
           if (supportedValues?.pending?.enabled && dataAvailabilityField && study[dataAvailabilityField] === 'pending') {
             accessible = AccessLevel.PENDING;
-          } else if (supportedValues?.notAvailable?.enabled && (study[authzField] === undefined || study[authzField] === '')) {
+          } else if (supportedValues?.notAvailable?.enabled && !study[authzField]) {
             accessible = AccessLevel.NOT_AVAILABLE;
           } else {
             let authMapping;
