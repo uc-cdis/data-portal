@@ -1,0 +1,51 @@
+.workspace-reg-container {
+    padding: 30px 32px;
+}
+
+.workspace-reg-form-container {
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 10px 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+}
+
+.workspace-reg-form {
+    width: 100%;
+}
+
+.workspace-reg-exp-text {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media screen and (min-width: 1280px) {
+    .workspace-reg-form {
+        width: 60%;
+        min-width: 50%;
+    }
+}
+
+.workspace-reg-form-item {
+    display: flex;
+    align-items: baseline;
+}
+
+.workspace-reg-form-item__middle-icon {
+    padding-left: 8px;
+}
+
+.workspace-reg-form-item__last-item {
+    padding-left: 8px;
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.workspace-reg-disclaimer-text {
+    font-size: 0.8em;
+    text-align: center
+}
