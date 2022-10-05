@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Checkbox, Card, Space,
-} from 'antd';
+import { Card, Space } from 'antd';
 import { fetchAndSetCsrfToken } from '../../configs';
 import GWASQuantitative from '../GWASWizard/GWASQuantitative';
 import GWASCaseControl from '../GWASWizard/GWASCaseControl';
@@ -26,12 +24,35 @@ const GWASUIApp = (props) => {
   }, [props]);
 
   if (!gwasTypeSelected) {
+    const isEnterOrSpace = (event) => (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar'
+      || event.keycode === '32' || event.keycode === '13');
+
+    const triggerNavigation = (gwasTypeInput) => {
+      setGwasType(gwasTypeInput);
+      setGwasTypeSelected(true);
+    };
+
+    const handleKeyPress = (event, gwasTypeInput) => {
+      if (isEnterOrSpace(event)) {
+        triggerNavigation(gwasTypeInput);
+      }
+    };
+
     return (
       <React.Fragment>
         <Space direction={'vertical'} style={{ width: '100%' }} align={'center'}>
           <div className='GWASUI-typeSelector'>
             <div>
-              <Card title='Case Control GWAS' bordered style={cardContent}>
+              <Card
+                title='Case Control GWAS'
+                bordered
+                style={cardContent}
+                tabIndex='0'
+                role='button'
+                aria-label='Case Control GWAS'
+                onKeyPress={(e) => handleKeyPress(e, 'caseControl')}
+                onClick={() => triggerNavigation('caseControl')}
+              >
                 <p>
                   Genome-wide association studies (GWAS) for a case-control study.
                   Here, the genotypes of roughly equal number of diseased (“cases”) and healthy (“controls”)
@@ -39,33 +60,27 @@ const GWASUIApp = (props) => {
                   Cases are encoded as ‘1’ while controls are encoded as ‘0’ and a binary model is used.
                 </p>
               </Card>
-              <div style={cardContent}>
-                <Checkbox onChange={() => {
-                  setGwasType('caseControl');
-                  setGwasTypeSelected(true);
-                }}
-                />
-              </div>
             </div>
             <div>
-              <Card title='Quantitative Phenotype' bordered style={cardContent}>
+              <Card
+                title='Quantitative Phenotype'
+                bordered
+                style={cardContent}
+                tabIndex='0'
+                role='button'
+                aria-label='Quantitative Phenotype'
+                onKeyPress={(e) => handleKeyPress(e, 'quantitative')}
+                onClick={() => triggerNavigation('quantitative')}
+              >
                 <p>
                   Genome-wide association studies (GWAS) for quantitative phenotype.
                   Here, GWAS evaluates statistical association between genetic variation and a continuous phenotype.
                   A phenotype, also called a trait, can be any measured or observed property of an individual.
                 </p>
               </Card>
-              <div style={cardContent}>
-                <Checkbox onChange={() => {
-                  setGwasType('quantitative');
-                  setGwasTypeSelected(true);
-                }}
-                />
-              </div>
             </div>
           </div>
         </Space>
-
       </React.Fragment>
     );
   }
