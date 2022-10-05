@@ -673,7 +673,6 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex) return;
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
-    const caseFieldInFileIndex = this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
     if (this.props.buttonConfig
       && this.props.buttonConfig.buttons
       && this.props.buttonConfig.buttons.some(
