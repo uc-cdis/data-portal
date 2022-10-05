@@ -135,7 +135,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
               <AddCohortButton />
             </div>
             <React.Fragment>
-              <div className='tour-div'>
+              <div className='tour-div' style={{marginTop: "15px"}}>
                 <TourButton stepInfo={stepInfo} />
                 <h4>&nbsp;Tutorial</h4>
               </div>
@@ -157,7 +157,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
       return (
         <React.Fragment>
           <React.Fragment>
-            <div className='tour-div'>
+            <div className='tour-div' style={{padding:0,marginTop: "-15px"}}>
               <TourButton stepInfo={stepInfo} />
               <h4>&nbsp;Tutorial</h4>
             </div>
@@ -187,7 +187,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 2:
       return (
         <React.Fragment>
-          <div className='tour-div'>
+          <div className='tour-div' style={{padding:0,marginTop: "-15px"}}>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
@@ -204,7 +204,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 3:
       return (
         <React.Fragment>
-          <div className='tour-div'>
+          <div className='tour-div' style={{padding:0,marginTop: "-15px"}}>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
@@ -220,7 +220,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 4:
       return (
         <React.Fragment>
-          <div className='tour-div'>
+          <div className='tour-div' style={{padding:0,marginTop: "-15px"}}>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
@@ -247,7 +247,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 5:
       return (
         <React.Fragment>
-          <div className='tour-div'>
+          <div className='tour-div' style={{padding:0,marginTop: "-15px"}}>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
