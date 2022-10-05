@@ -692,17 +692,13 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
         });
         const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
         if (caseIDResult) {
-          let caseIDList = caseIDResult.map((i) => i[caseField]);
-          caseIDList = _.uniq(caseIDList);
           const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
           if (!fileType) {
             throw Error('guppyConfig.manifestMapping.resourceIndexType is not defined');
           }
-          const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
-            [caseFieldInFileIndex]: {
-              selectedValues: caseIDList,
-            },
-          });
+          const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType,
+            this.props.filter,
+          );
           this.setState({
             manifestEntryCount: countResult,
           });
