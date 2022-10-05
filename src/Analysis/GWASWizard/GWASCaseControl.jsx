@@ -19,16 +19,6 @@ import AttritionTable from './shared/AttritionTable';
 
 const { Step } = Steps;
 
-
-const stepsContentPaddingTop = {
-  0: "30px",
-  1: "30px",
-  2: "30px",
-  3: "30px",
-  4: "30px",
-  5: "30px",
-}
-
 const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
   const [current, setCurrent] = useState(0);
   const [selectedCaseCohort, setSelectedCaseCohort] = useState(undefined);
@@ -403,7 +393,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             <Step key={item.title} title={item.title} description={item.description} />
           ))}
         </Steps>
-        <div className='steps-content' style={{paddingTop: stepsContentPaddingTop[current]}}>
+        <div className='steps-content'>
           <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
             {generateStep(current)}
           </Space>
