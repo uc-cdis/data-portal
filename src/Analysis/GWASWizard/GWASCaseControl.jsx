@@ -397,7 +397,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           />
         </React.Fragment>
       )}
-      <Space direction={'vertical'} style={{ width: '100%' }}>
+      <Space direction={'vertical'} style={{ width: '100%', marginTop: '15px' }}>
         <Steps current={current}>
           {caseControlSteps.map((item) => (
             <Step key={item.title} title={item.title} description={item.description} />

@@ -314,7 +314,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
         </div>
       )}
       <React.Fragment>
-        <Space direction={'vertical'} style={{ width: '100%' }}>
+        <Space direction={'vertical'} style={{ width: '100%', marginTop: '15px' }}>
           <Steps current={current}>
             {quantitativeSteps.map((item) => (
               <Step key={item.title} title={item.title} description={item.description} />
