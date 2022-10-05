@@ -130,6 +130,16 @@
   padding: 10px;
 }
 
+.GWASUI-typeSelector div .ant-card {
+  cursor: pointer;
+  border: 2px solid var(--g3-color__silver);
+  border-radius: 5px;
+}
+
+.GWASUI-typeSelector div .ant-card:hover {
+  border-color: white;
+}
+
 .GWASUI-typeTitle {
   float: relative;
 }
@@ -323,9 +333,9 @@
 }
 
 .GWASUI-attritionTable {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
 }
 
 .GWASUI-attritionRow .ant-collapse {
