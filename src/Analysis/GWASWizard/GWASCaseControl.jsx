@@ -138,7 +138,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 0:
       return (!loading && sourceId ? (
         <React.Fragment>
-          <div data-tour='step-1-new-cohort'>
+          <div data-tour='step-1-new-cohort' style={{marginTop: "15px"}}>
             <AddCohortButton />
           </div>
           <React.Fragment>
@@ -166,7 +166,9 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 1:
       return (
         <React.Fragment>
-          <AddCohortButton />
+          <div style={{marginTop: "15px"}}>
+            <AddCohortButton />
+          </div>
           <React.Fragment>
             <div className='tour-div' style={{marginTop: "15px"}}>
               <TourButton stepInfo={stepInfo} />
@@ -175,7 +177,8 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
               <h4 className='GWASUI-selectInstruction' data-tour='step-2-cohort-selection'>
                   In this step, you will continue to define your study populations.
-                  Please select the cohort that you would like to define as your study <span className='GWASUI-emphText'>control</span> population.
+                  Please select the cohort that you would like to define as your study
+                  <span className='GWASUI-emphText'>control</span> population.
               </h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
@@ -300,7 +303,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 6:
       return (
         <React.Fragment>
-          <div className='tour-div' style={{padding: 0, marginTop: "-15px" }}>
+          <div className='tour-div' style={{padding: 0}}>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>

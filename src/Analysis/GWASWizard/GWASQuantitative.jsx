@@ -131,7 +131,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
       return (!loading && sourceId
         ? (
           <React.Fragment>
-            <div data-tour='quant-step-1-new-cohort'>
+            <div data-tour='quant-step-1-new-cohort' style={{marginTop: "15px"}}>
               <AddCohortButton />
             </div>
             <React.Fragment>
@@ -157,7 +157,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
       return (
         <React.Fragment>
           <React.Fragment>
-            <div className='tour-div' style={{ padding:0, marginTop: "-15px"}}>
+            <div className='tour-div' style={{ padding:0}}>
               <TourButton stepInfo={stepInfo} />
               <h4>&nbsp;Tutorial</h4>
             </div>
@@ -187,7 +187,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 2:
       return (
         <React.Fragment>
-          <div className='tour-div' style={{padding:0, marginTop: '-15px'}}>
+          <div className='tour-div' style={{padding:0}}>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
@@ -204,7 +204,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 3:
       return (
         <React.Fragment>
-          <div className='tour-div' style={{padding:0, marginTop: '-15px'}}>
+          <div className='tour-div' style={{padding:0}}>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
@@ -220,7 +220,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 4:
       return (
         <React.Fragment>
-          <div className='tour-div' style={{padding:0, marginTop: '-15px'}}>
+          <div className='tour-div' style={{padding:0}}>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
@@ -247,7 +247,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 5:
       return (
         <React.Fragment>
-          <div className='tour-div' style={{padding:0, marginTop: '-15px'}}>
+          <div className='tour-div' style={{padding:0}}>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
