@@ -178,7 +178,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
               <h4 className='GWASUI-selectInstruction' data-tour='step-2-cohort-selection'>
                   In this step, you will continue to define your study populations.
                   Please select the cohort that you would like to define as your study
-                  <span className='GWASUI-emphText'>control</span> population.
+                <span className='GWASUI-emphText'>control</span> population.
               </h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
@@ -221,7 +221,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           {selectedCovariates.length > 0
               && (
                 <div className='tour-div'>
-                  <TourButton stepInfo={stepInfo} className='GWASUI-no-padding'/>
+                  <TourButton stepInfo={stepInfo} className='GWASUI-no-padding' />
                   <h4>&nbsp;Tutorial</h4>
                 </div>
               )}
@@ -389,7 +389,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           />
         </React.Fragment>
       )}
-      <Space direction={'vertical'} className='GWASUI-mt-15' style={{ width: '100%'}}>
+      <Space direction={'vertical'} className='GWASUI-mt-15' style={{ width: '100%' }}>
         <Steps current={current}>
           {caseControlSteps.map((item) => (
             <Step key={item.title} title={item.title} description={item.description} />
