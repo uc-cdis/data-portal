@@ -334,7 +334,7 @@
 
 .GWASUI-asterisk:before {
   content: "*";
-  margin: 0 2px 0 -10px;
+  margin: 0 3px 0 -10px;
   color: red;
 }
 
