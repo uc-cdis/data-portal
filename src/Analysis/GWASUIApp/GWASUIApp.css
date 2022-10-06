@@ -397,3 +397,8 @@
 .GWASUI-no-padding {
   padding: 0;
 }
+
+.GWASUI-no-top-spacing {
+  padding-top: 0;
+  margin-top: 0;
+}
