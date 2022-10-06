@@ -131,11 +131,11 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
       return (!loading && sourceId
         ? (
           <React.Fragment>
-            <div data-tour='quant-step-1-new-cohort' style={{marginTop: "15px"}}>
+            <div data-tour='quant-step-1-new-cohort' className='GWASUI-mt-15'>
               <AddCohortButton />
             </div>
             <React.Fragment>
-              <div className='tour-div' style={{marginTop: "15px"}}>
+              <div className='tour-div GWASUI-mt-15'>
                 <TourButton stepInfo={stepInfo} />
                 <h4>&nbsp;Tutorial</h4>
               </div>
@@ -314,7 +314,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
         </div>
       )}
       <React.Fragment>
-        <Space direction={'vertical'} className='GWASUI-mt-15' style={{ width: '100%', marginTop: '15px' }}>
+        <Space direction={'vertical'} className='GWASUI-mt-15' style={{ width: '100%'}}>
           <Steps current={current}>
             {quantitativeSteps.map((item) => (
               <Step key={item.title} title={item.title} description={item.description} />

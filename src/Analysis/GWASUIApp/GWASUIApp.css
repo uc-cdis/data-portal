@@ -393,3 +393,7 @@
 .GWASUI-mt-15 {
   margin-top: 15px;
 }
+
+.GWASUI-no-padding {
+  padding: 0;
+}

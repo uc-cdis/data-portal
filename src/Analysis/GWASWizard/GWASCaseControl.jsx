@@ -197,7 +197,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
       return (
         <React.Fragment>
           <React.Fragment>
-            <div className='tour-div' style={{padding: "0"}}>
+            <div className='tour-div GWASUI-no-padding'>
               <TourButton stepInfo={stepInfo} />
               <h4>&nbsp;Tutorial</h4>
             </div>
@@ -221,7 +221,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           {selectedCovariates.length > 0
               && (
                 <div className='tour-div'>
-                  <TourButton stepInfo={stepInfo} style={{padding: "0"}}/>
+                  <TourButton stepInfo={stepInfo} className='GWASUI-no-padding'/>
                   <h4>&nbsp;Tutorial</h4>
                 </div>
               )}
@@ -302,7 +302,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 6:
       return (
         <React.Fragment>
-          <div className='tour-div' style={{padding: 0}}>
+          <div className='tour-div GWASUI-no-padding'>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
