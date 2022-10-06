@@ -138,11 +138,11 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 0:
       return (!loading && sourceId ? (
         <React.Fragment>
-          <div data-tour='step-1-new-cohort' style={{marginTop: "15px"}}>
+          <div data-tour='step-1-new-cohort' className='GWASUI-mt-15'>
             <AddCohortButton />
           </div>
           <React.Fragment>
-            <div className='tour-div' style={{marginTop: "15px"}}>
+            <div className='tour-div GWASUI-mt-15'>
               <TourButton stepInfo={stepInfo} />
               <h4>&nbsp;Tutorial</h4>
             </div>
@@ -166,11 +166,11 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 1:
       return (
         <React.Fragment>
-          <div style={{marginTop: "15px"}}>
+          <div className='GWASUI-mt-15'>
             <AddCohortButton />
           </div>
           <React.Fragment>
-            <div className='tour-div' style={{marginTop: "15px"}}>
+            <div className='tour-div GWASUI-mt-15'>
               <TourButton stepInfo={stepInfo} />
               <h4>&nbsp;Tutorial</h4>
             </div>
@@ -254,7 +254,6 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
                   sourceId={sourceId}
                 />
               )}
-
         </React.Fragment>
       );
     case 4:
@@ -390,7 +389,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           />
         </React.Fragment>
       )}
-      <Space direction={'vertical'} style={{ width: '100%', marginTop: '15px' }}>
+      <Space direction={'vertical'} className='GWASUI-mt-15' style={{ width: '100%'}}>
         <Steps current={current}>
           {caseControlSteps.map((item) => (
             <Step key={item.title} title={item.title} description={item.description} />

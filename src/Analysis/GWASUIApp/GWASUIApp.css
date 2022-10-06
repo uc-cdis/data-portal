@@ -332,6 +332,12 @@
   text-overflow: ellipsis;
 }
 
+.GWASUI-label.asterisk:before {
+  content: "*";
+  margin: 0 2px 0 -10px;
+  color: red;
+}
+
 .GWASUI-attritionTable {
   display: flex;
   width: 100%;
@@ -384,8 +390,6 @@
   flex: 7;
 }
 
-label.GWASUI-label.asterisk:before {
-  content: "*";
-  margin: 0 2px 0 -10px;
-  color: red;
+.GWASUI-mt-15 {
+  margin-top: 15px;
 }
