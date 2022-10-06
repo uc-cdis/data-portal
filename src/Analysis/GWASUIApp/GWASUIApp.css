@@ -332,7 +332,7 @@
   text-overflow: ellipsis;
 }
 
-.GWASUI-label.asterisk:before {
+.GWASUI-asterisk:before {
   content: "*";
   margin: 0 2px 0 -10px;
   color: red;
