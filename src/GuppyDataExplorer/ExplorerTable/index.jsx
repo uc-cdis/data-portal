@@ -142,8 +142,8 @@ class ExplorerTable extends React.Component {
             .then(function(htmlString){
               var parser = new DOMParser();
               var doc = parser.parseFromString(htmlString, "text/html");
-              //var nos = doc.getElementsByTagName("h4");
-              var data = doc.toString();
+              var data = doc.body.innerHTML;
+              //var data = doc.toString();
               if(data.includes("Sorry, this page does not exist.") || data.includes("Failed to retrieve study data")){
                 return null;
               }
