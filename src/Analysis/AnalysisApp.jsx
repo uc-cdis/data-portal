@@ -13,6 +13,7 @@ import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
 import GWASWorkflowList from './GWASUIApp/GWASWorkflowList';
+import GWASContainer from "./GWASV2/GWASContainer";
 
 const queryClient = new QueryClient();
 
@@ -122,6 +123,11 @@ class AnalysisApp extends React.Component {
           <GWASWorkflowList refreshWorkflows={this.refreshWorkflows} />
         </div>
       );
+    case 'GWAS++': {
+      return <div>
+        <GWASContainer refreshWorkflows={this.refreshWorkflows}/>
+      </div>
+    }
     default:
       // this will ensure the main window will process the app messages (if any):
       window.addEventListener('message', this.processAppMessages);
