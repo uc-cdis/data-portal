@@ -19,7 +19,7 @@ const GWASContainer = () => {
         },
         {
             title: 'Step 4',
-            description: 'Review and submit your GWAS study',
+            description: 'Configure GWAS',
         }
     ]
 
