@@ -56,10 +56,6 @@ class AnalysisApp extends React.Component {
     this.props.checkJobStatus();
   }
 
-  refreshWorkflows = () => {
-    queryClient.invalidateQueries('workflows');
-  }
-
   processAppMessages = (event) => {
     const pathArray = this.state.app.applicationUrl.split('/');
     const protocol = pathArray[0];
@@ -113,14 +109,14 @@ class AnalysisApp extends React.Component {
           }}
         >
           <div className='analysis-app_flex_col'>
-            <ReduxGWASUIApp refreshWorkflows={this.refreshWorkflows} />
+            <ReduxGWASUIApp />
           </div>
         </TourProvider>
       );
     case 'GWASResults':
       return (
         <div className='analysis-app_flex_row'>
-          <GWASWorkflowList refreshWorkflows={this.refreshWorkflows} />
+            <GWASWorkflowList refetchInterval={5000} />
         </div>
       );
     case 'GWAS++': {

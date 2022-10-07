@@ -19,7 +19,7 @@ import AttritionTable from './shared/AttritionTable';
 
 const { Step } = Steps;
 
-const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
+const GWASCaseControl = ({ resetGWASType }) => {
   const [current, setCurrent] = useState(0);
   const [selectedCaseCohort, setSelectedCaseCohort] = useState(undefined);
   const [selectedControlCohort, setSelectedControlCohort] = useState(undefined);
@@ -126,7 +126,6 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     setImputationScore(0.3);
     setMafThreshold(0.01);
     setGwasName('');
-    refreshWorkflows();
   };
 
   const generateStep = () => {
@@ -440,7 +439,6 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
 };
 
 GWASCaseControl.propTypes = {
-  refreshWorkflows: PropTypes.func.isRequired,
   resetGWASType: PropTypes.func.isRequired,
 };
 
