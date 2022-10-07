@@ -11,7 +11,7 @@ const GWASContainer = () => {
         },
         {
             title: 'Step 2',
-            description: 'Select Outcome Phenotype',
+            description: 'Select Outcome Phenotypes',
         },
         {
             title: 'Step 3',
