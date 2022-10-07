@@ -131,11 +131,11 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
       return (!loading && sourceId
         ? (
           <React.Fragment>
-            <div data-tour='quant-step-1-new-cohort'>
+            <div data-tour='quant-step-1-new-cohort' className='GWASUI-mt-15'>
               <AddCohortButton />
             </div>
             <React.Fragment>
-              <div className='tour-div'>
+              <div className='tour-div GWASUI-mt-15'>
                 <TourButton stepInfo={stepInfo} />
                 <h4>&nbsp;Tutorial</h4>
               </div>
@@ -157,7 +157,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
       return (
         <React.Fragment>
           <React.Fragment>
-            <div className='tour-div'>
+            <div className='tour-div GWASUI-no-padding'>
               <TourButton stepInfo={stepInfo} />
               <h4>&nbsp;Tutorial</h4>
             </div>
@@ -187,7 +187,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 2:
       return (
         <React.Fragment>
-          <div className='tour-div'>
+          <div className='tour-div GWASUI-no-padding'>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
@@ -204,7 +204,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 3:
       return (
         <React.Fragment>
-          <div className='tour-div'>
+          <div className='tour-div GWASUI-no-padding'>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
@@ -220,7 +220,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 4:
       return (
         <React.Fragment>
-          <div className='tour-div'>
+          <div className='tour-div GWASUI-no-padding'>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
@@ -247,7 +247,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
     case 5:
       return (
         <React.Fragment>
-          <div className='tour-div'>
+          <div className='tour-div GWASUI-no-padding'>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
@@ -314,7 +314,7 @@ const GWASQuantitative = ({ resetGWASType, refreshWorkflows }) => {
         </div>
       )}
       <React.Fragment>
-        <Space direction={'vertical'} style={{ width: '100%' }}>
+        <Space direction={'vertical'} className='GWASUI-mt-15' style={{ width: '100%' }}>
           <Steps current={current}>
             {quantitativeSteps.map((item) => (
               <Step key={item.title} title={item.title} description={item.description} />

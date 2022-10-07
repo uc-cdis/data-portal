@@ -138,11 +138,11 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 0:
       return (!loading && sourceId ? (
         <React.Fragment>
-          <div data-tour='step-1-new-cohort'>
+          <div data-tour='step-1-new-cohort' className='GWASUI-mt-15'>
             <AddCohortButton />
           </div>
           <React.Fragment>
-            <div className='tour-div'>
+            <div className='tour-div GWASUI-mt-15'>
               <TourButton stepInfo={stepInfo} />
               <h4>&nbsp;Tutorial</h4>
             </div>
@@ -166,16 +166,19 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 1:
       return (
         <React.Fragment>
-          <AddCohortButton />
+          <div className='GWASUI-mt-15'>
+            <AddCohortButton />
+          </div>
           <React.Fragment>
-            <div className='tour-div'>
+            <div className='tour-div GWASUI-mt-15'>
               <TourButton stepInfo={stepInfo} />
               <h4>&nbsp;Tutorial</h4>
             </div>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
               <h4 className='GWASUI-selectInstruction' data-tour='step-2-cohort-selection'>
                   In this step, you will continue to define your study populations.
-                  Please select the cohort that you would like to define as your study <span className='GWASUI-emphText'>control</span> population.
+                  Please select the cohort that you would like to define as your study
+                <span className='GWASUI-emphText'>control</span> population.
               </h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
@@ -194,7 +197,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
       return (
         <React.Fragment>
           <React.Fragment>
-            <div className='tour-div'>
+            <div className='tour-div GWASUI-no-padding'>
               <TourButton stepInfo={stepInfo} />
               <h4>&nbsp;Tutorial</h4>
             </div>
@@ -218,7 +221,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           {selectedCovariates.length > 0
               && (
                 <div className='tour-div'>
-                  <TourButton stepInfo={stepInfo} />
+                  <TourButton stepInfo={stepInfo} className='GWASUI-no-padding' />
                   <h4>&nbsp;Tutorial</h4>
                 </div>
               )}
@@ -251,7 +254,6 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
                   sourceId={sourceId}
                 />
               )}
-
         </React.Fragment>
       );
     case 4:
@@ -300,7 +302,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 6:
       return (
         <React.Fragment>
-          <div className='tour-div'>
+          <div className='tour-div GWASUI-no-padding'>
             <TourButton stepInfo={stepInfo} />
             <h4>&nbsp;Tutorial</h4>
           </div>
@@ -387,7 +389,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           />
         </React.Fragment>
       )}
-      <Space direction={'vertical'} style={{ width: '100%' }}>
+      <Space direction={'vertical'} className='GWASUI-mt-15' style={{ width: '100%' }}>
         <Steps current={current}>
           {caseControlSteps.map((item) => (
             <Step key={item.title} title={item.title} description={item.description} />
