@@ -134,20 +134,47 @@ class ExplorerTable extends React.Component {
         if (this.props.tableConfig.dicomViewerId && this.props.tableConfig.dicomViewerId === field && valueStr) {
           const dicomViewerLink = `${hostname}dicom-viewer/viewer/${valueStr}`;
           if (this.props.tableConfig.linkFields.includes(field)) { // link button
+            const dicomServerLink = `${hostname}dicom-server/dicom-web/studies/${valueStr}/series`;
             valueStr = dicomViewerLink;
-            fetch(valueStr)
-            .then(function(response){
-              return response.text();
+
+            async function fetchDicomViewer() {
+              const response = await fetch(dicomServerLink);
+              // waits until the request completes...
+             return response;
+            }
+            const res = fetchDicomViewer();
+            if(res == undefined){
+              return null;
+            }
+
+            /*fetch(valueStr, {
+              method: 'GET',
+              mode: 'cors',
+              headers: {
+                "Accept": "application/dicom+json"
+              }
             })
-            .then(function(htmlString){
-              var parser = new DOMParser();
-              var doc = parser.parseFromString(htmlString, "text/html");
-              var data = doc.body.innerHTML;
-              //var data = doc.toString();
-              if(data.includes("Sorry, this page does not exist.") || data.includes("Failed to retrieve study data")){
+            .then((response) =>{
+              if(response === undefined ||response === null ||response.status === 404 || response.status === 504 || response.status != 200){
+                valueStr = null;
                 return null;
               }
-            });
+            });*/
+            /*.then(function(htmlString){
+              var parser = new DOMParser();
+              var document = parser.
+              var doc = parser.parseFromString(htmlString, "text/html");
+              var data1 = doc.getElementById("root");
+              var data2 = data1.getElementsByTagName("div");
+              var data3 = data2.getElementsByTagName("div");
+              var data4 = data3.getElementsByTagName("h4")[0].innerHTML;
+              //var data = d.getElementsByTagName("div")[2];
+              //window.onload = function() {doc.getElementById("root").innerHTML};
+              //var data = doc.toString();
+              if(data4.includes("Sorry, this page does not exist.") || data4.includes("Failed to retrieve study data")){
+                return null;
+              }
+            });*/
 
           } else { // direct link
             return (<div><span title={valueStr}><a href={dicomViewerLink} target='_blank' rel='noreferrer'>{valueStr}</a></span></div>);
