@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PropTypes } from "prop-types";
 import { Space, Button, Steps, Step, Popconfirm } from "antd";
+import SelectStudyPopulation from "./SelectStudyPopulation/SelectStudyPopulation";
 
 const GWASContainer = () => {
     const [current, setCurrent] = useState(0);
@@ -28,7 +29,7 @@ const GWASContainer = () => {
         switch (current) {
             case 0:
                 // select study population
-                return <>step 1</>
+                return <>step 1 <SelectStudyPopulation /></>
             case 1:
                 // outcome (customdichotomous or not)
                 return <>step 2</>
