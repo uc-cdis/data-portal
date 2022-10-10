@@ -6,7 +6,6 @@ import { SearchOutlined } from '@ant-design/icons';
 const SearchBar = ({ searchTerm, handleSearch, fields = 'variable name' }) => (
   <div className={'GWASUI-searchContainer'}>
     <div>
-      <SearchOutlined />
       <input
         className={'GWASUI-searchInput'}
         type='text'
@@ -14,6 +13,7 @@ const SearchBar = ({ searchTerm, handleSearch, fields = 'variable name' }) => (
         value={searchTerm}
         onChange={(e) => handleSearch(e.target.value)}
       />
+      <SearchOutlined style={{ fontSize: '20px'}}/>
     </div>
   </div>
 );

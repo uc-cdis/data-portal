@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import CohortDefinitions from './CohortDefinitions';
 import SearchBar from './SearchBar';
+import AddCohortButton from './AddCohortButton';
 import '../../GWASUIApp/GWASUIApp.css'
 
 const CohortSelect = ({
@@ -21,24 +22,33 @@ const CohortSelect = ({
     setCohortSearchTerm(searchTerm);
   };
   return (
-    <div data-tour='cohort-table'>
-      <div data-tour='cohort-table-search'>
+  <>
+    <div className='GWASUI-row cohort-table-search' >
+      <div className='GWASUI-column'>
         <SearchBar
           searchTerm={cohortSearchTerm}
           handleSearch={handleCohortSearch}
           fields={'cohort name'}
         />
       </div>
-      <div data-tour='cohort-table-body'>
-        <CohortDefinitions
-          selectedCohort={selectedCohort}
-          handleCohortSelect={handleCohortSelect}
-          sourceId={sourceId}
-          searchTerm={cohortSearchTerm}
-          otherCohortSelected={otherCohortSelected}
-        />
+      <div data-tour='step-1-new-cohort' className='GWASUI-column GWASUI-newCohort'>
+        <AddCohortButton />
       </div>
     </div>
+    <div className='GWASUI-mainTable'>
+      <div data-tour='cohort-table'>
+        <div data-tour='cohort-table-body'>
+          <CohortDefinitions
+            selectedCohort={selectedCohort}
+            handleCohortSelect={handleCohortSelect}
+            sourceId={sourceId}
+            searchTerm={cohortSearchTerm}
+            otherCohortSelected={otherCohortSelected}
+          />
+        </div>
+      </div>
+    </div>
+  </>
   );
 };
 
