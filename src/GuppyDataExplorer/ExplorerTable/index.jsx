@@ -65,7 +65,7 @@ class ExplorerTable extends React.Component {
    */
   buildColumnConfig = (field, isNestedTableColumn, isDetailedColumn) => {
     const fieldMappingEntry = this.props.guppyConfig.fieldMapping
-    && this.props.guppyConfig.fieldMapping.find((i) => i.field === field);
+      && this.props.guppyConfig.fieldMapping.find((i) => i.field === field);
     const overrideName = fieldMappingEntry ? fieldMappingEntry.name : undefined;
     const fieldStringsArray = field.split('.');
     // for nested table, we only display the children names in column header
@@ -132,7 +132,25 @@ class ExplorerTable extends React.Component {
         if (this.props.tableConfig.dicomViewerId && this.props.tableConfig.dicomViewerId === field && valueStr) {
           const dicomViewerLink = `${hostname}dicom-viewer/viewer/${valueStr}`;
           if (this.props.tableConfig.linkFields.includes(field)) { // link button
-            valueStr = dicomViewerLink;
+            //valueStr = dicomViewerLink;
+            const dicomServerLink = `${hostname}dicom-server/dicom-web/studies/${valueStr}/series`;
+            async function fetchDicomViewer() {
+              const res = await fetch(dicomServerLink, {
+                method: 'GET'
+              });
+              return res.headers.get("content-length");
+            }
+            //let len = fetchDicomViewer();
+            async function getData() {
+              let len = await fetchDicomViewer();
+              if (len === "22") {
+
+                return null;
+              } else {
+                return dicomViewerLink;
+              }
+            }
+            getData().then((data) => valueStr = data);
           } else { // direct link
             return (<div><span title={valueStr}><a href={dicomViewerLink} target='_blank' rel='noreferrer'>{valueStr}</a></span></div>);
           }
@@ -140,27 +158,27 @@ class ExplorerTable extends React.Component {
 
         // handling some special field types
         switch (field) {
-        case this.props.guppyConfig.downloadAccessor:
-          return (<div><span title={valueStr}><a href={`/files/${valueStr}`}>{valueStr}</a></span></div>);
-        case 'file_size':
-          return (<div><span title={valueStr}>{humanFileSize(valueStr)}</span></div>);
-        case this.props.tableConfig.linkFields.includes(field) && field:
-          return valueStr
-            ? (
-              <IconicLink
-                link={valueStr}
-                className='explorer-table-link'
-                buttonClassName='explorer-table-link-button'
-                icon='exit'
-                dictIcons={dictIcons}
-                iconColor='#606060'
-                target='_blank'
-                isExternal
-              />
-            )
-            : null;
-        default:
-          return (<div><span title={valueStr}>{valueStr}</span></div>);
+          case this.props.guppyConfig.downloadAccessor:
+            return (<div><span title={valueStr}><a href={`/files/${valueStr}`}>{valueStr}</a></span></div>);
+          case 'file_size':
+            return (<div><span title={valueStr}>{humanFileSize(valueStr)}</span></div>);
+          case this.props.tableConfig.linkFields.includes(field) && field:
+            return valueStr
+              ? (
+                <IconicLink
+                  link={valueStr}
+                  className='explorer-table-link'
+                  buttonClassName='explorer-table-link-button'
+                  icon='exit'
+                  dictIcons={dictIcons}
+                  iconColor='#606060'
+                  target='_blank'
+                  isExternal
+                />
+              )
+              : null;
+          default:
+            return (<div><span title={valueStr}>{valueStr}</span></div>);
         }
       },
     };
