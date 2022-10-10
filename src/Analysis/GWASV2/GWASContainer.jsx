@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PropTypes } from "prop-types";
 import { Space, Button, Steps, Step, Popconfirm } from "antd";
+
 import SelectStudyPopulation from "./SelectStudyPopulation/SelectStudyPopulation";
 
 const GWASContainer = () => {
