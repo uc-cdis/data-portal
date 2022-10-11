@@ -4,6 +4,7 @@ import {
   userAPIPath,
   headers,
   hostname,
+  hostnameWithSubdomain,
   basename,
   submissionApiPath,
   graphqlPath,
@@ -11,10 +12,12 @@ import {
   graphqlSchemaUrl,
   authzPath,
   authzMappingPath,
+  wtsAggregateAuthzPath,
 } from './configs';
 import { config } from './params';
 import { showSystemUse } from './localconf';
 import sessionMonitor from './SessionMonitor';
+import isEnabled from './helpers/featureFlags';
 
 export const updatePopup = (state) => ({
   type: 'UPDATE_POPUP',
@@ -498,30 +501,50 @@ export const fetchUserAccess = async (dispatch) => {
   });
 };
 
+const fetchAuthMapping = (authzMappingURL) => fetch(
+  authzMappingURL,
+).then((fetchRes) => {
+  switch (fetchRes.status) {
+  case 200:
+    return fetchRes.json();
+  default:
+    // This is dispatched on app init and on user login.
+    // Could be not logged in -> no username -> 404; this is ok
+    // There may be plans to update Arborist to return anonymous access when username not found
+    return {};
+  }
+});
+
 // asks arborist for the user's auth mapping if Arborist UI enabled
 export const fetchUserAuthMapping = async (dispatch) => {
   if (!config.showArboristAuthzOnProfile && !config.useArboristUI) {
     return;
   }
 
-  // Arborist will get the username from the jwt
-  const authMapping = await fetch(
-    `${authzMappingPath}`,
-  )
-    .then((fetchRes) => {
-      switch (fetchRes.status) {
-      case 200:
-        return fetchRes.json();
-      default:
-        // This is dispatched on app init and on user login.
-        // Could be not logged in -> no username -> 404; this is ok
-        // There may be plans to update Arborist to return anonymous access when username not found
-        return {};
-      }
-    });
+  let fetchedAuthMapping;
+  let authMapping;
+  let aggregateAuthMappings = {};
+
+  if (isEnabled('discoveryUseAggWTS')) {
+    // Arborist will get the username from the jwt
+    fetchedAuthMapping = await fetchAuthMapping(wtsAggregateAuthzPath);
+  }
+
+  if (fetchedAuthMapping && Object.keys(fetchedAuthMapping).length) {
+    authMapping = fetchedAuthMapping[hostnameWithSubdomain];
+    aggregateAuthMappings = fetchedAuthMapping;
+  } else {
+    fetchedAuthMapping = await fetchAuthMapping(authzMappingPath);
+    authMapping = fetchedAuthMapping;
+    aggregateAuthMappings[hostnameWithSubdomain] = fetchedAuthMapping;
+  }
 
   dispatch({
     type: 'RECEIVE_USER_AUTH_MAPPING',
     data: authMapping,
+  });
+  dispatch({
+    type: 'RECEIVE_AGGREGATE_USER_AUTH_MAPPINGS',
+    data: aggregateAuthMappings,
   });
 };

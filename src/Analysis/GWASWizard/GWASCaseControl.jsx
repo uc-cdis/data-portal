@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Steps, Button, Space, Popconfirm, Spin,
+  Steps, Button, Space, Popconfirm, Spin, notification, Table,
 } from 'antd';
+import CheckOutlined from '@ant-design/icons';
 import CohortSelect from './shared/CohortSelect';
 import CovariateSelect from './shared/CovariateSelect';
 import CustomDichotomousSelect from './shared/CustomDichotomousSelect';
 import { caseControlSteps } from './shared/constants';
-import { useSourceFetch } from './wizardEndpoints/cohortMiddlewareApi';
+import { useSourceFetch, getAllHareItems } from './wizardEndpoints/cohortMiddlewareApi';
 import '../GWASUIApp/GWASUIApp.css';
 import AddCohortButton from './shared/AddCohortButton';
 import CovariateReview from './CovariateReview';
 import WorkflowParameters from './shared/WorkflowParameters';
 import GWASFormSubmit from './shared/GWASFormSubmit';
 import TourButton from './shared/TourButton';
+import AttritionTable from './shared/AttritionTable';
 
 const { Step } = Steps;
 
@@ -28,6 +30,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
   const [imputationScore, setImputationScore] = useState(0.3);
   const [mafThreshold, setMafThreshold] = useState(0.01);
   const [gwasName, setGwasName] = useState('');
+  const [cohortSizes, setCohortSizes] = useState([]);
 
   const { loading, sourceId } = useSourceFetch();
 
@@ -42,20 +45,57 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     setSelectedCovariates(cov);
   };
 
+  const handleDichotomousCovariateDelete = (remainingDichotomousCovariates) => {
+    const covariateMapping = remainingDichotomousCovariates.map((conceptName) => selectedDichotomousCovariates.find((concept) => concept.provided_name === conceptName)); // eslint-disable-line max-len
+    setSelectedDichotomousCovariates(covariateMapping);
+  };
+
   const handleCovariateDelete = (remainingCovariates) => {
     const covariateMapping = remainingCovariates.map((conceptName) => selectedCovariates.find((concept) => concept.concept_name === conceptName));
     setSelectedCovariates(covariateMapping);
   };
 
+  const openNotification = (dataText, description) => {
+    const key = `open${Date.now()}`;
+    const btn = (
+      <Button type='primary' size='small' onClick={() => notification.close(key)}>
+        Confirm
+      </Button>
+    );
+    notification.open({
+      message: dataText,
+      description,
+      icon: (<CheckOutlined />),
+      placement: 'top',
+      btn,
+      key,
+    });
+  };
+
   const handleCDAdd = (cd) => {
+    const sameCDName = selectedDichotomousCovariates.find((covariate) => covariate.provided_name === cd.provided_name);
+    if (sameCDName) {
+      openNotification('Custom Dichotomous Covariate names must be unique', '');
+      return;
+    }
+
     setSelectedDichotomousCovariates((prevCD) => [...prevCD, cd]);
   };
 
-  const handleCDRemove = (id) => {
-    setSelectedDichotomousCovariates((prevCD) => [...prevCD.filter((cd) => cd.id !== id)]);
+  const handleCDRemove = (uuid) => {
+    setSelectedDichotomousCovariates((prevCD) => [...prevCD.filter((cd) => cd.uuid !== uuid)]);
   };
 
-  const handleHareChange = (hare) => {
+  const handleHareChange = (hare, allCaseHares, allControlHares) => {
+    if (hare.concept_value.length > 0) {
+      const hareBreakdown = getAllHareItems(hare.concept_value,
+        allCaseHares, allControlHares);
+      const { caseSize, controlSize } = {
+        caseSize: hareBreakdown[0].persons_in_cohort_with_value,
+        controlSize: hareBreakdown[1].persons_in_cohort_with_value,
+      };
+      setCohortSizes([caseSize, controlSize]);
+    }
     setSelectedHare(hare);
   };
 
@@ -101,12 +141,15 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           <div data-tour='step-1-new-cohort'>
             <AddCohortButton />
           </div>
-
           <React.Fragment>
+            <div className='tour-div'>
+              <TourButton stepInfo={stepInfo} />
+              <h4>&nbsp;Tutorial</h4>
+            </div>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
               <h4 className='GWASUI-selectInstruction' data-tour='step-1-cohort-selection'>
-                In this step, you will begin to determine your study populations.
-                To begin, select the cohort that you would like to define as your study `&quot;`case`&quot;` population.
+                  In this step, you will begin to determine your study populations.
+                  To begin, select the cohort that you would like to define as your study <span className='GWASUI-emphText'>case</span> population.
               </h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
@@ -116,7 +159,6 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
                   current={current}
                 />
               </div>
-              <TourButton stepInfo={stepInfo} />
             </Space>
           </React.Fragment>
         </React.Fragment>
@@ -126,8 +168,15 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
         <React.Fragment>
           <AddCohortButton />
           <React.Fragment>
+            <div className='tour-div'>
+              <TourButton stepInfo={stepInfo} />
+              <h4>&nbsp;Tutorial</h4>
+            </div>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-              <h4 className='GWASUI-selectInstruction'>In this step, you will continue to define your study populations. Please select the cohort that you would like to define as your study `&quot;`control`&quot;` population.</h4>
+              <h4 className='GWASUI-selectInstruction' data-tour='step-2-cohort-selection'>
+                  In this step, you will continue to define your study populations.
+                  Please select the cohort that you would like to define as your study <span className='GWASUI-emphText'>control</span> population.
+              </h4>
               <div className='GWASUI-mainTable'>
                 <CohortSelect
                   selectedCohort={selectedControlCohort}
@@ -145,6 +194,10 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
       return (
         <React.Fragment>
           <React.Fragment>
+            <div className='tour-div'>
+              <TourButton stepInfo={stepInfo} />
+              <h4>&nbsp;Tutorial</h4>
+            </div>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
               <h4 className='GWASUI-selectInstruction' data-tour='step-3-choosing-variable'>In this step, you will select the harmonized continuous covariates for your study. Please select all variables you wish to use in your model. (Note: population PCs are not included in this step)</h4>
               <div className='GWASUI-mainTable'>
@@ -155,7 +208,6 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
                   current={current}
                 />
               </div>
-              <TourButton stepInfo={stepInfo} />
             </Space>
           </React.Fragment>
         </React.Fragment>
@@ -163,17 +215,52 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 3:
       return (
         <React.Fragment>
-          <CovariateReview
-            caseCohortDefinitionId={selectedCaseCohort.cohort_definition_id}
-            controlCohortDefinitionId={selectedControlCohort.cohort_definition_id}
-            selectedCovariates={selectedCovariates}
-            sourceId={sourceId}
-          />
+          {selectedCovariates.length > 0
+              && (
+                <div className='tour-div'>
+                  <TourButton stepInfo={stepInfo} />
+                  <h4>&nbsp;Tutorial</h4>
+                </div>
+              )}
+          <React.Fragment>
+            {selectedCovariates.length === 0
+                && (
+                  <React.Fragment>
+                    <div className='GWASUI-mainTable GWASUI-spinnerContainer'>
+                      <Table
+                        dataSource={[{ placeholder: 'No covariates to review' }]}
+                        columns={[
+                          {
+                            title: '',
+                            dataIndex: 'placeholder',
+                            key: 'placeholder',
+                          },
+                        ]}
+                        pagination={false}
+                      />
+                    </div>
+                  </React.Fragment>
+                )}
+          </React.Fragment>
+          {selectedCovariates.length > 0
+              && (
+                <CovariateReview
+                  caseCohortDefinitionId={selectedCaseCohort.cohort_definition_id}
+                  controlCohortDefinitionId={selectedControlCohort.cohort_definition_id}
+                  selectedCovariates={selectedCovariates}
+                  sourceId={sourceId}
+                />
+              )}
+
         </React.Fragment>
       );
     case 4:
       return (
         <React.Fragment>
+          <div className='tour-div'>
+            <TourButton stepInfo={stepInfo} />
+            <h4>&nbsp;Tutorial</h4>
+          </div>
           <CustomDichotomousSelect
             sourceId={sourceId}
             handleCDAdd={handleCDAdd}
@@ -186,6 +273,10 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
     case 5:
       return (
         <React.Fragment>
+          <div className='tour-div'>
+            <TourButton stepInfo={stepInfo} />
+            <h4>&nbsp;Tutorial</h4>
+          </div>
           <WorkflowParameters
             caseCohortDefinitionId={selectedCaseCohort.cohort_definition_id}
             controlCohortDefinitionId={selectedControlCohort.cohort_definition_id}
@@ -202,16 +293,20 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
             selectedHare={selectedHare}
             handleHareChange={handleHareChange}
             handleCovariateDelete={handleCovariateDelete}
+            handleDichotomousCovariateDelete={handleDichotomousCovariateDelete}
           />
-          <TourButton stepInfo={stepInfo} />
         </React.Fragment>
       );
     case 6:
       return (
         <React.Fragment>
+          <div className='tour-div'>
+            <TourButton stepInfo={stepInfo} />
+            <h4>&nbsp;Tutorial</h4>
+          </div>
           <h4 className='GWASUI-selectInstruction'>In this step, you may review the metadata selected for the study, give a name to the study, and submit the GWAS for analysis.</h4>
           <h4 className='GWASUI-selectInstruction'>Upon submission you may review the status of the job in the ‘Submitted Job Status’ in this App above the enumerated steps</h4>
-          <div className='GWASUI-mainArea'>
+          <div className='GWASUI-mainArea' data-tour='review-metadata'>
             <GWASFormSubmit
               sourceId={sourceId}
               numOfPC={numOfPC}
@@ -220,12 +315,13 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
               selectedHare={selectedHare}
               selectedCaseCohort={selectedCaseCohort}
               selectedControlCohort={selectedControlCohort}
+              cohortSizes={cohortSizes}
               workflowType={'caseControl'}
               selectedCovariates={selectedCovariates}
               selectedDichotomousCovariates={selectedDichotomousCovariates}
               gwasName={gwasName}
               handleGwasNameChange={handleGwasNameChange}
-              resetGWAS={resetCaseControl}
+              resetCaseControl={resetCaseControl}
             />
           </div>
         </React.Fragment>
@@ -239,15 +335,58 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
   if ((current === 0 && !selectedCaseCohort) || (current === 1 && !selectedControlCohort)) {
     // Cohort selection
     nextButtonEnabled = false;
-  } else if (current === 2 && selectedCovariates.length < 1) {
-    // covariate selection
-    nextButtonEnabled = false;
   } else if (current === 5) {
     nextButtonEnabled = selectedHare?.concept_value !== '' && numOfPC;
   }
 
   return (
     <React.Fragment>
+      {!loading && sourceId && current !== 0 && (
+        <React.Fragment>
+          <AttritionTable
+            sourceId={sourceId}
+            selectedCohort={selectedCaseCohort}
+            otherSelectedCohort={selectedControlCohort}
+            // outcome={outcome}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            tableHeader={'Case Cohort Attrition Table'}
+          />
+          <AttritionTable
+            sourceId={sourceId}
+            selectedCohort={selectedControlCohort}
+            otherSelectedCohort={selectedCaseCohort}
+            // outcome={outcome}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            tableHeader={'Control Cohort Attrition Table'}
+          />
+        </React.Fragment>
+      )}
+      {!loading && sourceId && current === 0 && (
+        <React.Fragment>
+          <div data-tour='attrition-table'>
+            <AttritionTable
+              sourceId={sourceId}
+              selectedCohort={selectedCaseCohort}
+              otherSelectedCohort={selectedControlCohort}
+              // outcome={outcome}
+              selectedCovariates={selectedCovariates}
+              selectedDichotomousCovariates={selectedDichotomousCovariates}
+              tableHeader={'Case Cohort Attrition Table'}
+            />
+          </div>
+          <AttritionTable
+            sourceId={sourceId}
+            selectedCohort={selectedControlCohort}
+            otherSelectedCohort={selectedCaseCohort}
+            // outcome={outcome}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            tableHeader={'Control Cohort Attrition Table'}
+          />
+        </React.Fragment>
+      )}
       <Space direction={'vertical'} style={{ width: '100%' }}>
         <Steps current={current}>
           {caseControlSteps.map((item) => (
@@ -279,6 +418,7 @@ const GWASCaseControl = ({ resetGWASType, refreshWorkflows }) => {
           </Popconfirm>
           {current < caseControlSteps.length - 1 && (
             <Button
+              data-tour='next-button'
               className='GWASUI-navBtn GWASUI-navBtn__next'
               type='primary'
               onClick={() => {

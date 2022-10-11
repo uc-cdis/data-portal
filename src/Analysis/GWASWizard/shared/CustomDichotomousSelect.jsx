@@ -35,8 +35,8 @@ const CustomDichotomousSelect = ({
     <React.Fragment>
       <div className='cd-flex'>
         <React.Fragment>
-          <div className='GWASUI-align'>
-            <div className='GWASUI-flexRow'>
+          <div className='GWASUI-align' data-tour='choosing-dichotomous'>
+            <div className='GWASUI-flexRow' data-tour='table-repeat'>
               <div className='GWASUI-flexCol GWASUI-subTable'>
                 <h3 className='GWASUI-selectInstruction' align={'center'}>Select NO cohort</h3>
                 <CohortSelect
@@ -59,17 +59,19 @@ const CustomDichotomousSelect = ({
               </div>
             </div>
             <div className='GWASUI-flexRow'>
-              <div className='GWASUI-searchContainer'>
+              <div className='GWASUI-searchContainer' data-tour='name'>
                 <input
                   type='text'
                   className='GWASUI-searchInput'
                   onChange={(e) => setCdName(e.target.value)}
                   value={cdName}
-                  placeholder='Enter a name for custom dichotomous selection'
-                  style={{ width: '70%', height: '90%' }}
+                  placeholder='Enter a unique name for custom dichotomous selection'
+                  style={{ width: '75%', height: '90%' }}
                 />
               </div>
-              <button type='submit' disabled={disableCD} className={`${!disableCD ? 'GWASUI-btnEnable' : ''} GWASUI-cdBtn`} onClick={() => handleCDSubmit()}>Add</button>
+              <div data-tour='add-button'>
+                <button type='submit' disabled={disableCD} className={`${!disableCD ? 'GWASUI-btnEnable' : ''} GWASUI-cdBtn`} onClick={() => handleCDSubmit()}>Add</button>
+              </div>
             </div>
           </div>
         </React.Fragment>
@@ -82,13 +84,12 @@ const CustomDichotomousSelect = ({
                 width: 300,
               }}
               actions={[
-                <DeleteOutlined onClick={(d) => handleCDRemove(d.uuid)} key='delete' />,
+                <DeleteOutlined onClick={() => handleCDRemove(cd.uuid)} key='delete' />,
               ]}
             >
               <Meta
                 avatar={<TeamOutlined />}
                 title={`${cd.provided_name}`}
-                description={`Cohorts: [${cd.cohort_ids[0]}, ${cd.cohort_ids[1]}]`}
               />
             </Card>
           ),

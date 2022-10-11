@@ -1,5 +1,5 @@
 import {
-  studyRegistrationConfig, mdsURL, cedarWrapperURL, kayakoWrapperURL,
+  studyRegistrationConfig, mdsURL, cedarWrapperURL,
 } from '../localconf';
 import { fetchWithCreds } from '../actions';
 
@@ -17,6 +17,10 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
     const studyRegistrationTrackingField = studyRegistrationConfig?.studyRegistrationTrackingField;
     const metadataToUpdate = { ...studyMetadata };
     metadataToUpdate._guid_type = GUIDType;
+    if (!Object.prototype.hasOwnProperty.call(metadataToUpdate, STUDY_DATA_FIELD)) {
+      // it should already be there, but avoid errors if for some reason it's not
+      metadataToUpdate.STUDY_DATA_FIELD = {};
+    }
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationValidationField] = true;
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationTrackingField] = username;
     metadataToUpdate[STUDY_DATA_FIELD] = { ...metadataToUpdate[STUDY_DATA_FIELD], ...updatedValues };
@@ -63,26 +67,5 @@ export const registerStudyInMDS = async (metadataID, metadataToRegister = {}) =>
     });
   } catch (err) {
     throw new Error(`Request for update study data failed: ${err}`);
-  }
-};
-
-export const createKayakoTicket = async (subject, fullName, email, contents, departmentID) => {
-  try {
-    const kayakoTicketCreationURL = `${kayakoWrapperURL}/ticket`;
-    await fetchWithCreds({
-      path: kayakoTicketCreationURL,
-      method: 'POST',
-      customHeaders: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        subject, fullname: fullName, email, contents, departmentid: departmentID,
-      }),
-    }).then((response) => {
-      if (response.status !== 201) {
-        throw new Error(`Request for create Kayako ticket failed with status ${response.status}`);
-      }
-      return response;
-    });
-  } catch (err) {
-    throw new Error(`Request for create Kayako ticket failed: ${err}`);
   }
 };

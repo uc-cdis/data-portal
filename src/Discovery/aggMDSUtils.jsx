@@ -64,6 +64,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit, manifestFieldName) =
       x.guid = x._unique_id; // need to preserve for __manifest support
       x._unique_id = `${commonsName}_${x._unique_id}_${index}`;
       x.commons_url = commonsInfo.commons_url;
+      x.tags = x.tags || [];
       x.tags.push(Object({ category: 'Commons', name: commonsName }));
       x.name = x.short_name; // TODO: this will need to be refactored
 

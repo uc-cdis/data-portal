@@ -23,7 +23,7 @@ export const quantitativeSteps = [
   },
   {
     title: 'Step 4',
-    description: 'Add custom dichotomous covariates',
+    description: 'Add custom dichotomous covariates (optional)',
   },
   {
     title: 'Step 5',
@@ -32,7 +32,7 @@ export const quantitativeSteps = [
 
   {
     title: 'Step 6',
-    description: 'Review and Submit GWAS job',
+    description: 'Review and submit your GWAS study',
   },
 ];
 
@@ -55,7 +55,7 @@ export const caseControlSteps = [
   },
   {
     title: 'Step 5',
-    description: 'Add custom dichotomous covariates',
+    description: 'Add custom dichotomous covariates (optional)',
   },
   {
     title: 'Step 6',
@@ -63,7 +63,7 @@ export const caseControlSteps = [
   },
   {
     title: 'Step 7',
-    description: 'Review and Submit GWAS job',
+    description: 'Review and submit your GWAS study',
   },
 ];
 
@@ -121,5 +121,66 @@ export const covariateTableConfig = [
     dataIndex: 'concept_name',
     key: 'concept_name',
     filterSearch: true,
+  },
+];
+
+export const headerDataSource = [
+  {
+    type: '',
+    name: '',
+    size: '',
+    nonHispanicBlack: '',
+    nonHispanicAsian: '',
+    nonHispanicWhite: '',
+    hispanic: '',
+  },
+];
+
+export const attritionTableHeaderConfig = [
+  {
+    title: 'Type',
+    dataIndex: 'type',
+    key: 'type',
+    align: 'center',
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+    align: 'center',
+  },
+  {
+    title: 'Size',
+    dataIndex: 'size',
+    key: 'size',
+    align: 'center',
+  },
+  {
+    title: 'Non-Hispanic Black',
+    dataIndex: 'nonHispanicBlack',
+    key: 'nonHispanicBlack',
+    align: 'center',
+    width: '18%',
+  },
+  {
+    title: 'Non-Hispanic Asian',
+    dataIndex: 'nonHispanicAsian',
+    key: 'nonHispanicAsian',
+    align: 'center',
+    width: '18%',
+  },
+  {
+    title: 'Non-Hispanic White',
+    dataIndex: 'nonHispanicWhite',
+    key: 'nonHispanicWhite',
+    align: 'center',
+    width: '18%',
+  },
+  {
+    title: 'Hispanic',
+    dataIndex: 'hispanic',
+    key: 'hispanic',
+    align: 'center',
+    width: '18%',
   },
 ];

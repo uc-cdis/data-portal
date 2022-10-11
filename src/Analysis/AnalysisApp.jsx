@@ -104,23 +104,23 @@ class AnalysisApp extends React.Component {
         <TourProvider
           afterOpen={disableBody}
           beforeClose={enableBody}
+          disableInteraction
           onClickClose={({ setCurrentStep, setIsOpen }) => {
             setIsOpen(false);
 
             setCurrentStep(0);
           }}
         >
-          <QueryClientProvider client={queryClient} contextSharing>
-            <div className='analysis-app_flex_col'>
-              <div className='analysis-app_flex_row'>
-                <GWASWorkflowList refreshWorkflows={this.refreshWorkflows} />
-              </div>
-              <div className='analysis-app_flex_row'>
-                <ReduxGWASUIApp refreshWorkflows={this.refreshWorkflows} />
-              </div>
-            </div>
-          </QueryClientProvider>
+          <div className='analysis-app_flex_col'>
+            <ReduxGWASUIApp refreshWorkflows={this.refreshWorkflows} />
+          </div>
         </TourProvider>
+      );
+    case 'GWASResults':
+      return (
+        <div className='analysis-app_flex_row'>
+          <GWASWorkflowList refreshWorkflows={this.refreshWorkflows} />
+        </div>
       );
     default:
       // this will ensure the main window will process the app messages (if any):
@@ -212,7 +212,9 @@ class AnalysisApp extends React.Component {
                 <p className='analysis-app__description'>{app.description}</p>
                 <div className={`${this.state.analysisIsFullscreen ? 'analysis-app__fullscreen' : ''}`}>
                   <div className='analysis-app__actions'>
-                    {appContent}
+                    <QueryClientProvider client={queryClient} contextSharing>
+                      {appContent}
+                    </QueryClientProvider>
                   </div>
                   {this.state.isIframeApp
                     ? (

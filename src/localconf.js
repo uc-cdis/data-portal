@@ -21,6 +21,7 @@ function buildConfig(opts) {
     protocol: typeof window !== 'undefined' ? `${window.location.protocol}` : 'http:',
     hostnameOnly: typeof window !== 'undefined' ? hostnameNoSubdomain : 'localhost',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
+    hostnameWithSubdomain: hostnameValue,
     fenceURL: process.env.FENCE_URL,
     indexdURL: process.env.INDEXD_URL,
     cohortMiddlewareURL: process.env.COHORT_MIDDLEWARE_URL,
@@ -55,6 +56,7 @@ function buildConfig(opts) {
     protocol,
     hostnameOnly,
     hostname,
+    hostnameWithSubdomain,
     fenceURL,
     indexdURL,
     cohortMiddlewareURL,
@@ -79,7 +81,6 @@ function buildConfig(opts) {
     u.search = '';
     return u.href;
   }
-
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
@@ -94,6 +95,7 @@ function buildConfig(opts) {
   const gwasWorkflowPath = typeof gwasWorkflowURL === 'undefined' ? `${hostname}ga4gh/wes/v2/` : ensureTrailingSlash(gwasWorkflowURL);
 
   const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
+  const wtsAggregateAuthzPath = `${hostname}wts/aggregate/authz/mapping`;
   const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
   let login = {
     url: `${userAPIPath}login/google?redirect=`,
@@ -108,6 +110,7 @@ function buildConfig(opts) {
   const graphqlSchemaUrl = `${hostname}${(basename && basename !== '/') ? basename : ''}/data/schema.json`;
   const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);
   const workspaceErrorUrl = '/no-workspace-access/';
+  const Error403Url = '/403error';
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
   const workspacePayModelUrl = `${workspaceUrl}paymodels`;
@@ -282,7 +285,9 @@ function buildConfig(opts) {
   }
 
   const { discoveryConfig } = config;
-  const studyRegistrationConfig = config.studyRegistrationConfig || {};
+  const { registrationConfigs } = config;
+  const studyRegistrationConfig = (registrationConfigs && registrationConfigs.features)
+    ? (registrationConfigs.features.studyRegistrationConfig || {}) : {};
   if (!studyRegistrationConfig.studyRegistrationTrackingField) {
     studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username';
   }
@@ -297,6 +302,9 @@ function buildConfig(opts) {
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
+  const workspaceRegistrationConfig = (registrationConfigs && registrationConfigs.features)
+    ? registrationConfigs.features.workspaceRegistrationConfig : null;
+  const kayakoConfig = registrationConfigs ? registrationConfigs.kayakoConfig : null;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -419,6 +427,13 @@ function buildConfig(opts) {
             image: '/src/img/analysis-icons/gwas.svg',
           };
           break;
+        case 'GWASResults':
+          analysisApps.GWASResults = {
+            title: 'GWAS Results',
+            description: 'Use this App to view status & results of submitted workflows',
+            image: '/src/img/analysis-icons/gwasResults.svg',
+          };
+          break;
         default:
           break;
         }
@@ -458,6 +473,7 @@ function buildConfig(opts) {
     gwasTemplate,
     dev,
     hostname,
+    hostnameWithSubdomain,
     gaDebug,
     userAPIPath,
     jobAPIPath,
@@ -503,6 +519,7 @@ function buildConfig(opts) {
     guppyDownloadUrl,
     manifestServiceApiPath,
     wtsPath,
+    wtsAggregateAuthzPath,
     externalLoginOptionsUrl,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
@@ -529,6 +546,7 @@ function buildConfig(opts) {
     studyViewerConfig,
     covid19DashboardConfig,
     discoveryConfig,
+    kayakoConfig,
     studyRegistrationConfig,
     mapboxAPIToken,
     auspiceUrl,
@@ -536,6 +554,7 @@ function buildConfig(opts) {
     workspacePageTitle,
     workspacePageDescription,
     enableDAPTracker,
+    workspaceRegistrationConfig,
     workspaceStorageUrl,
     workspaceStorageListUrl,
     workspaceStorageDownloadUrl,
@@ -550,6 +569,7 @@ function buildConfig(opts) {
     ddEnv,
     ddSampleRate,
     showSystemUse,
+    Error403Url,
   };
 }
 

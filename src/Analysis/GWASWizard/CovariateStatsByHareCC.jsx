@@ -1,10 +1,11 @@
 /* eslint-disable camelcase */
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { Spin } from 'antd';
-import { fetchConceptStatsByHare, queryConfig } from './wizardEndpoints/cohortMiddlewareApi';
+import { fetchConceptStatsByHareForCaseControl, queryConfig, getAllHareItems } from './wizardEndpoints/cohortMiddlewareApi';
+import useDebounce from './shared/useDebounce';
 
 const CovariateStatsByHareCC = ({
   selectedHare,
@@ -15,9 +16,13 @@ const CovariateStatsByHareCC = ({
   sourceId,
   handleHareChange,
 }) => {
+  // selectedCovariates can go through multiple changes in a short period of time, depending on how
+  // the user is interacting with the UI, so debounce this one:
+  const debouncedSelectedCovariates = useDebounce(selectedCovariates, 800);
+
   const hareStatsParams = [
     'conceptsstats',
-    selectedCovariates,
+    debouncedSelectedCovariates,
     selectedDichotomousCovariates,
   ];
   const results = useQueries([
@@ -26,9 +31,10 @@ const CovariateStatsByHareCC = ({
         ...hareStatsParams,
         caseCohortDefinitionId,
       ],
-      queryFn: () => fetchConceptStatsByHare(
+      queryFn: () => fetchConceptStatsByHareForCaseControl(
         caseCohortDefinitionId,
-        selectedCovariates,
+        controlCohortDefinitionId,
+        debouncedSelectedCovariates,
         selectedDichotomousCovariates,
         sourceId,
       ),
@@ -39,9 +45,10 @@ const CovariateStatsByHareCC = ({
         ...hareStatsParams,
         controlCohortDefinitionId,
       ],
-      queryFn: () => fetchConceptStatsByHare(
+      queryFn: () => fetchConceptStatsByHareForCaseControl(
         controlCohortDefinitionId,
-        selectedCovariates,
+        caseCohortDefinitionId,
+        debouncedSelectedCovariates,
         selectedDichotomousCovariates,
         sourceId,
       ),
@@ -58,12 +65,6 @@ const CovariateStatsByHareCC = ({
     dataControl: results[1].data,
   };
 
-  const getAllHareItems = (concept_value, allCaseHares, allControlHares) => {
-    const caseHareBreakdown = allCaseHares.find((hare) => hare.concept_value === concept_value);
-    const controlHareBreakdown = allControlHares.find((hare) => hare.concept_value === concept_value);
-    return [caseHareBreakdown, controlHareBreakdown];
-  };
-
   const getHareDescriptionBreakdown = (singleHare, allCaseHares, allControlHares) => {
     const hareBreakdown = getAllHareItems(singleHare.concept_value,
       allCaseHares, allControlHares);
@@ -73,12 +74,6 @@ const CovariateStatsByHareCC = ({
     };
     return `${selectedCaseHare.concept_value_name} (sizes: ${selectedCaseHare.persons_in_cohort_with_value}, ${selectedControlHare.persons_in_cohort_with_value})`;
   };
-
-  useEffect(() => {
-    if (selectedHare && dataCase?.concept_breakdown && dataControl?.concept_breakdown) {
-      handleHareChange(selectedHare);
-    }
-  }, [selectedHare, dataCase, dataControl, handleHareChange]);
 
   if (statusCase === 'loading' || statusControl === 'loading') {
     return <Spin />;
@@ -98,7 +93,7 @@ const CovariateStatsByHareCC = ({
     }
     // normal scenario - there is breakdown data, so show in dropdown:
     return (
-      <div className='GWASUI-flexRow'>
+      <React.Fragment>
         <Dropdown
           // disabled
           buttonType='secondary'
@@ -115,7 +110,7 @@ const CovariateStatsByHareCC = ({
                 <Dropdown.Item
                   key={`key-${hare.concept_value}`}
                   value={`${hare}`}
-                  onClick={() => handleHareChange(hare)}
+                  onClick={() => handleHareChange(hare, dataCase.concept_breakdown, dataControl.concept_breakdown)}
                 >
                   <div>
                     {getHareDescriptionBreakdown(hare, dataCase.concept_breakdown, dataControl.concept_breakdown)}
@@ -125,7 +120,7 @@ const CovariateStatsByHareCC = ({
             }
           </Dropdown.Menu>
         </Dropdown>
-      </div>
+      </React.Fragment>
     );
   }
   return false;

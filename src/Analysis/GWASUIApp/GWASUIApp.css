@@ -19,6 +19,13 @@
   justify-content: space-between;
 }
 
+.tour-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px;
+}
+
 .ant-btn {
   width: auto;
 }
@@ -123,6 +130,16 @@
   padding: 10px;
 }
 
+.GWASUI-typeSelector div .ant-card {
+  cursor: pointer;
+  border: 2px solid var(--g3-color__silver);
+  border-radius: 5px;
+}
+
+.GWASUI-typeSelector div .ant-card:hover {
+  border-color: white;
+}
+
 .GWASUI-typeTitle {
   float: relative;
 }
@@ -173,6 +190,10 @@
 
 .ant-modal-content {
   width: 600px;
+}
+
+.ant-collapse {
+  margin-bottom: 10px;
 }
 
 .GWASApp-jobStatus .ant-collapse {
@@ -262,21 +283,12 @@
   padding: 5px;
 }
 
-.GWASUI-form {
-  justify-content: space-between;
-}
-
-.GWASUI-formItem {
-  margin: 5px;
-  padding: 2px;
-}
-
 .GWASUI-cdNameInput {
   width: 600px;
 }
 
 .GWASUI-btnEnable {
-  background-color:rgb(24, 144, 255);
+  background-color: rgb(24, 144, 255);
   color: white;
   transition: all 0.5s ease-in-out;
 }
@@ -299,8 +311,75 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  padding: 5px;
 }
 
 .GWASUI-emptyTable {
   height: 400px;
+}
+
+.GWASUI-emphText {
+  font-style: italic;
+  text-decoration: underline;
+}
+
+.GWASUI-label {
+  margin: 5px;
+  padding: 2px;
+  width: auto;
+  display: inline-block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.GWASUI-attritionTable {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+}
+
+.GWASUI-attritionRow .ant-collapse {
+  width: 100%;
+  display: none;
+}
+
+.GWASUI-attritionTableHeader {
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.GWASUI-attritionTableHeader .ant-spin-nested-loading .ant-spin-container .ant-table .ant-table-container .ant-table-content table .ant-table-tbody {
+  display: none;
+}
+.GWASUI-smCell {
+  width: 31%;
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.GWASUI-mdCell {
+  width: 100%;
+  text-align: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.GWASUI-leftAttr {
+  display: flex;
+  flex-direction: row;
+  margin: 0 0 20 0;
+  width: 100%;
+  align-items: left;
+  flex: 3;
+}
+
+.GWASUI-rightAttr {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: right;
+  flex: 7;
 }

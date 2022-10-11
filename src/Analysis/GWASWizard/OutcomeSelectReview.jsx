@@ -11,12 +11,12 @@ import { useFetch, useFilter } from './shared/formHooks';
 
 export const outcomeReviewTableConfig = [
   {
-    title: 'Concept ID',
+    title: 'Variable ID',
     dataIndex: 'concept_id',
     key: 'concept_id',
   },
   {
-    title: 'Concept Name',
+    title: 'Variable Name',
     dataIndex: 'concept_name',
     key: 'concept_name',
   },
@@ -70,24 +70,27 @@ const OutcomeSelectReview = ({
     <div>
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
         <hr />
-        <h4 className='GWASUI-selectInstruction'>
-                    In this step, you can review the covariates selection based on % missing metrics
-                    and select an outcome variable.
+        <h4 className='GWASUI-selectInstruction' data-tour='choosing-covariates'>
+          Assess variables based on % missing metric and select the outcome phenotype
         </h4>
-        <div className='GWASUI-mainTable'>
-          <SearchBar
-            searchTerm={outcomeSearchTerm}
-            handleSearch={handleOutcomeSearch}
-            fields={'outcome name...'}
-          />
-          <Table
-            className='GWASUI-review-table'
-            rowKey='concept_id'
-            rowSelection={outcomeSelection(handleOutcomeSelect, outcome)}
-            pagination={{ pageSize: 10 }}
-            columns={outcomeReviewTableConfig}
-            dataSource={displayedOutcomes}
-          />
+        <div className='GWASUI-mainTable' data-tour='covariates-table'>
+          <div data-tour='covariates-table-search'>
+            <SearchBar
+              searchTerm={outcomeSearchTerm}
+              handleSearch={handleOutcomeSearch}
+              fields={'variable name'}
+            />
+          </div>
+          <div data-tour='covariates-table-body'>
+            <Table
+              className='GWASUI-review-table'
+              rowKey='concept_id'
+              rowSelection={outcomeSelection(handleOutcomeSelect, outcome)}
+              pagination={{ pageSize: 10 }}
+              columns={outcomeReviewTableConfig}
+              dataSource={displayedOutcomes}
+            />
+          </div>
         </div>
       </Space>
     </div>
