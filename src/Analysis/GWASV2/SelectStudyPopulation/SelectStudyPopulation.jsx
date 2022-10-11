@@ -4,10 +4,9 @@ import CohortSelect from "./Utils/CohortSelect";
 import { useSourceFetch } from '../../GWASWizard/wizardEndpoints/cohortMiddlewareApi';
 import './SelectStudyPopulation.css'
 
-const SelectStudyPopulation = () => {
+const SelectStudyPopulation = ({selectedCaseCohort, setSelectedCaseCohort}) => {
   const [current, setCurrent] = useState(0);
 
-  const [selectedCaseCohort, setSelectedCaseCohort] = useState(undefined);
   const handleCaseCohortSelect = (cohort) => {
       setSelectedCaseCohort(cohort);
   };
