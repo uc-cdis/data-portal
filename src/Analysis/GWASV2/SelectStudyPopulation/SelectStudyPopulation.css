@@ -40,15 +40,3 @@
 .cohort-table-search {
     padding: 0 10px;
 }
-.GWASUI-row {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
-  }
-  .GWASUI-column {
-    display: flex;
-    flex-direction: column;
-    flex-basis: 100%;
-    flex: 1;
-  }

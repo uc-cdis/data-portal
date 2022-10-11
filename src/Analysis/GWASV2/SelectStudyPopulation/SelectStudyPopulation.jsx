@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Space, Spin } from 'antd';
+import { Spin } from 'antd';
 import CohortSelect from "./Utils/CohortSelect";
 import { useSourceFetch } from '../../GWASWizard/wizardEndpoints/cohortMiddlewareApi';
-import '../../GWASUIApp/GWASUIApp.css'
 import './SelectStudyPopulation.css'
 
 const SelectStudyPopulation = () => {
@@ -15,15 +14,12 @@ const SelectStudyPopulation = () => {
   const { loading, sourceId } = useSourceFetch();
 
   return (!loading && sourceId ? (
-    <Space direction={'vertical'} align={'center'}
-      style={{ width: '100%' }}>
         <CohortSelect
           selectedCohort={selectedCaseCohort}
           handleCohortSelect={handleCaseCohortSelect}
           sourceId={sourceId}
           current={current}
         />
-    </Space>
     ):  <Spin />);
 }
 
