@@ -4,15 +4,19 @@
     color: white;
     border: none;
 }
+
 .GWASUI-mainTable {
     border: none;
 }
+
 .GWASUI-newCohort button:hover {
     background-color: var(--g3-secondary-btn__bg-color--hover)
 }
+
 .GWASUI-table1 tr:nth-child(even) {
     background-color: #fafafb;
 }
+
 .GWASUI-table1 thead th {
     background-color: #e9eef2;
 }

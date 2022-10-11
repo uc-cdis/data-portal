@@ -6,6 +6,7 @@ import './GWASV2.css'
 
 const GWASContainer = () => {
     const [current, setCurrent] = useState(0);
+    const [selectedCaseCohort, setSelectedCaseCohort] = useState(undefined);
     const gwasSteps = [
         {
             title: 'Step 1',
@@ -30,7 +31,8 @@ const GWASContainer = () => {
         switch (current) {
             case 0:
                 // select study population
-                return <SelectStudyPopulation />
+                return <SelectStudyPopulation selectedCaseCohort={selectedCaseCohort}
+                        setSelectedCaseCohort={setSelectedCaseCohort}/>
             case 1:
                 // outcome (customdichotomous or not)
                 return <>step 2</>
