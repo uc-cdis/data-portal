@@ -58,9 +58,7 @@ const GWASContainer = () => {
       <React.Fragment>
         <Space direction={'vertical'} style={{ width: '100%' }}>
           <Steps current={current}>
-            {gwasSteps.map((item, idx) => (
-              <Step key={idx} title={item.title} description={item.description} />
-            ))}
+            {gwasSteps.forEach((item, idx) => (<Step key={idx} title={item.title} description={item.description} />))}
           </Steps>
           <div className='steps-content'>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
