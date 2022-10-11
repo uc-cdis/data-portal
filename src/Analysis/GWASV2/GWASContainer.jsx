@@ -7,7 +7,7 @@ import './GWASV2.css';
 
 const GWASContainer = () => {
   const [current, setCurrent] = useState(0);
-  const [selectedCaseCohort, setSelectedCaseCohort] = useState(undefined);
+  const [selectedCaseCohort, setSelectedCaseCohort] = useState({});
   const gwasSteps = [
     {
       title: 'Step 1',
@@ -57,9 +57,6 @@ const GWASContainer = () => {
     <React.Fragment>
       <React.Fragment>
         <Space direction={'vertical'} style={{ width: '100%' }}>
-          <Steps current={current}>
-            {gwasSteps.forEach((item, idx) => (<Step key={idx} title={item.title} description={item.description} />))}
-          </Steps>
           <div className='steps-content'>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
               {generateStep(current)}
@@ -72,8 +69,9 @@ const GWASContainer = () => {
               onClick={() => {
                 setCurrent(current - 1);
               }}
+              disabled={ current < 1? true : false }
             >
-                            Previous
+            Previous
             </Button>
             <Popconfirm
               title='Are you sure you want to leave this page?'

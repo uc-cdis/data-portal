@@ -35,5 +35,5 @@
 .analysis-app__actions .steps-content {
     background-color: inherit;
     border: none;
-    padding-top: 0;
+    padding-top: 10px;
 }
