@@ -1,33 +1,33 @@
-.GWASUI-newCohort button {
+.GWASV2 .GWASUI-newCohort button {
     margin: 0 0 12px auto;
     background-color: #2e77b8;
     color: white;
     border: none;
 }
 
-.GWASUI-mainTable {
+.GWASV2 .GWASUI-mainTable {
     border: none;
 }
 
-.GWASUI-newCohort button:hover {
+.GWASV2 .GWASUI-newCohort button:hover {
     background-color: var(--g3-secondary-btn__bg-color--hover)
 }
 
-.GWASUI-table1 tr:nth-child(even) {
+.GWASV2 .GWASUI-table1 tr:nth-child(even) {
     background-color: #fafafb;
 }
 
-.GWASUI-table1 thead th {
+.GWASV2 .GWASUI-table1 thead th {
     background-color: #e9eef2;
 }
 
-.GWASUI-table1 .ant-table-container {
+.GWASV2 .GWASUI-table1 .ant-table-container {
     border-top-left-radius: none;
     border-top-right-radius: none;
     border-radius: 5px;
     border: 2px solid #dedede;
 }
 
-.cohort-table-search {
+.GWASV2 .cohort-table-search {
     padding: 0 10px;
 }

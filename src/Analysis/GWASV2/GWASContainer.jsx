@@ -55,7 +55,7 @@ const GWASContainer = () => {
   };
   return (
     <React.Fragment>
-      <React.Fragment>
+      <div className="GWASV2">
         <Space direction={'vertical'} style={{ width: '100%' }}>
           <div className='steps-content'>
             <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
@@ -97,7 +97,7 @@ const GWASContainer = () => {
             {current === gwasSteps.length - 1 && (<div className='GWASUI-navBtn' />)}
           </div>
         </Space>
-      </React.Fragment>
+      </div>
     </React.Fragment>
   );
 };
