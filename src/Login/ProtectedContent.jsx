@@ -13,6 +13,8 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 import ReduxSystemUseWarningPopup from '../Popup/SystemUseWarningPopup';
 import { intersection, isPageFullScreen } from '../utils';
 import './ProtectedContent.css';
+import isEnabled from '../helpers/featureFlags';
+import { initWorkspaceRefreshToken } from '../Workspace/WorkspaceRefreshToken';
 
 let lastAuthMs = 0;
 
@@ -70,6 +72,10 @@ class ProtectedContent extends React.Component {
                 const latestState = { ...newState };
                 latestState.dataLoaded = true;
                 this.setState(latestState);
+                if (newState.authenticated && isEnabled('workspaceTokenServiceRefreshTokenAtLogin')) {
+                    // initialize WTS:
+                    initWorkspaceRefreshToken();
+                }
               };
               return filterPromise.then(
                 finish, finish,
