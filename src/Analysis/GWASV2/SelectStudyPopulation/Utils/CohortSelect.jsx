@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import CohortDefinitions from './CohortDefinitions';
-import SearchBar from '../Shared/SearchBar';
+import SearchBar from '../../Shared/SearchBar';
 import AddCohortButton from './AddCohortButton';
-import '../../GWASUIApp/GWASUIApp.css'
+import CohortDefinitions from './CohortDefinitions';
 
 const CohortSelect = ({
   selectedCohort,

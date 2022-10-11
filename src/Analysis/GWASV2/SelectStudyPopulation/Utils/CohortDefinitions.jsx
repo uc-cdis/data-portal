@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useQuery } from 'react-query';
+import { useQuery,  queryConfig } from 'react-query';
 import {Table, Spin } from 'antd';
-import { fetchCohortDefinitions, queryConfig } from '../../GWASWizard/wizardEndpoints/cohortMiddlewareApi';
-import { useFetch, useFilter } from '../../GWASWizard/shared/formHooks';
-
+import { fetchCohortDefinitions } from '../../Shared/wizardEndpoints/cohortMiddlewareApi';
+import { useFetch, useFilter } from '../../Shared/formHooks'
 
 const CohortDefinitions = ({
   sourceId, selectedCohort = undefined, handleCohortSelect, otherCohortSelected, searchTerm,
