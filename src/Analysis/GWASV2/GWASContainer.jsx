@@ -3,6 +3,7 @@ import { PropTypes } from "prop-types";
 import { Space, Button, Steps, Step, Popconfirm } from "antd";
 
 import SelectStudyPopulation from "./SelectStudyPopulation/SelectStudyPopulation";
+import './GWASV2.css'
 
 const GWASContainer = () => {
     const [current, setCurrent] = useState(0);
@@ -30,7 +31,7 @@ const GWASContainer = () => {
         switch (current) {
             case 0:
                 // select study population
-                return <>step 1 <SelectStudyPopulation /></>
+                return <SelectStudyPopulation />
             case 1:
                 // outcome (customdichotomous or not)
                 return <>step 2</>

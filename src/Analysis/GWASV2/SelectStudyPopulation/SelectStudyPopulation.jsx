@@ -14,19 +14,16 @@ import './SelectStudyPopulation.css'
     const { loading, sourceId } = useSourceFetch();
 
     return (!loading && sourceId ? (
-    <>
-    <h1>Hello world from Select Study Population</h1>
-            <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
+      <Space direction={'vertical'} align={'center'}
+        style={{ width: '100%' }}>
+          <CohortSelect
+            selectedCohort={selectedCaseCohort}
+            handleCohortSelect={handleCaseCohortSelect}
+            sourceId={sourceId}
+            current={current}
+          />
 
-                <CohortSelect
-                  selectedCohort={selectedCaseCohort}
-                  handleCohortSelect={handleCaseCohortSelect}
-                  sourceId={sourceId}
-                  current={current}
-                />
-
-            </Space>
-          </>
+      </Space>
     ):  <Spin />);
 }
 

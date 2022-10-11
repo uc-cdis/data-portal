@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import CohortDefinitions from './CohortDefinitions';
-import SearchBar from './SearchBar';
+import SearchBar from '../Shared/SearchBar';
 import AddCohortButton from './AddCohortButton';
 import '../../GWASUIApp/GWASUIApp.css'
 

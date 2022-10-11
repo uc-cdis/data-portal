@@ -13,7 +13,7 @@ const SearchBar = ({ searchTerm, handleSearch, fields = 'variable name' }) => (
         value={searchTerm}
         onChange={(e) => handleSearch(e.target.value)}
       />
-      <SearchOutlined style={{ fontSize: '20px'}}/>
+      <SearchOutlined size='small' style={{ fontSize: '20px'}}/>
     </div>
   </div>
 );

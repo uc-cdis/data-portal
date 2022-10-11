@@ -1,0 +1,8 @@
+.analysis-app__actions div:first-child {
+    margin: 0 auto;
+}
+.analysis-app__actions .steps-content {
+    background-color: inherit;
+    border: none;
+    padding-top: 0;
+}
