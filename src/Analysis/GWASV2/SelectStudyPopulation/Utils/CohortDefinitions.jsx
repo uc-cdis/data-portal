@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useQuery,  queryConfig } from 'react-query';
-import {Table, Spin } from 'antd';
+import { useQuery, queryConfig } from 'react-query';
+import { Table, Spin } from 'antd';
 import { fetchCohortDefinitions } from '../../Shared/wizardEndpoints/cohortMiddlewareApi';
-import { useFetch, useFilter } from '../../Shared/formHooks'
+import { useFetch, useFilter } from '../../Shared/formHooks';
 
 const CohortDefinitions = ({
   sourceId, selectedCohort = undefined, handleCohortSelect, otherCohortSelected, searchTerm,
@@ -12,15 +12,15 @@ const CohortDefinitions = ({
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
   const displayedCohorts = useFilter(fetchedCohorts, searchTerm, 'cohort_name');
 
-  const cohortSelection = (handler, selectedCohort, otherCohortSelected) => ({
+  const cohortSelection = (handler, inputSelectedCohort, inputOtherCohortSelected) => ({
     type: 'radio',
     columnTitle: 'Select',
-    selectedRowKeys: (selectedCohort) ? [selectedCohort.cohort_definition_id] : [],
+    selectedRowKeys: (inputSelectedCohort) ? [inputSelectedCohort.cohort_definition_id] : [],
     onChange: (_, selectedRows) => {
       handler(selectedRows[0]);
     },
     getCheckboxProps: (record) => ({
-      disabled: record.size === 0 || record.cohort_name === otherCohortSelected,
+      disabled: record.size === 0 || record.cohort_name === inputOtherCohortSelected,
     }),
   });
   const cohortTableConfig = [
