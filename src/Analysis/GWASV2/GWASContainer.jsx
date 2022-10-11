@@ -32,7 +32,7 @@ const GWASContainer = () => {
             case 0:
                 // select study population
                 return <SelectStudyPopulation selectedCaseCohort={selectedCaseCohort}
-                        setSelectedCaseCohort={setSelectedCaseCohort}/>
+                        setSelectedCaseCohort={setSelectedCaseCohort} current={current}/>
             case 1:
                 // outcome (customdichotomous or not)
                 return <>step 2</>
