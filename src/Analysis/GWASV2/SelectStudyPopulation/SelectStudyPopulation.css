@@ -13,31 +13,8 @@
     cursor: pointer;
 }
 
-.GWASV2 .GWASUI-mainTable {
-    border: none;
-}
-
-.GWASV2 .ant-table.ant-table-middle .ant-table-thead > tr > th:before{
-    display: none;
-}
-
 .GWASV2 .GWASUI-newCohort button:hover {
     background-color: var(--g3-secondary-btn__bg-color--hover)
-}
-
-.GWASV2 .GWASUI-table1 tr:nth-child(even) {
-    background-color: #fafafb;
-}
-
-.GWASV2 .GWASUI-table1 thead th {
-    background-color: #e9eef2;
-}
-
-.GWASV2 .GWASUI-table1 .ant-table-container {
-    border-top-left-radius: none;
-    border-top-right-radius: none;
-    border-radius: 5px;
-    border: 2px solid #dedede;
 }
 
 .GWASV2 .cohort-table-search {
