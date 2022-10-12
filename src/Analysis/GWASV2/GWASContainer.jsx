@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Space, Button, Steps, Step, Popconfirm,
-} from 'antd';
+import { Space, Button,  Popconfirm } from 'antd';
 import SelectStudyPopulation from './SelectStudyPopulation/SelectStudyPopulation';
 import './GWASV2.css';
 
