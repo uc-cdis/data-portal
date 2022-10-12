@@ -9,6 +9,10 @@
     border: none;
 }
 
+.GWASV2 .ant-table.ant-table-middle .ant-table-thead > tr > th:before{
+    display: none;
+}
+
 .GWASV2 .GWASUI-newCohort button:hover {
     background-color: var(--g3-secondary-btn__bg-color--hover)
 }
