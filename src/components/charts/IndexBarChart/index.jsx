@@ -47,10 +47,14 @@ const computeSummations = (projectList, countNames) => {
 };
 
 const createChartData = (projectList, countNames, sumList) => {
-  let indexChart = countNames.map((countName) => ({ name: countName }));
+  let indexChart = countNames.map((countName) => ({
+    name: countName,
+    allCounts: [],
+  }));
   projectList.forEach((project, i) => {
     project.counts.forEach((count, j) => {
       if (typeof indexChart[j] === 'undefined') return;
+      indexChart[j].allCounts.push(count);
       indexChart[j][`count${i}`] =
         sumList[j] > 0 ? ((count * 100) / sumList[j]).toFixed(2) : 0;
     });
