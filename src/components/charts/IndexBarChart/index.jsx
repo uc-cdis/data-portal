@@ -68,16 +68,6 @@ const createChartData = (projectList, countNames, sumList) => {
   return indexChart;
 };
 
-const createBarNames = (indexChart) => {
-  let barNames = [];
-  if (indexChart.length > 0) {
-    barNames = Object.keys(indexChart[0])
-      .filter((key) => key.indexOf('count') === 0)
-      .map((name) => name);
-  }
-  return barNames;
-};
-
 /**
  * Component shows stacked-bars - one stacked-bar for each project in props.projectList -
  * where experiments are stacked on top of cases.  projectList looks like:
@@ -103,7 +93,10 @@ function IndexBarChart({ projectList, countNames, barChartStyle, xAxisStyle }) {
   const sumList = computeSummations(topList, countNames);
   const indexChart = createChartData(topList, countNames, sumList);
   const projectNames = topList.map((project) => project.code);
-  const barNames = createBarNames(indexChart);
+  const barNames = Object.keys(indexChart[0] ?? {}).filter((key) =>
+    key.startsWith('count')
+  );
+
   let countBar = 0;
   return (
     <div className='index-bar-chart'>
