@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import AddCohortButton from './AddCohortButton';
 import CohortDefinitions from './CohortDefinitions';
+/* Eslint is giving error: import/no-named-as-default-member: needs a parser plugin */
 /* eslint-disable-next-line */
 import SearchBar from '../../Shared/SearchBar';
 
