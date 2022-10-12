@@ -7,8 +7,6 @@ import '../../../GWASUIApp/GWASUIApp.css'
 import '../SelectStudyPopulation.css'
 import '../../GWASV2.css'
 
-
-
 export default {
   title: 'Tests3/GWASV2/SelectStudyPopulation/CohortSelect',
   component: CohortSelect,
