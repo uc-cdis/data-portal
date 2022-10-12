@@ -3,6 +3,14 @@
     background-color: #2e77b8;
     color: white;
     border: none;
+    border-radius: 4px;
+    width: 152px;
+    height: 40px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
 }
 
 .GWASV2 .GWASUI-mainTable {

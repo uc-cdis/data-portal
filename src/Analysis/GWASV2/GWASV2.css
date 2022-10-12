@@ -33,17 +33,6 @@
     font-style: normal;
 }
 
-.GWASV2 button {
-    border-radius: 4px;
-    width: 152px;
-    height: 40px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    display: inline-block;
-    vertical-align: middle;
-    cursor: pointer;
-}
-
 .GWASV2 .analysis-app__actions .steps-content {
     background-color: inherit;
     border: none;

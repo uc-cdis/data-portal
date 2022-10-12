@@ -53,7 +53,7 @@ const GWASContainer = () => {
   };
   return (
     <React.Fragment>
-      {/* Inline style block needed so this rule doesn't impact other workflows */}
+      {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>{`.analysis-app__actions > div:nth-child(1) {margin: 0 auto; }`}</style>
       <div className="GWASV2">
         <Space direction={'vertical'} style={{ width: '100%' }}>
@@ -69,7 +69,7 @@ const GWASContainer = () => {
               onClick={() => {
                 setCurrent(current - 1);
               }}
-              disabled={ current < 1? true : false }
+              disabled={ current < 1 ? true : false }
             >
             Previous
             </Button>
@@ -79,7 +79,7 @@ const GWASContainer = () => {
               okText='Yes'
               cancelText='No'
             >
-              <Button type='link' size='medium' ghost>Select Different GWAS Type</Button>
+              <Button type='link' size='medium'>Select Different GWAS Type</Button>
             </Popconfirm>
             {current < gwasSteps.length - 1 && (
               <Button
