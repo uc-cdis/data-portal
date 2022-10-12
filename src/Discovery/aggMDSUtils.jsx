@@ -19,7 +19,7 @@ const retrieveCommonsInfo = async (commonsName) => {
  * @returns array with duplicates removed
  */
 const getUniqueTags = ((tags) => tags.filter((v, i, a) => a.findIndex((t) => (
-  typeof t.name === 'string' && t.name.length > 0 && t.category === v.category && t.name === v.name)) === i));
+  t.name?.length > 0 && t.category === v.category && t.name === v.name)) === i));
 
 const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
