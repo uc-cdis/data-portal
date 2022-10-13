@@ -5,7 +5,7 @@ language: node_js
 git:
   depth: 1
 node_js:
-  - "14"
+  - "16.15"
 
 cache:
   npm: false # disable npm cache for npm ci
@@ -14,7 +14,7 @@ services:
     - docker
 
 before_install:
-    - npm install -g npm@8.5
+    - npm install -g npm@8.15
 
 install:
     - npm ci
