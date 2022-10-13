@@ -21,13 +21,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     time \
     vim \
-    && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+    && curl -sL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log \
-    && npm install -g npm@8.5
+    && npm install -g npm@8.15
 
 ARG APP=dev
 ARG BASENAME
