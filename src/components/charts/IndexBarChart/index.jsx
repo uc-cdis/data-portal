@@ -47,10 +47,14 @@ const computeSummations = (projectList, countNames) => {
 };
 
 const createChartData = (projectList, countNames, sumList) => {
-  let indexChart = countNames.map((countName) => ({ name: countName }));
+  let indexChart = countNames.map((countName) => ({
+    name: countName,
+    allCounts: [],
+  }));
   projectList.forEach((project, i) => {
     project.counts.forEach((count, j) => {
       if (typeof indexChart[j] === 'undefined') return;
+      indexChart[j].allCounts.push(count);
       indexChart[j][`count${i}`] =
         sumList[j] > 0 ? ((count * 100) / sumList[j]).toFixed(2) : 0;
     });
@@ -62,16 +66,6 @@ const createChartData = (projectList, countNames, sumList) => {
     return newIndex;
   });
   return indexChart;
-};
-
-const createBarNames = (indexChart) => {
-  let barNames = [];
-  if (indexChart.length > 0) {
-    barNames = Object.keys(indexChart[0])
-      .filter((key) => key.indexOf('count') === 0)
-      .map((name) => name);
-  }
-  return barNames;
 };
 
 /**
@@ -99,7 +93,10 @@ function IndexBarChart({ projectList, countNames, barChartStyle, xAxisStyle }) {
   const sumList = computeSummations(topList, countNames);
   const indexChart = createChartData(topList, countNames, sumList);
   const projectNames = topList.map((project) => project.code);
-  const barNames = createBarNames(indexChart);
+  const barNames = Object.keys(indexChart[0] ?? {}).filter((key) =>
+    key.startsWith('count')
+  );
+
   let countBar = 0;
   return (
     <div className='index-bar-chart'>
