@@ -42,7 +42,7 @@ describe('the UserProfile component', () => {
         />
       </StaticRouter>,
     );
-    expect($vdom.find('tbody tr')).toHaveLength(testProps.userProfile.jtis.length + 1);
+    expect($vdom.find('tbody tr')).toHaveLength(testProps.userProfile.jtis.length);
   });
 
   it('triggers create-key events', (done) => {
@@ -79,7 +79,7 @@ describe('the UserProfile component', () => {
       </StaticRouter>,
     );
     const $deleteBtn = $vdom.find(`button[name="${DELETE_BTN}"]`);
-    expect($deleteBtn).toHaveLength(2);
+    expect($deleteBtn).toHaveLength($vdom.find('tbody tr').length);
     $deleteBtn.at(0).simulate('click');
     // should invoke onRequestDeleteKey callback  (above - calls done()) ...
   });
