@@ -1,0 +1,22 @@
+.GWASV2 .GWASUI-newCohort button {
+  margin: 6px 0 12px auto;
+  background-color: #2e77b8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 152px;
+  height: 40px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.GWASV2 .GWASUI-newCohort button:hover {
+  background-color: var(--g3-secondary-btn__bg-color--hover)
+}
+
+.GWASV2 .cohort-table-search {
+  padding: 0 10px;
+}

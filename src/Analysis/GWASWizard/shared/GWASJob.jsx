@@ -116,17 +116,16 @@ const GWASJob = ({ workflow }) => {
   };
 
   async function fetchWorkflowStatus() {
-    const statusEndpoint = `${gwasWorkflowPath}status/${workflow}`;
+    const statusEndpoint = `${gwasWorkflowPath}status/${workflow.name}`;
     const status = await fetch(statusEndpoint);
     return status.json();
   }
 
   const Status = () => {
-    const { data, status } = useQuery(['workflowId', workflow], fetchWorkflowStatus, {
+    const { data, status } = useQuery(['workflowId', workflow.name, workflow.phase], fetchWorkflowStatus, {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      refetchInterval: 60000,
+      refetchOnReconnect: false
     });
     if (status === 'loading') {
       return <React.Fragment>Loading</React.Fragment>;

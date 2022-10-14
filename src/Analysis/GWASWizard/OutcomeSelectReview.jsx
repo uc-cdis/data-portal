@@ -69,7 +69,6 @@ const OutcomeSelectReview = ({
   return (
     <div>
       <Space direction={'vertical'} align={'center'} style={{ width: '100%' }}>
-        <hr />
         <h4 className='GWASUI-selectInstruction' data-tour='choosing-covariates'>
           Assess variables based on % missing metric and select the outcome phenotype
         </h4>
