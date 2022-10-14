@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import AddCohortButton from './AddCohortButton';
-import CohortDefinitions from './CohortDefinitions';
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import AddCohortButton from "./AddCohortButton";
+import CohortDefinitions from "./CohortDefinitions";
 /* Eslint is giving error: import/no-named-as-default-member: needs a parser plugin */
 /* eslint-disable-next-line */
-import SearchBar from '../../Shared/SearchBar';
+import SearchBar from "../../Shared/SearchBar";
 
 const CohortSelect = ({
   selectedCohort,
   handleCohortSelect,
   sourceId,
-  otherCohortSelected = '',
   current,
 }) => {
-  const [cohortSearchTerm, setCohortSearchTerm] = useState('');
+  const [cohortSearchTerm, setCohortSearchTerm] = useState("");
 
   useEffect(() => {
-    setCohortSearchTerm('');
+    setCohortSearchTerm("");
   }, [current]);
 
   const handleCohortSearch = (searchTerm) => {
@@ -24,27 +23,29 @@ const CohortSelect = ({
   };
   return (
     <React.Fragment>
-      <div className='GWASUI-row cohort-table-search'>
-        <div className='GWASUI-column'>
+      <div className="GWASUI-row cohort-table-search">
+        <div className="GWASUI-column">
           <SearchBar
             searchTerm={cohortSearchTerm}
             handleSearch={handleCohortSearch}
-            fields={'cohort name'}
+            fields={"cohort name"}
           />
         </div>
-        <div data-tour='step-1-new-cohort' className='GWASUI-column GWASUI-newCohort'>
+        <div
+          data-tour="step-1-new-cohort"
+          className="GWASUI-column GWASUI-newCohort"
+        >
           <AddCohortButton />
         </div>
       </div>
-      <div className='GWASUI-mainTable'>
-        <div data-tour='cohort-table'>
-          <div data-tour='cohort-table-body'>
+      <div className="GWASUI-mainTable">
+        <div data-tour="cohort-table">
+          <div data-tour="cohort-table-body">
             <CohortDefinitions
               selectedCohort={selectedCohort}
               handleCohortSelect={handleCohortSelect}
               sourceId={sourceId}
               searchTerm={cohortSearchTerm}
-              otherCohortSelected={otherCohortSelected}
             />
           </div>
         </div>
@@ -63,7 +64,7 @@ CohortSelect.propTypes = {
 
 CohortSelect.defaultProps = {
   selectedCohort: undefined,
-  otherCohortSelected: '',
+  otherCohortSelected: "",
 };
 
 export default CohortSelect;
