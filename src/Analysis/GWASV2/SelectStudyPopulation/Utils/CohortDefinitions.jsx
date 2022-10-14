@@ -9,7 +9,6 @@ const CohortDefinitions = ({
   sourceId,
   selectedCohort = undefined,
   handleCohortSelect,
-  otherCohortSelected,
   searchTerm,
 }) => {
   const cohorts = useQuery(
@@ -78,13 +77,11 @@ CohortDefinitions.propTypes = {
   sourceId: PropTypes.number.isRequired,
   selectedCohort: PropTypes.object,
   handleCohortSelect: PropTypes.func.isRequired,
-  otherCohortSelected: PropTypes.string,
   searchTerm: PropTypes.string.isRequired,
 };
 
 CohortDefinitions.defaultProps = {
   selectedCohort: undefined,
-  otherCohortSelected: "",
 };
 
 export default CohortDefinitions;
