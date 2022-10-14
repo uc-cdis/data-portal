@@ -28,7 +28,7 @@ const CohortSelect = ({
           <SearchBar
             searchTerm={cohortSearchTerm}
             handleSearch={handleCohortSearch}
-            fields={"cohort name"}
+            field={"cohort name"}
           />
         </div>
         <div
