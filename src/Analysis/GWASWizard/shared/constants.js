@@ -29,7 +29,6 @@ export const quantitativeSteps = [
     title: 'Step 5',
     description: 'Set workflow parameters and remove unwanted covariates',
   },
-
   {
     title: 'Step 6',
     description: 'Review and submit your GWAS study',
