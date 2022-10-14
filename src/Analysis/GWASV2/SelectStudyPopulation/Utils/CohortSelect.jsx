@@ -58,13 +58,11 @@ CohortSelect.propTypes = {
   selectedCohort: PropTypes.object,
   handleCohortSelect: PropTypes.func.isRequired,
   sourceId: PropTypes.number.isRequired,
-  otherCohortSelected: PropTypes.string,
   current: PropTypes.number.isRequired,
 };
 
 CohortSelect.defaultProps = {
   selectedCohort: undefined,
-  otherCohortSelected: "",
 };
 
 export default CohortSelect;
