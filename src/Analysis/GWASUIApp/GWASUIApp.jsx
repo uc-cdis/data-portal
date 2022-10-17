@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Card, Space } from 'antd';
 import { fetchAndSetCsrfToken } from '../../configs';
 import GWASQuantitative from '../GWASWizard/GWASQuantitative';
@@ -89,21 +88,15 @@ const GWASUIApp = (props) => {
       {gwasTypeSelected && gwasType === 'caseControl' && (
         <GWASCaseControl
           resetGWASType={resetGWASType}
-          refreshWorkflows={props.refreshWorkflows}
         />
       )}
       {gwasTypeSelected && gwasType === 'quantitative' && (
         <GWASQuantitative
           resetGWASType={resetGWASType}
-          refreshWorkflows={props.refreshWorkflows}
         />
       )}
     </React.Fragment>
   );
-};
-
-GWASUIApp.propTypes = {
-  refreshWorkflows: PropTypes.func.isRequired,
 };
 
 export default GWASUIApp;
