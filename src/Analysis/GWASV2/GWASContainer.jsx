@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { Space, Button, Popconfirm } from "antd";
 import SelectStudyPopulation from "./SelectStudyPopulation/SelectStudyPopulation";
+import SelectCovariates from "./Shared/SelectCovariates/SelectCovariates";
 import "./GWASV2.css";
+import { gwasSteps } from "./constants";
+import Outcome from "./Outcome/Outcome";
 
 const GWASContainer = () => {
   const [current, setCurrent] = useState(0);
@@ -9,24 +12,16 @@ const GWASContainer = () => {
     selectedStudyPopulationCohort,
     setSelectedStudyPopulationCohort,
   ] = useState({});
-  const gwasSteps = [
-    {
-      title: "Step 1",
-      description: "Select Study Population",
-    },
-    {
-      title: "Step 2",
-      description: "Select Outcome Phenotypes",
-    },
-    {
-      title: "Step 3",
-      description: "Select Covariate Phenotype",
-    },
-    {
-      title: "Step 4",
-      description: "Configure GWAS",
-    },
-  ];
+  const [allCovariates, setAllCovariates] = useState([]);
+  const [outcome, setOutcome] = useState([]);
+
+  const handleCovariates = (cov) => {
+    console.log('cov', cov)
+  }
+
+  const handleOutcome = () => {
+    console.log('outcome');
+  }
 
   const generateStep = () => {
     // steps 2 & 3 very similar
@@ -42,10 +37,18 @@ const GWASContainer = () => {
         );
       case 1:
         // outcome (customdichotomous or not)
-        return <React.Fragment>step 2</React.Fragment>;
+        return <Outcome
+          handleOutcome={handleOutcome}
+          outcome={outcome}
+          covariates={[]}
+        />
       case 2:
         // covariates (customdichtomous or not)
-        return <React.Fragment>step 3</React.Fragment>;
+        return <AllCovariates
+          handleCovariates={handleCovariates}
+          covariates={allCovariates}
+        />;
+
       case 3:
         // all other input (mafs, imputation, etc), review, and submit
         return <React.Fragment>step 4</React.Fragment>;
@@ -98,7 +101,7 @@ const GWASContainer = () => {
                 onClick={() => {
                   setCurrent(current + 1);
                 }}
-                // disabled={!nextButtonEnabled}
+              // disabled={!nextButtonEnabled}
               >
                 Next
               </Button>
