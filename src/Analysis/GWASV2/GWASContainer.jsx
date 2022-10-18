@@ -59,7 +59,7 @@ const GWASContainer = () => {
     <React.Fragment>
       <ProgressBar current={current} />
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
-      <style>{`.analysis-app__actions > div:nth-child(1) {margin: 0 auto; }`}</style>
+      <style>{`.analysis-app__actions > div:nth-child(1) {width: 100%; }`}</style>
       <div className="GWASV2">
         <Space direction={"vertical"} style={{ width: "100%" }}>
           <div className="steps-content">
