@@ -5,8 +5,13 @@ import {
 } from 'antd';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { DiscoveryResource } from './Discovery';
+import { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+import Tooltip from 'rc-tooltip';
+import { InfoCircleOutlined } from '@ant-design/icons'
 
 const { Option } = Select;
+const tooltipText = ' test info';
 
 interface DiscoveryTagViewerProps {
   config: DiscoveryConfig
@@ -25,7 +30,7 @@ const DiscoveryDropdownTagViewer: React.FunctionComponent<DiscoveryTagViewerProp
     const tagMap = {};
     studies.forEach((study) => {
       const tagField = props.config.minimalFieldMapping.tagsListFieldName;
-      study[tagField]?.forEach((tag) => {
+      study[tagField].forEach((tag) => {
         if (tag.category === category.name) {
           tagMap[tag.name] = 1;
         }
@@ -122,7 +127,34 @@ const DiscoveryDropdownTagViewer: React.FunctionComponent<DiscoveryTagViewerProp
               xl={12}
               xxl={12}
             >
-              { tags }
+              <table >
+                <tr>
+                  <td >
+                  <Col >
+                  <Tooltip
+                  placement='left'
+                  overlay={category.tooltip}
+                  overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
+                  arrowContent={<div className='rc-tooltip-arrow-inner' />}
+                  width='300px'
+                  trigger={['hover', 'focus']}
+                  id={'controlPanelTooltipAdditional_data'}
+                >
+                   <span
+                    role='button'
+                    aria-describedby={'controlPanelTooltipAdditional_data'}
+                    className={'g3-helper-tooltip'}
+                  >
+                    <InfoCircleOutlined />
+                  </span>
+                </Tooltip>
+                  </Col>
+                  </td>
+                  <td width='500px' >
+                  {tags}
+                  </td>
+                </tr>
+               </table>
             </Col>
           );
         })
@@ -136,3 +168,6 @@ DiscoveryDropdownTagViewer.defaultProps = {
 };
 
 export default DiscoveryDropdownTagViewer;
+
+
+
