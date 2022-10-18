@@ -23,7 +23,7 @@ const ProgressBar = ({ current }) => {
           <Step icon={<>4</>} title={`Configure GWAS`} />
         </Steps>
       </div>
-      <Button style={{ float: "right" }}>New to GWAS? Get started here</Button>
+      <Button>New to GWAS? Get started here</Button>
     </div>
   );
 };
