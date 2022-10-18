@@ -17,6 +17,21 @@
 .ProgressBar .ant-steps-item-active {
   border-bottom: 2px solid orange;
 }
+.ProgressBar
+  .ant-steps-item-active.ant-steps-item-process
+  > .ant-steps-item-container
+  > .ant-steps-item-icon
+  .ant-steps-icon {
+  color: orange;
+}
+
+.ProgressBar
+  .ant-steps-item-active.ant-steps-item-process
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title {
+  color: orange;
+}
 .ProgressBar .ant-steps-item-active .ant-steps-item-container {
   border-bottom: none;
 }
@@ -39,6 +54,7 @@
 .ant-steps-item-wait
   > .ant-steps-item-container
   > .ant-steps-item-content
-  > .ant-steps-item-title {
+  > .ant-steps-item-title,
+.ProgressBar .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
   color: black;
 }
