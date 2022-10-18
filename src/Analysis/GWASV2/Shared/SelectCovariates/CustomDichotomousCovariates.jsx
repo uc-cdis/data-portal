@@ -6,7 +6,7 @@ import {
 } from '@ant-design/icons';
 import _ from 'lodash';
 import SelectStudyPopulation from '../../SelectStudyPopulation/SelectStudyPopulation';
-import '../../SelectStudyPopulation/SelectStudyPopulation.css';
+import '../../../GWASUIApp/GWASUIApp.css';
 
 const { Meta } = Card;
 
@@ -68,14 +68,14 @@ const CustomDichotomousCovariates = ({
                 <input
                   type='text'
                   className='GWASUI-searchInput'
-                  onChange={(e) => setCdName(e.target.value)}
-                  value={cdName}
+                  onChange={(e) => setProvidedName(e.target.value)}
+                  value={providedName}
                   placeholder='Enter a unique name for custom dichotomous selection'
                   style={{ width: '75%', height: '90%' }}
                 />
               </div>
               <div data-tour='add-button'>
-                <button type='submit' disabled={customDichotomousValidation} className={`${!disableCD ? 'GWASUI-btnEnable' : ''} GWASUI-cdBtn`} onClick={() => handleCDSubmit()}>Add</button>
+                <button type='submit' disabled={customDichotomousValidation} className={`${!customDichotomousValidation ? 'GWASUI-btnEnable' : ''} GWASUI-cdBtn`} onClick={() => handleCDSubmit()}>Add</button>
               </div>
             </div>
           </div>
