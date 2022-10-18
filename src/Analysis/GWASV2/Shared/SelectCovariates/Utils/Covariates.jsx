@@ -8,7 +8,11 @@ import { useFetch, useFilter } from './formHooks';
 
 
 const Covariates = ({
-  sourceId, searchTerm, selectedCovariates, handleCovariateSelect,
+  sourceId,
+  searchTerm,
+  selectedCovariates,
+  handleCovariateSelect,
+  handleCovariateSubmit
 }) => {
   const covariates = useQuery(['covariates', sourceId], () => fetchCovariates(sourceId), queryConfig);
   const fetchedCovariates = useFetch(covariates, 'concepts');
@@ -81,6 +85,7 @@ Covariates.propTypes = {
   searchTerm: PropTypes.string.isRequired,
   selectedCovariates: PropTypes.array.isRequired,
   handleCovariateSelect: PropTypes.func.isRequired,
+  handleCovariateSubmit: PropTypes.func.isRequired
 };
 
 export default Covariates;

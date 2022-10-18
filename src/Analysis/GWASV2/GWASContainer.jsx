@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Space, Button, Popconfirm } from "antd";
 import SelectStudyPopulation from "./SelectStudyPopulation/SelectStudyPopulation";
-import SelectCovariates from "./Shared/SelectCovariates/SelectCovariates";
+import Outcome from "./Outcome/Outcome";
+import AllCovariates from "./AllCovariates/AllCovariates";
 import "./GWASV2.css";
 import { gwasSteps } from "./constants";
-import Outcome from "./Outcome/Outcome";
+import { useSourceFetch } from "../GWASWizard/wizardEndpoints/cohortMiddlewareApi";
+import { Spin } from "antd";
+
 
 const GWASContainer = () => {
   const [current, setCurrent] = useState(0);
@@ -13,7 +16,8 @@ const GWASContainer = () => {
     setSelectedStudyPopulationCohort,
   ] = useState({});
   const [allCovariates, setAllCovariates] = useState([]);
-  const [outcome, setOutcome] = useState([]);
+  const [outcome, setOutcome] = useState({});
+  const { loading, sourceId } = useSourceFetch();
 
   const handleCovariates = (cov) => {
     console.log('cov', cov)
@@ -33,20 +37,23 @@ const GWASContainer = () => {
             selectedStudyPopulationCohort={selectedStudyPopulationCohort}
             setSelectedStudyPopulationCohort={setSelectedStudyPopulationCohort}
             current={current}
+            sourceId={sourceId}
           />
         );
       case 1:
         // outcome (customdichotomous or not)
         return <Outcome
-          handleOutcome={handleOutcome}
           outcome={outcome}
-          covariates={[]}
+          allCovariates={allCovariates}
+          handleOutcome={handleOutcome}
+          sourceId={sourceId}
         />
       case 2:
         // covariates (customdichtomous or not)
         return <AllCovariates
           handleCovariates={handleCovariates}
           covariates={allCovariates}
+          sourceId={sourceId}
         />;
 
       case 3:
@@ -69,7 +76,9 @@ const GWASContainer = () => {
               align={"center"}
               style={{ width: "100%" }}
             >
-              {generateStep(current)}
+              {!loading && sourceId ? generateStep(current) : (
+                <Spin />
+              )}
             </Space>
           </div>
           <div className="steps-action">

@@ -3,30 +3,26 @@ import { PropTypes } from "prop-types";
 import ContinuousCovariates from "../Shared/SelectCovariates/ContinuousCovariates";
 import CustomDichotomousCovariates from "../Shared/SelectCovariates/CustomDichotomousCovariates";
 
-const Outcome = ({
+const AllCovariates = ({
     allCovariates,
-    handleOutcome,
-    outcome,
-    sourceId
+    handleCovariates,
+    currentCovariate,
 }) => {
     const [mode, setMode] = useState("");
     return <>
         {mode === "continuous" ?
             // todo: add filter to allCovariates : .filter((cov) => concept_id in cov)
             (<ContinuousCovariates
-                continuousCovariates={allCovariates}
+                covariates={allCovariates}
                 handleOutcome={handleOutcome}
-                sourceId={sourceId}
-                setMode={setMode}
-                />) :
+            />) :
             mode === "dichotomous" ?
-            // todo: add filter to allCovariates : .filter((cov) => provided_name in cov)
+                // todo: add filter to allCovariates : .filter((cov) => provided_name in cov)
                 <CustomDichotomousCovariates
-                customDichotomousCovariates={allCovariates}
-                handleOutcome={handleOutcome}
-                setMode={setMode}
-                sourceId={sourceId}
-                 /> :
+                    dichotomous={allCovariates}
+                    handleOutcome={handleOutcome}
+                    sourceId={sourceId}
+                /> :
                 <div>
                     <button onClick={() => setMode("continuous")}>Add Continuous Outcome Phenotype</button>
                     <button onClick={() => setMode("dichotomous")}>Add Dichotomous Outcome Phenotype</button>
@@ -35,11 +31,10 @@ const Outcome = ({
     </>
 }
 
-Outcome.propTypes = {
-    handleOutcome: PropTypes.func.isRequired,
+AllCovariates.propTypes = {
     allCovariates: PropTypes.array.isRequired,
-    outcome: PropTypes.object.isRequired,
-    sourceId: PropTypes.number.isRequired
+    handleCovariates: PropTypes.func.isRequired,
+    currentCovariate: PropTypes.object.isRequired
 };
 
-export default Outcome;
+export default AllCovariates;
