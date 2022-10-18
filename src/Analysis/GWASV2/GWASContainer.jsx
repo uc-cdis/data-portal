@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Space, Button, Popconfirm } from "antd";
 import SelectStudyPopulation from "./SelectStudyPopulation/SelectStudyPopulation";
 import "./GWASV2.css";
+import ProgressBar from "./Shared/ProgressBar/ProgressBar";
 
 const GWASContainer = () => {
   const [current, setCurrent] = useState(0);
@@ -56,6 +57,7 @@ const GWASContainer = () => {
   };
   return (
     <React.Fragment>
+      <ProgressBar current={current} />
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>{`.analysis-app__actions > div:nth-child(1) {margin: 0 auto; }`}</style>
       <div className="GWASV2">

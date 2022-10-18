@@ -1,21 +1,21 @@
 import React from "react";
-import { Step, Steps } from "antd";
+import { Button, Steps } from "antd";
 
-const ProgressBar = () => {
-  const current = 1;
-
+const { Step } = Steps;
+const ProgressBar = ({ current }) => {
   return (
-    <React.Fragment>
-      <Steps current={1}>
-        <Step title="Finished" description="This is a description." />
-        <Step
-          title="In Progress"
-          subTitle="Left 00:00:08"
-          description="This is a description."
-        />
-        <Step title="Waiting" description="This is a description." />
-      </Steps>
-    </React.Fragment>
+    <div style={{ width: "100%" }}>
+      <div style={{ width: "60%", float: "left" }}>
+        <Steps current={current}>
+          <Step title={`Select Study Population`} />
+          <Step title={`Select Outcome Phenotype`} />
+          <Step title={`Select Covariate Phenotype`} />
+          <Step title={`Configure GWAS`} />
+        </Steps>
+      </div>
+
+      <Button style={{ float: "right" }}>New to GWAS? Get started here</Button>
+    </div>
   );
 };
 
