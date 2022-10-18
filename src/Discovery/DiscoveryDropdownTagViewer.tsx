@@ -5,8 +5,6 @@ import {
 } from 'antd';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { DiscoveryResource } from './Discovery';
-import { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
 import { InfoCircleOutlined } from '@ant-design/icons'
 
