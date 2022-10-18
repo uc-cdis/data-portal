@@ -2,7 +2,17 @@
   width: 100%;
 }
 
-/* Antd Step Style Overrides */
+.ProgressBar button.ant-btn-default {
+  color: #2e77b8;
+  border: 1px solid #2e77b8;
+  transition: none;
+}
+
+.ProgressBar button.ant-btn-default:hover {
+  background: var(--g3-secondary-btn__bg-color--hover);
+  color: white;
+}
+
 .ProgressBar .ant-steps-item-icon {
   font-size: 22px;
   text-align: left;
@@ -13,28 +23,14 @@
   border-bottom: 3px solid black;
 }
 
-/*
-.ProgressBar .ant-steps-item-active {
-  border-bottom: 2px solid orange;
-}
-*/
-
 .ProgressBar .ant-steps-item-active:before {
   content: "";
   position: absolute;
   left: 0;
   bottom: 0;
   width: 0;
-  border-bottom: solid 3px orange;
+  border-bottom: solid 3px #ef8523;
   animation: border_anim 0.3s linear forwards;
-}
-@keyframes border_anim {
-  0% {
-    width: 0%;
-  }
-  100% {
-    width: 100%;
-  }
 }
 
 .ProgressBar
@@ -42,7 +38,7 @@
   > .ant-steps-item-container
   > .ant-steps-item-icon
   .ant-steps-icon {
-  color: #ef8523;
+  color: #ab590d;
 }
 
 .ProgressBar
@@ -50,8 +46,9 @@
   > .ant-steps-item-container
   > .ant-steps-item-content
   > .ant-steps-item-title {
-  color: #ef8523;
+  color: #ab590d;
 }
+
 .ProgressBar .ant-steps-item-active .ant-steps-item-container {
   border-bottom: none;
 }
@@ -64,9 +61,11 @@
   background: none;
   border: none;
 }
+
 .ProgressBar .ant-steps-item-title {
   line-height: 37px;
 }
+
 .ProgressBar
   .ant-steps-item-process
   > .ant-steps-item-container
@@ -80,6 +79,7 @@
 .ProgressBar .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
   color: black;
 }
+
 .ProgressBar
   .ant-steps-horizontal:not(.ant-steps-label-vertical)
   .ant-steps-item {
@@ -87,6 +87,16 @@
   padding-left: 0;
   margin-right: 16px;
 }
+
 .ProgressBar .ant-steps-item-title::after {
   display: none;
+}
+
+@keyframes border_anim {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
 }
