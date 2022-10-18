@@ -5,8 +5,8 @@ import "./ProgressBar.css";
 const { Step } = Steps;
 const ProgressBar = ({ current }) => {
   return (
-    <div className="ProgressBar">
-      <div className="ProgressBar__steps">
+    <div className="progress-bar">
+      <div className="progress-bar__steps">
         <Steps current={current}>
           <Step
             icon={<>1</>}
