@@ -2,7 +2,13 @@
   width: 100%;
 }
 
+.ProgressBar__steps {
+  width: 60%;
+  float: left;
+}
+
 .ProgressBar button.ant-btn-default {
+  float: right;
   color: #2e77b8;
   border: 1px solid #2e77b8;
   transition: none;

@@ -6,7 +6,7 @@ const { Step } = Steps;
 const ProgressBar = ({ current }) => {
   return (
     <div className="ProgressBar">
-      <div style={{ width: "60%", float: "left" }}>
+      <div className="ProgressBar__steps">
         <Steps current={current}>
           <Step
             icon={<>1</>}
