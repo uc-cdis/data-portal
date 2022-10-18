@@ -6,6 +6,7 @@
   color: #2e77b8;
   border: 1px solid #2e77b8;
   transition: none;
+  margin-top: 10px;
 }
 
 .ProgressBar button.ant-btn-default:hover {
