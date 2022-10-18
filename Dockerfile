@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     time \
     vim \
-    && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+    && curl -sL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
