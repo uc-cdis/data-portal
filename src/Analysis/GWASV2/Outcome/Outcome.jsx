@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { PropTypes } from "prop-types";
 import SelectCovariates from "../Shared/SelectCovariates/SelectCovariates";
 import SelectCustomDichotomousCovariates from "../Shared/SelectCustomDichotomousCovariates/SelectCustomDichotomousCovariates";
@@ -8,10 +8,17 @@ const Outcome = ({
     handleCovariateChange,
     outcome
 }) => {
+    const [mode, setMode] = useState("");
     return <>
-        <button onClick={() => console.log('outcome', outcome)}>outcome</ button>
-        <SelectCovariates covariates={allCovariates} handleCovariateChange={handleCovariateChange} />
-        <SelectCustomDichotomousCovariates customDichotomousCovariates={allCovariates} handleCovariateChange={handleCovariateChange} />
+        {mode === "continuous" ?
+            (<SelectCovariates covariates={allCovariates} handleCovariateChange={handleCovariateChange} />) :
+            mode === "dichotomous" ?
+                <SelectCustomDichotomousCovariates customDichotomousCovariates={allCovariates} handleCovariateChange={handleCovariateChange} /> :
+                <div>
+                    <button onClick={() => setMode("continuous")}>Add Continuous Outcome Phenotype</button>
+                    <button onClick={() => setMode("dichotomous")}>Add Dichotomous Outcome Phenotype</button>
+                </div>
+        }
     </>
 }
 

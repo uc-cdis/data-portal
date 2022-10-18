@@ -1,14 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 // import { Spin } from "antd";
-
 import "./SelectCovariates.css";
 
 const SelectCovariates = ({
     covariates,
     handleCovariateChange
 }) => {
-    return <><button onClick={() => console.log('covs', covariates)}>covs</button></>
+    return (<></>)
 }
 
 SelectCovariates.propTypes = {
