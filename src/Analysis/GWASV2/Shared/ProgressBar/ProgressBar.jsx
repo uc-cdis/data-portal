@@ -7,9 +7,15 @@ const ProgressBar = ({ current }) => {
     <div style={{ width: "100%" }}>
       <div style={{ width: "60%", float: "left" }}>
         <Steps current={current}>
-          <Step title={`Select Study Population`} />
-          <Step title={`Select Outcome Phenotype`} />
-          <Step title={`Select Covariate Phenotype`} />
+          <Step
+            title={`${current <= 0 ? "Select" : "Edit"} Study Population`}
+          />
+          <Step
+            title={`${current <= 1 ? "Select" : "Edit"} Outcome Phenotype`}
+          />
+          <Step
+            title={`${current <= 2 ? "Select" : "Edit"} Covariate Phenotype`}
+          />
           <Step title={`Configure GWAS`} />
         </Steps>
       </div>
