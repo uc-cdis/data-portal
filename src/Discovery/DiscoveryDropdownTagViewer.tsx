@@ -11,7 +11,6 @@ import Tooltip from 'rc-tooltip';
 import { InfoCircleOutlined } from '@ant-design/icons'
 
 const { Option } = Select;
-const tooltipText = ' test info';
 
 interface DiscoveryTagViewerProps {
   config: DiscoveryConfig
@@ -168,6 +167,3 @@ DiscoveryDropdownTagViewer.defaultProps = {
 };
 
 export default DiscoveryDropdownTagViewer;
-
-
-
