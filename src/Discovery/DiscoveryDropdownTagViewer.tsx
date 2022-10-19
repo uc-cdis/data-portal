@@ -9,6 +9,7 @@ import Tooltip from 'rc-tooltip';
 import { InfoCircleOutlined } from '@ant-design/icons'
 
 const { Option } = Select;
+//const tooltipText = ' test info';
 
 interface DiscoveryTagViewerProps {
   config: DiscoveryConfig
@@ -115,7 +116,7 @@ const DiscoveryDropdownTagViewer: React.FunctionComponent<DiscoveryTagViewerProp
 
           return (
             <Col
-              className='discovery-header__tag-group'
+            className='discovery-header__tag-group'
               key={category.name}
               xs={24}
               sm={24}
@@ -123,17 +124,19 @@ const DiscoveryDropdownTagViewer: React.FunctionComponent<DiscoveryTagViewerProp
               lg={12}
               xl={12}
               xxl={12}
+
             >
-              <table >
+              <table>
                 <tr>
-                  <td >
-                  <Col >
+                  <td>
+                  <Col>
+                  <div style={{ display: category.tooltip != null ? 'block' : 'none' }}>
                   <Tooltip
                   placement='left'
                   overlay={category.tooltip}
                   overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
-                  arrowContent={<div className='rc-tooltip-arrow-inner' />}
-                  width='300px'
+                 arrowContent={<div className='rc-tooltip-arrow-inner' />}
+                  width='100%'
                   trigger={['hover', 'focus']}
                   id={'controlPanelTooltipAdditional_data'}
                 >
@@ -145,9 +148,10 @@ const DiscoveryDropdownTagViewer: React.FunctionComponent<DiscoveryTagViewerProp
                     <InfoCircleOutlined />
                   </span>
                 </Tooltip>
+                  </div>
                   </Col>
                   </td>
-                  <td width='500px' >
+                  <td width='100%'>
                   {tags}
                   </td>
                 </tr>

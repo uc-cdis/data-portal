@@ -4,6 +4,8 @@ import {
 } from 'antd';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { DiscoveryResource } from './Discovery';
+import Tooltip from 'rc-tooltip';
+import { InfoCircleOutlined } from '@ant-design/icons'
 
 const TAG_LIST_LIMIT = 8;
 interface DiscoveryTagViewerProps {
@@ -25,7 +27,7 @@ const DiscoveryTagViewer: React.FunctionComponent<DiscoveryTagViewerProps> = (pr
     const tagMap = {};
     studies.forEach((study) => {
       const tagField = props.config.minimalFieldMapping.tagsListFieldName;
-      study[tagField]?.forEach((tag) => {
+      study[tagField].forEach((tag) => {
         if (tag.category === category.name) {
           tagMap[tag.name] = 1;
         }
@@ -139,12 +141,42 @@ const DiscoveryTagViewer: React.FunctionComponent<DiscoveryTagViewerProps> = (pr
                 xl={6}
                 xxl={4}
               >
-                <h5 className='discovery-header__tag-group-header'>{categoryDisplayName}</h5>
-                { tags }
-              </Col>
-            );
-          })
-        }
+                <table>
+                <tr>
+
+                  <td>
+                  <Col>
+                  <div style={{ display: category.tooltip != null ? 'block' : 'none' }}>
+                  <Tooltip
+                  placement='left'
+                  overlay={category.tooltip}
+                  overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
+                 arrowContent={<div className='rc-tooltip-arrow-inner' />}
+                  width='100%'
+                  trigger={['hover', 'focus']}
+                  id={'controlPanelTooltipAdditional_data'}
+                >
+                  <span
+                    role='button'
+                    aria-describedby={'controlPanelTooltipAdditional_data'}
+                    className={'g3-helper-tooltip'}
+                  >
+                    <InfoCircleOutlined/>
+                  </span>
+                </Tooltip>
+                  </div>
+                  </Col>
+                  </td>
+                  <td width='100%'>
+                  <h5 className='discovery-header__tag-group-header'>{categoryDisplayName}</h5>
+                  {tags}
+                  </td>
+                </tr>
+               </table>
+               </Col>
+          );
+        })
+      }
       </Row>
     </div>
   );
