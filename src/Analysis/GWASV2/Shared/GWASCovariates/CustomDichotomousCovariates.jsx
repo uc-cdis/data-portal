@@ -12,8 +12,8 @@ import '../../../GWASUIApp/GWASUIApp.css';
 const { Meta } = Card;
 
 const CustomDichotomousCovariates = ({
-  handleCovariates,
-  customDichotomousCovariates,
+  handleCovariateSubmit,
+  // customDichotomousCovariates,
   sourceId,
   current,
   setMode
@@ -23,19 +23,13 @@ const CustomDichotomousCovariates = ({
   const [providedName, setProvidedName] = useState('');
 
   const handleDichotomousSubmit = () => {
-
-    // todo:
-    //   handleCovariates({ op: "add", body: {}});
-    // handleCDAdd({
-    //   uuid: _.uniqueId(),
-    //   variable_type: 'custom_dichotomous',
-    //   cohort_ids: [firstCohort.cohort_definition_id, secondCohort.cohort_definition_id],
-    //   provided_name: cdName,
-    // });
-
-    setFirstPopulation(undefined);
-    setSecondPopulation(undefined);
-    setProvidedName('');
+    handleCovariateSubmit({
+      uuid: _.uniqueId(),
+      variable_type: 'custom_dichotomous',
+      cohort_ids: [firstPopulation.cohort_definition_id, secondPopulation.cohort_definition_id],
+      provided_name: providedName,
+    })
+    setMode("");
   };
 
   const customDichotomousValidation = providedName.length === 0 || firstPopulation === undefined || secondPopulation === undefined;
@@ -109,8 +103,9 @@ const CustomDichotomousCovariates = ({
 };
 
 CustomDichotomousCovariates.propTypes = {
-  customDichotomousCovariates: PropTypes.array.isRequired,
-  handleCovariates: PropTypes.func.isRequired,
+  // customDichotomousCovariates: PropTypes.array.isRequired,
+  setMode: PropTypes.func.isRequired,
+  handleCovariateSubmit: PropTypes.func.isRequired,
   sourceId: PropTypes.number.isRequired,
   current: PropTypes.number.isRequired
 };

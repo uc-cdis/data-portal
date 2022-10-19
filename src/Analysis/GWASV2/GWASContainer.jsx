@@ -17,13 +17,14 @@ const GWASContainer = () => {
   const [allCovariates, setAllCovariates] = useState([]);
   const [outcome, setOutcome] = useState({});
   const { loading, sourceId } = useSourceFetch();
+  const [selectedCovariate, setSelectedCovariate] = useState(undefined)
 
-  const handleCovariates = (cov) => {
-    console.log('cov', cov)
+  const handleCovariateSubmit = (cov) => {
+    setSelectedCovariate(cov);
   }
 
-  const handleOutcome = () => {
-    console.log('outcome');
+  const handleOutcome = (outcome) => {
+    setOutcome(outcome);
   }
 
   const generateStep = () => {
@@ -43,16 +44,20 @@ const GWASContainer = () => {
         // outcome (customdichotomous or not)
         return <SelectOutcome
           outcome={outcome}
-          allCovariates={allCovariates}
+          // allCovariates={allCovariates}
           handleOutcome={handleOutcome}
           sourceId={sourceId}
+          current={current}
+          // selectedCovariate
         />
       case 2:
         // covariates (customdichtomous or not)
         return <SelectCovariates
-          handleCovariates={handleCovariates}
+          handleCovariateSubmit={handleCovariateSubmit}
           covariates={allCovariates}
           sourceId={sourceId}
+          selectedCovariate={selectedCovariate}
+          // selectedCovariate
         />;
 
       case 3:

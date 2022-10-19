@@ -10,19 +10,21 @@ import { useFetch, useFilter } from "../../formHooks";
 const Covariates = ({
   sourceId,
   // searchTerm,
-  selectedCovariates,
+  selectedCovariate = undefined,
   handleCovariateSelect,
 }) => {
   const covariates = useQuery(['covariates', sourceId], () => fetchCovariates(sourceId), queryConfig);
   const fetchedCovariates = useFetch(covariates, 'concepts');
   // const displayedCovariates = useFilter(fetchedCovariates, searchTerm, 'concept_name');
 
-  const covariateSelection = (handler, selected) => ({
+  const covariateSelection = (inputSelectedCovariate) => ({
     type: 'radio',
     columnTitle: 'Select',
-    selectedRowKeys: (selected) ? [selected.concept_id] : [],
+    selectedRowKeys: (selectedCovariate) ? [selectedCovariate.concept_id] : [],
     onChange: (_, selectedRows) => {
-      handler(selectedRows[0]);
+      // handler(selectedRows[0]);
+      console.log('selectedCovariate', selectedCovariate);
+      handleCovariateSelect(selectedRows[0])
     },
     getCheckboxProps: (record) => ({
         disabled: record.size === 0 // || selected.some((a) => a.concept_id === record.concept_id)
@@ -70,7 +72,7 @@ const Covariates = ({
         rowKey='concept_id'
         size='middle'
         pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '50', '100', '500'] }}
-        rowSelection={covariateSelection(handleCovariateSelect, selectedCovariates)}
+        rowSelection={covariateSelection(selectedCovariate)}
         columns={covariateTableConfig}
         dataSource={fetchedCovariates}
       />
@@ -82,8 +84,8 @@ const Covariates = ({
 Covariates.propTypes = {
   sourceId: PropTypes.number.isRequired,
   // searchTerm: PropTypes.string.isRequired,
-  selectedCovariates: PropTypes.array.isRequired,
-  handleCovariateSubmit: PropTypes.func.isRequired
+  selectedCovariate: PropTypes.any.isRequired,
+  handleCovariateSelect: PropTypes.func.isRequired
 };
 
 export default Covariates;

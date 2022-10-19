@@ -5,8 +5,8 @@ import CustomDichotomousCovariates from "../Shared/GWASCovariates/CustomDichotom
 
 const SelectCovariates = ({
     allCovariates,
-    handleCovariates,
-    currentCovariate,
+    handleCovariateSubmit,
+    selectedCovariate,
 }) => {
     const [mode, setMode] = useState("");
     return <>
@@ -14,14 +14,15 @@ const SelectCovariates = ({
             // todo: add filter to allCovariates : .filter((cov) => concept_id in cov)
             (<ContinuousCovariates
                 covariates={allCovariates}
-                handleCovariateSubmit={handleCovariates}
+                handleCovariateSubmit={handleCovariateSubmit}
+                selectedCovariate={selectedCovariate}
             />) :
             mode === "dichotomous" ?
                 // todo: add filter to allCovariates : .filter((cov) => provided_name in cov)
                 <CustomDichotomousCovariates
-                    dichotomous={allCovariates}
-                    handleCovariateSubmit={handleCovariates}
+                    handleCovariateSubmit={handleCovariateSubmit}
                     sourceId={sourceId}
+                    setMode={setMode}
                 /> :
                 <div>
                     <button style={{ height: 60, marginRight: 5}} onClick={() => setMode("continuous")}>Add Continuous Outcome Phenotype</button>

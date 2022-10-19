@@ -5,25 +5,30 @@ import "./GWASCovariates.css";
 import Covariates from "./Utils/Covariates";
 
 const ContinuousCovariates = ({
-    covariates,
+    // covariates,
     setMode,
     sourceId,
     // searchTerm,
+    selectedCovariate = undefined,
     handleCovariateSubmit
 }) => {
 
-    return (<><Covariates
-        selectedCovariates={covariates}
-        handleCovariateSelect={handleCovariateSubmit}
-        sourceId={sourceId}
+    return (<>
+        <Covariates
+            selectedCovariate={selectedCovariate}
+            handleCovariateSelect={handleCovariateSubmit}
+            sourceId={sourceId}
         // searchTerm={searchTerm}
-    />
-    <button onClick={() => console.log('props', props)}>props</button>
-        <button onClick={() => setMode("")}>cancel</button></>)
+        />
+        <button style={{marginLeft: 5}} onClick={() => setMode("")}>Submit</button>
+        <button onClick={() => {
+            handleCovariateSubmit(undefined)
+            setMode("")
+        }
+        }>cancel</button></>)
 }
 
 ContinuousCovariates.propTypes = {
-    covariates: PropTypes.array.isRequired,
     handleCovariateSubmit: PropTypes.func.isRequired,
     setMode: PropTypes.func.isRequired,
     sourceId: PropTypes.number.isRequired,
