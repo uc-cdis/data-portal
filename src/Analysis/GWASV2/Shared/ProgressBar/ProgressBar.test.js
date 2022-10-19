@@ -6,8 +6,7 @@ import ProgressBar from "./ProgressBar";
 Enzyme.configure({ adapter: new Adapter() });
 
 /*
-  Code to aid in Jest Mocking,
-  see
+  Code to aid in Jest Mocking, see:
   https://stackoverflow.com/questions/39830580/jest-test-fails-typeerror-window-matchmedia-is-not-a-function
 */
 window.matchMedia =
@@ -30,7 +29,8 @@ const testElementText = (wrapper, elNum, text) => {
 };
 
 const testElementClass = (wrapper, elNum, className) => {
-  /* Enzyme has problems using Selectors, work around from:
+  /*
+    Enzyme has problems using Selectors, work around from:
     https://stackoverflow.com/questions/56145868/how-to-test-all-children-from-a-selector-except-the-first-child-in-jest
   */
   wrapper.find("div.ant-steps-item").forEach(function(item, index) {
@@ -43,7 +43,6 @@ const testElementClass = (wrapper, elNum, className) => {
 };
 
 /* TESTS */
-
 /* Test active step class */
 describe("Test that active step class renders with active class when current is zero", () => {
   const wrapper = mount(<ProgressBar current={0} />);
@@ -51,18 +50,21 @@ describe("Test that active step class renders with active class when current is 
     testElementClass(wrapper, 1, "ant-steps-item-active");
   });
 });
+
 describe("Test that active step class renders with active class when current is one", () => {
   const wrapper = mount(<ProgressBar current={1} />);
   it("should render second step with active class when current is one", () => {
     testElementClass(wrapper, 2, "ant-steps-item-active");
   });
 });
+
 describe("Test that active step class renders with active class when current is two", () => {
   const wrapper = mount(<ProgressBar current={2} />);
   it("should render third step with active class when current is two", () => {
     testElementClass(wrapper, 3, "ant-steps-item-active");
   });
 });
+
 describe("Test that active step class renders with active class when current is three", () => {
   const wrapper = mount(<ProgressBar current={3} />);
   it("should render fourth step with active class when current is three", () => {
@@ -102,6 +104,7 @@ describe("Test that each step renders with correct text when current is one", ()
     testElementText(wrapper, 4, "4Configure GWAS");
   });
 });
+
 describe("Test that each step renders with correct text when current is two", () => {
   const wrapper = render(<ProgressBar current={2} />);
   it("should render first step", () => {
@@ -117,6 +120,7 @@ describe("Test that each step renders with correct text when current is two", ()
     testElementText(wrapper, 4, "4Configure GWAS");
   });
 });
+
 describe("Test that each step renders with correct text when current is three", () => {
   const wrapper = render(<ProgressBar current={3} />);
   it("should render first step", () => {
