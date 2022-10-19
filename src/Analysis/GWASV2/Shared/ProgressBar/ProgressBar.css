@@ -72,7 +72,7 @@
 .progress-bar .ant-steps-item-title {
   line-height: 37px;
 }
-
+.progress-bar .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon,
 .progress-bar
 .ant-steps-item-process
 > .ant-steps-item-container
@@ -82,8 +82,7 @@
 .ant-steps-item-wait
 > .ant-steps-item-container
 > .ant-steps-item-content
-> .ant-steps-item-title,
-.progress-bar .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+> .ant-steps-item-title {
   color: black;
 }
 
