@@ -151,9 +151,6 @@ class MapDataModel extends React.Component {
         if (data && data[this.state.parentNodeType]) {
           this.setState((prevState) => ({ validParentIds: data[prevState.parentNodeType] }));
         }
-      }).catch(error => {
-        // TODO - should we throw this error?
-        console.error(error);
       });
     } else {
       this.setState({ validParentIds: [] });
