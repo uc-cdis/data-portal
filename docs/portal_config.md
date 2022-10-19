@@ -631,7 +631,7 @@ Below is an example, with inline comments describing what each JSON block config
         "name": "Program", // this configures the tag category name that will be shown on the tag selector
         "color": "rgba(129, 211, 248, 1)", // color can be any vaid CSS color string, including hex, rgb, rgba, hsl
         "display": true,
-        "tooltip": "additional data", // optional string to add data when hovered on the info button
+        "tooltip": "additional data", // optional string to add additional data when hovered on the info button
         "displayName": "All Programs" // optional string to customize tag category display name
       },
       {
