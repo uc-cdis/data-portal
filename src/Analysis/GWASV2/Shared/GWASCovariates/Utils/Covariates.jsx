@@ -1,11 +1,10 @@
 import React from 'react';
-import './../GWASCovariates.css';
+import '../GWASCovariates.css';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Table, Spin } from 'antd';
-import { fetchCovariates, queryConfig  } from "../../wizardEndpoints/cohortMiddlewareApi";
-import { useFetch, useFilter } from "../../formHooks";
-
+import { fetchCovariates, queryConfig } from '../../wizardEndpoints/cohortMiddlewareApi';
+import { useFetch } from '../../formHooks';
 
 const Covariates = ({
   sourceId,
@@ -17,21 +16,19 @@ const Covariates = ({
   const fetchedCovariates = useFetch(covariates, 'concepts');
   // const displayedCovariates = useFilter(fetchedCovariates, searchTerm, 'concept_name');
 
-  const covariateSelection = (inputSelectedCovariate) => ({
+  const covariateSelection = () => ({
     type: 'radio',
     columnTitle: 'Select',
     selectedRowKeys: (selectedCovariate) ? [selectedCovariate.concept_id] : [],
     onChange: (_, selectedRows) => {
-      // handler(selectedRows[0]);
-      console.log('selectedCovariate', selectedCovariate);
-      handleCovariateSelect(selectedRows[0])
+      handleCovariateSelect(selectedRows[0]);
     },
     getCheckboxProps: (record) => ({
-        disabled: record.size === 0 // || selected.some((a) => a.concept_id === record.concept_id)
-      }),
+      disabled: record.size === 0, // || selected.some((a) => a.concept_id === record.concept_id)
+    }),
   });
 
- const covariateTableConfig = [
+  const covariateTableConfig = [
     {
       title: 'Concept ID',
       dataIndex: 'concept_id',
@@ -72,7 +69,7 @@ const Covariates = ({
         rowKey='concept_id'
         size='middle'
         pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '50', '100', '500'] }}
-        rowSelection={covariateSelection(selectedCovariate)}
+        rowSelection={covariateSelection()}
         columns={covariateTableConfig}
         dataSource={fetchedCovariates}
       />
@@ -85,7 +82,7 @@ Covariates.propTypes = {
   sourceId: PropTypes.number.isRequired,
   // searchTerm: PropTypes.string.isRequired,
   selectedCovariate: PropTypes.any.isRequired,
-  handleCovariateSelect: PropTypes.func.isRequired
+  handleCovariateSelect: PropTypes.func.isRequired,
 };
 
 export default Covariates;

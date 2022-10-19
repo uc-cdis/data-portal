@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { Space, Button, Popconfirm } from "antd";
-import SelectStudyPopulation from "./SelectStudyPopulation/SelectStudyPopulation";
-import SelectOutcome from "./SelectOutcome/SelectOutcome";
-import SelectCovariates from "./SelectCovariates/SelectCovariates";
-import "./GWASV2.css";
-import { gwasSteps } from "./constants";
-import { useSourceFetch } from "../GWASWizard/wizardEndpoints/cohortMiddlewareApi";
-import { Spin } from "antd";
+import React, { useState } from 'react';
+import {
+  Space, Button, Popconfirm, Spin,
+} from 'antd';
+import SelectStudyPopulation from './SelectStudyPopulation/SelectStudyPopulation';
+import SelectOutcome from './SelectOutcome/SelectOutcome';
+import SelectCovariates from './SelectCovariates/SelectCovariates';
+import './GWASV2.css';
+import { gwasSteps } from './constants';
+import { useSourceFetch } from '../GWASWizard/wizardEndpoints/cohortMiddlewareApi';
 
 const GWASContainer = () => {
   const [current, setCurrent] = useState(0);
@@ -14,105 +15,107 @@ const GWASContainer = () => {
     selectedStudyPopulationCohort,
     setSelectedStudyPopulationCohort,
   ] = useState({});
-  const [allCovariates, setAllCovariates] = useState([]);
+  const [allCovariates] = useState([]);
   const [outcome, setOutcome] = useState({});
   const { loading, sourceId } = useSourceFetch();
-  const [selectedCovariate, setSelectedCovariate] = useState(undefined)
+  const [selectedCovariate, setSelectedCovariate] = useState(undefined);
 
   const handleCovariateSubmit = (cov) => {
     setSelectedCovariate(cov);
-  }
+  };
 
-  const handleOutcome = (outcome) => {
-    setOutcome(outcome);
-  }
+  const handleOutcome = (out) => {
+    setOutcome(out);
+  };
 
   const generateStep = () => {
     // steps 2 & 3 very similar
     switch (current) {
-      case 0:
-        // select study population
-        return (
-          <SelectStudyPopulation
-            selectedStudyPopulationCohort={selectedStudyPopulationCohort}
-            setSelectedStudyPopulationCohort={setSelectedStudyPopulationCohort}
-            current={current}
-            sourceId={sourceId}
-          />
-        );
-      case 1:
-        // outcome (customdichotomous or not)
-        return <SelectOutcome
+    case 0:
+      // select study population
+      return (
+        <SelectStudyPopulation
+          selectedStudyPopulationCohort={selectedStudyPopulationCohort}
+          setSelectedStudyPopulationCohort={setSelectedStudyPopulationCohort}
+          current={current}
+          sourceId={sourceId}
+        />
+      );
+    case 1:
+      // outcome (customdichotomous or not)
+      return (
+        <SelectOutcome
           outcome={outcome}
           // allCovariates={allCovariates}
           handleOutcome={handleOutcome}
           sourceId={sourceId}
           current={current}
-          // selectedCovariate
         />
-      case 2:
-        // covariates (customdichtomous or not)
-        return <SelectCovariates
+      );
+    case 2:
+      // covariates (customdichtomous or not)
+      return (
+        <SelectCovariates
           handleCovariateSubmit={handleCovariateSubmit}
           covariates={allCovariates}
           sourceId={sourceId}
           selectedCovariate={selectedCovariate}
-          // selectedCovariate
-        />;
+        />
+      );
 
-      case 3:
-        // all other input (mafs, imputation, etc), review, and submit
-        return <React.Fragment>step 4</React.Fragment>;
-      default:
-        // required for eslint
-        return null;
+    case 3:
+      // all other input (mafs, imputation, etc), review, and submit
+      return <React.Fragment>step 4</React.Fragment>;
+    default:
+      // required for eslint
+      return null;
     }
   };
   return (
     <React.Fragment>
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>
-        {`.analysis-app__actions > div:nth-child(1) { ${current === 0 ? `margin: 0 auto;` : ``}  ${current === 1 || 2 ? `marginLeft: 0` : ``} }`}
+        {`.analysis-app__actions > div:nth-child(1) { ${current === 0 ? 'margin: 0 auto;' : ''}  ${current === 1 || 2 ? 'marginLeft: 0' : ''} }`}
       </style>
-      <div className="GWASV2">
-        <Space direction={"vertical"} style={{ width: "100%" }}>
-          <div className="steps-content">
+      <div className='GWASV2'>
+        <Space direction={'vertical'} style={{ width: '100%' }}>
+          <div className='steps-content'>
             <Space
-              direction={"vertical"}
-              align={"center"}
-              style={{ width: "100%" }}
+              direction={'vertical'}
+              align={'center'}
+              style={{ width: '100%' }}
             >
               {!loading && sourceId ? generateStep(current) : (
                 <Spin />
               )}
             </Space>
           </div>
-          <div className="steps-action" style={{minWidth: "95vw", margin: "auto", marginLeft: 10}}>
+          <div className='steps-action' style={{ minWidth: '95vw', margin: 'auto', marginLeft: 10 }}>
             <Button
-              className="GWASUI-navBtn GWASUI-navBtn__next"
-              type="primary"
+              className='GWASUI-navBtn GWASUI-navBtn__next'
+              type='primary'
               onClick={() => {
                 setCurrent(current - 1);
               }}
-              disabled={current < 1 ? true : false}
+              disabled={current < 1}
             >
               Previous
             </Button>
             <Popconfirm
-              title="Are you sure you want to leave this page?"
+              title='Are you sure you want to leave this page?'
               //   onConfirm={() => resetGWASType()}
-              okText="Yes"
-              cancelText="No"
+              okText='Yes'
+              cancelText='No'
             >
-              <Button type="link" size="medium">
+              <Button type='link' size='medium'>
                 Select Different GWAS Type
               </Button>
             </Popconfirm>
             {current < gwasSteps.length - 1 && (
               <Button
-                data-tour="next-button"
-                className="GWASUI-navBtn GWASUI-navBtn__next"
-                type="primary"
+                data-tour='next-button'
+                className='GWASUI-navBtn GWASUI-navBtn__next'
+                type='primary'
                 onClick={() => {
                   setCurrent(current + 1);
                 }}
@@ -122,7 +125,7 @@ const GWASContainer = () => {
               </Button>
             )}
             {current === gwasSteps.length - 1 && (
-              <div className="GWASUI-navBtn" />
+              <div className='GWASUI-navBtn' />
             )}
           </div>
         </Space>

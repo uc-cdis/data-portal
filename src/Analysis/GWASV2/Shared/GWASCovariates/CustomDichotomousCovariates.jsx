@@ -1,22 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card } from 'antd';
-import {
-  TeamOutlined, DeleteOutlined,
-} from '@ant-design/icons';
 import _ from 'lodash';
 import CohortSelect from '../../SelectStudyPopulation/Utils/CohortSelect';
-import SelectStudyPopulation from '../../SelectStudyPopulation/SelectStudyPopulation';
 import '../../../GWASUIApp/GWASUIApp.css';
-
-const { Meta } = Card;
 
 const CustomDichotomousCovariates = ({
   handleCovariateSubmit,
-  // customDichotomousCovariates,
   sourceId,
   current,
-  setMode
+  setMode,
 }) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
   const [secondPopulation, setSecondPopulation] = useState(undefined);
@@ -28,8 +20,8 @@ const CustomDichotomousCovariates = ({
       variable_type: 'custom_dichotomous',
       cohort_ids: [firstPopulation.cohort_definition_id, secondPopulation.cohort_definition_id],
       provided_name: providedName,
-    })
-    setMode("");
+    });
+    setMode('');
   };
 
   const customDichotomousValidation = providedName.length === 0 || firstPopulation === undefined || secondPopulation === undefined;
@@ -39,66 +31,70 @@ const CustomDichotomousCovariates = ({
       <div className='GWASUI-flexRow' data-tour='name'>
         <input
           type='text'
-          className={`GWASUI-providedName`}
+          className={'GWASUI-providedName'}
           onChange={(e) => setProvidedName(e.target.value)}
           value={providedName}
           placeholder='Provide a name...'
-          style={{ width: '50%', textSize: 'small', paddingLeft: 5, height: 45, borderRadius: 5, marginTop: 5 }}
+          style={{
+            width: '50%', textSize: 'small', paddingLeft: 5, height: 45, borderRadius: 5, marginTop: 5,
+          }}
         />
-        <button className={`GWASUI-dichBtn`} onClick={() => setMode("")}>
+        <button type='button' className={'GWASUI-dichBtn'} onClick={() => setMode('')}>
           cancel
         </button>
         <div data-tour='add-button'>
-          <button type='submit'
+          <button
+            type='button'
             disabled={customDichotomousValidation}
             className={`${!customDichotomousValidation ? 'GWASUI-btnEnable' : ''} GWASUI-dichBtn`}
-            onClick={() => handleDichotomousSubmit()}>
+            onClick={() => handleDichotomousSubmit()}
+          >
             Submit
           </button>
         </div>
       </div>
-        <React.Fragment>
-          <div data-tour='choosing-dichotomous'>
-            <div className='GWASUI-flexRow' data-tour='table-repeat'>
-              <div >
-                <h3 >Select NO Cohort</h3>
-                {/* todo: remove extra component layer, rename CohortSelect */}
-                {/* There is no difference between using CohortSelect vs. SelectStudyPopulation here*/}
-                <CohortSelect
-                  selectedCohort={firstPopulation}
-                  handleCohortSelect={setFirstPopulation}
-                  sourceId={sourceId}
-                  current={current}
-                />
-                {/* <SelectStudyPopulation
+      <React.Fragment>
+        <div data-tour='choosing-dichotomous'>
+          <div className='GWASUI-flexRow' data-tour='table-repeat'>
+            <div>
+              <h3>Select NO Cohort</h3>
+              {/* todo: remove extra component layer, rename CohortSelect */}
+              {/* There is no difference between using CohortSelect vs. SelectStudyPopulation here */}
+              <CohortSelect
+                selectedCohort={firstPopulation}
+                handleCohortSelect={setFirstPopulation}
+                sourceId={sourceId}
+                current={current}
+              />
+              {/* <SelectStudyPopulation
                   selectedStudyPopulationCohort={firstPopulation}
                   setSelectedStudyPopulationCohort={setFirstPopulation}
                   current={current}
                   sourceId={sourceId}
                 /> */}
-              </div>
-              <div >
+            </div>
+            <div>
               {/* className='GWASUI-selectInstruction GWASUI-no-top-spacing' align={'center'} */}
-                <h3 >Select YES Cohort</h3>
-                {/* <SelectStudyPopulation
+              <h3>Select YES Cohort</h3>
+              {/* <SelectStudyPopulation
                   selectedStudyPopulationCohort={secondPopulation}
                   setSelectedStudyPopulationCohort={setSecondPopulation}
                   current={current}
                   sourceId={sourceId}
                 /> */}
-                <CohortSelect
-                  selectedCohort={secondPopulation}
-                  handleCohortSelect={setSecondPopulation}
-                  sourceId={sourceId}
-                  current={current}
-                />
-              </div>
+              <CohortSelect
+                selectedCohort={secondPopulation}
+                handleCohortSelect={setSecondPopulation}
+                sourceId={sourceId}
+                current={current}
+              />
             </div>
-
           </div>
-        </React.Fragment>
-        <div />
-      </div>
+
+        </div>
+      </React.Fragment>
+      <div />
+    </div>
   );
 };
 
@@ -107,7 +103,11 @@ CustomDichotomousCovariates.propTypes = {
   setMode: PropTypes.func.isRequired,
   handleCovariateSubmit: PropTypes.func.isRequired,
   sourceId: PropTypes.number.isRequired,
-  current: PropTypes.number.isRequired
+  current: PropTypes.number.isRequired,
 };
+
+// CustomDichotomousCovariates.defaultProps = {
+//   selectedCovariate: undefined,
+// };
 
 export default CustomDichotomousCovariates;
