@@ -1,0 +1,41 @@
+
+.GWASUI-spinnerContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 5px;
+}
+
+.GWASUI-emptyTable {
+    height: 400px;
+}
+
+.GWASUI-dichBtnContainer {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .GWASUI-align {
+    margin: auto;
+    padding: 5px;
+  }
+
+  .GWASUI-dichNameInput {
+    width: 600px;
+  }
+
+  .GWASUI-btnEnable {
+    background-color: rgb(24, 144, 255);
+    color: white;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .GWASUI-dichList, .GWASUI-align {
+    flex: 1
+  }
+
+  .GWASUI-dichBtn {
+    margin: 7px 7px;
+    height: 45px;
+  }

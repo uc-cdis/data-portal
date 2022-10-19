@@ -1,22 +1,21 @@
 import React from 'react';
-import "./SelectCovariates.css";
+import './../GWASCovariates.css';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Table, Spin } from 'antd';
-import { fetchCovariates, queryConfig  } from "../../Shared/wizardEndpoints/cohortMiddlewareApi";
-import { useFetch, useFilter } from './formHooks';
+import { fetchCovariates, queryConfig  } from "../../wizardEndpoints/cohortMiddlewareApi";
+import { useFetch, useFilter } from "../../formHooks";
 
 
 const Covariates = ({
   sourceId,
-  searchTerm,
+  // searchTerm,
   selectedCovariates,
   handleCovariateSelect,
-  handleCovariateSubmit
 }) => {
   const covariates = useQuery(['covariates', sourceId], () => fetchCovariates(sourceId), queryConfig);
   const fetchedCovariates = useFetch(covariates, 'concepts');
-  const displayedCovariates = useFilter(fetchedCovariates, searchTerm, 'concept_name');
+  // const displayedCovariates = useFilter(fetchedCovariates, searchTerm, 'concept_name');
 
   const covariateSelection = (handler, selected) => ({
     type: 'radio',
@@ -73,7 +72,7 @@ const Covariates = ({
         pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '50', '100', '500'] }}
         rowSelection={covariateSelection(handleCovariateSelect, selectedCovariates)}
         columns={covariateTableConfig}
-        dataSource={displayedCovariates}
+        dataSource={fetchedCovariates}
       />
     );
   }
@@ -82,9 +81,8 @@ const Covariates = ({
 
 Covariates.propTypes = {
   sourceId: PropTypes.number.isRequired,
-  searchTerm: PropTypes.string.isRequired,
+  // searchTerm: PropTypes.string.isRequired,
   selectedCovariates: PropTypes.array.isRequired,
-  handleCovariateSelect: PropTypes.func.isRequired,
   handleCovariateSubmit: PropTypes.func.isRequired
 };
 

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Space, Button, Popconfirm } from "antd";
 import SelectStudyPopulation from "./SelectStudyPopulation/SelectStudyPopulation";
-import Outcome from "./Outcome/Outcome";
-import AllCovariates from "./AllCovariates/AllCovariates";
+import SelectOutcome from "./SelectOutcome/SelectOutcome";
+import SelectCovariates from "./SelectCovariates/SelectCovariates";
 import "./GWASV2.css";
 import { gwasSteps } from "./constants";
 import { useSourceFetch } from "../GWASWizard/wizardEndpoints/cohortMiddlewareApi";
 import { Spin } from "antd";
-
 
 const GWASContainer = () => {
   const [current, setCurrent] = useState(0);
@@ -42,7 +41,7 @@ const GWASContainer = () => {
         );
       case 1:
         // outcome (customdichotomous or not)
-        return <Outcome
+        return <SelectOutcome
           outcome={outcome}
           allCovariates={allCovariates}
           handleOutcome={handleOutcome}
@@ -50,7 +49,7 @@ const GWASContainer = () => {
         />
       case 2:
         // covariates (customdichtomous or not)
-        return <AllCovariates
+        return <SelectCovariates
           handleCovariates={handleCovariates}
           covariates={allCovariates}
           sourceId={sourceId}
@@ -67,7 +66,9 @@ const GWASContainer = () => {
   return (
     <React.Fragment>
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
-      <style>{`.analysis-app__actions > div:nth-child(1) {margin: 0 auto; }`}</style>
+      <style>
+        {`.analysis-app__actions > div:nth-child(1) { ${current === 0 ? `margin: 0 auto;` : ``}  ${current === 1 || 2 ? `marginLeft: 0` : ``} }`}
+      </style>
       <div className="GWASV2">
         <Space direction={"vertical"} style={{ width: "100%" }}>
           <div className="steps-content">
@@ -81,7 +82,7 @@ const GWASContainer = () => {
               )}
             </Space>
           </div>
-          <div className="steps-action">
+          <div className="steps-action" style={{minWidth: "95vw", margin: "auto", marginLeft: 10}}>
             <Button
               className="GWASUI-navBtn GWASUI-navBtn__next"
               type="primary"

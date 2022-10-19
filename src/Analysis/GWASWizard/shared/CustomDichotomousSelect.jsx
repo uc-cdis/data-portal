@@ -65,7 +65,7 @@ const CustomDichotomousSelect = ({
                   className='GWASUI-searchInput'
                   onChange={(e) => setCdName(e.target.value)}
                   value={cdName}
-                  placeholder='Enter a unique name for custom dichotomous selection'
+                  placeholder='Provide a name for custom dichotomous covariate'
                   style={{ width: '75%', height: '90%' }}
                 />
               </div>
