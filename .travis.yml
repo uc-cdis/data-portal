@@ -5,24 +5,24 @@ language: node_js
 git:
   depth: 1
 node_js:
-  - "16"
+  - "14"
 
 cache:
   npm: false # disable npm cache for npm ci
 
 services:
-    - docker
+  - docker
 
 before_install:
-    - npm install -g npm@8.5
+  - npm install -g npm@8.5
 
 install:
-    - npm ci
+  - npm ci
 
 script:
-    - npm run relay
-    - npm run params
-    - npm test
-    - bash ./testSchema.sh
-    - npm run eslint
-    - npm run stylelint
+  - npm run relay
+  - npm run params
+  - npm test
+  - bash ./testSchema.sh
+  - npm run eslint
+  - npm run stylelint
