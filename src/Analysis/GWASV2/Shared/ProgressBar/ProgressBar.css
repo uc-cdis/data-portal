@@ -40,6 +40,24 @@
   animation: border_anim 0.3s linear forwards;
 }
 
+.progress-bar .ant-steps-item-title {
+  line-height: 37px;
+}
+
+.progress-bar .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon,
+.progress-bar .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon,
+.progress-bar
+.ant-steps-item-process
+> .ant-steps-item-container
+> .ant-steps-item-icon
+.ant-steps-icon,
+.ant-steps-item-wait
+> .ant-steps-item-container
+> .ant-steps-item-content
+> .ant-steps-item-title {
+  color: black;
+}
+
 .progress-bar
 .ant-steps-item-active.ant-steps-item-process
 > .ant-steps-item-container
@@ -60,30 +78,13 @@
   border-bottom: none;
 }
 
+.progress-bar .ant-steps-item-wait .ant-steps-item-icon,
 .progress-bar
 .ant-steps-item-process
 > .ant-steps-item-container
-> .ant-steps-item-icon,
-.progress-bar .ant-steps-item-wait .ant-steps-item-icon {
+> .ant-steps-item-icon {
   background: none;
   border: none;
-}
-
-.progress-bar .ant-steps-item-title {
-  line-height: 37px;
-}
-.progress-bar .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon,
-.progress-bar
-.ant-steps-item-process
-> .ant-steps-item-container
-> .ant-steps-item-icon
-.ant-steps-icon,
-.progress-bar .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon,
-.ant-steps-item-wait
-> .ant-steps-item-container
-> .ant-steps-item-content
-> .ant-steps-item-title {
-  color: black;
 }
 
 .progress-bar
