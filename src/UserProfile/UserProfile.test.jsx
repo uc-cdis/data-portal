@@ -80,7 +80,7 @@ describe('the UserProfile component', () => {
       </StaticRouter>,
     );
     const $deleteBtn = $vdom.find(`button[name="${DELETE_BTN}"]`);
-    expect($deleteBtn).toHaveLength(testProps.userProfile.jtis.length);
+    expect($deleteBtn).toHaveLength(2);
     $deleteBtn.at(0).simulate('click');
     // should invoke onRequestDeleteKey callback  (above - calls done()) ...
   });
