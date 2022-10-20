@@ -14,6 +14,7 @@
   transition: none;
   margin-top: 5px;
 }
+
 @media only screen and (max-width: 1350px) {
   .progress-bar button.ant-btn-default,
   .progress-bar__steps {
@@ -56,30 +57,30 @@
 .progress-bar .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon,
 .progress-bar .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon,
 .progress-bar
-.ant-steps-item-process
-> .ant-steps-item-container
-> .ant-steps-item-icon
-.ant-steps-icon,
+  .ant-steps-item-process
+  > .ant-steps-item-container
+  > .ant-steps-item-icon
+  .ant-steps-icon,
 .ant-steps-item-wait
-> .ant-steps-item-container
-> .ant-steps-item-content
-> .ant-steps-item-title {
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title {
   color: black;
 }
 
 .progress-bar
-.ant-steps-item-active.ant-steps-item-process
-> .ant-steps-item-container
-> .ant-steps-item-icon
-.ant-steps-icon {
+  .ant-steps-item-active.ant-steps-item-process
+  > .ant-steps-item-container
+  > .ant-steps-item-icon
+  .ant-steps-icon {
   color: #ab590d;
 }
 
 .progress-bar
-.ant-steps-item-active.ant-steps-item-process
-> .ant-steps-item-container
-> .ant-steps-item-content
-> .ant-steps-item-title {
+  .ant-steps-item-active.ant-steps-item-process
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title {
   color: #ab590d;
 }
 
@@ -89,16 +90,16 @@
 
 .progress-bar .ant-steps-item-wait .ant-steps-item-icon,
 .progress-bar
-.ant-steps-item-process
-> .ant-steps-item-container
-> .ant-steps-item-icon {
+  .ant-steps-item-process
+  > .ant-steps-item-container
+  > .ant-steps-item-icon {
   background: none;
   border: none;
 }
 
 .progress-bar
-.ant-steps-horizontal:not(.ant-steps-label-vertical)
-.ant-steps-item {
+  .ant-steps-horizontal:not(.ant-steps-label-vertical)
+  .ant-steps-item {
   min-width: 250px;
   padding-left: 0;
   margin-right: 16px;
