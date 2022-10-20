@@ -42,8 +42,7 @@ describe('the UserProfile component', () => {
         />
       </StaticRouter>,
     );
-    // we expect one delete button per jti:
-    expect($vdom.find(`button[name="${DELETE_BTN}"]`)).toHaveLength(testProps.userProfile.jtis.length);
+    expect($vdom.find('tbody tr')).toHaveLength(testProps.userProfile.jtis.length + 1);
   });
 
   it('triggers create-key events', (done) => {
@@ -80,7 +79,7 @@ describe('the UserProfile component', () => {
       </StaticRouter>,
     );
     const $deleteBtn = $vdom.find(`button[name="${DELETE_BTN}"]`);
-    expect($deleteBtn).toHaveLength(testProps.userProfile.jtis.length);
+    expect($deleteBtn).toHaveLength(2);
     $deleteBtn.at(0).simulate('click');
     // should invoke onRequestDeleteKey callback  (above - calls done()) ...
   });
