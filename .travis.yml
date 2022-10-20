@@ -5,7 +5,7 @@ language: node_js
 git:
   depth: 1
 node_js:
-  - "14"
+  - "16"
 
 cache:
   npm: false # disable npm cache for npm ci

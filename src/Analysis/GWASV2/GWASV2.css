@@ -1,0 +1,63 @@
+.GWASV2 .GWASUI-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.GWASV2 .GWASUI-column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+
+.GWASV2 .steps-content {
+  border: none;
+  background: none;
+}
+
+.GWASV2 .GWASUI-searchContainer {
+  border: 1px solid #e9e9ea;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 5px 3px 5px 10px;
+  height: 40px;
+}
+
+.GWASV2 .GWASUI-searchContainer svg {
+  color: #9d9d9d;
+}
+
+.GWASV2 .GWASUI-searchContainer input {
+  font-style: normal;
+}
+
+.GWASV2 .analysis-app__actions .steps-content {
+  background-color: inherit;
+  border: none;
+  padding-top: 10px;
+}
+
+.GWASV2 .GWASUI-mainTable {
+  border: none;
+}
+
+.GWASV2 .ant-table.ant-table-middle .ant-table-thead > tr > th:before {
+  display: none;
+}
+
+.GWASV2 .GWASUI-table1 tr:nth-child(even) {
+  background-color: #fafafb;
+}
+
+.GWASV2 .GWASUI-table1 thead th {
+  background-color: #e9eef2;
+}
+
+.GWASV2 .GWASUI-table1 .ant-table-container {
+  border-top-left-radius: none;
+  border-top-right-radius: none;
+  border-radius: 5px;
+  border: 2px solid #dedede;
+}

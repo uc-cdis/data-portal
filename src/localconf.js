@@ -165,7 +165,7 @@ function buildConfig(opts) {
     const validOpenOptions = ['open-first', 'open-all', 'close-all'];
     studyViewerConfig.forEach((cfg, i) => {
       if (cfg.openMode
-      && !validOpenOptions.includes(cfg.openMode)) {
+        && !validOpenOptions.includes(cfg.openMode)) {
         studyViewerConfig[i].openMode = 'open-all';
       }
     });
@@ -344,98 +344,105 @@ function buildConfig(opts) {
     analysisTools.forEach((at) => {
       if (typeof at === 'string' || at instanceof String) {
         switch (at) {
-        case 'ndhHIV':
-          analysisApps.ndhHIV = {
-            title: 'NDH HIV Classifier',
-            description: 'Classify stored clinical data based on controller status.',
-            image: '/src/img/analysis-icons/hiv-classifier.svg',
-            visitIndexTypeName: config.HIVAppIndexTypeName || 'follow_up',
-          };
-          break;
-        case 'ndhVirus':
-          analysisApps.ndhVirus = {
-            title: 'NDH Virulence Simulation',
-            description: `This simulation runs a docker version of the Hypothesis Testing
+          case 'ndhHIV':
+            analysisApps.ndhHIV = {
+              title: 'NDH HIV Classifier',
+              description: 'Classify stored clinical data based on controller status.',
+              image: '/src/img/analysis-icons/hiv-classifier.svg',
+              visitIndexTypeName: config.HIVAppIndexTypeName || 'follow_up',
+            };
+            break;
+          case 'ndhVirus':
+            analysisApps.ndhVirus = {
+              title: 'NDH Virulence Simulation',
+              description: `This simulation runs a docker version of the Hypothesis Testing
           using Phylogenies (HyPhy) tool over data submitted in the NIAID Data Hub. \n
           The simulation is focused on modeling a Bayesian Graph Model (BGM) based on a binary matrix input.
           The implemented example predicts the virulence status of different influenza strains based on their mutations
           (the mutation panel is represented as the input binary matrix).`,
-            image: '/src/img/analysis-icons/virulence.png',
-          };
-          break;
-        case 'vaGWAS':
-          analysisApps.vaGWAS = {
-            title: 'vaGWAS',
-            description: 'Expression-based Genome-Wide Association Study',
-            image: '/src/img/analysis-icons/gwas.svg',
-            options: [
-              {
-                label: 'Lung',
-                value: 'Lung',
-              },
-              {
-                label: 'Gastrointestina',
-                value: 'Gastrointestina',
-              },
-              {
-                label: 'Prostate',
-                value: 'Prostate',
-              },
-              {
-                label: 'Head and Neck',
-                value: 'Head and Neck',
-              },
-              {
-                label: 'Skin',
-                value: 'Skin',
-              },
-              {
-                label: 'NULL',
-                value: 'NULL',
-              },
-              {
-                label: 'Lymph Node',
-                value: 'Lymph Node',
-              },
-              {
-                label: 'Liver',
-                value: 'Liver',
-              },
-              {
-                label: 'Musculoskeleta',
-                value: 'Musculoskeleta',
-              },
-              {
-                label: 'Occipital Mass',
-                value: 'Occipital Mass',
-              },
-              {
-                label: 'Brain',
-                value: 'Brain',
-              },
-              {
-                label: 'BxType',
-                value: 'BxType',
-              },
-            ],
-          };
-          break;
-        case 'GWASUIApp':
-          analysisApps.GWASUIApp = {
-            title: 'Gen3 GWAS',
-            description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
-            image: '/src/img/analysis-icons/gwas.svg',
-          };
-          break;
-        case 'GWASResults':
-          analysisApps.GWASResults = {
-            title: 'GWAS Results',
-            description: 'Use this App to view status & results of submitted workflows',
-            image: '/src/img/analysis-icons/gwasResults.svg',
-          };
-          break;
-        default:
-          break;
+              image: '/src/img/analysis-icons/virulence.png',
+            };
+            break;
+          case 'vaGWAS':
+            analysisApps.vaGWAS = {
+              title: 'vaGWAS',
+              description: 'Expression-based Genome-Wide Association Study',
+              image: '/src/img/analysis-icons/gwas.svg',
+              options: [
+                {
+                  label: 'Lung',
+                  value: 'Lung',
+                },
+                {
+                  label: 'Gastrointestina',
+                  value: 'Gastrointestina',
+                },
+                {
+                  label: 'Prostate',
+                  value: 'Prostate',
+                },
+                {
+                  label: 'Head and Neck',
+                  value: 'Head and Neck',
+                },
+                {
+                  label: 'Skin',
+                  value: 'Skin',
+                },
+                {
+                  label: 'NULL',
+                  value: 'NULL',
+                },
+                {
+                  label: 'Lymph Node',
+                  value: 'Lymph Node',
+                },
+                {
+                  label: 'Liver',
+                  value: 'Liver',
+                },
+                {
+                  label: 'Musculoskeleta',
+                  value: 'Musculoskeleta',
+                },
+                {
+                  label: 'Occipital Mass',
+                  value: 'Occipital Mass',
+                },
+                {
+                  label: 'Brain',
+                  value: 'Brain',
+                },
+                {
+                  label: 'BxType',
+                  value: 'BxType',
+                },
+              ],
+            };
+            break;
+          case 'GWASUIApp':
+            analysisApps.GWASUIApp = {
+              title: 'Gen3 GWAS',
+              description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
+              image: '/src/img/analysis-icons/gwas.svg',
+            };
+            break;
+          case 'GWASResults':
+            analysisApps.GWASResults = {
+              title: 'GWAS Results',
+              description: 'Use this App to view status & results of submitted workflows',
+              image: '/src/img/analysis-icons/gwasResults.svg',
+            };
+            break;
+          case 'GWAS++':
+            analysisApps["GWAS++"] = {
+              title: "GWAS++",
+              description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
+              image: '/src/img/analysis-icons/gwas.svg',
+            };
+            break;
+          default:
+            break;
         }
       } else if (at.title) {
         analysisApps[at.title] = at;

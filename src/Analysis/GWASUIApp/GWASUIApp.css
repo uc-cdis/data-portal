@@ -4,7 +4,7 @@
   border: 1px dashed #e9e9e9;
   border-radius: 2px;
   background-color: #fafafa;
-  padding-top: 40px;
+  padding-top: 25px;
   padding-bottom: 40px;
   display: flex;
   flex-direction: column;
@@ -128,6 +128,16 @@
   justify-content: center;
   width: 100%;
   padding: 10px;
+}
+
+.GWASUI-typeSelector div .ant-card {
+  cursor: pointer;
+  border: 2px solid var(--g3-color__silver);
+  border-radius: 5px;
+}
+
+.GWASUI-typeSelector div .ant-card:hover {
+  border-color: white;
 }
 
 .GWASUI-typeTitle {
@@ -322,10 +332,16 @@
   text-overflow: ellipsis;
 }
 
+.GWASUI-asterisk:before {
+  content: "*";
+  margin: 0 3px 0 -10px;
+  color: red;
+}
+
 .GWASUI-attritionTable {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
 }
 
 .GWASUI-attritionRow .ant-collapse {
@@ -372,4 +388,17 @@
   width: 100%;
   align-items: right;
   flex: 7;
+}
+
+.GWASUI-mt-15 {
+  margin-top: 15px;
+}
+
+.GWASUI-no-padding {
+  padding: 0;
+}
+
+.GWASUI-no-top-spacing {
+  padding-top: 0;
+  margin-top: 0;
 }
