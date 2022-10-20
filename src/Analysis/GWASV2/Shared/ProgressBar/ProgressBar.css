@@ -14,6 +14,15 @@
   transition: none;
   margin-top: 5px;
 }
+@media only screen and (max-width: 1350px) {
+  .progress-bar button.ant-btn-default,
+  .progress-bar__steps {
+    float: none;
+  }
+  .progress-bar button.ant-btn-default {
+    margin-top: 25px;
+  }
+}
 
 .progress-bar button.ant-btn-default:hover {
   background: var(--g3-secondary-btn__bg-color--hover);
