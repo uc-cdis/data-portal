@@ -74,7 +74,12 @@ class Workspace extends React.Component {
   }
 
   componentDidMount() {
-    initWorkspaceRefreshToken(this.connected);
+    // Check if workspaceTokenServiceRefreshTokenAtLogin is NOT set.
+    // Because if is already enabled, then an extra refresh is not
+    // really needed, since it has already happened at login:
+    if (!isEnabled('workspaceTokenServiceRefreshTokenAtLogin')) {
+      initWorkspaceRefreshToken(this.connected);
+    }
   }
 
   componentWillUnmount() {
