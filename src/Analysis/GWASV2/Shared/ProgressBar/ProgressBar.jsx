@@ -1,29 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, Steps } from 'antd';
-import './ProgressBar.css';
+import React from "react";
+import PropTypes from "prop-types";
+import { Button, Steps } from "antd";
+import { gwasV2Steps } from "../constants";
+import "./ProgressBar.css";
 
 const { Step } = Steps;
 const ProgressBar = ({ current }) => (
-  <div className='progress-bar'>
-    <div className='progress-bar__steps'>
+  <div className="progress-bar">
+    <div className="progress-bar__steps">
       <Steps current={current}>
-        <Step
-          icon={<React.Fragment>1</React.Fragment>}
-          title={`${current <= 0 ? 'Select' : 'Edit'} Study Population`}
-        />
-        <Step
-          icon={<React.Fragment>2</React.Fragment>}
-          title={`${current <= 1 ? 'Select' : 'Edit'} Outcome Phenotype`}
-        />
-        <Step
-          icon={<React.Fragment>3</React.Fragment>}
-          title={`${current <= 2 ? 'Select' : 'Edit'} Covariate Phenotype`}
-        />
-        <Step
-          icon={<React.Fragment>4</React.Fragment>}
-          title={'Configure GWAS'}
-        />
+        {gwasV2Steps.map((item, index) => (
+          <Step
+            key={item.title}
+            icon={<React.Fragment>{index + 1}</React.Fragment>}
+            title={`${current <= index ? item.title : item.secondaryTitle}`}
+          />
+        ))}
       </Steps>
     </div>
     <Button>New to GWAS? Get started here</Button>
