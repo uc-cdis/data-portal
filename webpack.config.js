@@ -123,7 +123,7 @@ const plugins = [
       return Object.keys(rv).join(' ');
     })()),
     dapURL: DAPTrackingURL,
-    script_src: ((() => {
+    scriptSrc: ((() => {
       const rv = {};
       if (scriptSrcURLs.length > 0) {
         scriptSrcURLs.forEach((url) => {

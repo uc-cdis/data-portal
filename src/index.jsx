@@ -134,7 +134,7 @@ async function init() {
         <ThemeProvider theme={theme}>
           <BrowserRouter basename={basename}>
             <div>
-              {(gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) && <GoogleAnalyticsRouteTracker />}
+              {/* {(gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) && <GoogleAnalyticsRouteTracker />} */}
               {enableDAPTracker && <DAPRouteTracker />}
               {isEnabled('noIndex')
                 ? (
