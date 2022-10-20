@@ -13,7 +13,7 @@ import {
 import { ThemeProvider } from 'styled-components';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 import { datadogRum } from '@datadog/browser-rum';
 
@@ -33,7 +33,7 @@ import {
 } from './localconf';
 import { portalVersion } from './versions';
 import { gaTracking, components } from './params';
-import GA, { RouteTracker } from './components/GoogleAnalytics';
+// import GA, { RouteTracker } from './components/GoogleAnalytics';
 import { DAPRouteTracker } from './components/DAPAnalytics';
 import isEnabled from './helpers/featureFlags';
 import sessionMonitor from './SessionMonitor';
@@ -51,8 +51,8 @@ workspaceSessionMonitor.start();
 async function init() {
   const store = await getReduxStore();
 
-  ReactGA.initialize(gaTracking);
-  ReactGA.pageview(window.location.pathname + window.location.search);
+  // ReactGA.initialize(gaTracking);
+  // ReactGA.pageview(window.location.pathname + window.location.search);
 
   // Datadog setup
   if (ddApplicationId && !ddClientToken) {
@@ -94,7 +94,7 @@ async function init() {
         <ThemeProvider theme={theme}>
           <BrowserRouter basename={basename}>
             <div>
-              {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+              {/* {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />} */}
               {enableDAPTracker && <DAPRouteTracker />}
               {isEnabled('noIndex')
                 ? (

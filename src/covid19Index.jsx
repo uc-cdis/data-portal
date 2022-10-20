@@ -45,13 +45,13 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
-  basename, dev, gaDebug, workspaceUrl, workspaceErrorUrl,
+  basename, workspaceUrl, workspaceErrorUrl,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
   discoveryConfig, ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
 } from './localconf';
 import { portalVersion } from './versions';
 import { gaTracking, components } from './params';
-import GA, { RouteTracker } from './components/GoogleAnalytics';
+// import GA, { RouteTracker } from './components/GoogleAnalytics';
 import { DAPRouteTracker } from './components/DAPAnalytics';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import isEnabled from './helpers/featureFlags';
@@ -118,7 +118,7 @@ async function init() {
         <ThemeProvider theme={theme}>
           <BrowserRouter basename={basename}>
             <div>
-              {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />}
+              {/* {GA.init(gaTracking, dev, gaDebug) && <RouteTracker />} */}
               {enableDAPTracker && <DAPRouteTracker />}
               {isEnabled('noIndex')
                 ? (
