@@ -5,8 +5,8 @@ export const gwasV2Steps = [
     secondaryTitle: 'Edit Study Population',
   },
   {
-    title: 'Select Outcome Phenotypes',
-    secondaryTitle: 'Edit Outcome Phenotypes',
+    title: 'Select Outcome Phenotype',
+    secondaryTitle: 'Edit Outcome Phenotype',
   },
   {
     title: 'Select Covariate Phenotype',
