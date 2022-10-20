@@ -30,8 +30,11 @@
     <% } %>
     <% if(htmlWebpackPlugin.options.gaTrackingId) { %>
       <!-- Google tag (gtag.js) -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= htmlWebpackPlugin.options.gaTrackingId %>"></script>
+      <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=<%= htmlWebpackPlugin.options.gaTrackingId %>"></script>
       <script>
+        '<%= htmlWebpackPlugin.options.gaTrackingId %>'
+      </script> -->
+      <!-- <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){window.dataLayer.push(arguments);}
         gtag('js', new Date());
@@ -44,7 +47,7 @@
         <script>
           gtag('config', '<%= htmlWebpackPlugin.options.gaTrackingId %>');
         </script>
-      <% } %>
+      <% } %> -->
     <% } %>
 </script>
   </head>

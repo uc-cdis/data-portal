@@ -9,6 +9,8 @@ import querystring from 'querystring';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAngleUp, faAngleDown, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 // import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
+
 import { Helmet } from 'react-helmet';
 import { datadogRum } from '@datadog/browser-rum';
 
@@ -76,6 +78,8 @@ workspaceSessionMonitor.start();
 async function init() {
   const store = await getReduxStore();
 
+  ReactGA.initialize(gaTrackingId);
+  ReactGA.send({ hitType: 'pageview', page: window.location.pathname + window.location.search });
   // ReactGA.initialize(gaTracking);
   // ReactGA.pageview(window.location.pathname + window.location.search);
 
