@@ -93,7 +93,7 @@ const plugins = [
     metaDescription: configFile.components.metaDescription || '',
     basename: pathPrefix,
     template: 'src/index.ejs',
-    connect_src: ((() => {
+    connectSrc: ((() => {
       const rv = {};
       if (typeof process.env.FENCE_URL !== 'undefined') {
         rv[(new URL(process.env.FENCE_URL)).origin] = true;
@@ -122,7 +122,7 @@ const plugins = [
       }
       return Object.keys(rv).join(' ');
     })()),
-    dap_url: DAPTrackingURL,
+    dapURL: DAPTrackingURL,
     script_src: ((() => {
       const rv = {};
       if (scriptSrcURLs.length > 0) {
@@ -132,7 +132,7 @@ const plugins = [
       }
       return Object.keys(rv).join(' ');
     })()),
-    img_src: ((() => {
+    imgSrc: ((() => {
       const rv = {};
       if (imgSrcURLs.length > 0) {
         imgSrcURLs.forEach((url) => {
@@ -141,7 +141,8 @@ const plugins = [
       }
       return Object.keys(rv).join(' ');
     })()),
-    ga_debug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
+    gaTrackingId: (gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) ? gaTrackingId : undefined,
+    gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     hash: true,
     chunks: ['vendors~bundle', 'bundle'],
   }),
