@@ -21,7 +21,7 @@ import {
   faInstagramSquare,
   faPinterestSquare,
 } from '@fortawesome/free-brands-svg-icons';
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 import { Helmet } from 'react-helmet';
 import { datadogRum } from '@datadog/browser-rum';
 
