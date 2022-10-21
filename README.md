@@ -327,8 +327,8 @@ class Component extends React.Component {
 
 ### Linting
 
-We use ESLint and Stylelint to lint and auto-format code.
+We use ESLint and Stylelint to lint and automatically format code.
 
-- `npm run eslint` Will run ESLint on the entire codebase and auto-fix all JS and JS like files.
-- `npm run eslint-new` Will run ESLint only on new files in the current git branch and auto-fix all JS and JS like files.
-- `npm run stylelint` Will run Stylelint on all CSS and CSS-like files in the codebase and auto-fix them.
+- `npm run eslint` Will run ESLint on the entire code base and automatically try to fix all JS and JS like files.
+- `npm run eslint-new` Will run ESLint only on newly added files in the current git branch and automatically try to fix the JS and JS like files.
+- `npm run stylelint` Will run Stylelint on all CSS and CSS-like files in the code base and automatically try to fix them.
