@@ -25,7 +25,7 @@ export function DisabledExplorerFilter({ className }) {
         <em>Composed filter state cannot be modified!</em>
       </p>
       <p>
-        To select filters in the filter bar, activate a non-composed filter set or create a new one. Filters cannot be selected in the filter bar when a composed filter set is active.
+        To re-enable it, go to Filter Set Workspace and use (activate) a Filter Set with a standard (non-composed) filter state or create a new one. This feature is disabled when the active Filter Set has a composed filter state.       
       </p>
     </div>
   );
