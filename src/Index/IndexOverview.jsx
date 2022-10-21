@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useResizeDetector } from 'react-resize-detector';
@@ -85,10 +85,7 @@ function IndexOverview({ overviewCounts }) {
     navigateParams.push({ state: { filter } });
   }
 
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
-  useEffect(() => {
-    if (overviewCounts !== undefined) setIsDataLoaded(true);
-  }, [overviewCounts]);
+  const isDataLoaded = overviewCounts !== undefined;
 
   return (
     <div className='index-overview'>
