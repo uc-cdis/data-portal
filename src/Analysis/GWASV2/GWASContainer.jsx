@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Space, Button, Popconfirm } from 'antd';
 import SelectStudyPopulation from './SelectStudyPopulation/SelectStudyPopulation';
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
+import AttritionTable from './Shared/AttritionTable/AttritionTable'
 import { gwasV2Steps } from './Shared/constants';
 import './GWASV2.css';
 
@@ -50,6 +51,23 @@ const GWASContainer = () => {
   return (
     <React.Fragment>
       <ProgressBar current={current} />
+
+
+      {!loading && sourceId && current !== 0 && (
+        <React.Fragment>
+          <AttritionTable
+            sourceId={sourceId}
+            selectedCohort={selectedCaseCohort}
+            otherSelectedCohort={selectedControlCohort}
+            // outcome={outcome}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            tableHeader={'Case Cohort Attrition Table'}
+          />
+        </React.Fragment>
+      )}
+
+
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>
         {'.analysis-app__actions > div:nth-child(1) { width: 100%; }'}
