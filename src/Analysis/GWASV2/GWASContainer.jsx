@@ -2,16 +2,21 @@ import React, { useState } from 'react';
 import { Space, Button, Popconfirm } from 'antd';
 import SelectStudyPopulation from './SelectStudyPopulation/SelectStudyPopulation';
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
-import AttritionTable from './Shared/AttritionTable/AttritionTable'
+import AttritionTable from './Shared/AttritionTable/AttritionTable';
+import { useSourceFetch, getAllHareItems } from './Shared/wizardEndpoints/cohortMiddlewareApi';
 import { gwasV2Steps } from './Shared/constants';
 import './GWASV2.css';
 
 const GWASContainer = () => {
+  const { loading, sourceId } = useSourceFetch();
   const [current, setCurrent] = useState(0);
   const [
     selectedStudyPopulationCohort,
     setSelectedStudyPopulationCohort,
   ] = useState({});
+  const [selectedControlCohort, setSelectedControlCohort] = useState(undefined);
+  const [selectedCovariates, setSelectedCovariates] = useState([]);
+  const [selectedDichotomousCovariates, setSelectedDichotomousCovariates] = useState([]);
 
   const generateStep = () => {
     // steps 2 & 3 very similar
@@ -52,12 +57,11 @@ const GWASContainer = () => {
     <React.Fragment>
       <ProgressBar current={current} />
 
-
-      {!loading && sourceId && current !== 0 && (
+      {!loading && sourceId && (
         <React.Fragment>
           <AttritionTable
             sourceId={sourceId}
-            selectedCohort={selectedCaseCohort}
+            selectedCohort={selectedStudyPopulationCohort}
             otherSelectedCohort={selectedControlCohort}
             // outcome={outcome}
             selectedCovariates={selectedCovariates}
@@ -66,7 +70,6 @@ const GWASContainer = () => {
           />
         </React.Fragment>
       )}
-
 
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>

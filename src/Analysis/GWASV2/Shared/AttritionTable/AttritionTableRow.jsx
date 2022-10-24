@@ -3,9 +3,11 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
-import { fetchConceptStatsByHareSubset,
+import {
+  fetchConceptStatsByHareSubset,
   fetchConceptStatsByHareSubsetCC,
-  queryConfig } from '../wizardEndpoints/cohortMiddlewareApi';
+  queryConfig,
+} from '../wizardEndpoints/cohortMiddlewareApi';
 
 const AttritionTableRow = ({
   cohortDefinitionId,
@@ -61,7 +63,6 @@ const AttritionTableRow = ({
     setAsn(getSizeByColumn('ASN'));
     setEur(getSizeByColumn('EUR'));
     setHis(getSizeByColumn('HIS'));
-
   }, [breakdownColumns]);
 
   return (

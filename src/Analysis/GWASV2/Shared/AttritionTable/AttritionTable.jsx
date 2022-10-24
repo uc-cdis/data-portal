@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Collapse, List, Table } from 'antd';
 import AttritionTableRow from './AttritionTableRow';
-import { attritionTableHeaderConfig, headerDataSource } from '../../Shared/constants';
+import { attritionTableHeaderConfig, headerDataSource } from '../constants';
+import '../../../GWASUIApp/GWASUIApp.css';
+import './AttritionTable.css';
 
 const { Panel } = Collapse;
 
@@ -39,46 +41,48 @@ const AttritionTable = ({
   }, [selectedCovariates, selectedDichotomousCovariates]);
 
   return (
-    <Collapse onClick={(event) => event.stopPropagation()}>
-      <Panel header={tableHeader} key='2'>
-        <Table
-          className='GWASUI-attritionTableHeader'
-          key='attritionHeaderKey'
-          pagination={false}
-          columns={attritionTableHeaderConfig}
-          dataSource={headerDataSource}
-        />
-        {selectedCohort?.cohort_definition_id && (
-          <React.Fragment>
-            <AttritionTableRow
-              cohortDefinitionId={selectedCohort.cohort_definition_id}
-              otherCohortDefinitionId={otherSelectedCohort ? otherSelectedCohort.cohort_definition_id : undefined}
-              rowType='Cohort'
-              rowName={selectedCohort.cohort_name}
-              covariateSubset={[]}
-              sourceId={sourceId}
-            />
-          </React.Fragment>
-        )}
-        {selectedCohort?.cohort_definition_id && covariateSubsets.length > 0 ? (
-          <List
-            className='GWASUI-attritionRow'
-            itemLayout='horizontal'
-            dataSource={covariateSubsets}
-            renderItem={(item) => (
+    <div className='gwasv2-attrition-table'>
+      <Collapse onClick={(event) => event.stopPropagation()}>
+        <Panel header={tableHeader} key='2'>
+          <Table
+            className='GWASUI-attritionTableHeader'
+            key='attritionHeaderKey'
+            pagination={false}
+            columns={attritionTableHeaderConfig}
+            dataSource={headerDataSource}
+          />
+          {selectedCohort?.cohort_definition_id && (
+            <React.Fragment>
               <AttritionTableRow
                 cohortDefinitionId={selectedCohort.cohort_definition_id}
                 otherCohortDefinitionId={otherSelectedCohort ? otherSelectedCohort.cohort_definition_id : undefined}
-                rowType={outcome && outcome.concept_id === item[0].concept_id ? 'Outcome Phenotype' : 'Covariate'}
-                rowName={item[0].concept_name ? item[0].concept_name : item[0].provided_name}
-                covariateSubset={item}
+                rowType='Cohort'
+                rowName={selectedCohort.cohort_name}
+                covariateSubset={[]}
                 sourceId={sourceId}
               />
-            )}
-          />
-        ) : null}
-      </Panel>
-    </Collapse>
+            </React.Fragment>
+          )}
+          {selectedCohort?.cohort_definition_id && covariateSubsets.length > 0 ? (
+            <List
+              className='GWASUI-attritionRow'
+              itemLayout='horizontal'
+              dataSource={covariateSubsets}
+              renderItem={(item) => (
+                <AttritionTableRow
+                  cohortDefinitionId={selectedCohort.cohort_definition_id}
+                  otherCohortDefinitionId={otherSelectedCohort ? otherSelectedCohort.cohort_definition_id : undefined}
+                  rowType={outcome && outcome.concept_id === item[0].concept_id ? 'Outcome Phenotype' : 'Covariate'}
+                  rowName={item[0].concept_name ? item[0].concept_name : item[0].provided_name}
+                  covariateSubset={item}
+                  sourceId={sourceId}
+                />
+              )}
+            />
+          ) : null}
+        </Panel>
+      </Collapse>
+    </div>
   );
 };
 

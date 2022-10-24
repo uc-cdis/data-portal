@@ -1,5 +1,6 @@
 .progress-bar {
   width: 100%;
+  margin-bottom: 75px;
 }
 
 .progress-bar__steps {
@@ -13,15 +14,19 @@
   border: 1px solid #2e77b8;
   transition: none;
   margin-top: 5px;
+
 }
 
 @media only screen and (max-width: 1350px) {
+  .progress-bar {
+    margin-bottom: 0;
+  }
   .progress-bar button.ant-btn-default,
   .progress-bar__steps {
     float: none;
   }
   .progress-bar button.ant-btn-default {
-    margin-top: 25px;
+    margin: 25px 0;
   }
 }
 
