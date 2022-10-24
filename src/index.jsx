@@ -77,7 +77,10 @@ workspaceSessionMonitor.start();
 async function init() {
   const store = await getReduxStore();
 
-  ReactGA.initialize(gaTrackingId);
+  // Google Analytics setup
+  if ((gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-'))) {
+    ReactGA.initialize(gaTrackingId);
+  }
   // ReactGA.send({ hitType: 'pageview', page: window.location.pathname + window.location.search });
   // ReactGA.initialize(gaTracking);
   // ReactGA.pageview(window.location.pathname + window.location.search);
