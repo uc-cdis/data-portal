@@ -9,6 +9,7 @@ A generic data portal that supports some basic interaction with Gen3 services li
 - [npm](https://www.npmjs.com/)
 
 ### Installing
+
 ```
 npm install
 ```
@@ -18,44 +19,49 @@ npm install
 See [docs/guide_running_portal_locally.md](docs/guide_running_portal_locally.md) for a step-by-step guide to running portal locally.
 
 The portal's `/dev.html` path loads javascript and most css
-from `localhost`.  Test code under local development with this procedure:
-* `npm install`
-* launch the webpack dev server, and configure local code with the same configuration as the server to test against.  For example - if we intend to test against qa.planx-pla.net, then:
+from `localhost`. Test code under local development with this procedure:
+
+- `npm install`
+- launch the webpack dev server, and configure local code with the same configuration as the server to test against. For example - if we intend to test against qa.planx-pla.net, then:
+
 ```
 HOSTNAME=qa.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 ```
+
 , or for qa-brain:
+
 ```
 HOSTNAME=qa-brain.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 ```
 
 You can also use the `autoprod` value for `NODE_ENV` to do the `auto` setup, then run `webpack` in production mode, so it generates `.js` and `.html` files instead of launching the dev server - ex:
+
 ```
 HOSTNAME=qa-brain.planx-pla.net NODE_ENV=autoprod GEN3_BUNDLE=all bash ./runWebpack.sh
 ```
 
 Tiered-access settings can be configured through either the `TIER_ACCESS_LEVEL` environment variable (site-wide) or through the `tierAccessLevel` property on guppyConfig blocks for each Data Explorer tab in the gitops.json (index-scoped). To use the index-scoped config style, all guppyConfig blocks in the portal config must contain the `tierAccessLevel` property. See `docs/portal_config.md` for thorough example of portal config structure.
 
->**NOTE:** To locally test site-wide Tiered Access features, the additional environment variables `TIER_ACCESS_LEVEL` and `TIER_ACCESS_LIMIT` should have the same values as the server's "global.tier_access_level" and "global.tier_access_limit" properties in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest).
+> **NOTE:** To locally test site-wide Tiered Access features, the additional environment variables `TIER_ACCESS_LEVEL` and `TIER_ACCESS_LIMIT` should have the same values as the server's "global.tier_access_level" and "global.tier_access_limit" properties in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest).
 >
 > **Example**:`HOSTNAME=qa-brain.planx-pla.net TIER_ACCESS_LEVEL=regular TIER_ACCESS_LIMIT=50 NODE_ENV=auto bash ./runWebpack.sh`
 
 If the index-scoped tiered-access setting is used, the `tierAccessLevel` properties in the guppyConfig blocks in gitops.json should have the same values as the server's "guppyConfig[index].tier_access_level" in its [`manifest.json`](https://github.com/uc-cdis/cdis-manifest). Tabs should be configured with the same tiered-access level as the ES index they use.
 
+- Accept the self-signed certificate at https://localhost:9443/bundle.js
 
-* Accept the self-signed certificate at https://localhost:9443/bundle.js
-
-* Load the test environment's `/dev.html` - ex: https://qa-brian.planx-pla.net/dev.html
-
+- Load the test environment's `/dev.html` - ex: https://qa-brian.planx-pla.net/dev.html
 
 ### Local development and gitops
 
-Most production commons currently load custom configuration via gitops.  The configuration for a production commons is available in that commons' gitops repository (mostly https://github.com/uc-cdis/cdis-manifest), and can be copied for local development.  The `runWebpack.sh` script automates this process when `NODE_ENV` is set to `auto` - ex:
+Most production commons currently load custom configuration via gitops. The configuration for a production commons is available in that commons' gitops repository (mostly https://github.com/uc-cdis/cdis-manifest), and can be copied for local development. The `runWebpack.sh` script automates this process when `NODE_ENV` is set to `auto` - ex:
+
 ```
 HOSTNAME=qa-brain.planx-pla.net NODE_ENV=auto bash ./runWebpack.sh
 ```
 
 Note: the legacy `dev` NODE_ENV is still available, but the `APP` environment must also be manually set to load the configuration that matches the dictionary from HOSTNAME - ex:
+
 ```
 HOSTNAME=qa.planx-pla.net NODE_ENV=dev APP=dev bash ./runWebpack.sh
 ```
@@ -65,13 +71,14 @@ HOSTNAME=qa.planx-pla.net NODE_ENV=dev APP=dev bash ./runWebpack.sh
 The portal webpack configurations selects between multiple application entry points
 at build time:
 
-* `commons` - the default data commons portal
-* `covid19` - a portal for pandemic response commons
-* `nct` - a portal for clinical trials
-* `ecosystem` - a portal for Gen3 data ecosystem
-* `workspace` - a scaled down portal for workspace accounts
+- `commons` - the default data commons portal
+- `covid19` - a portal for pandemic response commons
+- `nct` - a portal for clinical trials
+- `ecosystem` - a portal for Gen3 data ecosystem
+- `workspace` - a scaled down portal for workspace accounts
 
 We can use the https://remote/dev.html trick to test a local workspace build by setting the `GEN3_BUNDLE` variable to `workspace`:
+
 ```
 HOSTNAME=qa.planx-pla.net GEN3_BUNDLE=workspace bash ./runWebpack.sh
 ```
@@ -79,14 +86,14 @@ HOSTNAME=qa.planx-pla.net GEN3_BUNDLE=workspace bash ./runWebpack.sh
 That just changes the webpack config to serve the workspace bundle as `bundle.js` - which is what `dev.html` expects.
 
 The portal `Dockerfile` runs a deploy time webpack build to incorporate
-deploy-time configuration.  The `GEN3_BUNDLE` environment variable determines which application gets built at run time.
-
+deploy-time configuration. The `GEN3_BUNDLE` environment variable determines which application gets built at run time.
 
 ### Customized Basename
 
->:warning: To use this feature, make sure the to set the `BASENAME` to a customized value in the portal deployed to the remote before you run the local dev server with the customized basename. Also the customized basename you used for local portal dev server should be the same as you have set for the remote deployment.
+> :warning: To use this feature, make sure the to set the `BASENAME` to a customized value in the portal deployed to the remote before you run the local dev server with the customized basename. Also the customized basename you used for local portal dev server should be the same as you have set for the remote deployment.
 
 Available from `3.23.0`, you can supply a customized basename for portal by setting the `BASENAME` variable:
+
 ```
 HOSTNAME=qa.planx-pla.net NODE_ENV=auto BASENAME=/portal bash ./runWebpack.sh
 ```
@@ -101,12 +108,15 @@ To run Storybook:
 `npm run storybook`
 
 ### Run Windmill using Docker
+
 Build the container image first
+
 ```
 docker build -t windmill .
 ```
 
 Then run the container
+
 ```
 docker run --rm -e HOSTNAME=qa.planx-pla.net -p 443:443 -ti windmill
 ```
@@ -114,10 +124,13 @@ docker run --rm -e HOSTNAME=qa.planx-pla.net -p 443:443 -ti windmill
 You will then need to visit `https://localhost` and accept the self-signed certificate warnings
 
 ### Deployment
+
 docker run -d --name=dataportal -p 80:80 quay.io/cdis/data-portal
 
 ### GraphQL configuration
+
 The configurations of Homepage charts are specified data/config/<common-name>.json, or gitops.json in gitops repo. For each common, we need to specify the following json entities:
+
 ```
 "graphql": {
   "boardCounts": [
@@ -156,6 +169,7 @@ The configurations of Homepage charts are specified data/config/<common-name>.js
 
 
 ```
+
 - `boardCounts` are the counts that you want to display in the top-left of dashboard's
 - `chartCounts` are the counts that you want to display in the bar chart of dashboard's
 - `projectDetails` are the counts that you want to display in the list of projects. It could be same as `boardCounts`, in this case, you only need to point to `boardCounts`.
@@ -183,7 +197,9 @@ We support categorical horizontal grouped bar charts, and the chart will be usin
 ```
 
 ### Certificates configuration
+
 All the configurations of necessary certificates are define in src/<common-name>.json. For each common, we need to specify the following json entities:
+
 ```
 "components": {
   "certs": {
@@ -220,18 +236,23 @@ All the configurations of necessary certificates are define in src/<common-name>
 
 
 ```
+
 Then, specify all the required certificates that need to be completed before using the portal in following entry:
+
 ```
 "requiredCerts": ["<certificate-name>"]
 ```
+
 Default is an empty list.
 
 ### Style Guide
+
 When styling components, we adhere to a few rules. We style using class selectors (`.class-name` instead of `#class-name`), and separate class names with hyphens instead of camel case (`.class-name` instead of `.className`). The CSS file should be named {component}.css, and be in the same folder as the component. It is then imported into the component's .jsx file.
 
 We are moving toward using the [BEM methodology](http://getbem.com/introduction/) in terms of CSS organizational conventions. This means we are dividing chunks of code within a component into blocks, are avoiding nesting components, and are using the naming convention of `{block}__{elements}--{modifier}`. `{element}` and `{modifier}` are optional depending on the situation - see the [BEM guidelines](http://getbem.com/introduction/) for more examples.
 
 For our example, say we have a simple component called `Component`:
+
 ```
 import './Component.css';
 
@@ -247,6 +268,7 @@ class Component extends React.Component {
   }
 }
 ```
+
 Our block would be `.component`, and elements in that block would consist of the buttons and the title. So our CSS would look like this, based on the BEM naming conventions:
 
 ```
@@ -302,3 +324,11 @@ class Component extends React.Component {
   }
 }
 ```
+
+### Linting
+
+We use ESLint and Stylelint to lint and automatically format code.
+
+- `npm run eslint` Will run ESLint on the entire code base and automatically try to fix all JS and JS like files.
+- `npm run eslint-new` Will run ESLint only on newly added files in the current git branch and automatically try to fix the JS and JS like files.
+- `npm run stylelint` Will run Stylelint on all CSS and CSS-like files in the code base and automatically try to fix them.
