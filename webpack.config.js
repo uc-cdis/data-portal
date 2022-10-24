@@ -17,15 +17,17 @@ if (DAPTrackingURL) {
   scriptSrcURLs.push(DAPTrackingURL);
   connectSrcURLs.push(DAPTrackingURL);
 }
-if (gaTrackingId?.startsWith('UA-')) {
+if (gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) {
   scriptSrcURLs.push(...['https://www.google-analytics.com', 'https://ssl.google-analytics.com', 'https://www.googletagmanager.com']);
   connectSrcURLs.push('https://www.google-analytics.com');
   imgSrcURLs.push('https://www.google-analytics.com');
-} else if (gaTrackingId?.startsWith('G-')) {
-  scriptSrcURLs.push(...['https://*.googletagmanager.com, https://*.google-analytics.com']);
-  connectSrcURLs.push(...['https://*.google-analytics.com', 'https://*.analytics.google.com', 'https://*.googletagmanager.com']);
-  imgSrcURLs.push(...['https://*.google-analytics.com', 'https://*.googletagmanager.com']);
-} else {
+}
+// else if (gaTrackingId?.startsWith('G-')) {
+//   scriptSrcURLs.push(...['https://*.googletagmanager.com, https://*.google-analytics.com']);
+//   connectSrcURLs.push(...['https://*.google-analytics.com', 'https://*.analytics.google.com', 'https://*.googletagmanager.com']);
+//   imgSrcURLs.push(...['https://*.google-analytics.com', 'https://*.googletagmanager.com']);
+// }
+else {
   console.log('Unknown GA tag, skipping GA setup...');
 }
 if (process.env.DATA_UPLOAD_BUCKET) {
