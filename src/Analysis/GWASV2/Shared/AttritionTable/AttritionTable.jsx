@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Collapse, List, Table } from 'antd';
 import AttritionTableRow from './AttritionTableRow';
-import '../../GWASUIApp/GWASUIApp.css';
-import { attritionTableHeaderConfig, headerDataSource } from './constants';
+import { attritionTableHeaderConfig, headerDataSource } from '../../Shared/constants';
 
 const { Panel } = Collapse;
 
