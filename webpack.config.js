@@ -22,7 +22,7 @@ if (gaTrackingId?.startsWith('UA-')) {
   connectSrcURLs.push('https://www.google-analytics.com');
   imgSrcURLs.push('https://www.google-analytics.com');
 } else if (gaTrackingId?.startsWith('G-')) {
-  scriptSrcURLs.push('https://*.googletagmanager.com');
+  scriptSrcURLs.push('https://*.googletagmanager.com, https://*.google-analytics.com');
   connectSrcURLs.push(...['https://*.google-analytics.com', 'https://*.analytics.google.com', 'https://*.googletagmanager.com']);
   imgSrcURLs.push(...['https://*.google-analytics.com', 'https://*.googletagmanager.com']);
 } else {
