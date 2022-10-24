@@ -53,7 +53,7 @@ import { portalVersion } from './versions';
 import Analysis from './Analysis/Analysis';
 import ReduxAnalysisApp from './Analysis/ReduxAnalysisApp';
 import { components } from './params';
-import { GoogleAnalyticsRouteTracker } from './components/GoogleAnalytics';
+import { GARouteTracker } from './components/GoogleAnalytics';
 import { DAPRouteTracker } from './components/DAPAnalytics';
 import GuppyDataExplorer from './GuppyDataExplorer';
 import isEnabled from './helpers/featureFlags';
@@ -134,7 +134,7 @@ async function init() {
         <ThemeProvider theme={theme}>
           <BrowserRouter basename={basename}>
             <div>
-              {/* {(gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) && <GoogleAnalyticsRouteTracker />} */}
+              {(gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) && <GARouteTracker />}
               {enableDAPTracker && <DAPRouteTracker />}
               {isEnabled('noIndex')
                 ? (

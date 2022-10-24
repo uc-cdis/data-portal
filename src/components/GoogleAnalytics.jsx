@@ -1,55 +1,23 @@
-// import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-// import ReactGA from 'react-ga';
-// import { Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, useLocation } from 'react-router-dom';
 
-// class GoogleAnalytics extends Component {
-//   componentDidMount() {
-//     this.logPageChange(
-//       this.props.location.pathname,
-//       this.props.location.search,
-//     );
-//   }
+const GoogleAnalytics = () => {
+  const location = useLocation();
 
-//   componentDidUpdate({ location: prevLocation }) {
-//     const { location: { pathname, search } } = this.props;
-//     const isDifferentPathname = pathname !== prevLocation.pathname;
-//     const isDifferentSearch = search !== prevLocation.search;
+  useEffect(() => {
+    window.gtag('event', 'page_view', {
+      page_path: location.pathname + location.search,
+    });
+  }, [location]);
 
-//     if (isDifferentPathname || isDifferentSearch) {
-//       this.logPageChange(pathname, search);
-//     }
-//   }
+  return null;
+};
 
-//   logPageChange(pathname, search = '') {
-//     const page = pathname + search;
-//     const { location } = window;
-//     ReactGA.set({
-//       page,
-//       location: `${location.origin}${page}`,
-//       ...this.props.options,
-//     });
-//     ReactGA.pageview(page);
-//   }
+export const GARouteTracker = () => <Route component={GoogleAnalytics} />;
 
-//   render() {
-//     return null;
-//   }
-// }
-
-// GoogleAnalytics.propTypes = {
-//   location: PropTypes.shape({
-//     pathname: PropTypes.string,
-//     search: PropTypes.string,
-//   }).isRequired,
-//   options: PropTypes.object,
-// };
-
-// GoogleAnalytics.defaultProps = {
-//   options: {},
-// };
-
-// export const RouteTracker = () => <Route component={GoogleAnalytics} />;
+export default {
+  GoogleAnalytics,
+};
 
 // const init = (trackingId, dev, gaDebug, options = {}) => {
 //   const isGAEnabled = trackingId !== 'undefined';
@@ -64,19 +32,19 @@
 //   init,
 // };
 
-import React, { useEffect } from 'react';
-import { useLocation, Route } from 'react-router-dom';
+// import React, { useEffect } from 'react';
+// import { useLocation, Route } from 'react-router-dom';
 
-const GoogleAnalytics = () => {
-  const location = useLocation();
+// const GoogleAnalytics = () => {
+//   const location = useLocation();
 
-  useEffect(() => {
-    window.gtag('event', 'page_view', {
-      page_path: location.pathname + location.search,
-    });
-  }, [location]);
-};
+//   useEffect(() => {
+//     window.gtag('event', 'page_view', {
+//       page_path: location.pathname + location.search,
+//     });
+//   }, [location]);
+// };
 
-export const GoogleAnalyticsRouteTracker = () => <Route component={GoogleAnalytics} />;
+// export const GoogleAnalyticsRouteTracker = () => <Route component={GoogleAnalytics} />;
 
-export default GoogleAnalytics;
+// export default GoogleAnalytics;

@@ -78,8 +78,8 @@ workspaceSessionMonitor.start();
 async function init() {
   const store = await getReduxStore();
 
-  ReactGA.initialize(gaTracking);
-  ReactGA.pageview(window.location.pathname + window.location.search);
+  // ReactGA.initialize(gaTracking);
+  // ReactGA.pageview(window.location.pathname + window.location.search);
 
   // Datadog setup
   if (ddApplicationId && !ddClientToken) {
