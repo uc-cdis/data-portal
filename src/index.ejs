@@ -28,27 +28,6 @@
       <!-- We participate in the US government's analytics program. See the data at analytics.usa.gov. -->
       <script async type="text/javascript" src="<%= htmlWebpackPlugin.options.dapURL %>" id="_fed_an_ua_tag"></script>
     <% } %>
-    <% if(htmlWebpackPlugin.options.gaTrackingId) { %>
-      <!-- Google tag (gtag.js) -->
-      <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=<%= htmlWebpackPlugin.options.gaTrackingId %>"></script>
-      <script>
-        '<%= htmlWebpackPlugin.options.gaTrackingId %>'
-      </script> -->
-      <!-- <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){window.dataLayer.push(arguments);}
-        gtag('js', new Date());
-      </script>
-      <% if(htmlWebpackPlugin.options.gaDebug) { %>
-        <script>
-          gtag('config', '<%= htmlWebpackPlugin.options.gaTrackingId %>', { 'debug_mode': true });
-        </script>
-      <% } else { %>
-        <script>
-          gtag('config', '<%= htmlWebpackPlugin.options.gaTrackingId %>');
-        </script>
-      <% } %> -->
-    <% } %>
 </script>
   </head>
   <body>

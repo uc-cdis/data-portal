@@ -19,15 +19,9 @@ if (DAPTrackingURL) {
 }
 if (gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) {
   scriptSrcURLs.push(...['https://www.google-analytics.com', 'https://ssl.google-analytics.com', 'https://www.googletagmanager.com']);
-  connectSrcURLs.push('https://www.google-analytics.com');
+  connectSrcURLs.push(...['https://www.google-analytics.com', 'https://*.analytics.google.com']);
   imgSrcURLs.push('https://www.google-analytics.com');
-}
-// else if (gaTrackingId?.startsWith('G-')) {
-//   scriptSrcURLs.push(...['https://*.googletagmanager.com, https://*.google-analytics.com']);
-//   connectSrcURLs.push(...['https://*.google-analytics.com', 'https://*.analytics.google.com', 'https://*.googletagmanager.com']);
-//   imgSrcURLs.push(...['https://*.google-analytics.com', 'https://*.googletagmanager.com']);
-// }
-else {
+} else {
   console.log('Unknown GA tag, skipping GA setup...');
 }
 if (process.env.DATA_UPLOAD_BUCKET) {
@@ -143,8 +137,6 @@ const plugins = [
       }
       return Object.keys(rv).join(' ');
     })()),
-    gaTrackingId: (gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) ? gaTrackingId : undefined,
-    gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     hash: true,
     chunks: ['vendors~bundle', 'bundle'],
   }),
