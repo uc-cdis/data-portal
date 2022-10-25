@@ -118,7 +118,6 @@ const plugins = [
       }
       return Object.keys(rv).join(' ');
     })()),
-    dapURL: DAPTrackingURL,
     scriptSrc: ((() => {
       const rv = {};
       if (scriptSrcURLs.length > 0) {
@@ -137,6 +136,7 @@ const plugins = [
       }
       return Object.keys(rv).join(' ');
     })()),
+    dapURL: DAPTrackingURL,
     hash: true,
     chunks: ['vendors~bundle', 'bundle'],
   }),

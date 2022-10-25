@@ -5,7 +5,13 @@ import ReactGA from 'react-ga4';
 export const GAInit = (trackingId, gaDebug, options = {}) => {
   const isGAEnabled = (trackingId?.startsWith('UA-') || trackingId?.startsWith('G-'));
   if (isGAEnabled) {
-    ReactGA.initialize(trackingId, { debug: gaDebug, ...options });
+    // needs to explicitly exclude the debug parameter to turn off debug mode
+    // see https://support.google.com/analytics/answer/7201382?hl=en#zippy=%2Cgoogle-tag-websites
+    if (gaDebug) {
+      ReactGA.initialize(trackingId, { debug: gaDebug, ...options });
+    } else {
+      ReactGA.initialize(trackingId, { ...options });
+    }
   }
   return isGAEnabled;
 };
