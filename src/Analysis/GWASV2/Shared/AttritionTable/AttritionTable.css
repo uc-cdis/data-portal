@@ -46,6 +46,7 @@
 /* Cell Background Colors */
 .gwasv2-attrition-table .ant-collapse-content-box div.GWASUI-covariateRow  {
     background-color: #fafafb;
+    border-top: 1px solid #e3e3e4;
 }
 .gwasv2-attrition-table .ant-collapse-content-box div.GWASUI-covariateRow:nth-child(2n)  {
     background-color: white;
