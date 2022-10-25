@@ -72,3 +72,15 @@ export const attritionTableHeaderConfig = [
     width: '18%',
   },
 ];
+
+export const headerDataSource = [
+  {
+    type: '',
+    name: '',
+    size: '',
+    nonHispanicBlack: '',
+    nonHispanicAsian: '',
+    nonHispanicWhite: '',
+    hispanic: '',
+  },
+];
