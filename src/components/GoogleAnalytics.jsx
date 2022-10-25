@@ -7,6 +7,7 @@ export const GAInit = (trackingId, gaDebug, options = {}) => {
   if (isGAEnabled) {
     // needs to explicitly exclude the debug parameter to turn off debug mode
     // see https://support.google.com/analytics/answer/7201382?hl=en#zippy=%2Cgoogle-tag-websites
+    console.log(gaDebug);
     if (gaDebug) {
       ReactGA.initialize(trackingId, { debug: gaDebug, ...options });
     } else {
