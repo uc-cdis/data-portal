@@ -1,4 +1,30 @@
-.gwasv2-attrition-table {
-    background: hotpink;
+.gwasv2-attrition-table .ant-collapse-header {
+    background: #cfdbe6;
+}
+.gwasv2-attrition-table .ant-collapse-expand-icon svg {
+    display: none;
+}
+.gwasv2-attrition-table .ant-collapse-expand-icon {
+    background: #2e77b8;
+    border-radius: 16px;
+    color: white;
+    height: 16px;
+    width: 16px;
+    margin-top: 3px;
+    margin-right: 5px;
+
+}
+.gwasv2-attrition-table .ant-collapse-header[aria-expanded="false"] .ant-collapse-expand-icon:before {
+    content: "\2303";
+    display: block;
+    padding-left: 2px;
+    transition: all 0.1s ease-in-out;
+}
+.gwasv2-attrition-table .ant-collapse-header[aria-expanded="true"] .ant-collapse-expand-icon:before {
+    transform: rotate(180deg);
+    display: block;
+    content: "\2303";
+    transition: all 0.1s ease-in-out;
+    transform-origin: 6.5px 8.5px;
 
 }

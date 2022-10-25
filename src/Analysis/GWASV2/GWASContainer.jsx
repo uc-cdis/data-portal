@@ -15,6 +15,7 @@ const GWASContainer = () => {
     setSelectedStudyPopulationCohort,
   ] = useState({});
   const [selectedControlCohort, setSelectedControlCohort] = useState(undefined);
+  const [selectedCaseCohort, setSelectedCaseCohort] = useState(undefined);
   const [selectedCovariates, setSelectedCovariates] = useState([]);
   const [selectedDichotomousCovariates, setSelectedDichotomousCovariates] = useState([]);
 
@@ -70,8 +71,8 @@ const GWASContainer = () => {
           />
           <AttritionTable
             sourceId={sourceId}
-            selectedCohort={selectedStudyPopulationCohort}
-            otherSelectedCohort={selectedControlCohort}
+            selectedCohort={selectedControlCohort}
+            otherSelectedCohort={selectedCaseCohort}
             // outcome={outcome}
             selectedCovariates={selectedCovariates}
             selectedDichotomousCovariates={selectedDichotomousCovariates}
