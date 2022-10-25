@@ -75,7 +75,7 @@ const GWASContainer = () => {
             // outcome={outcome}
             selectedCovariates={selectedCovariates}
             selectedDichotomousCovariates={selectedDichotomousCovariates}
-            tableHeader={'2nd Case Cohort Attrition Table'}
+            tableHeader={'Control Cohort Attrition Table'}
           />
         </React.Fragment>
       )}
