@@ -9,12 +9,20 @@ const app = process.env.APP || 'dev';
 const configFileName = (app === 'dev') ? 'default' : app;
 // eslint-disable-next-line import/no-dynamic-require
 const configFile = require(`./data/config/${configFileName}.json`);
-const { DAPTrackingURL } = configFile;
+const { DAPTrackingURL, gaTrackingId } = configFile;
 const scriptSrcURLs = [];
 const connectSrcURLs = [];
+const imgSrcURLs = [];
 if (DAPTrackingURL) {
   scriptSrcURLs.push(DAPTrackingURL);
   connectSrcURLs.push(DAPTrackingURL);
+}
+if (gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-')) {
+  scriptSrcURLs.push(...['https://www.google-analytics.com', 'https://ssl.google-analytics.com', 'https://www.googletagmanager.com']);
+  connectSrcURLs.push(...['https://www.google-analytics.com', 'https://*.analytics.google.com']);
+  imgSrcURLs.push('https://www.google-analytics.com');
+} else {
+  console.log('Unknown GA tag, skipping GA setup...');
 }
 if (process.env.DATA_UPLOAD_BUCKET) {
   connectSrcURLs.push(`https://${process.env.DATA_UPLOAD_BUCKET}.s3.amazonaws.com`);
@@ -81,7 +89,7 @@ const plugins = [
     metaDescription: configFile.components.metaDescription || '',
     basename: pathPrefix,
     template: 'src/index.ejs',
-    connect_src: (function () {
+    connectSrc: ((() => {
       const rv = {};
       if (typeof process.env.FENCE_URL !== 'undefined') {
         rv[(new URL(process.env.FENCE_URL)).origin] = true;
@@ -109,9 +117,8 @@ const plugins = [
         });
       }
       return Object.keys(rv).join(' ');
-    }()),
-    dap_url: DAPTrackingURL,
-    script_src: (function () {
+    })()),
+    scriptSrc: ((() => {
       const rv = {};
       if (scriptSrcURLs.length > 0) {
         scriptSrcURLs.forEach((url) => {
@@ -119,7 +126,17 @@ const plugins = [
         });
       }
       return Object.keys(rv).join(' ');
-    }()),
+    })()),
+    imgSrc: ((() => {
+      const rv = {};
+      if (imgSrcURLs.length > 0) {
+        imgSrcURLs.forEach((url) => {
+          rv[(new URL(url)).origin] = true;
+        });
+      }
+      return Object.keys(rv).join(' ');
+    })()),
+    dapURL: DAPTrackingURL,
     hash: true,
     chunks: ['vendors~bundle', 'bundle'],
   }),

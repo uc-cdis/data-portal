@@ -69,7 +69,7 @@
     "react": "^16.8.6",
     "react-ace": "^6.1.0",
     "react-dom": "^16.8.6",
-    "react-ga": "^2.5.3",
+    "react-ga4": "^1.4.1",
     "react-helmet": "^5.2.0",
     "react-map-gl": "^5.2.3",
     "react-query": "^3.34.19",
