@@ -57,8 +57,16 @@
     width: 100%;
     padding: 0 16px;
 }
+
 .gwasv2-attrition-table table th,
 .gwasv2-attrition-table table td  {
     text-align: left;
     padding: 0 16px;
+}
+.gwasv2-attrition-table table tr {
+    height: 32px;
+}
+.gwasv2-attrition-table table thead {
+    background-color: #E9EEF2;
+    height: 40px;
 }

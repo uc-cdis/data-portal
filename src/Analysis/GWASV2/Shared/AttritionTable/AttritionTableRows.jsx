@@ -8,7 +8,10 @@ import {
   fetchConceptStatsByHareSubsetCC,
   queryConfig,
 } from '../wizardEndpoints/cohortMiddlewareApi';
-import { BarChart } from './ChartIcons/BarChart'
+import BarChart from './chartIcons/BarChart';
+import EulerDiagram from './chartIcons/EulerDiagram';
+
+
 
 const AttritionTableRow = ({
   cohortDefinitionId,
@@ -68,10 +71,10 @@ const AttritionTableRow = ({
 
   return (
     <tr>
-        <td className='gwasv2-smCell'>{rowType}</td>
-        <td className='gwasv2-smCell'>{BarChart}!</td>
+        <td className='gwasv2-smCell' style={{paddingLeft:"45px"}}>{rowType}</td>
+        <td className='gwasv2-smCell' style={{paddingLeft:"25px"}}>{Math.random()>0.5?<BarChart />:<EulerDiagram />}</td>
         <td className='gwasv2-smCell'>{rowName}</td>
-        <td className='gwasv2-smCell'>{status === 'loading' ? <Spin size='small' /> : breakdownSize || 0 }</td>
+        <td className='gwasv2-smCell' style={{borderRight:"2px solid #E2E2E3"}}>{status === 'loading' ? <Spin size='small' /> : breakdownSize || 0 }</td>
         <td className='gwasv2-mdCell'>{status === 'loading' ? <Spin size='small' /> : afr || 0 }</td>
         <td className='gwasv2-mdCell'>{status === 'loading' ? <Spin size='small' /> : asn || 0 }</td>
         <td className='gwasv2-mdCell'>{status === 'loading' ? <Spin size='small' /> : eur || 0 }</td>

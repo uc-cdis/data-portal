@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Collapse, List, Table } from 'antd';
-import AttritionTableRow from './AttritionTableRow';
 import AttritionTableRows from './AttritionTableRows';
-import { attritionTableHeaderConfig, headerDataSource } from '../constants';
 import '../../../GWASUIApp/GWASUIApp.css';
 import './AttritionTable.css';
 
@@ -49,10 +47,10 @@ const AttritionTable = ({
           <table>
             <thead>
               <tr>
-                <th style={{width:"15%"}}>Type</th>
+                <th style={{width:"15%", paddingLeft: "45px"}}>Type</th>
                 <th style={{width:"5%"}}>Chart</th>
                 <th style={{width:"15%"}}>Name</th>
-                <th style={{width:"5%"}}>Size</th>
+                <th style={{width:"5%", borderRight:"2px solid #E2E2E3"}}>Size</th>
                 <th style={{width:"15%"}}>Non-Hispanic Black</th>
                 <th style={{width:"15%"}}>Non-Hispanic Asian</th>
                 <th style={{width:"15%"}}>Non-Hispanic White</th>
