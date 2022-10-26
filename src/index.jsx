@@ -75,11 +75,6 @@ workspaceSessionMonitor.start();
 async function init() {
   const store = await getReduxStore();
 
-  // Google Analytics setup
-  // if ((gaTrackingId?.startsWith('UA-') || gaTrackingId?.startsWith('G-'))) {
-  //   ReactGA.initialize(gaTrackingId);
-  // }
-
   // Datadog setup
   if (ddApplicationId && !ddClientToken) {
     // eslint-disable-next-line no-console
