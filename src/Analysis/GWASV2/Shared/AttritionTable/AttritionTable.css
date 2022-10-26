@@ -50,3 +50,15 @@
 .gwasv2-attrition-table .ant-collapse-content-box div.GWASUI-covariateRow:nth-child(2n) {
   background-color: white;
 }
+
+
+/* New Table */
+.gwasv2-attrition-table table {
+    width: 100%;
+    padding: 0 16px;
+}
+.gwasv2-attrition-table table th,
+.gwasv2-attrition-table table td  {
+    text-align: left;
+    padding: 0 16px;
+}
