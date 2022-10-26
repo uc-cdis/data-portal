@@ -89,10 +89,10 @@ const AttritionTableRow = ({
 
   return (
     <tr>
-      <td className="gwasv2-smCell" style={{ paddingLeft: "45px" }}>
+      <td className="gwasv2-smCell" style={{ paddingLeft: "26px" }}>
         {rowType}
       </td>
-      <td className="gwasv2-smCell" style={{ paddingLeft: "25px" }}>
+      <td className="gwasv2-smCell" style={{ paddingLeft: "26px" }}>
         {Math.random() > 0.5 ? <BarChart /> : <EulerDiagram />}
       </td>
       <td className="gwasv2-smCell">{rowName}</td>
