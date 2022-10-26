@@ -60,7 +60,6 @@ const plugins = [
   new webpack.EnvironmentPlugin(['APP']),
   new webpack.EnvironmentPlugin({ BASENAME: '/' }),
   new webpack.EnvironmentPlugin(['LOGOUT_INACTIVE_USERS']),
-  new webpack.EnvironmentPlugin(['GA_DEBUG']),
   new webpack.EnvironmentPlugin(['WORKSPACE_TIMEOUT_IN_MINUTES']),
   new webpack.EnvironmentPlugin(['REACT_APP_PROJECT_ID']),
   new webpack.EnvironmentPlugin(['REACT_APP_DISABLE_SOCKET']),

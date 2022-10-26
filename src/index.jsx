@@ -42,7 +42,7 @@ import getReduxStore from './reduxStore';
 import { ReduxNavBar, ReduxTopBar, ReduxFooter } from './Layout/reduxer';
 import ReduxQueryNode, { submitSearchForm } from './QueryNode/ReduxQueryNode';
 import {
-  basename, gaDebug, gaTrackingId, workspaceUrl, workspaceErrorUrl, Error403Url,
+  basename, gaTrackingId, workspaceUrl, workspaceErrorUrl, Error403Url,
   indexPublic, explorerPublic, enableResourceBrowser, resourceBrowserPublic, enableDAPTracker,
   discoveryConfig, commonsWideAltText, ddApplicationId, ddClientToken, ddEnv, ddSampleRate,
 } from './localconf';
@@ -131,7 +131,7 @@ async function init() {
         <ThemeProvider theme={theme}>
           <BrowserRouter basename={basename}>
             <div>
-              {(GAInit(gaTrackingId, gaDebug)) && <GARouteTracker />}
+              {(GAInit(gaTrackingId)) && <GARouteTracker />}
               {enableDAPTracker && <DAPRouteTracker />}
               {isEnabled('noIndex')
                 ? (
