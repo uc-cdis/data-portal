@@ -1,65 +1,27 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import ReactGA from 'react-ga';
-import { Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, useLocation } from 'react-router-dom';
+import ReactGA from 'react-ga4';
+import { basename } from '../localconf';
 
-class GoogleAnalytics extends Component {
-  componentDidMount() {
-    this.logPageChange(
-      this.props.location.pathname,
-      this.props.location.search,
-    );
-  }
-
-  componentDidUpdate({ location: prevLocation }) {
-    const { location: { pathname, search } } = this.props;
-    const isDifferentPathname = pathname !== prevLocation.pathname;
-    const isDifferentSearch = search !== prevLocation.search;
-
-    if (isDifferentPathname || isDifferentSearch) {
-      this.logPageChange(pathname, search);
-    }
-  }
-
-  logPageChange(pathname, search = '') {
-    const page = pathname + search;
-    const { location } = window;
-    ReactGA.set({
-      page,
-      location: `${location.origin}${page}`,
-      ...this.props.options,
-    });
-    ReactGA.pageview(page);
-  }
-
-  render() {
-    return null;
-  }
-}
-
-GoogleAnalytics.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string,
-    search: PropTypes.string,
-  }).isRequired,
-  options: PropTypes.object,
-};
-
-GoogleAnalytics.defaultProps = {
-  options: {},
-};
-
-export const RouteTracker = () => <Route component={GoogleAnalytics} />;
-
-const init = (trackingId, dev, gaDebug, options = {}) => {
-  const isGAEnabled = trackingId !== 'undefined';
+export const GAInit = (trackingId) => {
+  const isGAEnabled = (trackingId?.startsWith('UA-') || trackingId?.startsWith('G-'));
   if (isGAEnabled) {
-    ReactGA.initialize(trackingId, { debug: gaDebug, ...options });
+    ReactGA.initialize(trackingId);
   }
   return isGAEnabled;
 };
 
-export default {
-  GoogleAnalytics,
-  init,
+const GoogleAnalytics = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const pagePath = (basename === '/') ? `${location.pathname}${location.search}` : `${basename}${location.pathname}${location.search}`;
+    window.gtag('event', 'page_view', {
+      page_path: pagePath,
+    });
+  }, [location]);
+
+  return null;
 };
+
+export const GARouteTracker = () => <Route component={GoogleAnalytics} />;

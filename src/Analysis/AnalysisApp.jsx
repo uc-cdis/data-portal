@@ -13,7 +13,7 @@ import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
 import GWASWorkflowList from './GWASUIApp/GWASWorkflowList';
-import GWASContainer from "./GWASV2/GWASContainer";
+import GWASContainer from './GWASV2/GWASContainer';
 
 const queryClient = new QueryClient();
 
@@ -116,13 +116,15 @@ class AnalysisApp extends React.Component {
     case 'GWASResults':
       return (
         <div className='analysis-app_flex_row'>
-            <GWASWorkflowList refetchInterval={5000} />
+          <GWASWorkflowList refetchInterval={5000} />
         </div>
       );
     case 'GWAS++': {
-      return <div>
-        <GWASContainer refreshWorkflows={this.refreshWorkflows}/>
-      </div>
+      return (
+        <div>
+          <GWASContainer refreshWorkflows={this.refreshWorkflows} />
+        </div>
+      );
     }
     default:
       // this will ensure the main window will process the app messages (if any):
