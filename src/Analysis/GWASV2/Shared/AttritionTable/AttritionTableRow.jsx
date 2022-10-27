@@ -93,7 +93,7 @@ const AttritionTableRow = ({
 
     /*
        TODO: Write logic such that if the covariate is numeric, it is bar chart
-       and the covariate is dichotomous, it should be a euler diagram
+       and if the covariate is dichotomous, it should be a euler diagram
     */
     return (Math.random() > 0.5) ? <BarChart /> : <EulerDiagram />;
   };
