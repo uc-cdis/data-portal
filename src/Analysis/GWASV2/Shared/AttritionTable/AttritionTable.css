@@ -12,6 +12,7 @@
   height: 18px;
   width: 18px;
   margin: 3px 10px 0;
+  text-align: center;
 }
 
 .gwasv2-attrition-table
@@ -19,7 +20,6 @@
   .ant-collapse-expand-icon:before {
   content: "\2303";
   display: block;
-  padding-left: 3px;
   font-size: 16px;
   transition: all 0.1s ease-in-out;
   margin-top: -1px;
@@ -34,7 +34,7 @@
   content: "\2303";
   transition: all 0.1s ease-in-out;
   transform-origin: 7px 9px;
-  margin: 1px;
+  margin: 1px 2px;
   font-size: 16px;
 }
 .gwasv2-attrition-table .ant-table-thead > tr > th {
