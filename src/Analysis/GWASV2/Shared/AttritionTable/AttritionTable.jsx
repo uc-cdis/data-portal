@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Collapse, List } from 'antd';
+import { Collapse } from 'antd';
 import AttritionTableRow from './AttritionTableRow';
 import '../../../GWASUIApp/GWASUIApp.css';
 import './AttritionTable.css';
@@ -39,7 +39,6 @@ const AttritionTable = ({
     setCovariateSubsets(getCovariateRow(selectedCovariates, selectedDichotomousCovariates));
   }, [selectedCovariates, selectedDichotomousCovariates]);
 
-
   return (
     <div className='gwasv2-attrition-table'>
       <Collapse onClick={(event) => event.stopPropagation()}>
@@ -47,17 +46,23 @@ const AttritionTable = ({
           <table>
             <thead>
               <tr>
-                <th className="gwasv2-attrition-table--leftpad
-                gwasv2-attrition-table--w15">Type</th>
-                <th className="gwasv2-attrition-table--w5">Chart</th>
-                <th className="gwasv2-attrition-table--w15">Name</th>
-                <th className="gwasv2-attrition-table--rightborder
-                gwasv2-attrition-table--w5">Size</th>
-                <th className="gwasv2-attrition-table--w15
-                gwasv2-attrition-table--leftpad">Non-Hispanic Black</th>
-                <th className="gwasv2-attrition-table--w15">Non-Hispanic Asian</th>
-                <th className="gwasv2-attrition-table--w15">Non-Hispanic White</th>
-                <th className="gwasv2-attrition-table--w15">Hispanic</th>
+                <th className='gwasv2-attrition-table--leftpad
+                gwasv2-attrition-table--w15'
+                >Type
+                </th>
+                <th className='gwasv2-attrition-table--w5'>Chart</th>
+                <th className='gwasv2-attrition-table--w15'>Name</th>
+                <th className='gwasv2-attrition-table--rightborder
+                gwasv2-attrition-table--w5'
+                >Size
+                </th>
+                <th className='gwasv2-attrition-table--w15
+                gwasv2-attrition-table--leftpad'
+                >Non-Hispanic Black
+                </th>
+                <th className='gwasv2-attrition-table--w15'>Non-Hispanic Asian</th>
+                <th className='gwasv2-attrition-table--w15'>Non-Hispanic White</th>
+                <th className='gwasv2-attrition-table--w15'>Hispanic</th>
               </tr>
             </thead>
             <tbody>
@@ -74,16 +79,16 @@ const AttritionTable = ({
                 </React.Fragment>
               )}
               {selectedCohort?.cohort_definition_id && covariateSubsets.length > 0 ? (
-                covariateSubsets.map((item)=> (
-                <AttritionTableRow
-                  key={item}
-                  cohortDefinitionId={selectedCohort.cohort_definition_id}
-                  otherCohortDefinitionId={otherSelectedCohort ? otherSelectedCohort.cohort_definition_id : undefined}
-                  rowType={outcome && outcome.concept_id === item[0].concept_id ? 'Outcome Phenotype' : 'Covariate'}
-                  rowName={item[0].concept_name ? item[0].concept_name : item[0].provided_name}
-                  covariateSubset={item}
-                  sourceId={sourceId}
-                />
+                covariateSubsets.map((item) => (
+                  <AttritionTableRow
+                    key={item}
+                    cohortDefinitionId={selectedCohort.cohort_definition_id}
+                    otherCohortDefinitionId={otherSelectedCohort ? otherSelectedCohort.cohort_definition_id : undefined}
+                    rowType={outcome && outcome.concept_id === item[0].concept_id ? 'Outcome Phenotype' : 'Covariate'}
+                    rowName={item[0].concept_name ? item[0].concept_name : item[0].provided_name}
+                    covariateSubset={item}
+                    sourceId={sourceId}
+                  />
                 ))
               ) : null}
             </tbody>

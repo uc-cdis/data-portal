@@ -1,16 +1,16 @@
 /* eslint-disable camelcase */
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { useQuery } from "react-query";
-import { Spin } from "antd";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useQuery } from 'react-query';
+import { Spin } from 'antd';
 import {
   fetchConceptStatsByHareSubset,
   fetchConceptStatsByHareSubsetCC,
   queryConfig,
-} from "../wizardEndpoints/cohortMiddlewareApi";
-import BarChart from "./ChartIcons/BarChart";
-import EulerDiagram from "./ChartIcons/EulerDiagram";
-import "./AttritionTable.css"
+} from '../wizardEndpoints/cohortMiddlewareApi';
+import BarChart from './ChartIcons/BarChart';
+import EulerDiagram from './ChartIcons/EulerDiagram';
+import './AttritionTable.css';
 
 const AttritionTableRow = ({
   cohortDefinitionId,
@@ -29,34 +29,32 @@ const AttritionTableRow = ({
 
   const { data, status } = useQuery(
     [
-      "conceptstatsbyharesubset",
+      'conceptstatsbyharesubset',
       covariateSubset,
       cohortDefinitionId,
       otherCohortDefinitionId,
     ],
-    () =>
-      // if there are not two cohorts selected, quantitative
-      !(cohortDefinitionId && otherCohortDefinitionId)
-        ? fetchConceptStatsByHareSubset(
-            cohortDefinitionId,
-            covariateSubset,
-            sourceId
-          )
-        : // If there are two cohorts selected, case control
-          fetchConceptStatsByHareSubsetCC(
-            cohortDefinitionId,
-            otherCohortDefinitionId,
-            covariateSubset,
-            sourceId
-          ),
-    queryConfig
+    () => (!(cohortDefinitionId && otherCohortDefinitionId)
+      // if there are not two cohorts selected, then quantitative
+      // Otherwise if there are two cohorts selected, case control
+      ? fetchConceptStatsByHareSubset(
+        cohortDefinitionId,
+        covariateSubset,
+        sourceId,
+      ) : fetchConceptStatsByHareSubsetCC(
+        cohortDefinitionId,
+        otherCohortDefinitionId,
+        covariateSubset,
+        sourceId,
+      )),
+    queryConfig,
   );
 
   const { breakdown } = { breakdown: data?.concept_breakdown };
 
   const getSizeByColumn = (hare) => {
     const hareIndex = breakdownColumns.findIndex(
-      ({ concept_value }) => concept_value === hare
+      ({ concept_value }) => concept_value === hare,
     );
     return hareIndex > -1
       ? breakdownColumns[hareIndex].persons_in_cohort_with_value
@@ -66,13 +64,13 @@ const AttritionTableRow = ({
   useEffect(() => {
     if (breakdown?.length) {
       const filteredBreakdown = breakdown.filter(
-        ({ concept_value }) => concept_value !== "OTH"
+        ({ concept_value }) => concept_value !== 'OTH',
       );
       setBreakdownSize(
         filteredBreakdown.reduce(
           (acc, curr) => acc + curr.persons_in_cohort_with_value,
-          0
-        )
+          0,
+        ),
       );
       setBreakdownColumns(filteredBreakdown);
     } else {
@@ -82,49 +80,48 @@ const AttritionTableRow = ({
   }, [breakdown, cohortDefinitionId, covariateSubset, sourceId]);
 
   useEffect(() => {
-    setAfr(getSizeByColumn("AFR"));
-    setAsn(getSizeByColumn("ASN"));
-    setEur(getSizeByColumn("EUR"));
-    setHis(getSizeByColumn("HIS"));
+    setAfr(getSizeByColumn('AFR'));
+    setAsn(getSizeByColumn('ASN'));
+    setEur(getSizeByColumn('EUR'));
+    setHis(getSizeByColumn('HIS'));
   }, [breakdownColumns]);
 
-  const determineChartIcon = (rowType) => {
-    if (rowType === "Cohort") {
+  const determineChartIcon = (rowTypeInput) => {
+    if (rowTypeInput === 'Cohort') {
       return null;
     }
-    else {
-      /*
+
+    /*
        TODO: Write logic such that if the covariate is numeric, it is bar chart
        and the covariate is dichotomous, it should be a euler diagram
-      */
-      return (Math.random() > 0.5) ? <BarChart /> : <EulerDiagram />;
-    }
-  }
+    */
+    return (Math.random() > 0.5) ? <BarChart /> : <EulerDiagram />;
+  };
   return (
     <tr>
-      <td className="gwasv2-attrition-table--leftpad" >
+      <td className='gwasv2-attrition-table--leftpad'>
         {rowType}
       </td>
-      <td className="gwasv2-attrition-table--chart">
+      <td className='gwasv2-attrition-table--chart'>
         {determineChartIcon(rowType)}
       </td>
       <td>{rowName}</td>
       <td
-        className="gwasv2-attrition-table--rightborder"
+        className='gwasv2-attrition-table--rightborder'
       >
-        {status === "loading" ? <Spin size="small" /> : breakdownSize || 0}
+        {status === 'loading' ? <Spin size='small' /> : breakdownSize || 0}
       </td>
-      <td className="gwasv2-attrition-table--leftpad">
-        {status === "loading" ? <Spin size="small" /> : afr || 0}
-      </td>
-      <td>
-        {status === "loading" ? <Spin size="small" /> : asn || 0}
+      <td className='gwasv2-attrition-table--leftpad'>
+        {status === 'loading' ? <Spin size='small' /> : afr || 0}
       </td>
       <td>
-        {status === "loading" ? <Spin size="small" /> : eur || 0}
+        {status === 'loading' ? <Spin size='small' /> : asn || 0}
       </td>
       <td>
-        {status === "loading" ? <Spin size="small" /> : his || 0}
+        {status === 'loading' ? <Spin size='small' /> : eur || 0}
+      </td>
+      <td>
+        {status === 'loading' ? <Spin size='small' /> : his || 0}
       </td>
     </tr>
   );
