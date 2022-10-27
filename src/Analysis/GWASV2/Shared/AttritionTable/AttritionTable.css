@@ -21,8 +21,8 @@
 }
 
 .gwasv2-attrition-table
-  .ant-collapse-header[aria-expanded="true"]
-  .ant-collapse-expand-icon:before {
+.ant-collapse-header[aria-expanded="true"]
+.ant-collapse-expand-icon:before {
   content: "\2303";
   display: block;
   font-size: 16px;
@@ -31,8 +31,8 @@
 }
 
 .gwasv2-attrition-table
-  .ant-collapse-header[aria-expanded="false"]
-  .ant-collapse-expand-icon:before {
+.ant-collapse-header[aria-expanded="false"]
+.ant-collapse-expand-icon:before {
   transform: rotate(180deg);
   display: block;
   content: "\2303";
@@ -44,11 +44,12 @@
 
 .gwasv2-attrition-table table tr {
   border-top: 1px solid #e3e3e4;
-
+  height: 32px;
 }
+
 .gwasv2-attrition-table table
-  tr:nth-child(2n) {
-    background-color: #fafafb;
+tr:nth-child(2n) {
+  background-color: #fafafb;
 }
 
 .gwasv2-attrition-table table {
@@ -60,10 +61,6 @@
 .gwasv2-attrition-table table td {
   text-align: left;
   padding: 0 16px;
-}
-
-.gwasv2-attrition-table table tr {
-  height: 32px;
 }
 
 .gwasv2-attrition-table table thead {
