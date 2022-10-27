@@ -43,7 +43,7 @@
 }
 
 .gwasv2-attrition-table table tr {
-  border-top: 1px solid #e3e3e4;
+  border-top: 1px solid #e2e2e3;
   height: 32px;
 }
 
@@ -75,7 +75,7 @@ tr:nth-child(2n) {
   text-align: center;
 }
 .gwasv2-attrition-table table .gwasv2-attrition-table--rightborder {
-  border-right: 2px solid #E2E2E3;
+  border-right: 2px solid #e2e2e3;
   padding-right: 32px;
 }
 
