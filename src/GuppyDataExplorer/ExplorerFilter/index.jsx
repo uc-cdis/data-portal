@@ -25,7 +25,7 @@ export function DisabledExplorerFilter({ className }) {
         <em>Composed filter state cannot be modified!</em>
       </p>
       <p>
-        To re-enable it, go to Filter Set Workspace and use (activate) a Filter Set with a standard (non-composed) filter state or create a new one. This feature is disabled when the active Filter Set has a composed filter state.       
+        To re-enable <i>this feature</i>, go to Filter Set Workspace and use (activate) a Filter Set with a standard (non-composed) filter state or create a new one. <i>This feature</i> is disabled when the active Filter Set has a composed filter state.       
       </p>
     </div>
   );
