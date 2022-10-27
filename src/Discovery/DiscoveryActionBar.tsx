@@ -456,7 +456,7 @@ const DiscoveryActionBar = (props: Props) => {
     }, [props.discovery.actionToResume],
   );
 
-  const handleRedirectToLoginClick = (action:'download'|'export'|'manifest' = null) => {
+  const handleRedirectToLoginClick = (action:'download'|'export'|'manifest'|null = null) => {
     const serializableState = {
       ...props.discovery,
       actionToResume: action,
@@ -522,7 +522,7 @@ const DiscoveryActionBar = (props: Props) => {
         </Popover>
         <Modal
           closable={false}
-          visible={downloadStatus.message.active}
+          open={downloadStatus.message.active}
           title={downloadStatus.message.title}
           footer={(
             <Button
