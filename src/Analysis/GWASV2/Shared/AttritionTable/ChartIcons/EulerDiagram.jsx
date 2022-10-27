@@ -1,7 +1,9 @@
 import React from 'react';
 
 const EulerDiagram = () => (
-  <svg xmlns='http://www.w3.org/2000/svg' width='22px' viewBox='0 0 64 42.667'>
+  <svg role='img' aria-labelledby='eulerDiagramTitle'  xmlns='http://www.w3.org/2000/svg'
+  width='22px' viewBox='0 0 64 42.667'>
+    <title id='eulerDiagramTitle'>An icon of a Euler Diagram</title>
     <path
       id='Path_4817'
       data-name='Path 4817'

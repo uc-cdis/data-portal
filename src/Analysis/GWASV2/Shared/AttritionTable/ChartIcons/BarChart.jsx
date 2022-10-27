@@ -1,7 +1,10 @@
 import React from 'react';
 
 const BarChart = () => (
-  <svg xmlns='http://www.w3.org/2000/svg' style={{ margin: '0 auto' }} width='16px' viewBox='0 0 64 64'>
+  <svg role='img' aria-labelledby='barChartTitle'
+  xmlns='http://www.w3.org/2000/svg' style={{ margin: '0 auto' }} width='16px'
+  viewBox='0 0 64 64'>
+    <title id="barChartTitle">An icon of a bar chart</title>
     <g id='Group_550' data-name='Group 550' transform='translate(-1 -1)'>
       <path
         id='Path_4799'
