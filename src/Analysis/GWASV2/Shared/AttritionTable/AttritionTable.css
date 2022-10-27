@@ -21,7 +21,7 @@
 }
 
 .gwasv2-attrition-table
-.ant-collapse-header[aria-expanded="true"]
+.ant-collapse-header
 .ant-collapse-expand-icon:before {
   content: "\2303";
   display: block;
@@ -31,15 +31,17 @@
 }
 
 .gwasv2-attrition-table
+.ant-collapse-header[aria-expanded="true"]
+.ant-collapse-expand-icon:before {
+  margin-top: -1px;
+}
+
+.gwasv2-attrition-table
 .ant-collapse-header[aria-expanded="false"]
 .ant-collapse-expand-icon:before {
   transform: rotate(180deg);
-  display: block;
-  content: "\2303";
-  transition: all 0.1s ease-in-out;
   transform-origin: 7px 9px;
   margin: 1px 2px;
-  font-size: 16px;
 }
 
 .gwasv2-attrition-table table tr {
