@@ -128,12 +128,12 @@ const AttritionTableRow = ({
 };
 
 AttritionTableRow.propTypes = {
-  cohortDefinitionId: PropTypes.number, // now selectedStudyPopulationCohort
-  otherCohortDefinitionId: PropTypes.number, // ignore this - this for case control and two cohorts,
-  rowType: PropTypes.string.isRequired, // Will either be "Study Population", "Covariate" or "Outcome Phenotype"
-  rowName: PropTypes.string.isRequired, // Wil be descriptive string for the Type
-  covariateSubset: PropTypes.array.isRequired, // An array of arrays
-  sourceId: PropTypes.number.isRequired, // Source of data, non-unique
+  cohortDefinitionId: PropTypes.number,
+  otherCohortDefinitionId: PropTypes.number,
+  rowType: PropTypes.string.isRequired,
+  rowName: PropTypes.string.isRequired,
+  covariateSubset: PropTypes.array.isRequired,
+  sourceId: PropTypes.number.isRequired,
 };
 
 AttritionTableRow.defaultProps = {
