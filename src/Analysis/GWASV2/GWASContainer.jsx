@@ -57,7 +57,6 @@ const GWASContainer = () => {
   return (
     <React.Fragment>
       <ProgressBar current={current} />
-
       {!loading && sourceId && (
         <React.Fragment>
           <AttritionTable
@@ -80,7 +79,6 @@ const GWASContainer = () => {
           />
         </React.Fragment>
       )}
-
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>
         {'.analysis-app__actions > div:nth-child(1) { width: 100%; }'}
