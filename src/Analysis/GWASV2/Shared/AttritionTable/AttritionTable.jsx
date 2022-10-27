@@ -46,9 +46,8 @@ const AttritionTable = ({
           <table>
             <thead>
               <tr>
-                <th className='gwasv2-attrition-table--leftpad
-                gwasv2-attrition-table--w15'
-                >Type
+                <th className='gwasv2-attrition-table--leftpad gwasv2-attrition-table--w15'>
+                  Type
                 </th>
                 <th className='gwasv2-attrition-table--w5'>Chart</th>
                 <th className='gwasv2-attrition-table--w15'>Name</th>
