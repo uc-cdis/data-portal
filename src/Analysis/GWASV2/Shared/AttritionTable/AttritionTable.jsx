@@ -47,14 +47,17 @@ const AttritionTable = ({
           <table>
             <thead>
               <tr>
-                <th style={{width:"15%", paddingLeft: "26px"}}>Type</th>
-                <th style={{width:"5%"}}>Chart</th>
-                <th style={{width:"15%"}}>Name</th>
-                <th style={{width:"5%", borderRight:"2px solid #E2E2E3"}}>Size</th>
-                <th style={{width:"15%"}}>Non-Hispanic Black</th>
-                <th style={{width:"15%"}}>Non-Hispanic Asian</th>
-                <th style={{width:"15%"}}>Non-Hispanic White</th>
-                <th style={{width:"15%"}}>Hispanic</th>
+                <th className="gwasv2-attrition-table--leftpad
+                gwasv2-attrition-table--w15">Type</th>
+                <th className="gwasv2-attrition-table--w5">Chart</th>
+                <th className="gwasv2-attrition-table--w15">Name</th>
+                <th className="gwasv2-attrition-table--rightborder
+                gwasv2-attrition-table--w5">Size</th>
+                <th className="gwasv2-attrition-table--w15
+                gwasv2-attrition-table--leftpad">Non-Hispanic Black</th>
+                <th className="gwasv2-attrition-table--w15">Non-Hispanic Asian</th>
+                <th className="gwasv2-attrition-table--w15">Non-Hispanic White</th>
+                <th className="gwasv2-attrition-table--w15">Hispanic</th>
               </tr>
             </thead>
             <tbody>

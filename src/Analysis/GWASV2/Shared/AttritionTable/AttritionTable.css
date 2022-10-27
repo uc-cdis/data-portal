@@ -9,6 +9,7 @@
 .gwasv2-attrition-table .ant-collapse-expand-icon svg {
   display: none;
 }
+
 .gwasv2-attrition-table .ant-collapse-expand-icon {
   background: #2e77b8;
   border-radius: 16px;
@@ -29,7 +30,6 @@
   margin-top: -1px;
 }
 
-/* Chevrons */
 .gwasv2-attrition-table
   .ant-collapse-header[aria-expanded="false"]
   .ant-collapse-expand-icon:before {
@@ -42,8 +42,6 @@
   font-size: 16px;
 }
 
-
-/* Cell Background Colors */
 .gwasv2-attrition-table table tr {
   border-top: 1px solid #e3e3e4;
 
@@ -53,7 +51,6 @@
     background-color: #fafafb;
 }
 
-/* New Table */
 .gwasv2-attrition-table table {
   width: 100%;
   padding: 0 16px;
@@ -64,10 +61,31 @@
   text-align: left;
   padding: 0 16px;
 }
+
 .gwasv2-attrition-table table tr {
   height: 32px;
 }
+
 .gwasv2-attrition-table table thead {
   background-color: #e9eef2;
   height: 40px;
+}
+
+.gwasv2-attrition-table table .gwasv2-attrition-table--leftpad {
+  padding-left: 32px;
+}
+.gwasv2-attrition-table table  .gwasv2-attrition-table--chart {
+  text-align: center;
+}
+.gwasv2-attrition-table table .gwasv2-attrition-table--rightborder {
+  border-right: 2px solid #E2E2E3;
+  padding-right: 32px;
+}
+
+.gwasv2-attrition-table--w5 {
+  width: 5%;
+}
+
+.gwasv2-attrition-table--w15 {
+  width: 15%;
 }

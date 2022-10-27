@@ -10,6 +10,7 @@ import {
 } from "../wizardEndpoints/cohortMiddlewareApi";
 import BarChart from "./ChartIcons/BarChart";
 import EulerDiagram from "./ChartIcons/EulerDiagram";
+import "./AttritionTable.css"
 
 const AttritionTableRow = ({
   cohortDefinitionId,
@@ -87,31 +88,42 @@ const AttritionTableRow = ({
     setHis(getSizeByColumn("HIS"));
   }, [breakdownColumns]);
 
+  const determineChartIcon = (rowType) => {
+    if (rowType === "Cohort") {
+      return null;
+    }
+    else {
+      /*
+       TODO: Write logic such that if the covariate is numeric, it is bar chart
+       and the covariate is dichotomous, it should be a euler diagram
+      */
+      return (Math.random() > 0.5) ? <BarChart /> : <EulerDiagram />;
+    }
+  }
   return (
     <tr>
-      <td className="gwasv2-smCell" style={{ paddingLeft: "26px" }}>
+      <td className="gwasv2-attrition-table--leftpad" >
         {rowType}
       </td>
-      <td className="gwasv2-smCell" style={{ paddingLeft: "26px" }}>
-        {rowType === "Cohort" ? <BarChart /> : <EulerDiagram />}
+      <td className="gwasv2-attrition-table--chart">
+        {determineChartIcon(rowType)}
       </td>
-      <td className="gwasv2-smCell">{rowName}</td>
+      <td>{rowName}</td>
       <td
-        className="gwasv2-smCell"
-        style={{ borderRight: "2px solid #E2E2E3" }}
+        className="gwasv2-attrition-table--rightborder"
       >
         {status === "loading" ? <Spin size="small" /> : breakdownSize || 0}
       </td>
-      <td className="gwasv2-mdCell">
+      <td className="gwasv2-attrition-table--leftpad">
         {status === "loading" ? <Spin size="small" /> : afr || 0}
       </td>
-      <td className="gwasv2-mdCell">
+      <td>
         {status === "loading" ? <Spin size="small" /> : asn || 0}
       </td>
-      <td className="gwasv2-mdCell">
+      <td>
         {status === "loading" ? <Spin size="small" /> : eur || 0}
       </td>
-      <td className="gwasv2-mdCell">
+      <td>
         {status === "loading" ? <Spin size="small" /> : his || 0}
       </td>
     </tr>
