@@ -8,8 +8,8 @@ import {
   fetchConceptStatsByHareSubsetCC,
   queryConfig,
 } from "../wizardEndpoints/cohortMiddlewareApi";
-import BarChart from "./chartIcons/BarChart";
-import EulerDiagram from "./chartIcons/EulerDiagram";
+import BarChart from "./ChartIcons/BarChart";
+import EulerDiagram from "./ChartIcons/EulerDiagram";
 
 const AttritionTableRow = ({
   cohortDefinitionId,
@@ -93,7 +93,7 @@ const AttritionTableRow = ({
         {rowType}
       </td>
       <td className="gwasv2-smCell" style={{ paddingLeft: "26px" }}>
-        {Math.random() > 0.5 ? <BarChart /> : <EulerDiagram />}
+        {rowType === "Cohort" ? <BarChart /> : <EulerDiagram />}
       </td>
       <td className="gwasv2-smCell">{rowName}</td>
       <td

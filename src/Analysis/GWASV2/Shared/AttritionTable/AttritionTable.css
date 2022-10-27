@@ -2,6 +2,10 @@
   background: #cfdbe6;
 }
 
+.gwasv2-attrition-table .ant-collapse-content-box {
+  padding: 0;
+}
+
 .gwasv2-attrition-table .ant-collapse-expand-icon svg {
   display: none;
 }
@@ -37,31 +41,16 @@
   margin: 1px 2px;
   font-size: 16px;
 }
-.gwasv2-attrition-table .ant-table-thead > tr > th {
-  background: #e9eef2;
-}
 
-.gwasv2-attrition-table .ant-collapse-content > .ant-collapse-content-box {
-  padding: 0;
-}
-
-/* Table Cell Borders */
-.gwasv2-attrition-table
-  .ant-table-thead
-  > tr
-  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
-  display: none;
-}
 
 /* Cell Background Colors */
-.gwasv2-attrition-table .ant-collapse-content-box div.GWASUI-covariateRow {
-  background-color: #fafafb;
+.gwasv2-attrition-table table tr {
   border-top: 1px solid #e3e3e4;
+
 }
-.gwasv2-attrition-table
-  .ant-collapse-content-box
-  div.GWASUI-covariateRow:nth-child(2n) {
-  background-color: white;
+.gwasv2-attrition-table table
+  tr:nth-child(2n) {
+    background-color: #fafafb;
 }
 
 /* New Table */

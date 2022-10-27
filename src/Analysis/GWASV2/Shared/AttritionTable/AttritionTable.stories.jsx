@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import AttritionTable from './AttritionTable';
+import '../../GWASV2.css';
 
 export default {
-  title: 'Tests2/GWASUI/AttritionTable',
+  title: 'Tests3/GWASV2/AttritionTable',
   component: AttritionTable,
 };
 
@@ -54,7 +55,6 @@ const MockTemplate = () => {
         selectedCovariates={selectedCovariates}
         selectedDichotomousCovariates={selectedDichotomousCovariates}
         tableHeader={'Case Cohort Attrition Table (1 of 2)'}
-
       />
 
     </QueryClientProvider>
