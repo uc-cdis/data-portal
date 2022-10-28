@@ -2,15 +2,22 @@ import React, { useState } from 'react';
 import { Space, Button, Popconfirm } from 'antd';
 import SelectStudyPopulation from './SelectStudyPopulation/SelectStudyPopulation';
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
+import AttritionTable from './Shared/AttritionTable/AttritionTable';
+import { useSourceFetch } from './Shared/wizardEndpoints/cohortMiddlewareApi';
 import { gwasV2Steps } from './Shared/constants';
 import './GWASV2.css';
 
 const GWASContainer = () => {
+  const { loading, sourceId } = useSourceFetch();
   const [current, setCurrent] = useState(0);
   const [
     selectedStudyPopulationCohort,
     setSelectedStudyPopulationCohort,
   ] = useState({});
+  const [selectedControlCohort] = useState(undefined);
+  const [selectedCaseCohort] = useState(undefined);
+  const [selectedCovariates] = useState([]);
+  const [selectedDichotomousCovariates] = useState([]);
 
   const generateStep = () => {
     // steps 2 & 3 very similar
@@ -50,6 +57,28 @@ const GWASContainer = () => {
   return (
     <React.Fragment>
       <ProgressBar current={current} />
+      {!loading && sourceId && (
+        <React.Fragment>
+          <AttritionTable
+            sourceId={sourceId}
+            selectedCohort={selectedStudyPopulationCohort}
+            otherSelectedCohort={selectedControlCohort}
+            // outcome={outcome}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            tableHeader={'Case Cohort Attrition Table'}
+          />
+          <AttritionTable
+            sourceId={sourceId}
+            selectedCohort={selectedControlCohort}
+            otherSelectedCohort={selectedCaseCohort}
+            // outcome={outcome}
+            selectedCovariates={selectedCovariates}
+            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            tableHeader={'Control Cohort Attrition Table'}
+          />
+        </React.Fragment>
+      )}
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>
         {'.analysis-app__actions > div:nth-child(1) { width: 100%; }'}
