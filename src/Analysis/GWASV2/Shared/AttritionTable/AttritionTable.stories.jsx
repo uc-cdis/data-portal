@@ -70,8 +70,6 @@ MockedSuccess.parameters = {
       rest.post('http://:cohortmiddlewarepath/cohort-middleware/concept-stats/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinition/breakdown-by-concept-id/:breakdownconceptid', (req, res, ctx) => {
         const { cohortmiddlewarepath } = req.params;
         const { cohortdefinition } = req.params;
-        console.log(cohortmiddlewarepath);
-        console.log(cohortdefinition);
         rowCount++;
         if (rowCount == 12) {
           // simulate empty response scenario:
