@@ -165,6 +165,13 @@
     "default-browser-id": {
       "meow": "6.1.0"
     },
+    "@upsetjs/venn.js": {
+      "uglify-js": "3.14.3",
+      "ansi-regex": "3.0.1"
+    },
+    "has-ansi": {
+      "ansi-regex": "3.0.1"
+    },
     "@reactour/utils": "0.3.0",
     "@reactour/popover": "0.4.1",
     "@reactour/mask": "0.5.1"
