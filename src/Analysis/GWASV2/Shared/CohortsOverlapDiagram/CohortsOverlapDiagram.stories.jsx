@@ -53,9 +53,6 @@ SuccessCase.parameters = {
         const { cohortmiddlewarepath } = req.params;
         const { cohortdefinitionA } = req.params;
         const { cohortdefinitionB } = req.params;
-        console.log(cohortmiddlewarepath);
-        console.log(cohortdefinitionA);
-        console.log(cohortdefinitionB);
         return res(
           ctx.delay(1100),
           ctx.json(
@@ -87,9 +84,6 @@ SuccessCase2.parameters = {
         const { cohortmiddlewarepath } = req.params;
         const { cohortdefinitionA } = req.params;
         const { cohortdefinitionB } = req.params;
-        console.log(cohortmiddlewarepath);
-        console.log(cohortdefinitionA);
-        console.log(cohortdefinitionB);
         return res(
           ctx.delay(500),
           ctx.json(
