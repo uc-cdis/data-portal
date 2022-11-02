@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 import { useState, useEffect } from 'react';
-import { cohortMiddlewarePath, wtsPath } from '../../../localconf';
-import { fetchWithCreds } from '../../../actions';
+import { cohortMiddlewarePath } from '../../../localconf';
 import { headers } from '../../../configs';
 import { hareConceptId } from '../shared/constants';
 
@@ -193,7 +192,7 @@ export const useSourceFetch = () => {
       setSourceId(data.sources[0].source_id);
       setLoading(false);
     });
-  }
+  };
   useEffect(() => {
     getSources();
   }, []);

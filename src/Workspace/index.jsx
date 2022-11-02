@@ -15,7 +15,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import isEnabled from '../helpers/featureFlags';
 import {
   workspaceUrl,
-  wtsPath,
   externalLoginOptionsUrl,
   workspaceOptionsUrl,
   workspaceLaunchUrl,
@@ -78,7 +77,8 @@ class Workspace extends React.Component {
     // Because if is already enabled, then an extra refresh is not
     // really needed, since it has already happened at login:
     if (!isEnabled('workspaceTokenServiceRefreshTokenAtLogin')) {
-      initWorkspaceRefreshToken(this.connected);
+      const redirectLocation = { from: window.location.pathname };
+      initWorkspaceRefreshToken(redirectLocation, this.connected);
     }
   }
 

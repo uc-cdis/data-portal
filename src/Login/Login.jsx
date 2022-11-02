@@ -10,6 +10,23 @@ import './Login.less';
 
 const getInitialState = (height) => ({ height });
 
+// Get a url for a given "location" (location object should have at least the .from attribute)
+export const getUrlForRedirectLocation = (location) => {
+  // compose next according to location.from
+  let next = (location.from) ? `${basename}${location.from}` : basename;
+  if (location.state && location.state.from) {
+    next = `${basename}${location.state.from}`;
+  }
+  // clean up url: no double slashes
+  next = next.replace(/\/+/g, '/');
+  const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/, '') : '');
+  if (queryParams.next) {
+    next = basename === '/' ? queryParams.next : basename + queryParams.next;
+  }
+  next = next.replace('?request_access', '?request_access_logged_in');
+  return next;
+};
+
 const getLoginUrl = (providerLoginUrl, next) => {
   const queryChar = providerLoginUrl.includes('?') ? '&' : '?';
   return `${providerLoginUrl}${queryChar}redirect=${window.location.origin}${next}`;
@@ -50,18 +67,7 @@ class Login extends React.Component {
 
   render() {
     const { location } = this.props; // this is the react-router "location"
-    // compose next according to location.from
-    let next = (location.from) ? `${basename}${location.from}` : basename;
-    if (location.state && location.state.from) {
-      next = `${basename}${location.state.from}`;
-    }
-    // clean up url: no double slashes
-    next = next.replace(/\/+/g, '/');
-    const queryParams = querystring.parse(location.search ? location.search.replace(/^\?+/, '') : '');
-    if (queryParams.next) {
-      next = basename === '/' ? queryParams.next : basename + queryParams.next;
-    }
-
+    const next = getUrlForRedirectLocation(location);
     let customImage = 'gene';
     let displaySideBoxImages = true;
     if (components.login && components.login.image !== undefined) {
@@ -72,7 +78,6 @@ class Login extends React.Component {
       }
     }
     const customImageStyle = { backgroundImage: `url(/src/img/icons/${customImage}.svg)` };
-    next = next.replace('?request_access', '?request_access_logged_in');
 
     let loginComponent = (
       <React.Fragment key='login-component'>

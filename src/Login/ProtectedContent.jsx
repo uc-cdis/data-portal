@@ -73,8 +73,9 @@ class ProtectedContent extends React.Component {
                 latestState.dataLoaded = true;
                 this.setState(latestState);
                 if (newState.authenticated && isEnabled('workspaceTokenServiceRefreshTokenAtLogin')) {
-                    // initialize WTS:
-                    initWorkspaceRefreshToken();
+                  // initialize WTS:
+                  const { location } = this.props; // this is the react-router "location"
+                  initWorkspaceRefreshToken(location);
                 }
               };
               return filterPromise.then(
