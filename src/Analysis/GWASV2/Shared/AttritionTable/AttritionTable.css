@@ -1,0 +1,90 @@
+.gwasv2-attrition-table .ant-collapse-header {
+  background: #cfdbe6;
+}
+
+.gwasv2-attrition-table .ant-collapse-content-box {
+  padding: 0;
+}
+
+.gwasv2-attrition-table .ant-collapse-expand-icon svg {
+  display: none;
+}
+
+.gwasv2-attrition-table .ant-collapse-expand-icon {
+  background: #2e77b8;
+  border-radius: 16px;
+  color: white;
+  height: 18px;
+  width: 18px;
+  margin: 3px 10px 0;
+  text-align: center;
+}
+
+.gwasv2-attrition-table
+.ant-collapse-header
+.ant-collapse-expand-icon:before {
+  content: "\2303";
+  display: block;
+  font-size: 16px;
+  transition: all 0.1s ease-in-out;
+  margin-top: -1px;
+}
+
+.gwasv2-attrition-table
+.ant-collapse-header[aria-expanded="true"]
+.ant-collapse-expand-icon:before {
+  margin-top: -1px;
+}
+
+.gwasv2-attrition-table
+.ant-collapse-header[aria-expanded="false"]
+.ant-collapse-expand-icon:before {
+  transform: rotate(180deg);
+  transform-origin: 7px 9px;
+  margin: 1px 2px;
+}
+
+.gwasv2-attrition-table table tr {
+  border-top: 1px solid #e2e2e3;
+  height: 32px;
+}
+
+.gwasv2-attrition-table table
+tr:nth-child(2n) {
+  background-color: #fafafb;
+}
+
+.gwasv2-attrition-table table {
+  width: 100%;
+  padding: 0 16px;
+}
+
+.gwasv2-attrition-table table th,
+.gwasv2-attrition-table table td {
+  text-align: left;
+  padding: 0 16px;
+}
+
+.gwasv2-attrition-table table thead {
+  background-color: #e9eef2;
+  height: 40px;
+}
+
+.gwasv2-attrition-table table .gwasv2-attrition-table--leftpad {
+  padding-left: 26px;
+}
+.gwasv2-attrition-table table  .gwasv2-attrition-table--chart {
+  text-align: center;
+}
+.gwasv2-attrition-table table .gwasv2-attrition-table--rightborder {
+  border-right: 2px solid #e2e2e3;
+  padding-right: 32px;
+}
+
+.gwasv2-attrition-table--w5 {
+  width: 5%;
+}
+
+.gwasv2-attrition-table--w15 {
+  width: 15%;
+}

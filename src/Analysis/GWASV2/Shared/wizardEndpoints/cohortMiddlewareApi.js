@@ -60,6 +60,34 @@ export const fetchOverlapInfo = async (
   return getOverlapStats.json();
 };
 
+// Basically a copy of fetchOverlapInfo above, but without the HARE arguments:
+export const fetchSimpleOverlapInfo = async (
+  sourceId,
+  cohortAId,
+  cohortBId,
+  selectedCovariates,
+  selectedDichotomousCovariates,
+) => {
+  const variablesPayload = {
+    variables: [
+      ...selectedDichotomousCovariates.map(({ uuid, ...withNoId }) => withNoId),
+      ...selectedCovariates.map((c) => ({
+        variable_type: 'concept',
+        concept_id: c.concept_id,
+      })),
+    ],
+  };
+  const statsEndPoint = `${cohortMiddlewarePath}cohort-stats/check-overlap/by-source-id/${sourceId}/by-cohort-definition-ids/${cohortAId}/${cohortBId}`;
+  const reqBody = {
+    method: 'POST',
+    credentials: 'include',
+    headers,
+    body: JSON.stringify(variablesPayload),
+  };
+  const getOverlapStats = await fetch(statsEndPoint, reqBody);
+  return getOverlapStats.json();
+};
+
 export const filterSubsetCovariates = (subsetCovariates) => {
   const filteredSubsets = [];
   subsetCovariates.forEach((covariate) => {
