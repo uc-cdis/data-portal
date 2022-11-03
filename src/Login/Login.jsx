@@ -24,7 +24,8 @@ export const getUrlForRedirectLocation = (location) => {
     next = basename === '/' ? queryParams.next : basename + queryParams.next;
   }
   const regexp = /^\/\w+|\/\?/gi;
-  if (new RegExp(regexp).test(next)) {
+  const isValidRedirect = new RegExp(regexp).test(next);
+  if (!isValidRedirect) {
     console.log(`Found illegal "next" parameter value ${next}`);
     return basename;
   }
