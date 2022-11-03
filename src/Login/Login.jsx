@@ -24,7 +24,7 @@ export const getUrlForRedirectLocation = (location) => {
     next = basename === '/' ? queryParams.next : basename + queryParams.next;
   }
   next = next.replace('?request_access', '?request_access_logged_in');
-  return next;
+  return `${next}`;
 };
 
 const getLoginUrl = (providerLoginUrl, next) => {
