@@ -23,6 +23,12 @@ export const getUrlForRedirectLocation = (location) => {
   if (queryParams.next) {
     next = basename === '/' ? queryParams.next : basename + queryParams.next;
   }
+  const regexp = /^\/.*/gi;
+  const isValidRedirect = new RegExp(regexp).test(next);
+  if (!isValidRedirect) {
+    console.log(`Found illegal "next" parameter value ${next}`);
+    return basename;
+  }
   next = next.replace('?request_access', '?request_access_logged_in');
   return `${next}`;
 };
