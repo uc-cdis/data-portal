@@ -68,24 +68,6 @@ const GWASContainer = () => {
             selectedCovariates={selectedCovariates}
             selectedDichotomousCovariates={selectedDichotomousCovariates}
           />
-          <AttritionTable
-            sourceId={sourceId}
-            selectedCohort={selectedStudyPopulationCohort}
-            otherSelectedCohort={selectedControlCohort}
-            // outcome={outcome}
-            selectedCovariates={selectedCovariates}
-            selectedDichotomousCovariates={selectedDichotomousCovariates}
-            tableHeader={"Case Cohort Attrition Table"}
-          />
-          <AttritionTable
-            sourceId={sourceId}
-            selectedCohort={selectedControlCohort}
-            otherSelectedCohort={selectedCaseCohort}
-            // outcome={outcome}
-            selectedCovariates={selectedCovariates}
-            selectedDichotomousCovariates={selectedDichotomousCovariates}
-            tableHeader={"Control Cohort Attrition Table"}
-          />
         </React.Fragment>
       )}
       {/* Inline style block needed so centering rule doesn't impact other workflows */}

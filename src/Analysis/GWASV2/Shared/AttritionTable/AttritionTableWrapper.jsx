@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import AttritionTable from "./AttritionTable";
 import PropTypes from "prop-types";
 
 const AttritionTableWrapper = ({
@@ -9,7 +10,28 @@ const AttritionTableWrapper = ({
   selectedDichotomousCovariates,
   sourceId,
 }) => {
-  return <h1>Attrition Table Wrapper</h1>;
+  return (
+    <>
+      <AttritionTable
+        sourceId={sourceId}
+        selectedCohort={selectedCohort}
+        otherSelectedCohort={otherSelectedCohort}
+        // outcome={outcome}
+        selectedCovariates={selectedCovariates}
+        selectedDichotomousCovariates={selectedDichotomousCovariates}
+        tableHeader={"Case Cohort Attrition Table"}
+      />
+      <AttritionTable
+        sourceId={sourceId}
+        selectedCohort={selectedCohort}
+        otherSelectedCohort={otherSelectedCohort}
+        // outcome={outcome}
+        selectedCovariates={selectedCovariates}
+        selectedDichotomousCovariates={selectedDichotomousCovariates}
+        tableHeader={"Control Cohort Attrition Table"}
+      />
+    </>
+  );
 };
 AttritionTableWrapper.propTypes = {
   selectedCohort: PropTypes.object,
