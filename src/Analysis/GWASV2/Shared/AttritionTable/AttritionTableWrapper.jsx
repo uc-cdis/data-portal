@@ -9,6 +9,21 @@ const AttritionTableWrapper = ({
   selectedDichotomousCovariates,
   sourceId,
 }) => {
+  // Given input arr below, output should be: [["A"], ["A", "B"], ["A", "B", "C"]]
+  const inputArr = ["A", "B", "C"];
+
+  const createCovariateSubset = (inputArr) => {
+    const outputArr = [];
+    const prevArr = [];
+    inputArr.forEach((item, index) => {
+      prevArr.push(inputArr[index]);
+      outputArr.push([...prevArr]);
+    });
+    return outputArr;
+  };
+
+  console.log("Final Output:", createCovariateSubset(inputArr));
+
   return (
     <>
       <AttritionTable

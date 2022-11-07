@@ -64,7 +64,7 @@ const GWASContainer = () => {
             sourceId={sourceId}
             selectedCohort={selectedStudyPopulationCohort}
             otherSelectedCohort={selectedControlCohort}
-            // outcome={outcome}
+            outcome={outcome}
             selectedCovariates={selectedCovariates}
             selectedDichotomousCovariates={selectedDichotomousCovariates}
           />
