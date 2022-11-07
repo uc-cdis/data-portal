@@ -14,27 +14,29 @@ const mockedQueryClient = new QueryClient({
     queries: { retry: false },
   },
 });
+const Template = (args) => (
+  <QueryClientProvider client={mockedQueryClient}>
+    <AttritionTableWrapper {...args} />
+  </QueryClientProvider>
+);
+export const WithOutcome = Template.bind({});
 
-const MockTemplateWithOutcome = () => {
-  const [outcome, setOutcome] = useState({
+WithOutcome.args = {
+  outcome: {
     concept_id: 2000006886,
     concept_name: "Attribute1",
     concept_code: "",
     concept_type: "MVP Continuous",
-  });
-  const [selectedCohort, setSelectedCohort] = useState({
+  },
+  selectedCohort: {
     cohort_definition_id: 123,
     cohort_name: "cohort name abc",
-  });
-  const [otherSelectedCohort, otherSetSelectedCohort] = useState({
+  },
+  otherSelectedCohort: {
     cohort_definition_id: 456,
     cohort_name: "cohort name def",
-  });
-
-  const [
-    selectedDichotomousCovariates,
-    setSelectedDichotomousCovariates,
-  ] = useState([
+  },
+  selectedDichotomousCovariates: [
     {
       variable_type: "custom_dichotomous",
       cohort_ids: [1, 2],
@@ -47,8 +49,8 @@ const MockTemplateWithOutcome = () => {
       provided_name: "dichotomous test2",
       uuid: "123456",
     },
-  ]);
-  const [selectedCovariates, setSelectedCovariates] = useState([
+  ],
+  selectedCovariates: [
     {
       concept_id: 2000006886,
       prefixed_concept_id: "ID_2000006886",
@@ -70,21 +72,8 @@ const MockTemplateWithOutcome = () => {
       concept_code: "",
       concept_type: "MVP Continuous",
     },
-  ]);
-
-  return (
-    <QueryClientProvider client={mockedQueryClient}>
-      <AttritionTableWrapper
-        sourceId={1}
-        selectedCohort={selectedCohort}
-        outcome={outcome}
-        selectedCovariates={selectedCovariates}
-        selectedDichotomousCovariates={selectedDichotomousCovariates}
-      />
-    </QueryClientProvider>
-  );
+  ],
 };
 
-let rowCount = 0;
-
-export const MockedOutcome = MockTemplateWithOutcome.bind({});
+export const WithNoOutcome = Template.bind({});
+WithNoOutcome.args = { ...WithOutcome.args, outcome: {} };

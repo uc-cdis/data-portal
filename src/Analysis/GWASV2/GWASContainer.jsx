@@ -18,7 +18,7 @@ const GWASContainer = () => {
   const [selectedCaseCohort] = useState(undefined);
   const [selectedCovariates] = useState([]);
   const [selectedDichotomousCovariates] = useState([]);
-  const [outcome, setOutcome] = useState(undefined);
+  const [outcome, setOutcome] = useState({});
 
   const generateStep = () => {
     // steps 2 & 3 very similar
