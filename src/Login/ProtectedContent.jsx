@@ -58,7 +58,7 @@ class ProtectedContent extends React.Component {
           )
           .then(
             () => this.checkLoginStatus(store, this.state)
-              .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkQuizStatus(newState)))
+              .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkQuizStatus(newState))) // don't redirect for public pages
               .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkApiToken(store, newState))),
           )
           .then(
