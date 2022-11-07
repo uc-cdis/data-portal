@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Space, Button, Popconfirm } from "antd";
 import SelectStudyPopulation from "./SelectStudyPopulation/SelectStudyPopulation";
 import ProgressBar from "./Shared/ProgressBar/ProgressBar";
-import AttritionTable from "./Shared/AttritionTable/AttritionTable";
 import { useSourceFetch } from "./Shared/wizardEndpoints/cohortMiddlewareApi";
 import { gwasV2Steps } from "./Shared/constants";
 import "./GWASV2.css";
@@ -19,6 +18,7 @@ const GWASContainer = () => {
   const [selectedCaseCohort] = useState(undefined);
   const [selectedCovariates] = useState([]);
   const [selectedDichotomousCovariates] = useState([]);
+  const [outcome, setOutcome] = useState(undefined);
 
   const generateStep = () => {
     // steps 2 & 3 very similar
