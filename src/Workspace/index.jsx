@@ -75,7 +75,7 @@ class Workspace extends React.Component {
   componentDidMount() {
     // Check if workspaceTokenServiceRefreshTokenAtLogin is NOT set.
     // Because if is already enabled, then an extra refresh is not
-    // really needed, since it has already happened at login:
+    // really needed, since it has already happened at login, so just call the callback:
     if (!isEnabled('workspaceTokenServiceRefreshTokenAtLogin')) {
       const redirectLocation = { from: `${window.location.pathname}` };
       initWorkspaceRefreshToken(redirectLocation, this.connected);
