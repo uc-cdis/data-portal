@@ -79,6 +79,8 @@ class Workspace extends React.Component {
     if (!isEnabled('workspaceTokenServiceRefreshTokenAtLogin')) {
       const redirectLocation = { from: `${window.location.pathname}` };
       initWorkspaceRefreshToken(redirectLocation, this.connected);
+    } else {
+      this.connected()
     }
   }
 
