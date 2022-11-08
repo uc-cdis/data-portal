@@ -28,6 +28,18 @@ WithOutcome.args = {
     concept_code: "",
     concept_type: "MVP Continuous",
   },
+  covariateSubset: [
+    {
+      variable_type: "custom_dichotomous",
+      provided_name: "providednamebyuser",
+      cohort_ids: [12, 32],
+    },
+    {
+      variable_type: "concept",
+      concept_id: "id",
+      concept_name: "concept name",
+    },
+  ],
   selectedCohort: {
     cohort_definition_id: 123,
     cohort_name: "cohort name abc",

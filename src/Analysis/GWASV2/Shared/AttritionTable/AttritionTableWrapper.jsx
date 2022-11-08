@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import AttritionTable from "./AttritionTable";
 const AttritionTableWrapper = ({
+  covariateSubset,
   selectedCohort,
   otherSelectedCohort,
   outcome,
@@ -28,6 +29,7 @@ const AttritionTableWrapper = ({
     <>
       <AttritionTable
         sourceId={sourceId}
+        covariateSubset={covariateSubset}
         selectedCohort={selectedCohort}
         otherSelectedCohort={otherSelectedCohort}
         outcome={outcome}
@@ -38,6 +40,7 @@ const AttritionTableWrapper = ({
       {Object.keys(outcome).length !== 0 && (
         <AttritionTable
           sourceId={sourceId}
+          covariateSubset={covariateSubset}
           selectedCohort={selectedCohort}
           otherSelectedCohort={otherSelectedCohort}
           outcome={outcome}
@@ -55,6 +58,7 @@ AttritionTableWrapper.propTypes = {
   outcome: PropTypes.object,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
+  covariateSubset: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
 };
 

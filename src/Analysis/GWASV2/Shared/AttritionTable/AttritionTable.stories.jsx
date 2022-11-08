@@ -24,6 +24,18 @@ const MockTemplate = () => {
     concept_code: "",
     concept_type: "MVP Continuous",
   });
+  const [covariateSubset] = useState([
+    {
+      variable_type: "custom_dichotomous",
+      provided_name: "providednamebyuser",
+      cohort_ids: [12, 32],
+    },
+    {
+      variable_type: "concept",
+      concept_id: "id",
+      concept_name: "concept name",
+    },
+  ]);
   const [selectedCohort, setSelectedCohort] = useState({
     cohort_definition_id: 123,
     cohort_name: "cohort name abc",

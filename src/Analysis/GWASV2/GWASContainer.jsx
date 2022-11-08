@@ -17,8 +17,25 @@ const GWASContainer = () => {
   const [selectedControlCohort] = useState(undefined);
   const [selectedCaseCohort] = useState(undefined);
   const [selectedCovariates] = useState([]);
+  const [covariateSubset] = useState([
+    {
+      variable_type: "custom_dichotomous",
+      provided_name: "providednamebyuser",
+      cohort_ids: [12, 32],
+    },
+    {
+      variable_type: "concept",
+      concept_id: "id",
+      concept_name: "concept name",
+    },
+  ]);
   const [selectedDichotomousCovariates] = useState([]);
-  const [outcome, setOutcome] = useState({});
+  const [outcome, setOutcome] = useState({
+    concept_id: 2000006886,
+    concept_name: "Attribute1",
+    concept_code: "",
+    concept_type: "MVP Continuous",
+  });
 
   const generateStep = () => {
     // steps 2 & 3 very similar
@@ -62,6 +79,7 @@ const GWASContainer = () => {
         <React.Fragment>
           <AttritionTableWrapper
             sourceId={sourceId}
+            covariateSubset={covariateSubset}
             selectedCohort={selectedStudyPopulationCohort}
             otherSelectedCohort={selectedControlCohort}
             outcome={outcome}
