@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import AttritionTable from "./AttritionTable";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import AttritionTable from './AttritionTable';
 const AttritionTableWrapper = ({
   covariateSubset,
   selectedCohort,
@@ -10,21 +10,6 @@ const AttritionTableWrapper = ({
   selectedDichotomousCovariates,
   sourceId,
 }) => {
-  // Given input arr below, output should be: [["A"], ["A", "B"], ["A", "B", "C"]]
-  const inputArr = ["A", "B", "C"];
-
-  const createCovariateSubset = (inputArr) => {
-    const outputArr = [];
-    const prevArr = [];
-    inputArr.forEach((item, index) => {
-      prevArr.push(inputArr[index]);
-      outputArr.push([...prevArr]);
-    });
-    return outputArr;
-  };
-
-  console.log("Final Output:", createCovariateSubset(inputArr));
-
   return (
     <>
       <AttritionTable
@@ -35,7 +20,7 @@ const AttritionTableWrapper = ({
         outcome={outcome}
         selectedCovariates={selectedCovariates}
         selectedDichotomousCovariates={selectedDichotomousCovariates}
-        tableHeader={"Case Cohort Attrition Table"}
+        tableHeader={'Case Cohort Attrition Table'}
       />
       {Object.keys(outcome).length !== 0 && (
         <AttritionTable
@@ -46,7 +31,7 @@ const AttritionTableWrapper = ({
           outcome={outcome}
           selectedCovariates={selectedCovariates}
           selectedDichotomousCovariates={selectedDichotomousCovariates}
-          tableHeader={"Control Cohort Attrition Table"}
+          tableHeader={'Control Cohort Attrition Table'}
         />
       )}
     </>

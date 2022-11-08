@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { Space, Button, Popconfirm } from "antd";
-import SelectStudyPopulation from "./SelectStudyPopulation/SelectStudyPopulation";
-import ProgressBar from "./Shared/ProgressBar/ProgressBar";
-import { useSourceFetch } from "./Shared/wizardEndpoints/cohortMiddlewareApi";
-import { gwasV2Steps } from "./Shared/constants";
-import "./GWASV2.css";
-import AttritionTableWrapper from "./Shared/AttritionTable/AttritionTableWrapper";
+import React, { useState } from 'react';
+import { Space, Button, Popconfirm } from 'antd';
+import SelectStudyPopulation from './SelectStudyPopulation/SelectStudyPopulation';
+import ProgressBar from './Shared/ProgressBar/ProgressBar';
+import { useSourceFetch } from './Shared/wizardEndpoints/cohortMiddlewareApi';
+import { gwasV2Steps } from './Shared/constants';
+import './GWASV2.css';
+import AttritionTableWrapper from './Shared/AttritionTable/AttritionTableWrapper';
 
 const GWASContainer = () => {
   const { loading, sourceId } = useSourceFetch();
@@ -19,22 +19,22 @@ const GWASContainer = () => {
   const [selectedCovariates] = useState([]);
   const [covariateSubset] = useState([
     {
-      variable_type: "custom_dichotomous",
-      provided_name: "providednamebyuser",
+      variable_type: 'custom_dichotomous',
+      provided_name: 'providednamebyuser',
       cohort_ids: [12, 32],
     },
     {
-      variable_type: "concept",
-      concept_id: "id",
-      concept_name: "concept name",
+      variable_type: 'concept',
+      concept_id: 'id',
+      concept_name: 'concept name',
     },
   ]);
   const [selectedDichotomousCovariates] = useState([]);
   const [outcome, setOutcome] = useState({
     concept_id: 2000006886,
-    concept_name: "Attribute1",
-    concept_code: "",
-    concept_type: "MVP Continuous",
+    concept_name: 'Attribute1',
+    concept_code: '',
+    concept_type: 'MVP Continuous',
   });
 
   const generateStep = () => {
@@ -90,23 +90,23 @@ const GWASContainer = () => {
       )}
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>
-        {".analysis-app__actions > div:nth-child(1) { width: 100%; }"}
+        {'.analysis-app__actions > div:nth-child(1) { width: 100%; }'}
       </style>
-      <div className="GWASV2">
-        <Space direction={"vertical"} style={{ width: "100%" }}>
-          <div className="steps-content">
+      <div className='GWASV2'>
+        <Space direction={'vertical'} style={{ width: '100%' }}>
+          <div className='steps-content'>
             <Space
-              direction={"vertical"}
-              align={"center"}
-              style={{ width: "100%" }}
+              direction={'vertical'}
+              align={'center'}
+              style={{ width: '100%' }}
             >
               {generateStep(current)}
             </Space>
           </div>
-          <div className="steps-action">
+          <div className='steps-action'>
             <Button
-              className="GWASUI-navBtn GWASUI-navBtn__next"
-              type="primary"
+              className='GWASUI-navBtn GWASUI-navBtn__next'
+              type='primary'
               onClick={() => {
                 setCurrent(current - 1);
               }}
@@ -115,20 +115,20 @@ const GWASContainer = () => {
               Previous
             </Button>
             <Popconfirm
-              title="Are you sure you want to leave this page?"
+              title='Are you sure you want to leave this page?'
               //   onConfirm={() => resetGWASType()}
-              okText="Yes"
-              cancelText="No"
+              okText='Yes'
+              cancelText='No'
             >
-              <Button type="link" size="medium">
+              <Button type='link' size='medium'>
                 Select Different GWAS Type
               </Button>
             </Popconfirm>
             {current < gwasV2Steps.length - 1 && (
               <Button
-                data-tour="next-button"
-                className="GWASUI-navBtn GWASUI-navBtn__next"
-                type="primary"
+                data-tour='next-button'
+                className='GWASUI-navBtn GWASUI-navBtn__next'
+                type='primary'
                 onClick={() => {
                   setCurrent(current + 1);
                 }}
@@ -138,7 +138,7 @@ const GWASContainer = () => {
               </Button>
             )}
             {current === gwasV2Steps.length - 1 && (
-              <div className="GWASUI-navBtn" />
+              <div className='GWASUI-navBtn' />
             )}
           </div>
         </Space>

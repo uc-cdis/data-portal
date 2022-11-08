@@ -1,16 +1,16 @@
 /* eslint-disable camelcase */
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { useQuery } from "react-query";
-import { Spin } from "antd";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useQuery } from 'react-query';
+import { Spin } from 'antd';
 import {
   fetchConceptStatsByHareSubset,
   fetchConceptStatsByHareSubsetCC,
   queryConfig,
-} from "../wizardEndpoints/cohortMiddlewareApi";
-import BarChart from "./ChartIcons/BarChart";
-import EulerDiagram from "./ChartIcons/EulerDiagram";
-import "./AttritionTable.css";
+} from '../wizardEndpoints/cohortMiddlewareApi';
+import BarChart from './ChartIcons/BarChart';
+import EulerDiagram from './ChartIcons/EulerDiagram';
+import './AttritionTable.css';
 
 const AttritionTableRow = ({
   cohortDefinitionId,
@@ -29,7 +29,7 @@ const AttritionTableRow = ({
 
   const { data, status } = useQuery(
     [
-      "conceptstatsbyharesubset",
+      'conceptstatsbyharesubset',
       covariateSubset,
       cohortDefinitionId,
       otherCohortDefinitionId,
@@ -66,7 +66,7 @@ const AttritionTableRow = ({
   useEffect(() => {
     if (breakdown?.length) {
       const filteredBreakdown = breakdown.filter(
-        ({ concept_value }) => concept_value !== "OTH"
+        ({ concept_value }) => concept_value !== 'OTH'
       );
       setBreakdownSize(
         filteredBreakdown.reduce(
@@ -82,17 +82,17 @@ const AttritionTableRow = ({
   }, [breakdown, cohortDefinitionId, covariateSubset, sourceId]);
 
   useEffect(() => {
-    setAfr(getSizeByColumn("AFR"));
-    setAsn(getSizeByColumn("ASN"));
-    setEur(getSizeByColumn("EUR"));
-    setHis(getSizeByColumn("HIS"));
+    setAfr(getSizeByColumn('AFR'));
+    setAsn(getSizeByColumn('ASN'));
+    setEur(getSizeByColumn('EUR'));
+    setHis(getSizeByColumn('HIS'));
   }, [breakdownColumns]);
 
   const determineChartIcon = (rowTypeInput) => {
-    if (rowTypeInput === "Cohort") {
+    if (rowTypeInput === 'Cohort') {
       return null;
     }
-    console.log("Rowtype is:", rowType);
+    console.log('Rowtype is:', rowType);
     /*
        TODO: Write logic such that if the covariate is numeric, it is bar chart
        and if the covariate is dichotomous, it should be a euler diagram
@@ -101,20 +101,20 @@ const AttritionTableRow = ({
   };
   return (
     <tr>
-      <td className="gwasv2-attrition-table--leftpad">{rowType}</td>
-      <td className="gwasv2-attrition-table--chart">
+      <td className='gwasv2-attrition-table--leftpad'>{rowType}</td>
+      <td className='gwasv2-attrition-table--chart'>
         {determineChartIcon(rowType)}
       </td>
       <td>{rowName}</td>
-      <td className="gwasv2-attrition-table--rightborder">
-        {status === "loading" ? <Spin size="small" /> : breakdownSize || 0}
+      <td className='gwasv2-attrition-table--rightborder'>
+        {status === 'loading' ? <Spin size='small' /> : breakdownSize || 0}
       </td>
-      <td className="gwasv2-attrition-table--leftpad">
-        {status === "loading" ? <Spin size="small" /> : afr || 0}
+      <td className='gwasv2-attrition-table--leftpad'>
+        {status === 'loading' ? <Spin size='small' /> : afr || 0}
       </td>
-      <td>{status === "loading" ? <Spin size="small" /> : asn || 0}</td>
-      <td>{status === "loading" ? <Spin size="small" /> : eur || 0}</td>
-      <td>{status === "loading" ? <Spin size="small" /> : his || 0}</td>
+      <td>{status === 'loading' ? <Spin size='small' /> : asn || 0}</td>
+      <td>{status === 'loading' ? <Spin size='small' /> : eur || 0}</td>
+      <td>{status === 'loading' ? <Spin size='small' /> : his || 0}</td>
     </tr>
   );
 };
