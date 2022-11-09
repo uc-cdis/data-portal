@@ -17,7 +17,7 @@ const GWASContainer = () => {
   const [selectedControlCohort] = useState(undefined);
   const [selectedCaseCohort] = useState(undefined);
   const [selectedCovariates] = useState([]);
-  const [covariateSubset] = useState([
+  const [newCovariateSubset] = useState([
     {
       variable_type: 'custom_dichotomous',
       provided_name: 'providednamebyuser',
@@ -79,7 +79,7 @@ const GWASContainer = () => {
         <React.Fragment>
           <AttritionTableWrapper
             sourceId={sourceId}
-            covariateSubset={covariateSubset}
+            newCovariateSubset={newCovariateSubset}
             selectedCohort={selectedStudyPopulationCohort}
             otherSelectedCohort={selectedControlCohort}
             outcome={outcome}

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { rest } from "msw";
-import AttritionTable from "./AttritionTable";
-import "../../GWASV2.css";
+import React, { useState } from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { rest } from 'msw';
+import AttritionTable from './AttritionTable';
+import '../../GWASV2.css';
 
 export default {
-  title: "Tests3/GWASV2/AttritionTable/AttritionTable",
+  title: 'Tests3/GWASV2/AttritionTable/AttritionTable',
   component: AttritionTable,
 };
 
@@ -20,68 +20,68 @@ const MockTemplate = () => {
   //const [selectedOutcome, setSelectedOutcome] = useState({ variable_type: 'custom_dichotomous', cohort_ids: [1, 2], provided_name: 'test outcome', uuid: '1234' })
   const [selectedOutcome, setSelectedOutcome] = useState({
     concept_id: 2000006886,
-    concept_name: "Attribute1",
-    concept_code: "",
-    concept_type: "MVP Continuous",
+    concept_name: 'Attribute1',
+    concept_code: '',
+    concept_type: 'MVP Continuous',
   });
-  const [covariateSubset] = useState([
+  const [newCovariateSubset] = useState([
     {
-      variable_type: "custom_dichotomous",
-      provided_name: "providednamebyuser",
+      variable_type: 'custom_dichotomous',
+      provided_name: 'providednamebyuser',
       cohort_ids: [12, 32],
     },
     {
-      variable_type: "concept",
-      concept_id: "id",
-      concept_name: "concept name",
+      variable_type: 'concept',
+      concept_id: 'id',
+      concept_name: 'concept name',
     },
   ]);
   const [selectedCohort, setSelectedCohort] = useState({
     cohort_definition_id: 123,
-    cohort_name: "cohort name abc",
+    cohort_name: 'cohort name abc',
   });
   const [otherSelectedCohort, otherSetSelectedCohort] = useState({
     cohort_definition_id: 456,
-    cohort_name: "cohort name def",
+    cohort_name: 'cohort name def',
   });
   const [
     selectedDichotomousCovariates,
     setSelectedDichotomousCovariates,
   ] = useState([
     {
-      variable_type: "custom_dichotomous",
+      variable_type: 'custom_dichotomous',
       cohort_ids: [1, 2],
-      provided_name: "dichotomous test1",
-      uuid: "12345",
+      provided_name: 'dichotomous test1',
+      uuid: '12345',
     },
     {
-      variable_type: "custom_dichotomous",
+      variable_type: 'custom_dichotomous',
       cohort_ids: [3, 4],
-      provided_name: "dichotomous test2",
-      uuid: "123456",
+      provided_name: 'dichotomous test2',
+      uuid: '123456',
     },
   ]);
   const [selectedCovariates, setSelectedCovariates] = useState([
     {
       concept_id: 2000006886,
-      prefixed_concept_id: "ID_2000006886",
-      concept_name: "Attribute1",
-      concept_code: "",
-      concept_type: "MVP Continuous",
+      prefixed_concept_id: 'ID_2000006886',
+      concept_name: 'Attribute1',
+      concept_code: '',
+      concept_type: 'MVP Continuous',
     },
     {
       concept_id: 2000006885,
-      prefixed_concept_id: "ID_2000006885",
-      concept_name: "Attribute10",
-      concept_code: "",
-      concept_type: "MVP Continuous",
+      prefixed_concept_id: 'ID_2000006885',
+      concept_name: 'Attribute10',
+      concept_code: '',
+      concept_type: 'MVP Continuous',
     },
     {
       concept_id: 2000000708,
-      prefixed_concept_id: "ID_2000000708",
-      concept_name: "Attribute11",
-      concept_code: "",
-      concept_type: "MVP Continuous",
+      prefixed_concept_id: 'ID_2000000708',
+      concept_name: 'Attribute11',
+      concept_code: '',
+      concept_type: 'MVP Continuous',
     },
   ]);
 
@@ -94,7 +94,7 @@ const MockTemplate = () => {
         outcome={selectedOutcome}
         selectedCovariates={selectedCovariates}
         selectedDichotomousCovariates={selectedDichotomousCovariates}
-        tableHeader={"Quantitative Attrition Table"}
+        tableHeader={'Quantitative Attrition Table'}
       />
       <AttritionTable
         // case-control:
@@ -104,7 +104,7 @@ const MockTemplate = () => {
         // no outcome
         selectedCovariates={selectedCovariates}
         selectedDichotomousCovariates={selectedDichotomousCovariates}
-        tableHeader={"Case Cohort Attrition Table (1 of 2)"}
+        tableHeader={'Case Cohort Attrition Table (1 of 2)'}
       />
     </QueryClientProvider>
   );
@@ -117,7 +117,7 @@ MockedSuccess.parameters = {
   msw: {
     handlers: [
       rest.post(
-        "http://:cohortmiddlewarepath/cohort-middleware/concept-stats/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinition/breakdown-by-concept-id/:breakdownconceptid",
+        'http://:cohortmiddlewarepath/cohort-middleware/concept-stats/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinition/breakdown-by-concept-id/:breakdownconceptid',
         (req, res, ctx) => {
           const { cohortmiddlewarepath } = req.params;
           const { cohortdefinition } = req.params;
@@ -136,27 +136,27 @@ MockedSuccess.parameters = {
             ctx.json({
               concept_breakdown: [
                 {
-                  concept_value: "ASN",
+                  concept_value: 'ASN',
                   concept_value_as_concept_id: 2000007029,
-                  concept_value_name: "non-Hispanic Asian",
+                  concept_value_name: 'non-Hispanic Asian',
                   persons_in_cohort_with_value: 40178 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
                 },
                 {
-                  concept_value: "EUR",
+                  concept_value: 'EUR',
                   concept_value_as_concept_id: 2000007031,
-                  concept_value_name: "non-Hispanic White",
+                  concept_value_name: 'non-Hispanic White',
                   persons_in_cohort_with_value: 39648 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
                 },
                 {
-                  concept_value: "AFR",
+                  concept_value: 'AFR',
                   concept_value_as_concept_id: 2000007030,
-                  concept_value_name: "non-Hispanic Black",
+                  concept_value_name: 'non-Hispanic Black',
                   persons_in_cohort_with_value: 40107 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
                 },
                 {
-                  concept_value: "HIS",
+                  concept_value: 'HIS',
                   concept_value_as_concept_id: 2000007028,
-                  concept_value_name: "Hispanic",
+                  concept_value_name: 'Hispanic',
                   persons_in_cohort_with_value: 40038 * (20 - rowCount), // just to mock/generate different numbers for different cohorts,
                 },
               ],
@@ -172,7 +172,7 @@ export const MockedError = MockTemplate.bind({});
 MockedError.parameters = {
   msw: {
     handlers: [
-      rest.post("", (req, res, ctx) => res(ctx.delay(800), ctx.status(403))),
+      rest.post('', (req, res, ctx) => res(ctx.delay(800), ctx.status(403))),
     ],
   },
 };

@@ -11,14 +11,17 @@ const AttritionTable = ({
   selectedCohort,
   otherSelectedCohort,
   outcome,
-  covariateSubset,
+  newCovariateSubset,
   selectedCovariates,
   selectedDichotomousCovariates,
   sourceId,
   tableHeader,
 }) => {
   const [covariateSubsets, setCovariateSubsets] = useState([]);
-  const [newCovariateSubsets, setNewCovariateSubsets] = useState([]);
+  const [
+    newCovariateSubsetsProcessed,
+    setNewCovariateSubsetsProcessed,
+  ] = useState([]);
 
   // Creates an array of arrays such that given input arr [A,B,C]
   // it returns arr [[A], [A,B], [A,B,C]]
@@ -32,6 +35,7 @@ const AttritionTable = ({
     return outputArr;
   };
 
+  // OLD METHOD
   const getCovariateRow = (
     selectedCovs = [],
     selectedCustomdichotomousCovs = []
@@ -54,7 +58,7 @@ const AttritionTable = ({
   };
 
   useEffect(() => {
-    setNewCovariateSubsets(newGetCovariateRow(covariateSubset));
+    setNewCovariateSubsetsProcessed(newGetCovariateRow(newCovariateSubset));
     setCovariateSubsets(
       getCovariateRow(selectedCovariates, selectedDichotomousCovariates)
     );
@@ -96,6 +100,7 @@ const AttritionTable = ({
             <tbody>
               {selectedCohort?.cohort_definition_id && (
                 <React.Fragment>
+                  {/* This is for the first Cohort Row in the Table */}
                   <AttritionTableRow
                     cohortDefinitionId={selectedCohort.cohort_definition_id}
                     otherCohortDefinitionId={
@@ -115,7 +120,8 @@ const AttritionTable = ({
                 ? covariateSubsets.map((item, i) => (
                     <>
                       <blink>
-                        NEW item:{JSON.stringify(newCovariateSubsets[i])}
+                        NEW item:
+                        {JSON.stringify(newCovariateSubsetsProcessed[i])}
                         <br></br>
                       </blink>
                       <blink>
@@ -157,7 +163,7 @@ AttritionTable.propTypes = {
   selectedCohort: PropTypes.object,
   otherSelectedCohort: PropTypes.object,
   outcome: PropTypes.object,
-  covariateSubset: PropTypes.array.isRequired,
+  newCovariateSubset: PropTypes.array.isRequired,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,

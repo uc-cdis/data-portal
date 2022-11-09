@@ -91,12 +91,12 @@ const AttritionTableRow = ({
   const determineChartIcon = (rowTypeInput) => {
     if (rowTypeInput === 'Cohort') {
       return null;
-    }
-    console.log('Rowtype is:', rowType);
-    /*
-       TODO: Write logic such that if the covariate is numeric, it is bar chart
+    } else if (rowType === 'Covariate')
+      /*
+       if the covariate is numeric, it is bar chart
        and if the covariate is dichotomous, it should be a euler diagram
     */
+      console.log('covariateSubset', covariateSubset);
     return Math.random() > 0.5 ? <BarChart /> : <EulerDiagram />;
   };
   return (
