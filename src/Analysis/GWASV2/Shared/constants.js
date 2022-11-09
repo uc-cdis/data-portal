@@ -17,3 +17,28 @@ export const gwasV2Steps = [
     secondaryTitle: 'Configure GWAS',
   },
 ];
+
+export const ACTIONS = {
+  SET_SELECTED_STUDY_POPULATION_COHORT: 'setSelectedStudyPopulationCohort',
+  DECREMENT_CURRENT: 'decrementCurrent',
+  INCREMENT_CURRENT: 'incrementCurrent',
+  SET_OUTCOME: 'setOutcome',
+  ADD_COVARIATE: 'addCovariate',
+  DELETE_CONTINUOUS_COVARIATE: 'deleteContinouosCovariate',
+  DELETE_DICHOTOMOUS_COVARIATE: 'deleteDichotomousCovariate',
+  UPDATE_MAF_THRESHOLD: 'updateMafThreshold',
+  UPDATE_IMPUTATION_SCORE: 'updateImputationScore',
+  UPDATE_NUM_PCS: 'updateNumPCs',
+};
+
+export const initialState = {
+  outcome: {},
+  selectedStudyPopulationCohort: null,
+  covariates: [],
+  imputationScore: 0.3,
+  mafThreshold: 0.01,
+  numOfPC: 3,
+  gwasName: '',
+  selectedHare: { concept_value: '' },
+  current: 0,
+};

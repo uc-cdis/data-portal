@@ -14,6 +14,7 @@ import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
 import GWASWorkflowList from './GWASUIApp/GWASWorkflowList';
 import GWASContainer from './GWASV2/GWASContainer';
+import { SourceContextProvider } from './GWASV2/Shared/Source';
 
 const queryClient = new QueryClient();
 
@@ -73,75 +74,77 @@ class AnalysisApp extends React.Component {
 
   getAppContent = (app) => {
     switch (app) {
-    case 'vaGWAS':
-      return (
-        <React.Fragment>
-          <Select
-            value={this.state.jobInput}
-            placeholder='Select your organ'
-            options={analysisApps[app].options}
-            onChange={this.selectChange}
-          />
-          <Button label='Run Analysis' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
-        </React.Fragment>
-      );
-    case 'ndhHIV':
-      return (
-        <HIVCohortFilter />
-      );
-    case 'ndhVirus':
-      return (
-        <React.Fragment>
-          <input className='text-input' type='text' placeholder='input data' name='input' />
-          <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
-        </React.Fragment>
-      );
-    case 'GWASUIApp':
-      return (
-        <TourProvider
-          afterOpen={disableBody}
-          beforeClose={enableBody}
-          disableInteraction
-          onClickClose={({ setCurrentStep, setIsOpen }) => {
-            setIsOpen(false);
-
-            setCurrentStep(0);
-          }}
-        >
-          <div className='analysis-app_flex_col'>
-            <ReduxGWASUIApp />
-          </div>
-        </TourProvider>
-      );
-    case 'GWASResults':
-      return (
-        <div className='analysis-app_flex_row'>
-          <GWASWorkflowList refetchInterval={5000} />
-        </div>
-      );
-    case 'GWAS++': {
-      return (
-        <div>
-          <GWASContainer refreshWorkflows={this.refreshWorkflows} />
-        </div>
-      );
-    }
-    default:
-      // this will ensure the main window will process the app messages (if any):
-      window.addEventListener('message', this.processAppMessages);
-      return (
-        <React.Fragment>
-          <div className='analysis-app__iframe-wrapper'>
-            <iframe
-              className='analysis-app__iframe'
-              title='Analysis App'
-              frameBorder='0'
-              src={`${this.state.app.applicationUrl}`}
-              onLoad={this.handleIframeApp}
+      case 'vaGWAS':
+        return (
+          <React.Fragment>
+            <Select
+              value={this.state.jobInput}
+              placeholder='Select your organ'
+              options={analysisApps[app].options}
+              onChange={this.selectChange}
             />
+            <Button label='Run Analysis' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+          </React.Fragment>
+        );
+      case 'ndhHIV':
+        return (
+          <HIVCohortFilter />
+        );
+      case 'ndhVirus':
+        return (
+          <React.Fragment>
+            <input className='text-input' type='text' placeholder='input data' name='input' />
+            <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
+          </React.Fragment>
+        );
+      case 'GWASUIApp':
+        return (
+          <TourProvider
+            afterOpen={disableBody}
+            beforeClose={enableBody}
+            disableInteraction
+            onClickClose={({ setCurrentStep, setIsOpen }) => {
+              setIsOpen(false);
+
+              setCurrentStep(0);
+            }}
+          >
+            <div className='analysis-app_flex_col'>
+              <ReduxGWASUIApp />
+            </div>
+          </TourProvider>
+        );
+      case 'GWASResults':
+        return (
+          <div className='analysis-app_flex_row'>
+            <GWASWorkflowList refetchInterval={5000} />
           </div>
-        </React.Fragment>
-      );
+        );
+      case 'GWAS++': {
+        return (
+          <div>
+            <SourceContextProvider>
+              <GWASContainer refreshWorkflows={this.refreshWorkflows} />
+            </SourceContextProvider>
+          </div>
+        );
+      }
+      default:
+        // this will ensure the main window will process the app messages (if any):
+        window.addEventListener('message', this.processAppMessages);
+        return (
+          <React.Fragment>
+            <div className='analysis-app__iframe-wrapper'>
+              <iframe
+                className='analysis-app__iframe'
+                title='Analysis App'
+                frameBorder='0'
+                src={`${this.state.app.applicationUrl}`}
+                onLoad={this.handleIframeApp}
+              />
+            </div>
+          </React.Fragment>
+        );
     }
   }
 
