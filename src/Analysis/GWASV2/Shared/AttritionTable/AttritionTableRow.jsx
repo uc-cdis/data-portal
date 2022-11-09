@@ -17,6 +17,8 @@ const AttritionTableRow = ({
   otherCohortDefinitionId,
   rowType,
   rowName,
+  rowObject,
+  outcome,
   covariateSubset,
   sourceId,
 }) => {
@@ -26,6 +28,9 @@ const AttritionTableRow = ({
   const [asn, setAsn] = useState(undefined);
   const [eur, setEur] = useState(undefined);
   const [his, setHis] = useState(undefined);
+
+  const variableList = { outcome, ...covariateSubset };
+  // console.log('variableList', JSON.stringify(variableList));
 
   const { data, status } = useQuery(
     [
@@ -89,15 +94,14 @@ const AttritionTableRow = ({
   }, [breakdownColumns]);
 
   const determineChartIcon = (rowTypeInput) => {
-    if (rowTypeInput === 'Cohort') {
-      return null;
-    } else if (rowType === 'Covariate')
-      /*
-       if the covariate is numeric, it is bar chart
-       and if the covariate is dichotomous, it should be a euler diagram
-    */
-      console.log('covariateSubset', covariateSubset);
-    return Math.random() > 0.5 ? <BarChart /> : <EulerDiagram />;
+    if (rowType === 'Covariate' || rowType === 'Outcome') {
+      if (rowObject.variable_type === 'concept') {
+        return <BarChart />;
+      } else {
+        return <EulerDiagram />;
+      }
+    }
+    return null;
   };
   return (
     <tr>
@@ -125,6 +129,8 @@ AttritionTableRow.propTypes = {
   rowType: PropTypes.string.isRequired,
   rowName: PropTypes.string.isRequired,
   covariateSubset: PropTypes.array.isRequired,
+  outcome: PropTypes.object,
+  rowObject: PropTypes.object,
   sourceId: PropTypes.number.isRequired,
 };
 

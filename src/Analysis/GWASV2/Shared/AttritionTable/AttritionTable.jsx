@@ -64,6 +64,7 @@ const AttritionTable = ({
     );
   }, [selectedCovariates, selectedDichotomousCovariates]);
 
+  console.log('outcome', JSON.stringify(outcome));
   return (
     <div className='gwasv2-attrition-table'>
       <Collapse onClick={(event) => event.stopPropagation()}>
@@ -103,6 +104,7 @@ const AttritionTable = ({
                   {/* This is for the first Cohort Row in the Table */}
                   <AttritionTableRow
                     cohortDefinitionId={selectedCohort.cohort_definition_id}
+                    outcome={outcome}
                     otherCohortDefinitionId={
                       otherSelectedCohort
                         ? otherSelectedCohort.cohort_definition_id
@@ -115,6 +117,31 @@ const AttritionTable = ({
                   />
                 </React.Fragment>
               )}
+
+              {outcome && (
+                <>
+                  {/* This is for the outcome Row in the Table */}
+                  <AttritionTableRow
+                    cohortDefinitionId={selectedCohort.cohort_definition_id}
+                    otherCohortDefinitionId={
+                      otherSelectedCohort
+                        ? otherSelectedCohort.cohort_definition_id
+                        : undefined
+                    }
+                    rowType='Outcome'
+                    outcome={outcome}
+                    rowName={
+                      outcome.variable_type === 'concept'
+                        ? outcome.concept_name
+                        : 'this is for case control, TODO'
+                    }
+                    rowObject={outcome}
+                    covariateSubset={[]}
+                    sourceId={sourceId}
+                  />
+                </>
+              )}
+
               {selectedCohort?.cohort_definition_id &&
               covariateSubsets.length > 0
                 ? covariateSubsets.map((item, i) => (
@@ -129,6 +156,8 @@ const AttritionTable = ({
                       </blink>
                       <AttritionTableRow
                         key={item}
+                        outcome={outcome}
+                        rowObject={item[0]}
                         cohortDefinitionId={selectedCohort.cohort_definition_id}
                         otherCohortDefinitionId={
                           otherSelectedCohort
@@ -162,7 +191,7 @@ const AttritionTable = ({
 AttritionTable.propTypes = {
   selectedCohort: PropTypes.object,
   otherSelectedCohort: PropTypes.object,
-  outcome: PropTypes.object,
+  outcome: PropTypes.object.isRequired,
   newCovariateSubset: PropTypes.array.isRequired,
   selectedCovariates: PropTypes.array.isRequired,
   selectedDichotomousCovariates: PropTypes.array.isRequired,

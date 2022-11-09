@@ -23,10 +23,9 @@ export const WithOutcome = Template.bind({});
 
 WithOutcome.args = {
   outcome: {
-    concept_id: 2000006886,
-    concept_name: 'Attribute1',
-    concept_code: '',
-    concept_type: 'MVP Continuous',
+    variable_type: 'concept',
+    concept_id: 'id',
+    concept_name: 'concept name',
   },
   newCovariateSubset: [
     {

@@ -19,10 +19,9 @@ const MockTemplate = () => {
   //for later:
   //const [selectedOutcome, setSelectedOutcome] = useState({ variable_type: 'custom_dichotomous', cohort_ids: [1, 2], provided_name: 'test outcome', uuid: '1234' })
   const [selectedOutcome, setSelectedOutcome] = useState({
-    concept_id: 2000006886,
-    concept_name: 'Attribute1',
-    concept_code: '',
-    concept_type: 'MVP Continuous',
+    variable_type: 'concept',
+    concept_id: 'id',
+    concept_name: 'concept name',
   });
   const [newCovariateSubset] = useState([
     {

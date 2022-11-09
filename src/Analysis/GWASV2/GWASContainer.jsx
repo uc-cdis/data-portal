@@ -30,11 +30,13 @@ const GWASContainer = () => {
     },
   ]);
   const [selectedDichotomousCovariates] = useState([]);
+
+  // THIS IS THE STRUCTURE FOR QUANTITIVE; when quantitive it will be variable_type:concept
+  // WHEN IT IS case control: it will be variable_type: 'custom_dichotomous'
   const [outcome, setOutcome] = useState({
-    concept_id: 2000006886,
-    concept_name: 'Attribute1',
-    concept_code: '',
-    concept_type: 'MVP Continuous',
+    variable_type: 'concept',
+    concept_id: 'id',
+    concept_name: 'concept name',
   });
 
   const generateStep = () => {
