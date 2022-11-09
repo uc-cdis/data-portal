@@ -55,8 +55,8 @@ const CohortSelect = ({
 };
 
 CohortSelect.propTypes = {
-  selectedCohort: PropTypes.object,
-  handleCohortSelect: PropTypes.func.isRequired,
+  selectedCohort: PropTypes.any,
+  handleCohortSelect: PropTypes.any.isRequired,
   sourceId: PropTypes.number.isRequired,
   current: PropTypes.number.isRequired,
 };

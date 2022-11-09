@@ -30,7 +30,7 @@ const CohortDefinitions = ({
       ? [inputSelectedCohort.cohort_definition_id]
       : [],
     onChange: (_, selectedRows) => {
-      handler(selectedRows[0]);
+      handler({ type: "selectedStudyPopulationCohort", update: selectedRows[0]});
     },
     getCheckboxProps: (record) => ({
       disabled:
@@ -75,8 +75,8 @@ const CohortDefinitions = ({
 
 CohortDefinitions.propTypes = {
   sourceId: PropTypes.number.isRequired,
-  selectedCohort: PropTypes.object,
-  handleCohortSelect: PropTypes.func.isRequired,
+  selectedCohort: PropTypes.any,
+  handleCohortSelect: PropTypes.any.isRequired,
   searchTerm: PropTypes.string.isRequired,
 };
 

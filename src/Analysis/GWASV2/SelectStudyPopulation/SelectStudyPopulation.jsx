@@ -1,36 +1,28 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Spin } from "antd";
 import CohortSelect from "./Utils/CohortSelect";
-import { useSourceFetch } from "../../GWASWizard/wizardEndpoints/cohortMiddlewareApi";
 import "./SelectStudyPopulation.css";
 
 const SelectStudyPopulation = ({
   selectedStudyPopulationCohort,
   setSelectedStudyPopulationCohort,
   current,
+  sourceId
 }) => {
-  const handleCaseCohortSelect = (cohort) => {
-    setSelectedStudyPopulationCohort(cohort);
-  };
-  const { loading, sourceId } = useSourceFetch();
 
-  return !loading && sourceId ? (
-    <CohortSelect
+  return <CohortSelect
       selectedCohort={selectedStudyPopulationCohort}
-      handleCohortSelect={handleCaseCohortSelect}
+      handleCohortSelect={setSelectedStudyPopulationCohort}
       sourceId={sourceId}
       current={current}
     />
-  ) : (
-    <Spin />
-  );
 };
 
 SelectStudyPopulation.propTypes = {
-  selectedStudyPopulationCohort: PropTypes.object.isRequired,
-  setSelectedStudyPopulationCohort: PropTypes.func.isRequired,
+  selectedStudyPopulationCohort: PropTypes.any.isRequired,
+  setSelectedStudyPopulationCohort: PropTypes.any.isRequired,
   current: PropTypes.number.isRequired,
+  sourceId: PropTypes.number.isRequired
 };
 
 export default SelectStudyPopulation;

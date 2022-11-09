@@ -1,55 +1,94 @@
-import React, { useState } from 'react';
-import { Space, Button, Popconfirm } from 'antd';
+import React, { useState, useReducer } from 'react';
+import { Space, Button, Popconfirm, Spin } from 'antd';
 import SelectStudyPopulation from './SelectStudyPopulation/SelectStudyPopulation';
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
-import AttritionTable from './Shared/AttritionTable/AttritionTable';
+// import AttritionTable from './Shared/AttritionTable/AttritionTable';
 import { useSourceFetch } from './Shared/wizardEndpoints/cohortMiddlewareApi';
 import { gwasV2Steps } from './Shared/constants';
 import './GWASV2.css';
 
 const GWASContainer = () => {
-  const { loading, sourceId } = useSourceFetch();
+  const initialState = {
+    outcome: {},
+    selectedStudyPopulationCohort: {},
+    allCovariates: [],
+    imputationScore: 0.3,
+    mafThreshold: 0.01,
+    numOfPC: 3,
+    gwasName: '',
+    selectedHare: { concept_value: '' }
+  }
+  const reducer = (gwas, action) => {
+    const { type, update } = action;
+    switch (type) {
+      default:
+        return {
+          ...gwas,
+          [type]: update
+        }
+    }
+  }
+
+  const [gwas, setGwas] = useReducer(reducer, initialState);
   const [current, setCurrent] = useState(0);
-  const [
-    selectedStudyPopulationCohort,
-    setSelectedStudyPopulationCohort,
-  ] = useState({});
-  const [selectedControlCohort] = useState(undefined);
-  const [selectedCaseCohort] = useState(undefined);
-  const [selectedCovariates] = useState([]);
-  const [selectedDichotomousCovariates] = useState([]);
+  const { loading, sourceId } = useSourceFetch();
+  // const [selectedControlCohort] = useState(undefined);
+  // const [selectedCaseCohort] = useState(undefined);
+  // const [selectedCovariates] = useState([]);
+  // const [selectedDichotomousCovariates] = useState([]);
 
   const generateStep = () => {
     // steps 2 & 3 very similar
     switch (current) {
-    case 0:
-      // select study population
-      return (
-        <SelectStudyPopulation
-          selectedStudyPopulationCohort={selectedStudyPopulationCohort}
-          setSelectedStudyPopulationCohort={setSelectedStudyPopulationCohort}
-          current={current}
-        />
-      );
-    case 1:
-      // outcome (customdichotomous or not)
-      return <React.Fragment>step 2</React.Fragment>;
-    case 2:
-      // covariates (customdichtomous or not)
-      return <React.Fragment>step 3</React.Fragment>;
-    case 3:
-      // all other input (mafs, imputation, etc), review, and submit
-      return <React.Fragment>step 4</React.Fragment>;
-    default:
-      // required for eslint
-      return null;
+      case 0:
+        // select study population
+        return (
+          <SelectStudyPopulation
+            selectedStudyPopulationCohort={gwas.selectedStudyPopulationCohort}
+            setSelectedStudyPopulationCohort={setGwas}
+            current={current}
+            sourceId={sourceId}
+          />
+        );
+      case 1:
+        // outcome (customdichotomous or not)
+        return <>
+          <SelectOutcome
+            outcome={gwas.outcome}
+            allCovariates={gwas.allCovariates}
+            handleOutcome={setGwas}
+            sourceId={sourceId}
+            current={current}
+          />
+        </>
+      case 2:
+        // covariates (customdichtomous or not)
+        return <>
+          <SelectCovariates
+            allCovariates={gwas.allCovariates}
+            setGwas={setGwas}
+          />
+        </>;
+      case 3:
+        // all other input (mafs, imputation, etc), review, and submit
+        return <>
+          <ConfigureGWAS
+            allCovariates={gwas.allCovariates}
+            imputationScore={gwas.imputationScore}
+            mafThreshold={gwas.mafThreshold}
+            selectedHare={gwas.selectedHare}
+            setGwas={setGwas}
+          /></>;
+      default:
+        // required for eslint
+        return null;
     }
   };
 
   let nextButtonEnabled = true;
   if (
     current === 0
-    && Object.keys(selectedStudyPopulationCohort).length === 0
+    && Object.keys(gwas.selectedStudyPopulationCohort).length === 0
   ) {
     nextButtonEnabled = false;
   }
@@ -57,7 +96,7 @@ const GWASContainer = () => {
   return (
     <React.Fragment>
       <ProgressBar current={current} />
-      {!loading && sourceId && (
+      {/* {!loading && sourceId && (
         <React.Fragment>
           <AttritionTable
             sourceId={sourceId}
@@ -78,7 +117,7 @@ const GWASContainer = () => {
             tableHeader={'Control Cohort Attrition Table'}
           />
         </React.Fragment>
-      )}
+      )} */}
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>
         {'.analysis-app__actions > div:nth-child(1) { width: 100%; }'}
@@ -91,7 +130,9 @@ const GWASContainer = () => {
               align={'center'}
               style={{ width: '100%' }}
             >
-              {generateStep(current)}
+              {!loading && sourceId ? generateStep(current) : (
+                <Spin />
+              )}
             </Space>
           </div>
           <div className='steps-action'>
