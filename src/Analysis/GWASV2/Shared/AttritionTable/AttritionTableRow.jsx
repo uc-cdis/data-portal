@@ -13,10 +13,9 @@ import EulerDiagram from './ChartIcons/EulerDiagram';
 import './AttritionTable.css';
 
 const AttritionTableRow = ({
-  cohortDefinitionId,
   otherCohortDefinitionId,
+  selectedCohort,
   rowType,
-  rowName,
   rowObject,
   outcome,
   covariateSubset,
@@ -28,6 +27,7 @@ const AttritionTableRow = ({
   const [asn, setAsn] = useState(undefined);
   const [eur, setEur] = useState(undefined);
   const [his, setHis] = useState(undefined);
+  const cohortDefinitionId = selectedCohort.cohort_definition_id;
 
   const variableList = { outcome, ...covariateSubset };
   // console.log('variableList', JSON.stringify(variableList));
@@ -103,13 +103,29 @@ const AttritionTableRow = ({
     }
     return null;
   };
+
+  const rowName = () => {
+    console.log('Hello Wrold!');
+    if (rowType === 'Outcome') {
+      return outcome.variable_type === 'concept'
+        ? outcome.concept_name
+        : 'this is for case control, TODO';
+    } else if (rowType === 'Covariate') {
+      return rowObject.concept_name
+        ? rowObject.concept_name
+        : rowObject.provided_name;
+    } else {
+      // For Cohort Logic
+      return selectedCohort.cohort_name;
+    }
+  };
   return (
     <tr>
       <td className='gwasv2-attrition-table--leftpad'>{rowType}</td>
       <td className='gwasv2-attrition-table--chart'>
         {determineChartIcon(rowType)}
       </td>
-      <td>{rowName}</td>
+      <td>{rowName()}</td>
       <td className='gwasv2-attrition-table--rightborder'>
         {status === 'loading' ? <Spin size='small' /> : breakdownSize || 0}
       </td>
@@ -124,18 +140,16 @@ const AttritionTableRow = ({
 };
 
 AttritionTableRow.propTypes = {
-  cohortDefinitionId: PropTypes.number,
   otherCohortDefinitionId: PropTypes.number,
   rowType: PropTypes.string.isRequired,
-  rowName: PropTypes.string.isRequired,
   covariateSubset: PropTypes.array.isRequired,
   outcome: PropTypes.object,
   rowObject: PropTypes.object,
+  selectedCohort: PropTypes.object,
   sourceId: PropTypes.number.isRequired,
 };
 
 AttritionTableRow.defaultProps = {
-  cohortDefinitionId: undefined,
   otherCohortDefinitionId: undefined,
 };
 

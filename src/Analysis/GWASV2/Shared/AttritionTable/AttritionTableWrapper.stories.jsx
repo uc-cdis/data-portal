@@ -22,6 +22,7 @@ const Template = (args) => (
 export const WithOutcome = Template.bind({});
 
 WithOutcome.args = {
+  sourceId: 1,
   outcome: {
     variable_type: 'concept',
     concept_id: 'id',

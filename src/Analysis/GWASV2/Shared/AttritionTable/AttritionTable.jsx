@@ -102,8 +102,10 @@ const AttritionTable = ({
               {selectedCohort?.cohort_definition_id && (
                 <React.Fragment>
                   {/* This is for the first Cohort Row in the Table */}
+
                   <AttritionTableRow
-                    cohortDefinitionId={selectedCohort.cohort_definition_id}
+                    // cohortDefinitionId={selectedCohort.cohort_definition_id}
+                    selectedCohort={selectedCohort}
                     outcome={outcome}
                     otherCohortDefinitionId={
                       otherSelectedCohort
@@ -111,7 +113,7 @@ const AttritionTable = ({
                         : undefined
                     }
                     rowType='Cohort'
-                    rowName={selectedCohort.cohort_name}
+                    // rowName={selectedCohort.cohort_name}
                     covariateSubset={[]}
                     sourceId={sourceId}
                   />
@@ -121,8 +123,10 @@ const AttritionTable = ({
               {outcome && (
                 <>
                   {/* This is for the outcome Row in the Table */}
+
                   <AttritionTableRow
-                    cohortDefinitionId={selectedCohort.cohort_definition_id}
+                    // cohortDefinitionId={selectedCohort.cohort_definition_id}
+                    selectedCohort={selectedCohort}
                     otherCohortDefinitionId={
                       otherSelectedCohort
                         ? otherSelectedCohort.cohort_definition_id
@@ -130,11 +134,6 @@ const AttritionTable = ({
                     }
                     rowType='Outcome'
                     outcome={outcome}
-                    rowName={
-                      outcome.variable_type === 'concept'
-                        ? outcome.concept_name
-                        : 'this is for case control, TODO'
-                    }
                     rowObject={outcome}
                     covariateSubset={[]}
                     sourceId={sourceId}
@@ -146,34 +145,32 @@ const AttritionTable = ({
               covariateSubsets.length > 0
                 ? covariateSubsets.map((item, i) => (
                     <>
-                      <blink>
-                        NEW item:
-                        {JSON.stringify(newCovariateSubsetsProcessed[i])}
-                        <br></br>
-                      </blink>
-                      <blink>
-                        OLD item: {JSON.stringify(covariateSubsets[i])}
-                      </blink>
+                      <tr>
+                        <td>
+                          NEW item:
+                          {JSON.stringify(newCovariateSubsetsProcessed[i])}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>OLD item: {JSON.stringify(covariateSubsets[i])}</td>
+                      </tr>
                       <AttritionTableRow
                         key={item}
                         outcome={outcome}
                         rowObject={item[0]}
-                        cohortDefinitionId={selectedCohort.cohort_definition_id}
+                        selectedCohort={selectedCohort}
+                        // cohortDefinitionId={selectedCohort.cohort_definition_id}
                         otherCohortDefinitionId={
                           otherSelectedCohort
                             ? otherSelectedCohort.cohort_definition_id
                             : undefined
                         }
-                        rowType={
-                          outcome && outcome.concept_id === item[0].concept_id
-                            ? 'Outcome Phenotype'
-                            : 'Covariate'
-                        }
-                        rowName={
-                          item[0].concept_name
-                            ? item[0].concept_name
-                            : item[0].provided_name
-                        }
+                        rowType='Covariate'
+                        // rowName={
+                        //  item[0].concept_name
+                        //    ? item[0].concept_name
+                        //    : item[0].provided_name
+                        //}
                         covariateSubset={item}
                         sourceId={sourceId}
                       />

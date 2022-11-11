@@ -22,7 +22,7 @@ const AttritionTableWrapper = ({
         selectedDichotomousCovariates={selectedDichotomousCovariates}
         tableHeader={'Case Cohort Attrition Table'}
       />
-      {Object.keys(outcome).length !== 0 && (
+      {outcome.variable_type === 'custom_dichotomous' && (
         <AttritionTable
           sourceId={sourceId}
           newCovariateSubset={newCovariateSubset}
