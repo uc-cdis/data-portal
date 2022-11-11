@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const smp = new SpeedMeasurePlugin();
 
@@ -138,6 +139,7 @@ const plugins = [
   }),
   */
   new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
+  new BundleAnalyzerPlugin()
 ];
 
 const allowedHosts = process.env.PORTAL_HOSTNAME ? [process.env.PORTAL_HOSTNAME] : 'auto';
