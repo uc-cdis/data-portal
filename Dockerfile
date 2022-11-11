@@ -40,19 +40,20 @@ RUN COMMIT=`git rev-parse HEAD` && echo "export const portalCommit = \"${COMMIT}
     && /bin/rm -rf .git \
     && /bin/rm -rf node_modules
 RUN npm config set unsafe-perm=true \
-    && npm ci \
-    && npm run relay \
-    && npm run params
-    # see https://stackoverflow.com/questions/48387040/nodejs-recommended-max-old-space-size
-RUN NODE_OPTIONS=--max-old-space-size=3584 NODE_ENV=production time npx webpack build
-RUN cp nginx.conf /etc/nginx/conf.d/nginx.conf \
-    && rm /etc/nginx/sites-enabled/default
+    && npm ci
 
-# In standard prod these will be overwritten by volume mounts
-# Provided here for ease of use in development and
-# non-standard deployment environments
+# RUN npm run relay \
+#     && npm run params
+#     # see https://stackoverflow.com/questions/48387040/nodejs-recommended-max-old-space-size
+# RUN NODE_OPTIONS=--max-old-space-size=3584 NODE_ENV=production time npx webpack build
+# RUN cp nginx.conf /etc/nginx/conf.d/nginx.conf \
+#     && rm /etc/nginx/sites-enabled/default
 
-RUN mkdir /mnt/ssl \
-    && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /mnt/ssl/nginx.key -out /mnt/ssl/nginx.crt -subj '/countryName=US/stateOrProvinceName=Illinois/localityName=Chicago/organizationName=CDIS/organizationalUnitName=PlanX/commonName=localhost/emailAddress=ops@cdis.org'
+# # In standard prod these will be overwritten by volume mounts
+# # Provided here for ease of use in development and
+# # non-standard deployment environments
 
-CMD bash ./dockerStart.sh
+# RUN mkdir /mnt/ssl \
+#     && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /mnt/ssl/nginx.key -out /mnt/ssl/nginx.crt -subj '/countryName=US/stateOrProvinceName=Illinois/localityName=Chicago/organizationName=CDIS/organizationalUnitName=PlanX/commonName=localhost/emailAddress=ops@cdis.org'
+
+# CMD bash ./dockerStart.sh
