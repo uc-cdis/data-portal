@@ -17,3 +17,14 @@ export const gwasV2Steps = [
     secondaryTitle: 'Configure GWAS',
   },
 ];
+
+export const gwas = {
+  outcome: {},
+  selectedStudyPopulationCohort: {},
+  allCovariates: [],
+  imputationScore: 0.3,
+  mafThreshold: 0.01,
+  numOfPC: 3,
+  gwasName: '',
+  selectedHare: { concept_value: '' }
+}
