@@ -18,7 +18,7 @@ set -e
 
 export APP="${APP:-dev}"
 export NODE_ENV="${NODE_ENV:-dev}"
-export HOSTNAME="${HOSTNAME:-"revproxy-service"}"
+export PORTAL_HOSTNAME="${PORTAL_HOSTNAME:-"revproxy-service"}"
 export BASENAME="${BASENAME:-""}"
 export GEN3_BUNDLE="${GEN3_BUNDLE:-commons}"
 export TIER_ACCESS_LEVEL="${TIER_ACCESS_LEVEL:-"private"}"

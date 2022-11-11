@@ -136,7 +136,7 @@ const plugins = [
   new webpack.optimize.AggressiveMergingPlugin(), // Merge chunks
 ];
 
-const allowedHosts = process.env.HOSTNAME ? [process.env.HOSTNAME] : 'auto';
+const allowedHosts = process.env.PORTAL_HOSTNAME ? [process.env.PORTAL_HOSTNAME] : 'auto';
 
 let optimization = {};
 let devtool = false;
@@ -215,7 +215,7 @@ module.exports = {
   }],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
-    path: __dirname,
+    path: "build",
     filename: '[name].js',
     publicPath: basename,
   },

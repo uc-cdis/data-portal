@@ -5,7 +5,8 @@
 #
 set -eu
 
+echo "PORTAL_HOSTNAME: $PORTAL_HOSTNAME"
 export NODE_ENV=production
 bash runWebpack.sh
 
-/usr/sbin/nginx -g 'daemon off;'
+# /usr/sbin/nginx -g 'daemon off;'

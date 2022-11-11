@@ -1,0 +1,22 @@
+ARG CODE_VERSION=latest
+FROM quay.io/cdis/data-portal:${CODE_VERSION} as builder
+
+ENV PORTAL_HOSTNAME healdata.org
+ENV APP gitops
+ENV BASENAME /
+
+COPY dockerStart.sh ./runWebpack.sh ./package.json ./
+COPY data data
+COPY gitops.json data/config/
+COPY gitops-logo.png custom/logo/gitops-logo.png
+COPY gitops-favicon.ico custom/favicon/gitops-favicon.ico
+COPY gitops.css custom/css/gitops.css
+COPY gitops-sponsors custom/sponsors/gitops-sponsors
+
+RUN bash ./dockerStart.sh
+
+FROM nginx:${CODE_VERSION}
+
+COPY --from=builder /data-portal/*.js /data-portal/index.html /usr/share/nginx/html/
+COPY --from=builder /data-portal/src/img/ /usr/share/nginx/html/src/img/
+COPY --from=builder /data-portal/src/css/ /usr/share/nginx/html/src/css/
