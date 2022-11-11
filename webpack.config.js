@@ -1,6 +1,10 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+
+const smp = new SpeedMeasurePlugin();
+
 
 const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
@@ -207,7 +211,7 @@ if (process.env.GEN3_BUNDLE) {
 //    note that runWebpack ensures GEN3_BUNDLE is set,
 //    and the Dockerfile leaves it unset ...
 
-module.exports = {
+module.exports = smp.wrap({
   entry,
   target: 'web',
   externals: [{
@@ -215,7 +219,7 @@ module.exports = {
   }],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
-    path: "__dirname/build",
+    path: __dirname/ + "build",
     filename: '[name].js',
     publicPath: basename,
   },
@@ -297,4 +301,4 @@ module.exports = {
     extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
   },
   plugins,
-};
+});
