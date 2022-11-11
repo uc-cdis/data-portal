@@ -35,9 +35,19 @@ WithOutcome.args = {
       cohort_ids: [12, 32],
     },
     {
+      variable_type: 'custom_dichotomous',
+      cohort_ids: [1, 2],
+      provided_name: 'dichotomous test1',
+    },
+    {
       variable_type: 'concept',
       concept_id: 'id',
       concept_name: 'concept name',
+    },
+    {
+      concept_id: 2000006886,
+      concept_name: 'Attribute1',
+      variable_type: 'concept',
     },
   ],
   selectedCohort: {

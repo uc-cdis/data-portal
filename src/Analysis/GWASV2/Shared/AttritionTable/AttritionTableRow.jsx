@@ -29,9 +29,6 @@ const AttritionTableRow = ({
   const [his, setHis] = useState(undefined);
   const cohortDefinitionId = selectedCohort.cohort_definition_id;
 
-  const variableList = { outcome, ...covariateSubset };
-  // console.log('variableList', JSON.stringify(variableList));
-
   const { data, status } = useQuery(
     [
       'conceptstatsbyharesubset',
@@ -105,7 +102,6 @@ const AttritionTableRow = ({
   };
 
   const rowName = () => {
-    console.log('Hello Wrold!');
     if (rowType === 'Outcome') {
       return outcome.variable_type === 'concept'
         ? outcome.concept_name
@@ -119,6 +115,7 @@ const AttritionTableRow = ({
       return selectedCohort.cohort_name;
     }
   };
+
   return (
     <tr>
       <td className='gwasv2-attrition-table--leftpad'>{rowType}</td>

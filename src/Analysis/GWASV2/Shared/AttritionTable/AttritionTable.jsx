@@ -104,16 +104,14 @@ const AttritionTable = ({
                   {/* This is for the first Cohort Row in the Table */}
 
                   <AttritionTableRow
-                    // cohortDefinitionId={selectedCohort.cohort_definition_id}
                     selectedCohort={selectedCohort}
                     outcome={outcome}
-                    otherCohortDefinitionId={
-                      otherSelectedCohort
-                        ? otherSelectedCohort.cohort_definition_id
-                        : undefined
-                    }
+                    // otherCohortDefinitionId={
+                    //   otherSelectedCohort
+                    //     ? otherSelectedCohort.cohort_definition_id
+                    //     : undefined
+                    // }
                     rowType='Cohort'
-                    // rowName={selectedCohort.cohort_name}
                     covariateSubset={[]}
                     sourceId={sourceId}
                   />
@@ -123,15 +121,13 @@ const AttritionTable = ({
               {outcome && (
                 <>
                   {/* This is for the outcome Row in the Table */}
-
                   <AttritionTableRow
-                    // cohortDefinitionId={selectedCohort.cohort_definition_id}
                     selectedCohort={selectedCohort}
-                    otherCohortDefinitionId={
-                      otherSelectedCohort
-                        ? otherSelectedCohort.cohort_definition_id
-                        : undefined
-                    }
+                    // otherCohortDefinitionId={
+                    //   otherSelectedCohort
+                    //     ? otherSelectedCohort.cohort_definition_id
+                    //     : undefined
+                    // }
                     rowType='Outcome'
                     outcome={outcome}
                     rowObject={outcome}
@@ -142,13 +138,13 @@ const AttritionTable = ({
               )}
 
               {selectedCohort?.cohort_definition_id &&
-              covariateSubsets.length > 0
-                ? covariateSubsets.map((item, i) => (
+              newCovariateSubsetsProcessed.length > 0
+                ? newCovariateSubsetsProcessed.map((item, i) => (
                     <>
                       <tr>
                         <td>
                           NEW item:
-                          {JSON.stringify(newCovariateSubsetsProcessed[i])}
+                          {JSON.stringify(newCovariateSubsetsProcessed)}
                         </td>
                       </tr>
                       <tr>
@@ -157,20 +153,14 @@ const AttritionTable = ({
                       <AttritionTableRow
                         key={item}
                         outcome={outcome}
-                        rowObject={item[0]}
+                        rowObject={item[i]}
                         selectedCohort={selectedCohort}
-                        // cohortDefinitionId={selectedCohort.cohort_definition_id}
                         otherCohortDefinitionId={
                           otherSelectedCohort
                             ? otherSelectedCohort.cohort_definition_id
                             : undefined
                         }
                         rowType='Covariate'
-                        // rowName={
-                        //  item[0].concept_name
-                        //    ? item[0].concept_name
-                        //    : item[0].provided_name
-                        //}
                         covariateSubset={item}
                         sourceId={sourceId}
                       />
