@@ -215,7 +215,7 @@ module.exports = {
   }],
   mode: process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'auto' ? 'production' : 'development',
   output: {
-    path: "build",
+    path: "__dirname/build",
     filename: '[name].js',
     publicPath: basename,
   },
