@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import ContinuousCovariates from '../Shared/GWASCovariates/ContinuousCovariates';
-import CustomDichotomousCovariates from '../Shared/GWASCovariates/CustomDichotomousCovariates';
+import ContinuousCovariates from '../Shared/Covariates/ContinuousCovariates';
+import CustomDichotomousCovariates from '../Shared/Covariates/CustomDichotomousCovariates';
 
 const SelectOutcome = ({
-  // allCovariates,
-  handleOutcomeSubmit,
-  handleOutcomeSelect,
+  allCovariates,
+  handleOutcome,
   outcome,
-  sourceId,
-  current,
 }) => {
   const [mode, setMode] = useState('');
+  const [selectedOutcome, setSelectedOutcome] = useState({});
+
   return (
     <div>
       {mode === 'continuous'
@@ -19,11 +18,11 @@ const SelectOutcome = ({
         ? (
           <ContinuousCovariates
             // covariates={allCovariates}
-            sourceId={sourceId}
             setMode={setMode}
-            selected={outcome}
-            handleSubmit={handleOutcomeSubmit}
-            handleSelect={handleOutcomeSelect}
+            selected={selectedOutcome}
+            handleSubmit={handleOutcome}
+            handleSelect={setSelectedOutcome}
+            type={"outcome"}
           />
         )
         : mode === 'dichotomous'
@@ -32,11 +31,10 @@ const SelectOutcome = ({
             <CustomDichotomousCovariates
             // customDichotomousCovariates={allCovariates}
               setMode={setMode}
-              sourceId={sourceId}
-              handleCovariateSubmit={handleOutcome}
-              handleCovariateSelect={handleCovariateSelect}
-              selectedCovariate={outcome}
-              current={current}
+              selected={outcome}
+              handleSubmit={handleOutcome}
+              handleSelect={setSelectedOutcome}
+            //   current={current}
             />
           )
           : (
@@ -51,9 +49,8 @@ const SelectOutcome = ({
 
 SelectOutcome.propTypes = {
   handleOutcome: PropTypes.func.isRequired,
-  // allCovariates: PropTypes.array.isRequired,
-  sourceId: PropTypes.number.isRequired,
-  current: PropTypes.number.isRequired,
+  allCovariates: PropTypes.array.isRequired,
+//   current: PropTypes.number.isRequired,
   outcome: PropTypes.object,
 };
 

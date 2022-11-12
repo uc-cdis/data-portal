@@ -1,28 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './GWASCovariates.css';
-import Covariates from './Utils/Covariates';
+// import './GWASCovariates.css';
+import Covariates from './Covariates';
 
 const ContinuousCovariates = ({
   setMode,
-  sourceId,
   // searchTerm,
   selected,
   handleSubmit,
-  handleSelect
+  handleSelect,
+  type
 }) => (
   <React.Fragment>
     <Covariates
-      selectedCovariate={selected}
+      selected={selected}
       handleSelect={handleSelect}
-      sourceId={sourceId}
     // searchTerm={searchTerm}
     />
     <button
       type='button'
       style={{ marginLeft: 5 }}
       onClick={() => {
-        handleSubmit(selected)
+        handleSubmit({ set: ["outcome", "current"], update: [selected, 2]  })
         setMode('')
       }}>
       Submit
@@ -30,7 +29,7 @@ const ContinuousCovariates = ({
     <button
       type='button'
       onClick={() => {
-        handleSubmit(undefined);
+        // handleSubmit(undefined);
         setMode(undefined);
       }}
     >cancel
@@ -41,8 +40,8 @@ const ContinuousCovariates = ({
 ContinuousCovariates.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   setMode: PropTypes.func.isRequired,
-  sourceId: PropTypes.number.isRequired,
-  handleSelect: PropTypes.func.isRequired
+  handleSelect: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired
   // searchTerm: PropTypes.string.isRequired
 };
 

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import CohortSelect from '../../SelectStudyPopulation/Utils/CohortSelect';
+import StudyPopulationCohortSelect from '../../SelectStudyPopulation/Utils/StudyPopulationCohortSelect';
 import '../../../GWASUIApp/GWASUIApp.css';
 
 const CustomDichotomousCovariates = ({
-  // selected,
+  selected,
   // handleSelect,
   handleSubmit,
-  sourceId,
-  current,
+  // current,
   setMode,
 }) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
@@ -74,11 +73,12 @@ const CustomDichotomousCovariates = ({
               <h3>Select NO Cohort</h3>
               {/* todo: remove extra component layer, rename CohortSelect */}
               {/* There is no difference between using CohortSelect vs. SelectStudyPopulation here */}
-              <CohortSelect
-                selectedCohort={firstPopulation}
-                handleCohortSelect={setFirstPopulation}
-                sourceId={sourceId}
-                current={current}
+              <StudyPopulationCohortSelect
+                selectedStudyPopulationCohort={firstPopulation}
+                handleStudyPopulationCohortSelect={setFirstPopulation}
+                cd={true}
+                // sourceId={sourceId}
+                // current={current}
               />
               {/* <SelectStudyPopulation
                   selectedStudyPopulationCohort={firstPopulation}
@@ -96,11 +96,12 @@ const CustomDichotomousCovariates = ({
                   current={current}
                   sourceId={sourceId}
                 /> */}
-              <CohortSelect
-                selectedCohort={secondPopulation}
-                handleCohortSelect={setSecondPopulation}
-                sourceId={sourceId}
-                current={current}
+              <StudyPopulationCohortSelect
+                selectedStudyPopulationCohort={secondPopulation}
+                handleStudyPopulationCohortSelect={setSecondPopulation}
+                cd={true}
+                // sourceId={sourceId}
+                // current={current}
               />
             </div>
           </div>
@@ -113,15 +114,15 @@ const CustomDichotomousCovariates = ({
 };
 
 CustomDichotomousCovariates.propTypes = {
-  // customDichotomousCovariates: PropTypes.array.isRequired,
+  selected: PropTypes.any,
   setMode: PropTypes.func.isRequired,
-  handleCovariateSubmit: PropTypes.func.isRequired,
-  sourceId: PropTypes.number.isRequired,
-  current: PropTypes.number.isRequired,
+  // handleSelect: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  // current: PropTypes.number.isRequired,
 };
 
-// CustomDichotomousCovariates.defaultProps = {
-//   selectedCovariate: undefined,
-// };
+CustomDichotomousCovariates.defaultProps = {
+  selected: {},
+};
 
 export default CustomDichotomousCovariates;

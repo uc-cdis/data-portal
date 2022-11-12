@@ -5,18 +5,18 @@ import CohortDefinitions from "./CohortDefinitions";
 /* Eslint is giving error: import/no-named-as-default-member: needs a parser plugin */
 /* eslint-disable-next-line */
 import SearchBar from "../../Shared/SearchBar";
+import "../StudyPopulationCohortSelect.css";
 
-const CohortSelect = ({
-  selectedCohort,
-  handleCohortSelect,
-  sourceId,
-  current,
+const StudyPopulationCohortSelect = ({
+  selectedStudyPopulationCohort,
+  handleStudyPopulationCohortSelect,
+  cd
 }) => {
   const [cohortSearchTerm, setCohortSearchTerm] = useState("");
 
-  useEffect(() => {
-    setCohortSearchTerm("");
-  }, [current]);
+  // useEffect(() => {
+  //   setCohortSearchTerm("");
+  // }, [current]);
 
   const handleCohortSearch = (searchTerm) => {
     setCohortSearchTerm(searchTerm);
@@ -42,10 +42,10 @@ const CohortSelect = ({
         <div data-tour="cohort-table">
           <div data-tour="cohort-table-body">
             <CohortDefinitions
-              selectedCohort={selectedCohort}
-              handleCohortSelect={handleCohortSelect}
-              sourceId={sourceId}
+              selectedCohort={selectedStudyPopulationCohort}
+              handleCohortSelect={handleStudyPopulationCohortSelect}
               searchTerm={cohortSearchTerm}
+              cd={cd}
             />
           </div>
         </div>
@@ -54,15 +54,16 @@ const CohortSelect = ({
   );
 };
 
-CohortSelect.propTypes = {
-  selectedCohort: PropTypes.any,
-  handleCohortSelect: PropTypes.any.isRequired,
-  sourceId: PropTypes.number.isRequired,
-  current: PropTypes.number.isRequired,
+StudyPopulationCohortSelect.propTypes = {
+  selectedStudyPopulationCohort: PropTypes.any,
+  handleStudyPopulationCohortSelect: PropTypes.any.isRequired,
+  // sourceId: PropTypes.number.isRequired,
+  // current: PropTypes.number.isRequired,
+  cd: PropTypes.bool.isRequired
 };
 
-CohortSelect.defaultProps = {
-  selectedCohort: undefined,
+StudyPopulationCohortSelect.defaultProps = {
+  selectedStudyPopulationCohort: undefined,
 };
 
-export default CohortSelect;
+export default StudyPopulationCohortSelect;

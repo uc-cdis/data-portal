@@ -26,5 +26,6 @@ export const gwas = {
   mafThreshold: 0.01,
   numOfPC: 3,
   gwasName: '',
-  selectedHare: { concept_value: '' }
+  selectedHare: { concept_value: '' },
+  current: 0
 }

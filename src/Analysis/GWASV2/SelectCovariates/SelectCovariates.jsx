@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
-import ContinuousCovariates from '../Shared/GWASCovariates/ContinuousCovariates';
-import CustomDichotomousCovariates from '../Shared/GWASCovariates/CustomDichotomousCovariates';
+import ContinuousCovariates from '../Shared/Covariates/ContinuousCovariates';
+import CustomDichotomousCovariates from '../Shared/Covariates/CustomDichotomousCovariates';
 
 const SelectCovariates = ({
   handleCovariateSelect,
   handleCovariateSubmit,
   selectedCovariate = undefined,
   allCovariates,
-  sourceId,
   current,
 }) => {
   const [mode, setMode] = useState(undefined);
@@ -22,7 +21,6 @@ const SelectCovariates = ({
             handleSelect={handleCovariateSelect}
             selected={selectedCovariate}
             covariates={allCovariates}
-            sourceId={sourceId}
             setMode={setMode}
           />
         )}
@@ -33,7 +31,6 @@ const SelectCovariates = ({
             handleSubmit={handleSubmit}
             // selected={selectedCovariate}
             covariates={allCovariates}
-            sourceId={sourceId}
             setMode={setMode}
             current={current}
           />
@@ -68,7 +65,6 @@ const SelectCovariates = ({
 SelectCovariates.propTypes = {
   handleCovariateSubmit: PropTypes.func.isRequired,
   handleCovariateSelect: PropTypes.func.isRequired,
-  sourceId: PropTypes.number.isRequired,
   current: PropTypes.number.isRequired,
   allCovariates: PropTypes.array.isRequired
 };

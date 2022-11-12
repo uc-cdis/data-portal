@@ -4,16 +4,18 @@ import { useQuery, queryConfig } from "react-query";
 import { Table, Spin } from "antd";
 import { fetchCohortDefinitions } from "../../Shared/wizardEndpoints/cohortMiddlewareApi";
 import { useFetch, useFilter } from "../../Shared/formHooks";
+import { useSourceContext } from "../../Shared/Source";
 
 const CohortDefinitions = ({
-  sourceId,
   selectedCohort = undefined,
   handleCohortSelect,
   searchTerm,
+  cd
 }) => {
+  const { source } = useSourceContext();
   const cohorts = useQuery(
-    ["cohortdefinitions", sourceId],
-    () => fetchCohortDefinitions(sourceId),
+    ["cohortdefinitions", source],
+    () => fetchCohortDefinitions(source),
     queryConfig
   );
   const fetchedCohorts = useFetch(cohorts, "cohort_definitions_and_stats");
@@ -30,7 +32,10 @@ const CohortDefinitions = ({
       ? [inputSelectedCohort.cohort_definition_id]
       : [],
     onChange: (_, selectedRows) => {
-      handler({ type: "selectedStudyPopulationCohort", update: selectedRows[0]});
+      handler(
+        !cd ? { set: "selectedStudyPopulationCohort", update: selectedRows[0]}
+      : selectedRows[0]
+      );
     },
     getCheckboxProps: (record) => ({
       disabled:
@@ -74,10 +79,10 @@ const CohortDefinitions = ({
 };
 
 CohortDefinitions.propTypes = {
-  sourceId: PropTypes.number.isRequired,
   selectedCohort: PropTypes.any,
   handleCohortSelect: PropTypes.any.isRequired,
   searchTerm: PropTypes.string.isRequired,
+  cd: PropTypes.bool.isRequired
 };
 
 CohortDefinitions.defaultProps = {

@@ -1,28 +1,33 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useReducer, useContext, useEffect } from 'react';
 import { Space, Button, Popconfirm, Spin } from 'antd';
-import SelectStudyPopulation from './SelectStudyPopulation/SelectStudyPopulation';
+import StudyPopulationCohortSelect from './SelectStudyPopulation/Utils/StudyPopulationCohortSelect';
+import SelectOutcome from "./SelectOutcome/SelectOutcome";
+import SelectCovariates from "./SelectCovariates/SelectCovariates";
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
 // import AttritionTable from './Shared/AttritionTable/AttritionTable';
-import { useSourceFetch } from './Shared/wizardEndpoints/cohortMiddlewareApi';
 import { gwasV2Steps, gwas } from './Shared/constants';
 import './GWASV2.css';
 
 const GWASContainer = () => {
   const reducer = (gwas, action) => {
-    const { type, update } = action;
-    switch (type) {
-      default:
+    const { set, update } = action;
+    switch (typeof set) {
+      case "object": {
+        const mutation = { ...gwas };
+        set.forEach((s) => {
+          mutation[s] = update[set.indexOf(s)]
+        })
+        return mutation
+      }
+      case "string":
         return {
           ...gwas,
-          [type]: update
+          [set]: update
         }
     }
   }
   // todo need better naming
   const [workflow, setWorkflow] = useReducer(reducer, gwas);
-
-  const [current, setCurrent] = useState(0);
-  const { loading, sourceId } = useSourceFetch();
 
   const {
     selectedStudyPopulationCohort,
@@ -30,18 +35,18 @@ const GWASContainer = () => {
     allCovariates,
     imputationScore,
     mafThreshold,
-    selectedHare
+    selectedHare,
+    current
   } = workflow
 
   const generateStep = () => {
     switch (current) {
       case 0:
         return (
-          <SelectStudyPopulation
+          <StudyPopulationCohortSelect
             selectedStudyPopulationCohort={selectedStudyPopulationCohort}
-            setSelectedStudyPopulationCohort={setWorkflow}
-            current={current}
-            sourceId={sourceId}
+            handleStudyPopulationCohortSelect={setWorkflow}
+            cd={false}
           />
         );
       case 1:
@@ -50,8 +55,6 @@ const GWASContainer = () => {
             outcome={outcome}
             allCovariates={allCovariates}
             handleOutcome={setWorkflow}
-            sourceId={sourceId}
-            current={current}
           />
         </>
       case 2:
@@ -85,6 +88,7 @@ const GWASContainer = () => {
 
   return (
     <React.Fragment>
+      <span>the current outcome is {workflow.outcome.concept_name ?? 'nada'}</span>
       <ProgressBar current={current} />
       {/* {!loading && sourceId && (
         <React.Fragment>
@@ -120,9 +124,7 @@ const GWASContainer = () => {
               align={'center'}
               style={{ width: '100%' }}
             >
-              {!loading && sourceId ? generateStep(current) : (
-                <Spin />
-              )}
+              {generateStep(current)}
             </Space>
           </div>
           <div className='steps-action'>
@@ -130,7 +132,7 @@ const GWASContainer = () => {
               className='GWASUI-navBtn GWASUI-navBtn__next'
               type='primary'
               onClick={() => {
-                setCurrent(current - 1);
+                setWorkflow({ set: "current", update: current - 1 });
               }}
               disabled={current < 1}
             >
@@ -152,7 +154,7 @@ const GWASContainer = () => {
                 className='GWASUI-navBtn GWASUI-navBtn__next'
                 type='primary'
                 onClick={() => {
-                  setCurrent(current + 1);
+                  setWorkflow({ set: "current", update: current + 1 });
                 }}
                 disabled={!nextButtonEnabled}
               >
