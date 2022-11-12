@@ -5,26 +5,28 @@ import StudyPopulationCohortSelect from '../../SelectStudyPopulation/Utils/Study
 import '../../../GWASUIApp/GWASUIApp.css';
 
 const CustomDichotomousCovariates = ({
-  // handleSelect,
   handleSubmit,
-  // current,
   setMode,
-  allCovariates = []
+  covariates = [],
+  outcome,
+  type
 }) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
   const [secondPopulation, setSecondPopulation] = useState(undefined);
   const [providedName, setProvidedName] = useState('');
 
   const handleDichotomousSubmit = () => {
-    handleSubmit({
-      uuid: _.uniqueId(),
+    const dichotomous = {
       variable_type: 'custom_dichotomous',
       cohort_ids: [
         firstPopulation.cohort_definition_id,
         secondPopulation.cohort_definition_id
       ],
       provided_name: providedName,
-    });
+    }
+    handleSubmit(type === "outcome" ?
+      { set: ["outcome", "current"], update: [dichotomous, 2] } :
+      { set: "covariates", update: [...covariates, dichotomous] });
     setMode('');
   };
 
@@ -50,9 +52,9 @@ const CustomDichotomousCovariates = ({
           }}
         />
         <button
-        type='button'
-        className={'GWASUI-dichBtn'}
-        onClick={() => setMode(undefined)}>
+          type='button'
+          className={'GWASUI-dichBtn'}
+          onClick={() => setMode(undefined)}>
           cancel
         </button>
         <div data-tour='add-button'>
@@ -77,8 +79,8 @@ const CustomDichotomousCovariates = ({
                 selectedStudyPopulationCohort={firstPopulation}
                 handleStudyPopulationCohortSelect={setFirstPopulation}
                 cd={true}
-                // sourceId={sourceId}
-                // current={current}
+              // sourceId={sourceId}
+              // current={current}
               />
               {/* <SelectStudyPopulation
                   selectedStudyPopulationCohort={firstPopulation}
@@ -100,8 +102,8 @@ const CustomDichotomousCovariates = ({
                 selectedStudyPopulationCohort={secondPopulation}
                 handleStudyPopulationCohortSelect={setSecondPopulation}
                 cd={true}
-                // sourceId={sourceId}
-                // current={current}
+              // sourceId={sourceId}
+              // current={current}
               />
             </div>
           </div>
@@ -115,14 +117,15 @@ const CustomDichotomousCovariates = ({
 
 CustomDichotomousCovariates.propTypes = {
   setMode: PropTypes.func.isRequired,
-  // handleSelect: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  allCovariates: PropTypes.array
-  // current: PropTypes.number.isRequired,
+  covariates: PropTypes.array,
+  outcome: PropTypes.object,
+  type: PropTypes.string.isRequired
 };
 
 CustomDichotomousCovariates.defaultProps = {
-  allCovariates: []
+  covariates: [],
+  outcome: {}
 }
 
 

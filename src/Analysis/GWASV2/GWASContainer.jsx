@@ -20,35 +20,44 @@ const GWASContainer = () => {
         return mutation
       }
       case "string":
-        switch(set) {
-          case "allCovariates":
-            console.table(set, update, gwas)
+        switch (set) {
+          case "covariates":
+            const { covariates, covariateSubsets } = gwas;
+            const { length } = covariateSubsets;
             debugger;
             return {
-            ...gwas,
-            [set]: update,
-            "covariateSubsets": [ /*...*/ ]
+              ...gwas,
+              [set]: [...covariates, update],
+              "covariateSubsets": length ?
+                [...covariateSubsets, [...covariateSubsets[length - 1], update]]
+                : [[update]]
             }
-        default:
-          return {
-          ...gwas,
-          [set]: update
+          default:
+            return {
+              ...gwas,
+              [set]: update
+            }
         }
-      }
     }
   }
+
   // todo need better naming
   const [workflow, setWorkflow] = useReducer(reducer, gwas);
 
   const {
     selectedStudyPopulationCohort,
     outcome,
-    allCovariates,
+    covariates,
+    covariateSubsets,
     imputationScore,
     mafThreshold,
     selectedHare,
     current
-  } = workflow
+  } = workflow;
+
+  useEffect(() => {
+    console.log('covariateSubsets', covariateSubsets)
+  }, [covariateSubsets]);
 
   const generateStep = () => {
     switch (current) {
@@ -64,21 +73,22 @@ const GWASContainer = () => {
         return <>
           <SelectOutcome
             outcome={outcome}
-            allCovariates={allCovariates}
+            covariates={covariates}
             handleOutcome={setWorkflow}
           />
         </>
       case 2:
         return <>
           <SelectCovariates
-            allCovariates={allCovariates}
+            outcome={outcome}
+            covariates={covariates}
             handleCovariateSubmit={setWorkflow}
           />
         </>;
       case 3:
         return <>
           <ConfigureGWAS
-            allCovariates={allCovariates}
+            allCovariates={[...covariates, outcome]}
             imputationScore={imputationScore}
             mafThreshold={mafThreshold}
             selectedHare={selectedHare}

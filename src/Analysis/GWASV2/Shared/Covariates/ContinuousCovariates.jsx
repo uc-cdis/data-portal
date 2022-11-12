@@ -9,7 +9,8 @@ const ContinuousCovariates = ({
   selected,
   handleSubmit,
   handleSelect,
-  allCovariates = [],
+  covariates = [],
+  outcome,
   type
 }) => (
   <React.Fragment>
@@ -24,7 +25,7 @@ const ContinuousCovariates = ({
       onClick={() => {
         handleSubmit(type === "outcome" ?
         { set: ["outcome", "current"], update: [selected, 2] }
-        : { set: "allCovariates", update: [...allCovariates, selected] }
+        : { set: "covariates", update: selected }
         )
         setMode('')
       }}>
@@ -46,13 +47,14 @@ ContinuousCovariates.propTypes = {
   setMode: PropTypes.func.isRequired,
   handleSelect: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
-  allCovariates: PropTypes.array
+  covariates: PropTypes.array,
+  outcome: PropTypes.object.isRequired
   // searchTerm: PropTypes.string.isRequired
 };
 
 ContinuousCovariates.defaultProps = {
   selectedCovariate: undefined,
-  allCovariates: []
+  covariates: []
 };
 
 export default ContinuousCovariates;

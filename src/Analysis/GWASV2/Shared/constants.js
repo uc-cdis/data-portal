@@ -21,7 +21,8 @@ export const gwasV2Steps = [
 export const gwas = {
   outcome: {},
   selectedStudyPopulationCohort: {},
-  allCovariates: [],
+  covariates: [],
+  covariateSubsets: [],
   imputationScore: 0.3,
   mafThreshold: 0.01,
   numOfPC: 3,

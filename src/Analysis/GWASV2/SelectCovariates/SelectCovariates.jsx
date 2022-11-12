@@ -5,8 +5,8 @@ import CustomDichotomousCovariates from '../Shared/Covariates/CustomDichotomousC
 
 const SelectCovariates = ({
   handleCovariateSubmit,
-  allCovariates,
-  // current,
+  covariates,
+  outcome
 }) => {
   const [mode, setMode] = useState(undefined);
   const [selectedCovariate, setSelectedCovariate] = useState({});
@@ -21,7 +21,8 @@ const SelectCovariates = ({
             selected={selectedCovariate}
             handleSubmit={handleCovariateSubmit}
             handleSelect={setSelectedCovariate}
-            allCovariates={allCovariates}
+            covariates={covariates}
+            outcome={outcome}
             type={"covariate"}
           />
         )}
@@ -32,10 +33,9 @@ const SelectCovariates = ({
           <CustomDichotomousCovariates
             setMode={setMode}
             handleSubmit={handleCovariateSubmit}
-            // selected={selectedCovariate}
-            allCovariates={allCovariates}
-
-            // current={current}
+            covariates={covariates}
+            outcome={outcome}
+            type={"covariate"}
           />
         )}
       {!mode && (
@@ -67,8 +67,8 @@ const SelectCovariates = ({
 
 SelectCovariates.propTypes = {
   handleCovariateSubmit: PropTypes.func.isRequired,
-  // current: PropTypes.number.isRequired,
-  allCovariates: PropTypes.array.isRequired
+  covariates: PropTypes.array.isRequired,
+  outcome: PropTypes.object.isRequired
 };
 
 export default SelectCovariates;

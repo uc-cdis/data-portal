@@ -4,7 +4,7 @@ import ContinuousCovariates from '../Shared/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../Shared/Covariates/CustomDichotomousCovariates';
 
 const SelectOutcome = ({
-  allCovariates,
+  covariates,
   handleOutcome,
   outcome,
 }) => {
@@ -17,11 +17,12 @@ const SelectOutcome = ({
       // todo: add filter to allCovariates : .filter((cov) => concept_id in cov)
         ? (
           <ContinuousCovariates
-            // covariates={allCovariates}
             setMode={setMode}
             selected={selectedOutcome}
             handleSubmit={handleOutcome}
             handleSelect={setSelectedOutcome}
+            covariates={covariates}
+            outcome={outcome}
             type={"outcome"}
           />
         )
@@ -29,11 +30,11 @@ const SelectOutcome = ({
         // todo: add filter to allCovariates : .filter((cov) => provided_name in cov)
           ? (
             <CustomDichotomousCovariates
-            // customDichotomousCovariates={allCovariates}
               setMode={setMode}
               handleSubmit={handleOutcome}
-            //   handleSelect={setSelectedOutcome}
-            //   current={current}
+              covariates={covariates}
+              outcome={outcome}
+              type={"outcome"}
             />
           )
           : (
@@ -48,8 +49,7 @@ const SelectOutcome = ({
 
 SelectOutcome.propTypes = {
   handleOutcome: PropTypes.func.isRequired,
-  allCovariates: PropTypes.array.isRequired,
-//   current: PropTypes.number.isRequired,
+  covariates: PropTypes.array.isRequired,
   outcome: PropTypes.object,
 };
 
