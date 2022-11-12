@@ -31,9 +31,8 @@ const SelectOutcome = ({
             <CustomDichotomousCovariates
             // customDichotomousCovariates={allCovariates}
               setMode={setMode}
-              selected={outcome}
               handleSubmit={handleOutcome}
-              handleSelect={setSelectedOutcome}
+            //   handleSelect={setSelectedOutcome}
             //   current={current}
             />
           )

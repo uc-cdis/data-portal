@@ -20,10 +20,21 @@ const GWASContainer = () => {
         return mutation
       }
       case "string":
-        return {
+        switch(set) {
+          case "allCovariates":
+            console.table(set, update, gwas)
+            debugger;
+            return {
+            ...gwas,
+            [set]: update,
+            "covariateSubsets": [ /*...*/ ]
+            }
+        default:
+          return {
           ...gwas,
           [set]: update
         }
+      }
     }
   }
   // todo need better naming
@@ -61,7 +72,7 @@ const GWASContainer = () => {
         return <>
           <SelectCovariates
             allCovariates={allCovariates}
-            setGwas={setWorkflow}
+            handleCovariateSubmit={setWorkflow}
           />
         </>;
       case 3:

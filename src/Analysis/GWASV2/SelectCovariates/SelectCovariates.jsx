@@ -4,35 +4,38 @@ import ContinuousCovariates from '../Shared/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../Shared/Covariates/CustomDichotomousCovariates';
 
 const SelectCovariates = ({
-  handleCovariateSelect,
   handleCovariateSubmit,
-  selectedCovariate = undefined,
   allCovariates,
-  current,
+  // current,
 }) => {
   const [mode, setMode] = useState(undefined);
+  const [selectedCovariate, setSelectedCovariate] = useState({});
+
   return (
     <React.Fragment>
       {mode === 'continuous'
         // todo: add filter to allCovariates : .filter((cov) => concept_id in cov)
         && (
           <ContinuousCovariates
-            handleSubmit={handleCovariateSubmit}
-            handleSelect={handleCovariateSelect}
-            selected={selectedCovariate}
-            covariates={allCovariates}
             setMode={setMode}
+            selected={selectedCovariate}
+            handleSubmit={handleCovariateSubmit}
+            handleSelect={setSelectedCovariate}
+            allCovariates={allCovariates}
+            type={"covariate"}
           />
         )}
+
       {mode === 'dichotomous'
         // todo: add filter to allCovariates : .filter((cov) => provided_name in cov)
         && (
           <CustomDichotomousCovariates
-            handleSubmit={handleSubmit}
-            // selected={selectedCovariate}
-            covariates={allCovariates}
             setMode={setMode}
-            current={current}
+            handleSubmit={handleCovariateSubmit}
+            // selected={selectedCovariate}
+            allCovariates={allCovariates}
+
+            // current={current}
           />
         )}
       {!mode && (
@@ -64,13 +67,8 @@ const SelectCovariates = ({
 
 SelectCovariates.propTypes = {
   handleCovariateSubmit: PropTypes.func.isRequired,
-  handleCovariateSelect: PropTypes.func.isRequired,
-  current: PropTypes.number.isRequired,
+  // current: PropTypes.number.isRequired,
   allCovariates: PropTypes.array.isRequired
-};
-
-SelectCovariates.defaultProps = {
-  selectedCovariate: undefined,
 };
 
 export default SelectCovariates;

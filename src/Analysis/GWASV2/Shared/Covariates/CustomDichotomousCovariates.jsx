@@ -5,11 +5,11 @@ import StudyPopulationCohortSelect from '../../SelectStudyPopulation/Utils/Study
 import '../../../GWASUIApp/GWASUIApp.css';
 
 const CustomDichotomousCovariates = ({
-  selected,
   // handleSelect,
   handleSubmit,
   // current,
   setMode,
+  allCovariates = []
 }) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
   const [secondPopulation, setSecondPopulation] = useState(undefined);
@@ -114,15 +114,17 @@ const CustomDichotomousCovariates = ({
 };
 
 CustomDichotomousCovariates.propTypes = {
-  selected: PropTypes.any,
   setMode: PropTypes.func.isRequired,
   // handleSelect: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  allCovariates: PropTypes.array
   // current: PropTypes.number.isRequired,
 };
 
 CustomDichotomousCovariates.defaultProps = {
-  selected: {},
-};
+  allCovariates: []
+}
+
+
 
 export default CustomDichotomousCovariates;
