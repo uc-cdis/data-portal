@@ -3,14 +3,15 @@ import { Space, Button, Popconfirm, Spin } from 'antd';
 import StudyPopulationCohortSelect from './SelectStudyPopulation/Utils/StudyPopulationCohortSelect';
 import SelectOutcome from "./SelectOutcome/SelectOutcome";
 import SelectCovariates from "./SelectCovariates/SelectCovariates";
+import CovariatesList from "./Shared/Covariates/CovariatesList";
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
 // import AttritionTable from './Shared/AttritionTable/AttritionTable';
-import { gwasV2Steps, gwas } from './Shared/constants';
+import { gwasV2Steps, initialWorkflow } from './Shared/constants';
 import './GWASV2.css';
 
 const GWASContainer = () => {
   const reducer = (gwas, action) => {
-    const { set, update } = action;
+    const { set, update, op = "" } = action;
     switch (typeof set) {
       case "object": {
         const mutation = { ...gwas };
@@ -24,14 +25,31 @@ const GWASContainer = () => {
           case "covariates":
             const { covariates, covariateSubsets } = gwas;
             const { length } = covariateSubsets;
-            debugger;
-            return {
-              ...gwas,
-              [set]: [...covariates, update],
-              "covariateSubsets": length ?
-                [...covariateSubsets, [...covariateSubsets[length - 1], update]]
-                : [[update]]
+            // const deleteIdx = op === '-' ? covariateSubsets.find((sub) => sub.find((s) => s.concept_id === update)): 0;
+            switch (op) {
+              case "+":
+                debugger;
+                return {
+                  ...workflow,
+                  [set]: [...covariates, update],
+                  "covariateSubsets": length ?
+                    [...covariateSubsets, [...covariateSubsets[length - 1], update]]
+                    : [[update]]
+                }
+              case "-":
+                console.log('delete update', update) // <-- pass update as an id always so you dont have to check
+                debugger;                            // custom dichotomous vs continuous being deleted
+                return {
+                  ...workflow,          // update should contain what type of cov being deleted to make this reducer fitler cleaner
+                  [set]: [...covariates.filter((c) => /* ... */ c)],
+                  "covariateSubsets": length === 1 ? [...covariateSubsets.map((sub) => sub.filter((s) => s?.concept_id === update || s?.provided_name === update))] : ''
+                }
+              // ^ todo:
+              // 1) grab idx of first subarray that contains id
+              // 2) filter out that covariate from all subarrays in covariateSubsets[idx + 1] - covariateSubsets[length - 1]
+              // 3) delete the subarray with idx from 1)
             }
+
           default:
             return {
               ...gwas,
@@ -42,7 +60,7 @@ const GWASContainer = () => {
   }
 
   // todo need better naming
-  const [workflow, setWorkflow] = useReducer(reducer, gwas);
+  const [workflow, setWorkflow] = useReducer(reducer, initialWorkflow);
 
   const {
     selectedStudyPopulationCohort,
@@ -84,6 +102,10 @@ const GWASContainer = () => {
             covariates={covariates}
             handleCovariateSubmit={setWorkflow}
           />
+          <CovariatesList
+            covariates={covariates}
+            setWorkflow={setWorkflow}
+           />
         </>;
       case 3:
         return <>
@@ -93,7 +115,12 @@ const GWASContainer = () => {
             mafThreshold={mafThreshold}
             selectedHare={selectedHare}
             setGwas={setWorkflow}
-          /></>;
+            />
+            <CovariatesList
+            covariates={covariates}
+            setWorkflow={setWorkflow}
+            />
+            </>;
       default:
         return null;
     }

@@ -18,7 +18,7 @@ export const gwasV2Steps = [
   },
 ];
 
-export const gwas = {
+export const initialWorkflow = {
   outcome: {},
   selectedStudyPopulationCohort: {},
   covariates: [],

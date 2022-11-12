@@ -25,7 +25,7 @@ const ContinuousCovariates = ({
       onClick={() => {
         handleSubmit(type === "outcome" ?
         { set: ["outcome", "current"], update: [selected, 2] }
-        : { set: "covariates", update: selected }
+        : { set: "covariates", update: selected, op: "+" }
         )
         setMode('')
       }}>
