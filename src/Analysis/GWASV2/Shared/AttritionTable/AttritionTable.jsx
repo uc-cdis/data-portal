@@ -145,7 +145,7 @@ const AttritionTable = ({
                     <React.Fragment key={item}>
                       {/* This is for all the covariate rows in the table */}
                       <tr>
-                        <td>
+                        <td colspan='8'>
                           NEW item:
                           {JSON.stringify(item[item.length - 1])}
                         </td>
