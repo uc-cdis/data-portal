@@ -13,7 +13,7 @@ const AttritionTable = ({
   outcome,
   newCovariateSubset,
   selectedCovariates,
-  selectedDichotomousCovariates,
+  // selectedDichotomousCovariates,
   sourceId,
   tableHeader,
 }) => {
@@ -59,10 +59,10 @@ const AttritionTable = ({
 
   useEffect(() => {
     setNewCovariateSubsetsProcessed(newGetCovariateRow(newCovariateSubset));
-    setCovariateSubsets(
-      getCovariateRow(selectedCovariates, selectedDichotomousCovariates)
-    );
-  }, [selectedCovariates, selectedDichotomousCovariates]);
+    // setCovariateSubsets(
+    //   getCovariateRow(selectedCovariates, selectedDichotomousCovariates)
+    // );
+  }, [newCovariateSubset]);
 
   console.log('outcome', JSON.stringify(outcome));
   return (
@@ -183,7 +183,7 @@ AttritionTable.propTypes = {
   outcome: PropTypes.object.isRequired,
   newCovariateSubset: PropTypes.array.isRequired,
   selectedCovariates: PropTypes.array.isRequired,
-  selectedDichotomousCovariates: PropTypes.array.isRequired,
+  // selectedDichotomousCovariates: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
   tableHeader: PropTypes.string.isRequired,
 };

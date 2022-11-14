@@ -29,7 +29,7 @@ const GWASContainer = () => {
       concept_name: 'concept name',
     },
   ]);
-  const [selectedDichotomousCovariates] = useState([]);
+  // const [selectedDichotomousCovariates] = useState([]);
 
   // THIS IS THE STRUCTURE FOR QUANTITIVE; when quantitive it will be variable_type:concept
   // WHEN IT IS case control: it will be variable_type: 'custom_dichotomous'
@@ -86,7 +86,7 @@ const GWASContainer = () => {
             otherSelectedCohort={selectedControlCohort}
             outcome={outcome}
             selectedCovariates={selectedCovariates}
-            selectedDichotomousCovariates={selectedDichotomousCovariates}
+            // selectedDichotomousCovariates={selectedDichotomousCovariates}
           />
         </React.Fragment>
       )}
