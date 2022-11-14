@@ -16,7 +16,6 @@ const GWASContainer = () => {
   ] = useState({});
   const [selectedControlCohort] = useState(undefined);
   const [selectedCaseCohort] = useState(undefined);
-  const [selectedCovariates] = useState([]);
   const [newCovariateSubset] = useState([
     {
       variable_type: 'custom_dichotomous',
@@ -33,7 +32,7 @@ const GWASContainer = () => {
 
   // THIS IS THE STRUCTURE FOR QUANTITIVE; when quantitive it will be variable_type:concept
   // WHEN IT IS case control: it will be variable_type: 'custom_dichotomous'
-  const [outcome, setOutcome] = useState({
+  const [outcome] = useState({
     variable_type: 'concept',
     concept_id: 'id',
     concept_name: 'concept name',
@@ -42,34 +41,34 @@ const GWASContainer = () => {
   const generateStep = () => {
     // steps 2 & 3 very similar
     switch (current) {
-    case 0:
-      // select study population
-      return (
-        <SelectStudyPopulation
-          selectedStudyPopulationCohort={selectedStudyPopulationCohort}
-          setSelectedStudyPopulationCohort={setSelectedStudyPopulationCohort}
-          current={current}
-        />
-      );
-    case 1:
-      // outcome (customdichotomous or not)
-      return <React.Fragment>step 2</React.Fragment>;
-    case 2:
-      // covariates (customdichtomous or not)
-      return <React.Fragment>step 3</React.Fragment>;
-    case 3:
-      // all other input (mafs, imputation, etc), review, and submit
-      return <React.Fragment>step 4</React.Fragment>;
-    default:
-      // required for eslint
-      return null;
+      case 0:
+        // select study population
+        return (
+          <SelectStudyPopulation
+            selectedStudyPopulationCohort={selectedStudyPopulationCohort}
+            setSelectedStudyPopulationCohort={setSelectedStudyPopulationCohort}
+            current={current}
+          />
+        );
+      case 1:
+        // outcome (customdichotomous or not)
+        return <React.Fragment>step 2</React.Fragment>;
+      case 2:
+        // covariates (customdichtomous or not)
+        return <React.Fragment>step 3</React.Fragment>;
+      case 3:
+        // all other input (mafs, imputation, etc), review, and submit
+        return <React.Fragment>step 4</React.Fragment>;
+      default:
+        // required for eslint
+        return null;
     }
   };
 
   let nextButtonEnabled = true;
   if (
-    current === 0
-    && Object.keys(selectedStudyPopulationCohort).length === 0
+    current === 0 &&
+    Object.keys(selectedStudyPopulationCohort).length === 0
   ) {
     nextButtonEnabled = false;
   }

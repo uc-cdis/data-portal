@@ -12,12 +12,9 @@ const AttritionTable = ({
   otherSelectedCohort,
   outcome,
   newCovariateSubset,
-  selectedCovariates,
-  // selectedDichotomousCovariates,
   sourceId,
   tableHeader,
 }) => {
-  const [covariateSubsets, setCovariateSubsets] = useState([]);
   const [
     newCovariateSubsetsProcessed,
     setNewCovariateSubsetsProcessed,
@@ -37,6 +34,7 @@ const AttritionTable = ({
 
   // OLD METHOD
   /*
+  const [covariateSubsets, setCovariateSubsets] = useState([]);
   const getCovariateRow = (
     selectedCovs = [],
     selectedCustomdichotomousCovs = []
@@ -141,7 +139,7 @@ const AttritionTable = ({
 
               {selectedCohort?.cohort_definition_id
               && newCovariateSubsetsProcessed.length > 0
-                ? newCovariateSubsetsProcessed.map((item, i) => (
+                ? newCovariateSubsetsProcessed.map((item) => (
                   <React.Fragment key={item}>
                     {/* This is for all the covariate rows in the table */}
                     <tr>
@@ -181,8 +179,6 @@ AttritionTable.propTypes = {
   otherSelectedCohort: PropTypes.object,
   outcome: PropTypes.object.isRequired,
   newCovariateSubset: PropTypes.array.isRequired,
-  selectedCovariates: PropTypes.array.isRequired,
-  // selectedDichotomousCovariates: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
   tableHeader: PropTypes.string.isRequired,
 };
@@ -190,7 +186,6 @@ AttritionTable.propTypes = {
 AttritionTable.defaultProps = {
   selectedCohort: undefined,
   otherSelectedCohort: undefined,
-  outcome: undefined,
 };
 
 export default AttritionTable;

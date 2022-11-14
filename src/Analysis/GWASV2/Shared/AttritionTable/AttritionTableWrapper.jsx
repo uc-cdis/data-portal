@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import AttritionTable from './AttritionTable';
 
@@ -7,8 +7,6 @@ const AttritionTableWrapper = ({
   selectedCohort,
   otherSelectedCohort,
   outcome,
-  selectedCovariates,
-  selectedDichotomousCovariates,
   sourceId,
 }) => (
   <React.Fragment>
@@ -40,8 +38,6 @@ AttritionTableWrapper.propTypes = {
   selectedCohort: PropTypes.object,
   otherSelectedCohort: PropTypes.object,
   outcome: PropTypes.object,
-  // selectedCovariates: PropTypes.array.isRequired,
-  // selectedDichotomousCovariates: PropTypes.array.isRequired,
   newCovariateSubset: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
 };

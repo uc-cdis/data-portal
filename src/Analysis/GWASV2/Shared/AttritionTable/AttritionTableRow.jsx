@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
@@ -36,10 +35,10 @@ const AttritionTableRow = ({
       cohortDefinitionId,
       otherCohortDefinitionId,
     ],
+    // if there are not two cohorts selected, then quantitative
+    // Otherwise if there are two cohorts selected, case control
     () => (!(cohortDefinitionId && otherCohortDefinitionId)
-      ? // if there are not two cohorts selected, then quantitative
-      // Otherwise if there are two cohorts selected, case control
-      fetchConceptStatsByHareSubset(
+      ? fetchConceptStatsByHareSubset(
         cohortDefinitionId,
         covariateSubset,
         sourceId,
@@ -57,6 +56,7 @@ const AttritionTableRow = ({
 
   const getSizeByColumn = (hare) => {
     const hareIndex = breakdownColumns.findIndex(
+      // eslint-disable-next-line camelcase
       ({ concept_value }) => concept_value === hare,
     );
     return hareIndex > -1
@@ -67,6 +67,7 @@ const AttritionTableRow = ({
   useEffect(() => {
     if (breakdown?.length) {
       const filteredBreakdown = breakdown.filter(
+        // eslint-disable-next-line camelcase
         ({ concept_value }) => concept_value !== 'OTH',
       );
       setBreakdownSize(
@@ -89,7 +90,7 @@ const AttritionTableRow = ({
     setHis(getSizeByColumn('HIS'));
   }, [breakdownColumns]);
 
-  const determineChartIcon = (rowTypeInput) => {
+  const determineChartIcon = () => {
     if (rowType === 'Covariate' || rowType === 'Outcome') {
       if (rowObject.variable_type === 'concept') {
         return <BarChart />;
@@ -104,7 +105,8 @@ const AttritionTableRow = ({
       return outcome.variable_type === 'concept'
         ? outcome.concept_name
         : 'this is for case control, TODO';
-    } if (rowType === 'Covariate') {
+    }
+    if (rowType === 'Covariate') {
       return rowObject.concept_name
         ? rowObject.concept_name
         : rowObject.provided_name;
@@ -138,13 +140,15 @@ AttritionTableRow.propTypes = {
   rowType: PropTypes.string.isRequired,
   covariateSubset: PropTypes.array.isRequired,
   outcome: PropTypes.object,
-  rowObject: PropTypes.object,
+  rowObject: PropTypes.object.isRequired,
   selectedCohort: PropTypes.object,
   sourceId: PropTypes.number.isRequired,
 };
 
 AttritionTableRow.defaultProps = {
   otherCohortDefinitionId: undefined,
+  selectedCohort: undefined,
+  outcome: undefined,
 };
 
 export default AttritionTableRow;
