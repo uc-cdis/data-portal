@@ -18,8 +18,8 @@ const AttritionTableWrapper = ({
         selectedCohort={selectedCohort}
         otherSelectedCohort={otherSelectedCohort}
         outcome={outcome}
-        selectedCovariates={selectedCovariates}
-        selectedDichotomousCovariates={selectedDichotomousCovariates}
+        // selectedCovariates={selectedCovariates}
+        // selectedDichotomousCovariates={selectedDichotomousCovariates}
         tableHeader={'Case Cohort Attrition Table'}
       />
       {outcome.variable_type === 'custom_dichotomous' && (
@@ -29,8 +29,8 @@ const AttritionTableWrapper = ({
           selectedCohort={selectedCohort}
           otherSelectedCohort={otherSelectedCohort}
           outcome={outcome}
-          selectedCovariates={selectedCovariates}
-          selectedDichotomousCovariates={selectedDichotomousCovariates}
+          // selectedCovariates={selectedCovariates}
+          // selectedDichotomousCovariates={selectedDichotomousCovariates}
           tableHeader={'Control Cohort Attrition Table'}
         />
       )}
@@ -41,8 +41,8 @@ AttritionTableWrapper.propTypes = {
   selectedCohort: PropTypes.object,
   otherSelectedCohort: PropTypes.object,
   outcome: PropTypes.object,
-  selectedCovariates: PropTypes.array.isRequired,
-  selectedDichotomousCovariates: PropTypes.array.isRequired,
+  // selectedCovariates: PropTypes.array.isRequired,
+  // selectedDichotomousCovariates: PropTypes.array.isRequired,
   newCovariateSubset: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
 };
