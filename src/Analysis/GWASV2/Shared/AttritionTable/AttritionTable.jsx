@@ -147,11 +147,8 @@ const AttritionTable = ({
                       <tr>
                         <td>
                           NEW item:
-                          {JSON.stringify(newCovariateSubsetsProcessed)}
+                          {JSON.stringify(item[item.length - 1])}
                         </td>
-                      </tr>
-                      <tr>
-                        <td>OLD item: {JSON.stringify(covariateSubsets[i])}</td>
                       </tr>
                       <AttritionTableRow
                         key={item}

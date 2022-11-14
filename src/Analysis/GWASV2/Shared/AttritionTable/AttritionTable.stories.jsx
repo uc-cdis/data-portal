@@ -23,18 +23,7 @@ const MockTemplate = () => {
     concept_id: 'id',
     concept_name: 'concept name',
   });
-  const [newCovariateSubset] = useState([
-    {
-      variable_type: 'custom_dichotomous',
-      provided_name: 'providednamebyuser',
-      cohort_ids: [12, 32],
-    },
-    {
-      variable_type: 'concept',
-      concept_id: 'id',
-      concept_name: 'concept name',
-    },
-  ]);
+
   const [selectedCohort, setSelectedCohort] = useState({
     cohort_definition_id: 123,
     cohort_name: 'cohort name abc',
@@ -43,10 +32,7 @@ const MockTemplate = () => {
     cohort_definition_id: 456,
     cohort_name: 'cohort name def',
   });
-  const [
-    selectedDichotomousCovariates,
-    setSelectedDichotomousCovariates,
-  ] = useState([
+  const [newCovariateSubset] = useState([
     {
       variable_type: 'custom_dichotomous',
       cohort_ids: [1, 2],
@@ -59,8 +45,6 @@ const MockTemplate = () => {
       provided_name: 'dichotomous test2',
       uuid: '123456',
     },
-  ]);
-  const [selectedCovariates, setSelectedCovariates] = useState([
     {
       concept_id: 2000006886,
       prefixed_concept_id: 'ID_2000006886',
@@ -92,8 +76,8 @@ const MockTemplate = () => {
         selectedCohort={selectedCohort}
         outcome={selectedOutcome}
         newCovariateSubset={newCovariateSubset}
-        selectedCovariates={selectedCovariates}
-        selectedDichotomousCovariates={selectedDichotomousCovariates}
+        // selectedCovariates={selectedCovariates}
+        // selectedDichotomousCovariates={selectedDichotomousCovariates}
         tableHeader={'Quantitative Attrition Table'}
       />
       <AttritionTable
@@ -103,8 +87,8 @@ const MockTemplate = () => {
         otherSelectedCohort={otherSelectedCohort}
         outcome={selectedOutcome}
         newCovariateSubset={newCovariateSubset}
-        selectedCovariates={selectedCovariates}
-        selectedDichotomousCovariates={selectedDichotomousCovariates}
+        // selectedCovariates={selectedCovariates}
+        // selectedDichotomousCovariates={selectedDichotomousCovariates}
         tableHeader={'Case Cohort Attrition Table (1 of 2)'}
       />
     </QueryClientProvider>
