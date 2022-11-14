@@ -85,7 +85,7 @@ const GWASContainer = () => {
             selectedCohort={selectedStudyPopulationCohort}
             otherSelectedCohort={selectedControlCohort}
             outcome={outcome}
-            selectedCovariates={selectedCovariates}
+            // selectedCovariates={selectedCovariates}
             // selectedDichotomousCovariates={selectedDichotomousCovariates}
           />
         </React.Fragment>
