@@ -42,34 +42,34 @@ const GWASContainer = () => {
   const generateStep = () => {
     // steps 2 & 3 very similar
     switch (current) {
-      case 0:
-        // select study population
-        return (
-          <SelectStudyPopulation
-            selectedStudyPopulationCohort={selectedStudyPopulationCohort}
-            setSelectedStudyPopulationCohort={setSelectedStudyPopulationCohort}
-            current={current}
-          />
-        );
-      case 1:
-        // outcome (customdichotomous or not)
-        return <React.Fragment>step 2</React.Fragment>;
-      case 2:
-        // covariates (customdichtomous or not)
-        return <React.Fragment>step 3</React.Fragment>;
-      case 3:
-        // all other input (mafs, imputation, etc), review, and submit
-        return <React.Fragment>step 4</React.Fragment>;
-      default:
-        // required for eslint
-        return null;
+    case 0:
+      // select study population
+      return (
+        <SelectStudyPopulation
+          selectedStudyPopulationCohort={selectedStudyPopulationCohort}
+          setSelectedStudyPopulationCohort={setSelectedStudyPopulationCohort}
+          current={current}
+        />
+      );
+    case 1:
+      // outcome (customdichotomous or not)
+      return <React.Fragment>step 2</React.Fragment>;
+    case 2:
+      // covariates (customdichtomous or not)
+      return <React.Fragment>step 3</React.Fragment>;
+    case 3:
+      // all other input (mafs, imputation, etc), review, and submit
+      return <React.Fragment>step 4</React.Fragment>;
+    default:
+      // required for eslint
+      return null;
     }
   };
 
   let nextButtonEnabled = true;
   if (
-    current === 0 &&
-    Object.keys(selectedStudyPopulationCohort).length === 0
+    current === 0
+    && Object.keys(selectedStudyPopulationCohort).length === 0
   ) {
     nextButtonEnabled = false;
   }

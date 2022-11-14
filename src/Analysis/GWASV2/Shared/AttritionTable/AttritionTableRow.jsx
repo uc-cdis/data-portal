@@ -36,29 +36,28 @@ const AttritionTableRow = ({
       cohortDefinitionId,
       otherCohortDefinitionId,
     ],
-    () =>
-      !(cohortDefinitionId && otherCohortDefinitionId)
-        ? // if there are not two cohorts selected, then quantitative
-          // Otherwise if there are two cohorts selected, case control
-          fetchConceptStatsByHareSubset(
-            cohortDefinitionId,
-            covariateSubset,
-            sourceId
-          )
-        : fetchConceptStatsByHareSubsetCC(
-            cohortDefinitionId,
-            otherCohortDefinitionId,
-            covariateSubset,
-            sourceId
-          ),
-    queryConfig
+    () => (!(cohortDefinitionId && otherCohortDefinitionId)
+      ? // if there are not two cohorts selected, then quantitative
+      // Otherwise if there are two cohorts selected, case control
+      fetchConceptStatsByHareSubset(
+        cohortDefinitionId,
+        covariateSubset,
+        sourceId,
+      )
+      : fetchConceptStatsByHareSubsetCC(
+        cohortDefinitionId,
+        otherCohortDefinitionId,
+        covariateSubset,
+        sourceId,
+      )),
+    queryConfig,
   );
 
   const { breakdown } = { breakdown: data?.concept_breakdown };
 
   const getSizeByColumn = (hare) => {
     const hareIndex = breakdownColumns.findIndex(
-      ({ concept_value }) => concept_value === hare
+      ({ concept_value }) => concept_value === hare,
     );
     return hareIndex > -1
       ? breakdownColumns[hareIndex].persons_in_cohort_with_value
@@ -68,13 +67,13 @@ const AttritionTableRow = ({
   useEffect(() => {
     if (breakdown?.length) {
       const filteredBreakdown = breakdown.filter(
-        ({ concept_value }) => concept_value !== 'OTH'
+        ({ concept_value }) => concept_value !== 'OTH',
       );
       setBreakdownSize(
         filteredBreakdown.reduce(
           (acc, curr) => acc + curr.persons_in_cohort_with_value,
-          0
-        )
+          0,
+        ),
       );
       setBreakdownColumns(filteredBreakdown);
     } else {
@@ -94,9 +93,8 @@ const AttritionTableRow = ({
     if (rowType === 'Covariate' || rowType === 'Outcome') {
       if (rowObject.variable_type === 'concept') {
         return <BarChart />;
-      } else {
-        return <EulerDiagram />;
       }
+      return <EulerDiagram />;
     }
     return null;
   };
@@ -106,14 +104,13 @@ const AttritionTableRow = ({
       return outcome.variable_type === 'concept'
         ? outcome.concept_name
         : 'this is for case control, TODO';
-    } else if (rowType === 'Covariate') {
+    } if (rowType === 'Covariate') {
       return rowObject.concept_name
         ? rowObject.concept_name
         : rowObject.provided_name;
-    } else {
-      // For Cohort Logic
-      return selectedCohort.cohort_name;
     }
+    // For Cohort Logic
+    return selectedCohort.cohort_name;
   };
 
   return (

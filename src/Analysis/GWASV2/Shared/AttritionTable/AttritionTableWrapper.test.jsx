@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import Enzyme, { render, mount, shallow } from 'enzyme';
+import React from 'react';
+import Enzyme, { mount, shallow } from 'enzyme';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Adapter from 'enzyme-adapter-react-16';
 import AttritionTableWrapper from './AttritionTableWrapper';
+
 Enzyme.configure({ adapter: new Adapter() });
 
 const mockedQueryClient = new QueryClient({

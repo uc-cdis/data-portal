@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import AttritionTable from './AttritionTable';
+
 const AttritionTableWrapper = ({
   newCovariateSubset,
   selectedCohort,
@@ -9,9 +10,19 @@ const AttritionTableWrapper = ({
   selectedCovariates,
   selectedDichotomousCovariates,
   sourceId,
-}) => {
-  return (
-    <>
+}) => (
+  <React.Fragment>
+    <AttritionTable
+      sourceId={sourceId}
+      newCovariateSubset={newCovariateSubset}
+      selectedCohort={selectedCohort}
+      otherSelectedCohort={otherSelectedCohort}
+      outcome={outcome}
+      // selectedCovariates={selectedCovariates}
+      // selectedDichotomousCovariates={selectedDichotomousCovariates}
+      tableHeader={'Case Cohort Attrition Table'}
+    />
+    {outcome.variable_type === 'custom_dichotomous' && (
       <AttritionTable
         sourceId={sourceId}
         newCovariateSubset={newCovariateSubset}
@@ -20,23 +31,11 @@ const AttritionTableWrapper = ({
         outcome={outcome}
         // selectedCovariates={selectedCovariates}
         // selectedDichotomousCovariates={selectedDichotomousCovariates}
-        tableHeader={'Case Cohort Attrition Table'}
+        tableHeader={'Control Cohort Attrition Table'}
       />
-      {outcome.variable_type === 'custom_dichotomous' && (
-        <AttritionTable
-          sourceId={sourceId}
-          newCovariateSubset={newCovariateSubset}
-          selectedCohort={selectedCohort}
-          otherSelectedCohort={otherSelectedCohort}
-          outcome={outcome}
-          // selectedCovariates={selectedCovariates}
-          // selectedDichotomousCovariates={selectedDichotomousCovariates}
-          tableHeader={'Control Cohort Attrition Table'}
-        />
-      )}
-    </>
-  );
-};
+    )}
+  </React.Fragment>
+);
 AttritionTableWrapper.propTypes = {
   selectedCohort: PropTypes.object,
   otherSelectedCohort: PropTypes.object,
