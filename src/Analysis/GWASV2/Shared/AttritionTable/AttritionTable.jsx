@@ -36,6 +36,7 @@ const AttritionTable = ({
   };
 
   // OLD METHOD
+  /*
   const getCovariateRow = (
     selectedCovs = [],
     selectedCustomdichotomousCovs = []
@@ -56,6 +57,7 @@ const AttritionTable = ({
       });
     return subsets;
   };
+  */
 
   useEffect(() => {
     setNewCovariateSubsetsProcessed(newGetCovariateRow(newCovariateSubset));
