@@ -28,4 +28,5 @@ jobs:
   unit_test:
     name: NPM Unit Test
     uses: uc-cdis/.github/.github/workflows/npm_unit_test.yaml@feat_npmunittests
-    secrets: inherit
+    with:
+      node-version: "['14.x']"
