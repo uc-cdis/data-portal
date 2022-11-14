@@ -41,7 +41,7 @@ const ConfigureGWAS = ({
                             value={numOfPC}
                             min={1}
                             max={10}
-                            onChange={(e) => setWorkflow({type: "numOfPCs", update: handleNumOfPC(e)})}
+                            onChange={(e) => setWorkflow({type: "numOfPCs", update: e })}
                         />
                         {/* {(!numOfPC) && (<span style={{ color: 'red' }}> Please input a value between 1 and 10</span>)} */}
                     </label>
