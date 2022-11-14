@@ -91,6 +91,7 @@ const MockTemplate = () => {
         sourceId={1}
         selectedCohort={selectedCohort}
         outcome={selectedOutcome}
+        newCovariateSubset={newCovariateSubset}
         selectedCovariates={selectedCovariates}
         selectedDichotomousCovariates={selectedDichotomousCovariates}
         tableHeader={'Quantitative Attrition Table'}
@@ -100,7 +101,8 @@ const MockTemplate = () => {
         sourceId={1}
         selectedCohort={selectedCohort}
         otherSelectedCohort={otherSelectedCohort}
-        // no outcome
+        outcome={selectedOutcome}
+        newCovariateSubset={newCovariateSubset}
         selectedCovariates={selectedCovariates}
         selectedDichotomousCovariates={selectedDichotomousCovariates}
         tableHeader={'Case Cohort Attrition Table (1 of 2)'}

@@ -100,7 +100,7 @@ const AttritionTable = ({
             </thead>
             <tbody>
               {selectedCohort?.cohort_definition_id && (
-                <React.Fragment>
+                <React.Fragment key={selectedCohort}>
                   {/* This is for the first Cohort Row in the Table */}
 
                   <AttritionTableRow
@@ -119,7 +119,7 @@ const AttritionTable = ({
               )}
 
               {outcome && (
-                <>
+                <React.Fragment key={outcome}>
                   {/* This is for the outcome Row in the Table */}
                   <AttritionTableRow
                     selectedCohort={selectedCohort}
@@ -134,13 +134,14 @@ const AttritionTable = ({
                     covariateSubset={[]}
                     sourceId={sourceId}
                   />
-                </>
+                </React.Fragment>
               )}
 
               {selectedCohort?.cohort_definition_id &&
               newCovariateSubsetsProcessed.length > 0
                 ? newCovariateSubsetsProcessed.map((item, i) => (
-                    <>
+                    <React.Fragment key={item}>
+                      {/* This is for all the covariate rows in the table */}
                       <tr>
                         <td>
                           NEW item:
@@ -165,7 +166,7 @@ const AttritionTable = ({
                         covariateSubset={item}
                         sourceId={sourceId}
                       />
-                    </>
+                    </React.Fragment>
                   ))
                 : null}
             </tbody>
