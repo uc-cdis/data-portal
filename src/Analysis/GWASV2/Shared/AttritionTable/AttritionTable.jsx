@@ -153,7 +153,8 @@ const AttritionTable = ({
                       <AttritionTableRow
                         key={item}
                         outcome={outcome}
-                        rowObject={item[i]}
+                        // use the last item
+                        rowObject={item[item.length - 1]}
                         selectedCohort={selectedCohort}
                         otherCohortDefinitionId={
                           otherSelectedCohort
