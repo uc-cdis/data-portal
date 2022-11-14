@@ -134,7 +134,23 @@ const GWASContainer = () => {
     nextButtonEnabled = false;
   }
 
+  const GWASSubmit = ()  => {
+    // todo:
+    // { outcome, allCovariates, numOfPCs, mafThreshold, imputationScore, ...} = workflow;
+    // grab submit code from GWASWizard/wizardEndpoints/gwasWorkflowApi.js
+  }
+
   return (
+    // const { covariateSubsets, ... } = workflow;
+    // todo: pass covariateSubsets & other variables (...) to attrition table
+
+    // <NewAttritionTable
+    //   covariateSubsets={covariateSubets}
+    //   ...
+    //   ...
+    //   ...
+    //  />
+
     <React.Fragment>
       <span>the current outcome is {workflow.outcome.concept_name ?? 'nada'}</span>
       <ProgressBar current={current} />
