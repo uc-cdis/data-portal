@@ -30,7 +30,7 @@ const MockTemplate = () => {
     cohort_definition_id: 456,
     cohort_name: 'cohort name def',
   });
-  const [newCovariateSubset] = useState([
+  const [covariates] = useState([
     {
       variable_type: 'custom_dichotomous',
       cohort_ids: [1, 2],
@@ -73,7 +73,7 @@ const MockTemplate = () => {
         sourceId={1}
         selectedCohort={selectedCohort}
         outcome={selectedOutcome}
-        newCovariateSubset={newCovariateSubset}
+        covariates={covariates}
         tableHeader={'Quantitative Attrition Table'}
       />
       <AttritionTable
@@ -82,7 +82,7 @@ const MockTemplate = () => {
         selectedCohort={selectedCohort}
         otherSelectedCohort={otherSelectedCohort}
         outcome={selectedOutcome}
-        newCovariateSubset={newCovariateSubset}
+        covariates={covariates}
         tableHeader={'Case Cohort Attrition Table (1 of 2)'}
       />
     </QueryClientProvider>
