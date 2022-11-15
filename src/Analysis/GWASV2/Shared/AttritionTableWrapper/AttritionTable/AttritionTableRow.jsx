@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import {
   fetchConceptStatsByHareSubset,
-  fetchConceptStatsByHareSubsetCC,
+  // fetchConceptStatsByHareSubsetCC,
   queryConfig,
 } from '../../wizardEndpoints/cohortMiddlewareApi';
 import BarChart from '../ChartIcons/BarChart';
@@ -99,11 +99,11 @@ const AttritionTableRow = ({
     if (rowType === 'Covariate' || rowType === 'Outcome') {
       if (rowObject.variable_type === 'concept') {
         return <BarChart />;
-      } else if (rowObject.variable_type === 'custom_dichotomous') {
-        return <EulerDiagram />;
-      } else {
-        throw 'Invalid rowType';
       }
+      if (rowObject.variable_type === 'custom_dichotomous') {
+        return <EulerDiagram />;
+      }
+      throw new Error('Invalid Row Type');
     }
     return null;
   };

@@ -56,8 +56,8 @@ describe('Component Mounts and renders 1 attrition table as expected', () => {
     shallow(
       <QueryClientProvider client={mockedQueryClient}>
         <AttritionTableWrapper {...AttritionTableArgs} />
-      </QueryClientProvider>
-    ).get(0)
+      </QueryClientProvider>,
+    ).get(0),
   );
   it('should render one <table> when outcome is variable_type: concept after click', () => {
     wrapper.find('.ant-collapse-header-text').simulate('click');
@@ -79,8 +79,8 @@ describe('Component Mounts and renders 2 tables as expected', () => {
     shallow(
       <QueryClientProvider client={mockedQueryClient}>
         <AttritionTableWrapper {...dichotomousOutcomeArgs} />
-      </QueryClientProvider>
-    ).get(0)
+      </QueryClientProvider>,
+    ).get(0),
   );
   it('should render two <table> when outcome is variable_type: dichotomous', () => {
     wrapper.find('.ant-collapse-header-text').forEach((item) => {
