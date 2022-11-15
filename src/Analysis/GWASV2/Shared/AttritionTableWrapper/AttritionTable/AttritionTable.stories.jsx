@@ -16,8 +16,6 @@ const mockedQueryClient = new QueryClient({
 });
 
 const MockTemplate = () => {
-  //for later:
-  //const [selectedOutcome, setSelectedOutcome] = useState({ variable_type: 'custom_dichotomous', cohort_ids: [1, 2], provided_name: 'test outcome', uuid: '1234' })
   const [selectedOutcome, setSelectedOutcome] = useState({
     variable_type: 'concept',
     concept_id: 'id',

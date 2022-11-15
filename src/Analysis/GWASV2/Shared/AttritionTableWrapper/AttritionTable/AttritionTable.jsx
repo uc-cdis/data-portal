@@ -31,36 +31,8 @@ const AttritionTable = ({
     return outputArr;
   };
 
-  // OLD METHOD
-  /*
-  const [covariateSubsets, setCovariateSubsets] = useState([]);
-  const getCovariateRow = (
-    selectedCovs = [],
-    selectedCustomdichotomousCovs = []
-  ) => {
-    const subsets = [];
-    // todo: handle case of deselecting/selecting existing covariates (100% missing?) after adding custom dichotomous
-    const allCovariates = [...selectedCovs, ...selectedCustomdichotomousCovs];
-    allCovariates
-      .slice()
-      .reverse()
-      .forEach((covariate, i) => {
-        subsets.push(
-          allCovariates
-            .slice()
-            .reverse()
-            .slice(allCovariates.length - i - 1)
-        );
-      });
-    return subsets;
-  };
-  */
-
   useEffect(() => {
     setNewCovariateSubsetsProcessed(newGetCovariateRow(newCovariateSubset));
-    // setCovariateSubsets(
-    //   getCovariateRow(selectedCovariates, selectedDichotomousCovariates)
-    // );
   }, [newCovariateSubset]);
   return (
     <div className='gwasv2-attrition-table' key={tableHeader}>
@@ -121,28 +93,28 @@ const AttritionTable = ({
                   />
                 </React.Fragment>
               )}
-              {selectedCohort?.cohort_definition_id
-              && newCovariateSubsetsProcessed.length > 0
+              {selectedCohort?.cohort_definition_id &&
+              newCovariateSubsetsProcessed.length > 0
                 ? newCovariateSubsetsProcessed.map((item) => (
-                  <React.Fragment key={item}>
-                    {/* This is for all the covariate rows in the table */}
-                    <AttritionTableRow
-                      key={item}
-                      outcome={outcome}
-                      // use the last item
-                      rowObject={item[item.length - 1]}
-                      selectedCohort={selectedCohort}
-                      otherCohortDefinitionId={
-                        otherSelectedCohort
-                          ? otherSelectedCohort.cohort_definition_id
-                          : undefined
-                      }
-                      rowType='Covariate'
-                      covariateSubset={item}
-                      sourceId={sourceId}
-                    />
-                  </React.Fragment>
-                ))
+                    <React.Fragment key={item}>
+                      {/* This is for all the covariate rows in the table */}
+                      <AttritionTableRow
+                        key={item}
+                        outcome={outcome}
+                        // use the last item
+                        rowObject={item[item.length - 1]}
+                        selectedCohort={selectedCohort}
+                        otherCohortDefinitionId={
+                          otherSelectedCohort
+                            ? otherSelectedCohort.cohort_definition_id
+                            : undefined
+                        }
+                        rowType='Covariate'
+                        covariateSubset={item}
+                        sourceId={sourceId}
+                      />
+                    </React.Fragment>
+                  ))
                 : null}
             </tbody>
           </table>
