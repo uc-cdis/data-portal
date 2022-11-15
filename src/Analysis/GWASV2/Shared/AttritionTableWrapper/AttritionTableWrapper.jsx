@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AttritionTable from './AttritionTable';
+import AttritionTable from './AttritionTable/AttritionTable';
 
 const AttritionTableWrapper = ({
   newCovariateSubset,

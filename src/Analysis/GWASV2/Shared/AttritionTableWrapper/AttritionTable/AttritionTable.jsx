@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Collapse } from 'antd';
-import AttritionTableRow from './AttritionTableRow';
-import '../../../GWASUIApp/GWASUIApp.css';
+import AttritionTableRow from '../AttritionTableRow';
 import './AttritionTable.css';
 
 const { Panel } = Collapse;
@@ -137,34 +136,34 @@ const AttritionTable = ({
                 </React.Fragment>
               )}
 
-              {selectedCohort?.cohort_definition_id
-              && newCovariateSubsetsProcessed.length > 0
+              {selectedCohort?.cohort_definition_id &&
+              newCovariateSubsetsProcessed.length > 0
                 ? newCovariateSubsetsProcessed.map((item) => (
-                  <React.Fragment key={item}>
-                    {/* This is for all the covariate rows in the table */}
-                    <tr>
-                      <td colSpan='8'>
+                    <React.Fragment key={item}>
+                      {/* This is for all the covariate rows in the table */}
+                      <tr>
+                        <td colSpan='8'>
                           NEW item:
-                        {JSON.stringify(item[item.length - 1])}
-                      </td>
-                    </tr>
-                    <AttritionTableRow
-                      key={item}
-                      outcome={outcome}
-                      // use the last item
-                      rowObject={item[item.length - 1]}
-                      selectedCohort={selectedCohort}
-                      otherCohortDefinitionId={
-                        otherSelectedCohort
-                          ? otherSelectedCohort.cohort_definition_id
-                          : undefined
-                      }
-                      rowType='Covariate'
-                      covariateSubset={item}
-                      sourceId={sourceId}
-                    />
-                  </React.Fragment>
-                ))
+                          {JSON.stringify(item[item.length - 1])}
+                        </td>
+                      </tr>
+                      <AttritionTableRow
+                        key={item}
+                        outcome={outcome}
+                        // use the last item
+                        rowObject={item[item.length - 1]}
+                        selectedCohort={selectedCohort}
+                        otherCohortDefinitionId={
+                          otherSelectedCohort
+                            ? otherSelectedCohort.cohort_definition_id
+                            : undefined
+                        }
+                        rowType='Covariate'
+                        covariateSubset={item}
+                        sourceId={sourceId}
+                      />
+                    </React.Fragment>
+                  ))
                 : null}
             </tbody>
           </table>

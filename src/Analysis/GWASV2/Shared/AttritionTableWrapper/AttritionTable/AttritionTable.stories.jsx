@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import AttritionTable from './AttritionTable';
-import '../../GWASV2.css';
+import '../../../GWASV2.css';
 
 export default {
   title: 'Tests3/GWASV2/AttritionTable/AttritionTable',
