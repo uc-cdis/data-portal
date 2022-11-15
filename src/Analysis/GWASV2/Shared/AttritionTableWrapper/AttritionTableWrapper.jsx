@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import AttritionTable from './AttritionTable/AttritionTable';
 
 const AttritionTableWrapper = ({
-  newCovariateSubset,
+  covariates,
   selectedCohort,
-  otherSelectedCohort,
   outcome,
   sourceId,
 }) => {
@@ -14,9 +13,8 @@ const AttritionTableWrapper = ({
     <React.Fragment>
       <AttritionTable
         sourceId={sourceId}
-        covariates={newCovariateSubset}
+        covariates={covariates}
         selectedCohort={selectedCohort}
-        otherSelectedCohort={otherSelectedCohort}
         outcome={outcome}
         tableHeader={
           useSecondTable ? 'Case Cohort Attrition Table' : 'Attrition Table'
@@ -25,9 +23,8 @@ const AttritionTableWrapper = ({
       {useSecondTable && (
         <AttritionTable
           sourceId={sourceId}
-          covariates={newCovariateSubset}
+          covariates={covariates}
           selectedCohort={selectedCohort}
-          otherSelectedCohort={otherSelectedCohort}
           outcome={outcome}
           tableHeader={'Control Cohort Attrition Table'}
         />
@@ -38,12 +35,12 @@ const AttritionTableWrapper = ({
 AttritionTableWrapper.propTypes = {
   selectedCohort: PropTypes.object,
   outcome: PropTypes.object,
-  newCovariateSubset: PropTypes.array.isRequired,
+  covariates: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
 };
 
 AttritionTableWrapper.defaultProps = {
-  selectedCohort: undefined,
-  outcome: undefined,
+  selectedCohort: null,
+  outcome: null,
 };
 export default AttritionTableWrapper;

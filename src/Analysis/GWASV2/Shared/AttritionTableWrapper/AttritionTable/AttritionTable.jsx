@@ -69,7 +69,7 @@ const AttritionTable = ({
                   {/* This is for the first Cohort Row in the Table */}
                   <AttritionTableRow
                     selectedCohort={selectedCohort}
-                    outcome={null}
+                    outcome={{}}
                     rowType='Cohort'
                     rowObject={{}}
                     currentCovariateAndCovariatesFromPrecedingRows={[]}

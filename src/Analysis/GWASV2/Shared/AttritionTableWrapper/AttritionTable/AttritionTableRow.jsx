@@ -155,7 +155,7 @@ AttritionTableRow.propTypes = {
 };
 
 AttritionTableRow.defaultProps = {
-  outcome: null,
+  outcome: {},
 };
 
 export default AttritionTableRow;

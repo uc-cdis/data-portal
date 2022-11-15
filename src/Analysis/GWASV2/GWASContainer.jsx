@@ -14,8 +14,8 @@ const GWASContainer = () => {
     selectedStudyPopulationCohort,
     setSelectedStudyPopulationCohort,
   ] = useState({});
-  const [selectedControlCohort] = useState(undefined);
-  const [newCovariateSubset] = useState([]);
+  const [selectedControlCohort] = useState({});
+  const [covariates] = useState([]);
   const [outcome] = useState({});
 
   const generateStep = () => {
@@ -46,10 +46,7 @@ const GWASContainer = () => {
   };
 
   let nextButtonEnabled = true;
-  if (
-    current === 0 &&
-    Object.keys(selectedStudyPopulationCohort).length === 0
-  ) {
+  if (current === 0 && !selectedStudyPopulationCohort) {
     nextButtonEnabled = false;
   }
 
@@ -60,9 +57,8 @@ const GWASContainer = () => {
         <React.Fragment>
           <AttritionTableWrapper
             sourceId={sourceId}
-            newCovariateSubset={newCovariateSubset}
+            covariates={covariates}
             selectedCohort={selectedStudyPopulationCohort}
-            otherSelectedCohort={selectedControlCohort}
             outcome={outcome}
           />
         </React.Fragment>
