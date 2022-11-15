@@ -15,7 +15,7 @@ const mockedQueryClient = new QueryClient({
   Code to aid in Jest Mocking, see:
   https://stackoverflow.com/questions/39830580/jest-test-fails-typeerror-window-matchmedia-is-not-a-function
 */
-window.matchMedia = window.matchMedia
+/* window.matchMedia = window.matchMedia
   || function () {
     return {
       matches: false,
@@ -23,7 +23,7 @@ window.matchMedia = window.matchMedia
       removeListener() {},
     };
   };
-
+*/
 const AttritionTableArgs = {
   sourceId: 1,
   outcome: {
@@ -62,7 +62,7 @@ const AttritionTableArgs = {
     cohort_name: 'cohort name def',
   },
 };
-/* Test Dynamic Text for Steps */
+
 describe('Component Mounts and renders 1 attrition table as expected', () => {
   const wrapper = mount(
     shallow(
@@ -72,10 +72,8 @@ describe('Component Mounts and renders 1 attrition table as expected', () => {
     ).get(0),
   );
   it('should render one <table> when outcome is variable_type: concept after click', () => {
-    // console.log(wrapper.html());
     wrapper.find('.ant-collapse-header-text').simulate('click');
     wrapper.update();
-    console.log(wrapper.html());
     expect(wrapper.find('table')).toHaveLength(1);
   });
 });
@@ -97,13 +95,10 @@ describe('Component Mounts and renders 2 tables as expected', () => {
     ).get(0),
   );
   it('should render two <table> when outcome is variable_type: dichotomous', () => {
-    console.log(wrapper.html());
-    wrapper.find('.ant-collapse-header-text').forEach((item, index) => {
+    wrapper.find('.ant-collapse-header-text').forEach((item) => {
       item.simulate('click');
     });
-
     wrapper.update();
-    console.log(wrapper.html());
     expect(wrapper.find('table')).toHaveLength(2);
   });
 });

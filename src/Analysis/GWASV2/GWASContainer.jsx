@@ -15,7 +15,6 @@ const GWASContainer = () => {
     setSelectedStudyPopulationCohort,
   ] = useState({});
   const [selectedControlCohort] = useState(undefined);
-  const [selectedCaseCohort] = useState(undefined);
   const [newCovariateSubset] = useState([]);
 
   // THIS IS THE STRUCTURE FOR QUANTITIVE; when quantitive it will be variable_type:concept

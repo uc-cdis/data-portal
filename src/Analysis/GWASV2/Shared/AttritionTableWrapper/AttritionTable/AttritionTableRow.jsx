@@ -55,16 +55,6 @@ const AttritionTableRow = ({
 
   const { breakdown } = { breakdown: data?.concept_breakdown };
 
-  const getSizeByColumn = (hare) => {
-    const hareIndex = breakdownColumns.findIndex(
-      // eslint-disable-next-line camelcase
-      ({ concept_value }) => concept_value === hare,
-    );
-    return hareIndex > -1
-      ? breakdownColumns[hareIndex].persons_in_cohort_with_value
-      : 0;
-  };
-
   useEffect(() => {
     if (breakdown?.length) {
       const filteredBreakdown = breakdown.filter(
@@ -85,6 +75,15 @@ const AttritionTableRow = ({
   }, [breakdown, cohortDefinitionId, covariateSubset, sourceId]);
 
   useEffect(() => {
+    const getSizeByColumn = (hare) => {
+      const hareIndex = breakdownColumns.findIndex(
+        // eslint-disable-next-line camelcase
+        ({ concept_value }) => concept_value === hare,
+      );
+      return hareIndex > -1
+        ? breakdownColumns[hareIndex].persons_in_cohort_with_value
+        : 0;
+    };
     setAfr(getSizeByColumn('AFR'));
     setAsn(getSizeByColumn('ASN'));
     setEur(getSizeByColumn('EUR'));
