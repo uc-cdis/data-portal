@@ -75,6 +75,7 @@ const AttritionTable = ({
                     selectedCohort={selectedCohort}
                     outcome={{}}
                     rowType='Cohort'
+                    rowObject={{}}
                     covariateSubset={[]}
                     sourceId={sourceId}
                   />
