@@ -97,13 +97,11 @@ const AttritionTableRow = ({
 
   const determineChartIcon = () => {
     if (rowType === 'Covariate' || rowType === 'Outcome') {
-      try {
-        if (rowObject.variable_type === 'concept') {
-          return <BarChart />;
-        } else if (rowObject.variable_type === 'custom_dichotomous') {
-          return <EulerDiagram />;
-        }
-      } catch {
+      if (rowObject.variable_type === 'concept') {
+        return <BarChart />;
+      } else if (rowObject.variable_type === 'custom_dichotomous') {
+        return <EulerDiagram />;
+      } else {
         throw 'Invalid rowType';
       }
     }
