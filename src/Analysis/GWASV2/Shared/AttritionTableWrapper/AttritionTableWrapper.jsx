@@ -8,31 +8,35 @@ const AttritionTableWrapper = ({
   otherSelectedCohort,
   outcome,
   sourceId,
-}) => (
-  <React.Fragment>
-    <AttritionTable
-      sourceId={sourceId}
-      covariates={newCovariateSubset}
-      selectedCohort={selectedCohort}
-      otherSelectedCohort={otherSelectedCohort}
-      outcome={outcome}
-      tableHeader={'Case Cohort Attrition Table'}
-    />
-    {outcome.variable_type === 'custom_dichotomous' && (
+}) => {
+  const useSecondTable = outcome.variable_type === 'custom_dichotomous';
+  return (
+    <React.Fragment>
       <AttritionTable
         sourceId={sourceId}
         covariates={newCovariateSubset}
         selectedCohort={selectedCohort}
         otherSelectedCohort={otherSelectedCohort}
         outcome={outcome}
-        tableHeader={'Control Cohort Attrition Table'}
+        tableHeader={
+          useSecondTable ? 'Case Cohort Attrition Table' : 'Attrition Table'
+        }
       />
-    )}
-  </React.Fragment>
-);
+      {useSecondTable && (
+        <AttritionTable
+          sourceId={sourceId}
+          covariates={newCovariateSubset}
+          selectedCohort={selectedCohort}
+          otherSelectedCohort={otherSelectedCohort}
+          outcome={outcome}
+          tableHeader={'Control Cohort Attrition Table'}
+        />
+      )}
+    </React.Fragment>
+  );
+};
 AttritionTableWrapper.propTypes = {
   selectedCohort: PropTypes.object,
-  otherSelectedCohort: PropTypes.object,
   outcome: PropTypes.object,
   newCovariateSubset: PropTypes.array.isRequired,
   sourceId: PropTypes.number.isRequired,
@@ -40,7 +44,6 @@ AttritionTableWrapper.propTypes = {
 
 AttritionTableWrapper.defaultProps = {
   selectedCohort: undefined,
-  otherSelectedCohort: undefined,
   outcome: undefined,
 };
 export default AttritionTableWrapper;
