@@ -19,9 +19,9 @@ const Template = (args) => (
     <AttritionTableWrapper {...args} />
   </QueryClientProvider>
 );
-export const WithOutcome = Template.bind({});
+export const WithConceptOutcome = Template.bind({});
 
-WithOutcome.args = {
+WithConceptOutcome.args = {
   sourceId: 1,
   outcome: {
     variable_type: 'concept',
@@ -62,7 +62,7 @@ WithOutcome.args = {
 
 export const WithDichotomousOutcome = Template.bind({});
 WithDichotomousOutcome.args = {
-  ...WithOutcome.args,
+  ...WithConceptOutcome.args,
   outcome: {
     variable_type: 'custom_dichotomous',
     concept_id: 'id',
