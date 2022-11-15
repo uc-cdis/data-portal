@@ -99,32 +99,20 @@ const AttritionTable = ({
               {selectedCohort?.cohort_definition_id && (
                 <React.Fragment key={selectedCohort}>
                   {/* This is for the first Cohort Row in the Table */}
-
                   <AttritionTableRow
                     selectedCohort={selectedCohort}
-                    outcome={outcome}
-                    // otherCohortDefinitionId={
-                    //   otherSelectedCohort
-                    //     ? otherSelectedCohort.cohort_definition_id
-                    //     : undefined
-                    // }
+                    outcome={{}}
                     rowType='Cohort'
                     covariateSubset={[]}
                     sourceId={sourceId}
                   />
                 </React.Fragment>
               )}
-
-              {outcome && (
+              {Object.keys(outcome).length > 0 && (
                 <React.Fragment key={outcome}>
                   {/* This is for the outcome Row in the Table */}
                   <AttritionTableRow
                     selectedCohort={selectedCohort}
-                    // otherCohortDefinitionId={
-                    //   otherSelectedCohort
-                    //     ? otherSelectedCohort.cohort_definition_id
-                    //     : undefined
-                    // }
                     rowType='Outcome'
                     outcome={outcome}
                     rowObject={outcome}
@@ -133,18 +121,11 @@ const AttritionTable = ({
                   />
                 </React.Fragment>
               )}
-
               {selectedCohort?.cohort_definition_id &&
               newCovariateSubsetsProcessed.length > 0
                 ? newCovariateSubsetsProcessed.map((item) => (
                     <React.Fragment key={item}>
                       {/* This is for all the covariate rows in the table */}
-                      <tr>
-                        <td colSpan='8'>
-                          NEW item:
-                          {JSON.stringify(item[item.length - 1])}
-                        </td>
-                      </tr>
                       <AttritionTableRow
                         key={item}
                         outcome={outcome}

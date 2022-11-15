@@ -29,6 +29,7 @@ const AttritionTableRow = ({
 
   const { data, status } = useQuery(
     [
+      outcome,
       'conceptstatsbyharesubset',
       covariateSubset,
       cohortDefinitionId,
@@ -37,10 +38,11 @@ const AttritionTableRow = ({
     // if there are not two cohorts selected, then quantitative
     // Otherwise if there are two cohorts selected, case control
     () =>
-      !(cohortDefinitionId && otherCohortDefinitionId)
+      !otherCohortDefinitionId
         ? fetchConceptStatsByHareSubset(
             cohortDefinitionId,
             covariateSubset,
+            outcome,
             sourceId
           )
         : fetchConceptStatsByHareSubsetCC(

@@ -10,7 +10,7 @@ export const fetchConceptStatsByHare = async (
   cohortDefinitionId,
   selectedCovariates,
   selectedDichotomousCovariates,
-  sourceId,
+  sourceId
 ) => {
   const variablesPayload = {
     variables: [
@@ -38,7 +38,7 @@ export const fetchOverlapInfo = async (
   controlCohortDefinitionId,
   selectedHare,
   selectedCovariates,
-  selectedDichotomousCovariates,
+  selectedDichotomousCovariates
 ) => {
   const variablesPayload = {
     variables: [
@@ -66,7 +66,7 @@ export const fetchSimpleOverlapInfo = async (
   cohortAId,
   cohortBId,
   selectedCovariates,
-  selectedDichotomousCovariates,
+  selectedDichotomousCovariates
 ) => {
   const variablesPayload = {
     variables: [
@@ -88,32 +88,14 @@ export const fetchSimpleOverlapInfo = async (
   return getOverlapStats.json();
 };
 
-export const filterSubsetCovariates = (subsetCovariates) => {
-  const filteredSubsets = [];
-  subsetCovariates.forEach((covariate) => {
-    if (covariate.variable_type === 'custom_dichotomous') {
-      filteredSubsets.push({
-        cohort_ids: covariate.cohort_ids,
-        provided_name: covariate.provided_name,
-        variable_type: covariate.variable_type,
-      });
-    } else {
-      filteredSubsets.push({
-        variable_type: 'concept',
-        concept_id: covariate.concept_id,
-      });
-    }
-  });
-  return filteredSubsets;
-};
-
 export const fetchConceptStatsByHareSubset = async (
   cohortDefinitionId,
   subsetCovariates,
-  sourceId,
+  outcome,
+  sourceId
 ) => {
   const variablesPayload = {
-    variables: [...filterSubsetCovariates(subsetCovariates)],
+    variables: [outcome, ...subsetCovariates],
   };
   const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
   const reqBody = {
@@ -145,32 +127,34 @@ export const fetchConceptStatsByHareSubsetCC = async (
   cohortDefinitionId,
   otherCohortDefinitionId,
   covariateSubset,
-  sourceId,
-) => fetchConceptStatsByHareSubset(
-  cohortDefinitionId,
-  addCDFilter(cohortDefinitionId, otherCohortDefinitionId, covariateSubset),
-  sourceId,
-);
+  sourceId
+) =>
+  fetchConceptStatsByHareSubset(
+    cohortDefinitionId,
+    addCDFilter(cohortDefinitionId, otherCohortDefinitionId, covariateSubset),
+    sourceId
+  );
 
 export const fetchConceptStatsByHareForCaseControl = async (
   queriedCohortDefinitionId,
   otherCohortDefinitionId,
   selectedCovariates,
   selectedDichotomousCovariates,
-  sourceId,
-) => fetchConceptStatsByHareSubset(
-  queriedCohortDefinitionId,
-  addCDFilter(queriedCohortDefinitionId, otherCohortDefinitionId, [
-    ...selectedCovariates,
-    ...selectedDichotomousCovariates,
-  ]),
-  sourceId,
-);
+  sourceId
+) =>
+  fetchConceptStatsByHareSubset(
+    queriedCohortDefinitionId,
+    addCDFilter(queriedCohortDefinitionId, otherCohortDefinitionId, [
+      ...selectedCovariates,
+      ...selectedDichotomousCovariates,
+    ]),
+    sourceId
+  );
 
 export const fetchCovariateStats = async (
   cohortDefinitionId,
   selectedCovariateIds,
-  sourceId,
+  sourceId
 ) => {
   const covariateIds = { ConceptIds: selectedCovariateIds };
   const conceptStatsEndpoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
@@ -245,15 +229,16 @@ export const queryConfig = {
 export const getAllHareItems = (
   concept_value,
   allCaseHares,
-  allControlHares,
+  allControlHares
 ) => {
   const caseHareBreakdown = allCaseHares.find(
-    (hare) => hare.concept_value === concept_value,
+    (hare) => hare.concept_value === concept_value
   );
   const controlHareBreakdown = allControlHares.find(
-    (hare) => hare.concept_value === concept_value,
+    (hare) => hare.concept_value === concept_value
   );
   return [caseHareBreakdown, controlHareBreakdown];
 };
 
-export const atlasDomain = () => cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas');
+export const atlasDomain = () =>
+  cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas');
