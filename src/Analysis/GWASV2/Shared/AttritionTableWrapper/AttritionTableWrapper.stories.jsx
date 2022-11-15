@@ -4,6 +4,7 @@ import { rest } from 'msw';
 import AttritionTableWrapper from './AttritionTableWrapper';
 import '../../GWASV2.css';
 
+let rowCount = 0;
 export default {
   title: 'Tests3/GWASV2/AttritionTable/AttritionTableWrapper',
   component: AttritionTableWrapper,
@@ -59,18 +60,7 @@ WithConceptOutcome.args = {
     cohort_name: 'cohort name def',
   },
 };
-
-export const WithDichotomousOutcome = Template.bind({});
-WithDichotomousOutcome.args = {
-  ...WithConceptOutcome.args,
-  outcome: {
-    variable_type: 'custom_dichotomous',
-    concept_id: 'id',
-    concept_name: 'concept name',
-  },
-};
-
-WithDichotomousOutcome.parameters = {
+WithConceptOutcome.parameters = {
   msw: {
     handlers: [
       rest.post(
@@ -125,10 +115,13 @@ WithDichotomousOutcome.parameters = {
   },
 };
 
-WithDichotomousOutcome.parameters = {
-  msw: {
-    handlers: [
-      rest.post('', (req, res, ctx) => res(ctx.delay(800), ctx.status(403))),
-    ],
+export const WithDichotomousOutcome = Template.bind({});
+WithDichotomousOutcome.args = {
+  ...WithConceptOutcome.args,
+  outcome: {
+    variable_type: 'custom_dichotomous',
+    concept_id: 'id',
+    concept_name: 'concept name',
   },
 };
+WithDichotomousOutcome.parameters = { ...WithConceptOutcome.parameters };
