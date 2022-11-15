@@ -15,9 +15,8 @@ const mockedQueryClient = new QueryClient({
   Code to aid in Jest Mocking, see:
   https://stackoverflow.com/questions/39830580/jest-test-fails-typeerror-window-matchmedia-is-not-a-function
 */
-window.matchMedia =
-  window.matchMedia ||
-  function() {
+window.matchMedia = window.matchMedia
+  || function () {
     return {
       matches: false,
       addListener() {},
@@ -69,8 +68,8 @@ describe('Component Mounts and renders 1 attrition table as expected', () => {
     shallow(
       <QueryClientProvider client={mockedQueryClient}>
         <AttritionTableWrapper {...AttritionTableArgs} />
-      </QueryClientProvider>
-    ).get(0)
+      </QueryClientProvider>,
+    ).get(0),
   );
   it('should render one <table> when outcome is variable_type: concept after click', () => {
     // console.log(wrapper.html());
@@ -82,7 +81,7 @@ describe('Component Mounts and renders 1 attrition table as expected', () => {
 });
 
 describe('Component Mounts and renders 2 tables as expected', () => {
-  let dichotomousOutcomeArgs = {
+  const dichotomousOutcomeArgs = {
     ...AttritionTableArgs,
     outcome: {
       variable_type: 'custom_dichotomous',
@@ -94,8 +93,8 @@ describe('Component Mounts and renders 2 tables as expected', () => {
     shallow(
       <QueryClientProvider client={mockedQueryClient}>
         <AttritionTableWrapper {...dichotomousOutcomeArgs} />
-      </QueryClientProvider>
-    ).get(0)
+      </QueryClientProvider>,
+    ).get(0),
   );
   it('should render two <table> when outcome is variable_type: dichotomous', () => {
     console.log(wrapper.html());

@@ -37,21 +37,20 @@ const AttritionTableRow = ({
     ],
     // if there are not two cohorts selected, then quantitative
     // Otherwise if there are two cohorts selected, case control
-    () =>
-      !otherCohortDefinitionId
-        ? fetchConceptStatsByHareSubset(
-            cohortDefinitionId,
-            covariateSubset,
-            outcome,
-            sourceId
-          )
-        : fetchConceptStatsByHareSubsetCC(
-            cohortDefinitionId,
-            otherCohortDefinitionId,
-            covariateSubset,
-            sourceId
-          ),
-    queryConfig
+    () => (!otherCohortDefinitionId
+      ? fetchConceptStatsByHareSubset(
+        cohortDefinitionId,
+        covariateSubset,
+        outcome,
+        sourceId,
+      )
+      : fetchConceptStatsByHareSubsetCC(
+        cohortDefinitionId,
+        otherCohortDefinitionId,
+        covariateSubset,
+        sourceId,
+      )),
+    queryConfig,
   );
 
   const { breakdown } = { breakdown: data?.concept_breakdown };
@@ -59,7 +58,7 @@ const AttritionTableRow = ({
   const getSizeByColumn = (hare) => {
     const hareIndex = breakdownColumns.findIndex(
       // eslint-disable-next-line camelcase
-      ({ concept_value }) => concept_value === hare
+      ({ concept_value }) => concept_value === hare,
     );
     return hareIndex > -1
       ? breakdownColumns[hareIndex].persons_in_cohort_with_value
@@ -70,13 +69,13 @@ const AttritionTableRow = ({
     if (breakdown?.length) {
       const filteredBreakdown = breakdown.filter(
         // eslint-disable-next-line camelcase
-        ({ concept_value }) => concept_value !== 'OTH'
+        ({ concept_value }) => concept_value !== 'OTH',
       );
       setBreakdownSize(
         filteredBreakdown.reduce(
           (acc, curr) => acc + curr.persons_in_cohort_with_value,
-          0
-        )
+          0,
+        ),
       );
       setBreakdownColumns(filteredBreakdown);
     } else {
