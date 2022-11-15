@@ -14,7 +14,7 @@ const GWASContainer = () => {
     selectedStudyPopulationCohort,
     setSelectedStudyPopulationCohort,
   ] = useState({});
-  const [selectedControlCohort] = useState({});
+  // const [selectedControlCohort] = useState({});
   const [covariates] = useState([]);
   const [outcome] = useState({});
 
