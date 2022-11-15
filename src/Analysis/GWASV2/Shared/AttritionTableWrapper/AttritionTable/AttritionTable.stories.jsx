@@ -76,8 +76,6 @@ const MockTemplate = () => {
         selectedCohort={selectedCohort}
         outcome={selectedOutcome}
         newCovariateSubset={newCovariateSubset}
-        // selectedCovariates={selectedCovariates}
-        // selectedDichotomousCovariates={selectedDichotomousCovariates}
         tableHeader={'Quantitative Attrition Table'}
       />
       <AttritionTable
@@ -87,8 +85,6 @@ const MockTemplate = () => {
         otherSelectedCohort={otherSelectedCohort}
         outcome={selectedOutcome}
         newCovariateSubset={newCovariateSubset}
-        // selectedCovariates={selectedCovariates}
-        // selectedDichotomousCovariates={selectedDichotomousCovariates}
         tableHeader={'Case Cohort Attrition Table (1 of 2)'}
       />
     </QueryClientProvider>
