@@ -90,23 +90,23 @@ const AttritionTable = ({
                   />
                 </React.Fragment>
               )}
-              {selectedCohort?.cohort_definition_id
-              && covariatesProcessed.length > 0
+              {selectedCohort?.cohort_definition_id &&
+              covariatesProcessed.length > 0
                 ? covariatesProcessed.map((item) => (
-                  <React.Fragment key={item}>
-                    {/* This is for all the covariate rows in the table */}
-                    <AttritionTableRow
-                      key={item}
-                      outcome={outcome}
-                      // use the last item
-                      rowObject={item[item.length - 1]}
-                      selectedCohort={selectedCohort}
-                      rowType='Covariate'
-                      currentCovariateAndCovariatesFromPrecedingRows={item}
-                      sourceId={sourceId}
-                    />
-                  </React.Fragment>
-                ))
+                    <React.Fragment key={item}>
+                      {/* This is for all the covariate rows in the table */}
+                      <AttritionTableRow
+                        key={item}
+                        outcome={outcome}
+                        // use the last item
+                        rowObject={item[item.length - 1]}
+                        selectedCohort={selectedCohort}
+                        rowType='Covariate'
+                        currentCovariateAndCovariatesFromPrecedingRows={item}
+                        sourceId={sourceId}
+                      />
+                    </React.Fragment>
+                  ))
                 : null}
             </tbody>
           </table>
@@ -126,7 +126,7 @@ AttritionTable.propTypes = {
 
 AttritionTable.defaultProps = {
   selectedCohort: undefined,
-  outcome: null,
+  outcome: {},
   covariates: [],
 };
 
