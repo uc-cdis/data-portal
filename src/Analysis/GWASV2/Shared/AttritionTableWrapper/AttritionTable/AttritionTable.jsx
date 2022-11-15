@@ -8,20 +8,16 @@ const { Panel } = Collapse;
 
 const AttritionTable = ({
   selectedCohort,
-  otherSelectedCohort,
   outcome,
-  newCovariateSubset,
+  covariates,
   sourceId,
   tableHeader,
 }) => {
-  const [
-    newCovariateSubsetsProcessed,
-    setNewCovariateSubsetsProcessed,
-  ] = useState([]);
+  const [covariatesProcessed, setCovariatesProcessed] = useState([]);
 
   // Creates an array of arrays such that given input arr [A,B,C]
   // it returns arr [[A], [A,B], [A,B,C]]
-  const newGetCovariateRow = (inputArr) => {
+  const getCovariateRow = (inputArr) => {
     const outputArr = [];
     const prevArr = [];
     inputArr.forEach((item, index) => {
@@ -32,8 +28,8 @@ const AttritionTable = ({
   };
 
   useEffect(() => {
-    setNewCovariateSubsetsProcessed(newGetCovariateRow(newCovariateSubset));
-  }, [newCovariateSubset]);
+    setCovariatesProcessed(getCovariateRow(covariates));
+  }, [covariates]);
   return (
     <div className='gwasv2-attrition-table' key={tableHeader}>
       <Collapse onClick={(event) => event.stopPropagation()}>
@@ -73,10 +69,10 @@ const AttritionTable = ({
                   {/* This is for the first Cohort Row in the Table */}
                   <AttritionTableRow
                     selectedCohort={selectedCohort}
-                    outcome={{}}
+                    outcome={null}
                     rowType='Cohort'
                     rowObject={{}}
-                    covariateSubset={[]}
+                    currentCovariateAndCovariatesFromPrecedingRows={[]}
                     sourceId={sourceId}
                   />
                 </React.Fragment>
@@ -89,14 +85,14 @@ const AttritionTable = ({
                     rowType='Outcome'
                     outcome={outcome}
                     rowObject={outcome}
-                    covariateSubset={[]}
+                    currentCovariateAndCovariatesFromPrecedingRows={[]}
                     sourceId={sourceId}
                   />
                 </React.Fragment>
               )}
               {selectedCohort?.cohort_definition_id &&
-              newCovariateSubsetsProcessed.length > 0
-                ? newCovariateSubsetsProcessed.map((item) => (
+              covariatesProcessed.length > 0
+                ? covariatesProcessed.map((item) => (
                     <React.Fragment key={item}>
                       {/* This is for all the covariate rows in the table */}
                       <AttritionTableRow
@@ -105,13 +101,8 @@ const AttritionTable = ({
                         // use the last item
                         rowObject={item[item.length - 1]}
                         selectedCohort={selectedCohort}
-                        otherCohortDefinitionId={
-                          otherSelectedCohort
-                            ? otherSelectedCohort.cohort_definition_id
-                            : undefined
-                        }
                         rowType='Covariate'
-                        covariateSubset={item}
+                        currentCovariateAndCovariatesFromPrecedingRows={item}
                         sourceId={sourceId}
                       />
                     </React.Fragment>
@@ -127,16 +118,16 @@ const AttritionTable = ({
 
 AttritionTable.propTypes = {
   selectedCohort: PropTypes.object,
-  otherSelectedCohort: PropTypes.object,
-  outcome: PropTypes.object.isRequired,
-  newCovariateSubset: PropTypes.array.isRequired,
+  outcome: PropTypes.object,
+  covariates: PropTypes.array,
   sourceId: PropTypes.number.isRequired,
   tableHeader: PropTypes.string.isRequired,
 };
 
 AttritionTable.defaultProps = {
   selectedCohort: undefined,
-  otherSelectedCohort: undefined,
+  outcome: null,
+  covariates: [],
 };
 
 export default AttritionTable;

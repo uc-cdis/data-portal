@@ -12,23 +12,19 @@ const AttritionTableWrapper = ({
   <React.Fragment>
     <AttritionTable
       sourceId={sourceId}
-      newCovariateSubset={newCovariateSubset}
+      covariates={newCovariateSubset}
       selectedCohort={selectedCohort}
       otherSelectedCohort={otherSelectedCohort}
       outcome={outcome}
-      // selectedCovariates={selectedCovariates}
-      // selectedDichotomousCovariates={selectedDichotomousCovariates}
       tableHeader={'Case Cohort Attrition Table'}
     />
     {outcome.variable_type === 'custom_dichotomous' && (
       <AttritionTable
         sourceId={sourceId}
-        newCovariateSubset={newCovariateSubset}
+        covariates={newCovariateSubset}
         selectedCohort={selectedCohort}
         otherSelectedCohort={otherSelectedCohort}
         outcome={outcome}
-        // selectedCovariates={selectedCovariates}
-        // selectedDichotomousCovariates={selectedDichotomousCovariates}
         tableHeader={'Control Cohort Attrition Table'}
       />
     )}

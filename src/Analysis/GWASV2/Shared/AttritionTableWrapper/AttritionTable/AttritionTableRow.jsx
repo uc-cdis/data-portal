@@ -11,12 +11,11 @@ import BarChart from '../ChartIcons/BarChart';
 import EulerDiagram from '../ChartIcons/EulerDiagram';
 
 const AttritionTableRow = ({
-  otherCohortDefinitionId,
   selectedCohort,
   rowType,
   rowObject,
   outcome,
-  covariateSubset,
+  currentCovariateAndCovariatesFromPrecedingRows,
   sourceId,
 }) => {
   const [breakdownSize, setBreakdownSize] = useState(undefined);
@@ -31,26 +30,27 @@ const AttritionTableRow = ({
     [
       outcome,
       'conceptstatsbyharesubset',
-      covariateSubset,
+      currentCovariateAndCovariatesFromPrecedingRows,
       cohortDefinitionId,
-      otherCohortDefinitionId,
     ],
     // if there are not two cohorts selected, then quantitative
     // Otherwise if there are two cohorts selected, case control
-    () => (!otherCohortDefinitionId
-      ? fetchConceptStatsByHareSubset(
+    () =>
+      fetchConceptStatsByHareSubset(
         cohortDefinitionId,
-        covariateSubset,
+        currentCovariateAndCovariatesFromPrecedingRows,
         outcome,
-        sourceId,
-      )
-      : fetchConceptStatsByHareSubsetCC(
-        cohortDefinitionId,
-        otherCohortDefinitionId,
-        covariateSubset,
-        sourceId,
-      )),
-    queryConfig,
+        sourceId
+      ),
+    /* TODO For Case Control
+        : fetchConceptStatsByHareSubsetCC(
+            cohortDefinitionId,
+            otherCohortDefinitionId,
+            currentCovariateAndCovariatesFromPrecedingRows,
+            sourceId
+          ),
+          */
+    queryConfig
   );
 
   const { breakdown } = { breakdown: data?.concept_breakdown };
@@ -59,26 +59,31 @@ const AttritionTableRow = ({
     if (breakdown?.length) {
       const filteredBreakdown = breakdown.filter(
         // eslint-disable-next-line camelcase
-        ({ concept_value }) => concept_value !== 'OTH',
+        ({ concept_value }) => concept_value !== 'OTH'
       );
       setBreakdownSize(
         filteredBreakdown.reduce(
           (acc, curr) => acc + curr.persons_in_cohort_with_value,
-          0,
-        ),
+          0
+        )
       );
       setBreakdownColumns(filteredBreakdown);
     } else {
       setBreakdownSize(0);
       setBreakdownColumns([]);
     }
-  }, [breakdown, cohortDefinitionId, covariateSubset, sourceId]);
+  }, [
+    breakdown,
+    cohortDefinitionId,
+    currentCovariateAndCovariatesFromPrecedingRows,
+    sourceId,
+  ]);
 
   useEffect(() => {
     const getSizeByColumn = (hare) => {
       const hareIndex = breakdownColumns.findIndex(
         // eslint-disable-next-line camelcase
-        ({ concept_value }) => concept_value === hare,
+        ({ concept_value }) => concept_value === hare
       );
       return hareIndex > -1
         ? breakdownColumns[hareIndex].persons_in_cohort_with_value
@@ -92,10 +97,15 @@ const AttritionTableRow = ({
 
   const determineChartIcon = () => {
     if (rowType === 'Covariate' || rowType === 'Outcome') {
-      if (rowObject.variable_type === 'concept') {
-        return <BarChart />;
+      try {
+        if (rowObject.variable_type === 'concept') {
+          return <BarChart />;
+        } else if (rowObject.variable_type === 'custom_dichotomous') {
+          return <EulerDiagram />;
+        }
+      } catch {
+        throw 'Invalid rowType';
       }
-      return <EulerDiagram />;
     }
     return null;
   };
@@ -136,19 +146,16 @@ const AttritionTableRow = ({
 };
 
 AttritionTableRow.propTypes = {
-  otherCohortDefinitionId: PropTypes.number,
   rowType: PropTypes.string.isRequired,
-  covariateSubset: PropTypes.array.isRequired,
+  currentCovariateAndCovariatesFromPrecedingRows: PropTypes.array.isRequired,
   outcome: PropTypes.object,
   rowObject: PropTypes.object.isRequired,
-  selectedCohort: PropTypes.object,
+  selectedCohort: PropTypes.object.isRequired,
   sourceId: PropTypes.number.isRequired,
 };
 
 AttritionTableRow.defaultProps = {
-  otherCohortDefinitionId: undefined,
-  selectedCohort: undefined,
-  outcome: undefined,
+  outcome: null,
 };
 
 export default AttritionTableRow;
