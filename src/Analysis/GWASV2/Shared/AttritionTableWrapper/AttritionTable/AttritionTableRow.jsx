@@ -6,9 +6,9 @@ import {
   fetchConceptStatsByHareSubset,
   fetchConceptStatsByHareSubsetCC,
   queryConfig,
-} from '../wizardEndpoints/cohortMiddlewareApi';
-import BarChart from './ChartIcons/BarChart';
-import EulerDiagram from './ChartIcons/EulerDiagram';
+} from '../../wizardEndpoints/cohortMiddlewareApi';
+import BarChart from '../ChartIcons/BarChart';
+import EulerDiagram from '../ChartIcons/EulerDiagram';
 
 const AttritionTableRow = ({
   otherCohortDefinitionId,

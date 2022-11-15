@@ -15,8 +15,9 @@ const mockedQueryClient = new QueryClient({
   Code to aid in Jest Mocking, see:
   https://stackoverflow.com/questions/39830580/jest-test-fails-typeerror-window-matchmedia-is-not-a-function
 */
-window.matchMedia = window.matchMedia
-  || function () {
+window.matchMedia =
+  window.matchMedia ||
+  function() {
     return {
       matches: false,
       addListener() {},
@@ -61,59 +62,49 @@ const AttritionTableArgs = {
     cohort_definition_id: 456,
     cohort_name: 'cohort name def',
   },
-  selectedDichotomousCovariates: [
-    {
-      variable_type: 'custom_dichotomous',
-      cohort_ids: [1, 2],
-      provided_name: 'dichotomous test1',
-      uuid: '12345',
-    },
-    {
-      variable_type: 'custom_dichotomous',
-      cohort_ids: [3, 4],
-      provided_name: 'dichotomous test2',
-      uuid: '123456',
-    },
-  ],
-  selectedCovariates: [
-    {
-      concept_id: 2000006886,
-      prefixed_concept_id: 'ID_2000006886',
-      concept_name: 'Attribute1',
-      concept_code: '',
-      concept_type: 'MVP Continuous',
-    },
-    {
-      concept_id: 2000006885,
-      prefixed_concept_id: 'ID_2000006885',
-      concept_name: 'Attribute10',
-      concept_code: '',
-      concept_type: 'MVP Continuous',
-    },
-    {
-      concept_id: 2000000708,
-      prefixed_concept_id: 'ID_2000000708',
-      concept_name: 'Attribute11',
-      concept_code: '',
-      concept_type: 'MVP Continuous',
-    },
-  ],
 };
 /* Test Dynamic Text for Steps */
-describe('Component Mounts', () => {
+describe('Component Mounts and renders 1 attrition table as expected', () => {
   const wrapper = mount(
     shallow(
       <QueryClientProvider client={mockedQueryClient}>
         <AttritionTableWrapper {...AttritionTableArgs} />
-      </QueryClientProvider>,
-    ).get(0),
+      </QueryClientProvider>
+    ).get(0)
   );
-
-  it('should render one <table>', () => {
-    console.log(wrapper.html());
+  it('should render one <table> when outcome is variable_type: concept after click', () => {
+    // console.log(wrapper.html());
     wrapper.find('.ant-collapse-header-text').simulate('click');
     wrapper.update();
     console.log(wrapper.html());
     expect(wrapper.find('table')).toHaveLength(1);
+  });
+});
+
+describe('Component Mounts and renders 2 tables as expected', () => {
+  let dichotomousOutcomeArgs = {
+    ...AttritionTableArgs,
+    outcome: {
+      variable_type: 'custom_dichotomous',
+      concept_id: 'id',
+      concept_name: 'concept name',
+    },
+  };
+  const wrapper = mount(
+    shallow(
+      <QueryClientProvider client={mockedQueryClient}>
+        <AttritionTableWrapper {...dichotomousOutcomeArgs} />
+      </QueryClientProvider>
+    ).get(0)
+  );
+  it('should render two <table> when outcome is variable_type: dichotomous', () => {
+    console.log(wrapper.html());
+    wrapper.find('.ant-collapse-header-text').forEach((item, index) => {
+      item.simulate('click');
+    });
+
+    wrapper.update();
+    console.log(wrapper.html());
+    expect(wrapper.find('table')).toHaveLength(2);
   });
 });

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Collapse } from 'antd';
-import AttritionTableRow from '../AttritionTableRow';
+import AttritionTableRow from './AttritionTableRow';
 import './AttritionTable.css';
 
 const { Panel } = Collapse;
@@ -62,10 +62,8 @@ const AttritionTable = ({
     //   getCovariateRow(selectedCovariates, selectedDichotomousCovariates)
     // );
   }, [newCovariateSubset]);
-
-  console.log('outcome', JSON.stringify(outcome));
   return (
-    <div className='gwasv2-attrition-table'>
+    <div className='gwasv2-attrition-table' key={tableHeader}>
       <Collapse onClick={(event) => event.stopPropagation()}>
         <Panel header={tableHeader} key='2'>
           <table>
