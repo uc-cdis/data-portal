@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Space, Button, Popconfirm } from 'antd';
 import SelectStudyPopulation from './SelectStudyPopulation/SelectStudyPopulation';
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
-import AttritionTable from './Shared/AttritionTable/AttritionTable';
+import AttritionTableWrapper from './Shared/AttritionTableWrapper/AttritionTableWrapper';
 import { useSourceFetch } from './Shared/wizardEndpoints/cohortMiddlewareApi';
 import { gwasV2Steps } from './Shared/constants';
 import './GWASV2.css';
@@ -13,11 +13,10 @@ const GWASContainer = () => {
   const [
     selectedStudyPopulationCohort,
     setSelectedStudyPopulationCohort,
-  ] = useState({});
-  const [selectedControlCohort] = useState(undefined);
-  const [selectedCaseCohort] = useState(undefined);
-  const [selectedCovariates] = useState([]);
-  const [selectedDichotomousCovariates] = useState([]);
+  ] = useState(null);
+  // const [selectedControlCohort] = useState({});
+  const [covariates] = useState([]);
+  const [outcome] = useState(null);
 
   const generateStep = () => {
     // steps 2 & 3 very similar
@@ -47,10 +46,7 @@ const GWASContainer = () => {
   };
 
   let nextButtonEnabled = true;
-  if (
-    current === 0
-    && Object.keys(selectedStudyPopulationCohort).length === 0
-  ) {
+  if (current === 0 && !selectedStudyPopulationCohort) {
     nextButtonEnabled = false;
   }
 
@@ -59,23 +55,11 @@ const GWASContainer = () => {
       <ProgressBar current={current} />
       {!loading && sourceId && (
         <React.Fragment>
-          <AttritionTable
+          <AttritionTableWrapper
             sourceId={sourceId}
+            covariates={covariates}
             selectedCohort={selectedStudyPopulationCohort}
-            otherSelectedCohort={selectedControlCohort}
-            // outcome={outcome}
-            selectedCovariates={selectedCovariates}
-            selectedDichotomousCovariates={selectedDichotomousCovariates}
-            tableHeader={'Case Cohort Attrition Table'}
-          />
-          <AttritionTable
-            sourceId={sourceId}
-            selectedCohort={selectedControlCohort}
-            otherSelectedCohort={selectedCaseCohort}
-            // outcome={outcome}
-            selectedCovariates={selectedCovariates}
-            selectedDichotomousCovariates={selectedDichotomousCovariates}
-            tableHeader={'Control Cohort Attrition Table'}
+            outcome={outcome}
           />
         </React.Fragment>
       )}
