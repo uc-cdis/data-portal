@@ -18,12 +18,12 @@ const AttritionTableRow = ({
   currentCovariateAndCovariatesFromPrecedingRows,
   sourceId,
 }) => {
-  const [breakdownSize, setBreakdownSize] = useState(0);
+  const [breakdownSize, setBreakdownSize] = useState(null);
   const [breakdownColumns, setBreakdownColumns] = useState([]);
-  const [afr, setAfr] = useState(0);
-  const [asn, setAsn] = useState(0);
-  const [eur, setEur] = useState(0);
-  const [his, setHis] = useState(0);
+  const [afr, setAfr] = useState(null);
+  const [asn, setAsn] = useState(null);
+  const [eur, setEur] = useState(null);
+  const [his, setHis] = useState(null);
   const cohortDefinitionId = selectedCohort.cohort_definition_id;
 
   const { data, status } = useQuery(
@@ -52,7 +52,7 @@ const AttritionTableRow = ({
     queryConfig,
   );
 
-  const { breakdown } = { breakdown: data?.concept_breakdown };
+  const breakdown = data?.concept_breakdown;
 
   useEffect(() => {
     if (breakdown?.length) {
@@ -122,6 +122,15 @@ const AttritionTableRow = ({
     return selectedCohort.cohort_name;
   };
 
+  const displayCellValue = (value) => {
+    if (status === 'loading') {
+      return <Spin size='small' />;
+    } if (status === 'error') {
+      return <h3>❌</h3>;
+    }
+    return value;
+  };
+
   return (
     <tr>
       <td className='gwasv2-attrition-table--leftpad'>{rowType}</td>
@@ -130,14 +139,14 @@ const AttritionTableRow = ({
       </td>
       <td>{rowName()}</td>
       <td className='gwasv2-attrition-table--rightborder'>
-        {status === 'loading' ? <Spin size='small' /> : breakdownSize}
+        {displayCellValue(breakdownSize)}
       </td>
       <td className='gwasv2-attrition-table--leftpad'>
-        {status === 'loading' ? <Spin size='small' /> : afr}
+        {displayCellValue(afr)}
       </td>
-      <td>{status === 'loading' ? <Spin size='small' /> : asn}</td>
-      <td>{status === 'loading' ? <Spin size='small' /> : eur}</td>
-      <td>{status === 'loading' ? <Spin size='small' /> : his}</td>
+      <td>{displayCellValue(asn)}</td>
+      <td>{displayCellValue(eur)}</td>
+      <td>{displayCellValue(his)}</td>
     </tr>
   );
 };
