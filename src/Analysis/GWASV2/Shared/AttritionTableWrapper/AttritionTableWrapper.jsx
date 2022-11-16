@@ -8,7 +8,7 @@ const AttritionTableWrapper = ({
   outcome,
   sourceId,
 }) => {
-  const useSecondTable = outcome.variable_type === 'custom_dichotomous';
+  const useSecondTable = outcome?.variable_type === 'custom_dichotomous';
   return (
     <React.Fragment>
       <AttritionTable

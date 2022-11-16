@@ -69,7 +69,7 @@ const AttritionTable = ({
                   {/* This is for the first Cohort Row in the Table */}
                   <AttritionTableRow
                     selectedCohort={selectedCohort}
-                    outcome={{}}
+                    outcome={null}
                     rowType='Cohort'
                     rowObject={{}}
                     currentCovariateAndCovariatesFromPrecedingRows={[]}
@@ -77,7 +77,7 @@ const AttritionTable = ({
                   />
                 </React.Fragment>
               )}
-              {Object.keys(outcome).length > 0 && (
+              {outcome && (
                 <React.Fragment key={outcome}>
                   {/* This is for the outcome Row in the Table */}
                   <AttritionTableRow
@@ -126,7 +126,7 @@ AttritionTable.propTypes = {
 
 AttritionTable.defaultProps = {
   selectedCohort: undefined,
-  outcome: {},
+  outcome: null,
   covariates: [],
 };
 

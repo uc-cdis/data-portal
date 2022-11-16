@@ -13,35 +13,35 @@ const GWASContainer = () => {
   const [
     selectedStudyPopulationCohort,
     setSelectedStudyPopulationCohort,
-  ] = useState({});
+  ] = useState(null);
   // const [selectedControlCohort] = useState({});
   const [covariates] = useState([]);
-  const [outcome] = useState({});
+  const [outcome] = useState(null);
 
   const generateStep = () => {
     // steps 2 & 3 very similar
     switch (current) {
-    case 0:
-      // select study population
-      return (
-        <SelectStudyPopulation
-          selectedStudyPopulationCohort={selectedStudyPopulationCohort}
-          setSelectedStudyPopulationCohort={setSelectedStudyPopulationCohort}
-          current={current}
-        />
-      );
-    case 1:
-      // outcome (customdichotomous or not)
-      return <React.Fragment>step 2</React.Fragment>;
-    case 2:
-      // covariates (customdichtomous or not)
-      return <React.Fragment>step 3</React.Fragment>;
-    case 3:
-      // all other input (mafs, imputation, etc), review, and submit
-      return <React.Fragment>step 4</React.Fragment>;
-    default:
-      // required for eslint
-      return null;
+      case 0:
+        // select study population
+        return (
+          <SelectStudyPopulation
+            selectedStudyPopulationCohort={selectedStudyPopulationCohort}
+            setSelectedStudyPopulationCohort={setSelectedStudyPopulationCohort}
+            current={current}
+          />
+        );
+      case 1:
+        // outcome (customdichotomous or not)
+        return <React.Fragment>step 2</React.Fragment>;
+      case 2:
+        // covariates (customdichtomous or not)
+        return <React.Fragment>step 3</React.Fragment>;
+      case 3:
+        // all other input (mafs, imputation, etc), review, and submit
+        return <React.Fragment>step 4</React.Fragment>;
+      default:
+        // required for eslint
+        return null;
     }
   };
 

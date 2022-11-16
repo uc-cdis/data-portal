@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Spin } from "antd";
-import CohortSelect from "./Utils/CohortSelect";
-import { useSourceFetch } from "../../GWASWizard/wizardEndpoints/cohortMiddlewareApi";
-import "./SelectStudyPopulation.css";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Spin } from 'antd';
+import CohortSelect from './Utils/CohortSelect';
+import { useSourceFetch } from '../../GWASWizard/wizardEndpoints/cohortMiddlewareApi';
+import './SelectStudyPopulation.css';
 
 const SelectStudyPopulation = ({
   selectedStudyPopulationCohort,
@@ -28,9 +28,11 @@ const SelectStudyPopulation = ({
 };
 
 SelectStudyPopulation.propTypes = {
-  selectedStudyPopulationCohort: PropTypes.object.isRequired,
+  selectedStudyPopulationCohort: PropTypes.object,
   setSelectedStudyPopulationCohort: PropTypes.func.isRequired,
   current: PropTypes.number.isRequired,
 };
-
+SelectStudyPopulation.defaultProps = {
+  selectedStudyPopulationCohort: null,
+};
 export default SelectStudyPopulation;
