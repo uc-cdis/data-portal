@@ -109,7 +109,6 @@ const AttritionTable = ({
                     rowType='Outcome'
                     outcome={outcome}
                     rowObject={outcome}
-                    // currentCovariateAndCovariatesFromPrecedingRows={[]}
                     currentCovariateAndCovariatesFromPrecedingRows={[
                       applyAutoGenFilters(),
                     ]}
