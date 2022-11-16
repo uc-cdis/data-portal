@@ -133,8 +133,13 @@ CohortsOverlapDiagram.propTypes = {
   selectedStudyPopulationCohort: PropTypes.object.isRequired,
   selectedCaseCohort: PropTypes.object.isRequired,
   selectedControlCohort: PropTypes.object.isRequired,
-  selectedCovariates: PropTypes.array.isRequired,
-  selectedDichotomousCovariates: PropTypes.array.isRequired,
+  selectedCovariates: PropTypes.array,
+  selectedDichotomousCovariates: PropTypes.array,
 };
+
+CohortsOverlapDiagram.defaultProps = {
+  selectedCovariates: [],
+  selectedDichotomousCovariates: [],
+}
 
 export default CohortsOverlapDiagram;
