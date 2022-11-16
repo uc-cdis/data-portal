@@ -18,12 +18,12 @@ const AttritionTableRow = ({
   currentCovariateAndCovariatesFromPrecedingRows,
   sourceId,
 }) => {
-  const [breakdownSize, setBreakdownSize] = useState(undefined);
+  const [breakdownSize, setBreakdownSize] = useState(0);
   const [breakdownColumns, setBreakdownColumns] = useState([]);
-  const [afr, setAfr] = useState(undefined);
-  const [asn, setAsn] = useState(undefined);
-  const [eur, setEur] = useState(undefined);
-  const [his, setHis] = useState(undefined);
+  const [afr, setAfr] = useState(0);
+  const [asn, setAsn] = useState(0);
+  const [eur, setEur] = useState(0);
+  const [his, setHis] = useState(0);
   const cohortDefinitionId = selectedCohort.cohort_definition_id;
 
   const { data, status } = useQuery(
@@ -130,14 +130,14 @@ const AttritionTableRow = ({
       </td>
       <td>{rowName()}</td>
       <td className='gwasv2-attrition-table--rightborder'>
-        {status === 'loading' ? <Spin size='small' /> : breakdownSize || 0}
+        {status === 'loading' ? <Spin size='small' /> : breakdownSize}
       </td>
       <td className='gwasv2-attrition-table--leftpad'>
-        {status === 'loading' ? <Spin size='small' /> : afr || 0}
+        {status === 'loading' ? <Spin size='small' /> : afr}
       </td>
-      <td>{status === 'loading' ? <Spin size='small' /> : asn || 0}</td>
-      <td>{status === 'loading' ? <Spin size='small' /> : eur || 0}</td>
-      <td>{status === 'loading' ? <Spin size='small' /> : his || 0}</td>
+      <td>{status === 'loading' ? <Spin size='small' /> : asn}</td>
+      <td>{status === 'loading' ? <Spin size='small' /> : eur}</td>
+      <td>{status === 'loading' ? <Spin size='small' /> : his}</td>
     </tr>
   );
 };
