@@ -1,6 +1,9 @@
 import React from 'react';
 import memoize from 'lodash/memoize';
-import { Checkbox, Collapse, Space } from 'antd';
+import {
+  Button, Checkbox, Collapse, Space,
+} from 'antd';
+import { UndoOutlined } from '@ant-design/icons';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import { AccessLevel } from './Discovery';
 
@@ -45,46 +48,64 @@ const getFilterValuesByKey = memoize(
 );
 
 const DiscoveryAdvancedSearchPanel = (props: Props) => (
-  <Collapse
-    bordered={false}
-    defaultActiveKey={props.config.features.advSearchFilters.filters.map((f) => f.key)}
-  >
-    { props.config.features.advSearchFilters.filters.map((filter) => {
-      const { key, keyDisplayName } = filter;
-      const values = getFilterValuesByKey(key, props.studies, props.config);
-      return (
-        <Collapse.Panel header={keyDisplayName || key} key={key}>
-          <Space direction='vertical'>
-            { values.map((value) => {
-              const valueDisplayName = (filter.valueDisplayNames && filter.valueDisplayNames[value])
-                ? filter.valueDisplayNames[value]
-                : value;
-              return (
-                <Checkbox
-                  key={`${key}-${value}`}
-                  checked={props.filterState[key] && props.filterState[key][value]}
-                  onChange={(ev) => {
-                    const newFilterState = { ...props.filterState };
-                    if (!newFilterState[key]) {
-                      newFilterState[key] = {};
-                    }
-                    if (ev.target.checked) {
-                      newFilterState[key][value] = true;
-                    } else {
-                      delete newFilterState[key][value];
-                    }
-                    props.setFilterState(newFilterState);
-                  }}
-                >
-                  {valueDisplayName}
-                </Checkbox>
-              );
-            })}
-          </Space>
-        </Collapse.Panel>
-      );
-    })}
-  </Collapse>
+  <Space direction='vertical'>
+    <div className='discovery-filters-control'>
+      <Button
+        type='default'
+        size='small'
+        className={'discovery-filters-control-button'}
+        disabled={Object.keys(props.filterState).length === 0}
+        onClick={() => { props.setFilterState({}); }}
+        icon={<UndoOutlined />}
+      >
+        {'Reset Filters'}
+      </Button>
+    </div>
+    <Collapse
+      bordered={false}
+      defaultActiveKey={props.config.features.advSearchFilters.filters.map((f) => f.key)}
+    >
+      { props.config.features.advSearchFilters.filters.map((filter) => {
+        const { key, keyDisplayName } = filter;
+        const values = getFilterValuesByKey(key, props.studies, props.config);
+        console.log(props.filterState);
+        return (
+          <Collapse.Panel header={keyDisplayName || key} key={key}>
+            <Space direction='vertical'>
+              { values.map((value) => {
+                const valueDisplayName = (filter.valueDisplayNames && filter.valueDisplayNames[value])
+                  ? filter.valueDisplayNames[value]
+                  : value;
+                return (
+                  <Checkbox
+                    key={`${key}-${value}`}
+                    checked={props.filterState[key] && props.filterState[key][value]}
+                    onChange={(ev) => {
+                      const newFilterState = { ...props.filterState };
+                      if (!newFilterState[key]) {
+                        newFilterState[key] = {};
+                      }
+                      if (ev.target.checked) {
+                        newFilterState[key][value] = true;
+                      } else {
+                        delete newFilterState[key][value];
+                        if (Object.keys(newFilterState[key]).length === 0) {
+                          delete newFilterState[key];
+                        }
+                      }
+                      props.setFilterState(newFilterState);
+                    }}
+                  >
+                    {valueDisplayName}
+                  </Checkbox>
+                );
+              })}
+            </Space>
+          </Collapse.Panel>
+        );
+      })}
+    </Collapse>
+  </Space>
 );
 
 export default DiscoveryAdvancedSearchPanel;
