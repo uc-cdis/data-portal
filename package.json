@@ -20,6 +20,7 @@
     "@storybook/addon-actions": "^6.0.0",
     "@storybook/react": "^6.0.0",
     "@types/redux-mock-store": "^1.0.3",
+    "@upsetjs/venn.js": "^1.4.2",
     "antd": "^4.16.7",
     "body-scroll-lock": "^4.0.0-beta.0",
     "brace": "^0.10.0",
@@ -69,7 +70,7 @@
     "react": "^16.8.6",
     "react-ace": "^6.1.0",
     "react-dom": "^16.8.6",
-    "react-ga": "^2.5.3",
+    "react-ga4": "^1.4.1",
     "react-helmet": "^5.2.0",
     "react-map-gl": "^5.2.3",
     "react-query": "^3.34.19",
@@ -164,6 +165,13 @@
     "default-browser-id": {
       "meow": "6.1.0"
     },
+    "@upsetjs/venn.js": {
+      "uglify-js": "3.14.3",
+      "ansi-regex": "3.0.1"
+    },
+    "has-ansi": {
+      "ansi-regex": "3.0.1"
+    },
     "@reactour/utils": "0.3.0",
     "@reactour/popover": "0.4.1",
     "@reactour/mask": "0.5.1"
@@ -190,6 +198,7 @@
     "schema": "node ./data/getSchema",
     "params": "node ./data/getTexts > src/params.js",
     "eslint": "./node_modules/.bin/eslint --ext js --ext jsx --ext ts --ext tsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --ignore-pattern '**/formHooks.jsx' --ignore-pattern '**/*.stories.jsx' --fix src data",
+    "eslint-new": "./node_modules/.bin/eslint  --ext js --ext jsx --ext ts --ext tsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js' --ignore-pattern '**/gqlHelper.js' --ignore-pattern '**/formHooks.jsx'  --ignore-pattern '**/*.json'   --ignore-pattern '**/Dockerfile'  --ignore-pattern '**/*.png'  --ignore-pattern '**/*.ico' --ignore-pattern '**/*.stories.jsx' --ignore-pattern '**/*.css'  --ignore-pattern '**/*.md'  --ignore-pattern '**/*.yml' --quiet --fix $(git diff --name-only master | xargs)",
     "elint": "./node_modules/.bin/eslint --ext js --ext jsx --ext ts --ext tsx --ignore-pattern '**/__generated__/**' --ignore-pattern '**/*.min.js' --ignore-pattern '**/setupJest.js'",
     "storybook": "start-storybook -p 6006 -s .storybook/public",
     "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --config .stylelintrc.js --fix",

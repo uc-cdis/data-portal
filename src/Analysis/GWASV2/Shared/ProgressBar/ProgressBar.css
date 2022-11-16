@@ -1,0 +1,123 @@
+.progress-bar {
+  width: 100%;
+  margin-bottom: 75px;
+}
+
+.progress-bar__steps {
+  width: 60%;
+  float: left;
+}
+
+.progress-bar button.ant-btn-default {
+  float: right;
+  color: #2e77b8;
+  border: 1px solid #2e77b8;
+  transition: none;
+  margin-top: 5px;
+}
+
+@media only screen and (max-width: 1350px) {
+  .progress-bar {
+    margin-bottom: 0;
+  }
+  .progress-bar button.ant-btn-default,
+  .progress-bar__steps {
+    float: none;
+  }
+  .progress-bar button.ant-btn-default {
+    margin: 25px 0;
+  }
+}
+
+.progress-bar button.ant-btn-default:hover {
+  background: var(--g3-secondary-btn__bg-color--hover);
+  color: white;
+}
+
+.progress-bar .ant-steps-item-icon {
+  font-size: 22px;
+  text-align: left;
+  width: auto;
+}
+
+.progress-bar .ant-steps-item-container {
+  border-bottom: 3px solid black;
+}
+
+.progress-bar .ant-steps-item-active:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  border-bottom: solid 3px #ef8523;
+  animation: border_anim 0.3s linear forwards;
+}
+
+.progress-bar .ant-steps-item-title {
+  line-height: 37px;
+}
+
+.progress-bar .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon,
+.progress-bar .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon,
+.progress-bar
+.ant-steps-item-process
+> .ant-steps-item-container
+> .ant-steps-item-icon
+.ant-steps-icon,
+.ant-steps-item-wait
+> .ant-steps-item-container
+> .ant-steps-item-content
+> .ant-steps-item-title {
+  color: black;
+}
+
+.progress-bar
+.ant-steps-item-active.ant-steps-item-process
+> .ant-steps-item-container
+> .ant-steps-item-icon
+.ant-steps-icon {
+  color: #ab590d;
+}
+
+.progress-bar
+.ant-steps-item-active.ant-steps-item-process
+> .ant-steps-item-container
+> .ant-steps-item-content
+> .ant-steps-item-title {
+  color: #ab590d;
+}
+
+.progress-bar .ant-steps-item-active .ant-steps-item-container {
+  border-bottom: none;
+}
+
+.progress-bar .ant-steps-item-wait .ant-steps-item-icon,
+.progress-bar
+.ant-steps-item-process
+> .ant-steps-item-container
+> .ant-steps-item-icon {
+  background: none;
+  border: none;
+}
+
+.progress-bar
+.ant-steps-horizontal:not(.ant-steps-label-vertical)
+.ant-steps-item {
+  min-width: 250px;
+  padding-left: 0;
+  margin-right: 16px;
+}
+
+.progress-bar .ant-steps-item-title::after {
+  display: none;
+}
+
+@keyframes border_anim {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
