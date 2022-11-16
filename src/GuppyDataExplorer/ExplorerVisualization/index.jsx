@@ -231,6 +231,7 @@ class ExplorerVisualization extends React.Component {
             </GuppyWrapper>
           )
         }
+        {console.log('ExplorerTable', this.props)}
         {
           this.props.tableConfig.enabled && (
             <ExplorerTable
