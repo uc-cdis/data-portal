@@ -48,7 +48,7 @@ const getFilterValuesByKey = memoize(
 );
 
 const DiscoveryAdvancedSearchPanel = (props: Props) => (
-  <Space direction='vertical'>
+  <Space direction='vertical' style={{ width: 'inherit' }}>
     <div className='discovery-filters-control'>
       <Button
         type='default'
@@ -63,12 +63,12 @@ const DiscoveryAdvancedSearchPanel = (props: Props) => (
     </div>
     <Collapse
       bordered={false}
+      style={{ wordBreak: 'break-word' }}
       defaultActiveKey={props.config.features.advSearchFilters.filters.map((f) => f.key)}
     >
       { props.config.features.advSearchFilters.filters.map((filter) => {
         const { key, keyDisplayName } = filter;
         const values = getFilterValuesByKey(key, props.studies, props.config);
-        console.log(props.filterState);
         return (
           <Collapse.Panel header={keyDisplayName || key} key={key}>
             <Space direction='vertical'>
