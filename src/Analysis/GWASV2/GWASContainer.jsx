@@ -3,7 +3,7 @@ import { Space, Button, Popconfirm, Spin } from 'antd';
 import StudyPopulationCohortSelect from './SelectStudyPopulation/Utils/StudyPopulationCohortSelect';
 import SelectOutcome from "./SelectOutcome/SelectOutcome";
 import SelectCovariates from "./SelectCovariates/SelectCovariates";
-import CovariatesList from "./Shared/Covariates/CovariatesList";
+import CovariatesCardsList from "./Shared/Covariates/CovariatesCardsList";
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
 import ConfigureGWAS from './ConfigureGWAS/ConfigureGWAS';
 // import AttritionTable from './Shared/AttritionTable/AttritionTable';
@@ -88,7 +88,7 @@ const GWASContainer = () => {
             covariates={covariates}
             handleCovariateSubmit={setWorkflow}
           />
-          <CovariatesList
+          <CovariatesCardsList
             covariates={covariates}
             setWorkflow={setWorkflow}
            />

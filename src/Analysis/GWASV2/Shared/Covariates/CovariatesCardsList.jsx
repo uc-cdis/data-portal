@@ -6,7 +6,7 @@ import { Card } from "antd";
 const { Meta } = Card;
 
 
-const CovariatesList = ({
+const CovariatesCardsList = ({
     covariates,
     setWorkflow
 }) => {
@@ -54,9 +54,9 @@ const CovariatesList = ({
     </div>)
 }
 
-CovariatesList.propTypes = {
+CovariatesCardsList.propTypes = {
     covariates: PropTypes.array.isRequired,
     setWorkflow: PropTypes.func.isRequired
 }
 
-export default CovariatesList;
+export default CovariatesCardsList;
