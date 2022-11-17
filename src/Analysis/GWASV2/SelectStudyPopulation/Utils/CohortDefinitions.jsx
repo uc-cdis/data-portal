@@ -33,7 +33,7 @@ const CohortDefinitions = ({
       : [],
     onChange: (_, selectedRows) => {
       handler(
-        !cd ? { set: "selectedStudyPopulationCohort", update: selectedRows[0]}
+        !cd ? { keyName: "selectedStudyPopulationCohort", newValue: selectedRows[0]}
       : selectedRows[0]
       );
     },

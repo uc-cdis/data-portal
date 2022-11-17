@@ -12,38 +12,38 @@ import './GWASV2.css';
 
 const GWASContainer = () => {
   const reducer = (gwas, action) => {
-    const { set, update, op = "" } = action;
-    switch (typeof set) {
+    const { keyName, newValue, op = "" } = action;
+    switch (typeof keyName) { // in some cases keyName is really a list of names!!?? Should we call this keyNames?? TODO - change to make this always a list
       case "object": {
         const mutation = { ...gwas };
-        set.forEach((s) => {
-          mutation[s] = update[set.indexOf(s)]
+        keyName.forEach((s) => {
+          mutation[s] = newValue[keyName.indexOf(s)]
         })
         return mutation
       }
       case "string":
-        switch (set) {
+        switch (keyName) {
           case "covariates":
             const { covariates } = gwas;
             switch (op) {
               case "+":
                 return {
                   ...gwas,
-                  [set]: [...covariates, update]
+                  [keyName]: [...covariates, newValue]
                 }
               case "-":
-                console.log('delete update', update) // <-- pass update as an id always so you dont have to check
+                console.log('delete newValue', newValue) // <-- pass newValue as an id always so you dont have to check
                                                      // custom dichotomous vs continuous being deleted
                 return {
-                  ...gwas,          // update should contain what type of cov being deleted to make this reducer fitler cleaner
-                  [set]: [...covariates.filter((c) => /* ... */ c), update]
+                  ...gwas,          // newValue should contain what type of cov being deleted to make this reducer fitler cleaner
+                  [keyName]: [...covariates.filter((c) => /* ... */ c), newValue]
                 }
             }
 
           default:
             return {
               ...gwas,
-              [set]: update
+              [keyName]: newValue
             }
         }
     }
@@ -168,7 +168,7 @@ const GWASContainer = () => {
               className='GWASUI-navBtn GWASUI-navBtn__next'
               type='primary'
               onClick={() => {
-                setWorkflow({ set: "current", update: current - 1 });
+                setWorkflow({ keyName: "current", newValue: current - 1 });
               }}
               disabled={current < 1}
             >
@@ -190,7 +190,7 @@ const GWASContainer = () => {
                 className='GWASUI-navBtn GWASUI-navBtn__next'
                 type='primary'
                 onClick={() => {
-                  setWorkflow({ set: "current", update: current + 1 });
+                  setWorkflow({ keyName: "current", newValue: current + 1 });
                 }}
                 disabled={!nextButtonEnabled}
               >

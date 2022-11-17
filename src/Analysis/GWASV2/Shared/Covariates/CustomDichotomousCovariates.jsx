@@ -25,8 +25,8 @@ const CustomDichotomousCovariates = ({
       provided_name: providedName,
     }
     handleSubmit(type === "outcome" ?
-      { set: ["outcome", "current"], update: [dichotomous, 2] } :
-      { set: "covariates", update: [...covariates, dichotomous] });
+      { keyName: ["outcome", "current"], newValue: [dichotomous, 2] } :
+      { keyName: "covariates", newValue: [...covariates, dichotomous] });
     setMode('');
   };
 

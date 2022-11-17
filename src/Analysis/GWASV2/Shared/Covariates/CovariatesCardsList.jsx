@@ -21,7 +21,7 @@ const CovariatesCardsList = ({
                     }}
                     actions={[
                         <DeleteOutlined onClick={() => {
-                            setWorkflow({ type: "covariates", update: cd.provided_name, op: '-' })
+                            setWorkflow({ keyName: "covariates", newValue: cd.provided_name, op: '-' })
                         }
                         } key='delete' />,
                     ]}
@@ -39,7 +39,7 @@ const CovariatesCardsList = ({
                     }}
                     actions={[
                         <DeleteOutlined onClick={() => {
-                            setWorkflow({ type: "covariates", update: cd.concept_id, op: '-' })
+                            setWorkflow({ keyName: "covariates", newValue: cd.concept_id, op: '-' })
                         }} key='delete' />,
                     ]}
                 >
