@@ -16,9 +16,7 @@ const AttritionTableWrapper = ({
         covariates={covariates}
         selectedCohort={selectedCohort}
         outcome={outcome}
-        tableHeader={
-          useSecondTable ? 'Case Cohort Attrition Table' : 'Attrition Table'
-        }
+        tableType={useSecondTable ? 'Case Cohort' : ''}
       />
       {useSecondTable && (
         <AttritionTable
@@ -26,7 +24,7 @@ const AttritionTableWrapper = ({
           covariates={covariates}
           selectedCohort={selectedCohort}
           outcome={outcome}
-          tableHeader={'Control Cohort Attrition Table'}
+          tableType={'Control Cohort'}
         />
       )}
     </React.Fragment>

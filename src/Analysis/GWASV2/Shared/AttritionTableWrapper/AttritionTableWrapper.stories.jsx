@@ -55,10 +55,6 @@ WithConceptOutcome.args = {
     cohort_definition_id: 123,
     cohort_name: 'cohort name abc',
   },
-  otherSelectedCohort: {
-    cohort_definition_id: 456,
-    cohort_name: 'cohort name def',
-  },
 };
 WithConceptOutcome.parameters = {
   msw: {
@@ -120,8 +116,8 @@ WithDichotomousOutcome.args = {
   ...WithConceptOutcome.args,
   outcome: {
     variable_type: 'custom_dichotomous',
-    concept_id: 'id',
-    concept_name: 'concept name',
+    cohort_ids: [1, 2],
+    provided_name: 'dichotomous test1',
   },
 };
 WithDichotomousOutcome.parameters = { ...WithConceptOutcome.parameters };
