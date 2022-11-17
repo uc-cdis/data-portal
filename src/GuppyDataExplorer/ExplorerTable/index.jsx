@@ -263,13 +263,9 @@ class ExplorerTable extends React.Component {
           method: 'GET',
         })
           .then((resp) => ({ ...x, has_dicom_images: resp.headers.get('content-length') !== '22' }),
-            // Object.defineProperty(this.props.rawData[index], 'has_dicom_images', {
-            //   value: resp.headers.get('content-length') !== '22',
-            //   enumerable: true,
-            // });
           );
-      })).then((x) => {
-        this.setState({ tableData: x });
+      })).then((data) => {
+        this.setState({ tableData: data });
         this.setState({ loading: false });
       });
     }
