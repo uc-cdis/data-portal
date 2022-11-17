@@ -22,7 +22,6 @@ export const initialWorkflow = {
   outcome: {},
   selectedStudyPopulationCohort: {},
   covariates: [],
-  covariateSubsets: [],
   imputationScore: 0.3,
   mafThreshold: 0.01,
   numOfPC: 3,

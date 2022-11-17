@@ -5,6 +5,7 @@ import SelectOutcome from "./SelectOutcome/SelectOutcome";
 import SelectCovariates from "./SelectCovariates/SelectCovariates";
 import CovariatesList from "./Shared/Covariates/CovariatesList";
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
+import ConfigureGWAS from './ConfigureGWAS/ConfigureGWAS';
 // import AttritionTable from './Shared/AttritionTable/AttritionTable';
 import { gwasV2Steps, initialWorkflow } from './Shared/constants';
 import './GWASV2.css';
@@ -23,31 +24,20 @@ const GWASContainer = () => {
       case "string":
         switch (set) {
           case "covariates":
-            const { covariates, covariateSubsets } = gwas;
-            const { length } = covariateSubsets;
-            // const deleteIdx = op === '-' ? covariateSubsets.find((sub) => sub.find((s) => s.concept_id === update)): 0;
+            const { covariates } = gwas;
             switch (op) {
               case "+":
-                debugger;
                 return {
-                  ...workflow,
-                  [set]: [...covariates, update],
-                  "covariateSubsets": length ?
-                    [...covariateSubsets, [...covariateSubsets[length - 1], update]]
-                    : [[update]]
+                  ...gwas,
+                  [set]: [...covariates, update]
                 }
               case "-":
                 console.log('delete update', update) // <-- pass update as an id always so you dont have to check
-                debugger;                            // custom dichotomous vs continuous being deleted
+                                                     // custom dichotomous vs continuous being deleted
                 return {
-                  ...workflow,          // update should contain what type of cov being deleted to make this reducer fitler cleaner
-                  [set]: [...covariates.filter((c) => /* ... */ c)],
-                  "covariateSubsets": length === 1 ? [...covariateSubsets.map((sub) => sub.filter((s) => s?.concept_id === update || s?.provided_name === update))] : ''
+                  ...gwas,          // update should contain what type of cov being deleted to make this reducer fitler cleaner
+                  [set]: [...covariates.filter((c) => /* ... */ c), update]
                 }
-              // ^ todo:
-              // 1) grab idx of first subarray that contains id
-              // 2) filter out that covariate from all subarrays in covariateSubsets[idx + 1] - covariateSubsets[length - 1]
-              // 3) delete the subarray with idx from 1)
             }
 
           default:
@@ -66,16 +56,12 @@ const GWASContainer = () => {
     selectedStudyPopulationCohort,
     outcome,
     covariates,
-    covariateSubsets,
     imputationScore,
+    numPCs,
     mafThreshold,
     selectedHare,
     current
   } = workflow;
-
-  useEffect(() => {
-    console.log('covariateSubsets', covariateSubsets)
-  }, [covariateSubsets]);
 
   const generateStep = () => {
     switch (current) {
@@ -98,7 +84,7 @@ const GWASContainer = () => {
       case 2:
         return <>
           <SelectCovariates
-            outcome={outcome}
+            outcome={{}}
             covariates={covariates}
             handleCovariateSubmit={setWorkflow}
           />
@@ -110,15 +96,11 @@ const GWASContainer = () => {
       case 3:
         return <>
           <ConfigureGWAS
-            allCovariates={[...covariates, outcome]}
-            imputationScore={imputationScore}
-            mafThreshold={mafThreshold}
-            selectedHare={selectedHare}
-            setGwas={setWorkflow}
-            />
-            <CovariatesList
-            covariates={covariates}
             setWorkflow={setWorkflow}
+            numOfPCs={numPCs}
+            mafThreshold={mafThreshold}
+            imputationScore={imputationScore}
+            selectedHare={selectedHare}
             />
             </>;
       default:
@@ -141,16 +123,6 @@ const GWASContainer = () => {
   }
 
   return (
-    // const { covariateSubsets, ... } = workflow;
-    // todo: pass covariateSubsets & other variables (...) to attrition table
-
-    // <NewAttritionTable
-    //   covariateSubsets={covariateSubets}
-    //   ...
-    //   ...
-    //   ...
-    //  />
-
     <React.Fragment>
       <span>the current outcome is {workflow.outcome.concept_name ?? 'nada'}</span>
       <ProgressBar current={current} />

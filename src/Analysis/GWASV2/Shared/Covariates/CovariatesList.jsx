@@ -3,6 +3,9 @@ import { PropTypes } from "prop-types";
 import { TeamOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Card } from "antd";
 
+const { Meta } = Card;
+
+
 const CovariatesList = ({
     covariates,
     setWorkflow
@@ -42,7 +45,7 @@ const CovariatesList = ({
                 >
                     <Meta
                         avatar={<TeamOutlined />}
-                        title={`${cd.provided_name}`}
+                        title={`${cd.concept_name}`}
                     />
                 </Card>)}
             </>

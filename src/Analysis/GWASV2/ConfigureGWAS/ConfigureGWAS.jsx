@@ -38,7 +38,7 @@ const ConfigureGWAS = ({
                         Number of PCs to use &nbsp;
                         <InputNumber
                             id='input-numOfPC'
-                            value={numOfPC}
+                            value={numOfPCs}
                             min={1}
                             max={10}
                             onChange={(e) => setWorkflow({type: "numOfPCs", update: e })}
@@ -85,10 +85,19 @@ const ConfigureGWAS = ({
     </>
 }
 
-ConfigureGWAS.PropTypes = {
+ConfigureGWAS.propTypes = {
     setWorkflow: PropTypes.func.isRequired,
     numOfPCs: PropTypes.number.isRequired,
     mafThreshold: PropTypes.number.isRequired,
     imputationScore: PropTypes.number.isRequired,
     selectedHare: PropTypes.object.isRequired
 }
+
+ConfigureGWAS.defaultProps = {
+    numOfPCs: 3,
+    mafThreshold: 0.01,
+    imputationScore: 0.3,
+    selectedHare: {},
+};
+
+export default ConfigureGWAS;
