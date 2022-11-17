@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, ReactNode } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import pluralize from 'pluralize';
@@ -21,6 +21,7 @@ class ExplorerTable extends React.Component {
       pageSize: props.defaultPageSize,
       currentPage: 0,
       showEmptyColumns: false,
+      tableData: this.props.rawData,
     };
   }
 
@@ -56,7 +57,7 @@ class ExplorerTable extends React.Component {
 
   /**
    * Build column configs for each table according to their locations and fields
-   * @param field: the full field name, if it is a nested field, it would contains at least 1 '.'
+   * @param field: the full field name, if it is a nested field, it would contain at least 1 '.'
    * @param isNestedTableColumn: control flag to determine if it is building column config for
    * the root table or inner nested tables
    * @param isDetailedColumn: control flag to determine if it is building column config for inner
@@ -130,27 +131,12 @@ class ExplorerTable extends React.Component {
 
         // if this field is the `dicomViewerId`, convert the value to a link to the DICOM viewer
         if (this.props.tableConfig.dicomViewerId && this.props.tableConfig.dicomViewerId === field && valueStr) {
-          const dicomViewerLink = `${hostname}dicom-viewer/viewer/${valueStr}`;
+          let dicomViewerLink = `${hostname}dicom-viewer/viewer/${valueStr}`;
+          if (row.original.has_dicom_images !== undefined && !row.original.has_dicom_images) {
+            dicomViewerLink = undefined;
+          }
           if (this.props.tableConfig.linkFields.includes(field)) { // link button
-            //valueStr = dicomViewerLink;
-            const dicomServerLink = `${hostname}dicom-server/dicom-web/studies/${valueStr}/series`;
-            async function fetchDicomViewer() {
-              const res = await fetch(dicomServerLink, {
-                method: 'GET'
-              });
-              return res.headers.get("content-length");
-            }
-            //let len = fetchDicomViewer();
-            async function getData() {
-              let len = await fetchDicomViewer();
-              if (len === "22") {
-
-                return null;
-              } else {
-                return dicomViewerLink;
-              }
-            }
-            getData().then((data) => valueStr = data);
+            valueStr = dicomViewerLink;
           } else { // direct link
             return (<div><span title={valueStr}><a href={dicomViewerLink} target='_blank' rel='noreferrer'>{valueStr}</a></span></div>);
           }
@@ -158,27 +144,27 @@ class ExplorerTable extends React.Component {
 
         // handling some special field types
         switch (field) {
-          case this.props.guppyConfig.downloadAccessor:
-            return (<div><span title={valueStr}><a href={`/files/${valueStr}`}>{valueStr}</a></span></div>);
-          case 'file_size':
-            return (<div><span title={valueStr}>{humanFileSize(valueStr)}</span></div>);
-          case this.props.tableConfig.linkFields.includes(field) && field:
-            return valueStr
-              ? (
-                <IconicLink
-                  link={valueStr}
-                  className='explorer-table-link'
-                  buttonClassName='explorer-table-link-button'
-                  icon='exit'
-                  dictIcons={dictIcons}
-                  iconColor='#606060'
-                  target='_blank'
-                  isExternal
-                />
-              )
-              : null;
-          default:
-            return (<div><span title={valueStr}>{valueStr}</span></div>);
+        case this.props.guppyConfig.downloadAccessor:
+          return (<div><span title={valueStr}><a href={`/files/${valueStr}`}>{valueStr}</a></span></div>);
+        case 'file_size':
+          return (<div><span title={valueStr}>{humanFileSize(valueStr)}</span></div>);
+        case this.props.tableConfig.linkFields.includes(field) && field:
+          return valueStr
+            ? (
+              <IconicLink
+                link={valueStr}
+                className='explorer-table-link'
+                buttonClassName='explorer-table-link-button'
+                icon='exit'
+                dictIcons={dictIcons}
+                iconColor='#606060'
+                target='_blank'
+                isExternal
+              />
+            )
+            : null;
+        default:
+          return (<div><span title={valueStr}>{valueStr}</span></div>);
         }
       },
     };
@@ -266,10 +252,40 @@ class ExplorerTable extends React.Component {
     this.setState({ showEmptyColumns: checked });
   };
 
+  augmentData = () => {
+    const haveField = this.props.rawData.filter((x) => Object.keys(x).includes(this.props.tableConfig.dicomViewerId));
+    if (haveField.length === this.props.rawData.length) {
+      this.setState({ loading: true });
+      // eslint-disable-next-line array-callback-return
+      Promise.all(this.props.rawData.map((x) => {
+        const dicomServerLink = `${hostname}dicom-server/dicom-web/studies/${x[this.props.tableConfig.dicomViewerId]}/series`;
+        return fetch(dicomServerLink, {
+          method: 'GET',
+        })
+          .then((resp) => ({ ...x, has_dicom_images: resp.headers.get('content-length') !== '22' }),
+            // Object.defineProperty(this.props.rawData[index], 'has_dicom_images', {
+            //   value: resp.headers.get('content-length') !== '22',
+            //   enumerable: true,
+            // });
+          );
+      })).then((x) => {
+        this.setState({ tableData: x });
+        this.setState({ loading: false });
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.tableConfig.dicomViewerId && this.props.rawData !== prevProps.rawData) {
+      this.augmentData();
+    } else if (this.props.rawData !== prevProps.rawData) this.setState({ tableData: this.props.rawData });
+  }
+
   render() {
     if (!this.props.tableConfig.fields || this.props.tableConfig.fields.length === 0) {
       return null;
     }
+
     // build column configs for root table first
     const rootColumnsConfig = this.props.tableConfig.fields.map((field) => {
       const tempColumnConfig = this.buildColumnConfig(field, false, false);
@@ -386,7 +402,7 @@ class ExplorerTable extends React.Component {
         <ReactTable
           columns={rootColumnsConfig}
           manual
-          data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
+          data={(this.props.isLocked || !this.props.rawData) ? [] : this.state.tableData}
           showPageSizeOptions={!this.props.isLocked}
           pages={(this.props.isLocked) ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}

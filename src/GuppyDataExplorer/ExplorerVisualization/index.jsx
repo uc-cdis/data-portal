@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
@@ -8,7 +8,7 @@ import { components } from '../../params';
 import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../../localconf';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerHeatMap from '../ExplorerHeatMap';
-import ExplorerTable from '../ExplorerTable';
+import ExplorerTable, {DicomHasImageLinkObserver} from '../ExplorerTable';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import {
   TableConfigType,
@@ -19,6 +19,7 @@ import {
 import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper';
 import './ExplorerVisualization.css';
 import { labelToPlural } from '../utils';
+
 
 class ExplorerVisualization extends React.Component {
   constructor(props) {
@@ -231,7 +232,6 @@ class ExplorerVisualization extends React.Component {
             </GuppyWrapper>
           )
         }
-        {console.log('ExplorerTable', this.props)}
         {
           this.props.tableConfig.enabled && (
             <ExplorerTable
