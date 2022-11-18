@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import './GWASCovariates.css';
 import Covariates from './Covariates';
+import { ACTIONS } from '../constants';
 
 const ContinuousCovariates = ({
   setMode,
@@ -25,8 +26,8 @@ const ContinuousCovariates = ({
       onClick={() => {
         dispatch(
           type === 'outcome'
-            ? { keyName: ['outcome', 'current'], newValue: [selected, 2] }
-            : { keyName: 'covariates', newValue: selected, op: '+' }
+            ? { type: ACTIONS.SET_OUTCOME, payload: selected }
+            : { type: ACTIONS.ADD_COVARIATE, payload: selected }
         );
         setMode('');
       }}

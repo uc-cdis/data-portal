@@ -7,58 +7,51 @@ import CovariatesCardsList from './Shared/Covariates/CovariatesCardsList';
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
 import ConfigureGWAS from './ConfigureGWAS/ConfigureGWAS';
 // import AttritionTable from './Shared/AttritionTable/AttritionTable';
-import { gwasV2Steps, initialState } from './Shared/constants';
+import { gwasV2Steps, initialState, ACTIONS } from './Shared/constants';
 import './GWASV2.css';
 
 const GWASContainer = () => {
   const reducer = (state, action) => {
-    const { keyName, newValue, op = '' } = action;
-    switch (
-      typeof keyName // in some cases keyName is really a list of names!!?? Should we call this keyNames?? TODO - change to make this always a list
-    ) {
-      case 'object': {
-        const mutation = { ...state };
-        keyName.forEach((s) => {
-          mutation[s] = newValue[keyName.indexOf(s)];
-        });
-        return mutation;
-      }
-      case 'string':
-        switch (keyName) {
-          case 'covariates':
-            const { covariates } = state;
-            switch (op) {
-              case '+':
-                return {
-                  ...state,
-                  [keyName]: [...covariates, newValue],
-                };
-              case '-':
-                console.log('delete newValue', newValue); // <-- pass newValue as an id always so you dont have to check
-                // custom dichotomous vs continuous being deleted
-                return {
-                  ...state, // newValue should contain what type of cov being deleted to make this reducer fitler cleaner
-                  [keyName]: [
-                    ...covariates.filter((c) => /* ... */ c),
-                    newValue,
-                  ],
-                };
-            }
-
-          default:
-            return {
-              ...state,
-              [keyName]: newValue,
-            };
-        }
+    console.log('called Reducer with:', state, 'and ', action);
+    switch (action.type) {
+      case ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT:
+        return { ...state, selectedStudyPopulationCohort: action.payload };
+      case ACTIONS.INCREMENT_CURRENT:
+        return { ...state, current: state.current + 1 };
+      case ACTIONS.DECREMENT_CURRENT:
+        return { ...state, current: state.current - 1 };
+      case ACTIONS.SET_OUTCOME:
+        return { ...state, current: 2, outcome: action.payload };
+      case ACTIONS.ADD_COVARIATE:
+        return { ...state, covariates: [...state.covariates, action.payload] };
+      case ACTIONS.DELETE_CONTINUOUS_COVARIATE:
+        return {
+          ...state,
+          covariates: state.covariates.filter((covariate) => {
+            return covariate.concept_id !== action.payload;
+          }),
+        };
+      case ACTIONS.DELETE_DICHOTOMOUS_COVARIATE:
+        return {
+          ...state,
+          covariates: state.covariates.filter((covariate) => {
+            return covariate.provided_name !== action.payload;
+          }),
+        };
+      case ACTIONS.UPDATE_IMPUTATION_SCORE:
+        return { ...state, imputationScore: action.payload };
+      case ACTIONS.UPDATE_MAF_THRESHOLD:
+        return { ...state, mafThreshold: action.payload };
+      case ACTIONS.UPDATE_NUM_PCS:
+        return { ...state, numPCs: action.payload };
+      default:
+        throw new Error('Unknown action passed to reducer');
     }
   };
 
-  // todo need better naming
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // todo DO WE EVEN NEED THIS DECLARATION? CHECK!
-  const {
+  /*const {
     selectedStudyPopulationCohort,
     outcome,
     covariates,
@@ -67,15 +60,15 @@ const GWASContainer = () => {
     mafThreshold,
     selectedHare,
     current,
-  } = state;
-
+  } = state;*/
   const generateStep = () => {
-    switch (current) {
+    switch (state.current) {
       case 0:
         return (
           <StudyPopulationCohortSelect
-            selectedStudyPopulationCohort={selectedStudyPopulationCohort}
+            selectedStudyPopulationCohort={state.selectedStudyPopulationCohort}
             handleStudyPopulationCohortSelect={dispatch}
+            dispatch={dispatch}
             cd={false}
           />
         );
@@ -83,8 +76,8 @@ const GWASContainer = () => {
         return (
           <>
             <SelectOutcome
-              outcome={outcome}
-              covariates={covariates}
+              outcome={state.outcome}
+              covariates={state.covariates}
               dispatch={dispatch}
             />
           </>
@@ -94,10 +87,13 @@ const GWASContainer = () => {
           <>
             <SelectCovariates
               outcome={{}}
-              covariates={covariates}
+              covariates={state.covariates}
               dispatch={dispatch}
             />
-            <CovariatesCardsList covariates={covariates} dispatch={dispatch} />
+            <CovariatesCardsList
+              covariates={state.covariates}
+              dispatch={dispatch}
+            />
           </>
         );
       case 3:
@@ -105,10 +101,10 @@ const GWASContainer = () => {
           <>
             <ConfigureGWAS
               dispatch={dispatch}
-              numOfPCs={numPCs}
-              mafThreshold={mafThreshold}
-              imputationScore={imputationScore}
-              selectedHare={selectedHare}
+              numOfPCs={state.numPCs}
+              mafThreshold={state.mafThreshold}
+              imputationScore={state.imputationScore}
+              selectedHare={state.selectedHare}
             />
           </>
         );
@@ -119,8 +115,8 @@ const GWASContainer = () => {
 
   let nextButtonEnabled = true;
   if (
-    current === 0 &&
-    Object.keys(selectedStudyPopulationCohort).length === 0
+    state.current === 0 &&
+    Object.keys(state.selectedStudyPopulationCohort).length === 0
   ) {
     nextButtonEnabled = false;
   }
@@ -134,7 +130,7 @@ const GWASContainer = () => {
   return (
     <React.Fragment>
       <span>the current outcome is {state.outcome.concept_name ?? 'nada'}</span>
-      <ProgressBar current={current} />
+      <ProgressBar current={state.current} />
       {/* {!loading && sourceId && (
         <React.Fragment>
           <AttritionTable
@@ -169,7 +165,7 @@ const GWASContainer = () => {
               align={'center'}
               style={{ width: '100%' }}
             >
-              {generateStep(current)}
+              {generateStep(state.current)}
             </Space>
           </div>
           <div className='steps-action'>
@@ -177,9 +173,9 @@ const GWASContainer = () => {
               className='GWASUI-navBtn GWASUI-navBtn__next'
               type='primary'
               onClick={() => {
-                dispatch({ keyName: 'current', newValue: current - 1 });
+                dispatch({ type: ACTIONS.DECREMENT_CURRENT });
               }}
-              disabled={current < 1}
+              disabled={state.current < 1}
             >
               Previous
             </Button>
@@ -193,20 +189,20 @@ const GWASContainer = () => {
                 Select Different GWAS Type
               </Button>
             </Popconfirm>
-            {current < gwasV2Steps.length - 1 && (
+            {state.current < gwasV2Steps.length - 1 && (
               <Button
                 data-tour='next-button'
                 className='GWASUI-navBtn GWASUI-navBtn__next'
                 type='primary'
                 onClick={() => {
-                  dispatch({ keyName: 'current', newValue: current + 1 });
+                  dispatch({ type: ACTIONS.INCREMENT_CURRENT });
                 }}
                 disabled={!nextButtonEnabled}
               >
                 Next
               </Button>
             )}
-            {current === gwasV2Steps.length - 1 && (
+            {state.current === gwasV2Steps.length - 1 && (
               <div className='GWASUI-navBtn' />
             )}
           </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import StudyPopulationCohortSelect from '../../SelectStudyPopulation/Utils/StudyPopulationCohortSelect';
+import { ACTIONS } from '../constants';
 import '../../../GWASUIApp/GWASUIApp.css';
 
 const CustomDichotomousCovariates = ({
@@ -26,8 +27,8 @@ const CustomDichotomousCovariates = ({
     };
     dispatch(
       type === 'outcome'
-        ? { keyName: ['outcome', 'current'], newValue: [dichotomous, 2] }
-        : { keyName: 'covariates', newValue: [...covariates, dichotomous] }
+        ? { type: ACTIONS.SET_OUTCOME, payload: dichotomous }
+        : { type: ACTIONS.ADD_COVARIATE, payload: dichotomous }
     );
     setMode('');
   };
