@@ -27,7 +27,7 @@ jobs:
 
   unit_test:
     name: NPM Unit Test
-    uses: uc-cdis/.github/.github/workflows/npm_unit_test.yaml@feat_npmunittests
+    uses: uc-cdis/.github/.github/workflows/npm_unit_test.yaml@feat/npmunittests
     with:
       node-version: '14'
       npm-version: '8.5'
