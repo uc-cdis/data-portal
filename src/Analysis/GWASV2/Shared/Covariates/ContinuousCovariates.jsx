@@ -7,54 +7,55 @@ const ContinuousCovariates = ({
   setMode,
   // searchTerm,
   selected,
-  handleSubmit,
+  dispatch,
   handleSelect,
   covariates = [],
   outcome,
-  type
+  type,
 }) => (
   <React.Fragment>
     <Covariates
       selected={selected}
       handleSelect={handleSelect}
-    // searchTerm={searchTerm}
+      // searchTerm={searchTerm}
     />
     <button
       type='button'
       style={{ marginLeft: 5 }}
       onClick={() => {
-        handleSubmit(type === "outcome" ?
-        { keyName: ["outcome", "current"], newValue: [selected, 2] }
-        : { keyName: "covariates", newValue: selected, op: "+" }
-        )
-        setMode('')
-      }}>
+        dispatch(
+          type === 'outcome'
+            ? { keyName: ['outcome', 'current'], newValue: [selected, 2] }
+            : { keyName: 'covariates', newValue: selected, op: '+' }
+        );
+        setMode('');
+      }}
+    >
       Submit
     </button>
     <button
       type='button'
       onClick={() => {
-        // handleSubmit(undefined);
         setMode(undefined);
       }}
-    >cancel
+    >
+      cancel
     </button>
   </React.Fragment>
 );
 
 ContinuousCovariates.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
   setMode: PropTypes.func.isRequired,
   handleSelect: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
   covariates: PropTypes.array,
-  outcome: PropTypes.object.isRequired
-  // searchTerm: PropTypes.string.isRequired
+  outcome: PropTypes.object.isRequired,
 };
 
 ContinuousCovariates.defaultProps = {
   selectedCovariate: undefined,
-  covariates: []
+  covariates: [],
 };
 
 export default ContinuousCovariates;

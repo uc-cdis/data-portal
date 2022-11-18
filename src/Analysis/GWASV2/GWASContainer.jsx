@@ -85,7 +85,7 @@ const GWASContainer = () => {
             <SelectOutcome
               outcome={outcome}
               covariates={covariates}
-              handleOutcome={dispatch}
+              dispatch={dispatch}
             />
           </>
         );
@@ -95,19 +95,16 @@ const GWASContainer = () => {
             <SelectCovariates
               outcome={{}}
               covariates={covariates}
-              handleCovariateSubmit={dispatch}
+              dispatch={dispatch}
             />
-            <CovariatesCardsList
-              covariates={covariates}
-              setWorkflow={dispatch}
-            />
+            <CovariatesCardsList covariates={covariates} dispatch={dispatch} />
           </>
         );
       case 3:
         return (
           <>
             <ConfigureGWAS
-              setWorkflow={dispatch}
+              dispatch={dispatch}
               numOfPCs={numPCs}
               mafThreshold={mafThreshold}
               imputationScore={imputationScore}

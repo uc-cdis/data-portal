@@ -5,11 +5,11 @@ import StudyPopulationCohortSelect from '../../SelectStudyPopulation/Utils/Study
 import '../../../GWASUIApp/GWASUIApp.css';
 
 const CustomDichotomousCovariates = ({
-  handleSubmit,
+  dispatch,
   setMode,
   covariates = [],
   outcome,
-  type
+  type,
 }) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
   const [secondPopulation, setSecondPopulation] = useState(undefined);
@@ -20,18 +20,22 @@ const CustomDichotomousCovariates = ({
       variable_type: 'custom_dichotomous',
       cohort_ids: [
         firstPopulation.cohort_definition_id,
-        secondPopulation.cohort_definition_id
+        secondPopulation.cohort_definition_id,
       ],
       provided_name: providedName,
-    }
-    handleSubmit(type === "outcome" ?
-      { keyName: ["outcome", "current"], newValue: [dichotomous, 2] } :
-      { keyName: "covariates", newValue: [...covariates, dichotomous] });
+    };
+    dispatch(
+      type === 'outcome'
+        ? { keyName: ['outcome', 'current'], newValue: [dichotomous, 2] }
+        : { keyName: 'covariates', newValue: [...covariates, dichotomous] }
+    );
     setMode('');
   };
 
   const customDichotomousValidation =
-    providedName.length === 0 || firstPopulation === undefined || secondPopulation === undefined;
+    providedName.length === 0 ||
+    firstPopulation === undefined ||
+    secondPopulation === undefined;
 
   return (
     <div>
@@ -54,14 +58,17 @@ const CustomDichotomousCovariates = ({
         <button
           type='button'
           className={'GWASUI-dichBtn'}
-          onClick={() => setMode(undefined)}>
+          onClick={() => setMode(undefined)}
+        >
           cancel
         </button>
         <div data-tour='add-button'>
           <button
             type='button'
             disabled={customDichotomousValidation}
-            className={`${!customDichotomousValidation ? 'GWASUI-btnEnable' : ''} GWASUI-dichBtn`}
+            className={`${
+              !customDichotomousValidation ? 'GWASUI-btnEnable' : ''
+            } GWASUI-dichBtn`}
             onClick={() => handleDichotomousSubmit()}
           >
             Submit
@@ -79,8 +86,8 @@ const CustomDichotomousCovariates = ({
                 selectedStudyPopulationCohort={firstPopulation}
                 handleStudyPopulationCohortSelect={setFirstPopulation}
                 cd={true}
-              // sourceId={sourceId}
-              // current={current}
+                // sourceId={sourceId}
+                // current={current}
               />
               {/* <SelectStudyPopulation
                   selectedStudyPopulationCohort={firstPopulation}
@@ -102,12 +109,11 @@ const CustomDichotomousCovariates = ({
                 selectedStudyPopulationCohort={secondPopulation}
                 handleStudyPopulationCohortSelect={setSecondPopulation}
                 cd={true}
-              // sourceId={sourceId}
-              // current={current}
+                // sourceId={sourceId}
+                // current={current}
               />
             </div>
           </div>
-
         </div>
       </React.Fragment>
       <div />
@@ -117,17 +123,15 @@ const CustomDichotomousCovariates = ({
 
 CustomDichotomousCovariates.propTypes = {
   setMode: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
   covariates: PropTypes.array,
   outcome: PropTypes.object,
-  type: PropTypes.string.isRequired
+  type: PropTypes.string.isRequired,
 };
 
 CustomDichotomousCovariates.defaultProps = {
   covariates: [],
-  outcome: {}
-}
-
-
+  outcome: {},
+};
 
 export default CustomDichotomousCovariates;
