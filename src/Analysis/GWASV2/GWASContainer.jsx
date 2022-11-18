@@ -48,19 +48,8 @@ const GWASContainer = () => {
         throw new Error('Unknown action passed to reducer');
     }
   };
-
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  /*const {
-    selectedStudyPopulationCohort,
-    outcome,
-    covariates,
-    imputationScore,
-    numPCs,
-    mafThreshold,
-    selectedHare,
-    current,
-  } = state;*/
   const generateStep = () => {
     switch (state.current) {
       case 0:
@@ -74,13 +63,11 @@ const GWASContainer = () => {
         );
       case 1:
         return (
-          <>
-            <SelectOutcome
-              outcome={state.outcome}
-              covariates={state.covariates}
-              dispatch={dispatch}
-            />
-          </>
+          <SelectOutcome
+            outcome={state.outcome}
+            covariates={state.covariates}
+            dispatch={dispatch}
+          />
         );
       case 2:
         return (
@@ -98,15 +85,13 @@ const GWASContainer = () => {
         );
       case 3:
         return (
-          <>
-            <ConfigureGWAS
-              dispatch={dispatch}
-              numOfPCs={state.numPCs}
-              mafThreshold={state.mafThreshold}
-              imputationScore={state.imputationScore}
-              selectedHare={state.selectedHare}
-            />
-          </>
+          <ConfigureGWAS
+            dispatch={dispatch}
+            numOfPCs={state.numPCs}
+            mafThreshold={state.mafThreshold}
+            imputationScore={state.imputationScore}
+            selectedHare={state.selectedHare}
+          />
         );
       default:
         return null;
