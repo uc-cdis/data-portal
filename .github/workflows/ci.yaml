@@ -31,3 +31,5 @@ jobs:
     with:
       node-version: '14'
       npm-version: '8.5'
+      pre-test: 'npm run relay && npm run params'
+      post-test: 'bash ./testSchema.sh'
