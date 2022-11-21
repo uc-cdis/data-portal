@@ -1,5 +1,4 @@
-import React from 'react';
-// import '../GWASCovariates.css';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Table, Spin } from 'antd';
@@ -7,22 +6,30 @@ import {
   fetchCovariates,
   queryConfig,
 } from '../wizardEndpoints/cohortMiddlewareApi';
-import { useFetch } from '../formHooks';
+import { useFetch, useFilter } from '../formHooks';
 import { useSourceContext } from '../Source';
+import SearchBar from '../SearchBar';
 
-const Covariates = ({
-  // searchTerm,
-  selected,
-  handleSelect,
-}) => {
+const Covariates = ({ selected, handleSelect }) => {
   const { source } = useSourceContext();
+
   const covariates = useQuery(
     ['covariates', source],
     () => fetchCovariates(source),
     queryConfig
   );
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const handleSearch = (searchTerm) => {
+    setSearchTerm(searchTerm);
+  };
+
   const fetchedCovariates = useFetch(covariates, 'concepts');
-  // const displayedCovariates = useFilter(fetchedCovariates, searchTerm, 'concept_name');
+  const displayedCovariates = useFilter(
+    fetchedCovariates,
+    searchTerm,
+    'concept_name'
+  );
 
   const covariateSelection = () => ({
     type: 'radio',
@@ -69,29 +76,34 @@ const Covariates = ({
 
   if (covariates?.status === 'success') {
     return (
-      <Table
-        className='GWASUI-table2'
-        rowKey='concept_id'
-        size='middle'
-        pagination={{
-          defaultPageSize: 10,
-          showSizeChanger: true,
-          pageSizeOptions: ['10', '20', '50', '100', '500'],
-        }}
-        rowSelection={covariateSelection()}
-        columns={covariateTableConfig}
-        dataSource={fetchedCovariates}
-      />
+      <>
+        <SearchBar
+          searchTerm={searchTerm}
+          handleSearch={handleSearch}
+          field='Continouos covariate name'
+        />
+        <Table
+          className='GWASUI-table2'
+          rowKey='concept_id'
+          size='middle'
+          pagination={{
+            defaultPageSize: 10,
+            showSizeChanger: true,
+            pageSizeOptions: ['10', '20', '50', '100', '500'],
+          }}
+          rowSelection={covariateSelection()}
+          columns={covariateTableConfig}
+          dataSource={displayedCovariates}
+        />
+      </>
     );
   }
   return <React.Fragment />;
 };
 
 Covariates.propTypes = {
-  // searchTerm: PropTypes.string.isRequired,
   selected: PropTypes.any,
   handleSelect: PropTypes.func.isRequired,
-  // type: Proptypes.string.isRequired
 };
 
 export default Covariates;
