@@ -81,37 +81,18 @@ const CustomDichotomousCovariates = ({
           <div className='GWASUI-flexRow' data-tour='table-repeat'>
             <div>
               <h3>Select NO Cohort</h3>
-              {/* todo: remove extra component layer, rename CohortSelect */}
-              {/* There is no difference between using CohortSelect vs. SelectStudyPopulation here */}
               <SelectStudyPopulation
                 selectedStudyPopulationCohort={firstPopulation}
                 handleSelectStudyPopulation={setFirstPopulation}
                 cd={true}
-                // sourceId={sourceId}
-                // current={current}
               />
-              {/* <SelectStudyPopulation
-                  selectedStudyPopulationCohort={firstPopulation}
-                  setSelectedStudyPopulationCohort={setFirstPopulation}
-                  current={current}
-                  sourceId={sourceId}
-                /> */}
             </div>
             <div>
-              {/* className='GWASUI-selectInstruction GWASUI-no-top-spacing' align={'center'} */}
               <h3>Select YES Cohort</h3>
-              {/* <SelectStudyPopulation
-                  selectedStudyPopulationCohort={secondPopulation}
-                  setSelectedStudyPopulationCohort={setSecondPopulation}
-                  current={current}
-                  sourceId={sourceId}
-                /> */}
               <SelectStudyPopulation
                 selectedStudyPopulationCohort={secondPopulation}
                 handleSelectStudyPopulation={setSecondPopulation}
                 cd={true}
-                // sourceId={sourceId}
-                // current={current}
               />
             </div>
           </div>
