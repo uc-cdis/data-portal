@@ -2,7 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { TeamOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
-import { ACTIONS } from '../constants';
+import ACTIONS from '../StateManagement/Actions';
 const { Meta } = Card;
 
 const CovariatesCardsList = ({ covariates, dispatch }) => {

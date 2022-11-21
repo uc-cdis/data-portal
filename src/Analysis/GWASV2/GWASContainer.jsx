@@ -6,49 +6,14 @@ import SelectCovariates from './SelectCovariates/SelectCovariates';
 import CovariatesCardsList from './Shared/Covariates/CovariatesCardsList';
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
 import AttritionTableWrapper from './Shared/AttritionTableWrapper/AttritionTableWrapper';
+import reducer from './Shared/StateManagement/reducer';
+import ACTIONS from './Shared/StateManagement/Actions';
+import initialState from './Shared/StateManagement/InitialState';
 import ConfigureGWAS from './ConfigureGWAS/ConfigureGWAS';
-// import AttritionTable from './Shared/AttritionTable/AttritionTable';
-import { gwasV2Steps, initialState, ACTIONS } from './Shared/constants';
+import { gwasV2Steps } from './Shared/constants';
 import './GWASV2.css';
 
 const GWASContainer = () => {
-  const reducer = (state, action) => {
-    console.log(state, action);
-    switch (action.type) {
-      case ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT:
-        return { ...state, selectedStudyPopulationCohort: action.payload };
-      case ACTIONS.INCREMENT_CURRENT_STEP:
-        return { ...state, currentStep: state.currentStep + 1 };
-      case ACTIONS.DECREMENT_CURRENT_STEP:
-        return { ...state, currentStep: state.currentStep - 1 };
-      case ACTIONS.SET_OUTCOME:
-        return { ...state, currentStep: 2, outcome: action.payload };
-      case ACTIONS.ADD_COVARIATE:
-        return { ...state, covariates: [...state.covariates, action.payload] };
-      case ACTIONS.DELETE_CONTINUOUS_COVARIATE:
-        return {
-          ...state,
-          covariates: state.covariates.filter((covariate) => {
-            return covariate.concept_id !== action.payload;
-          }),
-        };
-      case ACTIONS.DELETE_DICHOTOMOUS_COVARIATE:
-        return {
-          ...state,
-          covariates: state.covariates.filter((covariate) => {
-            return covariate.provided_name !== action.payload;
-          }),
-        };
-      case ACTIONS.UPDATE_IMPUTATION_SCORE:
-        return { ...state, imputationScore: action.payload };
-      case ACTIONS.UPDATE_MAF_THRESHOLD:
-        return { ...state, mafThreshold: action.payload };
-      case ACTIONS.UPDATE_NUM_PCS:
-        return { ...state, numPCs: action.payload };
-      default:
-        throw new Error(`Unknown action passed to reducer: ${action}`);
-    }
-  };
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const generateStep = () => {

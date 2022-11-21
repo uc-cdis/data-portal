@@ -5,7 +5,7 @@ import { Table, Spin } from 'antd';
 import { fetchCohortDefinitions } from '../../Shared/wizardEndpoints/cohortMiddlewareApi';
 import { useFetch, useFilter } from '../../Shared/formHooks';
 import { useSourceContext } from '../../Shared/Source';
-import { ACTIONS } from '../../Shared/constants';
+import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const CohortDefinitions = ({
   selectedCohort = undefined,
@@ -34,18 +34,6 @@ const CohortDefinitions = ({
       : [],
     onChange: (_, selectedRows) => {
       dispatch(
-        /* NEW WAY
-            {
-              type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
-              payload: selectedRows[0],
-            }
-            OLD WAY
-            {
-              keyName: 'selectedStudyPopulationCohort',
-              newValue: selectedRows[0],
-            }
-
-        */
         !cd
           ? {
               type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,

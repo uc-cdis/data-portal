@@ -15,10 +15,6 @@ const SelectStudyPopulation = ({
 }) => {
   const [cohortSearchTerm, setCohortSearchTerm] = useState('');
 
-  // useEffect(() => {
-  //   setCohortSearchTerm("");
-  // }, [current]);
-
   const handleCohortSearch = (searchTerm) => {
     setCohortSearchTerm(searchTerm);
   };
@@ -58,8 +54,6 @@ const SelectStudyPopulation = ({
 SelectStudyPopulation.propTypes = {
   selectedStudyPopulationCohort: PropTypes.any,
   handleSelectStudyPopulation: PropTypes.any.isRequired,
-  // sourceId: PropTypes.number.isRequired,
-  // current: PropTypes.number.isRequired,
   cd: PropTypes.bool.isRequired,
 };
 

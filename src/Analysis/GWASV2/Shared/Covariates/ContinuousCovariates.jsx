@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import './GWASCovariates.css';
 import Covariates from './Covariates';
-import { ACTIONS } from '../constants';
+import ACTIONS from '../StateManagement/Actions';
 
 const ContinuousCovariates = ({
   setMode,
