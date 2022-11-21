@@ -80,7 +80,7 @@ const Covariates = ({ selected, handleSelect }) => {
         <SearchBar
           searchTerm={searchTerm}
           handleSearch={handleSearch}
-          field='Continouos covariate name'
+          field='concept name'
         />
         <Table
           className='GWASUI-table2'
