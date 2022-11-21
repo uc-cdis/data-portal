@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 import ACTIONS from '../StateManagement/Actions';
@@ -9,48 +9,40 @@ const ContinuousCovariates = ({
   dispatch,
   handleSelect,
   type,
-}) => {
-  return (
-    <React.Fragment>
-      <Covariates selected={selected} handleSelect={handleSelect} />
-      <button
-        type='button'
-        style={{ marginLeft: 5 }}
-        onClick={() => {
-          dispatch(
-            type === 'outcome'
-              ? { type: ACTIONS.SET_OUTCOME, payload: selected }
-              : { type: ACTIONS.ADD_COVARIATE, payload: selected }
-          );
-          setMode('');
-        }}
-      >
-        Submit
-      </button>
-      <button
-        type='button'
-        onClick={() => {
-          setMode(undefined);
-        }}
-      >
-        cancel
-      </button>
-    </React.Fragment>
-  );
-};
+}) => (
+  <React.Fragment>
+    <Covariates selected={selected} handleSelect={handleSelect} />
+    <button
+      type='button'
+      style={{ marginLeft: 5 }}
+      onClick={() => {
+        dispatch(
+          type === 'outcome'
+            ? { type: ACTIONS.SET_OUTCOME, payload: selected }
+            : { type: ACTIONS.ADD_COVARIATE, payload: selected }
+        );
+        setMode('');
+      }}
+    >
+      Submit
+    </button>
+    <button
+      type='button'
+      onClick={() => {
+        setMode(undefined);
+      }}
+    >
+      cancel
+    </button>
+  </React.Fragment>
+);
 
 ContinuousCovariates.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  selected: PropTypes.object.isRequired,
   setMode: PropTypes.func.isRequired,
   handleSelect: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
-  covariates: PropTypes.array,
-  outcome: PropTypes.object.isRequired,
-};
-
-ContinuousCovariates.defaultProps = {
-  selectedCovariate: undefined,
-  covariates: [],
 };
 
 export default ContinuousCovariates;

@@ -20,8 +20,8 @@ const Covariates = ({ selected, handleSelect }) => {
   );
 
   const [searchTerm, setSearchTerm] = useState('');
-  const handleSearch = (searchTerm) => {
-    setSearchTerm(searchTerm);
+  const handleSearch = (inputSearchTerm) => {
+    setSearchTerm(inputSearchTerm);
   };
 
   const fetchedCovariates = useFetch(covariates, 'concepts');
@@ -76,7 +76,7 @@ const Covariates = ({ selected, handleSelect }) => {
 
   if (covariates?.status === 'success') {
     return (
-      <>
+      <React.Fragment>
         <SearchBar
           searchTerm={searchTerm}
           handleSearch={handleSearch}
@@ -95,7 +95,7 @@ const Covariates = ({ selected, handleSelect }) => {
           columns={covariateTableConfig}
           dataSource={displayedCovariates}
         />
-      </>
+      </React.Fragment>
     );
   }
   return <React.Fragment />;

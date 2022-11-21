@@ -1,18 +1,20 @@
-import React, { useContext, useState, useEffect, createContext } from "react";
-import { useSourceFetch } from "../../GWASWizard/wizardEndpoints/cohortMiddlewareApi";
+import React, {
+  useContext, useState, useEffect, createContext,
+} from 'react';
+import { useSourceFetch } from '../../GWASWizard/wizardEndpoints/cohortMiddlewareApi';
 
 const SourceContext = createContext();
 
 export function SourceContextProvider({ children }) {
   const [source, setSource] = useState(undefined);
-  const { sourceId  } = useSourceFetch();
+  const { sourceId } = useSourceFetch();
   useEffect(() => {
     setSource(sourceId);
   }, [sourceId]);
   return (
     <SourceContext.Provider
       value={{
-        source
+        source,
       }}
     >
       {children}
@@ -23,7 +25,7 @@ export function SourceContextProvider({ children }) {
 export function useSourceContext() {
   const context = useContext(SourceContext);
   if (context === undefined) {
-    throw new Error("Context must be used within a Provider");
+    throw new Error('Context must be used within a Provider');
   }
   return context;
 }

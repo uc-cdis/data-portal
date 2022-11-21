@@ -1,11 +1,10 @@
-import React, { useState, useReducer, useContext, useEffect } from 'react';
-import { Space, Button, Popconfirm, Spin } from 'antd';
+import React, { useReducer } from 'react';
+import { Space, Button, Popconfirm } from 'antd';
 import CohortSelect from './CohortSelect/CohortSelect';
 import SelectOutcome from './SelectOutcome/SelectOutcome';
 import SelectCovariates from './SelectCovariates/SelectCovariates';
 import CovariatesCardsList from './Shared/Covariates/CovariatesCardsList';
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
-import AttritionTableWrapper from './Shared/AttritionTableWrapper/AttritionTableWrapper';
 import reducer from './Shared/StateManagement/reducer';
 import ACTIONS from './Shared/StateManagement/Actions';
 import initialState from './Shared/StateManagement/InitialState';
@@ -18,49 +17,49 @@ const GWASContainer = () => {
 
   const generateStep = () => {
     switch (state.currentStep) {
-      case 0:
-        return (
-          <CohortSelect
-            selectedStudyPopulationCohort={state.selectedStudyPopulationCohort}
-            handleSelectStudyPopulation={dispatch}
-            dispatch={dispatch}
-            cd={false}
-          />
-        );
-      case 1:
-        return (
-          <SelectOutcome
-            outcome={state.outcome}
+    case 0:
+      return (
+        <CohortSelect
+          selectedStudyPopulationCohort={state.selectedStudyPopulationCohort}
+          handleSelectStudyPopulation={dispatch}
+          dispatch={dispatch}
+          cd={false}
+        />
+      );
+    case 1:
+      return (
+        <SelectOutcome
+          outcome={state.outcome}
+          covariates={state.covariates}
+          dispatch={dispatch}
+        />
+      );
+    case 2:
+      return (
+        <React.Fragment>
+          <SelectCovariates
+            outcome={{}}
             covariates={state.covariates}
             dispatch={dispatch}
           />
-        );
-      case 2:
-        return (
-          <>
-            <SelectCovariates
-              outcome={{}}
-              covariates={state.covariates}
-              dispatch={dispatch}
-            />
-            <CovariatesCardsList
-              covariates={state.covariates}
-              dispatch={dispatch}
-            />
-          </>
-        );
-      case 3:
-        return (
-          <ConfigureGWAS
+          <CovariatesCardsList
+            covariates={state.covariates}
             dispatch={dispatch}
-            numOfPCs={state.numPCs}
-            mafThreshold={state.mafThreshold}
-            imputationScore={state.imputationScore}
-            selectedHare={state.selectedHare}
           />
-        );
-      default:
-        return null;
+        </React.Fragment>
+      );
+    case 3:
+      return (
+        <ConfigureGWAS
+          dispatch={dispatch}
+          numOfPCs={state.numPCs}
+          mafThreshold={state.mafThreshold}
+          imputationScore={state.imputationScore}
+          selectedHare={state.selectedHare}
+        />
+      );
+    default:
+      return null;
     }
   };
 
@@ -69,11 +68,15 @@ const GWASContainer = () => {
     nextButtonEnabled = false;
   }
 
+  /*
+  todo:
+  { outcome, allCovariates, numOfPCs, mafThreshold, imputationScore, ...} = workflow;
+  grab submit code from GWASWizard/wizardEndpoints/gwasWorkflowApi.js
+
   const GWASSubmit = () => {
-    // todo:
-    // { outcome, allCovariates, numOfPCs, mafThreshold, imputationScore, ...} = workflow;
-    // grab submit code from GWASWizard/wizardEndpoints/gwasWorkflowApi.js
+
   };
+  */
 
   return (
     <React.Fragment>

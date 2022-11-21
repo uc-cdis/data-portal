@@ -2,7 +2,7 @@ import React from 'react';
 import Enzyme, { render, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import ProgressBar from './ProgressBar';
-import { gwasV2Steps } from '../../Shared/constants';
+import { gwasV2Steps } from '../constants';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -10,9 +10,8 @@ Enzyme.configure({ adapter: new Adapter() });
   Code to aid in Jest Mocking, see:
   https://stackoverflow.com/questions/39830580/jest-test-fails-typeerror-window-matchmedia-is-not-a-function
 */
-window.matchMedia =
-  window.matchMedia ||
-  function() {
+window.matchMedia = window.matchMedia
+  || function () {
     return {
       matches: false,
       addListener() {},
@@ -44,10 +43,10 @@ const testElementClass = (wrapper, elNum, className) => {
 /* TESTS */
 /* Test active step class */
 describe('Test that active step class renders with active class when current is between 0 and 3', () => {
-  for (let i = 0; i < 4; i = i + 1) {
+  for (let i = 0; i < 4; i += 1) {
     const wrapper = mount(<ProgressBar currentStep={i} />);
-    it(`should render step ${i +
-      1} with active class when currentStep is ${i}`, () => {
+    it(`should render step ${i
+      + 1} with active class when currentStep is ${i}`, () => {
       testElementClass(wrapper, i + 1, 'ant-steps-item-active');
     });
   }
@@ -55,16 +54,12 @@ describe('Test that active step class renders with active class when current is 
 
 /* Test Dynamic Text for Steps */
 describe('Test that each step renders with correct text when currentStep is between 0 and 3', () => {
-  for (let i = 0; i < 4; i = i + 1) {
+  for (let i = 0; i < 4; i += 1) {
     const wrapper = render(<ProgressBar currentStep={i} />);
-    const correctTextStep1 =
-      i === 0 ? gwasV2Steps[0].title : gwasV2Steps[0].secondaryTitle;
-    const correctTextStep2 =
-      i <= 1 ? gwasV2Steps[1].title : gwasV2Steps[1].secondaryTitle;
-    const correctTextStep3 =
-      i <= 2 ? gwasV2Steps[2].title : gwasV2Steps[2].secondaryTitle;
-    const correctTextStep4 =
-      i <= 3 ? gwasV2Steps[3].title : gwasV2Steps[3].secondaryTitle;
+    const correctTextStep1 = i === 0 ? gwasV2Steps[0].title : gwasV2Steps[0].secondaryTitle;
+    const correctTextStep2 = i <= 1 ? gwasV2Steps[1].title : gwasV2Steps[1].secondaryTitle;
+    const correctTextStep3 = i <= 2 ? gwasV2Steps[2].title : gwasV2Steps[2].secondaryTitle;
+    const correctTextStep4 = i <= 3 ? gwasV2Steps[3].title : gwasV2Steps[3].secondaryTitle;
     it(`should render first step with correct text: 1${correctTextStep1} when currentStep is ${i}`, () => {
       testElementText(wrapper, 1, `1${correctTextStep1}`);
     });

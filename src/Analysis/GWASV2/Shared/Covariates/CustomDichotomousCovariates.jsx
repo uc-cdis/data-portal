@@ -28,15 +28,14 @@ const CustomDichotomousCovariates = ({
     dispatch(
       type === 'outcome'
         ? { type: ACTIONS.SET_OUTCOME, payload: dichotomous }
-        : { type: ACTIONS.ADD_COVARIATE, payload: dichotomous }
+        : { type: ACTIONS.ADD_COVARIATE, payload: dichotomous },
     );
     setMode('');
   };
 
-  const customDichotomousValidation =
-    providedName.length === 0 ||
-    firstPopulation === undefined ||
-    secondPopulation === undefined;
+  const customDichotomousValidation = providedName.length === 0
+    || firstPopulation === undefined
+    || secondPopulation === undefined;
 
   return (
     <div>
@@ -84,7 +83,7 @@ const CustomDichotomousCovariates = ({
               <SelectStudyPopulation
                 selectedStudyPopulationCohort={firstPopulation}
                 handleSelectStudyPopulation={setFirstPopulation}
-                cd={true}
+                cd
               />
             </div>
             <div>
@@ -92,7 +91,7 @@ const CustomDichotomousCovariates = ({
               <SelectStudyPopulation
                 selectedStudyPopulationCohort={secondPopulation}
                 handleSelectStudyPopulation={setSecondPopulation}
-                cd={true}
+                cd
               />
             </div>
           </div>

@@ -17,7 +17,7 @@ const CohortDefinitions = ({
   const cohorts = useQuery(
     ['cohortdefinitions', source],
     () => fetchCohortDefinitions(source),
-    queryConfig
+    queryConfig,
   );
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
   const displayedCohorts = useFilter(fetchedCohorts, searchTerm, 'cohort_name');
@@ -25,7 +25,7 @@ const CohortDefinitions = ({
   const cohortSelection = (
     dispatch,
     inputSelectedCohort,
-    inputOtherCohortSelected
+    inputOtherCohortSelected,
   ) => ({
     type: 'radio',
     columnTitle: 'Select',
@@ -36,10 +36,10 @@ const CohortDefinitions = ({
       dispatch(
         !cd
           ? {
-              type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
-              payload: selectedRows[0],
-            }
-          : selectedRows[0]
+            type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
+            payload: selectedRows[0],
+          }
+          : selectedRows[0],
       );
     },
     getCheckboxProps: (record) => ({

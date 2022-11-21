@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import AddCohortButton from './Utils/AddCohortButton';
 import CohortDefinitions from './Utils/CohortDefinitions';
