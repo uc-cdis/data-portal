@@ -13,16 +13,16 @@ import './GWASV2.css';
 
 const GWASContainer = () => {
   const reducer = (state, action) => {
-    console.log('called Reducer with:', state, 'and ', action);
+    console.log(state, action);
     switch (action.type) {
       case ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT:
         return { ...state, selectedStudyPopulationCohort: action.payload };
-      case ACTIONS.INCREMENT_CURRENT:
-        return { ...state, current: state.current + 1 };
-      case ACTIONS.DECREMENT_CURRENT:
-        return { ...state, current: state.current - 1 };
+      case ACTIONS.INCREMENT_CURRENT_STEP:
+        return { ...state, currentStep: state.currentStep + 1 };
+      case ACTIONS.DECREMENT_CURRENT_STEP:
+        return { ...state, currentStep: state.currentStep - 1 };
       case ACTIONS.SET_OUTCOME:
-        return { ...state, current: 2, outcome: action.payload };
+        return { ...state, currentStep: 2, outcome: action.payload };
       case ACTIONS.ADD_COVARIATE:
         return { ...state, covariates: [...state.covariates, action.payload] };
       case ACTIONS.DELETE_CONTINUOUS_COVARIATE:
@@ -46,13 +46,13 @@ const GWASContainer = () => {
       case ACTIONS.UPDATE_NUM_PCS:
         return { ...state, numPCs: action.payload };
       default:
-        throw new Error('Unknown action passed to reducer');
+        throw new Error(`Unknown action passed to reducer: ${action}`);
     }
   };
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const generateStep = () => {
-    switch (state.current) {
+    switch (state.currentStep) {
       case 0:
         return (
           <SelectStudyPopulation
@@ -100,7 +100,7 @@ const GWASContainer = () => {
   };
 
   let nextButtonEnabled = true;
-  if (state.current === 0 && !state.selectedStudyPopulationCohort) {
+  if (state.currentStep === 0 && !state.selectedStudyPopulationCohort) {
     nextButtonEnabled = false;
   }
 
@@ -112,8 +112,10 @@ const GWASContainer = () => {
 
   return (
     <React.Fragment>
-      <span>the current outcome is {state.outcome.concept_name ?? 'nada'}</span>
-      <ProgressBar current={state.current} />
+      <span>
+        the currentStep outcome is {state.outcome.concept_name ?? 'nada'}
+      </span>
+      <ProgressBar currentStep={state.currentStep} />
       {/* {!loading && sourceId && (
         <React.Fragment>
           <AttritionTableWrapper
@@ -136,7 +138,7 @@ const GWASContainer = () => {
               align={'center'}
               style={{ width: '100%' }}
             >
-              {generateStep(state.current)}
+              {generateStep(state.currentStep)}
             </Space>
           </div>
           <div className='steps-action'>
@@ -144,9 +146,9 @@ const GWASContainer = () => {
               className='GWASUI-navBtn GWASUI-navBtn__next'
               type='primary'
               onClick={() => {
-                dispatch({ type: ACTIONS.DECREMENT_CURRENT });
+                dispatch({ type: ACTIONS.DECREMENT_CURRENT_STEP });
               }}
-              disabled={state.current < 1}
+              disabled={state.currentStep < 1}
             >
               Previous
             </Button>
@@ -160,20 +162,20 @@ const GWASContainer = () => {
                 Select Different GWAS Type
               </Button>
             </Popconfirm>
-            {state.current < gwasV2Steps.length - 1 && (
+            {state.currentStep < gwasV2Steps.length - 1 && (
               <Button
                 data-tour='next-button'
                 className='GWASUI-navBtn GWASUI-navBtn__next'
                 type='primary'
                 onClick={() => {
-                  dispatch({ type: ACTIONS.INCREMENT_CURRENT });
+                  dispatch({ type: ACTIONS.INCREMENT_CURRENT_STEP });
                 }}
                 disabled={!nextButtonEnabled}
               >
                 Next
               </Button>
             )}
-            {state.current === gwasV2Steps.length - 1 && (
+            {state.currentStep === gwasV2Steps.length - 1 && (
               <div className='GWASUI-navBtn' />
             )}
           </div>

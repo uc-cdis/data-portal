@@ -20,8 +20,8 @@ export const gwasV2Steps = [
 
 export const ACTIONS = {
   SET_SELECTED_STUDY_POPULATION_COHORT: 'setSelectedStudyPopulationCohort',
-  DECREMENT_CURRENT: 'decrementCurrent',
-  INCREMENT_CURRENT: 'incrementCurrent',
+  DECREMENT_CURRENT_STEP: 'decrementCurrentStep',
+  INCREMENT_CURRENT_STEP: 'incrementCurrentStep',
   SET_OUTCOME: 'setOutcome',
   ADD_COVARIATE: 'addCovariate',
   DELETE_CONTINUOUS_COVARIATE: 'deleteContinouosCovariate',
@@ -40,5 +40,5 @@ export const initialState = {
   numOfPC: 3,
   gwasName: '',
   selectedHare: { concept_value: '' },
-  current: 0,
+  currentStep: 0,
 };
