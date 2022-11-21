@@ -157,7 +157,7 @@ export const renderFieldContent = (content: any, contentType: 'string'|'paragrap
 };
 
 const highlightSearchTerm = (value: string, searchTerm: string, highlighClassName = 'matched'): {highlighted: React.ReactNode, matchIndex: number} => {
-  const matchIndex = value ? value.toLowerCase().indexOf(searchTerm.toLowerCase()) : -1;
+  const matchIndex = value.toLowerCase().indexOf(searchTerm.toLowerCase());
   const noMatchFound = matchIndex === -1;
   if (noMatchFound) {
     return { highlighted: value, matchIndex: -1 };
@@ -389,7 +389,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       let value = record[column.field];
       let renderedCell: undefined|string|ReactNode;
 
-      if (!value) {
+      if (value === undefined) {
         if (column.errorIfNotAvailable !== false) {
           throw new Error(`Configuration error: Could not find field ${column.field} in record ${JSON.stringify(record)}. Check the 'study_columns' section of the Discovery config.`);
         }
@@ -413,6 +413,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           renderedCell = renderFieldContent(value, column.contentType, config);
         }
       }
+
       return <Tooltip title='Click to view details'>{renderedCell}</Tooltip>;
     },
   }),
