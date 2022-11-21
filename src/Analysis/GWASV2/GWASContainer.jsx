@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useContext, useEffect } from 'react';
 import { Space, Button, Popconfirm, Spin } from 'antd';
-import SelectStudyPopulation from './SelectStudyPopulation/SelectStudyPopulation';
+import CohortSelect from './CohortSelect/CohortSelect';
 import SelectOutcome from './SelectOutcome/SelectOutcome';
 import SelectCovariates from './SelectCovariates/SelectCovariates';
 import CovariatesCardsList from './Shared/Covariates/CovariatesCardsList';
@@ -20,7 +20,7 @@ const GWASContainer = () => {
     switch (state.currentStep) {
       case 0:
         return (
-          <SelectStudyPopulation
+          <CohortSelect
             selectedStudyPopulationCohort={state.selectedStudyPopulationCohort}
             handleSelectStudyPopulation={dispatch}
             dispatch={dispatch}
