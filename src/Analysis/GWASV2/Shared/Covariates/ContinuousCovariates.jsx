@@ -19,7 +19,7 @@ const ContinuousCovariates = ({
         dispatch(
           type === 'outcome'
             ? { type: ACTIONS.SET_OUTCOME, payload: selected }
-            : { type: ACTIONS.ADD_COVARIATE, payload: selected }
+            : { type: ACTIONS.ADD_COVARIATE, payload: selected },
         );
         setMode('');
       }}

@@ -1,17 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import SelectStudyPopulation from '../../CohortSelect/CohortSelect';
 import ACTIONS from '../StateManagement/Actions';
 import '../../../GWASUIApp/GWASUIApp.css';
 
-const CustomDichotomousCovariates = ({
-  dispatch,
-  setMode,
-  covariates = [],
-  outcome,
-  type,
-}) => {
+const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
   const [secondPopulation, setSecondPopulation] = useState(undefined);
   const [providedName, setProvidedName] = useState('');
@@ -105,14 +98,7 @@ const CustomDichotomousCovariates = ({
 CustomDichotomousCovariates.propTypes = {
   setMode: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
-  covariates: PropTypes.array,
-  outcome: PropTypes.object,
   type: PropTypes.string.isRequired,
-};
-
-CustomDichotomousCovariates.defaultProps = {
-  covariates: [],
-  outcome: {},
 };
 
 export default CustomDichotomousCovariates;

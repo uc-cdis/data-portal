@@ -1,6 +1,7 @@
 import React, {
   useContext, useState, useEffect, createContext,
 } from 'react';
+import PropTypes from 'prop-types';
 import { useSourceFetch } from '../../GWASWizard/wizardEndpoints/cohortMiddlewareApi';
 
 const SourceContext = createContext();
@@ -29,3 +30,7 @@ export function useSourceContext() {
   }
   return context;
 }
+
+SourceContextProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
