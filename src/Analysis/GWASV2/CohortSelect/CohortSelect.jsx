@@ -10,7 +10,6 @@ import './CohortSelect.css';
 const CohortSelect = ({
   selectedStudyPopulationCohort,
   handleSelectStudyPopulation,
-  dispatch,
   cd,
 }) => {
   const [cohortSearchTerm, setCohortSearchTerm] = useState('');
