@@ -3,7 +3,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Table, Spin } from 'antd';
-import { fetchCovariates, queryConfig } from '../wizardEndpoints/cohortMiddlewareApi';
+import {
+  fetchCovariates,
+  queryConfig,
+} from '../wizardEndpoints/cohortMiddlewareApi';
 import { useFetch } from '../formHooks';
 import { useSourceContext } from '../Source';
 
@@ -13,23 +16,22 @@ const Covariates = ({
   handleSelect,
 }) => {
   const { source } = useSourceContext();
-  const covariates = useQuery(['covariates', source], () => fetchCovariates(source), queryConfig);
+  const covariates = useQuery(
+    ['covariates', source],
+    () => fetchCovariates(source),
+    queryConfig
+  );
   const fetchedCovariates = useFetch(covariates, 'concepts');
   // const displayedCovariates = useFilter(fetchedCovariates, searchTerm, 'concept_name');
 
   const covariateSelection = () => ({
     type: 'radio',
     columnTitle: 'Select',
-    selectedRowKeys: (selected) ? [selected.concept_id] : [],
+    selectedRowKeys: selected ? [selected.concept_id] : [],
     onChange: (_, selectedRows) => {
       handleSelect(selectedRows[0]);
     },
-    getCheckboxProps: (record) => ({
-      disabled: record.size === 0, // || selected.some((a) => a.concept_id === record.concept_id)
-    }),
   });
-
-
 
   const covariateTableConfig = [
     {
@@ -71,7 +73,11 @@ const Covariates = ({
         className='GWASUI-table2'
         rowKey='concept_id'
         size='middle'
-        pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '50', '100', '500'] }}
+        pagination={{
+          defaultPageSize: 10,
+          showSizeChanger: true,
+          pageSizeOptions: ['10', '20', '50', '100', '500'],
+        }}
         rowSelection={covariateSelection()}
         columns={covariateTableConfig}
         dataSource={fetchedCovariates}

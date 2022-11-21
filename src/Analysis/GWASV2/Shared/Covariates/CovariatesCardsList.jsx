@@ -24,11 +24,6 @@ const CovariatesCardsList = ({ covariates, dispatch }) => {
                       dispatch({
                         type: ACTIONS.DELETE_DICHOTOMOUS_COVARIATE,
                         payload: cd.provided_name,
-                        /*
-                        keyName: 'covariates',
-                        newValue: cd.provided_name,
-                        op: '-',
-                        */
                       });
                     }}
                     key='delete'
@@ -51,11 +46,6 @@ const CovariatesCardsList = ({ covariates, dispatch }) => {
                       dispatch({
                         type: ACTIONS.DELETE_CONTINUOUS_COVARIATE,
                         payload: cd.concept_id,
-                        /*
-                        keyName: 'covariates',
-                        newValue: cd.concept_id,
-                        op: '-',
-                        */
                       });
                     }}
                     key='delete'
