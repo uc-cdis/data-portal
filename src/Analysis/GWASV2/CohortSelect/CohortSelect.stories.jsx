@@ -1,12 +1,14 @@
 import React, { useReducer } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
-import { CohortSelect } from './CohortSelect';
+import CohortSelect from './CohortSelect';
 import reducer from '../Shared/StateManagement/reducer';
 import { Space } from 'antd';
 import './CohortSelect.css';
 import '../GWASV2.css';
 import '../../GWASUIApp/GWASUIApp.css';
+import { SourceContextProvider } from '../Shared/Source';
+import ACTIONS from '../Shared/StateManagement/Actions';
 
 export default {
   title: 'Tests3/GWASV2/CohortSelect/CohortSelect',
@@ -41,8 +43,18 @@ const MockTemplate = () => {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const handleStudyPopulationSelect = (selectedRow) => {
+    dispatch(
+      {
+        type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
+        payload: selectedRow,
+      }
+    );
+  }
+
   return (
     <QueryClientProvider client={mockedQueryClient}>
+      <SourceContextProvider>
       <div className='GWASV2'>
         <Space direction={'vertical'} style={{ width: '100%' }}>
           <div className='steps-content'></div>
@@ -52,13 +64,12 @@ const MockTemplate = () => {
             pipeline
           </h4>
           <CohortSelect
-            selectedStudyPopulationCohort={state.selectedStudyPopulationCohort}
-            handleSelectStudyPopulation={dispatch}
-            dispatch={dispatch}
-            cd={false}
+            selectedCohort={state.selectedStudyPopulationCohort}
+            handleCohortSelect={handleStudyPopulationSelect}
           />
         </Space>
       </div>
+      </SourceContextProvider>
     </QueryClientProvider>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import SelectStudyPopulation from '../../CohortSelect/CohortSelect';
+import CohortSelect from '../../CohortSelect/CohortSelect';
 import ACTIONS from '../StateManagement/Actions';
 import '../../../GWASUIApp/GWASUIApp.css';
 
@@ -73,18 +73,16 @@ const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
           <div className='GWASUI-flexRow' data-tour='table-repeat'>
             <div>
               <h3>Select NO Cohort</h3>
-              <SelectStudyPopulation
-                selectedStudyPopulationCohort={firstPopulation}
-                handleSelectStudyPopulation={setFirstPopulation}
-                cd
+              <CohortSelect
+                selectedCohort={firstPopulation}
+                handleCohortSelect={setFirstPopulation}
               />
             </div>
             <div>
               <h3>Select YES Cohort</h3>
-              <SelectStudyPopulation
-                selectedStudyPopulationCohort={secondPopulation}
-                handleSelectStudyPopulation={setSecondPopulation}
-                cd
+              <CohortSelect
+                selectedCohort={secondPopulation}
+                handleCohortSelect={setSecondPopulation}
               />
             </div>
           </div>

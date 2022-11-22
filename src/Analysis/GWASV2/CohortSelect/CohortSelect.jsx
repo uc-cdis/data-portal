@@ -8,9 +8,8 @@ import SearchBar from '../Shared/SearchBar';
 import './CohortSelect.css';
 
 const CohortSelect = ({
-  selectedStudyPopulationCohort,
-  handleSelectStudyPopulation,
-  cd,
+  selectedCohort,
+  handleCohortSelect,
 }) => {
   const [cohortSearchTerm, setCohortSearchTerm] = useState('');
 
@@ -38,10 +37,9 @@ const CohortSelect = ({
         <div data-tour='cohort-table'>
           <div data-tour='cohort-table-body'>
             <CohortDefinitions
-              selectedCohort={selectedStudyPopulationCohort}
-              handleCohortSelect={handleSelectStudyPopulation}
+              selectedCohort={selectedCohort}
+              handleCohortSelect={handleCohortSelect}
               searchTerm={cohortSearchTerm}
-              cd={cd}
             />
           </div>
         </div>
@@ -51,12 +49,8 @@ const CohortSelect = ({
 };
 
 CohortSelect.propTypes = {
-  selectedStudyPopulationCohort: PropTypes.any,
-  handleSelectStudyPopulation: PropTypes.any.isRequired,
-  cd: PropTypes.bool.isRequired,
+  selectedCohort: PropTypes.any,
+  handleCohortSelect: PropTypes.any.isRequired,
 };
 
-CohortSelect.defaultProps = {
-  selectedStudyPopulationCohort: null,
-};
 export default CohortSelect;

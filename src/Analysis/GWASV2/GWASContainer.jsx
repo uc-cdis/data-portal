@@ -15,15 +15,22 @@ import './GWASV2.css';
 const GWASContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const handleStudyPopulationSelect = (selectedRow) => {
+    dispatch(
+      {
+        type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
+        payload: selectedRow,
+      }
+    );
+  }
+
   const generateStep = () => {
     switch (state.currentStep) {
     case 0:
       return (
         <CohortSelect
-          selectedStudyPopulationCohort={state.selectedStudyPopulationCohort}
-          handleSelectStudyPopulation={dispatch}
-          dispatch={dispatch}
-          cd={false}
+          selectedCohort={state.selectedStudyPopulationCohort}
+          handleCohortSelect={handleStudyPopulationSelect}
         />
       );
     case 1:
