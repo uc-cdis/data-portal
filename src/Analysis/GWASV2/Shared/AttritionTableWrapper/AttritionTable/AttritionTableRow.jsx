@@ -106,7 +106,6 @@ const AttritionTableRow = ({
 
   const rowName = () => {
     if (rowType === 'Outcome') {
-      console.log('outcome:', outcome);
       return outcome.variable_type === 'concept'
         ? outcome.concept_name
         : outcome.provided_name;
