@@ -140,6 +140,6 @@ CohortsOverlapDiagram.propTypes = {
 CohortsOverlapDiagram.defaultProps = {
   selectedCovariates: [],
   selectedDichotomousCovariates: [],
-}
+};
 
 export default CohortsOverlapDiagram;

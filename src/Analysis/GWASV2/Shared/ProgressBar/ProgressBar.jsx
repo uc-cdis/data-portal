@@ -5,15 +5,15 @@ import { gwasV2Steps } from '../constants';
 import './ProgressBar.css';
 
 const { Step } = Steps;
-const ProgressBar = ({ current }) => (
+const ProgressBar = ({ currentStep }) => (
   <div className='progress-bar'>
     <div className='progress-bar__steps'>
-      <Steps current={current}>
+      <Steps current={currentStep}>
         {gwasV2Steps.map((item, index) => (
           <Step
             key={item.title}
             icon={<React.Fragment>{index + 1}</React.Fragment>}
-            title={`${current <= index ? item.title : item.secondaryTitle}`}
+            title={`${currentStep <= index ? item.title : item.secondaryTitle}`}
           />
         ))}
       </Steps>
@@ -23,7 +23,7 @@ const ProgressBar = ({ current }) => (
 );
 
 ProgressBar.propTypes = {
-  current: PropTypes.number.isRequired,
+  currentStep: PropTypes.number.isRequired,
 };
 
 export default ProgressBar;
