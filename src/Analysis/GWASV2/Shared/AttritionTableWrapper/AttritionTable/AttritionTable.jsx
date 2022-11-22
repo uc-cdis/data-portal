@@ -8,7 +8,6 @@ const { Panel } = Collapse;
 
 const AttritionTable = ({ selectedCohort, outcome, covariates, tableType }) => {
   const [covariatesProcessed, setCovariatesProcessed] = useState([]);
-
   // Creates an array of arrays such that given input arr [A,B,C]
   // it returns arr [[A], [A,B], [A,B,C]]
   const getCovariateRow = (inputArr) => {

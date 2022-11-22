@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import {
   fetchConceptStatsByHareSubset,
-  // fetchConceptStatsByHareSubsetCC,
   queryConfig,
 } from '../../wizardEndpoints/cohortMiddlewareApi';
 import BarChart from '../ChartIcons/BarChart';
@@ -18,6 +17,7 @@ const AttritionTableRow = ({
   outcome,
   currentCovariateAndCovariatesFromPrecedingRows,
 }) => {
+  const sourceId = useSourceContext().source;
   const [breakdownSize, setBreakdownSize] = useState(null);
   const [breakdownColumns, setBreakdownColumns] = useState([]);
   const [afr, setAfr] = useState(null);
@@ -25,7 +25,6 @@ const AttritionTableRow = ({
   const [eur, setEur] = useState(null);
   const [his, setHis] = useState(null);
   const cohortDefinitionId = selectedCohort.cohort_definition_id;
-  const { sourceId } = useSourceContext();
 
   const { data, status } = useQuery(
     [
@@ -90,10 +89,7 @@ const AttritionTableRow = ({
 
   const determineChartIcon = () => {
     if (rowType === 'Covariate' || rowType === 'Outcome') {
-      if (
-        rowObject.variable_type === 'concept' ||
-        'concept_type' in rowObject
-      ) {
+      if (rowObject.variable_type === 'concept') {
         return <BarChart />;
       }
       if (rowObject.variable_type === 'custom_dichotomous') {
@@ -110,9 +106,10 @@ const AttritionTableRow = ({
 
   const rowName = () => {
     if (rowType === 'Outcome') {
+      console.log('outcome:', outcome);
       return outcome.variable_type === 'concept'
         ? outcome.concept_name
-        : 'this is for case control, TODO!';
+        : outcome.provided_name;
     }
     if (rowType === 'Covariate') {
       return rowObject.concept_name
