@@ -17,57 +17,55 @@ const GWASContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleStudyPopulationSelect = (selectedRow) => {
-    dispatch(
-      {
-        type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
-        payload: selectedRow,
-      },
-    );
+    dispatch({
+      type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
+      payload: selectedRow,
+    });
   };
 
   const generateStep = () => {
     switch (state.currentStep) {
-    case 0:
-      return (
-        <CohortSelect
-          selectedCohort={state.selectedStudyPopulationCohort}
-          handleCohortSelect={handleStudyPopulationSelect}
-        />
-      );
-    case 1:
-      return (
-        <SelectOutcome
-          outcome={state.outcome}
-          covariates={state.covariates}
-          dispatch={dispatch}
-        />
-      );
-    case 2:
-      return (
-        <React.Fragment>
-          <SelectCovariates
-            outcome={{}}
+      case 0:
+        return (
+          <CohortSelect
+            selectedCohort={state.selectedStudyPopulationCohort}
+            handleCohortSelect={handleStudyPopulationSelect}
+          />
+        );
+      case 1:
+        return (
+          <SelectOutcome
+            outcome={state.outcome}
             covariates={state.covariates}
             dispatch={dispatch}
           />
-          <CovariatesCardsList
-            covariates={state.covariates}
+        );
+      case 2:
+        return (
+          <React.Fragment>
+            <SelectCovariates
+              outcome={{}}
+              covariates={state.covariates}
+              dispatch={dispatch}
+            />
+            <CovariatesCardsList
+              covariates={state.covariates}
+              dispatch={dispatch}
+            />
+          </React.Fragment>
+        );
+      case 3:
+        return (
+          <ConfigureGWAS
             dispatch={dispatch}
+            numOfPCs={state.numPCs}
+            mafThreshold={state.mafThreshold}
+            imputationScore={state.imputationScore}
+            selectedHare={state.selectedHare}
           />
-        </React.Fragment>
-      );
-    case 3:
-      return (
-        <ConfigureGWAS
-          dispatch={dispatch}
-          numOfPCs={state.numPCs}
-          mafThreshold={state.mafThreshold}
-          imputationScore={state.imputationScore}
-          selectedHare={state.selectedHare}
-        />
-      );
-    default:
-      return null;
+        );
+      default:
+        return null;
     }
   };
 
@@ -87,19 +85,12 @@ const GWASContainer = () => {
 
   return (
     <React.Fragment>
-      <span>
-        the currentStep outcome is {state.outcome.concept_name ?? 'nada'}
-      </span>
       <ProgressBar currentStep={state.currentStep} />
-
-      <React.Fragment>
-        <AttritionTableWrapper
-          covariates={state.covariates}
-          selectedCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-        />
-      </React.Fragment>
-
+      <AttritionTableWrapper
+        covariates={state.covariates}
+        selectedCohort={state.selectedStudyPopulationCohort}
+        outcome={state.outcome}
+      />
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>
         {'.analysis-app__actions > div:nth-child(1) { width: 100%; }'}
