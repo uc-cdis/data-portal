@@ -1,6 +1,6 @@
 import React, { useEffect, ReactNode } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import _, { isEqual } from 'lodash';
 import pluralize from 'pluralize';
 import ReactTable from 'react-table';
 import { Switch } from 'antd';
@@ -252,6 +252,10 @@ class ExplorerTable extends React.Component {
     this.setState({ showEmptyColumns: checked });
   };
 
+  /**
+   * processes the table data if this is a dicom table. This will determine if the table row
+   * has image data and will then esure that the lick icon is shown
+   */
   augmentData = () => {
     const haveField = this.props.rawData.filter((x) => Object.keys(x).includes(this.props.tableConfig.dicomViewerId));
     if (haveField.length === this.props.rawData.length) {
@@ -271,8 +275,14 @@ class ExplorerTable extends React.Component {
     }
   }
 
+  /**
+   * Used to process the table data when needed.
+   * THis is used primarily to check for the existence
+   * of a Dicom images to show the link icon to the dicom viewer
+   * @param prevProps
+   */
   componentDidUpdate(prevProps) {
-    if (this.props.tableConfig.dicomViewerId && this.props.rawData !== prevProps.rawData) {
+    if (this.props.tableConfig.dicomViewerId && !isEqual(this.props.rawData, prevProps.rawData)) {
       this.augmentData();
     } else if (this.props.rawData !== prevProps.rawData) this.setState({ tableData: this.props.rawData });
   }
