@@ -10,13 +10,11 @@ const ContinuousCovariates = ({
   handleSelect,
   type,
 }) => {
-  const formatSelected = (selected) => {
-    return {
-      variable_type: 'concept',
-      concept_id: selected.concept_id,
-      concept_name: selected.concept_name,
-    };
-  };
+  const formatSelected = () => ({
+    variable_type: 'concept',
+    concept_id: selected.concept_id,
+    concept_name: selected.concept_name,
+  });
   return (
     <React.Fragment>
       <Covariates selected={selected} handleSelect={handleSelect} />
@@ -27,13 +25,13 @@ const ContinuousCovariates = ({
           dispatch(
             type === 'outcome'
               ? {
-                  type: ACTIONS.SET_OUTCOME,
-                  payload: formatSelected(selected),
-                }
+                type: ACTIONS.SET_OUTCOME,
+                payload: formatSelected(selected),
+              }
               : {
-                  type: ACTIONS.ADD_COVARIATE,
-                  payload: formatSelected(selected),
-                }
+                type: ACTIONS.ADD_COVARIATE,
+                payload: formatSelected(selected),
+              },
           );
           setMode('');
         }}

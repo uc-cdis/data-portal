@@ -21,9 +21,9 @@ const GWASContainer = () => {
       {
         type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
         payload: selectedRow,
-      }
+      },
     );
-  }
+  };
 
   const generateStep = () => {
     switch (state.currentStep) {
