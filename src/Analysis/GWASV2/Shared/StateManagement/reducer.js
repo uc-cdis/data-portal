@@ -1,7 +1,6 @@
 import ACTIONS from './Actions';
 
 const reducer = (state, action) => {
-  console.log(state, action);
   switch (action.type) {
   case ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT:
     return { ...state, selectedStudyPopulationCohort: action.payload };
@@ -16,12 +15,16 @@ const reducer = (state, action) => {
   case ACTIONS.DELETE_CONTINUOUS_COVARIATE:
     return {
       ...state,
-      covariates: state.covariates.filter((covariate) => covariate.concept_id !== action.payload),
+      covariates: state.covariates.filter(
+        (covariate) => covariate.concept_id !== action.payload,
+      ),
     };
   case ACTIONS.DELETE_DICHOTOMOUS_COVARIATE:
     return {
       ...state,
-      covariates: state.covariates.filter((covariate) => covariate.provided_name !== action.payload),
+      covariates: state.covariates.filter(
+        (covariate) => covariate.provided_name !== action.payload,
+      ),
     };
   case ACTIONS.UPDATE_IMPUTATION_SCORE:
     return { ...state, imputationScore: action.payload };

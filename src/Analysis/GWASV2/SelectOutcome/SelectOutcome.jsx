@@ -7,10 +7,9 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
   const [mode, setMode] = useState('');
   const [selectedOutcome, setSelectedOutcome] = useState({});
 
-  return (
-    <div>
-      {mode === 'continuous' ? (
-        // todo: add filter to allCovariates : .filter((cov) => concept_id in cov)
+  const determineSelectOutcomeJsx = () => {
+    if (mode === 'continuous') {
+      return (
         <ContinuousCovariates
           setMode={setMode}
           selected={selectedOutcome}
@@ -20,8 +19,9 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
           outcome={outcome}
           type={'outcome'}
         />
-      ) : mode === 'dichotomous' ? (
-        // todo: add filter to allCovariates : .filter((cov) => provided_name in cov)
+      );
+    } if (mode === 'dichotomous') {
+      return (
         <CustomDichotomousCovariates
           setMode={setMode}
           dispatch={dispatch}
@@ -29,26 +29,30 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
           outcome={outcome}
           type={'outcome'}
         />
-      ) : (
-        <div>
-          <button
-            type='button'
-            style={{ height: 60, marginRight: 5 }}
-            onClick={() => setMode('continuous')}
-          >
+      );
+    }
+    return (
+      <div>
+        <button
+          type='button'
+          style={{ height: 60, marginRight: 5 }}
+          onClick={() => setMode('continuous')}
+        >
             Add Continuous Outcome Phenotype
-          </button>
-          <button
-            type='button'
-            style={{ height: 60, marginRight: 5 }}
-            onClick={() => setMode('dichotomous')}
-          >
+        </button>
+        <button
+          type='button'
+          style={{ height: 60, marginRight: 5 }}
+          onClick={() => setMode('dichotomous')}
+        >
             Add Dichotomous Outcome Phenotype
-          </button>
-        </div>
-      )}
-    </div>
-  );
+        </button>
+      </div>
+    );
+  };
+
+  // Outputs the JSX for the component:
+  return <div>{determineSelectOutcomeJsx()}</div>;
 };
 
 SelectOutcome.propTypes = {
@@ -58,7 +62,7 @@ SelectOutcome.propTypes = {
 };
 
 SelectOutcome.defaultProps = {
-  outcome: undefined,
+  outcome: null,
 };
 
 export default SelectOutcome;
