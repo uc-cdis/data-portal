@@ -10,6 +10,7 @@ import ACTIONS from './Shared/StateManagement/Actions';
 import initialState from './Shared/StateManagement/InitialState';
 import ConfigureGWAS from './ConfigureGWAS/ConfigureGWAS';
 import { gwasV2Steps } from './Shared/constants';
+import AttritionTableWrapper from './Shared/AttritionTableWrapper/AttritionTableWrapper';
 import './GWASV2.css';
 
 const GWASContainer = () => {
@@ -81,7 +82,6 @@ const GWASContainer = () => {
   grab submit code from GWASWizard/wizardEndpoints/gwasWorkflowApi.js
 
   const GWASSubmit = () => {
-
   };
   */
 
@@ -91,16 +91,15 @@ const GWASContainer = () => {
         the currentStep outcome is {state.outcome.concept_name ?? 'nada'}
       </span>
       <ProgressBar currentStep={state.currentStep} />
-      {/* {!loading && sourceId && (
-        <React.Fragment>
-          <AttritionTableWrapper
-            sourceId={sourceId}
-            covariates={covariates}
-            selectedCohort={selectedStudyPopulationCohort}
-            outcome={outcome}
-          />
-        </React.Fragment>
-      )} */}
+
+      <React.Fragment>
+        <AttritionTableWrapper
+          covariates={state.covariates}
+          selectedCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+        />
+      </React.Fragment>
+
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>
         {'.analysis-app__actions > div:nth-child(1) { width: 100%; }'}
