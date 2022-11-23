@@ -1,5 +1,5 @@
 const initialState = {
-  outcome: {},
+  outcome: null,
   selectedStudyPopulationCohort: null,
   covariates: [],
   imputationScore: 0.3,

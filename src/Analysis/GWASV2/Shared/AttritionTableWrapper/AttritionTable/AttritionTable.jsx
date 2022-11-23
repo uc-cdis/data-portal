@@ -51,7 +51,6 @@ const AttritionTable = ({
     }
     return {};
   };
-  const objectHasData = (obj) => Object.keys(obj).length > 0;
 
   return (
     <div className='gwasv2-attrition-table' key={tableType}>
@@ -99,7 +98,7 @@ const AttritionTable = ({
                   />
                 </React.Fragment>
               )}
-              {objectHasData(outcome) && (
+              {outcome && (
                 <React.Fragment key={tableType}>
                   {/* This is for the outcome Row in the Table */}
                   <AttritionTableRow
