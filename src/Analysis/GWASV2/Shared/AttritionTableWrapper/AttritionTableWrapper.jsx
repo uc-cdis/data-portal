@@ -26,11 +26,12 @@ const AttritionTableWrapper = ({ covariates, selectedCohort, outcome }) => {
 AttritionTableWrapper.propTypes = {
   selectedCohort: PropTypes.object,
   outcome: PropTypes.object,
-  covariates: PropTypes.array.isRequired,
+  covariates: PropTypes.array,
 };
 
 AttritionTableWrapper.defaultProps = {
   selectedCohort: null,
   outcome: null,
+  covariates: [],
 };
 export default AttritionTableWrapper;
