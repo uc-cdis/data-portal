@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../Shared/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../Shared/Covariates/CustomDichotomousCovariates';
+import ACTIONS from '../Shared/StateManagement/Actions';
 
 const SelectCovariates = ({ dispatch, covariates, outcome }) => {
   const [mode, setMode] = useState(undefined);
@@ -16,7 +17,7 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
           selected={selectedCovariate}
           dispatch={dispatch}
           handleSelect={setSelectedCovariate}
-          covariates={covariates}
+          covariates={covariates} //probably not needed TODO - remove
           outcome={outcome}
           type={'covariate'}
         />
@@ -25,11 +26,8 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
       {mode === 'dichotomous' && (
         // todo: add filter to allCovariates : .filter((cov) => provided_name in cov)
         <CustomDichotomousCovariates
-          setMode={setMode}
-          dispatch={dispatch}
-          covariates={covariates}
-          outcome={outcome}
-          type={'covariate'}
+           handleClose={() => {setMode('');}}
+           dispatch={(payload) => {dispatch({ type: ACTIONS.ADD_COVARIATE, payload: payload });}}
         />
       )}
       {!mode && (

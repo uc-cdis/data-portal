@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import CohortSelect from '../../CohortSelect/CohortSelect';
-import ACTIONS from '../StateManagement/Actions';
 import '../../../GWASUIApp/GWASUIApp.css';
 
-const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
+const CustomDichotomousCovariates = ({ dispatch, handleClose }) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
   const [secondPopulation, setSecondPopulation] = useState(undefined);
   const [providedName, setProvidedName] = useState('');
@@ -18,12 +17,8 @@ const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
       ],
       provided_name: providedName,
     };
-    dispatch(
-      type === 'outcome'
-        ? { type: ACTIONS.SET_OUTCOME, payload: dichotomous }
-        : { type: ACTIONS.ADD_COVARIATE, payload: dichotomous },
-    );
-    setMode('');
+    dispatch(dichotomous);
+    handleClose();
   };
 
   const customDichotomousValidation = providedName.length === 0
@@ -51,7 +46,7 @@ const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
         <button
           type='button'
           className={'GWASUI-dichBtn'}
-          onClick={() => setMode(undefined)}
+          onClick={() => handleClose()}
         >
           cancel
         </button>
@@ -94,9 +89,8 @@ const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
 };
 
 CustomDichotomousCovariates.propTypes = {
-  setMode: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
-  type: PropTypes.string.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };
 
 export default CustomDichotomousCovariates;
