@@ -32,6 +32,5 @@ AttritionTableWrapper.propTypes = {
 AttritionTableWrapper.defaultProps = {
   selectedCohort: null,
   outcome: null,
-  covariates: []
 };
 export default AttritionTableWrapper;
