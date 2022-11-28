@@ -71,8 +71,8 @@ describe('Component Mounts and renders 2 tables as expected', () => {
     ...AttritionTableArgs,
     outcome: {
       variable_type: 'custom_dichotomous',
-      concept_id: 'id',
-      concept_name: 'concept name',
+      provided_name: 'providednamebyuser',
+      cohort_ids: [123, 456],
     },
   };
   const wrapper = mount(

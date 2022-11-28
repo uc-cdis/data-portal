@@ -113,7 +113,7 @@ const AttritionTable = ({
                 </React.Fragment>
               )}
               {selectedCohort?.cohort_definition_id
-              && covariatesProcessed.length > 0
+              && outcome && covariatesProcessed.length > 0
                 ? covariatesProcessed.map((item) => (
                   <React.Fragment key={item}>
                     {/* This is for all the covariate rows in the table */}
