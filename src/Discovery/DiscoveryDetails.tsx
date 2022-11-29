@@ -186,18 +186,11 @@ const DiscoveryDetails = (props: Props) => {
   const pagePath = `/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`;
   const permalink = `${(basename === '/' ? '' : basename)}${pagePath}`;
 
-  const handleAuthorizedRedirectClick = (redirectURL: string = '/', studyUID: string|number|null = null) => {
-    history.push(redirectURL, {
-      studyUID,
-    });
-  };
-
-  const handleRedirectToRequestRegistrationAccessClick = (
-    studyRegistrationAuthZ: string|null = null,
+  const handleRedirectClick = (redirectURL: string = '/', studyRegistrationAuthZ: string|null = null,
     studyName: string|null = null,
     studyNumber: string|null = null,
     studyUID: string|number|null = null) => {
-    history.push('/study-reg/request-access', {
+    history.push(redirectURL, {
       studyName, studyNumber, studyRegistrationAuthZ, studyUID,
     });
   };
@@ -238,9 +231,13 @@ const DiscoveryDetails = (props: Props) => {
                 onClick={() => {
                   if (props.user.username) {
                     if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
-                      return handleAuthorizedRedirectClick('/study-reg', props.modalData[studyRegistrationConfig.studyRegistrationUIDField]);
+                      return handleRedirectClick('/study-reg',
+                        props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
+                        props.modalData.project_title,
+                        props.modalData.project_number,
+                        props.modalData[studyRegistrationConfig.studyRegistrationUIDField]);
                     }
-                    return handleRedirectToRequestRegistrationAccessClick(
+                    return handleRedirectClick('/study-reg/request-access',
                       props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
                       props.modalData.project_title,
                       props.modalData.project_number,
@@ -272,9 +269,13 @@ const DiscoveryDetails = (props: Props) => {
                 onClick={() => {
                   if (props.user.username) {
                     if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
-                      return handleAuthorizedRedirectClick('/study-reg/data-dictionary-submission', props.modalData[studyRegistrationConfig.studyRegistrationUIDField]);
+                      return handleRedirectClick('/study-reg/data-dictionary-submission',
+                        props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
+                        props.modalData.project_title,
+                        props.modalData.project_number,
+                        props.modalData[studyRegistrationConfig.studyRegistrationUIDField]);
                     }
-                    return handleRedirectToRequestRegistrationAccessClick(
+                    return handleRedirectClick('/study-reg/request-access',
                       props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
                       props.modalData.project_title,
                       props.modalData.project_number,
