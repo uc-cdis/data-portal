@@ -14,6 +14,7 @@ import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
 import GWASWorkflowList from './GWASUIApp/GWASWorkflowList';
 import GWASContainer from './GWASV2/GWASContainer';
+import { SourceContextProvider } from './GWASV2/Shared/Source';
 
 const queryClient = new QueryClient();
 
@@ -122,7 +123,9 @@ class AnalysisApp extends React.Component {
     case 'GWAS++': {
       return (
         <div>
-          <GWASContainer refreshWorkflows={this.refreshWorkflows} />
+          <SourceContextProvider>
+            <GWASContainer refreshWorkflows={this.refreshWorkflows} />
+          </SourceContextProvider>
         </div>
       );
     }
