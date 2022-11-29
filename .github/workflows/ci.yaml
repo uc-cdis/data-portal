@@ -13,7 +13,7 @@ concurrency:
 jobs:
   Security:
     name: Security Pipeline
-    uses: uc-cdis/.github/.github/workflows/securitypipeline.yaml@feat_npmunittests
+    uses: uc-cdis/.github/.github/workflows/securitypipeline.yaml@master
     secrets: inherit
 
   ci:
