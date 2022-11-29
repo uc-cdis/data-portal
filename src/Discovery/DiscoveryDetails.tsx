@@ -186,8 +186,8 @@ const DiscoveryDetails = (props: Props) => {
   const pagePath = `/discovery/${encodeURIComponent(props.modalData[props.config.minimalFieldMapping.uid])}/`;
   const permalink = `${(basename === '/' ? '' : basename)}${pagePath}`;
 
-  const handleRedirectToRegistrationClick = (studyUID: string|number|null = null) => {
-    history.push('/study-reg', {
+  const handleAuthorizedRedirectClick = (redirectURL: string = '/', studyUID: string|number|null = null) => {
+    history.push(redirectURL, {
       studyUID,
     });
   };
@@ -224,7 +224,7 @@ const DiscoveryDetails = (props: Props) => {
       <div className='discovery-modal__header-buttons'>
         <Button
           type='text'
-          onClick={() => { props.setModalVisible(false); setTabActiveKey('0');}}
+          onClick={() => { props.setModalVisible(false); setTabActiveKey('0'); }}
           className='discovery-modal__close-button'
         >
           <DoubleLeftOutlined />
@@ -238,7 +238,7 @@ const DiscoveryDetails = (props: Props) => {
                 onClick={() => {
                   if (props.user.username) {
                     if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
-                      return handleRedirectToRegistrationClick(props.modalData[studyRegistrationConfig.studyRegistrationUIDField]);
+                      return handleAuthorizedRedirectClick('/study-reg', props.modalData[studyRegistrationConfig.studyRegistrationUIDField]);
                     }
                     return handleRedirectToRequestRegistrationAccessClick(
                       props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
@@ -259,6 +259,40 @@ const DiscoveryDetails = (props: Props) => {
                       return ' Request Access to Register This Study ';
                     }
                     return ' Login to Register This Study ';
+                  }
+                )()}
+                </React.Fragment>
+              </Button>
+            )
+            : null}
+          {(props.modalData[studyRegistrationConfig.studyRegistrationValidationField] === false)
+            ? (
+              <Button
+                type='text'
+                onClick={() => {
+                  if (props.user.username) {
+                    if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
+                      return handleAuthorizedRedirectClick('/study-reg/data-dictionary-submission', props.modalData[studyRegistrationConfig.studyRegistrationUIDField]);
+                    }
+                    return handleRedirectToRequestRegistrationAccessClick(
+                      props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
+                      props.modalData.project_title,
+                      props.modalData.project_number,
+                      props.modalData[studyRegistrationConfig.studyRegistrationUIDField],
+                    );
+                  }
+                  return handleRedirectToLoginClick();
+                }}
+              >
+                <React.Fragment><AuditOutlined />{(
+                  () => {
+                    if (props.user.username) {
+                      if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig?.studyRegistrationAccessCheckField], props.userAuthMapping)) {
+                        return ' Link a Data Dictionary ';
+                      }
+                      return ' Request Access to Link a Data Dictionary ';
+                    }
+                    return ' Login to Link a Data Dictionary ';
                   }
                 )()}
                 </React.Fragment>

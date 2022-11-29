@@ -30,7 +30,7 @@ const { Text } = Typography;
 
 export interface FormSubmissionState {
   status?: ResultStatusType;
-  text?: string
+  text?: string;
 }
 export interface User {
   username: string

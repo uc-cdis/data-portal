@@ -92,6 +92,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
       resource_paths: [studyRegistrationAuthZ, '/mds_gateway', '/cedar'],
       role_ids: ['study_registrant', 'mds_user', 'cedar_user'],
     };
+    // file deepcode ignore Ssrf: requestorPath will not be altered
     fetchWithCreds({
       path: `${requestorPath}request`,
       method: 'POST',
@@ -130,7 +131,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
         }
         setReqAccessRequestPending(false);
       },
-    );
+    ).catch((err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
   };
 
   const onFinish = (values) => {

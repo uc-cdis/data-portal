@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Form,
   Input,
@@ -9,20 +9,31 @@ import {
   Space,
   Result,
   Upload,
+  Progress,
 } from 'antd';
 import { ResultStatusType } from 'antd/lib/result';
+import type { UploadProps } from 'antd/es/upload/interface';
 import {
   PlusOutlined,
 } from '@ant-design/icons';
 
 import './StudyRegistration.css';
+import { Link, useLocation } from 'react-router-dom';
+import { hostname, kayakoConfig, useArboristUI } from '../localconf';
+import { generatePresignedURL } from './utils';
+import { createKayakoTicket } from '../utils';
+import { userHasDataUpload, userHasMethodForServiceOnResource } from '../authMappingUtils';
+import { StudyRegistrationProps } from './StudyRegistration';
 
 const { Text } = Typography;
+const { TextArea } = Input;
 
 export interface FormSubmissionState {
   status?: ResultStatusType;
-  text?: string
+  text?: string;
 }
+
+const KAYAKO_MAX_SUBJECT_LENGTH = 255;
 
 const layout = {
   labelCol: {
@@ -44,75 +55,233 @@ const validateMessages = {
 };
 /* eslint-enable no-template-curly-in-string */
 
-const DataDictionarySubmission: React.FunctionComponent = () => {
+interface LocationState {
+  studyUID?: string|Number;
+  studyNumber?: string;
+  studyName?: string;
+  studyRegistrationAuthZ?: string;
+}
+
+const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> = (props: StudyRegistrationProps) => {
   const [form] = Form.useForm();
+  const location = useLocation();
 
   const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
+  const [studyNumber, setStudyNumber] = useState<string|undefined|null>(null);
+  const [studyName, setStudyName] = useState<string|undefined|null>(null);
+  const [studyUID, setStudyUID] = useState<string|Number|undefined|null>(null);
+  const [studyRegistrationAuthZ, setStudyRegistrationAuthZ] = useState<string|undefined|null>(null);
+  const [uploadProgress, setUploadProgress] = useState<number>(100);
+  const [uploading, setUploading] = useState<boolean>(false);
 
-  const userHasAccess = () => true;
+  useEffect(() => {
+    const locationStateData = location.state as LocationState || {};
+    setStudyUID(locationStateData.studyUID);
+    setStudyNumber(locationStateData.studyNumber);
+    setStudyName(locationStateData.studyName);
+    setStudyRegistrationAuthZ(locationStateData.studyRegistrationAuthZ);
+  }, [location.state]);
 
-  const onFinish = () => {
-    setFormSubmissionStatus({ status: 'success' });
-    // setFormSubmissionStatus({ status: 'error', text: 'err.message' });
+  useEffect(() => form.resetFields(), [studyNumber, studyName, form]);
+
+  const userHasAccess = () => {
+    if (!useArboristUI) {
+      return true;
+    }
+    // TODO: also check if user has study reg access here
+    return (userHasDataUpload(props.userAuthMapping) && userHasMethodForServiceOnResource('access', 'study_registrant', studyRegistrationAuthZ, props.userAuthMapping));
+  };
+
+  // const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  const uploadToS3 = (s3URL, file, progressCallback):Promise<any> => new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          resolve(xhr.responseText);
+        } else {
+          reject(xhr.responseText);
+        }
+      }
+    };
+
+    if (progressCallback) {
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const percentComplete = (e.loaded / file.size) * 100;
+          progressCallback(percentComplete);
+        }
+      };
+    }
+
+    xhr.open('PUT', s3URL);
+    xhr.send(file);
+  });
+
+  const handleUpload = (formValues) => {
+    setFormSubmissionStatus({ status: 'info', text: 'Preparing for upload' });
+    const fileInfo = formValues.fileList[0];
+    if (!fileInfo?.name) {
+      setFormSubmissionStatus({ status: 'error', text: 'Invalid file info received' });
+      return;
+    }
+    generatePresignedURL(fileInfo.name, 'qaplanetv1-data-bucket')
+      .then((response) => {
+        console.log(response.data.url);
+        setFormSubmissionStatus({ status: 'info', text: 'Uploading data dictionary...' });
+        const { url, guid } = response.data;
+        uploadToS3(url, fileInfo, setUploadProgress)
+          .then(() => {
+            setFormSubmissionStatus({ status: 'info', text: 'Finishing upload' });
+            let subject = `Data dictionary submission for ${studyNumber} ${studyName}`;
+            if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
+              subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
+            }
+            const email = formValues['E-mail Address'];
+            const dataDictionaryName = formValues['Data Dictionary Name'];
+            const contents = `Grant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}\nStudy UID: ${studyUID}\nData Dictionary Name: ${dataDictionaryName}\nData Dictionary GUID: ${guid}`;
+            createKayakoTicket(subject, 'VLMD Submitter', email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
+              (err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
+          })
+          .catch((err) => setFormSubmissionStatus({ status: 'error', text: err }))
+          .finally(() => { setUploading(false); setUploadProgress(100); });
+      }, (err) => setFormSubmissionStatus({ status: 'error', text: err }));
+    // const formData = new FormData();
+    // fileList.forEach((file) => {
+    //   console.log(file);
+    //   formData.append('files[]', file as RcFile);
+    // });
+    console.log(fileInfo);
+  };
+
+  const uploadProps: UploadProps = {
+    accept: '.csv,.tsv,.json',
+    maxCount: 1,
+    // onRemove: (file) => {
+    //   const index = fileList.indexOf(file);
+    //   const newFileList = fileList.slice();
+    //   newFileList.splice(index, 1);
+    //   setFileList(newFileList);
+    // },
+    beforeUpload: () => false,
+    // fileList,
+  };
+  const onFinish = (values) => {
+    setUploading(true);
+    handleUpload(values);
   };
 
   if (formSubmissionStatus) {
-    return (
-      <div className='study-reg-container'>
-        <div className='study-reg-form-container'>
-          {(formSubmissionStatus.status === 'success') ? (
+    switch (formSubmissionStatus.status) {
+    case 'success':
+      return (
+        <div className='study-reg-container'>
+          <div className='study-reg-form-container'>
             <Result
               status={formSubmissionStatus.status}
-              title='Your Data Dictionary has been submited!'
+              title='Your Data Dictionary has been submitted!'
+              extra={[
+                <Link key='discovery' to={'/discovery'}>
+                  <Button>Go To Discovery Page</Button>
+                </Link>,
+              ]}
             />
-          ) : (
-            <Result
-              status={formSubmissionStatus.status}
-              title='A problem has occurred during submition!'
-              subTitle={formSubmissionStatus.text}
-            />
-          )}
+          </div>
         </div>
-      </div>
-    );
+      );
+    case 'info':
+      return (
+        <div className='study-reg-container'>
+          <div className='study-reg-form-container'>
+            <Result
+              status={formSubmissionStatus.status}
+              title='Submitting data dictionary, please do not close this page or navigate away'
+              subTitle={formSubmissionStatus.text}
+              extra={<Progress percent={uploadProgress} showInfo={false} status='active' />}
+            />
+          </div>
+        </div>
+      );
+    case 'error':
+      return (
+        <div className='study-reg-container'>
+          <div className='study-reg-form-container'>
+            <Result
+              status={formSubmissionStatus.status}
+              title='A problem has occurred during submission!'
+              subTitle={formSubmissionStatus.text}
+              extra={[
+                <Button type='primary' key='close' onClick={() => { setFormSubmissionStatus(null); }}>
+                  Close
+                </Button>,
+              ]}
+            />
+          </div>
+        </div>
+      );
+    default:
+      return null;
+    }
   }
 
   return (
     <div className='study-reg-container'>
       <div className='study-reg-form-container'>
-        <Form className='study-reg-form' {...layout} form={form} name='study-reg-form' onFinish={onFinish} validateMessages={validateMessages}>
+        <Form className='study-reg-form' {...layout} form={form} name='vlmd-sub-form' onFinish={onFinish} validateMessages={validateMessages}>
           <Divider plain>Data Dictionary Submission</Divider>
           <div className='study-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
           <Form.Item
-            name='study_id'
-            label='Study'
-            rules={[{ required: true }]}
+            label='Study Name - Grant Number'
+            name='Study Grant_doNotInclude'
+            initialValue={(!studyName && !studyNumber) ? '123' : `${studyName || 'N/A'} - ${studyNumber || 'N/A'}`}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
           >
-            <Input
-              placeholder={'Study ID/name (pre-filled, not editable))'}
-              disabled
-            />
+            <TextArea disabled autoSize />
           </Form.Item>
           <Form.Item
-            label='Select file'
-            name='select_file'
+            label='Select Data Dictionary File'
+            name='fileList'
+            valuePropName='fileList'
+            getValueFromEvent={(e: any) => e?.fileList}
             rules={[{ required: true }]}
           >
-            <Upload>
+            <Upload {...uploadProps}>
               <Button
                 icon={<PlusOutlined />}
               >
-                Select file
+                Select File
               </Button>
             </Upload>
           </Form.Item>
           <Form.Item
-            name='dd_name'
-            label='Data dictionary name'
+            name='E-mail Address'
+            label='E-mail Address'
+            rules={[
+              {
+                type: 'email',
+                message: 'The input is not valid E-mail',
+              },
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name='Data Dictionary Name'
+            label='Data Dictionary Name'
+            initialValue={'123'}
             rules={[{ required: true }]}
           >
             <Input />
-            { true
+            {/* { true
               && (
                 <Typography>
                 This study is already linked to data dictionaries with the following names:
@@ -122,7 +291,7 @@ const DataDictionarySubmission: React.FunctionComponent = () => {
                   </ul>
                 Using an existing name will overwrite the existing link.
                 </Typography>
-              )}
+              )} */}
           </Form.Item>
 
           <Form.Item {...tailLayout}>
@@ -134,7 +303,7 @@ const DataDictionarySubmission: React.FunctionComponent = () => {
                   </Button>
                 </Tooltip>
               ) : (
-                <Button type='primary' htmlType='submit'>
+                <Button type='primary' htmlType='submit' disabled={uploading} loading={uploading}>
                   Submit data dictionary
                 </Button>
               )}
