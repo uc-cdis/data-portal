@@ -11,23 +11,23 @@ concurrency:
 
 
 jobs:
-#  Security:
-#    name: Security Pipeline
-#    uses: uc-cdis/.github/.github/workflows/securitypipeline.yaml@feat_npmunittests
-#    secrets: inherit
+  Security:
+    name: Security Pipeline
+    uses: uc-cdis/.github/.github/workflows/securitypipeline.yaml@feat_npmunittests
+    secrets: inherit
 
-#  ci:
-#    name: Build Image and Push
-#    uses: uc-cdis/.github/.github/workflows/image_build_push.yaml@master
-#    secrets:
-#      ECR_AWS_ACCESS_KEY_ID: ${{ secrets.ECR_AWS_ACCESS_KEY_ID }}
-#      ECR_AWS_SECRET_ACCESS_KEY: ${{ secrets.ECR_AWS_SECRET_ACCESS_KEY }}
-#      QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
-#      QUAY_ROBOT_TOKEN: ${{ secrets.QUAY_ROBOT_TOKEN }}
+  ci:
+    name: Build Image and Push
+    uses: uc-cdis/.github/.github/workflows/image_build_push.yaml@master
+    secrets:
+      ECR_AWS_ACCESS_KEY_ID: ${{ secrets.ECR_AWS_ACCESS_KEY_ID }}
+      ECR_AWS_SECRET_ACCESS_KEY: ${{ secrets.ECR_AWS_SECRET_ACCESS_KEY }}
+      QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
+      QUAY_ROBOT_TOKEN: ${{ secrets.QUAY_ROBOT_TOKEN }}
 
   unit_test:
     name: NPM Unit Test
-    uses: uc-cdis/.github/.github/workflows/npm_unit_test.yaml@feat_npmunittests
+    uses: uc-cdis/.github/.github/workflows/npm_unit_test.yaml@master
     with:
       node-version: '14'
       npm-version: '8.5'
