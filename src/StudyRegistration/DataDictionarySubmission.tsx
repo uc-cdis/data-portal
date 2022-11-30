@@ -19,7 +19,7 @@ import {
 
 import './StudyRegistration.css';
 import { Link, useLocation } from 'react-router-dom';
-import { hostname, kayakoConfig, useArboristUI } from '../localconf';
+import { hostname, kayakoConfig, studyRegistrationConfig, useArboristUI } from '../localconf';
 import { generatePresignedURL } from './utils';
 import { createKayakoTicket } from '../utils';
 import { userHasDataUpload, userHasMethodForServiceOnResource } from '../authMappingUtils';
@@ -88,11 +88,10 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
     if (!useArboristUI) {
       return true;
     }
-    // TODO: also check if user has study reg access here
-    return (userHasDataUpload(props.userAuthMapping) && userHasMethodForServiceOnResource('access', 'study_registrant', studyRegistrationAuthZ, props.userAuthMapping));
+    return (userHasDataUpload(props.userAuthMapping)
+    // && userHasMethodForServiceOnResource('access', 'study_registration', studyRegistrationAuthZ, props.userAuthMapping)
+    );
   };
-
-  // const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   const uploadToS3 = (s3URL, file, progressCallback):Promise<any> => new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -127,15 +126,15 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       setFormSubmissionStatus({ status: 'error', text: 'Invalid file info received' });
       return;
     }
-    generatePresignedURL(fileInfo.name, 'qaplanetv1-data-bucket')
-      .then((response) => {
-        console.log(response.data.url);
+    generatePresignedURL(fileInfo.name, studyRegistrationConfig.dataDictionarySubmissionBucket)
+      .then((data) => {
         setFormSubmissionStatus({ status: 'info', text: 'Uploading data dictionary...' });
-        const { url, guid } = response.data;
+        const { url, guid } = data;
         uploadToS3(url, fileInfo, setUploadProgress)
           .then(() => {
             setFormSubmissionStatus({ status: 'info', text: 'Finishing upload' });
-            let subject = `Data dictionary submission for ${studyNumber} ${studyName}`;
+            // TODO: change this line back
+            let subject = `DUMMY TESTING: Data dictionary submission for ${studyNumber} ${studyName}`;
             if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
               subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
             }
@@ -148,25 +147,12 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           .catch((err) => setFormSubmissionStatus({ status: 'error', text: err }))
           .finally(() => { setUploading(false); setUploadProgress(100); });
       }, (err) => setFormSubmissionStatus({ status: 'error', text: err }));
-    // const formData = new FormData();
-    // fileList.forEach((file) => {
-    //   console.log(file);
-    //   formData.append('files[]', file as RcFile);
-    // });
-    console.log(fileInfo);
   };
 
   const uploadProps: UploadProps = {
     accept: '.csv,.tsv,.json',
     maxCount: 1,
-    // onRemove: (file) => {
-    //   const index = fileList.indexOf(file);
-    //   const newFileList = fileList.slice();
-    //   newFileList.splice(index, 1);
-    //   setFileList(newFileList);
-    // },
     beforeUpload: () => false,
-    // fileList,
   };
   const onFinish = (values) => {
     setUploading(true);
@@ -225,6 +211,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       return null;
     }
   }
+  console.log(props.userAuthMapping);
 
   return (
     <div className='study-reg-container'>
@@ -277,7 +264,6 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           <Form.Item
             name='Data Dictionary Name'
             label='Data Dictionary Name'
-            initialValue={'123'}
             rules={[{ required: true }]}
           >
             <Input />

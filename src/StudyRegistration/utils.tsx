@@ -64,26 +64,32 @@ export const registerStudyInMDS = async (metadataID, metadataToRegister = {}) =>
     .catch((err) => Promise.reject(`Request for update study data failed: ${err}`));
 };
 
-export const generatePresignedURL = async (fileName: string, bucketName: string):Promise<any> => {
-  const JSONbody = JSON.stringify({
-    file_name: fileName,
-    bucket: bucketName,
-  });
-  // return Promise.resolve({ data: { url: 'http://0.0.0.0:3002/files/v3/files' } });
+export const generatePresignedURL = async (fileName: string, bucketName: string|undefined = undefined):Promise<any> => {
+  type ReqBody = {
+    // eslint-disable-next-line camelcase
+    file_name: string;
+    bucket?: string,
+  };
+  const body:ReqBody = { file_name: fileName };
+  if (bucketName) {
+    body.bucket = bucketName;
+  }
+  const JSONbody = JSON.stringify(body);
   const dataUploadURL = `${userAPIPath}data/upload`;
-  await fetchWithCreds({
+  const responseData = await fetchWithCreds({
     path: dataUploadURL,
     method: 'POST',
     customHeaders: { 'Content-Type': 'application/json' },
     body: JSONbody,
-  }).then((response) => {
-    if (response.status !== 200) {
-      return Promise.reject(`Request for prepare for upload failed with status ${response.status}`);
+  }).then(({ status, data }) => {
+    if (status !== 201) {
+      return Promise.reject(`Request for prepare for upload failed with status ${status}`);
     }
-    if (response.data?.url) {
+    if (!data?.url) {
       return Promise.reject('Request for prepare for upload because no presignedURL returned');
     }
-    return response;
+    return Promise.resolve(data);
   })
     .catch((err) => Promise.reject(`Request for prepare for upload failed: ${err}`));
+  return responseData;
 };
