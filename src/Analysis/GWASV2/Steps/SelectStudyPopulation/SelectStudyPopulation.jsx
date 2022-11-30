@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CohortSelect from '../../CohortSelect/CohortSelect';
 import ACTIONS from '../../Shared/StateManagement/Actions';
+import CohortSelect from '../../CohortSelect/CohortSelect';
 
 const SelectStudyPopulation = ({ selectedCohort, dispatch }) => {
   const handleStudyPopulationSelect = (selectedRow) => {
