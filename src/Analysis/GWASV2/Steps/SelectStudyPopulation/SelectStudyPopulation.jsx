@@ -19,10 +19,9 @@ const SelectStudyPopulation = ({ selectedCohort, dispatch }) => {
   );
 };
 
-/* SelectStudyPopulation.propTypes = {
+SelectStudyPopulation.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  selectedStudyPopulationCohort: PropTypes.object,
+  selectedCohort: PropTypes.object,
 };
-SelectStudyPopulation.defaultProps = { selectedStudyPopulationCohort: null };
- */
+SelectStudyPopulation.defaultProps = { selectedCohort: null };
 export default SelectStudyPopulation;

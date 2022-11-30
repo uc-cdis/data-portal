@@ -1,6 +1,5 @@
 import React, { useReducer } from 'react';
 import { Space, Button, Popconfirm } from 'antd';
-import CohortSelect from './CohortSelect/CohortSelect';
 import SelectOutcome from './SelectOutcome/SelectOutcome';
 import SelectCovariates from './SelectCovariates/SelectCovariates';
 import CovariatesCardsList from './Shared/Covariates/CovariatesCardsList';
@@ -11,8 +10,8 @@ import initialState from './Shared/StateManagement/InitialState';
 import ConfigureGWAS from './ConfigureGWAS/ConfigureGWAS';
 import { gwasV2Steps } from './Shared/constants';
 import AttritionTableWrapper from './Shared/AttritionTableWrapper/AttritionTableWrapper';
-import './GWASV2.css';
 import SelectStudyPopulation from './Steps/SelectStudyPopulation/SelectStudyPopulation';
+import './GWASV2.css';
 
 const GWASContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
