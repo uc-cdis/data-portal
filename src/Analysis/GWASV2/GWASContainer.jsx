@@ -1,6 +1,5 @@
 import React, { useReducer } from 'react';
 import { Space, Button, Popconfirm } from 'antd';
-import CohortSelect from './CohortSelect/CohortSelect';
 import SelectOutcome from './SelectOutcome/SelectOutcome';
 import SelectCovariates from './SelectCovariates/SelectCovariates';
 import CovariatesCardsList from './Shared/Covariates/CovariatesCardsList';
