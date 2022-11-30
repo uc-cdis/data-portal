@@ -60,32 +60,42 @@ export const fetchOverlapInfo = async (
   return getOverlapStats.json();
 };
 
-export const filterSubsetCovariates = (subsetCovariates) => {
-  const filteredSubsets = [];
-  subsetCovariates.forEach((covariate) => {
-    if (covariate.variable_type === 'custom_dichotomous') {
-      filteredSubsets.push({
-        cohort_ids: covariate.cohort_ids,
-        provided_name: covariate.provided_name,
-        variable_type: covariate.variable_type,
-      });
-    } else {
-      filteredSubsets.push({
+// Basically a copy of fetchOverlapInfo above, but without the HARE arguments:
+export const fetchSimpleOverlapInfo = async (
+  sourceId,
+  cohortAId,
+  cohortBId,
+  selectedCovariates,
+  selectedDichotomousCovariates,
+) => {
+  const variablesPayload = {
+    variables: [
+      ...selectedDichotomousCovariates.map(({ uuid, ...withNoId }) => withNoId),
+      ...selectedCovariates.map((c) => ({
         variable_type: 'concept',
-        concept_id: covariate.concept_id,
-      });
-    }
-  });
-  return filteredSubsets;
+        concept_id: c.concept_id,
+      })),
+    ],
+  };
+  const statsEndPoint = `${cohortMiddlewarePath}cohort-stats/check-overlap/by-source-id/${sourceId}/by-cohort-definition-ids/${cohortAId}/${cohortBId}`;
+  const reqBody = {
+    method: 'POST',
+    credentials: 'include',
+    headers,
+    body: JSON.stringify(variablesPayload),
+  };
+  const getOverlapStats = await fetch(statsEndPoint, reqBody);
+  return getOverlapStats.json();
 };
 
 export const fetchConceptStatsByHareSubset = async (
   cohortDefinitionId,
   subsetCovariates,
+  outcome,
   sourceId,
 ) => {
   const variablesPayload = {
-    variables: [...filterSubsetCovariates(subsetCovariates)],
+    variables: [outcome, ...subsetCovariates],
   };
   const conceptStatsEndPoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}/breakdown-by-concept-id/${hareConceptId}`;
   const reqBody = {
