@@ -20,7 +20,7 @@ import {
 import './StudyRegistration.css';
 import { Link, useLocation } from 'react-router-dom';
 import { hostname, kayakoConfig, studyRegistrationConfig, useArboristUI } from '../localconf';
-import { generatePresignedURL } from './utils';
+import { cleanUpFileRecord, generatePresignedURL } from './utils';
 import { createKayakoTicket } from '../utils';
 import { userHasDataUpload, userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { StudyRegistrationProps } from './StudyRegistration';
@@ -130,6 +130,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       .then((data) => {
         setFormSubmissionStatus({ status: 'info', text: 'Uploading data dictionary...' });
         const { url, guid } = data;
+        // TODO: clean up if upload to S3 is messed up
         uploadToS3(url, fileInfo, setUploadProgress)
           .then(() => {
             setFormSubmissionStatus({ status: 'info', text: 'Finishing upload' });
@@ -142,9 +143,15 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             const dataDictionaryName = formValues['Data Dictionary Name'];
             const contents = `Grant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}\nStudy UID: ${studyUID}\nData Dictionary Name: ${dataDictionaryName}\nData Dictionary GUID: ${guid}`;
             createKayakoTicket(subject, 'VLMD Submitter', email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
-              (err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
+              (err) => {
+                cleanUpFileRecord(guid);
+                setFormSubmissionStatus({ status: 'error', text: err.message });
+              });
           })
-          .catch((err) => setFormSubmissionStatus({ status: 'error', text: err }))
+          .catch((err) => {
+            cleanUpFileRecord(guid);
+            setFormSubmissionStatus({ status: 'error', text: err });
+          })
           .finally(() => { setUploading(false); setUploadProgress(100); });
       }, (err) => setFormSubmissionStatus({ status: 'error', text: err }));
   };
@@ -211,7 +218,6 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       return null;
     }
   }
-  console.log(props.userAuthMapping);
 
   return (
     <div className='study-reg-container'>

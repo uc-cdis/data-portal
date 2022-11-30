@@ -83,13 +83,27 @@ export const generatePresignedURL = async (fileName: string, bucketName: string|
     body: JSONbody,
   }).then(({ status, data }) => {
     if (status !== 201) {
-      return Promise.reject(`Request for prepare for upload failed with status ${status}`);
+      return Promise.reject(`status ${status}`);
     }
     if (!data?.url) {
-      return Promise.reject('Request for prepare for upload because no presignedURL returned');
+      return Promise.reject('no presignedURL returned');
     }
     return Promise.resolve(data);
   })
     .catch((err) => Promise.reject(`Request for prepare for upload failed: ${err}`));
   return responseData;
+};
+
+export const cleanUpFileRecord = async (guid:string) => {
+  const dataDeletionURL = `${userAPIPath}data/${guid}`;
+  await fetchWithCreds({
+    path: dataDeletionURL,
+    method: 'DELETE',
+  }).then(({ status }) => {
+    if (status !== 204) {
+      return Promise.reject(`status ${status}`);
+    }
+    return Promise.resolve();
+  })
+    .catch((err) => Promise.reject(`Request for clean up GUID ${guid} failed: ${err}`));
 };
