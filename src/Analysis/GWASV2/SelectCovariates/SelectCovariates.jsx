@@ -18,7 +18,7 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
           handleSelect={setSelectedCovariate}
           covariates={covariates}
           outcome={outcome}
-          type={'covariate'}
+          type={'covariates'}
         />
       )}
 
@@ -29,7 +29,7 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
           dispatch={dispatch}
           covariates={covariates}
           outcome={outcome}
-          type={'covariate'}
+          type={'covariates'}
         />
       )}
       {!mode && (

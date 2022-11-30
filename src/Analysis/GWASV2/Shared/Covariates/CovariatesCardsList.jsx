@@ -2,7 +2,6 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { TeamOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
-import ACTIONS from '../StateManagement/Actions';
 
 const { Meta } = Card;
 
@@ -21,8 +20,10 @@ const CovariatesCardsList = ({ covariates, dispatch }) => (
               <DeleteOutlined
                 onClick={() => {
                   dispatch({
-                    type: ACTIONS.DELETE_DICHOTOMOUS_COVARIATE,
-                    payload: cd.provided_name,
+                    keyNames: "covariates",
+                    payload: covariates.filter(
+                      (covariate) => covariate[cd.provided_name] !== cd.provided_name,
+                    ),
                   });
                 }}
                 key='delete'
@@ -43,8 +44,10 @@ const CovariatesCardsList = ({ covariates, dispatch }) => (
               <DeleteOutlined
                 onClick={() => {
                   dispatch({
-                    type: ACTIONS.DELETE_CONTINUOUS_COVARIATE,
-                    payload: cd.concept_id,
+                    keyNames: "covariates",
+                    payload: covariates.filter(
+                      (covariate) => covariate?.concept_id !== cd.concept_id,
+                    ),
                   });
                 }}
                 key='delete'

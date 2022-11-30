@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
-import ACTIONS from '../StateManagement/Actions';
 
 const ContinuousCovariates = ({
   setMode,
@@ -23,16 +22,11 @@ const ContinuousCovariates = ({
         style={{ marginLeft: 5 }}
         onClick={() => {
           dispatch(
-            type === 'outcome'
-              ? {
-                type: ACTIONS.SET_OUTCOME,
-                payload: formatSelected(selected),
-              }
-              : {
-                type: ACTIONS.ADD_COVARIATE,
-                payload: formatSelected(selected),
-              },
+            { keyNames: type, payload: formatSelected(selected) }
           );
+          dispatch({
+            keyNames: "currentStep", payload: 2
+          });
           setMode('');
         }}
       >

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { InputNumber } from 'antd';
-import ACTIONS from '../Shared/StateManagement/Actions';
 
 const twSudo = {
   flexCol: {
@@ -43,7 +42,9 @@ const ConfigureGWAS = ({
                 value={numOfPCs}
                 min={1}
                 max={10}
-                onChange={(e) => dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })}
+                onChange={(e) => dispatch({
+                  keyNames: "numOfPC",
+                  payload: Number(e) })}
               />
               {/* {(!numOfPC) && (<span style={{ color: 'red' }}> Please input a value between 1 and 10</span>)} */}
             </label>
@@ -55,7 +56,7 @@ const ConfigureGWAS = ({
                 id='input-maf'
                 value={mafThreshold}
                 onChange={(e) => dispatch({
-                  type: ACTIONS.UPDATE_MAF_THRESHOLD,
+                  keyNames: "mafThreshold",
                   payload: Number(e),
                 })}
                 stringMode

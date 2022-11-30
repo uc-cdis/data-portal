@@ -10,6 +10,7 @@ const CohortDefinitions = ({
   selectedCohort = undefined,
   handleCohortSelect,
   searchTerm,
+  namespace
 }) => {
   const { source } = useSourceContext();
   const cohorts = useQuery(
@@ -29,7 +30,9 @@ const CohortDefinitions = ({
       ? [inputSelectedCohort.cohort_definition_id]
       : [],
     onChange: (_, selectedRows) => {
-      handleCohortSelect(selectedRows[0]);
+      namespace === "selectedStudyPopulationCohort" ? handleCohortSelect(
+        { keyNames: "selectedStudyPopulationCohort", payload: selectedRows[0] })
+        : handleCohortSelect(selectedRows[0])
     },
   });
   const cohortTableConfig = [
@@ -72,6 +75,7 @@ CohortDefinitions.propTypes = {
   selectedCohort: PropTypes.any,
   handleCohortSelect: PropTypes.any.isRequired,
   searchTerm: PropTypes.string.isRequired,
+  namespace: PropTypes.string.isRequired
 };
 
 CohortDefinitions.defaultProps = {

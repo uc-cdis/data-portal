@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import CohortSelect from '../../CohortSelect/CohortSelect';
-import ACTIONS from '../StateManagement/Actions';
 import '../../../GWASUIApp/GWASUIApp.css';
 
 const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
@@ -19,9 +18,7 @@ const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
       provided_name: providedName,
     };
     dispatch(
-      type === 'outcome'
-        ? { type: ACTIONS.SET_OUTCOME, payload: dichotomous }
-        : { type: ACTIONS.ADD_COVARIATE, payload: dichotomous },
+      { keyNames: type, payload: dichotomous }
     );
     setMode('');
   };

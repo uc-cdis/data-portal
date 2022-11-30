@@ -7,7 +7,11 @@ import CohortDefinitions from './Utils/CohortDefinitions';
 import SearchBar from '../Shared/SearchBar';
 import './CohortSelect.css';
 
-const CohortSelect = ({ selectedCohort, handleCohortSelect }) => {
+const CohortSelect = ({
+  selectedCohort,
+  handleCohortSelect,
+  namespace
+}) => {
   const [cohortSearchTerm, setCohortSearchTerm] = useState('');
 
   const handleCohortSearch = (searchTerm) => {
@@ -37,6 +41,7 @@ const CohortSelect = ({ selectedCohort, handleCohortSelect }) => {
               selectedCohort={selectedCohort}
               handleCohortSelect={handleCohortSelect}
               searchTerm={cohortSearchTerm}
+              namespace={namespace}
             />
           </div>
         </div>
@@ -48,6 +53,7 @@ const CohortSelect = ({ selectedCohort, handleCohortSelect }) => {
 CohortSelect.propTypes = {
   selectedCohort: PropTypes.any,
   handleCohortSelect: PropTypes.func.isRequired,
+  namespace: PropTypes.string.isRequired
 };
 CohortSelect.defaultProps = {
   selectedCohort: null,

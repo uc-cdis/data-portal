@@ -46,7 +46,7 @@ const MockTemplate = () => {
   const handleStudyPopulationSelect = (selectedRow) => {
     dispatch(
       {
-        type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
+        keyNames: "selectedStudyPopulation",
         payload: selectedRow,
       }
     );
