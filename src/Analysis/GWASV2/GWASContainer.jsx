@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react';
 import { Space, Button, Popconfirm } from 'antd';
+import CohortSelect from './CohortSelect/CohortSelect';
 import SelectOutcome from './SelectOutcome/SelectOutcome';
 import SelectCovariates from './SelectCovariates/SelectCovariates';
 import CovariatesCardsList from './Shared/Covariates/CovariatesCardsList';
@@ -21,8 +22,8 @@ const GWASContainer = () => {
       case 0:
         return (
           <SelectStudyPopulation
-            dispatch={dispatch}
             selectedCohort={state.selectedStudyPopulationCohort}
+            dispatch={dispatch}
           />
         );
       case 1:
