@@ -49,18 +49,3 @@
   font-size: 0.8em;
   text-align: center
 }
-
-.linked-dd-ul {
-  list-style: none;
-  font-style: italic;
-}
-
-.ant-typography .linked-dd-ul > li {
-  display: inline-block;
-  margin: 0;
-  padding: 0 0.5em 0 0;
-}
-
-.linked-dd-ul > li:not(:last-child)::after {
-  content: ", ";
-}
