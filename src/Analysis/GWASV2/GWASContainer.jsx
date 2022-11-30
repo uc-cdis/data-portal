@@ -12,24 +12,18 @@ import ConfigureGWAS from './ConfigureGWAS/ConfigureGWAS';
 import { gwasV2Steps } from './Shared/constants';
 import AttritionTableWrapper from './Shared/AttritionTableWrapper/AttritionTableWrapper';
 import './GWASV2.css';
+import SelectStudyPopulation from './Steps/SelectStudyPopulation/SelectStudyPopulation';
 
 const GWASContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  const handleStudyPopulationSelect = (selectedRow) => {
-    dispatch({
-      type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
-      payload: selectedRow,
-    });
-  };
 
   const generateStep = () => {
     switch (state.currentStep) {
       case 0:
         return (
-          <CohortSelect
+          <SelectStudyPopulation
+            dispatch={dispatch}
             selectedCohort={state.selectedStudyPopulationCohort}
-            handleCohortSelect={handleStudyPopulationSelect}
           />
         );
       case 1:
