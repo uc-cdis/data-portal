@@ -298,6 +298,9 @@ function buildConfig(opts) {
   if (!studyRegistrationConfig.studyRegistrationUIDField) {
     studyRegistrationConfig.studyRegistrationUIDField = 'appl_id';
   }
+  if (!studyRegistrationConfig.dataDictionaryField) {
+    studyRegistrationConfig.dataDictionaryField = 'data_dictionaries';
+  }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
   const workspaceRegistrationConfig = (registrationConfigs && registrationConfigs.features)

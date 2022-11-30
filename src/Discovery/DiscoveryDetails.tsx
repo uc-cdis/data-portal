@@ -189,9 +189,10 @@ const DiscoveryDetails = (props: Props) => {
   const handleRedirectClick = (redirectURL: string = '/', studyRegistrationAuthZ: string|null = null,
     studyName: string|null = null,
     studyNumber: string|null = null,
-    studyUID: string|number|null = null) => {
+    studyUID: string|number|null = null,
+    existingDataDictionaryName: Array<string> = []) => {
     history.push(redirectURL, {
-      studyName, studyNumber, studyRegistrationAuthZ, studyUID,
+      studyName, studyNumber, studyRegistrationAuthZ, studyUID, existingDataDictionaryName,
     });
   };
 
@@ -273,7 +274,9 @@ const DiscoveryDetails = (props: Props) => {
                         props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
                         props.modalData.project_title,
                         props.modalData.project_number,
-                        props.modalData[studyRegistrationConfig.studyRegistrationUIDField]);
+                        props.modalData[studyRegistrationConfig.studyRegistrationUIDField],
+                        // get existing data dictionary names
+                        Object.keys(props.modalData[studyRegistrationConfig.dataDictionaryField] || {}));
                     }
                     return handleRedirectClick('/study-reg/request-access',
                       props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],

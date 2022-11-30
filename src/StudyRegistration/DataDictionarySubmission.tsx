@@ -10,11 +10,12 @@ import {
   Result,
   Upload,
   Progress,
+  Tag,
 } from 'antd';
 import { ResultStatusType } from 'antd/lib/result';
 import type { UploadProps } from 'antd/es/upload/interface';
 import {
-  PlusOutlined,
+  PlusOutlined, QuestionCircleOutlined,
 } from '@ant-design/icons';
 
 import './StudyRegistration.css';
@@ -60,6 +61,7 @@ interface LocationState {
   studyNumber?: string;
   studyName?: string;
   studyRegistrationAuthZ?: string;
+  existingDataDictionaryName?: Array<string>;
 }
 
 const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> = (props: StudyRegistrationProps) => {
@@ -71,6 +73,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
   const [studyName, setStudyName] = useState<string|undefined|null>(null);
   const [studyUID, setStudyUID] = useState<string|Number|undefined|null>(null);
   const [studyRegistrationAuthZ, setStudyRegistrationAuthZ] = useState<string|undefined|null>(null);
+  const [existingDataDictionaryName, setExistingDataDictionaryName] = useState<Array<string>>([]);
   const [uploadProgress, setUploadProgress] = useState<number>(100);
   const [uploading, setUploading] = useState<boolean>(false);
 
@@ -80,6 +83,8 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
     setStudyNumber(locationStateData.studyNumber);
     setStudyName(locationStateData.studyName);
     setStudyRegistrationAuthZ(locationStateData.studyRegistrationAuthZ);
+    // TODO: change this back
+    setExistingDataDictionaryName(['baseline', 'followup']);
   }, [location.state]);
 
   useEffect(() => form.resetFields(), [studyNumber, studyName, form]);
@@ -89,7 +94,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       return true;
     }
     return (userHasDataUpload(props.userAuthMapping)
-    // && userHasMethodForServiceOnResource('access', 'study_registration', studyRegistrationAuthZ, props.userAuthMapping)
+    && userHasMethodForServiceOnResource('access', 'study_registration', studyRegistrationAuthZ, props.userAuthMapping)
     );
   };
 
@@ -130,7 +135,6 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       .then((data) => {
         setFormSubmissionStatus({ status: 'info', text: 'Uploading data dictionary...' });
         const { url, guid } = data;
-        // TODO: clean up if upload to S3 is messed up
         uploadToS3(url, fileInfo, setUploadProgress)
           .then(() => {
             setFormSubmissionStatus({ status: 'info', text: 'Finishing upload' });
@@ -139,10 +143,15 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
               subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
             }
+            const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
             const email = formValues['E-mail Address'];
             const dataDictionaryName = formValues['Data Dictionary Name'];
-            const contents = `Grant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}\nStudy UID: ${studyUID}\nData Dictionary Name: ${dataDictionaryName}\nData Dictionary GUID: ${guid}`;
-            createKayakoTicket(subject, 'VLMD Submitter', email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
+            let contents = `Grant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}\nStudy UID: ${studyUID}\nData Dictionary GUID: ${guid}`;
+            Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
+              const [key, value] = entry;
+              contents = contents.concat(`\n${key}: ${value}`);
+            });
+            createKayakoTicket(subject, fullName, email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => {
                 cleanUpFileRecord(guid);
                 setFormSubmissionStatus({ status: 'error', text: err.message });
@@ -175,6 +184,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             <Result
               status={formSubmissionStatus.status}
               title='Your Data Dictionary has been submitted!'
+              subTitle='Please allow up to 48 hours before this data dictionary shows up in Discovery page'
               extra={[
                 <Link key='discovery' to={'/discovery'}>
                   <Button>Go To Discovery Page</Button>
@@ -239,7 +249,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           </Form.Item>
           <Form.Item
             label='Select Data Dictionary File'
-            name='fileList'
+            name='fileList_doNotInclude'
             valuePropName='fileList'
             getValueFromEvent={(e: any) => e?.fileList}
             rules={[{ required: true }]}
@@ -251,6 +261,46 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
                 Select File
               </Button>
             </Upload>
+          </Form.Item>
+          <Form.Item
+            name='Data Dictionary Name'
+            label='Data Dictionary Name'
+            rules={[{ required: true }]}
+          >
+            <Input />
+            { (existingDataDictionaryName.length)
+              && (
+                <Space direction='vertical'>
+                  <Typography>This study is already linked to data dictionaries with the following names:</Typography>
+                  <div>{existingDataDictionaryName.map(name => <Tag>{name}</Tag>)}</div>
+                  <Typography>Using an existing name will overwrite the existing link.</Typography>
+                </Space>
+              )}
+          </Form.Item>
+          <Divider plain>Administrative Fields <Tooltip title='We need these information so we can send you updates regarding your data dictionary submission. We do not save these information on the platform'>
+                <QuestionCircleOutlined className='study-reg-form-item__middle-icon' />
+              </Tooltip></Divider>
+          <Form.Item
+            name='First Name'
+            label='Submitter First Name'
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name='Last Name'
+            label='Submitter Last Name'
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input />
           </Form.Item>
           <Form.Item
             name='E-mail Address'
@@ -266,24 +316,6 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             ]}
           >
             <Input />
-          </Form.Item>
-          <Form.Item
-            name='Data Dictionary Name'
-            label='Data Dictionary Name'
-            rules={[{ required: true }]}
-          >
-            <Input />
-            {/* { true
-              && (
-                <Typography>
-                This study is already linked to data dictionaries with the following names:
-                  <ul className='linked-dd-ul'>
-                    <li>baseline</li>
-                    <li>followup</li>
-                  </ul>
-                Using an existing name will overwrite the existing link.
-                </Typography>
-              )} */}
           </Form.Item>
 
           <Form.Item {...tailLayout}>
