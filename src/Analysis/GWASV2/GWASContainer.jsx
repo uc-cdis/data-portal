@@ -11,22 +11,18 @@ import AttritionTableWrapper from './Shared/AttritionTableWrapper/AttritionTable
 import './GWASV2.css';
 
 const GWASContainer = () => {
-  const reducer = (gwasState, action) => {
+  const reducer = (state, action) => {
     const { keyNames, payload } = action;
+    let ACTION = keyNames;
     console.log('keyNames', keyNames, 'payload', payload);
-    // todo: rename keyNames to something "singular"
-    // changed my mind, dispatch can be called multiple times with 1 key at a time for simplicity/readability
-    switch (keyNames) {
-      default:
-        return {
-          ...gwasState,
-          [keyNames]: payload
-        }
+    return {
+      ...state,
+      [ACTION]: payload
     }
   };
-  const [gwasState, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const {  outcome,
+  const { outcome,
     selectedStudyPopulationCohort,
     covariates,
     imputationScore,
@@ -34,7 +30,7 @@ const GWASContainer = () => {
     numOfPC,
     gwasName,
     selectedHare,
-    currentStep } = gwasState
+    currentStep } = state;
 
   const generateStep = () => {
     switch (currentStep) {
@@ -129,7 +125,7 @@ const GWASContainer = () => {
               onClick={() => {
                 dispatch({ keyNames: "currentStep", payload: currentStep - 1 });
               }}
-              disabled={currentStep < 1 }
+              disabled={currentStep < 1}
             >
               Previous
             </Button>
