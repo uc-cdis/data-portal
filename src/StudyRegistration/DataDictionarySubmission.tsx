@@ -238,7 +238,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           <Form.Item
             label='Study Name - Grant Number'
             name='Study Grant_doNotInclude'
-            initialValue={(!studyName && !studyNumber) ? '123' : `${studyName || 'N/A'} - ${studyNumber || 'N/A'}`}
+            initialValue={(!studyName && !studyNumber) ? '' : `${studyName || 'N/A'} - ${studyNumber || 'N/A'}`}
             rules={[
               {
                 required: true,
