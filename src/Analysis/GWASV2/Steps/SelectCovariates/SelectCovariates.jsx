@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
-import ContinuousCovariates from '../Shared/Covariates/ContinuousCovariates';
-import CustomDichotomousCovariates from '../Shared/Covariates/CustomDichotomousCovariates';
+import ContinuousCovariates from '../../Shared/Covariates/ContinuousCovariates';
+import CustomDichotomousCovariates from '../../Shared/Covariates/CustomDichotomousCovariates';
 
 const SelectCovariates = ({ dispatch, covariates, outcome }) => {
   const [mode, setMode] = useState(undefined);
