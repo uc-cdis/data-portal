@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import AttritionTableWrapper from './AttritionTableWrapper';
+import { SourceContextProvider } from '../../Shared/Source';
 import '../../GWASV2.css';
 
 let rowCount = 0;
@@ -17,7 +18,9 @@ const mockedQueryClient = new QueryClient({
 });
 const Template = (args) => (
   <QueryClientProvider client={mockedQueryClient}>
-    <AttritionTableWrapper {...args} />
+    <SourceContextProvider>
+      <AttritionTableWrapper {...args} />
+    </SourceContextProvider>
   </QueryClientProvider>
 );
 export const WithConceptOutcome = Template.bind({});
