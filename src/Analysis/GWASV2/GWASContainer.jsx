@@ -1,16 +1,16 @@
 import React, { useReducer } from 'react';
 import { Space, Button, Popconfirm } from 'antd';
-import CovariatesCardsList from './Shared/Covariates/CovariatesCardsList';
-import ProgressBar from './Shared/ProgressBar/ProgressBar';
+import CovariatesCardsList from './Components/Covariates/CovariatesCardsList';
+import ProgressBar from './Components/ProgressBar/ProgressBar';
+import { gwasV2Steps } from './Shared/constants';
+import initialState from './Shared/StateManagement/InitialState';
 import reducer from './Shared/StateManagement/reducer';
 import ACTIONS from './Shared/StateManagement/Actions';
-import initialState from './Shared/StateManagement/InitialState';
+import AttritionTableWrapper from './Components/AttritionTableWrapper/AttritionTableWrapper';
 import SelectStudyPopulation from './Steps/SelectStudyPopulation/SelectStudyPopulation';
 import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
 import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
-import { gwasV2Steps } from './Shared/constants';
-import AttritionTableWrapper from './Shared/AttritionTableWrapper/AttritionTableWrapper';
 import './GWASV2.css';
 
 const GWASContainer = () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
-import ACTIONS from '../StateManagement/Actions';
+import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const ContinuousCovariates = ({
   setMode,
@@ -25,13 +25,13 @@ const ContinuousCovariates = ({
           dispatch(
             type === 'outcome'
               ? {
-                type: ACTIONS.SET_OUTCOME,
-                payload: formatSelected(selected),
-              }
+                  type: ACTIONS.SET_OUTCOME,
+                  payload: formatSelected(selected),
+                }
               : {
-                type: ACTIONS.ADD_COVARIATE,
-                payload: formatSelected(selected),
-              },
+                  type: ACTIONS.ADD_COVARIATE,
+                  payload: formatSelected(selected),
+                }
           );
           setMode('');
         }}

@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, queryConfig } from 'react-query';
 import { Table, Spin } from 'antd';
-import { fetchCohortDefinitions } from '../../Shared/wizardEndpoints/cohortMiddlewareApi';
-import { useFetch, useFilter } from '../../Shared/formHooks';
-import { useSourceContext } from '../../Shared/Source';
+import { fetchCohortDefinitions } from '../../../Shared/wizardEndpoints/cohortMiddlewareApi';
+import { useFetch, useFilter } from '../../../Shared/formHooks';
+import { useSourceContext } from '../../../Shared/Source';
 
 const CohortDefinitions = ({
   selectedCohort = undefined,
@@ -15,14 +15,12 @@ const CohortDefinitions = ({
   const cohorts = useQuery(
     ['cohortdefinitions', source],
     () => fetchCohortDefinitions(source),
-    queryConfig,
+    queryConfig
   );
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
   const displayedCohorts = useFilter(fetchedCohorts, searchTerm, 'cohort_name');
 
-  const cohortSelection = (
-    inputSelectedCohort,
-  ) => ({
+  const cohortSelection = (inputSelectedCohort) => ({
     type: 'radio',
     columnTitle: 'Select',
     selectedRowKeys: inputSelectedCohort

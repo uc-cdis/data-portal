@@ -1,5 +1,5 @@
 import React from 'react';
-import { atlasDomain } from '../../Shared/wizardEndpoints/cohortMiddlewareApi';
+import { atlasDomain } from '../../../Shared/wizardEndpoints/cohortMiddlewareApi';
 
 const AddCohortButton = () => (
   <React.Fragment>

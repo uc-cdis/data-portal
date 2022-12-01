@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
-import ContinuousCovariates from '../../Shared/Covariates/ContinuousCovariates';
-import CustomDichotomousCovariates from '../../Shared/Covariates/CustomDichotomousCovariates';
+import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
+import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 
 const SelectCovariates = ({ dispatch, covariates, outcome }) => {
   const [mode, setMode] = useState(undefined);
@@ -10,7 +10,6 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
   return (
     <React.Fragment>
       {mode === 'continuous' && (
-        // todo: add filter to allCovariates : .filter((cov) => concept_id in cov)
         <ContinuousCovariates
           setMode={setMode}
           selected={selectedCovariate}
@@ -23,7 +22,6 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
       )}
 
       {mode === 'dichotomous' && (
-        // todo: add filter to allCovariates : .filter((cov) => provided_name in cov)
         <CustomDichotomousCovariates
           setMode={setMode}
           dispatch={dispatch}

@@ -5,10 +5,10 @@ import { Table, Spin } from 'antd';
 import {
   fetchCovariates,
   queryConfig,
-} from '../wizardEndpoints/cohortMiddlewareApi';
-import { useFetch, useFilter } from '../formHooks';
-import { useSourceContext } from '../Source';
-import SearchBar from '../SearchBar';
+} from '../../Shared/wizardEndpoints/cohortMiddlewareApi';
+import { useFetch, useFilter } from '../../Shared/formHooks';
+import { useSourceContext } from '../../Shared/Source';
+import SearchBar from '../../Shared/SearchBar';
 
 const Covariates = ({ selected, handleSelect }) => {
   const { source } = useSourceContext();
@@ -16,7 +16,7 @@ const Covariates = ({ selected, handleSelect }) => {
   const covariates = useQuery(
     ['covariates', source],
     () => fetchCovariates(source),
-    queryConfig,
+    queryConfig
   );
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,7 +28,7 @@ const Covariates = ({ selected, handleSelect }) => {
   const displayedCovariates = useFilter(
     fetchedCovariates,
     searchTerm,
-    'concept_name',
+    'concept_name'
   );
 
   const covariateSelection = () => ({
