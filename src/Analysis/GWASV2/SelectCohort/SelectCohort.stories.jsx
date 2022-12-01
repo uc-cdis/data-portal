@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
-import CohortSelect from './CohortSelect';
+import CohortSelect from './SelectCohort';
 import reducer from '../Shared/StateManagement/reducer';
 import { Space } from 'antd';
 import './CohortSelect.css';
@@ -44,31 +44,29 @@ const MockTemplate = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleStudyPopulationSelect = (selectedRow) => {
-    dispatch(
-      {
-        type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
-        payload: selectedRow,
-      }
-    );
-  }
+    dispatch({
+      type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
+      payload: selectedRow,
+    });
+  };
 
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
-      <div className='GWASV2'>
-        <Space direction={'vertical'} style={{ width: '100%' }}>
-          <div className='steps-content'></div>
-          <h4>
-            Use this App to perform high throughput GWAS on Million Veteran
-            Program (MVP) data, using the University of Washington Genesis
-            pipeline
-          </h4>
-          <CohortSelect
-            selectedCohort={state.selectedStudyPopulationCohort}
-            handleCohortSelect={handleStudyPopulationSelect}
-          />
-        </Space>
-      </div>
+        <div className='GWASV2'>
+          <Space direction={'vertical'} style={{ width: '100%' }}>
+            <div className='steps-content'></div>
+            <h4>
+              Use this App to perform high throughput GWAS on Million Veteran
+              Program (MVP) data, using the University of Washington Genesis
+              pipeline
+            </h4>
+            <CohortSelect
+              selectedCohort={state.selectedStudyPopulationCohort}
+              handleCohortSelect={handleStudyPopulationSelect}
+            />
+          </Space>
+        </div>
       </SourceContextProvider>
     </QueryClientProvider>
   );

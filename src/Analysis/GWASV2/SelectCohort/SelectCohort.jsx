@@ -5,9 +5,9 @@ import CohortDefinitions from './Utils/CohortDefinitions';
 /* Eslint is giving error: import/no-named-as-default-member: needs a parser plugin */
 /* eslint-disable-next-line */
 import SearchBar from '../Shared/SearchBar';
-import './CohortSelect.css';
+import './SelectCohort.css';
 
-const CohortSelect = ({ selectedCohort, handleCohortSelect }) => {
+const SelectCohort = ({ selectedCohort, handleCohortSelect }) => {
   const [cohortSearchTerm, setCohortSearchTerm] = useState('');
 
   const handleCohortSearch = (searchTerm) => {
@@ -45,11 +45,11 @@ const CohortSelect = ({ selectedCohort, handleCohortSelect }) => {
   );
 };
 
-CohortSelect.propTypes = {
+SelectCohort.propTypes = {
   selectedCohort: PropTypes.any,
   handleCohortSelect: PropTypes.func.isRequired,
 };
-CohortSelect.defaultProps = {
+SelectCohort.defaultProps = {
   selectedCohort: null,
 };
-export default CohortSelect;
+export default SelectCohort;
