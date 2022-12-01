@@ -4,9 +4,9 @@ import { rest } from 'msw';
 import CohortSelect from './SelectCohort';
 import reducer from '../../Shared/StateManagement/reducer';
 import { Space } from 'antd';
-import './SelectCohort.css';
 import { SourceContextProvider } from '../../Shared/Source';
 import ACTIONS from '../../Shared/StateManagement/Actions';
+import './SelectCohort.css';
 import '../../../GWASV2/GWASV2.css';
 import '../../../GWASUIApp/GWASUIApp.css';
 
