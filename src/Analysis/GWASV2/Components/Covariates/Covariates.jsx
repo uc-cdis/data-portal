@@ -16,7 +16,7 @@ const Covariates = ({ selected, handleSelect }) => {
   const covariates = useQuery(
     ['covariates', source],
     () => fetchCovariates(source),
-    queryConfig
+    queryConfig,
   );
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,7 +28,7 @@ const Covariates = ({ selected, handleSelect }) => {
   const displayedCovariates = useFilter(
     fetchedCovariates,
     searchTerm,
-    'concept_name'
+    'concept_name',
   );
 
   const covariateSelection = () => ({
