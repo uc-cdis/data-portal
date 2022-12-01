@@ -4,11 +4,11 @@ import { rest } from 'msw';
 import CohortSelect from './SelectCohort';
 import reducer from '../../Shared/StateManagement/reducer';
 import { Space } from 'antd';
-import './CohortSelect.css';
-import '../GWASV2.css';
-import '../../GWASUIApp/GWASUIApp.css';
+import './SelectCohort.css';
 import { SourceContextProvider } from '../../Shared/Source';
 import ACTIONS from '../../Shared/StateManagement/Actions';
+import '../../../GWASV2/GWASV2.css';
+import '../../../GWASUIApp/GWASUIApp.css';
 
 export default {
   title: 'Tests3/GWASV2/CohortSelect/CohortSelect',
