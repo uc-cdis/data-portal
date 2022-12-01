@@ -6,7 +6,7 @@ import {
   fetchSimpleOverlapInfo,
   queryConfig,
   addCDFilter,
-} from '../../../Shared/wizardEndpoints/cohortMiddlewareApi';
+} from '../../../Shared/cohortMiddlewareApi';
 import Simple3SetsEulerDiagram from './Simple3SetsEulerDiagram';
 
 const CohortsOverlapDiagram = ({

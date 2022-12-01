@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 import { useState, useEffect } from 'react';
-import { cohortMiddlewarePath, wtsPath } from '../../../../localconf';
-import { fetchWithCreds } from '../../../../actions';
-import { headers } from '../../../../configs';
+import { cohortMiddlewarePath, wtsPath } from '../../../localconf';
+import { fetchWithCreds } from '../../../actions';
+import { headers } from '../../../configs';
 
 const hareConceptId = 2000007027;
 
@@ -10,7 +10,7 @@ export const fetchConceptStatsByHare = async (
   cohortDefinitionId,
   selectedCovariates,
   selectedDichotomousCovariates,
-  sourceId,
+  sourceId
 ) => {
   const variablesPayload = {
     variables: [
@@ -38,7 +38,7 @@ export const fetchOverlapInfo = async (
   controlCohortDefinitionId,
   selectedHare,
   selectedCovariates,
-  selectedDichotomousCovariates,
+  selectedDichotomousCovariates
 ) => {
   const variablesPayload = {
     variables: [
@@ -66,7 +66,7 @@ export const fetchSimpleOverlapInfo = async (
   cohortAId,
   cohortBId,
   selectedCovariates,
-  selectedDichotomousCovariates,
+  selectedDichotomousCovariates
 ) => {
   const variablesPayload = {
     variables: [
@@ -92,7 +92,7 @@ export const fetchConceptStatsByHareSubset = async (
   cohortDefinitionId,
   subsetCovariates,
   outcome,
-  sourceId,
+  sourceId
 ) => {
   const variablesPayload = {
     variables: [outcome, ...subsetCovariates],
@@ -127,32 +127,34 @@ export const fetchConceptStatsByHareSubsetCC = async (
   cohortDefinitionId,
   otherCohortDefinitionId,
   covariateSubset,
-  sourceId,
-) => fetchConceptStatsByHareSubset(
-  cohortDefinitionId,
-  addCDFilter(cohortDefinitionId, otherCohortDefinitionId, covariateSubset),
-  sourceId,
-);
+  sourceId
+) =>
+  fetchConceptStatsByHareSubset(
+    cohortDefinitionId,
+    addCDFilter(cohortDefinitionId, otherCohortDefinitionId, covariateSubset),
+    sourceId
+  );
 
 export const fetchConceptStatsByHareForCaseControl = async (
   queriedCohortDefinitionId,
   otherCohortDefinitionId,
   selectedCovariates,
   selectedDichotomousCovariates,
-  sourceId,
-) => fetchConceptStatsByHareSubset(
-  queriedCohortDefinitionId,
-  addCDFilter(queriedCohortDefinitionId, otherCohortDefinitionId, [
-    ...selectedCovariates,
-    ...selectedDichotomousCovariates,
-  ]),
-  sourceId,
-);
+  sourceId
+) =>
+  fetchConceptStatsByHareSubset(
+    queriedCohortDefinitionId,
+    addCDFilter(queriedCohortDefinitionId, otherCohortDefinitionId, [
+      ...selectedCovariates,
+      ...selectedDichotomousCovariates,
+    ]),
+    sourceId
+  );
 
 export const fetchCovariateStats = async (
   cohortDefinitionId,
   selectedCovariateIds,
-  sourceId,
+  sourceId
 ) => {
   const covariateIds = { ConceptIds: selectedCovariateIds };
   const conceptStatsEndpoint = `${cohortMiddlewarePath}concept-stats/by-source-id/${sourceId}/by-cohort-definition-id/${cohortDefinitionId}`;
@@ -227,15 +229,16 @@ export const queryConfig = {
 export const getAllHareItems = (
   concept_value,
   allCaseHares,
-  allControlHares,
+  allControlHares
 ) => {
   const caseHareBreakdown = allCaseHares.find(
-    (hare) => hare.concept_value === concept_value,
+    (hare) => hare.concept_value === concept_value
   );
   const controlHareBreakdown = allControlHares.find(
-    (hare) => hare.concept_value === concept_value,
+    (hare) => hare.concept_value === concept_value
   );
   return [caseHareBreakdown, controlHareBreakdown];
 };
 
-export const atlasDomain = () => cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas');
+export const atlasDomain = () =>
+  cohortMiddlewarePath.replace('cohort-middleware', 'analysis/OHDSI%20Atlas');

@@ -4,7 +4,7 @@ import { rest } from 'msw';
 import CohortsOverlapDiagram from './CohortsOverlapDiagram';
 
 export default {
-  title: "Tests3/GWASV2/CohortsOverlapDiagram",
+  title: 'Tests3/GWASV2/CohortsOverlapDiagram',
   component: CohortsOverlapDiagram,
 };
 
@@ -14,11 +14,11 @@ const mockedQueryClient = new QueryClient({
   },
 });
 
-const Template = (args) =>
-<QueryClientProvider client={mockedQueryClient}>
-  <CohortsOverlapDiagram {...args} />
-</QueryClientProvider>;
-
+const Template = (args) => (
+  <QueryClientProvider client={mockedQueryClient}>
+    <CohortsOverlapDiagram {...args} />
+  </QueryClientProvider>
+);
 
 const selectedStudyPopulationCohort = {
   cohort_definition_id: 25,
@@ -32,7 +32,8 @@ const selectedCaseCohort = {
 };
 const selectedControlCohort = {
   cohort_definition_id: 456,
-  cohort_name: 'Mock control cohort  with loooong name to test how a long name is rendered',
+  cohort_name:
+    'Mock control cohort  with loooong name to test how a long name is rendered',
   size: 1800,
 };
 
@@ -44,23 +45,27 @@ SuccessCase.args = {
   selectedControlCohort: selectedControlCohort,
   selectedCovariates: [],
   selectedDichotomousCovariates: [],
-}
+};
 SuccessCase.parameters = {
   // msw mocking:
   msw: {
     handlers: [
-      rest.post('http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB', (req, res, ctx) => {
-        const { cohortmiddlewarepath } = req.params;
-        const { cohortdefinitionA } = req.params;
-        const { cohortdefinitionB } = req.params;
-        return res(
-          ctx.delay(1100),
-          ctx.json(
-            {"cohort_overlap":
-              {"overlap_after_filter": Math.floor(Math.random() * 500)} // because of random here, we get some data that does not really make sense...SuccessCase2 tries to fix that for some of the relevant group overlaps...
-            }),
-        );
-      }),
+      rest.post(
+        'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
+        (req, res, ctx) => {
+          const { cohortmiddlewarepath } = req.params;
+          const { cohortdefinitionA } = req.params;
+          const { cohortdefinitionB } = req.params;
+          return res(
+            ctx.delay(1100),
+            ctx.json({
+              cohort_overlap: {
+                overlap_after_filter: Math.floor(Math.random() * 500),
+              }, // because of random here, we get some data that does not really make sense...SuccessCase2 tries to fix that for some of the relevant group overlaps...
+            })
+          );
+        }
+      ),
     ],
   },
 };
@@ -74,35 +79,41 @@ SuccessCase2.args = {
   selectedControlCohort: selectedControlCohort,
   selectedCovariates: [],
   selectedDichotomousCovariates: [],
-}
+};
 let variableOverlap = 234;
 SuccessCase2.parameters = {
   // msw mocking:
   msw: {
     handlers: [
-      rest.post('http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB', (req, res, ctx) => {
-        const { cohortmiddlewarepath } = req.params;
-        const { cohortdefinitionA } = req.params;
-        const { cohortdefinitionB } = req.params;
-        return res(
-          ctx.delay(500),
-          ctx.json(
-            {"cohort_overlap":
-              {"overlap_after_filter": (
-                cohortdefinitionA == selectedStudyPopulationCohort.cohort_definition_id &&
-                cohortdefinitionB == selectedCaseCohort.cohort_definition_id
-              ) ? variableOverlap--:
-              (
-                cohortdefinitionA == selectedCaseCohort.cohort_definition_id &&
-                cohortdefinitionB == selectedControlCohort.cohort_definition_id
-              ) ? 1000 : Math.floor(Math.random() * 500)}
-            }),
-        );
-      }),
+      rest.post(
+        'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
+        (req, res, ctx) => {
+          const { cohortmiddlewarepath } = req.params;
+          const { cohortdefinitionA } = req.params;
+          const { cohortdefinitionB } = req.params;
+          return res(
+            ctx.delay(500),
+            ctx.json({
+              cohort_overlap: {
+                overlap_after_filter:
+                  cohortdefinitionA ==
+                    selectedStudyPopulationCohort.cohort_definition_id &&
+                  cohortdefinitionB == selectedCaseCohort.cohort_definition_id
+                    ? variableOverlap--
+                    : cohortdefinitionA ==
+                        selectedCaseCohort.cohort_definition_id &&
+                      cohortdefinitionB ==
+                        selectedControlCohort.cohort_definition_id
+                    ? 1000
+                    : Math.floor(Math.random() * 500),
+              },
+            })
+          );
+        }
+      ),
     ],
   },
 };
-
 
 export const ErrorCase = Template.bind({});
 ErrorCase.args = {
@@ -112,15 +123,15 @@ ErrorCase.args = {
   selectedControlCohort: selectedControlCohort,
   selectedCovariates: [],
   selectedDichotomousCovariates: [],
-}
+};
 // mock endpoint failure:
 ErrorCase.parameters = {
   msw: {
     handlers: [
-      rest.post('http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB', (req, res, ctx) => res(
-        ctx.delay(800),
-        ctx.status(403),
-      )),
+      rest.post(
+        'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
+        (req, res, ctx) => res(ctx.delay(800), ctx.status(403))
+      ),
     ],
   },
 };

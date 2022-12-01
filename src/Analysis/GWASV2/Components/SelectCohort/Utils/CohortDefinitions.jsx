@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, queryConfig } from 'react-query';
 import { Table, Spin } from 'antd';
-import { fetchCohortDefinitions } from '../../../Shared/wizardEndpoints/cohortMiddlewareApi';
+import { fetchCohortDefinitions } from '../../../Shared/cohortMiddlewareApi';
 import { useFetch, useFilter } from '../../../Shared/formHooks';
 import { useSourceContext } from '../../../Shared/Source';
 

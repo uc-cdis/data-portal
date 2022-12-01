@@ -4,7 +4,7 @@ import AddCohortButton from './Utils/AddCohortButton';
 import CohortDefinitions from './Utils/CohortDefinitions';
 /* Eslint is giving error: import/no-named-as-default-member: needs a parser plugin */
 /* eslint-disable-next-line */
-import SearchBar from '../../Shared/SearchBar';
+import SearchBar from '../SearchBar/SearchBar';
 import './SelectCohort.css';
 
 const SelectCohort = ({ selectedCohort, handleCohortSelect }) => {

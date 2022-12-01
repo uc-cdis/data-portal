@@ -5,7 +5,7 @@ import { Spin } from 'antd';
 import {
   fetchConceptStatsByHareSubset,
   queryConfig,
-} from '../../../Shared/wizardEndpoints/cohortMiddlewareApi';
+} from '../../../Shared/cohortMiddlewareApi';
 import BarChart from '../ChartIcons/BarChart';
 import EulerDiagram from '../ChartIcons/EulerDiagram';
 import { useSourceContext } from '../../../Shared/Source';
