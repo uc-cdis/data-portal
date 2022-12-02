@@ -60,7 +60,7 @@ SuccessCase.parameters = {
             ctx.delay(1100),
             ctx.json({
               cohort_overlap: {
-                overlap_after_filter: Math.floor(Math.random() * 500),
+                case_control_overlap: Math.floor(Math.random() * 500),
               }, // because of random here, we get some data that does not really make sense...SuccessCase2 tries to fix that for some of the relevant group overlaps...
             })
           );
@@ -95,7 +95,7 @@ SuccessCase2.parameters = {
             ctx.delay(500),
             ctx.json({
               cohort_overlap: {
-                overlap_after_filter:
+                case_control_overlap:
                   cohortdefinitionA ==
                     selectedStudyPopulationCohort.cohort_definition_id &&
                   cohortdefinitionB == selectedCaseCohort.cohort_definition_id

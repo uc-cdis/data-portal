@@ -8,15 +8,17 @@ import {
   addCDFilter,
 } from '../../../Shared/cohortMiddlewareApi';
 import Simple3SetsEulerDiagram from './Simple3SetsEulerDiagram';
+import { useSourceContext } from '../../../Shared/Source';
 
 const CohortsOverlapDiagram = ({
-  sourceId,
   selectedStudyPopulationCohort,
   selectedCaseCohort,
   selectedControlCohort,
   selectedCovariates,
-  selectedDichotomousCovariates,
+  outcome,
 }) => {
+  const { source } = useSourceContext();
+  const sourceId = source; // TODO - change name of source to sourceId for clarity
   const results = useQueries([
     {
       queryKey: [
@@ -25,14 +27,14 @@ const CohortsOverlapDiagram = ({
         selectedStudyPopulationCohort,
         selectedCaseCohort,
         selectedCovariates,
-        selectedDichotomousCovariates,
+        outcome,
       ],
       queryFn: () => fetchSimpleOverlapInfo(
         sourceId,
         selectedStudyPopulationCohort.cohort_definition_id,
         selectedCaseCohort.cohort_definition_id,
         selectedCovariates,
-        selectedDichotomousCovariates,
+        outcome,
       ),
       ...queryConfig,
     },
@@ -43,14 +45,14 @@ const CohortsOverlapDiagram = ({
         selectedStudyPopulationCohort,
         selectedControlCohort,
         selectedCovariates,
-        selectedDichotomousCovariates,
+        outcome,
       ],
       queryFn: () => fetchSimpleOverlapInfo(
         sourceId,
         selectedStudyPopulationCohort.cohort_definition_id,
         selectedControlCohort.cohort_definition_id,
         selectedCovariates,
-        selectedDichotomousCovariates,
+        outcome,
       ),
       ...queryConfig,
     },
@@ -61,14 +63,14 @@ const CohortsOverlapDiagram = ({
         selectedCaseCohort,
         selectedControlCohort,
         selectedCovariates,
-        selectedDichotomousCovariates,
+        outcome,
       ],
       queryFn: () => fetchSimpleOverlapInfo(
         sourceId,
         selectedCaseCohort.cohort_definition_id,
         selectedControlCohort.cohort_definition_id,
         selectedCovariates,
-        selectedDichotomousCovariates,
+        outcome,
       ),
       ...queryConfig,
     },
@@ -81,18 +83,18 @@ const CohortsOverlapDiagram = ({
         selectedCaseCohort,
         selectedControlCohort,
         selectedCovariates,
-        selectedDichotomousCovariates,
+        outcome,
       ],
       queryFn: () => fetchSimpleOverlapInfo(
         sourceId,
         selectedStudyPopulationCohort.cohort_definition_id,
         selectedCaseCohort.cohort_definition_id,
-        selectedCovariates,
         addCDFilter(
           selectedCaseCohort.cohort_definition_id,
           selectedControlCohort.cohort_definition_id,
-          selectedDichotomousCovariates,
+          selectedCovariates,
         ), // ==> adds case/control as extra variable
+        outcome,
       ),
       ...queryConfig,
     },
@@ -142,12 +144,12 @@ const CohortsOverlapDiagram = ({
     set1Size: selectedStudyPopulationCohort.size,
     set2Size: selectedCaseCohort.size,
     set3Size: selectedControlCohort.size,
-    set12Size: dataPopCase.cohort_overlap.overlap_after_filter,
-    set13Size: dataPopControl.cohort_overlap.overlap_after_filter,
-    set23Size: dataCaseControl.cohort_overlap.overlap_after_filter,
+    set12Size: dataPopCase.cohort_overlap.case_control_overlap,
+    set13Size: dataPopControl.cohort_overlap.case_control_overlap,
+    set23Size: dataCaseControl.cohort_overlap.case_control_overlap,
     set123Size:
-      dataPopCase.cohort_overlap.overlap_after_filter
-      - dataPopCaseMinusPopCaseControl.cohort_overlap.overlap_after_filter,
+      dataPopCase.cohort_overlap.case_control_overlap
+      - dataPopCaseMinusPopCaseControl.cohort_overlap.case_control_overlap,
     set1Label: selectedStudyPopulationCohort.cohort_name,
     set2Label: selectedCaseCohort.cohort_name,
     set3Label: selectedControlCohort.cohort_name,
@@ -156,17 +158,16 @@ const CohortsOverlapDiagram = ({
 };
 
 CohortsOverlapDiagram.propTypes = {
-  sourceId: PropTypes.number.isRequired,
   selectedStudyPopulationCohort: PropTypes.object.isRequired,
   selectedCaseCohort: PropTypes.object.isRequired,
   selectedControlCohort: PropTypes.object.isRequired,
   selectedCovariates: PropTypes.array,
-  selectedDichotomousCovariates: PropTypes.array,
+  outcome: PropTypes.object,
 };
 
 CohortsOverlapDiagram.defaultProps = {
   selectedCovariates: [],
-  selectedDichotomousCovariates: [],
+  outcome: null,
 };
 
 export default CohortsOverlapDiagram;

@@ -3,7 +3,11 @@ import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 
-const SelectOutcome = ({ covariates, dispatch, outcome }) => {
+const SelectOutcome = ({
+  dispatch,
+  studyPopulationCohort,
+  outcome,
+}) => {
   const [mode, setMode] = useState('');
   const [selectedOutcome, setSelectedOutcome] = useState({});
 
@@ -15,7 +19,6 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
           selected={selectedOutcome}
           dispatch={dispatch}
           handleSelect={setSelectedOutcome}
-          covariates={covariates}
           outcome={outcome}
           type={'outcome'}
         />
@@ -26,7 +29,7 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
         <CustomDichotomousCovariates
           setMode={setMode}
           dispatch={dispatch}
-          covariates={covariates}
+          studyPopulationCohort={studyPopulationCohort}
           outcome={outcome}
           type={'outcome'}
         />
@@ -58,7 +61,7 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
 
 SelectOutcome.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  covariates: PropTypes.array.isRequired,
+  studyPopulationCohort: PropTypes.object.isRequired,
   outcome: PropTypes.object,
 };
 
