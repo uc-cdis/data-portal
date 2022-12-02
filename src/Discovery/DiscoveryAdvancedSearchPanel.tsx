@@ -1,7 +1,7 @@
 import React from 'react';
 import memoize from 'lodash/memoize';
 import {
-  Button, Checkbox, Collapse, Space,
+  Button, Checkbox, Collapse, Radio, RadioChangeEvent, Space,
 } from 'antd';
 import { UndoOutlined } from '@ant-design/icons';
 import { DiscoveryConfig } from './DiscoveryConfig';
@@ -11,7 +11,9 @@ interface Props {
   config: DiscoveryConfig;
   studies: {__accessible: AccessLevel, [any: string]: any}[]
   filterState: any;
-  setFilterState: (boolean) => void;
+  setFilterState: (any) => void;
+  filterMultiSelectionLogic: string;
+  setFilterMultiSelectionLogic: (any) => void;
 }
 
 const getFilterValuesByKey = memoize(
@@ -50,16 +52,30 @@ const getFilterValuesByKey = memoize(
 const DiscoveryAdvancedSearchPanel = (props: Props) => (
   <Space direction='vertical' style={{ width: 'inherit' }}>
     <div className='discovery-filters-control'>
-      <Button
-        type='default'
-        size='small'
-        className={'discovery-filters-control-button'}
-        disabled={Object.keys(props.filterState).length === 0}
-        onClick={() => { props.setFilterState({}); }}
-        icon={<UndoOutlined />}
-      >
-        {'Reset Filters'}
-      </Button>
+      <Space>
+        <Radio.Group
+          defaultValue={props.filterMultiSelectionLogic}
+          size='small'
+          buttonStyle='solid'
+          disabled={Object.keys(props.filterState).length === 0}
+          onChange={({ target: { value } }: RadioChangeEvent) => {
+            props.setFilterMultiSelectionLogic(value);
+          }}
+        >
+          <Radio.Button value='AND'>AND</Radio.Button>
+          <Radio.Button value='OR'>OR</Radio.Button>
+        </Radio.Group>
+        <Button
+          type='default'
+          size='small'
+          className={'discovery-filters-control-button'}
+          disabled={Object.keys(props.filterState).length === 0}
+          onClick={() => { props.setFilterState({}); }}
+          icon={<UndoOutlined />}
+        >
+          {'Reset Filters'}
+        </Button>
+      </Space>
     </div>
     <Collapse
       bordered={false}

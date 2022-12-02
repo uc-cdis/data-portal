@@ -190,7 +190,7 @@ interface FilterState {
   [key: string]: { [value: string]: boolean }
 }
 
-const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, config: DiscoveryConfig): any[] => {
+const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, config: DiscoveryConfig, filterMultiSelectionLogic: string): any[] => {
   // if no filters active, show all studies
   const noFiltersActive = Object.values(advSearchFilterState).every((selectedValues) => {
     if (Object.values(selectedValues).length === 0) {
@@ -217,9 +217,11 @@ const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, co
     if (!studyFilters) {
       return false;
     }
+
+    if (filterMultiSelectionLogic === 'OR') {
     // combine within filters as OR
-    // return studyFilters.some(({ key, value }) =>
-    //   key === filterName && filterValues.includes(value));
+      return studyFilters.some(({ key, value }) => key === filterName && filterValues.includes(value));
+    }
 
     // combine within filters as AND
     const studyFilterValues = studyFilters.filter(({ key }) => key === filterName)
@@ -263,6 +265,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filterState, setFilterState] = useState({} as FilterState);
+  const [filterMultiSelectionLogic, setFilterMultiSelectionLogic] = useState('AND');
   const [modalData, setModalData] = useState({} as DiscoveryResource);
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
@@ -296,6 +299,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         filteredResources,
         filterState,
         config,
+        filterMultiSelectionLogic,
       );
     }
 
@@ -801,6 +805,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
               studies={props.studies}
               filterState={filterState}
               setFilterState={setFilterState}
+              filterMultiSelectionLogic={filterMultiSelectionLogic}
+              setFilterMultiSelectionLogic={setFilterMultiSelectionLogic}
             />
           </div>
         )}
