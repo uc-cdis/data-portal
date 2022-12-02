@@ -4,7 +4,12 @@ import CohortSelect from '../SelectCohort/SelectCohort';
 import ACTIONS from '../../Shared/StateManagement/Actions';
 import '../../../GWASUIApp/GWASUIApp.css';
 
-const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
+const CustomDichotomousCovariates = ({
+  dispatch,
+  setMode,
+  type,
+  submitButtonLabel = 'Submit',
+}) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
   const [secondPopulation, setSecondPopulation] = useState(undefined);
   const [providedName, setProvidedName] = useState('');
@@ -21,14 +26,15 @@ const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
     dispatch(
       type === 'outcome'
         ? { type: ACTIONS.SET_OUTCOME, payload: dichotomous }
-        : { type: ACTIONS.ADD_COVARIATE, payload: dichotomous },
+        : { type: ACTIONS.ADD_COVARIATE, payload: dichotomous }
     );
     setMode('');
   };
 
-  const customDichotomousValidation = providedName.length === 0
-    || firstPopulation === undefined
-    || secondPopulation === undefined;
+  const customDichotomousValidation =
+    providedName.length === 0 ||
+    firstPopulation === undefined ||
+    secondPopulation === undefined;
 
   return (
     <div>
@@ -64,7 +70,7 @@ const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
             } GWASUI-dichBtn`}
             onClick={() => handleDichotomousSubmit()}
           >
-            Submit
+            {submitButtonLabel}
           </button>
         </div>
       </div>
