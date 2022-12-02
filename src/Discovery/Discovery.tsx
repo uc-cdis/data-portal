@@ -210,6 +210,9 @@ const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, co
     if (filterValues.length === 0) {
       return true;
     }
+    if (!config.features.advSearchFilters) {
+      return false;
+    }
     const studyFilters = study[config.features.advSearchFilters.field];
     if (!studyFilters) {
       return false;

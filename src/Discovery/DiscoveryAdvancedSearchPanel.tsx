@@ -21,13 +21,13 @@ const getFilterValuesByKey = memoize(
     }
     const filterValuesMap = {};
     studies.forEach((study) => {
-      const filtersField = config.features.advSearchFilters.field;
+      const filtersField = config.features.advSearchFilters?.field;
       if (!filtersField) {
         throw new Error('Misconfiguration error: missing required configuration property `discoveryConfig.features.advSearchFilters.field`');
       }
       if (!study[filtersField]) {
         // eslint-disable-next-line no-console
-        console.warn(`Warning: expected to find property '${config.features.advSearchFilters.field}' in study metadata for study ${study[config.minimalFieldMapping.uid]}, but could not find it! This study will not be filterable by the advanced search filters.`);
+        console.warn(`Warning: expected to find property '${config.features.advSearchFilters?.field}' in study metadata for study ${study[config.minimalFieldMapping.uid]}, but could not find it! This study will not be filterable by the advanced search filters.`);
         return;
       }
       try {
@@ -64,9 +64,9 @@ const DiscoveryAdvancedSearchPanel = (props: Props) => (
     <Collapse
       bordered={false}
       style={{ wordBreak: 'break-word' }}
-      defaultActiveKey={props.config.features.advSearchFilters.filters.map((f) => f.key)}
+      defaultActiveKey={props.config.features.advSearchFilters?.filters.map((f) => f.key)}
     >
-      { props.config.features.advSearchFilters.filters.map((filter) => {
+      { props.config.features.advSearchFilters?.filters.map((filter) => {
         const { key, keyDisplayName } = filter;
         const values = getFilterValuesByKey(key, props.studies, props.config);
         return (

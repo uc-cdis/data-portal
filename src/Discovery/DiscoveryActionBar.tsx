@@ -456,7 +456,7 @@ const DiscoveryActionBar = (props: Props) => {
     }, [props.discovery.actionToResume],
   );
 
-  const handleRedirectToLoginClick = (action:'download'|'export'|'manifest' = null) => {
+  const handleRedirectToLoginClick = (action:'download'|'export'|'manifest'|null = null) => {
     const serializableState = {
       ...props.discovery,
       actionToResume: action,
