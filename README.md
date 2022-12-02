@@ -16,7 +16,7 @@ npm install
 
 ### Local development and dev.html
 
-See [docs/guide_running_portal_locally.md](docs/guide_running_portal_locally.md) for a step-by-step guide to running portal locally.
+See the [guide to running data-portal locally](docs/guide_running_portal_locally.md) for a step-by-step guide.
 
 The portal's `/dev.html` path loads javascript and most css
 from `localhost`. Test code under local development with this procedure:
