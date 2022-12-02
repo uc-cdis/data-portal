@@ -1,4 +1,19 @@
-# Guide to running portal locally with a custom portal config
+# Guide to running data-portal locally
+
+This guide describes how to test data-portal code changes or configuration changes locally.
+
+## Instructions for internal or external use
+
+1. Your Data Commons should be running and accessible, with a running `data-portal` pod.
+2. Clone the `data-portal` repo and `cd` to it.
+3. Run `npm i`.
+4. Create a `config.json` file at `data/config`. Write your data-portal configuration in it (what would be in your `gitops.json` file for deployment).
+5. Run `HOSTNAME=<URL to your Data Commons portal, without the protocol> APP=config NODE_ENV=dev bash ./runWebpack.sh`.
+6. Go to `<URL to your Data Commons>/dev.html`.
+7. If the page does not load, go to https://localhost:9443/bundle.js and accept the warning about certificates.
+8. That's it! Local file changes are reflected automatically. Configuration file changes require reruning the command on step #5.
+
+## Detailed instructions for internal use
 
 This guide shows you how to test a portal config (aka `gitops.json` file) locally, so that you don't have to wait until the new `gitops.json` file is uploaded to GitHub and merged to see if your changes will break everything!
 
