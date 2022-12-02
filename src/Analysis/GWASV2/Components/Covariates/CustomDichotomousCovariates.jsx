@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import CohortSelect from '../SelectCohort/SelectCohort';
-import ACTIONS from '../../Shared/StateManagement/Actions';
 import '../../../GWASUIApp/GWASUIApp.css';
 
 const CustomDichotomousCovariates = ({
@@ -26,10 +25,9 @@ const CustomDichotomousCovariates = ({
     handleClose();
   };
 
-  const customDichotomousValidation =
-    providedName.length === 0 ||
-    firstPopulation === undefined ||
-    secondPopulation === undefined;
+  const customDichotomousValidation = providedName.length === 0
+    || firstPopulation === undefined
+    || secondPopulation === undefined;
 
   return (
     <div>
@@ -52,7 +50,7 @@ const CustomDichotomousCovariates = ({
         <button
           type='button'
           className={'GWASUI-dichBtn'}
-          onClick={() => setMode(undefined)}
+          onClick={() => handleClose()}
         >
           cancel
         </button>

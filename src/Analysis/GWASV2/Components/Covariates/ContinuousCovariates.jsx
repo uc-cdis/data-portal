@@ -26,13 +26,13 @@ const ContinuousCovariates = ({
           dispatch(
             type === 'outcome'
               ? {
-                  type: ACTIONS.SET_OUTCOME,
-                  payload: formatSelected(selected),
-                }
+                type: ACTIONS.SET_OUTCOME,
+                payload: formatSelected(selected),
+              }
               : {
-                  type: ACTIONS.ADD_COVARIATE,
-                  payload: formatSelected(selected),
-                }
+                type: ACTIONS.ADD_COVARIATE,
+                payload: formatSelected(selected),
+              },
           );
           setMode('');
         }}
@@ -57,6 +57,10 @@ ContinuousCovariates.propTypes = {
   setMode: PropTypes.func.isRequired,
   handleSelect: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
+  submitButtonLabel: PropTypes.string,
+};
+ContinuousCovariates.defaultProps = {
+  submitButtonLabel: 'Submit',
 };
 
 export default ContinuousCovariates;

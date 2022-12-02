@@ -4,7 +4,7 @@ import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariat
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import ACTIONS from '../../Shared/StateManagement/Actions';
 
-const SelectCovariates = ({ dispatch, covariates, outcome }) => {
+const SelectCovariates = ({ dispatch, outcome }) => {
   const [mode, setMode] = useState(undefined);
   const [selectedCovariate, setSelectedCovariate] = useState({});
 
@@ -27,10 +27,10 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
           handleClose={() => {
             setMode('');
           }}
-          dispatch={(selectedCovariate) => {
+          dispatch={(chosenCovariate) => {
             dispatch({
               type: ACTIONS.ADD_COVARIATE,
-              payload: selectedCovariate,
+              payload: chosenCovariate,
             });
           }}
           submitButtonLabel={'Add'}
@@ -66,7 +66,6 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
 
 SelectCovariates.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  covariates: PropTypes.array.isRequired,
   outcome: PropTypes.object.isRequired,
 };
 

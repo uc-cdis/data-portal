@@ -28,10 +28,10 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
           handleClose={() => {
             setMode('');
           }}
-          dispatch={(selectedOutcome) => {
+          dispatch={(chosenOutcome) => {
             dispatch({
               type: ACTIONS.SET_OUTCOME,
-              payload: selectedOutcome,
+              payload: chosenOutcome,
             });
           }}
         />
