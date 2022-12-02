@@ -6,7 +6,7 @@ This guide describes how to test data-portal code changes or configuration chang
 
 1. Your Data Commons should be running and accessible, with a running `data-portal` pod.
 2. Clone the `data-portal` repo and `cd` to it.
-3. Run `npm i`.
+3. Run `npm ci`.
 4. Create a `config.json` file at `data/config`. Write your data-portal configuration in it (what would be in your `gitops.json` file for deployment).
 5. Run `HOSTNAME=<URL to your Data Commons portal, without the protocol> APP=config NODE_ENV=dev bash ./runWebpack.sh`.
 6. Go to `<URL to your Data Commons>/dev.html`.
@@ -48,9 +48,9 @@ Assuming you want to edit the `gitops.json` file for `preprod.healdata.org`:
     git clone https://github.com/uc-cdis/data-portal
     ```
 
-5. Now navigate to the `data-portal` folder (`cd data-portal`) and run `npm install`. This command will probably take a few mins.
+5. Now navigate to the `data-portal` folder (`cd data-portal`) and run `npm ci`. This command will probably take a few mins.
     1. There may be some errors that show up — if they look like this: `rc-steps@4.1.3 requires a peer of react@>=16.9.0 but none is installed. You must install peer dependencies yourself.` then that's ok
-6. Once the `npm install` command finishes, follow these instructions to run portal locally: [https://github.com/uc-cdis/data-portal#local-development-and-devhtml](https://github.com/uc-cdis/data-portal#local-development-and-devhtml). Here's a tl;dr version:
+6. Once the `npm ci` command finishes, follow these instructions to run portal locally: [https://github.com/uc-cdis/data-portal#local-development-and-devhtml](https://github.com/uc-cdis/data-portal#local-development-and-devhtml). Here's a tl;dr version:
     1. In the terminal, in the data-portal folder, type `HOSTNAME=preprod.healdata.org NODE_ENV=auto bash ./runWebpack.sh`. This will start the local version of portal, it could take a minute or two to compile. Once you see a message that says: `ℹ ｢wdm｣: Compiled with warnings.`you're good!
         1. :information_source: For Gen3 environments with customized basename, you need to set the `BASENAME` env var as well during this step, for example: `HOSTNAME=preprod.healdata.org NODE_ENV=auto BASENAME=/portal bash ./runWebpack.sh`
     2. Open a browser and go to [https://localhost:9443/bundle.js](https://localhost:9443/bundle.js) and accept the warning about certificates. (May be hidden under a small button saying `advanced`.) If it works, you should see a bunch of code appear. You should only need to do this once every few weeks.
