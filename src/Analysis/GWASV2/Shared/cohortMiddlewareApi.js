@@ -66,16 +66,10 @@ export const fetchSimpleOverlapInfo = async (
   cohortAId,
   cohortBId,
   selectedCovariates,
-  selectedDichotomousCovariates,
+  outcome,
 ) => {
   const variablesPayload = {
-    variables: [
-      ...selectedDichotomousCovariates.map(({ uuid, ...withNoId }) => withNoId),
-      ...selectedCovariates.map((c) => ({
-        variable_type: 'concept',
-        concept_id: c.concept_id,
-      })),
-    ],
+    variables: [...selectedCovariates, outcome],
   };
   const statsEndPoint = `${cohortMiddlewarePath}cohort-stats/check-overlap/by-source-id/${sourceId}/by-cohort-definition-ids/${cohortAId}/${cohortBId}`;
   const reqBody = {

@@ -28,8 +28,8 @@ const GWASContainer = () => {
     case 1:
       return (
         <SelectOutcome
+          studyPopulationCohort={state.selectedStudyPopulationCohort}
           outcome={state.outcome}
-          covariates={state.covariates}
           dispatch={dispatch}
         />
       );
@@ -37,7 +37,8 @@ const GWASContainer = () => {
       return (
         <React.Fragment>
           <SelectCovariates
-            outcome={{}}
+            studyPopulationCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
             covariates={state.covariates}
             dispatch={dispatch}
           />

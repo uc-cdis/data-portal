@@ -2,9 +2,18 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import CohortSelect from '../SelectCohort/SelectCohort';
 import ACTIONS from '../../Shared/StateManagement/Actions';
+import CohortsOverlapDiagram from '../Diagrams/CohortsOverlapDiagram/CohortsOverlapDiagram';
+
 import '../../../GWASUIApp/GWASUIApp.css';
 
-const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
+const CustomDichotomousCovariates = ({
+  dispatch,
+  setMode,
+  type,
+  studyPopulationCohort,
+  covariates,
+  outcome,
+}) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
   const [secondPopulation, setSecondPopulation] = useState(undefined);
   const [providedName, setProvidedName] = useState('');
@@ -32,7 +41,7 @@ const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
 
   return (
     <div>
-      <div className='GWASUI-flexRow' data-tour='name'>
+      <div className='GWASUI-flexRow' style={{width: '1450px'}} data-tour='name'>
         <input
           type='text'
           className={'GWASUI-providedName'}
@@ -85,6 +94,20 @@ const CustomDichotomousCovariates = ({ dispatch, setMode, type }) => {
                 handleCohortSelect={setSecondPopulation}
               />
             </div>
+            <div style={{ paddingLeft: '30px' }}>
+              <h3>Cohort overlap diagram</h3>
+              { !firstPopulation || !secondPopulation ? (
+                <div style={{ width: '200px' }}>Select your cohorts to assess overlap</div>
+              ) : (
+                <CohortsOverlapDiagram
+                  selectedStudyPopulationCohort={studyPopulationCohort}
+                  selectedCaseCohort={firstPopulation}
+                  selectedControlCohort={secondPopulation}
+                  selectedCovariates={covariates}
+                  outcome={outcome}
+                />
+              )}
+            </div>
           </div>
         </div>
       </React.Fragment>
@@ -97,6 +120,14 @@ CustomDichotomousCovariates.propTypes = {
   setMode: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
+  studyPopulationCohort: PropTypes.object.isRequired,
+  covariates: PropTypes.array,
+  outcome: PropTypes.object,
+};
+
+CustomDichotomousCovariates.defaultProps = {
+  covariates: [],
+  outcome: null,
 };
 
 export default CustomDichotomousCovariates;
