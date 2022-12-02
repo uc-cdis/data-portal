@@ -9,6 +9,7 @@ const ContinuousCovariates = ({
   dispatch,
   handleSelect,
   type,
+  submitButtonLabel = 'Submit',
 }) => {
   const formatSelected = () => ({
     variable_type: 'concept',
@@ -25,18 +26,18 @@ const ContinuousCovariates = ({
           dispatch(
             type === 'outcome'
               ? {
-                type: ACTIONS.SET_OUTCOME,
-                payload: formatSelected(selected),
-              }
+                  type: ACTIONS.SET_OUTCOME,
+                  payload: formatSelected(selected),
+                }
               : {
-                type: ACTIONS.ADD_COVARIATE,
-                payload: formatSelected(selected),
-              },
+                  type: ACTIONS.ADD_COVARIATE,
+                  payload: formatSelected(selected),
+                }
           );
           setMode('');
         }}
       >
-        Submit
+        {submitButtonLabel}
       </button>
       <button
         type='button'

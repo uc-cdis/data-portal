@@ -18,6 +18,7 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
           covariates={covariates}
           outcome={outcome}
           type={'covariate'}
+          submitButtonLabel={'Add'}
         />
       )}
 
