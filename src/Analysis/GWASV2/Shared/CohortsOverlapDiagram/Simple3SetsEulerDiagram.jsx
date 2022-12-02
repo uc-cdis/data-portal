@@ -64,13 +64,13 @@ Simple3SetsEulerDiagram.propTypes = {
 };
 
 Simple3SetsEulerDiagram.defaultProps = {
-  set1Label: undefined,
-  set2Label: undefined,
-  set3Label: undefined,
-  set12Label: undefined,
-  set13Label: undefined,
-  set23Label: undefined,
-  set123Label: undefined,
+  set1Label: null,
+  set2Label: null,
+  set3Label: null,
+  set12Label: null,
+  set13Label: null,
+  set23Label: null,
+  set123Label: null,
 };
 
 export default Simple3SetsEulerDiagram;
