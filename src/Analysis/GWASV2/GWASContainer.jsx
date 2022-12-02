@@ -12,12 +12,10 @@ import './GWASV2.css';
 
 const GWASContainer = () => {
   const reducer = (state, action) => {
-    const { keyNames, payload } = action;
-    let ACTION = keyNames;
-    console.log('keyNames', keyNames, 'payload', payload);
+    const { accessor, payload } = action;
     return {
       ...state,
-      [ACTION]: payload
+      [accessor]: payload
     }
   };
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -53,6 +51,7 @@ const GWASContainer = () => {
       case 2:
         return (
           <React.Fragment>
+            <div style={{ display: "flex", flexDirection: "row", margin: "auto" }}>
             <SelectCovariates
               outcome={outcome}
               covariates={covariates}
@@ -62,6 +61,7 @@ const GWASContainer = () => {
               covariates={covariates}
               dispatch={dispatch}
             />
+            </div>
           </React.Fragment>
         );
       case 3:
@@ -123,7 +123,7 @@ const GWASContainer = () => {
               className='GWASUI-navBtn GWASUI-navBtn__next'
               type='primary'
               onClick={() => {
-                dispatch({ keyNames: "currentStep", payload: currentStep - 1 });
+                dispatch({ accessor: "currentStep", payload: currentStep - 1 });
               }}
               disabled={currentStep < 1}
             >
@@ -145,7 +145,7 @@ const GWASContainer = () => {
                 className='GWASUI-navBtn GWASUI-navBtn__next'
                 type='primary'
                 onClick={() => {
-                  dispatch({ keyNames: "currentStep", payload: currentStep + 1 });
+                  dispatch({ accessor: "currentStep", payload: currentStep + 1 });
                 }}
                 disabled={!nextButtonEnabled}
               >

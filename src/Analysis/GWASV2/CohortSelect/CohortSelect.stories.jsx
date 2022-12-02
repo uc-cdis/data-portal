@@ -46,7 +46,7 @@ const MockTemplate = () => {
   const handleStudyPopulationSelect = (selectedRow) => {
     dispatch(
       {
-        keyNames: "selectedStudyPopulation",
+        accessor: "selectedStudyPopulation",
         payload: selectedRow,
       }
     );

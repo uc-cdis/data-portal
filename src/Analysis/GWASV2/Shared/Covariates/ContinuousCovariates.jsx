@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 
 const ContinuousCovariates = ({
-  setMode,
+  setVariableType,
   selected,
   dispatch,
   handleSelect,
   type,
+  covariates
 }) => {
-  const formatSelected = () => ({
-    variable_type: 'concept',
-    concept_id: selected.concept_id,
-    concept_name: selected.concept_name,
-  });
+  const formatSelected = (covariate) => {
+    let { concept_code, prefixed_concept_id, ...cov } = covariate;
+    return cov;
+  }
   return (
     <React.Fragment>
       <Covariates selected={selected} handleSelect={handleSelect} />
@@ -22,12 +22,14 @@ const ContinuousCovariates = ({
         style={{ marginLeft: 5 }}
         onClick={() => {
           dispatch(
-            { keyNames: type, payload: formatSelected(selected) }
+            { accessor: type, payload: type === "outcome" ? formatSelected(selected) : [...covariates, formatSelected(selected)] }
           );
-          dispatch({
-            keyNames: "currentStep", payload: 2
-          });
-          setMode('');
+          if (type === "outcome") {
+            dispatch({
+              accessor: "currentStep", payload: 2
+            })
+          }
+          setVariableType(undefined);
         }}
       >
         Submit
@@ -35,7 +37,7 @@ const ContinuousCovariates = ({
       <button
         type='button'
         onClick={() => {
-          setMode(undefined);
+          setVariableType(undefined);
         }}
       >
         cancel
@@ -47,9 +49,10 @@ const ContinuousCovariates = ({
 ContinuousCovariates.propTypes = {
   dispatch: PropTypes.func.isRequired,
   selected: PropTypes.object.isRequired,
-  setMode: PropTypes.func.isRequired,
+  setVariableType: PropTypes.func.isRequired,
   handleSelect: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
+  covariates: PropTypes.array.isRequired
 };
 
 export default ContinuousCovariates;

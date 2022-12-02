@@ -43,7 +43,7 @@ const ConfigureGWAS = ({
                 min={1}
                 max={10}
                 onChange={(e) => dispatch({
-                  keyNames: "numOfPC",
+                  accessor: "numOfPC",
                   payload: Number(e) })}
               />
               {/* {(!numOfPC) && (<span style={{ color: 'red' }}> Please input a value between 1 and 10</span>)} */}
@@ -56,7 +56,7 @@ const ConfigureGWAS = ({
                 id='input-maf'
                 value={mafThreshold}
                 onChange={(e) => dispatch({
-                  keyNames: "mafThreshold",
+                  accessor: "mafThreshold",
                   payload: Number(e),
                 })}
                 stringMode

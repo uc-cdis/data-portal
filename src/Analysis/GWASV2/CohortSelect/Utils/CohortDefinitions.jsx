@@ -31,7 +31,7 @@ const CohortDefinitions = ({
       : [],
     onChange: (_, selectedRows) => {
       namespace === "selectedStudyPopulationCohort" ? handleCohortSelect(
-        { keyNames: "selectedStudyPopulationCohort", payload: selectedRows[0] })
+        { accessor: "selectedStudyPopulationCohort", payload: selectedRows[0] })
         : handleCohortSelect(selectedRows[0])
     },
   });

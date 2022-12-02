@@ -20,7 +20,7 @@ const CovariatesCardsList = ({ covariates, dispatch }) => (
               <DeleteOutlined
                 onClick={() => {
                   dispatch({
-                    keyNames: "covariates",
+                    accessor: "covariates",
                     payload: covariates.filter(
                       (covariate) => covariate[cd.provided_name] !== cd.provided_name,
                     ),
@@ -44,7 +44,7 @@ const CovariatesCardsList = ({ covariates, dispatch }) => (
               <DeleteOutlined
                 onClick={() => {
                   dispatch({
-                    keyNames: "covariates",
+                    accessor: "covariates",
                     payload: covariates.filter(
                       (covariate) => covariate?.concept_id !== cd.concept_id,
                     ),
