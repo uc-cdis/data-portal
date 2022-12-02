@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
+import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const SelectOutcome = ({ covariates, dispatch, outcome }) => {
   const [mode, setMode] = useState('');
@@ -24,11 +25,15 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
     if (mode === 'dichotomous') {
       return (
         <CustomDichotomousCovariates
-          setMode={setMode}
-          dispatch={dispatch}
-          covariates={covariates}
-          outcome={outcome}
-          type={'outcome'}
+          handleClose={() => {
+            setMode('');
+          }}
+          dispatch={(selectedOutcome) => {
+            dispatch({
+              type: ACTIONS.SET_OUTCOME,
+              payload: selectedOutcome,
+            });
+          }}
         />
       );
     }

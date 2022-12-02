@@ -6,8 +6,7 @@ import '../../../GWASUIApp/GWASUIApp.css';
 
 const CustomDichotomousCovariates = ({
   dispatch,
-  setMode,
-  type,
+  handleClose,
   submitButtonLabel = 'Submit',
 }) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
@@ -23,12 +22,8 @@ const CustomDichotomousCovariates = ({
       ],
       provided_name: providedName,
     };
-    dispatch(
-      type === 'outcome'
-        ? { type: ACTIONS.SET_OUTCOME, payload: dichotomous }
-        : { type: ACTIONS.ADD_COVARIATE, payload: dichotomous }
-    );
-    setMode('');
+    dispatch(dichotomous);
+    handleClose();
   };
 
   const customDichotomousValidation =
@@ -100,9 +95,11 @@ const CustomDichotomousCovariates = ({
 };
 
 CustomDichotomousCovariates.propTypes = {
-  setMode: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
-  type: PropTypes.string.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  submitButtonLabel: PropTypes.string,
 };
-
+CustomDichotomousCovariates.defaultProps = {
+  submitButtonLabel: 'Submit',
+};
 export default CustomDichotomousCovariates;

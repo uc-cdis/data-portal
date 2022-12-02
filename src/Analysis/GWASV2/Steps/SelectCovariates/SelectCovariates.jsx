@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
+import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const SelectCovariates = ({ dispatch, covariates, outcome }) => {
   const [mode, setMode] = useState(undefined);
@@ -15,7 +16,6 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
           selected={selectedCovariate}
           dispatch={dispatch}
           handleSelect={setSelectedCovariate}
-          covariates={covariates}
           outcome={outcome}
           type={'covariate'}
           submitButtonLabel={'Add'}
@@ -24,11 +24,15 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
 
       {mode === 'dichotomous' && (
         <CustomDichotomousCovariates
-          setMode={setMode}
-          dispatch={dispatch}
-          covariates={covariates}
-          outcome={outcome}
-          type={'covariate'}
+          handleClose={() => {
+            setMode('');
+          }}
+          dispatch={(selectedCovariate) => {
+            dispatch({
+              type: ACTIONS.ADD_COVARIATE,
+              payload: selectedCovariate,
+            });
+          }}
           submitButtonLabel={'Add'}
         />
       )}
