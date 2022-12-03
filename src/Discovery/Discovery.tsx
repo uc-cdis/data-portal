@@ -204,7 +204,31 @@ const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, co
   if (noFiltersActive) {
     return studies;
   }
-  return studies.filter((study) => Object.keys(advSearchFilterState).every((filterName) => {
+
+  // Combine within filters as AND
+  if (filterMultiSelectionLogic === 'AND') {
+    return studies.filter((study) => Object.keys(advSearchFilterState).every((filterName) => {
+      const filterValues = Object.keys(advSearchFilterState[filterName]);
+      // Handle the edge case where no values in this filter are selected
+      if (filterValues.length === 0) {
+        return true;
+      }
+      if (!config.features.advSearchFilters) {
+        return false;
+      }
+      const studyFilters = study[config.features.advSearchFilters.field];
+      if (!studyFilters || !studyFilters.length) {
+        return false;
+      }
+
+      const studyFilterValues = studyFilters.filter(({ key }) => key === filterName)
+        .map(({ value }) => value);
+      return filterValues.every((value) => studyFilterValues.includes(value));
+    }));
+  }
+
+  // Combine within filters as OR
+  return studies.filter((study) => Object.keys(advSearchFilterState).some((filterName) => {
     const filterValues = Object.keys(advSearchFilterState[filterName]);
     // Handle the edge case where no values in this filter are selected
     if (filterValues.length === 0) {
@@ -214,19 +238,11 @@ const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, co
       return false;
     }
     const studyFilters = study[config.features.advSearchFilters.field];
-    if (!studyFilters) {
+    if (!studyFilters || !studyFilters.length) {
       return false;
     }
 
-    if (filterMultiSelectionLogic === 'OR') {
-    // combine within filters as OR
-      return studyFilters.some(({ key, value }) => key === filterName && filterValues.includes(value));
-    }
-
-    // combine within filters as AND
-    const studyFilterValues = studyFilters.filter(({ key }) => key === filterName)
-      .map(({ value }) => value);
-    return filterValues.every((value) => studyFilterValues.includes(value));
+    return studyFilters.some(({ key, value }) => key === filterName && filterValues.includes(value));
   }));
 };
 
@@ -295,6 +311,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     );
 
     if (config.features.advSearchFilters && config.features.advSearchFilters.enabled) {
+      console.log(filteredResources);
       filteredResources = filterByAdvSearch(
         filteredResources,
         filterState,
@@ -323,7 +340,14 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   };
 
   useEffect(doSearchFilterSort,
-    [props.searchTerm, props.accessSortDirection, props.studies, props.pagination, props.accessFilters, props.selectedTags],
+    [props.searchTerm,
+      props.accessSortDirection,
+      props.studies,
+      props.pagination,
+      props.accessFilters,
+      props.selectedTags,
+      filterMultiSelectionLogic,
+      filterState],
   );
 
   useEffect(() => {
