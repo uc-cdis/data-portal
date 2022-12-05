@@ -20,7 +20,9 @@ import {
 
 import './StudyRegistration.css';
 import { Link, useLocation } from 'react-router-dom';
-import { hostname, kayakoConfig, studyRegistrationConfig, useArboristUI } from '../localconf';
+import {
+  hostname, kayakoConfig, studyRegistrationConfig, useArboristUI,
+} from '../localconf';
 import { cleanUpFileRecord, generatePresignedURL } from './utils';
 import { createKayakoTicket } from '../utils';
 import { userHasDataUpload, userHasMethodForServiceOnResource } from '../authMappingUtils';
@@ -120,13 +122,14 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
     }
 
     xhr.open('PUT', s3URL);
-    xhr.send(file);
+    // antd wraps the actual File object (event.target.files) into this "originFileObj" field
+    xhr.send(file.originFileObj);
   });
 
   const handleUpload = (formValues) => {
     setFormSubmissionStatus({ status: 'info', text: 'Preparing for upload' });
     const fileInfo = formValues.fileList_doNotInclude[0];
-    if (!fileInfo?.name) {
+    if (!fileInfo?.name || !fileInfo?.originFileObj) {
       setFormSubmissionStatus({ status: 'error', text: 'Invalid file info received' });
       return;
     }
@@ -175,55 +178,55 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
 
   if (formSubmissionStatus) {
     switch (formSubmissionStatus.status) {
-      case 'success':
-        return (
-          <div className='study-reg-container'>
-            <div className='study-reg-form-container'>
-              <Result
-                status={formSubmissionStatus.status}
-                title='Your Data Dictionary has been submitted!'
-                subTitle='Please allow up to 48 hours before this data dictionary shows up in Discovery page'
-                extra={[
-                  <Link key='discovery' to={'/discovery'}>
-                    <Button>Go To Discovery Page</Button>
-                  </Link>,
-                ]}
-              />
-            </div>
+    case 'success':
+      return (
+        <div className='study-reg-container'>
+          <div className='study-reg-form-container'>
+            <Result
+              status={formSubmissionStatus.status}
+              title='Your Data Dictionary has been submitted!'
+              subTitle='Please allow up to 48 hours before this data dictionary shows up in Discovery page'
+              extra={[
+                <Link key='discovery' to={'/discovery'}>
+                  <Button>Go To Discovery Page</Button>
+                </Link>,
+              ]}
+            />
           </div>
-        );
-      case 'info':
-        return (
-          <div className='study-reg-container'>
-            <div className='study-reg-form-container'>
-              <Result
-                status={formSubmissionStatus.status}
-                title='Submitting data dictionary, please do not close this page or navigate away'
-                subTitle={formSubmissionStatus.text}
-                extra={<Progress percent={uploadProgress} showInfo={false} status='active' />}
-              />
-            </div>
+        </div>
+      );
+    case 'info':
+      return (
+        <div className='study-reg-container'>
+          <div className='study-reg-form-container'>
+            <Result
+              status={formSubmissionStatus.status}
+              title='Submitting data dictionary, please do not close this page or navigate away'
+              subTitle={formSubmissionStatus.text}
+              extra={<Progress percent={uploadProgress} showInfo={false} status='active' />}
+            />
           </div>
-        );
-      case 'error':
-        return (
-          <div className='study-reg-container'>
-            <div className='study-reg-form-container'>
-              <Result
-                status={formSubmissionStatus.status}
-                title='A problem has occurred during submission!'
-                subTitle={formSubmissionStatus.text}
-                extra={[
-                  <Button type='primary' key='close' onClick={() => { setFormSubmissionStatus(null); }}>
+        </div>
+      );
+    case 'error':
+      return (
+        <div className='study-reg-container'>
+          <div className='study-reg-form-container'>
+            <Result
+              status={formSubmissionStatus.status}
+              title='A problem has occurred during submission!'
+              subTitle={formSubmissionStatus.text}
+              extra={[
+                <Button type='primary' key='close' onClick={() => { setFormSubmissionStatus(null); }}>
                     Close
-                  </Button>,
-                ]}
-              />
-            </div>
+                </Button>,
+              ]}
+            />
           </div>
-        );
-      default:
-        return null;
+        </div>
+      );
+    default:
+      return null;
     }
   }
 
@@ -267,19 +270,21 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           >
             <Input />
           </Form.Item>
-          {(existingDataDictionaryName?.length) ?
-            (
+          {(existingDataDictionaryName?.length)
+            ? (
               <Form.Item {...tailLayout}>
                 <Space direction='vertical'>
                   <Typography>This study is already linked to data dictionaries with the following names:</Typography>
-                  <div>{existingDataDictionaryName.map(name => <Tag key={name}>{name}</Tag>)}</div>
+                  <div>{existingDataDictionaryName.map((name) => <Tag key={name}>{name}</Tag>)}</div>
                   <Typography>Using an existing name will overwrite the existing link.</Typography>
                 </Space>
               </Form.Item>
             ) : null}
-          <Divider plain>Administrative Fields<Tooltip title='We need these information so we can send you updates regarding your data dictionary submission. We do not save these information on the platform'>
-            <QuestionCircleOutlined className='study-reg-form-item__middle-icon' />
-          </Tooltip></Divider>
+          <Divider plain>Administrative Fields
+            <Tooltip title='We need these information so we can send you updates regarding your data dictionary submission. We do not save these information on the platform'>
+              <QuestionCircleOutlined className='study-reg-form-item__middle-icon' />
+            </Tooltip>
+          </Divider>
           <Form.Item
             name='First Name'
             label='Submitter First Name'
