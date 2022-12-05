@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import CohortSelect from '../SelectCohort/SelectCohort';
+import SelectCohortDropDown from '../SelectCohort/SelectCohortDropDown';
 import CohortsOverlapDiagram from '../Diagrams/CohortsOverlapDiagram/CohortsOverlapDiagram';
 
 import '../../../GWASUIApp/GWASUIApp.css';
@@ -51,9 +51,7 @@ const CustomDichotomousCovariates = ({
             width: '50%',
             textSize: 'small',
             paddingLeft: 5,
-            height: 45,
             borderRadius: 5,
-            marginTop: 5,
           }}
         />
         <button
@@ -80,23 +78,23 @@ const CustomDichotomousCovariates = ({
         <div data-tour='choosing-dichotomous'>
           <div className='GWASUI-flexRow' data-tour='table-repeat'>
             <div>
-              <h3>Select NO Cohort</h3>
-              <CohortSelect
+              <h3>Get Value 0</h3>
+              <SelectCohortDropDown
                 selectedCohort={firstPopulation}
                 handleCohortSelect={setFirstPopulation}
               />
             </div>
             <div>
-              <h3>Select YES Cohort</h3>
-              <CohortSelect
+              <h3>Get Value 1</h3>
+              <SelectCohortDropDown
                 selectedCohort={secondPopulation}
                 handleCohortSelect={setSecondPopulation}
               />
             </div>
             <div style={{ paddingLeft: '30px' }}>
-              <h3>Cohort overlap diagram</h3>
+              <h3 style={{ width: '400px' }}>Cohort overlap diagram</h3>
               {!firstPopulation || !secondPopulation ? (
-                <div style={{ width: '200px' }}>
+                <div>
                   Select your cohorts to assess overlap
                 </div>
               ) : (
