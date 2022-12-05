@@ -42,13 +42,6 @@ SuccessCase.parameters = {
   // msw mocking:
   msw: {
     handlers: [
-      // Add this if needed:
-      // rest.get('http://:cohortmiddlewarepath/cohort-middleware/sources', (req, res, ctx) => {
-      //   return res(
-      //     ctx.delay(1100),
-      //     ctx.json({"sources":[{"source_id":2,"source_name":"OMOP"}]}),
-      //   );
-      // }),
       rest.post(
         'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
         (req, res, ctx) => {
@@ -65,7 +58,8 @@ SuccessCase.parameters = {
           );
         }
       ),
-      rest.get('http://:cohortmiddlewarepath/cohort-middleware/cohortdefinition-stats/by-source-id/:sourceid', (req, res, ctx) => {
+      rest.get('http://:cohortmiddlewarepath/cohort-middleware/cohortdefinition-stats/by-source-id/:sourceid',
+      (req, res, ctx) => {
         const { cohortmiddlewarepath } = req.params;
         const { cohortdefinitionA } = req.params;
         const { cohortdefinitionB } = req.params;
@@ -121,7 +115,8 @@ ErrorCase.args = {
 ErrorCase.parameters = {
   msw: {
     handlers: [
-      rest.get('http://:cohortmiddlewarepath/cohort-middleware/cohortdefinition-stats/by-source-id/:sourceid', (req, res, ctx) => res(
+      rest.get('http://:cohortmiddlewarepath/cohort-middleware/cohortdefinition-stats/by-source-id/:sourceid',
+      (req, res, ctx) => res(
         ctx.delay(800),
         ctx.status(403),
       )),
