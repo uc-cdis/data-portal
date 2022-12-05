@@ -9,10 +9,10 @@ const ContinuousCovariates = ({
 }) => {
   const [selected, setSelected] = useState({});
 
-  const formatSelected = (selectedInput) => ({
+  const formatSelected = () => ({
     variable_type: 'concept',
-    concept_id: selectedInput.concept_id,
-    concept_name: selectedInput.concept_name,
+    concept_id: selected.concept_id,
+    concept_name: selected.concept_name,
   });
 
   return (
