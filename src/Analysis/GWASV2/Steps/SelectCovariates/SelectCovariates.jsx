@@ -75,18 +75,14 @@ const SelectCovariates = ({
       )}
       <CovariatesCardsList
         covariates={covariates}
-        deleteDichotomousCovariate={(chosenDichotomousCovariate) =>
-          dispatch({
-            type: ACTIONS.DELETE_DICHOTOMOUS_COVARIATE,
-            payload: chosenDichotomousCovariate,
-          })
-        }
-        deleteContinuousCovariate={(chosenContinuousCovariate) =>
-          dispatch({
-            type: ACTIONS.DELETE_CONTINUOUS_COVARIATE,
-            payload: chosenContinuousCovariate,
-          })
-        }
+        deleteDichotomousCovariate={(chosenDichotomousCovariate) => dispatch({
+          type: ACTIONS.DELETE_DICHOTOMOUS_COVARIATE,
+          payload: chosenDichotomousCovariate,
+        })}
+        deleteContinuousCovariate={(chosenContinuousCovariate) => dispatch({
+          type: ACTIONS.DELETE_CONTINUOUS_COVARIATE,
+          payload: chosenContinuousCovariate,
+        })}
       />
     </React.Fragment>
   );
