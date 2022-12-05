@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
-import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const ContinuousCovariates = ({
-  setMode,
-
   dispatch,
   handleClose,
-  // type,
   submitButtonLabel = 'Submit',
 }) => {
   const [selected, setSelected] = useState({});

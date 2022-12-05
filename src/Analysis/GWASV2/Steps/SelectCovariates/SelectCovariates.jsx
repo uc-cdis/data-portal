@@ -4,15 +4,15 @@ import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariat
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import ACTIONS from '../../Shared/StateManagement/Actions';
 
-const SelectCovariates = ({ dispatch, outcome }) => {
-  const [covariateSelectionMode, setCovariateSelectionMode] = useState('');
+const SelectCovariates = ({ dispatch }) => {
+  const [selectionMode, setSelectionMode] = useState('');
 
   return (
     <React.Fragment>
-      {covariateSelectionMode === 'continuous' && (
+      {selectionMode === 'continuous' && (
         <ContinuousCovariates
           handleClose={() => {
-            setCovariateSelectionMode('');
+            setSelectionMode('');
           }}
           dispatch={(chosenOutcome) => {
             dispatch({
@@ -24,10 +24,10 @@ const SelectCovariates = ({ dispatch, outcome }) => {
         />
       )}
 
-      {covariateSelectionMode === 'dichotomous' && (
+      {selectionMode === 'dichotomous' && (
         <CustomDichotomousCovariates
           handleClose={() => {
-            setCovariateSelectionMode('');
+            setSelectionMode('');
           }}
           dispatch={(chosenCovariate) => {
             dispatch({
@@ -38,7 +38,7 @@ const SelectCovariates = ({ dispatch, outcome }) => {
           submitButtonLabel={'Add'}
         />
       )}
-      {!covariateSelectionMode && (
+      {!selectionMode && (
         <div>
           <button
             type='button'
@@ -46,7 +46,7 @@ const SelectCovariates = ({ dispatch, outcome }) => {
               height: 60,
               marginRight: 5,
             }}
-            onClick={() => setCovariateSelectionMode('continuous')}
+            onClick={() => setSelectionMode('continuous')}
           >
             Add Continuous Outcome Covariate
           </button>
@@ -56,7 +56,7 @@ const SelectCovariates = ({ dispatch, outcome }) => {
               height: 60,
               marginLeft: 5,
             }}
-            onClick={() => setCovariateSelectionMode('dichotomous')}
+            onClick={() => setSelectionMode('dichotomous')}
           >
             Add Dichotomous Outcome Covariate
           </button>
@@ -68,7 +68,6 @@ const SelectCovariates = ({ dispatch, outcome }) => {
 
 SelectCovariates.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  outcome: PropTypes.object.isRequired,
 };
 
 export default SelectCovariates;

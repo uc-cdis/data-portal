@@ -4,15 +4,15 @@ import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariat
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import ACTIONS from '../../Shared/StateManagement/Actions';
 
-const SelectOutcome = ({ covariates, dispatch, outcome }) => {
-  const [outcomeSelectionMode, setOutcomeSelectionMode] = useState('');
+const SelectOutcome = ({ dispatch }) => {
+  const [selectionMode, setSelectionMode] = useState('');
 
   const determineSelectOutcomeJsx = () => {
-    if (outcomeSelectionMode === 'continuous') {
+    if (selectionMode === 'continuous') {
       return (
         <ContinuousCovariates
           handleClose={() => {
-            setOutcomeSelectionMode('');
+            setSelectionMode('');
           }}
           dispatch={(chosenOutcome) => {
             dispatch({
@@ -23,11 +23,11 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
         />
       );
     }
-    if (outcomeSelectionMode === 'dichotomous') {
+    if (selectionMode === 'dichotomous') {
       return (
         <CustomDichotomousCovariates
           handleClose={() => {
-            setOutcomeSelectionMode('');
+            setSelectionMode('');
           }}
           dispatch={(chosenOutcome) => {
             dispatch({
@@ -43,14 +43,14 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
         <button
           type='button'
           style={{ height: 60, marginRight: 5 }}
-          onClick={() => setOutcomeSelectionMode('continuous')}
+          onClick={() => setSelectionMode('continuous')}
         >
           Add Continuous Outcome Phenotype
         </button>
         <button
           type='button'
           style={{ height: 60, marginRight: 5 }}
-          onClick={() => setOutcomeSelectionMode('dichotomous')}
+          onClick={() => setSelectionMode('dichotomous')}
         >
           Add Dichotomous Outcome Phenotype
         </button>
@@ -64,12 +64,6 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
 
 SelectOutcome.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  covariates: PropTypes.array.isRequired,
-  outcome: PropTypes.object,
-};
-
-SelectOutcome.defaultProps = {
-  outcome: null,
 };
 
 export default SelectOutcome;
