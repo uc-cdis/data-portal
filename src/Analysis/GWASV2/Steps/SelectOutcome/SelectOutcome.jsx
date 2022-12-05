@@ -5,14 +5,14 @@ import CustomDichotomousCovariates from '../../Components/Covariates/CustomDicho
 import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const SelectOutcome = ({ covariates, dispatch, outcome }) => {
-  const [mode, setMode] = useState('');
+  const [outcomeSelectionMode, setOutcomeSelectionMode] = useState('');
 
   const determineSelectOutcomeJsx = () => {
-    if (mode === 'continuous') {
+    if (outcomeSelectionMode === 'continuous') {
       return (
         <ContinuousCovariates
           handleClose={() => {
-            setMode('');
+            setOutcomeSelectionMode('');
           }}
           dispatch={(chosenOutcome) => {
             dispatch({
@@ -23,11 +23,11 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
         />
       );
     }
-    if (mode === 'dichotomous') {
+    if (outcomeSelectionMode === 'dichotomous') {
       return (
         <CustomDichotomousCovariates
           handleClose={() => {
-            setMode('');
+            setOutcomeSelectionMode('');
           }}
           dispatch={(chosenOutcome) => {
             dispatch({
@@ -43,14 +43,14 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
         <button
           type='button'
           style={{ height: 60, marginRight: 5 }}
-          onClick={() => setMode('continuous')}
+          onClick={() => setOutcomeSelectionMode('continuous')}
         >
           Add Continuous Outcome Phenotype
         </button>
         <button
           type='button'
           style={{ height: 60, marginRight: 5 }}
-          onClick={() => setMode('dichotomous')}
+          onClick={() => setOutcomeSelectionMode('dichotomous')}
         >
           Add Dichotomous Outcome Phenotype
         </button>

@@ -5,14 +5,14 @@ import CustomDichotomousCovariates from '../../Components/Covariates/CustomDicho
 import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const SelectCovariates = ({ dispatch, outcome }) => {
-  const [mode, setMode] = useState('');
+  const [covariateSelectionMode, setCovariateSelectionMode] = useState('');
 
   return (
     <React.Fragment>
-      {mode === 'continuous' && (
+      {covariateSelectionMode === 'continuous' && (
         <ContinuousCovariates
           handleClose={() => {
-            setMode('');
+            setCovariateSelectionMode('');
           }}
           dispatch={(chosenOutcome) => {
             dispatch({
@@ -24,10 +24,10 @@ const SelectCovariates = ({ dispatch, outcome }) => {
         />
       )}
 
-      {mode === 'dichotomous' && (
+      {covariateSelectionMode === 'dichotomous' && (
         <CustomDichotomousCovariates
           handleClose={() => {
-            setMode('');
+            setCovariateSelectionMode('');
           }}
           dispatch={(chosenCovariate) => {
             dispatch({
@@ -38,7 +38,7 @@ const SelectCovariates = ({ dispatch, outcome }) => {
           submitButtonLabel={'Add'}
         />
       )}
-      {!mode && (
+      {!covariateSelectionMode && (
         <div>
           <button
             type='button'
@@ -46,7 +46,7 @@ const SelectCovariates = ({ dispatch, outcome }) => {
               height: 60,
               marginRight: 5,
             }}
-            onClick={() => setMode('continuous')}
+            onClick={() => setCovariateSelectionMode('continuous')}
           >
             Add Continuous Outcome Covariate
           </button>
@@ -56,7 +56,7 @@ const SelectCovariates = ({ dispatch, outcome }) => {
               height: 60,
               marginLeft: 5,
             }}
-            onClick={() => setMode('dichotomous')}
+            onClick={() => setCovariateSelectionMode('dichotomous')}
           >
             Add Dichotomous Outcome Covariate
           </button>
