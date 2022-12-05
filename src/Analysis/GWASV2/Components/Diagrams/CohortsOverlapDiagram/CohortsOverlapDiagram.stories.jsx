@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import CohortsOverlapDiagram from './CohortsOverlapDiagram';
+import { SourceContextProvider } from '../../../Shared/Source';
 
 export default {
   title: 'Tests3/GWASV2/CohortsOverlapDiagram',
@@ -16,7 +17,9 @@ const mockedQueryClient = new QueryClient({
 
 const Template = (args) => (
   <QueryClientProvider client={mockedQueryClient}>
-    <CohortsOverlapDiagram {...args} />
+    <SourceContextProvider>
+      <CohortsOverlapDiagram {...args} />
+    </SourceContextProvider>
   </QueryClientProvider>
 );
 
