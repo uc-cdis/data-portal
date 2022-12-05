@@ -1,6 +1,5 @@
 import React, { useReducer } from 'react';
 import { Space, Button, Popconfirm } from 'antd';
-import CovariatesCardsList from './Components/Covariates/CovariatesCardsList';
 import ProgressBar from './Components/ProgressBar/ProgressBar';
 import { gwasV2Steps } from './Shared/constants';
 import initialState from './Shared/StateManagement/InitialState';
@@ -18,48 +17,44 @@ const GWASContainer = () => {
 
   const generateStep = () => {
     switch (state.currentStep) {
-    case 0:
-      return (
-        <SelectStudyPopulation
-          selectedCohort={state.selectedStudyPopulationCohort}
-          dispatch={dispatch}
-        />
-      );
-    case 1:
-      return (
-        <SelectOutcome
-          studyPopulationCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          dispatch={dispatch}
-        />
-      );
-    case 2:
-      return (
-        <React.Fragment>
-          <SelectCovariates
+      case 0:
+        return (
+          <SelectStudyPopulation
+            selectedCohort={state.selectedStudyPopulationCohort}
+            dispatch={dispatch}
+          />
+        );
+      case 1:
+        return (
+          <SelectOutcome
             studyPopulationCohort={state.selectedStudyPopulationCohort}
             outcome={state.outcome}
-            covariates={state.covariates}
             dispatch={dispatch}
           />
-          <CovariatesCardsList
-            covariates={state.covariates}
+        );
+      case 2:
+        return (
+          <React.Fragment>
+            <SelectCovariates
+              studyPopulationCohort={state.selectedStudyPopulationCohort}
+              outcome={state.outcome}
+              covariates={state.covariates}
+              dispatch={dispatch}
+            />
+          </React.Fragment>
+        );
+      case 3:
+        return (
+          <ConfigureGWAS
             dispatch={dispatch}
+            numOfPCs={state.numPCs}
+            mafThreshold={state.mafThreshold}
+            imputationScore={state.imputationScore}
+            selectedHare={state.selectedHare}
           />
-        </React.Fragment>
-      );
-    case 3:
-      return (
-        <ConfigureGWAS
-          dispatch={dispatch}
-          numOfPCs={state.numPCs}
-          mafThreshold={state.mafThreshold}
-          imputationScore={state.imputationScore}
-          selectedHare={state.selectedHare}
-        />
-      );
-    default:
-      return null;
+        );
+      default:
+        return null;
     }
   };
 

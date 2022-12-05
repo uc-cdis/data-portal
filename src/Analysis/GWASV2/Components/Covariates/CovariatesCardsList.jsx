@@ -2,11 +2,14 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { TeamOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
-import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const { Meta } = Card;
 
-const CovariatesCardsList = ({ covariates, dispatch }) => (
+const CovariatesCardsList = ({
+  covariates,
+  deleteDichotomousCovariate,
+  deleteContinuousCovariate,
+}) => (
   <div className='GWASUI-cdList'>
     {covariates.map((cd, key) => (
       <React.Fragment key={key}>
@@ -20,10 +23,7 @@ const CovariatesCardsList = ({ covariates, dispatch }) => (
             actions={[
               <DeleteOutlined
                 onClick={() => {
-                  dispatch({
-                    type: ACTIONS.DELETE_DICHOTOMOUS_COVARIATE,
-                    payload: cd.provided_name,
-                  });
+                  deleteDichotomousCovariate(cd.provided_name);
                 }}
                 key='delete'
               />,
@@ -42,10 +42,7 @@ const CovariatesCardsList = ({ covariates, dispatch }) => (
             actions={[
               <DeleteOutlined
                 onClick={() => {
-                  dispatch({
-                    type: ACTIONS.DELETE_CONTINUOUS_COVARIATE,
-                    payload: cd.concept_id,
-                  });
+                  deleteContinuousCovariate(cd.concept_id);
                 }}
                 key='delete'
               />,
@@ -61,7 +58,8 @@ const CovariatesCardsList = ({ covariates, dispatch }) => (
 
 CovariatesCardsList.propTypes = {
   covariates: PropTypes.array.isRequired,
-  dispatch: PropTypes.func.isRequired,
+  deleteDichotomousCovariate: PropTypes.func.isRequired,
+  deleteContinuousCovariate: PropTypes.func.isRequired,
 };
 
 export default CovariatesCardsList;

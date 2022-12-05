@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
+import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
 import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const SelectCovariates = ({
@@ -72,6 +73,21 @@ const SelectCovariates = ({
           </button>
         </div>
       )}
+      <CovariatesCardsList
+        covariates={covariates}
+        deleteDichotomousCovariate={(chosenDichotomousCovariate) =>
+          dispatch({
+            type: ACTIONS.DELETE_DICHOTOMOUS_COVARIATE,
+            payload: chosenDichotomousCovariate,
+          })
+        }
+        deleteContinuousCovariate={(chosenContinuousCovariate) =>
+          dispatch({
+            type: ACTIONS.DELETE_CONTINUOUS_COVARIATE,
+            payload: chosenContinuousCovariate,
+          })
+        }
+      />
     </React.Fragment>
   );
 };
