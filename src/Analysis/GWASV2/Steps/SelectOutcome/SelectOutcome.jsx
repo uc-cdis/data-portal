@@ -6,19 +6,20 @@ import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const SelectOutcome = ({ covariates, dispatch, outcome }) => {
   const [mode, setMode] = useState('');
-  const [selectedOutcome, setSelectedOutcome] = useState({});
 
   const determineSelectOutcomeJsx = () => {
     if (mode === 'continuous') {
       return (
         <ContinuousCovariates
-          setMode={setMode}
-          selected={selectedOutcome}
-          dispatch={dispatch}
-          handleSelect={setSelectedOutcome}
-          covariates={covariates}
-          outcome={outcome}
-          type={'outcome'}
+          handleClose={() => {
+            setMode('');
+          }}
+          dispatch={(chosenOutcome) => {
+            dispatch({
+              type: ACTIONS.SET_OUTCOME,
+              payload: chosenOutcome,
+            });
+          }}
         />
       );
     }

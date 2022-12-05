@@ -1,40 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const ContinuousCovariates = ({
   setMode,
-  selected,
+
   dispatch,
-  handleSelect,
-  type,
+  handleClose,
+  // type,
   submitButtonLabel = 'Submit',
 }) => {
-  const formatSelected = () => ({
+  const [selected, setSelected] = useState({});
+
+  const formatSelected = (selectedInput) => ({
     variable_type: 'concept',
-    concept_id: selected.concept_id,
-    concept_name: selected.concept_name,
+    concept_id: selectedInput.concept_id,
+    concept_name: selectedInput.concept_name,
   });
+
   return (
     <React.Fragment>
-      <Covariates selected={selected} handleSelect={handleSelect} />
+      <Covariates selected={selected} handleSelect={setSelected} />
       <button
         type='button'
         style={{ marginLeft: 5 }}
         onClick={() => {
-          dispatch(
-            type === 'outcome'
-              ? {
-                type: ACTIONS.SET_OUTCOME,
-                payload: formatSelected(selected),
-              }
-              : {
-                type: ACTIONS.ADD_COVARIATE,
-                payload: formatSelected(selected),
-              },
-          );
-          setMode('');
+          dispatch(formatSelected(selected));
+          handleClose();
         }}
       >
         {submitButtonLabel}
@@ -42,7 +35,7 @@ const ContinuousCovariates = ({
       <button
         type='button'
         onClick={() => {
-          setMode(undefined);
+          handleClose();
         }}
       >
         cancel
@@ -53,10 +46,7 @@ const ContinuousCovariates = ({
 
 ContinuousCovariates.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  selected: PropTypes.object.isRequired,
-  setMode: PropTypes.func.isRequired,
-  handleSelect: PropTypes.func.isRequired,
-  type: PropTypes.string.isRequired,
+  handleClose: PropTypes.func.isRequired,
   submitButtonLabel: PropTypes.string,
 };
 ContinuousCovariates.defaultProps = {
