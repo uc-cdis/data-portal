@@ -34,7 +34,7 @@ const ContinuousCovariates = ({
           handleClose();
         }}
       >
-        cancel
+        Cancel
       </button>
     </React.Fragment>
   );

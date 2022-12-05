@@ -61,7 +61,7 @@ const CustomDichotomousCovariates = ({
           className={'GWASUI-dichBtn'}
           onClick={() => handleClose()}
         >
-          cancel
+          Cancel
         </button>
         <div data-tour='add-button'>
           <button
