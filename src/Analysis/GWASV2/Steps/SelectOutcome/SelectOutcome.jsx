@@ -4,14 +4,8 @@ import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariat
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import ACTIONS from '../../Shared/StateManagement/Actions';
 
-const SelectOutcome = ({
-  covariates,
-  dispatch,
-  studyPopulationCohort,
-  outcome,
-}) => {
+const SelectOutcome = ({ dispatch, studyPopulationCohort, outcome }) => {
   const [selectionMode, setSelectionMode] = useState('');
-  const [selectedOutcome, setSelectedOutcome] = useState({});
 
   const determineSelectOutcomeJsx = () => {
     if (selectionMode === 'continuous') {
@@ -34,7 +28,6 @@ const SelectOutcome = ({
         <CustomDichotomousCovariates
           studyPopulationCohort={studyPopulationCohort}
           outcome={outcome}
-          covariates={covariates}
           handleClose={() => {
             setSelectionMode('');
           }}
@@ -74,7 +67,6 @@ const SelectOutcome = ({
 SelectOutcome.propTypes = {
   dispatch: PropTypes.func.isRequired,
   studyPopulationCohort: PropTypes.object.isRequired,
-  covariates: PropTypes.array.isRequired,
   outcome: PropTypes.object,
 };
 

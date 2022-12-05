@@ -8,8 +8,8 @@ import '../../../GWASUIApp/GWASUIApp.css';
 const CustomDichotomousCovariates = ({
   dispatch,
   handleClose,
-  covariates,
   studyPopulationCohort,
+  covariates,
   outcome,
   submitButtonLabel = 'Submit',
 }) => {
@@ -30,10 +30,9 @@ const CustomDichotomousCovariates = ({
     handleClose();
   };
 
-  const customDichotomousValidation =
-    providedName.length === 0 ||
-    firstPopulation === undefined ||
-    secondPopulation === undefined;
+  const customDichotomousValidation = providedName.length === 0
+    || firstPopulation === undefined
+    || secondPopulation === undefined;
 
   return (
     <div>
@@ -128,6 +127,8 @@ CustomDichotomousCovariates.propTypes = {
 };
 
 CustomDichotomousCovariates.defaultProps = {
+  covariates: [],
+  outcome: null,
   submitButtonLabel: 'Submit',
 };
 
