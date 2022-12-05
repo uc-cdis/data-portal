@@ -5,19 +5,21 @@ import CustomDichotomousCovariates from '../../Components/Covariates/CustomDicho
 import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const SelectCovariates = ({ dispatch, outcome }) => {
-  const [mode, setMode] = useState(undefined);
-  const [selectedCovariate, setSelectedCovariate] = useState({});
+  const [mode, setMode] = useState('');
 
   return (
     <React.Fragment>
       {mode === 'continuous' && (
         <ContinuousCovariates
-          setMode={setMode}
-          selected={selectedCovariate}
-          dispatch={dispatch}
-          handleSelect={setSelectedCovariate}
-          outcome={outcome}
-          type={'covariate'}
+          handleClose={() => {
+            setMode('');
+          }}
+          dispatch={(chosenOutcome) => {
+            dispatch({
+              type: ACTIONS.ADD_COVARIATE,
+              payload: chosenOutcome,
+            });
+          }}
           submitButtonLabel={'Add'}
         />
       )}
