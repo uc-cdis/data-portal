@@ -13,8 +13,8 @@ const CustomDichotomousCovariates = ({
   outcome,
   submitButtonLabel = 'Submit',
 }) => {
-  const [firstPopulation, setFirstPopulation] = useState(null);
-  const [secondPopulation, setSecondPopulation] = useState(null);
+  const [firstPopulation, setFirstPopulation] = useState(undefined);
+  const [secondPopulation, setSecondPopulation] = useState(undefined);
   const [providedName, setProvidedName] = useState('');
 
   const handleDichotomousSubmit = () => {
@@ -30,9 +30,10 @@ const CustomDichotomousCovariates = ({
     handleClose();
   };
 
-  const customDichotomousValidation = providedName.length === 0
-    || firstPopulation === undefined
-    || secondPopulation === undefined;
+  const customDichotomousValidation =
+    providedName.length === 0 ||
+    firstPopulation === undefined ||
+    secondPopulation === undefined;
 
   return (
     <div>
