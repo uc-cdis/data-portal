@@ -22,10 +22,10 @@ const SelectCovariates = ({
           handleClose={() => {
             setSelectionMode('');
           }}
-          dispatch={(chosenOutcome) => {
+          dispatch={(chosenCovariate) => {
             dispatch({
               type: ACTIONS.ADD_COVARIATE,
-              payload: chosenOutcome,
+              payload: chosenCovariate,
             });
           }}
           submitButtonLabel={'Add'}
