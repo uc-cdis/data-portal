@@ -80,14 +80,12 @@ const CustomDichotomousCovariates = ({
             <div>
               <h3>Get Value 0</h3>
               <SelectCohortDropDown
-                selectedCohort={firstPopulation}
                 handleCohortSelect={setFirstPopulation}
               />
             </div>
             <div>
               <h3>Get Value 1</h3>
               <SelectCohortDropDown
-                selectedCohort={secondPopulation}
                 handleCohortSelect={setSecondPopulation}
               />
             </div>

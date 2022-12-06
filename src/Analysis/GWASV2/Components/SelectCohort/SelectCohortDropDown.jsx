@@ -7,7 +7,6 @@ import { useFetch } from '../../Shared/formHooks';
 import { useSourceContext } from '../../Shared/Source';
 
 const SelectCohortDropDown = ({
-  selectedCohort = undefined,
   handleCohortSelect,
 }) => {
   const { source } = useSourceContext();
@@ -54,12 +53,7 @@ const SelectCohortDropDown = ({
 };
 
 SelectCohortDropDown.propTypes = {
-  selectedCohort: PropTypes.any,
   handleCohortSelect: PropTypes.any.isRequired,
-};
-
-SelectCohortDropDown.defaultProps = {
-  selectedCohort: undefined,
 };
 
 export default SelectCohortDropDown;

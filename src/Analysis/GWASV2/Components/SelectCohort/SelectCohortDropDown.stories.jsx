@@ -1,11 +1,9 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import SelectCohortDropDown from './SelectCohortDropDown';
-import reducer from '../../Shared/StateManagement/reducer';
 import { Space } from 'antd';
 import { SourceContextProvider } from '../../Shared/Source';
-import ACTIONS from '../../Shared/StateManagement/Actions';
 import './SelectCohort.css';
 import '../../../GWASV2/GWASV2.css';
 import '../../../GWASUIApp/GWASUIApp.css';
@@ -24,30 +22,10 @@ const mockedQueryClient = new QueryClient({
 });
 
 const MockTemplate = () => {
-  const initialState = {
-    outcome: {},
-    selectedStudyPopulationCohort: {
-      cohort_definition_id: 400,
-      cohort_name: 'Test cohortC - Large',
-      size: 200000,
-    },
-    covariates: [],
-    imputationScore: 0.3,
-    mafThreshold: 0.01,
-    numOfPC: 3,
-    gwasName: '',
-    selectedHare: {
-      concept_value: '',
-    },
-    currentStep: 0,
-  };
-  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const handleStudyPopulationSelect = (selectedRow) => {
-    dispatch({
-      type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
-      payload: selectedRow,
-    });
+
+  const handleCohortSelect = (selectedCohort) => {
+    console.log(selectedCohort);
   };
 
   return (
@@ -60,8 +38,7 @@ const MockTemplate = () => {
               Test selecting cohorts using dropdown
             </h4>
             <SelectCohortDropDown
-              selectedCohort={state.selectedStudyPopulationCohort}
-              handleCohortSelect={handleStudyPopulationSelect}
+              handleCohortSelect={handleCohortSelect}
             />
           </Space>
         </div>
