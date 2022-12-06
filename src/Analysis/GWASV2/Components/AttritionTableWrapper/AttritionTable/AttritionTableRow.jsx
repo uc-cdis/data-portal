@@ -114,8 +114,12 @@ const AttritionTableRow = ({
         ? rowObject.concept_name
         : rowObject.provided_name;
     }
-    // For Cohort Logic
-    return selectedCohort.cohort_name;
+    if (rowType === 'Cohort') {
+      return selectedCohort.cohort_name;
+    }
+    throw new Error(
+      `Invalid Row Type: ${rowType}. Expected one of ['Outcome', 'Covariate', 'Cohort']`,
+    );
   };
 
   const displayCellValue = (value) => {
@@ -128,9 +132,16 @@ const AttritionTableRow = ({
     return value;
   };
 
+  const rowTypeDescription = (rowType) => {
+    if (rowType === 'Outcome') {
+      return 'Outcome Phenotype';
+    }
+    return rowType;
+  };
+
   return (
     <tr>
-      <td className='gwasv2-attrition-table--leftpad'>{rowType}</td>
+      <td className='gwasv2-attrition-table--leftpad'>{rowTypeDescription(rowType)}</td>
       <td className='gwasv2-attrition-table--chart'>
         {determineChartIcon(rowType)}
       </td>
