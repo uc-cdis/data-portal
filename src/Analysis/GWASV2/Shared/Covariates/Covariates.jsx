@@ -20,9 +20,6 @@ const Covariates = ({ selected, handleSelect }) => {
   );
 
   const [searchTerm, setSearchTerm] = useState('');
-  const handleSearch = (inputSearchTerm) => {
-    setSearchTerm(inputSearchTerm);
-  };
 
   const fetchedCovariates = useFetch(covariates, 'concepts');
   const displayedCovariates = useFilter(
@@ -57,9 +54,9 @@ const Covariates = ({ selected, handleSelect }) => {
   if (covariates?.status === 'loading') {
     return (
       <React.Fragment>
-        <div className='GWASUI-spinnerContainer GWASUI-emptyTable'>
+        {/* <div className='GWASUI-spinnerContainer GWASUI-emptyTable'> */}
           <Spin />
-        </div>
+        {/* </div> */}
       </React.Fragment>
     );
   }
@@ -67,23 +64,35 @@ const Covariates = ({ selected, handleSelect }) => {
   if (covariates?.status === 'error') {
     return (
       <React.Fragment>
-        <div className='GWASUI-spinnerContainer GWASUI-emptyTable'>
+        {/* <div className='GWASUI-spinnerContainer GWASUI-emptyTable'> */}
           <span>Error!</span>
-        </div>
+        {/* </div> */}
       </React.Fragment>
     );
   }
 
   if (covariates?.status === 'success') {
     return (
-      <React.Fragment>
+      <div
+      style={{
+        width: "35%",
+        margin: "0 auto"
+      }}
+      // style={{
+      //   display: "flex",
+      //   flexDirection: "column",
+      //   margin: "auto"
+      // }}
+      >
+        <div>
         <SearchBar
           searchTerm={searchTerm}
-          handleSearch={handleSearch}
+          handleSearch={setSearchTerm}
           field='concept name'
         />
+        </div>
         <Table
-          className='GWASUI-table2'
+          // className='GWASUI-table2'
           rowKey='concept_id'
           size='middle'
           pagination={{
@@ -95,7 +104,7 @@ const Covariates = ({ selected, handleSelect }) => {
           columns={covariateTableConfig}
           dataSource={displayedCovariates}
         />
-      </React.Fragment>
+      </div>
     );
   }
   return <React.Fragment />;

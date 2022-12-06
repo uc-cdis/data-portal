@@ -7,7 +7,7 @@ import CovariatesCardsList from './Shared/Covariates/CovariatesCardsList';
 import ProgressBar from './Shared/ProgressBar/ProgressBar';
 import ConfigureGWAS from './ConfigureGWAS/ConfigureGWAS';
 import { gwasV2Steps, initialState } from './Shared/constants';
-import AttritionTableWrapper from './Shared/AttritionTableWrapper/AttritionTableWrapper';
+// import AttritionTableWrapper from './Shared/AttritionTableWrapper/AttritionTableWrapper';
 import './GWASV2.css';
 
 const GWASContainer = () => {
@@ -34,24 +34,29 @@ const GWASContainer = () => {
     switch (currentStep) {
       case 0:
         return (
-          <CohortSelect
-            selectedCohort={selectedStudyPopulationCohort}
-            handleCohortSelect={dispatch}
-            namespace={'selectedStudyPopulationCohort'}
-          />
+          <div
+            style={{ width: '80%', margin: 'auto', height: '500px' }}
+          >
+            <CohortSelect
+              selectedCohort={selectedStudyPopulationCohort}
+              handleCohortSelect={dispatch}
+              namespace={'selectedStudyPopulationCohort'}
+            />
+          </div>
         );
       case 1:
         return (
-          <SelectOutcome
-            outcome={outcome}
-            covariates={covariates}
-            dispatch={dispatch}
-          />
+          <div style={{ width: 'inherit' }} >
+              <SelectOutcome
+                outcome={outcome}
+                covariates={covariates}
+                dispatch={dispatch}
+              />
+            </div>
         );
       case 2:
         return (
           <React.Fragment>
-            <div style={{ display: "flex", flexDirection: "row", margin: "auto" }}>
             <SelectCovariates
               outcome={outcome}
               covariates={covariates}
@@ -61,7 +66,6 @@ const GWASContainer = () => {
               covariates={covariates}
               dispatch={dispatch}
             />
-            </div>
           </React.Fragment>
         );
       case 3:
@@ -98,15 +102,15 @@ const GWASContainer = () => {
   return (
     <React.Fragment>
       <ProgressBar currentStep={currentStep} />
-      <AttritionTableWrapper
+      {/* <AttritionTableWrapper
         covariates={covariates}
         selectedCohort={selectedStudyPopulationCohort}
         outcome={outcome}
-      />
+      /> */}
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
-      <style>
+      {/* <style>
         {'.analysis-app__actions > div:nth-child(1) { width: 100%; }'}
-      </style>
+      </style> */}
       <div className='GWASV2'>
         <Space direction={'vertical'} style={{ width: '100%' }}>
           <div className='steps-content'>
@@ -115,7 +119,12 @@ const GWASContainer = () => {
               align={'center'}
               style={{ width: '100%' }}
             >
-              {generateStep(currentStep)}
+              <div style={{
+                width: '95vw',
+                height: 'fit-content'
+              }}>
+                {generateStep(currentStep)}
+              </div>
             </Space>
           </div>
           <div className='steps-action'>

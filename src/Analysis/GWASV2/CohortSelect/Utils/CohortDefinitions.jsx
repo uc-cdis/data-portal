@@ -49,8 +49,11 @@ const CohortDefinitions = ({
   ];
 
   return cohorts?.status === 'success' ? (
+    <div
+      style={{ width: "35%", margin: '0 auto', marginTop: 10 }}
+    >
     <Table
-      className='GWASUI-table1'
+      // className='GWASUI-table1'
       rowKey='cohort_definition_id'
       size='middle'
       pagination={{
@@ -62,9 +65,12 @@ const CohortDefinitions = ({
       columns={cohortTableConfig}
       dataSource={displayedCohorts}
     />
+    </div>
   ) : (
     <React.Fragment>
-      <div className='GWASUI-spinnerContainer GWASUI-emptyTable'>
+      <div
+      // className='GWASUI-spinnerContainer GWASUI-emptyTable'
+      >
         <Spin />
       </div>
     </React.Fragment>

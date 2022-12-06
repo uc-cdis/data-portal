@@ -33,7 +33,7 @@ const ConfigureGWAS = ({
         <div style={flexRow}>
           <React.Fragment>
             <label
-              className='GWASUI-label GWASUI-asterisk'
+              // className='GWASUI-label GWASUI-asterisk'
               htmlFor='input-numOfPC'
             >
               Number of PCs to use &nbsp;
@@ -50,7 +50,9 @@ const ConfigureGWAS = ({
             </label>
           </React.Fragment>
           <React.Fragment>
-            <label className='GWASUI-label' htmlFor='input-maf'>
+            <label
+            // className='GWASUI-label'
+            htmlFor='input-maf'>
               MAF Cutoff &nbsp;
               <InputNumber
                 id='input-maf'
@@ -73,7 +75,9 @@ const ConfigureGWAS = ({
             {/* dispatch({ type: "selectedHare", update: selectedHare }) */}
           </React.Fragment>
           <React.Fragment>
-            <label className='GWASUI-label' htmlFor='input-imputation'>
+            <label
+            // className='GWASUI-label'
+            htmlFor='input-imputation'>
               Imputation Score Cutoff &nbsp;
               <InputNumber
                 id='input-imputation'

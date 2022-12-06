@@ -4,17 +4,33 @@ import "../../GWASUIApp/GWASUIApp.css";
 import { SearchOutlined } from "@ant-design/icons";
 
 const SearchBar = ({ searchTerm, handleSearch, field = "variable name" }) => (
-  <div className={"GWASUI-searchContainer"}>
-    <div>
-      <input
-        className={"GWASUI-searchInput"}
-        type="text"
-        placeholder={`Search by ${field}...`}
-        value={searchTerm}
-        onChange={(e) => handleSearch(e.target.value)}
-      />
-      <SearchOutlined style={{ fontSize: "20px" }} />
-    </div>
+  <div
+    style={{
+      backgroundColor: "white",
+      display: "flex",
+      direction: "row",
+      borderRadius: 5,
+      height: 40
+    }}
+  >
+    <input
+      style={{
+        border: "none transparent",
+        outline: "none",
+        fontSize: 14,
+        width: 170,
+        padding: 7
+      }}
+      type="text"
+      placeholder={`Search by ${field}`}
+      value={searchTerm}
+      onChange={(e) => handleSearch(e.target.value)}
+    />
+    <SearchOutlined style={{
+      fontSize: "20px",
+      margin: "auto",
+      marginRight: 5
+    }} />
   </div>
 );
 

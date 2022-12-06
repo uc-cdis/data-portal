@@ -11,7 +11,7 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
     // todo: add filter to allCovariates : .filter((cov) => concept_id in cov)
     <ContinuousCovariates
       setVariableType={setVariableType}
-      selVcted={selectedCovariate}
+      selected={selectedCovariate}
       dispatch={dispatch}
       handleSelect={setSelectedCovariate}
       covariates={covariates}
@@ -29,7 +29,7 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
     />
   )
   return (
-    <React.Fragment>
+    <div style={{ display: "flex", flexDirection: "column", margin: "auto" }}>
       {variableType && covariateMenu}
       {!variableType && (
         <div>
@@ -55,7 +55,7 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
           </button>
         </div>
       )}
-    </React.Fragment>
+    </div>
   );
 };
 

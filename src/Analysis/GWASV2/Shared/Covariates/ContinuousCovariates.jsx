@@ -15,34 +15,41 @@ const ContinuousCovariates = ({
     return cov;
   }
   return (
-    <React.Fragment>
+    <div
+    >
       <Covariates selected={selected} handleSelect={handleSelect} />
-      <button
-        type='button'
-        style={{ marginLeft: 5 }}
-        onClick={() => {
-          dispatch(
-            { accessor: type, payload: type === "outcome" ? formatSelected(selected) : [...covariates, formatSelected(selected)] }
-          );
-          if (type === "outcome") {
-            dispatch({
-              accessor: "currentStep", payload: 2
-            })
-          }
-          setVariableType(undefined);
-        }}
-      >
-        Submit
-      </button>
-      <button
-        type='button'
-        onClick={() => {
-          setVariableType(undefined);
-        }}
-      >
-        cancel
-      </button>
-    </React.Fragment>
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        margin: "auto"
+      }}>
+        <button
+          type='button'
+          style={{ marginLeft: 5 }}
+          onClick={() => {
+            dispatch(
+              { accessor: type, payload: type === "outcome" ? formatSelected(selected) : [...covariates, formatSelected(selected)] }
+            );
+            if (type === "outcome") {
+              dispatch({
+                accessor: "currentStep", payload: 2
+              })
+            }
+            setVariableType(undefined);
+          }}
+        >
+          Submit
+        </button>
+        <button
+          type='button'
+          onClick={() => {
+            setVariableType(undefined);
+          }}
+        >
+          cancel
+        </button>
+      </div>
+    </div>
   );
 };
 

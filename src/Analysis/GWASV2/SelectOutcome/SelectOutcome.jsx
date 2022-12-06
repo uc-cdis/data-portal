@@ -26,23 +26,36 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
         type={'outcome'}
       />
   return (<>
-    {variableType && outcomeMenu}
-    {!variableType && <div>
-      <button
-        type='button'
-        style={{ height: 60, marginRight: 5 }}
-        onClick={() => setVariableType('continuous')}
-      >
-        Add Continuous Outcome Phenotype
-      </button>
-      <button
-        type='button'
-        style={{ height: 60, marginRight: 5 }}
-        onClick={() => setVariableType('dichotomous')}
-      >
-        Add Dichotomous Outcome Phenotype
-      </button>
-    </div>}
+    <div
+      style={{
+        width: '80%',
+        margin: 'auto',
+        height: '600px',
+        border: "1px solid red"
+      }}
+    >
+      {variableType && outcomeMenu}
+      {!variableType && <div style={{
+        height: '80%',
+        display: "flex",
+        direction: "row"
+      }}>
+        <button
+          type='button'
+          style={{ height: 60, margin: 'auto' }}
+          onClick={() => setVariableType('continuous')}
+        >
+          Add Continuous Outcome Phenotype
+        </button>
+        <button
+          type='button'
+          style={{ height: 60, margin: 'auto' }}
+          onClick={() => setVariableType('dichotomous')}
+        >
+          Add Dichotomous Outcome Phenotype
+        </button>
+      </div>}
+    </div>
   </>)
 }
 

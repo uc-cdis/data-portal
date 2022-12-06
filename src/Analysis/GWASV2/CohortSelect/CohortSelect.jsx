@@ -5,7 +5,7 @@ import CohortDefinitions from './Utils/CohortDefinitions';
 /* Eslint is giving error: import/no-named-as-default-member: needs a parser plugin */
 /* eslint-disable-next-line */
 import SearchBar from '../Shared/SearchBar';
-import './CohortSelect.css';
+// import './CohortSelect.css';
 
 const CohortSelect = ({
   selectedCohort,
@@ -14,29 +14,37 @@ const CohortSelect = ({
 }) => {
   const [cohortSearchTerm, setCohortSearchTerm] = useState('');
 
-  const handleCohortSearch = (searchTerm) => {
-    setCohortSearchTerm(searchTerm);
-  };
   return (
     <React.Fragment>
-      <div className='GWASUI-row cohort-table-search'>
-        <div className='GWASUI-column'>
-          <SearchBar
-            searchTerm={cohortSearchTerm}
-            handleSearch={handleCohortSearch}
-            field={'cohort name'}
-          />
-        </div>
+      <div
+        style={{
+          width: "35%",
+          margin: '0 auto',
+          display: "flex",
+          direction: "row",
+          justifyContent: "space-between"
+        }}
+      // className='GWASUI-column'
+      >
+        {/* <button onClick={() => console.log('something')}>test</button> */}
+        <SearchBar
+          searchTerm={cohortSearchTerm}
+          handleSearch={setCohortSearchTerm}
+          field={'Cohort Name'}
+        />
         <div
           data-tour='step-1-new-cohort'
-          className='GWASUI-column GWASUI-newCohort'
+        // className='GWASUI-column GWASUI-newCohort'
         >
           <AddCohortButton />
         </div>
       </div>
-      <div className='GWASUI-mainTable'>
+      <div
+      // className='GWASUI-mainTable'
+      >
         <div data-tour='cohort-table'>
-          <div data-tour='cohort-table-body'>
+          <div data-tour='cohort-table-body'
+          >
             <CohortDefinitions
               selectedCohort={selectedCohort}
               handleCohortSelect={handleCohortSelect}
