@@ -11,9 +11,9 @@ const CovariatesCardsList = ({
   deleteContinuousCovariate,
 }) => (
   <div className='GWASUI-cdList'>
-    {covariates.map((cd, key) => (
+    {covariates.map((covariate, key) => (
       <React.Fragment key={key}>
-        {cd.provided_name && (
+        {covariate.provided_name && (
           <Card
             key={`cd-list-option-${key}`}
             style={{
@@ -23,16 +23,19 @@ const CovariatesCardsList = ({
             actions={[
               <DeleteOutlined
                 onClick={() => {
-                  deleteDichotomousCovariate(cd.provided_name);
+                  deleteDichotomousCovariate(covariate.provided_name);
                 }}
                 key='delete'
               />,
             ]}
           >
-            <Meta avatar={<TeamOutlined />} title={`${cd.provided_name}`} />
+            <Meta
+              avatar={<TeamOutlined />}
+              title={`${covariate.provided_name}`}
+            />
           </Card>
         )}
-        {cd.concept_id && (
+        {covariate.concept_id && (
           <Card
             key={`cd-list-option-${key}`}
             style={{
@@ -42,13 +45,16 @@ const CovariatesCardsList = ({
             actions={[
               <DeleteOutlined
                 onClick={() => {
-                  deleteContinuousCovariate(cd.concept_id);
+                  deleteContinuousCovariate(covariate.concept_id);
                 }}
                 key='delete'
               />,
             ]}
           >
-            <Meta avatar={<TeamOutlined />} title={`${cd.concept_name}`} />
+            <Meta
+              avatar={<TeamOutlined />}
+              title={`${covariate.concept_name}`}
+            />
           </Card>
         )}
       </React.Fragment>
