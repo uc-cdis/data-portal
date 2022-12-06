@@ -2,11 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 
-const ContinuousCovariates = ({
-  dispatch,
-  handleClose,
-  submitButtonLabel = 'Submit',
-}) => {
+const ContinuousCovariates = ({ dispatch, handleClose, submitButtonLabel }) => {
   const [selected, setSelected] = useState({});
 
   const formatSelected = () => ({
