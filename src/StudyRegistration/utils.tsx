@@ -10,7 +10,7 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
     const queryURL = `${mdsURL}/${metadataID}`;
     const queryRes = await fetch(queryURL);
     if (queryRes.status !== 200) {
-      return Promise.reject(`Request for query study data at ${queryURL} failed with status ${queryRes.status}}`);
+      throw new Error(`Request for query study data at ${queryURL} failed with status ${queryRes.status}}`);
     }
     const studyMetadata = await queryRes.json();
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
@@ -26,26 +26,27 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
     metadataToUpdate[STUDY_DATA_FIELD] = { ...metadataToUpdate[STUDY_DATA_FIELD], ...updatedValues };
     return metadataToUpdate;
   } catch (err) {
-    return Promise.reject(`Request for query MDS failed: ${err}`);
+    throw new Error(`Request for query MDS failed: ${err}`);
   }
 };
 
 export const createCEDARInstance = async (cedarUserUUID, metadataToRegister = {}):Promise<any> => {
   const cedarCreationURL = `${cedarWrapperURL}/create`;
-  const updatedMetadataToRegister = { ...metadataToRegister };
-  await fetchWithCreds({
+  let updatedMetadataToRegister = { ...metadataToRegister };
+  updatedMetadataToRegister = await fetchWithCreds({
     path: cedarCreationURL,
     method: 'POST',
     customHeaders: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ cedar_user_uuid: cedarUserUUID, metadata: metadataToRegister[STUDY_DATA_FIELD] }),
   }).then(({ status, data }) => {
     if (status !== 201) {
-      return Promise.reject(`Request for create CEDAR instance failed with status ${status}`);
+      throw new Error(`Request for create CEDAR instance failed with status ${status}`);
     }
     updatedMetadataToRegister[STUDY_DATA_FIELD].cedar_instance_id = data?.cedar_instance_id || '';
-    return updatedMetadataToRegister;
+    return Promise.resolve(updatedMetadataToRegister);
   })
-    .catch((err) => Promise.reject(`Request for create CEDAR instance failed: ${err}`));
+    .catch((err) => { throw new Error(`Request for create CEDAR instance failed: ${err}`); });
+  return updatedMetadataToRegister;
 };
 
 export const registerStudyInMDS = async (metadataID, metadataToRegister = {}) => {
@@ -57,11 +58,11 @@ export const registerStudyInMDS = async (metadataID, metadataToRegister = {}) =>
     body: JSON.stringify(metadataToRegister),
   }).then((response) => {
     if (response.status !== 200) {
-      return Promise.reject(`Request for update study data at ${updateURL} failed with status ${response.status}`);
+      throw new Error(`Request for update study data at ${updateURL} failed with status ${response.status}`);
     }
     return response;
   })
-    .catch((err) => Promise.reject(`Request for update study data failed: ${err}`));
+    .catch((err) => { throw new Error(`Request for update study data failed: ${err}`); });
 };
 
 export const generatePresignedURL = async (fileName: string, bucketName: string|undefined = undefined):Promise<any> => {
