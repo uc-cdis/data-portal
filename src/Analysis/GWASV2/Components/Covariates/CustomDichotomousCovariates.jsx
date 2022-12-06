@@ -11,7 +11,7 @@ const CustomDichotomousCovariates = ({
   studyPopulationCohort,
   covariates,
   outcome,
-  submitButtonLabel = 'Submit',
+  submitButtonLabel,
 }) => {
   const [firstPopulation, setFirstPopulation] = useState(undefined);
   const [secondPopulation, setSecondPopulation] = useState(undefined);
