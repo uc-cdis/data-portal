@@ -1,6 +1,5 @@
 import React, { useReducer } from 'react';
 import { Space, Button, Popconfirm } from 'antd';
-import CovariatesCardsList from './Components/Covariates/CovariatesCardsList';
 import ProgressBar from './Components/ProgressBar/ProgressBar';
 import { gwasV2Steps } from './Shared/constants';
 import initialState from './Shared/StateManagement/InitialState';
@@ -39,10 +38,6 @@ const GWASContainer = () => {
           <SelectCovariates
             studyPopulationCohort={state.selectedStudyPopulationCohort}
             outcome={state.outcome}
-            covariates={state.covariates}
-            dispatch={dispatch}
-          />
-          <CovariatesCardsList
             covariates={state.covariates}
             dispatch={dispatch}
           />

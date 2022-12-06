@@ -2,36 +2,41 @@ import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
+import ACTIONS from '../../Shared/StateManagement/Actions';
 
-const SelectOutcome = ({
-  dispatch,
-  studyPopulationCohort,
-  outcome,
-}) => {
-  const [mode, setMode] = useState('');
-  const [selectedOutcome, setSelectedOutcome] = useState({});
+const SelectOutcome = ({ dispatch, studyPopulationCohort, outcome }) => {
+  const [selectionMode, setSelectionMode] = useState('');
 
   const determineSelectOutcomeJsx = () => {
-    if (mode === 'continuous') {
+    if (selectionMode === 'continuous') {
       return (
         <ContinuousCovariates
-          setMode={setMode}
-          selected={selectedOutcome}
-          dispatch={dispatch}
-          handleSelect={setSelectedOutcome}
-          outcome={outcome}
-          type={'outcome'}
+          handleClose={() => {
+            setSelectionMode('');
+          }}
+          dispatch={(chosenOutcome) => {
+            dispatch({
+              type: ACTIONS.SET_OUTCOME,
+              payload: chosenOutcome,
+            });
+          }}
         />
       );
     }
-    if (mode === 'dichotomous') {
+    if (selectionMode === 'dichotomous') {
       return (
         <CustomDichotomousCovariates
-          setMode={setMode}
-          dispatch={dispatch}
           studyPopulationCohort={studyPopulationCohort}
           outcome={outcome}
-          type={'outcome'}
+          handleClose={() => {
+            setSelectionMode('');
+          }}
+          dispatch={(chosenOutcome) => {
+            dispatch({
+              type: ACTIONS.SET_OUTCOME,
+              payload: chosenOutcome,
+            });
+          }}
         />
       );
     }
@@ -40,14 +45,14 @@ const SelectOutcome = ({
         <button
           type='button'
           style={{ height: 60, marginRight: 5 }}
-          onClick={() => setMode('continuous')}
+          onClick={() => setSelectionMode('continuous')}
         >
           Add Continuous Outcome Phenotype
         </button>
         <button
           type='button'
           style={{ height: 60, marginRight: 5 }}
-          onClick={() => setMode('dichotomous')}
+          onClick={() => setSelectionMode('dichotomous')}
         >
           Add Dichotomous Outcome Phenotype
         </button>

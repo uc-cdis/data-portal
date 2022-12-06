@@ -2,15 +2,14 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { TeamOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
-import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const { Meta } = Card;
 
-const CovariatesCardsList = ({ covariates, dispatch }) => (
+const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
   <div className='GWASUI-cdList'>
-    {covariates.map((cd, key) => (
+    {covariates.map((covariate, key) => (
       <React.Fragment key={key}>
-        {cd.provided_name && (
+        {covariate.provided_name && (
           <Card
             key={`cd-list-option-${key}`}
             style={{
@@ -20,19 +19,19 @@ const CovariatesCardsList = ({ covariates, dispatch }) => (
             actions={[
               <DeleteOutlined
                 onClick={() => {
-                  dispatch({
-                    type: ACTIONS.DELETE_DICHOTOMOUS_COVARIATE,
-                    payload: cd.provided_name,
-                  });
+                  deleteCovariate(covariate);
                 }}
                 key='delete'
               />,
             ]}
           >
-            <Meta avatar={<TeamOutlined />} title={`${cd.provided_name}`} />
+            <Meta
+              avatar={<TeamOutlined />}
+              title={`${covariate.provided_name}`}
+            />
           </Card>
         )}
-        {cd.concept_id && (
+        {covariate.concept_id && (
           <Card
             key={`cd-list-option-${key}`}
             style={{
@@ -42,16 +41,16 @@ const CovariatesCardsList = ({ covariates, dispatch }) => (
             actions={[
               <DeleteOutlined
                 onClick={() => {
-                  dispatch({
-                    type: ACTIONS.DELETE_CONTINUOUS_COVARIATE,
-                    payload: cd.concept_id,
-                  });
+                  deleteCovariate(covariate);
                 }}
                 key='delete'
               />,
             ]}
           >
-            <Meta avatar={<TeamOutlined />} title={`${cd.concept_name}`} />
+            <Meta
+              avatar={<TeamOutlined />}
+              title={`${covariate.concept_name}`}
+            />
           </Card>
         )}
       </React.Fragment>
@@ -61,7 +60,7 @@ const CovariatesCardsList = ({ covariates, dispatch }) => (
 
 CovariatesCardsList.propTypes = {
   covariates: PropTypes.array.isRequired,
-  dispatch: PropTypes.func.isRequired,
+  deleteCovariate: PropTypes.func.isRequired,
 };
 
 export default CovariatesCardsList;

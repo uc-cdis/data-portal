@@ -1,50 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
-import ACTIONS from '../../Shared/StateManagement/Actions';
 
-const ContinuousCovariates = ({
-  setMode,
-  selected,
-  dispatch,
-  handleSelect,
-  type,
-}) => {
+const ContinuousCovariates = ({ dispatch, handleClose, submitButtonLabel }) => {
+  const [selected, setSelected] = useState({});
+
   const formatSelected = () => ({
     variable_type: 'concept',
     concept_id: selected.concept_id,
     concept_name: selected.concept_name,
   });
+
   return (
     <React.Fragment>
-      <Covariates selected={selected} handleSelect={handleSelect} />
+      <Covariates selected={selected} handleSelect={setSelected} />
       <button
         type='button'
         style={{ marginLeft: 5 }}
         onClick={() => {
-          dispatch(
-            type === 'outcome'
-              ? {
-                type: ACTIONS.SET_OUTCOME,
-                payload: formatSelected(selected),
-              }
-              : {
-                type: ACTIONS.ADD_COVARIATE,
-                payload: formatSelected(selected),
-              },
-          );
-          setMode('');
+          dispatch(formatSelected(selected));
+          handleClose();
         }}
       >
-        Submit
+        {submitButtonLabel}
       </button>
       <button
         type='button'
         onClick={() => {
-          setMode(undefined);
+          handleClose();
         }}
       >
-        cancel
+        Cancel
       </button>
     </React.Fragment>
   );
@@ -52,10 +38,11 @@ const ContinuousCovariates = ({
 
 ContinuousCovariates.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  selected: PropTypes.object.isRequired,
-  setMode: PropTypes.func.isRequired,
-  handleSelect: PropTypes.func.isRequired,
-  type: PropTypes.string.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  submitButtonLabel: PropTypes.string,
+};
+ContinuousCovariates.defaultProps = {
+  submitButtonLabel: 'Submit',
 };
 
 export default ContinuousCovariates;
