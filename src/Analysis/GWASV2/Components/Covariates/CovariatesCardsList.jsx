@@ -5,11 +5,7 @@ import { Card } from 'antd';
 
 const { Meta } = Card;
 
-const CovariatesCardsList = ({
-  covariates,
-  deleteDichotomousCovariate,
-  deleteContinuousCovariate,
-}) => (
+const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
   <div className='GWASUI-cdList'>
     {covariates.map((covariate, key) => (
       <React.Fragment key={key}>
@@ -23,7 +19,7 @@ const CovariatesCardsList = ({
             actions={[
               <DeleteOutlined
                 onClick={() => {
-                  deleteDichotomousCovariate(covariate.provided_name);
+                  deleteCovariate(covariate);
                 }}
                 key='delete'
               />,
@@ -45,7 +41,7 @@ const CovariatesCardsList = ({
             actions={[
               <DeleteOutlined
                 onClick={() => {
-                  deleteContinuousCovariate(covariate.concept_id);
+                  deleteCovariate(covariate);
                 }}
                 key='delete'
               />,
@@ -64,8 +60,7 @@ const CovariatesCardsList = ({
 
 CovariatesCardsList.propTypes = {
   covariates: PropTypes.array.isRequired,
-  deleteDichotomousCovariate: PropTypes.func.isRequired,
-  deleteContinuousCovariate: PropTypes.func.isRequired,
+  deleteCovariate: PropTypes.func.isRequired,
 };
 
 export default CovariatesCardsList;
