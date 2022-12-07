@@ -67,7 +67,7 @@
   width: 317px;
   margin-right: 16px;
   background: #fafafb;
-  box-shadow: 0 0 2px #000000;
+  box-shadow: 0 0 2px #000;
   border: 1px solid #2e77b8;
   border-radius: 4px;
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -86,7 +86,7 @@
   display: block;
   position: absolute;
   top: 33px;
-  color: white;
+  color: #fff;
   font-size: 35px;
   padding-top: 4px;
   margin-left: 15px;
@@ -104,10 +104,10 @@
 }
 
 .GWASV2 .GWASUI-selectionUI button:hover span:nth-child(2) {
-  color: white;
+  color: #fff;
 }
 
 .GWASV2 .GWASUI-selectionUI button:hover span:first-child {
-  background: white;
+  background: #fff;
   color: #2e77b8;
 }
