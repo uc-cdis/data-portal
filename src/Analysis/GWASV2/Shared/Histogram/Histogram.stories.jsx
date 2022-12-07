@@ -11,11 +11,26 @@ const Template = (args) => <Histogram {...args} />;
 export const FirstStepActive = Template.bind({});
 FirstStepActive.args = {
   data: [
-    { quarter: 1, earnings: 10000 },
-    { quarter: 4, earnings: 500 },
-    { quarter: 3, earnings: 12250 },
-    { quarter: 2, earnings: 5000 },
-  ]
+    { ageBin: '1-2', patients: 10000 },
+    { ageBin: 4, patients: 500 },
+    { ageBin: 3, patients: 12250 },
+    { ageBin: 'bin 2', patients: 5000 },
+    { ageBin: '1-2', patients: 10000 },
+    { ageBin: 4, patients: 500 },
+    { ageBin: 3, patients: 12250 },
+    { ageBin: 'bin 2', patients: 5000 },
+    { ageBin: '1-2', patients: 10000 },
+    { ageBin: 4, patients: 500 },
+    { ageBin: 3, patients: 12250 },
+    { ageBin: 'bin 2', patients: 5000 },
+    { ageBin: '1-2', patients: 10000 },
+    { ageBin: 4, patients: 500 },
+    { ageBin: 3, patients: 12250 },
+    { ageBin: 'bin 2', patients: 5000 },
+    ],
+  xAxisDataKey: 'ageBin',
+  barDataKey: 'patients',
+  barColor: 'darkblue'
 };
 
 export const SecondStepError = Template.bind({});
