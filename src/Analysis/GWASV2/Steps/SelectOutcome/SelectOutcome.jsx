@@ -40,21 +40,16 @@ const SelectOutcome = ({ dispatch, studyPopulationCohort, outcome }) => {
         />
       );
     }
+
     return (
-      <div>
-        <button
-          type='button'
-          style={{ height: 60, marginRight: 5 }}
-          onClick={() => setSelectionMode('continuous')}
-        >
-          Add Continuous Outcome Phenotype
+      <div className='GWASUI-selectionUI'>
+        <button type='button' onClick={() => setSelectionMode('continuous')}>
+          <span>+</span>
+          <span>Add Continuous Outcome Phenotype</span>
         </button>
-        <button
-          type='button'
-          style={{ height: 60, marginRight: 5 }}
-          onClick={() => setSelectionMode('dichotomous')}
-        >
-          Add Dichotomous Outcome Phenotype
+        <button type='button' onClick={() => setSelectionMode('dichotomous')}>
+          <span>+</span>
+          <span>Add Dichotomous Outcome Phenotype</span>
         </button>
       </div>
     );
