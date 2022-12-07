@@ -67,7 +67,7 @@
   width: 317px;
   margin-right: 16px;
   background: #fafafb;
-  box-shadow: 0px 0px 2px #000000;
+  box-shadow: 0 0 2px #000000;
   border: 1px solid #2e77b8;
   border-radius: 4px;
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -77,10 +77,6 @@
 
 .GWASV2 .GWASUI-selectionUI button:hover {
   background: #2e77b8;
-}
-
-.GWASV2 .GWASUI-selectionUI button:hover span:nth-child(2) {
-  color: white;
 }
 
 .GWASV2 .GWASUI-selectionUI button span:first-child {
@@ -98,11 +94,6 @@
   border-radius: 5px;
 }
 
-.GWASV2 .GWASUI-selectionUI button:hover span:first-child {
-  background: white;
-  color: #2e77b8;
-}
-
 .GWASV2 .GWASUI-selectionUI button span:nth-child(2) {
   position: absolute;
   font-size: 15px;
@@ -110,4 +101,13 @@
   display: block;
   top: 37px;
   left: 60px;
+}
+
+.GWASV2 .GWASUI-selectionUI button:hover span:nth-child(2) {
+  color: white;
+}
+
+.GWASV2 .GWASUI-selectionUI button:hover span:first-child {
+  background: white;
+  color: #2e77b8;
 }
