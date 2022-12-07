@@ -82,6 +82,28 @@ export const fetchSimpleOverlapInfo = async (
   return getOverlapStats.json();
 };
 
+export const fetchHistogramInfo = async (
+  sourceId,
+  cohortId,
+  selectedCovariates,
+  outcome,
+  currentSelection
+) => {
+  const variablesPayload = {
+    variables: [...selectedCovariates, outcome],
+  };
+  // TODO - validate that currentSelection has concept_id
+  const endPoint = `${cohortMiddlewarePath}histogram/by-source-id/${sourceId}/by-cohort-definition-id/${cohortId}/by-histogram-concept-id/${currentSelection.concept_id}`;
+  const reqBody = {
+    method: 'POST',
+    credentials: 'include',
+    headers,
+    body: JSON.stringify(variablesPayload),
+  };
+  const requestResponse = await fetch(endPoint, reqBody);
+  return requestResponse.json();
+};
+
 export const fetchConceptStatsByHareSubset = async (
   cohortDefinitionId,
   subsetCovariates,
