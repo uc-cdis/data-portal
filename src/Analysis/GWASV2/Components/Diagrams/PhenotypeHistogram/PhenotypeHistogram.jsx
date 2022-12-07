@@ -42,9 +42,9 @@ const PhenotypeHistogram = ({
     return <Spin />;
   }
   const histogramArgs = {
-    data,
-    xAxisDataKey: 'todo',
-    barDataKey: 'todo',
+    data: data.bins,
+    xAxisDataKey: 'start',
+    barDataKey: 'nr_persons',
     // chartWidth,
     // chartHeight: ,
     barColor: 'darkblue'
