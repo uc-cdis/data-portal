@@ -18,34 +18,26 @@ const SelectCohortDropDown = ({
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
 
   const onChange = (selectedCohortDefinitionId) => {
-    console.log(`selected ${selectedCohortDefinitionId}`);
     // find cohort object based on id:
-    const selectedCohort = fetchedCohorts.find(item => item.cohort_definition_id === selectedCohortDefinitionId);
+    const selectedCohort = fetchedCohorts.find((item) => item.cohort_definition_id === selectedCohortDefinitionId);
     handleCohortSelect(selectedCohort);
   };
 
-  const onSearch = (value) => {
-    console.log('search:', value);
-  };
-
   return cohorts?.status === 'success' ? (
-  <Select
-    style={{width: '300px'}}
-    showSearch
-    placeholder="Select a cohort"
-    optionFilterProp="children"
-    onChange={onChange}
-    onSearch={onSearch}
-    dropdownStyle={{minWidth: '800px'}}
-    filterOption={(input, option) =>
-      (option?.cohort_name ?? '').toLowerCase().includes(input.toLowerCase())
-    }
-    options={fetchedCohorts}
-    fieldNames={{label: 'cohort_name', value: 'cohort_definition_id'}}
-  />
+    <Select
+      style={{ width: '300px' }}
+      showSearch
+      placeholder='Select a cohort'
+      optionFilterProp='children'
+      onChange={onChange}
+      dropdownStyle={{ minWidth: '800px' }}
+      filterOption={(input, option) => (option?.cohort_name ?? '').toLowerCase().includes(input.toLowerCase())}
+      options={fetchedCohorts}
+      fieldNames={{ label: 'cohort_name', value: 'cohort_definition_id' }}
+    />
   ) : (
     <React.Fragment>
-      <div style={{width: '300px'}} className='GWASUI-spinnerContainer GWASUI-emptyTable'>
+      <div style={{ width: '300px' }} className='GWASUI-spinnerContainer GWASUI-emptyTable'>
         <Spin />
       </div>
     </React.Fragment>

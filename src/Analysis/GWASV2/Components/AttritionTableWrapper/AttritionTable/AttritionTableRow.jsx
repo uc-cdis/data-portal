@@ -132,16 +132,9 @@ const AttritionTableRow = ({
     return value;
   };
 
-  const rowTypeDescription = (rowType) => {
-    if (rowType === 'Outcome') {
-      return 'Outcome Phenotype';
-    }
-    return rowType;
-  };
-
   return (
     <tr>
-      <td className='gwasv2-attrition-table--leftpad'>{rowTypeDescription(rowType)}</td>
+      <td className='gwasv2-attrition-table--leftpad'>{ rowType === 'Outcome' ? 'Outcome Phenotype' : rowType }</td>
       <td className='gwasv2-attrition-table--chart'>
         {determineChartIcon(rowType)}
       </td>
