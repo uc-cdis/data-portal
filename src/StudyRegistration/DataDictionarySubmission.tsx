@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import parse from 'html-react-parser';
 import {
   Form,
   Input,
@@ -185,7 +186,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             <Result
               status={formSubmissionStatus.status}
               title='Your Data Dictionary has been submitted!'
-              subTitle='Please allow up to 48 hours before this data dictionary shows up in Discovery page'
+              subTitle='Please allow up to 48 hours for processing. You will be notified via e-mail when processing is completed.'
               extra={[
                 <Link key='discovery' to={'/discovery'}>
                   <Button>Go To Discovery Page</Button>
@@ -254,6 +255,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             valuePropName='fileList'
             getValueFromEvent={(e: any) => e?.fileList}
             rules={[{ required: true }]}
+            extra={'Supported file types: .csv/.tsv/.json'}
           >
             <Upload {...uploadProps}>
               <Button
@@ -280,8 +282,8 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
                 </Space>
               </Form.Item>
             ) : null}
-          <Divider plain>Administrative Fields
-            <Tooltip title='We need these information so we can send you updates regarding your data dictionary submission. We do not save these information on the platform'>
+          <Divider plain>Administration
+            <Tooltip title='This information will be used to contact you regarding your submission status. This information is not stored on the HEAL Data Platform'>
               <QuestionCircleOutlined className='study-reg-form-item__middle-icon' />
             </Tooltip>
           </Divider>
@@ -338,6 +340,12 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
               )}
             </Space>
           </Form.Item>
+          { (studyRegistrationConfig.dataDictionarySubmissionDisclaimerField)
+              && (
+                <Typography className='study-reg-disclaimer-text'>
+                  {parse(studyRegistrationConfig.dataDictionarySubmissionDisclaimerField)}
+                </Typography>
+              )}
         </Form>
       </div>
     </div>

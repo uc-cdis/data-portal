@@ -292,11 +292,11 @@ const DiscoveryDetails = (props: Props) => {
                   () => {
                     if (props.user.username) {
                       if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig?.studyRegistrationAccessCheckField], props.userAuthMapping)) {
-                        return ' Link a Data Dictionary ';
+                        return ' Submit a Data Dictionary ';
                       }
-                      return ' Request Access to Link a Data Dictionary ';
+                      return ' Request Access to Submit a Data Dictionary ';
                     }
-                    return ' Login to Link a Data Dictionary ';
+                    return ' Login to Submit a Data Dictionary ';
                   }
                 )()}
                 </React.Fragment>
