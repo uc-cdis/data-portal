@@ -42,17 +42,93 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
       }}>
         <button
           type='button'
-          style={{ height: 60, margin: 'auto' }}
+          style={{
+            height: 100,
+            width: 250,
+            border: "1px solid #4375B3",
+            margin: 'auto'
+          }}
           onClick={() => setVariableType('continuous')}
         >
-          Add Continuous Outcome Phenotype
+          <div style={{
+            width: 240,
+            display: "flex",
+            direction: "row",
+            margin: "0 auto"
+          }}>
+            <div
+              style={{
+                display: "flex",
+                direction: "row"
+              }}>
+              <div style={{
+                width: 35,
+                height: 30,
+                backgroundColor: "orange",
+                fontWeight: "bold",
+                fontSize: 30,
+                color: "white",
+                borderRadius: 5,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginLeft: 10
+              }}>+</div>
+              <div style={{
+                fontSize: 15,
+                color: "#4375B3",
+                textAlign: "center",
+                fontWeight: "bold"
+              }}>
+                Add Continuous Outcome Phenotype
+              </div>
+            </div>
+          </div>
         </button>
         <button
           type='button'
-          style={{ height: 60, margin: 'auto' }}
+          style={{
+            height: 100,
+            width: 250,
+            border: "1px solid #4375B3",
+            margin: 'auto'
+          }}
           onClick={() => setVariableType('dichotomous')}
         >
-          Add Dichotomous Outcome Phenotype
+          <div style={{
+            width: 240,
+            display: "flex",
+            direction: "row",
+            justifyContent: "space-around"
+          }}>
+            <div
+              style={{
+                display: "flex",
+                direction: "row"
+              }}>
+              <div style={{
+                width: 35,
+                height: 30,
+                backgroundColor: "orange",
+                fontWeight: "bold",
+                fontSize: 30,
+                color: "white",
+                borderRadius: 5,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginLeft: 10
+              }}>+</div>
+              <div style={{
+                fontSize: 15,
+                color: "#4375B3",
+                textAlign: "center",
+                fontWeight: "bold"
+              }}>
+                Add Dichotomous Outcome Phenotype
+              </div>
+            </div>
+          </div>
         </button>
       </div>}
     </div>
