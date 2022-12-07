@@ -42,12 +42,11 @@ const selectedControlCohort = {
 
 export const SuccessCase = Template.bind({});
 SuccessCase.args = {
-  sourceId: 123,
   selectedStudyPopulationCohort: selectedStudyPopulationCohort,
   selectedCaseCohort: selectedCaseCohort,
   selectedControlCohort: selectedControlCohort,
   selectedCovariates: [],
-  selectedDichotomousCovariates: [],
+  outcome: null
 };
 SuccessCase.parameters = {
   // msw mocking:
