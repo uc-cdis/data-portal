@@ -74,6 +74,7 @@
   position: relative;
   margin-bottom: 20px;
 }
+
 .GWASV2 .GWASUI-selectionUI button:hover {
   background: #2e77b8;
 }
@@ -96,6 +97,7 @@
   text-align: center;
   border-radius: 5px;
 }
+
 .GWASV2 .GWASUI-selectionUI button:hover span:first-child {
   background: white;
   color: #2e77b8;
