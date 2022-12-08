@@ -61,8 +61,12 @@ const MockTemplate = () => {
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
         <style>{`
-          label, input {display: block;}
-          input {margin-bottom: 1.5em;}
+          label {
+            display: block;
+          }
+          input {
+            margin-bottom: 1.5em;
+          }
         `}</style>
         <label for='length-input'>Number of covariates for first table:</label>
         <input
