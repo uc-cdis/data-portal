@@ -255,7 +255,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             valuePropName='fileList'
             getValueFromEvent={(e: any) => e?.fileList}
             rules={[{ required: true }]}
-            extra={'Supported file types: .csv/.tsv/.json'}
+            extra={'Supported file types: CSV, TSV, JSON'}
           >
             <Upload {...uploadProps}>
               <Button
