@@ -21,12 +21,7 @@ const MockTemplate = () => {
     cohort_definition_id: 123,
     cohort_name: 'cohort name abc',
   };
-  const [outcome] = useState({
-    variable_type: 'concept',
-    concept_id: 'id',
-    concept_name: 'concept name',
-  });
-  const tableType = '';
+
   const covariatesLong = [
     {
       variable_type: 'custom_dichotomous',
@@ -107,85 +102,71 @@ const MockTemplate = () => {
       concept_name: 'Attribute10',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068811,
       concept_name: 'Attribute11',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068812,
       concept_name: 'Attribute12',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068813,
       concept_name: 'Attribute13',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068814,
       concept_name: 'Attribute14',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068815,
       concept_name: 'Attribute15',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068816,
       concept_name: 'Attribute16',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068817,
       concept_name: 'Attribute17',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068818,
       concept_name: 'Attribute18',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068819,
       concept_name: 'Attribute19',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068820,
       concept_name: 'Attribute20',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068821,
       concept_name: 'Attribute21',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068822,
       concept_name: 'Attribute22',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068823,
       concept_name: 'Attribute23',
       variable_type: 'concept',
     },
-
     {
       concept_id: 20000068824,
       concept_name: 'Attribute24',
@@ -197,6 +178,11 @@ const MockTemplate = () => {
       variable_type: 'concept',
     },
   ];
+  const outcome = {
+    variable_type: 'custom_dichotomous',
+    cohort_ids: [1, 2],
+    provided_name: 'dichotomous test1',
+  };
   const covariatesShort = [
     {
       variable_type: 'custom_dichotomous',
@@ -210,11 +196,7 @@ const MockTemplate = () => {
       <SourceContextProvider>
         <AttritionTable
           selectedCohort={selectedCohort}
-          outcome={{
-            variable_type: 'custom_dichotomous',
-            cohort_ids: [1, 2],
-            provided_name: 'dichotomous test1',
-          }}
+          outcome={outcome}
           covariates={covariatesLong}
           tableType={'Case Cohort'}
         />
@@ -222,7 +204,7 @@ const MockTemplate = () => {
           selectedCohort={selectedCohort}
           outcome={outcome}
           covariates={covariatesShort}
-          tableType={'Control'}
+          tableType={'Control Cohort'}
         />
       </SourceContextProvider>
     </QueryClientProvider>
