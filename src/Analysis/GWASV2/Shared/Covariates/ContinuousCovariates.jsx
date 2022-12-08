@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 
@@ -10,21 +10,22 @@ const ContinuousCovariates = ({
   type,
   covariates
 }) => {
+  const [buffering, setBuffering] = useState(true);
   const formatSelected = (covariate) => {
     let { concept_code, prefixed_concept_id, ...cov } = covariate;
     return cov;
   }
   return (
-    <div>
-      <Covariates selected={selected} handleSelect={handleSelect} />
-      <div style={{
+    <div
+    >
+      {!buffering && <div style={{
         display: "flex",
         flexDirection: "row",
-        margin: "auto"
+        justifyContent: "space-between"
       }}>
         <button
           type='button'
-          style={{ marginLeft: 5 }}
+          style={{ margin: "0 auto" }}
           onClick={() => {
             dispatch(
               {
@@ -44,6 +45,7 @@ const ContinuousCovariates = ({
           Submit
         </button>
         <button
+          style={{ margin: "0 auto" }}
           type='button'
           onClick={() => {
             setVariableType(undefined);
@@ -51,7 +53,8 @@ const ContinuousCovariates = ({
         >
           cancel
         </button>
-      </div>
+      </div>}
+      <Covariates selected={selected} handleSelect={handleSelect} setBuffering={setBuffering} />
     </div>
   );
 };

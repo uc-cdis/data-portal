@@ -28,24 +28,22 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
   return (<>
     <div
       style={{
-        width: '80%',
+        width: '90%',
         margin: 'auto',
-        height: '600px',
-        border: "1px solid red"
+        height: '550px',
       }}
     >
       {variableType && outcomeMenu}
       {!variableType && <div style={{
-        height: '80%',
+        height: '90%',
         display: "flex",
-        direction: "row"
+        flexDirection: "row"
       }}>
         <button
           type='button'
           style={{
             height: 100,
             width: 250,
-            border: "1px solid #4375B3",
             margin: 'auto'
           }}
           onClick={() => setVariableType('continuous')}
@@ -53,13 +51,13 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
           <div style={{
             width: 240,
             display: "flex",
-            direction: "row",
+            flexDirection: "row",
             margin: "0 auto"
           }}>
             <div
               style={{
                 display: "flex",
-                direction: "row"
+                flexDirection: "row"
               }}>
               <div style={{
                 width: 35,
@@ -90,7 +88,6 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
           style={{
             height: 100,
             width: 250,
-            border: "1px solid #4375B3",
             margin: 'auto'
           }}
           onClick={() => setVariableType('dichotomous')}
@@ -98,13 +95,13 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
           <div style={{
             width: 240,
             display: "flex",
-            direction: "row",
+            flexDirection: "row",
             justifyContent: "space-around"
           }}>
             <div
               style={{
                 display: "flex",
-                direction: "row"
+                flexDirection: "row"
               }}>
               <div style={{
                 width: 35,

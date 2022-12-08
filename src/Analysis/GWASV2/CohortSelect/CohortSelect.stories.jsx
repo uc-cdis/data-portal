@@ -8,7 +8,6 @@ import './CohortSelect.css';
 import '../GWASV2.css';
 import '../../GWASUIApp/GWASUIApp.css';
 import { SourceContextProvider } from '../Shared/Source';
-import ACTIONS from '../Shared/StateManagement/Actions';
 
 export default {
   title: 'Tests3/GWASV2/CohortSelect/CohortSelect',

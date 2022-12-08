@@ -8,7 +8,7 @@ const SearchBar = ({ searchTerm, handleSearch, field = "variable name" }) => (
     style={{
       backgroundColor: "white",
       display: "flex",
-      direction: "row",
+      flexDirection: "row",
       borderRadius: 5,
       height: 40
     }}

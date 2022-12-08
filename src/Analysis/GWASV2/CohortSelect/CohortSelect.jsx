@@ -21,7 +21,7 @@ const CohortSelect = ({
           width: "35%",
           margin: '0 auto',
           display: "flex",
-          direction: "row",
+          flexDirection: "row",
           justifyContent: "space-between"
         }}
       >

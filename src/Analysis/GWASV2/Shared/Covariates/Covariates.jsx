@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Table, Spin } from 'antd';
@@ -10,7 +10,7 @@ import { useFetch, useFilter } from '../formHooks';
 import { useSourceContext } from '../Source';
 import SearchBar from '../SearchBar';
 
-const Covariates = ({ selected, handleSelect }) => {
+const Covariates = ({ selected, handleSelect, setBuffering }) => {
   const { source } = useSourceContext();
 
   const covariates = useQuery(
@@ -51,11 +51,16 @@ const Covariates = ({ selected, handleSelect }) => {
     },
   ];
 
+  useEffect(() => {
+    const { status } = covariates;
+    setBuffering(status !== "success" ? true : false)
+  }, [covariates.status]);
+
   if (covariates?.status === 'loading') {
     return (
       <div
-      style={{ textAlign: "center", marginTop: 50 }}>
-          <Spin />
+        style={{ textAlign: "center" }}>
+        <Spin />
       </div>
     );
   }
@@ -63,9 +68,7 @@ const Covariates = ({ selected, handleSelect }) => {
   if (covariates?.status === 'error') {
     return (
       <React.Fragment>
-        {/* <div className='GWASUI-spinnerContainer GWASUI-emptyTable'> */}
-          <span>Error!</span>
-        {/* </div> */}
+        <span>Error!</span>
       </React.Fragment>
     );
   }
@@ -73,25 +76,19 @@ const Covariates = ({ selected, handleSelect }) => {
   if (covariates?.status === 'success') {
     return (
       <div
-      style={{
-        width: "35%",
-        margin: "0 auto"
-      }}
-      // style={{
-      //   display: "flex",
-      //   flexDirection: "column",
-      //   margin: "auto"
-      // }}
+        style={{
+          width: "50%",
+          margin: "0 auto"
+        }}
       >
         <div>
-        <SearchBar
-          searchTerm={searchTerm}
-          handleSearch={setSearchTerm}
-          field='concept name'
-        />
+          <SearchBar
+            searchTerm={searchTerm}
+            handleSearch={setSearchTerm}
+            field='concept name'
+          />
         </div>
         <Table
-          // className='GWASUI-table2'
           rowKey='concept_id'
           size='middle'
           pagination={{
@@ -112,6 +109,7 @@ const Covariates = ({ selected, handleSelect }) => {
 Covariates.propTypes = {
   selected: PropTypes.object.isRequired,
   handleSelect: PropTypes.func.isRequired,
+  setBuffering: PropTypes.func.isRequired
 };
 
 export default Covariates;

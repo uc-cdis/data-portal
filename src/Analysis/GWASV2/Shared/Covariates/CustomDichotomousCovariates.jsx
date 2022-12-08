@@ -33,30 +33,59 @@ const CustomDichotomousCovariates = ({ dispatch, setVariableType, type, covariat
     || secondPopulation === undefined;
 
   return (
-    <div>
+    <div
+      style={{ margin: "auto", height: "inherit" }}
+      data-tour='choosing-dichotomous'>
       <div
-        data-tour='name'>
+        style={{ display: "flex", flexDirection: "row", width: "60%", justifyContent: "space-between", marginBottom: 100 }}
+        data-tour='table-repeat'>
+        <div style={{ display: "flex", flexDirection: "column", width: "fit-content" }}>
+          <span>Get Value 0</span>
+          <SelectCohortDropDown
+            handleCohortSelect={setFirstPopulation}
+          />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", width: "fit-content" }}>
+          <span>Get Value 1</span>
+          <SelectCohortDropDown
+            handleCohortSelect={setSecondPopulation}
+          />
+        </div>
+      </div>
+      <div
+        data-tour="name"
+        style={{ display: "flex", flexDirection: "row", width: "60%" }}
+      >
         <input
           type='text'
           onChange={(e) => setProvidedName(e.target.value)}
           value={providedName}
           placeholder='Provide a name...'
-          // style={{
-          //   width: '50%',
-          //   textSize: 'small',
-          //   paddingLeft: 5,
-          //   height: 45,
-          //   borderRadius: 5,
-          //   marginTop: 5,
-          // }}
+          style={{
+            width: '50%',
+            textSize: 'small',
+            height: 45,
+            borderRadius: 5,
+            margin: "0 auto"
+          }}
         />
-        <button
-          type='button'
-          onClick={() => setVariableType(undefined)}
+      </div>
+      <div
+        style={{ display: "flex", flexDirection: "row", width: "60%", marginTop: 100 }}
+      >
+        <div
+          style={{ margin: "0 auto" }}
         >
-          cancel
-        </button>
-        <div data-tour='add-button'>
+          <button
+            type='button'
+            onClick={() => setVariableType(undefined)}
+          >
+            cancel
+          </button>
+        </div>
+        <div
+          style={{ margin: "0 auto" }}
+          data-tour='add-button'>
           <button
             type='button'
             disabled={customDichotomousValidation}
@@ -68,23 +97,6 @@ const CustomDichotomousCovariates = ({ dispatch, setVariableType, type, covariat
           </button>
         </div>
       </div>
-      <React.Fragment>
-        <div data-tour='choosing-dichotomous'>
-          <div
-            data-tour='table-repeat'>
-            <div style={{ display: "flex", direction: "row" }}>
-              <h3>Get Value 0</h3>
-              <SelectCohortDropDown
-                handleCohortSelect={setFirstPopulation}
-              />
-            </div>
-            <h3>Get Value 1</h3>
-            <SelectCohortDropDown
-              handleCohortSelect={setSecondPopulation}
-            />
-          </div>
-        </div>
-      </React.Fragment>
       <div />
     </div>
   );

@@ -31,10 +31,8 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
   return (
     <div
       style={{
-        width: '80%',
-        margin: 'auto',
-        height: '600px',
-        border: "1px solid red"
+        width: '90%',
+        height: '550px',
       }}
     >
       {variableType && covariateMenu}
@@ -42,7 +40,7 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
         <div style={{
           height: '80%',
           display: "flex",
-          direction: "row"
+          flexDirection: "row"
         }}>
           <button
             type='button'
@@ -57,13 +55,13 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
             <div style={{
               width: 240,
               display: "flex",
-              direction: "row",
+              flexDirection: "row",
               margin: "0 auto"
             }}>
               <div
                 style={{
                   display: "flex",
-                  direction: "row"
+                  flexDirection: "row"
                 }}>
                 <div style={{
                   width: 35,
@@ -103,13 +101,13 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
             <div style={{
               width: 240,
               display: "flex",
-              direction: "row",
+              flexDirection: "row",
               justifyContent: "space-around"
             }}>
               <div
                 style={{
                   display: "flex",
-                  direction: "row"
+                  flexDirection: "row"
                 }}>
                 <div style={{
                   width: 35,

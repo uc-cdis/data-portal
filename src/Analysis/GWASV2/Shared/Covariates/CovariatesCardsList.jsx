@@ -42,7 +42,7 @@ const CovariatesCardsList = ({ covariates, dispatch, outcome }) => {
                     dispatch({
                       accessor: "covariates",
                       payload: covariates.filter(
-                        (cd) => cd[covariate.provided_name] !== covariate.provided_name,
+                        (cd) => covariate.provided_name !== cd.provided_name,
                       ),
                     });
                   }}
@@ -68,7 +68,7 @@ const CovariatesCardsList = ({ covariates, dispatch, outcome }) => {
                     dispatch({
                       accessor: "covariates",
                       payload: covariates.filter(
-                        (c) => c.concept_id !== c.concept_id,
+                        (c) => covariate.concept_id !== c.concept_id,
                       ),
                     });
                   }}
