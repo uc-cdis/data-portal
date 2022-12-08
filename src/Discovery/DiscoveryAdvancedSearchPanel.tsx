@@ -54,13 +54,13 @@ const DiscoveryAdvancedSearchPanel = (props: Props) => (
     <div className='discovery-filters-control'>
       <Space>
         <Radio.Group
-          defaultValue={props.filterMultiSelectionLogic}
           size='small'
           buttonStyle='solid'
           disabled={Object.keys(props.filterState).length === 0}
           onChange={({ target: { value } }: RadioChangeEvent) => {
             props.setFilterMultiSelectionLogic(value);
           }}
+          value={props.filterMultiSelectionLogic}
         >
           <Radio.Button value='AND'>AND</Radio.Button>
           <Radio.Button value='OR'>OR</Radio.Button>
@@ -70,7 +70,7 @@ const DiscoveryAdvancedSearchPanel = (props: Props) => (
           size='small'
           className={'discovery-filters-control-button'}
           disabled={Object.keys(props.filterState).length === 0}
-          onClick={() => { props.setFilterState({}); }}
+          onClick={() => { props.setFilterState({}); props.setFilterMultiSelectionLogic('AND'); }}
           icon={<UndoOutlined />}
         >
           {'Reset Filters'}
