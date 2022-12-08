@@ -60,25 +60,24 @@ const MockTemplate = () => {
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
+        <style>{`
+          label, input {display: block;}
+          input {margin-bottom: 1.5em;}
+        `}</style>
         <label for='length-input'>Number of covariates for first table:</label>
-        <br />
         <input
           id='length-input'
           type='number'
           value={covariateArrSizeTable1}
           onChange={(e) => handleChangeInput1(e.target.value)}
         />
-        <br />
         <label for='length-input'>Number of covariates for second table:</label>
-        <br />
         <input
           id='length-input'
           type='number'
           value={covariateArrSizeTable2}
           onChange={(e) => handleChangeInput2(e.target.value)}
         />
-        <br />
-        <br />
         <AttritionTable
           selectedCohort={selectedCohort}
           outcome={outcome}
