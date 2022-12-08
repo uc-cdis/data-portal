@@ -17,6 +17,9 @@ const mockedQueryClient = new QueryClient({
 });
 
 const MockTemplate = () => {
+  const [covariateArrSizeTable1, setCovariateArrSizeTable1] = useState(10);
+  const [covariateArrSizeTable2, setCovariateArrSizeTable2] = useState(2);
+
   const selectedCohort = {
     cohort_definition_id: 123,
     cohort_name: 'cohort name abc',
@@ -27,24 +30,30 @@ const MockTemplate = () => {
     cohort_ids: [1, 2],
     provided_name: 'dichotomous test1',
   };
-  const covariatesShort = [
-    {
-      variable_type: 'custom_dichotomous',
-      provided_name: 'providednamebyuser',
-      cohort_ids: [12, 32],
-    },
-  ];
-  const [covariateArrSize, setCovariateArrSize] = useState(25);
-  const covariatesLong = Array.from(
-    { length: covariateArrSize },
+
+  const covariatesArrFirstTable = Array.from(
+    { length: covariateArrSizeTable1 },
     (item, i) => ({
       concept_id: i,
       concept_name: 'Attribute' + i,
       variable_type: 'concept',
     })
   );
-  const handleChange = (input) => {
-    setCovariateArrSize(input);
+
+  const covariatesArrSecondTable = Array.from(
+    { length: covariateArrSizeTable2 },
+    (item, i) => ({
+      variable_type: 'custom_dichotomous',
+      provided_name: 'providednamebyuser' + i,
+      cohort_ids: [i, i * i],
+    })
+  );
+
+  const handleChangeInput1 = (input) => {
+    setCovariateArrSizeTable1(input);
+  };
+  const handleChangeInput2 = (input) => {
+    setCovariateArrSizeTable2(input);
   };
 
   return (
@@ -55,21 +64,30 @@ const MockTemplate = () => {
         <input
           id='length-input'
           type='number'
-          value={covariateArrSize}
-          onChange={(e) => handleChange(e.target.value)}
+          value={covariateArrSizeTable1}
+          onChange={(e) => handleChangeInput1(e.target.value)}
+        />
+        <br />
+        <label for='length-input'>Number of covariates for second table:</label>
+        <br />
+        <input
+          id='length-input'
+          type='number'
+          value={covariateArrSizeTable2}
+          onChange={(e) => handleChangeInput2(e.target.value)}
         />
         <br />
         <br />
         <AttritionTable
           selectedCohort={selectedCohort}
           outcome={outcome}
-          covariates={covariatesLong}
+          covariates={covariatesArrFirstTable}
           tableType={'Case Cohort'}
         />
         <AttritionTable
           selectedCohort={selectedCohort}
           outcome={outcome}
-          covariates={covariatesShort}
+          covariates={covariatesArrSecondTable}
           tableType={'Control Cohort'}
         />
       </SourceContextProvider>
