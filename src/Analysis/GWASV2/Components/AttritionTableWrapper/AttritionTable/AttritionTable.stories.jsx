@@ -52,6 +52,7 @@ const MockTemplate = () => {
   const handleChangeInput1 = (input) => {
     setCovariateArrSizeTable1(input);
   };
+
   const handleChangeInput2 = (input) => {
     setCovariateArrSizeTable2(input);
   };
