@@ -1,15 +1,12 @@
-.gwasv2-attrition-table .ant-collapse-content-box {
-  overflow-y: auto;
-  max-height: 300px;
-  position: static;
-}
-
 .gwasv2-attrition-table .ant-collapse-header {
   background: hsl(209, 32%, 86%);
 }
 
 .gwasv2-attrition-table .ant-collapse-content-box {
   padding: 0;
+  overflow-y: auto;
+  max-height: 300px;
+  position: static;
 }
 
 .gwasv2-attrition-table .ant-collapse-expand-icon svg {
@@ -35,14 +32,14 @@
 }
 
 .gwasv2-attrition-table
-  .ant-collapse-header[aria-expanded='true']
-  .ant-collapse-expand-icon:before {
+.ant-collapse-header[aria-expanded='true']
+.ant-collapse-expand-icon:before {
   margin-top: -1px;
 }
 
 .gwasv2-attrition-table
-  .ant-collapse-header[aria-expanded='false']
-  .ant-collapse-expand-icon:before {
+.ant-collapse-header[aria-expanded='false']
+.ant-collapse-expand-icon:before {
   transform: rotate(180deg);
   transform-origin: 7px 9px;
   margin: 1px 2px;
