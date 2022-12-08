@@ -33,7 +33,7 @@ const MockTemplate = () => {
 
   const covariatesArrFirstTable = Array.from(
     { length: covariateArrSizeTable1 },
-    (item, i) => ({
+    (_, i) => ({
       concept_id: i,
       concept_name: 'Attribute' + i,
       variable_type: 'concept',
@@ -42,19 +42,19 @@ const MockTemplate = () => {
 
   const covariatesArrSecondTable = Array.from(
     { length: covariateArrSizeTable2 },
-    (item, i) => ({
+    (_, i) => ({
       variable_type: 'custom_dichotomous',
       provided_name: 'providednamebyuser' + i,
       cohort_ids: [i, i * i],
     })
   );
 
-  const handleChangeInput1 = (input) => {
-    setCovariateArrSizeTable1(input);
+  const handleChangeInput1 = (userInputAmount) => {
+    setCovariateArrSizeTable1(userInputAmount);
   };
 
-  const handleChangeInput2 = (input) => {
-    setCovariateArrSizeTable2(input);
+  const handleChangeInput2 = (userInputAmount) => {
+    setCovariateArrSizeTable2(userInputAmount);
   };
 
   return (
@@ -75,9 +75,11 @@ const MockTemplate = () => {
           value={covariateArrSizeTable1}
           onChange={(e) => handleChangeInput1(e.target.value)}
         />
-        <label for='length-input'>Number of covariates for second table:</label>
+        <label for='length-input-2'>
+          Number of covariates for second table:
+        </label>
         <input
-          id='length-input'
+          id='length-input-2'
           type='number'
           value={covariateArrSizeTable2}
           onChange={(e) => handleChangeInput2(e.target.value)}
