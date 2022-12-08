@@ -53,11 +53,10 @@ const Covariates = ({ selected, handleSelect }) => {
 
   if (covariates?.status === 'loading') {
     return (
-      <React.Fragment>
-        {/* <div className='GWASUI-spinnerContainer GWASUI-emptyTable'> */}
+      <div
+      style={{ textAlign: "center", marginTop: 50 }}>
           <Spin />
-        {/* </div> */}
-      </React.Fragment>
+      </div>
     );
   }
 

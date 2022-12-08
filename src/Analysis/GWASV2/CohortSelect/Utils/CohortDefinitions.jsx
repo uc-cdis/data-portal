@@ -49,28 +49,26 @@ const CohortDefinitions = ({
   ];
 
   return cohorts?.status === 'success' ? (
-    <div
-      style={{ width: "35%", margin: '0 auto', marginTop: 10 }}
-    >
-    <Table
-      // className='GWASUI-table1'
-      rowKey='cohort_definition_id'
-      size='middle'
-      pagination={{
-        defaultPageSize: 10,
-        showSizeChanger: true,
-        pageSizeOptions: ['10', '20', '50', '100', '500'],
-      }}
-      rowSelection={cohortSelection(selectedCohort)}
-      columns={cohortTableConfig}
-      dataSource={displayedCohorts}
-    />
+    <div>
+      <Table
+        rowKey='cohort_definition_id'
+        size='middle'
+        pagination={{
+          defaultPageSize: 10,
+          showSizeChanger: true,
+          pageSizeOptions: ['10', '20', '50', '100', '500'],
+        }}
+        rowSelection={cohortSelection(selectedCohort)}
+        columns={cohortTableConfig}
+        dataSource={displayedCohorts}
+      />
     </div>
   ) : (
     <React.Fragment>
       <div
-      // className='GWASUI-spinnerContainer GWASUI-emptyTable'
-      >
+        style={{
+          textAlign: "center",
+          marginTop: 50 }}>
         <Spin />
       </div>
     </React.Fragment>

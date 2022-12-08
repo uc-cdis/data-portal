@@ -35,8 +35,7 @@ const GWASContainer = () => {
       case 0:
         return (
           <div
-            style={{ width: '80%', margin: 'auto', height: '500px' }}
-          >
+            style={{ width: '80%', margin: 'auto', height: '500px' }}>
             <CohortSelect
               selectedCohort={selectedStudyPopulationCohort}
               handleCohortSelect={dispatch}
@@ -46,17 +45,22 @@ const GWASContainer = () => {
         );
       case 1:
         return (
-          <div style={{ width: 'inherit' }} >
-              <SelectOutcome
-                outcome={outcome}
-                covariates={covariates}
-                dispatch={dispatch}
-              />
-            </div>
+          <div style={{ width: 'inherit', display: "flex", direction: "row" }} >
+            <SelectOutcome
+              outcome={outcome}
+              covariates={covariates}
+              dispatch={dispatch}
+            />
+            <CovariatesCardsList
+              covariates={covariates}
+              dispatch={dispatch}
+              outcome={outcome}
+            />
+          </div>
         );
       case 2:
         return (
-          <React.Fragment>
+          <div style={{ width: 'inherit', display: "flex", direction: "row" }} >
             <SelectCovariates
               outcome={outcome}
               covariates={covariates}
@@ -65,8 +69,9 @@ const GWASContainer = () => {
             <CovariatesCardsList
               covariates={covariates}
               dispatch={dispatch}
+              outcome={outcome}
             />
-          </React.Fragment>
+          </div>
         );
       case 3:
         return (
@@ -91,6 +96,7 @@ const GWASContainer = () => {
   const GWASSubmit = () => {
   };
   */
+
   let nextButtonEnabled = true;
   if (
     currentStep === 0

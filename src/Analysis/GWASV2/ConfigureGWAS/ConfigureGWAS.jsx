@@ -83,7 +83,7 @@ const ConfigureGWAS = ({
                 id='input-imputation'
                 value={imputationScore}
                 onChange={(e) => dispatch({
-                  type: ACTIONS.UPDATE_IMPUTATION_SCORE,
+                  accessor: "imputationScore",
                   payload: Number(e),
                 })}
                 stringMode

@@ -15,8 +15,7 @@ const ContinuousCovariates = ({
     return cov;
   }
   return (
-    <div
-    >
+    <div>
       <Covariates selected={selected} handleSelect={handleSelect} />
       <div style={{
         display: "flex",
@@ -28,7 +27,11 @@ const ContinuousCovariates = ({
           style={{ marginLeft: 5 }}
           onClick={() => {
             dispatch(
-              { accessor: type, payload: type === "outcome" ? formatSelected(selected) : [...covariates, formatSelected(selected)] }
+              {
+                accessor: type,
+                payload: type === "outcome" ?
+                  formatSelected(selected) : [...covariates, formatSelected(selected)]
+              }
             );
             if (type === "outcome") {
               dispatch({

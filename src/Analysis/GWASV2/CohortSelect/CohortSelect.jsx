@@ -24,9 +24,7 @@ const CohortSelect = ({
           direction: "row",
           justifyContent: "space-between"
         }}
-      // className='GWASUI-column'
       >
-        {/* <button onClick={() => console.log('something')}>test</button> */}
         <SearchBar
           searchTerm={cohortSearchTerm}
           handleSearch={setCohortSearchTerm}
@@ -45,12 +43,16 @@ const CohortSelect = ({
         <div data-tour='cohort-table'>
           <div data-tour='cohort-table-body'
           >
+            <div
+              style={{ width: "35%", margin: '0 auto', marginTop: 10 }}
+            >
             <CohortDefinitions
               selectedCohort={selectedCohort}
               handleCohortSelect={handleCohortSelect}
               searchTerm={cohortSearchTerm}
               namespace={namespace}
             />
+            </div>
           </div>
         </div>
       </div>

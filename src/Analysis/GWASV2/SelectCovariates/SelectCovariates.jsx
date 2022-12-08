@@ -29,7 +29,14 @@ const SelectCovariates = ({ dispatch, covariates, outcome }) => {
     />
   )
   return (
-    <div style={{ display: "flex", flexDirection: "column", margin: "auto" }}>
+    <div
+      style={{
+        width: '80%',
+        margin: 'auto',
+        height: '600px',
+        border: "1px solid red"
+      }}
+    >
       {variableType && covariateMenu}
       {!variableType && (
         <div style={{
