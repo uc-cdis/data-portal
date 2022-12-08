@@ -22,20 +22,6 @@ const MockTemplate = () => {
     cohort_name: 'cohort name abc',
   };
 
-  const covariatesLong = [
-    {
-      variable_type: 'custom_dichotomous',
-      provided_name: 'providednamebyuser',
-      cohort_ids: [12, 32],
-    },
-  ];
-  for (let i = 0; i < 25; i++) {
-    covariatesLong.push({
-      concept_id: i,
-      concept_name: 'Attribute' + i,
-      variable_type: 'concept',
-    });
-  }
   const outcome = {
     variable_type: 'custom_dichotomous',
     cohort_ids: [1, 2],
@@ -47,6 +33,14 @@ const MockTemplate = () => {
       provided_name: 'providednamebyuser',
       cohort_ids: [12, 32],
     },
+  ];
+  const covariatesLong = [
+    ...covariatesShort,
+    ...Array.from({ length: 25 }, (item, i) => ({
+      concept_id: i,
+      concept_name: 'Attribute' + i,
+      variable_type: 'concept',
+    })),
   ];
 
   return (
