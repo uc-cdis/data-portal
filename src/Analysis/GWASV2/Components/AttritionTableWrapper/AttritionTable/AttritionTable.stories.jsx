@@ -34,18 +34,32 @@ const MockTemplate = () => {
       cohort_ids: [12, 32],
     },
   ];
-  const covariatesLong = [
-    ...covariatesShort,
-    ...Array.from({ length: 25 }, (item, i) => ({
+  const [covariateArrSize, setCovariateArrSize] = useState(25);
+  const covariatesLong = Array.from(
+    { length: covariateArrSize },
+    (item, i) => ({
       concept_id: i,
       concept_name: 'Attribute' + i,
       variable_type: 'concept',
-    })),
-  ];
+    })
+  );
+  const handleChange = (input) => {
+    setCovariateArrSize(input);
+  };
 
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
+        <label for='length-input'>Number of covariates for first table:</label>
+        <br />
+        <input
+          id='length-input'
+          type='number'
+          value={covariateArrSize}
+          onChange={(e) => handleChange(e.target.value)}
+        />
+        <br />
+        <br />
         <AttritionTable
           selectedCohort={selectedCohort}
           outcome={outcome}
