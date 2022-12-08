@@ -90,8 +90,8 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
     const body = {
       username: props.user.username,
       resource_id: studyUID,
-      resource_paths: [studyRegistrationAuthZ, '/mds_gateway', '/cedar'],
-      role_ids: ['study_registrant', 'mds_user', 'cedar_user'],
+      resource_paths: [studyRegistrationAuthZ, '/mds_gateway', '/cedar', '/data_file'],
+      role_ids: ['study_registrant', 'mds_user', 'cedar_user', 'file_uploader'],
     };
     // file deepcode ignore Ssrf: requestorPath will not be altered
     fetchWithCreds({
