@@ -13,6 +13,8 @@ import ReduxAuthTimeoutPopup from '../Popup/ReduxAuthTimeoutPopup';
 import ReduxSystemUseWarningPopup from '../Popup/SystemUseWarningPopup';
 import { intersection, isPageFullScreen } from '../utils';
 import './ProtectedContent.css';
+import isEnabled from '../helpers/featureFlags';
+import { initWorkspaceRefreshToken } from '../Workspace/WorkspaceRefreshToken';
 
 let lastAuthMs = 0;
 
@@ -27,8 +29,8 @@ let lastAuthMs = 0;
  * @param filter {() => Promise} optional filter to apply before rendering the child component
  */
 class ProtectedContent extends React.Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     this.state = {
       authenticated: false,
       dataLoaded: false,
@@ -56,8 +58,8 @@ class ProtectedContent extends React.Component {
           )
           .then(
             () => this.checkLoginStatus(store, this.state)
-              .then((newState) => this.props.public || this.checkQuizStatus(newState))
-              .then((newState) => this.props.public || this.checkApiToken(store, newState)),
+              .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkQuizStatus(newState))) // don't redirect for public pages
+              .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkApiToken(store, newState))),
           )
           .then(
             (newState) => {
@@ -70,6 +72,11 @@ class ProtectedContent extends React.Component {
                 const latestState = { ...newState };
                 latestState.dataLoaded = true;
                 this.setState(latestState);
+                if (newState.authenticated && isEnabled('workspaceTokenServiceRefreshTokenAtLogin')) {
+                  // initialize WTS:
+                  const { location } = this.props; // this is the react-router "location"
+                  initWorkspaceRefreshToken(location);
+                }
               };
               return filterPromise.then(
                 finish, finish,
