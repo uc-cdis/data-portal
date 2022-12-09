@@ -62,6 +62,17 @@ storiesOf('FilterSetForms', module)
         filterSets={testFilterSets}
         onAction={action('open')}
         onClose={action('close')}
+        fetchWithToken={(token) => {
+          action('fetch-shared')(token);
+          setTimeout(() => {});
+          return new Promise((resolve, reject) => {
+            setTimeout(
+              () =>
+                token === testToken ? resolve(testFilterSets[0]) : reject(),
+              1000
+            );
+          });
+        }}
       />
     </Wrapper>
   ))
