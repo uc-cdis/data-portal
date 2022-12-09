@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import AttritionTable from './AttritionTable';
+import { SourceContextProvider } from '../../../Shared/Source';
 import '../../../GWASV2.css';
 
 export default {
@@ -16,75 +17,86 @@ const mockedQueryClient = new QueryClient({
 });
 
 const MockTemplate = () => {
-  const [selectedOutcome, setSelectedOutcome] = useState({
-    variable_type: 'concept',
-    concept_id: 'id',
-    concept_name: 'concept name',
-  });
+  const [covariateArrSizeTable1, setCovariateArrSizeTable1] = useState(10);
+  const [covariateArrSizeTable2, setCovariateArrSizeTable2] = useState(2);
 
-  const [selectedCohort, setSelectedCohort] = useState({
+  const selectedCohort = {
     cohort_definition_id: 123,
     cohort_name: 'cohort name abc',
-  });
-  const [otherSelectedCohort, otherSetSelectedCohort] = useState({
-    cohort_definition_id: 456,
-    cohort_name: 'cohort name def',
-  });
-  const [covariates] = useState([
-    {
+  };
+
+  const outcome = {
+    variable_type: 'custom_dichotomous',
+    cohort_ids: [1, 2],
+    provided_name: 'dichotomous test1',
+  };
+
+  const covariatesArrFirstTable = Array.from(
+    { length: covariateArrSizeTable1 },
+    (_, i) => ({
+      concept_id: i,
+      concept_name: 'Attribute' + i,
+      variable_type: 'concept',
+    })
+  );
+
+  const covariatesArrSecondTable = Array.from(
+    { length: covariateArrSizeTable2 },
+    (_, i) => ({
       variable_type: 'custom_dichotomous',
-      cohort_ids: [1, 2],
-      provided_name: 'dichotomous test1',
-      uuid: '12345',
-    },
-    {
-      variable_type: 'custom_dichotomous',
-      cohort_ids: [3, 4],
-      provided_name: 'dichotomous test2',
-      uuid: '123456',
-    },
-    {
-      variable_type: 'concept',
-      concept_id: 2000006886,
-      concept_name: 'Attribute1',
-      concept_code: '',
-      concept_type: 'MVP Continuous',
-    },
-    {
-      variable_type: 'concept',
-      concept_id: 2000006885,
-      concept_name: 'Attribute10',
-      concept_code: '',
-      concept_type: 'MVP Continuous',
-    },
-    {
-      variable_type: 'concept',
-      concept_id: 2000000708,
-      concept_name: 'Attribute11',
-      concept_code: '',
-      concept_type: 'MVP Continuous',
-    },
-  ]);
+      provided_name: 'providednamebyuser' + i,
+      cohort_ids: [i, i * i],
+    })
+  );
+
+  const handleChangeInput1 = (userInputAmount) => {
+    setCovariateArrSizeTable1(userInputAmount);
+  };
+
+  const handleChangeInput2 = (userInputAmount) => {
+    setCovariateArrSizeTable2(userInputAmount);
+  };
 
   return (
     <QueryClientProvider client={mockedQueryClient}>
-      <AttritionTable
-        // quantitative:
-        sourceId={1}
-        selectedCohort={selectedCohort}
-        outcome={selectedOutcome}
-        covariates={covariates}
-        tableHeader={'Quantitative Attrition Table'}
-      />
-      <AttritionTable
-        // case-control:
-        sourceId={1}
-        selectedCohort={selectedCohort}
-        otherSelectedCohort={otherSelectedCohort}
-        outcome={selectedOutcome}
-        covariates={covariates}
-        tableHeader={'Case Cohort Attrition Table (1 of 2)'}
-      />
+      <SourceContextProvider>
+        <style>{`
+          label {
+            display: block;
+          }
+          input {
+            margin-bottom: 1.5em;
+          }
+        `}</style>
+        <label for='length-input'>Number of covariates for first table:</label>
+        <input
+          id='length-input'
+          type='number'
+          value={covariateArrSizeTable1}
+          onChange={(e) => handleChangeInput1(e.target.value)}
+        />
+        <label for='length-input-2'>
+          Number of covariates for second table:
+        </label>
+        <input
+          id='length-input-2'
+          type='number'
+          value={covariateArrSizeTable2}
+          onChange={(e) => handleChangeInput2(e.target.value)}
+        />
+        <AttritionTable
+          selectedCohort={selectedCohort}
+          outcome={outcome}
+          covariates={covariatesArrFirstTable}
+          tableType={'Case Cohort'}
+        />
+        <AttritionTable
+          selectedCohort={selectedCohort}
+          outcome={outcome}
+          covariates={covariatesArrSecondTable}
+          tableType={'Control Cohort'}
+        />
+      </SourceContextProvider>
     </QueryClientProvider>
   );
 };

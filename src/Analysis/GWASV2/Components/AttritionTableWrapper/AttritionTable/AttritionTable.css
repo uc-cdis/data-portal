@@ -4,6 +4,9 @@
 
 .gwasv2-attrition-table .ant-collapse-content-box {
   padding: 0;
+  overflow-y: auto;
+  max-height: 300px;
+  position: static;
 }
 
 .gwasv2-attrition-table .ant-collapse-expand-icon svg {
@@ -20,10 +23,8 @@
   text-align: center;
 }
 
-.gwasv2-attrition-table
-.ant-collapse-header
-.ant-collapse-expand-icon:before {
-  content: "\2303";
+.gwasv2-attrition-table .ant-collapse-header .ant-collapse-expand-icon:before {
+  content: '\2303';
   display: block;
   font-size: 16px;
   transition: all 0.1s ease-in-out;
@@ -31,13 +32,13 @@
 }
 
 .gwasv2-attrition-table
-.ant-collapse-header[aria-expanded="true"]
+.ant-collapse-header[aria-expanded='true']
 .ant-collapse-expand-icon:before {
   margin-top: -1px;
 }
 
 .gwasv2-attrition-table
-.ant-collapse-header[aria-expanded="false"]
+.ant-collapse-header[aria-expanded='false']
 .ant-collapse-expand-icon:before {
   transform: rotate(180deg);
   transform-origin: 7px 9px;
@@ -49,8 +50,7 @@
   height: 32px;
 }
 
-.gwasv2-attrition-table table
-tr:nth-child(2n) {
+.gwasv2-attrition-table table tr:nth-child(2n) {
   background-color: #fafafb;
 }
 
@@ -73,7 +73,7 @@ tr:nth-child(2n) {
 .gwasv2-attrition-table table .gwasv2-attrition-table--leftpad {
   padding-left: 26px;
 }
-.gwasv2-attrition-table table  .gwasv2-attrition-table--chart {
+.gwasv2-attrition-table table .gwasv2-attrition-table--chart {
   text-align: center;
 }
 .gwasv2-attrition-table table .gwasv2-attrition-table--rightborder {
