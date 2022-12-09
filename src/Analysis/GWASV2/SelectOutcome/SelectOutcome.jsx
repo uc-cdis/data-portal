@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../Shared/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../Shared/Covariates/CustomDichotomousCovariates';
+import { pseudoTw } from '../Shared/constants';
 
 const SelectOutcome = ({ covariates, dispatch, outcome }) => {
   const [variableType, setVariableType] = useState(undefined);
@@ -25,12 +26,13 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
         outcome={outcome}
         type={'outcome'}
       />
+  const { "w-full": fullWidth, "m-auto": marginAuto, "h-550": h550 } = pseudoTw;
   return (<>
     <div
       style={{
-        width: '90%',
-        margin: 'auto',
-        height: '550px',
+        ...fullWidth,
+        ...marginAuto,
+        ...h550
       }}
     >
       {variableType && outcomeMenu}

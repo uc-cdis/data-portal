@@ -1,4 +1,48 @@
 /* eslint-disable import/prefer-default-export */
+
+
+export const pseudoTw = {
+  "flexRow": {
+    display: "flex",
+    flexDirection: "row"
+  },
+  "flexCol": {
+    display: "flex",
+    flexDirection: "column"
+  },
+  textCenter: {
+    textAlign: "center",
+  },
+  "w-inherit": {
+    width: "inherit"
+  },
+  "mx-auto": {
+    margin: "0 auto"
+  },
+  "my-auto": {
+    margin: "auto 0"
+  },
+  "m-auto": {
+    margin: "auto"
+  },
+  "h-550": {
+    height: 550
+  },
+  "h-fit": {
+    height: "fit-content"
+  },
+  "w-full": {
+    width: "100%"
+  },
+  justifyBetween: {
+    justifyContent: "space-between"
+  },
+  oneThirdWidth: {
+    width: "33%"
+  }
+}
+
+
 export const gwasV2Steps = [
   {
     title: 'Select Study Population',

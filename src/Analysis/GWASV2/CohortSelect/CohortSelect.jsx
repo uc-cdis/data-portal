@@ -5,7 +5,7 @@ import CohortDefinitions from './Utils/CohortDefinitions';
 /* Eslint is giving error: import/no-named-as-default-member: needs a parser plugin */
 /* eslint-disable-next-line */
 import SearchBar from '../Shared/SearchBar';
-// import './CohortSelect.css';
+import { pseudoTw } from "../Shared/constants";
 
 const CohortSelect = ({
   selectedCohort,
@@ -14,15 +14,20 @@ const CohortSelect = ({
 }) => {
   const [cohortSearchTerm, setCohortSearchTerm] = useState('');
 
+  const {
+    flexRow,
+    justifyBetween,
+    "mx-auto": mxAuto,
+    oneThirdWidth } = pseudoTw;
+
   return (
     <React.Fragment>
       <div
         style={{
-          width: "35%",
-          margin: '0 auto',
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between"
+          ...oneThirdWidth,
+          ...mxAuto,
+          ...flexRow,
+          ...justifyBetween
         }}
       >
         <SearchBar
@@ -32,26 +37,27 @@ const CohortSelect = ({
         />
         <div
           data-tour='step-1-new-cohort'
-        // className='GWASUI-column GWASUI-newCohort'
         >
           <AddCohortButton />
         </div>
       </div>
       <div
-      // className='GWASUI-mainTable'
       >
         <div data-tour='cohort-table'>
           <div data-tour='cohort-table-body'
           >
             <div
-              style={{ width: "35%", margin: '0 auto', marginTop: 10 }}
+              style={{
+                ...oneThirdWidth,
+                ...mxAuto
+              }}
             >
-            <CohortDefinitions
-              selectedCohort={selectedCohort}
-              handleCohortSelect={handleCohortSelect}
-              searchTerm={cohortSearchTerm}
-              namespace={namespace}
-            />
+              <CohortDefinitions
+                selectedCohort={selectedCohort}
+                handleCohortSelect={handleCohortSelect}
+                searchTerm={cohortSearchTerm}
+                namespace={namespace}
+              />
             </div>
           </div>
         </div>

@@ -5,6 +5,7 @@ import { Table, Spin } from 'antd';
 import { fetchCohortDefinitions } from '../../Shared/wizardEndpoints/cohortMiddlewareApi';
 import { useFetch, useFilter } from '../../Shared/formHooks';
 import { useSourceContext } from '../../Shared/Source';
+import { pseudoTw } from "../../Shared/constants";
 
 const CohortDefinitions = ({
   selectedCohort = undefined,
@@ -48,6 +49,8 @@ const CohortDefinitions = ({
     },
   ];
 
+  const { textCenter, "mt-50": mt50 } = pseudoTw;
+
   return cohorts?.status === 'success' ? (
     <div>
       <Table
@@ -67,8 +70,9 @@ const CohortDefinitions = ({
     <React.Fragment>
       <div
         style={{
-          textAlign: "center",
-          marginTop: 50 }}>
+          ...textCenter,
+          ...mt50
+        }}>
         <Spin />
       </div>
     </React.Fragment>
