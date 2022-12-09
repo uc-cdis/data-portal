@@ -13,7 +13,11 @@ const CovariatesCardsList = ({ covariates, dispatch, outcome }) => {
 
   return (
     <div
-      style={{ backgroundColor: "#EAEEF2" }}
+      style={{
+        backgroundColor: "#EAEEF2",
+        overflowY: "auto",
+        maxHeight: 550
+      }}
     >
       {/* Outcome Phenotype */}
       {(dichotomous || continuous) && (<Card

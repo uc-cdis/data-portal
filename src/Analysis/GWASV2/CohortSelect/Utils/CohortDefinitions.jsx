@@ -31,6 +31,8 @@ const CohortDefinitions = ({
       ? [inputSelectedCohort.cohort_definition_id]
       : [],
     onChange: (_, selectedRows) => {
+      // todo: refactor this for readability - if selecting population in 1st step dispatch reducer
+      // otherwise selecting population in other steps calls non-dispatch handler
       namespace === "selectedStudyPopulationCohort" ? handleCohortSelect(
         { accessor: "selectedStudyPopulationCohort", payload: selectedRows[0] })
         : handleCohortSelect(selectedRows[0])
