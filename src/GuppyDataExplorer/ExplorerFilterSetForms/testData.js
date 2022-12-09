@@ -57,3 +57,5 @@ export const testFilterSets = [
     },
   },
 ];
+
+export const testToken = 'token-value';
