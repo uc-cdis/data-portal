@@ -12,9 +12,10 @@ const ContinuousCovariates = ({
 }) => {
   const [buffering, setBuffering] = useState(true);
   const formatSelected = (covariate) => {
-    let { concept_code, prefixed_concept_id, ...cov } = covariate;
-    return cov;
+    let { concept_id, concept_name  } = covariate;
+    return { variable_type: 'concept', concept_id, concept_name }
   }
+
   return (
     <div
     >

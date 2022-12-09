@@ -27,7 +27,8 @@ const SelectHareDropDown = ({
     // A) outcome, source, covariates(applyautogen ~ -), selectedCohort.id, A n `B
     // B) outcome, source, covariates(applyautogen ~ X), selectedCohort.id, B n `A
 
-    const { data, status } = useQueries(
+    const getQueries = () => {
+        return (
         outcome.variable_type === "concept" ? [
             {
                 queryKey: ['conceptstatsbyhare',
@@ -45,7 +46,7 @@ const SelectHareDropDown = ({
             }
         ] :
             [{
-                queryKey: ['conceptstatsbyhare',
+                queryKey: ['conceptstatsbyharecase',
                     outcome,
                     covariates,
                     selectedCohort
@@ -67,7 +68,7 @@ const SelectHareDropDown = ({
                 ...queryConfig
             },
             {
-                queryKey: ['conceptstatsbyhare',
+                queryKey: ['conceptstatsbyharecontrol',
                     outcome,
                     covariates,
                     selectedCohort
@@ -87,7 +88,11 @@ const SelectHareDropDown = ({
                     source
                 ),
                 ...queryConfig
-            }]);
+            }]
+        );
+    }
+
+    const { data, status } = useQueries(getQueries());
 
 
     //   const getHareDescriptionBreakdown = (singleHare, allHares) => {
