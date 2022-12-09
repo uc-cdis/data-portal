@@ -263,7 +263,7 @@ const DiscoveryDetails = (props: Props) => {
               </Button>
             )
             : null}
-          {(props.modalData[studyRegistrationConfig.studyRegistrationValidationField] !== undefined) // VLMD submission button should be visible on all study reg eligible studies
+          {(props.modalData[studyRegistrationConfig.studyRegistrationValidationField]) // VLMD submission button should be visible only on registered studies
             ? (
               <Button
                 type='text'
