@@ -311,7 +311,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     );
 
     if (config.features.advSearchFilters && config.features.advSearchFilters.enabled) {
-      console.log(filteredResources);
       filteredResources = filterByAdvSearch(
         filteredResources,
         filterState,
@@ -810,13 +809,13 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           filtersVisible={filtersVisible}
           setFiltersVisible={setFiltersVisible}
         />
-
-        {/* Advanced search panel */}
-        { (
-          props.config.features.advSearchFilters
+        <div className='discovery-studies__content'>
+          {/* Advanced search panel */}
+          { (
+            props.config.features.advSearchFilters
           && props.config.features.advSearchFilters.enabled
           && filtersVisible
-        )
+          )
         && (
           <div
             className='discovery-filters'
@@ -835,40 +834,41 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           </div>
         )}
 
-        <div id='discovery-table-of-records' className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--collapsed' : ''}`}>
-          <Space direction={'vertical'} style={{ width: '100%' }}>
-            <DiscoveryListView
-              config={config}
-              studies={props.studies}
-              visibleResources={
-                visibleResources.slice(
-                  (props.pagination.currentPage - 1) * props.pagination.resultsPerPage,
-                  props.pagination.currentPage * props.pagination.resultsPerPage,
-                )
-              }
-              searchTerm={props.searchTerm}
-              advSearchFilterHeight={advSearchFilterHeight}
-              setAdvSearchFilterHeight={setAdvSearchFilterHeight}
-              setPermalinkCopied={setPermalinkCopied}
-              setModalData={setModalData}
-              setModalVisible={setModalVisible}
-              columns={columns}
-              selectedTags={props.selectedTags}
-              onTagsSelected={props.onTagsSelected}
-              accessibleFieldName={accessibleFieldName}
-              selectedResources={props.selectedResources}
-              onResourcesSelected={props.onResourcesSelected}
-            />
-            <Pagination
-              current={props.pagination.currentPage}
-              pageSize={props.pagination.resultsPerPage}
-              onChange={(currentPage, resultsPerPage) => props.onPaginationSet({ currentPage, resultsPerPage })}
-              pageSizeOptions={['10', '20', '50', '100']}
-              total={visibleResources.length}
-              showSizeChanger
-              style={{ float: 'right' }}
-            />
-          </Space>
+          <div id='discovery-table-of-records' className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--collapsed' : 'discovery-table-container--expanded '}`}>
+            <Space direction={'vertical'} style={{ width: '100%' }}>
+              <DiscoveryListView
+                config={config}
+                studies={props.studies}
+                visibleResources={
+                  visibleResources.slice(
+                    (props.pagination.currentPage - 1) * props.pagination.resultsPerPage,
+                    props.pagination.currentPage * props.pagination.resultsPerPage,
+                  )
+                }
+                searchTerm={props.searchTerm}
+                advSearchFilterHeight={advSearchFilterHeight}
+                setAdvSearchFilterHeight={setAdvSearchFilterHeight}
+                setPermalinkCopied={setPermalinkCopied}
+                setModalData={setModalData}
+                setModalVisible={setModalVisible}
+                columns={columns}
+                selectedTags={props.selectedTags}
+                onTagsSelected={props.onTagsSelected}
+                accessibleFieldName={accessibleFieldName}
+                selectedResources={props.selectedResources}
+                onResourcesSelected={props.onResourcesSelected}
+              />
+              <Pagination
+                current={props.pagination.currentPage}
+                pageSize={props.pagination.resultsPerPage}
+                onChange={(currentPage, resultsPerPage) => props.onPaginationSet({ currentPage, resultsPerPage })}
+                pageSizeOptions={['10', '20', '50', '100']}
+                total={visibleResources.length}
+                showSizeChanger
+                style={{ float: 'right' }}
+              />
+            </Space>
+          </div>
         </div>
         <ReduxDiscoveryDetails
           modalVisible={modalVisible}
