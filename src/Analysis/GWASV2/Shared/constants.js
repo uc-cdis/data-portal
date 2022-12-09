@@ -1,8 +1,6 @@
 /* eslint-disable import/prefer-default-export */
-
-
 export const pseudoTw = {
-  "flex": {
+  flex: {
     direction: (dir) => {
       return {
         display: "flex",
@@ -21,21 +19,21 @@ export const pseudoTw = {
       }
     }
   },
-  "width": {
+  width: {
     size: (w) => {
       return {
         width: w
       }
     }
   },
-  "height": {
+  height: {
     size: (h) => {
       return {
         height: h
       }
     }
   },
-  "margin": {
+  margin: {
     auto: (...args) => {
       if (args[0] === "default") return { margin: "auto" }
       let { length } = args;
