@@ -26,57 +26,53 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
         outcome={outcome}
         type={'outcome'}
       />
-  const { "w-full": fullWidth, "m-auto": marginAuto, "h-550": h550 } = pseudoTw;
+  const { flex, width, margin, height, bg, text } = pseudoTw;
   return (<>
     <div
       style={{
-        ...fullWidth,
-        ...marginAuto,
-        ...h550
+        ...width.size("100%"),
+        ...margin.auto("default"),
+        ...height.size(550)
       }}
     >
       {variableType && outcomeMenu}
       {!variableType && <div style={{
-        height: '90%',
-        display: "flex",
-        flexDirection: "row"
+        ...height.size("90%"),
+        ...flex.direction("row")
       }}>
         <button
           type='button'
           style={{
-            height: 100,
-            width: 250,
-            margin: 'auto'
+            ...height.size(100),
+            ...width.size(250),
+            ...margin.auto("default")
           }}
           onClick={() => setVariableType('continuous')}
         >
           <div style={{
-            width: 240,
-            display: "flex",
-            flexDirection: "row",
-            margin: "0 auto"
+            ...width.size(240),
+            ...flex.direction("row"),
+            ...margin.auto("x")
           }}>
             <div
               style={{
-                display: "flex",
-                flexDirection: "row"
+                ...flex.direction("row")
               }}>
               <div style={{
-                width: 35,
-                height: 30,
-                backgroundColor: "orange",
+                ...width.size(35),
+                ...height.size(30),
+                ...bg.color("orange"),
                 fontWeight: "bold",
                 fontSize: 30,
-                color: "white",
+                ...text.color("white"),
                 borderRadius: 5,
-                display: "flex",
+                ...flex.direction("row"),
                 justifyContent: "center",
                 alignItems: "center",
-                marginLeft: 10
               }}>+</div>
               <div style={{
                 fontSize: 15,
-                color: "#4375B3",
+                ...text.color("#4375B3"),
                 textAlign: "center",
                 fontWeight: "bold"
               }}>
@@ -95,32 +91,29 @@ const SelectOutcome = ({ covariates, dispatch, outcome }) => {
           onClick={() => setVariableType('dichotomous')}
         >
           <div style={{
-            width: 240,
-            display: "flex",
-            flexDirection: "row",
+            ...width.size(240),
+            ...flex.direction("row"),
             justifyContent: "space-around"
           }}>
             <div
               style={{
-                display: "flex",
-                flexDirection: "row"
+                ...flex.direction("row")
               }}>
               <div style={{
-                width: 35,
-                height: 30,
-                backgroundColor: "orange",
-                fontWeight: "bold",
-                fontSize: 30,
-                color: "white",
-                borderRadius: 5,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginLeft: 10
+                 ...width.size(35),
+                 ...height.size(30),
+                 ...bg.color("orange"),
+                 fontWeight: "bold",
+                 fontSize: 30,
+                 ...text.color("white"),
+                 borderRadius: 5,
+                 ...flex.direction("row"),
+                 justifyContent: "center",
+                 alignItems: "center",
               }}>+</div>
               <div style={{
                 fontSize: 15,
-                color: "#4375B3",
+                ...text.color("#4375B3"),
                 textAlign: "center",
                 fontWeight: "bold"
               }}>

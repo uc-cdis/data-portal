@@ -31,12 +31,10 @@ const GWASContainer = () => {
     currentStep } = state;
 
   const {
-    flexRow,
-    "w-inherit": inheritWidth,
-    "m-auto": marginAuto,
-    "h-550": h550,
-    "w-full": fullWidth,
-    "h-fit": fitHeight
+    flex,
+    width,
+    margin,
+    height
   } = pseudoTw;
 
   const generateStep = () => {
@@ -45,9 +43,9 @@ const GWASContainer = () => {
         return (
           <div
             style={{
-              ...inheritWidth,
-              ...marginAuto,
-              ...h550
+              ...width.size("inherit"),
+              ...margin.auto("default"),
+              ...height.size("fit-content")
             }}>
             <CohortSelect
               selectedCohort={selectedStudyPopulationCohort}
@@ -59,8 +57,8 @@ const GWASContainer = () => {
       case 1:
         return (
           <div style={{
-            ...inheritWidth,
-            ...flexRow
+            ...width.size("inherit"),
+            ...flex.direction("row")
           }} >
             <SelectOutcome
               outcome={outcome}
@@ -77,8 +75,8 @@ const GWASContainer = () => {
       case 2:
         return (
           <div style={{
-            ...inheritWidth,
-            ...flexRow
+            ...width.size("inherit"),
+            ...flex.direction("row")
           }} >
             <SelectCovariates
               outcome={outcome}
@@ -132,25 +130,21 @@ const GWASContainer = () => {
         selectedCohort={selectedStudyPopulationCohort}
         outcome={outcome}
       />
-      {/* Inline style block needed so centering rule doesn't impact other workflows */}
-      {/* <style>
-        {'.analysis-app__actions > div:nth-child(1) { width: 100%; }'}
-      </style> */}
       <div
         className='GWASV2'
       >
-        <Space direction={'vertical'} style={{ ...fullWidth }}>
+        <Space direction={'vertical'} style={{ ...width.size("fit-content") }}>
           <div
             className='steps-content'
           >
             <Space
               direction={'vertical'}
               align={'center'}
-              style={{ width: '100%' }}
+              style={{ ...width.size("100%") }}
             >
               <div style={{
-                width: '95vw',
-                ...fitHeight
+                ...width.size("95vw"),
+                ...height.size("fit-content")
               }}>
                 {generateStep(currentStep)}
               </div>

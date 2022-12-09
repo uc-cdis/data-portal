@@ -2,44 +2,62 @@
 
 
 export const pseudoTw = {
-  "flexRow": {
-    display: "flex",
-    flexDirection: "row"
+  "flex": {
+    direction: (dir) => {
+      return {
+        display: "flex",
+        flexDirection: dir
+      }
+  }},
+  text: {
+    align: (pos) => {
+      return {
+        textAlign: pos
+      }
+    },
+    color: (c) => {
+      return {
+        color : c
+      }
+    }
   },
-  "flexCol": {
-    display: "flex",
-    flexDirection: "column"
+  "width": {
+    size: (w) => {
+      return {
+        width: w
+      }
+    }
   },
-  textCenter: {
-    textAlign: "center",
+  "height": {
+    size: (h) => {
+      return {
+        height: h
+      }
+    }
   },
-  "w-inherit": {
-    width: "inherit"
+  "margin": {
+    auto: (...args) => {
+      if (args[0] === "default") return { margin: "auto" }
+      let { length } = args;
+      return length === 1 ? {
+        margin: args[0] === "x" ? "0 auto" : "auto 0"
+      }
+      : {
+          margin: args[0] === "x" ?
+          `${args[1]} auto` : `auto ${args[1]}`
+       }
+    }
   },
-  "mx-auto": {
-    margin: "0 auto"
-  },
-  "my-auto": {
-    margin: "auto 0"
-  },
-  "m-auto": {
-    margin: "auto"
-  },
-  "h-550": {
-    height: 550
-  },
-  "h-fit": {
-    height: "fit-content"
-  },
-  "w-full": {
-    width: "100%"
+  bg: {
+    color: (c) => {
+      return {
+        backgroundColor: c
+      }
+    }
   },
   justifyBetween: {
     justifyContent: "space-between"
   },
-  oneThirdWidth: {
-    width: "33%"
-  }
 }
 
 

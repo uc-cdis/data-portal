@@ -15,18 +15,18 @@ const CohortSelect = ({
   const [cohortSearchTerm, setCohortSearchTerm] = useState('');
 
   const {
-    flexRow,
+    flex,
     justifyBetween,
-    "mx-auto": mxAuto,
-    oneThirdWidth } = pseudoTw;
+    margin,
+    width } = pseudoTw;
 
   return (
     <React.Fragment>
       <div
         style={{
-          ...oneThirdWidth,
-          ...mxAuto,
-          ...flexRow,
+          ...width.size("33%"),
+          ...margin.auto("x"),
+          ...flex.direction("row"),
           ...justifyBetween
         }}
       >
@@ -48,8 +48,8 @@ const CohortSelect = ({
           >
             <div
               style={{
-                ...oneThirdWidth,
-                ...mxAuto
+                ...width.size("33%"),
+                ...margin.auto("x")
               }}
             >
               <CohortDefinitions
