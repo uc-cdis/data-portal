@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { InputNumber } from 'antd';
+import SelectHareDropDown from '../SelectHare/SelectHareDropDown';
 
 const twSudo = {
   flexCol: {
@@ -14,7 +15,6 @@ const twSudo = {
     margin: 'auto',
   },
 };
-
 // todo react tour
 
 const ConfigureGWAS = ({
@@ -22,7 +22,19 @@ const ConfigureGWAS = ({
   numOfPCs,
   mafThreshold,
   imputationScore,
+  covariates,
+  selectedCohort,
+  selectedHare,
+  outcome
 }) => {
+  // GWASUI label css
+  // margin: 5px;
+  // padding: 2px;
+  // width: auto;
+  // display: inline-block;
+  // white-space: nowrap;
+  // text-overflow: ellipsis;
+
   const { flexCol, flexRow } = twSudo;
   // https://xd.adobe.com/view/5773a0b3-0957-443b-830b-95318a30363c-0220/screen/b66dc7ca-840f-4cc9-92ba-0e02b21319fb/
   // https://ant.design/components/modal/
@@ -31,11 +43,17 @@ const ConfigureGWAS = ({
     <React.Fragment>
       <div style={flexCol}>
         <div style={flexRow}>
-          <React.Fragment>
+          <div style={flexCol}>
+            <SelectHareDropDown
+               selectedHare={selectedHare}
+               selectedCohort={selectedCohort}
+               covariates={covariates}
+               outcome={outcome}
+               handleHareChange={dispatch}
+                />
             <label
               // className='GWASUI-label GWASUI-asterisk'
-              htmlFor='input-numOfPC'
-            >
+              htmlFor='input-numOfPC'>
               Number of PCs to use &nbsp;
               <InputNumber
                 id='input-numOfPC'
@@ -48,8 +66,8 @@ const ConfigureGWAS = ({
               />
               {/* {(!numOfPC) && (<span style={{ color: 'red' }}> Please input a value between 1 and 10</span>)} */}
             </label>
-          </React.Fragment>
-          <React.Fragment>
+          </div>
+          <div style={flexCol}>
             <label
             // className='GWASUI-label'
             htmlFor='input-maf'>
@@ -67,14 +85,14 @@ const ConfigureGWAS = ({
                 max={'0.5'}
               />
             </label>
-          </React.Fragment>
+          </div>
         </div>
         <div style={flexRow}>
-          <React.Fragment>
+          <div>
             {/* todo add hare dropdown here */}
             {/* dispatch({ type: "selectedHare", update: selectedHare }) */}
-          </React.Fragment>
-          <React.Fragment>
+          </div>
+          <div style={flexCol}>
             <label
             // className='GWASUI-label'
             htmlFor='input-imputation'>
@@ -92,7 +110,7 @@ const ConfigureGWAS = ({
                 max={'1'}
               />
             </label>
-          </React.Fragment>
+          </div>
         </div>
       </div>
     </React.Fragment>
@@ -104,6 +122,10 @@ ConfigureGWAS.propTypes = {
   numOfPCs: PropTypes.number,
   mafThreshold: PropTypes.number,
   imputationScore: PropTypes.number,
+  covariates: PropTypes.array,
+  selectedCohort: PropTypes.object,
+  selectedHare: PropTypes.object,
+  outcome: PropTypes.object
 };
 
 ConfigureGWAS.defaultProps = {

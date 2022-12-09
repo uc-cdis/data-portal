@@ -98,6 +98,9 @@ const GWASContainer = () => {
             mafThreshold={mafThreshold}
             imputationScore={imputationScore}
             selectedHare={selectedHare}
+            covariates={covariates}
+            selectedCohort={selectedStudyPopulationCohort}
+            outcome={outcome}
           />
         );
       default:
