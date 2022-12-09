@@ -16,7 +16,7 @@ const SelectHareDropDown = ({
 }) => {
     const { source } = useSourceContext();
     const { width } = pseudoTw;
-    const hareResults = useQueries( outcome.variable_type === "concept" ? [
+    const hareResults = useQueries(outcome.variable_type === "concept" ? [
         {
             queryKey: ['conceptstatsbyhare',
                 outcome,
@@ -77,15 +77,19 @@ const SelectHareDropDown = ({
             ...queryConfig
         }]);
 
+    // let statusY, statusZ = "success";
+    // hareResults length === 2
+    // else {
+    //     final data always comes back in second entry of hareResults in this case? (dont think dataY is needed at all)
+    //     const { statusY: status, dataY: data } = hareResults[0];
+    //     const { statusZ: status, dataZ: data } = hareResults[1]
+    // }
+    useEffect(() => {
         if (hareResults.length === 1) {
-            const { status: statusX } = hareResults;
+            const { status: statusX, data: dataX } = hareResults[0];
+            console.table('dataX', dataX, 'dataY', statusX);
         }
-        let statusY, statusZ = "success";
-        // hareResults length === 2
-        // else {
-        //     const { status: statusY } = hareResults[0];
-        //     const { status: statusZ } = hareResults[1]
-        // }
+    }, [hareResults]);
 
     //   const getHareDescriptionBreakdown = (singleHare, allHares) => {
     //     const hareBreakdown = allHares.find((hare) => hare.concept_value === singleHare.concept_value);
@@ -111,43 +115,27 @@ const SelectHareDropDown = ({
     //       );
     //     }
     // normal scenario - there is breakdown data, so show in dropdown:
+
+
+       // todo: destructure breakdowns for hare options
+       // in the mapping over hareResults.data.concept_breakdown
     return (
         <>
-        <button onClick={() => console.log('hares', hareResults)}>hares</button>
-        {[statusX, statusY, statusZ].includes("loading") && <Spin />}
-        {statusX === "error" || [statusY, statusZ].some((status) => status === "error") && (<>error</>)}
-        {(statusX === "success" || [statusY, statusZ].every((status) => status === "success")) && <Select
-            style={{...width.size("30%")}}
-            showSearch={true}
-            placeholder='-select one of the ancestry groups below-'
-            // fieldNames={{ label: 'todo', value: 'todo' }}
-            // options={fetchedHareBreakdowns}
-            // optionFilterProp={`todo`}
-            // onChange={dispatch({ accessor: "selectedHare", payload: todo })}
-            dropdownStyle={{...width.size(800)}}
+            <button onClick={() => console.log('hares', hareResults)}>hares</button>
+            {[statusX, statusY, statusZ].includes("loading") && <Spin />}
+            {statusX === "error" || [statusY, statusZ].some((status) => status === "error") && (<>error</>)}
+            {(statusX === "success" || [statusY, statusZ].every((status) => status === "success")) && <Select
+                style={{ ...width.size("30%") }}
+                showSearch={true}
+                placeholder='-select one of the ancestry groups below-'
+                // fieldNames={{ label: 'todo', value: 'todo' }}
+                // options={fetchedHareBreakdowns}
+                // optionFilterProp={`todo`}
+                // onChange={dispatch({ accessor: "selectedHare", payload: todo })}
+                dropdownStyle={{ ...width.size(800) }}
             // filterOption={(searchTerm, hare) => (hare?.WhateverLabelIs ?? '').toLowerCase().includes(searchTerm.toLowerCase())}
-        />}
+            />}
         </>
-        //   <Dropdown buttonType='secondary' id='cohort-hare-selection-dropdown'>
-        //     <Dropdown.Button rightIcon='dropdown' buttonType='secondary'>
-        //       {(selectedHare?.concept_value?.length)
-        //         ? getHareDescriptionBreakdown(selectedHare, data.concept_breakdown)
-        //         : '-select one of the ancestry groups below-'}
-        //     </Dropdown.Button>
-        //     <Dropdown.Menu>
-        //       {
-        //         data.concept_breakdown.map((hare) => (
-        //           <Dropdown.Item
-        //             key={`key-${hare.concept_value}`}
-        //             value={`${hare}`}
-        //             onClick={() => handleHareChange(hare)}
-        //           >
-        //             <div>{getHareDescriptionBreakdown(hare, data.concept_breakdown)}</div>
-        //           </Dropdown.Item>
-        //         ))
-        //       }
-        //     </Dropdown.Menu>
-        //   </Dropdown>
     );
 };
 
