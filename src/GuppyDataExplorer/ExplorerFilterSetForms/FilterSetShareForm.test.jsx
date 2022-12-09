@@ -1,9 +1,7 @@
 import { render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import FilterSetShareForm from './FilterSetShareForm';
-import { testReduxStore } from './testData';
-
-const TOKEN_VALUE = 'foo';
+import { testReduxStore, testToken } from './testData';
 
 /**
  * @param {Partial<Parameters<typeof FilterSetShareForm>[0]>} [props]
@@ -11,7 +9,7 @@ const TOKEN_VALUE = 'foo';
  */
 function getProps(props = {}) {
   const defaultProps = {
-    onAction: () => Promise.resolve(TOKEN_VALUE),
+    onAction: () => Promise.resolve(testToken),
     onClose: () => {},
   };
   return { ...defaultProps, ...props };
@@ -42,7 +40,7 @@ test('token generated', async () => {
 
   await waitFor(() => expect(container).toBeInTheDocument());
 
-  expect(queryByText(TOKEN_VALUE)).toBeInTheDocument();
+  expect(queryByText(testToken)).toBeInTheDocument();
 
   const copyButton = queryByRole('button', { name: 'Copy to clipboard' });
   expect(copyButton).toBeInTheDocument();
@@ -61,7 +59,7 @@ test('token failed', async () => {
 
   await waitFor(() => expect(container).toBeInTheDocument());
 
-  expect(queryByText(TOKEN_VALUE)).not.toBeInTheDocument();
+  expect(queryByText(testToken)).not.toBeInTheDocument();
 
   const tryAgainButton = queryByRole('button', { name: 'Try again' });
   expect(tryAgainButton).toBeInTheDocument();

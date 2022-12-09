@@ -9,6 +9,7 @@ import FilterSetUpdateForm from '@src/GuppyDataExplorer/ExplorerFilterSetForms/F
 import {
   testFilterSets,
   testReduxStore,
+  testToken,
 } from '@src/GuppyDataExplorer/ExplorerFilterSetForms/testData';
 
 const style = {
@@ -85,7 +86,7 @@ storiesOf('FilterSetForms', module)
             action('share')();
             setTimeout(() => {});
             return new Promise((resolve) => {
-              setTimeout(() => resolve('token-value'), 1000);
+              setTimeout(() => resolve(testToken), 1000);
             });
           }}
           onClose={action('close')}
