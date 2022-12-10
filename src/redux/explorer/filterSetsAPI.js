@@ -1,6 +1,7 @@
 import { fetchWithCreds } from '../utils.fetch';
 import { convertFromFilterSetDTO, convertToFilterSetDTO } from './utils';
 
+/** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('../../GuppyDataExplorer/types').SavedExplorerFilterSet} SavedExplorerFilterSet */
 
 const FILTER_SET_URL = '/amanuensis/filter-sets';
@@ -69,5 +70,33 @@ export function updateById(explorerId, filterSet) {
   }).then(({ response, status }) => {
     if (status !== 200) throw response.statusText;
     return filterSet;
+  });
+}
+
+/**
+ * @param {SavedExplorerFilterSet} filterSet
+ * @returns {Promise<string>}
+ */
+export function createToken(filterSet) {
+  return fetchWithCreds({
+    path: `${FILTER_SET_URL}/snapshot`,
+    method: 'POST',
+    body: JSON.stringify({ filterSetId: filterSet.id }),
+  }).then(({ response, data, status }) => {
+    if (status !== 200) throw response.statusText;
+    return data;
+  });
+}
+
+/**
+ * @param {string} token
+ * @returns {Promise<SavedExplorerFilterSet>}
+ */
+export function fetchWithToken(token) {
+  return fetchWithCreds({
+    path: `${FILTER_SET_URL}/snapshot/${token}`,
+  }).then(({ response, data, status }) => {
+    if (status !== 200) throw response.statusText;
+    return convertFromFilterSetDTO(data);
   });
 }
