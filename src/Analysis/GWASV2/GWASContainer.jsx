@@ -1,71 +1,60 @@
 import React, { useReducer } from 'react';
 import { Space, Button, Popconfirm } from 'antd';
-import CohortSelect from './CohortSelect/CohortSelect';
-import SelectOutcome from './SelectOutcome/SelectOutcome';
-import SelectCovariates from './SelectCovariates/SelectCovariates';
-import CovariatesCardsList from './Shared/Covariates/CovariatesCardsList';
-import ProgressBar from './Shared/ProgressBar/ProgressBar';
+import ProgressBar from './Components/ProgressBar/ProgressBar';
+import { gwasV2Steps } from './Shared/constants';
+import initialState from './Shared/StateManagement/InitialState';
 import reducer from './Shared/StateManagement/reducer';
 import ACTIONS from './Shared/StateManagement/Actions';
-import initialState from './Shared/StateManagement/InitialState';
-import ConfigureGWAS from './ConfigureGWAS/ConfigureGWAS';
-import { gwasV2Steps } from './Shared/constants';
-import AttritionTableWrapper from './Shared/AttritionTableWrapper/AttritionTableWrapper';
+import AttritionTableWrapper from './Components/AttritionTableWrapper/AttritionTableWrapper';
+import SelectStudyPopulation from './Steps/SelectStudyPopulation/SelectStudyPopulation';
+import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
+import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
+import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
 import './GWASV2.css';
 
 const GWASContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const handleStudyPopulationSelect = (selectedRow) => {
-    dispatch({
-      type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
-      payload: selectedRow,
-    });
-  };
-
   const generateStep = () => {
     switch (state.currentStep) {
-      case 0:
-        return (
-          <CohortSelect
-            selectedCohort={state.selectedStudyPopulationCohort}
-            handleCohortSelect={handleStudyPopulationSelect}
-          />
-        );
-      case 1:
-        return (
-          <SelectOutcome
+    case 0:
+      return (
+        <SelectStudyPopulation
+          selectedCohort={state.selectedStudyPopulationCohort}
+          dispatch={dispatch}
+        />
+      );
+    case 1:
+      return (
+        <SelectOutcome
+          studyPopulationCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+          dispatch={dispatch}
+        />
+      );
+    case 2:
+      return (
+        <React.Fragment>
+          <SelectCovariates
+            studyPopulationCohort={state.selectedStudyPopulationCohort}
             outcome={state.outcome}
             covariates={state.covariates}
             dispatch={dispatch}
           />
-        );
-      case 2:
-        return (
-          <React.Fragment>
-            <SelectCovariates
-              outcome={{}}
-              covariates={state.covariates}
-              dispatch={dispatch}
-            />
-            <CovariatesCardsList
-              covariates={state.covariates}
-              dispatch={dispatch}
-            />
-          </React.Fragment>
-        );
-      case 3:
-        return (
-          <ConfigureGWAS
-            dispatch={dispatch}
-            numOfPCs={state.numPCs}
-            mafThreshold={state.mafThreshold}
-            imputationScore={state.imputationScore}
-            selectedHare={state.selectedHare}
-          />
-        );
-      default:
-        return null;
+        </React.Fragment>
+      );
+    case 3:
+      return (
+        <ConfigureGWAS
+          dispatch={dispatch}
+          numOfPCs={state.numPCs}
+          mafThreshold={state.mafThreshold}
+          imputationScore={state.imputationScore}
+          selectedHare={state.selectedHare}
+        />
+      );
+    default:
+      return null;
     }
   };
 
