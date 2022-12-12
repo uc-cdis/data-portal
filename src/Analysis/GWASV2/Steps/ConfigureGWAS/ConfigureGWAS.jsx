@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { InputNumber, Modal } from 'antd';
-import SelectHareDropDown from '../SelectHare/SelectHareDropDown';
+import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const twSudo = {
   flexCol: {
@@ -65,10 +65,7 @@ const ConfigureGWAS = ({
                 value={numOfPCs}
                 min={1}
                 max={10}
-                onChange={(e) => dispatch({
-                  accessor: "numOfPC",
-                  payload: Number(e)
-                })}
+                onChange={(e) => dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })}
               />
               {/* {(!numOfPC) && (<span style={{ color: 'red' }}> Please input a value between 1 and 10</span>)} */}
             </label>
@@ -82,7 +79,7 @@ const ConfigureGWAS = ({
                 id='input-maf'
                 value={mafThreshold}
                 onChange={(e) => dispatch({
-                  accessor: "mafThreshold",
+                  type: ACTIONS.UPDATE_MAF_THRESHOLD,
                   payload: Number(e),
                 })}
                 stringMode
@@ -105,7 +102,7 @@ const ConfigureGWAS = ({
                 id='input-imputation'
                 value={imputationScore}
                 onChange={(e) => dispatch({
-                  accessor: "imputationScore",
+                  type: ACTIONS.UPDATE_IMPUTATION_SCORE,
                   payload: Number(e),
                 })}
                 stringMode
@@ -116,7 +113,7 @@ const ConfigureGWAS = ({
             </label>
           </div>
         </div>
-        {/* <div style={flexRow}><button>Submit</button></div> */}
+        <div style={flexRow}><button>Submit</button></div>
         <Modal
           title={<div style={{...flexRow, ...{ justifyContent: "space-between" }}}>
             <div>Review Details</div>
