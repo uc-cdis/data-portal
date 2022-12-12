@@ -21,11 +21,14 @@ const DismissibleMessage = ({
     }
   };
   return (
-    <>
+    <React.Fragment>
       {open === true && (
         <div className={`dismissable-message ${messageType}`}>
           <span
             className='dismissable-message_close'
+            tabIndex='0'
+            role='button'
+            aria-label='Close Message'
             onClick={() => {
               setOpen(false);
             }}
@@ -39,7 +42,7 @@ const DismissibleMessage = ({
           <div>{description}</div>
         </div>
       )}
-    </>
+    </React.Fragment>
   );
 };
 export default DismissibleMessage;
