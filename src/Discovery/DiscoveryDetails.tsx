@@ -263,42 +263,32 @@ const DiscoveryDetails = (props: Props) => {
               </Button>
             )
             : null}
-          {(props.modalData[studyRegistrationConfig.studyRegistrationValidationField]) // VLMD submission button should be visible only on registered studies
+          {(props.modalData[studyRegistrationConfig.studyRegistrationValidationField]
+           && props.user.username
+           && userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) // user is authenticated, VLMD submission button should be visible only on registered studies that they have access to
             ? (
               <Button
                 type='text'
-                onClick={() => {
-                  if (props.user.username) {
-                    if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField], props.userAuthMapping)) {
-                      return handleRedirectClick('/study-reg/data-dictionary-submission',
-                        props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
-                        props.modalData.project_title,
-                        props.modalData.project_number,
-                        props.modalData[studyRegistrationConfig.studyRegistrationUIDField],
-                        // get existing data dictionary names
-                        Object.keys(props.modalData[studyRegistrationConfig.dataDictionaryField] || {}));
-                    }
-                    return handleRedirectClick('/study-reg/request-access',
-                      props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
-                      props.modalData.project_title,
-                      props.modalData.project_number,
-                      props.modalData[studyRegistrationConfig.studyRegistrationUIDField],
-                    );
-                  }
-                  return handleRedirectToLoginClick();
-                }}
+                onClick={() => handleRedirectClick('/study-reg/data-dictionary-submission',
+                  props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
+                  props.modalData.project_title,
+                  props.modalData.project_number,
+                  props.modalData[studyRegistrationConfig.studyRegistrationUIDField],
+                  // get existing data dictionary names
+                  Object.keys(props.modalData[studyRegistrationConfig.dataDictionaryField] || {}))}
               >
-                <React.Fragment><AuditOutlined />{(
-                  () => {
-                    if (props.user.username) {
-                      if (userHasMethodForServiceOnResource('access', 'study_registration', props.modalData[studyRegistrationConfig?.studyRegistrationAccessCheckField], props.userAuthMapping)) {
-                        return ' Submit a Data Dictionary ';
-                      }
-                      return ' Request Access to Submit a Data Dictionary ';
-                    }
-                    return ' Login to Submit a Data Dictionary ';
-                  }
-                )()}
+                <React.Fragment><AuditOutlined />{' Submit a Data Dictionary '}
+                </React.Fragment>
+              </Button>
+            )
+            : null}
+          {(props.modalData[studyRegistrationConfig.studyRegistrationValidationField] && !props.user.username) // user is NOT authenticated, Login in to VLMD submission button should be visible only on registered studies
+            ? (
+              <Button
+                type='text'
+                onClick={() => handleRedirectToLoginClick()}
+              >
+                <React.Fragment><AuditOutlined />{' Login to Submit a Data Dictionary '}
                 </React.Fragment>
               </Button>
             )
