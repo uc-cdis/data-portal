@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
 // import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
@@ -16,6 +16,7 @@ const SelectHareDropDown = ({
 }) => {
     const { source } = useSourceContext();
     const { width } = pseudoTw;
+    const [hares, setHares] = useState([]);
     const hareResults = useQueries(outcome.variable_type === "concept" ? [
         {
             queryKey: ['conceptstatsbyhare',
@@ -77,31 +78,21 @@ const SelectHareDropDown = ({
             ...queryConfig
         }]);
 
-    // let statusY, statusZ = "success";
-    // hareResults length === 2
-    // else {
-    //     final data always comes back in second entry of hareResults in this case? (dont think dataY is needed at all)
-    //     const { statusY: status, dataY: data } = hareResults[0];
-    //     const { statusZ: status, dataZ: data } = hareResults[1]
-    // }
+    const { status: statusX, data: dataX } = hareResults[hareResults.length === 1 ? 0 : -1];
+
     useEffect(() => {
-        if (hareResults.length === 1) {
-            const { status: statusX, data: dataX } = hareResults[0];
-            console.table('dataX', dataX, 'dataY', statusX);
-        }
-    }, [hareResults]);
+        setHares(dataX?.concept_breakdown);
+    }, [dataX]);
+
+    const onChange = (h) => {
+        console.log('hhhh', h)
+        // handleHareChange({ accessor: "selectedHare", payload: selectedHare })
+    }
 
     //   const getHareDescriptionBreakdown = (singleHare, allHares) => {
     //     const hareBreakdown = allHares.find((hare) => hare.concept_value === singleHare.concept_value);
     //     return `${hareBreakdown.concept_value_name} (size: ${hareBreakdown.persons_in_cohort_with_value})`;
     //   };
-
-    //   useEffect(() => {
-    //     if (selectedHare && data?.concept_breakdown) {
-    //     //   handleHareChange(selectedHare);
-    //     handleHareChange({ accessor: "selectedHare", payload: selectedHare })
-    //     }
-    //   }, [selectedHare, data, handleHareChange]);
 
 
     //   if (data) {
@@ -116,25 +107,22 @@ const SelectHareDropDown = ({
     //     }
     // normal scenario - there is breakdown data, so show in dropdown:
 
-
-       // todo: destructure breakdowns for hare options
-       // in the mapping over hareResults.data.concept_breakdown
     return (
         <>
-            <button onClick={() => console.log('hares', hareResults)}>hares</button>
-            {[statusX, statusY, statusZ].includes("loading") && <Spin />}
-            {statusX === "error" || [statusY, statusZ].some((status) => status === "error") && (<>error</>)}
-            {(statusX === "success" || [statusY, statusZ].every((status) => status === "success")) && <Select
-                style={{ ...width.size("30%") }}
+            <button onClick={() => console.log('hares', hareResults, 'HARES', hares)}>hares</button>
+            {statusX === "loading" && <Spin />}
+            {statusX === "error" && (<>error</>)}
+            {statusX === "success" && (
+                <Select
                 showSearch={true}
+                onChange={onChange}
                 placeholder='-select one of the ancestry groups below-'
-                // fieldNames={{ label: 'todo', value: 'todo' }}
-                // options={fetchedHareBreakdowns}
-                // optionFilterProp={`todo`}
-                // onChange={dispatch({ accessor: "selectedHare", payload: todo })}
+                fieldNames={{ label: 'concept_value_name', value: 'concept_value' }}
+                options={hares}
                 dropdownStyle={{ ...width.size(800) }}
-            // filterOption={(searchTerm, hare) => (hare?.WhateverLabelIs ?? '').toLowerCase().includes(searchTerm.toLowerCase())}
-            />}
+                filterOption={(searchTerm, option) => (option?.concept_value_name ?? '').toLowerCase().includes(searchTerm.toLowerCase())}
+                />
+            )}
         </>
     );
 };

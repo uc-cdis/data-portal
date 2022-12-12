@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { InputNumber } from 'antd';
+import { InputNumber, Modal } from 'antd';
 import SelectHareDropDown from '../SelectHare/SelectHareDropDown';
 
 const twSudo = {
@@ -12,7 +12,7 @@ const twSudo = {
   flexRow: {
     display: 'flex',
     flexDirection: 'row',
-    margin: 'auto',
+    justifyContent: "space-between"
   },
 };
 // todo react tour
@@ -27,6 +27,13 @@ const ConfigureGWAS = ({
   selectedHare,
   outcome
 }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const modalShow = () => {
+    setModalVisible(true);
+  }
+  const modalCancel = () => {
+    setModalVisible(false);
+  }
   // GWASUI label css
   // margin: 5px;
   // padding: 2px;
@@ -45,12 +52,12 @@ const ConfigureGWAS = ({
         <div style={flexRow}>
           <div style={flexCol}>
             <SelectHareDropDown
-               selectedHare={selectedHare}
-               selectedCohort={selectedCohort}
-               covariates={covariates}
-               outcome={outcome}
-               handleHareChange={dispatch}
-                />
+              selectedHare={selectedHare}
+              selectedCohort={selectedCohort}
+              covariates={covariates}
+              outcome={outcome}
+              handleHareChange={dispatch}
+            />
             <label
               // className='GWASUI-label GWASUI-asterisk'
               htmlFor='input-numOfPC'>
@@ -62,15 +69,16 @@ const ConfigureGWAS = ({
                 max={10}
                 onChange={(e) => dispatch({
                   accessor: "numOfPC",
-                  payload: Number(e) })}
+                  payload: Number(e)
+                })}
               />
               {/* {(!numOfPC) && (<span style={{ color: 'red' }}> Please input a value between 1 and 10</span>)} */}
             </label>
           </div>
           <div style={flexCol}>
             <label
-            // className='GWASUI-label'
-            htmlFor='input-maf'>
+              // className='GWASUI-label'
+              htmlFor='input-maf'>
               MAF Cutoff &nbsp;
               <InputNumber
                 id='input-maf'
@@ -94,8 +102,8 @@ const ConfigureGWAS = ({
           </div>
           <div style={flexCol}>
             <label
-            // className='GWASUI-label'
-            htmlFor='input-imputation'>
+              // className='GWASUI-label'
+              htmlFor='input-imputation'>
               Imputation Score Cutoff &nbsp;
               <InputNumber
                 id='input-imputation'
@@ -112,6 +120,61 @@ const ConfigureGWAS = ({
             </label>
           </div>
         </div>
+        {/* <div style={flexRow}><button>Submit</button></div> */}
+        <Modal
+          title={<div style={{...flexRow, ...{ justifyContent: "space-between" }}}>
+            <div>Review Details</div>
+            {/* <button onClick={modalCancel}>X</button> */}
+          </div>}
+          open={modalVisible}
+          onCancel={modalCancel}
+          // onOk={() => {
+          //   submission code here (onSuccess: setModalVisible(false))
+          //   setModalVisible(false)
+          // }}
+          >
+          <div style={flexCol}>
+            <div style={flexRow}>
+              <div>Number of PCs</div><div>{numOfPCs}</div>
+            </div>
+            <div style={flexRow}>
+            <div>MAF Cutoff</div><div>{mafThreshold}</div>
+            </div>
+            <div style={flexRow}>
+            {/* <div>HARE Ancestry</div><div>{selectedHare}</div> */}
+            </div>
+            <div style={flexRow}>
+            <div>Imputation Score Cutoff</div><div>{imputationScore}</div>
+            </div>
+            <hr />
+            <div style={flexRow}>
+            <div>Cohort</div><div>{selectedCohort?.cohort_name}</div>
+            </div>
+            <div style={flexRow}>
+            <div>Phenotype</div><div>{outcome?.concept_name}</div>
+            {/* outcome.provided_name */}
+            </div>
+            <div style={flexRow}>
+            <div>Final Size</div><div>{'final size'}</div>
+            </div>
+            <div style={flexRow}>
+            <div>Covariates</div>
+            {/* <div style={flexCol, { overflowY: 300 }}>
+              {covariates.forEach(cov => {
+                ?? cov.provided_name
+                return <div>{cov.concept_name}</div>
+              })}
+              </div> */}
+            </div>
+            <div style={flexRow}>
+            <div>Minimum Outlier Cutoff</div><div>{'min outlier cutoff'}</div>
+            </div>
+            <div style={flexRow}>
+            <div>Maximum Outlier Cutoff</div><div>{'max outlier cutoff'}</div>
+            </div>
+          </div>
+        </Modal>
+          <button onClick={modalShow}>open modal</button>
       </div>
     </React.Fragment>
   );
