@@ -20,16 +20,27 @@ const mockedQueryClient = new QueryClient({
 
 const MockTemplate = () => {
   const initialState = {
-    outcome: null,
-    selectedStudyPopulationCohort: null,
+    outcome: {
+      variable_type: 'concept',
+      concept_id: 2000000873,
+      concept_name: 'Attribute8',
+    },
+    selectedStudyPopulationCohort: {
+      cohort_definition_id: 9,
+      cohort_name: 'Diabetes Demo',
+      size: 293,
+    },
     covariates: [],
     imputationScore: 0.3,
     mafThreshold: 0.01,
     numOfPC: 3,
     gwasName: '',
-    selectedHare: { concept_value: '' },
+    selectedHare: {
+      concept_value: '',
+    },
     currentStep: 3,
   };
+
   const [state, dispatch] = useReducer(reducer, initialState);
   let nextButtonEnabled = true;
 
