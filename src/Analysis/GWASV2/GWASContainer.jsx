@@ -68,7 +68,7 @@ const GWASContainer = () => {
           covariates={state.covariates}
           selectedCohort={state.selectedStudyPopulationCohort}
           outcome={state.outcome}
-          showModal={true}
+          showModal
         />
       );
     default:

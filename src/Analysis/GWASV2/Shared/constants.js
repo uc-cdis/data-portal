@@ -21,59 +21,48 @@ export const gwasV2Steps = [
 /* eslint-disable import/prefer-default-export */
 export const pseudoTw = {
   flex: {
-    direction: (dir) => {
-      return {
-        display: "flex",
-        flexDirection: dir
-      }
-  }},
+    direction: (dir) => ({
+      display: 'flex',
+      flexDirection: dir,
+    }),
+  },
   text: {
-    align: (pos) => {
-      return {
-        textAlign: pos
-      }
-    },
-    color: (c) => {
-      return {
-        color : c
-      }
-    }
+    align: (pos) => ({
+      textAlign: pos,
+    }),
+    color: (c) => ({
+      color: c,
+    }),
   },
   width: {
-    size: (w) => {
-      return {
-        width: w
-      }
-    }
+    size: (w) => ({
+      width: w,
+    }),
   },
   height: {
-    size: (h) => {
-      return {
-        height: h
-      }
-    }
+    size: (h) => ({
+      height: h,
+    }),
   },
   margin: {
     auto: (...args) => {
-      if (args[0] === "default") return { margin: "auto" }
-      let { length } = args;
+      if (args[0] === 'default') return { margin: 'auto' };
+      const { length } = args;
       return length === 1 ? {
-        margin: args[0] === "x" ? "0 auto" : "auto 0"
+        margin: args[0] === 'x' ? '0 auto' : 'auto 0',
       }
-      : {
-          margin: args[0] === "x" ?
-          `${args[1]} auto` : `auto ${args[1]}`
-       }
-    }
+        : {
+          margin: args[0] === 'x'
+            ? `${args[1]} auto` : `auto ${args[1]}`,
+        };
+    },
   },
   bg: {
-    color: (c) => {
-      return {
-        backgroundColor: c
-      }
-    }
+    color: (c) => ({
+      backgroundColor: c,
+    }),
   },
   justifyBetween: {
-    justifyContent: "space-between"
+    justifyContent: 'space-between',
   },
-}
+};

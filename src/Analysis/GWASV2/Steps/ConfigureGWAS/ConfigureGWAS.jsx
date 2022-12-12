@@ -73,9 +73,7 @@ const ConfigureGWAS = ({
                 value={numOfPCs}
                 min={1}
                 max={10}
-                onChange={(e) =>
-                  dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })
-                }
+                onChange={(e) => dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })}
               />
               {/* {(!numOfPC) && (<span style={{ color: 'red' }}> Please input a value between 1 and 10</span>)} */}
             </label>
@@ -89,12 +87,10 @@ const ConfigureGWAS = ({
               <InputNumber
                 id='input-maf'
                 value={mafThreshold}
-                onChange={(e) =>
-                  dispatch({
-                    type: ACTIONS.UPDATE_MAF_THRESHOLD,
-                    payload: Number(e),
-                  })
-                }
+                onChange={(e) => dispatch({
+                  type: ACTIONS.UPDATE_MAF_THRESHOLD,
+                  payload: Number(e),
+                })}
                 stringMode
                 step='0.01'
                 min={'0'}
@@ -104,7 +100,7 @@ const ConfigureGWAS = ({
           </div>
         </div>
         <div style={flexRow}>
-          <div></div>
+          <div />
           <div style={flexCol}>
             <label
               // className='GWASUI-label'
@@ -114,12 +110,10 @@ const ConfigureGWAS = ({
               <InputNumber
                 id='input-imputation'
                 value={imputationScore}
-                onChange={(e) =>
-                  dispatch({
-                    type: ACTIONS.UPDATE_IMPUTATION_SCORE,
-                    payload: Number(e),
-                  })
-                }
+                onChange={(e) => dispatch({
+                  type: ACTIONS.UPDATE_IMPUTATION_SCORE,
+                  payload: Number(e),
+                })}
                 stringMode
                 step='0.1'
                 min={'0'}
@@ -135,14 +129,14 @@ const ConfigureGWAS = ({
           open={open}
           onOk={() => handleSubmit()}
           onCancel={() => setOpen(false)}
-          title={
+          title={(
             <div style={{ ...flexRow, ...{ justifyContent: 'space-between' } }}>
               <div>Review Details</div>
               {/* <button onClick={modalCancel}>X</button> */}
             </div>
-          }
+          )}
 
-          //onCancel={}
+          // onCancel={}
           // onOk={() => {
           //   submission code here (onSuccess: setModalVisible(false))
           //   setModalVisible(false)
@@ -183,13 +177,9 @@ const ConfigureGWAS = ({
                 Covariates
               </div>
               <div style={(flexCol, { overflowY: 300 })}>
-                {covariates.map((cov, key) => {
-                  return (
-                    <div key={key}>
-                      {cov?.concept_name ?? cov.provided_name}
-                    </div>
-                  );
-                })}
+                {covariates.map((cov, key) => (
+                  <div key={key}>{cov?.concept_name ?? cov.provided_name}</div>
+                ))}
               </div>
             </div>
           </div>

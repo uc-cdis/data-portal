@@ -50,26 +50,15 @@ const SelectCovariates = ({
         />
       )}
       {!selectionMode && (
-        <div>
-          <button
-            type='button'
-            style={{
-              height: 60,
-              marginRight: 5,
-            }}
-            onClick={() => setSelectionMode('continuous')}
-          >
-            Add Continuous Outcome Covariate
+        <div className='GWASUI-selectionUI'>
+          {' '}
+          <button type='button' onClick={() => setSelectionMode('continuous')}>
+            <span>+</span>
+            <span>Add Continuous Outcome Covariate</span>
           </button>
-          <button
-            type='button'
-            style={{
-              height: 60,
-              marginLeft: 5,
-            }}
-            onClick={() => setSelectionMode('dichotomous')}
-          >
-            Add Dichotomous Outcome Covariate
+          <button type='button' onClick={() => setSelectionMode('dichotomous')}>
+            <span>+</span>
+            <span>Add Dichotomous Outcome Covariate</span>
           </button>
         </div>
       )}
