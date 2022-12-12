@@ -645,10 +645,10 @@ Below is an example, with inline comments describing what each JSON block config
         "display": true
       }
     ],
-    "tagsDisplayName": "Tags" // optional, overrides the name of the mandatory tags column
+    "tagsDisplayName": "Tags", // optional, overrides the name of the mandatory tags column
     "tableScrollHeight": 450 // optional, no scroll if omitted
   },
-  "resourceBrowser": {), // see Resource Browser documentation
+  "resourceBrowser": {}, // see Resource Browser documentation
   "workspacePageTitle": "", // title to display above workspacePageDescription
   "workspacePageDescription": "", // html to display above the workspace options
   "studyViewerConfig": [],//See docs/study_viewer.md for more details.
