@@ -1,14 +1,14 @@
 # Portal Configurations
 
-> Contents duplicated from https://github.com/uc-cdis/cdis-wiki/blob/master/dev/gen3/guides/ui_etl_configuration.md#portal-folder for public access
+> Contents duplicated from <https://github.com/uc-cdis/cdis-wiki/blob/master/dev/gen3/guides/ui_etl_configuration.md#portal-folder> for public access
 
 ## The "portal config" file
 
 Each Gen3 Commons has a JSON file which details what UI features should be deployed for a commons, and what the configuration for these features should be. This is commonly referred to as the "portal config" file. A "portal config" file usually locates at `/portal/gitops.json` in the manifest directory of a Commons. Portal also has some default config files under `/data/config` but most of them are legacy configurations.
 
-Below is an example, with inline comments describing what each JSON block configures, as well as which properties are optional and which are required (if you are looking to copy/paste configuration as a start, please use something in the Github repo as the inline comments below will become an issue):
+Below is an example, with inline comments describing what each JSON block configures, as well as which properties are optional and which are required (if you are looking to copy/paste configuration as a start, please use something in the GitHub repository as the inline comments below will become an issue):
 
-```
+```json
 {
   "gaTrackingId": "xx-xxxxxxxxx-xxx", // optional; the Google Analytics ID to track statistics
   "ddEnv": "DEV", // optional; the Datadog RUM option specifying the application’s environment, for example: prod, pre-prod, staging, etc. Can be determined automatically if omitted
@@ -141,11 +141,11 @@ Below is an example, with inline comments describing what each JSON block config
     },
    "systemUse" : { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
       "systemUseTitle" : "", // required; Title of the popup dialog
-      "systemUseText" : [""] // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
-      "expireUseMsgDays" : optional; 0, // the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
+      "systemUseText" : [""], // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
+      "expireUseMsgDays": 0, // optional the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
     },
     "footer": {
-      "externalURL": "/external/footer" // iframe link to raw html from another source (ie frontend framework) to pull a footer from
+      "externalURL": "/external/footer", // iframe link to raw html from another source (ie frontend framework) to pull a footer from
       "links": [
         {
           "text": "Link title",
@@ -172,12 +172,12 @@ Below is an example, with inline comments describing what each JSON block config
   "requiredCerts": [], // optional; do users need to take a quiz or agree to something before they can access the site?
   "featureFlags": { // optional; will hide certain parts of the site if needed
     "explorer": true, // required; indicates the flag and whether to hide it or not
-    "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. The Data Explorer page would be publicly accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
+    "explorerPublic": true, // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. The Data Explorer page would be publicly accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
     "discovery": true, // optional; whether to enable the Discovery page. If true, `discoveryConfig` must be present as well.
-    "discoveryUseAggMDS": true // optional, false by default; if true, the Discovery page will use the Aggregate Metadata path instead of the Metadata path. This causes the Discovery page to serve as an "Ecosystem Browser". See docs/ecosystem_browser.md for more details.
+    "discoveryUseAggMDS": true, // optional, false by default; if true, the Discovery page will use the Aggregate Metadata path instead of the Metadata path. This causes the Discovery page to serve as an "Ecosystem Browser". See docs/ecosystem_browser.md for more details.
     "explorerStoreFilterInURL": true, // optional; whether to store/load applied filters in the URL during Data Explorer use.
-    This feature currently supports single select filters and range filters; it
-    lacks support for search filter state, accessibility state, table state.
+    // This feature currently supports single select filters and range filters; it
+    // lacks support for search filter state, accessibility state, table state.
     "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
     "explorerFilterValuesToHide": ["array of strings"], // optional, Values set in array will be hidden in guppy filters. Intended use is to hide missing data category from filters, for this it should be set to the same as `missing_data_alias` in Guppy server config
     "studyRegistration": true, // optional, whether to enable the study registration feature
@@ -428,13 +428,13 @@ Below is an example, with inline comments describing what each JSON block config
     "public": true, // optional, defaults to true. If false, requires user to sign in before seeing the Discovery page
     "features": {
       "exportToWorkspace": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
-          "enable": boolean
-          "enableDownloadManifest": boolean // enables a button which allows user to download a manifest file for gen3 client
-          "downloadManifestButtonText": string // text to be displayed on the download manifest button
-          "manifestFieldName": string // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
+          "enable": boolean,
+          "enableDownloadManifest": boolean, // enables a button which allows user to download a manifest file for gen3 client
+          "downloadManifestButtonText": string, // text to be displayed on the download manifest button
+          "manifestFieldName": string, // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
           "documentationLinks": {
-              "gen3Client": string // link to documentation about the gen3 client. Used for button tooltips
-              "gen3Workspaces": string // link to documentation about gen3 workspaces. Used for button tooltips.
+              "gen3Client": string, // link to documentation about the gen3 client. Used for button tooltips
+              "gen3Workspaces": string, // link to documentation about gen3 workspaces. Used for button tooltips.
           }
       },
       "pageTitle": {
@@ -707,6 +707,5 @@ Below is an example, with inline comments describing what each JSON block config
         "kayakoDepartmentId": 21        // Required; the department ID in the kayako portal. Refer to Ops team to get more info
       }
     }
-
 }
 ```
