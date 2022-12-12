@@ -51,9 +51,24 @@ const GWASContainer = () => {
           mafThreshold={state.mafThreshold}
           imputationScore={state.imputationScore}
           selectedHare={state.selectedHare}
-          covariates={covariates}
-          selectedCohort={selectedStudyPopulationCohort}
-          outcome={outcome}
+          covariates={state.covariates}
+          selectedCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+          showModal={false}
+        />
+      );
+    case 4:
+      return (
+        <ConfigureGWAS
+          dispatch={dispatch}
+          numOfPCs={state.numPCs}
+          mafThreshold={state.mafThreshold}
+          imputationScore={state.imputationScore}
+          selectedHare={state.selectedHare}
+          covariates={state.covariates}
+          selectedCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+          showModal={true}
         />
       );
     default:
@@ -119,7 +134,7 @@ const GWASContainer = () => {
                 Select Different GWAS Type
               </Button>
             </Popconfirm>
-            {state.currentStep < gwasV2Steps.length - 1 && (
+            {state.currentStep < gwasV2Steps.length && (
               <Button
                 data-tour='next-button'
                 className='GWASUI-navBtn GWASUI-navBtn__next'

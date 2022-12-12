@@ -54,6 +54,10 @@ const MockTemplate = () => {
           mafThreshold={state.mafThreshold}
           imputationScore={state.imputationScore}
           selectedHare={state.selectedHare}
+          covariates={state.covariates}
+          selectedCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+          showModal={false}
         />
         <Button
           style={{ marginTop: '3em', float: 'left' }}
