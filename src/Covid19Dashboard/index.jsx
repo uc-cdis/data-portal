@@ -227,6 +227,7 @@ class Covid19Dashboard extends React.Component {
           <Tabs>
             <TabList className='covid19-dashboard_tablist'>
               <Tab>COVID-19 in Illinois</Tab>
+              <Tab>COVID-19 Community Analysis</Tab>
               <Tab>IL SARS-CoV2 Genomics</Tab>
             </TabList>
 
@@ -272,6 +273,33 @@ class Covid19Dashboard extends React.Component {
                   )}
               </div>
             </TabPanel>
+            <TabPanel className='gen3-dashboard_panel'>
+              <div className='gen3-dashboard_quicksight'>
+                {/* this component doesn't need the mapboxAPIToken but it's a way to make
+                sure this is the COVID19 Commons and the iframe contents will load */}
+                { mapboxAPIToken
+                  && (
+                    <div className="gen3-dashboard_container">
+                      <div className="gen3-dashboard_row">
+                        <div className="gen3-dashboard_col">
+                          <iframe className="gen3-dashboard_frame" src="https://us-east-1.quicksight.aws.amazon.com/sn/embed/share/accounts/043745044068/dashboards/6652754a-1e60-4aaf-b160-1346cbc5fc66?directory_alias=gen3-dashboards">
+                          </iframe>
+                        </div>
+                      </div>
+                      <div className="gen3-dashboard_row">
+                        <div className="gen3-dashboard_col">
+                          <iframe  className="gen3-dashboard_frame" src="https://us-east-1.quicksight.aws.amazon.com/sn/accounts/043745044068/dashboards/00227203-5da5-428f-b687-7bb27acd2a99?directory_alias=gen3-dashboards">
+                          </iframe>
+                        </div>
+                        <div className="gen3-dashboard_col">
+                          <iframe  className="gen3-dashboard_frame" src="https://us-east-1.quicksight.aws.amazon.com/sn/accounts/043745044068/dashboards/3e6cb492-9541-4fec-b440-913135971b4d?directory_alias=gen3-dashboards">
+                          </iframe>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+              </div>
+            </TabPanel>
             <TabPanel className='covid19-dashboard_panel'>
               <div className='covid19-dashboard_auspice'>
                 {/* this component doesn't need the mapboxAPIToken but it's a way to make
@@ -287,6 +315,7 @@ class Covid19Dashboard extends React.Component {
                   )}
               </div>
             </TabPanel>
+
           </Tabs>
         </div>
 
