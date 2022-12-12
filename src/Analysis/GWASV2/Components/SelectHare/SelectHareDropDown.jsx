@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
 // import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { Spin, Select } from 'antd';
-import { fetchConceptStatsByHareSubset, queryConfig } from "../Shared/wizardEndpoints/cohortMiddlewareApi";
-import { useSourceContext } from '../Shared/Source';
-import { pseudoTw } from '../Shared/constants';
+import { fetchConceptStatsByHareSubset, queryConfig } from "../../Shared/cohortMiddlewareApi";
+import { useSourceContext } from '../../Shared/Source';
+import { pseudoTw } from '../../Shared/constants';
+import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const SelectHareDropDown = ({
     selectedHare,
@@ -85,8 +86,13 @@ const SelectHareDropDown = ({
     }, [dataX]);
 
     const onChange = (h) => {
-        console.log('hare selected', h)
-        // handleHareChange({ accessor: "selectedHare", payload: selectedHare })
+        selectedHare = {
+            concept_value: h,
+            concept_value_as_concept_id: 2000007032,
+            concept_value_name: h + "'s description" // TODO
+          }
+          console.log('hare selected', selectedHare)
+          handleHareChange({ type: ACTIONS.UPDATE_SELECTED_HARE, payload: selectedHare })
     }
 
     //   const getHareDescriptionBreakdown = (singleHare, allHares) => {

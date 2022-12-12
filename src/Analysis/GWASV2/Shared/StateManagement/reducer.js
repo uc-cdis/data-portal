@@ -39,6 +39,8 @@ const reducer = (state, action) => {
     return { ...state, mafThreshold: action.payload };
   case ACTIONS.UPDATE_NUM_PCS:
     return { ...state, numPCs: action.payload };
+  case ACTIONS.UPDATE_SELECTED_HARE:
+    return { ...state, selectedHare: action.payload };
   default:
     throw new Error(`Unknown action passed to reducer: ${action}`);
   }

@@ -8,6 +8,7 @@ const ACTIONS = {
   UPDATE_MAF_THRESHOLD: 'updateMafThreshold',
   UPDATE_IMPUTATION_SCORE: 'updateImputationScore',
   UPDATE_NUM_PCS: 'updateNumPCs',
+  UPDATE_SELECTED_HARE: 'updateSelectedHare'
 };
 
 export default ACTIONS;
