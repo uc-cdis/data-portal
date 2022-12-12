@@ -63,7 +63,6 @@ export interface DiscoveryConfig {
             displayName?: string,
             filters: {
                 key: string
-                // multiSelectBehavior?: 'AND' | 'OR' // defaults to OR // not yet supported
                 keyDisplayName?: string
                 valueDisplayNames?: {
                     [value: string]: string
