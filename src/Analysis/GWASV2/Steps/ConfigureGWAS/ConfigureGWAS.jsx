@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { InputNumber } from 'antd';
-import ACTIONS from '../../Shared/StateManagement/Actions';
+import { InputNumber, Modal } from 'antd';
+import SelectHareDropDown from '../SelectHare/SelectHareDropDown';
 
 const twSudo = {
   flexCol: {
@@ -12,10 +12,9 @@ const twSudo = {
   flexRow: {
     display: 'flex',
     flexDirection: 'row',
-    margin: 'auto',
+    justifyContent: "space-between"
   },
 };
-
 // todo react tour
 
 const ConfigureGWAS = ({
@@ -23,39 +22,67 @@ const ConfigureGWAS = ({
   numOfPCs,
   mafThreshold,
   imputationScore,
+  covariates,
+  selectedCohort,
+  selectedHare,
+  outcome
 }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const modalShow = () => {
+    setModalVisible(true);
+  }
+  const modalCancel = () => {
+    setModalVisible(false);
+  }
+  // GWASUI label css
+  // margin: 5px;
+  // padding: 2px;
+  // width: auto;
+  // display: inline-block;
+  // white-space: nowrap;
+  // text-overflow: ellipsis;
+
   const { flexCol, flexRow } = twSudo;
-  // https://xd.adobe.com/view/5773a0b3-0957-443b-830b-95318a30363c-0220/screen/b66dc7ca-840f-4cc9-92ba-0e02b21319fb/
-  // https://ant.design/components/modal/
-  // todo: add modal here, enable when fields valid (refer to WorkflowParameters.jsx & GWASFormSubmit.jsx)
+  // enable when fields valid (refer to WorkflowParameters.jsx & GWASFormSubmit.jsx)
   return (
     <React.Fragment>
       <div style={flexCol}>
         <div style={flexRow}>
-          <React.Fragment>
+          <div style={flexCol}>
+            <SelectHareDropDown
+              selectedHare={selectedHare}
+              selectedCohort={selectedCohort}
+              covariates={covariates}
+              outcome={outcome}
+              handleHareChange={dispatch}
+            />
             <label
-              className='GWASUI-label GWASUI-asterisk'
-              htmlFor='input-numOfPC'
-            >
+              // className='GWASUI-label GWASUI-asterisk'
+              htmlFor='input-numOfPC'>
               Number of PCs to use &nbsp;
               <InputNumber
                 id='input-numOfPC'
                 value={numOfPCs}
                 min={1}
                 max={10}
-                onChange={(e) => dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })}
+                onChange={(e) => dispatch({
+                  accessor: "numOfPC",
+                  payload: Number(e)
+                })}
               />
               {/* {(!numOfPC) && (<span style={{ color: 'red' }}> Please input a value between 1 and 10</span>)} */}
             </label>
-          </React.Fragment>
-          <React.Fragment>
-            <label className='GWASUI-label' htmlFor='input-maf'>
+          </div>
+          <div style={flexCol}>
+            <label
+              // className='GWASUI-label'
+              htmlFor='input-maf'>
               MAF Cutoff &nbsp;
               <InputNumber
                 id='input-maf'
                 value={mafThreshold}
                 onChange={(e) => dispatch({
-                  type: ACTIONS.UPDATE_MAF_THRESHOLD,
+                  accessor: "mafThreshold",
                   payload: Number(e),
                 })}
                 stringMode
@@ -64,21 +91,21 @@ const ConfigureGWAS = ({
                 max={'0.5'}
               />
             </label>
-          </React.Fragment>
+          </div>
         </div>
         <div style={flexRow}>
-          <React.Fragment>
-            {/* todo add hare dropdown here */}
-            {/* dispatch({ type: "selectedHare", update: selectedHare }) */}
-          </React.Fragment>
-          <React.Fragment>
-            <label className='GWASUI-label' htmlFor='input-imputation'>
+          <div>
+          </div>
+          <div style={flexCol}>
+            <label
+              // className='GWASUI-label'
+              htmlFor='input-imputation'>
               Imputation Score Cutoff &nbsp;
               <InputNumber
                 id='input-imputation'
                 value={imputationScore}
                 onChange={(e) => dispatch({
-                  type: ACTIONS.UPDATE_IMPUTATION_SCORE,
+                  accessor: "imputationScore",
                   payload: Number(e),
                 })}
                 stringMode
@@ -87,8 +114,61 @@ const ConfigureGWAS = ({
                 max={'1'}
               />
             </label>
-          </React.Fragment>
+          </div>
         </div>
+        {/* <div style={flexRow}><button>Submit</button></div> */}
+        <Modal
+          title={<div style={{...flexRow, ...{ justifyContent: "space-between" }}}>
+            <div>Review Details</div>
+            {/* <button onClick={modalCancel}>X</button> */}
+          </div>}
+          open={modalVisible}
+          onCancel={modalCancel}
+          // onOk={() => {
+          //   submission code here (onSuccess: setModalVisible(false))
+          //   setModalVisible(false)
+          // }}
+          >
+          <div style={flexCol}>
+            <div style={flexRow}>
+              <div>Number of PCs</div><div>{numOfPCs}</div>
+            </div>
+            <div style={flexRow}>
+            <div>MAF Cutoff</div><div>{mafThreshold}</div>
+            </div>
+            <div style={flexRow}>
+            <div>HARE Ancestry</div><div>{selectedHare?.concept_value_name}</div>
+            </div>
+            <div style={flexRow}>
+            <div>Imputation Score Cutoff</div><div>{imputationScore}</div>
+            </div>
+            <hr />
+            <div style={flexRow}>
+            <div>Cohort</div><div>{selectedCohort?.cohort_name}</div>
+            </div>
+            <div style={flexRow}>
+            <div>Phenotype</div><div>{outcome?.concept_name ?? outcome?.provided_name}</div>
+            </div>
+            <div style={flexRow}>
+            <div>Final Size</div><div>{'final size'}</div>
+            </div>
+            <div style={flexRow}>
+            <div onClick={() => console.log('cov', covariates)}>Covariates</div>
+            <div style={flexCol, { overflowY: 300 }}>
+              {covariates.map((cov, key) => {
+                return <div key={key}>{cov?.concept_name ?? cov.provided_name}</div>
+              })}
+              </div>
+            </div>
+            <div style={flexRow}>
+            <div>Minimum Outlier Cutoff</div><div>{'min outlier cutoff'}</div>
+            </div>
+            <div style={flexRow}>
+            <div>Maximum Outlier Cutoff</div><div>{'max outlier cutoff'}</div>
+            </div>
+          </div>
+        </Modal>
+          <button onClick={modalShow}>open modal</button>
       </div>
     </React.Fragment>
   );
@@ -99,6 +179,10 @@ ConfigureGWAS.propTypes = {
   numOfPCs: PropTypes.number,
   mafThreshold: PropTypes.number,
   imputationScore: PropTypes.number,
+  covariates: PropTypes.array,
+  selectedCohort: PropTypes.object,
+  selectedHare: PropTypes.object,
+  outcome: PropTypes.object
 };
 
 ConfigureGWAS.defaultProps = {
