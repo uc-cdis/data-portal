@@ -692,6 +692,7 @@ Below is an example, with inline comments describing what each JSON block config
           "studyRegistrationUIDField": "appl_id", // optional, the field which can be used to uniquely determine a metadata record for Study Registration. Defaults to "appl_id"
           "studyRegistrationFormDisclaimerField": "This is a disclaimer", //optional, the disclaimer text that appears under the submit button on the study registration request access form. Defaults to undefined
           "clinicalTrialFields": [] // optional, list of fields to fetch from ClinicalTrials.gov
+          "dataDictionaryField": "data_dictionaries" // optional, specify the field name in metadata for variable-level metadata, default to "data_dictionaries"
         },
         "workspaceRegistrationConfig" : { // optional, config for Workspace Registration Request Access page.
         "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
