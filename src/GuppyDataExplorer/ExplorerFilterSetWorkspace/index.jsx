@@ -9,6 +9,10 @@ import {
   fetchFilterSets,
   updateFilterSet,
 } from '../../redux/explorer/asyncThunks';
+import {
+  createToken,
+  fetchWithToken,
+} from '../../redux/explorer/filterSetsAPI';
 import { updateExplorerFilter } from '../../redux/explorer/slice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import FilterSetActionForm from './FilterSetActionForm';
@@ -73,17 +77,25 @@ function ExplorerFilterSetWorkspace() {
   function handleDuplicate() {
     workspace.duplicate();
   }
-  /** @param {SavedExplorerFilterSet} loaded */
-  function handleLoad(loaded) {
-    let newActiveId;
-    for (const [id, filterSet] of Object.entries(workspace.all))
-      if (filterSet.id === loaded.id) {
-        newActiveId = id;
-        break;
-      }
+  /**
+   * @param {SavedExplorerFilterSet} loaded
+   * @param {boolean} [isShared]
+   */
+  function handleLoad(loaded, isShared = false) {
+    if (isShared) {
+      workspace.load({ filter: loaded.filter });
+    } else {
+      let newActiveId;
 
-    if (newActiveId) workspace.use(newActiveId);
-    else workspace.load(loaded);
+      for (const [id, filterSet] of Object.entries(workspace.all))
+        if (filterSet.id === loaded.id) {
+          newActiveId = id;
+          break;
+        }
+
+      if (newActiveId) workspace.use(newActiveId);
+      else workspace.load(loaded);
+    }
 
     closeActionForm();
   }
@@ -95,6 +107,9 @@ function ExplorerFilterSetWorkspace() {
     } finally {
       closeActionForm();
     }
+  }
+  function handleShare() {
+    return createToken(activeSavedFilterSet);
   }
   function handleReset() {
     handleFilterChange(activeSavedFilterSet.filter);
@@ -328,6 +343,14 @@ function ExplorerFilterSetWorkspace() {
               <button
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
+                onClick={() => setActionFormType('SHARE')}
+                disabled={activeSavedFilterSet === undefined}
+              >
+                Share
+              </button>
+              <button
+                className='explorer-filter-set-workspace__action-button'
+                type='button'
                 onClick={handleReset}
                 disabled={
                   activeSavedFilterSet === undefined ||
@@ -431,12 +454,14 @@ function ExplorerFilterSetWorkspace() {
               all: savedFilterSets.data,
               empty: { name: '', description: '', filter: {} },
             }}
+            fetchWithToken={fetchWithToken}
             handlers={{
               clearAll: handleClearAll,
               close: closeActionForm,
               delete: handleDelete,
               load: handleLoad,
               save: handleSave,
+              share: handleShare,
             }}
             type={actionFormType}
           />

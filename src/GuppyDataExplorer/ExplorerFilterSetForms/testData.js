@@ -21,7 +21,7 @@ export const testReduxStore = configureStore({
   },
 });
 
-/** @type {import('../types').ExplorerFilterSet[]} */
+/** @type {import('../types').SavedExplorerFilterSet[]} */
 export const testFilterSets = [
   {
     name: 'Simple filter set',
@@ -57,3 +57,5 @@ export const testFilterSets = [
     },
   },
 ];
+
+export const testToken = 'token-value';
