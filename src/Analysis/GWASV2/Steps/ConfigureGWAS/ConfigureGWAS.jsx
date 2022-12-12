@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { InputNumber, Modal } from 'antd';
+import { InputNumber, Modal, Input } from 'antd';
 import SelectHareDropDown from '../../Components/SelectHare/SelectHareDropDown';
 
 import ACTIONS from '../../Shared/StateManagement/Actions';
@@ -36,6 +36,12 @@ const ConfigureGWAS = ({
   const [open, setOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  const [jobName, setJobName] = useState('');
+
+  const handleEnterJobName = (e) => {
+    setJobName(e.target.value);
+  };
+
   useEffect(() => {
     if (showModal === true) {
       setOpen(true);
@@ -43,7 +49,6 @@ const ConfigureGWAS = ({
   }, [showModal]);
 
   const handleSubmit = () => {
-    alert('handle submit called');
     setOpen(false);
     setShowSuccess(true);
   };
@@ -53,8 +58,8 @@ const ConfigureGWAS = ({
     <React.Fragment>
       {showSuccess && (
         <DismissibleMessage
-          title='Congralations'
-          description='You Submitted Job Number: 3.1415926'
+          title={`Congratulations on your submission for ${jobName}`}
+          description={`Your job number is: 3.1415`}
         />
       )}
       <div style={flexCol}>
@@ -142,16 +147,10 @@ const ConfigureGWAS = ({
           title={
             <div style={{ ...flexRow, ...{ justifyContent: 'space-between' } }}>
               <div>Review Details</div>
-              {/* <button onClick={modalCancel}>X</button> */}
             </div>
           }
-
-          // onCancel={}
-          // onOk={() => {
-          //   submission code here (onSuccess: setModalVisible(false))
-          //   setModalVisible(false)
-          // }}
         >
+          <Input placeholder='Enter Job Name' onChange={handleEnterJobName} />
           <div style={flexCol}>
             <div style={flexRow}>
               <div>Number of PCs</div>
