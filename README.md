@@ -11,17 +11,17 @@ A generic data portal that supports some basic interaction with Gen3 services li
 ### Installing
 
 ```
-npm install
+npm ci
 ```
 
 ### Local development and dev.html
 
-See [docs/guide_running_portal_locally.md](docs/guide_running_portal_locally.md) for a step-by-step guide to running portal locally.
+See the [guide to running data-portal locally](docs/guide_running_portal_locally.md) for a step-by-step guide.
 
 The portal's `/dev.html` path loads javascript and most css
 from `localhost`. Test code under local development with this procedure:
 
-- `npm install`
+- `npm ci`
 - launch the webpack dev server, and configure local code with the same configuration as the server to test against. For example - if we intend to test against qa.planx-pla.net, then:
 
 ```
