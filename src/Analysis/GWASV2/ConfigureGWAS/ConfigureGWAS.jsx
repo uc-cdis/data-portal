@@ -43,9 +43,7 @@ const ConfigureGWAS = ({
   // text-overflow: ellipsis;
 
   const { flexCol, flexRow } = twSudo;
-  // https://xd.adobe.com/view/5773a0b3-0957-443b-830b-95318a30363c-0220/screen/b66dc7ca-840f-4cc9-92ba-0e02b21319fb/
-  // https://ant.design/components/modal/
-  // todo: add modal here, enable when fields valid (refer to WorkflowParameters.jsx & GWASFormSubmit.jsx)
+  // enable when fields valid (refer to WorkflowParameters.jsx & GWASFormSubmit.jsx)
   return (
     <React.Fragment>
       <div style={flexCol}>
@@ -97,8 +95,6 @@ const ConfigureGWAS = ({
         </div>
         <div style={flexRow}>
           <div>
-            {/* todo add hare dropdown here */}
-            {/* dispatch({ type: "selectedHare", update: selectedHare }) */}
           </div>
           <div style={flexCol}>
             <label
@@ -141,7 +137,7 @@ const ConfigureGWAS = ({
             <div>MAF Cutoff</div><div>{mafThreshold}</div>
             </div>
             <div style={flexRow}>
-            {/* <div>HARE Ancestry</div><div>{selectedHare}</div> */}
+            <div>HARE Ancestry</div><div>{selectedHare?.concept_value_name}</div>
             </div>
             <div style={flexRow}>
             <div>Imputation Score Cutoff</div><div>{imputationScore}</div>
@@ -151,20 +147,18 @@ const ConfigureGWAS = ({
             <div>Cohort</div><div>{selectedCohort?.cohort_name}</div>
             </div>
             <div style={flexRow}>
-            <div>Phenotype</div><div>{outcome?.concept_name}</div>
-            {/* outcome.provided_name */}
+            <div>Phenotype</div><div>{outcome?.concept_name ?? outcome?.provided_name}</div>
             </div>
             <div style={flexRow}>
             <div>Final Size</div><div>{'final size'}</div>
             </div>
             <div style={flexRow}>
-            <div>Covariates</div>
-            {/* <div style={flexCol, { overflowY: 300 }}>
-              {covariates.forEach(cov => {
-                ?? cov.provided_name
-                return <div>{cov.concept_name}</div>
+            <div onClick={() => console.log('cov', covariates)}>Covariates</div>
+            <div style={flexCol, { overflowY: 300 }}>
+              {covariates.map((cov, key) => {
+                return <div key={key}>{cov?.concept_name ?? cov.provided_name}</div>
               })}
-              </div> */}
+              </div>
             </div>
             <div style={flexRow}>
             <div>Minimum Outlier Cutoff</div><div>{'min outlier cutoff'}</div>

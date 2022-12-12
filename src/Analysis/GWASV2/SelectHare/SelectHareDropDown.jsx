@@ -78,14 +78,14 @@ const SelectHareDropDown = ({
             ...queryConfig
         }]);
 
-    const { status: statusX, data: dataX } = hareResults[hareResults.length === 1 ? 0 : -1];
+    const { status: statusX, data: dataX } = hareResults.at(hareResults.length === 1 ? 0 : -1)
 
     useEffect(() => {
         setHares(dataX?.concept_breakdown);
     }, [dataX]);
 
     const onChange = (h) => {
-        console.log('hhhh', h)
+        console.log('hare selected', h)
         // handleHareChange({ accessor: "selectedHare", payload: selectedHare })
     }
 
