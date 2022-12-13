@@ -13,8 +13,8 @@ const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
           <Card
             key={`cd-list-option-${key}`}
             style={{
-              width: 300,
-              backgroundColor: 'purple',
+              width: 189,
+              backgroundColor: '#EBFAD3',
             }}
             actions={[
               <DeleteOutlined
@@ -35,8 +35,8 @@ const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
           <Card
             key={`cd-list-option-${key}`}
             style={{
-              width: 300,
-              backgroundColor: 'yellow',
+              width: 189,
+              backgroundColor: '#FDE3D6',
             }}
             actions={[
               <DeleteOutlined

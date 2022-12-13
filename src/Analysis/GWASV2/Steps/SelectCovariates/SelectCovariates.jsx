@@ -20,38 +20,42 @@ const SelectCovariates = ({
       <div className='GWASUI-row'>
         <div className='GWASUI-double-column'>
           {selectionMode === 'continuous' && (
-            <ContinuousCovariates
-              covariates={covariates}
-              outcome={outcome}
-              handleClose={() => {
-                setSelectionMode('');
-              }}
-              dispatch={(chosenCovariate) => {
-                dispatch({
-                  type: ACTIONS.ADD_COVARIATE,
-                  payload: chosenCovariate,
-                });
-              }}
-              submitButtonLabel={'Add'}
-            />
+            <div className='select-covariates-container'>
+              <ContinuousCovariates
+                covariates={covariates}
+                outcome={outcome}
+                handleClose={() => {
+                  setSelectionMode('');
+                }}
+                dispatch={(chosenCovariate) => {
+                  dispatch({
+                    type: ACTIONS.ADD_COVARIATE,
+                    payload: chosenCovariate,
+                  });
+                }}
+                submitButtonLabel={'Add'}
+              />
+            </div>
           )}
 
           {selectionMode === 'dichotomous' && (
-            <CustomDichotomousCovariates
-              studyPopulationCohort={studyPopulationCohort}
-              covariates={covariates}
-              outcome={outcome}
-              handleClose={() => {
-                setSelectionMode('');
-              }}
-              dispatch={(chosenCovariate) => {
-                dispatch({
-                  type: ACTIONS.ADD_COVARIATE,
-                  payload: chosenCovariate,
-                });
-              }}
-              submitButtonLabel={'Add'}
-            />
+            <div className='select-covariates-container'>
+              <CustomDichotomousCovariates
+                studyPopulationCohort={studyPopulationCohort}
+                covariates={covariates}
+                outcome={outcome}
+                handleClose={() => {
+                  setSelectionMode('');
+                }}
+                dispatch={(chosenCovariate) => {
+                  dispatch({
+                    type: ACTIONS.ADD_COVARIATE,
+                    payload: chosenCovariate,
+                  });
+                }}
+                submitButtonLabel={'Add'}
+              />
+            </div>
           )}
           {!selectionMode && (
             <div className='GWASUI-selectionUI'>
@@ -78,9 +82,9 @@ const SelectCovariates = ({
           className='GWASUI-column'
           style={{
             background: '#E9EEF2',
-            padding: '15px',
+            padding: '10px',
             width: '206px',
-            height: '520px',
+            minHeight: '300px',
           }}
         >
           <CovariatesCardsList
