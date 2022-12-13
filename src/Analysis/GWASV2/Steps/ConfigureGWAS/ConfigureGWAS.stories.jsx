@@ -47,40 +47,42 @@ const MockTemplate = () => {
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
-        <h1 style={{ textAlign: 'center' }}>Configure GWAS (Steps 4 & 5)</h1>
-        <ConfigureGWAS
-          dispatch={dispatch}
-          numOfPCs={state.numPCs}
-          mafThreshold={state.mafThreshold}
-          imputationScore={state.imputationScore}
-          selectedHare={state.selectedHare}
-          covariates={state.covariates}
-          selectedCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          showModal={state.currentStep === 4 ? true : false}
-        />
-        <Button
-          style={{ marginTop: '3em', float: 'left' }}
-          className='GWASUI-navBtn GWASUI-navBtn__next'
-          type='primary'
-          onClick={() => {
-            dispatch({ type: ACTIONS.DECREMENT_CURRENT_STEP });
-          }}
-          disabled={state.currentStep < 1}
-        >
-          Previous
-        </Button>
-        <Button
-          style={{ marginTop: '3em', float: 'right' }}
-          className='GWASUI-navBtn GWASUI-navBtn__next'
-          type='primary'
-          onClick={() => {
-            dispatch({ type: ACTIONS.INCREMENT_CURRENT_STEP });
-          }}
-          disabled={!nextButtonEnabled}
-        >
-          Next
-        </Button>
+        <div className='GWASV2'>
+          <h1 style={{ textAlign: 'center' }}>Configure GWAS (Steps 4 & 5)</h1>
+          <ConfigureGWAS
+            dispatch={dispatch}
+            numOfPCs={state.numPCs}
+            mafThreshold={state.mafThreshold}
+            imputationScore={state.imputationScore}
+            selectedHare={state.selectedHare}
+            covariates={state.covariates}
+            selectedCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            showModal={state.currentStep === 4 ? true : false}
+          />
+          <Button
+            style={{ marginTop: '3em', float: 'left' }}
+            className='GWASUI-navBtn GWASUI-navBtn__next'
+            type='primary'
+            onClick={() => {
+              dispatch({ type: ACTIONS.DECREMENT_CURRENT_STEP });
+            }}
+            disabled={state.currentStep < 1}
+          >
+            Previous
+          </Button>
+          <Button
+            style={{ marginTop: '3em', float: 'right' }}
+            className='GWASUI-navBtn GWASUI-navBtn__next'
+            type='primary'
+            onClick={() => {
+              dispatch({ type: ACTIONS.INCREMENT_CURRENT_STEP });
+            }}
+            disabled={!nextButtonEnabled}
+          >
+            Next
+          </Button>
+        </div>
       </SourceContextProvider>
     </QueryClientProvider>
   );

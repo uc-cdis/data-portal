@@ -6,3 +6,12 @@
 .ant-modal-body input[placeholder='Enter Job Name']::placeholder {
   color: #707070;
 }
+
+.configure-gwas .configure-gwas_container {
+  margin: auto;
+  background: #fff;
+  background: hotpink;
+  max-width: 682px;
+  min-height: 192px;
+  padding: 24px 12px;
+}

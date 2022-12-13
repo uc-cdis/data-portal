@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  InputNumber, Modal, Input, Space,
-} from 'antd';
+import { InputNumber, Modal, Input, Space } from 'antd';
 import SelectHareDropDown from '../../Components/SelectHare/SelectHareDropDown';
 import ACTIONS from '../../Shared/StateManagement/Actions';
 import DismissibleMessage from '../../Shared/DismissibleMessage/DismissibleMessage';
+import '../../GWASV2.css';
 import './ConfigureGWAS.css';
 
 const twSudo = {
@@ -64,9 +63,51 @@ const ConfigureGWAS = ({
           description={'Your job number is: 3.1415'}
         />
       )}
-      <div style={flexCol}>
-        <div style={flexRow}>
-          <div style={flexCol}>
+      <div className='configure-gwas_container'>
+        <div className='GWASUI-row'>
+          <div className='GWASUI-column'>
+            <label
+              // className='GWASUI-label GWASUI-asterisk'
+              htmlFor='input-numOfPC'
+            ></label>
+            Number of PCs to use &nbsp;
+            <InputNumber
+              id='input-numOfPC'
+              value={numOfPCs}
+              min={1}
+              max={10}
+              onChange={(e) =>
+                dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })
+              }
+            />
+          </div>
+          <div className='GWASUI-column'>
+            {' '}
+            <label
+              // className='GWASUI-label'
+              htmlFor='input-maf'
+            >
+              MAF Cutoff &nbsp;
+            </label>
+            <InputNumber
+              id='input-maf'
+              value={mafThreshold}
+              onChange={(e) =>
+                dispatch({
+                  type: ACTIONS.UPDATE_MAF_THRESHOLD,
+                  payload: Number(e),
+                })
+              }
+              stringMode
+              step='0.01'
+              min={'0'}
+              max={'0.5'}
+            />
+          </div>
+        </div>
+
+        <div className='GWASUI-row'>
+          <div className='GWASUI-column'>
             <SelectHareDropDown
               selectedHare={selectedHare}
               selectedCohort={selectedCohort}
@@ -74,65 +115,32 @@ const ConfigureGWAS = ({
               outcome={outcome}
               handleHareChange={dispatch}
             />
-            <label
-              // className='GWASUI-label GWASUI-asterisk'
-              htmlFor='input-numOfPC'
-            >
-              Number of PCs to use &nbsp;
-              <InputNumber
-                id='input-numOfPC'
-                value={numOfPCs}
-                min={1}
-                max={10}
-                onChange={(e) => dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })}
-              />
-              {/* {(!numOfPC) && (<span style={{ color: 'red' }}> Please input a value between 1 and 10</span>)} */}
-            </label>
           </div>
-          <div style={flexCol}>
-            <label
-              // className='GWASUI-label'
-              htmlFor='input-maf'
-            >
-              MAF Cutoff &nbsp;
-              <InputNumber
-                id='input-maf'
-                value={mafThreshold}
-                onChange={(e) => dispatch({
-                  type: ACTIONS.UPDATE_MAF_THRESHOLD,
-                  payload: Number(e),
-                })}
-                stringMode
-                step='0.01'
-                min={'0'}
-                max={'0.5'}
-              />
-            </label>
-          </div>
-        </div>
-        <div style={flexRow}>
-          <div />
-          <div style={flexCol}>
+
+          <div className='GWASUI-column'>
             <label
               // className='GWASUI-label'
               htmlFor='input-imputation'
             >
-              Imputation Score Cutoff &nbsp;
-              <InputNumber
-                id='input-imputation'
-                value={imputationScore}
-                onChange={(e) => dispatch({
+              Imputation Score Cutoff &nbsp;{' '}
+            </label>
+            <InputNumber
+              id='input-imputation'
+              value={imputationScore}
+              onChange={(e) =>
+                dispatch({
                   type: ACTIONS.UPDATE_IMPUTATION_SCORE,
                   payload: Number(e),
-                })}
-                stringMode
-                step='0.1'
-                min={'0'}
-                max={'1'}
-              />
-            </label>
+                })
+              }
+              stringMode
+              step='0.1'
+              min={'0'}
+              max={'1'}
+            />
           </div>
         </div>
+
         <Modal
           okText='Submit'
           cancelText='Back'
@@ -141,11 +149,11 @@ const ConfigureGWAS = ({
           okButtonProps={{ disabled: jobName === '' }}
           onOk={() => handleSubmit()}
           onCancel={() => setOpen(false)}
-          title={(
+          title={
             <div style={{ ...flexRow, ...{ justifyContent: 'space-between' } }}>
               <div>Review Details</div>
             </div>
-          )}
+          }
         >
           <Input placeholder='Enter Job Name' onChange={handleEnterJobName} />
           <div style={flexCol}>
