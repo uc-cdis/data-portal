@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  InputNumber, Modal, Input, Space,
-} from 'antd';
+import { InputNumber, Modal, Input, Space } from 'antd';
 import SelectHareDropDown from '../../Components/SelectHare/SelectHareDropDown';
 import ACTIONS from '../../Shared/StateManagement/Actions';
 import DismissibleMessage from '../../Shared/DismissibleMessage/DismissibleMessage';
@@ -84,7 +82,9 @@ const ConfigureGWAS = ({
                 value={numOfPCs}
                 min={1}
                 max={10}
-                onChange={(e) => dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })}
+                onChange={(e) =>
+                  dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })
+                }
               />
               {/* {(!numOfPC) && (<span style={{ color: 'red' }}> Please input a value between 1 and 10</span>)} */}
             </label>
@@ -98,10 +98,12 @@ const ConfigureGWAS = ({
               <InputNumber
                 id='input-maf'
                 value={mafThreshold}
-                onChange={(e) => dispatch({
-                  type: ACTIONS.UPDATE_MAF_THRESHOLD,
-                  payload: Number(e),
-                })}
+                onChange={(e) =>
+                  dispatch({
+                    type: ACTIONS.UPDATE_MAF_THRESHOLD,
+                    payload: Number(e),
+                  })
+                }
                 stringMode
                 step='0.01'
                 min={'0'}
@@ -121,10 +123,12 @@ const ConfigureGWAS = ({
               <InputNumber
                 id='input-imputation'
                 value={imputationScore}
-                onChange={(e) => dispatch({
-                  type: ACTIONS.UPDATE_IMPUTATION_SCORE,
-                  payload: Number(e),
-                })}
+                onChange={(e) =>
+                  dispatch({
+                    type: ACTIONS.UPDATE_IMPUTATION_SCORE,
+                    payload: Number(e),
+                  })
+                }
                 stringMode
                 step='0.1'
                 min={'0'}
@@ -133,18 +137,19 @@ const ConfigureGWAS = ({
             </label>
           </div>
         </div>
-
         <Modal
           okText='Submit'
           cancelText='Back'
           open={open}
+          // okButtonProps={{ disabled: jobName === '' ? false : true }}
+          okButtonProps={{ disabled: jobName === '' ? true : false }}
           onOk={() => handleSubmit()}
           onCancel={() => setOpen(false)}
-          title={(
+          title={
             <div style={{ ...flexRow, ...{ justifyContent: 'space-between' } }}>
               <div>Review Details</div>
             </div>
-          )}
+          }
         >
           <Input placeholder='Enter Job Name' onChange={handleEnterJobName} />
           <div style={flexCol}>
