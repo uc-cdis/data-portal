@@ -8,11 +8,12 @@ const DismissibleMessage = ({
   messageType = 'success',
 }) => {
   const [open, setOpen] = useState(true);
-  const isEnterOrSpace = (event) => event.key === 'Enter'
-    || event.key === ' '
-    || event.key === 'Spacebar'
-    || event.keycode === '32'
-    || event.keycode === '13';
+  const isEnterOrSpace = (event) =>
+    event.key === 'Enter' ||
+    event.key === ' ' ||
+    event.key === 'Spacebar' ||
+    event.keycode === '32' ||
+    event.keycode === '13';
 
   const handleKeyPress = (event, gwasTypeInput) => {
     if (isEnterOrSpace(event)) {
@@ -44,4 +45,16 @@ const DismissibleMessage = ({
     </React.Fragment>
   );
 };
+
+DismissibleMessage.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  messageType: PropTypes.string,
+};
+
+DismissibleMessage.defaultProps = {
+  description: 'placeholder description',
+  messageType: 'success',
+};
+
 export default DismissibleMessage;
