@@ -4,6 +4,8 @@ import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariat
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
 import ACTIONS from '../../Shared/StateManagement/Actions';
+import './SelectCovariates.css';
+import '../../GWASV2.css';
 
 const SelectCovariates = ({
   dispatch,
@@ -15,60 +17,83 @@ const SelectCovariates = ({
 
   return (
     <React.Fragment>
-      {selectionMode === 'continuous' && (
-        <ContinuousCovariates
-          covariates={covariates}
-          outcome={outcome}
-          handleClose={() => {
-            setSelectionMode('');
-          }}
-          dispatch={(chosenCovariate) => {
-            dispatch({
-              type: ACTIONS.ADD_COVARIATE,
-              payload: chosenCovariate,
-            });
-          }}
-          submitButtonLabel={'Add'}
-        />
-      )}
+      <div className='GWASUI-row'>
+        <div className='GWASUI-double-column'>
+          {selectionMode === 'continuous' && (
+            <ContinuousCovariates
+              covariates={covariates}
+              outcome={outcome}
+              handleClose={() => {
+                setSelectionMode('');
+              }}
+              dispatch={(chosenCovariate) => {
+                dispatch({
+                  type: ACTIONS.ADD_COVARIATE,
+                  payload: chosenCovariate,
+                });
+              }}
+              submitButtonLabel={'Add'}
+            />
+          )}
 
-      {selectionMode === 'dichotomous' && (
-        <CustomDichotomousCovariates
-          studyPopulationCohort={studyPopulationCohort}
-          covariates={covariates}
-          outcome={outcome}
-          handleClose={() => {
-            setSelectionMode('');
-          }}
-          dispatch={(chosenCovariate) => {
-            dispatch({
-              type: ACTIONS.ADD_COVARIATE,
-              payload: chosenCovariate,
-            });
-          }}
-          submitButtonLabel={'Add'}
-        />
-      )}
-      {!selectionMode && (
-        <div className='GWASUI-selectionUI'>
-          {' '}
-          <button type='button' onClick={() => setSelectionMode('continuous')}>
-            <span>+</span>
-            <span>Add Continuous Outcome Covariate</span>
-          </button>
-          <button type='button' onClick={() => setSelectionMode('dichotomous')}>
-            <span>+</span>
-            <span>Add Dichotomous Outcome Covariate</span>
-          </button>
+          {selectionMode === 'dichotomous' && (
+            <CustomDichotomousCovariates
+              studyPopulationCohort={studyPopulationCohort}
+              covariates={covariates}
+              outcome={outcome}
+              handleClose={() => {
+                setSelectionMode('');
+              }}
+              dispatch={(chosenCovariate) => {
+                dispatch({
+                  type: ACTIONS.ADD_COVARIATE,
+                  payload: chosenCovariate,
+                });
+              }}
+              submitButtonLabel={'Add'}
+            />
+          )}
+          {!selectionMode && (
+            <div className='GWASUI-selectionUI'>
+              <button
+                type='button'
+                onClick={() => setSelectionMode('continuous')}
+              >
+                <span>+</span>
+                <span>Add Continuous Outcome Covariate</span>
+              </button>
+
+              <button
+                type='button'
+                onClick={() => setSelectionMode('dichotomous')}
+              >
+                <span>+</span>
+                <span>Add Dichotomous Outcome Covariate</span>
+              </button>
+            </div>
+          )}
         </div>
-      )}
-      <CovariatesCardsList
-        covariates={covariates}
-        deleteCovariate={(chosenCovariate) => dispatch({
-          type: ACTIONS.DELETE_COVARIATE,
-          payload: chosenCovariate,
-        })}
-      />
+
+        <div
+          className='GWASUI-column'
+          style={{
+            background: '#E9EEF2',
+            padding: '15px',
+            width: '206px',
+            height: '520px',
+          }}
+        >
+          <CovariatesCardsList
+            covariates={covariates}
+            deleteCovariate={(chosenCovariate) =>
+              dispatch({
+                type: ACTIONS.DELETE_COVARIATE,
+                payload: chosenCovariate,
+              })
+            }
+          />
+        </div>
+      </div>
     </React.Fragment>
   );
 };

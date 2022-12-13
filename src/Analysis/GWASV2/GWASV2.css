@@ -11,6 +11,12 @@
   flex-basis: 100%;
   flex: 1;
 }
+.GWASV2 .GWASUI-double-column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 2;
+}
 
 .GWASV2 .steps-content {
   border: none;
