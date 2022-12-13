@@ -426,7 +426,7 @@ const DiscoveryActionBar = (props: Props) => {
         },
       );
     },
-    [downloadStatus, props.discovery.selectedResources],
+    [props.discovery.selectedResources],
   );
 
   useEffect(
