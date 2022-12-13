@@ -137,7 +137,7 @@ const ConfigureGWAS = ({
                   setShowSuccess(false);
                   dispatch({
                     type: ACTIONS.SET_CURRENT_STEP,
-                    payload: Number(3),
+                    payload: 3,
                   });
                 }}
               >
@@ -149,7 +149,7 @@ const ConfigureGWAS = ({
       )}
       {showError && (
         <DismissibleMessage
-          title={`Job submission failed!`}
+          title={'Job submission failed!'}
           description={`${errorText}`}
           messageType={'warning'}
         />

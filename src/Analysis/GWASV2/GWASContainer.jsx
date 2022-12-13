@@ -82,7 +82,6 @@ const GWASContainer = () => {
     nextButtonEnabled = false;
   }
 
-
   return (
     <React.Fragment>
       <ProgressBar currentStep={state.currentStep} />

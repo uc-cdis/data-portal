@@ -17,7 +17,7 @@ export const jobSubmission = async (
     n_pcs: numOfPCs,
     variables: [...selectedCovariates, outcome],
     out_prefix: Date.now().toString(),
-    outcome: outcome,
+    outcome,
     hare_population: selectedHare.concept_value_name,
     hare_concept_id: 2000007027,
     maf_threshold: Number(mafThreshold),
