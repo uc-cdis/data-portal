@@ -47,7 +47,7 @@ const MockTemplate = () => {
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
-        <h1 style={{ textAlign: 'center' }}>Configure GWAS (Step 4)</h1>
+        <h1 style={{ textAlign: 'center' }}>Configure GWAS (Steps 4 & 5)</h1>
         <ConfigureGWAS
           dispatch={dispatch}
           numOfPCs={state.numPCs}
