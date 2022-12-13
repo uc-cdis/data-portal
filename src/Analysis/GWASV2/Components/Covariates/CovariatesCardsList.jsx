@@ -26,8 +26,8 @@ const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
             ]}
           >
             <Meta
-              avatar={<TeamOutlined />}
-              title={`${covariate.provided_name}`}
+              title='Dichotomous Covariate'
+              description={`${covariate.provided_name}`}
             />
           </Card>
         )}
@@ -48,8 +48,8 @@ const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
             ]}
           >
             <Meta
-              avatar={<TeamOutlined />}
-              title={`${covariate.concept_name}`}
+              title='Continous Covariate'
+              description={`${covariate.concept_name}`}
             />
           </Card>
         )}

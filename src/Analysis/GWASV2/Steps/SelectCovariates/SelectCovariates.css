@@ -1,13 +1,40 @@
-.GWASUI-selectionUI {
+.GWASV2 .GWASUI-selectionUI {
   text-align: center;
   margin-top: 100px;
 }
-.GWASUI-double-column {
+.GWASV2 .GWASUI-double-column {
   min-width: 988px;
 }
-.select-covariates-container {
+.GWASV2 .select-covariates-container {
   padding: 20px;
   border: 1px solid #e2e2e3;
   background: #fff;
   border-radius: 4px;
+}
+.GWASV2 .ant-card {
+  margin-bottom: 10px;
+}
+.GWASV2 .ant-card-body {
+  padding: 0;
+}
+.GWASV2 .ant-card-meta-detail {
+  width: 100%;
+}
+.GWASV2 .ant-card-meta-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #333333;
+  margin: 10px;
+  width: 100%;
+}
+.GWASV2 .ant-card-meta-description {
+  width: 100%;
+  background-color: #fff;
+  padding: 10px;
+  min-height: 50px;
+}
+.GWASV2 .ant-card-actions {
+  position: absolute;
+  right: 0;
+  top: 33px;
 }
