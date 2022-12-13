@@ -17,7 +17,7 @@ const Template = (args) => (
 
 export const success = Template.bind({});
 success.args = {
-  title: 'Dismissible Message Title',
+  title: 'Congratulations on your submission for Job Name userInputName',
   description: 'Dismissible Message Description',
   messageType: 'success',
 };

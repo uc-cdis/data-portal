@@ -18,6 +18,7 @@
 .GWASV2 .dismissable-message_close {
   cursor: pointer;
   float: right;
+  margin-left: 25px;
 }
 .GWASV2 .dismissable-message_close:hover {
   opacity: 0.8;
