@@ -18,7 +18,7 @@
     "react-dom": "16.8.6",
     "react-map-gl": "^5.2.3",
     "react-redux": "^5.0.7",
-    "style-loader": "^0.21.0"
+    "style-loader": "^0.23.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.13.0",
