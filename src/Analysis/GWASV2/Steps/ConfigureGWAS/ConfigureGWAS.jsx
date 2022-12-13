@@ -168,9 +168,7 @@ const ConfigureGWAS = ({
               value={numOfPCs}
               min={1}
               max={10}
-              onChange={(e) =>
-                dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })
-              }
+              onChange={(e) => dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })}
             />
           </div>
           <div className='GWASUI-column'>
@@ -184,12 +182,10 @@ const ConfigureGWAS = ({
             <InputNumber
               id='input-maf'
               value={mafThreshold}
-              onChange={(e) =>
-                dispatch({
-                  type: ACTIONS.UPDATE_MAF_THRESHOLD,
-                  payload: Number(e),
-                })
-              }
+              onChange={(e) => dispatch({
+                type: ACTIONS.UPDATE_MAF_THRESHOLD,
+                payload: Number(e),
+              })}
               stringMode
               step='0.01'
               min={'0'}
@@ -218,12 +214,10 @@ const ConfigureGWAS = ({
             <InputNumber
               id='input-imputation'
               value={imputationScore}
-              onChange={(e) =>
-                dispatch({
-                  type: ACTIONS.UPDATE_IMPUTATION_SCORE,
-                  payload: Number(e),
-                })
-              }
+              onChange={(e) => dispatch({
+                type: ACTIONS.UPDATE_IMPUTATION_SCORE,
+                payload: Number(e),
+              })}
               stringMode
               step='0.1'
               min={'0'}
@@ -240,11 +234,11 @@ const ConfigureGWAS = ({
           okButtonProps={{ disabled: jobName === '' }}
           onOk={() => handleSubmit()}
           onCancel={() => setOpen(false)}
-          title={
+          title={(
             <div style={{ ...flexRow, ...{ justifyContent: 'space-between' } }}>
               <div>Review Details</div>
             </div>
-          }
+          )}
         >
           <Input placeholder='Enter Job Name' onChange={handleEnterJobName} />
           <div style={flexCol}>
