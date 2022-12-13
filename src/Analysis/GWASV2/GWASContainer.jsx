@@ -78,6 +78,10 @@ const GWASContainer = () => {
   if (state.currentStep === 0 && !state.selectedStudyPopulationCohort) {
     nextButtonEnabled = false;
   }
+  if (state.currentStep === 1 && !state.outcome) {
+    nextButtonEnabled = false;
+  }
+
 
   return (
     <React.Fragment>
