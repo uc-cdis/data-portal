@@ -2,6 +2,7 @@ const ACTIONS = {
   SET_SELECTED_STUDY_POPULATION_COHORT: 'setSelectedStudyPopulationCohort',
   DECREMENT_CURRENT_STEP: 'decrementCurrentStep',
   INCREMENT_CURRENT_STEP: 'incrementCurrentStep',
+  SET_CURRENT_STEP: 'setCurrentStep',
   SET_OUTCOME: 'setOutcome',
   ADD_COVARIATE: 'addCovariate',
   DELETE_COVARIATE: 'deleteCovariate',
@@ -9,6 +10,7 @@ const ACTIONS = {
   UPDATE_IMPUTATION_SCORE: 'updateImputationScore',
   UPDATE_NUM_PCS: 'updateNumPCs',
   UPDATE_SELECTED_HARE: 'updateSelectedHare',
+  RESET_STATE: 'resetState',
 };
 
 export default ACTIONS;

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import PropTypes from 'prop-types';
-import {
-  InputNumber, Modal, Input, Space,
-} from 'antd';
+import { InputNumber, Modal, Input } from 'antd';
 import SelectHareDropDown from '../../Components/SelectHare/SelectHareDropDown';
 import ACTIONS from '../../Shared/StateManagement/Actions';
-import DismissibleMessage from '../../Shared/DismissibleMessage/DismissibleMessage';
-import './ConfigureGWAS.css';
+import DismissibleMessage from '../../Components/DismissibleMessage/DismissibleMessage';
 import { jobSubmission } from '../../Shared/gwasWorkflowApi';
 import { useSourceContext } from '../../Shared/Source';
+import initialState from '../../Shared/StateManagement/InitialState';
+import '../../GWASV2.css';
+import './ConfigureGWAS.css';
 
 const twSudo = {
   flexCol: {
@@ -45,7 +45,6 @@ const ConfigureGWAS = ({
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
 
-
   const [jobName, setJobName] = useState('');
   const [errorText, setErrorText] = useState('');
 
@@ -59,41 +58,44 @@ const ConfigureGWAS = ({
     }
   }, [showModal]);
 
-  const submitJob = useMutation(() => (jobSubmission(
-      sourceId,
-      numOfPCs,
-      covariates,
-      outcome,
-      selectedHare,
-      mafThreshold,
-      imputationScore,
-      selectedCohort,
-      jobName,
-    )), {
-    onSuccess: (data) => {
-      if (data?.status === 200) {
-        setShowSuccess(true);
-      } else {
-        data.text().then((error) => {
-          let submissionError = null;
-          let errorText = `gwas job failed with error ${error}`;
-          if (error) {
-            submissionError = JSON.parse(error); // TODO test for json first
-            errorText = `submission failed due to error ${submissionError}`;
-          }
-          if (submissionError?.detail) {
-            const errorMessage = submissionError.detail[0]?.msg;
-            const errorType = submissionError.detail[0]?.type;
-            const errorLoc = submissionError.detail[0]?.loc;
-            errorText = `submission failed due to error ${errorType}, please fix ${errorMessage} in ${errorLoc}`;
-          }
-          setErrorText(errorText);
-          setShowError(true);
-        });
-      }
-    },
-  });
-
+  const submitJob = useMutation(
+    () =>
+      jobSubmission(
+        sourceId,
+        numOfPCs,
+        covariates,
+        outcome,
+        selectedHare,
+        mafThreshold,
+        imputationScore,
+        selectedCohort,
+        jobName
+      ),
+    {
+      onSuccess: (data) => {
+        if (data?.status === 200) {
+          setShowSuccess(true);
+        } else {
+          data.text().then((error) => {
+            let submissionError = null;
+            let errorText = `gwas job failed with error ${error}`;
+            if (error) {
+              submissionError = JSON.parse(error); // TODO test for json first
+              errorText = `submission failed due to error ${submissionError}`;
+            }
+            if (submissionError?.detail) {
+              const errorMessage = submissionError.detail[0]?.msg;
+              const errorType = submissionError.detail[0]?.type;
+              const errorLoc = submissionError.detail[0]?.loc;
+              errorText = `submission failed due to error ${errorType}, please fix ${errorMessage} in ${errorLoc}`;
+            }
+            setErrorText(errorText);
+            setShowError(true);
+          });
+        }
+      },
+    }
+  );
 
   const handleSubmit = () => {
     setOpen(false);
@@ -104,10 +106,46 @@ const ConfigureGWAS = ({
   return (
     <div className='configure-gwas'>
       {showSuccess && (
-        <DismissibleMessage
-          title={`Congratulations on your submission for ${jobName}`}
-          description={'Your job number is: 3.1415'}
-        />
+        <div className='configure-gwas_success'>
+          <DismissibleMessage
+            title={`Congratulations on your submission for ${jobName}`}
+            description={'Your job number is: 3.1415'}
+          />
+          <h3>DO YOU WANT TO</h3>
+          <div className='GWASUI-row'>
+            <div className='GWASUI-column'>
+              <a href='./GWASResults'>
+                <button>See Status</button>
+              </a>
+            </div>
+            <div className='GWASUI-column'>
+              <button
+                onClick={() => {
+                  setShowSuccess(false);
+                  dispatch({
+                    type: ACTIONS.RESET_STATE,
+                    payload: initialState,
+                  });
+                }}
+              >
+                Submit New Workflow
+              </button>
+            </div>
+            <div className='GWASUI-column'>
+              <button
+                onClick={() => {
+                  setShowSuccess(false);
+                  dispatch({
+                    type: ACTIONS.SET_CURRENT_STEP,
+                    payload: Number(3),
+                  });
+                }}
+              >
+                Submit Similar (Stay Here)
+              </button>
+            </div>
+          </div>
+        </div>
       )}
       {showError && (
         <DismissibleMessage
@@ -130,7 +168,9 @@ const ConfigureGWAS = ({
               value={numOfPCs}
               min={1}
               max={10}
-              onChange={(e) => dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })}
+              onChange={(e) =>
+                dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })
+              }
             />
           </div>
           <div className='GWASUI-column'>
@@ -144,10 +184,12 @@ const ConfigureGWAS = ({
             <InputNumber
               id='input-maf'
               value={mafThreshold}
-              onChange={(e) => dispatch({
-                type: ACTIONS.UPDATE_MAF_THRESHOLD,
-                payload: Number(e),
-              })}
+              onChange={(e) =>
+                dispatch({
+                  type: ACTIONS.UPDATE_MAF_THRESHOLD,
+                  payload: Number(e),
+                })
+              }
               stringMode
               step='0.01'
               min={'0'}
@@ -176,10 +218,12 @@ const ConfigureGWAS = ({
             <InputNumber
               id='input-imputation'
               value={imputationScore}
-              onChange={(e) => dispatch({
-                type: ACTIONS.UPDATE_IMPUTATION_SCORE,
-                payload: Number(e),
-              })}
+              onChange={(e) =>
+                dispatch({
+                  type: ACTIONS.UPDATE_IMPUTATION_SCORE,
+                  payload: Number(e),
+                })
+              }
               stringMode
               step='0.1'
               min={'0'}
@@ -196,11 +240,11 @@ const ConfigureGWAS = ({
           okButtonProps={{ disabled: jobName === '' }}
           onOk={() => handleSubmit()}
           onCancel={() => setOpen(false)}
-          title={(
+          title={
             <div style={{ ...flexRow, ...{ justifyContent: 'space-between' } }}>
               <div>Review Details</div>
             </div>
-          )}
+          }
         >
           <Input placeholder='Enter Job Name' onChange={handleEnterJobName} />
           <div style={flexCol}>

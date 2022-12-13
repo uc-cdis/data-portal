@@ -53,17 +53,22 @@ const MockTemplate = () => {
           style={{ background: '#f5f5f5', padding: '40px' }}
         >
           <h1 style={{ textAlign: 'center' }}>Configure GWAS (Steps 4 & 5)</h1>
-          <ConfigureGWAS
-            dispatch={dispatch}
-            numOfPCs={state.numPCs}
-            mafThreshold={state.mafThreshold}
-            imputationScore={state.imputationScore}
-            selectedHare={state.selectedHare}
-            covariates={state.covariates}
-            selectedCohort={state.selectedStudyPopulationCohort}
-            outcome={state.outcome}
-            showModal={state.currentStep === 4 ? true : false}
-          />
+          {state.currentStep !== 0 && (
+            <ConfigureGWAS
+              dispatch={dispatch}
+              numOfPCs={state.numPCs}
+              mafThreshold={state.mafThreshold}
+              imputationScore={state.imputationScore}
+              selectedHare={state.selectedHare}
+              covariates={state.covariates}
+              selectedCohort={state.selectedStudyPopulationCohort}
+              outcome={state.outcome}
+              showModal={state.currentStep === 4 ? true : false}
+            />
+          )}
+          {state.currentStep === 0 && (
+            <h1>Current Step is now back to the beginning...</h1>
+          )}
           <Button
             style={{ marginTop: '3em', float: 'left' }}
             className='GWASUI-navBtn GWASUI-navBtn__next'
