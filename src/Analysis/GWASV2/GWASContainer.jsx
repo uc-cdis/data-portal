@@ -79,15 +79,6 @@ const GWASContainer = () => {
     nextButtonEnabled = false;
   }
 
-  /*
-  todo:
-  { outcome, allCovariates, numOfPCs, mafThreshold, imputationScore, ...} = workflow;
-  grab submit code from GWASWizard/wizardEndpoints/gwasWorkflowApi.js
-
-  const GWASSubmit = () => {
-  };
-  */
-
   return (
     <React.Fragment>
       <ProgressBar currentStep={state.currentStep} />
@@ -144,9 +135,6 @@ const GWASContainer = () => {
               >
                 Next
               </Button>
-            )}
-            {state.currentStep === gwasV2Steps.length - 1 && (
-              <div className='GWASUI-navBtn' />
             )}
           </div>
         </Space>
