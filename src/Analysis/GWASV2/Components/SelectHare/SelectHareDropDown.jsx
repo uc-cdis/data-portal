@@ -106,9 +106,9 @@ const SelectHareDropDown = ({
 
   const onChange = (h) => {
     selectedHare = {
-      concept_value: h,
+      concept_value: h.value,
       concept_value_as_concept_id: 2000007032,
-      concept_value_name: `${h}'s description`, // TODO
+      concept_value_name: h.label,
     };
     console.log('hare selected', selectedHare);
     handleHareChange({
@@ -141,6 +141,7 @@ const SelectHareDropDown = ({
       {statusX === 'success' && (
         <Select
           showSearch
+          labelInValue
           onChange={onChange}
           placeholder='-select one of the ancestry groups below-'
           fieldNames={{ label: 'concept_value_name', value: 'concept_value' }}
