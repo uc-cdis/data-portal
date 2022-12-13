@@ -6,6 +6,7 @@ import reducer from '../../Shared/StateManagement/reducer';
 import ConfigureGWAS from './ConfigureGWAS';
 import { SourceContextProvider } from '../../Shared/Source';
 import ACTIONS from '../../Shared/StateManagement/Actions';
+import '../../GWASV2.css';
 
 export default {
   title: 'Tests3/GWASV2/Steps/ConfigureGWAS',
@@ -145,6 +146,31 @@ MockedSuccess.parameters = {
           );
         }
       ),
+
+      rest.post('http://:serverpath/ga4gh/wes/v2/submit', (req, res, ctx) => {
+        const { serverpath } = req.params;
+        console.log(serverpath);
+        return res(
+          ctx.delay(1100),
+          ctx.json({
+            ok: 'test',
+          }),
+        );
+      }),
+
     ],
   },
 };
+
+// TODO
+// export const MockedErrorSubmit = MockTemplate.bind({});
+// MockedError.parameters = {
+//   msw: {
+//     handlers: [
+//       rest.post('http://:serverpath/ga4gh/wes/v2/submit', (req, res, ctx) => res(
+//         ctx.delay(800),
+//         ctx.status(403),
+//       )),
+//     ],
+//   },
+// };
