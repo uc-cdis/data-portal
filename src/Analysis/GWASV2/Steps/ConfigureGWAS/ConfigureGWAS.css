@@ -1,0 +1,5 @@
+.ant-modal-body input[placeholder='Enter Job Name'] {
+  margin-bottom: 25px;
+  font-size: 18px;
+  border: 1px solid #dededf;
+}

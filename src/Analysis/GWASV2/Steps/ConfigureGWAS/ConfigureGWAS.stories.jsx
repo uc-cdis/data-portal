@@ -57,7 +57,7 @@ const MockTemplate = () => {
           covariates={state.covariates}
           selectedCohort={state.selectedStudyPopulationCohort}
           outcome={state.outcome}
-          showModal={false}
+          showModal={state.currentStep === 4 ? true : false}
         />
         <Button
           style={{ marginTop: '3em', float: 'left' }}

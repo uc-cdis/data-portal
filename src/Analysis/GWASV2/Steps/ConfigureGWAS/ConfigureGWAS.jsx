@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { InputNumber, Modal, Input } from 'antd';
+import { InputNumber, Modal, Input, Space } from 'antd';
 import SelectHareDropDown from '../../Components/SelectHare/SelectHareDropDown';
-
 import ACTIONS from '../../Shared/StateManagement/Actions';
 import DismissibleMessage from '../../Shared/DismissibleMessage/DismissibleMessage';
+import './ConfigureGWAS.css';
 
 const twSudo = {
   flexCol: {
@@ -55,7 +55,7 @@ const ConfigureGWAS = ({
 
   // enable when fields valid (refer to WorkflowParameters.jsx & GWASFormSubmit.jsx)
   return (
-    <React.Fragment>
+    <div className='configure-gwas'>
       {showSuccess && (
         <DismissibleMessage
           title={`Congratulations on your submission for ${jobName}`}
@@ -82,7 +82,9 @@ const ConfigureGWAS = ({
                 value={numOfPCs}
                 min={1}
                 max={10}
-                onChange={(e) => dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })}
+                onChange={(e) =>
+                  dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })
+                }
               />
               {/* {(!numOfPC) && (<span style={{ color: 'red' }}> Please input a value between 1 and 10</span>)} */}
             </label>
@@ -96,10 +98,12 @@ const ConfigureGWAS = ({
               <InputNumber
                 id='input-maf'
                 value={mafThreshold}
-                onChange={(e) => dispatch({
-                  type: ACTIONS.UPDATE_MAF_THRESHOLD,
-                  payload: Number(e),
-                })}
+                onChange={(e) =>
+                  dispatch({
+                    type: ACTIONS.UPDATE_MAF_THRESHOLD,
+                    payload: Number(e),
+                  })
+                }
                 stringMode
                 step='0.01'
                 min={'0'}
@@ -119,10 +123,12 @@ const ConfigureGWAS = ({
               <InputNumber
                 id='input-imputation'
                 value={imputationScore}
-                onChange={(e) => dispatch({
-                  type: ACTIONS.UPDATE_IMPUTATION_SCORE,
-                  payload: Number(e),
-                })}
+                onChange={(e) =>
+                  dispatch({
+                    type: ACTIONS.UPDATE_IMPUTATION_SCORE,
+                    payload: Number(e),
+                  })
+                }
                 stringMode
                 step='0.1'
                 min={'0'}
@@ -138,11 +144,11 @@ const ConfigureGWAS = ({
           open={open}
           onOk={() => handleSubmit()}
           onCancel={() => setOpen(false)}
-          title={(
+          title={
             <div style={{ ...flexRow, ...{ justifyContent: 'space-between' } }}>
               <div>Review Details</div>
             </div>
-          )}
+          }
         >
           <Input placeholder='Enter Job Name' onChange={handleEnterJobName} />
           <div style={flexCol}>
@@ -188,7 +194,7 @@ const ConfigureGWAS = ({
           </div>
         </Modal>
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 
