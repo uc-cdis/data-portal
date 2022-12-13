@@ -17,60 +17,60 @@ const GWASContainer = () => {
 
   const generateStep = () => {
     switch (state.currentStep) {
-      case 0:
-        return (
-          <SelectStudyPopulation
-            selectedCohort={state.selectedStudyPopulationCohort}
-            dispatch={dispatch}
-          />
-        );
-      case 1:
-        return (
-          <SelectOutcome
-            studyPopulationCohort={state.selectedStudyPopulationCohort}
-            outcome={state.outcome}
-            dispatch={dispatch}
-          />
-        );
-      case 2:
-        return (
-          <SelectCovariates
-            studyPopulationCohort={state.selectedStudyPopulationCohort}
-            outcome={state.outcome}
-            covariates={state.covariates}
-            dispatch={dispatch}
-          />
-        );
-      case 3:
-        return (
-          <ConfigureGWAS
-            dispatch={dispatch}
-            numOfPCs={state.numPCs}
-            mafThreshold={state.mafThreshold}
-            imputationScore={state.imputationScore}
-            selectedHare={state.selectedHare}
-            covariates={state.covariates}
-            selectedCohort={state.selectedStudyPopulationCohort}
-            outcome={state.outcome}
-            showModal={false}
-          />
-        );
-      case 4:
-        return (
-          <ConfigureGWAS
-            dispatch={dispatch}
-            numOfPCs={state.numPCs}
-            mafThreshold={state.mafThreshold}
-            imputationScore={state.imputationScore}
-            selectedHare={state.selectedHare}
-            covariates={state.covariates}
-            selectedCohort={state.selectedStudyPopulationCohort}
-            outcome={state.outcome}
-            showModal
-          />
-        );
-      default:
-        return null;
+    case 0:
+      return (
+        <SelectStudyPopulation
+          selectedCohort={state.selectedStudyPopulationCohort}
+          dispatch={dispatch}
+        />
+      );
+    case 1:
+      return (
+        <SelectOutcome
+          studyPopulationCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+          dispatch={dispatch}
+        />
+      );
+    case 2:
+      return (
+        <SelectCovariates
+          studyPopulationCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+          covariates={state.covariates}
+          dispatch={dispatch}
+        />
+      );
+    case 3:
+      return (
+        <ConfigureGWAS
+          dispatch={dispatch}
+          numOfPCs={state.numPCs}
+          mafThreshold={state.mafThreshold}
+          imputationScore={state.imputationScore}
+          selectedHare={state.selectedHare}
+          covariates={state.covariates}
+          selectedCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+          showModal={false}
+        />
+      );
+    case 4:
+      return (
+        <ConfigureGWAS
+          dispatch={dispatch}
+          numOfPCs={state.numPCs}
+          mafThreshold={state.mafThreshold}
+          imputationScore={state.imputationScore}
+          selectedHare={state.selectedHare}
+          covariates={state.covariates}
+          selectedCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+          showModal
+        />
+      );
+    default:
+      return null;
     }
   };
 
