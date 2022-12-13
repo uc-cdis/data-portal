@@ -53,7 +53,7 @@ DismissibleMessage.propTypes = {
 };
 
 DismissibleMessage.defaultProps = {
-  description: 'placeholder description',
+  description: '',
   messageType: 'success',
 };
 
