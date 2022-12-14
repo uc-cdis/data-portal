@@ -42,6 +42,8 @@ const ConfigureGWAS = ({
 
   const [open, setOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [successText, setSuccessText] = useState('');
+
   const [showError, setShowError] = useState(false);
 
   const [jobName, setJobName] = useState('');
@@ -72,22 +74,13 @@ const ConfigureGWAS = ({
     {
       onSuccess: (data) => {
         if (data?.status === 200) {
-          setShowSuccess(true);
+          data.text().then((success) => {
+            setShowSuccess(true);
+            setSuccessText(`GWAS job id: ${success}`);
+          });
         } else {
           data.text().then((error) => {
-            let submissionError = null;
-            let errorOutput = `gwas job failed with error ${error}`;
-            if (error) {
-              submissionError = JSON.parse(error); // TODO test for json first
-              errorOutput = `submission failed due to error ${submissionError}`;
-            }
-            if (submissionError?.detail) {
-              const errorMessage = submissionError.detail[0]?.msg;
-              const errorType = submissionError.detail[0]?.type;
-              const errorLoc = submissionError.detail[0]?.loc;
-              errorOutput = `submission failed due to error ${errorType}, please fix ${errorMessage} in ${errorLoc}`;
-            }
-            setErrorText(errorOutput);
+            setErrorText(`GWAS job failed with error: ${JSON.stringify(error)}`);
             setShowError(true);
           });
         }
@@ -106,7 +99,7 @@ const ConfigureGWAS = ({
         <div className='configure-gwas_success'>
           <DismissibleMessage
             title={`Congratulations on your submission for ${jobName}`}
-            description={'Your job number is: 3.1415'}
+            description={`${successText}`}
           />
           <h3>DO YOU WANT TO</h3>
           <div className='GWASUI-row'>

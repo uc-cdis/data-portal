@@ -157,9 +157,7 @@ MockedSuccess.parameters = {
         console.log(serverpath);
         return res(
           ctx.delay(1100),
-          ctx.json({
-            ok: 'test',
-          }),
+          ctx.text("gwas-workflow-123456")
         );
       }),
 
