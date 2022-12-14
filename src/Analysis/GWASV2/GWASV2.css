@@ -68,7 +68,14 @@
   border: 2px solid #dedede;
 }
 
+.GWASV2 .GWASUI-selectionUI {
+  height: 519px;
+  width: 988px;
+  background: #fff;
+  text-align: center;
+}
 .GWASV2 .GWASUI-selectionUI button {
+  margin-top: 200px;
   height: 96px;
   width: 317px;
   margin-right: 16px;

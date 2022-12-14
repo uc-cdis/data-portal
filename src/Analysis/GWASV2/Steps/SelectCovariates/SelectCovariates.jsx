@@ -89,10 +89,12 @@ const SelectCovariates = ({
         >
           <CovariatesCardsList
             covariates={covariates}
-            deleteCovariate={(chosenCovariate) => dispatch({
-              type: ACTIONS.DELETE_COVARIATE,
-              payload: chosenCovariate,
-            })}
+            deleteCovariate={(chosenCovariate) =>
+              dispatch({
+                type: ACTIONS.DELETE_COVARIATE,
+                payload: chosenCovariate,
+              })
+            }
           />
         </div>
       </div>

@@ -1,7 +1,3 @@
-.GWASV2 .GWASUI-selectionUI {
-  text-align: center;
-  margin-top: 100px;
-}
 .GWASV2 .GWASUI-double-column {
   min-width: 988px;
 }
@@ -10,6 +6,27 @@
   border: 1px solid #e2e2e3;
   background: #fff;
   border-radius: 4px;
+  height: 519px;
+}
+.GWASV2 .select-covariates-container .GWASUI-table1 + button,
+.GWASV2 .select-covariates-container .GWASUI-table1 + button + button {
+  position: absolute;
+}
+.GWASV2 .select-covariates-container .GWASUI-table1 + button {
+  margin-top: -45px;
+}
+.GWASV2 .select-covariates-container .GWASUI-table1 + button + button {
+  margin-top: -45px;
+  margin-left: 180px;
+}
+
+.GWASV2
+  .select-covariates-container
+  .ant-table.ant-table-middle
+  .ant-table-tbody
+  > tr
+  > td {
+  padding: 5px;
 }
 .GWASV2 .ant-card {
   margin-bottom: 10px;
