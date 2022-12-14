@@ -11,7 +11,6 @@ import { useSourceContext } from '../../Shared/Source';
 import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const SelectHareDropDown = ({
-  selectedHare,
   selectedCohort,
   covariates,
   outcome,
@@ -103,15 +102,14 @@ const SelectHareDropDown = ({
   }, [dataX]);
 
   const onChange = (h) => {
-    selectedHare = {
+    const selectedHareOutput = {
       concept_value: h.value,
       concept_value_as_concept_id: 2000007032,
       concept_value_name: h.label,
     };
-    console.log('hare selected', selectedHare);
     handleHareChange({
       type: ACTIONS.UPDATE_SELECTED_HARE,
-      payload: selectedHare,
+      payload: selectedHareOutput,
     });
   };
 
@@ -155,7 +153,6 @@ const SelectHareDropDown = ({
 };
 
 SelectHareDropDown.propTypes = {
-  selectedHare: PropTypes.object.isRequired,
   selectedCohort: PropTypes.object.isRequired,
   outcome: PropTypes.object.isRequired,
   covariates: PropTypes.array.isRequired,

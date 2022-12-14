@@ -1,6 +1,6 @@
 import { gwasTemplate, gwasWorkflowPath } from '../../../localconf';
 import { headers } from '../../../configs';
-
+/* eslint-disable import/prefer-default-export */
 export const jobSubmission = async (
   sourceId,
   numOfPCs,

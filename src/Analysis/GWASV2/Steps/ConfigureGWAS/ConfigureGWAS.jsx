@@ -59,18 +59,17 @@ const ConfigureGWAS = ({
   }, [showModal]);
 
   const submitJob = useMutation(
-    () =>
-      jobSubmission(
-        sourceId,
-        numOfPCs,
-        covariates,
-        outcome,
-        selectedHare,
-        mafThreshold,
-        imputationScore,
-        selectedCohort,
-        jobName
-      ),
+    () => jobSubmission(
+      sourceId,
+      numOfPCs,
+      covariates,
+      outcome,
+      selectedHare,
+      mafThreshold,
+      imputationScore,
+      selectedCohort,
+      jobName,
+    ),
     {
       onSuccess: (data) => {
         if (data?.status === 200) {
@@ -78,23 +77,23 @@ const ConfigureGWAS = ({
         } else {
           data.text().then((error) => {
             let submissionError = null;
-            let errorText = `gwas job failed with error ${error}`;
+            let errorOutput = `gwas job failed with error ${error}`;
             if (error) {
               submissionError = JSON.parse(error); // TODO test for json first
-              errorText = `submission failed due to error ${submissionError}`;
+              errorOutput = `submission failed due to error ${submissionError}`;
             }
             if (submissionError?.detail) {
               const errorMessage = submissionError.detail[0]?.msg;
               const errorType = submissionError.detail[0]?.type;
               const errorLoc = submissionError.detail[0]?.loc;
-              errorText = `submission failed due to error ${errorType}, please fix ${errorMessage} in ${errorLoc}`;
+              errorOutput = `submission failed due to error ${errorType}, please fix ${errorMessage} in ${errorLoc}`;
             }
-            setErrorText(errorText);
+            setErrorText(errorOutput);
             setShowError(true);
           });
         }
       },
-    }
+    },
   );
 
   const handleSubmit = () => {
@@ -115,11 +114,12 @@ const ConfigureGWAS = ({
           <div className='GWASUI-row'>
             <div className='GWASUI-column'>
               <a href='./GWASResults'>
-                <button>See Status</button>
+                <button type='button'>See Status</button>
               </a>
             </div>
             <div className='GWASUI-column'>
               <button
+                type='button'
                 onClick={() => {
                   setShowSuccess(false);
                   dispatch({
@@ -133,6 +133,7 @@ const ConfigureGWAS = ({
             </div>
             <div className='GWASUI-column'>
               <button
+                type='button'
                 onClick={() => {
                   setShowSuccess(false);
                   dispatch({
@@ -172,13 +173,7 @@ const ConfigureGWAS = ({
             />
           </div>
           <div className='GWASUI-column'>
-            {' '}
-            <label
-              // className='GWASUI-label'
-              htmlFor='input-maf'
-            >
-              MAF Cutoff &nbsp;
-            </label>
+            <label htmlFor='input-maf'>MAF Cutoff &nbsp;</label>
             <InputNumber
               id='input-maf'
               value={mafThreshold}
@@ -199,7 +194,6 @@ const ConfigureGWAS = ({
             <label htmlFor='input-selectHareDropDown'>HARE Ancestry</label>
             <SelectHareDropDown
               id='input-selectHareDropDown'
-              selectedHare={selectedHare}
               selectedCohort={selectedCohort}
               covariates={covariates}
               outcome={outcome}
@@ -230,7 +224,6 @@ const ConfigureGWAS = ({
           okText='Submit'
           cancelText='Back'
           open={open}
-          // okButtonProps={{ disabled: jobName === '' ? false : true }}
           okButtonProps={{ disabled: jobName === '' }}
           onOk={() => handleSubmit()}
           onCancel={() => setOpen(false)}
@@ -291,10 +284,10 @@ ConfigureGWAS.propTypes = {
   numOfPCs: PropTypes.number,
   mafThreshold: PropTypes.number,
   imputationScore: PropTypes.number,
-  covariates: PropTypes.array,
-  selectedCohort: PropTypes.object,
-  selectedHare: PropTypes.object,
-  outcome: PropTypes.object,
+  covariates: PropTypes.array.isRequired,
+  selectedCohort: PropTypes.object.isRequired,
+  selectedHare: PropTypes.object.isRequired,
+  outcome: PropTypes.object.isRequired,
   showModal: PropTypes.bool,
 };
 

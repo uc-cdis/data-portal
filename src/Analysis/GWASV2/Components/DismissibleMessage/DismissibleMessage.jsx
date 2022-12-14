@@ -14,11 +14,6 @@ const DismissibleMessage = ({
     || event.keycode === '32'
     || event.keycode === '13';
 
-  const handleKeyPress = (event, gwasTypeInput) => {
-    if (isEnterOrSpace(event)) {
-      triggerNavigation(gwasTypeInput);
-    }
-  };
   return (
     <React.Fragment>
       {open === true && (
