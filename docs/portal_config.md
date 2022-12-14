@@ -8,7 +8,7 @@ Each Gen3 Commons has a JSON file which details what UI features should be deplo
 
 Below is an example, with inline comments describing what each JSON block configures, as well as which properties are optional and which are required (if you are looking to copy/paste configuration as a start, please use something in the Github repo as the inline comments below will become an issue):
 
-```
+```json
 {
   "gaTrackingId": "xx-xxxxxxxxx-xxx", // optional; the Google Analytics ID to track statistics
   "ddEnv": "DEV", // optional; the Datadog RUM option specifying the application’s environment, for example: prod, pre-prod, staging, etc. Can be determined automatically if omitted
