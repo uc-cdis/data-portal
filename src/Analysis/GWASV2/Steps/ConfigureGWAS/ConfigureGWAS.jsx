@@ -152,12 +152,7 @@ const ConfigureGWAS = ({
       <div className='configure-gwas_container'>
         <div className='GWASUI-row'>
           <div className='GWASUI-column'>
-            <label
-              // className='GWASUI-label GWASUI-asterisk'
-              htmlFor='input-numOfPC'
-            >
-              Number of PCs to use
-            </label>
+            <label htmlFor='input-numOfPC'>Number of PCs to use</label>
             <InputNumber
               id='input-numOfPC'
               value={numOfPCs}

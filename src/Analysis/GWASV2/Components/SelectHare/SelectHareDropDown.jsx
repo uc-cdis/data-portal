@@ -11,6 +11,7 @@ import { useSourceContext } from '../../Shared/Source';
 import ACTIONS from '../../Shared/StateManagement/Actions';
 
 const SelectHareDropDown = ({
+  id,
   selectedCohort,
   covariates,
   outcome,
@@ -136,6 +137,7 @@ const SelectHareDropDown = ({
       {statusX === 'error' && <React.Fragment>error</React.Fragment>}
       {statusX === 'success' && (
         <Select
+          id={id}
           showSearch
           labelInValue
           onChange={onChange}
@@ -153,6 +155,7 @@ const SelectHareDropDown = ({
 };
 
 SelectHareDropDown.propTypes = {
+  id: PropTypes.string.isRequired,
   selectedCohort: PropTypes.object.isRequired,
   outcome: PropTypes.object.isRequired,
   covariates: PropTypes.array.isRequired,
