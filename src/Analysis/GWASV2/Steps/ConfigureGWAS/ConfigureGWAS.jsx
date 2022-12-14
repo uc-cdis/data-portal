@@ -102,7 +102,7 @@ const ConfigureGWAS = ({
 
   return (
     <div className='configure-gwas'>
-      {showSuccess === false && (
+      {showSuccess && (
         <div className='configure-gwas_success'>
           <DismissibleMessage
             title={`Congratulations on your submission for ${jobName}`}
