@@ -64,7 +64,7 @@ const SelectCovariates = ({
                 onClick={() => setSelectionMode('continuous')}
               >
                 <span>+</span>
-                <span>Add Continuous Outcome Covariate</span>
+                <span>Add Continuous Covariate</span>
               </button>
 
               <button
@@ -72,7 +72,7 @@ const SelectCovariates = ({
                 onClick={() => setSelectionMode('dichotomous')}
               >
                 <span>+</span>
-                <span>Add Dichotomous Outcome Covariate</span>
+                <span>Add Dichotomous Covariate</span>
               </button>
             </div>
           )}
