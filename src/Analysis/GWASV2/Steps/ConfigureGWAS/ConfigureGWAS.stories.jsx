@@ -31,7 +31,19 @@ const MockTemplate = () => {
       cohort_name: 'Diabetes Demo',
       size: 293,
     },
-    covariates: [],
+    covariates: [{
+      variable_type: 'concept',
+      concept_id: 2000000873,
+      concept_name: 'Attribute81',
+    },{
+      variable_type: 'concept',
+      concept_id: 2000000873,
+      concept_name: 'Attribute82',
+    },{
+      variable_type: 'concept',
+      concept_id: 2000000873,
+      concept_name: 'Attribute83',
+    },],
     imputationScore: 0.3,
     mafThreshold: 0.01,
     numOfPC: 3,

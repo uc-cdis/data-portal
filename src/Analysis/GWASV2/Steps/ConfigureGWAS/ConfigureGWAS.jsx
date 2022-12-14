@@ -215,7 +215,7 @@ const ConfigureGWAS = ({
             </div>
           )}
         >
-          <Input placeholder='Enter Job Name' onChange={handleEnterJobName} />
+          <Input className='gwas-job-name' placeholder='Enter Job Name' onChange={handleEnterJobName} />
           <div style={flexCol}>
             <div style={flexRow}>
               <div>Number of PCs</div>
@@ -248,9 +248,9 @@ const ConfigureGWAS = ({
             </div>
             <div style={flexRow}>
               <div>Covariates</div>
-              <div style={(flexCol, { overflowY: 300 })}>
-                {covariates.map((cov, key) => (
-                  <div key={key}>{cov?.concept_name ?? cov.provided_name}</div>
+              <div>
+                {covariates.map((covariate, key) => (
+                  <div key={key}>{covariate?.concept_name ?? covariate.provided_name}</div>
                 ))}
               </div>
             </div>
