@@ -455,7 +455,6 @@ const DiscoveryActionBar = (props: Props) => {
         handleDownloadManifestClick(props.config, props.discovery.selectedResources);
         props.onActionResumed();
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.discovery.actionToResume],
   );
 
