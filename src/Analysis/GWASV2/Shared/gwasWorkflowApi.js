@@ -24,7 +24,7 @@ export const jobSubmission = async (
     imputation_score_cutoff: Number(imputationScore),
     template_version: gwasTemplate,
     source_id: sourceId,
-    study_population_cohort: selectedCohort,
+    source_population_cohort: selectedCohort.cohort_definition_id,
     workflow_name: jobName,
   };
   const res = await fetch(submitEndpoint, {
