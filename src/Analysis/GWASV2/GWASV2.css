@@ -122,3 +122,12 @@
   background: #fff;
   color: #2e77b8;
 }
+
+.GWASUI-card-column {
+  background: #e9eef2;
+  padding: 10px;
+  width: 206px;
+  height: 519px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
