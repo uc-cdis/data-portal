@@ -35,12 +35,8 @@ const CustomDichotomousCovariates = ({
     || secondPopulation === undefined;
 
   return (
-    <div>
-      <div
-        className='GWASUI-flexRow'
-        style={{ width: '1450px' }}
-        data-tour='name'
-      >
+    <div style={{ minHeight: '300px' }}>
+      <div className='GWASUI-flexRow' data-tour='name'>
         <input
           type='text'
           className={'GWASUI-providedName'}
@@ -77,24 +73,22 @@ const CustomDichotomousCovariates = ({
       <React.Fragment>
         <div data-tour='choosing-dichotomous'>
           <div className='GWASUI-flexRow' data-tour='table-repeat'>
-            <div>
-              <h3>Get Value 0</h3>
-              <SelectCohortDropDown
-                handleCohortSelect={setFirstPopulation}
-              />
-            </div>
-            <div>
-              <h3>Get Value 1</h3>
-              <SelectCohortDropDown
-                handleCohortSelect={setSecondPopulation}
-              />
+            <div className='GWASUI-flexColumn'>
+              <div>
+                <h3>Get Value 0</h3>
+                <SelectCohortDropDown handleCohortSelect={setFirstPopulation} />
+              </div>
+              <div>
+                <h3>Get Value 1</h3>
+                <SelectCohortDropDown
+                  handleCohortSelect={setSecondPopulation}
+                />
+              </div>
             </div>
             <div style={{ paddingLeft: '30px' }}>
-              <h3 style={{ width: '400px' }}>Cohort overlap diagram</h3>
+              <h3>Cohort overlap diagram</h3>
               {!firstPopulation || !secondPopulation ? (
-                <div>
-                  Select your cohorts to assess overlap
-                </div>
+                <div>Select your cohorts to assess overlap</div>
               ) : (
                 <CohortsOverlapDiagram
                   selectedStudyPopulationCohort={studyPopulationCohort}

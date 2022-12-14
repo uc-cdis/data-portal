@@ -8,6 +8,8 @@ const reducer = (state, action) => {
     return { ...state, currentStep: state.currentStep + 1 };
   case ACTIONS.DECREMENT_CURRENT_STEP:
     return { ...state, currentStep: state.currentStep - 1 };
+  case ACTIONS.SET_CURRENT_STEP:
+    return { ...state, currentStep: action.payload };
   case ACTIONS.SET_OUTCOME:
     return { ...state, currentStep: 2, outcome: action.payload };
   case ACTIONS.ADD_COVARIATE:
@@ -39,6 +41,8 @@ const reducer = (state, action) => {
     return { ...state, mafThreshold: action.payload };
   case ACTIONS.UPDATE_NUM_PCS:
     return { ...state, numPCs: action.payload };
+  case ACTIONS.UPDATE_SELECTED_HARE:
+    return { ...state, selectedHare: action.payload };
   default:
     throw new Error(`Unknown action passed to reducer: ${action}`);
   }

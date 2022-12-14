@@ -80,7 +80,7 @@ const Covariates = ({ selected, handleSelect }) => {
           field='concept name'
         />
         <Table
-          className='GWASUI-table2'
+          className='GWASUI-table1'
           rowKey='concept_id'
           size='middle'
           pagination={{

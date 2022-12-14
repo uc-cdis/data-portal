@@ -34,14 +34,12 @@ const GWASContainer = () => {
       );
     case 2:
       return (
-        <React.Fragment>
-          <SelectCovariates
-            studyPopulationCohort={state.selectedStudyPopulationCohort}
-            outcome={state.outcome}
-            covariates={state.covariates}
-            dispatch={dispatch}
-          />
-        </React.Fragment>
+        <SelectCovariates
+          studyPopulationCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+          covariates={state.covariates}
+          dispatch={dispatch}
+        />
       );
     case 3:
       return (
@@ -51,6 +49,24 @@ const GWASContainer = () => {
           mafThreshold={state.mafThreshold}
           imputationScore={state.imputationScore}
           selectedHare={state.selectedHare}
+          covariates={state.covariates}
+          selectedCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+          showModal={false}
+        />
+      );
+    case 4:
+      return (
+        <ConfigureGWAS
+          dispatch={dispatch}
+          numOfPCs={state.numPCs}
+          mafThreshold={state.mafThreshold}
+          imputationScore={state.imputationScore}
+          selectedHare={state.selectedHare}
+          covariates={state.covariates}
+          selectedCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+          showModal
         />
       );
     default:
@@ -62,15 +78,9 @@ const GWASContainer = () => {
   if (state.currentStep === 0 && !state.selectedStudyPopulationCohort) {
     nextButtonEnabled = false;
   }
-
-  /*
-  todo:
-  { outcome, allCovariates, numOfPCs, mafThreshold, imputationScore, ...} = workflow;
-  grab submit code from GWASWizard/wizardEndpoints/gwasWorkflowApi.js
-
-  const GWASSubmit = () => {
-  };
-  */
+  if (state.currentStep === 1 && !state.outcome) {
+    nextButtonEnabled = false;
+  }
 
   return (
     <React.Fragment>
@@ -116,7 +126,7 @@ const GWASContainer = () => {
                 Select Different GWAS Type
               </Button>
             </Popconfirm>
-            {state.currentStep < gwasV2Steps.length - 1 && (
+            {state.currentStep < gwasV2Steps.length && (
               <Button
                 data-tour='next-button'
                 className='GWASUI-navBtn GWASUI-navBtn__next'
@@ -128,9 +138,6 @@ const GWASContainer = () => {
               >
                 Next
               </Button>
-            )}
-            {state.currentStep === gwasV2Steps.length - 1 && (
-              <div className='GWASUI-navBtn' />
             )}
           </div>
         </Space>

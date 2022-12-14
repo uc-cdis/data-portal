@@ -1,0 +1,52 @@
+.gwas-job-name {
+  margin-bottom: 25px;
+  font-size: 17px;
+  border: 1px solid #dededf;
+  color: #707070;
+}
+.ant-modal-body hr {
+  margin: 20px 0;
+  height: 1px;
+  background-color: #cfdbe6;
+  border: none;
+}
+
+.configure-gwas .configure-gwas_container {
+  margin: auto;
+  background: #fff;
+  border: 1px solid #e2e2e3;
+  border-radius: 4px;
+  width: 682px;
+  min-height: 192px;
+  padding: 24px 12px;
+}
+.configure-gwas .configure-gwas_container .ant-select,
+.configure-gwas .configure-gwas_container .ant-input-number {
+  max-width: 317px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.configure-gwas .configure-gwas_container label {
+  margin-bottom: 10px;
+}
+
+.configure-gwas_success {
+  margin-bottom: 60px;
+}
+.configure-gwas_success h3 {
+  text-align: center;
+}
+.configure-gwas_success button {
+  margin: 0 auto 0 auto;
+  width: 95%;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 4px;
+  border: none;
+  background: #b35f05;
+  padding: 8px;
+  cursor: pointer;
+}
+.configure-gwas_success button:hover {
+  background: #784005;
+}

@@ -1,0 +1,57 @@
+.GWASV2 .GWASUI-double-column {
+  min-width: 988px;
+}
+.GWASV2 .select-covariates-container {
+  padding: 20px;
+  border: 1px solid #e2e2e3;
+  background: #fff;
+  border-radius: 4px;
+  height: 519px;
+}
+.GWASV2 .select-covariates-container .GWASUI-table1 + button,
+.GWASV2 .select-covariates-container .GWASUI-table1 + button + button {
+  position: absolute;
+}
+.GWASV2 .select-covariates-container .GWASUI-table1 + button {
+  margin-top: -45px;
+}
+.GWASV2 .select-covariates-container .GWASUI-table1 + button + button {
+  margin-top: -45px;
+  margin-left: 180px;
+}
+
+.GWASV2
+  .select-covariates-container
+  .ant-table.ant-table-middle
+  .ant-table-tbody
+  > tr
+  > td {
+  padding: 5px;
+}
+.GWASV2 .ant-card {
+  margin-bottom: 10px;
+}
+.GWASV2 .ant-card-body {
+  padding: 0;
+}
+.GWASV2 .ant-card-meta-detail {
+  width: 100%;
+}
+.GWASV2 .ant-card-meta-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #333333;
+  margin: 10px;
+  width: 100%;
+}
+.GWASV2 .ant-card-meta-description {
+  width: 100%;
+  background-color: #fff;
+  padding: 10px;
+  min-height: 50px;
+}
+.GWASV2 .ant-card-actions {
+  position: absolute;
+  right: 0;
+  top: 33px;
+}
