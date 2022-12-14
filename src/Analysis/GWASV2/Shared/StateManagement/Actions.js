@@ -10,7 +10,6 @@ const ACTIONS = {
   UPDATE_IMPUTATION_SCORE: 'updateImputationScore',
   UPDATE_NUM_PCS: 'updateNumPCs',
   UPDATE_SELECTED_HARE: 'updateSelectedHare',
-  RESET_STATE: 'resetState',
 };
 
 export default ACTIONS;
