@@ -195,14 +195,14 @@
   flex: 1 1 auto;
 }
 
-.discovery-filters__visible {
+.discovery-filters--visible {
   width: 280px;
   margin-right: 20px;
   overflow-y: auto;
   transition: width 250ms 50ms;
 }
 
-.discovery-filters__hide {
+.discovery-filters--hide {
   width: 0;
   transition: width 250ms 50ms;
 }
