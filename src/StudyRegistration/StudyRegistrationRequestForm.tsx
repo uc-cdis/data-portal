@@ -93,7 +93,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
       resource_paths: [studyRegistrationAuthZ, '/mds_gateway', '/cedar', '/data_file'],
       role_ids: ['study_registrant', 'mds_user', 'cedar_user', 'file_uploader'],
     };
-    // file deepcode ignore Ssrf: requestorPath will not be altered
+    // deepcode ignore Ssrf: studyUID is pulled in from setState into request body, not as URL
     fetchWithCreds({
       path: `${requestorPath}request`,
       method: 'POST',
@@ -132,7 +132,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
         }
         setReqAccessRequestPending(false);
       },
-    ).catch((err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
+    ).catch(() => setFormSubmissionStatus({ status: 'error', text: 'Failed to create a request. Please try again later. If the error persists, please contact us for help.' }));
   };
 
   const onFinish = (values) => {
