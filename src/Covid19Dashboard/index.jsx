@@ -288,11 +288,11 @@ class Covid19Dashboard extends React.Component {
                       </div>
                       <div className="gen3-dashboard_row">
                         <div className="gen3-dashboard_col">
-                          <iframe  className="gen3-dashboard_frame" src="https://us-east-1.quicksight.aws.amazon.com/sn/accounts/043745044068/dashboards/00227203-5da5-428f-b687-7bb27acd2a99?directory_alias=gen3-dashboards">
+                          <iframe  className="gen3-dashboard_frame" src="https://us-east-1.quicksight.aws.amazon.com/sn/embed/share/accounts/043745044068/dashboards/00227203-5da5-428f-b687-7bb27acd2a99?directory_alias=gen3-dashboards">
                           </iframe>
                         </div>
                         <div className="gen3-dashboard_col">
-                          <iframe  className="gen3-dashboard_frame" src="https://us-east-1.quicksight.aws.amazon.com/sn/accounts/043745044068/dashboards/3e6cb492-9541-4fec-b440-913135971b4d?directory_alias=gen3-dashboards">
+                          <iframe  className="gen3-dashboard_frame" src="https://us-east-1.quicksight.aws.amazon.com/sn/embed/share/accounts/043745044068/dashboards/3e6cb492-9541-4fec-b440-913135971b4d?directory_alias=gen3-dashboards">
                           </iframe>
                         </div>
                       </div>
