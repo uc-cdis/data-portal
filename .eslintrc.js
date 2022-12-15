@@ -36,9 +36,9 @@ module.exports = {
     requireConfigFile: false,
     babelOptions: {
       plugins: [
-        '@babel/plugin-proposal-class-properties',
-      ],
-    },
+        '@babel/plugin-proposal-class-properties'
+      ]
+    }
   },
   rules: {
     'no-underscore-dangle': 'off',

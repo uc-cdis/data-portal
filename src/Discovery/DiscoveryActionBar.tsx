@@ -93,8 +93,8 @@ const checkFederatedLoginStatus = async (
     const { providers } = data;
     const unauthenticatedProviders = providers.filter((provider) => !provider.refresh_token_expiration);
 
-    const guidsForHostnameResolution:any = [];
-    const guidPrefixes:any = [];
+    const guidsForHostnameResolution = [];
+    const guidPrefixes = [];
     selectedResources.forEach(
       (selectedResource) => {
         (selectedResource[manifestFieldName] || []).forEach(
@@ -200,10 +200,8 @@ const checkDownloadStatus = (
               setDownloadStatus(DOWNLOAD_FAIL_STATUS);
             } else {
               try {
-                const regexp = /^https?:\/\/(\S+)\.s3\.amazonaws\.com\/(\S+)/gm;
-                if (!new RegExp(regexp).test(output)) {
-                  throw new Error('Invalid download URL');
-                }
+                /* eslint-disable no-new */
+                new URL(output);
                 setDownloadStatus({
                   inProgress: false,
                   message: {
@@ -303,7 +301,7 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
     throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
   }
   // combine manifests from all selected studies
-  const manifest:any = [];
+  const manifest = [];
   selectedResources.forEach((study) => {
     if (study[manifestFieldName]) {
       if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
@@ -356,7 +354,7 @@ const handleExportToWorkspaceClick = async (
 
   setExportingToWorkspace(true);
   // combine manifests from all selected studies
-  const manifest:any = [];
+  const manifest = [];
   selectedResources.forEach((study) => {
     if (study[manifestFieldName]) {
       if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
@@ -426,7 +424,7 @@ const DiscoveryActionBar = (props: Props) => {
         },
       );
     },
-    [props.discovery.selectedResources],
+    [],
   );
 
   useEffect(
@@ -458,7 +456,7 @@ const DiscoveryActionBar = (props: Props) => {
     }, [props.discovery.actionToResume],
   );
 
-  const handleRedirectToLoginClick = (action:'download'|'export'|'manifest'|null = null) => {
+  const handleRedirectToLoginClick = (action:'download'|'export'|'manifest' = null) => {
     const serializableState = {
       ...props.discovery,
       actionToResume: action,

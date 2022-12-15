@@ -22,4 +22,3 @@ __generated__/
 *.log
 *.bak
 .DS_Store
-.dccache
