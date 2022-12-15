@@ -10,6 +10,7 @@ const ACTIONS = {
   UPDATE_IMPUTATION_SCORE: 'updateImputationScore',
   UPDATE_NUM_PCS: 'updateNumPCs',
   UPDATE_SELECTED_HARE: 'updateSelectedHare',
+  UPDATE_FINAL_POPULATION_SIZE: 'updateFinalPopulationSize',
 };
 
 export default ACTIONS;

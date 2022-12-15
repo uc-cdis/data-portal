@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
 // import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
@@ -15,10 +15,9 @@ const SelectHareDropDown = ({
   selectedCohort,
   covariates,
   outcome,
-  handleHareChange,
+  dispatch,
 }) => {
   const { source } = useSourceContext();
-  const [hares, setHares] = useState([]);
   const hareResults = useQueries(
     outcome.variable_type === 'concept'
       ? [
@@ -94,13 +93,18 @@ const SelectHareDropDown = ({
       ],
   );
 
-  const { status: statusX, data: dataX } = hareResults.at(
-    hareResults.length === 1 ? 0 : -1,
-  );
-
-  useEffect(() => {
-    setHares(dataX?.concept_breakdown);
-  }, [dataX]);
+  const getFinalPopulationSize = (selectedHareItem) => {
+    const hareBreakdownPart1 = hareResults[0].data.concept_breakdown.find(
+      (hare) => selectedHareItem.value === hare.concept_value,
+    ).persons_in_cohort_with_value;
+    if (outcome.variable_type === 'concept') {
+      return hareBreakdownPart1;
+    }
+    const hareBreakdownPart2 = hareResults[1].data.concept_breakdown.find(
+      (hare) => selectedHareItem.value === hare.concept_value,
+    ).persons_in_cohort_with_value;
+    return hareBreakdownPart1 + hareBreakdownPart2;
+  };
 
   const onChange = (h) => {
     const selectedHareOutput = {
@@ -108,49 +112,36 @@ const SelectHareDropDown = ({
       concept_value_as_concept_id: 2000007032,
       concept_value_name: h.label,
     };
-    handleHareChange({
+    dispatch({
       type: ACTIONS.UPDATE_SELECTED_HARE,
       payload: selectedHareOutput,
     });
+    dispatch({
+      type: ACTIONS.UPDATE_FINAL_POPULATION_SIZE,
+      payload: getFinalPopulationSize(h),
+    });
   };
 
-  //   const getHareDescriptionBreakdown = (singleHare, allHares) => {
-  //     const hareBreakdown = allHares.find((hare) => hare.concept_value === singleHare.concept_value);
-  //     return `${hareBreakdown.concept_value_name} (size: ${hareBreakdown.persons_in_cohort_with_value})`;
-  //   };
-
-  //   if (data) {
-  //     // special case - endpoint returns empty result:
-  //     if (data.concept_breakdown == null) {
-  //       return (
-  //         <React.Fragment>
-  //           Error: there are no subjects in this cohort that have data available on all the selected covariates
-  //           and phenotype. Please review your selections
-  //         </React.Fragment>
-  //       );
-  //     }
-  // normal scenario - there is breakdown data, so show in dropdown:
-
+  if (hareResults.some((status) => status === 'loading')) {
+    return <Spin />;
+  }
+  if (hareResults.some((status) => status === 'error')) {
+    return <React.Fragment>error</React.Fragment>;
+  }
   return (
-    <React.Fragment>
-      {statusX === 'loading' && <Spin />}
-      {statusX === 'error' && <React.Fragment>error</React.Fragment>}
-      {statusX === 'success' && (
-        <Select
-          id={id}
-          showSearch
-          labelInValue
-          onChange={onChange}
-          placeholder='-select one of the ancestry groups below-'
-          fieldNames={{ label: 'concept_value_name', value: 'concept_value' }}
-          options={hares}
-          dropdownStyle={{ width: '800' }}
-          filterOption={(searchTerm, option) => (option?.concept_value_name ?? '')
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())}
-        />
-      )}
-    </React.Fragment>
+    <Select
+      id={id}
+      showSearch
+      labelInValue
+      onChange={onChange}
+      placeholder='-select one of the ancestry groups below-'
+      fieldNames={{ label: 'concept_value_name', value: 'concept_value' }}
+      options={hareResults[0].data?.concept_breakdown} // even when hareResults.length === 2, we can use hareResults[0] as the concept_breakdown descriptions should be the same
+      dropdownStyle={{ width: '800' }}
+      filterOption={(searchTerm, option) => (option?.concept_value_name ?? '')
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())}
+    />
   );
 };
 
@@ -159,7 +150,7 @@ SelectHareDropDown.propTypes = {
   selectedCohort: PropTypes.object.isRequired,
   outcome: PropTypes.object.isRequired,
   covariates: PropTypes.array.isRequired,
-  handleHareChange: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default SelectHareDropDown;

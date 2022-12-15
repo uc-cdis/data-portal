@@ -34,6 +34,7 @@ const ConfigureGWAS = ({
   selectedHare,
   outcome,
   showModal,
+  finalPopulationSize,
 }) => {
   const { source } = useSourceContext();
   const sourceId = source; // TODO - change name of source to sourceId for clarity
@@ -179,7 +180,7 @@ const ConfigureGWAS = ({
               selectedCohort={selectedCohort}
               covariates={covariates}
               outcome={outcome}
-              handleHareChange={dispatch}
+              dispatch={dispatch}
             />
           </div>
 
@@ -243,8 +244,8 @@ const ConfigureGWAS = ({
               <div>{outcome?.concept_name ?? outcome?.provided_name}</div>
             </div>
             <div style={flexRow}>
-              <div>Final Size</div>
-              <div>{'final size'}</div>
+              <div>Final Population Size</div>
+              <div>{finalPopulationSize}</div>
             </div>
             <div style={flexRow}>
               <div>Covariates</div>
@@ -271,6 +272,7 @@ ConfigureGWAS.propTypes = {
   selectedHare: PropTypes.object.isRequired,
   outcome: PropTypes.object.isRequired,
   showModal: PropTypes.bool,
+  finalPopulationSize: PropTypes.number,
 };
 
 ConfigureGWAS.defaultProps = {
@@ -278,6 +280,7 @@ ConfigureGWAS.defaultProps = {
   mafThreshold: 0.01,
   imputationScore: 0.3,
   showModal: false,
+  finalPopulationSize: 0,
 };
 
 export default ConfigureGWAS;

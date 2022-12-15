@@ -52,6 +52,7 @@ const MockTemplate = () => {
       concept_value: '',
     },
     currentStep: 3,
+    finalPopulationSize: 0,
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -76,6 +77,7 @@ const MockTemplate = () => {
               selectedCohort={state.selectedStudyPopulationCohort}
               outcome={state.outcome}
               showModal={state.currentStep === 4 ? true : false}
+              finalPopulationSize={state.finalPopulationSize}
             />
           )}
           {state.currentStep === 0 && (
