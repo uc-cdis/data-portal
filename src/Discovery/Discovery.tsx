@@ -285,7 +285,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [modalData, setModalData] = useState({} as DiscoveryResource);
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
-  const [advSearchFilterHeight, setAdvSearchFilterHeight] = useState('100vh');
   const [searchableTagCollapsed, setSearchableTagCollapsed] = useState(
     config.features.search.tagSearchDropdown
     && config.features.search.tagSearchDropdown.enabled
@@ -819,9 +818,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         && (
           <div
             className='discovery-filters'
-            style={{
-              height: advSearchFilterHeight,
-            }}
           >
             <DiscoveryAdvancedSearchPanel
               config={props.config}
@@ -846,8 +842,6 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                   )
                 }
                 searchTerm={props.searchTerm}
-                advSearchFilterHeight={advSearchFilterHeight}
-                setAdvSearchFilterHeight={setAdvSearchFilterHeight}
                 setPermalinkCopied={setPermalinkCopied}
                 setModalData={setModalData}
                 setModalVisible={setModalVisible}

@@ -196,7 +196,6 @@
 }
 
 .discovery-filters {
-  position: absolute;
   width: 280px;
   margin-right: 20px;
   overflow-y: auto;
@@ -225,15 +224,15 @@
 .discovery-table-container {
   border-radius: 8px;
   background-color: #fff;
-  transform: translateX(0);
-  transition: transform 300ms, width 250ms 50ms;
+  /* transform: translateX(0);
+  transition: transform 300ms, width 250ms 50ms; */
   overflow-x: auto;
 }
 
 .discovery-table-container--collapsed {
   width: calc(100% - 300px);
-  transform: translateX(300px);
-  transition: transform 300ms, width 250ms 50ms;
+  /* transform: translateX(300px);
+  transition: transform 300ms, width 250ms 50ms; */
 }
 
 .discovery-table-container--expanded {
