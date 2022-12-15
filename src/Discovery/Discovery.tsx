@@ -815,20 +815,20 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           && props.config.features.advSearchFilters.enabled
           && filtersVisible
           )
-        && (
-          <div
-            className='discovery-filters'
-          >
-            <DiscoveryAdvancedSearchPanel
-              config={props.config}
-              studies={props.studies}
-              filterState={filterState}
-              setFilterState={setFilterState}
-              filterMultiSelectionLogic={filterMultiSelectionLogic}
-              setFilterMultiSelectionLogic={setFilterMultiSelectionLogic}
-            />
-          </div>
-        )}
+            ? (
+              <div
+                className='discovery-filters__visible'
+              >
+                <DiscoveryAdvancedSearchPanel
+                  config={props.config}
+                  studies={props.studies}
+                  filterState={filterState}
+                  setFilterState={setFilterState}
+                  filterMultiSelectionLogic={filterMultiSelectionLogic}
+                  setFilterMultiSelectionLogic={setFilterMultiSelectionLogic}
+                />
+              </div>
+            ) : (<div className='discovery-filters__hide' />)}
 
           <div id='discovery-table-of-records' className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--collapsed' : 'discovery-table-container--expanded '}`}>
             <Space direction={'vertical'} style={{ width: '100%' }}>
