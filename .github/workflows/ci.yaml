@@ -13,7 +13,7 @@ concurrency:
 jobs:
   Security:
     name: Security Pipeline
-    uses: uc-cdis/.github/.github/workflows/securitypipeline.yaml@chore/superlinter
+    uses: uc-cdis/.github/.github/workflows/securitypipeline.yaml@chore/superliner
     with:
       python-poetry: 'false'
     secrets: inherit
