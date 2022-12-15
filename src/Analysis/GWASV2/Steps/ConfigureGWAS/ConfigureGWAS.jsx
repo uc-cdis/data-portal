@@ -80,7 +80,9 @@ const ConfigureGWAS = ({
           });
         } else {
           data.text().then((error) => {
-            setErrorText(`GWAS job failed with error: ${JSON.stringify(error)}`);
+            setErrorText(
+              `GWAS job failed with error: ${JSON.stringify(error)}`,
+            );
             setShowError(true);
           });
         }
@@ -208,14 +210,24 @@ const ConfigureGWAS = ({
           open={open}
           okButtonProps={{ disabled: jobName === '' }}
           onOk={() => handleSubmit()}
-          onCancel={() => setOpen(false)}
+          onCancel={() => {
+            setOpen(false);
+            dispatch({
+              type: ACTIONS.SET_CURRENT_STEP,
+              payload: 3,
+            });
+          }}
           title={(
             <div style={{ ...flexRow, ...{ justifyContent: 'space-between' } }}>
               <div>Review Details</div>
             </div>
           )}
         >
-          <Input className='gwas-job-name' placeholder='Enter Job Name' onChange={handleEnterJobName} />
+          <Input
+            className='gwas-job-name'
+            placeholder='Enter Job Name'
+            onChange={handleEnterJobName}
+          />
           <div style={flexCol}>
             <div style={flexRow}>
               <div>Number of PCs</div>
@@ -250,7 +262,9 @@ const ConfigureGWAS = ({
               <div>Covariates</div>
               <div>
                 {covariates.map((covariate, key) => (
-                  <div key={key}>{covariate?.concept_name ?? covariate.provided_name}</div>
+                  <div key={key}>
+                    {covariate?.concept_name ?? covariate.provided_name}
+                  </div>
                 ))}
               </div>
             </div>
