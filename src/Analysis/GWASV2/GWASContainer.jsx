@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import { Space, Button, Popconfirm } from 'antd';
+import { Space, Button } from 'antd';
 import ProgressBar from './Components/ProgressBar/ProgressBar';
 import { gwasV2Steps } from './Shared/constants';
 import initialState from './Shared/StateManagement/InitialState';
@@ -67,6 +67,7 @@ const GWASContainer = () => {
           selectedCohort={state.selectedStudyPopulationCohort}
           outcome={state.outcome}
           showModal
+          finalPopulationSize={state.finalPopulationSize}
         />
       );
     default:
@@ -116,16 +117,7 @@ const GWASContainer = () => {
             >
               Previous
             </Button>
-            <Popconfirm
-              title='Are you sure you want to leave this page?'
-              //   onConfirm={() => resetGWASType()}
-              okText='Yes'
-              cancelText='No'
-            >
-              <Button type='link' size='medium'>
-                Select Different GWAS Type
-              </Button>
-            </Popconfirm>
+            {/* If user is on the last step, do not show the next button */}
             {state.currentStep < gwasV2Steps.length && (
               <Button
                 data-tour='next-button'
