@@ -456,7 +456,9 @@ Below is an example, with inline comments describing what each JSON block config
         }
       },
       "advSearchFilters": {
-        "enabled": true
+        "enabled": true,
+        "field": "advSearchFilters", // required, filter component field name in metadata
+        "displayName": "Filters"  // optional, change the label of the filter open/close button, default value is "ADVANCED SEARCH"
       },
       "authorization": {
         "enabled": true, // toggles whether Discovery page displays users' access to studies. If true, 'useArboristUI' must also be set to true.
