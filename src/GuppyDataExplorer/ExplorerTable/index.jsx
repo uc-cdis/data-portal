@@ -25,36 +25,6 @@ class ExplorerTable extends React.Component {
     };
   }
 
-  getWidthForColumn = (field, columnName) => {
-    if (this.props.tableConfig.linkFields.includes(field)) {
-      return 80;
-    }
-
-    // some magic numbers that work fine for table columns width
-    const minWidth = 100;
-    const maxWidth = 400;
-    const letterWidth = 8;
-    const spacing = 20;
-    if (!this.props.rawData || this.props.rawData.length === 0) {
-      return minWidth;
-    }
-    let maxLetterLen = columnName.length;
-    const fieldStringsArray = field.split('.');
-    this.props.rawData.forEach((d) => {
-      if (d[fieldStringsArray[0]] === null || typeof d[fieldStringsArray[0]] === 'undefined') {
-        return;
-      }
-      // the calculation logic here is a bit wild if it is a nested array field
-      // it would convert the whole array to string and calculate
-      // which in most cases would exceed the maxWidth so just use maxWidth
-      const str = d[fieldStringsArray[0]].toString && d[fieldStringsArray[0]].toString();
-      const len = str ? str.length : 0;
-      maxLetterLen = len > maxLetterLen ? len : maxLetterLen;
-    });
-    const resWidth = Math.min((maxLetterLen * letterWidth) + spacing, maxWidth);
-    return resWidth;
-  }
-
   /**
    * Build column configs for each table according to their locations and fields
    * @param field: the full field name, if it is a nested field, it would contain at least 1 '.'
@@ -285,6 +255,36 @@ class ExplorerTable extends React.Component {
     if (this.props.tableConfig.dicomViewerId && !isEqual(this.props.rawData, prevProps.rawData)) {
       this.augmentData();
     } else if (this.props.rawData !== prevProps.rawData) this.setState({ tableData: this.props.rawData });
+  }
+
+  getWidthForColumn = (field, columnName) => {
+    if (this.props.tableConfig.linkFields.includes(field)) {
+      return 80;
+    }
+
+    // some magic numbers that work fine for table columns width
+    const minWidth = 100;
+    const maxWidth = 400;
+    const letterWidth = 8;
+    const spacing = 20;
+    if (!this.props.rawData || this.props.rawData.length === 0) {
+      return minWidth;
+    }
+    let maxLetterLen = columnName.length;
+    const fieldStringsArray = field.split('.');
+    this.props.rawData.forEach((d) => {
+      if (d[fieldStringsArray[0]] === null || typeof d[fieldStringsArray[0]] === 'undefined') {
+        return;
+      }
+      // the calculation logic here is a bit wild if it is a nested array field
+      // it would convert the whole array to string and calculate
+      // which in most cases would exceed the maxWidth so just use maxWidth
+      const str = d[fieldStringsArray[0]].toString && d[fieldStringsArray[0]].toString();
+      const len = str ? str.length : 0;
+      maxLetterLen = len > maxLetterLen ? len : maxLetterLen;
+    });
+    const resWidth = Math.min((maxLetterLen * letterWidth) + spacing, maxWidth);
+    return resWidth;
   }
 
   render() {
