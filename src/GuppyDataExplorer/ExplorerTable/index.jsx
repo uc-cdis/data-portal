@@ -408,7 +408,7 @@ class ExplorerTable extends React.Component {
         <ReactTable
           columns={rootColumnsConfig}
           manual
-          data={(this.props.isLocked || !this.props.rawData) ? [] : this.state.tableData}
+          data={(this.props.isLocked || !this.state.tableData) ? [] : this.state.tableData}
           showPageSizeOptions={!this.props.isLocked}
           pages={(this.props.isLocked) ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}
