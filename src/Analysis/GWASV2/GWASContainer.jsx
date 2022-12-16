@@ -76,10 +76,10 @@ const GWASContainer = () => {
   };
 
   let nextButtonEnabled = true;
-  if (state.currentStep === 0 && !state.selectedStudyPopulationCohort) {
-    nextButtonEnabled = false;
-  }
-  if (state.currentStep === 1 && !state.outcome) {
+  // step specific conditions where progress to next step needs to be blocked:
+  if ((state.currentStep === 0 && !state.selectedStudyPopulationCohort)
+      || (state.currentStep === 1 && !state.outcome)
+      || (state.currentStep === 3 && !state.selectedHare.concept_value)) {
     nextButtonEnabled = false;
   }
 
