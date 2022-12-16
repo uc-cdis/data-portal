@@ -1,11 +1,11 @@
 import {
-  studyRegistrationConfig, mdsURL, cedarWrapperURL,
+  studyRegistrationConfig, discoveryConfig, mdsURL, cedarWrapperURL,
 } from '../localconf';
 import { fetchWithCreds } from '../actions';
 
 const STUDY_DATA_FIELD = 'gen3_discovery'; // field in the MDS response that contains the study data
 
-export const preprocessStudyRegistrationMetadata = async (username, metadataID, updatedValues = {}, GUIDType = 'discovery_metadata') => {
+export const preprocessStudyRegistrationMetadata = async (username, metadataID, updatedValues, GUIDType = 'discovery_metadata') => {
   try {
     const queryURL = `${mdsURL}/${metadataID}`;
     const queryRes = await fetch(queryURL);
@@ -15,11 +15,21 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
     const studyMetadata = await queryRes.json();
     const studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
     const studyRegistrationTrackingField = studyRegistrationConfig?.studyRegistrationTrackingField;
+    const tagField = discoveryConfig?.minimalFieldMapping?.tagsListFieldName;
     const metadataToUpdate = { ...studyMetadata };
     metadataToUpdate._guid_type = GUIDType;
     if (!Object.prototype.hasOwnProperty.call(metadataToUpdate, STUDY_DATA_FIELD)) {
       // it should already be there, but avoid errors if for some reason it's not
       metadataToUpdate.STUDY_DATA_FIELD = {};
+    }
+    if (tagField && updatedValues.repository) {
+      if (!metadataToUpdate[STUDY_DATA_FIELD][tagField]) {
+        metadataToUpdate[STUDY_DATA_FIELD][tagField] = [];
+      }
+      metadataToUpdate[STUDY_DATA_FIELD][tagField].push({
+        name: updatedValues.repository,
+        category: 'Data Repository"',
+      });
     }
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationValidationField] = true;
     metadataToUpdate[STUDY_DATA_FIELD][studyRegistrationTrackingField] = username;

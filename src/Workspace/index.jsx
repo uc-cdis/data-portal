@@ -15,7 +15,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import isEnabled from '../helpers/featureFlags';
 import {
   workspaceUrl,
-  wtsPath,
   externalLoginOptionsUrl,
   workspaceOptionsUrl,
   workspaceLaunchUrl,
@@ -42,6 +41,7 @@ import WorkspaceOption from './WorkspaceOption';
 import WorkspaceLogin from './WorkspaceLogin';
 import sessionMonitor from '../SessionMonitor';
 import workspaceSessionMonitor from './WorkspaceSessionMonitor';
+import { initWorkspaceRefreshToken } from './WorkspaceRefreshToken';
 
 const { Step } = Steps;
 const { Panel } = Collapse;
@@ -73,19 +73,15 @@ class Workspace extends React.Component {
   }
 
   componentDidMount() {
-    fetchWithCreds({
-      path: `${wtsPath}connected`,
-      method: 'GET',
-    })
-      .then(
-        ({ status }) => {
-          if (status !== 200) {
-            window.location.href = `${wtsPath}/authorization_url?redirect=${window.location.pathname}`;
-          } else {
-            this.connected();
-          }
-        },
-      );
+    // Check if workspaceTokenServiceRefreshTokenAtLogin is NOT set.
+    // Because if is already enabled, then an extra refresh is not
+    // really needed, since it has already happened at login, so just call the callback:
+    if (!isEnabled('workspaceTokenServiceRefreshTokenAtLogin')) {
+      const redirectLocation = { from: `${window.location.pathname}` };
+      initWorkspaceRefreshToken(redirectLocation, this.connected);
+    } else {
+      this.connected();
+    }
   }
 
   componentWillUnmount() {

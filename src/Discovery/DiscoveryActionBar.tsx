@@ -93,8 +93,8 @@ const checkFederatedLoginStatus = async (
     const { providers } = data;
     const unauthenticatedProviders = providers.filter((provider) => !provider.refresh_token_expiration);
 
-    const guidsForHostnameResolution = [];
-    const guidPrefixes = [];
+    const guidsForHostnameResolution:any = [];
+    const guidPrefixes:any = [];
     selectedResources.forEach(
       (selectedResource) => {
         (selectedResource[manifestFieldName] || []).forEach(
@@ -200,8 +200,10 @@ const checkDownloadStatus = (
               setDownloadStatus(DOWNLOAD_FAIL_STATUS);
             } else {
               try {
-                /* eslint-disable no-new */
-                new URL(output);
+                const regexp = /^https?:\/\/(\S+)\.s3\.amazonaws\.com\/(\S+)/gm;
+                if (!new RegExp(regexp).test(output)) {
+                  throw new Error('Invalid download URL');
+                }
                 setDownloadStatus({
                   inProgress: false,
                   message: {
@@ -301,7 +303,7 @@ const handleDownloadManifestClick = (config: DiscoveryConfig, selectedResources:
     throw new Error('Missing required configuration field `config.features.exportToWorkspace.manifestFieldName`');
   }
   // combine manifests from all selected studies
-  const manifest = [];
+  const manifest:any = [];
   selectedResources.forEach((study) => {
     if (study[manifestFieldName]) {
       if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
@@ -354,7 +356,7 @@ const handleExportToWorkspaceClick = async (
 
   setExportingToWorkspace(true);
   // combine manifests from all selected studies
-  const manifest = [];
+  const manifest:any = [];
   selectedResources.forEach((study) => {
     if (study[manifestFieldName]) {
       if ('commons_url' in study && !(hostname.includes(study.commons_url))) { // PlanX addition to allow hostname based DRS in manifest download clients
@@ -424,7 +426,7 @@ const DiscoveryActionBar = (props: Props) => {
         },
       );
     },
-    [],
+    [props.discovery.selectedResources],
   );
 
   useEffect(
@@ -456,7 +458,7 @@ const DiscoveryActionBar = (props: Props) => {
     }, [props.discovery.actionToResume],
   );
 
-  const handleRedirectToLoginClick = (action:'download'|'export'|'manifest' = null) => {
+  const handleRedirectToLoginClick = (action:'download'|'export'|'manifest'|null = null) => {
     const serializableState = {
       ...props.discovery,
       actionToResume: action,
@@ -636,7 +638,7 @@ const DiscoveryActionBar = (props: Props) => {
               onClick={() => props.setFiltersVisible(!props.filtersVisible)}
               type='text'
             >
-          ADVANCED SEARCH
+              {props.config.features.advSearchFilters.displayName || 'ADVANCED SEARCH'}
               { props.filtersVisible
                 ? <LeftOutlined />
                 : <RightOutlined />}

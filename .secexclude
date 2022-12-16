@@ -1,5 +1,0 @@
-src/fonts/*
-**/__test__/*
-*.test.js
-*.test.jsx
-*.test.jsx.js

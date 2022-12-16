@@ -31,7 +31,6 @@ function buildConfig(opts) {
     workspaceURL: process.env.WORKSPACE_URL,
     manifestServiceURL: process.env.MANIFEST_SERVICE_URL,
     requestorURL: process.env.REQUESTOR_URL,
-    gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
     mapboxAPIToken: process.env.MAPBOX_API_TOKEN,
@@ -66,7 +65,6 @@ function buildConfig(opts) {
     workspaceURL,
     manifestServiceURL,
     requestorURL,
-    gaDebug,
     tierAccessLevel,
     tierAccessLimit,
     mapboxAPIToken,
@@ -165,7 +163,7 @@ function buildConfig(opts) {
     const validOpenOptions = ['open-first', 'open-all', 'close-all'];
     studyViewerConfig.forEach((cfg, i) => {
       if (cfg.openMode
-      && !validOpenOptions.includes(cfg.openMode)) {
+        && !validOpenOptions.includes(cfg.openMode)) {
         studyViewerConfig[i].openMode = 'open-all';
       }
     });
@@ -207,7 +205,7 @@ function buildConfig(opts) {
     }
   });
 
-  const { dataAvailabilityToolConfig, stridesPortalURL } = config;
+  const { dataAvailabilityToolConfig, stridesPortalURL, gaTrackingId } = config;
 
   let showSystemUse = false;
   if (components.systemUse && components.systemUse.systemUseText) {
@@ -434,6 +432,13 @@ function buildConfig(opts) {
             image: '/src/img/analysis-icons/gwasResults.svg',
           };
           break;
+        case 'GWAS++':
+          analysisApps['GWAS++'] = {
+            title: 'GWAS++',
+            description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
+            image: '/src/img/analysis-icons/gwas.svg',
+          };
+          break;
         default:
           break;
         }
@@ -474,7 +479,7 @@ function buildConfig(opts) {
     dev,
     hostname,
     hostnameWithSubdomain,
-    gaDebug,
+    gaTrackingId,
     userAPIPath,
     jobAPIPath,
     apiPath,

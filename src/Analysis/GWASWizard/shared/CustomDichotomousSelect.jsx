@@ -35,10 +35,10 @@ const CustomDichotomousSelect = ({
     <React.Fragment>
       <div className='cd-flex'>
         <React.Fragment>
-          <div className='GWASUI-align' data-tour='choosing-dichotomous'>
+          <div className='GWASUI-align GWASUI-no-top-spacing' data-tour='choosing-dichotomous'>
             <div className='GWASUI-flexRow' data-tour='table-repeat'>
-              <div className='GWASUI-flexCol GWASUI-subTable'>
-                <h3 className='GWASUI-selectInstruction' align={'center'}>Select NO cohort</h3>
+              <div className='GWASUI-flexCol GWASUI-subTable GWASUI-no-top-spacing'>
+                <h3 className='GWASUI-selectInstruction GWASUI-no-top-spacing' align={'center'}>Select NO Cohort</h3>
                 <CohortSelect
                   selectedCohort={firstCohort}
                   handleCohortSelect={setFirstCohort}
@@ -47,8 +47,8 @@ const CustomDichotomousSelect = ({
                   current={current}
                 />
               </div>
-              <div className='GWASUI-flexCol GWASUI-subTable'>
-                <h3 className='GWASUI-selectInstruction' align={'center'}>Select YES cohort</h3>
+              <div className='GWASUI-flexCol GWASUI-subTable GWASUI-no-top-spacing'>
+                <h3 className='GWASUI-selectInstruction GWASUI-no-top-spacing' align={'center'}>Select YES Cohort</h3>
                 <CohortSelect
                   selectedCohort={secondCohort}
                   handleCohortSelect={setSecondCohort}

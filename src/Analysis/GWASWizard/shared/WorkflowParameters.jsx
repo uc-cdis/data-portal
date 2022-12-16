@@ -40,8 +40,8 @@ const WorkflowParameters = ({
     </h4>
     <div className='GWASUI-mainArea'>
       <div data-tour='number-of-pcs'>
-        <label className='GWASUI-label' htmlFor='input-numOfPC'>
-          <span style={{ color: 'red' }}>*</span>Number of PCs to use &nbsp;
+        <label className='GWASUI-label GWASUI-asterisk' htmlFor='input-numOfPC'>
+          Number of PCs to use &nbsp;
           <InputNumber
             id='input-numOfPC'
             value={numOfPC}
@@ -81,8 +81,7 @@ const WorkflowParameters = ({
       </div>
       <div data-tour='hare'>
         {workflowType === 'caseControl' && (
-          <label className='GWASUI-label' htmlFor='select-hare-case-control'>
-            <span style={{ color: 'red' }}>*</span>
+          <label className='GWASUI-label GWASUI-asterisk' htmlFor='select-hare-case-control'>
             Select HARE group &nbsp;
             <CovariateStatsByHareCC
               id='select-hare-case-control'
@@ -98,8 +97,7 @@ const WorkflowParameters = ({
           </label>
         )}
         {workflowType === 'quantitative' && (
-          <label className='GWASUI-label' htmlFor='select-hare-quantitative'>
-            <span style={{ color: 'red' }}>*</span>
+          <label className='GWASUI-label GWASUI-asterisk' htmlFor='select-hare-quantitative'>
             Select HARE group &nbsp;
             <CovariateStatsByHareQ
               id='select-hare-quantitative'
@@ -110,7 +108,6 @@ const WorkflowParameters = ({
               sourceId={sourceId}
               handleHareChange={handleHareChange}
             />
-
           </label>
         )}
       </div>

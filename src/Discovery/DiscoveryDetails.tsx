@@ -224,7 +224,7 @@ const DiscoveryDetails = (props: Props) => {
       <div className='discovery-modal__header-buttons'>
         <Button
           type='text'
-          onClick={() => props.setModalVisible(false)}
+          onClick={() => { props.setModalVisible(false); setTabActiveKey('0'); }}
           className='discovery-modal__close-button'
         >
           <DoubleLeftOutlined />
