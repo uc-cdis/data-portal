@@ -95,8 +95,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
     if (!useArboristUI) {
       return true;
     }
-    return (userHasDataUpload(props.userAuthMapping)
-      && userHasMethodForServiceOnResource('access', 'study_registration', studyRegistrationAuthZ, props.userAuthMapping)
+    return (userHasMethodForServiceOnResource('access', 'study_registration', studyRegistrationAuthZ, props.userAuthMapping)
     );
   };
 

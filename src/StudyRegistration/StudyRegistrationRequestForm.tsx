@@ -90,8 +90,8 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
     const body = {
       username: props.user.username,
       resource_id: studyUID,
-      resource_paths: [studyRegistrationAuthZ, '/mds_gateway', '/cedar', '/data_file'],
-      role_ids: ['study_registrant', 'mds_user', 'cedar_user', 'file_uploader'],
+      resource_paths: [studyRegistrationAuthZ, '/mds_gateway', '/cedar'],
+      role_ids: ['study_registrant', 'mds_user', 'cedar_user'],
     };
     // deepcode ignore Ssrf: studyUID is pulled in from setState into request body, not as URL
     fetchWithCreds({
