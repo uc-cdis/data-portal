@@ -115,10 +115,14 @@ const SelectHareDropDown = ({
     ];
   };
 
+  const getConceptId = (selectedHareItem) => hareResults[0].data.concept_breakdown.find(
+    (hare) => selectedHareItem.value === hare.concept_value,
+  ).concept_value_as_concept_id;
+
   const onChange = (h) => {
     const selectedHareOutput = {
       concept_value: h.value,
-      concept_value_as_concept_id: 2000007032,
+      concept_value_as_concept_id: getConceptId(h),
       concept_value_name: h.label,
     };
     dispatch({

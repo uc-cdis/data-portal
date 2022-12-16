@@ -70,6 +70,9 @@ const MockTemplate = () => {
           style={{ background: '#f5f5f5', padding: '40px' }}
         >
           <h1 style={{ textAlign: 'center' }}>Configure GWAS (Steps 4 & 5)</h1>
+          <h2 style={{ textAlign: 'center' }}>
+            Click "Next" without selecting a HARE to test case/control population rendering in the modal
+          </h2>
           {state.currentStep !== 0 && (
             <ConfigureGWAS
               dispatch={dispatch}
