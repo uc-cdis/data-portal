@@ -94,13 +94,12 @@ const SelectHareDropDown = ({
   );
 
   const getFinalPopulationSizes = (selectedHareItem) => {
-
     if (outcome.variable_type === 'concept') {
       // Quantitative outcome scenario:
       const finalCohortSize = hareResults[0].data.concept_breakdown.find(
         (hare) => selectedHareItem.value === hare.concept_value,
       ).persons_in_cohort_with_value;
-      return [{population: 'Total', size: finalCohortSize}];
+      return [{ population: 'Total', size: finalCohortSize }];
     }
     // Dichotomous (aka Case/Control) outcome scenario:
     const finalControlCohortSize = hareResults[0].data.concept_breakdown.find(
@@ -110,9 +109,9 @@ const SelectHareDropDown = ({
       (hare) => selectedHareItem.value === hare.concept_value,
     ).persons_in_cohort_with_value;
     return [
-      {population: 'Control', size: finalControlCohortSize},
-      {population: 'Case', size: finalCaseCohortSize},
-      {population: 'Total', size: finalControlCohortSize + finalCaseCohortSize}
+      { population: 'Control', size: finalControlCohortSize },
+      { population: 'Case', size: finalCaseCohortSize },
+      { population: 'Total', size: finalControlCohortSize + finalCaseCohortSize },
     ];
   };
 

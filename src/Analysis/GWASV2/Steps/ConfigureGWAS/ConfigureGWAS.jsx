@@ -255,12 +255,12 @@ const ConfigureGWAS = ({
               <div>Outcome Phenotype</div>
               <div>{outcome?.concept_name ?? outcome?.provided_name}</div>
             </div>
-              {finalPopulationSizes.map((item, key) => (
-                <div key={key} style={flexRow}>
-                  <div>{item.population} Size</div>
-                  <div>{item.size}</div>
-                </div>
-                ))}
+            {finalPopulationSizes.map((item, key) => (
+              <div key={key} style={flexRow}>
+                <div>{item.population} Size</div>
+                <div>{item.size}</div>
+              </div>
+            ))}
             <div style={flexRow}>
               <div>Covariates</div>
               <div>
