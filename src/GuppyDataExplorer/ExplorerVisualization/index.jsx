@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import GuppyWrapper from '@gen3/guppy/dist/components/GuppyWrapper';
 import ConnectedFilter from '@gen3/guppy/dist/components/ConnectedFilter';
@@ -8,7 +8,7 @@ import { components } from '../../params';
 import { guppyUrl, tierAccessLevel, tierAccessLimit } from '../../localconf';
 import DataSummaryCardGroup from '../../components/cards/DataSummaryCardGroup';
 import ExplorerHeatMap from '../ExplorerHeatMap';
-import ExplorerTable, {DicomHasImageLinkObserver} from '../ExplorerTable';
+import ExplorerTable from '../ExplorerTable';
 import ReduxExplorerButtonGroup from '../ExplorerButtonGroup/ReduxExplorerButtonGroup';
 import {
   TableConfigType,
