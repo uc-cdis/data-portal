@@ -1,84 +1,85 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import { Space, Button, Popconfirm } from 'antd';
-import SelectStudyPopulation from './SelectStudyPopulation/SelectStudyPopulation';
-import ProgressBar from './Shared/ProgressBar/ProgressBar';
-import AttritionTable from './Shared/AttritionTable/AttritionTable';
-import { useSourceFetch } from './Shared/wizardEndpoints/cohortMiddlewareApi';
+import ProgressBar from './Components/ProgressBar/ProgressBar';
 import { gwasV2Steps } from './Shared/constants';
+import initialState from './Shared/StateManagement/InitialState';
+import reducer from './Shared/StateManagement/reducer';
+import ACTIONS from './Shared/StateManagement/Actions';
+import AttritionTableWrapper from './Components/AttritionTableWrapper/AttritionTableWrapper';
+import SelectStudyPopulation from './Steps/SelectStudyPopulation/SelectStudyPopulation';
+import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
+import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
+import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
 import './GWASV2.css';
 
 const GWASContainer = () => {
-  const { loading, sourceId } = useSourceFetch();
-  const [current, setCurrent] = useState(0);
-  const [
-    selectedStudyPopulationCohort,
-    setSelectedStudyPopulationCohort,
-  ] = useState({});
-  const [selectedControlCohort] = useState(undefined);
-  const [selectedCaseCohort] = useState(undefined);
-  const [selectedCovariates] = useState([]);
-  const [selectedDichotomousCovariates] = useState([]);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const generateStep = () => {
-    // steps 2 & 3 very similar
-    switch (current) {
+    switch (state.currentStep) {
     case 0:
-      // select study population
       return (
         <SelectStudyPopulation
-          selectedStudyPopulationCohort={selectedStudyPopulationCohort}
-          setSelectedStudyPopulationCohort={setSelectedStudyPopulationCohort}
-          current={current}
+          selectedCohort={state.selectedStudyPopulationCohort}
+          dispatch={dispatch}
         />
       );
     case 1:
-      // outcome (customdichotomous or not)
-      return <React.Fragment>step 2</React.Fragment>;
+      return (
+        <SelectOutcome
+          studyPopulationCohort={state.selectedStudyPopulationCohort}
+          outcome={state.outcome}
+          dispatch={dispatch}
+        />
+      );
     case 2:
-      // covariates (customdichtomous or not)
-      return <React.Fragment>step 3</React.Fragment>;
+      return (
+        <React.Fragment>
+          <SelectCovariates
+            studyPopulationCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            covariates={state.covariates}
+            dispatch={dispatch}
+          />
+        </React.Fragment>
+      );
     case 3:
-      // all other input (mafs, imputation, etc), review, and submit
-      return <React.Fragment>step 4</React.Fragment>;
+      return (
+        <ConfigureGWAS
+          dispatch={dispatch}
+          numOfPCs={state.numPCs}
+          mafThreshold={state.mafThreshold}
+          imputationScore={state.imputationScore}
+          selectedHare={state.selectedHare}
+        />
+      );
     default:
-      // required for eslint
       return null;
     }
   };
 
   let nextButtonEnabled = true;
-  if (
-    current === 0
-    && Object.keys(selectedStudyPopulationCohort).length === 0
-  ) {
+  if (state.currentStep === 0 && !state.selectedStudyPopulationCohort) {
     nextButtonEnabled = false;
   }
 
+  /*
+  todo:
+  { outcome, allCovariates, numOfPCs, mafThreshold, imputationScore, ...} = workflow;
+  grab submit code from GWASWizard/wizardEndpoints/gwasWorkflowApi.js
+
+  const GWASSubmit = () => {
+  };
+  */
+
   return (
     <React.Fragment>
-      <ProgressBar current={current} />
-      {!loading && sourceId && (
-        <React.Fragment>
-          <AttritionTable
-            sourceId={sourceId}
-            selectedCohort={selectedStudyPopulationCohort}
-            otherSelectedCohort={selectedControlCohort}
-            // outcome={outcome}
-            selectedCovariates={selectedCovariates}
-            selectedDichotomousCovariates={selectedDichotomousCovariates}
-            tableHeader={'Case Cohort Attrition Table'}
-          />
-          <AttritionTable
-            sourceId={sourceId}
-            selectedCohort={selectedControlCohort}
-            otherSelectedCohort={selectedCaseCohort}
-            // outcome={outcome}
-            selectedCovariates={selectedCovariates}
-            selectedDichotomousCovariates={selectedDichotomousCovariates}
-            tableHeader={'Control Cohort Attrition Table'}
-          />
-        </React.Fragment>
-      )}
+      <ProgressBar currentStep={state.currentStep} />
+      <AttritionTableWrapper
+        covariates={state.covariates}
+        selectedCohort={state.selectedStudyPopulationCohort}
+        outcome={state.outcome}
+      />
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>
         {'.analysis-app__actions > div:nth-child(1) { width: 100%; }'}
@@ -91,7 +92,7 @@ const GWASContainer = () => {
               align={'center'}
               style={{ width: '100%' }}
             >
-              {generateStep(current)}
+              {generateStep(state.currentStep)}
             </Space>
           </div>
           <div className='steps-action'>
@@ -99,9 +100,9 @@ const GWASContainer = () => {
               className='GWASUI-navBtn GWASUI-navBtn__next'
               type='primary'
               onClick={() => {
-                setCurrent(current - 1);
+                dispatch({ type: ACTIONS.DECREMENT_CURRENT_STEP });
               }}
-              disabled={current < 1}
+              disabled={state.currentStep < 1}
             >
               Previous
             </Button>
@@ -115,20 +116,20 @@ const GWASContainer = () => {
                 Select Different GWAS Type
               </Button>
             </Popconfirm>
-            {current < gwasV2Steps.length - 1 && (
+            {state.currentStep < gwasV2Steps.length - 1 && (
               <Button
                 data-tour='next-button'
                 className='GWASUI-navBtn GWASUI-navBtn__next'
                 type='primary'
                 onClick={() => {
-                  setCurrent(current + 1);
+                  dispatch({ type: ACTIONS.INCREMENT_CURRENT_STEP });
                 }}
                 disabled={!nextButtonEnabled}
               >
                 Next
               </Button>
             )}
-            {current === gwasV2Steps.length - 1 && (
+            {state.currentStep === gwasV2Steps.length - 1 && (
               <div className='GWASUI-navBtn' />
             )}
           </div>
