@@ -103,6 +103,9 @@
         "jsx-a11y/anchor-is-valid": [
             "off"
         ],
+        "jsx-a11y/no-noninteractive-tabindex": [
+            "error"
+        ],
         "import/extensions": [
             "off",
             "never"
