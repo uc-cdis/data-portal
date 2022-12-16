@@ -638,7 +638,7 @@ const DiscoveryActionBar = (props: Props) => {
               onClick={() => props.setFiltersVisible(!props.filtersVisible)}
               type='text'
             >
-          ADVANCED SEARCH
+              {props.config.features.advSearchFilters.displayName || 'ADVANCED SEARCH'}
               { props.filtersVisible
                 ? <LeftOutlined />
                 : <RightOutlined />}

@@ -190,7 +190,7 @@ interface FilterState {
   [key: string]: { [value: string]: boolean }
 }
 
-const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, config: DiscoveryConfig): any[] => {
+const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, config: DiscoveryConfig, filterMultiSelectionLogic: string): any[] => {
   // if no filters active, show all studies
   const noFiltersActive = Object.values(advSearchFilterState).every((selectedValues) => {
     if (Object.values(selectedValues).length === 0) {
@@ -204,24 +204,45 @@ const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, co
   if (noFiltersActive) {
     return studies;
   }
-  return studies.filter((study) => Object.keys(advSearchFilterState).every((filterName) => {
+
+  // Combine within filters as AND
+  if (filterMultiSelectionLogic === 'AND') {
+    return studies.filter((study) => Object.keys(advSearchFilterState).every((filterName) => {
+      const filterValues = Object.keys(advSearchFilterState[filterName]);
+      // Handle the edge case where no values in this filter are selected
+      if (filterValues.length === 0) {
+        return true;
+      }
+      if (!config.features.advSearchFilters) {
+        return false;
+      }
+      const studyFilters = study[config.features.advSearchFilters.field];
+      if (!studyFilters || !studyFilters.length) {
+        return false;
+      }
+
+      const studyFilterValues = studyFilters.filter(({ key }) => key === filterName)
+        .map(({ value }) => value);
+      return filterValues.every((value) => studyFilterValues.includes(value));
+    }));
+  }
+
+  // Combine within filters as OR
+  return studies.filter((study) => Object.keys(advSearchFilterState).some((filterName) => {
     const filterValues = Object.keys(advSearchFilterState[filterName]);
     // Handle the edge case where no values in this filter are selected
     if (filterValues.length === 0) {
       return true;
     }
-    const studyFilters = study[config.features.advSearchFilters.field];
-    if (!studyFilters) {
+    if (!config.features.advSearchFilters) {
       return false;
     }
-    // combine within filters as OR
-    // return studyFilters.some(({ key, value }) =>
-    //   key === filterName && filterValues.includes(value));
+    const studyFilters = study[config.features.advSearchFilters.field];
+    if (!studyFilters || !studyFilters.length) {
+      return false;
+    }
 
-    // combine within filters as AND
-    const studyFilterValues = studyFilters.filter(({ key }) => key === filterName)
-      .map(({ value }) => value);
-    return filterValues.every((value) => studyFilterValues.includes(value));
+    return studyFilters.some(({ key, value }) => key === filterName && filterValues.includes(value));
   }));
 };
 
@@ -260,10 +281,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filterState, setFilterState] = useState({} as FilterState);
+  const [filterMultiSelectionLogic, setFilterMultiSelectionLogic] = useState('AND');
   const [modalData, setModalData] = useState({} as DiscoveryResource);
   const [permalinkCopied, setPermalinkCopied] = useState(false);
   const [exportingToWorkspace, setExportingToWorkspace] = useState(false);
-  const [advSearchFilterHeight, setAdvSearchFilterHeight] = useState('100vh');
   const [searchableTagCollapsed, setSearchableTagCollapsed] = useState(
     config.features.search.tagSearchDropdown
     && config.features.search.tagSearchDropdown.enabled
@@ -293,6 +314,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
         filteredResources,
         filterState,
         config,
+        filterMultiSelectionLogic,
       );
     }
 
@@ -316,7 +338,14 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   };
 
   useEffect(doSearchFilterSort,
-    [props.searchTerm, props.accessSortDirection, props.studies, props.pagination, props.accessFilters, props.selectedTags],
+    [props.searchTerm,
+      props.accessSortDirection,
+      props.studies,
+      props.pagination,
+      props.accessFilters,
+      props.selectedTags,
+      filterMultiSelectionLogic,
+      filterState],
   );
 
   useEffect(() => {
@@ -779,63 +808,61 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           filtersVisible={filtersVisible}
           setFiltersVisible={setFiltersVisible}
         />
-
-        {/* Advanced search panel */}
-        { (
-          props.config.features.advSearchFilters
+        <div className='discovery-studies__content'>
+          {/* Advanced search panel */}
+          { (
+            props.config.features.advSearchFilters
           && props.config.features.advSearchFilters.enabled
           && filtersVisible
-        )
-        && (
-          <div
-            className='discovery-filters'
-            style={{
-              height: advSearchFilterHeight,
-            }}
-          >
-            <DiscoveryAdvancedSearchPanel
-              config={props.config}
-              studies={props.studies}
-              filterState={filterState}
-              setFilterState={setFilterState}
-            />
-          </div>
-        )}
+          )
+            ? (
+              <div
+                className='discovery-filters--visible'
+              >
+                <DiscoveryAdvancedSearchPanel
+                  config={props.config}
+                  studies={props.studies}
+                  filterState={filterState}
+                  setFilterState={setFilterState}
+                  filterMultiSelectionLogic={filterMultiSelectionLogic}
+                  setFilterMultiSelectionLogic={setFilterMultiSelectionLogic}
+                />
+              </div>
+            ) : (<div className='discovery-filters--hide' />)}
 
-        <div id='discovery-table-of-records' className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--collapsed' : ''}`}>
-          <Space direction={'vertical'} style={{ width: '100%' }}>
-            <DiscoveryListView
-              config={config}
-              studies={props.studies}
-              visibleResources={
-                visibleResources.slice(
-                  (props.pagination.currentPage - 1) * props.pagination.resultsPerPage,
-                  props.pagination.currentPage * props.pagination.resultsPerPage,
-                )
-              }
-              searchTerm={props.searchTerm}
-              advSearchFilterHeight={advSearchFilterHeight}
-              setAdvSearchFilterHeight={setAdvSearchFilterHeight}
-              setPermalinkCopied={setPermalinkCopied}
-              setModalData={setModalData}
-              setModalVisible={setModalVisible}
-              columns={columns}
-              selectedTags={props.selectedTags}
-              onTagsSelected={props.onTagsSelected}
-              accessibleFieldName={accessibleFieldName}
-              selectedResources={props.selectedResources}
-              onResourcesSelected={props.onResourcesSelected}
-            />
-            <Pagination
-              current={props.pagination.currentPage}
-              pageSize={props.pagination.resultsPerPage}
-              onChange={(currentPage, resultsPerPage) => props.onPaginationSet({ currentPage, resultsPerPage })}
-              pageSizeOptions={['10', '20', '50', '100']}
-              total={visibleResources.length}
-              showSizeChanger
-              style={{ float: 'right' }}
-            />
-          </Space>
+          <div id='discovery-table-of-records' className={`discovery-table-container ${filtersVisible ? 'discovery-table-container--collapsed' : 'discovery-table-container--expanded '}`}>
+            <Space direction={'vertical'} style={{ width: '100%' }}>
+              <DiscoveryListView
+                config={config}
+                studies={props.studies}
+                visibleResources={
+                  visibleResources.slice(
+                    (props.pagination.currentPage - 1) * props.pagination.resultsPerPage,
+                    props.pagination.currentPage * props.pagination.resultsPerPage,
+                  )
+                }
+                searchTerm={props.searchTerm}
+                setPermalinkCopied={setPermalinkCopied}
+                setModalData={setModalData}
+                setModalVisible={setModalVisible}
+                columns={columns}
+                selectedTags={props.selectedTags}
+                onTagsSelected={props.onTagsSelected}
+                accessibleFieldName={accessibleFieldName}
+                selectedResources={props.selectedResources}
+                onResourcesSelected={props.onResourcesSelected}
+              />
+              <Pagination
+                current={props.pagination.currentPage}
+                pageSize={props.pagination.resultsPerPage}
+                onChange={(currentPage, resultsPerPage) => props.onPaginationSet({ currentPage, resultsPerPage })}
+                pageSizeOptions={['10', '20', '50', '100']}
+                total={visibleResources.length}
+                showSizeChanger
+                style={{ float: 'right' }}
+              />
+            </Space>
+          </div>
         </div>
         <ReduxDiscoveryDetails
           modalVisible={modalVisible}

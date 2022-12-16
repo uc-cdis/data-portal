@@ -60,9 +60,9 @@ export interface DiscoveryConfig {
         advSearchFilters?: {
             enabled: boolean,
             field: string,
+            displayName?: string,
             filters: {
                 key: string
-                // multiSelectBehavior?: 'AND' | 'OR' // defaults to OR // not yet supported
                 keyDisplayName?: string
                 valueDisplayNames?: {
                     [value: string]: string
