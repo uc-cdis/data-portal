@@ -141,7 +141,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           .then(() => {
             setFormSubmissionStatus({ status: 'info', text: 'Finishing upload' });
             // TODO: change this line back
-            let subject = `DUMMY TESTING: Data dictionary submission for ${studyNumber} ${studyName}`;
+            let subject = `INTERNAL TESTING: Data dictionary submission for ${studyNumber} ${studyName}`;
             if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
               subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
             }
