@@ -81,12 +81,10 @@ const SelectCovariates = ({
         <div className='GWASUI-column GWASUI-card-column'>
           <CovariatesCardsList
             covariates={covariates}
-            deleteCovariate={(chosenCovariate) =>
-              dispatch({
-                type: ACTIONS.DELETE_COVARIATE,
-                payload: chosenCovariate,
-              })
-            }
+            deleteCovariate={(chosenCovariate) => dispatch({
+              type: ACTIONS.DELETE_COVARIATE,
+              payload: chosenCovariate,
+            })}
           />
         </div>
       </div>

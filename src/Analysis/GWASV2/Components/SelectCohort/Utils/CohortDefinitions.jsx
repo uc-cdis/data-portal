@@ -15,7 +15,7 @@ const CohortDefinitions = ({
   const cohorts = useQuery(
     ['cohortdefinitions', source],
     () => fetchCohortDefinitions(source),
-    queryConfig
+    queryConfig,
   );
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
   const displayedCohorts = useFilter(fetchedCohorts, searchTerm, 'cohort_name');
