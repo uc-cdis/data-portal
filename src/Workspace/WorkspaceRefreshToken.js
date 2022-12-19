@@ -26,5 +26,9 @@ export const initWorkspaceRefreshToken = (redirectLocation, connectedCallBack) =
         },
       );
     lastRefreshMs = Date.now();
+  } else { // if still within debounce time, don't call WTS, directly do the callback if available
+    if (connectedCallBack) {
+      connectedCallBack();
+    }
   }
 };
