@@ -51,26 +51,3 @@ describe('Test that active step class renders with active class when current is 
     });
   }
 });
-
-/* Test Dynamic Text for Steps */
-describe('Test that each step renders with correct text when currentStep is between 0 and 3', () => {
-  for (let i = 0; i < 4; i += 1) {
-    const wrapper = render(<ProgressBar currentStep={i} />);
-    const correctTextStep1 = i === 0 ? gwasV2Steps[0].title : gwasV2Steps[0].secondaryTitle;
-    const correctTextStep2 = i <= 1 ? gwasV2Steps[1].title : gwasV2Steps[1].secondaryTitle;
-    const correctTextStep3 = i <= 2 ? gwasV2Steps[2].title : gwasV2Steps[2].secondaryTitle;
-    const correctTextStep4 = i <= 3 ? gwasV2Steps[3].title : gwasV2Steps[3].secondaryTitle;
-    it(`should render first step with correct text: 1${correctTextStep1} when currentStep is ${i}`, () => {
-      testElementText(wrapper, 1, `1${correctTextStep1}`);
-    });
-    it(`should render second step with correct text: 2${correctTextStep2} when currentStep is ${i}`, () => {
-      testElementText(wrapper, 2, `2${correctTextStep2}`);
-    });
-    it(`should render third step with correct text: 3${correctTextStep3} when currentStep is ${i}`, () => {
-      testElementText(wrapper, 3, `3${correctTextStep3}`);
-    });
-    it(`should render fourth step with correct text: 4${correctTextStep4} when current is ${i}`, () => {
-      testElementText(wrapper, 4, `4${correctTextStep4}`);
-    });
-  }
-});
