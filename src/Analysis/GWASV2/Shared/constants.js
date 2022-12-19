@@ -17,3 +17,10 @@ export const gwasV2Steps = [
     secondaryTitle: 'Configure GWAS',
   },
 ];
+
+export const isEnterOrSpace = (event) =>
+  event.key === 'Enter' ||
+  event.key === ' ' ||
+  event.key === 'Spacebar' ||
+  event.keycode === '32' ||
+  event.keycode === '13';
