@@ -2,10 +2,10 @@ import React, { useState, useReducer } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Button } from 'antd';
 import { rest } from 'msw';
-import reducer from '../../Shared/StateManagement/reducer';
+import reducer from '../../Utils/StateManagement/reducer';
 import ConfigureGWAS from './ConfigureGWAS';
-import { SourceContextProvider } from '../../Shared/Source';
-import ACTIONS from '../../Shared/StateManagement/Actions';
+import { SourceContextProvider } from '../../Utils/Source';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 import '../../GWASV2.css';
 
 export default {
@@ -31,19 +31,23 @@ const MockTemplate = () => {
       cohort_name: 'Diabetes Demo',
       size: 293,
     },
-    covariates: [{
-      variable_type: 'concept',
-      concept_id: 2000000873,
-      concept_name: 'Attribute81',
-    },{
-      variable_type: 'concept',
-      concept_id: 2000000873,
-      concept_name: 'Attribute82',
-    },{
-      variable_type: 'concept',
-      concept_id: 2000000873,
-      concept_name: 'Attribute83',
-    },],
+    covariates: [
+      {
+        variable_type: 'concept',
+        concept_id: 2000000873,
+        concept_name: 'Attribute81',
+      },
+      {
+        variable_type: 'concept',
+        concept_id: 2000000873,
+        concept_name: 'Attribute82',
+      },
+      {
+        variable_type: 'concept',
+        concept_id: 2000000873,
+        concept_name: 'Attribute83',
+      },
+    ],
     imputationScore: 0.3,
     mafThreshold: 0.01,
     numOfPC: 3,
@@ -53,9 +57,9 @@ const MockTemplate = () => {
     },
     currentStep: 3,
     finalPopulationSizes: [
-      {population: 'Control', size: 90},
-      {population: 'Case', size: 95},
-      {population: 'Total', size: 90 + 95}
+      { population: 'Control', size: 90 },
+      { population: 'Case', size: 95 },
+      { population: 'Total', size: 90 + 95 },
     ],
   };
 
@@ -71,7 +75,8 @@ const MockTemplate = () => {
         >
           <h1 style={{ textAlign: 'center' }}>Configure GWAS (Steps 4 & 5)</h1>
           <h2 style={{ textAlign: 'center' }}>
-            Click "Next" without selecting a HARE to test case/control population rendering in the modal
+            Click "Next" without selecting a HARE to test case/control
+            population rendering in the modal
           </h2>
           {state.currentStep !== 0 && (
             <ConfigureGWAS
@@ -176,12 +181,8 @@ MockedSuccess.parameters = {
       rest.post('http://:serverpath/ga4gh/wes/v2/submit', (req, res, ctx) => {
         const { serverpath } = req.params;
         console.log(serverpath);
-        return res(
-          ctx.delay(1100),
-          ctx.text("gwas-workflow-123456")
-        );
+        return res(ctx.delay(1100), ctx.text('gwas-workflow-123456'));
       }),
-
     ],
   },
 };

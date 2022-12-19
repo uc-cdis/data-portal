@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Steps } from 'antd';
-import { gwasV2Steps } from '../../Shared/constants';
+import { gwasV2Steps } from '../../Utils/constants';
 import './ProgressBar.css';
 
 const { Step } = Steps;

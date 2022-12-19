@@ -2,24 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, queryConfig } from 'react-query';
 import { Select, Spin } from 'antd';
-import { fetchCohortDefinitions } from '../../Shared/cohortMiddlewareApi';
-import { useFetch } from '../../Shared/formHooks';
-import { useSourceContext } from '../../Shared/Source';
+import { fetchCohortDefinitions } from '../../Utils/cohortMiddlewareApi';
+import { useFetch } from '../../Utils/formHooks';
+import { useSourceContext } from '../../Utils/Source';
 
-const SelectCohortDropDown = ({
-  handleCohortSelect,
-}) => {
+const SelectCohortDropDown = ({ handleCohortSelect }) => {
   const { source } = useSourceContext();
   const cohorts = useQuery(
     ['cohortdefinitions', source],
     () => fetchCohortDefinitions(source),
-    queryConfig,
+    queryConfig
   );
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
 
   const onChange = (selectedCohortDefinitionId) => {
     // find cohort object based on id:
-    const selectedCohort = fetchedCohorts.find((item) => item.cohort_definition_id === selectedCohortDefinitionId);
+    const selectedCohort = fetchedCohorts.find(
+      (item) => item.cohort_definition_id === selectedCohortDefinitionId
+    );
     handleCohortSelect(selectedCohort);
   };
 
@@ -31,13 +31,18 @@ const SelectCohortDropDown = ({
       optionFilterProp='children'
       onChange={onChange}
       dropdownStyle={{ minWidth: '800px' }}
-      filterOption={(input, option) => (option?.cohort_name ?? '').toLowerCase().includes(input.toLowerCase())}
+      filterOption={(input, option) =>
+        (option?.cohort_name ?? '').toLowerCase().includes(input.toLowerCase())
+      }
       options={fetchedCohorts}
       fieldNames={{ label: 'cohort_name', value: 'cohort_definition_id' }}
     />
   ) : (
     <React.Fragment>
-      <div style={{ width: '300px' }} className='GWASUI-spinnerContainer GWASUI-emptyTable'>
+      <div
+        style={{ width: '300px' }}
+        className='GWASUI-spinnerContainer GWASUI-emptyTable'
+      >
         <Spin />
       </div>
     </React.Fragment>

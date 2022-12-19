@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { isEnterOrSpace } from '../../Shared/constants';
+import { isEnterOrSpace } from '../../Utils/constants';
 import './DismissibleMessage.css';
 
 const DismissibleMessage = ({

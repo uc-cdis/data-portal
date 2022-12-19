@@ -2,9 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
-import { fetchHistogramInfo, queryConfig } from '../../../Shared/cohortMiddlewareApi';
+import {
+  fetchHistogramInfo,
+  queryConfig,
+} from '../../../Utils/cohortMiddlewareApi';
 import Histogram from './Histogram';
-import { useSourceContext } from '../../../Shared/Source';
+import { useSourceContext } from '../../../Utils/Source';
 
 const PhenotypeHistogram = ({
   selectedStudyPopulationCohort,
@@ -23,14 +26,15 @@ const PhenotypeHistogram = ({
       outcome,
       selectedConceptId,
     ],
-    () => fetchHistogramInfo(
-      sourceId,
-      selectedStudyPopulationCohort,
-      selectedCovariates,
-      outcome,
-      selectedConceptId,
-    ),
-    queryConfig,
+    () =>
+      fetchHistogramInfo(
+        sourceId,
+        selectedStudyPopulationCohort,
+        selectedCovariates,
+        outcome,
+        selectedConceptId
+      ),
+    queryConfig
   );
 
   if (status === 'error') {

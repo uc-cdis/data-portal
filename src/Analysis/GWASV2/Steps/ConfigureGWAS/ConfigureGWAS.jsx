@@ -3,10 +3,10 @@ import { useMutation } from 'react-query';
 import PropTypes from 'prop-types';
 import { InputNumber, Modal, Input } from 'antd';
 import SelectHareDropDown from '../../Components/SelectHare/SelectHareDropDown';
-import ACTIONS from '../../Shared/StateManagement/Actions';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 import DismissibleMessage from '../../Components/DismissibleMessage/DismissibleMessage';
-import { jobSubmission } from '../../Shared/gwasWorkflowApi';
-import { useSourceContext } from '../../Shared/Source';
+import { jobSubmission } from '../../Utils/gwasWorkflowApi';
+import { useSourceContext } from '../../Utils/Source';
 import '../../GWASV2.css';
 import './ConfigureGWAS.css';
 
@@ -61,17 +61,18 @@ const ConfigureGWAS = ({
   }, [showModal]);
 
   const submitJob = useMutation(
-    () => jobSubmission(
-      sourceId,
-      numOfPCs,
-      covariates,
-      outcome,
-      selectedHare,
-      mafThreshold,
-      imputationScore,
-      selectedCohort,
-      jobName,
-    ),
+    () =>
+      jobSubmission(
+        sourceId,
+        numOfPCs,
+        covariates,
+        outcome,
+        selectedHare,
+        mafThreshold,
+        imputationScore,
+        selectedCohort,
+        jobName
+      ),
     {
       onSuccess: (data) => {
         if (data?.status === 200) {
@@ -82,13 +83,13 @@ const ConfigureGWAS = ({
         } else {
           data.text().then((error) => {
             setErrorText(
-              `GWAS job failed with error: ${JSON.stringify(error)}`,
+              `GWAS job failed with error: ${JSON.stringify(error)}`
             );
             setShowError(true);
           });
         }
       },
-    },
+    }
   );
 
   const handleSubmit = () => {
@@ -154,7 +155,9 @@ const ConfigureGWAS = ({
               value={numOfPCs}
               min={1}
               max={10}
-              onChange={(e) => dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })}
+              onChange={(e) =>
+                dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })
+              }
             />
           </div>
           <div className='GWASUI-column'>
@@ -162,10 +165,12 @@ const ConfigureGWAS = ({
             <InputNumber
               id='input-maf'
               value={mafThreshold}
-              onChange={(e) => dispatch({
-                type: ACTIONS.UPDATE_MAF_THRESHOLD,
-                payload: Number(e),
-              })}
+              onChange={(e) =>
+                dispatch({
+                  type: ACTIONS.UPDATE_MAF_THRESHOLD,
+                  payload: Number(e),
+                })
+              }
               stringMode
               step='0.01'
               min={'0'}
@@ -193,10 +198,12 @@ const ConfigureGWAS = ({
             <InputNumber
               id='input-imputation'
               value={imputationScore}
-              onChange={(e) => dispatch({
-                type: ACTIONS.UPDATE_IMPUTATION_SCORE,
-                payload: Number(e),
-              })}
+              onChange={(e) =>
+                dispatch({
+                  type: ACTIONS.UPDATE_IMPUTATION_SCORE,
+                  payload: Number(e),
+                })
+              }
               stringMode
               step='0.1'
               min={'0'}
@@ -218,11 +225,11 @@ const ConfigureGWAS = ({
               payload: 3,
             });
           }}
-          title={(
+          title={
             <div style={{ ...flexRow, ...{ justifyContent: 'space-between' } }}>
               <div>Review Details</div>
             </div>
-          )}
+          }
         >
           <Input
             className='gwas-job-name'

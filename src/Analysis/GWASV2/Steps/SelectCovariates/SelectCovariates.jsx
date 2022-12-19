@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
-import ACTIONS from '../../Shared/StateManagement/Actions';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 import './SelectCovariates.css';
 import '../../GWASV2.css';
 
@@ -81,10 +81,12 @@ const SelectCovariates = ({
         <div className='GWASUI-column GWASUI-card-column'>
           <CovariatesCardsList
             covariates={covariates}
-            deleteCovariate={(chosenCovariate) => dispatch({
-              type: ACTIONS.DELETE_COVARIATE,
-              payload: chosenCovariate,
-            })}
+            deleteCovariate={(chosenCovariate) =>
+              dispatch({
+                type: ACTIONS.DELETE_COVARIATE,
+                payload: chosenCovariate,
+              })
+            }
           />
         </div>
       </div>
