@@ -1,8 +1,7 @@
 import React from 'react';
-import Enzyme, { render, mount } from 'enzyme';
+import Enzyme, { mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import ProgressBar from './ProgressBar';
-import { gwasV2Steps } from '../../Shared/constants';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -18,13 +17,6 @@ window.matchMedia = window.matchMedia
       removeListener() {},
     };
   };
-
-/* HELPER METHODS */
-const testElementText = (wrapper, elNum, text) => {
-  const testElement = wrapper.find(`div.ant-steps-item:nth-child(${elNum})`);
-  expect(testElement).toHaveLength(1);
-  expect(testElement.text()).toEqual(text);
-};
 
 const testElementClass = (wrapper, elNum, className) => {
   /*
