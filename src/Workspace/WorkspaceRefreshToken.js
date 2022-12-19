@@ -11,7 +11,6 @@ export const initWorkspaceRefreshToken = (redirectLocation, connectedCallBack) =
   const redirectUrl = getUrlForRedirectLocation(redirectLocation);
   const nowMs = Date.now();
   if (nowMs - lastRefreshMs > debounceMs) {
-    console.log('init/renew WTS refresh token...');
     fetchWithCreds({
       path: `${wtsPath}connected`,
       method: 'GET',
@@ -26,9 +25,8 @@ export const initWorkspaceRefreshToken = (redirectLocation, connectedCallBack) =
         },
       );
     lastRefreshMs = Date.now();
-  } else { // if still within debounce time, don't call WTS, directly do the callback if available
-    if (connectedCallBack) {
-      connectedCallBack();
-    }
+  } else if (connectedCallBack) {
+    // if still within debounce time, don't call WTS, directly do the callback if available
+    connectedCallBack();
   }
 };
