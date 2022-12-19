@@ -11,6 +11,9 @@ const SelectOutcome = ({ dispatch, studyPopulationCohort, outcome }) => {
     if (selectionMode === 'continuous') {
       return (
         <ContinuousCovariates
+          selectedStudyPopulationCohort={studyPopulationCohort}
+          selectedCovariates={[]} // TODO - add to props above as well and pass in here...
+          outcome={outcome}
           handleClose={() => {
             setSelectionMode('');
           }}

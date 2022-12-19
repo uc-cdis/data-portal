@@ -21,14 +21,14 @@ const PhenotypeHistogram = ({
     [
       'gethistogramforcurrentlyselectedconcept',
       sourceId,
-      selectedStudyPopulationCohort,
+      selectedStudyPopulationCohort.cohort_definition_id,
       selectedCovariates,
       outcome,
       selectedConceptId,
     ],
     () => fetchHistogramInfo(
       sourceId,
-      selectedStudyPopulationCohort,
+      selectedStudyPopulationCohort.cohort_definition_id,
       selectedCovariates,
       outcome,
       selectedConceptId,
