@@ -99,8 +99,12 @@ const Covariates = ({ selected, handleSelect }) => {
 };
 
 Covariates.propTypes = {
-  selected: PropTypes.object.isRequired,
+  selected: PropTypes.object,
   handleSelect: PropTypes.func.isRequired,
+};
+
+Covariates.defaultProps = {
+  selected: null,
 };
 
 export default Covariates;

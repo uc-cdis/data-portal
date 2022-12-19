@@ -29,7 +29,7 @@ const Histogram = ({
 Histogram.propTypes = {
   data: PropTypes.array.isRequired,
   xAxisDataKey: PropTypes.string.isRequired,
-  barDataKey: PropTypes.array.isRequired,
+  barDataKey: PropTypes.string.isRequired,
   chartWidth: PropTypes.number,
   chartHeight: PropTypes.number,
   barColor: PropTypes.string,
