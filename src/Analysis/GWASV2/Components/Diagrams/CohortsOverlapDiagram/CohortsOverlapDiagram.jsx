@@ -6,7 +6,7 @@ import {
   fetchSimpleOverlapInfo,
   queryConfig,
   addCDFilter,
-} from '../../../Shared/cohortMiddlewareApi';
+} from '../../../Utils/cohortMiddlewareApi';
 import Simple3SetsEulerDiagram from './Simple3SetsEulerDiagram';
 import { useSourceContext } from '../../../Utils/Source';
 
