@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
-import ACTIONS from '../../Shared/StateManagement/Actions';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 import './SelectCovariates.css';
 import '../../GWASV2.css';
 

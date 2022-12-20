@@ -6,9 +6,9 @@ import { Spin, Select } from 'antd';
 import {
   fetchConceptStatsByHareSubset,
   queryConfig,
-} from '../../Shared/cohortMiddlewareApi';
-import { useSourceContext } from '../../Shared/Source';
-import ACTIONS from '../../Shared/StateManagement/Actions';
+} from '../../Utils/cohortMiddlewareApi';
+import { useSourceContext } from '../../Utils/Source';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 
 const SelectHareDropDown = ({
   id,
@@ -111,7 +111,10 @@ const SelectHareDropDown = ({
     return [
       { population: 'Control', size: finalControlCohortSize },
       { population: 'Case', size: finalCaseCohortSize },
-      { population: 'Total', size: finalControlCohortSize + finalCaseCohortSize },
+      {
+        population: 'Total',
+        size: finalControlCohortSize + finalCaseCohortSize,
+      },
     ];
   };
 

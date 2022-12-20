@@ -1,10 +1,11 @@
 import React, { useReducer } from 'react';
 import { Space, Button } from 'antd';
 import ProgressBar from './Components/ProgressBar/ProgressBar';
-import { gwasV2Steps } from './Shared/constants';
-import initialState from './Shared/StateManagement/InitialState';
-import reducer from './Shared/StateManagement/reducer';
-import ACTIONS from './Shared/StateManagement/Actions';
+import { gwasV2Steps } from './Utils/constants';
+import { SourceContextProvider } from './Utils/Source';
+import initialState from './Utils/StateManagement/InitialState';
+import reducer from './Utils/StateManagement/reducer';
+import ACTIONS from './Utils/StateManagement/Actions';
 import AttritionTableWrapper from './Components/AttritionTableWrapper/AttritionTableWrapper';
 import SelectStudyPopulation from './Steps/SelectStudyPopulation/SelectStudyPopulation';
 import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
@@ -78,13 +79,14 @@ const GWASContainer = () => {
   let nextButtonEnabled = true;
   // step specific conditions where progress to next step needs to be blocked:
   if ((state.currentStep === 0 && !state.selectedStudyPopulationCohort)
-      || (state.currentStep === 1 && !state.outcome)
-      || (state.currentStep === 3 && !state.selectedHare.concept_value)) {
+    || (state.currentStep === 1 && !state.outcome)
+    || (state.currentStep === 3 && !state.selectedHare.concept_value)
+  ) {
     nextButtonEnabled = false;
   }
 
   return (
-    <React.Fragment>
+    <SourceContextProvider>
       <ProgressBar currentStep={state.currentStep} />
       <AttritionTableWrapper
         covariates={state.covariates}
@@ -134,7 +136,7 @@ const GWASContainer = () => {
           </div>
         </Space>
       </div>
-    </React.Fragment>
+    </SourceContextProvider>
   );
 };
 

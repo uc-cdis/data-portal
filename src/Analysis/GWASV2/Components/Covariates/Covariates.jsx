@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Table, Spin } from 'antd';
-import { fetchCovariates, queryConfig } from '../../Shared/cohortMiddlewareApi';
-import { useFetch, useFilter } from '../../Shared/formHooks';
-import { useSourceContext } from '../../Shared/Source';
+import { fetchCovariates, queryConfig } from '../../Utils/cohortMiddlewareApi';
+import { useFetch, useFilter } from '../../Utils/formHooks';
+import { useSourceContext } from '../../Utils/Source';
 import SearchBar from '../SearchBar/SearchBar';
 
 const Covariates = ({ selected, handleSelect }) => {

@@ -2,13 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, queryConfig } from 'react-query';
 import { Select, Spin } from 'antd';
-import { fetchCohortDefinitions } from '../../Shared/cohortMiddlewareApi';
-import { useFetch } from '../../Shared/formHooks';
-import { useSourceContext } from '../../Shared/Source';
+import { fetchCohortDefinitions } from '../../Utils/cohortMiddlewareApi';
+import { useFetch } from '../../Utils/formHooks';
+import { useSourceContext } from '../../Utils/Source';
 
-const SelectCohortDropDown = ({
-  handleCohortSelect,
-}) => {
+const SelectCohortDropDown = ({ handleCohortSelect }) => {
   const { source } = useSourceContext();
   const cohorts = useQuery(
     ['cohortdefinitions', source],
@@ -19,7 +17,9 @@ const SelectCohortDropDown = ({
 
   const onChange = (selectedCohortDefinitionId) => {
     // find cohort object based on id:
-    const selectedCohort = fetchedCohorts.find((item) => item.cohort_definition_id === selectedCohortDefinitionId);
+    const selectedCohort = fetchedCohorts.find(
+      (item) => item.cohort_definition_id === selectedCohortDefinitionId,
+    );
     handleCohortSelect(selectedCohort);
   };
 
@@ -37,7 +37,10 @@ const SelectCohortDropDown = ({
     />
   ) : (
     <React.Fragment>
-      <div style={{ width: '300px' }} className='GWASUI-spinnerContainer GWASUI-emptyTable'>
+      <div
+        style={{ width: '300px' }}
+        className='GWASUI-spinnerContainer GWASUI-emptyTable'
+      >
         <Spin />
       </div>
     </React.Fragment>

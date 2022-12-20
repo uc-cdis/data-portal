@@ -3,10 +3,10 @@ import { useMutation } from 'react-query';
 import PropTypes from 'prop-types';
 import { InputNumber, Modal, Input } from 'antd';
 import SelectHareDropDown from '../../Components/SelectHare/SelectHareDropDown';
-import ACTIONS from '../../Shared/StateManagement/Actions';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 import DismissibleMessage from '../../Components/DismissibleMessage/DismissibleMessage';
-import { jobSubmission } from '../../Shared/gwasWorkflowApi';
-import { useSourceContext } from '../../Shared/Source';
+import { jobSubmission } from '../../Utils/gwasWorkflowApi';
+import { useSourceContext } from '../../Utils/Source';
 import '../../GWASV2.css';
 import './ConfigureGWAS.css';
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
-import ACTIONS from '../../Shared/StateManagement/Actions';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 
 const SelectOutcome = ({ dispatch, studyPopulationCohort, outcome }) => {
   const [selectionMode, setSelectionMode] = useState('');
