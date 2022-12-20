@@ -95,14 +95,9 @@ describe('JobInputModal', () => {
       />
     );
     const modal = wrapper.find(Modal);
-    //modal.simulate('ok'); // open the modal
     const input = modal.find(Input);
     input.simulate('change', { target: { value: 'Hello World' } });
-    //console.log(wrapper.debug());
-    // const inputEl = input.find('input');
-    // console.log(inputEl.prop('value'));
-    // expect(inputEl.prop('value')).toEqual('Hello World');
-    const inputEl = wrapper.find('input');
+    const inputEl = wrapper.find('input').first();
     expect(inputEl.prop('value')).toEqual('Hello World');
   });
 });
