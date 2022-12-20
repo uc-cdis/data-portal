@@ -2,6 +2,7 @@ import React, { useReducer } from 'react';
 import { Space, Button } from 'antd';
 import ProgressBar from './Components/ProgressBar/ProgressBar';
 import { gwasV2Steps } from './Utils/constants';
+import { SourceContextProvider } from './Utils/Source';
 import initialState from './Utils/StateManagement/InitialState';
 import reducer from './Utils/StateManagement/reducer';
 import ACTIONS from './Utils/StateManagement/Actions';
@@ -85,7 +86,7 @@ const GWASContainer = () => {
   }
 
   return (
-    <React.Fragment>
+    <SourceContextProvider>
       <ProgressBar currentStep={state.currentStep} />
       <AttritionTableWrapper
         covariates={state.covariates}
@@ -135,7 +136,7 @@ const GWASContainer = () => {
           </div>
         </Space>
       </div>
-    </React.Fragment>
+    </SourceContextProvider>
   );
 };
 
