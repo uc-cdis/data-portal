@@ -26,7 +26,7 @@ import {
 } from '../localconf';
 import { cleanUpFileRecord, generatePresignedURL } from './utils';
 import { createKayakoTicket } from '../utils';
-import { userHasDataUpload, userHasMethodForServiceOnResource } from '../authMappingUtils';
+import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { StudyRegistrationProps } from './StudyRegistration';
 
 const { Text } = Typography;
@@ -133,7 +133,11 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       setFormSubmissionStatus({ status: 'error', text: 'Invalid file info received' });
       return;
     }
-    generatePresignedURL(fileInfo.name, studyRegistrationConfig.dataDictionarySubmissionBucket)
+    if (!studyRegistrationAuthZ) {
+      setFormSubmissionStatus({ status: 'error', text: 'Invalid authz info received' });
+      return;
+    }
+    generatePresignedURL(fileInfo.name, studyRegistrationAuthZ, studyRegistrationConfig.dataDictionarySubmissionBucket)
       .then((data) => {
         setFormSubmissionStatus({ status: 'info', text: 'Uploading data dictionary...' });
         const { url, guid } = data;

@@ -75,13 +75,17 @@ export const registerStudyInMDS = async (metadataID, metadataToRegister = {}) =>
     .catch((err) => { throw new Error(`Request for update study data failed: ${err}`); });
 };
 
-export const generatePresignedURL = async (fileName: string, bucketName: string|undefined = undefined):Promise<any> => {
+export const generatePresignedURL = async (fileName: string, authz: string, bucketName: string|undefined = undefined):Promise<any> => {
   type ReqBody = {
     // eslint-disable-next-line camelcase
     file_name: string;
+    authz: Array<string>;
     bucket?: string,
   };
-  const body:ReqBody = { file_name: fileName };
+  const body:ReqBody = {
+    file_name: fileName,
+    authz: [authz],
+  };
   if (bucketName) {
     body.bucket = bucketName;
   }
