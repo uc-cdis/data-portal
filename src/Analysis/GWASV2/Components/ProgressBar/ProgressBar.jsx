@@ -13,7 +13,7 @@ const ProgressBar = ({ currentStep }) => (
           <Step
             key={item.title}
             icon={<React.Fragment>{index + 1}</React.Fragment>}
-            title={`${currentStep <= index ? item.title : item.secondaryTitle}`}
+            title={item.title}
           />
         ))}
       </Steps>
