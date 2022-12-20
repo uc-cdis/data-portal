@@ -19,78 +19,76 @@ const JobInputModal = ({
   outcome,
   finalPopulationSizes,
   covariates,
-}) => {
-  return (
-    <Modal
-      okText='Submit'
-      cancelText='Back'
-      open={open}
-      okButtonProps={{ disabled: jobName === '' }}
-      onOk={() => handleSubmit()}
-      onCancel={() => {
-        setOpen(false);
-        dispatch({
-          type: ACTIONS.SET_CURRENT_STEP,
-          payload: 3,
-        });
-      }}
-      title={
-        <div className='flex-row'>
-          <div>Review Details</div>
+}) => (
+  <Modal
+    okText='Submit'
+    cancelText='Back'
+    open={open}
+    okButtonProps={{ disabled: jobName === '' }}
+    onOk={() => handleSubmit()}
+    onCancel={() => {
+      setOpen(false);
+      dispatch({
+        type: ACTIONS.SET_CURRENT_STEP,
+        payload: 3,
+      });
+    }}
+    title={(
+      <div className='flex-row'>
+        <div>Review Details</div>
+      </div>
+    )}
+  >
+    <Input
+      className='gwas-job-name'
+      placeholder='Enter Job Name'
+      onChange={handleEnterJobName}
+    />
+    <div className='flex-col'>
+      <div className='flex-row'>
+        <div>Number of PCs</div>
+        <div>{numOfPCs}</div>
+      </div>
+      <div className='flex-row'>
+        <div>MAF Cutoff</div>
+        <div>{mafThreshold}</div>
+      </div>
+      <div className='flex-row'>
+        <div>HARE Ancestry</div>
+        <div>{selectedHare?.concept_value_name}</div>
+      </div>
+      <div className='flex-row'>
+        <div>Imputation Score Cutoff</div>
+        <div>{imputationScore}</div>
+      </div>
+      <hr />
+      <div className='flex-row'>
+        <div>Cohort</div>
+        <div>{selectedCohort?.cohort_name}</div>
+      </div>
+      <div className='flex-row'>
+        <div>Outcome Phenotype</div>
+        <div>{outcome?.concept_name ?? outcome?.provided_name}</div>
+      </div>
+      {finalPopulationSizes.map((item, key) => (
+        <div key={key} className='flex-row'>
+          <div>{item.population} Size</div>
+          <div>{item.size}</div>
         </div>
-      }
-    >
-      <Input
-        className='gwas-job-name'
-        placeholder='Enter Job Name'
-        onChange={handleEnterJobName}
-      />
-      <div className='flex-col'>
-        <div className='flex-row'>
-          <div>Number of PCs</div>
-          <div>{numOfPCs}</div>
-        </div>
-        <div className='flex-row'>
-          <div>MAF Cutoff</div>
-          <div>{mafThreshold}</div>
-        </div>
-        <div className='flex-row'>
-          <div>HARE Ancestry</div>
-          <div>{selectedHare?.concept_value_name}</div>
-        </div>
-        <div className='flex-row'>
-          <div>Imputation Score Cutoff</div>
-          <div>{imputationScore}</div>
-        </div>
-        <hr />
-        <div className='flex-row'>
-          <div>Cohort</div>
-          <div>{selectedCohort?.cohort_name}</div>
-        </div>
-        <div className='flex-row'>
-          <div>Outcome Phenotype</div>
-          <div>{outcome?.concept_name ?? outcome?.provided_name}</div>
-        </div>
-        {finalPopulationSizes.map((item, key) => (
-          <div key={key} className='flex-row'>
-            <div>{item.population} Size</div>
-            <div>{item.size}</div>
-          </div>
-        ))}
-        <div className='flex-row'>
-          <div>Covariates</div>
-          <div>
-            {covariates.map((covariate, key) => (
-              <div key={key}>
-                {covariate?.concept_name ?? covariate.provided_name}
-              </div>
-            ))}
-          </div>
+      ))}
+      <div className='flex-row'>
+        <div>Covariates</div>
+        <div>
+          {covariates.map((covariate, key) => (
+            <div key={key}>
+              {covariate?.concept_name ?? covariate.provided_name}
+            </div>
+          ))}
         </div>
       </div>
-    </Modal>
-  );
-};
+    </div>
+  </Modal>
+);
 
 JobInputModal.propTypes = {
   open: PropTypes.bool.isRequired,
