@@ -1,16 +1,3 @@
-.gwas-job-name {
-  margin-bottom: 25px;
-  font-size: 17px;
-  border: 1px solid #dededf;
-  color: #707070;
-}
-.ant-modal-body hr {
-  margin: 20px 0;
-  height: 1px;
-  background-color: #cfdbe6;
-  border: none;
-}
-
 .configure-gwas .configure-gwas_container {
   margin: auto;
   background: #fff;
