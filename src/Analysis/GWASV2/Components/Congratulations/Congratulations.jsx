@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DismissibleMessage from '../DismissibleMessage/DismissibleMessage';
 import ACTIONS from '../../Utils/StateManagement/Actions';
+import './Congratulations.css';
 
 const Congratulations = ({
   dispatch,
