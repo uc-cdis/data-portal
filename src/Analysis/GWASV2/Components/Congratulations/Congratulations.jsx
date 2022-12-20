@@ -1,6 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import DismissibleMessage from '../DismissibleMessage/DismissibleMessage';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 
-const Congratulations = ({ dispatch, setShowSuccess, successText }) => {
+const Congratulations = ({
+  dispatch,
+  setShowSuccess,
+  successText,
+  jobName,
+}) => (
   <div className='configure-gwas_success'>
     <DismissibleMessage
       title={`Congratulations on your submission for ${jobName}`}
@@ -38,6 +46,14 @@ const Congratulations = ({ dispatch, setShowSuccess, successText }) => {
         </button>
       </div>
     </div>
-  </div>;
+  </div>
+);
+
+Congratulations.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  setShowSuccess: PropTypes.func.isRequired,
+  successText: PropTypes.string.isRequired,
+  jobName: PropTypes.string.isRequired,
 };
+
 export default Congratulations;
