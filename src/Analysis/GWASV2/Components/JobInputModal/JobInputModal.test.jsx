@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { shallow, mount } from 'enzyme';
-import JobInputModal from './JobInputModal';
 import { Modal, Input } from 'antd';
+import JobInputModal from './JobInputModal';
 
 const open = true;
 const setOpen = () => null;
