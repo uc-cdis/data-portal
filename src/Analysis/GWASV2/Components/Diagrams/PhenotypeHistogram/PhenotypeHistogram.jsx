@@ -13,7 +13,7 @@ const PhenotypeHistogram = ({
   selectedStudyPopulationCohort,
   selectedCovariates,
   outcome,
-  selectedConceptId,
+  selectedContinuousItem,
 }) => {
   const { source } = useSourceContext();
   const sourceId = source; // TODO - change name of source to sourceId for clarity
@@ -24,14 +24,14 @@ const PhenotypeHistogram = ({
       selectedStudyPopulationCohort.cohort_definition_id,
       selectedCovariates,
       outcome,
-      selectedConceptId,
+      selectedContinuousItem.concept_id,
     ],
     () => fetchHistogramInfo(
       sourceId,
       selectedStudyPopulationCohort.cohort_definition_id,
       selectedCovariates,
       outcome,
-      selectedConceptId,
+      selectedContinuousItem.concept_id,
     ),
     queryConfig,
   );
@@ -47,6 +47,7 @@ const PhenotypeHistogram = ({
     xAxisDataKey: 'start',
     barDataKey: 'nr_persons',
     barColor: 'darkblue',
+    xAxisLegend: selectedContinuousItem.concept_name,
   };
   return <Histogram {...histogramArgs} />;
 };
@@ -55,7 +56,7 @@ PhenotypeHistogram.propTypes = {
   selectedStudyPopulationCohort: PropTypes.object.isRequired,
   selectedCovariates: PropTypes.array,
   outcome: PropTypes.object,
-  selectedConceptId: PropTypes.number.isRequired,
+  selectedContinuousItem: PropTypes.object.isRequired,
 };
 
 PhenotypeHistogram.defaultProps = {
