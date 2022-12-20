@@ -102,8 +102,8 @@ SuccessCase.parameters = {
             ctx.delay(1100),
             ctx.json({
               bins: [
-                {start: 1,  end: 10, nr_persons: 100},
-                {start: 10, end: 20, nr_persons: 200},
+                {start: 1.4564567,  end: 10.45642, nr_persons: 100},
+                {start: 10.45642, end: 20, nr_persons: 200},
                 {start: 20, end: 30, nr_persons: 300},
                 {start: 30, end: 40, nr_persons: 400},
                 {start: 40, end: 50, nr_persons: 500},

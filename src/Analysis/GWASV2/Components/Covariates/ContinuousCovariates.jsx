@@ -21,7 +21,7 @@ const ContinuousCovariates = ({
 
   return (
     <React.Fragment>
-      <div className='GWASUI-flexRow' style={{ width: '850px' }} data-tour='name'>
+      <div className='GWASUI-flexRow' style={{ width: '950px' }} data-tour='name'>
         <div>
           <div>
             <Covariates selected={selected} handleSelect={setSelected} />
@@ -52,7 +52,7 @@ const ContinuousCovariates = ({
                 selectedStudyPopulationCohort={selectedStudyPopulationCohort}
                 selectedCovariates={selectedCovariates}
                 outcome={outcome}
-                selectedConceptId={selected.concept_id}
+                selectedContinuousItem={selected}
               />
             )
             : 'Select a variable'}
