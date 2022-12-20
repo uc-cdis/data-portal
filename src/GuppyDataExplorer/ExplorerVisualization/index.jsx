@@ -20,7 +20,6 @@ import { checkForAnySelectedUnaccessibleField } from '../GuppyDataExplorerHelper
 import './ExplorerVisualization.css';
 import { labelToPlural } from '../utils';
 
-
 class ExplorerVisualization extends React.Component {
   constructor(props) {
     super(props);
