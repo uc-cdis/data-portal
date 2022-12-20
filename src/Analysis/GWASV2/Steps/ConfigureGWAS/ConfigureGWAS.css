@@ -29,24 +29,3 @@
 .configure-gwas .configure-gwas_container label {
   margin-bottom: 10px;
 }
-
-.configure-gwas_success {
-  margin-bottom: 60px;
-}
-.configure-gwas_success h3 {
-  text-align: center;
-}
-.configure-gwas_success button {
-  margin: 0 auto 0 auto;
-  width: 95%;
-  font-size: 14px;
-  color: #fff;
-  border-radius: 4px;
-  border: none;
-  background: #b35f05;
-  padding: 8px;
-  cursor: pointer;
-}
-.configure-gwas_success button:hover {
-  background: #784005;
-}
