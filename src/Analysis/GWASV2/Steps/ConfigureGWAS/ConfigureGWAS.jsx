@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import PropTypes from 'prop-types';
-import ACTIONS from '../../Utils/StateManagement/Actions';
 import DismissibleMessage from '../../Components/DismissibleMessage/DismissibleMessage';
 import { jobSubmission } from '../../Utils/gwasWorkflowApi';
 import { useSourceContext } from '../../Utils/Source';
@@ -45,18 +44,17 @@ const ConfigureGWAS = ({
   }, [showModal]);
 
   const submitJob = useMutation(
-    () =>
-      jobSubmission(
-        sourceId,
-        numOfPCs,
-        covariates,
-        outcome,
-        selectedHare,
-        mafThreshold,
-        imputationScore,
-        selectedCohort,
-        jobName
-      ),
+    () => jobSubmission(
+      sourceId,
+      numOfPCs,
+      covariates,
+      outcome,
+      selectedHare,
+      mafThreshold,
+      imputationScore,
+      selectedCohort,
+      jobName,
+    ),
     {
       onSuccess: (data) => {
         if (data?.status === 200) {
@@ -67,13 +65,13 @@ const ConfigureGWAS = ({
         } else {
           data.text().then((error) => {
             setErrorText(
-              `GWAS job failed with error: ${JSON.stringify(error)}`
+              `GWAS job failed with error: ${JSON.stringify(error)}`,
             );
             setShowError(true);
           });
         }
       },
-    }
+    },
   );
 
   const handleSubmit = () => {
