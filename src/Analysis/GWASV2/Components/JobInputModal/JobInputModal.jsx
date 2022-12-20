@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Input } from 'antd';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import './JobInputModal.css';
@@ -47,11 +48,11 @@ const JobInputModal = ({
           payload: 3,
         });
       }}
-      title={
+      title={(
         <div style={{ ...flexRow, ...{ justifyContent: 'space-between' } }}>
           <div>Review Details</div>
         </div>
-      }
+      )}
     >
       <Input
         className='gwas-job-name'
@@ -103,6 +104,23 @@ const JobInputModal = ({
       </div>
     </Modal>
   );
+};
+
+JobInputModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  jobName: PropTypes.string.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  setOpen: PropTypes.func.isRequired,
+  handleEnterJobName: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  numOfPCs: PropTypes.number.isRequired,
+  mafThreshold: PropTypes.number.isRequired,
+  imputationScore: PropTypes.number.isRequired,
+  covariates: PropTypes.array.isRequired,
+  selectedCohort: PropTypes.object.isRequired,
+  selectedHare: PropTypes.object.isRequired,
+  outcome: PropTypes.object.isRequired,
+  finalPopulationSizes: PropTypes.array.isRequired,
 };
 
 export default JobInputModal;
