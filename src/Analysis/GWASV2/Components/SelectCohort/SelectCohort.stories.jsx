@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
-import CohortSelect from './SelectCohort';
+import SelectCohort from './SelectCohort';
 import reducer from '../../Utils/StateManagement/reducer';
 import { Space } from 'antd';
 import { SourceContextProvider } from '../../Utils/Source';
@@ -11,8 +11,8 @@ import '../../../GWASV2/GWASV2.css';
 import '../../../GWASUIApp/GWASUIApp.css';
 
 export default {
-  title: 'Tests3/GWASV2/CohortSelect/CohortSelect',
-  component: CohortSelect,
+  title: 'Tests3/GWASV2/SelectCohort/SelectCohort',
+  component: SelectCohort,
 };
 
 // useful examples: https://github.com/mswjs/msw-storybook-addon/tree/main/packages/docs/src/demos/react-query

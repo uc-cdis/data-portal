@@ -20,20 +20,6 @@ const JobInputModal = ({
   finalPopulationSizes,
   covariates,
 }) => {
-  const twSudo = {
-    flexCol: {
-      display: 'flex',
-      flexDirection: 'column',
-      margin: 'auto',
-    },
-    flexRow: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-  };
-
-  const { flexCol, flexRow } = twSudo;
   return (
     <Modal
       okText='Submit'
@@ -48,50 +34,50 @@ const JobInputModal = ({
           payload: 3,
         });
       }}
-      title={(
-        <div style={{ ...flexRow, ...{ justifyContent: 'space-between' } }}>
+      title={
+        <div className='flex-row'>
           <div>Review Details</div>
         </div>
-      )}
+      }
     >
       <Input
         className='gwas-job-name'
         placeholder='Enter Job Name'
         onChange={handleEnterJobName}
       />
-      <div style={flexCol}>
-        <div style={flexRow}>
+      <div className='flex-col'>
+        <div className='flex-row'>
           <div>Number of PCs</div>
           <div>{numOfPCs}</div>
         </div>
-        <div style={flexRow}>
+        <div className='flex-row'>
           <div>MAF Cutoff</div>
           <div>{mafThreshold}</div>
         </div>
-        <div style={flexRow}>
+        <div className='flex-row'>
           <div>HARE Ancestry</div>
           <div>{selectedHare?.concept_value_name}</div>
         </div>
-        <div style={flexRow}>
+        <div className='flex-row'>
           <div>Imputation Score Cutoff</div>
           <div>{imputationScore}</div>
         </div>
         <hr />
-        <div style={flexRow}>
+        <div className='flex-row'>
           <div>Cohort</div>
           <div>{selectedCohort?.cohort_name}</div>
         </div>
-        <div style={flexRow}>
+        <div className='flex-row'>
           <div>Outcome Phenotype</div>
           <div>{outcome?.concept_name ?? outcome?.provided_name}</div>
         </div>
         {finalPopulationSizes.map((item, key) => (
-          <div key={key} style={flexRow}>
+          <div key={key} className='flex-row'>
             <div>{item.population} Size</div>
             <div>{item.size}</div>
           </div>
         ))}
-        <div style={flexRow}>
+        <div className='flex-row'>
           <div>Covariates</div>
           <div>
             {covariates.map((covariate, key) => (
