@@ -53,7 +53,7 @@ const ContinuousCovariates = ({
                 selectedContinuousItem={selected}
               />
             )
-            : 'Select a variable'}
+            : 'Select a concept to render its corresponding histogram'}
         </div>
       </div>
     </React.Fragment>
