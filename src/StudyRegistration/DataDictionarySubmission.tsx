@@ -206,7 +206,8 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             <Result
               status={formSubmissionStatus.status}
               title='Your Data Dictionary has been submitted!'
-              subTitle='Please allow up to 48 hours for processing. You will be notified via e-mail when processing is completed.'
+              // TODO: no time commitment for file processing ATM
+              subTitle='Thank you for your submission! You will be notified via e-mail when processing is completed.'
               extra={[
                 <Link key='discovery' to={'/discovery'}>
                   <Button>Go To Discovery Page</Button>
