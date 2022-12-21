@@ -39,6 +39,45 @@ const Template = () => {
   );
 };
 
+const mockConcepts = [
+  {
+    concept_id: 2000006885,
+    concept_name: 'Average height ',
+    concept_code: '',
+    concept_type: 'Measurement',
+  },
+  {
+    concept_id: 2000000280,
+    concept_name: 'BMI at enrollment',
+    concept_code: '',
+    concept_type: 'Measurement',
+  },
+  {
+    concept_id: 2000000323,
+    concept_name: 'Age Group',
+    concept_code: '',
+    concept_type: 'Person',
+  },
+  {
+    concept_id: 2200006885,
+    concept_name: 'Average height2 ',
+    concept_code: '',
+    concept_type: 'Measurement',
+  },
+  {
+    concept_id: 2200000280,
+    concept_name: 'BMI at enrollment2',
+    concept_code: '',
+    concept_type: 'Measurement',
+  },
+  {
+    concept_id: 2200000323,
+    concept_name: 'Age Group2',
+    concept_code: '',
+    concept_type: 'Person',
+  },
+];
+
 export const SuccessCase = Template.bind({});
 SuccessCase.parameters = {
   msw: {
@@ -51,44 +90,7 @@ SuccessCase.parameters = {
         return res(
           ctx.delay(1100),
           ctx.json({
-            concepts: [
-              {
-                concept_id: 2000006885,
-                concept_name: 'Average height ',
-                concept_code: '',
-                concept_type: 'Measurement',
-              },
-              {
-                concept_id: 2000000280,
-                concept_name: 'BMI at enrollment',
-                concept_code: '',
-                concept_type: 'Measurement',
-              },
-              {
-                concept_id: 2000000323,
-                concept_name: 'Age Group',
-                concept_code: '',
-                concept_type: 'Person',
-              },
-              {
-                concept_id: 2200006885,
-                concept_name: 'Average height2 ',
-                concept_code: '',
-                concept_type: 'Measurement',
-              },
-              {
-                concept_id: 2200000280,
-                concept_name: 'BMI at enrollment2',
-                concept_code: '',
-                concept_type: 'Measurement',
-              },
-              {
-                concept_id: 2200000323,
-                concept_name: 'Age Group2',
-                concept_code: '',
-                concept_type: 'Person',
-              },
-            ],
+            concepts: mockConcepts,
           }),
         );
       }),
@@ -119,6 +121,42 @@ SuccessCase.parameters = {
     ],
   },
 };
+
+
+export const EmptyDataCase = Template.bind({});
+EmptyDataCase.parameters = {
+  msw: {
+    handlers: [
+      rest.post('http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type', (req, res, ctx) => {
+        const { cohortmiddlewarepath } = req.params;
+        const { sourceid } = req.params;
+        console.log(cohortmiddlewarepath);
+        console.log(sourceid);
+        return res(
+          ctx.delay(1100),
+          ctx.json({
+            concepts: mockConcepts,
+          }),
+        );
+      }),
+      rest.post(
+        //histogram/by-source-id/${sourceId}/by-cohort-definition-id/${cohortId}/by-histogram-concept-id/${currentSelection.concept_id}`;
+        'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId/by-histogram-concept-id/:conceptId',
+        (req, res, ctx) => {
+          const { cohortmiddlewarepath } = req.params;
+          const { cohortdefinitionId } = req.params;
+          return res(
+            ctx.delay(1100),
+            ctx.json({
+              bins: null, // simulates empty data response
+            })
+          );
+        }
+      ),
+    ],
+  },
+};
+
 
 export const ErrorCase = Template.bind({});
 ErrorCase.parameters = {
