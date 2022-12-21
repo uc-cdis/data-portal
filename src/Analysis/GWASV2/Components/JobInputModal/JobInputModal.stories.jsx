@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
 import JobInputModal from './JobInputModal';
 
 export default {
@@ -14,44 +15,16 @@ const MockTemplate = () => {
   };
   const dispatch = () => null;
   const handleEnterJobName = () => null;
-  const covariates = [
-    {
-      variable_type: 'concept',
-      concept_id: 2000000873,
-      concept_name: 'Attribute81',
-    },
-    {
-      variable_type: 'concept',
-      concept_id: 2000000873,
-      concept_name: 'Attribute82',
-    },
-    {
-      variable_type: 'concept',
-      concept_id: 2000000873,
-      concept_name: 'Attribute83',
-    },
-  ];
-  const selectedCohort = {
-    variable_type: 'concept',
-    concept_id: 2000000873,
-    concept_name: 'Attribute83',
-  };
-  const imputationScore = 0.3;
-  const mafThreshold = 0.01;
-  const numOfPCs = 3;
-  const selectedHare = {
-    concept_value: '',
-  };
-  const finalPopulationSizes = [
-    { population: 'Control', size: 90 },
-    { population: 'Case', size: 95 },
-    { population: 'Total', size: 90 + 95 },
-  ];
-  const outcome = {
-    variable_type: 'concept',
-    concept_id: 2000000873,
-    concept_name: 'Attribute83',
-  };
+  const {
+    covariates,
+    imputationScore,
+    mafThreshold,
+    numOfPCs,
+    selectedHare,
+    finalPopulationSizes,
+    outcome,
+    selectedStudyPopulationCohort,
+  } = ValidInitialState;
 
   return (
     <div
@@ -70,7 +43,7 @@ const MockTemplate = () => {
         mafThreshold={mafThreshold}
         selectedHare={selectedHare}
         imputationScore={imputationScore}
-        selectedCohort={selectedCohort}
+        selectedCohort={selectedStudyPopulationCohort}
         outcome={outcome}
         finalPopulationSizes={finalPopulationSizes}
         covariates={covariates}
