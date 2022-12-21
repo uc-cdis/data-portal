@@ -22,7 +22,8 @@ const SelectCovariates = ({
           {selectionMode === 'continuous' && (
             <div className='select-covariates-container'>
               <ContinuousCovariates
-                covariates={covariates}
+                selectedStudyPopulationCohort={studyPopulationCohort}
+                selectedCovariates={covariates}
                 outcome={outcome}
                 handleClose={() => {
                   setSelectionMode('');
