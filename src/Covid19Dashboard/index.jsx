@@ -17,6 +17,7 @@ import IllinoisMapChart from './IllinoisMapChart';
 import CountWidget from './CountWidget';
 import ChartCarousel from './ChartCarousel';
 import './Covid19Dashboard.less';
+import SampleComponent from './AdditionalComponents';
 
 /* To fetch new data:
 - add the prop name and location to `dashboardDataLocations`;
@@ -228,6 +229,7 @@ class Covid19Dashboard extends React.Component {
             <TabList className='covid19-dashboard_tablist'>
               <Tab>COVID-19 in Illinois</Tab>
               <Tab>IL SARS-CoV2 Genomics</Tab>
+              <Tab>Additional Tab</Tab> {/* Add another tab */}
             </TabList>
 
             {/* illinois tab */}
@@ -285,6 +287,12 @@ class Covid19Dashboard extends React.Component {
                       src={auspiceUrlIL}
                     />
                   )}
+              </div>
+            </TabPanel>
+            <TabPanel className='covid19-dashboard_panel'>
+              <div className='covid19-dashboard_auspice'>
+                {/* Add additional Tab Panels and Content */}
+                <SampleComponent />
               </div>
             </TabPanel>
           </Tabs>
