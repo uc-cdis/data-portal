@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { Modal, Input } from 'antd';
 import JobInputModal from './JobInputModal';
+import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
 
 const open = true;
 const setOpen = () => null;
@@ -11,44 +12,17 @@ const handleSubmit = () => {
 };
 const dispatch = () => null;
 const handleEnterJobName = () => null;
-const covariates = [
-  {
-    variable_type: 'concept',
-    concept_id: 2000000873,
-    concept_name: 'Attribute81',
-  },
-  {
-    variable_type: 'concept',
-    concept_id: 2000000873,
-    concept_name: 'Attribute82',
-  },
-  {
-    variable_type: 'concept',
-    concept_id: 2000000873,
-    concept_name: 'Attribute83',
-  },
-];
-const selectedCohort = {
-  variable_type: 'concept',
-  concept_id: 2000000873,
-  concept_name: 'Attribute83',
-};
-const imputationScore = 0.3;
-const mafThreshold = 0.01;
-const numOfPCs = 3;
-const selectedHare = {
-  concept_value: '',
-};
-const finalPopulationSizes = [
-  { population: 'Control', size: 90 },
-  { population: 'Case', size: 95 },
-  { population: 'Total', size: 90 + 95 },
-];
-const outcome = {
-  variable_type: 'concept',
-  concept_id: 2000000873,
-  concept_name: 'Attribute83',
-};
+
+const {
+  covariates,
+  imputationScore,
+  mafThreshold,
+  numOfPCs,
+  selectedHare,
+  finalPopulationSizes,
+  outcome,
+  selectedStudyPopulationCohort,
+} = ValidInitialState;
 
 describe('JobInputModal', () => {
   it('should render an AntD modal with an AntD input', () => {
@@ -64,7 +38,7 @@ describe('JobInputModal', () => {
         mafThreshold={mafThreshold}
         selectedHare={selectedHare}
         imputationScore={imputationScore}
-        selectedCohort={selectedCohort}
+        selectedCohort={selectedStudyPopulationCohort}
         outcome={outcome}
         finalPopulationSizes={finalPopulationSizes}
         covariates={covariates}
@@ -88,7 +62,7 @@ describe('JobInputModal', () => {
         mafThreshold={mafThreshold}
         selectedHare={selectedHare}
         imputationScore={imputationScore}
-        selectedCohort={selectedCohort}
+        selectedCohort={selectedStudyPopulationCohort}
         outcome={outcome}
         finalPopulationSizes={finalPopulationSizes}
         covariates={covariates}
