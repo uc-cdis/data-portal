@@ -758,7 +758,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
                     onClick={() => { setSearchableTagCollapsed(!searchableTagCollapsed); }}
                     icon={(searchableTagCollapsed) ? <DownOutlined /> : <UpOutlined />}
                   >
-                    {`${props.config.features.search.tagSearchDropdown.collapsibleButtonText || 'Tag Panel'}`}
+                    {`${props.config.features.search.tagSearchDropdown?.collapsibleButtonText || 'Tag Panel'}`}
                   </Button>
                 </div>
               </div>
@@ -807,6 +807,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
           setExportingToWorkspace={setExportingToWorkspace}
           filtersVisible={filtersVisible}
           setFiltersVisible={setFiltersVisible}
+          disableFilterButton={!props.studies.length}
         />
         <div className='discovery-studies__content'>
           {/* Advanced search panel */}
