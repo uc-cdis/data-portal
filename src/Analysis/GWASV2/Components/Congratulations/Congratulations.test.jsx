@@ -18,7 +18,7 @@ describe('Congratulations component', () => {
         setShowSuccess={mockSetShowSuccess}
         successText={successText}
         jobName={jobName}
-      />
+      />,
     );
   });
 
@@ -45,19 +45,13 @@ describe('Congratulations component', () => {
     expect(wrapper.find('button')).toHaveLength(3);
   });
 
-  it('calls the window.location function when the second button is clicked', () => {
-    wrapper
-      .find('button')
-      .at(1)
-      .simulate('click');
+  it('calls the window.location function when the reload button is clicked', () => {
+    wrapper.find('button#reload').simulate('click');
     expect(window.location.reload).toHaveBeenCalled();
   });
 
-  it('calls the dispatch function with the correct action when the third button is clicked', () => {
-    wrapper
-      .find('button')
-      .at(2)
-      .simulate('click');
+  it('calls the dispatch function with the correct action when the change-step is clicked', () => {
+    wrapper.find('button#change-step').simulate('click');
     expect(mockDispatch).toHaveBeenCalledWith({
       type: ACTIONS.SET_CURRENT_STEP,
       payload: 3,

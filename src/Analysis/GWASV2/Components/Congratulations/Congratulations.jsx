@@ -19,11 +19,14 @@ const Congratulations = ({
     <div className='GWASUI-row'>
       <div className='GWASUI-column'>
         <a href='./GWASResults'>
-          <button type='button'>See Status</button>
+          <button id='see-status' type='button'>
+            See Status
+          </button>
         </a>
       </div>
       <div className='GWASUI-column'>
         <button
+          id='reload'
           type='button'
           onClick={() => {
             window.location.reload();
@@ -34,6 +37,7 @@ const Congratulations = ({
       </div>
       <div className='GWASUI-column'>
         <button
+          id='change-step'
           type='button'
           onClick={() => {
             setShowSuccess(false);
