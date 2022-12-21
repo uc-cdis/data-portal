@@ -14,7 +14,7 @@ import {
   Tag,
 } from 'antd';
 import { ResultStatusType } from 'antd/lib/result';
-import type { UploadProps } from 'antd/es/upload/interface';
+import type { RcFile, UploadProps } from 'antd/es/upload/interface';
 import {
   PlusOutlined, QuestionCircleOutlined,
 } from '@ant-design/icons';
@@ -90,6 +90,23 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
   }, [location.state]);
 
   useEffect(() => form.resetFields(), [studyNumber, studyName, form]);
+
+  const handleFileSizeValidation = (_, fileList: RcFile): Promise<boolean|void> => {
+    const fileInfo = fileList[0];
+    if (fileInfo && fileInfo.size === 0) {
+      form.setFieldValue('fileList_doNotInclude', []);
+      return Promise.reject('Invalid file: file is empty');
+    }
+    if (!fileInfo?.size) {
+      form.setFieldValue('fileList_doNotInclude', []);
+      return Promise.reject('Invalid file: unable to calculate file size');
+    }
+    if (fileInfo.size / 1024 / 1024 > 10) {
+      form.setFieldValue('fileList_doNotInclude', []);
+      return Promise.reject('Invalid file: file size cannot exceed 10MB');
+    }
+    return Promise.resolve(true);
+  };
 
   const userHasAccess = () => {
     if (!useArboristUI) {
@@ -257,8 +274,12 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             name='fileList_doNotInclude'
             valuePropName='fileList'
             getValueFromEvent={(e: any) => e?.fileList}
-            rules={[{ required: true }]}
-            extra={'Supported file types: CSV, TSV, JSON'}
+            rules={[{ required: true },
+              {
+                validator: handleFileSizeValidation,
+                validateTrigger: 'onChange',
+              }]}
+            extra={'Supported file types: CSV, TSV, JSON; Maximum file size: 10MB'}
           >
             <Upload {...uploadProps}>
               <Button
