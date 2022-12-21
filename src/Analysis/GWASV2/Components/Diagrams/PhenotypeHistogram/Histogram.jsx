@@ -4,6 +4,19 @@ import {
 } from 'recharts';
 import PropTypes from 'prop-types';
 
+
+const CustomTooltip = ({ active, payload, binLabel }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div style={{ background: 'lightgray'}}>
+        <p>{`Number of persons: ${payload[0].value}`}</p>
+      </div>
+    );
+  }
+
+  return null;
+};
+
 // TODO - improve tickGap - e.g. the minTickGap={50} below needs to be dynamically calculated
 const Histogram = ({
   data,
@@ -24,7 +37,7 @@ const Histogram = ({
       <Label value={xAxisLegend || xAxisDataKey} position='bottom' offset={20} />
     </XAxis>
     <YAxis />
-    <Tooltip />
+    <Tooltip content={<CustomTooltip />} />
     <CartesianGrid strokeDasharray='3 3' />
     <Bar dataKey={barDataKey} fill={barColor} />
   </BarChart>

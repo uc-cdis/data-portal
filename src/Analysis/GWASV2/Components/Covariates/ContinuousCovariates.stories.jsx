@@ -2,7 +2,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import ContinuousCovariates from './ContinuousCovariates';
-import { SourceContextProvider } from '../../Shared/Source';
+import { SourceContextProvider } from '../../Utils/Source';
 
 export default {
   title: 'Tests3/GWASV2/ContinuousCovariates',
