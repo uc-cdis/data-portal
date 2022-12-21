@@ -23,27 +23,25 @@ const ContinuousCovariates = ({
     <React.Fragment>
       <div className='GWASUI-flexRow' style={{ width: '950px' }} data-tour='name'>
         <div>
-          <div>
-            <Covariates selected={selected} handleSelect={setSelected} />
-            <button
-              type='button'
-              style={{ marginLeft: 5 }}
-              onClick={() => {
-                dispatch(formatSelected(selected));
-                handleClose();
-              }}
-            >
-              {submitButtonLabel}
-            </button>
-            <button
-              type='button'
-              onClick={() => {
-                handleClose();
-              }}
-            >
-            Cancel
-            </button>
-          </div>
+          <Covariates selected={selected} handleSelect={setSelected} />
+          <button
+            type='button'
+            style={{ marginLeft: 5 }}
+            onClick={() => {
+              dispatch(formatSelected(selected));
+              handleClose();
+            }}
+          >
+            {submitButtonLabel}
+          </button>
+          <button
+            type='button'
+            onClick={() => {
+              handleClose();
+            }}
+          >
+          Cancel
+          </button>
         </div>
         <div style={{ paddingLeft: '30px' }}>
           {selected
