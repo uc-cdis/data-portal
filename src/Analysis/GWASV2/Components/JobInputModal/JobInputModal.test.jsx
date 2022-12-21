@@ -68,7 +68,7 @@ describe('JobInputModal', () => {
         outcome={outcome}
         finalPopulationSizes={finalPopulationSizes}
         covariates={covariates}
-      />
+      />,
     );
     const modal = wrapper.find(Modal);
     expect(modal.exists()).toBe(true);
@@ -92,7 +92,7 @@ describe('JobInputModal', () => {
         outcome={outcome}
         finalPopulationSizes={finalPopulationSizes}
         covariates={covariates}
-      />
+      />,
     );
     const modal = wrapper.find(Modal);
     const input = modal.find(Input);
