@@ -23,6 +23,12 @@ CustomTooltip.propTypes = {
   label: PropTypes.number,
 };
 
+CustomTooltip.defaultProps = {
+  active: null,
+  payload: null,
+  label: null,
+};
+
 // TODO - improve tickGap - e.g. the minTickGap={50} below needs to be dynamically calculated
 const Histogram = ({
   data,
