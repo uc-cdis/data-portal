@@ -5,6 +5,7 @@ import SelectionConfiguration from './SelectConfiguration';
 import { rest } from 'msw';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import '../../GWASV2.css';
+import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
 
 export default {
   title: 'Tests3/GWASV2/SelectConfiguration',
@@ -18,50 +19,7 @@ const mockedQueryClient = new QueryClient({
 });
 
 const MockTemplate = () => {
-  const initialState = {
-    outcome: {
-      variable_type: 'concept',
-      concept_id: 2000000873,
-      concept_name: 'Attribute8',
-    },
-    selectedStudyPopulationCohort: {
-      cohort_definition_id: 9,
-      cohort_name: 'Diabetes Demo',
-      size: 293,
-    },
-    covariates: [
-      {
-        variable_type: 'concept',
-        concept_id: 2000000873,
-        concept_name: 'Attribute81',
-      },
-      {
-        variable_type: 'concept',
-        concept_id: 2000000873,
-        concept_name: 'Attribute82',
-      },
-      {
-        variable_type: 'concept',
-        concept_id: 2000000873,
-        concept_name: 'Attribute83',
-      },
-    ],
-    imputationScore: 0.3,
-    mafThreshold: 0.01,
-    numPCs: 3,
-    gwasName: '',
-    selectedHare: {
-      concept_value: '',
-    },
-    currentStep: 3,
-    finalPopulationSizes: [
-      { population: 'Control', size: 90 },
-      { population: 'Case', size: 95 },
-      { population: 'Total', size: 90 + 95 },
-    ],
-  };
-
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, ValidInitialState);
 
   return (
     <QueryClientProvider client={mockedQueryClient}>
@@ -80,7 +38,7 @@ const MockTemplate = () => {
           <div className='configure-gwas'>
             <div className='configure-gwas_container'>
               <SelectionConfiguration
-                numOfPCs={state.numPCs}
+                numOfPCs={state.numOfPCs}
                 mafThreshold={state.mafThreshold}
                 imputationScore={state.imputationScore}
                 selectedCohort={state.selectedStudyPopulationCohort}
