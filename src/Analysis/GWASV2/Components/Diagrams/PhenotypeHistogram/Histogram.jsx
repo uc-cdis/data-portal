@@ -3,18 +3,24 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Label,
 } from 'recharts';
 import PropTypes from 'prop-types';
+import { formatNumber } from '../../../Utils/constants';
 
-
-const CustomTooltip = ({ active, payload, binLabel }) => {
+const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div style={{ background: 'lightgray'}}>
-        <p>{`Number of persons: ${payload[0].value}`}</p>
+      <div style={{ background: 'lightgray' }}>
+        <p>{`Number of persons: ${formatNumber(payload[0].value)}, for values starting at: ${formatNumber(label)}`}</p>
       </div>
     );
   }
 
   return null;
+};
+
+CustomTooltip.propTypes = {
+  active: PropTypes.any,
+  payload: PropTypes.any,
+  label: PropTypes.number,
 };
 
 // TODO - improve tickGap - e.g. the minTickGap={50} below needs to be dynamically calculated
@@ -26,6 +32,7 @@ const Histogram = ({
   chartHeight,
   barColor,
   xAxisLegend,
+  yAxisLegend,
 }) => (
   <BarChart
     width={chartWidth}
@@ -33,10 +40,12 @@ const Histogram = ({
     data={data}
     margin={{ top: 20, bottom: 65, right: 60 }}
   >
-    <XAxis dataKey={xAxisDataKey} minTickGap={50} tickFormatter={(tick) => Math.round(tick * 10) / 10}>
+    <XAxis dataKey={xAxisDataKey} minTickGap={50} tickFormatter={(tick) => formatNumber(tick)}>
       <Label value={xAxisLegend || xAxisDataKey} position='bottom' offset={20} />
     </XAxis>
-    <YAxis />
+    <YAxis>
+      <Label value={yAxisLegend || barDataKey} position='top' offset={10} />
+    </YAxis>
     <Tooltip content={<CustomTooltip />} />
     <CartesianGrid strokeDasharray='3 3' />
     <Bar dataKey={barDataKey} fill={barColor} />
@@ -51,6 +60,7 @@ Histogram.propTypes = {
   chartHeight: PropTypes.number,
   barColor: PropTypes.string,
   xAxisLegend: PropTypes.string,
+  yAxisLegend: PropTypes.string,
 };
 
 Histogram.defaultProps = {
@@ -58,6 +68,7 @@ Histogram.defaultProps = {
   chartHeight: 500,
   barColor: '#8884d8',
   xAxisLegend: null,
+  yAxisLegend: null,
 };
 
 export default Histogram;

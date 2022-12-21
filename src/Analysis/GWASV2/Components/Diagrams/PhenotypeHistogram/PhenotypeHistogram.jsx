@@ -43,8 +43,11 @@ const PhenotypeHistogram = ({
     return <React.Fragment>Fetching histogram data... <Spin /></React.Fragment>;
   }
   if (data.bins === null) {
-    return <React.Fragment>None of the persons in the (remaining) population
-      have a value for [{selectedContinuousItem.concept_name}]</React.Fragment>
+    return (
+      <React.Fragment>None of the persons in the (remaining) population
+      have a value for [{selectedContinuousItem.concept_name}]
+      </React.Fragment>
+    );
   }
   const histogramArgs = {
     data: data.bins,
@@ -52,6 +55,7 @@ const PhenotypeHistogram = ({
     barDataKey: 'nr_persons',
     barColor: 'darkblue',
     xAxisLegend: selectedContinuousItem.concept_name,
+    yAxisLegend: 'Persons',
   };
   return <Histogram {...histogramArgs} />;
 };

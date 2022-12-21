@@ -74,15 +74,15 @@ SuccessCase.parameters = {
             ctx.delay(1100),
             ctx.json({
               bins: [
-                {start: 1.4564567,  end: 10.45642, nr_persons: 100},
-                {start: 10.45642, end: 20, nr_persons: 200},
-                {start: 20, end: 30, nr_persons: 300},
-                {start: 30, end: 40, nr_persons: 400},
-                {start: 40, end: 50, nr_persons: 500},
-                {start: 50, end: 60, nr_persons: 400},
-                {start: 60, end: 70, nr_persons: 350},
-                {start: 70, end: 80, nr_persons: 100},
-                {start: 80, end: 90, nr_persons: 50},
+                {start: 1.4564567,  end: 10.45642, nr_persons: 800},
+                {start: 10.45642, end: 20, nr_persons: 1200},
+                {start: 20, end: 30, nr_persons: 1300},
+                {start: 30, end: 40, nr_persons: 1400},
+                {start: 40, end: 50, nr_persons: 1500},
+                {start: 50, end: 60, nr_persons: 1400},
+                {start: 60, end: 70, nr_persons: 1350},
+                {start: 70, end: 80, nr_persons: 1100},
+                {start: 8000, end: 90, nr_persons: 150},
               ],
             })
           );
