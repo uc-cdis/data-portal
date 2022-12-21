@@ -47,7 +47,7 @@ describe('SelectConfiguration component', () => {
         outcome={outcome}
         dispatch={dispatch}
         imputationScore={imputationScore}
-      />
+      />,
     );
   });
   it('should render the InputNumber component for the number of PCs', () => {
