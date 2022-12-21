@@ -9,7 +9,7 @@ import '../../../GWASV2/GWASV2.css';
 import '../../../GWASUIApp/GWASUIApp.css';
 
 export default {
-  title: 'Tests3/GWASV2/CohortSelect/SelectCohortDropDown',
+  title: 'Tests3/GWASV2/SelectCohort/SelectCohortDropDown',
   component: SelectCohortDropDown,
 };
 
