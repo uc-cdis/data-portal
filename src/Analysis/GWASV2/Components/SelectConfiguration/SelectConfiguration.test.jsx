@@ -1,48 +1,27 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import SelectConfiguration from './SelectConfiguration';
+import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 
 describe('SelectConfiguration component', () => {
   let wrapper;
   const dispatch = jest.fn();
-  const numOfPCs = 5;
-  const mafThreshold = 0.1;
-  const selectedCohort = {
-    cohort_definition_id: 9,
-    cohort_name: 'Diabetes Demo',
-    size: 293,
-  };
-  const covariates = [
-    {
-      variable_type: 'concept',
-      concept_id: 2000000873,
-      concept_name: 'Attribute81',
-    },
-    {
-      variable_type: 'concept',
-      concept_id: 2000000873,
-      concept_name: 'Attribute82',
-    },
-    {
-      variable_type: 'concept',
-      concept_id: 2000000873,
-      concept_name: 'Attribute83',
-    },
-  ];
-  const outcome = {
-    variable_type: 'concept',
-    concept_id: 2000000873,
-    concept_name: 'Attribute8',
-  };
-  const imputationScore = 0.5;
+  const {
+    numOfPCs,
+    mafThreshold,
+    selectedStudyPopulationCohort,
+    covariates,
+    outcome,
+    imputationScore,
+  } = ValidInitialState;
 
   beforeEach(() => {
     wrapper = shallow(
       <SelectConfiguration
         numOfPCs={numOfPCs}
         mafThreshold={mafThreshold}
-        selectedCohort={selectedCohort}
+        selectedCohort={selectedStudyPopulationCohort}
         covariates={covariates}
         outcome={outcome}
         dispatch={dispatch}
