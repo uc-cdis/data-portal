@@ -61,7 +61,7 @@ const MockTemplate = () => {
               Program (MVP) data, using the University of Washington Genesis
               pipeline
             </h4>
-            <CohortSelect
+            <SelectCohort
               selectedCohort={state.selectedStudyPopulationCohort}
               handleCohortSelect={handleStudyPopulationSelect}
             />
