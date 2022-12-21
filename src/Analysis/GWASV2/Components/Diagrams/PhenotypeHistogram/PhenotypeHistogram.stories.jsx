@@ -97,7 +97,7 @@ ErrorCase.args = {
   selectedStudyPopulationCohort: selectedStudyPopulationCohort,
   selectedCovariates: selectedCovariates,
   outcome: null,
-  selectedConceptId: currentSelection.concept_id,
+  selectedContinuousItem: currentSelection
 };
 // mock endpoint failure:
 ErrorCase.parameters = {
