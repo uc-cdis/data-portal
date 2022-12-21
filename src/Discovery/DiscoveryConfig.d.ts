@@ -38,6 +38,8 @@ export interface DiscoveryConfig {
             }
         },
         authorization: {
+            columnTooltip: string
+            supportedValues: any
             enabled: boolean,
             // requestAccess: { // not supported
             //     enabled: boolean,
