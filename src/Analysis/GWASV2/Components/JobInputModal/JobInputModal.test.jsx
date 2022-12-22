@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { Modal, Input } from 'antd';
 import JobInputModal from './JobInputModal';
 import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
@@ -43,7 +43,7 @@ describe('JobInputModal', () => {
         outcome={outcome}
         finalPopulationSizes={finalPopulationSizes}
         covariates={covariates}
-      />
+      />,
     );
   });
   it('should render an AntD modal with an AntD input', () => {
@@ -62,7 +62,7 @@ describe('JobInputModal', () => {
   it('should display correct hare ancestry string', () => {
     const hareAncestryContainer = wrapper.find('#modal-hare-ancestry');
     expect(hareAncestryContainer.text()).toMatch(
-      selectedHare.concept_value_name
+      selectedHare.concept_value_name,
     );
   });
   it('should display correct imputation score', () => {
@@ -72,13 +72,13 @@ describe('JobInputModal', () => {
   it('should display correct cohort', () => {
     const cohortContainer = wrapper.find('#modal-cohort');
     expect(cohortContainer.text()).toMatch(
-      selectedStudyPopulationCohort.cohort_name
+      selectedStudyPopulationCohort.cohort_name,
     );
   });
   it('should display correct outcome', () => {
     const outcomeContainer = wrapper.find('#modal-outcome');
     expect(outcomeContainer.text()).toMatch(
-      outcome?.concept_name ?? outcome?.provided_name
+      outcome?.concept_name ?? outcome?.provided_name,
     );
   });
   it('should display each population size', () => {
@@ -91,7 +91,7 @@ describe('JobInputModal', () => {
     const covariateContainer = wrapper.find('#modal-covariates');
     covariates.forEach((covariate) => {
       expect(covariateContainer.text()).toContain(
-        covariate?.concept_name ?? covariate.provided_name
+        covariate?.concept_name ?? covariate.provided_name,
       );
     });
   });

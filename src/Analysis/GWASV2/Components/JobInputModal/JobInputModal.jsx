@@ -33,11 +33,11 @@ const JobInputModal = ({
         payload: 3,
       });
     }}
-    title={
+    title={(
       <div className='flex-row'>
         <div>Review Details</div>
       </div>
-    }
+    )}
   >
     <Input
       className='gwas-job-name'

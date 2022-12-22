@@ -29,9 +29,6 @@ describe('SelectConfiguration component', () => {
       />,
     );
   });
-  it('should render the InputNumber component for the number of PCs', () => {
-    expect(wrapper.find('#input-numOfPCs').exists()).toBe(true);
-  });
   it('should render the InputNumber component for the MAF threshold', () => {
     expect(wrapper.find('#input-maf').exists()).toBe(true);
   });
