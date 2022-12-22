@@ -29,7 +29,7 @@ const DismissibleMessage = ({
             X
           </span>
           <div>{title}</div>
-          <div className="dismissable-message-description">{description}</div>
+          <div className='dismissable-message-description'>{description}</div>
         </div>
       )}
     </React.Fragment>
