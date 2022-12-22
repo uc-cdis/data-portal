@@ -43,7 +43,7 @@ const Simple3SetsEulerDiagram = ({
   }, [sets]);
 
   return (
-    <div id='euler' className="euler-diagram" />
+    <div id='euler' className='euler-diagram' />
   );
 };
 
