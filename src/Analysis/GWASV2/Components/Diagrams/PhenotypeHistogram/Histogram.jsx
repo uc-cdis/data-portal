@@ -4,11 +4,12 @@ import {
 } from 'recharts';
 import PropTypes from 'prop-types';
 import { formatNumber } from '../../../Utils/constants';
+import "./Histogram.css";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div style={{ background: 'lightgray' }}>
+      <div className="histogram-tooltip">
         <p>{`Number of persons: ${formatNumber(payload[0].value)}, for values starting at: ${formatNumber(label)}`}</p>
       </div>
     );
