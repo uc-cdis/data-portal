@@ -4,11 +4,19 @@
   padding: 15px;
   margin-bottom: 15px;
 }
+
 .GWASV2 .dismissable-message.success {
   border: 1px solid #a8c599;
   background: #fcfff5;
   color: #1e561f;
 }
+
+.GWASV2 .dismissable-message > div:nth-child(3) {
+  font-size: 14px;
+  font-weight: normal;
+  margin-top: 20px;
+}
+
 .GWASV2 .dismissable-message.warning {
   color: #830e0e;
   border: 1px solid #c59999;
@@ -39,10 +47,4 @@
 }
 .GWASV2 .dismissable-message_close:hover {
   opacity: 0.8;
-}
-
-.GWASV2 .dismissable-message > div:nth-child(3) {
-  font-size: 14px;
-  font-weight: normal;
-  margin-top: 20px;
 }
