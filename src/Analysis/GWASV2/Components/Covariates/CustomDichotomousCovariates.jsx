@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import SelectCohortDropDown from '../SelectCohort/SelectCohortDropDown';
 import CohortsOverlapDiagram from '../Diagrams/CohortsOverlapDiagram/CohortsOverlapDiagram';
-
+import './Covariates.css';
 import '../../../GWASUIApp/GWASUIApp.css';
 
 const CustomDichotomousCovariates = ({
@@ -35,7 +35,7 @@ const CustomDichotomousCovariates = ({
     || secondPopulation === undefined;
 
   return (
-    <div style={{ minHeight: '300px' }}>
+    <div className='custom-dichotomous-covariates'>
       <div className='GWASUI-flexRow' data-tour='name'>
         <input
           type='text'
@@ -43,12 +43,6 @@ const CustomDichotomousCovariates = ({
           onChange={(e) => setProvidedName(e.target.value)}
           value={providedName}
           placeholder='Provide a name...'
-          style={{
-            width: '50%',
-            textSize: 'small',
-            paddingLeft: 5,
-            borderRadius: 5,
-          }}
         />
         <button
           type='button'
@@ -85,7 +79,7 @@ const CustomDichotomousCovariates = ({
                 />
               </div>
             </div>
-            <div style={{ paddingLeft: '30px' }}>
+            <div className='cohorts-overlap-diagram'>
               <h3>Cohort overlap diagram</h3>
               {!firstPopulation || !secondPopulation ? (
                 <div>Select your cohorts to assess overlap</div>
