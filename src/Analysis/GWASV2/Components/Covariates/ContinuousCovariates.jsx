@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Covariates from './Covariates';
 import PhenotypeHistogram from '../Diagrams/PhenotypeHistogram/PhenotypeHistogram';
+import './Covariates.css';
 
 const ContinuousCovariates = ({
   selectedStudyPopulationCohort,
@@ -21,12 +22,12 @@ const ContinuousCovariates = ({
 
   return (
     <React.Fragment>
-      <div className='GWASUI-flexRow' style={{ width: '950px' }} data-tour='name'>
+      <div className='GWASUI-flexRow continuous-covariates' data-tour='name'>
         <div>
           <Covariates selected={selected} handleSelect={setSelected} />
           <button
+            className='submit-button'
             type='button'
-            style={{ marginLeft: 5 }}
             onClick={() => {
               dispatch(formatSelected(selected));
               handleClose();
@@ -43,7 +44,7 @@ const ContinuousCovariates = ({
           Cancel
           </button>
         </div>
-        <div style={{ paddingLeft: '30px' }}>
+        <div className='phenotype-histogram'>
           {selected
             ? (
               <PhenotypeHistogram
