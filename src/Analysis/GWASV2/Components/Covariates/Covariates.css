@@ -9,6 +9,24 @@
     margin-top: 8px;
 }
 
-.GWASV2 .ant-select {
-    width: 300px;
-  }
+
+.GWASV2 .dichotomous-card {
+    width: 189;
+    background: #EBFAD3;
+}
+.GWASV2 .continuous-card {
+    width: 189;
+    background: #FDE3D6;
+}
+
+.GWASV2 .custom-dichotomous-covariates {
+    min-height: 300px;
+}
+.GWASV2 .custom-dichotomous-covariates input {
+    width: 50%;
+    padding-left: 5;
+    border-radius: 5;
+}
+.GWASV2 .custom-dichotomous-covariates .cohorts-overlap-diagram {
+    padding-left: 30px;
+}

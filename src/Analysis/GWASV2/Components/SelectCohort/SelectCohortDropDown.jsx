@@ -26,6 +26,7 @@ const SelectCohortDropDown = ({ handleCohortSelect }) => {
   return cohorts?.status === 'success' ? (
     <Select
       showSearch
+      className='select-cohort'
       placeholder='Select a cohort'
       optionFilterProp='children'
       onChange={onChange}

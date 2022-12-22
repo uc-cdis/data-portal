@@ -12,10 +12,7 @@ const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
         {covariate.provided_name && (
           <Card
             key={`cd-list-option-${key}`}
-            style={{
-              width: 189,
-              backgroundColor: '#EBFAD3',
-            }}
+            className='dichotomous-card'
             actions={[
               <DeleteOutlined
                 onClick={() => {
@@ -34,10 +31,7 @@ const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
         {covariate.concept_id && (
           <Card
             key={`cd-list-option-${key}`}
-            style={{
-              width: 189,
-              backgroundColor: '#FDE3D6',
-            }}
+            className='continuous-card'
             actions={[
               <DeleteOutlined
                 onClick={() => {
@@ -48,7 +42,7 @@ const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
             ]}
           >
             <Meta
-              title='Continous Covariate'
+              title='Continuous Covariate'
               description={`${covariate.concept_name}`}
             />
           </Card>
