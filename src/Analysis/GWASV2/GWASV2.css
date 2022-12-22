@@ -18,6 +18,9 @@
   flex: 2;
 }
 
+.GWASV2 .steps-wrapper {
+  width: 100%;
+}
 .GWASV2 .steps-content {
   border: none;
   background: none;

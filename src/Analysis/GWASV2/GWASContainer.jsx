@@ -98,12 +98,11 @@ const GWASContainer = () => {
         {'.analysis-app__actions > div:nth-child(1) { width: 100%; }'}
       </style>
       <div className='GWASV2'>
-        <Space direction={'vertical'} style={{ width: '100%' }}>
+        <Space direction={'vertical'} className='steps-wrapper'>
           <div className='steps-content'>
             <Space
               direction={'vertical'}
               align={'center'}
-              style={{ width: '100%' }}
             >
               {generateStep(state.currentStep)}
             </Space>
