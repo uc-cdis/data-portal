@@ -1,16 +1,15 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { Modal, Input } from 'antd';
 import JobInputModal from './JobInputModal';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
 
 const open = true;
 const setOpen = () => null;
 const jobName = 'User Input Job Name 1234';
-const handleSubmit = () => {
-  setOpen(false);
-};
-const mockHandleEnterJobName = jest.fn();
+const handleEnterJobName = () => null;
+const mockHandleSubmit = jest.fn();
 const mockDispatch = jest.fn();
 
 const {
@@ -27,14 +26,14 @@ const {
 describe('JobInputModal', () => {
   let wrapper;
   beforeEach(() => {
-    wrapper = shallow(
+    wrapper = mount(
       <JobInputModal
         open={open}
         jobName={jobName}
-        handleSubmit={handleSubmit}
+        handleSubmit={mockHandleSubmit}
         setOpen={setOpen}
         dispatch={mockDispatch}
-        handleEnterJobName={mockHandleEnterJobName}
+        handleEnterJobName={handleEnterJobName}
         numOfPCs={numOfPCs}
         mafThreshold={mafThreshold}
         selectedHare={selectedHare}
@@ -46,6 +45,7 @@ describe('JobInputModal', () => {
       />,
     );
   });
+
   it('should render an AntD modal with an AntD input', () => {
     const modal = wrapper.find(Modal);
     expect(modal.exists()).toBe(true);
@@ -94,5 +94,22 @@ describe('JobInputModal', () => {
         covariate?.concept_name ?? covariate.provided_name,
       );
     });
+  });
+  it('calls the dispatch function with the correct action when the back button is clicked', () => {
+    const backButton = wrapper.findWhere(
+      (node) => node.type() && node.name() && node.text() === 'Back',
+    );
+    backButton.last().simulate('click');
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: ACTIONS.SET_CURRENT_STEP,
+      payload: 3,
+    });
+  });
+  it('calls the handle submit function with no parameters when the submit button is clicked', () => {
+    const backButton = wrapper.findWhere(
+      (node) => node.type() && node.name() && node.text() === 'Submit',
+    );
+    backButton.last().simulate('click');
+    expect(mockHandleSubmit).toHaveBeenCalledWith();
   });
 });
