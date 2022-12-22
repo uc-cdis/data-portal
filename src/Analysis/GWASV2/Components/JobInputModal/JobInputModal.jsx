@@ -33,11 +33,11 @@ const JobInputModal = ({
         payload: 3,
       });
     }}
-    title={(
+    title={
       <div className='flex-row'>
         <div>Review Details</div>
       </div>
-    )}
+    }
   >
     <Input
       className='gwas-job-name'
@@ -47,38 +47,40 @@ const JobInputModal = ({
     <div className='flex-col'>
       <div className='flex-row'>
         <div>Number of PCs</div>
-        <div>{numOfPCs}</div>
+        <div id='modal-num-of-pcs'>{numOfPCs}</div>
       </div>
       <div className='flex-row'>
         <div>MAF Cutoff</div>
-        <div>{mafThreshold}</div>
+        <div id='modal-maf-threshold'>{mafThreshold}</div>
       </div>
       <div className='flex-row'>
         <div>HARE Ancestry</div>
-        <div>{selectedHare?.concept_value_name}</div>
+        <div id='modal-hare-ancestry'>{selectedHare?.concept_value_name}</div>
       </div>
       <div className='flex-row'>
         <div>Imputation Score Cutoff</div>
-        <div>{imputationScore}</div>
+        <div id='modal-imputation-score'>{imputationScore}</div>
       </div>
       <hr />
       <div className='flex-row'>
         <div>Cohort</div>
-        <div>{selectedCohort?.cohort_name}</div>
+        <div id='modal-cohort'>{selectedCohort?.cohort_name}</div>
       </div>
       <div className='flex-row'>
         <div>Outcome Phenotype</div>
-        <div>{outcome?.concept_name ?? outcome?.provided_name}</div>
+        <div id='modal-outcome'>
+          {outcome?.concept_name ?? outcome?.provided_name}
+        </div>
       </div>
       {finalPopulationSizes.map((item, key) => (
-        <div key={key} className='flex-row'>
+        <div id='modal-population-size' key={key} className='flex-row'>
           <div>{item.population} Size</div>
           <div>{item.size}</div>
         </div>
       ))}
       <div className='flex-row'>
         <div>Covariates</div>
-        <div>
+        <div id='modal-covariates'>
           {covariates.map((covariate, key) => (
             <div key={key}>
               {covariate?.concept_name ?? covariate.provided_name}
