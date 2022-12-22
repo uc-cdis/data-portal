@@ -26,18 +26,14 @@ describe('SelectConfiguration component', () => {
         outcome={outcome}
         dispatch={dispatch}
         imputationScore={imputationScore}
-      />,
+      />
     );
   });
-  it('should render the InputNumber component for the MAF threshold', () => {
-    expect(wrapper.find('#input-maf').exists()).toBe(true);
-  });
+
   it('should render the SelectHareDropDown component', () => {
     expect(wrapper.find('#input-selectHareDropDown').exists()).toBe(true);
   });
-  it('should render the InputNumber component for the imputation score', () => {
-    expect(wrapper.find('#input-imputation').exists()).toBe(true);
-  });
+
   it('should dispatch an action to update the number of PCs when the InputNumber value changes', () => {
     wrapper
       .find('#input-numOfPCs')
@@ -48,17 +44,6 @@ describe('SelectConfiguration component', () => {
       payload: 3,
     });
   });
-  it('should dispatch an action to update the MAF threshold when the InputNumber value changes', () => {
-    wrapper
-      .find('#input-maf')
-      .props()
-      .onChange(0.2);
-    expect(dispatch).toHaveBeenCalledWith({
-      type: ACTIONS.UPDATE_MAF_THRESHOLD,
-      payload: 0.2,
-    });
-  });
-
   it('should dispatch an action to update the MAF threshold when the InputNumber value changes', () => {
     wrapper
       .find('#input-maf')
