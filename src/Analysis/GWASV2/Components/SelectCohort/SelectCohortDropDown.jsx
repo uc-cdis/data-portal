@@ -29,7 +29,6 @@ const SelectCohortDropDown = ({ handleCohortSelect }) => {
       placeholder='Select a cohort'
       optionFilterProp='children'
       onChange={onChange}
-      dropdownStyle={{ minWidth: '800px' }}
       filterOption={(input, option) => (option?.cohort_name ?? '').toLowerCase().includes(input.toLowerCase())}
       options={fetchedCohorts}
       fieldNames={{ label: 'cohort_name', value: 'cohort_definition_id' }}
