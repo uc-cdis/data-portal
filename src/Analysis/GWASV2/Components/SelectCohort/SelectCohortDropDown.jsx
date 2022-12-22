@@ -36,9 +36,7 @@ const SelectCohortDropDown = ({ handleCohortSelect }) => {
     />
   ) : (
     <React.Fragment>
-      <div
-        className='GWASUI-spinnerContainer GWASUI-emptyTable'
-      >
+      <div className='GWASUI-spinnerContainer GWASUI-emptyTable'>
         <Spin />
       </div>
     </React.Fragment>

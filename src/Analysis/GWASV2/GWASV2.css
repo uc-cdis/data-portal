@@ -11,6 +11,7 @@
   flex-basis: 100%;
   flex: 1;
 }
+
 .GWASV2 .GWASUI-double-column {
   display: flex;
   flex-direction: column;
@@ -21,6 +22,7 @@
 .GWASV2 .steps-wrapper {
   width: 100%;
 }
+
 .GWASV2 .steps-content {
   border: none;
   background: none;
@@ -78,6 +80,7 @@
   background: #fff;
   text-align: center;
 }
+
 .GWASV2 .GWASUI-selectionUI button {
   margin-top: 200px;
   height: 96px;

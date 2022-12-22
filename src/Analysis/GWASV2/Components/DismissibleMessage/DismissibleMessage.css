@@ -11,7 +11,7 @@
   color: #1e561f;
 }
 
-.GWASV2 .dismissable-message > div:nth-child(3) {
+.GWASV2 .dismissable-message-description {
   font-size: 14px;
   font-weight: normal;
   margin-top: 20px;
