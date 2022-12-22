@@ -28,6 +28,13 @@
   > td {
   padding: 5px;
 }
+
+.GWASV2 .select-covariates-container .ant-select,
+.GWASV2 .select-covariates-container .ant-select-dropdown {
+  width: 300px;
+  min-width: 300px;
+}
+
 .GWASV2 .ant-card {
   margin-bottom: 10px;
 }
