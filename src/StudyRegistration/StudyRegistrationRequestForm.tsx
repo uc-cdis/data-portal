@@ -20,6 +20,7 @@ import {
 import { FormSubmissionState, StudyRegistrationProps } from './StudyRegistration';
 import { createKayakoTicket } from '../utils';
 import { fetchWithCreds } from '../actions';
+import { doesUserHaveRequestPending } from './utils';
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -84,7 +85,16 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
     return (userHasMethodForServiceOnResource('create', 'kayako', '/kayako', props.userAuthMapping));
   };
 
-  const handleRegisterFormSubmission = (formValues) => {
+  const handleRegisterFormSubmission = async (formValues) => {
+    // first, check if there is already a pending request in requestor
+    const userHaveRequestPending = await doesUserHaveRequestPending(studyUID);
+    if (userHaveRequestPending) {
+      // there is already a request for this user on this study, display a message and disable the button
+      setFormSubmissionButtonDisabled(true);
+      setFormSubmissionStatus({ status: 'warning', text: 'There is already a pending request for this study/user combination, please wait while we are processing your request.' });
+      return;
+    }
+
     // create a request in requestor
     const body = {
       username: props.user.username,
@@ -121,10 +131,6 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
             // eslint-disable-next-line no-console
             console.error('Requestor returns 201 but no request_id in payload body'); // shouldn't get here
           }
-        } else if (status === 409) {
-          // there is already a request for this user on this study, display a message and disable the button
-          setFormSubmissionButtonDisabled(true);
-          setFormSubmissionStatus({ status: 'warning', text: 'There is already a pending request for this study/user combination, please wait while we are processing your request.' });
         } else {
           // something has gone wrong
           setFormSubmissionStatus({ status: 'error', text: `Failed to create a request with error code: ${status}. Please try again later. If the error persists, please contact us for help.` });

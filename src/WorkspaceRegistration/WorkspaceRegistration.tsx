@@ -20,6 +20,7 @@ import {
 } from '../localconf';
 import { createKayakoTicket } from '../utils';
 import { fetchWithCreds } from '../actions';
+import { doesUserHaveRequestPending } from '../StudyRegistration/utils';
 
 const { Text } = Typography;
 const layout = {
@@ -67,10 +68,19 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
     return (userHasMethodForServiceOnResource('create', 'kayako', '/kayako', props.userAuthMapping));
   };
 
-  const handleRegisterFormSubmission = (formValues) => {
+  const handleRegisterFormSubmission = async (formValues) => {
+    const policeID = workspaceRegistrationConfig?.workspacePolicyId ? workspaceRegistrationConfig.workspacePolicyId : 'workspace';
+    const userHaveRequestPending = await doesUserHaveRequestPending(undefined, policeID);
+    if (userHaveRequestPending) {
+      // there is already a workspace access request for this user, display a message and disable the button
+      setFormSubmissionButtonDisabled(true);
+      setFormSubmissionStatus({ status: 'warning', text: 'There is already a pending request for workspace access, please wait while we are processing your request.' });
+      return;
+    }
+
     // create a request in requestor
     const body = {
-      policy_id: workspaceRegistrationConfig?.workspacePolicyId ? workspaceRegistrationConfig.workspacePolicyId : 'workspace',
+      policy_id: policeID,
     };
     fetchWithCreds({
       path: `${requestorPath}request`,
@@ -96,17 +106,13 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
             // eslint-disable-next-line no-console
             console.error('Requestor returns 201 but no request_id in payload body'); // shouldn't get here
           }
-        } else if (status === 409) {
-          // there is already a request for this user on this study, display a message and disable the button
-          setFormSubmissionButtonDisabled(true);
-          setFormSubmissionStatus({ status: 'warning', text: 'There is already a pending request for workspace access, please wait while we are processing your request.' });
         } else {
           // something has gone wrong
           setFormSubmissionStatus({ status: 'error', text: `Failed to create a request with error code: ${status}. Please try again later. If the error persists, please contact us for help.` });
         }
         setReqAccessRequestPending(false);
       },
-    );
+    ).catch(() => setFormSubmissionStatus({ status: 'error', text: 'Failed to create a request. Please try again later. If the error persists, please contact us for help.' }));
   };
 
   const onFinish = (values) => {
