@@ -25,7 +25,6 @@ const SelectCohortDropDown = ({ handleCohortSelect }) => {
 
   return cohorts?.status === 'success' ? (
     <Select
-      style={{ width: '300px' }}
       showSearch
       placeholder='Select a cohort'
       optionFilterProp='children'
@@ -38,7 +37,6 @@ const SelectCohortDropDown = ({ handleCohortSelect }) => {
   ) : (
     <React.Fragment>
       <div
-        style={{ width: '300px' }}
         className='GWASUI-spinnerContainer GWASUI-emptyTable'
       >
         <Spin />
