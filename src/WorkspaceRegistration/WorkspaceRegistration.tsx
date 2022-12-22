@@ -9,6 +9,7 @@ import {
   Space,
   Result,
   Radio,
+  message,
 } from 'antd';
 import { ResultStatusType } from 'antd/lib/result';
 import { Link } from 'react-router-dom';
@@ -70,12 +71,17 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
 
   const handleRegisterFormSubmission = async (formValues) => {
     const policeID = workspaceRegistrationConfig?.workspacePolicyId ? workspaceRegistrationConfig.workspacePolicyId : 'workspace';
-    const userHaveRequestPending = await doesUserHaveRequestPending(undefined, policeID);
-    if (userHaveRequestPending) {
+
+    try {
+      const userHaveRequestPending = await doesUserHaveRequestPending(undefined, policeID);
+      if (userHaveRequestPending) {
       // there is already a workspace access request for this user, display a message and disable the button
-      setFormSubmissionButtonDisabled(true);
-      setFormSubmissionStatus({ status: 'warning', text: 'There is already a pending request for workspace access, please wait while we are processing your request.' });
-      return;
+        setFormSubmissionButtonDisabled(true);
+        setFormSubmissionStatus({ status: 'info', text: 'There is already a pending request for workspace access, please wait while we are processing your request.' });
+        return;
+      }
+    } catch (err) {
+      message.warning(`Unable to check existing requests: ${err}`);
     }
 
     // create a request in requestor

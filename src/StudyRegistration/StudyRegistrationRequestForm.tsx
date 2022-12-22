@@ -9,6 +9,7 @@ import {
   Space,
   Result,
   Radio,
+  message,
 } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -87,12 +88,16 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
 
   const handleRegisterFormSubmission = async (formValues) => {
     // first, check if there is already a pending request in requestor
-    const userHaveRequestPending = await doesUserHaveRequestPending(studyUID);
-    if (userHaveRequestPending) {
+    try {
+      const userHaveRequestPending = await doesUserHaveRequestPending(studyUID);
+      if (userHaveRequestPending) {
       // there is already a request for this user on this study, display a message and disable the button
-      setFormSubmissionButtonDisabled(true);
-      setFormSubmissionStatus({ status: 'warning', text: 'There is already a pending request for this study/user combination, please wait while we are processing your request.' });
-      return;
+        setFormSubmissionButtonDisabled(true);
+        setFormSubmissionStatus({ status: 'info', text: 'There is already a pending request for this study/user combination, please wait while we are processing your request.' });
+        return;
+      }
+    } catch (err) {
+      message.warning(`Unable to check existing requests: ${err}`);
     }
 
     // create a request in requestor
