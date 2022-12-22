@@ -26,7 +26,7 @@ describe('SelectConfiguration component', () => {
         outcome={outcome}
         dispatch={dispatch}
         imputationScore={imputationScore}
-      />
+      />,
     );
   });
 
