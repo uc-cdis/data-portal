@@ -239,7 +239,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
               title='A problem has occurred during submission!'
               subTitle={formSubmissionStatus.text}
               extra={[
-                <Button type='primary' key='close' onClick={() => { setFormSubmissionStatus(null); }}>
+                <Button type='primary' key='close' onClick={() => { setUploading(false); setFormSubmissionStatus(null); }}>
                     Close
                 </Button>,
               ]}
