@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
-// import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
 import { Spin, Select } from 'antd';
 import {
   fetchConceptStatsByHareSubset,
