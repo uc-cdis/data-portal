@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
-import ACTIONS from '../../Shared/StateManagement/Actions';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 
 const SelectOutcome = ({ dispatch, studyPopulationCohort, outcome }) => {
   const [selectionMode, setSelectionMode] = useState('');
@@ -11,6 +11,9 @@ const SelectOutcome = ({ dispatch, studyPopulationCohort, outcome }) => {
     if (selectionMode === 'continuous') {
       return (
         <ContinuousCovariates
+          selectedStudyPopulationCohort={studyPopulationCohort}
+          selectedCovariates={[]} // TODO - add to props above as well and pass in here...
+          outcome={outcome}
           handleClose={() => {
             setSelectionMode('');
           }}

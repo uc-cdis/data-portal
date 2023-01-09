@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import AttritionTableWrapper from './AttritionTableWrapper';
-import { SourceContextProvider } from '../../Shared/Source';
+import { SourceContextProvider } from '../../Utils/Source';
 import '../../GWASV2.css';
 
 let rowCount = 0;

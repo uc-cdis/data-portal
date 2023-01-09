@@ -20,3 +20,7 @@
 .GWASV2 .cohort-table-search {
   padding: 0 10px;
 }
+
+.GWASV2 .select-cohort {
+  width: 300px;
+}

@@ -25,7 +25,7 @@ const AttritionTableArgs = {
     concept_id: 'id',
     concept_name: 'concept name',
   },
-  newCovariateSubset: [
+  covariates: [
     {
       variable_type: 'custom_dichotomous',
       provided_name: 'providednamebyuser',
