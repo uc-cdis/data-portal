@@ -47,6 +47,7 @@ interface Props {
   setExportingToWorkspace: (boolean) => void;
   filtersVisible: boolean;
   setFiltersVisible: (boolean) => void;
+  disableFilterButton: boolean;
   user: User,
   discovery: {
     actionToResume: 'download'|'export'|'manifest';
@@ -636,9 +637,10 @@ const DiscoveryActionBar = (props: Props) => {
             <Button
               className='discovery-adv-filter-button'
               onClick={() => props.setFiltersVisible(!props.filtersVisible)}
+              disabled={props.disableFilterButton}
               type='text'
             >
-          ADVANCED SEARCH
+              {props.config.features.advSearchFilters.displayName || 'ADVANCED SEARCH'}
               { props.filtersVisible
                 ? <LeftOutlined />
                 : <RightOutlined />}
