@@ -52,7 +52,7 @@ To install the template you will need npm
 
 To install type the following:
 ```
-npm install
+npm ci
 ```
 
 You will also need to set up a Mapbox token which is needed

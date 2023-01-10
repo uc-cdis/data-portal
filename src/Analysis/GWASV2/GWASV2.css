@@ -12,6 +12,17 @@
   flex: 1;
 }
 
+.GWASV2 .GWASUI-double-column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 2;
+}
+
+.GWASV2 .steps-wrapper {
+  width: 100%;
+}
+
 .GWASV2 .steps-content {
   border: none;
   background: none;
@@ -27,6 +38,7 @@
 
 .GWASV2 .GWASUI-searchContainer svg {
   color: #9d9d9d;
+  font-size: 20px;
 }
 
 .GWASV2 .GWASUI-searchContainer input {
@@ -60,4 +72,69 @@
   border-top-right-radius: none;
   border-radius: 5px;
   border: 2px solid #dedede;
+}
+
+.GWASV2 .GWASUI-selectionUI {
+  height: 519px;
+  width: 988px;
+  background: #fff;
+  text-align: center;
+}
+
+.GWASV2 .GWASUI-selectionUI button {
+  margin-top: 200px;
+  height: 96px;
+  width: 317px;
+  margin-right: 16px;
+  background: #fafafb;
+  border: 1px solid #2e77b8;
+  border-radius: 4px;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.GWASV2 .GWASUI-selectionUI button:hover {
+  background: #2e77b8;
+}
+
+.GWASV2 .GWASUI-selectionUI button span:first-child {
+  background: #ef8523;
+  width: 32px;
+  height: 32px;
+  display: block;
+  position: absolute;
+  top: 33px;
+  color: #fff;
+  font-size: 35px;
+  padding-top: 4px;
+  margin-left: 15px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.GWASV2 .GWASUI-selectionUI button span:nth-child(2) {
+  position: absolute;
+  font-size: 15px;
+  color: #2e77b8;
+  display: block;
+  top: 37px;
+  left: 60px;
+}
+
+.GWASV2 .GWASUI-selectionUI button:hover span:nth-child(2) {
+  color: #fff;
+}
+
+.GWASV2 .GWASUI-selectionUI button:hover span:first-child {
+  background: #fff;
+  color: #2e77b8;
+}
+
+.GWASUI-card-column {
+  background: #e9eef2;
+  padding: 10px;
+  width: 206px;
+  height: 519px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }

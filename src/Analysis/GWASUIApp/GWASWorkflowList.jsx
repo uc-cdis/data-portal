@@ -2,11 +2,11 @@ import React from 'react';
 import { Collapse, List, Spin } from 'antd';
 import './GWASUIApp.css';
 import { useQuery } from 'react-query';
-import { gwasWorkflowPath } from '../../localconf';
 import PropTypes from 'prop-types';
+import { gwasWorkflowPath } from '../../localconf';
 import GWASJob from '../GWASWizard/shared/GWASJob';
 
-const GWASWorkflowList = ({refetchInterval}) => {
+const GWASWorkflowList = ({ refetchInterval }) => {
   const { Panel } = Collapse;
 
   async function fetchGwasWorkflows() {
@@ -20,7 +20,7 @@ const GWASWorkflowList = ({refetchInterval}) => {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      refetchInterval: refetchInterval,
+      refetchInterval,
     });
     if (status === 'loading') {
       return <React.Fragment><div className='GWASUI-spinnerContainer'><Spin /></div></React.Fragment>;
@@ -53,11 +53,10 @@ const GWASWorkflowList = ({refetchInterval}) => {
       <GWASWorkflows />
     </div>
   );
-
 };
 
 GWASWorkflowList.propTypes = {
-  refetchInterval: PropTypes.number.isRequired
+  refetchInterval: PropTypes.number.isRequired,
 };
 
 export default GWASWorkflowList;
