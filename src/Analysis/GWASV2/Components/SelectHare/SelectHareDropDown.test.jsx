@@ -33,35 +33,47 @@ useSourceFetch.mockResolvedValue({
   sourceId: 2, loading: false,
 });
 
-describe('SelectHareDropDown component', () => {
+// Other generic arguments and functions shared by tests below:
+const mockedQueryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: false },
+  },
+});
+const mountDropDownForOutcome = (
+  selectedStudyPopulationCohort,
+  covariates,
+  outcome,
+  dispatch) => mount(
+  <QueryClientProvider client={mockedQueryClient}>
+    <SourceContextProvider>
+      <SelectHareDropDown
+        id='input-selectHareDropDownTest'
+        selectedCohort={selectedStudyPopulationCohort}
+        covariates={covariates}
+        outcome={outcome}
+        dispatch={dispatch}
+      />
+    </SourceContextProvider>
+  </QueryClientProvider>,
+);
+
+// Tests:
+describe('SelectHareDropDown component - Quantitative outcome test scenarios', () => {
   let wrapper;
-  const dispatch = jest.fn();
   const {
     selectedStudyPopulationCohort,
     covariates,
     outcome,
   } = ValidInitialState;
+  let dispatch;
 
-  const mockedQueryClient = new QueryClient({
-    defaultOptions: {
-      queries: { retry: false },
-    },
-  });
   beforeEach(() => {
+    dispatch = jest.fn();
     // use mount() instead of shallow():
-    wrapper = mount(
-      <QueryClientProvider client={mockedQueryClient}>
-        <SourceContextProvider>
-          <SelectHareDropDown
-            id='input-selectHareDropDownTest'
-            selectedCohort={selectedStudyPopulationCohort}
-            covariates={covariates}
-            outcome={outcome}
-            dispatch={dispatch}
-          />
-        </SourceContextProvider>
-      </QueryClientProvider>,
-    );
+    wrapper = mountDropDownForOutcome(selectedStudyPopulationCohort,
+      covariates,
+      outcome,
+      dispatch);
   });
   it('should render the SelectHareDropDown component', async () => {
     expect(wrapper.find(SelectHareDropDown).exists()).toBe(true);
@@ -81,7 +93,7 @@ describe('SelectHareDropDown component', () => {
       },
     });
   });
-  it('should dispatch an action to update the population sizes reflecting the selected HARE group', () => {
+  it('should dispatch an action to update the population size reflecting the selected HARE group', () => {
     wrapper
       .find(Select)
       .props()
@@ -92,4 +104,57 @@ describe('SelectHareDropDown component', () => {
     });
   });
 });
-// TODO: add dichotomous (case/control) scenarios...
+
+describe('SelectHareDropDown component - Dichotomous (case/control) test scenarios', () => {
+  let wrapper;
+  const {
+    selectedStudyPopulationCohort,
+    covariates,
+  } = ValidInitialState;
+  // Custom dichotomous (case/control) outcome type:
+  const outcome = {
+    variable_type: 'custom_dichotomous',
+    provided_name: 'providednamebyuser',
+    cohort_ids: [12, 32],
+  };
+  let dispatch;
+
+  beforeEach(() => {
+    dispatch = jest.fn();
+    wrapper = mountDropDownForOutcome(selectedStudyPopulationCohort,
+      covariates,
+      outcome,
+      dispatch);
+  });
+  it('should render the SelectHareDropDown component', async () => {
+    expect(wrapper.find(SelectHareDropDown).exists()).toBe(true);
+    expect(wrapper.find(SelectHareDropDown)).toHaveLength(1);
+  });
+  it('should dispatch an action to update the selected HARE object', () => {
+    wrapper
+      .find(Select)
+      .props()
+      .onChange({ value: 'EUR', label: 'non-Hispanic White' });
+    expect(dispatch).toHaveBeenCalledWith({
+      type: ACTIONS.UPDATE_SELECTED_HARE,
+      payload: {
+        concept_value: 'EUR',
+        concept_value_as_concept_id: 2000007031,
+        concept_value_name: 'non-Hispanic White',
+      },
+    });
+  });
+  it('should dispatch an action to update the population sizes (case, control and total size) reflecting the selected HARE group', () => {
+    wrapper
+      .find(Select)
+      .props()
+      .onChange({ value: 'EUR', label: 'non-Hispanic White' });
+    expect(dispatch).toHaveBeenCalledWith({
+      type: ACTIONS.UPDATE_FINAL_POPULATION_SIZES,
+      payload: [
+        { population: 'Control', size: 39648 },
+        { population: 'Case', size: 39648 },
+        { population: 'Total', size: 39648 * 2 }],
+    });
+  });
+});
