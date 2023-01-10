@@ -30,6 +30,7 @@ const GWASContainer = () => {
         <SelectOutcome
           studyPopulationCohort={state.selectedStudyPopulationCohort}
           outcome={state.outcome}
+          covariates={state.covariates}
           dispatch={dispatch}
         />
       );
@@ -78,7 +79,8 @@ const GWASContainer = () => {
 
   let nextButtonEnabled = true;
   // step specific conditions where progress to next step needs to be blocked:
-  if ((state.currentStep === 0 && !state.selectedStudyPopulationCohort)
+  if (
+    (state.currentStep === 0 && !state.selectedStudyPopulationCohort)
     || (state.currentStep === 1 && !state.outcome)
     || (state.currentStep === 3 && !state.selectedHare.concept_value)
   ) {
@@ -100,10 +102,7 @@ const GWASContainer = () => {
       <div className='GWASV2'>
         <Space direction={'vertical'} className='steps-wrapper'>
           <div className='steps-content'>
-            <Space
-              direction={'vertical'}
-              align={'center'}
-            >
+            <Space direction={'vertical'} align={'center'}>
               {generateStep(state.currentStep)}
             </Space>
           </div>
