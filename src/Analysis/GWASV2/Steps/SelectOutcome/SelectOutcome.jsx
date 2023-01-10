@@ -1,46 +1,58 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
+import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import ACTIONS from '../../Utils/StateManagement/Actions';
+import './SelectOutcome.css';
+import '../../GWASV2.css';
 
-const SelectOutcome = ({ dispatch, studyPopulationCohort, outcome }) => {
+const SelectOutcome = ({
+  dispatch,
+  studyPopulationCohort,
+  outcome,
+  covariates,
+}) => {
   const [selectionMode, setSelectionMode] = useState('');
 
   const determineSelectOutcomeJsx = () => {
     if (selectionMode === 'continuous') {
       return (
-        <ContinuousCovariates
-          selectedStudyPopulationCohort={studyPopulationCohort}
-          selectedCovariates={[]} // TODO - add to props above as well and pass in here...
-          outcome={outcome}
-          handleClose={() => {
-            setSelectionMode('');
-          }}
-          dispatch={(chosenOutcome) => {
-            dispatch({
-              type: ACTIONS.SET_OUTCOME,
-              payload: chosenOutcome,
-            });
-          }}
-        />
+        <div className='select-outcome-container'>
+          <ContinuousCovariates
+            selectedStudyPopulationCohort={studyPopulationCohort}
+            selectedCovariates={[]} // TODO - add to props above as well and pass in here...
+            outcome={outcome}
+            handleClose={() => {
+              setSelectionMode('');
+            }}
+            dispatch={(chosenOutcome) => {
+              dispatch({
+                type: ACTIONS.SET_OUTCOME,
+                payload: chosenOutcome,
+              });
+            }}
+          />
+        </div>
       );
     }
     if (selectionMode === 'dichotomous') {
       return (
-        <CustomDichotomousCovariates
-          studyPopulationCohort={studyPopulationCohort}
-          outcome={outcome}
-          handleClose={() => {
-            setSelectionMode('');
-          }}
-          dispatch={(chosenOutcome) => {
-            dispatch({
-              type: ACTIONS.SET_OUTCOME,
-              payload: chosenOutcome,
-            });
-          }}
-        />
+        <div className='select-outcome-container'>
+          <CustomDichotomousCovariates
+            studyPopulationCohort={studyPopulationCohort}
+            outcome={outcome}
+            handleClose={() => {
+              setSelectionMode('');
+            }}
+            dispatch={(chosenOutcome) => {
+              dispatch({
+                type: ACTIONS.SET_OUTCOME,
+                payload: chosenOutcome,
+              });
+            }}
+          />
+        </div>
       );
     }
 
@@ -59,7 +71,22 @@ const SelectOutcome = ({ dispatch, studyPopulationCohort, outcome }) => {
   };
 
   // Outputs the JSX for the component:
-  return <div>{determineSelectOutcomeJsx()}</div>;
+  return (
+    <div className='GWASUI-row'>
+      <div className='GWASUI-double-column'>{determineSelectOutcomeJsx()}</div>
+      <div className='GWASUI-column GWASUI-card-column'>
+        <CovariatesCardsList
+          covariates={covariates}
+          deleteCovariate={(chosenCovariate) =>
+            dispatch({
+              type: ACTIONS.DELETE_COVARIATE,
+              payload: chosenCovariate,
+            })
+          }
+        />
+      </div>
+    </div>
+  );
 };
 
 SelectOutcome.propTypes = {

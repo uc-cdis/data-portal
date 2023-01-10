@@ -18,69 +18,71 @@ const GWASContainer = () => {
 
   const generateStep = () => {
     switch (state.currentStep) {
-    case 0:
-      return (
-        <SelectStudyPopulation
-          selectedCohort={state.selectedStudyPopulationCohort}
-          dispatch={dispatch}
-        />
-      );
-    case 1:
-      return (
-        <SelectOutcome
-          studyPopulationCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          dispatch={dispatch}
-        />
-      );
-    case 2:
-      return (
-        <SelectCovariates
-          studyPopulationCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          covariates={state.covariates}
-          dispatch={dispatch}
-        />
-      );
-    case 3:
-      return (
-        <ConfigureGWAS
-          dispatch={dispatch}
-          numOfPCs={state.numPCs}
-          mafThreshold={state.mafThreshold}
-          imputationScore={state.imputationScore}
-          selectedHare={state.selectedHare}
-          covariates={state.covariates}
-          selectedCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          showModal={false}
-        />
-      );
-    case 4:
-      return (
-        <ConfigureGWAS
-          dispatch={dispatch}
-          numOfPCs={state.numPCs}
-          mafThreshold={state.mafThreshold}
-          imputationScore={state.imputationScore}
-          selectedHare={state.selectedHare}
-          covariates={state.covariates}
-          selectedCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          showModal
-          finalPopulationSizes={state.finalPopulationSizes}
-        />
-      );
-    default:
-      return null;
+      case 0:
+        return (
+          <SelectStudyPopulation
+            selectedCohort={state.selectedStudyPopulationCohort}
+            dispatch={dispatch}
+          />
+        );
+      case 1:
+        return (
+          <SelectOutcome
+            studyPopulationCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            covariates={state.covariates}
+            dispatch={dispatch}
+          />
+        );
+      case 2:
+        return (
+          <SelectCovariates
+            studyPopulationCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            covariates={state.covariates}
+            dispatch={dispatch}
+          />
+        );
+      case 3:
+        return (
+          <ConfigureGWAS
+            dispatch={dispatch}
+            numOfPCs={state.numPCs}
+            mafThreshold={state.mafThreshold}
+            imputationScore={state.imputationScore}
+            selectedHare={state.selectedHare}
+            covariates={state.covariates}
+            selectedCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            showModal={false}
+          />
+        );
+      case 4:
+        return (
+          <ConfigureGWAS
+            dispatch={dispatch}
+            numOfPCs={state.numPCs}
+            mafThreshold={state.mafThreshold}
+            imputationScore={state.imputationScore}
+            selectedHare={state.selectedHare}
+            covariates={state.covariates}
+            selectedCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            showModal
+            finalPopulationSizes={state.finalPopulationSizes}
+          />
+        );
+      default:
+        return null;
     }
   };
 
   let nextButtonEnabled = true;
   // step specific conditions where progress to next step needs to be blocked:
-  if ((state.currentStep === 0 && !state.selectedStudyPopulationCohort)
-    || (state.currentStep === 1 && !state.outcome)
-    || (state.currentStep === 3 && !state.selectedHare.concept_value)
+  if (
+    (state.currentStep === 0 && !state.selectedStudyPopulationCohort) ||
+    (state.currentStep === 1 && !state.outcome) ||
+    (state.currentStep === 3 && !state.selectedHare.concept_value)
   ) {
     nextButtonEnabled = false;
   }
@@ -100,10 +102,7 @@ const GWASContainer = () => {
       <div className='GWASV2'>
         <Space direction={'vertical'} className='steps-wrapper'>
           <div className='steps-content'>
-            <Space
-              direction={'vertical'}
-              align={'center'}
-            >
+            <Space direction={'vertical'} align={'center'}>
               {generateStep(state.currentStep)}
             </Space>
           </div>

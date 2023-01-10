@@ -1,5 +1,5 @@
-.GWASV2 .continuous-covariates {
-  width: 950px;
+.GWASV2 .select-covariates-container {
+  min-width: 988px;
 }
 
 .GWASV2 .submit-button {
@@ -13,12 +13,12 @@
 
 .GWASV2 .dichotomous-card {
   width: 189px;
-  background: #EBFAD3;
+  background: #ebfad3;
 }
 
 .GWASV2 .continuous-card {
   width: 189px;
-  background: #FDE3D6;
+  background: #fde3d6;
 }
 
 .GWASV2 .custom-dichotomous-covariates {
