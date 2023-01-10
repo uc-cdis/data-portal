@@ -23,11 +23,11 @@
 }
 
 .GWASV2
-  .select-covariates-container
-  .ant-table.ant-table-middle
-  .ant-table-tbody
-  > tr
-  > td {
+.select-covariates-container
+.ant-table.ant-table-middle
+.ant-table-tbody
+> tr
+> td {
   padding: 5px;
 }
 

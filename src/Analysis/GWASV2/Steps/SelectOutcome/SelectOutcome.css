@@ -4,10 +4,6 @@
 
 .GWASV2 .select-outcome-container {
   padding: 20px;
-  border: 1px solid #e2e2e3;
   background: #fff;
   height: 519px;
-}
-.GWASV2 .select-outcome-container .GWASUI-flexRow {
-  width: 100%;
 }

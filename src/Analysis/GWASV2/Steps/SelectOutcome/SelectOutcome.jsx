@@ -21,7 +21,6 @@ const SelectOutcome = ({
         <div className='select-outcome-container'>
           <ContinuousCovariates
             selectedStudyPopulationCohort={studyPopulationCohort}
-            selectedCovariates={[]} // TODO - add to props above as well and pass in here...
             outcome={outcome}
             handleClose={() => {
               setSelectionMode('');
