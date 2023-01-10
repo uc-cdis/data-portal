@@ -11,8 +11,10 @@ import { fetchWithCreds } from '../../utils.fetch';
 import { getGQLFilter } from '../../GuppyComponents/Utils/queries';
 import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 import './ExplorerExploreExternalButton.css';
+import Spinner from '../../components/Spinner';
 
 /** @typedef {import('../types').ExplorerFilter} ExplorerFilter */
+
 /** @typedef {import('./types').ExternalCommonsInfo} ExternalCommonsInfo */
 
 /**
@@ -48,6 +50,7 @@ function ExplorerExploreExternalButton({ filter }) {
 
   const [selected, setSelected] = useState(emptyOption);
   const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [commonsInfo, setCommonsInfo] = useState(
     /** @type {ExternalCommonsInfo} */ (null)
   );
@@ -55,11 +58,13 @@ function ExplorerExploreExternalButton({ filter }) {
   function openPopup() {
     setShow(true);
   }
+
   function closePopup() {
     setSelected(emptyOption);
     setCommonsInfo(null);
     setShow(false);
   }
+
   /** @param {typeof selected} newSelected */
   async function handleSelectExternalCommons(newSelected) {
     if (selected.value === newSelected.value) return;
@@ -71,20 +76,25 @@ function ExplorerExploreExternalButton({ filter }) {
     }
 
     try {
+      setIsLoading(true);
       const newCommonsInfo = await fetchExternalCommonsInfo({
         path: `/analysis/tools/external/${newSelected.value}`,
         body: JSON.stringify({ filter: getGQLFilter(filter) }),
       });
+      setIsLoading(false);
       setCommonsInfo(newCommonsInfo);
     } catch (e) {
       // eslint-disable-next-line no-console
+      setIsLoading(false);
       console.error(e);
     }
   }
+
   function handleOpenExternalCommons() {
     window.open(commonsInfo.link, '_blank');
     closePopup();
   }
+
   function handleDownlodManifest() {
     const dateString = new Date().toISOString().split('T')[0];
     const filename = `${dateString}-manifest-${selected.value}.txt`;
@@ -119,6 +129,11 @@ function ExplorerExploreExternalButton({ filter }) {
                 }
               />
               <ExplorerFilterDisplay filter={filter} />
+              {isLoading && (
+                <div className='explorer-explore-external__loading'>
+                  <Spinner />
+                </div>
+              )}
             </form>
             {commonsInfo?.type === 'file' ? (
               <div className='explorer-explore-external__download-manifest'>
