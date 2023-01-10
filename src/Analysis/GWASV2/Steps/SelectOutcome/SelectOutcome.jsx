@@ -90,12 +90,12 @@ SelectOutcome.propTypes = {
   dispatch: PropTypes.func.isRequired,
   studyPopulationCohort: PropTypes.object.isRequired,
   outcome: PropTypes.object,
-  covariates: PropTypes.object,
+  covariates: PropTypes.array,
 };
 
 SelectOutcome.defaultProps = {
   outcome: null,
-  covariates: null,
+  covariates: [],
 };
 
 export default SelectOutcome;
