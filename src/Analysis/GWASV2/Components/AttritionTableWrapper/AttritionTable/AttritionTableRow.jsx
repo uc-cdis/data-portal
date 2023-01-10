@@ -5,10 +5,10 @@ import { Spin } from 'antd';
 import {
   fetchConceptStatsByHareSubset,
   queryConfig,
-} from '../../../Shared/cohortMiddlewareApi';
+} from '../../../Utils/cohortMiddlewareApi';
 import BarChart from '../ChartIcons/BarChart';
 import EulerDiagram from '../ChartIcons/EulerDiagram';
-import { useSourceContext } from '../../../Shared/Source';
+import { useSourceContext } from '../../../Utils/Source';
 
 const AttritionTableRow = ({
   selectedCohort,
@@ -134,7 +134,9 @@ const AttritionTableRow = ({
 
   return (
     <tr>
-      <td className='gwasv2-attrition-table--leftpad'>{ rowType === 'Outcome' ? 'Outcome Phenotype' : rowType }</td>
+      <td className='gwasv2-attrition-table--leftpad'>
+        {rowType === 'Outcome' ? 'Outcome Phenotype' : rowType}
+      </td>
       <td className='gwasv2-attrition-table--chart'>
         {determineChartIcon(rowType)}
       </td>

@@ -1,0 +1,22 @@
+.ant-modal .gwas-job-name {
+  margin-bottom: 25px;
+  font-size: 17px;
+  border: 1px solid #dededf;
+  color: #707070;
+}
+.ant-modal .ant-modal-body hr {
+  margin: 20px 0;
+  height: 1px;
+  background-color: #cfdbe6;
+  border: none;
+}
+.ant-modal .flex-col {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+.ant-modal .flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
