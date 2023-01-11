@@ -26,6 +26,18 @@ class ExplorerTable extends React.Component {
   }
 
   /**
+   * Used to process the table data when needed.
+   * THis is used primarily to check for the existence
+   * of a Dicom images to show the link icon to the dicom viewer
+   * @param prevProps
+   */
+  componentDidUpdate(prevProps) {
+    if (this.props.tableConfig.dicomViewerId && !isEqual(this.props.rawData, prevProps.rawData)) {
+      this.augmentData();
+    } else if (this.props.rawData !== prevProps.rawData) this.setState({ tableData: this.props.rawData });
+  }
+
+  /**
    * Build column configs for each table according to their locations and fields
    * @param field: the full field name, if it is a nested field, it would contain at least 1 '.'
    * @param isNestedTableColumn: control flag to determine if it is building column config for
@@ -243,18 +255,6 @@ class ExplorerTable extends React.Component {
         this.setState({ loading: false });
       });
     }
-  }
-
-  /**
-   * Used to process the table data when needed.
-   * THis is used primarily to check for the existence
-   * of a Dicom images to show the link icon to the dicom viewer
-   * @param prevProps
-   */
-  componentDidUpdate(prevProps) {
-    if (this.props.tableConfig.dicomViewerId && !isEqual(this.props.rawData, prevProps.rawData)) {
-      this.augmentData();
-    } else if (this.props.rawData !== prevProps.rawData) this.setState({ tableData: this.props.rawData });
   }
 
   getWidthForColumn = (field, columnName) => {

@@ -47,6 +47,7 @@ interface Props {
   setExportingToWorkspace: (boolean) => void;
   filtersVisible: boolean;
   setFiltersVisible: (boolean) => void;
+  disableFilterButton: boolean;
   user: User,
   discovery: {
     actionToResume: 'download'|'export'|'manifest';
@@ -524,7 +525,7 @@ const DiscoveryActionBar = (props: Props) => {
         </Popover>
         <Modal
           closable={false}
-          visible={downloadStatus.message.active}
+          open={downloadStatus.message.active}
           title={downloadStatus.message.title}
           footer={(
             <Button
@@ -636,6 +637,7 @@ const DiscoveryActionBar = (props: Props) => {
             <Button
               className='discovery-adv-filter-button'
               onClick={() => props.setFiltersVisible(!props.filtersVisible)}
+              disabled={props.disableFilterButton}
               type='text'
             >
               {props.config.features.advSearchFilters.displayName || 'ADVANCED SEARCH'}

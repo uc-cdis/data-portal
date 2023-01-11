@@ -1,5 +1,5 @@
 import {
-  studyRegistrationConfig, discoveryConfig, mdsURL, cedarWrapperURL,
+  studyRegistrationConfig, discoveryConfig, mdsURL, cedarWrapperURL, requestorPath,
 } from '../localconf';
 import { fetchWithCreds } from '../actions';
 
@@ -78,4 +78,24 @@ export const registerStudyInMDS = async (metadataID, metadataToRegister = {}) =>
   } catch (err) {
     throw new Error(`Request for update study data failed: ${err}`);
   }
+};
+
+export const doesUserHaveRequestPending = async (
+  resourceID: string|Number|null|undefined = undefined,
+  policyID: string|Number|null|undefined = undefined) => {
+  const regexp = /^[a-zA-Z0-9\-_]{1,50}$/gm;
+  if (resourceID && !new RegExp(regexp).test(resourceID.toString())) {
+    throw new Error(`Invalid resource ID found: ${resourceID}`);
+  }
+  if (policyID && !new RegExp(regexp).test(policyID.toString())) {
+    throw new Error(`Invalid policy ID found: ${policyID}`);
+  }
+  const res = await fetchWithCreds({
+    path: `${requestorPath}request/user?${(resourceID === 0 || resourceID) ? `&resource_id=${resourceID}` : ''}${(policyID === 0 || policyID) ? `&policy_id=${policyID}` : ''}&status=DRAFT`,
+    method: 'GET',
+  });
+  if (res.status !== 200) {
+    throw new Error(`Encountered error while checking for existing request: ${JSON.stringify(res)}`);
+  }
+  return !!res.data?.length;
 };

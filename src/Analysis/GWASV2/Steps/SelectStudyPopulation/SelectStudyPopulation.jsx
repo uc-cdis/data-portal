@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ACTIONS from '../../Shared/StateManagement/Actions';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 import CohortSelect from '../../Components/SelectCohort/SelectCohort';
 
 const SelectStudyPopulation = ({ selectedCohort, dispatch }) => {

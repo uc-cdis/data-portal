@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import AttritionTable from './AttritionTable';
-import { SourceContextProvider } from '../../../Shared/Source';
+import { SourceContextProvider } from '../../../Utils/Source';
 import '../../../GWASV2.css';
 
 export default {

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Steps } from 'antd';
-import { gwasV2Steps } from '../../Shared/constants';
+import { gwasV2Steps } from '../../Utils/constants';
 import './ProgressBar.css';
 
 const { Step } = Steps;
@@ -13,7 +13,7 @@ const ProgressBar = ({ currentStep }) => (
           <Step
             key={item.title}
             icon={<React.Fragment>{index + 1}</React.Fragment>}
-            title={`${currentStep <= index ? item.title : item.secondaryTitle}`}
+            title={item.title}
           />
         ))}
       </Steps>

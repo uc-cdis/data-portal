@@ -56,7 +56,6 @@ const DiscoveryAdvancedSearchPanel = (props: Props) => (
         <Radio.Group
           size='small'
           buttonStyle='solid'
-          disabled={Object.keys(props.filterState).length === 0}
           onChange={({ target: { value } }: RadioChangeEvent) => {
             props.setFilterMultiSelectionLogic(value);
           }}
