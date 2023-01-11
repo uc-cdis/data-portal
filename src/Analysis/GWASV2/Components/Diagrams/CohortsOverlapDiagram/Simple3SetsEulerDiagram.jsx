@@ -39,6 +39,7 @@ const Simple3SetsEulerDiagram = ({
       throw Error('Error: invalid set sizes. A set overlap cannot be bigger than the set itself.');
     }
     const chart = venn.VennDiagram();
+    console.log(sets); // TODO - remove this .log later
     d3.select('#euler').datum(sets).call(chart);
   }, [sets]);
 
