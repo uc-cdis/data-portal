@@ -525,7 +525,7 @@ const DiscoveryActionBar = (props: Props) => {
         </Popover>
         <Modal
           closable={false}
-          visible={downloadStatus.message.active}
+          open={downloadStatus.message.active}
           title={downloadStatus.message.title}
           footer={(
             <Button

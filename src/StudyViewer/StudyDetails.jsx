@@ -330,7 +330,7 @@ class StudyDetails extends React.Component {
            {(requestAccessConfig) ? (
              <Modal
                title='Request Access'
-               visible={this.state.redirectModalVisible}
+               open={this.state.redirectModalVisible}
                closable={false}
                onCancel={this.handleRedirectModalCancel}
                footer={[
@@ -353,7 +353,7 @@ class StudyDetails extends React.Component {
            ) : null}
            <Modal
              title='Download Files'
-             visible={this.state.downloadModalVisible}
+             open={this.state.downloadModalVisible}
              closable={false}
              onCancel={this.handleDownloadModalCancel}
              footer={[
