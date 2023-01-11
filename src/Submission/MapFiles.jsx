@@ -322,7 +322,7 @@ class MapFiles extends React.Component {
           && (
             <Modal
               title='Deleting File Records'
-              visible={this.state.showDeletePopup}
+              open={this.state.showDeletePopup}
               closable={false}
               onCancel={this.onClosePopup}
               footer={[
