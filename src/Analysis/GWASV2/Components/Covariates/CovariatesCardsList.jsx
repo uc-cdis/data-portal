@@ -5,8 +5,16 @@ import { Card } from 'antd';
 
 const { Meta } = Card;
 
-const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
+const CovariatesCardsList = ({ covariates, outcome, deleteCovariate }) => (
   <div className='GWASUI-cdList'>
+    {outcome && (
+      <Card className='outcome-card'>
+        <Meta
+          title='Outcome '
+          description={`${outcome.provided_name || outcome.concept_name}`}
+        />
+      </Card>
+    )}
     {covariates.map((covariate, key) => (
       <React.Fragment key={key}>
         {covariate.provided_name && (
@@ -53,8 +61,13 @@ const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
 );
 
 CovariatesCardsList.propTypes = {
-  covariates: PropTypes.array.isRequired,
+  covariates: PropTypes.array,
+  outcome: PropTypes.object,
   deleteCovariate: PropTypes.func.isRequired,
+};
+CovariatesCardsList.defaultProps = {
+  outcome: null,
+  covariates: [],
 };
 
 export default CovariatesCardsList;
