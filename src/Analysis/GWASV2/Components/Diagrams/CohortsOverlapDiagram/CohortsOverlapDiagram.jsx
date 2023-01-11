@@ -160,7 +160,7 @@ const CohortsOverlapDiagram = ({
       statusStudyPopulationAndCaseAndControl,
     ].some((status) => status === 'loading')
   ) {
-    return <Spin />;
+    return <Spin data-testid='loading-spinner' />;
   }
   const eulerArgs = {
     set1Size: selectedStudyPopulationCohort.size,
