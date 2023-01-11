@@ -6,7 +6,7 @@ const ValidState = {
   },
   selectedStudyPopulationCohort: {
     cohort_definition_id: 404,
-    cohort_name: 'Catch All (do not run generate)',
+    cohort_name: 'Mock study population cohort',
     size: 510904,
   },
   covariates: [
