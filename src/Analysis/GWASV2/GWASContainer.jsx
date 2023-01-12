@@ -11,21 +11,12 @@ import SelectStudyPopulation from './Steps/SelectStudyPopulation/SelectStudyPopu
 import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
 import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
-import { TourProvider } from '@reactour/tour';
 import { useTour } from '@reactour/tour';
-//import Tour from 'reactour';
 import './GWASV2.css';
 
 const GWASContainer = () => {
   const { setIsOpen } = useTour();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const steps = [
-    {
-    selector: '.first-step',
-    content: 'This is my first Step',
-    }
-  ];
-  const [isTourOpen, setIsTourOpen] = useState(true);
 
   const generateStep = () => {
     switch (state.currentStep) {
@@ -100,7 +91,6 @@ const GWASContainer = () => {
 
   return (
     <SourceContextProvider>
-      <TourProvider steps={steps}>
       <p className="first-step">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent at
         finibus nulla, quis varius justo. Vestibulum lorem lorem, viverra porta
@@ -153,7 +143,6 @@ const GWASContainer = () => {
           </div>
         </Space>
       </div>
-      </TourProvider>
     </SourceContextProvider>
   );
 };
