@@ -23,7 +23,8 @@ const SelectCohortDropDown = ({ handleCohortSelect }) => {
     handleCohortSelect(selectedCohort);
   };
 
-  return cohorts?.status === 'success' ? (
+  if (cohorts?.status === 'success') {
+    return (
     <Select
       showSearch
       className='select-cohort'
@@ -34,13 +35,20 @@ const SelectCohortDropDown = ({ handleCohortSelect }) => {
       options={fetchedCohorts}
       fieldNames={{ label: 'cohort_name', value: 'cohort_definition_id' }}
     />
-  ) : (
+    );
+  }
+  if (cohorts?.status === 'loading') {
+    return (
     <React.Fragment>
       <div className='GWASUI-spinnerContainer GWASUI-emptyTable'>
         <Spin />
       </div>
     </React.Fragment>
-  );
+    );
+  }
+  if (cohorts?.status === 'error') {
+    return <React.Fragment>Error getting data for dropdown</React.Fragment>;
+  }
 };
 
 SelectCohortDropDown.propTypes = {
