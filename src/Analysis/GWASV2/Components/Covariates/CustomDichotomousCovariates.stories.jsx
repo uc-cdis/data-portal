@@ -124,7 +124,60 @@ ErrorCase.parameters = {
     handlers: [
       rest.get(
         'http://:cohortmiddlewarepath/cohort-middleware/cohortdefinition-stats/by-source-id/:sourceid',
-        (req, res, ctx) => res(ctx.delay(800), ctx.status(403))
+        (req, res, ctx) => res(ctx.delay(800), ctx.status(504))
+      ),
+    ],
+  },
+};
+
+
+
+
+export const ErrorCase2 = Template.bind({});
+ErrorCase2.args = {
+  dispatch: (payload) => {
+    console.log('dummy dispatch', payload);
+  },
+  setMode: (mode) => {
+    console.log('dummy setMode', mode);
+  },
+  type: 'outcome',
+  studyPopulationCohort: studyPopulationCohort,
+  covariates: [],
+  outcome: null,
+};
+ErrorCase2.parameters = {
+  // msw mocking:
+  msw: {
+    handlers: [
+      rest.post(
+        'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
+        (req, res, ctx) => res(ctx.delay(800), ctx.status(504))
+      ),
+      rest.get(
+        'http://:cohortmiddlewarepath/cohort-middleware/cohortdefinition-stats/by-source-id/:sourceid',
+        (req, res, ctx) => {
+          const { cohortmiddlewarepath } = req.params;
+          const { cohortdefinitionA } = req.params;
+          const { cohortdefinitionB } = req.params;
+          return res(
+            ctx.delay(800),
+            ctx.json({
+              cohort_definitions_and_stats: [
+                {
+                  cohort_definition_id: 401,
+                  cohort_name: 'Mock cohortD - Large',
+                  size: 221000,
+                },
+                {
+                  cohort_definition_id: 400,
+                  cohort_name: 'Mock cohortC - Large',
+                  size: 212000,
+                },
+              ],
+            })
+          );
+        }
       ),
     ],
   },
