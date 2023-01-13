@@ -673,6 +673,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex) return;
     const caseField = this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex;
+    const caseFieldInFileIndex = this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex;
     if (this.props.buttonConfig
       && this.props.buttonConfig.buttons
       && this.props.buttonConfig.buttons.some(
@@ -695,12 +696,26 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
           if (!fileType) {
             throw Error('guppyConfig.manifestMapping.resourceIndexType is not defined');
           }
-          const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType,
-            this.props.filter,
-          );
-          this.setState({
-            manifestEntryCount: countResult,
-          });
+          if (this.props.guppyConfig.manifestMapping.useFilterForCounts) {
+            const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType,
+              this.props.filter,
+            );
+            this.setState({
+              manifestEntryCount: countResult,
+            });
+          } else {
+            let caseIDList = caseIDResult.map((i) => i[caseField]);
+            caseIDList = _.uniq(caseIDList);
+            console.log("caseIDs", caseIDList)
+            const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
+              [caseFieldInFileIndex]: {
+                selectedValues: caseIDList,
+              },
+            });
+            this.setState({
+              manifestEntryCount: countResult,
+            });
+          }
         } else {
           throw Error('Error when downloading data');
         }
