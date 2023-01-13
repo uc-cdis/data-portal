@@ -6,11 +6,9 @@ import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
 
 describe('CovariatesCardsList component', () => {
   let wrapper;
-  let mockDeleteCovariate;
+  const mockDeleteCovariate = jest.fn();
 
   beforeEach(() => {
-    mockDeleteCovariate = jest.fn();
-
     const mockProps = {
       outcome: ValidInitialState.outcome,
       covariates: [
@@ -19,17 +17,16 @@ describe('CovariatesCardsList component', () => {
       ],
       deleteCovariate: mockDeleteCovariate,
     };
-
     wrapper = mount(<CovariatesCardsList {...mockProps} />);
   });
 
   it('should render an outcome card', () => {
     expect(wrapper.find('.outcome-card').exists()).toBe(true);
     expect(wrapper.find('.outcome-card .ant-card-meta-title').text()).toBe(
-      'Outcome'
+      'Outcome',
     );
     expect(
-      wrapper.find('.outcome-card .ant-card-meta-description').text()
+      wrapper.find('.outcome-card .ant-card-meta-description').text(),
     ).toBe('Attribute8');
   });
 
@@ -39,13 +36,13 @@ describe('CovariatesCardsList component', () => {
       wrapper
         .find('.dichotomous-card .ant-card-meta-title')
         .last()
-        .text()
+        .text(),
     ).toBe('Dichotomous Covariate');
     expect(
       wrapper
         .find('.dichotomous-card .ant-card-meta-description')
         .last()
-        .text()
+        .text(),
     ).toBe('test dichotomous covariate');
 
     expect(wrapper.find('.continuous-card').exists()).toBe(true);
@@ -53,13 +50,13 @@ describe('CovariatesCardsList component', () => {
       wrapper
         .find('.continuous-card .ant-card-meta-title')
         .last()
-        .text()
+        .text(),
     ).toBe('Continuous Covariate');
     expect(
       wrapper
         .find('.continuous-card .ant-card-meta-description')
         .last()
-        .text()
+        .text(),
     ).toBe('test continuous covariate');
   });
 
@@ -72,7 +69,6 @@ describe('CovariatesCardsList component', () => {
       provided_name: 'test dichotomous covariate',
       concept_id: 123,
     });
-
     wrapper
       .find(DeleteOutlined)
       .last()
