@@ -11,6 +11,11 @@ const ValidInitialState = {
   },
   covariates: [
     {
+      variable_type: 'custom_dichotomous',
+      provided_name: 'test dichotomous covariate',
+      concept_id: 2000000123,
+    },
+    {
       variable_type: 'concept',
       concept_id: 2000000873,
       concept_name: 'Attribute81',

@@ -11,10 +11,7 @@ describe('CovariatesCardsList component', () => {
   beforeEach(() => {
     const mockProps = {
       outcome: ValidInitialState.outcome,
-      covariates: [
-        { provided_name: 'test dichotomous covariate', concept_id: 123 },
-        { concept_name: 'test continuous covariate', concept_id: 456 },
-      ],
+      covariates: ValidInitialState.covariates,
       deleteCovariate: mockDeleteCovariate,
     };
     wrapper = mount(<CovariatesCardsList {...mockProps} />);
@@ -23,26 +20,26 @@ describe('CovariatesCardsList component', () => {
   it('should render an outcome card', () => {
     expect(wrapper.find('.outcome-card').exists()).toBe(true);
     expect(wrapper.find('.outcome-card .ant-card-meta-title').text()).toBe(
-      'Outcome',
+      'Outcome'
     );
     expect(
-      wrapper.find('.outcome-card .ant-card-meta-description').text(),
+      wrapper.find('.outcome-card .ant-card-meta-description').text()
     ).toBe('Attribute8');
   });
 
-  it('should render two covariate cards', () => {
+  it('should render covariate cards', () => {
     expect(wrapper.find('.dichotomous-card').exists()).toBe(true);
     expect(
       wrapper
         .find('.dichotomous-card .ant-card-meta-title')
         .last()
-        .text(),
+        .text()
     ).toBe('Dichotomous Covariate');
     expect(
       wrapper
         .find('.dichotomous-card .ant-card-meta-description')
         .last()
-        .text(),
+        .text()
     ).toBe('test dichotomous covariate');
 
     expect(wrapper.find('.continuous-card').exists()).toBe(true);
@@ -50,14 +47,14 @@ describe('CovariatesCardsList component', () => {
       wrapper
         .find('.continuous-card .ant-card-meta-title')
         .last()
-        .text(),
+        .text()
     ).toBe('Continuous Covariate');
     expect(
       wrapper
         .find('.continuous-card .ant-card-meta-description')
         .last()
-        .text(),
-    ).toBe('test continuous covariate');
+        .text()
+    ).toBe('Attribute83');
   });
 
   it('should call deleteCovariate when the delete icon is clicked', () => {
@@ -66,16 +63,18 @@ describe('CovariatesCardsList component', () => {
       .first()
       .simulate('click');
     expect(mockDeleteCovariate).toHaveBeenCalledWith({
+      variable_type: 'custom_dichotomous',
       provided_name: 'test dichotomous covariate',
-      concept_id: 123,
+      concept_id: 2000000123,
     });
     wrapper
       .find(DeleteOutlined)
       .last()
       .simulate('click');
     expect(mockDeleteCovariate).toHaveBeenCalledWith({
-      concept_name: 'test continuous covariate',
-      concept_id: 456,
+      variable_type: 'concept',
+      concept_name: 'Attribute83',
+      concept_id: 2000000873,
     });
   });
 });
