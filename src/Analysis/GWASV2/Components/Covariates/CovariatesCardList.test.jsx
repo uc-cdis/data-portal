@@ -20,7 +20,7 @@ describe('CovariatesCardsList component', () => {
   it('should render an outcome card', () => {
     expect(wrapper.find('.outcome-card').exists()).toBe(true);
     expect(wrapper.find('.outcome-card .ant-card-meta-title').text()).toBe(
-      'Outcome'
+      'Outcome Phenotype'
     );
     expect(
       wrapper.find('.outcome-card .ant-card-meta-description').text()

@@ -10,7 +10,7 @@ const CovariatesCardsList = ({ covariates, outcome, deleteCovariate }) => (
     {outcome && (
       <Card className='outcome-card'>
         <Meta
-          title='Outcome'
+          title='Outcome Phenotype'
           description={`${outcome.provided_name || outcome.concept_name}`}
         />
       </Card>
