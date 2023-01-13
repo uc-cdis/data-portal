@@ -12,10 +12,12 @@ const SelectStudyPopulation = ({ selectedCohort, dispatch }) => {
   };
 
   return (
-    <CohortSelect
-      selectedCohort={selectedCohort}
-      handleCohortSelect={handleStudyPopulationSelect}
-    />
+    <div data-tour='first-step-1'>
+      <CohortSelect
+        selectedCohort={selectedCohort}
+        handleCohortSelect={handleStudyPopulationSelect}
+      />
+    </div>
   );
 };
 

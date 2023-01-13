@@ -89,16 +89,7 @@ const GWASContainer = () => {
   }
 
   return (
-    <SourceContextProvider>
-      <p data-tour="first-step">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent at
-        finibus nulla, quis varius justo. Vestibulum lorem lorem, viverra porta
-        metus nec, porta luctus orci
-      </p>
-      <p data-tour="second-step">
-        This is the second step.
-      </p>
-     
+    <SourceContextProvider> 
       <ProgressBar currentStep={state.currentStep} />
       <AttritionTableWrapper
         covariates={state.covariates}
