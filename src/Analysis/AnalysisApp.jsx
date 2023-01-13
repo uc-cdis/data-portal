@@ -20,14 +20,6 @@ const queryClient = new QueryClient();
 const disableBody = (target) => disableBodyScroll(target);
 const enableBody = (target) => enableBodyScroll(target);
 
-const steps = [
-  {
-  selector: '.first-step',
-  content: 'This is my first Step',
-  }
-];
-
-
 class AnalysisApp extends React.Component {
   constructor(props) {
     super(props);
@@ -129,7 +121,7 @@ class AnalysisApp extends React.Component {
       );
     case 'GWAS++': {
       return (
-        <TourProvider steps={steps}>
+        <TourProvider>
         <div>
           <GWASContainer refreshWorkflows={this.refreshWorkflows} />
         </div>

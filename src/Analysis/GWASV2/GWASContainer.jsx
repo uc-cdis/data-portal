@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useReducer, useState, useEffect } from 'react';
 import { Space, Button } from 'antd';
 import ProgressBar from './Components/ProgressBar/ProgressBar';
 import { gwasV2Steps } from './Utils/constants';
@@ -15,7 +15,6 @@ import { useTour } from '@reactour/tour';
 import './GWASV2.css';
 
 const GWASContainer = () => {
-  const { setIsOpen } = useTour();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const generateStep = () => {
@@ -91,12 +90,14 @@ const GWASContainer = () => {
 
   return (
     <SourceContextProvider>
-      <p className="first-step">
+      <p data-tour="first-step">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent at
         finibus nulla, quis varius justo. Vestibulum lorem lorem, viverra porta
         metus nec, porta luctus orci
       </p>
-      <button onClick={() => setIsOpen(true)}>Open Tour</button>
+      <p data-tour="second-step">
+        This is the second step.
+      </p>
      
       <ProgressBar currentStep={state.currentStep} />
       <AttritionTableWrapper
