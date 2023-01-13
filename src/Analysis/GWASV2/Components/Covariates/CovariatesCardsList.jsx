@@ -16,10 +16,10 @@ const CovariatesCardsList = ({ covariates, outcome, deleteCovariate }) => (
       </Card>
     )}
     {covariates.map((covariate, key) => (
-      <React.Fragment key={key}>
+      <React.Fragment key={covariate + key}>
         {covariate.provided_name && (
           <Card
-            key={`cd-list-option-${key}`}
+            key={`cd-list-option-${covariate + key}`}
             className='dichotomous-card'
             actions={[
               <DeleteOutlined
