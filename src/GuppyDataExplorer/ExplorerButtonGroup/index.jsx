@@ -706,7 +706,6 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
           } else {
             let caseIDList = caseIDResult.map((i) => i[caseField]);
             caseIDList = _.uniq(caseIDList);
-            console.log("caseIDs", caseIDList)
             const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
               [caseFieldInFileIndex]: {
                 selectedValues: caseIDList,
