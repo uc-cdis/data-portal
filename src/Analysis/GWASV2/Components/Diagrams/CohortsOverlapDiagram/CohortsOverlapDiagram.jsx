@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
 import { Spin } from 'antd';
@@ -9,8 +9,14 @@ import {
 } from '../../../Utils/cohortMiddlewareApi';
 import Simple3SetsEulerDiagram from './Simple3SetsEulerDiagram';
 import { useSourceContext } from '../../../Utils/Source';
+import ACTIONS from '../../../Utils/StateManagement/Actions';
 
+const OVERLAP_ERROR = {
+  title: 'Your selected cohorts should have some overlap with the study population',
+  messageType: 'warning',
+};
 const CohortsOverlapDiagram = ({
+  dispatch,
   selectedStudyPopulationCohort,
   selectedCaseCohort,
   selectedControlCohort,
@@ -120,6 +126,25 @@ const CohortsOverlapDiagram = ({
     dataPopCaseMinusPopCaseControl: results[3].data,
   };
 
+  useEffect(() => {
+    // Validate and give error message if there is no overlap:
+    if (dataPopCase?.cohort_overlap
+        && dataPopControl?.cohort_overlap) {
+      if (dataPopCase.cohort_overlap.case_control_overlap === 0
+        || dataPopControl.cohort_overlap.case_control_overlap === 0) {
+        dispatch({
+          type: ACTIONS.ADD_MESSAGE,
+          payload: OVERLAP_ERROR,
+        });
+      } else {
+        dispatch({
+          type: ACTIONS.DELETE_MESSAGE,
+          payload: OVERLAP_ERROR,
+        });
+      }
+    }
+  }, [dataPopCase, dataPopControl]);
+
   if (
     [
       statusPopCase,
@@ -158,6 +183,7 @@ const CohortsOverlapDiagram = ({
 };
 
 CohortsOverlapDiagram.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   selectedStudyPopulationCohort: PropTypes.object.isRequired,
   selectedCaseCohort: PropTypes.object.isRequired,
   selectedControlCohort: PropTypes.object.isRequired,

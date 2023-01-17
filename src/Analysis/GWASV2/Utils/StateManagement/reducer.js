@@ -47,6 +47,15 @@ const reducer = (state, action) => {
     return { ...state, finalPopulationSizes: action.payload };
   case ACTIONS.SET_SELECTION_MODE:
     return { ...state, selectionMode: action.payload };
+  case ACTIONS.ADD_MESSAGE:
+    return { ...state, messages: [...state.messages, action.payload] };
+  case ACTIONS.DELETE_MESSAGE:
+    return {
+      ...state,
+      messages: state.messages.filter(
+        (message) => message !== action.payload,
+      ),
+    };
   default:
     throw new Error(`Unknown action passed to reducer: ${action}`);
   }

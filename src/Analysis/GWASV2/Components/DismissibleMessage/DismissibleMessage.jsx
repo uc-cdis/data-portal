@@ -7,8 +7,13 @@ const DismissibleMessage = ({
   title = 'Placeholder Title',
   description = 'placeholder description',
   messageType = 'success',
+  dismissMessage = null,
 }) => {
   const [open, setOpen] = useState(true);
+  const close = () => {
+    if (dismissMessage) dismissMessage();
+    else setOpen(false);
+  };
 
   return (
     <React.Fragment>
@@ -19,11 +24,9 @@ const DismissibleMessage = ({
             tabIndex='0'
             role='button'
             aria-label='Close Message'
-            onClick={() => {
-              setOpen(false);
-            }}
+            onClick={close}
             onKeyDown={(e) => {
-              if (isEnterOrSpace(e)) setOpen(false);
+              if (isEnterOrSpace(e)) close();
             }}
           >
             X
@@ -40,11 +43,13 @@ DismissibleMessage.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   messageType: PropTypes.string,
+  dismissMessage: PropTypes.func,
 };
 
 DismissibleMessage.defaultProps = {
   description: '',
   messageType: 'success',
+  dismissMessage: null,
 };
 
 export default DismissibleMessage;
