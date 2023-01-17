@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { DeleteOutlined } from '@ant-design/icons';
 import CovariatesCardsList from './CovariatesCardsList';
-import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
+import ValidState from '../../TestData/States/ValidState';
 
 describe('CovariatesCardsList component', () => {
   let wrapper;
@@ -10,8 +10,8 @@ describe('CovariatesCardsList component', () => {
 
   beforeEach(() => {
     const mockProps = {
-      outcome: ValidInitialState.outcome,
-      covariates: ValidInitialState.covariates,
+      outcome: ValidState.outcome,
+      covariates: ValidState.covariates,
       deleteCovariate: mockDeleteCovariate,
     };
     wrapper = mount(<CovariatesCardsList {...mockProps} />);
@@ -20,10 +20,10 @@ describe('CovariatesCardsList component', () => {
   it('should render an outcome card', () => {
     expect(wrapper.find('.outcome-card').exists()).toBe(true);
     expect(wrapper.find('.outcome-card .ant-card-meta-title').text()).toBe(
-      'Outcome Phenotype'
+      'Outcome Phenotype',
     );
     expect(
-      wrapper.find('.outcome-card .ant-card-meta-description').text()
+      wrapper.find('.outcome-card .ant-card-meta-description').text(),
     ).toBe('Attribute8');
   });
 
@@ -33,13 +33,13 @@ describe('CovariatesCardsList component', () => {
       wrapper
         .find('.dichotomous-card .ant-card-meta-title')
         .last()
-        .text()
+        .text(),
     ).toBe('Dichotomous Covariate');
     expect(
       wrapper
         .find('.dichotomous-card .ant-card-meta-description')
         .last()
-        .text()
+        .text(),
     ).toBe('test dichotomous covariate');
 
     expect(wrapper.find('.continuous-card').exists()).toBe(true);
@@ -47,13 +47,13 @@ describe('CovariatesCardsList component', () => {
       wrapper
         .find('.continuous-card .ant-card-meta-title')
         .last()
-        .text()
+        .text(),
     ).toBe('Continuous Covariate');
     expect(
       wrapper
         .find('.continuous-card .ant-card-meta-description')
         .last()
-        .text()
+        .text(),
     ).toBe('Attribute83');
   });
 

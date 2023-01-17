@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CovariatesCardsList from './CovariatesCardsList';
-import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
+import ValidState from '../../TestData/States/ValidState';
 import './Covariates.css';
 import '../../Steps/SelectCovariates/SelectCovariates.css';
 import '../../GWASV2.css';
@@ -27,4 +27,4 @@ const Template = (args) => (
 );
 
 export const SuccessState = Template.bind({});
-SuccessState.args = ValidInitialState;
+SuccessState.args = ValidState;

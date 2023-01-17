@@ -1,4 +1,4 @@
-const ValidInitialState = {
+const ValidState = {
   outcome: {
     variable_type: 'concept',
     concept_id: 2000000873,
@@ -48,4 +48,4 @@ const ValidInitialState = {
     },
   ],
 };
-export default ValidInitialState;
+export default ValidState;
