@@ -15,7 +15,7 @@ const SelectCohort = ({ selectedCohort, handleCohortSelect }) => {
   };
   return (
     <React.Fragment>
-      <div data-tour='first-step-4' className='GWASUI-row cohort-table-search'>
+      <div data-tour='cohort-search' className='GWASUI-row cohort-table-search'>
         <div className='GWASUI-column'>
           <SearchBar
             searchTerm={cohortSearchTerm}
@@ -24,7 +24,6 @@ const SelectCohort = ({ selectedCohort, handleCohortSelect }) => {
           />
         </div>
         <div
-          data-tour='step-1-new-cohort'
           className='GWASUI-column GWASUI-newCohort'
         >
           <AddCohortButton />

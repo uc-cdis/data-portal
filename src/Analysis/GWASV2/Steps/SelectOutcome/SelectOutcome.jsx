@@ -72,7 +72,7 @@ const SelectOutcome = ({
   // Outputs the JSX for the component:
   return (
     <div className='GWASUI-row'>
-      <div className='GWASUI-double-column'>{determineSelectOutcomeJsx()}</div>
+      <div data-tour='select-outcome' className='GWASUI-double-column'>{determineSelectOutcomeJsx()}</div>
       <div className='GWASUI-column GWASUI-card-column'>
         <CovariatesCardsList
           covariates={covariates}

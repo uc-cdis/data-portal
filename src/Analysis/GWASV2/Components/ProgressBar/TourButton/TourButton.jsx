@@ -8,8 +8,10 @@ const TourButton = ({ currentStep }) => {
   const { setIsOpen, setSteps } = useTour();
  
   useEffect(() => {
-    setSteps(TourSteps);
-  }, []);
+    console.log("currentStep", currentStep);
+    console.log("setSteps", setSteps);
+    setSteps(TourSteps[currentStep]);
+  }, [currentStep, setSteps]);
 
   return (
     <Button onClick={() => setIsOpen(true)}>New to GWAS? Get started here!</Button>

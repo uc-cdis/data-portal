@@ -21,10 +21,12 @@ const GWASContainer = () => {
     switch (state.currentStep) {
     case 0:
       return (
+        <div data-tour="cohort-intro">
         <SelectStudyPopulation
           selectedCohort={state.selectedStudyPopulationCohort}
           dispatch={dispatch}
         />
+        </div>
       );
     case 1:
       return (
