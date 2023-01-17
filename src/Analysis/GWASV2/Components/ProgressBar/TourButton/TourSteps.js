@@ -1,4 +1,4 @@
-export const TourSteps = {
+const TourSteps = {
     0: [
         {
             selector: '[data-tour="cohort-intro"]',
@@ -46,15 +46,21 @@ export const TourSteps = {
             selector: '[data-tour="select-outcome-dichotomous"]',
             content: 'Please press here to select a dichotomous outcome phenotype. In pressing this option you’ll be able to select two cohorts available to you to define your outcome phenotype. The population selected will be a subsection of your study population'
         },
+    ],
+    2: [
         {
-            selector: '[data-tour="attrition-table"]',
-            content: 'Here you may see how your selection is populated as ancestry. This table will show you the population of your potential cohort as it relates to the ancestry you may choose as you make selections in the GWAS App',
+            selector: '[data-tour="select-covariate"]',
+            content: 'In this step you may add as many covariates as you wish. To edit previous steps please click ‘Previous’ or press the step number. This step is not mandatory',
         },
         {
-            selector: '[data-tour="next-button"]',
-            content: 'Please press Next to continue',
-        }
+            selector: '[data-tour="select-covariate-continious"]',
+            content: 'Please press here to add a continuous covariate to your GWAS. In pressing this option you’ll be able to select one of the contentious variables available to you as covariate for your study population',
+        },
+        {
+            selector: '[data-tour="select-covariate-dichotomous"]',
+            content: 'Please press here to add a dichotomous covariate. In pressing this option you’ll be able to select two cohorts available to you to define a dichotomous covariate. The population selected will be a subsection of your study population'
+        },
     ]
 };
 
-//export default TourSteps;
+export default TourSteps;
