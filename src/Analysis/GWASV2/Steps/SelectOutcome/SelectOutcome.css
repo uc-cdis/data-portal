@@ -2,12 +2,17 @@
   border: 1px solid #e2e2e3;
 }
 
-.GWASV2 .select-outcome-container {
+.GWASV2 .select-container {
   padding: 20px;
   background: #fff;
   height: 519px;
 }
 
-.GWASV2 .select-outcome-container .GWASUI-flexRow {
+.GWASV2 .select-container .ant-table-content {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.GWASV2 .select-container .GWASUI-flexRow {
   width: 100%;
 }

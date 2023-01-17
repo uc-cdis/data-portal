@@ -20,7 +20,7 @@ const SelectCovariates = ({
       <div className='GWASUI-row'>
         <div className='GWASUI-double-column'>
           {selectionMode === 'continuous' && (
-            <div className='select-covariates-container'>
+            <div className='select-container'>
               <ContinuousCovariates
                 selectedStudyPopulationCohort={studyPopulationCohort}
                 selectedCovariates={covariates}
@@ -82,10 +82,12 @@ const SelectCovariates = ({
         <div className='GWASUI-column GWASUI-card-column'>
           <CovariatesCardsList
             covariates={covariates}
-            deleteCovariate={(chosenCovariate) => dispatch({
-              type: ACTIONS.DELETE_COVARIATE,
-              payload: chosenCovariate,
-            })}
+            deleteCovariate={(chosenCovariate) =>
+              dispatch({
+                type: ACTIONS.DELETE_COVARIATE,
+                payload: chosenCovariate,
+              })
+            }
           />
         </div>
       </div>

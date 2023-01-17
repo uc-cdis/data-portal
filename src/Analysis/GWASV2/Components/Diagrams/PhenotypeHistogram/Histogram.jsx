@@ -17,8 +17,9 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <div className='histogram-tooltip'>
         <p>{`Number of persons: ${formatNumber(
-          payload[0].value
-        )}, for values starting at: ${formatNumber(label)}`}</p>
+          payload[0].value,
+        )}, for values starting at: ${formatNumber(label)}`}
+        </p>
       </div>
     );
   }

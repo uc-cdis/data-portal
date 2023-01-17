@@ -26,15 +26,14 @@ const PhenotypeHistogram = ({
       outcome,
       selectedContinuousItem.concept_id,
     ],
-    () =>
-      fetchHistogramInfo(
-        sourceId,
-        selectedStudyPopulationCohort.cohort_definition_id,
-        selectedCovariates,
-        outcome,
-        selectedContinuousItem.concept_id
-      ),
-    queryConfig
+    () => fetchHistogramInfo(
+      sourceId,
+      selectedStudyPopulationCohort.cohort_definition_id,
+      selectedCovariates,
+      outcome,
+      selectedContinuousItem.concept_id,
+    ),
+    queryConfig,
   );
 
   if (status === 'error') {

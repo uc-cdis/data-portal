@@ -18,7 +18,7 @@ const SelectOutcome = ({
   const determineSelectOutcomeJsx = () => {
     if (selectionMode === 'continuous') {
       return (
-        <div className='select-outcome-container'>
+        <div className='select-container'>
           <ContinuousCovariates
             selectedStudyPopulationCohort={studyPopulationCohort}
             outcome={outcome}
@@ -37,7 +37,7 @@ const SelectOutcome = ({
     }
     if (selectionMode === 'dichotomous') {
       return (
-        <div className='select-outcome-container'>
+        <div className='select-container'>
           <CustomDichotomousCovariates
             studyPopulationCohort={studyPopulationCohort}
             outcome={outcome}
@@ -76,10 +76,12 @@ const SelectOutcome = ({
       <div className='GWASUI-column GWASUI-card-column'>
         <CovariatesCardsList
           covariates={covariates}
-          deleteCovariate={(chosenCovariate) => dispatch({
-            type: ACTIONS.DELETE_COVARIATE,
-            payload: chosenCovariate,
-          })}
+          deleteCovariate={(chosenCovariate) =>
+            dispatch({
+              type: ACTIONS.DELETE_COVARIATE,
+              payload: chosenCovariate,
+            })
+          }
         />
       </div>
     </div>
