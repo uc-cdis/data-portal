@@ -1,4 +1,4 @@
-const TourSteps = {
+export const TourSteps = {
     0: [
         {
             selector: '[data-tour="cohort-intro"]',
@@ -37,8 +37,24 @@ const TourSteps = {
         {
             selector: '[data-tour="select-outcome"]',
             content: 'In this step you may choose your outcome phenotype. To edit previous steps please click ‘Previous’ or press the step number',
+        },
+        {
+            selector: '[data-tour="select-outcome-continious"]',
+            content: 'Please press here to select a continuous outcome phenotype. In pressing this option you’ll be able to select one of the contentious variables available to you as an outcome phenotype for your study population',
+        },
+        {
+            selector: '[data-tour="select-outcome-dichotomous"]',
+            content: 'Please press here to select a dichotomous outcome phenotype. In pressing this option you’ll be able to select two cohorts available to you to define your outcome phenotype. The population selected will be a subsection of your study population'
+        },
+        {
+            selector: '[data-tour="attrition-table"]',
+            content: 'Here you may see how your selection is populated as ancestry. This table will show you the population of your potential cohort as it relates to the ancestry you may choose as you make selections in the GWAS App',
+        },
+        {
+            selector: '[data-tour="next-button"]',
+            content: 'Please press Next to continue',
         }
     ]
 };
 
-export default TourSteps;
+//export default TourSteps;

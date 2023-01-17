@@ -57,11 +57,11 @@ const SelectOutcome = ({
 
     return (
       <div className='GWASUI-selectionUI'>
-        <button type='button' onClick={() => setSelectionMode('continuous')}>
+        <button data-tour='select-outcome-continious' type='button' onClick={() => setSelectionMode('continuous')}>
           <span>+</span>
           <span>Add Continuous Outcome Phenotype</span>
         </button>
-        <button type='button' onClick={() => setSelectionMode('dichotomous')}>
+        <button data-tour='select-outcome-dichotomous' type='button' onClick={() => setSelectionMode('dichotomous')}>
           <span>+</span>
           <span>Add Dichotomous Outcome Phenotype</span>
         </button>
