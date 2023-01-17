@@ -12,7 +12,7 @@ describe('CovariatesCardsList component', () => {
   const lastCovariateObj = ValidState.covariates.at(-1);
   const lastContinousCovariateText = lastCovariateObj.concept_name;
   const dichotomousObj = ValidState.covariates.filter(
-    (obj) => obj.variable_type === 'custom_dichotomous'
+    (obj) => obj.variable_type === 'custom_dichotomous',
   )[0];
   const dichotomousText = dichotomousObj.provided_name;
 
@@ -28,10 +28,10 @@ describe('CovariatesCardsList component', () => {
   it('should render an outcome card', () => {
     expect(wrapper.find('.outcome-card').exists()).toBe(true);
     expect(wrapper.find('.outcome-card .ant-card-meta-title').text()).toBe(
-      'Outcome Phenotype'
+      'Outcome Phenotype',
     );
     expect(
-      wrapper.find('.outcome-card .ant-card-meta-description').text()
+      wrapper.find('.outcome-card .ant-card-meta-description').text(),
     ).toBe(outcomeText);
   });
 
@@ -41,13 +41,13 @@ describe('CovariatesCardsList component', () => {
       wrapper
         .find('.dichotomous-card .ant-card-meta-title')
         .last()
-        .text()
+        .text(),
     ).toBe('Dichotomous Covariate');
     expect(
       wrapper
         .find('.dichotomous-card .ant-card-meta-description')
         .last()
-        .text()
+        .text(),
     ).toBe(dichotomousText);
 
     expect(wrapper.find('.continuous-card').exists()).toBe(true);
@@ -55,13 +55,13 @@ describe('CovariatesCardsList component', () => {
       wrapper
         .find('.continuous-card .ant-card-meta-title')
         .last()
-        .text()
+        .text(),
     ).toBe('Continuous Covariate');
     expect(
       wrapper
         .find('.continuous-card .ant-card-meta-description')
         .last()
-        .text()
+        .text(),
     ).toBe(lastContinousCovariateText);
   });
 
