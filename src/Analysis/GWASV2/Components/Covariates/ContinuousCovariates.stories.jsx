@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import ContinuousCovariates from './ContinuousCovariates';
 import { SourceContextProvider } from '../../Utils/Source';
+import './Covariates.css';
 
 export default {
   title: 'Tests3/GWASV2/ContinuousCovariates',
@@ -21,19 +22,21 @@ const Template = () => {
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
-      <ContinuousCovariates
-        selectedStudyPopulationCohort={{cohort_definition_id: 123}}
-        selectedCovariates={[]}
-        covariates={[]}
-        outcome={null}
-        handleClose={() => {
-          console.log('close');
-        }}
-        dispatch={(chosenCovariate) => {
-          console.log('chosen covariate:', chosenCovariate)
-        }}
-        submitButtonLabel={'Add'}
-      />
+        <div className='GWASV2'>
+          <ContinuousCovariates
+            selectedStudyPopulationCohort={{ cohort_definition_id: 123 }}
+            selectedCovariates={[]}
+            covariates={[]}
+            outcome={null}
+            handleClose={() => {
+              console.log('close');
+            }}
+            dispatch={(chosenCovariate) => {
+              console.log('chosen covariate:', chosenCovariate);
+            }}
+            submitButtonLabel={'Add'}
+          />
+        </div>
       </SourceContextProvider>
     </QueryClientProvider>
   );
@@ -82,18 +85,21 @@ export const SuccessCase = Template.bind({});
 SuccessCase.parameters = {
   msw: {
     handlers: [
-      rest.post('http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type', (req, res, ctx) => {
-        const { cohortmiddlewarepath } = req.params;
-        const { sourceid } = req.params;
-        console.log(cohortmiddlewarepath);
-        console.log(sourceid);
-        return res(
-          ctx.delay(1100),
-          ctx.json({
-            concepts: mockConcepts,
-          }),
-        );
-      }),
+      rest.post(
+        'http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type',
+        (req, res, ctx) => {
+          const { cohortmiddlewarepath } = req.params;
+          const { sourceid } = req.params;
+          console.log(cohortmiddlewarepath);
+          console.log(sourceid);
+          return res(
+            ctx.delay(1100),
+            ctx.json({
+              concepts: mockConcepts,
+            })
+          );
+        }
+      ),
       rest.post(
         //histogram/by-source-id/${sourceId}/by-cohort-definition-id/${cohortId}/by-histogram-concept-id/${currentSelection.concept_id}`;
         'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId/by-histogram-concept-id/:conceptId',
@@ -104,15 +110,15 @@ SuccessCase.parameters = {
             ctx.delay(1100),
             ctx.json({
               bins: [
-                {start: 1.4564567,  end: 10.45642, nr_persons: 100},
-                {start: 10.45642, end: 20, nr_persons: 200},
-                {start: 20, end: 30, nr_persons: 300},
-                {start: 30, end: 40, nr_persons: 400},
-                {start: 40, end: 50, nr_persons: 500},
-                {start: 50, end: 60, nr_persons: 400},
-                {start: 60, end: 70, nr_persons: 350},
-                {start: 70, end: 80, nr_persons: 100},
-                {start: 80, end: 90, nr_persons: 50},
+                { start: 1.4564567, end: 10.45642, nr_persons: 100 },
+                { start: 10.45642, end: 20, nr_persons: 200 },
+                { start: 20, end: 30, nr_persons: 300 },
+                { start: 30, end: 40, nr_persons: 400 },
+                { start: 40, end: 50, nr_persons: 500 },
+                { start: 50, end: 60, nr_persons: 400 },
+                { start: 60, end: 70, nr_persons: 350 },
+                { start: 70, end: 80, nr_persons: 100 },
+                { start: 80, end: 90, nr_persons: 50 },
               ],
             })
           );
@@ -122,23 +128,25 @@ SuccessCase.parameters = {
   },
 };
 
-
 export const EmptyDataCase = Template.bind({});
 EmptyDataCase.parameters = {
   msw: {
     handlers: [
-      rest.post('http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type', (req, res, ctx) => {
-        const { cohortmiddlewarepath } = req.params;
-        const { sourceid } = req.params;
-        console.log(cohortmiddlewarepath);
-        console.log(sourceid);
-        return res(
-          ctx.delay(1100),
-          ctx.json({
-            concepts: mockConcepts,
-          }),
-        );
-      }),
+      rest.post(
+        'http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type',
+        (req, res, ctx) => {
+          const { cohortmiddlewarepath } = req.params;
+          const { sourceid } = req.params;
+          console.log(cohortmiddlewarepath);
+          console.log(sourceid);
+          return res(
+            ctx.delay(1100),
+            ctx.json({
+              concepts: mockConcepts,
+            })
+          );
+        }
+      ),
       rest.post(
         //histogram/by-source-id/${sourceId}/by-cohort-definition-id/${cohortId}/by-histogram-concept-id/${currentSelection.concept_id}`;
         'http://:cohortmiddlewarepath/cohort-middleware/histogram/by-source-id/:sourceid/by-cohort-definition-id/:cohortdefinitionId/by-histogram-concept-id/:conceptId',
@@ -157,15 +165,14 @@ EmptyDataCase.parameters = {
   },
 };
 
-
 export const ErrorCase = Template.bind({});
 ErrorCase.parameters = {
   msw: {
     handlers: [
-      rest.post('http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type', (req, res, ctx) => res(
-        ctx.delay(800),
-        ctx.status(403),
-      )),
+      rest.post(
+        'http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type',
+        (req, res, ctx) => res(ctx.delay(800), ctx.status(403))
+      ),
     ],
   },
 };

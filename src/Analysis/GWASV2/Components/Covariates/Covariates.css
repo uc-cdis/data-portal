@@ -6,11 +6,6 @@
   margin-left: 5px;
 }
 
-.GWASV2 .phenotype-histogram {
-  padding-left: 30px;
-  margin-top: 8px;
-}
-
 .GWASV2 .dichotomous-card {
   width: 189px;
   background: #ebfad3;
@@ -33,4 +28,68 @@
 
 .GWASV2 .custom-dichotomous-covariates .cohorts-overlap-diagram {
   padding-left: 30px;
+}
+
+.GWASV2 .phenotype-histogram {
+  padding-left: 30px;
+  margin-top: 8px;
+  width: 600px;
+}
+.GWASV2 .continuous-covariates .GWASUI-searchContainer,
+.GWASV2 .continuous-covariates .continous-covariates-table {
+  width: 350px;
+}
+
+.GWASV2
+  .continuous-covariates
+  .ant-table.ant-table-middle
+  .ant-table-tbody
+  > tr
+  > td {
+  padding: 5px 8px;
+}
+
+.GWASV2 .continuous-covariates-button-container {
+  display: block;
+  float: right;
+  height: 36px;
+}
+
+.GWASV2 .phenotype-histogram .recharts-wrapper {
+  margin-top: 60px;
+}
+.GWASV2 .phenotype-histogram .histrogram-loading {
+  margin-top: 60px;
+}
+.GWASV2 .phenotype-histogram button {
+  margin: 6px 0 12px auto;
+  background-color: #2e77b8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 152px;
+  height: 40px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.GWASV2 .GWASV2 .phenotype-histogram button:hover {
+  background-color: var(--g3-secondary-btn__bg-color--hover);
+}
+.GWASV2 .phenotype-histogram button.cancel-button {
+  color: #2e77b8;
+  background: white;
+  border: 1px solid #2e77b8;
+  margin-right: 25px;
+}
+.GWASV2 .phenotype-histogram button.cancel-button:hover {
+  background-color: var(--g3-secondary-btn__bg-color--hover);
+  color: white;
+}
+
+.GWASV2 .phenotype-histogram-directions {
+  float: left;
+  margin-top: 25px;
 }

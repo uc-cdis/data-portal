@@ -26,26 +26,32 @@ const PhenotypeHistogram = ({
       outcome,
       selectedContinuousItem.concept_id,
     ],
-    () => fetchHistogramInfo(
-      sourceId,
-      selectedStudyPopulationCohort.cohort_definition_id,
-      selectedCovariates,
-      outcome,
-      selectedContinuousItem.concept_id,
-    ),
-    queryConfig,
+    () =>
+      fetchHistogramInfo(
+        sourceId,
+        selectedStudyPopulationCohort.cohort_definition_id,
+        selectedCovariates,
+        outcome,
+        selectedContinuousItem.concept_id
+      ),
+    queryConfig
   );
 
   if (status === 'error') {
     return <React.Fragment>Error getting data for diagram</React.Fragment>;
   }
   if (status === 'loading') {
-    return <React.Fragment>Fetching histogram data... <Spin /></React.Fragment>;
+    return (
+      <div className='histrogram-loading'>
+        Fetching histogram data... <Spin />
+      </div>
+    );
   }
   if (data.bins === null) {
     return (
-      <React.Fragment>None of the persons in the (remaining) population
-      have a value for [{selectedContinuousItem.concept_name}]
+      <React.Fragment>
+        None of the persons in the (remaining) population have a value for [
+        {selectedContinuousItem.concept_name}]
       </React.Fragment>
     );
   }
