@@ -8,6 +8,14 @@ describe('CovariatesCardsList component', () => {
   let wrapper;
   const mockDeleteCovariate = jest.fn();
 
+  const outcomeText = ValidState.outcome.concept_name;
+  const lastCovariateObj = ValidState.covariates.at(-1);
+  const lastContinousCovariateText = lastCovariateObj.concept_name;
+  const dichotomousObj = ValidState.covariates.filter(
+    (obj) => obj.variable_type === 'custom_dichotomous'
+  )[0];
+  const dichotomousText = dichotomousObj.provided_name;
+
   beforeEach(() => {
     const mockProps = {
       outcome: ValidState.outcome,
@@ -20,11 +28,11 @@ describe('CovariatesCardsList component', () => {
   it('should render an outcome card', () => {
     expect(wrapper.find('.outcome-card').exists()).toBe(true);
     expect(wrapper.find('.outcome-card .ant-card-meta-title').text()).toBe(
-      'Outcome Phenotype',
+      'Outcome Phenotype'
     );
     expect(
-      wrapper.find('.outcome-card .ant-card-meta-description').text(),
-    ).toBe('Attribute8');
+      wrapper.find('.outcome-card .ant-card-meta-description').text()
+    ).toBe(outcomeText);
   });
 
   it('should render covariate cards', () => {
@@ -33,28 +41,28 @@ describe('CovariatesCardsList component', () => {
       wrapper
         .find('.dichotomous-card .ant-card-meta-title')
         .last()
-        .text(),
+        .text()
     ).toBe('Dichotomous Covariate');
     expect(
       wrapper
         .find('.dichotomous-card .ant-card-meta-description')
         .last()
-        .text(),
-    ).toBe('test dichotomous covariate');
+        .text()
+    ).toBe(dichotomousText);
 
     expect(wrapper.find('.continuous-card').exists()).toBe(true);
     expect(
       wrapper
         .find('.continuous-card .ant-card-meta-title')
         .last()
-        .text(),
+        .text()
     ).toBe('Continuous Covariate');
     expect(
       wrapper
         .find('.continuous-card .ant-card-meta-description')
         .last()
-        .text(),
-    ).toBe('Attribute83');
+        .text()
+    ).toBe(lastContinousCovariateText);
   });
 
   it('should call deleteCovariate when the delete icon is clicked', () => {
@@ -62,19 +70,11 @@ describe('CovariatesCardsList component', () => {
       .find(DeleteOutlined)
       .first()
       .simulate('click');
-    expect(mockDeleteCovariate).toHaveBeenCalledWith({
-      variable_type: 'custom_dichotomous',
-      provided_name: 'test dichotomous covariate',
-      concept_id: 2000000123,
-    });
+    expect(mockDeleteCovariate).toHaveBeenCalledWith(dichotomousObj);
     wrapper
       .find(DeleteOutlined)
       .last()
       .simulate('click');
-    expect(mockDeleteCovariate).toHaveBeenCalledWith({
-      variable_type: 'concept',
-      concept_name: 'Attribute83',
-      concept_id: 2000000873,
-    });
+    expect(mockDeleteCovariate).toHaveBeenCalledWith(lastCovariateObj);
   });
 });

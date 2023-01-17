@@ -12,8 +12,8 @@ const ValidState = {
   covariates: [
     {
       variable_type: 'custom_dichotomous',
-      provided_name: 'test dichotomous covariate',
-      concept_id: 2000000123,
+      provided_name: 'providednamebyuser',
+      cohort_ids: [12, 32],
     },
     {
       variable_type: 'concept',

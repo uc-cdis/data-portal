@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ValidState from '../../TestData/InitialStates/ValidState';
+import ValidState from '../../TestData/States/ValidState';
 import JobInputModal from './JobInputModal';
 
 export default {
