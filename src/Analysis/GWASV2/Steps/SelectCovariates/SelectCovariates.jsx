@@ -18,7 +18,7 @@ const SelectCovariates = ({
   return (
     <React.Fragment>
       <div className='GWASUI-row'>
-        <div  data-tour='select-covariate'className='GWASUI-double-column'>
+        <div  data-tour='select-covariate' className='GWASUI-double-column'>
           {selectionMode === 'continuous' && (
             <div className='select-covariates-container'>
               <ContinuousCovariates

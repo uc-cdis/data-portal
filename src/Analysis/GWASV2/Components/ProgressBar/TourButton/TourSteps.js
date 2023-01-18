@@ -44,7 +44,7 @@ const TourSteps = {
         },
         {
             selector: '[data-tour="select-outcome-dichotomous"]',
-            content: 'Please press here to select a dichotomous outcome phenotype. In pressing this option you’ll be able to select two cohorts available to you to define your outcome phenotype. The population selected will be a subsection of your study population'
+            content: 'Please press here to select a dichotomous outcome phenotype. In pressing this option you’ll be able to select two cohorts available to you to define your outcome phenotype. The population selected will be a subsection of your study population',
         },
     ],
     2: [
@@ -58,7 +58,28 @@ const TourSteps = {
         },
         {
             selector: '[data-tour="select-covariate-dichotomous"]',
-            content: 'Please press here to add a dichotomous covariate. In pressing this option you’ll be able to select two cohorts available to you to define a dichotomous covariate. The population selected will be a subsection of your study population'
+            content: 'Please press here to add a dichotomous covariate. In pressing this option you’ll be able to select two cohorts available to you to define a dichotomous covariate. The population selected will be a subsection of your study population',
+        },
+    ],
+    3: [
+        {
+            selector: '[data-tour="configure-gwas"]',
+            content: 'In this step, you will determine workflow parameters. Please adjust the number of population principal components to control for population structure, minor allele frequency cutoff and imputation score cutoff. Please also choose the ancestry population on which you would like to perform your study.',
+        },
+        {
+            selector: '[data-tour="configure-pcs"]',
+            content: 'Population Principal components (PCs) refer to linear combinations of genome-wide genotyping data to control for population structure/stratification (select up to 10 PCs)',
+        },
+        {
+            selector: '[data-tour="configure-maf"]',
+            content: 'Minor allele frequency (MAF) is the frequency at which the second most common allele occurs in a given population and can be used to filter out rare markers (scale of 0-0.5)',
+        },        {
+            selector: '[data-tour="configure-hare"]',
+            content: 'Please choose the ancestry population on which you would like to perform your study. The numbers appearing in the dropdown represent the population size of your study, considering all of your previous selections. The codes are the HARE (harmonized ancestry and race/ethnicity) codes',
+        },        
+        {
+            selector: '[data-tour="configure-imputation"]',
+            content: 'This value reflects the quality of imputed SNPs and can be used to remove low-quality imputed markers (scale of 0-1)',
         },
     ]
 };
