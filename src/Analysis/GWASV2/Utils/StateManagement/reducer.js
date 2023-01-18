@@ -45,6 +45,8 @@ const reducer = (state, action) => {
     return { ...state, selectedHare: action.payload };
   case ACTIONS.UPDATE_FINAL_POPULATION_SIZES:
     return { ...state, finalPopulationSizes: action.payload };
+  case ACTIONS.SET_SELECTION_MODE:
+    return { ...state, selectionMode: action.payload};
   default:
     throw new Error(`Unknown action passed to reducer: ${action}`);
   }

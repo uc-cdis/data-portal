@@ -27,6 +27,11 @@ const SelectCovariates = ({
                 outcome={outcome}
                 handleClose={() => {
                   setSelectionMode('');
+                  dispatch({
+                    type: ACTIONS.SET_SELECTION_MODE,
+                    payload: '',
+                  });
+    
                 }}
                 dispatch={(chosenCovariate) => {
                   dispatch({
@@ -47,6 +52,11 @@ const SelectCovariates = ({
                 outcome={outcome}
                 handleClose={() => {
                   setSelectionMode('');
+                  dispatch({
+                    type: ACTIONS.SET_SELECTION_MODE,
+                    payload: '',
+                  });
+    
                 }}
                 dispatch={(chosenCovariate) => {
                   dispatch({
@@ -63,7 +73,14 @@ const SelectCovariates = ({
               <button
                 data-tour='select-covariate-continious'
                 type='button'
-                onClick={() => setSelectionMode('continuous')}
+                onClick={() => {
+                  setSelectionMode('continuous'); 
+                    dispatch({
+                      type: ACTIONS.SET_SELECTION_MODE,
+                      payload: 'continuous',
+                    });
+                  }
+                }
               >
                 <span>+</span>
                 <span>Add Continuous Covariate</span>
@@ -72,7 +89,14 @@ const SelectCovariates = ({
               <button
                 data-tour='select-covariate-dichotomous'
                 type='button'
-                onClick={() => setSelectionMode('dichotomous')}
+                onClick={() => {
+                  setSelectionMode('dichotomous');
+                    dispatch({
+                      type: ACTIONS.SET_SELECTION_MODE,
+                      payload: 'dichotomous',
+                    });
+                  }
+                }
               >
                 <span>+</span>
                 <span>Add Dichotomous Covariate</span>

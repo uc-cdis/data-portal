@@ -92,7 +92,10 @@ const GWASContainer = () => {
 
   return (
     <SourceContextProvider> 
-      <ProgressBar currentStep={state.currentStep} />
+      <ProgressBar
+        currentStep={state.currentStep} 
+        selectionMode={state.selectionMode}
+      />
       <AttritionTableWrapper
         covariates={state.covariates}
         selectedCohort={state.selectedStudyPopulationCohort}

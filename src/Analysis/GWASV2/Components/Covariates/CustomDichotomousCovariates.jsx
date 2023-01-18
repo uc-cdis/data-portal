@@ -40,6 +40,7 @@ const CustomDichotomousCovariates = ({
         <input
           type='text'
           className={'GWASUI-providedName'}
+          data-tour='name-input'
           onChange={(e) => setProvidedName(e.target.value)}
           value={providedName}
           placeholder='Provide a name...'
@@ -48,6 +49,7 @@ const CustomDichotomousCovariates = ({
           type='button'
           className={'GWASUI-dichBtn'}
           onClick={() => handleClose()}
+          data-tour='submit-cancel-buttons'
         >
           Cancel
         </button>
@@ -67,7 +69,7 @@ const CustomDichotomousCovariates = ({
       <React.Fragment>
         <div data-tour='choosing-dichotomous'>
           <div className='GWASUI-flexRow' data-tour='table-repeat'>
-            <div className='GWASUI-flexColumn'>
+            <div data-tour='select-dichotomous' className='GWASUI-flexColumn'>
               <div>
                 <h3>Get Value 0</h3>
                 <SelectCohortDropDown handleCohortSelect={setFirstPopulation} />
@@ -79,7 +81,7 @@ const CustomDichotomousCovariates = ({
                 />
               </div>
             </div>
-            <div className='cohorts-overlap-diagram'>
+            <div data-tour='cohorts-overlap-diagram' className='cohorts-overlap-diagram'>
               <h3>Cohort overlap diagram</h3>
               {!firstPopulation || !secondPopulation ? (
                 <div>Select your cohorts to assess overlap</div>

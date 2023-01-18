@@ -6,7 +6,7 @@ import './ProgressBar.css';
 import TourButton from './TourButton/TourButton';
 
 const { Step } = Steps;
-const ProgressBar = ({ currentStep }) => (
+const ProgressBar = ({ currentStep, selectionMode }) => (
   <div className='progress-bar'>
     <div className='progress-bar__steps'>
       <Steps current={currentStep}>
@@ -19,12 +19,13 @@ const ProgressBar = ({ currentStep }) => (
         ))}
       </Steps>
     </div>
-    <TourButton currentStep={currentStep}></TourButton>
+    <TourButton currentStep={currentStep} selectionMode={selectionMode}></TourButton>
   </div>
 );
 
 ProgressBar.propTypes = {
   currentStep: PropTypes.number.isRequired,
+  selectionMode: PropTypes.string.isRequired,
 };
 
 export default ProgressBar;

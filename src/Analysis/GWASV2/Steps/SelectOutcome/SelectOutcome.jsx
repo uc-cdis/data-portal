@@ -24,6 +24,10 @@ const SelectOutcome = ({
             outcome={outcome}
             handleClose={() => {
               setSelectionMode('');
+              dispatch({
+                type: ACTIONS.SET_SELECTION_MODE,
+                payload: '',
+              });
             }}
             dispatch={(chosenOutcome) => {
               dispatch({
@@ -43,6 +47,11 @@ const SelectOutcome = ({
             outcome={outcome}
             handleClose={() => {
               setSelectionMode('');
+              dispatch({
+                type: ACTIONS.SET_SELECTION_MODE,
+                payload: '',
+              });
+
             }}
             dispatch={(chosenOutcome) => {
               dispatch({
@@ -57,11 +66,29 @@ const SelectOutcome = ({
 
     return (
       <div className='GWASUI-selectionUI'>
-        <button data-tour='select-outcome-continious' type='button' onClick={() => setSelectionMode('continuous')}>
+        <button data-tour='select-outcome-continious' type='button'
+          onClick={() => {
+            setSelectionMode('continuous'); 
+              dispatch({
+                type: ACTIONS.SET_SELECTION_MODE,
+                payload: 'continuous',
+              });
+            }
+          }
+        >
           <span>+</span>
           <span>Add Continuous Outcome Phenotype</span>
         </button>
-        <button data-tour='select-outcome-dichotomous' type='button' onClick={() => setSelectionMode('dichotomous')}>
+        <button data-tour='select-outcome-dichotomous' type='button'
+          onClick={() => {
+            setSelectionMode('dichotomous');
+              dispatch({
+                type: ACTIONS.SET_SELECTION_MODE,
+                payload: 'dichotomous',
+              });
+            }
+          }
+        >
           <span>+</span>
           <span>Add Dichotomous Outcome Phenotype</span>
         </button>

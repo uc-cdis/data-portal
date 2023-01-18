@@ -25,26 +25,28 @@ const ContinuousCovariates = ({
       <div className='GWASUI-flexRow continuous-covariates' data-tour='name'>
         <div>
           <Covariates selected={selected} handleSelect={setSelected} />
-          <button
-            className='submit-button'
-            type='button'
-            onClick={() => {
-              dispatch(formatSelected(selected));
-              handleClose();
-            }}
-          >
-            {submitButtonLabel}
-          </button>
-          <button
-            type='button'
-            onClick={() => {
-              handleClose();
-            }}
-          >
-          Cancel
-          </button>
+          <div data-tour='submit-cancel-buttons'>
+            <button
+              className='submit-button'
+              type='button'
+              onClick={() => {
+                dispatch(formatSelected(selected));
+                handleClose();
+              }}
+            >
+              {submitButtonLabel}
+            </button>
+            <button
+              type='button'
+              onClick={() => {
+                handleClose();
+              }}
+            >
+            Cancel
+            </button>
+          </div>
         </div>
-        <div className='phenotype-histogram'>
+        <div data-tour='phenotype-histogram' className='phenotype-histogram'>
           {selected
             ? (
               <PhenotypeHistogram
