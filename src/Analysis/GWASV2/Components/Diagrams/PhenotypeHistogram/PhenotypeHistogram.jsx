@@ -26,14 +26,15 @@ const PhenotypeHistogram = ({
       outcome,
       selectedContinuousItem.concept_id,
     ],
-    () => fetchHistogramInfo(
-      sourceId,
-      selectedStudyPopulationCohort.cohort_definition_id,
-      selectedCovariates,
-      outcome,
-      selectedContinuousItem.concept_id,
-    ),
-    queryConfig,
+    () =>
+      fetchHistogramInfo(
+        sourceId,
+        selectedStudyPopulationCohort.cohort_definition_id,
+        selectedCovariates,
+        outcome,
+        selectedContinuousItem.concept_id
+      ),
+    queryConfig
   );
 
   if (status === 'error') {
@@ -48,10 +49,10 @@ const PhenotypeHistogram = ({
   }
   if (data.bins === null) {
     return (
-      <React.Fragment>
+      <div className='phenotype-histogram-directions'>
         None of the persons in the (remaining) population have a value for [
         {selectedContinuousItem.concept_name}]
-      </React.Fragment>
+      </div>
     );
   }
   const histogramArgs = {

@@ -9,8 +9,13 @@
 }
 
 .GWASV2 .select-container .ant-table-content {
-  max-height: 400px;
+  max-height: 390px;
   overflow-y: auto;
+}
+.GWASV2 .select-container .GWASUI-emptyTable {
+  border: 2px solid #e9eef2;
+  /*  #fafafb #e9eef2 */
+  min-height: 450px;
 }
 
 .GWASV2 .select-container .GWASUI-flexRow {
