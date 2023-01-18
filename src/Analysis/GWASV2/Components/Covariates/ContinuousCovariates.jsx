@@ -40,6 +40,7 @@ const ContinuousCovariates = ({
             <button
               className='submit-button'
               type='button'
+              disabled={selected ? false : true}
               onClick={() => {
                 dispatch(formatSelected(selected));
                 handleClose();
