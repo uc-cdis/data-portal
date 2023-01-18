@@ -11,12 +11,6 @@
   background: #fde3d6;
 }
 
-.GWASV2 .custom-dichotomous-covariates input {
-  width: 50%;
-  padding-left: 5px;
-  border-radius: 5px;
-}
-
 /* Buttons */
 .GWASV2 .submit-button,
 .GWASV2 .cancel-button {
@@ -41,7 +35,9 @@
   background-color: rgba(46, 119, 184, 0.3);
   cursor: not-allowed;
 }
-
+.GWASV2 .custom-dichotomous-covariates button.cancel-button {
+  margin-left: 20px;
+}
 .GWASV2 .custom-dichotomous-covariates button.cancel-button,
 .GWASV2 .select-container button.cancel-button {
   color: #2e77b8;
@@ -67,19 +63,19 @@
 
 .GWASV2 .continuous-covariates .select-covariates-container .ant-select,
 .GWASV2
-  .continuous-covariates
-  .select-covariates-container
-  .ant-select-dropdown {
+.continuous-covariates
+.select-covariates-container
+.ant-select-dropdown {
   width: 100%;
   min-width: inherit;
 }
 
 .GWASV2
-  .continuous-covariates
-  .ant-table.ant-table-middle
-  .ant-table-tbody
-  > tr
-  > td {
+.continuous-covariates
+.ant-table.ant-table-middle
+.ant-table-tbody
+> tr
+> td {
   padding: 5px 8px;
 }
 
@@ -119,10 +115,9 @@
   margin-top: 6px;
   border: 1px solid #dededf;
   border-radius: 4px;
+  padding-left: 5px;
 }
-.GWASV2 .custom-dichotomous-covariates button.cancel-button {
-  margin-left: 20px;
-}
+
 .GWASV2 .dichotomous-selection {
   width: 364px;
   margin-top: 10px;
