@@ -40,7 +40,7 @@ const SelectCovariates = ({
           )}
 
           {selectionMode === 'dichotomous' && (
-            <div className='select-covariates-container'>
+            <div className='select-container'>
               <CustomDichotomousCovariates
                 studyPopulationCohort={studyPopulationCohort}
                 covariates={covariates}
@@ -82,10 +82,12 @@ const SelectCovariates = ({
         <div className='GWASUI-column GWASUI-card-column'>
           <CovariatesCardsList
             covariates={covariates}
-            deleteCovariate={(chosenCovariate) => dispatch({
-              type: ACTIONS.DELETE_COVARIATE,
-              payload: chosenCovariate,
-            })}
+            deleteCovariate={(chosenCovariate) =>
+              dispatch({
+                type: ACTIONS.DELETE_COVARIATE,
+                payload: chosenCovariate,
+              })
+            }
           />
         </div>
       </div>

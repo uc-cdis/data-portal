@@ -19,7 +19,6 @@
 .GWASV2 .custom-dichotomous-covariates {
   min-height: 300px;
 }
-
 .GWASV2 .custom-dichotomous-covariates input {
   width: 50%;
   padding-left: 5px;
@@ -30,8 +29,8 @@
   padding-left: 30px;
 }
 /* Buttons */
-.GWASV2 .custom-dichotomous-covariates button,
-.GWASV2 .select-container button {
+.GWASV2 .submit-button,
+.GWASV2 .cancel-button {
   margin: 6px 0 12px auto;
   background-color: #2e77b8;
   color: white;
@@ -45,10 +44,15 @@
   vertical-align: middle;
   cursor: pointer;
 }
-.GWASV2 .custom-dichotomous-covariates button:hover,
-.GWASV2 .select-container button:hover {
+.GWASV2 .submit-button:hover {
   background-color: var(--g3-secondary-btn__bg-color--hover);
 }
+
+.GWASV2 .submit-button[disabled] {
+  background-color: rgba(46, 119, 184, 0.3);
+  cursor: not-allowed;
+}
+
 .GWASV2 .custom-dichotomous-covariates button.cancel-button,
 .GWASV2 .select-container button.cancel-button {
   color: #2e77b8;
@@ -67,9 +71,18 @@
   margin-top: 8px;
   width: 600px;
 }
-.GWASV2 .continuous-covariates .GWASUI-searchContainer,
+
 .GWASV2 .continuous-covariates .continous-covariates-table {
-  width: 350px;
+  width: 400px;
+}
+
+.GWASV2 .continuous-covariates .select-covariates-container .ant-select,
+.GWASV2
+  .continuous-covariates
+  .select-covariates-container
+  .ant-select-dropdown {
+  width: 100%;
+  min-width: inherit;
 }
 
 .GWASV2

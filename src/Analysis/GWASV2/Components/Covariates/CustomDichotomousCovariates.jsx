@@ -30,9 +30,10 @@ const CustomDichotomousCovariates = ({
     handleClose();
   };
 
-  const customDichotomousValidation = providedName.length === 0
-    || firstPopulation === undefined
-    || secondPopulation === undefined;
+  const customDichotomousValidation =
+    providedName.length === 0 ||
+    firstPopulation === undefined ||
+    secondPopulation === undefined;
 
   return (
     <div className='custom-dichotomous-covariates'>
@@ -57,7 +58,7 @@ const CustomDichotomousCovariates = ({
           <button
             type='button'
             disabled={customDichotomousValidation}
-            className={`${
+            className={`submit-button ${
               !customDichotomousValidation ? 'GWASUI-btnEnable' : ''
             } GWASUI-dichBtn`}
             onClick={() => handleDichotomousSubmit()}
@@ -71,8 +72,8 @@ const CustomDichotomousCovariates = ({
           <div className='GWASUI-flexRow' data-tour='table-repeat'>
             <div className='GWASUI-flexColumn dichotomous-selection'>
               <div className='dichotomous-directions'>
-                Define a dichotomous variable by intersecting your study
-                population with 2 other cohorts.
+                Define a dichotomous variable by study population with 2 other
+                cohorts.
               </div>
               <div>
                 <h3>Get Value 0</h3>
