@@ -31,8 +31,11 @@ const Template = () => {
             handleClose={() => {
               console.log('close');
             }}
-            dispatch={(chosenCovariate) => {
-              console.log('chosen covariate:', chosenCovariate);
+            handleSelect={(chosenCovariate) => {
+              console.log('chosen covariate:', chosenCovariate)
+            }}
+            dispatch={(payload) => {
+              console.log('payload:', payload)
             }}
             submitButtonLabel={'Add'}
           />

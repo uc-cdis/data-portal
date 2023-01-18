@@ -5,10 +5,11 @@ import PhenotypeHistogram from '../Diagrams/PhenotypeHistogram/PhenotypeHistogra
 import './Covariates.css';
 
 const ContinuousCovariates = ({
+  dispatch,
   selectedStudyPopulationCohort,
   selectedCovariates,
   outcome,
-  dispatch,
+  handleSelect,
   handleClose,
   submitButtonLabel,
 }) => {
@@ -42,7 +43,7 @@ const ContinuousCovariates = ({
               type='button'
               disabled={!selected}
               onClick={() => {
-                dispatch(formatSelected(selected));
+                handleSelect(formatSelected(selected));
                 handleClose();
               }}
             >
@@ -52,6 +53,7 @@ const ContinuousCovariates = ({
           {selected ? (
             <div data-tour='phenotype-histogram'>
               <PhenotypeHistogram
+                dispatch={dispatch}
                 selectedStudyPopulationCohort={selectedStudyPopulationCohort}
                 selectedCovariates={selectedCovariates}
                 outcome={outcome}
@@ -74,6 +76,7 @@ ContinuousCovariates.propTypes = {
   selectedCovariates: PropTypes.array,
   outcome: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
+  handleSelect: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   submitButtonLabel: PropTypes.string,
 };
