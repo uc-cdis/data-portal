@@ -24,6 +24,7 @@ const SelectOutcome = ({
       return (
         <div className='select-container'>
           <ContinuousCovariates
+            dispatch={dispatch}
             selectedStudyPopulationCohort={studyPopulationCohort}
             outcome={outcome}
             handleClose={() => {
@@ -33,7 +34,7 @@ const SelectOutcome = ({
                 payload: '',
               });
             }}
-            dispatch={(chosenOutcome) => {
+            handleSelect={(chosenOutcome) => {
               dispatch({
                 type: ACTIONS.SET_OUTCOME,
                 payload: chosenOutcome,
