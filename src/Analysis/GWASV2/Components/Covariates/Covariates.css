@@ -1,16 +1,4 @@
-.GWASV2 .select-covariates-container {
-  min-width: 988px;
-}
-
-.GWASV2 .submit-button {
-  margin-left: 5px;
-}
-
-.GWASV2 .phenotype-histogram {
-  padding-left: 30px;
-  margin-top: 8px;
-}
-
+/* Cards */
 .GWASV2 .outcome-card {
   background: #cae6f1;
 }
@@ -23,18 +11,12 @@
   background: #fde3d6;
 }
 
-.GWASV2 .custom-dichotomous-covariates {
-  min-height: 300px;
-}
 .GWASV2 .custom-dichotomous-covariates input {
   width: 50%;
   padding-left: 5px;
   border-radius: 5px;
 }
 
-.GWASV2 .custom-dichotomous-covariates .cohorts-overlap-diagram {
-  padding-left: 30px;
-}
 /* Buttons */
 .GWASV2 .submit-button,
 .GWASV2 .cancel-button {
