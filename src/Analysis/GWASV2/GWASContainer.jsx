@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from 'react';
+import React, { useReducer } from 'react';
 import { Space, Button } from 'antd';
 import ProgressBar from './Components/ProgressBar/ProgressBar';
 import { gwasV2Steps } from './Utils/constants';
@@ -11,7 +11,6 @@ import SelectStudyPopulation from './Steps/SelectStudyPopulation/SelectStudyPopu
 import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
 import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
-import { useTour } from '@reactour/tour';
 import './GWASV2.css';
 
 const GWASContainer = () => {
@@ -21,11 +20,11 @@ const GWASContainer = () => {
     switch (state.currentStep) {
     case 0:
       return (
-        <div data-tour="cohort-intro">
-        <SelectStudyPopulation
-          selectedCohort={state.selectedStudyPopulationCohort}
-          dispatch={dispatch}
-        />
+        <div data-tour='cohort-intro'>
+          <SelectStudyPopulation
+            selectedCohort={state.selectedStudyPopulationCohort}
+            dispatch={dispatch}
+          />
         </div>
       );
     case 1:
@@ -91,9 +90,9 @@ const GWASContainer = () => {
   }
 
   return (
-    <SourceContextProvider> 
+    <SourceContextProvider>
       <ProgressBar
-        currentStep={state.currentStep} 
+        currentStep={state.currentStep}
         selectionMode={state.selectionMode}
       />
       <AttritionTableWrapper

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Steps } from 'antd';
+import { Steps } from 'antd';
 import { gwasV2Steps } from '../../Utils/constants';
 import './ProgressBar.css';
 import TourButton from './TourButton/TourButton';
@@ -19,7 +19,7 @@ const ProgressBar = ({ currentStep, selectionMode }) => (
         ))}
       </Steps>
     </div>
-    <TourButton currentStep={currentStep} selectionMode={selectionMode}></TourButton>
+    <TourButton currentStep={currentStep} selectionMode={selectionMode} />
   </div>
 );
 

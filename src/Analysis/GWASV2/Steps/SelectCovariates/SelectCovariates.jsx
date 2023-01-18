@@ -18,7 +18,7 @@ const SelectCovariates = ({
   return (
     <React.Fragment>
       <div className='GWASUI-row'>
-        <div  data-tour='select-covariate' className='GWASUI-double-column'>
+        <div data-tour='select-covariate' className='GWASUI-double-column'>
           {selectionMode === 'continuous' && (
             <div className='select-covariates-container'>
               <ContinuousCovariates
@@ -31,7 +31,6 @@ const SelectCovariates = ({
                     type: ACTIONS.SET_SELECTION_MODE,
                     payload: '',
                   });
-    
                 }}
                 dispatch={(chosenCovariate) => {
                   dispatch({
@@ -56,7 +55,6 @@ const SelectCovariates = ({
                     type: ACTIONS.SET_SELECTION_MODE,
                     payload: '',
                   });
-    
                 }}
                 dispatch={(chosenCovariate) => {
                   dispatch({
@@ -74,13 +72,12 @@ const SelectCovariates = ({
                 data-tour='select-covariate-continious'
                 type='button'
                 onClick={() => {
-                  setSelectionMode('continuous'); 
-                    dispatch({
-                      type: ACTIONS.SET_SELECTION_MODE,
-                      payload: 'continuous',
-                    });
-                  }
-                }
+                  setSelectionMode('continuous');
+                  dispatch({
+                    type: ACTIONS.SET_SELECTION_MODE,
+                    payload: 'continuous',
+                  });
+                }}
               >
                 <span>+</span>
                 <span>Add Continuous Covariate</span>
@@ -91,12 +88,11 @@ const SelectCovariates = ({
                 type='button'
                 onClick={() => {
                   setSelectionMode('dichotomous');
-                    dispatch({
-                      type: ACTIONS.SET_SELECTION_MODE,
-                      payload: 'dichotomous',
-                    });
-                  }
-                }
+                  dispatch({
+                    type: ACTIONS.SET_SELECTION_MODE,
+                    payload: 'dichotomous',
+                  });
+                }}
               >
                 <span>+</span>
                 <span>Add Dichotomous Covariate</span>
