@@ -27,6 +27,7 @@
   vertical-align: middle;
   cursor: pointer;
 }
+
 .GWASV2 .submit-button:hover {
   background-color: var(--g3-secondary-btn__bg-color--hover);
 }
@@ -35,9 +36,11 @@
   background-color: rgba(46, 119, 184, 0.3);
   cursor: not-allowed;
 }
+
 .GWASV2 .custom-dichotomous-covariates button.cancel-button {
   margin-left: 20px;
 }
+
 .GWASV2 .custom-dichotomous-covariates button.cancel-button,
 .GWASV2 .select-container button.cancel-button {
   color: #2e77b8;
@@ -45,11 +48,13 @@
   border: 1px solid #2e77b8;
   margin-right: 25px;
 }
+
 .GWASV2 .custom-dichotomous-covariates button.cancel-button:hover,
 .GWASV2 .select-container button.cancel-button:hover {
   background-color: var(--g3-secondary-btn__bg-color--hover);
   color: white;
 }
+
 /* Continous Covariate Selection */
 .GWASV2 .phenotype-histogram {
   padding-left: 30px;
@@ -63,19 +68,19 @@
 
 .GWASV2 .continuous-covariates .select-covariates-container .ant-select,
 .GWASV2
-.continuous-covariates
-.select-covariates-container
-.ant-select-dropdown {
+  .continuous-covariates
+  .select-covariates-container
+  .ant-select-dropdown {
   width: 100%;
   min-width: inherit;
 }
 
 .GWASV2
-.continuous-covariates
-.ant-table.ant-table-middle
-.ant-table-tbody
-> tr
-> td {
+  .continuous-covariates
+  .ant-table.ant-table-middle
+  .ant-table-tbody
+  > tr
+  > td {
   padding: 5px 8px;
 }
 
@@ -88,6 +93,7 @@
 .GWASV2 .phenotype-histogram .recharts-wrapper {
   margin-top: 60px;
 }
+
 .GWASV2 .phenotype-histogram .histrogram-loading {
   margin-top: 80px;
   text-align: center;
@@ -102,13 +108,14 @@
 }
 
 /* Dichotomous Covariate Selection */
-.custom-dichotomous-covariates .GWASUI-flexRow label {
+.GWASV2 .custom-dichotomous-covariates .GWASUI-flexRow label {
   font-weight: bold;
   margin: 0 10px 0 auto;
   padding-top: 13px;
   color: #333;
 }
-.custom-dichotomous-covariates .GWASUI-flexRow input {
+
+.GWASV2 .custom-dichotomous-covariates .GWASUI-flexRow input {
   width: 260px;
   margin-right: 10px;
   height: 40px;
@@ -130,6 +137,7 @@
   margin-bottom: 4px;
   margin-top: 16px;
 }
+
 .GWASV2 .cohorts-overlap-diagram {
   width: 600px;
   text-align: center;
