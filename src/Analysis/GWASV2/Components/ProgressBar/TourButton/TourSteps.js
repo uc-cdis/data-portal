@@ -115,16 +115,72 @@ const TourSteps = {
   ],
   2.1: [
     {
+      selector: '[data-tour="select-covariate"]',
+      content: 'In this step you may add as many covariates as you wish. Once ‘Add’ is pressed you will be able to add another selection. Previous selections are populated on the right hand side',
+    },
+    {
       selector: '[data-tour="select-concept"]',
       content: 'Here you may choose one continuous variable. All variables are harmonized. To browse the table please scroll down to the bottom',
     },
-
+    {
+      selector: '[data-tour="search-bar"]',
+      content: 'Use this search bar to look for existing variables by name. This is a word based search that can look for letters/words within the name of the variable name',
+    },
+    {
+      selector: '[data-tour="concept-table"]',
+      content: 'The table is sorted by variable name',
+    },
+    {
+      selector: '[data-tour="select-concept"]',
+      content: 'Navigate through the pages via the arrow buttons or by clicking on the page number. Please use the per page button on the bottom right to expand/reduce the amount of cohorts shown in each page',
+    },
+    {
+      selector: '[data-tour="phenotype-histogram"]',
+      content: 'This is an interactive tool. Here you may define the minimum and maximum cuttoffs of your variable. You may also use transformations on this data',
+    },
+    {
+      selector: '[data-tour="submit-cancel-buttons"]',
+      content: 'Please press cancel to go back, or add to continue to the next step',
+    },
+    {
+      selector: '[data-tour="covariates-card"]',
+      content: 'In this section you are able to see all added covariates. Each card represents one covariate defined. You may choose to edit a covariate you defined, or remove it',
+    },
+    {
+      selector: '[data-tour="attrition-table"]',
+      content: 'Here you may see how your selection is populated as ancestry. This table will show you the population of your potential cohort as it relates to the ancestry you may choose as you make selections in the GWAS App. Please press the chart icon to revisit your adjusted selection',
+    },
   ],
   2.2: [
     {
-      selector: '[data-tour="select-dichotomous"]',
-      content: 'You may select a dichotomous outcome phenotype here by selecting two cohorts. Please combine a cohort for value 0 and a cohort for value 1',
+      selector: '[data-tour="select-covariate"]',
+      content: 'In this step you may add as many covariates as you wish. Once ‘Add’ is pressed you will be able to add another selection. Previous selections are populated on the right hand side',
     },
+    {
+      selector: '[data-tour="select-dichotomous"]',
+      content: 'You may select a dichotomous covariate here by selecting two cohorts. Please combine a cohort for value 0 and a cohort for value 1',
+    },
+    {
+      selector: '[data-tour="cohorts-overlap-diagram"]',
+      content: 'In this diagram you may see how the cohorts chosen interact with each other and with the study population you have selected in step 1',
+    },
+    {
+      selector: '[data-tour="name-input"]',
+      content: 'Please name your covariate. We recommend you give a name that is meaningful so that you may revisit your analysis later',
+    },
+    {
+      selector: '[data-tour="submit-cancel-buttons"]',
+      content: 'Please press cancel to go back, or add to continue to the next step',
+    },
+    {
+      selector: '[data-tour="covariates-card"]',
+      content: 'In this section you are able to see all added covariates. Each card represents one covariate defined. You may choose to edit a covariate you defined, or remove it',
+    },
+    {
+      selector: '[data-tour="attrition-table"]',
+      content: 'Here you may see how your selection is populated as ancestry. This table will show you the population of your potential cohort as it relates to the ancestry you may choose as you make selections in the GWAS App. Please press the chart icon to revisit the Euler diagram',
+    },
+
   ],
   3: [
     {

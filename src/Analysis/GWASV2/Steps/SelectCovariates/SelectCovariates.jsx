@@ -101,7 +101,7 @@ const SelectCovariates = ({
           )}
         </div>
 
-        <div className='GWASUI-column GWASUI-card-column'>
+        <div data-tour='covariates-card' className='GWASUI-column GWASUI-card-column'>
           <CovariatesCardsList
             covariates={covariates}
             deleteCovariate={(chosenCovariate) => dispatch({
