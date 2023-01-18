@@ -1,4 +1,4 @@
-const ValidInitialState = {
+const ValidState = {
   outcome: {
     variable_type: 'concept',
     concept_id: 2000000873,
@@ -10,6 +10,11 @@ const ValidInitialState = {
     size: 510904,
   },
   covariates: [
+    {
+      variable_type: 'custom_dichotomous',
+      provided_name: 'providednamebyuser',
+      cohort_ids: [12, 32],
+    },
     {
       variable_type: 'concept',
       concept_id: 2000000873,
@@ -43,4 +48,4 @@ const ValidInitialState = {
     },
   ],
 };
-export default ValidInitialState;
+export default ValidState;

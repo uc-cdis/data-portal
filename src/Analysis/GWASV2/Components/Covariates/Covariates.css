@@ -1,10 +1,25 @@
+.GWASV2 .select-covariates-container {
+  min-width: 988px;
+}
+
+.GWASV2 .submit-button {
+  margin-left: 5px;
+}
+
+.GWASV2 .phenotype-histogram {
+  padding-left: 30px;
+  margin-top: 8px;
+}
+
+.GWASV2 .outcome-card {
+  background: #cae6f1;
+}
+
 .GWASV2 .dichotomous-card {
-  width: 189px;
   background: #ebfad3;
 }
 
 .GWASV2 .continuous-card {
-  width: 189px;
   background: #fde3d6;
 }
 
