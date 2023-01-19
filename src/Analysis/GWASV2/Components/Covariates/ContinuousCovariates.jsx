@@ -49,20 +49,20 @@ const ContinuousCovariates = ({
               {submitButtonLabel}
             </button>
           </div>
-          <div data-tour='phenotype-histogram'>
-            {selected ? (
+          {selected ? (
+            <div data-tour='phenotype-histogram'>
               <PhenotypeHistogram
                 selectedStudyPopulationCohort={selectedStudyPopulationCohort}
                 selectedCovariates={selectedCovariates}
                 outcome={outcome} 
                 selectedContinuousItem={selected}
-              />
-            ) : (
-              <div className='phenotype-histogram-directions'>
-                Select a concept to render its corresponding histogram
-              </div>
-            )}
-          </div>
+            />
+            </div>
+          ) : (
+            <div data-tour='phenotype-histogram' className='phenotype-histogram-directions'>
+              Select a concept to render its corresponding histogram
+            </div>
+          )}
         </div>
       </div>
     </React.Fragment>
