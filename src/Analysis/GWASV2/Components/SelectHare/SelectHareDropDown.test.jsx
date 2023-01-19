@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import { Select } from 'antd';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import SelectHareDropDown from './SelectHareDropDown';
-import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
+import ValidState from '../../TestData/States/ValidState';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import { SourceContextProvider } from '../../Utils/Source';
 import {
@@ -30,7 +30,8 @@ fetchConceptStatsByHareSubset.mockResolvedValue({
   ],
 });
 useSourceFetch.mockResolvedValue({
-  sourceId: 2, loading: false,
+  sourceId: 2,
+  loading: false,
 });
 
 // Other generic arguments and functions shared by tests below:
@@ -43,7 +44,8 @@ const mountDropDownForOutcome = (
   selectedStudyPopulationCohort,
   covariates,
   outcome,
-  dispatch) => mount(
+  dispatch,
+) => mount(
   <QueryClientProvider client={mockedQueryClient}>
     <SourceContextProvider>
       <SelectHareDropDown
@@ -60,20 +62,18 @@ const mountDropDownForOutcome = (
 // Tests:
 describe('SelectHareDropDown component - Quantitative outcome test scenarios', () => {
   let wrapper;
-  const {
-    selectedStudyPopulationCohort,
-    covariates,
-    outcome,
-  } = ValidInitialState;
+  const { selectedStudyPopulationCohort, covariates, outcome } = ValidState;
   let dispatch;
 
   beforeEach(() => {
     dispatch = jest.fn();
     // use mount() instead of shallow():
-    wrapper = mountDropDownForOutcome(selectedStudyPopulationCohort,
+    wrapper = mountDropDownForOutcome(
+      selectedStudyPopulationCohort,
       covariates,
       outcome,
-      dispatch);
+      dispatch,
+    );
   });
   it('should render the SelectHareDropDown component', async () => {
     expect(wrapper.find(SelectHareDropDown).exists()).toBe(true);
@@ -107,10 +107,7 @@ describe('SelectHareDropDown component - Quantitative outcome test scenarios', (
 
 describe('SelectHareDropDown component - Dichotomous (case/control) test scenarios', () => {
   let wrapper;
-  const {
-    selectedStudyPopulationCohort,
-    covariates,
-  } = ValidInitialState;
+  const { selectedStudyPopulationCohort, covariates } = ValidState;
   // Custom dichotomous (case/control) outcome type:
   const outcome = {
     variable_type: 'custom_dichotomous',
@@ -121,10 +118,12 @@ describe('SelectHareDropDown component - Dichotomous (case/control) test scenari
 
   beforeEach(() => {
     dispatch = jest.fn();
-    wrapper = mountDropDownForOutcome(selectedStudyPopulationCohort,
+    wrapper = mountDropDownForOutcome(
+      selectedStudyPopulationCohort,
       covariates,
       outcome,
-      dispatch);
+      dispatch,
+    );
   });
   it('should render the SelectHareDropDown component', async () => {
     expect(wrapper.find(SelectHareDropDown).exists()).toBe(true);
@@ -154,7 +153,8 @@ describe('SelectHareDropDown component - Dichotomous (case/control) test scenari
       payload: [
         { population: 'Control', size: 39648 },
         { population: 'Case', size: 39648 },
-        { population: 'Total', size: 39648 * 2 }],
+        { population: 'Total', size: 39648 * 2 },
+      ],
     });
   });
 });

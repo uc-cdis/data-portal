@@ -26,7 +26,7 @@ const SelectCovariates = ({
       <div className='GWASUI-row'>
         <div data-tour='select-covariate' className='GWASUI-double-column'>
           {selectionMode === 'continuous' && (
-            <div className='select-covariates-container'>
+            <div className='select-container'>
               <ContinuousCovariates
                 selectedStudyPopulationCohort={studyPopulationCohort}
                 selectedCovariates={covariates}
@@ -50,7 +50,7 @@ const SelectCovariates = ({
           )}
 
           {selectionMode === 'dichotomous' && (
-            <div className='select-covariates-container'>
+            <div className='select-container'>
               <CustomDichotomousCovariates
                 studyPopulationCohort={studyPopulationCohort}
                 covariates={covariates}
@@ -110,6 +110,7 @@ const SelectCovariates = ({
         <div data-tour='covariates-card' className='GWASUI-column GWASUI-card-column'>
           <CovariatesCardsList
             covariates={covariates}
+            outcome={outcome}
             deleteCovariate={(chosenCovariate) => dispatch({
               type: ACTIONS.DELETE_COVARIATE,
               payload: chosenCovariate,
