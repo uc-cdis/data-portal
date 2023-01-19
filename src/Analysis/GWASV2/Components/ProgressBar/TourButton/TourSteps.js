@@ -70,7 +70,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="submit-cancel-buttons"]',
-      content: 'Please press cancel to go back, or submit to continue to the next step',
+      content: 'Please press Cancel to go back, or Submit to continue to the next step',
     },
     {
       selector: '[data-tour="attrition-table"]',
@@ -92,7 +92,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="submit-cancel-buttons"]',
-      content: 'Please press cancel to go back, or submit to continue to the next step',
+      content: 'Please press Cancel to go back, or Submit to continue to the next step',
     },
     {
       selector: '[data-tour="attrition-table"]',
@@ -140,7 +140,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="submit-cancel-buttons"]',
-      content: 'Please press cancel to go back, or add to continue to the next step',
+      content: 'Please press Cancel to go back, or Add to continue to the next step',
     },
     {
       selector: '[data-tour="covariates-card"]',
@@ -170,7 +170,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="submit-cancel-buttons"]',
-      content: 'Please press cancel to go back, or add to continue to the next step',
+      content: 'Please press Cancel to go back, or Add to continue to the next step',
     },
     {
       selector: '[data-tour="covariates-card"]',
@@ -202,6 +202,9 @@ const TourSteps = {
       selector: '[data-tour="configure-imputation"]',
       content: 'This value reflects the quality of imputed SNPs and can be used to remove low-quality imputed markers (scale of 0-1)',
     },
+    {
+      selector: '[data-tour="next-button"]',
+      content: 'Please press Next to continue. In the next screen, you can review your selections for the GWAS study, give a name for your GWAS study and submit it. If you would like to change your choices for the study, please press Back at the bottom of the page to modify the parameters',    },
   ],
 };
 
