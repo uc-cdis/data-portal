@@ -66,7 +66,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="phenotype-histogram"]',
-      content: 'This is an interactive tool. Here you may define the minimum and maximum cuttoffs of your variable. You may also use transformations on this data',
+      content: 'This is an interactive tool. Here you may define the minimum and maximum cutoffs of your variable. You may also use transformations on this data',
     },
     {
       selector: '[data-tour="submit-cancel-buttons"]',
@@ -84,7 +84,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="cohorts-overlap-diagram"]',
-      content: 'In this diagram you may see how the cohorts chosen interact with each other and with the study population you have selected in step 1',
+      content: 'In this diagram you may see how the chosen cohorts interact with each other and with the study population you have selected in step 1',
     },
     {
       selector: '[data-tour="name-input"]',
@@ -106,7 +106,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="select-covariate-continious"]',
-      content: 'Please press here to add a continuous covariate to your GWAS. In pressing this option you’ll be able to select one of the continuous variables available to you as covariate for your study population',
+      content: 'Please press here to add a continuous covariate to your GWAS. In pressing this option you’ll be able to select one of the continuous variables available to you as a covariate for your study population',
     },
     {
       selector: '[data-tour="select-covariate-dichotomous"]',
@@ -136,7 +136,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="phenotype-histogram"]',
-      content: 'This is an interactive tool. Here you may define the minimum and maximum cuttoffs of your variable. You may also use transformations on this data',
+      content: 'This is an interactive tool. Here you may define the minimum and maximum cutoffs of your variable. You may also use transformations on this data',
     },
     {
       selector: '[data-tour="submit-cancel-buttons"]',
@@ -162,7 +162,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="cohorts-overlap-diagram"]',
-      content: 'In this diagram you may see how the cohorts chosen interact with each other and with the study population you have selected in step 1',
+      content: 'In this diagram you may see how the chosen cohorts interact with each other and with the study population you have selected in step 1',
     },
     {
       selector: '[data-tour="name-input"]',

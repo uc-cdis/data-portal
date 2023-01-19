@@ -17,8 +17,7 @@ const SelectCovariates = ({
   useEffect(() => () => dispatch({
     type: ACTIONS.SET_SELECTION_MODE,
     payload: '',
-  }),
-  []);
+  }), []);
 
   return (
     <React.Fragment>

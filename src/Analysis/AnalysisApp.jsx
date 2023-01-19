@@ -127,7 +127,6 @@ class AnalysisApp extends React.Component {
           disableInteraction
           onClickClose={({ setCurrentStep, setIsOpen }) => {
             setIsOpen(false);
-
             setCurrentStep(0);
           }}
         >

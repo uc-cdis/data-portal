@@ -17,8 +17,7 @@ const SelectOutcome = ({
   useEffect(() => () => dispatch({
     type: ACTIONS.SET_SELECTION_MODE,
     payload: '',
-  }),
-  []);
+  }), []);
 
   const determineSelectOutcomeJsx = () => {
     if (selectionMode === 'continuous') {

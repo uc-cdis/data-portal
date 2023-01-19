@@ -8,9 +8,6 @@ const TourButton = ({ currentStep, selectionMode }) => {
   const { setIsOpen, setSteps } = useTour();
 
   useEffect(() => {
-    console.log('currentStep', currentStep);
-    console.log('setSteps', setSteps);
-    console.log('SelectionMode', selectionMode);
     if (selectionMode === 'continuous' && currentStep === 1) {
       setSteps(TourSteps[1.1]);
     } else if (selectionMode === 'dichotomous' && currentStep === 1) {
