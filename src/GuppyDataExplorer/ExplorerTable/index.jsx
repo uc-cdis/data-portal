@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import _, { isEqual } from 'lodash';
 import pluralize from 'pluralize';
 import ReactTable from 'react-table';
 import { Switch } from 'antd';
 import 'react-table/react-table.css';
 import IconicLink from '../../components/buttons/IconicLink';
 import { GuppyConfigType, TableConfigType } from '../configTypeDef';
+import { hostname } from '../../localconf';
 import { capitalizeFirstLetter, humanFileSize } from '../../utils';
 import './ExplorerTable.css';
 import LockIcon from '../../img/icons/lock.svg';
@@ -20,42 +21,25 @@ class ExplorerTable extends React.Component {
       pageSize: props.defaultPageSize,
       currentPage: 0,
       showEmptyColumns: false,
+      tableData: this.props.rawData,
     };
   }
 
-  getWidthForColumn = (field, columnName) => {
-    if (this.props.tableConfig.linkFields.includes(field)) {
-      return 80;
-    }
-
-    // some magic numbers that work fine for table columns width
-    const minWidth = 100;
-    const maxWidth = 400;
-    const letterWidth = 8;
-    const spacing = 20;
-    if (!this.props.rawData || this.props.rawData.length === 0) {
-      return minWidth;
-    }
-    let maxLetterLen = columnName.length;
-    const fieldStringsArray = field.split('.');
-    this.props.rawData.forEach((d) => {
-      if (d[fieldStringsArray[0]] === null || typeof d[fieldStringsArray[0]] === 'undefined') {
-        return;
-      }
-      // the calculation logic here is a bit wild if it is a nested array field
-      // it would convert the whole array to string and calculate
-      // which in most cases would exceed the maxWidth so just use maxWidth
-      const str = d[fieldStringsArray[0]].toString && d[fieldStringsArray[0]].toString();
-      const len = str ? str.length : 0;
-      maxLetterLen = len > maxLetterLen ? len : maxLetterLen;
-    });
-    const resWidth = Math.min((maxLetterLen * letterWidth) + spacing, maxWidth);
-    return resWidth;
+  /**
+   * Used to process the table data when needed.
+   * THis is used primarily to check for the existence
+   * of a Dicom images to show the link icon to the dicom viewer
+   * @param prevProps
+   */
+  componentDidUpdate(prevProps) {
+    if (this.props.tableConfig.dicomViewerId && !isEqual(this.props.rawData, prevProps.rawData)) {
+      this.augmentData();
+    } else if (this.props.rawData !== prevProps.rawData) this.setState({ tableData: this.props.rawData });
   }
 
   /**
    * Build column configs for each table according to their locations and fields
-   * @param field: the full field name, if it is a nested field, it would contains at least 1 '.'
+   * @param field: the full field name, if it is a nested field, it would contain at least 1 '.'
    * @param isNestedTableColumn: control flag to determine if it is building column config for
    * the root table or inner nested tables
    * @param isDetailedColumn: control flag to determine if it is building column config for inner
@@ -64,7 +48,7 @@ class ExplorerTable extends React.Component {
    */
   buildColumnConfig = (field, isNestedTableColumn, isDetailedColumn) => {
     const fieldMappingEntry = this.props.guppyConfig.fieldMapping
-    && this.props.guppyConfig.fieldMapping.find((i) => i.field === field);
+      && this.props.guppyConfig.fieldMapping.find((i) => i.field === field);
     const overrideName = fieldMappingEntry ? fieldMappingEntry.name : undefined;
     const fieldStringsArray = field.split('.');
     // for nested table, we only display the children names in column header
@@ -126,6 +110,20 @@ class ExplorerTable extends React.Component {
             return rowComp;
           }
         }
+
+        // if this field is the `dicomViewerId`, convert the value to a link to the DICOM viewer
+        if (this.props.tableConfig.dicomViewerId && this.props.tableConfig.dicomViewerId === field && valueStr) {
+          let dicomViewerLink = `${hostname}dicom-viewer/viewer/${valueStr}`;
+          if (row.original.has_dicom_images !== undefined && !row.original.has_dicom_images) {
+            dicomViewerLink = undefined;
+          }
+          if (this.props.tableConfig.linkFields.includes(field)) { // link button
+            valueStr = dicomViewerLink;
+          } else { // direct link
+            return (<div><span title={valueStr}><a href={dicomViewerLink} target='_blank' rel='noreferrer'>{valueStr}</a></span></div>);
+          }
+        }
+
         // handling some special field types
         switch (field) {
         case this.props.guppyConfig.downloadAccessor:
@@ -236,10 +234,64 @@ class ExplorerTable extends React.Component {
     this.setState({ showEmptyColumns: checked });
   };
 
+  /**
+   * processes the table data if this is a dicom table. This will determine if the table row
+   * has image data and will then esure that the lick icon is shown
+   */
+  augmentData = () => {
+    const haveField = this.props.rawData.filter((x) => Object.keys(x).includes(this.props.tableConfig.dicomViewerId));
+    if (haveField.length === this.props.rawData.length) {
+      this.setState({ loading: true });
+      // eslint-disable-next-line array-callback-return
+      Promise.all(this.props.rawData.map((x) => {
+        const dicomServerLink = `${hostname}dicom-server/dicom-web/studies/${x[this.props.tableConfig.dicomViewerId]}/series`;
+        return fetch(dicomServerLink, {
+          method: 'GET',
+        })
+          .then((resp) => ({ ...x, has_dicom_images: resp.headers.get('content-length') !== '22' }),
+          );
+      })).then((data) => {
+        this.setState({ tableData: data });
+        this.setState({ loading: false });
+      });
+    }
+  }
+
+  getWidthForColumn = (field, columnName) => {
+    if (this.props.tableConfig.linkFields.includes(field)) {
+      return 80;
+    }
+
+    // some magic numbers that work fine for table columns width
+    const minWidth = 100;
+    const maxWidth = 400;
+    const letterWidth = 8;
+    const spacing = 20;
+    if (!this.props.rawData || this.props.rawData.length === 0) {
+      return minWidth;
+    }
+    let maxLetterLen = columnName.length;
+    const fieldStringsArray = field.split('.');
+    this.props.rawData.forEach((d) => {
+      if (d[fieldStringsArray[0]] === null || typeof d[fieldStringsArray[0]] === 'undefined') {
+        return;
+      }
+      // the calculation logic here is a bit wild if it is a nested array field
+      // it would convert the whole array to string and calculate
+      // which in most cases would exceed the maxWidth so just use maxWidth
+      const str = d[fieldStringsArray[0]].toString && d[fieldStringsArray[0]].toString();
+      const len = str ? str.length : 0;
+      maxLetterLen = len > maxLetterLen ? len : maxLetterLen;
+    });
+    const resWidth = Math.min((maxLetterLen * letterWidth) + spacing, maxWidth);
+    return resWidth;
+  }
+
   render() {
     if (!this.props.tableConfig.fields || this.props.tableConfig.fields.length === 0) {
       return null;
     }
+
     // build column configs for root table first
     const rootColumnsConfig = this.props.tableConfig.fields.map((field) => {
       const tempColumnConfig = this.buildColumnConfig(field, false, false);
@@ -356,7 +408,7 @@ class ExplorerTable extends React.Component {
         <ReactTable
           columns={rootColumnsConfig}
           manual
-          data={(this.props.isLocked || !this.props.rawData) ? [] : this.props.rawData}
+          data={(this.props.isLocked || !this.state.tableData) ? [] : this.state.tableData}
           showPageSizeOptions={!this.props.isLocked}
           pages={(this.props.isLocked) ? 0 : visiblePages} // Total number of pages, don't show 10000+ records in table
           loading={this.state.loading}

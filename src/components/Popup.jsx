@@ -61,7 +61,7 @@ class Popup extends React.Component {
             }
           </div>
           <div className='popup__message'>
-            { this.props.message && <div className='high-light'>{this.props.message}</div> }
+            { this.props.message && <div className='high-light'>{this.props.message.map((text, i) => <p key={i}>{text}</p>)}</div> }
             {
               this.props.lines.length > 0
               && (
@@ -158,7 +158,7 @@ Popup.propTypes = {
     label: PropTypes.string,
     code: PropTypes.string,
   })),
-  message: PropTypes.string,
+  message: PropTypes.array,
   leftButtons: PropTypes.arrayOf(buttonType),
   rightButtons: PropTypes.arrayOf(buttonType),
   title: PropTypes.string,
@@ -170,7 +170,7 @@ Popup.defaultProps = {
   error: '',
   iconName: '',
   lines: [],
-  message: '',
+  message: [''],
   leftButtons: [],
   rightButtons: [],
   title: '',

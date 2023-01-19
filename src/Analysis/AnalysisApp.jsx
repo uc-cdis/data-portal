@@ -3,11 +3,22 @@ import PropTypes from 'prop-types'; // see https://github.com/facebook/prop-type
 import Select from 'react-select';
 import { Spin } from 'antd';
 import Button from '@gen3/ui-component/dist/components/Button';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { TourProvider } from '@reactour/tour';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
-import ReduxGWASApp from './GWASApp/ReduxGWASApp';
+import ReduxGWASUIApp from './GWASUIApp/ReduxGWASUIApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
+import sessionMonitor from '../SessionMonitor';
+import GWASWorkflowList from './GWASUIApp/GWASWorkflowList';
+import GWASContainer from './GWASV2/GWASContainer';
+
+const queryClient = new QueryClient();
+
+const disableBody = (target) => disableBodyScroll(target);
+const enableBody = (target) => enableBodyScroll(target);
 
 class AnalysisApp extends React.Component {
   constructor(props) {
@@ -31,6 +42,7 @@ class AnalysisApp extends React.Component {
       this.fetchJobResult()
         .then((res) => ({ results: `${res.data.output}`.split('\n') }));
     }
+    return null;
   }
 
   componentWillUnmount() {
@@ -42,6 +54,21 @@ class AnalysisApp extends React.Component {
     this.clearResult();
     this.props.submitJob({ organ: this.state.jobInput ? this.state.jobInput.value : null });
     this.props.checkJobStatus();
+  }
+
+  processAppMessages = (event) => {
+    const pathArray = this.state.app.applicationUrl.split('/');
+    const protocol = pathArray[0];
+    const host = pathArray[2];
+    const applicationBaseUrl = `${protocol}//${host}`;
+
+    // ONLY process messages coming from the same domain as the app AND
+    // which contain the message "refresh token!":
+    if (event.origin === applicationBaseUrl
+      && event.data === 'refresh token!') {
+      // Call function to refresh session:
+      sessionMonitor.updateUserActivity();
+    }
   }
 
   getAppContent = (app) => {
@@ -69,11 +96,39 @@ class AnalysisApp extends React.Component {
           <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
         </React.Fragment>
       );
-    case 'GWASApp':
+    case 'GWASUIApp':
       return (
-        <ReduxGWASApp />
+        <TourProvider
+          afterOpen={disableBody}
+          beforeClose={enableBody}
+          disableInteraction
+          onClickClose={({ setCurrentStep, setIsOpen }) => {
+            setIsOpen(false);
+
+            setCurrentStep(0);
+          }}
+        >
+          <div className='analysis-app_flex_col'>
+            <ReduxGWASUIApp />
+          </div>
+        </TourProvider>
       );
+    case 'GWASResults':
+      return (
+        <div className='analysis-app_flex_row'>
+          <GWASWorkflowList refetchInterval={5000} />
+        </div>
+      );
+    case 'GWAS++': {
+      return (
+        <div>
+          <GWASContainer refreshWorkflows={this.refreshWorkflows} />
+        </div>
+      );
+    }
     default:
+      // this will ensure the main window will process the app messages (if any):
+      window.addEventListener('message', this.processAppMessages);
       return (
         <React.Fragment>
           <div className='analysis-app__iframe-wrapper'>
@@ -161,22 +216,24 @@ class AnalysisApp extends React.Component {
                 <p className='analysis-app__description'>{app.description}</p>
                 <div className={`${this.state.analysisIsFullscreen ? 'analysis-app__fullscreen' : ''}`}>
                   <div className='analysis-app__actions'>
-                    { appContent }
+                    <QueryClientProvider client={queryClient} contextSharing>
+                      {appContent}
+                    </QueryClientProvider>
                   </div>
-                  { this.state.isIframeApp
+                  {this.state.isIframeApp
                     ? (
                       <div className='analysis-app__buttongroup'>
-                        { fullscreenButton }
+                        {fullscreenButton}
                       </div>
                     ) : null}
                 </div>
                 {(showJobStatus)
                   ? (
                     <div className='analysis-app__job-status'>
-                      { this.isJobRunning() ? <Spin size='large' tip='Job in progress...' /> : null }
-                      { job && job.status === 'Completed' ? <h3>Job Completed</h3> : null }
-                      { job && job.status === 'Failed' ? <h3>Job Failed</h3> : null }
-                      { results ? results.map((line, i) => <p key={i}>{line}</p>) : null }
+                      {this.isJobRunning() ? <Spin size='large' tip='Job in progress...' /> : null}
+                      {job?.status === 'Completed' ? <h3>Job Completed</h3> : null}
+                      {job?.status === 'Failed' ? <h3>Job Failed</h3> : null}
+                      {results ? results.map((line, i) => <p key={i}>{line}</p>) : null}
                     </div>
                   )
                   : null}

@@ -6,6 +6,9 @@ export interface DiscoveryConfig {
             enableDownloadManifest: boolean
             downloadManifestButtonText?: string
             manifestFieldName: string
+            enableDownloadZip: boolean
+            downloadZipButtonText?: string
+            verifyExternalLogins?: boolean
         }
         // explorationIntegration: {
         //     enabled: boolean // not supported
@@ -22,14 +25,21 @@ export interface DiscoveryConfig {
         search: {
             searchBar: {
                 enabled: boolean,
+                inputSubtitle?: string,
                 placeholder?: string
-                // searchTags: boolean, // not supported, consider removing
                 searchableTextFields?: string[] // list of properties in data to make searchable.
                                                 // if not present, only fields visible in the table
                                                 // will be searchable.
+            },
+            tagSearchDropdown?: {
+                enabled: boolean,
+                collapsibleButtonText?: string
+                collapseOnDefault?: boolean
             }
         },
         authorization: {
+            columnTooltip: string
+            supportedValues: any
             enabled: boolean,
             // requestAccess: { // not supported
             //     enabled: boolean,
@@ -43,12 +53,18 @@ export interface DiscoveryConfig {
             //     }
             // }
         },
+        tagsColumn?: {
+            enabled: boolean,
+        },
+        tagsInDescription?: {
+            enabled: boolean,
+        },
         advSearchFilters?: {
             enabled: boolean,
             field: string,
+            displayName?: string,
             filters: {
                 key: string
-                // multiSelectBehavior?: 'AND' | 'OR' // defaults to OR // not yet supported
                 keyDisplayName?: string
                 valueDisplayNames?: {
                     [value: string]: string
@@ -95,7 +111,7 @@ export interface DiscoveryConfig {
             // showBackground?: boolean // defaults to `true`
             includeName?: boolean,
             fields: StudyPageFieldConfig[]
-        }[]
+        }[],
         // descriptionField: {
         //     name: string
         //     field: string
@@ -103,6 +119,22 @@ export interface DiscoveryConfig {
         //     valueIfNotAvailable?: string[] // defaults to 'n/a'
         // }
     },
+    detailView: {
+        headerField: string
+        tabs: {
+            tabName: string
+            groups: {
+                header: string
+                fields: {
+                    type: 'block' | 'text' | 'link' | 'textList' | 'linkList' | 'accessDescriptor' | 'tags'
+                    sourceField?: string
+                    label: string
+                    // optionally refine tags by categories
+                    categories?: string[]
+                }[]
+            }[]
+        } []
+    }
     minimalFieldMapping: {
         tagsListFieldName: string,
         authzField: string,
@@ -115,7 +147,9 @@ export interface DiscoveryConfig {
         color?: string
         display: boolean
         displayName?: string
-    }[]
+    }[],
+    tagsDisplayName?: string
+    tableScrollHeight?: number
 }
 export interface StudyPageFieldConfig {
     name: string

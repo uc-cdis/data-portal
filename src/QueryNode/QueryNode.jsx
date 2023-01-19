@@ -162,7 +162,7 @@ class QueryNode extends React.Component {
       popup.popupEl = (
         <Popup
           title={queryNodes.query_node.submitter_id}
-          message={'Are you sure you want to delete this node?'}
+          message={['Are you sure you want to delete this node?']}
           error={jsonToString(queryNodes.delete_error)}
           lines={[{ code: jsonToString(queryNodes.query_node) }]}
           leftButtons={[
@@ -189,7 +189,7 @@ class QueryNode extends React.Component {
       popup.popupEl = (
         <Popup
           title={queryNodes.query_node.submitter_id}
-          message={`Error deleting: ${queryNodes.query_node.submitter_id}`}
+          message={[`Error deleting: ${queryNodes.query_node.submitter_id}`]}
           error={jsonToString(queryNodes.delete_error)}
           lines={[{ code: jsonToString(queryNodes.query_node) }]}
           onClose={closeDelete}
@@ -201,7 +201,7 @@ class QueryNode extends React.Component {
       popup.popupEl = (
         <Popup
           title={queryNodes.query_node.submitter_id}
-          message={popups.nodeDeletePopup}
+          message={[popups.nodeDeletePopup]}
           onClose={() => onUpdatePopup({ nodeDeletePopup: false })}
         />
       );

@@ -59,7 +59,7 @@ class WorkspaceLogin extends React.Component {
       <div className='login-page__central-content'>
         {
           this.props.providers.length > 0
-            ? <h2>Link accounts from other Data Commons</h2>
+            ? <h2>Link accounts from other data resources</h2>
             : null
         }
         {

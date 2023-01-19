@@ -18,7 +18,8 @@ const retrieveCommonsInfo = async (commonsName) => {
  * @param {*} tags
  * @returns array with duplicates removed
  */
-const getUniqueTags = ((tags) => tags.filter((v, i, a) => a.findIndex((t) => (t.category === v.category && t.name === v.name)) === i));
+const getUniqueTags = ((tags) => tags.filter((v, i, a) => a.findIndex((t) => (
+  t.name?.length > 0 && t.category === v.category && t.name === v.name)) === i));
 
 const loadStudiesFromAggMDSRequests = async (offset, limit) => {
   const url = `${aggMDSDataURL}?data=True&limit=${limit}&offset=${offset}`;
@@ -65,6 +66,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
       x.frontend_uid = `${commonsName}_${index}`;
       x._unique_id = `${commonsName}_${x._unique_id}_${index}`;
       x.commons_url = commonsInfo.commons_url;
+      x.tags = x.tags || [];
       x.tags.push(Object({ category: 'Commons', name: commonsName }));
       x.name = x.short_name; // TODO: this will need to be refactored
 

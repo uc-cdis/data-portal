@@ -75,7 +75,7 @@ export const checkJobStatus = (dispatch, getState) => {
 // TODO: need to get result urls from a Gen3 service
 export const submitJob = (body) => (dispatch) => dispatch(dispatchJob(body));
 
-export const checkJob = () => (dispatch) => asyncSetInterval(() => dispatch(checkJobStatus), 1000)
+export const checkJob = () => (dispatch) => asyncSetInterval(() => dispatch(checkJobStatus), 10000)
   .then((intervalValue) => {
     dispatch({ type: 'JOB_STATUS_INTERVAL', value: intervalValue });
   });

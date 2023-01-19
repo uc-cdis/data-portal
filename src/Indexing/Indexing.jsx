@@ -311,8 +311,8 @@ class Indexing extends React.Component {
   downloadJobOutput = (linkToFile) => {
     const link = document.createElement('a');
     link.href = linkToFile;
-    document.body.appendChild(link);
     link.click();
+    document.body.appendChild(link);
   }
 
   download = async () => {
@@ -488,7 +488,7 @@ class Indexing extends React.Component {
             this.state.showIndexFilesPopup
                   && (
                     <Popup
-                      message={''}
+                      message={['']}
                       title='Indexing Files'
                       rightButtons={this.state.indexingFilesStatus !== 'success' ? [
                         {
@@ -520,7 +520,7 @@ class Indexing extends React.Component {
             this.state.showDownloadManifestPopup
                   && (
                     <Popup
-                      message={''}
+                      message={['']}
                       title='Downloading Indexing File'
                       rightButtons={this.state.downloadManifestStatus !== 'success' ? [
                         {

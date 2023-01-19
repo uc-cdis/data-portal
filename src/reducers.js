@@ -16,6 +16,7 @@ import bar from './Layout/reducers';
 import ddgraph from './DataDictionary/reducers';
 import privacyPolicy from './PrivacyPolicy/reducers';
 import study from './StudyViewer/reducers';
+import discovery from './Discovery/reducers';
 import { fetchUserAccess, fetchUserAuthMapping } from './actions';
 import getReduxStore from './reduxStore';
 
@@ -78,6 +79,15 @@ const userAuthMapping = (state = {}, action) => {
   }
 };
 
+const userAggregateAuthMappings = (state = {}, action) => {
+  switch (action.type) {
+  case 'RECEIVE_AGGREGATE_USER_AUTH_MAPPINGS':
+    return { ...state, ...action.data };
+  default:
+    return state;
+  }
+};
+
 export const removeDeletedNode = (state, id) => {
   const searchResult = state.search_result;
   const nodeType = Object.keys(searchResult.data)[0];
@@ -109,6 +119,8 @@ const reducers = combineReducers({
   ddgraph,
   userAccess,
   userAuthMapping,
+  userAggregateAuthMappings,
+  discovery,
 });
 
 export default reducers;

@@ -21,14 +21,16 @@ function buildConfig(opts) {
     protocol: typeof window !== 'undefined' ? `${window.location.protocol}` : 'http:',
     hostnameOnly: typeof window !== 'undefined' ? hostnameNoSubdomain : 'localhost',
     hostname: typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}/` : 'http://localhost/',
+    hostnameWithSubdomain: hostnameValue,
     fenceURL: process.env.FENCE_URL,
     indexdURL: process.env.INDEXD_URL,
+    cohortMiddlewareURL: process.env.COHORT_MIDDLEWARE_URL,
+    gwasWorkflowURL: process.env.GWAS_WORKFLOW_URL,
     arboristURL: process.env.ARBORIST_URL,
     wtsURL: process.env.WTS_URL,
     workspaceURL: process.env.WORKSPACE_URL,
     manifestServiceURL: process.env.MANIFEST_SERVICE_URL,
     requestorURL: process.env.REQUESTOR_URL,
-    gaDebug: !!(process.env.GA_DEBUG && process.env.GA_DEBUG === 'true'),
     tierAccessLevel: process.env.TIER_ACCESS_LEVEL || 'private',
     tierAccessLimit: Number.parseInt(process.env.TIER_ACCESS_LIMIT, 10) || 1000,
     mapboxAPIToken: process.env.MAPBOX_API_TOKEN,
@@ -40,8 +42,9 @@ function buildConfig(opts) {
   // Override default basename if loading via /dev.html
   // dev.html loads bundle.js via https://localhost...
   //
-  if (typeof window.location !== 'undefined' && window.location.pathname.indexOf(`${defaults.basename}dev.html`) === 0) {
-    defaults.basename += 'dev.html';
+  const ensureTrailingSlashBasename = `${defaults.basename}${defaults.basename.endsWith('/') ? '' : '/'}`;
+  if (typeof window.location !== 'undefined' && window.location.pathname.indexOf(`${ensureTrailingSlashBasename}dev.html`) === 0) {
+    defaults.basename = `${ensureTrailingSlashBasename}dev.html`;
   }
 
   const {
@@ -52,14 +55,16 @@ function buildConfig(opts) {
     protocol,
     hostnameOnly,
     hostname,
+    hostnameWithSubdomain,
     fenceURL,
     indexdURL,
+    cohortMiddlewareURL,
+    gwasWorkflowURL,
     arboristURL,
     wtsURL,
     workspaceURL,
     manifestServiceURL,
     requestorURL,
-    gaDebug,
     tierAccessLevel,
     tierAccessLimit,
     mapboxAPIToken,
@@ -74,7 +79,6 @@ function buildConfig(opts) {
     u.search = '';
     return u.href;
   }
-
   const submissionApiPath = `${hostname}api/v0/submission/`;
   const apiPath = `${hostname}api/`;
   const graphqlPath = `${hostname}api/v0/submission/graphql/`;
@@ -84,7 +88,12 @@ function buildConfig(opts) {
   const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
   const coreMetadataPath = `${hostname}coremetadata/`;
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
+
+  const cohortMiddlewarePath = typeof cohortMiddlewareURL === 'undefined' ? `${hostname}cohort-middleware/` : ensureTrailingSlash(cohortMiddlewareURL);
+  const gwasWorkflowPath = typeof gwasWorkflowURL === 'undefined' ? `${hostname}ga4gh/wes/v2/` : ensureTrailingSlash(gwasWorkflowURL);
+
   const wtsPath = typeof wtsURL === 'undefined' ? `${hostname}wts/oauth2/` : ensureTrailingSlash(wtsURL);
+  const wtsAggregateAuthzPath = `${hostname}wts/aggregate/authz/mapping`;
   const externalLoginOptionsUrl = `${hostname}wts/external_oidc/`;
   let login = {
     url: `${userAPIPath}login/google?redirect=`,
@@ -96,11 +105,15 @@ function buildConfig(opts) {
   const logoutInactiveUsers = !(process.env.LOGOUT_INACTIVE_USERS === 'false');
   const useIndexdAuthz = !(process.env.USE_INDEXD_AUTHZ === 'false');
   const workspaceTimeoutInMinutes = process.env.WORKSPACE_TIMEOUT_IN_MINUTES || 480;
-  const graphqlSchemaUrl = `${hostname}data/schema.json`;
+  const graphqlSchemaUrl = `${hostname}${(basename && basename !== '/') ? basename : ''}/data/schema.json`;
   const workspaceUrl = typeof workspaceURL === 'undefined' ? '/lw-workspace/' : ensureTrailingSlash(workspaceURL);
   const workspaceErrorUrl = '/no-workspace-access/';
+  const Error403Url = '/403error';
   const workspaceOptionsUrl = `${workspaceUrl}options`;
   const workspaceStatusUrl = `${workspaceUrl}status`;
+  const workspacePayModelUrl = `${workspaceUrl}paymodels`;
+  const workspaceSetPayModelUrl = `${workspaceUrl}setpaymodel`;
+  const workspaceAllPayModelsUrl = `${workspaceUrl}allpaymodels`;
   const workspaceTerminateUrl = `${workspaceUrl}terminate`;
   const workspaceLaunchUrl = `${workspaceUrl}launch`;
   const datasetUrl = `${hostname}api/search/datasets`;
@@ -130,6 +143,7 @@ function buildConfig(opts) {
   let ddSampleRate = 100;
   if (config.ddSampleRate) {
     if (Number.isNaN(config.ddSampleRate)) {
+      // eslint-disable-next-line no-console
       console.warn('Datadog sampleRate value in Portal config is not a number, ignoring');
     } else {
       ddSampleRate = config.ddSampleRate;
@@ -149,7 +163,7 @@ function buildConfig(opts) {
     const validOpenOptions = ['open-first', 'open-all', 'close-all'];
     studyViewerConfig.forEach((cfg, i) => {
       if (cfg.openMode
-      && !validOpenOptions.includes(cfg.openMode)) {
+        && !validOpenOptions.includes(cfg.openMode)) {
         studyViewerConfig[i].openMode = 'open-all';
       }
     });
@@ -191,16 +205,31 @@ function buildConfig(opts) {
     }
   });
 
-  const { dataAvailabilityToolConfig } = config;
+  const { dataAvailabilityToolConfig, stridesPortalURL, gaTrackingId } = config;
+
+  let showSystemUse = false;
+  if (components.systemUse && components.systemUse.systemUseText) {
+    showSystemUse = true;
+  }
 
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
     showArboristAuthzOnProfile = config.showArboristAuthzOnProfile;
   }
 
+  let gwasTemplate = 'gwas-template-latest';
+  if (config.argoTemplate) {
+    gwasTemplate = config.argoTemplate;
+  }
+
   let showFenceAuthzOnProfile = true;
   if (config.showFenceAuthzOnProfile === false) {
     showFenceAuthzOnProfile = config.showFenceAuthzOnProfile;
+  }
+
+  let showExternalLoginsOnProfile = false;
+  if (config.showExternalLoginsOnProfile === true) {
+    showExternalLoginsOnProfile = config.showExternalLoginsOnProfile;
   }
 
   let hideSubmissionIfIneligible = false;
@@ -254,9 +283,26 @@ function buildConfig(opts) {
   }
 
   const { discoveryConfig } = config;
-
+  const { registrationConfigs } = config;
+  const studyRegistrationConfig = (registrationConfigs && registrationConfigs.features)
+    ? (registrationConfigs.features.studyRegistrationConfig || {}) : {};
+  if (!studyRegistrationConfig.studyRegistrationTrackingField) {
+    studyRegistrationConfig.studyRegistrationTrackingField = 'registrant_username';
+  }
+  if (!studyRegistrationConfig.studyRegistrationValidationField) {
+    studyRegistrationConfig.studyRegistrationValidationField = 'is_registered';
+  }
+  if (!studyRegistrationConfig.studyRegistrationAccessCheckField) {
+    studyRegistrationConfig.studyRegistrationAccessCheckField = 'registration_authz';
+  }
+  if (!studyRegistrationConfig.studyRegistrationUIDField) {
+    studyRegistrationConfig.studyRegistrationUIDField = 'appl_id';
+  }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
+  const workspaceRegistrationConfig = (registrationConfigs && registrationConfigs.features)
+    ? registrationConfigs.features.workspaceRegistrationConfig : null;
+  const kayakoConfig = registrationConfigs ? registrationConfigs.kayakoConfig : null;
 
   const colorsForCharts = {
     categorical9Colors: components.categorical9Colors ? components.categorical9Colors : [
@@ -372,10 +418,24 @@ function buildConfig(opts) {
             ],
           };
           break;
-        case 'GWASApp':
-          analysisApps.GWASApp = {
-            title: 'GWAS',
-            description: 'GWAS App',
+        case 'GWASUIApp':
+          analysisApps.GWASUIApp = {
+            title: 'Gen3 GWAS',
+            description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
+            image: '/src/img/analysis-icons/gwas.svg',
+          };
+          break;
+        case 'GWASResults':
+          analysisApps.GWASResults = {
+            title: 'GWAS Results',
+            description: 'Use this App to view status & results of submitted workflows',
+            image: '/src/img/analysis-icons/gwasResults.svg',
+          };
+          break;
+        case 'GWAS++':
+          analysisApps['GWAS++'] = {
+            title: 'GWAS++',
+            description: 'Use this App to perform high throughput GWAS on Million Veteran Program (MVP) data, using the University of Washington Genesis pipeline',
             image: '/src/img/analysis-icons/gwas.svg',
           };
           break;
@@ -394,8 +454,11 @@ function buildConfig(opts) {
     mobile: 480,
   };
 
+  const mdsURL = `${hostname}mds/metadata`;
   const aggMDSURL = `${hostname}mds/aggregate`;
   const aggMDSDataURL = `${aggMDSURL}/metadata`;
+  const cedarWrapperURL = `${hostname}cedar`;
+  const kayakoWrapperURL = `${hostname}kayako`;
 
   // Disallow gitops.json configurability of Gen3 Data Commons and CTDS logo alt text.
   // This allows for one point-of-change in the case of future rebranding.
@@ -412,9 +475,11 @@ function buildConfig(opts) {
     basename,
     breakpoints,
     buildConfig,
+    gwasTemplate,
     dev,
     hostname,
-    gaDebug,
+    hostnameWithSubdomain,
+    gaTrackingId,
     userAPIPath,
     jobAPIPath,
     apiPath,
@@ -422,6 +487,8 @@ function buildConfig(opts) {
     credentialCdisPath,
     coreMetadataPath,
     indexdPath,
+    cohortMiddlewarePath,
+    gwasWorkflowPath,
     graphqlPath,
     dataDictionaryTemplatePath,
     graphqlSchemaUrl,
@@ -439,8 +506,12 @@ function buildConfig(opts) {
     workspaceErrorUrl,
     workspaceOptionsUrl,
     workspaceStatusUrl,
+    workspacePayModelUrl,
+    workspaceSetPayModelUrl,
+    workspaceAllPayModelsUrl,
     workspaceLaunchUrl,
     workspaceTerminateUrl,
+    stridesPortalURL,
     homepageChartNodes: components.index.homepageChartNodes,
     homepageChartNodesChunkSize,
     customHomepageChartConfig: components.index.customHomepageChartConfig,
@@ -453,9 +524,11 @@ function buildConfig(opts) {
     guppyDownloadUrl,
     manifestServiceApiPath,
     wtsPath,
+    wtsAggregateAuthzPath,
     externalLoginOptionsUrl,
     showArboristAuthzOnProfile,
     showFenceAuthzOnProfile,
+    showExternalLoginsOnProfile,
     hideSubmissionIfIneligible,
     useArboristUI,
     terraExportWarning,
@@ -478,22 +551,30 @@ function buildConfig(opts) {
     studyViewerConfig,
     covid19DashboardConfig,
     discoveryConfig,
+    kayakoConfig,
+    studyRegistrationConfig,
     mapboxAPIToken,
     auspiceUrl,
     auspiceUrlIL,
     workspacePageTitle,
     workspacePageDescription,
     enableDAPTracker,
+    workspaceRegistrationConfig,
     workspaceStorageUrl,
     workspaceStorageListUrl,
     workspaceStorageDownloadUrl,
     marinerUrl,
+    mdsURL,
     aggMDSDataURL,
+    cedarWrapperURL,
+    kayakoWrapperURL,
     commonsWideAltText,
     ddApplicationId,
     ddClientToken,
     ddEnv,
     ddSampleRate,
+    showSystemUse,
+    Error403Url,
   };
 }
 

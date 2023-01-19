@@ -66,3 +66,16 @@
   height: 100vh;
   background: inherit;
 }
+
+.analysis-app_flex_col {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.analysis-app_flex_row {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+}

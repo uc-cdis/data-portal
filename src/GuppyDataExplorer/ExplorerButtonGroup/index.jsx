@@ -3,6 +3,7 @@ import FileSaver from 'file-saver';
 import _ from 'lodash';
 import Button from '@gen3/ui-component/dist/components/Button';
 import Dropdown from '@gen3/ui-component/dist/components/Dropdown';
+import Tooltip from 'rc-tooltip';
 import Toaster from '@gen3/ui-component/dist/components/Toaster';
 import { getGQLFilter } from '@gen3/guppy/dist/components/Utils/queries';
 import PropTypes from 'prop-types';
@@ -13,6 +14,9 @@ import { manifestServiceApiPath, guppyGraphQLUrl, terraExportWarning } from '../
 import './ExplorerButtonGroup.css';
 import Popup from '../../components/Popup';
 
+// template variable for export-pfb-to-url/export-file-pfb-to-url button config.
+// see docs/export_pfb_to_url.md
+const PRESIGNED_URL_TEMPLATE_VARIABLE = '{{PRESIGNED_URL}}';
 class ExplorerButtonGroup extends React.Component {
   constructor(props) {
     super(props);
@@ -24,8 +28,16 @@ class ExplorerButtonGroup extends React.Component {
       toasterHeadline: '',
       toasterError: null,
       toasterErrorText: 'There was an error exporting your cohort.',
+      downloadingInProgress: {
+        data: false,
+        manifest: false,
+        fileManifest: false,
+      },
+      downloadingInProgressToasterText: 'Your download has started and it may take up to several minutes. Please do not navigate away from this page.',
       exportingToTerra: false,
       exportingToSevenBridges: false,
+      exportingPFBToURL: false,
+      targetURLTemplate: '', // stores the target URL when the user clicks an 'export-pfb-to-url' button
       // for export to PFB
       exportPFBURL: '',
       exportPFBToWorkspaceGUID: '',
@@ -80,6 +92,14 @@ class ExplorerButtonGroup extends React.Component {
             }, () => {
               this.sendPFBToSevenBridges();
             });
+          } else if (this.state.exportingPFBToURL) {
+            this.setState({
+              exportPFBURL: `${res.data.output}`.split('\n'),
+              toasterOpen: false,
+              exportingPFBToURL: false,
+            }, () => {
+              this.sendPFBToURL(this.state.targetURLTemplate, this.state.exportPFBURL);
+            });
           } else if (this.state.exportingPFBToWorkspace) {
             const pfbGUID = `${res.data.output}`.split('\n')[0];
             this.sendPFBToWorkspace(pfbGUID);
@@ -119,6 +139,7 @@ class ExplorerButtonGroup extends React.Component {
 
   getOnClickFunction = (buttonConfig) => {
     let clickFunc = () => {};
+
     if (buttonConfig.type.startsWith('data')) {
       clickFunc = this.downloadData(buttonConfig.fileName, buttonConfig.type.split('-').pop());
     }
@@ -127,6 +148,22 @@ class ExplorerButtonGroup extends React.Component {
     }
     if (buttonConfig.type === 'file-manifest') {
       clickFunc = this.downloadManifest(buttonConfig.fileName, 'file');
+    }
+    if (buttonConfig.type === 'export-pfb-to-url') {
+      if (!buttonConfig.targetURLTemplate) {
+        throw new Error('Misconfiguration Error! Expected button of type `export-pfb-to-url` to have the required `targetURLTemplate` property');
+      } else if (buttonConfig.targetURLTemplate.indexOf(PRESIGNED_URL_TEMPLATE_VARIABLE) === -1) {
+        throw new Error(`Misconfiguration error! An \`export-pfb-to-url\` button has a bad \`targetURLTemplate\` property. The string \`${PRESIGNED_URL_TEMPLATE_VARIABLE}\` must appear in the \`targetURLTemplate\` property. Bad \`targetURLTemplate\`: ${this.state.targetURLTemplate}`);
+      }
+      clickFunc = this.exportPFBToURL(buttonConfig.targetURLTemplate);
+    }
+    if (buttonConfig.type === 'export-file-pfb-to-url') {
+      if (!buttonConfig.targetURLTemplate) {
+        throw new Error('Misconfiguration Error! Expected button of type `export-file-pfb-to-url` to have the required `targetURLTemplate` property');
+      } else if (buttonConfig.targetURLTemplate.indexOf(PRESIGNED_URL_TEMPLATE_VARIABLE) === -1) {
+        throw new Error(`Misconfiguration error! An \`export-file-pfb-to-url\` button has a bad \`targetURLTemplate\` property. The string \`${PRESIGNED_URL_TEMPLATE_VARIABLE}\` must appear in the \`targetURLTemplate\` property. Bad \`targetURLTemplate\`: ${this.state.targetURLTemplate}`);
+      }
+      clickFunc = this.exportFilePFBToURL(buttonConfig.targetURLTemplate);
     }
     if (buttonConfig.type === 'export') {
       // REMOVE THIS CODE WHEN TERRA EXPORT WORKS
@@ -274,6 +311,9 @@ class ExplorerButtonGroup extends React.Component {
       {
         <div className='explorer-button-group__toaster-text'>
           <div> {this.state.toasterHeadline} </div>
+          { (Object.values(this.state.downloadingInProgress).some((x) => x === true))
+            ? <div> { this.state.downloadingInProgressToasterText } </div>
+            : null}
           { (this.state.exportWorkspaceFileName)
             ? <div> Most recent Workspace file name: { this.state.exportWorkspaceFileName } </div>
             : null}
@@ -339,6 +379,7 @@ class ExplorerButtonGroup extends React.Component {
   };
 
   downloadData = (filename, fileFormat) => () => {
+    this.setState({ downloadingInProgress: { data: true }, toasterOpen: true });
     const fileTypeKey = fileFormat.toLowerCase();
     const isJsonFormat = fileTypeKey === 'json' || fileTypeKey === 'data';
     const queryArgObj = {};
@@ -352,10 +393,17 @@ class ExplorerButtonGroup extends React.Component {
       } else {
         throw Error('Error when downloading data');
       }
+      this.setState({ downloadingInProgress: { data: false }, toasterOpen: false });
     });
   };
 
   downloadManifest = (filename, indexType) => async () => {
+    if (indexType === 'file') {
+      this.setState({ downloadingInProgress: { fileManifest: true }, toasterOpen: true });
+    } else {
+      this.setState({ downloadingInProgress: { manifest: true }, toasterOpen: true });
+    }
+
     const resultManifest = await this.getManifest(indexType);
     if (resultManifest) {
       const blob = new Blob([JSON.stringify(resultManifest, null, 2)], { type: 'text/json' });
@@ -363,12 +411,17 @@ class ExplorerButtonGroup extends React.Component {
     } else {
       throw Error('Error when downloading manifest');
     }
+    if (indexType === 'file') {
+      this.setState({ downloadingInProgress: { fileManifest: false }, toasterOpen: false });
+    } else {
+      this.setState({ downloadingInProgress: { manifest: false }, toasterOpen: false });
+    }
   };
 
   // REMOVE THIS CODE ONCE TERRA EXPORT WORKS
   // =========================================
   // The below code is a temporary feature for for https://ctds-planx.atlassian.net/browse/PXP-5186
-  // (Warn user about Terra entitiy threshold). This code should be removed when
+  // (Warn user about Terra entity threshold). This code should be removed when
   // Terra is no longer limited to importing <165,000 entities. (~14k subjects).
   // This file is the only file that contains code for this feature.
   exportToTerraWithWarning = () => {
@@ -410,6 +463,43 @@ class ExplorerButtonGroup extends React.Component {
     this.setState({ exportingToSevenBridges: true }, () => {
       this.exportToPFB();
     });
+  }
+
+  // This is a generic way to export a PFB to a third party, deprecating
+  // exportToTerra and exportToSevenBridges.
+  // See docs/export-pfb-to-url.md
+  // Code flow (it's confusing):
+  // 1. User clicks a 'export-pfb-to-url' button
+  // 2. Store target URL as state.targetURLTemplate
+  // 2. Kick off a PFB export job with this.exportToPFB()
+  // 3. componentDidUpdate polls the exportToPFB job status, when complete it will call
+  //    sendPFBToURL(this.state.targetURLTemplate)
+  exportPFBToURL = (targetURLTemplate) => () => {
+    this.setState({
+      exportingPFBToURL: true,
+      targetURLTemplate,
+    }, () => {
+      this.exportToPFB();
+    });
+  }
+
+  // counterpart to exportPFBToURL, allows export of a PFB to a third
+  // party from the Files tab. Deprecates exportFilesToTerra, exportFilesToSevenBridges.
+  exportFilePFBToURL = (targetURLTemplate) => () => {
+    this.setState({
+      exportingPFBToURL: true,
+      targetURLTemplate,
+    }, () => {
+      this.exportFilesToPFB();
+    });
+  }
+
+  sendPFBToURL = (targetURLTemplate, presignedURL) => {
+    const signedURL = encodeURIComponent(presignedURL);
+    // the PFB export target URL is a template URL that should have a {{PRESIGNED_URL}} template
+    // variable in it.
+    const targetURL = targetURLTemplate.replace(PRESIGNED_URL_TEMPLATE_VARIABLE, signedURL);
+    window.location = targetURL;
   }
 
   exportFilesToSevenBridges = () => {
@@ -565,14 +655,20 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     });
   };
 
-  isFileButton = (buttonConfig) => buttonConfig.type === 'manifest'
-    || buttonConfig.type === 'export'
-    || buttonConfig.type === 'export-to-seven-bridges'
-    || buttonConfig.type === 'export-to-workspace'
-    || buttonConfig.type === 'export-to-pfb'
-    || buttonConfig.type === 'export-pfb-to-workspace';
+  isFilePFBButton = (buttonConfig) => buttonConfig.type === 'export-file-pfb-to-url'
+    || buttonConfig.type === 'export-files-to-pfb'
+    || buttonConfig.type === 'export-files' // deprecated
+    || buttonConfig.type === 'export-files-to-seven-bridges'; // deprecated
 
   refreshManifestEntryCount = async () => {
+    const isFileButton = (buttonConfig) => buttonConfig.type === 'export-pfb-to-url'
+      || buttonConfig.type === 'manifest'
+      || buttonConfig.type === 'export-to-workspace'
+      || buttonConfig.type === 'export-to-pfb'
+      || buttonConfig.type === 'export-pfb-to-workspace'
+      || buttonConfig.type === 'export' // deprecated
+      || buttonConfig.type === 'export-to-seven-bridges'; // deprecated
+
     if (this.props.isLocked || !this.props.guppyConfig.manifestMapping
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInDataIndex
       || !this.props.guppyConfig.manifestMapping.referenceIdFieldInResourceIndex) return;
@@ -581,7 +677,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     if (this.props.buttonConfig
       && this.props.buttonConfig.buttons
       && this.props.buttonConfig.buttons.some(
-        (btnCfg) => this.isFileButton(btnCfg) && btnCfg.enabled)) {
+        (btnCfg) => isFileButton(btnCfg) && btnCfg.enabled)) {
       if (this.props.guppyConfig.fileCountField) {
         // if "fileCountField" is set, just ask for sum of file_count field
         const totalFileCount = await this.getFileCountSum();
@@ -599,6 +695,9 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
           let caseIDList = caseIDResult.map((i) => i[caseField]);
           caseIDList = _.uniq(caseIDList);
           const fileType = this.props.guppyConfig.manifestMapping.resourceIndexType;
+          if (!fileType) {
+            throw Error('guppyConfig.manifestMapping.resourceIndexType is not defined');
+          }
           const countResult = await this.props.getTotalCountsByTypeAndFilter(fileType, {
             [caseFieldInFileIndex]: {
               selectedValues: caseIDList,
@@ -653,7 +752,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
 
   // check if the user has access to this resource
   isButtonDisplayed = (buttonConfig) => {
-    if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
+    if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace' || buttonConfig.type === 'export-pfb-to-workspace') {
       const authResult = this.props.userAccess.Workspace;
       return typeof authResult !== 'undefined' ? authResult : true;
     }
@@ -665,11 +764,17 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     if (this.props.isLocked) {
       return !this.props.isLocked;
     }
-    if (buttonConfig.type === 'manifest') {
-      return this.state.manifestEntryCount > 0;
+    if (buttonConfig.type.startsWith('data') || buttonConfig.type === 'manifest' || buttonConfig.type === 'file-manifest') {
+      let isEnabled = Object.values(this.state.downloadingInProgress).every((x) => x === false);
+      if (buttonConfig.type === 'manifest') {
+        isEnabled = isEnabled && this.state.manifestEntryCount > 0;
+      }
+      return isEnabled;
     }
+
     const pfbJobIsRunning = this.state.exportingToTerra
     || this.state.exportingToSevenBridges
+    || this.state.exportingPFBToURL
     || this.isPFBRunning();
     if (buttonConfig.type === 'export-to-pfb') {
       // disable the pfb export button if any other pfb export jobs are running
@@ -688,6 +793,19 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     }
     if (buttonConfig.type === 'export-pfb-to-workspace') {
       // disable the pfb export button if any other pfb export jobs are running
+      if (pfbJobIsRunning) {
+        return false;
+      }
+      // If limited file PFB export is enabled, disable the button if the selected
+      // data files are on more than one source node. (See https://github.com/uc-cdis/data-portal/pull/729)
+      if (this.props.buttonConfig.enableLimitedFilePFBExport) {
+        return this.state.sourceNodesInCohort.length === 1;
+      }
+    }
+    if (buttonConfig.type === 'export-pfb-to-url') {
+      return !pfbJobIsRunning;
+    }
+    if (buttonConfig.type === 'export-file-pfb-to-url') {
       if (pfbJobIsRunning) {
         return false;
       }
@@ -742,6 +860,15 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     if (this.props.isPending) {
       return true;
     }
+    if (buttonConfig.type.startsWith('data')) {
+      return this.state.downloadingInProgress.data;
+    }
+    if (buttonConfig.type === 'manifest') {
+      return this.state.downloadingInProgress.manifest;
+    }
+    if (buttonConfig.type === 'file-manifest') {
+      return this.state.downloadingInProgress.fileManifest;
+    }
     if (buttonConfig.type === 'export-to-workspace' || buttonConfig.type === 'export-files-to-workspace') {
       return this.state.exportingToWorkspace;
     }
@@ -749,7 +876,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       // export to pfb button is pending if a pfb export job is running and it's
       // neither an export to terra job or an export to seven bridges job.
       return this.isPFBRunning()
-        && !(this.state.exportingToTerra || this.state.exportingToSevenBridges);
+        && !(this.state.exportingToTerra || this.state.exportingToSevenBridges || this.state.exportingPFBToURL);
     }
     if (buttonConfig.type === 'export' || buttonConfig.type === 'export-files') {
       // export to terra button is pending if a pfb export job is running and
@@ -762,6 +889,13 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       // and it's an export to seven bridges job.
       return this.isPFBRunning()
         && this.state.exportingToSevenBridges;
+    }
+    if (buttonConfig.type === 'export-pfb-to-url' || buttonConfig.type === 'export-file-pfb-to-url') {
+      return this.isPFBRunning()
+        && this.state.exportingPFBToURL
+        // because we can have multiple `export-pfb-to-url` buttons, only make the
+        // one the user clicked have the pending state.
+        && this.state.targetURLTemplate === buttonConfig.targetURLTemplate;
     }
     return false;
   };
@@ -788,9 +922,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     // (See https://github.com/uc-cdis/data-portal/pull/729).
     // If the user has selected multiple files on different nodes, display a
     // tooltip explaining that the user can only export files of the same type.
-    const isFilePFBButton = buttonConfig.type === 'export-files' || buttonConfig.type === 'export-files-to-pfb' || buttonConfig.type === 'export-files-to-seven-bridges';
     if (this.props.buttonConfig.enableLimitedFilePFBExport
-      && isFilePFBButton
+      && this.isFilePFBButton(buttonConfig)
       && this.state.sourceNodesInCohort.length > 1) {
       tooltipEnabled = true;
       btnTooltipText = 'Currently you cannot export files with different Data Types. Please choose a single Data Type from the Data Type filter on the left.';
@@ -798,9 +931,11 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
 
     return (
       <Button
-        key={buttonConfig.type}
-        onClick={clickFunc}
-        label={buttonTitle}
+        key={`${buttonConfig.type}-${buttonConfig.title}`}
+        onClick={() => ((!this.props.user.username && this.isLoginForDownloadEnabled()
+          && this.isDownloadButton(buttonConfig)) ? this.goToLogin() : clickFunc())}
+        label={(!this.props.user.username && this.isLoginForDownloadEnabled()
+          && this.isDownloadButton(buttonConfig)) ? `Login to ${buttonTitle.toLowerCase()}` : buttonTitle}
         leftIcon={buttonConfig.leftIcon}
         rightIcon={buttonConfig.rightIcon}
         className='explorer-button-group__download-button'
@@ -813,6 +948,19 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
     );
   };
 
+  isLoginForDownloadEnabled = () => this.props.buttonConfig.loginForDownload;
+
+  goToLogin = () => {
+    if (!this.props.user || !this.props.user.username) {
+      this.props.history.push('/login', { from: `${this.props.location.pathname}` });
+    }
+  }
+
+  isDownloadButton = (buttonConfig) => (
+    buttonConfig.type.startsWith('data')
+    || buttonConfig.type === 'manifest'
+    || buttonConfig.type === 'file-manifest');
+
   render() {
     const dropdownConfigs = calculateDropdownButtonConfigs(this.props.buttonConfig);
     return (
@@ -824,8 +972,8 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
             && (
               <Popup
                 message={terraExportWarning.message
-                  ? terraExportWarning.message
-                  : `Warning: You have selected more subjects than are currently supported. The import may not succeed. Terra recommends slicing your data into segments of no more than ${terraExportWarning.subjectThreshold.toLocaleString()} subjects and exporting each separately. Would you like to continue anyway?`}
+                  ? [terraExportWarning.message]
+                  : [`Warning: You have selected more subjects than are currently supported. The import may not succeed. Terra recommends slicing your data into segments of no more than ${terraExportWarning.subjectThreshold.toLocaleString()} subjects and exporting each separately. Would you like to continue anyway?`]}
                 title={terraExportWarning.title
                   ? terraExportWarning.title
                   : 'Warning: Export May Fail'}
@@ -856,7 +1004,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
           * First, render dropdown buttons
           * Buttons are grouped under same dropdown if they have the same dropdownID
           * If only one button points to the same dropdownId, it won't be grouped into dropdown
-          *   but will only be rendered as sinlge normal button instead.
+          *   but will only be rendered as single normal button instead.
           */
           dropdownConfigs && Object.keys(dropdownConfigs).length > 0
           && Object.keys(dropdownConfigs)
@@ -865,25 +1013,54 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
               const entry = dropdownConfigs[dropdownId];
               const btnConfigs = entry.buttonConfigs;
               const dropdownTitle = entry.dropdownConfig.title;
+
+              // If limited file PFB export is enabled, PFB export buttons will be disabled
+              // if the user selects multiple files that are on different nodes in the graph.
+              // (See https://github.com/uc-cdis/data-portal/pull/729).
+              // If the user has selected multiple files on different nodes, display a
+              // tooltip explaining that the user can only export files of the same type.
+              const showLimitedFilePFBExportTooltip = (buttonConfig) => this.props.buttonConfig.enableLimitedFilePFBExport
+                && this.isFilePFBButton(buttonConfig)
+                && this.state.sourceNodesInCohort.length > 1;
+
               return (
                 <Dropdown
                   key={dropdownId}
                   className='explorer-button-group__dropdown'
                   disabled={this.props.totalCount === 0 || this.props.isLocked}
                 >
-                  <Dropdown.Button>{dropdownTitle}</Dropdown.Button>
+                  <Dropdown.Button>{(!this.props.user.username && this.isLoginForDownloadEnabled())
+                    ? `Login to ${dropdownTitle.toLowerCase()}` : dropdownTitle}
+                  </Dropdown.Button>
                   <Dropdown.Menu>
                     {
                       btnConfigs.map((btnCfg) => {
                         const onClick = this.getOnClickFunction(btnCfg);
+                        const buttonText = (!this.props.user.username
+                          && this.isLoginForDownloadEnabled()
+                          && this.isDownloadButton(btnCfg))
+                          ? `Login to download ${btnCfg.title}`
+                          : btnCfg.title;
+
                         return (
                           <Dropdown.Item
-                            key={btnCfg.type}
-                            leftIcon='datafile'
-                            rightIcon='download'
-                            onClick={onClick}
+                            key={`${btnCfg.type}-${btnCfg.title}`}
+                            leftIcon={btnCfg.leftIcon}
+                            rightIcon={btnCfg.rightIcon}
+                            onClick={() => ((!this.props.user.username && this.isLoginForDownloadEnabled()
+                              && this.isDownloadButton(btnCfg)) ? this.goToLogin() : onClick())}
                           >
-                            {btnCfg.title}
+                            {showLimitedFilePFBExportTooltip(btnCfg)
+                              ? (
+                                <Tooltip
+                                  placement='right'
+                                  overlay={'Currently you cannot export files with different Data Types. Please choose a single Data Type from the Data Type filter on the left.'}
+                                  arrowContent={<div className='rc-tooltip-arrow-inner' />}
+                                >
+                                  <div>{buttonText}</div>
+                                </Tooltip>
+                              )
+                              : <div>{buttonText}</div>}
                           </Dropdown.Item>
                         );
                       })
@@ -933,6 +1110,8 @@ ExplorerButtonGroup.propTypes = {
   fetchJobResult: PropTypes.func.isRequired,
   isLocked: PropTypes.bool.isRequired,
   userAccess: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 ExplorerButtonGroup.defaultProps = {

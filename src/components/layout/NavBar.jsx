@@ -6,9 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import NavButton from './NavButton';
 import NavBarTooltip from './NavBarTooltip';
-import { breakpoints, commonsWideAltText } from '../../localconf';
+import { breakpoints, commonsWideAltText, basename } from '../../localconf';
 import { config, components } from '../../params';
 import './NavBar.less';
+
+const cleanBasename = basename.replace(/(\/dev.html$)/, '');
 
 /**
  * NavBar renders row of nav-items of form { name, icon, link }
@@ -99,7 +101,7 @@ class NavBar extends Component {
                   <a href={homepageHref}>
                     <img
                       className='nav-bar__logo-img'
-                      src='/src/img/logo.png'
+                      src={(cleanBasename === '/') ? '/src/img/logo.png' : `${cleanBasename}/src/img/logo.png`}
                       alt={commonsWideAltText.portalLogo || 'Gen3 Data Commons - home'}
                     />
                   </a>
@@ -108,7 +110,7 @@ class NavBar extends Component {
                   <NavLink exact to=''>
                     <img
                       className='nav-bar__logo-img'
-                      src='/src/img/logo.png'
+                      src={(cleanBasename === '/') ? '/src/img/logo.png' : `${cleanBasename}/src/img/logo.png`}
                       alt={commonsWideAltText.portalLogo || 'Gen3 Data Commons - home'}
                     />
                   </NavLink>
@@ -119,13 +121,24 @@ class NavBar extends Component {
                 <div
                   className='nav-bar__home-button'
                 >
-                  <NavLink
-                    exact
-                    to=''
-                    className='h3-typo nav-bar__link nav-bar__link--home g3-ring-on-focus'
-                  >
-                    {this.props.navTitle}
-                  </NavLink>
+                  {homepageHref
+                    ? (
+                      <a
+                        href={homepageHref}
+                        className='h3-typo nav-bar__link nav-bar__link--home g3-ring-on-focus'
+                      >
+                        {this.props.navTitle}
+                      </a>
+                    )
+                    : (
+                      <NavLink
+                        exact
+                        to=''
+                        className='h3-typo nav-bar__link nav-bar__link--home g3-ring-on-focus'
+                      >
+                        {this.props.navTitle}
+                      </NavLink>
+                    )}
                 </div>
               )
             }

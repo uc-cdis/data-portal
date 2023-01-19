@@ -16,18 +16,28 @@ module.exports = {
     es6: true,
     jest: true,
   },
+  globals: {
+    JSX: true,
+  },
   plugins: [
     'react',
+    'react-hooks',
     'jsx-a11y',
     'import',
   ],
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 6,
     ecmaFeatures: {
       jsx: true,
       spread: true,
+    },
+    requireConfigFile: false,
+    babelOptions: {
+      plugins: [
+        '@babel/plugin-proposal-class-properties',
+      ],
     },
   },
   rules: {
@@ -74,7 +84,7 @@ module.exports = {
     ],
     'jsx-a11y/label-has-associated-control': [2, {
       labelAttributes: ['label'],
-      controlComponents: ['Switch'],
+      controlComponents: ['Switch', 'Input'],
       depth: 3,
     }],
     'jsx-a11y/anchor-is-valid': ['off'],
@@ -92,6 +102,8 @@ module.exports = {
     'react/destructuring-assignment': ['off'],
     'react/jsx-one-expression-per-line': ['off'],
     'react/jsx-props-no-spreading': ['off'],
+    'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
+    'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
   },
   overrides: [
     {
@@ -170,6 +182,12 @@ module.exports = {
       files: ['src/components/InputWithIcon.jsx'],
       rules: {
         'react/no-unused-prop-types': 'off',
+      },
+    },
+    {
+      files: ['src/Analysis/GWASWizard/shared/CustomDichotomousSelect.jsx'],
+      rules: {
+        'react/no-unknown-property': ['error', { ignore: ['align'] }], // centering in h3
       },
     },
     // Linting settings for Typescript

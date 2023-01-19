@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import LegendPanel from './LegendPanel';
 import MapStylePanel from './MapStylePanel';
 import LayerSelector from './LayerSelector';
@@ -11,9 +11,10 @@ import './ControlPanel.less';
 
 class ControlPanel extends PureComponent {
   render() {
-    const tooltipText1 = 'Google Mobility Data shows movement trends as a percentage variance from an established baseline for a given day and place.';
+    const tooltipText1 = (<React.Fragment> Google Mobility Data shows movement trends as a percentage variance from an established baseline for a given day and place. <br /> Google LLC &quot;Google COVID-19 Community Mobility Reports&quot;. <a href='https://www.google.com/covid19/mobility/'> https://www.google.com/covid19/mobility/</a>  <br /> Accessed: Today</React.Fragment>);
     const tooltipText2 = 'Additional data of interest to display in map tool-tip pop-up.  These data will not influence color gradients on the map.';
 
+    const tooltipText1Style = { 'word-wrap': 'break-word' };
     return (
       <div className='control-panel'>
         <h3>{this.props.legendTitle}</h3>
@@ -27,6 +28,7 @@ class ControlPanel extends PureComponent {
               <Tooltip
                 placement='right'
                 overlay={tooltipText1}
+                overlayStyle={tooltipText1Style}
                 overlayClassName='g3-filter-section__and-or-toggle-helper-tooltip'
                 arrowContent={<div className='rc-tooltip-arrow-inner' />}
                 width='300px'
@@ -39,7 +41,7 @@ class ControlPanel extends PureComponent {
                   aria-describedby={'controlPanelTooltipMobilityData'}
                   className={'g3-helper-tooltip'}
                 >
-                  <ExclamationCircleOutlined />
+                  <InfoCircleOutlined />
                 </span>
               </Tooltip>
             )}
@@ -91,7 +93,7 @@ class ControlPanel extends PureComponent {
                     aria-describedby={'controlPanelTooltipAdditional_data'}
                     className={'g3-helper-tooltip'}
                   >
-                    <ExclamationCircleOutlined />
+                    <InfoCircleOutlined />
                   </span>
                 </Tooltip>
               </h4>
