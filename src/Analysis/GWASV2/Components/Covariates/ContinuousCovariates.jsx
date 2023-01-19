@@ -54,9 +54,9 @@ const ContinuousCovariates = ({
               <PhenotypeHistogram
                 selectedStudyPopulationCohort={selectedStudyPopulationCohort}
                 selectedCovariates={selectedCovariates}
-                outcome={outcome} 
+                outcome={outcome}
                 selectedContinuousItem={selected}
-            />
+              />
             </div>
           ) : (
             <div data-tour='phenotype-histogram' className='phenotype-histogram-directions'>

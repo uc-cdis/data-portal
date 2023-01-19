@@ -204,7 +204,8 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="next-button"]',
-      content: 'Please press Next to continue. In the next screen, you can review your selections for the GWAS study and provide a name for your GWAS study. Please press Submit to submit your study or press Back to adjust your study parameters',    },
+      content: 'Please press Next to continue. In the next screen, you can review your selections for the GWAS study and provide a name for your GWAS study. Please press Submit to submit your study or press Back to adjust your study parameters',
+    },
   ],
 };
 

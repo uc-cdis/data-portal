@@ -14,12 +14,11 @@ const SelectCovariates = ({
   covariates,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
-  useEffect( () => () => 
-    dispatch({
-      type: ACTIONS.SET_SELECTION_MODE,
-      payload: '',
-    }),
-  [] );
+  useEffect(() => () => dispatch({
+    type: ACTIONS.SET_SELECTION_MODE,
+    payload: '',
+  }),
+  []);
 
   return (
     <React.Fragment>
