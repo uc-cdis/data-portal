@@ -23,12 +23,24 @@ const ContinuousCovariates = ({
   return (
     <React.Fragment>
       <div className='GWASUI-flexRow continuous-covariates' data-tour='name'>
-        <div>
+        <div className='continous-covariates-table'>
           <Covariates selected={selected} handleSelect={setSelected} />
-          <div data-tour='submit-cancel-buttons'>
+        </div>
+        <div className='phenotype-histogram'>
+          <div data-tour='submit-cancel-buttons' className='continuous-covariates-button-container'>
+            <button
+              type='button'
+              className='cancel-button'
+              onClick={() => {
+                handleClose();
+              }}
+            >
+              Cancel
+            </button>
             <button
               className='submit-button'
               type='button'
+              disabled={!selected}
               onClick={() => {
                 dispatch(formatSelected(selected));
                 handleClose();
@@ -36,27 +48,21 @@ const ContinuousCovariates = ({
             >
               {submitButtonLabel}
             </button>
-            <button
-              type='button'
-              onClick={() => {
-                handleClose();
-              }}
-            >
-            Cancel
-            </button>
           </div>
-        </div>
-        <div data-tour='phenotype-histogram' className='phenotype-histogram'>
-          {selected
-            ? (
+          <div data-tour='phenotype-histogram'>
+            {selected ? (
               <PhenotypeHistogram
                 selectedStudyPopulationCohort={selectedStudyPopulationCohort}
                 selectedCovariates={selectedCovariates}
-                outcome={outcome}
+                outcome={outcome} 
                 selectedContinuousItem={selected}
               />
-            )
-            : 'Select a concept to render its corresponding histogram'}
+            ) : (
+              <div className='phenotype-histogram-directions'>
+                Select a concept to render its corresponding histogram
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </React.Fragment>
