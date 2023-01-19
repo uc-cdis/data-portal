@@ -37,8 +37,10 @@ const CustomDichotomousCovariates = ({
   return (
     <div className='custom-dichotomous-covariates'>
       <div className='GWASUI-flexRow' data-tour='name'>
+        <label htmlFor='phenotype-input'>Phenotype Name</label>
         <input
           type='text'
+          id='phenotype-input'
           className={'GWASUI-providedName'}
           onChange={(e) => setProvidedName(e.target.value)}
           value={providedName}
@@ -46,7 +48,7 @@ const CustomDichotomousCovariates = ({
         />
         <button
           type='button'
-          className={'GWASUI-dichBtn'}
+          className='GWASUI-dichBtn cancel-button'
           onClick={() => handleClose()}
         >
           Cancel
@@ -55,7 +57,7 @@ const CustomDichotomousCovariates = ({
           <button
             type='button'
             disabled={customDichotomousValidation}
-            className={`${
+            className={`submit-button ${
               !customDichotomousValidation ? 'GWASUI-btnEnable' : ''
             } GWASUI-dichBtn`}
             onClick={() => handleDichotomousSubmit()}
@@ -65,9 +67,13 @@ const CustomDichotomousCovariates = ({
         </div>
       </div>
       <React.Fragment>
-        <div data-tour='choosing-dichotomous'>
+        <div>
           <div className='GWASUI-flexRow' data-tour='table-repeat'>
-            <div className='GWASUI-flexColumn'>
+            <div className='GWASUI-flexColumn dichotomous-selection'>
+              <div className='dichotomous-directions'>
+                Define a dichotomous variable by study population with 2 other
+                cohorts.
+              </div>
               <div>
                 <h3>Get Value 0</h3>
                 <SelectCohortDropDown handleCohortSelect={setFirstPopulation} />
@@ -80,7 +86,6 @@ const CustomDichotomousCovariates = ({
               </div>
             </div>
             <div className='cohorts-overlap-diagram'>
-              <h3>Cohort overlap diagram</h3>
               {!firstPopulation || !secondPopulation ? (
                 <div>Select your cohorts to assess overlap</div>
               ) : (

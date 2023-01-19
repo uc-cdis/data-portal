@@ -20,7 +20,7 @@ const SelectCovariates = ({
       <div className='GWASUI-row'>
         <div className='GWASUI-double-column'>
           {selectionMode === 'continuous' && (
-            <div className='select-covariates-container'>
+            <div className='select-container'>
               <ContinuousCovariates
                 selectedStudyPopulationCohort={studyPopulationCohort}
                 selectedCovariates={covariates}
@@ -40,7 +40,7 @@ const SelectCovariates = ({
           )}
 
           {selectionMode === 'dichotomous' && (
-            <div className='select-covariates-container'>
+            <div className='select-container'>
               <CustomDichotomousCovariates
                 studyPopulationCohort={studyPopulationCohort}
                 covariates={covariates}

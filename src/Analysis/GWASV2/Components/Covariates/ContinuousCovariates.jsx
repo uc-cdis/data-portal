@@ -23,38 +23,44 @@ const ContinuousCovariates = ({
   return (
     <React.Fragment>
       <div className='GWASUI-flexRow continuous-covariates' data-tour='name'>
-        <div>
+        <div className='continous-covariates-table'>
           <Covariates selected={selected} handleSelect={setSelected} />
-          <button
-            className='submit-button'
-            type='button'
-            onClick={() => {
-              dispatch(formatSelected(selected));
-              handleClose();
-            }}
-          >
-            {submitButtonLabel}
-          </button>
-          <button
-            type='button'
-            onClick={() => {
-              handleClose();
-            }}
-          >
-          Cancel
-          </button>
         </div>
         <div className='phenotype-histogram'>
-          {selected
-            ? (
-              <PhenotypeHistogram
-                selectedStudyPopulationCohort={selectedStudyPopulationCohort}
-                selectedCovariates={selectedCovariates}
-                outcome={outcome}
-                selectedContinuousItem={selected}
-              />
-            )
-            : 'Select a concept to render its corresponding histogram'}
+          <div className='continuous-covariates-button-container'>
+            <button
+              type='button'
+              className='cancel-button'
+              onClick={() => {
+                handleClose();
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              className='submit-button'
+              type='button'
+              disabled={!selected}
+              onClick={() => {
+                dispatch(formatSelected(selected));
+                handleClose();
+              }}
+            >
+              {submitButtonLabel}
+            </button>
+          </div>
+          {selected ? (
+            <PhenotypeHistogram
+              selectedStudyPopulationCohort={selectedStudyPopulationCohort}
+              selectedCovariates={selectedCovariates}
+              outcome={outcome}
+              selectedContinuousItem={selected}
+            />
+          ) : (
+            <div className='phenotype-histogram-directions'>
+              Select a concept to render its corresponding histogram
+            </div>
+          )}
         </div>
       </div>
     </React.Fragment>
