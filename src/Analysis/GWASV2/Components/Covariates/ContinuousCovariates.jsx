@@ -22,7 +22,7 @@ const ContinuousCovariates = ({
 
   return (
     <React.Fragment>
-      <div className='GWASUI-flexRow continuous-covariates' data-tour='name'>
+      <div className='GWASUI-flexRow continuous-covariates'>
         <div className='continous-covariates-table'>
           <Covariates selected={selected} handleSelect={setSelected} />
         </div>

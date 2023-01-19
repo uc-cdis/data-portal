@@ -36,7 +36,7 @@ const CustomDichotomousCovariates = ({
 
   return (
     <div className='custom-dichotomous-covariates'>
-      <div className='GWASUI-flexRow' data-tour='name'>
+      <div className='GWASUI-flexRow'>
         <label htmlFor='phenotype-input'>Phenotype Name</label>
         <input
           type='text'
@@ -55,7 +55,7 @@ const CustomDichotomousCovariates = ({
         >
           Cancel
         </button>
-        <div data-tour='add-button'>
+        <div>
           <button
             type='button'
             disabled={customDichotomousValidation}
@@ -70,7 +70,7 @@ const CustomDichotomousCovariates = ({
       </div>
       <React.Fragment>
         <div>
-          <div className='GWASUI-flexRow' data-tour='table-repeat'>
+          <div className='GWASUI-flexRow'>
             <div data-tour='select-dichotomous' className='GWASUI-flexColumn dichotomous-selection'>
               <div className='dichotomous-directions'>
                 Define a dichotomous variable by study population with 2 other

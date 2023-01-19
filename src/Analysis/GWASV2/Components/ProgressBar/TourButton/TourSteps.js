@@ -144,7 +144,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="covariates-card"]',
-      content: 'In this section you are able to see all added covariates. Each card represents one covariate defined. You may choose to edit a covariate you defined, or remove it',
+      content: 'In this section you are able to see the outcome phenotype and all added covariates. Each card represents one covariate defined. You may choose to edit a covariate you defined, or remove it',
     },
     {
       selector: '[data-tour="attrition-table"]',
@@ -174,7 +174,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="covariates-card"]',
-      content: 'In this section you are able to see all added covariates. Each card represents one covariate defined. You may choose to edit a covariate you defined, or remove it',
+      content: 'In this section you are able to see the outcome phenotype and all added covariates. Each card represents one covariate defined. You may choose to edit a covariate you defined, or remove it',
     },
     {
       selector: '[data-tour="attrition-table"]',
