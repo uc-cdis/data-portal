@@ -36,11 +36,11 @@ const TourSteps = {
   1: [
     {
       selector: '[data-tour="select-outcome"]',
-      content: 'In this step you may choose your outcome phenotype. To edit previous steps please click ‘Previous’ or press the step number',
+      content: 'In this step you may choose your outcome phenotype. To edit previous steps please click ‘Previous’',
     },
     {
       selector: '[data-tour="select-outcome-continious"]',
-      content: 'Please press here to select a continuous outcome phenotype. In pressing this option you’ll be able to select one of the contentious variables available to you as an outcome phenotype for your study population',
+      content: 'Please press here to select a continuous outcome phenotype. In pressing this option you’ll be able to select one of the continuous variables available to you as an outcome phenotype for your study population',
     },
     {
       selector: '[data-tour="select-outcome-dichotomous"]',
@@ -102,11 +102,11 @@ const TourSteps = {
   2: [
     {
       selector: '[data-tour="select-covariate"]',
-      content: 'In this step you may add as many covariates as you wish. To edit previous steps please click ‘Previous’ or press the step number. This step is not mandatory',
+      content: 'In this step you may add as many covariates as you wish. To edit previous steps please click ‘Previous’. This step is not mandatory',
     },
     {
       selector: '[data-tour="select-covariate-continious"]',
-      content: 'Please press here to add a continuous covariate to your GWAS. In pressing this option you’ll be able to select one of the contentious variables available to you as covariate for your study population',
+      content: 'Please press here to add a continuous covariate to your GWAS. In pressing this option you’ll be able to select one of the continuous variables available to you as covariate for your study population',
     },
     {
       selector: '[data-tour="select-covariate-dichotomous"]',

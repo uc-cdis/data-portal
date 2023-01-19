@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
@@ -14,6 +14,12 @@ const SelectCovariates = ({
   covariates,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
+  useEffect( () => () => 
+    dispatch({
+      type: ACTIONS.SET_SELECTION_MODE,
+      payload: '',
+    }),
+  [] );
 
   return (
     <React.Fragment>

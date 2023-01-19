@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
@@ -14,6 +14,12 @@ const SelectOutcome = ({
   covariates,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
+  useEffect( () => () => 
+    dispatch({
+      type: ACTIONS.SET_SELECTION_MODE,
+      payload: '',
+    }),
+  [] );
 
   const determineSelectOutcomeJsx = () => {
     if (selectionMode === 'continuous') {
