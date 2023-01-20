@@ -2,7 +2,7 @@ const TourSteps = {
   0: [
     {
       selector: '[data-tour="cohort-intro"]',
-      content: 'In this page you may select your starting study population',
+      content: 'Here you may select your starting study population',
     },
     {
       selector: '[data-tour="cohort-select"]',
@@ -66,7 +66,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="phenotype-histogram"]',
-      content: 'This is an interactive tool. Here you may define the minimum and maximum cutoffs of your variable. You may also use transformations on this data',
+      content: 'Here you may see the histogram corresponding to your chosen variable',
     },
     {
       selector: '[data-tour="submit-cancel-buttons"]',
@@ -74,7 +74,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="attrition-table"]',
-      content: 'Here you may see how your selection is populated as ancestry. This table will show you the population of your potential cohort as it relates to the ancestry you may choose as you make selections in the GWAS App. Please press the chart icon to revisit your adjusted selection',
+      content: 'Here you may see how your selection is populated as ancestry. This table will show you the population of your potential cohort as it relates to the ancestry you may choose as you make selections in the GWAS App',
     },
   ],
   1.2: [
@@ -96,7 +96,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="attrition-table"]',
-      content: 'Here you may see how your selection is populated as ancestry. This table will show you the population of your potential cohort as it relates to the ancestry you may choose as you make selections in the GWAS App. Please press the chart icon to revisit the Euler diagram',
+      content: 'Here you may see how your selection is populated as ancestry. This table will show you the population of your potential cohort as it relates to the ancestry you may choose as you make selections in the GWAS App',
     },
   ],
   2: [
@@ -136,7 +136,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="phenotype-histogram"]',
-      content: 'This is an interactive tool. Here you may define the minimum and maximum cutoffs of your variable. You may also use transformations on this data',
+      content: 'Here you may see the histogram corresponding to your chosen variable',
     },
     {
       selector: '[data-tour="submit-cancel-buttons"]',
@@ -144,11 +144,11 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="covariates-card"]',
-      content: 'In this section you are able to see the outcome phenotype and all added covariates. Each card represents one covariate defined. You may choose to edit a covariate you defined, or remove it',
+      content: 'In this section you are able to see the outcome phenotype and all added covariates. Each card represents one covariate defined. You may remove a previously chosen variable',
     },
     {
       selector: '[data-tour="attrition-table"]',
-      content: 'Here you may see how your selection is populated as ancestry. This table will show you the population of your potential cohort as it relates to the ancestry you may choose as you make selections in the GWAS App. Please press the chart icon to revisit your adjusted selection',
+      content: 'Here you may see how your selection is populated as ancestry. This table will show you the population of your potential cohort as it relates to the ancestry you may choose as you make selections in the GWAS App',
     },
   ],
   2.2: [
@@ -174,11 +174,11 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="covariates-card"]',
-      content: 'In this section you are able to see the outcome phenotype and all added covariates. Each card represents one covariate defined. You may choose to edit a covariate you defined, or remove it',
+      content: 'In this section you are able to see the outcome phenotype and all added covariates. Each card represents one covariate defined. You may remove a previously chosen variable',
     },
     {
       selector: '[data-tour="attrition-table"]',
-      content: 'Here you may see how your selection is populated as ancestry. This table will show you the population of your potential cohort as it relates to the ancestry you may choose as you make selections in the GWAS App. Please press the chart icon to revisit the Euler diagram',
+      content: 'Here you may see how your selection is populated as ancestry. This table will show you the population of your potential cohort as it relates to the ancestry you may choose as you make selections in the GWAS App',
     },
 
   ],
