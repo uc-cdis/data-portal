@@ -174,7 +174,7 @@ const TourSteps = {
     },
     {
       selector: '[data-tour="covariates-card"]',
-      content: 'In this section you are able to see the outcome phenotype and all added covariates. Each card represents one covariate defined. You may remove a previously chosen variable',
+      content: 'In this section you are able to see the outcome phenotype and all added covariates. Each card represents one covariate defined. You may remove a previously created variable',
     },
     {
       selector: '[data-tour="attrition-table"]',
