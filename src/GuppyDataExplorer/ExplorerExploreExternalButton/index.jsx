@@ -54,6 +54,7 @@ function ExplorerExploreExternalButton({ filter }) {
   const [commonsInfo, setCommonsInfo] = useState(
     /** @type {ExternalCommonsInfo} */ (null)
   );
+  const [isFileDownloaded, setIsFileDownloaded] = useState(false);
 
   function openPopup() {
     setShow(true);
@@ -63,6 +64,8 @@ function ExplorerExploreExternalButton({ filter }) {
     setSelected(emptyOption);
     setCommonsInfo(null);
     setShow(false);
+    setIsLoading(false);
+    setIsFileDownloaded(false);
   }
 
   /** @param {typeof selected} newSelected */
@@ -95,10 +98,19 @@ function ExplorerExploreExternalButton({ filter }) {
     closePopup();
   }
 
-  function handleDownlodManifest() {
+  function handleDownloadManifest() {
     const dateString = new Date().toISOString().split('T')[0];
     const filename = `${dateString}-manifest-${selected.value}.txt`;
     saveToFile(commonsInfo.data, filename);
+    setIsFileDownloaded(true);
+  }
+
+  function isOpenInNewTabButtonEnabled() {
+    if (!commonsInfo) {
+      return false;
+    } else if (commonsInfo.type === 'file') {
+      return isFileDownloaded;
+    }
   }
 
   return (
@@ -147,7 +159,7 @@ function ExplorerExploreExternalButton({ filter }) {
                 </p>
                 <Button
                   label='Download manifest'
-                  onClick={handleDownlodManifest}
+                  onClick={handleDownloadManifest}
                 />
               </div>
             ) : null}
@@ -160,7 +172,7 @@ function ExplorerExploreExternalButton({ filter }) {
               />
               <Button
                 label='Open in new tab'
-                enabled={commonsInfo !== null}
+                enabled={isOpenInNewTabButtonEnabled()}
                 onClick={handleOpenExternalCommons}
               />
             </div>
