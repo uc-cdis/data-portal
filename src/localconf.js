@@ -211,6 +211,10 @@ function buildConfig(opts) {
   if (components.systemUse && components.systemUse.systemUseText) {
     showSystemUse = true;
   }
+  let showSystemUseOnlyOnLogin = false;
+  if (components.systemUse && components.systemUse.showOnlyOnLogin) {
+    showSystemUseOnlyOnLogin = true;
+  }
 
   let showArboristAuthzOnProfile = false;
   if (config.showArboristAuthzOnProfile) {
@@ -574,6 +578,7 @@ function buildConfig(opts) {
     ddEnv,
     ddSampleRate,
     showSystemUse,
+    showSystemUseOnlyOnLogin,
     Error403Url,
   };
 }
