@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
@@ -14,6 +14,10 @@ const SelectOutcome = ({
   covariates,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
+  useEffect(() => () => dispatch({
+    type: ACTIONS.SET_SELECTION_MODE,
+    payload: '',
+  }), []);
 
   const determineSelectOutcomeJsx = () => {
     if (selectionMode === 'continuous') {
@@ -24,6 +28,10 @@ const SelectOutcome = ({
             outcome={outcome}
             handleClose={() => {
               setSelectionMode('');
+              dispatch({
+                type: ACTIONS.SET_SELECTION_MODE,
+                payload: '',
+              });
             }}
             dispatch={(chosenOutcome) => {
               dispatch({
@@ -43,6 +51,10 @@ const SelectOutcome = ({
             outcome={outcome}
             handleClose={() => {
               setSelectionMode('');
+              dispatch({
+                type: ACTIONS.SET_SELECTION_MODE,
+                payload: '',
+              });
             }}
             dispatch={(chosenOutcome) => {
               dispatch({
@@ -57,11 +69,31 @@ const SelectOutcome = ({
 
     return (
       <div className='GWASUI-selectionUI'>
-        <button type='button' onClick={() => setSelectionMode('continuous')}>
+        <button
+          data-tour='select-outcome-continious'
+          type='button'
+          onClick={() => {
+            setSelectionMode('continuous');
+            dispatch({
+              type: ACTIONS.SET_SELECTION_MODE,
+              payload: 'continuous',
+            });
+          }}
+        >
           <span>+</span>
           <span>Add Continuous Outcome Phenotype</span>
         </button>
-        <button type='button' onClick={() => setSelectionMode('dichotomous')}>
+        <button
+          data-tour='select-outcome-dichotomous'
+          type='button'
+          onClick={() => {
+            setSelectionMode('dichotomous');
+            dispatch({
+              type: ACTIONS.SET_SELECTION_MODE,
+              payload: 'dichotomous',
+            });
+          }}
+        >
           <span>+</span>
           <span>Add Dichotomous Outcome Phenotype</span>
         </button>
@@ -72,7 +104,7 @@ const SelectOutcome = ({
   // Outputs the JSX for the component:
   return (
     <div className='GWASUI-row'>
-      <div className='GWASUI-double-column'>{determineSelectOutcomeJsx()}</div>
+      <div data-tour='select-outcome' className='GWASUI-double-column'>{determineSelectOutcomeJsx()}</div>
       <div className='GWASUI-column GWASUI-card-column'>
         <CovariatesCardsList
           covariates={covariates}

@@ -22,12 +22,12 @@ const ContinuousCovariates = ({
 
   return (
     <React.Fragment>
-      <div className='GWASUI-flexRow continuous-covariates' data-tour='name'>
+      <div className='GWASUI-flexRow continuous-covariates'>
         <div className='continous-covariates-table'>
           <Covariates selected={selected} handleSelect={setSelected} />
         </div>
         <div className='phenotype-histogram'>
-          <div className='continuous-covariates-button-container'>
+          <div data-tour='submit-cancel-buttons' className='continuous-covariates-button-container'>
             <button
               type='button'
               className='cancel-button'
@@ -50,14 +50,16 @@ const ContinuousCovariates = ({
             </button>
           </div>
           {selected ? (
-            <PhenotypeHistogram
-              selectedStudyPopulationCohort={selectedStudyPopulationCohort}
-              selectedCovariates={selectedCovariates}
-              outcome={outcome}
-              selectedContinuousItem={selected}
-            />
+            <div data-tour='phenotype-histogram'>
+              <PhenotypeHistogram
+                selectedStudyPopulationCohort={selectedStudyPopulationCohort}
+                selectedCovariates={selectedCovariates}
+                outcome={outcome}
+                selectedContinuousItem={selected}
+              />
+            </div>
           ) : (
-            <div className='phenotype-histogram-directions'>
+            <div data-tour='phenotype-histogram' className='phenotype-histogram-directions'>
               Select a concept to render its corresponding histogram
             </div>
           )}

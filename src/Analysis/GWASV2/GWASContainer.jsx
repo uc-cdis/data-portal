@@ -20,10 +20,12 @@ const GWASContainer = () => {
     switch (state.currentStep) {
     case 0:
       return (
-        <SelectStudyPopulation
-          selectedCohort={state.selectedStudyPopulationCohort}
-          dispatch={dispatch}
-        />
+        <div data-tour='cohort-intro'>
+          <SelectStudyPopulation
+            selectedCohort={state.selectedStudyPopulationCohort}
+            dispatch={dispatch}
+          />
+        </div>
       );
     case 1:
       return (
@@ -89,7 +91,10 @@ const GWASContainer = () => {
 
   return (
     <SourceContextProvider>
-      <ProgressBar currentStep={state.currentStep} />
+      <ProgressBar
+        currentStep={state.currentStep}
+        selectionMode={state.selectionMode}
+      />
       <AttritionTableWrapper
         covariates={state.covariates}
         selectedCohort={state.selectedStudyPopulationCohort}

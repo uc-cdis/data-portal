@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
@@ -14,11 +14,15 @@ const SelectCovariates = ({
   covariates,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
+  useEffect(() => () => dispatch({
+    type: ACTIONS.SET_SELECTION_MODE,
+    payload: '',
+  }), []);
 
   return (
     <React.Fragment>
       <div className='GWASUI-row'>
-        <div className='GWASUI-double-column'>
+        <div data-tour='select-covariate' className='GWASUI-double-column'>
           {selectionMode === 'continuous' && (
             <div className='select-container'>
               <ContinuousCovariates
@@ -27,6 +31,10 @@ const SelectCovariates = ({
                 outcome={outcome}
                 handleClose={() => {
                   setSelectionMode('');
+                  dispatch({
+                    type: ACTIONS.SET_SELECTION_MODE,
+                    payload: '',
+                  });
                 }}
                 dispatch={(chosenCovariate) => {
                   dispatch({
@@ -47,6 +55,10 @@ const SelectCovariates = ({
                 outcome={outcome}
                 handleClose={() => {
                   setSelectionMode('');
+                  dispatch({
+                    type: ACTIONS.SET_SELECTION_MODE,
+                    payload: '',
+                  });
                 }}
                 dispatch={(chosenCovariate) => {
                   dispatch({
@@ -61,16 +73,30 @@ const SelectCovariates = ({
           {!selectionMode && (
             <div className='GWASUI-selectionUI'>
               <button
+                data-tour='select-covariate-continious'
                 type='button'
-                onClick={() => setSelectionMode('continuous')}
+                onClick={() => {
+                  setSelectionMode('continuous');
+                  dispatch({
+                    type: ACTIONS.SET_SELECTION_MODE,
+                    payload: 'continuous',
+                  });
+                }}
               >
                 <span>+</span>
                 <span>Add Continuous Covariate</span>
               </button>
 
               <button
+                data-tour='select-covariate-dichotomous'
                 type='button'
-                onClick={() => setSelectionMode('dichotomous')}
+                onClick={() => {
+                  setSelectionMode('dichotomous');
+                  dispatch({
+                    type: ACTIONS.SET_SELECTION_MODE,
+                    payload: 'dichotomous',
+                  });
+                }}
               >
                 <span>+</span>
                 <span>Add Dichotomous Covariate</span>
@@ -79,7 +105,7 @@ const SelectCovariates = ({
           )}
         </div>
 
-        <div className='GWASUI-column GWASUI-card-column'>
+        <div data-tour='covariates-card' className='GWASUI-column GWASUI-card-column'>
           <CovariatesCardsList
             covariates={covariates}
             outcome={outcome}
