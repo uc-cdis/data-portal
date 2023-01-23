@@ -10,9 +10,11 @@ import { useAppSelector } from '../../redux/hooks';
 import { overrideSelectTheme } from '../../utils';
 import FilterSetCard from './FilterSetCard';
 import { checkIfFilterInScope } from './utils';
+import { DEFAULT_END_YEAR, DEFAULT_INTERVAL } from './const';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ParsedSurvivalAnalysisResult} ParsedSurvivalAnalysisResult */
+
 /** @typedef {import('./types').UserInputSubmitHandler} UserInputSubmitHandler */
 
 /** @param {{ label: string | JSX.Element; [x: string]: any }} props */
@@ -46,16 +48,16 @@ function ControlFormSelect({ label, ...selectProps }) {
 }
 
 ControlFormSelect.propTypes = {
-  label: PropTypes.string,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 };
 
-/** @param {{ label: string; [x: string]: any }} props */
+/** @param {{ label: string | JSX.Element; [x: string]: any }} props */
 function ControlFormInput({ label, ...inputAttrs }) {
   return <SimpleInputField label={label} input={<input {...inputAttrs} />} />;
 }
 
 ControlFormInput.propTypes = {
-  label: PropTypes.string,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 };
 
 const survivalTypeOptions = [
@@ -91,9 +93,8 @@ function validateNumberInput(e, setStateAction) {
  * @param {Object} prop
  * @param {ParsedSurvivalAnalysisResult['count']} [prop.countByFilterSet]
  * @param {UserInputSubmitHandler} prop.onSubmit
- * @param {number} prop.timeInterval
  */
-function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
+function ControlForm({ countByFilterSet, onSubmit }) {
   const consortiums = useAppSelector(
     (state) => state.explorer.config.survivalAnalysisConfig.consortium ?? []
   );
@@ -104,9 +105,9 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
     (state) => new Set(state.explorer.survivalAnalysisResult.staleFilterSetIds)
   );
 
-  const [localTimeInterval, setLocalTimeInterval] = useState(timeInterval);
+  const [timeInterval, setTimeInterval] = useState(DEFAULT_INTERVAL);
   const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(undefined);
+  const [endTime, setEndTime] = useState(DEFAULT_END_YEAR);
   const [survivalType, setSurvivalType] = useState(survivalTypeOptions[0]);
   const [selectFilterSet, setSelectFilterSet] = useState(null);
   const [usedFilterSetIds, setUsedFilterSetIds] = useState(emptyFilterSetIds);
@@ -133,7 +134,7 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
   const submitUserInput = () => {
     setIsInputChanged(false);
     onSubmit({
-      timeInterval: localTimeInterval,
+      timeInterval,
       startTime,
       endTime: endTime || undefined,
       efsFlag: survivalType.value === 'efs',
@@ -142,9 +143,9 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
   };
 
   const resetUserInput = () => {
-    setLocalTimeInterval(4);
+    setTimeInterval(DEFAULT_INTERVAL);
     setStartTime(0);
-    setEndTime(undefined);
+    setEndTime(DEFAULT_END_YEAR);
     setSurvivalType(survivalTypeOptions[0]);
     setUsedFilterSetIds([]);
     setIsInputChanged(false);
@@ -209,7 +210,22 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
       />
       <ControlFormInput
         id='survival-end-time'
-        label='End time (year)'
+        label={
+          <Tooltip
+            arrowContent={<div className='rc-tooltip-arrow-inner' />}
+            mouseLeaveDelay={0}
+            overlay='Clearing this field will show data for all years available.'
+            placement='left'
+          >
+            <span>
+              <FontAwesomeIcon
+                icon='circle-info'
+                color='var(--pcdc-color__primary-light)'
+              />{' '}
+              End time (year)
+            </span>
+          </Tooltip>
+        }
         type='number'
         placeholder='Optional; max value if left blank'
         min={startTime + 1}
@@ -217,7 +233,8 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
         step={1}
         onBlur={(e) => validateNumberInput(e, setEndTime)}
         onChange={(e) => {
-          setEndTime(Number.parseInt(e.target.value, 10));
+          const numberValue = Number.parseInt(e.target.value, 10);
+          setEndTime(isNaN(numberValue) ? '' : numberValue);
           setIsInputChanged(true);
         }}
         value={endTime}
@@ -229,12 +246,12 @@ function ControlForm({ countByFilterSet, onSubmit, timeInterval }) {
         min={1}
         max={5}
         step={1}
-        onBlur={(e) => validateNumberInput(e, setLocalTimeInterval)}
+        onBlur={(e) => validateNumberInput(e, setTimeInterval)}
         onChange={(e) => {
-          setLocalTimeInterval(Number.parseInt(e.target.value, 10));
+          setTimeInterval(Number.parseInt(e.target.value, 10));
           setIsInputChanged(true);
         }}
-        value={localTimeInterval}
+        value={timeInterval}
       />
       <div className='explorer-survival-analysis__filter-set-select'>
         <Select
@@ -302,7 +319,6 @@ ControlForm.propTypes = {
     })
   ),
   onSubmit: PropTypes.func.isRequired,
-  timeInterval: PropTypes.number.isRequired,
 };
 
 export default ControlForm;
