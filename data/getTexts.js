@@ -6,7 +6,6 @@ const componentTexts = paramByApp(params, 'components');
 function getChartText() {
   const graphQL = getGraphQL(paramByApp(params, 'graphql'));
   const boardPluralNames = graphQL.boardCounts.map((item) => item.plural);
-  console.log(boardPluralNames);
   if (boardPluralNames.length < 4 && !graphQL.chartNodesExcludeFiles) { boardPluralNames.push('Files'); }
   const detailPluralNames = graphQL.projectDetails.map((item) => item.plural);
   if (detailPluralNames.length < 4 && !graphQL.chartNodesExcludeFiles) { detailPluralNames.push('Files'); }
