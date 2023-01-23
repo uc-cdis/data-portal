@@ -11,6 +11,7 @@ import RiskTable from './RiskTable';
 import UserAgreement from './UserAgreement';
 import { checkUserAgreement, handleUserAgreement } from './utils';
 import './ExplorerSurvivalAnalysis.css';
+import { DEFAULT_END_YEAR, DEFAULT_INTERVAL } from './const';
 
 /** @typedef {import('./types').UserInputSubmitHandler} UserInputSubmitHandler */
 
@@ -21,10 +22,10 @@ function ExplorerSurvivalAnalysis() {
   );
 
   const [isUserCompliant, setIsUserCompliant] = useState(checkUserAgreement());
-  const [timeInterval, setTimeInterval] = useState(4);
+  const [timeInterval, setTimeInterval] = useState(DEFAULT_INTERVAL);
   const [startTime, setStartTime] = useState(0);
   const [efsFlag, setEfsFlag] = useState(false);
-  const [endTime, setEndTime] = useState(undefined);
+  const [endTime, setEndTime] = useState(DEFAULT_END_YEAR);
 
   /** @type {UserInputSubmitHandler} */
   const handleSubmit = (input) => {
@@ -52,7 +53,6 @@ function ExplorerSurvivalAnalysis() {
             <ControlForm
               countByFilterSet={result.parsed.count}
               onSubmit={handleSubmit}
-              timeInterval={timeInterval}
             />
           </div>
           <div className='explorer-survival-analysis__column-right'>
