@@ -1,0 +1,4 @@
+.scrolled-message {
+  height: 50vh;
+  overflow-y: auto;
+}
