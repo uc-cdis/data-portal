@@ -533,7 +533,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
             <div>Data Availability</div>
             <Tooltip title={config.features.authorization.columnTooltip}>
               <Dropdown
-                visible={accessibilityFilterVisible}
+                open={accessibilityFilterVisible}
                 overlay={(
                   <Menu>
                     {
