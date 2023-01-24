@@ -1,11 +1,10 @@
-import React, { useState, useLayoutEffect, createRef }  from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Popup from '../components/Popup';
 import { components } from '../params';
 import { hostname } from '../localconf';
 import { updateSystemUseNotice } from '../actions';
-import './SystemUseWarningPopup.css';
 
 const handleAcceptWarning = () => {
   /**
@@ -32,60 +31,21 @@ const handleAcceptWarning = () => {
   return (dispatch) => dispatch(updateSystemUseNotice(false));
 };
 
-const isVisible = (ele, container) => {
-  const { bottom, height, top } = ele.current.getBoundingClientRect();
-  const containerRect = container.current.getBoundingClientRect();
-  return top <= containerRect.top ? containerRect.top - top <= height : bottom - containerRect.bottom <= height;
-};
-
 const SystemUsePopup = (props) => {
   const { titleText, messageText, onAccept } = props;
-  const [atBottom, setAtBottom] = useState(false);
-  const lastRef = createRef();
-  const ref = createRef();
-
-  const handleScroll = (e) => {
-    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (!atBottom) setAtBottom(bottom); // only set if never scrolled.
-  };
-
-  useLayoutEffect(() => {
-    const element = ref.current;
-    if (!element) {
-      return;
-    }
-
-    const lastElement = lastRef.current;
-    if (!lastElement) {
-      return;
-    }
-
-    if (isVisible(ref, lastRef)) {
-      setAtBottom(true);
-    }
-  }, [ref, lastRef]);
-
   return (
     <Popup
       title={titleText}
+      message={messageText}
       rightButtons={[
         {
-          enabled: atBottom,
           caption: 'Accept',
           fn: () => {
             onAccept();
           },
         },
       ]}
-    >
-      { messageText && (
-        <div ref={ref} className='scrolled-message' onScroll={handleScroll} >
-          <div className='high-light'>{messageText.map((text, i) => (!messageText[i + 1]
-            ? <p ref={lastRef} key={i}>{text}</p> : <p key={i}>{text}</p>))}
-          </div>
-        </div>
-      )}
-    </Popup>
+    />
   );
 };
 
