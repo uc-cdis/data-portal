@@ -11,8 +11,11 @@ const DismissibleMessage = ({
 }) => {
   const [open, setOpen] = useState(true);
   const close = () => {
-    if (dismissMessage) dismissMessage();
-    else setOpen(false);
+    // If a dismissMessage "callback" function is configured, call it:
+    if (dismissMessage) {
+      dismissMessage();
+    }
+    setOpen(false);
   };
 
   return (
