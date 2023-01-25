@@ -9,11 +9,7 @@ import {
 import Histogram from './Histogram';
 import { useSourceContext } from '../../../Utils/Source';
 import ACTIONS from '../../../Utils/StateManagement/Actions';
-
-const NO_BINS_ERROR = {
-  title: 'None of the persons in the (remaining) population have a value for the selected concept',
-  messageType: 'warning',
-};
+import { MESSAGES } from '../../../Utils/constants';
 
 const PhenotypeHistogram = ({
   dispatch,
@@ -48,12 +44,12 @@ const PhenotypeHistogram = ({
     if (data?.bins === null) {
       dispatch({
         type: ACTIONS.ADD_MESSAGE,
-        payload: NO_BINS_ERROR,
+        payload: MESSAGES.NO_BINS_ERROR,
       });
     } else {
       dispatch({
         type: ACTIONS.DELETE_MESSAGE,
-        payload: NO_BINS_ERROR,
+        payload: MESSAGES.NO_BINS_ERROR,
       });
     }
   }, [data]);

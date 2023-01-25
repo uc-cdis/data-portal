@@ -10,11 +10,8 @@ import {
 import Simple3SetsEulerDiagram from './Simple3SetsEulerDiagram';
 import { useSourceContext } from '../../../Utils/Source';
 import ACTIONS from '../../../Utils/StateManagement/Actions';
+import { MESSAGES } from '../../../Utils/constants';
 
-const OVERLAP_ERROR = {
-  title: 'Your selected cohorts should have some overlap with the study population',
-  messageType: 'warning',
-};
 const CohortsOverlapDiagram = ({
   dispatch,
   selectedStudyPopulationCohort,
@@ -134,12 +131,12 @@ const CohortsOverlapDiagram = ({
         || dataStudyPopulationAndControl.cohort_overlap.case_control_overlap === 0) {
         dispatch({
           type: ACTIONS.ADD_MESSAGE,
-          payload: OVERLAP_ERROR,
+          payload: MESSAGES.OVERLAP_ERROR,
         });
       } else {
         dispatch({
           type: ACTIONS.DELETE_MESSAGE,
-          payload: OVERLAP_ERROR,
+          payload: MESSAGES.OVERLAP_ERROR,
         });
       }
     }
