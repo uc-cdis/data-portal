@@ -48,7 +48,10 @@ const reducer = (state, action) => {
   case ACTIONS.SET_SELECTION_MODE:
     return { ...state, selectionMode: action.payload };
   case ACTIONS.ADD_MESSAGE:
-    return { ...state, messages: [...state.messages, action.payload] };
+    if (!state.messages.find((element) => element === action.payload)) {
+      return { ...state, messages: [...state.messages, action.payload] };
+    }
+    return state;
   case ACTIONS.DELETE_MESSAGE:
     return {
       ...state,
