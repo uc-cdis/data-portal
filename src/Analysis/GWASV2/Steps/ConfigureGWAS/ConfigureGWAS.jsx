@@ -80,7 +80,7 @@ const ConfigureGWAS = ({
   };
 
   return (
-    <div className='configure-gwas'>
+    <div data-tour='configure-gwas' className='configure-gwas'>
       {showSuccess && (
         <Congratulations
           dispatch={dispatch}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import SelectConfiguration from './SelectConfiguration';
-import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
+import ValidState from '../../TestData/States/ValidState';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 
 describe('SelectConfiguration component', () => {
@@ -14,7 +14,7 @@ describe('SelectConfiguration component', () => {
     covariates,
     outcome,
     imputationScore,
-  } = ValidInitialState;
+  } = ValidState;
 
   beforeEach(() => {
     wrapper = shallow(
