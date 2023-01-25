@@ -42,7 +42,8 @@ Below is an example, with inline comments describing what each JSON block config
         "name": "Study"
       }
     ],
-    "projectDetails": "boardCounts" // required; which JSON block above to use for displaying aggregate properties on the submission page (www.project.io/submission)
+    "projectDetails": "boardCounts", // required; which JSON block above to use for displaying aggregate properties on the submission page (/submission)
+    "chartNodesExcludeFiles": true // optional; specifies whether to exclude File nodes from charts. Defaults to false
   },
   "components": {
     "appName": "Gen3 Generic Data Commons", // required; title of commons that appears on the homepage
@@ -78,6 +79,8 @@ Below is an example, with inline comments describing what each JSON block config
           "label": "Run analysis"
         }
       ],
+      "homepageChartNodesExcludeFiles": true, // optional; specifies whether to exclude File nodes from the homepage chart. Defaults to false
+      "homepageChartNodesChunkSize": 5, // optional; specifies the number of node for each chunked request for homepage nodes that is being send to Peregrine. Defaults to 15
       "homepageChartNodes": [ // optional; used for tiered access on the homepage. This means that the charts on the homepage will be available to the public.
         {
           "node": "case", // required; GraphQL field name of node to show a chart for
@@ -129,7 +132,7 @@ Below is an example, with inline comments describing what each JSON block config
           "name": "Documentation"
         }
       ],
-      "useProfileDropdown": false // optional; enables expiremental profile UI; defaults false, may change in future releases
+      "useProfileDropdown": false // optional; enables experimental profile UI; defaults false, may change in future releases
     },
     "login": { // required; what is displayed on the login page (/login)
       "title": "Gen3 Generic Data Commons", // optional; title for the login page
@@ -139,9 +142,9 @@ Below is an example, with inline comments describing what each JSON block config
       "email": "support@datacommons.io", // optional; email for contact
       "image": "gene" // optional; images displayed on the login page
     },
-   "systemUse" : { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
-      "systemUseTitle" : "", // required; Title of the popup dialog
-      "systemUseText" : [""], // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
+   "systemUse": { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
+      "systemUseTitle": "", // required; Title of the popup dialog
+      "systemUseText": [""], // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
       "expireUseMsgDays": 0, // optional the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
     },
     "footer": {
@@ -528,7 +531,7 @@ Below is an example, with inline comments describing what each JSON block config
       {
         "name": "Commons",
         "field": "commons_of_origin",
-        "hrefValueFromField": "commons_url", // If this attribute is present, the text in the column will be linked. The href value of the link will be the corresponding value of the fieldname in this attribute.
+        "hrefValueFromField": "commons_url", // If this attribute is present, the text in the column will be linked. The href value of the link will be the corresponding value of the field name in this attribute.
       }
     ],
     "studyPreviewField": { // if present, studyPreviewField shows a special preview field beneath each row of data in the table, useful for study descriptions.
@@ -539,7 +542,7 @@ Below is an example, with inline comments describing what each JSON block config
       "includeIfNotAvailable": true,
       "valueIfNotAvailable": "No description has been provided for this study."
     },
-    // consider updated "detailView" configufation with tabbing option
+    // consider updated "detailView" configuration with tabbing option
     "studyPageFields": { // studyPageFields configures the fields that are displayed when a user opens a study page by clicking on a row in the table.
       "header": { // if present, shows a header field at the top of the study page.
         "field": "name"
@@ -632,7 +635,7 @@ Below is an example, with inline comments describing what each JSON block config
     "tagCategories": [ // configures the categories displayed in the tag selector. If a tag category appears in the `tagsListFieldName` field but is not configured here, it will not be displayed in the tag selector.
       {
         "name": "Program", // this configures the tag category name that will be shown on the tag selector
-        "color": "rgba(129, 211, 248, 1)", // color can be any vaid CSS color string, including hex, rgb, rgba, hsl
+        "color": "rgba(129, 211, 248, 1)", // color can be any valid CSS color string, including hex, rgb, rgba, hsl
         "display": true,
         "displayName": "All Programs" // optional string to customize tag category display name
       },
@@ -699,7 +702,7 @@ Below is an example, with inline comments describing what each JSON block config
         "workspaceRegistrationConfig" : { // optional, config for Workspace Registration Request Access page.
         "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
         "workspaceInfoMessage": "Please fill out this form to request and be approved for access to workspace.", //optional, any info message to give users more context before they fill the request access form
-        "successRedirect" : { // optional, upon succesful submission of the registration form, the user is presented with a button to go to a specific page. defaults to `{ link: '/', text: 'Go to Home Page' }`
+        "successRedirect" : { // optional, upon successful submission of the registration form, the user is presented with a button to go to a specific page. defaults to `{ link: '/', text: 'Go to Home Page' }`
           "link": "/discovery",
           "text": "Go to Discovery Page"
         }
