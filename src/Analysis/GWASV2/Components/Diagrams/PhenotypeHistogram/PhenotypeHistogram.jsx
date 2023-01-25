@@ -40,13 +40,18 @@ const PhenotypeHistogram = ({
     return <React.Fragment>Error getting data for diagram</React.Fragment>;
   }
   if (status === 'loading') {
-    return <React.Fragment>Fetching histogram data... <Spin /></React.Fragment>;
+    return (
+      <div className='histrogram-loading'>
+        Fetching histogram data... <Spin />
+      </div>
+    );
   }
   if (data.bins === null) {
     return (
-      <React.Fragment>None of the persons in the (remaining) population
-      have a value for [{selectedContinuousItem.concept_name}]
-      </React.Fragment>
+      <div className='phenotype-histogram-directions'>
+        None of the persons in the (remaining) population have a value for [
+        {selectedContinuousItem.concept_name}]
+      </div>
     );
   }
   const histogramArgs = {

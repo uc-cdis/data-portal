@@ -5,7 +5,7 @@ import AttritionTable from './AttritionTable/AttritionTable';
 const AttritionTableWrapper = ({ covariates, selectedCohort, outcome }) => {
   const useSecondTable = outcome?.variable_type === 'custom_dichotomous';
   return (
-    <React.Fragment>
+    <div data-tour='attrition-table'>
       <AttritionTable
         covariates={covariates}
         selectedCohort={selectedCohort}
@@ -20,7 +20,7 @@ const AttritionTableWrapper = ({ covariates, selectedCohort, outcome }) => {
           tableType={'Control Cohort'}
         />
       )}
-    </React.Fragment>
+    </div>
   );
 };
 AttritionTableWrapper.propTypes = {

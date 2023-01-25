@@ -16,7 +16,7 @@ const SelectConfiguration = ({
 }) => (
   <React.Fragment>
     <div className='GWASUI-row'>
-      <div className='GWASUI-column'>
+      <div data-tour='configure-pcs' className='GWASUI-column'>
         <label htmlFor='input-numOfPC'>Number of PCs to use</label>
         <InputNumber
           id='input-numOfPCs'
@@ -26,7 +26,7 @@ const SelectConfiguration = ({
           onChange={(e) => dispatch({ type: ACTIONS.UPDATE_NUM_PCS, payload: Number(e) })}
         />
       </div>
-      <div className='GWASUI-column'>
+      <div data-tour='configure-maf' className='GWASUI-column'>
         <label htmlFor='input-maf'>MAF Cutoff &nbsp;</label>
         <InputNumber
           id='input-maf'
@@ -43,7 +43,7 @@ const SelectConfiguration = ({
       </div>
     </div>
     <div className='GWASUI-row'>
-      <div className='GWASUI-column'>
+      <div data-tour='configure-hare' className='GWASUI-column'>
         <label htmlFor='input-selectHareDropDown'>HARE Ancestry</label>
         <SelectHareDropDown
           id='input-selectHareDropDown'
@@ -53,7 +53,7 @@ const SelectConfiguration = ({
           dispatch={dispatch}
         />
       </div>
-      <div className='GWASUI-column'>
+      <div data-tour='configure-imputation' className='GWASUI-column'>
         <label htmlFor='input-imputation'>
           Imputation Score Cutoff &nbsp;{' '}
         </label>
