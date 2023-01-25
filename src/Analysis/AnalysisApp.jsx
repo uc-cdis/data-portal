@@ -121,9 +121,19 @@ class AnalysisApp extends React.Component {
       );
     case 'GWAS++': {
       return (
-        <div>
-          <GWASContainer refreshWorkflows={this.refreshWorkflows} />
-        </div>
+        <TourProvider
+          afterOpen={disableBody}
+          beforeClose={enableBody}
+          disableInteraction
+          onClickClose={({ setCurrentStep, setIsOpen }) => {
+            setIsOpen(false);
+            setCurrentStep(0);
+          }}
+        >
+          <div>
+            <GWASContainer refreshWorkflows={this.refreshWorkflows} />
+          </div>
+        </TourProvider>
       );
     }
     default:

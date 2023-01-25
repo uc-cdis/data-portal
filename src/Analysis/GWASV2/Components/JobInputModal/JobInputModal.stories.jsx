@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
+import ValidState from '../../TestData/States/ValidState';
 import JobInputModal from './JobInputModal';
 
 export default {
@@ -24,7 +24,7 @@ const MockTemplate = () => {
     finalPopulationSizes,
     outcome,
     selectedStudyPopulationCohort,
-  } = ValidInitialState;
+  } = ValidState;
 
   return (
     <div

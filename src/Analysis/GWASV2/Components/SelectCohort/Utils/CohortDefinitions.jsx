@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useQuery, queryConfig } from 'react-query';
+import { useQuery } from 'react-query';
 import { Table, Spin } from 'antd';
-import { fetchCohortDefinitions } from '../../../Utils/cohortMiddlewareApi';
+import { fetchCohortDefinitions, queryConfig } from '../../../Utils/cohortMiddlewareApi';
 import { useFetch, useFilter } from '../../../Utils/formHooks';
 import { useSourceContext } from '../../../Utils/Source';
 
