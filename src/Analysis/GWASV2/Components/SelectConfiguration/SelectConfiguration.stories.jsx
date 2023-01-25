@@ -5,7 +5,7 @@ import SelectionConfiguration from './SelectConfiguration';
 import { rest } from 'msw';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import '../../GWASV2.css';
-import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
+import ValidState from '../../TestData/States/ValidState';
 
 export default {
   title: 'Tests3/GWASV2/SelectConfiguration',
@@ -19,7 +19,7 @@ const mockedQueryClient = new QueryClient({
 });
 
 const MockTemplate = () => {
-  const [state, dispatch] = useReducer(reducer, ValidInitialState);
+  const [state, dispatch] = useReducer(reducer, ValidState);
 
   return (
     <QueryClientProvider client={mockedQueryClient}>
