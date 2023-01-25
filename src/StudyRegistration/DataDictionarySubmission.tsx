@@ -257,6 +257,10 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       <div className='study-reg-form-container'>
         <Form className='study-reg-form' {...layout} form={form} name='vlmd-sub-form' onFinish={onFinish} validateMessages={validateMessages}>
           <Divider plain>Data Dictionary Submission</Divider>
+          <Typography style={{ textAlign: 'center' }}>
+          Data dictionaries must conform to the HEAL VLMD schema. View more information and VLMD templates <a href='https://github.com/HEAL/heal-metadata-schemas' target='_blank' rel='noreferrer'>here</a>.
+          </Typography>
+          <Divider plain />
           <div className='study-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
           <Form.Item
             label='Study Name - Grant Number'
