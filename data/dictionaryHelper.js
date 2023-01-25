@@ -50,6 +50,7 @@ function getGraphQL(graphQLParams) {
   const { boardCounts } = graphQLParams;
   const { chartCounts } = graphQLParams;
   let { projectDetails } = graphQLParams;
+  const { chartNodesExcludeFiles } = graphQLParams;
   if (typeof projectDetails === 'string') {
     projectDetails = graphQLParams[projectDetails];
   }
@@ -57,6 +58,7 @@ function getGraphQL(graphQLParams) {
     boardCounts,
     chartCounts,
     projectDetails,
+    chartNodesExcludeFiles,
   };
 }
 
