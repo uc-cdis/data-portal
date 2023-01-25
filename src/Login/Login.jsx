@@ -26,6 +26,7 @@ export const getUrlForRedirectLocation = (location) => {
   const regexp = /^\/.*/gi;
   const isValidRedirect = new RegExp(regexp).test(next);
   if (!isValidRedirect) {
+    // eslint-disable-next-line no-console
     console.log(`Found illegal "next" parameter value ${next}`);
     return basename;
   }

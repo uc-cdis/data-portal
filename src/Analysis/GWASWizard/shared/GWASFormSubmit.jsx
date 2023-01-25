@@ -76,6 +76,7 @@ const GWASFormSubmit = ({
           if (workflowType === 'quantitative') resetQuantitative();
         } else {
           data.text().then((text) => {
+            // eslint-disable-next-line no-console
             console.log(`gwas job failed with error ${text}`);
             const submissionError = JSON.parse(text);
             const errorMessage = submissionError.detail[0]?.msg;

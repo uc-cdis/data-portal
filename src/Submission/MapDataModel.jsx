@@ -153,6 +153,7 @@ class MapDataModel extends React.Component {
         }
       }).catch((error) => {
         // TODO - should we throw this error?
+        // eslint-disable-next-line no-console
         console.error(error);
       });
     } else {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import '../GWASUIApp/GWASUIApp.css';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
@@ -33,10 +33,6 @@ const CohortOverlap = ({
     ),
     queryConfig,
   );
-
-  useEffect(() => {
-    console.log('cohortSizes', cohortSizes);
-  }, [cohortSizes]);
 
   if (status === 'loading') {
     return <Spin />;
