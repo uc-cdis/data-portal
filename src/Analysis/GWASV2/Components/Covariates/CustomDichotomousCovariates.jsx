@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import SelectCohortDropDown from '../SelectCohort/SelectCohortDropDown';
 import CohortsOverlapDiagram from '../Diagrams/CohortsOverlapDiagram/CohortsOverlapDiagram';
-
+import './Covariates.css';
 import '../../../GWASUIApp/GWASUIApp.css';
 
 const CustomDichotomousCovariates = ({
@@ -35,37 +35,31 @@ const CustomDichotomousCovariates = ({
     || secondPopulation === undefined;
 
   return (
-    <div>
-      <div
-        className='GWASUI-flexRow'
-        style={{ width: '1450px' }}
-        data-tour='name'
-      >
+    <div className='custom-dichotomous-covariates'>
+      <div className='GWASUI-flexRow'>
+        <label htmlFor='phenotype-input'>Phenotype Name</label>
         <input
           type='text'
+          id='phenotype-input'
           className={'GWASUI-providedName'}
+          data-tour='name-input'
           onChange={(e) => setProvidedName(e.target.value)}
           value={providedName}
           placeholder='Provide a name...'
-          style={{
-            width: '50%',
-            textSize: 'small',
-            paddingLeft: 5,
-            borderRadius: 5,
-          }}
         />
         <button
           type='button'
-          className={'GWASUI-dichBtn'}
+          className='GWASUI-dichBtn cancel-button'
+          data-tour='submit-cancel-buttons'
           onClick={() => handleClose()}
         >
           Cancel
         </button>
-        <div data-tour='add-button'>
+        <div>
           <button
             type='button'
             disabled={customDichotomousValidation}
-            className={`${
+            className={`submit-button ${
               !customDichotomousValidation ? 'GWASUI-btnEnable' : ''
             } GWASUI-dichBtn`}
             onClick={() => handleDichotomousSubmit()}
@@ -75,26 +69,27 @@ const CustomDichotomousCovariates = ({
         </div>
       </div>
       <React.Fragment>
-        <div data-tour='choosing-dichotomous'>
-          <div className='GWASUI-flexRow' data-tour='table-repeat'>
-            <div>
-              <h3>Get Value 0</h3>
-              <SelectCohortDropDown
-                handleCohortSelect={setFirstPopulation}
-              />
+        <div>
+          <div className='GWASUI-flexRow'>
+            <div data-tour='select-dichotomous' className='GWASUI-flexColumn dichotomous-selection'>
+              <div className='dichotomous-directions'>
+                Define a dichotomous variable by study population with 2 other
+                cohorts.
+              </div>
+              <div>
+                <h3>Get Value 0</h3>
+                <SelectCohortDropDown handleCohortSelect={setFirstPopulation} />
+              </div>
+              <div>
+                <h3>Get Value 1</h3>
+                <SelectCohortDropDown
+                  handleCohortSelect={setSecondPopulation}
+                />
+              </div>
             </div>
-            <div>
-              <h3>Get Value 1</h3>
-              <SelectCohortDropDown
-                handleCohortSelect={setSecondPopulation}
-              />
-            </div>
-            <div style={{ paddingLeft: '30px' }}>
-              <h3 style={{ width: '400px' }}>Cohort overlap diagram</h3>
+            <div data-tour='cohorts-overlap-diagram' className='cohorts-overlap-diagram'>
               {!firstPopulation || !secondPopulation ? (
-                <div>
-                  Select your cohorts to assess overlap
-                </div>
+                <div>Select your cohorts to assess overlap</div>
               ) : (
                 <CohortsOverlapDiagram
                   selectedStudyPopulationCohort={studyPopulationCohort}

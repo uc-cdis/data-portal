@@ -14,7 +14,6 @@ import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
 import GWASWorkflowList from './GWASUIApp/GWASWorkflowList';
 import GWASContainer from './GWASV2/GWASContainer';
-import { SourceContextProvider } from './GWASV2/Shared/Source';
 
 const queryClient = new QueryClient();
 
@@ -122,11 +121,19 @@ class AnalysisApp extends React.Component {
       );
     case 'GWAS++': {
       return (
-        <div>
-          <SourceContextProvider>
+        <TourProvider
+          afterOpen={disableBody}
+          beforeClose={enableBody}
+          disableInteraction
+          onClickClose={({ setCurrentStep, setIsOpen }) => {
+            setIsOpen(false);
+            setCurrentStep(0);
+          }}
+        >
+          <div>
             <GWASContainer refreshWorkflows={this.refreshWorkflows} />
-          </SourceContextProvider>
-        </div>
+          </div>
+        </TourProvider>
       );
     }
     default:

@@ -8,6 +8,8 @@ const initialState = {
   gwasName: '',
   selectedHare: { concept_value: '' },
   currentStep: 0,
+  finalPopulationSizes: [],
+  selectionMode: '',
 };
 
 export default initialState;

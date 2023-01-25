@@ -3,13 +3,13 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import SelectCohortDropDown from './SelectCohortDropDown';
 import { Space } from 'antd';
-import { SourceContextProvider } from '../../Shared/Source';
+import { SourceContextProvider } from '../../Utils/Source';
 import './SelectCohort.css';
 import '../../../GWASV2/GWASV2.css';
 import '../../../GWASUIApp/GWASUIApp.css';
 
 export default {
-  title: 'Tests3/GWASV2/CohortSelect/SelectCohortDropDown',
+  title: 'Tests3/GWASV2/SelectCohort/SelectCohortDropDown',
   component: SelectCohortDropDown,
 };
 
@@ -22,8 +22,6 @@ const mockedQueryClient = new QueryClient({
 });
 
 const MockTemplate = () => {
-
-
   const handleCohortSelect = (selectedCohort) => {
     console.log(selectedCohort);
   };
@@ -34,12 +32,8 @@ const MockTemplate = () => {
         <div className='GWASV2'>
           <Space direction={'vertical'} style={{ width: '100%' }}>
             <div className='steps-content'></div>
-            <h4>
-              Test selecting cohorts using dropdown
-            </h4>
-            <SelectCohortDropDown
-              handleCohortSelect={handleCohortSelect}
-            />
+            <h4>Test selecting cohorts using dropdown</h4>
+            <SelectCohortDropDown handleCohortSelect={handleCohortSelect} />
           </Space>
         </div>
       </SourceContextProvider>
@@ -65,7 +59,8 @@ MockedSuccess.parameters = {
               cohort_definitions_and_stats: [
                 {
                   cohort_definition_id: 1,
-                  cohort_name: 'Test cohort1 with a veeeeeeeerrrrrrryyyyyyy loooooooooooooooooooong name to test how it will be displayed',
+                  cohort_name:
+                    'Test cohort1 with a veeeeeeeerrrrrrryyyyyyy loooooooooooooooooooong name to test how it will be displayed',
                   size: 6,
                 },
                 {

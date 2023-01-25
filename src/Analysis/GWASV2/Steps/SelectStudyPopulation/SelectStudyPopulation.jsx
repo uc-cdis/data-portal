@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ACTIONS from '../../Shared/StateManagement/Actions';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 import CohortSelect from '../../Components/SelectCohort/SelectCohort';
 
 const SelectStudyPopulation = ({ selectedCohort, dispatch }) => {
@@ -12,10 +12,12 @@ const SelectStudyPopulation = ({ selectedCohort, dispatch }) => {
   };
 
   return (
-    <CohortSelect
-      selectedCohort={selectedCohort}
-      handleCohortSelect={handleStudyPopulationSelect}
-    />
+    <div data-tour='cohort-select'>
+      <CohortSelect
+        selectedCohort={selectedCohort}
+        handleCohortSelect={handleStudyPopulationSelect}
+      />
+    </div>
   );
 };
 

@@ -2,7 +2,7 @@ import React, {
   useContext, useState, useEffect, createContext,
 } from 'react';
 import PropTypes from 'prop-types';
-import { useSourceFetch } from '../../GWASWizard/wizardEndpoints/cohortMiddlewareApi';
+import { useSourceFetch } from './cohortMiddlewareApi';
 
 const SourceContext = createContext();
 

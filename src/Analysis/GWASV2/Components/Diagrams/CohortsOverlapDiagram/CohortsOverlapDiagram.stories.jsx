@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import CohortsOverlapDiagram from './CohortsOverlapDiagram';
-import { SourceContextProvider } from '../../../Shared/Source';
+import { SourceContextProvider } from '../../../Utils/Source';
 
 export default {
   title: 'Tests3/GWASV2/CohortsOverlapDiagram',
@@ -42,12 +42,11 @@ const selectedControlCohort = {
 
 export const SuccessCase = Template.bind({});
 SuccessCase.args = {
-  sourceId: 123,
   selectedStudyPopulationCohort: selectedStudyPopulationCohort,
   selectedCaseCohort: selectedCaseCohort,
   selectedControlCohort: selectedControlCohort,
   selectedCovariates: [],
-  selectedDichotomousCovariates: [],
+  outcome: null,
 };
 SuccessCase.parameters = {
   // msw mocking:

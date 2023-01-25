@@ -6,7 +6,7 @@ const index = (state = {}, action) => {
     const { projectNodeCounts, homepageChartNodes, fileNodes } = action;
     const nodesForIndexChart = homepageChartNodes.map((item) => item.node);
 
-    // constructing projct counts for index bar chart
+    // constructing project counts for index bar chart
     const projectsByName = {};
     Object.keys(projectNodeCounts).forEach((proj) => {
       let code = proj;
@@ -14,12 +14,12 @@ const index = (state = {}, action) => {
       if (projCodeIndex !== -1) {
         code = proj.substring(projCodeIndex + 1);
       }
-      let counts = 0;
+      let counts = [];
       if (projectNodeCounts[proj]) {
         counts = nodesForIndexChart.map((node) => projectNodeCounts[proj][node]);
       }
 
-      if (nodesForIndexChart.length < 4) {
+      if (nodesForIndexChart.length < 4 && !components.index.homepageChartNodesExcludeFiles) {
         const fileCountsForProj = fileNodes.reduce((acc, fileNode) => {
           let newAcc = acc;
           if (projectNodeCounts[proj][fileNode]) {
@@ -38,7 +38,7 @@ const index = (state = {}, action) => {
     });
 
     const countNames = homepageChartNodes.map((item) => item.name);
-    if (countNames.length < 4) {
+    if (countNames.length < 4 && !components.index.homepageChartNodesExcludeFiles) {
       countNames.push('Files');
     }
     return { ...state, projectsByName, countNames };
@@ -56,21 +56,21 @@ const index = (state = {}, action) => {
     const summaryCounts = {
       ...state.summaryCounts || {}, ...action.data.summaryCounts,
     };
-    const lastestListUpdating = Date.now();
+    const latestListUpdating = Date.now();
     // const { error, ...state } = state;
     return {
       ...state,
       projectsByName,
       summaryCounts,
-      lastestListUpdating,
+      latestListUpdating,
       countNames: components.charts.indexChartNames,
     };
   }
   case 'RECEIVE_HOMEPAGE_CHART_PROJECT_DETAIL': {
     const projectsByName = { ...state.projectsByName || {} };
     projectsByName[action.data.name] = action.data;
-    const lastestDetailsUpdating = Date.now();
-    return { ...state, projectsByName, lastestDetailsUpdating };
+    const latestListUpdating = Date.now();
+    return { ...state, projectsByName, latestListUpdating };
   }
   default:
     return state;

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import ContinuousCovariates from '../../Components/Covariates/ContinuousCovariates';
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
-import ACTIONS from '../../Shared/StateManagement/Actions';
+import ACTIONS from '../../Utils/StateManagement/Actions';
+import './SelectCovariates.css';
+import '../../GWASV2.css';
 
 const SelectCovariates = ({
   dispatch,
@@ -12,74 +14,108 @@ const SelectCovariates = ({
   covariates,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
+  useEffect(() => () => dispatch({
+    type: ACTIONS.SET_SELECTION_MODE,
+    payload: '',
+  }), []);
 
   return (
     <React.Fragment>
-      {selectionMode === 'continuous' && (
-        <ContinuousCovariates
-          covariates={covariates}
-          outcome={outcome}
-          handleClose={() => {
-            setSelectionMode('');
-          }}
-          dispatch={(chosenCovariate) => {
-            dispatch({
-              type: ACTIONS.ADD_COVARIATE,
-              payload: chosenCovariate,
-            });
-          }}
-          submitButtonLabel={'Add'}
-        />
-      )}
+      <div className='GWASUI-row'>
+        <div data-tour='select-covariate' className='GWASUI-double-column'>
+          {selectionMode === 'continuous' && (
+            <div className='select-container'>
+              <ContinuousCovariates
+                selectedStudyPopulationCohort={studyPopulationCohort}
+                selectedCovariates={covariates}
+                outcome={outcome}
+                handleClose={() => {
+                  setSelectionMode('');
+                  dispatch({
+                    type: ACTIONS.SET_SELECTION_MODE,
+                    payload: '',
+                  });
+                }}
+                dispatch={(chosenCovariate) => {
+                  dispatch({
+                    type: ACTIONS.ADD_COVARIATE,
+                    payload: chosenCovariate,
+                  });
+                }}
+                submitButtonLabel={'Add'}
+              />
+            </div>
+          )}
 
-      {selectionMode === 'dichotomous' && (
-        <CustomDichotomousCovariates
-          studyPopulationCohort={studyPopulationCohort}
-          covariates={covariates}
-          outcome={outcome}
-          handleClose={() => {
-            setSelectionMode('');
-          }}
-          dispatch={(chosenCovariate) => {
-            dispatch({
-              type: ACTIONS.ADD_COVARIATE,
-              payload: chosenCovariate,
-            });
-          }}
-          submitButtonLabel={'Add'}
-        />
-      )}
-      {!selectionMode && (
-        <div>
-          <button
-            type='button'
-            style={{
-              height: 60,
-              marginRight: 5,
-            }}
-            onClick={() => setSelectionMode('continuous')}
-          >
-            Add Continuous Outcome Covariate
-          </button>
-          <button
-            type='button'
-            style={{
-              height: 60,
-              marginLeft: 5,
-            }}
-            onClick={() => setSelectionMode('dichotomous')}
-          >
-            Add Dichotomous Outcome Covariate
-          </button>
+          {selectionMode === 'dichotomous' && (
+            <div className='select-container'>
+              <CustomDichotomousCovariates
+                studyPopulationCohort={studyPopulationCohort}
+                covariates={covariates}
+                outcome={outcome}
+                handleClose={() => {
+                  setSelectionMode('');
+                  dispatch({
+                    type: ACTIONS.SET_SELECTION_MODE,
+                    payload: '',
+                  });
+                }}
+                dispatch={(chosenCovariate) => {
+                  dispatch({
+                    type: ACTIONS.ADD_COVARIATE,
+                    payload: chosenCovariate,
+                  });
+                }}
+                submitButtonLabel={'Add'}
+              />
+            </div>
+          )}
+          {!selectionMode && (
+            <div className='GWASUI-selectionUI'>
+              <button
+                data-tour='select-covariate-continious'
+                type='button'
+                onClick={() => {
+                  setSelectionMode('continuous');
+                  dispatch({
+                    type: ACTIONS.SET_SELECTION_MODE,
+                    payload: 'continuous',
+                  });
+                }}
+              >
+                <span>+</span>
+                <span>Add Continuous Covariate</span>
+              </button>
+
+              <button
+                data-tour='select-covariate-dichotomous'
+                type='button'
+                onClick={() => {
+                  setSelectionMode('dichotomous');
+                  dispatch({
+                    type: ACTIONS.SET_SELECTION_MODE,
+                    payload: 'dichotomous',
+                  });
+                }}
+              >
+                <span>+</span>
+                <span>Add Dichotomous Covariate</span>
+              </button>
+            </div>
+          )}
         </div>
-      )}
-      <CovariatesCardsList
-        covariates={covariates}
-        deleteCovariate={(chosenCovariate) => dispatch({
-          type: ACTIONS.DELETE_COVARIATE,
-          payload: chosenCovariate,
-        })}
-      />
+
+        <div data-tour='covariates-card' className='GWASUI-column GWASUI-card-column'>
+          <CovariatesCardsList
+            covariates={covariates}
+            outcome={outcome}
+            deleteCovariate={(chosenCovariate) => dispatch({
+              type: ACTIONS.DELETE_COVARIATE,
+              payload: chosenCovariate,
+            })}
+          />
+        </div>
+      </div>
     </React.Fragment>
   );
 };
