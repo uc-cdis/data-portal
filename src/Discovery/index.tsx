@@ -109,7 +109,7 @@ const DiscoveryWithMDSBackend: React.FC<{
           } else {
             let authMapping;
             if (isEnabled('discoveryUseAggWTS')) {
-              authMapping = props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)];
+              authMapping = props.userAggregateAuthMappings[(study.commons_url || hostnameWithSubdomain)] || {};
             } else {
               authMapping = props.userAuthMapping;
             }
@@ -153,7 +153,7 @@ const DiscoveryWithMDSBackend: React.FC<{
 
     // indicate discovery tag is active even if we didn't click a button to get here
     props.onDiscoveryPageActive();
-  }, [props]);
+  }, []);
 
   let studyRegistrationValidationField = studyRegistrationConfig?.studyRegistrationValidationField;
   if (!isEnabled('studyRegistration')) {

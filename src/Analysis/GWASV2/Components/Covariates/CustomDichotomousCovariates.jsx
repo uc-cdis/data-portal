@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import SelectCohortDropDown from '../SelectCohort/SelectCohortDropDown';
 import CohortsOverlapDiagram from '../Diagrams/CohortsOverlapDiagram/CohortsOverlapDiagram';
-
+import './Covariates.css';
 import '../../../GWASUIApp/GWASUIApp.css';
 
 const CustomDichotomousCovariates = ({
@@ -35,24 +35,14 @@ const CustomDichotomousCovariates = ({
     || secondPopulation === undefined;
 
   return (
-    <div>
-      <div
-        className='GWASUI-flexRow'
-        style={{ width: '1450px' }}
-        data-tour='name'
-      >
+    <div className='custom-dichotomous-covariates'>
+      <div className='GWASUI-flexRow' data-tour='name'>
         <input
           type='text'
           className={'GWASUI-providedName'}
           onChange={(e) => setProvidedName(e.target.value)}
           value={providedName}
           placeholder='Provide a name...'
-          style={{
-            width: '50%',
-            textSize: 'small',
-            paddingLeft: 5,
-            borderRadius: 5,
-          }}
         />
         <button
           type='button'
@@ -77,24 +67,22 @@ const CustomDichotomousCovariates = ({
       <React.Fragment>
         <div data-tour='choosing-dichotomous'>
           <div className='GWASUI-flexRow' data-tour='table-repeat'>
-            <div>
-              <h3>Get Value 0</h3>
-              <SelectCohortDropDown
-                handleCohortSelect={setFirstPopulation}
-              />
+            <div className='GWASUI-flexColumn'>
+              <div>
+                <h3>Get Value 0</h3>
+                <SelectCohortDropDown handleCohortSelect={setFirstPopulation} />
+              </div>
+              <div>
+                <h3>Get Value 1</h3>
+                <SelectCohortDropDown
+                  handleCohortSelect={setSecondPopulation}
+                />
+              </div>
             </div>
-            <div>
-              <h3>Get Value 1</h3>
-              <SelectCohortDropDown
-                handleCohortSelect={setSecondPopulation}
-              />
-            </div>
-            <div style={{ paddingLeft: '30px' }}>
-              <h3 style={{ width: '400px' }}>Cohort overlap diagram</h3>
+            <div className='cohorts-overlap-diagram'>
+              <h3>Cohort overlap diagram</h3>
               {!firstPopulation || !secondPopulation ? (
-                <div>
-                  Select your cohorts to assess overlap
-                </div>
+                <div>Select your cohorts to assess overlap</div>
               ) : (
                 <CohortsOverlapDiagram
                   selectedStudyPopulationCohort={studyPopulationCohort}

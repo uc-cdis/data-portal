@@ -1,6 +1,6 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { TeamOutlined, DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
 
 const { Meta } = Card;
@@ -12,10 +12,7 @@ const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
         {covariate.provided_name && (
           <Card
             key={`cd-list-option-${key}`}
-            style={{
-              width: 300,
-              backgroundColor: 'purple',
-            }}
+            className='dichotomous-card'
             actions={[
               <DeleteOutlined
                 onClick={() => {
@@ -26,18 +23,15 @@ const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
             ]}
           >
             <Meta
-              avatar={<TeamOutlined />}
-              title={`${covariate.provided_name}`}
+              title='Dichotomous Covariate'
+              description={`${covariate.provided_name}`}
             />
           </Card>
         )}
         {covariate.concept_id && (
           <Card
             key={`cd-list-option-${key}`}
-            style={{
-              width: 300,
-              backgroundColor: 'yellow',
-            }}
+            className='continuous-card'
             actions={[
               <DeleteOutlined
                 onClick={() => {
@@ -48,8 +42,8 @@ const CovariatesCardsList = ({ covariates, deleteCovariate }) => (
             ]}
           >
             <Meta
-              avatar={<TeamOutlined />}
-              title={`${covariate.concept_name}`}
+              title='Continuous Covariate'
+              description={`${covariate.concept_name}`}
             />
           </Card>
         )}

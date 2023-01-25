@@ -59,7 +59,6 @@ const AttritionTableRow = ({
     setAsn(getSizeByColumn('ASN'));
     setEur(getSizeByColumn('EUR'));
     setHis(getSizeByColumn('HIS'));
-
   }, [breakdownColumns]);
 
   return (

@@ -216,7 +216,7 @@ const DiscoveryDetails = (props: Props) => {
   return (
     <Drawer
       className='discovery-modal'
-      visible={props.modalVisible}
+      open={props.modalVisible}
       width={'50vw'}
       closable={false}
       onClose={() => { props.setModalVisible(false); setTabActiveKey('0'); }}
@@ -224,7 +224,7 @@ const DiscoveryDetails = (props: Props) => {
       <div className='discovery-modal__header-buttons'>
         <Button
           type='text'
-          onClick={() => { props.setModalVisible(false); setTabActiveKey('0');}}
+          onClick={() => { props.setModalVisible(false); setTabActiveKey('0'); }}
           className='discovery-modal__close-button'
         >
           <DoubleLeftOutlined />
@@ -289,21 +289,18 @@ const DiscoveryDetails = (props: Props) => {
                 type={'card'}
                 activeKey={tabActiveKey}
                 onChange={(activeKey) => { setTabActiveKey(activeKey); }}
-              >
-                {
-                  props.config.detailView.tabs.map(
-                    ({ tabName, groups }, tabIndex) => (
-                      <Tabs.TabPane key={tabIndex} tab={<span {...tabLabelCls}>{tabName}</span>}>
-                        {
-                          (groups || []).map(
-                            (group, i) => <div key={i}>{fieldGrouping(group, props.config, props.modalData)}</div>,
-                          )
-                        }
-                      </Tabs.TabPane>
-                    ),
-                  )
-                }
-              </Tabs>
+                items={props.config.detailView.tabs.map(
+                  ({ tabName, groups }, tabIndex) => (
+                    {
+                      label: <span {...tabLabelCls}>{tabName}</span>,
+                      key: `${tabIndex}`,
+                      children: (groups || []).map(
+                        (group, i) => <div key={i}>{fieldGrouping(group, props.config, props.modalData)}</div>,
+                      ),
+                    }
+                  ),
+                )}
+              />
             </div>
           )
           : (
