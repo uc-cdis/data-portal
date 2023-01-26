@@ -74,6 +74,14 @@
   border: 2px solid #dedede;
 }
 
+.GWASV2 .GWASUI-table1 .ant-table-cell-row-hover {
+  cursor: pointer;
+}
+
+.GWASV2 .GWASUI-table1 .ant-table-cell-row-hover .ant-radio-inner {
+  border-color: #1890ff;
+}
+
 .GWASV2 .GWASUI-selectionUI {
   height: 519px;
   width: 988px;

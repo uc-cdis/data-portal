@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { Table, Spin } from 'antd';
-import { fetchCohortDefinitions, queryConfig } from '../../../Utils/cohortMiddlewareApi';
+import {
+  fetchCohortDefinitions,
+  queryConfig,
+} from '../../../Utils/cohortMiddlewareApi';
 import { useFetch, useFilter } from '../../../Utils/formHooks';
 import { useSourceContext } from '../../../Utils/Source';
 
@@ -15,7 +18,7 @@ const CohortDefinitions = ({
   const cohorts = useQuery(
     ['cohortdefinitions', source],
     () => fetchCohortDefinitions(source),
-    queryConfig,
+    queryConfig
   );
   const fetchedCohorts = useFetch(cohorts, 'cohort_definitions_and_stats');
   const displayedCohorts = useFilter(fetchedCohorts, searchTerm, 'cohort_name');
@@ -52,6 +55,13 @@ const CohortDefinitions = ({
         defaultPageSize: 10,
         showSizeChanger: true,
         pageSizeOptions: ['10', '20', '50', '100', '500'],
+      }}
+      onRow={(selectedCohort) => {
+        return {
+          onClick: () => {
+            handleCohortSelect(selectedCohort);
+          },
+        };
       }}
       rowSelection={cohortSelection(selectedCohort)}
       columns={cohortTableConfig}
