@@ -12,6 +12,9 @@
 }
 
 /* Buttons */
+.GWASV2 .button-wrapper {
+  display: flex;
+}
 .GWASV2 .submit-button,
 .GWASV2 .cancel-button {
   margin: 6px 0 12px auto;
@@ -68,19 +71,19 @@
 
 .GWASV2 .continuous-covariates .select-covariates-container .ant-select,
 .GWASV2
-.continuous-covariates
-.select-covariates-container
-.ant-select-dropdown {
+  .continuous-covariates
+  .select-covariates-container
+  .ant-select-dropdown {
   width: 100%;
   min-width: inherit;
 }
 
 .GWASV2
-.continuous-covariates
-.ant-table.ant-table-middle
-.ant-table-tbody
-> tr
-> td {
+  .continuous-covariates
+  .ant-table.ant-table-middle
+  .ant-table-tbody
+  > tr
+  > td {
   padding: 5px 8px;
 }
 
