@@ -25,7 +25,7 @@ export const formatNumber = (number) => (Math.round(number * 10) / 10).toLocaleS
 
 export const MESSAGES = {
   OVERLAP_ERROR: {
-    title: 'Your selected cohorts should have some overlap with the study population',
+    title: 'None of the persons in the (remaining) population of your selected cohorts overlap with the study population',
     messageType: 'warning',
   },
   NO_BINS_ERROR: {
