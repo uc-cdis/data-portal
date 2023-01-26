@@ -56,13 +56,11 @@ const CohortDefinitions = ({
         showSizeChanger: true,
         pageSizeOptions: ['10', '20', '50', '100', '500'],
       }}
-      onRow={(selectedCohort) => {
-        return {
-          onClick: () => {
-            handleCohortSelect(selectedCohort);
-          },
-        };
-      }}
+      onRow={(selectedRow) => ({
+        onClick: () => {
+          handleCohortSelect(selectedRow);
+        },
+      })}
       rowSelection={cohortSelection(selectedCohort)}
       columns={cohortTableConfig}
       dataSource={displayedCohorts}

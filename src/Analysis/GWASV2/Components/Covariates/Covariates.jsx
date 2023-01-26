@@ -10,7 +10,6 @@ import SearchBar from '../SearchBar/SearchBar';
 const Covariates = ({ selected, handleSelect }) => {
   const { source } = useSourceContext();
 
-  const [selectedRow, setSelectedRow] = useState(null);
   const covariates = useQuery(
     ['covariates', source],
     () => fetchCovariates(source),
@@ -90,13 +89,11 @@ const Covariates = ({ selected, handleSelect }) => {
             showSizeChanger: true,
             pageSizeOptions: ['10', '20', '50', '100', '500'],
           }}
-          onRow={(selectedRow) => {
-            return {
-              onClick: () => {
-                handleSelect(selectedRow);
-              },
-            };
-          }}
+          onRow={(selectedRow) => ({
+            onClick: () => {
+              handleSelect(selectedRow);
+            },
+          })}
           rowSelection={covariateSelection()}
           columns={covariateTableConfig}
           dataSource={displayedCovariates}
