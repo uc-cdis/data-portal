@@ -12,9 +12,10 @@
 }
 
 /* Buttons */
-.GWASV2 .button-wrapper {
+.GWASV2 .dichotomous-button-wrapper {
   display: flex;
 }
+
 .GWASV2 .submit-button,
 .GWASV2 .cancel-button {
   margin: 6px 0 12px auto;

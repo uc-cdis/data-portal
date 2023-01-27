@@ -31,9 +31,10 @@ const CustomDichotomousCovariates = ({
     handleClose();
   };
 
-  const customDichotomousValidation = providedName.length === 0
-    || firstPopulation === undefined
-    || secondPopulation === undefined;
+  const customDichotomousValidation =
+    providedName.length === 0 ||
+    firstPopulation === undefined ||
+    secondPopulation === undefined;
 
   return (
     <div className='custom-dichotomous-covariates'>
@@ -48,7 +49,10 @@ const CustomDichotomousCovariates = ({
           value={providedName}
           placeholder='Provide a name...'
         />
-        <span className='button-wrapper' data-tour='submit-cancel-buttons'>
+        <span
+          className='dichotomous-button-wrapper'
+          data-tour='submit-cancel-buttons'
+        >
           <button
             type='button'
             className='GWASUI-dichBtn cancel-button'
