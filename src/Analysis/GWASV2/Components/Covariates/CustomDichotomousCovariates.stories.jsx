@@ -9,11 +9,7 @@ export default {
   component: CustomDichotomousCovariates,
 };
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 
 const Template = (args) => (
   <QueryClientProvider client={mockedQueryClient}>

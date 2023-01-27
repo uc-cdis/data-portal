@@ -12,11 +12,7 @@ export default {
   component: SelectionConfiguration,
 };
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 
 const MockTemplate = () => {
   const [state, dispatch] = useReducer(reducer, ValidState);
