@@ -9,11 +9,7 @@ export default {
   component: PhenotypeHistogram,
 };
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 
 const Template = (args) => (
   <QueryClientProvider client={mockedQueryClient}>

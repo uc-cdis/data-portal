@@ -11,11 +11,7 @@ export default {
 
 // useful examples: https://github.com/mswjs/msw-storybook-addon/tree/main/packages/docs/src/demos/react-query
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 
 const Template = () => {
   const [selectedCovariate, setSelectedCovariate] = useState(null);
@@ -76,8 +72,8 @@ ErrorCase.parameters = {
   msw: {
     handlers: [
       rest.post('http://:cohortmiddlewarepath/cohort-middleware/concept/by-source-id/:sourceid/by-type', (req, res, ctx) => res(
-        ctx.delay(800),
-        ctx.status(403),
+        ctx.delay(3000),
+        ctx.status(403, "error"),
       )),
     ],
   },
