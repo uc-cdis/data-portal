@@ -19,13 +19,14 @@ FirstStepActive.args = {
   set123Size: 123,
 };
 
+// Test whether we get an error when the overlap size is bigger than the group size:
 export const SecondStepError = Template.bind({});
 SecondStepError.args = {
   set1Size: 1000,
   set2Size: 900,
   set3Size: 4000,
   set12Size: 100,
-  set13Size: 20000,
+  set13Size: 20000, // impossible overlap
   set23Size: 300,
   set123Size: 123,
 };

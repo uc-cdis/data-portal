@@ -27,8 +27,12 @@ export const fetchConceptStatsByHare = async (
     headers,
     body: JSON.stringify(variablesPayload),
   };
-  const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
-  return getConceptStats.json();
+  const response = await fetch(conceptStatsEndPoint, reqBody);
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
 };
 
 export const fetchOverlapInfo = async (
@@ -55,8 +59,12 @@ export const fetchOverlapInfo = async (
     headers,
     body: JSON.stringify(variablesPayload),
   };
-  const getOverlapStats = await fetch(statsEndPoint, reqBody);
-  return getOverlapStats.json();
+  const response = await fetch(statsEndPoint, reqBody);
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
 };
 
 // Basically a copy of fetchOverlapInfo above, but without the HARE arguments:
@@ -77,8 +85,12 @@ export const fetchSimpleOverlapInfo = async (
     headers,
     body: JSON.stringify(variablesPayload),
   };
-  const getOverlapStats = await fetch(statsEndPoint, reqBody);
-  return getOverlapStats.json();
+  const response = await fetch(statsEndPoint, reqBody);
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
 };
 
 export const fetchHistogramInfo = async (
@@ -98,8 +110,12 @@ export const fetchHistogramInfo = async (
     headers,
     body: JSON.stringify(variablesPayload),
   };
-  const requestResponse = await fetch(endPoint, reqBody);
-  return requestResponse.json();
+  const response = await fetch(endPoint, reqBody);
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
 };
 
 export const fetchConceptStatsByHareSubset = async (
@@ -118,8 +134,12 @@ export const fetchConceptStatsByHareSubset = async (
     headers,
     body: JSON.stringify(variablesPayload),
   };
-  const getConceptStats = await fetch(conceptStatsEndPoint, reqBody);
-  return getConceptStats.json();
+  const response = await fetch(conceptStatsEndPoint, reqBody);
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
 };
 
 export const addCDFilter = (cohortId, otherCohortId, covariateArr) => {
@@ -176,14 +196,22 @@ export const fetchCovariateStats = async (
     headers,
     body: JSON.stringify(covariateIds),
   };
-  const getConceptStats = await fetch(conceptStatsEndpoint, reqBody);
-  return getConceptStats.json();
+  const response = await fetch(conceptStatsEndpoint, reqBody);
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
 };
 
 export const fetchCohortDefinitions = async (sourceId) => {
   const cohortEndPoint = `${cohortMiddlewarePath}cohortdefinition-stats/by-source-id/${sourceId}`;
-  const getCohortDefinitions = await fetch(cohortEndPoint);
-  return getCohortDefinitions.json();
+  const response = await fetch(cohortEndPoint);
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
 };
 
 export const fetchCovariates = async (sourceId) => {
@@ -197,14 +225,22 @@ export const fetchCovariates = async (sourceId) => {
     headers,
     body: JSON.stringify(allowedConceptTypes),
   };
-  const getConcepts = await fetch(conceptEndpoint, reqBody);
-  return getConcepts.json();
+  const response = await fetch(conceptEndpoint, reqBody);
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
 };
 
 export const fetchSources = async () => {
   const sourcesEndpoint = `${cohortMiddlewarePath}sources`;
-  const getSources = await fetch(sourcesEndpoint);
-  return getSources.json();
+  const response = await fetch(sourcesEndpoint);
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+  return response.json();
 };
 
 export const useSourceFetch = () => {
@@ -226,6 +262,7 @@ export const queryConfig = {
   refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
+  retry: false,
 };
 
 export const getAllHareItems = (
