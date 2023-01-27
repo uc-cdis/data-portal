@@ -51,6 +51,9 @@ const selectedCovariates = [
 
 export const SuccessCase = Template.bind({});
 SuccessCase.args = {
+  dispatch: (payload) => {
+    console.log('dummy dispatch', payload);
+  },
   selectedStudyPopulationCohort: selectedStudyPopulationCohort,
   selectedCovariates: selectedCovariates,
   outcome: null,
@@ -90,6 +93,9 @@ SuccessCase.parameters = {
 
 export const ErrorCase = Template.bind({});
 ErrorCase.args = {
+  dispatch: (payload) => {
+    console.log('dummy dispatch', payload);
+  },
   selectedStudyPopulationCohort: selectedStudyPopulationCohort,
   selectedCovariates: selectedCovariates,
   outcome: null,
