@@ -31,10 +31,9 @@ const CustomDichotomousCovariates = ({
     handleClose();
   };
 
-  const customDichotomousValidation =
-    providedName.length === 0 ||
-    firstPopulation === undefined ||
-    secondPopulation === undefined;
+  const customDichotomousValidation = providedName.length === 0
+    || firstPopulation === undefined
+    || secondPopulation === undefined;
 
   return (
     <div className='custom-dichotomous-covariates'>
