@@ -319,7 +319,7 @@ const slice = createSlice({
       })
       .addCase(updateSurvivalResult.rejected, (state, action) => {
         state.survivalAnalysisResult.data = null;
-        state.survivalAnalysisResult.error = Error(String(action.payload));
+        state.survivalAnalysisResult.error = action.payload;
         state.survivalAnalysisResult.isPending = false;
         state.survivalAnalysisResult.parsed = {};
         state.survivalAnalysisResult.staleFilterSetIds = [];

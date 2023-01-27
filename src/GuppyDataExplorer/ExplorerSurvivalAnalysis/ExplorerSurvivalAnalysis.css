@@ -35,9 +35,6 @@
 .explorer-survival-analysis__error-message {
   margin-bottom: 1rem;
   text-align: initial;
-}
-
-.explorer-survival-analysis__error-message > pre {
   background: var(--g3-color__bg-cloud);
   padding: 0.5rem;
 }
