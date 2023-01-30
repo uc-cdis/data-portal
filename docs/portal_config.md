@@ -42,7 +42,8 @@ Below is an example, with inline comments describing what each JSON block config
         "name": "Study"
       }
     ],
-    "projectDetails": "boardCounts" // required; which JSON block above to use for displaying aggregate properties on the submission page (www.project.io/submission)
+    "projectDetails": "boardCounts", // required; which JSON block above to use for displaying aggregate properties on the submission page (/submission)
+    "chartNodesExcludeFiles": true // optional; specifies whether to exclude File nodes from charts. Defaults to false
   },
   "components": {
     "appName": "Gen3 Generic Data Commons", // required; title of commons that appears on the homepage
@@ -78,6 +79,8 @@ Below is an example, with inline comments describing what each JSON block config
           "label": "Run analysis"
         }
       ],
+      "homepageChartNodesExcludeFiles": true, // optional; specifies whether to exclude File nodes from the homepage chart. Defaults to false
+      "homepageChartNodesChunkSize": 5, // optional; specifies the number of node for each chunked request for homepage nodes that is being send to Peregrine. Defaults to 15
       "homepageChartNodes": [ // optional; used for tiered access on the homepage. This means that the charts on the homepage will be available to the public.
         {
           "node": "case", // required; GraphQL field name of node to show a chart for
@@ -129,7 +132,7 @@ Below is an example, with inline comments describing what each JSON block config
           "name": "Documentation"
         }
       ],
-      "useProfileDropdown": false // optional; enables expiremental profile UI; defaults false, may change in future releases
+      "useProfileDropdown": false // optional; enables experimental profile UI; defaults false, may change in future releases
     },
     "login": { // required; what is displayed on the login page (/login)
       "title": "Gen3 Generic Data Commons", // optional; title for the login page
@@ -173,12 +176,12 @@ Below is an example, with inline comments describing what each JSON block config
   "requiredCerts": [], // optional; do users need to take a quiz or agree to something before they can access the site?
   "featureFlags": { // optional; will hide certain parts of the site if needed
     "explorer": true, // required; indicates the flag and whether to hide it or not
-    "explorerPublic": true // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. The Data Explorer page would be publicly accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
+    "explorerPublic": true, // optional; If set to true, the data explorer page would be treated as a public component and can be accessed without login. The Data Explorer page would be publicly accessible if 1. tiered access level is set to libre OR 2. this explorerPublic flag is set to true.
     "discovery": true, // optional; whether to enable the Discovery page. If true, `discoveryConfig` must be present as well.
-    "discoveryUseAggMDS": true // optional, false by default; if true, the Discovery page will use the Aggregate Metadata path instead of the Metadata path. This causes the Discovery page to serve as an "Ecosystem Browser". See docs/ecosystem_browser.md for more details.
+    "discoveryUseAggMDS": true, // optional, false by default; if true, the Discovery page will use the Aggregate Metadata path instead of the Metadata path. This causes the Discovery page to serve as an "Ecosystem Browser". See docs/ecosystem_browser.md for more details.
     "explorerStoreFilterInURL": true, // optional; whether to store/load applied filters in the URL during Data Explorer use.
-    This feature currently supports single select filters and range filters; it
-    lacks support for search filter state, accessibility state, table state.
+    // This feature currently supports single select filters and range filters; it
+    // lacks support for search filter state, accessibility state, table state.
     "explorerHideEmptyFilterSection": false, // optional, when filtering data hide FilterSection when they are empty.
     "explorerFilterValuesToHide": ["array of strings"], // optional, Values set in array will be hidden in guppy filters. Intended use is to hide missing data category from filters, for this it should be set to the same as `missing_data_alias` in Guppy server config
     "studyRegistration": true, // optional, whether to enable the study registration feature
@@ -348,7 +351,8 @@ Below is an example, with inline comments describing what each JSON block config
         "resourceIndexType": "file", // required; what is the type of the index (must match the guppy config block in manifest.json) that contains the resources you want a manifest of?
         "resourceIdField": "object_id", // required; what is the identifier in the manifest index that you want to grab?
         "referenceIdFieldInResourceIndex": "case_id", // required; what is the field in the manifest index you want to make sure matches a field in the cohort?
-        "referenceIdFieldInDataIndex": "case_id" // required; what is the field in the case/subject/participant index you are using to match with a field in the manifest index?
+        "referenceIdFieldInDataIndex": "case_id", // required; what is the field in the case/subject/participant index you are using to match with a field in the manifest index?
+        "useFilterForCounts": false // optional: set to true to use the explore filter to query for file counts. This requires the fields that has been specified in the explorer tab of a certain index must have all those fields injected into its corresponding File index
       },
       "accessibleFieldCheckList": ["project_id"], // optional; only useful when tiered access is enabled (tier_access_level=regular). When tiered access is on, portal needs to perform some filtering to display data explorer UI components according to user’s accessibility. Guppy will make queries for each of the fields listed in this array and figure out for each fields, what values are accessible to the current user and what values are not.
       "accessibleValidationField": "project_id" // optional; only useful when tiered access is enabled (tier_access_level=regular). This value should be selected from the “accessibleFieldCheckList” variable. Portal will use this field to check against the result returned from Guppy with “accessibleFieldCheckList” to determine if user has selected any unaccessible values on the UI, and changes UI appearance accordingly.
@@ -429,13 +433,13 @@ Below is an example, with inline comments describing what each JSON block config
     "public": true, // optional, defaults to true. If false, requires user to sign in before seeing the Discovery page
     "features": {
       "exportToWorkspace": { // configures the export to workspace feature. If enabled, the Discovery page data must contain a field which is a list of GUIDs for each study. See `manifestFieldName`
-          "enable": boolean
-          "enableDownloadManifest": boolean // enables a button which allows user to download a manifest file for gen3 client
-          "downloadManifestButtonText": string // text to be displayed on the download manifest button
-          "manifestFieldName": string // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
+          "enable": boolean,
+          "enableDownloadManifest": boolean, // enables a button which allows user to download a manifest file for gen3 client
+          "downloadManifestButtonText": string, // text to be displayed on the download manifest button
+          "manifestFieldName": string, // the field in the Discovery page data that contains the list of GUIDs that link to each study's data files.
           "documentationLinks": {
-              "gen3Client": string // link to documentation about the gen3 client. Used for button tooltips
-              "gen3Workspaces": string // link to documentation about gen3 workspaces. Used for button tooltips.
+              "gen3Client": string, // link to documentation about the gen3 client. Used for button tooltips
+              "gen3Workspaces": string, // link to documentation about gen3 workspaces. Used for button tooltips.
           }
       },
       "pageTitle": {
@@ -529,7 +533,7 @@ Below is an example, with inline comments describing what each JSON block config
       {
         "name": "Commons",
         "field": "commons_of_origin",
-        "hrefValueFromField": "commons_url", // If this attribute is present, the text in the column will be linked. The href value of the link will be the corresponding value of the fieldname in this attribute.
+        "hrefValueFromField": "commons_url", // If this attribute is present, the text in the column will be linked. The href value of the link will be the corresponding value of the field name in this attribute.
       }
     ],
     "studyPreviewField": { // if present, studyPreviewField shows a special preview field beneath each row of data in the table, useful for study descriptions.
@@ -540,7 +544,7 @@ Below is an example, with inline comments describing what each JSON block config
       "includeIfNotAvailable": true,
       "valueIfNotAvailable": "No description has been provided for this study."
     },
-    // consider updated "detailView" configufation with tabbing option
+    // consider updated "detailView" configuration with tabbing option
     "studyPageFields": { // studyPageFields configures the fields that are displayed when a user opens a study page by clicking on a row in the table.
       "header": { // if present, shows a header field at the top of the study page.
         "field": "name"
@@ -633,7 +637,7 @@ Below is an example, with inline comments describing what each JSON block config
     "tagCategories": [ // configures the categories displayed in the tag selector. If a tag category appears in the `tagsListFieldName` field but is not configured here, it will not be displayed in the tag selector.
       {
         "name": "Program", // this configures the tag category name that will be shown on the tag selector
-        "color": "rgba(129, 211, 248, 1)", // color can be any vaid CSS color string, including hex, rgb, rgba, hsl
+        "color": "rgba(129, 211, 248, 1)", // color can be any valid CSS color string, including hex, rgb, rgba, hsl
         "display": true,
         "displayName": "All Programs" // optional string to customize tag category display name
       },
@@ -648,10 +652,10 @@ Below is an example, with inline comments describing what each JSON block config
         "display": true
       }
     ],
-    "tagsDisplayName": "Tags" // optional, overrides the name of the mandatory tags column
+    "tagsDisplayName": "Tags", // optional, overrides the name of the mandatory tags column
     "tableScrollHeight": 450 // optional, no scroll if omitted
   },
-  "resourceBrowser": {), // see Resource Browser documentation
+  "resourceBrowser": {}, // see Resource Browser documentation
   "workspacePageTitle": "", // title to display above workspacePageDescription
   "workspacePageDescription": "", // html to display above the workspace options
   "studyViewerConfig": [],//See docs/study_viewer.md for more details.
@@ -699,7 +703,7 @@ Below is an example, with inline comments describing what each JSON block config
         "workspaceRegistrationConfig" : { // optional, config for Workspace Registration Request Access page.
         "workspacePolicyId": "workspace", // optional, name of the policy that is needed to provide workspace access; if missing, defaults to 'workspace'
         "workspaceInfoMessage": "Please fill out this form to request and be approved for access to workspace.", //optional, any info message to give users more context before they fill the request access form
-        "successRedirect" : { // optional, upon succesful submission of the registration form, the user is presented with a button to go to a specific page. defaults to `{ link: '/', text: 'Go to Home Page' }`
+        "successRedirect" : { // optional, upon successful submission of the registration form, the user is presented with a button to go to a specific page. defaults to `{ link: '/', text: 'Go to Home Page' }`
           "link": "/discovery",
           "text": "Go to Discovery Page"
         }

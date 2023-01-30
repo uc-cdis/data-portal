@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import { Modal, Input } from 'antd';
 import JobInputModal from './JobInputModal';
 import ACTIONS from '../../Utils/StateManagement/Actions';
-import ValidInitialState from '../../TestData/InitialStates/ValidInitialState';
+import ValidState from '../../TestData/States/ValidState';
 
 const open = true;
 const setOpen = () => null;
@@ -21,7 +21,7 @@ const {
   finalPopulationSizes,
   outcome,
   selectedStudyPopulationCohort,
-} = ValidInitialState;
+} = ValidState;
 
 describe('JobInputModal', () => {
   let wrapper;

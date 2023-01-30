@@ -251,6 +251,11 @@ function buildConfig(opts) {
     terraExportWarning = config.terraExportWarning;
   }
 
+  let homepageChartNodesExcludeFiles = false;
+  if (components.index.homepageChartNodesExcludeFiles) {
+    homepageChartNodesExcludeFiles = components.index.homepageChartNodesExcludeFiles;
+  }
+
   let homepageChartNodesChunkSize = 15;
   if (components.index.homepageChartNodesChunkSize) {
     homepageChartNodesChunkSize = components.index.homepageChartNodesChunkSize;
@@ -518,6 +523,7 @@ function buildConfig(opts) {
     stridesPortalURL,
     homepageChartNodes: components.index.homepageChartNodes,
     homepageChartNodesChunkSize,
+    homepageChartNodesExcludeFiles,
     customHomepageChartConfig: components.index.customHomepageChartConfig,
     datasetUrl,
     indexPublic,
