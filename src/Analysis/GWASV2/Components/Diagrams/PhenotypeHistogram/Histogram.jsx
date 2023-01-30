@@ -16,9 +16,10 @@ const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className='histogram-tooltip'>
-        <p>{`Number of persons: ${formatNumber(
-          payload[0].value,
-        )}, for values starting at: ${formatNumber(label)}`}
+        <p>
+          {`Number of persons: ${formatNumber(
+            payload[0].value,
+          )}, for values starting at: ${formatNumber(label)}`}
         </p>
       </div>
     );
@@ -50,30 +51,32 @@ const Histogram = ({
   xAxisLegend,
   yAxisLegend,
 }) => (
-  <BarChart
-    width={chartWidth}
-    height={chartHeight}
-    data={data}
-    margin={{ top: 20, bottom: 65, right: 60 }}
-  >
-    <XAxis
-      dataKey={xAxisDataKey}
-      minTickGap={50}
-      tickFormatter={(tick) => formatNumber(tick)}
+  <div data-testid='histogram'>
+    <BarChart
+      width={chartWidth}
+      height={chartHeight}
+      data={data}
+      margin={{ top: 20, bottom: 65, right: 60 }}
     >
-      <Label
-        value={xAxisLegend || xAxisDataKey}
-        position='bottom'
-        offset={20}
-      />
-    </XAxis>
-    <YAxis>
-      <Label value={yAxisLegend || barDataKey} position='top' offset={10} />
-    </YAxis>
-    <Tooltip content={<CustomTooltip />} />
-    <CartesianGrid strokeDasharray='3 3' />
-    <Bar dataKey={barDataKey} fill={barColor} />
-  </BarChart>
+      <XAxis
+        dataKey={xAxisDataKey}
+        minTickGap={50}
+        tickFormatter={(tick) => formatNumber(tick)}
+      >
+        <Label
+          value={xAxisLegend || xAxisDataKey}
+          position='bottom'
+          offset={20}
+        />
+      </XAxis>
+      <YAxis>
+        <Label value={yAxisLegend || barDataKey} position='top' offset={10} />
+      </YAxis>
+      <Tooltip content={<CustomTooltip />} />
+      <CartesianGrid strokeDasharray='3 3' />
+      <Bar dataKey={barDataKey} fill={barColor} />
+    </BarChart>
+  </div>
 );
 
 Histogram.propTypes = {
