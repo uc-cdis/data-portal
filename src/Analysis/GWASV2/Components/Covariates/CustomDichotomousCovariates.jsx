@@ -48,31 +48,38 @@ const CustomDichotomousCovariates = ({
           value={providedName}
           placeholder='Provide a name...'
         />
-        <button
-          type='button'
-          className='GWASUI-dichBtn cancel-button'
+        <span
+          className='dichotomous-button-wrapper'
           data-tour='submit-cancel-buttons'
-          onClick={() => handleClose()}
         >
-          Cancel
-        </button>
-        <div>
           <button
             type='button'
-            disabled={customDichotomousValidation}
-            className={`submit-button ${
-              !customDichotomousValidation ? 'GWASUI-btnEnable' : ''
-            } GWASUI-dichBtn`}
-            onClick={() => handleDichotomousSubmit()}
+            className='GWASUI-dichBtn cancel-button'
+            onClick={() => handleClose()}
           >
-            {submitButtonLabel}
+            Cancel
           </button>
-        </div>
+          <div>
+            <button
+              type='button'
+              disabled={customDichotomousValidation}
+              className={`submit-button ${
+                !customDichotomousValidation ? 'GWASUI-btnEnable' : ''
+              } GWASUI-dichBtn`}
+              onClick={() => handleDichotomousSubmit()}
+            >
+              {submitButtonLabel}
+            </button>
+          </div>
+        </span>
       </div>
       <React.Fragment>
         <div>
           <div className='GWASUI-flexRow'>
-            <div data-tour='select-dichotomous' className='GWASUI-flexColumn dichotomous-selection'>
+            <div
+              data-tour='select-dichotomous'
+              className='GWASUI-flexColumn dichotomous-selection'
+            >
               <div className='dichotomous-directions'>
                 Define a dichotomous variable by study population with 2 other
                 cohorts.
@@ -88,7 +95,10 @@ const CustomDichotomousCovariates = ({
                 />
               </div>
             </div>
-            <div data-tour='cohorts-overlap-diagram' className='cohorts-overlap-diagram'>
+            <div
+              data-tour='cohorts-overlap-diagram'
+              className='cohorts-overlap-diagram'
+            >
               {!firstPopulation || !secondPopulation ? (
                 <div>Select your cohorts to assess overlap</div>
               ) : (
