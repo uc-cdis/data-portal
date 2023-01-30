@@ -1,9 +1,12 @@
 import React from 'react';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-// import ProgressBar from './ProgressBar';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import ProgressBar from './ProgressBar';
 
-Enzyme.configure({ adapter: new Adapter() });
+/*
+Use this for debugging:
+screen.debug()
+*/
 
 /*
   Code to aid in Jest Mocking, see:
@@ -19,30 +22,128 @@ window.matchMedia =
     };
   };
 
-const testElementClass = (wrapper, elNum, className) => {
-  /*
+test('has correct welcome text', () => {
+  render(<ProgressBar currentStep={1} selectionMode='continuous' />);
+  expect(screen.getByRole('heading')).toHaveTextContent('Welcome');
+});
+
+/*
     Enzyme has problems using Selectors, work around from:
     https://stackoverflow.com/questions/56145868/how-to-test-all-children-from-a-selector-except-the-first-child-in-jest
   */
-  wrapper.find('div.ant-steps-item').forEach((item, index) => {
+
+/*
+    const testElementClass = (elNum, className) => {
+  const { container } = render(
+    <ProgressBar currentStep={elNum} selectionMode='continuous' />
+  );
+
+  container.querySelectorAll('div.ant-steps-item').forEach((item, index) => {
+    console.log('ITEM CLASSLIST', JSON.stringify(item.classList));
     if (index === elNum - 1) {
-      expect(item.hasClass(className)).toEqual(true);
+      // expect(item.hasClass(className)).toEqual(true);
+      // expect(item.toHaveClass(className)).toEqual(true);
+      // console.log('TRUE', JSON.stringify(item.classList));
+      // console.log('TRUE CONTAINS', item.classList.contains(className));
+      expect(item.classList.contains(className)).toBe(true);
     } else {
-      expect(item.hasClass(className)).toEqual(false);
+      // expect(item.hasClass(className)).toEqual(false);
+      // expect(item.toHaveClass(className)).toEqual(true);
+      // expect(item.classList.contains(className)).toBe(false);
     }
   });
+};
+*/
+
+const testElementClass = (elNum, className) => {
+  const { container } = render(
+    <ProgressBar currentStep={elNum} selectionMode='continuous' />
+  );
+
+  for (let i = 0; i < 5; i++) {
+    if (i === elNum) {
+      expect(
+        container
+          .querySelector(`[data-testid='${i}']`)
+          .classList.contains('ant-steps-item-active')
+      ).toBe(true);
+    } else {
+      expect(
+        container
+          .querySelector(`[data-testid='${i}']`)
+          .classList.contains('ant-steps-item-active')
+      ).toBe(false);
+    }
+  }
+  expect(
+    container
+      .querySelector("[data-testid='1']")
+      .classList.contains('ant-steps-item-active')
+  ).toBe(true);
 };
 
 /* TESTS */
 /* Test active step class */
+
 describe('Test that active step class renders with active class when current is between 0 and 3', () => {
   for (let i = 0; i < 4; i += 1) {
-    // TODO: Uncomment this and sort out aliasing issue with CI testing
-    // const wrapper = mount(<ProgressBar currentStep={i} />);
-    const wrapper = null;
-    it.skip(`should render step ${i +
+    it(`should render step ${i +
       1} with active class when currentStep is ${i}`, () => {
-      testElementClass(wrapper, i + 1, 'ant-steps-item-active');
+      testElementClass(i, 'ant-steps-item-active');
     });
   }
 });
+/*
+describe('Test that active step class renders with active class when current is between 0 and 3', () => {
+  it(`should render step 1 with correct text and with active class when currentStep is 0`, () => {
+    const { container } = render(
+      <ProgressBar currentStep={0} selectionMode='continuous' />
+    );
+    expect(
+      container
+        .querySelector("[data-testid='1']")
+        .classList.contains('ant-steps-item-active')
+    ).toBe(true);
+    expect(
+      container
+        .querySelector("[data-testid='2']")
+        .classList.contains('ant-steps-item-active')
+    ).toBe(false);
+    expect(
+      container
+        .querySelector("[data-testid='3']")
+        .classList.contains('ant-steps-item-active')
+    ).toBe(false);
+    expect(
+      container
+        .querySelector("[data-testid='4']")
+        .classList.contains('ant-steps-item-active')
+    ).toBe(false);
+  });
+  it(`should render step 2 with correct text and with active class when currentStep is 0`, () => {
+    const { container } = render(
+      <ProgressBar currentStep={1} selectionMode='continuous' />
+    );
+    expect(
+      container
+        .querySelector("[data-testid='1']")
+        .classList.contains('ant-steps-item-active')
+    ).toBe(false);
+    expect(
+      container
+        .querySelector("[data-testid='2']")
+        .classList.contains('ant-steps-item-active')
+    ).toBe(true);
+    expect(
+      container
+        .querySelector("[data-testid='3']")
+        .classList.contains('ant-steps-item-active')
+    ).toBe(false);
+    expect(
+      container
+        .querySelector("[data-testid='4']")
+        .classList.contains('ant-steps-item-active')
+    ).toBe(false);
+  });
+});
+*/
