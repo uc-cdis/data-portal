@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, getAllByType, logRoles } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import Histogram from './Histogram';
 
@@ -7,9 +7,8 @@ import Histogram from './Histogram';
   Code to aid in Jest Mocking, see:
   https://stackoverflow.com/questions/39830580/jest-test-fails-typeerror-window-matchmedia-is-not-a-function
 */
-window.matchMedia =
-  window.matchMedia ||
-  function() {
+window.matchMedia = window.matchMedia
+  || function () {
     return {
       matches: false,
       addListener() {},
@@ -46,10 +45,10 @@ describe('Histogram component', () => {
         ]}
         xAxisDataKey='key'
         barDataKey='value'
-      />
+      />,
     );
     expect(
-      container.getElementsByClassName('recharts-bar-rectangle').length
+      container.getElementsByClassName('recharts-bar-rectangle').length,
     ).toBe(3);
   });
 
@@ -62,10 +61,10 @@ describe('Histogram component', () => {
         data={data}
         xAxisDataKey={xAxisDataKey}
         barDataKey={barDataKey}
-      />
+      />,
     );
     expect(
-      container.getElementsByClassName('recharts-tooltip-wrapper').length
+      container.getElementsByClassName('recharts-tooltip-wrapper').length,
     ).toBe(1);
   });
 });
