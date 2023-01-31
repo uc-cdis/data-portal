@@ -17,21 +17,6 @@ window.matchMedia =
     };
   };
 
-/*
-let container = null;
-beforeEach(() => {
-  // setup a DOM element as a render target
-  container = document.createElement('div');
-  document.body.appendChild(container);
-});
-
-afterEach(() => {
-  // cleanup on exiting
-  unmountComponentAtNode(container);
-  container.remove();
-  container = null;
-});
-*/
 describe('Histogram component', () => {
   it('renders histogram with default props', () => {
     render(<Histogram data={[]} xAxisDataKey='key' barDataKey='value' />);
@@ -39,7 +24,7 @@ describe('Histogram component', () => {
     expect(histogramComponent).toBeInTheDocument();
   });
 
-  it('renders two bars when given two datums', () => {
+  it('renders three bars when given three datums', () => {
     const { container } = render(
       <Histogram
         data={[
@@ -63,7 +48,6 @@ describe('Histogram component', () => {
         barDataKey='value'
       />
     );
-
     expect(
       container.getElementsByClassName('recharts-bar-rectangle').length
     ).toBe(3);
@@ -73,17 +57,11 @@ describe('Histogram component', () => {
     const data = [];
     const xAxisDataKey = 'otherValue';
     const barDataKey = 'value';
-    const chartWidth = 600;
-    const chartHeight = 350;
-    const barColor = 'hotpink';
     const { container } = render(
       <Histogram
         data={data}
         xAxisDataKey={xAxisDataKey}
         barDataKey={barDataKey}
-        chartWidth={chartWidth}
-        chartHeight={chartHeight}
-        barColor={barColor}
       />
     );
     expect(
