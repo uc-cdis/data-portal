@@ -26,7 +26,9 @@ export function fetchResult(body) {
     method: 'POST',
     body: JSON.stringify(body),
   }).then(({ response, data, status }) => {
-    if (status !== 200) throw response.statusText;
+    if (status !== 200) {
+      throw response.statusText;
+    }
     return data;
   });
 }

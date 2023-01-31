@@ -4,10 +4,12 @@ import { Provider } from 'react-redux';
 import FilterSetCreateForm from '@src/GuppyDataExplorer/ExplorerFilterSetForms/FilterSetCreateForm';
 import FilterSetDeleteForm from '@src/GuppyDataExplorer/ExplorerFilterSetForms/FilterSetDeleteForm';
 import FilterSetOpenForm from '@src/GuppyDataExplorer/ExplorerFilterSetForms/FilterSetOpenForm';
+import FilterSetShareForm from '@src/GuppyDataExplorer/ExplorerFilterSetForms/FilterSetShareForm';
 import FilterSetUpdateForm from '@src/GuppyDataExplorer/ExplorerFilterSetForms/FilterSetUpdateForm';
 import {
   testFilterSets,
   testReduxStore,
+  testToken,
 } from '@src/GuppyDataExplorer/ExplorerFilterSetForms/testData';
 
 const style = {
@@ -60,6 +62,17 @@ storiesOf('FilterSetForms', module)
         filterSets={testFilterSets}
         onAction={action('open')}
         onClose={action('close')}
+        fetchWithToken={(token) => {
+          action('fetch-shared')(token);
+          setTimeout(() => {});
+          return new Promise((resolve, reject) => {
+            setTimeout(
+              () =>
+                token === testToken ? resolve(testFilterSets[0]) : reject(),
+              1000
+            );
+          });
+        }}
       />
     </Wrapper>
   ))
@@ -74,4 +87,35 @@ storiesOf('FilterSetForms', module)
         onClose={action('close')}
       />
     </Wrapper>
+  ))
+  .add('Share form', () => (
+    <>
+      <strong>Success</strong>
+      <Wrapper>
+        <FilterSetShareForm
+          onAction={() => {
+            action('share')();
+            setTimeout(() => {});
+            return new Promise((resolve) => {
+              setTimeout(() => resolve(testToken), 1000);
+            });
+          }}
+          onClose={action('close')}
+        />
+      </Wrapper>
+      <br />
+      <strong>Error</strong>
+      <Wrapper>
+        <FilterSetShareForm
+          onAction={() => {
+            action('share')();
+            setTimeout(() => {});
+            return new Promise((_, reject) => {
+              setTimeout(() => reject(), 1000);
+            });
+          }}
+          onClose={action('close')}
+        />
+      </Wrapper>
+    </>
   ));

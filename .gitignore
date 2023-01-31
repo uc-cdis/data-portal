@@ -10,3 +10,4 @@ src/params.js
 __generated__/
 *.log
 .DS_Store
+.idea/
