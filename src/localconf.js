@@ -304,7 +304,7 @@ function buildConfig(opts) {
     studyRegistrationConfig.studyRegistrationUIDField = 'appl_id';
   }
   if (!studyRegistrationConfig.dataDictionaryField) {
-    studyRegistrationConfig.dataDictionaryField = 'data_dictionaries';
+    studyRegistrationConfig.dataDictionaryField = '';
   }
   const { workspacePageTitle } = config;
   const { workspacePageDescription } = config;
