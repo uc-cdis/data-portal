@@ -8,7 +8,6 @@ import TourButton from './TourButton/TourButton';
 const { Step } = Steps;
 const ProgressBar = ({ currentStep, selectionMode }) => (
   <div className='progress-bar'>
-    <h1>Welcome</h1>
     <div className='progress-bar__steps'>
       <Steps current={currentStep}>
         {gwasV2Steps.map((item, index) => (
