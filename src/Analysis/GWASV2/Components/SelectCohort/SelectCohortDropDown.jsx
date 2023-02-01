@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useQuery, queryConfig } from 'react-query';
+import { useQuery } from 'react-query';
 import { Select, Spin } from 'antd';
-import { fetchCohortDefinitions } from '../../Utils/cohortMiddlewareApi';
+import { fetchCohortDefinitions, queryConfig } from '../../Utils/cohortMiddlewareApi';
 import { useFetch } from '../../Utils/formHooks';
 import { useSourceContext } from '../../Utils/Source';
 
@@ -23,7 +23,20 @@ const SelectCohortDropDown = ({ handleCohortSelect }) => {
     handleCohortSelect(selectedCohort);
   };
 
-  return cohorts?.status === 'success' ? (
+  if (cohorts?.status === 'loading') {
+    return (
+      <React.Fragment>
+        <div className='GWASUI-spinnerContainer GWASUI-emptyTable'>
+          <Spin />
+        </div>
+      </React.Fragment>
+    );
+  }
+  if (cohorts?.status === 'error') {
+    return <React.Fragment>Error getting data for dropdown</React.Fragment>;
+  }
+
+  return (
     <Select
       showSearch
       className='select-cohort'
@@ -34,12 +47,6 @@ const SelectCohortDropDown = ({ handleCohortSelect }) => {
       options={fetchedCohorts}
       fieldNames={{ label: 'cohort_name', value: 'cohort_definition_id' }}
     />
-  ) : (
-    <React.Fragment>
-      <div className='GWASUI-spinnerContainer GWASUI-emptyTable'>
-        <Spin />
-      </div>
-    </React.Fragment>
   );
 };
 
