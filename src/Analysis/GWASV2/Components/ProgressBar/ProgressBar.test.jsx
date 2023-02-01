@@ -1,8 +1,8 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import { screen } from '@testing-library/react';
+
 // import ProgressBar from './ProgressBar';
-// Uncomment the above line once @reactour is on CI server
+// Uncomment the above lines once @reactour is on CI server
 
 /*
   Code to aid in Jest Mocking, see:

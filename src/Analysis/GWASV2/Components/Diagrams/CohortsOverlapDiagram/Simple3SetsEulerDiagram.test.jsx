@@ -14,7 +14,7 @@ describe('<Simple3SetsEulerDiagram />', () => {
         set13Size={60}
         set23Size={70}
         set123Size={10}
-      />
+      />,
     );
     expect(screen.getByTestId('euler-diagram')).toBeInTheDocument();
   });
@@ -31,10 +31,10 @@ describe('<Simple3SetsEulerDiagram />', () => {
           set13Size={60}
           set23Size={70}
           set123Size={10}
-        />
+        />,
       );
     }).toThrowError(
-      'Error: invalid set sizes. A set overlap cannot be bigger than the set itself.'
+      'Error: invalid set sizes. A set overlap cannot be bigger than the set itself.',
     );
   });
 });
