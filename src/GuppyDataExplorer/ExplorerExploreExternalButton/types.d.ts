@@ -9,3 +9,15 @@ export type ExternalCommonsInfo =
       link: string;
       type: 'redirect';
     };
+
+type CommonsDict = {
+  [key: string]: string;
+};
+type Commons = {
+  label: string;
+  value: string;
+};
+export type ExternalConfig = {
+  commons: Commons[];
+  commons_dict: CommonsDict;
+};
