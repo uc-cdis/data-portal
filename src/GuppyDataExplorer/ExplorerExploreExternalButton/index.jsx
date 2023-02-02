@@ -17,6 +17,8 @@ import Spinner from '../../components/Spinner';
 
 /** @typedef {import('./types').ExternalCommonsInfo} ExternalCommonsInfo */
 
+/** @typedef {import('./types').ExternalConfig} ExternalConfig */
+
 /**
  * @param {{ path: string; body: string }} payload
  * @returns {Promise<ExternalCommonsInfo>}
@@ -41,12 +43,6 @@ function ExplorerExploreExternalButton({ filter }) {
     label: 'Select data commons',
     value: '',
   };
-  const externalCommonsOptions = [
-    {
-      label: 'Genomic Data Commons',
-      value: 'gdc',
-    },
-  ];
 
   const [selected, setSelected] = useState(emptyOption);
   const [show, setShow] = useState(false);
@@ -54,18 +50,35 @@ function ExplorerExploreExternalButton({ filter }) {
   const [commonsInfo, setCommonsInfo] = useState(
     /** @type {ExternalCommonsInfo} */ (null)
   );
+  const [externalConfig, setExternalConfig] = useState(
+    /** @type {ExternalConfig} */ (null)
+  );
   const [isFileDownloaded, setIsFileDownloaded] = useState(false);
 
   function openPopup() {
     setShow(true);
+    handleFetchExternalConfig();
   }
 
   function closePopup() {
     setSelected(emptyOption);
     setCommonsInfo(null);
+    setExternalConfig(null);
     setShow(false);
     setIsLoading(false);
     setIsFileDownloaded(false);
+  }
+
+  function handleFetchExternalConfig() {
+    setIsLoading(true);
+    fetchWithCreds({
+      path: '/analysis/tools/external/config',
+    })
+      .then(({ data }) => {
+        setExternalConfig(data);
+      })
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
   }
 
   /** @param {typeof selected} newSelected */
@@ -84,12 +97,12 @@ function ExplorerExploreExternalButton({ filter }) {
         path: `/analysis/tools/external/${newSelected.value}`,
         body: JSON.stringify({ filter: getGQLFilter(filter) }),
       });
-      setIsLoading(false);
       setCommonsInfo(newCommonsInfo);
     } catch (e) {
       // eslint-disable-next-line no-console
-      setIsLoading(false);
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -131,7 +144,7 @@ function ExplorerExploreExternalButton({ filter }) {
                 input={
                   <Select
                     inputId='explore-external-data-commons'
-                    options={[emptyOption, ...externalCommonsOptions]}
+                    options={[emptyOption, ...(externalConfig?.commons || [])]}
                     value={selected}
                     autoFocus
                     isClearable={false}
