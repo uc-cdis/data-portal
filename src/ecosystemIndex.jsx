@@ -549,7 +549,7 @@ async function init() {
                       ? (
                         <Route
                           exact
-                          path='/study-reg/data-dictionary-submission'
+                          path='/data-dictionary-submission'
                           component={
                             (props) => (
                               <ProtectedContent

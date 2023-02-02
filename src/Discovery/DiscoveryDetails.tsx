@@ -269,7 +269,7 @@ const DiscoveryDetails = (props: Props) => {
             ? (
               <Button
                 type='text'
-                onClick={() => handleRedirectClick('/study-reg/data-dictionary-submission',
+                onClick={() => handleRedirectClick('/data-dictionary-submission',
                   props.modalData[studyRegistrationConfig.studyRegistrationAccessCheckField],
                   props.modalData.project_title,
                   props.modalData.project_number,
