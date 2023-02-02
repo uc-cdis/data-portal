@@ -485,8 +485,8 @@ export const fetchUserAccess = async (dispatch) => {
           case 401: // user is not logged in
           case 403: // user is not allowed to access the resource
             return false;
-          case 200: // valid input -> check "ok" field for authorization
-            return fetchRes.ok;
+          case 200: // user is authorized
+            return true;
           default:
             console.error(`Unknown status "${fetchRes.status}" returned by arborist call`);
             return false;
