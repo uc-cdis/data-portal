@@ -13,6 +13,7 @@ const ProgressBar = ({ currentStep, selectionMode }) => (
         {gwasV2Steps.map((item, index) => (
           <Step
             key={item.title}
+            data-testid='progress-bar-step'
             icon={<React.Fragment>{index + 1}</React.Fragment>}
             title={item.title}
           />
