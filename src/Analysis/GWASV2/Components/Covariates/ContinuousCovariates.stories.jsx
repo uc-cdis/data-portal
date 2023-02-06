@@ -12,11 +12,7 @@ export default {
 
 // useful examples: https://github.com/mswjs/msw-storybook-addon/tree/main/packages/docs/src/demos/react-query
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 
 const Template = () => {
   return (
@@ -31,8 +27,11 @@ const Template = () => {
             handleClose={() => {
               console.log('close');
             }}
-            dispatch={(chosenCovariate) => {
-              console.log('chosen covariate:', chosenCovariate);
+            handleSelect={(chosenCovariate) => {
+              console.log('chosen covariate:', chosenCovariate)
+            }}
+            dispatch={(payload) => {
+              console.log('payload:', payload)
             }}
             submitButtonLabel={'Add'}
           />

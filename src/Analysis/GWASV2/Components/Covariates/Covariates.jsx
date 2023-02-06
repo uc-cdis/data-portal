@@ -89,6 +89,11 @@ const Covariates = ({ selected, handleSelect }) => {
             showSizeChanger: true,
             pageSizeOptions: ['10', '20', '50', '100', '500'],
           }}
+          onRow={(selectedRow) => ({
+            onClick: () => {
+              handleSelect(selectedRow);
+            },
+          })}
           rowSelection={covariateSelection()}
           columns={covariateTableConfig}
           dataSource={displayedCovariates}

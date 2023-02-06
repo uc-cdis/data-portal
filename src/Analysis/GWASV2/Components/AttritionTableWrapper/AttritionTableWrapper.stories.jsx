@@ -11,11 +11,7 @@ export default {
   component: AttritionTableWrapper,
 };
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 const Template = (args) => (
   <QueryClientProvider client={mockedQueryClient}>
     <SourceContextProvider>

@@ -10,6 +10,7 @@ const initialState = {
   currentStep: 0,
   finalPopulationSizes: [],
   selectionMode: '',
+  messages: [],
 };
 
 export default initialState;

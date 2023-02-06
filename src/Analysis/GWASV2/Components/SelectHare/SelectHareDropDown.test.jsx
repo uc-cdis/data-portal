@@ -35,11 +35,7 @@ useSourceFetch.mockResolvedValue({
 });
 
 // Other generic arguments and functions shared by tests below:
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 const mountDropDownForOutcome = (
   selectedStudyPopulationCohort,
   covariates,
