@@ -9,7 +9,6 @@ bpa "data.bloodpac.org"
 dcf "nci-crdc.datacommons.io"
 gtex "gen3.biodatacatalyst.nhlbi.nih.gov"
 anvil "gen3.theanvil.io"
-dev "qa.planx-pla.net"
 genomel "genomel.bionimbus.org"
 )
 index=0
