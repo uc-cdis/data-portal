@@ -26,6 +26,7 @@ const SelectCovariates = ({
           {selectionMode === 'continuous' && (
             <div className='select-container'>
               <ContinuousCovariates
+                dispatch={dispatch}
                 selectedStudyPopulationCohort={studyPopulationCohort}
                 selectedCovariates={covariates}
                 outcome={outcome}
@@ -36,7 +37,7 @@ const SelectCovariates = ({
                     payload: '',
                   });
                 }}
-                dispatch={(chosenCovariate) => {
+                handleSelect={(chosenCovariate) => {
                   dispatch({
                     type: ACTIONS.ADD_COVARIATE,
                     payload: chosenCovariate,
@@ -50,6 +51,7 @@ const SelectCovariates = ({
           {selectionMode === 'dichotomous' && (
             <div className='select-container'>
               <CustomDichotomousCovariates
+                dispatch={dispatch}
                 studyPopulationCohort={studyPopulationCohort}
                 covariates={covariates}
                 outcome={outcome}
@@ -60,7 +62,7 @@ const SelectCovariates = ({
                     payload: '',
                   });
                 }}
-                dispatch={(chosenCovariate) => {
+                handleSelect={(chosenCovariate) => {
                   dispatch({
                     type: ACTIONS.ADD_COVARIATE,
                     payload: chosenCovariate,

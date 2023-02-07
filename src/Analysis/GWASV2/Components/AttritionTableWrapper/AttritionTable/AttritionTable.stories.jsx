@@ -10,11 +10,7 @@ export default {
   component: AttritionTable,
 };
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 
 const MockTemplate = () => {
   const [covariateArrSizeTable1, setCovariateArrSizeTable1] = useState(10);
