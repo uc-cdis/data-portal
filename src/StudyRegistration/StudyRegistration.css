@@ -49,3 +49,18 @@
   font-size: 0.8rem;
   text-align: center
 }
+
+.vlmd-submit-modal-footer-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/* antd modal style override */
+.ant-modal-header {
+  background-color: var(--secondary-color);
+}
+
+.ant-modal-title {
+  color: white;
+}

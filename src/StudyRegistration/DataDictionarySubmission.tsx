@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 import parse from 'html-react-parser';
 import {
@@ -12,6 +13,7 @@ import {
   Upload,
   Progress,
   Tag,
+  Modal,
 } from 'antd';
 import { ResultStatusType } from 'antd/lib/result';
 import type { RcFile, UploadProps } from 'antd/es/upload/interface';
@@ -79,6 +81,8 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
   const [existingDataDictionaryName, setExistingDataDictionaryName] = useState<Array<string> | undefined>([]);
   const [uploadProgress, setUploadProgress] = useState<number>(100);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [overwriteConfirmModalVisible, setOverwriteConfirmModalVisible] = useState<boolean>(false);
+  const [duplicatedDataDictionaryName, setDuplicatedDataDictionaryName] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const locationStateData = location.state as LocationState || {};
@@ -187,13 +191,34 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
       }, (err) => setFormSubmissionStatus({ status: 'error', text: err }));
   };
 
+  const handleOk = () => {
+    setOverwriteConfirmModalVisible(false);
+    form.submit();
+  };
+
+  const handleCancel = () => {
+    setUploading(false);
+    setOverwriteConfirmModalVisible(false);
+  };
+
+  const onSubmitButtonClick = () => {
+    setUploading(true);
+    const ddName = form.getFieldValue('Data Dictionary Name');
+    if (existingDataDictionaryName?.includes(ddName)) {
+      setDuplicatedDataDictionaryName(ddName);
+      setOverwriteConfirmModalVisible(true);
+    } else {
+      form.submit();
+    }
+  };
+
   const uploadProps: UploadProps = {
     accept: '.csv,.tsv,.json',
     maxCount: 1,
     beforeUpload: () => false,
   };
+
   const onFinish = (values) => {
-    setUploading(true);
     handleUpload(values);
   };
 
@@ -254,6 +279,24 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
 
   return (
     <div className='study-reg-container'>
+      <Modal
+        title='Confirm Overwrite'
+        open={overwriteConfirmModalVisible}
+        closable={false}
+        footer={(
+          <div className='vlmd-submit-modal-footer-btn'>
+            <Button key='cancel' onClick={handleCancel}>
+            No
+            </Button>
+            <Button key='ok' type='primary' onClick={handleOk}>
+            Yes
+            </Button>
+          </div>
+        )}
+      >
+        A data dictionary with the name <Tag>{duplicatedDataDictionaryName}</Tag>is already associated with this study, and will be overwritten by the new submission.
+        Are you sure you want to overwrite <Tag>{duplicatedDataDictionaryName}</Tag>?
+      </Modal>
       <div className='study-reg-form-container'>
         <Form className='study-reg-form' {...layout} form={form} name='vlmd-sub-form' onFinish={onFinish} validateMessages={validateMessages}>
           <Divider plain>Data Dictionary Submission</Divider>
@@ -358,12 +401,12 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             <Space>
               {(!userHasAccess()) ? (
                 <Tooltip title={'You don\'t have permission to submit data dictionary'}>
-                  <Button type='primary' htmlType='submit' disabled>
+                  <Button type='primary' disabled>
                     Submit data dictionary
                   </Button>
                 </Tooltip>
               ) : (
-                <Button type='primary' htmlType='submit' disabled={uploading} loading={uploading}>
+                <Button type='primary' onClick={onSubmitButtonClick} disabled={uploading} loading={uploading}>
                   Submit data dictionary
                 </Button>
               )}
