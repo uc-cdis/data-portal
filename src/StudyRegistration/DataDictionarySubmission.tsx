@@ -294,8 +294,8 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
           </div>
         )}
       >
-        A data dictionary with the name <Tag>{duplicatedDataDictionaryName}</Tag>is already associated with this study, and will be overwritten by the new submission.
-        Are you sure you want to overwrite <Tag>{duplicatedDataDictionaryName}</Tag>?
+        A data dictionary with the name <Text strong>{`"${duplicatedDataDictionaryName}"`}</Text> is already associated with this study, and will be overwritten by the new submission.
+        Are you sure you want to overwrite <Text strong>{`"${duplicatedDataDictionaryName}"`}</Text>?
       </Modal>
       <div className='study-reg-form-container'>
         <Form className='study-reg-form' {...layout} form={form} name='vlmd-sub-form' onFinish={onFinish} validateMessages={validateMessages}>
