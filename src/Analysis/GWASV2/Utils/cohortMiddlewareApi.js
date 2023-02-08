@@ -18,7 +18,8 @@ export const fetchSimpleOverlapInfo = async (
       {
         variable_type: 'concept',
         concept_id: hareConceptId,
-      }],
+      }].filter(Boolean), // filter out any undefined or null items (e.g. in some
+                          // scenarios "outcome" and "selectedCovariates" are still null and/or empty)
   };
   const statsEndPoint = `${cohortMiddlewarePath}cohort-stats/check-overlap/by-source-id/${sourceId}/by-cohort-definition-ids/${cohortAId}/${cohortBId}`;
   const reqBody = {
@@ -48,7 +49,8 @@ export const fetchHistogramInfo = async (
       {
         variable_type: 'concept',
         concept_id: hareConceptId,
-      }],
+      }].filter(Boolean), // filter out any undefined or null items (e.g. in some
+                          // scenarios "outcome" and "selectedCovariates" are still null and/or empty)
   };
   const endPoint = `${cohortMiddlewarePath}histogram/by-source-id/${sourceId}/by-cohort-definition-id/${cohortId}/by-histogram-concept-id/${selectedConceptId}`;
   const reqBody = {
