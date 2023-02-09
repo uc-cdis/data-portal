@@ -12,9 +12,9 @@ import {
 } from '@ant-design/icons';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
-import { gwasWorkflowPath } from '../../../localconf';
-import { headers } from '../../../configs';
-import { getPresignedUrl } from '../../AnalysisJob';
+import { gwasWorkflowPath } from '../../localconf';
+import { headers } from '../../configs';
+import { getPresignedUrl } from '../AnalysisJob';
 import { gwasStatus } from './constants';
 
 const GWASJob = ({ workflow }) => {
