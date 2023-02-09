@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ReactNode } from 'react';
-import { debounce } from 'lodash';
+import { DebounceSearch } from './Utils/DebounceSearch/DebounceSearch';
 import * as JsSearch from 'js-search';
 import {
   Tag, Popover, Space, Collapse, Button, Dropdown, Menu, Pagination, Tooltip,
@@ -278,6 +278,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const { config } = props;
 
   const [jsSearch, setJsSearch] = useState(null);
+  const [executedSearches, setExecutedSearches] = useState(0);
   const [accessibilityFilterVisible, setAccessibilityFilterVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
@@ -338,21 +339,8 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     setVisibleResources(filteredResources);
   };
 
-  const debounceDelayInMilliseconds = 500;
-  const [executedSearches, setExecutedSearches] = useState(0);
-  const initialSearchesWithoutDebounce = 2;
   useEffect(
-    () => {
-      // Execute searches initially without debounce on page load
-      if (executedSearches < initialSearchesWithoutDebounce) {
-        console.log('no debounce');
-        setExecutedSearches(executedSearches + 1);
-        return doSearchFilterSort();
-      }
-      console.log('with debounce');
-      // Otherwise debounce the calls
-      return debounce(doSearchFilterSort, debounceDelayInMilliseconds);
-    }, [
+    DebounceSearch(doSearchFilterSort, executedSearches, setExecutedSearches), [
       props.searchTerm,
       props.accessSortDirection,
       props.studies,
