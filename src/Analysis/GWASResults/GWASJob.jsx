@@ -163,7 +163,7 @@ const GWASJob = ({ workflow }) => {
 };
 
 GWASJob.propTypes = {
-  workflow: PropTypes.string.isRequired,
+  workflow: PropTypes.object.isRequired,
 };
 
 export default GWASJob;
