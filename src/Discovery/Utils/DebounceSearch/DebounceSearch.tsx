@@ -1,4 +1,9 @@
 import { debounce } from 'lodash';
+import { useCallback } from 'react';
+
+
+const dbs = useCallback(debounce(doSearchFilterSort, debounceDelayInMilliseconds),[]);
+
 
 const DebounceSearch = (doSearchFilterSort, executedSearches, setExecutedSearches) => {
   const debounceDelayInMilliseconds = 500;

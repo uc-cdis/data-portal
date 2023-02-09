@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
 import * as JsSearch from 'js-search';
 import {
   Tag, Popover, Space, Collapse, Button, Dropdown, Menu, Pagination, Tooltip,
@@ -29,7 +29,9 @@ import DiscoveryListView from './DiscoveryListView';
 import DiscoveryAdvancedSearchPanel from './DiscoveryAdvancedSearchPanel';
 import { ReduxDiscoveryActionBar, ReduxDiscoveryDetails } from './reduxer';
 import DiscoveryMDSSearch from './DiscoveryMDSSearch';
+import { debounce, throttle } from 'lodash';
 import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
+import doSearchFilterSort from './Utils/DebounceSearch/doSearchFilterSort';
 
 export const accessibleFieldName = '__accessible';
 
@@ -300,47 +302,30 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     props.onSearchChange(value);
   };
 
-  const doSearchFilterSort = () => {
-    let filteredResources = props.studies;
-    if (jsSearch && props.searchTerm) {
-      filteredResources = jsSearch.search(props.searchTerm);
-    }
-    filteredResources = filterByTags(
-      filteredResources,
-      props.selectedTags,
-      config,
-    );
 
-    if (config.features.advSearchFilters && config.features.advSearchFilters.enabled) {
-      filteredResources = filterByAdvSearch(
-        filteredResources,
-        filterState,
-        config,
-        filterMultiSelectionLogic,
-      );
-    }
 
-    if (props.config.features.authorization.enabled) {
-      filteredResources = filteredResources.filter(
-        (resource) => props.accessFilters[resource[accessibleFieldName]],
-      );
-    }
+  const debounceDelayInMilliseconds = 500;
+  const initialSearchesWithoutDebounce = 2;
+  //const dbs = useCallback(debounce(doSearchFilterSort, 500),[]);
 
-    filteredResources = filteredResources.sort(
-      (a, b) => {
-        if (props.accessSortDirection === AccessSortDirection.DESCENDING) {
-          return a[accessibleFieldName] - b[accessibleFieldName];
-        } if (props.accessSortDirection === AccessSortDirection.ASCENDING) {
-          return b[accessibleFieldName] - a[accessibleFieldName];
-        }
-        return 0;
-      },
-    );
-    setVisibleResources(filteredResources);
-  };
+  // THIS WORKS BUT ONLY ON PREVIOUS VERSION OF SEARCH TERM
+  // const dbs =  useMemo(() => (debounce(doSearchFilterSort, 250)),[visibleResources]);
+  const dbs =  useMemo(() => (debounce(doSearchFilterSort, 500)),[]);
+
 
   useEffect(
-    DebounceSearch(doSearchFilterSort, executedSearches, setExecutedSearches), [
+    ()=>{
+      const parametersForDoSearchFilterSort = [props, jsSearch, config, setVisibleResources, filterByTags, filterByAdvSearch, filterState, filterMultiSelectionLogic, accessibleFieldName, AccessSortDirection];
+      // Execute searches initially without debounce to decrease page load time
+      if (executedSearches < initialSearchesWithoutDebounce) {
+        setExecutedSearches(executedSearches + 1);
+          return   doSearchFilterSort(...parametersForDoSearchFilterSort ) ;
+      }
+      // Otherwise debounce the calls
+      // return debounce(doSearchFilterSort, debounceDelayInMilliseconds);
+      dbs(...parametersForDoSearchFilterSort);
+      return;
+    }, [
       props.searchTerm,
       props.accessSortDirection,
       props.studies,
