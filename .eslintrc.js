@@ -184,12 +184,6 @@ module.exports = {
         'react/no-unused-prop-types': 'off',
       },
     },
-    {
-      files: ['src/Analysis/GWASWizard/shared/CustomDichotomousSelect.jsx'],
-      rules: {
-        'react/no-unknown-property': ['error', { ignore: ['align'] }], // centering in h3
-      },
-    },
     // Linting settings for Typescript
     {
       files: ['*.ts', '*.tsx'],
