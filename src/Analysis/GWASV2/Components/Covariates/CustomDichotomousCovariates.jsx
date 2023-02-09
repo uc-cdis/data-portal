@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SelectCohortDropDown from '../SelectCohort/SelectCohortDropDown';
 import CohortsOverlapDiagram from '../Diagrams/CohortsOverlapDiagram/CohortsOverlapDiagram';
 import './Covariates.css';
-import '../../../GWASUIApp/GWASUIApp.css';
+import '../../../GWASResults/GWASUIApp.css';
 
 const CustomDichotomousCovariates = ({
   dispatch,

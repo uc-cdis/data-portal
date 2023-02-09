@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import GWASWorkflowList from './GWASWorkflowList';
-import { gwasStatus } from '../GWASWizard/shared/constants';
+import { gwasStatus } from './constants';
 
 export default {
-  title: 'Tests2/GWASUI/WorkflowList',
+  title: 'Tests2/GWASResults/WorkflowList',
   component: GWASWorkflowList,
 };
 
