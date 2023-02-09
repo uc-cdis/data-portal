@@ -1,14 +1,13 @@
-import { DebounceSearch } from './DebounceSearch';
 import { debounce } from 'lodash';
+import { DebounceSearch } from './DebounceSearch';
 
-jest.mock('lodash', () => {
-  return {
-    debounce: jest.fn(func => func),
-  };
-});
+jest.mock('lodash', () => ({
+  debounce: jest.fn((func) => func),
+}));
 
 describe('DebounceSearch', () => {
-  let doSearchFilterSort, setExecutedSearches;
+  let doSearchFilterSort; let
+    setExecutedSearches;
   beforeEach(() => {
     doSearchFilterSort = jest.fn();
     setExecutedSearches = jest.fn();
@@ -26,7 +25,7 @@ describe('DebounceSearch', () => {
   });
 
   it('debounces the doSearchFilterSort function after the first two calls', () => {
-    let executedSearches = 2;
+    const executedSearches = 2;
     DebounceSearch(doSearchFilterSort, executedSearches, setExecutedSearches);
     expect(debounce).toHaveBeenCalledWith(doSearchFilterSort, 500);
   });

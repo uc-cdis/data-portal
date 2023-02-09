@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ReactNode } from 'react';
-import { DebounceSearch } from './Utils/DebounceSearch/DebounceSearch';
 import * as JsSearch from 'js-search';
 import {
   Tag, Popover, Space, Collapse, Button, Dropdown, Menu, Pagination, Tooltip,
@@ -20,6 +19,7 @@ import {
 } from '@ant-design/icons';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import MenuItem from 'antd/lib/menu/MenuItem';
+import DebounceSearch from './Utils/DebounceSearch/DebounceSearch';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
