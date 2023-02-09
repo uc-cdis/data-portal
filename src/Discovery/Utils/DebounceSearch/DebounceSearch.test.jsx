@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import { DebounceSearch } from './DebounceSearch';
+import DebounceSearch from './DebounceSearch';
 
 jest.mock('lodash', () => ({
   debounce: jest.fn((func) => func),
