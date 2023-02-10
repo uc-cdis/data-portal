@@ -8,11 +8,10 @@ import { TourProvider } from '@reactour/tour';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import BackLink from '../components/BackLink';
 import HIVCohortFilter from '../HIVCohortFilter/HIVCohortFilter';
-import ReduxGWASUIApp from './GWASUIApp/ReduxGWASUIApp';
 import { analysisApps } from '../localconf';
 import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
-import GWASWorkflowList from './GWASUIApp/GWASWorkflowList';
+import GWASWorkflowList from './GWASResults/GWASWorkflowList';
 import GWASContainer from './GWASV2/GWASContainer';
 
 const queryClient = new QueryClient();
@@ -96,30 +95,13 @@ class AnalysisApp extends React.Component {
           <Button label='Run' buttonType='primary' onClick={this.onSubmitJob} isPending={this.isJobRunning()} />
         </React.Fragment>
       );
-    case 'GWASUIApp':
-      return (
-        <TourProvider
-          afterOpen={disableBody}
-          beforeClose={enableBody}
-          disableInteraction
-          onClickClose={({ setCurrentStep, setIsOpen }) => {
-            setIsOpen(false);
-
-            setCurrentStep(0);
-          }}
-        >
-          <div className='analysis-app_flex_col'>
-            <ReduxGWASUIApp />
-          </div>
-        </TourProvider>
-      );
     case 'GWASResults':
       return (
         <div className='analysis-app_flex_row'>
           <GWASWorkflowList refetchInterval={5000} />
         </div>
       );
-    case 'GWAS++': {
+    case 'GWASUIApp': {
       return (
         <TourProvider
           afterOpen={disableBody}

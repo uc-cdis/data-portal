@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Button, List, Tag,
-} from 'antd';
+import { Button, List, Tag } from 'antd';
 import {
   CheckCircleOutlined,
   SyncOutlined,
@@ -12,19 +10,23 @@ import {
 } from '@ant-design/icons';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
-import { gwasWorkflowPath } from '../../../localconf';
-import { headers } from '../../../configs';
-import { getPresignedUrl } from '../../AnalysisJob';
-import { gwasStatus } from './constants';
+import { gwasWorkflowPath } from '../../localconf';
+import { headers } from '../../configs';
+import { getPresignedUrl } from '../AnalysisJob';
+import gwasStatus from './constants';
 
 const GWASJob = ({ workflow }) => {
   async function handleWorkflowOutput(url) {
-    const response = await fetch(url, { headers }).then((res) => res.json()).then((data) => data);
+    const response = await fetch(url, { headers })
+      .then((res) => res.json())
+      .then((data) => data);
     if (response) {
-      getPresignedUrl(JSON.parse(response.outputs.parameters[0].value).did, 'download')
-        .then((res) => {
-          window.open(res, '_blank');
-        });
+      getPresignedUrl(
+        JSON.parse(response.outputs.parameters[0].value).did,
+        'download',
+      ).then((res) => {
+        window.open(res, '_blank');
+      });
     }
   }
 
@@ -122,32 +124,38 @@ const GWASJob = ({ workflow }) => {
   }
 
   const Status = () => {
-    const { data, status } = useQuery(['workflowId', workflow.name, workflow.phase], fetchWorkflowStatus, {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    });
+    const { data, status } = useQuery(
+      ['workflowId', workflow.name, workflow.phase],
+      fetchWorkflowStatus,
+      {
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+      },
+    );
     if (status === 'loading') {
       return <React.Fragment>Loading</React.Fragment>;
     }
     if (status === 'error') {
       return <React.Fragment />;
     }
-    const finishedAt = (data.finishedAt === null) ? '' : data.finishedAt;
+    const finishedAt = data.finishedAt === null ? '' : data.finishedAt;
     return (
       <React.Fragment>
-        <List.Item
-          actions={getActionButtons(data.phase, data.name)}
-        >
+        <List.Item actions={getActionButtons(data.phase, data.name)}>
           <List.Item.Meta
             title={`Run ID: ${data.name}`}
             description={(
               <dl>
                 <dt>Workflow Name: {data.wf_name}</dt>
-                <dt>Started at {data.startedAt} {data.phase === gwasStatus.succeeded ? `and finished at ${finishedAt}` : ''}</dt>
+                <dt>
+                  Started at {data.startedAt}{' '}
+                  {data.phase === gwasStatus.succeeded
+                    ? `and finished at ${finishedAt}`
+                    : ''}
+                </dt>
               </dl>
             )}
-
           />
           <div>{getStatusTag(data.phase)}</div>
         </List.Item>
@@ -163,7 +171,7 @@ const GWASJob = ({ workflow }) => {
 };
 
 GWASJob.propTypes = {
-  workflow: PropTypes.string.isRequired,
+  workflow: PropTypes.object.isRequired,
 };
 
 export default GWASJob;
