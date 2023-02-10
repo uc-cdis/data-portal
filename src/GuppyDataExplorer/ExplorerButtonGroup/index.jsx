@@ -688,7 +688,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
         // otherwise, just query subject index for subject_id list,
         // and query file index for manifest info.
         this.setState({
-          manifestEntryCount: 0,
+          manifestEntryCount: 0, downloadingInProgress: { manifest: true },
         });
         const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
         if (caseIDResult) {
@@ -701,7 +701,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
               this.props.filter,
             );
             this.setState({
-              manifestEntryCount: countResult,
+              manifestEntryCount: countResult, downloadingInProgress: { manifest: false },
             });
           } else {
             let caseIDList = caseIDResult.map((i) => i[caseField]);
@@ -712,7 +712,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
               },
             });
             this.setState({
-              manifestEntryCount: countResult,
+              manifestEntryCount: countResult, downloadingInProgress: { manifest: false },
             });
           }
         } else {
