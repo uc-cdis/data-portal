@@ -165,14 +165,15 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
         uploadToS3(url, fileInfo, setUploadProgress)
           .then(() => {
             setFormSubmissionStatus({ status: 'info', text: 'Finishing upload' });
-            // TODO: change this line back
-            let subject = `INTERNAL TESTING: Data dictionary submission for ${studyNumber} ${studyName}`;
+            let subject = `Data dictionary submission for ${studyNumber} ${studyName}`;
             if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
               subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
             }
             const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
             const email = formValues['E-mail Address'];
-            let contents = `Grant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}\nStudy UID: ${studyUID}\nData Dictionary GUID: ${guid}`;
+            // This is the CLI command to kick off the argo wf from AdminVM
+            const cliCmd = `argo submit -n argo --watch vlmd_submission_workflow.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${studyUID}`;
+            let contents = `Grant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}\nStudy UID: ${studyUID}\nData Dictionary GUID: ${guid}\n\nCLI Command: ${cliCmd}`;
             Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
               const [key, value] = entry;
               contents = contents.concat(`\n${key}: ${value}`);
@@ -231,7 +232,7 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             <Result
               status={formSubmissionStatus.status}
               title='Your Data Dictionary has been submitted!'
-              // TODO: no time commitment for file processing ATM
+              // TODO: no time commitment for file processing ATM, until we have a fully automated flow...
               subTitle='Thank you for your submission! You will be notified via e-mail when processing is completed.'
               extra={[
                 <Link key='discovery' to={'/discovery'}>
