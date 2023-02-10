@@ -19,9 +19,8 @@ import {
 } from '@ant-design/icons';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import MenuItem from 'antd/lib/menu/MenuItem';
-import DebounceSearch from './Utils/DebounceSearch/DebounceSearch';
+import doDebounceSearch from './Utils/Search/doDebounceSearch';
 import { DiscoveryConfig } from './DiscoveryConfig';
-import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
 import DiscoveryTagViewer from './DiscoveryTagViewer';
 import DiscoveryDropdownTagViewer from './DiscoveryDropdownTagViewer';
@@ -29,9 +28,10 @@ import DiscoveryListView from './DiscoveryListView';
 import DiscoveryAdvancedSearchPanel from './DiscoveryAdvancedSearchPanel';
 import { ReduxDiscoveryActionBar, ReduxDiscoveryDetails } from './reduxer';
 import DiscoveryMDSSearch from './DiscoveryMDSSearch';
-import { debounce, throttle } from 'lodash';
+import { debounce } from 'lodash';
 import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
-import doSearchFilterSort from './Utils/DebounceSearch/doSearchFilterSort';
+import doSearchFilterSort from './Utils/Search/doSearchFilterSort';
+import './Discovery.css';
 
 export const accessibleFieldName = '__accessible';
 
@@ -180,74 +180,9 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
   };
 };
 
-const filterByTags = (studies: any[], selectedTags: any, config: DiscoveryConfig): any[] => {
-  // if no tags selected, show all studies
-  if (Object.values(selectedTags).every((selected) => !selected)) {
-    return studies;
-  }
-  const tagField = config.minimalFieldMapping.tagsListFieldName;
-  return studies.filter((study) => study[tagField]?.some((tag) => selectedTags[tag.name]));
-};
-
 interface FilterState {
   [key: string]: { [value: string]: boolean }
 }
-
-const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, config: DiscoveryConfig, filterMultiSelectionLogic: string): any[] => {
-  // if no filters active, show all studies
-  const noFiltersActive = Object.values(advSearchFilterState).every((selectedValues) => {
-    if (Object.values(selectedValues).length === 0) {
-      return true;
-    }
-    if (Object.values(selectedValues).every((selected) => !selected)) {
-      return true;
-    }
-    return false;
-  });
-  if (noFiltersActive) {
-    return studies;
-  }
-
-  // Combine within filters as AND
-  if (filterMultiSelectionLogic === 'AND') {
-    return studies.filter((study) => Object.keys(advSearchFilterState).every((filterName) => {
-      const filterValues = Object.keys(advSearchFilterState[filterName]);
-      // Handle the edge case where no values in this filter are selected
-      if (filterValues.length === 0) {
-        return true;
-      }
-      if (!config.features.advSearchFilters) {
-        return false;
-      }
-      const studyFilters = study[config.features.advSearchFilters.field];
-      if (!studyFilters || !studyFilters.length) {
-        return false;
-      }
-
-      const studyFilterValues = studyFilters.filter(({ key }) => key === filterName)
-        .map(({ value }) => value);
-      return filterValues.every((value) => studyFilterValues.includes(value));
-    }));
-  }
-
-  // Combine within filters as OR
-  return studies.filter((study) => Object.keys(advSearchFilterState).some((filterName) => {
-    const filterValues = Object.keys(advSearchFilterState[filterName]);
-    // Handle the edge case where no values in this filter are selected
-    if (filterValues.length === 0) {
-      return true;
-    }
-    if (!config.features.advSearchFilters) {
-      return false;
-    }
-    const studyFilters = study[config.features.advSearchFilters.field];
-    if (!studyFilters || !studyFilters.length) {
-      return false;
-    }
-
-    return studyFilters.some(({ key, value }) => key === filterName && filterValues.includes(value));
-  }));
-};
 
 export interface DiscoveryResource {
   [accessibleFieldName]: AccessLevel,
@@ -278,9 +213,8 @@ interface Props {
 
 const Discovery: React.FunctionComponent<Props> = (props: Props) => {
   const { config } = props;
-
   const [jsSearch, setJsSearch] = useState(null);
-  const [executedSearches, setExecutedSearches] = useState(0);
+  const [executedSearchesCount, setExecutedSearchesCount] = useState(0);
   const [accessibilityFilterVisible, setAccessibilityFilterVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
@@ -302,30 +236,12 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     props.onSearchChange(value);
   };
 
-
-
-  const debounceDelayInMilliseconds = 500;
-  const initialSearchesWithoutDebounce = 2;
-  //const dbs = useCallback(debounce(doSearchFilterSort, 500),[]);
-
-  // THIS WORKS BUT ONLY ON PREVIOUS VERSION OF SEARCH TERM
-  // const dbs =  useMemo(() => (debounce(doSearchFilterSort, 250)),[visibleResources]);
-  const debounceSearch =  useMemo(() => (debounce(doSearchFilterSort, 500)),[]);
-
+  const memoizedDebouncedSearch =  useMemo(() => (debounce(doSearchFilterSort, 500)),[]);
+  const parametersForDoSearchFilterSort = [props, jsSearch, config, setVisibleResources,
+    filterState, filterMultiSelectionLogic, accessibleFieldName, AccessSortDirection];
 
   useEffect(
-    ()=>{
-      const parametersForDoSearchFilterSort = [props, jsSearch, config, setVisibleResources, filterByTags, filterByAdvSearch, filterState, filterMultiSelectionLogic, accessibleFieldName, AccessSortDirection];
-      // Execute searches initially without debounce to decrease page load time
-      if (executedSearches < initialSearchesWithoutDebounce) {
-        setExecutedSearches(executedSearches + 1);
-          return   doSearchFilterSort(...parametersForDoSearchFilterSort ) ;
-      }
-      // Otherwise debounce the calls
-      // return debounce(doSearchFilterSort, debounceDelayInMilliseconds);
-      debounceSearch(...parametersForDoSearchFilterSort);
-      return;
-    }, [
+    ()=> doDebounceSearch(parametersForDoSearchFilterSort, memoizedDebouncedSearch, executedSearchesCount, setExecutedSearchesCount), [
       props.searchTerm,
       props.accessSortDirection,
       props.studies,
