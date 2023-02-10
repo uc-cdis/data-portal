@@ -687,6 +687,9 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
       } else {
         // otherwise, just query subject index for subject_id list,
         // and query file index for manifest info.
+        // Setting downloadingInProgress of manifest to true as a trick such that the button's isPending
+        // state is set to true while the manifest is being counted. This is because we want the button to show
+        // the spinner instead of the download icon while the counting is in progress. 
         this.setState({
           manifestEntryCount: 0, downloadingInProgress: { manifest: true }, toasterOpen: false,
         });
