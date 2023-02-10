@@ -310,7 +310,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   // THIS WORKS BUT ONLY ON PREVIOUS VERSION OF SEARCH TERM
   // const dbs =  useMemo(() => (debounce(doSearchFilterSort, 250)),[visibleResources]);
-  const dbs =  useMemo(() => (debounce(doSearchFilterSort, 500)),[]);
+  const debounceSearch =  useMemo(() => (debounce(doSearchFilterSort, 500)),[]);
 
 
   useEffect(
@@ -323,7 +323,7 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
       }
       // Otherwise debounce the calls
       // return debounce(doSearchFilterSort, debounceDelayInMilliseconds);
-      dbs(...parametersForDoSearchFilterSort);
+      debounceSearch(...parametersForDoSearchFilterSort);
       return;
     }, [
       props.searchTerm,
