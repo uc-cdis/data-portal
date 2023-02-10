@@ -2,7 +2,6 @@ import filterByTags from "./filterByTags";
 import filterByAdvSearch from "./filterByAdvSearch"
 
 const doSearchFilterSort = (props, jsSearch, config, setVisibleResources, filterState, filterMultiSelectionLogic, accessibleFieldName, AccessSortDirection ) => {
-    console.log('called doSearchFilterSort with ',props.studies, ' and search term', props.searchTerm);
     let filteredResources = props.studies;
     if (jsSearch && props.searchTerm) {
       filteredResources = jsSearch.search(props.searchTerm);
