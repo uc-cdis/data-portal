@@ -137,10 +137,10 @@ const SelectHareDropDown = ({
     });
   };
 
-  if (hareResults.some((status) => status === 'loading')) {
+  if (hareResults.some((hareResult) => hareResult.status === 'loading')) {
     return <Spin />;
   }
-  if (hareResults.some((status) => status === 'error')) {
+  if (hareResults.some((hareResult) => hareResult.status === 'error')) {
     return <React.Fragment>error</React.Fragment>;
   }
   return (

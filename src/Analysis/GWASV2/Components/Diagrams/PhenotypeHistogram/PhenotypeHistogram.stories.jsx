@@ -9,11 +9,7 @@ export default {
   component: PhenotypeHistogram,
 };
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 
 const Template = (args) => (
   <QueryClientProvider client={mockedQueryClient}>
@@ -55,6 +51,9 @@ const selectedCovariates = [
 
 export const SuccessCase = Template.bind({});
 SuccessCase.args = {
+  dispatch: (payload) => {
+    console.log('dummy dispatch', payload);
+  },
   selectedStudyPopulationCohort: selectedStudyPopulationCohort,
   selectedCovariates: selectedCovariates,
   outcome: null,
@@ -94,6 +93,9 @@ SuccessCase.parameters = {
 
 export const ErrorCase = Template.bind({});
 ErrorCase.args = {
+  dispatch: (payload) => {
+    console.log('dummy dispatch', payload);
+  },
   selectedStudyPopulationCohort: selectedStudyPopulationCohort,
   selectedCovariates: selectedCovariates,
   outcome: null,

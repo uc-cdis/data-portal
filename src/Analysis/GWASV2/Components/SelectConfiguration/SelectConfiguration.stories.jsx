@@ -12,11 +12,7 @@ export default {
   component: SelectionConfiguration,
 };
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 
 const MockTemplate = () => {
   const [state, dispatch] = useReducer(reducer, ValidState);
@@ -68,14 +64,14 @@ MockedSuccess.parameters = {
           if (rowCount == 12) {
             // simulate empty response scenario:
             return res(
-              ctx.delay(200 * rowCount),
+              ctx.delay(2000 * rowCount),
               ctx.json({
                 concept_breakdown: null,
               })
             );
           }
           return res(
-            ctx.delay(200 * rowCount),
+            ctx.delay(2000 * rowCount),
             ctx.json({
               concept_breakdown: [
                 {

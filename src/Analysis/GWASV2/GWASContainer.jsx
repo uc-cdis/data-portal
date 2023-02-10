@@ -11,6 +11,7 @@ import SelectStudyPopulation from './Steps/SelectStudyPopulation/SelectStudyPopu
 import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
 import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
+import DismissibleMessagesList from './Components/DismissibleMessage/DismissibleMessagesList';
 import './GWASV2.css';
 
 const GWASContainer = () => {
@@ -99,6 +100,15 @@ const GWASContainer = () => {
         covariates={state.covariates}
         selectedCohort={state.selectedStudyPopulationCohort}
         outcome={state.outcome}
+      />
+      <DismissibleMessagesList
+        messages={state.messages}
+        dismissMessage={(chosenMessage) => {
+          dispatch({
+            type: ACTIONS.DELETE_MESSAGE,
+            payload: chosenMessage,
+          });
+        }}
       />
       {/* Inline style block needed so centering rule doesn't impact other workflows */}
       <style>

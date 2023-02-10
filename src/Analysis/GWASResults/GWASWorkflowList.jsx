@@ -4,7 +4,7 @@ import './GWASUIApp.css';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
 import { gwasWorkflowPath } from '../../localconf';
-import GWASJob from '../GWASWizard/shared/GWASJob';
+import GWASJob from './GWASJob';
 
 const GWASWorkflowList = ({ refetchInterval }) => {
   const { Panel } = Collapse;

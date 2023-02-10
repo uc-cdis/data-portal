@@ -8,7 +8,7 @@ import { SourceContextProvider } from '../../Utils/Source';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import './SelectCohort.css';
 import '../../../GWASV2/GWASV2.css';
-import '../../../GWASUIApp/GWASUIApp.css';
+import '../../../GWASResults/GWASUIApp.css';
 
 export default {
   title: 'Tests3/GWASV2/SelectCohort/SelectCohort',
@@ -17,11 +17,7 @@ export default {
 
 // useful examples: https://github.com/mswjs/msw-storybook-addon/tree/main/packages/docs/src/demos/react-query
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 
 const MockTemplate = () => {
   const initialState = {
