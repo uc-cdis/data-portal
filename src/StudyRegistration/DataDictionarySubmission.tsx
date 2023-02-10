@@ -171,13 +171,14 @@ const DataDictionarySubmission: React.FunctionComponent<StudyRegistrationProps> 
             }
             const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
             const email = formValues['E-mail Address'];
-            // This is the CLI command to kick off the argo wf from AdminVM
-            const cliCmd = `argo submit -n argo --watch vlmd_submission_workflow.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${studyUID}`;
-            let contents = `Grant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}\nStudy UID: ${studyUID}\nData Dictionary GUID: ${guid}\n\nCLI Command: ${cliCmd}`;
+            let contents = `Grant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}\nStudy UID: ${studyUID}\nData Dictionary GUID: ${guid}`;
             Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
               const [key, value] = entry;
               contents = contents.concat(`\n${key}: ${value}`);
             });
+            // This is the CLI command to kick off the argo wf from AdminVM
+            const cliCmd = `argo submit -n argo --watch vlmd_submission_workflow.yaml -p data_dict_guid=${guid} -p dictionary_name="${formValues['Data Dictionary Name']}" -p study_id=${studyUID}`;
+            contents = contents.concat(`\n\nCLI Command: ${cliCmd}`);
             createKayakoTicket(subject, fullName, email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
               (err) => {
                 cleanUpFileRecord(guid);
