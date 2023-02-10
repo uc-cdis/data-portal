@@ -688,7 +688,7 @@ Currently, in order to export a File PFB, \`enableLimitedFilePFBExport\` must be
         // otherwise, just query subject index for subject_id list,
         // and query file index for manifest info.
         this.setState({
-          manifestEntryCount: 0, downloadingInProgress: { manifest: true },
+          manifestEntryCount: 0, downloadingInProgress: { manifest: true }, toasterOpen: false,
         });
         const caseIDResult = await this.props.downloadRawDataByFields({ fields: [caseField] });
         if (caseIDResult) {
