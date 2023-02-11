@@ -1,5 +1,5 @@
 import {
-  studyRegistrationConfig, discoveryConfig, mdsURL, cedarWrapperURL, requestorPath,
+  studyRegistrationConfig, discoveryConfig, mdsURL, cedarWrapperURL, userAPIPath, requestorPath,
 } from '../localconf';
 import { fetchWithCreds } from '../actions';
 
@@ -40,44 +40,87 @@ export const preprocessStudyRegistrationMetadata = async (username, metadataID, 
   }
 };
 
-export const createCEDARInstance = async (cedarUserUUID, metadataToRegister = {}) => {
-  try {
-    const cedarCreationURL = `${cedarWrapperURL}/create`;
-    const updatedMetadataToRegister = { ...metadataToRegister };
-    await fetchWithCreds({
-      path: cedarCreationURL,
-      method: 'POST',
-      customHeaders: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cedar_user_uuid: cedarUserUUID, metadata: metadataToRegister[STUDY_DATA_FIELD] }),
-    }).then(({ status, data }) => {
-      if (status !== 201) {
-        throw new Error(`Request for create CEDAR instance failed with status ${status}`);
-      }
-      updatedMetadataToRegister[STUDY_DATA_FIELD].cedar_instance_id = data?.cedar_instance_id || '';
-    });
-    return updatedMetadataToRegister;
-  } catch (err) {
-    throw new Error(`Request for create CEDAR instance failed: ${err}`);
-  }
+export const createCEDARInstance = async (cedarUserUUID, metadataToRegister = {}):Promise<any> => {
+  const cedarCreationURL = `${cedarWrapperURL}/create`;
+  let updatedMetadataToRegister = { ...metadataToRegister };
+  updatedMetadataToRegister = await fetchWithCreds({
+    path: cedarCreationURL,
+    method: 'POST',
+    customHeaders: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cedar_user_uuid: cedarUserUUID, metadata: metadataToRegister[STUDY_DATA_FIELD] }),
+  }).then(({ status, data }) => {
+    if (status !== 201) {
+      throw new Error(`Request for create CEDAR instance failed with status ${status}`);
+    }
+    updatedMetadataToRegister[STUDY_DATA_FIELD].cedar_instance_id = data?.cedar_instance_id || '';
+    return Promise.resolve(updatedMetadataToRegister);
+  })
+    .catch((err) => { throw new Error(`Request for create CEDAR instance failed: ${err}`); });
+  return updatedMetadataToRegister;
 };
 
 export const registerStudyInMDS = async (metadataID, metadataToRegister = {}) => {
-  try {
-    const updateURL = `${mdsURL}/${metadataID}?overwrite=true`;
-    await fetchWithCreds({
-      path: updateURL,
-      method: 'POST',
-      customHeaders: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(metadataToRegister),
-    }).then((response) => {
-      if (response.status !== 200) {
-        throw new Error(`Request for update study data at ${updateURL} failed with status ${response.status}`);
-      }
-      return response;
-    });
-  } catch (err) {
-    throw new Error(`Request for update study data failed: ${err}`);
+  const updateURL = `${mdsURL}/${metadataID}?overwrite=true`;
+  await fetchWithCreds({
+    path: updateURL,
+    method: 'POST',
+    customHeaders: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(metadataToRegister),
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw new Error(`Request for update study data at ${updateURL} failed with status ${response.status}`);
+    }
+    return response;
+  })
+    .catch((err) => { throw new Error(`Request for update study data failed: ${err}`); });
+};
+
+export const generatePresignedURL = async (fileName: string, authz: string, bucketName: string|undefined = undefined):Promise<any> => {
+  type ReqBody = {
+    // eslint-disable-next-line camelcase
+    file_name: string;
+    authz: Array<string>;
+    bucket?: string,
+  };
+  const body:ReqBody = {
+    file_name: fileName,
+    authz: [authz],
+  };
+  if (bucketName) {
+    body.bucket = bucketName;
   }
+  const JSONbody = JSON.stringify(body);
+  const dataUploadURL = `${userAPIPath}data/upload`;
+  const responseData = await fetchWithCreds({
+    path: dataUploadURL,
+    method: 'POST',
+    customHeaders: { 'Content-Type': 'application/json' },
+    body: JSONbody,
+  }).then(({ status, data }) => {
+    if (status !== 201) {
+      return Promise.reject(`status ${status}`);
+    }
+    if (!data?.url) {
+      return Promise.reject('no presignedURL returned');
+    }
+    return Promise.resolve(data);
+  })
+    .catch((err) => Promise.reject(`Request for prepare for upload failed: ${err}`));
+  return responseData;
+};
+
+export const cleanUpFileRecord = async (guid:string) => {
+  const dataDeletionURL = `${userAPIPath}data/${guid}`;
+  await fetchWithCreds({
+    path: dataDeletionURL,
+    method: 'DELETE',
+  }).then(({ status }) => {
+    if (status !== 204) {
+      return Promise.reject(`status ${status}`);
+    }
+    return Promise.resolve();
+  })
+    .catch((err) => Promise.reject(`Request for clean up GUID ${guid} failed: ${err}`));
 };
 
 export const doesUserHaveRequestPending = async (
