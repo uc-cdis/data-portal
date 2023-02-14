@@ -142,10 +142,11 @@ Below is an example, with inline comments describing what each JSON block config
       "email": "support@datacommons.io", // optional; email for contact
       "image": "gene" // optional; images displayed on the login page
     },
-   "systemUse": { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
-      "systemUseTitle": "", // required; Title of the popup dialog
-      "systemUseText": [""], // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
-      "expireUseMsgDays": 0, // optional the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
+   "systemUse" : { // optional; will show a Use Message in a popup, to inform users of the use policy of the commons. It will display a message which requires acceptance before a user can use the site.
+      "systemUseTitle" : "", // required; Title of the popup dialog
+      "systemUseText" : [""] // required; Message to show in a popup which is used to notify the user of site policy and use restrictions
+      "expireUseMsgDays" : 0, // optional; the number of days to keep cookie once the "Accept" button is clicked, the default is 0 which sets the cookie to be a browser session cookie
+      "showOnlyOnLogin" : false, // optional; if set to true, the USe Message will only be shown after a success login
     },
     "footer": {
       "externalURL": "/external/footer", // iframe link to raw html from another source (ie frontend framework) to pull a footer from
