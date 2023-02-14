@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import parse from 'html-react-parser';
 import {
   Form,
   Input,
@@ -313,7 +314,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
           { (studyRegistrationConfig.studyRegistrationFormDisclaimerField)
               && (
                 <Typography className='study-reg-disclaimer-text'>
-                  {studyRegistrationConfig.studyRegistrationFormDisclaimerField}
+                  {parse(studyRegistrationConfig.studyRegistrationFormDisclaimerField)}
                 </Typography>
               )}
         </Form>
