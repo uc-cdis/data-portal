@@ -1,29 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Steps } from 'antd';
-import { gwasV2Steps } from '../../Shared/constants';
+import { Steps } from 'antd';
+import { gwasV2Steps } from '../../Utils/constants';
 import './ProgressBar.css';
+import TourButton from './TourButton/TourButton';
 
 const { Step } = Steps;
-const ProgressBar = ({ currentStep }) => (
+const ProgressBar = ({ currentStep, selectionMode }) => (
   <div className='progress-bar'>
     <div className='progress-bar__steps'>
       <Steps current={currentStep}>
         {gwasV2Steps.map((item, index) => (
           <Step
             key={item.title}
+            data-testid='progress-bar-step'
             icon={<React.Fragment>{index + 1}</React.Fragment>}
-            title={`${currentStep <= index ? item.title : item.secondaryTitle}`}
+            title={item.title}
           />
         ))}
       </Steps>
     </div>
-    <Button>New to GWAS? Get started here</Button>
+    <TourButton currentStep={currentStep} selectionMode={selectionMode} />
   </div>
 );
 
 ProgressBar.propTypes = {
   currentStep: PropTypes.number.isRequired,
+  selectionMode: PropTypes.string.isRequired,
 };
 
 export default ProgressBar;

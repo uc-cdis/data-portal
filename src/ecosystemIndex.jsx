@@ -66,6 +66,7 @@ import { ReduxStudyViewer, ReduxSingleStudyViewer } from './StudyViewer/reduxer'
 import StudyRegistration from './StudyRegistration';
 import WorkspaceRegistration from './WorkspaceRegistration';
 import ReduxStudyRegistrationRequestForm from './StudyRegistration/ReduxStudyRegistrationRequestForm';
+import ReduxDataDictionarySubmission from './StudyRegistration/ReduxDataDictionarySubmission';
 import NotFound from './components/NotFound';
 import ErrorPage403 from './components/ErrorPage403';
 
@@ -535,6 +536,24 @@ async function init() {
                             (props) => (
                               <ProtectedContent
                                 component={ReduxStudyRegistrationRequestForm}
+                                {...props}
+                              />
+                            )
+                          }
+                        />
+                      )
+                      : null
+                  }
+                  {
+                    isEnabled('studyRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/data-dictionary-submission'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={ReduxDataDictionarySubmission}
                                 {...props}
                               />
                             )

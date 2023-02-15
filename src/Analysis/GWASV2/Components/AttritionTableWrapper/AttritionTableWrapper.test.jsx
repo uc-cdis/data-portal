@@ -12,11 +12,7 @@ import AttritionTableWrapper from './AttritionTableWrapper';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 
 const AttritionTableArgs = {
   sourceId: 1,
@@ -25,7 +21,7 @@ const AttritionTableArgs = {
     concept_id: 'id',
     concept_name: 'concept name',
   },
-  newCovariateSubset: [
+  covariates: [
     {
       variable_type: 'custom_dichotomous',
       provided_name: 'providednamebyuser',

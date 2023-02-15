@@ -2,18 +2,14 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import CohortsOverlapDiagram from './CohortsOverlapDiagram';
-import { SourceContextProvider } from '../../../Shared/Source';
+import { SourceContextProvider } from '../../../Utils/Source';
 
 export default {
   title: 'Tests3/GWASV2/CohortsOverlapDiagram',
   component: CohortsOverlapDiagram,
 };
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 
 const Template = (args) => (
   <QueryClientProvider client={mockedQueryClient}>
@@ -42,12 +38,14 @@ const selectedControlCohort = {
 
 export const SuccessCase = Template.bind({});
 SuccessCase.args = {
-  sourceId: 123,
+  dispatch: (payload) => {
+    console.log('dummy dispatch', payload);
+  },
   selectedStudyPopulationCohort: selectedStudyPopulationCohort,
   selectedCaseCohort: selectedCaseCohort,
   selectedControlCohort: selectedControlCohort,
   selectedCovariates: [],
-  selectedDichotomousCovariates: [],
+  outcome: null,
 };
 SuccessCase.parameters = {
   // msw mocking:
@@ -76,12 +74,14 @@ SuccessCase.parameters = {
 // similar to test above, but with some overlap values fixed:
 export const SuccessCase2 = Template.bind({});
 SuccessCase2.args = {
-  sourceId: 123,
+  dispatch: (payload) => {
+    console.log('dummy dispatch', payload);
+  },
   selectedStudyPopulationCohort: selectedStudyPopulationCohort,
   selectedCaseCohort: selectedCaseCohort,
   selectedControlCohort: selectedControlCohort,
   selectedCovariates: [],
-  selectedDichotomousCovariates: [],
+  outcome: null,
 };
 let variableOverlap = 234;
 SuccessCase2.parameters = {
@@ -120,12 +120,14 @@ SuccessCase2.parameters = {
 
 export const ErrorCase = Template.bind({});
 ErrorCase.args = {
-  sourceId: 123,
+  dispatch: (payload) => {
+    console.log('dummy dispatch', payload);
+  },
   selectedStudyPopulationCohort: selectedStudyPopulationCohort,
   selectedCaseCohort: selectedCaseCohort,
   selectedControlCohort: selectedControlCohort,
   selectedCovariates: [],
-  selectedDichotomousCovariates: [],
+  outcome: null,
 };
 // mock endpoint failure:
 ErrorCase.parameters = {
@@ -133,7 +135,34 @@ ErrorCase.parameters = {
     handlers: [
       rest.post(
         'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
-        (req, res, ctx) => res(ctx.delay(800), ctx.status(403))
+        (req, res, ctx) => res(
+          ctx.delay(800),
+          ctx.status(403),
+          ctx.json({errorMessage: `Error`, }),)
+      ),
+    ],
+  },
+};
+
+export const TimeoutCase = Template.bind({});
+TimeoutCase.args = {
+  dispatch: (payload) => {
+    console.log('dummy dispatch', payload);
+  },
+  selectedStudyPopulationCohort: selectedStudyPopulationCohort,
+  selectedCaseCohort: selectedCaseCohort,
+  selectedControlCohort: selectedControlCohort,
+  selectedCovariates: [],
+  outcome: null,
+};
+// mock endpoint timeout:
+TimeoutCase.parameters = {
+  msw: {
+    handlers: [
+      rest.post(
+        'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
+        (req, res, ctx) => res(
+          ctx.delay(3000), ctx.status(504), ctx.json("server timeout"))
       ),
     ],
   },

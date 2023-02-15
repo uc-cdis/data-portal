@@ -54,12 +54,11 @@ class ProtectedContent extends React.Component {
           ],
         )
           .then(
-            () => this.checkUseWarning(store, this.state), // check for existence of cookie to popup Use Warning
-          )
-          .then(
             () => this.checkLoginStatus(store, this.state)
               .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkQuizStatus(newState))) // don't redirect for public pages
               .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkApiToken(store, newState))),
+          ) .then(
+            (newState) => this.checkUseWarning(store, newState), // check for existence of cookie to popup Use Warning
           )
           .then(
             (newState) => {
@@ -146,7 +145,7 @@ class ProtectedContent extends React.Component {
 
   checkUseWarning = (store, initialState) => {
     const newState = { ...initialState };
-    store.dispatch(displaySystemUseNotice());
+    store.dispatch(displaySystemUseNotice(initialState.authenticated));
     return newState;
   };
 

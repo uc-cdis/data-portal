@@ -15,7 +15,7 @@ import {
   wtsAggregateAuthzPath,
 } from './configs';
 import { config } from './params';
-import { showSystemUse } from './localconf';
+import { showSystemUse, showSystemUseOnlyOnLogin } from './localconf';
 import sessionMonitor from './SessionMonitor';
 import isEnabled from './helpers/featureFlags';
 
@@ -324,11 +324,12 @@ export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
  *     *) expireUseMsgDays: number of days until displaying message again, set to 0 to make it
  *        a browser session
  */
-export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
+export const checkIfDisplaySystemUseNotice = (authenticated) => (dispatch) => {
   // couple of option for when to display the system use warning
   // displayUseMsg:
   // "cookie": use the cookie and expireValue (defaults to 0 to show use message per session
   //  undefined or systemUseText is undefined: always false
+  //
   if (!showSystemUse) {
     dispatch({
       type: 'UPDATE_POPUP',
@@ -338,7 +339,7 @@ export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
     });
     return;
   }
-  // look for cookie
+  // look for cookie, if exists then do not show systemUse
   if (document.cookie.indexOf('systemUseWarning=') >= 0) {
     dispatch({
       type: 'UPDATE_POPUP',
@@ -346,14 +347,28 @@ export const checkIfDisplaySystemUseNotice = () => (dispatch) => {
         systemUseWarnPopup: false,
       },
     });
-  } else {
-    dispatch({
-      type: 'UPDATE_POPUP',
-      data: {
-        systemUseWarnPopup: true,
-      },
-    });
+    return;
   }
+  // test to see if systemUse dialog should be shown
+  if (showSystemUseOnlyOnLogin) { // if set to show only on login
+    if (authenticated) { // and logged in, show systemUse
+      dispatch({
+        type: 'UPDATE_POPUP',
+        data: {
+          systemUseWarnPopup: true,
+        },
+      });
+    }
+    return;
+  }
+  // last case, show system use
+  dispatch({
+    type: 'UPDATE_POPUP',
+    data: {
+      systemUseWarnPopup: true,
+    },
+  });
+
   // don't change anything
 };
 
@@ -366,7 +381,7 @@ export const updateSystemUseNotice = (displayUseWarning) => (dispatch) => {
   });
 };
 
-export const displaySystemUseNotice = () => (dispatch, getState) => dispatch(checkIfDisplaySystemUseNotice(getState().popups.systemUseWarnPopup));
+export const displaySystemUseNotice = (authenticated) => (dispatch, getState) => dispatch(checkIfDisplaySystemUseNotice(authenticated, getState().popups.systemUseWarnPopup));
 
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -
@@ -485,8 +500,8 @@ export const fetchUserAccess = async (dispatch) => {
           case 401: // user is not logged in
           case 403: // user is not allowed to access the resource
             return false;
-          case 200: // valid input -> check "ok" field for authorization
-            return fetchRes.ok;
+          case 200: // user is authorized
+            return true;
           default:
             console.error(`Unknown status "${fetchRes.status}" returned by arborist call`);
             return false;

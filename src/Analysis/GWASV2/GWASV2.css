@@ -12,6 +12,17 @@
   flex: 1;
 }
 
+.GWASV2 .GWASUI-double-column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 2;
+}
+
+.GWASV2 .steps-wrapper {
+  width: 100%;
+}
+
 .GWASV2 .steps-content {
   border: none;
   background: none;
@@ -27,6 +38,7 @@
 
 .GWASV2 .GWASUI-searchContainer svg {
   color: #9d9d9d;
+  font-size: 20px;
 }
 
 .GWASV2 .GWASUI-searchContainer input {
@@ -62,7 +74,23 @@
   border: 2px solid #dedede;
 }
 
+.GWASV2 .GWASUI-table1 .ant-table-cell-row-hover {
+  cursor: pointer;
+}
+
+.GWASV2 .GWASUI-table1 .ant-table-cell-row-hover .ant-radio-inner {
+  border-color: #1890ff;
+}
+
+.GWASV2 .GWASUI-selectionUI {
+  height: 519px;
+  width: 988px;
+  background: #fff;
+  text-align: center;
+}
+
 .GWASV2 .GWASUI-selectionUI button {
+  margin-top: 200px;
   height: 96px;
   width: 317px;
   margin-right: 16px;
@@ -108,4 +136,13 @@
 .GWASV2 .GWASUI-selectionUI button:hover span:first-child {
   background: #fff;
   color: #2e77b8;
+}
+
+.GWASUI-card-column {
+  background: #e9eef2;
+  padding: 10px;
+  width: 206px;
+  height: 519px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
