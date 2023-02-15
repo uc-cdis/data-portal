@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import AttritionTable from './AttritionTable';
-import { SourceContextProvider } from '../../../Shared/Source';
+import { SourceContextProvider } from '../../../Utils/Source';
 import '../../../GWASV2.css';
 
 export default {
@@ -10,11 +10,7 @@ export default {
   component: AttritionTable,
 };
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 
 const MockTemplate = () => {
   const [covariateArrSizeTable1, setCovariateArrSizeTable1] = useState(10);

@@ -9,8 +9,8 @@ function makeSureHomepageChartWorks() {
   function parseNodeType(countName) {
     return countName.substring(1, countName.length - '_count'.length);
   }
-  const boardCountNodes = params.config.graphql.boardCounts.map(e => parseNodeType(e.graphql));
-  const chartCountNodes = params.config.graphql.chartCounts.map(e => parseNodeType(e.graphql));
+  const boardCountNodes = params.config.graphql.boardCounts.map((e) => parseNodeType(e.graphql));
+  const chartCountNodes = params.config.graphql.chartCounts.map((e) => parseNodeType(e.graphql));
 
   /**
    * Check if all nodes exist in dictionary

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3-selection';
 import * as venn from '@upsetjs/venn.js';
+import './CohortsOverlapDiagram.css';
 
 const Simple3SetsEulerDiagram = ({
   set1Size,
@@ -21,28 +22,63 @@ const Simple3SetsEulerDiagram = ({
   set123Label,
 }) => {
   const sets = [
-    { sets: ['1'], size: set1Size, label: set1Label || Number(set1Size).toLocaleString() }, // TODO - these items take "color": as an attribute. So we can use that to guarantee the color and add a legend.
-    { sets: ['2'], size: set2Size, label: set2Label || Number(set2Size).toLocaleString() },
-    { sets: ['3'], size: set3Size, label: set3Label || Number(set3Size).toLocaleString() },
-    { sets: ['1', '2'], size: set12Size, label: set12Label || Number(set12Size).toLocaleString() },
-    { sets: ['1', '3'], size: set13Size, label: set13Label || Number(set13Size).toLocaleString() },
-    { sets: ['2', '3'], size: set23Size, label: set23Label || Number(set23Size).toLocaleString() },
-    { sets: ['1', '2', '3'], size: set123Size, label: set123Label || Number(set123Size).toLocaleString() },
+    {
+      sets: ['1'],
+      size: set1Size,
+      label: set1Label || Number(set1Size).toLocaleString(),
+    }, // TODO - these items take "color": as an attribute. So we can use that to guarantee the color and add a legend.
+    {
+      sets: ['2'],
+      size: set2Size,
+      label: set2Label || Number(set2Size).toLocaleString(),
+    },
+    {
+      sets: ['3'],
+      size: set3Size,
+      label: set3Label || Number(set3Size).toLocaleString(),
+    },
+    {
+      sets: ['1', '2'],
+      size: set12Size,
+      label: set12Label || Number(set12Size).toLocaleString(),
+    },
+    {
+      sets: ['1', '3'],
+      size: set13Size,
+      label: set13Label || Number(set13Size).toLocaleString(),
+    },
+    {
+      sets: ['2', '3'],
+      size: set23Size,
+      label: set23Label || Number(set23Size).toLocaleString(),
+    },
+    {
+      sets: ['1', '2', '3'],
+      size: set123Size,
+      label: set123Label || Number(set123Size).toLocaleString(),
+    },
   ];
 
   useEffect(() => {
     // some basic validation:
-    if ((set1Size < set12Size || set1Size < set13Size)
-    || (set2Size < set12Size || set2Size < set23Size)
-    || (set3Size < set13Size || set3Size < set23Size)) {
-      throw Error('Error: invalid set sizes. A set overlap cannot be bigger than the set itself.');
+    if (
+      set1Size < set12Size
+      || set1Size < set13Size
+      || set2Size < set12Size || set2Size < set23Size
+      || set3Size < set13Size || set3Size < set23Size
+    ) {
+      throw Error(
+        'Error: invalid set sizes. A set overlap cannot be bigger than the set itself.',
+      );
     }
     const chart = venn.VennDiagram();
-    d3.select('#euler').datum(sets).call(chart);
+    d3.select('#euler')
+      .datum(sets)
+      .call(chart);
   }, [sets]);
 
   return (
-    <div id='euler' style={{ textAlign: 'center' }} />
+    <div id='euler' className='euler-diagram' data-testid='euler-diagram' />
   );
 };
 

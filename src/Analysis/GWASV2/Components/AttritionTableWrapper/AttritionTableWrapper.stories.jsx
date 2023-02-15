@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import AttritionTableWrapper from './AttritionTableWrapper';
-import { SourceContextProvider } from '../../Shared/Source';
+import { SourceContextProvider } from '../../Utils/Source';
 import '../../GWASV2.css';
 
 let rowCount = 0;
@@ -11,11 +11,7 @@ export default {
   component: AttritionTableWrapper,
 };
 
-const mockedQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-});
+const mockedQueryClient = new QueryClient();
 const Template = (args) => (
   <QueryClientProvider client={mockedQueryClient}>
     <SourceContextProvider>

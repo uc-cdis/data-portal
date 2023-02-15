@@ -6,11 +6,11 @@ const componentTexts = paramByApp(params, 'components');
 function getChartText() {
   const graphQL = getGraphQL(paramByApp(params, 'graphql'));
   const boardPluralNames = graphQL.boardCounts.map((item) => item.plural);
-  if (boardPluralNames.length < 4) { boardPluralNames.push('Files'); }
+  if (boardPluralNames.length < 4 && !graphQL.chartNodesExcludeFiles) { boardPluralNames.push('Files'); }
   const detailPluralNames = graphQL.projectDetails.map((item) => item.plural);
-  if (detailPluralNames.length < 4) { detailPluralNames.push('Files'); }
+  if (detailPluralNames.length < 4 && !graphQL.chartNodesExcludeFiles) { detailPluralNames.push('Files'); }
   const indexChartNames = graphQL.boardCounts.map((item) => item.plural);
-  if (indexChartNames.length < 4) { indexChartNames.push('Files'); }
+  if (indexChartNames.length < 4 && !graphQL.chartNodesExcludeFiles) { indexChartNames.push('Files'); }
   return {
     boardPluralNames,
     chartNames: graphQL.chartCounts.map((item) => item.name),

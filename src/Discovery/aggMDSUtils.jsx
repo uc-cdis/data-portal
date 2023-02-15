@@ -1,16 +1,4 @@
-import { discoveryConfig, aggMDSDataURL } from '../localconf';
-
-const retrieveCommonsInfo = async (commonsName) => {
-  const url = `${aggMDSDataURL}/${commonsName}/info`;
-  const res = await fetch(url);
-  if (res.status !== 200) {
-    throw new Error(`Request for commons info at ${url} failed. Response: ${JSON.stringify(res, null, 2)}`);
-  }
-
-  const jsonResponse = await res.json();
-
-  return jsonResponse;
-};
+import { discoveryConfig, aggMDSDataURL, studyRegistrationConfig } from '../localconf';
 
 /**
  * getUniqueTags returns a reduced subset of unique tags for the given tags.
@@ -36,23 +24,7 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
 
   let allStudies = [];
 
-  const commonsPromises = commons.map((commonsName) => (
-    Promise.all([
-      retrieveCommonsInfo(commonsName),
-    ])
-  ));
-
-  const responses = await Promise.all(commonsPromises);
-
-  const allCommonsInfo = responses
-    .reduce((commonsInfoByName, commonsInfo, index) => ({
-      ...commonsInfoByName,
-      [commons[index]]: commonsInfo,
-    }), {});
-
   commons.forEach((commonsName) => {
-    const [commonsInfo] = allCommonsInfo[commonsName];
-
     const studies = metadataResponse[commonsName];
 
     const editedStudies = studies.map((entry, index) => {
@@ -60,33 +32,34 @@ const loadStudiesFromAggMDSRequests = async (offset, limit) => {
       const studyId = keys[0];
 
       const entryUnpacked = entry[studyId].gen3_discovery;
-      const x = { ...entryUnpacked };
-      x.study_id = studyId;
-      x.commons = commonsName;
-      x.frontend_uid = `${commonsName}_${index}`;
-      x._unique_id = `${commonsName}_${x._unique_id}_${index}`;
-      x.commons_url = commonsInfo.commons_url;
-      x.tags = x.tags || [];
-      x.tags.push(Object({ category: 'Commons', name: commonsName }));
-      x.name = x.short_name; // TODO: this will need to be refactored
+      entryUnpacked.study_id = studyId;
+      entryUnpacked.commons = commonsName;
+      entryUnpacked.frontend_uid = `${commonsName}_${index}`;
+      entryUnpacked.tags = entryUnpacked.tags || [];
+      entryUnpacked.tags.push(Object({ category: 'Commons', name: commonsName }));
 
       // If the discoveryConfig has a tag with the same name as one of the fields on an entry,
       // add the value of that field as a tag.
 
       discoveryConfig.tagCategories.forEach((tag) => {
-        if (tag.name in x) {
-          if (typeof x[tag.name] === 'string') {
-            const tagValue = x[tag.name];
-            x.tags.push(Object({ category: tag.name, name: tagValue }));
-          } else if (Array.isArray(x[tag.name])) {
-            x.tags = x.tags.concat(
-              x[tag.name].map((name) => ({ category: tag.name, name })),
+        if (tag.name in entryUnpacked) {
+          if (typeof entryUnpacked[tag.name] === 'string') {
+            const tagValue = entryUnpacked[tag.name];
+            entryUnpacked.tags.push(Object({ category: tag.name, name: tagValue }));
+          } else if (Array.isArray(entryUnpacked[tag.name])) {
+            entryUnpacked.tags = entryUnpacked.tags.concat(
+              entryUnpacked[tag.name].map((name) => ({ category: tag.name, name })),
             );
           }
         }
       });
-      x.tags = [...getUniqueTags(x.tags).entries()].map((e) => (e[1]));
-      return x;
+      entryUnpacked.tags = [...getUniqueTags(entryUnpacked.tags).entries()].map((e) => (e[1]));
+
+      // copy VLMD info if exists
+      if (studyRegistrationConfig?.dataDictionaryField && entry[studyId][studyRegistrationConfig.dataDictionaryField]) {
+        entryUnpacked[studyRegistrationConfig.dataDictionaryField] = entry[studyId][studyRegistrationConfig.dataDictionaryField];
+      }
+      return entryUnpacked;
     });
 
     allStudies = allStudies.concat(editedStudies);
