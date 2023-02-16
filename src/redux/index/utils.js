@@ -29,7 +29,7 @@ export function parseCounts(data) {
   }
 
   return {
-    countNames: ['Subjects', 'Molecular Analyses'],
+    countNames: ['Subjects', 'Subjects with molecular analyses'],
     overviewCounts,
     projectList,
   };
