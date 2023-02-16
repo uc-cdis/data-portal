@@ -9,8 +9,14 @@ import SimpleInputField from '../../components/SimpleInputField';
 import { useAppSelector } from '../../redux/hooks';
 import { overrideSelectTheme } from '../../utils';
 import FilterSetCard from './FilterSetCard';
-import { checkIfFilterInScope } from './utils';
-import { DEFAULT_END_YEAR, DEFAULT_INTERVAL } from './const';
+import {
+  checkIfFilterHasOptedOutConsortiums,
+  checkIfFilterInScope,
+} from './utils';
+import {
+  DEFAULT_END_YEAR,
+  DEFAULT_INTERVAL,
+} from './const';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ParsedSurvivalAnalysisResult} ParsedSurvivalAnalysisResult */
@@ -122,7 +128,11 @@ function ControlForm({ countByFilterSet, onSubmit }) {
 
     if (isUsed) {
       const isStale = staleFilterSetIdSet.has(value);
-      usedFilterSets.push({ ...filterSet, isStale });
+      const hasOptedOutConsortiums = checkIfFilterHasOptedOutConsortiums(
+        consortiums,
+        filterSet.filter
+      );
+      usedFilterSets.push({ ...filterSet, isStale, hasOptedOutConsortiums });
     }
   }
 

@@ -2,27 +2,56 @@
 import { FILTER_TYPE } from '../ExplorerFilterSetWorkspace/utils';
 
 /** @typedef {import('./types').RisktableData} RisktableData */
+
 /** @typedef {import('./types').SurvivalData} SurvivalData */
 
 /**
- * @param {string[]} consortium
+ * @param {string[]} consortiums
  * @param {import('../types').ExplorerFilter} filter
  */
-export function checkIfFilterInScope(consortium, filter) {
-  if (consortium.length === 0) return true;
+export function checkIfFilterInScope(consortiums, filter) {
+  if (consortiums.length === 0) return true;
 
   if (filter.__type === FILTER_TYPE.COMPOSED)
-    return filter.value.every((f) => checkIfFilterInScope(consortium, f));
+    return filter.value.every((f) => checkIfFilterInScope(consortiums, f));
 
   for (const [key, val] of Object.entries(filter.value ?? {}))
     if (
       key === 'consortium' &&
       val.__type === FILTER_TYPE.OPTION &&
-      val.selectedValues.some((v) => !consortium.includes(v))
+      val.selectedValues.some((v) => !consortiums.includes(v))
     )
       return false;
 
   return true;
+}
+
+/**
+ * @param {string[]} consortiums
+ * @param {import('../types').ExplorerFilter} filter
+ * @return {boolean}
+ */
+export function checkIfFilterHasOptedOutConsortiums(consortiums, filter) {
+  const optedInConsortiums = ['INRG', 'INSTRuCT'];
+
+  if (!consortiums.length) {
+    return false;
+  }
+  if (!filter.value) {
+    // All Subjects
+    return consortiums.some((c) => !optedInConsortiums.includes(c));
+  } else if (filter.__type === FILTER_TYPE.COMPOSED) {
+    return filter.value.some((f) =>
+      checkIfFilterHasOptedOutConsortiums(consortiums, f)
+    );
+  } else {
+    for (const [key, val] of Object.entries(filter.value)) {
+      if (key === 'consortium' && val.__type === FILTER_TYPE.OPTION) {
+        return val.selectedValues.some((c) => !optedInConsortiums.includes(c));
+      }
+    }
+    return false;
+  }
 }
 
 /**
