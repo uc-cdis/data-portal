@@ -25,20 +25,24 @@ const studyPopulationCohort = {
   size: 400000,
 };
 
-export const SuccessCase = Template.bind({});
-SuccessCase.args = {
+export const SuccessAndZeroOverlapCases = Template.bind({});
+SuccessAndZeroOverlapCases.args = {
   dispatch: (payload) => {
     console.log('dummy dispatch', payload);
   },
-  setMode: (mode) => {
-    console.log('dummy setMode', mode);
+  handleSelect: (selectedPair) => {
+    console.log('dummy handleSelect', selectedPair);
   },
-  type: 'outcome',
+  handleClose: () => {
+    console.log('dummy handleClose');
+  },
   studyPopulationCohort: studyPopulationCohort,
   covariates: [],
   outcome: null,
+  submitButtonLabel: 'Submit!!'
 };
-SuccessCase.parameters = {
+const dummyNoOverlapCohortId = 30001;
+SuccessAndZeroOverlapCases.parameters = {
   // msw mocking:
   msw: {
     handlers: [
@@ -48,11 +52,17 @@ SuccessCase.parameters = {
           const { cohortmiddlewarepath } = req.params;
           const { cohortdefinitionA } = req.params;
           const { cohortdefinitionB } = req.params;
+          // default random overlap:
+          let overlap = Math.floor(Math.random() * 10000) + 10000;
+          if (parseInt(cohortdefinitionA) === dummyNoOverlapCohortId || parseInt(cohortdefinitionB) === dummyNoOverlapCohortId) {
+            // set overlap to 0 to trigger a validation scenario in the component:
+            overlap = 0;
+          }
           return res(
             ctx.delay(500),
             ctx.json({
               cohort_overlap: {
-                case_control_overlap: Math.floor(Math.random() * 10000) + 10000,
+                case_control_overlap: overlap,
               }, // because of random here, we get some data that does not really make sense...SuccessCase2 tries to fix that for some of the relevant group overlaps...
             })
           );
@@ -79,8 +89,8 @@ SuccessCase.parameters = {
                   size: 212000,
                 },
                 {
-                  cohort_definition_id: 301,
-                  cohort_name: 'Mock cohortB - medium',
+                  cohort_definition_id: dummyNoOverlapCohortId,
+                  cohort_name: 'NO OVERLAP Mock cohortB - medium',
                   size: 55296,
                 },
                 {
