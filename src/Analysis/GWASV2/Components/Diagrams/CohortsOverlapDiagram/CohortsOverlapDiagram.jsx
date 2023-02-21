@@ -8,6 +8,7 @@ import {
   addCDFilter,
 } from '../../../Utils/cohortMiddlewareApi';
 import Simple3SetsEulerDiagram from './Simple3SetsEulerDiagram';
+import CohortsOverlapLegend from './CohortsOverlapLegend';
 import { useSourceContext } from '../../../Utils/Source';
 import ACTIONS from '../../../Utils/StateManagement/Actions';
 import { MESSAGES } from '../../../Utils/constants';
@@ -176,7 +177,17 @@ const CohortsOverlapDiagram = ({
     set2Label: selectedCaseCohort.cohort_name,
     set3Label: selectedControlCohort.cohort_name,
   };
-  return <Simple3SetsEulerDiagram {...eulerArgs} />;
+  return(
+    <>
+      <CohortsOverlapLegend cohort1={eulerArgs.set1Label} cohort2={eulerArgs.set2Label} cohort3={eulerArgs.set3Label} />
+      <Simple3SetsEulerDiagram {...eulerArgs} />
+      <CohortsOverlapTextVersion {...eulerArgs} />
+      <div className="euler-diagram-controls">
+        <button>Text Version</button>
+        <button>Diagram</button>
+    </div>
+   </>
+   );
 };
 
 CohortsOverlapDiagram.propTypes = {

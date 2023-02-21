@@ -1,3 +1,61 @@
 .euler-diagram {
   text-align: center;
 }
+
+.euler-diagram g[data-venn-sets="1"] path {
+  stroke: #FDE725;
+  stroke-width: 2px;
+}
+.euler-diagram g[data-venn-sets="2"] path {
+  stroke: #440154;
+  stroke-width: 2px;
+}
+.euler-diagram g[data-venn-sets="3"] path {
+  stroke: #21918C;
+  stroke-width: 2px;
+}
+.euler-diagram text.label {
+ display: none;
+}
+.euler-diagram .venn-area.venn-intersection text.label {
+  display: block;
+}
+
+.euler-diagram .venn-area.venn-intersection text.label tspan {
+  fill: #333333;
+  font-size:12px;
+}
+
+/* legend */
+.euler-diagram-legend .legend-item {
+  position: relative;
+  height: 12px;
+  margin-bottom: 5px;
+}
+.euler-diagram-legend .legend-mark {
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top:6px;
+  left: 0;
+}
+.euler-diagram-legend .legend-label {
+  position:absolute;
+  left:15px;
+  color: #333333;
+  font-size: 12px;
+}
+
+
+.legend-mark-1 {
+  background:#FDE72540;
+  stroke: #FDE725;
+}
+.legend-mark-2 {
+  background:#44015440;
+  stroke: #440154;
+}
+.legend-mark-3 {
+  background:#21918C40;
+  stroke: #21918C
+}
