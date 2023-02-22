@@ -77,9 +77,11 @@ const Simple3SetsEulerDiagram = ({
     }
     const chart = venn.VennDiagram();
     d3.select('#euler')
+    .style("height", '310px')
       .datum(sets)
       .call(chart);
   }, [sets]);
+
 
   return (    <div id='euler' className='euler-diagram' data-testid='euler-diagram' />  );
 

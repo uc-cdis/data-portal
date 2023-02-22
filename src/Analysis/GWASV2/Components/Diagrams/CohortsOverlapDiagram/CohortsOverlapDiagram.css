@@ -1,21 +1,25 @@
+.GWASV2 .cohorts-overlap-diagram {
+  padding-left: 15px;
+}
+
 .euler-diagram {
   text-align: center;
 }
 
-.euler-diagram g[data-venn-sets="1"] path {
-  stroke: #FDE725;
+.euler-diagram g[data-venn-sets='1'] path {
+  stroke: #fde725;
   stroke-width: 2px;
 }
-.euler-diagram g[data-venn-sets="2"] path {
+.euler-diagram g[data-venn-sets='2'] path {
   stroke: #440154;
   stroke-width: 2px;
 }
-.euler-diagram g[data-venn-sets="3"] path {
-  stroke: #21918C;
+.euler-diagram g[data-venn-sets='3'] path {
+  stroke: #21918c;
   stroke-width: 2px;
 }
 .euler-diagram text.label {
- display: none;
+  display: none;
 }
 .euler-diagram .venn-area.venn-intersection text.label {
   display: block;
@@ -23,7 +27,7 @@
 
 .euler-diagram .venn-area.venn-intersection text.label tspan {
   fill: #333333;
-  font-size:12px;
+  font-size: 12px;
 }
 
 /* legend */
@@ -36,26 +40,47 @@
   width: 8px;
   height: 8px;
   position: absolute;
-  top:6px;
+  top: 6px;
   left: 0;
 }
 .euler-diagram-legend .legend-label {
-  position:absolute;
-  left:15px;
+  position: absolute;
+  left: 15px;
   color: #333333;
   font-size: 12px;
 }
 
-
 .legend-mark-1 {
-  background:#FDE72540;
-  stroke: #FDE725;
+  background: #fde72540;
+  stroke: #fde725;
 }
 .legend-mark-2 {
-  background:#44015440;
+  background: #44015440;
   stroke: #440154;
 }
 .legend-mark-3 {
-  background:#21918C40;
-  stroke: #21918C
+  background: #21918c40;
+  stroke: #21918c;
+}
+
+/* Text Version*/
+.euler-diagram-text-version {
+  text-align: left;
+  height: 360px;
+}
+
+.euler-diagram-text-version li {
+  list-style-type: disc;
+  list-style-position: inside;
+  font-size: 12px;
+}
+/* Text Version Controls */
+.euler-diagram-controls {
+  text-align: left;
+  margin-top: 15px;
+  width: 600px;
+}
+.euler-diagram-controls button:focus-visible {
+  outline: #3495ff solid 1px;
+  margin: 0 1px;
 }
