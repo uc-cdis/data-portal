@@ -1,29 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import CohortsOverlapLegend from './CohortsOverlapLegend';
 
-const CohortsOverlapLegend = ({ cohort1Label, cohort2Label, cohort3Label }) => (
-  <div className='euler-diagram-legend'>
-    <div className='legend-item'>
-      <span className='legend-mark legend-mark-1' />
-      <span className='legend-label'>{cohort1Label}</span>
-    </div>
+describe('CohortsOverlapLegend', () => {
+  const cohort1Label = 'Cohort 1';
+  const cohort2Label = 'Cohort 2';
+  const cohort3Label = 'Cohort 3';
 
-    <div className='legend-item'>
-      <span className='legend-mark legend-mark-2' />
-      <span className='legend-label'>{cohort2Label}</span>
-    </div>
-
-    <div className='legend-item' id='legend-set3'>
-      <span className='legend-mark legend-mark-3' />
-      <span className='legend-label'>{cohort3Label}</span>
-    </div>
-  </div>
-);
-
-CohortsOverlapLegend.propTypes = {
-  cohort1Label: PropTypes.string.isRequired,
-  cohort2Label: PropTypes.string.isRequired,
-  cohort3Label: PropTypes.string.isRequired,
-};
-
-export default CohortsOverlapLegend;
+  it('renders the legend items with the correct labels', () => {
+    render(
+      <CohortsOverlapLegend
+        cohort1Label={cohort1Label}
+        cohort2Label={cohort2Label}
+        cohort3Label={cohort3Label}
+      />
+    );
+    expect(screen.getByText(cohort1Label)).toBeInTheDocument();
+    expect(screen.getByText(cohort2Label)).toBeInTheDocument();
+    expect(screen.getByText(cohort3Label)).toBeInTheDocument();
+  });
+});
