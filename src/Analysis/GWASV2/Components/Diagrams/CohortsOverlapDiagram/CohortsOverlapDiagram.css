@@ -20,17 +20,21 @@
   stroke: var(--set1-border-color);
   stroke-width: 2px;
 }
+
 .euler-diagram g[data-venn-sets='2'] path {
   stroke: var(--set2-border-color);
   stroke-width: 2px;
 }
+
 .euler-diagram g[data-venn-sets='3'] path {
   stroke: var(--set3-border-color);
   stroke-width: 2px;
 }
+
 .euler-diagram text.label {
   display: none;
 }
+
 .euler-diagram .venn-area.venn-intersection text.label {
   display: block;
 }
@@ -46,6 +50,7 @@
   height: 12px;
   margin-bottom: 5px;
 }
+
 .euler-diagram-legend .legend-mark {
   width: 10px;
   height: 10px;
@@ -53,6 +58,7 @@
   top: 6px;
   left: 0;
 }
+
 .euler-diagram-legend .legend-label {
   position: absolute;
   left: 15px;
@@ -64,10 +70,12 @@
   background: var(--set1-background-color);
   border: 1px solid var(--set1-border-color);
 }
+
 .legend-mark-2 {
   background: var(--set2-background-color);
   border: 1px solid var(--set2-border-color);
 }
+
 .legend-mark-3 {
   background: var(--set3-background-color);
   border: 1px solid var(--set3-border-color);
@@ -78,10 +86,12 @@
   text-align: left;
   height: 362px;
 }
+
 .euler-diagram-text-version h2 {
   line-height: 0;
   padding-bottom: 20px;
 }
+
 .euler-diagram-text-version ul {
   padding-left: 10px;
 }
