@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const CohortsOverlapTextVersion = ({ eulerArgs }) => {
   const {
@@ -31,4 +32,9 @@ const CohortsOverlapTextVersion = ({ eulerArgs }) => {
     </div>
   );
 };
+
+CohortsOverlapTextVersion.propTypes = {
+  eulerArgs: PropTypes.array.isRequired,
+};
+
 export default CohortsOverlapTextVersion;

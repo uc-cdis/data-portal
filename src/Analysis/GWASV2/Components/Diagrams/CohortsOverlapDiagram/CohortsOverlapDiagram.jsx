@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQueries } from 'react-query';
-import { Spin } from 'antd';
+import { Spin, Button } from 'antd';
 import {
   fetchSimpleOverlapInfo,
   queryConfig,
@@ -13,7 +13,6 @@ import CohortsOverlapTextVersion from './CohortsOverlapTextVersion';
 import { useSourceContext } from '../../../Utils/Source';
 import ACTIONS from '../../../Utils/StateManagement/Actions';
 import { MESSAGES } from '../../../Utils/constants';
-import { Button } from 'antd';
 
 const CohortsOverlapDiagram = ({
   dispatch,
@@ -36,14 +35,13 @@ const CohortsOverlapDiagram = ({
         selectedCovariates,
         outcome,
       ],
-      queryFn: () =>
-        fetchSimpleOverlapInfo(
-          sourceId,
-          selectedStudyPopulationCohort.cohort_definition_id,
-          selectedCaseCohort.cohort_definition_id,
-          selectedCovariates,
-          outcome
-        ),
+      queryFn: () => fetchSimpleOverlapInfo(
+        sourceId,
+        selectedStudyPopulationCohort.cohort_definition_id,
+        selectedCaseCohort.cohort_definition_id,
+        selectedCovariates,
+        outcome,
+      ),
       ...queryConfig,
     },
     {
@@ -55,14 +53,13 @@ const CohortsOverlapDiagram = ({
         selectedCovariates,
         outcome,
       ],
-      queryFn: () =>
-        fetchSimpleOverlapInfo(
-          sourceId,
-          selectedStudyPopulationCohort.cohort_definition_id,
-          selectedControlCohort.cohort_definition_id,
-          selectedCovariates,
-          outcome
-        ),
+      queryFn: () => fetchSimpleOverlapInfo(
+        sourceId,
+        selectedStudyPopulationCohort.cohort_definition_id,
+        selectedControlCohort.cohort_definition_id,
+        selectedCovariates,
+        outcome,
+      ),
       ...queryConfig,
     },
     {
@@ -74,14 +71,13 @@ const CohortsOverlapDiagram = ({
         selectedCovariates,
         outcome,
       ],
-      queryFn: () =>
-        fetchSimpleOverlapInfo(
-          sourceId,
-          selectedCaseCohort.cohort_definition_id,
-          selectedControlCohort.cohort_definition_id,
-          selectedCovariates,
-          outcome
-        ),
+      queryFn: () => fetchSimpleOverlapInfo(
+        sourceId,
+        selectedCaseCohort.cohort_definition_id,
+        selectedControlCohort.cohort_definition_id,
+        selectedCovariates,
+        outcome,
+      ),
       ...queryConfig,
     },
     // special case: the overlap of study population with case, excluding any intersection w/ cohort:
@@ -95,18 +91,17 @@ const CohortsOverlapDiagram = ({
         selectedCovariates,
         outcome,
       ],
-      queryFn: () =>
-        fetchSimpleOverlapInfo(
-          sourceId,
-          selectedStudyPopulationCohort.cohort_definition_id,
+      queryFn: () => fetchSimpleOverlapInfo(
+        sourceId,
+        selectedStudyPopulationCohort.cohort_definition_id,
+        selectedCaseCohort.cohort_definition_id,
+        addCDFilter(
           selectedCaseCohort.cohort_definition_id,
-          addCDFilter(
-            selectedCaseCohort.cohort_definition_id,
-            selectedControlCohort.cohort_definition_id,
-            selectedCovariates
-          ), // ==> adds case/control as extra variable
-          outcome
-        ),
+          selectedControlCohort.cohort_definition_id,
+          selectedCovariates,
+        ), // ==> adds case/control as extra variable
+        outcome,
+      ),
       ...queryConfig,
     },
   ]);
@@ -135,12 +130,12 @@ const CohortsOverlapDiagram = ({
   useEffect(() => {
     // Validate and give error message if there is no overlap:
     if (
-      dataStudyPopulationAndCase?.cohort_overlap &&
-      dataStudyPopulationAndControl?.cohort_overlap
+      dataStudyPopulationAndCase?.cohort_overlap
+      && dataStudyPopulationAndControl?.cohort_overlap
     ) {
       if (
-        dataStudyPopulationAndCase.cohort_overlap.case_control_overlap === 0 ||
-        dataStudyPopulationAndControl.cohort_overlap.case_control_overlap === 0
+        dataStudyPopulationAndCase.cohort_overlap.case_control_overlap === 0
+        || dataStudyPopulationAndControl.cohort_overlap.case_control_overlap === 0
       ) {
         dispatch({
           type: ACTIONS.ADD_MESSAGE,
@@ -184,8 +179,8 @@ const CohortsOverlapDiagram = ({
       dataStudyPopulationAndControl.cohort_overlap.case_control_overlap,
     set23Size: dataCaseAndControl.cohort_overlap.case_control_overlap,
     set123Size:
-      dataStudyPopulationAndCase.cohort_overlap.case_control_overlap -
-      dataStudyPopulationAndCaseMinusStudyPopulationAndCaseAndControl
+      dataStudyPopulationAndCase.cohort_overlap.case_control_overlap
+      - dataStudyPopulationAndCaseMinusStudyPopulationAndCaseAndControl
         .cohort_overlap.case_control_overlap,
     set1Label: selectedStudyPopulationCohort.cohort_name,
     set2Label: selectedCaseCohort.cohort_name,
@@ -193,16 +188,16 @@ const CohortsOverlapDiagram = ({
   };
 
   return (
-    <>
+    <React.Fragment>
       {!showTextVersion && (
-        <>
+        <React.Fragment>
           <CohortsOverlapLegend
-            cohort1={eulerArgs.set1Label}
-            cohort2={eulerArgs.set2Label}
-            cohort3={eulerArgs.set3Label}
+            cohort1Label={eulerArgs.set1Label}
+            cohort2Label={eulerArgs.set2Label}
+            cohort3Label={eulerArgs.set3Label}
           />
           <Simple3SetsEulerDiagram {...eulerArgs} />
-        </>
+        </React.Fragment>
       )}
       {showTextVersion && <CohortsOverlapTextVersion eulerArgs={eulerArgs} />}
       <div className='euler-diagram-controls'>
@@ -221,7 +216,7 @@ const CohortsOverlapDiagram = ({
           Diagram
         </Button>
       </div>
-    </>
+    </React.Fragment>
   );
 };
 

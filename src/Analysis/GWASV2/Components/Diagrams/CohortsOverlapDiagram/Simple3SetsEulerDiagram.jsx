@@ -4,7 +4,6 @@ import * as d3 from 'd3-selection';
 import * as venn from '@upsetjs/venn.js';
 import './CohortsOverlapDiagram.css';
 
-
 const Simple3SetsEulerDiagram = ({
   set1Size,
   set2Size,
@@ -62,29 +61,32 @@ const Simple3SetsEulerDiagram = ({
       label: set123Label || Number(set123Size).toLocaleString(),
     },
   ];
+  const maxDiagramSize = 310;
 
   useEffect(() => {
     // some basic validation:
     if (
       set1Size < set12Size
       || set1Size < set13Size
-      || set2Size < set12Size || set2Size < set23Size
-      || set3Size < set13Size || set3Size < set23Size
+      || set2Size < set12Size
+      || set2Size < set23Size
+      || set3Size < set13Size
+      || set3Size < set23Size
     ) {
       throw Error(
         'Error: invalid set sizes. A set overlap cannot be bigger than the set itself.',
       );
     }
-    const chart = venn.VennDiagram();
+    const chart = venn.VennDiagram().height(maxDiagramSize);
     d3.select('#euler')
-    .style("height", '310px')
+      .style('height', maxDiagramSize)
       .datum(sets)
       .call(chart);
   }, [sets]);
 
-
-  return (    <div id='euler' className='euler-diagram' data-testid='euler-diagram' />  );
-
+  return (
+    <div id='euler' className='euler-diagram' data-testid='euler-diagram' />
+  );
 };
 
 Simple3SetsEulerDiagram.propTypes = {
