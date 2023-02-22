@@ -79,7 +79,6 @@ const Simple3SetsEulerDiagram = ({
     }
     const chart = venn.VennDiagram().height(maxDiagramSize);
     d3.select('#euler')
-      .style('height', maxDiagramSize)
       .datum(sets)
       .call(chart);
   }, [sets]);
