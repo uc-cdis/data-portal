@@ -14,7 +14,7 @@ describe('CohortsOverlapLegend', () => {
         cohort1Label={cohort1Label}
         cohort2Label={cohort2Label}
         cohort3Label={cohort3Label}
-      />
+      />,
     );
     expect(screen.getByText(cohort1Label)).toBeInTheDocument();
     expect(screen.getByText(cohort2Label)).toBeInTheDocument();
