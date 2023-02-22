@@ -26,19 +26,19 @@ const Simple3SetsEulerDiagram = ({
       sets: ['1'],
       size: set1Size,
       label: set1Label || Number(set1Size).toLocaleString(),
-      color: '#FDE72540', // yellow
-    }, // TODO - these items take "color": as an attribute. So we can use that to guarantee the color and add a legend.
+      color: '#FDE72540',
+    },
     {
       sets: ['2'],
       size: set2Size,
       label: set2Label || Number(set2Size).toLocaleString(),
-      color: '#44015440', // purple
+      color: '#44015440',
     },
     {
       sets: ['3'],
       size: set3Size,
       label: set3Label || Number(set3Size).toLocaleString(),
-      color: '#21918C40', // green
+      color: '#21918C40',
     },
     {
       sets: ['1', '2'],
