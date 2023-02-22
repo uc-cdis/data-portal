@@ -61,20 +61,20 @@ const Simple3SetsEulerDiagram = ({
       label: set123Label || Number(set123Size).toLocaleString(),
     },
   ];
-  const maxDiagramSize = 310;
+  const maxDiagramSize = 305;
 
   useEffect(() => {
     // some basic validation:
     if (
-      set1Size < set12Size
-      || set1Size < set13Size
-      || set2Size < set12Size
-      || set2Size < set23Size
-      || set3Size < set13Size
-      || set3Size < set23Size
+      set1Size < set12Size ||
+      set1Size < set13Size ||
+      set2Size < set12Size ||
+      set2Size < set23Size ||
+      set3Size < set13Size ||
+      set3Size < set23Size
     ) {
       throw Error(
-        'Error: invalid set sizes. A set overlap cannot be bigger than the set itself.',
+        'Error: invalid set sizes. A set overlap cannot be bigger than the set itself.'
       );
     }
     const chart = venn.VennDiagram().height(maxDiagramSize);
