@@ -12,8 +12,8 @@ interface ParametersForDoSearchFilterSort {
   filterMultiSelectionLogic: string,
   accessibleFieldName: string,
   AccessSortDirection: AccessSortDirection,
-
 }
+
 const doSearchFilterSort = (parametersForDoSearchFilterSort: ParametersForDoSearchFilterSort) => {
   const {
     props,
