@@ -16,22 +16,22 @@ describe('doDebounceSearch', () => {
   });
 
   it('should execute doSearchFilterSort initially without debouncing', () => {
-    doDebounceSearch([1, 2, 3], memoizedDebouncedSearch, 0, setExecutedSearchesCount);
-    expect(doSearchFilterSort).toHaveBeenCalledWith(1, 2, 3);
+    doDebounceSearch({test:"test"}, memoizedDebouncedSearch, 0, setExecutedSearchesCount);
+    expect(doSearchFilterSort).toHaveBeenCalledWith({test:"test"});
     expect(memoizedDebouncedSearch).not.toHaveBeenCalled();
     expect(setExecutedSearchesCount).toHaveBeenCalledWith(1);
 
     jest.clearAllMocks();
-    doDebounceSearch([4, 5, 6], memoizedDebouncedSearch, 1, setExecutedSearchesCount);
-    expect(doSearchFilterSort).toHaveBeenCalledWith(4, 5, 6);
+    doDebounceSearch({test:"test2"}, memoizedDebouncedSearch, 1, setExecutedSearchesCount);
+    expect(doSearchFilterSort).toHaveBeenCalledWith({test:"test2"});
     expect(memoizedDebouncedSearch).not.toHaveBeenCalled();
     expect(setExecutedSearchesCount).toHaveBeenCalledWith(2);
   });
 
   it('should debounce the doSearchFilterSort call when executedSearchesCount >= 2', () => {
-    doDebounceSearch([1, 2, 3], memoizedDebouncedSearch, 2, setExecutedSearchesCount);
+    doDebounceSearch({test:"test3"}, memoizedDebouncedSearch, 2, setExecutedSearchesCount);
     expect(doSearchFilterSort).not.toHaveBeenCalled();
-    expect(memoizedDebouncedSearch).toHaveBeenCalledWith(1, 2, 3);
+    expect(memoizedDebouncedSearch).toHaveBeenCalledWith({test:"test3"});
     expect(setExecutedSearchesCount).not.toHaveBeenCalled();
   });
 });
