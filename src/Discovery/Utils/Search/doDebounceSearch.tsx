@@ -1,15 +1,20 @@
-import doSearchFilterSort from "./doSearchFilterSort";
+import doSearchFilterSort from './doSearchFilterSort';
 
-const doDebounceSearch = (parametersForDoSearchFilterSort, memoizedDebouncedSearch, executedSearchesCount, setExecutedSearchesCount) => {
+const doDebounceSearch = (
+  parametersForDoSearchFilterSort: any[],
+  memoizedDebouncedSearch: (...args: any[]) => void,
+  executedSearchesCount: number,
+  setExecutedSearchesCount: (count: number) => void
+) => {
   const debounceDelayInMilliseconds = 500;
   const initialSearchesWithoutDebounce = 2;
-    // Execute searches initially without debounce to decrease page load time
-    if (executedSearchesCount < initialSearchesWithoutDebounce) {
-      setExecutedSearchesCount(executedSearchesCount + 1);
-      return doSearchFilterSort(...parametersForDoSearchFilterSort ) ;
-    }
-    // Otherwise debounce the calls
-    // return debounce(doSearchFilterSort, debounceDelayInMilliseconds);
-    return memoizedDebouncedSearch(...parametersForDoSearchFilterSort);
-}
+  // Execute searches initially without debounce to decrease page load time
+  if (executedSearchesCount < initialSearchesWithoutDebounce) {
+    setExecutedSearchesCount(executedSearchesCount + 1);
+    return doSearchFilterSort(parametersForDoSearchFilterSort);
+  }
+  // Otherwise debounce the calls
+  // return debounce(doSearchFilterSort, debounceDelayInMilliseconds);
+  return memoizedDebouncedSearch(parametersForDoSearchFilterSort);
+};
 export default doDebounceSearch;

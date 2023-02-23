@@ -237,10 +237,20 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     props.onSearchChange(value);
   };
 
-  const memoizedDebouncedSearch =  useMemo(() => (debounce(doSearchFilterSort, 500)),[]);
-  const parametersForDoSearchFilterSort = [props, jsSearch, config, setVisibleResources,
-    filterState, filterMultiSelectionLogic, accessibleFieldName, AccessSortDirection];
-
+  const memoizedDebouncedSearch = useMemo(
+    () => debounce(doSearchFilterSort, 500),
+    []
+  );
+  const parametersForDoSearchFilterSort = {
+    props,
+    jsSearch,
+    config,
+    setVisibleResources,
+    filterState,
+    filterMultiSelectionLogic,
+    accessibleFieldName,
+    AccessSortDirection,
+  };
   useEffect(
     ()=> doDebounceSearch(parametersForDoSearchFilterSort, memoizedDebouncedSearch, executedSearchesCount, setExecutedSearchesCount), [
       props.searchTerm,
