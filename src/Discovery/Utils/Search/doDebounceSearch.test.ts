@@ -1,9 +1,9 @@
-import doDebounceSearch from "./doDebounceSearch";
-import doSearchFilterSort from "./doSearchFilterSort";
+import doDebounceSearch from './doDebounceSearch';
+import doSearchFilterSort from './doSearchFilterSort';
 
-jest.mock("./doSearchFilterSort");
+jest.mock('./doSearchFilterSort');
 
-describe("doDebounceSearch", () => {
+describe('doDebounceSearch', () => {
   let memoizedDebouncedSearch;
   let setExecutedSearchesCount;
   beforeEach(() => {
@@ -15,7 +15,7 @@ describe("doDebounceSearch", () => {
     jest.clearAllMocks();
   });
 
-  it("should execute doSearchFilterSort initially without debouncing", () => {
+  it('should execute doSearchFilterSort initially without debouncing', () => {
     doDebounceSearch([1, 2, 3], memoizedDebouncedSearch, 0, setExecutedSearchesCount);
     expect(doSearchFilterSort).toHaveBeenCalledWith(1, 2, 3);
     expect(memoizedDebouncedSearch).not.toHaveBeenCalled();
@@ -28,7 +28,7 @@ describe("doDebounceSearch", () => {
     expect(setExecutedSearchesCount).toHaveBeenCalledWith(2);
   });
 
-  it("should debounce the doSearchFilterSort call when executedSearchesCount >= 2", () => {
+  it('should debounce the doSearchFilterSort call when executedSearchesCount >= 2', () => {
     doDebounceSearch([1, 2, 3], memoizedDebouncedSearch, 2, setExecutedSearchesCount);
     expect(doSearchFilterSort).not.toHaveBeenCalled();
     expect(memoizedDebouncedSearch).toHaveBeenCalledWith(1, 2, 3);

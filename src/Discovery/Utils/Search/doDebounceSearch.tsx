@@ -1,12 +1,11 @@
 import doSearchFilterSort from './doSearchFilterSort';
 
 const doDebounceSearch = (
-  parametersForDoSearchFilterSort: any[],
+  parametersForDoSearchFilterSort: {},
   memoizedDebouncedSearch: (...args: any[]) => void,
   executedSearchesCount: number,
-  setExecutedSearchesCount: (count: number) => void
+  setExecutedSearchesCount: (count: number) => void,
 ) => {
-  const debounceDelayInMilliseconds = 500;
   const initialSearchesWithoutDebounce = 2;
   // Execute searches initially without debounce to decrease page load time
   if (executedSearchesCount < initialSearchesWithoutDebounce) {

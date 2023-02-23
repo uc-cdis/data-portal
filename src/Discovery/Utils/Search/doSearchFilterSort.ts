@@ -19,24 +19,24 @@ const doSearchFilterSort = (parametersForDoSearchFilterSort) => {
   filteredResources = filterByTags(
     filteredResources,
     props.selectedTags,
-    config
+    config,
   );
 
   if (
-    config.features.advSearchFilters &&
-    config.features.advSearchFilters.enabled
+    config.features.advSearchFilters
+    && config.features.advSearchFilters.enabled
   ) {
     filteredResources = filterByAdvSearch(
       filteredResources,
       filterState,
       config,
-      filterMultiSelectionLogic
+      filterMultiSelectionLogic,
     );
   }
 
   if (props.config.features.authorization.enabled) {
     filteredResources = filteredResources.filter(
-      (resource) => props.accessFilters[resource[accessibleFieldName]]
+      (resource) => props.accessFilters[resource[accessibleFieldName]],
     );
   }
 

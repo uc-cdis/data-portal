@@ -1,4 +1,6 @@
-import React, { useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
+import React, {
+  useState, useEffect, ReactNode, useMemo,
+} from 'react';
 import * as JsSearch from 'js-search';
 import {
   Tag, Popover, Space, Collapse, Button, Dropdown, Menu, Pagination, Tooltip,
@@ -19,6 +21,8 @@ import {
 } from '@ant-design/icons';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import MenuItem from 'antd/lib/menu/MenuItem';
+import { debounce } from 'lodash';
+import { JsxElement } from 'typescript';
 import doDebounceSearch from './Utils/Search/doDebounceSearch';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import DiscoverySummary from './DiscoverySummary';
@@ -28,11 +32,9 @@ import DiscoveryListView from './DiscoveryListView';
 import DiscoveryAdvancedSearchPanel from './DiscoveryAdvancedSearchPanel';
 import { ReduxDiscoveryActionBar, ReduxDiscoveryDetails } from './reduxer';
 import DiscoveryMDSSearch from './DiscoveryMDSSearch';
-import { debounce } from 'lodash';
 import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
 import doSearchFilterSort from './Utils/Search/doSearchFilterSort';
 import './Discovery.css';
-import { JsxElement } from 'typescript';
 
 export const accessibleFieldName = '__accessible';
 
@@ -109,54 +111,54 @@ const accessibleDataFilterToggle = () => {
 
 export const renderFieldContent = (content: any, contentType: 'string' | 'paragraphs' | 'number' | 'link' | 'tags' = 'string', config: DiscoveryConfig): React.ReactNode => {
   switch (contentType) {
-    case 'string':
-      if (Array.isArray(content)) {
-        return content.join(', ');
-      }
-      return content;
-    case 'number':
-      if (Array.isArray(content)) {
-        return content.join(', ');
-      }
-      return content.toLocaleString();
-    case 'paragraphs':
-      return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
-    case 'link':
+  case 'string':
+    if (Array.isArray(content)) {
+      return content.join(', ');
+    }
+    return content;
+  case 'number':
+    if (Array.isArray(content)) {
+      return content.join(', ');
+    }
+    return content.toLocaleString();
+  case 'paragraphs':
+    return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
+  case 'link':
+    return (
+      <a
+        onClick={(ev) => ev.stopPropagation()}
+        onKeyPress={(ev) => ev.stopPropagation()}
+        href={content}
+        target='_blank'
+        rel='noreferrer'
+      >
+        {content}
+      </a>
+    );
+  case 'tags':
+    if (!content || !content.map) {
+      return null;
+    }
+    return content.map(({ name, category }) => {
+      const color = getTagColor(category, config);
       return (
-        <a
-          onClick={(ev) => ev.stopPropagation()}
-          onKeyPress={(ev) => ev.stopPropagation()}
-          href={content}
-          target='_blank'
-          rel='noreferrer'
+        <Tag
+          key={name}
+          role='button'
+          tabIndex={0}
+          className='discovery-header__tag-btn discovery-tag discovery-tag--selected'
+          aria-label={name}
+          style={{
+            backgroundColor: color,
+            borderColor: color,
+          }}
         >
-          {content}
-        </a>
+          {name}
+        </Tag>
       );
-    case 'tags':
-      if (!content || !content.map) {
-        return null;
-      }
-      return content.map(({ name, category }) => {
-        const color = getTagColor(category, config);
-        return (
-          <Tag
-            key={name}
-            role='button'
-            tabIndex={0}
-            className='discovery-header__tag-btn discovery-tag discovery-tag--selected'
-            aria-label={name}
-            style={{
-              backgroundColor: color,
-              borderColor: color,
-            }}
-          >
-            {name}
-          </Tag>
-        );
-      });
-    default:
-      throw new Error(`Unrecognized content type ${contentType}. Check the 'study_page_fields' section of the Discovery config.`);
+    });
+  default:
+    throw new Error(`Unrecognized content type ${contentType}. Check the 'study_page_fields' section of the Discovery config.`);
   }
 };
 
@@ -237,9 +239,10 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     props.onSearchChange(value);
   };
 
+  const debouncingDelayInMilliseconds = 500;
   const memoizedDebouncedSearch = useMemo(
-    () => debounce(doSearchFilterSort, 500),
-    []
+    () => debounce(doSearchFilterSort, debouncingDelayInMilliseconds),
+    [],
   );
   const parametersForDoSearchFilterSort = {
     props,
@@ -251,8 +254,9 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
     accessibleFieldName,
     AccessSortDirection,
   };
+
   useEffect(
-    ()=> doDebounceSearch(parametersForDoSearchFilterSort, memoizedDebouncedSearch, executedSearchesCount, setExecutedSearchesCount), [
+    () => doDebounceSearch(parametersForDoSearchFilterSort, memoizedDebouncedSearch, executedSearchesCount, setExecutedSearchesCount), [
       props.searchTerm,
       props.accessSortDirection,
       props.studies,
