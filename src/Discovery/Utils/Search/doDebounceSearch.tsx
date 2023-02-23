@@ -13,7 +13,6 @@ const doDebounceSearch = (
     return doSearchFilterSort(parametersForDoSearchFilterSort);
   }
   // Otherwise debounce the calls
-  // return debounce(doSearchFilterSort, debounceDelayInMilliseconds);
   return memoizedDebouncedSearch(parametersForDoSearchFilterSort);
 };
 export default doDebounceSearch;
