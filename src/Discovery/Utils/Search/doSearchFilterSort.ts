@@ -1,7 +1,20 @@
 import filterByTags from './filterByTags';
 import filterByAdvSearch from './filterByAdvSearch';
+import { Props, FilterState, AccessSortDirection } from '../../Discovery';
+import { DiscoveryConfig } from '../../DiscoveryConfig';
 
-const doSearchFilterSort = (parametersForDoSearchFilterSort) => {
+interface ParametersForDoSearchFilterSort {
+  props: Props,
+  jsSearch: any,
+  config: DiscoveryConfig,
+  setVisibleResources: (...args: any[]) => void,
+  filterState: FilterState,
+  filterMultiSelectionLogic: string,
+  accessibleFieldName: string,
+  AccessSortDirection: AccessSortDirection,
+
+}
+const doSearchFilterSort = (parametersForDoSearchFilterSort: ParametersForDoSearchFilterSort) => {
   const {
     props,
     jsSearch,

@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import * as JsSearch from 'js-search';
 import {
-  Tag, Popover, Space, Collapse, Button, Dropdown, Menu, Pagination, Tooltip,
+  Tag, Popover, Space, Collapse, Button, Dropdown, Pagination, Tooltip,
 } from 'antd';
 import {
   LockOutlined,
@@ -20,9 +20,7 @@ import {
   MinusCircleOutlined,
 } from '@ant-design/icons';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
-import MenuItem from 'antd/lib/menu/MenuItem';
 import { debounce } from 'lodash';
-import { JsxElement } from 'typescript';
 import doDebounceSearch from './Utils/Search/doDebounceSearch';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import DiscoverySummary from './DiscoverySummary';
@@ -183,7 +181,7 @@ const highlightSearchTerm = (value: string, searchTerm: string, highlighClassNam
   };
 };
 
-interface FilterState {
+export interface FilterState {
   [key: string]: { [value: string]: boolean }
 }
 
@@ -193,7 +191,7 @@ export interface DiscoveryResource {
   tags?: { name: string, category: string }[]
 }
 
-interface Props {
+export interface Props {
   config: DiscoveryConfig,
   studies: DiscoveryResource[],
   studyRegistrationValidationField: string,
