@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const CohortsOverlapTextVersion = ({ eulerArgs }) => {
+const CohortsOverlapTextVersion = ({ title, eulerArgs }) => {
   const {
     set12Size,
     set13Size,
@@ -13,7 +13,7 @@ const CohortsOverlapTextVersion = ({ eulerArgs }) => {
   } = eulerArgs;
   return (
     <div className='euler-diagram-text-version'>
-      <h2>Cohort Intersections</h2>
+      <h2>{title}</h2>
       <ul>
         <li>
           {set1Label} ∩ {set2Label}&nbsp;=&nbsp;{set12Size.toLocaleString()}
