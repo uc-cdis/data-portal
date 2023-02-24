@@ -101,6 +101,12 @@ class AnalysisApp extends React.Component {
           <GWASWorkflowList refetchInterval={5000} />
         </div>
       );
+    case 'GWASResultsV2':
+      return (
+        <div className='analysis-app_flex_row'>
+          TODO - your new table component?
+        </div>
+      );
     case 'GWASUIApp': {
       return (
         <TourProvider
