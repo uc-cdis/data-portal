@@ -34,6 +34,7 @@ const CohortsOverlapTextVersion = ({ title, eulerArgs }) => {
 };
 
 CohortsOverlapTextVersion.propTypes = {
+  title: PropTypes.string.isRequired,
   eulerArgs: PropTypes.object.isRequired,
 };
 

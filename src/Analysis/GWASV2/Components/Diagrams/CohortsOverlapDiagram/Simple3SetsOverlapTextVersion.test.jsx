@@ -20,29 +20,29 @@ describe('CohortsOverlapTextVersion', () => {
       screen.getByText(
         `${eulerArgs.set1Label} ∩ ${
           eulerArgs.set2Label
-        } = ${eulerArgs.set12Size.toLocaleString()}`
-      )
+        } = ${eulerArgs.set12Size.toLocaleString()}`,
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
         `${eulerArgs.set1Label} ∩ ${
           eulerArgs.set3Label
-        } = ${eulerArgs.set13Size.toLocaleString()}`
-      )
+        } = ${eulerArgs.set13Size.toLocaleString()}`,
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
         `${eulerArgs.set2Label} ∩ ${
           eulerArgs.set3Label
-        } = ${eulerArgs.set23Size.toLocaleString()}`
-      )
+        } = ${eulerArgs.set23Size.toLocaleString()}`,
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
         `${eulerArgs.set1Label} ∩ ${eulerArgs.set2Label} ∩ ${
           eulerArgs.set3Label
-        } = ${eulerArgs.set123Size.toLocaleString()}`
-      )
+        } = ${eulerArgs.set123Size.toLocaleString()}`,
+      ),
     ).toBeInTheDocument();
   });
 });
