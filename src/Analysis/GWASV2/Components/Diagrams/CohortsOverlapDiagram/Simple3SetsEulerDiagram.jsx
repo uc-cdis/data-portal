@@ -26,16 +26,19 @@ const Simple3SetsEulerDiagram = ({
       sets: ['1'],
       size: set1Size,
       label: set1Label || Number(set1Size).toLocaleString(),
-    }, // TODO - these items take "color": as an attribute. So we can use that to guarantee the color and add a legend.
+      color: '#FDE72540',
+    },
     {
       sets: ['2'],
       size: set2Size,
       label: set2Label || Number(set2Size).toLocaleString(),
+      color: '#44015440',
     },
     {
       sets: ['3'],
       size: set3Size,
       label: set3Label || Number(set3Size).toLocaleString(),
+      color: '#21918C40',
     },
     {
       sets: ['1', '2'],
@@ -58,20 +61,23 @@ const Simple3SetsEulerDiagram = ({
       label: set123Label || Number(set123Size).toLocaleString(),
     },
   ];
+  const maxDiagramSize = 305;
 
   useEffect(() => {
     // some basic validation:
     if (
       set1Size < set12Size
       || set1Size < set13Size
-      || set2Size < set12Size || set2Size < set23Size
-      || set3Size < set13Size || set3Size < set23Size
+      || set2Size < set12Size
+      || set2Size < set23Size
+      || set3Size < set13Size
+      || set3Size < set23Size
     ) {
       throw Error(
         'Error: invalid set sizes. A set overlap cannot be bigger than the set itself.',
       );
     }
-    const chart = venn.VennDiagram();
+    const chart = venn.VennDiagram().height(maxDiagramSize);
     d3.select('#euler')
       .datum(sets)
       .call(chart);
