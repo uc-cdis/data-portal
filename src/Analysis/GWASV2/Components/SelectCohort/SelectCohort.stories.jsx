@@ -8,7 +8,6 @@ import { SourceContextProvider } from '../../Utils/Source';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import './SelectCohort.css';
 import '../../../GWASV2/GWASV2.css';
-import '../../../GWASResults/GWASUIApp.css';
 
 export default {
   title: 'Tests3/GWASV2/SelectCohort/SelectCohort',
