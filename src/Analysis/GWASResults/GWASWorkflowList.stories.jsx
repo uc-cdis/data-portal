@@ -74,10 +74,10 @@ MockedSuccess.parameters = {
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
           const { workflowid } = req.params;
-          const { workflowuid } = req.params;
+          const workflowuid = req.url.search;
           console.log(argowrapperpath);
-          console.log(workflowid);
-          console.log(workflowuid);
+          console.log('workflowid:' + workflowid);
+          console.log('workflowuid:' + workflowuid);
 
           return res(
             ctx.delay(500),
