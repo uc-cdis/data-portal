@@ -265,70 +265,83 @@
   padding: 10px;
   margin: 10px;
 }*/
-
+/*
 .GWASUI-listItem {
   padding: 3px;
 }
-
+*/
+/*
 .GWASUI-submitContainer {
   margin-left: auto;
   margin-top: 20px;
 }
-
+*/
+/*
 .GWASUI-nameInput {
   padding: 5px;
   margin-right: auto;
   margin-top: 20px;
 }
+*/
 
+/*
 .GWASUI-cohortSelector {
   width: 800px;
 }
-
+*/
+/*
 .GWASUI-addCohortBtn {
   width: 15px;
   flex-basis: 20%;
   align-self: flex-end;
 }
-
+*/
+/*
 .GWASUI-btnText {
   font-size: 12px;
 }
-
+*/
+/*
 .GWASUI-cdBtnContainer {
   width: 100%;
   justify-content: center;
 }
-
+*/
+/*
 .GWASUI-align {
   margin: auto;
   padding: 5px;
 }
-
+*/
+/*
 .GWASUI-cdNameInput {
   width: 600px;
 }
-
+*/
+/*
 .GWASUI-btnEnable {
   background-color: rgb(24, 144, 255);
   color: white;
   transition: all 0.5s ease-in-out;
 }
-
+*/
+/*
 .cd-flex {
   display: flex;
 }
-
+*/
+/*
 .GWASUI-cdList,
 .GWASUI-align {
   flex: 1;
 }
-
+*/
+/*
 .GWASUI-cdBtn {
   margin: 7px 7px;
   height: 45px;
 }
-
+*/
 .GWASUI-spinnerContainer {
   display: flex;
   align-items: center;
@@ -336,16 +349,18 @@
   width: 100%;
   padding: 5px;
 }
-
+/*
 .GWASUI-emptyTable {
   height: 400px;
 }
-
+*/
+/*
 .GWASUI-emphText {
   font-style: italic;
   text-decoration: underline;
 }
-
+*/
+/*
 .GWASUI-label {
   margin: 5px;
   padding: 2px;
@@ -354,24 +369,28 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
+*/
+/*
 .GWASUI-asterisk:before {
   content: '*';
   margin: 0 3px 0 -10px;
   color: red;
 }
-
+*/
+/*
 .GWASUI-attritionTable {
   display: flex;
   width: 100%;
   flex-direction: row;
 }
-
+*/
+/*
 .GWASUI-attritionRow .ant-collapse {
   width: 100%;
   display: none;
 }
-
+*/
+/*
 .GWASUI-attritionTableHeader {
   width: 100%;
   align-items: center;
@@ -388,6 +407,8 @@
   .ant-table-tbody {
   display: none;
 }
+*/
+/*
 .GWASUI-smCell {
   width: 31%;
   text-align: center;
@@ -402,7 +423,8 @@
   align-items: center;
   padding: 16px;
 }
-
+*/
+/*
 .GWASUI-leftAttr {
   display: flex;
   flex-direction: row;
@@ -432,3 +454,4 @@
   padding-top: 0;
   margin-top: 0;
 }
+*/
