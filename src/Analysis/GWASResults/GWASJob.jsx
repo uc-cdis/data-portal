@@ -41,11 +41,11 @@ const GWASJob = ({ workflow }) => {
     let buttonClickHandler;
 
     if (phase === gwasStatus.succeeded) {
-      actionUrl = `${gwasWorkflowPath}status/${workflowName}`;
+      actionUrl = `${gwasWorkflowPath}status/${workflowName}?uid=${workflow.uid}`;
       buttonText = 'download outputs';
       buttonClickHandler = handleWorkflowOutput;
     } else if (phase === gwasStatus.failed) {
-      actionUrl = `${gwasWorkflowPath}logs/${workflowName}`;
+      actionUrl = `${gwasWorkflowPath}logs/${workflowName}?uid=${workflow.uid}`;
       buttonText = 'view logs';
       buttonClickHandler = handleWorkflowLogs;
     }
@@ -118,7 +118,7 @@ const GWASJob = ({ workflow }) => {
   };
 
   async function fetchWorkflowStatus() {
-    const statusEndpoint = `${gwasWorkflowPath}status/${workflow.name}`;
+    const statusEndpoint = `${gwasWorkflowPath}status/${workflow.name}?uid=${workflow.uid}`;
     const status = await fetch(statusEndpoint);
     return status.json();
   }
