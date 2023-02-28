@@ -15,12 +15,11 @@ const SelectCovariates = ({
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
   useEffect(
-    () => () =>
-      dispatch({
-        type: ACTIONS.SET_SELECTION_MODE,
-        payload: '',
-      }),
-    []
+    () => () => dispatch({
+      type: ACTIONS.SET_SELECTION_MODE,
+      payload: '',
+    }),
+    [],
   );
 
   return (
@@ -118,12 +117,10 @@ const SelectCovariates = ({
           <CovariatesCardsList
             covariates={covariates}
             outcome={outcome}
-            deleteCovariate={(chosenCovariate) =>
-              dispatch({
-                type: ACTIONS.DELETE_COVARIATE,
-                payload: chosenCovariate,
-              })
-            }
+            deleteCovariate={(chosenCovariate) => dispatch({
+              type: ACTIONS.DELETE_COVARIATE,
+              payload: chosenCovariate,
+            })}
           />
         </div>
       </div>

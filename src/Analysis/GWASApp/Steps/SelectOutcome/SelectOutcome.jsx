@@ -15,12 +15,11 @@ const SelectOutcome = ({
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
   useEffect(
-    () => () =>
-      dispatch({
-        type: ACTIONS.SET_SELECTION_MODE,
-        payload: '',
-      }),
-    []
+    () => () => dispatch({
+      type: ACTIONS.SET_SELECTION_MODE,
+      payload: '',
+    }),
+    [],
   );
 
   const determineSelectOutcomeJsx = () => {
@@ -117,12 +116,10 @@ const SelectOutcome = ({
         <CovariatesCardsList
           covariates={covariates}
           outcome={outcome}
-          deleteCovariate={(chosenCovariate) =>
-            dispatch({
-              type: ACTIONS.DELETE_COVARIATE,
-              payload: chosenCovariate,
-            })
-          }
+          deleteCovariate={(chosenCovariate) => dispatch({
+            type: ACTIONS.DELETE_COVARIATE,
+            payload: chosenCovariate,
+          })}
         />
       </div>
     </div>
