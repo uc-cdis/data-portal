@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
-import SelectCohortDropDown from './SelectCohortDropDown';
+import SelectCohort from './SelectCohort';
+import reducer from '../../Utils/StateManagement/reducer';
 import { Space } from 'antd';
 import { SourceContextProvider } from '../../Utils/Source';
+import ACTIONS from '../../Utils/StateManagement/Actions';
 import './SelectCohort.css';
-import '../../../GWASV2/GWASV2.css';
-import '../../../GWASResults/GWASUIApp.css';
+import '../../GWASV2.css';
 
 export default {
-  title: 'Tests3/GWASV2/SelectCohort/SelectCohortDropDown',
-  component: SelectCohortDropDown,
+  title: 'Tests3/GWASV2/SelectCohort/SelectCohort',
+  component: SelectCohort,
 };
 
 // useful examples: https://github.com/mswjs/msw-storybook-addon/tree/main/packages/docs/src/demos/react-query
@@ -18,8 +19,30 @@ export default {
 const mockedQueryClient = new QueryClient();
 
 const MockTemplate = () => {
-  const handleCohortSelect = (selectedCohort) => {
-    console.log(selectedCohort);
+  const initialState = {
+    outcome: {},
+    selectedStudyPopulationCohort: {
+      cohort_definition_id: 400,
+      cohort_name: 'Test cohortC - Large (do not run generate)',
+      size: 200000,
+    },
+    covariates: [],
+    imputationScore: 0.3,
+    mafThreshold: 0.01,
+    numOfPC: 3,
+    gwasName: '',
+    selectedHare: {
+      concept_value: '',
+    },
+    currentStep: 0,
+  };
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const handleStudyPopulationSelect = (selectedRow) => {
+    dispatch({
+      type: ACTIONS.SET_SELECTED_STUDY_POPULATION_COHORT,
+      payload: selectedRow,
+    });
   };
 
   return (
@@ -28,8 +51,15 @@ const MockTemplate = () => {
         <div className='GWASV2'>
           <Space direction={'vertical'} style={{ width: '100%' }}>
             <div className='steps-content'></div>
-            <h4>Test selecting cohorts using dropdown</h4>
-            <SelectCohortDropDown handleCohortSelect={handleCohortSelect} />
+            <h4>
+              Use this App to perform high throughput GWAS on Million Veteran
+              Program (MVP) data, using the University of Washington Genesis
+              pipeline
+            </h4>
+            <SelectCohort
+              selectedCohort={state.selectedStudyPopulationCohort}
+              handleCohortSelect={handleStudyPopulationSelect}
+            />
           </Space>
         </div>
       </SourceContextProvider>
@@ -55,8 +85,7 @@ MockedSuccess.parameters = {
               cohort_definitions_and_stats: [
                 {
                   cohort_definition_id: 1,
-                  cohort_name:
-                    'Test cohort1 with a veeeeeeeerrrrrrryyyyyyy loooooooooooooooooooong name to test how it will be displayed',
+                  cohort_name: 'Test cohort1',
                   size: 6,
                 },
                 {

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SelectCohortDropDown from '../SelectCohort/SelectCohortDropDown';
 import CohortsOverlapDiagram from '../Diagrams/CohortsOverlapDiagram/CohortsOverlapDiagram';
 import './Covariates.css';
-import '../../../GWASV2/GWASV2.css';
+import '../../GWASV2.css';
 
 const CustomDichotomousCovariates = ({
   dispatch,
@@ -31,10 +31,9 @@ const CustomDichotomousCovariates = ({
     handleClose();
   };
 
-  const customDichotomousValidation =
-    providedName.length === 0 ||
-    firstPopulation === undefined ||
-    secondPopulation === undefined;
+  const customDichotomousValidation = providedName.length === 0
+    || firstPopulation === undefined
+    || secondPopulation === undefined;
 
   return (
     <div className='custom-dichotomous-covariates'>
