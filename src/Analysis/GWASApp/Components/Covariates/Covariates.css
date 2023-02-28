@@ -72,19 +72,19 @@
 
 .GWASApp .continuous-covariates .select-covariates-container .ant-select,
 .GWASApp
-  .continuous-covariates
-  .select-covariates-container
-  .ant-select-dropdown {
+.continuous-covariates
+.select-covariates-container
+.ant-select-dropdown {
   width: 100%;
   min-width: inherit;
 }
 
 .GWASApp
-  .continuous-covariates
-  .ant-table.ant-table-middle
-  .ant-table-tbody
-  > tr
-  > td {
+.continuous-covariates
+.ant-table.ant-table-middle
+.ant-table-tbody
+> tr
+> td {
   padding: 5px 8px;
 }
 
