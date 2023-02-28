@@ -43,6 +43,7 @@ const getMockWorkflowList = () => {
   if (requestCount % 3 == 0) {
     workflowList.splice(0, 0, {
       name: 'argo-wrapper-workflow-' + requestCount,
+      uid: 'uid-' + requestCount,
       phase: getMockPhase(requestCount),
     });
     rowCount++;
@@ -69,17 +70,20 @@ MockedSuccess.parameters = {
         }
       ),
       rest.get(
-        'http://:argowrapperpath/ga4gh/wes/v2/status/:workflowid',
+        'http://:argowrapperpath/ga4gh/wes/v2/status/:workflowid?uid=:workflowuid',
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
           const { workflowid } = req.params;
+          const workflowuid = req.url.search;
           console.log(argowrapperpath);
-          console.log(workflowid);
+          console.log('workflowid:' + workflowid);
+          console.log('workflowuid:' + workflowuid);
 
           return res(
             ctx.delay(500),
             ctx.json({
               name: workflowid,
+              uid: workflowuid,
               wf_name: workflowid + ' name',
               arguments: {
                 parameters: [
