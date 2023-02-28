@@ -5,7 +5,7 @@ import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList
 import CustomDichotomousCovariates from '../../Components/Covariates/CustomDichotomousCovariates';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import './SelectOutcome.css';
-import '../../GWASV2.css';
+import '../../GWASApp.css';
 
 const SelectOutcome = ({
   dispatch,
@@ -14,10 +14,14 @@ const SelectOutcome = ({
   covariates,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
-  useEffect(() => () => dispatch({
-    type: ACTIONS.SET_SELECTION_MODE,
-    payload: '',
-  }), []);
+  useEffect(
+    () => () =>
+      dispatch({
+        type: ACTIONS.SET_SELECTION_MODE,
+        payload: '',
+      }),
+    []
+  );
 
   const determineSelectOutcomeJsx = () => {
     if (selectionMode === 'continuous') {
@@ -106,15 +110,19 @@ const SelectOutcome = ({
   // Outputs the JSX for the component:
   return (
     <div className='GWASUI-row'>
-      <div data-tour='select-outcome' className='GWASUI-double-column'>{determineSelectOutcomeJsx()}</div>
+      <div data-tour='select-outcome' className='GWASUI-double-column'>
+        {determineSelectOutcomeJsx()}
+      </div>
       <div className='GWASUI-column GWASUI-card-column'>
         <CovariatesCardsList
           covariates={covariates}
           outcome={outcome}
-          deleteCovariate={(chosenCovariate) => dispatch({
-            type: ACTIONS.DELETE_COVARIATE,
-            payload: chosenCovariate,
-          })}
+          deleteCovariate={(chosenCovariate) =>
+            dispatch({
+              type: ACTIONS.DELETE_COVARIATE,
+              payload: chosenCovariate,
+            })
+          }
         />
       </div>
     </div>

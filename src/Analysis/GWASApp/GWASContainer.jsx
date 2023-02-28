@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import { Space, Button } from 'antd';
 import ProgressBar from './Components/ProgressBar/ProgressBar';
-import { gwasV2Steps } from './Utils/constants';
+import { GWASAppSteps } from './Utils/constants';
 import { SourceContextProvider } from './Utils/Source';
 import initialState from './Utils/StateManagement/InitialState';
 import reducer from './Utils/StateManagement/reducer';
@@ -12,80 +12,80 @@ import ConfigureGWAS from './Steps/ConfigureGWAS/ConfigureGWAS';
 import SelectOutcome from './Steps/SelectOutcome/SelectOutcome';
 import SelectCovariates from './Steps/SelectCovariates/SelectCovariates';
 import DismissibleMessagesList from './Components/DismissibleMessage/DismissibleMessagesList';
-import './GWASV2.css';
+import './GWASApp.css';
 
 const GWASContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const generateStep = () => {
     switch (state.currentStep) {
-    case 0:
-      return (
-        <div data-tour='cohort-intro'>
-          <SelectStudyPopulation
-            selectedCohort={state.selectedStudyPopulationCohort}
+      case 0:
+        return (
+          <div data-tour='cohort-intro'>
+            <SelectStudyPopulation
+              selectedCohort={state.selectedStudyPopulationCohort}
+              dispatch={dispatch}
+            />
+          </div>
+        );
+      case 1:
+        return (
+          <SelectOutcome
+            studyPopulationCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            covariates={state.covariates}
             dispatch={dispatch}
           />
-        </div>
-      );
-    case 1:
-      return (
-        <SelectOutcome
-          studyPopulationCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          covariates={state.covariates}
-          dispatch={dispatch}
-        />
-      );
-    case 2:
-      return (
-        <SelectCovariates
-          studyPopulationCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          covariates={state.covariates}
-          dispatch={dispatch}
-        />
-      );
-    case 3:
-      return (
-        <ConfigureGWAS
-          dispatch={dispatch}
-          numOfPCs={state.numPCs}
-          mafThreshold={state.mafThreshold}
-          imputationScore={state.imputationScore}
-          selectedHare={state.selectedHare}
-          covariates={state.covariates}
-          selectedCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          showModal={false}
-        />
-      );
-    case 4:
-      return (
-        <ConfigureGWAS
-          dispatch={dispatch}
-          numOfPCs={state.numPCs}
-          mafThreshold={state.mafThreshold}
-          imputationScore={state.imputationScore}
-          selectedHare={state.selectedHare}
-          covariates={state.covariates}
-          selectedCohort={state.selectedStudyPopulationCohort}
-          outcome={state.outcome}
-          showModal
-          finalPopulationSizes={state.finalPopulationSizes}
-        />
-      );
-    default:
-      return null;
+        );
+      case 2:
+        return (
+          <SelectCovariates
+            studyPopulationCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            covariates={state.covariates}
+            dispatch={dispatch}
+          />
+        );
+      case 3:
+        return (
+          <ConfigureGWAS
+            dispatch={dispatch}
+            numOfPCs={state.numPCs}
+            mafThreshold={state.mafThreshold}
+            imputationScore={state.imputationScore}
+            selectedHare={state.selectedHare}
+            covariates={state.covariates}
+            selectedCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            showModal={false}
+          />
+        );
+      case 4:
+        return (
+          <ConfigureGWAS
+            dispatch={dispatch}
+            numOfPCs={state.numPCs}
+            mafThreshold={state.mafThreshold}
+            imputationScore={state.imputationScore}
+            selectedHare={state.selectedHare}
+            covariates={state.covariates}
+            selectedCohort={state.selectedStudyPopulationCohort}
+            outcome={state.outcome}
+            showModal
+            finalPopulationSizes={state.finalPopulationSizes}
+          />
+        );
+      default:
+        return null;
     }
   };
 
   let nextButtonEnabled = true;
   // step specific conditions where progress to next step needs to be blocked:
   if (
-    (state.currentStep === 0 && !state.selectedStudyPopulationCohort)
-    || (state.currentStep === 1 && !state.outcome)
-    || (state.currentStep === 3 && !state.selectedHare.concept_value)
+    (state.currentStep === 0 && !state.selectedStudyPopulationCohort) ||
+    (state.currentStep === 1 && !state.outcome) ||
+    (state.currentStep === 3 && !state.selectedHare.concept_value)
   ) {
     nextButtonEnabled = false;
   }
@@ -114,7 +114,7 @@ const GWASContainer = () => {
       <style>
         {'.analysis-app__actions > div:nth-child(1) { width: 100%; }'}
       </style>
-      <div className='GWASV2'>
+      <div className='GWASApp'>
         <Space direction={'vertical'} className='steps-wrapper'>
           <div className='steps-content'>
             <Space direction={'vertical'} align={'center'}>
@@ -133,7 +133,7 @@ const GWASContainer = () => {
               Previous
             </Button>
             {/* If user is on the last step, do not show the next button */}
-            {state.currentStep < gwasV2Steps.length && (
+            {state.currentStep < GWASAppSteps.length && (
               <Button
                 data-tour='next-button'
                 className='GWASUI-navBtn GWASUI-navBtn__next'

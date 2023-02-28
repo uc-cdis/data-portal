@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Steps } from 'antd';
-import { gwasV2Steps } from '../../Utils/constants';
+import { GWASAppSteps } from '../../Utils/constants';
 import './ProgressBar.css';
 import TourButton from './TourButton/TourButton';
 
@@ -10,7 +10,7 @@ const ProgressBar = ({ currentStep, selectionMode }) => (
   <div className='progress-bar'>
     <div className='progress-bar__steps'>
       <Steps current={currentStep}>
-        {gwasV2Steps.map((item, index) => (
+        {GWASAppSteps.map((item, index) => (
           <Step
             key={item.title}
             data-testid='progress-bar-step'

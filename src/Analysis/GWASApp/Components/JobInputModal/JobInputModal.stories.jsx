@@ -3,7 +3,7 @@ import ValidState from '../../TestData/States/ValidState';
 import JobInputModal from './JobInputModal';
 
 export default {
-  title: 'Tests3/GWASV2/JobInputModal',
+  title: 'Tests3/GWASApp/JobInputModal',
   component: JobInputModal,
 };
 
@@ -28,7 +28,7 @@ const MockTemplate = () => {
 
   return (
     <div
-      className='GWASV2'
+      className='GWASApp'
       style={{ background: '#f5f5f5', padding: '40px', textAlign: 'center' }}
     >
       <h1>JobInputModal</h1>

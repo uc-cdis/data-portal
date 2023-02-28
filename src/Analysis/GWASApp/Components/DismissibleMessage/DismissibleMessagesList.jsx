@@ -10,7 +10,7 @@ import DismissibleMessage from './DismissibleMessage';
 //   },
 
 const DismissibleMessagesList = ({ messages, dismissMessage }) => (
-  <div className='GWASV2'>
+  <div className='GWASApp'>
     {messages.map((message, key) => (
       <React.Fragment key={message + key}>
         <DismissibleMessage

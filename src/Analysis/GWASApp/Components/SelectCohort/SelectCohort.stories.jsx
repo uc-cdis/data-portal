@@ -7,10 +7,10 @@ import { Space } from 'antd';
 import { SourceContextProvider } from '../../Utils/Source';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import './SelectCohort.css';
-import '../../GWASV2.css';
+import '../../GWASApp.css';
 
 export default {
-  title: 'Tests3/GWASV2/SelectCohort/SelectCohort',
+  title: 'Tests3/GWASApp/SelectCohort/SelectCohort',
   component: SelectCohort,
 };
 
@@ -48,7 +48,7 @@ const MockTemplate = () => {
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
-        <div className='GWASV2'>
+        <div className='GWASApp'>
           <Space direction={'vertical'} style={{ width: '100%' }}>
             <div className='steps-content'></div>
             <h4>

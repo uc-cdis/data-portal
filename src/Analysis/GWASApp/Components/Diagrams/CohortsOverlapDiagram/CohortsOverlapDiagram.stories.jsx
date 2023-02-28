@@ -5,7 +5,7 @@ import CohortsOverlapDiagram from './CohortsOverlapDiagram';
 import { SourceContextProvider } from '../../../Utils/Source';
 
 export default {
-  title: 'Tests3/GWASV2/CohortsOverlapDiagram',
+  title: 'Tests3/GWASApp/CohortsOverlapDiagram',
   component: CohortsOverlapDiagram,
 };
 
@@ -135,10 +135,12 @@ ErrorCase.parameters = {
     handlers: [
       rest.post(
         'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
-        (req, res, ctx) => res(
-          ctx.delay(800),
-          ctx.status(403),
-          ctx.json({errorMessage: `Error`, }),)
+        (req, res, ctx) =>
+          res(
+            ctx.delay(800),
+            ctx.status(403),
+            ctx.json({ errorMessage: `Error` })
+          )
       ),
     ],
   },
@@ -161,8 +163,8 @@ TimeoutCase.parameters = {
     handlers: [
       rest.post(
         'http://:cohortmiddlewarepath/cohort-middleware/cohort-stats/check-overlap/by-source-id/:sourceid/by-cohort-definition-ids/:cohortdefinitionA/:cohortdefinitionB',
-        (req, res, ctx) => res(
-          ctx.delay(3000), ctx.status(504), ctx.json("server timeout"))
+        (req, res, ctx) =>
+          res(ctx.delay(3000), ctx.status(504), ctx.json('server timeout'))
       ),
     ],
   },

@@ -1,4 +1,4 @@
-.GWASV2 .steps-content {
+.GWASApp .steps-content {
   margin-top: 16px;
   margin-bottom: 16px;
   border: 1px dashed #e9e9e9;
@@ -95,44 +95,44 @@
   transition: all 0.5s ease-in-out;
 }
 
-.GWASV2 .steps-action {
+.GWASApp .steps-action {
   margin-top: 24px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.GWASV2 .GWASUI-row {
+.GWASApp .GWASUI-row {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
 }
 
-.GWASV2 .GWASUI-column {
+.GWASApp .GWASUI-column {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
   flex: 1;
 }
 
-.GWASV2 .GWASUI-double-column {
+.GWASApp .GWASUI-double-column {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
   flex: 2;
 }
 
-.GWASV2 .steps-wrapper {
+.GWASApp .steps-wrapper {
   width: 100%;
 }
 
-.GWASV2 .steps-content {
+.GWASApp .steps-content {
   border: none;
   background: none;
 }
 
-.GWASV2 .GWASUI-searchContainer {
+.GWASApp .GWASUI-searchContainer {
   border: 1px solid #e9e9ea;
   border-radius: 5px;
   margin-bottom: 10px;
@@ -140,16 +140,16 @@
   height: 40px;
 }
 
-.GWASV2 .GWASUI-searchContainer svg {
+.GWASApp .GWASUI-searchContainer svg {
   color: #9d9d9d;
   font-size: 20px;
 }
 
-.GWASV2 .GWASUI-searchContainer input {
+.GWASApp .GWASUI-searchContainer input {
   font-style: normal;
 }
 
-.GWASV2 .analysis-app__actions .steps-content {
+.GWASApp .analysis-app__actions .steps-content {
   background-color: inherit;
   border: none;
   padding-top: 10px;
@@ -159,48 +159,48 @@
   width: 150px;
 }
 
-.GWASV2 .GWASUI-mainTable {
+.GWASApp .GWASUI-mainTable {
   border: none;
   min-width: 500px;
   padding: 0 8px;
   border: 1px solid #e9e9e9;
 }
 
-.GWASV2 .ant-table.ant-table-middle .ant-table-thead > tr > th:before {
+.GWASApp .ant-table.ant-table-middle .ant-table-thead > tr > th:before {
   display: none;
 }
 
-.GWASV2 .GWASUI-table1 tr:nth-child(even) {
+.GWASApp .GWASUI-table1 tr:nth-child(even) {
   background-color: #fafafb;
 }
 
-.GWASV2 .GWASUI-table1 thead th {
+.GWASApp .GWASUI-table1 thead th {
   background-color: #e9eef2;
 }
 
-.GWASV2 .GWASUI-table1 .ant-table-container {
+.GWASApp .GWASUI-table1 .ant-table-container {
   border-top-left-radius: none;
   border-top-right-radius: none;
   border-radius: 5px;
   border: 2px solid #dedede;
 }
 
-.GWASV2 .GWASUI-table1 .ant-table-cell-row-hover {
+.GWASApp .GWASUI-table1 .ant-table-cell-row-hover {
   cursor: pointer;
 }
 
-.GWASV2 .GWASUI-table1 .ant-table-cell-row-hover .ant-radio-inner {
+.GWASApp .GWASUI-table1 .ant-table-cell-row-hover .ant-radio-inner {
   border-color: #1890ff;
 }
 
-.GWASV2 .GWASUI-selectionUI {
+.GWASApp .GWASUI-selectionUI {
   height: 519px;
   width: 988px;
   background: #fff;
   text-align: center;
 }
 
-.GWASV2 .GWASUI-selectionUI button {
+.GWASApp .GWASUI-selectionUI button {
   margin-top: 200px;
   height: 96px;
   width: 317px;
@@ -212,11 +212,11 @@
   margin-bottom: 20px;
 }
 
-.GWASV2 .GWASUI-selectionUI button:hover {
+.GWASApp .GWASUI-selectionUI button:hover {
   background: #2e77b8;
 }
 
-.GWASV2 .GWASUI-selectionUI button span:first-child {
+.GWASApp .GWASUI-selectionUI button span:first-child {
   background: #ef8523;
   width: 32px;
   height: 32px;
@@ -231,7 +231,7 @@
   border-radius: 5px;
 }
 
-.GWASV2 .GWASUI-selectionUI button span:nth-child(2) {
+.GWASApp .GWASUI-selectionUI button span:nth-child(2) {
   position: absolute;
   font-size: 15px;
   color: #2e77b8;
@@ -240,11 +240,11 @@
   left: 60px;
 }
 
-.GWASV2 .GWASUI-selectionUI button:hover span:nth-child(2) {
+.GWASApp .GWASUI-selectionUI button:hover span:nth-child(2) {
   color: #fff;
 }
 
-.GWASV2 .GWASUI-selectionUI button:hover span:first-child {
+.GWASApp .GWASUI-selectionUI button:hover span:first-child {
   background: #fff;
   color: #2e77b8;
 }

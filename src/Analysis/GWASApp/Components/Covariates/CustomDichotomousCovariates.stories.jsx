@@ -5,7 +5,7 @@ import CustomDichotomousCovariates from './CustomDichotomousCovariates';
 import { SourceContextProvider } from '../../Utils/Source';
 
 export default {
-  title: 'Tests3/GWASV2/CustomDichotomousCovariates',
+  title: 'Tests3/GWASApp/CustomDichotomousCovariates',
   component: CustomDichotomousCovariates,
 };
 
@@ -39,7 +39,7 @@ SuccessAndZeroOverlapCases.args = {
   studyPopulationCohort: studyPopulationCohort,
   covariates: [],
   outcome: null,
-  submitButtonLabel: 'Submit!!'
+  submitButtonLabel: 'Submit!!',
 };
 const dummyNoOverlapCohortId = 30001;
 SuccessAndZeroOverlapCases.parameters = {
@@ -54,7 +54,10 @@ SuccessAndZeroOverlapCases.parameters = {
           const { cohortdefinitionB } = req.params;
           // default random overlap:
           let overlap = Math.floor(Math.random() * 10000) + 10000;
-          if (parseInt(cohortdefinitionA) === dummyNoOverlapCohortId || parseInt(cohortdefinitionB) === dummyNoOverlapCohortId) {
+          if (
+            parseInt(cohortdefinitionA) === dummyNoOverlapCohortId ||
+            parseInt(cohortdefinitionB) === dummyNoOverlapCohortId
+          ) {
             // set overlap to 0 to trigger a validation scenario in the component:
             overlap = 0;
           }

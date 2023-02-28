@@ -2,7 +2,7 @@ import React from 'react';
 import Histogram from './Histogram';
 
 export default {
-  title: "Tests3/GWASV2/Histogram_Recharts",
+  title: 'Tests3/GWASApp/Histogram_Recharts',
   component: Histogram,
 };
 
@@ -27,12 +27,11 @@ FirstStepActive.args = {
     { ageBin: 4, patients: 500 },
     { ageBin: 3, patients: 12250 },
     { ageBin: 'bin 2', patients: 5000 },
-    ],
+  ],
   xAxisDataKey: 'ageBin',
   barDataKey: 'patients',
-  barColor: 'darkblue'
+  barColor: 'darkblue',
 };
 
 export const SecondStepError = Template.bind({});
-SecondStepError.args = {
-};
+SecondStepError.args = {};

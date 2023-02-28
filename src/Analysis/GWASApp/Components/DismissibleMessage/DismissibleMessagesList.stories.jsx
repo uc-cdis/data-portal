@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import DismissibleMessagesList from './DismissibleMessagesList';
-import '../../GWASV2.css';
+import '../../GWASApp.css';
 
 export default {
-  title: 'Tests3/GWASV2/DismissibleMessage/DismissibleMessagesList',
+  title: 'Tests3/GWASApp/DismissibleMessage/DismissibleMessagesList',
   component: DismissibleMessagesList,
 };
 
@@ -25,15 +25,17 @@ const Template = (args) => {
       messageType: 'warning',
     },
   ]);
-  return <DismissibleMessagesList
-    dismissMessage={(chosenMessage) => {
-      const newMessages = messages.filter(
-        (message) => message !== chosenMessage,
-      );
-      setMessages(newMessages);
-    }}
-    messages={messages}
-  />
+  return (
+    <DismissibleMessagesList
+      dismissMessage={(chosenMessage) => {
+        const newMessages = messages.filter(
+          (message) => message !== chosenMessage
+        );
+        setMessages(newMessages);
+      }}
+      messages={messages}
+    />
+  );
 };
 
 export const SuccessState = Template.bind({});

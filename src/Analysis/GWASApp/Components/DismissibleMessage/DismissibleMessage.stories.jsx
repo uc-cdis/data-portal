@@ -4,12 +4,12 @@ import { rest } from 'msw';
 import DismissibleMessage from './DismissibleMessage';
 
 export default {
-  title: 'Tests3/GWASV2/DismissibleMessage/DismissibleMessage',
+  title: 'Tests3/GWASApp/DismissibleMessage/DismissibleMessage',
   component: DismissibleMessage,
 };
 
 const Template = (args) => (
-  <div className='GWASV2'>
+  <div className='GWASApp'>
     <h1 style={{ textAlign: 'center' }}>Dismissible Message</h1>
     <DismissibleMessage {...args} />
   </div>

@@ -1,4 +1,4 @@
-.GWASV2 .GWASUI-newCohort button {
+.GWASApp .GWASUI-newCohort button {
   margin: 6px 0 12px auto;
   background-color: #2e77b8;
   color: white;
@@ -13,14 +13,14 @@
   cursor: pointer;
 }
 
-.GWASV2 .GWASUI-newCohort button:hover {
-  background-color: var(--g3-secondary-btn__bg-color--hover)
+.GWASApp .GWASUI-newCohort button:hover {
+  background-color: var(--g3-secondary-btn__bg-color--hover);
 }
 
-.GWASV2 .cohort-table-search {
+.GWASApp .cohort-table-search {
   padding: 0 10px;
 }
 
-.GWASV2 .select-cohort {
+.GWASApp .select-cohort {
   width: 300px;
 }

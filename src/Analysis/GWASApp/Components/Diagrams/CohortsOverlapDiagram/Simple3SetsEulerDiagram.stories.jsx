@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Simple3GroupsEulerDiagram from './Simple3SetsEulerDiagram';
 
 export default {
-  title: "Tests3/GWASV2/EulerDiagram",
+  title: 'Tests3/GWASApp/EulerDiagram',
   component: Simple3GroupsEulerDiagram,
 };
 

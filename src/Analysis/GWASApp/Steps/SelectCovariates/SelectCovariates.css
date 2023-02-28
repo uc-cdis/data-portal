@@ -1,30 +1,30 @@
-.GWASV2 .GWASUI-double-column {
+.GWASApp .GWASUI-double-column {
   width: 988px;
 }
 
-.GWASV2 .ant-card {
+.GWASApp .ant-card {
   margin-bottom: 10px;
 }
-.GWASV2 .ant-card-body {
+.GWASApp .ant-card-body {
   padding: 0;
 }
-.GWASV2 .ant-card-meta-detail {
+.GWASApp .ant-card-meta-detail {
   width: 100%;
 }
-.GWASV2 .ant-card-meta-title {
+.GWASApp .ant-card-meta-title {
   font-size: 12px;
   font-weight: bold;
   color: #333333;
   margin: 10px;
   width: 100%;
 }
-.GWASV2 .ant-card-meta-description {
+.GWASApp .ant-card-meta-description {
   width: 100%;
   background-color: #fff;
   padding: 10px;
   min-height: 50px;
 }
-.GWASV2 .ant-card-actions {
+.GWASApp .ant-card-actions {
   position: absolute;
   right: 0;
   top: 33px;

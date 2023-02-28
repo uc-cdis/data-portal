@@ -2,22 +2,22 @@
   border: 1px solid #e2e2e3;
 }
 
-.GWASV2 .select-container {
+.GWASApp .select-container {
   padding: 20px;
   background: #fff;
   height: 519px;
 }
 
-.GWASV2 .select-container .ant-table-content {
+.GWASApp .select-container .ant-table-content {
   max-height: 390px;
   overflow-y: auto;
 }
 
-.GWASV2 .select-container .GWASUI-emptyTable {
+.GWASApp .select-container .GWASUI-emptyTable {
   border: 2px solid #e9eef2;
   min-height: 450px;
 }
 
-.GWASV2 .select-container .GWASUI-flexRow {
+.GWASApp .select-container .GWASUI-flexRow {
   width: 100%;
 }

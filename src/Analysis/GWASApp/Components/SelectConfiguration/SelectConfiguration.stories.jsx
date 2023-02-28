@@ -4,11 +4,11 @@ import reducer from '../../Utils/StateManagement/reducer';
 import SelectionConfiguration from './SelectConfiguration';
 import { rest } from 'msw';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import '../../GWASV2.css';
+import '../../GWASApp.css';
 import ValidState from '../../TestData/States/ValidState';
 
 export default {
-  title: 'Tests3/GWASV2/SelectConfiguration',
+  title: 'Tests3/GWASApp/SelectConfiguration',
   component: SelectionConfiguration,
 };
 
@@ -21,7 +21,7 @@ const MockTemplate = () => {
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
         <div
-          className='GWASV2'
+          className='GWASApp'
           style={{
             padding: '40px',
             height: '600px',

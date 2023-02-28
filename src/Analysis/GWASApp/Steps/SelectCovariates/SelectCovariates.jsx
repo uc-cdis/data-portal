@@ -5,7 +5,7 @@ import CustomDichotomousCovariates from '../../Components/Covariates/CustomDicho
 import CovariatesCardsList from '../../Components/Covariates/CovariatesCardsList';
 import ACTIONS from '../../Utils/StateManagement/Actions';
 import './SelectCovariates.css';
-import '../../GWASV2.css';
+import '../../GWASApp.css';
 
 const SelectCovariates = ({
   dispatch,
@@ -14,10 +14,14 @@ const SelectCovariates = ({
   covariates,
 }) => {
   const [selectionMode, setSelectionMode] = useState('');
-  useEffect(() => () => dispatch({
-    type: ACTIONS.SET_SELECTION_MODE,
-    payload: '',
-  }), []);
+  useEffect(
+    () => () =>
+      dispatch({
+        type: ACTIONS.SET_SELECTION_MODE,
+        payload: '',
+      }),
+    []
+  );
 
   return (
     <React.Fragment>
@@ -107,14 +111,19 @@ const SelectCovariates = ({
           )}
         </div>
 
-        <div data-tour='covariates-card' className='GWASUI-column GWASUI-card-column'>
+        <div
+          data-tour='covariates-card'
+          className='GWASUI-column GWASUI-card-column'
+        >
           <CovariatesCardsList
             covariates={covariates}
             outcome={outcome}
-            deleteCovariate={(chosenCovariate) => dispatch({
-              type: ACTIONS.DELETE_COVARIATE,
-              payload: chosenCovariate,
-            })}
+            deleteCovariate={(chosenCovariate) =>
+              dispatch({
+                type: ACTIONS.DELETE_COVARIATE,
+                payload: chosenCovariate,
+              })
+            }
           />
         </div>
       </div>

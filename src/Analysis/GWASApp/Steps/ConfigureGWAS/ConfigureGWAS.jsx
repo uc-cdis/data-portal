@@ -7,7 +7,7 @@ import { useSourceContext } from '../../Utils/Source';
 import Congratulations from '../../Components/Congratulations/Congratulations';
 import JobInputModal from '../../Components/JobInputModal/JobInputModal';
 import SelectConfiguration from '../../Components/SelectConfiguration/SelectConfiguration';
-import '../../GWASV2.css';
+import '../../GWASApp.css';
 
 const ConfigureGWAS = ({
   dispatch,
@@ -44,17 +44,18 @@ const ConfigureGWAS = ({
   }, [showModal]);
 
   const submitJob = useMutation(
-    () => jobSubmission(
-      sourceId,
-      numOfPCs,
-      covariates,
-      outcome,
-      selectedHare,
-      mafThreshold,
-      imputationScore,
-      selectedCohort,
-      jobName,
-    ),
+    () =>
+      jobSubmission(
+        sourceId,
+        numOfPCs,
+        covariates,
+        outcome,
+        selectedHare,
+        mafThreshold,
+        imputationScore,
+        selectedCohort,
+        jobName
+      ),
     {
       onSuccess: (data) => {
         if (data?.status === 200) {
@@ -65,13 +66,13 @@ const ConfigureGWAS = ({
         } else {
           data.text().then((error) => {
             setErrorText(
-              `GWAS job failed with error: ${JSON.stringify(error)}`,
+              `GWAS job failed with error: ${JSON.stringify(error)}`
             );
             setShowError(true);
           });
         }
       },
-    },
+    }
   );
 
   const handleSubmit = () => {

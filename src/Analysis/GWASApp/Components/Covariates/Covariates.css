@@ -1,23 +1,23 @@
 /* Cards */
-.GWASV2 .outcome-card {
+.GWASApp .outcome-card {
   background: #cae6f1;
 }
 
-.GWASV2 .dichotomous-card {
+.GWASApp .dichotomous-card {
   background: #ebfad3;
 }
 
-.GWASV2 .continuous-card {
+.GWASApp .continuous-card {
   background: #fde3d6;
 }
 
 /* Buttons */
-.GWASV2 .custom-dichotomous-covariates .dichotomous-button-wrapper {
+.GWASApp .custom-dichotomous-covariates .dichotomous-button-wrapper {
   display: flex;
 }
 
-.GWASV2 .submit-button,
-.GWASV2 .cancel-button {
+.GWASApp .submit-button,
+.GWASApp .cancel-button {
   margin: 6px 0 12px auto;
   background-color: #2e77b8;
   color: white;
@@ -32,79 +32,79 @@
   cursor: pointer;
 }
 
-.GWASV2 .submit-button:hover {
+.GWASApp .submit-button:hover {
   background-color: var(--g3-secondary-btn__bg-color--hover);
 }
 
-.GWASV2 .submit-button[disabled] {
+.GWASApp .submit-button[disabled] {
   background-color: rgba(46, 119, 184, 0.3);
   cursor: not-allowed;
 }
 
-.GWASV2 .custom-dichotomous-covariates button.cancel-button {
+.GWASApp .custom-dichotomous-covariates button.cancel-button {
   margin-left: 20px;
 }
 
-.GWASV2 .custom-dichotomous-covariates button.cancel-button,
-.GWASV2 .select-container button.cancel-button {
+.GWASApp .custom-dichotomous-covariates button.cancel-button,
+.GWASApp .select-container button.cancel-button {
   color: #2e77b8;
   background: white;
   border: 1px solid #2e77b8;
   margin-right: 25px;
 }
 
-.GWASV2 .custom-dichotomous-covariates button.cancel-button:hover,
-.GWASV2 .select-container button.cancel-button:hover {
+.GWASApp .custom-dichotomous-covariates button.cancel-button:hover,
+.GWASApp .select-container button.cancel-button:hover {
   background-color: var(--g3-secondary-btn__bg-color--hover);
   color: white;
 }
 
 /* Continous Covariate Selection */
-.GWASV2 .phenotype-histogram {
+.GWASApp .phenotype-histogram {
   padding-left: 30px;
   margin-top: 8px;
   width: 600px;
 }
 
-.GWASV2 .continuous-covariates .continous-covariates-table {
+.GWASApp .continuous-covariates .continous-covariates-table {
   width: 400px;
 }
 
-.GWASV2 .continuous-covariates .select-covariates-container .ant-select,
-.GWASV2
-.continuous-covariates
-.select-covariates-container
-.ant-select-dropdown {
+.GWASApp .continuous-covariates .select-covariates-container .ant-select,
+.GWASApp
+  .continuous-covariates
+  .select-covariates-container
+  .ant-select-dropdown {
   width: 100%;
   min-width: inherit;
 }
 
-.GWASV2
-.continuous-covariates
-.ant-table.ant-table-middle
-.ant-table-tbody
-> tr
-> td {
+.GWASApp
+  .continuous-covariates
+  .ant-table.ant-table-middle
+  .ant-table-tbody
+  > tr
+  > td {
   padding: 5px 8px;
 }
 
-.GWASV2 .continuous-covariates-button-container {
+.GWASApp .continuous-covariates-button-container {
   display: block;
   float: right;
   height: 36px;
 }
 
-.GWASV2 .phenotype-histogram .recharts-wrapper {
+.GWASApp .phenotype-histogram .recharts-wrapper {
   margin-top: 60px;
 }
 
-.GWASV2 .phenotype-histogram .histrogram-loading {
+.GWASApp .phenotype-histogram .histrogram-loading {
   margin-top: 80px;
   text-align: center;
   width: 600px;
 }
 
-.GWASV2 .phenotype-histogram-directions {
+.GWASApp .phenotype-histogram-directions {
   float: left;
   margin-top: 50px;
   text-align: center;
@@ -112,14 +112,14 @@
 }
 
 /* Dichotomous Covariate Selection */
-.GWASV2 .custom-dichotomous-covariates .GWASUI-flexRow label {
+.GWASApp .custom-dichotomous-covariates .GWASUI-flexRow label {
   font-weight: bold;
   margin: 0 10px 0 auto;
   padding-top: 13px;
   color: #333;
 }
 
-.GWASV2 .custom-dichotomous-covariates .GWASUI-flexRow input {
+.GWASApp .custom-dichotomous-covariates .GWASUI-flexRow input {
   width: 260px;
   margin-right: 10px;
   height: 40px;
@@ -129,13 +129,13 @@
   padding-left: 5px;
 }
 
-.GWASV2 .dichotomous-selection {
+.GWASApp .dichotomous-selection {
   width: 364px;
   margin-right: 15px;
   margin-top: 10px;
 }
 
-.GWASV2 .dichotomous-selection h3 {
+.GWASApp .dichotomous-selection h3 {
   color: #333;
   font-size: 14px;
   font-weight: bold;
@@ -143,7 +143,7 @@
   margin-top: 16px;
 }
 
-.GWASV2 .cohorts-overlap-diagram {
+.GWASApp .cohorts-overlap-diagram {
   width: 600px;
   text-align: center;
   margin-top: 20px;

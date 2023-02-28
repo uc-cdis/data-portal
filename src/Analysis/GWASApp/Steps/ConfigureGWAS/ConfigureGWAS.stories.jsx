@@ -6,10 +6,10 @@ import reducer from '../../Utils/StateManagement/reducer';
 import ConfigureGWAS from './ConfigureGWAS';
 import { SourceContextProvider } from '../../Utils/Source';
 import ACTIONS from '../../Utils/StateManagement/Actions';
-import '../../GWASV2.css';
+import '../../GWASApp.css';
 
 export default {
-  title: 'Tests3/GWASV2/Steps/ConfigureGWAS',
+  title: 'Tests3/GWASApp/Steps/ConfigureGWAS',
   component: ConfigureGWAS,
 };
 
@@ -66,7 +66,7 @@ const MockTemplate = () => {
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
         <div
-          className='GWASV2'
+          className='GWASApp'
           style={{ background: '#f5f5f5', padding: '40px' }}
         >
           <h1 style={{ textAlign: 'center' }}>Configure GWAS (Steps 4 & 5)</h1>

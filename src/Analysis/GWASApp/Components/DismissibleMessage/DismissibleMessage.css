@@ -1,34 +1,34 @@
-.GWASV2 .dismissable-message {
+.GWASApp .dismissable-message {
   font-size: 18px;
   font-weight: bold;
   padding: 15px;
   margin-bottom: 15px;
 }
 
-.GWASV2 .dismissable-message.success {
+.GWASApp .dismissable-message.success {
   border: 1px solid #a8c599;
   background: #fcfff5;
   color: #1e561f;
 }
 
-.GWASV2 .dismissable-message-description {
+.GWASApp .dismissable-message-description {
   font-size: 14px;
   font-weight: normal;
   margin-top: 20px;
 }
 
-.GWASV2 .dismissable-message.warning {
+.GWASApp .dismissable-message.warning {
   color: #830e0e;
   border: 1px solid #c59999;
   background: #fff5f5;
   position: relative;
 }
 
-.GWASV2 .dismissable-message.warning > div:nth-child(2) {
+.GWASApp .dismissable-message.warning > div:nth-child(2) {
   margin-left: 40px;
 }
 
-.GWASV2 .dismissable-message.warning > div:nth-child(2):before {
+.GWASApp .dismissable-message.warning > div:nth-child(2):before {
   content: '!';
   font-weight: bold;
   border: 2px solid #830e0e;
@@ -40,11 +40,11 @@
   padding-left: 10px;
   line-height: 1.3;
 }
-.GWASV2 .dismissable-message_close {
+.GWASApp .dismissable-message_close {
   cursor: pointer;
   float: right;
   margin-left: 25px;
 }
-.GWASV2 .dismissable-message_close:hover {
+.GWASApp .dismissable-message_close:hover {
   opacity: 0.8;
 }

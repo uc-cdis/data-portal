@@ -5,7 +5,7 @@ import ContinuousCovariates from './ContinuousCovariates';
 import { SourceContextProvider } from '../../Utils/Source';
 
 export default {
-  title: 'Tests3/GWASV2/ContinuousCovariates',
+  title: 'Tests3/GWASApp/ContinuousCovariates',
   component: ContinuousCovariates,
 };
 
@@ -17,7 +17,7 @@ const Template = () => {
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SourceContextProvider>
-        <div className='GWASV2'>
+        <div className='GWASApp'>
           <ContinuousCovariates
             selectedStudyPopulationCohort={{ cohort_definition_id: 123 }}
             selectedCovariates={[]}
@@ -27,10 +27,10 @@ const Template = () => {
               console.log('close');
             }}
             handleSelect={(chosenCovariate) => {
-              console.log('chosen covariate:', chosenCovariate)
+              console.log('chosen covariate:', chosenCovariate);
             }}
             dispatch={(payload) => {
-              console.log('payload:', payload)
+              console.log('payload:', payload);
             }}
             submitButtonLabel={'Add'}
           />

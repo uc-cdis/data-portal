@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ProgressBar from './ProgressBar';
 
 export default {
-  title: 'Tests3/GWASV2/ProgressBar',
+  title: 'Tests3/GWASApp/ProgressBar',
   component: ProgressBar,
 };
 

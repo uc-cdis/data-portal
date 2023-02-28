@@ -3,10 +3,10 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import AttritionTable from './AttritionTable';
 import { SourceContextProvider } from '../../../Utils/Source';
-import '../../../GWASV2.css';
+import '../../../GWASApp.css';
 
 export default {
-  title: 'Tests3/GWASV2/AttritionTable/AttritionTable',
+  title: 'Tests3/GWASApp/AttritionTable/AttritionTable',
   component: AttritionTable,
 };
 

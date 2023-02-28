@@ -3,11 +3,11 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { rest } from 'msw';
 import AttritionTableWrapper from './AttritionTableWrapper';
 import { SourceContextProvider } from '../../Utils/Source';
-import '../../GWASV2.css';
+import '../../GWASApp.css';
 
 let rowCount = 0;
 export default {
-  title: 'Tests3/GWASV2/AttritionTable/AttritionTableWrapper',
+  title: 'Tests3/GWASApp/AttritionTable/AttritionTableWrapper',
   component: AttritionTableWrapper,
 };
 
