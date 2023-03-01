@@ -12,6 +12,7 @@ export { FILTER_TYPE } from '../../../../GuppyComponents/Utils/const';
 /** @typedef {import('../types').FilterTabStatus} FilterTabStatus */
 /** @typedef {import('../types').BaseFilter} BaseFilter */
 /** @typedef {import('../types').OptionFilter} OptionFilter */
+
 /** @typedef {import('../types').StandardFilterState} StandardFilterState */
 
 /**
@@ -21,6 +22,16 @@ export { FILTER_TYPE } from '../../../../GuppyComponents/Utils/const';
 export function getExpandedStatus(filterTabs, expandedStatusControl) {
   return filterTabs.map(({ fields }) =>
     fields.map(() => expandedStatusControl)
+  );
+}
+
+/**
+ * @param {FilterTabsOption[]} filterTabs
+ * @param {EmptyFilter | StandardFilterState} filterResults
+ */
+export function getExcludedStatus(filterTabs, filterResults) {
+  return filterTabs.map(({ fields }) =>
+    fields.map((field) => filterResults.value?.[field]?.isExclusion || false)
   );
 }
 
@@ -172,8 +183,6 @@ export function clearFilterSection({
   if (anchorLabel === undefined || anchorLabel === '') {
     newFilterResults.value[fieldName] = /** @type {BaseFilter} */ ({});
   } else {
-    console.log('newFilterResults', newFilterResults);
-
     /** @type {AnchoredFilterState} */ (
       newFilterResults.value[anchorLabel]
     ).value[fieldName] = /** @type {BaseFilter} */ ({});
@@ -199,6 +208,55 @@ export function tabHasActiveFilters(filterTabStatus) {
     return false;
   }
   return Object.values(filterTabStatus).some(tabHasActiveFilters);
+}
+
+/**
+ * @param {Object} args
+ * @param {StandardFilterState} args.filterResults
+ * @param {FilterTabsOption[]} args.filterTabs
+ * @param {number} args.tabIndex
+ * @param {string} args.anchorLabel
+ * @param {number} args.sectionIndex
+ * @param {boolean} args.isExclusion
+ */
+export function updateExclusion({
+  filterResults,
+  filterTabs,
+  tabIndex,
+  anchorLabel,
+  sectionIndex,
+  isExclusion,
+}) {
+  const newFilterResults = cloneDeep(filterResults);
+
+  const fieldName = filterTabs[tabIndex].fields[sectionIndex];
+  if (!anchorLabel) {
+    newFilterResults.value[fieldName] = {
+      ...newFilterResults.value[fieldName],
+      selectedValues: newFilterResults.value[fieldName]?.selectedValues ?? [],
+      __type: FILTER_TYPE.OPTION,
+      isExclusion,
+    };
+  } else {
+    if (!(anchorLabel in newFilterResults.value)) {
+      newFilterResults.value[anchorLabel] = {
+        __type: FILTER_TYPE.ANCHORED,
+        value: {},
+      };
+    }
+    newFilterResults.value[anchorLabel].value[fieldName] = {
+      ...newFilterResults.value[anchorLabel].value[fieldName],
+      selectedValues:
+        newFilterResults.value[anchorLabel].value[fieldName]?.selectedValues ??
+        [],
+      __type: FILTER_TYPE.OPTION,
+      isExclusion,
+    };
+  }
+
+  return {
+    filterResults: removeEmptyFilter(newFilterResults),
+  };
 }
 
 /**
@@ -373,6 +431,7 @@ export function updateRangeValue({
  * @param {string} args.anchorLabel
  * @param {number} args.sectionIndex
  * @param {string} args.selectedValue
+ * @param {boolean} args.isExclusion
  */
 export function updateSelectedValue({
   filterStatus,
@@ -382,6 +441,7 @@ export function updateSelectedValue({
   anchorLabel,
   sectionIndex,
   selectedValue,
+  isExclusion,
 }) {
   // update filter status
   const newFilterStatus = cloneDeep(filterStatus);
@@ -425,6 +485,7 @@ export function updateSelectedValue({
       else if (selectedValueIndex < 0 && isSelected)
         selectedValues.push(selectedValue);
     }
+    newFilterResults.value[fieldName].isExclusion = isExclusion;
   } else {
     if (!(anchorLabel in newFilterResults.value))
       newFilterResults.value[anchorLabel] = {
@@ -460,6 +521,9 @@ export function updateSelectedValue({
       else if (selectedValueIndex < 0 && isSelected)
         selectedValues.push(selectedValue);
     }
+    /** @type {OptionFilter} */ (
+      newAnchoredFilterResults.value[fieldName]
+    ).isExclusion = isExclusion;
   }
   newFilterResults = removeEmptyFilter(newFilterResults);
 

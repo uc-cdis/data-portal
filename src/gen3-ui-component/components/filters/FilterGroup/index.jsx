@@ -9,11 +9,13 @@ import PatientIdFilter from '../PatientIdFilter';
 import {
   clearFilterSection,
   FILTER_TYPE,
+  getExcludedStatus,
   getExpandedStatus,
   getFilterStatus,
   getSelectedAnchors,
   tabHasActiveFilters,
   updateCombineMode,
+  updateExclusion,
   updateRangeValue,
   updateSelectedValue,
 } from './utils';
@@ -100,6 +102,11 @@ function FilterGroup({
   );
 
   const [filterResults, setFilterResults] = useState(filter);
+
+  const [excludedStatus] = useState(
+    getExcludedStatus(filterTabs, filterResults)
+  );
+
   const [filterStatus, setFilterStatus] = useState(
     getFilterStatus({
       anchorConfig: filterConfig.anchor,
@@ -192,8 +199,9 @@ function FilterGroup({
   /**
    * @param {number} sectionIndex
    * @param {string} selectedValue
+   * @param {boolean} isExclusion
    */
-  function handleSelect(sectionIndex, selectedValue) {
+  function handleSelect(sectionIndex, selectedValue, isExclusion) {
     const updated = updateSelectedValue({
       filterStatus,
       filterResults,
@@ -202,8 +210,27 @@ function FilterGroup({
       anchorLabel,
       sectionIndex,
       selectedValue,
+      isExclusion,
     });
     setFilterStatus(updated.filterStatus);
+    setFilterResults(updated.filterResults);
+    onFilterChange(updated.filterResults);
+  }
+
+  /**
+   * @param {number} sectionIndex
+   * @param {boolean} isExclusion
+   */
+  function handleToggleExclusion(sectionIndex, isExclusion) {
+    const updated = updateExclusion({
+      filterResults,
+      filterTabs,
+      tabIndex,
+      anchorLabel,
+      sectionIndex,
+      isExclusion,
+    });
+
     setFilterResults(updated.filterResults);
     onFilterChange(updated.filterResults);
   }
@@ -262,6 +289,7 @@ function FilterGroup({
       filterToFind.current = '';
     }
   }, [tabIndex]);
+
   /** @param {{ value: { index: number; title: string }}} option */
   function handleFindFilter({ value }) {
     if (tabIndex !== value.index) {
@@ -349,7 +377,9 @@ function FilterGroup({
         {tabs[tabIndex].map((section, index) => (
           <FilterSection
             key={section.title}
+            sectionTitle={section.title}
             disabledTooltipMessage={disabledTooltipMessage}
+            excluded={excludedStatus[tabIndex][index]}
             expanded={expandedStatus[tabIndex][index]}
             filterStatus={filterTabStatus[index]}
             hideZero={hideZero}
@@ -359,10 +389,15 @@ function FilterGroup({
             onAfterDrag={(...args) => handleDrag(index, ...args)}
             onClear={() => handleClearSection(index)}
             onSearchFilterLoadOptions={section.onSearchFilterLoadOptions}
-            onSelect={(label) => handleSelect(index, label)}
+            onSelect={(label, isExclusion) =>
+              handleSelect(index, label, isExclusion)
+            }
             onToggle={(isExpanded) => handleToggleSection(index, isExpanded)}
             onToggleCombineMode={(...args) =>
               handleToggleCombineMode(index, ...args)
+            }
+            onToggleExclusion={(isExclusion) =>
+              handleToggleExclusion(index, isExclusion)
             }
             options={section.options}
             title={section.title}

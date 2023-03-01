@@ -5,6 +5,7 @@ export type EmptyFilter = { __type?: never };
 export type OptionFilter = {
   __combineMode?: CombineMode;
   __type: 'OPTION';
+  isExclusion?: boolean;
   selectedValues?: string[];
 };
 
@@ -54,9 +55,16 @@ export type GqlRangeFilter = {
   };
 };
 
+export type GqlNotFilter = {
+  '!=': {
+    [x: string]: string;
+  };
+};
+
 export type GqlSimpleFilter =
   | GqlInFilter
   | GqlRangeFilter
+  | GqlNotFilter
   | { AND: GqlSimpleFilter[] }
   | { OR: GqlSimpleFilter[] };
 

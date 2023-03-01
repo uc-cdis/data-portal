@@ -35,6 +35,7 @@ function SingleSelectFilter({
   }
 
   const [localSelected, setLocalSelected] = useState(selected ?? false);
+
   function handleCheck() {
     setLocalSelected(!localSelected);
     onSelect(label);
