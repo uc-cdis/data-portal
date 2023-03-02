@@ -57,7 +57,7 @@ class ProtectedContent extends React.Component {
             () => this.checkLoginStatus(store, this.state)
               .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkQuizStatus(newState))) // don't redirect for public pages
               .then((newState) => ((this.props.public) ? { ...newState, redirectTo: null } : this.checkApiToken(store, newState))),
-          ) .then(
+          ).then(
             (newState) => this.checkUseWarning(store, newState), // check for existence of cookie to popup Use Warning
           )
           .then(

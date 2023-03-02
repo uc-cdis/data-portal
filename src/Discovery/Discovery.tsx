@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ReactNode } from 'react';
 import * as JsSearch from 'js-search';
 import {
-  Tag, Popover, Space, Collapse, Button, Dropdown, Menu, Pagination, Tooltip,
+  Tag, Popover, Space, Collapse, Button, Dropdown, Pagination, Tooltip,
 } from 'antd';
 import {
   LockOutlined,
@@ -18,7 +18,6 @@ import {
   MinusCircleOutlined,
 } from '@ant-design/icons';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
-import MenuItem from 'antd/lib/menu/MenuItem';
 import { DiscoveryConfig } from './DiscoveryConfig';
 import './Discovery.css';
 import DiscoverySummary from './DiscoverySummary';
@@ -29,7 +28,6 @@ import DiscoveryAdvancedSearchPanel from './DiscoveryAdvancedSearchPanel';
 import { ReduxDiscoveryActionBar, ReduxDiscoveryDetails } from './reduxer';
 import DiscoveryMDSSearch from './DiscoveryMDSSearch';
 import DiscoveryAccessibilityLinks from './DiscoveryAccessibilityLinks';
-import { JsxElement } from 'typescript';
 
 export const accessibleFieldName = '__accessible';
 
@@ -106,54 +104,54 @@ const accessibleDataFilterToggle = () => {
 
 export const renderFieldContent = (content: any, contentType: 'string' | 'paragraphs' | 'number' | 'link' | 'tags' = 'string', config: DiscoveryConfig): React.ReactNode => {
   switch (contentType) {
-    case 'string':
-      if (Array.isArray(content)) {
-        return content.join(', ');
-      }
-      return content;
-    case 'number':
-      if (Array.isArray(content)) {
-        return content.join(', ');
-      }
-      return content.toLocaleString();
-    case 'paragraphs':
-      return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
-    case 'link':
+  case 'string':
+    if (Array.isArray(content)) {
+      return content.join(', ');
+    }
+    return content;
+  case 'number':
+    if (Array.isArray(content)) {
+      return content.join(', ');
+    }
+    return content.toLocaleString();
+  case 'paragraphs':
+    return content.split('\n').map((paragraph, i) => <p key={i}>{paragraph}</p>);
+  case 'link':
+    return (
+      <a
+        onClick={(ev) => ev.stopPropagation()}
+        onKeyPress={(ev) => ev.stopPropagation()}
+        href={content}
+        target='_blank'
+        rel='noreferrer'
+      >
+        {content}
+      </a>
+    );
+  case 'tags':
+    if (!content || !content.map) {
+      return null;
+    }
+    return content.map(({ name, category }) => {
+      const color = getTagColor(category, config);
       return (
-        <a
-          onClick={(ev) => ev.stopPropagation()}
-          onKeyPress={(ev) => ev.stopPropagation()}
-          href={content}
-          target='_blank'
-          rel='noreferrer'
+        <Tag
+          key={name}
+          role='button'
+          tabIndex={0}
+          className='discovery-header__tag-btn discovery-tag discovery-tag--selected'
+          aria-label={name}
+          style={{
+            backgroundColor: color,
+            borderColor: color,
+          }}
         >
-          {content}
-        </a>
+          {name}
+        </Tag>
       );
-    case 'tags':
-      if (!content || !content.map) {
-        return null;
-      }
-      return content.map(({ name, category }) => {
-        const color = getTagColor(category, config);
-        return (
-          <Tag
-            key={name}
-            role='button'
-            tabIndex={0}
-            className='discovery-header__tag-btn discovery-tag discovery-tag--selected'
-            aria-label={name}
-            style={{
-              backgroundColor: color,
-              borderColor: color,
-            }}
-          >
-            {name}
-          </Tag>
-        );
-      });
-    default:
-      throw new Error(`Unrecognized content type ${contentType}. Check the 'study_page_fields' section of the Discovery config.`);
+    });
+  default:
+    throw new Error(`Unrecognized content type ${contentType}. Check the 'study_page_fields' section of the Discovery config.`);
   }
 };
 
@@ -340,11 +338,11 @@ const Discovery: React.FunctionComponent<Props> = (props: Props) => {
 
   useEffect(doSearchFilterSort,
     [props.searchTerm,
-    props.accessSortDirection,
-    props.studies,
-    props.pagination,
-    props.accessFilters,
-    props.selectedTags,
+      props.accessSortDirection,
+      props.studies,
+      props.pagination,
+      props.accessFilters,
+      props.selectedTags,
       filterMultiSelectionLogic,
       filterState],
   );
