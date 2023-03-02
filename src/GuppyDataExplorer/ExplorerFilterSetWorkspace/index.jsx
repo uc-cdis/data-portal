@@ -328,7 +328,6 @@ function ExplorerFilterSetWorkspace() {
                 className='explorer-filter-set-workspace__action-button'
                 type='button'
                 onClick={() => setActionFormType('LOAD')}
-                disabled={savedFilterSets.data.length < 1}
               >
                 Load
               </button>

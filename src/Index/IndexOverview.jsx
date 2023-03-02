@@ -32,8 +32,8 @@ function CountsDataView({ counts }) {
       count: counts.molecular_analysis,
       faIcon: 'microscope',
       name: {
-        singular: 'Molecular analysis',
-        plural: 'Molecular analyses',
+        singular: 'Subject with molecular analyses',
+        plural: 'Subjects with molecular analyses',
       },
     },
   ];

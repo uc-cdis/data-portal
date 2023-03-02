@@ -10,7 +10,7 @@ import ExplorerFilterDisplay from '../ExplorerFilterDisplay';
 /**
  * @typedef {Object} FilterSetCardProps
  * @property {{ fitted: number; total: number }} [count]
- * @property {ExplorerFilterSet & { isStale: boolean }} filterSet
+ * @property {ExplorerFilterSet & { isStale: boolean } & {hasOptedOutConsortiums: boolean}} filterSet
  * @property {string} label
  * @property {React.MouseEventHandler<HTMLButtonElement>} onClose
  */
@@ -30,7 +30,7 @@ export default function FilterSetCard({ count, filterSet, label, onClose }) {
           />
           {label}
         </button>
-        {filterSet.isStale ? (
+        {filterSet.isStale && (
           <button type='button'>
             <Tooltip
               arrowContent={<div className='rc-tooltip-arrow-inner' />}
@@ -47,7 +47,25 @@ export default function FilterSetCard({ count, filterSet, label, onClose }) {
               />
             </Tooltip>
           </button>
-        ) : null}
+        )}
+        {filterSet.hasOptedOutConsortiums && (
+          <button type='button'>
+            <Tooltip
+              arrowContent={<div className='rc-tooltip-arrow-inner' />}
+              mouseLeaveDelay={0}
+              overlay={
+                'Not all patients in the filter set are represented due to one or more consortiums opting out of participation in the pilot'
+              }
+              placement='top'
+              trigger={['hover', 'focus']}
+            >
+              <FontAwesomeIcon
+                icon='triangle-exclamation'
+                color='var(--pcdc-color__secondary)'
+              />
+            </Tooltip>
+          </button>
+        )}
         {count === undefined ? (
           <em>N/A</em>
         ) : (
