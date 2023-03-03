@@ -53,7 +53,7 @@ const GWASWorkflowList = ({ refetchInterval }) => {
   };
 
   return (
-    <div className='GWASApp-jobStatus'>
+    <div className='GWASResults-jobStatus'>
       <GWASWorkflows />
     </div>
   );

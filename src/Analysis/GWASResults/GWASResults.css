@@ -2,7 +2,7 @@
   width: auto;
 }
 
-.GWASApp-jobStatus {
+.GWASResults-jobStatus {
   width: 100%;
   margin-bottom: 16px;
   min-width: 800px;
@@ -24,7 +24,7 @@
   margin-bottom: 10px;
 }
 
-.GWASApp-jobStatus .ant-collapse {
+.GWASResults-jobStatus .ant-collapse {
   width: 100%;
 }
 
