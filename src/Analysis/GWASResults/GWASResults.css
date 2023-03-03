@@ -32,11 +32,6 @@
   content: center;
 }
 
-.GWASUI-flexRow {
-  display: flex;
-  width: 650px;
-}
-
 .GWASUI-spinnerContainer {
   display: flex;
   align-items: center;
