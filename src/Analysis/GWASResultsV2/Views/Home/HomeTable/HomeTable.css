@@ -1,0 +1,10 @@
+.home-table {
+  width: 1316px;
+  text-align: center;
+}
+
+.home-table tr,
+.home-table td,
+.home-table {
+  border: 1px solid black;
+}

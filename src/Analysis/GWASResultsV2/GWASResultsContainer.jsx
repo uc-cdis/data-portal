@@ -1,22 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, createContext } from 'react';
 import { Space } from 'antd';
 import Home from './Views/Home/Home';
-import './GWASResults.less';
+import Results from './Views/Results/Results';
+import Execution from './Views/Execution/Execution';
+import { SharedContext } from './Utils/constants';
+import './GWASResultsContainer.css';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
-  const returnHome = () => {
-    setCurrentView('home');
-  };
-
   const generateStep = () => {
     switch (currentView) {
       case 'home':
         return <Home />;
       case 'results':
-        return <Results returnHome={returnHome} />;
+        return <Results />;
       case 'execution':
-        return <Execution returnHome={returnHome} />;
+        return <Execution />;
       default:
         return null;
     }
@@ -24,11 +23,9 @@ const GWASResultsContainer = () => {
 
   return (
     <div className='GWASResults'>
-      <div className='view'>
-        <Space direction={'vertical'} align={'center'}>
-          {generateStep(currentView)}
-        </Space>
-      </div>
+      <SharedContext.Provider value={setCurrentView}>
+        <div className='view'>{generateStep(currentView)}</div>
+      </SharedContext.Provider>
     </div>
   );
 };

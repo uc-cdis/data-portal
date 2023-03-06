@@ -1,6 +1,10 @@
 import React from 'react';
+import ReturnHomeButton from '../../SharedComponents/ReturnHomeButton/ReturnHomeButton';
 
-const Results = () => {
-  return <h1>Results</h1>;
-};
+const Results = () => (
+  <>
+    <ReturnHomeButton />
+    <h1>Results</h1>
+  </>
+);
 export default Results;
