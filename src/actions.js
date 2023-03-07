@@ -381,8 +381,12 @@ export const updateSystemUseNotice = (displayUseWarning) => (dispatch) => {
   });
 };
 
-// eslint-disable-next-line max-len
-export const displaySystemUseNotice = (authenticated) => (dispatch, getState) => dispatch(checkIfDisplaySystemUseNotice(authenticated, getState().popups.systemUseWarnPopup));
+export const displaySystemUseNotice = (authenticated) => (dispatch, getState) => dispatch(
+  checkIfDisplaySystemUseNotice(
+    authenticated,
+    getState().popups.systemUseWarnPopup,
+  ),
+);
 
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -
