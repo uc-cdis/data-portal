@@ -11,6 +11,7 @@ const setCurrentView = (input) => {
 };
 const setCurrentExecutionData = () => alert('setCurrent Execution data called');
 const setCurrentResultsData = () => alert('setCurrent Results data called');
+const badTableData = [];
 const tableData = [
   {
     RunId: 123,
@@ -32,7 +33,7 @@ const tableData = [
   },
 ];
 
-const MockTemplate = () => {
+const MockTemplateSuccess = () => {
   return (
     <SharedContext.Provider
       value={{
@@ -47,4 +48,20 @@ const MockTemplate = () => {
   );
 };
 
-export const MockedSuccess = MockTemplate.bind({});
+const MockTemplateFail = () => {
+  return (
+    <SharedContext.Provider
+      value={{
+        tableData: badTableData,
+        setCurrentExecutionData,
+        setCurrentResultsData,
+        setCurrentView,
+      }}
+    >
+      <Home />
+    </SharedContext.Provider>
+  );
+};
+
+export const MockedSuccess = MockTemplateSuccess.bind({});
+export const MockedFail = MockTemplateFail.bind({});

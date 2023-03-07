@@ -11,8 +11,7 @@ const GWASResultsContainer = () => {
   const [currentExecutionData, setCurrentExecutionData] = useState({});
   const [currentResultsData, setCurrentResultsData] = useState({});
   const [tableData, setTableData] = useState(GetTableDataFromApi());
-
-  const pollingIntervalinMilliseconds = 50000;
+  const pollingIntervalinMilliseconds = 5000;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,14 +23,14 @@ const GWASResultsContainer = () => {
 
   const generateStep = () => {
     switch (currentView) {
-    case 'home':
-      return <Home />;
-    case 'results':
-      return <Results />;
-    case 'execution':
-      return <Execution />;
-    default:
-      return null;
+      case 'home':
+        return <Home />;
+      case 'results':
+        return <Results />;
+      case 'execution':
+        return <Execution />;
+      default:
+        return null;
     }
   };
 
