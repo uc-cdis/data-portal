@@ -24,8 +24,8 @@ const HomeTable = () => {
           <th>Actions</th>
         </tr>
 
-        {tableData &&
-          tableData.map((item) => (
+        {tableData
+          && tableData.map((item) => (
             <tr key={item.RunId}>
               <React.Fragment key={item.RunId}>
                 <td>{item.RunId}</td>
