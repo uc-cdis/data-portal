@@ -11,7 +11,7 @@ const setCurrentView = (input) => {
 };
 const setCurrentExecutionData = () => alert('setCurrent Execution data called');
 const setCurrentResultsData = () => alert('setCurrent Results data called');
-const badTableData = [];
+const badTableData = null;
 const tableData = [
   {
     RunId: 123,
