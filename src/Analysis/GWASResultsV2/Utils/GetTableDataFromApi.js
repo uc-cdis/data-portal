@@ -1,8 +1,10 @@
-export const GetTableDataFromApi = () => {
+const sixDigitRandomNumber = () => Math.floor(100000 + Math.random() * 900000);
+
+const GetTableDataFromApi = () =>
   // this is a placeholder for the API call in ticket VADC 465
-  return [
+  [
     {
-      RunId: Math.random() * 1000,
+      RunId: sixDigitRandomNumber(),
       WorkflowName: 'some workflow name',
       DateTimeStarted: 'DateTimeStarted',
       JobStatus: 'some job status',
@@ -11,7 +13,7 @@ export const GetTableDataFromApi = () => {
       ResultsData: 'some resultsData for item 1',
     },
     {
-      RunId: Math.random() * 1000,
+      RunId: sixDigitRandomNumber(),
       WorkflowName: 'some workflow name',
       DateTimeStarted: 'DateTimeStarted',
       JobStatus: 'some job status',
@@ -20,4 +22,5 @@ export const GetTableDataFromApi = () => {
       ResultsData: 'some resultsData for item 2',
     },
   ];
-};
+
+export default GetTableDataFromApi;

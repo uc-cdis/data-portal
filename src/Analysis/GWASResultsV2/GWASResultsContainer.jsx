@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Home from './Views/Home/Home';
 import Results from './Views/Results/Results';
 import Execution from './Views/Execution/Execution';
-import { SharedContext } from './Utils/SharedContext';
-import { GetTableDataFromApi } from './Utils/GetTableDataFromApi';
+import SharedContext from './Utils/SharedContext';
+import GetTableDataFromApi from './Utils/GetTableDataFromApi';
 import './GWASResultsContainer.css';
 
 const GWASResultsContainer = () => {

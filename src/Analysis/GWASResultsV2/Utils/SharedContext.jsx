@@ -1,3 +1,5 @@
-import React, { createContext } from 'react';
+import { createContext } from 'react';
 
-export const SharedContext = createContext();
+const SharedContext = createContext();
+
+export default SharedContext;

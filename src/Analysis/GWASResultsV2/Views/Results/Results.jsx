@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { SharedContext } from '../../Utils/SharedContext';
+import SharedContext from '../../Utils/SharedContext';
 import ReturnHomeButton from '../../SharedComponents/ReturnHomeButton/ReturnHomeButton';
 
 const Results = () => {

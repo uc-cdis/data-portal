@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import React, { useContext } from 'react';
-import { SharedContext } from '../../../Utils/SharedContext';
+import SharedContext from '../../../Utils/SharedContext';
 import './HomeTable.css';
 
 const HomeTable = () => {
@@ -24,44 +24,42 @@ const HomeTable = () => {
           <th>Actions</th>
         </tr>
 
-        {tableData &&
-          tableData.map((item) => {
-            return (
-              <tr>
-                <React.Fragment key={item.RunId}>
-                  <td>{item.RunId}</td>
-                  <td>{item.WorkflowName}</td>
-                  <td>{item.DateTimeStarted}</td>
-                  <td>{item.JobStatus}</td>
-                  <td>{item.DateTimeSubmitted}</td>
-                  <td>
-                    <div>
-                      <Button
-                        onClick={() => {
-                          setExecutionData(item.ExecutionData);
-                          setCurrentView('execution');
-                        }}
-                      >
-                        Execution
-                      </Button>
-                    </div>
+        {tableData
+          && tableData.map((item) => (
+            <tr key={item.RunId}>
+              <React.Fragment key={item.RunId}>
+                <td>{item.RunId}</td>
+                <td>{item.WorkflowName}</td>
+                <td>{item.DateTimeStarted}</td>
+                <td>{item.JobStatus}</td>
+                <td>{item.DateTimeSubmitted}</td>
+                <td>
+                  <div>
+                    <Button
+                      onClick={() => {
+                        setExecutionData(item.ExecutionData);
+                        setCurrentView('execution');
+                      }}
+                    >
+                      Execution
+                    </Button>
+                  </div>
 
-                    <div>
-                      <Button
-                        onClick={() => {
-                          setCurrentResultsData(item.ResultsData);
-                          setCurrentView('results');
-                        }}
-                      >
-                        Results
-                      </Button>
-                    </div>
-                  </td>
-                  <td>Actions</td>
-                </React.Fragment>
-              </tr>
-            );
-          })}
+                  <div>
+                    <Button
+                      onClick={() => {
+                        setCurrentResultsData(item.ResultsData);
+                        setCurrentView('results');
+                      }}
+                    >
+                      Results
+                    </Button>
+                  </div>
+                </td>
+                <td>Actions</td>
+              </React.Fragment>
+            </tr>
+          ))}
       </tbody>
     </table>
   );
