@@ -24,8 +24,8 @@ const HomeTable = () => {
           <th>Actions</th>
         </tr>
 
-        {tableData
-          && tableData.map((item) => (
+        {tableData &&
+          tableData.map((item) => (
             <tr key={item.RunId}>
               <td>{item.RunId}</td>
               <td>{item.WorkflowName}</td>
@@ -33,27 +33,22 @@ const HomeTable = () => {
               <td>{item.JobStatus}</td>
               <td>{item.DateTimeSubmitted}</td>
               <td>
-                <div>
-                  <Button
-                    onClick={() => {
-                      setCurrentExecutionData(item.ExecutionData);
-                      setCurrentView('execution');
-                    }}
-                  >
-                    Execution
-                  </Button>
-                </div>
-
-                <div>
-                  <Button
-                    onClick={() => {
-                      setCurrentResultsData(item.ResultsData);
-                      setCurrentView('results');
-                    }}
-                  >
-                    Results
-                  </Button>
-                </div>
+                <Button
+                  onClick={() => {
+                    setCurrentExecutionData(item.ExecutionData);
+                    setCurrentView('execution');
+                  }}
+                >
+                  Execution
+                </Button>
+                <Button
+                  onClick={() => {
+                    setCurrentResultsData(item.ResultsData);
+                    setCurrentView('results');
+                  }}
+                >
+                  Results
+                </Button>
               </td>
               <td>Actions</td>
             </tr>
