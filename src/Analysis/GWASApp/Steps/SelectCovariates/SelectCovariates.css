@@ -1,0 +1,31 @@
+.GWASApp .GWASUI-double-column {
+  width: 988px;
+}
+
+.GWASApp .ant-card {
+  margin-bottom: 10px;
+}
+.GWASApp .ant-card-body {
+  padding: 0;
+}
+.GWASApp .ant-card-meta-detail {
+  width: 100%;
+}
+.GWASApp .ant-card-meta-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #333333;
+  margin: 10px;
+  width: 100%;
+}
+.GWASApp .ant-card-meta-description {
+  width: 100%;
+  background-color: #fff;
+  padding: 10px;
+  min-height: 50px;
+}
+.GWASApp .ant-card-actions {
+  position: absolute;
+  right: 0;
+  top: 33px;
+}
