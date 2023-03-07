@@ -11,7 +11,7 @@ const GWASResultsContainer = () => {
   const [currentExecutionData, setCurrentExecutionData] = useState({});
   const [currentResultsData, setCurrentResultsData] = useState({});
   const [tableData, setTableData] = useState(GetTableDataFromApi());
-  const pollingIntervalinMilliseconds = 50000;
+  const pollingIntervalinMilliseconds = 5000;
 
   // API Polling:
   useEffect(() => {
