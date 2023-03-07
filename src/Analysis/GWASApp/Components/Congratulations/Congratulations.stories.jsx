@@ -1,5 +1,4 @@
 import React from 'react';
-import '../../GWASVApp.css';
 import Congratulations from './Congratulations';
 
 export default {
