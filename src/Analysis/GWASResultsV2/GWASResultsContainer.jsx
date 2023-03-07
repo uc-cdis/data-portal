@@ -17,20 +17,19 @@ const GWASResultsContainer = () => {
     const interval = setInterval(() => {
       setTableData(GetTableDataFromApi());
     }, pollingIntervalinMilliseconds);
-
     return () => clearInterval(interval);
   }, []);
 
   const generateStep = () => {
     switch (currentView) {
-    case 'home':
-      return <Home />;
-    case 'results':
-      return <Results />;
-    case 'execution':
-      return <Execution />;
-    default:
-      return null;
+      case 'home':
+        return <Home />;
+      case 'results':
+        return <Results />;
+      case 'execution':
+        return <Execution />;
+      default:
+        return null;
     }
   };
 
