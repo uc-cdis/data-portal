@@ -1,13 +1,27 @@
-import React, { useState, createContext } from 'react';
-import { Space } from 'antd';
+import React, { useState, useEffect } from 'react';
 import Home from './Views/Home/Home';
 import Results from './Views/Results/Results';
 import Execution from './Views/Execution/Execution';
-import { SharedContext } from './Utils/constants';
+import { SharedContext } from './Utils/SharedContext';
+import { GetTableDataFromApi } from './Utils/GetTableDataFromApi';
 import './GWASResultsContainer.css';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
+  const [executionData, setExecutionData] = useState({});
+  const [currentResultsData, setCurrentResultsData] = useState({});
+  const [tableData, setTableData] = useState(GetTableDataFromApi());
+
+  const pollingIntervalinMilliseconds = 5000;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTableData(GetTableDataFromApi());
+    }, pollingIntervalinMilliseconds);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const generateStep = () => {
     switch (currentView) {
       case 'home':
@@ -23,7 +37,16 @@ const GWASResultsContainer = () => {
 
   return (
     <div className='GWASResults'>
-      <SharedContext.Provider value={setCurrentView}>
+      <SharedContext.Provider
+        value={{
+          setCurrentView,
+          tableData,
+          executionData,
+          setExecutionData,
+          currentResultsData,
+          setCurrentResultsData,
+        }}
+      >
         <div className='view'>{generateStep(currentView)}</div>
       </SharedContext.Provider>
     </div>

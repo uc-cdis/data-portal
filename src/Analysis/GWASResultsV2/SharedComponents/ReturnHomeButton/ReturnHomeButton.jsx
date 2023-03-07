@@ -1,11 +1,19 @@
+import { Button } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import React, { useContext } from 'react';
-import { SharedContext } from '../../Utils/constants';
+import { SharedContext } from '../../Utils/SharedContext';
 import './ReturnHomeButton.css';
 
 const ReturnHomeButton = () => {
-  const setCurrentView = useContext(SharedContext);
+  const { setCurrentView } = useContext(SharedContext);
   return (
-    <button onClick={() => setCurrentView('home')}>Return Home Button</button>
+    <Button
+      type='text'
+      icon={<ArrowLeftOutlined />}
+      onClick={() => setCurrentView('home')}
+    >
+      Return Home Button
+    </Button>
   );
 };
 export default ReturnHomeButton;
