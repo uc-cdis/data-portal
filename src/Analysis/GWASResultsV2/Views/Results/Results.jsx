@@ -8,7 +8,7 @@ const Results = () => {
     <React.Fragment>
       <ReturnHomeButton />
       <h1>Results</h1>
-      <div>{currentResultsData}</div>
+      <h2>{currentResultsData}</h2>
     </React.Fragment>
   );
 };

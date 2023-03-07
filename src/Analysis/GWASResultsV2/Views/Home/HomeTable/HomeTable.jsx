@@ -7,7 +7,7 @@ const HomeTable = () => {
   const {
     setCurrentView,
     tableData,
-    setExecutionData,
+    setCurrentExecutionData,
     setCurrentResultsData,
   } = useContext(SharedContext);
 
@@ -24,8 +24,8 @@ const HomeTable = () => {
           <th>Actions</th>
         </tr>
 
-        {tableData
-          && tableData.map((item) => (
+        {tableData &&
+          tableData.map((item) => (
             <tr key={item.RunId}>
               <React.Fragment key={item.RunId}>
                 <td>{item.RunId}</td>
@@ -37,7 +37,7 @@ const HomeTable = () => {
                   <div>
                     <Button
                       onClick={() => {
-                        setExecutionData(item.ExecutionData);
+                        setCurrentExecutionData(item.ExecutionData);
                         setCurrentView('execution');
                       }}
                     >

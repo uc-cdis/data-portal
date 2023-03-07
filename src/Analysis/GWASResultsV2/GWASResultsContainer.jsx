@@ -8,11 +8,11 @@ import './GWASResultsContainer.css';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
-  const [executionData, setExecutionData] = useState({});
+  const [currentExecutionData, setCurrentExecutionData] = useState({});
   const [currentResultsData, setCurrentResultsData] = useState({});
   const [tableData, setTableData] = useState(GetTableDataFromApi());
 
-  const pollingIntervalinMilliseconds = 5000;
+  const pollingIntervalinMilliseconds = 50000;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,14 +24,14 @@ const GWASResultsContainer = () => {
 
   const generateStep = () => {
     switch (currentView) {
-    case 'home':
-      return <Home />;
-    case 'results':
-      return <Results />;
-    case 'execution':
-      return <Execution />;
-    default:
-      return null;
+      case 'home':
+        return <Home />;
+      case 'results':
+        return <Results />;
+      case 'execution':
+        return <Execution />;
+      default:
+        return null;
     }
   };
 
@@ -41,8 +41,8 @@ const GWASResultsContainer = () => {
         value={{
           setCurrentView,
           tableData,
-          executionData,
-          setExecutionData,
+          currentExecutionData,
+          setCurrentExecutionData,
           currentResultsData,
           setCurrentResultsData,
         }}
