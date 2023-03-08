@@ -14,6 +14,7 @@ export default {
 };
 
 const mockedQueryClient = new QueryClient();
+const submissionLoadingDurationInMilliseconds = 5000;
 
 const MockTemplate = () => {
   const initialState = {
@@ -177,21 +178,11 @@ MockedSuccess.parameters = {
       rest.post('http://:serverpath/ga4gh/wes/v2/submit', (req, res, ctx) => {
         const { serverpath } = req.params;
         console.log(serverpath);
-        return res(ctx.delay(1100), ctx.text('gwas-workflow-123456'));
+        return res(
+          ctx.delay(submissionLoadingDurationInMilliseconds),
+          ctx.text('gwas-workflow-123456')
+        );
       }),
     ],
   },
 };
-
-// TODO
-// export const MockedErrorSubmit = MockTemplate.bind({});
-// MockedError.parameters = {
-//   msw: {
-//     handlers: [
-//       rest.post('http://:serverpath/ga4gh/wes/v2/submit', (req, res, ctx) => res(
-//         ctx.delay(800),
-//         ctx.status(403),
-//       )),
-//     ],
-//   },
-// };

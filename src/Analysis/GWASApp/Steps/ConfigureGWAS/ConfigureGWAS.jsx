@@ -7,6 +7,7 @@ import { useSourceContext } from '../../Utils/Source';
 import Congratulations from '../../Components/Congratulations/Congratulations';
 import JobInputModal from '../../Components/JobInputModal/JobInputModal';
 import SelectConfiguration from '../../Components/SelectConfiguration/SelectConfiguration';
+import { Spin, Space } from 'antd';
 import '../../GWASApp.css';
 
 const ConfigureGWAS = ({
@@ -44,17 +45,18 @@ const ConfigureGWAS = ({
   }, [showModal]);
 
   const submitJob = useMutation(
-    () => jobSubmission(
-      sourceId,
-      numOfPCs,
-      covariates,
-      outcome,
-      selectedHare,
-      mafThreshold,
-      imputationScore,
-      selectedCohort,
-      jobName,
-    ),
+    () =>
+      jobSubmission(
+        sourceId,
+        numOfPCs,
+        covariates,
+        outcome,
+        selectedHare,
+        mafThreshold,
+        imputationScore,
+        selectedCohort,
+        jobName
+      ),
     {
       onSuccess: (data) => {
         if (data?.status === 200) {
@@ -65,13 +67,13 @@ const ConfigureGWAS = ({
         } else {
           data.text().then((error) => {
             setErrorText(
-              `GWAS job failed with error: ${JSON.stringify(error)}`,
+              `GWAS job failed with error: ${JSON.stringify(error)}`
             );
             setShowError(true);
           });
         }
       },
-    },
+    }
   );
 
   const handleSubmit = () => {
@@ -96,6 +98,15 @@ const ConfigureGWAS = ({
           messageType={'warning'}
         />
       )}
+      {submitJob.isLoading && (
+        <Space
+          direction='vertical'
+          size={200}
+          className='GWASUI-spinnerContainer set-height'
+        >
+          <Spin />
+        </Space>
+      )}
       <div className='configure-gwas_container'>
         <SelectConfiguration
           numOfPCs={numOfPCs}
@@ -106,7 +117,6 @@ const ConfigureGWAS = ({
           dispatch={dispatch}
           imputationScore={imputationScore}
         />
-
         <JobInputModal
           open={open}
           jobName={jobName}
