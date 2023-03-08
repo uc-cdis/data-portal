@@ -2,7 +2,6 @@ import { Button } from 'antd';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
-
 import './HomeTable.css';
 
 const HomeTable = ({ tableData }) => {
@@ -25,8 +24,8 @@ const HomeTable = ({ tableData }) => {
           <th>Actions</th>
         </tr>
 
-        {tableData
-          && tableData.map((item) => (
+        {tableData &&
+          tableData.map((item) => (
             <tr key={item.RunId}>
               <td>{item.RunId}</td>
               <td>{item.WorkflowName}</td>
