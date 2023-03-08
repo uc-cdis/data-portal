@@ -48,20 +48,4 @@ const MockTemplateSuccess = () => {
   );
 };
 
-const MockTemplateFail = () => {
-  return (
-    <SharedContext.Provider
-      value={{
-        tableData: badTableData,
-        setCurrentExecutionData,
-        setCurrentResultsData,
-        setCurrentView,
-      }}
-    >
-      <Home />
-    </SharedContext.Provider>
-  );
-};
-
 export const MockedSuccess = MockTemplateSuccess.bind({});
-export const MockedFail = MockTemplateFail.bind({});

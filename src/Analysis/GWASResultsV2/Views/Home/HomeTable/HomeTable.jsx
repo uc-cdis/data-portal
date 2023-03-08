@@ -3,10 +3,9 @@ import React, { useContext } from 'react';
 import SharedContext from '../../../Utils/SharedContext';
 import './HomeTable.css';
 
-const HomeTable = () => {
+const HomeTable = ({ tableData }) => {
   const {
     setCurrentView,
-    tableData,
     setCurrentExecutionData,
     setCurrentResultsData,
   } = useContext(SharedContext);
@@ -24,8 +23,8 @@ const HomeTable = () => {
           <th>Actions</th>
         </tr>
 
-        {tableData
-          && tableData.map((item) => (
+        {tableData &&
+          tableData.map((item) => (
             <tr key={item.RunId}>
               <td>{item.RunId}</td>
               <td>{item.WorkflowName}</td>

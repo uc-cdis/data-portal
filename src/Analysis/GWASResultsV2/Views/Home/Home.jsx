@@ -1,12 +1,22 @@
-import React, { useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Spin } from 'antd';
 import HomeTable from './HomeTable/HomeTable';
-import SharedContext from '../../Utils/SharedContext';
 
+import GetTableDataFromApi from './Utils/GetTableDataFromApi';
 const Home = () => {
-  const { tableData } = useContext(SharedContext);
+  const [tableData, setTableData] = useState(GetTableDataFromApi());
+  const pollingIntervalinMilliseconds = 5000;
+
+  // API Polling:
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTableData(GetTableDataFromApi());
+    }, pollingIntervalinMilliseconds);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div>{tableData && tableData.length > 0 ? <HomeTable /> : <Spin />}</div>
+    <div>{tableData ? <HomeTable tableData={tableData} /> : <Spin />}</div>
   );
 };
 export default Home;

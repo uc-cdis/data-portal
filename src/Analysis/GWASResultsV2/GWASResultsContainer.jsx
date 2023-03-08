@@ -3,34 +3,25 @@ import Home from './Views/Home/Home';
 import Results from './Views/Results/Results';
 import Execution from './Views/Execution/Execution';
 import SharedContext from './Utils/SharedContext';
-import GetTableDataFromApi from './Utils/GetTableDataFromApi';
+import VIEWS from './Utils/ViewsEnumeration';
+
 import './GWASResultsContainer.css';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
   const [currentExecutionData, setCurrentExecutionData] = useState({});
   const [currentResultsData, setCurrentResultsData] = useState({});
-  const [tableData, setTableData] = useState(GetTableDataFromApi());
-  const pollingIntervalinMilliseconds = 5000;
-
-  // API Polling:
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTableData(GetTableDataFromApi());
-    }, pollingIntervalinMilliseconds);
-    return () => clearInterval(interval);
-  }, []);
 
   const generateStep = () => {
     switch (currentView) {
-    case 'home':
-      return <Home />;
-    case 'results':
-      return <Results />;
-    case 'execution':
-      return <Execution />;
-    default:
-      return null;
+      case VIEWS.home:
+        return <Home />;
+      case VIEWS.results:
+        return <Results />;
+      case VIEWS.execution:
+        return <Execution />;
+      default:
+        return null;
     }
   };
 
@@ -39,7 +30,6 @@ const GWASResultsContainer = () => {
       <SharedContext.Provider
         value={{
           setCurrentView,
-          tableData,
           currentExecutionData,
           setCurrentExecutionData,
           currentResultsData,
