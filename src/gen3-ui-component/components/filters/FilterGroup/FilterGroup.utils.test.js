@@ -10,6 +10,8 @@ import {
   updateRangeValue,
   updateSelectedValue,
   getSelectedAnchors,
+  getExcludedStatus,
+  updateExclusion,
 } from './utils';
 
 /** @typedef {import('../types').FilterStatus} FilterStatus */
@@ -33,6 +35,150 @@ describe('Get expanded status array for all tabs', () => {
   });
 });
 
+describe('Get excluded status array for all tabs', () => {
+  test('Get correct result', () => {
+    const filterTabs = [
+      { title: 'a', fields: ['x', 'y'] },
+      { title: 'b', fields: ['z'] },
+    ];
+    const filterResult = /** @type StandardFilterState} */ ({
+      value: {
+        x: { isExclusion: true },
+      },
+    });
+
+    const expected = [[true, false], [false]];
+
+    expect(getExcludedStatus(filterTabs, filterResult)).toEqual(expected);
+  });
+});
+
+describe('#updateExclusion', () => {
+  const filterResultsTemplate = {
+    __combineMode: 'AND',
+    __type: 'STANDARD',
+    value: {
+      x: {
+        __combineMode: 'AND',
+        __type: 'OPTION',
+        selectedValues: ['a', 'b'],
+      },
+    },
+  };
+  const filterTabs = [
+    {
+      fields: ['x'],
+    },
+  ];
+  describe('when it is an anchor filter', () => {
+    const filterResults = {
+      ...filterResultsTemplate,
+      value: {
+        y: {
+          __type: FILTER_TYPE.ANCHORED,
+          value: {
+            x: {
+              __combineMode: 'AND',
+              __type: 'OPTION',
+              selectedValues: ['a', 'b'],
+            },
+          },
+        },
+      },
+    };
+    test('it sets isExclusion', () => {
+      const actual = updateExclusion({
+        filterResults,
+        filterTabs,
+        tabIndex: 0,
+        isExclusion: true,
+        anchorLabel: 'y',
+        sectionIndex: 0,
+      });
+      const expected = {
+        filterResults: {
+          __combineMode: 'AND',
+          __type: 'STANDARD',
+          value: {
+            y: {
+              __type: 'ANCHORED',
+              value: {
+                x: {
+                  __combineMode: 'AND',
+                  __type: 'OPTION',
+                  isExclusion: true,
+                  selectedValues: ['a', 'b'],
+                },
+              },
+            },
+          },
+        },
+      };
+      expect(actual).toEqual(expected);
+    });
+  });
+  describe('when it is not anchor filter', () => {
+    test('it sets isExclusion with selected values', () => {
+      const filterResults = {
+        ...filterResultsTemplate,
+      };
+      const actual = updateExclusion({
+        filterResults,
+        filterTabs,
+        tabIndex: 0,
+        isExclusion: true,
+        anchorLabel: '',
+        sectionIndex: 0,
+      });
+      const expected = {
+        filterResults: {
+          __combineMode: 'AND',
+          __type: 'STANDARD',
+          value: {
+            x: {
+              __combineMode: 'AND',
+              __type: 'OPTION',
+              isExclusion: true,
+              selectedValues: ['a', 'b'],
+            },
+          },
+        },
+      };
+      expect(actual).toEqual(expected);
+    });
+    test('it sets isExclusion without selected values', () => {
+      const filterResults = {
+        ...filterResultsTemplate,
+        value: {
+          x: { ...filterResultsTemplate.value.x, selectedValues: undefined },
+        },
+      };
+      const actual = updateExclusion({
+        filterResults,
+        filterTabs,
+        tabIndex: 0,
+        isExclusion: true,
+        anchorLabel: '',
+        sectionIndex: 0,
+      });
+      const expected = {
+        filterResults: {
+          __combineMode: 'AND',
+          __type: 'STANDARD',
+          value: {
+            x: {
+              __combineMode: 'AND',
+              __type: 'OPTION',
+              isExclusion: true,
+              selectedValues: [],
+            },
+          },
+        },
+      };
+      expect(actual).toEqual(expected);
+    });
+  });
+});
 describe('Get filter results by anchor label', () => {
   test('Missing anchor config', () => {
     const received = getFilterResultsByAnchor({
@@ -363,6 +509,7 @@ describe('Clear a single filter section', () => {
       sectionIndex,
     });
   }
+
   test('Option filter', () => {
     const cleared = helper({
       tabIndex: 0,
@@ -588,6 +735,7 @@ describe('Toggles combine mode in option filter', () => {
       combineModeValue,
     });
   }
+
   test('Missing combine mode', () => {
     const updated = helper({
       filterStatus: [[{ foo: true }]],
@@ -746,6 +894,7 @@ describe('Toggles combine mode in option filter', () => {
 
 describe('Update a range filter', () => {
   const [minValue, maxValue] = [0, 5];
+
   /**
    * @param {Object} args
    * @param {FilterStatus} [args.filterStatus]
@@ -779,6 +928,7 @@ describe('Update a range filter', () => {
       rangeStep: 1,
     });
   }
+
   test('Simple update', () => {
     const updated = helper({
       lowerBound: 1,
@@ -892,8 +1042,15 @@ describe('Update an option filter', () => {
    * @param {StandardFilterState} args.filterResults
    * @param {string} [args.anchorLabel]
    * @param {string} args.selectedValue
+   * @param {boolean} args.isExclusion
    */
-  function helper({ filterStatus, filterResults, anchorLabel, selectedValue }) {
+  function helper({
+    filterStatus,
+    filterResults,
+    anchorLabel,
+    selectedValue,
+    isExclusion,
+  }) {
     return updateSelectedValue({
       filterStatus,
       filterResults,
@@ -902,18 +1059,25 @@ describe('Update an option filter', () => {
       anchorLabel,
       sectionIndex: 0,
       selectedValue,
+      isExclusion,
     });
   }
+
   test('Select value', () => {
     const updated = helper({
       filterStatus: [[{}]],
       filterResults: { value: {} },
       selectedValue: 'foo',
+      isExclusion: true,
     });
     const expected = {
       filterResults: {
         value: {
-          x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo'] },
+          x: {
+            __type: FILTER_TYPE.OPTION,
+            selectedValues: ['foo'],
+            isExclusion: true,
+          },
         },
       },
       filterStatus: [[{ foo: true }]],
@@ -929,6 +1093,7 @@ describe('Update an option filter', () => {
         },
       },
       selectedValue: 'foo',
+      isExclusion: false,
     });
     const expected = {
       filterResults: { value: {} },
@@ -942,6 +1107,7 @@ describe('Update an option filter', () => {
       filterResults: { value: {} },
       anchorLabel: 'a:a0',
       selectedValue: 'foo',
+      isExclusion: true,
     });
     const expected = {
       filterResults: {
@@ -949,7 +1115,11 @@ describe('Update an option filter', () => {
           'a:a0': {
             __type: FILTER_TYPE.ANCHORED,
             value: {
-              x: { __type: FILTER_TYPE.OPTION, selectedValues: ['foo'] },
+              x: {
+                __type: FILTER_TYPE.OPTION,
+                selectedValues: ['foo'],
+                isExclusion: true,
+              },
             },
           },
         },
@@ -973,6 +1143,7 @@ describe('Update an option filter', () => {
       },
       anchorLabel: 'a:a0',
       selectedValue: 'foo',
+      isExclusion: true,
     });
     const expected = {
       filterResults: { value: {} },

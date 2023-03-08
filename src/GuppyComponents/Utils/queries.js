@@ -574,8 +574,22 @@ function parseSimpleFilter(fieldName, filterValues) {
 
   // an option-type filter
   if (filterValues.__type === FILTER_TYPE.OPTION) {
-    const { selectedValues, __combineMode } = filterValues;
-    if (selectedValues?.length > 0)
+    const { selectedValues, __combineMode, isExclusion } = filterValues;
+    const hasSelectedValues = selectedValues?.length > 0;
+
+    if (!hasSelectedValues && isExclusion) {
+      // do nothing when only selecting NOT but no other values
+      return undefined;
+    }
+
+    if (hasSelectedValues) {
+      if (isExclusion) {
+        return {
+          AND: selectedValues.map((selectedValue) => ({
+            '!=': { [fieldName]: selectedValue },
+          })),
+        };
+      }
       return __combineMode === 'AND'
         ? {
             AND: selectedValues.map((selectedValue) => ({
@@ -583,10 +597,11 @@ function parseSimpleFilter(fieldName, filterValues) {
             })),
           }
         : { IN: { [fieldName]: selectedValues } };
-
-    if (__combineMode !== undefined)
+    }
+    if (__combineMode !== undefined) {
       // with a combine setting only - ignore it.
       return undefined;
+    }
   }
 
   throw invalidFilterError;

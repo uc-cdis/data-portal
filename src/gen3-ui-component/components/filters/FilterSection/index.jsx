@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from 'rc-tooltip';
+import Switch from 'react-switch';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import SingleSelectFilter from '../SingleSelectFilter';
@@ -12,6 +13,7 @@ import './FilterSection.css';
 /** @typedef {import('../types').OptionFilterStatus} OptionFilterStatus */
 /** @typedef {import('../types').RangeFilterOption} RangeFilterOption */
 /** @typedef {import('../types').RangeFilterStatus} RangeFilterStatus */
+
 /** @typedef {import('../types').SingleSelectFilterOption} SingleSelectFilterOption */
 
 /** @param {OptionFilterStatus | RangeFilterStatus} filterStatus */
@@ -28,6 +30,8 @@ function getNumValuesSelected(filterStatus) {
 /**
  * @typedef {Object} FilterSectionProps
  * @property {string} [disabledTooltipMessage]
+ * @property {string} [sectionTitle]
+ * @property {boolean} [excluded]
  * @property {boolean} [expanded]
  * @property {OptionFilterStatus | RangeFilterStatus} [filterStatus]
  * @property {boolean} [hideZero]
@@ -38,7 +42,8 @@ function getNumValuesSelected(filterStatus) {
  * @property {(lowerBound: number, upperBound: number, min: number, max: number, rangeStep: number) => void} onAfterDrag
  * @property {() => void} [onClear]
  * @property {(searchString: string, offset: number) => PaginateResponse} [onSearchFilterLoadOptions]
- * @property {(label: string) => void} onSelect
+ * @property {(label: string, isExclusion: boolean) => void} [onSelect]
+ * @property {(isExclusion: boolean) => void} [onToggleExclusion]
  * @property {(isExpanded: boolean) => void} [onToggle]
  * @property {(fieldName: string, value: string) => void} [onToggleCombineMode]
  * @property {(SingleSelectFilterOption[] | RangeFilterOption[])} options
@@ -64,6 +69,8 @@ const defaultOptions = [];
 /** @param {FilterSectionProps} props */
 function FilterSection({
   disabledTooltipMessage = '',
+  sectionTitle = '',
+  excluded = false,
   expanded = true,
   filterStatus: filterStatusProp,
   hideZero = true,
@@ -77,6 +84,7 @@ function FilterSection({
   onSelect,
   onToggle = () => {},
   onToggleCombineMode = () => {},
+  onToggleExclusion = () => {},
   options = defaultOptions,
   title = '',
   tooltip,
@@ -102,6 +110,7 @@ function FilterSection({
     combineMode: 'OR',
     filterStatus: {},
     isExpanded: expanded,
+    isExclusion: excluded,
     isSearchInputEmpty: true,
     isShowingCombineMode: false,
     isShowingMoreOptions: false,
@@ -148,6 +157,7 @@ function FilterSection({
       ...prevState,
       filterStatus: {},
       resetClickCounter: prevState.resetClickCounter + 1,
+      isExclusion: false,
     }));
     onClear();
   }
@@ -175,7 +185,7 @@ function FilterSection({
         filterStatus: newFilterStatus,
       };
     });
-    onSelect(label);
+    onSelect(label, state.isExclusion);
   }
 
   /**
@@ -197,6 +207,16 @@ function FilterSection({
     onToggle(newIsExpanded);
     setState((prevState) => ({ ...prevState, isExpanded: newIsExpanded }));
   }
+
+  /** @param {boolean} isExclusion */
+  function handleToggleExclusion(isExclusion) {
+    onToggleExclusion(isExclusion);
+    setState((prevState) => ({
+      ...prevState,
+      isExclusion,
+    }));
+  }
+
   useEffect(() => {
     toggleIsExpanded(expanded);
   }, [expanded]);
@@ -397,37 +417,48 @@ function FilterSection({
 
   /** @param {OptionFilterStatus} filterStatus */
   function renderTextFilter(filterStatus) {
-    return /** @type {SingleSelectFilterOption[]} */ (options).map((option) => {
-      if (
-        // For searchFilters, options are treated differently -- the only
-        // options passed are the already selected options, as opposed
-        // to all available options in textfilters. So don't filter out
-        // any options based on `optionsVisibleStatus`.
-        !isSearchFilter &&
-        !state.optionsVisibleStatus[option.text]
-      ) {
-        return null;
-      }
-      return (
-        // We use the 'key' prop to force the SingleSelectFilter
-        // to rerender on filterStatus change.
-        // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
-        <SingleSelectFilter
-          key={`${option.text}-${
-            filterStatus[option.text] ? 'enabled' : 'disabled'
-          }`}
-          accessible={option.accessible}
-          count={isSearchFilter ? null : option.count}
-          disabled={option.disabled}
-          disabledTooltipMessage={disabledTooltipMessage}
-          hideZero={hideZero}
-          label={option.text}
-          lockedTooltipMessage={lockedTooltipMessage}
-          onSelect={handleSelectSingleSelectFilter}
-          selected={filterStatus[option.text]}
-        />
-      );
-    });
+    // For searchFilters, options are treated differently -- the only
+    // options passed are the already selected options, as opposed
+    // to all available options in textfilters. So don't filter out
+    // any options based on `optionsVisibleStatus`.
+    // We use the 'key' prop to force the SingleSelectFilter
+    // to rerender on filterStatus change.
+    // See https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#recommendation-fully-uncontrolled-component-with-a-key
+    return (
+      <>
+        <div className='g3-single-select-filter'>
+          <label htmlFor={sectionTitle} style={{ marginRight: '0.5rem' }}>
+            Exclude Selections
+          </label>
+          <Switch
+            id={sectionTitle}
+            height={22}
+            width={44}
+            onChange={handleToggleExclusion}
+            checked={state.isExclusion}
+          />
+        </div>
+        {options.map(
+          (option) =>
+            (isSearchFilter || state.optionsVisibleStatus[option.text]) && (
+              <SingleSelectFilter
+                key={`${option.text}-${
+                  filterStatus[option.text] ? 'enabled' : 'disabled'
+                }`}
+                accessible={option.accessible}
+                count={isSearchFilter ? null : option.count}
+                disabled={option.disabled}
+                disabledTooltipMessage={disabledTooltipMessage}
+                hideZero={hideZero}
+                label={option.text}
+                lockedTooltipMessage={lockedTooltipMessage}
+                onSelect={handleSelectSingleSelectFilter}
+                selected={filterStatus[option.text]}
+              />
+            )
+        )}
+      </>
+    );
   }
 
   // Takes in parent component's filterStatus or self state's filterStatus
@@ -501,7 +532,7 @@ function FilterSection({
                   <span className='g3-filter-section__selected-count-chip-text-emphasis'>
                     {numSelected}
                   </span>
-                  &nbsp;selected
+                  &nbsp;{`${state.isExclusion ? 'excluded' : 'selected'}`}
                 </>
               }
               onClearButtonClick={handleClearButtonClick}
@@ -587,6 +618,8 @@ function FilterSection({
 
 FilterSection.propTypes = {
   expanded: PropTypes.bool,
+  excluded: PropTypes.bool,
+  sectionTitle: PropTypes.string,
   filterStatus: PropTypes.oneOfType([
     PropTypes.object,
     PropTypes.arrayOf(PropTypes.number),
@@ -601,6 +634,7 @@ FilterSection.propTypes = {
   onSelect: PropTypes.func.isRequired,
   onToggle: PropTypes.func,
   onToggleCombineMode: PropTypes.func,
+  onToggleExclusion: PropTypes.func,
   options: PropTypes.arrayOf(
     PropTypes.shape({
       filterType: PropTypes.oneOf(['singleSelect', 'range']).isRequired,
