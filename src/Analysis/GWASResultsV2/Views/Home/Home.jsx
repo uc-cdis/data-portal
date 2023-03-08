@@ -3,6 +3,7 @@ import { Spin } from 'antd';
 import HomeTable from './HomeTable/HomeTable';
 
 import GetTableDataFromApi from './Utils/GetTableDataFromApi';
+
 const Home = () => {
   const [tableData, setTableData] = useState(GetTableDataFromApi());
   const pollingIntervalinMilliseconds = 5000;

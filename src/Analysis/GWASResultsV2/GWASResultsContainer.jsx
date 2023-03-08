@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Home from './Views/Home/Home';
 import Results from './Views/Results/Results';
 import Execution from './Views/Execution/Execution';
@@ -14,14 +14,14 @@ const GWASResultsContainer = () => {
 
   const generateStep = () => {
     switch (currentView) {
-      case VIEWS.home:
-        return <Home />;
-      case VIEWS.results:
-        return <Results />;
-      case VIEWS.execution:
-        return <Execution />;
-      default:
-        return null;
+    case VIEWS.home:
+      return <Home />;
+    case VIEWS.results:
+      return <Results />;
+    case VIEWS.execution:
+      return <Execution />;
+    default:
+      return null;
     }
   };
 
