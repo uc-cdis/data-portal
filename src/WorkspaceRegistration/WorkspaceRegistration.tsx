@@ -173,7 +173,7 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
       <div className='workspace-reg-container'>
         <div className='workspace-reg-form-container'>
           <Form className='workspace-reg-form' {...layout} form={form} name='workspace-reg-request-form' onFinish={onFinish} validateMessages={validateMessages}>
-            <Divider plain>Workspace Registration Access Request</Divider>
+            <Divider plain>Workspace Access Request</Divider>
             <Typography style={{ textAlign: 'center' }}>
               {infoMessage}
             </Typography>
@@ -297,7 +297,7 @@ const WorkspaceRegistrationRequestForm: React.FunctionComponent<WorkspaceRegistr
     <div className='workspace-reg-container'>
       <div className='workspace-reg-form-container'>
         <Form className='workspace-reg-form' {...layout} form={form} name='workspace-reg-request-form' onFinish={onFinish} validateMessages={validateMessages}>
-          <Divider plain>Workspace Registration Access Request</Divider>
+          <Divider plain>Workspace Access Request</Divider>
           <Typography style={{ textAlign: 'center' }}>
             Error: Missing Kayako configuration. <br /> Please contact Administrator to request access to workspace.
           </Typography>
