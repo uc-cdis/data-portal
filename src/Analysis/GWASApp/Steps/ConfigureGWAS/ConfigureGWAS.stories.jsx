@@ -14,7 +14,7 @@ export default {
 };
 
 const mockedQueryClient = new QueryClient();
-const submissionLoadingDurationInMilliseconds = 5000;
+const submissionLoadingDurationInMilliseconds = 95000;
 
 const MockTemplate = () => {
   const initialState = {

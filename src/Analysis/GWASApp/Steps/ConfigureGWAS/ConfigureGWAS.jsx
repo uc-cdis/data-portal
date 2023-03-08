@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import PropTypes from 'prop-types';
+import { Spin } from 'antd';
 import DismissibleMessage from '../../Components/DismissibleMessage/DismissibleMessage';
 import { jobSubmission } from '../../Utils/gwasWorkflowApi';
 import { useSourceContext } from '../../Utils/Source';
 import Congratulations from '../../Components/Congratulations/Congratulations';
 import JobInputModal from '../../Components/JobInputModal/JobInputModal';
 import SelectConfiguration from '../../Components/SelectConfiguration/SelectConfiguration';
-import { Spin, Space } from 'antd';
 import '../../GWASApp.css';
 
 const ConfigureGWAS = ({
@@ -45,18 +45,17 @@ const ConfigureGWAS = ({
   }, [showModal]);
 
   const submitJob = useMutation(
-    () =>
-      jobSubmission(
-        sourceId,
-        numOfPCs,
-        covariates,
-        outcome,
-        selectedHare,
-        mafThreshold,
-        imputationScore,
-        selectedCohort,
-        jobName
-      ),
+    () => jobSubmission(
+      sourceId,
+      numOfPCs,
+      covariates,
+      outcome,
+      selectedHare,
+      mafThreshold,
+      imputationScore,
+      selectedCohort,
+      jobName,
+    ),
     {
       onSuccess: (data) => {
         if (data?.status === 200) {
@@ -67,13 +66,13 @@ const ConfigureGWAS = ({
         } else {
           data.text().then((error) => {
             setErrorText(
-              `GWAS job failed with error: ${JSON.stringify(error)}`
+              `GWAS job failed with error: ${JSON.stringify(error)}`,
             );
             setShowError(true);
           });
         }
       },
-    }
+    },
   );
 
   const handleSubmit = () => {
@@ -99,13 +98,9 @@ const ConfigureGWAS = ({
         />
       )}
       {submitJob.isLoading && (
-        <Space
-          direction='vertical'
-          size={200}
-          className='GWASUI-spinnerContainer set-height'
-        >
+        <div className='GWASUI-spinnerContainer set-height'>
           <Spin />
-        </Space>
+        </div>
       )}
       <div className='configure-gwas_container'>
         <SelectConfiguration
