@@ -24,8 +24,8 @@ const HomeTable = ({ tableData }) => {
           <th>Actions</th>
         </tr>
 
-        {tableData &&
-          tableData.map((item) => (
+        {tableData
+          && tableData.map((item) => (
             <tr key={item.RunId}>
               <td>{item.RunId}</td>
               <td>{item.WorkflowName}</td>
