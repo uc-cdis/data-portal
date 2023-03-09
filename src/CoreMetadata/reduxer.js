@@ -1,9 +1,10 @@
 import { connect } from 'react-redux';
+const semver = require('semver');
 import CoreMetadataHeader from './CoreMetadataHeader';
 import FileTypePicture from '../components/FileTypePicture';
 import CoreMetadataTable from './CoreMetadataTable';
 import CoreMetadataPage from './page';
-import { coreMetadataPath, userAPIPath } from '../localconf';
+import { peregrineVersionPath, coreMetadataPath, coreMetadataLegacyPath, userAPIPath } from '../localconf';
 import { fetchWithCreds, updatePopup } from '../actions';
 
 export const generateSignedURL = (objectId) => (dispatch) => fetchWithCreds({
@@ -33,26 +34,53 @@ const clearSignedURL = () => ({
   type: 'CLEAR_SIGNED_URL',
 });
 
-export const fetchCoreMetadata = (objectId) => (dispatch) => fetchWithCreds({
-  path: coreMetadataPath + objectId,
-  customHeaders: { Accept: 'application/json' },
-  dispatch,
-})
-  .then(({ status, data }) => {
-    switch (status) {
-    case 200:
-      return {
-        type: 'RECEIVE_CORE_METADATA',
-        metadata: data,
-      };
-    default:
-      return {
-        type: 'CORE_METADATA_ERROR',
-        error: data,
-      };
-    }
-  })
-  .then((msg) => dispatch(msg));
+export const fetchCoreMetadata = (objectId) => (dispatch) => {
+  // if peregrine is on version 3.2.0/2023.04 or newer, or on a branch, use
+  // the peregrine endpoint. if not, use the deprecated pidgin endpoint
+  const minSemVer = '3.2.0';
+  // We need two dots here to achieve proper comparison later with other monthly versions
+  const minMonthlyRelease = semver.coerce('2023.04.0', { loose: true });
+  const monthlyReleaseCutoff = semver.coerce('2020', { loose: true });
+
+  return fetch(peregrineVersionPath)
+    .then((response) => response.text())
+    .then((responseBody) => {
+      var peregrineVersion = JSON.parse(responseBody).version;
+      var url = coreMetadataPath;
+      if (peregrineVersion) {
+        try {
+          peregrineVersion = semver.coerce(peregrineVersion, { loose: true });
+          if (
+            semver.lt(peregrineVersion, minSemVer) ||
+            (semver.gte(peregrineVersion, monthlyReleaseCutoff) && semver.lt(peregrineVersion, minMonthlyRelease))
+          ) {
+            url = coreMetadataLegacyPath;
+          }
+        } catch (error) {} // can't parse or compare the peregrine version: don't use legacy url
+      }
+
+      return fetchWithCreds({
+        path: url + objectId,
+        customHeaders: { Accept: 'application/json' },
+        dispatch,
+      })
+        .then(({ status, data }) => {
+          switch (status) {
+            case 200:
+              return {
+                type: 'RECEIVE_CORE_METADATA',
+                metadata: data,
+              };
+            default:
+              return {
+                type: 'CORE_METADATA_ERROR',
+                error: data,
+              };
+          }
+        })
+        .then((msg) => dispatch(msg));
+    });
+};
 
 export const ReduxCoreMetadataHeader = (() => {
   const mapStateToProps = (state) => ({
