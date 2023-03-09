@@ -355,7 +355,7 @@ async function init() {
                       ? (
                         <Route
                           exact
-                          path='/workspace/register'
+                          path='/workspace/request-access'
                           component={
                             (props) => (
                               <ProtectedContent
