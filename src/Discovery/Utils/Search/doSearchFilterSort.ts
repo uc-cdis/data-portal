@@ -23,7 +23,6 @@ const doSearchFilterSort = (parametersForDoSearchFilterSort: ParametersForDoSear
     filterState,
     filterMultiSelectionLogic,
     accessibleFieldName,
-    AccessSortDirection,
   } = parametersForDoSearchFilterSort;
   let filteredResources = props.studies;
   if (jsSearch && props.searchTerm) {
