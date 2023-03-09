@@ -1,10 +1,10 @@
 import React from 'react';
 import { Collapse, List, Spin } from 'antd';
-import './GWASUIApp.css';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
 import { gwasWorkflowPath } from '../../localconf';
 import GWASJob from './GWASJob';
+import './GWASResults.css';
 
 const GWASWorkflowList = ({ refetchInterval }) => {
   const { Panel } = Collapse;
@@ -23,7 +23,13 @@ const GWASWorkflowList = ({ refetchInterval }) => {
       refetchInterval,
     });
     if (status === 'loading') {
-      return <React.Fragment><div className='GWASUI-spinnerContainer'><Spin /></div></React.Fragment>;
+      return (
+        <React.Fragment>
+          <div className='GWASUI-spinnerContainer'>
+            <Spin />
+          </div>
+        </React.Fragment>
+      );
     }
     if (status === 'error') {
       return <React.Fragment>Error</React.Fragment>;
@@ -38,9 +44,7 @@ const GWASWorkflowList = ({ refetchInterval }) => {
               itemLayout='horizontal'
               pagination={{ pageSize: 5 }}
               dataSource={data}
-              renderItem={(item) => (
-                <GWASJob workflow={item} />
-              )}
+              renderItem={(item) => <GWASJob workflow={item} />}
             />
           </Panel>
         </Collapse>
@@ -49,7 +53,7 @@ const GWASWorkflowList = ({ refetchInterval }) => {
   };
 
   return (
-    <div className='GWASApp-jobStatus'>
+    <div className='GWASResults-jobStatus'>
       <GWASWorkflows />
     </div>
   );
