@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { Text } from 'recharts';
 
 /**
  * @typedef {Object} TickProps
@@ -17,9 +18,18 @@ function Tick({ payload = {}, x = 0, y = 0 }) {
           {countNumber}
         </tspan>
       </text>
-      <text textAnchor='end' x={x} y={y} dy={20}>
-        <tspan className='h4-typo'>{countName}</tspan>
-      </text>
+      <Text
+        textAnchor='end'
+        x={x}
+        y={y}
+        dy={10}
+        width='200'
+        verticalAnchor='start'
+        fill={''}
+        className='h4-typo'
+      >
+        {countName}
+      </Text>
     </g>
   );
 }
