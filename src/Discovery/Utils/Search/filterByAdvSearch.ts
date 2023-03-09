@@ -1,8 +1,5 @@
 import { DiscoveryConfig } from '../../DiscoveryConfig';
-
-interface FilterState {
-    [key: string]: { [value: string]: boolean }
-  }
+import { FilterState } from '../../Discovery';
 
 const filterByAdvSearch = (studies: any[], advSearchFilterState: FilterState, config: DiscoveryConfig, filterMultiSelectionLogic: string): any[] => {
   // if no filters active, show all studies
