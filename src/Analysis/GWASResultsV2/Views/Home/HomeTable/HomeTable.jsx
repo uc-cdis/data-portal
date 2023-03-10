@@ -24,22 +24,21 @@ const HomeTable = ({ data }) => {
           <th>Actions</th>
         </tr>
 
-        {data
-          && data.map((item) => (
+        {data &&
+          data.map((item) => (
             <tr key={item?.uid}>
               <td>{item?.uid}</td>
               <td>{item?.name}</td>
               <td>{item?.startedAt}</td>
               <td>{item?.phase}</td>
               <td>
-                {item.DateTimeSubmitted
-                  || `item.DateTimeSubmiited missing at ${
-                    new Date().toLocaleString()}`}
+                {item.DateTimeSubmitted ||
+                  `item.DateTimeSubmiited missing at ${new Date().toLocaleString()}`}
               </td>
               <td>
                 <Button
                   onClick={() => {
-                    setCurrentExecutionData(item.ExecutionData);
+                    setCurrentExecutionData('Execution data for ' + item.uid);
                     setCurrentView('execution');
                   }}
                 >
@@ -47,7 +46,7 @@ const HomeTable = ({ data }) => {
                 </Button>
                 <Button
                   onClick={() => {
-                    setCurrentResultsData(item.ResultsData);
+                    setCurrentResultsData('Results data for ' + item.uid);
                     setCurrentView('results');
                   }}
                 >
