@@ -7,7 +7,7 @@ import { coreMetadataPath, userAPIPath } from '../localconf';
 import { fetchWithCreds, updatePopup } from '../actions';
 
 export const generateSignedURL = (objectId) => (dispatch) => fetchWithCreds({
-  path: `${userAPIPath}/data/download/${objectId}?expires_in=3600`,
+  path: `${userAPIPath}data/download/${objectId}?expires_in=3600`,
   dispatch,
 })
   .then(
