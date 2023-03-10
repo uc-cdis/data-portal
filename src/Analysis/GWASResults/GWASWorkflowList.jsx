@@ -34,7 +34,7 @@ const GWASWorkflowList = ({ refetchInterval }) => {
     if (status === 'error') {
       return <React.Fragment>Error</React.Fragment>;
     }
-
+    console.log('data', data);
     return (
       <React.Fragment>
         <Collapse onClick={(event) => event.stopPropagation()}>
