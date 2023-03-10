@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Spin, List } from 'antd';
+import React, { useState } from 'react';
+import { Spin } from 'antd';
 import { useQuery } from 'react-query';
 import HomeTable from './HomeTable/HomeTable';
 import { gwasWorkflowPath } from '../../../../localconf';
 import GetTableDataFromApi from './Utils/GetTableDataFromApi';
 
 const Home = () => {
-  const [tableData, setTableData] = useState(GetTableDataFromApi());
-  const pollingIntervalinMilliseconds = 5000;
+  const refetchInterval = 5000;
 
   // PIETER CODE
   async function fetchGwasWorkflows() {
@@ -16,7 +15,6 @@ const Home = () => {
     return getWorkflows.json();
   }
   const GWASWorkflows = () => {
-    const refetchInterval = 5000;
     const { data, status } = useQuery('workflows', fetchGwasWorkflows, {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
