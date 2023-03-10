@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
 import './HomeTable.css';
 
-const HomeTable = ({ tableData }) => {
+const HomeTable = ({ data }) => {
   const {
     setCurrentView,
     setCurrentExecutionData,
@@ -24,14 +24,18 @@ const HomeTable = ({ tableData }) => {
           <th>Actions</th>
         </tr>
 
-        {tableData
-          && tableData.map((item) => (
-            <tr key={item.RunId}>
-              <td>{item.RunId}</td>
-              <td>{item.WorkflowName}</td>
-              <td>{item.DateTimeStarted}</td>
-              <td>{item.JobStatus}</td>
-              <td>{item.DateTimeSubmitted}</td>
+        {data &&
+          data.map((item) => (
+            <tr key={item?.uid}>
+              <td>{item?.uid}</td>
+              <td>{item?.name}</td>
+              <td>{item?.startedAt}</td>
+              <td>{item?.phase}</td>
+              <td>
+                {item.DateTimeSubmitted ||
+                  'item.DateTimeSubmiited missing at ' +
+                    new Date().toLocaleString()}
+              </td>
               <td>
                 <Button
                   onClick={() => {
@@ -58,7 +62,7 @@ const HomeTable = ({ tableData }) => {
   );
 };
 HomeTable.propTypes = {
-  tableData: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired,
 };
 
 export default HomeTable;

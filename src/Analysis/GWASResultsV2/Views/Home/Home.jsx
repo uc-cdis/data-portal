@@ -26,7 +26,7 @@ const Home = () => {
     if (status === 'loading') {
       return (
         <React.Fragment>
-          <div className='GWASUI-spinnerContainer'>
+          <div className='spinner-container'>
             <Spin />
           </div>
         </React.Fragment>
@@ -39,10 +39,9 @@ const Home = () => {
         </React.Fragment>
       );
     }
-    console.log('data', data);
     return (
       <React.Fragment>
-        <h1>It works!</h1>
+        <HomeTable data={data} />
       </React.Fragment>
     );
   };
@@ -50,7 +49,6 @@ const Home = () => {
   return (
     <div>
       <GWASWorkflows />
-      {tableData ? <HomeTable tableData={tableData} /> : <Spin />}
     </div>
   );
 };
