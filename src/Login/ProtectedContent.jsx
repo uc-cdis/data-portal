@@ -266,7 +266,12 @@ class ProtectedContent extends React.Component {
         </div>
       );
     }
-    return (<div className={`protected-content ${pageFullWidthClassModifier}`}>       <ReduxSystemUseWarningPopup /> <Spinner /></div>);
+    return (
+      <div className={`protected-content ${pageFullWidthClassModifier}`}>
+        <ReduxSystemUseWarningPopup />
+        <Spinner />
+      </div>
+    );
   }
 }
 
