@@ -61,7 +61,6 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
   const location = useLocation();
 
   const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
-  // const [requestID, setRequestID] = useState<string|undefined|null>(null);
   const [studyNumber, setStudyNumber] = useState<string|undefined|null>(null);
   const [studyName, setStudyName] = useState<string|undefined|null>(null);
   const [studyUID, setStudyUID] = useState<string|Number|undefined|null>(null);
@@ -84,7 +83,8 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
     if (!useArboristUI) {
       return true;
     }
-    return (userHasMethodForServiceOnResource('create', 'kayako', '/kayako', props.userAuthMapping));
+    return (userHasMethodForServiceOnResource('create', 'kayako', '/kayako',
+     props.userAuthMapping));
   };
 
   const handleRegisterFormSubmission = async (formValues) => {
@@ -92,9 +92,14 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
     try {
       const userHaveRequestPending = await doesUserHaveRequestPending(studyUID);
       if (userHaveRequestPending) {
-      // there is already a request for this user on this study, display a message and disable the button
+      // there is already a request for this user on this study, display a message
+      // and disable the button
         setFormSubmissionButtonDisabled(true);
-        setFormSubmissionStatus({ status: 'info', text: 'There is already a pending request for this study/user combination, please wait while we are processing your request.' });
+        setFormSubmissionStatus({
+          status: 'info',
+          text: `There is already a pending request for this study/user combination,
+           please wait while we are processing your request.`
+         });
         return;
       }
     } catch (err) {
@@ -108,7 +113,8 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
       resource_paths: [studyRegistrationAuthZ, '/mds_gateway', '/cedar'],
       role_ids: ['study_registrant', 'mds_user', 'cedar_user'],
     };
-    // deepcode ignore Ssrf: studyUID is pulled in from setState into request body, not as URL
+    // deepcode ignore Ssrf: studyUID is pulled in from setState into request body,
+    // not as URL
     fetchWithCreds({
       path: `${requestorPath}request`,
       method: 'POST',
@@ -191,20 +197,32 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
     );
   }
 
+  console.log((props))
   return (
     <div className='study-reg-container'>
       <div className='study-reg-form-container'>
-        <Form className='study-reg-form' {...layout} form={form} name='study-reg-request-form' onFinish={onFinish} validateMessages={validateMessages}>
+        <Form className='study-reg-form' {...layout} form={form}
+          name='study-reg-request-form' onFinish={onFinish}
+          validateMessages={validateMessages}>
+
+          <h1>formText {props.formText}</h1>
+          <h1> newProp {props.newProp}</h1>
+
           <Divider plain>Study Registration Access Request</Divider>
           <Typography style={{ textAlign: 'center' }}>
-            Please fill out this form to request and be approved for access to register your study with the HEAL Platform.
+            Please fill out this form to request and be approved for access to
+            register your study with the HEAL Platform.
           </Typography>
           <Divider plain />
-          <div className='study-reg-exp-text'><Text type='danger'>*</Text><Text type='secondary'> Indicates required fields</Text></div>
+          <div className='study-reg-exp-text'>
+            <Text type='danger'>*</Text>
+            <Text type='secondary'> Indicates required fields</Text>
+          </div>
           <Form.Item
             label='Study Name - Grant Number'
             name='Study Grant_doNotInclude'
-            initialValue={(!studyName && !studyNumber) ? '' : `${studyName || 'N/A'} - ${studyNumber || 'N/A'}`}
+            initialValue={(!studyName && !studyNumber) ?
+              '' : `${studyName || 'N/A'} - ${studyNumber || 'N/A'}`}
             rules={[
               {
                 required: true,
@@ -222,7 +240,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
               },
             ]}
           >
-            <Input />
+          <Input />
           </Form.Item>
           <Form.Item
             name='Last Name'
@@ -233,7 +251,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
               },
             ]}
           >
-            <Input />
+          <Input />
           </Form.Item>
           <Form.Item
             name='E-mail Address'
@@ -296,17 +314,21 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
           <Form.Item {...tailLayout}>
             <Space>
               {(!userHasAccess()) ? (
-                <Tooltip title={'You don\'t have permission to request for access to study registration'}>
+                <Tooltip title={`You don't have permission to
+                  request for access to study registration`}>
                   <Button type='primary' htmlType='submit' disabled>
                     Submit
                   </Button>
                 </Tooltip>
               ) : (
-                <Button type='primary' htmlType='submit' disabled={reqAccessRequestPending || formSubmissionButtonDisabled} loading={reqAccessRequestPending}>
+                <Button type='primary' htmlType='submit'
+                  disabled={reqAccessRequestPending || formSubmissionButtonDisabled}
+                  loading={reqAccessRequestPending}>
                   Submit
                 </Button>
               )}
-              <Button htmlType='button' onClick={onReset} disabled={reqAccessRequestPending}>
+              <Button htmlType='button' onClick={onReset}
+                disabled={reqAccessRequestPending}>
                 Reset
               </Button>
             </Space>

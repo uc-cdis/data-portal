@@ -18,7 +18,6 @@ import {
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useLocation } from 'react-router-dom';
-
 import './StudyRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import { useArboristUI, studyRegistrationConfig } from '../localconf';
@@ -37,7 +36,8 @@ export interface User {
 }
 export interface StudyRegistrationProps {
   user: User,
-  userAuthMapping: any
+  userAuthMapping: any,
+  formText: string,
 }
 interface LocationState {
   studyUID?: string | number;
@@ -237,6 +237,7 @@ const StudyRegistration: React.FunctionComponent<StudyRegistrationProps> = (prop
     return (
       <div className='study-reg-container'>
         <div className='study-reg-form-container'>
+          <h1>formText: {props.formText}</h1>
           {(formSubmissionStatus.status === 'success') ? (
             <Result
               status={formSubmissionStatus.status}
