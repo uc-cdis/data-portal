@@ -31,15 +31,16 @@ describe('HomeTable component', () => {
     render(
       <SharedContext.Provider value={mockContext}>
         <HomeTable data={data} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
     // Check that each of the values from data appear once in the dom
     data.forEach((item) => {
-      for (const [key, value] of Object.entries(item)) {
+      Object.values(item).forEach((value) => {
+        // for (const [key, value] of Object.entries(item)) {
         const textTestNode = screen.getByText(value);
         expect(textTestNode).toBeInTheDocument();
-      }
+      });
     });
 
     // Check that the execution and results buttons render for each row
