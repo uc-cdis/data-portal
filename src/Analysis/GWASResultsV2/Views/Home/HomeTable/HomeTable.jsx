@@ -5,11 +5,7 @@ import SharedContext from '../../../Utils/SharedContext';
 import './HomeTable.css';
 
 const HomeTable = ({ data }) => {
-  const {
-    setCurrentView,
-    setCurrentExecutionData,
-    setCurrentResultsData,
-  } = useContext(SharedContext);
+  const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
 
   return (
     <table className='home-table'>
@@ -23,7 +19,6 @@ const HomeTable = ({ data }) => {
           <th>View Details</th>
           <th>Actions</th>
         </tr>
-
         {data &&
           data.map((item) => (
             <tr key={item?.uid}>
@@ -38,7 +33,10 @@ const HomeTable = ({ data }) => {
               <td>
                 <Button
                   onClick={() => {
-                    setCurrentExecutionData('Execution data for ' + item.uid);
+                    setSelectedRowData({
+                      uid: item?.uid,
+                      name: item?.name,
+                    });
                     setCurrentView('execution');
                   }}
                 >
@@ -46,7 +44,10 @@ const HomeTable = ({ data }) => {
                 </Button>
                 <Button
                   onClick={() => {
-                    setCurrentResultsData('Results data for ' + item.uid);
+                    setSelectedRowData({
+                      uid: item?.uid,
+                      name: item?.name,
+                    });
                     setCurrentView('results');
                   }}
                 >

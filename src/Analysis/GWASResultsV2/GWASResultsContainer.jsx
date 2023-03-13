@@ -9,19 +9,18 @@ import './GWASResultsContainer.css';
 
 const GWASResultsContainer = () => {
   const [currentView, setCurrentView] = useState('home');
-  const [currentExecutionData, setCurrentExecutionData] = useState({});
-  const [currentResultsData, setCurrentResultsData] = useState({});
+  const [selectedRowData, setSelectedRowData] = useState({});
 
   const generateStep = () => {
     switch (currentView) {
-    case VIEWS.home:
-      return <Home />;
-    case VIEWS.results:
-      return <Results />;
-    case VIEWS.execution:
-      return <Execution />;
-    default:
-      return null;
+      case VIEWS.home:
+        return <Home />;
+      case VIEWS.results:
+        return <Results />;
+      case VIEWS.execution:
+        return <Execution />;
+      default:
+        return null;
     }
   };
 
@@ -30,10 +29,8 @@ const GWASResultsContainer = () => {
       <SharedContext.Provider
         value={{
           setCurrentView,
-          currentExecutionData,
-          setCurrentExecutionData,
-          currentResultsData,
-          setCurrentResultsData,
+          selectedRowData,
+          setSelectedRowData,
         }}
       >
         <div className='view'>{generateStep(currentView)}</div>

@@ -3,12 +3,15 @@ import SharedContext from '../../Utils/SharedContext';
 import ReturnHomeButton from '../../SharedComponents/ReturnHomeButton/ReturnHomeButton';
 
 const Execution = () => {
-  const { currentExecutionData } = useContext(SharedContext);
+  const { selectedRowData } = useContext(SharedContext);
+  const { name, uid } = selectedRowData;
   return (
     <React.Fragment>
       <ReturnHomeButton />
       <h1>Execution</h1>
-      <h2>{currentExecutionData}</h2>
+      <strong>Name: </strong> {name}
+      <br />
+      <strong>UID: </strong> {uid}
     </React.Fragment>
   );
 };
