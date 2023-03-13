@@ -8,7 +8,6 @@ import GetTableDataFromApi from './Utils/GetTableDataFromApi';
 const Home = () => {
   const refetchInterval = 5000;
 
-  // PIETER CODE
   async function fetchGwasWorkflows() {
     const workflowsEndpoint = `${gwasWorkflowPath}workflows`;
     const getWorkflows = await fetch(workflowsEndpoint);
