@@ -3,7 +3,6 @@ import { Spin } from 'antd';
 import { useQuery } from 'react-query';
 import HomeTable from './HomeTable/HomeTable';
 import { gwasWorkflowPath } from '../../../../localconf';
-import GetTableDataFromApi from './Utils/GetTableDataFromApi';
 
 const Home = () => {
   const refetchInterval = 5000;
