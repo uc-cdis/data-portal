@@ -1,6 +1,8 @@
 /* eslint-disable prefer-destructuring */
 const { components, requiredCerts, config } = require('./params');
 
+const semver = require('semver');
+
 /**
  * Setup configuration variables based on the "app" the data-portal is
  * being deployed into (Brain Health Commons, Blood Pack, ...)
@@ -88,8 +90,30 @@ function buildConfig(opts) {
   const jobAPIPath = `${hostname}job/`;
   const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
 
-  const coreMetadataPath = `${hostname}api/search/coremetadata/`;
-  const coreMetadataLegacyPath = `${hostname}coremetadata/`;
+  const coreMetadataPathPromise = fetch(peregrineVersionPath)
+    .then((response) => response.text())
+    .then((responseBody) => {
+      // if peregrine is on version 3.2.0/2023.04 or newer, or on a branch, use
+      // the peregrine endpoint. if not, use the deprecated pidgin endpoint
+      const minSemVer = '3.2.0';
+      const minMonthlyRelease = semver.coerce('2023.04.0', { loose: true });
+      const monthlyReleaseCutoff = semver.coerce('2020', { loose: true });
+
+      var peregrineVersion = JSON.parse(responseBody).version;
+      var url = `${hostname}api/search/coremetadata/`;
+      if (peregrineVersion) {
+        try {
+          peregrineVersion = semver.coerce(peregrineVersion, { loose: true });
+          if (
+            semver.lt(peregrineVersion, minSemVer) ||
+            (semver.gte(peregrineVersion, monthlyReleaseCutoff) && semver.lt(peregrineVersion, minMonthlyRelease))
+          ) {
+            url = `${hostname}coremetadata/`; // pidgin endpoint
+          }
+        } catch (error) { } // can't parse or compare the peregrine version: don't use legacy url
+      }
+      return url;
+    });
 
   const indexdPath = typeof indexdURL === 'undefined' ? `${hostname}index/` : ensureTrailingSlash(indexdURL);
 
@@ -501,8 +525,7 @@ function buildConfig(opts) {
     apiPath,
     submissionApiPath,
     credentialCdisPath,
-    coreMetadataPath,
-    coreMetadataLegacyPath,
+    coreMetadataPathPromise,
     indexdPath,
     cohortMiddlewarePath,
     gwasWorkflowPath,
