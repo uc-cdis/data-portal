@@ -91,18 +91,18 @@ function buildConfig(opts) {
   const credentialCdisPath = `${userAPIPath}credentials/cdis/`;
 
   const coreMetadataPathPromise = fetch(peregrineVersionPath)
-    .then((response) => response.text())
-    .then((responseBody) => {
+    .then(response => response.json())
+    .then(responseBody => {
       // if peregrine is on version 3.2.0/2023.04 or newer, or on a branch, use
       // the peregrine endpoint. if not, use the deprecated pidgin endpoint
       const minSemVer = '3.2.0';
       const minMonthlyRelease = semver.coerce('2023.04.0', { loose: true });
       const monthlyReleaseCutoff = semver.coerce('2020', { loose: true });
 
-      var peregrineVersion = JSON.parse(responseBody).version;
       var url = `${hostname}api/search/coremetadata/`;
-      if (peregrineVersion) {
-        try {
+      try {
+        var peregrineVersion = responseBody.version;
+        if (peregrineVersion) {
           peregrineVersion = semver.coerce(peregrineVersion, { loose: true });
           if (
             semver.lt(peregrineVersion, minSemVer) ||
@@ -110,8 +110,8 @@ function buildConfig(opts) {
           ) {
             url = `${hostname}coremetadata/`; // pidgin endpoint
           }
-        } catch (error) { } // can't parse or compare the peregrine version: don't use legacy url
-      }
+        }
+      } catch (error) { } // can't parse or compare the peregrine version: don't use legacy url
       return url;
     });
 
@@ -530,7 +530,6 @@ function buildConfig(opts) {
     cohortMiddlewarePath,
     gwasWorkflowPath,
     graphqlPath,
-    peregrineVersionPath,
     dataDictionaryTemplatePath,
     graphqlSchemaUrl,
     appname: components.appName,
