@@ -1,12 +1,9 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
-import { gwasWorkflowPath } from '../../../../localconf';
 import { rest } from 'msw';
-import {testTableData} from '../../TestData/testTableData'
 import Home from './Home';
-
-
+import testTableData from '../../TestData/testTableData';
 
 const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
@@ -60,20 +57,7 @@ const getMockPhase = (requestCount) => {
   }
 };
 
-let workflowList = [
-  {
-    "name": "argo-wrapper-workflow-2",
-    "uid": "uid-2",
-    "phase": "Succeeded",
-    "startedAt": "2021-10-12T17:24:24.531Z"
-  },
-  {
-    "name": "argo-wrapper-workflow-1",
-    "uid": "uid-1",
-    "phase": "Running",
-    "startedAt": "2000-02-10T05:00:58.927Z"
-  },
-];
+let workflowList = testTableData;
 
 const getMockWorkflowList = () => {
   requestCount++;
