@@ -21,8 +21,7 @@ const mockedQueryClient = new QueryClient({
   },
 });
 
-const MockTemplate = () => {
-  return (
+const MockTemplate = () =>
     <QueryClientProvider client={mockedQueryClient}>
       <SharedContext.Provider
         value={{
@@ -33,8 +32,7 @@ const MockTemplate = () => {
         <Home />
       </SharedContext.Provider>
     </QueryClientProvider>
-  );
-};
+
 
 let requestCount = 0;
 let rowCount = 1;
