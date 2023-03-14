@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import testTableData from '../../TestData/testTableData';
 import SharedContext from '../../Utils/SharedContext';
 import Home from './Home';
 
@@ -44,17 +45,14 @@ describe('Home component', () => {
     ).toBeInTheDocument();
   });
 
-  it('should render the HomeTable component with data when data is loaded', async () => {
-    const mockData = [
-      { uid: 1, name: 'Workflow 1' },
-      { uid: 2, name: 'Workflow 2' },
-    ];
+  it('should render the HomeTable component with data when test data is loaded', async () => {
     jest.spyOn(window, 'fetch').mockResolvedValueOnce({
-      json: jest.fn().mockResolvedValueOnce(mockData),
+      json: jest.fn().mockResolvedValueOnce(testTableData),
     });
     render(testJSX());
-    await screen.findByText('Workflow 1');
-    expect(screen.getByText('Workflow 1')).toBeInTheDocument();
-    expect(screen.getByText('Workflow 2')).toBeInTheDocument();
+    await screen.findByText(testTableData[0].name);
+    testTableData.forEach((item)=>{
+      expect(screen.getByText(item.name)).toBeInTheDocument();
+    });
   });
 });
