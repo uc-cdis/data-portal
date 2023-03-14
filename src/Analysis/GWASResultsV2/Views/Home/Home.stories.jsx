@@ -1,6 +1,9 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
+import { gwasWorkflowPath } from '../../../../localconf';
+import { rest } from 'msw';
+import {testTableData} from '../../TestData/testTableData'
 import Home from './Home';
 
 export default {
@@ -15,33 +18,13 @@ const setCurrentView = (input) => {
 };
 const setCurrentExecutionData = () => alert('setCurrent Execution data called');
 const setCurrentResultsData = () => alert('setCurrent Results data called');
-const tableData = [
-  {
-    RunId: 123,
-    WorkflowName: 'some workflow name',
-    DateTimeStarted: 'DateTimeStarted',
-    JobStatus: 'some job status',
-    DateTimeSubmitted: 'some date time submitted',
-    ExecutionData: 'some ExecutionData for item 1',
-    ResultsData: 'some resultsData for item 1',
-  },
-  {
-    RunId: 456,
-    WorkflowName: 'some workflow name',
-    DateTimeStarted: 'DateTimeStarted',
-    JobStatus: 'some job status',
-    DateTimeSubmitted: 'some date time submitted',
-    ExecutionData: 'some ExecutionData for item 2',
-    ResultsData: 'some resultsData for item 2',
-  },
-];
 
-const MockTemplateSuccess = () => {
+
+const MockTemplate = () => {
   return (
     <QueryClientProvider client={mockedQueryClient}>
       <SharedContext.Provider
         value={{
-          tableData,
           setCurrentExecutionData,
           setCurrentResultsData,
           setCurrentView,
@@ -53,4 +36,17 @@ const MockTemplateSuccess = () => {
   );
 };
 
-export const MockedSuccess = MockTemplateSuccess.bind({});
+export const MockedSuccess = MockTemplate.bind({});
+MockedSuccess.parameters = {
+  msw: {
+    handlers: [
+      rest.get('https://swapi.dev/api/films/', (req, res, ctx) => {
+        return res(
+          ctx.json({
+            results: testTableData,
+          }),
+        );
+      }),
+    ]
+  },
+};
