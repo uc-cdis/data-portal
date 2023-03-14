@@ -1,17 +1,20 @@
 import React from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
 import Home from './Home';
+
 export default {
   title: 'Tests2/GWASResults/Views/Home',
   component: 'Home',
 };
+
+const mockedQueryClient = new QueryClient();
 
 const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
 };
 const setCurrentExecutionData = () => alert('setCurrent Execution data called');
 const setCurrentResultsData = () => alert('setCurrent Results data called');
-const badTableData = null;
 const tableData = [
   {
     RunId: 123,
@@ -35,16 +38,18 @@ const tableData = [
 
 const MockTemplateSuccess = () => {
   return (
-    <SharedContext.Provider
-      value={{
-        tableData,
-        setCurrentExecutionData,
-        setCurrentResultsData,
-        setCurrentView,
-      }}
-    >
-      <Home />
-    </SharedContext.Provider>
+    <QueryClientProvider client={mockedQueryClient}>
+      <SharedContext.Provider
+        value={{
+          tableData,
+          setCurrentExecutionData,
+          setCurrentResultsData,
+          setCurrentView,
+        }}
+      >
+        <Home />
+      </SharedContext.Provider>
+    </QueryClientProvider>
   );
 };
 

@@ -7,7 +7,7 @@ export default {
   component: 'Execution',
 };
 
-const currentExecutionData = 'Placeholder Execution Data';
+const selectedRowData = { name: 'Test Name', uid: '123456' };
 const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
 };
@@ -16,7 +16,7 @@ const MockTemplate = () => {
   return (
     <SharedContext.Provider
       value={{
-        currentExecutionData,
+        selectedRowData,
         setCurrentView,
       }}
     >
