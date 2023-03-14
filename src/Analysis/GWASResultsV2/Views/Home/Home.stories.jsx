@@ -67,7 +67,7 @@ const getMockWorkflowList = () => {
     });
     rowCount++;
   }
-  // simulate status change of some recent items at each 10th request:
+  // simulate status change of some recent items:
   if (rowCount % 5 == 0) {
     // just some status that is not used in getMockPhase:
     workflowList[2].phase = gwasStatus.pending;
