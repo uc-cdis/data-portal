@@ -51,7 +51,7 @@ describe('Home component', () => {
     });
     render(testJSX());
     await screen.findByText(testTableData[0].name);
-    testTableData.forEach((item)=>{
+    testTableData.forEach((item) => {
       expect(screen.getByText(item.name)).toBeInTheDocument();
     });
   });
