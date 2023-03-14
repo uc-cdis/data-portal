@@ -68,7 +68,7 @@ class CoreMetadataHeader extends Component {
           || userHasAccess
           || projectIsOpenData(projectAvail, projectId)
         ) {
-          const downloadLink = `${userAPIPath}/data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
+          const downloadLink = `${userAPIPath}data/download/${this.props.metadata.object_id}?expires_in=900&redirect`;
 
           this.setState({
             downloadButton: (
