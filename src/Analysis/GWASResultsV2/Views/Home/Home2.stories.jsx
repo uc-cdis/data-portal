@@ -69,6 +69,7 @@ const getMockWorkflowList = () => {
       name: 'argo-wrapper-workflow-' + requestCount,
       uid: 'uid-' + requestCount,
       phase: getMockPhase(requestCount),
+      startedAt: new Date(new Date() - Math.random()*(1e+12))
     });
     rowCount++;
   }
@@ -90,7 +91,7 @@ MockedSuccess.parameters = {
         (req, res, ctx) => {
           const { argowrapperpath } = req.params;
           console.log(argowrapperpath);
-          return res(ctx.delay(200), ctx.json(getMockWorkflowList()));
+          return res(ctx.delay(100), ctx.json(getMockWorkflowList()));
         }
       ),
       rest.get(
@@ -104,7 +105,7 @@ MockedSuccess.parameters = {
           console.log('workflowuid:' + workflowuid);
 
           return res(
-            ctx.delay(500),
+            ctx.delay(300),
             ctx.json({
               name: workflowid,
               uid: workflowuid,
