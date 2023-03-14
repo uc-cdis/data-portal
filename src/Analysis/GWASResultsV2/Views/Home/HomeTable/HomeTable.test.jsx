@@ -22,7 +22,6 @@ describe('HomeTable component', () => {
     // Check that each of the values from data appear once in the dom
     data.forEach((item) => {
       Object.values(item).forEach((value) => {
-        // for (const [key, value] of Object.entries(item)) {
         const textTestNode = screen.getByText(value);
         expect(textTestNode).toBeInTheDocument();
       });

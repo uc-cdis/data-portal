@@ -33,7 +33,6 @@ const MockTemplate = () =>
       </SharedContext.Provider>
     </QueryClientProvider>
 
-
 let requestCount = 0;
 let rowCount = 1;
 const gwasStatus = {
