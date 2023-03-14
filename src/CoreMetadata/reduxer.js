@@ -3,7 +3,9 @@ import CoreMetadataHeader from './CoreMetadataHeader';
 import FileTypePicture from '../components/FileTypePicture';
 import CoreMetadataTable from './CoreMetadataTable';
 import CoreMetadataPage from './page';
-import { peregrineVersionPath, coreMetadata, coreMetadataLegacyPath, userAPIPath } from '../localconf';
+import {
+  peregrineVersionPath, coreMetadataPath, coreMetadataLegacyPath, userAPIPath,
+} from '../localconf';
 import { fetchWithCreds, updatePopup } from '../actions';
 
 const semver = require('semver');
@@ -46,18 +48,20 @@ export const fetchCoreMetadata = (objectId) => (dispatch) => {
   return fetch(peregrineVersionPath)
     .then((response) => response.text())
     .then((responseBody) => {
-      var peregrineVersion = JSON.parse(responseBody).version;
-      var url = coreMetadataPath;
+      let peregrineVersion = JSON.parse(responseBody).version;
+      let url = coreMetadataPath;
       if (peregrineVersion) {
         try {
           peregrineVersion = semver.coerce(peregrineVersion, { loose: true });
           if (
-            semver.lt(peregrineVersion, minSemVer) ||
-            (semver.gte(peregrineVersion, monthlyReleaseCutoff) && semver.lt(peregrineVersion, minMonthlyRelease))
+            semver.lt(peregrineVersion, minSemVer)
+            || (semver.gte(peregrineVersion, monthlyReleaseCutoff) && semver.lt(peregrineVersion, minMonthlyRelease))
           ) {
             url = coreMetadataLegacyPath;
           }
-        } catch (error) { } // can't parse or compare the peregrine version: don't use legacy url
+        } catch (error) {
+          // can't parse or compare the peregrine version: don't use legacy url
+        }
       }
 
       return fetchWithCreds({
@@ -67,16 +71,16 @@ export const fetchCoreMetadata = (objectId) => (dispatch) => {
       })
         .then(({ status, data }) => {
           switch (status) {
-            case 200:
-              return {
-                type: 'RECEIVE_CORE_METADATA',
-                metadata: data,
-              };
-            default:
-              return {
-                type: 'CORE_METADATA_ERROR',
-                error: data,
-              };
+          case 200:
+            return {
+              type: 'RECEIVE_CORE_METADATA',
+              metadata: data,
+            };
+          default:
+            return {
+              type: 'CORE_METADATA_ERROR',
+              error: data,
+            };
           }
         })
         .then((msg) => dispatch(msg));
