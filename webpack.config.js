@@ -57,7 +57,7 @@ if (configFile && configFile.analysisTools) {
 
 // returns the last modified time of the CSS file
 function getCSSVersion() {
-  const stats = fs.statSync(`${__dirname}/src/css/themeoverrides.css`);
+  const stats = fs.statSync('./src/css/themeoverrides.css');
   return (stats.mtime.getTime());
 }
 
