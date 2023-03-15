@@ -57,6 +57,19 @@ if (configFile && configFile.analysisTools) {
 
 // returns the last modified time of the CSS file
 function getCSSVersion() {
+  const overridesCss = './src/css/themeoverrides.css';
+  if (!fs.existsSync(overridesCss)) {
+    console.warn(`${overridesCss} does not exist`);
+    return(''); 
+  } else {
+    const stats = fs.statSync(overridesCss);
+    return (stats.mtime.getTime());
+  }
+}
+  
+  const cssFile = './src/css/themeoverrides.css';
+  if(File(cssFile).exists()
+  var cssFile = new File()
   const stats = fs.statSync('./src/css/themeoverrides.css');
   return (stats.mtime.getTime());
 }
