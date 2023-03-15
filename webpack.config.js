@@ -66,13 +66,6 @@ function getCSSVersion() {
     return (stats.mtime.getTime());
   }
 }
-  
-  const cssFile = './src/css/themeoverrides.css';
-  if(File(cssFile).exists()
-  var cssFile = new File()
-  const stats = fs.statSync('./src/css/themeoverrides.css');
-  return (stats.mtime.getTime());
-}
 
 const plugins = [
   new webpack.EnvironmentPlugin(['NODE_ENV']),
