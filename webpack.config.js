@@ -95,8 +95,8 @@ const plugins = [
     title: configFile.components.appName || 'Generic Data Commons',
     metaDescription: configFile.components.metaDescription || '',
     basename: pathPrefix,
-    template: 'src/index.ejs',
     cssVersion: getCSSVersion(),
+    template: 'src/index.ejs',
     connectSrc: ((() => {
       const rv = {};
       if (typeof process.env.FENCE_URL !== 'undefined') {
