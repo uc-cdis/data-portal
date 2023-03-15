@@ -55,6 +55,12 @@ if (configFile && configFile.analysisTools) {
   });
 }
 
+// returns the last modified time of the CSS file
+function getCSSVersion() {
+  const stats = fs.statSync(`${__dirname}/src/css/themeoverrides.css`);
+  return (stats.mtime.getTime());
+}
+
 const plugins = [
   new webpack.EnvironmentPlugin(['NODE_ENV']),
   new webpack.EnvironmentPlugin({ MOCK_STORE: null }),
@@ -156,12 +162,6 @@ const plugins = [
 ];
 
 const allowedHosts = process.env.HOSTNAME ? [process.env.HOSTNAME] : 'auto';
-
-// returns the last modified time of the CSS file
-function getCSSVersion() {
-  const stats = fs.statSync(`${__dirname}/src/css/themeoverrides.css`)
-  return (stats.mtime.getTime())
-}
 
 let optimization = {};
 let devtool = false;
