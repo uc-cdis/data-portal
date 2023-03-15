@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const fs = require('fs');
 
 const basename = process.env.BASENAME || '/';
 const pathPrefix = basename.endsWith('/') ? basename.slice(0, basename.length - 1) : basename;
@@ -89,6 +90,7 @@ const plugins = [
     metaDescription: configFile.components.metaDescription || '',
     basename: pathPrefix,
     template: 'src/index.ejs',
+    cssVersion: getCSSVersion(),
     connectSrc: ((() => {
       const rv = {};
       if (typeof process.env.FENCE_URL !== 'undefined') {
@@ -154,6 +156,12 @@ const plugins = [
 ];
 
 const allowedHosts = process.env.HOSTNAME ? [process.env.HOSTNAME] : 'auto';
+
+// returns the last modified time of the CSS file
+function getCSSVersion() {
+  const stats = fs.statSync(`${__dirname}/src/css/themeoverrides.css`)
+  return (stats.mtime.getTime())
+}
 
 let optimization = {};
 let devtool = false;
