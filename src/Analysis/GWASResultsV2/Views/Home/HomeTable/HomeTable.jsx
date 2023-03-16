@@ -4,12 +4,8 @@ import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
 import './HomeTable.css';
 
-const HomeTable = ({ tableData }) => {
-  const {
-    setCurrentView,
-    setCurrentExecutionData,
-    setCurrentResultsData,
-  } = useContext(SharedContext);
+const HomeTable = ({ data }) => {
+  const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
 
   return (
     <table className='home-table'>
@@ -23,19 +19,24 @@ const HomeTable = ({ tableData }) => {
           <th>View Details</th>
           <th>Actions</th>
         </tr>
-
-        {tableData
-          && tableData.map((item) => (
-            <tr key={item.RunId}>
-              <td>{item.RunId}</td>
-              <td>{item.WorkflowName}</td>
-              <td>{item.DateTimeStarted}</td>
-              <td>{item.JobStatus}</td>
-              <td>{item.DateTimeSubmitted}</td>
+        {data
+          && data.map((item) => (
+            <tr key={item?.uid}>
+              <td>{item?.uid}</td>
+              <td>{item?.name}</td>
+              <td>{item?.startedAt}</td>
+              <td>{item?.phase}</td>
+              <td>
+                {item.DateTimeSubmitted
+                  || `item.DateTimeSubmiited missing at ${new Date().toLocaleString()}`}
+              </td>
               <td>
                 <Button
                   onClick={() => {
-                    setCurrentExecutionData(item.ExecutionData);
+                    setSelectedRowData({
+                      uid: item?.uid,
+                      name: item?.name,
+                    });
                     setCurrentView('execution');
                   }}
                 >
@@ -43,7 +44,10 @@ const HomeTable = ({ tableData }) => {
                 </Button>
                 <Button
                   onClick={() => {
-                    setCurrentResultsData(item.ResultsData);
+                    setSelectedRowData({
+                      uid: item?.uid,
+                      name: item?.name,
+                    });
                     setCurrentView('results');
                   }}
                 >
@@ -58,7 +62,7 @@ const HomeTable = ({ tableData }) => {
   );
 };
 HomeTable.propTypes = {
-  tableData: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired,
 };
 
 export default HomeTable;

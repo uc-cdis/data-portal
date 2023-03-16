@@ -1,23 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Spin } from 'antd';
+import { useQuery } from 'react-query';
 import HomeTable from './HomeTable/HomeTable';
-
-import GetTableDataFromApi from './Utils/GetTableDataFromApi';
+import { gwasWorkflowPath } from '../../../../localconf';
 
 const Home = () => {
-  const [tableData, setTableData] = useState(GetTableDataFromApi());
-  const pollingIntervalinMilliseconds = 5000;
+  const refetchInterval = 5000;
 
-  // API Polling:
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTableData(GetTableDataFromApi());
-    }, pollingIntervalinMilliseconds);
-    return () => clearInterval(interval);
-  }, []);
+  async function fetchGwasWorkflows() {
+    const workflowsEndpoint = `${gwasWorkflowPath}workflows`;
+    const getWorkflows = await fetch(workflowsEndpoint);
+    return getWorkflows.json();
+  }
+  const GWASWorkflows = () => {
+    const { data, status } = useQuery('workflows', fetchGwasWorkflows, {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchInterval,
+    });
+    if (status === 'loading') {
+      return (
+        <React.Fragment>
+          <div className='spinner-container'>
+            <Spin />
+          </div>
+        </React.Fragment>
+      );
+    }
+    if (status === 'error') {
+      return (
+        <React.Fragment>
+          <h1>Error loading data for table</h1>
+        </React.Fragment>
+      );
+    }
+    return (
+      <React.Fragment>
+        <HomeTable data={data} />
+      </React.Fragment>
+    );
+  };
 
   return (
-    <div>{tableData ? <HomeTable tableData={tableData} /> : <Spin />}</div>
+    <div>
+      <GWASWorkflows />
+    </div>
   );
 };
 export default Home;
