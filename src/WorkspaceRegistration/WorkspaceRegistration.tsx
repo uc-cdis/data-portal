@@ -14,7 +14,6 @@ import {
 import { ResultStatusType } from 'antd/lib/result';
 import { Link } from 'react-router-dom';
 
-
 import './WorkspaceRegistration.css';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
 import {
