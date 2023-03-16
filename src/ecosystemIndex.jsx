@@ -538,8 +538,7 @@ const newProp = {newProp: 'wooowzah!'}
                             (props) => (
                               <ProtectedContent
                                 component={ReduxStudyRegistrationRequestForm}
-
-                                {...props}{...{newProp :'adsfds'}}
+                                {...props}
                               />
                             )
                           }
@@ -565,6 +564,27 @@ const newProp = {newProp: 'wooowzah!'}
                       )
                       : null
                   }
+
+{
+                    isEnabled('studyRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/data-dictionary-submission/request-access'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                                component={ReduxStudyRegistrationRequestForm}
+                                {...props}
+                              />
+                            )
+                          }
+                        />
+                      )
+                      : null
+                  }
+
+
                   <Route
                     path='/not-found'
                     component={NotFound}

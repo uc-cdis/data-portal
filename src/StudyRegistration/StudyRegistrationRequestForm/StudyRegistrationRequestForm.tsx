@@ -14,35 +14,23 @@ import {
 } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 
-import './StudyRegistration.css';
-import { userHasMethodForServiceOnResource } from '../authMappingUtils';
+import '../StudyRegistration.css';
+import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
 import {
   hostname, requestorPath, useArboristUI, studyRegistrationConfig, kayakoConfig,
-} from '../localconf';
-import { FormSubmissionState, StudyRegistrationProps } from './StudyRegistration';
-import { createKayakoTicket } from '../utils';
-import { fetchWithCreds } from '../actions';
-import { doesUserHaveRequestPending } from './utils';
+} from '../../localconf';
+import { FormSubmissionState, StudyRegistrationProps } from '../StudyRegistration';
+import { createKayakoTicket } from '../../utils';
+import { fetchWithCreds } from '../../actions';
+import { doesUserHaveRequestPending } from '../utils';
+import { layout, tailLayout } from './FormLayoutConstants';
 
 const { TextArea } = Input;
 const { Text } = Typography;
 
 const KAYAKO_MAX_SUBJECT_LENGTH = 255;
 
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 32,
-  },
-};
-const tailLayout = {
-  wrapperCol: {
-    offset: 8,
-    span: 16,
-  },
-};
+
 /* eslint-disable no-template-curly-in-string */
 const validateMessages = {
   required: '${label} is required',
@@ -59,7 +47,6 @@ interface LocationState {
 const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationProps> = (props: StudyRegistrationProps) => {
   const [form] = Form.useForm();
   const location = useLocation();
-
   const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
   const [studyNumber, setStudyNumber] = useState<string|undefined|null>(null);
   const [studyName, setStudyName] = useState<string|undefined|null>(null);
@@ -130,9 +117,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
             if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
               subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
             }
-
             let contents = `Request ID: ${data.request_id}\nGrant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}`;
-
             Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
               const [key, value] = entry;
               contents = contents.concat(`\n${key}: ${value}`);
@@ -197,7 +182,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
     );
   }
 
-  console.log((props))
+  console.log((location.pathname))
   return (
     <div className='study-reg-container'>
       <div className='study-reg-form-container'>
@@ -205,8 +190,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
           name='study-reg-request-form' onFinish={onFinish}
           validateMessages={validateMessages}>
 
-          <h1>formText {props.formText}</h1>
-          <h1> newProp {props.newProp}</h1>
+          <h1>formText {location.pathname}</h1>
 
           <Divider plain>Study Registration Access Request</Divider>
           <Typography style={{ textAlign: 'center' }}>
