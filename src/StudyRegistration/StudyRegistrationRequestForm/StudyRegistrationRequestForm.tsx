@@ -8,13 +8,10 @@ import {
   Tooltip,
   Typography,
   Space,
-  Result,
   Radio,
   message,
 } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
-
-import '../StudyRegistration.css';
+import { useLocation } from 'react-router-dom';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
 import {
   hostname, requestorPath, useArboristUI, studyRegistrationConfig, kayakoConfig,
@@ -23,7 +20,10 @@ import { FormSubmissionState, StudyRegistrationProps } from '../StudyRegistratio
 import { createKayakoTicket } from '../../utils';
 import { fetchWithCreds } from '../../actions';
 import { doesUserHaveRequestPending } from '../utils';
-import { layout, tailLayout } from './FormLayoutConstants';
+import { determineFormText, layout, tailLayout } from './FormLayoutConstants';
+import FormSubmissionUI from './FormSubmissionUI';
+import '../StudyRegistration.css';
+
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -55,6 +55,7 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
   const [role, setRole] = useState('Principal Investigator');
   const [formSubmissionButtonDisabled, setFormSubmissionButtonDisabled] = useState(false);
   const [reqAccessRequestPending, setReqAccessRequestPending] = useState(false);
+  const formText = determineFormText(location.pathname);
 
   useEffect(() => {
     const locationStateData = location.state as LocationState || {};
@@ -151,51 +152,22 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
   };
 
   if (formSubmissionStatus) {
-    return (
-      <div className='study-reg-container'>
-        <div className='study-reg-form-container'>
-          {(formSubmissionStatus.status === 'success') ? (
-            <Result
-              status={formSubmissionStatus.status}
-              title='Your access request has been submitted!'
-              subTitle='Thank you for your submission. Requests take up to 1 business day to complete. You will be notified of the status.'
-              extra={[
-                <Link key='discovery' to={'/discovery'}>
-                  <Button>Go To Discovery Page</Button>
-                </Link>,
-              ]}
-            />
-          ) : (
-            <Result
-              status={formSubmissionStatus.status}
-              title='A problem has occurred during submitting the request!'
-              subTitle={formSubmissionStatus.text}
-              extra={[
-                <Button type='primary' key='close' onClick={() => { setFormSubmissionStatus(null); setReqAccessRequestPending(false); }}>
-                  Close
-                </Button>,
-              ]}
-            />
-          )}
-        </div>
-      </div>
-    );
+    return <FormSubmissionUI
+      formSubmissionStatus={formSubmissionStatus}
+      setFormSubmissionStatus={setFormSubmissionStatus}
+      setReqAccessRequestPending={setReqAccessRequestPending}
+      />
   }
 
-  console.log((location.pathname))
   return (
     <div className='study-reg-container'>
       <div className='study-reg-form-container'>
         <Form className='study-reg-form' {...layout} form={form}
           name='study-reg-request-form' onFinish={onFinish}
           validateMessages={validateMessages}>
-
-          <h1>formText {location.pathname}</h1>
-
-          <Divider plain>Study Registration Access Request</Divider>
+          <Divider plain>{formText.title}</Divider>
           <Typography style={{ textAlign: 'center' }}>
-            Please fill out this form to request and be approved for access to
-            register your study with the HEAL Platform.
+            {formText.description}
           </Typography>
           <Divider plain />
           <div className='study-reg-exp-text'>
