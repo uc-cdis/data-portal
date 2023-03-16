@@ -19,7 +19,7 @@ import {
   AccessLevel, accessibleFieldName, renderFieldContent, DiscoveryResource,
 } from './Discovery';
 import { userHasMethodForServiceOnResource } from '../authMappingUtils';
-import StudyRegistrationRequestForm from '../StudyRegistration/StudyRegistrationRequestForm/StudyRegistrationRequestForm';
+import StudyRegistrationRequestForm from '../StudyRegistration/GenericRegistrationRequestForm/GenericRegistrationRequestForm';
 
 const { Panel } = Collapse;
 

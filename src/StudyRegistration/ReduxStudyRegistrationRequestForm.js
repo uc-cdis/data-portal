@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import StudyRegistrationRequestForm from './StudyRegistrationRequestForm/StudyRegistrationRequestForm';
+import StudyRegistrationRequestForm from './GenericRegistrationRequestForm/GenericRegistrationRequestForm';
 
 const mapStateToProps = (state) => ({
   user: state.user,

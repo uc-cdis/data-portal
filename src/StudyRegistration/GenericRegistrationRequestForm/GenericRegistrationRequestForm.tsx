@@ -14,21 +14,21 @@ import {
 import { useLocation } from 'react-router-dom';
 import { userHasMethodForServiceOnResource } from '../../authMappingUtils';
 import {
-  hostname, requestorPath, useArboristUI, studyRegistrationConfig, kayakoConfig,
+  hostname, requestorPath, useArboristUI, studyRegistrationConfig,
 } from '../../localconf';
 import { FormSubmissionState, StudyRegistrationProps } from '../StudyRegistration';
-import { createKayakoTicket } from '../../utils';
-import { fetchWithCreds } from '../../actions';
-import { doesUserHaveRequestPending } from '../utils';
-import { determineFormText, layout, tailLayout } from './FormLayoutConstants';
+
+
+import {  layout, tailLayout } from './FormLayoutConstants';
+import { determineFormText } from './FormTextConstants'
 import FormSubmissionUI from './FormSubmissionUI';
+import handleRegisterFormSubmission from './handleRegisterFormSubmission';
 import '../StudyRegistration.css';
 
 
 const { TextArea } = Input;
 const { Text } = Typography;
 
-const KAYAKO_MAX_SUBJECT_LENGTH = 255;
 
 
 /* eslint-disable no-template-curly-in-string */
@@ -44,7 +44,7 @@ interface LocationState {
   studyRegistrationAuthZ?: string;
 }
 
-const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationProps> = (props: StudyRegistrationProps) => {
+const GenericRegistrationRequestForm: React.FunctionComponent<StudyRegistrationProps> = (props: StudyRegistrationProps) => {
   const [form] = Form.useForm();
   const location = useLocation();
   const [formSubmissionStatus, setFormSubmissionStatus] = useState<FormSubmissionState | null>(null);
@@ -75,72 +75,19 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
      props.userAuthMapping));
   };
 
-  const handleRegisterFormSubmission = async (formValues) => {
-    // first, check if there is already a pending request in requestor
-    try {
-      const userHaveRequestPending = await doesUserHaveRequestPending(studyUID);
-      if (userHaveRequestPending) {
-      // there is already a request for this user on this study, display a message
-      // and disable the button
-        setFormSubmissionButtonDisabled(true);
-        setFormSubmissionStatus({
-          status: 'info',
-          text: `There is already a pending request for this study/user combination,
-           please wait while we are processing your request.`
-         });
-        return;
-      }
-    } catch (err) {
-      message.warning(`Unable to check existing requests: ${err}`);
-    }
-
-    // create a request in requestor
-    const body = {
-      username: props.user.username,
-      resource_id: studyUID,
-      resource_paths: [studyRegistrationAuthZ, '/mds_gateway', '/cedar'],
-      role_ids: ['study_registrant', 'mds_user', 'cedar_user'],
-    };
-    // deepcode ignore Ssrf: studyUID is pulled in from setState into request body,
-    // not as URL
-    fetchWithCreds({
-      path: `${requestorPath}request`,
-      method: 'POST',
-      body: JSON.stringify(body),
-    }).then(
-      ({ data, status }) => {
-        if (status === 201) {
-          if (data && data.request_id) {
-            // request created, now create a kayako ticket
-            const fullName = `${formValues['First Name']} ${formValues['Last Name']}`;
-            const email = formValues['E-mail Address'];
-            let subject = `Registration Access Request for ${studyNumber} ${studyName}`;
-            if (subject.length > KAYAKO_MAX_SUBJECT_LENGTH) {
-              subject = `${subject.substring(0, KAYAKO_MAX_SUBJECT_LENGTH - 3)}...`;
-            }
-            let contents = `Request ID: ${data.request_id}\nGrant Number: ${studyNumber}\nStudy Name: ${studyName}\nEnvironment: ${hostname}`;
-            Object.entries(formValues).filter(([key]) => !key.includes('_doNotInclude')).forEach((entry) => {
-              const [key, value] = entry;
-              contents = contents.concat(`\n${key}: ${value}`);
-            });
-            createKayakoTicket(subject, fullName, email, contents, kayakoConfig?.kayakoDepartmentId).then(() => setFormSubmissionStatus({ status: 'success' }),
-              (err) => setFormSubmissionStatus({ status: 'error', text: err.message }));
-          } else {
-            // eslint-disable-next-line no-console
-            console.error('Requestor returns 201 but no request_id in payload body'); // shouldn't get here
-          }
-        } else {
-          // something has gone wrong
-          setFormSubmissionStatus({ status: 'error', text: `Failed to create a request with error code: ${status}. Please try again later. If the error persists, please contact us for help.` });
-        }
-        setReqAccessRequestPending(false);
-      },
-    ).catch(() => setFormSubmissionStatus({ status: 'error', text: 'Failed to create a request. Please try again later. If the error persists, please contact us for help.' }));
-  };
-
   const onFinish = (values) => {
     setReqAccessRequestPending(true);
-    handleRegisterFormSubmission(values);
+    handleRegisterFormSubmission(
+      values,
+      studyUID,
+      setFormSubmissionButtonDisabled,
+      setFormSubmissionStatus,
+      props,
+      studyRegistrationAuthZ,
+      studyNumber,
+      studyName,
+      setReqAccessRequestPending,
+      )
   };
 
   const onReset = () => {
@@ -301,4 +248,4 @@ const StudyRegistrationRequestForm: React.FunctionComponent<StudyRegistrationPro
   );
 };
 
-export default StudyRegistrationRequestForm;
+export default GenericRegistrationRequestForm;
