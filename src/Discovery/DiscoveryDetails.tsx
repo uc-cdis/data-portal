@@ -291,8 +291,8 @@ const DiscoveryDetails = (props: Props) => {
             {(
               props.user.username
               && !userHasMethodForServiceOnResource('access', 'study_registration')
+              && props.userAuthMapping
             )  ? (
-              <>
                 <Button
                   type='text'
                   onClick={() => handleRedirectClick('/data-dictionary-submission/request-access',
@@ -303,7 +303,7 @@ const DiscoveryDetails = (props: Props) => {
                       )}> <React.Fragment><AuditOutlined />{' Request Access to Submit a Data Dictionary '}
                       </React.Fragment>
                     </Button>
-              </>
+
             ): null}
 
           {(props.modalData[studyRegistrationConfig.studyRegistrationValidationField] && !props.user.username) // user is NOT authenticated, Login in to VLMD submission button should be visible only on registered studies
