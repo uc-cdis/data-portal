@@ -113,9 +113,6 @@ async function init() {
   // FontAwesome icons
   library.add(faAngleUp, faAngleDown, faExternalLinkAlt);
 
-
-const newProp = {newProp: 'wooowzah!'}
-
   render(
     <div>
       <Provider store={store}>
@@ -564,8 +561,7 @@ const newProp = {newProp: 'wooowzah!'}
                       )
                       : null
                   }
-
-{
+                  {
                     isEnabled('studyRegistration')
                       ? (
                         <Route
@@ -583,8 +579,6 @@ const newProp = {newProp: 'wooowzah!'}
                       )
                       : null
                   }
-
-
                   <Route
                     path='/not-found'
                     component={NotFound}
