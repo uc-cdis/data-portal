@@ -65,14 +65,14 @@ const HomeTable = ({ data }) => {
       key: 'phase',
       render: (record) => {
         return (
-          <>
+          <div className='job-status'>
             {record.phase === 'Succeeded' && <Completed />}
             {record.phase === 'pending' && <Pending />}
             {record.phase === 'running' && <Running />}
             {record.phase === 'Failed' && <Failed />}
 
             {record.phase}
-          </>
+          </div>
         )
       },
       sorter: (a, b) => {return a.phase.localeCompare(b.phase)},

@@ -1,7 +1,6 @@
 .home-table {
   width: 100%;
 }
-
-.home-table .ant-table-cell {
-  min-width: 150px;
+.home-table .job-status {
+  min-width: 160px;
 }
