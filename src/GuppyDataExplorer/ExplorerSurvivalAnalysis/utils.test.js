@@ -1,5 +1,6 @@
 import { FILTER_TYPE } from '../ExplorerFilterSetWorkspace/utils';
 import {
+  checkIfFilterHasDisallowedVariables,
   checkIfFilterHasOptedOutConsortiums,
   checkIfFilterInScope,
 } from './utils';
@@ -251,6 +252,91 @@ describe('utils tests', () => {
             consortium: {
               __type: FILTER_TYPE.OPTION,
               selectedValues: ['INRG', 'INSTRuCT', 'OTHER'],
+            },
+          },
+        })
+      ).toBeTruthy();
+    });
+  });
+
+  describe('check if a filter set has disallowed variables', () => {
+    const __combineMode = /** @type {'AND'} */ ('AND');
+    test('composed filter set', () => {
+      expect(
+        checkIfFilterHasDisallowedVariables({
+          __type: FILTER_TYPE.COMPOSED,
+          value: [
+            {
+              __combineMode,
+              __type: FILTER_TYPE.STANDARD,
+              value: {
+                consortium: {
+                  __type: FILTER_TYPE.OPTION,
+                  selectedValues: ['INRG', 'INSTRuCT'],
+                },
+              },
+            },
+            {
+              __combineMode,
+              __type: FILTER_TYPE.STANDARD,
+              value: {
+                consortium: {
+                  __type: FILTER_TYPE.OPTION,
+                  selectedValues: ['INRG'],
+                },
+              },
+            },
+          ],
+        })
+      ).toBeFalsy();
+
+      expect(
+        checkIfFilterHasDisallowedVariables({
+          __type: FILTER_TYPE.COMPOSED,
+          value: [
+            {
+              __combineMode,
+              __type: FILTER_TYPE.STANDARD,
+              value: {
+                data_contributor_id: {
+                  __type: FILTER_TYPE.OPTION,
+                  selectedValues: ['COG'],
+                },
+              },
+            },
+            {
+              __combineMode,
+              __type: FILTER_TYPE.STANDARD,
+              value: {
+                consortium: {
+                  __type: FILTER_TYPE.OPTION,
+                  selectedValues: ['INRG'],
+                },
+              },
+            },
+          ],
+        })
+      ).toBeTruthy();
+    });
+    test('Standard filter set', () => {
+      expect(
+        checkIfFilterHasDisallowedVariables({
+          __type: FILTER_TYPE.STANDARD,
+          value: {
+            consortium: {
+              __type: FILTER_TYPE.OPTION,
+              selectedValues: ['INRG', 'INSTRuCT'],
+            },
+          },
+        })
+      ).toBeFalsy();
+      expect(
+        checkIfFilterHasDisallowedVariables({
+          __type: FILTER_TYPE.STANDARD,
+          value: {
+            data_contributor_id: {
+              __type: FILTER_TYPE.OPTION,
+              selectedValues: ['COG'],
             },
           },
         })

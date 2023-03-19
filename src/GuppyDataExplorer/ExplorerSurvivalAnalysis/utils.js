@@ -1,5 +1,6 @@
 /* eslint-disable no-shadow */
 import { FILTER_TYPE } from '../ExplorerFilterSetWorkspace/utils';
+import { DISALLOWED_VARIABLES } from './const';
 
 /** @typedef {import('./types').RisktableData} RisktableData */
 
@@ -24,6 +25,21 @@ export function checkIfFilterInScope(consortiums, filter) {
       return false;
 
   return true;
+}
+
+/**
+ * @param {import('../types').ExplorerFilter} filter
+ * @return {boolean}
+ */
+export function checkIfFilterHasDisallowedVariables(filter) {
+  const disallowedVariables = DISALLOWED_VARIABLES.map((v) => v.field);
+
+  if (filter.__type === FILTER_TYPE.COMPOSED) {
+    return filter.value.some((f) => checkIfFilterHasDisallowedVariables(f));
+  }
+  return Object.keys(filter.value ?? {}).some((k) =>
+    disallowedVariables.includes(k)
+  );
 }
 
 /**

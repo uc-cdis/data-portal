@@ -56,3 +56,8 @@ export type UserInput = {
 };
 
 export type UserInputSubmitHandler = (userInput: UserInput) => void;
+
+export type DisallowedVariable = {
+  label: string;
+  field: string;
+}
