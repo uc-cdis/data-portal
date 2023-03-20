@@ -7,7 +7,6 @@ import '../../TestData/matchMedia';
 import SharedContext from '../../Utils/SharedContext';
 import Home from './Home';
 
-
 const mockedQueryClient = new QueryClient({
   defaultOptions: {
     queries: { retry: false },
@@ -29,10 +28,6 @@ const testJSX = () => (
     </SharedContext.Provider>
   </QueryClientProvider>
 );
-
-
-
-
 
 describe('Home component', () => {
   it('should render a loading spinner when data is loading', async () => {

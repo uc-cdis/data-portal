@@ -1,43 +1,14 @@
-import { Button, Table, Space, Dropdown } from 'antd';
+import React, { useContext } from 'react';
+import { Button, Table, Space, Dropdown, Menu } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
-import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
-import './HomeTable.css';
 import Completed from './icons/Completed';
 import Pending from './icons/Pending';
 import Running from './icons/Running';
 import Failed from './icons/Failed';
-
-const dropDownItems = [
-  {
-    key: '1',
-    label: (
-      <a target="_blank" rel="noopener noreferrer" href="#">
-        Download
-      </a>
-    ),
-    disabled: true,
-  },
-  {
-    key: '2',
-    label: (
-      <a target="_blank" rel="noopener noreferrer" href="#">
-        Rerun
-      </a>
-    ),
-    disabled: true,
-  },
-  {
-    key: '3',
-    label: (
-      <a target="_blank" rel="noopener noreferrer" href="#">
-        Archive Job
-      </a>
-    ),
-    disabled: true,
-  },
-];
+import './HomeTable.css';
+import ActionsDropdown from './ActionsDropdown';
 
 const HomeTable = ({ data }) => {
   const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
@@ -46,52 +17,48 @@ const HomeTable = ({ data }) => {
       title: 'UID',
       dataIndex: 'uid',
       key: 'uid',
-      sorter: (a, b) => {return a.uid.localeCompare(b.uid)},
+      sorter: (a, b) => a.uid.localeCompare(b.uid),
     },
     {
       title: 'Workflow name',
       dataIndex: 'name',
       key: 'name',
-      sorter: (a, b) => {return a.name.localeCompare(b.name)},
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: 'Date/ Time Started',
       dataIndex: 'startedAt',
       key: 'startedAt',
-      sorter: (a, b) => {return a.startedAt.localeCompare(b.startedAt)},
+      sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
     },
     {
       title: 'Job status',
       key: 'phase',
-      render: (record) => {
-        return (
-          <div className='job-status'>
-            {record.phase === 'Succeeded' && <Completed />}
-            {record.phase === 'pending' && <Pending />}
-            {record.phase === 'running' && <Running />}
-            {record.phase === 'Failed' && <Failed />}
+      render: (record) => (
+        <div className='job-status'>
+          {record.phase === 'Succeeded' && <Completed />}
+          {record.phase === 'pending' && <Pending />}
+          {record.phase === 'running' && <Running />}
+          {record.phase === 'Failed' && <Failed />}
 
-            {record.phase}
-          </div>
-        )
-      },
-      sorter: (a, b) => {return a.phase.localeCompare(b.phase)},
+          {record.phase}
+        </div>
+      ),
+      sorter: (a, b) => a.phase.localeCompare(b.phase),
     },
     {
       title: 'Date/ Time Submitted',
       key: 'DateTimeSubmitted',
-      render: (record) => {
-        return ( record.DateTimeSubmitted ||
-          `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`
-        )},
+      render: (record) => (record.DateTimeSubmitted
+          || `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`
+      ),
     },
     {
       title: 'View Details',
       key: 'viewDetails',
-      render: (record) => {
-        return (
-          <Space>
-            <Button
+      render: (record) => (
+        <Space>
+          <Button
             onClick={() => {
               setSelectedRowData({
                 uid: record.uid,
@@ -114,20 +81,14 @@ const HomeTable = ({ data }) => {
             Results
           </Button>
         </Space>
-      )},
+      ),
     },
     {
       title: 'Actions',
       key: 'actions',
-      render:  (record) => {
-        return (
-          /*<Dropdown menu={{ dropDownItems }}>
-            <a onClick={(e) => e.preventDefault()}>
-              <EllipsisOutlined />
-            </a>
-          </Dropdown>*/<>Fix Commented code, causes runtime err on click</>
-        )
-      }
+      render: (record) => (
+        <ActionsDropdown />
+      ),
     },
   ];
 
@@ -136,8 +97,8 @@ const HomeTable = ({ data }) => {
       <Table
         dataSource={[...data]}
         columns={columns}
-        rowKey={record => record.uid}
-        pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '30']}}
+        rowKey={(record) => record.uid}
+        pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '30'] }}
       />
     </div>
   );
