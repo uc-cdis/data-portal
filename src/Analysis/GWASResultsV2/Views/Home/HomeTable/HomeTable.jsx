@@ -7,6 +7,7 @@ import Completed from './icons/Completed';
 import Pending from './icons/Pending';
 import Running from './icons/Running';
 import Failed from './icons/Failed';
+import Error from './icons/Error';
 import './HomeTable.css';
 
 const HomeTable = ({ data }) => {
@@ -36,10 +37,10 @@ const HomeTable = ({ data }) => {
       render: (record) => (
         <div className='job-status'>
           {record.phase === 'Succeeded' && <Completed />}
-          {record.phase === 'pending' && <Pending />}
-          {record.phase === 'running' && <Running />}
+          {record.phase === 'Pending' && <Pending />}
+          {record.phase === 'Running' && <Running />}
+          {record.phase === 'Error' && <Error />}
           {record.phase === 'Failed' && <Failed />}
-
           {record.phase}
         </div>
       ),
@@ -85,7 +86,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (record) => (
+      render: () => (
         <ActionsDropdown />
       ),
     },

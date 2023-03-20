@@ -34,11 +34,11 @@ const items = [
 
 const ActionsDropdown = () => (
   <Dropdown menu={{ items }} trigger={['click']}>
-      <Space>
-        <Button type='text'>
-          <EllipsisOutlined />
-        </Button>
-      </Space>
+    <Space>
+      <Button type='text'>
+        <EllipsisOutlined />
+      </Button>
+    </Space>
   </Dropdown>
 );
 
