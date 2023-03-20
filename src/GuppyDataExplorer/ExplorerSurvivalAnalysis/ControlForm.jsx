@@ -10,12 +10,14 @@ import { useAppSelector } from '../../redux/hooks';
 import { overrideSelectTheme } from '../../utils';
 import FilterSetCard from './FilterSetCard';
 import {
+  checkIfFilterHasDisallowedVariables,
   checkIfFilterHasOptedOutConsortiums,
   checkIfFilterInScope,
 } from './utils';
 import {
   DEFAULT_END_YEAR,
   DEFAULT_INTERVAL,
+  DISALLOWED_VARIABLES,
 } from './const';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
@@ -124,7 +126,26 @@ function ControlForm({ countByFilterSet, onSubmit }) {
     const { name: label, id: value } = filterSet;
     const isUsed = usedFilterSetIds.includes(value);
     const isOutOfScope = !checkIfFilterInScope(consortiums, filterSet.filter);
-    filterSetOptions.push({ label, value, isDisabled: isUsed || isOutOfScope });
+    const isDisallowedVariables = checkIfFilterHasDisallowedVariables(
+      filterSet.filter
+    );
+
+    filterSetOptions.push({
+      label: isDisallowedVariables ? (
+        <Tooltip
+          arrowContent={<div className='rc-tooltip-arrow-inner' />}
+          mouseLeaveDelay={0}
+          overlay='This Filter Set includes disallowed variables and cannot be used for survival analysis.'
+          placement='right'
+        >
+          <span>{label}</span>
+        </Tooltip>
+      ) : (
+        label
+      ),
+      value,
+      isDisabled: isUsed || isOutOfScope || isDisallowedVariables,
+    });
 
     if (isUsed) {
       const isStale = staleFilterSetIdSet.has(value);
@@ -164,12 +185,12 @@ function ControlForm({ countByFilterSet, onSubmit }) {
   return (
     <form className='explorer-survival-analysis__control-form'>
       <ControlFormSelect
-        inputId='consortium'
+        inputId='allowed-consortium'
         label={
           <Tooltip
             arrowContent={<div className='rc-tooltip-arrow-inner' />}
             mouseLeaveDelay={0}
-            overlay='Only data from the following sources are available for survival analysis. Filter Sets including other consortium values are disabled.'
+            overlay='Survival curves can only be generated for Filter Sets that include patients from allowed consortia.'
             placement='left'
           >
             <span>
@@ -177,7 +198,7 @@ function ControlForm({ countByFilterSet, onSubmit }) {
                 icon='circle-info'
                 color='var(--pcdc-color__primary-light)'
               />{' '}
-              Consortium
+              Allowed Consortium
             </span>
           </Tooltip>
         }
@@ -188,6 +209,33 @@ function ControlForm({ countByFilterSet, onSubmit }) {
         isMulti
         isDisabled
         value={consortiums.map((label) => ({ label }))}
+        theme={overrideSelectTheme}
+      />
+      <ControlFormSelect
+        inputId='disallowed-variables'
+        label={
+          <Tooltip
+            arrowContent={<div className='rc-tooltip-arrow-inner' />}
+            mouseLeaveDelay={0}
+            overlay='Filter sets that use disallowed variables cannot be utilized for survival analysis'
+            placement='left'
+          >
+            <span>
+              <FontAwesomeIcon
+                icon='circle-info'
+                color='var(--pcdc-color__primary-light)'
+              />{' '}
+              Disallowed Variables
+            </span>
+          </Tooltip>
+        }
+        components={{
+          IndicatorsContainer: () => null,
+          MultiValueRemove: () => null,
+        }}
+        isMulti
+        isDisabled
+        value={DISALLOWED_VARIABLES}
         theme={overrideSelectTheme}
       />
       <ControlFormSelect
