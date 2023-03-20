@@ -293,7 +293,7 @@ export const refreshUser = () => fetchUser;
 
 export const logoutAPI = (displayAuthPopup = false) => (dispatch) => {
   const cleanBasename = basename.replace(/^\/+/g, '').replace(/(dev.html$)/, '');
-  fetch(`${userAPIPath}/logout?next=${hostname}${cleanBasename}`)
+  fetch(`${userAPIPath}logout?next=${hostname}${cleanBasename}`)
     .then((response) => {
       if (displayAuthPopup) {
         dispatch({
@@ -381,7 +381,9 @@ export const updateSystemUseNotice = (displayUseWarning) => (dispatch) => {
   });
 };
 
-export const displaySystemUseNotice = (authenticated) => (dispatch, getState) => dispatch(checkIfDisplaySystemUseNotice(authenticated, getState().popups.systemUseWarnPopup));
+export const displaySystemUseNotice = (authenticated) => (dispatch) => dispatch(
+  checkIfDisplaySystemUseNotice(authenticated),
+);
 
 /*
  * redux-thunk support asynchronous redux actions via 'thunks' -

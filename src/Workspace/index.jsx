@@ -735,7 +735,7 @@ class Workspace extends React.Component {
     } if (this.state.connectedStatus && !this.state.hasWorkspaceAccess) {
       if (isEnabled('workspaceRegistration')) {
         console.log('This is navigated to workspace register page');
-        return <Redirect to='/workspace/register' />;
+        return <Redirect to='/workspace/request-access' />;
       }
       return <Redirect to={workspaceErrorUrl} />;
     }
