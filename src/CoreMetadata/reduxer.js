@@ -45,6 +45,7 @@ export const fetchCoreMetadata = (objectId) => (dispatch) => {
   const minMonthlyRelease = semver.coerce('2023.04.0', { loose: true });
   const monthlyReleaseCutoff = semver.coerce('2020', { loose: true });
 
+  // TODO move the peregrine version logic so we don't fire up this call every time we get core metadata
   return fetch(peregrineVersionPath)
     .then((response) => response.text())
     .then((responseBody) => {

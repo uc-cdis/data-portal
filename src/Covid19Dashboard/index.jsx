@@ -231,7 +231,7 @@ class Covid19Dashboard extends React.Component {
               <Tab>IL SARS-CoV2 Genomics</Tab>
             </TabList>
 
-            <TabPanel className='gen3-dashboard_panel'>
+            <TabPanel className='covid19-dashboard_panel'>
               <div className='gen3-dashboard_quicksight'>
                 {/* this component doesn't need the mapboxAPIToken but it's a way to make
                 sure this is the COVID19 Commons and the iframe contents will load */}
