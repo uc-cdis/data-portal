@@ -3,28 +3,10 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import testTableData from '../../TestData/testTableData';
+import '../../TestData/matchMedia';
 import SharedContext from '../../Utils/SharedContext';
 import Home from './Home';
 
-// Needed to fix window.matchMedia is not a function issue
-// https://stackoverflow.com/questions/39830580/jest-test-fails-typeerror-window-matchmedia-is-not-a-function
-describe("Test", () => {
-  beforeAll(() => {
-    Object.defineProperty(window, "matchMedia", {
-      writable: true,
-      value: jest.fn().mockImplementation(query => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(), // Deprecated
-        removeListener: jest.fn(), // Deprecated
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      }))
-    });
-  });
-});
 
 const mockedQueryClient = new QueryClient({
   defaultOptions: {
