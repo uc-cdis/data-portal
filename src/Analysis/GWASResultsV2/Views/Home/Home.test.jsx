@@ -6,6 +6,26 @@ import testTableData from '../../TestData/testTableData';
 import SharedContext from '../../Utils/SharedContext';
 import Home from './Home';
 
+// Needed to fix window.matchMedia is not a function issue
+// https://stackoverflow.com/questions/39830580/jest-test-fails-typeerror-window-matchmedia-is-not-a-function
+describe("Test", () => {
+  beforeAll(() => {
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: jest.fn().mockImplementation(query => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(), // Deprecated
+        removeListener: jest.fn(), // Deprecated
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      }))
+    });
+  });
+});
+
 const mockedQueryClient = new QueryClient({
   defaultOptions: {
     queries: { retry: false },
@@ -27,6 +47,10 @@ const testJSX = () => (
     </SharedContext.Provider>
   </QueryClientProvider>
 );
+
+
+
+
 
 describe('Home component', () => {
   it('should render a loading spinner when data is loading', async () => {

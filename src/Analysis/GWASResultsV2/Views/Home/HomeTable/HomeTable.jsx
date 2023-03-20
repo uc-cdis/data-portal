@@ -9,37 +9,37 @@ import Pending from './icons/Pending';
 import Running from './icons/Running';
 import Failed from './icons/Failed';
 
-const HomeTable = ({ data }) => {
-    const dropDownItems = [
-    {
-      key: '1',
-      label: (
-        <a target="_blank" rel="noopener noreferrer" href="#">
-          Download
-        </a>
-      ),
-      disabled: true,
-    },
-    {
-      key: '2',
-      label: (
-        <a target="_blank" rel="noopener noreferrer" href="#">
-          Rerun
-        </a>
-      ),
-      disabled: true,
-    },
-    {
-      key: '3',
-      label: (
-        <a target="_blank" rel="noopener noreferrer" href="#">
-          Archive Job
-        </a>
-      ),
-      disabled: true,
-    },
-  ];
+const dropDownItems = [
+  {
+    key: '1',
+    label: (
+      <a target="_blank" rel="noopener noreferrer" href="#">
+        Download
+      </a>
+    ),
+    disabled: true,
+  },
+  {
+    key: '2',
+    label: (
+      <a target="_blank" rel="noopener noreferrer" href="#">
+        Rerun
+      </a>
+    ),
+    disabled: true,
+  },
+  {
+    key: '3',
+    label: (
+      <a target="_blank" rel="noopener noreferrer" href="#">
+        Archive Job
+      </a>
+    ),
+    disabled: true,
+  },
+];
 
+const HomeTable = ({ data }) => {
   const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
   const columns = [
     {
@@ -81,7 +81,7 @@ const HomeTable = ({ data }) => {
       title: 'Date/ Time Submitted',
       key: 'DateTimeSubmitted',
       render: (record) => {
-        return (
+        return ( record.DateTimeSubmitted ||
           `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`
         )},
     },
@@ -136,6 +136,7 @@ const HomeTable = ({ data }) => {
       <Table
         dataSource={[...data]}
         columns={columns}
+        rowKey={record => record.uid}
         pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '30']}}
       />
     </div>
