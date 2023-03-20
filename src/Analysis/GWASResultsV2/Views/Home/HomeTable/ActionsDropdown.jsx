@@ -34,13 +34,11 @@ const items = [
 
 const ActionsDropdown = () => (
   <Dropdown menu={{ items }} trigger={['click']}>
-    <a tabindex="0"  onClick={(e) => e.preventDefault()}>
       <Space>
-        <Button type="text">
+        <Button type='text'>
           <EllipsisOutlined />
         </Button>
       </Space>
-    </a>
   </Dropdown>
 );
 
