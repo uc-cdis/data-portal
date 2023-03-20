@@ -1,14 +1,13 @@
 import React, { useContext } from 'react';
-import { Button, Table, Space, Dropdown, Menu } from 'antd';
-import { EllipsisOutlined } from '@ant-design/icons';
+import { Button, Table, Space } from 'antd';
 import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
+import ActionsDropdown from './ActionsDropdown';
 import Completed from './icons/Completed';
 import Pending from './icons/Pending';
 import Running from './icons/Running';
 import Failed from './icons/Failed';
 import './HomeTable.css';
-import ActionsDropdown from './ActionsDropdown';
 
 const HomeTable = ({ data }) => {
   const { setCurrentView, setSelectedRowData } = useContext(SharedContext);

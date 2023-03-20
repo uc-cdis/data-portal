@@ -1,44 +1,47 @@
 import React from 'react';
-import { Space, Dropdown } from 'antd';
+import { Space, Dropdown, Button } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 
-const items =  [
-    {
-      key: '1',
-      label: (
-        <a target="_blank" rel="noopener noreferrer" href="#">
+const items = [
+  {
+    key: '1',
+    label: (
+      <a target='_blank' rel='noopener noreferrer' href='#'>
           Download
-        </a>
-      ),
-      disabled: true,
-    },
-    {
-      key: '2',
-      label: (
-        <a target="_blank" rel="noopener noreferrer" href="#">
+      </a>
+    ),
+    disabled: true,
+  },
+  {
+    key: '2',
+    label: (
+      <a target='_blank' rel='noopener noreferrer' href='#'>
           Rerun
-        </a>
-      ),
-      disabled: true,
-    },
-    {
-      key: '3',
-      label: (
-        <a target="_blank" rel="noopener noreferrer" href="#">
+      </a>
+    ),
+    disabled: true,
+  },
+  {
+    key: '3',
+    label: (
+      <a target='_blank' rel='noopener noreferrer' href='#'>
           Archive Job
-        </a>
-      ),
-      disabled: true,
-    }
-  ];
+      </a>
+    ),
+    disabled: true,
+  },
+];
 
-const ActionsDropdown = () =>
-    <Dropdown menu={{ items }} trigger={['click']}>
-        <a onClick={(e) => e.preventDefault()}>
-            <Space>
-                <EllipsisOutlined />
-            </Space>
-        </a>
-    </Dropdown>
+const ActionsDropdown = () => (
+  <Dropdown menu={{ items }} trigger={['click']}>
+    <a tabindex="0"  onClick={(e) => e.preventDefault()}>
+      <Space>
+        <Button type="text">
+          <EllipsisOutlined />
+        </Button>
+      </Space>
+    </a>
+  </Dropdown>
+);
 
 export default ActionsDropdown;
