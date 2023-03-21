@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Button, Table, Space } from 'antd';
 import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
-import ActionsDropdown from './ActionsDropdown';
+import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
 import Succeeded from './icons/Succeeded';
 import Pending from './icons/Pending';
 import Running from './icons/Running';
