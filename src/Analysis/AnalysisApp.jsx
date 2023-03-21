@@ -13,6 +13,7 @@ import './AnalysisApp.css';
 import sessionMonitor from '../SessionMonitor';
 import GWASWorkflowList from './GWASResults/GWASWorkflowList';
 import GWASContainer from './GWASApp/GWASContainer';
+import GWASResultsContainer from './GWASResultsV2/GWASResultsContainer';
 
 const queryClient = new QueryClient();
 
@@ -122,7 +123,7 @@ class AnalysisApp extends React.Component {
     case 'GWASResultsV2':
       return (
         <div className='analysis-app_flex_row'>
-            TODO - your new table component?
+          <GWASResultsContainer />
         </div>
       );
     case 'GWASUIApp': {

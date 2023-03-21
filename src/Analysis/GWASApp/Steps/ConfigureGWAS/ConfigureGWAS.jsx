@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import PropTypes from 'prop-types';
+import { Spin } from 'antd';
 import DismissibleMessage from '../../Components/DismissibleMessage/DismissibleMessage';
 import { jobSubmission } from '../../Utils/gwasWorkflowApi';
 import { useSourceContext } from '../../Utils/Source';
@@ -96,6 +97,11 @@ const ConfigureGWAS = ({
           messageType={'warning'}
         />
       )}
+      {submitJob.isLoading && (
+        <div className='GWASUI-spinnerContainer set-height'>
+          <Spin />
+        </div>
+      )}
       <div className='configure-gwas_container'>
         <SelectConfiguration
           numOfPCs={numOfPCs}
@@ -106,7 +112,6 @@ const ConfigureGWAS = ({
           dispatch={dispatch}
           imputationScore={imputationScore}
         />
-
         <JobInputModal
           open={open}
           jobName={jobName}

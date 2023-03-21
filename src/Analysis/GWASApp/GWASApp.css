@@ -91,6 +91,10 @@
   padding: 5px;
 }
 
+.GWASUI-spinnerContainer.set-height {
+  height: 250px;
+}
+
 .GWASUI-emptyTable {
   height: 400px;
 }
