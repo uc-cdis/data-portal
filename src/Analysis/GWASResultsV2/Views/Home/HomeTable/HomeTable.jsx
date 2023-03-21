@@ -3,7 +3,7 @@ import { Button, Table, Space } from 'antd';
 import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
 import ActionsDropdown from './ActionsDropdown';
-import Completed from './icons/Completed';
+import Succeeded from './icons/Succeeded';
 import Pending from './icons/Pending';
 import Running from './icons/Running';
 import Failed from './icons/Failed';
@@ -36,7 +36,7 @@ const HomeTable = ({ data }) => {
       key: 'phase',
       render: (record) => (
         <div className='job-status'>
-          {record.phase === 'Succeeded' && <Completed />}
+          {record.phase === 'Succeeded' && <Succeeded />}
           {record.phase === 'Pending' && <Pending />}
           {record.phase === 'Running' && <Running />}
           {record.phase === 'Error' && <Error />}
@@ -49,9 +49,9 @@ const HomeTable = ({ data }) => {
     {
       title: 'Date/ Time Submitted',
       key: 'DateTimeSubmitted',
-      render: (record) => (record.DateTimeSubmitted
-          || `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`
-      ),
+      render: (record) =>
+        record.DateTimeSubmitted ||
+        `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`,
     },
     {
       title: 'View Details',
@@ -86,9 +86,7 @@ const HomeTable = ({ data }) => {
     {
       title: 'Actions',
       key: 'actions',
-      render: () => (
-        <ActionsDropdown />
-      ),
+      render: () => <ActionsDropdown />,
     },
   ];
 
@@ -98,7 +96,11 @@ const HomeTable = ({ data }) => {
         dataSource={[...data]}
         columns={columns}
         rowKey={(record) => record.uid}
-        pagination={{ defaultPageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '30'] }}
+        pagination={{
+          defaultPageSize: 10,
+          showSizeChanger: true,
+          pageSizeOptions: ['10', '20', '30'],
+        }}
       />
     </div>
   );
