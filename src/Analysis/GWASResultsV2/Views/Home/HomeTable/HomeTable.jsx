@@ -10,7 +10,7 @@ const HomeTable = ({ data }) => {
   const { setCurrentView, setSelectedRowData } = useContext(SharedContext);
   const columns = [
     {
-      title: 'UID',
+      title: 'Run ID',
       dataIndex: 'uid',
       key: 'uid',
       sorter: (a, b) => a.uid.localeCompare(b.uid),
@@ -22,7 +22,7 @@ const HomeTable = ({ data }) => {
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: 'Date/ Time Started',
+      title: 'Date/Time Started',
       dataIndex: 'startedAt',
       key: 'startedAt',
       sorter: (a, b) => a.startedAt.localeCompare(b.startedAt),
@@ -43,10 +43,11 @@ const HomeTable = ({ data }) => {
       sorter: (a, b) => a.phase.localeCompare(b.phase),
     },
     {
-      title: 'Date/ Time Submitted',
+      title: 'Date/Time Submitted',
       key: 'DateTimeSubmitted',
-      render: (record) => record.DateTimeSubmitted
-        || `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`,
+      render: (record) =>
+        record.DateTimeSubmitted ||
+        `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`,
     },
     {
       title: 'View Details',
