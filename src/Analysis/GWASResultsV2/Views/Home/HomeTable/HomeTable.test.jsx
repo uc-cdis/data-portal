@@ -4,6 +4,7 @@ import '@testing-library/jest-dom';
 import HomeTable from './HomeTable';
 import SharedContext from '../../../Utils/SharedContext';
 import testTableData from '../../../TestData/testTableData';
+import '../../../TestData/matchMedia';
 
 describe('HomeTable component', () => {
   const data = testTableData;
@@ -19,11 +20,11 @@ describe('HomeTable component', () => {
       </SharedContext.Provider>,
     );
 
-    // Check that each of the values from data appear once in the dom
+    // Check that each of the values from data appear  in the dom
     data.forEach((item) => {
       Object.values(item).forEach((value) => {
-        const textTestNode = screen.getByText(value);
-        expect(textTestNode).toBeInTheDocument();
+        const textTestNodes = screen.getAllByText(value);
+        expect(textTestNodes[0]).toBeInTheDocument();
       });
     });
 

@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import testTableData from '../../TestData/testTableData';
+import '../../TestData/matchMedia';
 import SharedContext from '../../Utils/SharedContext';
 import Home from './Home';
 
