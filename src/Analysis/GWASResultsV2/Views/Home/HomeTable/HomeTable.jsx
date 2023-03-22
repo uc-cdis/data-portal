@@ -3,7 +3,7 @@ import { Button, Table, Space } from 'antd';
 import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
 import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
-import Icons from './Icons/Icons';
+import Icons from './TableIcons/Icons';
 import './HomeTable.css';
 
 const HomeTable = ({ data }) => {
