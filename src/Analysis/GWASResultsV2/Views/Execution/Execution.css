@@ -6,11 +6,12 @@
   color: #333333;
   font-size: 12px;
   font-weight: bold;
-  padding: 24px 17px;
+  padding: 12px 16px;
   border: 1px solid #e2e2e3;
+  margin: 5em 0 1em 0;
 }
 .execution-data p {
-  padding-left: 17px;
+  padding-left: 16px;
   margin: 0;
 }
 
