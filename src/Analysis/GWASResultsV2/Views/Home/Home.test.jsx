@@ -2,8 +2,8 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import testTableData from '../../TestData/testTableData';
-import '../../TestData/matchMedia';
+import TestTableData from '../../TestData/TestTableData';
+import '../../TestData/MatchMedia';
 import SharedContext from '../../Utils/SharedContext';
 import Home from './Home';
 
@@ -48,11 +48,11 @@ describe('Home component', () => {
 
   it('should render the HomeTable component with data when test data is loaded', async () => {
     jest.spyOn(window, 'fetch').mockResolvedValueOnce({
-      json: jest.fn().mockResolvedValueOnce(testTableData),
+      json: jest.fn().mockResolvedValueOnce(TestTableData),
     });
     render(testJSX());
-    await screen.findByText(testTableData[0].name);
-    testTableData.forEach((item) => {
+    await screen.findByText(TestTableData[0].name);
+    TestTableData.forEach((item) => {
       expect(screen.getByText(item.name)).toBeInTheDocument();
     });
   });

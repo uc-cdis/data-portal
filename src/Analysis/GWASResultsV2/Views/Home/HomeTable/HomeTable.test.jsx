@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import HomeTable from './HomeTable';
 import SharedContext from '../../../Utils/SharedContext';
-import testTableData from '../../../TestData/testTableData';
-import '../../../TestData/matchMedia';
+import TestTableData from '../../../TestData/TestTableData';
+import '../../../TestData/MatchMedia';
 
 describe('HomeTable component', () => {
-  const data = testTableData;
+  const data = TestTableData;
   const mockContext = {
     setCurrentView: jest.fn(),
     setSelectedRowData: jest.fn(),
