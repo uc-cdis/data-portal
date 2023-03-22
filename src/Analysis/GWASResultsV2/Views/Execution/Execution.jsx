@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react';
-import { gwasWorkflowPath } from '../../../../localconf';
+import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
+import { gwasWorkflowPath } from '../../../../localconf';
 import SharedContext from '../../Utils/SharedContext';
 import ReturnHomeButton from '../../SharedComponents/ReturnHomeButton/ReturnHomeButton';
 import ExecutionTable from './ExecutionTable';
@@ -68,16 +68,16 @@ const Execution = () => {
       <div className='execution-data'>
         <h2>Logs</h2>
         {data.length === 0 && (
-          <>
+          <React.Fragment>
             <p>
               <strong>Error!</strong> Returned array has length of zero
             </p>
-          </>
+          </React.Fragment>
         )}
         {data.error && JSON.stringify(data)}
         {data.length > 1 &&
           data.map((item) => (
-            <>
+            <React.Fragment>
               <p key={item.uid}>
                 <strong>Name: {item.name}</strong>
                 <br />
@@ -86,7 +86,7 @@ const Execution = () => {
                 error_message: {item.error_message}
               </p>
               <br />
-            </>
+            </React.Fragment>
           ))}
       </div>
     </React.Fragment>

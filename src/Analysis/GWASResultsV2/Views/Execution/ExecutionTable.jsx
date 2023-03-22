@@ -1,10 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import SharedContext from '../../Utils/SharedContext';
 
 const ExecutionTable = () => {
   const { selectedRowData } = useContext(SharedContext);
   return (
-    <>
+    <React.Fragment>
       <table className='execution-table'>
         <tbody>
           <tr>
@@ -25,7 +25,7 @@ const ExecutionTable = () => {
           )}
         </tbody>
       </table>
-    </>
+    </React.Fragment>
   );
 };
 
