@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import TestTableData from '../../TestData/TestTableData';
+import TableData from '../../TestData/TableData';
 import '../../TestData/MatchMedia';
 import SharedContext from '../../Utils/SharedContext';
 import Home from './Home';
@@ -42,17 +42,17 @@ describe('Home component', () => {
     render(testJSX());
     await screen.findByText('Error loading data for table');
     expect(
-      screen.getByText('Error loading data for table'),
+      screen.getByText('Error loading data for table')
     ).toBeInTheDocument();
   });
 
   it('should render the HomeTable component with data when test data is loaded', async () => {
     jest.spyOn(window, 'fetch').mockResolvedValueOnce({
-      json: jest.fn().mockResolvedValueOnce(TestTableData),
+      json: jest.fn().mockResolvedValueOnce(TableData),
     });
     render(testJSX());
-    await screen.findByText(TestTableData[0].name);
-    TestTableData.forEach((item) => {
+    await screen.findByText(TableData[0].name);
+    TableData.forEach((item) => {
       expect(screen.getByText(item.name)).toBeInTheDocument();
     });
   });

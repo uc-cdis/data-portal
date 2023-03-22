@@ -1,4 +1,4 @@
-const TestTableData = [
+const TableData = [
   {
     uid: '123',
     name: 'Workflow 1',
@@ -15,4 +15,4 @@ const TestTableData = [
   },
 ];
 
-export default TestTableData;
+export default TableData;
