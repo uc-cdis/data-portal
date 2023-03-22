@@ -5,18 +5,14 @@ import { EllipsisOutlined } from '@ant-design/icons';
 const items = [
   {
     key: '1',
-    label: (
-      <a target='_blank' rel='noopener noreferrer' href='#'>
-          Download
-      </a>
-    ),
+    label: <Button type='text'>Download</Button>,
     disabled: true,
   },
   {
     key: '2',
     label: (
       <a target='_blank' rel='noopener noreferrer' href='#'>
-          Rerun
+        Rerun
       </a>
     ),
     disabled: true,
@@ -25,7 +21,7 @@ const items = [
     key: '3',
     label: (
       <a target='_blank' rel='noopener noreferrer' href='#'>
-          Archive Job
+        Archive Job
       </a>
     ),
     disabled: true,

@@ -3,11 +3,7 @@ import { Button, Table, Space } from 'antd';
 import PropTypes from 'prop-types';
 import SharedContext from '../../../Utils/SharedContext';
 import ActionsDropdown from './ActionsDropdown/ActionsDropdown';
-import Succeeded from './icons/Succeeded';
-import Pending from './icons/Pending';
-import Running from './icons/Running';
-import Failed from './icons/Failed';
-import Error from './icons/Error';
+import Icons from './Icons/Icons';
 import './HomeTable.css';
 
 const HomeTable = ({ data }) => {
@@ -36,11 +32,11 @@ const HomeTable = ({ data }) => {
       key: 'phase',
       render: (record) => (
         <div className='job-status'>
-          {record.phase === 'Succeeded' && <Succeeded />}
-          {record.phase === 'Pending' && <Pending />}
-          {record.phase === 'Running' && <Running />}
-          {record.phase === 'Error' && <Error />}
-          {record.phase === 'Failed' && <Failed />}
+          {record.phase === 'Succeeded' && <Icons.Succeeded />}
+          {record.phase === 'Pending' && <Icons.Pending />}
+          {record.phase === 'Running' && <Icons.Running />}
+          {record.phase === 'Error' && <Icons.Error />}
+          {record.phase === 'Failed' && <Icons.Failed />}
           {record.phase}
         </div>
       ),
@@ -49,8 +45,9 @@ const HomeTable = ({ data }) => {
     {
       title: 'Date/ Time Submitted',
       key: 'DateTimeSubmitted',
-      render: (record) => record.DateTimeSubmitted
-        || `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`,
+      render: (record) =>
+        record.DateTimeSubmitted ||
+        `item.DateTimeSubmitted missing at ${new Date().toLocaleString()}`,
     },
     {
       title: 'View Details',

@@ -1,5 +1,4 @@
 import React from 'react';
-import './icons.css';
 
 const Pending = () => (
   <span className='job-status-icon'>

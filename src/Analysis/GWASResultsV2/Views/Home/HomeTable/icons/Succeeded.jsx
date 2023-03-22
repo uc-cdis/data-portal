@@ -1,5 +1,4 @@
 import React from 'react';
-import './icons.css';
 
 const Succeeded = () => (
   <span className='job-status-icon'>
