@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import HomeTable from './HomeTable';
 import SharedContext from '../../../Utils/SharedContext';
 import TableData from '../../../TestData/TableData';
-import '../../../TestData/MatchMedia';
+import '../../../TestData/MatchMediaFix';
 
 describe('HomeTable component', () => {
   const data = TableData;
@@ -17,7 +17,7 @@ describe('HomeTable component', () => {
     render(
       <SharedContext.Provider value={mockContext}>
         <HomeTable data={data} />
-      </SharedContext.Provider>
+      </SharedContext.Provider>,
     );
 
     // Check that each of the values from data appear in the dom
