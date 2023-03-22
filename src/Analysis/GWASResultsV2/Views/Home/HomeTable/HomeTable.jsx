@@ -19,24 +19,21 @@ const HomeTable = ({ data }) => {
           <th>View Details</th>
           <th>Actions</th>
         </tr>
-        {data
-          && data.map((item) => (
+        {data &&
+          data.map((item) => (
             <tr key={item?.uid}>
               <td>{item?.uid}</td>
               <td>{item?.name}</td>
               <td>{item?.startedAt}</td>
               <td>{item?.phase}</td>
               <td>
-                {item.DateTimeSubmitted
-                  || `item.DateTimeSubmiited missing at ${new Date().toLocaleString()}`}
+                {item.DateTimeSubmitted ||
+                  `item.DateTimeSubmiited missing at ${new Date().toLocaleString()}`}
               </td>
               <td>
                 <Button
                   onClick={() => {
-                    setSelectedRowData({
-                      uid: item?.uid,
-                      name: item?.name,
-                    });
+                    setSelectedRowData(item);
                     setCurrentView('execution');
                   }}
                 >
