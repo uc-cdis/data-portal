@@ -176,8 +176,13 @@ export const getPropertyDescription = (property) => {
   if ('description' in property) {
     return property.description;
   }
-  if ('term' in property) {
-    description = property.term.map(x => x["description"]).join('; ');
+  if ('term' in property && property.term !== 'undefined') {
+    if (!Array.isArray(property.term)) {
+      return property.term?.["description"]
+    }
+    else {
+      description = property.term.map(x => x["description"]).join('; ');
+    }
   }
   return description;
 };
