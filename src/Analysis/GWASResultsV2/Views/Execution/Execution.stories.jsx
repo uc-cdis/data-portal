@@ -1,4 +1,5 @@
 import React from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import SharedContext from '../../Utils/SharedContext';
 import Execution from './Execution';
 
@@ -7,6 +8,12 @@ export default {
   component: 'Execution',
 };
 
+const mockedQueryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: false },
+  },
+});
+
 const selectedRowData = { name: 'Test Name', uid: '123456' };
 const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
@@ -14,14 +21,16 @@ const setCurrentView = (input) => {
 
 const MockTemplate = () => {
   return (
-    <SharedContext.Provider
-      value={{
-        selectedRowData,
-        setCurrentView,
-      }}
-    >
-      <Execution />
-    </SharedContext.Provider>
+    <QueryClientProvider client={mockedQueryClient}>
+      <SharedContext.Provider
+        value={{
+          selectedRowData,
+          setCurrentView,
+        }}
+      >
+        <Execution />
+      </SharedContext.Provider>
+    </QueryClientProvider>
   );
 };
 
