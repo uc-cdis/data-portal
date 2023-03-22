@@ -100,13 +100,7 @@ function DataDictionaryPropertyTable({
                 return null;
               }
             }
-            let termID = '';
-            let termLink = '';
-            if ('term' in property) {
-              termID = property.term.termDef && property.term.termDef.cde_id;
-              termLink =
-                property.term.termDef && property.term.termDef.term_url;
-            }
+
             const propertyNameFragment = getPropertyNameFragment(
               propertyKey,
               nameMatch,
@@ -147,7 +141,11 @@ function DataDictionaryPropertyTable({
                   {propertyDescriptionFragment}
                 </td>
                 <td className='data-dictionary-property-table__data'>
-                  {termLink !== '' && <a href={termLink}>{termID}</a>}
+                  {
+                    property.term.filter((obj) => { return obj["termDef"]?.["term_url"] && obj["termDef"]?.["cde_id"]})
+                                  .map((x,i) => { return (<li key={i}><a href={x["termDef"]["term_url"]} target="_blank"> {x["termDef"]["cde_id"]} </a></li>);
+                    })
+                  }
                 </td>
               </tr>
             );
