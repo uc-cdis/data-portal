@@ -17,7 +17,7 @@ describe('HomeTable component', () => {
     render(
       <SharedContext.Provider value={mockContext}>
         <HomeTable data={data} />
-      </SharedContext.Provider>,
+      </SharedContext.Provider>
     );
 
     // Check that each of the values from data appear in the dom
