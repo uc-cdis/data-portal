@@ -5,7 +5,11 @@ import { EllipsisOutlined } from '@ant-design/icons';
 const items = [
   {
     key: '1',
-    label: <Button type='text'>Download</Button>,
+    label: (
+      <a target='_blank' rel='noopener noreferrer' href='#'>
+        Download
+      </a>
+    ),
     disabled: true,
   },
   {
