@@ -60,11 +60,10 @@ function getCSSVersion() {
   const overridesCss = './src/css/themeoverrides.css';
   if (!fs.existsSync(overridesCss)) {
     console.warn(`${overridesCss} does not exist`);
-    return(''); 
-  } else {
-    const stats = fs.statSync(overridesCss);
-    return (stats.mtime.getTime());
+    return ('');
   }
+  const stats = fs.statSync(overridesCss);
+  return (stats.mtime.getTime());
 }
 
 const plugins = [
