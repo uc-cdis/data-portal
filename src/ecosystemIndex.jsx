@@ -354,7 +354,7 @@ async function init() {
                       ? (
                         <Route
                           exact
-                          path='/workspace/register'
+                          path='/workspace/registerOLD'
                           component={
                             (props) => (
                               <ProtectedContent
@@ -367,6 +367,28 @@ async function init() {
                       )
                       : null
                   }
+
+
+{
+                    isEnabled('workspaceRegistration')
+                      ? (
+                        <Route
+                          exact
+                          path='/workspace/register'
+                          component={
+                            (props) => (
+                              <ProtectedContent
+                              component={ReduxStudyRegistrationRequestForm}
+                              {...props}
+                              />
+                            )
+                          }
+                        />
+                      )
+                      : null
+                  }
+
+
                   <Route
                     exact
                     path={workspaceUrl}
