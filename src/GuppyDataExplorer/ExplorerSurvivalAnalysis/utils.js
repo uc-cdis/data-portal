@@ -1,6 +1,5 @@
 /* eslint-disable no-shadow */
 import { FILTER_TYPE } from '../ExplorerFilterSetWorkspace/utils';
-import { DISALLOWED_VARIABLES } from './const';
 
 /** @typedef {import('./types').RisktableData} RisktableData */
 
@@ -29,45 +28,23 @@ export function checkIfFilterInScope(consortiums, filter) {
 
 /**
  * @param {import('../types').ExplorerFilter} filter
+ * @param {import('./types').DisallowedVariable[]} disallowedVariables
  * @return {boolean}
  */
-export function checkIfFilterHasDisallowedVariables(filter) {
-  const disallowedVariables = DISALLOWED_VARIABLES.map((v) => v.field);
+export function checkIfFilterHasDisallowedVariables(
+  disallowedVariables,
+  filter
+) {
+  const disallowedFields = disallowedVariables.map((v) => v.field);
 
   if (filter.__type === FILTER_TYPE.COMPOSED) {
-    return filter.value.some((f) => checkIfFilterHasDisallowedVariables(f));
+    return filter.value.some((f) =>
+      checkIfFilterHasDisallowedVariables(disallowedVariables, f)
+    );
   }
   return Object.keys(filter.value ?? {}).some((k) =>
-    disallowedVariables.includes(k)
+    disallowedFields.includes(k)
   );
-}
-
-/**
- * @param {string[]} consortiums
- * @param {import('../types').ExplorerFilter} filter
- * @return {boolean}
- */
-export function checkIfFilterHasOptedOutConsortiums(consortiums, filter) {
-  const optedInConsortiums = ['INRG', 'INSTRuCT'];
-
-  if (!consortiums.length) {
-    return false;
-  }
-  if (!filter.value) {
-    // All Subjects
-    return consortiums.some((c) => !optedInConsortiums.includes(c));
-  } else if (filter.__type === FILTER_TYPE.COMPOSED) {
-    return filter.value.some((f) =>
-      checkIfFilterHasOptedOutConsortiums(consortiums, f)
-    );
-  } else {
-    for (const [key, val] of Object.entries(filter.value)) {
-      if (key === 'consortium' && val.__type === FILTER_TYPE.OPTION) {
-        return val.selectedValues.some((c) => !optedInConsortiums.includes(c));
-      }
-    }
-    return false;
-  }
 }
 
 /**

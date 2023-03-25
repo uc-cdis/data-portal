@@ -1,7 +1,6 @@
 import { FILTER_TYPE } from '../ExplorerFilterSetWorkspace/utils';
 import {
   checkIfFilterHasDisallowedVariables,
-  checkIfFilterHasOptedOutConsortiums,
   checkIfFilterInScope,
 } from './utils';
 
@@ -163,107 +162,19 @@ describe('utils tests', () => {
     });
   });
 
-  describe('check if a filter set has opted-out consortiums', () => {
-    const __combineMode = /** @type {'AND'} */ ('AND');
-    test('empty consortiums in config, no opted-out consortiums', () => {
-      expect(checkIfFilterHasOptedOutConsortiums([], {})).toBeFalsy();
-    });
-    test('All Subject filter set', () => {
-      expect(
-        checkIfFilterHasOptedOutConsortiums(['INRG', 'INSTRuCT'], {})
-      ).toBeFalsy();
-      expect(
-        checkIfFilterHasOptedOutConsortiums(['INRG', 'INSTRuCT', 'NODAL'], {})
-      ).toBeTruthy();
-    });
-    test('Composed filter set', () => {
-      expect(
-        checkIfFilterHasOptedOutConsortiums(['INRG', 'INSTRuCT', 'NODAL'], {
-          __type: FILTER_TYPE.COMPOSED,
-          value: [
-            {
-              __combineMode,
-              __type: FILTER_TYPE.STANDARD,
-              value: {
-                consortium: {
-                  __type: FILTER_TYPE.OPTION,
-                  selectedValues: ['INRG', 'INSTRuCT'],
-                },
-              },
-            },
-            {
-              __combineMode,
-              __type: FILTER_TYPE.STANDARD,
-              value: {
-                consortium: {
-                  __type: FILTER_TYPE.OPTION,
-                  selectedValues: ['INRG'],
-                },
-              },
-            },
-          ],
-        })
-      ).toBeFalsy();
-      expect(
-        checkIfFilterHasOptedOutConsortiums(['INRG', 'INSTRuCT', 'NODAL'], {
-          __type: FILTER_TYPE.COMPOSED,
-          value: [
-            {
-              __combineMode,
-              __type: FILTER_TYPE.STANDARD,
-              value: {
-                consortium: {
-                  __type: FILTER_TYPE.OPTION,
-                  selectedValues: ['INRG', 'INSTRuCT', 'NODAL'],
-                },
-              },
-            },
-            {
-              __combineMode,
-              __type: FILTER_TYPE.STANDARD,
-              value: {
-                consortium: {
-                  __type: FILTER_TYPE.OPTION,
-                  selectedValues: ['INRG'],
-                },
-              },
-            },
-          ],
-        })
-      ).toBeTruthy();
-    });
-
-    test('Standard filter set', () => {
-      expect(
-        checkIfFilterHasOptedOutConsortiums(['INRG', 'INSTRuCT', 'NODAL'], {
-          __type: FILTER_TYPE.STANDARD,
-          value: {
-            consortium: {
-              __type: FILTER_TYPE.OPTION,
-              selectedValues: ['INRG', 'INSTRuCT'],
-            },
-          },
-        })
-      ).toBeFalsy();
-      expect(
-        checkIfFilterHasOptedOutConsortiums(['INRG', 'INSTRuCT', 'NODAL'], {
-          __type: FILTER_TYPE.STANDARD,
-          value: {
-            consortium: {
-              __type: FILTER_TYPE.OPTION,
-              selectedValues: ['INRG', 'INSTRuCT', 'OTHER'],
-            },
-          },
-        })
-      ).toBeTruthy();
-    });
-  });
-
   describe('check if a filter set has disallowed variables', () => {
     const __combineMode = /** @type {'AND'} */ ('AND');
+    const disallowedVariables = [
+      {
+        field: 'data_contributor_id',
+        label: 'Data Contributor',
+      },
+      { field: 'studies.study_id', label: 'Study' },
+      { field: 'treatment_arm', label: 'Treatment Arm' },
+    ];
     test('composed filter set', () => {
       expect(
-        checkIfFilterHasDisallowedVariables({
+        checkIfFilterHasDisallowedVariables(disallowedVariables, {
           __type: FILTER_TYPE.COMPOSED,
           value: [
             {
@@ -291,7 +202,7 @@ describe('utils tests', () => {
       ).toBeFalsy();
 
       expect(
-        checkIfFilterHasDisallowedVariables({
+        checkIfFilterHasDisallowedVariables(disallowedVariables, {
           __type: FILTER_TYPE.COMPOSED,
           value: [
             {
@@ -320,7 +231,7 @@ describe('utils tests', () => {
     });
     test('Standard filter set', () => {
       expect(
-        checkIfFilterHasDisallowedVariables({
+        checkIfFilterHasDisallowedVariables(disallowedVariables, {
           __type: FILTER_TYPE.STANDARD,
           value: {
             consortium: {
@@ -331,7 +242,7 @@ describe('utils tests', () => {
         })
       ).toBeFalsy();
       expect(
-        checkIfFilterHasDisallowedVariables({
+        checkIfFilterHasDisallowedVariables(disallowedVariables, {
           __type: FILTER_TYPE.STANDARD,
           value: {
             data_contributor_id: {
