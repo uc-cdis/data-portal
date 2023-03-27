@@ -14,8 +14,7 @@ const Execution = () => {
   // THIS IS THE PROBLEM: The example endpoint works. See line below.
   // BUT the generated endpoints do not, even though they look like they in good format.
   // Example: change line 23 to use exampleEndpoint vs endpoint variables
-  const exampleEndpoint =
-    'https://qa-mickey.planx-pla.net/ga4gh/wes/v2/logs/gwas-workflow-9317784556?uid=4b125c09-9712-486f-bacd-ec1451aae935';
+  const exampleEndpoint = 'https://qa-mickey.planx-pla.net/ga4gh/wes/v2/logs/gwas-workflow-9317784556?uid=4b125c09-9712-486f-bacd-ec1451aae935';
   // const endpoint = `${gwasWorkflowPath}logs/${name}?uid=${uid}`;
   const endpoint = `https://qa-mickey.planx-pla.net/ga4gh/wes/v2/logs/${name}?uid=${uid}`;
 
@@ -74,8 +73,8 @@ const Execution = () => {
           </React.Fragment>
         )}
         {data.error && JSON.stringify(data)}
-        {data.length > 1 &&
-          data.map((item) => (
+        {data.length > 1
+          && data.map((item) => (
             <React.Fragment>
               <p key={item.uid}>
                 <strong>Name: {item.name}</strong>
