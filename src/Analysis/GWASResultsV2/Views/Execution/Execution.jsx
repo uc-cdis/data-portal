@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useQuery } from 'react-query';
 import { Spin } from 'antd';
 import { gwasWorkflowPath } from '../../../../localconf';
