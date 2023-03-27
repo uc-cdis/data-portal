@@ -7,8 +7,11 @@ const items = [
     key: '1',
     label: (
       <a
-        href='javascript: void(0)'
-        onClick={() => alert('Placeholder function for DL zip for row called')}
+        href=''
+        onClick={(e) => {
+          e.preventDefault();
+          alert('Placeholder function for downloading row zip file called');
+        }}
       >
         Download
       </a>
