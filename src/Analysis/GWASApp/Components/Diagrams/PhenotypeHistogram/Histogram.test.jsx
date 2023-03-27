@@ -35,14 +35,14 @@ describe('Histogram component', () => {
   it('renders three bars when given three datums', () => {
     const { container } = render(<Histogram {...args} />);
     expect(
-      container.getElementsByClassName('recharts-bar-rectangle').length
+      container.getElementsByClassName('recharts-bar-rectangle').length,
     ).toBe(3);
   });
 
   it('renders with a tooltip container', () => {
     const { container } = render(<Histogram {...args} />);
     expect(
-      container.getElementsByClassName('recharts-tooltip-wrapper').length
+      container.getElementsByClassName('recharts-tooltip-wrapper').length,
     ).toBe(1);
   });
 });

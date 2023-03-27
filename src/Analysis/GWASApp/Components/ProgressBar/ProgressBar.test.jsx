@@ -19,8 +19,8 @@ const testElementClass = (currentStep, className) => {
 /* Test active step class */
 describe('Test that active step class renders with active class when current is between 0 and 3', () => {
   for (let i = 0; i < 4; i += 1) {
-    it(`should render step ${i +
-      1} with active class when currentStep is ${i}`, () => {
+    it(`should render step ${i
+      + 1} with active class when currentStep is ${i}`, () => {
       testElementClass(i, 'ant-steps-item-active');
     });
   }

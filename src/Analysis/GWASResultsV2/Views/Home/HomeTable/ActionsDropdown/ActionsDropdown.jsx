@@ -6,11 +6,14 @@ const items = [
   {
     key: '1',
     label: (
-      <a target='_blank' rel='noopener noreferrer' href='#'>
+      <a
+        href='javascript: void(0)'
+        onClick={() => alert('Placeholder function for DL zip for row called')}
+      >
         Download
       </a>
     ),
-    disabled: true,
+    disabled: false,
   },
 ];
 
