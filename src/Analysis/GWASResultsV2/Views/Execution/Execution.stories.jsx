@@ -14,7 +14,10 @@ const mockedQueryClient = new QueryClient({
   },
 });
 
-const selectedRowData = { name: 'Test Name', uid: '123456' };
+const selectedRowData = {
+  name: 'gwas-workflow-9317784556',
+  uid: '4b125c09-9712-486f-bacd-ec1451aae935',
+};
 const setCurrentView = (input) => {
   alert(`setCurrentView called with ${input}`);
 };

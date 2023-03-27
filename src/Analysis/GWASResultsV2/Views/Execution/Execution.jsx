@@ -20,7 +20,7 @@ const Execution = () => {
   const endpoint = `https://qa-mickey.planx-pla.net/ga4gh/wes/v2/logs/${name}?uid=${uid}`;
 
   async function fetchExecutionData() {
-    const getData = await fetch(endpoint);
+    const getData = await fetch(exampleEndpoint);
     return getData.json();
   }
   const { data, status } = useQuery('ExecutionData', fetchExecutionData, {
