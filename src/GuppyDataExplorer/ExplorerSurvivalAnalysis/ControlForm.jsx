@@ -11,14 +11,9 @@ import { overrideSelectTheme } from '../../utils';
 import FilterSetCard from './FilterSetCard';
 import {
   checkIfFilterHasDisallowedVariables,
-  checkIfFilterHasOptedOutConsortiums,
   checkIfFilterInScope,
 } from './utils';
-import {
-  DEFAULT_END_YEAR,
-  DEFAULT_INTERVAL,
-  DISALLOWED_VARIABLES,
-} from './const';
+import { DEFAULT_END_YEAR, DEFAULT_INTERVAL } from './const';
 
 /** @typedef {import('./types').ExplorerFilterSet} ExplorerFilterSet */
 /** @typedef {import('./types').ParsedSurvivalAnalysisResult} ParsedSurvivalAnalysisResult */
@@ -112,6 +107,10 @@ function ControlForm({ countByFilterSet, onSubmit }) {
   const staleFilterSetIdSet = useAppSelector(
     (state) => new Set(state.explorer.survivalAnalysisResult.staleFilterSetIds)
   );
+  const disallowedVariables = useAppSelector(
+    (state) =>
+      state.explorer.config.survivalAnalysisConfig['excluded_variables'] ?? []
+  );
 
   const [timeInterval, setTimeInterval] = useState(DEFAULT_INTERVAL);
   const [startTime, setStartTime] = useState(0);
@@ -127,15 +126,26 @@ function ControlForm({ countByFilterSet, onSubmit }) {
     const isUsed = usedFilterSetIds.includes(value);
     const isOutOfScope = !checkIfFilterInScope(consortiums, filterSet.filter);
     const isDisallowedVariables = checkIfFilterHasDisallowedVariables(
+      disallowedVariables,
       filterSet.filter
     );
 
+    const isDisabled = isUsed || isOutOfScope || isDisallowedVariables;
+
+    const disabledOverlay = isUsed
+      ? 'This Filter Set is already in use.'
+      : isOutOfScope
+      ? 'This Filter Set includes out of scope consortia.'
+      : isDisallowedVariables
+      ? 'This Filter Set includes disallowed variables and cannot be used for survival analysis.'
+      : '';
+
     filterSetOptions.push({
-      label: isDisallowedVariables ? (
+      label: isDisabled ? (
         <Tooltip
           arrowContent={<div className='rc-tooltip-arrow-inner' />}
           mouseLeaveDelay={0}
-          overlay='This Filter Set includes disallowed variables and cannot be used for survival analysis.'
+          overlay={disabledOverlay}
           placement='right'
         >
           <span>{label}</span>
@@ -144,16 +154,12 @@ function ControlForm({ countByFilterSet, onSubmit }) {
         label
       ),
       value,
-      isDisabled: isUsed || isOutOfScope || isDisallowedVariables,
+      isDisabled,
     });
 
     if (isUsed) {
       const isStale = staleFilterSetIdSet.has(value);
-      const hasOptedOutConsortiums = checkIfFilterHasOptedOutConsortiums(
-        consortiums,
-        filterSet.filter
-      );
-      usedFilterSets.push({ ...filterSet, isStale, hasOptedOutConsortiums });
+      usedFilterSets.push({ ...filterSet, isStale });
     }
   }
 
@@ -235,7 +241,7 @@ function ControlForm({ countByFilterSet, onSubmit }) {
         }}
         isMulti
         isDisabled
-        value={DISALLOWED_VARIABLES}
+        value={disallowedVariables}
         theme={overrideSelectTheme}
       />
       <ControlFormSelect

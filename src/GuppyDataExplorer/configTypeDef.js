@@ -73,6 +73,12 @@ export const ChartConfigType = PropTypes.object;
 
 export const SurvivalAnalysisConfigType = PropTypes.shape({
   consortium: PropTypes.arrayOf(PropTypes.string),
+  excluded_variables: PropTypes.arrayOf(
+    PropTypes.shape({
+      field: PropTypes.string,
+      label: PropTypes.string,
+    })
+  ),
   result: PropTypes.shape({
     risktable: PropTypes.bool,
     survival: PropTypes.bool,
