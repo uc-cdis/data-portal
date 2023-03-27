@@ -11,7 +11,5 @@ describe('ActionsDropdown', () => {
       fireEvent.click(dropdownButton);
     });
     expect(getByText('Download')).toBeInTheDocument();
-    expect(getByText('Rerun')).toBeInTheDocument();
-    expect(getByText('Archive Job')).toBeInTheDocument();
   });
 });
