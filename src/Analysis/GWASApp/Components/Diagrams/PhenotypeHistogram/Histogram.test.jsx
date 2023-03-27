@@ -3,19 +3,6 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import Histogram from './Histogram';
 
-/*
-  Code to aid in Jest Mocking, see:
-  https://stackoverflow.com/questions/39830580/jest-test-fails-typeerror-window-matchmedia-is-not-a-function
-*/
-window.matchMedia = window.matchMedia
-  || function () {
-    return {
-      matches: false,
-      addListener() {},
-      removeListener() {},
-    };
-  };
-
 const args = {
   data: [
     {
@@ -48,14 +35,14 @@ describe('Histogram component', () => {
   it('renders three bars when given three datums', () => {
     const { container } = render(<Histogram {...args} />);
     expect(
-      container.getElementsByClassName('recharts-bar-rectangle').length,
+      container.getElementsByClassName('recharts-bar-rectangle').length
     ).toBe(3);
   });
 
   it('renders with a tooltip container', () => {
     const { container } = render(<Histogram {...args} />);
     expect(
-      container.getElementsByClassName('recharts-tooltip-wrapper').length,
+      container.getElementsByClassName('recharts-tooltip-wrapper').length
     ).toBe(1);
   });
 });

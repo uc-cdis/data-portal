@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import TableData from '../../TestData/TableData';
-import '../../TestData/MatchMediaFix';
 import SharedContext from '../../Utils/SharedContext';
 import Home from './Home';
 
@@ -42,7 +41,7 @@ describe('Home component', () => {
     render(testJSX());
     await screen.findByText('Error loading data for table');
     expect(
-      screen.getByText('Error loading data for table'),
+      screen.getByText('Error loading data for table')
     ).toBeInTheDocument();
   });
 
