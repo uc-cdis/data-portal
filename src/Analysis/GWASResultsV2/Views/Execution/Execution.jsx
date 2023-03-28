@@ -60,8 +60,8 @@ const Execution = () => {
           </React.Fragment>
         )}
         {data.error && JSON.stringify(data)}
-        {data.length > 0 &&
-          data.map((item) => (
+        {data.length > 0
+          && data.map((item) => (
             <React.Fragment>
               <p key={item.uid}>
                 <strong>Name: {item.name}</strong>
